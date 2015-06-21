@@ -1,81 +1,65 @@
-Import Image Stack Filter {#importimagestack}
-======
+Import Images (3D Stack) {#importimagestack}
+=============
 
 ## Group (Subgroup) ##
-Image Import Filters (Input)
-
+IO (Input)
 
 ## Description ##
-Images that are imported into DREAM3D should probably be segmented using a preprocessing tool as there are currently no effective tools to do the segmentation in DREAM3D itself. If your images are already preprocessed so that they are segmented into specific regions DREAM3D may be able to work with the image data and give you meaningful results. There are 3 categories of images that DREAM3D can handle.
+This Filter is used to import a stack of 2D images that represent a 3D volume.  This Filter makes use of Qt's [QImage](http://doc.qt.io/qt-4.8/qimage.html) class to perform the import, although not all [QImage formats](http://doc.qt.io/qt-4.8/qimage.html#Format-enum) are currently supported by this filter. Currently, support only exists for 8 bit grayscale, 32 bit RGB, and 32 bit ARGB images. Note that due to limitations of the Xdmf wrapper, 4 component ARGB images cannot be visualized using ParaView. The only current way to solve this issue is to import the image data and then apply the [Flatten Image](flattenimage.html) Filter, which will convert the color data to gray scale data. The image can then be visualized in ParaView using the Xdmf wrapper.
 
-----------
-
-## Type 1 Image
-
-The regions of the image that represent a phase or grain each have a unique identifier such as a gray scale value or unique RGB value.
-
-![Type 1 Image](Type1.png)
-@image latex Type1.png "Type 1 Image" width=5in
+## Importing a Stack of Images ##
+This Filter will import a directory of sequentially numbered image files into the DREAM.3D data structure, creating a **Data Container**, **Cell Attribute Matrix**, and **Attribute Array** in the process, which the user may name. The user selects the directory that contains all the files to be imported then uses the additional input widgets on the Filter interface (_File Prefix_, _File Suffix_, _File Extension_, and _Padding Digits_) to make adjustments to the generated file name until the correct number of files is found. The user may also select starting and ending indices to import. The user interface indicates through red and green icons if an expected file exists on the file system. This Filter may also be used to import single images in addition to stacks of images.  The user may also enter the origin and resolution of the imported images, if known.
 
 -----
 
-## Type 2 Image ##
-
-There are regions that represent grains where each region has a unique identifier but there are multiple regions with the same identifier.
-
-![Type 2 Image](Type2.png)
-@image latex Type2.png "Type 2 Image" width=5in
+![Import Image Stack User Interface](ImportImageStackGUI.png)
 
 -----
 
-## Type 3 Image ##
 
-Each Grain is traced out via a another pixel identifier so that grain boundaries are "black" and each grain is "white".
-
-![Type 3 Image](Type3.png)
-@image latex Type3.png "Type 3 Image" width=5in
+DREAM.3D contains numerous tools to modify, analyze and segment generic image data.  If your images are already pre-processed so that they are segmented into specific regions, DREAM.3D may also be able to work with the image data and produce meaningful results. Three categories of images that DREAM.3D can handle include the following:
 
 -----
 
-## Notes
-When importing color images they will be imported as RGBA, or color with Alpha values. Due to some limitations of the XDMF wrapper the 4 component arrays will only show as 3 component arrays in the XDMF description which will mess up the rendering in ParaView. The only current way to solve this issue is to import the image data and then follow that with the [Flatten Image](flattenimage.html) filter which will convert the color data to gray scale data. Then writing out the .dream3d file with the xdmf wrapper will allow the user to properly see their data.
+## Category 1 Image ##
 
+The regions of the image that represent an **Ensemble** or **Feature** each have a unique identifier such as a grayscale value or unique RGB value.
+
+![Category 1 Image](Type1.png)
+
+-----
+
+## Category 2 Image ##
+
+There are regions in the image that represent **Features**, where each region has a unique identifier but there are multiple regions with the same identifier.
+
+![Category 2 Image](Type2.png)
+
+-----
+
+## Category 3 Image ##
+
+Each **Feature** is traced out via another pixel identifier so that **Feature** boundaries are "black" and each **Feature** is "white". This type of image is commonly referred to as a *binary* image.
+
+![Category 3 Image](Type3.png)
+
+-----
+
+Note that the above categories represent a small subset of the kinds of images DREAM.3D can process.  In general, any kind of multi-dimensional data can be stored and analyzed by DREAM.3D.
 
 ## Parameters ##
+See Description
 
-
-| Name             |  Type  |
-|------------------|--------|
-| Feature Array Name | String |
-
-
-## Required DataContainers ##
-
-Voxel
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
-
-
 None
 
-
 ## Created Arrays ##
-
-| Type | Default Array Name | Description | Comment |
-|------|--------------------|-------------|---------|
-| Int  | User Defined       | ....        | other   |
-
-
-
-## Authors ##
-
-
-**Contact Info** dream3d@bluequartz.net
-
-**Version** 1.0.0
-
-**License**  See the License.txt file that came with DREAM3D.
-
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|------|----------------------|-------------|
+| Cell  | ImageData | UInt8 | (n) | **Attribute Array** for the imported image data. The dimensionality of the array depends on the kind of image read: (1) for grayscale, (3) for RGB, and (4) for ARGB |
 
 
 ## License & Copyright ##

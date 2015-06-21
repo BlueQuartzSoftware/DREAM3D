@@ -37,20 +37,15 @@
 #ifndef _MultiEmmpmFilter_H_
 #define _MultiEmmpmFilter_H_
 
-
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 #include "EMMPMFilter.h"
 
 /**
-* @class MultiEmmpmFilter MultiEmmpmFilter.h EMMPM/MultiEmmpmFilters/MultiEmmpmFilter.h
-* @brief
-* @author
-* @date
-* @version 1.0
-*/
+ * @brief The MultiEmmpmFilter class. See [Filter documentation](@ref multiemmpmfilter) for details.
+ */
 class MultiEmmpmFilter : public EMMPMFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */

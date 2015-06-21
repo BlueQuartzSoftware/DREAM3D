@@ -33,24 +33,16 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+
 #ifndef _WriteImages_H_
 #define _WriteImages_H_
-
-#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-
-#include "ImageIO/ImageIOConstants.h"
 
 /**
- * @class WriteImages WriteImages.h /IOFilters/WriteImages.h
- * @brief
- * @author
- * @date
- * @version 1.0
+ * @brief The WriteImages class. See [Filter documentation](@ref writeimages) for details.
  */
 class WriteImages : public AbstractFilter
 {
@@ -139,14 +131,14 @@ class WriteImages : public AbstractFilter
     virtual void preflight();
 
     /**
-     * @brief saveImage This will do the actual saving of the data to an Image on the disk
+     * @brief saveImage Saves the data to an image on the disk
      * @param slice The axis on which the slicing occurs
      * @param dA Dimensions of one axis of the plane
      * @param dB Dimensions of the second axis of the plane
      * @param dims Array of the 3 dimensions
-     * @return
+     * @return Integer error values
      */
-    int saveImage(size_t slice, size_t dB, size_t dA, size_t* dims);
+    int32_t saveImage(size_t slice, size_t dB, size_t dA, size_t* dims);
 
   signals:
     /**

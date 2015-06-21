@@ -37,19 +37,14 @@
 #ifndef _EMMPMFilter_H_
 #define _EMMPMFilter_H_
 
-
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 #include "EMMPMLib/Core/EMMPM_Constants.h"
 
 /**
- * @class EMMPMFilter EMMPMFilter.h EMMPM/EMMPMFilters/EMMPMFilter.h
- * @brief
- * @author
- * @date
- * @version 1.0
+ * @brief The EMMPMFilter class. See [Filter documentation](@ref emmpmfilter) for details.
  */
 class EMMPMFilter : public AbstractFilter
 {
@@ -185,7 +180,8 @@ class EMMPMFilter : public AbstractFilter
     void dataCheck();
 
     /**
-     * @brief segment
+     * @brief segment Performs the EMMPM segmentation routine
+     * @param initType Enumeration of EMMPM initialization types
      */
     virtual void segment(EMMPM_InitializationType initType);
 

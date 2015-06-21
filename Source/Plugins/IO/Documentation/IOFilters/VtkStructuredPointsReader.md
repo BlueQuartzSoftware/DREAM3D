@@ -1,11 +1,13 @@
-VTK Structured Points Reader  {#vtkstructuredpointsreader}
+VTK STRUCTURED_POINTS Reader  {#vtkstructuredpointsreader}
 ============
 
 ## Group (Subgroup) ##
 IO (Input)
 
 ## Description ##
-This Filter reads an _STRUCTURED POINTS_ type of 3D array from a legacy .vtk file. The currently supported VTK dataset attribute types are SCALARS and VECTORS. Other dataset attributes will not be read correctly and may cause issues when running the Filter. The VTK data must be _POINT DATA_ and/or _CELL DATA_ and can be either binary or ASCII. The Filter will create a new **Data Container** with an **Image** Geometry along with the necessary types of **Attribute Matrix** depending on what type of data is being read.
+This Filter reads a _STRUCTURED_POINTS_ type of 3D array from a legacy .vtk file. A _STRUCTURED_POINTS_ file is a more general type of **Image** geometry where data can be stored at the vertices of each voxel. The currently supported VTK dataset attribute types are SCALARS and VECTORS. Other dataset attributes will not be read correctly and may cause issues when running the Filter. The VTK data must be _POINT_DATA_ and/or _CELL_DATA_ and can be either binary or ASCII. The Filter will create a new **Data Container** with an **Image** geometry for each of the types of data (i.e., _POINT_DATA_ and/or _CELL_DATA_) selected to be read, along with a **Cell Attribute Matrix** to hold the imported data.
+
+*Note:* In a _STRUCTURED_POINTS_ file, _POINT_DATA_ lies on the vertices of each unit element voxel (i.e., eight values per voxel), while _CELL_DATA_ lies at the voxel center.  This Filter will import *both* types of data as **Image** geometries, since either form a structured rectilinear grid.  This is to enable easier visualization of the _POINT_DATA_, and to enable greater flexibility when using DREAM.3D analysis tools, many of which rely on an **Image** geometry.
 
 ### Example Input ###
 
@@ -31,13 +33,13 @@ This Filter reads an _STRUCTURED POINTS_ type of 3D array from a legacy .vtk fil
 ## Parameters ##
 | Name | Type | Description |
 |------|------|-------------|
-| Input VVTK File | File Path | Input .vtk file path |
+| Input VTK File | File Path | Input .vtk file path |
 | Read Point Data | Boolean | Whether the read point data from the .vtk file |
-| Read Cell Data | Boolean | Whether the read point data from the .vtk file |
+| Read Cell Data | Boolean | Whether the read cell data from the .vtk file |
 | Point Data Data Container | String | Created **Data Container** name. Only needed if _Read Point Data_ is checked |
-| Vertex Attribute Matrix | String | Created **Vertex Attribute Matrix** name. Only needed if _Read Point Data_ is checked |
+| Point Data Attribute Matrix | String | Created **Vertex Attribute Matrix** name. Only needed if _Read Point Data_ is checked |
 | Cell Data Data Container | String | Created **Data Container** name. Only needed if _Read Cell Data_ is checked |
-| Cell Attribute Matrix | String | Created **Cell Attribute Matrix** name. Only needed if _Read Cell Data_ is checked |
+| Cell Data Attribute Matrix | String | Created **Cell Attribute Matrix** name. Only needed if _Read Cell Data_ is checked |
 
 ## Required Geometry ##
 Not Applicable

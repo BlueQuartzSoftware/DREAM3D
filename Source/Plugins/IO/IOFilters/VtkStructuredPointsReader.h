@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @brief The VtkStructuredPointsReader class. See [Filter documentation](@ref visualizegbcdgmt) for details.
+ * @brief The VtkStructuredPointsReader class. See [Filter documentation](@ref vtkstructuredpointsreader) for details.
  */
 class VtkStructuredPointsReader : public AbstractFilter
 {
@@ -159,54 +159,97 @@ class VtkStructuredPointsReader : public AbstractFilter
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
-    /**
-     * @brief Reads the VTK header and sets the values that are described in the header
-     * @return Error Condition. Negative is Error.
-     */
-    int readHeader();
 
     /**
-     * @brief
-     * @return Error Condition. Negative is Error.
+     * @brief readHeader Reads the .vtk file header ; CURRENTLY NOT IMPLEMENTED
+     * @return Integer error value
      */
-    virtual int readFile();
+    int32_t readHeader();
 
     /**
-     * @brief readData
-     * @param instream
+     * @brief readFile Handles the main reading of the .vtk file
+     * @return Integer error value
+     */
+    virtual int32_t readFile();
+
+    /**
+     * @brief readData Reads a section of data from the .vtk file
+     * @param instream Incoming file stream
      */
     virtual void readData(std::istream& instream);
 
     /**
-     *
-     * @param input
-     * @param value
-     * @return Error Condition. Negative is Error.
+     * @brief parseCoordinateLine Parses a line representing coordinates
+     * @param input Incoming line to parse
+     * @param value Coordinate value
+     * @return Integer error value
      */
-    int parseCoordinateLine(const char* input, size_t& value);
+    int32_t parseCoordinateLine(const char* input, size_t& value);
 
     /**
-      * @brief Parses the byte size from a data set declaration line
-      * @param text
-      * @return
+      * @brief parseByteSize Parses the byte size from a data set declaration line
+      * @param text Line to parse
+      * @return Integer error value
       */
     size_t parseByteSize(QString text);
 
     /**
-     * @brief VtkStructuredPointsReader::readLine
-     * @param in
-     * @param result
-     * @return
+     * @brief readLine Reads a line from the .vtk file
+     * @param in Incoming file stream
+     * @param result Char pointer to store line
+     * @param length Length of line
+     * @return Integer error value
      */
-    int readLine(std::istream& in, char* result, size_t length);
-    int readString(std::istream& in, char* result, size_t length);
+    int32_t readLine(std::istream& in, char* result, size_t length);
+
+    /**
+     * @brief readString Reas a string from the .vtk file
+     * @param in Incoming file stream
+     * @param result Char pointer to store string
+     * @param length Length of string
+     * @return Integer error value
+     */
+    int32_t readString(std::istream& in, char* result, size_t length);
+
+    /**
+     * @brief lowerCase Converts a string to lower case
+     * @param str Incoming string to convert
+     * @param len Length of string
+     * @return Integer error value
+     */
     char* lowerCase(char* str, const size_t len);
-    int readDataTypeSection(std::istream& in, int numPts, const std::string& nextKeyWord);
-    int readScalarData(std::istream& in, int count);
-    int readVectorData(std::istream& in, int count);
-    int ReadScalarData(std::istream& in, int numPts);
-    int ReadVectorData(std::istream& in, int numPts);
-    int DecodeString(char* resname, const char* name);
+
+    /**
+     * @brief readDataTypeSection Determines the type of data to be read from the .vtk file
+     * @param in Incoming file stream
+     * @param numPts Number of points to read
+     * @param nextKeyWord Keyword for data type
+     * @return Integer error value
+     */
+    int32_t readDataTypeSection(std::istream& in, int numPts, const std::string& nextKeyWord);
+
+    /**
+     * @brief readScalarData Reads scalar data attribute types
+     * @param in Incoming file stream
+     * @return Integer error value
+     */
+    int32_t readScalarData(std::istream& in, int numPts);
+
+    /**
+     * @brief readVectorData Reads vector data attribute types
+     * @param in Incoming file stream
+     * @param numPts Number of points
+     * @return Integer error value
+     */
+    int32_t readVectorData(std::istream& in, int numPts);
+
+    /**
+     * @brief DecodeString Decodes a binary string from the .vtk file
+     * @param resname Resulting decoded string
+     * @param name Binary string to decode
+     * @return Integer error value
+     */
+    int32_t DecodeString(char* resname, const char* name);
 
   private:
     AttributeMatrix::Pointer m_CurrentAttrMat;

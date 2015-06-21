@@ -36,11 +36,7 @@
 
 #include "MultiEmmpmFilter.h"
 
-#include <QtCore/QString>
-#include <QRgb>
-
 #include "EMMPM/EMMPMConstants.h"
-
 #include "EMMPM/EMMPMLib/EMMPMLib.h"
 #include "EMMPM/EMMPMLib/Common/EMTime.h"
 #include "EMMPM/EMMPMLib/Common/EMMPM_Math.h"
@@ -59,7 +55,7 @@
 // -----------------------------------------------------------------------------
 MultiEmmpmFilter::MultiEmmpmFilter() :
 EMMPMFilter(),
-m_OutputAttributeMatrixName("EMMPM Output"),
+m_OutputAttributeMatrixName("MultiArrayEMMPMOutput"),
 m_OutputArrayPrefix("Segmented_"),
 m_UsePreviousMuSigma(true)
 {
@@ -79,11 +75,9 @@ MultiEmmpmFilter::~MultiEmmpmFilter()
 void MultiEmmpmFilter::setupFilterParameters()
 {
   FilterParameterVector parameters = getFilterParameters();
-
   parameters.push_back(FilterParameter::New("Use Mu/Sigma from Previous Image as Initialization for Current Image", "UsePreviousMuSigma", FilterParameterWidgetType::BooleanWidget, getUsePreviousMuSigma(), FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Output ArrayName Prefix", "OutputArrayPrefix", FilterParameterWidgetType::StringWidget, getOutputArrayPrefix(), FilterParameter::Parameter));
-
-  parameters[0] = MultiDataArraySelectionFilterParameter::New("Select Input Data Arrays", "InputDataArrayVector", FilterParameterWidgetType::MultiDataArraySelectionWidget, getInputDataArrayVector(), FilterParameter::RequiredArray);
+  parameters.push_back(FilterParameter::New("Output Array Name Prefix", "OutputArrayPrefix", FilterParameterWidgetType::StringWidget, getOutputArrayPrefix(), FilterParameter::Parameter));
+  parameters[0] = MultiDataArraySelectionFilterParameter::New("Select Input Attribute Arrays", "InputDataArrayVector", FilterParameterWidgetType::MultiDataArraySelectionWidget, getInputDataArrayVector(), FilterParameter::RequiredArray);
 
   // Look for the OutputDataArrayPath and replace with our OutputAttributeMatrixName instead
   for ( qint32 i = 0; i < parameters.size(); i++ )
@@ -91,7 +85,7 @@ void MultiEmmpmFilter::setupFilterParameters()
     FilterParameter::Pointer& p = parameters[i];
     if ( p->getPropertyName().compare("OutputDataArrayPath") == 0 )
     {
-        parameters[i] = FilterParameter::New("Output Attribute Matrix Name", "OutputAttributeMatrixName", FilterParameterWidgetType::StringWidget, getOutputAttributeMatrixName(), FilterParameter::CreatedArray);
+        parameters[i] = FilterParameter::New("Output Cell Attribute Matrix Name", "OutputAttributeMatrixName", FilterParameterWidgetType::StringWidget, getOutputAttributeMatrixName(), FilterParameter::CreatedArray);
     }
   }
 
@@ -159,7 +153,9 @@ void MultiEmmpmFilter::dataCheck()
 
   if (DataArrayPath::ValidateVector(getInputDataArrayVector()) == false)
   {
-    // Throw error?
+    setErrorCondition(-62000);
+    QString ss = QObject::tr("All Attribute Arrays must belong to the same Data Container and Attribute Matrix");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   QVector<size_t> cDims(1, 1); // We need a single component, gray scale image
@@ -183,89 +179,60 @@ void MultiEmmpmFilter::dataCheck()
 
  #endif
 
-  if(getOutputArrayPrefix().isEmpty())
+  if (getOutputArrayPrefix().isEmpty())
   {
     setErrorCondition(-62002);
-    QString message = QObject::tr("Using a Prefix (even a single Alpha-Numeric Value) is needed so that the output XDMF files can be written correctly.");
+    QString message = QObject::tr("Using a prefix (even a single alphanumeric value) is required so that the output Xdmf files can be written correctly");
     notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
   }
 
   if (getInputDataArrayVector().isEmpty())
   {
     setErrorCondition(-62003);
-    QString message = QObject::tr("You must select at least one data array as input for this filter.");
-    notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
-    return;
-  }
-
-  bool vResult = DataArrayPath::ValidateVector(getInputDataArrayVector());
-
-  if (vResult == false)
-  {
-    setErrorCondition(-62004);
-    QString message = QObject::tr("You have selected data arrays from different attribute matrices.  Please select data arrays from the same attribute matrix.");
+    QString message = QObject::tr("At least one Attribute Array must be selected");
     notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
     return;
   }
 
   DataArrayPath inputAMPath = DataArrayPath::GetAttributeMatrixPath(getInputDataArrayVector());
 
-  // Make sure the Data Container exists
-  DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(inputAMPath.getDataContainerName());
-  if(NULL == dc.get())
-  {
-    return;
-  }
-
-  // Make sure the input AttributeMatrix exists
-  AttributeMatrix::Pointer inAM = dc->getPrereqAttributeMatrix<AbstractFilter>(this, inputAMPath.getAttributeMatrixName(), 10000);
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
+  AttributeMatrix::Pointer inAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, inputAMPath, -301);
+  if(getErrorCondition() < 0 || NULL == inAM.get()) { return; }
 
   // Now create our output attributeMatrix which will contain all of our segmented images
   QVector<size_t> tDims = inAM->getTupleDimensions();
   AttributeMatrix::Pointer outAM = getDataContainerArray()->getDataContainer(inputAMPath.getDataContainerName())->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
-
+  if(getErrorCondition() < 0 || NULL == outAM.get()) { return; }
 
   // Get the list of checked array names from the input data arrays list
   QList<QString> arrayNames = DataArrayPath::GetDataArrayNames(getInputDataArrayVector());
 
-  for ( int i = 0; i < arrayNames.size(); i++ )
+  for (int32_t i = 0; i < arrayNames.size(); i++ )
   {
-  QString daName = arrayNames.at(i);
-  QString newName = getOutputArrayPrefix() + arrayNames.at(i);
-  inputAMPath.setDataArrayName(daName);
+    QString daName = arrayNames.at(i);
+    QString newName = getOutputArrayPrefix() + arrayNames.at(i);
+    inputAMPath.setDataArrayName(daName);
 
-  getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, inputAMPath, cDims);
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
+    getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, inputAMPath, cDims);
+    if (getErrorCondition() < 0) { return; }
 
-  outAM->createAndAddAttributeArray<UInt8ArrayType, AbstractFilter, uint8_t>(this, newName, 0, cDims);
+    outAM->createAndAddAttributeArray<UInt8ArrayType, AbstractFilter, uint8_t>(this, newName, 0, cDims);
   }
 
   // The EM/MPM Library has a hard coded MAX Classes of 16
   if (getNumClasses() > 15)
   {
     setErrorCondition(-62000);
-    QString ss = QObject::tr("The Maximum number of classes is 15");
+    QString ss = QObject::tr("The maximum number of classes is 15");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   // It does not make any sense if we want anything less than 2 classes
   if (getNumClasses() < 2)
   {
     setErrorCondition(-62001);
-    QString ss = QObject::tr("The Minimum number of classes is 2");
+    QString ss = QObject::tr("The minimum number of classes is 2");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -287,12 +254,9 @@ void MultiEmmpmFilter::preflight()
 // -----------------------------------------------------------------------------
 void MultiEmmpmFilter::execute()
 {
-  // typically run your dataCheck function to make sure you can get that far and all your variables are initialized
-  dataCheck();
-  // Check to make sure you made it through the data check. Errors would have been reported already so if something
-  // happens to fail in the dataCheck() then we simply return
-  if (getErrorCondition() < 0) { return; }
   setErrorCondition(0);
+  dataCheck();
+  if (getErrorCondition() < 0) { return; }
 
   DataArrayPath inputAMPath = DataArrayPath::GetAttributeMatrixPath(getInputDataArrayVector());
 
@@ -300,7 +264,7 @@ void MultiEmmpmFilter::execute()
   QListIterator<QString> iter(arrayNames);
 
   QString msgPrefix = getMessagePrefix();
-  int i = 1;
+  int32_t i = 1;
   // This is the routine that sets up the EM/MPM to segment the image
   while (iter.hasNext())
   {
@@ -314,7 +278,7 @@ void MultiEmmpmFilter::execute()
     arrayPath.setAttributeMatrixName(getOutputAttributeMatrixName());
     QString outName = getOutputArrayPrefix() + arrayPath.getDataArrayName();
     arrayPath.setDataArrayName(outName);
-    // Remove the array if it already exists
+    // Remove the array if it already exists ; this would be very strange but check for it anyway
     getDataContainerArray()->getAttributeMatrix(arrayPath)->removeAttributeArray(outName);
     setOutputDataArrayPath(arrayPath);
 
@@ -330,16 +294,15 @@ void MultiEmmpmFilter::execute()
     }
 
     EMMPMFilter::execute();
-    if ( getErrorCondition() < 0 ) { break; }
+    if (getErrorCondition() < 0) { break; }
     i++;
 
-    if ( getCancel() ) { break; }
+    if (getCancel()) { break; }
   }
 
-  /* If some error occurs this code snippet can report the error up the call chain*/
   if (getErrorCondition() < 0)
   {
-    QString ss = QObject::tr("There was a generic error running the EMMPM Segmentation Filter. Please contact the developers.");
+    QString ss = QObject::tr("Error occurred running the EM/MPM algorithm");
     setErrorCondition(-60009);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
@@ -352,62 +315,48 @@ void MultiEmmpmFilter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MultiEmmpmFilter::getCompiledLibraryName()
+AbstractFilter::Pointer MultiEmmpmFilter::newFilterInstance(bool copyFilterParameters)
 {
-  return EMMPMConstants::EMMPMBaseName;
+  MultiEmmpmFilter::Pointer filter = MultiEmmpmFilter::New();
+  if (true == copyFilterParameters)
+  {
+  DREAM3D_COPY_INSTANCEVAR(InputDataArrayVector)
+  DREAM3D_COPY_INSTANCEVAR(NumClasses)
+  DREAM3D_COPY_INSTANCEVAR(ExchangeEnergy)
+  DREAM3D_COPY_INSTANCEVAR(HistogramLoops)
+  DREAM3D_COPY_INSTANCEVAR(SegmentationLoops)
+  DREAM3D_COPY_INSTANCEVAR(UseSimulatedAnnealing)
+  DREAM3D_COPY_INSTANCEVAR(UseGradientPenalty)
+  DREAM3D_COPY_INSTANCEVAR(GradientPenalty)
+  DREAM3D_COPY_INSTANCEVAR(UseCurvaturePenalty)
+  DREAM3D_COPY_INSTANCEVAR(CurvaturePenalty)
+  DREAM3D_COPY_INSTANCEVAR(RMax)
+  DREAM3D_COPY_INSTANCEVAR(EMLoopDelay)
+  DREAM3D_COPY_INSTANCEVAR(OutputAttributeMatrixName)
+  }
+  return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MultiEmmpmFilter::getCompiledLibraryName()
+{ return EMMPMConstants::EMMPMBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString MultiEmmpmFilter::getGroupName()
-{
-  return "Segmentation";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString MultiEmmpmFilter::getHumanLabel()
-{
-  return "MultiArray EMMPM Segmentation";
-}
+{ return DREAM3D::FilterGroups::ReconstructionFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString MultiEmmpmFilter::getSubGroupName()
-{
-  return "EMMPM";
-}
-
+{ return DREAM3D::FilterSubGroups::SegmentationFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer MultiEmmpmFilter::newFilterInstance(bool copyFilterParameters)
-{
-  /*
-  * write code to optionally copy the filter parameters from the current filter into the new instance
-  */
-  MultiEmmpmFilter::Pointer filter = MultiEmmpmFilter::New();
-  if (true == copyFilterParameters)
-  {
-  DREAM3D_COPY_INSTANCEVAR(InputDataArrayVector)
-    DREAM3D_COPY_INSTANCEVAR(NumClasses)
-    DREAM3D_COPY_INSTANCEVAR(ExchangeEnergy)
-    DREAM3D_COPY_INSTANCEVAR(HistogramLoops)
-    DREAM3D_COPY_INSTANCEVAR(SegmentationLoops)
-    DREAM3D_COPY_INSTANCEVAR(UseSimulatedAnnealing)
-    DREAM3D_COPY_INSTANCEVAR(UseGradientPenalty)
-    DREAM3D_COPY_INSTANCEVAR(GradientPenalty)
-    DREAM3D_COPY_INSTANCEVAR(UseCurvaturePenalty)
-    DREAM3D_COPY_INSTANCEVAR(CurvaturePenalty)
-    DREAM3D_COPY_INSTANCEVAR(RMax)
-    DREAM3D_COPY_INSTANCEVAR(EMLoopDelay)
-    DREAM3D_COPY_INSTANCEVAR(OutputAttributeMatrixName)
-
-  }
-  return filter;
-}
-
+const QString MultiEmmpmFilter::getHumanLabel()
+{ return "Multi-Array EM/MPM"; }

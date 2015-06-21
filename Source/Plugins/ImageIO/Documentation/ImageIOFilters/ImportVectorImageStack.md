@@ -1,8 +1,8 @@
 Import Image Stack Filter {#importvectorimagestack}
-======
+=============
 
 ## Group (Subgroup) ##
-Image Import Filters (Input)
+IO (Input)
 
 
 ## Description ##

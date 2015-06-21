@@ -36,11 +36,7 @@
 
 #include "EMMPMFilter.h"
 
-#include <QtCore/QString>
-#include <QRgb>
-
 #include "EMMPM/EMMPMConstants.h"
-
 #include "EMMPM/EMMPMLib/EMMPMLib.h"
 #include "EMMPM/EMMPMLib/Common/EMTime.h"
 #include "EMMPM/EMMPMLib/Common/EMMPM_Math.h"
@@ -50,6 +46,7 @@
 #include "EMMPM/EMMPMLib/Core/InitializationFunctions.h"
 #include "EMMPM/EMMPMLib/Core/EMMPMUtilities.h"
 
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
@@ -60,7 +57,7 @@
 // -----------------------------------------------------------------------------
 EMMPMFilter::EMMPMFilter() :
   AbstractFilter(),
-  m_InputDataArrayPath(),
+  m_InputDataArrayPath("", "", ""),
   m_NumClasses(4),
   m_ExchangeEnergy(0.5f),
   m_HistogramLoops(5),
@@ -70,7 +67,7 @@ EMMPMFilter::EMMPMFilter() :
   m_CurvaturePenalty(1.0f),
   m_RMax(15.0f),
   m_EMLoopDelay(1),
-  m_OutputDataArrayPath(),
+  m_OutputDataArrayPath("", "", ""),
   m_EmmpmInitType(EMMPM_Basic)
 {
   setupFilterParameters();
@@ -88,8 +85,7 @@ EMMPMFilter::~EMMPMFilter()
 void EMMPMFilter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
-  parameters.push_back(FilterParameter::New("Num Classes", "NumClasses", FilterParameterWidgetType::IntWidget, getNumClasses(), FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("Number of Classes", "NumClasses", FilterParameterWidgetType::IntWidget, getNumClasses(), FilterParameter::Parameter));
   parameters.push_back(FilterParameter::New("Exchange Energy", "ExchangeEnergy", FilterParameterWidgetType::DoubleWidget, getExchangeEnergy(), FilterParameter::Parameter));
   parameters.push_back(FilterParameter::New("Histogram Loops (EM)", "HistogramLoops", FilterParameterWidgetType::IntWidget, getHistogramLoops(), FilterParameter::Parameter));
   parameters.push_back(FilterParameter::New("Segmentation Loops (MPM)", "SegmentationLoops", FilterParameterWidgetType::IntWidget, getSegmentationLoops(), FilterParameter::Parameter));
@@ -103,11 +99,8 @@ void EMMPMFilter::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Curvature Penalty (Beta C)", "CurvaturePenalty", FilterParameterWidgetType::DoubleWidget, getCurvaturePenalty(), FilterParameter::Parameter));
   parameters.push_back(FilterParameter::New("R Max", "RMax", FilterParameterWidgetType::DoubleWidget, getRMax(), FilterParameter::Parameter));
   parameters.push_back(FilterParameter::New("EM Loop Delay", "EMLoopDelay", FilterParameterWidgetType::IntWidget, getEMLoopDelay(), FilterParameter::Parameter));
-
   parameters.push_back(FilterParameter::New("Select Input Array", "InputDataArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputDataArrayPath(), FilterParameter::RequiredArray));
-
   parameters.push_back(FilterParameter::New("Created Data Array", "OutputDataArrayPath", FilterParameterWidgetType::DataArrayCreationWidget, getOutputDataArrayPath(), FilterParameter::CreatedArray));
-
   setFilterParameters(parameters);
 }
 
@@ -130,7 +123,6 @@ void EMMPMFilter::readFilterParameters(AbstractFilterParametersReader* reader, i
   setRMax(reader->readValue("RMax", getRMax()));
   setEMLoopDelay(reader->readValue("EMLoopDelay", getEMLoopDelay()));
   setOutputDataArrayPath(reader->readDataArrayPath("OutputDataArrayPath", getOutputDataArrayPath()));
-
   reader->closeFilterGroup();
 }
 
@@ -141,8 +133,6 @@ int EMMPMFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-
-
   DREAM3D_FILTER_WRITE_PARAMETER(InputDataArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(NumClasses)
   DREAM3D_FILTER_WRITE_PARAMETER(ExchangeEnergy)
@@ -156,7 +146,6 @@ int EMMPMFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, i
   DREAM3D_FILTER_WRITE_PARAMETER(RMax)
   DREAM3D_FILTER_WRITE_PARAMETER(EMLoopDelay)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputDataArrayPath)
-
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -168,38 +157,29 @@ void EMMPMFilter::dataCheck()
 {
   setErrorCondition(0);
 
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getInputDataArrayPath().getDataContainerName());
+
   QVector<size_t> cDims(1, 1); // We need a single component, gray scale image
   m_InputImagePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getInputDataArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(NULL != m_InputImagePtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  {
-    m_InputImage = m_InputImagePtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() < 0) { return; }
-
-  ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getInputDataArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || NULL == image.get()) { return; }
+  { m_InputImage = m_InputImagePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   m_OutputImagePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, getOutputDataArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(NULL != m_OutputImagePtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  {
-    m_OutputImage = m_OutputImagePtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  { m_OutputImage = m_OutputImagePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-
-  if(getNumClasses() > 15)
+  if (getNumClasses() > 15)
   {
     setErrorCondition(-62000);
-    QString ss = QObject::tr("The Maximum number of classes is 15");
+    QString ss = QObject::tr("The maximum number of classes is 15");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  if(getNumClasses() < 2)
+  if (getNumClasses() < 2)
   {
     setErrorCondition(-62001);
-    QString ss = QObject::tr("The Minimum number of classes is 2");
+    QString ss = QObject::tr("The minimum number of classes is 2");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-
-
 }
 
 // -----------------------------------------------------------------------------
@@ -221,24 +201,12 @@ void EMMPMFilter::preflight()
 // -----------------------------------------------------------------------------
 void EMMPMFilter::execute()
 {
-  // typically run your dataCheck function to make sure you can get that far and all your variables are initialized
-  dataCheck();
-  // Check to make sure you made it through the data check. Errors would have been reported already so if something
-  // happens to fail in the dataCheck() then we simply return
-  if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
+  dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   // This is the routine that sets up the EM/MPM to segment the image
   segment(getEmmpmInitType());
-
-  /* If some error occurs this code snippet can report the error up the call chain*/
-  if(getErrorCondition() < 0)
-  {
-    QString ss = QObject::tr("Some error message");
-    setErrorCondition(-99999999);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
@@ -257,7 +225,7 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
   InitializationFunction::Pointer initFunction = BasicInitialization::New();
 
   // Set the initialization function based on the parameters
-  switch(data->initType)
+  switch (data->initType)
   {
     case EMMPM_ManualInit:
       initFunction = InitializationFunction::New();
@@ -275,15 +243,13 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
   data->emIterations = getHistogramLoops();
   data->mpmIterations = getSegmentationLoops();
 
-
-  for(int i = 0; i < data->classes; i++)
+  for (int32_t i = 0; i < data->classes; i++)
   {
-    int gray = 255 / (data->classes - 1);
+    int32_t gray = 255 / (data->classes - 1);
     // Generate a Gray Scale Color Table
     data->colorTable[i] = qRgb(i * gray, i * gray, i * gray);
     // Hard code the minimum variance to 4.5; This could be a user option.
     data->min_variance[i] = 4.5;
-
     // Do we know what w_gamma is?
     data->w_gamma[i] = i;
   }
@@ -307,7 +273,7 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
   data->r_max = getRMax();
   data->ccostLoopDelay = getEMLoopDelay();
 
-  //Assign our data array allocated input and output images into the EMMPM_Data class
+  // Assign our data array allocated input and output images into the EMMPM_Data class
   data->inputImage = m_InputImage;
   data->xt = m_OutputImage;
 
@@ -316,11 +282,11 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
 
   // If we are using the "Feedback" loop then we copy the previous Mu/Sigma values into the Mean/Variance
   // variables
-  if(data->initType == EMMPM_ManualInit)
+  if (data->initType == EMMPM_ManualInit)
   {
-    for(int i = 0; i < data->classes; i++)
+    for (int32_t i = 0; i < data->classes; i++)
     {
-      for(unsigned int d = 0; d < data->dims; d++)
+      for (uint32_t d = 0; d < data->dims; d++)
       {
         data->mean[i * data->dims + d] = m_PreviousMu[i * data->dims + d];
         data->variance[i * data->dims + d] = m_PreviousSigma[i * data->dims + d];
@@ -353,13 +319,13 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
   // into the initialization of the next Image to be Segmented
   m_PreviousMu.resize(getNumClasses() * data->dims);
   m_PreviousSigma.resize(getNumClasses() * data->dims);
-  if(0)
+  if (0)
   {
     std::cout << "--------------------------------------------------------------" << std::endl;
     for(std::vector<float>::size_type i = 0; i < getNumClasses(); i++)
     {
       std::cout << "Mu: " << data->mean[i] << " Variance: " << sqrtf(data->variance[i]) << std::endl;
-      for(unsigned int d = 0; d < data->dims; d++)
+      for (uint32_t d = 0; d < data->dims; d++)
       {
         m_PreviousMu[i * data->dims + d] = data->mean[i * data->dims + d];
         m_PreviousSigma[i * data->dims + d] = data->variance[i * data->dims + d];
@@ -369,65 +335,40 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
 
 }
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString EMMPMFilter::getCompiledLibraryName()
-{
-  return EMMPMConstants::EMMPMBaseName;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString EMMPMFilter::getGroupName()
-{
-  return "Segmentation";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString EMMPMFilter::getHumanLabel()
-{
-  return "EMMPM Segmentation";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString EMMPMFilter::getSubGroupName()
-{
-  return "EMMPM";
-}
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer EMMPMFilter::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * write code to optionally copy the filter parameters from the current filter into the new instance
-  */
   EMMPMFilter::Pointer filter = EMMPMFilter::New();
   if(true == copyFilterParameters)
   {
-    /* If the filter uses all the standard Filter Parameter Widgets you can probabaly get
-     * away with using this method to copy the filter parameters from the current instance
-     * into the new instance
-     */
     copyFilterParameterInstanceVariables(filter.get());
-    /* If your filter is using a lot of custom FilterParameterWidgets @see ReadH5Ebsd then you
-     * may need to copy each filter parameter explicitly plus any other instance variables that
-     * are needed into the new instance. Here is some example code from ReadH5Ebsd
-     */
-    //    DREAM3D_COPY_INSTANCEVAR(OutputFile)
-    //    DREAM3D_COPY_INSTANCEVAR(ZStartIndex)
-    //    DREAM3D_COPY_INSTANCEVAR(ZEndIndex)
-    //    DREAM3D_COPY_INSTANCEVAR(ZResolution)
   }
   return filter;
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EMMPMFilter::getCompiledLibraryName()
+{ return EMMPMConstants::EMMPMBaseName; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EMMPMFilter::getGroupName()
+{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EMMPMFilter::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::SegmentationFilters; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EMMPMFilter::getHumanLabel()
+{ return "EM/MPM"; }

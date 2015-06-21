@@ -33,23 +33,16 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+
 #ifndef _ImportImageStack_H_
 #define _ImportImageStack_H_
-
-#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
 
-#include "ImageIO/ImageIOConstants.h"
 /**
- * @class ImportImageStack ImportImageStack.h ImageIO/Code/ImageIOFilters/ImportImageStack.h
- * @brief
- * @author
- * @date
- * @version 1.0
+ * @brief The ImportImageStack class. See [Filter documentation](@ref importimagestack) for details.
  */
 class ImportImageStack : public AbstractFilter
 {
@@ -63,6 +56,7 @@ class ImportImageStack : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
     Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+
     DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
     Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
@@ -161,7 +155,6 @@ class ImportImageStack : public AbstractFilter
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
-
 
   private:
     DEFINE_DATAARRAY_VARIABLE(uint8_t, ImageData)

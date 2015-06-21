@@ -1,65 +1,43 @@
-Multi-EMMPM {#multiemmpmfilter}
-=====
+Multi-Array EM/MPM {#multiemmpmfilter}
+=============
 
 ## Group (Subgroup) ##
-Filter Group (Filter Subgroup)
-
+Reconstruction (Segmentation)
 
 ## Description ##
-This filter performs the EM/MPM algorithm on an entire AttributeMatrix worth of DataArrays. The user needs to select the AttributeMatrix that contains the image data (8 bit, unsigned char only) data and the filter will perform EM/MPM on each data array. The segmented images will be stored into a newly created AttributeMatrix where the name of each output array will be the a user defined **prefix** + the original name of the input array.
+This Filter performs the EM/MPM algorithm on a selected number of **Atribute Arrays**, representing grayscale images, that all belong to the same **Cell Attribute Matrix**. The user may select any number of **Attribute Arrays** to segment.  The _Select/Deselect All_  button can used to automatically select all **Attribute Arrays** in a given **Attribute Matrix**. The segmented images will be stored into a newly created **Cell Attribute Matrix** where the name of each output array will be the a user defined _prefix_ plus the original name of the input array. For information regarding the operation of the EM/MPM algorithm and the meaning of the parameters, please refer to the documentation for the [EM/MPM](EMMPMFilter.html "") Filter.
 
-The filter author highly recommends reading the original paper on the subject to gain an understanding of the values for the input parameters.
-
-There is also an option to use the last Mu (mean) and Sigma (variance) values calculated on the current array as the initialization values for the next data array to process. Using this can help the EM/MPM algorithm achieve subjectively "better" segmentations by starting the algorithm at values that should be close to the ending values. **NOTE** This option should _only_ be used if all of the images are similar to one another. Something like a montage/tiled data set or a 3D stack of images. If the input arrays are vastly different using this option can have negative effects on the accuracy of the final segmented images.
+This Filter contains an additional option to use the last Mu (mean) and Sigma (variance) values calculated on the current array as the initialization values for the next **Attribute Array** to process. Using this can help the EM/MPM algorithm achieve subjectively "better" segmentations by starting the algorithm at values that should be close to the ending values. This option should _only_ be used if all of the images are "similar" to one another (e.g., a montage/tiled data set or a 3D stack of images). If the input **Attribute Arrays** are qualitatively different, using this option can have negative effects on the accuracy of the final segmented images.
 
 ## Input Parameters ##
-
-| Name | Type | Description |
-|------|------| ----------- |
-| Input AttributeArrays | Strings | List of AttributeArrays to segment |
-| Num Classes | Integer | The number of Classes to segment the *image* into. | 
-| Exchange Energy | float | The **Exchange Energy** input | 
-| Histogram (EM) Loops | int | The number of Histogram loops to perform |
-| Segmentation (EMPM) Loops | int | The number of Segmentation loops |
-| Use Simulated Annealing | bool | Simulate an Annealing process |
-| Use Gradient Penalty | bool | Use a penalty to gradients when segmenting |
-| Gradient Penalty | float | The penalty to apply for gradients |
-| Use Curvature Penalty | bool | Use a penalty for curvature |
-| Curvature Penalty | float | The penalty to use for curvatures |
-| R Max | float | The max radius for the curvature penalty |
-| EM Loop Delay | int | The number of EM Loops to delay before applying the curvature penalty |
-
-
-## Output Parameters ##
-
-| Name | Type | Description |
-|------|------| ----------- |
-| Use Mu/Sigma as initializers | Bool |  |
-| Output AttributeMatrix Name | String | The name of the new output AttributeMatrix to create |
-| Output AttributeArray Name Prefix | String | A prefix to apply to each created output AttributeArray |
-
-
+| Name             | Type | Description |
+|------------------|------|-------------|
+| Number of Classes | Int | The number of classes in which to segment the image | 
+| Exchange Energy | Float | The value of the exchange energy | 
+| Histogram Loops (EM) | Int | The number of histogram loops (EM) to perform |
+| Segmentation Loops (MPM) | Int | The number of segmentation loops (MPM) to perform |
+| Use Simulated Annealing | Bool | Apply the simulated annealing process |
+| Use Gradient Penalty | Bool | Use a penalty to gradients when segmenting |
+| Gradient Penalty (Beta E) | Float | The penalty to apply for gradients. Only needed if _Use Gradient Penalty_ is checked |
+| Use Curvature Penalty | Bool | Use a penalty for curvature |
+| Curvature Penalty | Float | The penalty to use for curvatures. Only needed if _Use Curvature Penalty_ is checked |
+| R Max | Float | The max radius for the curvature penalty. Only needed if _Use Curvature Penalty_ is checked |
+| EM Loop Delay | Int | The number of EM Loops to delay before applying the curvature penalty. Only needed if _Use Curvature Penalty_ is checked |
+| Use Mu/Sigma from Previous Image as Initialization for Current Image | Bool | Whether to use the calculated mu/sigma from the previous segmented image as the starting point for the next image segmentation. May help reduce computation time |
+| Output Array Name Prefix | String | Prefix to apply to the output segmented arrays |
 
 ## Required Geometry ##
-
 Image / Rectilinear Grid
 
 ## Required Arrays ##
-
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
-| Unsigned 8 Bit Integers  | | uint 8 | (1)  | 8 Bit Grayscale images only |
-
+| Cell | None | UInt8 | (1)  | 8 bit grayscale images to segment. The user may select any number of arrays to segment |
 
 ## Created Arrays ##
-
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
-| Unsigned 8 Bit Integers  |  |  uint 8   | (1) | The value is the class that the specific point was segmented into |
-
-
-## Citations ##
-H. C. Chuang, M. L. Comer, and J. Simmons, “Texture Segmentation in Microstructure Images of Advanced Materials,” In Proceedings of the _2008 IEEE Southwest Symposium on Image Analysis and Interpretation_, March 24-26, 2008, Santa Fe, NM
+| Cell | None | UInt8 | (1) | Unsigned 8 bit array representing the value of the class that the **Cell** was segmented into. An output array is created for each segmented input array and placed in a new **Cell Attribute Matrix** that the user may name |
 
 ## License & Copyright ##
 

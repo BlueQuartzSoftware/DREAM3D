@@ -1,42 +1,35 @@
 Write Images {#writeimages}
-=====
+=============
 
 ## Group (Subgroup) ##
-
 IO (Output)
 
-
 ## Description ##
+This Filter will save images based on an array that represents grayscale, RGB or ARGB color values. If the input array represents a 3D volume, the Filter can output a series of slices along one of the orthogonal axes.  The options are to produce XY slices along the Z axis, XZ slices along the Y axis or YZ slices along the X axis. The user has the option to save in one of 3 standard image formats: TIF, BMP, or PNG. The user must define the folder to which the images are written and may define a file prefix for the saved images. The output files will be numbered sequentially starting at zero (0) and ending at the total dimensions for the chosen axis. For example, if the Z axis has 117 dimensions, 117 XY image files will be produced and numbered 0 to 116.
 
-This filter will save images based on an array that represents RGB, Gray Scale or RGBA color values for each slice in the data set. The options are to produce XY slices along the Z axis, XZ slices along the Y axis or YZ slices along the X axis. The user has the option to save in one of 3 standard image formats (Tif, BMP, PNG). The user should select the output directory and optionally enter a prefix that will be used when creating each output file by checking the File Prefix check box and entering an Image File Prefix. The output files will be numbered sequentially starting at Zero (0) and ending at the total dimensions for the axis. For example, if the Z axis has 117 dimensions, 117 XY image files will be produced and numbered 0 to 116.
+An example of a Filter that produces color data that can be used as input to this Filter is the [Generate IPF Colors](generateipfcolors.html) Filter, which will generate RGB values for each voxel in the volume.
 
-An example filter to run would be the [Generate IPF Colors](generateipfcolors.html) filter which will generate RGB values for each voxel in the volume.
-
-**NOTE** The saved image will be in RGBA format regardless of the initial input array. This means that Gray Scale images will be 4x the size of the original input data to the array.
+*Note:* The saved images will be in ARGB format regardless of the initial input array. This means that grayscale images will be four times the size of the original input data to the array.
 
 ## Parameters ##
-
 | Name             | Type | Description |
 |------------------|------|---------|
-| Image Format     | Integer | 0=tif, 1=bmp, 2=png |
-| Plane     | Integer | 0=XY, 1=XZ, 2=YZ |
-| File Prefix | Boolean | True=Add the prefix, False=Do NOT add the prefix |
+| Image Format | Enumeration | Selection for tif, bmp, or png image formats |
+| Plane | Enumeration | Selection for plane normal for writing the images (XY, XZ, or YZ) |
+| File Prefix | Boolean | Whether to add a prefix to the saved images |
 | Image File Prefix | String | String prefix to add to every image in addition to the slice index |
-| Output Path   | File Path | Where to save all the images. If the path does not exist, DREAM3D will try to create the path |
+| Output Directory Path | File Path | Output directory path for the saved images |
 
 ## Required Geometry ##
-Not Applicable
+Image / Rectilinear Grid
 
 ## Required Arrays ##
-
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| UInt8  | User Selected | UInt8 | Any | Select Color Data. The user selects a Voxel Cell Array that represents RGB, Gray Scale or RGBA color values for each voxel. The selected array should be a 1, 3, or 4 component array. It must be a Uint8 array |
+| Cell | None| UInt8 | (n) | Selected color data for output image. The data should represent grayscale, RGB or ARGB color values. The dimensionality of the array depends on the kind of image read: (1) for grayscale, (3) for RGB, and (4) for ARGB |
 
 ## Created Arrays ##
-
 None
-
 
 ## License & Copyright ##
 
