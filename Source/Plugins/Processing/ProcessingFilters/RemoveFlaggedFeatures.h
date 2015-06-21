@@ -157,8 +157,8 @@ class RemoveFlaggedFeatures : public AbstractFilter
   private:
     int32_t* m_Neighbors;
 
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, FlaggedFeatures)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(bool, FlaggedFeatures)
 
     RemoveFlaggedFeatures(const RemoveFlaggedFeatures&); // Copy Constructor Not Implemented
     void operator=(const RemoveFlaggedFeatures&); // Operator '=' Not Implemented

@@ -156,8 +156,8 @@ class FindSaltykovSizes : public AbstractFilter
     int round_to_nearest_int(T x);
 
   private:
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, EquivalentDiameters)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, SaltykovEquivalentDiameters)
+    DEFINE_DATAARRAY_VARIABLE(float, EquivalentDiameters)
+    DEFINE_DATAARRAY_VARIABLE(float, SaltykovEquivalentDiameters)
 
     FindSaltykovSizes(const FindSaltykovSizes&); // Copy Constructor Not Implemented
     void operator=(const FindSaltykovSizes&); // Operator '=' Not Implemented

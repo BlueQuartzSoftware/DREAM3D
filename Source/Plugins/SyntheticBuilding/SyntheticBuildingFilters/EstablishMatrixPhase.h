@@ -179,11 +179,11 @@ class EstablishMatrixPhase : public AbstractFilter
     float sizez;
     float totalvol;
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, NumFeatures)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, NumFeatures)
+    DEFINE_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
     StatsDataArray::WeakPointer m_StatsDataArray;
 
     /**

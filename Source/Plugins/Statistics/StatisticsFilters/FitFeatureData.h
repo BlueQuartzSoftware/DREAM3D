@@ -159,11 +159,11 @@ class FitFeatureData : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_IDATAARRAY_VARIABLE(InDataArray)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, BiasedFeatures)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_IDATAARRAY_VARIABLE(InDataArray)
+    DEFINE_DATAARRAY_VARIABLE(bool, BiasedFeatures)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, NewEnsembleArray)
+    DEFINE_DATAARRAY_VARIABLE(float, NewEnsembleArray)
 
     FitFeatureData(const FitFeatureData&); // Copy Constructor Not Implemented
     void operator=(const FitFeatureData&); // Operator '=' Not Implemented

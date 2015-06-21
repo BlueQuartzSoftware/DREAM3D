@@ -142,8 +142,8 @@ class FindBoundaryCells : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int8_t, BoundaryCells)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int8_t, BoundaryCells)
 
     FindBoundaryCells(const FindBoundaryCells&); // Copy Constructor Not Implemented
     void operator=(const FindBoundaryCells&); // Operator '=' Not Implemented

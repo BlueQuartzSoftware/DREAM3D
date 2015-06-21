@@ -82,7 +82,7 @@ class FindMisorientationVectorsImpl
           {
             QuaternionMathF::Copy(m_Quats[m_Neighbors[3 * i + j]], q2);
             QuaternionMathF::Conjugate(q2);
-			      QuaternionMathF::Multiply(q1, q2, delq);
+            QuaternionMathF::Multiply(q1, q2, delq);
             m_OrientationOps[1]->getFZQuat(delq);
             QuaternionMathF::GetMisorientationVector(delq, misoVec);
             m_MisoVecs[3 * m_FaceIds[3 * i + j] + 0] = misoVec[0];
@@ -116,12 +116,9 @@ FindOrientationFieldCurl::FindOrientationFieldCurl() :
   m_CrystalStructuresArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
   m_QuatsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Quats),
   m_DislocationTensorsArrayName(DREAM3D::CellData::DislocationTensors),
-  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
   m_DislocationTensors(NULL),
-  m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_Quats(NULL),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();

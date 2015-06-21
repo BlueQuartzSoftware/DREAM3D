@@ -165,12 +165,12 @@ class QuickSurfaceMesh : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FaceLabels)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int8_t, NodeTypes)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FacePhases)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FaceLabels)
+    DEFINE_DATAARRAY_VARIABLE(int8_t, NodeTypes)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FacePhases)
 
     /**
      * @brief updateFaceInstancePointers Updates raw Face pointers

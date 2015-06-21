@@ -94,7 +94,6 @@ void FindBoundingBoxFeatures::readFilterParameters(AbstractFilterParametersReade
   reader->openFilterGroup(this, index);
   setCalcByPhase(reader->readValue("CalcByPhase", getCalcByPhase()));
   setPhasesArrayPath(reader->readDataArrayPath("PhasesArrayPath", getPhasesArrayPath()));
-  setPhasesArrayName(reader->readString("PhasesArrayName", getPhasesArrayName() ) );
   setBiasedFeaturesArrayName(reader->readString("BiasedFeaturesArrayName", getBiasedFeaturesArrayName() ) );
   setSurfaceFeaturesArrayPath(reader->readDataArrayPath("SurfaceFeaturesArrayPath", getSurfaceFeaturesArrayPath() ) );
   setCentroidsArrayPath(reader->readDataArrayPath("CentroidsArrayPath", getCentroidsArrayPath() ) );
@@ -110,7 +109,6 @@ int FindBoundingBoxFeatures::writeFilterParameters(AbstractFilterParametersWrite
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CalcByPhase)
   DREAM3D_FILTER_WRITE_PARAMETER(PhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(PhasesArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(BiasedFeaturesArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceFeaturesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(CentroidsArrayPath)

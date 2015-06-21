@@ -62,13 +62,9 @@ FindDirectionalModuli::FindDirectionalModuli() :
   m_AvgQuatsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
   m_DirectionalModuliArrayName("DirectionalModuli"),
   m_DirectionalModuli(NULL),
-  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
-  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_AvgQuats(NULL),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL),
-  m_CrystalCompliancesArrayName("CrystalCompliances"),
   m_CrystalCompliances(NULL)
 {
   m_LoadingDirection.x = 0.0f;
@@ -304,7 +300,7 @@ void FindDirectionalModuli::execute()
     {
       //concatenate rotation with crystal orientation (determine rotation from crystal frame to sample loading direction)
       QuaternionMathF::Copy(avgQuats[i], q1);
-	    QuaternionMathF::Multiply(q1, q2, qTotal);
+      QuaternionMathF::Multiply(q1, q2, qTotal);
 
       /*
       This method is straightforward but computationally very expensive/wasteful (since it computes the full rotated compliance matrix and we only need s'11)

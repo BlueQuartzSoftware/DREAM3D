@@ -161,7 +161,7 @@ class ErodeDilateBadData : public AbstractFilter
   private:
     int32_t* m_Neighbors;
 
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
     ErodeDilateBadData(const ErodeDilateBadData&); // Copy Constructor Not Implemented
     void operator=(const ErodeDilateBadData&); // Operator '=' Not Implemented

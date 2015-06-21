@@ -145,9 +145,9 @@ class FlattenImage : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint8_t, ImageData)
+    DEFINE_DATAARRAY_VARIABLE(uint8_t, ImageData)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(uint8_t, FlatImageData)
+    DEFINE_DATAARRAY_VARIABLE(uint8_t, FlatImageData)
 
     FlattenImage(const FlattenImage&); // Copy Constructor Not Implemented
     void operator=(const FlattenImage&); // Operator '=' Not Implemented

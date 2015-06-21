@@ -155,8 +155,8 @@ class FindBasalLoadingFactor : public AbstractFilter
 
   private:
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, BasalLoadingFactor)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
+    DEFINE_DATAARRAY_VARIABLE(float, BasalLoadingFactor)
+    DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
 
     FindBasalLoadingFactor(const FindBasalLoadingFactor&); // Copy Constructor Not Implemented
     void operator=(const FindBasalLoadingFactor&); // Operator '=' Not Implemented

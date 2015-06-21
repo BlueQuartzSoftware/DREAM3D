@@ -51,7 +51,6 @@ IdentifySample::IdentifySample() :
   AbstractFilter(),
   m_FillHoles(false),
   m_GoodVoxelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
-  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_GoodVoxels(NULL)
 {
   setupFilterParameters();

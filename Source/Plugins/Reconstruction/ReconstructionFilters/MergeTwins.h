@@ -164,14 +164,14 @@ class MergeTwins : public GroupFeatures
     void characterize_twins();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(bool, Active)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, CellParentIds)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureParentIds)
+    DEFINE_DATAARRAY_VARIABLE(bool, Active)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, CellParentIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureParentIds)
 
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 

@@ -165,10 +165,10 @@ class WriteStatsGenOdfAngleFile : public AbstractFilter
     int writeOutputFile(QTextStream& out, int32_t lineCount, int64_t totalPoints, int32_t phase);
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, GoodVoxels)
+    DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+    DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
 
     WriteStatsGenOdfAngleFile(const WriteStatsGenOdfAngleFile&); // Copy Constructor Not Implemented
     void operator=(const WriteStatsGenOdfAngleFile&); // Operator '=' Not Implemented

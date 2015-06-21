@@ -151,10 +151,10 @@ class FindBoundingBoxFeatures : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, Phases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Centroids)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, SurfaceFeatures)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(bool, BiasedFeatures)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, Phases)
+    DEFINE_DATAARRAY_VARIABLE(float, Centroids)
+    DEFINE_DATAARRAY_VARIABLE(bool, SurfaceFeatures)
+    DEFINE_DATAARRAY_VARIABLE(bool, BiasedFeatures)
 
     /**
      * @brief find_boundingboxfeatures Determines which Features are biased by the outer surface of a 3D volume.

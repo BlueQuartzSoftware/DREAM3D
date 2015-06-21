@@ -133,7 +133,7 @@ class SampleSurfaceMeshSpecifiedPoints : public SampleSurfaceMesh
     virtual void assign_points(Int32ArrayType::Pointer iArray);
 
   private:
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
     // number of specified points
     int64_t  m_NumPoints;

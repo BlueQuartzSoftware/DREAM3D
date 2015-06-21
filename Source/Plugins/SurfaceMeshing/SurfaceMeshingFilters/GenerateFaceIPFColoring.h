@@ -138,13 +138,13 @@ class GenerateFaceIPFColoring : public SurfaceMeshFilter
     void dataCheckVoxel();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
+    DEFINE_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(uint8_t, SurfaceMeshFaceIPFColors)
+    DEFINE_DATAARRAY_VARIABLE(uint8_t, SurfaceMeshFaceIPFColors)
 
     GenerateFaceIPFColoring(const GenerateFaceIPFColoring&); // Copy Constructor Not Implemented
     void operator=(const GenerateFaceIPFColoring&); // Operator '=' Not Implemented

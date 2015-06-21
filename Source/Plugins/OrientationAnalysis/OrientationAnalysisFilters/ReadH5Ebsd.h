@@ -99,6 +99,11 @@ class ReadH5Ebsd : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(AxisAngleInput_t, EulerTransformation)
     //-------------------------------------------------------
 
+    DREAM3D_INSTANCE_PROPERTY(QString, CrystalStructuresArrayName)
+    DREAM3D_INSTANCE_PROPERTY(QString, LatticeConstantsArrayName)
+    DREAM3D_INSTANCE_PROPERTY(QString, CellPhasesArrayName)
+    DREAM3D_INSTANCE_PROPERTY(QString, CellEulerAnglesArrayName)
+
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */
@@ -291,10 +296,10 @@ class ReadH5Ebsd : public AbstractFilter
     }
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, LatticeConstants)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
+    DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+    DEFINE_DATAARRAY_VARIABLE(float, LatticeConstants)
 
     StringDataArray::WeakPointer  m_MaterialNamesPtr;
 

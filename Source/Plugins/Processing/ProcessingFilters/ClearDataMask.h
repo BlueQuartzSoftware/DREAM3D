@@ -139,7 +139,7 @@ class ClearDataMask : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, Mask)
+    DEFINE_DATAARRAY_VARIABLE(bool, Mask)
 
     ClearDataMask(const ClearDataMask&); // Copy Constructor Not Implemented
     void operator=(const ClearDataMask&); // Operator '=' Not Implemented

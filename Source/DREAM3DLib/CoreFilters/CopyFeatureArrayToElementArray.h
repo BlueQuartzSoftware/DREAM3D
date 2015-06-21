@@ -145,8 +145,8 @@ class DREAM3DLib_EXPORT CopyFeatureArrayToElementArray : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_REQUIRED_IDATAARRAY_VARIABLE(InArray)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_IDATAARRAY_VARIABLE(InArray)
 
     CopyFeatureArrayToElementArray(const CopyFeatureArrayToElementArray&); // Copy Constructor Not Implemented
     void operator=(const CopyFeatureArrayToElementArray&); // Operator '=' Not Implemented

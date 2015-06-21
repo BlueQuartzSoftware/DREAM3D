@@ -161,11 +161,11 @@ class GenerateRodriguesColors : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(uint8_t, CellRodriguesColors)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, GoodVoxels)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
+    DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    DEFINE_DATAARRAY_VARIABLE(uint8_t, CellRodriguesColors)
+    DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
 
     GenerateRodriguesColors(const GenerateRodriguesColors&); // Copy Constructor Not Implemented
     void operator=(const GenerateRodriguesColors&); // Operator '=' Not Implemented

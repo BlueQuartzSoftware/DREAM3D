@@ -88,13 +88,14 @@ class GenerateFeatureIds : public AbstractFilter
       m_DataContainerName(DREAM3D::Defaults::DataContainerName),
       m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
       m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-      m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-      m_FeatureIds(NULL)
+      m_FeatureIds(NULL),
+      m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds)
     {
     }
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    QString m_FeatureIdsArrayName;
 
     void dataCheck()
     {

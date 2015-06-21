@@ -179,15 +179,15 @@ class FindSchmids : public AbstractFilter
   private:
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
+    DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, Schmids)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, Phis)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, Lambdas)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, Poles)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, SlipSystems)
+    DEFINE_DATAARRAY_VARIABLE(float, Schmids)
+    DEFINE_DATAARRAY_VARIABLE(float, Phis)
+    DEFINE_DATAARRAY_VARIABLE(float, Lambdas)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, Poles)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, SlipSystems)
 
     FindSchmids(const FindSchmids&); // Copy Constructor Not Implemented
     void operator=(const FindSchmids&); // Operator '=' Not Implemented

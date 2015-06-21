@@ -162,11 +162,11 @@ class FindFeatureNeighborCAxisMisalignments : public AbstractFilter
   private:
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+    DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, AvgCAxisMisalignments)
+    DEFINE_DATAARRAY_VARIABLE(float, AvgCAxisMisalignments)
 
     NeighborList<int32_t>::WeakPointer m_NeighborList;
     NeighborList<float>::WeakPointer m_CAxisMisalignmentList;

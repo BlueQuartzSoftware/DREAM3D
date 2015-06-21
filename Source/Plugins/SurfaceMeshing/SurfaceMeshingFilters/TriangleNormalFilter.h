@@ -118,7 +118,7 @@ class TriangleNormalFilter : public SurfaceMeshFilter
     void dataCheck();
 
   private:
-    DEFINE_CREATED_DATAARRAY_VARIABLE(double, SurfaceMeshTriangleNormals)
+    DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshTriangleNormals)
 
     TriangleNormalFilter(const TriangleNormalFilter&); // Copy Constructor Not Implemented
     void operator=(const TriangleNormalFilter&); // Operator '=' Not Implemented

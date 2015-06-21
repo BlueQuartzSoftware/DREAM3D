@@ -160,11 +160,11 @@ class FindNeighborhoods : public AbstractFilter
     void find_neighborhoods();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Centroids)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, EquivalentDiameters)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_DATAARRAY_VARIABLE(float, Centroids)
+    DEFINE_DATAARRAY_VARIABLE(float, EquivalentDiameters)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, Neighborhoods)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, Neighborhoods)
 
     NeighborList<int32_t>::WeakPointer m_NeighborhoodList;
 

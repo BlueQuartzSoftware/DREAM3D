@@ -156,7 +156,7 @@ class ChangeResolution : public AbstractFilter
      */
     void dataCheck();
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
     /**
      * @brief updateFeatureInstancePointers Updates raw cell pointers

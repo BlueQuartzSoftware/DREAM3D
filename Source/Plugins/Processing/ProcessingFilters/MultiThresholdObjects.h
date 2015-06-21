@@ -143,7 +143,7 @@ class MultiThresholdObjects : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_CREATED_DATAARRAY_VARIABLE(bool, Destination)
+    DEFINE_DATAARRAY_VARIABLE(bool, Destination)
 
     MultiThresholdObjects(const MultiThresholdObjects&); // Copy Constructor Not Implemented
     void operator=(const MultiThresholdObjects&); // Operator '=' Not Implemented

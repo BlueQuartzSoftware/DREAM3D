@@ -138,11 +138,11 @@ class  INLWriter : public FileWriter
     virtual int32_t writeFile();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, NumFeatures)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
+    DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, NumFeatures)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
     StringDataArray::WeakPointer m_MaterialNamePtr;

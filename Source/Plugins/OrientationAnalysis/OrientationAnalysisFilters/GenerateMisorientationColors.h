@@ -159,12 +159,12 @@ class GenerateMisorientationColors : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Quats)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, GoodVoxels)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_DATAARRAY_VARIABLE(float, Quats)
+    DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+    DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(uint8_t, MisorientationColor)
+    DEFINE_DATAARRAY_VARIABLE(uint8_t, MisorientationColor)
 
     GenerateMisorientationColors(const GenerateMisorientationColors&); // Copy Constructor Not Implemented
     void operator=(const GenerateMisorientationColors&); // Operator '=' Not Implemented

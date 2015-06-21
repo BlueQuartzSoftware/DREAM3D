@@ -157,13 +157,13 @@ class FindProjectedImageStatistics : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_IDATAARRAY_VARIABLE(InData)
+    DEFINE_IDATAARRAY_VARIABLE(InData)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, ProjectedImageMin)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, ProjectedImageMax)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, ProjectedImageAvg)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, ProjectedImageStd)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, ProjectedImageVar)
+    DEFINE_DATAARRAY_VARIABLE(float, ProjectedImageMin)
+    DEFINE_DATAARRAY_VARIABLE(float, ProjectedImageMax)
+    DEFINE_DATAARRAY_VARIABLE(float, ProjectedImageAvg)
+    DEFINE_DATAARRAY_VARIABLE(float, ProjectedImageStd)
+    DEFINE_DATAARRAY_VARIABLE(float, ProjectedImageVar)
 
     FindProjectedImageStatistics(const FindProjectedImageStatistics&); // Copy Constructor Not Implemented
     void operator=(const FindProjectedImageStatistics&); // Operator '=' Not Implemented

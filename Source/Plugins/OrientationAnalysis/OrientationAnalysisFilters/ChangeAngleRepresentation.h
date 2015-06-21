@@ -142,7 +142,7 @@ class ChangeAngleRepresentation : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
+    DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
 
     ChangeAngleRepresentation(const ChangeAngleRepresentation&); // Copy Constructor Not Implemented
     void operator=(const ChangeAngleRepresentation&); // Operator '=' Not Implemented

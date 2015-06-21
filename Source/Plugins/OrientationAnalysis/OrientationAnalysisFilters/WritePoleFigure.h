@@ -192,10 +192,10 @@ class WritePoleFigure : public AbstractFilter
     void writeImage(QImage image, QString label);
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, GoodVoxels)
+    DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+    DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
 
     WritePoleFigure(const WritePoleFigure&); // Copy Constructor Not Implemented
     void operator=(const WritePoleFigure&); // Operator '=' Not Implemented

@@ -167,7 +167,7 @@ class PhReader : public FileReader
   private:
     QScopedPointer<PhReaderPrivate> const d_ptr;
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     size_t m_Dims[3];
     FILE* m_InStream;
 

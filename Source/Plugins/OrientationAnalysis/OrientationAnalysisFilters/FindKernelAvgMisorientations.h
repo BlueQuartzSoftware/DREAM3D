@@ -158,12 +158,12 @@ class FindKernelAvgMisorientations : public AbstractFilter
   private:
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Quats)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_DATAARRAY_VARIABLE(float, Quats)
+    DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, KernelAverageMisorientations)
+    DEFINE_DATAARRAY_VARIABLE(float, KernelAverageMisorientations)
 
     FindKernelAvgMisorientations(const FindKernelAvgMisorientations&); // Copy Constructor Not Implemented
     void operator=(const FindKernelAvgMisorientations&); // Operator '=' Not Implemented

@@ -165,14 +165,14 @@ class FindTwinBoundarySchmidFactors : public AbstractFilter
   private:
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, SurfaceMeshTwinBoundary)
+    DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
+    DEFINE_DATAARRAY_VARIABLE(bool, SurfaceMeshTwinBoundary)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, SurfaceMeshTwinBoundarySchmidFactors)
+    DEFINE_DATAARRAY_VARIABLE(float, SurfaceMeshTwinBoundarySchmidFactors)
 
     /**
      * @brief dataCheckVoxel Checks for the appropriate parameter values and availability of arrays

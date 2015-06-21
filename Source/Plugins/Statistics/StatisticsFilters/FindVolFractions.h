@@ -141,9 +141,9 @@ class FindVolFractions : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, VolFractions)
+    DEFINE_DATAARRAY_VARIABLE(float, VolFractions)
 
     FindVolFractions(const FindVolFractions&); // Copy Constructor Not Implemented
     void operator=(const FindVolFractions&); // Operator '=' Not Implemented

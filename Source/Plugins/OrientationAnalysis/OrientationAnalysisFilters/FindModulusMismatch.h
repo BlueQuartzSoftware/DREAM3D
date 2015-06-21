@@ -159,9 +159,9 @@ class FindModulusMismatch : public AbstractFilter
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Moduli)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, SurfaceMeshDeltaModulus)
+    DEFINE_DATAARRAY_VARIABLE(float, Moduli)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_DATAARRAY_VARIABLE(float, SurfaceMeshDeltaModulus)
 
     /**
      * @brief dataCheckVoxel dataCheck Checks for the appropriate parameter values and availability of arrays

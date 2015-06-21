@@ -412,23 +412,23 @@ class InsertPrecipitatePhases : public AbstractFilter
     ShapeOps::Pointer m_EllipsoidOps;
     ShapeOps::Pointer m_SuperEllipsoidOps;
 
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int8_t, BoundaryCells)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_DATAARRAY_VARIABLE(int8_t, BoundaryCells)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, AxisEulerAngles)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, Centroids)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, AxisLengths)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, Volumes)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, Omega3s)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, EquivalentDiameters)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, NumCells)
+    DEFINE_DATAARRAY_VARIABLE(float, AxisEulerAngles)
+    DEFINE_DATAARRAY_VARIABLE(float, Centroids)
+    DEFINE_DATAARRAY_VARIABLE(float, AxisLengths)
+    DEFINE_DATAARRAY_VARIABLE(float, Volumes)
+    DEFINE_DATAARRAY_VARIABLE(float, Omega3s)
+    DEFINE_DATAARRAY_VARIABLE(float, EquivalentDiameters)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, NumCells)
     NeighborList<float>::WeakPointer m_ClusteringList;
 
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, ShapeTypes)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, NumFeatures)
+    DEFINE_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
+    DEFINE_DATAARRAY_VARIABLE(uint32_t, ShapeTypes)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, NumFeatures)
 
     int64_t* m_Neighbors;
     StatsDataArray::WeakPointer m_StatsDataArray;

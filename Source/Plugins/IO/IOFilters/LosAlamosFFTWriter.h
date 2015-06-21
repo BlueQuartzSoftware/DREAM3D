@@ -129,9 +129,9 @@ class  LosAlamosFFTWriter : public FileWriter
     virtual int32_t writeFile();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
 
     LosAlamosFFTWriter(const LosAlamosFFTWriter&); // Copy Constructor Not Implemented
     void operator=(const LosAlamosFFTWriter&); // Operator '=' Not Implemented

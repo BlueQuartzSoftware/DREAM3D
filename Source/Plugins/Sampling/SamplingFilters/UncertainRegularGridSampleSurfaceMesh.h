@@ -151,7 +151,7 @@ class UncertainRegularGridSampleSurfaceMesh : public SampleSurfaceMesh
     virtual void assign_points(Int32ArrayType::Pointer iArray);
 
   private:
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
     UncertainRegularGridSampleSurfaceMesh(const UncertainRegularGridSampleSurfaceMesh&); // Copy Constructor Not Implemented
     void operator=(const UncertainRegularGridSampleSurfaceMesh&); // Operator '=' Not Implemented

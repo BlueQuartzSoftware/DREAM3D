@@ -164,11 +164,11 @@ class FindOrientationFieldCurl : public AbstractFilter
   private:
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, DislocationTensors)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Quats)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_DATAARRAY_VARIABLE(float, DislocationTensors)
+    DEFINE_DATAARRAY_VARIABLE(float, Quats)
 
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
     FindOrientationFieldCurl(const FindOrientationFieldCurl&); // Copy Constructor Not Implemented
     void operator=(const FindOrientationFieldCurl&); // Operator '=' Not Implemented

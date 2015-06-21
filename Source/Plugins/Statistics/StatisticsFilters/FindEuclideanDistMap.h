@@ -172,12 +172,12 @@ class FindEuclideanDistMap : public AbstractFilter
     void find_euclideandistmap();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, NearestNeighbors)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, GBEuclideanDistances)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, TJEuclideanDistances)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, QPEuclideanDistances)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, NearestNeighbors)
+    DEFINE_DATAARRAY_VARIABLE(float, GBEuclideanDistances)
+    DEFINE_DATAARRAY_VARIABLE(float, TJEuclideanDistances)
+    DEFINE_DATAARRAY_VARIABLE(float, QPEuclideanDistances)
 
     FindEuclideanDistMap(const FindEuclideanDistMap&); // Copy Constructor Not Implemented
     void operator=(const FindEuclideanDistMap&); // Operator '=' Not Implemented

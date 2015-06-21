@@ -160,9 +160,9 @@ class FindRelativeMotionBetweenSlices : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_IDATAARRAY_VARIABLE(InData)
+    DEFINE_IDATAARRAY_VARIABLE(InData)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, MotionDirection)
+    DEFINE_DATAARRAY_VARIABLE(float, MotionDirection)
 
     FindRelativeMotionBetweenSlices(const FindRelativeMotionBetweenSlices&); // Copy Constructor Not Implemented
     void operator=(const FindRelativeMotionBetweenSlices&); // Operator '=' Not Implemented

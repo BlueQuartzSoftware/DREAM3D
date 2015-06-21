@@ -145,7 +145,7 @@ class NeighborCICorrelation : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, ConfidenceIndex)
+    DEFINE_DATAARRAY_VARIABLE(float, ConfidenceIndex)
 
     NeighborCICorrelation(const NeighborCICorrelation&); // Copy Constructor Not Implemented
     void operator=(const NeighborCICorrelation&); // Operator '=' Not Implemented

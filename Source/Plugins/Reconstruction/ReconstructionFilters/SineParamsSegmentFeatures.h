@@ -160,10 +160,10 @@ class SineParamsSegmentFeatures : public SegmentFeatures
   private:
     IDataArray::Pointer m_InputData;
 
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, SineParams)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, GoodVoxels)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(bool, Active)
+    DEFINE_DATAARRAY_VARIABLE(float, SineParams)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
+    DEFINE_DATAARRAY_VARIABLE(bool, Active)
 
     ///Boost Random Number generator stuff. We use the boost::shared_ptr to ensure the pointers are cleaned up when the
     ///filter is deleted

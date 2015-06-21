@@ -133,8 +133,8 @@ class MultiEmmpmFilter : public EMMPMFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint8_t, InputImage)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(uint8_t, OutputImage)
+    DEFINE_DATAARRAY_VARIABLE(uint8_t, InputImage)
+    DEFINE_DATAARRAY_VARIABLE(uint8_t, OutputImage)
 
     std::vector<float> m_PreviousMu;
     std::vector<float> m_PreviousSigma;

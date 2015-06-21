@@ -158,13 +158,13 @@ class FindAvgOrientations : public AbstractFilter
   private:
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Quats)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_DATAARRAY_VARIABLE(float, Quats)
+    DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, AvgQuats)
+    DEFINE_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
+    DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
 
     FindAvgOrientations(const FindAvgOrientations&); // Copy Constructor Not Implemented
     void operator=(const FindAvgOrientations&); // Operator '=' Not Implemented

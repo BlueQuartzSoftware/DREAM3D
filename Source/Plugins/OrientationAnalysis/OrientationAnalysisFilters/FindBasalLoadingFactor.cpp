@@ -55,7 +55,6 @@ FindBasalLoadingFactor::FindBasalLoadingFactor() :
   m_AvgQuatsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
   m_BasalLoadingFactorArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::BasalLoadingFactor),
   m_BasalLoadingFactor(NULL),
-  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_AvgQuats(NULL)
 {
   m_LoadingDirection.x = 1.0f;

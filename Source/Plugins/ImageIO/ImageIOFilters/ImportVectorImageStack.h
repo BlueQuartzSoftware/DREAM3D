@@ -171,7 +171,7 @@ class ImportVectorImageStack : public AbstractFilter
     void generateFileList();
 
   private:
-    DEFINE_CREATED_DATAARRAY_VARIABLE(uint8_t, VectorData)
+    DEFINE_DATAARRAY_VARIABLE(uint8_t, VectorData)
 
     ImportVectorImageStack(const ImportVectorImageStack&); // Copy Constructor Not Implemented
     void operator=(const ImportVectorImageStack&); // Operator '=' Not Implemented

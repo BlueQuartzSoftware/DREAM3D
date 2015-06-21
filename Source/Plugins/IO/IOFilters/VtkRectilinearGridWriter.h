@@ -282,7 +282,7 @@ class VtkRectilinearGridWriter : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
     VtkRectilinearGridWriter(const VtkRectilinearGridWriter&); // Copy Constructor Not Implemented
     void operator=(const VtkRectilinearGridWriter&); // Operator '=' Not Implemented

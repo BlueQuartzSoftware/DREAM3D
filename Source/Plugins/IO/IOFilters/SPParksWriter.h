@@ -145,7 +145,7 @@ class SPParksWriter : public FileWriter
     virtual int32_t writeFile();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
     SPParksWriter(const SPParksWriter&); // Copy Constructor Not Implemented
     void operator=(const SPParksWriter&); // Operator '=' Not Implemented

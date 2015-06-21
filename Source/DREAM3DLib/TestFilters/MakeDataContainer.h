@@ -156,11 +156,11 @@ class DREAM3DLib_EXPORT MakeDataContainer : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, CellEulerAngles)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, LatticeConstants)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
+    DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+    DEFINE_DATAARRAY_VARIABLE(float, LatticeConstants)
 
     MakeDataContainer(const MakeDataContainer&); // Copy Constructor Not Implemented
     void operator=(const MakeDataContainer&); // Operator '=' Not Implemented

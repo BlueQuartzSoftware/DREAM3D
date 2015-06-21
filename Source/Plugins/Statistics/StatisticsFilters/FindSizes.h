@@ -161,11 +161,11 @@ class FindSizes : public AbstractFilter
     void find_sizes2D();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, Volumes)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, EquivalentDiameters)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, NumCells)
+    DEFINE_DATAARRAY_VARIABLE(float, Volumes)
+    DEFINE_DATAARRAY_VARIABLE(float, EquivalentDiameters)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, NumCells)
 
     FindSizes(const FindSizes&); // Copy Constructor Not Implemented
     void operator=(const FindSizes&); // Operator '=' Not Implemented

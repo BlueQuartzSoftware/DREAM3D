@@ -162,15 +162,15 @@ class FindBoundaryStrengths : public AbstractFilter
   private:
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
+    DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, SurfaceMeshF1s)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, SurfaceMeshF1spts)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, SurfaceMeshF7s)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, SurfaceMeshmPrimes)
+    DEFINE_DATAARRAY_VARIABLE(float, SurfaceMeshF1s)
+    DEFINE_DATAARRAY_VARIABLE(float, SurfaceMeshF1spts)
+    DEFINE_DATAARRAY_VARIABLE(float, SurfaceMeshF7s)
+    DEFINE_DATAARRAY_VARIABLE(float, SurfaceMeshmPrimes)
 
     /**
      * @brief dataCheckVoxel Checks for the appropriate parameter values and availability of arrays

@@ -151,8 +151,8 @@ class FindSurfaceFeatures : public AbstractFilter
     void find_surfacefeatures2D();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(bool, SurfaceFeatures)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(bool, SurfaceFeatures)
 
     FindSurfaceFeatures(const FindSurfaceFeatures&); // Copy Constructor Not Implemented
     void operator=(const FindSurfaceFeatures&); // Operator '=' Not Implemented

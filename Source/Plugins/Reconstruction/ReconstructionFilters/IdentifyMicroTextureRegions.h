@@ -173,17 +173,17 @@ class IdentifyMicroTextureRegions : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CAxisLocations)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    DEFINE_DATAARRAY_VARIABLE(float, CAxisLocations)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, MTRIds)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(bool, Active)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(bool, InMTR)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, VolFrac)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, AvgCAxis)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, PatchIds)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(bool, PatchActive)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, MTRIds)
+    DEFINE_DATAARRAY_VARIABLE(bool, Active)
+    DEFINE_DATAARRAY_VARIABLE(bool, InMTR)
+    DEFINE_DATAARRAY_VARIABLE(float, VolFrac)
+    DEFINE_DATAARRAY_VARIABLE(float, AvgCAxis)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, PatchIds)
+    DEFINE_DATAARRAY_VARIABLE(bool, PatchActive)
 
     boost::shared_ptr<NumberDistribution> m_Distribution;
     boost::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;

@@ -275,22 +275,22 @@ class GenerateEnsembleStatistics : public AbstractFilter
     void calculatePPTBoundaryFrac();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Volumes)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, BiasedFeatures)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, SurfaceFeatures)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AxisEulerAngles)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, RadialDistFunc)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, MaxMinRadialDistFunc)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Omega3s)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AspectRatios)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, EquivalentDiameters)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, Neighborhoods)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
+    DEFINE_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
+    DEFINE_DATAARRAY_VARIABLE(float, Volumes)
+    DEFINE_DATAARRAY_VARIABLE(bool, BiasedFeatures)
+    DEFINE_DATAARRAY_VARIABLE(bool, SurfaceFeatures)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_DATAARRAY_VARIABLE(float, AxisEulerAngles)
+    DEFINE_DATAARRAY_VARIABLE(float, RadialDistFunc)
+    DEFINE_DATAARRAY_VARIABLE(float, MaxMinRadialDistFunc)
+    DEFINE_DATAARRAY_VARIABLE(float, Omega3s)
+    DEFINE_DATAARRAY_VARIABLE(float, AspectRatios)
+    DEFINE_DATAARRAY_VARIABLE(float, EquivalentDiameters)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, Neighborhoods)
+    DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
+    DEFINE_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
 
 
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;

@@ -156,10 +156,10 @@ class GBCDTriangleDumper : public AbstractFilter
     void dataCheckVoxel();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(double, SurfaceMeshFaceAreas)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
+    DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceAreas)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
+    DEFINE_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
 
     GBCDTriangleDumper(const GBCDTriangleDumper&); // Copy Constructor Not Implemented
     void operator=(const GBCDTriangleDumper&); // Operator '=' Not Implemented

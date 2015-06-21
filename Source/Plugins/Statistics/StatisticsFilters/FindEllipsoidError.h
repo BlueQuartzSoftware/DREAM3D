@@ -176,13 +176,13 @@ class FindEllipsoidError : public AbstractFilter
     void find_error2D();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AxisEulerAngles)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Centroids)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AxisLengths)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, NumCells)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, IdealFeatureIds)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, EllipsoidError)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(float, AxisEulerAngles)
+    DEFINE_DATAARRAY_VARIABLE(float, Centroids)
+    DEFINE_DATAARRAY_VARIABLE(float, AxisLengths)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, NumCells)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, IdealFeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(float, EllipsoidError)
 
     double scaleFactor;
 

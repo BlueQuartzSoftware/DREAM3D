@@ -223,10 +223,10 @@ class ReadCtfData : public AbstractFilter
   private:
     QScopedPointer<ReadCtfDataPrivate> const d_ptr;
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, CellEulerAngles)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, LatticeConstants)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
+    DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+    DEFINE_DATAARRAY_VARIABLE(float, LatticeConstants)
 
     ReadCtfData(const ReadCtfData&); // Copy Constructor Not Implemented
     void operator=(const ReadCtfData&); // Operator '=' Not Implemented

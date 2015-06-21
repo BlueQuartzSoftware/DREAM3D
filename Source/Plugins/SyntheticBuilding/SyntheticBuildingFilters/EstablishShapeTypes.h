@@ -148,8 +148,8 @@ class EstablishShapeTypes : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(uint32_t, ShapeTypes)
+    DEFINE_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
+    DEFINE_DATAARRAY_VARIABLE(uint32_t, ShapeTypes)
 
     EstablishShapeTypes(const EstablishShapeTypes&); // Copy Constructor Not Implemented
     void operator=(const EstablishShapeTypes&); // Operator '=' Not Implemented

@@ -169,10 +169,10 @@ class InsertAtoms : public AbstractFilter
     virtual void updateVertexInstancePointers();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, AtomFeatureLabels)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, AtomFeatureLabels)
 
     InsertAtoms(const InsertAtoms&); // Copy Constructor Not Implemented
     void operator=(const InsertAtoms&); // Operator '=' Not Implemented

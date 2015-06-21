@@ -159,14 +159,14 @@ class FindGBCD : public SurfaceMeshFilter
     void sizeGBCD(int faceChunkSize, int numMisoReps);
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(double, SurfaceMeshFaceAreas)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceAreas)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
+    DEFINE_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(double, GBCD)
+    DEFINE_DATAARRAY_VARIABLE(double, GBCD)
 
     FloatArrayType::Pointer m_GbcdDeltasArray;
     Int32ArrayType::Pointer m_GbcdSizesArray;

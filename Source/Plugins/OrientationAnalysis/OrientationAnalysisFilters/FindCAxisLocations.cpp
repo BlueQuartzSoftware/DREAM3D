@@ -52,7 +52,6 @@ FindCAxisLocations::FindCAxisLocations() :
   AbstractFilter(),
   m_QuatsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Quats),
   m_CAxisLocationsArrayName(DREAM3D::CellData::CAxisLocation),
-  m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_Quats(NULL),
   m_CAxisLocations(NULL)
 {

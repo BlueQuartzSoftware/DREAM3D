@@ -163,8 +163,8 @@ class SurfaceMeshToVtk : public AbstractFilter
     int writePointData(FILE* vtkFile);
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int8_t, SurfaceMeshNodeType)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_DATAARRAY_VARIABLE(int8_t, SurfaceMeshNodeType)
 
     SurfaceMeshToVtk(const SurfaceMeshToVtk&); // Copy Constructor Not Implemented
     void operator=(const SurfaceMeshToVtk&); // Operator '=' Not Implemented

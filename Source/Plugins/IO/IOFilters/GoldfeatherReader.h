@@ -172,13 +172,13 @@ class GoldfeatherReader : public AbstractFilter
     void updateFaceInstancePointers();
 
   private:
-    DEFINE_CREATED_DATAARRAY_VARIABLE(double, SurfaceMeshPrincipalCurvature1s)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(double, SurfaceMeshPrincipalCurvature2s)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(double, SurfaceMeshPrincipalDirection1s)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(double, SurfaceMeshPrincipalDirection2s)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(double, SurfaceMeshNodeNormals)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshPrincipalCurvature1s)
+    DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshPrincipalCurvature2s)
+    DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshPrincipalDirection1s)
+    DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshPrincipalDirection2s)
+    DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshNodeNormals)
+    DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
 
     GoldfeatherReader(const GoldfeatherReader&); // Copy Constructor Not Implemented
     void operator=(const GoldfeatherReader&); // Operator '=' Not Implemented

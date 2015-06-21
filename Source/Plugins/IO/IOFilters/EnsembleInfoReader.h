@@ -145,8 +145,8 @@ class EnsembleInfoReader : public FileReader
     void ensembleLookup(QStringList values);
 
   private:
-    DEFINE_CREATED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
+    DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+    DEFINE_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
 
     uint32_t m_ptype;
     uint32_t m_crystruct;

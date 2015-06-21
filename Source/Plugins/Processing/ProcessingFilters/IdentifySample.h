@@ -144,7 +144,7 @@ class IdentifySample : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, GoodVoxels)
+    DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
 
     IdentifySample(const IdentifySample&); // Copy Constructor Not Implemented
     void operator=(const IdentifySample&); // Operator '=' Not Implemented

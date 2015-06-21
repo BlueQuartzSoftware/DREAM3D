@@ -149,10 +149,10 @@ class FindAvgCAxes : public AbstractFilter
   private:
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Quats)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(float, Quats)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, AvgCAxes)
+    DEFINE_DATAARRAY_VARIABLE(float, AvgCAxes)
 
     FindAvgCAxes(const FindAvgCAxes&); // Copy Constructor Not Implemented
     void operator=(const FindAvgCAxes&); // Operator '=' Not Implemented

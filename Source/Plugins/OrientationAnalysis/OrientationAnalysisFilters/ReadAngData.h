@@ -208,10 +208,10 @@ class ReadAngData : public AbstractFilter
   private:
     QScopedPointer<ReadAngDataPrivate> const d_ptr;
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, CellEulerAngles)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, LatticeConstants)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
+    DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+    DEFINE_DATAARRAY_VARIABLE(float, LatticeConstants)
 
     ReadAngData(const ReadAngData&); // Copy Constructor Not Implemented
     void operator=(const ReadAngData&); // Operator '=' Not Implemented

@@ -150,9 +150,9 @@ class FindLargestCrossSections : public AbstractFilter
     void find_crosssections();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, LargestCrossSections)
+    DEFINE_DATAARRAY_VARIABLE(float, LargestCrossSections)
 
     FindLargestCrossSections(const FindLargestCrossSections&); // Copy Constructor Not Implemented
     void operator=(const FindLargestCrossSections&); // Operator '=' Not Implemented

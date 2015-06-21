@@ -193,14 +193,14 @@ class FindShapes : public AbstractFilter
     void find_axiseulers2D();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Centroids)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(float, Centroids)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, AxisEulerAngles)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, AxisLengths)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, Omega3s)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, Volumes)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, AspectRatios)
+    DEFINE_DATAARRAY_VARIABLE(float, AxisEulerAngles)
+    DEFINE_DATAARRAY_VARIABLE(float, AxisLengths)
+    DEFINE_DATAARRAY_VARIABLE(float, Omega3s)
+    DEFINE_DATAARRAY_VARIABLE(float, Volumes)
+    DEFINE_DATAARRAY_VARIABLE(float, AspectRatios)
 
     double scaleFactor;
 

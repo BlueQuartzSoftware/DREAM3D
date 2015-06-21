@@ -168,7 +168,7 @@ class DxReader : public FileReader
   private:
     QScopedPointer<DxReaderPrivate> const d_ptr;
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     size_t m_Dims[3];
     QFile  m_InStream;
 

@@ -49,7 +49,6 @@
 AlignSectionsFeature::AlignSectionsFeature() :
   AlignSections(),
   m_GoodVoxelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
-  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_GoodVoxels(NULL)
 {
   // only setting up the child parameters because the parent constructor has already been called

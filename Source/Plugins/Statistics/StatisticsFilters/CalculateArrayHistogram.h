@@ -166,9 +166,9 @@ class CalculateArrayHistogram : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_IDATAARRAY_VARIABLE(InDataArray)
+    DEFINE_IDATAARRAY_VARIABLE(InDataArray)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(double, NewDataArray)
+    DEFINE_DATAARRAY_VARIABLE(double, NewDataArray)
 
     CalculateArrayHistogram(const CalculateArrayHistogram&); // Copy Constructor Not Implemented
     void operator=(const CalculateArrayHistogram&); // Operator '=' Not Implemented

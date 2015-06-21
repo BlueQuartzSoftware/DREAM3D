@@ -125,7 +125,7 @@ class AlignSectionsFeature : public AlignSections
     virtual void find_shifts(std::vector<int64_t>& xshifts, std::vector<int64_t>& yshifts);
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, GoodVoxels)
+    DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
 
     AlignSectionsFeature(const AlignSectionsFeature&); // Copy Constructor Not Implemented
     void operator=(const AlignSectionsFeature&); // Operator '=' Not Implemented

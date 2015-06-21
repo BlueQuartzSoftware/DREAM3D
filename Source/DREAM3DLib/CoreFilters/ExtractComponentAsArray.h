@@ -145,9 +145,9 @@ class ExtractComponentAsArray : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_IDATAARRAY_VARIABLE(InArray)
+    DEFINE_IDATAARRAY_VARIABLE(InArray)
 
-    DEFINE_CREATED_IDATAARRAY_VARIABLE(NewArray)
+    DEFINE_IDATAARRAY_VARIABLE(NewArray)
 
     ExtractComponentAsArray(const ExtractComponentAsArray&); // Copy Constructor Not Implemented
     void operator=(const ExtractComponentAsArray&); // Operator '=' Not Implemented

@@ -180,7 +180,7 @@ class WriteImages : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint8_t, Colors)
+    DEFINE_DATAARRAY_VARIABLE(uint8_t, Colors)
 
     WriteImages(const WriteImages&); // Copy Constructor Not Implemented
     void operator=(const WriteImages&); // Operator '=' Not Implemented

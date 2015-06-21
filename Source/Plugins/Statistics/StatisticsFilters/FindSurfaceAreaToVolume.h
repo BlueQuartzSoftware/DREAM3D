@@ -145,10 +145,10 @@ class FindSurfaceAreaToVolume : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, NumCells)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, NumCells)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, SurfaceAreaVolumeRatio)
+    DEFINE_DATAARRAY_VARIABLE(float, SurfaceAreaVolumeRatio)
 
     FindSurfaceAreaToVolume(const FindSurfaceAreaToVolume&); // Copy Constructor Not Implemented
     void operator=(const FindSurfaceAreaToVolume&); // Operator '=' Not Implemented

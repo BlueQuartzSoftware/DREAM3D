@@ -150,10 +150,10 @@ class FindBoundaryElementFractions : public AbstractFilter
     void find_surface_voxel_fractions();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int8_t, BoundaryCells)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int8_t, BoundaryCells)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, BoundaryCellFractions)
+    DEFINE_DATAARRAY_VARIABLE(float, BoundaryCellFractions)
 
     FindBoundaryElementFractions(const FindBoundaryElementFractions&); // Copy Constructor Not Implemented
     void operator=(const FindBoundaryElementFractions&); // Operator '=' Not Implemented

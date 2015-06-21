@@ -157,11 +157,11 @@ class ScalarSegmentFeatures : public SegmentFeatures
     virtual bool determineGrouping(int64_t referencepoint, int64_t neighborpoint, int32_t gnum);
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, GoodVoxels)
-    DEFINE_REQUIRED_IDATAARRAY_VARIABLE(InputData)
+    DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
+    DEFINE_IDATAARRAY_VARIABLE(InputData)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(bool, Active)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(bool, Active)
 
     boost::shared_ptr<CompareFunctor> m_Compare;
 

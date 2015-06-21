@@ -164,11 +164,11 @@ class FindNeighbors : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int8_t, BoundaryCells)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(bool, SurfaceFeatures)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, NumNeighbors)
+    DEFINE_DATAARRAY_VARIABLE(int8_t, BoundaryCells)
+    DEFINE_DATAARRAY_VARIABLE(bool, SurfaceFeatures)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, NumNeighbors)
 
     NeighborList<int32_t>::WeakPointer m_NeighborList;
     NeighborList<float>::WeakPointer m_SharedSurfaceAreaList;

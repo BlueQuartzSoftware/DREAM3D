@@ -61,9 +61,7 @@ LaplacianSmoothing::LaplacianSmoothing() :
   m_QuadPointLambda(0.0f),
   m_SurfaceTripleLineLambda(0.0f),
   m_SurfaceQuadPointLambda(0.0f),
-  m_SurfaceMeshNodeTypeArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
   m_SurfaceMeshNodeType(NULL),
-  m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabels(NULL)
 {
   setupFilterParameters();

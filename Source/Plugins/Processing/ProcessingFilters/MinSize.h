@@ -170,9 +170,9 @@ class MinSize : public AbstractFilter
   private:
     int32_t* m_Neighbors;
 
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, NumCells)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, NumCells)
 
     MinSize(const MinSize&); // Copy Constructor Not Implemented
     void operator=(const MinSize&); // Operator '=' Not Implemented

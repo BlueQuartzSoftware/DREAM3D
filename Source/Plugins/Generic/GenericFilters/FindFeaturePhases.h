@@ -145,9 +145,9 @@ class FindFeaturePhases : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
 
     FindFeaturePhases(const FindFeaturePhases&); // Copy Constructor Not Implemented
     void operator=(const FindFeaturePhases&); // Operator '=' Not Implemented

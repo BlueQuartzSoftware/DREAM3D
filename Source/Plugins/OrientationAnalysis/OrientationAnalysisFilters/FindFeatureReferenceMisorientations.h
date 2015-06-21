@@ -167,15 +167,15 @@ class FindFeatureReferenceMisorientations : public AbstractFilter
   private:
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, GBEuclideanDistances)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Quats)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_DATAARRAY_VARIABLE(float, GBEuclideanDistances)
+    DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
+    DEFINE_DATAARRAY_VARIABLE(float, Quats)
+    DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, FeatureReferenceMisorientations)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, FeatureAvgMisorientations)
+    DEFINE_DATAARRAY_VARIABLE(float, FeatureReferenceMisorientations)
+    DEFINE_DATAARRAY_VARIABLE(float, FeatureAvgMisorientations)
 
     FindFeatureReferenceMisorientations(const FindFeatureReferenceMisorientations&); // Copy Constructor Not Implemented
     void operator=(const FindFeatureReferenceMisorientations&); // Operator '=' Not Implemented

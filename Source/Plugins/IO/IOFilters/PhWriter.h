@@ -122,7 +122,7 @@ class PhWriter : public FileWriter
     virtual int32_t writeFile();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
     PhWriter(const PhWriter&); // Copy Constructor Not Implemented
     void operator=(const PhWriter&); // Operator '=' Not Implemented

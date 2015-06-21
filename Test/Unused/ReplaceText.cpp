@@ -54,7 +54,7 @@ void buildInitializerList(QString hFile, QString cppFile)
       initializerList << s;
     }
 
-    if(line.contains(QString("DEFINE_REQUIRED_DATAARRAY_VARIABLE")) )
+    if(line.contains(QString("DEFINE_DATAARRAY_VARIABLE")) )
     {
       QStringList chunks = line.split(QRegExp(", "));
       chunks = chunks.at(1).split(QRegExp("\\)"));

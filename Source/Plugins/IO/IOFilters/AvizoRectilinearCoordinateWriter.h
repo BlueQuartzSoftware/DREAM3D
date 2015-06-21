@@ -177,7 +177,7 @@ class AvizoRectilinearCoordinateWriter : public AbstractFilter
     int writeData(QDataStream& writer);
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
     AvizoRectilinearCoordinateWriter(const AvizoRectilinearCoordinateWriter&); // Copy Constructor Not Implemented
     void operator=(const AvizoRectilinearCoordinateWriter&); // Operator '=' Not Implemented

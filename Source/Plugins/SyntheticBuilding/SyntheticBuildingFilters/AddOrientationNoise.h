@@ -148,7 +148,7 @@ class AddOrientationNoise : public AbstractFilter
     void add_orientation_noise();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
+    DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
 
     AddOrientationNoise(const AddOrientationNoise&); // Copy Constructor Not Implemented
     void operator=(const AddOrientationNoise&); // Operator '=' Not Implemented

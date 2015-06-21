@@ -141,9 +141,9 @@ class FindNumFeatures : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, NumFeatures)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, NumFeatures)
 
     FindNumFeatures(const FindNumFeatures&); // Copy Constructor Not Implemented
     void operator=(const FindNumFeatures&); // Operator '=' Not Implemented

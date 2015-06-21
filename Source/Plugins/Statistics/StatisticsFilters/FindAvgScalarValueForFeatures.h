@@ -150,10 +150,10 @@ class FindAvgScalarValueForFeatures : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_IDATAARRAY_VARIABLE(InDataArray)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_IDATAARRAY_VARIABLE(InDataArray)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, NewFeatureArray)
+    DEFINE_DATAARRAY_VARIABLE(float, NewFeatureArray)
 
     FindAvgScalarValueForFeatures(const FindAvgScalarValueForFeatures&); // Copy Constructor Not Implemented
     void operator=(const FindAvgScalarValueForFeatures&); // Operator '=' Not Implemented

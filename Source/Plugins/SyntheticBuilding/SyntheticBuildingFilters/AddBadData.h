@@ -157,7 +157,7 @@ class AddBadData : public AbstractFilter
     void add_noise();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, GBEuclideanDistances)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, GBEuclideanDistances)
 
     AddBadData(const AddBadData&); // Copy Constructor Not Implemented
     void operator=(const AddBadData&); // Operator '=' Not Implemented

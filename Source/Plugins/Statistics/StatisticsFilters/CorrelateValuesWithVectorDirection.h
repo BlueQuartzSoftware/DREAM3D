@@ -163,7 +163,7 @@ class CorrelateValuesWithVectorDirection : public AbstractFilter
     void createSterographicProjections(size_t numComps);
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, VectorData)
+    DEFINE_DATAARRAY_VARIABLE(float, VectorData)
 
     DoubleArrayType::Pointer m_LambertProj;
 

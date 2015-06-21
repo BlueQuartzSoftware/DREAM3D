@@ -150,8 +150,8 @@ class ExtractFlaggedFeatures : public AbstractFilter
     Int32ArrayType::Pointer boundsPtr;
     int32_t* m_FeatureBounds;
 
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, FlaggedFeatures)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(bool, FlaggedFeatures)
 
     ExtractFlaggedFeatures(const ExtractFlaggedFeatures&); // Copy Constructor Not Implemented
     void operator=(const ExtractFlaggedFeatures&); // Operator '=' Not Implemented

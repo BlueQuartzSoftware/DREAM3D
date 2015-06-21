@@ -100,9 +100,7 @@ FindModulusMismatch::FindModulusMismatch()  :
   m_ModuliArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, "ElasticModuli"),
   m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshDeltaModulusArrayName("SurfaceMeshDeltaModulus"),
-  m_ModuliArrayName("ElasticModuli"),
   m_Moduli(NULL),
-  m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabels(NULL)
 {
   setupFilterParameters();

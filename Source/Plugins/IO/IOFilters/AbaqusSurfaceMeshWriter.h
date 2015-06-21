@@ -142,7 +142,7 @@ class AbaqusSurfaceMeshWriter : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
 
     /**
      * @brief writeHeader Writes the header of the .inp file

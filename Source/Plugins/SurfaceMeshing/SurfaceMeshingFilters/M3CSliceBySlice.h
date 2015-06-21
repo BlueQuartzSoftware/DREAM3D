@@ -389,7 +389,7 @@ class M3CSliceBySlice : public AbstractFilter
     // QVector<int> findAdjacentTriangles(Triangle *triangle, int label);
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
     int numfeatures;
 

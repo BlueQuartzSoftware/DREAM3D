@@ -147,9 +147,9 @@ class GenerateVectorColors : public AbstractFilter
      */
     void dataCheck();
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Vectors)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, GoodVoxels)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(uint8_t, CellVectorColors)
+    DEFINE_DATAARRAY_VARIABLE(float, Vectors)
+    DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
+    DEFINE_DATAARRAY_VARIABLE(uint8_t, CellVectorColors)
 
     GenerateVectorColors(const GenerateVectorColors&); // Copy Constructor Not Implemented
     void operator=(const GenerateVectorColors&); // Operator '=' Not Implemented

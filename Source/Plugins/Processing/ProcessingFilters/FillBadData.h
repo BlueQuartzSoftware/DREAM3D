@@ -154,8 +154,8 @@ class FillBadData : public AbstractFilter
     bool* m_AlreadyChecked;
     int32_t* m_Neighbors;
 
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
 
     FillBadData(const FillBadData&); // Copy Constructor Not Implemented
     void operator=(const FillBadData&); // Operator '=' Not Implemented

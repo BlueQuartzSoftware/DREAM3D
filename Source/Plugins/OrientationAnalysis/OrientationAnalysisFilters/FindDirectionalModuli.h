@@ -173,12 +173,12 @@ class FindDirectionalModuli : public AbstractFilter
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, DirectionalModuli)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
+    DEFINE_DATAARRAY_VARIABLE(float, DirectionalModuli)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
 
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CrystalCompliances)
+    DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    DEFINE_DATAARRAY_VARIABLE(float, CrystalCompliances)
 
     FindDirectionalModuli(const FindDirectionalModuli&); // Copy Constructor Not Implemented
     void operator=(const FindDirectionalModuli&); // Operator '=' Not Implemented

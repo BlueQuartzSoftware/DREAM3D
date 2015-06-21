@@ -153,7 +153,7 @@ class AbaqusHexahedronWriter : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
     /**
      * @brief writeNodes Writes the _nodes.inp file

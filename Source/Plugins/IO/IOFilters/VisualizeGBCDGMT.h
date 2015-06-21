@@ -158,7 +158,7 @@ class VisualizeGBCDGMT : public AbstractFilter
     bool getSquareCoord(float* xstl1_norm1, float* sqCoord);
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(double, GBCD)
+    DEFINE_DATAARRAY_VARIABLE(double, GBCD)
 
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
     QVector<float> gmtValues;

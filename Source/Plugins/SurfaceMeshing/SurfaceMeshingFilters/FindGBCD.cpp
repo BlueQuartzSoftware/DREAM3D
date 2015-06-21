@@ -339,17 +339,11 @@ FindGBCD::FindGBCD() :
   m_FeaturePhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
   m_CrystalStructuresArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
   m_GBCDArrayName(DREAM3D::EnsembleData::GBCD),
-  m_SurfaceMeshFaceAreasArrayName(DREAM3D::FaceData::SurfaceMeshFaceAreas),
   m_SurfaceMeshFaceAreas(NULL),
-  m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabels(NULL),
-  m_SurfaceMeshFaceNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
   m_SurfaceMeshFaceNormals(NULL),
-  m_FeatureEulerAnglesArrayName(DREAM3D::FeatureData::EulerAngles),
   m_FeatureEulerAngles(NULL),
-  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL),
   m_GBCD(NULL),
   m_GbcdDeltas(NULL),
@@ -608,9 +602,9 @@ void FindGBCD::execute()
   double MRDfactor = double(totalBins) / totalFaceArea;
   for(int i = 0; i < totalBins; i++)
   {
-	  m_GBCD[i] *= MRDfactor;
-	  //m_GBCD[2 * i + 0] *= MRDfactor;
-	  //m_GBCD[2 * i + 1] *= MRDfactor;
+    m_GBCD[i] *= MRDfactor;
+    //m_GBCD[2 * i + 0] *= MRDfactor;
+    //m_GBCD[2 * i + 1] *= MRDfactor;
   }
 
   /* Let the GUI know we are done with this filter */

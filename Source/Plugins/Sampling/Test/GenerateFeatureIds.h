@@ -91,7 +91,7 @@ class GenerateFeatureIds : public AbstractFilter
     }
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
     void dataCheck()
     {

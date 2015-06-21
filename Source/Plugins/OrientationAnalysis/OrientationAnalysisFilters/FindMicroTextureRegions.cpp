@@ -55,7 +55,6 @@ FindMicroTextureRegions::FindMicroTextureRegions() :
   m_MicroTextureRegionFractionOccupiedArrayName(DREAM3D::FeatureData::MicroTextureRegionFractionOccupied),
   m_MicroTextureRegionNumCells(NULL),
   m_MicroTextureRegionFractionOccupied(NULL),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
   setupFilterParameters();

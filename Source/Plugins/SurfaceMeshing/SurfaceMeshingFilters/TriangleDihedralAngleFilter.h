@@ -118,7 +118,7 @@ class TriangleDihedralAngleFilter : public SurfaceMeshFilter
     void dataCheck();
 
   private:
-    DEFINE_CREATED_DATAARRAY_VARIABLE(double, SurfaceMeshTriangleDihedralAngles)
+    DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshTriangleDihedralAngles)
 
     TriangleDihedralAngleFilter(const TriangleDihedralAngleFilter&); // Copy Constructor Not Implemented
     void operator=(const TriangleDihedralAngleFilter&); // Operator '=' Not Implemented

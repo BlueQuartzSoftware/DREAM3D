@@ -199,7 +199,7 @@ float positionInHeader(const QString hFile, const QString var, bool isPointer)
     while (sourceLines.hasNext())
     {
       QString line = sourceLines.next();
-      if(line.contains(searchString) && line.contains("DEFINE_REQUIRED_DATAARRAY_VARIABLE") )
+      if(line.contains(searchString) && line.contains("DEFINE_DATAARRAY_VARIABLE") )
       {
         int index = line.indexOf(var); // Verify we actually found the whole word
         if(line.at(index - 1).isSpace() )
@@ -224,7 +224,7 @@ float positionInHeader(const QString hFile, const QString var, bool isPointer)
     while (sourceLines.hasNext())
     {
       QString line = sourceLines.next();
-      if(line.contains(searchString) && line.contains("DEFINE_CREATED_DATAARRAY_VARIABLE") )
+      if(line.contains(searchString) && line.contains("DEFINE_DATAARRAY_VARIABLE") )
       {
         line = sourceLines.next();
         found = true;
@@ -274,7 +274,7 @@ float positionInHeader(const QString hFile, const QString var, bool isPointer)
     while (sourceLines.hasNext())
     {
       QString line = sourceLines.next();
-      if(line.contains(searchString) && line.contains("DEFINE_REQUIRED_DATAARRAY_VARIABLE") )
+      if(line.contains(searchString) && line.contains("DEFINE_DATAARRAY_VARIABLE") )
       {
         int index = line.indexOf(searchString); // Verify we actually found the whole word
         if(index > -1 && line.at(index - 1).isSpace() )

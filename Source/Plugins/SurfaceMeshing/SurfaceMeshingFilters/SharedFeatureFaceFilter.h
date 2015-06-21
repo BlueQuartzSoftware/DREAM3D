@@ -133,11 +133,11 @@ class SharedFeatureFaceFilter : public SurfaceMeshFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceIds)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceLabels)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceNumTriangles)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceLabels)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceNumTriangles)
 
     SharedFeatureFaceFilter(const SharedFeatureFaceFilter&); // Copy Constructor Not Implemented
     void operator=(const SharedFeatureFaceFilter&); // Operator '=' Not Implemented

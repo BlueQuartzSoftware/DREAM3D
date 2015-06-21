@@ -147,8 +147,8 @@ class FindFeatureCentroids : public AbstractFilter
     void find_centroids();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, Centroids)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(float, Centroids)
 
     FindFeatureCentroids(const FindFeatureCentroids&); // Copy Constructor Not Implemented
     void operator=(const FindFeatureCentroids&); // Operator '=' Not Implemented

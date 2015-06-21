@@ -148,11 +148,11 @@ class GenerateFaceSchuhMisorientationColoring : public SurfaceMeshFilter
     void dataCheckVoxel();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(uint8_t, SurfaceMeshFaceSchuhMisorientationColors)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_DATAARRAY_VARIABLE(uint8_t, SurfaceMeshFaceSchuhMisorientationColors)
+    DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
     GenerateFaceSchuhMisorientationColoring(const GenerateFaceSchuhMisorientationColoring&); // Copy Constructor Not Implemented
     void operator=(const GenerateFaceSchuhMisorientationColoring&); // Operator '=' Not Implemented

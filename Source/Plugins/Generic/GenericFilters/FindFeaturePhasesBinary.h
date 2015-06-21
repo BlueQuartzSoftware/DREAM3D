@@ -148,9 +148,9 @@ class FindFeaturePhasesBinary : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, GoodVoxels)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
 
     FindFeaturePhasesBinary(const FindFeaturePhasesBinary&); // Copy Constructor Not Implemented
     void operator=(const FindFeaturePhasesBinary&); // Operator '=' Not Implemented

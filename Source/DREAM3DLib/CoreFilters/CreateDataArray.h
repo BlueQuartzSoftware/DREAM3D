@@ -149,7 +149,7 @@ class DREAM3DLib_EXPORT CreateDataArray : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_CREATED_IDATAARRAY_VARIABLE(OutputArray)
+    DEFINE_IDATAARRAY_VARIABLE(OutputArray)
 
     void checkInitialization();
 

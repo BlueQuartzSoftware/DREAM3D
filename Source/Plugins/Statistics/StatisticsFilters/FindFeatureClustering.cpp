@@ -60,14 +60,10 @@ FindFeatureClustering::FindFeatureClustering() :
   m_ClusteringListArrayName(DREAM3D::FeatureData::ClusteringList),
   m_NewEnsembleArrayArrayName("RDF"),
   m_MaxMinArrayName(getNewEnsembleArrayArrayName() + "MaxMinDistances"),
-  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
-  m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
   m_Centroids(NULL),
-  m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
   m_EquivalentDiameters(NULL),
   m_NewEnsembleArray(NULL),
-  m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
   m_BiasedFeatures(NULL)
 {
   setupFilterParameters();

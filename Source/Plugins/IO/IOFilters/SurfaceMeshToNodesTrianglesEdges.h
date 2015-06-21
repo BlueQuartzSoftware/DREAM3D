@@ -160,8 +160,8 @@ class SurfaceMeshToNodesTrianglesEdges : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int8_t, SurfaceMeshNodeType)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_DATAARRAY_VARIABLE(int8_t, SurfaceMeshNodeType)
 
     SurfaceMeshToNodesTrianglesEdges(const SurfaceMeshToNodesTrianglesEdges&); // Copy Constructor Not Implemented
     void operator=(const SurfaceMeshToNodesTrianglesEdges&); // Operator '=' Not Implemented

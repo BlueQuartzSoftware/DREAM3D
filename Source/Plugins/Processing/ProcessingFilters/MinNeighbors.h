@@ -172,9 +172,9 @@ class MinNeighbors : public AbstractFilter
   private:
     int32_t* m_Neighbors;
 
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, NumNeighbors)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, NumNeighbors)
 
     MinNeighbors(const MinNeighbors&); // Copy Constructor Not Implemented
     void operator=(const MinNeighbors&); // Operator '=' Not Implemented

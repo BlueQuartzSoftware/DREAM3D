@@ -157,7 +157,7 @@ class VerifyTriangleWinding : public SurfaceMeshFilter
     int32_t getSeedTriangle(int32_t label, QSet<int32_t>& triangleIndices);
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
 
     bool m_DoNodeFaceConnectivityFilter;
 

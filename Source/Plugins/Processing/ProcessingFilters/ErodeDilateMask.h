@@ -156,7 +156,7 @@ class ErodeDilateMask : public AbstractFilter
   private:
     bool* m_MaskCopy;
 
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, Mask)
+    DEFINE_DATAARRAY_VARIABLE(bool, Mask)
 
     ErodeDilateMask(const ErodeDilateMask&); // Copy Constructor Not Implemented
     void operator=(const ErodeDilateMask&); // Operator '=' Not Implemented

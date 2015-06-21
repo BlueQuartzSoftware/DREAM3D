@@ -148,8 +148,8 @@ class DREAM3DLib_EXPORT CreateFeatureArrayFromElementArray : public AbstractFilt
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_REQUIRED_IDATAARRAY_VARIABLE(InArray)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_IDATAARRAY_VARIABLE(InArray)
 
     CreateFeatureArrayFromElementArray(const CreateFeatureArrayFromElementArray&); // Copy Constructor Not Implemented
     void operator=(const CreateFeatureArrayFromElementArray&); // Operator '=' Not Implemented

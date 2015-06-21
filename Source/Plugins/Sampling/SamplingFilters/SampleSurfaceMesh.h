@@ -152,7 +152,7 @@ class SampleSurfaceMesh : public AbstractFilter
     virtual void assign_points(Int32ArrayType::Pointer iArray);
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
 
     SampleSurfaceMesh(const SampleSurfaceMesh&); // Copy Constructor Not Implemented
     void operator=(const SampleSurfaceMesh&); // Operator '=' Not Implemented

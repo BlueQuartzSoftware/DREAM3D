@@ -146,9 +146,9 @@ class FindCAxisLocations : public AbstractFilter
   private:
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Quats)
+    DEFINE_DATAARRAY_VARIABLE(float, Quats)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, CAxisLocations)
+    DEFINE_DATAARRAY_VARIABLE(float, CAxisLocations)
 
     FindCAxisLocations(const FindCAxisLocations&); // Copy Constructor Not Implemented
     void operator=(const FindCAxisLocations&); // Operator '=' Not Implemented

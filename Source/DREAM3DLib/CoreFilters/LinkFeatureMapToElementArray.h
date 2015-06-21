@@ -150,9 +150,9 @@ class DREAM3DLib_EXPORT LinkFeatureMapToElementArray : public AbstractFilter
     void updateFeatureInstancePointers();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SelectedCellData)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, SelectedCellData)
 
-    DEFINE_CREATED_DATAARRAY_VARIABLE(bool, Active)
+    DEFINE_DATAARRAY_VARIABLE(bool, Active)
 
     LinkFeatureMapToElementArray(const LinkFeatureMapToElementArray&); // Copy Constructor Not Implemented
     void operator=(const LinkFeatureMapToElementArray&); // Operator '=' Not Implemented

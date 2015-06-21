@@ -150,8 +150,8 @@ class VASPReader : public FileReader
     void updateVertexInstancePointers();
 
   private:
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, AtomVelocities)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, AtomTypes)
+    DEFINE_DATAARRAY_VARIABLE(float, AtomVelocities)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, AtomTypes)
     QFile  m_InStream;
 
     float latticeConstant;

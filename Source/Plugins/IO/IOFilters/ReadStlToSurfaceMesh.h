@@ -156,7 +156,7 @@ class ReadStlToSurfaceMesh : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_CREATED_DATAARRAY_VARIABLE(double, SurfaceMeshTriangleNormals)
+    DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshTriangleNormals)
 
     double m_minXcoord;
     double m_maxXcoord;
