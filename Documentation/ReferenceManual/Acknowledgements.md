@@ -28,7 +28,7 @@ Over the next couple of years (2011-2013), additional researchers contributed co
 
 By 2013, Jackson and Groeber had fully documented the tools, created a Software Developer's Kit (SDK) and generated tools for adding plugins to the package, making the software package readily usable and extensible. As the community surrounding DREAM.3D continued to grow, Jackson formed BlueQuartz Software into an LLC to better provide professional support and allow for additional growth.  In 2014, Dr. Sean Donegan joined BlueQuartz Software from the Rollett group to provide another full-time developer with materials expertise.  In late 2014, BlueQuartz also added  Joseph Kleingers and Sally Connell as full-time developers with computer science backgrounds.
 
-During the growth of BlueQuartz Software through 2014, the core [data structure](@ref datastructure) of DREAM.3D was redesigned to allow for greater user flexibility.  This change also allowed the tool to expand outside of microstructural analysis to include most areas of materials research, and ultimately to multidimensional data analysis in general. These efforts spurred the release of the current version of DREAM.3D, version 6, which reprsents a great step forward in the DREAM.3D experience.  
+During the growth of BlueQuartz Software through 2014, the core [data structure](@ref datastructure) of DREAM.3D was redesigned to allow for greater user flexibility.  This change also allowed the tool to expand outside of microstructural analysis to include most areas of materials research, and ultimately to multidimensional data analysis in general. These efforts spurred the release of the current version of DREAM.3D, version 6, which represents a great step forward in the DREAM.3D experience.  
 
 ## Funding Sources ##
 Parts of DREAM.3D were written under US Air Force (AFRL) Contract FA8650-07-D-5800 and Naval Research Labs (NRL) Contract N00173-07-C-2068. Many others have contributed to the code including the following (non-exhaustive) list:
@@ -82,7 +82,7 @@ Parts of DREAM.3D were written under US Air Force (AFRL) Contract FA8650-07-D-58
 + Dr. Patrick Callahan (CC)
 + Dr. Shlomo Taasan (CC)
 
-### Navy Research Laboratory (NRL) ###
+### Naval Research Laboratory (NRL) ###
 
 
 + Dr. Dave Rowenhorst (VC, CC)

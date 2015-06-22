@@ -73,3 +73,5 @@ A key concept behind **Features** and **Ensembles** is the existence of a _map_ 
 @image latex Images/elfeatens.png "Object-Attribute Associations" width=6in 
 
 -----
+
+For a detailed discussion of the DREAM.3D data structure and its associated applications to the analysis of microstructure data, please consult this [IMMI paper](http://www.immijournal.com/content/3/1/5/abstract).
