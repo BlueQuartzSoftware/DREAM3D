@@ -591,4 +591,4 @@ const QString VisualizeGBCDPoleFigure::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString VisualizeGBCDPoleFigure::getHumanLabel()
-{ return "Write VTK Pole Figure (GBCD Data)"; }
+{ return "Write GBCD Pole Figure (VTK)"; }
