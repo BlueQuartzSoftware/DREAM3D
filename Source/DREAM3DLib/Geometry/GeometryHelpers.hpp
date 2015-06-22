@@ -282,6 +282,9 @@ namespace GeometryHelpers
           break;
         }
 
+		// Now allocate storage for the links
+		dynamicList->allocateLists(linkCount);
+
         // Allocate an array of bools that we use each iteration so that we don't put duplicates into the array
         boost::shared_array<bool> visitedPtr(new bool[numElems]);
         bool* visited = visitedPtr.get();
@@ -315,7 +318,7 @@ namespace GeometryHelpers
               {
                 for (size_t j = 0; j < numVertsPerElem; j++)
                 {
-                  if (seedElem[i] == vertCell[i])
+                  if (seedElem[i] == vertCell[j])
                   {
                     vCount++;
                   }
