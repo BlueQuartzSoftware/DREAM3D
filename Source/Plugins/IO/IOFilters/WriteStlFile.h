@@ -34,45 +34,41 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _ReadStlToSurfaceMesh_H_
-#define _ReadStlToSurfaceMesh_H_
-
-#include <QtCore/QString>
+#ifndef _WriteStlFile_H_
+#define _WriteStlFile_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-
 
 /**
- * @class ReadStlToSurfaceMesh ReadStlToSurfaceMesh.h IOFilters/Code/IOFiltersFilters/ReadStlToSurfaceMesh.h
- * @brief This filter creates an STL file for each Feature ID, or Region ID that is encountered in
- * the volume.
- * @author
- * @date
- * @version 1.0
+ * @brief The WriteStlFile class. See [Filter documentation](@ref surfacemeshtostl) for details.
  */
-class ReadStlToSurfaceMesh : public AbstractFilter
+class WriteStlFile : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(ReadStlToSurfaceMesh)
-    DREAM3D_STATIC_NEW_MACRO(ReadStlToSurfaceMesh)
-    DREAM3D_TYPE_MACRO_SUPER(ReadStlToSurfaceMesh, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(WriteStlFile)
+    DREAM3D_STATIC_NEW_MACRO(WriteStlFile)
+    DREAM3D_TYPE_MACRO_SUPER(WriteStlFile, AbstractFilter)
 
-    virtual ~ReadStlToSurfaceMesh();
+    virtual ~WriteStlFile();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshDataContainerName)
-    Q_PROPERTY(QString SurfaceMeshDataContainerName READ getSurfaceMeshDataContainerName WRITE setSurfaceMeshDataContainerName)
-    DREAM3D_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
-    Q_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
-    DREAM3D_FILTER_PARAMETER(QString, StlFilePath)
-    Q_PROPERTY(QString StlFilePath READ getStlFilePath WRITE setStlFilePath)
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshTriangleNormalsArrayName)
-    Q_PROPERTY(QString SurfaceMeshTriangleNormalsArrayName READ getSurfaceMeshTriangleNormalsArrayName WRITE setSurfaceMeshTriangleNormalsArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, OutputStlDirectory)
+    Q_PROPERTY(QString OutputStlDirectory READ getOutputStlDirectory WRITE setOutputStlDirectory)
+
+    DREAM3D_FILTER_PARAMETER(QString, OutputStlPrefix)
+    Q_PROPERTY(QString OutputStlPrefix READ getOutputStlPrefix WRITE setOutputStlPrefix)
+
+    DREAM3D_FILTER_PARAMETER(bool, GroupByPhase)
+    Q_PROPERTY(bool GroupByPhase READ getGroupByPhase WRITE setGroupByPhase)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+    Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFacePhasesArrayPath)
+    Q_PROPERTY(DataArrayPath SurfaceMeshFacePhasesArrayPath READ getSurfaceMeshFacePhasesArrayPath WRITE setSurfaceMeshFacePhasesArrayPath)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -148,7 +144,7 @@ class ReadStlToSurfaceMesh : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    ReadStlToSurfaceMesh();
+    WriteStlFile();
 
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -156,22 +152,28 @@ class ReadStlToSurfaceMesh : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshTriangleNormals)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFacePhases)
 
-    double m_minXcoord;
-    double m_maxXcoord;
-    double m_minYcoord;
-    double m_maxYcoord;
-    double m_minZcoord;
-    double m_maxZcoord;
+    /**
+     * @brief writeHeader Writes the header of the STL file
+     * @param f File instance pointer
+     * @param header Header to write to file
+     * @param triCount Number of triangles
+     * @return Integer error value
+     */
+    int32_t writeHeader(FILE* f, const QString& header, int32_t triCount);
 
-    void updateFaceInstancePointers();
+    /**
+     * @brief writeNumTrianglesToFile Writes the number of triangles to the STL file
+     * @param filename Name of the output file
+     * @param triCount Number of triangles
+     * @return Integer error value
+     */
+    int32_t writeNumTrianglesToFile(const QString& filename, int32_t triCount);
 
-    void readFile();
-    void eliminate_duplicate_nodes();
-
-    ReadStlToSurfaceMesh(const ReadStlToSurfaceMesh&); // Copy Constructor Not Implemented
-    void operator=(const ReadStlToSurfaceMesh&); // Operator '=' Not Implemented
+    WriteStlFile(const WriteStlFile&); // Copy Constructor Not Implemented
+    void operator=(const WriteStlFile&); // Operator '=' Not Implemented
 };
 
-#endif /* _ReadStlToSurfaceMesh_H_ */
+#endif /* _WriteStlFile_H_ */

@@ -34,7 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#include "ReadStlToSurfaceMesh.h"
+#include "ReadStlFile.h"
 
 #include <QtCore/QSet>
 #include <QtCore/QDir>
@@ -108,19 +108,19 @@ class FindUniqueIdsImpl
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ReadStlToSurfaceMesh::ReadStlToSurfaceMesh() :
+ReadStlFile::ReadStlFile() :
   AbstractFilter(),
   m_SurfaceMeshDataContainerName(DREAM3D::Defaults::DataContainerName),
   m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
   m_StlFilePath(""),
-  m_SurfaceMeshTriangleNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
-  m_SurfaceMeshTriangleNormals(NULL),
-  m_minXcoord(1000000000000.0),
-  m_maxXcoord(0.0),
-  m_minYcoord(1000000000000.0),
-  m_maxYcoord(0.0),
-  m_minZcoord(1000000000000.0),
-  m_maxZcoord(0.0)
+  m_FaceNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
+  m_FaceNormals(NULL),
+  m_minXcoord(std::numeric_limits<float>::max()),
+  m_maxXcoord(-std::numeric_limits<float>::max()),
+  m_minYcoord(std::numeric_limits<float>::max()),
+  m_maxYcoord(-std::numeric_limits<float>::max()),
+  m_minZcoord(std::numeric_limits<float>::max()),
+  m_maxZcoord(-std::numeric_limits<float>::max())
 {
   setupFilterParameters();
 }
@@ -128,14 +128,14 @@ ReadStlToSurfaceMesh::ReadStlToSurfaceMesh() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ReadStlToSurfaceMesh::~ReadStlToSurfaceMesh()
+ReadStlFile::~ReadStlFile()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadStlToSurfaceMesh::setupFilterParameters()
+void ReadStlFile::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
@@ -143,7 +143,7 @@ void ReadStlToSurfaceMesh::setupFilterParameters()
 
   parameters.push_back(FilterParameter::New("Data Container Name", "SurfaceMeshDataContainerName", FilterParameterWidgetType::StringWidget, getSurfaceMeshDataContainerName(), FilterParameter::CreatedArray));
   parameters.push_back(FilterParameter::New("Face Attribute Matrix", "FaceAttributeMatrixName", FilterParameterWidgetType::StringWidget, getFaceAttributeMatrixName(), FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshTriangleNormals", "SurfaceMeshTriangleNormalsArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshTriangleNormalsArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Face Normals", "FaceNormalsArrayName", FilterParameterWidgetType::StringWidget, getFaceNormalsArrayName(), FilterParameter::CreatedArray, ""));
 
   setFilterParameters(parameters);
 }
@@ -151,27 +151,27 @@ void ReadStlToSurfaceMesh::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadStlToSurfaceMesh::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void ReadStlFile::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   setStlFilePath( reader->readString( "StlFilePath", getStlFilePath() ) );
   setFaceAttributeMatrixName(reader->readString("FaceAttributeMatrixName", getFaceAttributeMatrixName() ) );
   setSurfaceMeshDataContainerName( reader->readString( "SurfaceMeshDataContainerName", getSurfaceMeshDataContainerName() ) );
-  setSurfaceMeshTriangleNormalsArrayName(reader->readString("SurfaceMeshTriangleNormalsArrayName", getSurfaceMeshTriangleNormalsArrayName() ) );
+  setFaceNormalsArrayName(reader->readString("FaceNormalsArrayName", getFaceNormalsArrayName() ) );
   reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ReadStlToSurfaceMesh::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int ReadStlFile::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(StlFilePath)
   DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshDataContainerName)
   DREAM3D_FILTER_WRITE_PARAMETER(FaceAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshTriangleNormalsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FaceNormalsArrayName)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -179,18 +179,18 @@ int ReadStlToSurfaceMesh::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadStlToSurfaceMesh::updateFaceInstancePointers()
+void ReadStlFile::updateFaceInstancePointers()
 {
   setErrorCondition(0);
 
-  if( NULL != m_SurfaceMeshTriangleNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_SurfaceMeshTriangleNormals = m_SurfaceMeshTriangleNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if( NULL != m_FaceNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_FaceNormals = m_FaceNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadStlToSurfaceMesh::dataCheck()
+void ReadStlFile::dataCheck()
 {
   DataArrayPath tempPath;
   setErrorCondition(0);
@@ -214,16 +214,16 @@ void ReadStlToSurfaceMesh::dataCheck()
   if(getErrorCondition() < 0 || NULL == faceAttrMat.get()) { return; }
 
   QVector<size_t> dims(1, 3);
-  tempPath.update(getSurfaceMeshDataContainerName(), getFaceAttributeMatrixName(), getSurfaceMeshTriangleNormalsArrayName() );
-  m_SurfaceMeshTriangleNormalsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshTriangleNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_SurfaceMeshTriangleNormals = m_SurfaceMeshTriangleNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getSurfaceMeshDataContainerName(), getFaceAttributeMatrixName(), getFaceNormalsArrayName() );
+  m_FaceNormalsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_FaceNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_FaceNormals = m_FaceNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadStlToSurfaceMesh::preflight()
+void ReadStlFile::preflight()
 {
   setInPreflight(true);
   emit preflightAboutToExecute();
@@ -236,7 +236,7 @@ void ReadStlToSurfaceMesh::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadStlToSurfaceMesh::execute()
+void ReadStlFile::execute()
 {
   dataCheck();
   if(getErrorCondition() < 0) { return; }
@@ -252,7 +252,7 @@ void ReadStlToSurfaceMesh::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadStlToSurfaceMesh::readFile()
+void ReadStlFile::readFile()
 {
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(m_SurfaceMeshDataContainerName);
 
@@ -283,15 +283,19 @@ void ReadStlToSurfaceMesh::readFile()
   updateFaceInstancePointers();
 
   //Read the triangles
-  float v[12];
+  static const size_t k_StlElementCount = 12;
+  float v[k_StlElementCount];
   unsigned short attr;
   for(int t = 0; t < triCount; ++t)
   {
-    for (size_t j = 0; j < 12; ++j)
+    fread(reinterpret_cast<void*>(v), sizeof(float), k_StlElementCount, f);
+
+    fread( reinterpret_cast<void*>(&attr), sizeof(unsigned short), 1, f);
+    if(attr > 0)
     {
-      fread((void*)&v[j], sizeof(float), 1, f);
+      std::vector<unsigned char> buffer(attr); // Allocate a buffer for the STL attribute data to be placed into
+      fread( reinterpret_cast<void*>(&(buffer.front())), attr, 1, f); // Read the bytes into the buffer so that we can skip it.
     }
-    fread((void*)&attr, sizeof(unsigned short), 1, f);
     if(v[3] < m_minXcoord) { m_minXcoord = v[3]; }
     if(v[3] > m_maxXcoord) { m_maxXcoord = v[3]; }
     if(v[4] < m_minYcoord) { m_minYcoord = v[4]; }
@@ -310,9 +314,9 @@ void ReadStlToSurfaceMesh::readFile()
     if(v[10] > m_maxYcoord) { m_maxYcoord = v[10]; }
     if(v[11] < m_minZcoord) { m_minZcoord = v[11]; }
     if(v[11] > m_maxZcoord) { m_maxZcoord = v[11]; }
-    m_SurfaceMeshTriangleNormals[3 * t + 0] = v[0];
-    m_SurfaceMeshTriangleNormals[3 * t + 1] = v[1];
-    m_SurfaceMeshTriangleNormals[3 * t + 2] = v[2];
+    m_FaceNormals[3 * t + 0] = v[0];
+    m_FaceNormals[3 * t + 1] = v[1];
+    m_FaceNormals[3 * t + 2] = v[2];
     nodes[3 * (3 * t + 0) + 0] = v[3];
     nodes[3 * (3 * t + 0) + 1] = v[4];
     nodes[3 * (3 * t + 0) + 2] = v[5];
@@ -333,7 +337,7 @@ void ReadStlToSurfaceMesh::readFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadStlToSurfaceMesh::eliminate_duplicate_nodes()
+void ReadStlFile::eliminate_duplicate_nodes()
 {
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(m_SurfaceMeshDataContainerName);
 
@@ -432,9 +436,9 @@ void ReadStlToSurfaceMesh::eliminate_duplicate_nodes()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ReadStlToSurfaceMesh::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ReadStlFile::newFilterInstance(bool copyFilterParameters)
 {
-  ReadStlToSurfaceMesh::Pointer filter = ReadStlToSurfaceMesh::New();
+  ReadStlFile::Pointer filter = ReadStlFile::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -445,27 +449,27 @@ AbstractFilter::Pointer ReadStlToSurfaceMesh::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadStlToSurfaceMesh::getCompiledLibraryName()
+const QString ReadStlFile::getCompiledLibraryName()
 { return IOConstants::IOBaseName; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadStlToSurfaceMesh::getGroupName()
+const QString ReadStlFile::getGroupName()
 { return DREAM3D::FilterGroups::IOFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadStlToSurfaceMesh::getSubGroupName()
+const QString ReadStlFile::getSubGroupName()
 { return DREAM3D::FilterSubGroups::InputFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadStlToSurfaceMesh::getHumanLabel()
-{ return "Read Stl File To SurfaceMesh"; }
+const QString ReadStlFile::getHumanLabel()
+{ return "Read Stl File"; }
 

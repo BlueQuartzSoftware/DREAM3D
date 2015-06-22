@@ -1,4 +1,4 @@
-Write STL Files From Triangle Geometry {#surfacemeshtostl}
+Write STL Files From Triangle Geometry {#writestlfile}
 =============
 
 ## Group (Subgroup) ##

@@ -34,7 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#include "SurfaceMeshToStl.h"
+#include "WriteStlFile.h"
 
 #include <QtCore/QDir>
 
@@ -50,7 +50,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SurfaceMeshToStl::SurfaceMeshToStl() :
+WriteStlFile::WriteStlFile() :
   AbstractFilter(),
   m_OutputStlDirectory(""),
   m_OutputStlPrefix(""),
@@ -66,14 +66,14 @@ SurfaceMeshToStl::SurfaceMeshToStl() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SurfaceMeshToStl::~SurfaceMeshToStl()
+WriteStlFile::~WriteStlFile()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshToStl::setupFilterParameters()
+void WriteStlFile::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FileSystemFilterParameter::New("Output STL Directory", "OutputStlDirectory", FilterParameterWidgetType::OutputPathWidget, getOutputStlDirectory(), FilterParameter::Parameter));
@@ -88,7 +88,7 @@ void SurfaceMeshToStl::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshToStl::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void WriteStlFile::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   setSurfaceMeshFacePhasesArrayPath(reader->readDataArrayPath("SurfaceMeshFacePhasesArrayPath", getSurfaceMeshFacePhasesArrayPath() ) );
@@ -101,7 +101,7 @@ void SurfaceMeshToStl::readFilterParameters(AbstractFilterParametersReader* read
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshToStl::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int WriteStlFile::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
@@ -116,7 +116,7 @@ int SurfaceMeshToStl::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshToStl::dataCheck()
+void WriteStlFile::dataCheck()
 {
   setErrorCondition(0);
 
@@ -152,7 +152,7 @@ void SurfaceMeshToStl::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshToStl::preflight()
+void WriteStlFile::preflight()
 {
   setInPreflight(true);
   emit preflightAboutToExecute();
@@ -165,7 +165,7 @@ void SurfaceMeshToStl::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshToStl::execute()
+void WriteStlFile::execute()
 {
   int32_t err = 0;
   setErrorCondition(0);
@@ -335,7 +335,7 @@ void SurfaceMeshToStl::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int32_t SurfaceMeshToStl::writeHeader(FILE* f, const QString& header, int32_t triCount)
+int32_t WriteStlFile::writeHeader(FILE* f, const QString& header, int32_t triCount)
 {
   if (NULL == f)
   {
@@ -355,7 +355,7 @@ int32_t SurfaceMeshToStl::writeHeader(FILE* f, const QString& header, int32_t tr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int32_t SurfaceMeshToStl::writeNumTrianglesToFile(const QString& filename, int32_t triCount)
+int32_t WriteStlFile::writeNumTrianglesToFile(const QString& filename, int32_t triCount)
 {
   // We need to update the number of triangles in the file
   int32_t err = 0;
@@ -371,9 +371,9 @@ int32_t SurfaceMeshToStl::writeNumTrianglesToFile(const QString& filename, int32
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer SurfaceMeshToStl::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer WriteStlFile::newFilterInstance(bool copyFilterParameters)
 {
-  SurfaceMeshToStl::Pointer filter = SurfaceMeshToStl::New();
+  WriteStlFile::Pointer filter = WriteStlFile::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -384,23 +384,23 @@ AbstractFilter::Pointer SurfaceMeshToStl::newFilterInstance(bool copyFilterParam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SurfaceMeshToStl::getCompiledLibraryName()
+const QString WriteStlFile::getCompiledLibraryName()
 { return IOConstants::IOBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SurfaceMeshToStl::getGroupName()
+const QString WriteStlFile::getGroupName()
 { return DREAM3D::FilterGroups::IOFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SurfaceMeshToStl::getSubGroupName()
+const QString WriteStlFile::getSubGroupName()
 { return DREAM3D::FilterSubGroups::OutputFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SurfaceMeshToStl::getHumanLabel()
+const QString WriteStlFile::getHumanLabel()
 { return "Write STL Files from Triangle Geometry"; }

@@ -26,12 +26,13 @@ set(_PublicFilters
   LosAlamosFFTWriter
   PhReader
   PhWriter
+  ReadStlFile
   SPParksTextReader
   SPParksWriter
-  SurfaceMeshToStl
   VisualizeGBCDGMT
   VisualizeGBCDPoleFigure
   VtkStructuredPointsReader
+  WriteStlFile
 )
 
 #--------------
@@ -53,8 +54,7 @@ set(_PrivateFilters
   GoldfeatherReader
   LammpsFileWriter
   NodesTrianglesToStl
-  NodesTrianglesToVtk
-  ReadStlToSurfaceMesh
+  NodesTrianglesToVtk 
   SurfaceMeshToNonconformalVtk
   SurfaceMeshToNodesTrianglesEdges
   SurfaceMeshToVtk
