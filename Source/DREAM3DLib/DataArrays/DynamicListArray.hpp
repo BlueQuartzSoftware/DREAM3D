@@ -177,7 +177,7 @@ class DynamicListArray
      * @brief allocateLists
      * @param linkCounts
      */
-    void allocateLists(QVector<size_t>& linkCounts)
+    void allocateLists(QVector<T>& linkCounts)
     {
       allocate(linkCounts.size());
       for (K i = 0; i < linkCounts.size(); i++)
@@ -191,7 +191,7 @@ class DynamicListArray
      * @brief allocateLists
      * @param linkCounts
      */
-    void allocateLists(std::vector<size_t>& linkCounts)
+    void allocateLists(std::vector<T>& linkCounts)
     {
       allocate(linkCounts.size());
       for (K i = 0; i < linkCounts.size(); i++)

@@ -523,7 +523,7 @@ void InsertAtoms::execute()
 
   // create a dynamic list array to hold face lists
   Int32Int32DynamicListArray::Pointer faceLists = Int32Int32DynamicListArray::New();
-  QVector<size_t> linkCount(numFeatures, 0);
+  QVector<int32_t> linkCount(numFeatures, 0);
 
   // fill out lists with number of references to cells
   typedef boost::shared_array<int32_t> SharedInt32Array_t;

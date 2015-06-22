@@ -206,7 +206,7 @@ namespace GeometryHelpers
         size_t numVertsPerElem = elemList->getNumberOfComponents();
 
         // Allocate the basic structures
-        QVector<size_t> linkCount(numVerts, 0);
+        QVector<T> linkCount(numVerts, 0);
         size_t elemId = 0;
         int64_t* linkLoc;
 
@@ -247,7 +247,8 @@ namespace GeometryHelpers
        * @brief FindElementNeighbors
        * @param elemList
        * @param elemsContainingVert
-       * @param dynamicList
+       * @param dynamicList This should be an empty DynamicListArray object. It is not
+       * it <b>WILL</b> be cleared and reallocated.
        * @return
        */
       template<typename T, typename K>
@@ -282,6 +283,8 @@ namespace GeometryHelpers
           break;
         }
 
+        dynamicList->allocateLists(linkCount);
+
         // Allocate an array of bools that we use each iteration so that we don't put duplicates into the array
         boost::shared_array<bool> visitedPtr(new bool[numElems]);
         bool* visited = visitedPtr.get();
@@ -315,7 +318,7 @@ namespace GeometryHelpers
               {
                 for (size_t j = 0; j < numVertsPerElem; j++)
                 {
-                  if (seedElem[i] == vertCell[i])
+                  if (seedElem[i] == vertCell[j])
                   {
                     vCount++;
                   }
