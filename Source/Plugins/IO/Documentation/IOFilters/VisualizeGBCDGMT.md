@@ -10,6 +10,7 @@ This Filter creates a .dat file that can be used in conjunction with [GMT](http:
 -----
 
 ![GMT Output of GBCD Data](SmallIn100GMT_.png)
+@image latex SmallIn100GMT_.png "GMT Output of GBCD Data" width=6in 
 
 -----
 

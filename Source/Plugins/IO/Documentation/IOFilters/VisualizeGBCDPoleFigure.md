@@ -11,9 +11,9 @@ This Filter creates a .vtk file that can be used in [ParaView](http://www.paravi
 
 ![Regular Grid Visualization of the Small IN100 GBCD results.](Small_IN00_GBCD_RegularGrid.png)
 
+-----
+
 ![Using ParaView's Threshold filter + Cells to Points + Delaunay2D Filters](Small_IN100_GBCD_Delaunay2D.png)
-
-
 
 -----
 

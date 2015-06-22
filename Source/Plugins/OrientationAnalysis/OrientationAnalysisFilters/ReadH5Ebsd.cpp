@@ -1011,4 +1011,4 @@ const QString ReadH5Ebsd::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString ReadH5Ebsd::getHumanLabel()
-{ return "Read H5Ebsd File"; }
+{ return "Read H5EBSD File"; }

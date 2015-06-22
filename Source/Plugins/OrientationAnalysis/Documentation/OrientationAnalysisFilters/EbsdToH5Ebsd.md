@@ -1,14 +1,14 @@
-Import Orientation File(s) to H5Ebsd {#ebsdtoh5ebsd}
+Import Orientation File(s) to H5EBSD {#ebsdtoh5ebsd}
 =============
 
 ## Group (Subgroup) ##
 IO (Input)
 
 ## Description ##
-This Filter will convert orientation data obtained from Electron Backscatter Diffraction (Ebsd) experiments into a single file archive based on the [HDF5](http://www.hdfgroup.org) file specification. See the **Supported File Formats** section below for information on file compatibility. This Filter is typically run as a single filter pipeline to perform the conversion. All subsequent pipelines should then use the [Read H5Ebsd File](readh5ebsd.html) Filter to import the H5Ebsd file into DREAM.3D for analysis, as opposed to re-importing the raw Ebsd files.  The primary purpose of this filter is to import a stack of data that forms a 3D volume.  If the user wishes to import a single data file, then the Filters [Read EDAX EBSD Data (.ang)](ReadAngData.html ""), [Read EDAX EBSD Data (.h5)](ReadEdaxH5Data.html ""), or [Read Oxford Instr. EBSD Data (.ctf)](ReadCtfData.html "") should be used for EDAX .ang, EDAX .h5, or Oxford .ctf files, respectively.
+This Filter will convert orientation data obtained from Electron Backscatter Diffraction (EBSD) experiments into a single file archive based on the [HDF5](http://www.hdfgroup.org) file specification. See the **Supported File Formats** section below for information on file compatibility. This Filter is typically run as a single filter pipeline to perform the conversion. All subsequent pipelines should then use the [Read H5EBSD File](readh5ebsd.html) Filter to import the H5EBSD file into DREAM.3D for analysis, as opposed to re-importing the raw EBSD files.  The primary purpose of this filter is to import a stack of data that forms a 3D volume.  If the user wishes to import a single data file, then the Filters [Read EDAX EBSD Data (.ang)](ReadAngData.html ""), [Read EDAX EBSD Data (.h5)](ReadEdaxH5Data.html ""), or [Read Oxford Instr. EBSD Data (.ctf)](ReadCtfData.html "") should be used for EDAX .ang, EDAX .h5, or Oxford .ctf files, respectively.
 
 ### Converting Orientation Data to H5EBSD Archive ###
-In order to work with orientation data, DREAM.3D needs to read the data from an archive file based on the [HDF5](http://www.hdfgroup.org) specification. In order to convert the data, the user will first build a single Filter pipeline by selecting the [Import Orientation File(s) to H5Ebsd](EbsdToH5Ebsd.html "") Filter. This Filter will convert a directory of sequentially numbered files into a single [HDF5](http://www.hdfgroup.org) file that retains all the meta data from the header(s) of the files. The user selects the directory that contains all the files to be imported then uses the additional input widgets on the Filter interface (_File Prefix_, _File Suffix_, _File Extension_, and _Padding Digits_) to make adjustments to the generated file name until the correct number of files is found. The user may also select starting and ending indices to import. The user interface indicates through red and green icons if an expected file exists on the file system and will also display a warning message at the bottom of the Filter interface if any of the generated file names do not appear on the file system.
+In order to work with orientation data, DREAM.3D needs to read the data from an archive file based on the [HDF5](http://www.hdfgroup.org) specification. In order to convert the data, the user will first build a single Filter pipeline by selecting the [Import Orientation File(s) to H5EBSD](EbsdToH5Ebsd.html "") Filter. This Filter will convert a directory of sequentially numbered files into a single [HDF5](http://www.hdfgroup.org) file that retains all the meta data from the header(s) of the files. The user selects the directory that contains all the files to be imported then uses the additional input widgets on the Filter interface (_File Prefix_, _File Suffix_, _File Extension_, and _Padding Digits_) to make adjustments to the generated file name until the correct number of files is found. The user may also select starting and ending indices to import. The user interface indicates through red and green icons if an expected file exists on the file system and will also display a warning message at the bottom of the Filter interface if any of the generated file names do not appear on the file system.
 
 ### Stacking Order ###
 Due to different experimental setups, the definition of the _bottom_ slice or the **Z=0** slice can be different. The user should verify that the proper button box is checked for their data set. 
@@ -22,36 +22,41 @@ Many serial sectioning systems are inherently a series of 2D scans stacked toget
 -----
 
 ![Import Orientation Files User Interface](images/ImportOrientationDataFilter.png)
+@image latex images/ImportOrientationDataFilter.png "Import Orientation Files User Interface" width=6in
 
 -----
 
 ## Orientations, Reference Frames and Coordinate Systems
-DREAM.3D's origin follows the specimen's coordinate system so that the physical location of the 0 row and 0 column voxel should visually appear in the lower left corner of a computer graphics display as shown in the figure below, where the specimen coordinate system (white) overlaid with Ebsd coordinate system (yellow).
+DREAM.3D's origin follows the specimen's coordinate system so that the physical location of the 0 row and 0 column voxel should visually appear in the lower left corner of a computer graphics display as shown in the figure below, where the specimen coordinate system (white) overlaid with EBSD coordinate system (yellow).
 
 -----
 
 ![TSL Coordinate System (Spatial)](images/CoordinateSystem1.png)
+@image latex images/CoordinateSystem1.png "TSL Coordinate System (Spatial)" width=6in
 
 -----
 
-Commercial Ebsd acquisition systems do not typically follow this convention, and DREAM.3D needs input from the user so that the proper transformations to the data can be applied during subsequent analysis. Commercial Ebsd software packages allow for some initial transformations of the data, in which case the DREAM.3D environment does not have any way of determining if those transformations have already occurred. During the import process the user is asked a few questions regarding the orientation of the EBSD data in relation to the specimen coordinate system.
+Commercial EBSD acquisition systems do not typically follow this convention, and DREAM.3D needs input from the user so that the proper transformations to the data can be applied during subsequent analysis. Commercial EBSD software packages allow for some initial transformations of the data, in which case the DREAM.3D environment does not have any way of determining if those transformations have already occurred. During the import process the user is asked a few questions regarding the orientation of the EBSD data in relation to the specimen coordinate system.
 
 -----
 
 ![The Advance Reference Frame Dialog](images/EbsdToH5Ebsd_ReferenceFrameDialog.png)
+@image latex images/EbsdToH5Ebsd_ReferenceFrameDialog.png "The Advance Reference Frame Dialog" width=6in
 
 -----
 
 ### Setting the Spatial Reference Frame ###
-The user needs to click the _Set Reference Frame_ button to set the proper reference frame for the data set which will be written to the H5Ebsd file as meta data. Below are a number of examples showing the differences in the data sets due to the selection of different reference frames.
+The user needs to click the _Set Reference Frame_ button to set the proper reference frame for the data set which will be written to the H5EBSD file as meta data. Below are a number of examples showing the differences in the data sets due to the selection of different reference frames.
 
 ---
 
 ![No Transform or Unknown Manufacturer or HEDM Data](images/NoUnknown_HEDM_RefFrame.png)
+@image latex images/NoUnknown_HEDM_RefFrame.png "No Transform or Unknown Manufacturer or HEDM Data" width=6in
 
 ---
 
 ![TSL or HKL Transform](images/EDAX_HKL_RefFrame.png)
+@image latex images/EDAX_HKL_RefFrame.png "TSL or HKL Transform" width=6in
 
 ---
 

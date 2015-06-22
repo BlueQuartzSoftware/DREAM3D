@@ -557,4 +557,4 @@ const QString EbsdToH5Ebsd::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString EbsdToH5Ebsd::getHumanLabel()
-{ return "Import Orientation File(s) to H5Ebsd"; }
+{ return "Import Orientation File(s) to H5EBSD"; }
