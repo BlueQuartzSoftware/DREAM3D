@@ -1,4 +1,4 @@
-Write VTK Pole Figure (GBCD Data) {#visualizegbcdpolefigure}
+Write GBCD Pole Figure (vtk) {#visualizegbcdpolefigure}
 ============
 
 ## Group (Subgroup) ##
@@ -9,8 +9,11 @@ This Filter creates a .vtk file that can be used in [ParaView](http://www.paravi
 
 -----
 
-<center><img Test src="SmallIn100VTK.tif" alt="Drawing" style="width: 500px;"/></center>
-<center><b>Regular Grid Visualization of GBCD Data</b></center>
+![Regular Grid Visualization of the Small IN100 GBCD results.](Small_IN00_GBCD_RegularGrid.png)
+
+![Using ParaView's Threshold filter + Cells to Points + Delaunay2D Filters](Small_IN100_GBCD_Delaunay2D.png)
+
+
 
 -----
 
@@ -27,7 +30,7 @@ Triangle
 ## Required Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Ensemble | GBDC | Double | (6) | 5 parameter GBCD data. The 6<sup>th</sup> component is used internally to track the northern vs. southern hemisphere of the Lambert sphere |
+| Ensemble | GBDC | Double | (6) | 5 parameter GBCD data. The 6<sup>th</sup> component is used internally to track the number of bins |
 
 ## Created Arrays ##
 None

@@ -1,4 +1,4 @@
-Write GMT Pole Figure Data (GBCD Data) {#visualizegbcdgmt}
+Write GBCD Pole Figure (GMT) {#visualizegbcdgmt}
 ============
 
 ## Group (Subgroup) ##
