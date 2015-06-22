@@ -94,11 +94,11 @@ QUrl DREAM3DHelpUrlGenerator::generateHTMLUrl(QString htmlName)
 
 
 
-#if defined(Q_OS_WIN)
+#if defined(Q_OS_WIN) || defined (Q_OS_MAC)
   QFileInfo fi( helpDir.absolutePath() + Detail::Dream3DHelpPath + htmlName + ".html");
   if (fi.exists() == false)
   {
-    // The help file does not exist at the default location because we are probably running from visual studio.
+    // The help file does not exist at the default location because we are probably running from Visual Studio or Xcode
     // Try up one more directory
     helpDir.cdUp();
   }
