@@ -180,7 +180,17 @@ void PipelineViewWidget::newEmptyPipelineViewLayout()
                                                           "padding: 10px;\n"
                                                           "}"));
     m_EmptyPipelineLabel->setAlignment(Qt::AlignCenter);
-    m_EmptyPipelineLabel->setText("Drag filters here to build up a pipeline");
+    QString text;
+    QTextStream ss (&text);
+    ss << "<h2>Creating a Pipeline</h2>";
+    ss << "<hr>";
+    ss << "File > Open <br />";
+    ss << "File > New <br />";
+    ss << "Drag and drop filters<br />";
+    ss << "Double click a Bookmark<br />";
+    ss << "Double click a Prebuilt Pipeline<br />";
+    m_EmptyPipelineLabel->setText(text);
+
 
     gridLayout->addWidget(m_EmptyPipelineLabel, 1, 1, 1, 1);
 
