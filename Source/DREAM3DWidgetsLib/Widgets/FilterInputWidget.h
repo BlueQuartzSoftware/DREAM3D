@@ -59,7 +59,7 @@ class DREAM3DWidgetsLib_EXPORT FilterInputWidget : public QWidget, private Ui::F
     Q_OBJECT
 
   public:
-    FilterInputWidget(QWidget* parent = NULL);
+    FilterInputWidget(QString filterClassName, QWidget* parent = NULL);
     virtual ~FilterInputWidget();
 
     virtual void setupGui();
@@ -82,7 +82,8 @@ class DREAM3DWidgetsLib_EXPORT FilterInputWidget : public QWidget, private Ui::F
     void fadeOutWidget(QWidget* widget);
 
   private:
-    QPointer<FaderWidget> faderWidget;
+    QString m_FilterClassName;
+    QPointer<FaderWidget> m_FaderWidget;
     bool m_AdvFadedOut;
     QString m_BrandingLabel;
 

@@ -64,8 +64,9 @@ enum TabIndices
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FilterInputWidget::FilterInputWidget(QWidget* parent) :
+FilterInputWidget::FilterInputWidget(QString filterClassName, QWidget* parent) :
   QWidget(parent),
+  m_FilterClassName(filterClassName),
   m_AdvFadedOut(false)
 {
   setupUi(this);
@@ -78,7 +79,7 @@ FilterInputWidget::FilterInputWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 FilterInputWidget::~FilterInputWidget()
 {
-  
+
 }
 
 // -----------------------------------------------------------------------------
@@ -116,7 +117,7 @@ void FilterInputWidget::setupGui()
 // -----------------------------------------------------------------------------
 void FilterInputWidget::on_filterHelpBtn_pressed()
 {
-  DREAM3DUserManualDialog::LaunchHelpDialog(filterHumanLabel->text());
+  DREAM3DUserManualDialog::LaunchHelpDialog(m_FilterClassName);
 }
 
 // -----------------------------------------------------------------------------
@@ -191,13 +192,13 @@ void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
 // -----------------------------------------------------------------------------
 void FilterInputWidget::fadeInWidget(QWidget* widget)
 {
-  if (faderWidget)
+  if (m_FaderWidget)
   {
-    faderWidget->close();
+    m_FaderWidget->close();
   }
-  faderWidget = new FaderWidget(widget);
-  faderWidget->setStartColor(DREAM3D::Defaults::AdvancedColor);
-  faderWidget->start();
+  m_FaderWidget = new FaderWidget(widget);
+  m_FaderWidget->setStartColor(DREAM3D::Defaults::AdvancedColor);
+  m_FaderWidget->start();
   m_AdvFadedOut = false;
 }
 
@@ -207,16 +208,16 @@ void FilterInputWidget::fadeInWidget(QWidget* widget)
 void FilterInputWidget::fadeOutWidget(QWidget* widget)
 {
 
-  if (faderWidget)
+  if (m_FaderWidget)
   {
-    faderWidget->close();
+    m_FaderWidget->close();
   }
-  faderWidget = new FaderWidget(widget);
-  faderWidget->setFadeOut();
-  faderWidget->setStartColor(DREAM3D::Defaults::AdvancedColor);
-  connect(faderWidget, SIGNAL(animationComplete() ),
+  m_FaderWidget = new FaderWidget(widget);
+  m_FaderWidget->setFadeOut();
+  m_FaderWidget->setStartColor(DREAM3D::Defaults::AdvancedColor);
+  connect(m_FaderWidget, SIGNAL(animationComplete() ),
           widget, SLOT(hide()));
-  faderWidget->start();
+  m_FaderWidget->start();
   m_AdvFadedOut = true;
 }
 

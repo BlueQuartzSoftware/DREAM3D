@@ -158,7 +158,7 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
 void PipelineFilterWidget::setupFilterInputWidget()
 {
   // Instantiate the filter input widget object
-  m_FilterInputWidget = new FilterInputWidget(this);
+  m_FilterInputWidget = new FilterInputWidget(m_Filter->getNameOfClass(), this);
 
   // Initialize the filter input widget with values
   m_FilterInputWidget->displayFilterParameters(this);
@@ -878,10 +878,10 @@ void PipelineFilterWidget::showContextMenuForWidget(const QPoint &pos)
 // -----------------------------------------------------------------------------
 void PipelineFilterWidget::launchHelpForItem()
 {
-  QString name = getFilter()->getHumanLabel();
+  QString className = getFilterClassName();
 
   // Launch the dialog
-  DREAM3DUserManualDialog::LaunchHelpDialog(name);
+  DREAM3DUserManualDialog::LaunchHelpDialog(className);
 }
 
 // -----------------------------------------------------------------------------

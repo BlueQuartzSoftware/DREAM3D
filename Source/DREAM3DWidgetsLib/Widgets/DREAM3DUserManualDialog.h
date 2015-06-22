@@ -69,10 +69,11 @@ public:
   static void LaunchHelpDialog(QUrl url);
 
   /**
-  * @brief Static function to launch the help dialog with the given filter human label
+  * @brief Static function to launch the help dialog with the given filter's classname
+  * @param className The name of the Filter's class in C++ as given by the "getNameOfClass()" static function of the filter.
   * @return
   */
-  static void LaunchHelpDialog(QString humanLabel);
+  static void LaunchHelpDialog(QString className);
 
 protected:
   DREAM3DUserManualDialog();

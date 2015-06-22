@@ -102,8 +102,9 @@ void DREAM3DUserManualDialog::LaunchHelpDialog(QUrl url)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DUserManualDialog::LaunchHelpDialog(QString humanLabel)
+void DREAM3DUserManualDialog::LaunchHelpDialog(QString className)
 {
+#if 0
   FilterManager* fm = FilterManager::Instance();
   if (NULL == fm)
   {
@@ -120,7 +121,7 @@ void DREAM3DUserManualDialog::LaunchHelpDialog(QString humanLabel)
     return;
   }
   QString className = filter->getNameOfClass();
-
+#endif
   // Generate help page
   QUrl helpURL = DREAM3DHelpUrlGenerator::generateHTMLUrl(className.toLower());
   DREAM3DUserManualDialog::LaunchHelpDialog(helpURL);

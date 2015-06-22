@@ -213,10 +213,10 @@ void FilterLibraryDockWidget::showContextMenuForWidget(const QPoint &pos)
     actionLaunchHelp->setObjectName(QString::fromUtf8("actionLaunchHelp"));
     actionLaunchHelp->setText(QApplication::translate("DREAM3D_UI", "Filter Help", 0));
     connect(actionLaunchHelp, SIGNAL(triggered()),
-      m_Mapper, SLOT(map()));
+            m_Mapper, SLOT(map()));
     m_Mapper->setMapping(actionLaunchHelp, itemName);
     connect(m_Mapper, SIGNAL(mapped(QString)),
-      this, SLOT(launchHelpForItem(QString)));
+            this, SLOT(launchHelpForItem(QString)));
 
     m_ContextMenu->addAction(actionLaunchHelp);
     m_ContextMenu->exec(QCursor::pos());
@@ -226,10 +226,26 @@ void FilterLibraryDockWidget::showContextMenuForWidget(const QPoint &pos)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterLibraryDockWidget::launchHelpForItem(QString name)
+void FilterLibraryDockWidget::launchHelpForItem(QString humanLabel)
 {
+  FilterManager* fm = FilterManager::Instance();
+  if (NULL == fm)
+  {
+    return;
+  }
+  IFilterFactory::Pointer factory = fm->getFactoryForFilterHumanName(humanLabel);
+  if (NULL == factory.get())
+  {
+    return;
+  }
+  AbstractFilter::Pointer filter = factory->create();
+  if (NULL == filter.get())
+  {
+    return;
+  }
+  QString className = filter->getNameOfClass();
   // Launch the dialog
-  DREAM3DUserManualDialog::LaunchHelpDialog(name);
+  DREAM3DUserManualDialog::LaunchHelpDialog(className);
 }
 
 // -----------------------------------------------------------------------------
