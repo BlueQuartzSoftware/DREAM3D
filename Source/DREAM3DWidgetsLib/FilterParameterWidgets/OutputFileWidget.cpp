@@ -199,7 +199,7 @@ void OutputFileWidget::on_selectBtn_clicked()
   QString ext = m_FilterParameter->getFileExtension();
   QString s = Ftype + QString(" Files (") + ext + QString(");;All Files(*.*)");
   QString defaultName = m_OpenDialogLastDirectory + QDir::separator() + "Untitled";
-  QString file = QFileDialog::getOpenFileName(this, tr("Select File"), defaultName, s);
+  QString file = QFileDialog::getSaveFileName(this, tr("Save File As"), defaultName, s);
 
 
   if(true == file.isEmpty())
