@@ -81,12 +81,6 @@ class H5DataArrayWriter
         return -607;
       }
 
-      err = QH5Lite::writeScalarAttribute(gid, dataArray->getName(), DREAM3D::HDF5::NumComponents, 1);
-      if(err < 0)
-      {
-        return -606;
-      }
-
 
       // Write the tuple dimensions as an attribute
       hsize_t size = tDims.size();

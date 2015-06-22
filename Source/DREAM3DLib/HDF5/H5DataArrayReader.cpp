@@ -241,56 +241,6 @@ IDataArray::Pointer H5DataArrayReader::ReadIDataArray(hid_t gid, const QString& 
       return ptr;
     }
 
-#if 1
-    /*** !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    * sizes of the dimensions were written into the file in reverse order that DREAM3D uses so we need to reverse the
-    * order of the tuple and component dimenions. DREAM3D stores the dimensions in Fastest To Slowest order (XYZ) and
-    * actually stores the data in that order. HDF5 would interpret the data incorrectly because HDF5 uses the convention
-    * of Slowest to Fastest dimension ordering. This mainly effects HDFView being able to interpret the data and displaying
-    * it correctly. BUT there could be other users that have existing C/C++/Fortran HDF5 codes that would be tripped up
-    * by this issue. There are attributes in the .dream3d file on the actual data set that help to fully describe
-    * the ordering of the data and what dimension goes with which axis.
-    */
-    qint32 count = tDims.size() - 1;
-    QVector<size_t> temp(tDims.size());
-    for (int i = count; i >= 0; i--)
-    {
-      //     std::cout << "  " << tDims[i] << std::endl;
-      temp[count - i] = tDims[i];
-    }
-    tDims = temp;
-    //  std::cout << "  Comp Dims: " << std::endl;
-    count = cDims.size() - 1;
-    temp.resize(cDims.size());
-    for (int i = count; i >= 0; i--)
-    {
-      //    std::cout << "  " << cDims[i] << std::endl;
-      temp[count - i] = cDims[i];
-    }
-    cDims = temp;
-#endif
-
-
-    //Sanity Check the combination of the Tuple and Component Dims. They should match in aggregate what we got from the getDatasetInfo above.
-    qint32 offset = 0;
-    for(qint32 i = 0; i < tDims.size(); i++)
-    {
-      if(dims.at(offset) != tDims.at(i))
-      {
-        qDebug() << "Tuple Dimension " << i << " did not equal the matching slot in the HDF5 Dataset Dimensions." << dims.at(offset) << " Versus " << tDims.at(i);
-        return ptr;
-      }
-      offset++;
-    }
-    for(qint32 i = 0; i < cDims.size(); i++)
-    {
-      if(dims.at(offset) != cDims.at(i))
-      {
-        qDebug() << "Component Dimension " << i << " did not equal the matching slot in the HDF5 Dataset Dimensions." << dims.at(offset) << " Versus " << cDims.at(i);
-        return ptr;
-      }
-      offset++;
-    }
 
     // Check to see if we are reading a bool array and if so read it and return
     if (classType.compare("DataArray<bool>") == 0)

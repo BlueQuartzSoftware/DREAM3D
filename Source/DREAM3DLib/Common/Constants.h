@@ -432,7 +432,6 @@ namespace DREAM3D
     const DREAM3D_STRING DREAM3DVersion("DREAM3D Version");
     const DREAM3D_STRING ObjectType("ObjectType");
     const DREAM3D_STRING Rank("Rank");
-    const DREAM3D_STRING NumComponents("NumComponents");
     const DREAM3D_STRING TupleDimensions("TupleDimensions");
     const DREAM3D_STRING ComponentDimensions("ComponentDimensions");
     const DREAM3D_STRING AxisDimensions("Tuple Axis Dimensions");
