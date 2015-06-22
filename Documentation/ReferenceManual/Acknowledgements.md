@@ -1,5 +1,19 @@
-Brief History and Acknowledgements {#acknowledgements}
+What is DREAM.3D? {#acknowledgements}
 ========
+
+## Introduction ##
+Welcome to DREAM.3D, an open and modular software package that allows users to reconstruct, instantiate, quantify, mesh, handle and visualize multi-dimensional, multi-modal data. The core software package has many major functionalities, including:
+
+@li Import a series of Electron Backscatter Diffraction (Ebsd) data files (either TSL .ang or HKL .ctf) or images (.bmp, .jpeg, .tif or .png) as a 3D volume and export the data packed into a single HDF5 data file in order to reduce data size and clutter
+@li Alignment, cleaning, reconstruction, segmentation and analysis of imported data
+@li Statistics, either synthetically created or from real data, can be used to generate a statistically equivelent material structure
+@li Reconstructed and synthetic volumes can be surfaced meshed to allow export into FEM or other simulations.
+
+The above items represent only a subset of the specific capabilities of DREAM.3D.  In general, DREAM.3D can be considered a generic tool for processing multi-dimensional, multi-modal dat. While DREAM.3D was originally designed as a tool to analyze microstructure data, the development of an abstract and powerful [data structure](@ref datastructure) allows for analysis of not just generic materials data, but also mulit-dimensional data in general.  
+
+DREAM.3D makes the data analysis simple and straight forward, while providing state-of-the-art functionality. The development of more features is always on going and the DREAM.3D development team welcomes your feed back whether you are first time user or seasoned user. 
+
+<a href="https://groups.google.com/forum/?hl=en#!forum/dream3d-users">test</a> 
 
 ## History of DREAM.3D ##
 The history of DREAM.3D is rooted in two parallel research efforts:
@@ -71,11 +85,3 @@ Parts of DREAM.3D were written under US Air Force (AFRL) Contract FA8650-07-D-58
 
 + Mr. Joey Kleingers (CC) (SOCHE)
 + Mr. Jarrell Waggoner (CC) (Univ. South Carolina)
-
-
-
-@htmlonly
-|   | Navigation |    |
-|----|---------|------|
-| --| [Top](index.html) | [Next Section](datastructure.html) |
-@endhtmlonly

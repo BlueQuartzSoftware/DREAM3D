@@ -26,7 +26,7 @@ Triangle
 ## Required Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Ensemble | GBDC | Double | (6) | 5 parameter GBCD data. The 6<sup>th</sup> component is used internally to track the number of bins |
+| Ensemble | GBDC | Double | (6) | 5 parameter GBCD data. The 6<sup>th</sup> component is used internally to track the northern vs. southern hemisphere of the Lambert sphere |
 
 ## Created Arrays ##
 None

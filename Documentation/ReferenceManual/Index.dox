@@ -1,23 +1,11 @@
 /*!
 
 @mainpage Table of Contents
-The DREAM3D Rererence Manual contains all the information to start using DREAM3D quickly. The user is urged to read through the short introduction to get a basic idea of how to use DREAM3D. For a really quick start the user is referred to the various tutorials that have been created. For those uses importing data from other sources the sections on the various file formats will be of interest. Finally the "Filter Documentation" lists each of the filters that the user can utilize in their workflows.
-
-Welcome to DREAM.3D, an open and modular software package that allows users to reconstruct, instantiate, quantify, mesh, handle and visualize microstructure digitally. The core software package has four (4) major functionalities.
-
-@li First, a series of EBSD data files (either TSL .ang or HKL .ctf) or images (.bmp, .jpeg, .tif or .png) can be read and packed into a single HDF5 data file in order to reduce data size and clutter.
-@li The sections can be aligned, cleaned, reconstructed, segmented and statistically characterized.
-@li Statistics, either synthetically created or from real data, can be used to generate a statistically equivelent microstructure.
-@li The reconstructed volumes and the synthetic volumes can be surfaced meshed to allow the models to be moved into FEM or other simulations.
-
-DREAM3D makes the reconstruction of 3D EBSD data simple and straight forward. The development of more features is always on going and the DREAM3D development team welcomes your feed back whether you are first time user or seasoned user.
-
+The DREAM.3D User Manual contains all the necessary information to start using DREAM.3D quickly. The user is urged to read through the @ref acknowledgements section for an introduction to the basic ideas and motivations behind DREAM.3D. For a quick start on using the some of the common functions of DREAM.3D, the user can consult the @ref tutorials section. For those users importing data from other sources, the @ref supportedfileformats section will be of interest. The main operations of DREAM.3D are contained in self-contained functions termed <b>Filters</b>, which all have documentation covering their use in the @ref filterdocumentation section.
 
 @subpage acknowledgements
 
 @subpage datastructure
-
-@subpage supportedfileformats
 
 @subpage userinterface
 
@@ -30,5 +18,7 @@ DREAM3D makes the reconstruction of 3D EBSD data simple and straight forward. Th
 @subpage tutorials
 
 @subpage auxiliarytools
+
+@subpage supportedfileformats
 */
 
