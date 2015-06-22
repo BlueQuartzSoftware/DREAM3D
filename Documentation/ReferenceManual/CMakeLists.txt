@@ -26,6 +26,7 @@ set(DOCUMENTATION_SOURCE_FILES
   \"${PROJECT_SOURCE_DIR}/UserInterface.md\"
   \"${PROJECT_SOURCE_DIR}/CreatingPipeline.md\"
   \"${PROJECT_SOURCE_DIR}/ImportExportPipelines.md\"
+  \"${PROJECT_SOURCE_DIR}/Glossary.md\"
   \"${PROJECT_SOURCE_DIR}/SupportedFileFormats/SupportedFileFormats.dox\"
   \"${PROJECT_SOURCE_DIR}/SupportedFileFormats/NativeDREAM3DFileFormat.md\"
   \"${PROJECT_SOURCE_DIR}/SupportedFileFormats/XdmfForVisualization.md\"

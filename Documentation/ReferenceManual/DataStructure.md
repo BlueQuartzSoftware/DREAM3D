@@ -1,61 +1,75 @@
 DREAM.3D Data Structure {#datastructure}
 =========
 
-DREAM3D uses a data structure that is based on the concepts of combinatorial topology and common methods for describing mesh structures.  Any topological network (in 2- or 3-D) can be decribed with a the following hierarchy:
+## Overview ##
 
-![DREAM3D Data Structure](Images/DataStructure-2.png)
+DREAM.3D uses an _abstract_, _hierarchical_ data structure that has roots in the concepts of combinatorial topology and common methods for describing mesh structures.  The generalized data structure follows a tree structure with the following possible node types:
 
-@image latex Images/DataStructure-2.png "DREAM3D Data Structure " width=6in 
++ **Data Container Array**: The root node of the data structure. In most cases, a particular workflow will only have one **Data Container Array**, but this is not a hard requirement.  The **Data Container Array** has access to create and retrieve all _objects_ that descend from it, not just its immediate **Data Container** children.
++ **Data Container**: Holds **Attribute Matrices** for data that belong to _unique_ geometries.  Two **Data Containers** are distinguised by their associated **Geometry**.
++ **Attribute Matrix**: Holds **Attribute Arrays**, which are the containers for raw data. The type of **Attribute Matrix** labels the hierarchy level to which its associated **Attribute Arrays** corresponds.
++ **Attribute Array**: Holds raw data in memory. DREAM.3D utilizes a _flat_ data storage approach, such that even multidimensional data is allocated into a contiguous section of memory. This approach enables faster and more efficient compute times.
 
+The above node types are commonly referred to as _objects_, while the data stored within them is referred to as the _attributes_ of those objects. For most DREAM.3D functions, the user is given control over how to name the various objects within the data hierarchy.
 
-If the mesh (or network) is 2-D, then the *Volume* element does not exist and the *Face* element is the highest level element. For typical *voxel-based* data, the *voxels* are the *Volume* elements and within DREAM.3D are referred to  as **Cells**.  Similarly, in a surface mesh with triangular patches, the triangles are the *Face* elements and within DREAM.3D are referred to  as **Faces**.  This topology is required to describe the "mesh" or "structure" of the data itself and is not/cannot be adjusted/defined by the user. 
+-----
 
-However, once the topology of the "structure" is set, the user can begin *grouping* topological elements into higher level features of the "structure".  Below is an example of this grouping for a *voxel-based* dataset of a polycrystalline metal.
+![DREAM.3D Data Structure](Images/dataStructure.png)
+@image latex Images/dataStructure.png "DREAM.3D Data Structure" width=6in 
 
-![DREAM.3D Data Structure](Images/DataStructure-1.png)
+-----
 
-@image latex Images/DataStructure-1.png "DREAM.3D Data Structure " width=6in 
+## Geometry ##
+A special kind of object is known as the **Geometry**, which defines the spatial organization of the data. The **Data Container** objects are responsible for holding **Geometries**. In general, this means that the distinguishing characteristic between two **Data Containers** is their associated **Geoemtry** objects. **Geoemtries** are generally classified by the _topology_ of their unit **Element**, which is the smallest building block of the geometry. **Elements** can have 4 different dimensionalities: 0 (points), 1 (lines), 2 (polygons), and 3 (polyhedra). In the DREAM.3D ontology, these are generally referred to as **Vertices**, **Edges**, **Faces**, and **Cells**. 
 
-DREAM.3D uses two additional levels above the topological levels required to define the "structure" of the data.  These two levels are called: **Feature** and **Ensemble**.  These levels allow the user to *group* topological elements together based on criteria of similarity.  For the example above, the **Cells** are *grouped* to identify **Features** (i.e. grains) by applying a criterion of similar crystallographic orientation (i.e. neighboring **Cells** with similar orientation are said to belong to the same **Feature**).  The **Features** are then *grouped* to identify **Ensembles** by a criterion of similar phase (i.e. all grains of the same phase in the dataset are said to belong to the same **Ensemble**).  The grouping criteria are at the discretion of the user, because these additional levels are not required for description of the "structure", but rather are organizational levels for describing the information that lives on the "structure".  
+-----
 
-At each level, DREAM.3D creates a *Map* to store information/data about the individual elements at that level.  Additional information about the maps of the DREAM.3D data structure and "typical" data are given below:
+![Unit Element Types](Images/vefc.png)
+@image latex Images/vefc.png "Unit Element Types" width=6in 
 
-## Vertex ##
-  - Map of attributes associated with single *points*.    
-  - Measured values (i.e. Orientation, Chemistry, Greyscale, etc.) - generally measured data is not represented at the **Vertex** level, but the user could choose to store measured values at the **Vertices** rather than the more typical **Cell**-centered convention.
-  - Calculated values (i.e. Curvatures, Coordination, etc.) - these calculated values are typically values associated with the connectivity or geometry of the "mesh" or "structure" itself. 
+-----
 
-## Edge ##
-  - Map of attributes associated with edges of **Faces**.    
-  - Measured values - data is not typically measured at the **Edge** level.
-  - Calculated values (i.e. Curvatures, Coordination, etc.) - these calculated values are typically values associated with the connectivity or geometry of the "mesh" or "structure" itself. 
+Data attributes can be associated with any of these element types, as long as that association makes sense for the given element topology. For example, a triangulated surface mesh can have **Vertex**, **Edge**, and **Face** data associated with it, but not **Cell** data, since a triangle has a 2-dimensional topology.
 
-## Face ##
-  - Map of attributes associated with surface patches.    
-  - Measured values - data is not typically measured at the **Face** level.
-  - Calculated values (i.e. Bounding Feature Ids, Normals, Curvature, etc.) - these calculated values are typically IDs to the higher level maps (**Feature** and **Ensemble**), related to gradients of the measured values, values associated with the connectivity or geometry of the "mesh" or "structure" itself or relationships to values calculated in the higher level maps. 
+### Currently Implemented Geometries ###
+| Name             | Topology |  Associated Data | Description |
+|------------------|------|------------------------|-----------|
+| Unknown | N/A | Any | A null geometry, used if the underlying data have no spatial layout |
+| Vertex | 0 | Vertex | A collection of points, commonly referred to as a _point cloud_ |
+| Edge | 1 | Edge | A collection of edges defined by two vertices, forming _lines_ |
+| Triangle | 2 | Face | A collection of triangles; one type of _surface mesh_ |
+| Quad | 2 | Face | A collection of quadrilaterals; one type of _surface mesh_ |
+| Image | 3 | Cell | A _structured_, _rectilinear_ grid; this **Geometry** is composed of _pixels_ (in 2D) or _voxels_ (in 3D) |
 
-## Cell ##
-  - Map of attributes associated with single *datapoints* - often these *datapoints* are not truly *volumes*, but rather point-probe measurements that are homogenized over the volume nearest to each probe-point.    
-  - Measured values (i.e. Orientation, Chemistry, Greyscale, etc.) - typically this is the level at which most data is actually acquired.
-  - Calculated values (i.e. Feature Ids, Kernel Avg. Misorientation, Euclidean Distance, etc.) - these calculated values are typically IDs to the higher level maps (**Feature** and **Ensemble**), related to gradients of the measured values or relationships to values calculated in the higher level maps. 
+## Attribute Matrices & Data Hierarchy ##
+Data is organized in DREAM.3D using **Attribute Matrix** objects. These objects themselves do not store data; instead, they store the last level in the object hierarchy, called **Attribute Arrays**, which are the low-level containers for contiguous regions of data. There are a variety of different types of **Attribute Matrices**:
 
++ **Element**: Attribute data associated directly with the features of the **Geometry** objects. Types of **Element Attribute Matrices** include:
+	- **Vertex**: Attribute data associated with vertices
+	- **Edge**: Attribute data associated with edges
+	- **Face**: Attribute data associated with polygons
+	- **Cell**: Attribute data assocaites with polyhedra
++ **Feature**: Attribute data associated with _collections_ of **Elements**
++ **Ensemble**: Attribute data associated with _collections_ of **Features**
 
-## Feature ##
-  - Map of attributes associated with sets of *datapoints* - generally *elements* in this map are sets of contiguous **Cells** that have some aspect of similarity, often in their measured values (i.e. orientation, chemistry, greyscale, etc.).
-  - Measured values (i.e. Avg. Stresses, Avg. Strains, etc) - some measurement techniques are capable of measuring values averaged over an entire **Feature** (i.e. High Energy Diffraction Microscopy). 
-  - Calculated values (i.e. Avg. Orientation, Size, Shape, No. of Neighbors, etc.) - generally there is little measured data at this level and these values are calculated from averaging the measured data from the **Cells** that constitute each **Feature** or geometrically describe the size and/or shape of the set of **Cells**.
+The four different types of **Element Attribute Matrix** correspond to the four possible levels of dimensional topology for a given **Geometry**. For example, a **Triangle Geometry** may have a **Vertex Attribute Matrix** that stores an **Attribute Array** that defines a scalar at each vertex, and a **Face Attribute Matrix** that defines a vector on every triangle. This example points out one of the advantages of the DREAM.3D data structure: data with any amount of dimensionality can be stored efficiently thanks to the generic _object-attribute_ associations. Note as well that the **Attribute Matrix** itself defines the _tuple dimensions_ for a given kind of data, whereas the **Attribute Arrays** in that **Attribute Matrix** define the _component dimensions_ of the raw data. For example, consider a **Triangle Geometry** with 20 triangles. A **Face Attribute Matrix** for this **Geometry** will have 20 _tuples_; i.e., the number of triangles. An associated scalar **Attribute Array** in this **Face Attribute Matrix** will also have a _tuple_ length of 20, since 20 x 1 = 20. But an **Attribute Array** that defines a vector (such as a normal for each triangle) would have 3 components. This vector array is still associated with the triangles, so it is stored in the **Face Attribute Matrix**. The total number of _tuples_ for the underlying array in this case is now 60, since 20 x 3 = 60.
 
+-----
 
-## Ensemble ##
-  - Map of attributes associated with sets of **Features**
-  - Measured/Set values (i.e. Crystal Structure, Phase Type, etc.) - measured values at the **Ensemble** level are usually user-defined parameters during the data collection or during analysis within DREAM.3D.
-  - Calculated values (i.e. Size Distribution, No. of Features, ODF, etc.) - these values are typically descriptions of the distribution of values from the lower level **Feature** map.  
+![Attribute Matrix Layout](Images/attributematrix.png)
+@image latex Images/attributematrix.png "Attribute Matrix Layout" width=6in 
 
+-----
 
+A given **Data Container** should only have at most one type of each of the different varieties of **Element Attribute Matrix**. This arises because a given **Geometry** should only have one way to organize its unit elements in space (e.g., the number of triangles in a **Triangle Geometry** remains fixed). If the number of any of the components of a **Geometry** change, then that defines a new **Geometry** that should belong in a new **Data Container** with new associated **Attribute Matrices**. Note that if the elements of a **Geometry** merely _move_ (e.g., via a mesh smoothing process), then there is no need to instantiate new **Attribute Matrices**, since the underlying _tuple_ dimensions have remained constant.
 
-@htmlonly
-|   | Navigation |    |
-|----|---------|------|
-| [Back](acknowledgements.html) | [Top](index.html) | [Next Section](supportedfileformats.html) |
-@endhtmlonly
+The underlying **Elements** of a given **Geometry** can be _grouped_ together to form collections of **Elements** via some classification rule. A common example is _segmenting_ a grayscale image by assigning all pixels with less than a certain grayscale value to class 1, and all others to class 2. This procedure introduces a sense of _hierarchy_ to a data stream. DREAM.3D refers to these collections of **Elements** as **Features**. These **Features** can then have data associated with them through a **Feature Attribute Matrix**. Any kind of **Element** may be grouped into **Features**, and there may be many different ways to group said **Elements**. Therefore, **Data Containers** can generally contain as many **Feature Attribute Matrices** as are necessary. To continue the hierarchy scale, DREAM.3D allows for **Features** to be grouped together to form **Ensembles**. Again, these **Ensembles** can have associated **Ensemble Attribute Matrices** to store data, and there may be many **Ensemble Attribute Matrices** in a given **Data Container**. In principal, it is even possible to have **Ensembles** of **Ensembles**! In this manner, the DREAM.3D data structure allows data associations to bridge across mutiple length scales
+
+A key concept behind **Features** and **Ensembles** is the existence of a _map_ that ties the entries in a **Feature/Ensemble Attribute Matrix** to one level lower in the hierarchy.  The values in this map are commonly referred to as _Ids_. For example, consider an **Image Geometry** in 2D that has a set of 10 **Features** within it, defined by 10 groups of pixels.  The **Attribute Matrix** associated with this set of **Features** will have _11_ tuples. Why 11 and not 10? DREAM.3D begins numbering **Features** and **Ensembles** at 1, and reserves the _0_ value for special use. Therefore, the number of tuples for a given **Feature/Ensemble Attribute Matrix** is always one larger than the actual number of **Features/Ensembles**. Since the **Features** are groups of pixels (a kind of **Element**), DREAM.3D associates each pixel with a particular **Feature**. These _Feature Id_ values correspond to integers that sit on the pixel **Elements**, and allow DREAM.3D to index into the **Feature Attribute Matrix** by knowing the _Feature Id_ at one level lower in the hierarchy.  The same concept applies to _Ensemble Ids_ sitting at the **Feature** level. These _map_ associations enable DREAM.3D to efficiently _link_ between the various hiearchy scales, allowing for connections and correlations to be assessed.
+
+-----
+
+![Object-Attribute Associations](Images/elfeatens.png)
+@image latex Images/elfeatens.png "Object-Attribute Associations" width=6in 
+
+-----
