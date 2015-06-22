@@ -75,9 +75,20 @@ MultiEmmpmFilter::~MultiEmmpmFilter()
 void MultiEmmpmFilter::setupFilterParameters()
 {
   FilterParameterVector parameters = getFilterParameters();
+
   parameters.push_back(FilterParameter::New("Use Mu/Sigma from Previous Image as Initialization for Current Image", "UsePreviousMuSigma", FilterParameterWidgetType::BooleanWidget, getUsePreviousMuSigma(), FilterParameter::Parameter));
   parameters.push_back(FilterParameter::New("Output Array Name Prefix", "OutputArrayPrefix", FilterParameterWidgetType::StringWidget, getOutputArrayPrefix(), FilterParameter::Parameter));
-  parameters[0] = MultiDataArraySelectionFilterParameter::New("Select Input Attribute Arrays", "InputDataArrayVector", FilterParameterWidgetType::MultiDataArraySelectionWidget, getInputDataArrayVector(), FilterParameter::RequiredArray);
+
+
+
+  for ( qint32 i = 0; i < parameters.size(); i++ )
+  {
+    FilterParameter::Pointer& p = parameters[i];
+    if ( p->getPropertyName().compare("InputDataArrayPath") == 0 )
+    {
+      parameters[i] = MultiDataArraySelectionFilterParameter::New("Select Input Attribute Arrays", "InputDataArrayVector", FilterParameterWidgetType::MultiDataArraySelectionWidget, getInputDataArrayVector(), FilterParameter::RequiredArray);
+    }
+  }
 
   // Look for the OutputDataArrayPath and replace with our OutputAttributeMatrixName instead
   for ( qint32 i = 0; i < parameters.size(); i++ )
