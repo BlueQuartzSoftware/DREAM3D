@@ -704,4 +704,4 @@ const QString FindGBCD::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString FindGBCD::getHumanLabel()
-{ return "Find Grain Boundary Character Distribution"; }
+{ return "Find GBCD"; }
