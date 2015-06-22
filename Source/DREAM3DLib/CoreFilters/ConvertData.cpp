@@ -402,7 +402,7 @@ const QString ConvertData::getGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString ConvertData::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::MiscFilters; }
+{ return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
 
 // -----------------------------------------------------------------------------
 //
