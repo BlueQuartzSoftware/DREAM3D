@@ -1330,7 +1330,7 @@ void DREAM3D_UI::on_actionCheck_For_Updates_triggered()
   prefs.endGroup();
 
   // Now display the dialog box
-  d->exec();
+  d->show();
 }
 
 // -----------------------------------------------------------------------------

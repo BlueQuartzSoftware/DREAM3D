@@ -102,6 +102,13 @@ void AboutDREAM3D::setupGui()
   revisionLabel->setText(str);
 
   setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
+
+#if defined (Q_OS_MAC)
+  QAction* closeAction = new QAction(this);
+  closeAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_W));
+  connect(closeAction, SIGNAL(triggered()), this, SLOT(close()));
+  addAction(closeAction);
+#endif
 }
 
 // -----------------------------------------------------------------------------
