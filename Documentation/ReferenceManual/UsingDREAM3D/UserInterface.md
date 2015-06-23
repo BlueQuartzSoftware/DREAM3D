@@ -15,6 +15,8 @@ All sections, except the **Pipeline** View and the **Filter** Input View, can be
 
 DREAM.3D allows the user to spawn as many _main windows_ as desired. To open a new DREAM.3D instance, click the _New..._ option in the _File_ menu. Each instance of DREAM.3D can act independently, and the user is allowed to run different **Pipelines** in each _main window_ at the same time.
 
+In order to keep the size of the DREAM.3D exeuctable manageable, most of the libraries it depends on are distributed as loose files. This means that the actual DREAM.3D exeuctable **cannot be moved** outside of the folder it came in **unless all other contents of that folder are moved with it**.
+
 ------
 
 ![Overview of the DREAM.3D User Interface](Images/OverView-DREAM3D.png)

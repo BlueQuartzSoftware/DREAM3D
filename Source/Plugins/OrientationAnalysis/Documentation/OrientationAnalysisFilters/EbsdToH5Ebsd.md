@@ -40,8 +40,8 @@ Commercial EBSD acquisition systems do not typically follow this convention, and
 
 -----
 
-![The Advance Reference Frame Dialog](images/EbsdToH5Ebsd_ReferenceFrameDialog.png)
-@image latex images/EbsdToH5Ebsd_ReferenceFrameDialog.png "The Advance Reference Frame Dialog" width=6in
+![Advanced Reference Frame Dialog](images/EbsdToH5Ebsd_ReferenceFrameDialog.png)
+@image latex images/EbsdToH5Ebsd_ReferenceFrameDialog.png "Advanced Reference Frame Dialog" width=6in
 
 -----
 

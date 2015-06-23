@@ -1,4 +1,4 @@
-Cropping Data Tutorial {#tutorialcroppingdata}
+Cropping Data {#tutorialcroppingdata}
 ========
 
 Cropping data in DREAM3D can help reduce the time to process data by removing data that the user decides should not be processed. The filter uses the 3D Voxel index as the minimum and maximum values to use for the region of interest. The easiest way to work through the data is to initially run a pipeline that writes out a .dream3d file and then load the .xdmf file into ParaView. In the _Information_ tab, ParaView will display the extents of the data. For this example, note that the data extent in Voxels is (0,164)(0,172)(0,39) and in Microns is (0, 16.4)(0, 13.8)(0, 9.75) which corresponds to a resolution of (0.1, 0.08, 0.25).

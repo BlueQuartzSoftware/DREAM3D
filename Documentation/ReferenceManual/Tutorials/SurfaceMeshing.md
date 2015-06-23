@@ -1,4 +1,4 @@
-Surface Meshing Tutorial {#tutorialsurfacemeshingtutorial}
+Surface Meshing {#tutorialsurfacemeshingtutorial}
 ========
 
 ## Surface Mesh Definitions

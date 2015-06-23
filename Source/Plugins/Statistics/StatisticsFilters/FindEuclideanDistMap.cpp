@@ -200,13 +200,13 @@ class FindEuclideanMap
         double dist = 0.0;
         double oneOverzBlock = 1.0 / double(zBlock);
         double oneOverxpoints = 1.0 / double(xpoints);
-        for(int64_t m = 0; m < zpoints; m++)
+        for (int64_t m = 0; m < zpoints; m++)
         {
           zStride = m * zBlock;
           for (int64_t n = 0; n < ypoints; n++)
           {
             yStride = n * xpoints;
-            for(int64_t p = 0; p < xpoints; p++)
+            for (int64_t p = 0; p < xpoints; p++)
             {
               x1 = double(p) * resx;
               y1 = double(n) * resy;
