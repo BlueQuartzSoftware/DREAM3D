@@ -49,9 +49,10 @@
 #include "DREAM3DLib/Plugin/PluginManager.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
-
 #include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
 #include "DREAM3DLib/Plugin/DREAM3DPluginLoader.h"
+#include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/JsonFilterParametersWriter.h"
 
 #include "Tools/ToolConfiguration.h"
 
@@ -932,18 +933,40 @@ void ReplaceLicenseText(QString absPath)
   writeOutput(didReplace, outLines, absPath);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ProcessFile(const QString& path)
+{
+
+  FilterPipeline::Pointer pipeline = QFilterParametersReader::ReadPipelineFromFile(path, QSettings::IniFormat);
+
+  QFileInfo fi(path);
+
+  Observer obs;
+
+  QDir dir("/tmp/Converted_Pipelines");
+  dir.mkpath(".");
+
+  QString jsonPath = "/tmp/Converted_Pipelines/" + fi.baseName() + ".json";
+  QString name = fi.baseName();
+
+  int err = JsonFilterParametersWriter::WritePipelineToFile(pipeline, jsonPath, name, &obs);
+  if(err > -1)
+  {
+    std::cout << "Wrote new pipeline at " << jsonPath.toStdString() << std::endl;
+  }
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReplaceLicenseCodeRecursively(QDir currentDir)
+void ReplaceRecursively(QDir currentDir)
 {
 
   QStringList filters;
-  filters.append("*.h");
-  filters.append("*.cpp");
-  filters.append("*.hpp");
-  filters.append("*.in");
+  filters.append("*.ini");
+
 
   if(currentDir.dirName().compare("zRel")== 0 || currentDir.dirName().compare("Build") == 0)
   {
@@ -955,7 +978,7 @@ void ReplaceLicenseCodeRecursively(QDir currentDir)
   {
     foreach(QFileInfo fi, dirList)
     {
-      ReplaceLicenseCodeRecursively( QDir( fi.absoluteFilePath() ));   // Recursive call
+      ReplaceRecursively( QDir( fi.absoluteFilePath() ));   // Recursive call
     }
   }
 
@@ -963,7 +986,7 @@ void ReplaceLicenseCodeRecursively(QDir currentDir)
   foreach(QFileInfo itemInfo, itemList)
   {
     QString itemFilePath = itemInfo.absoluteFilePath();
-    ReplaceLicenseText(itemFilePath);
+    ProcessFile(itemFilePath);
   }
 }
 
@@ -1064,7 +1087,8 @@ int main(int argc, char* argv[])
 
   //GenerateMarkDownDocs();
   //GenerateFilterParametersCode();
-  //ReplaceLicenseCodeRecursively( QDir ( D3DTools::GetDREAM3DProjDir() ) );
+  //ReplaceRecursively( QDir ( D3DTools::GetDREAM3DProjDir() ) );
+  ReplaceRecursively( QDir ( "/Users/mjackson/Library/Preferences/DREAM3D_Favorites" ) );
 
   return 0;
 }
