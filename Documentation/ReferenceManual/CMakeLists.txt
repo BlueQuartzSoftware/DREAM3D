@@ -43,6 +43,8 @@ set(DOCUMENTATION_SOURCE_FILES
   \"${PROJECT_SOURCE_DIR}/AuxiliaryTools/DevHelper.md\"
   \"${PROJECT_SOURCE_DIR}/AuxiliaryTools/PipelineRunner.md\"
   \"${PROJECT_SOURCE_DIR}/AuxiliaryTools/AuxiliaryTools.dox\"
+  \"${PROJECT_SOURCE_DIR}/ReleaseNotes/ReleaseNotes_6_0_0.md\"
+  \"${PROJECT_SOURCE_DIR}/ReleaseNotes/ReleaseNotes.dox\"
 )
 
 set(DOXYGEN_IMAGE_DIRS
