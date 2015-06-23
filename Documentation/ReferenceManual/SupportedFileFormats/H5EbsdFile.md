@@ -14,11 +14,12 @@ The EBSD Data from multiple vendors is stored in a data file using the HDF5 file
 | Root Level Attributes | Type | Name/Comments/Default Value  |
 |----------|---------------|-----------|
 | FileVersion |  H5T\_NATIVE\_INT32   | Current Value="5"  |
+| EsdLibVersion | H5T\_STRING | Optional value that states what version of the library wrote the file |
 
 
 | Root Level Data sets | HDF5 Type | Name/Comments/Default Value |
 |----------|---------------|-----------|
-| Index | H5T\_NATIVE\_INT32 | List of all Slice index values |
+| Index | An array of all the slice values. As of DREAM3D Version 5 this is not really used but could handy if the list of slices starts to get large.  |  |
 | EulerTransformationAngle | H5T\_NATIVE\_FLOAT | Degrees |
 | EulerTransformationAxis | H5T\_NATIVE\_FLOAT |  3x1 Array (Example 0,0,1)|
 | Manufacturer | H5T\_STRING | The **Manufacturer** currently is either _TSL_ or _HKL_ |
