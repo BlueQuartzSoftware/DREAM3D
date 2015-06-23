@@ -41,6 +41,7 @@
 #include <QtCore/QDir>
 
 #include <QtWidgets/QMessageBox>
+#include <QtWidgets/QAction>
 
 #include <QWebHistory>
 #include <QWebHistoryItem>
@@ -64,6 +65,13 @@ DREAM3DUserManualDialog::DREAM3DUserManualDialog()
   DREAM3DUserManualDialog::self = this;
 
   self->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
+
+#if defined (Q_OS_MAC)
+  QAction* closeAction = new QAction(this);
+  closeAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_W));
+  connect(closeAction, SIGNAL(triggered()), this, SLOT(close()));
+  addAction(closeAction);
+#endif
 }
 
 // -----------------------------------------------------------------------------
