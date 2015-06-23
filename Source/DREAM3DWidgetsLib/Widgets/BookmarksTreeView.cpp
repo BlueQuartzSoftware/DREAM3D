@@ -313,8 +313,12 @@ void BookmarksTreeView::dragMoveEvent(QDragMoveEvent* event)
 
     if (model->flags(index).testFlag(Qt::ItemIsDropEnabled) == true)
     {
-      //setExpanded(index, true);
       setCurrentIndex(index);
+    }
+    else
+    {
+      // Set the current index back to the index being dragged, but don't highlight it
+      selectionModel()->setCurrentIndex(m_IndexBeingDragged, QItemSelectionModel::NoUpdate);
     }
   }
 
