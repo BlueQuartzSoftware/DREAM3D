@@ -1644,8 +1644,8 @@ void DREAM3D_UI::displayHelp(QString file)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionAbout_DREAM3D_triggered()
 {
-  AboutDREAM3D d(this);
-  d.exec();
+  AboutDREAM3D* d = new AboutDREAM3D(this);
+  d->show();
 }
 
 
