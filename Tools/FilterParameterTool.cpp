@@ -47,12 +47,15 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/DREAM3DLibVersion.h"
 #include "DREAM3DLib/Plugin/PluginManager.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 #include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
 #include "DREAM3DLib/Plugin/DREAM3DPluginLoader.h"
+#include "DREAM3DLib/CoreFilters/EmptyFilter.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/JsonFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/JsonFilterParametersReader.h"
 
 #include "Tools/ToolConfiguration.h"
 
@@ -1061,6 +1064,23 @@ void GenerateMarkDownDocs()
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void CreateTableOfChangedFilters(const QString& path)
+{
+  FilterPipeline::Pointer pipeline = JsonFilterParametersReader::ReadPipelineFromFile(path);
+
+  FilterPipeline::FilterContainerType container = pipeline->getFilterContainer();
+  std::cout << "| Version 4 Name | Version 6 Name |" << std::endl;
+  std::cout << "|----------------|----------------|" << std::endl;
+  foreach(AbstractFilter::Pointer filter, container)
+  {
+    EmptyFilter* empty = qobject_cast<EmptyFilter*>(filter.get());
+
+    std::cout << "| " << empty->getOriginalFilterName().toStdString() << " |   |" << std::endl;
+  }
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -1088,7 +1108,8 @@ int main(int argc, char* argv[])
   //GenerateMarkDownDocs();
   //GenerateFilterParametersCode();
   //ReplaceRecursively( QDir ( D3DTools::GetDREAM3DProjDir() ) );
-  ReplaceRecursively( QDir ( "/Users/mjackson/Library/Preferences/DREAM3D_Favorites" ) );
+  //ReplaceRecursively( QDir ( "/Users/mjackson/Library/Preferences/DREAM3D_Favorites" ) );
+  // CreateTableOfChangedFilters( QString::fromLatin1("/Users/mjackson/Desktop/v6_Changed_Names.json"));
 
   return 0;
 }
