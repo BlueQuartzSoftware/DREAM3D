@@ -1,66 +1,40 @@
 Synthetic Microstructure Generation {#tutorialsyntheticsingle}
 =========
 
-Launch DREAM3D and open the "Prebuilt Pipelines" area then the "Workshop" area (See image) and then double click the "(01) Single Cubic Phase Equiaxed" prebuilt pipeline. This will clear any filters currently in the pipeline and then populate the pipeline with the proper pipeline to build this synthetic microstructure.
+This tutorial uses a **Prebuilt Pipeline** to explain the concepts behind _sythentic microstructure_ generation in DREAM.3D. Begin by finding the **Prebuilt Pipeline** <i>(01) Single Cubic Phase Equiaxed</i> in the **Prebuilt Pipelines View** and double click on it. This will open that **Pipeline** in a new DREAM.3D window. In order to generate a synthetic microstructure, DREAM.3D needs a set of statistics that define the stochastic properties of the structure. In this case, the statistics have been generated _synthetically_ using the [StatsGenerator](@ref statsgenerator) tool. To learn how to generate your own microstructure statistics, visit the [StatsGenerator documentation](@ref statsgenerator).
+
+The <i>(01) Single Cubic Phase Equiaxed</i> **Prebuilt Pipeline** reads in a statistics file that was distributed with DREAM.3D. This simple set of statistics defines a single phase microstructure with equiaxed grains, cubic crystal symmetry, and generally random texture. To generate a synthetic microstructure that represents an instance of these statistics, simply click the _Go_ button. After the **Prebuilt Pipeline** has finished, it will write a .dream3d file and a .xdmf file to the *Data/Output* directory. The synthetic structure can be visualized by opening the .xdmf file in [ParaView](http://www.paraview.org). Note that if you re-run the **Prebuilt Pipeline**, you will overwrite your previous files and generate a _completely new_ synthetic microstructure. The microstructure is different each time running the **Pipeline** because the synthetic structure generation process is inherently _stochastic_. The resulting microstructure is locally different on each run, but its _descriptive statistics_ are indistinguishable each time.
 
 -------------------
 
-![DREAM3D Gui showing correct selection of the prebuilt pipeline](Images/synth-1.png)
-
-@image latex Images/synth-1.png "DREAM3D Gui showing correct selection of the prebuilt pipeline" width=3in
-
--------------------
-
-
-## Pipeline ##
-
-
-+ Initialize Synthetic Volume
-  - 128 Voxels in X,Y & Z
-  - 0.500 micron resolution in X, Y & Z
-+ Pack Primary Phases
-+ Find Feature Neighbors
-+ Find Number of Features
-+ Match Crystallography
-+ Generate IPF Colors (Optional)
-    - This filter is Optional
-    - It will generate actual colors corresponding to the standard IPF Color Triangle
-+ Write DREAM3D Data File
-
+![IPF Triangle for Cubic Symmetry](Images/IPFFilterLegend.png)
+@image latex Images/IPFFilterLegend.png "IPF Triangle for Cubic Symmetry" width=6in
 
 -------------------
 
-![IPF Triangle for Cubic](Images/IPFFilterLegend.png)
+-------------------
 
-@image latex Images/IPFFilterLegend.png "IPF Triangle for Cubic" width=1.75in
+![Example Generated Synthetic Microstructure](Images/synthetic.png)
+@image latex Images/synth-2.png "Example Generated Synthetic Microstructure" width=6in
 
 -------------------
 
-## Notes ##
-All the inputs should be properly set. The default location for the output file will be in the "Data/Output" directory that is located in the DREAM3D distribution directory. If you choose to save the output to another location be sure not to save the output in such a way as to over write the input file.
+## The Synthetic Structure Generation Process ##
+Assuming you have obtained a set of microstructure statistics (either by using [StatsGenerator](@ref statsgenerator) or by some other means), the first step of generating a synthetic structure is to [initialize the synthetic volume](@ref initializesyntheticvolume). During this process, you will set the overall _dimensions_, _resolution_, and _origin_ of the synthetic microstructure. Currently, all synthetic microstructures DREAM.3D creates will be instantiated on _regular grids_. Thus, the **Geometry** associated with a synthetic volume will be an **Image Geometry**. In order to create the synthetic microstructure, DREAM.3D will _pack_ **Features** of a pre-determined _shape type_ into the intialized volume. Think of it like tossing spheres into a box and swapping them about until they fill as much space as possible. During this process DREAM.3D will keep track of statistics such as the distribution of **Feature** sizes, shapes, neighbors, etc., to ensure that the resulting packed volume matches the _morphological_ statistics that were used as inputs.
 
-## Executing the Pipeline ##
+In order to start this swapping process, DREAM.3D will need to know what [types of shapes need to be packed](@ref establishshapetypes). Shape types are shared by each **Ensemble**; in the materials vernacular, these would be termed the _phases_ of the structure. For example, if you have a single phase structure (such as for the <i>(01) Single Cubic Phase Equiaxed</i> **Prebuilt Pipeline**), then there is one **Ensemble**, and you will need to select one shape type class. Each **Ensemble** must have its shape type set, and every **Ensemble** can have a different shape type. 
 
-When you have everything setup, click the "Go" button to start the pipeline. The pipeline should finish fairly quickly, within a few minutes for the default settings.
+------------
 
-## Visualization ##
+![General Workflow for Synthetic Building](Images/syntheticprocess.png)
+@image latex Images/ebsdreconstruction.png "General Workflow for Synthetic Building" width=6in
 
-After the pipeline is complete a .dream3d file and its supporting .xdmf file will be created. In order to visualize the data launch [ParaView](http://www.paraview.org) open the .xdmf file and select the "Grain Ids" and "IPFColors" data sets. Then click the "Apply" button. The microstructure should look something like the image below, which is shown with IPF coloring with a 001 reference direction.
+------------
 
--------------------
+After setting up the shape types, the next step is to [pack the primary phases](@ref packprimaryphases) of the microstructure. This process is the main step in creating a synthetic structure: it will actually pack all the shape types into the volume, swap them about until they pack nicely and meet the required statistics, and then get those shapes onto the **Image Geometry** by assigning every voxel a **Feature** Id.  The **Filter** that accomplishes this task is complex, and has a number of options, so it is encouraged to read its [documentation](@ref packprimaryphases) to learn more about how it works. But what does the _primary_ part of _pack primary phases_ mean? The primary phases can be thought of as those phases whose **Features** are the main components of the microstructure from a structural standpoint. Something that would not be a primary phase might be a _precipitate_ phase, or a _matrix_ phase. For example, if you want to create a two phase structure that has precipitates sitting at the boundaries of the primary phase, you would want to [pack the primary phase](@ref packprimaryphases) and then [insert precipitates](@ref insertprecipitatephases) on top of it. If you want to make a structure that has a contiguous matrix phase with some other **Features** thrown in, you would want to [establish that matrix phase](@ref establishmatrixphase) and then [insert the next phases as precipitates](@ref insertprecipitatephases). DREAM.3D comes with **Prebuilt Pipelines** that highlight these major types of microstructure creation.
 
-![Generated Synthetic Microstructure](Images/synth-2.png)
+After creating the morphological portion of your microstructure, you may want to [match its crystallography](@ref matchcrystallography) to a texture. For example, [StatsGenerator](@ref statsgenerator) allows you to define an orientation distribution function (ODF) that can be fit into your synthetic microstructure. Again, you can define your ODFs individually for each **Ensemble**. You can even define your misorientation distribution function (MDF) and your axis ODF, which is particularly useful if you are creating **Features** with high aspect ratios that you want aligned along some direction.
 
-@image latex Images/synth-2.png "Generated Synthetic Microstructure" width=3in
+The ability to control the morphological and crystallographic statistics of a structure on a phase by phase basis enables the user to create a huge variety of synthetic microstructures with great fidelity. This power can also be a problem, however, since it is possible to create a set of statistics that _cannot be packed in any way that satisfies all boundary conditions_. The DREAM.3D **Filters** that participate in the synthetic building process are aware of this, and will silently stop their attempts to fit data if they find it simply cannot be done. This means that it is crucial to _validate_ that you got the statistics you wanted after creating a synthetic microstructure. Luckily, DREAM.3D has all the tools necessary to quantify those [statistics](@ref statisticsfilters) and allow a user to confirm they got what they expected.
 
--------------------
-
-### ParaView Notes ###
-
-If you color by the IPFColors then a few additional steps need to be taken to force ParaView to use the generated colors. The image below shows the settings that need to be set in order to use the generated colors. If you would like to view internal grains then use the "Slice" and "Clip" filters to view to make cuts through the structure. [ParaView](http://www.paraview.org)  offers many tutorials on their website.
-![ParaView OverView](Images/ex_reconstruction_50.png)
-
-@image latex Images/ex_reconstruction_50.png "ParaView OverView" width=6in
-
--------------------
-
+To learn more about the specific tools involved in synthetic building, visit the [Synthetic Building](@ref syntheticbuildingfilters) section of the [Filter Documentation](@ref filterdocumentation). Also check out the [Statistics](@ref statisticsfilters) and [Orientation Analysis](@ref orientationanalysisfilters) sections for more information on **Filters** that can help anlayze synthetic microstructures.

@@ -1,4 +1,4 @@
-Establish Matrix Phase {#establishshapetypes}
+Establish Shape Types {#establishshapetypes}
 ======
 
 ## Group (Subgroup) ##
