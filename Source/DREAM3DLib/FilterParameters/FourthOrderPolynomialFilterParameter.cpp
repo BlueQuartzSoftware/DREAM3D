@@ -66,3 +66,13 @@ FourthOrderPolynomialFilterParameter::Pointer FourthOrderPolynomialFilterParamet
 
   return ptr;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString FourthOrderPolynomialFilterParameter::getWidgetType()
+{
+  return QString("FourthOrderPolynomialWidget");
+}
+

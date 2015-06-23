@@ -252,7 +252,7 @@ void IdentifyMicroTextureRegions::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(DoubleFilterParameter::New("C-Axis Alignment Tolerance", "CAxisTolerance", getCAxisTolerance(), FilterParameter::Parameter, "Degrees"));
+  parameters.push_back(DoubleFilterParameter::New("C-Axis Alignment Tolerance (Degrees)", "CAxisTolerance", getCAxisTolerance(), FilterParameter::Parameter));
   parameters.push_back(DoubleFilterParameter::New("Minimum MicroTextured Region Size (Diameter)", "MinMTRSize", getMinMTRSize(), FilterParameter::Parameter));
   parameters.push_back(DoubleFilterParameter::New("Minimum Volume Fraction in MTR", "MinVolFrac", getMinVolFrac(), FilterParameter::Parameter));
 

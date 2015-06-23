@@ -90,8 +90,7 @@ void VisualizeGBCDGMT::setupFilterParameters()
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Crystal Structure");
     option->setPropertyName("CrystalStructure");
-    option->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    //option->setValueType("unsigned int");
+
     QVector<QString> choices;
     // The choices here are IN ORDER of the enumerations from the EBSDLib. DO NOT CHANGE THE ORDER.
     choices.push_back("Hexagonal-High 6/mmm");

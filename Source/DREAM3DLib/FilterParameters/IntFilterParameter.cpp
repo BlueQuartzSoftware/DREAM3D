@@ -64,3 +64,13 @@ IntFilterParameter::Pointer IntFilterParameter::New(const QString& humanLabel, c
 
   return ptr;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString IntFilterParameter::getWidgetType()
+{
+  return QString("IntWidget");
+}
+

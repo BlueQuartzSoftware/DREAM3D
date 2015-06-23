@@ -41,7 +41,7 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/BooleanFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-
+#include "DREAM3DLib/FilterParameters/OutputFileFilterParameter.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 
@@ -74,7 +74,7 @@ void AlignSections::setupFilterParameters()
   FilterParameterVector parameters;
   QStringList linkedProps("AlignmentShiftFileName");
   parameters.push_back(LinkedBooleanFilterParameter::New("Write Alignment Shift File", "WriteAlignmentShifts", getWriteAlignmentShifts(), linkedProps, FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Alignment File", "AlignmentShiftFileName", FilterParameterWidgetType::OutputFileWidget, "QString", FilterParameter::Parameter, "", "*.txt"));
+  parameters.push_back(OutputFileFilterParameter::New("Alignment File", "AlignmentShiftFileName", getAlignmentShiftFileName(), FilterParameter::Parameter, "", "*.txt"));
   parameters.push_back(BooleanFilterParameter::New("Linear Background Subtraction", "SubtractBackground", getSubtractBackground(), FilterParameter::Parameter));
   setFilterParameters(parameters);
 }

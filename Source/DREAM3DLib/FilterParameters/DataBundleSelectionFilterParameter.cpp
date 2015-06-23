@@ -63,3 +63,13 @@ DataBundleSelectionFilterParameter::Pointer DataBundleSelectionFilterParameter::
 
   return ptr;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString DataBundleSelectionFilterParameter::getWidgetType()
+{
+  return QString("DataBundleSelectionWidget");
+}
+

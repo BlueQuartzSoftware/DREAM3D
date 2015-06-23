@@ -82,7 +82,6 @@ void DataContainerReader::setupFilterParameters()
     DataContainerReaderFilterParameter::Pointer parameter = DataContainerReaderFilterParameter::New();
     parameter->setHumanLabel("Select Arrays from Input File");
     parameter->setPropertyName("InputFileDataContainerArrayProxy");
-    parameter->setWidgetType(FilterParameterWidgetType::DataContainerReaderWidget);
     parameter->setDefaultFlagValue(Qt::Checked);
     parameter->setInputFileProperty("InputFile");
     parameter->setCategory(FilterParameter::Parameter);

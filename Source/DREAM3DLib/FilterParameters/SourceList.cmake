@@ -25,7 +25,7 @@ set(DREAM3DLib_FilterParameters_HDRS
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/LinkedBooleanFilterParameter.h
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/ChoiceFilterParameter.h
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/LinkedChoicesFilterParameter.h
-  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/ConstrainedFilterParameter.h
+#  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/ConstrainedFilterParameter.h
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/VolumeInfoFilterParameter.h
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/DynamicChoiceFilterParameter.h
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/ComparisonFilterParameter.h
@@ -76,7 +76,7 @@ set(DREAM3DLib_FilterParameters_SRCS
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/ChoiceFilterParameter.cpp
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/LinkedBooleanFilterParameter.cpp
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/LinkedChoicesFilterParameter.cpp
-  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/ConstrainedFilterParameter.cpp
+#  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/ConstrainedFilterParameter.cpp
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/VolumeInfoFilterParameter.cpp
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/DynamicChoiceFilterParameter.cpp
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/ComparisonFilterParameter.cpp

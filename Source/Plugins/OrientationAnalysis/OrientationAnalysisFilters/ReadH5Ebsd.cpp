@@ -54,6 +54,7 @@
 #include "EbsdLib/TSL/H5AngVolumeReader.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
+#include "OrientationAnalysis/FilterParameters/ReadH5EbsdFilterParameter.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -108,7 +109,7 @@ ReadH5Ebsd::~ReadH5Ebsd()
 void ReadH5Ebsd::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Read H5Ebsd File", "", FilterParameterWidgetType::ReadH5EbsdWidget, "", FilterParameter::Parameter));
+  parameters.push_back(ReadH5EbsdFilterParameter::New("Read H5Ebsd File", "", "", FilterParameter::Parameter));
   parameters.push_back(StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray));

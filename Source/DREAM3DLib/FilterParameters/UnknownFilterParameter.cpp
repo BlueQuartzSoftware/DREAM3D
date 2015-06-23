@@ -54,17 +54,21 @@ UnknownFilterParameter::~UnknownFilterParameter()
 UnknownFilterParameter::Pointer UnknownFilterParameter::New(const QString& humanLabel, const QString& propertyName,
   const QString& defaultValue, Category category, int groupIndex)
 {
-
   UnknownFilterParameter::Pointer ptr = UnknownFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
   ptr->setDefaultValue(defaultValue);
   ptr->setCategory(category);
   ptr->setGroupIndex(groupIndex);
-
-  if (ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
-  {
-    ptr->setReadOnly(true);
-  }
   return ptr;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString UnknownFilterParameter::getWidgetType()
+{
+  return QString("UnknownWidget");
+}
+

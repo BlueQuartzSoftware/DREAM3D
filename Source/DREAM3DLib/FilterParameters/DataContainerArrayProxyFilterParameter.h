@@ -55,6 +55,14 @@ public:
   DREAM3D_INSTANCE_PROPERTY(DataContainerArrayProxy, DataContainerArrayProxy)
     DREAM3D_INSTANCE_PROPERTY(Qt::CheckState, DefaultFlagValue)
 
+  /**
+   * @brief getWidgetType Returns the type of widget that displays and controls
+   * this FilterParameter subclass
+   * @return
+   */
+  QString getWidgetType();
+
+
 protected:
   DataContainerArrayProxyFilterParameter();
 

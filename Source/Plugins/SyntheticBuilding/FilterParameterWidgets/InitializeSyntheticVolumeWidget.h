@@ -42,6 +42,7 @@
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
@@ -171,9 +172,9 @@ class InitializeSyntheticVolumeWidget : public FilterParameterWidget, private Ui
     QList<QComboBox*>                 m_ShapeTypeCombos;
 
 
-    FilterParameter::Pointer     m_StatsArrayPath;
-    FilterParameter::Pointer     m_PhaseTypesPath;
-    FilterParameter::Pointer     m_CrystalStructuresPath;
+    DataArraySelectionFilterParameter::Pointer     m_StatsArrayPath;
+    DataArraySelectionFilterParameter::Pointer     m_PhaseTypesPath;
+    DataArraySelectionFilterParameter::Pointer     m_CrystalStructuresPath;
 
 
     InitializeSyntheticVolumeWidget(const InitializeSyntheticVolumeWidget&); // Copy Constructor Not Implemented

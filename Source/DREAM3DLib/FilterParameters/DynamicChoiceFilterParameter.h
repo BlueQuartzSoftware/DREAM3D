@@ -50,7 +50,6 @@ public:
     const QVariant& defaultValue,
     const QString& listProperty,
     Category category,
-    const QString& units,
     int groupIndex = -1);
 
   virtual ~DynamicChoiceFilterParameter();
@@ -58,6 +57,14 @@ public:
 
   DREAM3D_INSTANCE_STRING_PROPERTY(ListProperty)
   DREAM3D_INSTANCE_STRING_PROPERTY(Units)
+
+  /**
+   * @brief getWidgetType Returns the type of widget that displays and controls
+   * this FilterParameter subclass
+   * @return
+   */
+  QString getWidgetType();
+
 
 protected:
   DynamicChoiceFilterParameter();

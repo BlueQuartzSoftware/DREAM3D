@@ -90,7 +90,7 @@ void SurfaceMeshToNodesTrianglesEdges::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Output Edges File");
     parameter->setPropertyName("OutputEdgesFile");
-    parameter->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
+    
     //parameter->setValueType("QString");
     parameters.push_back(parameter);
   }

@@ -89,7 +89,7 @@ void FitFeatureData::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Distribution Type");
     parameter->setPropertyName("DistributionType");
-    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    
     QVector<QString> choices;
     choices.push_back("Beta");
     choices.push_back("Log-Normal");

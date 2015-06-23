@@ -41,7 +41,6 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/ConvertHexGridToSquareGridFilterParameter.h"
 
 #include "DREAM3DLib/Utilities/FilePathGenerator.h"
 
@@ -49,6 +48,7 @@
 #include "EbsdLib/TSL/AngReader.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
+#include "OrientationAnalysis/FilterParameters/ConvertHexGridToSquareGridFilterParameter.h"
 
 // -----------------------------------------------------------------------------
 //

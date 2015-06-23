@@ -66,3 +66,13 @@ Symmetric6x6FilterParameter::Pointer Symmetric6x6FilterParameter::New(const QStr
 
   return ptr;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString Symmetric6x6FilterParameter::getWidgetType()
+{
+  return QString("Symmetric6x6Widget");
+}
+

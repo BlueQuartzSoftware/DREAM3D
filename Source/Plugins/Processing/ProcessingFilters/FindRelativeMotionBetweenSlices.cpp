@@ -159,7 +159,7 @@ void FindRelativeMotionBetweenSlices::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Plane of Interest");
     parameter->setPropertyName("Plane");
-    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    
     QVector<QString> choices;
     choices.push_back("XY");
     choices.push_back("XZ");

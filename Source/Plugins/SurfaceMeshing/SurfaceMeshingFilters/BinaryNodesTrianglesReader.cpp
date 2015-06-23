@@ -45,6 +45,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/InputFileFilterParameter.h"
 
 #include "BinaryNodesTrianglesReader.h"
 
@@ -79,21 +80,9 @@ BinaryNodesTrianglesReader::~BinaryNodesTrianglesReader()
 void BinaryNodesTrianglesReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Binary Nodes Input File");
-    parameter->setPropertyName("BinaryNodesFile");
-    parameter->setWidgetType(FilterParameterWidgetType::InputFileWidget);
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Binary Triangles Input File");
-    parameter->setPropertyName("BinaryTrianglesFile");
-    parameter->setWidgetType(FilterParameterWidgetType::InputFileWidget);
-    parameters.push_back(parameter);
-  }
 
+  parameters.push_back(InputFileFilterParameter::New("Binary Nodes Input File", "BinaryNodesFile", getBinaryNodesFile(), FilterParameter::Parameter, "*.raw", "Raw Files"));
+  parameters.push_back(InputFileFilterParameter::New("Binary Triangles Input File", "BinaryTrianglesFile", getBinaryTrianglesFile(), FilterParameter::Parameter, "*.raw", "Raw Files"));
 
   setFilterParameters(parameters);
 }

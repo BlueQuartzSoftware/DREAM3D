@@ -47,7 +47,7 @@ public:
     DREAM3D_TYPE_MACRO_SUPER(ShapeTypesFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-    const QString& widgetType, const QVariant& defaultValue,
+     const QVariant& defaultValue,
     const QString& phaseTypeCountProperty,
     const QString& phaseTypeArrayPathProperty,
     Category category,
@@ -57,6 +57,14 @@ public:
 
   DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeCountProperty)
     DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeArrayPathProperty)
+
+  /**
+   * @brief getWidgetType Returns the type of widget that displays and controls
+   * this FilterParameter subclass
+   * @return
+   */
+  QString getWidgetType();
+
 
 protected:
   ShapeTypesFilterParameter();

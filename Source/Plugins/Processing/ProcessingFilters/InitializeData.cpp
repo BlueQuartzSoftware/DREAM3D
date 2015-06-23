@@ -77,12 +77,12 @@ void InitializeData::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", getCellAttributeMatrixPath(), FilterParameter::RequiredArray));
-  parameters.push_back(IntFilterParameter::New("X Min", "XMin", getXMin(), FilterParameter::Parameter, "Column"));
-  parameters.push_back(IntFilterParameter::New("Y Min", "YMin", getYMin(), FilterParameter::Parameter, "Row"));
-  parameters.push_back(IntFilterParameter::New("Z Min", "ZMin", getZMin(), FilterParameter::Parameter, "Plane"));
-  parameters.push_back(IntFilterParameter::New("X Max", "XMax", getXMax(), FilterParameter::Parameter, "Column"));
-  parameters.push_back(IntFilterParameter::New("Y Max", "YMax", getYMax(), FilterParameter::Parameter, "Row"));
-  parameters.push_back(IntFilterParameter::New("Z Max", "ZMax", getZMax(), FilterParameter::Parameter, "Plane"));
+  parameters.push_back(IntFilterParameter::New("X Min (Column)", "XMin", getXMin(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Y Min (Row)", "YMin", getYMin(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Z Min (Plane)", "ZMin", getZMin(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("X Max (Column)", "XMax", getXMax(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Y Max (Row)", "YMax", getYMax(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Z Max (Plane)", "ZMax", getZMax(), FilterParameter::Parameter));
   setFilterParameters(parameters);
 }
 

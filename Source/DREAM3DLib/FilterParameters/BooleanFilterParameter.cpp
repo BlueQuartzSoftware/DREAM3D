@@ -65,3 +65,13 @@ BooleanFilterParameter::Pointer BooleanFilterParameter::New(const QString& human
 
   return ptr;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString BooleanFilterParameter::getWidgetType()
+{
+  return QString("BooleanWidget");
+}
+

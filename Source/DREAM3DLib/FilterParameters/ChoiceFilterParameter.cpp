@@ -62,7 +62,6 @@ ChoiceFilterParameter::Pointer ChoiceFilterParameter::New(const QString& humanLa
   ChoiceFilterParameter::Pointer ptr = ChoiceFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
-  ptr->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
   ptr->setDefaultValue(defaultValue);
   ptr->setCategory(category);
   ptr->setChoices(choices);
@@ -72,3 +71,12 @@ ChoiceFilterParameter::Pointer ChoiceFilterParameter::New(const QString& humanLa
 
   return ptr;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ChoiceFilterParameter::getWidgetType()
+{
+  return QString("ChoiceWidget");
+}
+

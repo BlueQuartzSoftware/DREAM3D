@@ -60,7 +60,6 @@ LinkedBooleanFilterParameter::Pointer LinkedBooleanFilterParameter::New(const QS
   LinkedBooleanFilterParameter::Pointer ptr = LinkedBooleanFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
-  ptr->setWidgetType(FilterParameterWidgetType::LinkedBooleanWidget);
   ptr->setDefaultValue(defaultValue);
   ptr->setCategory(category);
   ptr->setConditionalProperties(conditionalProperties);
@@ -68,3 +67,13 @@ LinkedBooleanFilterParameter::Pointer LinkedBooleanFilterParameter::New(const QS
 
   return ptr;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString LinkedBooleanFilterParameter::getWidgetType()
+{
+  return QString("LinkedBooleanWidget");
+}
+

@@ -64,3 +64,13 @@ DoubleFilterParameter::Pointer DoubleFilterParameter::New(const QString& humanLa
 
   return ptr;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString DoubleFilterParameter::getWidgetType()
+{
+  return QString("DoubleWidget");
+}
+

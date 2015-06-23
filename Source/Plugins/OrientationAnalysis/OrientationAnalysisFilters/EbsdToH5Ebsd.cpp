@@ -48,6 +48,7 @@
 #include "EbsdLib/TSL/H5AngImporter.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
+#include "OrientationAnalysis/FilterParameters/EbsdToH5EbsdFilterParameter.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -91,7 +92,7 @@ void EbsdToH5Ebsd::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FilterParameter::New("Import Orientation Data", "OrientationData", FilterParameterWidgetType::EbsdToH5EbsdWidget, "", FilterParameter::Parameter));
+  parameters.push_back(EbsdToH5EbsdFilterParameter::New("Import Orientation Data", "OrientationData", getOutputFile(), FilterParameter::Parameter));
 
   setFilterParameters(parameters);
 

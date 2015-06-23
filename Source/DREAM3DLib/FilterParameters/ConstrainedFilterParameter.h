@@ -52,6 +52,12 @@ public:
   DREAM3D_INSTANCE_PROPERTY(T, Minimum)
     DREAM3D_INSTANCE_PROPERTY(T, Maximum)
 
+  /**
+   * @brief getWidgetType Returns the type of widget that displays and controls
+   * this FilterParameter subclass
+   * @return
+   */
+  QString getWidgetType();
 protected:
   ConstrainedFilterParameter() {}
 

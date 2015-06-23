@@ -83,7 +83,7 @@ void NeighborOrientationCorrelation::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(DoubleFilterParameter::New("Minimum Confidence Index", "MinConfidence", getMinConfidence(), FilterParameter::Parameter));
-  parameters.push_back(DoubleFilterParameter::New("Misorientation Tolerance", "MisorientationTolerance", getMisorientationTolerance(), FilterParameter::Parameter, "Degrees"));
+  parameters.push_back(DoubleFilterParameter::New("Misorientation Tolerance (Degrees)", "MisorientationTolerance", getMisorientationTolerance(), FilterParameter::Parameter));
   parameters.push_back(IntFilterParameter::New("Cleanup Level", "Level", getLevel(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   parameters.push_back(DataArraySelectionFilterParameter::New("Confidence Index", "ConfidenceIndexArrayPath", getConfidenceIndexArrayPath(), FilterParameter::RequiredArray));

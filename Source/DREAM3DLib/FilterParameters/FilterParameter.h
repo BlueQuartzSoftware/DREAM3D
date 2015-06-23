@@ -47,28 +47,7 @@
 #include "DREAM3DLib/DataContainers/DataArrayPath.h"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 
-typedef struct {
-  int x; int y; int z;
 
-  void writeJson(QJsonObject &json)
-  {
-    json["x"] = x;
-    json["y"] = y;
-    json["z"] = z;
-  }
-
-  bool readJson(QJsonObject &json)
-  {
-    if (json["x"].isDouble() && json["y"].isDouble() && json["z"].isDouble())
-    {
-      x = json["x"].toInt();
-      y = json["y"].toInt();
-      z = json["z"].toInt();
-      return true;
-    }
-    return false;
-  }
-} IntVec3_t;
 
 typedef struct {
   float x; float y; float z;
@@ -372,7 +351,7 @@ FileListInfo_t;
 
 //typedef struct { float angle; float h; float k; float l; } AxisAngleInput_t;
 
-Q_DECLARE_METATYPE(IntVec3_t)
+
 Q_DECLARE_METATYPE(FloatVec3_t)
 Q_DECLARE_METATYPE(FloatVec4_t)
 Q_DECLARE_METATYPE(FloatVec21_t)
@@ -382,49 +361,6 @@ Q_DECLARE_METATYPE(Float4thOrderPoly_t)
 Q_DECLARE_METATYPE(AxisAngleInput_t)
 Q_DECLARE_METATYPE(FileListInfo_t)
 
-
-namespace FilterParameterWidgetType
-{
-
-  const QString StringWidget("StringWidget");
-  const QString IntWidget("IntWidget");
-  const QString DoubleWidget("DoubleWidget");
-  const QString InputFileWidget("InputFileWidget");
-  const QString InputPathWidget("InputPathWidget");
-  const QString OutputFileWidget("OutputFileWidget");
-  const QString OutputPathWidget("OutputPathWidget");
-  const QString FileListInfoWidget("FileListInfoWidget");
-  const QString BooleanWidget("BooleanWidget");
-  const QString ChoiceWidget("ChoiceWidget"); // Generic ComboBox Drop down where the filter provides the list of strings
-  const QString IntVec3Widget("IntVec3Widget");
-  const QString FloatVec3Widget("FloatVec3Widget");
-  const QString FloatVec4Widget("FloatVec4Widget");
-  const QString SecondOrderPolynomialWidget("SecondOrderPolynomialWidget");
-  const QString ThirdOrderPolynomialWidget("ThirdOrderPolynomialWidget");
-  const QString FourthOrderPolynomialWidget("FourthOrderPolynomialWidget");
-  const QString Symmetric6x6Widget("Symmetric6x6Widget");
-  const QString AxisAngleWidget("AxisAngleWidget");
-  const QString UnknownWidget("UnknownWidget");
-  const QString DataContainerArrayProxyWidget("DataContainerArrayProxyWidget");
-  const QString DataContainerReaderWidget("DataContainerReaderWidget");
-  const QString DataArraySelectionWidget("DataArraySelectionWidget");
-  const QString MultiDataArraySelectionWidget("MultiDataArraySelectionWidget");
-  const QString ComparisonSelectionWidget("ComparisonSelectionWidget");
-  const QString AttributeMatrixSelectionWidget("AttributeMatrixSelectionWidget");
-  const QString DataBundleSelectionWidget("DataBundleSelectionWidget");
-  const QString DataContainerSelectionWidget("DataContainerSelectionWidget");
-  const QString ShapeTypeSelectionWidget("ShapeTypeSelectionWidget");
-  const QString DataArrayCreationWidget("DataArrayCreationWidget");
-  const QString SeparatorWidget("SeparatorWidget");
-  const QString DynamicTableWidget("DynamicTableWidget");
-  const QString LinkedBooleanWidget("LinkedBooleanWidget");
-  const QString PhaseTypeSelectionWidget("PhaseTypeSelectionWidget");
-
-  const QString DynamicChoiceWidget("DynamicChoiceWidget");
-
-  const QString PreflightUpdatedValueWidget("PreflightUpdatedValueWidget");
-  const QString VolumeDataContainerInfoWidget("VolumeDataContainerInfoWidget");
-}
 
 /**
  * @class FilterParameter FilterParameter.h DREAM3DLib/FilterParameters/FilterParameter.h
@@ -438,7 +374,6 @@ class DREAM3DLib_EXPORT FilterParameter
 {
   public:
     DREAM3D_SHARED_POINTERS(FilterParameter)
-    DREAM3D_STATIC_NEW_MACRO(FilterParameter)
     DREAM3D_TYPE_MACRO(FilterParameter)
 
     enum Category
@@ -449,29 +384,18 @@ class DREAM3DLib_EXPORT FilterParameter
       Uncategorized = 3
     };
 
-    /**
-     * @brief Creates a new Filter Parameter from the arguments. This is good for a general filter parameter that is needed.
-     * @param humanLabel What is displayed to the user in the GUI
-     * @param propertyName The name of the property that this FilterParameter controls. It should be an exact match for a Q_PROPERTY
-     * that is in the header of the filter
-     * @param widgetType The type of widget that will be used for display and gather the input value from the user
-     * @param valueType The type of data structure that is used to store the data
-     * @param advanced Is this parameter an advanced or basic. If it is advanced then the Filter Parameter will only
-     * show up on the 'Advanced' Tab of the Input widget
-     * @param units Optional argument that allows the programmer to set Units to help clarify an input value
-     * @param fileExtension What file extension should this parameter use
-     * @param fileType What type of file does this filter parameter represent (TIFF, STL, ...)
-     * @param castableValueType What value can the input value be cast back to.
-     * @return
-     */
-    static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const QVariant& defaultValue, Category category, int groupIndex = -1);
-
     virtual ~FilterParameter();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(HumanLabel)
     DREAM3D_INSTANCE_STRING_PROPERTY(PropertyName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(WidgetType)
+
+    /**
+     * @brief getWidgetType This is a pure virtual function. All subclasses need
+     * to implement this function.
+     * @return
+     */
+    virtual QString getWidgetType()  = 0;
+
     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(QVariant, DefaultValue)
     DREAM3D_INSTANCE_PROPERTY(Category, Category)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadOnly)

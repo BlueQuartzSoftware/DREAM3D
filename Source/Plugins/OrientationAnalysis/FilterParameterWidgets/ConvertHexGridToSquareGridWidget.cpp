@@ -49,7 +49,7 @@
 
 
 #include "OrientationAnalysis/OrientationAnalysisFilters/ConvertHexGridToSquareGrid.h"
-
+#include "OrientationAnalysis/FilterParameters/ConvertHexGridToSquareGridFilterParameter.h"
 
 // Initialize private static member variable
 QString ConvertHexGridToSquareGridWidget::m_OpenDialogLastDirectory = "";
@@ -65,7 +65,7 @@ ConvertHexGridToSquareGridWidget::ConvertHexGridToSquareGridWidget(FilterParamet
   m_Filter = qobject_cast<ConvertHexGridToSquareGrid*>(filter);
   Q_ASSERT_X(NULL != m_Filter, "ConvertHexGridToSquareGridWidget can ONLY be used with ConvertHexGridToSquareGridWidget filter", __FILE__);
 
-  m_FilterParameter = dynamic_cast<FileSystemFilterParameter*>(parameter);
+  m_FilterParameter = dynamic_cast<ConvertHexGridToSquareGridFilterParameter*>(parameter);
 
   if ( getOpenDialogLastDirectory().isEmpty() )
   {
@@ -106,7 +106,7 @@ AbstractFilter* ConvertHexGridToSquareGridWidget::getFilter() const
 // -----------------------------------------------------------------------------
 void ConvertHexGridToSquareGridWidget::setFilterParameter(FilterParameter* value)
 {
-  m_FilterParameter = dynamic_cast<FileSystemFilterParameter*>(value);
+  m_FilterParameter = dynamic_cast<ConvertHexGridToSquareGridFilterParameter*>(value);
 }
 
 // -----------------------------------------------------------------------------

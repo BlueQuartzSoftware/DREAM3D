@@ -57,9 +57,18 @@ SeparatorFilterParameter::Pointer SeparatorFilterParameter::New(const QString& h
   SeparatorFilterParameter::Pointer ptr = SeparatorFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName("");
-  ptr->setWidgetType(FilterParameterWidgetType::SeparatorWidget);
   ptr->setReadOnly(true);
   ptr->setCategory(category);
   ptr->setDefaultValue(QString(""));
   return ptr;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString SeparatorFilterParameter::getWidgetType()
+{
+  return QString("SeparatorWidget");
+}
+

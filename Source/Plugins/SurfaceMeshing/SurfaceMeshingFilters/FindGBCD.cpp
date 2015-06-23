@@ -372,7 +372,7 @@ FindGBCD::~FindGBCD()
 void FindGBCD::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(DoubleFilterParameter::New("GBCD Resolution", "GBCDRes", getGBCDRes(), FilterParameter::Parameter, "Degrees"));
+  parameters.push_back(DoubleFilterParameter::New("GBCD Resolution (Degrees)", "GBCDRes", getGBCDRes(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray));
   parameters.push_back(DataArraySelectionFilterParameter::New("Face Normals", "SurfaceMeshFaceNormalsArrayPath", getSurfaceMeshFaceNormalsArrayPath(), FilterParameter::RequiredArray));

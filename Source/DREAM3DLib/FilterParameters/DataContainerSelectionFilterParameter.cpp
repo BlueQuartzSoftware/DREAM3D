@@ -64,3 +64,13 @@ DataContainerSelectionFilterParameter::Pointer DataContainerSelectionFilterParam
 
   return ptr;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString DataContainerSelectionFilterParameter::getWidgetType()
+{
+  return QString("DataContainerSelectionWidget");
+}
+

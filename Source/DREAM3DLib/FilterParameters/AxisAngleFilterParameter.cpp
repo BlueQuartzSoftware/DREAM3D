@@ -65,3 +65,13 @@ AxisAngleFilterParameter::Pointer AxisAngleFilterParameter::New(const QString& h
 
   return ptr;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString AxisAngleFilterParameter::getWidgetType()
+{
+  return QString("AxisAngleWidget");
+}
+

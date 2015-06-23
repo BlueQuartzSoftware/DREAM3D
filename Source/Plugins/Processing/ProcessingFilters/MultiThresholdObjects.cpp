@@ -75,7 +75,7 @@ void MultiThresholdObjects::setupFilterParameters()
     ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
     parameter->setHumanLabel("Select Arrays to Threshold");
     parameter->setPropertyName("SelectedThresholds");
-    parameter->setWidgetType(FilterParameterWidgetType::ComparisonSelectionWidget);
+    
     parameter->setShowOperators(true);
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);

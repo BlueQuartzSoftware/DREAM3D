@@ -88,7 +88,7 @@ void MultiEmmpmFilter::setupFilterParameters()
     FilterParameter::Pointer& p = parameters[i];
     if ( p->getPropertyName().compare("InputDataArrayPath") == 0 )
     {
-      parameters[i] = MultiDataArraySelectionFilterParameter::New("Input Attribute Arrays", "InputDataArrayVector", FilterParameterWidgetType::MultiDataArraySelectionWidget, getInputDataArrayVector(), FilterParameter::RequiredArray);
+      parameters[i] = MultiDataArraySelectionFilterParameter::New("Input Attribute Arrays", "InputDataArrayVector", getInputDataArrayVector(), FilterParameter::RequiredArray);
     }
   }
 
@@ -98,8 +98,7 @@ void MultiEmmpmFilter::setupFilterParameters()
     FilterParameter::Pointer& p = parameters[i];
     if ( p->getPropertyName().compare("OutputDataArrayPath") == 0 )
     {
-
-      parameters[i] = FilterParameter::New("Output Cell Attribute Matrix", "OutputAttributeMatrixName", FilterParameterWidgetType::StringWidget, getOutputAttributeMatrixName(), FilterParameter::CreatedArray);
+      parameters[i] = StringFilterParameter::New("Output Cell Attribute Matrix", "OutputAttributeMatrixName", getOutputAttributeMatrixName(), FilterParameter::CreatedArray);
     }
   }
 

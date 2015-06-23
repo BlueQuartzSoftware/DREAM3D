@@ -53,17 +53,25 @@ MultiDataArraySelectionFilterParameter::~MultiDataArraySelectionFilterParameter(
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MultiDataArraySelectionFilterParameter::Pointer MultiDataArraySelectionFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QString& widgetType, const QVector<DataArrayPath>& defaultPaths,
+MultiDataArraySelectionFilterParameter::Pointer MultiDataArraySelectionFilterParameter::New(const QString& humanLabel, const QString& propertyName, const QVector<DataArrayPath>& defaultPaths,
   Category category, int groupIndex)
 {
   MultiDataArraySelectionFilterParameter::Pointer ptr = MultiDataArraySelectionFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
-  ptr->setWidgetType(widgetType);
   ptr->setDefaultPaths(defaultPaths);
   ptr->setCategory(category);
   ptr->setGroupIndex(groupIndex);
 
   return ptr;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString MultiDataArraySelectionFilterParameter::getWidgetType()
+{
+  return QString("MultiDataArraySelectionWidget");
+}
+

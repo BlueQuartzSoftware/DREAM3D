@@ -40,7 +40,7 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/VolumeDataContainerInfoFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/VolumeInfoFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/IntFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/BooleanFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
@@ -89,13 +89,13 @@ CropVolume::~CropVolume()
 void CropVolume::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(VolumeInfoVolumeDataContainerInfoFilterParameter::New("Geometry Information", "CurrentVolumeDataContainerDimensions", getCurrentVolumeDataContainerDimensions(), FilterParameter::Parameter, "CurrentVolumeDataContainerResolutions"));
-  parameters.push_back(IntFilterParameter::New("X Min", "XMin", getXMin(), FilterParameter::Parameter, "Column"));
-  parameters.push_back(IntFilterParameter::New("Y Min", "YMin", getYMin(), FilterParameter::Parameter, "Row"));
-  parameters.push_back(IntFilterParameter::New("Z Min", "ZMin", getZMin(), FilterParameter::Parameter, "Plane"));
-  parameters.push_back(IntFilterParameter::New("X Max", "XMax", getXMax(), FilterParameter::Parameter, "Column"));
-  parameters.push_back(IntFilterParameter::New("Y Max", "YMax", getYMax(), FilterParameter::Parameter, "Row"));
-  parameters.push_back(IntFilterParameter::New("Z Max", "ZMax", getZMax(), FilterParameter::Parameter, "Plane"));
+  parameters.push_back(VolumeInfoFilterParameter::New("Geometry Information", "CurrentVolumeDataContainerDimensions", getCurrentVolumeDataContainerDimensions(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("X Min (Column)", "XMin", getXMin(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Y Min (Row)", "YMin", getYMin(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Z Min (Plane)", "ZMin", getZMin(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("X Max (Column)", "XMax", getXMax(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Y Max (Row)", "YMax", getYMax(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Z Max (Plane)", "ZMax", getZMax(), FilterParameter::Parameter));
   QStringList linkedProps;
   linkedProps << "CellFeatureAttributeMatrixPath" << "FeatureIdsArrayPath";
   parameters.push_back(LinkedBooleanFilterParameter::New("Renumber Features", "RenumberFeatures", getRenumberFeatures(), linkedProps, FilterParameter::Parameter));

@@ -58,6 +58,12 @@ public:
   DREAM3D_INSTANCE_PROPERTY(QVector<QString>, Choices)
     DREAM3D_INSTANCE_PROPERTY(bool, Editable)
 
+  /**
+   * @brief getWidgetType Returns the type of widget that displays and controls
+   * this FilterParameter subclass
+   * @return
+   */
+  QString getWidgetType();
 protected:
   ChoiceFilterParameter();
 

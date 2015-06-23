@@ -94,7 +94,7 @@ void FindFeatureReferenceMisorientations::setupFilterParameters()
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
     parameter->setHumanLabel("Reference Orientation");
     parameter->setPropertyName("ReferenceOrientation");
-    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    
     QVector<QString> choices;
     choices.push_back("Average Orientation");
     choices.push_back("Orientation at Feature Centroid");

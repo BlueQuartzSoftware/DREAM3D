@@ -52,17 +52,25 @@ PreflightUpdatedValue::~PreflightUpdatedValue()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PreflightUpdatedValue::Pointer PreflightUpdatedValue::New(const QString& humanLabel, const QString& propertyName,
-  const QString& widgetType, const QVariant& defaultValue,
+PreflightUpdatedValue::Pointer PreflightUpdatedValue::New(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue,
   Category category, int groupIndex)
 {
   PreflightUpdatedValue::Pointer ptr = PreflightUpdatedValue::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
-  ptr->setWidgetType(widgetType);
   ptr->setDefaultValue(defaultValue);
   ptr->setCategory(category);
   ptr->setGroupIndex(groupIndex);
 
   return ptr;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString PreflightUpdatedValue::getWidgetType()
+{
+  return QString("PreflightUpdatedValueWidget");
+}
+

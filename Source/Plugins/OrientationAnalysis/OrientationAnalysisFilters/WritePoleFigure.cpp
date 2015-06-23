@@ -108,7 +108,7 @@ void WritePoleFigure::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Image Format");
     parameter->setPropertyName("ImageFormat");
-    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    
     QVector<QString> choices;
     choices.push_back("tif");
     choices.push_back("bmp");
@@ -117,13 +117,13 @@ void WritePoleFigure::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(IntFilterParameter::New("Lambert Image Size", "LambertSize", getLambertSize(), FilterParameter::Parameter, "Pixels"));
+  parameters.push_back(IntFilterParameter::New("Lambert Image Size (Pixels)", "LambertSize", getLambertSize(), FilterParameter::Parameter));
   parameters.push_back(IntFilterParameter::New("Number of Colors", "NumColors", getNumColors(), FilterParameter::Parameter));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Image Layout");
     parameter->setPropertyName("ImageLayout");
-    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    
     QVector<QString> choices;
     choices.push_back("Horizontal");
     choices.push_back("Vertical");
@@ -134,7 +134,7 @@ void WritePoleFigure::setupFilterParameters()
   }
   parameters.push_back(StringFilterParameter::New("Image Prefix", "ImagePrefix", getImagePrefix(), FilterParameter::Parameter));
   parameters.push_back(OutputPathFilterParameter::New("Output Path", "OutputPath", getOutputPath(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("Image Size", "ImageSize", getImageSize(), FilterParameter::Parameter, "Square Pixels"));
+  parameters.push_back(IntFilterParameter::New("Image Size (Square Pixels)", "ImageSize", getImageSize(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   parameters.push_back(DataArraySelectionFilterParameter::New("Euler Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray));
   parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray));

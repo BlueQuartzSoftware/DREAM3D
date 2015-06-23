@@ -105,7 +105,7 @@ void GroupMicroTextureRegions::setupFilterParameters()
   FilterParameterVector parameters = getFilterParameters();
 
   parameters.push_front(BooleanFilterParameter::New("Group C-Axes With Running Average", "UseRunningAverage", getUseRunningAverage(), FilterParameter::Parameter));
-  parameters.push_front(DoubleFilterParameter::New("C-Axis Alignment Tolerance", "CAxisTolerance", getCAxisTolerance(), FilterParameter::Parameter, "Degrees"));
+  parameters.push_front(DoubleFilterParameter::New("C-Axis Alignment Tolerance (Degrees)", "CAxisTolerance", getCAxisTolerance(), FilterParameter::Parameter));
 
   parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray));
   parameters.push_back(DataArraySelectionFilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray));

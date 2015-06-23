@@ -85,7 +85,7 @@ void MoveData::setupFilterParameters()
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
     parameter->setHumanLabel("Object to Move");
     parameter->setPropertyName("WhatToMove");
-    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    
     parameter->setDefaultValue(getWhatToMove()); // Just set the first index
     QVector<QString> choices;
     choices.push_back("Attribute Matrix");

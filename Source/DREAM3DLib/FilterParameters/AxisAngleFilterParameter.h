@@ -46,12 +46,18 @@ public:
     DREAM3D_STATIC_NEW_MACRO(AxisAngleFilterParameter)
     DREAM3D_TYPE_MACRO(AxisAngleFilterParameter)
 
-    static Pointer New(const QString& humanLabel, const QString& propertyName, 
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
     const AxisAngleInput_t& defaultValue, Category category,
      int groupIndex = -1);
 
   virtual ~AxisAngleFilterParameter();
 
+  /**
+   * @brief getWidgetType Returns the type of widget that displays and controls
+   * this FilterParameter subclass
+   * @return
+   */
+  QString getWidgetType();
 protected:
   AxisAngleFilterParameter();
 

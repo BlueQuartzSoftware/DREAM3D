@@ -41,31 +41,10 @@
 FilterParameter::FilterParameter() :
   m_HumanLabel(""),
   m_PropertyName(""),
-  m_WidgetType(""),
   m_Category(Uncategorized),
   m_ReadOnly(false),
   m_GroupIndex(-1)
 {}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
-                                              const QVariant& defaultValue, Category category, int groupIndex)
-{
-
-  FilterParameter::Pointer ptr = FilterParameter::New();
-  ptr->setHumanLabel(humanLabel);
-  ptr->setPropertyName(propertyName);
-  ptr->setDefaultValue(defaultValue);
-  ptr->setCategory(category);
-  ptr->setGroupIndex(groupIndex);
-  if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
-  {
-    ptr->setReadOnly(true);
-  }
-  return ptr;
-}
 
 // -----------------------------------------------------------------------------
 //

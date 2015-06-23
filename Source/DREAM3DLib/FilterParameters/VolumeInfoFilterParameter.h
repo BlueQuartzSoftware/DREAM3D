@@ -46,16 +46,24 @@ public:
     DREAM3D_STATIC_NEW_MACRO(VolumeInfoFilterParameter)
     DREAM3D_TYPE_MACRO_SUPER(VolumeInfoFilterParameter, FilterParameter)
 
-    static Pointer New(const QString& humanLabel, const QString& dimsProperty,
-    const QString& widgetType, const IntVec3_t& defaultValue,
-    Category category,
-    const QString& resProperty = QString(""),
-    int groupIndex = -1);
+  static Pointer New(const QString& humanLabel, const QString& dimsProperty,
+                     const IntVec3_t& defaultValue,
+                     Category category,
+                     const QString& resProperty = QString(""),
+                     int groupIndex = -1);
 
   virtual ~VolumeInfoFilterParameter();
 
   DREAM3D_INSTANCE_STRING_PROPERTY(DimensionsProperty)
     DREAM3D_INSTANCE_STRING_PROPERTY(ResolutionProperty)
+
+  /**
+   * @brief getWidgetType Returns the type of widget that displays and controls
+   * this FilterParameter subclass
+   * @return
+   */
+  QString getWidgetType();
+
 
 protected:
   VolumeInfoFilterParameter();

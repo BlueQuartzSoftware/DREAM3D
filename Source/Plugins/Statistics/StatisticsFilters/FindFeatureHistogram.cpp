@@ -86,7 +86,7 @@ void FindFeatureHistogram::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Number of Bins");
     parameter->setPropertyName("NumberOfBins");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
+    
     parameters.push_back(parameter);
   }
   QStringList linkedProps("BiasedFeaturesArrayPath");

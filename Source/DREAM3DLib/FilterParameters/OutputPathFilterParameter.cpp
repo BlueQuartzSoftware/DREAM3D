@@ -66,3 +66,13 @@ OutputPathFilterParameter::Pointer OutputPathFilterParameter::New(const QString&
 
   return ptr;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString OutputPathFilterParameter::getWidgetType()
+{
+  return QString("OutputPathWidget");
+}
+

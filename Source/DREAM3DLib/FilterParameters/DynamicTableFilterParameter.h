@@ -65,6 +65,14 @@ public:
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
     DREAM3D_INSTANCE_PROPERTY(QString, ErrorMessage)
 
+  /**
+   * @brief getWidgetType Returns the type of widget that displays and controls
+   * this FilterParameter subclass
+   * @return
+   */
+  QString getWidgetType();
+
+
 protected:
   DynamicTableFilterParameter();
 

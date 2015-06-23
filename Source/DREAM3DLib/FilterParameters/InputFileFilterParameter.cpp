@@ -68,3 +68,12 @@ InputFileFilterParameter::Pointer InputFileFilterParameter::New(const QString& h
 
   return ptr;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString InputFileFilterParameter::getWidgetType()
+{
+  return QString("InputFileWidget");
+}
+

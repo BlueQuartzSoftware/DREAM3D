@@ -77,7 +77,7 @@ void ConvertOrientations::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Input Orientation Type");
     parameter->setPropertyName("InputType");
-    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    
     QVector<QString> inputChoices = OrientationConverter<float>::GetOrientationTypeStrings();
     parameter->setChoices(inputChoices);
     parameter->setCategory(FilterParameter::Parameter);
@@ -88,7 +88,7 @@ void ConvertOrientations::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Output Orientation Type");
     parameter->setPropertyName("OutputType");
-    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    
     QVector<QString> inputChoices = OrientationConverter<float>::GetOrientationTypeStrings();
     parameter->setChoices(inputChoices);
     parameter->setCategory(FilterParameter::Parameter);

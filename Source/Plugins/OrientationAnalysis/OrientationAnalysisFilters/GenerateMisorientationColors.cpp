@@ -184,7 +184,7 @@ void GenerateMisorientationColors::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FloatVec3FilterParameter::New("Reference Orientation Axis", "ReferenceAxis", getReferenceAxis(), FilterParameter::Parameter));
-  parameters.push_back(DoubleFilterParameter::New("Reference Orientation Angle", "ReferenceAngle", getReferenceAngle(), FilterParameter::Parameter, "Degrees"));
+  parameters.push_back(DoubleFilterParameter::New("Reference Orientation Angle (Degrees)", "ReferenceAngle", getReferenceAngle(), FilterParameter::Parameter));
   QStringList linkedProps("GoodVoxelsArrayPath");
   parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Good Elements Only (Bad Elements Will Be Black)", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));

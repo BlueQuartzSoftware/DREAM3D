@@ -92,8 +92,7 @@ void VisualizeGBCDPoleFigure::setupFilterParameters()
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Crystal Structure");
     option->setPropertyName("CrystalStructure");
-    option->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    //option->setValueType("unsigned int");
+
     QVector<QString> choices;
     choices.push_back("Hexagonal-High 6/mmm");
     choices.push_back("Cubic-High m-3m");

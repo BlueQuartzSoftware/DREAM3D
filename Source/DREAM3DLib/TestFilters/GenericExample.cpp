@@ -125,7 +125,7 @@ void GenericExample::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Conversion Type");
     parameter->setPropertyName("ConversionType");
-    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    
     ////parameter->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back("Degrees To Radians");
@@ -137,7 +137,7 @@ void GenericExample::setupFilterParameters()
 
 
   /* Display a group of 3 text boxes to collect 3 integer values */
-  parameters.push_back(IntVec3FilterParameter::New("Dimensions", "Dimensions", getDimensions(), FilterParameter::Parameter, "XYZ"));
+  parameters.push_back(IntVec3FilterParameter::New("Dimensions (XYZ)", "Dimensions", getDimensions(), FilterParameter::Parameter));
 
   parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::Parameter));
 
@@ -161,7 +161,7 @@ void GenericExample::setupFilterParameters()
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
     parameter->setHumanLabel("Select Distance Metric");
     parameter->setPropertyName("DistanceMetric");
-    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    
     parameter->setDefaultValue(getDistanceMetric()); // Just set the first index
 
     QVector<QString> choices;
@@ -195,7 +195,7 @@ void GenericExample::setupFilterParameters()
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
     parameter->setHumanLabel("Select Algorithm");
     parameter->setPropertyName("AlgorithmSelection");
-    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    
     parameter->setDefaultValue(getAlgorithmSelection()); // Just set the first index
 
     QVector<QString> choices;
@@ -223,7 +223,7 @@ void GenericExample::setupFilterParameters()
   QVector<DataArrayPath> paths;
   paths.push_back(DataArrayPath("StatsGeneratorDataContainer", "CellEnsembleData", "CrystalStructures"));
   paths.push_back(DataArrayPath("StatsGeneratorDataContainer", "CellEnsembleData", "Statistics"));
-  parameters.push_back(MultiDataArraySelectionFilterParameter::New("Multi Data Array Test", "SelectedMultiArrayPaths", FilterParameterWidgetType::MultiDataArraySelectionWidget, paths, FilterParameter::Parameter, 0));
+  parameters.push_back(MultiDataArraySelectionFilterParameter::New("Multi Data Array Test", "SelectedMultiArrayPaths", paths, FilterParameter::Parameter, 0));
 
   setFilterParameters(parameters);
 }

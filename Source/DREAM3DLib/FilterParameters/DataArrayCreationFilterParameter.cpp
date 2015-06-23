@@ -66,3 +66,13 @@ DataArrayCreationFilterParameter::Pointer DataArrayCreationFilterParameter::New(
 
   return ptr;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString DataArrayCreationFilterParameter::getWidgetType()
+{
+  return QString("DataArrayCreationWidget");
+}
+

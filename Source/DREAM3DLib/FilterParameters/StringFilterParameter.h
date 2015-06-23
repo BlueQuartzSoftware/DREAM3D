@@ -51,6 +51,14 @@ public:
 
     virtual ~StringFilterParameter();
 
+  /**
+   * @brief getWidgetType Returns the type of widget that displays and controls
+   * this FilterParameter subclass
+   * @return
+   */
+  QString getWidgetType();
+
+
 protected:
   StringFilterParameter();
 

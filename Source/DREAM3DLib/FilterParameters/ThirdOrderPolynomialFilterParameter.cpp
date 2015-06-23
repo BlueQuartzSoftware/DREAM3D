@@ -66,3 +66,13 @@ ThirdOrderPolynomialFilterParameter::Pointer ThirdOrderPolynomialFilterParameter
 
   return ptr;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ThirdOrderPolynomialFilterParameter::getWidgetType()
+{
+  return QString("ThirdOrderPolynomialWidget");
+}
+

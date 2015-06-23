@@ -62,6 +62,14 @@ public:
     DREAM3D_INSTANCE_PROPERTY(QString, AttributeMatrixPathProperty)
     DREAM3D_INSTANCE_PROPERTY(DataArrayPath, AttributeMatrixPathDefault)
 
+  /**
+   * @brief getWidgetType Returns the type of widget that displays and controls
+   * this FilterParameter subclass
+   * @return
+   */
+  QString getWidgetType();
+
+
 protected:
   PhaseTypesFilterParameter();
 

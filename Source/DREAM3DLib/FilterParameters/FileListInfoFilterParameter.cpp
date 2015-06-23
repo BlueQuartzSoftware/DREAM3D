@@ -60,7 +60,6 @@ FileListInfoFilterParameter::Pointer FileListInfoFilterParameter::New(const QStr
   FileListInfoFilterParameter::Pointer ptr = FileListInfoFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
-  ptr->setWidgetType(FilterParameterWidgetType::FileListInfoWidget);
   QVariant v;
   v.setValue(defaultValue);
   ptr->setDefaultValue(v);
@@ -68,3 +67,13 @@ FileListInfoFilterParameter::Pointer FileListInfoFilterParameter::New(const QStr
 
   return ptr;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString FileListInfoFilterParameter::getWidgetType()
+{
+  return QString("FileListInfoWidget");
+}
+

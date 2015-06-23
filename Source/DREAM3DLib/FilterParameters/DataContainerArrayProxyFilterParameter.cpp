@@ -68,3 +68,14 @@ DataContainerArrayProxyFilterParameter::Pointer DataContainerArrayProxyFilterPar
 
   return ptr;
 }
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString DataContainerArrayProxyFilterParameter::getWidgetType()
+{
+  return QString("DataContainerArrayProxyWidget");
+}
+

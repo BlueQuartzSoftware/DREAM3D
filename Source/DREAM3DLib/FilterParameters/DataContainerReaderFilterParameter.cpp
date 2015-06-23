@@ -70,3 +70,13 @@ DataContainerReaderFilterParameter::Pointer DataContainerReaderFilterParameter::
 
   return ptr;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString DataContainerReaderFilterParameter::getWidgetType()
+{
+  return QString("DataContainerReaderWidget");
+}
+

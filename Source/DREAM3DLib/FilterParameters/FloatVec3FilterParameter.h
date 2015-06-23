@@ -53,6 +53,14 @@ public:
 
     virtual ~FloatVec3FilterParameter();
 
+  /**
+   * @brief getWidgetType Returns the type of widget that displays and controls
+   * this FilterParameter subclass
+   * @return
+   */
+  QString getWidgetType();
+
+
 protected:
   FloatVec3FilterParameter();
 

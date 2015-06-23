@@ -80,9 +80,9 @@ RegularGridSampleSurfaceMesh::~RegularGridSampleSurfaceMesh()
 void RegularGridSampleSurfaceMesh::setupFilterParameters()
 {
   FilterParameterVector parameters = getFilterParameters();
-  parameters.push_back(IntFilterParameter::New("X Points", "XPoints", getXPoints(), FilterParameter::Parameter, "Column"));
-  parameters.push_back(IntFilterParameter::New("Y Points", "YPoints", getYPoints(), FilterParameter::Parameter, "Row"));
-  parameters.push_back(IntFilterParameter::New("Z Points", "ZPoints", getZPoints(), FilterParameter::Parameter, "Plane"));
+  parameters.push_back(IntFilterParameter::New("X Points (Column)", "XPoints", getXPoints(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Y Points (Row)", "YPoints", getYPoints(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Z Points (Plane)", "ZPoints", getZPoints(), FilterParameter::Parameter));
   parameters.push_back(FloatVec3FilterParameter::New("Resolution", "Resolution", getResolution(), FilterParameter::Parameter));
   parameters.push_back(StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));

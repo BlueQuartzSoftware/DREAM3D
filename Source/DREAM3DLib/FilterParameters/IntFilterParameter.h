@@ -46,10 +46,18 @@ public:
     DREAM3D_TYPE_MACRO(IntFilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-    const QVariant& defaultValue, Category category, 
+    const QVariant& defaultValue, Category category,
      int groupIndex = -1);
 
     virtual ~IntFilterParameter();
+
+  /**
+   * @brief getWidgetType Returns the type of widget that displays and controls
+   * this FilterParameter subclass
+   * @return
+   */
+  QString getWidgetType();
+
 
 protected:
   IntFilterParameter();

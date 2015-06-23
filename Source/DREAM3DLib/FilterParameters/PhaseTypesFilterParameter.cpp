@@ -64,8 +64,6 @@ PhaseTypesFilterParameter::Pointer PhaseTypesFilterParameter::New(const QString&
   PhaseTypesFilterParameter::Pointer ptr = PhaseTypesFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(PhaseTypesArrayName);
-  ptr->setWidgetType(FilterParameterWidgetType::PhaseTypeSelectionWidget);
-
   ptr->setCategory(category);
   ptr->setGroupIndex(groupIndex);
 
@@ -77,3 +75,13 @@ PhaseTypesFilterParameter::Pointer PhaseTypesFilterParameter::New(const QString&
 
   return ptr;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString PhaseTypesFilterParameter::getWidgetType()
+{
+  return QString("PhaseTypesWidget");
+}
+

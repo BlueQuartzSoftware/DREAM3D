@@ -59,7 +59,7 @@
 
 
 class ConvertHexGridToSquareGrid;
-class FileSystemFilterParameter;
+class ConvertHexGridToSquareGridFilterParameter;
 
 /**
  * @class ConvertHexGridToSquareGridWidget ConvertHexGridToSquareGridWidget.h Plugins/EbsdImport/UI/ConvertHexGridToSquareGridWidget.h
@@ -175,7 +175,7 @@ class ConvertHexGridToSquareGridWidget : public FilterParameterWidget, private U
 
   private:
     ConvertHexGridToSquareGrid*           m_Filter;
-    FileSystemFilterParameter*            m_FilterParameter;
+    ConvertHexGridToSquareGridFilterParameter*            m_FilterParameter;
     QList<QWidget*>             m_WidgetList;
     QButtonGroup*               m_StackingGroup;
     QButtonGroup*               m_OriginGroup;

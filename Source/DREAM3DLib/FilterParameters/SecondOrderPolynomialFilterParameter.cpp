@@ -66,3 +66,13 @@ SecondOrderPolynomialFilterParameter::Pointer SecondOrderPolynomialFilterParamet
 
   return ptr;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString SecondOrderPolynomialFilterParameter::getWidgetType()
+{
+  return QString("SecondOrderPolynomialWidget");
+}
+

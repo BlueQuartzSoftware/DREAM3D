@@ -43,6 +43,7 @@
 #include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/DoubleFilterParameter.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
@@ -88,8 +89,7 @@ void AlignSectionsMutualInformation::setupFilterParameters()
 {
   // getting the current parameters that were set by the parent and adding to it before resetting it
   FilterParameterVector parameters = getFilterParameters();
-  parameters.push_front(FilterParameter::New("Misorientation Tolerance", "MisorientationTolerance", FilterParameterWidgetType::DoubleWidget, getMisorientationTolerance(),
-                                             FilterParameter::Parameter));
+  parameters.push_front(DoubleFilterParameter::New("Misorientation Tolerance", "MisorientationTolerance", getMisorientationTolerance(), FilterParameter::Parameter));
   QStringList linkedProps("GoodVoxelsArrayPath");
   parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask Array", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));

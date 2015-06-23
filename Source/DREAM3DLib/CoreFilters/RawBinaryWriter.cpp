@@ -41,7 +41,7 @@ void RawBinaryWriter::setupFilterParameters()
   *  FilterParameter::Pointer parameter = FilterParameter::New();
   *  parameter->setHumanLabel("Eulers Array");
   *  parameter->setPropertyName("CellEulerAnglesArrayName");
-  *  parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
+  *  
   *  parameter->setUnits("");
   *  parameters.push_back(parameter);
   * }

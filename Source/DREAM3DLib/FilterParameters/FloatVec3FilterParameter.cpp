@@ -66,3 +66,12 @@ FloatVec3FilterParameter::Pointer FloatVec3FilterParameter::New(const QString& h
 
   return ptr;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString FloatVec3FilterParameter::getWidgetType()
+{
+  return QString("FloatVec3Widget");
+}
+

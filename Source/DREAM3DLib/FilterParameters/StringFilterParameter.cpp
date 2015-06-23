@@ -65,3 +65,13 @@ StringFilterParameter::Pointer StringFilterParameter::New(const QString& humanLa
 
   return ptr;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString StringFilterParameter::getWidgetType()
+{
+  return QString("StringWidget");
+}
+

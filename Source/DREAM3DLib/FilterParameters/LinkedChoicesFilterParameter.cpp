@@ -42,7 +42,6 @@
 LinkedChoicesFilterParameter::LinkedChoicesFilterParameter() :
 ChoiceFilterParameter()
 {
-  setWidgetType(FilterParameterWidgetType::ChoiceWidget);
 }
 
 // -----------------------------------------------------------------------------
@@ -63,7 +62,6 @@ LinkedChoicesFilterParameter::Pointer LinkedChoicesFilterParameter::New(const QS
   LinkedChoicesFilterParameter::Pointer ptr = LinkedChoicesFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
-  ptr->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
   ptr->setDefaultValue(defaultValue);
   ptr->setCategory(category);
   ptr->setChoices(choices);
@@ -73,3 +71,13 @@ LinkedChoicesFilterParameter::Pointer LinkedChoicesFilterParameter::New(const QS
 
   return ptr;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString LinkedChoicesFilterParameter::getWidgetType()
+{
+  return QString("LinkedChoicesWidget");
+}
+

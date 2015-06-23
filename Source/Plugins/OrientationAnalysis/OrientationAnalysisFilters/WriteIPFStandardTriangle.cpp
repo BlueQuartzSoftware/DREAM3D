@@ -77,7 +77,7 @@ void WriteIPFStandardTriangle::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(OutputFileFilterParameter::New("Output File", "OutputFile", getOutputFile(), FilterParameter::Parameter, "*.tif, *.bmp, *.png", "Image"));
-  parameters.push_back(IntFilterParameter::New("Image Size", "ImageSize", getImageSize(), FilterParameter::Parameter, " Square Pixels"));
+  parameters.push_back(IntFilterParameter::New("Image Size (Square Pixels)", "ImageSize", getImageSize(), FilterParameter::Parameter));
   setFilterParameters(parameters);
 }
 

@@ -66,3 +66,12 @@ ComparisonFilterParameter::Pointer ComparisonFilterParameter::New(const QString&
 
   return ptr;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ComparisonFilterParameter::getWidgetType()
+{
+  return QString("ComparisonWidget");
+}
+

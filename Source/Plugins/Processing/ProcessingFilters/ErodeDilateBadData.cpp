@@ -83,7 +83,7 @@ void ErodeDilateBadData::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Operation");
     parameter->setPropertyName("Direction");
-    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    
     QVector<QString> choices;
     choices.push_back("Dilate");
     choices.push_back("Erode");

@@ -89,7 +89,7 @@ void FitCorrelatedFeatureData::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Distribution Type");
     parameter->setPropertyName("DistributionType");
-    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    
     //parameter->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back("Beta");

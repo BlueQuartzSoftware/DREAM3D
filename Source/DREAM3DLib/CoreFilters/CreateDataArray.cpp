@@ -75,7 +75,7 @@ void CreateDataArray::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Scalar Type");
     parameter->setPropertyName("ScalarType");
-    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    
     QVector<QString> choices;
     choices.push_back("signed   int 8  bit");
     choices.push_back("unsigned int 8  bit");

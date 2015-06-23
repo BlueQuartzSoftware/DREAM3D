@@ -51,6 +51,13 @@ public:
 
     virtual ~AttributeMatrixSelectionFilterParameter();
 
+    /**
+     * @brief getWidgetType Returns the type of widget that displays and controls
+     * this FilterParameter subclass
+     * @return
+     */
+    QString getWidgetType();
+
 protected:
   AttributeMatrixSelectionFilterParameter();
 

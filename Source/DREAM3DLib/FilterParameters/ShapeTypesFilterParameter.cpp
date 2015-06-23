@@ -52,8 +52,7 @@ ShapeTypesFilterParameter::~ShapeTypesFilterParameter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ShapeTypesFilterParameter::Pointer ShapeTypesFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QString& widgetType, const QVariant& defaultValue,
+ShapeTypesFilterParameter::Pointer ShapeTypesFilterParameter::New(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue,
   const QString& phaseTypeCountProperty,
   const QString& phaseTypeArrayPathProperty,
   Category category, int groupIndex)
@@ -61,7 +60,6 @@ ShapeTypesFilterParameter::Pointer ShapeTypesFilterParameter::New(const QString&
   ShapeTypesFilterParameter::Pointer ptr = ShapeTypesFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
-  ptr->setWidgetType(widgetType);
   ptr->setDefaultValue(defaultValue);
   ptr->setCategory(category);
 
@@ -71,3 +69,14 @@ ShapeTypesFilterParameter::Pointer ShapeTypesFilterParameter::New(const QString&
 
   return ptr;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ShapeTypesFilterParameter::getWidgetType()
+{
+  return QString("ShapeTypesWidget");
+}
+
+

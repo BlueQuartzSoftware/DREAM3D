@@ -153,7 +153,7 @@ void ExportData::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();  //Delimiter choice
     parameter->setHumanLabel("Delimiter");
     parameter->setPropertyName("Delimeter");
-    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    
     QVector<QString> choices;
     choices.push_back(", (comma)");
     choices.push_back("; (semicolon)");

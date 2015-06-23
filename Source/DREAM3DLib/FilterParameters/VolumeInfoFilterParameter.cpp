@@ -54,14 +54,12 @@ VolumeInfoFilterParameter::~VolumeInfoFilterParameter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VolumeInfoFilterParameter::Pointer VolumeInfoFilterParameter::New(const QString& humanLabel, const QString& dimsProperty,
-  const QString& widgetType, const IntVec3_t& defaultValue,
+VolumeInfoFilterParameter::Pointer VolumeInfoFilterParameter::New(const QString& humanLabel, const QString& dimsProperty, const IntVec3_t& defaultValue,
   Category category, const QString& resProperty, int groupIndex)
 {
   VolumeInfoFilterParameter::Pointer ptr = VolumeInfoFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(dimsProperty);
-  ptr->setWidgetType(widgetType);
   QVariant v;
   v.setValue(defaultValue);
   ptr->setDefaultValue(v);
@@ -72,3 +70,13 @@ VolumeInfoFilterParameter::Pointer VolumeInfoFilterParameter::New(const QString&
   ptr->setGroupIndex(groupIndex);
   return ptr;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString VolumeInfoFilterParameter::getWidgetType()
+{
+  return QString("VolumeInfoWidget");
+}
+

@@ -5,7 +5,8 @@
 #include "TestFilters.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-
+#include "DREAM3DLib/FilterParameters/IntFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/DoubleFilterParameter.h"
 
 
 // -----------------------------------------------------------------------------
@@ -37,21 +38,13 @@ void Filt0::setupFilterParameters()
 
   /*  For an Integer use this code*/
   {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Integer");
-    parameter->setPropertyName("Filt0_Integer");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
+    IntFilterParameter::Pointer parameter = IntFilterParameter::New("Int Value", "Filt0_Integer", 0, FilterParameter::Parameter);
     //  //parameter->setValueType("int");
     parameters.push_back(parameter);
   }
   /*  For a Floating point value use this code*/
   {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Float");
-    parameter->setPropertyName("Filt0_Float");
-    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-    ////parameter->setValueType("float");
-//    parameter->setCastableValueType("double");
+    DoubleFilterParameter::Pointer parameter = DoubleFilterParameter::New("Float Value", "Filt0_Float", 0.0, FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
 
@@ -159,21 +152,13 @@ void Filt1::setupFilterParameters()
 
   /*  For an Integer use this code*/
   {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Integer");
-    parameter->setPropertyName("Integer");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-//    //parameter->setValueType("int");
+    IntFilterParameter::Pointer parameter = IntFilterParameter::New("Int Value", "Filt1_Integer", 0, FilterParameter::Parameter);
+    //  //parameter->setValueType("int");
     parameters.push_back(parameter);
   }
   /*  For a Floating point value use this code*/
   {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Float");
-    parameter->setPropertyName("Float");
-    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-    ////parameter->setValueType("float");
-    //parameter->setCastableValueType("double");
+    DoubleFilterParameter::Pointer parameter = DoubleFilterParameter::New("Float Value", "Filt1_Float", 0.0, FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
 

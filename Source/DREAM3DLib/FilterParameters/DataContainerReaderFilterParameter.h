@@ -57,6 +57,14 @@ class DREAM3DLib_EXPORT DataContainerReaderFilterParameter : public FilterParame
     DREAM3D_INSTANCE_PROPERTY(QString, FileExtension)
     DREAM3D_INSTANCE_PROPERTY(QString, FileType)
 
+    /**
+     * @brief getWidgetType Returns the type of widget that displays and controls
+     * this FilterParameter subclass
+     * @return
+     */
+    QString getWidgetType();
+
+
     protected:
       DataContainerReaderFilterParameter();
 

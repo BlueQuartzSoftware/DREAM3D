@@ -66,3 +66,11 @@ AttributeMatrixSelectionFilterParameter::Pointer AttributeMatrixSelectionFilterP
 
   return ptr;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString AttributeMatrixSelectionFilterParameter::getWidgetType()
+{
+  return QString("AttributeMatrixSelectionWidget");
+}

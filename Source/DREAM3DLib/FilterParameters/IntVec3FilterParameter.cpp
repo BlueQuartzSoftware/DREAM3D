@@ -68,3 +68,13 @@ IntVec3FilterParameter::Pointer IntVec3FilterParameter::New(const QString& human
 
   return ptr;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString IntVec3FilterParameter::getWidgetType()
+{
+  return QString("IntVec3Widget");
+}
+
