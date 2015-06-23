@@ -822,5 +822,5 @@ const QString SurfaceMeshToVtk::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString SurfaceMeshToVtk::getHumanLabel()
-{ return "Write Vtk PolyData from SurfaceMesh"; }
+{ return "Write Vtk PolyData from Triangle Geometry"; }
 

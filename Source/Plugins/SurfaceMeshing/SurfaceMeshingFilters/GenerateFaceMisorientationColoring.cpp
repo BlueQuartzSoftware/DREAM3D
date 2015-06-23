@@ -356,4 +356,4 @@ const QString GenerateFaceMisorientationColoring::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString GenerateFaceMisorientationColoring::getHumanLabel()
-{ return "Generate Face Misorientation Colors"; }
+{ return "Generate Misorientation Colors (Face)"; }

@@ -407,4 +407,4 @@ const QString GenerateFaceIPFColoring::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString GenerateFaceIPFColoring::getHumanLabel()
-{ return "Generate Face IPF Colors"; }
+{ return "Generate IPF Colors (Face)"; }

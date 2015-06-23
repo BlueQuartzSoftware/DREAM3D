@@ -1,4 +1,4 @@
-Generate Face Misorientation Coloring {#generatefacemisorientationcoloring}
+Generate Misorientation Colors (Face) {#generatefacemisorientationcoloring}
 ======================
 
 ## Group (Subgroup) ##
@@ -11,9 +11,9 @@ This filter generates a 3 component vector per **Face** that is the axis-angle o
 
 ## Parameters ##
 
-## Required DataContainers ##
+## Required Geometry ##
 
-SurfaceMesh - Valid Surface Mesh containing the shared vertex array and face list
+Triangle Geometry - Valid Triangle containing the shared vertex array and face list
 
 
 ## Required Arrays ##
