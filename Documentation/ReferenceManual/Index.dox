@@ -21,11 +21,11 @@ Documentation for the individual <b>Filters</b> in DREAM.3D
 
 @subpage tutorials
 
-Tutorials covering some of the most commong DREAM.3D workflows
+Tutorials covering some of the most common DREAM.3D workflows
 
 @subpage auxiliarytools
 
-Overviews of the DREAM.3D tools @ref statsgenerator and @ref devhelper
+Overviews of the auxiliary DREAM.3D tools @ref statsgenerator, @ref devhelper and @ref pipelinerunner
 
 @subpage supportedfileformats
 

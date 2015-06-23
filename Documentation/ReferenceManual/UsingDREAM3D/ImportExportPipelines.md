@@ -1,86 +1,68 @@
-Import, Export & Favorite Pipelines {#importexportsavepipeline}
+Saving & Opening Pipelines {#importexportsavepipeline}
 =========
 
-## Saving and Loading a Predefined Pipeline
-DREAM3D allows the user to _Export_ and _Import_ pipelines via the **File** menu and the **Save Pipeline** and **Open Pipeline** menu items. The pipeline files are saved in the _.ini_ file format popular among many other programs. This file format is a simple text file with delineated sections with _Key::Value_ entries. This makes the sharing of Pipelines mostly transparent between users. If a pipeline has filters that require files to be read from or written to and the pipeline file is passed to another user that does not have those same paths, then the new user may have to make the adjustments inside of DREAM3D after the pipeline is loaded.
+A current **Pipeline** in the **Pipeline View** can be saved to the disk by selecting the _Save_ option in the _File_ menu. Once saved to the disk, the files can be **Bookmarked** for quick access. For more information on **Bookmarks**, visit the [user interface](@ref userinterface) section. A saved **Pipeline** file can be opened by choosing the _Open..._ option in the _File_ menu and selecting the desired **Pipeline** file. 
+
+DREAM.3D utilizes a _document_ model when dealing with saving and opening **Pipelines**. Whenever a **Pipeline** file is opened, it will appear in a new DREA.3D window. If the **Pipeline** is modified and the user selects the _Save_ option, the **Pipeline** file will be updated with the changes. 
+
+## Pipeline File Formats ##
+DREAM.3D allows the user to _export_ and _import_ **Pipelines** to a variety of file formats. The currently supported file formats are
+
++ .json
++ .dream3d
++ .txt
++ .ini
+
+Versions of DREAM.3D prior to version 6 saved **Pipelines** in the .ini format, which may have ended with either the .txt or .ini file extensions. The current version of DREAM.3D is able to read these older formats, but all new **Pipelines** will be saved to either the .json or .dream3d file format. The information written to a **Pipeline** file includes:
+
++ The list of **Filters** in the **Pipeline**, in sequential order
++ All the variables for each **Filter** and their settings
++ The name of the **Pipeline** file
++ The version of DREAM.3D used to create the **Pipeline**
+
 
 -------
 
-![Figure 1: File Menu](Images/ImportExport-1.png)
+	{
+  	  	"0": {
+    	    "CellAttributeMatrixName": "CellData",
+        	"CellEnsembleAttributeMatrixName": "CellEnsembleData",
+    	    "DataContainerName": "DataContainer",
+    	    "FilterVersion": "5.2.1285",
+    	    "Filter_Human_Label": "Read H5Ebsd File",
+    	    "Filter_Name": "ReadH5Ebsd",
+    	    "InputFile": "Data/Output/SmallIN100.h5ebsd",
+    	    "RefFrameZDir": 1,
+    	    "SelectedArrayNames": [
+    	        "Image Quality",
+    	        "Phases",
+    	        "Confidence Index",
+    	        "EulerAngles"
+    	    ],
+    	    "UseTransformations": 1,
+    	    "ZEndIndex": 117,
+    	    "ZStartIndex": 1
+    	},
+    	"1": {
+    	    "FilterVersion": "5.2.1285",
+    	    "Filter_Human_Label": "Write DREAM3D Data File",
+    	    "Filter_Name": "DataContainerWriter",
+    	    "OutputFile": "Data/Output/SmallIN100.dream3d",
+    	    "WriteXdmfFile": 1
+    	},
+    	"PipelineBuilder": {
+    	    "Name": "(02) Small IN100 Initial Visualization",
+    	    "Number_Filters": 2,
+    	    "Version": "5.2.1285"
+    	}
+	}
 
-@image latex Images/ImportExport-1.png "Figure 1: File Menu" width=2in
+<center><b>An Example Pipeline in .json Format</b></center>
 
 -------
 
-The following is a partial listing of a 3D EBSD reconstruction pipeline saved as a pipeline file:
+The .json file format is an open standard that most scripting languages, such as Python and MATLAB, can easily understand. Therefore, it is straightforward to parse the .json file with an external program to make modifications as necessary. You can even set up scripting to create many version of a **Pipeline** file and execute them from the command line using the [PipelineRunner](@ref pipelinerunner) tool.
 
-	[PipelineBuilder]
-	Number_Filters=15
-	Name=Reconstruction
-	
-	[0]
-	Filter_Name=ReadH5Ebsd
-	InputFile=/Users/Shared/Data/Ang_Data/Small_IN100_Output/Small_IN100.h5ebsd
-	ZStartIndex=1
-	ZEndIndex=117
-	UseTransformations=false
-	ArraySelections_VoxelCell\size=4
-	ArraySelections_VoxelCell\1\VoxelCell=Confidence Index
-	ArraySelections_VoxelCell\2\VoxelCell=EulerAngles
-	ArraySelections_VoxelCell\3\VoxelCell=Image Quality
-	ArraySelections_VoxelCell\4\VoxelCell=Phases
-	ArraySelections_VoxelFeature\size=0
-	ArraySelections_VoxelEnsemble\size=2
-	ArraySelections_VoxelEnsemble\1\VoxelEnsemble=CrystalStructures
-	ArraySelections_VoxelEnsemble\2\VoxelEnsemble=MaterialName
-	ArraySelections_SurfaceMeshPoint\size=0
-	ArraySelections_SurfaceMeshFace\size=0
-	ArraySelections_SurfaceMeshEdge\size=0
-	ArraySelections_SolidMeshPoint\size=0
-	ArraySelections_SolidMeshFace\size=0
-	ArraySelections_SolidMeshEnsemble\size=0
-	
-	[1]
-	Filter_Name=MultiThresholdCells
-	OutputArrayName=GoodVoxels
-	ComparisonInputs\size=2
-	ComparisonInputs\1\ArrayName=Image Quality
-	ComparisonInputs\1\CompOperator=1
-	ComparisonInputs\1\CompValue=120
-	ComparisonInputs\2\ArrayName=Confidence Index
-	ComparisonInputs\2\CompOperator=1
-	ComparisonInputs\2\CompValue=0.100000001490116
-	
-	[2]
-	Filter_Name=IdentifySample
-	
-	[3]
-	Filter_Name=AlignSectionsFeatureCentroid
-	UseReferenceSlice=true
-	ReferenceSlice=0
+The .dream3d file format is a binary file based on [HDF5](https://www.hdfgroup.org/HDF5/). More specific information about this file format can be found in the [Native DREAM.3D File Format](@ref nativedream3d) section. The .dream3d format is also how the data structure objects are stored to disk. Whenever a user writes a new DREAM.3D file, the **Pipeline** used to create it will be written into the .dream3d file alongside the data structure objects. This means that the data structure is always accompanied by the workflow that was used to create it, adding _provenance_ to the data. If you select a .dream3d file from the _Open_ option of the _File_ menu, the **Pipeline** from within that .dream3d file will be extracted and opened in a new window. This allows users to recover the workflow used to create a particular DREAM.3D file. Additionally, a .dream3d file can be dragged from the file system and dropped into the **Pipeline View**. The user is then asked if they would like to extract the **Pipeline** from the file or read the data structure objects out of the file into the current **Pipeline**. 
 
-
-## Creating a Favorite Pipeline ##
-
-If the user creates a pipeline that the user intends to use several times, then the user may want to save the pipeline to the _Favorites_ area. This can be accomplished by using the **Pipeline** menu and selecting the **Add Favorite**. If the user wants to remove a favorite at any time the user needs to select the **Remove Favorite** menu item.
-
---------------
-
-![Pipeline Menu](Images/PipelineMenu.png)
-
-@image latex Images/PipelineMenu.png "Pipeline Menu" width=3in
-
---------------
-
-## Clearing the Pipeline ##
-
-As a convenience for those situations where the user has created a large pipeline and the user would like to delete every filter from the pipeline, the **Pipeline Menu** also has a menu item to remove every filter from a pipeline and an associated keyboard shortcut.
-
-
-@htmlonly
-
-|   | Navigation |    |
-|----|---------|------|
-| [Back](creatingpipeline.html) | [Top](usermanual.html) | [Next Section](statsgenerator.html) |  
- 
-@endhtmlonly
+Note that if you select to save a **Pipeline** file as a .dream3d file, the resulting .dream3d file will **only** have the current **Pipeline** in it, not any of the data structure. To save the actual data structure along with the **Pipeline**, you must run the [Write DREAM3D Data File](@ref datacontainerwriter) **Filter**.

@@ -1,45 +1,24 @@
 Creating a Pipeline {#creatingpipeline}
 =========
-In DREAM3D the user processes their data by creating what is known as a _Pipeline_ which is constructed  out of a series of _Filters_. By chaining together a series of filters, the data is processed in quick succession and can ultimately be saved to a number of different file formats. The user should be aware that all processing on the data is done **in place**, i.e., there is only a single copy of the data resident in memory at any one time.
 
-## Building a Pipeline
-In order the build a pipeline the user can either double click on a particular filter or drag the filter from the _Filter List_ into the _Pipeline Area_.
+In DREAM.3D, the user processes their data by creating what is known as a **Pipeline** which is constructed out of a series of **Filters**. By chaining together a series of **Filters**, the underlying data structure is processed and modified in quick succession. The user should be aware that all processing on the data is done **in place**, i.e., there is only a single copy of the data resident in memory at any one time. While this reduces the overall memory footprint, the user will have to be aware that their data may be modified from its original form. To help the user avoid accidentally overwriting data, all objects at a given hierarchy level in the [data structure](@ref datastructure) are not allowed to share the same name. For example, a data structure can have an **Attribute Matrix** named _foo_ that holds an **Attribute Array** named _bar_, but if the user tries to create a new **Attribute Matrix** named _foo_, an error will be presented in the **Pipeline Error Table**. The user _is allowed_ to create another **Attribute Array** named _bar_, however, as long as that **Attribute Array** belongs to a different **Attribute Matrix**. In other words, no two children of a given data structure object can share the same name!  
 
-![Figure 1: Empty pipeline area.](Images/CreatingPipeline-1.png)
+## Building a Pipeline ##
+The interface mechanics of building a **Pipeline** are discussed in the [Overview of the User Interface](@ref userinterface) section. The concepts behind creating a **Pipeline** are presented here.  In an abstract sense, a **Pipeline** can be thought of as a series of _tubes_, where the individial pieces of _pipe_ are the **Filters**. The _fluid_ traversing the **Pipeline** is the underlying data structure. The **Filters** can change the overall direction of the data structure, compress it, morph it, modify it, and add to it, until finally the data structure comes out the other side. Each individual **Filter** will require certain kinds of inputs, which means that some **Filter** further up in the **Pipeline** must, at some point, create those necessary pieces of the data structure. DREAM.3D alerts the user if any of these pieces are missing by executing a process called **Preflight**. Think of **Preflight** as compiling a computer program: any compiler errors are populated in the **Pipeline Error Table**. Using this feedback, a user can modify the parameters of existing **Filters** and add new **Filters** to the **Pipeline** until all errors are silenced. It is then safe to run the **Pipeline** by clicking _Go_! While the **Pipeline** is running, you can click on **Filters** in the **Pipeline View** and inspect the items in the **Filter Input View**. Also, the _Go_ button will change to a _Cancel_ button when a **Pipeline** is running. Clicking _Cancel_ will stop the **Pipeline** execution. Note that some **Filters** may not check for this _Cancel_ click at all points of their operation. If this is the case, the **Pipeline** may wait to quit until after the current **Filter** has finished running. 
 
-@image latex Images/CreatingPipeline-1.png "Figure 1: Empty pipeline area." width=6in 
+------
 
-The user can place multiple filters into the pipeline to generate a workflow of data input, analysis and data output filters. The user can reorder the filters by simply using drag-and-drop of a selected filter in the pipeline and moving it into a new position in the pipeline. As filters are placed into the pipeline a basic error checking algorithm called the **Preflight** is executed on the entire pipeline. During the preflight stage the pipeline will have each filter check its input parameters and the availability of required data arrays. Figure 2 shows a pipeline ready to execute with no errors.
+![Anatomy of a Pipeline](Images/pipelineanatomy.png)
+@image latex Images/pipelineanatomy.png "Anatomy of a Pipeline" width=6in
 
-----------
+------
 
-![Figure 2: Correctly populated pipeline.](Images/CreatingPipeline-2.png)
+But how do you know what kind of **Pipeline** to create? What are the primary ingredients of a useful **Pipeline**? First, it is important to become familiar with the DREAM.3D ontology. The best place to start is by reading and understanding the [DREAM.3D Data Structure](@ref datastructure) section. The terms presented to the user on **Filters** will use the same language as explained in the [DREAM.3D Data Structure](@ref datastructure) section. Additionally, consult the [Glossary](@ref glossary) as a quick reference for DREAM.3D ontology terms. Once you are familiar with the DREAM.3D language, understanding the functions of **Filters** becomes much easier. The [Filter Documentation](@ref filterdocumentation) is also useful for getting to know specific **Filters**. 
 
-@image latex Images/CreatingPipeline-2.png "Figure 2: Correctly populated pipeline." width=6in 
+When constructing a **Pipeline**, try to think about your data in terms of the DREAM.3D language. What kind of **Geometry** are you working? Is it a 2D picture made up of pixels (an **Image Geometry**)? A triangulated surface mesh (a **Triangle Geometry**)? What are the _unit elements_ of your **Geometry**? More importantly, where on your **Geometry** does your data lie? The _dimensional topology_ of the **Elements** the data lie on determines the type of **Attribute Matrix** to which that data will ultimately belong. For example, a 3D stack of images with grayscale data at every voxel would have a grayscale **Attribute Array** located in a **Cell Attribute Matrix**. 
 
-----------
+Once you've translated your data into the DREAM.3D ontology, you can start thinking about constructing a **Pipeline** to do something interesting. All **Pipelines** will need to start by creating an instance of the DREAM.3D [data structure](@ref datastructure) in some fashion. This is usually accomplished by reading in some data from a file. Visit the [Supported File Formats](@ref supportedfileformats) section for information on the kinds of files DREAM.3D can understand. Next, you'll want to string together **Filters** to accomplish an analysis.  This is the interesting part about building a **Pipeline**. You can begin anlayzing the underlying data that lies on your **Geometry**, or think about grouping **Geometry** elements to form **Features**. For example, in the 3D grayscale image stack example, you may wish to group all elements into two classes by applying a threshold. This would group the **Geometry** elements into 2 **Features**. There are a host of **Filters** used to analyze your newly created **Features**, calculating information like their sizes and shapes (and much more!). At all steps in creating a **Pipeline**, try to think about your data using the abstract DREAM.3D ontology. This will not only help you in understanding what **Filters** do, but also allow you to remain flexible. Be imaginative!
 
-![Figure 3: Selected Filter in the pipeline & How to remove the filter.](Images/CreatingPipeline-4.png)
+After you've constructed the analysis portion of a **Pipeline**, you'll probably want to export your new data structure to your disk. Again, the [Supported File Formats](@ref supportedfileformats) section explains what sorts of files you can export. In particular, the native .dream3d file format is very useful, since it was designed to handle the abstract data structure. Also, the file is based on open source [HDF5](https://www.hdfgroup.org/HDF5/), meaning anyone can read the data!
 
-@image latex Images/CreatingPipeline-4.png "Figure 3: Selected Filter in the pipeline & How to remove the filter." width=6in 
-
-----------
-
-To remove a filter from the pipeline the user can use the mouse to click the small **X** icon in the upper left corner of the filter.
-
-If the preflight did not complete successfully, the user will see the offending filters show a red outline and red title area. This indicates that one or more of the input parameters have an error or the filter requires data that will not be available at that point in the pipeline. By looking at the error table, the user can read the error message from the pipeline and act accordingly. An example pipeline with errors is shown in figure 4.
-
-----------
-
-![Figure 4: Errors in the constructed pipeline.](Images/CreatingPipeline-3.png)
-
-@image latex Images/CreatingPipeline-3.png "Figure 4: Errors in the constructed pipeline." width=6in 
-
--------------
-
-Once the errors are resolved, the user can now execute the pipeline and generate the outputs. Because the DREAM3D native file format stores the complete state of the data arrays, the user can use this idea to add _checkpoints_ to the pipeline in the case of a long running pipeline.
-@htmlonly
-|   | Navigation |    |
-|----|---------|------|
-| [Back](userinterface.html) | [Top](usermanual.html) | [Next Section](importexportsavepipeline.html) |
-@endhtmlonly
+Over time, you'll probably want to start saving your **Pipelines** so you can streamline the **Pipeline** creation process or share your workflow. The [Saving & Opening Pipelines](@ref importexportsavepipeline) section gives more details on this process.

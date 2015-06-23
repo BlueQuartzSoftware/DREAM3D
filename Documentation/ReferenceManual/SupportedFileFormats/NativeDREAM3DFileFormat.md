@@ -1,4 +1,4 @@
-Native DREAM3D File Format {#nativedream3d}
+Native DREAM.3D File Format {#nativedream3d}
 ===========
 
 ## HDF5 ##

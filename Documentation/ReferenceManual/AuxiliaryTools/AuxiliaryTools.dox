@@ -6,6 +6,8 @@
 
 @subpage devhelper
 
+@subpage pipelinerunner
+
 A discussion of the helper tool for generating uer defined statistics for building synthetic structures in DREAM.3D.
 
 

@@ -1,192 +1,141 @@
 Overview of the User Interface {#userinterface}
 =========
 
-DREAM3D has 7 main sections of its user interface:
+DREAM.3D has 7 main sections of its user interface:
 
-1. The Filter Library
-2. The Filter List
-3. The Pipeline View
-4. The Filter Input View
-5. The Pipeline Error Table
-6. The Bookmarks View
-7. The Prebuilt Pipelines View
+1. [Filter Library](#filterlibrary)
+2. [Filter List](#filterlist)
+3. [Pipeline View](#pipelineview)
+4. [Filter Input View](#filterinputview)
+5. [Pipeline Error Table](#pipelineerrortable)
+6. [Bookmarks View](#bookmarksview)
+7. [Prebuilt Pipelines View](#prebuiltpipelinesview)
 
-All sections, except the **Pipeline View** and the **Filter Input View**, can be undocked from the main window and rearranged into any order that the user prefers.  Sections can also be dragged and dropped on top of each other, which then automatically puts those sections into a tabbed interface.
+All sections, except the **Pipeline** View and the **Filter** Input View, can be _undocked_ from the main window and rearranged into any order that the user prefers.  Sections can also be dragged and dropped on top of each other, which then automatically puts those sections into a tabbed interface. Additionally, the sections that can be _undocked_ can also have their visibility toggled by the appropriate buttons found in DREAM.3D's **View** menu.
 
-All sections, except the **Pipeline View** and the **Filter Input View**, can have their visibility toggled by the appropriate buttons found in DREAM3D's **View** menu.
-
-------
-
-![Overview of DREAM3D User Interface](Images/OverView-DREAM3D.png)
-
-@image latex Images/OverView-DREAM3D.png "Overview of DREAM3D user interface " width=6in
+DREAM.3D allows the user to spawn as many _main windows_ as desired. To open a new DREAM.3D instance, click the _New..._ option in the _File_ menu. Each instance of DREAM.3D can act independently, and the user is allowed to run different **Pipelines** in each _main window_ at the same time.
 
 ------
 
-## 1. The Filter Library ##
+![Overview of the DREAM.3D User Interface](Images/OverView-DREAM3D.png)
+@image latex Images/OverView-DREAM3D.png "Overview of the DREAM.3D User Interface" width=6in
 
-![The Filter Library](Images/OverView-FilterLibrary.png)
+------
 
-### Overview ###
-The **Filter Library** section organizes the filters of DREAM3D according to the plugin that they belong to. The user can expand a specific plugin group (and possibly a sub-group), and the filters associated with that plugin will be displayed.  This makes it easy to find filters based on the plugin that they are associated with.
+<a name="filterlibrary">
+## Filter Library ##
+</a>
 
-The **Filter Library** section can be docked/undocked from the main window and its visibility can be toggled from DREAM3D's **View** menu.
+![Filter Library](Images/OverView-FilterLibrary.png)
+@image latex Images/OverView-FilterLibrary.png "Filter Library" width=6in
 
---------------
+The **Filter Library** section organizes the **Filters** of DREAM.3D according to their _group_ and _subgroup_. The user can expand a specific _group_ (and possibly a _subgroup_) to expose the **Filters**. **Filters** are placed into groups and subgroups based on their _functionality_. This makes it easy to find **Filters** based on a desired function. In general, the **Filter** group will correspond to the **Plugin** that **Filter** resides in, but this may not always be the case.
 
-## 2. The Filter List ##
+------
 
-![The Filter List](Images/OverView-FilterList.png)
+<a name="filterlist">
+## Filter List ##
+</a>
 
-### Overview ###
-The **Filter List** section organizes the filters of DREAM3D alphabetically by name.
+![Filter List](Images/OverView-FilterList.png)
+@image latex Images/OverView-FilterList.png "Filter List" width=6in
 
-Using the search bar, the user can search for filters based on the name.
+The **Filter List** section organizes the **Filters** of DREAM.3D alphabetically by name. Using the search bar, the user can search for **Filters** based on the name.
 
 ### Searching Algorithms ###
-Clicking on the magnifying glass icon in the search bar allows the user to pick between three different search algorithms.
+Clicking on the magnifying glass icon in the search bar allows the user to pick between three different search algorithms:
 
-The **All Words** algorithm will search for filters with names that contain all the words in the search bar, in any order.
++ **All Words**: Search for **Filters** with names that contain all the words in the search bar, in any order 
++ **Any Words**: Search for **Filters** with names that contain any of the words in the search bar, in any order
++ **Exact Phrase**: Search for **Filters** with names that match the phrase that is written in the search bar exactly
 
-The **Any Words** algorithm will search for filters with names that contain any of the words in the search bar, in any order.
 
-The **Exact Phrase** algorithm will search for filters with names that match the phrase that is written in the search bar.
+------
 
-The **Filter List** section can be docked/undocked from the main window and its visibility can be toggled from DREAM3D's **View** menu.
+<a name="pipelineview">
+## Pipeline View ##
+</a>
 
---------------
+![Pipeline View](Images/OverView-PipelineView.png)
+@image latex Images/OverView-PipelineView.png "Pipeline View" width=6in
 
-## 3. The Pipeline View ##
+The **Pipeline View** section displays which **Filters** are in the current pipeline, and in what order. This section is where the user will construct their **Pipeline** by double clicking on a **Filter** in the **Filter List** or the **Filter Library**.  It is also possible to drag a **Filter** from these areas and drop it into the **Pipeline View**. **Filters** in this section can be rearranged into different orders via dragging and dropping the **Filter** objects. More information on creating **Pipelines** can be found in the [Creating a Pipeline](@ref creatingpipeline) section.
 
-![The Pipeline View](Images/OverView-PipelineView.png)
+### Preflights & Errors ###
+As the user updates the **Pipeline**, a process called **Preflight** will be executed to make sure that the **Pipeline** will have all the necessary data available during execution. If a **Filter** object in the **Pipeline** has an error, it will be colored red. If this is the case, check the [Pipeline Error Table](#pipelineerrortable) for an explanation of the error.
 
-### Overview ###
-The **Pipeline View** section displays which filters are in the current pipeline, and in what order.
+### Interacting With Filters & Pipelines ###
+A **Filter** can be selected by single left clicking. Right clicking on a **Filter** opens a menu that allows the help for that **Filter** to be displayed by clicking _Filter Help_. **Filters** can be removed from the **Pipeline** by clicking the red _X_ icon on the **Filter** object. The entire **Pipeline View** can be cleared by either choosing *Clear Pipeline* from the *Pipeline* menu, or right clicking in an empty area of the **Pipeline View** to make a contextual menu appear with the *Clear Pipeline* option. After solving any **Preflight** errors and creating a satisfactory **Pipeline**, click the _Go_ button to start running.
 
-This section is where the user will construct their pipeline by double-clicking on a filter in the **Filter List** or the **Filter Library**.  It is also possible to drag a filter from these areas and drop it into the **Pipeline View**.
+------
 
-Filters in this section can be rearranged into different orders via dragging and dropping the filter objects.
+<a name="filterinputview">
+## Filter Input View ##
+</a>
 
-### Preflights and Errors ###
-As the user updates the pipeline, a process called **Preflight** will be executed to make sure that the pipeline will have all the necessary data available during the actual execution of the pipeline.  If there are any issues, the pipeline view will display either errors or warnings.
+![Filter Input View - Variables Tab](Images/OverView-FilterInputView1.png)
+@image latex OverView-FilterInputView1.png "Filter Input View - Variables Tab" width=6in
 
-If a filter object in the pipeline has an error, the filter object itself will be colored red (Example:  Add Bad Data).  If this is the case, check the **Pipeline Error Table** to see the error message and error code.
+![Filter Input View - Current Structure Tab](Images/OverView-FilterInputView2.png)
+@image latex Images/OverView-FilterInputView2.png "Filter Input View - Current Structure Tab" width=6in
 
-### Selecting A Filter Object ###
-Click on a filter object to select it.
+The **Filter Input View** contains all the parameters for the selected **Filter**. There are two sections: **Variables** and **Current Structure**:
 
-### Getting Help For A Filter ###
-To view the help page for a filter, right-click on the filter object to display a contextual menu and select the *Filter Help* option.
-
-### Removing A Filter Object From The Pipeline View ###
-Click the red X icon on a filter object to remove it from the pipeline.
-
-### Clearing The Pipeline View ###
-To clear the entire pipeline, either choose *Clear Pipeline* from the *Pipeline* menu, or right-click in an empty area of the **Pipeline View** to make a contextual menu appear with the *Clear Pipeline* option.
-
-### Running the Pipeline ###
-When the pipeline is correct, has no errors, and is ready to run, press the **Go** button to start the pipeline.
-
---------------
-
-## 4. The Filter Input View ##
-
-![The Filter Input View - Variables Tab](Images/OverView-FilterInputView1.png)
-
-### Overview ###
-The **Filter Input View** contains all the inputs for the selected filter.
-
-There are two sections: **Variables** and **Current Structure**.
-
-### Variables ###
-The **Variables** tab contains filter inputs, such as a field for an output path or a series of combo boxes to select an attribute array path.
-
-![The Filter Input View - Current Structure Tab](Images/OverView-FilterInputView2.png)
-
-### Current Structure ###
-The **Current Structure** tab contains the current data container array structure.
++ **Variables**: Contains **Filter** _Parameters_, _Required Arrays_, and _Created Arrays_:
+	- _Parameters_ are generally inputs that influence the functionality of the **Filter**
+	- _Required Arrays_ are data structure objects that are needed for the **Filter** to function
+	- _Created Arrays_ are data structure objects that the **Filter** will create during its execution
++ **Current Structure** Displays the state of the data structure as it would look after the selected **Filter** has executed
 
 ### Viewing A Filter's Help Page ###
-To view the help page for the displayed filter, press the **?** icon.
+To view the help page for the selected **Filter**, press the _?_ icon.
 
---------------
+------
 
-## 5. The Pipeline Error Table ##
+<a name="pipelineerrortable">
+## Pipeline Error Table ##
+</a>
 
-![The Pipeline Error Table](Images/OverView-PipelineErrorTable.png)
+![Pipeline Error Table](Images/OverView-PipelineErrorTable.png)
+@image latex Images/OverView-PipelineErrorTable.png "Pipeline Error Table" width=6in
 
-### Overview ###
-The **Pipeline Error Table** displays any errors and/or warnings associated with filters that are actively being used in the **Pipeline View**.
+The **Pipeline Error Table** displays any errors and/or warnings associated with **Filters** that are actively being used in the **Pipeline View**.
 
-### Preflights and Table Re-Population ###
-This section gets re-populated every time the pipeline runs its **Preflight** process, which makes sure that the pipeline will have all the necessary data available during the actual execution of the pipeline.  The **Preflight** process is re-run any time the user changes the **Pipeline View** or **Filter Input View** sections.
+### Preflights and Table Repopulation ###
+This section gets repopulated every time the **Pipeline** runs its **Preflight** process, which makes sure that the **Pipeline** will have all the necessary data available to execute normally.  The **Preflight** process is run any time the user modifies the **Pipeline View** or **Filter Input View** sections.
 
-The **Pipeline Error Table** section can be docked/undocked from the main window and its visibility can be toggled from DREAM3D's **View** menu.
+------
 
---------------
+<a name="bookmarksview">
+## Bookmarks View ##
+</a>
 
-## 6. The Bookmarks View ##
+![Bookmarks View](Images/OverView-BookmarksView.png)
+@image latex Images/OverView-BookmarksView.png "Bookmarks View" width=6in
 
-![The Bookmarks View](Images/OverView-BookmarksView.png)
+The **Bookmarks View** is a section where the user can _bookmark_ any **Pipelines** that they have saved on the file system for later use.  This section allows the user to bookmark the pipelines in any structure that they want, using _virtual folders_. Visit the [Saving & Opening Pipelines](@ref importexportsavepipeline) section for more information on handling saved **Pipelines**.
 
-### Overview ###
-The **Bookmarks View** is a section where the user can bookmark any pipelines that they have saved on the file system for later use.  This section allows the user to bookmark the pipelines in any structure that they want, using virtual folders.
-
-It is also possible to drag pipelines and folders containing pipelines from the file system into the **Bookmarks View**.
-
-The user can right-click anywhere in the **Bookmarks View** to make a contextual menu appear with additional options.
+**Pipelines** and folders containing **Pipelines** can be dragged from the file system into the **Bookmarks View**. The user can right click anywhere in the **Bookmarks View** to make a contextual menu appear with additional options.
 
 ![Bookmarks Contextual Menu](Images/OverView-BookmarksViewMenu.png)
+@image latex Images/OverView-BookmarksViewMenu.png "Bookmarks Contextual Menu" width=6in
 
-### Adding A Bookmark ###
-To add a bookmark to the **Bookmarks View**, open the *Bookmarks* menu and choose *Add Bookmark*.
+### Interacting With Bookmarks ###
+To add a bookmark to the **Bookmarks View**, open the *Bookmarks* menu and choose *Add Bookmark*. Users can also use the **Bookmarks Contextual Menu** to add a bookmark by right clicking on an existing virtual folder or empty space and selecting *Add Bookmark*. **Bookmarks** and virtual folders can be renamed by right clicking on them and selecting the *Rename Bookmark* or *Rename Folder* option. To update a bookmark in the **Bookmarks View**, use the **Bookmarks Contextual Menu** by right clicking on a bookmark and select *Update Pipeline*. The **Bookmark** that was right clicked will be updated with the pipeline that is currently in the **Pipeline View**. To remove a **Bookmark** or virtual folder from the **Bookmarks View**, use the **Bookmarks Contextual Menu** by right clicking on a bookmark or virtual folder and select *Remove Bookmark* or *Remove Folder*. This procedure _does not_ delete the **Pipeline** files themselves, but only removes them from the **Bookmarks View**.
 
-Users can also use the **Bookmarks Contextual Menu** to add a bookmark by right-clicking on an existing virtual folder or empty space and selecting *Add Bookmark*.
+**WARNING:**  Removing a virtual folder will also remove all of its contents!
 
-### Renaming A Bookmark or Virtual Folder ###
-To rename a bookmark or virtual folder in the **Bookmarks View**, use the **Bookmarks Contextual Menu** by right-clicking on a bookmark or virtual folder and select *Rename Bookmark* or *Rename Folder*.
+To add a virtual folder to the **Bookmarks View**, open the *Bookmarks* menu and choose *New Folder*. Users can also use the **Bookmarks Contextual Menu** by right clicking on a bookmark, virtual folder, or empty space, and selecting *New Folder*. A specific **Bookmark's** location on the file system can be viewed by by right clicking on a **Bookmark** and selecting *Show In Finder* (Mac OS X) or *Show In Windows Explorer* (Windows). To open a **Bookmark** in the **Pipeline View**, drag and drop it into the **Pipeline View**. **Bookmarks** can be dropped into the middle of existing **Pipelines** if desired. Double clicking on a **Bookmark** will open the **Pipeline** in a new _main window_.
 
-### Updating A Bookmark ###
-To update a bookmark in the **Bookmarks View**, use the **Bookmarks Contextual Menu** by right-clicking on a bookmark and select *Update Pipeline*.
+------
 
-The bookmark that was right-clicked will be updated with the pipeline that is currently in the **Pipeline View**.
+<a name="prebuiltpipelinesview">
+## Prebuilt Pipelines View ##
+</a>
 
-### Removing A Bookmark or Virtual Folder ###
-To remove a bookmark or virtual folder in the **Bookmarks View**, use the **Bookmarks Contextual Menu** by right-clicking on a bookmark or virtual folder and select *Remove Bookmark* or *Remove Folder*.
+![Prebuilt Pipelines View](Images/OverView-PrebuiltPipelinesView.png)
+@image latex Images/OverView-PrebuiltPipelinesView.png "Prebuilt Pipelines View" width=6in
 
-**WARNING:**  Removing a virtual folder will also remove all of its contents.
+DREAM.3D provides several _prebuilt_ **Pipelines** that can aid new users in getting started with DREAM.3D.  These **Pipelines** are displayed in the **Prebuilt Pipelines View**. To open a prebuilt **Pipeline** in the **Pipeline View**, drag and drop it into the **Pipeline View**. Just as with **Bookmarks**, prebuilt **Pipelines** can be dropped into the middle of existing **Pipelines**. Double clicking on a prebuilt **Pipeline** will open the **Pipeline** in a new _main window_.
 
-### Adding A Virtual Folder ###
-To add a virtual folder to the **Bookmarks View**, open the *Bookmarks* menu and choose *New Folder*.
-
-Users can also use the **Bookmarks Contextual Menu** by right-clicking on a bookmark, virtual folder, or empty space, and selecting *New Folder*.
-
-### Viewing A Bookmark's Location On The File System ###
-To view a specific bookmark's location on the file system, use the **Bookmarks Contextual Menu** by right-clicking on a bookmark, and select *Show In Finder* (Mac OS X) or *Show In Windows Explorer* (Windows).
-
-### Opening A Bookmark ###
-To open a bookmark in the **Pipeline View**, either double-click on the bookmark or drag and drop it in the **Pipeline View**.
-
-The **Bookmarks View** section can be docked/undocked from the main window and its visibility can be toggled from DREAM3D's **View** menu.
-
---------------
-
-## 7. The Prebuilt Pipelines View ##
-
-![The Prebuilt Pipelines View](Images/OverView-PrebuiltPipelinesView.png)
-
-### Overview ###
-DREAM3D provides several *Prebuilt Pipelines* that can aid the new user in getting started with DREAM3D.  These pipelines are displayed in the **Prebuilt Pipelines View**.
-
-### Opening A Prebuilt Pipeline ###
-To open a prebuilt pipeline, either double-click on the prebuilt or drag and drop it in the **Pipeline View**. 
-
-The **Prebuilt Pipelines View** section can be docked/undocked from the main window and its visibility can be toggled from DREAM3D's **View** menu.
-
---------------
-
-@htmlonly
-|   | Navigation |    |
-|----|---------|------|
-| [Back](supportedfileformats.html) | [Top](usermanual.html) | [Next Section](creatingpipeline.html) |
-@endhtmlonly
+------
