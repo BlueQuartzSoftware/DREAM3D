@@ -44,8 +44,9 @@
 // -----------------------------------------------------------------------------
 EmptyFilter::EmptyFilter() :
   AbstractFilter(),
-  m_HumanLabel("NON FUNCTIONAL FILTER")
+  m_HumanLabel("Unknown Filter")
 {
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -60,6 +61,15 @@ EmptyFilter::~EmptyFilter()
 // -----------------------------------------------------------------------------
 void EmptyFilter::setupFilterParameters()
 {
+  FilterParameterVector parameters;
+
+  QString str;
+  QTextStream ss(&str);
+  ss << "The original filter '<b><i>" << getOriginalFilterName() << "</i></b>' was not loaded. ";
+  ss << "Either a plugin with the original filter was not loaded or the original ";
+  ss << "filter has been renamed.";
+  parameters.push_back(FilterParameter::New(str, "OriginalFilterName", FilterParameterWidgetType::UnknownWidget, getOriginalFilterName(), FilterParameter::Parameter, "Unknown Filter"));
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
@@ -68,7 +78,15 @@ void EmptyFilter::setupFilterParameters()
 void EmptyFilter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setOriginalFilterName(reader->readString("OriginalFilterName", getOriginalFilterName()));
   reader->closeFilterGroup();
+
+  /* Specifically for this filter we need to reset the filter parameters so that
+   * it picks up the Original Filter name. This is NOT normal operation for any
+   * other filters. Your filter should not be doing this. If you are copy/pasting
+   * from this filter. STOP. Pick another filter.
+   */
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -78,6 +96,7 @@ int EmptyFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
+  DREAM3D_FILTER_WRITE_PARAMETER(OriginalFilterName)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -110,4 +129,63 @@ void EmptyFilter::execute()
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer EmptyFilter::newFilterInstance(bool copyFilterParameters)
+{
+  EmptyFilter::Pointer filter = EmptyFilter::New();
+  if(true == copyFilterParameters)
+  {
+    copyFilterParameterInstanceVariables(filter.get());
+  }
+  return filter;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EmptyFilter::getCompiledLibraryName()
+{
+  return Core::CoreBaseName;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EmptyFilter::getGroupName()
+{
+  return DREAM3D::FilterGroups::CoreFilters;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EmptyFilter::getSubGroupName()
+{
+  return DREAM3D::FilterSubGroups::MiscFilters;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EmptyFilter::getHumanLabel()
+{
+  if(m_HumanLabel.isEmpty())
+  {
+    return QString::fromLatin1("Unknown Filter");
+  }
+
+  return QString("Unknown Filter: %1").arg(m_OriginalFilterName);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EmptyFilter::setHumanLabel(const QString& humanLabel)
+{
+  m_HumanLabel = humanLabel;
 }

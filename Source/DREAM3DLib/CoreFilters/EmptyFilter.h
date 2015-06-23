@@ -57,24 +57,29 @@ class DREAM3DLib_EXPORT EmptyFilter : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(OriginalFilterName)
 
     /**
+     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+     */
+    virtual const QString getCompiledLibraryName();
+
+    /**
+     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+     */
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+
+    /**
      * @brief getGroupName Reimplemented from @see AbstractFilter class
      */
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::CoreFilters; }
+    virtual const QString getGroupName();
 
     /**
      * @brief getSubGroupName Reimplemented from @see AbstractFilter class
      */
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
+    virtual const QString getSubGroupName();
 
     /**
-    * @brief setHumanLabel Reimplemented from @see AbstractFilter class
-    */
-    virtual void setHumanLabel(const QString& humanLabel) { m_HumanLabel = humanLabel; }
-
-    /**
-      * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-      */
-     virtual const QString getHumanLabel() { return m_HumanLabel; }
+     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+     */
+    virtual const QString getHumanLabel();
 
     /**
      * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -100,6 +105,13 @@ class DREAM3DLib_EXPORT EmptyFilter : public AbstractFilter
     * @brief preflight Reimplemented from @see AbstractFilter class
     */
     virtual void preflight();
+
+    /**
+     * @brief This is overloaded from the super class for this particular filter.
+     * All other filters do <b>NOT</b> overload this filter
+     * @param humanLabel
+     */
+    void setHumanLabel(const QString& humanLabel);
 
   signals:
     /**

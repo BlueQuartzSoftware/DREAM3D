@@ -623,7 +623,7 @@ void BookmarksDockWidget::m_ActionRemovePipeline_triggered()
   QString path = model->index(index.row(), BookmarksItem::Path, index.parent()).data().toString();
 
   QMessageBox msgBox;
-  msgBox.setText("Are you sure that you want to remove \"" + name + "\"?");
+  msgBox.setText("Are you sure that you want to remove the bookmark \"" + name + "\"? The original file will not be removed.");
   msgBox.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
   msgBox.setDefaultButton(QMessageBox::Yes);
   int ret = msgBox.exec();
