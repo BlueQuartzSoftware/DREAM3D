@@ -168,13 +168,13 @@ void PipelineViewWidget::newEmptyPipelineViewLayout()
 
     m_EmptyPipelineLabel = new QLabel(this);
     m_EmptyPipelineLabel->setObjectName(QString::fromUtf8("label"));
-    m_EmptyPipelineLabel->setMinimumSize(QSize(325, 50));
+    m_EmptyPipelineLabel->setMinimumSize(QSize(325, 250));
     m_EmptyPipelineLabel->setStyleSheet(QString::fromUtf8("QLabel {\n"
                                                           "border-radius: 20px;\n"
-                                                          "border: 1px solid rgb(120, 120, 120);\n"
-                                                          "background-color: rgb(160, 160, 160);\n"
+                                                          "/*border: 1px solid rgb(120, 120, 120);*/\n"
+                                                          "/* background-color: rgb(160, 160, 160); */\n"
                                                           "font-weight: bold;\n"
-                                                          "color : rgb(255, 255, 255);\n"
+                                                          "color : rgb(150, 150, 150);\n"
                                                           "text-align: center;\n"
                                                           "margin: 5px;\n"
                                                           "padding: 10px;\n"
