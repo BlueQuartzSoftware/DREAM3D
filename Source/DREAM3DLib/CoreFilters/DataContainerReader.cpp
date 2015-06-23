@@ -602,4 +602,4 @@ const QString DataContainerReader::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString DataContainerReader::getHumanLabel()
-{ return "Read DREAM3D Data File"; }
+{ return "Read DREAM.3D Data File"; }

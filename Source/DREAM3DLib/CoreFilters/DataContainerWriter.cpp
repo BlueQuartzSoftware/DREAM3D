@@ -500,4 +500,4 @@ const QString DataContainerWriter::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString DataContainerWriter::getHumanLabel()
-{ return "Write DREAM3D Data File"; }
+{ return "Write DREAM.3D Data File"; }
