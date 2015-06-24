@@ -46,6 +46,8 @@
 //-- UIC generated Header
 #include "ui_PluginDetails.h"
 
+#define DREAM3D_PLUGINDETAILS_PLUGIN_CONFIG 0
+
 class PluginDetails : public QDialog, private Ui::PluginDetails
 {
     Q_OBJECT

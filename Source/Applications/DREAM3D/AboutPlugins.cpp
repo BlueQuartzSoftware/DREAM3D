@@ -97,6 +97,12 @@ void AboutPlugins::setupGui()
   pluginsTable->horizontalHeader()->setSectionResizeMode(CHECKBOX_INDEX, QHeaderView::ResizeToContents);
   pluginsTable->horizontalHeader()->setSectionResizeMode(STATUS_INDEX, QHeaderView::ResizeToContents);
 
+#if DREAM3D_PLUGINDETAILS_PLUGIN_CONFIG
+#else
+  pluginsTable->horizontalHeader()->hideSection(CHECKBOX_INDEX);
+  pluginsTable->horizontalHeader()->hideSection(STATUS_INDEX);
+#endif
+
   // Set selection behavior so that only full rows can be selected
   pluginsTable->setSelectionBehavior(QAbstractItemView::SelectRows);
 

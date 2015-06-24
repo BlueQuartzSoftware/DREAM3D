@@ -98,6 +98,12 @@ void PluginDetails::loadPluginDetails()
   {
     filtersListWidget->addItem(*iter);
   }
+
+#if DREAM3D_PLUGINDETAILS_PLUGIN_CONFIG
+#else
+  statusHeader->setHidden(true);
+  statusLabel->setHidden(true);
+#endif
 }
 
 // -----------------------------------------------------------------------------
