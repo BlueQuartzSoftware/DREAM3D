@@ -572,9 +572,9 @@ void FindShapes::find_axiseulers()
     double Ixx = featuremoments[i * 6 + 0];
     double Iyy = featuremoments[i * 6 + 1];
     double Izz = featuremoments[i * 6 + 2];
-    double Ixy = -featuremoments[i * 6 + 3];
-    double Iyz = -featuremoments[i * 6 + 4];
-    double Ixz = -featuremoments[i * 6 + 5];
+    double Ixy = featuremoments[i * 6 + 3];
+    double Iyz = featuremoments[i * 6 + 4];
+    double Ixz = featuremoments[i * 6 + 5];
     double radius1 = featureeigenvals[3 * i];
     double radius2 = featureeigenvals[3 * i + 1];
     double radius3 = featureeigenvals[3 * i + 2];

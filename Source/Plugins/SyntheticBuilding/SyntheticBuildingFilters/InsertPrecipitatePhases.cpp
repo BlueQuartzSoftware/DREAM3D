@@ -1812,8 +1812,7 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
 
   float radcur2 = (radcur1 * bovera);
   float radcur3 = (radcur1 * covera);
-  float ga[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-  float gaT[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+  float ga[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
   FOrientArrayType om(9, 0.0);
   FOrientTransformsType::eu2om(FOrientArrayType(&(m_AxisEulerAngles[3 * gnum]), 3), om);
   om.toGMatrix(ga);
@@ -1852,8 +1851,7 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
         coords[0] = coords[0] - xc;
         coords[1] = coords[1] - yc;
         coords[2] = coords[2] - zc;
-        MatrixMath::Transpose3x3(ga, gaT);
-        MatrixMath::Multiply3x3with3x1(gaT, coords, coordsRotated);
+        MatrixMath::Multiply3x3with3x1(ga, coords, coordsRotated);
         float axis1comp = coordsRotated[0] / radcur1;
         float axis2comp = coordsRotated[1] / radcur2;
         float axis3comp = coordsRotated[2] / radcur3;
@@ -1943,8 +1941,7 @@ void InsertPrecipitatePhases::assign_voxels()
     //    float phi1 = m_AxisEulerAngles[3 * i];
     //    float PHI = m_AxisEulerAngles[3 * i + 1];
     //    float phi2 = m_AxisEulerAngles[3 * i + 2];
-    float ga[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-    float gaT[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+    float ga[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
     FOrientArrayType om(9, 0.0);
     FOrientTransformsType::eu2om(FOrientArrayType(&(m_AxisEulerAngles[3*i]), 3), om);
     om.toGMatrix(ga);
@@ -2005,8 +2002,7 @@ void InsertPrecipitatePhases::assign_voxels()
           coords[0] = coords[0] - xc;
           coords[1] = coords[1] - yc;
           coords[2] = coords[2] - zc;
-          MatrixMath::Transpose3x3(ga, gaT);
-          MatrixMath::Multiply3x3with3x1(gaT, coords, coordsRotated);
+          MatrixMath::Multiply3x3with3x1(ga, coords, coordsRotated);
           float axis1comp = coordsRotated[0] / radcur1;
           float axis2comp = coordsRotated[1] / radcur2;
           float axis3comp = coordsRotated[2] / radcur3;
