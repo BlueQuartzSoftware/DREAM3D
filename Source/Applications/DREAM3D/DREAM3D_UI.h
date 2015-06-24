@@ -286,6 +286,11 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     */
     void pipelineFinished();
 
+    /**
+    * @brief dream3dWindowChangedState
+    */
+    void dream3dWindowChangedState(DREAM3D_UI* self);
+
   protected:
 
     /**
@@ -375,6 +380,8 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      * @brief Drag and drop implementation
      */
     void dropEvent(QDropEvent*);
+
+    void changeEvent(QEvent* event);
 
     /**
      *

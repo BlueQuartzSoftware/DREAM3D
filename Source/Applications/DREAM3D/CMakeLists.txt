@@ -71,7 +71,6 @@ include(${DREAM3DProj_SOURCE_DIR}/License/License.cmake)
 # List the source files here
 set(DREAM3D_SRCS
   ${DREAM3D_SOURCE_DIR}/main.cpp
-  ${DREAM3D_SOURCE_DIR}/BrandedInitializer.cpp
   ${DREAM3D_SOURCE_DIR}/DREAM3D_UI.cpp
   ${DREAM3D_SOURCE_DIR}/DSplashScreen.cpp
   ${DREAM3D_SOURCE_DIR}/AboutDREAM3D.cpp
@@ -90,7 +89,6 @@ set(DREAM3D_HDRS
 #------------------------------------------------------------------
 # Headers that do need to have moc run on them, i.e., QObject based headers
 SET(DREAM3D_MOC_HDRS
-  ${DREAM3D_SOURCE_DIR}/BrandedInitializer.h
   ${DREAM3D_SOURCE_DIR}/DREAM3D_UI.h
   ${DREAM3D_SOURCE_DIR}/DSplashScreen.h
   ${DREAM3D_SOURCE_DIR}/AboutDREAM3D.h

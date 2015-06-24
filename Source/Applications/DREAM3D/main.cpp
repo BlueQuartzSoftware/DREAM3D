@@ -39,7 +39,6 @@
 #include <QtCore/QDir>
 #include <QtCore/QDebug>
 
-#include "BrandedInitializer.h"
 #include "DREAM3DApplication.h"
 
 #ifdef Q_WS_X11
@@ -88,9 +87,8 @@ int main(int argc, char* argv[])
 #endif
 
   setlocale(LC_NUMERIC, "C");
-  BrandedInitializer d3dInitializer;
 
-  if (!d3dInitializer.initialize(argc, argv))
+  if (!qtapp.initialize(argc, argv))
   {
     return 1;
   }
