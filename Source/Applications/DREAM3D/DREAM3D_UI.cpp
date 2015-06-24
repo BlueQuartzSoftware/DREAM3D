@@ -1875,5 +1875,16 @@ void DREAM3D_UI::setStatusBarMessage(const QString &msg)
   statusbar->showMessage(msg);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::changeEvent(QEvent* event)
+{
+  if (event->type() == QEvent::ActivationChange)
+  {
+    emit dream3dWindowChangedState(this);
+  }
+}
+
 
 

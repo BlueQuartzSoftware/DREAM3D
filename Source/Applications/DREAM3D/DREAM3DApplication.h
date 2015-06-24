@@ -38,10 +38,23 @@
 #ifndef _DREAM3DApplication_H_
 #define _DREAM3DApplication_H_
 
+#include <QtCore/QObject>
+#include <QtCore/QVector>
+
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QWidget>
+#include <QtWidgets/QMenuBar>
+#include <QtWidgets/QMenu>
+
+#include "DREAM3DLib/DREAM3DLib.h"
+//#include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
 
 #define dream3dApp (static_cast<DREAM3DApplication *>(qApp))
+
+class DSplashScreen;
+class DREAM3D_UI;
+class QPluginLoader;
+class IDREAM3DPlugin;
 
 class DREAM3DApplication : public QApplication
 {
@@ -51,6 +64,8 @@ public:
   DREAM3DApplication(int & argc, char ** argv);
   virtual ~DREAM3DApplication();
 
+  bool initialize(int argc, char* argv[]);
+
   QList<QWidget*> getDREAM3DWindowList();
 
   void registerDREAM3DWindow(QWidget* widget);
@@ -59,11 +74,66 @@ public:
 protected:
   bool event(QEvent* event);
 
+  DREAM3D_UI* getNewDREAM3DInstance();
+
 protected slots:
+
+  /**
+   * @brief Updates the QMenu 'Recent Files' with the latest list of files. This
+   * should be connected to the Signal QRecentFileList->fileListChanged
+   * @param file The newly added file.
+   */
+  void updateRecentFileList(const QString &file);
+
+  /**
+  * @brief exitTriggered
+  */
   void exitTriggered();
 
+  /**
+  * @brief activeWindowChanged
+  */
+  void activeWindowChanged(DREAM3D_UI* instance);
+
+  // DREAM3D_UI slots
+  void openRecentFile();
+
+  void on_m_ActionNew_triggered();
+  void on_m_ActionOpen_triggered();
+  void on_m_ActionClearRecentFiles_triggered();
+  void on_m_ActionShowIndex_triggered();
+  void on_m_ActionCheck_For_Updates_triggered();
+  void on_m_ActionLicense_Information_triggered();
+  void on_m_ActionAbout_DREAM3D_triggered();
+  void on_m_ActionExit_triggered();
+
 private:
-  QList<QWidget*>                   m_DREAM3DWidgetList;
+  QList<QWidget*>                 m_DREAM3DWidgetList;
+  DREAM3D_UI*                     m_ActiveWindow;
+
+  QMenuBar*                       m_GlobalMenu;
+  QMenu*                          m_MenuFile;
+  QMenu*                          m_Menu_RecentFiles;
+  QMenu*                          m_MenuHelp;
+  QAction*                        m_ActionOpen;
+  QAction*                        m_ActionNew;
+  QAction*                        m_ActionClearRecentFiles;
+  QAction*                        m_ActionShowIndex;
+  QAction*                        m_ActionCheck_For_Updates;
+  QAction*                        m_ActionAbout_DREAM3D;
+  QAction*                        m_ActionPlugin_Information;
+  QAction*                        m_ActionExit;
+
+  QString                         m_OpenDialogLastDirectory;
+
+  bool                            show_splash;
+  DSplashScreen*                  Splash;
+  DREAM3D_UI*                     MainWindow;
+  QVector<QPluginLoader*>         m_PluginLoaders;
+
+  void initializeApplication();
+  void initializeGlobalMenu();
+  QVector<IDREAM3DPlugin*> loadPlugins();
 
   DREAM3DApplication(const DREAM3DApplication&); // Copy Constructor Not Implemented
   void operator=(const DREAM3DApplication&); // Operator '=' Not Implemented
