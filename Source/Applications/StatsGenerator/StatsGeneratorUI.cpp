@@ -56,6 +56,12 @@
 
 #include "DREAM3DLib/DREAM3DLibVersion.h"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
+#include "DREAM3DLib/StatsData/PrimaryStatsData.h"
+#include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
+#include "DREAM3DLib/StatsData/TransformationStatsData.h"
+#include "DREAM3DLib/StatsData/BoundaryStatsData.h"
+#include "DREAM3DLib/StatsData/MatrixStatsData.h"
+
 #include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/CoreFilters/DataContainerWriter.h"
 #include "DREAM3DLib/CoreFilters/DataContainerReader.h"

@@ -377,6 +377,28 @@ int VertexGeom::writeXdmf(QTextStream& out, QString dcName, QString hdfFileName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QString VertexGeom::getInfoString(DREAM3D::InfoStringFormat format)
+{
+  QString info;
+  QTextStream ss (&info);
+
+  if(format == DREAM3D::HtmlFormat)
+  {
+    ss << "<tr bgcolor=\"#D3D8E0\"><th colspan=2>Vertex Geometry Info</th></tr>";
+    ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">NumberOfElements</th><td>" << getNumberOfVertices() << "</td></tr>";
+    ss << "</tbody></table>";
+  }
+  else
+  {
+
+  }
+  return info;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int VertexGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
 {
   herr_t err = 0;

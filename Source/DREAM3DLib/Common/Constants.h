@@ -63,6 +63,14 @@ namespace DREAM3D
   static const uint8_t PartiallyChecked = 1;
   static const uint8_t Checked = 2;
 
+  enum InfoStringFormat {
+    HtmlFormat = 0,
+//      JsonFormat,
+//      TextFormat,
+//      XmlFormat,
+    UnknownFormat
+  };
+
   namespace BlueQuartz
   {
     const QString VendorName("BlueQuartz Software, LLC");
