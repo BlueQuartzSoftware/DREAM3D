@@ -37,22 +37,12 @@
 #ifndef _ReadStlFile_H_
 #define _ReadStlFile_H_
 
-#include <QtCore/QString>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-
 
 /**
- * @class ReadStlFile ReadStlFile.h IOFilters/Code/IOFiltersFilters/ReadStlFile.h
- * @brief This filter creates an STL file for each Feature ID, or Region ID that is encountered in
- * the volume.
- * @author
- * @date
- * @version 1.0
+ * @brief The ReadStlFile class. See [Filter documentation](@ref readstlfile) for details.
  */
 class ReadStlFile : public AbstractFilter
 {
@@ -64,13 +54,15 @@ class ReadStlFile : public AbstractFilter
 
     virtual ~ReadStlFile();
 
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshDataContainerName)
     Q_PROPERTY(QString SurfaceMeshDataContainerName READ getSurfaceMeshDataContainerName WRITE setSurfaceMeshDataContainerName)
+
     DREAM3D_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
     Q_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
+
     DREAM3D_FILTER_PARAMETER(QString, StlFilePath)
     Q_PROPERTY(QString StlFilePath READ getStlFilePath WRITE setStlFilePath)
+
     DREAM3D_FILTER_PARAMETER(QString, FaceNormalsArrayName)
     Q_PROPERTY(QString FaceNormalsArrayName READ getFaceNormalsArrayName WRITE setFaceNormalsArrayName)
 
@@ -165,9 +157,20 @@ class ReadStlFile : public AbstractFilter
     double m_minZcoord;
     double m_maxZcoord;
 
+    /**
+     * @brief updateFaceInstancePointers Updates raw Face pointers
+     */
     void updateFaceInstancePointers();
 
+    /**
+     * @brief readFile Reads the .stl file
+     */
     void readFile();
+
+    /**
+     * @brief eliminate_duplicate_nodes Removes duplicate nodes to ensure the
+     * created vertex list is shared
+     */
     void eliminate_duplicate_nodes();
 
     ReadStlFile(const ReadStlFile&); // Copy Constructor Not Implemented

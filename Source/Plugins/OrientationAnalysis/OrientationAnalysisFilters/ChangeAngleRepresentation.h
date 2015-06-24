@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @brief The ChangeAngleRepresentation class. See [Filter documentation](@ref ChangeAngleRepresentation) for details.
+ * @brief The ChangeAngleRepresentation class. See [Filter documentation](@ref changeanglerepresentation) for details.
  */
 class ChangeAngleRepresentation : public AbstractFilter
 {

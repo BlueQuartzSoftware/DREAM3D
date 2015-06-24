@@ -1,55 +1,43 @@
 Find Feature Boundary Strength Metrics {#findboundarystrengths}
-======
+=============
 
 ## Group (Subgroup) ##
-Statistics Filters (Crystallographic)
+Statistics (Crystallographic)
 
 ## Description ##
-This filter calculates the same metrics as in the [Find Slip Transmission Metrics Filter](FindSlipTransmissionMetrics.html "").  However, this filter stores the values in the **Face** map in the SurfaceMesh DataContainer.  The algorithm the filter uses is below:
+This Filter calculates the same metrics as in the [Find Neighbor Slip Transmission Metrics](FindSlipTransmissionMetrics.html "") **Filter**.  However, this Filter stores the values in the **Face Attribute Matrix** of a **Triangle Geometry**.  The algorithm the Filter uses is as follows:
 
-1. Find the two **Features** that are separated by a **Face** in the SurfaceMesh.
-2. Get the average orientation of both of the **Features**.
-3. Calculate the transmission metrics from both directions (i.e. **Feature** 1 to **Feature** 2 and **Feature** 2 to **Feature** 1).
+1. Find the two **Features** that are separated by a **Face** in the **Triangle Geometry**
+2. Get the average orientation of both of the **Features**
+3. Calculate the transmission metrics from both directions (i.e. **Feature** 1 to **Feature** 2 and **Feature** 2 to **Feature** 1)
 4. Store the metrics in the **Face** map
 5. Repeat for all **Faces**
 
-Note: each metric is calculated twice for the two different directions slip could approach the boundary.  The values are stored on each **Face** in the **Face** map in a way that notes the direction (i.e. 1 to 2 vs. 2 to 1).
+*Note:* Each metric is calculated twice for the two different directions slip could approach the boundary.  The values are stored on each **Face** in the **Face** map in a way that notes the direction (i.e., when **Feature** 1 has neighbor **Feature** 2 and when **Feature** 2 has neighbor **Feature** 1) because the direction across the boundary between the **Features** affects the value of the metric. 
 
 ## Parameters ##
-
 | Name | Type | Description |
 |------|------| ----------- |
-| Loading | Float Vector | The X, Y & Z Loading for the sample. |
+| Loading Direction | Float (3x) | The loading axis for the sample |
 
-## Required DataContainers ##
-
-+ Voxel
-+ SurfaceMesh
+## Required Geometry ##
+Image + Triangle
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Feature (Voxel) | AvgQuats | Five (5) values (floats) defining the average orientation of the **Feature** in quaternion representation | Filter will calculate average quaternions for **Features** if not already calculated. | Find Feature Average Orientations (Statistics) |
-| Feature (Voxel) | FeaturePhases | Phase Id (int) specifying the phase of the **Feature**| | Find Feature Phases (Generic), Read Feature Info File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
-| Feature (Voxel) | Schmids |  |  | Find Schmid Factors (Statistics) |
-| Feature (Voxel) | SlipSystems |  |  | Find Schmid Factors (Statistics) |
+| Face | FaceLabels | Int | (2) | Specifies which **Features** are on either side of each triangle |
+| Feature | AvgQuats | Float | (4) | Specifies the average orientation of each **Feature** in quaternion representation |
+| Feature | Phases | Int | (1) | Specifies to which phase each **Feature** belongs |
+| Ensemble | CrystalStructures | Int | (1) | Enumeration representing the crystal structure for each phase |
 
 ## Created Arrays ##
-| Type | Default Name | Comment |
-|------|--------------|---------|
-| Face (SurfaceMesh) | SurfaceMeshF1s |  |
-| Face (SurfaceMesh) | SurfaceMeshF1spts |  |
-| Face (SurfaceMesh) | SurfaceMeshF7s |  |
-| Face (SurfaceMesh) | SurfaceMeshmPrimes |  |
-
-
-## Authors ##
-
-
-
-
-
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Face | F1s | Float | (2) | |
+| Face | F1spts | Float | (2) | |
+| Face | F7s | Float | (2) | |
+| Face | mPrimes | Float | (2) | |
 
 ## License & Copyright ##
 

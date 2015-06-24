@@ -1,36 +1,39 @@
 Find Twin Boundary Schmid Factors {#findtwinboundaryschmidfactors}
-==========
+=============
 
 ## Group (Subgroup) ##
-Statistics Filters (Crystallographic)
+Statistics (Crystallographic)
 
 ## Description ##
-This filter calculates the *Schmid Factors* for the 3 slip systems in the plane of each twin boundary.  The filter only calculates the values for **Faces** already identified as twins.
+This Filter calculates the *Schmid factors* for the 3 slip systems in the plane of each twin boundary.  The Filter only calculates the values for **Faces** already identified as twins. The **Filter** can also write an information file that contains details about each **Triangle** in the **Geometry**. The information written is ASCII text with the following columns of data for each **Triangle**:
+
+	Feature1	Feature2	IsTwin	Plane	Schmid1	Schmid2	Schmid3
 
 ## Parameters ##
-| Output File |  |
-| Loading Direction | 3 x float |
+| Name | Type | Description |
+|------|------| ----------- |
+| Loading Direction | Float (3x) | The loading axis for the sample |
+| Write Twin Boundary Info File | Bool | Whether to write an ASCII text file |
+| Twin Boundary Info File | File Path | The output twin boundary info file path. Only needed if _Write Twin Boundary Info File_ is checked |
 
-## Required DataContainers ##
-+ Voxel
-+ SurfaceMesh
 
+## Required Geometry ##
+Image + Triangle
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Face   | SurfaceMeshFaceLabels | N x 2 Col of signed integer |  | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
-| Face   | SurfaceMeshFaceNormals | N x 3 Col of floats |  | Generate Triangle Normals Filter (SurfaceMeshing) |
-| Feature (Voxel) | AvgQuats | Five (5) values (floats) defining the average orientation of the **Feature** in quaternion representation | Filter will calculate average quaternions for **Features** if not already calculated. | Find Feature Average Orientations (Statistics) |
-| Feature (Voxel) | FeaturePhases | Phase Id (int) specifying the phase of the **Feature**| | Find Feature Phases (Generic), Read Feature Info File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
-| Ensemble (Voxel) | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Read H5Ebsd File (IO), Read Ensemble Info File (IO), Initialize Synthetic Volume (SyntheticBuilding) |
+| Feature | AvgQuats | Float | (4) | Specifies the average orientation of each **Feature** in quaternion representation |
+| Feature | Phases | Int | (1) | Specifies to which phase each **Feature** belongs |
+| Ensemble | CrystalStructures | Int | (1) | Enumeration representing the crystal structure for each phase |
+| Face | FaceLabels | Int | (2) | Specifies which **Features** are on either side of each triangle |
+| Face | FaceNormals | Double | (3) | Specifies the normal of each triangle |
+| Face | TwinBoundary | Bool | (1) | Whether a give **Face** belongs to a twin boundary |
 
 ## Created Arrays ##
-
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Face   | SurfaceMeshTwinBoundarySchmidFactors | 3 Schmid factors on the plane of the twin boundary for the user defined loading direction |  |
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Face | TwinBoundarySchmidFactors | Float | (3) | The three Schmid factors for each **Triangle** corresponding to the three slip systems. This array will have a _0_ value if the **Triangle** is not a twin boundary |
 
 
 ## License & Copyright ##

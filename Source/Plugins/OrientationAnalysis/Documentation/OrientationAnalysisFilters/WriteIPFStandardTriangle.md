@@ -1,43 +1,35 @@
 Write IPF Triangle Legend (Cubic m-3m) {#writeipfstandardtriangle}
-=====
+=============
 
 ## Group (Subgroup) ##
-IO Filters (Output)
-
+IO (Output)
 
 ## Description ##
-This filter will generate a standard Inverse Pole Figure color Triangle that is used for typical EBSD visualizations and other visualizations from orientation data. The user can adjust the size and type of the output file.
+This Filter will generate a standard inverse pole figure color stereographic triangle that is used for typical EBSD visualizations and other visualizations from orientation data. The user can adjust the size and type of the output file.
 
-**Currently the only supported triangles are for Cubic (m-3m) crystal symmetry.**
+**Currently the only supported triangle is for Cubic (m-3m) crystal symmetry.**
 
-![Example Output from Filter](images/IPFFilterLegend.png)
+-----
+
+![Cubic Standard Stereographic Triangle](images/IPFFilterLegend.tif)
+@image latex images/IPFFilterLegend.tif "Cubic Standard Stereographic Triangle" width=6in
+
+-----
 
 ## Parameters ##
-| Name             | Type |
-|------------------|------|
-| Image Size | Pixels (This will be both the height and width of the image) |  
-| Image Type | Tiff, PNG and BMP can be selected |  
-| Output File Name |  The path to the output file |
+| Name | Type | Description |
+|------|------| ----------- |
+| Output File | File Path | The output file path. Currently supports .tif, .bmp, and .png file formats |
+| Image Size (Square Pizels) | Int | Size of the output image in square pixels |   
 
+## Required Geoemtry ##
+Not Applicable
 
 ## Required Arrays ##
-
 None
 
 ## Created Arrays ##
-
 None
-
-## Authors ##
-
-**Copyright** 2015 BlueQuartz Software, LLC
-
-**Contact Info** dream3d@bluequartz.net
-
-**Version** 1.0.0
-
-**License**  See the License.txt file that came with DREAM3D.
-
 
 ## License & Copyright ##
 

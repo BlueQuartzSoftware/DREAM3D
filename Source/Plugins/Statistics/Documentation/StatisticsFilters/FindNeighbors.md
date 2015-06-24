@@ -36,7 +36,7 @@ Image / Rectilinear Grid
 |------|--------------|-------------|---------|-----|
 | Cell | SurfaceCells | Int(8) | (1) | The number of neighboring **Cells** of a given **Cell** that belong to a different **Feature** than itself. Values will range from *0* to *6* (only created if *Store Boundary Cells Array* is set to *true*) |
 | Feature | NumNeighbors | Int | (1) | Number of contiguous neighboring **Features** for a given **Feature** |
-| Feature | NeighborLists | List of Ints | (1) | List of the contiguous neighboring **Features** for a given **Feature** |
+| Feature | NeighborList | List of Ints | (1) | List of the contiguous neighboring **Features** for a given **Feature** |
 | Feature | SharedSurfaceAreaLists | List of Floats | (1) | List of the shared surface area for each of the contiguous neighboring **Features** for a given **Feature** |
 | Feature | SurfaceFeatures | Boolean | (1) | Flag equal to 1 if the **Feature** touches an outer surface of the sample and equal to 0 if it does not. (only created if *Store Surface Features Array* is set to *true*) |
 

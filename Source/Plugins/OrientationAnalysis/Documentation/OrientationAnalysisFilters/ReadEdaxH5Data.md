@@ -1,66 +1,49 @@
-Read EDAX/TSL Ebsd Data (HDF5 Format) {#readedaxh5data}
-=====
-
+Read EDAX EBSD Data (.h5) {#readedaxh5data}
+=============
 
 ## Group (Subgroup) ##
-IOFilters (Input)
-
+IO (Input)
 
 ## Description ##
-This filter will read a single .h5 file into a DataContainer backed by an ImageGeometry allowing the immediate use of filters on the data instead of having to generate the intermediate .h5ebsd file. The user should be aware that simply reading the file then performing operations that are dependent on the proper crystallographic and sample reference frame will be undefined or simply **wrong**. In order to bring the crystal reference frame and sample reference frame into coincidence the proper filters need to be run. The user should read the documentation for the "[Rotate Sample Reference Frame](rotatesamplerefframe.html)" and "[Rotate Euler Reference Frame](rotateeulerrefframe.html)".
+This Filter will read a single .h5 file into a new **Data Container** with a corresponding **Image Geometry**, allowing the immediate use of **Filters** on the data instead of having to generate the intermediate .h5ebsd file. A **Cell Attribute Matrix** and **Ensemble Attribute Matrix** will also be created to hold the imported EBSD information. Currently, the user has no control over the names of the created **Attribute Arrays**. The user should be aware that simply reading the file then performing operations that are dependent on the proper crystallographic and sample reference frame will be undefined or simply **wrong**. In order to bring the [crystal reference frame](@ref rotateeulerrefframe) and [sample reference frame](@ref rotatesamplerefframe) into coincidence, rotations will need to be applied to the data.
 
 ### Default TSL Transformations ###
+If the data has come from a TSL acquisition system and the settings of the acquisition software were in the default modes, he following reference frame transformations may need to be performed based on the version of the OIM Analysis software being used to collect the data:
 
-If the data has come from a TSL based acquisition system and the settings of the acquisition software were in the default modes then the following reference frame transformations may need to be performed based on the version of the OIM Analysis software being used to collect the data. The user is **strongly** encourages to seek the advice of the collecting personnel to verify their equipment setup. Newer versions of OIM Analysis have changed the defaults which may render the reference frame transformations unneeded. 
++ Sample Reference Frame: 180<sup>o</sup> about the <010> Axis
++ Crystal Reference Frame: 90<sup>o</sup> about the <001> Axis
 
-+ Sample Reference Frame: 180 Degrees about the <010> Axis
-+ Crystal Reference Frame: 90 Degrees about the <001> Axis
-
-The user also may want to assign unindexed pixels to be ignored and be assigned an RGB Color of Black. In this case the user can insert a [Threshold Objects](multithresholdobjects.html) filter to define the "Good Voxels" cell data. Typical thresholds include _Confidence Index_ > 0.1 or _Image Quality_ > some user defined value.
+The user also may want to assign un-indexed pixels to be ignored by flagging them as "bad". The [Threshold Objects](@ref multithresholdobjects) **Filter** can be used to define this _mask_ by thresholding on values such as _Confidence Index_ > 0.1 or _Image Quality_ > desired quality.
 
 ## Parameters ##
+| Name | Type | Description |
+|------|------| ----------- |
+| Input File | File Path |The input .h5 file path |
+| Scan Name | Enumeration | The name of the scan in the .h5 file. EDAX can store multiple scans in a single file |
+| Data Container Name | String | Created **Data Container** name |
+| Cell Attribute Matrix Name | String | Created **Cell Attribute Matrix** name |
+| Cell Ensemble Attribute Matrix Name | String | Created **Ensemble Attribute Matrix** name |
 
-| Name             | Type |
-|------------------|------|
-| Input File | The Path to the .h5 file |
-| Scan Name | The name of the scan in the hdf5 file. EDAX can store multiple scans in a single file |
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
-
 None
 
-## Required DataContainers ##
-
-The filter will create a new DataContainer with an ImageGeometry object.
-
-
-## Created Arrays ##
-
-Arrays are created based on the data read from the EBSD file. The following table lists the arrays that are read from the HDF5 based EDAX Ebsd file. 
-
-| Type | Array Name | Component Dimensions | Comment |
-|------|--------------------|-------------|---------|
-| Float  | Confidence Index | [1]     | Ranges from 0.0 to 1.0   |
-| Float  | Euler Angle      | [3]     |    |
-| Float  | Fit              | [1]     |    |
-| Float  | Image Quality    | [1] |    |
-| Int    | Phases             | [1] | Numbered starting from 1 for a valid phase   |
-| Float  | SEM Signal       | [1] |    |
-| Float  | X Position       | [1] |    |
-| Float  | Y Position       | [1] |    |
-
-
-
-## Authors ##
-
-**Copyright** 2015 BlueQuartz Software
-
-**Contact Info** dream3d@bluequartz.net
-
-**Version** 1.0.0
-
-**License**  See the License.txt file that came with DREAM3D.
-
+## Created Arrays ## 
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Cell  | Confidence Index | Float |(1)     | Confidence of indexing  |
+| Cell  | EulerAngles      | Float |(3)     | Three angles defining the orientation of the **Cell** in Bunge convention (Z-X-Z)  |
+| Cell  | Fit              | Float |(1)     |  Quality of fit for indexing  |
+| Cell  | Image Quality    | Float |(1) | Quality of image   |
+| Cell  | Phases           | Int   | (1) | Specifies to which phase each **Cell** belongs   |
+| Cell  | SEM Signal       | Float |(1) | Value of SEM signal   |
+| Cell  | X Position       | Float |(1) | X coordinate of **Cell**   |
+| Cell  | Y Position       | Float |(1) | Y coordinate of **Cell**   |
+| Ensemble | CrystalStructures | Int | (1) | Enumeration representing the crystal structure for each phase |
+| Ensemble | LatticeConstants | Float | (6) | The 6 values that define the lattice constants for the phase |
+| Ensemble | MaterialName | String | (1) | Name of each phase |
 
 
 ## License & Copyright ##

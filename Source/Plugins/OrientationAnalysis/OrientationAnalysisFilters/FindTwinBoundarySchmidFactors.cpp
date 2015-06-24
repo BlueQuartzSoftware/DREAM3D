@@ -316,6 +316,8 @@ void FindTwinBoundarySchmidFactors::dataCheckVoxel()
 
   QVector<DataArrayPath> dataArrayPaths;
 
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getAvgQuatsArrayPath().getDataContainerName());
+
   QVector<size_t> cDims(1, 4);
   m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAvgQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -344,6 +346,8 @@ void FindTwinBoundarySchmidFactors::dataCheckSurfaceMesh()
   DataArrayPath tempPath;
 
   QVector<DataArrayPath> dataArrayPaths;
+
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
 
   QVector<size_t> cDims(1, 2);
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -423,7 +427,7 @@ void FindTwinBoundarySchmidFactors::execute()
   }
 
 
-  if(m_WriteFile == true)
+  if (m_WriteFile == true)
   {
     std::ofstream outFile;
     outFile.open(m_TwinBoundarySchmidFactorsFile.toLatin1().data(), std::ios_base::binary);

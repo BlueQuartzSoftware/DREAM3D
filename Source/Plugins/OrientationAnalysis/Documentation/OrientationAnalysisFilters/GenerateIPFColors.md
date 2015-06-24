@@ -1,63 +1,48 @@
 Generate IPF Colors {#generateipfcolors}
-========
+=============
 
 ## Group (Subgroup) ##
-Generic Filters (Misc)
+Processing (Crystallography)
 
 ## Description ##
-This filter will generate Inverse Pole Figure colors for Cubic, Hexagonal or Trigonal Crystal Structures. The user can enter the Reference direction and is defaulted to [001]. The user is required to run a filter that will determine if a voxel should have it's color calculated by generating the _GoodVoxels_ array or an equivalent **boolean** array. Typically the **MultiThreshold Cells** or **Single Threshold Cells** filter is run _before_ this filter with an output array set to _GoodVoxels_.
+This Filter will generate _inverse pole figure_ (IPF) colors for cubic, hexagonal or trigonal crystal structures. The user can enter the _Reference Direction_, which defaults to [001]. The **Filter** also has the option to apply a black color to all "bad" **Elements**, as defined by a boolean _mask_ array, which can be generated using the [Threshold Objects](@ref multithresholdobjects) **Filter**.
 
 ### Originating Data Notes ###
 
 + TSL (.ang file)
-    - If the data originates from a TSL .ang file then voxels that the TSL software could not reliably identify the Euler Angles will have a "Fit of Solution" = 180 and/or an "Image Quality" = 0.0.
-    - This means that when the user runs some sort of threshold filter the _GoodVoxels_ will be those voxels that have an Image Quality > 0 and/or Fit < 180.0
+    - If the data originates from a TSL .ang file, then **Elements** that the TSL software could not reliably identify the Euler angles for will have a "Fit of Solution" = 180 and/or an "Image Quality" = 0.0.
+    - This means that when the user runs some sort of threshold filter the _mask_ will be those **Elements** that have an Image Quality > 0 and/or Fit < 180.0
 + HKL (.ctf file)
     - If the data originates from an HKL (or Bruker) system (.ctf file) then bad voxels can typically be found by setting "Error" > 0
-    - This means that when the user runs some sort of threshold filter the _GoodVoxels_ will be those voxels that have an Error = 0
+    - This means that when the user runs some sort of threshold filter the _mask_ will be those **Elements** that have an Error = 0
 
 ![IPF Color Triangle](images/IPFFilterLegend.png)
-@image latex IPFFilterLegend.png " " width=2.5in
+@image latex IPFFilterLegend.png "IPF Color Triangle" width=6in
 
 ![Example Data Set](images/IPFColor_1.png)
-@image latex IPFColor_1.png " " width=5in
+@image latex IPFColor_1.png "Example Data Set" width=6in
 
+## Parameters ##
+| Name | Type | Description |
+|------|------| ----------- |
+| Reference Direction | Float (3x) | The reference axis with respect to compute the IPF colors |
+| Apply to Good Elements Only (Bad Elements Will Be Black) | Bool | Whether to assign a black color to "bad" **Elements** |
 
-## Input Options ##
-
-| Option | Type |
-|-------|-------|
-| X Reference Direction | Double |
-| Y Reference Direction | Double |
-| Z Reference Direction | Double |
-
-
-## Required DataContainers ##
-
-Voxel DataContainer
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
-
-| Type | Default Name | Description  | Filters Known to Create Data |
-|------|--------------|------------|-----|
-| Cell | CellEulerAngles |  These are the angles used to determine the colors | Read H5Ebsd File (IO), Match Crystallography (SyntheticBuilding) |
-| Cell | CellPhases |  These are used to determine which ensemble the **Cell** belongs to | Read H5Ebsd File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |  
-| Cell | GoodVoxels | This is the boolean array that determines if a voxel will have its IPF Color generated or not. | [MultiThreshold Cells](multithresholdcells.html), [Single Threshold Cells](singlethresholdcells.html) |
-| Ensemble | CrystalStructures |  These are the symmetries of the ensembles, which dictate orientation operations and which color palatte is used | Read H5Ebsd File (IO), Read Ensemble Info File (IO), Initialize Synthetic Volume (SyntheticBuilding) |
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Element | EulerAngles | Float | (3)  | Three angles defining the orientation of the **Element** in Bunge convention (Z-X-Z) |
+| Element | Phases | Int | (1) | Phase Id specifying the phase of the **Element** |
+| Element | Mask | Bool | (1) | Boolean array that flags **Elements** as "good" (true) or "bad" (false) |
+| Ensemble | CrystalStructures | Int | (1) | Enumeration representing the crystal structure for each phase |
 
 ## Created Arrays ##
-
-| Type | Name | Description |
-|------|------|-------------|
-| Cell | IPFColors | The RGB colors are encoded as an unsigned char triplet  |
-
-
-### Authors ###
-
-
-
-
-
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Element | IPFColor |  UInt8 | (3) | The RGB colors encoded as unsigned chars |
 
 ## License & Copyright ##
 

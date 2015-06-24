@@ -1,73 +1,52 @@
 Read Oxford Instr. Ebsd Data {#readctfdata}
-=====
+=============
 
 ## Group (Subgroup) ##
-IOFilters (Input)
-
+IO (Input)
 
 ## Description ##
-This filter will read a single .ctf file into the VoxelDataContainer allowing the immediate use of filters on the data instead of having to generate the intermediate .h5ebsd file. The user should be aware that simply reading the file then performing operations that are dependent on the proper crystallographic and sample reference frame will be undefined or simply **wrong**. In order to bring the crystal reference frame and sample reference frame into coincidence the proper filters need to be run. The user should read the documentation for the "[Rotate Sample Reference Frame](rotatesamplerefframe.html)" and "[Rotate Euler Reference Frame](rotateeulerrefframe.html)".
-
-
-The user also may want to assign unindexed pixels to be ignored and be assigned an RGB Color of Black. In this case the user can insert the [MultiThreshold (Cell Data) Filter](multithresholdcells.html) to define the "Good Voxels" cell data.
+This Filter will read a single .ctf file into a new **Data Container** with a corresponding **Image Geometry**, allowing the immediate use of **Filters** on the data instead of having to generate the intermediate .h5ebsd file. A **Cell Attribute Matrix** and **Ensemble Attribute Matrix** will also be created to hold the imported EBSD information. Currently, the user has no control over the names of the created **Attribute Arrays**. The user should be aware that simply reading the file then performing operations that are dependent on the proper crystallographic and sample reference frame will be undefined or simply **wrong**. In order to bring the [crystal reference frame](@ref rotateeulerrefframe) and [sample reference frame](@ref rotatesamplerefframe) into coincidence, rotations will need to be applied to the data.
 
 ### Default HKL Transformations ###
+If the data has come from a HKL acquisition system and the settings of the acquisition software were in the default modes, then the following reference frame transformations need to be performed:
 
-If the data has come from a HKL based acquisition system and the settings of the acquisition software were in the default modes then the following reference frame transformations need to be performed:
-
-+ Sample Reference Frame: 180 Degrees about the <010> Axis
++ Sample Reference Frame: 180<sup>o</sup> about the <010> Axis
 + Crystal Reference Frame: None
- 
-The user also may want to assign unindexed pixels to be ignored and be assigned an RGB Color of Black. In this case the user can insert the [Single Threshold (Cell Data) Filter](singlethresholdcells.html) to define the "Good Voxels" cell data. For HKL data the "Error" column defines each point as being properly indexed (Value = 0) or an error occurred and the point was not indexed (Value > 0).
+
+The user also may want to assign un-indexed pixels to be ignored by flagging them as "bad". The [Threshold Objects](@ref multithresholdobjects) **Filter** can be used to define this _mask_ by thresholding on values such as _Error_ = 0.
 
 ### Radians and Degrees ###
-
-2D CTF Files have their angles in **degrees**. Please be sure to insert a filter to convert the Euler Angles from Degrees to Radians before running any other filter.
+2D .ctf files have their angles in **degrees**. Please be sure to [convert](@ref changeanglerepresentation) the Euler angles from degrees to radians before running any other **Filter**.
 
 ## Parameters ##
+| Name | Type | Description |
+|------|------| ----------- |
+| Input File | File Path |The input .ctf file path |
+| Data Container Name | String | Created **Data Container** name |
+| Cell Attribute Matrix Name | String | Created **Cell Attribute Matrix** name |
+| Cell Ensemble Attribute Matrix Name | String | Created **Ensemble Attribute Matrix** name |
 
-| Name             | Type |
-|------------------|------|
-| Input File | The Path to the .ctf file |
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
-
 None
 
-## Required DataContainers ##
-
-The filter will create a new DataContainer with an ImageGeometry object.
-
 ## Created Arrays ##
-
-Arrays are created based on the data read from the EBSD file.
-
-
-| Type | Array Name | Component Dimensions | Comment |
-|------|--------------------|-------------|---------|
-| Float  | BC | [1]     |  |
-| Float  | Euler Angle      | [3]     |    |
-| Float  | BS              | [1]     |    |
-| Float  | Bands    | [1] |    |
-| Int    | Phases             | [1] | Numbered starting from 1 for a valid phase   |
-| Float  | MAD       | [1] | Typical threshold value is < 1.8  |
-| Float  | X Position       | [1] |    |
-| Float  | Y Position       | [1] |    |
-| int  | Error       | [1] | Value=0 is a well indexed scan point   |
-
-
-
-## Authors ##
-
-**Copyright** 2015 BlueQuartz Software
-
-**Contact Info** dream3d@bluequartz.net
-
-**Version** 1.0.0
-
-**License**  See the License.txt file that came with DREAM3D.
-
-
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Cell | BC           | Float | (1) | Band contrast levels |
+| Cell | EulerAngles  | Float | (3) | Three angles defining the orientation of the **Cell** in Bunge convention (Z-X-Z)  |
+| Cell | BS           | Float | (1) | Band saturation levels |
+| Cell | Bands        | Float | (1) | Number of bands   |
+| Cell | Phases       | Int   | (1) | Specifies to which phase each **Cell** belongs   |
+| Cell | MAD          | Float | (1) | Mean angular deviation. Typical threshold value is < 1.8  |
+| Cell  | X Position       | Float |(1) | X coordinate of **Cell**   |
+| Cell  | Y Position       | Float |(1) | Y coordinate of **Cell**   |
+| Cell | Error        | Int   | (1) | Value = 0 is a well indexed scan point   |
+| Ensemble | CrystalStructures | Int | (1) | Enumeration representing the crystal structure for each phase |
+| Ensemble | LatticeConstants | Float | (6) | The 6 values that define the lattice constants for the phase |
+| Ensemble | MaterialName | String | (1) | Name of each phase |
 
 ## License & Copyright ##
 

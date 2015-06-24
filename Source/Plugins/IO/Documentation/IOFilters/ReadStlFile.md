@@ -1,12 +1,11 @@
 Read STL File {#readstlfile}
-======
+=============
 
 ## Group (Subgroup) ##
 IO (Input)
 
 ## Description ##
-
-This Filter will read a binary STL File and create a **Triangle Geometry** object in memory. The STL reader is very strict to the STL specification. An explanation of the STL file format can be found on [Wikipedia](https://en.wikipedia.org/wiki/STL_(file_format)). The structure of the file is as follows:
+This Filter will read a binary STL File and create a **Triangle Geometry** object in memory. The STL reader is very strict to the STL specification. An explanation of the STL file format can be found on [Wikipedia](https://en.wikipedia.org/wiki/STL). The structure of the file is as follows:
 
 	UINT8[80] – Header
 	UINT32 – Number of triangles
@@ -19,15 +18,15 @@ This Filter will read a binary STL File and create a **Triangle Geometry** objec
 	UINT16 – Attribute byte count
 	end
 
-**It is very important that the "Attribute byte Count" is correct as DREAM.3D follows the specification strictly.** If you are writing an STL file be sure that the value for the "Attribute byte count" is ZERO (0). If you chose to encode additional data into a section after each triangle then be sure that the "Attribute byte count" is set correctly. DREAM.3D will obey the value located in the "Attribute byte count".
+**It is very important that the "Attribute byte Count" is correct as DREAM.3D follows the specification strictly.** If you are writing an STL file be sure that the value for the "Attribute byte count" is _zero_ (0). If you chose to encode additional data into a section after each triangle then be sure that the "Attribute byte count" is set correctly. DREAM.3D will obey the value located in the "Attribute byte count".
 
 ## Parameters ##
 
 | Name | Type | Description |
 |------|------|------|
-| STL File | File Path  | The file path to the STL file on disk |
-| Data Container | String | Created **Data Container** name |
-| Face Attribute Matrix | String | Created **Cell Attribute Matrix** name |
+| STL File | File Path  | The input STL file path |
+| Data Container Name | String | Created **Data Container** name |
+| Face Attribute Matrix Name | String | Created **Face Attribute Matrix** name |
 
 ## Required Geometry ##
 Not Applicable
@@ -38,7 +37,7 @@ None
 ## Created Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
-| Cell | FaceNormals  | double | (3) | The Normal of the triangle |
+| Face | FaceNormals  | Double | (3) | The normals for each triangle |
 
 
 ## License & Copyright ##

@@ -1,42 +1,36 @@
 Find Twin Boundaries {#findtwinboundaries}
-==========
+=============
 
 ## Group (Subgroup) ##
-Statistics Filters (Crystallographic)
+Statistics (Crystallographic)
 
 ## Description ##
-This filter identifies all **Faces** between neighboring **Features** that have a Sigma 3 twin relationship.  The filter uses the average orientation of the **Features** on either side of the **Face** to determine the *misorientation* between the **Features**.  If the *axis-angle* that describes the *misorientation* is within a both the axis and angle user-defined tolerance, then the **Face** is flagged as being a twin.  After the **Face** is flagged as a twin, the crystal direction parallel to the **Face** normal is determined and compared with the *misorientation axis* if *Compute Coherence* is selected.  The misalignment of these two crystal directions is stored as the incoherence value for the **Face** (the value is in degrees).  Note this filter will only extract twin boundaries if the twin **Feature** is the same phase as the parent **Feature**. 
+This Filter identifies all **Triangles** between neighboring **Features** that have a &sigma; = 3 twin relationship.  The Filter uses the average orientation of the **Features** on either side of the **Triangle** to determine the *misorientation* between the **Features**.  If the *axis-angle* that describes the *misorientation* is within both the axis and angle user-defined tolerance, then the **Triangle** is flagged as being a twin.  After the **Triangle** is flagged as a twin, the crystal direction parallel to the **Face** normal is determined and compared with the *misorientation axis* if *Compute Coherence* is selected.  The misalignment of these two crystal directions is stored as the incoherence value for the **Triangle** (in degrees). Note this Filter will only extract twin boundaries if the twin **Feature** is the same phase as the parent **Feature**. 
 
 ## Parameters ##
+| Name | Type | Description |
+|------|------| ----------- |
+| Axis Tolerance (Degrees) | Float | Degree of tolerance for angular distance from the [111] axis  |
+| Angle Tolerance (Degrees) | Float | Degree of tolerance for angular deviation from 60<sup>o</sup> |
+| Compute Coherence | Bool | Whether to compute the coherence between the **Face** normal and the misorientation axis |
 
-| Name | Type |
-|------|------|
-| Axis Tolerance | Double |
-| Angle Tolerance | Double |
-| Compute Coherence | Boolean |
-
-## Required DataContainers ##
-+ Volume
-+ SurfaceMesh
-
+## Required Geometry ##
+Image + Triangle
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Face | SurfaceMeshFaceLabels | N x 2 Col of signed integer |  | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
-| Face | SurfaceMeshFaceNormals | N x 3 Col of floats |  | Generate Triangle Normals Filter (SurfaceMeshing) |
-| Face | SurfaceMeshTwinBoundary | boolean value equal to 1 for twin and 0 for non-twin |  | Find Twin Boundaries (Statistics) |
-| Feature (Volume) | AvgQuats | Five (5) values (floats) defining the average orientation of the **Feature** in quaternion representation | Filter will calculate average quaternions for **Features** if not already calculated. | Find Feature Average Orientations (Statistics) |
-| Feature (Volume) | FeaturePhases | Phase Id (int) specifying the phase of the **Feature**| | Find Feature Phases (Generic), Read Feature Info File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
-| Ensemble (Volume) | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Read H5Ebsd File (IO), Read Ensemble Info File (IO), Initialize Synthetic Volume (SyntheticBuilding) |
+| Feature | AvgQuats | Float | (4) | Specifies the average orientation of each **Feature** in quaternion representation |
+| Feature | Phases | Int | (1) | Specifies to which phase each **Feature** belongs |
+| Ensemble | CrystalStructures | Int | (1) | Enumeration representing the crystal structure for each phase |
+| Face | FaceLabels | Int | (2) | Specifies which **Features** are on either side of each triangle |
+| Face | FaceNormals | Double | (3) | Specifies the normal of each triangle. Only required if _Compute Coherence_ is checked |
 
 ## Created Arrays ##
-
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Face | SurfaceMeshTwinBoundary | boolean value equal to 1 for twin and 0 for non-twin |  |
-| Face | SurfaceMeshTwinBoundaryIncoherence | Angle in degrees between crystal direction parallel to **Face** normal and misorientation axis |  |
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Face | TwinBoundary | Bool | (1) | Whether a give **Face** belongs to a twin boundary |
+| Face | TwinBoundaryIncoherence |  Float | (1) |Angle in degrees between crystal direction parallel to **Face** normal and misorientation axis | 
 
 
 ## License & Copyright ##

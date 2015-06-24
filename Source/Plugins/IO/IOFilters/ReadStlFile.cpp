@@ -36,12 +36,6 @@
 
 #include "ReadStlFile.h"
 
-#include <QtCore/QSet>
-#include <QtCore/QDir>
-#include <QtCore/QFileInfo>
-#include <QtCore/QDir>
-#include <QtCore/QFile>
-
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
@@ -49,18 +43,21 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
 
 #include "IO/IOConstants.h"
 
+/**
+ * @brief The FindUniqueIdsImpl class implements a threaded algorithm that determines the set of
+ * unique vertices in the triangle geometry
+ */
 class FindUniqueIdsImpl
 {
-
-  public:
+   public:
     FindUniqueIdsImpl(SharedVertexList::Pointer vertex, QVector<QVector<size_t> > nodesInBin, int64_t* uniqueIds) :
       m_Vertex(vertex),
       m_NodesInBin(nodesInBin),
@@ -73,15 +70,15 @@ class FindUniqueIdsImpl
       float* verts = m_Vertex->getPointer(0);
       for (size_t i = start; i < end; i++)
       {
-        for(int j = 0; j < m_NodesInBin[i].size(); j++)
+        for (int32_t j = 0; j < m_NodesInBin[i].size(); j++)
         {
           size_t node1 = m_NodesInBin[i][j];
-          if(m_UniqueIds[node1] == node1)
+          if (m_UniqueIds[node1] == node1)
           {
-            for(int k = j + 1; k < m_NodesInBin[i].size(); k++)
+            for (int32_t k = j + 1; k < m_NodesInBin[i].size(); k++)
             {
               size_t node2 = m_NodesInBin[i][k];
-              if(verts[node1*3] == verts[node2*3] && verts[node1*3+1] == verts[node2*3+1] && verts[node1*3+2] == verts[node2*3+2])
+              if (verts[node1 * 3] == verts[node2 * 3] && verts[node1 * 3 + 1] == verts[node2 * 3 + 1] && verts[node1 * 3 + 2] == verts[node2 * 3 + 2])
               {
                 m_UniqueIds[node2] = node1;
               }
@@ -101,9 +98,7 @@ class FindUniqueIdsImpl
     SharedVertexList::Pointer m_Vertex;
     QVector<QVector<size_t> > m_NodesInBin;
     int64_t* m_UniqueIds;
-
 };
-
 
 // -----------------------------------------------------------------------------
 //
@@ -139,12 +134,10 @@ void ReadStlFile::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FileSystemFilterParameter::New("Stl File", "StlFilePath", FilterParameterWidgetType::InputFileWidget, getStlFilePath(), FilterParameter::Parameter, "", "*.stl", "STL File"));
-
+  parameters.push_back(FileSystemFilterParameter::New("STL File", "StlFilePath", FilterParameterWidgetType::InputFileWidget, getStlFilePath(), FilterParameter::Parameter, "", "*.stl", "STL File"));
   parameters.push_back(FilterParameter::New("Data Container Name", "SurfaceMeshDataContainerName", FilterParameterWidgetType::StringWidget, getSurfaceMeshDataContainerName(), FilterParameter::CreatedArray));
-  parameters.push_back(FilterParameter::New("Face Attribute Matrix", "FaceAttributeMatrixName", FilterParameterWidgetType::StringWidget, getFaceAttributeMatrixName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Face Attribute Matrix Name", "FaceAttributeMatrixName", FilterParameterWidgetType::StringWidget, getFaceAttributeMatrixName(), FilterParameter::CreatedArray, ""));
   parameters.push_back(FilterParameter::New("Face Normals", "FaceNormalsArrayName", FilterParameterWidgetType::StringWidget, getFaceNormalsArrayName(), FilterParameter::CreatedArray, ""));
-
   setFilterParameters(parameters);
 }
 
@@ -192,12 +185,14 @@ void ReadStlFile::updateFaceInstancePointers()
 // -----------------------------------------------------------------------------
 void ReadStlFile::dataCheck()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
+
+  DataArrayPath tempPath;
+
   if (m_StlFilePath.isEmpty() == true)
   {
     setErrorCondition(-1003);
-    notifyErrorMessage(getHumanLabel(), "Stl File Path is Not set correctly", -1003);
+    notifyErrorMessage(getHumanLabel(), "The input file must be set", -1003);
   }
 
   // Create a SufaceMesh Data Container with Faces, Vertices, Feature Labels and optionally Phase labels
@@ -210,12 +205,11 @@ void ReadStlFile::dataCheck()
   sm->setGeometry(triangleGeom);
 
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer faceAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Face);
-  if(getErrorCondition() < 0 || NULL == faceAttrMat.get()) { return; }
+  sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Face);
 
-  QVector<size_t> dims(1, 3);
+  QVector<size_t> cDims(1, 3);
   tempPath.update(getSurfaceMeshDataContainerName(), getFaceAttributeMatrixName(), getFaceNormalsArrayName() );
-  m_FaceNormalsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FaceNormalsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FaceNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FaceNormals = m_FaceNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -238,6 +232,7 @@ void ReadStlFile::preflight()
 // -----------------------------------------------------------------------------
 void ReadStlFile::execute()
 {
+  setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
@@ -246,7 +241,6 @@ void ReadStlFile::execute()
 
   setErrorCondition(0);
   notifyStatusMessage(getHumanLabel(), "Complete");
-  return;
 }
 
 // -----------------------------------------------------------------------------
@@ -256,20 +250,20 @@ void ReadStlFile::readFile()
 {
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(m_SurfaceMeshDataContainerName);
 
-  //Open File
+  // Open File
   FILE* f = fopen(m_StlFilePath.toLatin1().data(), "rb");
   if (NULL == f)
   {
     setErrorCondition(-1003);
-    notifyErrorMessage(getHumanLabel(), "Stl file could not be opened", -1003);
+    notifyErrorMessage(getHumanLabel(), "Error opening STL file", -1003);
     return;
   }
 
-  //Read Header
+  // Read Header
   char h[80];
-  int32_t triCount;
-  fread(h, sizeof(int), 20, f);
-  fread(&triCount, sizeof(int), 1, f);
+  int32_t triCount = 0;
+  fread(h, sizeof(int32_t), 20, f);
+  fread(&triCount, sizeof(int32_t), 1, f);
 
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
   triangleGeom->resizeTriList(triCount);
@@ -277,21 +271,21 @@ void ReadStlFile::readFile()
   float* nodes = triangleGeom->getVertexPointer(0);
   int64_t* triangles = triangleGeom->getTriPointer(0);
 
-  //Resize the triangle attribute matrix to hold the normals and update the normals pointer
+  // Resize the triangle attribute matrix to hold the normals and update the normals pointer
   QVector<size_t> tDims(1, triCount);
   sm->getAttributeMatrix(getFaceAttributeMatrixName())->resizeAttributeArrays(tDims);
   updateFaceInstancePointers();
 
-  //Read the triangles
+  // Read the triangles
   static const size_t k_StlElementCount = 12;
   float v[k_StlElementCount];
   unsigned short attr;
-  for(int t = 0; t < triCount; ++t)
+  for (int32_t t = 0; t < triCount; ++t)
   {
     fread(reinterpret_cast<void*>(v), sizeof(float), k_StlElementCount, f);
 
-    fread( reinterpret_cast<void*>(&attr), sizeof(unsigned short), 1, f);
-    if(attr > 0)
+    fread(reinterpret_cast<void*>(&attr), sizeof(unsigned short), 1, f);
+    if (attr > 0)
     {
       std::vector<unsigned char> buffer(attr); // Allocate a buffer for the STL attribute data to be placed into
       fread( reinterpret_cast<void*>(&(buffer.front())), attr, 1, f); // Read the bytes into the buffer so that we can skip it.
@@ -347,30 +341,30 @@ void ReadStlFile::eliminate_duplicate_nodes()
   int64_t* triangles = triangleGeom->getTriPointer(0);
   int64_t nTriangles = triangleGeom->getNumberOfTris();
 
-  float stepX = (m_maxXcoord - m_minXcoord) / 100.0;
-  float stepY = (m_maxYcoord - m_minYcoord) / 100.0;
-  float stepZ = (m_maxZcoord - m_minZcoord) / 100.0;
+  float stepX = (m_maxXcoord - m_minXcoord) / 100.0f;
+  float stepY = (m_maxYcoord - m_minYcoord) / 100.0f;
+  float stepZ = (m_maxZcoord - m_minZcoord) / 100.0f;
 
   QVector<QVector<size_t> > nodesInBin(100 * 100 * 100);
 
-  //determine (xyz) bin each node falls in - used to speed up node comparison
-  int bin, xBin, yBin, zBin;
-  for(int64_t i = 0; i < nNodes; i++)
+  // determine (xyz) bin each node falls in - used to speed up node comparison
+  int32_t bin = 0, xBin = 0, yBin = 0, zBin = 0;
+  for (int64_t i = 0; i < nNodes; i++)
   {
     xBin = (vertex[i*3] - m_minXcoord) / stepX;
     yBin = (vertex[i*3+1] - m_minYcoord) / stepY;
     zBin = (vertex[i*3+2] - m_minZcoord) / stepZ;
-    if(xBin == 100) { xBin = 99; }
-    if(yBin == 100) { yBin = 99; }
-    if(zBin == 100) { zBin = 99; }
+    if (xBin == 100) { xBin = 99; }
+    if (yBin == 100) { yBin = 99; }
+    if (zBin == 100) { zBin = 99; }
     bin = (zBin * 10000) + (yBin * 100) + xBin;
     nodesInBin[bin].push_back(i);
   }
 
-  //Create array to hold unique node numbers
+  // Create array to hold unique node numbers
   Int64ArrayType::Pointer uniqueIdsPtr = Int64ArrayType::CreateArray(nNodes, "uniqueIds");
   int64_t* uniqueIds = uniqueIdsPtr->getPointer(0);
-  for(int64_t i = 0; i < nNodes; i++)
+  for (int64_t i = 0; i < nNodes; i++)
   {
     uniqueIds[i] = i;
   }
@@ -397,7 +391,7 @@ void ReadStlFile::eliminate_duplicate_nodes()
 
   //renumber the unique nodes
   int64_t uniqueCount = 0;
-  for(int64_t i = 0; i < nNodes; i++)
+  for (int64_t i = 0; i < nNodes; i++)
   {
     if(uniqueIds[i] == i)
     {
@@ -410,8 +404,8 @@ void ReadStlFile::eliminate_duplicate_nodes()
     }
   }
 
-  //Move nodes to unique Id and then resize nodes array
-  for(int64_t i = 0; i < nNodes; i++)
+  // Move nodes to unique Id and then resize nodes array
+  for (int64_t i = 0; i < nNodes; i++)
   {
     vertex[uniqueIds[i]*3] = vertex[i*3];
     vertex[uniqueIds[i]*3+1] = vertex[i*3+1];
@@ -419,9 +413,9 @@ void ReadStlFile::eliminate_duplicate_nodes()
   }
   triangleGeom->resizeVertexList(uniqueCount);
 
-  //Update the triangle nodes to reflect the unique ids
-  int64_t node1, node2, node3;
-  for(int64_t i = 0; i < nTriangles; i++)
+  // Update the triangle nodes to reflect the unique ids
+  int64_t node1 = 0, node2 = 0, node3 = 0;
+  for (int64_t i = 0; i < nTriangles; i++)
   {
     node1 = triangles[i*3];
     node2 = triangles[i*3+1];
@@ -452,13 +446,11 @@ AbstractFilter::Pointer ReadStlFile::newFilterInstance(bool copyFilterParameters
 const QString ReadStlFile::getCompiledLibraryName()
 { return IOConstants::IOBaseName; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ReadStlFile::getGroupName()
 { return DREAM3D::FilterGroups::IOFilters; }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -466,10 +458,8 @@ const QString ReadStlFile::getGroupName()
 const QString ReadStlFile::getSubGroupName()
 { return DREAM3D::FilterSubGroups::InputFilters; }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ReadStlFile::getHumanLabel()
-{ return "Read Stl File"; }
-
+{ return "Read STL File"; }

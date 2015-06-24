@@ -88,7 +88,7 @@ void FindBoundaryStrengths::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FilterParameter::New("Loading", "Loading", FilterParameterWidgetType::FloatVec3Widget, getLoading(), FilterParameter::Parameter, "XYZ"));
+  parameters.push_back(FilterParameter::New("Loading Direction", "Loading", FilterParameterWidgetType::FloatVec3Widget, getLoading(), FilterParameter::Parameter, "XYZ"));
 
   parameters.push_back(FilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, ""));
   parameters.push_back(FilterParameter::New("Avgerage Quaternions", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), FilterParameter::RequiredArray, ""));
@@ -189,6 +189,8 @@ void FindBoundaryStrengths::dataCheckSurfaceMesh()
 void FindBoundaryStrengths::dataCheckVoxel()
 {
   setErrorCondition(0);
+
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getAvgQuatsArrayPath().getDataContainerName());
 
   QVector<DataArrayPath> dataArrayPaths;
 

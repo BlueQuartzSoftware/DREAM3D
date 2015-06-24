@@ -136,7 +136,7 @@ class CalculateTwinBoundaryImpl
           {
             int32_t nsym = m_OrientationOps[phase1]->getNumSymOps();
             QuaternionMathF::Conjugate(q2);
-			      QuaternionMathF::Multiply(q1, q2, misq);
+            QuaternionMathF::Multiply(q1, q2, misq);
             FOrientArrayType om(9);
             FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
             om.toGMatrix(g1);
@@ -147,7 +147,7 @@ class CalculateTwinBoundaryImpl
             {
               m_OrientationOps[phase1]->getQuatSymOp(j, sym_q);
               // calculate crystal direction parallel to normal
-			        QuaternionMathF::Multiply(misq, sym_q, s1_misq);
+              QuaternionMathF::Multiply(misq, sym_q, s1_misq);
 
               if (m_FindCoherence) { QuaternionMathF::MultiplyQuatVec(sym_q, xstl_norm, s_xstl_norm); }
 
@@ -156,7 +156,7 @@ class CalculateTwinBoundaryImpl
                 // calculate the symmetric misorienation
                 m_OrientationOps[phase1]->getQuatSymOp(k, sym_q);
                 QuaternionMathF::Conjugate(sym_q);
-				        QuaternionMathF::Multiply(sym_q, s1_misq, s2_misq);
+                QuaternionMathF::Multiply(sym_q, s1_misq, s2_misq);
 
                 FOrientArrayType ax(n1, n2, n3, w);
                 FOrientTransformsType::qu2ax(FOrientArrayType(s2_misq), ax);
@@ -298,6 +298,8 @@ void FindTwinBoundaries::dataCheckVoxel()
 
   QVector<DataArrayPath> dataArrayPaths;
 
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getAvgQuatsArrayPath().getDataContainerName());
+
   QVector<size_t> cDims(1, 4);
   m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAvgQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -327,6 +329,8 @@ void FindTwinBoundaries::dataCheckSurfaceMesh()
 
   QVector<DataArrayPath> dataArrayPaths;
 
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
+
   QVector<size_t> cDims(1, 2);
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -348,7 +352,7 @@ void FindTwinBoundaries::dataCheckSurfaceMesh()
   if( NULL != m_SurfaceMeshTwinBoundaryPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshTwinBoundary = m_SurfaceMeshTwinBoundaryPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(getFindCoherence())
+  if (getFindCoherence())
   {
     tempPath.update(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), getSurfaceMeshFaceLabelsArrayPath().getAttributeMatrixName(), getSurfaceMeshTwinBoundaryIncoherenceArrayName() );
     m_SurfaceMeshTwinBoundaryIncoherencePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 180.0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
