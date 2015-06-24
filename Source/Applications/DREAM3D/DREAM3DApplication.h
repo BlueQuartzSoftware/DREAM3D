@@ -100,7 +100,9 @@ protected slots:
 
   void on_m_ActionNew_triggered();
   void on_m_ActionOpen_triggered();
-  void on_m_ActionClearRecentFiles_triggered();
+
+  void on_actionClearRecentFiles_triggered();
+
   void on_m_ActionShowIndex_triggered();
   void on_m_ActionCheck_For_Updates_triggered();
   void on_m_ActionLicense_Information_triggered();
@@ -142,6 +144,17 @@ private:
   QAction*                        actionPlugin_Information;
   QAction*                        actionSave;
   QAction*                        actionSaveAs;
+  QAction* m_ActionAddPipeline;
+  QAction* m_ActionUpdatePipeline;
+  QAction* m_ActionRenamePipeline;
+  QAction* m_ActionLocateFile;
+  QAction* m_ActionAddToPipelineView;
+  QAction* m_ActionNewFolder;
+  QAction* m_ActionRemovePipeline;
+  QAction* m_ActionShowInFileSystem;
+  QAction* m_ActionClearPipeline;
+  QAction* m_ActionCloseWindow;
+  QAction* m_ActionExit;
 
   QString                         m_OpenDialogLastDirectory;
 
@@ -151,7 +164,7 @@ private:
   QVector<QPluginLoader*>         m_PluginLoaders;
 
   void initializeApplication();
-  void initializeGlobalMenu();
+  QMenuBar* createMenu();
   QVector<IDREAM3DPlugin*> loadPlugins();
 
   DREAM3DApplication(const DREAM3DApplication&); // Copy Constructor Not Implemented

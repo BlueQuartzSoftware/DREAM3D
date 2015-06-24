@@ -202,18 +202,8 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void on_actionPlugin_Information_triggered();
     void on_actionShowIndex_triggered();
 
-    // Recent Files menu
-    void on_actionClearRecentFiles_triggered();
-
     // Buttons and other widgets that send signals that we want to catch
     void on_startPipelineBtn_clicked();
-
-    /**
-     * @brief Updates the QMenu 'Recent Files' with the latest list of files. This
-     * should be connected to the Signal QRecentFileList->fileListChanged
-     * @param file The newly added file.
-     */
-    void updateRecentFileList(const QString &file);
 
     /**
      * @brief Qt Slot that fires in response to a click on a "Recent File' Menu entry.
@@ -242,11 +232,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     * @brief clearFilterInputWidget
     */
     void clearFilterInputWidget();
-
-    /**
-     * @brief pipelineStarted
-     */
-    void disableMenuItems();
 
     /**
     * @brief markDocumentAsDirty
@@ -318,11 +303,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     /**
     * @brief
     */
-    void initializeMenuActions();
-
-    /**
-    * @brief
-    */
     void setupPipelineItemMenu();
 
     /**
@@ -344,11 +324,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     * @brief
     */
     void setupPipelineViewMenu();
-
-    /**
-    * @brief
-    */
-    void setupViewMenu();
 
     /**
     * @brief
@@ -455,18 +430,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
     QString             m_OpenedFilePath;
     static QString    m_OpenDialogLastDirectory;
-
-    QAction* m_ActionAddPipeline;
-    QAction* m_ActionUpdatePipeline;
-    QAction* m_ActionRenamePipeline;
-    QAction* m_ActionLocateFile;
-    QAction* m_ActionAddToPipelineView;
-    QAction* m_ActionNewFolder;
-    QAction* m_ActionRemovePipeline;
-    QAction* m_ActionShowInFileSystem;
-    QAction* m_ActionClearPipeline;
-    QAction* m_ActionCloseWindow;
-    QAction* m_ActionExit;
 
     /**
     * @brief Updates the "first run" variable in the preferences file
