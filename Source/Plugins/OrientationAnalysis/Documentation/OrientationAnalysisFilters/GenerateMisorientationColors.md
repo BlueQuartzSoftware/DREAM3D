@@ -35,11 +35,17 @@ With other coloring methods, such as IPF, "bad" **Elements** which result from n
 
 ### Example Output Images ###
 
+-----
+
 ![Small IN100 courtesy of [2] showing a generally random texture](images/Small_IN100_Miso_90.png)
 @image latex images/Small_IN100_Miso_90.png "Small IN100 courtesy of [2] showing a generally random texture" width=6in
 
+-----
+
 ![Interstitial Free (IF) Steel courtesy of [3]](images/Miso_fw-ar-IF1-avtr12-corr.png)
 @image latex images/Miso_fw-ar-IF1-avtr12-corr.png "Interstitial Free (IF) Steel courtesy of [3]" width=6in
+
+-----
 
 ## Parameters ##
 | Name | Type | Description |

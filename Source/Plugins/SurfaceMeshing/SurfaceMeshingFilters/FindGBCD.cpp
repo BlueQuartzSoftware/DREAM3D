@@ -427,6 +427,8 @@ void FindGBCD::dataCheckSurfaceMesh()
 
   DataArrayPath tempPath;
 
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
+
   DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == sm.get()) { return; }
 
@@ -470,6 +472,8 @@ void FindGBCD::dataCheckSurfaceMesh()
 void FindGBCD::dataCheckVoxel()
 {
   setErrorCondition(0);
+
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureEulerAnglesArrayPath().getDataContainerName());
 
   QVector<size_t> cDims(1, 3);
   m_FeatureEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getFeatureEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */

@@ -1,28 +1,29 @@
 Generate Triangle Areas {#triangleareafilter}
-======
+============
 
 ## Group (Subgroup) ##
-SurfaceMesh
+Surface Meshing (Misc)
 
 ## Description ##
-This filter computes the area of each triangle (given by points A,B,C) in the surface mesh by calculating the following: 1/2*|AB||AC|sin(O), where O is the angle between |AB| and |AC|.
+This Filter computes the area of each **Triangle** in a **Triangle Geometry** by calculating the following: 
+	
+	1/2*|AB||AC|sin(O)
 
+where _O_ is the angle between |AB| and |AC|.
 
 ## Parameters ##
 None
 
-## Required DataContainers ##
-SurfaceMesh - Valid Surface Mesh containing the shared vertex array and face list
+## Required Geometry ##
+Triangle
 
 ## Required Arrays ##
 None
 
 ## Created Arrays ##
-
-| Type | Default Name | Comment |
-|------|--------------|---------|
-| Face | SurfaceMeshFaceAreas | |
-
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Face | FaceAreas | Double | (1) | Specifies the area of each **Face** |
 
 
 ## License & Copyright ##

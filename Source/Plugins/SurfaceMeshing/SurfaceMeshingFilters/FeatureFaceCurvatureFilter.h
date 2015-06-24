@@ -61,9 +61,6 @@ class FeatureFaceCurvatureFilter : public SurfaceMeshFilter
     DREAM3D_FILTER_PARAMETER(QString, EdgeAttributeMatrixName)
     Q_PROPERTY(QString EdgeAttributeMatrixName READ getEdgeAttributeMatrixName WRITE setEdgeAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshUniqueEdgesArrayName)
-    Q_PROPERTY(QString SurfaceMeshUniqueEdgesArrayName READ getSurfaceMeshUniqueEdgesArrayName WRITE setSurfaceMeshUniqueEdgesArrayName)
-
     DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshPrincipalCurvature1sArrayName)
     Q_PROPERTY(QString SurfaceMeshPrincipalCurvature1sArrayName READ getSurfaceMeshPrincipalCurvature1sArrayName WRITE setSurfaceMeshPrincipalCurvature1sArrayName)
 

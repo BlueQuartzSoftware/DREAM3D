@@ -177,7 +177,7 @@ void GenerateFaceMisorientationColoring::setupFilterParameters()
   FilterParameterVector parameters;
 
   parameters.push_back(FilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, ""));
-  parameters.push_back(FilterParameter::New("Avgerage Quaternions", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), FilterParameter::RequiredArray, ""));
   parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, ""));
   parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, ""));
 
@@ -251,9 +251,10 @@ void GenerateFaceMisorientationColoring::dataCheckSurfaceMesh()
 void GenerateFaceMisorientationColoring::dataCheckVoxel()
 {
   setErrorCondition(0);
-  DataArrayPath tempPath;
 
   QVector<DataArrayPath> dataArrayPaths;
+
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getAvgQuatsArrayPath().getDataContainerName());
 
   QVector<size_t> cDims(1, 4);
   m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAvgQuatsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -344,13 +345,13 @@ const QString GenerateFaceMisorientationColoring::getCompiledLibraryName()
 //
 // -----------------------------------------------------------------------------
 const QString GenerateFaceMisorientationColoring::getGroupName()
-{ return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+{ return DREAM3D::FilterGroups::ProcessingFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateFaceMisorientationColoring::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::MiscFilters; }
+{ return DREAM3D::FilterSubGroups::CrystallographyFilters; }
 
 // -----------------------------------------------------------------------------
 //
