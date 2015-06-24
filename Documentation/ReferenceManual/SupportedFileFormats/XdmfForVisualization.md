@@ -1,4 +1,4 @@
-XDMF For Visualization {#xdmf}
+Xdmf For Visualization {#xdmf}
 ========
 
 ## Introduction ##
