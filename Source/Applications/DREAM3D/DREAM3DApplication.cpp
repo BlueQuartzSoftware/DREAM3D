@@ -529,12 +529,12 @@ QMenuBar* DREAM3DApplication::createMenu()
   actionClearRecentFiles->setText(QApplication::translate("DREAM3D_UI", "Clear Recent Files", 0));
   actionExit->setText(QApplication::translate("DREAM3D_UI", "Exit DREAM3D", 0));
 #if defined(Q_OS_WIN)
-  m_ActionExit->setShortcut(QKeySequence(Qt::ALT + Qt::Key_F4));
+  actionExit->setShortcut(QKeySequence(Qt::ALT + Qt::Key_F4));
 #else
   actionExit->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
 #endif
 #if defined(Q_OS_WIN)
-  m_ActionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Windows Explorer", 0));
+  actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Windows Explorer", 0));
 #elif defined(Q_OS_MAC)
   actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Finder", 0));
 #else

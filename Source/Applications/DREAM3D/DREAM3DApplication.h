@@ -105,7 +105,6 @@ protected slots:
 
   void on_actionShowIndex_triggered();
   void on_actionCheck_For_Updates_triggered();
-  void on_actionLicense_Information_triggered();
   void on_actionAbout_DREAM3D_triggered();
   void on_actionExit_triggered();
 
