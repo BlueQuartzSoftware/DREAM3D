@@ -113,6 +113,12 @@ bool DREAM3DApplication::initialize(int argc, char* argv[])
 {
   QApplication::setApplicationVersion(DREAM3DLib::Version::Complete());
 
+  // If Mac or Linux, initialize global menu
+#if defined (Q_OS_WIN)
+#else
+  m_GlobalMenu = createMenu();
+#endif
+
   // Create and show the splash screen as the main window is being created.
   QPixmap pixmap(QLatin1String(":/branded_splash.png"));
   this->Splash = new DSplashScreen(pixmap);
@@ -359,22 +365,24 @@ QVector<IDREAM3DPlugin*> DREAM3DApplication::loadPlugins()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DApplication::initializeApplication()
-{
-  #if defined (Q_OS_WIN)
-  #else
-    m_GlobalMenu = createMenu();
-  #endif
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QMenuBar* DREAM3DApplication::createMenu()
 {
   QMenuBar* menubar = new QMenuBar(NULL);
   menubar->setObjectName(QStringLiteral("m_GlobalMenu"));
   menubar->setGeometry(QRect(0, 0, 1104, 21));
+
+  menuFile = new QMenu(menubar);
+  menuFile->setObjectName(QStringLiteral("menuFile"));
+  menu_RecentFiles = new QMenu(menuFile);
+  menu_RecentFiles->setObjectName(QStringLiteral("menu_RecentFiles"));
+  menuView = new QMenu(menubar);
+  menuView->setObjectName(QStringLiteral("menuView"));
+  menuBookmarks = new QMenu(menubar);
+  menuBookmarks->setObjectName(QStringLiteral("menuBookmarks"));
+  menuHelp = new QMenu(menubar);
+  menuHelp->setObjectName(QStringLiteral("menuHelp"));
+  menuPipeline = new QMenu(menubar);
+  menuPipeline->setObjectName(QStringLiteral("menuPipeline"));
 
 #if 0
   //  m_FilterListBtn = new QToolButton(this);
@@ -436,106 +444,11 @@ QMenuBar* DREAM3DApplication::createMenu()
   //          this, SLOT(on_actionShow_Issues_triggered(bool)) );
 #endif
 
-
-  /* m_ActionAddPipeline */
-  m_ActionAddPipeline = new QAction(menuBookmarks);
-  m_ActionAddPipeline->setObjectName(QString::fromUtf8("m_ActionAddPipeline"));
-  m_ActionAddPipeline->setText(QApplication::translate("DREAM3D_UI", "Add Bookmark", 0));
-  menuBookmarks->addAction(m_ActionAddPipeline);
-  QKeySequence m_ActionAddPipelineKeySeq(Qt::CTRL + Qt::Key_B);
-  m_ActionAddPipeline->setShortcut(m_ActionAddPipelineKeySeq);
-  //connect(m_ActionAddPipeline, SIGNAL(triggered()), bookmarksDockWidget, SLOT(m_ActionAddPipeline_triggered()));
-
   /* m_ActionRenamePipeline */
-  m_ActionRenamePipeline = new QAction(this);
-  m_ActionRenamePipeline->setObjectName(QString::fromUtf8("m_ActionRenamePipeline"));
-  m_ActionRenamePipeline->setText(QApplication::translate("DREAM3D_UI", "Rename Pipeline", 0));
   //bookmarksDockWidget->setRenameAction(m_ActionRenamePipeline);
-  //connect(m_ActionRenamePipeline, SIGNAL(triggered()), bookmarksDockWidget, SLOT(m_ActionRenamePipeline_triggered()));
-
-  {
-    menuBookmarks->addSeparator();
-  }
 
   /* m_ActionRemovePipeline */
-  m_ActionRemovePipeline = new QAction(this);
-  m_ActionRemovePipeline->setObjectName(QString::fromUtf8("m_ActionRemovePipeline"));
-  m_ActionRemovePipeline->setText(QApplication::translate("DREAM3D_UI", "Remove Bookmark", 0));
   //bookmarksDockWidget->setDeleteAction(m_ActionRemovePipeline);
-  //connect(m_ActionRemovePipeline, SIGNAL(triggered()), bookmarksDockWidget, SLOT(m_ActionRemovePipeline_triggered()));
-
-  {
-    menuBookmarks->addSeparator();
-  }
-
-  /* m_ActionNewFolder */
-  m_ActionNewFolder = new QAction(menuBookmarks);
-  m_ActionNewFolder->setObjectName(QString::fromUtf8("m_ActionNewFolder"));
-  m_ActionNewFolder->setText(QApplication::translate("DREAM3D_UI", "New Folder", 0));
-  menuBookmarks->addAction(m_ActionNewFolder);
-  QKeySequence m_ActionNewFolderKeySeq(Qt::CTRL + Qt::Key_F);
-  m_ActionNewFolder->setShortcut(m_ActionNewFolderKeySeq);
-  //connect(m_ActionNewFolder, SIGNAL(triggered()), bookmarksDockWidget, SLOT(m_ActionNewFolder_triggered()));
-
-  /* m_ActionClearPipeline */
-  m_ActionClearPipeline = new QAction(menuPipeline);
-  m_ActionClearPipeline->setObjectName(QString::fromUtf8("m_ActionClearPipeline"));
-  m_ActionClearPipeline->setText(QApplication::translate("DREAM3D_UI", "Clear Pipeline", 0));
-  menuPipeline->addAction(m_ActionClearPipeline);
-  QKeySequence actionClearKeySeq(Qt::CTRL + Qt::Key_Backspace);
-  m_ActionClearPipeline->setShortcut(actionClearKeySeq);
-  connect(m_ActionClearPipeline, SIGNAL(triggered()),
-    this, SLOT(clearPipeline()));
-
-
-
-
-  /* m_ActionLocateFile */
-  m_ActionLocateFile = new QAction(this);
-  m_ActionLocateFile->setObjectName(QString::fromUtf8("m_ActionLocateFile"));
-  m_ActionLocateFile->setText(QApplication::translate("DREAM3D_UI", "Locate Bookmark...", 0));
-  //connect(m_ActionLocateFile, SIGNAL(triggered()), bookmarksDockWidget, SLOT(m_ActionLocateFile_triggered()));
-
-  /* m_ActionShowInFileSystem */
-  m_ActionShowInFileSystem = new QAction(this);
-  m_ActionShowInFileSystem->setObjectName(QString::fromUtf8("m_ActionShowInFileSystem"));
-  // Handle the naming based on what OS we are currently running...
-#if defined(Q_OS_WIN)
-  m_ActionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Windows Explorer", 0));
-#elif defined(Q_OS_MAC)
-  m_ActionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Finder", 0));
-#else
-  m_ActionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in File System", 0));
-#endif
-  //connect(m_ActionShowInFileSystem, SIGNAL(triggered()), bookmarksDockWidget, SLOT(m_ActionShowInFileSystem_triggered()));
-
-#if defined(Q_OS_MAC)
-  /* m_ActionCloseWindow */
-  m_ActionCloseWindow = new QAction(this);
-  m_ActionCloseWindow->setObjectName(QString::fromUtf8("m_ActionCloseWindow"));
-  m_ActionCloseWindow->setText(QApplication::translate("DREAM3D_UI", "Close Window", 0));
-  QKeySequence m_ActionCloseWindowKeySeq(Qt::CTRL + Qt::Key_W);
-  m_ActionCloseWindow->setShortcut(m_ActionCloseWindowKeySeq);
-  menuFile->addAction(m_ActionCloseWindow);
-  connect(m_ActionCloseWindow, SIGNAL(triggered()), this, SLOT(closeWindow()));
-#endif
-
-  /* m_ActionExit */
-  m_ActionExit = new QAction(this);
-  m_ActionExit->setObjectName(QString::fromUtf8("m_ActionExit"));
-  m_ActionExit->setText(QApplication::translate("DREAM3D_UI", "Exit DREAM3D", 0));
-#if defined(Q_OS_WIN)
-  QKeySequence m_ActionCloseWindowKeySeq(Qt::ALT + Qt::Key_F4);
-  m_ActionExit->setShortcut(m_ActionCloseWindowKeySeq);
-  connect(m_ActionExit, SIGNAL(triggered()),
-    this, SLOT(closeWindow()));
-#else
-  QKeySequence m_ActionExitKeySeq(Qt::CTRL + Qt::Key_Q);
-  m_ActionExit->setShortcut(m_ActionExitKeySeq);
-  connect(m_ActionExit, SIGNAL(triggered()),
-    dream3dApp, SLOT(exitTriggered()));
-#endif
-  menuFile->addAction(m_ActionExit);
 
   actionShow_Filter_Library = new QAction(this);
   actionShow_Filter_Library->setObjectName(QStringLiteral("actionShow_Filter_Library"));
@@ -543,17 +456,34 @@ QMenuBar* DREAM3DApplication::createMenu()
   actionShow_Prebuilt_Pipelines = new QAction(this);
   actionShow_Prebuilt_Pipelines->setObjectName(QStringLiteral("actionShow_Prebuilt_Pipelines"));
   actionShow_Prebuilt_Pipelines->setIconVisibleInMenu(false);
+#if defined(Q_OS_WIN)
+#else
+  actionCloseWindow = new QAction(this);
+  actionCloseWindow->setObjectName(QString::fromUtf8("m_ActionCloseWindow"));
+#endif
+  actionAddPipeline = new QAction(menuBookmarks);
+  actionAddPipeline->setObjectName(QString::fromUtf8("m_ActionAddPipeline"));
+  actionRenamePipeline = new QAction(this);
+  actionRenamePipeline->setObjectName(QString::fromUtf8("m_ActionRenamePipeline"));
+  actionRemovePipeline = new QAction(this);
+  actionRemovePipeline->setObjectName(QString::fromUtf8("m_ActionRemovePipeline"));
+  actionClearPipeline = new QAction(menuPipeline);
+  actionClearPipeline->setObjectName(QString::fromUtf8("m_ActionClearPipeline"));
+  actionLocateFile = new QAction(this);
+  actionLocateFile->setObjectName(QString::fromUtf8("m_ActionLocateFile"));
+  actionShowInFileSystem = new QAction(this);
+  actionShowInFileSystem->setObjectName(QString::fromUtf8("m_ActionShowInFileSystem"));
+  actionExit = new QAction(this);
+  actionExit->setObjectName(QString::fromUtf8("m_ActionExit"));
+  actionNewFolder = new QAction(menuBookmarks);
+  actionNewFolder->setObjectName(QString::fromUtf8("m_ActionNewFolder"));
   actionOpen = new QAction(this);
   actionOpen->setObjectName(QStringLiteral("actionOpen"));
   actionNew = new QAction(this);
   actionNew->setObjectName(QStringLiteral("actionNew"));
-  actionSavePipelineAs = new QAction(this);
-  actionSavePipelineAs->setObjectName(QStringLiteral("actionSavePipelineAs"));
   actionShow_Favorites = new QAction(this);
   actionShow_Favorites->setObjectName(QStringLiteral("actionShow_Favorites"));
   actionShow_Favorites->setIconVisibleInMenu(false);
-  actionClearPipeline = new QAction(this);
-  actionClearPipeline->setObjectName(QStringLiteral("actionClearPipeline"));
   actionClearRecentFiles = new QAction(this);
   actionClearRecentFiles->setObjectName(QStringLiteral("actionClearRecentFiles"));
   actionShow_Issues = new QAction(this);
@@ -564,26 +494,10 @@ QMenuBar* DREAM3DApplication::createMenu()
   actionShow_Filter_List->setIconVisibleInMenu(false);
   actionShowIndex = new QAction(this);
   actionShowIndex->setObjectName(QStringLiteral("actionShowIndex"));
-  actionLicense_Information = new QAction(this);
-  actionLicense_Information->setObjectName(QStringLiteral("actionLicense_Information"));
   actionAbout_DREAM3D = new QAction(this);
   actionAbout_DREAM3D->setObjectName(QStringLiteral("actionAbout_DREAM3D"));
   actionCheck_For_Updates = new QAction(this);
   actionCheck_For_Updates->setObjectName(QStringLiteral("actionCheck_For_Updates"));
-  actionExit = new QAction(this);
-  actionExit->setObjectName(QStringLiteral("actionExit"));
-  actionSaveAsNewFavorite = new QAction(this);
-  actionSaveAsNewFavorite->setObjectName(QStringLiteral("actionSaveAsNewFavorite"));
-  actionCopyCurrentFilter = new QAction(this);
-  actionCopyCurrentFilter->setObjectName(QStringLiteral("actionCopyCurrentFilter"));
-  actionAppendToExistingFavorite = new QAction(this);
-  actionAppendToExistingFavorite->setObjectName(QStringLiteral("actionAppendToExistingFavorite"));
-  actionUpdateFavorite = new QAction(this);
-  actionUpdateFavorite->setObjectName(QStringLiteral("actionUpdateFavorite"));
-  actionPasteCopiedFilter = new QAction(this);
-  actionPasteCopiedFilter->setObjectName(QStringLiteral("actionPasteCopiedFilter"));
-  actionRemoveCurrentFilter = new QAction(this);
-  actionRemoveCurrentFilter->setObjectName(QStringLiteral("actionRemoveCurrentFilter"));
   actionPlugin_Information = new QAction(this);
   actionPlugin_Information->setObjectName(QStringLiteral("actionPlugin_Information"));
   actionSave = new QAction(this);
@@ -591,53 +505,48 @@ QMenuBar* DREAM3DApplication::createMenu()
   actionSaveAs = new QAction(this);
   actionSaveAs->setObjectName(QStringLiteral("actionSaveAs"));
 
-  menuFile = new QMenu(menubar);
-  menuFile->setObjectName(QStringLiteral("menuFile"));
-  menu_RecentFiles = new QMenu(menuFile);
-  menu_RecentFiles->setObjectName(QStringLiteral("menu_RecentFiles"));
-  menuView = new QMenu(menubar);
-  menuView->setObjectName(QStringLiteral("menuView"));
-  menuBookmarks = new QMenu(menubar);
-  menuBookmarks->setObjectName(QStringLiteral("menuBookmarks"));
-  menuHelp = new QMenu(menubar);
-  menuHelp->setObjectName(QStringLiteral("menuHelp"));
-  menuPipeline = new QMenu(menubar);
-  menuPipeline->setObjectName(QStringLiteral("menuPipeline"));
-
   actionShow_Filter_Library->setText(QApplication::translate("DREAM3D_UI", "Filter Library", 0));
   actionShow_Prebuilt_Pipelines->setText(QApplication::translate("DREAM3D_UI", "Prebuilt Pipelines", 0));
+  actionLocateFile->setText(QApplication::translate("DREAM3D_UI", "Locate Bookmark...", 0));
+  actionAddPipeline->setText(QApplication::translate("DREAM3D_UI", "Add Bookmark", 0));
+  actionAddPipeline->setShortcut(QApplication::translate("DREAM3D_UI", "Ctrl+B", 0));
+  actionRenamePipeline->setText(QApplication::translate("DREAM3D_UI", "Rename Pipeline", 0));
+  actionRemovePipeline->setText(QApplication::translate("DREAM3D_UI", "Remove Bookmark", 0));
+  actionNewFolder->setText(QApplication::translate("DREAM3D_UI", "New Folder", 0));
+  actionAddPipeline->setShortcut(QApplication::translate("DREAM3D_UI", "Ctrl+F", 0));
+  actionClearPipeline->setText(QApplication::translate("DREAM3D_UI", "Clear Pipeline", 0));
+  actionClearPipeline->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Backspace));
+#if defined(Q_OS_WIN)
+#else
+  actionCloseWindow->setText(QApplication::translate("DREAM3D_UI", "Close Window", 0));
+  actionCloseWindow->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_W));
+#endif
   actionOpen->setText(QApplication::translate("DREAM3D_UI", "Open...", 0));
   actionOpen->setShortcut(QApplication::translate("DREAM3D_UI", "Ctrl+O", 0));
   actionNew->setText(QApplication::translate("DREAM3D_UI", "New...", 0));
   actionNew->setShortcut(QApplication::translate("DREAM3D_UI", "Ctrl+N", 0));
-  actionSavePipelineAs->setText(QApplication::translate("DREAM3D_UI", "Save Pipeline As...", 0));
-  actionSavePipelineAs->setShortcut(QApplication::translate("DREAM3D_UI", "Ctrl+Shift+S", 0));
   actionShow_Favorites->setText(QApplication::translate("DREAM3D_UI", "Favorites", 0));
-  actionClearPipeline->setText(QApplication::translate("DREAM3D_UI", "Clear", 0));
-  actionClearPipeline->setShortcut(QApplication::translate("DREAM3D_UI", "Ctrl+Shift+Backspace", 0));
   actionClearRecentFiles->setText(QApplication::translate("DREAM3D_UI", "Clear Recent Files", 0));
+  actionExit->setText(QApplication::translate("DREAM3D_UI", "Exit DREAM3D", 0));
+#if defined(Q_OS_WIN)
+  m_ActionExit->setShortcut(QKeySequence(Qt::ALT + Qt::Key_F4));
+#else
+  actionExit->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
+#endif
+#if defined(Q_OS_WIN)
+  m_ActionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Windows Explorer", 0));
+#elif defined(Q_OS_MAC)
+  actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Finder", 0));
+#else
+  m_ActionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in File System", 0));
+#endif
   actionShow_Issues->setText(QApplication::translate("DREAM3D_UI", "Issues", 0));
   actionShow_Filter_List->setText(QApplication::translate("DREAM3D_UI", "Filter List", 0));
   actionShowIndex->setText(QApplication::translate("DREAM3D_UI", "DREAM3D Help", 0));
   actionShowIndex->setShortcut(QApplication::translate("DREAM3D_UI", "Ctrl+H", 0));
-  actionLicense_Information->setText(QApplication::translate("DREAM3D_UI", "Show License", 0));
-  actionLicense_Information->setShortcut(QApplication::translate("DREAM3D_UI", "Ctrl+L", 0));
   actionAbout_DREAM3D->setText(QApplication::translate("DREAM3D_UI", "About DREAM3D", 0));
   actionCheck_For_Updates->setText(QApplication::translate("DREAM3D_UI", "Check For Updates", 0));
   actionCheck_For_Updates->setShortcut(QApplication::translate("DREAM3D_UI", "Ctrl+U", 0));
-  actionExit->setText(QApplication::translate("DREAM3D_UI", "Exit DREAM3D", 0));
-  actionSaveAsNewFavorite->setText(QApplication::translate("DREAM3D_UI", "Save As New Favorite", 0));
-  actionSaveAsNewFavorite->setShortcut(QApplication::translate("DREAM3D_UI", "Ctrl+Shift+S", 0));
-  actionCopyCurrentFilter->setText(QApplication::translate("DREAM3D_UI", "Copy Current Filter", 0));
-  actionCopyCurrentFilter->setShortcut(QApplication::translate("DREAM3D_UI", "Ctrl+C", 0));
-  actionAppendToExistingFavorite->setText(QApplication::translate("DREAM3D_UI", "Append To Existing Favorite", 0));
-  actionAppendToExistingFavorite->setShortcut(QApplication::translate("DREAM3D_UI", "Ctrl+A", 0));
-  actionUpdateFavorite->setText(QApplication::translate("DREAM3D_UI", "Update Favorite", 0));
-  actionUpdateFavorite->setShortcut(QApplication::translate("DREAM3D_UI", "Ctrl+S", 0));
-  actionPasteCopiedFilter->setText(QApplication::translate("DREAM3D_UI", "Paste Copied Filter", 0));
-  actionPasteCopiedFilter->setShortcut(QApplication::translate("DREAM3D_UI", "Ctrl+V", 0));
-  actionRemoveCurrentFilter->setText(QApplication::translate("DREAM3D_UI", "Remove Current Filter", 0));
-  actionRemoveCurrentFilter->setShortcut(QApplication::translate("DREAM3D_UI", "Ctrl+Backspace", 0));
   actionPlugin_Information->setText(QApplication::translate("DREAM3D_UI", "Plugin Information", 0));
   actionPlugin_Information->setIconText(QApplication::translate("DREAM3D_UI", "Plugin Information", 0));
 #ifndef QT_NO_TOOLTIP
@@ -654,6 +563,22 @@ QMenuBar* DREAM3DApplication::createMenu()
   menuHelp->setTitle(QApplication::translate("DREAM3D_UI", "Help", 0));
   menuPipeline->setTitle(QApplication::translate("DREAM3D_UI", "Pipeline", 0));
 
+  // Connections
+  //connect(m_ActionAddPipeline, SIGNAL(triggered()), bookmarksDockWidget, SLOT(m_ActionAddPipeline_triggered()));
+  //connect(m_ActionRenamePipeline, SIGNAL(triggered()), bookmarksDockWidget, SLOT(m_ActionRenamePipeline_triggered()));
+  //connect(m_ActionRemovePipeline, SIGNAL(triggered()), bookmarksDockWidget, SLOT(m_ActionRemovePipeline_triggered()));
+  //connect(m_ActionNewFolder, SIGNAL(triggered()), bookmarksDockWidget, SLOT(m_ActionNewFolder_triggered()));
+  //connect(m_ActionLocateFile, SIGNAL(triggered()), bookmarksDockWidget, SLOT(m_ActionLocateFile_triggered()));
+  //connect(m_ActionShowInFileSystem, SIGNAL(triggered()), bookmarksDockWidget, SLOT(m_ActionShowInFileSystem_triggered()));
+  #if defined(Q_OS_WIN)
+  //connect(m_ActionExit, SIGNAL(triggered()), this, SLOT(closeWindow()));
+  #else
+  //connect(m_ActionExit, SIGNAL(triggered()), dream3dApp, SLOT(exitTriggered()));
+  //connect(m_ActionCloseWindow, SIGNAL(triggered()), this, SLOT(closeWindow()));
+  #endif
+  //connect(m_ActionClearPipeline, SIGNAL(triggered()), this, SLOT(clearPipeline()));
+
+  // Add the actions to their respective menus
   menubar->addAction(menuFile->menuAction());
   menubar->addAction(menuView->menuAction());
   menubar->addAction(menuBookmarks->menuAction());
@@ -667,6 +592,11 @@ QMenuBar* DREAM3DApplication::createMenu()
   menuFile->addSeparator();
   menuFile->addAction(menu_RecentFiles->menuAction());
   menuFile->addSeparator();
+  menuFile->addAction(actionExit);
+#if defined(Q_OS_WIN)
+#else
+  menuFile->addAction(actionCloseWindow);
+#endif
   menu_RecentFiles->addSeparator();
   menu_RecentFiles->addAction(actionClearRecentFiles);
   menuView->addAction(actionShow_Filter_Library);
@@ -674,8 +604,12 @@ QMenuBar* DREAM3DApplication::createMenu()
   menuView->addAction(actionShow_Prebuilt_Pipelines);
   menuView->addAction(actionShow_Favorites);
   menuView->addAction(actionShow_Issues);
-  menuBookmarks->addSeparator();
-  menuBookmarks->addSeparator();
+  menuBookmarks->addAction(actionAddPipeline);
+  {
+    menuBookmarks->addSeparator();
+  }
+  menuBookmarks->addAction(actionNewFolder);
+  menuPipeline->addAction(actionClearPipeline);
   menuHelp->addAction(actionShowIndex);
   menuHelp->addSeparator();
   menuHelp->addAction(actionCheck_For_Updates);
@@ -829,7 +763,7 @@ void DREAM3DApplication::exitTriggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DApplication::on_m_ActionNew_triggered()
+void DREAM3DApplication::on_actionNew_triggered()
 {
   DREAM3D_UI* newInstance = getNewDREAM3DInstance();
   newInstance->show();
@@ -838,7 +772,7 @@ void DREAM3DApplication::on_m_ActionNew_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DApplication::on_m_ActionOpen_triggered()
+void DREAM3DApplication::on_actionOpen_triggered()
 {
   DREAM3D_UI* newInstance = getNewDREAM3DInstance();
 
@@ -865,7 +799,7 @@ void DREAM3DApplication::on_m_ActionOpen_triggered()
 // -----------------------------------------------------------------------------
 // This is copied from the DREAM3D_UI class.
 // -----------------------------------------------------------------------------
-void DREAM3DApplication::on_m_ActionShowIndex_triggered()
+void DREAM3DApplication::on_actionShowIndex_triggered()
 {
   // Generate help page
   QUrl helpURL = DREAM3DHelpUrlGenerator::generateHTMLUrl("index");
@@ -875,29 +809,16 @@ void DREAM3DApplication::on_m_ActionShowIndex_triggered()
 // -----------------------------------------------------------------------------
 // This is copied from the DREAM3D_UI class.
 // -----------------------------------------------------------------------------
-void DREAM3DApplication::on_m_ActionAbout_DREAM3D_triggered()
+void DREAM3DApplication::on_actionAbout_DREAM3D_triggered()
 {
   AboutDREAM3D d(NULL);
   d.exec();
 }
 
 // -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3DApplication::on_m_ActionLicense_Information_triggered()
-{
-//  ApplicationAboutBoxDialog about(DREAM3D::LicenseList, NULL);
-//  QString an = QCoreApplication::applicationName();
-//  QString version("");
-//  version.append(DREAM3DLib::Version::PackageComplete().toLatin1().data());
-//  about.setApplicationInfo(an, version);
-//  about.exec();
-}
-
-// -----------------------------------------------------------------------------
 //  This is copied from the DREAM3D_UI class.
 // -----------------------------------------------------------------------------
-void DREAM3DApplication::on_m_ActionCheck_For_Updates_triggered()
+void DREAM3DApplication::on_actionCheck_For_Updates_triggered()
 {
   DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(NULL);
 
@@ -919,7 +840,7 @@ void DREAM3DApplication::on_m_ActionCheck_For_Updates_triggered()
 // -----------------------------------------------------------------------------
 // This is copied from the DREAM3D_UI class.
 // -----------------------------------------------------------------------------
-void DREAM3DApplication::on_m_ActionExit_triggered()
+void DREAM3DApplication::on_actionExit_triggered()
 {
 #if defined (Q_OS_MAC)
   closeAllWindows();
@@ -938,6 +859,7 @@ DREAM3D_UI* DREAM3DApplication::getNewDREAM3DInstance()
   // Create new DREAM3D instance
   DREAM3D_UI* newInstance = new DREAM3D_UI(NULL);
   newInstance->setLoadedPlugins(plugins);
+  registerDREAM3DWindow(newInstance);
 
   // Show the new instance
   newInstance->setAttribute(Qt::WA_DeleteOnClose);

@@ -98,63 +98,63 @@ protected slots:
   // DREAM3D_UI slots
   void openRecentFile();
 
-  void on_m_ActionNew_triggered();
-  void on_m_ActionOpen_triggered();
+  void on_actionNew_triggered();
+  void on_actionOpen_triggered();
 
   void on_actionClearRecentFiles_triggered();
 
-  void on_m_ActionShowIndex_triggered();
-  void on_m_ActionCheck_For_Updates_triggered();
-  void on_m_ActionLicense_Information_triggered();
-  void on_m_ActionAbout_DREAM3D_triggered();
-  void on_m_ActionExit_triggered();
+  void on_actionShowIndex_triggered();
+  void on_actionCheck_For_Updates_triggered();
+  void on_actionLicense_Information_triggered();
+  void on_actionAbout_DREAM3D_triggered();
+  void on_actionExit_triggered();
 
 private:
   QList<QWidget*>                 m_DREAM3DWidgetList;
   DREAM3D_UI*                     m_ActiveWindow;
-
   QMenuBar*                       m_GlobalMenu;
+
+  // File Menu
   QMenu*                          menuFile;
-  QMenu*                          menu_RecentFiles;
-  QMenu*                          menuView;
-  QMenu*                          menuBookmarks;
-  QMenu*                          menuHelp;
-  QMenu*                          menuPipeline;
-  QAction*                        actionShow_Filter_Library;
-  QAction*                        actionShow_Prebuilt_Pipelines;
-  QAction*                        actionOpen;
   QAction*                        actionNew;
-  QAction*                        actionSavePipelineAs;
-  QAction*                        actionShow_Favorites;
-  QAction*                        actionClearPipeline;
-  QAction*                        actionClearRecentFiles;
-  QAction*                        actionShow_Issues;
-  QAction*                        actionShow_Filter_List;
-  QAction*                        actionShowIndex;
-  QAction*                        actionLicense_Information;
-  QAction*                        actionAbout_DREAM3D;
-  QAction*                        actionCheck_For_Updates;
-  QAction*                        actionExit;
-  QAction*                        actionSaveAsNewFavorite;
-  QAction*                        actionCopyCurrentFilter;
-  QAction*                        actionAppendToExistingFavorite;
-  QAction*                        actionUpdateFavorite;
-  QAction*                        actionPasteCopiedFilter;
-  QAction*                        actionRemoveCurrentFilter;
-  QAction*                        actionPlugin_Information;
+  QAction*                        actionOpen;
   QAction*                        actionSave;
   QAction*                        actionSaveAs;
-  QAction* m_ActionAddPipeline;
-  QAction* m_ActionUpdatePipeline;
-  QAction* m_ActionRenamePipeline;
-  QAction* m_ActionLocateFile;
-  QAction* m_ActionAddToPipelineView;
-  QAction* m_ActionNewFolder;
-  QAction* m_ActionRemovePipeline;
-  QAction* m_ActionShowInFileSystem;
-  QAction* m_ActionClearPipeline;
-  QAction* m_ActionCloseWindow;
-  QAction* m_ActionExit;
+  QMenu*                          menu_RecentFiles;
+  QAction*                        actionClearRecentFiles;
+  QAction*                        actionCloseWindow;
+  QAction*                        actionExit;
+
+  // View Menu
+  QMenu*                          menuView;
+  QAction*                        actionShow_Filter_Library;
+  QAction*                        actionShow_Filter_List;
+  QAction*                        actionShow_Prebuilt_Pipelines;
+  QAction*                        actionShow_Favorites;
+  QAction*                        actionShow_Issues;
+
+  // Bookmarks Menu
+  QMenu*                          menuBookmarks;
+  QAction*                        actionAddPipeline;
+  QAction*                        actionNewFolder;
+
+  // Pipeline Menu
+  QMenu*                          menuPipeline;
+  QAction*                        actionClearPipeline;
+
+  // Help Menu
+  QMenu*                          menuHelp;
+  QAction*                        actionShowIndex;
+  QAction*                        actionCheck_For_Updates;
+  QAction*                        actionAbout_DREAM3D;
+  QAction*                        actionPlugin_Information;
+
+  // Contextual Menus
+  QAction*                        actionRenamePipeline;
+  QAction*                        actionRemovePipeline;
+  QAction*                        actionLocateFile;
+  QAction*                        actionShowInFileSystem;
+
 
   QString                         m_OpenDialogLastDirectory;
 
@@ -163,7 +163,6 @@ private:
   DREAM3D_UI*                     MainWindow;
   QVector<QPluginLoader*>         m_PluginLoaders;
 
-  void initializeApplication();
   QMenuBar* createMenu();
   QVector<IDREAM3DPlugin*> loadPlugins();
 
