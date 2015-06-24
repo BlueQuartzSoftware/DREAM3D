@@ -112,17 +112,36 @@ private:
   DREAM3D_UI*                     m_ActiveWindow;
 
   QMenuBar*                       m_GlobalMenu;
-  QMenu*                          m_MenuFile;
-  QMenu*                          m_Menu_RecentFiles;
-  QMenu*                          m_MenuHelp;
-  QAction*                        m_ActionOpen;
-  QAction*                        m_ActionNew;
-  QAction*                        m_ActionClearRecentFiles;
-  QAction*                        m_ActionShowIndex;
-  QAction*                        m_ActionCheck_For_Updates;
-  QAction*                        m_ActionAbout_DREAM3D;
-  QAction*                        m_ActionPlugin_Information;
-  QAction*                        m_ActionExit;
+  QMenu*                          menuFile;
+  QMenu*                          menu_RecentFiles;
+  QMenu*                          menuView;
+  QMenu*                          menuBookmarks;
+  QMenu*                          menuHelp;
+  QMenu*                          menuPipeline;
+  QAction*                        actionShow_Filter_Library;
+  QAction*                        actionShow_Prebuilt_Pipelines;
+  QAction*                        actionOpen;
+  QAction*                        actionNew;
+  QAction*                        actionSavePipelineAs;
+  QAction*                        actionShow_Favorites;
+  QAction*                        actionClearPipeline;
+  QAction*                        actionClearRecentFiles;
+  QAction*                        actionShow_Issues;
+  QAction*                        actionShow_Filter_List;
+  QAction*                        actionShowIndex;
+  QAction*                        actionLicense_Information;
+  QAction*                        actionAbout_DREAM3D;
+  QAction*                        actionCheck_For_Updates;
+  QAction*                        actionExit;
+  QAction*                        actionSaveAsNewFavorite;
+  QAction*                        actionCopyCurrentFilter;
+  QAction*                        actionAppendToExistingFavorite;
+  QAction*                        actionUpdateFavorite;
+  QAction*                        actionPasteCopiedFilter;
+  QAction*                        actionRemoveCurrentFilter;
+  QAction*                        actionPlugin_Information;
+  QAction*                        actionSave;
+  QAction*                        actionSaveAs;
 
   QString                         m_OpenDialogLastDirectory;
 
