@@ -88,23 +88,6 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
 
     virtual ~AttributeMatrix();
 
-    enum AttributeMatrixType
-    {
-      VertexType = 0,
-      EdgeType,
-      FaceType,
-      CellType,
-      VertexFeatureType,
-      EdgeFeatureType,
-      FaceFeatureType,
-      CellFeatureType,
-      VertexEnsembleType,
-      EdgeEnsembleType,
-      FaceEnsembleType,
-      CellEnsembleType,
-      UnknownType
-    };
-
     /**
      * @brief New Creates an AttributeMatrix with the give name
      * @param tupleDims The dimensions of the Attribute matrix given in the order fastest moving to slowest moving (XYZ)
