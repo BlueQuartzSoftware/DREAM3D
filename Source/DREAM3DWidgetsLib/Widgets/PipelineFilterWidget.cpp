@@ -261,8 +261,8 @@ void PipelineFilterWidget::layoutWidgets()
     // Connect up some signals and slots
     connect(w, SIGNAL(parametersChanged() ),
             parent(), SLOT(preflightPipeline() ) );
-    connect(w, SIGNAL(parametersChanged()),
-      this, SLOT(handleFilterParameterChanged()));
+//    connect(w, SIGNAL(parametersChanged()),
+//      this, SLOT(handleFilterParameterChanged()));
     connect(w, SIGNAL(errorSettingFilterParameter(const QString&)),
             this, SLOT(displayFilterParameterWidgetError(const QString&)));
 
