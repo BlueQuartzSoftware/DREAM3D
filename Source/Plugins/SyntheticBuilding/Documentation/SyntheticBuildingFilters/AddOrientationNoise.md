@@ -1,38 +1,35 @@
 Add Orientation Noise {#addorientationnoise}
-======
+=============
 
 ## Group (Subgroup) ##
-Synthetic Builder Filters (Crystallography)
+Synthetic Building (Crystallography)
 
 ## Description ##
-This filter adds "noise" to the **Cell** orienations.  This filter is intended to add "realism" to synthetic structures that have single orientations assigned to **Features** (an in turn, all of the **Cells** they own).  The user can specify a magnitude of the "noise", which refers to the maximum rotation angle that is applied to the existing **Cells**.  The algorithm for applying the orientation "noise" is as follows:
+This Filter adds "noise" to the orientations on each **Element** of a **Geometry**.  This Filter is intended to add "realism" to synthetic structures that have single orientations assigned to **Features**.  The user can specify a magnitude of the noise, which refers to the maximum rotation angle that is applied to the existing **Element** orientations.  The algorithm for applying the orientation noise is as follows:
 
-1. Obtain the orientation of the **Cell**.
-2. Generate a random number between *0* and the user defined magnitude. This value is the rotation angle.
-3. Generate a random unit vector.  This is the rotation axis.
-4. Calculate the rotation corresponding to the axis-angle pair generated in Steps 2-3 and apply it to the orientation of the **Cell** to obtain a new orientation.
-5. Repeat for all **Cells**
+1. Obtain the orientation of the **Element**
+2. Generate a random number between *0* and the user defined magnitude. This value is the rotation angle
+3. Generate a random unit vector.  This is the rotation axis
+4. Calculate the rotation corresponding to the axis-angle pair generated in steps 2-3 and apply it to the orientation of the **Element** to obtain a new orientation
+5. Repeat for all **Elements**
 
-
+For more information on synthetic building, visit the [tutorial](@ref tutorialsyntheticsingle).
 
 ## Parameters ##
+| Name | Type | Description |
+|------|------| ----------- |
+| Magnitude of Orientation Noise (Degrees) | Float | Maximum rotation angle in degrees to apply to **Element** orientations |
 
-| Name | Type |
-|------|------|
-| Magnitude of Orientation Noise | Double |
-
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Not Applicable
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | CellEulerAngles | Three (3) angles (floats) defining the orientation of the **Cell** in Bunge convention (Z-X-Z) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Read H5Ebsd File (IO), Match Crystallography (SyntheticBuilding) |
+| Element | EulerAngles | Float | (3) | Three angles defining the orientation of the **Element** in Bunge convention (Z-X-Z) |
 
 ## Created Arrays ##
 None
-
 
 ## License & Copyright ##
 

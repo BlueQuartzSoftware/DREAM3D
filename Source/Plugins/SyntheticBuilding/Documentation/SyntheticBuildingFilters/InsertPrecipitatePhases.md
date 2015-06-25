@@ -1,62 +1,75 @@
 Insert Precipitate Phases {#insertprecipitatephases}
-======
+=============
 
 ## Group (Subgroup) ##
-Synthetic Builder Filters (Packing)
+Synthetic Building (Packing)
 
 ## Description ##
-If there are precipitate phases in the Statistics file, then this filter will place precipitate **Features** with the sizes, shapes, physical orientations and locations corresponding to the goal statistics.  The user can specify if they want *periodic boundary conditions* and whether they would like to write out the goal attributes of the generated **Features**. 
+If there are precipitate _Phase Types_ in the volume, then this Filter will place precipitate **Features** with the sizes, shapes, physical orientations and locations corresponding to the goal statistics. Precipitate **Features** are currently placed _one at a time_ and are _not allowed to overlap_. The precpitiate packing process is similar to that for [packing primary phases](@ref packprimaryphases).
 
 Currently, the parameters that are matched to target parameters include: 
 
 <ul>
-<li>the fraction of precipitates on a grain boundary</li>
-<li>the size distribution of the precipitates</li>
-<li>the volume fraction of precipitates</li>
-<li>the Omega 3 distribution of precipitates in each size bin</li>
-<li>the b/a size distribution of precipitates in each size bin </li>
-<li>the c/a size distribution of precipitates in each size bin </li>
-<li>the axis orientation distribution </li>
-<li>the normalized radial distribution function (if opted for by the user) </li>
+<li>Fraction of precipitates on a grain boundary</li>
+<li>Size distribution of the precipitates</li>
+<li>Volume fraction of precipitates</li>
+<li>Omega 3 distribution of precipitates in each size bin</li>
+<li>b/a size distribution of precipitates in each size bin </li>
+<li>c/a size distribution of precipitates in each size bin </li>
+<li>Axis orientation distribution </li>
+<li>Normalized radial distribution function (if opted for by the user) </li>
 </ul>
 
-Note that for an ellipsoid a > b > c. Additionally, there is an exclusion zone around each precipitate such that no precipitate can be within another precipitate’s equivalent sphere diameter. 
+Note that for an ellipsoid a > b > c.
+
+The user can specify if they want *periodic boundary conditions*.  If they choose *periodic boundary conditions*, when the precipitate **Features** are being placed, if a **Feature** attempts to extend past the boundary of the volume it wraps to the opposing face and is placed on the opposite side of the volume.
+
+The user can also specify if they want to write out the goal attributes of the generated precipitate **Features**.  The **Features**, once packed, will not necessarily have the exact statistics (size, shape, orientation, number of neighbors) as sampled from the distributions.  This is due to the use of non-space-filling objects in the packing process.  The overlaps and gaps that occur after packing, must be assigned and will cause the **Features** to deviate from the intended goal (albeit hopefully in a minor way).  Writing out the goal attributes allows the user to then calculate the actual attributes and compare to determine how well the packing algorithm is working for their **Features**.
+
+The user can also choose to read in a list of precipitate **Features** with their locations and size and shape descriptions already determined. If this option is choosen, the Filter will skip the steps of generating the **Features** and iteratively placing them and will begin *growing* the **Features** defined in list.  The format of the *Feature Input File* is:
 
 
+	Number of Features
+	Phase, X, Y, Z, A, B, C, O3, Phi1, PHI, Phi2
+	Phase, X, Y, Z, A, B, C, O3, Phi1, PHI, Phi2
+	Phase, X, Y, Z, A, B, C, O3, Phi1, PHI, Phi2
+	.
+	.
+	.
+	Phase, X, Y, Z, A, B, C, O3, Phi1, PHI, Phi2
+
+
+where (X,Y,Z) are the coordinates of the **Feature**'s centroid, (A,B,C) are the major, mid and minor principal semiaxis lengths of the **Feature**, O3 is the Omega 3 value of the **Feature** and (Phi1,PHI,Phi2) are the *Euler angles* that describe the **Features**'s orientation in the sample reference frame.
+
+For more information on synthetic building, visit the [tutorial](@ref tutorialsyntheticsingle).
 
 ## Parameters ##
+| Name | Type | Description |
+|------|------| ----------- |
+| Periodic Boundaries | Boolean | Whether to *wrap* **Features** to create *periodic boundary conditions* |
+| Match Radial Distribution Function | Bool | Whether to attempt to match the _radial distribution function_ of the precipitates |
+| Already Have Precipitates | Bool | Whether to read in a file that lists the available precipitates |
+| Precipitate Input File | File Path | The input precipitates file. Only needed if _Already Have Precipitates_ is checked |
+| Write Goal Attributes | Bool | Whether to write the goal attributes of the packed precipitates |
+| Goal Attributes CSV File |  File Path | The output .csv file path. Only needed if _Write Goal Attributes_ is checked |
 
-| Name | Type |
-|------|------|
-| Periodic Boundary | Boolean (On or Off) |
-| Match Radial Distribution Function | Boolean (On or Off) |
-| Already Have Precipitates | Boolean (On or Off) |
-| Precipitate Input File | Input File if “Already Have Precipitates” is checked|
-| Write Goal Attributes | Boolean (On or Off) |
-| Goal Attributes CSV File | Output File if “Write Goal Attributes” is checked|
-
-## Required DataContainers ##
-Volume
+## Required Geometry ##
+Image
 
 ## Required Arrays ##
-## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
-|------|--------------|-------------|---------|-----|
-| Ensemble | Statistics | A data array of the goal statistics (size distribution, RDF, shape distribution, volume fraction and more) of the phases to be synthetically generated |  | Generate Ensemble Statistics (Statistics), StatsGenerator Application |  
-| Ensemble | PhaseTypes | Enumeration (int) specifying the type of phase of each Ensemble/phase (Primary=0, Precipitate=1, Transformation=2, Matrix=3, Boundary=4) |  | Generate Ensemble Statistics (Statistics), StatsGenerator Application |
-| Ensemble | ShapeTypes |Enumeration (int) specifying the type of shape of each Ensemble/phase (Ellipsoid=0, Super Ellipsoid=1, Cube Octahedron=2, Cylinder=3, Unknown Shape Type=4)  |  | Establish Shape Types (SyntheticBuilding) |
-| Cell | FeatureIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
-| Cell | CellPhases | Phase Id (int) specifying the phase of the **Cell** | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Read H5Ebsd File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
-| Cell | BoundaryCells | Boolean specifiying whether the cell is a boundary cell (true) or not (false)  |  | Find Boundary Cells (Generic), Find Feature Neighbors (Statistics) |
-| Feature | FeaturePhases |Phase Id (int) specifying the phase of the **Feature**  |  | PackPrimaryPhases (Synthetic Building), Establish Matrix Phase (Synthetic Building)|
-| Ensemble | NumFeatures | Number of features in each ensemble/phase (int) |  | PackPrimaryPhases (Synthetic Building), Establish Matrix Phase (Synthetic Building)|
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|------|----------------------|-------------|
+| Ensemble | Statistics | Statistics Object | (1) | Statistics objects (depending on *Phase Type*) that store fits to descriptors such as size distribution, shape distribution, neighbor distribution, ODF, MDF, etc. |
+| Ensemble | PhaseTypes | Int | (1) | Enumeration specifying the type of phase of each **Ensemble**  |
+| Ensemble | ShapeTypes | Int | (1) | Enumeration specifying the type of shape to place for each **Ensemble** |
+| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs |
+| Cell     | Phases            | Int | (1) | Specifies to which **Ensemble** each **Cell** belongs |
+| Cell | BoundaryCells | Int | (1) | Specifies whether a **Cell** lies on a **Feature** boundary |
+| Feature | Phases | Int | (1) | Specifies to which **Ensemble** each **Feature** belongs |
+| Ensemble | NumFeatures | Int | (1) | Specified the number of **Features** in each **Ensemble** |
 
 ## Created Arrays ##
-
-| Type | Default Name | Comment |
-|------|--------------|---------|
-|  |  |  |
+None
 
 
 ## License & Copyright ##

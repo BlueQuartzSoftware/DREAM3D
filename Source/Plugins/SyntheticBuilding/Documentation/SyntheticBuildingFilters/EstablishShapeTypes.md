@@ -1,47 +1,34 @@
 Establish Shape Types {#establishshapetypes}
-======
+=============
 
 ## Group (Subgroup) ##
-Synthetic Builder Filters (Initialization)
+Synthetic Building (Generation)
 
 ## Description ##
-This Filter allows the user to assign a specific shape type to each phase of their synthetic structure. This filter should
-be inserted **BEFORE** any packing filters are added. The filter is typically added just after the Initialize Synthetic Volume
-filter is added. The various shape types are
+This Filter allows the user to assign a specific _shape type_ to each **Ensemble** of a synthetic structure. This Filter should be inserted **BEFORE** any packing **Filters** are added. The Filter is typically added just after the [initializing the synthetic volume](@ref initializesyntheticvolume). The various shape types are:
+
 + Ellipsoid
 + Super Ellipsoid
 + Cube Octahedron
 + Cylinder
++ Unknown Shape Type
+
+The _Unknown Shape Type_ represents an "error" shape type that _should not_ be used to create normal synthetic structures.
+
+For more information on synthetic building, visit the [tutorial](@ref tutorialsyntheticsingle).
 
 ## Parameters ##
-| Name             | Type | Notes |
-|------------------|------|-------|
-| Phase Types Array | UInt32 Array | Any array that has the correct number of tuples will work, i.e., the number of tuples is the same as the number of phases |
-
+None
 
 ## Required Arrays ##
-
-An Array that has the correct number of phases indentified. For example, one could use the "Crystal Structures" array if needed
-
-## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Ensemble | PhaseTypes | Enumeration (int) specifying the type of phase of each Ensemble/phase (Primary=0, Precipitate=1, Transformation=2, Matrix=3, Boundary=4) |  | Intialize Synthetic Volume (SyntheticBuilding), Generate Ensemble Statistics (Statistics) |
-
+| Ensemble | PhaseTypes | Int | (1) | Enumeration specifying the type of phase of each **Ensemble** |
 
 ## Created Arrays ##
-
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Ensemble | ShapeTypes | UInt32 array of the shape types. Each value in the array represents one of the enumerations above. |  |
-
-## Authors ##
-
-
-
-
-
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Ensemble | ShapeTypes | Int | (1) | Enumeration specifying the type of shape for each **Ensemble** |
 
 ## License & Copyright ##
 

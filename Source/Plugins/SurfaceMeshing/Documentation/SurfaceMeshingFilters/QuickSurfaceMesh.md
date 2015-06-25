@@ -7,6 +7,8 @@ Surface Meshing (Generation)
 ## Description ##
 This **Filter** generates a **Triangle Geometry** from an **Image Geometry** that represents a surface mesh of the present **Features**. The algorithm proceeds by creating a pair of **Triangles** for each face of the **Cell** where the neighboring **Cell** have a different **Feature** Id value. The meshing operation is extremely quick but can result in a surface mesh that is very "stair stepped". The user is encouraged to use a [smoothing operation](@ref laplaciansmoothing) to reduce this "blockiness".
 
+For more information on surface meshing, visit the [tutorial](@ref tutorialsurfacemeshingtutorial).
+
 ---------------
 
 ![Example Quick Mesh Output](QuickSurfaceMeshOutput.png)

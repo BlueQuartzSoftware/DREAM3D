@@ -1,4 +1,4 @@
-Laplacian Smoothing Filter {#laplaciansmoothing}
+Laplacian Smoothing {#laplaciansmoothing}
 ============
 
 ## Group (Subgroup) ##
@@ -61,6 +61,8 @@ The values for the _Node Type_ array can take one of the following values.
         const int8_t SurfaceQuadPoint = 14;
       }
     }
+
+For more information on surface meshing, visit the [tutorial](@ref tutorialsurfacemeshingtutorial).
 
 ## Parameters ##
 | Name | Type | Description |
