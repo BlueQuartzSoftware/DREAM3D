@@ -34,40 +34,43 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _AdjustVolumeOrigin_H_
-#define _AdjustVolumeOrigin_H_
+#ifndef _CreateImageGeometry_H_
+#define _CreateImageGeometry_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @brief The AdjustVolumeOrigin class. See [Filter documentation](@ref adjustvolumeorigin) for details.
+ * @brief The CreateImageGeometry class. See [Filter documentation](@ref adjustvolumeorigin) for details.
  */
-class DREAM3DLib_EXPORT AdjustVolumeOrigin : public AbstractFilter
+class DREAM3DLib_EXPORT CreateImageGeometry : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(AdjustVolumeOrigin)
-    DREAM3D_STATIC_NEW_MACRO(AdjustVolumeOrigin)
-    DREAM3D_TYPE_MACRO_SUPER(AdjustVolumeOrigin, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(CreateImageGeometry)
+    DREAM3D_STATIC_NEW_MACRO(CreateImageGeometry)
+    DREAM3D_TYPE_MACRO_SUPER(CreateImageGeometry, AbstractFilter)
 
-    virtual ~AdjustVolumeOrigin();
+    virtual ~CreateImageGeometry();
 
-    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
-    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+    DREAM3D_FILTER_PARAMETER(QString, SelectedDataContainer)
+    Q_PROPERTY(QString SelectedDataContainer READ getSelectedDataContainer WRITE setSelectedDataContainer)
 
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceDataContainerName)
-    Q_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
-
-    DREAM3D_FILTER_PARAMETER(bool, ApplyToVoxelVolume)
-    Q_PROPERTY(bool ApplyToVoxelVolume READ getApplyToVoxelVolume WRITE setApplyToVoxelVolume)
-
-    DREAM3D_FILTER_PARAMETER(bool, ApplyToSurfaceMesh)
-    Q_PROPERTY(bool ApplyToSurfaceMesh READ getApplyToSurfaceMesh WRITE setApplyToSurfaceMesh)
+    DREAM3D_FILTER_PARAMETER(IntVec3_t, Dimensions)
+    Q_PROPERTY(IntVec3_t Dimensions READ getDimensions WRITE setDimensions)
 
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Origin)
     Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
+
+    DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
+    Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
+
+//    DREAM3D_FILTER_PARAMETER(bool, CreateAttributeMatrix)
+//    Q_PROPERTY(bool CreateAttributeMatrix READ getCreateAttributeMatrix WRITE setCreateAttributeMatrix)
+
+//    DREAM3D_FILTER_PARAMETER(QString, AttributeMatrixName)
+//    Q_PROPERTY(QString AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -143,7 +146,7 @@ class DREAM3DLib_EXPORT AdjustVolumeOrigin : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    AdjustVolumeOrigin();
+    CreateImageGeometry();
 
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -156,8 +159,8 @@ class DREAM3DLib_EXPORT AdjustVolumeOrigin : public AbstractFilter
     void updateSurfaceMesh();
 
   private:
-    AdjustVolumeOrigin(const AdjustVolumeOrigin&); // Copy Constructor Not Implemented
-    void operator=(const AdjustVolumeOrigin&); // Operator '=' Not Implemented
+    CreateImageGeometry(const CreateImageGeometry&); // Copy Constructor Not Implemented
+    void operator=(const CreateImageGeometry&); // Operator '=' Not Implemented
 };
 
-#endif /* _AdjustVolumeOrigin_H_ */
+#endif /* _CreateImageGeometry_H_ */

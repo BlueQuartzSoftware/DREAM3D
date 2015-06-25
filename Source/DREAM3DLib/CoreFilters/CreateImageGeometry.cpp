@@ -32,69 +32,26 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
-#include "SetOriginResolutionImageGeom.h"
-
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-#include <tbb/parallel_for.h>
-#include <tbb/blocked_range.h>
-#include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
-#endif
+#include "CreateImageGeometry.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
 
-/**
- * @brief The UpdateVerticesImpl class implements a threaded algorithm that adjusts the
- * positions of a set of nodes relative to a new origin
- */
-class UpdateVerticesImpl
-{
-    float* m_Nodes;
-    float* m_Delta;
 
-  public:
-    UpdateVerticesImpl(float* nodes, float* delta) :
-      m_Nodes(nodes),
-      m_Delta(delta)
-    {
-    }
-
-    virtual ~UpdateVerticesImpl() {}
-
-    void generate(size_t start, size_t end) const
-    {
-
-      for (size_t i = start; i < end; i++)
-      {
-        m_Nodes[3*i] -= m_Delta[0];
-        m_Nodes[3*i+1] -= m_Delta[1];
-        m_Nodes[3*i+2] -= m_Delta[2];
-      }
-
-    }
-
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range<size_t>& r) const
-    {
-      generate(r.begin(), r.end());
-    }
-#endif
-};
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SetOriginResolutionImageGeom::SetOriginResolutionImageGeom() :
+CreateImageGeometry::CreateImageGeometry() :
   AbstractFilter(),
-  m_DataContainerName(""),
-  m_ChangeOrigin(false),
-  m_ChangeResolution(false)
+  m_SelectedDataContainer("ImageGeomDataContainer")
 {
+  m_Dimensions.x = 0;
+  m_Dimensions.y = 0;
+  m_Dimensions.z = 0;
+
   m_Origin.x = 0.0f;
   m_Origin.y = 0.0f;
   m_Origin.z = 0.0f;
@@ -109,29 +66,22 @@ SetOriginResolutionImageGeom::SetOriginResolutionImageGeom() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SetOriginResolutionImageGeom::~SetOriginResolutionImageGeom()
+CreateImageGeometry::~CreateImageGeometry()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SetOriginResolutionImageGeom::setupFilterParameters()
+void CreateImageGeometry::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
+  parameters.push_back(FilterParameter::New("Dimensions", "Dimensions", FilterParameterWidgetType::IntVec3Widget, getDimensions(), FilterParameter::Parameter, "XYZ"));
+  parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget, getOrigin(), FilterParameter::Parameter, "XYZ"));
+  parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget, getResolution(), FilterParameter::Parameter, "XYZ"));
 
-
-  QStringList linkedProps("Origin");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Change Origin", "ChangeOrigin", getChangeOrigin(), linkedProps, FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget, getOrigin(), FilterParameter::Parameter, ""));
-
-  linkedProps.clear();
-  linkedProps << "Resolution";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Change Resolution", "ChangeResolution", getChangeResolution(), linkedProps, FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget, getResolution(), FilterParameter::Parameter, ""));
-
-  parameters.push_back(FilterParameter::New("Data Container To Apply To", "DataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerName(), FilterParameter::RequiredArray));
+  parameters.push_back(FilterParameter::New("Data Container Name", "SelectedDataContainer", FilterParameterWidgetType::DataContainerSelectionWidget, getSelectedDataContainer(), FilterParameter::RequiredArray));
 
   setFilterParameters(parameters);
 }
@@ -139,29 +89,27 @@ void SetOriginResolutionImageGeom::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SetOriginResolutionImageGeom::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void CreateImageGeometry::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setChangeOrigin( reader->readValue("ChangeOrigin", getChangeOrigin()) );
-  setChangeResolution( reader->readValue("ChangeResolution", getChangeResolution()) );
+  setDimensions( reader->readIntVec3("Dimensions", getDimensions() ) );
   setOrigin( reader->readFloatVec3("Origin", getOrigin() ) );
-  setResolution(reader->readFloatVec3("Resolution", getResolution() ) );
-  setDataContainerName(reader->readString("DataContainerName", getDataContainerName()));
+  setResolution( reader->readFloatVec3("Resolution", getResolution() ) );
+  setSelectedDataContainer(reader->readString("SelectedDataContainer", getSelectedDataContainer()));
   reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SetOriginResolutionImageGeom::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int CreateImageGeometry::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
+  DREAM3D_FILTER_WRITE_PARAMETER(Dimensions)
   DREAM3D_FILTER_WRITE_PARAMETER(Origin)
   DREAM3D_FILTER_WRITE_PARAMETER(Resolution)
-  DREAM3D_FILTER_WRITE_PARAMETER(ChangeOrigin)
-  DREAM3D_FILTER_WRITE_PARAMETER(ChangeResolution)
-  DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SelectedDataContainer)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -169,29 +117,40 @@ int SetOriginResolutionImageGeom::writeFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SetOriginResolutionImageGeom::dataCheck()
+void CreateImageGeometry::dataCheck()
 {
   setErrorCondition(0);
 
-  ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getDataContainerName());
-  if(getErrorCondition() < 0)
+  if (m_Dimensions.x == 0 || m_Dimensions.y == 0 || m_Dimensions.z == 0)
   {
+    QString ss = QObject::tr("One of the dimensions has a size less than or equal to zero. The minimum size must be postive");
+    setErrorCondition(-390);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+
+  if(getSelectedDataContainer().isEmpty())
+  {
+    QString ss = QObject::tr("The Data Container must have a name.");
+    setErrorCondition(-391);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
-  if(getChangeOrigin())
-  {
-    image->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
-  }
-  if(getChangeResolution())
-  {
-    image->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-  }
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getSelectedDataContainer());
+  if(getErrorCondition() < 0) { return; }
+
+
+  ImageGeom::Pointer image = ImageGeom::CreateGeometry("ImageGeometry");
+  image->setDimensions(m_Dimensions.x, m_Dimensions.y, m_Dimensions.z);
+  image->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+  image->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+  m->setGeometry(image);
+
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SetOriginResolutionImageGeom::preflight()
+void CreateImageGeometry::preflight()
 {
   setInPreflight(true);
   emit preflightAboutToExecute();
@@ -204,7 +163,7 @@ void SetOriginResolutionImageGeom::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SetOriginResolutionImageGeom::execute()
+void CreateImageGeometry::execute()
 {
   setErrorCondition(0);
   dataCheck();
@@ -216,9 +175,9 @@ void SetOriginResolutionImageGeom::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer SetOriginResolutionImageGeom::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer CreateImageGeometry::newFilterInstance(bool copyFilterParameters)
 {
-  SetOriginResolutionImageGeom::Pointer filter = SetOriginResolutionImageGeom::New();
+  CreateImageGeometry::Pointer filter = CreateImageGeometry::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -229,23 +188,23 @@ AbstractFilter::Pointer SetOriginResolutionImageGeom::newFilterInstance(bool cop
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SetOriginResolutionImageGeom::getCompiledLibraryName()
+const QString CreateImageGeometry::getCompiledLibraryName()
 { return Core::CoreBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SetOriginResolutionImageGeom::getGroupName()
+const QString CreateImageGeometry::getGroupName()
 { return DREAM3D::FilterGroups::CoreFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SetOriginResolutionImageGeom::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::SpatialFilters; }
+const QString CreateImageGeometry::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::GenerationFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SetOriginResolutionImageGeom::getHumanLabel()
-{ return "Set Origin & Resolution (Image)"; }
+const QString CreateImageGeometry::getHumanLabel()
+{ return "Create Geometry (Image)"; }

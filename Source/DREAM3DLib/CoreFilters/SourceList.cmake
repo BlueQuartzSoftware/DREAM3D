@@ -23,8 +23,11 @@ set(_PublicFilters
   CopyAttributeMatrix
   CopyDataContainer
   CopyFeatureArrayToElementArray
+  CreateAttributeMatrix
+  CreateDataContainer
   CreateDataArray
   CreateFeatureArrayFromElementArray
+  CreateImageGeometry
   DataContainerReader
   DataContainerWriter
   ExtractComponentAsArray
