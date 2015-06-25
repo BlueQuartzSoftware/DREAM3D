@@ -567,7 +567,6 @@ void FindShapes::find_axes2D()
 void FindShapes::find_axiseulers()
 {
   size_t numfeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
-  float ea1 = 0.0f, ea2 = 0.0f, ea3 = 0.0f;
   for (size_t i = 1; i < numfeatures; i++)
   {
     double Ixx = featuremoments[i * 6 + 0];
