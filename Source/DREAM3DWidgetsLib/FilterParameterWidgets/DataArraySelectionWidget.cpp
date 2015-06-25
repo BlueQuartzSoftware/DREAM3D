@@ -181,53 +181,24 @@ void DataArraySelectionWidget::populateComboBoxes()
     attributeArrayList->clear();
     return;
   }
+  // Cache the DataContainerArray Structure for our use during all the selections
+  m_DcaProxy = DataContainerArrayProxy(dca.get());
 
-  QString prevDcName = dataContainerList->currentText();
-  QString prevAmName = attributeMatrixList->currentText();
-  QString prevDaName = attributeArrayList->currentText();
-  dataContainerList->clear();
-  attributeMatrixList->clear();
-  attributeArrayList->clear();
+  // Populate the DataContainerArray Combo Box with all the DataContainers
+  QList<DataContainerProxy> dcList = m_DcaProxy.dataContainers.values();
+  QListIterator<DataContainerProxy> iter(dcList);
 
-  // Loop over the data containers until we find the proper data container
-  QList<DataContainer::Pointer> containers = dca->getDataContainers();
-
-  QListIterator<DataContainer::Pointer> dcIter(containers);
-  while(dcIter.hasNext())
+  while(iter.hasNext() )
   {
-    DataContainer::Pointer dc = dcIter.next();
-    dataContainerList->addItem(dc->getName());
-
-    // Loop over the attribute matrices until we find the proper attribute matrix
-    QMap<QString,AttributeMatrix::Pointer> matrices = dc->getAttributeMatrices();
-
-    QMapIterator<QString,AttributeMatrix::Pointer> amIter(matrices);
-    while(amIter.hasNext())
+    DataContainerProxy dc = iter.next();
+    if(dataContainerList->findText(dc.name) == -1 )
     {
-      amIter.next();
-      AttributeMatrix::Pointer am = amIter.value();
-      attributeMatrixList->addItem(amIter.key());
-
-      // Loop over the data arrays until we find the proper data array
-      QList<QString> arrayNames = am->getAttributeArrayNames();
-
-      for (int i=0; i<arrayNames.size(); i++)
-      {
-        attributeArrayList->addItem(arrayNames[i]);
-      }
+      int index = dataContainerList->currentIndex();
+      dataContainerList->addItem(dc.name);
+      dataContainerList->setCurrentIndex(index);
     }
   }
 
-  int prevDcIndex = dataContainerList->findText(prevDcName);
-  dataContainerList->setCurrentIndex(prevDcIndex);
-
-  int prevAmIndex = attributeMatrixList->findText(prevAmName);
-  attributeMatrixList->setCurrentIndex(prevAmIndex);
-
-  int prevDaIndex = attributeArrayList->findText(prevDaName);
-  attributeArrayList->setCurrentIndex(prevDaIndex);
-
-#if 0
   // Get what is in the filter
   DataArrayPath selectedPath = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<DataArrayPath>();
 
@@ -317,7 +288,7 @@ void DataArraySelectionWidget::populateComboBoxes()
   }
 
   if(didBlock) { attributeArrayList->blockSignals(false); didBlock = false; }// not be triggering an infinte recursion of preflights
-#endif
+
 }
 
 // -----------------------------------------------------------------------------
@@ -339,13 +310,52 @@ QString DataArraySelectionWidget::checkStringValues(QString curDcName, QString f
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void DataArraySelectionWidget::populateAttributeMatrixList()
+{
+  //qDebug() << getFilter()->getHumanLabel() << "  " << getFilterParameter()->getHumanLabel() << " DataArraySelectionWidget::populateAttributeMatrixList()";
+
+  QString dcName = dataContainerList->currentText();
+
+  // Clear the AttributeMatrix List
+  attributeMatrixList->blockSignals(true);
+  attributeMatrixList->clear();
+
+  // Loop over the data containers until we find the proper data container
+  QList<DataContainerProxy> containers = m_DcaProxy.dataContainers.values();
+  QListIterator<DataContainerProxy> containerIter(containers);
+  while(containerIter.hasNext())
+  {
+    DataContainerProxy dc = containerIter.next();
+
+    if(dc.name.compare(dcName) == 0 )
+    {
+      // We found the proper Data Container, now populate the AttributeMatrix List
+      QMap<QString, AttributeMatrixProxy> attrMats = dc.attributeMatricies;
+      QMapIterator<QString, AttributeMatrixProxy> attrMatsIter(attrMats);
+      while(attrMatsIter.hasNext() )
+      {
+        attrMatsIter.next();
+        QString amName = attrMatsIter.key();
+        attributeMatrixList->addItem(amName);
+      }
+    }
+  }
+
+  attributeMatrixList->blockSignals(false);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void DataArraySelectionWidget::on_dataContainerList_currentIndexChanged(int index)
 {
-  populateComboBoxes();
+  populateAttributeMatrixList();
 
-  m_DidCausePreflight = true;
-  emit parametersChanged();
-  m_DidCausePreflight = false;
+  // Do not select an attribute matrix from the list
+  if (attributeMatrixList->count() > 0)
+  {
+    attributeMatrixList->setCurrentIndex(-1);
+  }
 }
 
 
@@ -354,7 +364,13 @@ void DataArraySelectionWidget::on_dataContainerList_currentIndexChanged(int inde
 // -----------------------------------------------------------------------------
 void DataArraySelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)
 {
-  populateComboBoxes();
+  populateAttributeArrayList();
+
+  // Do not select an attribute array from the list
+  if (attributeArrayList->count() > 0)
+  {
+    attributeArrayList->setCurrentIndex(-1);
+  }
 
   m_DidCausePreflight = true;
   emit parametersChanged();
@@ -406,6 +422,58 @@ void DataArraySelectionWidget::setSelectedPath(QString dcName, QString attrMatNa
   }
   attributeArrayList->blockSignals(false);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataArraySelectionWidget::populateAttributeArrayList()
+{
+  attributeArrayList->blockSignals(true);
+  attributeArrayList->clear();
+
+  // Get the selected Data Container Name from the DataContainerList Widget
+  QString currentDCName = dataContainerList->currentText();
+  QString currentAttrMatName = attributeMatrixList->currentText();
+
+  // Loop over the data containers until we find the proper data container
+  QList<DataContainerProxy> containers = m_DcaProxy.dataContainers.values();
+  QListIterator<DataContainerProxy> containerIter(containers);
+  while(containerIter.hasNext())
+  {
+    DataContainerProxy dc = containerIter.next();
+    if(dc.name.compare(currentDCName) == 0 )
+    {
+      // We found the proper Data Container, now populate the AttributeMatrix List
+      QMap<QString, AttributeMatrixProxy> attrMats = dc.attributeMatricies;
+      QMapIterator<QString, AttributeMatrixProxy> attrMatsIter(attrMats);
+      while(attrMatsIter.hasNext() )
+      {
+        attrMatsIter.next();
+        QString amName = attrMatsIter.key();
+        if(amName.compare(currentAttrMatName) == 0 )
+        {
+          // Clear the list of arrays from the QListWidget
+          attributeArrayList->clear();
+          // We found the selected AttributeMatrix, so loop over this attribute matrix arrays and populate the list widget
+          AttributeMatrixProxy amProxy = attrMatsIter.value();
+          QMap<QString, DataArrayProxy> dataArrays = amProxy.dataArrays;
+          QMapIterator<QString, DataArrayProxy> dataArraysIter(dataArrays);
+          while(dataArraysIter.hasNext() )
+          {
+            dataArraysIter.next();
+            //DataArrayProxy daProxy = dataArraysIter.value();
+            QString daName = dataArraysIter.key();
+            attributeArrayList->addItem(daName);
+          }
+        }
+      }
+    }
+  }
+
+  attributeArrayList->setCurrentIndex(-1);
+  attributeArrayList->blockSignals(false);
+}
+
 
 // -----------------------------------------------------------------------------
 //blockSignals(false);
