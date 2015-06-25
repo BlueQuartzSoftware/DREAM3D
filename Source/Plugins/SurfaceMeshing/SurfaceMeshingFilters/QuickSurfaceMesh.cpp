@@ -52,12 +52,12 @@
 // -----------------------------------------------------------------------------
 QuickSurfaceMesh::QuickSurfaceMesh() :
   AbstractFilter(),
-  m_SurfaceDataContainerName(DREAM3D::Defaults::DataContainerName),
+  m_SurfaceDataContainerName(DREAM3D::Defaults::TriangleDataContainerName),
   m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
   m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
   m_TransferPhaseId(false),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_CellPhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_CellPhasesArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
   m_FaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_NodeTypesArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
   m_FacePhasesArrayName(DREAM3D::FaceData::SurfaceMeshFacePhases),
@@ -98,7 +98,7 @@ void QuickSurfaceMesh::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Face Labels", "FaceLabelsArrayName", FilterParameterWidgetType::StringWidget, getFaceLabelsArrayName(), FilterParameter::CreatedArray, ""));
   parameters.push_back(FilterParameter::New("Node Types", "NodeTypesArrayName", FilterParameterWidgetType::StringWidget, getNodeTypesArrayName(), FilterParameter::CreatedArray, ""));
   parameters.push_back(FilterParameter::New("Face Phases", "FacePhasesArrayName", FilterParameterWidgetType::StringWidget, getFacePhasesArrayName(), FilterParameter::CreatedArray, ""));
-  
+
   setFilterParameters(parameters);
 }
 

@@ -50,7 +50,7 @@
 //
 // -----------------------------------------------------------------------------
 UncertainRegularGridSampleSurfaceMesh::UncertainRegularGridSampleSurfaceMesh() :
-  m_DataContainerName(DREAM3D::Defaults::DataContainerName),
+  m_DataContainerName(DREAM3D::Defaults::ImageDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_XPoints(0),
   m_YPoints(0),

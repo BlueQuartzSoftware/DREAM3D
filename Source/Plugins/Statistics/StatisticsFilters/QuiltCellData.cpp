@@ -48,7 +48,7 @@
 QuiltCellData::QuiltCellData() :
   AbstractFilter(),
   m_SelectedCellArrayPath("", "", ""),
-  m_OutputDataContainerName(DREAM3D::Defaults::NewDataContainerName),
+  m_OutputDataContainerName(DREAM3D::Defaults::NewImageDataContainerName),
   m_OutputAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_OutputArrayName("Quilt_Data"),
   m_OutputArray(NULL)

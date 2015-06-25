@@ -50,7 +50,7 @@ NeighborCICorrelation::NeighborCICorrelation() :
   AbstractFilter(),
   m_MinConfidence(0.1f),
   m_Loop(false),
-  m_ConfidenceIndexArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::ConfidenceIndex),
+  m_ConfidenceIndexArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::ConfidenceIndex),
   m_ConfidenceIndex(NULL)
 {
   setupFilterParameters();

@@ -51,9 +51,9 @@
 // -----------------------------------------------------------------------------
 FindSchmids::FindSchmids() :
   AbstractFilter(),
-  m_FeaturePhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
-  m_CrystalStructuresArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
-  m_AvgQuatsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
+  m_FeaturePhasesArrayPath("", "", ""),
+  m_CrystalStructuresArrayPath("", "", ""),
+  m_AvgQuatsArrayPath("", "", ""),
   m_SchmidsArrayName(DREAM3D::FeatureData::Schmids),
   m_SlipSystemsArrayName(DREAM3D::FeatureData::SlipSystems),
   m_PolesArrayName(DREAM3D::FeatureData::Poles),

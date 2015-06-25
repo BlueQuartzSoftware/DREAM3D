@@ -51,9 +51,9 @@
 
 FindShapes::FindShapes()  :
   AbstractFilter(),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_CentroidsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Centroids),
+  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_CentroidsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Centroids),
   m_Omega3sArrayName(DREAM3D::FeatureData::Omega3s),
   m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
   m_AxisLengthsArrayName(DREAM3D::FeatureData::AxisLengths),
@@ -686,7 +686,7 @@ void FindShapes::find_axiseulers()
     n3y = n3y / norm3;
     n3z = n3z / norm3;
 
-    //insert principal unit vectors into rotation matrix representing Feature reference frame within the sample reference frame 
+    //insert principal unit vectors into rotation matrix representing Feature reference frame within the sample reference frame
     //(Note that the 3 direction is actually the long axis and the 1 direction is actually the short axis)
     float g[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
     g[0][0] = n3x;

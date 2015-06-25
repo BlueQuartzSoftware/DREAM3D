@@ -48,9 +48,8 @@
 // -----------------------------------------------------------------------------
 FindFeaturePhases::FindFeaturePhases() :
   AbstractFilter(),
-//  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, ""),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::ElementAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_CellPhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::ElementAttributeMatrixName, DREAM3D::CellData::Phases),
+  m_FeatureIdsArrayPath("", "", ""),
+  m_CellPhasesArrayPath("", "", ""),
   m_FeaturePhasesArrayPath(DREAM3D::FeatureData::Phases),
   m_FeatureIds(NULL),
   m_CellPhases(NULL),

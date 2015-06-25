@@ -51,8 +51,8 @@
 // -----------------------------------------------------------------------------
 FindNumFeatures::FindNumFeatures() :
   AbstractFilter(),
-  m_FeaturePhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
-  m_NumFeaturesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::NumFeatures),
+  m_FeaturePhasesArrayPath("", "", ""),
+  m_NumFeaturesArrayPath("", "", ""),
   m_FeaturePhases(NULL),
   m_NumFeatures(NULL)
 {

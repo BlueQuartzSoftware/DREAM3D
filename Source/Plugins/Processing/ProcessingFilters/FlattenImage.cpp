@@ -96,7 +96,7 @@ class FlattenImageImpl
 FlattenImage::FlattenImage() :
   AbstractFilter(),
   m_FlattenMethod(DREAM3D::FlattenImageMethod::Luminosity),
-  m_ImageDataArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::ImageData),
+  m_ImageDataArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::ImageData),
   m_FlatImageDataArrayName(DREAM3D::CellData::FlatImageData),
   m_ImageData(NULL),
   m_FlatImageData(NULL)

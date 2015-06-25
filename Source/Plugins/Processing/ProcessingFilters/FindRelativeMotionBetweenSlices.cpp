@@ -124,7 +124,7 @@ class CalcRelativeMotion
 // -----------------------------------------------------------------------------
 FindRelativeMotionBetweenSlices::FindRelativeMotionBetweenSlices() :
   AbstractFilter(),
-  m_SelectedArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
+  m_SelectedArrayPath("", "", ""),
   m_Plane(0),
   m_MotionDirectionArrayName(DREAM3D::CellData::MotionDirection),
   m_InData(NULL),

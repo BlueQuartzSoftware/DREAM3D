@@ -105,7 +105,7 @@ class FindUniqueIdsImpl
 // -----------------------------------------------------------------------------
 ReadStlFile::ReadStlFile() :
   AbstractFilter(),
-  m_SurfaceMeshDataContainerName(DREAM3D::Defaults::DataContainerName),
+  m_SurfaceMeshDataContainerName(DREAM3D::Defaults::TriangleDataContainerName),
   m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
   m_StlFilePath(""),
   m_FaceNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),

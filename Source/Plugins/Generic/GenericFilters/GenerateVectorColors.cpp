@@ -52,8 +52,8 @@
 // -----------------------------------------------------------------------------
 GenerateVectorColors::GenerateVectorColors() :
   AbstractFilter(),
-  m_VectorsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::ElementAttributeMatrixName, DREAM3D::CellData::VectorData),
-  m_GoodVoxelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::ElementAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
+  m_VectorsArrayPath("", "", ""),
+  m_GoodVoxelsArrayPath("", "", ""),
   m_CellVectorColorsArrayName(DREAM3D::CellData::VectorColor),
   m_UseGoodVoxels(false),
   m_Vectors(NULL),
@@ -82,7 +82,7 @@ void GenerateVectorColors::setupFilterParameters()
 
   parameters.push_back(FilterParameter::New("Vector Array Name", "VectorsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getVectorsArrayPath(), FilterParameter::RequiredArray));
 
-  parameters.push_back(FilterParameter::New("Good Voxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Mask", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, ""));
 
   parameters.push_back(FilterParameter::New("Element Vector Colors", "CellVectorColorsArrayName", FilterParameterWidgetType::StringWidget, getCellVectorColorsArrayName(), FilterParameter::CreatedArray, ""));
   setFilterParameters(parameters);

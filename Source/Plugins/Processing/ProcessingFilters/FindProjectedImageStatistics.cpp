@@ -137,7 +137,7 @@ class CalcProjectedStatsImpl
 // -----------------------------------------------------------------------------
 FindProjectedImageStatistics::FindProjectedImageStatistics() :
   AbstractFilter(),
-  m_SelectedArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
+  m_SelectedArrayPath("", "", ""),
   m_Plane(0),
   m_ProjectedImageMinArrayName(DREAM3D::CellData::ProjectedImageMin),
   m_ProjectedImageMaxArrayName(DREAM3D::CellData::ProjectedImageMax),

@@ -92,7 +92,7 @@ class ChangeAngleRepresentationImpl
 ChangeAngleRepresentation::ChangeAngleRepresentation() :
   AbstractFilter(),
   m_ConversionType(DREAM3D::EulerAngleConversionType::DegreesToRadians),
-  m_CellEulerAnglesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::ElementAttributeMatrixName, DREAM3D::CellData::EulerAngles),
+  m_CellEulerAnglesArrayPath("", "", ""),
   m_CellEulerAngles(NULL)
 {
   setupFilterParameters();

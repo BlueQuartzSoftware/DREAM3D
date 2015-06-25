@@ -58,7 +58,7 @@
 // -----------------------------------------------------------------------------
 ReadH5Ebsd::ReadH5Ebsd() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::DataContainerName),
+  m_DataContainerName(DREAM3D::Defaults::ImageDataContainerName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_PhaseNameArrayName(""),

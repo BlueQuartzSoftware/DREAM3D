@@ -58,7 +58,7 @@ VisualizeGBCDPoleFigure::VisualizeGBCDPoleFigure() :
   AbstractFilter(),
   m_OutputFile(""),
   m_CrystalStructure(Ebsd::CrystalStructure::UnknownCrystalStructure),
-  m_GBCDArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceEnsembleAttributeMatrixName, DREAM3D::EnsembleData::GBCD),
+  m_GBCDArrayPath(DREAM3D::Defaults::TriangleDataContainerName, DREAM3D::Defaults::FaceEnsembleAttributeMatrixName, DREAM3D::EnsembleData::GBCD),
   m_GBCD(NULL)
 {
   m_MisorientationRotation.angle = 0.0f;

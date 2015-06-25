@@ -57,7 +57,7 @@
 // -----------------------------------------------------------------------------
 ImportVectorImageStack::ImportVectorImageStack() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::DataContainerName),
+  m_DataContainerName(DREAM3D::Defaults::ImageDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_StartIndex(0),
   m_EndIndex(0),

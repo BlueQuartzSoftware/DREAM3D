@@ -80,7 +80,7 @@ PhReaderPrivate::PhReaderPrivate(PhReader* ptr) :
 // -----------------------------------------------------------------------------
 PhReader::PhReader() :
   FileReader(),
-  m_VolumeDataContainerName(DREAM3D::Defaults::DataContainerName),
+  m_VolumeDataContainerName(DREAM3D::Defaults::ImageDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_InputFile(""),
   m_FileWasRead(false),

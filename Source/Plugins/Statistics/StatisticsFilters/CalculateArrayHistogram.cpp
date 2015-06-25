@@ -50,7 +50,7 @@
 // -----------------------------------------------------------------------------
 CalculateArrayHistogram::CalculateArrayHistogram() :
   AbstractFilter(),
-  m_SelectedArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::AttributeMatrixName, ""),
+  m_SelectedArrayPath("", "", ""),
   m_NumberOfBins(-1),
   m_MinRange(0.0f),
   m_MaxRange(1.0f),

@@ -48,7 +48,7 @@
 // -----------------------------------------------------------------------------
 RegularizeZSpacing::RegularizeZSpacing() :
   AbstractFilter(),
-  m_CellAttributeMatrixPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
+  m_CellAttributeMatrixPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
   m_InputFile(""),
   m_NewZRes(1.0f)
 {

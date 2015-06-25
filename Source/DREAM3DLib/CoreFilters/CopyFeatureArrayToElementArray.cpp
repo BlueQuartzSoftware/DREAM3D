@@ -48,7 +48,7 @@
 CopyFeatureArrayToElementArray::CopyFeatureArrayToElementArray() :
   AbstractFilter(),
   m_SelectedFeatureArrayPath("", "", ""),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_FeatureIdsArrayPath("", "", ""),
   m_CreatedArrayName(""),
   m_FeatureIds(NULL),
   m_InArray(NULL)

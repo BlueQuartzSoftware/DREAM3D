@@ -49,8 +49,8 @@
 // -----------------------------------------------------------------------------
 FindSizes::FindSizes() :
   AbstractFilter(),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
   m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
   m_NumCellsArrayName(DREAM3D::FeatureData::NumCells),
@@ -82,7 +82,7 @@ void FindSizes::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Equivalent Diameters", "EquivalentDiametersArrayName", FilterParameterWidgetType::StringWidget, getEquivalentDiametersArrayName(), FilterParameter::CreatedArray, ""));
   parameters.push_back(FilterParameter::New("Number Of Cells", "NumCellsArrayName", FilterParameterWidgetType::StringWidget, getNumCellsArrayName(), FilterParameter::CreatedArray, ""));
   parameters.push_back(FilterParameter::New("Volumes", "VolumesArrayName", FilterParameterWidgetType::StringWidget, getVolumesArrayName(), FilterParameter::CreatedArray, ""));
-  
+
   setFilterParameters(parameters);
 }
 

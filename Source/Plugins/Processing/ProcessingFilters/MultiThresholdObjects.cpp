@@ -50,7 +50,7 @@
 // -----------------------------------------------------------------------------
 MultiThresholdObjects::MultiThresholdObjects() :
   AbstractFilter(),
-  m_DestinationArrayName(DREAM3D::GeneralData::ThresholdArray),
+  m_DestinationArrayName(DREAM3D::GeneralData::Mask),
   m_SelectedThresholds(),
   m_Destination(NULL)
 {

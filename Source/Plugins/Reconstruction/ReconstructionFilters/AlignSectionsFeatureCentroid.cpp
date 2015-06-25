@@ -51,7 +51,7 @@ AlignSectionsFeatureCentroid::AlignSectionsFeatureCentroid() :
   AlignSections(),
   m_ReferenceSlice(0),
   m_UseReferenceSlice(false),
-  m_GoodVoxelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
+  m_GoodVoxelsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Mask),
   m_GoodVoxels(NULL)
 {
   // only setting up the child parameters because the parent constructor has already been called
@@ -77,7 +77,7 @@ void AlignSectionsFeatureCentroid::setupFilterParameters()
   parameters.push_back(LinkedBooleanFilterParameter::New("Use Reference Slice", "UseReferenceSlice", getUseReferenceSlice(), linkedProps, FilterParameter::Parameter));
   parameters.push_back(FilterParameter::New("Reference Slice", "ReferenceSlice", FilterParameterWidgetType::IntWidget, getReferenceSlice(), FilterParameter::Parameter));
 
-  parameters.push_back(FilterParameter::New("Good Voxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Mask", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, ""));
 
   setFilterParameters(parameters);
 }

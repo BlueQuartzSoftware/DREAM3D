@@ -53,7 +53,7 @@
 // -----------------------------------------------------------------------------
 VASPReader::VASPReader() :
   FileReader(),
-  m_VertexDataContainerName(DREAM3D::Defaults::DataContainerName),
+  m_VertexDataContainerName(DREAM3D::Defaults::VertexDataContainerName),
   m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
   m_InputFile(""),
   m_AtomVelocitiesArrayName(DREAM3D::VertexData::AtomVelocities),

@@ -55,12 +55,12 @@
 // -----------------------------------------------------------------------------
 FitFeatureData::FitFeatureData() :
   AbstractFilter(),
-  m_SelectedFeatureArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, ""),
+  m_SelectedFeatureArrayPath("", "", ""),
   m_DistributionType(DREAM3D::DistributionType::UnknownDistributionType),
   m_RemoveBiasedFeatures(false),
-  m_FeaturePhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
-  m_BiasedFeaturesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, DREAM3D::FeatureData::BiasedFeatures),
-  m_NewEnsembleArrayArray(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::EnsembleAttributeMatrixName, DREAM3D::EnsembleData::FitParameters),
+  m_FeaturePhasesArrayPath("", "", ""),
+  m_BiasedFeaturesArrayPath("", "", ""),
+  m_NewEnsembleArrayArray("", "", ""),
   m_InDataArray(NULL),
   m_BiasedFeatures(NULL),
   m_FeaturePhases(NULL),

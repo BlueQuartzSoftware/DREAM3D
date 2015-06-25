@@ -47,7 +47,7 @@
 // -----------------------------------------------------------------------------
 ClearDataMask::ClearDataMask() :
   AbstractFilter(),
-  m_MaskArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::ElementAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
+  m_MaskArrayPath("", "", ""),
   m_Mask(NULL)
 {
   setupFilterParameters();
@@ -67,7 +67,7 @@ void ClearDataMask::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FilterParameter::New("Element Mask", "MaskArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getMaskArrayPath(), FilterParameter::RequiredArray));
+  parameters.push_back(FilterParameter::New("Mask", "MaskArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getMaskArrayPath(), FilterParameter::RequiredArray));
 
   setFilterParameters(parameters);
 }

@@ -51,7 +51,7 @@
 CorrelateValuesWithVectorDirection::CorrelateValuesWithVectorDirection() :
   AbstractFilter(),
   m_CorrelatedDataArrayPath("", "", ""),
-  m_VectorDataArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::VectorData),
+  m_VectorDataArrayPath("", "", ""),
   m_Logfile("CorrelateValuesWithVectorDirection.log"),
   m_VectorData(NULL),
   m_MaxCoord(sqrt(DREAM3D::Constants::k_2Pi)/2.0),

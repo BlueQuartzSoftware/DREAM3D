@@ -228,11 +228,11 @@ class InsertAtomsImpl
 // -----------------------------------------------------------------------------
 InsertAtoms::InsertAtoms() :
   AbstractFilter(),
-  m_VertexDataContainerName(DREAM3D::Defaults::DataContainerName),
+  m_VertexDataContainerName(DREAM3D::Defaults::VertexDataContainerName),
   m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
   m_Basis(0),
-  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
-  m_AvgQuatsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
+  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::TriangleDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
+  m_AvgQuatsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
   m_AtomFeatureLabelsArrayName(DREAM3D::VertexData::AtomFeatureLabels),
   m_SurfaceMeshFaceLabels(NULL),
   m_AvgQuats(NULL),

@@ -48,9 +48,9 @@
 // -----------------------------------------------------------------------------
 FindBoundaryElementFractions::FindBoundaryElementFractions() :
   AbstractFilter(),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::ElementAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_BoundaryCellsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::BoundaryCells),
-  m_BoundaryCellFractionsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, DREAM3D::FeatureData::SurfaceElementFractions),
+  m_FeatureIdsArrayPath("", "", ""),
+  m_BoundaryCellsArrayPath("", "", ""),
+  m_BoundaryCellFractionsArrayPath("", "", ""),
   m_FeatureIds(NULL),
   m_BoundaryCells(NULL),
   m_BoundaryCellFractions(NULL)
@@ -182,7 +182,7 @@ void FindBoundaryElementFractions::execute()
 
   find_surface_voxel_fractions();
 
-  notifyStatusMessage(getHumanLabel(), "FindBoundaryElementFractions Completed");
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

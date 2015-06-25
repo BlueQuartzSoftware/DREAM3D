@@ -51,9 +51,9 @@
 // -----------------------------------------------------------------------------
 FindAvgCAxes::FindAvgCAxes() :
   AbstractFilter(),
-  m_QuatsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Quats),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_AvgCAxesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgCAxes),
+  m_QuatsArrayPath("", "", ""),
+  m_FeatureIdsArrayPath("", "", ""),
+  m_AvgCAxesArrayPath("", "", ""),
   m_FeatureIds(NULL),
   m_Quats(NULL),
   m_AvgCAxes(NULL)

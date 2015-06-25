@@ -125,6 +125,11 @@ namespace DREAM3D
     const DREAM3D_STRING FeatureAttributeMatrixName("FeatureAttributeMatrix");
     const DREAM3D_STRING EnsembleAttributeMatrixName("EnsembleAttributeMatrix");
 
+    const DREAM3D_STRING ImageDataContainerName("ImageDataContainer");
+    const DREAM3D_STRING NewImageDataContainerName("NewImageDataContainer");
+    const DREAM3D_STRING TriangleDataContainerName("TriangleDataContainer");
+    const DREAM3D_STRING QuadDataContainerName("QuadDataContainer");
+
     const DREAM3D_STRING VertexDataContainerName("VertexDataContainer");
     const DREAM3D_STRING VertexAttributeMatrixName("VertexData");
     const DREAM3D_STRING VertexFeatureAttributeMatrixName("VertexFeatureData");
@@ -220,6 +225,7 @@ namespace DREAM3D
   namespace GeneralData
   {
     const DREAM3D_STRING ThresholdArray("ThresholdArray");
+    const DREAM3D_STRING Mask("Mask");
   }
 
   namespace CellData
@@ -250,6 +256,7 @@ namespace DREAM3D
     const DREAM3D_STRING ImageQuality("Image Quality");
     const DREAM3D_STRING ImageQualityNoSpace("ImageQuality");
     const DREAM3D_STRING KernelAverageMisorientations("KernelAverageMisorientations");
+    const DREAM3D_STRING Mask("Mask");
     const DREAM3D_STRING MotionDirection("MotionDirection");
     const DREAM3D_STRING MicroTexVolFrac("MicroTexVolFrac");
     const DREAM3D_STRING MisorientationColor("MisorientationColor");
@@ -313,6 +320,7 @@ namespace DREAM3D
     const DREAM3D_STRING KernelAvgMisorientations("KernelAvgMisorientations");
     const DREAM3D_STRING LMG("LMG");
     const DREAM3D_STRING LargestCrossSections("LargestCrossSections");
+    const DREAM3D_STRING Mask("Mask");
     const DREAM3D_STRING MTRdensity("MTRdensity");
     const DREAM3D_STRING MTRgKAM("MTRgKAM");
     const DREAM3D_STRING MicroTextureRegionFractionOccupied("MicroTextureRegionFractionOccupied");

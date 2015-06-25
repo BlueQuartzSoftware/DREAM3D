@@ -57,7 +57,7 @@
 // -----------------------------------------------------------------------------
 EMMPMFilter::EMMPMFilter() :
   AbstractFilter(),
-  m_InputDataArrayPath("", "", ""),
+  m_InputDataArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::ImageData),
   m_NumClasses(4),
   m_ExchangeEnergy(0.5f),
   m_HistogramLoops(5),

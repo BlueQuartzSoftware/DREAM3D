@@ -52,12 +52,12 @@
 // -----------------------------------------------------------------------------
 FeatureInfoReader::FeatureInfoReader() :
   FileReader(),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
+  m_CellAttributeMatrixName("", "", ""),
+  m_CellFeatureAttributeMatrixName(""),
   m_InputFile(""),
   m_CreateCellLevelArrays(true),
   m_RenumberFeatures(true),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_FeatureIdsArrayPath("", "", ""),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
