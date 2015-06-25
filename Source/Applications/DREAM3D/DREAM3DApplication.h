@@ -43,8 +43,8 @@
 
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QWidget>
-#include <QtWidgets/QMenuBar>
-#include <QtWidgets/QMenu>
+
+#include "Applications/DREAM3D/DREAM3DMenu.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
 //#include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
@@ -76,6 +76,8 @@ protected:
 
   DREAM3D_UI* getNewDREAM3DInstance();
 
+  void toggleGlobalMenuItems(bool on);
+
 protected slots:
 
   /**
@@ -84,11 +86,6 @@ protected slots:
    * @param file The newly added file.
    */
   void updateRecentFileList(const QString &file);
-
-  /**
-  * @brief exitTriggered
-  */
-  void exitTriggered();
 
   /**
   * @brief activeWindowChanged
@@ -100,60 +97,20 @@ protected slots:
 
   void on_actionNew_triggered();
   void on_actionOpen_triggered();
+  void on_actionSave_triggered();
+  void on_actionSaveAs_triggered();
 
   void on_actionClearRecentFiles_triggered();
-
+  void on_actionCloseWindow_triggered();
+  void on_actionExit_triggered();
   void on_actionShowIndex_triggered();
   void on_actionCheck_For_Updates_triggered();
   void on_actionAbout_DREAM3D_triggered();
-  void on_actionExit_triggered();
 
 private:
   QList<QWidget*>                 m_DREAM3DWidgetList;
   DREAM3D_UI*                     m_ActiveWindow;
-  QMenuBar*                       m_GlobalMenu;
-
-  // File Menu
-  QMenu*                          menuFile;
-  QAction*                        actionNew;
-  QAction*                        actionOpen;
-  QAction*                        actionSave;
-  QAction*                        actionSaveAs;
-  QMenu*                          menu_RecentFiles;
-  QAction*                        actionClearRecentFiles;
-  QAction*                        actionCloseWindow;
-  QAction*                        actionExit;
-
-  // View Menu
-  QMenu*                          menuView;
-  QAction*                        actionShow_Filter_Library;
-  QAction*                        actionShow_Filter_List;
-  QAction*                        actionShow_Prebuilt_Pipelines;
-  QAction*                        actionShow_Favorites;
-  QAction*                        actionShow_Issues;
-
-  // Bookmarks Menu
-  QMenu*                          menuBookmarks;
-  QAction*                        actionAddPipeline;
-  QAction*                        actionNewFolder;
-
-  // Pipeline Menu
-  QMenu*                          menuPipeline;
-  QAction*                        actionClearPipeline;
-
-  // Help Menu
-  QMenu*                          menuHelp;
-  QAction*                        actionShowIndex;
-  QAction*                        actionCheck_For_Updates;
-  QAction*                        actionAbout_DREAM3D;
-  QAction*                        actionPlugin_Information;
-
-  // Contextual Menus
-  QAction*                        actionRenamePipeline;
-  QAction*                        actionRemovePipeline;
-  QAction*                        actionLocateFile;
-  QAction*                        actionShowInFileSystem;
-
+  DREAM3DMenu*                    m_GlobalMenu;
 
   QString                         m_OpenDialogLastDirectory;
 
@@ -162,7 +119,6 @@ private:
   DREAM3D_UI*                     MainWindow;
   QVector<QPluginLoader*>         m_PluginLoaders;
 
-  QMenuBar* createMenu();
   QVector<IDREAM3DPlugin*> loadPlugins();
 
   DREAM3DApplication(const DREAM3DApplication&); // Copy Constructor Not Implemented
