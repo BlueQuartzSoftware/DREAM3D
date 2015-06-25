@@ -686,33 +686,35 @@ void FindShapes::find_axiseulers()
     n3y = n3y / norm3;
     n3z = n3z / norm3;
 
-    float test[3][3];
-    test[0][0] = n3x;
-    test[0][1] = n3y;
-    test[0][2] = n3z;
-    test[1][0] = n2x;
-    test[1][1] = n2y;
-    test[1][2] = n2z;
-    test[2][0] = n1x;
-    test[2][1] = n1y;
-    test[2][2] = n1z;
+    //insert principal unit vectors into rotation matrix representing Feature reference frame within the sample reference frame 
+    //(Note that the 3 direction is actually the long axis and the 1 direction is actually the short axis)
+    float g[3][3];
+    g[0][0] = n3x;
+    g[0][1] = n3y;
+    g[0][2] = n3z;
+    g[1][0] = n2x;
+    g[1][1] = n2y;
+    g[1][2] = n2z;
+    g[2][0] = n1x;
+    g[2][1] = n1y;
+    g[2][2] = n1z;
 
     //check for right-handedness
     typedef  OrientationTransforms<FOrientArrayType, float> OrientationTransformType;
-    OrientationTransformType::ResultType result = FOrientTransformsType::om_check(FOrientArrayType(test));
+    OrientationTransformType::ResultType result = FOrientTransformsType::om_check(FOrientArrayType(g));
     if (result.result == 0)
     {
-      test[2][0] *= -1;
-      test[2][1] *= -1;
-      test[2][2] *= -1;
+      g[2][0] *= -1.0f;
+      g[2][1] *= -1.0f;
+      g[2][2] *= -1.0f;
     }
 
-    FOrientArrayType eu(3, 0.0);
-    FOrientTransformsType::om2eu(FOrientArrayType(test), eu);
+    FOrientArrayType eu(3, 0.0f);
+    FOrientTransformsType::om2eu(FOrientArrayType(g), eu);
 
-    m_AxisEulerAngles[3 * i] = static_cast<float>(eu[0]);
-    m_AxisEulerAngles[3 * i + 1] = static_cast<float>(eu[1]);
-    m_AxisEulerAngles[3 * i + 2] = static_cast<float>(eu[2]);
+    m_AxisEulerAngles[3 * i] = eu[0];
+    m_AxisEulerAngles[3 * i + 1] = eu[1];
+    m_AxisEulerAngles[3 * i + 2] = eu[2];
   }
 }
 
