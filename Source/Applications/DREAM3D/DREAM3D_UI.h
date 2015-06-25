@@ -107,6 +107,12 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     PipelineViewWidget* getPipelineViewWidget();
 
     /**
+    * @brief getPrebuiltsDockWidget
+    * @param
+    */
+    PrebuiltPipelinesDockWidget* getPrebuiltsDockWidget();
+
+    /**
     * @brief getBookmarksDockWidget
     * @param
     */

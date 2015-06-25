@@ -117,8 +117,6 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
   public slots:
     //// Slots to catch signals from main menu or context menu
     void m_ActionLocateFile_triggered();
-    void m_ActionRemovePipeline_triggered();
-    void m_ActionRenamePipeline_triggered();
     void m_ActionShowInFileSystem_triggered();
 
     /**

@@ -102,6 +102,8 @@ protected slots:
 
   void on_actionAddBookmark_triggered();
   void on_actionNewFolder_triggered();
+  void on_actionRenamePipeline_triggered();
+  void on_actionRemovePipeline_triggered();
   void on_actionClearPipeline_triggered();
 
   void on_pipelineViewContextMenuRequested(const QPoint&);

@@ -752,6 +752,51 @@ void DREAM3DApplication::on_actionPluginInformation_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void DREAM3DApplication::on_actionRenamePipeline_triggered()
+{
+  if (NULL != m_ActiveWindow)
+  {
+    BookmarksTreeView* bookmarksTreeView = m_ActiveWindow->getBookmarksDockWidget()->getBookmarksTreeView();
+    QModelIndex index = bookmarksTreeView->currentIndex();
+    bookmarksTreeView->edit(index);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DApplication::on_actionRemovePipeline_triggered()
+{
+  if (NULL != m_ActiveWindow)
+  {
+    BookmarksDockWidget* bookmarksDockWidget = m_ActiveWindow->getBookmarksDockWidget();
+    BookmarksTreeView* bookmarksTreeView = bookmarksDockWidget->getBookmarksTreeView();
+
+    BookmarksModel* model = BookmarksModel::Instance();
+
+    QModelIndex index = bookmarksTreeView->currentIndex();
+    QString name = model->index(index.row(), BookmarksItem::Name, index.parent()).data().toString();
+
+    QMessageBox msgBox;
+    msgBox.setText("Are you sure that you want to remove the bookmark \"" + name + "\"? The original file will not be removed.");
+    msgBox.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
+    msgBox.setDefaultButton(QMessageBox::Yes);
+    int ret = msgBox.exec();
+
+    if (ret == QMessageBox::Yes)
+    {
+      //Remove favorite, graphically, from the DREAM3D interface
+      model->removeRow(index.row(), index.parent());
+
+      // Write these changes out to the preferences file
+      emit bookmarksDockWidget->fireWriteSettings();
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void DREAM3DApplication::on_actionCloseWindow_triggered()
 {
   m_ActiveWindow->close();
@@ -807,17 +852,123 @@ void DREAM3DApplication::on_pipelineViewContextMenuRequested(const QPoint& pos)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DApplication::on_bookmarksDockContextMenuRequested(const QPoint&)
+void DREAM3DApplication::on_bookmarksDockContextMenuRequested(const QPoint& pos)
 {
+  BookmarksTreeView* bookmarksTreeView = m_ActiveWindow->getBookmarksDockWidget()->getBookmarksTreeView();
 
+  QModelIndex index = bookmarksTreeView->indexAt(pos);
+
+  QPoint mapped;
+  if (index.isValid())
+  {
+    // Note: We must map the point to global from the viewport to
+    // account for the header.
+    mapped = bookmarksTreeView->viewport()->mapToGlobal(pos);
+  }
+  else
+  {
+    index = QModelIndex();
+    mapped = bookmarksTreeView->mapToGlobal(pos);
+  }
+
+  BookmarksModel* model = BookmarksModel::Instance();
+
+  QAction* m_ActionAddPipeline;
+  QAction* m_ActionNewFolder;
+  QAction* m_ActionRenamePipeline;
+  QAction* m_ActionRemovePipeline;
+  QAction* m_ActionLocateFile;
+#if defined(Q_OS_MAC)
+  m_ActionAddPipeline = m_GlobalMenu->getAddBookmark();
+  m_ActionNewFolder = m_GlobalMenu->getNewFolder();
+  m_ActionRenamePipeline = m_GlobalMenu->getRenamePipeline();
+  m_ActionRemovePipeline = m_GlobalMenu->getRemovePipeline();
+  m_ActionLocateFile = m_GlobalMenu->getLocateFile();
+#else
+  m_ActionAddPipeline = m_ActiveWindow->getDREAM3DMenu()->getAddBookmark();
+  m_ActionNewFolder = m_ActiveWindow->getDREAM3DMenu()->getNewFolder();
+  m_ActionRenamePipeline = m_ActiveWindow->getDREAM3DMenu()->getRenamePipeline();
+  m_ActionRemovePipeline = m_ActiveWindow->getDREAM3DMenu()->getRemovePipeline();
+  m_ActionLocateFile = m_ActiveWindow->getDREAM3DMenu()->getLocateFile();
+#endif
+
+  QMenu menu;
+  if (index.isValid() == false)
+  {
+    menu.addAction(m_ActionAddPipeline);
+    {
+      QAction* separator = new QAction(this);
+      separator->setSeparator(true);
+      menu.addAction(separator);
+    }
+    menu.addAction(m_ActionNewFolder);
+  }
+  else
+  {
+    QModelIndex actualIndex = model->index(index.row(), BookmarksItem::Path, index.parent());
+    QString path = actualIndex.data().toString();
+    if (path.isEmpty() == false)
+    {
+      bool itemHasErrors = model->data(actualIndex, Qt::UserRole).value<bool>();
+      if (itemHasErrors == true)
+      {
+        
+      }
+      else
+      {
+        
+      }
+    }
+    else if (path.isEmpty())
+    {
+      menu.addAction(m_ActionAddPipeline);
+
+      m_ActionRenamePipeline->setText("Rename Folder");
+      menu.addAction(m_ActionRenamePipeline);
+
+      {
+        QAction* separator = new QAction(this);
+        separator->setSeparator(true);
+        menu.addAction(separator);
+      }
+
+      m_ActionRemovePipeline->setText("Remove Folder");
+      menu.addAction(m_ActionRemovePipeline);
+
+      {
+        QAction* separator = new QAction(this);
+        separator->setSeparator(true);
+        menu.addAction(separator);
+      }
+
+      menu.addAction(m_ActionNewFolder);
+    }
+  }
+
+  menu.exec(mapped);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DApplication::on_prebuiltsDockContextMenuRequested(const QPoint&)
+void DREAM3DApplication::on_prebuiltsDockContextMenuRequested(const QPoint& pos)
 {
+  PrebuiltPipelinesDockWidget* prebuiltsDockWidget = m_ActiveWindow->getPrebuiltsDockWidget();
+  QMenu menu;
 
+  #if defined(Q_OS_MAC)
+    menu.addAction(m_GlobalMenu->getShowPrebuiltInFileSystem());
+  #else
+    if (NULL != m_ActiveWindow)
+    {
+      menu.addAction(m_ActiveWindow->getDREAM3DMenu()->getShowPrebuiltInFileSystem());
+    }
+  #endif
+
+    if (NULL != m_ActiveWindow)
+    {
+      menu.exec(prebuiltsDockWidget->mapToGlobal(pos));
+    }
 }
 
 // -----------------------------------------------------------------------------

@@ -1401,6 +1401,14 @@ BookmarksDockWidget* DREAM3D_UI::getBookmarksDockWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+PrebuiltPipelinesDockWidget* DREAM3D_UI::getPrebuiltsDockWidget()
+{
+  return prebuiltPipelinesDockWidget;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void DREAM3D_UI::setOpenedFilePath(const QString &filePath)
 {
   m_OpenedFilePath = filePath;

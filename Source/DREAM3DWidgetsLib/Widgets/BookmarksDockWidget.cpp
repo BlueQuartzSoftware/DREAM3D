@@ -570,43 +570,6 @@ bool BookmarksDockWidget::removeDir(const QString& dirName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksDockWidget::m_ActionRemovePipeline_triggered()
-{
-  BookmarksModel* model = BookmarksModel::Instance();
-
-  QModelIndex index = bookmarksTreeView->currentIndex();
-  QString name = model->index(index.row(), BookmarksItem::Name, index.parent()).data().toString();
-  QString path = model->index(index.row(), BookmarksItem::Path, index.parent()).data().toString();
-
-  QMessageBox msgBox;
-  msgBox.setText("Are you sure that you want to remove the bookmark \"" + name + "\"? The original file will not be removed.");
-  msgBox.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
-  msgBox.setDefaultButton(QMessageBox::Yes);
-  int ret = msgBox.exec();
-
-  if (ret == QMessageBox::Yes)
-  {
-    //Remove favorite, graphically, from the DREAM3D interface
-    model->removeRow(index.row(), index.parent());
-
-    // Write these changes out to the preferences file
-    emit fireWriteSettings();
-  }
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BookmarksDockWidget::m_ActionRenamePipeline_triggered()
-{
-  QModelIndex index = bookmarksTreeView->currentIndex();
-  bookmarksTreeView->edit(index);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void BookmarksDockWidget::m_ActionShowInFileSystem_triggered()
 {
   BookmarksModel* model = BookmarksModel::Instance();
