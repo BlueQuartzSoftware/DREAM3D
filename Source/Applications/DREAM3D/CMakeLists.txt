@@ -78,6 +78,7 @@ set(DREAM3D_SRCS
   ${DREAM3D_SOURCE_DIR}/PluginDetails.cpp
   ${DREAM3D_SOURCE_DIR}/DREAM3Dv6Wizard.cpp
   ${DREAM3D_SOURCE_DIR}/DREAM3DApplication.cpp
+  ${DREAM3D_SOURCE_DIR}/DREAM3DMenu.cpp
   )
 
 #------------------------------------------------------------------
@@ -96,6 +97,7 @@ SET(DREAM3D_MOC_HDRS
   ${DREAM3D_SOURCE_DIR}/PluginDetails.h
   ${DREAM3D_SOURCE_DIR}/DREAM3Dv6Wizard.h
   ${DREAM3D_SOURCE_DIR}/DREAM3DApplication.h
+  ${DREAM3D_SOURCE_DIR}/DREAM3DMenu.h
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3D" "${DREAM3D_HDRS};${DREAM3D_MOC_HDRS}" "${DREAM3D_SRCS}" ${PROJECT_INSTALL_HEADERS})
 

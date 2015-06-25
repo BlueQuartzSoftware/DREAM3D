@@ -50,6 +50,8 @@
 #include <QtGui/QResizeEvent>
 #include <QtWidgets/QToolBar>
 
+#include "Applications/DREAM3D/DREAM3DMenu.h"
+
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
@@ -123,6 +125,17 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void setOpenDialogLastDirectory(const QString &path);
 
     /**
+    * @brief
+    */
+    void connectSignalsSlots(DREAM3D_UI* other);
+
+    /**
+    * @brief setDREAM3DMenu
+    * @param menu
+    */
+    void setDREAM3DMenu(DREAM3DMenu* menu);
+
+    /**
      * @brief versionCheckReply
      */
     void versionCheckReply(UpdateCheckData*);
@@ -150,10 +163,22 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     */
     void openNewPipeline(const QString &filePath, const bool &setOpenedFilePath, const bool &addToRecentFiles, const bool &newWindow);
 
-  public slots:
+    /**
+     * @brief savePipeline Helper function that saves the pipeline
+     */
+    bool savePipeline();
 
-    void on_actionNew_triggered();
-    void on_actionOpen_triggered();
+    /**
+     * @brief savePipelineAs Helper function that saves the pipeline
+     */
+    bool savePipelineAs();
+
+    /**
+     * @brief Clears the recent files list
+     */
+    void clearRecentFiles();
+
+  public slots:
 
     /**
     * @brief setOpenedFilePath
@@ -170,12 +195,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
   protected slots:
 
     /* Menu Slots */
-
-    // File Menu
-    void on_actionSave_triggered();
-    void on_actionSaveAs_triggered();
-
-    void closeWindow();
 
     //Pipeline Menu
 //    void on_m_ActionUpdatePipeline_triggered();
@@ -198,7 +217,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
     // Help Menu
     void on_actionCheck_For_Updates_triggered();
-    void on_actionAbout_DREAM3D_triggered();
     void on_actionPlugin_Information_triggered();
     void on_actionShowIndex_triggered();
 
@@ -279,16 +297,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
   protected:
 
     /**
-     * @brief savePipeline Helper function that saves the pipeline
-     */
-    bool savePipeline();
-
-    /**
-     * @brief savePipelineAs Helper function that saves the pipeline
-     */
-    bool savePipelineAs();
-
-    /**
      * @brief populateMenus This is a planned API that plugins would use to add Menus to the main application
      * @param plugin
      */
@@ -329,11 +337,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     * @brief
     */
     void connectSignalsSlots();
-
-    /**
-    * @brief
-    */
-    void connectSignalsSlots(DREAM3D_UI* other);
 
     /**
     * @brief
@@ -407,29 +410,31 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void resizeEvent ( QResizeEvent* event );
 
   private:
-    QThread*                    m_WorkerThread;
-    IDREAM3DPlugin*     m_ActivePlugin;
-    QVector<IDREAM3DPlugin*> m_LoadedPlugins;
+    QThread*                              m_WorkerThread;
+    IDREAM3DPlugin*                       m_ActivePlugin;
+    QVector<IDREAM3DPlugin*>              m_LoadedPlugins;
 
-    HelpDialog*                 m_HelpDialog;
+    HelpDialog*                           m_HelpDialog;
 
-    QSharedPointer<UpdateCheck>   m_UpdateCheck;
+    QSharedPointer<UpdateCheck>           m_UpdateCheck;
 
-    QThread*                    m_UpdateCheckThread;
-    FilterManager*      m_FilterManager;
-    FilterWidgetManager*  m_FilterWidgetManager;
+    QThread*                              m_UpdateCheckThread;
+    FilterManager*                        m_FilterManager;
+    FilterWidgetManager*                  m_FilterWidgetManager;
 
-    FilterPipeline::Pointer      m_PipelineInFlight;
+    FilterPipeline::Pointer               m_PipelineInFlight;
 
-    QToolButton*         m_FilterListBtn;
-    QToolButton*        m_FilterLibraryBtn;
-    QToolButton*        m_FavoritesBtn;
-    QToolButton*        m_PrebuiltBtn;
-    QToolButton*        m_IssuesBtn;
-    bool                m_ShouldRestart;
+    DREAM3DMenu*                          m_InstanceMenu;
 
-    QString             m_OpenedFilePath;
-    static QString    m_OpenDialogLastDirectory;
+    QToolButton*                          m_FilterListBtn;
+    QToolButton*                          m_FilterLibraryBtn;
+    QToolButton*                          m_FavoritesBtn;
+    QToolButton*                          m_PrebuiltBtn;
+    QToolButton*                          m_IssuesBtn;
+    bool                                  m_ShouldRestart;
+
+    QString                               m_OpenedFilePath;
+    static QString                        m_OpenDialogLastDirectory;
 
     /**
     * @brief Updates the "first run" variable in the preferences file
