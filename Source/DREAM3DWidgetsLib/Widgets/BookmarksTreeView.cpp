@@ -33,8 +33,10 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include "BookmarksTreeView.h"
 
-#include "DREAM3DWidgetsLib/Widgets/BookmarksTreeView.h"
+#include "Applications/DREAM3D/DREAM3DApplication.h"
+
 #include "DREAM3DWidgetsLib/Widgets/BookmarksItemDelegate.h"
 
 #include <QtGui/QMouseEvent>
@@ -57,9 +59,7 @@ m_TopLevelItemPlaceholder(QModelIndex())
 {
   setContextMenuPolicy(Qt::CustomContextMenu);
 
-  connect(this,
-    SIGNAL(customContextMenuRequested(const QPoint&)),
-    SLOT(onCustomContextMenuRequested(const QPoint&)));
+  connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), dream3dApp, SLOT(on_bookmarksDockContextMenuRequested(const QPoint&)));
 
   connect(this, SIGNAL(collapsed(const QModelIndex&)), SLOT(collapseIndex(const QModelIndex&)));
   connect(this, SIGNAL(expanded(const QModelIndex&)), SLOT(expandIndex(const QModelIndex&)));

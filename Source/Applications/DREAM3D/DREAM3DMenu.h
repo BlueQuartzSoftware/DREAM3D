@@ -68,6 +68,14 @@ public:
   QAction* getSaveAs();
 
   QAction* getClearPipeline();
+  QAction* getShowBookmarkInFileSystem();
+  QAction* getShowPrebuiltInFileSystem();
+
+  QAction* getAddBookmark();
+  QAction* getNewFolder();
+  QAction* getRenamePipeline();
+  QAction* getRemovePipeline();
+  QAction* getLocateFile();
 
 private:
 
@@ -111,7 +119,8 @@ private:
   QAction*                        m_ActionRenamePipeline;
   QAction*                        m_ActionRemovePipeline;
   QAction*                        m_ActionLocateFile;
-  QAction*                        m_ActionShowInFileSystem;
+  QAction*                        m_ActionShowBookmarkInFileSystem;
+  QAction*                        m_ActionShowPrebuiltInFileSystem;
 
   DREAM3DMenu(const DREAM3DMenu&); // Copy Constructor Not Implemented
   void operator=(const DREAM3DMenu&); // Operator '=' Not Implemented

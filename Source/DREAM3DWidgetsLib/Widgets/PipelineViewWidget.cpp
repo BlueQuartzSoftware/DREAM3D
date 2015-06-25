@@ -108,7 +108,6 @@ PipelineViewWidget::PipelineViewWidget(QWidget* parent) :
   setFocusPolicy(Qt::StrongFocus);
 
   connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), dream3dApp, SLOT(on_pipelineViewContextMenuRequested(const QPoint&)));
-
 }
 
 // -----------------------------------------------------------------------------

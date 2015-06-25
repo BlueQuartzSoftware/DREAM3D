@@ -159,8 +159,10 @@ void DREAM3DMenu::initialize()
   m_ActionClearPipeline->setObjectName(QString::fromUtf8("m_ActionClearPipeline"));
   m_ActionLocateFile = new QAction(this);
   m_ActionLocateFile->setObjectName(QString::fromUtf8("m_ActionLocateFile"));
-  m_ActionShowInFileSystem = new QAction(this);
-  m_ActionShowInFileSystem->setObjectName(QString::fromUtf8("m_ActionShowInFileSystem"));
+  m_ActionShowBookmarkInFileSystem = new QAction(this);
+  m_ActionShowBookmarkInFileSystem->setObjectName(QString::fromUtf8("m_ActionShowBookmarkInFileSystem"));
+  m_ActionShowPrebuiltInFileSystem = new QAction(this);
+  m_ActionShowPrebuiltInFileSystem->setObjectName(QString::fromUtf8("m_ActionShowPrebuiltInFileSystem"));
   m_ActionExit = new QAction(this);
   m_ActionExit->setObjectName(QString::fromUtf8("m_ActionExit"));
   m_ActionNewFolder = new QAction(m_MenuBookmarks);
@@ -217,11 +219,14 @@ void DREAM3DMenu::initialize()
   m_ActionExit->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
 #endif
 #if defined(Q_OS_WIN)
-  m_ActionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Windows Explorer", 0));
+  m_ActionShowBookmarkInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Windows Explorer", 0));
+  m_ActionShowPrebuiltInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Windows Explorer", 0));
 #elif defined(Q_OS_MAC)
-  m_ActionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Finder", 0));
+  m_ActionShowBookmarkInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Finder", 0));
+  m_ActionShowPrebuiltInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Finder", 0));
 #else
-  m_ActionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in File System", 0));
+  m_ActionShowBookmarkInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in File System", 0));
+  m_ActionShowPrebuiltInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in File System", 0));
 #endif
   m_ActionShowIssues->setText(QApplication::translate("DREAM3D_UI", "Issues", 0));
   m_ActionShowFilterList->setText(QApplication::translate("DREAM3D_UI", "Filter List", 0));
@@ -261,11 +266,11 @@ void DREAM3DMenu::initialize()
   connect(m_ActionAddBookmark, SIGNAL(triggered()), dream3dApp, SLOT(on_actionAddBookmark_triggered()));
   connect(m_ActionNewFolder, SIGNAL(triggered()), dream3dApp, SLOT(on_actionNewFolder_triggered()));
   connect(m_ActionClearPipeline, SIGNAL(triggered()), dream3dApp, SLOT(on_actionClearPipeline_triggered()));
-
-  //connect(m_ActionRenamePipeline, SIGNAL(triggered()), bookmarksDockWidget, SLOT(m_ActionRenamePipeline_triggered()));
-  //connect(m_ActionRemovePipeline, SIGNAL(triggered()), bookmarksDockWidget, SLOT(m_ActionRemovePipeline_triggered()));
-  //connect(m_ActionLocateFile, SIGNAL(triggered()), bookmarksDockWidget, SLOT(m_ActionLocateFile_triggered()));
-  //connect(m_ActionShowInFileSystem, SIGNAL(triggered()), bookmarksDockWidget, SLOT(m_ActionShowInFileSystem_triggered()));
+  connect(m_ActionShowBookmarkInFileSystem, SIGNAL(triggered()), dream3dApp, SLOT(on_actionShowBookmarkInFileSystem_triggered()));
+  connect(m_ActionShowPrebuiltInFileSystem, SIGNAL(triggered()), dream3dApp, SLOT(on_actionShowPrebuiltInFileSystem_triggered()));
+  connect(m_ActionRenamePipeline, SIGNAL(triggered()), dream3dApp, SLOT(on_actionRenamePipeline_triggered()));
+  connect(m_ActionRemovePipeline, SIGNAL(triggered()), dream3dApp, SLOT(on_actionRemovePipeline_triggered()));
+  connect(m_ActionLocateFile, SIGNAL(triggered()), dream3dApp, SLOT(m_ActionLocateFile_triggered()));
 
   // Add the actions to their respective menus
   m_GlobalMenu->addAction(m_MenuFile->menuAction());
@@ -405,6 +410,62 @@ QAction* DREAM3DMenu::getSaveAs()
 QAction* DREAM3DMenu::getClearPipeline()
 {
   return m_ActionClearPipeline;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QAction* DREAM3DMenu::getShowPrebuiltInFileSystem()
+{
+  return m_ActionShowPrebuiltInFileSystem;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QAction* DREAM3DMenu::getShowBookmarkInFileSystem()
+{
+  return m_ActionShowBookmarkInFileSystem;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QAction* DREAM3DMenu::getAddBookmark()
+{
+  return m_ActionAddBookmark;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QAction* DREAM3DMenu::getNewFolder()
+{
+  return m_ActionNewFolder;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QAction* DREAM3DMenu::getRenamePipeline()
+{
+  return m_ActionRenamePipeline;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QAction* DREAM3DMenu::getRemovePipeline()
+{
+  return m_ActionRemovePipeline;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QAction* DREAM3DMenu::getLocateFile()
+{
+  return m_ActionLocateFile;
 }
 
 

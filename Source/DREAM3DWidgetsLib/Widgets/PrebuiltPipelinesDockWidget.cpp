@@ -66,6 +66,8 @@ PrebuiltPipelinesDockWidget::PrebuiltPipelinesDockWidget(QWidget* parent) :
 {
   setupUi(this);
   setupGui();
+
+  connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), dream3dApp, SLOT(on_prebuiltsDockContextMenuRequested(const QPoint&)));
 }
 
 
