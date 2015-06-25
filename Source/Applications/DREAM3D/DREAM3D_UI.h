@@ -101,12 +101,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void setLoadedPlugins(QVector<IDREAM3DPlugin*> plugins);
 
     /**
-     * @brief displayHelp
-     * @param helpFile
-     */
-    void displayHelp(QString helpFile);
-
-    /**
     * @brief getPipelineViewWidget
     * @param
     */
@@ -180,6 +174,8 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
   public slots:
 
+    void clearPipeline();
+
     /**
     * @brief setOpenedFilePath
     * @param filePath
@@ -194,19 +190,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
   protected slots:
 
-    /* Menu Slots */
-
-    //Pipeline Menu
-//    void on_m_ActionUpdatePipeline_triggered();
-//    void on_actionSaveAsNewPipeline_triggered();
-//    void on_actionAppendToExistingPipeline_triggered();
-    void clearPipeline();
-
-    // Filter Menu
-//    void on_actionCopyCurrentFilter_triggered();
-//    void on_actionPasteCopiedFilter_triggered();
-//    void on_actionRemoveCurrentFilter_triggered();
-
     //View Menu
     // These all need to take a bool b  argument
     void on_actionShow_Filter_Library_triggered(bool b);
@@ -214,11 +197,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void on_actionShow_Prebuilt_Pipelines_triggered(bool b);
     void on_actionShow_Favorites_triggered(bool b);
     void on_actionShow_Issues_triggered(bool b);
-
-    // Help Menu
-    void on_actionCheck_For_Updates_triggered();
-    void on_actionPlugin_Information_triggered();
-    void on_actionShowIndex_triggered();
 
     // Buttons and other widgets that send signals that we want to catch
     void on_startPipelineBtn_clicked();

@@ -100,12 +100,21 @@ protected slots:
   void on_actionSave_triggered();
   void on_actionSaveAs_triggered();
 
+  void on_actionAddBookmark_triggered();
+  void on_actionNewFolder_triggered();
+  void on_actionClearPipeline_triggered();
+
+  void on_pipelineViewContextMenuRequested(const QPoint&);
+  void on_bookmarksDockContextMenuRequested(const QPoint&);
+  void on_prebuiltsDockContextMenuRequested(const QPoint&);
+
   void on_actionClearRecentFiles_triggered();
   void on_actionCloseWindow_triggered();
   void on_actionExit_triggered();
-  void on_actionShowIndex_triggered();
-  void on_actionCheck_For_Updates_triggered();
-  void on_actionAbout_DREAM3D_triggered();
+  void on_actionShowDREAM3DHelp_triggered();
+  void on_actionCheckForUpdates_triggered();
+  void on_actionPluginInformation_triggered();
+  void on_actionAboutDREAM3D_triggered();
 
   void toPipelineRunningState();
 

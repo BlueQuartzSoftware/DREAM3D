@@ -116,12 +116,33 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
 
   public slots:
     //// Slots to catch signals from main menu or context menu
-    void m_ActionNewFolder_triggered();
-    void m_ActionAddPipeline_triggered();
     void m_ActionLocateFile_triggered();
     void m_ActionRemovePipeline_triggered();
     void m_ActionRenamePipeline_triggered();
     void m_ActionShowInFileSystem_triggered();
+
+    /**
+    * @brief BookmarksDockWidget::addBookmark
+    * @param filePath
+    * @param parent
+    */
+    void addBookmark(const QString &filePath, const QModelIndex &parent);
+
+    /**
+    * @brief BookmarksDockWidget::addFavoriteTreeItem
+    * @param parent
+    * @param favoriteTitle
+    * @param icon
+    * @param favoritePath
+    * @param allowEditing
+    */
+    int addTreeItem(QModelIndex parent,
+      QString& favoriteTitle,
+      QIcon icon,
+      QString favoritePath,
+      bool allowEditing,
+      bool editState,
+      bool isExpanded);
 
   protected:
     QStringList generateFilterListFromPipelineFile(QString path);
@@ -131,29 +152,6 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
     QString writeNewFavoriteFilePath(QString newFavoriteTitle, QString favoritePath, QTreeWidgetItem* item);
 
   protected slots:
-
-  /**
-  * @brief BookmarksDockWidget::addFavoriteTreeItem
-  * @param parent
-  * @param favoriteTitle
-  * @param icon
-  * @param favoritePath
-  * @param allowEditing
-  */
-  int addTreeItem(QModelIndex parent,
-    QString& favoriteTitle,
-    QIcon icon,
-    QString favoritePath,
-    bool allowEditing,
-    bool editState,
-    bool isExpanded);
-
-  /**
-  * @brief BookmarksDockWidget::addBookmark
-  * @param filePath
-  * @param parent
-  */
-  void addBookmark(const QString &filePath, const QModelIndex &parent);
 
     //// Slots to catch signals from the QTreeWidget
     void on_bookmarksTreeView_clicked(const QModelIndex & index);

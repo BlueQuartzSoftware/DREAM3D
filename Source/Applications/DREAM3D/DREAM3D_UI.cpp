@@ -59,13 +59,11 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
+#include "DREAM3DLib/Plugin/PluginManager.h"
 
-#include "QtSupportLib/ApplicationAboutBoxDialog.h"
 #include "QtSupportLib/QRecentFileList.h"
 #include "QtSupportLib/DREAM3DQtMacros.h"
 #include "QtSupportLib/DREAM3DPluginFrame.h"
-#include "QtSupportLib/HelpDialog.h"
-#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
 
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
 #include "DREAM3DWidgetsLib/UpdateCheck.h"
@@ -74,12 +72,9 @@
 #include "DREAM3DWidgetsLib/Widgets/PipelineViewWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/FilterLibraryDockWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/PrebuiltPipelinesDockWidget.h"
-#include "DREAM3DWidgetsLib/Widgets/DREAM3DUserManualDialog.h"
 
 
 #include "Applications/DREAM3D/DREAM3DConstants.h"
-#include "Applications/DREAM3D/AboutDREAM3D.h"
-#include "Applications/DREAM3D/AboutPlugins.h"
 #include "Applications/DREAM3D/DREAM3Dv6Wizard.h"
 #include "Applications/DREAM3D/DREAM3DApplication.h"
 #include "Applications/DREAM3D/DREAM3DMenu.h"
@@ -427,13 +422,6 @@ void DREAM3D_UI::closeEvent(QCloseEvent* event)
   dream3dApp->unregisterDREAM3DWindow(this);
 
   event->accept();
-
-  if (m_ShouldRestart == true)
-  {
-    // Restart DREAM3D
-    QProcess::startDetached(QApplication::applicationFilePath());
-    dream3dApp->quit();
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -647,9 +635,6 @@ void DREAM3D_UI::setupGui()
 {
   // Automatically check for updates at startup if the user has indicated that preference before
   checkForUpdatesAtStartup();
-
-  m_HelpDialog = new HelpDialog(this);
-  m_HelpDialog->setWindowModality(Qt::NonModal);
 
   pipelineViewWidget->setScrollArea(pipelineViewScrollArea);
 
@@ -963,7 +948,7 @@ void DREAM3D_UI::makeStatusBarButton(QString text, QDockWidget* dockWidget, QToo
 {
   btn->setText(text);
   btn->setCheckable(true);
-  btn->setChecked(!dockWidget->isHidden());
+  btn->setChecked(dockWidget->isVisible());
   statusBar()->insertPermanentWidget(index, btn, 0);
 }
 
@@ -1021,61 +1006,6 @@ void DREAM3D_UI::on_pipelineViewWidget_pipelineIssuesCleared()
 void DREAM3D_UI::on_pipelineViewWidget_pipelineHasNoErrors()
 {
 
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::on_actionPlugin_Information_triggered()
-{
-  AboutPlugins dialog(this);
-  dialog.exec();
-
-  // Write cache on exit
-  dialog.writePluginCache();
-
-  /* If any of the load checkboxes were changed, display a dialog warning
-   * the user that they must restart DREAM3D to see the changes.
-   */
-  if (dialog.getLoadPreferencesDidChange() == true)
-  {
-    QMessageBox msgBox;
-    msgBox.setText("DREAM3D must be restarted to allow these changes to take effect.");
-    msgBox.setInformativeText("Restart?");
-    msgBox.setWindowTitle("Restart Needed");
-    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-    msgBox.setDefaultButton(QMessageBox::Yes);
-    int choice = msgBox.exec();
-
-    if (choice == QMessageBox::Yes)
-    {
-      // Set Restart Flag and Begin closing DREAM3D
-      m_ShouldRestart = true;
-      this->close();
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::on_actionCheck_For_Updates_triggered()
-{
-  DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(this);
-
-  d->setCurrentVersion((DREAM3DLib::Version::Complete()));
-  d->setUpdateWebSite(DREAM3D::UpdateWebsite::UpdateWebSite);
-  d->setApplicationName("DREAM3D");
-
-  // Read from the DREAM3DSettings Pref file the information that we need
-  DREAM3DSettings prefs;
-  prefs.beginGroup(DREAM3D::UpdateWebsite::VersionCheckGroupName);
-  QDateTime dateTime = prefs.value(DREAM3D::UpdateWebsite::LastVersionCheck, QDateTime::currentDateTime()).toDateTime();
-  d->setLastCheckDateTime(dateTime);
-  prefs.endGroup();
-
-  // Now display the dialog box
-  d->show();
 }
 
 // -----------------------------------------------------------------------------
@@ -1344,25 +1274,6 @@ void DREAM3D_UI::pipelineDidFinish()
   filterLibraryDockWidget->blockSignals(false);
 
   emit pipelineFinished();
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::displayHelp(QString file)
-{
-  m_HelpDialog->setContentFile(file);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::on_actionShowIndex_triggered()
-{
-  // Generate help page
-  QUrl helpURL = DREAM3DHelpUrlGenerator::generateHTMLUrl("index");
-  DREAM3DUserManualDialog::LaunchHelpDialog(helpURL);
 }
 
 // -----------------------------------------------------------------------------

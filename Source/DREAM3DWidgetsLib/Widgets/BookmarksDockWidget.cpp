@@ -426,50 +426,6 @@ void BookmarksDockWidget::m_ActionLocateFile_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksDockWidget::m_ActionNewFolder_triggered()
-{
-  BookmarksModel* model = BookmarksModel::Instance();
-
-  QModelIndex parent = getSelectedParentTreeItem();
-  QString parentName = model->index(parent.row(), BookmarksItem::Name, parent.parent()).data().toString();
-
-  QString name = "New Folder";
-
-  addTreeItem(parent, name, QIcon(":/folder_blue.png"), "", true, true, false);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BookmarksDockWidget::m_ActionAddPipeline_triggered()
-{
-
-  QString proposedDir = m_OpenDialogLastDirectory;
-  QList<QString> newPrefPaths;
-
-  newPrefPaths = QFileDialog::getOpenFileNames(this, tr("Choose Pipeline File(s)"),
-    proposedDir, tr("Json File (*.json);;Dream3d File (*.dream3d);;Text File (*.txt);;Ini File (*.ini);;All Files (*.*)"));
-  if (true == newPrefPaths.isEmpty()) { return; }
-
-  QModelIndex parent = getSelectedParentTreeItem();
-
-  for (int i = 0; i < newPrefPaths.size(); i++)
-  {
-    QString newPrefPath = newPrefPaths[i];
-    newPrefPath = QDir::toNativeSeparators(newPrefPath);
-    addBookmark(newPrefPath, parent);
-  }
-
-  if (newPrefPaths.size() > 0)
-  {
-    // Cache the directory from the last path added
-    m_OpenDialogLastDirectory = newPrefPaths[newPrefPaths.size() - 1];
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void BookmarksDockWidget::addBookmark(const QString &filePath, const QModelIndex &parent)
 {
   QFileInfo fi(filePath);
