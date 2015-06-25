@@ -18,7 +18,6 @@ START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}" "Generic
 # List your public filters here
 
 set(_PublicFilters
-  AdjustVolumeOrigin
   ConvertData
   CopyAttributeArray
   CopyAttributeMatrix
@@ -37,6 +36,7 @@ set(_PublicFilters
   RenameAttributeMatrix
   RenameDataContainer
   ScaleVolume
+  SetOriginResolutionImageGeom
 )
 
 
