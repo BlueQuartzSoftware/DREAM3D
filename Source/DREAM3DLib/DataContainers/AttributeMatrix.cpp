@@ -571,6 +571,89 @@ QString AttributeMatrix::generateXdmfText(const QString& centering, const QStrin
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QString AttributeMatrix::getInfoString(DREAM3D::InfoStringFormat format)
+{
+  QString info;
+  QTextStream ss (&info);
+  if(format == DREAM3D::HtmlFormat)
+  {
+    ss << "<html><head></head>\n";
+    ss << "<body>\n";
+    ss << "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
+    ss << "<tbody>\n";
+    ss << "<tr bgcolor=\"#D3D8E0\"><th colspan=2>Attribute Matrix Info</th></tr>";
+
+    ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Name:</th><td>" << getName() << "</td></tr>";
+
+    QString typeString;
+    switch(m_Type)
+    {
+      case VertexType:
+        typeString = "Vertex";
+        break;
+      case EdgeType:
+        typeString = "Edge";
+        break;
+      case FaceType:
+        typeString = "Face";
+        break;
+      case CellType:
+        typeString = "Cell";
+        break;
+      case VertexFeatureType:
+        typeString = "Vertex Feature";
+        break;
+      case EdgeFeatureType:
+        typeString = "Edge Feature";
+        break;
+      case FaceFeatureType:
+        typeString = "Face Feature";
+        break;
+      case CellFeatureType:
+        typeString = "Cell Feature";
+        break;
+      case VertexEnsembleType:
+        typeString = "Vertex Ensemble";
+        break;
+      case EdgeEnsembleType:
+        typeString = "Edge Ensemble";
+        break;
+      case FaceEnsembleType:
+        typeString = "Face Ensemble";
+        break;
+      case CellEnsembleType:
+        typeString = "Cell Ensemble";
+      default:
+        typeString = "Unknown";
+        break;
+    }
+
+    ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Type:</th><td>" << typeString << "</td></tr>";
+    QString tupleStr = "(";
+    for(int i = 0; i < m_TupleDims.size(); i++)
+    {
+      tupleStr = tupleStr + QString::number(m_TupleDims[i]);
+      if(i < m_TupleDims.size() - 1) {
+         tupleStr = tupleStr + QString(", ");
+      }
+    }
+    tupleStr = tupleStr + ")";
+    ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Tuple Dimensions:</th><td>" << tupleStr << "</td></tr>";
+
+    ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Attribute Array Count:</th><td>" << getNumAttributeArrays() << "</td></tr>";
+    ss << "</tbody></table>\n";
+    ss << "<br/>";
+    ss << "</body></html>";
+  }
+  else
+  {
+
+  }
+  return info;
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QString AttributeMatrix::writeXdmfAttributeDataHelper(int numComp, const QString& attrType,
                                                       const QString& dataContainerName,
                                                       IDataArray::Pointer array,

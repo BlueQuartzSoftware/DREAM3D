@@ -1,49 +1,41 @@
 Quick Surface Mesh {#quicksurfacemesh}
-======
+============
 
 ## Group (Subgroup) ##
-SurfaceMesh
+Surface Meshing (Generation)
 
 ## Description ##
-This surface meshing algorithm proceeds by creating a pair of triangles for each face of the **Cell** where the neighboring **Cell** have a different **Feature** id value. No attempt is made to mimic the operations of a MultiMaterial Marching Cubes algorithm. The meshing operation is extremely quick but can result in a surface mesh that is very "stair stepped". The user is encouraged to use a smoothing operation on the surface mesh.
+This **Filter** generates a **Triangle Geometry** from an **Image Geometry** that represents a surface mesh of the present **Features**. The algorithm proceeds by creating a pair of **Triangles** for each face of the **Cell** where the neighboring **Cell** have a different **Feature** Id value. The meshing operation is extremely quick but can result in a surface mesh that is very "stair stepped". The user is encouraged to use a [smoothing operation](@ref laplaciansmoothing) to reduce this "blockiness".
 
-
+For more information on surface meshing, visit the [tutorial](@ref tutorialsurfacemeshingtutorial).
 
 ---------------
 
-![Example output showing a single grain on the edge of a box. Note the sharp edge of the box.](QuickSurfaceMeshOutput.png)
-@image latex QuickSurfaceMeshOutput.png "Example output showing a single grain on the edge of a box. Note the sharp edge on the box." width=3in
+![Example Quick Mesh Output](QuickSurfaceMeshOutput.png)
+@image latex QuickSurfaceMeshOutput.png "Example Quick Mesh Output" width=6in
 
 ---------------
 
 ## Parameters ##
-None
+| Name | Type | Description |
+|------|------|-------------|
+| Transfer Phase Id | Bool | Whether to transfer the **Ensemble** Ids from the **Image Geometry** into the new **Triangle Geometry** |
 
-## Required DataContainers ##
-Voxel
-SurfaceMesh - This will create the Topology (Vertices and Triangles) of the surface mesh over writing anything that is currently in the SurfaceMeshDataContainer
-
+## Required Geometry ##
+Image
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell (Voxel) | GrainIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs |
+| Cell | Phases | Int | (1) | Specifies to which **Ensemble** each **Cell** belongs. Only needed if _Transfer Phase Id_ is checked |
 
 ## Created Arrays ##
-| Type | Default Name | Comment |
-|------|--------------|---------|
-| Vertex Array | SurfaceMeshNodes | The shared list of nodes that make up the mesh |
-| Triangle Array | SurfaceMeshTriangles | The List of triangles in the Surface Mesh |
-| Vertex | SurfaceMeshNodeType | N x 1 Col of unsigned char |
-
-
-## Authors ##
-
-
-
-
-
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Face | FaceLabels | Int | (2) | Specifies which **Features** are on either side of each **Face** |
+| Vertex| NodeTypes | Int | (1) | Specifies the type of node in the **Geometry** |
+| Face | Phases | Int | (1) | Specifies to which **Ensemble** each **Face** belongs. Only needed if _Transfer Phase Id_ is checked |
 
 ## License & Copyright ##
 

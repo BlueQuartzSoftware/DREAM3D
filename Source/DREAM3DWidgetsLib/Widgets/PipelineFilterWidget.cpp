@@ -909,5 +909,3 @@ void PipelineFilterWidget::toIdleState()
   m_FilterInputWidget->getVariablesTabContentsWidget()->setEnabled(true);
   deleteBtn->setEnabled(true);
 }
-
-

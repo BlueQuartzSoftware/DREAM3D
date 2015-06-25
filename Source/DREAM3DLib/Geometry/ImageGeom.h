@@ -193,6 +193,13 @@ class DREAM3DLib_EXPORT ImageGeom : public IGeometry
     virtual QString getGeometryTypeAsString();
 
     /**
+     * @brief getInfoString
+     * @return Returns a formatted string that contains general infomation about
+     * the instance of the object.
+     */
+    virtual QString getInfoString(DREAM3D::InfoStringFormat format);
+
+    /**
      * @brief getXdmfGridType
      * @return
      */

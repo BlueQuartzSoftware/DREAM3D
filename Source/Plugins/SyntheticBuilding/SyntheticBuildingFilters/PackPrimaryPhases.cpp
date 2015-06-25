@@ -54,6 +54,7 @@
 #include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "DREAM3DLib/StatsData/PrimaryStatsData.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "DREAM3DLib/Utilities/TimeUtilities.h"
 #include "DREAM3DLib/Geometry/ShapeOps/CubeOctohedronOps.h"
@@ -141,22 +142,11 @@ class AssignVoxelsGapsImpl
       DimType row = 0;
       DimType plane = 0;
       DimType index = 0;
-      float gaCopy[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-      float gaT[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
       float coords[3] = { 0.0f, 0.0f, 0.0f };
       float inside = 0.0f;
       float coordsRotated[3] = { 0.0f, 0.0f, 0.0f };
       int32_t* newowners = newownersPtr->getPointer(0);
       float* ellipfuncs = ellipfuncsPtr->getPointer(0);
-
-      // making a copy because the transpose function used later can't deal with the const nature of ga
-      for (int32_t i = 0; i < 3; i++)
-      {
-        for (int32_t j = 0; j < 3; j++)
-        {
-          gaCopy[i][j] = ga[i][j];
-        }
-      }
 
       DimType dim0_dim_1 = dims[0] * dims[1];
       for (DimType iter1 = xStart; iter1 < xEnd; iter1++)
@@ -188,8 +178,7 @@ class AssignVoxelsGapsImpl
             coords[0] = coords[0] - xc;
             coords[1] = coords[1] - yc;
             coords[2] = coords[2] - zc;
-            MatrixMath::Transpose3x3(gaCopy, gaT);
-            MatrixMath::Multiply3x3with3x1(gaT, coords, coordsRotated);
+            MatrixMath::Multiply3x3with3x1(ga, coords, coordsRotated);
             float axis1comp = coordsRotated[0] * Invradcur[0];
             float axis2comp = coordsRotated[1] * Invradcur[1];
             float axis3comp = coordsRotated[2] * Invradcur[2];
@@ -2040,8 +2029,7 @@ void PackPrimaryPhases::insert_feature(size_t gnum)
   float phi1 = m_AxisEulerAngles[3 * gnum];
   float PHI = m_AxisEulerAngles[3 * gnum + 1];
   float phi2 = m_AxisEulerAngles[3 * gnum + 2];
-  float ga[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-  float gaT[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+  float ga[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
   FOrientArrayType om(9, 0.0);
   FOrientTransformsType::eu2om(FOrientArrayType(phi1, PHI, phi2), om);
   om.toGMatrix(ga);
@@ -2084,8 +2072,7 @@ void PackPrimaryPhases::insert_feature(size_t gnum)
         coords[0] = coords[0] - xc;
         coords[1] = coords[1] - yc;
         coords[2] = coords[2] - zc;
-        MatrixMath::Transpose3x3(ga, gaT);
-        MatrixMath::Multiply3x3with3x1(gaT, coords, coordsRotated);
+        MatrixMath::Multiply3x3with3x1(ga, coords, coordsRotated);
         float axis1comp = coordsRotated[0] * OneOverRadcur1;
         float axis2comp = coordsRotated[1] * OneOverRadcur2;
         float axis3comp = coordsRotated[2] * OneOverRadcur3;
@@ -2203,7 +2190,7 @@ void PackPrimaryPhases::assign_voxels()
     float phi1 = m_AxisEulerAngles[3 * i];
     float PHI = m_AxisEulerAngles[3 * i + 1];
     float phi2 = m_AxisEulerAngles[3 * i + 2];
-    float ga[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+    float ga[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
     FOrientArrayType om(9, 0.0);
     FOrientTransformsType::eu2om(FOrientArrayType(phi1, PHI, phi2), om);
     om.toGMatrix(ga);

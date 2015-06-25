@@ -1,31 +1,31 @@
-
 Add Bad Data {#addbaddata}
-======
+=============
 
 ## Group (Subgroup) ##
-Synthetic Builder Filters (Misc)
+Synthetic Building (Misc)
 
 ## Description ##
-This filter adds "bad" data to a volume.  This filter is intended to add "realism" (i.e. more representative of an experimental dataset) to synthetic structures that don't have any "bad" **Cells**.  The user can choose to add "random noise" and/or "noise" along **Feature** boundaries.  If they choose to add either kind of "noise", the user must then set the volume fraction of **Cells** to set as "bad".  The volume fractions entered by the user apply to only the set of **Cells** that the "noise" would affect.  For example, if the user chose *0.2* for the volume fraction of boundary "noise", then each boundary **Cell** would have a *20%* chance of being changed to a "bad" **Cell** and all other **Cells** would have a *0%* chance of being changed.
+This Filter adds "bad" data to an **Image Geometry**.  This Filter is intended to add "realism" (i.e., more representative of an experimental dataset) to synthetic structures that don not have any "bad" **Cells**.  The user can choose to add "random noise" and/or "noise" along **Feature** boundaries. For a given type of noise, the user must then set the volume fraction of **Cells** to set as "bad".  The volume fractions entered apply to only the set of **Cells** that the noise would affect.  For example, if the user chose *0.2* for the volume fraction of boundary "noise", then each boundary **Cell** would have a *20%* chance of being changed to a "bad" **Cell** and all other **Cells** would have a *0%* chance of being changed. In order to compute noise over the **Feature** boundaries, the **Filter** needs the [Manhattan distances](@ref findeuclideandistmap) for each **Cell** from the **Feature** boundaries
 
+All **Attribute Arrays** that belong to the same **Attribute Matrix** as the selected _Feature Boundary Euclidean Distances_ array will have noise added to them. To flag a value as "noise", this **Filter** will initialize a selected _tuple_ in the **Attribute Array** to **0**. Note that a zero value _may not_ necessarily represent a "bad" data point in any kind of **Attribute Array**.
+
+For more information on synthetic building, visit the [tutorial](@ref tutorialsyntheticsingle).
 
 ## Parameters ##
+| Name | Type | Description |
+|------|------| ----------- |
+| Add Random Noise | Bool | Whether to add random Poisson noise to the whole volume |
+| Volume Fraction Random Noise | Float | Fraction of noise to add over the whole volume |
+| Add Boundary Noise | Bool | Whether to add noise to the boundary **Cells** |
+| Volume Fraction Boundary Noise | Float | Fraction of noise to add to the boundary **Cells** |
 
-| Name | Type |
-|------|------|
-| Add Random Noise | Boolean |
-| Volume Fraction Random Noise | float |
-| Add Boundary Noise | Boolean |
-| Volume Fraction Boundary Noise | float |
-
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Image
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | GBEuclideanDistances |  |  | Find Euclidean Distance Map (Statistics) |
+| Cell | GBEuclideanDistances | Float | (1) | Manhattan distances of each **Cell** to the closest **Feature** boundary |
 
 ## Created Arrays ##
 None

@@ -44,7 +44,6 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArrayFilter.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/HDF5/H5DataArrayWriter.hpp"
 #include "DREAM3DLib/HDF5/H5DataArrayReader.h"
@@ -1108,6 +1107,59 @@ class DataArray : public IDataArray
       out << "      </DataItem>" << "\n";
       out << "    </Attribute>" << "\n";
       return 1;
+    }
+
+
+    /**
+     * @brief getInfoString
+     * @return Returns a formatted string that contains general infomation about
+     * the instance of the object.
+     */
+    virtual QString getInfoString(DREAM3D::InfoStringFormat format)
+    {
+
+      QLocale usa(QLocale::English, QLocale::UnitedStates);
+
+      QString info;
+      QTextStream ss (&info);
+      if(format == DREAM3D::HtmlFormat)
+      {
+        ss << "<html><head></head>\n";
+        ss << "<body>\n";
+        ss << "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
+        ss << "<tbody>\n";
+        ss << "<tr bgcolor=\"#D3D8E0\"><th colspan=2>Attribute Array Info</th></tr>";
+
+        ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Name:</th><td>" << getName() << "</td></tr>";
+
+
+        ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Type:</th><td> DataArray&lt;" << getTypeAsString() << "&gt;</td></tr>";
+        QString numStr = usa.toString(static_cast<qlonglong>(getNumberOfTuples() ));
+        ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Number of Tuples:</th><td>" << numStr << "</td></tr>";
+
+        QString compDimStr = "(";
+        for(int i = 0; i < m_CompDims.size(); i++)
+        {
+          compDimStr = compDimStr + QString::number(m_CompDims[i]);
+          if(i < m_CompDims.size() - 1) {
+             compDimStr = compDimStr + QString(", ");
+          }
+        }
+        compDimStr = compDimStr + ")";
+        ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Component Dimensions:</th><td>" << compDimStr << "</td></tr>";
+        numStr = usa.toString(static_cast<qlonglong>(m_Size));
+        ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Total Elements:</th><td>" << numStr << "</td></tr>";
+        numStr = usa.toString(static_cast<qlonglong>(m_Size * sizeof(T)));
+        ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Total Memory Required:</th><td>" << numStr << "</td></tr>";
+        ss << "</tbody></table>\n";
+        ss << "<br/>";
+        ss << "</body></html>";
+      }
+      else
+      {
+
+      }
+      return info;
     }
 
     /**

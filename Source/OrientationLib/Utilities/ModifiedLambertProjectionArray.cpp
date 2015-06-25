@@ -32,12 +32,9 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
 #include "ModifiedLambertProjectionArray.h"
 
 #include <QtCore/QList>
-
-
 
 
 #include "H5Support/QH5Utilities.h"
@@ -56,6 +53,123 @@ ModifiedLambertProjectionArray::ModifiedLambertProjectionArray() :
 // -----------------------------------------------------------------------------
 ModifiedLambertProjectionArray::~ModifiedLambertProjectionArray()
 {
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ModifiedLambertProjectionArray::getXdmfTypeAndSize(QString& xdmfTypeName, int& precision)
+{
+  xdmfTypeName = getNameOfClass();
+  precision = 0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ModifiedLambertProjectionArray::getTypeAsString() { return "ModifiedLambertProjectionArray"; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer ModifiedLambertProjectionArray::createNewArray(size_t numElements, int rank, size_t* dims, const QString& name, bool allocate)
+{
+  return ModifiedLambertProjectionArray::NullPointer();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer ModifiedLambertProjectionArray::createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name, bool allocate)
+{
+  return ModifiedLambertProjectionArray::NullPointer();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer ModifiedLambertProjectionArray::createNewArray(size_t numElements, QVector<size_t> dims, const QString& name, bool allocate)
+{
+  return ModifiedLambertProjectionArray::NullPointer();
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool ModifiedLambertProjectionArray::isAllocated()
+{
+  return m_IsAllocated;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ModifiedLambertProjectionArray::clearAll()
+{
+  m_ModifiedLambertProjectionArray.clear();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ModifiedLambertProjectionArray::setModifiedLambertProjection(int index, ModifiedLambertProjection::Pointer ModifiedLambertProjection)
+{
+  if(index >= static_cast<int>(m_ModifiedLambertProjectionArray.size()))
+  {
+    size_t old = m_ModifiedLambertProjectionArray.size();
+    m_ModifiedLambertProjectionArray.resize(index + 1);
+    // Initialize with zero length Vectors
+    for (int i = old; i < m_ModifiedLambertProjectionArray.size(); ++i)
+    {
+      m_ModifiedLambertProjectionArray[i] = ModifiedLambertProjection::New();
+    }
+  }
+  m_ModifiedLambertProjectionArray[index] = ModifiedLambertProjection;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ModifiedLambertProjectionArray::fillArrayWithNewModifiedLambertProjection(size_t n)
+{
+  m_ModifiedLambertProjectionArray.resize(n);
+  for (size_t i = 0; i < n; ++i)
+  {
+    if (m_ModifiedLambertProjectionArray[i].get() == NULL)
+    {
+      m_ModifiedLambertProjectionArray[i] = ModifiedLambertProjection::New();
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+ModifiedLambertProjection::Pointer ModifiedLambertProjectionArray::getModifiedLambertProjection(int idx)
+{
+#ifndef NDEBUG
+  if(m_ModifiedLambertProjectionArray.size() > 0)
+  {
+    BOOST_ASSERT(idx < static_cast<int>(m_ModifiedLambertProjectionArray.size()));
+  }
+#endif
+  return m_ModifiedLambertProjectionArray[idx];
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+ModifiedLambertProjection::Pointer ModifiedLambertProjectionArray::operator[](int idx)
+{
+#ifndef NDEBUG
+  if(m_ModifiedLambertProjectionArray.size() > 0)
+  {
+    BOOST_ASSERT(idx < static_cast<int>(m_ModifiedLambertProjectionArray.size()));
+  }
+#endif
+  return m_ModifiedLambertProjectionArray[idx];
 }
 
 // -----------------------------------------------------------------------------
@@ -351,7 +465,7 @@ void AppendRowToH5Dataset(hid_t gid, const QString& dsetName, int lambertSize, d
   newDims[0] = currentDims[0] + 1;
   newDims[1] = currentDims[1]; // Number of columns
 
-//  printf("dataset '%s' rank %d, size %lu x %lu \n", dsetName.toLatin1().data(), rank, (unsigned long)(newDims[0]), (unsigned long)(newDims[1]));
+  //  printf("dataset '%s' rank %d, size %lu x %lu \n", dsetName.toLatin1().data(), rank, (unsigned long)(newDims[0]), (unsigned long)(newDims[1]));
   status = H5Dset_extent(dataset, newDims);
   if (status < 0)
   {
@@ -368,8 +482,8 @@ void AppendRowToH5Dataset(hid_t gid, const QString& dsetName, int lambertSize, d
   /*  printf("dataset '%s' rank %d, dims1 %lu x %lu \n", dsetName, rank, (unsigned long)(dims1[0]), (unsigned long)(dims1[1]));*/
   status = H5Sselect_hyperslab(filespace, H5S_SELECT_SET, offset, NULL, hyperDims, NULL);
   /* Define a Memory Space*/
-//  currentDims[0] = 1;
-//  currentDims[1] = currentDims[1] / 2;
+  //  currentDims[0] = 1;
+  //  currentDims[1] = currentDims[1] / 2;
   dataspace = H5Screate_simple(rank, hyperDims, NULL);
   /* Write the data to the hyperslab.*/
   /*  printf("dataset '%s' rank %d, dims %lu x %lu \n", dsetName, rank, (unsigned long)(dims[0]), (unsigned long)(dims[1]));*/
@@ -418,9 +532,9 @@ void Create2DExpandableDataset(hid_t gid, const QString& dsetName, int lambertSi
   hsize_t hyperDims[2] =  { 1ULL, static_cast<hsize_t>(lambertSize) };
   double fillvalue = -1.0;
   int rank = 2;
-//  int i = 0;
-//  int strSize = 0;
-//  char buffer[32];
+  //  int i = 0;
+  //  int strSize = 0;
+  //  char buffer[32];
 
   if (lambertSize == 1)
   {
@@ -438,7 +552,7 @@ void Create2DExpandableDataset(hid_t gid, const QString& dsetName, int lambertSi
   status = H5Pset_fill_value(cparms, H5T_NATIVE_DOUBLE, &fillvalue);
 
   /* Create a new dataset within the file using cparms creation properties.*/
-//  dataset = H5Dcreate(gid, dsetName, H5T_NATIVE_DOUBLE, dataspace, cparms, H5P_DEFAULT, H5P_DEFAULT);
+  //  dataset = H5Dcreate(gid, dsetName, H5T_NATIVE_DOUBLE, dataspace, cparms, H5P_DEFAULT, H5P_DEFAULT);
   dataset = H5Dcreate2(gid, dsetName.toLatin1().data(), H5T_NATIVE_DOUBLE, dataspace, H5P_DEFAULT, cparms, H5P_DEFAULT);
   /*  Extend the dataset. This call assures that dataset is at least 1 */
   size[0] = 1; // Single Row
@@ -567,4 +681,58 @@ int ModifiedLambertProjectionArray::readH5Data(hid_t parentId)
   err |= QH5Utilities::closeHDF5Object(gid);
 
   return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int ModifiedLambertProjectionArray::writeXdmfAttribute(QTextStream& out, int64_t* volDims, const QString& hdfFileName,
+                                                       const QString& groupPath, const QString& labelb)
+{
+  out << "<!-- Xdmf is not supported for " << getNameOfClass() << " with type " << getTypeAsString() << " --> ";
+  return -1;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ModifiedLambertProjectionArray::getInfoString(DREAM3D::InfoStringFormat format)
+{
+  QString info;
+  QTextStream ss (&info);
+  if(format == DREAM3D::HtmlFormat)
+  {
+    ss << "<html><head></head>\n";
+    ss << "<body>\n";
+    ss << "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
+    ss << "<tbody>\n";
+    ss << "<tr bgcolor=\"#D3D8E0\"><th colspan=2>Attribute Array Info</th></tr>";
+
+    ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Name:</th><td>" << getName() << "</td></tr>";
+
+
+    ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Type:</th><td>" << getTypeAsString() << "</td></tr>";
+    ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Attribute Array Count:</th><td>" << getNumberOfTuples() << "</td></tr>";
+
+    //        QString compDimStr = "(";
+    //        for(int i = 0; i < m_CompDims.size(); i++)
+    //        {
+    //          compDimStr = compDimStr + QString::number(m_CompDims[i]);
+    //          if(i < m_CompDims.size() - 1) {
+    //             compDimStr = compDimStr + QString(", ");
+    //          }
+    //        }
+    //        compDimStr = compDimStr + ")";
+    //        ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Component Dimensions:</th><td>" << compDimStr << "</td></tr>";
+    //        ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Total Elements:</th><td>" << m_Size << "</td></tr>";
+
+    ss << "</tbody></table>\n";
+    ss << "<br/>";
+    ss << "</body></html>";
+  }
+  else
+  {
+
+  }
+  return info;
 }

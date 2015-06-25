@@ -314,6 +314,13 @@ class DREAM3DLib_EXPORT TriangleGeom : public IGeometry2D
     virtual int writeXdmf(QTextStream& out, QString dcName, QString hdfFileName);
 
     /**
+     * @brief getInfoString
+     * @return Returns a formatted string that contains general infomation about
+     * the instance of the object.
+     */
+    virtual QString getInfoString(DREAM3D::InfoStringFormat format);
+
+    /**
      * @brief readGeometryFromHDF5
      * @param parentId
      * @param preflight

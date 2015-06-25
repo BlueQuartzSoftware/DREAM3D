@@ -690,3 +690,38 @@ QVector<DataArrayPath> DataContainer::getAllDataArrayPaths()
 
   return paths;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString DataContainer::getInfoString(DREAM3D::InfoStringFormat format)
+{
+  QString info;
+  QTextStream ss (&info);
+  if(format == DREAM3D::HtmlFormat)
+  {
+    ss << "<html><head></head>\n";
+    ss << "<body>\n";
+    ss << "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
+    ss << "<tbody>\n";
+    ss << "<tr bgcolor=\"#D3D8E0\"><th colspan=2>Data Container Info</th></tr>";
+
+    ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Name:</th><td>" << getName() << "</td></tr>";
+    ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Attribute Matrix Count:</th><td>" << getNumAttributeMatrices() << "</td></tr>";
+    ss << "<tr><td></td><td></td></tr>";
+    if(getGeometry().get() != NULL) {
+      ss << getGeometry()->getInfoString(DREAM3D::HtmlFormat);
+    }
+
+    ss << "</tbody></table>\n";
+    ss << "<br/>";
+    ss << "</body></html>";
+  }
+  else
+  {
+
+  }
+  return info;
+}
+
+

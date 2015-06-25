@@ -42,64 +42,27 @@ class DREAM3DWidgetsLib_EXPORT DataContainerArrayWidget : public QWidget, privat
 
     void initializeWithFilter(AbstractFilter* filter);
 
-    void updateModelFromProxy(DataContainerArrayProxy& proxy);
+    void updateModelFromProxy(DataContainerArray* dc);
 
 
   protected slots:
+
     void updateView();
 
+    void preflightCompleted();
+
+    void dcaProxyView_indexChanged(const QModelIndex & current, const QModelIndex & previous);
+
+    void on_dcaProxyView_updatePreviewWidget(const QModelIndex & index);
+
+
+
   protected:
-    QList<QStandardItem*> findChildItems(QStandardItem* parent, QString text);
-    void removeNonExistantChildren(QStandardItem* parent, QStringList possibleNames);
+
     void clearStandardItemModel();
 
   private:
     AbstractFilter*     m_Filter;
-
-
-    template<typename T>
-    QStandardItem* getColumnItem(QStandardItem* parent, QString name, T& proxy)
-    {
-      QStandardItem* item = NULL;
-      QList<QStandardItem*> items = findChildItems(parent, name);
-      if (items.count() == 0)
-      {
-        // Create a new item because we did not find this item already
-        item = new QStandardItem(proxy.name);
-        //item->setCheckState( (proxy.flag == 2 ? Qt::Checked : Qt::Unchecked) );
-        //item->setCheckable(false);
-        parent->appendRow(item);
-      }
-      else if (items.count() > 1)
-      {
-        item = NULL;
-      }
-      else
-      {
-        item = items.at(0);
-        //item->setCheckState( (proxy.flag == 2 ? Qt::Checked : Qt::Unchecked) );
-        //item->setCheckable(false);
-      }
-
-      return item;
-    }
-
-
-    template<typename T>
-    QStandardItem* updateProxyItem(QStandardItem* parent, QString name, T& proxy)
-    {
-      QStandardItem* item = NULL;
-      if(NULL == parent) { return item; }
-      QList<QStandardItem*> items = findChildItems(parent, name);
-      if (items.count() == 1)
-      {
-        item = items.at(0);
-        //   qDebug() << parent->text() << " | " << item->text() << " ::"  << proxy.flag << " (Going to Change to) " << item->checkState();
-        proxy.flag = item->checkState();
-      }
-
-      return item;
-    }
 
 
     DataContainerArrayWidget(const DataContainerArrayWidget&); // Copy Constructor Not Implemented

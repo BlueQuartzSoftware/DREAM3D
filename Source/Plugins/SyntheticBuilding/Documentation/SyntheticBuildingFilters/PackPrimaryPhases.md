@@ -2,7 +2,7 @@ Pack Primary Phases {#packprimaryphases}
 =============
 
 ## Group (Subgroup) ##
-Synthetic Builder Filters (Packing)
+Synthetic Building (Packing)
 
 ## Description ##
 If there are primary *Phases Types* in the volume, then this Filter will place primary **Features** with the sizes, shapes, physical orientations and locations corresponding to the goal statistics.   All primary phase types will placed at once.
@@ -17,20 +17,20 @@ The user can specify if they want to use a *mask* when building the volume.  If 
 
 The user can also choose to read in a list of **Features** with their locations and size and shape descriptions already determined.  If this option is choosen, the Filter will skip the steps of generating the **Features** and iteratively placing them and will begin *growing* the **Features** defined in list.  The format of the *Feature Input File* is:
 
-~~~~~~~~~~~~~~~
-Number of Features
-Phase, X, Y, Z, A, B, C, O3, Phi1, PHI, Phi2
-Phase, X, Y, Z, A, B, C, O3, Phi1, PHI, Phi2
-Phase, X, Y, Z, A, B, C, O3, Phi1, PHI, Phi2
-.
-.
-.
-Phase, X, Y, Z, A, B, C, O3, Phi1, PHI, Phi2
-~~~~~~~~~~~~~~~
+
+	Number of Features
+	Phase, X, Y, Z, A, B, C, O3, Phi1, PHI, Phi2
+	Phase, X, Y, Z, A, B, C, O3, Phi1, PHI, Phi2
+	Phase, X, Y, Z, A, B, C, O3, Phi1, PHI, Phi2
+	.
+	.
+	.
+	Phase, X, Y, Z, A, B, C, O3, Phi1, PHI, Phi2
+
 
 where (X,Y,Z) are the coordinates of the **Feature**'s centroid, (A,B,C) are the major, mid and minor principal semiaxis lengths of the **Feature**, O3 is the Omega 3 value of the **Feature** and (Phi1,PHI,Phi2) are the *Euler angles* that describe the **Features**'s orientation in the sample reference frame.
 
-
+For more information on synthetic building, visit the [tutorial](@ref tutorialsyntheticsingle).
 
 ## Parameters ##
 | Name | Type | Description |
@@ -43,16 +43,16 @@ where (X,Y,Z) are the coordinates of the **Feature**'s centroid, (A,B,C) are the
 | Goal Attributes CSV File | File Path | Path to the file that will hold the goal attributes of the generated **Features** (only necessary if *Write Goal Attributes* is *true*) |
 
 ## Required Geometry ##
-Image / Rectilinear Grid
+Image
 
 ## Required Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
-| Cell     | Phases            | Int | (1) | Specifies the **Ensemble** of the **Cell** |
-| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs. |
-| Ensemble | PhaseTypes | Int | (1) | Enumeration specifying the type of phase of each **Ensemble** (Primary=0, Precipitate=1, Transformation=2, Matrix=3, Boundary=4, Unknown=999) |
-| Ensemble | ShapeTypes | Int | (1) | Enumeration specifying the type of shape to place for each **Ensemble** (Ellipsoid=0, Superellipsoid=1, Cube-Octahedron=2, Cylinder=3, Unknown=999) |
-| Ensemble | Statistics | Statistics Object | (1) | Statistics objects (depending on *Phase Type*) that store fits to descriptors like: size distribution, shape distribution, neighbor distribution, ODF, MDF, etc) |
+| Cell     | Phases            | Int | (1) | Specifies to which **Ensemble** each **Cell** belongs |
+| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs |
+| Ensemble | PhaseTypes | Int | (1) | Enumeration specifying the type of phase of each **Ensemble**  |
+| Ensemble | ShapeTypes | Int | (1) | Enumeration specifying the type of shape to place for each **Ensemble** |
+| Ensemble | Statistics | Statistics Object | (1) | Statistics objects (depending on *Phase Type*) that store fits to descriptors such as size distribution, shape distribution, neighbor distribution, ODF, MDF, etc. |
 
 ## Created Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |

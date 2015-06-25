@@ -130,6 +130,11 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     virtual IGeometry::Pointer getGeometry();
 
     /**
+     * @param format The format of the string to be returned.
+     */
+    virtual QString getInfoString(DREAM3D::InfoStringFormat format);
+
+    /**
     * @brief Adds/overwrites the data for a named array
     * @param name The name that the array will be known by
     * @param data The IDataArray::Pointer that will hold the data

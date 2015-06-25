@@ -1,44 +1,39 @@
 Jumble Orientations {#jumbleorientations}
-======
+=============
 
 ## Group (Subgroup) ##
-Synthetic Builder Filters (Crystallography)
+Synthetic Building (Crystallography)
 
 ## Description ##
-This filter "jumbles" the orientations of the **Features** amongst each other.  The filter cycles through all the **Features**, randomly choosing another **Feature** to swap orientations with.  On each swap, it is checked that the randomly selected **Feature** is of the same phase.
+This Filter "jumbles" the orientations of a set of **Features** amongst each other. The algorithm for this procedure is as follows:
 
-Note: by cycling through the **Features**, it is garaunteed that each **Feature** will be swapped at least once, but it could actually be swapped multiple times if a later **Feature** randomly selects it to swap with.
+1. For each **Feauture**, select another random **Feature** belonging to the same **Ensemble**
+2. Swap the orientations at both the **Feature** and **Element** level of the current **Feature** and the randomly selected **Feature**
+3. After iterating through all **Features**, recompute the average orientations for each **Feature**
 
+By cycling through all the **Features**, it is guaranteed that each **Feature** will be swapped at least once, but it may be swapped multiple times if a later **Feature** randomly selects it to swap with.
+
+For more information on synthetic building, visit the [tutorial](@ref tutorialsyntheticsingle).
 
 ## Parameters ##
 None
 
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Not Applicable
+
 
 ## Required Arrays ##
-
-## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
-|------|--------------|-------------|---------|-----|
-| Cell | GrainIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
-| Feature | FeaturePhases | Phase Id (int) specifying the phase of the **Feature**| | Find Feature Phases (Generic), Read Feature Info File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|------|----------------------|-------------|
+| Element | FeaturesIds | Int | (1) | Specifies to which **Feature** each **Element** belongs |
+| Feature | EulerAngles | Float | (3) | Three angles defining the orientation of the **Feature** in Bunge convention (Z-X-Z) |
+| Feature | Phases | Int | (1) |  Specifies to which **Ensemble** each **Cell** belongs |
 
 ## Created Arrays ##
-
-| Type | Default Name | Comment |
-|------|--------------|---------|
-| Cell | CellEulerAngles |  |
-| Feature | AvgQuats |  |
-| Feature | FeatureEulerAngles |  |
-
-##Authors##
-
-
-
-
-
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|------|----------------------|-------------|
+| Element | EulerAngles | Float | (3) | Three angles defining the orientation of the **Element** in Bunge convention (Z-X-Z) |
+| Feature | AvgQuats | Float | (4) | The average orientation of each **Feature** in quaternion representation |
 
 ## License & Copyright ##
 

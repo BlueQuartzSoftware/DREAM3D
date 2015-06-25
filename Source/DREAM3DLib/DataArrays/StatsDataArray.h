@@ -32,25 +32,18 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #ifndef _STATSDATAARRAY_H_
 #define _STATSDATAARRAY_H_
 
-#include <QtCore/QString>
-#include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/StatsData/StatsData.h"
-#include "DREAM3DLib/StatsData/PrimaryStatsData.h"
-#include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
-#include "DREAM3DLib/StatsData/TransformationStatsData.h"
-#include "DREAM3DLib/StatsData/BoundaryStatsData.h"
-#include "DREAM3DLib/StatsData/MatrixStatsData.h"
 
-/*
- *
+
+/**
+ * @brief The StatsDataArray class
  */
 class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
 {
@@ -62,198 +55,108 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
 
     virtual ~StatsDataArray();
 
-
     /**
      * @brief Static constructor
      * @param numElements The number of elements in the internal array.
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    static Pointer CreateArray(size_t numElements, const QString& name, bool allocate = true)
-    {
-      if (name.isEmpty() == true)
-      {
-        return NullPointer();
-      }
-      StatsDataArray::Pointer ptr = StatsDataArray::New();
-      ptr->setName(name);
-      std::vector<unsigned int> phase_types(numElements, DREAM3D::PhaseType::UnknownPhaseType);
-      if(allocate) { ptr->fillArrayWithNewStatsData(numElements, &(phase_types.front()) ); }
-      return ptr;
-    }
+    static Pointer CreateArray(size_t numElements, const QString& name, bool allocate = true);
 
-    static Pointer CreateArray(size_t numTuples, int rank, size_t* dims, const QString& name, bool allocate = true)
-    {
-      if (name.isEmpty() == true)
-      {
-        return NullPointer();
-      }
-      StatsDataArray::Pointer ptr = StatsDataArray::New();
-      ptr->setName(name);
-      std::vector<unsigned int> phase_types(numTuples, DREAM3D::PhaseType::UnknownPhaseType);
-      if(allocate) { ptr->fillArrayWithNewStatsData(numTuples, &(phase_types.front()) ); }
-      return ptr;
-    }
+    /**
+     * @brief CreateArray
+     * @param numTuples
+     * @param rank
+     * @param dims
+     * @param name
+     * @param allocate
+     * @return
+     */
+    static Pointer CreateArray(size_t numTuples, int rank, size_t* dims, const QString& name, bool allocate = true);
 
-    static Pointer CreateArray(size_t numTuples, std::vector<size_t> cDims, const QString& name, bool allocate = true)
-    {
-      if (name.isEmpty() == true)
-      {
-        return NullPointer();
-      }
-      StatsDataArray::Pointer ptr = StatsDataArray::New();
-      ptr->setName(name);
-      std::vector<unsigned int> phase_types(numTuples, DREAM3D::PhaseType::UnknownPhaseType);
-      if(allocate) { ptr->fillArrayWithNewStatsData(numTuples, &(phase_types.front()) ); }
-      return ptr;
-    }
+    /**
+     * @brief CreateArray
+     * @param numTuples
+     * @param cDims
+     * @param name
+     * @param allocate
+     * @return
+     */
+    static Pointer CreateArray(size_t numTuples, std::vector<size_t> cDims, const QString& name, bool allocate = true);
 
-    static Pointer CreateArray(size_t numTuples, QVector<size_t> cDims, const QString& name, bool allocate = true)
-    {
-      if (name.isEmpty() == true)
-      {
-        return NullPointer();
-      }
-      StatsDataArray::Pointer ptr = StatsDataArray::New();
-      ptr->setName(name);
-      std::vector<unsigned int> phase_types(numTuples, DREAM3D::PhaseType::UnknownPhaseType);
-      if(allocate) { ptr->fillArrayWithNewStatsData(numTuples, &(phase_types.front()) ); }
-      return ptr;
-    }
+    /**
+     * @brief CreateArray
+     * @param numTuples
+     * @param cDims
+     * @param name
+     * @param allocate
+     * @return
+     */
+    static Pointer CreateArray(size_t numTuples, QVector<size_t> cDims, const QString& name, bool allocate = true);
 
-    static Pointer CreateArray(QVector<size_t> tDims, QVector<size_t> cDims, const QString& name, bool allocate = true)
-    {
-      if (name.isEmpty() == true)
-      {
-        return NullPointer();
-      }
-      size_t numTuples = tDims[0];
-      qint32 size = tDims.size();
-      for(qint32 iter = 1; iter < size; iter++)
-      {
-        numTuples *= tDims[iter];
-      }
-      StatsDataArray::Pointer ptr = StatsDataArray::New();
-      ptr->setName(name);
-      std::vector<unsigned int> phase_types(numTuples, DREAM3D::PhaseType::UnknownPhaseType);
-      if(allocate) { ptr->fillArrayWithNewStatsData(numTuples, &(phase_types.front()) ); }
-      return ptr;
-    }
+    /**
+     * @brief CreateArray
+     * @param tDims
+     * @param cDims
+     * @param name
+     * @param allocate
+     * @return
+     */
+    static Pointer CreateArray(QVector<size_t> tDims, QVector<size_t> cDims, const QString& name, bool allocate = true);
 
     /**
      * @brief GetTypeName Returns a string representation of the type of data that is stored by this class. This
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void getXdmfTypeAndSize(QString& xdmfTypeName, int& precision)
-    {
-      xdmfTypeName = getNameOfClass();
-      precision = 0;
-    }
+    void getXdmfTypeAndSize(QString& xdmfTypeName, int& precision);
 
     /**
      * @brief getTypeAsString
      * @return
      */
-    virtual QString getTypeAsString() { return "StatsDataArray"; }
+    virtual QString getTypeAsString();
 
 
     DREAM3D_INSTANCE_PROPERTY(QVector<StatsData::Pointer>, StatsDataArray)
 
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name, bool allocate = true)
-    {
-      return StatsDataArray::New();
-    }
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name, bool allocate = true);
 
-    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name, bool allocate = true)
-    {
-      return StatsDataArray::New();
-    }
+    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name, bool allocate = true);
 
-    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<size_t> dims, const QString& name, bool allocate = true)
-    {
-      return StatsDataArray::New();
-    }
+    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<size_t> dims, const QString& name, bool allocate = true);
 
     /**
     * @brief
     */
-    virtual bool isAllocated()
-    {
-      return m_IsAllocated;
-    }
+    virtual bool isAllocated();
 
     /**
      *
      */
-    void clearAll()
-    {
-      m_StatsDataArray.clear();
-    }
+    void clearAll();
 
     /**
      *
      */
-    void setStatsData(int index, StatsData::Pointer statsData)
-    {
-      if(index >= static_cast<int>(m_StatsDataArray.size()))
-      {
-        size_t old = m_StatsDataArray.size();
-        m_StatsDataArray.resize(index + 1);
-        // Initialize with zero length Vectors
-        for (int i = old; i < m_StatsDataArray.size(); ++i)
-        {
-          m_StatsDataArray[i] = StatsData::New();
-        }
-      }
-      m_StatsDataArray[index] = statsData;
-    }
+    void setStatsData(int index, StatsData::Pointer statsData);
 
     /**
     *
     */
-    void fillArrayWithNewStatsData(size_t n, unsigned int* phase_types)
-    {
-      m_StatsDataArray.resize(n);
-      for (size_t i = 0; i < n; ++i)
-      {
-        if (phase_types != NULL)
-        {
-          if(phase_types[i] == DREAM3D::PhaseType::PrimaryPhase) { m_StatsDataArray[i] = PrimaryStatsData::New(); }
-          else if(phase_types[i] == DREAM3D::PhaseType::PrecipitatePhase) { m_StatsDataArray[i] = PrecipitateStatsData::New(); }
-          else if(phase_types[i] == DREAM3D::PhaseType::TransformationPhase) { m_StatsDataArray[i] = TransformationStatsData::New(); }
-          else if(phase_types[i] == DREAM3D::PhaseType::BoundaryPhase) { m_StatsDataArray[i] = BoundaryStatsData::New(); }
-          else if(phase_types[i] == DREAM3D::PhaseType::MatrixPhase) { m_StatsDataArray[i] = MatrixStatsData::New(); }
-          else { m_StatsDataArray[i] = StatsData::New(); }
-        }
-        if(phase_types == NULL) { m_StatsDataArray[i] = StatsData::New(); }
-      }
-    }
+    void fillArrayWithNewStatsData(size_t n, unsigned int* phase_types);
 
     /**
      *
      */
-    StatsData::Pointer getStatsData(int idx)
-    {
-#ifndef NDEBUG
-      if(m_StatsDataArray.size() > 0)
-      {
-        BOOST_ASSERT(idx < static_cast<int>(m_StatsDataArray.size()));
-      }
-#endif
-      return m_StatsDataArray[idx];
-    }
+    StatsData::Pointer getStatsData(int idx);
 
-    StatsData::Pointer operator[](int idx)
-    {
-#ifndef NDEBUG
-      if(m_StatsDataArray.size() > 0)
-      {
-        BOOST_ASSERT(idx < static_cast<int>(m_StatsDataArray.size()));
-      }
-#endif
-      return m_StatsDataArray[idx];
-    }
+    /**
+     * @brief operator []
+     * @param idx
+     * @return
+     */
+    StatsData::Pointer operator[](int idx);
 
     /* **************** This is the interface for the IDataArray Class which MUST
      *  Be implemented. Most of it is useless and will simply ASSERT if called. */
@@ -300,7 +203,16 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
      */
     virtual size_t getSize();
 
+    /**
+     * @brief getNumberOfComponents
+     * @return
+     */
     virtual int getNumberOfComponents();
+
+    /**
+     * @brief getComponentDimensions
+     * @return
+     */
     virtual QVector<size_t> getComponentDimensions();
 
     /**
@@ -330,6 +242,11 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
      */
     virtual int copyTuple(size_t currentPos, size_t newPos);
 
+    /**
+     * @brief reorderCopy
+     * @param newOrderMap
+     * @return
+     */
     virtual IDataArray::Pointer reorderCopy(QVector<size_t> newOrderMap);
 
     /**
@@ -361,7 +278,20 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
      */
     virtual int32_t resize(size_t numTuples);
 
+    /**
+     * @brief printTuple
+     * @param out
+     * @param i
+     * @param delimiter
+     */
     virtual void printTuple(QTextStream& out, size_t i, char delimiter = ',');
+
+    /**
+     * @brief printComponent
+     * @param out
+     * @param i
+     * @param j
+     */
     virtual void printComponent(QTextStream& out, size_t i, int j);
 
     /**
@@ -370,6 +300,12 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
      * @return
      */
     virtual int writeH5Data(hid_t parentId, QVector<size_t> tDims);
+
+    /**
+     * @brief readH5Data
+     * @param parentId
+     * @return
+     */
     virtual int readH5Data(hid_t parentId);
 
     /**
@@ -381,11 +317,14 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
      * @return
      */
     virtual int writeXdmfAttribute(QTextStream& out, int64_t* volDims, const QString& hdfFileName,
-                                   const QString& groupPath, const QString& labelb)
-    {
-      out << "<!-- Xdmf is not supported for " << getNameOfClass() << " with type " << getTypeAsString() << " --> ";
-      return -1;
-    }
+                                   const QString& groupPath, const QString& labelb);
+
+    /**
+     * @brief getInfoString
+     * @param format
+     * @return
+     */
+    virtual QString getInfoString(DREAM3D::InfoStringFormat format);
 
   protected:
     StatsDataArray();

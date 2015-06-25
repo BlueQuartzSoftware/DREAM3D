@@ -715,6 +715,36 @@ int ImageGeom::writeXdmf(QTextStream &out, QString dcName, QString hdfFileName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QString ImageGeom::getInfoString(DREAM3D::InfoStringFormat format)
+{
+  QString info;
+  QTextStream ss (&info);
+
+  int64_t volDims[3] =
+  { static_cast<int64_t>(getXPoints()), static_cast<int64_t>(getYPoints()), static_cast<int64_t>(getZPoints()) };
+  float spacing[3] =
+  { getXRes(), getYRes(), getZRes() };
+  float origin[3] =
+  { 0.0f, 0.0f, 0.0f };
+  getOrigin(origin);
+
+  if(format == DREAM3D::HtmlFormat)
+  {
+    ss << "<tr bgcolor=\"#D3D8E0\"><th colspan=2>Image Geometry Info</th></tr>";
+    ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Dimensions:</th><td>" << volDims[0] << " x " << volDims[1] << " x " << volDims[1] << "</td></tr>";
+    ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Origin:</th><td>" << origin[0] << ", " << origin[1] << ", " << origin[2] << "</td></tr>";
+    ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Spacing/Resolution:</th><td>" << spacing[0] << ", " << spacing[1] << ", " << spacing[2] << "</td></tr>";
+  }
+  else
+  {
+
+  }
+  return info;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int ImageGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
 {
   int err = 0;

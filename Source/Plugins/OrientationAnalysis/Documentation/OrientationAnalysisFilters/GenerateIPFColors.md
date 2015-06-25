@@ -16,11 +16,17 @@ This Filter will generate _inverse pole figure_ (IPF) colors for cubic, hexagona
     - If the data originates from an HKL (or Bruker) system (.ctf file) then bad voxels can typically be found by setting "Error" > 0
     - This means that when the user runs some sort of threshold filter the _mask_ will be those **Elements** that have an Error = 0
 
+-----
+
 ![IPF Color Triangle](images/IPFFilterLegend.png)
 @image latex IPFFilterLegend.png "IPF Color Triangle" width=6in
 
+-----
+
 ![Example Data Set](images/IPFColor_1.png)
 @image latex IPFColor_1.png "Example Data Set" width=6in
+
+-----
 
 ## Parameters ##
 | Name | Type | Description |
@@ -42,7 +48,7 @@ Not Applicable
 ## Created Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Element | IPFColor |  UInt8 | (3) | The RGB colors encoded as unsigned chars |
+| Element | IPFColor |  UInt8 | (3) | The RGB colors encoded as unsigned chars for each **Element** |
 
 ## License & Copyright ##
 

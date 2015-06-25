@@ -21,6 +21,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 
 /**
@@ -156,7 +157,6 @@ class DREAM3DLib_EXPORT IDataArray
      */
     virtual IDataArray::Pointer reorderCopy(QVector<size_t> newOrderMap) = 0;
 
-
     /**
      * @brief Splats the same value c across all values in the Tuple
      * @param pos The index of the Tuple
@@ -183,27 +183,67 @@ class DREAM3DLib_EXPORT IDataArray
      */
     virtual int32_t resize(size_t numTuples) = 0;
 
-
+    /**
+     * @brief printTuple
+     * @param out
+     * @param i
+     * @param delimiter
+     */
     virtual void printTuple(QTextStream& out, size_t i, char delimiter = ',') = 0;
+
+    /**
+     * @brief printComponent
+     * @param out
+     * @param i
+     * @param j
+     */
     virtual void printComponent(QTextStream& out, size_t i, int j) = 0;
 
+    /**
+     * @brief deepCopy
+     * @param forceNoAllocate
+     * @return
+     */
     virtual IDataArray::Pointer deepCopy(bool forceNoAllocate = false) = 0;
 
     /**
-     *
+     * @brief writeH5Data
      * @param parentId
+     * @param tDims
      * @return
      */
     virtual int writeH5Data(hid_t parentId, QVector<size_t> tDims) = 0;
+
+    /**
+     * @brief readH5Data
+     * @param parentId
+     * @return
+     */
     virtual int readH5Data(hid_t parentId) = 0;
 
+    /**
+     * @brief writeXdmfAttribute
+     * @param out
+     * @param volDims
+     * @param hdfFileName
+     * @param groupPath
+     * @param label
+     * @return
+     */
     virtual int writeXdmfAttribute(QTextStream& out, int64_t* volDims, const QString& hdfFileName, const QString& groupPath, const QString& label) = 0;
-//    {
-//      qDebug() << "IDataArray::writeXdmfAttribute needs to be implemented for the data being written." ;
-//      return -1;
-//    }
 
+    /**
+     * @brief getTypeAsString
+     * @return
+     */
     virtual QString getTypeAsString() = 0;
+
+    /**
+     * @brief getInfoString
+     * @return Returns a formatted string that contains general infomation about
+     * the instance of the object.
+     */
+    virtual QString getInfoString(DREAM3D::InfoStringFormat format) = 0;
 
   protected:
 

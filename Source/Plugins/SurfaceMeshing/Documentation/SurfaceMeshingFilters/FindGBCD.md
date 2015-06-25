@@ -1,32 +1,34 @@
-Find Grain Boundary Character Distribution {#findgbcd}
-======
+Find GBCD {#findgbcd}
+=============
 
 ## Group (Subgroup) ##
-SurfaceMesh
+Statistics (Crystallographic)
 
 ## Description ##
-This filter computes the Grain Boundary Character Distribution (GBCD).
-
+This Filter computes the 5D grain boundary character distribution (GBCD) for a **Triangle Geometry**, which is the relative area of grain boundary for a given misorientation and normal. The GBCD can be visualized by using either the [Write GBCD Pole Figure (GMT)](@ref visualizegbcdgmt) or the [Write GBCD Pole Figure (VTK)](@ref visualizegbcdpolefigure) **Filters**.
 
 ## Parameters ##
-None
+| Name | Type | Description |
+|------|------| ----------- |
+| GBCD Resolution (Degrees) | Int | The resolution in degrees for the GBCD calculation |
 
-## Required DataContainers ##
-SurfaceMesh - Valid Surface Mesh containing the shared vertex array and face list
+## Required Geometry ##
+Image + Triangle
 
 ## Required Arrays ##
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Face   | SurfaceMeshFaceLabels | N x 2 Col of signed integer |  | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
-| Face   | SurfaceMeshFaceAreas | |  | Generate Triangle Areas (SurfaceMeshing) |
-| Face   | SurfaceMeshFaceNormals | N x 3 Col of floats |  | Generate Triangle Normals Filter (SurfaceMeshing) |
+| Face | FaceLabels | Int | (2) | Specifies which **Features** are on either side of each **Face** |
+| Face | FaceNormals | Double | (3) | Specifies the normal of each **Face** |
+| Face | FaceAreas | Double | (1) | Specifies the area of each **Face** |
+| Feature | EulerAngles | Float | (3) | Three angles defining the orientation of the **Feature** in Bunge convention (Z-X-Z) |
+| Feature | Phases | Int | (1) | Specifies to which phase each **Feature** belongs |
+| Ensemble | CrystalStructures | Int | (1) | Enumeration representing the crystal structure for each phase |
 
 ## Created Arrays ##
-
-| Type | Default Name | Comment |
-|------|--------------|---------|
-| Ensemble | GBCD | |
-
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Ensemble | GBCD | Double | (6) | 5 parameter GBCD data. The 6<sup>th</sup> component is used internally to track the northern vs. southern hemisphere of the Lambert sphere |
 
 
 ## License & Copyright ##

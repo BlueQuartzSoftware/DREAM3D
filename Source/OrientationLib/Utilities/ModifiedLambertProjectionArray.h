@@ -48,8 +48,8 @@
 #include "OrientationLib/Utilities/ModifiedLambertProjection.h"
 
 
-/*
- *
+/**
+ * @brief The ModifiedLambertProjectionArray class
  */
 class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
 {
@@ -62,119 +62,104 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
     virtual ~ModifiedLambertProjectionArray();
 
     /**
+     * @brief getXdmfTypeAndSize
+     * @param xdmfTypeName
+     * @param precision
+     */
+    void getXdmfTypeAndSize(QString& xdmfTypeName, int& precision);
+
+    /**
      * @brief GetTypeName Returns a string representation of the type of data that is stored by this class. This
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void getXdmfTypeAndSize(QString& xdmfTypeName, int& precision)
-    {
-      xdmfTypeName = getNameOfClass();
-      precision = 0;
-    }
-
-    /**
-     * @brief getTypeAsString
-     * @return
-     */
-    virtual QString getTypeAsString() { return "ModifiedLambertProjectionArray"; }
+    virtual QString getTypeAsString();
 
     DREAM3D_INSTANCE_PROPERTY(int, Phase)
+
     DREAM3D_INSTANCE_PROPERTY(QVector<ModifiedLambertProjection::Pointer>, ModifiedLambertProjectionArray)
 
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name, bool allocate = true)
-    {
-      return ModifiedLambertProjectionArray::New();
-    }
+    /**
+     * @brief createNewArray
+     * @param numElements
+     * @param rank
+     * @param dims
+     * @param name
+     * @param allocate
+     * @return
+     */
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name, bool allocate = true);
 
-    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name, bool allocate = true)
-    {
-      return ModifiedLambertProjectionArray::New();
-    }
+    /**
+     * @brief createNewArray
+     * @param numElements
+     * @param dims
+     * @param name
+     * @param allocate
+     * @return
+     */
+    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name, bool allocate = true);
 
-    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<size_t> dims, const QString& name, bool allocate = true)
-    {
-      return ModifiedLambertProjectionArray::New();
-    }
+    /**
+     * @brief createNewArray
+     * @param numElements
+     * @param dims
+     * @param name
+     * @param allocate
+     * @return
+     */
+    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<size_t> dims, const QString& name, bool allocate = true);
 
     /**
     * @brief
     */
-    virtual bool isAllocated()
-    {
-      return m_IsAllocated;
-    }
-
+    virtual bool isAllocated();
 
     /**
-     *
+     * @brief clearAll
      */
-    void clearAll()
-    {
-      m_ModifiedLambertProjectionArray.clear();
-    }
+    void clearAll();
 
     /**
-     *
+     * @brief setModifiedLambertProjection
+     * @param index
+     * @param ModifiedLambertProjection
      */
-    void setModifiedLambertProjection(int index, ModifiedLambertProjection::Pointer ModifiedLambertProjection)
-    {
-      if(index >= static_cast<int>(m_ModifiedLambertProjectionArray.size()))
-      {
-        size_t old = m_ModifiedLambertProjectionArray.size();
-        m_ModifiedLambertProjectionArray.resize(index + 1);
-        // Initialize with zero length Vectors
-        for (int i = old; i < m_ModifiedLambertProjectionArray.size(); ++i)
-        {
-          m_ModifiedLambertProjectionArray[i] = ModifiedLambertProjection::New();
-        }
-      }
-      m_ModifiedLambertProjectionArray[index] = ModifiedLambertProjection;
-    }
+    void setModifiedLambertProjection(int index, ModifiedLambertProjection::Pointer ModifiedLambertProjection);
 
     /**
-    *
-    */
-    void fillArrayWithNewModifiedLambertProjection(size_t n)
-    {
-      m_ModifiedLambertProjectionArray.resize(n);
-      for (size_t i = 0; i < n; ++i)
-      {
-        if (m_ModifiedLambertProjectionArray[i].get() == NULL)
-        {
-          m_ModifiedLambertProjectionArray[i] = ModifiedLambertProjection::New();
-        }
-      }
-    }
-
-    /**
-     *
+     * @brief fillArrayWithNewModifiedLambertProjection
+     * @param n
      */
-    ModifiedLambertProjection::Pointer getModifiedLambertProjection(int idx)
-    {
-#ifndef NDEBUG
-      if(m_ModifiedLambertProjectionArray.size() > 0)
-      {
-        BOOST_ASSERT(idx < static_cast<int>(m_ModifiedLambertProjectionArray.size()));
-      }
-#endif
-      return m_ModifiedLambertProjectionArray[idx];
-    }
+    void fillArrayWithNewModifiedLambertProjection(size_t n);
 
-    ModifiedLambertProjection::Pointer operator[](int idx)
-    {
-#ifndef NDEBUG
-      if(m_ModifiedLambertProjectionArray.size() > 0)
-      {
-        BOOST_ASSERT(idx < static_cast<int>(m_ModifiedLambertProjectionArray.size()));
-      }
-#endif
-      return m_ModifiedLambertProjectionArray[idx];
-    }
+    /**
+     * @brief getModifiedLambertProjection
+     * @param idx
+     * @return
+     */
+    ModifiedLambertProjection::Pointer getModifiedLambertProjection(int idx);
+
+    /**
+     * @brief operator []
+     * @param idx
+     * @return
+     */
+    ModifiedLambertProjection::Pointer operator[](int idx);
 
     /* **************** This is the interface for the IDataArray Class which MUST
      *  Be implemented. Most of it is useless and will simply ASSERT if called. */
 
+    /**
+     * @brief setName
+     * @param name
+     */
     void setName(const QString& name);
+
+    /**
+     * @brief getName
+     * @return
+     */
     QString getName();
 
     /**
@@ -209,11 +194,34 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      */
     virtual size_t getSize();
 
+    /**
+     * @brief SetNumberOfComponents
+     * @param nc
+     */
     virtual void SetNumberOfComponents(int nc);
+
+    /**
+     * @brief getNumberOfComponents
+     * @return
+     */
     virtual int getNumberOfComponents();
+
+    /**
+     * @brief getComponentDimensions
+     * @return
+     */
     virtual QVector<size_t> getComponentDimensions();
 
+    /**
+     * @brief SetRank
+     * @param rank
+     */
     virtual void SetRank(int rank);
+
+    /**
+     * @brief getRank
+     * @return
+     */
     virtual int getRank();
 
     /**
@@ -244,6 +252,11 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      */
     virtual int copyTuple(size_t currentPos, size_t newPos);
 
+    /**
+     * @brief reorderCopy
+     * @param newOrderMap
+     * @return
+     */
     virtual IDataArray::Pointer reorderCopy(QVector<size_t> newOrderMap);
 
     /**
@@ -278,7 +291,20 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      */
     virtual int32_t resize(size_t numTuples);
 
+    /**
+     * @brief printTuple
+     * @param out
+     * @param i
+     * @param delimiter
+     */
     virtual void printTuple(QTextStream& out, size_t i, char delimiter = ',');
+
+    /**
+     * @brief printComponent
+     * @param out
+     * @param i
+     * @param j
+     */
     virtual void printComponent(QTextStream& out, size_t i, int j);
 
     /**
@@ -287,6 +313,12 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @return
      */
     virtual int writeH5Data(hid_t parentId, QVector<size_t> tDims);
+
+    /**
+     * @brief readH5Data
+     * @param parentId
+     * @return
+     */
     virtual int readH5Data(hid_t parentId);
 
     /**
@@ -298,11 +330,14 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @return
      */
     virtual int writeXdmfAttribute(QTextStream& out, int64_t* volDims, const QString& hdfFileName,
-                                   const QString& groupPath, const QString& labelb)
-    {
-      out << "<!-- Xdmf is not supported for " << getNameOfClass() << " with type " << getTypeAsString() << " --> ";
-      return -1;
-    }
+                                   const QString& groupPath, const QString& labelb);
+
+    /**
+     * @brief getInfoString
+     * @return Returns a formatted string that contains general infomation about
+     * the instance of the object.
+     */
+    virtual QString getInfoString(DREAM3D::InfoStringFormat format);
 
   protected:
     ModifiedLambertProjectionArray();

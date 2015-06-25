@@ -1,21 +1,20 @@
 Reverse Triangle Winding Filter {#reversetrianglewinding}
-======
+============
 
 ## Group (Subgroup) ##
-SurfaceMesh
+Surface Meshing (Connectivity/Arrangement)
 
 ## Description ##
-This filter reverses the winding on each triangle. If the next filter is to compute the surface normals the user will notice that the normals now point in the opposite direction. Some analysis filters require the normals to be pointing "away" from the center of a **Feature**. The current surface meshing algorithms tend to orient the normals pointing "into" the **Feature**.
-
+This Filter reverses the _winding_ for each **Triangle** in a **Triangle Geometry**. This will _reverse_ the direction of calculated **Triangle** normals. Some analysis routines require the normals to be pointing "away" from the center of a **Feature**. This **Filter** allows for manipulation of this construct.
 
 ## Parameters ##
+None
 
-## Required DataContainers ##
-SurfaceMesh - Valid Surface Mesh containing the shared vertex array and face list
+## Required Geometry ##
+Triangle
 
 ## Required Arrays ##
 None
-
 
 ## Created Arrays ##
 None

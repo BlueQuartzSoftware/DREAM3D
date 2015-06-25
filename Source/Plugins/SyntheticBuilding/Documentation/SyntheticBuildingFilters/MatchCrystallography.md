@@ -1,42 +1,47 @@
 Match Crystallography {#matchcrystallography}
-======
+=============
 
 ## Group (Subgroup) ##
-Synthetic Builder Filters (Crystallography)
+Synthetic Building (Crystallography)
 
 ## Description ##
-This Filter iteratively either swaps out the orientation of a **Feature** (selected at random) for a new orientation (sampled from the goal Orientation Distribution Function) or switches the orientations of two **Features** (selected at random).  The switch or swap is accepted if it lowers the error of the current ODF and Misorientation Distribution Function from the goal.  This is done for a user defined number of iterations.  
+This Filter attempts to match a defined _orientation distribution function_ (ODF) to a set of **Features**. The matching algorithm involves two processes that are performed iteratively:
+
+1. _Swappping_ out the orientation of a randomly selected **Feature** for a new orientation sampled from the goal ODF
+2. _Switching_ the orientations of two **Features** selected at random 
+
+The _switch_ or _swap_ is accepted if it lowers the error of the current ODF and misorientation distribution function (MDF) from the goal. This process continues for a user defined number of iterations, or until the texture functions are matched to within precision.
+
+For more information on synthetic building, visit the [tutorial](@ref tutorialsyntheticsingle).  
 
 ## Parameters ##
+| Name | Type | Description |
+|------|------| ----------- |
+| Maximum Number of Iterations (Swaps) | Int | Maximum number of swaps to perform for the matching process |
 
-| Name | Type |
-|------|------|
-| Maximum Number of Iterations (Swaps) | Integer |
-
-## Required DataContainers ##
-Voxel
+## Required Geometry ##
+Image
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
-|------|--------------|-------------|---------|-----|
-| Cell | GrainIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
-| Feature | FeaturePhases | Phase Id (int) specifying the phase of the **Feature**| | Find Feature Phases (Generic), Read Feature Info File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
-| Feature | SurfaceFeatures |  |  | Find Surface Features (Generic)
-| Ensemble | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Read H5Ebsd File (IO), Read Ensemble Info File (IO), Initialize Synthetic Volume (SyntheticBuilding) |
-| Ensemble | NumFeatures |  |  | Find Number of Features (Statistics) |
-| Ensemble | Statistics |  |  | Generate Ensemble Statistics (Statistics), StatsGenerator Application |
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|------|----------------------|-------------|
+| Ensemble | Statistics | Statistics Object | (1) | Statistics objects (depending on *Phase Type*) that store fits to descriptors such as size distribution, shape distribution, neighbor distribution, ODF, MDF, etc. |
+| Ensemble | CrystalStructures | Int | (1) | Enumeration representing the crystal structure for each phase |
+| Ensemble | PhaseTypes | Int | (1) | Enumeration specifying the type of phase of each **Ensemble**  |
+| Cell | FeaturesIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs |
+| Feature | Phases | Int | (1) |  Specifies to which **Ensemble** each **Cell** belongs |
+| Feature | SurfaceFeatures | Boolean | (1) | Flag equal to 1 if the **Feature** touches an outer surface of the sample and equal to 0 if it does not |
+| Feature | NeighborList | List of Ints | (1) | List of the contiguous neighboring **Features** for a given **Feature** |
+| Feature | SharedSurfaceAreaLists | List of Floats | (1) | List of the shared surface area for each of the contiguous neighboring **Features** for a given **Feature** |
+| Ensemble | NumFeatures | Int | (1) | Specified the number of **Features** in each **Ensemble** |
 
 ## Created Arrays ##
-
-| Type | Default Name | Comment |
-|------|--------------|---------|
-| Cell | CellEulerAngles |  |
-| Feature | AvgQuats |  |
-| Feature | FeatureEulerAngles |  |
-| Feature | Volumes |  |
-| Ensemble | CrystalStructures | This filter copies over the crystal structures from the Stats file into a new crystal structures array in the ensemble attribute matrix for the synthetic structure. The user currently has no choice in the name of this array|
-
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|------|----------------------|-------------|
+| Cell | EulerAngles | Float | (3) | Three angles defining the orientation of the **Cell** in Bunge convention (Z-X-Z) |
+| Feature | Volumes | Float | (1) | Specifies the volume of each **Feature** |
+| Feature | EulerAngles | Float | (3) | Three angles defining the orientation of the **Feature** in Bunge convention (Z-X-Z) |
+| Feature | AvgQuats | Float | (4) | The average orientation of each **Feature** in quaternion representation |
 
 ## License & Copyright ##
 
