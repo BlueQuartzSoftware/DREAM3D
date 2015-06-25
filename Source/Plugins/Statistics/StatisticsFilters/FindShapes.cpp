@@ -40,6 +40,7 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 
 #include "Statistics/StatisticsConstants.h"
@@ -685,33 +686,35 @@ void FindShapes::find_axiseulers()
     n3y = n3y / norm3;
     n3z = n3z / norm3;
 
-    if (n1z > 1.0) { n1z = 1.0; }
-    if (n1z < -1.0) { n1z = -1.0; }
-    ea2 = acos(n1z);
-    if (ea2 == 0.0)
-    {
-      ea1 = 0.0;
-      ea3 = acos(n2y);
-    }
-    else
-    {
-      double cosine3 = (n2z / sin(ea2));
-      double sine3 = (n3z / sin(ea2));
-      double cosine1 = (-n1y / sin(ea2));
-      double sine1 = (n1x / sin(ea2));
-      if (cosine3 > 1.0) { cosine3 = 1.0; }
-      if (cosine3 < -1.0) { cosine3 = -1.0; }
-      if (cosine1 > 1.0) { cosine1 = 1.0; }
-      if (cosine1 < -1.0) { cosine1 = -1.0; }
-      ea3 = acos(cosine3);
-      ea1 = acos(cosine1);
-      if (sine3 < 0.0) { ea3 = (2 * M_PI) - ea3; }
-      if (sine1 < 0.0) { ea1 = (2 * M_PI) - ea1; }
+    //insert principal unit vectors into rotation matrix representing Feature reference frame within the sample reference frame 
+    //(Note that the 3 direction is actually the long axis and the 1 direction is actually the short axis)
+    float g[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+    g[0][0] = n3x;
+    g[0][1] = n3y;
+    g[0][2] = n3z;
+    g[1][0] = n2x;
+    g[1][1] = n2y;
+    g[1][2] = n2z;
+    g[2][0] = n1x;
+    g[2][1] = n1y;
+    g[2][2] = n1z;
 
+    //check for right-handedness
+    typedef  OrientationTransforms<FOrientArrayType, float> OrientationTransformType;
+    OrientationTransformType::ResultType result = FOrientTransformsType::om_check(FOrientArrayType(g));
+    if (result.result == 0)
+    {
+      g[2][0] *= -1.0f;
+      g[2][1] *= -1.0f;
+      g[2][2] *= -1.0f;
     }
-    m_AxisEulerAngles[3 * i] = static_cast<float>(ea1);
-    m_AxisEulerAngles[3 * i + 1] = static_cast<float>(ea2);
-    m_AxisEulerAngles[3 * i + 2] = static_cast<float>(ea3);
+
+    FOrientArrayType eu(3, 0.0f);
+    FOrientTransformsType::om2eu(FOrientArrayType(g), eu);
+
+    m_AxisEulerAngles[3 * i] = eu[0];
+    m_AxisEulerAngles[3 * i + 1] = eu[1];
+    m_AxisEulerAngles[3 * i + 2] = eu[2];
   }
 }
 
