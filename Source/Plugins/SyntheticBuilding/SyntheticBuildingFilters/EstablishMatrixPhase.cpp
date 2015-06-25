@@ -40,6 +40,11 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "DREAM3DLib/StatsData/PrimaryStatsData.h"
+#include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
+#include "DREAM3DLib/StatsData/TransformationStatsData.h"
+#include "DREAM3DLib/StatsData/BoundaryStatsData.h"
+#include "DREAM3DLib/StatsData/MatrixStatsData.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
@@ -87,7 +92,7 @@ void EstablishMatrixPhase::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Statistics Array", "InputStatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputStatsArrayPath(), FilterParameter::RequiredArray));
   parameters.push_back(FilterParameter::New("Phase Types Array", "InputPhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputPhaseTypesArrayPath(), FilterParameter::RequiredArray));
-  parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "OutputCellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getOutputCellAttributeMatrixPath(), FilterParameter::CreatedArray));
+  parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "OutputCellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getOutputCellAttributeMatrixPath(), FilterParameter::CreatedArray));
   parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "OutputCellFeatureAttributeMatrixName", FilterParameterWidgetType::StringWidget, getOutputCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray));
   parameters.push_back(FilterParameter::New("Cell Ensemble Attribute Matrix Name", "OutputCellEnsembleAttributeMatrixName", FilterParameterWidgetType::StringWidget, getOutputCellEnsembleAttributeMatrixName(), FilterParameter::CreatedArray));
   parameters.push_back(FilterParameter::New("Cell Feature Ids Array Name", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget, getFeatureIdsArrayName(), FilterParameter::CreatedArray));

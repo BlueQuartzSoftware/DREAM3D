@@ -36,7 +36,6 @@
 #include "TriangleOps.h"
 
 #include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/DataArrays/ManagedArrayOfArrays.hpp"
 #include "DREAM3DLib/DataContainers/DataContainer.h"
 
 

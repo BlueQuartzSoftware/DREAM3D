@@ -51,7 +51,7 @@
 AddBadData::AddBadData() :
   AbstractFilter(),
   m_GBEuclideanDistancesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::ElementAttributeMatrixName, DREAM3D::CellData::GBEuclideanDistances),
-  m_PoissonNoise(false),
+  m_PoissonNoise(true),
   m_PoissonVolFraction(0.0f),
   m_BoundaryNoise(false),
   m_BoundaryVolFraction(0.0f),
@@ -120,6 +120,15 @@ int AddBadData::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 void AddBadData::dataCheck()
 {
   setErrorCondition(0);
+
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getGBEuclideanDistancesArrayPath().getDataContainerName());
+
+  if ((m_PoissonNoise == false) && (m_BoundaryNoise == false))
+  {
+    QString ss = QObject::tr("At least one type of noise must be selected");
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
 
   QVector<size_t> cDims(1, 1);
   m_GBEuclideanDistancesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getGBEuclideanDistancesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */

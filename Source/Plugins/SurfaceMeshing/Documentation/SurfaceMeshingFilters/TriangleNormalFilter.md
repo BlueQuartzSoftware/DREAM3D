@@ -1,28 +1,25 @@
-Generate Triangle Normals Filter {#trianglenormalfilter}
-======
-
+Generate Triangle Normals {#trianglenormalfilter}
+============
 
 ## Group (Subgroup) ##
-SurfaceMesh
+Surface Meshing (Misc)
 
 ## Description ##
-This filter calculates a normal vector of length 1 (Normalized) for each triangle.
-
+This Filter calculates a normal vector of length 1 (normalized) for each **Triangle** in a **Triangle Geometry**.
 
 ## Parameters ##
 None
 
-## Required DataContainers ##
-SurfaceMesh - Valid Surface Mesh containing the shared vertex array and face list
+## Required Geometry ##
+Triangle
 
 ## Required Arrays ##
 None
 
 ## Created Arrays ##
-
-| Type | Default Name | Comment |
-|------|--------------|---------|
-| Face | SurfaceMeshFaceNormals | N x 3 Col of double values for each face in the Mesh |
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Face | FaceNormals | Double | (3) | Specifies the normal of each **Face** |
 
 
 ## License & Copyright ##

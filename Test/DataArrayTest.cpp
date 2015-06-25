@@ -49,7 +49,6 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
-#include "DREAM3DLib/DataArrays/ManagedArrayOfArrays.hpp"
 #include "DREAM3DLib/DataArrays/StringDataArray.hpp"
 
 

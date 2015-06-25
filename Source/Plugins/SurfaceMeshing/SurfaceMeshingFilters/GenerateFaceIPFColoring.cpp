@@ -305,6 +305,8 @@ void GenerateFaceIPFColoring::dataCheckVoxel()
 
   QVector<DataArrayPath> dataArrayPaths;
 
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureEulerAnglesArrayPath().getDataContainerName());
+
   QVector<size_t> cDims(1, 3);
   m_FeatureEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getFeatureEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -395,13 +397,13 @@ const QString GenerateFaceIPFColoring::getCompiledLibraryName()
 //
 // -----------------------------------------------------------------------------
 const QString GenerateFaceIPFColoring::getGroupName()
-{ return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+{ return DREAM3D::FilterGroups::ProcessingFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateFaceIPFColoring::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::MiscFilters; }
+{ return DREAM3D::FilterSubGroups::CrystallographyFilters; }
 
 // -----------------------------------------------------------------------------
 //

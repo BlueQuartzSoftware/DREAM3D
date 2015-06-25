@@ -1,54 +1,55 @@
-Feature Face Curvature Filter {#featurefacecurvaturefilter}
-======
+Find Feature Face Curvature {#featurefacecurvaturefilter}
+=============
 
 ## Group (Subgroup) ##
-SurfaceMesh
+Surface Meshing (Curvature)
 
 ## Description ##
-This filter calculates the mean and Gaussian curvature for each triangle in a surface mesh using the technique in [1]
-and where the groups of triangles are defined as those triangles having the same pair of **Feature** ids (nSpin values).
+This Filter calculates the _mean_ and _Gaussian_ curvature for each **Triangle** in a **Triangle Geometry** using the technique in [1]. The groups of **Triangles** over which to compute the curvatures is determines by the **Features** they are associated, deonoted by their _Face Labels_. The curvature information will be stored in a new **Edge Attribute Matrix**.
 
-The Principal Curvature 1 &amp; 2 are the "Kappa 1" and "Kappa 2" values from the paper and are the Eigen values from the Wiengarten Matrix.
+Principal Curvatures 1 and 2 are the &kappa;<sub>1</sub> and &kappa;<sub>2</sub> from [1] and are the eigenvalues from the Wiengarten matrix. The Principal Directions 1 and 2 are the eigenvectors from the solution to the least squares fit algorithm. The Mean Curvature is (&kappa;<sub>1</sub> + &kappa;<sub>2</sub>)/2, while the Gaussian curvature is (&kappa;<sub>1</sub> * &kappa;<sub>2</sub>).
 
-The Principal Direction 1 &amp; 2 are the Eigen vectors from the solution to the least squares fit algorithm.
+-----
 
-The Mean Curvature is (Kappa1 + Kappa2)/2
+![Curvature Coloring of a Feature](FeatureFaceCurvatureFilter.png)
+@image latex FeatureFaceCurvatureFilter.png "Curvature Coloring of a Feature" width=6in
 
-The Gaussian Curvature is (Kappa1 * Kappa2).
-__[1]__
-Jack Goldfeather, Victoria Interrante "A Novel Cubic-Order Algorithm for Approximating Principal Direction Vectors"
-_ACM Transactions on Graphics_ 2004, 23(1), pp. 45-63.
-
-![Sample Output from filter](FeatureFaceCurvatureFilter.png)
-@image latex FeatureFaceCurvatureFilter.png " " width=6in
+-----
 
 
 ## Parameters ##
-
 | Name | Type | Description |
 |------|------| ----------- |
-| Neighborhood Ring Count | Integer | The size of the nieghborhood to use to calculate the curvature values |
-| Compute Principal Directions | Bool | Compute the Principal Direction Vectors |
-| Compute Mean Curvature | Bool | Compute the Mean Curvature values |
-| Compute Gaussian Curvature | Bool | Compute the Gaussian Curvature values |
+| Neighborhood Ring Count | Int | The size of the nieghborhood to use to calculate the curvature values |
+| Compute Principal Direction Vectors | Bool | Whether to compute the principal direction vectors |
+| Compute Gaussian Curvature | Bool | Whether to compute the Gaussian curvature values |
+| Compute Mean Curvature | Bool | Whether to compute the mean curvature values |
+| Use Face Normals for Curve Fitting | Bool | Whether to use the **Face** normals to improve the least squares fit |
+| Edge Attribute Matrix Name | String | Created **Edge Attribute Matrix** name |
 
-## Required DataContainers ##
-SurfaceMesh - Valid Surface Mesh containing the shared vertex array and face list
+## Required Geometry ##
+Triangle
 
 ## Required Arrays ##
-None
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Face | FaceLabels | Int | (2) | Specifies which **Features** are on either side of each **Face** |
+| Face | FeatureFaceIds | Int | (1) | Specifies to which **Feature** boundary each **Face** belongs |
+| Face | FaceNormals | Double | (3) | Specifies the normal of each **Face** |
+| Face | FaceCentroids | Double | (3) | Specifies the centroid of each **Face** |
 
 ## Created Arrays ##
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Edge | PrincipalCurvature1 | Double | (2) | First set eigenvalues of the Wiengarten matrix (&kappa;<sub>1</sub>). Only computed if _Compute Principal Direction Vectors_ is checked |
+| Edge | PrincipalCurvature2 | Double | (2) | Second set eigenvalues of the Wiengarten matrix (&kappa;<sub>2</sub>). Only computed if _Compute Principal Direction Vectors_ is checked |
+| Edge | PrincipalDirection1 | Double | (3) | First set of eigenvectors. Only computed if _Compute Principal Direction Vectors_ is checked |
+| Edge | PrincipalDirection2 | Double | (3) | Second set of eigenvectors. Only computed if _Compute Principal Direction Vectors_ is checked |
+| Edge | MeanCurvatures      | Double | (2) | Mean curvature values. Only computed if _Compute Mean Curvature_ is checked |
+| Edge | GaussianCurvatures  | Double | (2) | Gaussian curvature values. Only computed if _Compute Gaussian Curvature_ is checked |
 
-| Type | Default Name | Comment |
-|------|--------------|---------|
-| Triangle Attribute Array | Principal Curvature 1 | N x 1 Col array of double values |
-| Triangle Attribute Array | Principal Curvature 2 | N x 1 Col array of double values |
-| Triangle Attribute Array | Principal Direction 1 | N x 3 Col array of double values |
-| Triangle Attribute Array | Principal Direction 2 | N x 3 Col array of double values |
-| Triangle Attribute Array | Mean Curvature | N x 1 Col array of double values |
-| Triangle Attribute Array | Gaussian Curvature | N x 1 Col array of double values |
-
+## References ##
+[1] J. Goldfeather, V. Interrante, "A Novel Cubic-Order Algorithm for Approximating Principal Direction Vectors", ACM Transactions on Graphics 2004, 23(1), pp. 45-63.
 
 ## License & Copyright ##
 

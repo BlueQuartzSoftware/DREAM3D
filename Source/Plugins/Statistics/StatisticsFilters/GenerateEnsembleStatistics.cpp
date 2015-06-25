@@ -44,6 +44,12 @@
 #include "DREAM3DLib/FilterParameters/PhaseTypesFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
+#include "DREAM3DLib/StatsData/PrimaryStatsData.h"
+#include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
+#include "DREAM3DLib/StatsData/TransformationStatsData.h"
+#include "DREAM3DLib/StatsData/BoundaryStatsData.h"
+#include "DREAM3DLib/StatsData/MatrixStatsData.h"
+
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"

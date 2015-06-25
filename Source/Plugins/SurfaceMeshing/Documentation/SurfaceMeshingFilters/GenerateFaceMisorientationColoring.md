@@ -1,33 +1,31 @@
 Generate Misorientation Colors (Face) {#generatefacemisorientationcoloring}
-======================
+============
 
 ## Group (Subgroup) ##
-SurfaceMesh (Misc)
+Processing (Crystallography)
 
 ## Description ##
-
-This filter generates a 3 component vector per **Face** that is the axis-angle of the misorientation associated with the **Features** that lie on either side of the **Face**.  The axis is normalized, so if the magnitude of the vector is viewed, it will be the *misorientation angle* in degrees.
-
+This Filter generates a 3 component vector for each **Triangle** in a **Triangle Geometry** that is the axis-angle of the misorientation associated with the **Features** that lie on either side of the **Triangle**.  The axis is normalized, so if the magnitude of the vector is viewed, it will be the *misorientation angle* in degrees.
 
 ## Parameters ##
+None
 
 ## Required Geometry ##
-
-Triangle Geometry - Valid Triangle containing the shared vertex array and face list
-
+Image + Triangle 
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
-|------|--------------|-------------|---------|-------|
-| Face | SurfaceMeshFaceLabels | N x 2 Col of signed integer |  | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Face | FaceLabels | Int | (2) | Specifies which **Features** are on either side of each **Face** |
+| Feature | AvgQuats | Float | (4) | Specifies the average orientation of each **Feature** in quaternion representation |
+| Feature | Phases | Int | (1) | Specifies to which phase each **Feature** belongs |
+| Ensemble | CrystalStructures | Int | (1) | Enumeration representing the crystal structure for each phase |
 
 
 ## Created Arrays ##
-| Type | Name | Comment |
-|------|------|---------|
-| Face | SurfaceMeshTriangleIPFColors | N X 3 Array of floats that is the axis-angle of the misorientation across each **Face** |
-
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Face | MisorientationColors | Float | (3) | A set of RGB color schemes encoded as floats for each **Face** |
 
 
 ## License & Copyright ##

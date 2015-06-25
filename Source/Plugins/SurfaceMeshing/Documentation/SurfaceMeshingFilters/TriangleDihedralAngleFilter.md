@@ -1,28 +1,25 @@
-Generate Triangle Areas {#triangledihedralanglefilter}
-======
+Find Minimum Triangle Dihedral Angle {#triangledihedralanglefilter}
+============
 
 ## Group (Subgroup) ##
-SurfaceMesh
+Surface Meshing (Misc)
 
 ## Description ##
-This filter computes the minimum dihedral angle of each triangle (given by points A,B,C) in the surface mesh by calculating the angles between the three sides of the triangle and storing the minimum value for the triangle.
-
+This Filter computes the minimum dihedral angle of each **Triangle** in a **Triangle Geometry** by calculating the angles between the three sides of the **Triangle** and storing the minimum value.
 
 ## Parameters ##
 None
 
-## Required DataContainers ##
-SurfaceMesh - Valid Surface Mesh containing the shared vertex array and face list
+## Required Geometry ##
+Triangle
 
 ## Required Arrays ##
 None
 
 ## Created Arrays ##
-
-| Type | Default Name | Comment |
-|------|--------------|---------|
-| Face | SurfaceMeshFaceDihedralAngles | |
-
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Face | FaceDihedralAngles | Double | (1) | Specifies the minimum dihedral angle of each **Face** |
 
 
 ## License & Copyright ##

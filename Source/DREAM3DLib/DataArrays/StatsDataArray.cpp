@@ -37,7 +37,11 @@
 
 #include <QtCore/QList>
 
-
+#include "DREAM3DLib/StatsData/PrimaryStatsData.h"
+#include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
+#include "DREAM3DLib/StatsData/TransformationStatsData.h"
+#include "DREAM3DLib/StatsData/BoundaryStatsData.h"
+#include "DREAM3DLib/StatsData/MatrixStatsData.h"
 
 
 #include "H5Support/QH5Utilities.h"
@@ -58,6 +62,118 @@ StatsDataArray::StatsDataArray() :
 StatsDataArray::~StatsDataArray()
 {
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+StatsDataArray::Pointer StatsDataArray::CreateArray(size_t numElements, const QString& name, bool allocate)
+{
+  if (name.isEmpty() == true)
+  {
+    return NullPointer();
+  }
+  StatsDataArray::Pointer ptr = StatsDataArray::New();
+  ptr->setName(name);
+  std::vector<unsigned int> phase_types(numElements, DREAM3D::PhaseType::UnknownPhaseType);
+  if(allocate) { ptr->fillArrayWithNewStatsData(numElements, &(phase_types.front()) ); }
+  return ptr;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+StatsDataArray::Pointer StatsDataArray::CreateArray(size_t numTuples, int rank, size_t* dims, const QString& name, bool allocate)
+{
+  if (name.isEmpty() == true)
+  {
+    return NullPointer();
+  }
+  StatsDataArray::Pointer ptr = StatsDataArray::New();
+  ptr->setName(name);
+  std::vector<unsigned int> phase_types(numTuples, DREAM3D::PhaseType::UnknownPhaseType);
+  if(allocate) { ptr->fillArrayWithNewStatsData(numTuples, &(phase_types.front()) ); }
+  return ptr;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+StatsDataArray::Pointer StatsDataArray::CreateArray(size_t numTuples, std::vector<size_t> cDims, const QString& name, bool allocate)
+{
+  if (name.isEmpty() == true)
+  {
+    return NullPointer();
+  }
+  StatsDataArray::Pointer ptr = StatsDataArray::New();
+  ptr->setName(name);
+  std::vector<unsigned int> phase_types(numTuples, DREAM3D::PhaseType::UnknownPhaseType);
+  if(allocate) { ptr->fillArrayWithNewStatsData(numTuples, &(phase_types.front()) ); }
+  return ptr;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+StatsDataArray::Pointer StatsDataArray::CreateArray(size_t numTuples, QVector<size_t> cDims, const QString& name, bool allocate)
+{
+  if (name.isEmpty() == true)
+  {
+    return NullPointer();
+  }
+  StatsDataArray::Pointer ptr = StatsDataArray::New();
+  ptr->setName(name);
+  std::vector<unsigned int> phase_types(numTuples, DREAM3D::PhaseType::UnknownPhaseType);
+  if(allocate) { ptr->fillArrayWithNewStatsData(numTuples, &(phase_types.front()) ); }
+  return ptr;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+StatsDataArray::Pointer StatsDataArray::CreateArray(QVector<size_t> tDims, QVector<size_t> cDims, const QString& name, bool allocate)
+{
+  if (name.isEmpty() == true)
+  {
+    return NullPointer();
+  }
+  size_t numTuples = tDims[0];
+  qint32 size = tDims.size();
+  for(qint32 iter = 1; iter < size; iter++)
+  {
+    numTuples *= tDims[iter];
+  }
+  StatsDataArray::Pointer ptr = StatsDataArray::New();
+  ptr->setName(name);
+  std::vector<unsigned int> phase_types(numTuples, DREAM3D::PhaseType::UnknownPhaseType);
+  if(allocate) { ptr->fillArrayWithNewStatsData(numTuples, &(phase_types.front()) ); }
+  return ptr;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer StatsDataArray::createNewArray(size_t numElements, int rank, size_t* dims, const QString& name, bool allocate)
+{
+  return StatsDataArray::NullPointer();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer StatsDataArray::createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name, bool allocate)
+{
+  return StatsDataArray::NullPointer();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer StatsDataArray::createNewArray(size_t numElements, QVector<size_t> dims, const QString& name, bool allocate)
+{
+  return StatsDataArray::NullPointer();
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -420,3 +536,156 @@ int StatsDataArray::readH5Data(hid_t parentId)
 
   return err;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int StatsDataArray::writeXdmfAttribute(QTextStream& out, int64_t* volDims, const QString& hdfFileName,
+                               const QString& groupPath, const QString& labelb)
+{
+  out << "<!-- Xdmf is not supported for " << getNameOfClass() << " with type " << getTypeAsString() << " --> ";
+  return -1;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString StatsDataArray::getInfoString(DREAM3D::InfoStringFormat format)
+{
+  QString info;
+  QTextStream ss (&info);
+  if(format == DREAM3D::HtmlFormat)
+  {
+    ss << "<html><head></head>\n";
+    ss << "<body>\n";
+    ss << "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
+    ss << "<tbody>\n";
+    ss << "<tr bgcolor=\"#D3D8E0\"><th colspan=2>Attribute Array Info</th></tr>";
+
+    ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Name:</th><td>" << getName() << "</td></tr>";
+
+
+    ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Type:</th><td>" << getTypeAsString() << "</td></tr>";
+    ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Number of Tuples:</th><td>" << getNumberOfTuples() << "</td></tr>";
+
+//    QString compDimStr = "(";
+//    for(int i = 0; i < m_CompDims.size(); i++)
+//    {
+//      compDimStr = compDimStr + QString::number(m_CompDims[i]);
+//      if(i < m_CompDims.size() - 1) {
+//         compDimStr = compDimStr + QString(", ");
+//      }
+//    }
+//    compDimStr = compDimStr + ")";
+//    ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Component Dimensions:</th><td>" << compDimStr << "</td></tr>";
+//    ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Total Elements:</th><td>" << m_Size << "</td></tr>";
+
+    ss << "</tbody></table>\n";
+    ss << "<br/>";
+    ss << "</body></html>";
+  }
+  else
+  {
+
+  }
+  return info;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString StatsDataArray::getTypeAsString()
+{ return "StatsDataArray"; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsDataArray::getXdmfTypeAndSize(QString& xdmfTypeName, int& precision)
+{
+  xdmfTypeName = getNameOfClass();
+  precision = 0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool StatsDataArray::isAllocated()
+{
+  return m_IsAllocated;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsDataArray::clearAll()
+{
+  m_StatsDataArray.clear();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsDataArray::setStatsData(int index, StatsData::Pointer statsData)
+{
+  if(index >= static_cast<int>(m_StatsDataArray.size()))
+  {
+    size_t old = m_StatsDataArray.size();
+    m_StatsDataArray.resize(index + 1);
+    // Initialize with zero length Vectors
+    for (int i = old; i < m_StatsDataArray.size(); ++i)
+    {
+      m_StatsDataArray[i] = StatsData::New();
+    }
+  }
+  m_StatsDataArray[index] = statsData;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsDataArray::fillArrayWithNewStatsData(size_t n, unsigned int* phase_types)
+{
+  m_StatsDataArray.resize(n);
+  for (size_t i = 0; i < n; ++i)
+  {
+    if (phase_types != NULL)
+    {
+      if(phase_types[i] == DREAM3D::PhaseType::PrimaryPhase) { m_StatsDataArray[i] = PrimaryStatsData::New(); }
+      else if(phase_types[i] == DREAM3D::PhaseType::PrecipitatePhase) { m_StatsDataArray[i] = PrecipitateStatsData::New(); }
+      else if(phase_types[i] == DREAM3D::PhaseType::TransformationPhase) { m_StatsDataArray[i] = TransformationStatsData::New(); }
+      else if(phase_types[i] == DREAM3D::PhaseType::BoundaryPhase) { m_StatsDataArray[i] = BoundaryStatsData::New(); }
+      else if(phase_types[i] == DREAM3D::PhaseType::MatrixPhase) { m_StatsDataArray[i] = MatrixStatsData::New(); }
+      else { m_StatsDataArray[i] = StatsData::New(); }
+    }
+    if(phase_types == NULL) { m_StatsDataArray[i] = StatsData::New(); }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+StatsData::Pointer StatsDataArray::getStatsData(int idx)
+{
+#ifndef NDEBUG
+  if(m_StatsDataArray.size() > 0)
+  {
+    BOOST_ASSERT(idx < static_cast<int>(m_StatsDataArray.size()));
+  }
+#endif
+  return m_StatsDataArray[idx];
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+StatsData::Pointer StatsDataArray::operator[](int idx)
+{
+#ifndef NDEBUG
+  if(m_StatsDataArray.size() > 0)
+  {
+    BOOST_ASSERT(idx < static_cast<int>(m_StatsDataArray.size()));
+  }
+#endif
+  return m_StatsDataArray[idx];
+}
+

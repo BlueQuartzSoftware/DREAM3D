@@ -1,28 +1,36 @@
-Shared Feature Face Filter {#sharedfeaturefacefilter}
-======
+Generate Triangle Face Ids {#sharedfeaturefacefilter}
+============
 
 ## Group (Subgroup) ##
-SurfaceMesh
+Surface Meshing (Connectivity/Arrangement)
 
 ## Description ##
-This filter generates all the unique **Feature** id to **Feature** id values. For example if **Feature** Id = 4 had 3 neighbors with values of 6, 8 and 9 then at least 3 unique values would be generated for the pairs (4,6), (4, 8) and (4,9). This value is stored in the array at the same index as the triangle is stored in the triangle array.
+This Filter assigns a unique Id to each **Triangle** in a **Triangle Geometry** that represents the _unique boundary_ on which that **Triangle** resides. For example, if there were only two **Features** that shared one boundary, then the **Triangles** on that boundary would be labeled with a single unique Id. This procedure creates _unique groups_ of **Triangles**, which themselves are a set of **Features**. Thus, this **Filter** also creates a **Feature Attribute Matrux** for this new set of **Features**, and creates **Attribute Arrays** for their Ids and number of **Triangles**.
 
+---------------
+
+![Example Surface Mesh Coloring By Feature Face Id](featureFaceIds.png)
+@image latex featureFaceIds.png "Example Surface Mesh Coloring By Feature Face Id" width=6in
+
+---------------
 
 ## Parameters ##
-
-
-## Required DataContainers ##
-
-SurfaceMesh - Valid Surface Mesh containing the shared vertex array and face list
-
-## Required Arrays ##
 None
 
-## Created Arrays ##
+## Required Geometry ##
+Triangle
 
-| Type | Default Name | Comment |
-|------|--------------|---------|
-| Face | SurfaceMeshGrainFaceId | The length of the array is the number of triangles for that unique face id value |
+## Required Arrays ##
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Face | FaceLabels | Int | (2) | Specifies which **Features** are on either side of each **Face** |
+
+## Created Arrays ##
+| Type | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Face | FeatureFaceId | Int | (1) | Specifies to which **Feature** each **Face** belongs |
+| Feature | FaceLabels | Int | (1) | Specifies which _original_ **Features** are on either side of each _new_ **Feature** |
+| Feature | NumTriangles | Int | (1) | Number of **Triangles** in each **Feature** |
 
 
 ## License & Copyright ##

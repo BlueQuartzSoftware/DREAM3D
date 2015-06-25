@@ -88,6 +88,23 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
 
     virtual ~AttributeMatrix();
 
+    enum AttributeMatrixType
+    {
+      VertexType = 0,
+      EdgeType,
+      FaceType,
+      CellType,
+      VertexFeatureType,
+      EdgeFeatureType,
+      FaceFeatureType,
+      CellFeatureType,
+      VertexEnsembleType,
+      EdgeEnsembleType,
+      FaceEnsembleType,
+      CellEnsembleType,
+      UnknownType
+    };
+
     /**
      * @brief New Creates an AttributeMatrix with the give name
      * @param tupleDims The dimensions of the Attribute matrix given in the order fastest moving to slowest moving (XYZ)
@@ -558,6 +575,14 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
      * @return
      */
     virtual QString generateXdmfText(const QString& centering, const QString& dataContainerName, const QString& hdfFileName, const uint8_t gridType = 0);
+
+    /**
+     * @brief getInfoString Returns a text string in the given format that has information
+     * about the attribute Matrix
+     * @param format A value from the DREAM3D::InfoStringFormat enumeration
+     * @return
+     */
+    virtual QString getInfoString(DREAM3D::InfoStringFormat format);
 
   protected:
     AttributeMatrix(QVector<size_t> tDims, const QString& name, unsigned int attrType);

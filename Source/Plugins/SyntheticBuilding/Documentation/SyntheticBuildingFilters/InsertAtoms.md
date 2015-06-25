@@ -2,7 +2,7 @@ Insert Atoms {#insertatoms}
 =============
 
 ## Group (Subgroup) ##
-Synthetic Builder Filters (Packing)
+Synthetic Building (Packing)
 
 ## Description ##
 This Filter creates a **Vertex** geometry where the **Vertices** represent atom positions.  The Filter requires a **Triangle** surface mesh that bounds **Features** of different crystallographic orientation.  The Filter then extracts the **Triangles** associated with each **Feature** and in parallel inserts atoms on the crystal lattice of each **Feature**.  The steps associated with inserting the atoms in each **Feature** are as follows:
@@ -36,17 +36,6 @@ Triangle
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | Vertex | AtomFeatureLabels | Int | (1) | Specifies to which **Feature** each **Vertex** (or atom) belongs. |
-
-## Authors ##
-
-**Contact Info** dream3d@bluequartz.net
-
-**Version** 1.0.0
-
-**License**  See the License.txt file that came with DREAM3D.
-
-
-
 
 ## License & Copyright ##
 
