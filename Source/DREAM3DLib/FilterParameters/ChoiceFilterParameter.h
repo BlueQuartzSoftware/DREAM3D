@@ -43,15 +43,15 @@ class DREAM3DLib_EXPORT ChoiceFilterParameter : public FilterParameter
 {
 public:
   DREAM3D_SHARED_POINTERS(ChoiceFilterParameter)
-    DREAM3D_STATIC_NEW_MACRO(ChoiceFilterParameter)
-    DREAM3D_TYPE_MACRO_SUPER(ChoiceFilterParameter, FilterParameter)
+  DREAM3D_STATIC_NEW_MACRO(ChoiceFilterParameter)
+  DREAM3D_TYPE_MACRO_SUPER(ChoiceFilterParameter, FilterParameter)
 
-    static Pointer New(const QString& humanLabel, const QString& propertyName,
-    const QVariant& defaultValue,
-    QVector<QString> choices,
-    bool editable,
-    Category category,
-    int groupIndex = -1);
+  static Pointer New(const QString& humanLabel, const QString& propertyName,
+                    const QVariant& defaultValue,
+                    QVector<QString> choices,
+                    bool editable,
+                    Category category,
+                    int groupIndex = -1);
 
   virtual ~ChoiceFilterParameter();
 
@@ -67,3 +67,4 @@ private:
 };
 
 #endif /* _ChoiceFilterParameter_H_ */
+
