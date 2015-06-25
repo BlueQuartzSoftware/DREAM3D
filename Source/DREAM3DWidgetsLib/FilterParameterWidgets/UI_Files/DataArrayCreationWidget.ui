@@ -31,7 +31,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QComboBox" name="dataContainerList">
+    <widget class="QComboBox" name="dataContainerCombo">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -44,7 +44,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QComboBox" name="attributeMatrixList">
+    <widget class="QComboBox" name="attributeMatrixCombo">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -127,8 +127,6 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

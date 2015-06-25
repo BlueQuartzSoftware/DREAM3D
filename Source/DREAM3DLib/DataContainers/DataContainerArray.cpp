@@ -371,6 +371,29 @@ bool DataContainerArray::doesDataContainerExist(const QString& name)
   return false;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool DataContainerArray::doesAttributeMatrixExist(const DataArrayPath& path)
+{
+  if ( !doesDataContainerExist(path.getDataContainerName())) { return false; }
+
+  DataContainer::Pointer dc = getDataContainer(path);
+  return dc->doesAttributeMatrixExist(path.getAttributeMatrixName());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool DataContainerArray::doesAttributeArrayExist(const DataArrayPath& path)
+{
+    if ( !doesDataContainerExist(path.getDataContainerName())) { return false; }
+    if ( !doesAttributeMatrixExist(path) ) { return false; }
+    AttributeMatrix::Pointer attrMat = getAttributeMatrix(path);
+
+    return attrMat->doesAttributeArrayExist(path.getDataArrayName());
+}
+
 
 // -----------------------------------------------------------------------------
 //

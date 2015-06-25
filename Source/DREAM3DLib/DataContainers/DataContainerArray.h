@@ -105,6 +105,20 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
     virtual bool doesDataContainerExist(const QString& name);
 
     /**
+     * @brief DataContainerArray::doesAttributeMatrixExist
+     * @param path
+     * @return
+     */
+    virtual bool doesAttributeMatrixExist(const DataArrayPath& path);
+
+    /**
+     * @brief doesAttributeArrayExist
+     * @param path
+     * @return
+     */
+    virtual bool doesAttributeArrayExist(const DataArrayPath& path);
+
+    /**
      * @brief
      */
     virtual DataContainer::Pointer removeDataContainer(const QString& name);

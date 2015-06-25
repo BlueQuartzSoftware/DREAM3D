@@ -121,12 +121,12 @@ void DataContainerSelectionWidget::setupGui()
     label->setText(getFilterParameter()->getHumanLabel() );
   }
 
-  dataContainerList->blockSignals(true);
+  dataContainerCombo->blockSignals(true);
 
-  dataContainerList->clear();
+  dataContainerCombo->clear();
 
   // Now let the gui send signals like normal
-  dataContainerList->blockSignals(false);
+  dataContainerCombo->blockSignals(false);
 
 
   populateComboBoxes();
@@ -157,41 +157,42 @@ void DataContainerSelectionWidget::populateComboBoxes()
   // Populate the DataContainerArray Combo Box with all the DataContainers
   QList<DataContainerProxy> dcList = m_DcaProxy.dataContainers.values();
   QListIterator<DataContainerProxy> iter(dcList);
-
+  dataContainerCombo->clear();
   while(iter.hasNext() )
   {
     DataContainerProxy dc = iter.next();
-    if(dataContainerList->findText(dc.name) == -1 )
-    {
-      int index = dataContainerList->currentIndex();
-      dataContainerList->addItem(dc.name);
-      dataContainerList->setCurrentIndex(index);
-    }
+    dataContainerCombo->addItem(dc.name);
+//    if(dataContainerCombo->findText(dc.name) == -1 )
+//    {
+//      int index = dataContainerCombo->currentIndex();
+//      dataContainerCombo->addItem(dc.name);
+//      dataContainerCombo->setCurrentIndex(index);
+//    }
   }
 
   //remove items in the combo that are NOT in the Data Container Array
-  int count = dataContainerList->count();
-  for(int i = count - 1; i >= 0; i--)
-  {
-    QString str0 = dataContainerList->itemText(i);
-    iter.toFront();
-    bool boo = false;
-    while(iter.hasNext() )
-    {
-      DataContainerProxy dc = iter.next();
-      if(dc.name.compare(str0) == 0)
-      {
-        boo = true; // found in the list
-      }
-    }
-    if(boo == false)
-    {
-      dataContainerList->removeItem(i);
-    }
-  }
+//  int count = dataContainerCombo->count();
+//  for(int i = count - 1; i >= 0; i--)
+//  {
+//    QString str0 = dataContainerCombo->itemText(i);
+//    iter.toFront();
+//    bool boo = false;
+//    while(iter.hasNext() )
+//    {
+//      DataContainerProxy dc = iter.next();
+//      if(dc.name.compare(str0) == 0)
+//      {
+//        boo = true; // found in the list
+//      }
+//    }
+//    if(boo == false)
+//    {
+//      dataContainerCombo->removeItem(i);
+//    }
+//  }
 
   // Grab what is currently selected
-  QString curDcName = dataContainerList->currentText();
+  QString curDcName = dataContainerCombo->currentText();
 
 
   // Get what is in the filter
@@ -218,22 +219,22 @@ void DataContainerSelectionWidget::populateComboBoxes()
   // changes in the GUI, like a testing script?
 
   QString dcName = checkStringValues(curDcName, filtDcName);
-
+  if( !dca->doesDataContainerExist(dcName) ) { dcName = ""; }
 
   bool didBlock = false;
 
-  if (!dataContainerList->signalsBlocked()) { didBlock = true; }
-  dataContainerList->blockSignals(true);
-  int dcIndex = dataContainerList->findText(dcName);
+  if (!dataContainerCombo->signalsBlocked()) { didBlock = true; }
+  dataContainerCombo->blockSignals(true);
+  int dcIndex = dataContainerCombo->findText(dcName);
   if(dcIndex < 0 && dcName.isEmpty() == false)
   {
-    dataContainerList->addItem(dcName);
+    dataContainerCombo->addItem(dcName);
   }
   else
   {
-    dataContainerList->setCurrentIndex(dcIndex);
+    dataContainerCombo->setCurrentIndex(dcIndex);
   }
-  if(didBlock) { dataContainerList->blockSignals(false); didBlock = false; }
+  if(didBlock) { dataContainerCombo->blockSignals(false); didBlock = false; }
 
 }
 
@@ -276,10 +277,10 @@ void DataContainerSelectionWidget::beforePreflight()
     return;
   }
 
-  dataContainerList->blockSignals(true);
+  dataContainerCombo->blockSignals(true);
   // Reset all the combo box widgets to have the default selection of the first index in the list
   populateComboBoxes();
-  dataContainerList->blockSignals(false);
+  dataContainerCombo->blockSignals(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -297,7 +298,7 @@ void DataContainerSelectionWidget::filterNeedsInputParameters(AbstractFilter* fi
 {
   // Generate the path to the AttributeArray
   //DataArrayPath path(dataContainerList->currentText(), attributeMatrixList->currentText(), attributeArrayList->currentText());
-  QVariant var(dataContainerList->currentText() );
+  QVariant var(dataContainerCombo->currentText() );
   // var.setValue(path);
   bool ok = false;
   // Set the value into the Filter

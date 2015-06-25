@@ -220,34 +220,34 @@ void PipelineFilterWidget::layoutWidgets()
   filterName->setText(m_Filter->getHumanLabel() );
 
   // Get the FilterWidgetManagere instance so we can instantiate new FilterParameterWidgets
-  FilterWidgetManager*  fwm = FilterWidgetManager::Instance();
+  FilterWidgetManager* fwm = FilterWidgetManager::Instance();
   // Get a list of all the filterParameters from the filter.
   QVector<FilterParameter::Pointer> filterParameters = m_Filter->getFilterParameters();
   // Create all the FilterParameterWidget objects that can be displayed where ever the developer needs
   for (QVector<FilterParameter::Pointer>::iterator iter = filterParameters.begin(); iter != filterParameters.end(); ++iter )
   {
-    FilterParameter* option = (*iter).get();
+    FilterParameter* parameter = (*iter).get();
 
-    validateFileSystemFilterParameter(option);
+    validateFileSystemFilterParameter(parameter);
 
-    QWidget* w = fwm->createWidget(option, m_Filter.get());
-    m_PropertyToWidget.insert(option->getPropertyName(), w); // Update our Map of Filter Parameter Properties to the Widget
+    QWidget* w = fwm->createWidget(parameter, m_Filter.get());
+    m_PropertyToWidget.insert(parameter->getPropertyName(), w); // Update our Map of Filter Parameter Properties to the Widget
 
     if (NULL == w) { continue; }
     m_FilterParameterWidgets.push_back(w);
 
     // Determine which group box to add the widget into
-    if(option->getCategory() == FilterParameter::Parameter)
+    if(parameter->getCategory() == FilterParameter::Parameter)
     {
       w->setParent(m_VariablesWidget);
       pLayout->addWidget(w);
     }
-    else if(option->getCategory() == FilterParameter::RequiredArray)
+    else if(parameter->getCategory() == FilterParameter::RequiredArray)
     {
       w->setParent(m_VariablesWidget);
       rLayout->addWidget(w);
     }
-    else if(option->getCategory() == FilterParameter::CreatedArray)
+    else if(parameter->getCategory() == FilterParameter::CreatedArray)
     {
       w->setParent(m_VariablesWidget);
       cLayout->addWidget(w);

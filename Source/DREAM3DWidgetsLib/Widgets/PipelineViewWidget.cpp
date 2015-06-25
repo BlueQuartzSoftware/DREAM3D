@@ -413,7 +413,6 @@ int PipelineViewWidget::writePipeline(QString filePath)
 // -----------------------------------------------------------------------------
 int PipelineViewWidget::openPipeline(const QString &filePath, int index, const bool &setOpenedFilePath, const bool &changeTitle)
 {
-  //If the filePath already exists - delete it so that we get a clean write to the file
   QFileInfo fi(filePath);
   if (fi.exists() == false)
   {
