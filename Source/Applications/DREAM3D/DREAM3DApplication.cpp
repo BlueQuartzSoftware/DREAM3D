@@ -610,19 +610,24 @@ DREAM3D_UI* DREAM3DApplication::getNewDREAM3DInstance()
   DREAM3D_UI* newInstance = new DREAM3D_UI(NULL);
   newInstance->setLoadedPlugins(plugins);
   registerDREAM3DWindow(newInstance);
-  connect(newInstance, SIGNAL(dream3dWindowChangedState(DREAM3D_UI*)), this, SLOT(activeWindowChanged(DREAM3D_UI*)));
-
-  // Show the new instance
   newInstance->setAttribute(Qt::WA_DeleteOnClose);
   newInstance->setWindowTitle("[*]Untitled Pipeline - DREAM3D");
+
+  DREAM3DMenu* instanceMenu = new DREAM3DMenu();
+  newInstance->setDREAM3DMenu(instanceMenu);
+  newInstance->setMenuBar(instanceMenu->getMenuBar());
+
   if (NULL != m_ActiveWindow)
   {
     newInstance->move(m_ActiveWindow->x() + 45, m_ActiveWindow->y() + 45);
     m_ActiveWindow->connectSignalsSlots(newInstance);
   }
-  return newInstance;
 
   m_ActiveWindow = newInstance;
+
+  connect(newInstance, SIGNAL(dream3dWindowChangedState(DREAM3D_UI*)), this, SLOT(activeWindowChanged(DREAM3D_UI*)));
+
+  return newInstance;
 }
 
 // -----------------------------------------------------------------------------
@@ -632,16 +637,18 @@ void DREAM3DApplication::activeWindowChanged(DREAM3D_UI* instance)
 {
   if (instance->isActiveWindow())
   {
-    if (m_DREAM3DWidgetList.size() == 1)
-    {
-      toggleGlobalMenuItems(true);
-    }
+    #if defined(Q_OS_MAC)
+      if (m_DREAM3DWidgetList.size() == 1)
+      {
+        toggleGlobalMenuItems(true);
+      }
+    #endif
     m_ActiveWindow = instance;
   }
   else if (m_DREAM3DWidgetList.size() <= 0)
   {
     m_ActiveWindow = NULL;
-    #if !defined(Q_OS_WIN)
+    #if defined(Q_OS_MAC)
       toggleGlobalMenuItems(false);
     #endif
   }
