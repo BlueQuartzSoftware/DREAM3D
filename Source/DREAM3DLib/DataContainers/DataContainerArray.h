@@ -255,19 +255,31 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
     /**
      * @brief This function will create a new DataContainer of type <T>
      * @param dataContainerName The name of the DataContainer. Must not be empty or this method will ASSERT()
-     * @return
+     * @return Valid DataContainer Object UNLESS the DataContainer with the given name already exists or the
+     * dataContainerName is empty in which case a Null DataContainer will be returned.
      */
     template<typename Filter>
     DataContainer::Pointer createNonPrereqDataContainer(Filter* filter, const QString& dataContainerName)
     {
-      Q_ASSERT(dataContainerName.isEmpty() == false);
+      if(dataContainerName.isEmpty())
+      {
+        if (filter)
+        {
+          filter->setErrorCondition(-887);
+          QString ss = QObject::tr("The DataContainer Object must have a name to be created.");
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+          return DataContainer::NullPointer();
+        }
+      }
+
       if(doesDataContainerExist(dataContainerName) == true)
       {
         if (filter)
         {
           filter->setErrorCondition(-888);
-          QString ss = "The DataContainer Object with the specific name '" + dataContainerName + "' already exists.";
+          QString ss = QObject::tr("The DataContainer Object with the specific name '%1' already exists.").arg(dataContainerName);
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+          return DataContainer::NullPointer();
         }
       }
       DataContainer::Pointer dataContainer = DataContainer::New(dataContainerName);
