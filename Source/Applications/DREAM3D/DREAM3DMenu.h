@@ -59,6 +59,9 @@ public:
   QMenu* getBookmarksMenu();
   QMenu* getPipelineMenu();
   QMenu* getHelpMenu();
+  QMenu* getRecentFilesMenu();
+
+  QAction* getClearRecentFiles();
 
 private:
 
