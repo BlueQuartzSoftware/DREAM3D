@@ -248,12 +248,6 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     int openPipeline(const QString &filePath, int index, const bool &setOpenedFilePath, const bool &changeTitle);
 
     /**
-     * @brief onCustomContextMenuRequested
-     * @param pos
-     */
-    void on_customContextMenuRequested(const QPoint& pos);
-
-    /**
      * @brief reindexWidgetTitles
      */
     void reindexWidgetTitles();
@@ -310,7 +304,6 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     void dragLeaveEvent(QDragLeaveEvent* event);
     void dragMoveEvent(QDragMoveEvent* event);
     void dropEvent(QDropEvent* event);
-    void showContextMenu(const QPoint& globalPos);
 
   protected slots:
     void handleFilterParameterChanged();

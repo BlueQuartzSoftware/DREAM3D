@@ -40,6 +40,7 @@
 #include <QtCore/QTime>
 #include <QtCore/QPluginLoader>
 #include <QtCore/QFileInfo>
+#include <QtCore/QProcess>
 #include <QtCore/QDir>
 
 #include <QtWidgets/QFileDialog>
@@ -116,6 +117,11 @@ bool DREAM3DApplication::initialize(int argc, char* argv[])
 {
   QApplication::setApplicationVersion(DREAM3DLib::Version::Complete());
 
+  // If Mac, initialize global menu
+  #if defined (Q_OS_MAC)
+    m_GlobalMenu = new DREAM3DMenu();
+  #endif
+
   // Create and show the splash screen as the main window is being created.
   QPixmap pixmap(QLatin1String(":/branded_splash.png"));
   this->Splash = new DSplashScreen(pixmap);
@@ -151,11 +157,6 @@ bool DREAM3DApplication::initialize(int argc, char* argv[])
   this->MainWindow->setLoadedPlugins(plugins);
   this->MainWindow->setAttribute(Qt::WA_DeleteOnClose);
   connect(this->MainWindow, SIGNAL(dream3dWindowChangedState(DREAM3D_UI*)), this, SLOT(activeWindowChanged(DREAM3D_UI*)));
-
-  // If Mac or Linux, initialize global menu
-#if defined (Q_OS_MAC)
-  m_GlobalMenu = new DREAM3DMenu();
-#endif
 
   // Open pipeline if DREAM3D was opened from a compatible file
   if (argc == 2)
@@ -585,7 +586,10 @@ void DREAM3DApplication::on_actionOpen_triggered()
 // -----------------------------------------------------------------------------
 void DREAM3DApplication::on_actionSave_triggered()
 {
-  m_ActiveWindow->savePipeline();
+  if (NULL != m_ActiveWindow)
+  {
+    m_ActiveWindow->savePipeline();
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -593,13 +597,82 @@ void DREAM3DApplication::on_actionSave_triggered()
 // -----------------------------------------------------------------------------
 void DREAM3DApplication::on_actionSaveAs_triggered()
 {
-  m_ActiveWindow->savePipelineAs();
+  if (NULL != m_ActiveWindow)
+  {
+    m_ActiveWindow->savePipelineAs();
+  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DApplication::on_actionShowIndex_triggered()
+void DREAM3DApplication::on_actionAddBookmark_triggered()
+{
+  if (NULL != m_ActiveWindow)
+  {
+    BookmarksDockWidget* bookmarksDockWidget = m_ActiveWindow->getBookmarksDockWidget();
+
+    if (NULL != bookmarksDockWidget)
+    {
+      QString proposedDir = m_OpenDialogLastDirectory;
+      QList<QString> newPrefPaths;
+
+      newPrefPaths = QFileDialog::getOpenFileNames(m_ActiveWindow, tr("Choose Pipeline File(s)"),
+                                                   proposedDir, tr("Json File (*.json);;Dream3d File (*.dream3d);;Text File (*.txt);;Ini File (*.ini);;All Files (*.*)"));
+      if (true == newPrefPaths.isEmpty()) { return; }
+
+      QModelIndex parent = bookmarksDockWidget->getSelectedParentTreeItem();
+
+      for (int i = 0; i < newPrefPaths.size(); i++)
+      {
+        QString newPrefPath = newPrefPaths[i];
+        newPrefPath = QDir::toNativeSeparators(newPrefPath);
+        bookmarksDockWidget->addBookmark(newPrefPath, parent);
+      }
+
+      if (newPrefPaths.size() > 0)
+      {
+        // Cache the directory from the last path added
+        m_OpenDialogLastDirectory = newPrefPaths[newPrefPaths.size() - 1];
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DApplication::on_actionNewFolder_triggered()
+{
+  if (NULL != m_ActiveWindow)
+  {
+    BookmarksModel* model = BookmarksModel::Instance();
+    BookmarksDockWidget* bookmarksDockWidget = m_ActiveWindow->getBookmarksDockWidget();
+
+    QModelIndex parent = bookmarksDockWidget->getSelectedParentTreeItem();
+    QString parentName = model->index(parent.row(), BookmarksItem::Name, parent.parent()).data().toString();
+
+    QString name = "New Folder";
+
+    bookmarksDockWidget->addTreeItem(parent, name, QIcon(":/folder_blue.png"), "", true, true, false);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DApplication::on_actionClearPipeline_triggered()
+{
+  if (NULL != m_ActiveWindow)
+  {
+    m_ActiveWindow->clearPipeline();
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DApplication::on_actionShowDREAM3DHelp_triggered()
 {
   // Generate help page
   QUrl helpURL = DREAM3DHelpUrlGenerator::generateHTMLUrl("index");
@@ -609,7 +682,7 @@ void DREAM3DApplication::on_actionShowIndex_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DApplication::on_actionAbout_DREAM3D_triggered()
+void DREAM3DApplication::on_actionAboutDREAM3D_triggered()
 {
   AboutDREAM3D d(NULL);
   d.exec();
@@ -618,7 +691,7 @@ void DREAM3DApplication::on_actionAbout_DREAM3D_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DApplication::on_actionCheck_For_Updates_triggered()
+void DREAM3DApplication::on_actionCheckForUpdates_triggered()
 {
   DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(NULL);
 
@@ -635,6 +708,45 @@ void DREAM3DApplication::on_actionCheck_For_Updates_triggered()
 
   // Now display the dialog box
   d->exec();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DApplication::on_actionPluginInformation_triggered()
+{
+  AboutPlugins dialog(NULL);
+  dialog.exec();
+
+  // Write cache on exit
+  dialog.writePluginCache();
+
+  /* If any of the load checkboxes were changed, display a dialog warning
+   * the user that they must restart DREAM3D to see the changes.
+   */
+  if (dialog.getLoadPreferencesDidChange() == true)
+  {
+    QMessageBox msgBox;
+    msgBox.setText("DREAM3D must be restarted to allow these changes to take effect.");
+    msgBox.setInformativeText("Restart?");
+    msgBox.setWindowTitle("Restart Needed");
+    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    msgBox.setDefaultButton(QMessageBox::Yes);
+    int choice = msgBox.exec();
+
+    if (choice == QMessageBox::Yes)
+    {
+      for (int i=0; i<m_DREAM3DWidgetList.size(); i++)
+      {
+        DREAM3D_UI* dream3d = m_DREAM3DWidgetList[i];
+        dream3d->close();
+      }
+
+      // Restart DREAM3D
+      QProcess::startDetached(QApplication::applicationFilePath());
+      dream3dApp->quit();
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -667,6 +779,45 @@ void DREAM3DApplication::on_actionExit_triggered()
   {
     quit();
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DApplication::on_pipelineViewContextMenuRequested(const QPoint& pos)
+{
+  PipelineViewWidget* pipelineView = m_ActiveWindow->getPipelineViewWidget();
+  QMenu menu;
+
+  #if defined(Q_OS_MAC)
+    menu.addAction(m_GlobalMenu->getClearPipeline());
+  #else
+    if (NULL != m_ActiveWindow)
+    {
+      menu.addAction(m_ActiveWindow->getDREAM3DMenu()->getClearPipeline());
+    }
+  #endif
+
+  if (NULL != m_ActiveWindow)
+  {
+    menu.exec(pipelineView->mapToGlobal(pos));
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DApplication::on_bookmarksDockContextMenuRequested(const QPoint&)
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DApplication::on_prebuiltsDockContextMenuRequested(const QPoint&)
+{
+
 }
 
 // -----------------------------------------------------------------------------
@@ -732,6 +883,8 @@ void DREAM3DApplication::toggleGlobalMenuItems(bool on)
   m_GlobalMenu->getViewMenu()->setEnabled(on);
   m_GlobalMenu->getBookmarksMenu()->setEnabled(on);
   m_GlobalMenu->getPipelineMenu()->setEnabled(on);
+  m_GlobalMenu->getSave()->setEnabled(on);
+  m_GlobalMenu->getSaveAs()->setEnabled(on);
 }
 
 // -----------------------------------------------------------------------------

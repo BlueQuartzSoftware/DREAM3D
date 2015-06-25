@@ -62,6 +62,12 @@ public:
   QMenu* getRecentFilesMenu();
 
   QAction* getClearRecentFiles();
+  QAction* getNew();
+  QAction* getOpen();
+  QAction* getSave();
+  QAction* getSaveAs();
+
+  QAction* getClearPipeline();
 
 private:
 
@@ -87,7 +93,7 @@ private:
 
   // Bookmarks Menu
   QMenu*                          m_MenuBookmarks;
-  QAction*                        m_ActionAddPipeline;
+  QAction*                        m_ActionAddBookmark;
   QAction*                        m_ActionNewFolder;
 
   // Pipeline Menu
