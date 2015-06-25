@@ -136,6 +136,11 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void setDREAM3DMenu(DREAM3DMenu* menu);
 
     /**
+    * @brief getDREAM3DMenu
+    */
+    DREAM3DMenu* getDREAM3DMenu();
+
+    /**
      * @brief versionCheckReply
      */
     void versionCheckReply(UpdateCheckData*);
@@ -172,11 +177,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      * @brief savePipelineAs Helper function that saves the pipeline
      */
     bool savePipelineAs();
-
-    /**
-     * @brief Clears the recent files list
-     */
-    void clearRecentFiles();
 
   public slots:
 

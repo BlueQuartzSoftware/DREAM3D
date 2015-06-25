@@ -153,11 +153,7 @@ bool DREAM3DApplication::initialize(int argc, char* argv[])
   connect(this->MainWindow, SIGNAL(dream3dWindowChangedState(DREAM3D_UI*)), this, SLOT(activeWindowChanged(DREAM3D_UI*)));
 
   // If Mac or Linux, initialize global menu
-#if defined (Q_OS_WIN)
-  DREAM3DMenu* instanceMenu = new DREAM3DMenu();
-  this->MainWindow->setDREAM3DMenu(instanceMenu);
-  this->MainWindow->setMenuBar(instanceMenu->getMenuBar());
-#else
+#if defined (Q_OS_MAC)
   m_GlobalMenu = new DREAM3DMenu();
 #endif
 
@@ -396,24 +392,58 @@ bool DREAM3DApplication::event(QEvent* event)
 // -----------------------------------------------------------------------------
 void DREAM3DApplication::updateRecentFileList(const QString &file)
 {
-#if 0
+#if defined (Q_OS_MAC)
+  QMenu* recentFilesMenu = m_GlobalMenu->getRecentFilesMenu();
+  QAction* clearRecentFilesAction = m_GlobalMenu->getClearRecentFiles();
+
   // Clear the Recent Items Menu
-  this->m_Menu_RecentFiles->clear();
+  recentFilesMenu->clear();
 
   // Get the list from the static object
   QStringList files = QRecentFileList::instance()->fileList();
-  foreach (QString file, files)
+  foreach(QString file, files)
   {
-    QAction* action = new QAction(this->m_Menu_RecentFiles);
+    QAction* action = new QAction(recentFilesMenu);
     action->setText(QRecentFileList::instance()->parentAndFileName(file));
     action->setData(file);
     action->setVisible(true);
-    this->m_Menu_RecentFiles->addAction(action);
+    recentFilesMenu->addAction(action);
     connect(action, SIGNAL(triggered()), this, SLOT(openRecentFile()));
   }
 
-  this->m_Menu_RecentFiles->addSeparator();
-  this->m_Menu_RecentFiles->addAction(m_ActionClearRecentFiles);
+  recentFilesMenu->addSeparator();
+  recentFilesMenu->addAction(clearRecentFilesAction);
+#else
+  QList<DREAM3D_UI*> windows = dream3dApp->getDREAM3DWindowList();
+  
+  for (int i = 0; i < windows.size(); i++)
+  {
+    DREAM3D_UI* window = windows[i];
+
+    if (NULL != window)
+    {
+      QMenu* recentFilesMenu = window->getDREAM3DMenu()->getRecentFilesMenu();
+      QAction* clearRecentFilesAction = window->getDREAM3DMenu()->getClearRecentFiles();
+
+      // Clear the Recent Items Menu
+      recentFilesMenu->clear();
+
+      // Get the list from the static object
+      QStringList files = QRecentFileList::instance()->fileList();
+      foreach(QString file, files)
+      {
+        QAction* action = new QAction(recentFilesMenu);
+        action->setText(QRecentFileList::instance()->parentAndFileName(file));
+        action->setData(file);
+        action->setVisible(true);
+        recentFilesMenu->addAction(action);
+        connect(action, SIGNAL(triggered()), this, SLOT(openRecentFile()));
+      }
+
+      recentFilesMenu->addSeparator();
+      recentFilesMenu->addAction(clearRecentFilesAction);
+    }
+  }
 #endif
 }
 
@@ -422,7 +452,49 @@ void DREAM3DApplication::updateRecentFileList(const QString &file)
 // -----------------------------------------------------------------------------
 void DREAM3DApplication::on_actionClearRecentFiles_triggered()
 {
-  m_ActiveWindow->clearRecentFiles();
+#if defined (Q_OS_MAC)
+  QMenu* recentFilesMenu = m_GlobalMenu->getRecentFilesMenu();
+  QAction* clearRecentFilesAction = m_GlobalMenu->getClearRecentFiles();
+
+  // Clear the Recent Items Menu
+  recentFilesMenu->clear();
+  recentFilesMenu->addSeparator();
+  recentFilesMenu->addAction(clearRecentFilesAction);
+
+  // Clear the actual list
+  QRecentFileList* recents = QRecentFileList::instance();
+  recents->clear();
+
+  // Write out the empty list
+  DREAM3DSettings prefs;
+  recents->writeList(prefs);
+#else
+  QList<DREAM3D_UI*> windows = dream3dApp->getDREAM3DWindowList();
+
+  for (int i = 0; i < windows.size(); i++)
+  {
+    DREAM3D_UI* window = windows[i];
+
+    if (NULL != window)
+    {
+      QMenu* recentFilesMenu = window->getDREAM3DMenu()->getRecentFilesMenu();
+      QAction* clearRecentFilesAction = window->getDREAM3DMenu()->getClearRecentFiles();
+
+      // Clear the Recent Items Menu
+      recentFilesMenu->clear();
+      recentFilesMenu->addSeparator();
+      recentFilesMenu->addAction(clearRecentFilesAction);
+
+      // Clear the actual list
+      QRecentFileList* recents = QRecentFileList::instance();
+      recents->clear();
+
+      // Write out the empty list
+      DREAM3DSettings prefs;
+      recents->writeList(prefs);
+    }
+  }
+#endif
 }
 
 // -----------------------------------------------------------------------------
@@ -450,7 +522,7 @@ void DREAM3DApplication::openRecentFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QWidget*> DREAM3DApplication::getDREAM3DWindowList()
+QList<DREAM3D_UI*> DREAM3DApplication::getDREAM3DWindowList()
 {
   return m_DREAM3DWidgetList;
 }
@@ -458,17 +530,17 @@ QList<QWidget*> DREAM3DApplication::getDREAM3DWindowList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DApplication::registerDREAM3DWindow(QWidget* widget)
+void DREAM3DApplication::registerDREAM3DWindow(DREAM3D_UI* window)
 {
-  m_DREAM3DWidgetList.push_back(widget);
+  m_DREAM3DWidgetList.push_back(window);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DApplication::unregisterDREAM3DWindow(QWidget* widget)
+void DREAM3DApplication::unregisterDREAM3DWindow(DREAM3D_UI* window)
 {
-  m_DREAM3DWidgetList.removeAll(widget);
+  m_DREAM3DWidgetList.removeAll(window);
 }
 
 // -----------------------------------------------------------------------------
@@ -570,7 +642,6 @@ void DREAM3DApplication::on_actionCheck_For_Updates_triggered()
 // -----------------------------------------------------------------------------
 void DREAM3DApplication::on_actionCloseWindow_triggered()
 {
-  unregisterDREAM3DWindow(m_ActiveWindow);
   m_ActiveWindow->close();
 }
 
@@ -609,13 +680,8 @@ DREAM3D_UI* DREAM3DApplication::getNewDREAM3DInstance()
   // Create new DREAM3D instance
   DREAM3D_UI* newInstance = new DREAM3D_UI(NULL);
   newInstance->setLoadedPlugins(plugins);
-  registerDREAM3DWindow(newInstance);
   newInstance->setAttribute(Qt::WA_DeleteOnClose);
   newInstance->setWindowTitle("[*]Untitled Pipeline - DREAM3D");
-
-  DREAM3DMenu* instanceMenu = new DREAM3DMenu();
-  newInstance->setDREAM3DMenu(instanceMenu);
-  newInstance->setMenuBar(instanceMenu->getMenuBar());
 
   if (NULL != m_ActiveWindow)
   {
@@ -666,6 +732,22 @@ void DREAM3DApplication::toggleGlobalMenuItems(bool on)
   m_GlobalMenu->getViewMenu()->setEnabled(on);
   m_GlobalMenu->getBookmarksMenu()->setEnabled(on);
   m_GlobalMenu->getPipelineMenu()->setEnabled(on);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DApplication::toPipelineRunningState()
+{
+  m_ActiveWindow->getDREAM3DMenu()->getPipelineMenu()->setDisabled(true);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DApplication::toPipelineIdleState()
+{
+  m_ActiveWindow->getDREAM3DMenu()->getPipelineMenu()->setEnabled(true);
 }
 
 

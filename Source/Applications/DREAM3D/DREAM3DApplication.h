@@ -66,10 +66,10 @@ public:
 
   bool initialize(int argc, char* argv[]);
 
-  QList<QWidget*> getDREAM3DWindowList();
+  QList<DREAM3D_UI*> getDREAM3DWindowList();
 
-  void registerDREAM3DWindow(QWidget* widget);
-  void unregisterDREAM3DWindow(QWidget* widget);
+  void registerDREAM3DWindow(DREAM3D_UI* window);
+  void unregisterDREAM3DWindow(DREAM3D_UI* window);
 
 protected:
   bool event(QEvent* event);
@@ -107,8 +107,12 @@ protected slots:
   void on_actionCheck_For_Updates_triggered();
   void on_actionAbout_DREAM3D_triggered();
 
+  void toPipelineRunningState();
+
+  void toPipelineIdleState();
+
 private:
-  QList<QWidget*>                 m_DREAM3DWidgetList;
+  QList<DREAM3D_UI*>              m_DREAM3DWidgetList;
   DREAM3D_UI*                     m_ActiveWindow;
   DREAM3DMenu*                    m_GlobalMenu;
 

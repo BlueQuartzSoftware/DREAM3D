@@ -82,6 +82,7 @@
 #include "Applications/DREAM3D/AboutPlugins.h"
 #include "Applications/DREAM3D/DREAM3Dv6Wizard.h"
 #include "Applications/DREAM3D/DREAM3DApplication.h"
+#include "Applications/DREAM3D/DREAM3DMenu.h"
 
 
 // Initialize private static member variable
@@ -108,6 +109,14 @@ DREAM3D_UI::DREAM3D_UI(QWidget* parent) :
   m_ShouldRestart(false),
   m_OpenedFilePath("")
 {
+  dream3dApp->registerDREAM3DWindow(this);
+
+#if !defined(Q_OS_MAC)
+  // Create the menu
+  m_InstanceMenu = new DREAM3DMenu();
+  setMenuBar(m_InstanceMenu->getMenuBar());
+#endif
+
   m_OpenDialogLastDirectory = QDir::homePath();
 
   // Update first run
@@ -136,11 +145,6 @@ DREAM3D_UI::DREAM3D_UI(QWidget* parent) :
 
   // Set window modified to false
   setWindowModified(false);
-
-#if 0
-  // If all DREAM3D windows are closed, disable menus
-  connect(dream3dApp, SIGNAL(lastWindowClosed()), this, SLOT(disableMenuItems()));
-#endif
 }
 
 // -----------------------------------------------------------------------------
@@ -148,7 +152,7 @@ DREAM3D_UI::DREAM3D_UI(QWidget* parent) :
 // -----------------------------------------------------------------------------
 DREAM3D_UI::~DREAM3D_UI()
 {
-
+  dream3dApp->unregisterDREAM3DWindow(this);
 }
 
 // -----------------------------------------------------------------------------
@@ -231,15 +235,6 @@ void DREAM3D_UI::resizeEvent ( QResizeEvent* event )
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::openNewPipeline(const QString &filePath, const bool &setOpenedFilePath, const bool &addToRecentFiles)
 {
-  //if (pipelineViewWidget->filterCount() > 0)
-  //{
-  //  openNewPipeline(filePath, setOpenedFilePath, addToRecentFiles, true);
-  //}
-  //else
-  //{
-  //  openNewPipeline(filePath, setOpenedFilePath, addToRecentFiles, false);
-  //}
-
   openNewPipeline(filePath, setOpenedFilePath, addToRecentFiles, true);
 }
 
@@ -664,9 +659,6 @@ void DREAM3D_UI::setupGui()
 
   pipelineViewScrollArea->verticalScrollBar()->setSingleStep(5);
 
-  // Make the connections between the gui elements
-  //QRecentFileList* recentsList = QRecentFileList::instance();
-
   // Hook up the signals from the various docks to the PipelineViewWidget that will either add a filter
   // or load an entire pipeline into the view
   connectSignalsSlots();
@@ -777,30 +769,6 @@ void DREAM3D_UI::connectSignalsSlots(DREAM3D_UI* other)
 
   connect(other->getBookmarksDockWidget()->getBookmarksTreeView(), SIGNAL(expanded(const QModelIndex&)),
     bookmarksDockWidget->getBookmarksTreeView(), SLOT(expand(const QModelIndex&)));
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::clearRecentFiles()
-{
-  // Clear the Recent Items Menu
-  QList<QMenu*> menus = menuBar()->findChildren<QMenu*>("menu_RecentFiles", Qt::FindChildrenRecursively);
-  if (menus.size() == 1)
-  {
-    QMenu* menu_RecentFiles = menus[0];
-    menu_RecentFiles->clear();
-    menu_RecentFiles->addSeparator();
-    menu_RecentFiles->addAction(actionClearRecentFiles);
-
-    // Clear the actual list
-    QRecentFileList* recents = QRecentFileList::instance();
-    recents->clear();
-
-    // Write out the empty list
-    DREAM3DSettings prefs;
-    recents->writeList(prefs);
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -1213,11 +1181,6 @@ void DREAM3D_UI::on_startPipelineBtn_clicked()
     qDebug() << "canceling from GUI...." << "\n";
     emit pipelineCanceled();
 
-#if 0
-    // Enable the "Clear Pipeline" menu option
-    m_ActionClearPipeline->setEnabled(true);
-#endif
-
     // Enable FilterListDockWidget signals - resume adding filters
     filterListDockWidget->blockSignals(false);
 
@@ -1274,16 +1237,16 @@ void DREAM3D_UI::on_startPipelineBtn_clicked()
   connect(this, SIGNAL(pipelineCanceled()), pipelineViewWidget, SLOT(toIdleState()));
   connect(this, SIGNAL(pipelineFinished()), pipelineViewWidget, SLOT(toIdleState()));
 
+  // Connect signals and slots between DREAM3D_UI and DREAM3DApplication
+  connect(this, SIGNAL(pipelineStarted()), dream3dApp, SLOT(toPipelineRunningState()));
+  connect(this, SIGNAL(pipelineCanceled()), dream3dApp, SLOT(toPipelineIdleState()));
+  connect(this, SIGNAL(pipelineFinished()), dream3dApp, SLOT(toPipelineIdleState()));
+
   // Block FilterListDockWidget signals, so that we can't add filters to the view while running the pipeline
   filterListDockWidget->blockSignals(true);
 
   // Block FilterLibraryDockWidget signals, so that we can't add filters to the view while running the pipeline
   filterLibraryDockWidget->blockSignals(true);
-
-#if 0
-  // Disable the "Clear Pipeline" menu option
-  m_ActionClearPipeline->setDisabled(true);
-#endif
 
   // Move the FilterPipeline object into the thread that we just created.
   m_PipelineInFlight->moveToThread(m_WorkerThread);
@@ -1373,11 +1336,6 @@ void DREAM3D_UI::pipelineDidFinish()
   m_PipelineInFlight = FilterPipeline::NullPointer();// This _should_ remove all the filters and deallocate them
   startPipelineBtn->setText("Go");
   m_ProgressBar->setValue(0);
-
-#if 0
-  // Enable the "Clear Pipeline" menu option
-  m_ActionClearPipeline->setEnabled(true);
-#endif
 
   // Re-enable FilterListDockWidget signals - resume adding filters
   filterListDockWidget->blockSignals(false);
@@ -1608,6 +1566,14 @@ void DREAM3D_UI::changeEvent(QEvent* event)
 void DREAM3D_UI::setDREAM3DMenu(DREAM3DMenu* menu)
 {
   m_InstanceMenu = menu;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DREAM3DMenu* DREAM3D_UI::getDREAM3DMenu()
+{
+  return m_InstanceMenu;
 }
 
 
