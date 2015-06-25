@@ -212,12 +212,12 @@ void DREAM3DMenu::initialize()
   m_ActionClearRecentFiles->setText(QApplication::translate("DREAM3D_UI", "Clear Recent Files", 0));
   m_ActionExit->setText(QApplication::translate("DREAM3D_UI", "Exit DREAM3D", 0));
 #if defined(Q_OS_WIN)
-  actionExit->setShortcut(QKeySequence(Qt::ALT + Qt::Key_F4));
+  m_ActionExit->setShortcut(QKeySequence(Qt::ALT + Qt::Key_F4));
 #else
   m_ActionExit->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
 #endif
 #if defined(Q_OS_WIN)
-  actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Windows Explorer", 0));
+  m_ActionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Windows Explorer", 0));
 #elif defined(Q_OS_MAC)
   m_ActionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Finder", 0));
 #else
