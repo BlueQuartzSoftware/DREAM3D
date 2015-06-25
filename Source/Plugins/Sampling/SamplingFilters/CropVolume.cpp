@@ -513,12 +513,23 @@ void CropVolume::execute()
 IntVec3_t CropVolume::getCurrentVolumeDataContainerDimensions()
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
+
   IntVec3_t data;
-  if (NULL != m.get())
+  if (NULL != m.get() )
   {
-    data.x = m->getGeometryAs<ImageGeom>()->getXPoints();
-    data.y = m->getGeometryAs<ImageGeom>()->getYPoints();
-    data.z = m->getGeometryAs<ImageGeom>()->getZPoints();
+    ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
+    if (image.get() != NULL)
+    {
+      data.x = image->getXPoints();
+      data.y = image->getYPoints();
+      data.z = image->getZPoints();
+    }
+    else
+    {
+      data.x = 0;
+      data.y = 0;
+      data.z = 0;
+    }
   }
   else
   {
@@ -538,9 +549,20 @@ FloatVec3_t CropVolume::getCurrentVolumeDataContainerResolutions()
   FloatVec3_t data;
   if (NULL != m)
   {
-    data.x = m->getGeometryAs<ImageGeom>()->getXRes();
-    data.y = m->getGeometryAs<ImageGeom>()->getYRes();
-    data.z = m->getGeometryAs<ImageGeom>()->getZRes();
+    ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
+    if (image.get() != NULL)
+    {
+      data.x = image->getXRes();
+      data.y = image->getYRes();
+      data.z = image->getZRes();
+    }
+    else
+    {
+      data.x = 0;
+      data.y = 0;
+      data.z = 0;
+    }
+
   }
   else
   {
