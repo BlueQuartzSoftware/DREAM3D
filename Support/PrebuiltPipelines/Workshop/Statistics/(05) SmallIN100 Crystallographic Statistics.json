@@ -1,6 +1,6 @@
 {
     "0": {
-        "Filter_Human_Label": "Read DREAM3D Data File",
+        "Filter_Human_Label": "Read DREAM.3D Data File",
         "Filter_Name": "DataContainerReader",
         "InputFile": "Data/Output/SmallIN100Cleaned.dream3d",
         "InputFileDataContainerArrayProxy": {
@@ -16,7 +16,7 @@
                                     "Flag": 2,
                                     "Name": "Confidence Index",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -27,22 +27,9 @@
                                         1
                                     ],
                                     "Flag": 2,
-                                    "Name": "CriticalField1",
+                                    "Name": "CriticalField",
                                     "Object Type": "DataArray<bool>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "CriticalField2",
-                                    "Object Type": "DataArray<bool>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -55,7 +42,7 @@
                                     "Flag": 2,
                                     "Name": "EquivalentDiameters",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -68,7 +55,7 @@
                                     "Flag": 2,
                                     "Name": "EulerAngles",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         3
                                     ],
@@ -81,7 +68,7 @@
                                     "Flag": 2,
                                     "Name": "FeatureIds",
                                     "Object Type": "DataArray<int32_t>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -94,7 +81,7 @@
                                     "Flag": 2,
                                     "Name": "Fit",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -107,7 +94,7 @@
                                     "Flag": 2,
                                     "Name": "GBEuclideanDistances",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -120,7 +107,7 @@
                                     "Flag": 2,
                                     "Name": "IPFColor",
                                     "Object Type": "DataArray<uint8_t>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         3
                                     ],
@@ -133,7 +120,20 @@
                                     "Flag": 2,
                                     "Name": "Image Quality",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
+                                    "Tuple Dimensions": [
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "Mask",
+                                    "Object Type": "DataArray<bool>",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -146,7 +146,7 @@
                                     "Flag": 2,
                                     "Name": "MisorientationColor",
                                     "Object Type": "DataArray<uint8_t>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         3
                                     ],
@@ -159,7 +159,7 @@
                                     "Flag": 2,
                                     "Name": "ParentIds",
                                     "Object Type": "DataArray<int32_t>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -172,7 +172,7 @@
                                     "Flag": 2,
                                     "Name": "Phases",
                                     "Object Type": "DataArray<int32_t>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -185,7 +185,7 @@
                                     "Flag": 2,
                                     "Name": "QPEuclideanDistances",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -198,7 +198,7 @@
                                     "Flag": 2,
                                     "Name": "Quats",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         4
                                     ],
@@ -211,7 +211,7 @@
                                     "Flag": 2,
                                     "Name": "SEM Signal",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -224,20 +224,7 @@
                                     "Flag": 2,
                                     "Name": "TJEuclideanDistances",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "ThresholdArray",
-                                    "Object Type": "DataArray<bool>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -250,7 +237,7 @@
                                     "Flag": 2,
                                     "Name": "X Position",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -263,7 +250,7 @@
                                     "Flag": 2,
                                     "Name": "Y Position",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -283,7 +270,7 @@
                                     "Flag": 2,
                                     "Name": "CrystalStructures",
                                     "Object Type": "DataArray<uint32_t>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellEnsembleData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellEnsembleData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -296,7 +283,7 @@
                                     "Flag": 2,
                                     "Name": "LatticeConstants",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellEnsembleData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellEnsembleData",
                                     "Tuple Dimensions": [
                                         6
                                     ],
@@ -309,7 +296,7 @@
                                     "Flag": 2,
                                     "Name": "MaterialName",
                                     "Object Type": "DataArray<int8_t>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellEnsembleData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellEnsembleData",
                                     "Tuple Dimensions": [
                                         14
                                     ],
@@ -329,7 +316,7 @@
                                     "Flag": 2,
                                     "Name": "Active",
                                     "Object Type": "DataArray<bool>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -342,7 +329,7 @@
                                     "Flag": 2,
                                     "Name": "AspectRatios",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
                                         2
                                     ],
@@ -352,10 +339,10 @@
                                     "Component Dimensions": [
                                         3
                                     ],
-                                    "Flag": 2,
+                                    "Flag": 0,
                                     "Name": "AvgEulerAngles",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
                                         3
                                     ],
@@ -365,10 +352,10 @@
                                     "Component Dimensions": [
                                         4
                                     ],
-                                    "Flag": 2,
+                                    "Flag": 0,
                                     "Name": "AvgQuats",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
                                         4
                                     ],
@@ -381,7 +368,7 @@
                                     "Flag": 2,
                                     "Name": "AxisEulerAngles",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
                                         3
                                     ],
@@ -394,7 +381,7 @@
                                     "Flag": 2,
                                     "Name": "AxisLengths",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
                                         3
                                     ],
@@ -407,7 +394,7 @@
                                     "Flag": 2,
                                     "Name": "Centroids",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
                                         3
                                     ],
@@ -418,22 +405,9 @@
                                         1
                                     ],
                                     "Flag": 2,
-                                    "Name": "CriticalFields1",
+                                    "Name": "CriticalFields",
                                     "Object Type": "DataArray<bool>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "CriticalFields2",
-                                    "Object Type": "DataArray<bool>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -446,7 +420,7 @@
                                     "Flag": 2,
                                     "Name": "EquivalentDiameters",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -459,7 +433,7 @@
                                     "Flag": 2,
                                     "Name": "NeighborList",
                                     "Object Type": "NeighborList<T>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -472,7 +446,7 @@
                                     "Flag": 2,
                                     "Name": "NeighborhoodList",
                                     "Object Type": "NeighborList<T>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -485,7 +459,7 @@
                                     "Flag": 2,
                                     "Name": "Neighborhoods",
                                     "Object Type": "DataArray<int32_t>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -498,7 +472,7 @@
                                     "Flag": 2,
                                     "Name": "NumCells",
                                     "Object Type": "DataArray<int32_t>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -511,7 +485,20 @@
                                     "Flag": 2,
                                     "Name": "NumNeighbors",
                                     "Object Type": "DataArray<int32_t>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
+                                    "Tuple Dimensions": [
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "NumNeighbors2",
+                                    "Object Type": "DataArray<int32_t>",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -524,7 +511,7 @@
                                     "Flag": 2,
                                     "Name": "Omega3s",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -537,7 +524,7 @@
                                     "Flag": 2,
                                     "Name": "ParentIds",
                                     "Object Type": "DataArray<int32_t>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -550,7 +537,20 @@
                                     "Flag": 2,
                                     "Name": "Phases",
                                     "Object Type": "DataArray<int32_t>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
+                                    "Tuple Dimensions": [
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "Shape Volumes",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -563,7 +563,7 @@
                                     "Flag": 2,
                                     "Name": "SharedSurfaceAreaList",
                                     "Object Type": "NeighborList<T>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -574,9 +574,9 @@
                                         1
                                     ],
                                     "Flag": 2,
-                                    "Name": "Volumes",
+                                    "Name": "Size Volumes",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -596,7 +596,7 @@
                                     "Flag": 2,
                                     "Name": "Active",
                                     "Object Type": "DataArray<bool>",
-                                    "Path": "/DataContainers/VolumeDataContainer/NewCellFeatureData",
+                                    "Path": "/DataContainers/ImageDataContainer/NewCellFeatureData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -609,7 +609,7 @@
                         }
                     ],
                     "Flag": 2,
-                    "Name": "VolumeDataContainer",
+                    "Name": "ImageDataContainer",
                     "Type": 0
                 }
             ]
@@ -620,35 +620,35 @@
         "AvgEulerAnglesArrayPath": {
             "Attribute Matrix Name": "CellFeatureData",
             "Data Array Name": "AvgEulerAngles",
-            "Data Container Name": "VolumeDataContainer"
+            "Data Container Name": "ImageDataContainer"
         },
         "AvgQuatsArrayPath": {
             "Attribute Matrix Name": "CellFeatureData",
             "Data Array Name": "AvgQuats",
-            "Data Container Name": "VolumeDataContainer"
+            "Data Container Name": "ImageDataContainer"
         },
         "CellPhasesArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "Phases",
-            "Data Container Name": "VolumeDataContainer"
+            "Data Container Name": "ImageDataContainer"
         },
         "CrystalStructuresArrayPath": {
             "Attribute Matrix Name": "CellEnsembleData",
             "Data Array Name": "CrystalStructures",
-            "Data Container Name": "VolumeDataContainer"
+            "Data Container Name": "ImageDataContainer"
         },
         "FeatureIdsArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "FeatureIds",
-            "Data Container Name": "VolumeDataContainer"
+            "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "5.2.1325.091b8ac",
+        "FilterVersion": "6.0.1882",
         "Filter_Human_Label": "Find Feature Average Orientations",
         "Filter_Name": "FindAvgOrientations",
         "QuatsArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "Quats",
-            "Data Container Name": "VolumeDataContainer"
+            "Data Container Name": "ImageDataContainer"
         }
     },
     "2": {
@@ -656,19 +656,19 @@
         "AvgQuatsArrayPath": {
             "Attribute Matrix Name": "CellFeatureData",
             "Data Array Name": "AvgQuats",
-            "Data Container Name": "VolumeDataContainer"
+            "Data Container Name": "ImageDataContainer"
         },
         "CrystalStructuresArrayPath": {
             "Attribute Matrix Name": "CellEnsembleData",
             "Data Array Name": "CrystalStructures",
-            "Data Container Name": "VolumeDataContainer"
+            "Data Container Name": "ImageDataContainer"
         },
         "FeaturePhasesArrayPath": {
             "Attribute Matrix Name": "CellFeatureData",
             "Data Array Name": "Phases",
-            "Data Container Name": "VolumeDataContainer"
+            "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "5.2.1325.091b8ac",
+        "FilterVersion": "6.0.1882",
         "Filter_Human_Label": "Find Feature Neighbor Misorientations",
         "Filter_Name": "FindMisorientations",
         "FindAvgMisors": 0,
@@ -676,31 +676,26 @@
         "NeighborListArrayPath": {
             "Attribute Matrix Name": "CellFeatureData",
             "Data Array Name": "NeighborList",
-            "Data Container Name": "VolumeDataContainer"
+            "Data Container Name": "ImageDataContainer"
         }
     },
     "3": {
         "AvgQuatsArrayPath": {
             "Attribute Matrix Name": "CellFeatureData",
             "Data Array Name": "AvgQuats",
-            "Data Container Name": "VolumeDataContainer"
-        },
-        "CellFeatureAttributeMatrixName": {
-            "Attribute Matrix Name": "CellFeatureData",
-            "Data Array Name": "",
-            "Data Container Name": "VolumeDataContainer"
+            "Data Container Name": "ImageDataContainer"
         },
         "CrystalStructuresArrayPath": {
             "Attribute Matrix Name": "CellEnsembleData",
             "Data Array Name": "CrystalStructures",
-            "Data Container Name": "VolumeDataContainer"
+            "Data Container Name": "ImageDataContainer"
         },
         "FeaturePhasesArrayPath": {
             "Attribute Matrix Name": "CellFeatureData",
             "Data Array Name": "Phases",
-            "Data Container Name": "VolumeDataContainer"
+            "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "5.2.1325.091b8ac",
+        "FilterVersion": "6.0.1882",
         "Filter_Human_Label": "Find Schmid Factors",
         "Filter_Name": "FindSchmids",
         "LambdasArrayName": "Schmid_Lambdas",
@@ -730,37 +725,37 @@
         "AvgQuatsArrayPath": {
             "Attribute Matrix Name": "CellFeatureData",
             "Data Array Name": "AvgQuats",
-            "Data Container Name": "VolumeDataContainer"
+            "Data Container Name": "ImageDataContainer"
         },
         "CellPhasesArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "Phases",
-            "Data Container Name": "VolumeDataContainer"
+            "Data Container Name": "ImageDataContainer"
         },
         "CrystalStructuresArrayPath": {
             "Attribute Matrix Name": "CellEnsembleData",
             "Data Array Name": "CrystalStructures",
-            "Data Container Name": "VolumeDataContainer"
+            "Data Container Name": "ImageDataContainer"
         },
         "FeatureAvgMisorientationsArrayName": "FeatureAvgMisorientations",
         "FeatureIdsArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "FeatureIds",
-            "Data Container Name": "VolumeDataContainer"
+            "Data Container Name": "ImageDataContainer"
         },
         "FeatureReferenceMisorientationsArrayName": "FeatureReferenceMisorientations",
-        "FilterVersion": "5.2.1325.091b8ac",
+        "FilterVersion": "6.0.1882",
         "Filter_Human_Label": "Find Feature Reference Misorientations",
         "Filter_Name": "FindFeatureReferenceMisorientations",
         "GBEuclideanDistancesArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "GBEuclideanDistances",
-            "Data Container Name": "VolumeDataContainer"
+            "Data Container Name": "ImageDataContainer"
         },
         "QuatsArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "Quats",
-            "Data Container Name": "VolumeDataContainer"
+            "Data Container Name": "ImageDataContainer"
         },
         "ReferenceOrientation": 0
     },
@@ -768,19 +763,19 @@
         "CellPhasesArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "Phases",
-            "Data Container Name": "VolumeDataContainer"
+            "Data Container Name": "ImageDataContainer"
         },
         "CrystalStructuresArrayPath": {
             "Attribute Matrix Name": "CellEnsembleData",
             "Data Array Name": "CrystalStructures",
-            "Data Container Name": "VolumeDataContainer"
+            "Data Container Name": "ImageDataContainer"
         },
         "FeatureIdsArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "FeatureIds",
-            "Data Container Name": "VolumeDataContainer"
+            "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "5.2.1325.091b8ac",
+        "FilterVersion": "6.0.1882",
         "Filter_Human_Label": "Find Kernel Average Misorientations",
         "Filter_Name": "FindKernelAvgMisorientations",
         "KernelAverageMisorientationsArrayName": "KernelAverageMisorientations",
@@ -792,12 +787,12 @@
         "QuatsArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "Quats",
-            "Data Container Name": "VolumeDataContainer"
+            "Data Container Name": "ImageDataContainer"
         }
     },
     "6": {
-        "FilterVersion": "5.2.1325.091b8ac",
-        "Filter_Human_Label": "Write DREAM3D Data File",
+        "FilterVersion": "6.0.1882",
+        "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100Cleaned.dream3d",
         "WriteXdmfFile": 1
@@ -805,6 +800,6 @@
     "PipelineBuilder": {
         "Name": "(05) SmallIN100 Crystallographic Statistics",
         "Number_Filters": 7,
-        "Version": "5.2.1325.091b8ac"
+        "Version": "6.0"
     }
 }
