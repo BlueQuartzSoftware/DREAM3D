@@ -175,6 +175,8 @@ void ChangeResolution::dataCheck()
     getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
   }
 
+  getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getCellAttributeMatrixPath(), -301);
+
   if (getRenumberFeatures() == true)
   {
     QVector<size_t> cDims(1, 1);
@@ -233,7 +235,7 @@ void ChangeResolution::preflight()
   tDims[2] = m_ZP;
   m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName())->setTupleDimensions(tDims);
 
-  if(m_RenumberFeatures == true)
+  if (m_RenumberFeatures == true)
   {
     AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
     QVector<bool> activeObjects(cellFeatureAttrMat->getNumTuples(), true);
