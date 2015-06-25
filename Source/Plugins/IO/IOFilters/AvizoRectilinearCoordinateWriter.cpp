@@ -56,7 +56,7 @@ AvizoRectilinearCoordinateWriter::AvizoRectilinearCoordinateWriter() :
   m_OutputFile(""),
   m_WriteBinaryFile(false),
   m_WriteFeatureIds(true),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
   setupFilterParameters();

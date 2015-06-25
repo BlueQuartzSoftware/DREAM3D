@@ -56,10 +56,10 @@
 // -----------------------------------------------------------------------------
 FindDirectionalModuli::FindDirectionalModuli() :
   AbstractFilter(),
-  m_FeaturePhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
-  m_CrystalStructuresArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
-  m_CrystalCompliancesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, "CrystalCompliances"),
-  m_AvgQuatsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
+  m_FeaturePhasesArrayPath("", "", ""),
+  m_CrystalStructuresArrayPath("", "", ""),
+  m_CrystalCompliancesArrayPath("", "", ""),
+  m_AvgQuatsArrayPath("", "", ""),
   m_DirectionalModuliArrayName("DirectionalModuli"),
   m_DirectionalModuli(NULL),
   m_FeaturePhases(NULL),

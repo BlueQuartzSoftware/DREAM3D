@@ -68,7 +68,7 @@ class ScopedFileMonitor
 // -----------------------------------------------------------------------------
 GoldfeatherReader::GoldfeatherReader() :
   AbstractFilter(),
-  m_SurfaceDataContainerName(DREAM3D::Defaults::DataContainerName),
+  m_SurfaceDataContainerName(DREAM3D::Defaults::TriangleDataContainerName),
   m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
   m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
   m_SurfaceMeshPrincipalCurvature1sArrayName(DREAM3D::FaceData::SurfaceMeshPrincipalCurvature1),

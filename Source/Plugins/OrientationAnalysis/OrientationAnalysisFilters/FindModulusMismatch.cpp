@@ -97,8 +97,8 @@ class FindModulusMismatchImpl
 // -----------------------------------------------------------------------------
 FindModulusMismatch::FindModulusMismatch()  :
   AbstractFilter(),
-  m_ModuliArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, "ElasticModuli"),
-  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
+  m_ModuliArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, "ElasticModuli"),
+  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::TriangleDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshDeltaModulusArrayName("SurfaceMeshDeltaModulus"),
   m_Moduli(NULL),
   m_SurfaceMeshFaceLabels(NULL)

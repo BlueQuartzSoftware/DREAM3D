@@ -50,7 +50,7 @@ ErodeDilateCoordinationNumber::ErodeDilateCoordinationNumber() :
   AbstractFilter(),
   m_Loop(false),
   m_CoordinationNumber(6),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_Neighbors(NULL),
   m_FeatureIds(NULL)
 {

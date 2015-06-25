@@ -79,7 +79,7 @@ DxReaderPrivate::DxReaderPrivate(DxReader* ptr) :
 // -----------------------------------------------------------------------------
 DxReader::DxReader() :
   FileReader(),
-  m_VolumeDataContainerName(DREAM3D::Defaults::DataContainerName),
+  m_VolumeDataContainerName(DREAM3D::Defaults::ImageDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_InputFile(""),
   m_FileWasRead(false),

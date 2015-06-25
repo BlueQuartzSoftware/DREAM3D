@@ -49,9 +49,9 @@
 // -----------------------------------------------------------------------------
 FindAvgScalarValueForFeatures::FindAvgScalarValueForFeatures() :
   AbstractFilter(),
-  m_SelectedCellArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::ElementAttributeMatrixName, ""),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::ElementAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_NewFeatureArrayArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, DREAM3D::FeatureData::ScalarAverages),
+  m_SelectedCellArrayPath("", "", ""),
+  m_FeatureIdsArrayPath("", "", ""),
+  m_NewFeatureArrayArrayPath("", "", ""),
   m_InDataArray(NULL),
   m_FeatureIds(NULL),
   m_NewFeatureArray(NULL)

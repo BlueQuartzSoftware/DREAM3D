@@ -48,7 +48,7 @@
 // -----------------------------------------------------------------------------
 InputCrystalCompliances::InputCrystalCompliances() :
   AbstractFilter(),
-  m_CrystalCompliancesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::EnsembleAttributeMatrixName, "Crystal Compliances"),
+  m_CrystalCompliancesArrayPath("", "", ""),
   m_CrystalCompliances(NULL)
 {
   m_Compliances.v11 = 1;

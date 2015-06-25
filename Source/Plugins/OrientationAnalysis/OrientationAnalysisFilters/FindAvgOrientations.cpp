@@ -50,12 +50,12 @@
 // -----------------------------------------------------------------------------
 FindAvgOrientations::FindAvgOrientations() :
   AbstractFilter(),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_CellPhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
-  m_QuatsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Quats),
-  m_CrystalStructuresArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
-  m_AvgQuatsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
-  m_AvgEulerAnglesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgEulerAngles),
+  m_FeatureIdsArrayPath("", "", ""),
+  m_CellPhasesArrayPath("", "", ""),
+  m_QuatsArrayPath("", "", ""),
+  m_CrystalStructuresArrayPath("", "", ""),
+  m_AvgQuatsArrayPath("", "", ""),
+  m_AvgEulerAnglesArrayPath("", "", ""),
   m_FeatureIds(NULL),
   m_CellPhases(NULL),
   m_Quats(NULL),

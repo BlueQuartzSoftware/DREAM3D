@@ -110,7 +110,7 @@ class CalculateAreasImpl
 // -----------------------------------------------------------------------------
 TriangleAreaFilter::TriangleAreaFilter() :
   SurfaceMeshFilter(),
-  m_SurfaceMeshTriangleAreasArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceAreas),
+  m_SurfaceMeshTriangleAreasArrayPath(DREAM3D::Defaults::TriangleDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceAreas),
   m_SurfaceMeshTriangleAreas(NULL)
 {
   setupFilterParameters();

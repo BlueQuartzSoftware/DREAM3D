@@ -113,7 +113,7 @@ class RotateEulerRefFrameImpl
 RotateEulerRefFrame::RotateEulerRefFrame() :
   AbstractFilter(),
   m_RotationAngle(0.0f),
-  m_CellEulerAnglesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerAngles),
+  m_CellEulerAnglesArrayPath("", "", ""),
   m_CellEulerAngles(NULL)
 {
   m_RotationAxis.x = 0.0f;

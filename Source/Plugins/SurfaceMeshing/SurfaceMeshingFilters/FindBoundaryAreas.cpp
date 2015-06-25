@@ -46,9 +46,9 @@
 // -----------------------------------------------------------------------------
 FindBoundaryAreas::FindBoundaryAreas() :
   AbstractFilter(),
-  m_SurfaceMeshTriangleAreasArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceAreas),
-  m_SurfaceMeshFeatureFaceIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_SurfaceMeshBoundaryAreasArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceFeatureAttributeMatrixName, "BoundaryAreas"),
+  m_SurfaceMeshTriangleAreasArrayPath(DREAM3D::Defaults::TriangleDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceAreas),
+  m_SurfaceMeshFeatureFaceIdsArrayPath(DREAM3D::Defaults::TriangleDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_SurfaceMeshBoundaryAreasArrayPath(DREAM3D::Defaults::TriangleDataContainerName, DREAM3D::Defaults::FaceFeatureAttributeMatrixName, "BoundaryAreas"),
   m_SurfaceMeshTriangleAreas(NULL),
   m_SurfaceMeshFeatureFaceIds(NULL),
   m_SurfaceMeshBoundaryAreas(NULL)

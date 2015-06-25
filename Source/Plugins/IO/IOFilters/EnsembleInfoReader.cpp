@@ -52,8 +52,8 @@
 // -----------------------------------------------------------------------------
 EnsembleInfoReader::EnsembleInfoReader() :
   FileReader(),
-  m_DataContainerName(DREAM3D::Defaults::DataContainerName),
-  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
+  m_DataContainerName(""),
+  m_CellEnsembleAttributeMatrixName(""),
   m_InputFile(""),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),

@@ -48,8 +48,8 @@
 // -----------------------------------------------------------------------------
 FindVolFractions::FindVolFractions() :
   AbstractFilter(),
-  m_CellPhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::ElementAttributeMatrixName, DREAM3D::CellData::Phases),
-  m_VolFractionsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::EnsembleAttributeMatrixName, DREAM3D::EnsembleData::VolFractions),
+  m_CellPhasesArrayPath("", "", ""),
+  m_VolFractionsArrayPath("", "", ""),
   m_CellPhases(NULL),
   m_VolFractions(NULL)
 {

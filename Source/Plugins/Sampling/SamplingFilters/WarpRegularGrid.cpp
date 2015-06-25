@@ -51,8 +51,8 @@
 // -----------------------------------------------------------------------------
 WarpRegularGrid::WarpRegularGrid() :
   AbstractFilter(),
-  m_NewDataContainerName(DREAM3D::Defaults::NewDataContainerName),
-  m_CellAttributeMatrixPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
+  m_NewDataContainerName(DREAM3D::Defaults::NewImageDataContainerName),
+  m_CellAttributeMatrixPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
   m_PolyOrder(0),
   m_SaveAsNewDataContainer(false)
 {

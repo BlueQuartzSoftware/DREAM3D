@@ -151,24 +151,24 @@ void DataContainerSelectionWidget::populateComboBoxes()
   {
     return;
   }
-  // Cache the DataContainerArray Structure for our use during all the selections
-  m_DcaProxy = DataContainerArrayProxy(dca.get());
 
-  // Populate the DataContainerArray Combo Box with all the DataContainers
-  QList<DataContainerProxy> dcList = m_DcaProxy.dataContainers.values();
-  QListIterator<DataContainerProxy> iter(dcList);
+  QString prevName = dataContainerList->currentText();
+  dataContainerList->clear();
 
-  while(iter.hasNext() )
+  // Loop over the data containers until we find the proper data container
+  QList<DataContainer::Pointer> containers = dca->getDataContainers();
+
+  QListIterator<DataContainer::Pointer> containerIter(containers);
+  while(containerIter.hasNext())
   {
-    DataContainerProxy dc = iter.next();
-    if(dataContainerList->findText(dc.name) == -1 )
-    {
-      int index = dataContainerList->currentIndex();
-      dataContainerList->addItem(dc.name);
-      dataContainerList->setCurrentIndex(index);
-    }
+    DataContainer::Pointer dc = containerIter.next();
+    dataContainerList->addItem(dc->getName());
   }
 
+  int index = dataContainerList->findText(prevName);
+  dataContainerList->setCurrentIndex(index);
+
+#if 0
   //remove items in the combo that are NOT in the Data Container Array
   int count = dataContainerList->count();
   for(int i = count - 1; i >= 0; i--)
@@ -234,7 +234,7 @@ void DataContainerSelectionWidget::populateComboBoxes()
     dataContainerList->setCurrentIndex(dcIndex);
   }
   if(didBlock) { dataContainerList->blockSignals(false); didBlock = false; }
-
+#endif
 }
 
 // -----------------------------------------------------------------------------

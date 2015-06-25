@@ -48,14 +48,14 @@
 // -----------------------------------------------------------------------------
 FindSlipTransmissionMetrics::FindSlipTransmissionMetrics() :
   AbstractFilter(),
-  m_NeighborListArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::NeighborList),
+  m_NeighborListArrayPath("", "", ""),
   m_F1ListArrayName(DREAM3D::FeatureData::F1List),
   m_F1sptListArrayName(DREAM3D::FeatureData::F1sptList),
   m_F7ListArrayName(DREAM3D::FeatureData::F7List),
   m_mPrimeListArrayName(DREAM3D::FeatureData::mPrimeList),
-  m_AvgQuatsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
-  m_FeaturePhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
-  m_CrystalStructuresArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
+  m_AvgQuatsArrayPath("", "", ""),
+  m_FeaturePhasesArrayPath("", "", ""),
+  m_CrystalStructuresArrayPath("", "", ""),
   m_FeaturePhases(NULL),
   m_AvgQuats(NULL),
   m_CrystalStructures(NULL)

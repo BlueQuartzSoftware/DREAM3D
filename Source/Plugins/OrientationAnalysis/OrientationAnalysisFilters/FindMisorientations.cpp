@@ -49,11 +49,11 @@
 // -----------------------------------------------------------------------------
 FindMisorientations::FindMisorientations()  :
   AbstractFilter(),
-  m_NeighborListArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::NeighborList),
+  m_NeighborListArrayPath("", "", ""),
   m_MisorientationListArrayName(DREAM3D::FeatureData::MisorientationList),
-  m_AvgQuatsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
-  m_FeaturePhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
-  m_CrystalStructuresArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
+  m_AvgQuatsArrayPath("", "", ""),
+  m_FeaturePhasesArrayPath("", "", ""),
+  m_CrystalStructuresArrayPath("", "", ""),
   m_AvgMisorientationsArrayName(DREAM3D::FeatureData::AvgMisorientations),
   m_FindAvgMisors(false),
   m_AvgQuats(NULL),

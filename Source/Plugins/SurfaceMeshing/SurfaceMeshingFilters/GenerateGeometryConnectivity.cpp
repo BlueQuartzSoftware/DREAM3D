@@ -47,7 +47,7 @@
 // -----------------------------------------------------------------------------
 GenerateGeometryConnectivity::GenerateGeometryConnectivity() :
   SurfaceMeshFilter(),
-  m_SurfaceDataContainerName(DREAM3D::Defaults::DataContainerName),
+  m_SurfaceDataContainerName(""),
   m_GenerateVertexTriangleLists(true),
   m_GenerateTriangleNeighbors(true)
 {

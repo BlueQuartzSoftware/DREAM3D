@@ -114,8 +114,6 @@ class DREAM3DWidgetsLib_EXPORT DataArraySelectionWidget : public FilterParameter
 
   protected:
     void populateComboBoxes();
-    void populateAttributeMatrixList();
-    void populateAttributeArrayList();
 
     /**
      * @brief generateDCAProxy

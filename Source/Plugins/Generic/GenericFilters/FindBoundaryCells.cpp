@@ -48,7 +48,7 @@
 // -----------------------------------------------------------------------------
 FindBoundaryCells::FindBoundaryCells() :
   AbstractFilter(),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_BoundaryCellsArrayName(DREAM3D::CellData::BoundaryCells),
   m_FeatureIds(NULL),
   m_BoundaryCells(NULL)

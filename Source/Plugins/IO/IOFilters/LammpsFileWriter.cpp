@@ -54,7 +54,7 @@
 // -----------------------------------------------------------------------------
 LammpsFileWriter::LammpsFileWriter() :
   AbstractFilter(),
-  m_VertexDataContainerName(DREAM3D::Defaults::DataContainerName),
+  m_VertexDataContainerName(DREAM3D::Defaults::VertexDataContainerName),
   m_LammpsFile("")
 {
   setupFilterParameters();

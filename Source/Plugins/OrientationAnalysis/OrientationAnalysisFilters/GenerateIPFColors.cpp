@@ -127,11 +127,11 @@ class GenerateIPFColorsImpl
 // -----------------------------------------------------------------------------
 GenerateIPFColors::GenerateIPFColors() :
   AbstractFilter(),
-  m_CellPhasesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::CellPhases),
-  m_CellEulerAnglesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerAngles),
-  m_CrystalStructuresArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
+  m_CellPhasesArrayPath("", "", ""),
+  m_CellEulerAnglesArrayPath("", "", ""),
+  m_CrystalStructuresArrayPath("", "", ""),
   m_UseGoodVoxels(false),
-  m_GoodVoxelsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
+  m_GoodVoxelsArrayPath("", "", ""),
   m_CellIPFColorsArrayName(DREAM3D::CellData::IPFColor),
   m_CellPhases(NULL),
   m_CellEulerAngles(NULL),

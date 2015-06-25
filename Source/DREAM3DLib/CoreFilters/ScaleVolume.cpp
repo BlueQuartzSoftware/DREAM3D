@@ -90,8 +90,8 @@ class UpdateVerticesImpl
 // -----------------------------------------------------------------------------
 ScaleVolume::ScaleVolume() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::DataContainerName),
-  m_SurfaceDataContainerName(DREAM3D::Defaults::DataContainerName),
+  m_DataContainerName(""),
+  m_SurfaceDataContainerName(""),
   m_ApplyToVoxelVolume(true),
   m_ApplyToSurfaceMesh(true)
 {

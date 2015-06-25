@@ -47,10 +47,10 @@
 // -----------------------------------------------------------------------------
 CreateFeatureArrayFromElementArray::CreateFeatureArrayFromElementArray() :
   AbstractFilter(),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
+  m_CellFeatureAttributeMatrixName("", "", ""),
   m_SelectedCellArrayPath("", "", ""),
   m_CreatedArrayName(""),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_FeatureIdsArrayPath("", "", ""),
   m_FeatureIds(NULL),
   m_InArray(NULL)
 {

@@ -48,12 +48,12 @@
 // -----------------------------------------------------------------------------
 ChangeResolution::ChangeResolution() :
   AbstractFilter(),
-  m_NewDataContainerName(DREAM3D::Defaults::NewDataContainerName),
-  m_CellAttributeMatrixPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
-  m_CellFeatureAttributeMatrixPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
+  m_NewDataContainerName(DREAM3D::Defaults::NewImageDataContainerName),
+  m_CellAttributeMatrixPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
+  m_CellFeatureAttributeMatrixPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
   m_RenumberFeatures(true),
   m_SaveAsNewDataContainer(false),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
   m_Resolution.x = 1.0f;
@@ -175,6 +175,8 @@ void ChangeResolution::dataCheck()
     getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
   }
 
+  getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getCellAttributeMatrixPath(), -301);
+
   if (getRenumberFeatures() == true)
   {
     QVector<size_t> cDims(1, 1);
@@ -233,7 +235,7 @@ void ChangeResolution::preflight()
   tDims[2] = m_ZP;
   m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName())->setTupleDimensions(tDims);
 
-  if(m_RenumberFeatures == true)
+  if (m_RenumberFeatures == true)
   {
     AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
     QVector<bool> activeObjects(cellFeatureAttrMat->getNumTuples(), true);

@@ -108,7 +108,7 @@ class CalculateNormalsImpl
 // -----------------------------------------------------------------------------
 TriangleNormalFilter::TriangleNormalFilter() :
   SurfaceMeshFilter(),
-  m_SurfaceMeshTriangleNormalsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceNormals),
+  m_SurfaceMeshTriangleNormalsArrayPath(DREAM3D::Defaults::TriangleDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceNormals),
   m_SurfaceMeshTriangleNormals(NULL)
 {
   setupFilterParameters();

@@ -70,7 +70,7 @@
 // -----------------------------------------------------------------------------
 YSChoiAbaqusReader::YSChoiAbaqusReader() :
   FileReader(),
-  m_DataContainerName(DREAM3D::Defaults::DataContainerName),
+  m_DataContainerName(DREAM3D::Defaults::ImageDataContainerName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),

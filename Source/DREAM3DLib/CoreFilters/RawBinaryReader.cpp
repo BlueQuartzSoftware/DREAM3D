@@ -160,7 +160,7 @@ int32_t readBinaryFile(typename DataArray<T>::Pointer p, const QString& filename
 // -----------------------------------------------------------------------------
 RawBinaryReader::RawBinaryReader() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::DataContainerName),
+  m_DataContainerName(DREAM3D::Defaults::ImageDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_ScalarType(0),
   m_Endian(0),

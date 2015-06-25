@@ -51,7 +51,7 @@
 FindSaltykovSizes::FindSaltykovSizes() :
   AbstractFilter(),
   m_EquivalentDiametersArrayPath(DREAM3D::FeatureData::EquivalentDiameters),
-  m_SaltykovEquivalentDiametersArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::SaltykovEquivalentDiameters),
+  m_SaltykovEquivalentDiametersArrayPath(DREAM3D::FeatureData::SaltykovEquivalentDiameters),
   m_EquivalentDiameters(NULL),
   m_SaltykovEquivalentDiameters(NULL)
 {

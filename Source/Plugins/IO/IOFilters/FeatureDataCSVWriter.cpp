@@ -52,7 +52,7 @@
 // -----------------------------------------------------------------------------
 FeatureDataCSVWriter::FeatureDataCSVWriter() :
   AbstractFilter(),
-  m_CellFeatureAttributeMatrixPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
+  m_CellFeatureAttributeMatrixPath("", "", ""),
   m_FeatureDataFile(""),
   m_WriteNeighborListData(false),
   m_Delimiter(',')

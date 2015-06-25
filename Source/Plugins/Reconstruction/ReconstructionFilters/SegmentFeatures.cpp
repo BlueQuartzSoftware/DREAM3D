@@ -47,7 +47,7 @@
 // -----------------------------------------------------------------------------
 SegmentFeatures::SegmentFeatures() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::DataContainerName)
+  m_DataContainerName(DREAM3D::Defaults::ImageDataContainerName)
 {
 }
 

@@ -48,8 +48,8 @@
 // -----------------------------------------------------------------------------
 GroupFeatures::GroupFeatures() :
   AbstractFilter(),
-  m_ContiguousNeighborListArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::NeighborList),
-  m_NonContiguousNeighborListArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::NeighborhoodList),
+  m_ContiguousNeighborListArrayPath("", "", ""),
+  m_NonContiguousNeighborListArrayPath("", "", ""),
   m_UseNonContiguousNeighbors(false),
   m_PatchGrouping(false)
 {

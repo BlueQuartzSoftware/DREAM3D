@@ -50,7 +50,7 @@
 // -----------------------------------------------------------------------------
 AddBadData::AddBadData() :
   AbstractFilter(),
-  m_GBEuclideanDistancesArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::ElementAttributeMatrixName, DREAM3D::CellData::GBEuclideanDistances),
+  m_GBEuclideanDistancesArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::ElementAttributeMatrixName, DREAM3D::CellData::GBEuclideanDistances),
   m_PoissonNoise(true),
   m_PoissonVolFraction(0.0f),
   m_BoundaryNoise(false),

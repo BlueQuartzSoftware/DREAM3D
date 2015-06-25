@@ -160,7 +160,7 @@ class RotateSampleRefFrameImpl
 // -----------------------------------------------------------------------------
 RotateSampleRefFrame::RotateSampleRefFrame() :
   AbstractFilter(),
-  m_CellAttributeMatrixPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
+  m_CellAttributeMatrixPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
   m_RotationAngle(0.0),
   m_SliceBySlice(false)
 {
