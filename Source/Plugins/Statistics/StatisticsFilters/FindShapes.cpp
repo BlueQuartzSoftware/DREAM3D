@@ -688,7 +688,7 @@ void FindShapes::find_axiseulers()
 
     //insert principal unit vectors into rotation matrix representing Feature reference frame within the sample reference frame 
     //(Note that the 3 direction is actually the long axis and the 1 direction is actually the short axis)
-    float g[3][3];
+    float g[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
     g[0][0] = n3x;
     g[0][1] = n3y;
     g[0][2] = n3z;
