@@ -325,9 +325,11 @@ void DREAM3DMenu::setViewMenu(QMenu* viewMenu)
     }
 
     m_MenuView = viewMenu;
-
-    QAction* bookmarksMenuAction = m_MenuBookmarks->menuAction();
-    m_MenuBar->insertMenu(bookmarksMenuAction, viewMenu);
+    if(NULL != viewMenu)
+    {
+      QAction* bookmarksMenuAction = m_MenuBookmarks->menuAction();
+      m_MenuBar->insertMenu(bookmarksMenuAction, viewMenu);
+    }
   }
 }
 
