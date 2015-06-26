@@ -73,6 +73,13 @@ class DREAM3DApplication : public QApplication
 
     DREAM3D_UI* getNewDREAM3DInstance();
 
+    /**
+     * @brief event
+     * @param event
+     * @return
+     */
+    bool event(QEvent* event);
+
   public slots:
 
     void newInstanceFromFile(const QString &filePath, const bool &setOpenedFilePath, const bool &addToRecentFiles);
