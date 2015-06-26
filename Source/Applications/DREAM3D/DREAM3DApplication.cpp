@@ -519,6 +519,11 @@ void DREAM3DApplication::registerDREAM3DWindow(DREAM3D_UI* window, QMenu* viewMe
 void DREAM3DApplication::unregisterDREAM3DWindow(DREAM3D_UI* window)
 {
   m_DREAM3DInstanceMap.remove(window);
+
+#if defined (Q_OS_MAC)
+    m_GlobalMenu->setViewMenu(NULL);
+#endif
+
 }
 
 // -----------------------------------------------------------------------------
