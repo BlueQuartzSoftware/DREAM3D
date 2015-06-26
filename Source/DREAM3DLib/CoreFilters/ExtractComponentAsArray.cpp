@@ -72,9 +72,9 @@ void ExtractComponentAsArray::setupFilterParameters()
 
   parameters.push_back(FilterParameter::New("Component Number to Extract", "CompNumber", FilterParameterWidgetType::IntWidget, getCompNumber(), FilterParameter::Parameter));
 
-  parameters.push_back(FilterParameter::New("MultiComponent Array", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), FilterParameter::RequiredArray));
+  parameters.push_back(FilterParameter::New("Multicomponent Attribute Array", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), FilterParameter::RequiredArray));
 
-  parameters.push_back(FilterParameter::New("New Scalar Array Name", "NewArrayArrayName", FilterParameterWidgetType::StringWidget, getNewArrayArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Scalar Attribute Array", "NewArrayArrayName", FilterParameterWidgetType::StringWidget, getNewArrayArrayName(), FilterParameter::CreatedArray, ""));
 
   setFilterParameters(parameters);
 }
@@ -228,4 +228,4 @@ const QString ExtractComponentAsArray::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString ExtractComponentAsArray::getHumanLabel()
-{ return "Extract Component As Attribute Array"; }
+{ return "Extract Component as Attribute Array"; }

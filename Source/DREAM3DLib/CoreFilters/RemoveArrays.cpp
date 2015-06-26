@@ -66,7 +66,7 @@ void RemoveArrays::setupFilterParameters()
 
   {
     DataContainerArrayProxyFilterParameter::Pointer parameter = DataContainerArrayProxyFilterParameter::New();
-    parameter->setHumanLabel("Items To Delete");
+    parameter->setHumanLabel("Objects to Delete");
     parameter->setPropertyName("DataArraysToRemove");
     parameter->setWidgetType(FilterParameterWidgetType::DataContainerArrayProxyWidget);
     parameter->setDefaultFlagValue(Qt::Unchecked);

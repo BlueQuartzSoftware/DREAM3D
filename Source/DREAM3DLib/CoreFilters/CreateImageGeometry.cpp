@@ -76,13 +76,10 @@ CreateImageGeometry::~CreateImageGeometry()
 void CreateImageGeometry::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
-  parameters.push_back(FilterParameter::New("Dimensions", "Dimensions", FilterParameterWidgetType::IntVec3Widget, getDimensions(), FilterParameter::Parameter, "XYZ"));
-  parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget, getOrigin(), FilterParameter::Parameter, "XYZ"));
-  parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget, getResolution(), FilterParameter::Parameter, "XYZ"));
-
-  parameters.push_back(FilterParameter::New("Data Container Name", "SelectedDataContainer", FilterParameterWidgetType::DataContainerSelectionWidget, getSelectedDataContainer(), FilterParameter::RequiredArray));
-
+  parameters.push_back(FilterParameter::New("Data Container Destination", "SelectedDataContainer", FilterParameterWidgetType::DataContainerSelectionWidget, getSelectedDataContainer(), FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("Dimensions", "Dimensions", FilterParameterWidgetType::IntVec3Widget, getDimensions(), FilterParameter::Parameter, ""));
+  parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget, getOrigin(), FilterParameter::Parameter, ""));
+  parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget, getResolution(), FilterParameter::Parameter, ""));
   setFilterParameters(parameters);
 }
 

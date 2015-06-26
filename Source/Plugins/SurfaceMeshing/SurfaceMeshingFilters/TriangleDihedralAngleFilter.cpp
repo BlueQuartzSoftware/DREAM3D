@@ -142,9 +142,8 @@ TriangleDihedralAngleFilter::~TriangleDihedralAngleFilter()
 void TriangleDihedralAngleFilter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
+  parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
   parameters.push_back(FilterParameter::New("Face Dihedral Angles", "SurfaceMeshTriangleDihedralAnglesArrayPath", FilterParameterWidgetType::DataArrayCreationWidget, getSurfaceMeshTriangleDihedralAnglesArrayPath(), FilterParameter::CreatedArray, ""));
-
   setFilterParameters(parameters);
 }
 

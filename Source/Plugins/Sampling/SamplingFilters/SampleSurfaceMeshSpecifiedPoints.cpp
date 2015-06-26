@@ -68,8 +68,8 @@ SampleSurfaceMeshSpecifiedPoints::~SampleSurfaceMeshSpecifiedPoints()
 void SampleSurfaceMeshSpecifiedPoints::setupFilterParameters()
 {
   FilterParameterVector parameters = getFilterParameters();
-  parameters.push_back(FileSystemFilterParameter::New("Specified Points File Path", "InputFilePath", FilterParameterWidgetType::InputFileWidget, getInputFilePath(), FilterParameter::Parameter, "", "*.raw, *.bin"));
-  parameters.push_back(FileSystemFilterParameter::New("Sampled Values File Path", "OutputFilePath", FilterParameterWidgetType::OutputFileWidget, getOutputFilePath(), FilterParameter::Parameter, "", "*.txt"));
+  parameters.push_back(FileSystemFilterParameter::New("Specified Points File", "InputFilePath", FilterParameterWidgetType::InputFileWidget, getInputFilePath(), FilterParameter::Parameter, "", "*.raw, *.bin"));
+  parameters.push_back(FileSystemFilterParameter::New("Sampled Values File", "OutputFilePath", FilterParameterWidgetType::OutputFileWidget, getOutputFilePath(), FilterParameter::Parameter, "", "*.txt"));
   setFilterParameters(parameters);
 }
 

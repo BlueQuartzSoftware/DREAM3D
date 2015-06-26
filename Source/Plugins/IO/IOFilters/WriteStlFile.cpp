@@ -79,7 +79,8 @@ void WriteStlFile::setupFilterParameters()
   parameters.push_back(FileSystemFilterParameter::New("Output STL Directory", "OutputStlDirectory", FilterParameterWidgetType::OutputPathWidget, getOutputStlDirectory(), FilterParameter::Parameter));
   parameters.push_back(FilterParameter::New("STL File Prefix", "OutputStlPrefix", FilterParameterWidgetType::StringWidget, getOutputStlPrefix(), FilterParameter::Parameter));
   QStringList linkedProps("SurfaceMeshFacePhasesArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Group Files By Ensemble", "GroupByPhase", getGroupByPhase(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Group Files by Ensemble", "GroupByPhase", getGroupByPhase(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   parameters.push_back(FilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, ""));
   parameters.push_back(FilterParameter::New("Face Phases", "SurfaceMeshFacePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFacePhasesArrayPath(), FilterParameter::RequiredArray, ""));
   setFilterParameters(parameters);

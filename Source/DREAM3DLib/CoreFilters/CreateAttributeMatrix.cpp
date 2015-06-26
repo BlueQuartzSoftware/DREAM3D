@@ -16,7 +16,7 @@
 CreateAttributeMatrix::CreateAttributeMatrix() :
   AbstractFilter(),
   m_SelectedDataContainer(""),
-  m_CreatedAttributeMatrixName("Attribute Matrix"),
+  m_CreatedAttributeMatrixName("AttributeMatrix"),
   m_AttributeMatrixType(DREAM3D::AttributeMatrixType::Generic),
   m_TupleDimensions()
 {
@@ -36,8 +36,7 @@ CreateAttributeMatrix::~CreateAttributeMatrix()
 void CreateAttributeMatrix::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Selected Data Container", "SelectedDataContainer", FilterParameterWidgetType::DataContainerSelectionWidget, getSelectedDataContainer(), FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Created Attribute Matrix Name", "CreatedAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCreatedAttributeMatrixName(), FilterParameter::Parameter, ""));
+  parameters.push_back(FilterParameter::New("Data Container Destination", "SelectedDataContainer", FilterParameterWidgetType::DataContainerSelectionWidget, getSelectedDataContainer(), FilterParameter::Parameter));
 
   {
     QVector<QString> choices;
@@ -63,6 +62,7 @@ void CreateAttributeMatrix::setupFilterParameters()
 
   std::vector<std::vector<double> > defaultTable;
   parameters.push_back(DynamicTableFilterParameter::New("Tuple Dimensions", "TupleDimensions", FilterParameterWidgetType::DynamicTableWidget, rHeaders, cHeaders, defaultTable, FilterParameter::Parameter, false, true, 0));
+  parameters.push_back(FilterParameter::New("Created Attribute Matrix", "CreatedAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCreatedAttributeMatrixName(), FilterParameter::CreatedArray, ""));
 
   setFilterParameters(parameters);
 }

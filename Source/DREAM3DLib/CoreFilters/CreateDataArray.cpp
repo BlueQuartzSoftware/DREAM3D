@@ -89,10 +89,10 @@ void CreateDataArray::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(FilterParameter::New("Number Of Components", "NumberOfComponents", FilterParameterWidgetType::IntWidget, getNumberOfComponents(), FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("Number of Components", "NumberOfComponents", FilterParameterWidgetType::IntWidget, getNumberOfComponents(), FilterParameter::Parameter));
   parameters.push_back(FilterParameter::New("Initialization Value", "InitializationValue", FilterParameterWidgetType::DoubleWidget, getInitializationValue(), FilterParameter::Parameter));
 
-  parameters.push_back(FilterParameter::New("Output Array", "NewArray", FilterParameterWidgetType::DataArrayCreationWidget, getNewArray(), FilterParameter::CreatedArray));
+  parameters.push_back(FilterParameter::New("Created Attribute Array", "NewArray", FilterParameterWidgetType::DataArrayCreationWidget, getNewArray(), FilterParameter::CreatedArray));
 
   setFilterParameters(parameters);
 }

@@ -118,14 +118,14 @@ void ChangeAngleRepresentation::setupFilterParameters()
     parameter->setPropertyName("ConversionType");
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
     QVector<QString> choices;
-    choices.push_back("Degrees To Radians");
-    choices.push_back("Radians To Degrees");
+    choices.push_back("Degrees to Radians");
+    choices.push_back("Radians to Degrees");
     parameter->setChoices(choices);
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
 
-  parameters.push_back(FilterParameter::New("Element Angles", "CellEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(FilterParameter::New("Angles", "CellEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, ""));
 
   setFilterParameters(parameters);
 }

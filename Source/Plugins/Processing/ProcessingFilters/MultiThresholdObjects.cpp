@@ -79,8 +79,7 @@ void MultiThresholdObjects::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-
-  parameters.push_back(FilterParameter::New("Output Array Name", "DestinationArrayName", FilterParameterWidgetType::StringWidget, getDestinationArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Output Attribute Array", "DestinationArrayName", FilterParameterWidgetType::StringWidget, getDestinationArrayName(), FilterParameter::CreatedArray, ""));
   setFilterParameters(parameters);
 }
 

@@ -32,7 +32,7 @@ This Filter writes relevant information about the Grain Boundary Character Distr
 | Output File | File Path | GBCD Triangles File |
 
 ## Required Geometry ##
-Triangle
+Image + Triangle
 
 ## Required Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |

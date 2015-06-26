@@ -96,7 +96,7 @@ void ConvertOrientations::setupFilterParameters()
 
   parameters.push_back(FilterParameter::New("Input Orientations", "InputOrientationArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputOrientationArrayPath(), FilterParameter::RequiredArray, "", 0));
 
-  parameters.push_back(FilterParameter::New("Output Orientation Array Name", "OutputOrientationArrayName", FilterParameterWidgetType::StringWidget, getOutputOrientationArrayName(), FilterParameter::CreatedArray, "", 0));
+  parameters.push_back(FilterParameter::New("Output Orientations", "OutputOrientationArrayName", FilterParameterWidgetType::StringWidget, getOutputOrientationArrayName(), FilterParameter::CreatedArray, "", 0));
 
   setFilterParameters(parameters);
 }

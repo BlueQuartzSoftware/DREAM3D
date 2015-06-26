@@ -39,6 +39,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "Sampling/SamplingConstants.h"
 
@@ -66,10 +67,9 @@ NearestPointFuseRegularGrids::~NearestPointFuseRegularGrids()
 void NearestPointFuseRegularGrids::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
+  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   parameters.push_back(FilterParameter::New("Reference Cell Attribute Matrix", "ReferenceCellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getReferenceCellAttributeMatrixPath(), FilterParameter::RequiredArray));
   parameters.push_back(FilterParameter::New("Sampling Cell Attribute Matrix", "SamplingCellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getSamplingCellAttributeMatrixPath(), FilterParameter::RequiredArray));
-
   setFilterParameters(parameters);
 }
 
