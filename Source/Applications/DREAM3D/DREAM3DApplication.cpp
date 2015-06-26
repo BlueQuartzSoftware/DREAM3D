@@ -415,11 +415,14 @@ void DREAM3DApplication::updateRecentFileList(const QString &file)
   recentFilesMenu->addSeparator();
   recentFilesMenu->addAction(clearRecentFilesAction);
 #else
-  QList<DREAM3D_UI*> windows = dream3dApp->getDREAM3DWindowList();
+  QMap<DREAM3D_UI*, QMenu*> windows = dream3dApp->getDREAM3DInstanceMap();
   
-  for (int i = 0; i < windows.size(); i++)
+  QMapIterator<DREAM3D_UI*, QMenu*> iter(windows);
+  while (iter.hasNext())
   {
-    DREAM3D_UI* window = windows[i];
+    iter.next();
+
+    DREAM3D_UI* window = iter.key();
 
     if (NULL != window)
     {
@@ -470,11 +473,14 @@ void DREAM3DApplication::on_actionClearRecentFiles_triggered()
   DREAM3DSettings prefs;
   recents->writeList(prefs);
 #else
-  QList<DREAM3D_UI*> windows = dream3dApp->getDREAM3DWindowList();
+  QMap<DREAM3D_UI*, QMenu*> windows = dream3dApp->getDREAM3DInstanceMap();
 
-  for (int i = 0; i < windows.size(); i++)
+  QMapIterator<DREAM3D_UI*, QMenu*> iter(windows);
+  while (iter.hasNext())
   {
-    DREAM3D_UI* window = windows[i];
+    iter.next();
+
+    DREAM3D_UI* window = iter.key();
 
     if (NULL != window)
     {
@@ -784,10 +790,12 @@ void DREAM3DApplication::on_actionRemovePipeline_triggered()
     QMessageBox msgBox;
     if (model->flags(nameIndex).testFlag(Qt::ItemIsDropEnabled) == false)
     {
+      msgBox.setWindowTitle("Remove Bookmark");
       msgBox.setText("Are you sure that you want to remove the bookmark \"" + name + "\"? The original file will not be removed.");
     }
     else
     {
+      msgBox.setWindowTitle("Remove Folder");
       msgBox.setText("Are you sure that you want to remove the folder \"" + name + "\"? The folder's contents will also be removed.");
     }
     msgBox.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
