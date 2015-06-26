@@ -64,7 +64,12 @@ DREAM3DSettings::DREAM3DSettings(QObject *parent)
   QString oldFilePath = prefs.fileName();
 
   QFileInfo fi(oldFilePath);
-  QString newFilePath = fi.path() + "/DREAM3D_V5.json";
+ #if defined (Q_OS_MAC)
+  QString newFilePath = fi.path() + "/net.bluequartz.DREAM3D.json";
+#else
+  QString newFilePath = fi.path() + "/DREAM3D.json";
+#endif
+
   m_FilePath = QDir::toNativeSeparators(newFilePath);
 
   // Open the file and read the contents, if it exists
@@ -201,7 +206,7 @@ QVariant DREAM3DSettings::value(const QString &key, const QVariant &defaultValue
       return value;
     }
   }
-  
+
   return m_Stack.top()->group.value(key).toVariant();
 }
 
