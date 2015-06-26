@@ -130,7 +130,7 @@ private:
   void performDrag();
   void expandChildren(const QModelIndex &parent, BookmarksModel* model);
   QJsonObject wrapModel(QModelIndex index);
-  static void UnwrapModel(QJsonObject object, BookmarksModel* model, QModelIndex parentIndex);
+  static void UnwrapModel(QString objectName, QJsonObject object, BookmarksModel* model, QModelIndex parentIndex);
 
   QPoint                    m_StartPos;
   QMenu                     m_Menu;
