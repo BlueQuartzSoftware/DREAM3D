@@ -47,9 +47,10 @@
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QFileDialog>
-#include <QtGui/QDesktopServices>
 #include <QtWidgets/QTreeWidgetItem>
 #include <QtWidgets/QMenu>
+
+#include "Applications/DREAM3D/DREAM3DApplication.h"
 
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
@@ -70,8 +71,6 @@ enum ErrorCodes {
 // -----------------------------------------------------------------------------
 BookmarksDockWidget::BookmarksDockWidget(QWidget* parent) :
   QDockWidget(parent),
-  m_RenameAction(NULL),
-  m_DeleteAction(NULL),
   m_OpenDialogLastDirectory("")
 {
   setupUi(this);
@@ -296,11 +295,10 @@ void BookmarksDockWidget::on_bookmarksTreeView_doubleClicked(const QModelIndex &
     {
       bookmarksTreeView->blockSignals(true);
       BookmarkMissingDialog* dialog = new BookmarkMissingDialog(this, Qt::WindowSystemMenuHint | Qt::WindowCloseButtonHint | Qt::WindowTitleHint);
-      connect(dialog, SIGNAL(locateBtnPressed()), this, SLOT(m_ActionLocateFile_triggered()));
+      connect(dialog, SIGNAL(locateBtnPressed()), dream3dApp, SLOT(on_actionLocateFile_triggered()));
       dialog->setBookmarkName(nameIndex.data().toString());
       dialog->exec();
       delete dialog;
-      QString newPath = pathIndex.data().toString();
       bookmarksTreeView->blockSignals(false);
     }
     else
@@ -315,39 +313,6 @@ void BookmarksDockWidget::on_bookmarksTreeView_doubleClicked(const QModelIndex &
     }
   }
 
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BookmarksDockWidget::on_bookmarksTreeView_currentIndexChanged(const QModelIndex & current, const QModelIndex & previous)
-{
-  BookmarksModel* model = BookmarksModel::Instance();
-  QString path = model->index(current.row(), BookmarksItem::Path, current.parent()).data().toString();
-
-  if (m_DeleteAction != NULL)
-  {
-    if (current.isValid() == false)
-    {
-      m_DeleteAction->setVisible(false);
-    }
-    else if (path.isEmpty())
-    {
-      m_DeleteAction->setText("Remove Folder");
-      m_DeleteAction->setVisible(true);
-
-      m_RenameAction->setText("Rename Folder");
-      m_RenameAction->setVisible(true);
-    }
-    else
-    {
-      m_DeleteAction->setText("Remove Bookmark");
-      m_DeleteAction->setVisible(true);
-
-      m_RenameAction->setText("Rename Bookmark");
-      m_RenameAction->setVisible(true);
-    }
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -378,49 +343,6 @@ QString BookmarksDockWidget::writeNewFavoriteFilePath(QString newFavoriteTitle, 
   bookmarksTreeView->blockSignals(false);
 
   return newPath;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BookmarksDockWidget::m_ActionLocateFile_triggered()
-{
-  BookmarksModel* model = BookmarksModel::Instance();
-  QModelIndex current = getBookmarksTreeView()->currentIndex();
-
-  QModelIndex nameIndex = model->index(current.row(), BookmarksItem::Name, current.parent());
-  QModelIndex pathIndex = model->index(current.row(), BookmarksItem::Path, current.parent());
-
-  QFileInfo fi(pathIndex.data().toString());
-  QString restrictions;
-  if (fi.completeSuffix() == "json")
-  {
-    restrictions = "Json File (*.json)";
-  }
-  else if (fi.completeSuffix() == "dream3d")
-  {
-    restrictions = "Dream3d File(*.dream3d)";
-  }
-  else if (fi.completeSuffix() == "txt")
-  {
-    restrictions = "Text File (*.txt)";
-  }
-  else
-  {
-    restrictions = "Ini File (*.ini)";
-  }
-
-  QString filePath = QFileDialog::getOpenFileName(this, tr("Locate Pipeline File"),
-    pathIndex.data().toString(), tr(restrictions.toStdString().c_str()));
-  if (true == filePath.isEmpty()) { return; }
-
-  filePath = QDir::toNativeSeparators(filePath);
-
-  // Set the new path into the item
-  model->setData(pathIndex, filePath, Qt::DisplayRole);
-
-  // Change item back to default look and functionality
-  model->setData(nameIndex, false, Qt::UserRole);
 }
 
 // -----------------------------------------------------------------------------
@@ -458,7 +380,7 @@ QModelIndex BookmarksDockWidget::getSelectedParentTreeItem()
   // selected an actual favorite item, get it's parent which MUST be a folder
   if(index.isValid() && model->index(index.row(), BookmarksItem::Path, index.parent()).data().toString().isEmpty() == false)
   {
-    index = index.parent();
+    index = model->index(index.row(), BookmarksItem::Path, index.parent());
   }
 
   // Make sure we have a valid selection otherwise select the root item
@@ -565,35 +487,6 @@ bool BookmarksDockWidget::removeDir(const QString& dirName)
   }
 
   return result;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BookmarksDockWidget::m_ActionShowInFileSystem_triggered()
-{
-  BookmarksModel* model = BookmarksModel::Instance();
-
-  QModelIndex index = bookmarksTreeView->currentIndex();
-  if(index.isValid())
-  {
-    QString pipelinePath = model->index(index.row(), BookmarksItem::Path, index.parent()).data().toString();
-
-    QFileInfo pipelinePathInfo(pipelinePath);
-    QString pipelinePathDir = pipelinePathInfo.path();
-
-    QString s("file://");
-#if defined(Q_OS_WIN)
-    s = s + "/"; // Need the third slash on windows because file paths start with a drive letter
-#elif defined(Q_OS_MAC)
-
-#else
-    // We are on Linux - I think
-
-#endif
-    s = s + pipelinePathDir;
-    QDesktopServices::openUrl(s);
-  }
 }
 
 // -----------------------------------------------------------------------------

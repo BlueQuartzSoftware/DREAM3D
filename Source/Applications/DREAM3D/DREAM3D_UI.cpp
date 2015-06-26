@@ -104,14 +104,6 @@ DREAM3D_UI::DREAM3D_UI(QWidget* parent) :
   m_ShouldRestart(false),
   m_OpenedFilePath("")
 {
-  dream3dApp->registerDREAM3DWindow(this);
-
-#if !defined(Q_OS_MAC)
-  // Create the menu
-  m_InstanceMenu = new DREAM3DMenu();
-  setMenuBar(m_InstanceMenu->getMenuBar());
-#endif
-
   m_OpenDialogLastDirectory = QDir::homePath();
 
   // Update first run
@@ -129,6 +121,16 @@ DREAM3D_UI::DREAM3D_UI(QWidget* parent) :
   // Calls the Parent Class to do all the Widget Initialization that were created
   // using the QDesigner program
   setupUi(this);
+
+  // Set up the menu
+  QMenu* viewMenu = createViewMenu();
+#if !defined(Q_OS_MAC)
+  // Create the menu
+  m_InstanceMenu = new DREAM3DMenu();
+  m_InstanceMenu->setViewMenu(viewMenu);
+  setMenuBar(m_InstanceMenu->getMenuBar());
+#endif
+  dream3dApp->registerDREAM3DWindow(this, viewMenu);
 
   // Do our own widget initializations
   setupGui();
@@ -268,9 +270,6 @@ void DREAM3D_UI::openNewPipeline(const QString &filePath, const bool &setOpenedF
       // Show the new instance
       newInstance->setAttribute(Qt::WA_DeleteOnClose);
       newInstance->move(this->x() + 45, this->y() + 45);
-
-      // Register the DREAM3D window with the application
-      dream3dApp->registerDREAM3DWindow(newInstance);
 
       connectSignalsSlots(newInstance);
 
@@ -656,8 +655,6 @@ void DREAM3D_UI::setupGui()
 
   // Set the IssuesDockWidget as a PipelineMessageObserver Object.
   pipelineViewWidget->setPipelineMessageObserver(issuesDockWidget);
-
-  setupPipelineContextMenu();
 }
 
 
@@ -755,203 +752,6 @@ void DREAM3D_UI::connectSignalsSlots(DREAM3D_UI* other)
   connect(other->getBookmarksDockWidget()->getBookmarksTreeView(), SIGNAL(expanded(const QModelIndex&)),
     bookmarksDockWidget->getBookmarksTreeView(), SLOT(expand(const QModelIndex&)));
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::setupPipelineItemMenu()
-{
-#if 0
-  // Normal items
-  QList<QAction*> favoriteItemActions;
-
-  favoriteItemActions << m_ActionAddPipeline;
-  favoriteItemActions << m_ActionRenamePipeline;
-  favoriteItemActions << m_ActionUpdatePipeline;
-
-  {
-    QAction* separator = new QAction(this);
-    separator->setSeparator(true);
-    favoriteItemActions << separator;
-  }
-
-  favoriteItemActions << m_ActionRemovePipeline;
-
-  {
-    QAction* separator = new QAction(this);
-    separator->setSeparator(true);
-    favoriteItemActions << separator;
-  }
-
-  favoriteItemActions << m_ActionNewFolder;
-
-  {
-    QAction* separator = new QAction(this);
-    separator->setSeparator(true);
-    favoriteItemActions << separator;
-  }
-
-  favoriteItemActions << m_ActionShowInFileSystem;
-
-  // Items with errors
-  QList<QAction*> errorItemActions;
-
-  errorItemActions << m_ActionLocateFile;
-  {
-    QAction* separator = new QAction(this);
-    separator->setSeparator(true);
-    errorItemActions << separator;
-  }
-  errorItemActions << m_ActionRemovePipeline;
-
-  bookmarksDockWidget->getBookmarksTreeView()->setLeafActionList(favoriteItemActions);
-  bookmarksDockWidget->getBookmarksTreeView()->setLeafErrorActionList(errorItemActions);
-#endif
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::setupFolderMenu()
-{
-#if 0
-  QList<QAction*> favoriteCategoryActions;
-
-  favoriteCategoryActions << m_ActionAddPipeline;
-  favoriteCategoryActions << m_ActionRenamePipeline;
-
-  {
-    QAction* separator = new QAction(this);
-    separator->setSeparator(true);
-    favoriteCategoryActions << separator;
-  }
-
-  favoriteCategoryActions << m_ActionRemovePipeline;
-
-  {
-    QAction* separator = new QAction(this);
-    separator->setSeparator(true);
-    favoriteCategoryActions << separator;
-  }
-
-  favoriteCategoryActions << m_ActionNewFolder;
-
-  bookmarksDockWidget->getBookmarksTreeView()->setNodeActionList(favoriteCategoryActions);
-#endif
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::setupDefaultMenu()
-{
-#if 0
-  QList<QAction*> favoriteDefaultActions;
-
-  favoriteDefaultActions << m_ActionAddPipeline;
-
-  {
-    QAction* separator = new QAction(this);
-    separator->setSeparator(true);
-    favoriteDefaultActions << separator;
-  }
-
-  favoriteDefaultActions << m_ActionNewFolder;
-
-
-  bookmarksDockWidget->getBookmarksTreeView()->setDefaultActionList(favoriteDefaultActions);
-#endif
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::setupPrebuiltsMenu()
-{
-#if 0
-  // Prebuilt Pipeline Items
-  QList<QAction*> prebuiltItemActions;
-
-  prebuiltItemActions << m_ActionShowInFileSystem;
-
-  prebuiltPipelinesDockWidget->getFilterLibraryTreeWidget()->setLeafActionList(prebuiltItemActions);
-
-  // Prebuilt Folders
-  QList<QAction*> prebuildCategoryActions;
-
-  prebuildCategoryActions << m_ActionShowInFileSystem;
-
-  prebuiltPipelinesDockWidget->getFilterLibraryTreeWidget()->setNodeActionList(prebuildCategoryActions);
-#endif
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::setupPipelineViewMenu()
-{
-#if 0
-  QList<QAction*> pipelineViewActions;
-
-  pipelineViewActions << m_ActionAddPipeline;
-
-  {
-    QAction* separator = new QAction(this);
-    separator->setSeparator(true);
-    pipelineViewActions << separator;
-  }
-
-  pipelineViewActions << m_ActionNewFolder;
-
-  {
-    QAction* separator = new QAction(this);
-    separator->setSeparator(true);
-    pipelineViewActions << separator;
-  }
-
-  pipelineViewActions << m_ActionClearPipeline;
-
-  pipelineViewWidget->setContextMenuActions(pipelineViewActions);
-#endif
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::setupPipelineContextMenu()
-{
-#if 0
-  // Initialize the menus
-  initializeMenuActions();
-
-  // Setup contextual menu for pipelines
-  setupPipelineItemMenu();
-
-  // Setup contextual menu for folders
-  setupFolderMenu();
-
-  // Setup the default menu
-  setupDefaultMenu();
-
-  // Setup the prebuilts menu
-  setupPrebuiltsMenu();
-
-  // Setup Pipeline View Widget menu
-  setupPipelineViewMenu();
-#endif
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::makeStatusBarButton(QString text, QDockWidget* dockWidget, QToolButton* btn, int index)
-{
-  btn->setText(text);
-  btn->setCheckable(true);
-  btn->setChecked(dockWidget->isVisible());
-  statusBar()->insertPermanentWidget(index, btn, 0);
-}
-
 
 // -----------------------------------------------------------------------------
 //
@@ -1315,7 +1115,7 @@ void DREAM3D_UI::clearPipeline()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionShow_Filter_Library_triggered(bool b)
 {
-  updateAndSyncDockWidget(actionShow_Filter_Library, filterLibraryDockWidget, m_FilterLibraryBtn, b);
+  updateAndSyncDockWidget(actionShow_Filter_Library, filterLibraryDockWidget, b);
 }
 
 // -----------------------------------------------------------------------------
@@ -1323,7 +1123,7 @@ void DREAM3D_UI::on_actionShow_Filter_Library_triggered(bool b)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionShow_Filter_List_triggered(bool b)
 {
-  updateAndSyncDockWidget(actionShow_Filter_List, filterListDockWidget, m_FilterListBtn, b);
+  updateAndSyncDockWidget(actionShow_Filter_List, filterListDockWidget, b);
 }
 
 
@@ -1332,7 +1132,7 @@ void DREAM3D_UI::on_actionShow_Filter_List_triggered(bool b)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionShow_Prebuilt_Pipelines_triggered(bool b)
 {
-  updateAndSyncDockWidget(actionShow_Prebuilt_Pipelines, prebuiltPipelinesDockWidget, m_PrebuiltBtn, b);
+  updateAndSyncDockWidget(actionShow_Prebuilt_Pipelines, prebuiltPipelinesDockWidget, b);
 }
 
 // -----------------------------------------------------------------------------
@@ -1340,7 +1140,7 @@ void DREAM3D_UI::on_actionShow_Prebuilt_Pipelines_triggered(bool b)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionShow_Favorites_triggered(bool b)
 {
-  updateAndSyncDockWidget(actionShow_Favorites, bookmarksDockWidget, m_FavoritesBtn, b);
+  updateAndSyncDockWidget(actionShow_Favorites, bookmarksDockWidget, b);
 }
 
 // -----------------------------------------------------------------------------
@@ -1348,38 +1148,22 @@ void DREAM3D_UI::on_actionShow_Favorites_triggered(bool b)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionShow_Issues_triggered(bool b)
 {
-  updateAndSyncDockWidget(actionShow_Issues, issuesDockWidget, m_IssuesBtn, b);
+  updateAndSyncDockWidget(actionShow_Issues, issuesDockWidget, b);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::updateAndSyncDockWidget(QAction* action, QDockWidget* dock, QToolButton* btn, bool b)
+void DREAM3D_UI::updateAndSyncDockWidget(QAction* action, QDockWidget* dock, bool b)
 {
-  if(m_FilterListBtn == NULL || m_FilterLibraryBtn == NULL || m_FavoritesBtn == NULL || m_PrebuiltBtn == NULL || m_IssuesBtn == NULL) { return; }
-
   action->blockSignals(true);
   dock->blockSignals(true);
-  btn->blockSignals(true);
 
   action->setChecked(b);
-  btn->toggle();
   dock->setVisible(b);
-#if 0
-  if(b == false)
-  {
-    QString text = action->text().replace("Show", "Hide");
-    action->setText(text);
-  }
-  else
-  {
-    QString text = action->text().replace("Hide", "Show");
-    action->setText(text);
-  }
-#endif
+
   action->blockSignals(false);
   dock->blockSignals(false);
-  btn->blockSignals(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -1404,6 +1188,30 @@ BookmarksDockWidget* DREAM3D_UI::getBookmarksDockWidget()
 PrebuiltPipelinesDockWidget* DREAM3D_UI::getPrebuiltsDockWidget()
 {
   return prebuiltPipelinesDockWidget;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilterListDockWidget* DREAM3D_UI::getFilterListDockWidget()
+{
+  return filterListDockWidget;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilterLibraryDockWidget* DREAM3D_UI::getFilterLibraryDockWidget()
+{
+  return filterLibraryDockWidget;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IssuesDockWidget* DREAM3D_UI::getIssuesDockWidget()
+{
+  return issuesDockWidget;
 }
 
 // -----------------------------------------------------------------------------
@@ -1493,6 +1301,46 @@ void DREAM3D_UI::setDREAM3DMenu(DREAM3DMenu* menu)
 DREAM3DMenu* DREAM3D_UI::getDREAM3DMenu()
 {
   return m_InstanceMenu;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QMenu* DREAM3D_UI::createViewMenu()
+{
+  QMenu* menuView = new QMenu(this);
+  menuView->setTitle(QApplication::translate("DREAM3D_UI", "View", 0));
+  menuView->setObjectName(QStringLiteral("menuView"));
+
+  QAction* actionShowFilterList = filterListDockWidget->toggleViewAction();
+  actionShowFilterList->setText("Filter List");
+  menuView->addAction(actionShowFilterList);
+  connect(actionShowFilterList, SIGNAL(triggered(bool)), dream3dApp, SLOT(on_actionShowFilterList_triggered(bool)) );
+
+
+  QAction* actionShowFilterLibrary = filterLibraryDockWidget->toggleViewAction();
+  actionShowFilterLibrary->setText("Filter Library");
+  menuView->addAction(actionShowFilterLibrary);
+  connect(actionShowFilterLibrary, SIGNAL(triggered(bool)), dream3dApp, SLOT(on_actionShowFilterLibrary_triggered(bool)) );
+
+
+  QAction* actionShowFavorites = bookmarksDockWidget->toggleViewAction();
+  actionShowFavorites->setText("Favorite Pipelines");
+  menuView->addAction(actionShowFavorites);
+  connect(actionShowFavorites, SIGNAL(triggered(bool)), dream3dApp, SLOT(on_actionShowBookmarks_triggered(bool)) );
+
+
+  QAction* actionShowPrebuiltPipelines = prebuiltPipelinesDockWidget->toggleViewAction();
+  actionShowPrebuiltPipelines->setText("Prebuilt Pipelines");
+  menuView->addAction(actionShowPrebuiltPipelines);
+  connect(actionShowPrebuiltPipelines, SIGNAL(triggered(bool)), dream3dApp, SLOT(on_actionShowPrebuiltPipelines_triggered(bool)) );
+
+  QAction* actionShowIssues = issuesDockWidget->toggleViewAction();
+  actionShowIssues->setText("Show Warnings/Errors");
+  menuView->addAction(actionShowIssues);
+  connect(actionShowIssues, SIGNAL(triggered(bool)), dream3dApp, SLOT(on_actionShowIssues_triggered(bool)) );
+
+  return menuView;
 }
 
 

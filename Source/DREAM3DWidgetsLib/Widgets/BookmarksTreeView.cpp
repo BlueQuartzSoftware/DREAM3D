@@ -87,58 +87,6 @@ void BookmarksTreeView::addActionList(QList<QAction*> actionList)
   }
 }
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BookmarksTreeView::setNodeActionList(QList<QAction*> list)
-{
-  m_NodeActions = list;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BookmarksTreeView::setLeafActionList(QList<QAction*> list)
-{
-  m_LeafActions = list;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BookmarksTreeView::setLeafErrorActionList(QList<QAction*> list)
-{
-  m_LeafErrorActions = list;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BookmarksTreeView::setDefaultActionList(QList<QAction*> list)
-{
-  m_DefaultActions = list;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BookmarksTreeView::onCustomContextMenuRequested(const QPoint& pos)
-{
-  QModelIndex index = indexAt(pos);
-
-  if (index.isValid())
-  {
-    // Note: We must map the point to global from the viewport to
-    // account for the header.
-    showContextMenu(index, viewport()->mapToGlobal(pos));
-  }
-  else
-  {
-    showContextMenu(QModelIndex(), mapToGlobal(pos));
-  }
-}
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -159,48 +107,6 @@ void BookmarksTreeView::mousePressEvent(QMouseEvent* event)
     }
   }
   QTreeView::mousePressEvent(event);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BookmarksTreeView::showContextMenu(QModelIndex index, const QPoint& globalPos)
-{
-  BookmarksModel* model = BookmarksModel::Instance();
-
-  // Clear menu's previous actions
-  m_Menu.clear();
-
-  if (index.isValid() == false)
-  {
-    if (!m_LeafActions.isEmpty())
-    {
-      addActionList(m_DefaultActions);
-    }
-  }
-  else
-  {
-    QModelIndex actualIndex = model->index(index.row(), BookmarksItem::Path, index.parent());
-    QString path = actualIndex.data().toString();
-    if (path.isEmpty() == false)
-    {
-      bool itemHasErrors = model->data(actualIndex, Qt::UserRole).value<bool>();
-      if (itemHasErrors == true && !m_LeafErrorActions.isEmpty())
-      {
-        addActionList(m_LeafErrorActions);
-      }
-      else if (!m_LeafActions.isEmpty())
-      {
-        addActionList(m_LeafActions);
-      }
-    }
-    else if (path.isEmpty() && !m_NodeActions.isEmpty())
-    {
-      addActionList(m_NodeActions);
-    }
-  }
-
-  m_Menu.exec(globalPos);
 }
 
 // -----------------------------------------------------------------------------

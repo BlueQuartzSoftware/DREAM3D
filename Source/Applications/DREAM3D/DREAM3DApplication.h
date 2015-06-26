@@ -66,9 +66,9 @@ public:
 
   bool initialize(int argc, char* argv[]);
 
-  QList<DREAM3D_UI*> getDREAM3DWindowList();
+  QMap<DREAM3D_UI*, QMenu*> getDREAM3DInstanceMap();
 
-  void registerDREAM3DWindow(DREAM3D_UI* window);
+  void registerDREAM3DWindow(DREAM3D_UI* window, QMenu* viewMenu);
   void unregisterDREAM3DWindow(DREAM3D_UI* window);
 
 protected:
@@ -95,6 +95,12 @@ protected slots:
   // DREAM3D_UI slots
   void openRecentFile();
 
+  void on_actionShowFilterList_triggered(bool visible);
+  void on_actionShowFilterLibrary_triggered(bool visible);
+  void on_actionShowBookmarks_triggered(bool visible);
+  void on_actionShowPrebuiltPipelines_triggered(bool visible);
+  void on_actionShowIssues_triggered(bool visible);
+
   void on_actionNew_triggered();
   void on_actionOpen_triggered();
   void on_actionSave_triggered();
@@ -104,6 +110,9 @@ protected slots:
   void on_actionNewFolder_triggered();
   void on_actionRenamePipeline_triggered();
   void on_actionRemovePipeline_triggered();
+  void on_actionShowBookmarkInFileSystem_triggered();
+  void on_actionShowPrebuiltInFileSystem_triggered();
+  void on_actionLocateFile_triggered();
   void on_actionClearPipeline_triggered();
 
   void on_pipelineViewContextMenuRequested(const QPoint&);
@@ -123,16 +132,22 @@ protected slots:
   void toPipelineIdleState();
 
 private:
-  QList<DREAM3D_UI*>              m_DREAM3DWidgetList;
-  DREAM3D_UI*                     m_ActiveWindow;
-  DREAM3DMenu*                    m_GlobalMenu;
 
-  QString                         m_OpenDialogLastDirectory;
+  // This map stores each DREAM3D instance with its accompanying "View" menu
+  QMap<DREAM3D_UI*, QMenu*>               m_DREAM3DInstanceMap;
 
-  bool                            show_splash;
-  DSplashScreen*                  Splash;
-  DREAM3D_UI*                     MainWindow;
-  QVector<QPluginLoader*>         m_PluginLoaders;
+  // The currently active DREAM3D instance
+  DREAM3D_UI*                             m_ActiveWindow;
+
+  // The global menu (used on Mac OS X only)
+  DREAM3DMenu*                            m_GlobalMenu;
+
+  QString                                 m_OpenDialogLastDirectory;
+
+  bool                                    show_splash;
+  DSplashScreen*                          Splash;
+  DREAM3D_UI*                             MainWindow;
+  QVector<QPluginLoader*>                 m_PluginLoaders;
 
   QVector<IDREAM3DPlugin*> loadPlugins();
 

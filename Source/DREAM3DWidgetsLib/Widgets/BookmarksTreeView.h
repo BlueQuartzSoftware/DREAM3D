@@ -90,30 +90,6 @@ public:
   QJsonObject toJsonObject();
 
   /**
-  * @brief setNodeActionList
-  * @param list
-  */
-  void setNodeActionList(QList<QAction*> list);
-
-  /**
-  * @brief setLeafActionList
-  * @param list
-  */
-  void setLeafActionList(QList<QAction*> list);
-
-  /**
-  * @brief setLeafErrorActionList
-  * @param list
-  */
-  void setLeafErrorActionList(QList<QAction*> list);
-
-  /**
-  * @brief setDefaultActionList
-  * @param list
-  */
-  void setDefaultActionList(QList<QAction*> list);
-
-  /**
   * @brief setModel
   * @param model
   */
@@ -143,19 +119,6 @@ signals:
   void folderChangedState(const QModelIndex &index, bool expand);
 
   private slots:
-
-  /**
-  * @brief onCustomContextMenuRequested
-  * @param pos
-  */
-  void onCustomContextMenuRequested(const QPoint& pos);
-
-  /**
-  * @brief showContextMenu
-  * @param item
-  * @param globalPos
-  */
-  void showContextMenu(QModelIndex index, const QPoint& globalPos);
 
   /**
   * @brief mousePressEvent

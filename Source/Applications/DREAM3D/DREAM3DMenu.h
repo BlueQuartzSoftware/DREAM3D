@@ -56,10 +56,17 @@ public:
 
   QMenu* getFileMenu();
   QMenu* getViewMenu();
+  void setViewMenu(QMenu* viewMenu);
   QMenu* getBookmarksMenu();
   QMenu* getPipelineMenu();
   QMenu* getHelpMenu();
   QMenu* getRecentFilesMenu();
+
+  QAction* getShowFilterLibrary();
+  QAction* getShowFilterList();
+  QAction* getShowPrebuiltPipelines();
+  QAction* getShowBookmarks();
+  QAction* getShowIssues();
 
   QAction* getClearRecentFiles();
   QAction* getNew();
@@ -79,7 +86,7 @@ public:
 
 private:
 
-  QMenuBar*                       m_GlobalMenu;
+  QMenuBar*                       m_MenuBar;
 
   // File Menu
   QMenu*                          m_MenuFile;
@@ -96,7 +103,7 @@ private:
   QAction*                        m_ActionShowFilterLibrary;
   QAction*                        m_ActionShowFilterList;
   QAction*                        m_ActionShowPrebuiltPipelines;
-  QAction*                        m_ActionShowFavorites;
+  QAction*                        m_ActionShowBookmarks;
   QAction*                        m_ActionShowIssues;
 
   // Bookmarks Menu

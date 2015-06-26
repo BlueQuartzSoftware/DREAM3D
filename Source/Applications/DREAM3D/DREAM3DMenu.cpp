@@ -42,7 +42,13 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3DMenu::DREAM3DMenu()
+DREAM3DMenu::DREAM3DMenu() :
+  m_MenuView(NULL),
+  m_ActionShowFilterLibrary(NULL),
+  m_ActionShowFilterList(NULL),
+  m_ActionShowPrebuiltPipelines(NULL),
+  m_ActionShowBookmarks(NULL),
+  m_ActionShowIssues(NULL)
 {
   initialize();
 }
@@ -60,95 +66,23 @@ DREAM3DMenu::~DREAM3DMenu()
 // -----------------------------------------------------------------------------
 void DREAM3DMenu::initialize()
 {
-  m_GlobalMenu = new QMenuBar(NULL);
-  m_GlobalMenu->setObjectName(QStringLiteral("m_GlobalMenu"));
-  m_GlobalMenu->setGeometry(QRect(0, 0, 1104, 21));
+  m_MenuBar = new QMenuBar(NULL);
+  m_MenuBar->setObjectName(QStringLiteral("m_GlobalMenu"));
+  m_MenuBar->setGeometry(QRect(0, 0, 1104, 21));
 
-  m_MenuFile = new QMenu(m_GlobalMenu);
+  m_MenuFile = new QMenu(m_MenuBar);
   m_MenuFile->setObjectName(QStringLiteral("menuFile"));
   m_MenuRecentFiles = new QMenu(m_MenuFile);
   m_MenuRecentFiles->setObjectName(QStringLiteral("menu_RecentFiles"));
-  m_MenuView = new QMenu(m_GlobalMenu);
-  m_MenuView->setObjectName(QStringLiteral("menuView"));
-  m_MenuBookmarks = new QMenu(m_GlobalMenu);
+  m_MenuBookmarks = new QMenu(m_MenuBar);
   m_MenuBookmarks->setObjectName(QStringLiteral("menuBookmarks"));
-  m_MenuHelp = new QMenu(m_GlobalMenu);
+  m_MenuHelp = new QMenu(m_MenuBar);
   m_MenuHelp->setObjectName(QStringLiteral("menuHelp"));
-  m_MenuPipeline = new QMenu(m_GlobalMenu);
+  m_MenuPipeline = new QMenu(m_MenuBar);
   m_MenuPipeline->setObjectName(QStringLiteral("menuPipeline"));
 
-#if 0
-  //  m_FilterListBtn = new QToolButton(this);
-  //  makeStatusBarButton("Filters", filterListDockWidget, m_FilterListBtn, 0);
-  menuView->removeAction(actionShow_Filter_List);
-  delete actionShow_Filter_List;
-  actionShow_Filter_List = filterListDockWidget->toggleViewAction();
-  actionShow_Filter_List->setText("Filter List");
-
-  menuView->addAction(actionShow_Filter_List);
-  connect(actionShow_Filter_List, SIGNAL(triggered(bool)), this, SLOT(on_actionShow_Filter_List_triggered(bool)) );
-  //  connect(m_FilterListBtn, SIGNAL(toggled(bool)),
-  //          this, SLOT(on_actionShow_Filter_List_triggered(bool)) );
 
 
-  //  m_FilterLibraryBtn = new QToolButton(this);
-  //  makeStatusBarButton("Filter Library", filterLibraryDockWidget, m_FilterLibraryBtn, 1);
-  menuView->removeAction(actionShow_Filter_Library);
-  delete actionShow_Filter_Library;
-  actionShow_Filter_Library = filterLibraryDockWidget->toggleViewAction();
-  actionShow_Filter_Library->setText("Filter Library");
-  menuView->addAction(actionShow_Filter_Library);
-  connect(actionShow_Filter_Library, SIGNAL(triggered(bool)), this, SLOT(on_actionShow_Filter_Library_triggered(bool)) );
-  //  connect(m_FilterLibraryBtn, SIGNAL(toggled(bool)),
-  //          this, SLOT(on_actionShow_Filter_Library_triggered(bool)) );
-
-  //  m_FavoritesBtn = new QToolButton(this);
-  //  makeStatusBarButton("Favorites", BookmarksDockWidget, m_FavoritesBtn, 2);
-  menuView->removeAction(actionShow_Favorites);
-  delete actionShow_Favorites;
-  actionShow_Favorites = bookmarksDockWidget->toggleViewAction();
-  actionShow_Favorites->setText("Favorite Pipelines");
-  menuView->addAction(actionShow_Favorites);
-  connect(actionShow_Favorites, SIGNAL(triggered(bool)), this, SLOT(on_actionShow_Favorites_triggered(bool)) );
-  //  connect(m_FavoritesBtn, SIGNAL(toggled(bool)),
-  //          this, SLOT(on_actionShow_Favorites_triggered(bool)) );
-
-  //  m_PrebuiltBtn = new QToolButton(this);
-  //  makeStatusBarButton("Prebuilt", prebuiltPipelinesDockWidget, m_PrebuiltBtn, 3);
-  menuView->removeAction(actionShow_Prebuilt_Pipelines);
-  delete actionShow_Prebuilt_Pipelines;
-  actionShow_Prebuilt_Pipelines = prebuiltPipelinesDockWidget->toggleViewAction();
-  actionShow_Prebuilt_Pipelines->setText("Prebuilt Pipelines");
-  menuView->addAction(actionShow_Prebuilt_Pipelines);
-  connect(actionShow_Prebuilt_Pipelines, SIGNAL(triggered(bool)), this, SLOT(on_actionShow_Prebuilt_Pipelines_triggered(bool)) );
-  //  connect(m_PrebuiltBtn, SIGNAL(toggled(bool)),
-  //          this, SLOT(on_actionShow_Prebuilt_Pipelines_triggered(bool)) );
-
-
-  //  m_IssuesBtn = new QToolButton(this);
-  //  makeStatusBarButton("Issues", issuesDockWidget, m_IssuesBtn, 4);
-  menuView->removeAction(actionShow_Issues);
-  delete actionShow_Issues;
-  actionShow_Issues = issuesDockWidget->toggleViewAction();
-  actionShow_Issues->setText("Show Warnings/Errors");
-  menuView->addAction(actionShow_Issues);
-  connect(actionShow_Issues, SIGNAL(triggered(bool)), this, SLOT(on_actionShow_Issues_triggered(bool)) );
-  //  connect(m_IssuesBtn, SIGNAL(toggled(bool)),
-  //          this, SLOT(on_actionShow_Issues_triggered(bool)) );
-#endif
-
-  /* m_ActionRenamePipeline */
-  //bookmarksDockWidget->setRenameAction(m_ActionRenamePipeline);
-
-  /* m_ActionRemovePipeline */
-  //bookmarksDockWidget->setDeleteAction(m_ActionRemovePipeline);
-
-  m_ActionShowFilterLibrary = new QAction(this);
-  m_ActionShowFilterLibrary->setObjectName(QStringLiteral("actionShow_Filter_Library"));
-  m_ActionShowFilterLibrary->setIconVisibleInMenu(false);
-  m_ActionShowPrebuiltPipelines = new QAction(this);
-  m_ActionShowPrebuiltPipelines->setObjectName(QStringLiteral("actionShow_Prebuilt_Pipelines"));
-  m_ActionShowPrebuiltPipelines->setIconVisibleInMenu(false);
   m_ActionAddBookmark = new QAction(m_MenuBookmarks);
   m_ActionAddBookmark->setObjectName(QString::fromUtf8("m_ActionAddPipeline"));
   m_ActionRenamePipeline = new QAction(this);
@@ -171,17 +105,8 @@ void DREAM3DMenu::initialize()
   m_ActionOpen->setObjectName(QStringLiteral("actionOpen"));
   m_ActionNew = new QAction(this);
   m_ActionNew->setObjectName(QStringLiteral("actionNew"));
-  m_ActionShowFavorites = new QAction(this);
-  m_ActionShowFavorites->setObjectName(QStringLiteral("actionShow_Favorites"));
-  m_ActionShowFavorites->setIconVisibleInMenu(false);
   m_ActionClearRecentFiles = new QAction(this);
   m_ActionClearRecentFiles->setObjectName(QStringLiteral("actionClearRecentFiles"));
-  m_ActionShowIssues = new QAction(this);
-  m_ActionShowIssues->setObjectName(QStringLiteral("actionShow_Issues"));
-  m_ActionShowIssues->setIconVisibleInMenu(false);
-  m_ActionShowFilterList = new QAction(this);
-  m_ActionShowFilterList->setObjectName(QStringLiteral("actionShow_Filter_List"));
-  m_ActionShowFilterList->setIconVisibleInMenu(false);
   m_ActionShowDREAM3DHelp = new QAction(this);
   m_ActionShowDREAM3DHelp->setObjectName(QStringLiteral("actionShowDREAM3DHelp"));
   m_ActionAboutDREAM3D = new QAction(this);
@@ -195,8 +120,9 @@ void DREAM3DMenu::initialize()
   m_ActionSaveAs = new QAction(this);
   m_ActionSaveAs->setObjectName(QStringLiteral("actionSaveAs"));
 
-  m_ActionShowFilterLibrary->setText(QApplication::translate("DREAM3D_UI", "Filter Library", 0));
-  m_ActionShowPrebuiltPipelines->setText(QApplication::translate("DREAM3D_UI", "Prebuilt Pipelines", 0));
+
+
+
   m_ActionLocateFile->setText(QApplication::translate("DREAM3D_UI", "Locate Bookmark...", 0));
   m_ActionAddBookmark->setText(QApplication::translate("DREAM3D_UI", "Add Bookmark", 0));
   m_ActionAddBookmark->setShortcut(QApplication::translate("DREAM3D_UI", "Ctrl+B", 0));
@@ -210,7 +136,6 @@ void DREAM3DMenu::initialize()
   m_ActionOpen->setShortcut(QApplication::translate("DREAM3D_UI", "Ctrl+O", 0));
   m_ActionNew->setText(QApplication::translate("DREAM3D_UI", "New...", 0));
   m_ActionNew->setShortcut(QApplication::translate("DREAM3D_UI", "Ctrl+N", 0));
-  m_ActionShowFavorites->setText(QApplication::translate("DREAM3D_UI", "Favorites", 0));
   m_ActionClearRecentFiles->setText(QApplication::translate("DREAM3D_UI", "Clear Recent Files", 0));
   m_ActionExit->setText(QApplication::translate("DREAM3D_UI", "Exit DREAM3D", 0));
 #if defined(Q_OS_WIN)
@@ -228,8 +153,6 @@ void DREAM3DMenu::initialize()
   m_ActionShowBookmarkInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in File System", 0));
   m_ActionShowPrebuiltInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in File System", 0));
 #endif
-  m_ActionShowIssues->setText(QApplication::translate("DREAM3D_UI", "Issues", 0));
-  m_ActionShowFilterList->setText(QApplication::translate("DREAM3D_UI", "Filter List", 0));
   m_ActionShowDREAM3DHelp->setText(QApplication::translate("DREAM3D_UI", "DREAM3D Help", 0));
   m_ActionShowDREAM3DHelp->setShortcut(QApplication::translate("DREAM3D_UI", "Ctrl+H", 0));
   m_ActionAboutDREAM3D->setText(QApplication::translate("DREAM3D_UI", "About DREAM3D", 0));
@@ -247,7 +170,6 @@ void DREAM3DMenu::initialize()
   m_ActionSaveAs->setShortcut(QApplication::translate("DREAM3D_UI", "Ctrl+Shift+S", 0));
   m_MenuFile->setTitle(QApplication::translate("DREAM3D_UI", "File", 0));
   m_MenuRecentFiles->setTitle(QApplication::translate("DREAM3D_UI", "Recent Files", 0));
-  m_MenuView->setTitle(QApplication::translate("DREAM3D_UI", "View", 0));
   m_MenuBookmarks->setTitle(QApplication::translate("DREAM3D_UI", "Bookmarks", 0));
   m_MenuHelp->setTitle(QApplication::translate("DREAM3D_UI", "Help", 0));
   m_MenuPipeline->setTitle(QApplication::translate("DREAM3D_UI", "Pipeline", 0));
@@ -270,14 +192,18 @@ void DREAM3DMenu::initialize()
   connect(m_ActionShowPrebuiltInFileSystem, SIGNAL(triggered()), dream3dApp, SLOT(on_actionShowPrebuiltInFileSystem_triggered()));
   connect(m_ActionRenamePipeline, SIGNAL(triggered()), dream3dApp, SLOT(on_actionRenamePipeline_triggered()));
   connect(m_ActionRemovePipeline, SIGNAL(triggered()), dream3dApp, SLOT(on_actionRemovePipeline_triggered()));
-  connect(m_ActionLocateFile, SIGNAL(triggered()), dream3dApp, SLOT(m_ActionLocateFile_triggered()));
+  connect(m_ActionLocateFile, SIGNAL(triggered()), dream3dApp, SLOT(on_actionLocateFile_triggered()));
+  connect(m_ActionShowFilterList, SIGNAL(triggered(bool)), dream3dApp, SLOT(on_actionShowFilterList_triggered(bool)) );
+  connect(m_ActionShowFilterLibrary, SIGNAL(triggered(bool)), dream3dApp, SLOT(on_actionShowFilterLibrary_triggered(bool)) );
+  connect(m_ActionShowPrebuiltPipelines, SIGNAL(triggered(bool)), dream3dApp, SLOT(on_actionShowPrebuiltPipelines_triggered(bool)) );
+  connect(m_ActionShowBookmarks, SIGNAL(triggered(bool)), dream3dApp, SLOT(on_actionShowBookmarks_triggered(bool)) );
+  connect(m_ActionShowIssues, SIGNAL(triggered(bool)), dream3dApp, SLOT(on_actionShowIssues_triggered(bool)) );
 
   // Add the actions to their respective menus
-  m_GlobalMenu->addAction(m_MenuFile->menuAction());
-  m_GlobalMenu->addAction(m_MenuView->menuAction());
-  m_GlobalMenu->addAction(m_MenuBookmarks->menuAction());
-  m_GlobalMenu->addAction(m_MenuPipeline->menuAction());
-  m_GlobalMenu->addAction(m_MenuHelp->menuAction());
+  m_MenuBar->addAction(m_MenuFile->menuAction());
+  m_MenuBar->addAction(m_MenuBookmarks->menuAction());
+  m_MenuBar->addAction(m_MenuPipeline->menuAction());
+  m_MenuBar->addAction(m_MenuHelp->menuAction());
   m_MenuFile->addAction(m_ActionNew);
   m_MenuFile->addAction(m_ActionOpen);
   m_MenuFile->addSeparator();
@@ -289,11 +215,6 @@ void DREAM3DMenu::initialize()
   m_MenuFile->addAction(m_ActionExit);
   m_MenuRecentFiles->addSeparator();
   m_MenuRecentFiles->addAction(m_ActionClearRecentFiles);
-  m_MenuView->addAction(m_ActionShowFilterLibrary);
-  m_MenuView->addAction(m_ActionShowFilterList);
-  m_MenuView->addAction(m_ActionShowPrebuiltPipelines);
-  m_MenuView->addAction(m_ActionShowFavorites);
-  m_MenuView->addAction(m_ActionShowIssues);
   m_MenuBookmarks->addAction(m_ActionAddBookmark);
   {
     m_MenuBookmarks->addSeparator();
@@ -313,7 +234,7 @@ void DREAM3DMenu::initialize()
 // -----------------------------------------------------------------------------
 QMenuBar* DREAM3DMenu::getMenuBar()
 {
-  return m_GlobalMenu;
+  return m_MenuBar;
 }
 
 // -----------------------------------------------------------------------------
@@ -330,6 +251,24 @@ QMenu* DREAM3DMenu::getFileMenu()
 QMenu* DREAM3DMenu::getViewMenu()
 {
   return m_MenuView;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DMenu::setViewMenu(QMenu* viewMenu)
+{ 
+  if (NULL != m_MenuView)
+  {
+    m_MenuBar->removeAction(m_MenuView->menuAction());
+  }
+
+  m_MenuView = viewMenu;
+
+  //viewMenu->findChild<QAction*>("")
+
+  QAction* bookmarksMenuAction = m_MenuBookmarks->menuAction();
+  m_MenuBar->insertMenu(bookmarksMenuAction, viewMenu);
 }
 
 // -----------------------------------------------------------------------------
@@ -370,6 +309,46 @@ QMenu* DREAM3DMenu::getRecentFilesMenu()
 QAction* DREAM3DMenu::getClearRecentFiles()
 {
   return m_ActionClearRecentFiles;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QAction* DREAM3DMenu::getShowFilterLibrary()
+{
+  return m_ActionShowFilterLibrary;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QAction* DREAM3DMenu::getShowFilterList()
+{
+  return m_ActionShowFilterList;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QAction* DREAM3DMenu::getShowPrebuiltPipelines()
+{
+  return m_ActionShowPrebuiltPipelines;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QAction* DREAM3DMenu::getShowBookmarks()
+{
+  return m_ActionShowBookmarks;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QAction* DREAM3DMenu::getShowIssues()
+{
+  return m_ActionShowIssues;
 }
 
 // -----------------------------------------------------------------------------
