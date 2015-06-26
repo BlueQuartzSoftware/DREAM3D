@@ -227,81 +227,6 @@ void DREAM3D_UI::resizeEvent ( QResizeEvent* event )
 }
 
 // -----------------------------------------------------------------------------
-/* This is a slot that catches signals from BookmarksDockWidget
-   and PrebuiltPipelinesDockWidget */
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::openNewPipeline(const QString &filePath, const bool &setOpenedFilePath, const bool &addToRecentFiles)
-{
-  openNewPipeline(filePath, setOpenedFilePath, addToRecentFiles, true);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::openNewPipeline(const QString &filePath, const bool &setOpenedFilePath, const bool &addToRecentFiles, const bool &newWindow)
-{
-  QFileInfo fi(filePath);
-  QRecentFileList* list = QRecentFileList::instance();
-
-  if (newWindow == true)
-  {
-    PluginManager* pluginManager = PluginManager::Instance();
-    QVector<IDREAM3DPlugin*> plugins = pluginManager->getPluginsVector();
-
-    // Create new DREAM3D instance
-    DREAM3D_UI* newInstance = new DREAM3D_UI(NULL);
-    newInstance->setLoadedPlugins(plugins);
-
-    // Read Pipeline
-    int err = newInstance->getPipelineViewWidget()->openPipeline(filePath, 0, setOpenedFilePath, true);
-
-    // Set Current File Path
-    if (err >= 0)
-    {
-      // Cache the last directory on new instance
-      newInstance->setOpenDialogLastDirectory(fi.path());
-
-      if (addToRecentFiles == true)
-      {
-        // Add file to the recent files list
-        list->addFile(filePath);
-      }
-
-      // Show the new instance
-      newInstance->setAttribute(Qt::WA_DeleteOnClose);
-      newInstance->move(this->x() + 45, this->y() + 45);
-
-      connectSignalsSlots(newInstance);
-
-      newInstance->show();
-    }
-    else
-    {
-      // Show error message on old DREAM3D instance
-      QString errorMessage = newInstance->getPipelineViewWidget()->getStatusBar()->currentMessage();
-      pipelineViewWidget->getStatusBar()->showMessage(errorMessage);
-
-      // Delete new DREAM3D instance
-      delete newInstance;
-    }
-  }
-  else
-  {
-    int err = pipelineViewWidget->openPipeline(filePath, 0, setOpenedFilePath, true);
-    setOpenDialogLastDirectory(fi.path());
-
-    if (err >= 0)
-    {
-      if (addToRecentFiles == true)
-      {
-        // Add file to the recent files list
-        list->addFile(filePath);
-      }
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 bool DREAM3D_UI::savePipeline()
@@ -467,7 +392,6 @@ void DREAM3D_UI::readSettings()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::readWindowSettings(DREAM3DSettings& prefs)
 {
-  QString filePath = prefs.fileName();
   bool ok = false;
   prefs.beginGroup("WindowSettings");
   if (prefs.contains(QString("MainWindowGeometry")))
@@ -482,7 +406,6 @@ void DREAM3D_UI::readWindowSettings(DREAM3DSettings& prefs)
 
   if (prefs.contains(QString("MainWindowState")))
   {
-    std::cout << "Reading State of Main Window" << std::endl;
     QByteArray layout_data = prefs.value("MainWindowState", "").toByteArray();
     restoreState(layout_data);
   }
@@ -670,10 +593,10 @@ void DREAM3D_UI::disconnectSignalsSlots()
     pipelineViewWidget, SLOT(addFilter(const QString&)));
 
   disconnect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(const QString&, const bool &, const bool &)),
-    this, SLOT(openNewPipeline(const QString&, const bool &, const bool &)));
+    dream3dApp, SLOT(newInstanceFromFile(const QString&, const bool &, const bool &)));
 
   disconnect(bookmarksDockWidget, SIGNAL(pipelineFileActivated(const QString&, const bool &, const bool &)),
-    this, SLOT(openNewPipeline(const QString&, const bool &, const bool &)));
+    dream3dApp, SLOT(newInstanceFromFile(const QString&, const bool &, const bool &)));
 
   disconnect(this, SIGNAL(bookmarkNeedsToBeAdded(const QString&, const QModelIndex&)),
     bookmarksDockWidget, SLOT(addBookmark(const QString&, const QModelIndex&)));
@@ -714,10 +637,10 @@ void DREAM3D_UI::connectSignalsSlots()
           pipelineViewWidget, SLOT(addFilter(const QString&)) );
 
   connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(const QString&, const bool &, const bool &)),
-    this, SLOT(openNewPipeline(const QString&, const bool &, const bool &)));
+          dream3dApp, SLOT(newInstanceFromFile(const QString&, const bool &, const bool &)));
 
   connect(bookmarksDockWidget, SIGNAL(pipelineFileActivated(const QString&, const bool &, const bool &)),
-    this, SLOT(openNewPipeline(const QString&, const bool &, const bool &)));
+        dream3dApp, SLOT(newInstanceFromFile(const QString&, const bool &, const bool &)));
 
   connect(this, SIGNAL(bookmarkNeedsToBeAdded(const QString&, const QModelIndex&)),
     bookmarksDockWidget, SLOT(addBookmark(const QString&, const QModelIndex&)));
@@ -884,20 +807,6 @@ QMessageBox::StandardButton DREAM3D_UI::checkDirtyDocument()
   }
 
   return QMessageBox::Ignore;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::openRecentFile()
-{
-  QAction* action = qobject_cast<QAction*>(sender());
-  if (action)
-  {
-    //qDebug() << "Opening Recent file: " << action->data().toString() << "\n";
-    QString filePath = action->data().toString();
-    openNewPipeline(filePath, 0, true, true);
-  }
 }
 
 // -----------------------------------------------------------------------------

@@ -40,6 +40,7 @@
 #include <QtCore/QDebug>
 
 #include "DREAM3DApplication.h"
+#include "DREAM3D_UI.h"
 
 #ifdef Q_WS_X11
 #include <QPlastiqueStyle>
@@ -75,7 +76,7 @@ int main(int argc, char* argv[])
   qDebug() << "        cwd: " << cwd;
 #endif
 
-  QCoreApplication::setApplicationName("DREAM3D_V5");
+  QCoreApplication::setApplicationName("DREAM3D_V6");
   QCoreApplication::setOrganizationDomain("bluequartz.net");
   QCoreApplication::setOrganizationName("BlueQuartz Software");
   QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
@@ -93,6 +94,23 @@ int main(int argc, char* argv[])
     return 1;
   }
 
-  return qtapp.exec();
+  // Open pipeline if DREAM3D was opened from a compatible file
+  if (argc == 2)
+  {
+    char* two = argv[1];
+    QString filePath = QString::fromLatin1(two);
+    if (!filePath.isEmpty())
+    {
+      qtapp.newInstanceFromFile(filePath, true, true);
+    }
+  }
+  else
+  {
+    DREAM3D_UI* ui = qtapp.getNewDREAM3DInstance();
+    ui->show();
+  }
+
+  int err = qtapp.exec();
+  return err;
 }
 

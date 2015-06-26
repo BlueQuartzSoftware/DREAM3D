@@ -182,13 +182,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void checkFirstRun();
 
     /**
-    * @brief openNewPipeline
-    * @param filePath
-    * @param setOpenedFilePath
-    */
-    void openNewPipeline(const QString &filePath, const bool &setOpenedFilePath, const bool &addToRecentFiles, const bool &newWindow);
-
-    /**
      * @brief savePipeline Helper function that saves the pipeline
      */
     bool savePipeline();
@@ -220,12 +213,14 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void on_startPipelineBtn_clicked();
 
     /**
-     * @brief Qt Slot that fires in response to a click on a "Recent File' Menu entry.
+     * @brief pipelineDidFinish
      */
-    void openRecentFile();
-
     void pipelineDidFinish();
 
+    /**
+     * @brief processPipelineMessage
+     * @param msg
+     */
     void processPipelineMessage(const PipelineMessage& msg);
 
     /**
@@ -251,14 +246,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     * @brief markDocumentAsDirty
     */
     void markDocumentAsDirty();
-
-    /**
-    * @brief openNewPipeline
-    * @param filePath
-    * @param setOpenedFilePath
-    */
-    void openNewPipeline(const QString &filePath, const bool &setOpenedFilePath, const bool &addToRecentFiles);
-
 
     // Our Signals that we can emit custom for this class
   signals:
