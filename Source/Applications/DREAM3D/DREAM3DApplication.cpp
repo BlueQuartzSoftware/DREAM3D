@@ -347,6 +347,24 @@ QVector<IDREAM3DPlugin*> DREAM3DApplication::loadPlugins()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+bool DREAM3DApplication::event(QEvent* event)
+{
+  if (event->type() == QEvent::FileOpen)
+  {
+    QFileOpenEvent* openEvent = static_cast<QFileOpenEvent*>(event);
+    QString filePath = openEvent->file();
+
+    newInstanceFromFile(filePath, true, true);
+
+    return true;
+  }
+
+  return QApplication::event(event);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void DREAM3DApplication::updateRecentFileList(const QString &file)
 {
 #if defined (Q_OS_MAC)

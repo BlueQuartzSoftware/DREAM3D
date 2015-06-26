@@ -233,11 +233,7 @@ void DREAM3DMenu::initialize()
   connect(m_ActionRenamePipeline, SIGNAL(triggered()), dream3dApp, SLOT(on_actionRenamePipeline_triggered()));
   connect(m_ActionRemovePipeline, SIGNAL(triggered()), dream3dApp, SLOT(on_actionRemovePipeline_triggered()));
   connect(m_ActionLocateFile, SIGNAL(triggered()), dream3dApp, SLOT(on_actionLocateFile_triggered()));
-  connect(m_ActionShowFilterList, SIGNAL(triggered(bool)), dream3dApp, SLOT(on_actionShowFilterList_triggered(bool)) );
-  connect(m_ActionShowFilterLibrary, SIGNAL(triggered(bool)), dream3dApp, SLOT(on_actionShowFilterLibrary_triggered(bool)) );
-  connect(m_ActionShowPrebuiltPipelines, SIGNAL(triggered(bool)), dream3dApp, SLOT(on_actionShowPrebuiltPipelines_triggered(bool)) );
-  connect(m_ActionShowBookmarks, SIGNAL(triggered(bool)), dream3dApp, SLOT(on_actionShowBookmarks_triggered(bool)) );
-  connect(m_ActionShowIssues, SIGNAL(triggered(bool)), dream3dApp, SLOT(on_actionShowIssues_triggered(bool)) );
+
 
   // Add the actions to their respective menus
   m_MenuBar->addAction(m_MenuFile->menuAction());
@@ -322,9 +318,11 @@ QMenu* DREAM3DMenu::getViewMenu()
 // -----------------------------------------------------------------------------
 void DREAM3DMenu::setViewMenu(QMenu* viewMenu)
 {
-  if (NULL != m_MenuView && m_MenuBar != NULL)
+  if (m_MenuBar != NULL)
   {
-    m_MenuBar->removeAction(m_MenuView->menuAction());
+    if(NULL != m_MenuView) {
+      m_MenuBar->removeAction(m_MenuView->menuAction());
+    }
 
     m_MenuView = viewMenu;
 
