@@ -88,6 +88,9 @@ DREAM3DApplication::DREAM3DApplication(int & argc, char ** argv) :
   QRecentFileList* recentsList = QRecentFileList::instance();
   connect(recentsList, SIGNAL(fileListChanged(const QString &)),
     this, SLOT(updateRecentFileList(const QString &)));
+
+  // Create the placeholder View Menu
+  m_PlaceholderViewMenu = createPlaceholderViewMenu();
 }
 
 // -----------------------------------------------------------------------------
@@ -1168,12 +1171,12 @@ void DREAM3DApplication::on_actionShowBookmarks_triggered(bool visible)
 {
   if (NULL != m_ActiveWindow)
   {
-    QAction* actionShowFilterLibrary = qobject_cast<QAction*>(sender());
-    FilterLibraryDockWidget* filterLibraryDockWidget = m_ActiveWindow->getFilterLibraryDockWidget();
+    QAction* actionShowBookmarks = qobject_cast<QAction*>(sender());
+    BookmarksDockWidget* bookmarksDockWidget = m_ActiveWindow->getBookmarksDockWidget();
 
-    if (NULL != actionShowFilterLibrary && NULL != filterLibraryDockWidget)
+    if (NULL != actionShowBookmarks && NULL != bookmarksDockWidget)
     {
-      m_ActiveWindow->updateAndSyncDockWidget(actionShowFilterLibrary, filterLibraryDockWidget, visible);
+      m_ActiveWindow->updateAndSyncDockWidget(actionShowBookmarks, bookmarksDockWidget, visible);
     }
   }
 }
@@ -1185,12 +1188,12 @@ void DREAM3DApplication::on_actionShowPrebuiltPipelines_triggered(bool visible)
 {
   if (NULL != m_ActiveWindow)
   {
-    QAction* actionShowFilterLibrary = qobject_cast<QAction*>(sender());
-    FilterLibraryDockWidget* filterLibraryDockWidget = m_ActiveWindow->getFilterLibraryDockWidget();
+    QAction* actionShowPrebuilts = qobject_cast<QAction*>(sender());
+    PrebuiltPipelinesDockWidget* prebuiltsDockWidget = m_ActiveWindow->getPrebuiltsDockWidget();
 
-    if (NULL != actionShowFilterLibrary && NULL != filterLibraryDockWidget)
+    if (NULL != actionShowPrebuilts && NULL != prebuiltsDockWidget)
     {
-      m_ActiveWindow->updateAndSyncDockWidget(actionShowFilterLibrary, filterLibraryDockWidget, visible);
+      m_ActiveWindow->updateAndSyncDockWidget(actionShowPrebuilts, prebuiltsDockWidget, visible);
     }
   }
 }
@@ -1202,12 +1205,12 @@ void DREAM3DApplication::on_actionShowIssues_triggered(bool visible)
 {
   if (NULL != m_ActiveWindow)
   {
-    QAction* actionShowFilterLibrary = qobject_cast<QAction*>(sender());
-    FilterLibraryDockWidget* filterLibraryDockWidget = m_ActiveWindow->getFilterLibraryDockWidget();
+    QAction* actionShowIssues = qobject_cast<QAction*>(sender());
+    IssuesDockWidget* issuesDockWidget = m_ActiveWindow->getIssuesDockWidget();
 
-    if (NULL != actionShowFilterLibrary && NULL != filterLibraryDockWidget)
+    if (NULL != actionShowIssues && NULL != issuesDockWidget)
     {
-      m_ActiveWindow->updateAndSyncDockWidget(actionShowFilterLibrary, filterLibraryDockWidget, visible);
+      m_ActiveWindow->updateAndSyncDockWidget(actionShowIssues, issuesDockWidget, visible);
     }
   }
 }
@@ -1248,24 +1251,32 @@ void DREAM3DApplication::activeWindowChanged(DREAM3D_UI* instance)
   {
     m_ActiveWindow = instance;
 
-    // Set this instance's view menu to the global menu
-    QMenu* viewMenu = m_DREAM3DInstanceMap.value(instance, NULL);
-    if (NULL != viewMenu)
-    {
-      m_GlobalMenu->setViewMenu(viewMenu);
-    }
-
     #if defined(Q_OS_MAC)
+      // Set this instance's view menu to the global menu
+      QMenu* viewMenu = m_DREAM3DInstanceMap.value(instance, NULL);
+      if (NULL != viewMenu)
+      {
+        m_GlobalMenu->setViewMenu(viewMenu);
+      }
+
+      /* If the active signal got fired and there is now only one window,
+       * this means that the first window has been opened.
+       * Enable menu items. */
       if (m_DREAM3DInstanceMap.size() == 1)
       {
         toggleGlobalMenuItems(true);
       }
     #endif
   }
+  /* If the inactive signal got fired and there are no more windows,
+   * this means that the last window has been closed.
+   * Disable menu items. */
   else if (m_DREAM3DInstanceMap.size() <= 0)
   {
     m_ActiveWindow = NULL;
+
     #if defined(Q_OS_MAC)
+      m_GlobalMenu->setViewMenu(m_PlaceholderViewMenu);
       toggleGlobalMenuItems(false);
     #endif
   }
@@ -1301,6 +1312,44 @@ void DREAM3DApplication::toPipelineRunningState()
 void DREAM3DApplication::toPipelineIdleState()
 {
   m_ActiveWindow->getDREAM3DMenu()->getPipelineMenu()->setEnabled(true);
+}
+
+// -----------------------------------------------------------------------------
+// This function is used if the last DREAM3D window gets closed.  Since the View
+// menu relies on a DREAM3D instance, we usually create each instance's View menu
+// inside of the DREAM3D_UI constructor.  However in this case, since there is no
+// DREAM3D instance to use, we have to create a placeholder View menu here to use.
+// -----------------------------------------------------------------------------
+QMenu* DREAM3DApplication::createPlaceholderViewMenu()
+{
+  QMenu* menuView = new QMenu(NULL);
+  menuView->setTitle(QApplication::translate("DREAM3D_UI", "View", 0));
+  menuView->setObjectName(QStringLiteral("menuView"));
+
+  QAction* actionShowFilterList = new QAction(menuView);
+  actionShowFilterList->setText("Filter List");
+  menuView->addAction(actionShowFilterList);
+
+
+  QAction* actionShowFilterLibrary = new QAction(menuView);
+  actionShowFilterLibrary->setText("Filter Library");
+  menuView->addAction(actionShowFilterLibrary);
+
+
+  QAction* actionShowBookmarks = new QAction(menuView);
+  actionShowBookmarks->setText("Bookmarks");
+  menuView->addAction(actionShowBookmarks);
+
+
+  QAction* actionShowPrebuiltPipelines = new QAction(menuView);
+  actionShowPrebuiltPipelines->setText("Prebuilt Pipelines");
+  menuView->addAction(actionShowPrebuiltPipelines);
+
+  QAction* actionShowIssues = new QAction(menuView);
+  actionShowIssues->setText("Show Warnings/Errors");
+  menuView->addAction(actionShowIssues);
+
+  return menuView;
 }
 
 
