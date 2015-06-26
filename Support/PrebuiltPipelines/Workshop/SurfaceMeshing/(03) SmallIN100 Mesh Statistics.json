@@ -11,79 +11,14 @@
                             "Data Arrays": [
                                 {
                                     "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "SurfaceMeshFaceAreas",
-                                    "Object Type": "DataArray<double>",
-                                    "Path": "/DataContainers/SurfaceDataContainer/FaceData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "SurfaceMeshFaceDihedralAngles",
-                                    "Object Type": "DataArray<double>",
-                                    "Path": "/DataContainers/SurfaceDataContainer/FaceData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        6
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "SurfaceMeshFaceIPFColors",
-                                    "Object Type": "DataArray<uint8_t>",
-                                    "Path": "/DataContainers/SurfaceDataContainer/FaceData",
-                                    "Tuple Dimensions": [
-                                        6
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
                                         2
                                     ],
                                     "Flag": 2,
                                     "Name": "SurfaceMeshFaceLabels",
                                     "Object Type": "DataArray<int32_t>",
-                                    "Path": "/DataContainers/SurfaceDataContainer/FaceData",
+                                    "Path": "/DataContainers/TriangleDataContainer/FaceData",
                                     "Tuple Dimensions": [
                                         2
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        3
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "SurfaceMeshFaceMisorientationColors",
-                                    "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/SurfaceDataContainer/FaceData",
-                                    "Tuple Dimensions": [
-                                        3
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        3
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "SurfaceMeshFaceNormals",
-                                    "Object Type": "DataArray<double>",
-                                    "Path": "/DataContainers/SurfaceDataContainer/FaceData",
-                                    "Tuple Dimensions": [
-                                        3
                                     ],
                                     "Version": 2
                                 }
@@ -101,7 +36,7 @@
                                     "Flag": 2,
                                     "Name": "SurfaceMeshNodeType",
                                     "Object Type": "DataArray<int8_t>",
-                                    "Path": "/DataContainers/SurfaceDataContainer/VertexData",
+                                    "Path": "/DataContainers/TriangleDataContainer/VertexData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -114,7 +49,7 @@
                         }
                     ],
                     "Flag": 2,
-                    "Name": "SurfaceDataContainer",
+                    "Name": "TriangleDataContainer",
                     "Type": 0
                 },
                 {
@@ -128,7 +63,7 @@
                                     "Flag": 2,
                                     "Name": "Confidence Index",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -141,7 +76,7 @@
                                     "Flag": 2,
                                     "Name": "EulerAngles",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         3
                                     ],
@@ -154,7 +89,7 @@
                                     "Flag": 2,
                                     "Name": "FeatureIds",
                                     "Object Type": "DataArray<int32_t>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -167,7 +102,7 @@
                                     "Flag": 2,
                                     "Name": "Fit",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -180,7 +115,7 @@
                                     "Flag": 2,
                                     "Name": "IPFColor",
                                     "Object Type": "DataArray<uint8_t>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         3
                                     ],
@@ -193,7 +128,7 @@
                                     "Flag": 2,
                                     "Name": "Image Quality",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -206,7 +141,7 @@
                                     "Flag": 2,
                                     "Name": "MisorientationColor",
                                     "Object Type": "DataArray<uint8_t>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         3
                                     ],
@@ -219,7 +154,7 @@
                                     "Flag": 2,
                                     "Name": "ParentIds",
                                     "Object Type": "DataArray<int32_t>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -232,7 +167,7 @@
                                     "Flag": 2,
                                     "Name": "Phases",
                                     "Object Type": "DataArray<int32_t>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -245,7 +180,7 @@
                                     "Flag": 2,
                                     "Name": "Quats",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         4
                                     ],
@@ -258,7 +193,7 @@
                                     "Flag": 2,
                                     "Name": "SEM Signal",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -271,7 +206,7 @@
                                     "Flag": 2,
                                     "Name": "ThresholdArray",
                                     "Object Type": "DataArray<bool>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -284,7 +219,7 @@
                                     "Flag": 2,
                                     "Name": "X Position",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -297,7 +232,7 @@
                                     "Flag": 2,
                                     "Name": "Y Position",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -317,7 +252,7 @@
                                     "Flag": 2,
                                     "Name": "CrystalStructures",
                                     "Object Type": "DataArray<uint32_t>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellEnsembleData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellEnsembleData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -330,7 +265,7 @@
                                     "Flag": 2,
                                     "Name": "LatticeConstants",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellEnsembleData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellEnsembleData",
                                     "Tuple Dimensions": [
                                         6
                                     ],
@@ -343,7 +278,7 @@
                                     "Flag": 2,
                                     "Name": "MaterialName",
                                     "Object Type": "DataArray<int8_t>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellEnsembleData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellEnsembleData",
                                     "Tuple Dimensions": [
                                         14
                                     ],
@@ -363,7 +298,7 @@
                                     "Flag": 2,
                                     "Name": "Active",
                                     "Object Type": "DataArray<bool>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -376,7 +311,7 @@
                                     "Flag": 2,
                                     "Name": "AvgEulerAngles",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
                                         3
                                     ],
@@ -389,7 +324,7 @@
                                     "Flag": 2,
                                     "Name": "AvgQuats",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
                                         4
                                     ],
@@ -402,7 +337,7 @@
                                     "Flag": 2,
                                     "Name": "EquivalentDiameters",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -415,7 +350,7 @@
                                     "Flag": 2,
                                     "Name": "NumCells",
                                     "Object Type": "DataArray<int32_t>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -428,7 +363,7 @@
                                     "Flag": 2,
                                     "Name": "NumNeighbors",
                                     "Object Type": "DataArray<int32_t>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -441,7 +376,7 @@
                                     "Flag": 2,
                                     "Name": "ParentIds",
                                     "Object Type": "DataArray<int32_t>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -454,7 +389,7 @@
                                     "Flag": 2,
                                     "Name": "Phases",
                                     "Object Type": "DataArray<int32_t>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -467,7 +402,7 @@
                                     "Flag": 2,
                                     "Name": "Volumes",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/VolumeDataContainer/CellFeatureData",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -487,7 +422,7 @@
                                     "Flag": 2,
                                     "Name": "Active",
                                     "Object Type": "DataArray<bool>",
-                                    "Path": "/DataContainers/VolumeDataContainer/NewCellFeatureData",
+                                    "Path": "/DataContainers/ImageDataContainer/NewCellFeatureData",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -500,7 +435,7 @@
                         }
                     ],
                     "Flag": 2,
-                    "Name": "VolumeDataContainer",
+                    "Name": "ImageDataContainer",
                     "Type": 0
                 }
             ]
@@ -508,89 +443,105 @@
         "OverwriteExistingDataContainers": 0
     },
     "1": {
+        "FaceAttributeMatrixName": {
+            "Attribute Matrix Name": "FaceData",
+            "Data Array Name": "",
+            "Data Container Name": "TriangleDataContainer"
+        },
+        "FilterVersion": "6.0.1877",
+        "Filter_Human_Label": "Generate Triangle Areas",
+        "Filter_Name": "TriangleAreaFilter",
+        "SurfaceMeshTriangleAreasArrayName": "SurfaceMeshFaceAreas"
+    },
+    "2": {
+        "FaceAttributeMatrixName": {
+            "Attribute Matrix Name": "FaceData",
+            "Data Array Name": "",
+            "Data Container Name": "TriangleDataContainer"
+        },
+        "FilterVersion": "6.0.1877",
+        "Filter_Human_Label": "Generate Triangle Normals Filter",
+        "Filter_Name": "TriangleNormalFilter",
+        "SurfaceMeshTriangleNormalsArrayName": "SurfaceMeshFaceNormals"
+    },
+    "3": {
+        "FaceAttributeMatrixName": {
+            "Attribute Matrix Name": "FaceData",
+            "Data Array Name": "",
+            "Data Container Name": "TriangleDataContainer"
+        },
+        "FilterVersion": "6.0.1877",
+        "Filter_Human_Label": "Find Minimum Triangle Dihedral Angle",
+        "Filter_Name": "TriangleDihedralAngleFilter",
+        "SurfaceMeshTriangleDihedralAnglesArrayName": "SurfaceMeshFaceDihedralAngles"
+    },
+    "4": {
         "CrystalStructuresArrayPath": {
             "Attribute Matrix Name": "CellEnsembleData",
             "Data Array Name": "CrystalStructures",
-            "Data Container Name": "VolumeDataContainer"
+            "Data Container Name": "ImageDataContainer"
         },
-        "FaceEnsembleAttributeMatrixName": "FaceEnsembleData",
         "FeatureEulerAnglesArrayPath": {
             "Attribute Matrix Name": "CellFeatureData",
             "Data Array Name": "AvgEulerAngles",
-            "Data Container Name": "VolumeDataContainer"
+            "Data Container Name": "ImageDataContainer"
         },
         "FeaturePhasesArrayPath": {
             "Attribute Matrix Name": "CellFeatureData",
             "Data Array Name": "Phases",
-            "Data Container Name": "VolumeDataContainer"
+            "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "5.2.1325.091b8ac",
-        "Filter_Human_Label": "Find GBCD",
-        "Filter_Name": "FindGBCD",
-        "GBCDArrayName": "GBCD",
-        "GBCDRes": 9,
-        "SurfaceMeshFaceAreasArrayPath": {
-            "Attribute Matrix Name": "FaceData",
-            "Data Array Name": "SurfaceMeshFaceAreas",
-            "Data Container Name": "SurfaceDataContainer"
-        },
+        "FilterVersion": "6.0.1877",
+        "Filter_Human_Label": "Generate Face IPF Colors",
+        "Filter_Name": "GenerateFaceIPFColoring",
+        "SurfaceMeshFaceIPFColorsArrayName": "SurfaceMeshFaceIPFColors",
         "SurfaceMeshFaceLabelsArrayPath": {
             "Attribute Matrix Name": "FaceData",
             "Data Array Name": "SurfaceMeshFaceLabels",
-            "Data Container Name": "SurfaceDataContainer"
+            "Data Container Name": "TriangleDataContainer"
         },
         "SurfaceMeshFaceNormalsArrayPath": {
             "Attribute Matrix Name": "FaceData",
             "Data Array Name": "SurfaceMeshFaceNormals",
-            "Data Container Name": "SurfaceDataContainer"
+            "Data Container Name": "TriangleDataContainer"
         }
     },
-    "2": {
-        "CrystalStructure": 1,
-        "FilterVersion": "5.2.1325.091b8ac",
-        "Filter_Human_Label": "Write GMT Pole Figure Data (GBCD Data)",
-        "Filter_Name": "VisualizeGBCDGMT",
-        "GBCDArrayPath": {
-            "Attribute Matrix Name": "FaceEnsembleData",
-            "Data Array Name": "GBCD",
-            "Data Container Name": "SurfaceDataContainer"
+    "5": {
+        "AvgQuatsArrayPath": {
+            "Attribute Matrix Name": "CellFeatureData",
+            "Data Array Name": "AvgQuats",
+            "Data Container Name": "ImageDataContainer"
         },
-        "MisorientationRotation": {
-            "angle": 60,
-            "h": 1,
-            "k": 1,
-            "l": 1
+        "CrystalStructuresArrayPath": {
+            "Attribute Matrix Name": "CellEnsembleData",
+            "Data Array Name": "CrystalStructures",
+            "Data Container Name": "ImageDataContainer"
         },
-        "OutputFile": "Data/Output/SmallIN100GBCD/SmallIn100GMT_1.dat"
+        "FeaturePhasesArrayPath": {
+            "Attribute Matrix Name": "CellFeatureData",
+            "Data Array Name": "Phases",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "FilterVersion": "6.0.1877",
+        "Filter_Human_Label": "Generate Face Misorientation Colors",
+        "Filter_Name": "GenerateFaceMisorientationColoring",
+        "SurfaceMeshFaceLabelsArrayPath": {
+            "Attribute Matrix Name": "FaceData",
+            "Data Array Name": "SurfaceMeshFaceLabels",
+            "Data Container Name": "TriangleDataContainer"
+        },
+        "SurfaceMeshFaceMisorientationColorsArrayName": "SurfaceMeshFaceMisorientationColors"
     },
-    "3": {
-        "CrystalStructure": 1,
-        "FilterVersion": "5.2.1325.091b8ac",
-        "Filter_Human_Label": "Write VTK Pole Figure (GBCD Data)",
-        "Filter_Name": "VisualizeGBCDPoleFigure",
-        "GBCDArrayPath": {
-            "Attribute Matrix Name": "FaceEnsembleData",
-            "Data Array Name": "GBCD",
-            "Data Container Name": "SurfaceDataContainer"
-        },
-        "MisorientationRotation": {
-            "angle": 60,
-            "h": 1,
-            "k": 1,
-            "l": 1
-        },
-        "OutputFile": "Data/Output/SmallIN100GBCD/SmallIn100VTK.vtk"
-    },
-    "4": {
-        "FilterVersion": "5.2.1325.091b8ac",
+    "6": {
+        "FilterVersion": "6.0.1877",
         "Filter_Human_Label": "Write DREAM3D Data File",
         "Filter_Name": "DataContainerWriter",
-        "OutputFile": "Data/Output/SmallIN100Mesh_GBCD.dream3d",
+        "OutputFile": "Data/Output/SmallIN100Mesh.dream3d",
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {
-        "Name": "(05) SmallIN100 GBCD",
-        "Number_Filters": 5,
-        "Version": "5.2.1325.091b8ac"
+        "Name": "(03) SmallIN100 Mesh Statistics",
+        "Number_Filters": 7,
+        "Version": "6.0"
     }
 }

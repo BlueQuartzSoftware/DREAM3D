@@ -128,20 +128,20 @@ void DataArrayCreationWidget::setupGui()
 
   connect(dataArrayName, SIGNAL(textChanged(const QString&)),
           this, SLOT(widgetChanged(const QString&)));
-  connect(attributeMatrixList, SIGNAL(currentIndexChanged(const QString&)),
+  connect(attributeMatrixCombo, SIGNAL(currentIndexChanged(const QString&)),
     this, SLOT(widgetChanged(const QString&)));
-  connect(dataContainerList, SIGNAL(currentIndexChanged(const QString&)),
+  connect(dataContainerCombo, SIGNAL(currentIndexChanged(const QString&)),
     this, SLOT(widgetChanged(const QString&)));
 
-  dataContainerList->blockSignals(true);
-  attributeMatrixList->blockSignals(true);
+  dataContainerCombo->blockSignals(true);
+  attributeMatrixCombo->blockSignals(true);
   dataArrayName->blockSignals(true);
-  dataContainerList->clear();
-  attributeMatrixList->clear();
+  dataContainerCombo->clear();
+  attributeMatrixCombo->clear();
   dataArrayName->clear();
   // Now let the gui send signals like normal
-  dataContainerList->blockSignals(false);
-  attributeMatrixList->blockSignals(false);
+  dataContainerCombo->blockSignals(false);
+  attributeMatrixCombo->blockSignals(false);
   dataArrayName->blockSignals(false);
 
   populateComboBoxes();
@@ -173,21 +173,22 @@ void DataArrayCreationWidget::populateComboBoxes()
   // Populate the DataContainerArray Combo Box with all the DataContainers
   QList<DataContainerProxy> dcList = m_DcaProxy.dataContainers.values();
   QListIterator<DataContainerProxy> iter(dcList);
-
+  dataContainerCombo->clear();
   while(iter.hasNext() )
   {
     DataContainerProxy dc = iter.next();
-    if(dataContainerList->findText(dc.name) == -1 )
-    {
-      int index = dataContainerList->currentIndex();
-      dataContainerList->addItem(dc.name);
-      dataContainerList->setCurrentIndex(index);
-    }
+    dataContainerCombo->addItem(dc.name);
+//    if(dataContainerCombo->findText(dc.name) == -1 )
+//    {
+//      int index = dataContainerCombo->currentIndex();
+//      dataContainerCombo->addItem(dc.name);
+//      dataContainerCombo->setCurrentIndex(index);
+//    }
   }
 
   // Grab what is currently selected
-  QString curDcName = dataContainerList->currentText();
-  QString curAmName = attributeMatrixList->currentText();
+  QString curDcName = dataContainerCombo->currentText();
+  QString curAmName = attributeMatrixCombo->currentText();
   QString curDaName = dataArrayName->text();
 
   // Get what is in the filter
@@ -207,34 +208,37 @@ void DataArrayCreationWidget::populateComboBoxes()
   // changes in the GUI, like a testing script?
 
   QString dcName = checkStringValues(curDcName, filtDcName);
+  if( !dca->doesDataContainerExist(dcName) ) { dcName = ""; }
   QString amName = checkStringValues(curAmName, filtAmName);
+  if ( !dca->doesAttributeMatrixExist(DataArrayPath(dcName, amName, "") ) ) { amName = ""; }
   QString daName = checkStringValues(curDaName, filtDaName);
+  //if ( !dca->doesAttributeArrayExist(DataArrayPath(dcName, amName, daName) )) { daName = ""; }
 
   bool didBlock = false;
 
-  if (!dataContainerList->signalsBlocked()) { didBlock = true; }
-  dataContainerList->blockSignals(true);
+  if (!dataContainerCombo->signalsBlocked()) { didBlock = true; }
+  dataContainerCombo->blockSignals(true);
 
-  int dcIndex = dataContainerList->findText(dcName);
-  dataContainerList->setCurrentIndex(dcIndex);
+  int dcIndex = dataContainerCombo->findText(dcName);
+  dataContainerCombo->setCurrentIndex(dcIndex);
   populateAttributeMatrixList();
 
-  if(didBlock) { dataContainerList->blockSignals(false); didBlock = false; }
+  if(didBlock) { dataContainerCombo->blockSignals(false); didBlock = false; }
 
-  if(!attributeMatrixList->signalsBlocked()) { didBlock = true; }
-  attributeMatrixList->blockSignals(true);
+  if(!attributeMatrixCombo->signalsBlocked()) { didBlock = true; }
+  attributeMatrixCombo->blockSignals(true);
 
   if (dcIndex < 0)
   {
-    attributeMatrixList->setCurrentIndex(-1);
+    attributeMatrixCombo->setCurrentIndex(-1);
   }
   else
   {
-    int amIndex = attributeMatrixList->findText(amName);
-    attributeMatrixList->setCurrentIndex(amIndex);
+    int amIndex = attributeMatrixCombo->findText(amName);
+    attributeMatrixCombo->setCurrentIndex(amIndex);
   }
 
-  if(didBlock) { attributeMatrixList->blockSignals(false); didBlock = false; }
+  if(didBlock) { attributeMatrixCombo->blockSignals(false); didBlock = false; }
 
 
   if(!dataArrayName->signalsBlocked()) { didBlock = true; }
@@ -333,9 +337,9 @@ void DataArrayCreationWidget::on_dataContainerList_currentIndexChanged(int index
   populateAttributeMatrixList();
 
   // Do not select an attribute matrix from the list
-  if (attributeMatrixList->count() > 0)
+  if (attributeMatrixCombo->count() > 0)
   {
-    attributeMatrixList->setCurrentIndex(-1);
+    attributeMatrixCombo->setCurrentIndex(-1);
   }
 }
 
@@ -344,11 +348,11 @@ void DataArrayCreationWidget::on_dataContainerList_currentIndexChanged(int index
 // -----------------------------------------------------------------------------
 void DataArrayCreationWidget::populateAttributeMatrixList()
 {
-  QString dcName = dataContainerList->currentText();
+  QString dcName = dataContainerCombo->currentText();
 
   // Clear the AttributeMatrix List
-  attributeMatrixList->blockSignals(true);
-  attributeMatrixList->clear();
+  attributeMatrixCombo->blockSignals(true);
+  attributeMatrixCombo->clear();
 
   // Loop over the data containers until we find the proper data container
   QList<DataContainerProxy> containers = m_DcaProxy.dataContainers.values();
@@ -366,12 +370,12 @@ void DataArrayCreationWidget::populateAttributeMatrixList()
       {
         attrMatsIter.next();
         QString amName = attrMatsIter.key();
-        attributeMatrixList->addItem(amName);
+        attributeMatrixCombo->addItem(amName);
       }
     }
   }
 
-  attributeMatrixList->blockSignals(false);
+  attributeMatrixCombo->blockSignals(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -448,13 +452,13 @@ void DataArrayCreationWidget::beforePreflight()
     return;
   }
 
-  dataContainerList->blockSignals(true);
-  attributeMatrixList->blockSignals(true);
+  dataContainerCombo->blockSignals(true);
+  attributeMatrixCombo->blockSignals(true);
   dataArrayName->blockSignals(true);
   // Reset all the combo box widgets to have the default selection of the first index in the list
   populateComboBoxes();
-  dataContainerList->blockSignals(false);
-  attributeMatrixList->blockSignals(false);
+  dataContainerCombo->blockSignals(false);
+  attributeMatrixCombo->blockSignals(false);
   dataArrayName->blockSignals(false);
 }
 
@@ -472,7 +476,7 @@ void DataArrayCreationWidget::afterPreflight()
 void DataArrayCreationWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
   // Generate the path to the AttributeArray
-  DataArrayPath path(dataContainerList->currentText(), attributeMatrixList->currentText(), dataArrayName->text());
+  DataArrayPath path(dataContainerCombo->currentText(), attributeMatrixCombo->currentText(), dataArrayName->text());
   QVariant var;
   var.setValue(path);
   bool ok = false;

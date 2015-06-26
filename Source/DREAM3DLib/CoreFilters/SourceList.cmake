@@ -18,14 +18,16 @@ START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}" "Generic
 # List your public filters here
 
 set(_PublicFilters
-  AdjustVolumeOrigin
   ConvertData
   CopyAttributeArray
   CopyAttributeMatrix
   CopyDataContainer
   CopyFeatureArrayToElementArray
+  CreateAttributeMatrix
+  CreateDataContainer
   CreateDataArray
   CreateFeatureArrayFromElementArray
+  CreateImageGeometry
   DataContainerReader
   DataContainerWriter
   ExtractComponentAsArray
@@ -37,6 +39,7 @@ set(_PublicFilters
   RenameAttributeMatrix
   RenameDataContainer
   ScaleVolume
+  SetOriginResolutionImageGeom
 )
 
 

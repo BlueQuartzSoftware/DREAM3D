@@ -1,6 +1,6 @@
 {
     "0": {
-        "Filter_Human_Label": "Read DREAM3D Data File",
+        "Filter_Human_Label": "Read DREAM.3D Data File",
         "Filter_Name": "DataContainerReader",
         "InputFile": "Data/Composite.dream3d",
         "InputFileDataContainerArrayProxy": {
@@ -71,18 +71,18 @@
             "z": 128
         },
         "EstimateNumberOfFeatures": 0,
-        "FilterVersion": "5.2.1695",
+        "FilterVersion": "6.0.1882",
         "Filter_Human_Label": "Initialize Synthetic Volume",
         "Filter_Name": "InitializeSyntheticVolume",
         "InputPhaseTypesArrayPath": {
-            "Attribute Matrix Name": "",
-            "Data Array Name": "",
-            "Data Container Name": ""
+            "Attribute Matrix Name": "CellEnsembleData",
+            "Data Array Name": "PhaseTypes",
+            "Data Container Name": "StatsGeneratorDataContainer"
         },
         "InputStatsArrayPath": {
-            "Attribute Matrix Name": "",
-            "Data Array Name": "",
-            "Data Container Name": ""
+            "Attribute Matrix Name": "CellEnsembleData",
+            "Data Array Name": "Statistics",
+            "Data Container Name": "StatsGeneratorDataContainer"
         },
         "InputStatsFile": "",
         "Origin": {
@@ -97,16 +97,18 @@
         }
     },
     "2": {
-        "FilterVersion": "5.2.1695",
+        "FilterVersion": "6.0.1882",
         "Filter_Human_Label": "Establish Shape Types",
         "Filter_Name": "EstablishShapeTypes",
         "InputPhaseTypesArrayPath": {
-            "Attribute Matrix Name": "",
-            "Data Array Name": "",
-            "Data Container Name": ""
+            "Attribute Matrix Name": "CellEnsembleData",
+            "Data Array Name": "PhaseTypes",
+            "Data Container Name": "StatsGeneratorDataContainer"
         },
         "ShapeTypeData": [
-            999
+            999,
+            0,
+            0
         ],
         "ShapeTypesArrayName": "ShapeTypes"
     },
@@ -114,18 +116,18 @@
         "CellPhasesArrayName": "Phases",
         "FeatureIdsArrayName": "FeatureIds",
         "FeaturePhasesArrayName": "Phases",
-        "FilterVersion": "5.2.1695",
+        "FilterVersion": "6.0.1882",
         "Filter_Human_Label": "Establish Matrix Phase",
         "Filter_Name": "EstablishMatrixPhase",
         "InputPhaseTypesArrayPath": {
-            "Attribute Matrix Name": "",
-            "Data Array Name": "",
-            "Data Container Name": ""
+            "Attribute Matrix Name": "CellEnsembleData",
+            "Data Array Name": "PhaseTypes",
+            "Data Container Name": "StatsGeneratorDataContainer"
         },
         "InputStatsArrayPath": {
-            "Attribute Matrix Name": "",
-            "Data Array Name": "",
-            "Data Container Name": ""
+            "Attribute Matrix Name": "CellEnsembleData",
+            "Data Array Name": "Statistics",
+            "Data Container Name": "StatsGeneratorDataContainer"
         },
         "NumFeaturesArrayName": "NumFeatures",
         "OutputCellAttributeMatrixPath": {
@@ -139,7 +141,7 @@
     "4": {
         "BoundaryCellsArrayName": "BoundaryCells",
         "CellFeatureAttributeMatrixPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "CellFeatureData",
             "Data Array Name": "",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
@@ -148,7 +150,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
-        "FilterVersion": "5.2.1695",
+        "FilterVersion": "6.0.1882",
         "Filter_Human_Label": "Find Feature Neighbors",
         "Filter_Name": "FindNeighbors",
         "NeighborListArrayName": "NeighborList",
@@ -176,33 +178,33 @@
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
         "FeaturePhasesArrayPath": {
-            "Attribute Matrix Name": "CellData",
-            "Data Array Name": "",
+            "Attribute Matrix Name": "CellFeatureData",
+            "Data Array Name": "Phases",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
-        "FilterVersion": "5.2.1695",
+        "FilterVersion": "6.0.1882",
         "Filter_Human_Label": "Insert Precipitate Phases",
         "Filter_Name": "InsertPrecipitatePhases",
         "HavePrecips": 0,
         "InputPhaseTypesArrayPath": {
-            "Attribute Matrix Name": "",
-            "Data Array Name": "",
-            "Data Container Name": ""
+            "Attribute Matrix Name": "CellEnsembleData",
+            "Data Array Name": "PhaseTypes",
+            "Data Container Name": "StatsGeneratorDataContainer"
         },
         "InputShapeTypesArrayPath": {
-            "Attribute Matrix Name": "",
-            "Data Array Name": "",
-            "Data Container Name": ""
+            "Attribute Matrix Name": "CellEnsembleData",
+            "Data Array Name": "ShapeTypes",
+            "Data Container Name": "StatsGeneratorDataContainer"
         },
         "InputStatsArrayPath": {
-            "Attribute Matrix Name": "",
-            "Data Array Name": "",
-            "Data Container Name": ""
+            "Attribute Matrix Name": "CellEnsembleData",
+            "Data Array Name": "Statistics",
+            "Data Container Name": "StatsGeneratorDataContainer"
         },
         "MatchRDF": 0,
         "NumFeaturesArrayPath": {
-            "Attribute Matrix Name": "CellData",
-            "Data Array Name": "",
+            "Attribute Matrix Name": "CellEnsembleData",
+            "Data Array Name": "NumFeatures",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
         "PeriodicBoundaries": 0,
@@ -210,8 +212,8 @@
         "WriteGoalAttributes": 0
     },
     "6": {
-        "FilterVersion": "5.2.1695",
-        "Filter_Human_Label": "Write DREAM3D Data File",
+        "FilterVersion": "6.0.1882",
+        "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/CompositeOut.dream3d",
         "WriteXdmfFile": 1
@@ -219,6 +221,6 @@
     "PipelineBuilder": {
         "Name": "(05) Composite",
         "Number_Filters": 7,
-        "Version": "5.2"
+        "Version": "6.0"
     }
 }

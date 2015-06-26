@@ -71,7 +71,7 @@
             "z": 128
         },
         "EstimateNumberOfFeatures": 0,
-        "FilterVersion": "5.2.1695",
+        "FilterVersion": "6.0.1877",
         "Filter_Human_Label": "Initialize Synthetic Volume",
         "Filter_Name": "InitializeSyntheticVolume",
         "InputPhaseTypesArrayPath": {
@@ -97,7 +97,7 @@
         }
     },
     "2": {
-        "FilterVersion": "5.2.1695",
+        "FilterVersion": "6.0.1877",
         "Filter_Human_Label": "Establish Shape Types",
         "Filter_Name": "EstablishShapeTypes",
         "InputPhaseTypesArrayPath": {
@@ -118,7 +118,7 @@
         "FeatureIdsArrayName": "FeatureIds",
         "FeatureInputFile": "",
         "FeaturePhasesArrayName": "Phases",
-        "FilterVersion": "5.2.1695",
+        "FilterVersion": "6.0.1877",
         "Filter_Human_Label": "Pack Primary Phases",
         "Filter_Name": "PackPrimaryPhases",
         "HaveFeatures": 0,
@@ -167,7 +167,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
-        "FilterVersion": "5.2.1695",
+        "FilterVersion": "6.0.1877",
         "Filter_Human_Label": "Find Feature Neighbors",
         "Filter_Name": "FindNeighbors",
         "NeighborListArrayName": "NeighborList",
@@ -196,7 +196,7 @@
             "Data Array Name": "Phases",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
-        "FilterVersion": "5.2.1695",
+        "FilterVersion": "6.0.1877",
         "Filter_Human_Label": "Match Crystallography",
         "Filter_Name": "MatchCrystallography",
         "InputStatsArrayPath": {
@@ -249,7 +249,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "StatsGeneratorDataContainer"
         },
-        "FilterVersion": "5.2.1695",
+        "FilterVersion": "6.0.1877",
         "Filter_Human_Label": "Generate IPF Colors",
         "Filter_Name": "GenerateIPFColors",
         "GoodVoxelsArrayPath": {
@@ -265,7 +265,7 @@
         "UseGoodVoxels": 0
     },
     "7": {
-        "FilterVersion": "5.2.1695",
+        "FilterVersion": "6.0.1877",
         "Filter_Human_Label": "Write DREAM3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/CubicSingleRolledOut.dream3d",
@@ -274,6 +274,6 @@
     "PipelineBuilder": {
         "Name": "(03) Single Cubic Phase Rolled",
         "Number_Filters": 8,
-        "Version": "5.2"
+        "Version": "6.0"
     }
 }

@@ -1,11 +1,11 @@
-Adjust Origin  {#adjustvolumeorigin}
+Set Origin & Resolution (Image)  {#setoriginresolutionimagegeom}
 =============
 
 ## Group (Subgroup) ##
 Core Filters (Spatial)
 
 ## Description ##
-This filter changes the origin of the volume. For example if the current origin is
+This filter changes the origin and/or the resolution of an **Image Geometry**. For example if the current origin is
 at (0,0,0) and the user would like the origin to be (10, 4, 8) then the user should enter the following input values:
 
 + X Origin: 10
@@ -16,12 +16,13 @@ at (0,0,0) and the user would like the origin to be (10, 4, 8) then the user sho
 
 | Name    | Type      |  Description |
 |---------|-----------|--------|
-|  Origin | 3 x Float | Applied to x, y, and z for Image Geometry and node 1, node 2 and node 3 for Surface Mesh Geometry       |
-| Apply to Voxel Volume | Boolean | Should the new origin be applied to the Voxel Volume |
-| Apply to SurfaceMesh Volume | Boolean | Should the new origin be applied to the Surface Mesh |
+| Origin | 3 x Float | Applied to x, y, and z for Image Geometry |
+| Resolution | 3 x Float | Applied to x, y, and z for Image Geometry |
+| Change Origin | Boolean | Should the new origin be applied to the Image Geometry |
+| Change Resolution | Boolean | Should the new resolution be applied to the Image Geometry |
 
 ## Required Geometry ##
-Image / Rectilinear Grid and/or 2D Surface Mesh
+Image / Rectilinear Grid
 
 ## Required Arrays ##
 None

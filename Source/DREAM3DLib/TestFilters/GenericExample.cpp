@@ -90,7 +90,7 @@ GenericExample::~GenericExample()
 // -----------------------------------------------------------------------------
 void GenericExample::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   /* Place all your option initialization code here */
   /* For String input use this code */
   parameters.push_back(FilterParameter::New("STL Output Prefix", "StlFilePrefix", FilterParameterWidgetType::StringWidget, getStlFilePrefix(), FilterParameter::Parameter));

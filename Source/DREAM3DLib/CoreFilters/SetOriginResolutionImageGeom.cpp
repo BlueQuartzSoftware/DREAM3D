@@ -34,7 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#include "AdjustVolumeOrigin.h"
+#include "SetOriginResolutionImageGeom.h"
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
@@ -89,16 +89,19 @@ class UpdateVerticesImpl
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AdjustVolumeOrigin::AdjustVolumeOrigin() :
+SetOriginResolutionImageGeom::SetOriginResolutionImageGeom() :
   AbstractFilter(),
   m_DataContainerName(""),
-  m_SurfaceDataContainerName(""),
-  m_ApplyToVoxelVolume(true),
-  m_ApplyToSurfaceMesh(true)
+  m_ChangeOrigin(false),
+  m_ChangeResolution(false)
 {
   m_Origin.x = 0.0f;
   m_Origin.y = 0.0f;
   m_Origin.z = 0.0f;
+
+  m_Resolution.x = 1.0f;
+  m_Resolution.y = 1.0f;
+  m_Resolution.z = 1.0f;
 
   setupFilterParameters();
 }
@@ -106,26 +109,29 @@ AdjustVolumeOrigin::AdjustVolumeOrigin() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AdjustVolumeOrigin::~AdjustVolumeOrigin()
+SetOriginResolutionImageGeom::~SetOriginResolutionImageGeom()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AdjustVolumeOrigin::setupFilterParameters()
+void SetOriginResolutionImageGeom::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
+
+
+  QStringList linkedProps("Origin");
+  parameters.push_back(LinkedBooleanFilterParameter::New("Change Origin", "ChangeOrigin", getChangeOrigin(), linkedProps, FilterParameter::Parameter));
   parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget, getOrigin(), FilterParameter::Parameter, ""));
-  QStringList linkedProps("DataContainerName");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Apply To Voxel Volume", "ApplyToVoxelVolume", getApplyToVoxelVolume(), linkedProps, FilterParameter::Parameter));
+
   linkedProps.clear();
-  linkedProps << "SurfaceDataContainerName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Surface Mesh", "ApplyToSurfaceMesh", getApplyToSurfaceMesh(), linkedProps, FilterParameter::Parameter));
+  linkedProps << "Resolution";
+  parameters.push_back(LinkedBooleanFilterParameter::New("Change Resolution", "ChangeResolution", getChangeResolution(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget, getResolution(), FilterParameter::Parameter, ""));
 
   parameters.push_back(FilterParameter::New("Data Container To Apply To", "DataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerName(), FilterParameter::RequiredArray));
-  parameters.push_back(FilterParameter::New("Surface Data Container To Apply To", "SurfaceDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getSurfaceDataContainerName(), FilterParameter::RequiredArray));
 
   setFilterParameters(parameters);
 }
@@ -133,29 +139,29 @@ void AdjustVolumeOrigin::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AdjustVolumeOrigin::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void SetOriginResolutionImageGeom::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setApplyToVoxelVolume( reader->readValue("ApplyToVoxelVolume", getApplyToVoxelVolume()) );
-  setApplyToSurfaceMesh( reader->readValue("ApplyToSurfaceMesh", getApplyToSurfaceMesh()) );
+  setChangeOrigin( reader->readValue("ChangeOrigin", getChangeOrigin()) );
+  setChangeResolution( reader->readValue("ChangeResolution", getChangeResolution()) );
   setOrigin( reader->readFloatVec3("Origin", getOrigin() ) );
+  setResolution(reader->readFloatVec3("Resolution", getResolution() ) );
   setDataContainerName(reader->readString("DataContainerName", getDataContainerName()));
-  setSurfaceDataContainerName(reader->readString("SurfaceDataContainerName", getSurfaceDataContainerName()));
   reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AdjustVolumeOrigin::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int SetOriginResolutionImageGeom::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(Origin)
-  DREAM3D_FILTER_WRITE_PARAMETER(ApplyToVoxelVolume)
-  DREAM3D_FILTER_WRITE_PARAMETER(ApplyToSurfaceMesh)
+  DREAM3D_FILTER_WRITE_PARAMETER(Resolution)
+  DREAM3D_FILTER_WRITE_PARAMETER(ChangeOrigin)
+  DREAM3D_FILTER_WRITE_PARAMETER(ChangeResolution)
   DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceDataContainerName)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -163,25 +169,29 @@ int AdjustVolumeOrigin::writeFilterParameters(AbstractFilterParametersWriter* wr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AdjustVolumeOrigin::dataCheck()
+void SetOriginResolutionImageGeom::dataCheck()
 {
   setErrorCondition(0);
 
-  if (m_ApplyToVoxelVolume == true)
+  ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getDataContainerName());
+  if(getErrorCondition() < 0)
   {
-    getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getDataContainerName());
+    return;
   }
-
-  if (m_ApplyToSurfaceMesh == true)
+  if(getChangeOrigin())
   {
-    getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometry2D, AbstractFilter>(this, getSurfaceDataContainerName());
+    image->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+  }
+  if(getChangeResolution())
+  {
+    image->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AdjustVolumeOrigin::preflight()
+void SetOriginResolutionImageGeom::preflight()
 {
   setInPreflight(true);
   emit preflightAboutToExecute();
@@ -194,75 +204,11 @@ void AdjustVolumeOrigin::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AdjustVolumeOrigin::updateSurfaceMesh()
-{
-  setErrorCondition(0);
-
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
-#endif
-
-  IGeometry2D::Pointer geom2D = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName())->getGeometryAs<IGeometry2D>();
-  float* nodes = geom2D->getVertexPointer(0);
-
-  // First get the min/max coords.
-
-  float min[3] = { std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max() };
-
-  int64_t count = geom2D->getNumberOfVertices();
-  for (int64_t i = 0; i < count; i++)
-  {
-    if (nodes[3*i] < min[0])
-    {
-      min[0] = nodes[i];
-    }
-    if (nodes[3*i+1] < min[1])
-    {
-      min[1] = nodes[i+1];
-    }
-    if (nodes[3*i+2] < min[2])
-    {
-      min[2] = nodes[i+2];
-    }
-  }
-
-  float delta[3] = {min[0] - m_Origin.x, min[1] - m_Origin.y, min[2] - m_Origin.z };
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-  if (doParallel == true)
-  {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, count),
-                      UpdateVerticesImpl(nodes, delta), tbb::auto_partitioner());
-  }
-  else
-#endif
-  {
-    UpdateVerticesImpl serial(nodes, delta);
-    serial.generate(0, count);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AdjustVolumeOrigin::execute()
+void SetOriginResolutionImageGeom::execute()
 {
   setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
-
-  // Set the Voxel Volume First, since this is easy
-  if (m_ApplyToVoxelVolume == true)
-  {
-    DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
-    ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
-    image->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
-  }
-
-  if (m_ApplyToSurfaceMesh == true)
-  {
-    updateSurfaceMesh();
-  }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
@@ -270,9 +216,9 @@ void AdjustVolumeOrigin::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer AdjustVolumeOrigin::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer SetOriginResolutionImageGeom::newFilterInstance(bool copyFilterParameters)
 {
-  AdjustVolumeOrigin::Pointer filter = AdjustVolumeOrigin::New();
+  SetOriginResolutionImageGeom::Pointer filter = SetOriginResolutionImageGeom::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -283,23 +229,23 @@ AbstractFilter::Pointer AdjustVolumeOrigin::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AdjustVolumeOrigin::getCompiledLibraryName()
+const QString SetOriginResolutionImageGeom::getCompiledLibraryName()
 { return Core::CoreBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AdjustVolumeOrigin::getGroupName()
+const QString SetOriginResolutionImageGeom::getGroupName()
 { return DREAM3D::FilterGroups::CoreFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AdjustVolumeOrigin::getSubGroupName()
+const QString SetOriginResolutionImageGeom::getSubGroupName()
 { return DREAM3D::FilterSubGroups::SpatialFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AdjustVolumeOrigin::getHumanLabel()
-{ return "Change Origin of Volume"; }
+const QString SetOriginResolutionImageGeom::getHumanLabel()
+{ return "Set Origin & Resolution (Image)"; }

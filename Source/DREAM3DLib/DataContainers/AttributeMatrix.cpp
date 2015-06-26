@@ -588,41 +588,47 @@ QString AttributeMatrix::getInfoString(DREAM3D::InfoStringFormat format)
     QString typeString;
     switch(m_Type)
     {
-      case VertexType:
+      case DREAM3D::AttributeMatrixType::Vertex:
         typeString = "Vertex";
         break;
-      case EdgeType:
+      case DREAM3D::AttributeMatrixType::Edge:
         typeString = "Edge";
         break;
-      case FaceType:
+      case DREAM3D::AttributeMatrixType::Face:
         typeString = "Face";
         break;
-      case CellType:
+      case DREAM3D::AttributeMatrixType::Cell:
         typeString = "Cell";
         break;
-      case VertexFeatureType:
+      case DREAM3D::AttributeMatrixType::VertexFeature:
         typeString = "Vertex Feature";
         break;
-      case EdgeFeatureType:
+      case DREAM3D::AttributeMatrixType::EdgeFeature:
         typeString = "Edge Feature";
         break;
-      case FaceFeatureType:
+      case DREAM3D::AttributeMatrixType::FaceFeature:
         typeString = "Face Feature";
         break;
-      case CellFeatureType:
+      case DREAM3D::AttributeMatrixType::CellFeature:
         typeString = "Cell Feature";
         break;
-      case VertexEnsembleType:
+      case DREAM3D::AttributeMatrixType::VertexEnsemble:
         typeString = "Vertex Ensemble";
         break;
-      case EdgeEnsembleType:
+      case DREAM3D::AttributeMatrixType::EdgeEnsemble:
         typeString = "Edge Ensemble";
         break;
-      case FaceEnsembleType:
+      case DREAM3D::AttributeMatrixType::FaceEnsemble:
         typeString = "Face Ensemble";
         break;
-      case CellEnsembleType:
+      case DREAM3D::AttributeMatrixType::CellEnsemble:
         typeString = "Cell Ensemble";
+        break;
+      case DREAM3D::AttributeMatrixType::MetaData:
+        typeString = "MetaData";
+        break;
+      case DREAM3D::AttributeMatrixType::Generic:
+        typeString = "Generic";
       default:
         typeString = "Unknown";
         break;

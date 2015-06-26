@@ -2,8 +2,8 @@
     "0": {
         "CellAttributeMatrixName": "CellData",
         "CellEnsembleAttributeMatrixName": "CellEnsembleData",
-        "DataContainerName": "DataContainer",
-        "FilterVersion": "5.2.1285",
+        "DataContainerName": "ImageDataContainer",
+        "FilterVersion": "6.0.1877",
         "Filter_Human_Label": "Read H5Ebsd File",
         "Filter_Name": "ReadH5Ebsd",
         "InputFile": "Data/Output/SmallIN100.h5ebsd",
@@ -19,8 +19,8 @@
         "ZStartIndex": 1
     },
     "1": {
-        "DestinationArrayName": "ThresholdArray",
-        "FilterVersion": "5.2.1285",
+        "DestinationArrayName": "Mask",
+        "FilterVersion": "6.0.1877",
         "Filter_Human_Label": "Threshold Objects",
         "Filter_Name": "MultiThresholdObjects",
         "SelectedThresholds": [
@@ -29,19 +29,19 @@
                 "Attribute Matrix Name": "CellData",
                 "Comparison Operator": 1,
                 "Comparison Value": 0.10000000149011612,
-                "Data Container Name": "DataContainer"
+                "Data Container Name": "ImageDataContainer"
             },
             {
                 "Attribute Array Name": "Image Quality",
                 "Attribute Matrix Name": "CellData",
                 "Comparison Operator": 1,
                 "Comparison Value": 120,
-                "Data Container Name": "DataContainer"
+                "Data Container Name": "ImageDataContainer"
             }
         ]
     },
     "2": {
-        "FilterVersion": "5.2.1285",
+        "FilterVersion": "6.0.1877",
         "Filter_Human_Label": "Write DREAM3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100.dream3d",
@@ -50,6 +50,6 @@
     "PipelineBuilder": {
         "Name": "(03) Small IN100 Threshold",
         "Number_Filters": 3,
-        "Version": "5.2.1285"
+        "Version": "6.0"
     }
 }

@@ -108,8 +108,13 @@ void FilterInputWidget::setupGui()
   QFont categoryFont = DREAM3DStyles::GetCategoryFont();
 
   filterHumanLabel->setFont(humanLabelFont);
+
+#if 1
+  brandingLabel->hide();
+#else
   brandingLabel->setFont(brandingFont);
   brandingLabel->installEventFilter(this);
+#endif
 }
 
 // -----------------------------------------------------------------------------
