@@ -77,11 +77,12 @@
 // -----------------------------------------------------------------------------
 DREAM3DApplication::DREAM3DApplication(int & argc, char ** argv) :
   QApplication(argc, argv),
+  #if defined(Q_OS_MAC)
   m_GlobalMenu(NULL),
+  #endif
   m_OpenDialogLastDirectory(""),
   show_splash(true),
   Splash(NULL),
-  MainWindow(NULL),
   m_ActiveWindow(NULL)
 {
   // Connection to update the recent files list on all windows when it changes
@@ -155,37 +156,14 @@ bool DREAM3DApplication::initialize(int argc, char* argv[])
   // Load application plugins.
   QVector<IDREAM3DPlugin*> plugins = loadPlugins();
 
-  // Create main window.
-  this->MainWindow = new DREAM3D_UI(NULL);
-  this->MainWindow->setWindowTitle("[*]Untitled Pipeline - DREAM3D");
-  this->MainWindow->setLoadedPlugins(plugins);
-  this->MainWindow->setAttribute(Qt::WA_DeleteOnClose);
-  connect(this->MainWindow, SIGNAL(dream3dWindowChangedState(DREAM3D_UI*)), this, SLOT(activeWindowChanged(DREAM3D_UI*)));
-
-  // Open pipeline if DREAM3D was opened from a compatible file
-  if (argc == 2)
-  {
-    char* two = argv[1];
-    QString filePath = QString::fromLatin1(two);
-    if (!filePath.isEmpty())
-    {
-      QFileInfo fi(filePath);
-      this->MainWindow->openNewPipeline(filePath, 0, true, true);
-    }
-  }
-
   // give GUI components time to update before the mainwindow is shown
   QApplication::instance()->processEvents();
-  this->MainWindow->show();
   if (show_splash)
   {
  //   delay(1);
-    this->Splash->finish(this->MainWindow);
+    this->Splash->finish(NULL);
   }
   QApplication::instance()->processEvents();
-
-  // Check if this is the first run of DREAM3D
-  this->MainWindow->checkFirstRun();
 
   return true;
 }
@@ -323,7 +301,7 @@ QVector<IDREAM3DPlugin*> DREAM3DApplication::loadPlugins()
     QString fileName = fi.fileName();
     QObject* plugin = loader->instance();
     qDebug() << "    Pointer: " << plugin << "\n";
-    if (plugin )
+    if (plugin)
     {
       IDREAM3DPlugin* ipPlugin = qobject_cast<IDREAM3DPlugin*>(plugin);
       if (ipPlugin)
@@ -369,28 +347,6 @@ QVector<IDREAM3DPlugin*> DREAM3DApplication::loadPlugins()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool DREAM3DApplication::event(QEvent* event)
-{
-  if (event->type() == QEvent::FileOpen)
-  {
-    QFileOpenEvent* openEvent = static_cast<QFileOpenEvent*>(event);
-    QString filePath = openEvent->file();
-
-    // Create new DREAM3D_UI instance
-    DREAM3D_UI* newInstance = new DREAM3D_UI(NULL);
-
-    // Open the pipeline in a new window
-    newInstance->openNewPipeline(filePath, true, true, true);
-
-    return true;
-  }
-
-  return QApplication::event(event);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void DREAM3DApplication::updateRecentFileList(const QString &file)
 {
 #if defined (Q_OS_MAC)
@@ -416,7 +372,7 @@ void DREAM3DApplication::updateRecentFileList(const QString &file)
   recentFilesMenu->addAction(clearRecentFilesAction);
 #else
   QMap<DREAM3D_UI*, QMenu*> windows = dream3dApp->getDREAM3DInstanceMap();
-  
+
   QMapIterator<DREAM3D_UI*, QMenu*> iter(windows);
   while (iter.hasNext())
   {
@@ -515,14 +471,11 @@ void DREAM3DApplication::openRecentFile()
   {
     QString filePath = action->data().toString();
 
-    DREAM3D_UI* newInstance = getNewDREAM3DInstance();
-    newInstance->openNewPipeline(filePath, true, true, false);
+    newInstanceFromFile(filePath, true, true);
 
     // Add file path to the recent files list for both instances
     QRecentFileList* list = QRecentFileList::instance();
     list->addFile(filePath);
-
-    newInstance->show();
   }
 }
 
@@ -558,33 +511,23 @@ void DREAM3DApplication::on_actionNew_triggered()
   DREAM3D_UI* newInstance = getNewDREAM3DInstance();
   newInstance->show();
 }
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void DREAM3DApplication::on_actionOpen_triggered()
 {
-  DREAM3D_UI* newInstance = getNewDREAM3DInstance();
-
   QString proposedDir = m_OpenDialogLastDirectory;
   QString filePath = QFileDialog::getOpenFileName(NULL, tr("Open Pipeline"),
     proposedDir, tr("Json File (*.json);;Dream3d File (*.dream3d);;Text File (*.txt);;Ini File (*.ini);;All Files (*.*)"));
-  if (true == filePath.isEmpty())
+  if(filePath.isEmpty())
   {
-    unregisterDREAM3DWindow(newInstance);
-    delete newInstance;
     return;
   }
 
-  filePath = QDir::toNativeSeparators(filePath);
-  QFileInfo fi(filePath);
-
-  newInstance->openNewPipeline(filePath, true, true, false);
-
-  newInstance->show();
+  newInstanceFromFile(filePath, true, true);
 
   // Cache the last directory on old instance
-  m_OpenDialogLastDirectory = fi.path();
+  m_OpenDialogLastDirectory = filePath;
 }
 
 // -----------------------------------------------------------------------------
@@ -1226,6 +1169,25 @@ void DREAM3DApplication::on_actionShowIssues_triggered(bool visible)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void DREAM3DApplication::newInstanceFromFile(const QString &filePath, const bool &setOpenedFilePath, const bool &addToRecentFiles)
+{
+  DREAM3D_UI* ui = getNewDREAM3DInstance();
+  QString nativeFilePath = QDir::toNativeSeparators(filePath);
+
+  ui->getPipelineViewWidget()->openPipeline(nativeFilePath, 0, setOpenedFilePath, true);
+
+  QRecentFileList* list = QRecentFileList::instance();
+  if (addToRecentFiles == true)
+  {
+    // Add file to the recent files list
+    list->addFile(filePath);
+  }
+  ui->show();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 DREAM3D_UI* DREAM3DApplication::getNewDREAM3DInstance()
 {
   PluginManager* pluginManager = PluginManager::Instance();
@@ -1246,6 +1208,9 @@ DREAM3D_UI* DREAM3DApplication::getNewDREAM3DInstance()
   m_ActiveWindow = newInstance;
 
   connect(newInstance, SIGNAL(dream3dWindowChangedState(DREAM3D_UI*)), this, SLOT(activeWindowChanged(DREAM3D_UI*)));
+
+  // Check if this is the first run of DREAM3D
+  newInstance->checkFirstRun();
 
   return newInstance;
 }
@@ -1294,16 +1259,20 @@ void DREAM3DApplication::activeWindowChanged(DREAM3D_UI* instance)
   }
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DApplication::toggleGlobalMenuItems(bool on)
+void DREAM3DApplication::toggleGlobalMenuItems(bool value)
 {
-  m_GlobalMenu->getViewMenu()->setEnabled(on);
-  m_GlobalMenu->getBookmarksMenu()->setEnabled(on);
-  m_GlobalMenu->getPipelineMenu()->setEnabled(on);
-  m_GlobalMenu->getSave()->setEnabled(on);
-  m_GlobalMenu->getSaveAs()->setEnabled(on);
+#if defined(Q_OS_MAC)
+  m_GlobalMenu->toggleMenuChildren(m_GlobalMenu->getViewMenu(), value);
+  m_GlobalMenu->toggleMenuChildren(m_GlobalMenu->getBookmarksMenu(), value);
+  m_GlobalMenu->toggleMenuChildren(m_GlobalMenu->getPipelineMenu(), value);
+
+  m_GlobalMenu->getSave()->setEnabled(value);
+  m_GlobalMenu->getSaveAs()->setEnabled(value);
+#endif
 }
 
 // -----------------------------------------------------------------------------

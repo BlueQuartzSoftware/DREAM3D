@@ -36,6 +36,8 @@
 
 #include "DREAM3DMenu.h"
 
+#include <QtCore/QDebug>
+
 #include "Applications/DREAM3D/DREAM3DApplication.h"
 
 
@@ -43,12 +45,48 @@
 //
 // -----------------------------------------------------------------------------
 DREAM3DMenu::DREAM3DMenu() :
+  m_MenuBar(NULL),
+
+  // File Menu
+  m_MenuFile(NULL),
+  m_ActionNew(NULL),
+  m_ActionOpen(NULL),
+  m_ActionSave(NULL),
+  m_ActionSaveAs(NULL),
+  m_MenuRecentFiles(NULL),
+  m_ActionClearRecentFiles(NULL),
+  m_ActionExit(NULL),
+
+  // View Menu
   m_MenuView(NULL),
   m_ActionShowFilterLibrary(NULL),
   m_ActionShowFilterList(NULL),
   m_ActionShowPrebuiltPipelines(NULL),
   m_ActionShowBookmarks(NULL),
-  m_ActionShowIssues(NULL)
+  m_ActionShowIssues(NULL),
+
+  // Bookmarks Menu
+  m_MenuBookmarks(NULL),
+  m_ActionAddBookmark(NULL),
+  m_ActionNewFolder(NULL),
+
+  // Pipeline Menu
+  m_MenuPipeline(NULL),
+  m_ActionClearPipeline(NULL),
+
+  // Help Menu
+  m_MenuHelp(NULL),
+  m_ActionShowDREAM3DHelp(NULL),
+  m_ActionCheckForUpdates(NULL),
+  m_ActionAboutDREAM3D(NULL),
+  m_ActionPluginInformation(NULL),
+
+  // Contextual Menus
+  m_ActionRenamePipeline(NULL),
+  m_ActionRemovePipeline(NULL),
+  m_ActionLocateFile(NULL),
+  m_ActionShowBookmarkInFileSystem(NULL),
+  m_ActionShowPrebuiltInFileSystem(NULL)
 {
   initialize();
 }
@@ -58,7 +96,9 @@ DREAM3DMenu::DREAM3DMenu() :
 // -----------------------------------------------------------------------------
 DREAM3DMenu::~DREAM3DMenu()
 {
-
+  qDebug() << "~DREAM3DMenu";
+  if (m_MenuBar) { delete m_MenuBar; }
+  if (m_MenuFile) { delete m_MenuFile; }
 }
 
 // -----------------------------------------------------------------------------
@@ -232,6 +272,30 @@ void DREAM3DMenu::initialize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void DREAM3DMenu::toggleMenuChildren(QMenu* menu, bool value)
+{
+  if(menu)
+  {
+    QObjectList menus = menu->children();
+    foreach(QObject* obj, menus)
+    {
+      QMenu* menu = qobject_cast<QMenu*>(obj);
+      if(menu)
+      {
+        menu->setEnabled(value);
+      }
+      QAction* action = qobject_cast<QAction*>(obj);
+      if(action)
+      {
+        action->setEnabled(value);
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QMenuBar* DREAM3DMenu::getMenuBar()
 {
   return m_MenuBar;
@@ -257,16 +321,16 @@ QMenu* DREAM3DMenu::getViewMenu()
 //
 // -----------------------------------------------------------------------------
 void DREAM3DMenu::setViewMenu(QMenu* viewMenu)
-{ 
-  if (NULL != m_MenuView)
+{
+  if (NULL != m_MenuView && m_MenuBar != NULL)
   {
     m_MenuBar->removeAction(m_MenuView->menuAction());
+
+    m_MenuView = viewMenu;
+
+    QAction* bookmarksMenuAction = m_MenuBookmarks->menuAction();
+    m_MenuBar->insertMenu(bookmarksMenuAction, viewMenu);
   }
-
-  m_MenuView = viewMenu;
-
-  QAction* bookmarksMenuAction = m_MenuBookmarks->menuAction();
-  m_MenuBar->insertMenu(bookmarksMenuAction, viewMenu);
 }
 
 // -----------------------------------------------------------------------------

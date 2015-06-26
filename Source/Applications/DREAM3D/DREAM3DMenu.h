@@ -52,6 +52,9 @@ public:
 
   void initialize();
 
+  void toggleMenuChildren(QMenu* menu, bool value);
+
+
   QMenuBar* getMenuBar();
 
   QMenu* getFileMenu();
