@@ -38,35 +38,133 @@
 #ifndef _DREAM3DApplication_H_
 #define _DREAM3DApplication_H_
 
+#include <QtCore/QObject>
+#include <QtCore/QVector>
+
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QWidget>
 
+#include "Applications/DREAM3D/DREAM3DMenu.h"
+
+#include "DREAM3DLib/DREAM3DLib.h"
+//#include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
+
 #define dream3dApp (static_cast<DREAM3DApplication *>(qApp))
+
+class DSplashScreen;
+class DREAM3D_UI;
+class QPluginLoader;
+class IDREAM3DPlugin;
 
 class DREAM3DApplication : public QApplication
 {
-  Q_OBJECT
+    Q_OBJECT
 
-public:
-  DREAM3DApplication(int & argc, char ** argv);
-  virtual ~DREAM3DApplication();
+  public:
+    DREAM3DApplication(int & argc, char ** argv);
+    virtual ~DREAM3DApplication();
 
-  QList<QWidget*> getDREAM3DWindowList();
+    bool initialize(int argc, char* argv[]);
 
-  void registerDREAM3DWindow(QWidget* widget);
-  void unregisterDREAM3DWindow(QWidget* widget);
+    QMap<DREAM3D_UI*, QMenu*> getDREAM3DInstanceMap();
 
-protected:
-  bool event(QEvent* event);
+    void registerDREAM3DWindow(DREAM3D_UI* window, QMenu* viewMenu);
+    void unregisterDREAM3DWindow(DREAM3D_UI* window);
 
-protected slots:
-  void exitTriggered();
+    DREAM3D_UI* getNewDREAM3DInstance();
 
-private:
-  QList<QWidget*>                   m_DREAM3DWidgetList;
+  public slots:
 
-  DREAM3DApplication(const DREAM3DApplication&); // Copy Constructor Not Implemented
-  void operator=(const DREAM3DApplication&); // Operator '=' Not Implemented
+    void newInstanceFromFile(const QString &filePath, const bool &setOpenedFilePath, const bool &addToRecentFiles);
+
+
+  protected:
+
+    void toggleGlobalMenuItems(bool value);
+
+  protected slots:
+
+    /**
+   * @brief Updates the QMenu 'Recent Files' with the latest list of files. This
+   * should be connected to the Signal QRecentFileList->fileListChanged
+   * @param file The newly added file.
+   */
+    void updateRecentFileList(const QString &file);
+
+    /**
+  * @brief activeWindowChanged
+  */
+    void activeWindowChanged(DREAM3D_UI* instance);
+
+    // DREAM3D_UI slots
+    void openRecentFile();
+
+    void on_actionShowFilterList_triggered(bool visible);
+    void on_actionShowFilterLibrary_triggered(bool visible);
+    void on_actionShowBookmarks_triggered(bool visible);
+    void on_actionShowPrebuiltPipelines_triggered(bool visible);
+    void on_actionShowIssues_triggered(bool visible);
+
+    void on_actionNew_triggered();
+    void on_actionOpen_triggered();
+    void on_actionSave_triggered();
+    void on_actionSaveAs_triggered();
+
+    void on_actionAddBookmark_triggered();
+    void on_actionNewFolder_triggered();
+    void on_actionRenamePipeline_triggered();
+    void on_actionRemovePipeline_triggered();
+    void on_actionShowBookmarkInFileSystem_triggered();
+    void on_actionShowPrebuiltInFileSystem_triggered();
+    void on_actionLocateFile_triggered();
+    void on_actionClearPipeline_triggered();
+
+    void on_pipelineViewContextMenuRequested(const QPoint&);
+    void on_bookmarksDockContextMenuRequested(const QPoint&);
+    void on_prebuiltsDockContextMenuRequested(const QPoint&);
+
+    void on_actionClearRecentFiles_triggered();
+    void on_actionCloseWindow_triggered();
+    void on_actionExit_triggered();
+    void on_actionShowDREAM3DHelp_triggered();
+    void on_actionCheckForUpdates_triggered();
+    void on_actionPluginInformation_triggered();
+    void on_actionAboutDREAM3D_triggered();
+
+    void toPipelineRunningState();
+
+    void toPipelineIdleState();
+
+  private:
+
+    // This map stores each DREAM3D instance with its accompanying "View" menu
+    QMap<DREAM3D_UI*, QMenu*>               m_DREAM3DInstanceMap;
+
+    // The currently active DREAM3D instance
+    DREAM3D_UI*                             m_ActiveWindow;
+
+    // The global menu (used on Mac OS X only)
+#if defined(Q_OS_MAC)
+    DREAM3DMenu*                            m_GlobalMenu;
+#endif
+
+    /* Used on Mac OS X when there are no DREAM3D instances instantiated,
+   * but the application is still running. */
+    QMenu*                                  m_PlaceholderViewMenu;
+
+    QString                                 m_OpenDialogLastDirectory;
+
+    bool                                    show_splash;
+    DSplashScreen*                          Splash;
+
+    QVector<QPluginLoader*>                 m_PluginLoaders;
+
+    QVector<IDREAM3DPlugin*> loadPlugins();
+
+    QMenu* createPlaceholderViewMenu();
+
+    DREAM3DApplication(const DREAM3DApplication&); // Copy Constructor Not Implemented
+    void operator=(const DREAM3DApplication&); // Operator '=' Not Implemented
 };
 
 #endif /* _DREAM3DApplication_H */

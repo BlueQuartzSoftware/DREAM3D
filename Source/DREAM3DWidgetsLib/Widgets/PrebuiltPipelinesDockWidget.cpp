@@ -48,12 +48,12 @@
 #include <QtWidgets/QTreeWidgetItem>
 #include <QtWidgets/QMenu>
 
+#include "Applications/DREAM3D/DREAM3DApplication.h"
+
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 #include "DREAM3DLib/FilterParameters/JsonFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
-
-#include "Applications/DREAM3D/DREAM3DApplication.h"
 
 #include "FilterListDockWidget.h"
 
@@ -66,6 +66,10 @@ PrebuiltPipelinesDockWidget::PrebuiltPipelinesDockWidget(QWidget* parent) :
 {
   setupUi(this);
   setupGui();
+
+  setContextMenuPolicy(Qt::CustomContextMenu);
+
+  connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), dream3dApp, SLOT(on_prebuiltsDockContextMenuRequested(const QPoint&)));
 }
 
 
@@ -407,30 +411,6 @@ QStringList PrebuiltPipelinesDockWidget::generateFilterListFromPipelineFile(QStr
     prefs.endGroup();
   }
   return filterNames;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PrebuiltPipelinesDockWidget::actionShowInFileSystem_triggered()
-{
-  QTreeWidgetItem* item = prebuiltsLibraryTree->currentItem();
-  QString pipelinePath = item->data(1, Qt::UserRole).toString();
-
-  QFileInfo pipelinePathInfo(pipelinePath);
-  QString pipelinePathDir = pipelinePathInfo.path();
-
-  QString s("file://");
-#if defined(Q_OS_WIN)
-  s = s + "/"; // Need the third slash on windows because file paths start with a drive letter
-#elif defined(Q_OS_MAC)
-
-#else
-  // We are on Linux - I think
-
-#endif
-  s = s + pipelinePathDir;
-  QDesktopServices::openUrl(s);
 }
 
 // -----------------------------------------------------------------------------

@@ -90,30 +90,6 @@ public:
   QJsonObject toJsonObject();
 
   /**
-  * @brief setNodeActionList
-  * @param list
-  */
-  void setNodeActionList(QList<QAction*> list);
-
-  /**
-  * @brief setLeafActionList
-  * @param list
-  */
-  void setLeafActionList(QList<QAction*> list);
-
-  /**
-  * @brief setLeafErrorActionList
-  * @param list
-  */
-  void setLeafErrorActionList(QList<QAction*> list);
-
-  /**
-  * @brief setDefaultActionList
-  * @param list
-  */
-  void setDefaultActionList(QList<QAction*> list);
-
-  /**
   * @brief setModel
   * @param model
   */
@@ -145,19 +121,6 @@ signals:
   private slots:
 
   /**
-  * @brief onCustomContextMenuRequested
-  * @param pos
-  */
-  void onCustomContextMenuRequested(const QPoint& pos);
-
-  /**
-  * @brief showContextMenu
-  * @param item
-  * @param globalPos
-  */
-  void showContextMenu(QModelIndex index, const QPoint& globalPos);
-
-  /**
   * @brief mousePressEvent
   * @param event
   */
@@ -167,7 +130,7 @@ private:
   void performDrag();
   void expandChildren(const QModelIndex &parent, BookmarksModel* model);
   QJsonObject wrapModel(QModelIndex index);
-  static void UnwrapModel(QJsonObject object, BookmarksModel* model, QModelIndex parentIndex);
+  static void UnwrapModel(QString objectName, QJsonObject object, BookmarksModel* model, QModelIndex parentIndex);
 
   QPoint                    m_StartPos;
   QMenu                     m_Menu;

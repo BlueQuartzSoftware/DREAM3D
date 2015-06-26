@@ -71,7 +71,6 @@ include(${DREAM3DProj_SOURCE_DIR}/License/License.cmake)
 # List the source files here
 set(DREAM3D_SRCS
   ${DREAM3D_SOURCE_DIR}/main.cpp
-  ${DREAM3D_SOURCE_DIR}/BrandedInitializer.cpp
   ${DREAM3D_SOURCE_DIR}/DREAM3D_UI.cpp
   ${DREAM3D_SOURCE_DIR}/DSplashScreen.cpp
   ${DREAM3D_SOURCE_DIR}/AboutDREAM3D.cpp
@@ -79,6 +78,7 @@ set(DREAM3D_SRCS
   ${DREAM3D_SOURCE_DIR}/PluginDetails.cpp
   ${DREAM3D_SOURCE_DIR}/DREAM3Dv6Wizard.cpp
   ${DREAM3D_SOURCE_DIR}/DREAM3DApplication.cpp
+  ${DREAM3D_SOURCE_DIR}/DREAM3DMenu.cpp
   )
 
 #------------------------------------------------------------------
@@ -90,7 +90,6 @@ set(DREAM3D_HDRS
 #------------------------------------------------------------------
 # Headers that do need to have moc run on them, i.e., QObject based headers
 SET(DREAM3D_MOC_HDRS
-  ${DREAM3D_SOURCE_DIR}/BrandedInitializer.h
   ${DREAM3D_SOURCE_DIR}/DREAM3D_UI.h
   ${DREAM3D_SOURCE_DIR}/DSplashScreen.h
   ${DREAM3D_SOURCE_DIR}/AboutDREAM3D.h
@@ -98,6 +97,7 @@ SET(DREAM3D_MOC_HDRS
   ${DREAM3D_SOURCE_DIR}/PluginDetails.h
   ${DREAM3D_SOURCE_DIR}/DREAM3Dv6Wizard.h
   ${DREAM3D_SOURCE_DIR}/DREAM3DApplication.h
+  ${DREAM3D_SOURCE_DIR}/DREAM3DMenu.h
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3D" "${DREAM3D_HDRS};${DREAM3D_MOC_HDRS}" "${DREAM3D_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
