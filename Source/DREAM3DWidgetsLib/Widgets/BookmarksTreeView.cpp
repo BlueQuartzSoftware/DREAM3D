@@ -410,9 +410,10 @@ QJsonObject BookmarksTreeView::toJsonObject()
   for (int i = 0; i < rootItem->childCount(); i++)
   {
     QModelIndex childIndex = model->index(i, BookmarksItem::Name, QModelIndex());
+    QString name = childIndex.data().toString();
 
     QJsonObject childObj = wrapModel(childIndex);
-    treeObj["Child " + QString::number(i + 1)] = childObj;
+    treeObj[name] = childObj;
   }
 
   return treeObj;
@@ -427,18 +428,17 @@ QJsonObject BookmarksTreeView::wrapModel(QModelIndex currentIndex)
 
   QJsonObject obj;
 
+  QString name = model->index(currentIndex.row(), BookmarksItem::Name, currentIndex.parent()).data().toString();
+  QString path = model->index(currentIndex.row(), BookmarksItem::Path, currentIndex.parent()).data().toString();
+
   for (int i = 0; i < model->rowCount(currentIndex); i++)
   {
-    QModelIndex childIndex = model->index(i, 0, currentIndex);
+    QModelIndex childIndex = model->index(i, BookmarksItem::Name, currentIndex);
+    QString childName = childIndex.data().toString();
 
     QJsonObject childObj = wrapModel(childIndex);
-    obj["Child " + QString::number(i + 1)] = childObj;
+    obj[childName] = childObj;
   }
-
-  QString name = model->index(currentIndex.row(), BookmarksItem::Name, model->parent(currentIndex)).data().toString();
-  QString path = model->index(currentIndex.row(), BookmarksItem::Path, model->parent(currentIndex)).data().toString();
-
-  obj.insert("Name", name);
 
   if (model->flags(currentIndex).testFlag(Qt::ItemIsDropEnabled) == true)
   {
@@ -459,12 +459,14 @@ BookmarksModel* BookmarksTreeView::FromJsonObject(QJsonObject treeObject)
 {
   BookmarksModel* model = BookmarksModel::Instance();
 
-  for (QJsonObject::iterator iter = treeObject.begin(); iter != treeObject.end(); ++iter)
+  QStringList keys = treeObject.keys();
+  keys.sort(Qt::CaseInsensitive);
+  for (int i=0; i<keys.size(); i++)
   {
-    QJsonValue val = *iter;
+    QJsonValue val = treeObject.value(keys[i]);
     if (val.isObject())
     {
-      BookmarksTreeView::UnwrapModel(val.toObject(), model, QModelIndex());
+      BookmarksTreeView::UnwrapModel(keys[i], val.toObject(), model, QModelIndex());
     }
   }
 
@@ -484,14 +486,13 @@ BookmarksModel* BookmarksTreeView::FromJsonObject(QJsonObject treeObject)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksTreeView::UnwrapModel(QJsonObject object, BookmarksModel* model, QModelIndex parentIndex)
+void BookmarksTreeView::UnwrapModel(QString objectName, QJsonObject object, BookmarksModel* model, QModelIndex parentIndex)
 {
   int row = model->rowCount(parentIndex);
   model->insertRow(row, parentIndex);
   QModelIndex nameIndex = model->index(row, BookmarksItem::Name, parentIndex);
   QModelIndex pathIndex = model->index(row, BookmarksItem::Path, parentIndex);
 
-  QString name = object["Name"].toString();
   QString path = object["Path"].toString();
   bool expanded = object["Expanded"].toBool();
 
@@ -512,17 +513,19 @@ void BookmarksTreeView::UnwrapModel(QJsonObject object, BookmarksModel* model, Q
 
   path = QDir::toNativeSeparators(path);
 
-  model->setData(nameIndex, name, Qt::DisplayRole);
+  model->setData(nameIndex, objectName, Qt::DisplayRole);
   model->setData(pathIndex, path, Qt::DisplayRole);
   model->setNeedsToBeExpanded(nameIndex, expanded);
   model->setNeedsToBeExpanded(pathIndex, expanded);
 
-  for (QJsonObject::iterator iter = object.begin(); iter != object.end(); ++iter)
+  QStringList keys = object.keys();
+  keys.sort(Qt::CaseInsensitive);
+  for (int i=0; i<keys.size(); i++)
   {
-    QJsonValue val = *iter;
+    QJsonValue val = object.value(keys[i]);
     if (val.isObject())
     {
-      BookmarksTreeView::UnwrapModel(val.toObject(), model, nameIndex);
+      BookmarksTreeView::UnwrapModel(keys[i], val.toObject(), model, nameIndex);
     }
   }
 }
