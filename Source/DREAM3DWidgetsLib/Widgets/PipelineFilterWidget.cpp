@@ -224,6 +224,8 @@ void PipelineFilterWidget::layoutWidgets()
   // Get a list of all the filterParameters from the filter.
   QVector<FilterParameter::Pointer> filterParameters = m_Filter->getFilterParameters();
   // Create all the FilterParameterWidget objects that can be displayed where ever the developer needs
+
+  int pCount = 0, rCount = 0, cCount = 0;
   for (QVector<FilterParameter::Pointer>::iterator iter = filterParameters.begin(); iter != filterParameters.end(); ++iter )
   {
     FilterParameter* parameter = (*iter).get();
@@ -233,7 +235,9 @@ void PipelineFilterWidget::layoutWidgets()
     QWidget* w = fwm->createWidget(parameter, m_Filter.get());
     m_PropertyToWidget.insert(parameter->getPropertyName(), w); // Update our Map of Filter Parameter Properties to the Widget
 
-    if (NULL == w) { continue; }
+    if (NULL == w) {
+      continue;
+    }
     m_FilterParameterWidgets.push_back(w);
 
     // Determine which group box to add the widget into
@@ -241,16 +245,19 @@ void PipelineFilterWidget::layoutWidgets()
     {
       w->setParent(m_VariablesWidget);
       pLayout->addWidget(w);
+      pCount++;
     }
     else if(parameter->getCategory() == FilterParameter::RequiredArray)
     {
       w->setParent(m_VariablesWidget);
       rLayout->addWidget(w);
+      rCount++;
     }
     else if(parameter->getCategory() == FilterParameter::CreatedArray)
     {
       w->setParent(m_VariablesWidget);
       cLayout->addWidget(w);
+      cCount++;
     }
     else
     {
@@ -272,7 +279,7 @@ void PipelineFilterWidget::layoutWidgets()
   linkConditionalWidgets(filterParameters);
 
   // If there are widgets in the parameters group box, add it to the overall layout.  If not, remove the group box.
-  if (pLayout->isEmpty() == false)
+  if (pLayout->isEmpty() == false || pCount > 0)
   {
     m_VariablesVerticalLayout->addWidget(parametersGroupBox);
   }
@@ -282,7 +289,7 @@ void PipelineFilterWidget::layoutWidgets()
   }
 
   // If there are widgets in the required arrays group box, add it to the overall layout.  If not, remove the group box.
-  if (rLayout->isEmpty() == false)
+  if (rLayout->isEmpty() == false || rCount > 0)
   {
     m_VariablesVerticalLayout->addWidget(requiredGroupBox);
   }
@@ -292,7 +299,7 @@ void PipelineFilterWidget::layoutWidgets()
   }
 
   // If there are widgets in the created arrays group box, add it to the overall layout.  If not, remove the group box.
-  if (cLayout->isEmpty() == false)
+  if (cLayout->isEmpty() == false || cCount > 0)
   {
     m_VariablesVerticalLayout->addWidget(createdGroupBox);
   }

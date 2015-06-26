@@ -127,7 +127,7 @@ void IssuesDockWidget::processPipelineMessage(const PipelineMessage& msg)
         int msgCode = msg.getCode();
 
         int rc = errorTableWidget->rowCount();
-
+        //FIXME: THis next line is REALLY slow.
         errorTableWidget->insertRow(rc);
 
         QString msgPrefix = (msg.getPrefix());
@@ -149,7 +149,9 @@ void IssuesDockWidget::processPipelineMessage(const PipelineMessage& msg)
         {
           errorTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
         }
+        //FIXME: THis next line is REALLY slow.
         errorTableWidget->setItem(rc, 1, descriptionWidgetItem);
+        //FIXME: THis next line is REALLY slow.
         errorTableWidget->setItem(rc, 2, codeWidgetItem);
       }
       break;
@@ -197,6 +199,7 @@ void IssuesDockWidget::processPipelineMessage(const PipelineMessage& msg)
     default:
       return;
   }
+
 }
 
 // -----------------------------------------------------------------------------
