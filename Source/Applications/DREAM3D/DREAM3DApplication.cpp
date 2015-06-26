@@ -1311,7 +1311,11 @@ void DREAM3DApplication::toggleGlobalMenuItems(bool on)
 // -----------------------------------------------------------------------------
 void DREAM3DApplication::toPipelineRunningState()
 {
+#if defined (Q_OS_MAC)
+  m_GlobalMenu->getPipelineMenu()->setDisabled(true);
+#else
   m_ActiveWindow->getDREAM3DMenu()->getPipelineMenu()->setDisabled(true);
+#endif
 }
 
 // -----------------------------------------------------------------------------
@@ -1319,7 +1323,11 @@ void DREAM3DApplication::toPipelineRunningState()
 // -----------------------------------------------------------------------------
 void DREAM3DApplication::toPipelineIdleState()
 {
+#if defined (Q_OS_MAC)
+  m_GlobalMenu->getPipelineMenu()->setEnabled(true);
+#else
   m_ActiveWindow->getDREAM3DMenu()->getPipelineMenu()->setEnabled(true);
+#endif
 }
 
 // -----------------------------------------------------------------------------
