@@ -211,10 +211,10 @@
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="dataContainerList"/>
+      <widget class="QComboBox" name="dataContainerCombo"/>
      </item>
      <item>
-      <widget class="QComboBox" name="attributeMatrixList"/>
+      <widget class="QComboBox" name="attributeMatrixCombo"/>
      </item>
     </layout>
    </item>

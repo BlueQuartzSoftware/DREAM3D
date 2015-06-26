@@ -124,9 +124,9 @@ class ComparisonSelectionWidget : public FilterParameterWidget, private Ui::Comp
     void on_addComparison_clicked();
     void on_removeComparison_clicked();
 
-    void on_dataContainerList_currentIndexChanged(int index);
+    void on_dataContainerCombo_currentIndexChanged(int index);
 
-    void on_attributeMatrixList_currentIndexChanged(int index);
+    void on_attributeMatrixCombo_currentIndexChanged(int index);
 
     void tableDataWasChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight);
     void widgetChanged(const QString &text);

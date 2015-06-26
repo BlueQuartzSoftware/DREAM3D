@@ -102,9 +102,9 @@ class DREAM3DWidgetsLib_EXPORT DataArrayCreationWidget : public FilterParameterW
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
 
-    void on_dataContainerList_currentIndexChanged(int index);
+    void on_dataContainerCombo_currentIndexChanged(int index);
 
-    void on_attributeMatrixList_currentIndexChanged(int index);
+    void on_attributeMatrixCombo_currentIndexChanged(int index);
 
     void on_dataArrayName_returnPressed();
     void on_applyChangesBtn_clicked();

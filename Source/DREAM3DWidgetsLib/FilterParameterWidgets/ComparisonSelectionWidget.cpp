@@ -77,8 +77,8 @@ ComparisonInputs ComparisonSelectionWidget::getComparisonInputs()
   for(int i = 0; i < filterCount; ++i)
   {
     ComparisonInput_t comp;
-    comp.dataContainerName = dataContainerList->currentText();
-    comp.attributeMatrixName = attributeMatrixList->currentText();
+    comp.dataContainerName = dataContainerCombo->currentText();
+    comp.attributeMatrixName = attributeMatrixCombo->currentText();
     comp.attributeArrayName = featureNames[i];
     comp.compOperator = featureOperators[i];
     comp.compValue = featureValues[i];
@@ -120,10 +120,10 @@ void ComparisonSelectionWidget::setupGui()
   connect(m_ComparisonSelectionTableModel, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex)),
           this, SLOT(tableDataWasChanged(const QModelIndex&, const QModelIndex&)));
 
-  connect(dataContainerList, SIGNAL(currentIndexChanged(const QString&)),
+  connect(dataContainerCombo, SIGNAL(currentIndexChanged(const QString&)),
     this, SLOT(widgetChanged(const QString&)));
 
-  connect(attributeMatrixList, SIGNAL(currentIndexChanged(const QString&)),
+  connect(attributeMatrixCombo, SIGNAL(currentIndexChanged(const QString&)),
     this, SLOT(widgetChanged(const QString&)));
 
   // Catch when the filter is about to execute the preflight
@@ -220,17 +220,17 @@ void ComparisonSelectionWidget::populateComboBoxes()
   while(iter.hasNext() )
   {
     DataContainerProxy dc = iter.next();
-    if(dataContainerList->findText(dc.name) == -1 )
+    if(dataContainerCombo->findText(dc.name) == -1 )
     {
-      int index = dataContainerList->currentIndex();
-      dataContainerList->addItem(dc.name);
-      dataContainerList->setCurrentIndex(index);
+      int index = dataContainerCombo->currentIndex();
+      dataContainerCombo->addItem(dc.name);
+      dataContainerCombo->setCurrentIndex(index);
     }
   }
 
   // Grab what is currently selected
-  QString curDcName = dataContainerList->currentText();
-  QString curAmName = attributeMatrixList->currentText();
+  QString curDcName = dataContainerCombo->currentText();
+  QString curAmName = attributeMatrixCombo->currentText();
   //  QString curDaName = attributeArrayList->currentText();
 
   // Get what is in the filter
@@ -259,30 +259,30 @@ void ComparisonSelectionWidget::populateComboBoxes()
 
   bool didBlock = false;
 
-  if (!dataContainerList->signalsBlocked()) { didBlock = true; }
-  dataContainerList->blockSignals(true);
-  int dcIndex = dataContainerList->findText(dcName);
+  if (!dataContainerCombo->signalsBlocked()) { didBlock = true; }
+  dataContainerCombo->blockSignals(true);
+  int dcIndex = dataContainerCombo->findText(dcName);
 
-  dataContainerList->setCurrentIndex(dcIndex);
+  dataContainerCombo->setCurrentIndex(dcIndex);
   populateAttributeMatrixList();
 
-  if(didBlock) { dataContainerList->blockSignals(false); didBlock = false; }
+  if(didBlock) { dataContainerCombo->blockSignals(false); didBlock = false; }
 
-  if(!attributeMatrixList->signalsBlocked()) { didBlock = true; }
-  attributeMatrixList->blockSignals(true);
+  if(!attributeMatrixCombo->signalsBlocked()) { didBlock = true; }
+  attributeMatrixCombo->blockSignals(true);
 
   if (dcIndex < 0)
   {
-    attributeMatrixList->setCurrentIndex(-1);
+    attributeMatrixCombo->setCurrentIndex(-1);
     ComparisonInputs ci;
     m_ComparisonSelectionTableModel->setTableData(ci);
   }
   else
   {
-    int amIndex = attributeMatrixList->findText(amName);
+    int amIndex = attributeMatrixCombo->findText(amName);
 
     // Set the selected index in the Attribute Matrix
-    attributeMatrixList->setCurrentIndex(amIndex);
+    attributeMatrixCombo->setCurrentIndex(amIndex);
 
     if (amIndex < 0)
     {
@@ -304,7 +304,7 @@ void ComparisonSelectionWidget::populateComboBoxes()
     }
   }
 
-  if(didBlock) { attributeMatrixList->blockSignals(false); didBlock = false; }
+  if(didBlock) { attributeMatrixCombo->blockSignals(false); didBlock = false; }
 
 
 }
@@ -316,11 +316,11 @@ void ComparisonSelectionWidget::populateComboBoxes()
 void ComparisonSelectionWidget::populateAttributeMatrixList()
 {
 //  std::cout << "ComparisonSelectionWidget::populateAttributeMatrixList()" << std::endl;
-  QString dcName = dataContainerList->currentText();
+  QString dcName = dataContainerCombo->currentText();
 
   // Clear the AttributeMatrix List
-  attributeMatrixList->blockSignals(true);
-  attributeMatrixList->clear();
+  attributeMatrixCombo->blockSignals(true);
+  attributeMatrixCombo->clear();
 
   // Loop over the data containers until we find the proper data container
   QList<DataContainerProxy> containers = m_DcaProxy.dataContainers.values();
@@ -338,12 +338,12 @@ void ComparisonSelectionWidget::populateAttributeMatrixList()
       {
         attrMatsIter.next();
         QString amName = attrMatsIter.key();
-        attributeMatrixList->addItem(amName);
+        attributeMatrixCombo->addItem(amName);
       }
     }
   }
 
-  attributeMatrixList->blockSignals(false);
+  attributeMatrixCombo->blockSignals(false);
 }
 
 
@@ -355,8 +355,8 @@ QStringList ComparisonSelectionWidget::generateAttributeArrayList()
 //  std::cout << "ComparisonSelectionWidget::generateAttributeArrayList()" << std::endl;
   QStringList attributeArrayList;
   // Get the selected Data Container Name from the DataContainerList Widget
-  QString currentDCName = dataContainerList->currentText();
-  QString currentAttrMatName = attributeMatrixList->currentText();
+  QString currentDCName = dataContainerCombo->currentText();
+  QString currentAttrMatName = attributeMatrixCombo->currentText();
 
   // Loop over the data containers until we find the proper data container
   QList<DataContainerProxy> containers = m_DcaProxy.dataContainers.values();
@@ -474,14 +474,14 @@ void ComparisonSelectionWidget::on_removeComparison_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ComparisonSelectionWidget::on_dataContainerList_currentIndexChanged(int index)
+void ComparisonSelectionWidget::on_dataContainerCombo_currentIndexChanged(int index)
 {
   populateAttributeMatrixList();
 
   // Do not select an attribute matrix from the list
-  if (attributeMatrixList->count() > 0)
+  if (attributeMatrixCombo->count() > 0)
   {
-    attributeMatrixList->setCurrentIndex(-1);
+    attributeMatrixCombo->setCurrentIndex(-1);
   }
 }
 
@@ -489,7 +489,7 @@ void ComparisonSelectionWidget::on_dataContainerList_currentIndexChanged(int ind
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ComparisonSelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)
+void ComparisonSelectionWidget::on_attributeMatrixCombo_currentIndexChanged(int index)
 {
   QStringList possibleArrays = generateAttributeArrayList();
   m_ComparisonSelectionTableModel->setPossibleFeatures(possibleArrays);
@@ -548,14 +548,14 @@ void ComparisonSelectionWidget::beforePreflight()
     return;
   }
 
-  dataContainerList->blockSignals(true);
-  attributeMatrixList->blockSignals(true);
+  dataContainerCombo->blockSignals(true);
+  attributeMatrixCombo->blockSignals(true);
   m_ComparisonSelectionTableModel->blockSignals(true);
   // Reset all the combo box widgets to have the default selection of the first index in the list
   populateComboBoxes();
   m_ComparisonSelectionTableModel->blockSignals(false);
-  dataContainerList->blockSignals(false);
-  attributeMatrixList->blockSignals(false);
+  dataContainerCombo->blockSignals(false);
+  attributeMatrixCombo->blockSignals(false);
 }
 
 // -----------------------------------------------------------------------------

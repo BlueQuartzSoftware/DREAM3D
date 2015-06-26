@@ -97,9 +97,9 @@ class DREAM3DWidgetsLib_EXPORT AttributeMatrixSelectionWidget : public FilterPar
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
 
-    void on_dataContainerList_currentIndexChanged(int index);
+    void on_dataContainerCombo_currentIndexChanged(int index);
 
-    void on_attributeMatrixList_currentIndexChanged(int index);
+    void on_attributeMatrixCombo_currentIndexChanged(int index);
 
 
   protected:

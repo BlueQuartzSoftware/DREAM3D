@@ -332,7 +332,7 @@ void DataArrayCreationWidget::setSelectedPath(QString dcName, QString attrMatNam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataArrayCreationWidget::on_dataContainerList_currentIndexChanged(int index)
+void DataArrayCreationWidget::on_dataContainerCombo_currentIndexChanged(int index)
 {
   populateAttributeMatrixList();
 
@@ -381,7 +381,7 @@ void DataArrayCreationWidget::populateAttributeMatrixList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataArrayCreationWidget::on_attributeMatrixList_currentIndexChanged(int index)
+void DataArrayCreationWidget::on_attributeMatrixCombo_currentIndexChanged(int index)
 {
   // std::cout << "void DataArrayCreationWidget::on_attributeMatrixList_currentIndexChanged(int index)" << std::endl;
   m_DidCausePreflight = true;
