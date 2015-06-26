@@ -245,7 +245,6 @@ void FindFeatureReferenceMisorientations::execute()
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
-  float w = 0.0f;
   float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
   uint32_t phase1 = Ebsd::CrystalStructure::UnknownCrystalStructure;
   uint32_t phase2 = Ebsd::CrystalStructure::UnknownCrystalStructure;
@@ -313,16 +312,10 @@ void FindFeatureReferenceMisorientations::execute()
             QuaternionMathF::Copy(quats[m_Centers[gnum]], q2);
             phase2 = m_CrystalStructures[m_CellPhases[m_Centers[gnum]]];
           }
-          w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-          FOrientArrayType rod(4);
-          FOrientTransformsType::ax2ro(FOrientArrayType(n1, n2, n3, w), rod);
-          rod = m_OrientationOps[phase1]->getMDFFZRod(rod);
-          w = rod[3];
-          w = w * (180.0f / DREAM3D::Constants::k_Pi);
-          m_FeatureReferenceMisorientations[point] = w;
+          m_FeatureReferenceMisorientations[point] = DREAM3D::Constants::k_180OverPi * m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
           idx = m_FeatureIds[point] * 2;
           avgMiso[idx + 0]++;
-          avgMiso[idx + 1] = avgMiso[idx + 1] + w;
+          avgMiso[idx + 1] = avgMiso[idx + 1] + m_FeatureReferenceMisorientations[point];
         }
         if (m_FeatureIds[point] == 0 || m_CellPhases[point] == 0)
         {
