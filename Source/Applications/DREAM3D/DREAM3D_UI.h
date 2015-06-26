@@ -119,6 +119,24 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     BookmarksDockWidget* getBookmarksDockWidget();
 
     /**
+    * @brief getFilterListDockWidget
+    * @param
+    */
+    FilterListDockWidget* getFilterListDockWidget();
+
+    /**
+    * @brief getFilterLibraryDockWidget
+    * @param
+    */
+    FilterLibraryDockWidget* getFilterLibraryDockWidget();
+
+    /**
+    * @brief getFilterListDockWidget
+    * @param
+    */
+    IssuesDockWidget* getIssuesDockWidget();
+
+    /**
     * @brief setOpenedFilePath
     * @param path
     */
@@ -139,6 +157,8 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     * @brief getDREAM3DMenu
     */
     DREAM3DMenu* getDREAM3DMenu();
+
+    void updateAndSyncDockWidget(QAction* action, QDockWidget* dock, bool b);
 
     /**
      * @brief versionCheckReply
@@ -287,37 +307,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void populateMenus(QObject* plugin);
 
     /**
-     * @brief setupPipelineMenu This will collect specific menu items and allow them to be used from a contextual menu
-     * assigned to the various Pipeline/Filter/Favorites type items
-     */
-    void setupPipelineContextMenu();
-
-    /**
-    * @brief
-    */
-    void setupPipelineItemMenu();
-
-    /**
-    * @brief
-    */
-    void setupFolderMenu();
-
-    /**
-    * @brief
-    */
-    void setupDefaultMenu();
-
-    /**
-    * @brief
-    */
-    void setupPrebuiltsMenu();
-
-    /**
-    * @brief
-    */
-    void setupPipelineViewMenu();
-
-    /**
     * @brief
     */
     void connectSignalsSlots();
@@ -376,11 +365,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      */
     void writeDockWidgetSettings(DREAM3DSettings& prefs, QDockWidget* dw);
 
-
-    void makeStatusBarButton(QString text, QDockWidget* dockWidget, QToolButton* btn, int index);
-
-    void updateAndSyncDockWidget(QAction* action, QDockWidget* dock, QToolButton* btn, bool b);
-
     /**
      * @brief Checks the currently open file for changes that need to be saved
      * @return QMessageBox::StandardButton
@@ -419,6 +403,13 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
     QString                               m_OpenedFilePath;
     static QString                        m_OpenDialogLastDirectory;
+
+    /**
+    * @brief Creates a view menu for the DREAM3D instance.  We need to
+    * do this separately because there is a different View menu for each
+    * DREAM3D instance on all OSes.
+    */
+    QMenu* createViewMenu();
 
     /**
     * @brief Updates the "first run" variable in the preferences file

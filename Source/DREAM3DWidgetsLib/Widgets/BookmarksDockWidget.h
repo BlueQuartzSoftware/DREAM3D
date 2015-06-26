@@ -73,9 +73,6 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
     BookmarksDockWidget(QWidget* parent = NULL);
     virtual ~BookmarksDockWidget();
 
-    DREAM3D_INSTANCE_PROPERTY(QAction*, RenameAction)
-    DREAM3D_INSTANCE_PROPERTY(QAction*, DeleteAction)
-
     /**
      * @brief setupGui
      */
@@ -115,9 +112,6 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
     virtual QDir findV4FavoritesDirectory();
 
   public slots:
-    //// Slots to catch signals from main menu or context menu
-    void m_ActionLocateFile_triggered();
-    void m_ActionShowInFileSystem_triggered();
 
     /**
     * @brief BookmarksDockWidget::addBookmark
@@ -154,9 +148,6 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
     //// Slots to catch signals from the QTreeWidget
     void on_bookmarksTreeView_clicked(const QModelIndex & index);
     void on_bookmarksTreeView_doubleClicked(const QModelIndex & index);
-    void on_bookmarksTreeView_currentIndexChanged(const QModelIndex & current, const QModelIndex & previous);
-
-    //void convertPipelines(QString newDirectory);
 
   signals:
 
