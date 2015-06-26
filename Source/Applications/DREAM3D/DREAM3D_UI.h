@@ -216,14 +216,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
   protected slots:
 
-    //View Menu
-    // These all need to take a bool b  argument
-    void on_actionShow_Filter_Library_triggered(bool b);
-    void on_actionShow_Filter_List_triggered(bool b);
-    void on_actionShow_Prebuilt_Pipelines_triggered(bool b);
-    void on_actionShow_Favorites_triggered(bool b);
-    void on_actionShow_Issues_triggered(bool b);
-
     // Buttons and other widgets that send signals that we want to catch
     void on_startPipelineBtn_clicked();
 

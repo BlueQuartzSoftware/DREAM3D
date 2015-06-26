@@ -142,6 +142,10 @@ private:
   // The global menu (used on Mac OS X only)
   DREAM3DMenu*                            m_GlobalMenu;
 
+  /* Used on Mac OS X when there are no DREAM3D instances instantiated,
+   * but the application is still running. */
+  QMenu*                                  m_PlaceholderViewMenu;
+
   QString                                 m_OpenDialogLastDirectory;
 
   bool                                    show_splash;
@@ -150,6 +154,8 @@ private:
   QVector<QPluginLoader*>                 m_PluginLoaders;
 
   QVector<IDREAM3DPlugin*> loadPlugins();
+
+  QMenu* createPlaceholderViewMenu();
 
   DREAM3DApplication(const DREAM3DApplication&); // Copy Constructor Not Implemented
   void operator=(const DREAM3DApplication&); // Operator '=' Not Implemented

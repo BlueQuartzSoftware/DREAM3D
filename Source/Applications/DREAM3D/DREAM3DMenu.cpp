@@ -265,8 +265,6 @@ void DREAM3DMenu::setViewMenu(QMenu* viewMenu)
 
   m_MenuView = viewMenu;
 
-  //viewMenu->findChild<QAction*>("")
-
   QAction* bookmarksMenuAction = m_MenuBookmarks->menuAction();
   m_MenuBar->insertMenu(bookmarksMenuAction, viewMenu);
 }

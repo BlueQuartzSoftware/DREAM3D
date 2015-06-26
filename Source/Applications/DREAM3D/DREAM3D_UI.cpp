@@ -1113,47 +1113,6 @@ void DREAM3D_UI::clearPipeline()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::on_actionShow_Filter_Library_triggered(bool b)
-{
-  updateAndSyncDockWidget(actionShow_Filter_Library, filterLibraryDockWidget, b);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::on_actionShow_Filter_List_triggered(bool b)
-{
-  updateAndSyncDockWidget(actionShow_Filter_List, filterListDockWidget, b);
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::on_actionShow_Prebuilt_Pipelines_triggered(bool b)
-{
-  updateAndSyncDockWidget(actionShow_Prebuilt_Pipelines, prebuiltPipelinesDockWidget, b);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::on_actionShow_Favorites_triggered(bool b)
-{
-  updateAndSyncDockWidget(actionShow_Favorites, bookmarksDockWidget, b);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::on_actionShow_Issues_triggered(bool b)
-{
-  updateAndSyncDockWidget(actionShow_Issues, issuesDockWidget, b);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void DREAM3D_UI::updateAndSyncDockWidget(QAction* action, QDockWidget* dock, bool b)
 {
   action->blockSignals(true);
@@ -1324,10 +1283,10 @@ QMenu* DREAM3D_UI::createViewMenu()
   connect(actionShowFilterLibrary, SIGNAL(triggered(bool)), dream3dApp, SLOT(on_actionShowFilterLibrary_triggered(bool)) );
 
 
-  QAction* actionShowFavorites = bookmarksDockWidget->toggleViewAction();
-  actionShowFavorites->setText("Favorite Pipelines");
-  menuView->addAction(actionShowFavorites);
-  connect(actionShowFavorites, SIGNAL(triggered(bool)), dream3dApp, SLOT(on_actionShowBookmarks_triggered(bool)) );
+  QAction* actionShowBookmarks = bookmarksDockWidget->toggleViewAction();
+  actionShowBookmarks->setText("Bookmarks");
+  menuView->addAction(actionShowBookmarks);
+  connect(actionShowBookmarks, SIGNAL(triggered(bool)), dream3dApp, SLOT(on_actionShowBookmarks_triggered(bool)) );
 
 
   QAction* actionShowPrebuiltPipelines = prebuiltPipelinesDockWidget->toggleViewAction();
