@@ -580,10 +580,10 @@ void DREAM3D_UI::setupGui()
   pipelineViewWidget->setPipelineMessageObserver(issuesDockWidget);
 
   m_ProgressBar->hide();
-  horizontalLayout_2->removeWidget(m_ProgressBar);
-  horizontalLayout_2->removeWidget(startPipelineBtn);
-  horizontalLayout_2->addSpacerItem(progressSpacer);
-  horizontalLayout_2->addWidget(startPipelineBtn);
+//  horizontalLayout_2->removeWidget(m_ProgressBar);
+//  horizontalLayout_2->removeWidget(startPipelineBtn);
+//  horizontalLayout_2->addSpacerItem(progressSpacer);
+//  horizontalLayout_2->addWidget(startPipelineBtn);
 }
 
 
@@ -835,10 +835,10 @@ void DREAM3D_UI::on_startPipelineBtn_clicked()
     return;
   }
 
-  horizontalLayout_2->removeWidget(startPipelineBtn);
-  horizontalLayout_2->removeItem(progressSpacer);
-  horizontalLayout_2->addWidget(m_ProgressBar, 1);
-  horizontalLayout_2->addWidget(startPipelineBtn);
+//  horizontalLayout_2->removeWidget(startPipelineBtn);
+//  horizontalLayout_2->removeItem(progressSpacer);
+//  horizontalLayout_2->addWidget(m_ProgressBar, 1);
+//  horizontalLayout_2->addWidget(startPipelineBtn);
   m_ProgressBar->show();
 
   if (m_WorkerThread != NULL)
@@ -989,10 +989,10 @@ void DREAM3D_UI::pipelineDidFinish()
   m_ProgressBar->setValue(0);
 
   m_ProgressBar->hide();
-  horizontalLayout_2->removeWidget(m_ProgressBar);
-  horizontalLayout_2->removeWidget(startPipelineBtn);
-  horizontalLayout_2->addSpacerItem(progressSpacer);
-  horizontalLayout_2->addWidget(startPipelineBtn);
+//  horizontalLayout_2->removeWidget(m_ProgressBar);
+//  horizontalLayout_2->removeWidget(startPipelineBtn);
+  //horizontalLayout_2->addSpacerItem(progressSpacer);
+ // horizontalLayout_2->addWidget(startPipelineBtn);
 
 
   // Re-enable FilterListDockWidget signals - resume adding filters
