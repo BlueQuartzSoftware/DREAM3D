@@ -127,6 +127,8 @@ void PipelineViewWidget::setPipelineMessageObserver(QObject* pipelineMessageObse
   // setup our connection
   connect(this, SIGNAL(pipelineIssuesCleared()),
           m_PipelineMessageObserver, SLOT(clearIssues()) );
+  connect(this, SIGNAL(preflightPipelineComplete()),
+          m_PipelineMessageObserver, SLOT(displayCachedMessages()));
 }
 
 // -----------------------------------------------------------------------------
@@ -653,6 +655,7 @@ void PipelineViewWidget::preflightPipeline()
       if(filter->getErrorCondition() < 0) {fw->setHasPreflightErrors(true);}
     }
   }
+  emit preflightPipelineComplete();
 }
 
 

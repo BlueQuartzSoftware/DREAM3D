@@ -77,6 +77,8 @@ class DREAM3DWidgetsLib_EXPORT IssuesDockWidget : public QDockWidget, public IOb
     void processPipelineMessage(const PipelineMessage& msg);
     void clearIssues();
     void on_errorTableWidget_itemClicked( QTableWidgetItem* item );
+    void displayCachedMessages();
+
   signals:
 
   protected:
@@ -84,6 +86,7 @@ class DREAM3DWidgetsLib_EXPORT IssuesDockWidget : public QDockWidget, public IOb
 
 
   private:
+    QVector<PipelineMessage> m_CachedMessages;
 
 
     IssuesDockWidget(const IssuesDockWidget&); // Copy Constructor Not Implemented

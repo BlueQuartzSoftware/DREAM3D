@@ -301,6 +301,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     void noFilterWidgetsInPipeline();
 
     void filterParameterChanged();
+    void preflightPipelineComplete();
 
   protected:
     void setupGui();

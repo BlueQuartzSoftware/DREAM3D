@@ -922,8 +922,15 @@ void DREAM3D_UI::on_startPipelineBtn_clicked()
   connect(m_WorkerThread, SIGNAL(finished()),
           this, SLOT( pipelineDidFinish() ) );
 
+  // Add in a connection to clear the Error/Warnings table when the thread starts
+  connect(m_WorkerThread, SIGNAL(started()),
+          issuesDockWidget, SLOT( clearIssues() ) );
+
+  // Tell the Error/Warnings Table that we are finished and to display any cached messages
+  connect(m_WorkerThread, SIGNAL(finished()),
+          issuesDockWidget, SLOT( displayCachedMessages() ) );
+
   // If the use clicks on the "Cancel" button send a message to the PipelineBuilder object
-  // We need a Direct Connection so the
   connect(this, SIGNAL(pipelineCanceled() ),
           m_PipelineInFlight.get(), SLOT (cancelPipeline() ), Qt::DirectConnection);
 
