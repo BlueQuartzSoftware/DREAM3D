@@ -75,8 +75,6 @@ class ReadAngData : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(bool, FileWasRead)
     Q_PROPERTY(bool FileWasRead READ getFileWasRead)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
-
     DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
 
     DREAM3D_FILTER_PARAMETER(QString, InputFile)

@@ -83,7 +83,6 @@ ReadAngData::ReadAngData() :
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_FileWasRead(false),
-  m_PhaseNameArrayName(""),
   m_MaterialNameArrayName(DREAM3D::EnsembleData::MaterialName),
   m_InputFile(""),
   m_RefFrameZDir(Ebsd::RefFrameZDir::UnknownRefFrameZDirection),
