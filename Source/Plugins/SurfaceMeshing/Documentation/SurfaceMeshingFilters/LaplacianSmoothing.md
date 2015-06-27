@@ -5,7 +5,7 @@ Laplacian Smoothing {#laplaciansmoothing}
 Surface Meshing (Smoothing)
 
 ## Description ##
-This Filter applies Laplacian smoothing to a **Triangle Geometry** that represents a surface mesh. A. Belyaev [2] has a concise explanation of the Laplacian Smoothing as follows:
+This **Filter** applies Laplacian smoothing to a **Triangle Geometry** that represents a surface mesh. A. Belyaev [2] has a concise explanation of the Laplacian Smoothing as follows:
 
 ---------------------------
 
@@ -67,22 +67,22 @@ For more information on surface meshing, visit the [tutorial](@ref tutorialsurfa
 ## Parameters ##
 | Name | Type | Description |
 |------|------|-------------|
-| Iteration Steps | Integer | Number of iteration steps to perform. More steps causes more smoothing but will also cause the volume to shrink more. _Inreasing this number too high may cause collapse of points!_ |
-| Default Lambda | Float | Value of &lambda; to apply to general internal nodes that are not triple lines, quadruple points or on the surface of the volume |
-| Triple Line Lambda | Float | Value of &lambda; to apply to nodes designated as triple line nodes. |
-| Quadruple Points Lambda | Float | Value of &lambda; to apply to nodes designated as quadruple points. |
-| Outer Points Lambda | Float | The value of &lambda; to apply to nodes that lie on the outer surface of the volume |
-| Outer Triple Line Lambda | Float | Value of &lambda; for triple lines that lie on the outer surface of the volume |
-| Outer Quadruple Points Lambda | Float | Value of &lambda; for the quadruple Points that lie on the outer surface of the volume. |
+| Iteration Steps | int32_t | Number of iteration steps to perform. More steps causes more smoothing but will also cause the volume to shrink more. _Inreasing this number too high may cause collapse of points!_ |
+| Default Lambda | float | Value of &lambda; to apply to general internal nodes that are not triple lines, quadruple points or on the surface of the volume |
+| Triple Line Lambda | float | Value of &lambda; to apply to nodes designated as triple line nodes. |
+| Quadruple Points Lambda | float | Value of &lambda; to apply to nodes designated as quadruple points. |
+| Outer Points Lambda | float | The value of &lambda; to apply to nodes that lie on the outer surface of the volume |
+| Outer Triple Line Lambda | float | Value of &lambda; for triple lines that lie on the outer surface of the volume |
+| Outer Quadruple Points Lambda | float | Value of &lambda; for the quadruple Points that lie on the outer surface of the volume. |
 
 ## Required Geometry ##
 Triangle
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Vertex| NodeTypes | Int | (1) | Specifies the type of node in the **Geometry** |
-| Face | FaceLabels | Int | (2) | Specifies which **Features** are on either side of each **Face** |
+| **Vertex Attribute Array** | NodeTypes | int8_t | (1) | Specifies the type of node in the **Geometry** |
+| **Face Attribute Array** | FaceLabels | int32_t | (2) | Specifies which **Features** are on either side of each **Face** |
 
 ## Created Arrays ##
 None

@@ -2,21 +2,23 @@ Rename Attribute Matrix {#renameattributematrix}
 =============
 
 ## Group (Subgroup) ##
-Core Filters (Memory/Management)
+Core (Memory/Management)
 
 ## Description ##
-This filter renames a user chosen AttributeMatrx to a user defined new name.
+This **Filter** renames a user chosen **Attribute Matrix**.
 
 ## Parameters ##
 | Name | Type | Description |
 |------|------| ----------- |
-| New Attribute Matrix Name| String | New Name |
+| New Attribute Matrix Name | String | New name for the selected **Attribute Matrix** |
 
 ## Required Geometry ##
 Not Applicable
 
 ## Required Arrays ##
-None
+| Kind | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| **Attribute Matrix** | None | Any | N/A | **Attribute Matrix** to rename |
 
 ## Created Arrays ##
 None

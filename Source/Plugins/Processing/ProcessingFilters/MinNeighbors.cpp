@@ -429,4 +429,4 @@ const QString MinNeighbors::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString MinNeighbors::getHumanLabel()
-{ return "Minimum Number of Neighbors Filter"; }
+{ return "Minimum Number of Neighbors"; }

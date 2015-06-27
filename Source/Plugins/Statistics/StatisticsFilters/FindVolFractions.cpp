@@ -191,4 +191,4 @@ const QString FindVolFractions::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString FindVolFractions::getHumanLabel()
-{ return "Find Volume Fractions of Phases"; }
+{ return "Find Volume Fractions of Ensembles"; }

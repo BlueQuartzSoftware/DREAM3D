@@ -5,7 +5,7 @@ Find Feature Boundary Strength Metrics {#findboundarystrengths}
 Statistics (Crystallographic)
 
 ## Description ##
-This Filter calculates the same metrics as in the [Find Neighbor Slip Transmission Metrics](FindSlipTransmissionMetrics.html "") **Filter**.  However, this Filter stores the values in the **Face Attribute Matrix** of a **Triangle Geometry**.  The algorithm the Filter uses is as follows:
+This **Filter** calculates the same metrics as in the [Find Neighbor Slip Transmission Metrics](FindSlipTransmissionMetrics.html "") **Filter**.  However, this **Filter** stores the values in the **Face Attribute Matrix** of a **Triangle Geometry**.  The algorithm the **Filter** uses is as follows:
 
 1. Find the two **Features** that are separated by a **Face** in the **Triangle Geometry**
 2. Get the average orientation of both of the **Features**
@@ -18,26 +18,26 @@ This Filter calculates the same metrics as in the [Find Neighbor Slip Transmissi
 ## Parameters ##
 | Name | Type | Description |
 |------|------| ----------- |
-| Loading Direction | Float (3x) | The loading axis for the sample |
+| Loading Direction | float (3x) | The loading axis for the sample |
 
 ## Required Geometry ##
 Image + Triangle
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Face | FaceLabels | Int | (2) | Specifies which **Features** are on either side of each triangle |
-| Feature | AvgQuats | Float | (4) | Specifies the average orientation of each **Feature** in quaternion representation |
-| Feature | Phases | Int | (1) | Specifies to which phase each **Feature** belongs |
-| Ensemble | CrystalStructures | Int | (1) | Enumeration representing the crystal structure for each phase |
+| **Face Attribute Array** | FaceLabels | int32_t | (2) | Specifies which **Features** are on either side of each **Face** |
+| **Feature Attribute Array** | AvgQuats | float | (4) | Specifies the average orientation of each **Feature** in quaternion representation |
+| **Feature Attribute Array** | Phases | int32_t | (1) | Specifies to which **Ensemble** each **Feature** belongs |
+| **Ensemble Attribute Array** | CrystalStructures | uint32_t | (1) | Enumeration representing the crystal structure for each phase |
 
 ## Created Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Face | F1s | Float | (2) | |
-| Face | F1spts | Float | (2) | |
-| Face | F7s | Float | (2) | |
-| Face | mPrimes | Float | (2) | |
+| **Face Attribute Array** | F1s | float | (2) | |
+| **Face Attribute Array** | F1spts | float | (2) | |
+| **Face Attribute Array** | F7s | float | (2) | |
+| **Face Attribute Array** | mPrimes | float | (2) | |
 
 ## License & Copyright ##
 

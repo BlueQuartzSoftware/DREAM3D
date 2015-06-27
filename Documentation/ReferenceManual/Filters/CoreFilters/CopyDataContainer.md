@@ -2,26 +2,27 @@ Copy Data Container{#copydatacontainer}
 =============
 
 ## Group (Subgroup) ##
-Core Filters (Memory/Management)
+Core (Memory/Management)
 
 
 ## Description ##
-This filter copies a user chosen DataContainer to a new DataContainer with a user defined new name.
+This **Filter** copies a user chosen **Data Container** to a new **Data Container** with a user defined name. The **Data Container** will copy all of its **Attribute Matrices** (and component **Attribute Arrays**) and its **Geoemtry** as well.
 
 ## Parameters ##
-| Name | Type | Description |
-|------|------| ----------- |
-| New Data Container Name | String | Name for the copied data container |
-
+None
 
 ## Required Geometry ##
 Not Applicable
 
 ## Required Arrays ##
-None
+| Kind | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Any **Data Container** | None | N/A | N/A | **Data Container** to copy |
 
 ## Created Arrays ##
-None
+| Kind | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Any **Data Container** | None | N/A | N/A | Copied **Data Container** |
 
 ## License & Copyright ##
 

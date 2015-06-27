@@ -296,4 +296,4 @@ const QString FitFeatureData::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString FitFeatureData::getHumanLabel()
-{ return "Fit Distribution To Feature Data"; }
+{ return "Fit Distribution to Feature Data"; }

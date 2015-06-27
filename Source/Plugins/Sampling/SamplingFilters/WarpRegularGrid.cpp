@@ -117,7 +117,7 @@ void WarpRegularGrid::setupFilterParameters()
   QStringList linkedProps;
   linkedProps << "NewDataContainerName";
   parameters.push_back(LinkedBooleanFilterParameter::New("Save as New Data Container", "SaveAsNewDataContainer", getSaveAsNewDataContainer(), linkedProps, FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Data Container", "NewDataContainerName", FilterParameterWidgetType::StringWidget, getNewDataContainerName(), FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("Data Container", "NewDataContainerName", FilterParameterWidgetType::StringWidget, getNewDataContainerName(), FilterParameter::CreatedArray));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellAttributeMatrixPath(), FilterParameter::RequiredArray));
   setFilterParameters(parameters);
@@ -339,5 +339,5 @@ const QString WarpRegularGrid::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString WarpRegularGrid::getHumanLabel()
-{ return "Warp Rectilinear Grid Dataset"; }
+{ return "Warp Rectilinear Grid"; }
 

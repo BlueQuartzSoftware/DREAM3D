@@ -36,7 +36,6 @@ CreateAttributeMatrix::~CreateAttributeMatrix()
 void CreateAttributeMatrix::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Data Container Destination", "SelectedDataContainer", FilterParameterWidgetType::DataContainerSelectionWidget, getSelectedDataContainer(), FilterParameter::Parameter));
 
   {
     QVector<QString> choices;
@@ -62,6 +61,7 @@ void CreateAttributeMatrix::setupFilterParameters()
 
   std::vector<std::vector<double> > defaultTable;
   parameters.push_back(DynamicTableFilterParameter::New("Tuple Dimensions", "TupleDimensions", FilterParameterWidgetType::DynamicTableWidget, rHeaders, cHeaders, defaultTable, FilterParameter::Parameter, false, true, 0));
+  parameters.push_back(FilterParameter::New("Data Container Destination", "SelectedDataContainer", FilterParameterWidgetType::DataContainerSelectionWidget, getSelectedDataContainer(), FilterParameter::RequiredArray));
   parameters.push_back(FilterParameter::New("Created Attribute Matrix", "CreatedAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCreatedAttributeMatrixName(), FilterParameter::CreatedArray, ""));
 
   setFilterParameters(parameters);

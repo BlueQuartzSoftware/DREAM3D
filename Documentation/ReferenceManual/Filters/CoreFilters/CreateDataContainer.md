@@ -3,17 +3,14 @@ Create Data Container {#createdatacontainer}
 
 ## Group (Subgroup) ##
 
-Core Filters (Generation)
+Core (Generation)
 
 ## Description ##
 
-This Filter creates a new **Data Container**.
+This **Filter** creates a new **Data Container**.
 
 ## Parameters ##
-
-| Name | Type | Description |
-|------|------|------|
-| Data Container Name| String | The name of the new **Data Container** |
+None
 
 ## Required Geometry ##
 
@@ -24,8 +21,9 @@ Not Applicable
 Not Applicable
 
 ## Created Arrays ##
-
-Not Applicable
+| Kind | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|----------------|
+| **Data Container** | DataContainer | N/A | N/A | Created **Data Container** name |
 
 
 ## License & Copyright ##

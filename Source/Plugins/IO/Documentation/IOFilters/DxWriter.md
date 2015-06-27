@@ -5,7 +5,7 @@ Write Dx File (Feature Ids) {#dxwriter}
 IO (Output)
 
 ## Description ##
-This Filter writes to a Dx file. The file format is that used by the _OpenDX Source Software_ based on IBM's _Visualization Data Explorer_. 
+This **Filter** writes to a Dx file. The file format is that used by the _OpenDX Source Software_ based on IBM's _Visualization Data Explorer_. 
 
 ### Example Output ###
 The .dx file:     
@@ -41,16 +41,16 @@ _See: [the opendx site](http://www.opendx.org)_ for more information.
 ## Parameters ##
 | Name | Type | Description |
 |------|------|------|
-| Output File | File Path | Output .dx file path |
+| Output File | File Path | The output .dx file path |
 | Add Surface Layer | Boolean | Adds an extra layer of **Cells** around the outside of the structure and assigns them a *FeatureId* of *-3* |
 
 ## Required Geometry ##
-Image / Rectilinear Grid
+Image 
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs |
+| **Cell Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs |
 
 ## Created Arrays ##
 None

@@ -5,7 +5,7 @@ Generate Triangle Face Ids {#sharedfeaturefacefilter}
 Surface Meshing (Connectivity/Arrangement)
 
 ## Description ##
-This Filter assigns a unique Id to each **Triangle** in a **Triangle Geometry** that represents the _unique boundary_ on which that **Triangle** resides. For example, if there were only two **Features** that shared one boundary, then the **Triangles** on that boundary would be labeled with a single unique Id. This procedure creates _unique groups_ of **Triangles**, which themselves are a set of **Features**. Thus, this **Filter** also creates a **Feature Attribute Matrux** for this new set of **Features**, and creates **Attribute Arrays** for their Ids and number of **Triangles**.
+This **Filter** assigns a unique Id to each **Triangle** in a **Triangle Geometry** that represents the _unique boundary_ on which that **Triangle** resides. For example, if there were only two **Features** that shared one boundary, then the **Triangles** on that boundary would be labeled with a single unique Id. This procedure creates _unique groups_ of **Triangles**, which themselves are a set of **Features**. Thus, this **Filter** also creates a **Feature Attribute Matrux** for this new set of **Features**, and creates **Attribute Arrays** for their Ids and number of **Triangles**.
 
 ---------------
 
@@ -21,16 +21,17 @@ None
 Triangle
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Face | FaceLabels | Int | (2) | Specifies which **Features** are on either side of each **Face** |
+| **Face Attribute Array** | FaceLabels | int32_t | (2) | Specifies which **Features** are on either side of each **Face** |
 
 ## Created Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Face | FeatureFaceId | Int | (1) | Specifies to which **Feature** each **Face** belongs |
-| Feature | FaceLabels | Int | (1) | Specifies which _original_ **Features** are on either side of each _new_ **Feature** |
-| Feature | NumTriangles | Int | (1) | Number of **Triangles** in each **Feature** |
+| **Face Attribute Array** | FeatureFaceId | int32_t | (1) | Specifies to which **Feature** each **Face** belongs |
+| **Attribute Matrix** | FaceFeatureData | Face Feature | N/A | Created **Feature Attribute Matrix** name  |
+| **Feature Attribute Array** | FaceLabels | int32_t | (1) | Specifies which _original_ **Features** are on either side of each _new_ **Feature** |
+| **Feature Attribute Array** | NumTriangles | int32_t | (1) | Number of **Triangles** in each **Feature** |
 
 
 ## License & Copyright ##

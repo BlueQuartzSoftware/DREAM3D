@@ -5,10 +5,10 @@ Generate Misorientation Colors {#generatemisorientationcolors}
 Processing (Crystallography)
 
 ## Description ##
-This Filter will generate colors based on the method developed by C. Schuh and S. Patala for cubic, hexagonal, tetragonal, or orthorhombic crystal structures (currently only the cubic high symmetry is working)<sup>[1]</sup>. Orientations are colored by _disorientation_ relative to a _reference orientation_. The user can enter a _Reference Orientation Axis_ and a _Reference Orientation Angle_ relative to the sample reference frame. The default reference orientation is the sample frame (misorientation from sample frame: 0<sup>o</sup> about [001]). The **Filter** also has the option to apply a black color to all "bad" **Elements**, as defined by a boolean _mask_ array, which can be generated using the [Threshold Objects](@ref multithresholdobjects) **Filter**.
+This **Filter** will generate colors based on the method developed by C. Schuh and S. Patala for cubic, hexagonal, tetragonal, or orthorhombic crystal structures (currently only the cubic high symmetry is working)<sup>[1]</sup>. Orientations are colored by _disorientation_ relative to a _reference orientation_. The user can enter a _Reference Orientation Axis_ and a _Reference Orientation Angle_ relative to the sample reference frame. The default reference orientation is the sample frame (misorientation from sample frame: 0<sup>o</sup> about [001]). The **Filter** also has the option to apply a black color to all "bad" **Elements**, as defined by a boolean _mask_ array, which can be generated using the [Threshold Objects](@ref multithresholdobjects) **Filter**.
 
 ### Important Implementation Notes ###
-_The user should be aware of the crystal symmetry (Laue Group and Point Group) of their data. The Filter is only valid for certain point groups within a Laue group (See table below)._
+The user should be aware of the crystal symmetry (Laue Group and Point Group) of their data. The **Filter** is only valid for certain point groups within a Laue group (See table below).
 
 ### Color Output Notes ###
 With other coloring methods, such as IPF, "bad" **Elements** which result from non-indexed EBSD scans can be colored with a black color. Since the misorientation coloring scheme uses all possible colors, marking voxels in an image in such a way that the voxels stand out is not possible.
@@ -50,24 +50,25 @@ With other coloring methods, such as IPF, "bad" **Elements** which result from n
 ## Parameters ##
 | Name | Type | Description |
 |------|------| ----------- |
-| Reference Orientation Axis | Float (3x) | The reference axis with respect to compute the disorientation |
-| Reference Orientation Angle (Degrees) | Float | The reference angle with respect to compute the disorientation |
-| Apply to Good Elements Only (Bad Elements Will Be Black) | Bool | Whether to assign a black color to "bad" **Elements** |
+| Reference Orientation Axis | float (3x) | The reference axis with respect to compute the disorientation |
+| Reference Orientation Angle (Degrees) | float | The reference angle with respect to compute the disorientation |
+| Apply to Good Elements Only (Bad Elements Will Be Black) | bool | Whether to assign a black color to "bad" **Elements** |
 
 ## Required Geometry ##
 Not Applicable
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Element | Quats | Float | (4) | Specifies the orientation of each **Element** in quaternion representation |
-| Element | Phases | Int | (1) | Specifies to which phase each **Element** belongs |
-| Ensemble | CrystalStructures | Int | (1) | Enumeration representing the crystal structure for each phase |
+| **Element Attribute Array** | Quats | float | (3)  | Specifies the orientation of each **Element** in quaternion representation |
+| **Element Attribute Array** | Phases | int32_t | (1) | Phase Id specifying the phase of the **Element** |
+| **Element Attribute Array** | Mask | bool | (1) | Used to define **Elements** as *good* or *bad*. Only required if _Apply to Good Elements Only (Bad Elements Will Be Black)_ is checked |
+| **Ensemble Attribute Array** | CrystalStructures | uint32_t | (1) | Enumeration representing the crystal structure for each **Ensemble** |
 
 ## Created Arrays ##
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Element | MisorientationColors | UInt8 | (3) | The RGB colors encoded as unsigned chars |
+| **Element Attribute Array** | MisorientationColors | uint8_t | (3) | The RGB colors encoded as unsigned chars |
 
 ## References ##
 

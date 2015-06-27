@@ -127,7 +127,7 @@ namespace
 // -----------------------------------------------------------------------------
 MergeColonies::MergeColonies() :
   GroupFeatures(),
-  m_NewCellFeatureAttributeMatrixName(DREAM3D::Defaults::NewCellFeatureAttributeMatrixName),
+  m_NewCellFeatureAttributeMatrixName("NewFeatureData"),
   m_FeatureIdsArrayPath("", "", ""),
   m_CellPhasesArrayPath("", "", ""),
   m_FeaturePhasesArrayPath("", "", ""),

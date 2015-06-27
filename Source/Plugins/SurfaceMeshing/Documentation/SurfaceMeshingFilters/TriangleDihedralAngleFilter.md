@@ -5,7 +5,7 @@ Find Minimum Triangle Dihedral Angle {#triangledihedralanglefilter}
 Surface Meshing (Misc)
 
 ## Description ##
-This Filter computes the minimum dihedral angle of each **Triangle** in a **Triangle Geometry** by calculating the angles between the three sides of the **Triangle** and storing the minimum value.
+This **Filter** computes the minimum dihedral angle of each **Triangle** in a **Triangle Geometry** by calculating the angles between the three sides of the **Triangle** and storing the minimum value.
 
 ## Parameters ##
 None
@@ -17,9 +17,9 @@ Triangle
 None
 
 ## Created Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Face | FaceDihedralAngles | Double | (1) | Specifies the minimum dihedral angle of each **Face** |
+| **Face Attribute Array** | FaceDihedralAngles | double | (1) | Specifies the minimum dihedral angle of each **Face** |
 
 
 ## License & Copyright ##

@@ -94,7 +94,7 @@ InputCrystalCompliances::~InputCrystalCompliances()
 void InputCrystalCompliances::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Compliance Values", "Compliances", FilterParameterWidgetType::Symmetric6x6Widget, getCompliances(), FilterParameter::RequiredArray, "10^-11 Pa^-1"));
+  parameters.push_back(FilterParameter::New("Compliance Values", "Compliances", FilterParameterWidgetType::Symmetric6x6Widget, getCompliances(), FilterParameter::Parameter, "10^-11 Pa^-1"));
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::CreatedArray));
   parameters.push_back(FilterParameter::New("Crystal Compliances", "CrystalCompliancesArrayPath", FilterParameterWidgetType::DataArrayCreationWidget, getCrystalCompliancesArrayPath(), FilterParameter::CreatedArray, ""));
   setFilterParameters(parameters);

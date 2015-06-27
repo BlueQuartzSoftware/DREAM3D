@@ -5,15 +5,13 @@ Los Alamos FFT Writer {#losalamosfftwriter}
 IO (Output)
 
 ## Description ##
-This Filter writes out **CellData** from an **Image** geometry to a file that is appropriate to use as an input into Ricardo Lebensohn's FFT 3D simulation codes<sup>[1]</sup>. 
+This **Filter** writes out **CellData** from an **Image Geometry** to a file that is appropriate to use as an input into Ricardo Lebensohn's FFT 3D simulation codes<sup>[1]</sup>. 
 
 The format of the file is an ASCII text file with the following space delimited information:
 
 	Phi1   Phi   Phi2  X  Y   Z  Feature_ID   Phase_ID
 
 The Euler angles are in degrees. X, Y, Z are integer indices into the **Image** geometry. Feature ID & Phase ID are the integer values for the feature and phase **Starting at One (1)**.
-
-[1] R.A. Lebensohn, 2001. N-site modeling of a 3D viscoplastic polycrystal using Fast Fourier Transform. Acta mater. 49, 2723-2737.
 
 ### Example Output ###
 The output file:     
@@ -42,22 +40,24 @@ The output file:
 ## Parameters ##
 | Name             | Type | Description |
 |------------------|------|-------------|
-| Output File | File Path | Output .txt file path |
+| Output File | File Path | The output .txt file path |
 
 
 ## Required Geometry ##
-Image / Rectilinear Grid
+Image
 
 ## Required Arrays ##
-| Type | Default Name | Type | Componenet Dimensions | Description |
-|------|--------------------|-------------|---------|
-| Cell | FeaturesIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs |
-| Cell | EulerAngles | Float | (3) | Three angles defining the orientation of the **Cell** in Bunge convention (Z-X-Z) |
-| Cell | Phases | Int | (1) |  Specifies to which **Ensemble** each **Cell** belongs |
+| Kind | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| **Cell Attribute Array** | FeaturesIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs |
+| **Cell Attribute Array** | EulerAngles | float | (3) | Three angles defining the orientation of the **Cell** in Bunge convention (Z-X-Z) |
+| **Cell Attribute Array** | Phases | int32_t | (1) |  Specifies to which **Ensemble** each **Cell** belongs |
 
 ## Created Arrays ##
 None
 
+## References ##
+[1] R.A. Lebensohn, 2001. N-site modeling of a 3D viscoplastic polycrystal using Fast Fourier Transform. Acta mater. 49, 2723-2737.
 
 ## License & Copyright ##
 

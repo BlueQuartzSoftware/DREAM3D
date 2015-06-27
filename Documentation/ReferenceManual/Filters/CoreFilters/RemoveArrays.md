@@ -1,11 +1,11 @@
-Delete Arrays {#removearrays}
+Delete Data {#removearrays}
 =============
 
 ## Group (Subgroup) ##
-Core Filters (Memory/Management)
+Core (Memory/Management)
 
 ## Description ##
-This filter allows the user to remove specified arrays from the pipeline by deleting them from memory. This can be helpful if the user has operations that need as much memory as possible and there are extra arrays that are not needed residing in memory. For example when creating a surface mesh one typically only needs an array that defines the structure of the volume and then afterwards can be safely deleted.
+This **Filter** allows the user to remove specified objects from the existing structure. This can be helpful if the user has operations that need as much memory as possible and there are extra objects that are not needed residing in memory. Alternatively, this **Filter** allows the user to remove objects that may share a name with another object further in the **Pipeline** that another **Filter** tries to create, since DREAM.3D generally does not allows objects at the same hierarchy to share the same name.
 
 ## Parameters ##
 None
@@ -14,9 +14,9 @@ None
 Not Applicable
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Any  | None         | Any | Any | Items To Delete |
+| Any  | None         | Any | Any | Objects to delete |
 
 ## Created Arrays ##
 None

@@ -2,38 +2,30 @@ Generate Vector Colors {#generatevectorcolors}
 =============
 
 ## Group (Subgroup) ##
-Generic Filters (Misc)
+Generic (Crystallography)
 
 ## Description ##
-This Filter generates a color for each **Element** based on the vector assigned to that **Element** in the input vector data array.  The color scheme assigns a unique color to all points on the unit hemisphere using a HSV-like scheme. 
+This **Filter** generates a color for each **Element** based on the vector assigned to that **Element** in the input vector data.  The color scheme assigns a unique color to all points on the unit hemisphere using a HSV-like scheme. 
 
 ## Parameters ##
 | Name             | Type | Description |
 |------------------|------|---------|
-| Apply to Good Voxels Only (Bad Voxels Will Be Black) | Boolean | Whether or not to assign colors to *bad* voxels or leave them black |
+| Apply to Good Voxels Only (Bad Voxels Will Be Black) | bool | Whether or not to assign colors to *bad* voxels or leave them black |
 
 ## Required Geometry ##
 Not Applicable
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Element | VectorData | Float | (3) | Vectors the colors will represent  |
-| Element | GoodVoxels | Boolean | (1) | Used to define **Elements** as *good* or *bad*  |
+| **Element Attribute Array** | VectorData | float | (3) | Vectors the colors will represent |
+| **Element Attribute Array** | Mask | bool | (1) | Used to define **Elements** as *good* or *bad*  |
 
 
 ## Created Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Element | Colors | Unsigned Char | (3) | The RGB colors |
-
-
-### Authors ###
-
-
-
-
-
+| **Element Attribute Array** | Colors | uint8_t | (3) | RGB colors |
 
 
 ## License & Copyright ##

@@ -2,10 +2,10 @@ Calculate Frequency Histogram {#calculatearrayhistogram}
 =============
 
 ## Group (Subgroup) ##
-Statistics Filters (Ensemble)
+Statistics (Ensemble)
 
 ## Description ##
-This Filter will create a "Frequency Distribution" histogram of a specified scalar **Attribute Array**. The user will select the number of bins (a value greater than zero). The user will enter a new **Attribute Matrix** name and a new histogram **Attribute Array** name. If the user clicks the new **Data Container** check box, a new **Data Container** name must be entered. Otherwise the current **Data Container** will be used.
+This **Filter** will create a "frequency distribution" histogram of a specified scalar **Attribute Array**. The user will select the number of bins (a value greater than zero). The user will enter a new **Attribute Matrix** name and a new histogram **Attribute Array** name. If the user clicks the new **Data Container** check box, a new **Data Container** name must be entered. Otherwise the current **Data Container** will be used.
 
 The histogram is a "Left Closed, Right Open" histogram, meaning the bin intervals are denoted as [a, b). The value returned in component "0" of the output array is _b_ from the above interval while component "1" is the frequency for that bin. The output output array can be most easily be thought of as a 2 column x "num bins" row output.
 
@@ -43,24 +43,26 @@ Also see Histogram Quick Reference at https://plot.ly/histogram/.
 ## Parameters ##
 | Name | Type | Description |
 |------|------| ----------- |
-| Number Of Bins | Integer | Specifies number of histogram bins ( greater than zero) |
-| Use Min & Max Range | Boolean | Specifies whether the user can set the Min and Max values to consider for the histogram or if the Min and Max of the data will be used |
-| Min Value | Double | The user can set this value if the "Use Min & Max Range" is true |
-| Max Value | Double | The user can set this value if the "Use Min & Max Range" is true |
-| New Data Container | Boolean | Specifies if the output array will be stored in a new **Data Container** or the existing one |
+| Number of Bins | int32_t | Specifies number of histogram bins (greater than zero) |
+| Use Min & Max Range | bool | Whether the user can set the min and max values to consider for the histogram |
+| Min Value | float | Specifies the lower bound of the histogram. Only needed if _Use Min & Max Range_ is checked |
+| Max Value | float | Specifies the upper bound of the histogram. Only needed if _Use Min & Max Range_ is checked |
+| New Data Container | bool | Whether the output array will be stored in a new **Data Container** or the existing one |
 
 ## Required Geometry ##
 Not Applicable
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Any  | None         | Any | (1) | Array to calculate histogram of (must be a scalar array) |
+| Any **Attribute Array**  | None         | Any | (1) | Array to calculate histogram of (must be a scalar array) |
 
 ## Created Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Double | User set | Double | (2) | The output array is a two component array with [Bin cutoff {right side}, Frequency] values for each bin. |
+| **Data Container** | NewDataContainer | N/A | N/A | Created **Data Container** name. Only created if _Use Min & Max Range_ is checked |
+| **Attribute Matrix** | NewAttributeMatrixName | Generic | N/A | Created **Attribute Matrix** name |
+| Any **Attribute Array** | Histogram | double | (2) | Two component array with [Bin cutoff {right side}, Frequency] values for each bin |
 
 ## License & Copyright ##
 

@@ -1,35 +1,32 @@
-Extract Component As Array {#extractcomponentasarray}
+Extract Component as Attribute Array {#extractcomponentasarray}
 =============
 
 ## Group (Subgroup) ##
-Core Filters (Memory/Management)
+Core (Memory/Management)
 
 ## Description ##
-This filter will create an attribute array from a single component of a user chosen array.
+This **Filter** will create an **Attribute Array** from a single component of a user chosen array multicomponent array.
 
 ## Parameters ##
 | Name | Type | Description |
 |------|------| ----------- |
-| Component Number to Extract| Integer | The number of which component|
-| New Scalar Array Name| String |  Output name for one component array|
+| Component Number to Extract | int32_t | The index of which component to extract |
 
 
 ## Required Geometry ##
 Not Applicable
 
 ## Required Arrays ##
-
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Any  | Multi-Component | Any | >1 | Multi-Component |
+| Any **Attribute Array** | None | Any | >1 | Multicomponent **Attribute Array** to use as input |
 
 
 ## Created Arrays ##
 
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Any | New Scalar Array Name | Any | (1) | Single component array|
-
+| Any **Attribute Array** | None | Any | (1) | Scalar **Attribute Array** name |
 
 ## License & Copyright ##
 

@@ -5,7 +5,7 @@ Add Orientation Noise {#addorientationnoise}
 Synthetic Building (Crystallography)
 
 ## Description ##
-This Filter adds "noise" to the orientations on each **Element** of a **Geometry**.  This Filter is intended to add "realism" to synthetic structures that have single orientations assigned to **Features**.  The user can specify a magnitude of the noise, which refers to the maximum rotation angle that is applied to the existing **Element** orientations.  The algorithm for applying the orientation noise is as follows:
+This **Filter** adds "noise" to the orientations on each **Element** of a **Geometry**.  This **Filter**  is intended to add "realism" to synthetic structures that have single orientations assigned to **Features**.  The user can specify a magnitude of the noise, which refers to the maximum rotation angle that is applied to the existing **Element** orientations.  The algorithm for applying the orientation noise is as follows:
 
 1. Obtain the orientation of the **Element**
 2. Generate a random number between *0* and the user defined magnitude. This value is the rotation angle
@@ -24,9 +24,9 @@ For more information on synthetic building, visit the [tutorial](@ref tutorialsy
 Not Applicable
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Element | EulerAngles | Float | (3) | Three angles defining the orientation of the **Element** in Bunge convention (Z-X-Z) |
+| **Element Attribute Array** | EulerAngles | float | (3) | Three angles defining the orientation of the **Element** in Bunge convention (Z-X-Z) |
 
 ## Created Arrays ##
 None

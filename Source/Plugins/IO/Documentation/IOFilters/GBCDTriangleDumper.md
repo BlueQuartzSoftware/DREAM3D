@@ -5,7 +5,7 @@ Write GBCD Triangles File {#gbcdtriangledumper}
 IO (Output)
 
 ## Description ##
-This Filter writes relevant information about the Grain Boundary Character Distribution (GBCD) on an existing set of triangles.  The information written includes the inward and outward Euler angles, normals, and areas for each triangle.  The file format was originally defined by Prof. Greg Rohrer (CMU).
+This **Filter** writes relevant information about the Grain Boundary Character Distribution (GBCD) on an existing set of triangles.  The information written includes the inward and outward Euler angles, normals, and areas for each triangle.  The file format was originally defined by Prof. Greg Rohrer (CMU).
 
 ## Example Output ## 
 
@@ -29,18 +29,18 @@ This Filter writes relevant information about the Grain Boundary Character Distr
 ## Parameters ##
 | Name | Type | Description |
 |------|------|------|
-| Output File | File Path | GBCD Triangles File |
+| Output File | File Path | The output GBCD triangle file path |
 
 ## Required Geometry ##
 Image + Triangle
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Triangle | FaceLabels | Int  | (2) | Specifies to which two **Features** each triangle belongs |
-| Face | FaceNormals | Double | (3) | Vector specifying the normal to each triangle |
-| Face  | FaceAreas | Double | (1) | The area of each triangle |
-| Feature  | FeatureEulerAngles | Float | (3) | Three angles defining the orientation of the triangle in Bunge convention (Z-X-Z). |
+| **Face Attribute Array** | FaceLabels | int32_t  | (2) | Specifies which **Features** are on either side of each **Face** |
+| **Face Attribute Array** | FaceNormals | double | (3) | Specifies the normal of each **Face** |
+| **Face Attribute Array**  | FaceAreas | double | (1) | Specifies the area of each **Face** |
+| **Feature Attribute Array**  | AvgEulerAngles | float | (3) | Three angles defining the orientation of the **Feature** in Bunge convention (Z-X-Z). |
 
 ## Created Arrays ##
 None

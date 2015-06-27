@@ -2,10 +2,10 @@ Copy Attribute Array {#copyattributearray}
 =============
 
 ## Group (Subgroup) ##
-Core Filters (Memory/Management)
+Core (Memory/Management)
 
 ## Description ##
-This filter copies a user chosen array to a new array with a user defined new name in the same data container and attribute matrix.
+This **Filter** copies a user chosen **Attribute Array** to a new **Attribute Array** with a user defined new name in the same **Data Container** and **Attribute Matrix**.
 
 ## Parameters ##
 None
@@ -15,16 +15,16 @@ Not Applicable
 
 ## Required Arrays ##
 
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Any | Attribute Array To Copy | Any | Any | N/A |
+| Any **Attribute Array** | None | Any | Any | **Attribute Array** to copy |
 
 
 ## Created Arrays ##
 
-| Type | New Attribute Array Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|----------------|
-| Any | User set | Any | Any |Array will have same values as its old counterpart |
+| Any **Attribute Array** | None | Any | Any | Copied **Attribute Array** |
 
 
 ## License & Copyright ##

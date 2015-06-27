@@ -5,7 +5,7 @@ Write IPF Triangle Legend (Cubic m-3m) {#writeipfstandardtriangle}
 IO (Output)
 
 ## Description ##
-This Filter will generate a standard inverse pole figure color stereographic triangle that is used for typical EBSD visualizations and other visualizations from orientation data. The user can adjust the size and type of the output file.
+This **Filter** will generate a standard inverse pole figure color stereographic triangle that is used for typical EBSD visualizations and other visualizations from orientation data. The user can adjust the size and type of the output file.
 
 **Currently the only supported triangle is for Cubic (m-3m) crystal symmetry.**
 

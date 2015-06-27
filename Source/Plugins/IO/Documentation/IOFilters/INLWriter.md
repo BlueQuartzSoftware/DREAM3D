@@ -5,7 +5,7 @@ Write INL File {#inlwriter}
 IO (Output)
 
 ## Description ##
-This Filter writes out **Cell** data from an **Image** geometry to a file format used by the Idaho National Laboratory (INL).  The format is columnar and space delimited, with header lines denoted by the "#" character. The columns are the following:
+This **Filter** writes out **Cell** data from an **Image Geometry** to a file format used by the Idaho National Laboratory (INL).  The format is columnar and space delimited, with header lines denoted by the "#" character. The columns are the following:
 
 	- phi1 
 	- Phi 
@@ -61,21 +61,21 @@ Some information about the phase is included in the header section of the file i
 
 | Name | Type | Description |
 |------|------|-------------|
-| Output File | File Path | Output .txt file path |
+| Output File | File Path | The output .txt file path |
 
 ## Required Geometry ##
-Image / Rectilinear Grid
+Image 
 
 ## Required Arrays ##
 
-| Type | Default Name |Type | Component Dimensions | Description |
+| Kind | Default Name |Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs |
-| Cell | Phases | Int | (1) | Specifies to which **Ensemble** each **Cell** belongs |
-| Cell | EulerAngles | Float | (3) | Three angles defining the orientation of the **Cell** in Bunge convention (Z-X-Z) |
-| Ensemble | CrystalStructures | Int | (1) | These are the symmetries of the **Ensembles**, which dictate orientation operations and which color palatte is used |
-| Ensemble | Material Names | String | (1)  | String identifiers for the material name of each **Ensemble** |
-| Ensemble | Number of Features | Int | (1) | The number of features per **Ensemble** |
+| **Cell Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs |
+| **Cell Attribute Array** | Phases | int32_t | (1) | Specifies to which **Ensemble** each **Cell** belongs |
+| **Cell Attribute Array** | EulerAngles | float | (3) | Three angles defining the orientation of the **Cell** in Bunge convention (Z-X-Z) |
+| **Ensemble Attribute Array** | CrystalStructures | uint32_t | (1) | Enumeration representing the crystal structure for each **Ensemble** |
+| **Ensemble Attribute Array** | Material Names | String | (1)  | Name of each **Ensemble** |
+| **Ensemble Attribute Array** | Number of Features | uint32_t | (1) | The number of **Features** per **Ensemble** |
 
 ## Created Arrays ##
 None

@@ -5,7 +5,7 @@ Read Dx File (Feature Ids) {#dxreader}
 IO (Input)
 
 ## Description ##
-This Filter reads from a Dx file. This is a file in a format generated using the _OpenDX Source Software_ based on IBM's _Visualization Data Explorer_. 
+This **Filter** reads from a Dx file. This is a file in a format generated using the _OpenDX Source Software_ based on IBM's _Visualization Data Explorer_. 
 
 ## Example Input##
 
@@ -53,22 +53,22 @@ _See: [the opendx site](http://www.opendx.org)_ for more information.
 ## Parameters ##
 | Name | Type | Description |
 |------|------| ----------- |
-| Input File | File Path | Input .dx file |
-| Origin | Float (x3) | The location in space of the (0, 0, 0) voxel |
-| Resolution | Float (x3) | Vector of resolution values (dx, dy, dz) |
-| Data Container | String | Created **Data Container** name |
-| Cell Attribute Matrix | String | Created **Cell Attribute Matrix** name |
+| Input File | File Path | The input .dx file path |
+| Origin | Float (x3) | The location in space of the (0, 0, 0) coordinate |
+| Resolution | Float (x3) | The resolution values (dx, dy, dz) |
 
 ## Required Geometry ##
-Image / Rectilinear Grid
+Image 
 
 ## Required Arrays ##
 None
 
 ## Created Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs |
+| **Data Container** | ImageDataContainer | N/A | N/A | Created **Data Container** name with an **Image Geometry** |
+| **Attribute Matrix** | CellData | Cell | N/A | Created **Cell Attribute Matrix** name |
+| **Cell Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs |
 
 ## License & Copyright ##
 

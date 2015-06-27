@@ -83,8 +83,8 @@ void UncertainRegularGridSampleSurfaceMesh::setupFilterParameters()
   parameters.push_back(FilterParameter::New("X Points", "XPoints", FilterParameterWidgetType::IntWidget, getXPoints(), FilterParameter::Parameter, "Column"));
   parameters.push_back(FilterParameter::New("Y Points", "YPoints", FilterParameterWidgetType::IntWidget, getYPoints(), FilterParameter::Parameter, "Row"));
   parameters.push_back(FilterParameter::New("Z Points", "ZPoints", FilterParameterWidgetType::IntWidget, getZPoints(), FilterParameter::Parameter, "Plane"));
-  parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget, getResolution(), FilterParameter::Parameter, "Microns"));
-  parameters.push_back(FilterParameter::New("Uncertainty", "Uncertainty", FilterParameterWidgetType::FloatVec3Widget, getUncertainty(), FilterParameter::Parameter, "Microns"));
+  parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget, getResolution(), FilterParameter::Parameter, ""));
+  parameters.push_back(FilterParameter::New("Uncertainty", "Uncertainty", FilterParameterWidgetType::FloatVec3Widget, getUncertainty(), FilterParameter::Parameter, ""));
 
   parameters.push_back(FilterParameter::New("Data Container", "DataContainerName", FilterParameterWidgetType::StringWidget, getDataContainerName(), FilterParameter::CreatedArray, ""));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));

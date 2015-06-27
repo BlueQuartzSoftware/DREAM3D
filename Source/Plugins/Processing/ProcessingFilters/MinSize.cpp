@@ -76,7 +76,7 @@ MinSize::~MinSize()
 void MinSize::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Minimum Allowed Feature Size", "MinAllowedFeatureSize", FilterParameterWidgetType::IntWidget, getMinAllowedFeatureSize(), FilterParameter::Parameter, "Pixels"));
+  parameters.push_back(FilterParameter::New("Minimum Allowed Feature Size", "MinAllowedFeatureSize", FilterParameterWidgetType::IntWidget, getMinAllowedFeatureSize(), FilterParameter::Parameter, ""));
   QStringList linkedProps;
   linkedProps << "PhaseNumber" << "FeaturePhasesArrayPath";
   parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Single Phase Only", "ApplyToSinglePhase", getApplyToSinglePhase(), linkedProps, FilterParameter::Parameter));
@@ -428,4 +428,4 @@ const QString MinSize::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString MinSize::getHumanLabel()
-{ return "Minimum Size Filter"; }
+{ return "Minimum Size"; }

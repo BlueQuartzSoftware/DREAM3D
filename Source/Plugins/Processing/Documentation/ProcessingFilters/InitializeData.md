@@ -2,26 +2,28 @@ Initialize Data {#initializedata}
 =============
 
 ## Group (Subgroup) ##
-Processing Filters (Cleanup)
+Processing (Cleanup)
 
 ## Description ##
-This Filter allows the user to define a subvolume of the dataset in which the Filter will reset all data by writing *zeros (0)* into every array for every **Cell** within the subvolume.
+This **Filter** allows the user to define a subvolume of the data set in which the **Filter** will reset all data by writing *zeros (0)* into every array for every **Cell** within the subvolume.
 
 ## Parameters ##
 | Name | Type | Description |
 |------|------|------|
-| X Min | Integer | Minimum X bound in voxels |
-| Y Min | Integer | Minimum Y bound in voxels |
-| Z Min | Integer | Minimum Z bound in voxels |
-| X Max | Integer | Maximum X bound in voxels |
-| Y Max | Integer | Maximum Y bound in voxels |
-| Z Max | Integer | Maximum Z bound in voxels |
+| X Min | int32_t | Minimum X bound in **Cells** |
+| Y Min | int32_t | Minimum Y bound in **Cells** |
+| Z Min | int32_t | Minimum Z bound in **Cells** |
+| X Max | int32_t | Maximum X bound in **Cells** |
+| Y Max | int32_t | Maximum Y bound in **Cells** |
+| Z Max | int32_t | Maximum Z bound in **Cells** |
 
 ## Required Geometry ##
-Image / Rectilinear Grid
+Image 
 
 ## Required Arrays ##
-None
+| Kind | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| **Attribute Matrix** | CellData | Cell | N/A | **Cell** data in which to initialize a subvolume to zeros |
 
 ## Created Arrays ##
 None

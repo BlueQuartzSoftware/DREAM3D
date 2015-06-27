@@ -2,10 +2,10 @@ Find Average Value of Scalars For Feature {#findavgscalarvalueforfeatures}
 =============
 
 ## Group (Subgroup) ##
-Statistics Filters (Misc)
+Statistics (Misc)
 
 ## Description ##
-This Filter determines the average value of a scalar **Attribute Array** for each **Feature** by the following algorithm:
+This **Filter** determines the average value of a scalar **Attribute Array** for each **Feature** by the following algorithm:
 
 1. Gather all **Elements** that belong to the **Feature**
 2. Average the values of the scalar **Attribute Array** for all **Elements** and store as the average for the **Feature**
@@ -17,15 +17,15 @@ None
 Not Applicable
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Element | FeatureIds | Int | (1) | Specifies to which **Feature** each **Element** belongs. |
-| Element | None | Variable | (1) | Scalar **Attribute Array** to average for each **Feature** |
+| **Element Attribute Array**  | None | Any | (1) | Scalar **Attribute Array** to average for each **Feature** |
+| **Element Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Element** belongs |
 
 ## Created Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Feature | ScalarAverages | Float | (1) | Average value of scalar **Attribute Array** for each **Feature** |
+| **Feature Attribute Array** | ScalarAverages | float | (1) | Average value of scalar **Attribute Array** for each **Feature** |
 
 
 ## License & Copyright ##

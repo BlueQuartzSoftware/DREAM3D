@@ -2,28 +2,28 @@ Flatten Image {#flattenimage}
 =============
 
 ## Group (Subgroup) ##
-Processing Filters (Image)
+Processing (Image)
 
 ## Description ##
-This Filter allows the user to select a *flattening* method for turning an array of RGB or RGBa values into grayscale values.  The options available in this Filter are *Average* and *Luminosity*.  If *Average* is selected, then the R, G and B values are averaged to get a single grayscale value.  If *Luminosity* is selected, then the grayscale value equals (R*0.21)+(G*0.72)+(B*0.07).
+This **Filter** allows the user to select a *flattening* method for turning an array of RGB or RGBa values into grayscale values.  The options available in this **Filter** are *Average* and *Luminosity*.  If *Average* is selected, then the R, G and B values are averaged to get a single grayscale value.  If *Luminosity* is selected, then the grayscale value equals (R*0.21)+(G*0.72)+(B*0.07).
 
 ## Parameters ##
 | Name | Type | Description |
 |------|------|------|
-| Flattening Method | Selection | Tells the Filter which method to use when flattening the RGB array.
+| Flattening Method | Enumeration | Which method to use when flattening the RGB array |
 
 ## Required Geometry ##
 Not Applicable
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Element | ImageData | Float | (3) or (4) | RGB or RGBa values |
+| **Element Attribute Array** | ImageData | uint8_t | (3) or (4) | RGB or ARGB values |
 
 ## Created Arrays ##
-| Type | Default Name | Type | Component Dimensions (dimension, size) | Description |
+| Kind | Default Name | Type | Component Dimensions (dimension, size) | Description |
 |------|--------------|-------------|---------|-----|
-| Element | FlatImageData | Float | (1) | Grayscale values |
+| **Element Attribute Array** | FlatImageData | uint8_t | (1) | Grayscale values |
 
 
 ## License & Copyright ##

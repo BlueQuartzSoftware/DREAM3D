@@ -3,35 +3,31 @@ Create Feature Array From Cell Array {#createfeaturearrayfromelementarray}
 
 ## Group (Subgroup) ##
 
-Core Filters (Memory/Management)
+Core (Memory/Management)
 
 ## Description ##
 
-This filter copies all the associated **Cells** to the **Feature** that they belong to.
+This **Filter** copies all the associated **Element** data of a selected **Element Attribute Array** to the **Feature** to which the **Elements** belong. The value stored for each **Feature** will be the value of the _last element copied_. 
 
 ## Parameters ##
-
-| Name | Type | Description |
-|------|------|---------------|
-| New Feature Array Name | String |  |
+None
 
 ## Required Geometry ##
 Not Applicable
 
 
 ## Required Arrays ##
-
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Feature  | Element Array Name | Int | (1) | Feature Array |
-| Cell  | Element Feature Ids | Any | (1) |  |
+| Element **Attribute Array** | None | Any | Any | **Element** data to copy to **Feature** data |
+| Element **Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Element** belongs |
 
 
 ## Created Arrays ##
-
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Feature | New Feature Array Name | Any  | (1) |  |
+| **Attribute Matrix** | None | **Feature**  | N/A | **Feature Attribute Matrix** in which to place the copied data |
+| Feature **Attribute Array** | None | Any  | Any | Copied **Attribute Array** name |
 
 ## License & Copyright ##
 

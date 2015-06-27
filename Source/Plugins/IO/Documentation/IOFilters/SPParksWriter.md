@@ -5,7 +5,7 @@ Write SPParks File (Feature Ids) {#spparkswriter}
 IO (Output)
 
 ## Description ##
-This Filter writes to a data file in a format used by [SPPARKS Kinetic Monte Carlo Simulator](http://spparks.sandia.gov/).
+This **Filter** writes to a data file in a format used by [SPPARKS Kinetic Monte Carlo Simulator](http://spparks.sandia.gov/).
 
 + The "Values" section is a pair of numbers where the first number is the site ID and the second
  number is the actual value of the **Feature** Id at that site.
@@ -43,13 +43,12 @@ More information can be found at the [SPParks web site.](http://spparks.sandia.g
 | Output File | File Path | Output .spparks file path |
 
 ## Required Geometry ##
-Image / Rectilinear Grid
+Image
 
 ## Required Arrays ##
-
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs |
+| **Cell Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs |
 
 ## Created Arrays ##
 None

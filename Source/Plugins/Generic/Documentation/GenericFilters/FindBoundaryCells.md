@@ -2,10 +2,10 @@ Find Boundary Cells (Image) {#findboundarycells}
 =============
 
 ## Group (Subgroup) ##
-Generic Filters (Spatial)
+Generic (Spatial)
 
 ## Description ##
-This Filter determines, for each **Cell**, the number of neighboring **Cells** that are owned by a different **Feature**.  The algorithm for determining this is as follows: 
+This **Filter** determines, for each **Cell**, the number of neighboring **Cells** that are owned by a different **Feature**.  The algorithm for determining this is as follows: 
 
 1. Identify the **Feature** to which a **Cell** belongs
 2. Identify the **Features** to which each of the current **Cell**'s six (6) face-face neighboring **Cells** (front, back, left, right, up, down) belong
@@ -16,17 +16,17 @@ This Filter determines, for each **Cell**, the number of neighboring **Cells** t
 None
 
 ## Required Geometry ##
-Image / Rectilinear Grid
+Image 
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs. |
+| **Cell Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs. |
 
 ## Created Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | SurfaceCells | Int | (1) | The number of neighboring **Cells** of a given **Cell** that belong to a different **Feature** than itself. Values will range from *0* to *6* |
+| **Cell Attribute Array** | BoundaryCells | int32_t | (1) | The number of neighboring **Cells** of a given **Cell** that belong to a different **Feature** than itself. Values will range from *0* to *6* |
 
 ## License & Copyright ##
 

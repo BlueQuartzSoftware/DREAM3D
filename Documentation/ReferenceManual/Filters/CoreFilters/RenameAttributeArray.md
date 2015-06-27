@@ -2,24 +2,23 @@ Rename Attribute Array {#renameattributearray}
 =============
 
 ## Group (Subgroup) ##
-Core Filters (Memory/Management)
+Core (Memory/Management)
 
 ## Description ##
-This filter renames a user chosen array to a user defined new name.
+This **Filter** renames a user chosen **Attribute Array**.
 
 ## Parameters ##
 | Name | Type | Description |
 |------|------| ----------- |
-| New Attribute Array Name| String | New Name |
+| New Attribute Array Name | String | New name for the selected **Attribute Array** |
 
 ## Required Geometry ##
 Not Applicable
 
 ## Required Arrays ##
-
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Any | None | Any | Any | Attribute Array To Rename |
+| Any **Attribute Array** | None | Any | Any | **Attribute Array** to rename |
 
 
 ## Created Arrays ##

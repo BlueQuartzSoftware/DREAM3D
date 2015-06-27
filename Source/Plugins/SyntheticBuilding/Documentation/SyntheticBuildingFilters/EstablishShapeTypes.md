@@ -5,7 +5,7 @@ Establish Shape Types {#establishshapetypes}
 Synthetic Building (Generation)
 
 ## Description ##
-This Filter allows the user to assign a specific _shape type_ to each **Ensemble** of a synthetic structure. This Filter should be inserted **BEFORE** any packing **Filters** are added. The Filter is typically added just after the [initializing the synthetic volume](@ref initializesyntheticvolume). The various shape types are:
+This **Filter** allows the user to assign a specific _shape type_ to each **Ensemble** of a synthetic structure. This **Filter** should be inserted **BEFORE** any packing **Filters** are added. The **Filter** is typically added just after the [initializing the synthetic volume](@ref initializesyntheticvolume). The various shape types are:
 
 + Ellipsoid
 + Super Ellipsoid
@@ -21,14 +21,14 @@ For more information on synthetic building, visit the [tutorial](@ref tutorialsy
 None
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Ensemble | PhaseTypes | Int | (1) | Enumeration specifying the type of phase of each **Ensemble** |
+| **Ensemble Attribute Array** | PhaseTypes | uint32_t | (1) | Enumeration specifying the phase type of each **Ensemble** |
 
 ## Created Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Ensemble | ShapeTypes | Int | (1) | Enumeration specifying the type of shape for each **Ensemble** |
+| **Ensemble Attribute Array** | ShapeTypes | uint32_t | (1) | Enumeration specifying the type of shape to place for each **Ensemble** |
 
 ## License & Copyright ##
 

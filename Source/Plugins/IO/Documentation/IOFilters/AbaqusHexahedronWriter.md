@@ -5,9 +5,7 @@ Abaqus Hexahedron Writer {#abaqushexahedronwriter}
 IO (Output)
 
 ## Description ##
-This Filter produces the basic five Abaqus .inp files for input into the Abaqus analysis tool.
-The files created are: xxx.inp (the master file), xxx_nodes.inp, xxx_elems.inp, xxx_elset.inp and xxx_sects.inp.
-This Filter is based on a Python script developed by Matthew W. Priddy (Ga. Tech., early 2015).
+This **Filter** produces the basic five Abaqus .inp files for input into the Abaqus analysis tool. The files created are: xxx.inp (the master file), xxx_nodes.inp, xxx_elems.inp, xxx_elset.inp and xxx_sects.inp. This **Filter** is based on a Python script developed by Matthew W. Priddy (Ga. Tech., early 2015).
 
 ### Example Output ###
 The master file:     
@@ -114,18 +112,19 @@ The _sects.inp file:
 ## Parameters ##
 | Name             | Type | Description |
 |------------------|------|------------------------|
-| Output Path | File Path | Path to folder for the created files |
-| Output File Prefix | String | Prefix for the name of the 5 files |
-| Hour Glass Stiffness | Int | Only recommended if using C3D8R elements |
+| Hour Glass Stiffness | int32_t | Only recommended if using C3D8R elements |
 | Job Name | String | Job Name, if desired |
+| Output Path | File Path | The output path for the .inp files |
+| Output File Prefix | String | Prefix for the name of the 5 files |
+
 
 ## Required Geometry ##
-Image / Rectilinear Grid
+Image
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs |
+| **Cell Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs |
 
 ## Created Arrays ##
 None

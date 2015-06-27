@@ -2,11 +2,10 @@ Find Feature Phases {#findfeaturephases}
 =============
 
 ## Group (Subgroup) ##
-Generic Filters (Misc)
+Generic (Misc)
 
 ## Description ##
-This Filter determines the phase of each **Feature** by querying the phase of the **Elements** that belong to the **Feature**.
-Note that it is assumed that all **Elements** belonging to a **Feature** are of the same phase, and thus any **Element** can be used to determine the phase of the **Feature** that owns that **Element**.
+This **Filter** determines the **Ensemble** of each **Feature** by querying the **Ensemble** of the **Elements** that belong to the **Feature**. Note that it is assumed that all **Elements** belonging to a **Feature** are of the same **Feature**, and thus any **Element** can be used to determine the **Ensemble** of the **Feature** that owns that **Element**.
 
 ## Parameters ##
 None
@@ -15,15 +14,15 @@ None
 Not Applicable
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Element | Phases | Int | (1) | Specifies the phase of the **Element** |
-| Element | FeatureIds | Int | (1) | Specifies to which **Feature** each **Element** belongs. |
+| **Element Attribute Array** | Phases | int32_t | (1) | Specifies to which **Ensemble** each **Element** belongs |
+| **Element Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Element** belongs |
 
 ## Created Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Feature | Phases | Int | (1) | Specifies the phase of the **Feature** - Values will begin at 1 as there is no phase 0, which is used temporarily in some filters for *bad* data|
+| **Feature Attribute Array** | Phases | int32_t | (1) | Specifies to which **Ensemble** each **Feature** belongs  |
 
 
 ## License & Copyright ##

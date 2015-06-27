@@ -5,7 +5,7 @@ Read STL File {#readstlfile}
 IO (Input)
 
 ## Description ##
-This Filter will read a binary STL File and create a **Triangle Geometry** object in memory. The STL reader is very strict to the STL specification. An explanation of the STL file format can be found on [Wikipedia](https://en.wikipedia.org/wiki/STL). The structure of the file is as follows:
+This **Filter**  will read a binary STL File and create a **Triangle Geometry** object in memory. The STL reader is very strict to the STL specification. An explanation of the STL file format can be found on [Wikipedia](https://en.wikipedia.org/wiki/STL). The structure of the file is as follows:
 
 	UINT8[80] – Header
 	UINT32 – Number of triangles
@@ -24,9 +24,7 @@ This Filter will read a binary STL File and create a **Triangle Geometry** objec
 
 | Name | Type | Description |
 |------|------|------|
-| STL File | File Path  | The input STL file path |
-| Data Container Name | String | Created **Data Container** name |
-| Face Attribute Matrix Name | String | Created **Face Attribute Matrix** name |
+| STL File | File Path  | The input .stl file path |
 
 ## Required Geometry ##
 Not Applicable
@@ -35,9 +33,11 @@ Not Applicable
 None
 
 ## Created Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
-| Face | FaceNormals  | Double | (3) | The normals for each triangle |
+| **Data Container** | TriangleDataContainer  | N/A | N/A | Created **Data Container** name with a **Triangle Geometry** |
+| **Attribute Matrix** | FaceData  | Face | N/A | Created **Face Attribute Matrix** name  |
+| **Face Attribute Array** | FaceNormals  | double | (3) | Specifies the normal of each **Face** |
 
 
 ## License & Copyright ##

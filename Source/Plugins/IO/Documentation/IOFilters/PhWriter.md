@@ -5,7 +5,7 @@ Write Ph File (Feature Ids) {#phwriter}
 IO (Output)
 
 ## Description ##
-This Filter writes a custom data file used by the Materials Science Department at Carnegie Mellon University.  See the [PhReader](PhReader.html "") Filter description for example data format.
+This **Filter** writes a custom data file used by the Materials Science Department at Carnegie Mellon University.  See the [PhReader](PhReader.html "") **Filter** description for example data format.
 
 ### Example Output ###
 
@@ -36,15 +36,15 @@ This Filter writes a custom data file used by the Materials Science Department a
 ## Parameters ##
 | Name | Type | Description |
 |------|------|------|
-| Output File | File Path | Output .ph file path |
+| Output File | File Path | The output .ph file path |
 
 ## Required Geometry ##
-Image / Rectilinear Grid
+Image
 
 ## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs |
+| **Cell Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs |
 
 ## Created Arrays ##
 None

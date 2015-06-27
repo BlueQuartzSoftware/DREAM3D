@@ -5,7 +5,7 @@ Generate Triangle Areas {#triangleareafilter}
 Surface Meshing (Misc)
 
 ## Description ##
-This Filter computes the area of each **Triangle** in a **Triangle Geometry** by calculating the following: 
+This **Filter** computes the area of each **Triangle** in a **Triangle Geometry** by calculating the following: 
 	
 	1/2*|AB||AC|sin(O)
 
@@ -21,9 +21,9 @@ Triangle
 None
 
 ## Created Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Face | FaceAreas | Double | (1) | Specifies the area of each **Face** |
+| **Face Attribute Array**  | FaceAreas | double | (1) | Specifies the area of each **Face** |
 
 
 ## License & Copyright ##

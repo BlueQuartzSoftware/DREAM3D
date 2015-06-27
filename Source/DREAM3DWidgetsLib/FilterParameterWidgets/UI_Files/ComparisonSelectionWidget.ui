@@ -228,7 +228,7 @@ font-weight: bold;
 }</string>
      </property>
      <property name="text">
-      <string>Data Arrays To Threshold</string>
+      <string>Attribute Arrays to Threshold</string>
      </property>
     </widget>
    </item>

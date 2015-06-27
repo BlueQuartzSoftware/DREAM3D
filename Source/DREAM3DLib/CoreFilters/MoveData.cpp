@@ -79,7 +79,7 @@ void MoveData::setupFilterParameters()
   linkedProps << "DataContainerDestination" << "AttributeMatrixSource" << "AttributeMatrixDestination" << "DataArraySource";
   {
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
-    parameter->setHumanLabel("Objects to Move");
+    parameter->setHumanLabel("Object to Move");
     parameter->setPropertyName("WhatToMove");
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
     parameter->setDefaultValue(getWhatToMove()); // Just set the first index

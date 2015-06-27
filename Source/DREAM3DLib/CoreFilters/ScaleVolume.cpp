@@ -120,11 +120,11 @@ void ScaleVolume::setupFilterParameters()
 
   QStringList linkedProps("DataContainerName");
   parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Image Geometry", "ApplyToVoxelVolume", getApplyToVoxelVolume(), linkedProps, FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Data Container Image Geometry to Scale", "DataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerName(), FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("Data Container Image Geometry to Scale", "DataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerName(), FilterParameter::RequiredArray));
   linkedProps.clear();
   linkedProps << "SurfaceDataContainerName";
   parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Surface Geometry", "ApplyToSurfaceMesh", getApplyToSurfaceMesh(), linkedProps, FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Data Container Surface Geometry to Scale", "SurfaceDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getSurfaceDataContainerName(), FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("Data Container Surface Geometry to Scale", "SurfaceDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getSurfaceDataContainerName(), FilterParameter::RequiredArray));
 
   setFilterParameters(parameters);
 }

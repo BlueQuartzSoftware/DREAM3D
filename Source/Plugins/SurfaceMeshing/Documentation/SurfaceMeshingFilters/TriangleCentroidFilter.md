@@ -5,7 +5,7 @@ Generate Triangle Centroids {#trianglecentroidfilter}
 Surface Meshing (Misc)
 
 ## Description ##
-This Filter computes the centroid of each **Triangle** in a **Triangle Geometry** by calculating the average position of all 3 **Vertices** that make up the **Triangle**.
+This **Filter** computes the centroid of each **Triangle** in a **Triangle Geometry** by calculating the average position of all 3 **Vertices** that make up the **Triangle**.
 
 ## Parameters ##
 None
@@ -17,9 +17,9 @@ Triangle
 None
 
 ## Created Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Face | FaceCentroids | Double | (1) | Specifies the centroid of each **Face** |
+| **Face Attribute Array** | FaceCentroids | double | (1) | Specifies the centroid of each **Face** |
 
 
 ## License & Copyright ##

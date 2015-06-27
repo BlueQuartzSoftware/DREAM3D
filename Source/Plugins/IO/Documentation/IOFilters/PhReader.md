@@ -5,7 +5,7 @@ Read Ph File (Feature Ids) {#phreader}
 IO (Input)
 
 ## Description ##
-This Filter reads a custom data file used by the Materials Science Department at Carnegie Mellon University. The information in the file defines an **Image** geometry with a set of **Feature** Ids.  The file format is a simple ASCII text file with the following contents:
+This **Filter** reads a custom data file used by the Materials Science Department at Carnegie Mellon University. The information in the file defines an **Image Geometry** with a set of **Feature** Ids.  The file format is a simple ASCII text file with the following contents:
 
 **Format**
 
@@ -34,24 +34,22 @@ This Filter reads a custom data file used by the Materials Science Department at
 ## Parameters ##
 | Name | Type | Description |
 |------|------| ----------- |
-| Input File | File Path | Input .ph file path |
-| Origin | Float (x3) | The location in space of the (0, 0, 0) voxel |
-| Resolution | Float (x3) | Vector of resolution values (dx, dy, dz) |
-| Data Container | String | Created **Data Container** name |
-| Cell Attribute Matrix | String | Created **Cell Attribute Matrix** name |
+| Input File | File Path | The input .ph file path |
+| Origin | flaot (3x) | The location in space of the (0, 0, 0) coordinate |
+| Resolution | Float (x3) | The resolution values (dx, dy, dz) |
 
 ## Required Geometry ##
 Not Applicable
-
 
 ## Required Arrays ##
 None
 
 ## Created Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs |
-
+| **Data Container** | ImageDataContainer | N/A | N/A | Created **Data Container** name with an **Image Geometry** |
+| **Attribute Matrix** | CellData | Cell | N/A | Created **Cell Attribute Matrix** name |
+| **Cell Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs |
 
 ## License & Copyright ##
 

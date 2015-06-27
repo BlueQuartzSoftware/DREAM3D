@@ -219,4 +219,4 @@ const QString FindBoundaryElementFractions::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString FindBoundaryElementFractions::getHumanLabel()
-{ return "Find Feature Boundary Cell Fractions"; }
+{ return "Find Feature Boundary Element Fractions"; }

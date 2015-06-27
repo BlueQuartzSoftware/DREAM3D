@@ -5,7 +5,7 @@ Generate Triangle Normals {#trianglenormalfilter}
 Surface Meshing (Misc)
 
 ## Description ##
-This Filter calculates a normal vector of length 1 (normalized) for each **Triangle** in a **Triangle Geometry**.
+This **Filter** calculates a normal vector of length 1 (normalized) for each **Triangle** in a **Triangle Geometry**.
 
 ## Parameters ##
 None
@@ -17,9 +17,9 @@ Triangle
 None
 
 ## Created Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Face | FaceNormals | Double | (3) | Specifies the normal of each **Face** |
+| **Face Attribute Array**  | FaceNormals | double | (3) | Specifies the normal of each **Face** |
 
 
 ## License & Copyright ##
