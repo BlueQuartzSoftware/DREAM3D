@@ -31,14 +31,9 @@ Overviews of the auxiliary DREAM.3D tools @ref statsgenerator, @ref devhelper an
 
 Overview of the file formats DREAM.3D currently supports
 
-@subpage glossary
-
-A glossary defining the basic terms in the DREAM.3D ontology
-
-
 @subpage releasenotes
 
-
+Release notes for each version of DREAM.3D
 
 */
 
