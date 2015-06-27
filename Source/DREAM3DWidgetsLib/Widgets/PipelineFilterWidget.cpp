@@ -204,11 +204,11 @@ void PipelineFilterWidget::layoutWidgets()
   QVBoxLayout* pLayout = new QVBoxLayout(parametersGroupBox);
   parametersGroupBox->setStyleSheet(groupBoxStyle);
 
-  QGroupBox* requiredGroupBox = new QGroupBox("Required Arrays", this);
+  QGroupBox* requiredGroupBox = new QGroupBox("Required Objects", this);
   QVBoxLayout* rLayout = new QVBoxLayout(requiredGroupBox);
   requiredGroupBox->setStyleSheet(groupBoxStyle);
 
-  QGroupBox* createdGroupBox = new QGroupBox("Created Arrays", this);
+  QGroupBox* createdGroupBox = new QGroupBox("Created Objects", this);
   QVBoxLayout* cLayout = new QVBoxLayout(createdGroupBox);
   createdGroupBox->setStyleSheet(groupBoxStyle);
 
