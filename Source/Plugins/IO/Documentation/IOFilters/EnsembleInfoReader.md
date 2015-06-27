@@ -61,10 +61,10 @@ For example, if you have a structure that has 2 phases that consist of a Cubic P
 ## Required Geometry ##
 Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 None
 
-## Created Arrays ##
+## Created Objects ##
 | Kind | Default Name | Type | Component Dimension | Description |
 |------|--------------|-------------|---------|--------------|
 | **Attribute Matrix** | EnsembleAttributeMatrix | Ensemble | N/A | Created **Ensemble Attribute Matrix** name |

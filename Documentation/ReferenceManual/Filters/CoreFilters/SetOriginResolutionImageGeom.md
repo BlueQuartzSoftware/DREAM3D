@@ -23,12 +23,12 @@ This **Filter** changes the origin and/or the resolution of an **Image Geometry*
 ## Required Geometry ##
 Image
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Data Container** | None | N/A | N/A | **Data Container** with an **Image Geometry** to modify |
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 ## License & Copyright ##

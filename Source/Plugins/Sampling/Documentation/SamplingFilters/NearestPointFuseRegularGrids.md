@@ -15,10 +15,10 @@ None
 ## Required Geometry ##
 Image
 
-## Required Arrays ##
+## Required Objects ##
 None
 
-## Created Arrays ##
+## Created Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Attribute Matrix** | CellData | Cell | N/A | *Reference* **Cell** data to use for fusion |

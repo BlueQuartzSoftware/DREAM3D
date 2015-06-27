@@ -13,12 +13,12 @@ None
 ## Required Geometry ##
 Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | Any  | None         | Any | Any | Objects to delete |
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 ## License & Copyright ##

@@ -27,12 +27,12 @@ This **Filter** creates a .vtk file that can be used in [ParaView](http://www.pa
 ## Required Geometry ##
 Triangle
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Ensemble Attribute Array** | GBDC | Double | (n,m,l,o,q,r) | 5 parameter GBCD data. The 6<sup>th</sup> component is used internally to track the northern vs. southern hemisphere of the Lambert sphere |
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 ## License & Copyright ##

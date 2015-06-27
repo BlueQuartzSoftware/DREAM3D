@@ -27,13 +27,13 @@ After all the **Features** have been identified, an **Attribute Matrix** is crea
 ## Required Geometry ##
 Image / Rectilinear Grid
 
-## Required Arrays ##
+## Required Objects ##
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | Cell | None | Float | (3) | Vector array used during segmentation |
 | Cell | GoodVoxels | Boolean | (1) | Specifies if the **Cell** is to be considered during segmentation.  Array only required if *Use Mask Array* is set to *true* |
 
-## Created Arrays ##
+## Created Objects ##
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs. |

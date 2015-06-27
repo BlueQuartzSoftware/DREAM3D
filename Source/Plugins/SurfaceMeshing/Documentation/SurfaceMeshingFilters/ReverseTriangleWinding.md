@@ -13,12 +13,12 @@ None
 ## Required Geometry ##
 Triangle
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Data Container** | None | N/A | N/A | **Data Container** that holds the **Triangle Geometry** to reverse winding |
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 

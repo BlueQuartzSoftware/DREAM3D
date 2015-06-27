@@ -20,7 +20,7 @@ None
 ## Required Geometry ##
 Image + Triangle
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Face Attribute Array** | FaceLabels | int32_t | (2) | Specifies which **Features** are on either side of each **Face** |
@@ -29,7 +29,7 @@ Image + Triangle
 | **Feature Attribute Array** | Phases | int32_t | (1) | Specifies to which phase each **Feature** belongs |
 | **Ensemble Attribute Array** | CrystalStructures | uint32_t | (1) | Enumeration representing the crystal structure for each **Ensemble** |
 
-## Created Arrays ##
+## Created Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Face Attribute Array** | IPFColors | uint8_t | (6) | A set of two RGB color schemes encoded as unsigned chars for each **Face** |

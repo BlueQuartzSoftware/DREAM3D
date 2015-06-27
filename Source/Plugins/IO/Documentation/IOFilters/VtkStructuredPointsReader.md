@@ -40,10 +40,10 @@ This **Filter** reads a _STRUCTURED_POINTS_ type of 3D array from a legacy .vtk 
 ## Required Geometry ##
 Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 None
 
-## Created Arrays ##
+## Created Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Data Container** | ImageDataContainer_PointData | N/A | N/A | Created **Data Container** name with an **Image Geometry** storing POINT_DATA. Only created if _Read Point Data_ is checked |

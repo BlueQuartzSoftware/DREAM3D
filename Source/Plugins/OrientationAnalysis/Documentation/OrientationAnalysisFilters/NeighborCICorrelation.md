@@ -18,12 +18,12 @@ This **Filter** first identifies all **Cells** that have a *confidence index* be
 ## Required Geometry ##
 Image
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Cell Attribute Array** | Confidence Index | float | (1) | Specifies the confidence in the orientation of the **Cell** (TSL data) |
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 

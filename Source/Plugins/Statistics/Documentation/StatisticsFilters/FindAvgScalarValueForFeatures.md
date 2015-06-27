@@ -16,13 +16,13 @@ None
 ## Required Geometry ##
 Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Element Attribute Array**  | None | Any | (1) | Scalar **Attribute Array** to average for each **Feature** |
 | **Element Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Element** belongs |
 
-## Created Arrays ##
+## Created Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Feature Attribute Array** | ScalarAverages | float | (1) | Average value of scalar **Attribute Array** for each **Feature** |

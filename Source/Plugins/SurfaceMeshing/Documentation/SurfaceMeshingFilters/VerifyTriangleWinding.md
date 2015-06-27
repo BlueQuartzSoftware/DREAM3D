@@ -14,10 +14,10 @@ None
 ## Required DataContainers ##
 SurfaceMesh - Valid Surface Mesh containing the shared vertex array and face list
 
-## Required Arrays ##
+## Required Objects ##
 None
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 

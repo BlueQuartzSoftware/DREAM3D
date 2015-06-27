@@ -22,13 +22,13 @@ If the wrong conversion is selected (e.g., the user chooses *degrees to radians*
 ## Required Geometry ##
 Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
 | **Element Attribute Array** | None    | float | (n)                 | Values that represent angles in degrees or radians |
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 ## License & Copyright ##

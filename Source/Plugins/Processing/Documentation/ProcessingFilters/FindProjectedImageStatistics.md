@@ -15,12 +15,12 @@ This **Filter** calculates statistics (minimum, maximum, average, standard devia
 ## Required Geometry ##
 Image
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Cell Attribute Array** | None | Any, except bool | (1) | Any scalar array for which the user would like to calculate projected statistics |
 
-## Created Arrays ##
+## Created Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Cell Attribute Array** | ProjectedImageMin | float | (1) | The minimum value of the scalar array along the stack of voxels perpendicular to the plane of interest |

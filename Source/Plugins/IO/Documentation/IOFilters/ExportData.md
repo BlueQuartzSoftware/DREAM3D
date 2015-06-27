@@ -53,12 +53,12 @@ Choice of delimiter is as follows:
 ## Required Geometry ##
 Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | Any **Attribute Array** | None | Any | Any | Output arrays to be written as ASCII representations |
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 ## License & Copyright ##

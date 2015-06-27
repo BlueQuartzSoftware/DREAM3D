@@ -18,7 +18,7 @@ This filter calculates the directional elastic modulus for each **Feature** give
 ## Required DataContainers ##
 Voxel
 
-## Required Arrays ##
+## Required Objects ##
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
 | Feature | FeaturePhases | Phase Id (int) specifying the phase of the **Feature** | | 
@@ -26,7 +26,7 @@ Voxel
 | Feature | AvgQuats | Four (4) values (floats) defining the average orientation of the **Feature** in quaternion representation | |
 | Ensemble | CrystalCompliances | 6x6 matrix specifying the elastic compliances of the **Phase** | in pascals^-1 |
 
-## Created Arrays ##
+## Created Objects ##
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|

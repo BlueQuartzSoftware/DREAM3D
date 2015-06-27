@@ -17,7 +17,7 @@ This filter will correlate one **Feature** with another **Feature** and bin the 
 | Number Of Bins For Correlated Array | Integer | |
 | Remove Biased Features | Boolean | TRUE if biased features are to be omitted from the binning counts. |
 
-## Required Arrays ##
+## Required Objects ##
 
 | Type | Default Array Name | Description | Comment |
 |------|--------------------|-------------|---------|
@@ -25,7 +25,7 @@ This filter will correlate one **Feature** with another **Feature** and bin the 
 | Feature | SelectedFeature | | | |
 | Feature | Correlated Feature | | | |
 
-## Created Arrays ##
+## Created Objects ##
 
 | Type | Default Array Name | Description | Comment |
 |------|--------------------|-------------|---------|

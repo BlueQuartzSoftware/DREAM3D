@@ -71,10 +71,10 @@ The vtk ASCII output file:
 ## Required Geometry ##
 Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 None
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 ## License & Copyright ##

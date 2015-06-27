@@ -14,12 +14,12 @@ I/O Filters
 ## Required DataContainers ##
 Voxel
 
-## Required Arrays ##
+## Required Objects ##
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
 
-## Created Arrays ##
+## Created Objects ##
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|

@@ -25,10 +25,10 @@ This **Filter** will generate a standard inverse pole figure color stereographic
 ## Required Geoemtry ##
 Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 None
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 ## License & Copyright ##

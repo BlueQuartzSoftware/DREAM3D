@@ -39,7 +39,7 @@ This filter is used in a workflow where the user would like to generate a synthe
 | Output File | File Path |  
 
 
-## Required Arrays ##
+## Required Objects ##
 
 | Type | Default Array Name | Description | Comment |
 |--------|----------------------------|-----------------|---------------|
@@ -48,7 +48,7 @@ This filter is used in a workflow where the user would like to generate a synthe
 | Bool | Convert to Degrees    | Should the filter convert the output to Degrees      |    |  
 | Bool  | Apply to Good Voxels | Should only cells marked as **good** be used.     |    |  
 
-## Created Arrays ##
+## Created Objects ##
 
 NONE
 

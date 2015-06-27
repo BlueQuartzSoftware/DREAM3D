@@ -69,11 +69,11 @@ If the raw binary file you are reading has a _header_ before the actual data beg
 
 Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 
 None
 
-## Created Arrays ##
+## Created Objects ##
 
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|

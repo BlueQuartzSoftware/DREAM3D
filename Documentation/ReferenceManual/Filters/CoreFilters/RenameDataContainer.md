@@ -15,12 +15,12 @@ This **Filter** renames a user chosen **Data Container**.
 ## Required Geometry ##
 Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Data Container** | None | N/A | N/A | **Data Container** to rename |
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 ## License & Copyright ##

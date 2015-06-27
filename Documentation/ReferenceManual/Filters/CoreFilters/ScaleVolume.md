@@ -17,13 +17,13 @@ This **Filter** scales a volume by the factors entered by the user. For example,
 ## Required Geometry ##
 Image and/or 2D surface (Triangle/Quad)
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Data Container** | None | N/A | N/A | **Data Container** with an **Image Geometry** to scale. Only required if _Apply to Image Geometry_ is checked |
 | **Data Container** | None | N/A | N/A | **Data Container** with a surface **Geometry** to scale. Only required if _Apply to Surface Geometry_ is checked |
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 ## License & Copyright ##

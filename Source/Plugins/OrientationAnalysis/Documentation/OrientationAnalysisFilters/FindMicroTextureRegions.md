@@ -13,14 +13,14 @@ This filter does the following...
 |------------------|------|
 | Field Array Name | String |
 
-## Required Arrays ##
+## Required Objects ##
 
 | Type | Default Array Name | Description | Comment |
 |------|--------------------|-------------|---------|
 | Int  | SomeName           | ....        | other   |
 
 
-## Created Arrays ##
+## Created Objects ##
 
 | Type | Default Array Name | Description | Comment |
 |------|--------------------|-------------|---------|

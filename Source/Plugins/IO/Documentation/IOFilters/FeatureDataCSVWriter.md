@@ -45,12 +45,12 @@ The *CSV* file with Write Neighbor Data checked:
 ## Required Geometry ##
 Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Attribute Matrix** | None | Feature | N/A | **Feature Attribute Matrix** that holds the data write |
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 ## License & Copyright ##

@@ -52,10 +52,10 @@ must have a user entry or the default value _0_ will be used.
 ## Required Geometry ##
 Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 None
 
-## Created Arrays ##
+## Created Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|----------------|
 | Any **Attribute Array** | None | Any | Any | Created **Attribute Array** location and name |

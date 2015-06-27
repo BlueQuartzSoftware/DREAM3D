@@ -27,12 +27,12 @@ This **Filter** performs the EM/MPM segmentation algorithm on an **Attribute Arr
 ## Required Geometry ##
 Image
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | uint8_t | (1)  | 8 bit grayscale image to segment |
 
-## Created Arrays ##
+## Created Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | None | uint8_t | (1) | Unsigned 8 bit array representing the value of the class that the **Cell** was segmented into |

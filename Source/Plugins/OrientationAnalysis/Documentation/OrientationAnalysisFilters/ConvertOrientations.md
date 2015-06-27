@@ -37,14 +37,14 @@ If the angles fall outside of this range the **original** Euler Input data **WIL
 
 Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
 | Any **Attribute Array** | None    | float | See above table | Incoming orientation representation |
 
 
-## Created Arrays ##
+## Created Objects ##
 
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-------------------|

@@ -33,13 +33,13 @@ When converting data from signed values to unsigned values or vice-versa, there 
 ## Required Geometry ##
 Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | Any **Attribute Array**  | None | Any | Any | Array to convert |
 
-## Created Arrays ##
+## Created Objects ##
 
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|

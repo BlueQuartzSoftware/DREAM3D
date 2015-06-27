@@ -50,10 +50,10 @@ and the user wanted a uniform resolution of *3*, then the following mapping woul
 ## Required Geometry ##
 Image 
 
-## Required Arrays ##
+## Required Objects ##
 None
 
-## Created Arrays ##
+## Created Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Attribute Matrix** | CellData | Cell | N/A | Regularized **Cell Attribute Matrix** name |

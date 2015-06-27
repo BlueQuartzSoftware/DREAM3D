@@ -16,12 +16,12 @@ This **Filter** will rotate the *Euler angles* that exist at each **Element**.  
 ## Required Geometry ##
 Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Element Attribute Array** | EulerAngles | float | (3) | Three angles defining the orientation of the **Cell** in Bunge convention (Z-X-Z) |
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 ## License & Copyright ##

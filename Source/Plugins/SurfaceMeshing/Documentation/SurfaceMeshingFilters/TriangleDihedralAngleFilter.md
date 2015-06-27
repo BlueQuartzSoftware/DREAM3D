@@ -13,10 +13,10 @@ None
 ## Required Geometry ##
 Triangle
 
-## Required Arrays ##
+## Required Objects ##
 None
 
-## Created Arrays ##
+## Created Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Face Attribute Array** | FaceDihedralAngles | double | (1) | Specifies the minimum dihedral angle of each **Face** |

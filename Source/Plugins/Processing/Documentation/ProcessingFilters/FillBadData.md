@@ -17,13 +17,13 @@ This **Filter** removes small *noise* in the data, but keeps larger regions that
 ## Required Geometry ##
 Image 
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Cell Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs |
 | **Cell Attribute Array** | Phases | int32_t | (1) | Specifies to which **Ensemble** each **Cell** belongs. Only required if _Store Defects as New Phase_ is checked |
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 ## License & Copyright ##

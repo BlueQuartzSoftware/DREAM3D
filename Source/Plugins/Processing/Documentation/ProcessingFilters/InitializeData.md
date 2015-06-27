@@ -20,12 +20,12 @@ This **Filter** allows the user to define a subvolume of the data set in which t
 ## Required Geometry ##
 Image 
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Attribute Matrix** | CellData | Cell | N/A | **Cell** data in which to initialize a subvolume to zeros |
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 ## License & Copyright ##

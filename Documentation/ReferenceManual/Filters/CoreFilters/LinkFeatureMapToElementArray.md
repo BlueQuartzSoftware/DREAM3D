@@ -13,12 +13,12 @@ None
 ## Required Geometry ##
 Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Element Attribute Array**  | None | int32_t | (1) | **Element Attribute Array** to use as the **Feature** index map |
 
-## Created Arrays ##
+## Created Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Attribute Matrix**  | None | **Feature** | N/A | **Feature Attribute Matrix** to reset |

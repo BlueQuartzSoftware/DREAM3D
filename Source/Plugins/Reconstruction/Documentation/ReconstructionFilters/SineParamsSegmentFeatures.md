@@ -17,13 +17,13 @@ This filter groups together **Cells** that differ in some user defined scalar va
 ## Required DataContainers ##
 Voxel
 
-## Required Arrays ##
+## Required Objects ##
 
 | Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
 | Cell | *User Chosen* |  | Array will always be present, since the user may only chose from existing arrays | N/A |
 
-## Created Arrays ##
+## Created Objects ##
 
 | Type | Default Name | Comment |
 |------|--------------|---------|

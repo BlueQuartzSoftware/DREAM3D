@@ -30,7 +30,7 @@ Note, because this iterates over all the features, each distance will be double 
 ## Required DataContainers ##
 Volume
 
-## Required Arrays ##
+## Required Objects ##
 
 | Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
@@ -38,7 +38,7 @@ Volume
 | Feature | EquivalentDiameters | Diameter (float) of a sphere with the same volume as the **Feature**. | | Find Feature Sizes (Statistics) |
 | Feature | FeaturePhases | Phase Id (int) specifying the phase of the **Feature**| | Find Feature Phases (Generic), Read Feature Info File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
 
-## Created Arrays ##
+## Created Objects ##
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|

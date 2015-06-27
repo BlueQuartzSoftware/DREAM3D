@@ -37,13 +37,13 @@ This **Filter** writes an Abaqus file that is a surface mesh using S3 Elements. 
 ## Required Geometry ##
 Triangle
 
-## Required Arrays ##
+## Required Objects ##
 
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Face Attribute Array** | FaceLabels | int32_t | (2) | Specifies which **Features** are on either side of each **Face** |
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 ## License & Copyright ##

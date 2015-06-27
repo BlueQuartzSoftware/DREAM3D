@@ -57,7 +57,7 @@ With other coloring methods, such as IPF, "bad" **Elements** which result from n
 ## Required Geometry ##
 Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Element Attribute Array** | Quats | float | (3)  | Specifies the orientation of each **Element** in quaternion representation |
@@ -65,7 +65,7 @@ Not Applicable
 | **Element Attribute Array** | Mask | bool | (1) | Used to define **Elements** as *good* or *bad*. Only required if _Apply to Good Elements Only (Bad Elements Will Be Black)_ is checked |
 | **Ensemble Attribute Array** | CrystalStructures | uint32_t | (1) | Enumeration representing the crystal structure for each **Ensemble** |
 
-## Created Arrays ##
+## Created Objects ##
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Element Attribute Array** | MisorientationColors | uint8_t | (3) | The RGB colors encoded as unsigned chars |

@@ -22,12 +22,12 @@ For more information on synthetic building, visit the [tutorial](@ref tutorialsy
 ## Required Geometry ##
 Image
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Cell Attribute Array** | GBEuclideanDistances | float | (1) | Manhattan distances of each **Cell** to the closest **Feature** boundary |
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 

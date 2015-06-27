@@ -23,7 +23,7 @@ This filter will generate Rodrigues colors for each voxel.
 
 Voxel DataContainer
 
-## Required Arrays ##
+## Required Objects ##
 
 | Type | Default Name | Description  | Filters Known to Create Data |
 |------|--------------|------------|-----|
@@ -31,7 +31,7 @@ Voxel DataContainer
 | Cell | CellPhases |  These are used to determine which ensemble the **Cell** belongs to | Read H5Ebsd File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
 | Ensemble | CrystalStructures |  These are the symmetries of the ensembles, which dictate orientation operations and which color palatte is used | Read H5Ebsd File (IO), Read Ensemble Info File (IO), Initialize Synthetic Volume (SyntheticBuilding) |
 
-## Created Arrays ##
+## Created Objects ##
 
 | Type | Name | Description |
 |------|------|-------------|

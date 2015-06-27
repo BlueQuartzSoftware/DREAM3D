@@ -66,7 +66,7 @@ Some information about the phase is included in the header section of the file i
 ## Required Geometry ##
 Image 
 
-## Required Arrays ##
+## Required Objects ##
 
 | Kind | Default Name |Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
@@ -77,7 +77,7 @@ Image
 | **Ensemble Attribute Array** | Material Names | String | (1)  | Name of each **Ensemble** |
 | **Ensemble Attribute Array** | Number of Features | uint32_t | (1) | The number of **Features** per **Ensemble** |
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 ## License & Copyright ##

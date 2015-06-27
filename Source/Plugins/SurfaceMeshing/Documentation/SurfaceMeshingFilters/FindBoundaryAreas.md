@@ -13,12 +13,12 @@ None
 ## Required DataContainers ##
 SurfaceMesh - Valid Surface Mesh containing the shared vertex array and face list
 
-## Required Arrays ##
+## Required Objects ##
 | Type | Default Name | Comment |
 |------|--------------|---------|
 | Face | SurfaceMeshFaceAreas | |
 
-## Created Arrays ##
+## Created Objects ##
 | Type | Default Name | Comment |
 |------|--------------|---------|
 | FaceFeature | BoundaryAreas | |

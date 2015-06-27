@@ -13,14 +13,14 @@ This filter reads in files generated using the VASP program. See [the VASP web s
 |------------------|------|
 | Feature Array Name | String |
 
-## Required Arrays ##
+## Required Objects ##
 
 | Type | Default Array Name | Description | Comment |
 |------|--------------------|-------------|---------|
 | Int  | SomeName           | ....        | other   |
 
 
-## Created Arrays ##
+## Created Objects ##
 
 | Type | Default Array Name | Description | Comment |
 |------|--------------------|-------------|---------|

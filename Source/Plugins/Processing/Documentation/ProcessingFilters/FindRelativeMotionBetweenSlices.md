@@ -20,12 +20,12 @@ This **Filter** assigns a direction *moved* to each **Cell** by extracting a pat
 ## Required Geometry ##
 Image 
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Cell Attribute Array** | None | Any, except bool | (1) | Any scalar array the user would like to use to track *motion* of **Features** through slices |
 
-## Created Arrays ##
+## Created Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Cell Attribute Array** | MotionDirection | float | (3) | Specifies the direction, as a unit vector, that the extracted patch *moved* |

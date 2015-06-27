@@ -45,12 +45,12 @@ If you wanted to create an **Attribute Matrix** to represent a 3D volume where t
 
 Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Data Container**  | None | N/A | N/A | **Data Container** for the created **Attribute Matrix**  |
 
-## Created Arrays ##
+## Created Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Attribute Matrix**  | None | Any | N/A | Created **Attribute Matrix** name  |

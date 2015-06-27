@@ -24,13 +24,13 @@ distributions in a ni-based superalloy in three and two dimensions using the sal
 ## Required DataContainers ##
 Volume
 
-## Required Arrays ##
+## Required Objects ##
 
 | Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
 | Feature | EquivalentDiameters | Diameter (float) of a sphere with the same volume as the **Feature**. | Find Feature Sizes (Statistics) |
 
-## Created Arrays ##
+## Created Objects ##
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|

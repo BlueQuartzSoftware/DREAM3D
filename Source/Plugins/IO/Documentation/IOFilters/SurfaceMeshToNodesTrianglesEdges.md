@@ -57,7 +57,7 @@ The edges file format is as follows:
 ## Required DataContainers ##
 SurfaceMesh
 
-## Required Arrays ##
+## Required Objects ##
 
 | Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
@@ -68,7 +68,7 @@ SurfaceMesh
 | EdgeArray | | The list of unique edges in the mesh |   | Generate Surface Mesh Connectivity (SurfaceMeshing) | 
 
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 

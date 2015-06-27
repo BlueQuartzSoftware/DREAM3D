@@ -18,7 +18,7 @@ This filter will bin a specified **Feature** level attribute.  The user can chos
 ## Required DataContainers ##
 Volume
 
-## Required Arrays ##
+## Required Objects ##
 
 | Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
@@ -26,7 +26,7 @@ Volume
 | Feature | SelectedFeature | Selected feature to be binned. | | |
 
 
-## Created Arrays ##
+## Created Objects ##
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
 | Ensemble | Statistics |  |  |

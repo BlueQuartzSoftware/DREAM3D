@@ -13,12 +13,12 @@ None
 ## Required Geometry ##
 Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensionss | Description |
 |------|--------------|-------------|---------|-----|
 | **Element Attribute Array** | Mask | bool | (1) | Used to define whether the **Elements** are part of the mask  |
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 

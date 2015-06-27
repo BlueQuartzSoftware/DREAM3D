@@ -17,10 +17,10 @@ This filter reads a legacy DREAM.3D file that holds the *Euler Angles*, *Phases*
 ## Required DataContainers ##
 Voxel
 
-## Required Arrays ##
+## Required Objects ##
 None
 
-## Created Arrays ##
+## Created Objects ##
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|

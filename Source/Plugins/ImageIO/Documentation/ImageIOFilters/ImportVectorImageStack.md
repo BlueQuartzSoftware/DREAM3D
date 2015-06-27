@@ -53,13 +53,13 @@ When importing color images they will be imported as RGBA, or color with Alpha v
 
 Voxel
 
-## Required Arrays ##
+## Required Objects ##
 
 
 None
 
 
-## Created Arrays ##
+## Created Objects ##
 
 | Type | Default Array Name | Description | Comment |
 |------|--------------------|-------------|---------|

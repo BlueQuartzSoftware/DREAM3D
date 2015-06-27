@@ -15,7 +15,7 @@ None
 + SurfaceMesh
 
 
-## Required Arrays ##
+## Required Objects ##
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
@@ -23,7 +23,7 @@ None
 | Feature (Volume) | Moduli | One (1) value (float) defining the elastic modulus of the **Feature** | | 
 
 
-## Created Arrays ##
+## Created Objects ##
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|

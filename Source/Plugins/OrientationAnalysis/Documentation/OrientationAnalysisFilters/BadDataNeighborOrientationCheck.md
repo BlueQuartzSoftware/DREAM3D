@@ -20,7 +20,7 @@ This **Filter** compares the orientations of *bad* **Cells** with their neighbor
 ## Required Geometry ##
 Image
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Cell Attribute Array** | Quats | flaot | (4) | Specifies the orientation of the **Cell** in quaternion representation |
@@ -28,7 +28,7 @@ Image
 | **Cell Attribute Array** | Phases | int32_t | (1) | Specifies to which **Ensemble** each **Cell** belongs |
 | **Ensemble Attribute Array** | CrystalStructures | uint32_t | (1) | Enumeration representing the crystal structure for each phase |
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 ## License & Copyright ##

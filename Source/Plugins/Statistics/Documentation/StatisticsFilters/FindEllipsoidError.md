@@ -15,7 +15,7 @@ Between the *Find Shapes* and *Find Centroids* filters, an ideal ellipsoid for e
 |------------------|------|-----|
 | Write Ideal Ellipse Feature Ids | Bool | This writes out a cell array containing the ideal feature IDs. This is only for visualization, and can be a lengthy calculation |
 
-## Required Arrays ##
+## Required Objects ##
 
 | Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
@@ -25,7 +25,7 @@ Between the *Find Shapes* and *Find Centroids* filters, an ideal ellipsoid for e
 | Feature | AxisEulers | The euler angles in radians (3 component - float) required to rotate the ellipsoid into the sample reference frame  **Feature**. |  | Find Feature Shapes (Statistics) | 
 | Feature | AxisLengths | Length in microns (3 component - float) of each axis of the ellipsoid. They are ordered from largest to smallest **Feature**. |  | Find Feature Shapes (Statistics) | 
 
-## Created Arrays ##
+## Created Objects ##
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|

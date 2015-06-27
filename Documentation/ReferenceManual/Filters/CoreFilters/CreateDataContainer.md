@@ -16,11 +16,11 @@ None
 
 Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 
 Not Applicable
 
-## Created Arrays ##
+## Created Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|----------------|
 | **Data Container** | DataContainer | N/A | N/A | Created **Data Container** name |

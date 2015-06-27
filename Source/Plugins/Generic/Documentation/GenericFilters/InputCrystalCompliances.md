@@ -17,10 +17,10 @@ The symmetry drop down menu is for convenience only (the full 6x6 matrix will be
 ## Required Geometry ##
 Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 None
 
-## Created Arrays ##
+## Created Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Ensemble Attribute Array** | CrystalCompliances | float | (6,6) | 6x6 matrix that specifies the compliance of the crystal (in the crystal reference frame) |

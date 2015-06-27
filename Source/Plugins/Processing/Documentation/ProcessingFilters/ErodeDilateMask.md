@@ -19,12 +19,12 @@ If the mask is _dilated_, the **Filter** grows the *true* regions by one **Cell*
 ## Required Geometry ##
 Image 
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensionss | Description |
 |------|--------------|-------------|---------|-----|
 | **Cell Attribute Array** | Mask | bool | (1) | Used to define whether the **Cells** are part of the mask  |
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 ## License & Copyright ##

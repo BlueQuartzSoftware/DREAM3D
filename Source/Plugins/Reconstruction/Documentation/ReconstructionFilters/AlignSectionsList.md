@@ -28,10 +28,10 @@ The slices must be ordered from the bottom of the sample to the top of the sampl
 ## Required Geometry ##
 Image
 
-## Required Arrays ##
+## Required Objects ##
 None
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 ## License & Copyright ##

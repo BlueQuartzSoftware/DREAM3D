@@ -16,14 +16,14 @@ This filter generates a 3 component vector per **Face** that is the axis-angle o
 SurfaceMesh - Valid Surface Mesh containing the shared vertex array and face list
 
 
-## Required Arrays ##
+## Required Objects ##
 
 | Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-------|
 | Face | SurfaceMeshFaceLabels | N x 2 Col of signed integer |  | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
 
 
-## Created Arrays ##
+## Created Objects ##
 | Type | Name | Comment |
 |------|------|---------|
 | Face | SurfaceMeshTriangleIPFColors | N X 3 Array of floats that is the axis-angle of the misorientation across each **Face** |

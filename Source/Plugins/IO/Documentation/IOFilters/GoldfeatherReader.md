@@ -20,12 +20,12 @@ addition to the mesh is the data for the Principal Curvatures and Principal Curv
 ## Required DataContainers ##
 Voxel
 
-## Required Arrays ##
+## Required Objects ##
 None
 
 
 
-## Created Arrays ##
+## Created Objects ##
 
 | Type       | Name | Comment |
 |------------|------|---------|

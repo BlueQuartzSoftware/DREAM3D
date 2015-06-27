@@ -30,7 +30,7 @@ Principal Curvatures 1 and 2 are the &kappa;<sub>1</sub> and &kappa;<sub>2</sub>
 ## Required Geometry ##
 Triangle
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Face Attribute Array** | FaceLabels | int32_t | (2) | Specifies which **Features** are on either side of each **Face** |
@@ -38,7 +38,7 @@ Triangle
 | **Face Attribute Array** | FaceNormals | double | (3) | Specifies the normal of each **Face** |
 | **Face Attribute Array** | FaceCentroids | double | (3) | Specifies the centroid of each **Face** |
 
-## Created Arrays ##
+## Created Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Attribute Matrix** | EdgeData | Edge | N/A | Created **Edge Attribute Matrix** name |

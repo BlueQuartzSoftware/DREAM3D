@@ -16,12 +16,12 @@ This **Filter** will rotate the *spatial reference frame* around a user defined 
 ## Required Geometry ##
 Image
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Attribute Matrix** | CellData | Cell | N/A | **Cell Attribute Matrix** that holds the data to rotate |
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 ## License & Copyright ##

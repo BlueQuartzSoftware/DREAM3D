@@ -27,13 +27,13 @@ filter first to create a description of the **Geometry**.
 
 Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Data Container** | None | N/A | N/A | **Data Container** in which to place the created **Image Geometry** |
 
 
-## Created Arrays ##
+## Created Objects ##
 Not Applicable
 
 ## License & Copyright ##

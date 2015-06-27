@@ -16,13 +16,13 @@ This **Filter** will create an **Attribute Array** from a single component of a 
 ## Required Geometry ##
 Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | Any **Attribute Array** | None | Any | >1 | Multicomponent **Attribute Array** to use as input |
 
 
-## Created Arrays ##
+## Created Objects ##
 
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|

@@ -30,12 +30,12 @@ The user can also decide to remove a _background shift_ present in the sample. T
 ## Required Geometry ##
 Image 
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Cell Attribute Array** | Mask | bool | (1) | Specifies if the **Cell** is to be counted as part of the *sample* or not |
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 ## License & Copyright ##

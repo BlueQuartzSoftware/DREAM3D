@@ -24,12 +24,12 @@ This **Filter** creates a .dat file that can be used in conjunction with [GMT](h
 ## Required Geometry ##
 Triangle
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Ensemble Attribute Array** | GBDC | Double | (n,m,l,o,q,r) | 5 parameter GBCD data. The 6<sup>th</sup> component is used internally to track the northern vs. southern hemisphere of the Lambert sphere |
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 ## License & Copyright ##

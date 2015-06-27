@@ -13,10 +13,10 @@ None
 ## Required Geometry ##
 Triangle
 
-## Required Arrays ##
+## Required Objects ##
 None
 
-## Created Arrays ##
+## Created Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Face Attribute Array**  | FaceNormals | double | (3) | Specifies the normal of each **Face** |

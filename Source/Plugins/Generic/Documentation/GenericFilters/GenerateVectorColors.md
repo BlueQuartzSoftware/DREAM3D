@@ -15,14 +15,14 @@ This **Filter** generates a color for each **Element** based on the vector assig
 ## Required Geometry ##
 Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Element Attribute Array** | VectorData | float | (3) | Vectors the colors will represent |
 | **Element Attribute Array** | Mask | bool | (1) | Used to define **Elements** as *good* or *bad*  |
 
 
-## Created Arrays ##
+## Created Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Element Attribute Array** | Colors | uint8_t | (3) | RGB colors |

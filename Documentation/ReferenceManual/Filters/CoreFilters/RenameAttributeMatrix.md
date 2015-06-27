@@ -15,12 +15,12 @@ This **Filter** renames a user chosen **Attribute Matrix**.
 ## Required Geometry ##
 Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Attribute Matrix** | None | Any | N/A | **Attribute Matrix** to rename |
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 ## License & Copyright ##

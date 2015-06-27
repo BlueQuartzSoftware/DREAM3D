@@ -24,12 +24,12 @@ If _Fill Holes_ is set to *true*:
 ## Required Geometry ##
 Image 
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Cell Attribute Array** | Mask | bool | (1) | *Mask* array defining what is sample and what is not |
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 ## License & Copyright ##

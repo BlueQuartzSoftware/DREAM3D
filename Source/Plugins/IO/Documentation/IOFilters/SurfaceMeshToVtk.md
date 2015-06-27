@@ -22,14 +22,14 @@ binary format as stipulated by the VTK file format.
 ## Required Geometry ##
 Triangle
 
-## Required Arrays ##
+## Required Objects ##
 
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | Triangle | SurfaceMeshFaceLabels | int  | (2)   | The list of all triangles (faces) in the mesh. Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
 | Vertex | SurfaceMeshNodeType | int | (1) | The shared node (vertex) list. Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 

@@ -37,14 +37,14 @@ None
 
 Voxel DataContainer
 
-## Required Arrays ##
+## Required Objects ##
 
 | Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|------------------------------|
 | Cell | CellEulerAngles | | These are the angles used to determine the colors | Read H5Ebsd File (IO), Match Crystallography (SyntheticBuilding) |
 
 
-## Created Arrays ##
+## Created Objects ##
 
 | Type | Name | Description | Comment |
 |------|------|-------------|---------|

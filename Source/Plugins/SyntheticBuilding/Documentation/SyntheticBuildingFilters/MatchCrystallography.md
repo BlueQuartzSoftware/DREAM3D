@@ -22,7 +22,7 @@ For more information on synthetic building, visit the [tutorial](@ref tutorialsy
 ## Required Geometry ##
 Image
 
-## Required Arrays ##
+## Required Objects ##
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs |
@@ -35,7 +35,7 @@ Image
 | **Ensemble Attribute Array** | PhaseTypes | uint32_t | (1) | Enumeration specifying the phase type of each **Ensemble** |
 | **Ensemble Attribute Array** | NumFeatures | int32_t | (1) | Specifies the number of **Features** in each **Ensemble** |
 
-## Created Arrays ##
+## Created Objects ##
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
 | **Cell Attribute Array** | EulerAngles | float | (3) | Three angles defining the orientation of the **Cell** in Bunge convention (Z-X-Z) |

@@ -17,7 +17,7 @@ This **Filter** identifies all **Triangles** between neighboring **Features** th
 ## Required Geometry ##
 Image + Triangle
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Feature Attribute Array** | AvgQuats | float | (4) | Specifies the average orienation of each **Feature** in quaternion representation |
@@ -26,7 +26,7 @@ Image + Triangle
 | **Face Attribute Array** | FaceLabels | int32_t | (2) | Specifies which **Features** are on either side of each triangle |
 | **Face Attribute Array** | FaceNormals | double | (3) | Specifies the normal of each triangle. Only required if _Compute Coherence_ is checked |
 
-## Created Arrays ##
+## Created Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Face Attribute Array** | TwinBoundary | bool | (1) | Specifies whether a given **Face** belongs to a twin boundary |

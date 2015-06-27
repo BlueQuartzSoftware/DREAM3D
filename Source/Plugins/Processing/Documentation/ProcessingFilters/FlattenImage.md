@@ -15,12 +15,12 @@ This **Filter** allows the user to select a *flattening* method for turning an a
 ## Required Geometry ##
 Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Element Attribute Array** | ImageData | uint8_t | (3) or (4) | RGB or ARGB values |
 
-## Created Arrays ##
+## Created Objects ##
 | Kind | Default Name | Type | Component Dimensions (dimension, size) | Description |
 |------|--------------|-------------|---------|-----|
 | **Element Attribute Array** | FlatImageData | uint8_t | (1) | Grayscale values |

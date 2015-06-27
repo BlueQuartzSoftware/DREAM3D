@@ -18,10 +18,10 @@ This **Filter** reads in a .dream3d data file into the current data structure. T
 ## Required Geometry ##
 Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 None
 
-## Created Arrays ##
+## Created Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | Any | None | Any | Any | Object(s) read in from the .dream3d will all be inserted into the current data structure |

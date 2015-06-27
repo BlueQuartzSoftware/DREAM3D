@@ -16,7 +16,7 @@ This **Filter** allows the user to move an **Attribute Array** from one **Attrib
 ## Required Geometry ##
 Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Attribute Matrix**  | None         | Any | N/A | **Attribute Matrix** to move |
@@ -25,7 +25,7 @@ Not Applicable
 | **Attribute Matrix**  | None         | Any | N/A | **Attribute Matrix** in which to move the selected **Attribute Array** |
 
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 ## License & Copyright ##
