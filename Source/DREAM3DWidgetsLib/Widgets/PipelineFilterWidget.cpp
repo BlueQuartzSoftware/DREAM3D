@@ -432,14 +432,14 @@ void PipelineFilterWidget::linkConditionalWidgets(QVector<FilterParameter::Point
   // Figure out if we have any "Linked Boolean Widgets" to hook up to other widgets
   for (QVector<FilterParameter::Pointer>::iterator iter = filterParameters.begin(); iter != filterParameters.end(); ++iter )
   {
-    FilterParameter::Pointer option = (*iter);
-    LinkedBooleanFilterParameter::Pointer optionPtr = boost::dynamic_pointer_cast<LinkedBooleanFilterParameter>(option);
-    if(NULL != optionPtr.get() && option->getWidgetType().compare(FilterParameterWidgetType::LinkedBooleanWidget) == 0 )
+    FilterParameter::Pointer filterParameter = (*iter);
+    LinkedBooleanFilterParameter::Pointer filterParameterPtr = boost::dynamic_pointer_cast<LinkedBooleanFilterParameter>(filterParameter);
+    if(NULL != filterParameterPtr.get() && filterParameter->getWidgetType().compare(FilterParameterWidgetType::LinkedBooleanWidget) == 0 )
     {
-      QStringList linkedProps = optionPtr->getConditionalProperties();
+      QStringList linkedProps = filterParameterPtr->getConditionalProperties();
 
       QStringListIterator iter = QStringListIterator(linkedProps);
-      QWidget* checkboxSource = m_PropertyToWidget[optionPtr->getPropertyName()];
+      QWidget* checkboxSource = m_PropertyToWidget[filterParameterPtr->getPropertyName()];
       while(iter.hasNext())
       {
         QString propName = iter.next();
@@ -455,12 +455,17 @@ void PipelineFilterWidget::linkConditionalWidgets(QVector<FilterParameter::Point
           }
         }
       }
+      LinkedBooleanWidget* boolWidget = qobject_cast<LinkedBooleanWidget*>(checkboxSource);
+      if(boolWidget)
+      {
+        boolWidget->updateLinkedWidgets();
+      }
     }
 
 
     // Figure out if we have any Linked ComboBox Widgets to hook up to other widgets
-    LinkedChoicesFilterParameter::Pointer optionPtr2 = boost::dynamic_pointer_cast<LinkedChoicesFilterParameter>(option);
-    if(NULL != optionPtr2.get() && option->getWidgetType().compare(FilterParameterWidgetType::ChoiceWidget) == 0 )
+    LinkedChoicesFilterParameter::Pointer optionPtr2 = boost::dynamic_pointer_cast<LinkedChoicesFilterParameter>(filterParameter);
+    if(NULL != optionPtr2.get() && filterParameter->getWidgetType().compare(FilterParameterWidgetType::ChoiceWidget) == 0 )
     {
       QStringList linkedProps = optionPtr2->getLinkedProperties();
 
@@ -476,11 +481,11 @@ void PipelineFilterWidget::linkConditionalWidgets(QVector<FilterParameter::Point
           connect(checkboxSource, SIGNAL(conditionalPropertyChanged(int)),
                   w, SLOT(setLinkedComboBoxState(int) ) );
 
-          /*ChoiceWidget* choiceWidget = qobject_cast<ChoiceWidget*>(checkboxSource);
+          ChoiceWidget* choiceWidget = qobject_cast<ChoiceWidget*>(checkboxSource);
           if(choiceWidget)
           {
             choiceWidget->widgetChanged(choiceWidget->getCurrentIndex(), false);
-          }*/
+          }
         }
       }
     }

@@ -184,6 +184,10 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
      */
     void populatePipelineView(FilterPipeline::Pointer pipeline, int index);
 
+    /**
+     * @brief eventFilter
+     * @return
+     */
     bool eventFilter(QObject*, QEvent*);
 
   public slots:
