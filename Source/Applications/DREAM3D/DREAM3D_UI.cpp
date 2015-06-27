@@ -578,6 +578,12 @@ void DREAM3D_UI::setupGui()
 
   // Set the IssuesDockWidget as a PipelineMessageObserver Object.
   pipelineViewWidget->setPipelineMessageObserver(issuesDockWidget);
+
+  m_ProgressBar->hide();
+  horizontalLayout_2->removeWidget(m_ProgressBar);
+  horizontalLayout_2->removeWidget(startPipelineBtn);
+  horizontalLayout_2->addSpacerItem(progressSpacer);
+  horizontalLayout_2->addWidget(startPipelineBtn);
 }
 
 
@@ -829,6 +835,12 @@ void DREAM3D_UI::on_startPipelineBtn_clicked()
     return;
   }
 
+  horizontalLayout_2->removeWidget(startPipelineBtn);
+  horizontalLayout_2->removeItem(progressSpacer);
+  horizontalLayout_2->addWidget(m_ProgressBar, 1);
+  horizontalLayout_2->addWidget(startPipelineBtn);
+  m_ProgressBar->show();
+
   if (m_WorkerThread != NULL)
   {
     m_WorkerThread->wait(); // Wait until the thread is complete
@@ -975,6 +987,13 @@ void DREAM3D_UI::pipelineDidFinish()
   m_PipelineInFlight = FilterPipeline::NullPointer();// This _should_ remove all the filters and deallocate them
   startPipelineBtn->setText("Go");
   m_ProgressBar->setValue(0);
+
+  m_ProgressBar->hide();
+  horizontalLayout_2->removeWidget(m_ProgressBar);
+  horizontalLayout_2->removeWidget(startPipelineBtn);
+  horizontalLayout_2->addSpacerItem(progressSpacer);
+  horizontalLayout_2->addWidget(startPipelineBtn);
+
 
   // Re-enable FilterListDockWidget signals - resume adding filters
   filterListDockWidget->blockSignals(false);

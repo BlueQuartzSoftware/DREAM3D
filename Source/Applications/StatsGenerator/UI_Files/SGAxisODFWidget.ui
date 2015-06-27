@@ -36,7 +36,16 @@
        <string>ODF</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>5</number>
+       </property>
+       <property name="topMargin">
+        <number>5</number>
+       </property>
+       <property name="rightMargin">
+        <number>5</number>
+       </property>
+       <property name="bottomMargin">
         <number>5</number>
        </property>
        <item>
@@ -68,14 +77,23 @@
             <bool>true</bool>
            </property>
            <layout class="QGridLayout" name="gridLayout_2">
+            <property name="leftMargin">
+             <number>4</number>
+            </property>
+            <property name="topMargin">
+             <number>4</number>
+            </property>
+            <property name="rightMargin">
+             <number>4</number>
+            </property>
+            <property name="bottomMargin">
+             <number>4</number>
+            </property>
             <property name="horizontalSpacing">
              <number>3</number>
             </property>
             <property name="verticalSpacing">
              <number>5</number>
-            </property>
-            <property name="margin">
-             <number>4</number>
             </property>
             <item row="1" column="0">
              <widget class="QPushButton" name="deleteODFTextureBtn">
@@ -255,14 +273,23 @@
             <property name="sizeConstraint">
              <enum>QLayout::SetMinimumSize</enum>
             </property>
+            <property name="leftMargin">
+             <number>4</number>
+            </property>
+            <property name="topMargin">
+             <number>4</number>
+            </property>
+            <property name="rightMargin">
+             <number>4</number>
+            </property>
+            <property name="bottomMargin">
+             <number>4</number>
+            </property>
             <property name="horizontalSpacing">
              <number>8</number>
             </property>
             <property name="verticalSpacing">
              <number>-1</number>
-            </property>
-            <property name="margin">
-             <number>4</number>
             </property>
             <item row="2" column="0">
              <widget class="QLabel" name="label_3">
@@ -544,7 +571,7 @@
             <x>0</x>
             <y>0</y>
             <width>862</width>
-            <height>195</height>
+            <height>196</height>
            </rect>
           </property>
           <property name="sizePolicy">
@@ -563,7 +590,16 @@
            <property name="spacing">
             <number>4</number>
            </property>
-           <property name="margin">
+           <property name="leftMargin">
+            <number>5</number>
+           </property>
+           <property name="topMargin">
+            <number>5</number>
+           </property>
+           <property name="rightMargin">
+            <number>5</number>
+           </property>
+           <property name="bottomMargin">
             <number>5</number>
            </property>
            <item>
@@ -619,8 +655,11 @@
            <property name="text">
             <string>Update ODF</string>
            </property>
-           <property name="default">
+           <property name="autoDefault">
             <bool>true</bool>
+           </property>
+           <property name="default">
+            <bool>false</bool>
            </property>
           </widget>
          </item>

@@ -193,7 +193,29 @@ sss</string>
            <number>0</number>
           </property>
           <item>
+           <spacer name="progressSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::MinimumExpanding</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
            <widget class="QProgressBar" name="m_ProgressBar">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="value">
              <number>0</number>
             </property>
@@ -205,7 +227,7 @@ sss</string>
              <string>Go</string>
             </property>
             <property name="default">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
            </widget>
           </item>
