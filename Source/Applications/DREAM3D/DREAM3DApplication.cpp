@@ -520,9 +520,9 @@ void DREAM3DApplication::unregisterDREAM3DWindow(DREAM3D_UI* window)
 {
   m_DREAM3DInstanceMap.remove(window);
 
-#if defined (Q_OS_MAC)
-    m_GlobalMenu->setViewMenu(NULL);
-#endif
+//#if defined (Q_OS_MAC)
+//    m_GlobalMenu->setViewMenu(NULL);
+//#endif
 
 }
 
@@ -1249,10 +1249,11 @@ void DREAM3DApplication::activeWindowChanged(DREAM3D_UI* instance)
 
     #if defined(Q_OS_MAC)
       // Set this instance's view menu to the global menu
-      QMenu* viewMenu = m_DREAM3DInstanceMap.value(instance, NULL);
-      if (NULL != viewMenu)
+      QMenuBar* menuBar = m_GlobalMenu->getMenuBar();
+      QMenu* viewMenuToAdd = m_DREAM3DInstanceMap.value(instance, NULL);
+      if (NULL != viewMenuToAdd)
       {
-        m_GlobalMenu->setViewMenu(viewMenu);
+        m_GlobalMenu->setViewMenu(viewMenuToAdd);
       }
 
       /* If the active signal got fired and there is now only one window,
@@ -1260,25 +1261,38 @@ void DREAM3DApplication::activeWindowChanged(DREAM3D_UI* instance)
        * Enable menu items. */
       if (m_DREAM3DInstanceMap.size() == 1)
       {
+        // We are launching the first window, so remove the placeholder view menu
+        if (NULL != m_PlaceholderViewMenu)
+        {
+          menuBar->removeAction(m_PlaceholderViewMenu->menuAction());
+        }
         toggleGlobalMenuItems(true);
       }
     #endif
   }
-  /* If the inactive signal got fired and there are no more windows,
-   * this means that the last window has been closed.
-   * Disable menu items. */
-  else if (m_DREAM3DInstanceMap.size() <= 0)
-  {
-    m_ActiveWindow = NULL;
-
-    #if defined(Q_OS_MAC)
-      m_GlobalMenu->setViewMenu(m_PlaceholderViewMenu);
-      toggleGlobalMenuItems(false);
-    #endif
-  }
   else
   {
-    // Do something with the inactive DREAM3D windows here
+    #if defined(Q_OS_MAC)
+    // Remove the inactive window's view menu from the menu bar
+    QMenuBar* menuBar = m_GlobalMenu->getMenuBar();
+    QMenu* viewMenuToRemove = m_DREAM3DInstanceMap.value(instance, NULL);
+    if(NULL != viewMenuToRemove) {
+      menuBar->removeAction(viewMenuToRemove->menuAction());
+    }
+    #endif
+
+    /* If the inactive signal got fired and there are no more windows,
+     * this means that the last window has been closed.
+     * Disable menu items. */
+    if (m_DREAM3DInstanceMap.size() <= 0)
+    {
+      m_ActiveWindow = NULL;
+
+      #if defined(Q_OS_MAC)
+        m_GlobalMenu->setViewMenu(m_PlaceholderViewMenu);
+        toggleGlobalMenuItems(false);
+      #endif
+    }
   }
 }
 

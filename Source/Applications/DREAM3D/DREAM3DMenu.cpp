@@ -36,6 +36,8 @@
 
 #include "DREAM3DMenu.h"
 
+#include <iostream>
+
 #include <QtCore/QDebug>
 
 #include "Applications/DREAM3D/DREAM3DApplication.h"
@@ -320,18 +322,10 @@ void DREAM3DMenu::setViewMenu(QMenu* viewMenu)
 {
   if (m_MenuBar != NULL)
   {
-    if(NULL != m_MenuView) {
-      m_MenuBar->removeAction(m_MenuView->menuAction());
-    }
-
     m_MenuView = viewMenu;
 
-    if(NULL != viewMenu)
-    {
-      QAction* bookmarksMenuAction = m_MenuBookmarks->menuAction();
-      m_MenuBar->insertMenu(bookmarksMenuAction, viewMenu);
-    }
-
+    QAction* bookmarksMenuAction = m_MenuBookmarks->menuAction();
+    QAction* viewMenuAction = m_MenuBar->insertMenu(bookmarksMenuAction, viewMenu);
   }
 }
 
