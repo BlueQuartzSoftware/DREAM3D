@@ -146,9 +146,9 @@ void UpdateCheck::networkReplied(QNetworkReply* reply)
     QString releaseDate = d3dJson["Release Date"].toString();
     QString releaseType = d3dJson["Release Type"].toString();
 
-    QString serverMajor = QString::number(d3dJson["Major"].toInt());
-    QString serverMinor = QString::number(d3dJson["Minor"].toInt());
-    QString serverPatch = QString::number(d3dJson["Patch"].toInt());
+    QString serverMajor = d3dJson["Major"].toString();
+    QString serverMinor = d3dJson["Minor"].toString();
+    QString serverPatch = d3dJson["Patch"].toString();
 
     QString appMajor = DREAM3DLib::Version::Major();
     QString appMinor = DREAM3DLib::Version::Minor();
