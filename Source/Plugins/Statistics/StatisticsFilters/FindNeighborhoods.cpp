@@ -233,7 +233,7 @@ void FindNeighborhoods::find_neighborhoods()
     if (i % 1000 == 0)
     {
 
-      QString ss = QObject::tr("Working On Feature %1 of %2").arg(i).arg(totalFeatures);
+      QString ss = QObject::tr("Working on Feature %1 of %2").arg(i).arg(totalFeatures);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     }
     x = m_Centroids[3 * i];

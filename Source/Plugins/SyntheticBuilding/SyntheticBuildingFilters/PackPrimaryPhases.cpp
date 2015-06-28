@@ -1011,6 +1011,9 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
     }
   }
 
+  QString ss = QObject::tr("Packing Features || Starting Feature Placement...");
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+
   tDims[0] = static_cast<size_t>(gid);
   m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->resizeAttributeArrays(tDims);
   totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
