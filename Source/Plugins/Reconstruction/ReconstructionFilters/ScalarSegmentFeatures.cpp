@@ -246,8 +246,11 @@ void ScalarSegmentFeatures::updateFeatureInstancePointers()
 // -----------------------------------------------------------------------------
 void ScalarSegmentFeatures::dataCheck()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
+  DataArrayPath tempPath;
+
+  SegmentFeatures::dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   // Set the DataContainerName for the Parent Class (SegmentFeatures) to Use
   setDataContainerName(m_ScalarArrayPath.getDataContainerName());
@@ -305,7 +308,6 @@ void ScalarSegmentFeatures::preflight()
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
-  SegmentFeatures::preflight();
   setInPreflight(false);
 }
 

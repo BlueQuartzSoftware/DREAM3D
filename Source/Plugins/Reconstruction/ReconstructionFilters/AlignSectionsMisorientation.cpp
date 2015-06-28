@@ -136,6 +136,9 @@ void AlignSectionsMisorientation::dataCheck()
 {
   setErrorCondition(0);
 
+  AlignSections::dataCheck();
+  if(getErrorCondition() < 0) { return; }
+
   // Set the DataContainerName and AttributematrixName for the Parent Class (AlignSections) to Use.
   setDataContainerName(m_QuatsArrayPath.getDataContainerName());
   setCellAttributeMatrixName(m_QuatsArrayPath.getAttributeMatrixName());
@@ -180,7 +183,6 @@ void AlignSectionsMisorientation::preflight()
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
-  AlignSections::preflight();
   setInPreflight(false);
 }
 

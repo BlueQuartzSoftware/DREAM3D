@@ -139,6 +139,9 @@ void AlignSectionsMutualInformation::dataCheck()
 {
   setErrorCondition(0);
 
+  AlignSections::dataCheck();
+  if(getErrorCondition() < 0) { return; }
+
   INIT_DataArray(m_FeatureCounts, int32_t);
 
   // Set the DataContainerName and AttributematrixName for the Parent Class (AlignSections) to Use.
@@ -183,7 +186,6 @@ void AlignSectionsMutualInformation::preflight()
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
-  AlignSections::preflight();
   setInPreflight(false);
 }
 
