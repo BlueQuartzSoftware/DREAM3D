@@ -193,11 +193,11 @@ void WritePoleFigure::dataCheck()
   if (m_OutputPath.isEmpty() == true)
   {
     setErrorCondition(-1003);
-    notifyErrorMessage(getHumanLabel(), "Output directory must be set", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "The output directory must be set", getErrorCondition());
   }
   else if (path.exists() == false)
   {
-    QString ss = QObject::tr("The directory path for the output file does not exist. DREAM3D will attempt to create this path during execution of the filter.");
+    QString ss = QObject::tr("The directory path for the output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
     notifyWarningMessage(getHumanLabel(), ss, -1);
   }
 
@@ -306,7 +306,7 @@ void WritePoleFigure::writeImage(QImage image, QString label)
   if (!saved)
   {
     setErrorCondition(-90011);
-    QString ss = QObject::tr("The Pole Figure image file '%1' was not saved.").arg(filename);
+    QString ss = QObject::tr("The Pole Figure image file '%1' was not saved").arg(filename);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 }

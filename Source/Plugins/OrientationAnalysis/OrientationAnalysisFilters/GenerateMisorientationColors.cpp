@@ -340,7 +340,7 @@ void GenerateMisorientationColors::execute()
     if (notSupported->getValue(i) == 1)
     {
       QString msg("The symmetry of ");
-      msg.append(ops[i]->getSymmetryName()).append(" is not currently supported for misorientation coloring. Elements with this symmetry have been set to black.");
+      msg.append(ops[i]->getSymmetryName()).append(" is not currently supported for misorientation coloring. Elements with this symmetry have been set to black");
       notifyWarningMessage(getHumanLabel(), msg, -5000);
     }
   }
@@ -348,7 +348,7 @@ void GenerateMisorientationColors::execute()
   // Check for bad voxels which will show up as black also.
   if (notSupported->getValue(12) == 1)
   {
-    QString msg("There were elements with an unknown crystal symmetry due most likely being marked as 'a 'bad'. These elements have been colored black BUT black is a valid color for misorientation coloring. Please understand this when visualizing your data.");
+    QString msg("There were elements with an unknown crystal symmetry due most likely being marked as 'a 'bad'. These elements have been colored black BUT black is a valid color for misorientation coloring. Please understand this when visualizing your data");
     notifyWarningMessage(getHumanLabel(), msg, -5001);
   }
 

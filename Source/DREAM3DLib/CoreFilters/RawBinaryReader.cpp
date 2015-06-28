@@ -360,7 +360,7 @@ void RawBinaryReader::dataCheck()
   {
 
     QString ss = QObject::tr("The file size is %1 but the number of bytes needed to fill the array is %2. This condition would cause an error reading the input file."
-                             " Please adjust the input parameters to match the size of the file or select a different data file.").arg(fileSize).arg(allocatedBytes);
+                             " Please adjust the input parameters to match the size of the file or select a different data file").arg(fileSize).arg(allocatedBytes);
     setErrorCondition(RBR_FILE_TOO_SMALL);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
@@ -368,7 +368,7 @@ void RawBinaryReader::dataCheck()
   {
 
     QString ss = QObject::tr("The file size is %1 but the number of bytes needed to fill the array is %2 which is less than the size of the file."
-                             " DREAM3D will read only the first part of the file into the array.").arg(fileSize).arg(allocatedBytes);
+                             " DREAM.3D will read only the first part of the file into the array").arg(fileSize).arg(allocatedBytes);
     notifyWarningMessage(getHumanLabel(), ss, RBR_FILE_TOO_BIG);
   }
 
