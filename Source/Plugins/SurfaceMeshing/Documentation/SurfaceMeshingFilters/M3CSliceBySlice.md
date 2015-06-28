@@ -77,7 +77,7 @@ _The accurate reconstruction of three-dimensional (3D) boundary surfaces from tw
 
 ## License & Copyright ##
 
-Please see the description file distributed with this plugin.
+Please see the description file distributed with this **Plugin**
 
 ## DREAM.3D Mailing Lists ##
 
