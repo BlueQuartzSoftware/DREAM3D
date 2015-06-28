@@ -2,10 +2,10 @@
 
 DREAM.3D is an open source, cross-platform and modular software package that allows users to reconstruct, instantiate, quantify, mesh, handle and visualize multidimensional, multimodal data. The core software package has many major functionalities, including:
 
-@li Import a series of Electron Backscatter Diffraction (EBSD) data files (either TSL .ang or HKL .ctf) or images (.bmp, .jpeg, .tif or .png) as a 3D volume and export the data packed into a single HDF5 data file in order to reduce data size and clutter
-@li Alignment, cleaning, reconstruction, segmentation and analysis of imported data
-@li Statistics, either synthetically created or from real data, can be used to generate a statistically equivelent material structure
-@li Reconstructed and synthetic volumes can be surfaced meshed to allow export into FEM or other simulations.
++ Import a series of Electron Backscatter Diffraction (EBSD) data files (either TSL .ang or HKL .ctf) or images (.bmp, .jpeg, .tif or .png) as a 3D volume and export the data packed into a single HDF5 data file in order to reduce data size and clutter
++ Alignment, cleaning, reconstruction, segmentation and analysis of imported data
++ Statistics, either synthetically created or from real data, can be used to generate a statistically equivelent material structure
++ Reconstructed and synthetic volumes can be surfaced meshed to allow export into FEM or other simulations.
 
 The above items represent only a subset of the specific capabilities of DREAM.3D.  In general, DREAM.3D can be considered a generic tool for processing multidimensional, multimodal data. The main [DREAM.3D web site](http://dream3d.bluequartz.net) has more information on the project, in addition to official binary distributions and example data files. DREAM.3D is built with a **Plugin** system that allows other institutions to build additional **Filters** using their own programming resources and intellectual property and still protect those rights under the BSD license.
 
