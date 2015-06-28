@@ -1,122 +1,10 @@
 {
     "0": {
-        "Filter_Human_Label": "Read DREAM3D Data File",
+        "Filter_Human_Label": "Read DREAM.3D Data File",
         "Filter_Name": "DataContainerReader",
         "InputFile": "Data/Output/SmallIN100Mesh.dream3d",
         "InputFileDataContainerArrayProxy": {
             "Data Containers": [
-                {
-                    "Attribute Matricies": [
-                        {
-                            "Data Arrays": [
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "SurfaceMeshFaceAreas",
-                                    "Object Type": "DataArray<double>",
-                                    "Path": "/DataContainers/TriangleDataContainer/FaceData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "SurfaceMeshFaceDihedralAngles",
-                                    "Object Type": "DataArray<double>",
-                                    "Path": "/DataContainers/TriangleDataContainer/FaceData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        6
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "SurfaceMeshFaceIPFColors",
-                                    "Object Type": "DataArray<uint8_t>",
-                                    "Path": "/DataContainers/TriangleDataContainer/FaceData",
-                                    "Tuple Dimensions": [
-                                        6
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        2
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "SurfaceMeshFaceLabels",
-                                    "Object Type": "DataArray<int32_t>",
-                                    "Path": "/DataContainers/TriangleDataContainer/FaceData",
-                                    "Tuple Dimensions": [
-                                        2
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        3
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "SurfaceMeshFaceMisorientationColors",
-                                    "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/TriangleDataContainer/FaceData",
-                                    "Tuple Dimensions": [
-                                        3
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        3
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "SurfaceMeshFaceNormals",
-                                    "Object Type": "DataArray<double>",
-                                    "Path": "/DataContainers/TriangleDataContainer/FaceData",
-                                    "Tuple Dimensions": [
-                                        3
-                                    ],
-                                    "Version": 2
-                                }
-                            ],
-                            "Flag": 2,
-                            "Name": "FaceData",
-                            "Type": 2
-                        },
-                        {
-                            "Data Arrays": [
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "SurfaceMeshNodeType",
-                                    "Object Type": "DataArray<int8_t>",
-                                    "Path": "/DataContainers/TriangleDataContainer/VertexData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                }
-                            ],
-                            "Flag": 2,
-                            "Name": "VertexData",
-                            "Type": 0
-                        }
-                    ],
-                    "Flag": 2,
-                    "Name": "TriangleDataContainer",
-                    "Type": 0
-                },
                 {
                     "Attribute Matricies": [
                         {
@@ -201,6 +89,19 @@
                                 },
                                 {
                                     "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "Mask",
+                                    "Object Type": "DataArray<bool>",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
+                                    "Tuple Dimensions": [
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
                                         3
                                     ],
                                     "Flag": 2,
@@ -258,19 +159,6 @@
                                     "Flag": 2,
                                     "Name": "SEM Signal",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "ThresholdArray",
-                                    "Object Type": "DataArray<bool>",
                                     "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         1
@@ -439,6 +327,19 @@
                                         1
                                     ],
                                     "Flag": 2,
+                                    "Name": "NumNeighbors2",
+                                    "Object Type": "DataArray<int32_t>",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
+                                    "Tuple Dimensions": [
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
                                     "Name": "ParentIds",
                                     "Object Type": "DataArray<int32_t>",
                                     "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
@@ -502,6 +403,118 @@
                     "Flag": 2,
                     "Name": "ImageDataContainer",
                     "Type": 0
+                },
+                {
+                    "Attribute Matricies": [
+                        {
+                            "Data Arrays": [
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "FaceAreas",
+                                    "Object Type": "DataArray<double>",
+                                    "Path": "/DataContainers/TriangleDataContainer/FaceData",
+                                    "Tuple Dimensions": [
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "FaceDihedralAngles",
+                                    "Object Type": "DataArray<double>",
+                                    "Path": "/DataContainers/TriangleDataContainer/FaceData",
+                                    "Tuple Dimensions": [
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        2
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "FaceLabels",
+                                    "Object Type": "DataArray<int32_t>",
+                                    "Path": "/DataContainers/TriangleDataContainer/FaceData",
+                                    "Tuple Dimensions": [
+                                        2
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        3
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "FaceNormals",
+                                    "Object Type": "DataArray<double>",
+                                    "Path": "/DataContainers/TriangleDataContainer/FaceData",
+                                    "Tuple Dimensions": [
+                                        3
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        6
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "SurfaceMeshFaceIPFColors",
+                                    "Object Type": "DataArray<uint8_t>",
+                                    "Path": "/DataContainers/TriangleDataContainer/FaceData",
+                                    "Tuple Dimensions": [
+                                        6
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        3
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "SurfaceMeshFaceMisorientationColors",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/TriangleDataContainer/FaceData",
+                                    "Tuple Dimensions": [
+                                        3
+                                    ],
+                                    "Version": 2
+                                }
+                            ],
+                            "Flag": 2,
+                            "Name": "FaceData",
+                            "Type": 2
+                        },
+                        {
+                            "Data Arrays": [
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "NodeType",
+                                    "Object Type": "DataArray<int8_t>",
+                                    "Path": "/DataContainers/TriangleDataContainer/VertexData",
+                                    "Tuple Dimensions": [
+                                        1
+                                    ],
+                                    "Version": 2
+                                }
+                            ],
+                            "Flag": 2,
+                            "Name": "VertexData",
+                            "Type": 0
+                        }
+                    ],
+                    "Flag": 2,
+                    "Name": "TriangleDataContainer",
+                    "Type": 0
                 }
             ]
         },
@@ -524,31 +537,31 @@
             "Data Array Name": "Phases",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.0.1877",
+        "FilterVersion": "6.0.1964",
         "Filter_Human_Label": "Find GBCD",
         "Filter_Name": "FindGBCD",
         "GBCDArrayName": "GBCD",
         "GBCDRes": 9,
         "SurfaceMeshFaceAreasArrayPath": {
             "Attribute Matrix Name": "FaceData",
-            "Data Array Name": "SurfaceMeshFaceAreas",
+            "Data Array Name": "FaceAreas",
             "Data Container Name": "TriangleDataContainer"
         },
         "SurfaceMeshFaceLabelsArrayPath": {
             "Attribute Matrix Name": "FaceData",
-            "Data Array Name": "SurfaceMeshFaceLabels",
+            "Data Array Name": "FaceLabels",
             "Data Container Name": "TriangleDataContainer"
         },
         "SurfaceMeshFaceNormalsArrayPath": {
             "Attribute Matrix Name": "FaceData",
-            "Data Array Name": "SurfaceMeshFaceNormals",
+            "Data Array Name": "FaceNormals",
             "Data Container Name": "TriangleDataContainer"
         }
     },
     "2": {
         "CrystalStructure": 1,
-        "FilterVersion": "6.0.1877",
-        "Filter_Human_Label": "Write GMT Pole Figure Data (GBCD Data)",
+        "FilterVersion": "6.0.1964",
+        "Filter_Human_Label": "Write GBCD Pole Figure (GMT 5)",
         "Filter_Name": "VisualizeGBCDGMT",
         "GBCDArrayPath": {
             "Attribute Matrix Name": "FaceEnsembleData",
@@ -565,8 +578,8 @@
     },
     "3": {
         "CrystalStructure": 1,
-        "FilterVersion": "6.0.1877",
-        "Filter_Human_Label": "Write VTK Pole Figure (GBCD Data)",
+        "FilterVersion": "6.0.1964",
+        "Filter_Human_Label": "Write GBCD Pole Figure (VTK)",
         "Filter_Name": "VisualizeGBCDPoleFigure",
         "GBCDArrayPath": {
             "Attribute Matrix Name": "FaceEnsembleData",
@@ -582,8 +595,8 @@
         "OutputFile": "Data/Output/SmallIN100GBCD/SmallIn100VTK.vtk"
     },
     "4": {
-        "FilterVersion": "6.0.1877",
-        "Filter_Human_Label": "Write DREAM3D Data File",
+        "FilterVersion": "6.0.1964",
+        "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100Mesh_GBCD.dream3d",
         "WriteXdmfFile": 1

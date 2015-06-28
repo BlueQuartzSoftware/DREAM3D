@@ -42,7 +42,7 @@
     },
     "2": {
         "FilterVersion": "6.0.1877",
-        "Filter_Human_Label": "Write DREAM3D Data File",
+        "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100.dream3d",
         "WriteXdmfFile": 1
