@@ -1,8 +1,7 @@
 H5EBSD Data File Specification {#h5ebsdfile}
 ================
 
-## Introduction
-The EBSD Data from multiple vendors is stored in a data file using the HDF5 file format library. Although the general layout of the HDF5 file is the same between vendors, there are details that are NOT the same between vendors, because each vendor chooses to save different types of data. The top-level datasets that deal with the basic volume information is the same for every file.
+DREAM.3D can store EBSD data from multiple vendors in a data file using the [HDF5](http://www.hdfgroup.org) file format library. Although the general layout of the HDF5 file is the same between vendors, there are details that are _not_ the same between vendors, because each vendor chooses to save different types of data. The top level datasets that deal with the basic volume information is the same for every file.
 
 
 
@@ -192,7 +191,7 @@ Each Slice is grouped into its own H5G_GROUP with the Name of the group as the i
 
 ## Stacking Order Discussion ##
 
-The **Stacking Order** refers to the order in which the z slices are stacked together when they are read from the file. The enumerations are also in the EbsdLibConstants.h header file.
+The _stacking order_ refers to the order in which the z slices are stacked together when they are read from the file. The enumerations are also in the EbsdLibConstants.h header file.
 
 As a further explanation, if the ordering is **Low To High**, then the slice with the lowest number is positioned at Z=0 in 3D Cartesian space. For example, if your data set is numbered from 23 to 86 with file names of the form Slice\_023.ang and you select "Low To High", then the data inside of file Slice\_023.ang will be positioned at Z=0 during any method that has to deal with the data. The opposite of this is if the user were to select to have their data **High to Low**, in which case, the file with name Slice\_086.ang will be positioned at Z=0 and the file with name "Slice_023.ang" will be positioned at Z=64.
 

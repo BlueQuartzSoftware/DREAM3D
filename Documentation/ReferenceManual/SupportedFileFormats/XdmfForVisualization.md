@@ -1,23 +1,21 @@
-Xdmf For Visualization {#xdmf}
+Xdmf for Visualization {#xdmf}
 ========
 
-## Introduction ##
-[XDMF](http://www.xdmf.org) is an XML file that describes either a regular grid or an unstructured grid data set where the data can be stored in an HDF5, Binary or with the xml file itself. The user can find out more information for this format at the [Xdmf website](http://www.xdmf.org). DREAM3D will optionally write out an Xdmf file when writing a DREAM3D Data file so that users can view the processed data easily using the free [ParaView](http://www.paraview.org) application. In prior versions of DREAM3D, the only way to view the data was to write out a legacy VTK file, which can be slow and simply duplicates much of the data that is stored in the .dream3d file. This is a waste of space and is not memory efficient when it comes to ParaView loading the data from the legacy .vtk file.
+[Xdmf](http://www.xdmf.org) is an XML file that describes either a regular grid or an unstructured grid data set where the data can be stored in an [HDF5](http://www.hdfgroup.org) file, binary file or with the XML file itself. The user can find out more information for this format at the [Xdmf website](http://www.xdmf.org). DREAM.3D will optionally write out an Xdmf file when writing a DREAM.3D data file so that users can view the processed data easily using the open source [ParaView](http://www.paraview.org) application. In prior versions of DREAM.3D, the only way to view the data was to write out a legacy VTK file, which can be slow and duplicate much of the data that is stored in the .dream3d file. The Xdmf format allows for more efficient approach to visualization
 
 -------
 
 ![Opening an Xdmf File in ParaView](Images/XdmfParaViewLoading.png)
-
 @image latex Images/XdmfParaViewLoading.png "Opening an Xdmf File in ParaView" width=3in
 
 --------
 
-By using an Xdmf wrapper file the user can selectively load just the data that they are interested in viewing. This saves time loading the data, and, more importantly, reduces the amount of memory needed to load, store and view the data.
+By using an Xdmf wrapper file, the user can selectively load just the data that they are interested in viewing. This saves time loading the data, and, more importantly, reduces the amount of memory needed to load, store and view the data.
 
-**Note**: It is a REQUIREMENT that the Xdmf file and the DREAM3D file are in the same directory, because paths in the XDMF file refer to data stored in the DREAM3D file. The XML files are typically a few kilobytes in size and are, therefore, a huge savings over writing the VTK file for the same data.
+*Note:* It is a **REQUIREMENT** that the Xdmf file and the DREAM.3D file are in the same directory, because paths in the Xdmf file refer to data stored in the DREAM.3D file. The XML files are typically a few kilobytes in size and are, therefore, a huge savings over writing the VTK file for the same data. Also, **DO NOT CHANGE THE NAME OF A DREAM.3D OR ITS CORRESPONDING XDMF FILE!** The data will always be safe, but changing the names of the files disrupts the paths in the Xdmf files. If you would change the name of a DREAM.3D file, simply re-import into the DREAM.3D application and immediately export it again with a new name.
 
-## XDMF Example Contents ##
-Below is an example of what an Xdmf file might contain.
+## Xdmf Example Contents ##
+Below is an example of what an Xdmf file might contain:
 
     <?xml version="1.0"?>
     <!DOCTYPE Xdmf SYSTEM "Xdmf.dtd"[]>
