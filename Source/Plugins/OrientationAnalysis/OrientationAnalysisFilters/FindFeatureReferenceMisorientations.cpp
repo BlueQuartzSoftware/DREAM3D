@@ -317,7 +317,7 @@ void FindFeatureReferenceMisorientations::execute()
           FOrientArrayType rod(4);
           FOrientTransformsType::ax2ro(FOrientArrayType(n1, n2, n3, w), rod);
           rod = m_OrientationOps[phase1]->getMDFFZRod(rod);
-          w = rod[3];
+          w = 2.0f * atanf(rod[3]);
           w = w * (180.0f / DREAM3D::Constants::k_Pi);
           m_FeatureReferenceMisorientations[point] = w;
           idx = m_FeatureIds[point] * 2;
