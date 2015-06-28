@@ -272,7 +272,7 @@ bool DREAM3D_UI::savePipelineAs()
   QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.json";
   QString filePath = QFileDialog::getSaveFileName(this, tr("Save Pipeline To File"),
     proposedFile,
-    tr("Json File (*.json);;DREAM3D File (*.dream3d);;All Files (*.*)"));
+    tr("Json File (*.json);;DREAM.3D File (*.dream3d);;All Files (*.*)"));
   if (true == filePath.isEmpty()) { return false; }
 
   filePath = QDir::toNativeSeparators(filePath);

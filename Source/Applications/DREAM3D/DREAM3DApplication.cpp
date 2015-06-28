@@ -541,7 +541,7 @@ void DREAM3DApplication::on_actionOpen_triggered()
 {
   QString proposedDir = m_OpenDialogLastDirectory;
   QString filePath = QFileDialog::getOpenFileName(NULL, tr("Open Pipeline"),
-    proposedDir, tr("Json File (*.json);;Dream3d File (*.dream3d);;Text File (*.txt);;Ini File (*.ini);;All Files (*.*)"));
+    proposedDir, tr("Json File (*.json);;DREAM.3D File (*.dream3d);;Text File (*.txt);;Ini File (*.ini);;All Files (*.*)"));
   if(filePath.isEmpty())
   {
     return;
@@ -590,7 +590,7 @@ void DREAM3DApplication::on_actionAddBookmark_triggered()
       QList<QString> newPrefPaths;
 
       newPrefPaths = QFileDialog::getOpenFileNames(m_ActiveWindow, tr("Choose Pipeline File(s)"),
-                                                   proposedDir, tr("Json File (*.json);;Dream3d File (*.dream3d);;Text File (*.txt);;Ini File (*.ini);;All Files (*.*)"));
+                                                   proposedDir, tr("Json File (*.json);;DREAM.3D File (*.dream3d);;Text File (*.txt);;Ini File (*.ini);;All Files (*.*)"));
       if (true == newPrefPaths.isEmpty()) { return; }
 
       QModelIndex parent = bookmarksDockWidget->getSelectedParentTreeItem();
