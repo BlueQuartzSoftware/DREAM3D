@@ -193,7 +193,7 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int64_t>& xshifts, st
     xCentroid[iter] = 0;
     yCentroid[iter] = 0;
 
-    QString ss = QObject::tr("Aligning Sections - Determining Shifts - %1 Percent Complete").arg(((float)iter / dims[2]) * 100);
+    QString ss = QObject::tr("Aligning Sections || Determining Shifts || %1% Complete").arg(((float)iter / dims[2]) * 100);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     slice = static_cast<int>( (dims[2] - 1) - iter );
     for (DimType l = 0; l < dims[1]; l++)
