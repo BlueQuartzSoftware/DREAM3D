@@ -576,6 +576,8 @@ void FindGBCD::execute()
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     }
 
+    if(getCancel() == true) { return; }
+
     for (size_t j = 0; j < faceChunkSize; j++)
     {
       for (size_t k = 0; k < numMisoReps; k++)
