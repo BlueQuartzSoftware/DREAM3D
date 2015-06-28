@@ -5,7 +5,7 @@
 @FilterGroup@ (@FilterSubgroup@)
 
 ## Description ##
-This Filter does the following...
+This **Filter** does the following...
 
 ## Parameters ##
 | Name | Type | Description |
@@ -15,15 +15,17 @@ This Filter does the following...
 ## Required Geometry ##
 Required Geometry Type -or- Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| ELement/Feature/Ensemble | Array Name | Int/Float/etc. | (1)/(3)/etc. | Description of array... |
+| **Data Container** | Data Container Name | N/A | N/A | Description of object... |
+| **Attribute Matrix** | Attribute Matrix Name | Element/Feature/Ensemble/etc. | N/A | Description of object... |
+| **Element/Feature/Ensemble/etc. Attribute Array** | AttributeArray Name | int32_t/float/etc. | (1)/(3)/etc. | Description of object... |
 
-## Created Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
-| ELement/Feature/Ensemble | Array Name | Int/Float/etc. | (1)/(3)/etc. | Description of array... |
+## Created Objects ##
+| **Data Container** | Data Container Name | N/A | N/A | Description of object... |
+| **Attribute Matrix** | Attribute Matrix Name | Element/Feature/Ensemble/etc. | N/A | Description of object... |
+| **Element/Feature/Ensemble/etc. Attribute Array** | AttributeArray Name | int32_t/float/etc. | (1)/(3)/etc. | Description of object... |
 
 ## License & Copyright ##
 

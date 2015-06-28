@@ -8,7 +8,7 @@ Import & Export File Formats {#miscfileformats}
 + TSL .h5 files
 + HKL .ctf files
 + Raw Binary files
-+ Image formats (.tif, .png, .bmp)
++ Image formats (.tif, .png, .bmp, .jpeg)
 + STL files
 + Dx files (Limited Subset)
 + Ph files
