@@ -23,7 +23,6 @@ set(DOCUMENTATION_SOURCE_FILES
   \"${PROJECT_SOURCE_DIR}/Index.dox\"
   \"${PROJECT_SOURCE_DIR}/Acknowledgements.md\"
   \"${PROJECT_SOURCE_DIR}/DataStructure.md\"
-  \"${PROJECT_SOURCE_DIR}/Glossary.md\"
   \"${PROJECT_SOURCE_DIR}/UsingDREAM3D/UsingDREAM3D.dox\"
   \"${PROJECT_SOURCE_DIR}/UsingDREAM3D/UserInterface.md\"
   \"${PROJECT_SOURCE_DIR}/UsingDREAM3D/CreatingPipeline.md\"

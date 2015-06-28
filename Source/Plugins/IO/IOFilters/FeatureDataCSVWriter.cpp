@@ -74,6 +74,7 @@ void FeatureDataCSVWriter::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(FileSystemFilterParameter::New("Output File", "FeatureDataFile", FilterParameterWidgetType::OutputFileWidget, getFeatureDataFile(), FilterParameter::Parameter, "", "*.csv", "Comma Separated Data"));
   parameters.push_back(FilterParameter::New("Write Neighbor Data", "WriteNeighborListData", FilterParameterWidgetType::BooleanWidget, getWriteNeighborListData(), FilterParameter::Parameter));
+  parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   parameters.push_back(FilterParameter::New("Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixPath(), FilterParameter::RequiredArray, ""));
   setFilterParameters(parameters);
 }

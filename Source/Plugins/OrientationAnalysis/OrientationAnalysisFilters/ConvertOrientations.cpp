@@ -38,9 +38,8 @@
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/LinkedChoicesFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-
+#include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/OrientationMath/OrientationConverter.hpp"
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
@@ -96,7 +95,7 @@ void ConvertOrientations::setupFilterParameters()
 
   parameters.push_back(FilterParameter::New("Input Orientations", "InputOrientationArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputOrientationArrayPath(), FilterParameter::RequiredArray, "", 0));
 
-  parameters.push_back(FilterParameter::New("Output Orientation Array Name", "OutputOrientationArrayName", FilterParameterWidgetType::StringWidget, getOutputOrientationArrayName(), FilterParameter::CreatedArray, "", 0));
+  parameters.push_back(FilterParameter::New("Output Orientations", "OutputOrientationArrayName", FilterParameterWidgetType::StringWidget, getOutputOrientationArrayName(), FilterParameter::CreatedArray, "", 0));
 
   setFilterParameters(parameters);
 }

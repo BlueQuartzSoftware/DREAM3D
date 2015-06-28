@@ -5,7 +5,7 @@ Establish Shape Types {#establishshapetypes}
 Synthetic Building (Generation)
 
 ## Description ##
-This Filter allows the user to assign a specific _shape type_ to each **Ensemble** of a synthetic structure. This Filter should be inserted **BEFORE** any packing **Filters** are added. The Filter is typically added just after the [initializing the synthetic volume](@ref initializesyntheticvolume). The various shape types are:
+This **Filter** allows the user to assign a specific _shape type_ to each **Ensemble** of a synthetic structure. This **Filter** should be inserted **BEFORE** any packing **Filters** are added. The **Filter** is typically added just after the [initializing the synthetic volume](@ref initializesyntheticvolume). The various shape types are:
 
 + Ellipsoid
 + Super Ellipsoid
@@ -20,23 +20,22 @@ For more information on synthetic building, visit the [tutorial](@ref tutorialsy
 ## Parameters ##
 None
 
-## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+## Required Objects ##
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Ensemble | PhaseTypes | Int | (1) | Enumeration specifying the type of phase of each **Ensemble** |
+| **Ensemble Attribute Array** | PhaseTypes | uint32_t | (1) | Enumeration specifying the phase type of each **Ensemble** |
 
-## Created Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+## Created Objects ##
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Ensemble | ShapeTypes | Int | (1) | Enumeration specifying the type of shape for each **Ensemble** |
+| **Ensemble Attribute Array** | ShapeTypes | uint32_t | (1) | Enumeration specifying the type of shape to place for each **Ensemble** |
 
 ## License & Copyright ##
 
 Please see the description file distributed with this plugin.
 
-## DREAM3D Mailing Lists ##
+## DREAM.3D Mailing Lists ##
 
-If you need more help with a filter, please consider asking your question on the DREAM3D Users mailing list:
-https://groups.google.com/forum/?hl=en#!forum/dream3d-users
+If you need more help with a **Filter**, please consider asking your question on the [DREAM.3D Users Google group!](https://groups.google.com/forum/?hl=en#!forum/dream3d-users)
 
 

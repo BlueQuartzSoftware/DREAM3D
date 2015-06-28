@@ -204,11 +204,11 @@ void PipelineFilterWidget::layoutWidgets()
   QVBoxLayout* pLayout = new QVBoxLayout(parametersGroupBox);
   parametersGroupBox->setStyleSheet(groupBoxStyle);
 
-  QGroupBox* requiredGroupBox = new QGroupBox("Required Arrays", this);
+  QGroupBox* requiredGroupBox = new QGroupBox("Required Objects", this);
   QVBoxLayout* rLayout = new QVBoxLayout(requiredGroupBox);
   requiredGroupBox->setStyleSheet(groupBoxStyle);
 
-  QGroupBox* createdGroupBox = new QGroupBox("Created Arrays", this);
+  QGroupBox* createdGroupBox = new QGroupBox("Created Objects", this);
   QVBoxLayout* cLayout = new QVBoxLayout(createdGroupBox);
   createdGroupBox->setStyleSheet(groupBoxStyle);
 
@@ -224,6 +224,8 @@ void PipelineFilterWidget::layoutWidgets()
   // Get a list of all the filterParameters from the filter.
   QVector<FilterParameter::Pointer> filterParameters = m_Filter->getFilterParameters();
   // Create all the FilterParameterWidget objects that can be displayed where ever the developer needs
+
+  int pCount = 0, rCount = 0, cCount = 0;
   for (QVector<FilterParameter::Pointer>::iterator iter = filterParameters.begin(); iter != filterParameters.end(); ++iter )
   {
     FilterParameter* parameter = (*iter).get();
@@ -233,7 +235,9 @@ void PipelineFilterWidget::layoutWidgets()
     QWidget* w = fwm->createWidget(parameter, m_Filter.get());
     m_PropertyToWidget.insert(parameter->getPropertyName(), w); // Update our Map of Filter Parameter Properties to the Widget
 
-    if (NULL == w) { continue; }
+    if (NULL == w) {
+      continue;
+    }
     m_FilterParameterWidgets.push_back(w);
 
     // Determine which group box to add the widget into
@@ -241,16 +245,19 @@ void PipelineFilterWidget::layoutWidgets()
     {
       w->setParent(m_VariablesWidget);
       pLayout->addWidget(w);
+      pCount++;
     }
     else if(parameter->getCategory() == FilterParameter::RequiredArray)
     {
       w->setParent(m_VariablesWidget);
       rLayout->addWidget(w);
+      rCount++;
     }
     else if(parameter->getCategory() == FilterParameter::CreatedArray)
     {
       w->setParent(m_VariablesWidget);
       cLayout->addWidget(w);
+      cCount++;
     }
     else
     {
@@ -272,7 +279,7 @@ void PipelineFilterWidget::layoutWidgets()
   linkConditionalWidgets(filterParameters);
 
   // If there are widgets in the parameters group box, add it to the overall layout.  If not, remove the group box.
-  if (pLayout->isEmpty() == false)
+  if (pLayout->isEmpty() == false || pCount > 0)
   {
     m_VariablesVerticalLayout->addWidget(parametersGroupBox);
   }
@@ -282,7 +289,7 @@ void PipelineFilterWidget::layoutWidgets()
   }
 
   // If there are widgets in the required arrays group box, add it to the overall layout.  If not, remove the group box.
-  if (rLayout->isEmpty() == false)
+  if (rLayout->isEmpty() == false || rCount > 0)
   {
     m_VariablesVerticalLayout->addWidget(requiredGroupBox);
   }
@@ -292,7 +299,7 @@ void PipelineFilterWidget::layoutWidgets()
   }
 
   // If there are widgets in the created arrays group box, add it to the overall layout.  If not, remove the group box.
-  if (cLayout->isEmpty() == false)
+  if (cLayout->isEmpty() == false || cCount > 0)
   {
     m_VariablesVerticalLayout->addWidget(createdGroupBox);
   }
@@ -425,14 +432,14 @@ void PipelineFilterWidget::linkConditionalWidgets(QVector<FilterParameter::Point
   // Figure out if we have any "Linked Boolean Widgets" to hook up to other widgets
   for (QVector<FilterParameter::Pointer>::iterator iter = filterParameters.begin(); iter != filterParameters.end(); ++iter )
   {
-    FilterParameter::Pointer option = (*iter);
-    LinkedBooleanFilterParameter::Pointer optionPtr = boost::dynamic_pointer_cast<LinkedBooleanFilterParameter>(option);
-    if(NULL != optionPtr.get() && option->getWidgetType().compare(FilterParameterWidgetType::LinkedBooleanWidget) == 0 )
+    FilterParameter::Pointer filterParameter = (*iter);
+    LinkedBooleanFilterParameter::Pointer filterParameterPtr = boost::dynamic_pointer_cast<LinkedBooleanFilterParameter>(filterParameter);
+    if(NULL != filterParameterPtr.get() && filterParameter->getWidgetType().compare(FilterParameterWidgetType::LinkedBooleanWidget) == 0 )
     {
-      QStringList linkedProps = optionPtr->getConditionalProperties();
+      QStringList linkedProps = filterParameterPtr->getConditionalProperties();
 
       QStringListIterator iter = QStringListIterator(linkedProps);
-      QWidget* checkboxSource = m_PropertyToWidget[optionPtr->getPropertyName()];
+      QWidget* checkboxSource = m_PropertyToWidget[filterParameterPtr->getPropertyName()];
       while(iter.hasNext())
       {
         QString propName = iter.next();
@@ -448,12 +455,17 @@ void PipelineFilterWidget::linkConditionalWidgets(QVector<FilterParameter::Point
           }
         }
       }
+      LinkedBooleanWidget* boolWidget = qobject_cast<LinkedBooleanWidget*>(checkboxSource);
+      if(boolWidget)
+      {
+        boolWidget->updateLinkedWidgets();
+      }
     }
 
 
     // Figure out if we have any Linked ComboBox Widgets to hook up to other widgets
-    LinkedChoicesFilterParameter::Pointer optionPtr2 = boost::dynamic_pointer_cast<LinkedChoicesFilterParameter>(option);
-    if(NULL != optionPtr2.get() && option->getWidgetType().compare(FilterParameterWidgetType::ChoiceWidget) == 0 )
+    LinkedChoicesFilterParameter::Pointer optionPtr2 = boost::dynamic_pointer_cast<LinkedChoicesFilterParameter>(filterParameter);
+    if(NULL != optionPtr2.get() && filterParameter->getWidgetType().compare(FilterParameterWidgetType::ChoiceWidget) == 0 )
     {
       QStringList linkedProps = optionPtr2->getLinkedProperties();
 
@@ -469,11 +481,11 @@ void PipelineFilterWidget::linkConditionalWidgets(QVector<FilterParameter::Point
           connect(checkboxSource, SIGNAL(conditionalPropertyChanged(int)),
                   w, SLOT(setLinkedComboBoxState(int) ) );
 
-          /*ChoiceWidget* choiceWidget = qobject_cast<ChoiceWidget*>(checkboxSource);
+          ChoiceWidget* choiceWidget = qobject_cast<ChoiceWidget*>(checkboxSource);
           if(choiceWidget)
           {
             choiceWidget->widgetChanged(choiceWidget->getCurrentIndex(), false);
-          }*/
+          }
         }
       }
     }

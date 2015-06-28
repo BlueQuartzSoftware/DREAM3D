@@ -5,9 +5,7 @@ Read Ensemble Info File {#ensembleinforeader}
 IO (Input)
 
 ## Description ##
-This Filter reads in information about the crystal structure and phase types of all the **Features** that are contained in a **Cell** based volume. 
-These values are needed to allow the calculation of statistics on the volume, if they have not already been provided by some other means. 
-The format of the input file is a simple ASCII text file with the extension .ini or .txt. The first group in the file is the name [EnsembleInfo] in square brackets with the key Number_Phases=*number of phases* that are contained in the volume. Subsequent groups in the file list the __Phase Number__, __Crystal Structure__ and __Phase Type__. The proper values for the crystal structure and phase type come from internal constants within DREAM.3D and are listed here:
+This **Filter** reads in information about the crystal structure and phase types of all the **Features** that are contained in a **Cell** based volume. These values are needed to allow the calculation of statistics on the volume, if they have not already been provided by some other means.  The format of the input file is a simple ASCII text file with the extension .ini or .txt. The first group in the file is the name [EnsembleInfo] in square brackets with the key Number_Phases=*number of phases* that are contained in the volume. Subsequent groups in the file list the __Phase Number__, __Crystal Structure__ and __Phase Type__. The proper values for the crystal structure and phase type come from internal constants within DREAM.3D and are listed here:
 
 **Crystal Structure**
 
@@ -58,29 +56,28 @@ For example, if you have a structure that has 2 phases that consist of a Cubic P
 
 | Name | Type | Description |
 |------|------|-------------|
-| Input Ensemble Info File | File Path | Input file location |
-| Cell Ensemble Attribute Matrix | String | Name for created attribute matrix |
+| Input Ensemble Info File | File Path | The input file path |
 
 ## Required Geometry ##
 Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 None
 
-## Created Arrays ##
-| Type | Default Name | Type | Component Dimension | Description |
+## Created Objects ##
+| Kind | Default Name | Type | Component Dimension | Description |
 |------|--------------|-------------|---------|--------------|
-| Ensemble | CrystalStructures | UInt | (1)  | Enumeration representing the crystal structure for each phase |
-| Ensemble | PhaseTypes        | UInt | (1) | Enumeration representing the type for each phase |
+| **Attribute Matrix** | EnsembleAttributeMatrix | Ensemble | N/A | Created **Ensemble Attribute Matrix** name |
+| **Ensemble Attribute Array** | CrystalStructures | uint32_t | (1)  | Enumeration representing the crystal structure for each **Ensemble** |
+| **Ensemble Attribute Array** | PhaseTypes        | uint32_t | (1) | Enumeration representing the phase type for each **Ensemble** |
 
 
 ## License & Copyright ##
 
 Please see the description file distributed with this plugin.
 
-## DREAM3D Mailing Lists ##
+## DREAM.3D Mailing Lists ##
 
-If you need more help with a filter, please consider asking your question on the DREAM3D Users mailing list:
-https://groups.google.com/forum/?hl=en#!forum/dream3d-users
+If you need more help with a **Filter**, please consider asking your question on the [DREAM.3D Users Google group!](https://groups.google.com/forum/?hl=en#!forum/dream3d-users)
 
 

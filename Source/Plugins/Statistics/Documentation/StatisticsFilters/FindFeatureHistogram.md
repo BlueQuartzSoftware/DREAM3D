@@ -18,7 +18,7 @@ This filter will bin a specified **Feature** level attribute.  The user can chos
 ## Required DataContainers ##
 Volume
 
-## Required Arrays ##
+## Required Objects ##
 
 | Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
@@ -26,7 +26,7 @@ Volume
 | Feature | SelectedFeature | Selected feature to be binned. | | |
 
 
-## Created Arrays ##
+## Created Objects ##
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
 | Ensemble | Statistics |  |  |
@@ -36,9 +36,8 @@ Volume
 
 Please see the description file distributed with this plugin.
 
-## DREAM3D Mailing Lists ##
+## DREAM.3D Mailing Lists ##
 
-If you need more help with a filter, please consider asking your question on the DREAM3D Users mailing list:
-https://groups.google.com/forum/?hl=en#!forum/dream3d-users
+If you need more help with a **Filter**, please consider asking your question on the [DREAM.3D Users Google group!](https://groups.google.com/forum/?hl=en#!forum/dream3d-users)
 
 

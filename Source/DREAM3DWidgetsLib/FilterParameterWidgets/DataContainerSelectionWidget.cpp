@@ -258,7 +258,7 @@ QString DataContainerSelectionWidget::checkStringValues(QString curDcName, QStri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerSelectionWidget::on_dataContainerList_currentIndexChanged(int index)
+void DataContainerSelectionWidget::on_dataContainerCombo_currentIndexChanged(int index)
 {
   m_DidCausePreflight = true;
   emit parametersChanged();

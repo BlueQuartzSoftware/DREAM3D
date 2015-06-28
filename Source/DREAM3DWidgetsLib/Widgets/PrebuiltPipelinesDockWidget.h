@@ -102,11 +102,6 @@ class DREAM3DWidgetsLib_EXPORT  PrebuiltPipelinesDockWidget : public QDockWidget
     */
     void writeSettings(DREAM3DSettings& prefs);
 
-
-  public slots:
-    void actionShowInFileSystem_triggered();
-
-
   protected:
     virtual QDir findPipelinesDirectory();
     virtual void readPipelines();

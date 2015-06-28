@@ -114,9 +114,8 @@ TriangleCentroidFilter::~TriangleCentroidFilter()
 void TriangleCentroidFilter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
+  parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
   parameters.push_back(FilterParameter::New("Face Centroids", "SurfaceMeshTriangleCentroidsArrayPath", FilterParameterWidgetType::DataArrayCreationWidget, getSurfaceMeshTriangleCentroidsArrayPath(), FilterParameter::CreatedArray, ""));
-
   setFilterParameters(parameters);
 }
 

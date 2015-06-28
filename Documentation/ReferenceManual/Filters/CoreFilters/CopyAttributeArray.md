@@ -2,10 +2,10 @@ Copy Attribute Array {#copyattributearray}
 =============
 
 ## Group (Subgroup) ##
-Core Filters (Memory/Management)
+Core (Memory/Management)
 
 ## Description ##
-This filter copies a user chosen array to a new array with a user defined new name in the same data container and attribute matrix.
+This **Filter** copies a user chosen **Attribute Array** to a new **Attribute Array** with a user defined new name in the same **Data Container** and **Attribute Matrix**.
 
 ## Parameters ##
 None
@@ -13,27 +13,26 @@ None
 ## Required Geometry ##
 Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Any | Attribute Array To Copy | Any | Any | N/A |
+| Any **Attribute Array** | None | Any | Any | **Attribute Array** to copy |
 
 
-## Created Arrays ##
+## Created Objects ##
 
-| Type | New Attribute Array Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|----------------|
-| Any | User set | Any | Any |Array will have same values as its old counterpart |
+| Any **Attribute Array** | None | Any | Any | Copied **Attribute Array** |
 
 
 ## License & Copyright ##
 
 Please see the description file distributed with this plugin.
 
-## DREAM3D Mailing Lists ##
+## DREAM.3D Mailing Lists ##
 
-If you need more help with a filter, please consider asking your question on the DREAM3D Users mailing list:
-https://groups.google.com/forum/?hl=en#!forum/dream3d-users
+If you need more help with a **Filter**, please consider asking your question on the [DREAM.3D Users Google group!](https://groups.google.com/forum/?hl=en#!forum/dream3d-users)
 
 

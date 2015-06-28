@@ -74,12 +74,12 @@ MoveData::~MoveData()
 void MoveData::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  
+
   QStringList linkedProps;
   linkedProps << "DataContainerDestination" << "AttributeMatrixSource" << "AttributeMatrixDestination" << "DataArraySource";
   {
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
-    parameter->setHumanLabel("Items To Move");
+    parameter->setHumanLabel("Object to Move");
     parameter->setPropertyName("WhatToMove");
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
     parameter->setDefaultValue(getWhatToMove()); // Just set the first index
@@ -92,8 +92,8 @@ void MoveData::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
- 
-  
+
+
   parameters.push_back(FilterParameter::New("Attribute Matrix Source", "AttributeMatrixSource", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getAttributeMatrixSource(), FilterParameter::RequiredArray, "", 0));
   parameters.push_back(FilterParameter::New("Data Container Destination", "DataContainerDestination", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerDestination(), FilterParameter::RequiredArray, "", 0));
   parameters.push_back(FilterParameter::New("Attribute Array Source", "DataArraySource", FilterParameterWidgetType::DataArraySelectionWidget, getDataArraySource(), FilterParameter::RequiredArray, "", 1));

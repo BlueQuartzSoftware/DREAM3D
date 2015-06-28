@@ -33,7 +33,7 @@ CreateDataContainer::~CreateDataContainer()
 void CreateDataContainer::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Created Data Container Name", "CreatedDataContainer", FilterParameterWidgetType::StringWidget, getCreatedDataContainer(), FilterParameter::Parameter, ""));
+  parameters.push_back(FilterParameter::New("Created Data Container", "CreatedDataContainer", FilterParameterWidgetType::StringWidget, getCreatedDataContainer(), FilterParameter::CreatedArray, ""));
   setFilterParameters(parameters);
 }
 

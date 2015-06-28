@@ -27,13 +27,13 @@ After all the **Features** have been identified, an **Attribute Matrix** is crea
 ## Required Geometry ##
 Image / Rectilinear Grid
 
-## Required Arrays ##
+## Required Objects ##
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | Cell | None | Float | (3) | Vector array used during segmentation |
 | Cell | GoodVoxels | Boolean | (1) | Specifies if the **Cell** is to be considered during segmentation.  Array only required if *Use Mask Array* is set to *true* |
 
-## Created Arrays ##
+## Created Objects ##
 | Type | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs. |
@@ -44,9 +44,8 @@ Image / Rectilinear Grid
 
 Please see the description file distributed with this plugin.
 
-## DREAM3D Mailing Lists ##
+## DREAM.3D Mailing Lists ##
 
-If you need more help with a filter, please consider asking your question on the DREAM3D Users mailing list:
-https://groups.google.com/forum/?hl=en#!forum/dream3d-users
+If you need more help with a **Filter**, please consider asking your question on the [DREAM.3D Users Google group!](https://groups.google.com/forum/?hl=en#!forum/dream3d-users)
 
 

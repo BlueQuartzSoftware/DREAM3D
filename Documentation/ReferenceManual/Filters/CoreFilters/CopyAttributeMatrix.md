@@ -2,32 +2,33 @@ Copy Attribute Matrix {#copyattributematrix}
 =============
 
 ## Group (Subgroup) ##
-Core Filters (Memory/Management)
+Core (Memory/Management)
 
 ## Description ##
-This filter copies a user chosen AttributeMatrx to a new AttributeMatrix with a user defined new name to the same data container.
+This **Filter** copies a user chosen **Attribute Matrx** to a new **Attribute Matrix** with a user defined name in the same **Data Container**. The **Attribute Matrix** will copy all of its **Attribute Arrays** as well.
 
 ## Parameters ##
-| Name | Type | Description |
-|------|------| ----------- |
-| New Attribute Matrix Name | String | Name for the copied attribute matrix |
+None
 
 ## Required Geometry ##
 Not Applicable
 
-## Required Arrays ##
-None
+## Required Objects ##
+| Kind | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Any **Attribute Matrix** | None | N/A | N/A | **Attribute Matrix** to copy |
 
-## Created Arrays ##
-None
+## Created Objects ##
+| Kind | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Any **Attribute Matrix** | None | N/A | N/A | Copied **Attribute Matrix** |
 
 ## License & Copyright ##
 
 Please see the description file distributed with this plugin.
 
-## DREAM3D Mailing Lists ##
+## DREAM.3D Mailing Lists ##
 
-If you need more help with a filter, please consider asking your question on the DREAM3D Users mailing list:
-https://groups.google.com/forum/?hl=en#!forum/dream3d-users
+If you need more help with a **Filter**, please consider asking your question on the [DREAM.3D Users Google group!](https://groups.google.com/forum/?hl=en#!forum/dream3d-users)
 
 

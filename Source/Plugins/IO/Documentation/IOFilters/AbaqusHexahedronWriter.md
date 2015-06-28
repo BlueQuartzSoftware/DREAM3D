@@ -5,9 +5,7 @@ Abaqus Hexahedron Writer {#abaqushexahedronwriter}
 IO (Output)
 
 ## Description ##
-This Filter produces the basic five Abaqus .inp files for input into the Abaqus analysis tool.
-The files created are: xxx.inp (the master file), xxx_nodes.inp, xxx_elems.inp, xxx_elset.inp and xxx_sects.inp.
-This Filter is based on a Python script developed by Matthew W. Priddy (Ga. Tech., early 2015).
+This **Filter** produces the basic five Abaqus .inp files for input into the Abaqus analysis tool. The files created are: xxx.inp (the master file), xxx_nodes.inp, xxx_elems.inp, xxx_elset.inp and xxx_sects.inp. This **Filter** is based on a Python script developed by Matthew W. Priddy (Ga. Tech., early 2015).
 
 ### Example Output ###
 The master file:     
@@ -114,28 +112,28 @@ The _sects.inp file:
 ## Parameters ##
 | Name             | Type | Description |
 |------------------|------|------------------------|
-| Output Path | File Path | Path to folder for the created files |
-| Output File Prefix | String | Prefix for the name of the 5 files |
-| Hour Glass Stiffness | Int | Only recommended if using C3D8R elements |
+| Hour Glass Stiffness | int32_t | Only recommended if using C3D8R elements |
 | Job Name | String | Job Name, if desired |
+| Output Path | File Path | The output path for the .inp files |
+| Output File Prefix | String | Prefix for the name of the 5 files |
+
 
 ## Required Geometry ##
-Image / Rectilinear Grid
+Image
 
-## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+## Required Objects ##
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs |
+| **Cell Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs |
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 ## License & Copyright ##
 
 Please see the description file distributed with this plugin.
 
-## DREAM3D Mailing Lists ##
+## DREAM.3D Mailing Lists ##
 
-If you need more help with a filter, please consider asking your question on the DREAM3D Users mailing list:
-https://groups.google.com/forum/?hl=en#!forum/dream3d-users
+If you need more help with a **Filter**, please consider asking your question on the [DREAM.3D Users Google group!](https://groups.google.com/forum/?hl=en#!forum/dream3d-users)
 

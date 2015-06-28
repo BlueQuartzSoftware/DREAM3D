@@ -31,14 +31,14 @@ The Moving Finite Element (MFE) algorithm is based on Kuprat's work on Gradient 
 ## Required DataContainers ##
 SurfaceMesh - Valid Surface Mesh containing the shared vertex array and face list
 
-## Required Arrays ##
+## Required Objects ##
 
 | Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
 | Vertex | SurfaceMeshNodeType | N x 1 Col of unsigned char |  | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
 
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 ## Authors ##
@@ -52,9 +52,8 @@ None
 
 Please see the description file distributed with this plugin.
 
-## DREAM3D Mailing Lists ##
+## DREAM.3D Mailing Lists ##
 
-If you need more help with a filter, please consider asking your question on the DREAM3D Users mailing list:
-https://groups.google.com/forum/?hl=en#!forum/dream3d-users
+If you need more help with a **Filter**, please consider asking your question on the [DREAM.3D Users Google group!](https://groups.google.com/forum/?hl=en#!forum/dream3d-users)
 
 

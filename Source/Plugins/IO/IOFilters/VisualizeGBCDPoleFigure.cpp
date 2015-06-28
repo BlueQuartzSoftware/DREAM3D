@@ -109,9 +109,8 @@ void VisualizeGBCDPoleFigure::setupFilterParameters()
   }
   parameters.push_back(FilterParameter::New("Misorientation Axis-Angle", "MisorientationRotation", FilterParameterWidgetType::AxisAngleWidget, getMisorientationRotation(), FilterParameter::Parameter));
   parameters.push_back(FileSystemFilterParameter::New("Output Regular Grid VTK File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), FilterParameter::Parameter, "", "*.vtk", "VTK File"));
-
+  parameters.push_back(SeparatorFilterParameter::New("Face Ensemble Data", FilterParameter::RequiredArray));
   parameters.push_back(FilterParameter::New("GBCD", "GBCDArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGBCDArrayPath(), FilterParameter::RequiredArray, ""));
-
   setFilterParameters(parameters);
 }
 

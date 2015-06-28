@@ -65,9 +65,9 @@ void CopyAttributeArray::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FilterParameter::New("Attribute Array To Copy", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), FilterParameter::RequiredArray));
+  parameters.push_back(FilterParameter::New("Attribute Array to Copy", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), FilterParameter::RequiredArray));
 
-  parameters.push_back(FilterParameter::New("New Attribute Array Name", "NewArrayName", FilterParameterWidgetType::StringWidget, getNewArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(FilterParameter::New("Copied Attribute Array", "NewArrayName", FilterParameterWidgetType::StringWidget, getNewArrayName(), FilterParameter::CreatedArray));
 
   setFilterParameters(parameters);
 }

@@ -40,7 +40,7 @@ void WriteWebServerJSON(const QString& filePath)
   QJsonObject meta;
 
   meta["Release Date"] = QDate::currentDate().toString();
-  meta["Release Type"] = "Release Candidate";
+  meta["Release Type"] = DREAM3DProj_RELEASE_TYPE;
   meta["Major"] = DREAM3DLib::Version::Major();
   meta["Minor"] = DREAM3DLib::Version::Minor();
   meta["Patch"] = DREAM3DLib::Version::Patch();

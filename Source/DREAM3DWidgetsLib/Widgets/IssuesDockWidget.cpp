@@ -94,13 +94,8 @@ void IssuesDockWidget::on_errorTableWidget_itemClicked( QTableWidgetItem* item )
 // -----------------------------------------------------------------------------
 void IssuesDockWidget::clearIssues()
 {
-  // qDebug() << "IssuesDockWidget::clearIssues()";
-  for (int i = 0; i < errorTableWidget->rowCount(); ++i)
-  {
-    //qDebug() << "    Removing Issue";
-    errorTableWidget->removeRow(i);
-  }
-  errorTableWidget->setRowCount(0);
+  errorTableWidget->clearContents();
+  m_CachedMessages.clear();
 }
 
 // -----------------------------------------------------------------------------
@@ -108,27 +103,55 @@ void IssuesDockWidget::clearIssues()
 // -----------------------------------------------------------------------------
 void IssuesDockWidget::processPipelineMessage(const PipelineMessage& msg)
 {
-  //  std::cout << "IssuesDockWidget::processPipelineMessage(PipelineMessage& message)" << std::endl;
-  // Create error hyperlink
-  QLabel* hyperlinkLabel = createHyperlinkLabel(msg);
+  m_CachedMessages.push_back(msg);
+}
 
-  QColor msgColor;
-  switch(msg.getType())
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void IssuesDockWidget::displayCachedMessages()
+{
+  // Figure out how many error and warning messages that we have. We ignore the rest
+  int count = 0;
+  for(int i = 0; i < m_CachedMessages.size(); i++)
   {
-    case PipelineMessage::Error:
-      // m_hasErrors = true;
-      msgColor.setRed(255);
-      msgColor.setGreen(191);
-      msgColor.setBlue(193);
+    PipelineMessage msg = m_CachedMessages[i];
+    switch(msg.getType())
+    {
+      case PipelineMessage::Error:
+        count++;
+        break;
+      case PipelineMessage::Warning:
+        count++;
+        break;
+      default:
+        break;
+    }
+  }
+
+  // Now create the correct number of table rows.
+  errorTableWidget->setRowCount(count);
+  int row = 0;
+  // Add in the content for the cells of the table.
+  for(int j = 0; j < m_CachedMessages.size(); j++)
+  {
+    PipelineMessage msg = m_CachedMessages[j];
+    // Create error hyperlink
+    QLabel* hyperlinkLabel = createHyperlinkLabel(msg);
+
+    QColor msgColor;
+    switch(msg.getType())
+    {
+      case PipelineMessage::Error:
+        // m_hasErrors = true;
+        msgColor.setRed(255);
+        msgColor.setGreen(191);
+        msgColor.setBlue(193);
       {
         QBrush msgBrush(msgColor);
 
         QString msgDesc = (msg.getText());
         int msgCode = msg.getCode();
-
-        int rc = errorTableWidget->rowCount();
-
-        errorTableWidget->insertRow(rc);
 
         QString msgPrefix = (msg.getPrefix());
         QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(msgPrefix);
@@ -143,22 +166,23 @@ void IssuesDockWidget::processPipelineMessage(const PipelineMessage& msg)
 
         if (hyperlinkLabel == NULL)
         {
-          errorTableWidget->setItem(rc, 0, filterNameWidgetItem);
+          errorTableWidget->setItem(row, 0, filterNameWidgetItem);
         }
         else
         {
-          errorTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
+          errorTableWidget->setCellWidget(row, 0, hyperlinkLabel);
         }
-        errorTableWidget->setItem(rc, 1, descriptionWidgetItem);
-        errorTableWidget->setItem(rc, 2, codeWidgetItem);
+        errorTableWidget->setItem(row, 1, descriptionWidgetItem);
+        errorTableWidget->setItem(row, 2, codeWidgetItem);
       }
-      break;
+        row++;
+        break;
 
-    case PipelineMessage::Warning:
-      //  m_hasWarnings = true;
-      msgColor.setRed(251);
-      msgColor.setGreen(254);
-      msgColor.setBlue(137);
+      case PipelineMessage::Warning:
+        //  m_hasWarnings = true;
+        msgColor.setRed(251);
+        msgColor.setGreen(254);
+        msgColor.setBlue(137);
 
       {
         QBrush msgBrush(msgColor);
@@ -167,9 +191,7 @@ void IssuesDockWidget::processPipelineMessage(const PipelineMessage& msg)
         QString msgDesc = (msg.getText());
         int msgCode = msg.getCode();
 
-        int rc = errorTableWidget->rowCount();
 
-        errorTableWidget->insertRow(rc);
 
         QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(msgName);
         filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
@@ -183,19 +205,21 @@ void IssuesDockWidget::processPipelineMessage(const PipelineMessage& msg)
 
         if (hyperlinkLabel == NULL)
         {
-          errorTableWidget->setItem(rc, 0, filterNameWidgetItem);
+          errorTableWidget->setItem(row, 0, filterNameWidgetItem);
         }
         else
         {
-          errorTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
+          errorTableWidget->setCellWidget(row, 0, hyperlinkLabel);
         }
-        errorTableWidget->setItem(rc, 1, descriptionWidgetItem);
-        errorTableWidget->setItem(rc, 2, codeWidgetItem);
+        errorTableWidget->setItem(row, 1, descriptionWidgetItem);
+        errorTableWidget->setItem(row, 2, codeWidgetItem);
       }
-      break;
+        row++;
+        break;
 
-    default:
-      return;
+      default:
+        return;
+    }
   }
 }
 

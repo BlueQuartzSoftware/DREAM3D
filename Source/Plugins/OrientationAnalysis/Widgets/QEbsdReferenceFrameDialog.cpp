@@ -271,18 +271,28 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
 {
   if (m_EbsdFileName.isEmpty() == true) { return; }
   DataContainerArray::Pointer dca = DataContainerArray::New();
+  QString dcName;
+  QString cellAttrMatName;
+  QString cellEnsembleName;
+  DataArrayPath cellPhasesArrayPath;
+  DataArrayPath cellEulerAnglesArrayPath;
+  DataArrayPath crystalStructuresArrayPath;
 
   QFileInfo fi(m_EbsdFileName);
-  QString dataContainerName;
-  QString attributeMatrixName;
+
   if(fi.suffix().compare(Ebsd::Ang::FileExtLower) == 0)
   {
     ReadAngData::Pointer reader = ReadAngData::New();
+
     reader->setInputFile(m_EbsdFileName);
     reader->setDataContainerArray(dca);
     reader->execute();
-    dataContainerName = reader->getDataContainerName();
-    attributeMatrixName = reader->getCellAttributeMatrixName();
+    dcName = reader->getDataContainerName();
+    cellAttrMatName = reader->getCellAttributeMatrixName();
+    cellEnsembleName = reader->getCellEnsembleAttributeMatrixName();
+    cellPhasesArrayPath = DataArrayPath(dcName, cellAttrMatName, Ebsd::AngFile::Phases);
+    cellEulerAnglesArrayPath = DataArrayPath(dcName, cellAttrMatName, Ebsd::AngFile::EulerAngles);
+    crystalStructuresArrayPath = DataArrayPath(dcName, cellEnsembleName, Ebsd::AngFile::CrystalStructures);
     int err = reader->getErrorCondition();
     if (err < 0)
     {
@@ -306,8 +316,12 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
     reader->setInputFile(m_EbsdFileName);
     reader->setDataContainerArray(dca);
     reader->execute();
-    dataContainerName = reader->getDataContainerName();
-    attributeMatrixName = reader->getCellAttributeMatrixName();
+    dcName = reader->getDataContainerName();
+    cellAttrMatName = reader->getCellAttributeMatrixName();
+    cellEnsembleName = reader->getCellEnsembleAttributeMatrixName();
+    cellPhasesArrayPath = DataArrayPath(dcName, cellAttrMatName, Ebsd::CtfFile::Phases);
+    cellEulerAnglesArrayPath = DataArrayPath(dcName, cellAttrMatName, Ebsd::CtfFile::EulerAngles);
+    crystalStructuresArrayPath = DataArrayPath(dcName, cellEnsembleName, Ebsd::CtfFile::CrystalStructures);
     int err = reader->getErrorCondition();
     if (err < 0)
     {
@@ -338,7 +352,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
       // horribly gone wrong in which case the system is going to come down quickly after this.
       AbstractFilter::Pointer convert = convertEulerFactory->create();
 
-      DataArrayPath eulerAnglesPath(dataContainerName, attributeMatrixName, Ebsd::CtfFile::EulerAngles);
+      DataArrayPath eulerAnglesPath(dcName, cellAttrMatName, Ebsd::CtfFile::EulerAngles);
       QVariant var;
       var.setValue(eulerAnglesPath);
       convert->setProperty("ConversionType", DREAM3D::EulerAngleConversionType::DegreesToRadians);
@@ -389,19 +403,32 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
   }
   ipfColorFilter->setReferenceDir(ref);
   ipfColorFilter->setDataContainerArray(dca);
+  ipfColorFilter->setCellPhasesArrayPath(cellPhasesArrayPath);
+  ipfColorFilter->setCellEulerAnglesArrayPath(cellEulerAnglesArrayPath);
+  ipfColorFilter->setCrystalStructuresArrayPath(crystalStructuresArrayPath);
   ipfColorFilter->execute();
   int err = ipfColorFilter->getErrorCondition();
   if (err < 0)
   {
     m_BaseImage = QImage();
     m_DisplayedImage = QImage();
+    QMessageBox msgBox;
+    msgBox.setText("IPF Color Filter Error");
+    QString iText;
+    QTextStream ss(&iText);
+    ss << "Error Executing the IPF Colors Filter. The error code was " << err;
+    msgBox.setInformativeText(iText);
+    msgBox.setStandardButtons(QMessageBox::Ok);
+    msgBox.setDefaultButton(QMessageBox::Ok);
+    msgBox.exec();
+    return;
   }
 
-  DataContainer::Pointer m = dca->getDataContainer(dataContainerName);
+  DataContainer::Pointer m = dca->getDataContainer(dcName);
   size_t dims[3] = {0, 0, 0};
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(dims);
+  m->getGeometryAs<ImageGeom>()->getDimensions(dims);
   float res[3] = {0.0f, 0.0f, 0.0f};
-  /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getResolution(res);
+  m->getGeometryAs<ImageGeom>()->getResolution(res);
 
   m_XDim->setText(QString::number(dims[0]));
   m_YDim->setText(QString::number(dims[1]));
@@ -411,7 +438,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
   QImage image(dims[0], dims[1], QImage::Format_ARGB32);
   size_t index = 0;
 
-  AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(attributeMatrixName);
+  AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(cellAttrMatName);
 
   IDataArray::Pointer arrayPtr = attrMat->getAttributeArray(ipfColorFilter->getCellIPFColorsArrayName());
   if (NULL == arrayPtr.get())

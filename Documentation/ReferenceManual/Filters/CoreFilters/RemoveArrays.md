@@ -1,11 +1,11 @@
-Delete Arrays {#removearrays}
+Delete Data {#removearrays}
 =============
 
 ## Group (Subgroup) ##
-Core Filters (Memory/Management)
+Core (Memory/Management)
 
 ## Description ##
-This filter allows the user to remove specified arrays from the pipeline by deleting them from memory. This can be helpful if the user has operations that need as much memory as possible and there are extra arrays that are not needed residing in memory. For example when creating a surface mesh one typically only needs an array that defines the structure of the volume and then afterwards can be safely deleted.
+This **Filter** allows the user to remove specified objects from the existing structure. This can be helpful if the user has operations that need as much memory as possible and there are extra objects that are not needed residing in memory. Alternatively, this **Filter** allows the user to remove objects that may share a name with another object further in the **Pipeline** that another **Filter** tries to create, since DREAM.3D generally does not allows objects at the same hierarchy to share the same name.
 
 ## Parameters ##
 None
@@ -13,21 +13,20 @@ None
 ## Required Geometry ##
 Not Applicable
 
-## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+## Required Objects ##
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Any  | None         | Any | Any | Items To Delete |
+| Any  | None         | Any | Any | Objects to delete |
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 ## License & Copyright ##
 
 Please see the description file distributed with this plugin.
 
-## DREAM3D Mailing Lists ##
+## DREAM.3D Mailing Lists ##
 
-If you need more help with a filter, please consider asking your question on the DREAM3D Users mailing list:
-https://groups.google.com/forum/?hl=en#!forum/dream3d-users
+If you need more help with a **Filter**, please consider asking your question on the [DREAM.3D Users Google group!](https://groups.google.com/forum/?hl=en#!forum/dream3d-users)
 
 

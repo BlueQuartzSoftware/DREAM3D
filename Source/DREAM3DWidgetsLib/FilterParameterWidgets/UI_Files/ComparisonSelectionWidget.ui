@@ -211,10 +211,10 @@
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="dataContainerList"/>
+      <widget class="QComboBox" name="dataContainerCombo"/>
      </item>
      <item>
-      <widget class="QComboBox" name="attributeMatrixList"/>
+      <widget class="QComboBox" name="attributeMatrixCombo"/>
      </item>
     </layout>
    </item>
@@ -228,7 +228,7 @@ font-weight: bold;
 }</string>
      </property>
      <property name="text">
-      <string>Data Arrays To Threshold</string>
+      <string>Attribute Arrays to Threshold</string>
      </property>
     </widget>
    </item>

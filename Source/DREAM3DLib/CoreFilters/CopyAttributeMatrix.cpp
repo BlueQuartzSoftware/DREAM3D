@@ -65,9 +65,9 @@ void CopyAttributeMatrix::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FilterParameter::New("Attribute Matrix To Copy", "SelectedAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getSelectedAttributeMatrixPath(), FilterParameter::RequiredArray));
+  parameters.push_back(FilterParameter::New("Attribute Matrix to Copy", "SelectedAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getSelectedAttributeMatrixPath(), FilterParameter::RequiredArray));
 
-  parameters.push_back(FilterParameter::New("New Attribute Matrix Name", "NewAttributeMatrix", FilterParameterWidgetType::StringWidget, getNewAttributeMatrix(), FilterParameter::CreatedArray));
+  parameters.push_back(FilterParameter::New("Copied Attribute Matrix", "NewAttributeMatrix", FilterParameterWidgetType::StringWidget, getNewAttributeMatrix(), FilterParameter::CreatedArray));
 
   setFilterParameters(parameters);
 }

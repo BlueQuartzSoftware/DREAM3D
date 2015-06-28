@@ -72,11 +72,10 @@ FindNumFeatures::~FindNumFeatures()
 void FindNumFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
-  parameters.push_back(FilterParameter::New("Feature Phases Array Path", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::RequiredArray));
-
+  parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
+  parameters.push_back(FilterParameter::New("Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::CreatedArray));
   parameters.push_back(FilterParameter::New("Number Of Features", "NumFeaturesArrayPath", FilterParameterWidgetType::DataArrayCreationWidget, getNumFeaturesArrayPath(), FilterParameter::CreatedArray));
-
   setFilterParameters(parameters);
 }
 

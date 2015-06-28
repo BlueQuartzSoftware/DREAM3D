@@ -5,7 +5,7 @@ Write Feature Data as CSV File {#featuredatacsvwriter}
 IO (Output)
 
 ## Description ##
-This Filter writes the data associated with each **Feature** to a file name specified by the user in *CSV* format. Every array in the **Feature** map is written as a column of data in the *CSV* file.  The user can choose to also write the neighbor data. Neighbor data are data arrays that are associated with the neighbors of a **Feature**, such as: list of neighbors, list of misorientations, list of shared surface areas, etc. These blocks of info are written after the scalar data arrays.  Since the number of neighbors is variable for each **Feature**, the data is written as follows (for each **Feature**): Id, number of neighbors, value1, value2,...valueN.
+This **Filter** writes the data associated with each **Feature** to a file name specified by the user in *CSV* format. Every array in the **Feature** map is written as a column of data in the *CSV* file.  The user can choose to also write the neighbor data. Neighbor data are data arrays that are associated with the neighbors of a **Feature**, such as: list of neighbors, list of misorientations, list of shared surface areas, etc. These blocks of info are written after the scalar data arrays.  Since the number of neighbors is variable for each **Feature**, the data is written as follows (for each **Feature**): Id, number of neighbors, value1, value2,...valueN.
 
 
 ### Example Output ###
@@ -39,25 +39,26 @@ The *CSV* file with Write Neighbor Data checked:
 
 | Name | Type |Description |
 |------|------|------|
-| Output File | File Path | Output .csv file path |
-| Write Neighbor Data | Boolean | Whether to write the **Feature** neighbor data |
+| Output File | File Path | The output .csv file path |
+| Write Neighbor Data | bool | Whether to write the **Feature** neighbor data |
 
 ## Required Geometry ##
 Not Applicable
 
-## Required Arrays ##
-None
+## Required Objects ##
+| Kind | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| **Attribute Matrix** | None | Feature | N/A | **Feature Attribute Matrix** that holds the data write |
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 ## License & Copyright ##
 
 Please see the description file distributed with this plugin.
 
-## DREAM3D Mailing Lists ##
+## DREAM.3D Mailing Lists ##
 
-If you need more help with a filter, please consider asking your question on the DREAM3D Users mailing list:
-https://groups.google.com/forum/?hl=en#!forum/dream3d-users
+If you need more help with a **Filter**, please consider asking your question on the [DREAM.3D Users Google group!](https://groups.google.com/forum/?hl=en#!forum/dream3d-users)
 
 

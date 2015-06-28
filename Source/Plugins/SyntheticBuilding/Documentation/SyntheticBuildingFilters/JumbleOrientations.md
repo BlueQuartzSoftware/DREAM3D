@@ -5,7 +5,7 @@ Jumble Orientations {#jumbleorientations}
 Synthetic Building (Crystallography)
 
 ## Description ##
-This Filter "jumbles" the orientations of a set of **Features** amongst each other. The algorithm for this procedure is as follows:
+This **Filter** "jumbles" the orientations of a set of **Features** amongst each other. The algorithm for this procedure is as follows:
 
 1. For each **Feauture**, select another random **Feature** belonging to the same **Ensemble**
 2. Swap the orientations at both the **Feature** and **Element** level of the current **Feature** and the randomly selected **Feature**
@@ -22,26 +22,25 @@ None
 Not Applicable
 
 
-## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+## Required Objects ##
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
-| Element | FeaturesIds | Int | (1) | Specifies to which **Feature** each **Element** belongs |
-| Feature | EulerAngles | Float | (3) | Three angles defining the orientation of the **Feature** in Bunge convention (Z-X-Z) |
-| Feature | Phases | Int | (1) |  Specifies to which **Ensemble** each **Cell** belongs |
+| **Element Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Element** belongs |
+| **Feature Attribute Array** | AvgEulerAngles | float | (3) | Three angles defining the orientation of the **Feature** in Bunge convention (Z-X-Z) |
+| **Feature Attribute Array** | Phases | int32_t | (1) |  Specifies to which **Ensemble** each **Cell** belongs |
 
-## Created Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+## Created Objects ##
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
-| Element | EulerAngles | Float | (3) | Three angles defining the orientation of the **Element** in Bunge convention (Z-X-Z) |
-| Feature | AvgQuats | Float | (4) | The average orientation of each **Feature** in quaternion representation |
+| **Element Attribute Array** | EulerAngles | float | (3) | Three angles defining the orientation of the **Element** in Bunge convention (Z-X-Z) |
+| **Feature Attribute Array** | AvgQuats | Float | (4) | The average orientation of each **Feature** in quaternion representation |
 
 ## License & Copyright ##
 
 Please see the description file distributed with this plugin.
 
-## DREAM3D Mailing Lists ##
+## DREAM.3D Mailing Lists ##
 
-If you need more help with a filter, please consider asking your question on the DREAM3D Users mailing list:
-https://groups.google.com/forum/?hl=en#!forum/dream3d-users
+If you need more help with a **Filter**, please consider asking your question on the [DREAM.3D Users Google group!](https://groups.google.com/forum/?hl=en#!forum/dream3d-users)
 
 

@@ -69,11 +69,12 @@ CopyFeatureArrayToElementArray::~CopyFeatureArrayToElementArray()
 void CopyFeatureArrayToElementArray::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
-  parameters.push_back(FilterParameter::New("Feature Array To Copy To Element Data", "SelectedFeatureArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedFeatureArrayPath(), FilterParameter::RequiredArray));
-  parameters.push_back(FilterParameter::New("Element Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
-
-  parameters.push_back(FilterParameter::New("New Element Array Name", "CreatedArrayName", FilterParameterWidgetType::StringWidget, getCreatedArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
+  parameters.push_back(FilterParameter::New("Feature Data to Copy to Element Data", "SelectedFeatureArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedFeatureArrayPath(), FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
+  parameters.push_back(FilterParameter::New("Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
+  parameters.push_back(FilterParameter::New("Copied Attribute Array", "CreatedArrayName", FilterParameterWidgetType::StringWidget, getCreatedArrayName(), FilterParameter::CreatedArray, ""));
 
   setFilterParameters(parameters);
 }
@@ -326,4 +327,4 @@ const QString CopyFeatureArrayToElementArray::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString CopyFeatureArrayToElementArray::getHumanLabel()
-{ return "Create Element Array From Feature Array"; }
+{ return "Create Element Array from Feature Array"; }

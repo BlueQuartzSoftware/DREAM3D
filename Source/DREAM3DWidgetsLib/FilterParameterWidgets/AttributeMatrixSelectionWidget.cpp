@@ -305,7 +305,7 @@ void AttributeMatrixSelectionWidget::setSelectedPath(QString dcName, QString att
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AttributeMatrixSelectionWidget::on_dataContainerList_currentIndexChanged(int index)
+void AttributeMatrixSelectionWidget::on_dataContainerCombo_currentIndexChanged(int index)
 {
   populateAttributeMatrixList();
 
@@ -354,7 +354,7 @@ void AttributeMatrixSelectionWidget::populateAttributeMatrixList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AttributeMatrixSelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)
+void AttributeMatrixSelectionWidget::on_attributeMatrixCombo_currentIndexChanged(int index)
 {
   m_DidCausePreflight = true;
   emit parametersChanged();

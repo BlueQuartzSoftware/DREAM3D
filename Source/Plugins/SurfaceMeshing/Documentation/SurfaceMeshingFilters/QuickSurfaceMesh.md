@@ -19,31 +19,33 @@ For more information on surface meshing, visit the [tutorial](@ref tutorialsurfa
 ## Parameters ##
 | Name | Type | Description |
 |------|------|-------------|
-| Transfer Phase Id | Bool | Whether to transfer the **Ensemble** Ids from the **Image Geometry** into the new **Triangle Geometry** |
+| Transfer Phase Id | bool | Whether to transfer the **Ensemble** Ids from the **Image Geometry** into the new **Triangle Geometry** |
 
 ## Required Geometry ##
 Image
 
-## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+## Required Objects ##
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs |
-| Cell | Phases | Int | (1) | Specifies to which **Ensemble** each **Cell** belongs. Only needed if _Transfer Phase Id_ is checked |
+| **Cell Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs |
+| **Cell Attribute Array** | Phases | int32_t | (1) | Specifies to which **Ensemble** each **Cell** belongs. Only needed if _Transfer Phase Id_ is checked |
 
-## Created Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+## Created Objects ##
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Face | FaceLabels | Int | (2) | Specifies which **Features** are on either side of each **Face** |
-| Vertex| NodeTypes | Int | (1) | Specifies the type of node in the **Geometry** |
-| Face | Phases | Int | (1) | Specifies to which **Ensemble** each **Face** belongs. Only needed if _Transfer Phase Id_ is checked |
+| **Data Container** | TriangleDataContainer | N/A | N/A | Created **Data Container** name with a **Triangle Geometry** |
+| **Attribute Matrix** | VertexData | Vertex | N/A | Created **Vertex Attribute Matrix** name  |
+| **Vertex Attribute Array** | NodeTypes | int8_t | (1) | Specifies the type of node in the **Geometry** |
+| **Attribute Matrix** | FaceData | Face | N/A | Created **Face Attribute Matrix** name  |
+| **Face Attribute Array** | FaceLabels | int32_t | (2) | Specifies which **Features** are on either side of each **Face** |
+| **Face Attribute Array** | Phases | int32_t | (1) | Specifies to which **Ensemble** each **Face** belongs. Only needed if _Transfer Phase Id_ is checked |
 
 ## License & Copyright ##
 
 Please see the description file distributed with this plugin.
 
-## DREAM3D Mailing Lists ##
+## DREAM.3D Mailing Lists ##
 
-If you need more help with a filter, please consider asking your question on the DREAM3D Users mailing list:
-https://groups.google.com/forum/?hl=en#!forum/dream3d-users
+If you need more help with a **Filter**, please consider asking your question on the [DREAM.3D Users Google group!](https://groups.google.com/forum/?hl=en#!forum/dream3d-users)
 
 

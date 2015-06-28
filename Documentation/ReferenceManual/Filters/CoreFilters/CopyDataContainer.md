@@ -2,33 +2,33 @@ Copy Data Container{#copydatacontainer}
 =============
 
 ## Group (Subgroup) ##
-Core Filters (Memory/Management)
+Core (Memory/Management)
 
 
 ## Description ##
-This filter copies a user chosen DataContainer to a new DataContainer with a user defined new name.
+This **Filter** copies a user chosen **Data Container** to a new **Data Container** with a user defined name. The **Data Container** will copy all of its **Attribute Matrices** (and component **Attribute Arrays**) and its **Geoemtry** as well.
 
 ## Parameters ##
-| Name | Type | Description |
-|------|------| ----------- |
-| New Data Container Name | String | Name for the copied data container |
-
+None
 
 ## Required Geometry ##
 Not Applicable
 
-## Required Arrays ##
-None
+## Required Objects ##
+| Kind | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Any **Data Container** | None | N/A | N/A | **Data Container** to copy |
 
-## Created Arrays ##
-None
+## Created Objects ##
+| Kind | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Any **Data Container** | None | N/A | N/A | Copied **Data Container** |
 
 ## License & Copyright ##
 
 Please see the description file distributed with this plugin.
 
-## DREAM3D Mailing Lists ##
+## DREAM.3D Mailing Lists ##
 
-If you need more help with a filter, please consider asking your question on the DREAM3D Users mailing list:
-https://groups.google.com/forum/?hl=en#!forum/dream3d-users
+If you need more help with a **Filter**, please consider asking your question on the [DREAM.3D Users Google group!](https://groups.google.com/forum/?hl=en#!forum/dream3d-users)
 

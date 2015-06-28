@@ -5,7 +5,7 @@ Read STL File {#readstlfile}
 IO (Input)
 
 ## Description ##
-This Filter will read a binary STL File and create a **Triangle Geometry** object in memory. The STL reader is very strict to the STL specification. An explanation of the STL file format can be found on [Wikipedia](https://en.wikipedia.org/wiki/STL). The structure of the file is as follows:
+This **Filter**  will read a binary STL File and create a **Triangle Geometry** object in memory. The STL reader is very strict to the STL specification. An explanation of the STL file format can be found on [Wikipedia](https://en.wikipedia.org/wiki/STL). The structure of the file is as follows:
 
 	UINT8[80] – Header
 	UINT32 – Number of triangles
@@ -24,29 +24,28 @@ This Filter will read a binary STL File and create a **Triangle Geometry** objec
 
 | Name | Type | Description |
 |------|------|------|
-| STL File | File Path  | The input STL file path |
-| Data Container Name | String | Created **Data Container** name |
-| Face Attribute Matrix Name | String | Created **Face Attribute Matrix** name |
+| STL File | File Path  | The input .stl file path |
 
 ## Required Geometry ##
 Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 None
 
-## Created Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+## Created Objects ##
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
-| Face | FaceNormals  | Double | (3) | The normals for each triangle |
+| **Data Container** | TriangleDataContainer  | N/A | N/A | Created **Data Container** name with a **Triangle Geometry** |
+| **Attribute Matrix** | FaceData  | Face | N/A | Created **Face Attribute Matrix** name  |
+| **Face Attribute Array** | FaceNormals  | double | (3) | Specifies the normal of each **Face** |
 
 
 ## License & Copyright ##
 
 Please see the description file distributed with this plugin.
 
-## DREAM3D Mailing Lists ##
+## DREAM.3D Mailing Lists ##
 
-If you need more help with a filter, please consider asking your question on the DREAM3D Users mailing list:
-https://groups.google.com/forum/?hl=en#!forum/dream3d-users
+If you need more help with a **Filter**, please consider asking your question on the [DREAM.3D Users Google group!](https://groups.google.com/forum/?hl=en#!forum/dream3d-users)
 
 

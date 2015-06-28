@@ -2,13 +2,13 @@ Create Data Array {#createdataarray}
 =============
 
 ## Group (Subgroup) ##
-Core Filters (Generation)
+Core (Generation)
 
 
 ## Description ##
-This filter creates a DataArray of any primitive type with any number of components (1 Row x N Cols) and initialize all the values to a user settable value. The primitive type of the array to create is set using an integer constant. Code listing 1 shows the values:
+This **Filter** creates am **Attribute Array** of any primitive type with any number of components along a _single component dimension_. For example, a scalar as (1) or a 3-vector as (3), but _not_ a matrix as (3, 3). The array is initialized to a user define value. The primitive type of the array to create is set using an integer constant. Code listing 1 shows the values:
 
-**Code Listing 1**
+### Primitive Type Enumeration ###
 
     static const int Int8 = 0;
     static const int UInt8 = 1;
@@ -23,7 +23,7 @@ This filter creates a DataArray of any primitive type with any number of compone
     static const int Bool = 10;
     
 
-**Data Types** 
+### Primitive Data Types ##
 
 | Type             | Size |        Range       |
 |------------------|------|--------------------|
@@ -39,37 +39,33 @@ This filter creates a DataArray of any primitive type with any number of compone
 | Double | 64 bit | -1.7e+308 to -2.2e-308, 0.0, 2.2e-308 to 1.7e+308 (15 digits)|
 | Boolean | 8 bit |0 = false and any other value will be forced to 1 = true|
 
-The number of components should be at least 1. An example of "Number of Components" would be 3 for an RGB Image, 1 for a gray scale image, 1 for a simple array, 4 for a Quaternions array. All values of the array will be initialized to the user set value. The initialization value text box
-must have a user entry or the default value will be used.
+The number of components should be at least 1. Examples of _Number of Components_ would be 3 for an RGB Image, 1 for a gray scale image, 1 for a scalar array, 4 for a quaternions array, etc. All values of the array will be initialized to the user set value. The initialization value text box
+must have a user entry or the default value _0_ will be used.
 
 ## Parameters ##
-
 | Name             | Type | Description |
 |------------------|------|-------------|
-| Output Array Name | String | Name for created array |
-| Scalar Type | Integer | Data type for created array |
-| Number of Components | Integer | Greater than 1 |
-| Initialization Value | double | Fill value for array |
+| Scalar Type | Enumeration | Primitive data type for created array |
+| Number of Components | int32_t | Component size |
+| Initialization Value | float | Initialization value for array |
 
 ## Required Geometry ##
 Not Applicable
 
-## Required Arrays ##
+## Required Objects ##
 None
 
-## Created Arrays ##
-
-| Type | Default Name | Type | Component Dimensions | Description |
+## Created Objects ##
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|----------------|
-| Any | None | User chosen | User chosen | Output Array Name |
+| Any **Attribute Array** | None | Any | Any | Created **Attribute Array** location and name |
 
 
 ## License & Copyright ##
 
 Please see the description file distributed with this plugin.
 
-## DREAM3D Mailing Lists ##
+## DREAM.3D Mailing Lists ##
 
-If you need more help with a filter, please consider asking your question on the DREAM3D Users mailing list:
-https://groups.google.com/forum/?hl=en#!forum/dream3d-users
+If you need more help with a **Filter**, please consider asking your question on the [DREAM.3D Users Google group!](https://groups.google.com/forum/?hl=en#!forum/dream3d-users)
 

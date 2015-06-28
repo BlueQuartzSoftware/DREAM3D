@@ -5,7 +5,7 @@ Write SPParks File (Feature Ids) {#spparkswriter}
 IO (Output)
 
 ## Description ##
-This Filter writes to a data file in a format used by [SPPARKS Kinetic Monte Carlo Simulator](http://spparks.sandia.gov/).
+This **Filter** writes to a data file in a format used by [SPPARKS Kinetic Monte Carlo Simulator](http://spparks.sandia.gov/).
 
 + The "Values" section is a pair of numbers where the first number is the site ID and the second
  number is the actual value of the **Feature** Id at that site.
@@ -43,24 +43,22 @@ More information can be found at the [SPParks web site.](http://spparks.sandia.g
 | Output File | File Path | Output .spparks file path |
 
 ## Required Geometry ##
-Image / Rectilinear Grid
+Image
 
-## Required Arrays ##
-
-| Type | Default Name | Type | Component Dimensions | Description |
+## Required Objects ##
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs |
+| **Cell Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs |
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 ## License & Copyright ##
 
 Please see the description file distributed with this plugin.
 
-## DREAM3D Mailing Lists ##
+## DREAM.3D Mailing Lists ##
 
-If you need more help with a filter, please consider asking your question on the DREAM3D Users mailing list:
-https://groups.google.com/forum/?hl=en#!forum/dream3d-users
+If you need more help with a **Filter**, please consider asking your question on the [DREAM.3D Users Google group!](https://groups.google.com/forum/?hl=en#!forum/dream3d-users)
 
 

@@ -73,12 +73,10 @@ FindAvgScalarValueForFeatures::~FindAvgScalarValueForFeatures()
 void FindAvgScalarValueForFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
-  /* Required Arrays */
-  parameters.push_back(FilterParameter::New("Element Array To Average", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedCellArrayPath(), FilterParameter::RequiredArray));
-  parameters.push_back(FilterParameter::New("Element Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
-
-  /* Created Arrays */
+  parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
+  parameters.push_back(FilterParameter::New("Attribute Array to Average", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedCellArrayPath(), FilterParameter::RequiredArray));
+  parameters.push_back(FilterParameter::New("Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
   parameters.push_back(FilterParameter::New("Scalar Feature Averages", "NewFeatureArrayArrayPath", FilterParameterWidgetType::DataArrayCreationWidget, getNewFeatureArrayArrayPath(), FilterParameter::CreatedArray, ""));
   setFilterParameters(parameters);
 }

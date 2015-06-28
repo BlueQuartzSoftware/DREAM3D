@@ -164,22 +164,23 @@ void FilterListDockWidget::showContextMenuForWidget(const QPoint &pos)
   m_ContextMenu->clear();
 
   QListWidgetItem* item = filterList->itemAt(pos);
-  QString itemName = item->text();
-  //QString helpLabel = "'" + itemName + "' Help";
+  if(item)
+  {
+    m_Mapper = new QSignalMapper(this);
+    QAction* actionLaunchHelp = new QAction(m_ContextMenu);
+    actionLaunchHelp->setObjectName(QString::fromUtf8("actionLaunchHelp"));
+    actionLaunchHelp->setText(QApplication::translate("DREAM3D_UI", "Filter Help", 0));
+    connect(actionLaunchHelp, SIGNAL(triggered()),
+            m_Mapper, SLOT(map()));
 
-  m_Mapper = new QSignalMapper(this);
+    QString itemName = item->text();
+    m_Mapper->setMapping(actionLaunchHelp, itemName);
+    connect(m_Mapper, SIGNAL(mapped(QString)),
+            this, SLOT(launchHelpForItem(QString)));
 
-  QAction* actionLaunchHelp = new QAction(m_ContextMenu);
-  actionLaunchHelp->setObjectName(QString::fromUtf8("actionLaunchHelp"));
-  actionLaunchHelp->setText(QApplication::translate("DREAM3D_UI", "Filter Help", 0));
-  connect(actionLaunchHelp, SIGNAL(triggered()),
-    m_Mapper, SLOT(map()));
-  m_Mapper->setMapping(actionLaunchHelp, itemName);
-  connect(m_Mapper, SIGNAL(mapped(QString)),
-    this, SLOT(launchHelpForItem(QString)));
-
-  m_ContextMenu->addAction(actionLaunchHelp);
-  m_ContextMenu->exec(QCursor::pos());
+    m_ContextMenu->addAction(actionLaunchHelp);
+    m_ContextMenu->exec(QCursor::pos());
+  }
 }
 
 // -----------------------------------------------------------------------------

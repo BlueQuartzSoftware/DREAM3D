@@ -2,10 +2,10 @@ Regularize Z Spacing {#regularizezspacing}
 =============
 
 ## Group (Subgroup) ##
-Sampling Filters (Resolution)
+Sampling (Resolution)
 
 ## Description ##
-This Filter "resamples" the 3D array in the Z-direction (which is generally taken as the sectioning direction).  The **Image / Rectilinear Grid Geometry** assumes all **Cells** are of the same size (dX x dY x dZ).  If the Z locations (i.e. slice positions) are not uniform, then the user can enter a list of the actual Z locations and a desired uniform "resolution".  The filter will then create a new volume with uniform Z locations and determine which of the old "slices" should be copied to the new "slices". Below is an example:
+This **Filter** "resamples" the 3D array in the Z-direction (which is generally taken as the sectioning direction).  The **Image Geometry** assumes all **Cells** are of the same size (dx x dy x dx).  If the Z locations (i.e., slice positions) are not uniform, then the user can enter a list of the actual Z locations and a desired uniform "resolution".  The format of the list file is each Z slice position on a separate line. The **Filter** will then create a new volume with uniform Z locations and determine which of the old "slices" should be copied to the new "slices". Below is an example:
 
 If a dataset had 10 sections with the following locations:
 
@@ -39,30 +39,31 @@ and the user wanted a uniform resolution of *3*, then the following mapping woul
 |10|30|8|
 |11|33|9|
 
-*Note:* No interpolation of the data is performed and the nearest "old slice" is copied to a given "new slice".
+*Note:* No interpolation of the data is performed and the nearest "old slice" is copied to a given "new slice". 
 
 ## Parameters ##
 | Name | Type | Description |
 |------|------|------|
-| Current Z Positions File | File Path | Location of the Z positions file |
-| Z Res | Double | Uniform resolution desired in the Z direction of the new grid |
+| Current Z Positions File | File Path | The input file path of the Z positions file |
+| New Z Resolution | float | Uniform resolution desired in the Z direction of the new grid |
 
 ## Required Geometry ##
-Image / Rectilinear Grid
+Image 
 
-## Required Arrays ##
+## Required Objects ##
 None
 
-## Created Arrays ##
-None
+## Created Objects ##
+| Kind | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| **Attribute Matrix** | CellData | Cell | N/A | Regularized **Cell Attribute Matrix** name |
 
 ## License & Copyright ##
 
 Please see the description file distributed with this plugin.
 
-## DREAM3D Mailing Lists ##
+## DREAM.3D Mailing Lists ##
 
-If you need more help with a filter, please consider asking your question on the DREAM3D Users mailing list:
-https://groups.google.com/forum/?hl=en#!forum/dream3d-users
+If you need more help with a **Filter**, please consider asking your question on the [DREAM.3D Users Google group!](https://groups.google.com/forum/?hl=en#!forum/dream3d-users)
 
 

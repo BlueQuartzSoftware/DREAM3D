@@ -82,7 +82,6 @@ FitFeatureData::~FitFeatureData()
 void FitFeatureData::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Distribution Type");
@@ -98,13 +97,12 @@ void FitFeatureData::setupFilterParameters()
   }
   QStringList linkedProps("BiasedFeaturesArrayPath");
   parameters.push_back(LinkedBooleanFilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", getRemoveBiasedFeatures(), linkedProps, FilterParameter::Parameter));
-
-  parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
+  parameters.push_back(FilterParameter::New("Feature Array to Fit", "SelectedFeatureArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedFeatureArrayPath(), FilterParameter::RequiredArray));
+  parameters.push_back(FilterParameter::New("Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, ""));
   parameters.push_back(FilterParameter::New("Biased Features", "BiasedFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getBiasedFeaturesArrayPath(), FilterParameter::RequiredArray, ""));
-  parameters.push_back(FilterParameter::New("Feature Array To Fit", "SelectedFeatureArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedFeatureArrayPath(), FilterParameter::RequiredArray));
-
+  parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::CreatedArray));
   parameters.push_back(FilterParameter::New("Fit Parameters", "NewEnsembleArrayArray", FilterParameterWidgetType::DataArrayCreationWidget, getNewEnsembleArrayArray(), FilterParameter::CreatedArray, ""));
-
   setFilterParameters(parameters);
 }
 
@@ -298,4 +296,4 @@ const QString FitFeatureData::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString FitFeatureData::getHumanLabel()
-{ return "Fit Distribution To Feature Data"; }
+{ return "Fit Distribution to Feature Data"; }

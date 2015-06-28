@@ -68,10 +68,10 @@ LinkFeatureMapToElementArray::~LinkFeatureMapToElementArray()
 void LinkFeatureMapToElementArray::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
-  parameters.push_back(FilterParameter::New("Element Array To Link", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedCellArrayPath(), FilterParameter::RequiredArray));
-
-  parameters.push_back(FilterParameter::New("Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
+  parameters.push_back(FilterParameter::New("Element Attribute Array to Link", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedCellArrayPath(), FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
+  parameters.push_back(FilterParameter::New("Feature Attribute Matrix", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, ""));
   parameters.push_back(FilterParameter::New("Active", "ActiveArrayName", FilterParameterWidgetType::StringWidget, getActiveArrayName(), FilterParameter::CreatedArray, ""));
 
   setFilterParameters(parameters);
@@ -226,4 +226,4 @@ const QString LinkFeatureMapToElementArray::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString LinkFeatureMapToElementArray::getHumanLabel()
-{ return "Link Feature Attribute Matrix To Element Attribute Array"; }\
+{ return "Link Feature Attribute Matrix to Element Attribute Array"; }\

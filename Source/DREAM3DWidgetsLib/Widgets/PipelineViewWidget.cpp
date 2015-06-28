@@ -58,6 +58,8 @@
 #include <QtWidgets/QProgressDialog>
 #include <QtWidgets/QMessageBox>
 
+#include "Applications/DREAM3D/DREAM3DApplication.h"
+
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/PipelineMessage.h"
@@ -105,10 +107,7 @@ PipelineViewWidget::PipelineViewWidget(QWidget* parent) :
   setContextMenuPolicy(Qt::CustomContextMenu);
   setFocusPolicy(Qt::StrongFocus);
 
-  connect(this,
-          SIGNAL(customContextMenuRequested(const QPoint&)),
-          SLOT(on_customContextMenuRequested(const QPoint&)));
-
+  connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), dream3dApp, SLOT(on_pipelineViewContextMenuRequested(const QPoint&)));
 }
 
 // -----------------------------------------------------------------------------
@@ -128,6 +127,8 @@ void PipelineViewWidget::setPipelineMessageObserver(QObject* pipelineMessageObse
   // setup our connection
   connect(this, SIGNAL(pipelineIssuesCleared()),
           m_PipelineMessageObserver, SLOT(clearIssues()) );
+  connect(this, SIGNAL(preflightPipelineComplete()),
+          m_PipelineMessageObserver, SLOT(displayCachedMessages()));
 }
 
 // -----------------------------------------------------------------------------
@@ -654,6 +655,7 @@ void PipelineViewWidget::preflightPipeline()
       if(filter->getErrorCondition() < 0) {fw->setHasPreflightErrors(true);}
     }
   }
+  emit preflightPipelineComplete();
 }
 
 
@@ -1273,29 +1275,6 @@ bool PipelineViewWidget::shouldAutoScroll(const QPoint& pos)
 void PipelineViewWidget::setContextMenuActions(QList<QAction*> list)
 {
   m_MenuActions = list;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineViewWidget::on_customContextMenuRequested(const QPoint& pos)
-{
-  // Note: We must map the point to global from the viewport to
-  // account for the header.
-  showContextMenu(mapToGlobal(pos) );
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineViewWidget::showContextMenu(const QPoint& globalPos)
-{
-  m_Menu.clear();
-  for (int i = 0; i < m_MenuActions.size(); i++)
-  {
-    m_Menu.addAction(m_MenuActions[i]);
-  }
-  m_Menu.exec(globalPos);
 }
 
 // -----------------------------------------------------------------------------

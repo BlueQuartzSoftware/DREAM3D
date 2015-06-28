@@ -5,7 +5,7 @@ Read Ph File (Feature Ids) {#phreader}
 IO (Input)
 
 ## Description ##
-This Filter reads a custom data file used by the Materials Science Department at Carnegie Mellon University. The information in the file defines an **Image** geometry with a set of **Feature** Ids.  The file format is a simple ASCII text file with the following contents:
+This **Filter** reads a custom data file used by the Materials Science Department at Carnegie Mellon University. The information in the file defines an **Image Geometry** with a set of **Feature** Ids.  The file format is a simple ASCII text file with the following contents:
 
 **Format**
 
@@ -34,32 +34,29 @@ This Filter reads a custom data file used by the Materials Science Department at
 ## Parameters ##
 | Name | Type | Description |
 |------|------| ----------- |
-| Input File | File Path | Input .ph file path |
-| Origin | Float (x3) | The location in space of the (0, 0, 0) voxel |
-| Resolution | Float (x3) | Vector of resolution values (dx, dy, dz) |
-| Data Container | String | Created **Data Container** name |
-| Cell Attribute Matrix | String | Created **Cell Attribute Matrix** name |
+| Input File | File Path | The input .ph file path |
+| Origin | flaot (3x) | The location in space of the (0, 0, 0) coordinate |
+| Resolution | Float (x3) | The resolution values (dx, dy, dz) |
 
 ## Required Geometry ##
 Not Applicable
 
-
-## Required Arrays ##
+## Required Objects ##
 None
 
-## Created Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+## Created Objects ##
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Cell | FeatureIds | Int | (1) | Specifies to which **Feature** each **Cell** belongs |
-
+| **Data Container** | ImageDataContainer | N/A | N/A | Created **Data Container** name with an **Image Geometry** |
+| **Attribute Matrix** | CellData | Cell | N/A | Created **Cell Attribute Matrix** name |
+| **Cell Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs |
 
 ## License & Copyright ##
 
 Please see the description file distributed with this plugin.
 
-## DREAM3D Mailing Lists ##
+## DREAM.3D Mailing Lists ##
 
-If you need more help with a filter, please consider asking your question on the DREAM3D Users mailing list:
-https://groups.google.com/forum/?hl=en#!forum/dream3d-users
+If you need more help with a **Filter**, please consider asking your question on the [DREAM.3D Users Google group!](https://groups.google.com/forum/?hl=en#!forum/dream3d-users)
 
 

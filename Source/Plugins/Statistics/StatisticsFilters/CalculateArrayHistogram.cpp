@@ -79,8 +79,6 @@ CalculateArrayHistogram::~CalculateArrayHistogram()
 void CalculateArrayHistogram::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
-  /* Parameter */
   parameters.push_back(FilterParameter::New("Number of Bins", "NumberOfBins", FilterParameterWidgetType::IntWidget, getNumberOfBins(), FilterParameter::Parameter));
   QStringList linkedProps;
   linkedProps << "MinRange" << "MaxRange";
@@ -90,13 +88,9 @@ void CalculateArrayHistogram::setupFilterParameters()
   linkedProps.clear();
   linkedProps << "NewDataContainerName";
   parameters.push_back(LinkedBooleanFilterParameter::New("New Data Container", "NewDataContainer", getNewDataContainer(), linkedProps, FilterParameter::Parameter));
-
-  /* Required Arrays */
-  parameters.push_back(FilterParameter::New("Selected Array", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), FilterParameter::RequiredArray));
-
-  /* Created Arrays */
-  parameters.push_back(FilterParameter::New("New Data Container Name", "NewDataContainerName", FilterParameterWidgetType::StringWidget, getNewDataContainerName(), FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("New Attribute Matrix Name", "NewAttributeMatrixName", FilterParameterWidgetType::StringWidget, getNewAttributeMatrixName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Attribute Array to Histogram", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), FilterParameter::RequiredArray));
+  parameters.push_back(FilterParameter::New("Data Container ", "NewDataContainerName", FilterParameterWidgetType::StringWidget, getNewDataContainerName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(FilterParameter::New("Attribute Matrix", "NewAttributeMatrixName", FilterParameterWidgetType::StringWidget, getNewAttributeMatrixName(), FilterParameter::CreatedArray, ""));
   parameters.push_back(FilterParameter::New("Histogram", "NewDataArrayName", FilterParameterWidgetType::StringWidget, getNewDataArrayName(), FilterParameter::CreatedArray, ""));
   setFilterParameters(parameters);
 }
@@ -146,7 +140,7 @@ void CalculateArrayHistogram::dataCheck()
   if (m_NumberOfBins <= 0)
   {
     setErrorCondition(-11011);
-    QString ss = QObject::tr("The Number of Bins (%1) must be positive").arg(m_NumberOfBins);
+    QString ss = QObject::tr("The number of bins (%1) must be positive").arg(m_NumberOfBins);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }

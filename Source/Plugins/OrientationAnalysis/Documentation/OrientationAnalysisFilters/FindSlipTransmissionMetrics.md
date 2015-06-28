@@ -5,7 +5,7 @@ Find Neighbor Slip Transmission Metrics {#findsliptransmissionmetrics}
 Statistics (Crystallographic)
 
 ## Description ##
-This Filter calculates a suite of *slip transmission metrics* that are related to the alignment of slip directions and planes across **Feature** boundaries.  The algorithm for calculation of these metrics is as follows:
+This **Filter** calculates a suite of *slip transmission metrics* that are related to the alignment of slip directions and planes across **Feature** boundaries.  The algorithm for calculation of these metrics is as follows:
 
 1. Get the average orientation of the **Feature**
 2. Get the **Feature**'s list of neighboring **Features**
@@ -22,29 +22,28 @@ None
 ## Required Geometry ##
 Not Applicable
 
-## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+## Required Objects ##
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Feature | NeighborList | List of Ints | (1) | List of the contiguous neighboring **Features** for a given **Feature** |
-| Feature | AvgQuats | Float | (4) | Specifies the average orientation of each **Feature** in quaternion representation |
-| Feature | Phases | Int | (1) | Specifies to which phase each **Feature** belongs |
-| Ensemble | CrystalStructures | Int | (1) | Enumeration representing the crystal structure for each phase |
+| **Feature Attribute Array** | NeighborList | List of int32_t | (1) | List of the contiguous neighboring **Features** for a given **Feature** |
+| **Feature Attribute Array** | AvgQuats | float | (4) | Specifies the average orienation of each **Feature** in quaternion representation |
+| **Feature Attribute Array** | Phases | int32_t | (1) | Specifies to which **Ensemble** each **Feature** belongs |
+| **Ensemble Attribute Array** | CrystalStructures | uint32_t | (1) | Enumeration representing the crystal structure for each **Ensemble** |
 
-## Created Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+## Created Objects ##
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Face | F1s | Float | (2) | |
-| Face | F1spts | Float | (2) | |
-| Face | F7s | Float | (2) | |
-| Face | mPrimes | Float | (2) | |
+| **Feature Attribute Array** | F1s | float | (2) | |
+| **Feature Attribute Array** | F1spts | float | (2) | |
+| **Feature Attribute Array** | F7s | float | (2) | |
+| **Feature Attribute Array** | mPrimes | float | (2) | |
 
 ## License & Copyright ##
 
 Please see the description file distributed with this plugin.
 
-## DREAM3D Mailing Lists ##
+## DREAM.3D Mailing Lists ##
 
-If you need more help with a filter, please consider asking your question on the DREAM3D Users mailing list:
-https://groups.google.com/forum/?hl=en#!forum/dream3d-users
+If you need more help with a **Filter**, please consider asking your question on the [DREAM.3D Users Google group!](https://groups.google.com/forum/?hl=en#!forum/dream3d-users)
 
 

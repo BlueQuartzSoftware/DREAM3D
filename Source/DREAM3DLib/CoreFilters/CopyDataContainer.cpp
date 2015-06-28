@@ -65,9 +65,9 @@ void CopyDataContainer::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FilterParameter::New("Data Container To Copy", "SelectedDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getSelectedDataContainerName(), FilterParameter::RequiredArray));
+  parameters.push_back(FilterParameter::New("Data Container to Copy", "SelectedDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getSelectedDataContainerName(), FilterParameter::RequiredArray));
 
-  parameters.push_back(FilterParameter::New("New Data Container Name", "NewDataContainerName", FilterParameterWidgetType::StringWidget, getNewDataContainerName(), FilterParameter::CreatedArray));
+  parameters.push_back(FilterParameter::New("Copied Data Container", "NewDataContainerName", FilterParameterWidgetType::StringWidget, getNewDataContainerName(), FilterParameter::CreatedArray));
 
   setFilterParameters(parameters);
 }

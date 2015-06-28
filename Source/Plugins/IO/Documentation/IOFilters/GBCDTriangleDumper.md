@@ -5,7 +5,7 @@ Write GBCD Triangles File {#gbcdtriangledumper}
 IO (Output)
 
 ## Description ##
-This Filter writes relevant information about the Grain Boundary Character Distribution (GBCD) on an existing set of triangles.  The information written includes the inward and outward Euler angles, normals, and areas for each triangle.  The file format was originally defined by Prof. Greg Rohrer (CMU).
+This **Filter** writes relevant information about the Grain Boundary Character Distribution (GBCD) on an existing set of triangles.  The information written includes the inward and outward Euler angles, normals, and areas for each triangle.  The file format was originally defined by Prof. Greg Rohrer (CMU).
 
 ## Example Output ## 
 
@@ -29,28 +29,27 @@ This Filter writes relevant information about the Grain Boundary Character Distr
 ## Parameters ##
 | Name | Type | Description |
 |------|------|------|
-| Output File | File Path | GBCD Triangles File |
+| Output File | File Path | The output GBCD triangle file path |
 
 ## Required Geometry ##
-Triangle
+Image + Triangle
 
-## Required Arrays ##
-| Type | Default Name | Type | Component Dimensions | Description |
+## Required Objects ##
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Triangle | FaceLabels | Int  | (2) | Specifies to which two **Features** each triangle belongs |
-| Face | FaceNormals | Double | (3) | Vector specifying the normal to each triangle |
-| Face  | FaceAreas | Double | (1) | The area of each triangle |
-| Feature  | FeatureEulerAngles | Float | (3) | Three angles defining the orientation of the triangle in Bunge convention (Z-X-Z). |
+| **Face Attribute Array** | FaceLabels | int32_t  | (2) | Specifies which **Features** are on either side of each **Face** |
+| **Face Attribute Array** | FaceNormals | double | (3) | Specifies the normal of each **Face** |
+| **Face Attribute Array**  | FaceAreas | double | (1) | Specifies the area of each **Face** |
+| **Feature Attribute Array**  | AvgEulerAngles | float | (3) | Three angles defining the orientation of the **Feature** in Bunge convention (Z-X-Z). |
 
-## Created Arrays ##
+## Created Objects ##
 None
 
 ## License & Copyright ##
 
 Please see the description file distributed with this plugin.
 
-## DREAM3D Mailing Lists ##
+## DREAM.3D Mailing Lists ##
 
-If you need more help with a filter, please consider asking your question on the DREAM3D Users mailing list:
-https://groups.google.com/forum/?hl=en#!forum/dream3d-users
+If you need more help with a **Filter**, please consider asking your question on the [DREAM.3D Users Google group!](https://groups.google.com/forum/?hl=en#!forum/dream3d-users)
 

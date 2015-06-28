@@ -48,8 +48,8 @@
 // -----------------------------------------------------------------------------
 FindVolFractions::FindVolFractions() :
   AbstractFilter(),
-  m_CellPhasesArrayPath("", "", ""),
-  m_VolFractionsArrayPath("", "", ""),
+  m_CellPhasesArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
+  m_VolFractionsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::VolFractions),
   m_CellPhases(NULL),
   m_VolFractions(NULL)
 {
@@ -69,11 +69,10 @@ FindVolFractions::~FindVolFractions()
 void FindVolFractions::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
-  parameters.push_back(FilterParameter::New("Element Phases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellPhasesArrayPath(), FilterParameter::RequiredArray, ""));
-
+  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
+  parameters.push_back(FilterParameter::New("Phases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellPhasesArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
   parameters.push_back(FilterParameter::New("Volume Fractions", "VolFractionsArrayPath", FilterParameterWidgetType::DataArrayCreationWidget, getVolFractionsArrayPath(), FilterParameter::CreatedArray, ""));
-
   setFilterParameters(parameters);
 }
 
@@ -107,6 +106,8 @@ int FindVolFractions::writeFilterParameters(AbstractFilterParametersWriter* writ
 void FindVolFractions::dataCheck()
 {
   setErrorCondition(0);
+
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getCellPhasesArrayPath().getDataContainerName());
 
   QVector<size_t> cDims(1, 1);
   m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -190,4 +191,4 @@ const QString FindVolFractions::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString FindVolFractions::getHumanLabel()
-{ return "Find Volume Fractions of Phases"; }
+{ return "Find Volume Fractions of Ensembles"; }

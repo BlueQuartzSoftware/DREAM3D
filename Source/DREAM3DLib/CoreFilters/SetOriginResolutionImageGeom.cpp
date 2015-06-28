@@ -120,7 +120,7 @@ void SetOriginResolutionImageGeom::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-
+  parameters.push_back(FilterParameter::New("Data Container Image Geometry to Modify", "DataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerName(), FilterParameter::RequiredArray));
 
   QStringList linkedProps("Origin");
   parameters.push_back(LinkedBooleanFilterParameter::New("Change Origin", "ChangeOrigin", getChangeOrigin(), linkedProps, FilterParameter::Parameter));
@@ -130,8 +130,6 @@ void SetOriginResolutionImageGeom::setupFilterParameters()
   linkedProps << "Resolution";
   parameters.push_back(LinkedBooleanFilterParameter::New("Change Resolution", "ChangeResolution", getChangeResolution(), linkedProps, FilterParameter::Parameter));
   parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget, getResolution(), FilterParameter::Parameter, ""));
-
-  parameters.push_back(FilterParameter::New("Data Container To Apply To", "DataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerName(), FilterParameter::RequiredArray));
 
   setFilterParameters(parameters);
 }
