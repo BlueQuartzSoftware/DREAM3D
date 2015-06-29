@@ -125,7 +125,7 @@ const QString @ClassName@::getCompiledLibraryName()
 //
 // -----------------------------------------------------------------------------
 const QString @ClassName@::getGroupName()
-{ return "@PluginName@"; }
+{ return "DREAM3D::FilterGroups::Unsupported"; }
 
 // -----------------------------------------------------------------------------
 //
@@ -137,5 +137,5 @@ const QString @ClassName@::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString @ClassName@::getSubGroupName()
-{ return "Misc"; }
+{ return "@PluginName@"; }
 
