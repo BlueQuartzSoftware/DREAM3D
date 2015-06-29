@@ -1080,7 +1080,7 @@ const QString TesselateFarFieldGrains::getCompiledLibraryName()
 //
 // -----------------------------------------------------------------------------
 const QString TesselateFarFieldGrains::getGroupName()
-{ return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
+{ return DREAM3D::FilterGroups::Unsupported; }
 
 
 // -----------------------------------------------------------------------------

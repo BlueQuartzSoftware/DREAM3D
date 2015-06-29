@@ -20,15 +20,15 @@
 //
 // -----------------------------------------------------------------------------
 HEDMAnalysisPlugin::HEDMAnalysisPlugin() :
-m_Version(HEDMAnalysis::Version::Package()),                            // Initialize HEDMAnalysis's Version Number Here
-m_CompatibilityVersion(HEDMAnalysis::Version::Package()), // Initialize HEDMAnalysis's Compatibility Version Number Here
-m_Vendor("Vendor Name"),                                // Initialize HEDMAnalysis's Vendor Name Here
-m_URL("URL"),                                           // Initialize Company URL Here
-m_Location("Location"),                                 // Initialize Company Location Here
-m_Description("Description"),                           // Initialize HEDMAnalysis's Description Here
-m_Copyright("Copyright"),                               // Initialize HEDMAnalysis's Copyright Here
-m_Filters(QList<QString>()),                        // Initialize HEDMAnalysis's List of Dependencies Here
-m_DidLoad(false)
+  m_Version(HEDMAnalysis::Version::Package()),                            // Initialize HEDMAnalysis's Version Number Here
+  m_CompatibilityVersion(HEDMAnalysis::Version::Package()), // Initialize HEDMAnalysis's Compatibility Version Number Here
+  m_Vendor("Vendor Name"),                                // Initialize HEDMAnalysis's Vendor Name Here
+  m_URL("URL"),                                           // Initialize Company URL Here
+  m_Location("Location"),                                 // Initialize Company Location Here
+  m_Description("Description"),                           // Initialize HEDMAnalysis's Description Here
+  m_Copyright("Copyright"),                               // Initialize HEDMAnalysis's Copyright Here
+  m_Filters(QList<QString>()),                        // Initialize HEDMAnalysis's List of Dependencies Here
+  m_DidLoad(false)
 {
 
 }

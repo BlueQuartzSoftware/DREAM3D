@@ -165,10 +165,10 @@ int ReadMicData::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
-      DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-      DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
-      DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
-      writer->closeFilterGroup();
+  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -567,7 +567,7 @@ const QString ReadMicData::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 const QString ReadMicData::getGroupName()
 {
-  return DREAM3D::FilterGroups::IOFilters;
+  return DREAM3D::FilterGroups::Unsupported;
 }
 
 
