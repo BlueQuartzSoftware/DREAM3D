@@ -304,8 +304,9 @@ function UpdateExecutableDependencies()
 # -----------------------------------------------------------------------------
 #  Script really starts here
 # -----------------------------------------------------------------------------
-tmpFile="${TmpDir}/$RANDOM/@osx_app_name@.out"
-mkdir -p "${TmpDir}/$RANDOM"
+OUTDIR=$RANDOM
+tmpFile="${TmpDir}/$OUTDIR/@osx_app_name@.out"
+mkdir -p "${TmpDir}/$OUTDIR"
 otool -L "${ApplicationExe}" > "${tmpFile}"
 
 i=0
