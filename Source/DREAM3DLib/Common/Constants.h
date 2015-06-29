@@ -186,6 +186,7 @@ namespace DREAM3D
     const DREAM3D_STRING SolidMeshingFilters("Solid Meshing");
     const DREAM3D_STRING TestFilters("Test");
     const DREAM3D_STRING CoreFilters("Core");
+    const DREAM3D_STRING Unsupported("Unsupported");
   }
 
   namespace FilterSubGroups
