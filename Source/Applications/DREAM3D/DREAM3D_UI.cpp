@@ -89,18 +89,14 @@ QString DREAM3D_UI::m_OpenDialogLastDirectory = "";
 DREAM3D_UI::DREAM3D_UI(QWidget* parent) :
   QMainWindow(parent),
   m_WorkerThread(NULL),
-  //  m_PluginActionGroup(NULL),
-  //  m_PluginPrefsActionGroup(NULL),
   m_ActivePlugin(NULL),
-  //  m_PluginToolBar(NULL),
   m_HelpDialog(NULL),
   m_UpdateCheckThread(NULL),
-  m_FilterListBtn(NULL),
-  m_FilterLibraryBtn(NULL),
+  m_FilterManager(NULL),
+  m_FilterWidgetManager(NULL),
+  #if !defined(Q_OS_MAC)
   m_InstanceMenu(NULL),
-  m_FavoritesBtn(NULL),
-  m_PrebuiltBtn(NULL),
-  m_IssuesBtn(NULL),
+  #endif
   m_ShouldRestart(false),
   m_OpenedFilePath("")
 {
@@ -540,7 +536,7 @@ void DREAM3D_UI::checkForUpdatesAtStartup()
     {
       m_UpdateCheck = QSharedPointer<UpdateCheck>(new UpdateCheck(this));
 
-      connect(m_UpdateCheck.data(), SIGNAL( LatestVersion(UpdateCheckData*) ),
+      connect(m_UpdateCheck.data(), SIGNAL( latestVersion(UpdateCheckData*) ),
               this, SLOT( versionCheckReply(UpdateCheckData*) ) );
 
       m_UpdateCheck->checkVersion(DREAM3D::UpdateWebsite::UpdateWebSite);
@@ -1181,6 +1177,7 @@ void DREAM3D_UI::changeEvent(QEvent* event)
   }
 }
 
+#if !defined(Q_OS_MAC)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -1196,6 +1193,7 @@ DREAM3DMenu* DREAM3D_UI::getDREAM3DMenu()
 {
   return m_InstanceMenu;
 }
+#endif
 
 // -----------------------------------------------------------------------------
 //

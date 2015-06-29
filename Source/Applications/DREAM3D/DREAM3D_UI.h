@@ -146,7 +146,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     * @brief
     */
     void connectSignalsSlots(DREAM3D_UI* other);
-
+#if !defined(Q_OS_MAC)
     /**
     * @brief setDREAM3DMenu
     * @param menu
@@ -157,7 +157,13 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     * @brief getDREAM3DMenu
     */
     DREAM3DMenu* getDREAM3DMenu();
-
+#endif
+    /**
+     * @brief updateAndSyncDockWidget
+     * @param action
+     * @param dock
+     * @param b
+     */
     void updateAndSyncDockWidget(QAction* action, QDockWidget* dock, bool b);
 
     /**
@@ -370,14 +376,9 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     FilterWidgetManager*                  m_FilterWidgetManager;
 
     FilterPipeline::Pointer               m_PipelineInFlight;
-
+#if !defined(Q_OS_MAC)
     DREAM3DMenu*                          m_InstanceMenu;
-
-    QToolButton*                          m_FilterListBtn;
-    QToolButton*                          m_FilterLibraryBtn;
-    QToolButton*                          m_FavoritesBtn;
-    QToolButton*                          m_PrebuiltBtn;
-    QToolButton*                          m_IssuesBtn;
+#endif
     bool                                  m_ShouldRestart;
 
     QString                               m_OpenedFilePath;
