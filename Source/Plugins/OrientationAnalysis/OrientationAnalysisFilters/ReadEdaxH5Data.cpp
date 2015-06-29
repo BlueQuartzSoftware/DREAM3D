@@ -322,7 +322,7 @@ void ReadEdaxH5Data::flushCache()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadEdaxH5Data::readDataFile(H5OIMReader* reader, DataContainer::Pointer m, QVector<size_t> &tDims, ANG_READ_FLAG flag)
+void ReadEdaxH5Data::readDataFile(H5OIMReader* reader, DataContainer::Pointer m, QVector<size_t>& tDims, ANG_READ_FLAG flag)
 {
   QFileInfo fi(m_InputFile);
   QDateTime timeStamp(fi.lastModified());
@@ -501,7 +501,7 @@ int32_t ReadEdaxH5Data::loadMaterialInfo(H5OIMReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadEdaxH5Data::copyRawEbsdData(H5OIMReader* reader, QVector<size_t> &tDims, QVector<size_t> &cDims)
+void ReadEdaxH5Data::copyRawEbsdData(H5OIMReader* reader, QVector<size_t>& tDims, QVector<size_t>& cDims)
 {
   float* f1 = NULL;
   float* f2 = NULL;

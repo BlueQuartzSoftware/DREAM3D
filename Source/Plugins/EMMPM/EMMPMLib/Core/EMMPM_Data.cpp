@@ -96,52 +96,52 @@ int EMMPM_Data::allocateDataStructureMemory()
 {
   if(NULL == this->y)
   {
-    this->y = (unsigned char *)malloc(this->columns * this->rows * this->dims * sizeof(unsigned char));
+    this->y = (unsigned char*)malloc(this->columns * this->rows * this->dims * sizeof(unsigned char));
   }
-  if(NULL == this->y) return -1;
+  if(NULL == this->y) { return -1; }
 
   if(NULL == this->xt)
   {
     this->xt = (unsigned char*)malloc(this->columns * this->rows * sizeof(unsigned char));
   }
-  if(NULL == this->xt) return -1;
+  if(NULL == this->xt) { return -1; }
 
   if(NULL == this->mean)
   {
     this->mean = (real_t*)malloc(this->classes * this->dims * sizeof(real_t));
   }
-  if(NULL == this->mean) return -1;
+  if(NULL == this->mean) { return -1; }
 
   if(NULL == this->prev_mu)
   {
     this->prev_mu = (real_t*)malloc(this->classes * this->dims * sizeof(real_t));
   }
-  if(NULL == this->prev_mu) return -1;
+  if(NULL == this->prev_mu) { return -1; }
 
 
   if(NULL == this->variance)
   {
     this->variance = (real_t*)malloc(this->classes * this->dims * sizeof(real_t));
   }
-  if(NULL == this->variance) return -1;
+  if(NULL == this->variance) { return -1; }
 
   if(NULL == this->prev_variance)
   {
     this->prev_variance = (real_t*)malloc(this->classes * this->dims * sizeof(real_t));
   }
-  if(NULL == this->prev_variance) return -1;
+  if(NULL == this->prev_variance) { return -1; }
 
   if(NULL == this->probs)
   {
     this->probs = (real_t*)malloc(this->classes * this->columns * this->rows * sizeof(real_t));
   }
-  if(NULL == this->probs) return -1;
+  if(NULL == this->probs) { return -1; }
 
   if(NULL == this->histograms)
   {
     this->histograms = (real_t*)malloc(this->classes * this->dims * 256 * sizeof(real_t));
   }
-  if(NULL == this->histograms) return -1;
+  if(NULL == this->histograms) { return -1; }
 
   if (NULL == this->couplingBeta)
   {
@@ -149,7 +149,7 @@ int EMMPM_Data::allocateDataStructureMemory()
     size_t couplingElements = cSize * cSize;
     this->couplingBeta = static_cast<real_t*>(malloc(sizeof(real_t) * couplingElements));
   }
-  if (NULL == this->couplingBeta) return -1;
+  if (NULL == this->couplingBeta) { return -1; }
 
   return 0;
 }
@@ -252,49 +252,49 @@ void EMMPM_Data::initVariables()
 // -----------------------------------------------------------------------------
 void EMMPM_Data::calculateBetaMatrix(double default_beta)
 {
-    if (NULL == couplingBeta)
-    {
-        return;
-    }
+  if (NULL == couplingBeta)
+  {
+    return;
+  }
 
-    // Recalculate the Class Coupling Matrix
-    int ij = 0;
-    for (int i = 0; i < (classes + 1); ++i)
+  // Recalculate the Class Coupling Matrix
+  int ij = 0;
+  for (int i = 0; i < (classes + 1); ++i)
+  {
+    for (int j = 0; j < (classes + 1); ++j)
     {
-        for (int j = 0; j < (classes + 1); ++j)
-        {
-            ij = ((classes + 1) * i) + j;
-            if(j == classes) couplingBeta[ij] = 0.0;
-            else if(i == j) couplingBeta[ij] = 0.0;
-            else if(i == classes) couplingBeta[ij] = 0.0;
-            else couplingBeta[ij] = default_beta;
-        }
+      ij = ((classes + 1) * i) + j;
+      if(j == classes) { couplingBeta[ij] = 0.0; }
+      else if(i == j) { couplingBeta[ij] = 0.0; }
+      else if(i == classes) { couplingBeta[ij] = 0.0; }
+      else { couplingBeta[ij] = default_beta; }
     }
-    // Update the Coupling Matrix with user defined entries
-    for (std::vector<CoupleType>::iterator iter = coupleEntries.begin(); iter != coupleEntries.end(); ++iter)
-    {
-        ij = ((classes + 1) * ((*iter).label_1)) + (*iter).label_2;
-        couplingBeta[ij] = (*iter).beta;
-        ij = ((classes + 1) * ((*iter).label_2)) + (*iter).label_1;
-        couplingBeta[ij] = (*iter).beta;
-    }
+  }
+  // Update the Coupling Matrix with user defined entries
+  for (std::vector<CoupleType>::iterator iter = coupleEntries.begin(); iter != coupleEntries.end(); ++iter)
+  {
+    ij = ((classes + 1) * ((*iter).label_1)) + (*iter).label_2;
+    couplingBeta[ij] = (*iter).beta;
+    ij = ((classes + 1) * ((*iter).label_2)) + (*iter).label_1;
+    couplingBeta[ij] = (*iter).beta;
+  }
 #if 0
-    std::cout << "***\t";
-    for (int i = 0; i < (classes + 1); ++i)
+  std::cout << "***\t";
+  for (int i = 0; i < (classes + 1); ++i)
+  {
+    std::cout   << i << "\t";
+  }
+  std::cout << std::endl;
+
+  for (int i = 0; i < (classes + 1); ++i)
+  {
+    std::cout << i << "\t";
+    for (int j = 0; j < (classes + 1); ++j)
     {
-      std::cout   << i << "\t";
+      ij = ((classes + 1) * i) + j;
+      std::cout << couplingBeta[ij] << "\t";
     }
     std::cout << std::endl;
-
-    for (int i = 0; i < (classes + 1); ++i)
-    {
-        std::cout << i << "\t";
-        for (int j = 0; j < (classes + 1); ++j)
-        {
-            ij = ((classes + 1) * i) + j;
-            std::cout << couplingBeta[ij] << "\t";
-        }
-        std::cout << std::endl;
-    }
+  }
 #endif
 }

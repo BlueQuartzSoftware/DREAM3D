@@ -44,16 +44,17 @@
 void __stdcall GetSystemTimeAsFileTime(FILETIME*);
 
 inline void CMP_gettimeofday(struct timeval* p, void* tz /* IGNORED */)
- {
-  union {
-     long long ns100; /*time since 1 Jan 1601 in 100ns units */
-   FILETIME ft;
+{
+  union
+  {
+    long long ns100; /*time since 1 Jan 1601 in 100ns units */
+    FILETIME ft;
   } now;
 
-    GetSystemTimeAsFileTime( &(now.ft) );
-    p->tv_usec=(long)((now.ns100 / 10LL) % 1000000LL );
-    p->tv_sec= (long)((now.ns100-(116444736000000000LL))/10000000LL);
- }
+  GetSystemTimeAsFileTime( &(now.ft) );
+  p->tv_usec = (long)((now.ns100 / 10LL) % 1000000LL );
+  p->tv_sec = (long)((now.ns100 - (116444736000000000LL)) / 10000000LL);
+}
 
 #define CMP_GET_TIME_OF_DAY CMP_gettimeofday
 #endif /*  GET_TIME_OF_DAY_WARNING */
@@ -77,8 +78,8 @@ inline void CMP_gettimeofday(struct timeval* p, void* tz /* IGNORED */)
 #endif
 
 #ifdef __cplusplus
- extern "C" {
- #endif
+extern "C" {
+#endif
 
 /**
 * @brief Returns a Formatted String of the current Date/Time for logging

@@ -44,32 +44,32 @@
 
 class Symmetric6x6WidgetCodeGenerator : public FPCodeGenerator
 {
-public:
-  DREAM3D_SHARED_POINTERS(Symmetric6x6WidgetCodeGenerator)
+  public:
+    DREAM3D_SHARED_POINTERS(Symmetric6x6WidgetCodeGenerator)
 
     static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
-  {
-    Pointer sharedPtr(new Symmetric6x6WidgetCodeGenerator(humanLabel, propertyName, category, initValue));
-    return sharedPtr;
-  }
+    {
+      Pointer sharedPtr(new Symmetric6x6WidgetCodeGenerator(humanLabel, propertyName, category, initValue));
+      return sharedPtr;
+    }
 
-  virtual ~Symmetric6x6WidgetCodeGenerator();
+    virtual ~Symmetric6x6WidgetCodeGenerator();
 
-  virtual QString generateSetupFilterParameters();
+    virtual QString generateSetupFilterParameters();
 
-  virtual QString generateReadFilterParameters();
+    virtual QString generateReadFilterParameters();
 
-  virtual QString generateDataCheck();
+    virtual QString generateDataCheck();
 
-  virtual QString generateFilterParameters();
+    virtual QString generateFilterParameters();
 
-protected:
-  Symmetric6x6WidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
+  protected:
+    Symmetric6x6WidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
-private:
+  private:
 
-  Symmetric6x6WidgetCodeGenerator(const Symmetric6x6WidgetCodeGenerator&); // Copy Constructor Not Implemented
-  void operator=(const Symmetric6x6WidgetCodeGenerator&); // Operator '=' Not Implemented
+    Symmetric6x6WidgetCodeGenerator(const Symmetric6x6WidgetCodeGenerator&); // Copy Constructor Not Implemented
+    void operator=(const Symmetric6x6WidgetCodeGenerator&); // Operator '=' Not Implemented
 };
 
 #endif /* Symmetric6x6WidgetCodeGenerator_H_ */

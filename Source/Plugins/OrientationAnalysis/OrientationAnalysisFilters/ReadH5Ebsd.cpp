@@ -434,7 +434,7 @@ void ReadH5Ebsd::preflight()
   setInPreflight(true);
   // Read the file to get the data arrays, size, meta data
   readVolumeInfo(); // This is specific to "readers" in general (I think), or at least those readers that need to show
-                    // a structure to the user to allow them to select only specific parts of the file to read
+  // a structure to the user to allow them to select only specific parts of the file to read
   // Now signal that any GUI widget is ready to read the information from this instance
   emit preflightAboutToExecute();
   // Let the GUI Widget (or anything else) update the parameters for this filter

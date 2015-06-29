@@ -51,7 +51,8 @@
 
 #include "HelpWidget.h"
 
-enum WidgetIndices {
+enum WidgetIndices
+{
   PLUGIN_MAKER,
   FILTER_MAKER
 };
@@ -60,7 +61,7 @@ enum WidgetIndices {
 //
 // -----------------------------------------------------------------------------
 DevHelper::DevHelper(QWidget* parent) :
-QMainWindow(parent)
+  QMainWindow(parent)
 {
   setupUi(this);
 
@@ -122,7 +123,7 @@ void DevHelper::updateStatusMessage(QString message)
 // -----------------------------------------------------------------------------
 void DevHelper::closeEvent(QCloseEvent* event)
 {
-    writeSettings();
+  writeSettings();
 }
 
 // -----------------------------------------------------------------------------

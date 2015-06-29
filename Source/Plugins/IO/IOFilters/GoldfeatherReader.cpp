@@ -247,7 +247,7 @@ void GoldfeatherReader::dataCheck()
   if( NULL != m_SurfaceMeshPrincipalCurvature2sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshPrincipalCurvature2s = m_SurfaceMeshPrincipalCurvature2sPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  dims[0]= 3;
+  dims[0] = 3;
   tempPath.update(getSurfaceDataContainerName(), getVertexAttributeMatrixName(), getSurfaceMeshPrincipalDirection1sArrayName() );
   m_SurfaceMeshPrincipalDirection1sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshPrincipalDirection1sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -325,9 +325,9 @@ void GoldfeatherReader::execute()
   for(int n = 0; n < nNodes; ++n)
   {
     fscanf(f, "%f %f %f %f %f %f %f %f\n", &x, &y, &z, &n0, &n1, &n2, &p1, &p2);
-    nodes[n*3] = x;
-    nodes[n*3+1] = y;
-    nodes[n*3+2] = z;
+    nodes[n * 3] = x;
+    nodes[n * 3 + 1] = y;
+    nodes[n * 3 + 2] = z;
     m_SurfaceMeshNodeNormals[n * 3 + 0] = n0;
     m_SurfaceMeshNodeNormals[n * 3 + 1] = n1;
     m_SurfaceMeshNodeNormals[n * 3 + 2] = n2;
@@ -364,9 +364,9 @@ void GoldfeatherReader::execute()
   for(int t = 0; t < nTriangles; ++t)
   {
     fscanf(f, "%f %f %f %f %f %f", &x, &y, &z, &n0, &n1, &n2);
-    triangles[t*3] = x;
-    triangles[t*3+1] = y;
-    triangles[t*3+2] = z;
+    triangles[t * 3] = x;
+    triangles[t * 3 + 1] = y;
+    triangles[t * 3 + 2] = z;
     //  triangles[t].tIndex = t;
     m_SurfaceMeshFaceLabels[t * 2] = 0;
     m_SurfaceMeshFaceLabels[t * 2 + 1] = 1;

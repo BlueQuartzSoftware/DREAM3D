@@ -149,33 +149,33 @@ class DREAM3DLib_EXPORT DataContainerArrayProxy
     * @param json
     * @return
     */
-    void writeJson(QJsonObject &json);
+    void writeJson(QJsonObject& json);
 
     /**
     * @brief Reads the contents of the the json object 'json' into the proxy
     * @param json
     * @return
     */
-    bool readJson(QJsonObject &json);
+    bool readJson(QJsonObject& json);
 
     //----- Our variables, publicly available
     QMap<QString, DataContainerProxy>  dataContainers;
 
-    private:
+  private:
 
-      /**
-      * @brief Writes the contents of the map to a json array
-      * @param map
-      * @return QJsonArray
-      */
-      QJsonArray writeMap(QMap<QString, DataContainerProxy> map);
+    /**
+    * @brief Writes the contents of the map to a json array
+    * @param map
+    * @return QJsonArray
+    */
+    QJsonArray writeMap(QMap<QString, DataContainerProxy> map);
 
-      /**
-      * @brief Reads the contents of the json array to a QMap
-      * @param jsonArray
-      * @return
-      */
-      QMap<QString, DataContainerProxy> readMap(QJsonArray jsonArray);
+    /**
+    * @brief Reads the contents of the json array to a QMap
+    * @param jsonArray
+    * @return
+    */
+    QMap<QString, DataContainerProxy> readMap(QJsonArray jsonArray);
 };
 
 Q_DECLARE_METATYPE(DataContainerArrayProxy)

@@ -40,7 +40,7 @@
 //
 // -----------------------------------------------------------------------------
 ChoiceWidgetCodeGenerator::ChoiceWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue) :
-FPCodeGenerator(humanLabel, propertyName, category, initValue)
+  FPCodeGenerator(humanLabel, propertyName, category, initValue)
 {
 
 }
@@ -69,7 +69,7 @@ QString ChoiceWidgetCodeGenerator::generateSetupFilterParameters()
   ss << "    parameter->setCategory(" + getCategory() + ");\n";
   ss << "    parameters.push_back(parameter);\n";
   ss << "  }";
-  
+
   return contents;
 }
 

@@ -42,19 +42,19 @@
 
 class QtSupportLib_EXPORT HoverButton : public QPushButton
 {
-  Q_OBJECT
-public:
-  explicit HoverButton(QWidget *parent = 0);
+    Q_OBJECT
+  public:
+    explicit HoverButton(QWidget* parent = 0);
 
-  virtual ~HoverButton();
+    virtual ~HoverButton();
 
-protected:
-  bool event(QEvent * event);
+  protected:
+    bool event(QEvent* event);
 
-private:
+  private:
 
-  HoverButton(const HoverButton&); // Copy Constructor Not Implemented
-  void operator=(const HoverButton&); // Operator '=' Not Implemented
+    HoverButton(const HoverButton&); // Copy Constructor Not Implemented
+    void operator=(const HoverButton&); // Operator '=' Not Implemented
 };
 
 #endif // HoverButton_H

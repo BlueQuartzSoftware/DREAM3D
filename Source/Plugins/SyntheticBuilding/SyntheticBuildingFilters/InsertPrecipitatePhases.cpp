@@ -593,7 +593,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
         QString ss = QObject::tr("Tried to cast a statsDataArray[%1].get() to a PrecipitateStatsData* "
                                  "pointer but this resulted in a NULL pointer. The value at m_PhaseTypes[%2] = %3 does not match up "
                                  "with the type of pointer stored in the StatsDataArray (PrecipitateStatsData)\n")
-            .arg(i).arg(i).arg(m_PhaseTypes[i]);
+                     .arg(i).arg(i).arg(m_PhaseTypes[i]);
         notifyErrorMessage(getHumanLabel(), ss, -666);
         setErrorCondition(-666);
         return;
@@ -875,7 +875,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
       //m_Centroids[3 * i + 1] = yc;
       //m_Centroids[3 * i + 2] = zc;
       move_precipitate(i, xc, yc, zc);
-      //		insert_precipitate(i);
+      //    insert_precipitate(i);
       good = check_for_overlap(i, exclusionZonesPtr);
       iterCount++;
       if(getCancel() == true) { return; }
@@ -1131,7 +1131,7 @@ void InsertPrecipitatePhases::generate_precipitate(int32_t phase, uint64_t seed,
 {
   DREAM3D_RANDOMNG_NEW_SEEDED(seed)
 
-      StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
+  StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
 
   float r1 = 1.0f;
   float a2 = 0.0f, a3 = 0.0f;
@@ -1399,18 +1399,18 @@ bool InsertPrecipitatePhases::check_for_overlap(size_t gNum, Int32ArrayType::Poi
       if (plane < 0) { plane = plane + m_ZPoints; }
       if (plane > m_ZPoints - 1) { plane = plane - m_ZPoints; }
       featureOwnersIdx = (m_XPoints * m_YPoints * plane) + (m_XPoints * row) + col;
-      if (exclusionZones[featureOwnersIdx] > 0) overlapCount++;
+      if (exclusionZones[featureOwnersIdx] > 0) { overlapCount++; }
     }
     else
     {
       if (col >= 0 && col < m_XPoints && row >= 0 && row < m_YPoints && plane >= 0 && plane < m_ZPoints)
       {
         featureOwnersIdx = (m_XPoints * m_YPoints * plane) + (m_XPoints * row) + col;
-        if (exclusionZones[featureOwnersIdx] > 0) overlapCount++;
+        if (exclusionZones[featureOwnersIdx] > 0) { overlapCount++; }
       }
     }
   }
-  if ((static_cast<float>(overlapCount) / static_cast<float>(size)) > 0.1) return false;
+  if ((static_cast<float>(overlapCount) / static_cast<float>(size)) > 0.1) { return false; }
   return true;
 }
 
@@ -1781,7 +1781,7 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
 {
   DREAM3D_RANDOMNG_NEW()
 
-      float inside = -1.0f;
+  float inside = -1.0f;
   int64_t column = 0, row = 0, plane = 0;
   int64_t centercolumn = 0, centerrow = 0, centerplane = 0;
   int64_t xmin = 0, xmax = 0, ymin = 0, ymax = 0, zmin = 0, zmax = 0;
@@ -1954,7 +1954,7 @@ void InsertPrecipitatePhases::assign_voxels()
     //    float phi2 = m_AxisEulerAngles[3 * i + 2];
     float ga[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
     FOrientArrayType om(9, 0.0);
-    FOrientTransformsType::eu2om(FOrientArrayType(&(m_AxisEulerAngles[3*i]), 3), om);
+    FOrientTransformsType::eu2om(FOrientArrayType(&(m_AxisEulerAngles[3 * i]), 3), om);
     om.toGMatrix(ga);
 
     column = static_cast<DimType>( (xc - (xRes / 2.0f)) / xRes );

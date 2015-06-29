@@ -53,9 +53,9 @@
 //
 // -----------------------------------------------------------------------------
 BookmarksTreeView::BookmarksTreeView(QWidget* parent) :
-QTreeView(parent),
-m_IndexBeingDragged(QModelIndex()),
-m_TopLevelItemPlaceholder(QModelIndex())
+  QTreeView(parent),
+  m_IndexBeingDragged(QModelIndex()),
+  m_TopLevelItemPlaceholder(QModelIndex())
 {
   setContextMenuPolicy(Qt::CustomContextMenu);
 
@@ -212,7 +212,7 @@ void BookmarksTreeView::dragMoveEvent(QDragMoveEvent* event)
   {
     if (m_TopLevelItemPlaceholder.isValid())
     {
-      model->removeRow(topLevelPHPos-1, rootIndex());
+      model->removeRow(topLevelPHPos - 1, rootIndex());
       m_TopLevelItemPlaceholder = QModelIndex();
     }
     clearSelection();
@@ -346,7 +346,7 @@ void BookmarksTreeView::setModel(QAbstractItemModel* model)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksTreeView::expandChildren(const QModelIndex &parent, BookmarksModel* model)
+void BookmarksTreeView::expandChildren(const QModelIndex& parent, BookmarksModel* model)
 {
   for (int row = 0; row < model->rowCount(parent); row++)
   {
@@ -364,12 +364,12 @@ void BookmarksTreeView::expandChildren(const QModelIndex &parent, BookmarksModel
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksTreeView::collapseIndex(const QModelIndex & index)
+void BookmarksTreeView::collapseIndex(const QModelIndex& index)
 {
   if (index.isValid())
   {
     BookmarksModel* model = BookmarksModel::Instance();
-    QModelIndex sibling = model->sibling(0,0,index);
+    QModelIndex sibling = model->sibling(0, 0, index);
 
     QTreeView::collapse(index);
     model->setNeedsToBeExpanded(index, false);
@@ -380,10 +380,10 @@ void BookmarksTreeView::collapseIndex(const QModelIndex & index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksTreeView::expandIndex(const QModelIndex & index)
+void BookmarksTreeView::expandIndex(const QModelIndex& index)
 {
   BookmarksModel* model = BookmarksModel::Instance();
-  QModelIndex sibling = model->sibling(0,0,index);
+  QModelIndex sibling = model->sibling(0, 0, index);
 
   QTreeView::expand(index);
   model->setNeedsToBeExpanded(index, true);
@@ -393,7 +393,7 @@ void BookmarksTreeView::expandIndex(const QModelIndex & index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksTreeView::currentChanged(const QModelIndex & current, const QModelIndex & previous)
+void BookmarksTreeView::currentChanged(const QModelIndex& current, const QModelIndex& previous)
 {
   emit currentIndexChanged(current, previous);
 }
@@ -461,7 +461,7 @@ BookmarksModel* BookmarksTreeView::FromJsonObject(QJsonObject treeObject)
 
   QStringList keys = treeObject.keys();
   keys.sort(Qt::CaseInsensitive);
-  for (int i=0; i<keys.size(); i++)
+  for (int i = 0; i < keys.size(); i++)
   {
     QJsonValue val = treeObject.value(keys[i]);
     if (val.isObject())
@@ -477,8 +477,8 @@ BookmarksModel* BookmarksTreeView::FromJsonObject(QJsonObject treeObject)
     fsWatcher->addPaths(paths);
   }
   model->setFileSystemWatcher(fsWatcher);
-  connect(model->getFileSystemWatcher(), SIGNAL(fileChanged(const QString &)),
-          model, SLOT(updateRowState(const QString &)));
+  connect(model->getFileSystemWatcher(), SIGNAL(fileChanged(const QString&)),
+          model, SLOT(updateRowState(const QString&)));
 
   return model;
 }
@@ -520,7 +520,7 @@ void BookmarksTreeView::UnwrapModel(QString objectName, QJsonObject object, Book
 
   QStringList keys = object.keys();
   keys.sort(Qt::CaseInsensitive);
-  for (int i=0; i<keys.size(); i++)
+  for (int i = 0; i < keys.size(); i++)
   {
     QJsonValue val = object.value(keys[i]);
     if (val.isObject())

@@ -61,7 +61,7 @@ class DREAM3DApplication : public QApplication
     Q_OBJECT
 
   public:
-    DREAM3DApplication(int & argc, char ** argv);
+    DREAM3DApplication(int& argc, char** argv);
     virtual ~DREAM3DApplication();
 
     bool initialize(int argc, char* argv[]);
@@ -82,7 +82,7 @@ class DREAM3DApplication : public QApplication
 
   public slots:
 
-    void newInstanceFromFile(const QString &filePath, const bool &setOpenedFilePath, const bool &addToRecentFiles);
+    void newInstanceFromFile(const QString& filePath, const bool& setOpenedFilePath, const bool& addToRecentFiles);
 
 
   protected:
@@ -92,15 +92,15 @@ class DREAM3DApplication : public QApplication
   protected slots:
 
     /**
-   * @brief Updates the QMenu 'Recent Files' with the latest list of files. This
-   * should be connected to the Signal QRecentFileList->fileListChanged
-   * @param file The newly added file.
-   */
-    void updateRecentFileList(const QString &file);
+    * @brief Updates the QMenu 'Recent Files' with the latest list of files. This
+    * should be connected to the Signal QRecentFileList->fileListChanged
+    * @param file The newly added file.
+    */
+    void updateRecentFileList(const QString& file);
 
     /**
-  * @brief activeWindowChanged
-  */
+    * @brief activeWindowChanged
+    */
     void activeWindowChanged(DREAM3D_UI* instance);
 
     // DREAM3D_UI slots
@@ -156,7 +156,7 @@ class DREAM3DApplication : public QApplication
 #endif
 
     /* Used on Mac OS X when there are no DREAM3D instances instantiated,
-   * but the application is still running. */
+    * but the application is still running. */
     QMenu*                                  m_PlaceholderViewMenu;
 
     QString                                 m_OpenDialogLastDirectory;

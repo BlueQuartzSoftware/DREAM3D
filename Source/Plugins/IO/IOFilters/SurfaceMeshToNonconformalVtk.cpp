@@ -263,9 +263,9 @@ void SurfaceMeshToNonconformalVtk::execute()
   {
     if (m_SurfaceMeshNodeType[i] > 0)
     {
-      pos[0] = static_cast<float>(nodes[i*3]);
-      pos[1] = static_cast<float>(nodes[i*3+1]);
-      pos[2] = static_cast<float>(nodes[i*3+2]);
+      pos[0] = static_cast<float>(nodes[i * 3]);
+      pos[1] = static_cast<float>(nodes[i * 3 + 1]);
+      pos[2] = static_cast<float>(nodes[i * 3 + 2]);
 
       if (m_WriteBinaryFile == true)
       {
@@ -346,16 +346,16 @@ void SurfaceMeshToNonconformalVtk::execute()
       if (doWrite == 1)
       {
         tData[0] = 3; // Push on the total number of entries for this entry
-        tData[1] = triangles[j*3];
-        tData[2] = triangles[j*3+1];
-        tData[3] = triangles[j*3+2];
+        tData[1] = triangles[j * 3];
+        tData[2] = triangles[j * 3 + 1];
+        tData[3] = triangles[j * 3 + 2];
       }
       else
       {
         tData[0] = 3; // Push on the total number of entries for this entry
-        tData[1] = triangles[j*3+2];
-        tData[2] = triangles[j*3+1];
-        tData[3] = triangles[j*3];
+        tData[1] = triangles[j * 3 + 2];
+        tData[2] = triangles[j * 3 + 1];
+        tData[3] = triangles[j * 3];
       }
       if (m_WriteBinaryFile == true)
       {
@@ -532,23 +532,23 @@ int SurfaceMeshToNonconformalVtk::writePointData(FILE* vtkFile)
 #if 1
   // This is from the Goldfeather Paper
   writePointVectorData<double>(sm, attrMatName, "Principal_Direction_1",
-                                                     "double", m_WriteBinaryFile, "VECTORS", vtkFile, numNodes);
+                               "double", m_WriteBinaryFile, "VECTORS", vtkFile, numNodes);
   // This is from the Goldfeather Paper
   writePointVectorData<double>(sm, attrMatName, "Principal_Direction_2",
-                                                     "double", m_WriteBinaryFile, "VECTORS", vtkFile, numNodes);
+                               "double", m_WriteBinaryFile, "VECTORS", vtkFile, numNodes);
 
   // This is from the Goldfeather Paper
   writePointScalarData<double>(sm, attrMatName, "Principal_Curvature_1",
-                                                     "double", m_WriteBinaryFile, vtkFile, numNodes);
+                               "double", m_WriteBinaryFile, vtkFile, numNodes);
 
   // This is from the Goldfeather Paper
   writePointScalarData<double>(sm, attrMatName, "Principal_Curvature_2",
-                                                     "double", m_WriteBinaryFile, vtkFile, numNodes);
+                               "double", m_WriteBinaryFile, vtkFile, numNodes);
 #endif
 
   // This is from the Goldfeather Paper
   writePointVectorData<double>(sm, attrMatName, DREAM3D::VertexData::SurfaceMeshNodeNormals,
-                                                     "double", m_WriteBinaryFile, "VECTORS", vtkFile, numNodes);
+                               "double", m_WriteBinaryFile, "VECTORS", vtkFile, numNodes);
 
 
   return err;
@@ -845,35 +845,35 @@ int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, QMap<int32_t, int
 
   notifyStatusMessage(getHumanLabel(), "Writing Face Normals...");
   writeCellNormalData<double>(sm, attrMatName, DREAM3D::FaceData::SurfaceMeshFaceNormals,
-                                                    "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
+                              "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
 
   notifyStatusMessage(getHumanLabel(), "Writing Principal Curvature 1");
   writeCellScalarData<double>(sm, attrMatName, DREAM3D::FaceData::SurfaceMeshPrincipalCurvature1,
-                                                    "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
+                              "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
   notifyStatusMessage(getHumanLabel(), "Writing Principal Curvature 2");
   writeCellScalarData<double>(sm, attrMatName, DREAM3D::FaceData::SurfaceMeshPrincipalCurvature2,
-                                                    "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
+                              "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
 
   notifyStatusMessage(getHumanLabel(), "Writing Feature Face Id");
   writeCellScalarData<int32_t>(sm, attrMatName, DREAM3D::FaceData::SurfaceMeshFeatureFaceId,
-                                                     "int", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
+                               "int", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
 
   notifyStatusMessage(getHumanLabel(), "Writing Gaussian Curvature");
   writeCellScalarData<double>(sm, attrMatName, DREAM3D::FaceData::SurfaceMeshGaussianCurvatures,
-                                                    "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
+                              "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
 
   notifyStatusMessage(getHumanLabel(), "Writing Mean Curvature");
   writeCellScalarData<double>(sm, attrMatName, DREAM3D::FaceData::SurfaceMeshMeanCurvatures,
-                                                    "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
+                              "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
 #if 0
   writeCellVectorData<double>(sm, attrMatName, DREAM3D::CellData::SurfaceMeshPrincipalDirection1,
-                                                    "double", m_WriteBinaryFile, "VECTORS", vtkFile, nT);
+                              "double", m_WriteBinaryFile, "VECTORS", vtkFile, nT);
 
   writeCellVectorData<double>(sm, attrMatName, DREAM3D::CellData::SurfaceMeshPrincipalDirection2,
-                                                    "double", m_WriteBinaryFile, "VECTORS", vtkFile, nT);
+                              "double", m_WriteBinaryFile, "VECTORS", vtkFile, nT);
 
   writeCellNormalData<double>(sm, attrMatName, "Goldfeather_Triangle_Normals",
-                                                    "double", m_WriteBinaryFile, vtkFile, nT);
+                              "double", m_WriteBinaryFile, vtkFile, nT);
 #endif
 
   return err;

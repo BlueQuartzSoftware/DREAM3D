@@ -44,32 +44,32 @@
 
 class FloatVec4WidgetCodeGenerator : public FPCodeGenerator
 {
-public:
-  DREAM3D_SHARED_POINTERS(FloatVec4WidgetCodeGenerator)
+  public:
+    DREAM3D_SHARED_POINTERS(FloatVec4WidgetCodeGenerator)
 
     static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
-  {
-    Pointer sharedPtr(new FloatVec4WidgetCodeGenerator(humanLabel, propertyName, category, initValue));
-    return sharedPtr;
-  }
+    {
+      Pointer sharedPtr(new FloatVec4WidgetCodeGenerator(humanLabel, propertyName, category, initValue));
+      return sharedPtr;
+    }
 
-  virtual ~FloatVec4WidgetCodeGenerator();
+    virtual ~FloatVec4WidgetCodeGenerator();
 
-  virtual QString generateSetupFilterParameters();
+    virtual QString generateSetupFilterParameters();
 
-  virtual QString generateReadFilterParameters();
+    virtual QString generateReadFilterParameters();
 
-  virtual QString generateDataCheck();
+    virtual QString generateDataCheck();
 
-  virtual QString generateFilterParameters();
+    virtual QString generateFilterParameters();
 
-protected:
-  FloatVec4WidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
+  protected:
+    FloatVec4WidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
-private:
+  private:
 
-  FloatVec4WidgetCodeGenerator(const FloatVec4WidgetCodeGenerator&); // Copy Constructor Not Implemented
-  void operator=(const FloatVec4WidgetCodeGenerator&); // Operator '=' Not Implemented
+    FloatVec4WidgetCodeGenerator(const FloatVec4WidgetCodeGenerator&); // Copy Constructor Not Implemented
+    void operator=(const FloatVec4WidgetCodeGenerator&); // Operator '=' Not Implemented
 };
 
 #endif /* FloatVec4WidgetCodeGenerator_H_ */

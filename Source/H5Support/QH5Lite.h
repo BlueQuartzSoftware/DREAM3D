@@ -331,7 +331,7 @@ namespace H5Support_NAMESPACE
       */
       static H5Support_EXPORT herr_t writeVectorOfStringsDataset(hid_t loc_id,
                                                                  const QString& dsetName,
-                                                                 const QVector<QString> &data);
+                                                                 const QVector<QString>& data);
       /**
        * @brief Writes an Attribute to an HDF5 Object
        * @param loc_id The Parent Location of the HDFobject that is getting the attribute
@@ -630,9 +630,9 @@ namespace H5Support_NAMESPACE
         * @param data
         * @return
         */
-        static H5Support_EXPORT herr_t readVectorOfStringDataset(hid_t loc_id,
-                                                                 const QString& dsetName,
-                                                                 QVector<QString> &data);
+      static H5Support_EXPORT herr_t readVectorOfStringDataset(hid_t loc_id,
+                                                               const QString& dsetName,
+                                                               QVector<QString>& data);
       /**
        * @brief reads a null terminated string dataset into the supplied buffer. The buffer
        * should be already preallocated.

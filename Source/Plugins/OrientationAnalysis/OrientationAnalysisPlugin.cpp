@@ -51,13 +51,13 @@
 //
 // -----------------------------------------------------------------------------
 OrientationAnalysisPlugin::OrientationAnalysisPlugin() :
-m_Version(DREAM3DLib::Version::Package()),
-m_CompatibilityVersion(DREAM3DLib::Version::Package()),
-m_Vendor(DREAM3D::BlueQuartz::VendorName),
-m_URL(DREAM3D::BlueQuartz::URL),
-m_Location(""),
-m_Copyright(DREAM3D::BlueQuartz::Copyright),
-m_Filters(QList<QString>()),
+  m_Version(DREAM3DLib::Version::Package()),
+  m_CompatibilityVersion(DREAM3DLib::Version::Package()),
+  m_Vendor(DREAM3D::BlueQuartz::VendorName),
+  m_URL(DREAM3D::BlueQuartz::URL),
+  m_Location(""),
+  m_Copyright(DREAM3D::BlueQuartz::Copyright),
+  m_Filters(QList<QString>()),
   m_DidLoad(false)
 {
 

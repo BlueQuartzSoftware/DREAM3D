@@ -40,8 +40,8 @@
 //
 // -----------------------------------------------------------------------------
 MultiDataArraySelectionFilterParameter::MultiDataArraySelectionFilterParameter() :
-FilterParameter(),
-m_DefaultPaths(QVector<DataArrayPath>())
+  FilterParameter(),
+  m_DefaultPaths(QVector<DataArrayPath>())
 {}
 
 // -----------------------------------------------------------------------------
@@ -54,8 +54,8 @@ MultiDataArraySelectionFilterParameter::~MultiDataArraySelectionFilterParameter(
 //
 // -----------------------------------------------------------------------------
 MultiDataArraySelectionFilterParameter::Pointer MultiDataArraySelectionFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QString& widgetType, const QVector<DataArrayPath>& defaultPaths,
-  Category category, int groupIndex)
+    const QString& widgetType, const QVector<DataArrayPath>& defaultPaths,
+    Category category, int groupIndex)
 {
   MultiDataArraySelectionFilterParameter::Pointer ptr = MultiDataArraySelectionFilterParameter::New();
   ptr->setHumanLabel(humanLabel);

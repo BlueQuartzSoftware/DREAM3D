@@ -101,8 +101,8 @@ void FilterParameterWidgetsDialogs::ShowFilterPropertyCastError(AbstractFilter* 
 // -----------------------------------------------------------------------------
 void FilterParameterWidgetsDialogs::ShowEmptyStringError(AbstractFilter* filter, FilterParameter* filterParameter)
 {
-	QString ss = QString("A value must be entered for parameter '%1' in Filter '%2' to the filter instance.").arg(filterParameter->getPropertyName()).arg(filter->getHumanLabel());
-	QMessageBox::StandardButton reply;
-	reply = QMessageBox::critical(NULL, QString("Filter Parameter Error"), ss, QMessageBox::Ok);
-	Q_UNUSED(reply);
+  QString ss = QString("A value must be entered for parameter '%1' in Filter '%2' to the filter instance.").arg(filterParameter->getPropertyName()).arg(filter->getHumanLabel());
+  QMessageBox::StandardButton reply;
+  reply = QMessageBox::critical(NULL, QString("Filter Parameter Error"), ss, QMessageBox::Ok);
+  Q_UNUSED(reply);
 }

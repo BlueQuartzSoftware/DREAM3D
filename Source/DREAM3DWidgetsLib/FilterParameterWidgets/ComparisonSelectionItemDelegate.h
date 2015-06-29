@@ -76,8 +76,8 @@ class ComparisonSelectionItemDelegate : public QStyledItemDelegate
 
   public slots:
     void arrayNameChangedData(int i);
-	void operatorChangedData(int i);
-	void valueChangedData(const QString& text);
+    void operatorChangedData(int i);
+    void valueChangedData(const QString& text);
 
   private:
     QStringList m_FeatureList;

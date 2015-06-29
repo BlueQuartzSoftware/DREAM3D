@@ -44,32 +44,32 @@
 
 class AxisAngleWidgetCodeGenerator : public FPCodeGenerator
 {
-public:
-  DREAM3D_SHARED_POINTERS(AxisAngleWidgetCodeGenerator)
+  public:
+    DREAM3D_SHARED_POINTERS(AxisAngleWidgetCodeGenerator)
 
     static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
-  {
-    Pointer sharedPtr(new AxisAngleWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
-    return sharedPtr;
-  }
+    {
+      Pointer sharedPtr(new AxisAngleWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
+      return sharedPtr;
+    }
 
-  virtual ~AxisAngleWidgetCodeGenerator();
+    virtual ~AxisAngleWidgetCodeGenerator();
 
-  virtual QString generateSetupFilterParameters();
+    virtual QString generateSetupFilterParameters();
 
-  virtual QString generateReadFilterParameters();
+    virtual QString generateReadFilterParameters();
 
-  virtual QString generateDataCheck();
+    virtual QString generateDataCheck();
 
-  virtual QString generateFilterParameters();
+    virtual QString generateFilterParameters();
 
-protected:
-  AxisAngleWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
+  protected:
+    AxisAngleWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
-private:
+  private:
 
-  AxisAngleWidgetCodeGenerator(const AxisAngleWidgetCodeGenerator&); // Copy Constructor Not Implemented
-  void operator=(const AxisAngleWidgetCodeGenerator&); // Operator '=' Not Implemented
+    AxisAngleWidgetCodeGenerator(const AxisAngleWidgetCodeGenerator&); // Copy Constructor Not Implemented
+    void operator=(const AxisAngleWidgetCodeGenerator&); // Operator '=' Not Implemented
 };
 
 #endif /* AxisAngleWidgetCodeGenerator_H_ */

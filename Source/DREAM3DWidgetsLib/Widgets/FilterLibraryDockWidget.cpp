@@ -203,7 +203,7 @@ void FilterLibraryDockWidget::on_bookmarksTreeView_itemChanged( QTreeWidgetItem*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterLibraryDockWidget::showContextMenuForWidget(const QPoint &pos)
+void FilterLibraryDockWidget::showContextMenuForWidget(const QPoint& pos)
 {
   QTreeWidgetItem* item = bookmarksTreeView->itemAt(pos);
 

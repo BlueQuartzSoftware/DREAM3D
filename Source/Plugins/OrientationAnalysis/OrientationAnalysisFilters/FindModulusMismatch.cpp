@@ -78,7 +78,7 @@ class FindModulusMismatchImpl
         {
           deltaE = m_Moduli[feature1] - m_Moduli[feature2];
           if(deltaE < 0)
-            deltaE = -deltaE;
+          { deltaE = -deltaE; }
         }
         m_DeltaModuli[i] = deltaE;
       }

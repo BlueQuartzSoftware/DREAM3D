@@ -45,10 +45,14 @@
  * @brief This file contains many constants that are generic to the EBSD library
  */
 
-typedef struct {
-  float angle; float h; float k; float l;
+typedef struct
+{
+  float angle;
+  float h;
+  float k;
+  float l;
 
-  void writeJson(QJsonObject &json)
+  void writeJson(QJsonObject& json)
   {
     json["angle"] = angle;
     json["h"] = h;
@@ -56,7 +60,7 @@ typedef struct {
     json["l"] = l;
   }
 
-  bool readJson(QJsonObject &json)
+  bool readJson(QJsonObject& json)
   {
     if (json["angle"].isDouble() && json["h"].isDouble() && json["k"].isDouble() && json["l"].isDouble())
     {

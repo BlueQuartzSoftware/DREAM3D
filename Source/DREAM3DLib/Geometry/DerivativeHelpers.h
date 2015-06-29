@@ -58,12 +58,12 @@ namespace DerivativeHelpers
   /**
    * @brief TriJacobian
    */
-  typedef Eigen::Matrix<double,2,2,Eigen::RowMajor> TriangleJacobian;
+  typedef Eigen::Matrix<double, 2, 2, Eigen::RowMajor> TriangleJacobian;
 
   /**
    * @brief QuadJacobian
    */
-  typedef Eigen::Matrix<double,2,2,Eigen::RowMajor> QuadJacobian;
+  typedef Eigen::Matrix<double, 2, 2, Eigen::RowMajor> QuadJacobian;
 
   class EdgeDeriv
   {

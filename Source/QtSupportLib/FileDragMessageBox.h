@@ -46,15 +46,15 @@
 
 enum ExtractionType
 {
-    Replace,
-    Append,
-    Prepend
+  Replace,
+  Append,
+  Prepend
 };
 
 
 class QtSupportLib_EXPORT FileDragMessageBox : public QDialog, private Ui::FileDragMessageBox
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
     FileDragMessageBox(QWidget* parent = 0);
@@ -67,8 +67,8 @@ class QtSupportLib_EXPORT FileDragMessageBox : public QDialog, private Ui::FileD
     void on_okBtn_clicked();
     void on_cancelBtn_clicked();
 
-private:
-  bool okBtnPressed;
+  private:
+    bool okBtnPressed;
 };
 
 #endif /* _FileDragMessageBox_H */

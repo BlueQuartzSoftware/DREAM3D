@@ -60,30 +60,30 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
     FilterListDockWidget(QWidget* parent = NULL);
     virtual ~FilterListDockWidget();
 
-	QList<QString> serializeString(QString string, char token);
-  QString deserializeString(QList<QString> list, char token);
+    QList<QString> serializeString(QString string, char token);
+    QString deserializeString(QList<QString> list, char token);
 
-	void matchFilter(QMapIterator<QString, IFilterFactory::Pointer> iter, QString fullWord, int &filterCount);
+    void matchFilter(QMapIterator<QString, IFilterFactory::Pointer> iter, QString fullWord, int& filterCount);
 
-  /**
-  * @brief Reads the preferences from the users pref file
-  */
-  void readSettings(QMainWindow* main, DREAM3DSettings& prefs);
+    /**
+    * @brief Reads the preferences from the users pref file
+    */
+    void readSettings(QMainWindow* main, DREAM3DSettings& prefs);
 
-  /**
-  * @brief Writes the preferences to the users pref file
-  */
-  void writeSettings(DREAM3DSettings& prefs);
+    /**
+    * @brief Writes the preferences to the users pref file
+    */
+    void writeSettings(DREAM3DSettings& prefs);
 
-  /**
-  * @brief Returns true if a search is in progress, else returns false
-  */
-  bool searchInProgress();
+    /**
+    * @brief Returns true if a search is in progress, else returns false
+    */
+    bool searchInProgress();
 
-  /**
-  * @brief Returns the filter list widget
-  */
-  FilterListWidget* getFilterListWidget();
+    /**
+    * @brief Returns the filter list widget
+    */
+    FilterListWidget* getFilterListWidget();
 
   public slots:
 
@@ -93,10 +93,10 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
      */
     void on_filterList_itemDoubleClicked( QListWidgetItem* item );
 
-	/**
-	* @brief searchFilters triggered when the user types something in the Search Field
-	*/
-	void searchFilters(QString text);
+    /**
+    * @brief searchFilters triggered when the user types something in the Search Field
+    */
+    void searchFilters(QString text);
 
     /**
      * @brief updateFilterList This method extracts all the names of the filters that have been
@@ -108,7 +108,7 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
     * @brief showContextMenuForWidget
     * @param pos
     */
-    void showContextMenuForWidget(const QPoint &pos);
+    void showContextMenuForWidget(const QPoint& pos);
 
     /**
     * @brief launchHelpForItem
@@ -150,7 +150,7 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
     /**
     * @brief Detect a key press
     */
-    void keyPressEvent(QKeyEvent * event);
+    void keyPressEvent(QKeyEvent* event);
 
     /**
      * @brief setupGui Called to get everything in the GUI setup correctly

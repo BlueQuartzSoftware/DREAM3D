@@ -44,34 +44,34 @@
 
 class InputPathWidgetCodeGenerator : public FPCodeGenerator
 {
-public:
-  DREAM3D_SHARED_POINTERS(InputPathWidgetCodeGenerator)
+  public:
+    DREAM3D_SHARED_POINTERS(InputPathWidgetCodeGenerator)
 
     static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
-  {
-    Pointer sharedPtr(new InputPathWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
-    return sharedPtr;
-  }
+    {
+      Pointer sharedPtr(new InputPathWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
+      return sharedPtr;
+    }
 
-  virtual ~InputPathWidgetCodeGenerator();
+    virtual ~InputPathWidgetCodeGenerator();
 
-  virtual QString generateSetupFilterParameters();
+    virtual QString generateSetupFilterParameters();
 
-  virtual QString generateReadFilterParameters();
+    virtual QString generateReadFilterParameters();
 
-  virtual QString generateDataCheck();
+    virtual QString generateDataCheck();
 
-  virtual QString generateFilterParameters();
+    virtual QString generateFilterParameters();
 
-  virtual QString generateCPPIncludes();
+    virtual QString generateCPPIncludes();
 
-protected:
-  InputPathWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
+  protected:
+    InputPathWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
-private:
+  private:
 
-  InputPathWidgetCodeGenerator(const InputPathWidgetCodeGenerator&); // Copy Constructor Not Implemented
-  void operator=(const InputPathWidgetCodeGenerator&); // Operator '=' Not Implemented
+    InputPathWidgetCodeGenerator(const InputPathWidgetCodeGenerator&); // Copy Constructor Not Implemented
+    void operator=(const InputPathWidgetCodeGenerator&); // Operator '=' Not Implemented
 };
 
 #endif /* InputPathWidgetCodeGenerator_H_ */

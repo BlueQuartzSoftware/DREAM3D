@@ -249,9 +249,9 @@ void DataContainerArrayProxy::reverseFlags()
       dcProxy.flag = Qt::Checked;
     }
 
-  QMap<QString, AttributeMatrixProxy>& amProxies = dcProxy.attributeMatricies;
-  for (QMap<QString, AttributeMatrixProxy>::iterator amIter = amProxies.begin(); amIter != amProxies.end(); ++amIter) // AttributeMatrix Level
-  {
+    QMap<QString, AttributeMatrixProxy>& amProxies = dcProxy.attributeMatricies;
+    for (QMap<QString, AttributeMatrixProxy>::iterator amIter = amProxies.begin(); amIter != amProxies.end(); ++amIter) // AttributeMatrix Level
+    {
       AttributeMatrixProxy& amProxy = amIter.value();
       if(amProxy.flag == Qt::Checked)
       {
@@ -262,10 +262,10 @@ void DataContainerArrayProxy::reverseFlags()
         amProxy.flag = Qt::Checked;
       }
 
-    QMap<QString, DataArrayProxy>& daProxies = amProxy.dataArrays;
-    for (QMap<QString, DataArrayProxy>::iterator daIter = daProxies.begin(); daIter != daProxies.end(); ++daIter) // DataArray Level
-    {
-    DataArrayProxy& daProxy = daIter.value();
+      QMap<QString, DataArrayProxy>& daProxies = amProxy.dataArrays;
+      for (QMap<QString, DataArrayProxy>::iterator daIter = daProxies.begin(); daIter != daProxies.end(); ++daIter) // DataArray Level
+      {
+        DataArrayProxy& daProxy = daIter.value();
         if(daProxy.flag == Qt::Checked)
         {
           daProxy.flag = Qt::Unchecked;
@@ -292,14 +292,14 @@ QStringList DataContainerArrayProxy::serialize()
   {
     DataContainerProxy& dcProxy =  dcIter.value();
 
-  QMap<QString, AttributeMatrixProxy>& amProxies = dcProxy.attributeMatricies;
-  for (QMap<QString, AttributeMatrixProxy>::iterator amIter = amProxies.begin(); amIter != amProxies.end(); ++amIter) // AttributeMatrix Level
-  {
+    QMap<QString, AttributeMatrixProxy>& amProxies = dcProxy.attributeMatricies;
+    for (QMap<QString, AttributeMatrixProxy>::iterator amIter = amProxies.begin(); amIter != amProxies.end(); ++amIter) // AttributeMatrix Level
+    {
       AttributeMatrixProxy& amProxy = amIter.value();
 
-    QMap<QString, DataArrayProxy>& daProxies = amProxy.dataArrays;
-    for (QMap<QString, DataArrayProxy>::iterator daIter = daProxies.begin(); daIter != daProxies.end(); ++daIter) // DataArray Level
-    {
+      QMap<QString, DataArrayProxy>& daProxies = amProxy.dataArrays;
+      for (QMap<QString, DataArrayProxy>::iterator daIter = daProxies.begin(); daIter != daProxies.end(); ++daIter) // DataArray Level
+      {
         DataArrayProxy& daProxy = daIter.value();
 
         QString str = QString("[PATH=%1|%2|%3][FLAG=%4]").arg(dcProxy.name).arg(amProxy.name).arg(daProxy.name).arg(daProxy.flag);
@@ -463,7 +463,7 @@ DataContainerProxy& DataContainerArrayProxy::getDataContainerProxy(const QString
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerArrayProxy::writeJson(QJsonObject &json)
+void DataContainerArrayProxy::writeJson(QJsonObject& json)
 {
   json["Data Containers"] = writeMap(dataContainers);
 }
@@ -471,7 +471,7 @@ void DataContainerArrayProxy::writeJson(QJsonObject &json)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool DataContainerArrayProxy::readJson(QJsonObject &json)
+bool DataContainerArrayProxy::readJson(QJsonObject& json)
 {
   if (json["Data Containers"].isArray())
   {

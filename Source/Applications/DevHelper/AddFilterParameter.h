@@ -45,46 +45,46 @@
 
 class AddFilterParameter : public QWidget, public Ui::AddFilterParameter
 {
-  Q_OBJECT
+    Q_OBJECT
 
-public:
-  AddFilterParameter(QWidget* parent = 0);
-  ~AddFilterParameter();
+  public:
+    AddFilterParameter(QWidget* parent = 0);
+    ~AddFilterParameter();
 
-  QString getVariableName();
-  QString getHumanName();
-  QString getType();
-  QString getCategory();
-  QList<QString> getTypeList();
-  QString getInitValue();
+    QString getVariableName();
+    QString getHumanName();
+    QString getType();
+    QString getCategory();
+    QList<QString> getTypeList();
+    QString getInitValue();
 
-  void setVariableName(QString varName);
-  void setHumanName(QString humanName);
-  void setType(QString type);
-  void setCategory(QString category);
-  void setInitValue(QString initValue);
+    void setVariableName(QString varName);
+    void setHumanName(QString humanName);
+    void setType(QString type);
+    void setCategory(QString category);
+    void setInitValue(QString initValue);
 
-protected:
-  void setupGui();
+  protected:
+    void setupGui();
 
-signals:
-  void addBtnPressed(AddFilterParameter* widget);
+  signals:
+    void addBtnPressed(AddFilterParameter* widget);
 
   protected slots:
-  void on_addFilterParameterBtn_clicked();
-  void on_cancelBtn_clicked();
-  void on_varName_textChanged(const QString &text);
-  void on_humanName_textChanged(const QString &text);
-  void on_type_currentTextChanged(const QString &text);
-  //void on_initValue_textChanged(const QString &text);
+    void on_addFilterParameterBtn_clicked();
+    void on_cancelBtn_clicked();
+    void on_varName_textChanged(const QString& text);
+    void on_humanName_textChanged(const QString& text);
+    void on_type_currentTextChanged(const QString& text);
+    //void on_initValue_textChanged(const QString &text);
 
-private:
+  private:
 
-  bool filledOutCheck();
-  bool filledOutCheck_NoVarName();
+    bool filledOutCheck();
+    bool filledOutCheck_NoVarName();
 
-  AddFilterParameter(const AddFilterParameter&);    // Copy Constructor Not Implemented
-  void operator=(const AddFilterParameter&);  // Operator '=' Not Implemented
+    AddFilterParameter(const AddFilterParameter&);    // Copy Constructor Not Implemented
+    void operator=(const AddFilterParameter&);  // Operator '=' Not Implemented
 };
 
 #endif

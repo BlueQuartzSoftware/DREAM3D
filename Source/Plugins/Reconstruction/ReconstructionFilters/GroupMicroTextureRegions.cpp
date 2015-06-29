@@ -77,7 +77,9 @@ GroupMicroTextureRegions::GroupMicroTextureRegions() :
 {
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
-  avgCaxes[0] = 0.0f; avgCaxes[1] = 0.0f; avgCaxes[2] = 0.0f;
+  avgCaxes[0] = 0.0f;
+  avgCaxes[1] = 0.0f;
+  avgCaxes[2] = 0.0f;
   caxisTolerance = 0.0f;
 
   setupFilterParameters();

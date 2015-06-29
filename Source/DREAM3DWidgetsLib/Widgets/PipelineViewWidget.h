@@ -249,7 +249,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     /**
     * @brief Open pipeline to a file
     */
-    int openPipeline(const QString &filePath, int index, const bool &setOpenedFilePath, const bool &changeTitle);
+    int openPipeline(const QString& filePath, int index, const bool& setOpenedFilePath, const bool& changeTitle);
 
     /**
      * @brief reindexWidgetTitles
@@ -290,7 +290,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     void removePlaceHolderFilter();
     void preflightHasMessage(PipelineMessage msg);
 
-    void pipelineOpened(QString& file, const bool &setOpenedFilePath, const bool &changeTitle);
+    void pipelineOpened(QString& file, const bool& setOpenedFilePath, const bool& changeTitle);
     void pipelineHasErrorsSignal();
     void pipelineHasNoErrors();
     void pipelineIssuesCleared();

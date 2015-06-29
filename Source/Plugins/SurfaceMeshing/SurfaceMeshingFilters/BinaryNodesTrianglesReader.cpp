@@ -318,9 +318,9 @@ int BinaryNodesTrianglesReader::read()
     {
       break;
     }
-    m_NodeList[i*3] = nRecord.x;
-    m_NodeList[i*3+1] = nRecord.y;
-    m_NodeList[i*3+2] = nRecord.z;
+    m_NodeList[i * 3] = nRecord.x;
+    m_NodeList[i * 3 + 1] = nRecord.y;
+    m_NodeList[i * 3 + 2] = nRecord.z;
     m_SurfaceMeshNodeTypes[nRecord.nodeId] = nRecord.nodeKind;
   }
 
@@ -347,9 +347,9 @@ int BinaryNodesTrianglesReader::read()
     {
       break;
     }
-    m_TriangleList[i*3] = tRecord.nodeId_0;
-    m_TriangleList[i*3+1] = tRecord.nodeId_1;
-    m_TriangleList[i*3+2] = tRecord.nodeId_2;
+    m_TriangleList[i * 3] = tRecord.nodeId_0;
+    m_TriangleList[i * 3 + 1] = tRecord.nodeId_1;
+    m_TriangleList[i * 3 + 2] = tRecord.nodeId_2;
     m_FaceLabels[tRecord.triId * 2] = tRecord.label_0;
     m_FaceLabels[tRecord.triId * 2 + 1] = tRecord.label_1;
   }

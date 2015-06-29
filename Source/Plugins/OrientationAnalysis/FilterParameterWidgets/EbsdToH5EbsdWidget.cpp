@@ -131,7 +131,7 @@ AbstractFilter* EbsdToH5EbsdWidget::getFilter() const
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::setWidgetListEnabled(bool b)
 {
-  foreach (QWidget * w, m_WidgetList)
+  foreach (QWidget* w, m_WidgetList)
   {
     w->setEnabled(b);
   }
@@ -196,7 +196,7 @@ void EbsdToH5EbsdWidget::getGuiParametersFromFilter()
   m_InputDir->setText(m_Filter->getInputPath());
 
   QObjectList obs = children();
-  foreach(QObject * ob, obs)
+  foreach(QObject* ob, obs)
   {
     ob->blockSignals(true);
   }
@@ -215,7 +215,7 @@ void EbsdToH5EbsdWidget::getGuiParametersFromFilter()
   m_SampleTransformation = m_Filter->getSampleTransformation();
   m_EulerTransformation = m_Filter->getEulerTransformation();
 
-  foreach(QObject * ob, obs)
+  foreach(QObject* ob, obs)
   {
     ob->blockSignals(false);
   }

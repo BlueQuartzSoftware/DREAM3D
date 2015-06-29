@@ -12,7 +12,7 @@ class AbstractFilter;
 
 class PreflightVerify : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
   public:
     PreflightVerify(QObject* parent = NULL);
     virtual ~PreflightVerify();

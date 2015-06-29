@@ -43,8 +43,8 @@
 //
 // -----------------------------------------------------------------------------
 FavoritesChangedDialog::FavoritesChangedDialog(QWidget* parent) :
-QDialog(parent),
-m_OpenDialogLastDirectory("")
+  QDialog(parent),
+  m_OpenDialogLastDirectory("")
 {
   setupUi(this);
 }
@@ -74,7 +74,7 @@ void FavoritesChangedDialog::on_selectBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FavoritesChangedDialog::on_outputDir_textChanged(const QString &text)
+void FavoritesChangedDialog::on_outputDir_textChanged(const QString& text)
 {
   QFileInfo fi(text);
 

@@ -18,7 +18,7 @@ class RemoveArraysObserver : public QObject
     DREAM3D_INSTANCE_PROPERTY(QList<PipelineMessage>, ErrorList)
     Q_PROPERTY(QList<PipelineMessage> ErrorList READ getErrorList WRITE setErrorList)
 
-public:
+  public:
     DREAM3D_SHARED_POINTERS(RemoveArraysObserver)
     DREAM3D_TYPE_MACRO(RemoveArraysObserver)
     DREAM3D_STATIC_NEW_MACRO(RemoveArraysObserver)
@@ -26,13 +26,13 @@ public:
     RemoveArraysObserver() {}
     virtual ~RemoveArraysObserver() {}
 
-public slots:
-    void processPipelineMessage(const PipelineMessage & msg)
+  public slots:
+    void processPipelineMessage(const PipelineMessage& msg)
     {
-        m_ErrorList.push_back(msg);
+      m_ErrorList.push_back(msg);
     }
 
-private:
+  private:
     RemoveArraysObserver(const RemoveArraysObserver&); // Copy Constructor Not Implemented
     void operator=(const RemoveArraysObserver&); // Operator '=' Not Implemented
 };

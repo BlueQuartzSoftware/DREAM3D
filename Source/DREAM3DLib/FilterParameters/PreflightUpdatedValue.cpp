@@ -53,8 +53,8 @@ PreflightUpdatedValue::~PreflightUpdatedValue()
 //
 // -----------------------------------------------------------------------------
 PreflightUpdatedValue::Pointer PreflightUpdatedValue::New(const QString& humanLabel, const QString& propertyName,
-  const QString& widgetType, const QVariant& defaultValue,
-  Category category, int groupIndex)
+                                                          const QString& widgetType, const QVariant& defaultValue,
+                                                          Category category, int groupIndex)
 {
   PreflightUpdatedValue::Pointer ptr = PreflightUpdatedValue::New();
   ptr->setHumanLabel(humanLabel);

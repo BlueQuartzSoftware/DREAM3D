@@ -72,7 +72,7 @@ int TestFilterAvailability()
 //
 // -----------------------------------------------------------------------------
 int MultiThresholdObjects()
-{ 
+{
   // Create two test arrays, a float array and a int array
   DataContainerArray::Pointer dca = DataContainerArray::New();
   DataContainer::Pointer vdc = DataContainer::New("dc1");
@@ -145,7 +145,7 @@ int MultiThresholdObjects()
     DataArray<bool>* inputArray = DataArray<bool>::SafePointerDownCast(thresholdArray.get());
     bool* inputArrayPtr = inputArray->getPointer(0); // pointer for threshold array created from the filter for the float array
 
-    // For the comparison value of 0.1, the threshold array elements 0 to 9 should be false and 10 through 19 should be true 
+    // For the comparison value of 0.1, the threshold array elements 0 to 9 should be false and 10 through 19 should be true
     for (size_t i = 0; i < 20; i++)
     {
       if (!((i < 10 && inputArrayPtr[i] == false) || (i >= 10 && inputArrayPtr[i] == true)))
@@ -162,7 +162,7 @@ int MultiThresholdObjects()
     v1.compOperator = 1; // greater than
     v1.compValue = 15; // comparison value
     comp1.addInput(v1);
-    
+
     var.setValue(comp1);
     propWasSet = filter->setProperty("SelectedThresholds", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
@@ -180,7 +180,7 @@ int MultiThresholdObjects()
     DataArray<bool>* inputArray1 = DataArray<bool>::SafePointerDownCast(thresholdArray1.get());
     bool* inputArrayPtr1 = inputArray1->getPointer(0); // pointer for threshold array created from the filter for the int array
 
-    // For the comparison value of 15, the threshold array elements 0 to 15 should be false and 16 through 19 should be true 
+    // For the comparison value of 15, the threshold array elements 0 to 15 should be false and 16 through 19 should be true
     for (size_t i = 0; i < 20; i++)
     {
       if (!((i <= 15 && inputArrayPtr1[i] == false) || (i > 15 && inputArrayPtr1[i] == true)))

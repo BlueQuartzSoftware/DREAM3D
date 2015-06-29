@@ -71,9 +71,9 @@ class UpdateVerticesImpl
 
       for (size_t i = start; i < end; i++)
       {
-        m_Nodes[3*i] -= m_Delta[0];
-        m_Nodes[3*i+1] -= m_Delta[1];
-        m_Nodes[3*i+2] -= m_Delta[2];
+        m_Nodes[3 * i] -= m_Delta[0];
+        m_Nodes[3 * i + 1] -= m_Delta[1];
+        m_Nodes[3 * i + 2] -= m_Delta[2];
       }
 
     }

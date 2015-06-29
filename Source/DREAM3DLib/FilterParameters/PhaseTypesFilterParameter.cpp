@@ -53,13 +53,13 @@ PhaseTypesFilterParameter::~PhaseTypesFilterParameter()
 //
 // -----------------------------------------------------------------------------
 PhaseTypesFilterParameter::Pointer PhaseTypesFilterParameter::New(const QString& humanLabel,
-  const QString& PhaseTypesArrayName,
-  const QString& phaseTypeCountProperty,
-  const QString& phaseTypeDataProperty,
-  const QString& attributeMatrixProperty,
-  const DataArrayPath attributeMatrixDefault,
-  Category category,
-  int groupIndex)
+    const QString& PhaseTypesArrayName,
+    const QString& phaseTypeCountProperty,
+    const QString& phaseTypeDataProperty,
+    const QString& attributeMatrixProperty,
+    const DataArrayPath attributeMatrixDefault,
+    Category category,
+    int groupIndex)
 {
   PhaseTypesFilterParameter::Pointer ptr = PhaseTypesFilterParameter::New();
   ptr->setHumanLabel(humanLabel);

@@ -574,10 +574,10 @@ int TestJsonWriter()
     err = writer->writeValue(Int8Test::Key, Int8Test::Value);
     DREAM3D_REQUIRE_EQUAL(err, 0)
 
-      err = writer->writeValue(Int8Test::ErrorValueMaxKey, Int8Test::ErrorValueMax);
+    err = writer->writeValue(Int8Test::ErrorValueMaxKey, Int8Test::ErrorValueMax);
     DREAM3D_REQUIRE_EQUAL(err, 0)
 
-      err = writer->writeValue(Int8Test::ErrorValueMinKey, Int8Test::ErrorValueMin);
+    err = writer->writeValue(Int8Test::ErrorValueMinKey, Int8Test::ErrorValueMin);
     DREAM3D_REQUIRE_EQUAL(err, 0)
   }
 
@@ -586,10 +586,10 @@ int TestJsonWriter()
     err = writer->writeValue(Int16Test::Key, Int16Test::Value);
     DREAM3D_REQUIRE_EQUAL(err, 0)
 
-      err = writer->writeValue(Int16Test::ErrorValueMaxKey, Int16Test::ErrorValueMax);
+    err = writer->writeValue(Int16Test::ErrorValueMaxKey, Int16Test::ErrorValueMax);
     DREAM3D_REQUIRE_EQUAL(err, 0)
 
-      err = writer->writeValue(Int16Test::ErrorValueMinKey, Int16Test::ErrorValueMin);
+    err = writer->writeValue(Int16Test::ErrorValueMinKey, Int16Test::ErrorValueMin);
     DREAM3D_REQUIRE_EQUAL(err, 0)
   }
 
@@ -598,10 +598,10 @@ int TestJsonWriter()
     err = writer->writeValue(Int32Test::Key, Int32Test::Value);
     DREAM3D_REQUIRE_EQUAL(err, 0)
 
-      err = writer->writeValue(Int32Test::ErrorValueMaxKey, Int32Test::ErrorValueMax);
+    err = writer->writeValue(Int32Test::ErrorValueMaxKey, Int32Test::ErrorValueMax);
     DREAM3D_REQUIRE_EQUAL(err, 0)
 
-      err = writer->writeValue(Int32Test::ErrorValueMinKey, Int32Test::ErrorValueMin);
+    err = writer->writeValue(Int32Test::ErrorValueMinKey, Int32Test::ErrorValueMin);
     DREAM3D_REQUIRE_EQUAL(err, 0)
   }
 
@@ -610,10 +610,10 @@ int TestJsonWriter()
     err = writer->writeValue(Int64Test::Key, Int64Test::Value);
     DREAM3D_REQUIRE_EQUAL(err, 0)
 
-      err = writer->writeValue(Int64Test::ErrorValueMaxKey, Int64Test::ErrorValueMax);
+    err = writer->writeValue(Int64Test::ErrorValueMaxKey, Int64Test::ErrorValueMax);
     DREAM3D_REQUIRE_EQUAL(err, 0)
 
-      err = writer->writeValue(Int64Test::ErrorValueMinKey, Int64Test::ErrorValueMin);
+    err = writer->writeValue(Int64Test::ErrorValueMinKey, Int64Test::ErrorValueMin);
     DREAM3D_REQUIRE_EQUAL(err, 0)
   }
 
@@ -622,10 +622,10 @@ int TestJsonWriter()
     err = writer->writeValue(uInt8Test::Key, uInt8Test::Value);
     DREAM3D_REQUIRE_EQUAL(err, 0)
 
-      err = writer->writeValue(uInt8Test::ErrorValueMaxKey, uInt8Test::ErrorValueMax);
+    err = writer->writeValue(uInt8Test::ErrorValueMaxKey, uInt8Test::ErrorValueMax);
     DREAM3D_REQUIRE_EQUAL(err, 0)
 
-      err = writer->writeValue(uInt8Test::ErrorValueMinKey, uInt8Test::ErrorValueMin);
+    err = writer->writeValue(uInt8Test::ErrorValueMinKey, uInt8Test::ErrorValueMin);
     DREAM3D_REQUIRE_EQUAL(err, 0)
   }
 
@@ -634,10 +634,10 @@ int TestJsonWriter()
     err = writer->writeValue(uInt16Test::Key, uInt16Test::Value);
     DREAM3D_REQUIRE_EQUAL(err, 0)
 
-      err = writer->writeValue(uInt16Test::ErrorValueMaxKey, uInt16Test::ErrorValueMax);
+    err = writer->writeValue(uInt16Test::ErrorValueMaxKey, uInt16Test::ErrorValueMax);
     DREAM3D_REQUIRE_EQUAL(err, 0)
 
-      err = writer->writeValue(uInt16Test::ErrorValueMinKey, uInt16Test::ErrorValueMin);
+    err = writer->writeValue(uInt16Test::ErrorValueMinKey, uInt16Test::ErrorValueMin);
     DREAM3D_REQUIRE_EQUAL(err, 0)
   }
 
@@ -646,10 +646,10 @@ int TestJsonWriter()
     err = writer->writeValue(uInt32Test::Key, uInt32Test::Value);
     DREAM3D_REQUIRE_EQUAL(err, 0)
 
-      err = writer->writeValue(uInt32Test::ErrorValueMaxKey, uInt32Test::ErrorValueMax);
+    err = writer->writeValue(uInt32Test::ErrorValueMaxKey, uInt32Test::ErrorValueMax);
     DREAM3D_REQUIRE_EQUAL(err, 0)
 
-      err = writer->writeValue(uInt32Test::ErrorValueMinKey, uInt32Test::ErrorValueMin);
+    err = writer->writeValue(uInt32Test::ErrorValueMinKey, uInt32Test::ErrorValueMin);
     DREAM3D_REQUIRE_EQUAL(err, 0)
   }
 
@@ -658,10 +658,10 @@ int TestJsonWriter()
     err = writer->writeValue(uInt64Test::Key, uInt64Test::Value);
     DREAM3D_REQUIRE_EQUAL(err, 0)
 
-      err = writer->writeValue(uInt64Test::ErrorValueMaxKey, uInt64Test::ErrorValueMax);
+    err = writer->writeValue(uInt64Test::ErrorValueMaxKey, uInt64Test::ErrorValueMax);
     DREAM3D_REQUIRE_EQUAL(err, 0)
 
-      err = writer->writeValue(uInt64Test::ErrorValueMinKey, uInt64Test::ErrorValueMin);
+    err = writer->writeValue(uInt64Test::ErrorValueMinKey, uInt64Test::ErrorValueMin);
     DREAM3D_REQUIRE_EQUAL(err, 0)
   }
 
@@ -676,10 +676,10 @@ int TestJsonWriter()
     err = writer->writeValue(FloatTest::Key, FloatTest::Value);
     DREAM3D_REQUIRE_EQUAL(err, 0)
 
-      err = writer->writeValue(FloatTest::ErrorValueMaxKey, FloatTest::ErrorValueMax);
+    err = writer->writeValue(FloatTest::ErrorValueMaxKey, FloatTest::ErrorValueMax);
     DREAM3D_REQUIRE_EQUAL(err, 0)
 
-      err = writer->writeValue(FloatTest::ErrorValueMinKey, FloatTest::ErrorValueMin);
+    err = writer->writeValue(FloatTest::ErrorValueMinKey, FloatTest::ErrorValueMin);
     DREAM3D_REQUIRE_EQUAL(err, 0)
   }
 
@@ -1119,10 +1119,10 @@ int TestJsonReader()
     int16_t val = reader->readValue(Int16Test::Key, def);
     DREAM3D_REQUIRE_EQUAL(val, Int16Test::Value)
 
-      int16_t errorValMax = reader->readValue(Int16Test::ErrorValueMaxKey, def);
+    int16_t errorValMax = reader->readValue(Int16Test::ErrorValueMaxKey, def);
     DREAM3D_REQUIRE_EQUAL(errorValMax, def)
 
-      int16_t errorValMin = reader->readValue(Int16Test::ErrorValueMinKey, def);
+    int16_t errorValMin = reader->readValue(Int16Test::ErrorValueMinKey, def);
     DREAM3D_REQUIRE_EQUAL(errorValMin, def)
   }
 
@@ -1132,10 +1132,10 @@ int TestJsonReader()
     int32_t val = reader->readValue(Int32Test::Key, def);
     DREAM3D_REQUIRE_EQUAL(val, Int32Test::Value)
 
-      int32_t errorValMax = reader->readValue(Int32Test::ErrorValueMaxKey, def);
+    int32_t errorValMax = reader->readValue(Int32Test::ErrorValueMaxKey, def);
     DREAM3D_REQUIRE_EQUAL(errorValMax, def)
 
-      int32_t errorValMin = reader->readValue(Int32Test::ErrorValueMinKey, def);
+    int32_t errorValMin = reader->readValue(Int32Test::ErrorValueMinKey, def);
     DREAM3D_REQUIRE_EQUAL(errorValMin, def)
   }
 
@@ -1145,10 +1145,10 @@ int TestJsonReader()
     int64_t val = reader->readValue(Int64Test::Key, def);
     DREAM3D_REQUIRE_EQUAL(val, Int64Test::Value)
 
-      int64_t errorValMax = reader->readValue(Int64Test::ErrorValueMaxKey, def);
+    int64_t errorValMax = reader->readValue(Int64Test::ErrorValueMaxKey, def);
     DREAM3D_REQUIRE_EQUAL(errorValMax, def)
 
-      int64_t errorValMin = reader->readValue(Int64Test::ErrorValueMinKey, def);
+    int64_t errorValMin = reader->readValue(Int64Test::ErrorValueMinKey, def);
     DREAM3D_REQUIRE_EQUAL(errorValMin, def)
   }
 
@@ -1158,10 +1158,10 @@ int TestJsonReader()
     uint8_t val = reader->readValue(uInt8Test::Key, def);
     DREAM3D_REQUIRE_EQUAL(val, uInt8Test::Value)
 
-      uint8_t errorValMax = reader->readValue(uInt8Test::ErrorValueMaxKey, def);
+    uint8_t errorValMax = reader->readValue(uInt8Test::ErrorValueMaxKey, def);
     DREAM3D_REQUIRE_EQUAL(errorValMax, def)
 
-      uint8_t errorValMin = reader->readValue(uInt8Test::ErrorValueMinKey, def);
+    uint8_t errorValMin = reader->readValue(uInt8Test::ErrorValueMinKey, def);
     DREAM3D_REQUIRE_EQUAL(errorValMin, def)
   }
 
@@ -1171,10 +1171,10 @@ int TestJsonReader()
     uint16_t val = reader->readValue(uInt16Test::Key, def);
     DREAM3D_REQUIRE_EQUAL(val, uInt16Test::Value)
 
-      uint16_t errorValMax = reader->readValue(uInt16Test::ErrorValueMaxKey, def);
+    uint16_t errorValMax = reader->readValue(uInt16Test::ErrorValueMaxKey, def);
     DREAM3D_REQUIRE_EQUAL(errorValMax, def)
 
-      uint16_t errorValMin = reader->readValue(uInt16Test::ErrorValueMinKey, def);
+    uint16_t errorValMin = reader->readValue(uInt16Test::ErrorValueMinKey, def);
     DREAM3D_REQUIRE_EQUAL(errorValMin, def)
   }
 
@@ -1184,10 +1184,10 @@ int TestJsonReader()
     uint32_t val = reader->readValue(uInt32Test::Key, def);
     DREAM3D_REQUIRE_EQUAL(val, uInt32Test::Value)
 
-      uint32_t errorValMax = reader->readValue(uInt32Test::ErrorValueMaxKey, def);
+    uint32_t errorValMax = reader->readValue(uInt32Test::ErrorValueMaxKey, def);
     DREAM3D_REQUIRE_EQUAL(errorValMax, def)
 
-      uint32_t errorValMin = reader->readValue(uInt32Test::ErrorValueMinKey, def);
+    uint32_t errorValMin = reader->readValue(uInt32Test::ErrorValueMinKey, def);
     DREAM3D_REQUIRE_EQUAL(errorValMin, def)
   }
 
@@ -1197,10 +1197,10 @@ int TestJsonReader()
     uint64_t val = reader->readValue(uInt64Test::Key, def);
     DREAM3D_REQUIRE_EQUAL(val, uInt64Test::Value)
 
-      uint64_t errorValMax = reader->readValue(uInt64Test::ErrorValueMaxKey, def);
+    uint64_t errorValMax = reader->readValue(uInt64Test::ErrorValueMaxKey, def);
     DREAM3D_REQUIRE_EQUAL(errorValMax, def)
 
-      uint64_t errorValMin = reader->readValue(uInt64Test::ErrorValueMinKey, def);
+    uint64_t errorValMin = reader->readValue(uInt64Test::ErrorValueMinKey, def);
     DREAM3D_REQUIRE_EQUAL(errorValMin, def)
   }
 
@@ -1217,10 +1217,10 @@ int TestJsonReader()
     float val = reader->readValue(FloatTest::Key, def);
     DREAM3D_REQUIRE_EQUAL(val, FloatTest::Value)
 
-      float errorValMax = reader->readValue(FloatTest::ErrorValueMaxKey, def);
+    float errorValMax = reader->readValue(FloatTest::ErrorValueMaxKey, def);
     DREAM3D_REQUIRE_EQUAL(errorValMax, def)
 
-      float errorValMin = reader->readValue(FloatTest::ErrorValueMinKey, def);
+    float errorValMin = reader->readValue(FloatTest::ErrorValueMinKey, def);
     DREAM3D_REQUIRE_EQUAL(errorValMin, def)
   }
 
@@ -1228,220 +1228,220 @@ int TestJsonReader()
   {
     QVector<int8_t> vector = reader->readArray(Int8VectorTest::Key, QVector<int8_t>());
     DREAM3D_REQUIRE_EQUAL(vector.size(), 5)
-      DREAM3D_REQUIRE_EQUAL(vector[0], Int8VectorTest::Value1)
-      DREAM3D_REQUIRE_EQUAL(vector[1], Int8VectorTest::Value2)
-      DREAM3D_REQUIRE_EQUAL(vector[2], Int8VectorTest::Value3)
-      DREAM3D_REQUIRE_EQUAL(vector[3], Int8VectorTest::Value4)
-      DREAM3D_REQUIRE_EQUAL(vector[4], Int8VectorTest::Value5)
+    DREAM3D_REQUIRE_EQUAL(vector[0], Int8VectorTest::Value1)
+    DREAM3D_REQUIRE_EQUAL(vector[1], Int8VectorTest::Value2)
+    DREAM3D_REQUIRE_EQUAL(vector[2], Int8VectorTest::Value3)
+    DREAM3D_REQUIRE_EQUAL(vector[3], Int8VectorTest::Value4)
+    DREAM3D_REQUIRE_EQUAL(vector[4], Int8VectorTest::Value5)
   }
 
   // QVector<int16_t> read test
   {
     QVector<int16_t> vector = reader->readArray(Int16VectorTest::Key, QVector<int16_t>());
     DREAM3D_REQUIRE_EQUAL(vector.size(), 5)
-      DREAM3D_REQUIRE_EQUAL(vector[0], Int16VectorTest::Value1)
-      DREAM3D_REQUIRE_EQUAL(vector[1], Int16VectorTest::Value2)
-      DREAM3D_REQUIRE_EQUAL(vector[2], Int16VectorTest::Value3)
-      DREAM3D_REQUIRE_EQUAL(vector[3], Int16VectorTest::Value4)
-      DREAM3D_REQUIRE_EQUAL(vector[4], Int16VectorTest::Value5)
+    DREAM3D_REQUIRE_EQUAL(vector[0], Int16VectorTest::Value1)
+    DREAM3D_REQUIRE_EQUAL(vector[1], Int16VectorTest::Value2)
+    DREAM3D_REQUIRE_EQUAL(vector[2], Int16VectorTest::Value3)
+    DREAM3D_REQUIRE_EQUAL(vector[3], Int16VectorTest::Value4)
+    DREAM3D_REQUIRE_EQUAL(vector[4], Int16VectorTest::Value5)
   }
 
   // QVector<int32_t> read test
   {
     QVector<int32_t> vector = reader->readArray(Int32VectorTest::Key, QVector<int32_t>());
     DREAM3D_REQUIRE_EQUAL(vector.size(), 5)
-      DREAM3D_REQUIRE_EQUAL(vector[0], Int32VectorTest::Value1)
-      DREAM3D_REQUIRE_EQUAL(vector[1], Int32VectorTest::Value2)
-      DREAM3D_REQUIRE_EQUAL(vector[2], Int32VectorTest::Value3)
-      DREAM3D_REQUIRE_EQUAL(vector[3], Int32VectorTest::Value4)
-      DREAM3D_REQUIRE_EQUAL(vector[4], Int32VectorTest::Value5)
+    DREAM3D_REQUIRE_EQUAL(vector[0], Int32VectorTest::Value1)
+    DREAM3D_REQUIRE_EQUAL(vector[1], Int32VectorTest::Value2)
+    DREAM3D_REQUIRE_EQUAL(vector[2], Int32VectorTest::Value3)
+    DREAM3D_REQUIRE_EQUAL(vector[3], Int32VectorTest::Value4)
+    DREAM3D_REQUIRE_EQUAL(vector[4], Int32VectorTest::Value5)
   }
 
   // QVector<int64_t> read test
   {
     QVector<int64_t> vector = reader->readArray(Int64VectorTest::Key, QVector<int64_t>());
     DREAM3D_REQUIRE_EQUAL(vector.size(), 5)
-      DREAM3D_REQUIRE_EQUAL(vector[0], Int64VectorTest::Value1)
-      DREAM3D_REQUIRE_EQUAL(vector[1], Int64VectorTest::Value2)
-      DREAM3D_REQUIRE_EQUAL(vector[2], Int64VectorTest::Value3)
-      DREAM3D_REQUIRE_EQUAL(vector[3], Int64VectorTest::Value4)
-      DREAM3D_REQUIRE_EQUAL(vector[4], Int64VectorTest::Value5)
+    DREAM3D_REQUIRE_EQUAL(vector[0], Int64VectorTest::Value1)
+    DREAM3D_REQUIRE_EQUAL(vector[1], Int64VectorTest::Value2)
+    DREAM3D_REQUIRE_EQUAL(vector[2], Int64VectorTest::Value3)
+    DREAM3D_REQUIRE_EQUAL(vector[3], Int64VectorTest::Value4)
+    DREAM3D_REQUIRE_EQUAL(vector[4], Int64VectorTest::Value5)
   }
 
   // QVector<uint8_t> read test
   {
     QVector<uint8_t> vector = reader->readArray(uInt8VectorTest::Key, QVector<uint8_t>());
     DREAM3D_REQUIRE_EQUAL(vector.size(), 5)
-      DREAM3D_REQUIRE_EQUAL(vector[0], uInt8VectorTest::Value1)
-      DREAM3D_REQUIRE_EQUAL(vector[1], uInt8VectorTest::Value2)
-      DREAM3D_REQUIRE_EQUAL(vector[2], uInt8VectorTest::Value3)
-      DREAM3D_REQUIRE_EQUAL(vector[3], uInt8VectorTest::Value4)
-      DREAM3D_REQUIRE_EQUAL(vector[4], uInt8VectorTest::Value5)
+    DREAM3D_REQUIRE_EQUAL(vector[0], uInt8VectorTest::Value1)
+    DREAM3D_REQUIRE_EQUAL(vector[1], uInt8VectorTest::Value2)
+    DREAM3D_REQUIRE_EQUAL(vector[2], uInt8VectorTest::Value3)
+    DREAM3D_REQUIRE_EQUAL(vector[3], uInt8VectorTest::Value4)
+    DREAM3D_REQUIRE_EQUAL(vector[4], uInt8VectorTest::Value5)
   }
 
   // QVector<uint16_t> read test
   {
     QVector<uint16_t> vector = reader->readArray(uInt16VectorTest::Key, QVector<uint16_t>());
     DREAM3D_REQUIRE_EQUAL(vector.size(), 5)
-      DREAM3D_REQUIRE_EQUAL(vector[0], uInt16VectorTest::Value1)
-      DREAM3D_REQUIRE_EQUAL(vector[1], uInt16VectorTest::Value2)
-      DREAM3D_REQUIRE_EQUAL(vector[2], uInt16VectorTest::Value3)
-      DREAM3D_REQUIRE_EQUAL(vector[3], uInt16VectorTest::Value4)
-      DREAM3D_REQUIRE_EQUAL(vector[4], uInt16VectorTest::Value5)
+    DREAM3D_REQUIRE_EQUAL(vector[0], uInt16VectorTest::Value1)
+    DREAM3D_REQUIRE_EQUAL(vector[1], uInt16VectorTest::Value2)
+    DREAM3D_REQUIRE_EQUAL(vector[2], uInt16VectorTest::Value3)
+    DREAM3D_REQUIRE_EQUAL(vector[3], uInt16VectorTest::Value4)
+    DREAM3D_REQUIRE_EQUAL(vector[4], uInt16VectorTest::Value5)
   }
 
   // QVector<uint32_t> read test
   {
     QVector<uint32_t> vector = reader->readArray(uInt32VectorTest::Key, QVector<uint32_t>());
     DREAM3D_REQUIRE_EQUAL(vector.size(), 5)
-      DREAM3D_REQUIRE_EQUAL(vector[0], uInt32VectorTest::Value1)
-      DREAM3D_REQUIRE_EQUAL(vector[1], uInt32VectorTest::Value2)
-      DREAM3D_REQUIRE_EQUAL(vector[2], uInt32VectorTest::Value3)
-      DREAM3D_REQUIRE_EQUAL(vector[3], uInt32VectorTest::Value4)
-      DREAM3D_REQUIRE_EQUAL(vector[4], uInt32VectorTest::Value5)
+    DREAM3D_REQUIRE_EQUAL(vector[0], uInt32VectorTest::Value1)
+    DREAM3D_REQUIRE_EQUAL(vector[1], uInt32VectorTest::Value2)
+    DREAM3D_REQUIRE_EQUAL(vector[2], uInt32VectorTest::Value3)
+    DREAM3D_REQUIRE_EQUAL(vector[3], uInt32VectorTest::Value4)
+    DREAM3D_REQUIRE_EQUAL(vector[4], uInt32VectorTest::Value5)
   }
 
   // QVector<uint64_t> read test
   {
     QVector<uint64_t> vector = reader->readArray(uInt64VectorTest::Key, QVector<uint64_t>());
     DREAM3D_REQUIRE_EQUAL(vector.size(), 5)
-      DREAM3D_REQUIRE_EQUAL(vector[0], uInt64VectorTest::Value1)
-      DREAM3D_REQUIRE_EQUAL(vector[1], uInt64VectorTest::Value2)
-      DREAM3D_REQUIRE_EQUAL(vector[2], uInt64VectorTest::Value3)
-      DREAM3D_REQUIRE_EQUAL(vector[3], uInt64VectorTest::Value4)
-      DREAM3D_REQUIRE_EQUAL(vector[4], uInt64VectorTest::Value5)
+    DREAM3D_REQUIRE_EQUAL(vector[0], uInt64VectorTest::Value1)
+    DREAM3D_REQUIRE_EQUAL(vector[1], uInt64VectorTest::Value2)
+    DREAM3D_REQUIRE_EQUAL(vector[2], uInt64VectorTest::Value3)
+    DREAM3D_REQUIRE_EQUAL(vector[3], uInt64VectorTest::Value4)
+    DREAM3D_REQUIRE_EQUAL(vector[4], uInt64VectorTest::Value5)
   }
 
   // QVector<double> read test
   {
     QVector<double> vector = reader->readArray(DoubleVectorTest::Key, QVector<double>());
     DREAM3D_REQUIRE_EQUAL(vector.size(), 5)
-      DREAM3D_REQUIRE_EQUAL(vector[0], DoubleVectorTest::Value1)
-      DREAM3D_REQUIRE_EQUAL(vector[1], DoubleVectorTest::Value2)
-      DREAM3D_REQUIRE_EQUAL(vector[2], DoubleVectorTest::Value3)
-      DREAM3D_REQUIRE_EQUAL(vector[3], DoubleVectorTest::Value4)
-      DREAM3D_REQUIRE_EQUAL(vector[4], DoubleVectorTest::Value5)
+    DREAM3D_REQUIRE_EQUAL(vector[0], DoubleVectorTest::Value1)
+    DREAM3D_REQUIRE_EQUAL(vector[1], DoubleVectorTest::Value2)
+    DREAM3D_REQUIRE_EQUAL(vector[2], DoubleVectorTest::Value3)
+    DREAM3D_REQUIRE_EQUAL(vector[3], DoubleVectorTest::Value4)
+    DREAM3D_REQUIRE_EQUAL(vector[4], DoubleVectorTest::Value5)
   }
 
   // QVector<float> read test
   {
     QVector<float> vector = reader->readArray(FloatVectorTest::Key, QVector<float>());
     DREAM3D_REQUIRE_EQUAL(vector.size(), 5)
-      DREAM3D_REQUIRE_EQUAL(vector[0], FloatVectorTest::Value1)
-      DREAM3D_REQUIRE_EQUAL(vector[1], FloatVectorTest::Value2)
-      DREAM3D_REQUIRE_EQUAL(vector[2], FloatVectorTest::Value3)
-      DREAM3D_REQUIRE_EQUAL(vector[3], FloatVectorTest::Value4)
-      DREAM3D_REQUIRE_EQUAL(vector[4], FloatVectorTest::Value5)
+    DREAM3D_REQUIRE_EQUAL(vector[0], FloatVectorTest::Value1)
+    DREAM3D_REQUIRE_EQUAL(vector[1], FloatVectorTest::Value2)
+    DREAM3D_REQUIRE_EQUAL(vector[2], FloatVectorTest::Value3)
+    DREAM3D_REQUIRE_EQUAL(vector[3], FloatVectorTest::Value4)
+    DREAM3D_REQUIRE_EQUAL(vector[4], FloatVectorTest::Value5)
   }
 
   // IntVec3_t read test
   {
     IntVec3_t intvec3 = reader->readIntVec3(IntVec3Test::Key, IntVec3_t());
     DREAM3D_REQUIRE_EQUAL(intvec3.x, IntVec3Test::X)
-      DREAM3D_REQUIRE_EQUAL(intvec3.y, IntVec3Test::Y)
-      DREAM3D_REQUIRE_EQUAL(intvec3.z, IntVec3Test::Z)
+    DREAM3D_REQUIRE_EQUAL(intvec3.y, IntVec3Test::Y)
+    DREAM3D_REQUIRE_EQUAL(intvec3.z, IntVec3Test::Z)
   }
 
   // FloatVec3_t read test
   {
     FloatVec3_t floatvec3 = reader->readFloatVec3(FloatVec3Test::Key, FloatVec3_t());
     DREAM3D_REQUIRE_EQUAL(floatvec3.x, FloatVec3Test::X)
-      DREAM3D_REQUIRE_EQUAL(floatvec3.y, FloatVec3Test::Y)
-      DREAM3D_REQUIRE_EQUAL(floatvec3.z, FloatVec3Test::Z)
+    DREAM3D_REQUIRE_EQUAL(floatvec3.y, FloatVec3Test::Y)
+    DREAM3D_REQUIRE_EQUAL(floatvec3.z, FloatVec3Test::Z)
   }
 
   // FloatVec4_t read test
   {
     FloatVec4_t floatvec4 = reader->readFloatVec4(FloatVec4Test::Key, FloatVec4_t());
     DREAM3D_REQUIRE_EQUAL(floatvec4.a, FloatVec4Test::A)
-      DREAM3D_REQUIRE_EQUAL(floatvec4.b, FloatVec4Test::B)
-      DREAM3D_REQUIRE_EQUAL(floatvec4.c, FloatVec4Test::C)
-      DREAM3D_REQUIRE_EQUAL(floatvec4.d, FloatVec4Test::D)
+    DREAM3D_REQUIRE_EQUAL(floatvec4.b, FloatVec4Test::B)
+    DREAM3D_REQUIRE_EQUAL(floatvec4.c, FloatVec4Test::C)
+    DREAM3D_REQUIRE_EQUAL(floatvec4.d, FloatVec4Test::D)
   }
 
   // FloatVec21_t read test
   {
     FloatVec21_t floatvec21 = reader->readFloatVec21(FloatVec21Test::Key, FloatVec21_t());
     DREAM3D_REQUIRE_EQUAL(floatvec21.v11, FloatVec21Test::Val1)
-      DREAM3D_REQUIRE_EQUAL(floatvec21.v12, FloatVec21Test::Val2)
-      DREAM3D_REQUIRE_EQUAL(floatvec21.v13, FloatVec21Test::Val3)
-      DREAM3D_REQUIRE_EQUAL(floatvec21.v14, FloatVec21Test::Val4)
-      DREAM3D_REQUIRE_EQUAL(floatvec21.v15, FloatVec21Test::Val5)
-      DREAM3D_REQUIRE_EQUAL(floatvec21.v16, FloatVec21Test::Val6)
-      DREAM3D_REQUIRE_EQUAL(floatvec21.v22, FloatVec21Test::Val7)
-      DREAM3D_REQUIRE_EQUAL(floatvec21.v23, FloatVec21Test::Val8)
-      DREAM3D_REQUIRE_EQUAL(floatvec21.v24, FloatVec21Test::Val9)
-      DREAM3D_REQUIRE_EQUAL(floatvec21.v25, FloatVec21Test::Val10)
-      DREAM3D_REQUIRE_EQUAL(floatvec21.v26, FloatVec21Test::Val11)
-      DREAM3D_REQUIRE_EQUAL(floatvec21.v33, FloatVec21Test::Val12)
-      DREAM3D_REQUIRE_EQUAL(floatvec21.v34, FloatVec21Test::Val13)
-      DREAM3D_REQUIRE_EQUAL(floatvec21.v35, FloatVec21Test::Val14)
-      DREAM3D_REQUIRE_EQUAL(floatvec21.v36, FloatVec21Test::Val15)
-      DREAM3D_REQUIRE_EQUAL(floatvec21.v44, FloatVec21Test::Val16)
-      DREAM3D_REQUIRE_EQUAL(floatvec21.v45, FloatVec21Test::Val17)
-      DREAM3D_REQUIRE_EQUAL(floatvec21.v46, FloatVec21Test::Val18)
-      DREAM3D_REQUIRE_EQUAL(floatvec21.v55, FloatVec21Test::Val19)
-      DREAM3D_REQUIRE_EQUAL(floatvec21.v56, FloatVec21Test::Val20)
-      DREAM3D_REQUIRE_EQUAL(floatvec21.v66, FloatVec21Test::Val21)
+    DREAM3D_REQUIRE_EQUAL(floatvec21.v12, FloatVec21Test::Val2)
+    DREAM3D_REQUIRE_EQUAL(floatvec21.v13, FloatVec21Test::Val3)
+    DREAM3D_REQUIRE_EQUAL(floatvec21.v14, FloatVec21Test::Val4)
+    DREAM3D_REQUIRE_EQUAL(floatvec21.v15, FloatVec21Test::Val5)
+    DREAM3D_REQUIRE_EQUAL(floatvec21.v16, FloatVec21Test::Val6)
+    DREAM3D_REQUIRE_EQUAL(floatvec21.v22, FloatVec21Test::Val7)
+    DREAM3D_REQUIRE_EQUAL(floatvec21.v23, FloatVec21Test::Val8)
+    DREAM3D_REQUIRE_EQUAL(floatvec21.v24, FloatVec21Test::Val9)
+    DREAM3D_REQUIRE_EQUAL(floatvec21.v25, FloatVec21Test::Val10)
+    DREAM3D_REQUIRE_EQUAL(floatvec21.v26, FloatVec21Test::Val11)
+    DREAM3D_REQUIRE_EQUAL(floatvec21.v33, FloatVec21Test::Val12)
+    DREAM3D_REQUIRE_EQUAL(floatvec21.v34, FloatVec21Test::Val13)
+    DREAM3D_REQUIRE_EQUAL(floatvec21.v35, FloatVec21Test::Val14)
+    DREAM3D_REQUIRE_EQUAL(floatvec21.v36, FloatVec21Test::Val15)
+    DREAM3D_REQUIRE_EQUAL(floatvec21.v44, FloatVec21Test::Val16)
+    DREAM3D_REQUIRE_EQUAL(floatvec21.v45, FloatVec21Test::Val17)
+    DREAM3D_REQUIRE_EQUAL(floatvec21.v46, FloatVec21Test::Val18)
+    DREAM3D_REQUIRE_EQUAL(floatvec21.v55, FloatVec21Test::Val19)
+    DREAM3D_REQUIRE_EQUAL(floatvec21.v56, FloatVec21Test::Val20)
+    DREAM3D_REQUIRE_EQUAL(floatvec21.v66, FloatVec21Test::Val21)
   }
 
   // Float2ndOrderPoly_t read test
   {
     Float2ndOrderPoly_t floatPoly = reader->readFloat2ndOrderPoly(Float2ndOrderPolyTest::Key, Float2ndOrderPoly_t());
     DREAM3D_REQUIRE_EQUAL(floatPoly.c20, Float2ndOrderPolyTest::Val1)
-      DREAM3D_REQUIRE_EQUAL(floatPoly.c02, Float2ndOrderPolyTest::Val2)
-      DREAM3D_REQUIRE_EQUAL(floatPoly.c11, Float2ndOrderPolyTest::Val3)
-      DREAM3D_REQUIRE_EQUAL(floatPoly.c10, Float2ndOrderPolyTest::Val4)
-      DREAM3D_REQUIRE_EQUAL(floatPoly.c01, Float2ndOrderPolyTest::Val5)
-      DREAM3D_REQUIRE_EQUAL(floatPoly.c00, Float2ndOrderPolyTest::Val6)
+    DREAM3D_REQUIRE_EQUAL(floatPoly.c02, Float2ndOrderPolyTest::Val2)
+    DREAM3D_REQUIRE_EQUAL(floatPoly.c11, Float2ndOrderPolyTest::Val3)
+    DREAM3D_REQUIRE_EQUAL(floatPoly.c10, Float2ndOrderPolyTest::Val4)
+    DREAM3D_REQUIRE_EQUAL(floatPoly.c01, Float2ndOrderPolyTest::Val5)
+    DREAM3D_REQUIRE_EQUAL(floatPoly.c00, Float2ndOrderPolyTest::Val6)
   }
 
   // Float3rdOrderPoly_t read test
   {
     Float3rdOrderPoly_t floatPoly = reader->readFloat3rdOrderPoly(Float3rdOrderPolyTest::Key, Float3rdOrderPoly_t());
     DREAM3D_REQUIRE_EQUAL(floatPoly.c30, Float3rdOrderPolyTest::Val1)
-      DREAM3D_REQUIRE_EQUAL(floatPoly.c03, Float3rdOrderPolyTest::Val2)
-      DREAM3D_REQUIRE_EQUAL(floatPoly.c21, Float3rdOrderPolyTest::Val3)
-      DREAM3D_REQUIRE_EQUAL(floatPoly.c12, Float3rdOrderPolyTest::Val4)
-      DREAM3D_REQUIRE_EQUAL(floatPoly.c20, Float3rdOrderPolyTest::Val5)
-      DREAM3D_REQUIRE_EQUAL(floatPoly.c02, Float3rdOrderPolyTest::Val6)
-      DREAM3D_REQUIRE_EQUAL(floatPoly.c11, Float3rdOrderPolyTest::Val7)
-      DREAM3D_REQUIRE_EQUAL(floatPoly.c10, Float3rdOrderPolyTest::Val8)
-      DREAM3D_REQUIRE_EQUAL(floatPoly.c01, Float3rdOrderPolyTest::Val9)
-      DREAM3D_REQUIRE_EQUAL(floatPoly.c00, Float3rdOrderPolyTest::Val10)
+    DREAM3D_REQUIRE_EQUAL(floatPoly.c03, Float3rdOrderPolyTest::Val2)
+    DREAM3D_REQUIRE_EQUAL(floatPoly.c21, Float3rdOrderPolyTest::Val3)
+    DREAM3D_REQUIRE_EQUAL(floatPoly.c12, Float3rdOrderPolyTest::Val4)
+    DREAM3D_REQUIRE_EQUAL(floatPoly.c20, Float3rdOrderPolyTest::Val5)
+    DREAM3D_REQUIRE_EQUAL(floatPoly.c02, Float3rdOrderPolyTest::Val6)
+    DREAM3D_REQUIRE_EQUAL(floatPoly.c11, Float3rdOrderPolyTest::Val7)
+    DREAM3D_REQUIRE_EQUAL(floatPoly.c10, Float3rdOrderPolyTest::Val8)
+    DREAM3D_REQUIRE_EQUAL(floatPoly.c01, Float3rdOrderPolyTest::Val9)
+    DREAM3D_REQUIRE_EQUAL(floatPoly.c00, Float3rdOrderPolyTest::Val10)
   }
 
   // Float4thOrderPoly_t read test
   {
     Float4thOrderPoly_t floatPoly = reader->readFloat4thOrderPoly(Float4thOrderPolyTest::Key, Float4thOrderPoly_t());
     DREAM3D_REQUIRE_EQUAL(floatPoly.c02, Float4thOrderPolyTest::Val1)
-      DREAM3D_REQUIRE_EQUAL(floatPoly.c11, Float4thOrderPolyTest::Val2)
-      DREAM3D_REQUIRE_EQUAL(floatPoly.c10, Float4thOrderPolyTest::Val3)
-      DREAM3D_REQUIRE_EQUAL(floatPoly.c01, Float4thOrderPolyTest::Val4)
-      DREAM3D_REQUIRE_EQUAL(floatPoly.c00, Float4thOrderPolyTest::Val5)
-      DREAM3D_REQUIRE_EQUAL(floatPoly.c40, Float4thOrderPolyTest::Val6)
-      DREAM3D_REQUIRE_EQUAL(floatPoly.c04, Float4thOrderPolyTest::Val7)
-      DREAM3D_REQUIRE_EQUAL(floatPoly.c31, Float4thOrderPolyTest::Val8)
-      DREAM3D_REQUIRE_EQUAL(floatPoly.c13, Float4thOrderPolyTest::Val9)
-      DREAM3D_REQUIRE_EQUAL(floatPoly.c22, Float4thOrderPolyTest::Val10)
-      DREAM3D_REQUIRE_EQUAL(floatPoly.c30, Float4thOrderPolyTest::Val11)
-      DREAM3D_REQUIRE_EQUAL(floatPoly.c03, Float4thOrderPolyTest::Val12)
-      DREAM3D_REQUIRE_EQUAL(floatPoly.c21, Float4thOrderPolyTest::Val13)
-      DREAM3D_REQUIRE_EQUAL(floatPoly.c12, Float4thOrderPolyTest::Val14)
-      DREAM3D_REQUIRE_EQUAL(floatPoly.c20, Float4thOrderPolyTest::Val15)
+    DREAM3D_REQUIRE_EQUAL(floatPoly.c11, Float4thOrderPolyTest::Val2)
+    DREAM3D_REQUIRE_EQUAL(floatPoly.c10, Float4thOrderPolyTest::Val3)
+    DREAM3D_REQUIRE_EQUAL(floatPoly.c01, Float4thOrderPolyTest::Val4)
+    DREAM3D_REQUIRE_EQUAL(floatPoly.c00, Float4thOrderPolyTest::Val5)
+    DREAM3D_REQUIRE_EQUAL(floatPoly.c40, Float4thOrderPolyTest::Val6)
+    DREAM3D_REQUIRE_EQUAL(floatPoly.c04, Float4thOrderPolyTest::Val7)
+    DREAM3D_REQUIRE_EQUAL(floatPoly.c31, Float4thOrderPolyTest::Val8)
+    DREAM3D_REQUIRE_EQUAL(floatPoly.c13, Float4thOrderPolyTest::Val9)
+    DREAM3D_REQUIRE_EQUAL(floatPoly.c22, Float4thOrderPolyTest::Val10)
+    DREAM3D_REQUIRE_EQUAL(floatPoly.c30, Float4thOrderPolyTest::Val11)
+    DREAM3D_REQUIRE_EQUAL(floatPoly.c03, Float4thOrderPolyTest::Val12)
+    DREAM3D_REQUIRE_EQUAL(floatPoly.c21, Float4thOrderPolyTest::Val13)
+    DREAM3D_REQUIRE_EQUAL(floatPoly.c12, Float4thOrderPolyTest::Val14)
+    DREAM3D_REQUIRE_EQUAL(floatPoly.c20, Float4thOrderPolyTest::Val15)
   }
 
   // FileListInfo_t read test
   {
     FileListInfo_t fileListInfo = reader->readFileListInfo(FileListInfoTest::Key, FileListInfo_t());
-      DREAM3D_REQUIRE_EQUAL(fileListInfo.EndIndex, FileListInfoTest::EndIndex)
-        DREAM3D_REQUIRE_EQUAL(fileListInfo.FileExtension, FileListInfoTest::FileExtension)
-        DREAM3D_REQUIRE_EQUAL(fileListInfo.FilePrefix, FileListInfoTest::FilePrefix)
-        DREAM3D_REQUIRE_EQUAL(fileListInfo.FileSuffix, FileListInfoTest::FileSuffix)
-        DREAM3D_REQUIRE_EQUAL(fileListInfo.InputPath, FileListInfoTest::InputPath)
-        DREAM3D_REQUIRE_EQUAL(fileListInfo.Ordering, FileListInfoTest::Ordering)
-      DREAM3D_REQUIRE_EQUAL(fileListInfo.PaddingDigits, FileListInfoTest::PaddingDigits)
-      DREAM3D_REQUIRE_EQUAL(fileListInfo.StartIndex, FileListInfoTest::StartIndex)
+    DREAM3D_REQUIRE_EQUAL(fileListInfo.EndIndex, FileListInfoTest::EndIndex)
+    DREAM3D_REQUIRE_EQUAL(fileListInfo.FileExtension, FileListInfoTest::FileExtension)
+    DREAM3D_REQUIRE_EQUAL(fileListInfo.FilePrefix, FileListInfoTest::FilePrefix)
+    DREAM3D_REQUIRE_EQUAL(fileListInfo.FileSuffix, FileListInfoTest::FileSuffix)
+    DREAM3D_REQUIRE_EQUAL(fileListInfo.InputPath, FileListInfoTest::InputPath)
+    DREAM3D_REQUIRE_EQUAL(fileListInfo.Ordering, FileListInfoTest::Ordering)
+    DREAM3D_REQUIRE_EQUAL(fileListInfo.PaddingDigits, FileListInfoTest::PaddingDigits)
+    DREAM3D_REQUIRE_EQUAL(fileListInfo.StartIndex, FileListInfoTest::StartIndex)
   }
 
   // ComparisonInputs read test
@@ -1450,16 +1450,16 @@ int TestJsonReader()
     DREAM3D_REQUIRE_EQUAL(inputs.size(), 2)
 
     DREAM3D_REQUIRE_EQUAL(inputs[0].attributeArrayName, MultipleComparisonInputTest::AttributeArrayName1)
-      DREAM3D_REQUIRE_EQUAL(inputs[0].attributeMatrixName, MultipleComparisonInputTest::AttributeMatrixName1)
-      DREAM3D_REQUIRE_EQUAL(inputs[0].compOperator, MultipleComparisonInputTest::CompOperator1)
-      DREAM3D_REQUIRE_EQUAL(inputs[0].compValue, MultipleComparisonInputTest::CompValue1)
-      DREAM3D_REQUIRE_EQUAL(inputs[0].dataContainerName, MultipleComparisonInputTest::DataContainerName1)
+    DREAM3D_REQUIRE_EQUAL(inputs[0].attributeMatrixName, MultipleComparisonInputTest::AttributeMatrixName1)
+    DREAM3D_REQUIRE_EQUAL(inputs[0].compOperator, MultipleComparisonInputTest::CompOperator1)
+    DREAM3D_REQUIRE_EQUAL(inputs[0].compValue, MultipleComparisonInputTest::CompValue1)
+    DREAM3D_REQUIRE_EQUAL(inputs[0].dataContainerName, MultipleComparisonInputTest::DataContainerName1)
 
-      DREAM3D_REQUIRE_EQUAL(inputs[1].attributeArrayName, MultipleComparisonInputTest::AttributeArrayName2)
-      DREAM3D_REQUIRE_EQUAL(inputs[1].attributeMatrixName, MultipleComparisonInputTest::AttributeMatrixName2)
-      DREAM3D_REQUIRE_EQUAL(inputs[1].compOperator, MultipleComparisonInputTest::CompOperator2)
-      DREAM3D_REQUIRE_EQUAL(inputs[1].compValue, MultipleComparisonInputTest::CompValue2)
-      DREAM3D_REQUIRE_EQUAL(inputs[1].dataContainerName, MultipleComparisonInputTest::DataContainerName2)
+    DREAM3D_REQUIRE_EQUAL(inputs[1].attributeArrayName, MultipleComparisonInputTest::AttributeArrayName2)
+    DREAM3D_REQUIRE_EQUAL(inputs[1].attributeMatrixName, MultipleComparisonInputTest::AttributeMatrixName2)
+    DREAM3D_REQUIRE_EQUAL(inputs[1].compOperator, MultipleComparisonInputTest::CompOperator2)
+    DREAM3D_REQUIRE_EQUAL(inputs[1].compValue, MultipleComparisonInputTest::CompValue2)
+    DREAM3D_REQUIRE_EQUAL(inputs[1].dataContainerName, MultipleComparisonInputTest::DataContainerName2)
   }
 
   // ComparisonInput_t read test
@@ -1513,21 +1513,21 @@ int TestJsonReader()
     DataContainerArrayProxy proxy = reader->readDataContainerArrayProxy(DataContainerArrayProxyTest::Key, DataContainerArrayProxy());
     QMap<QString, DataContainerProxy> dcMap = proxy.dataContainers;
     DREAM3D_REQUIRE_EQUAL(dcMap.size(), 1)
-      DREAM3D_REQUIRE_EQUAL(dcMap.contains(DataContainerArrayProxyTest::DcProxyName), true)
+    DREAM3D_REQUIRE_EQUAL(dcMap.contains(DataContainerArrayProxyTest::DcProxyName), true)
 
-      QMap<QString, AttributeMatrixProxy> amMap = dcMap.value(DataContainerArrayProxyTest::DcProxyName).attributeMatricies;
+    QMap<QString, AttributeMatrixProxy> amMap = dcMap.value(DataContainerArrayProxyTest::DcProxyName).attributeMatricies;
     DREAM3D_REQUIRE_EQUAL(amMap.size(), 2)
     DREAM3D_REQUIRE_EQUAL(amMap.contains(DataContainerArrayProxyTest::AmProxyName1), true)
-      DREAM3D_REQUIRE_EQUAL(amMap.contains(DataContainerArrayProxyTest::AmProxyName2), true)
+    DREAM3D_REQUIRE_EQUAL(amMap.contains(DataContainerArrayProxyTest::AmProxyName2), true)
 
-      QMap<QString, DataArrayProxy> daMap1 = amMap.value(DataContainerArrayProxyTest::AmProxyName1).dataArrays;
+    QMap<QString, DataArrayProxy> daMap1 = amMap.value(DataContainerArrayProxyTest::AmProxyName1).dataArrays;
     DREAM3D_REQUIRE_EQUAL(daMap1.size(), 2)
-      DREAM3D_REQUIRE_EQUAL(daMap1.contains(DataContainerArrayProxyTest::DaProxyName1), true)
-      DREAM3D_REQUIRE_EQUAL(daMap1.contains(DataContainerArrayProxyTest::DaProxyName2), true)
+    DREAM3D_REQUIRE_EQUAL(daMap1.contains(DataContainerArrayProxyTest::DaProxyName1), true)
+    DREAM3D_REQUIRE_EQUAL(daMap1.contains(DataContainerArrayProxyTest::DaProxyName2), true)
 
     QMap<QString, DataArrayProxy> daMap2 = amMap.value(DataContainerArrayProxyTest::AmProxyName2).dataArrays;
     DREAM3D_REQUIRE_EQUAL(daMap2.size(), 1)
-      DREAM3D_REQUIRE_EQUAL(daMap2.contains(DataContainerArrayProxyTest::DaProxyName3), true)
+    DREAM3D_REQUIRE_EQUAL(daMap2.contains(DataContainerArrayProxyTest::DaProxyName3), true)
   }
 
   // DataArrayPath read test
@@ -1535,9 +1535,9 @@ int TestJsonReader()
     DataArrayPath path = reader->readDataArrayPath(DataArrayPathTest::Key, DataArrayPath());
     DREAM3D_REQUIRE_EQUAL(path.isEmpty(), false)
 
-      DREAM3D_REQUIRE_EQUAL(path.getDataContainerName(), DataArrayPathTest::DCName)
-      DREAM3D_REQUIRE_EQUAL(path.getAttributeMatrixName(), DataArrayPathTest::AMName)
-      DREAM3D_REQUIRE_EQUAL(path.getDataArrayName(), DataArrayPathTest::DAName)
+    DREAM3D_REQUIRE_EQUAL(path.getDataContainerName(), DataArrayPathTest::DCName)
+    DREAM3D_REQUIRE_EQUAL(path.getAttributeMatrixName(), DataArrayPathTest::AMName)
+    DREAM3D_REQUIRE_EQUAL(path.getDataArrayName(), DataArrayPathTest::DAName)
   }
 
   // QVector<DataArrayPath> read test
@@ -1545,13 +1545,13 @@ int TestJsonReader()
     QVector<DataArrayPath> paths = reader->readDataArrayPathVector(MultipleDataArrayPathTest::Key, QVector<DataArrayPath>());
     DREAM3D_REQUIRE_EQUAL(paths.size(), 2)
 
-      DREAM3D_REQUIRE_EQUAL(paths[0].getDataContainerName(), MultipleDataArrayPathTest::DCName1)
-      DREAM3D_REQUIRE_EQUAL(paths[0].getAttributeMatrixName(), MultipleDataArrayPathTest::AMName1)
-      DREAM3D_REQUIRE_EQUAL(paths[0].getDataArrayName(), MultipleDataArrayPathTest::DAName1)
+    DREAM3D_REQUIRE_EQUAL(paths[0].getDataContainerName(), MultipleDataArrayPathTest::DCName1)
+    DREAM3D_REQUIRE_EQUAL(paths[0].getAttributeMatrixName(), MultipleDataArrayPathTest::AMName1)
+    DREAM3D_REQUIRE_EQUAL(paths[0].getDataArrayName(), MultipleDataArrayPathTest::DAName1)
 
-      DREAM3D_REQUIRE_EQUAL(paths[1].getDataContainerName(), MultipleDataArrayPathTest::DCName2)
-      DREAM3D_REQUIRE_EQUAL(paths[1].getAttributeMatrixName(), MultipleDataArrayPathTest::AMName2)
-      DREAM3D_REQUIRE_EQUAL(paths[1].getDataArrayName(), MultipleDataArrayPathTest::DAName2)
+    DREAM3D_REQUIRE_EQUAL(paths[1].getDataContainerName(), MultipleDataArrayPathTest::DCName2)
+    DREAM3D_REQUIRE_EQUAL(paths[1].getAttributeMatrixName(), MultipleDataArrayPathTest::AMName2)
+    DREAM3D_REQUIRE_EQUAL(paths[1].getDataArrayName(), MultipleDataArrayPathTest::DAName2)
   }
 
   // DynamicTableData read test
@@ -1559,29 +1559,29 @@ int TestJsonReader()
     DynamicTableData data = reader->readDynamicTableData(DynamicTableDataTest::Key, DynamicTableData());
     DREAM3D_REQUIRE_EQUAL(data.isEmpty(), false)
 
-      QStringList rowHeaders = data.getRowHeaders();
+    QStringList rowHeaders = data.getRowHeaders();
     DREAM3D_REQUIRE_EQUAL(rowHeaders.size(), 6)
-      DREAM3D_REQUIRE_EQUAL(rowHeaders[0], DynamicTableDataTest::RowHeader1)
-      DREAM3D_REQUIRE_EQUAL(rowHeaders[1], DynamicTableDataTest::RowHeader2)
-      DREAM3D_REQUIRE_EQUAL(rowHeaders[2], DynamicTableDataTest::RowHeader3)
-      DREAM3D_REQUIRE_EQUAL(rowHeaders[3], DynamicTableDataTest::RowHeader4)
-      DREAM3D_REQUIRE_EQUAL(rowHeaders[4], DynamicTableDataTest::RowHeader5)
-      DREAM3D_REQUIRE_EQUAL(rowHeaders[5], DynamicTableDataTest::RowHeader6)
+    DREAM3D_REQUIRE_EQUAL(rowHeaders[0], DynamicTableDataTest::RowHeader1)
+    DREAM3D_REQUIRE_EQUAL(rowHeaders[1], DynamicTableDataTest::RowHeader2)
+    DREAM3D_REQUIRE_EQUAL(rowHeaders[2], DynamicTableDataTest::RowHeader3)
+    DREAM3D_REQUIRE_EQUAL(rowHeaders[3], DynamicTableDataTest::RowHeader4)
+    DREAM3D_REQUIRE_EQUAL(rowHeaders[4], DynamicTableDataTest::RowHeader5)
+    DREAM3D_REQUIRE_EQUAL(rowHeaders[5], DynamicTableDataTest::RowHeader6)
 
-      QStringList colHeaders = data.getColHeaders();
+    QStringList colHeaders = data.getColHeaders();
     DREAM3D_REQUIRE_EQUAL(colHeaders.size(), 8)
-      DREAM3D_REQUIRE_EQUAL(colHeaders[0], DynamicTableDataTest::ColumnHeader1)
-      DREAM3D_REQUIRE_EQUAL(colHeaders[1], DynamicTableDataTest::ColumnHeader2)
-      DREAM3D_REQUIRE_EQUAL(colHeaders[2], DynamicTableDataTest::ColumnHeader3)
-      DREAM3D_REQUIRE_EQUAL(colHeaders[3], DynamicTableDataTest::ColumnHeader4)
-      DREAM3D_REQUIRE_EQUAL(colHeaders[4], DynamicTableDataTest::ColumnHeader5)
-      DREAM3D_REQUIRE_EQUAL(colHeaders[5], DynamicTableDataTest::ColumnHeader6)
-      DREAM3D_REQUIRE_EQUAL(colHeaders[6], DynamicTableDataTest::ColumnHeader7)
-      DREAM3D_REQUIRE_EQUAL(colHeaders[7], DynamicTableDataTest::ColumnHeader8)
+    DREAM3D_REQUIRE_EQUAL(colHeaders[0], DynamicTableDataTest::ColumnHeader1)
+    DREAM3D_REQUIRE_EQUAL(colHeaders[1], DynamicTableDataTest::ColumnHeader2)
+    DREAM3D_REQUIRE_EQUAL(colHeaders[2], DynamicTableDataTest::ColumnHeader3)
+    DREAM3D_REQUIRE_EQUAL(colHeaders[3], DynamicTableDataTest::ColumnHeader4)
+    DREAM3D_REQUIRE_EQUAL(colHeaders[4], DynamicTableDataTest::ColumnHeader5)
+    DREAM3D_REQUIRE_EQUAL(colHeaders[5], DynamicTableDataTest::ColumnHeader6)
+    DREAM3D_REQUIRE_EQUAL(colHeaders[6], DynamicTableDataTest::ColumnHeader7)
+    DREAM3D_REQUIRE_EQUAL(colHeaders[7], DynamicTableDataTest::ColumnHeader8)
 
-      std::vector<std::vector<double> > tableData = data.getTableData();
+    std::vector<std::vector<double> > tableData = data.getTableData();
     DREAM3D_REQUIRE_EQUAL(tableData.size(), rowHeaders.size())
-      foreach(std::vector<double> vector, tableData)
+    foreach(std::vector<double> vector, tableData)
     {
       DREAM3D_REQUIRE_EQUAL(vector.size(), colHeaders.size())
       foreach(double i, vector)

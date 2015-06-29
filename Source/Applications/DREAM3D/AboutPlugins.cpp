@@ -115,11 +115,11 @@ void AboutPlugins::setupGui()
 
   if (statusItem->text() == NOT_FOUND_STRING)
   {
-	  removePluginBtn->setVisible(true);
+    removePluginBtn->setVisible(true);
   }
   else
   {
-	  removePluginBtn->setVisible(false);
+    removePluginBtn->setVisible(false);
   }
 
   connect(pluginsTable, SIGNAL(itemDoubleClicked(QTableWidgetItem*)), this, SLOT(displayDetailsWindow(QTableWidgetItem*)));
@@ -144,7 +144,7 @@ void AboutPlugins::loadPlugins(QList<PluginProxy::Pointer> proxies)
   pluginsTable->setRowCount(vector.size());
 
   // Iterate over PluginManager and add each entry to the plugin table
-  for (int row=0; row<vector.size(); row++)
+  for (int row = 0; row < vector.size(); row++)
   {
     IDREAM3DPlugin* plugin = vector.at(row);
     addPluginToTable(plugin, row);
@@ -165,9 +165,9 @@ void AboutPlugins::loadPlugins(QList<PluginProxy::Pointer> proxies)
     if ( managerNames.contains(proxyName) == false )
     {
       qDebug() << "The plugin " << proxyName << " was not found in the PluginManager.";
-    DREAM3DPlugin* plugin = new DREAM3DPlugin();
-    plugin->setPluginName(proxyName);
-    plugin->setStatus(NOT_FOUND_STRING);
+      DREAM3DPlugin* plugin = new DREAM3DPlugin();
+      plugin->setPluginName(proxyName);
+      plugin->setStatus(NOT_FOUND_STRING);
       addPlaceHolderToTable(plugin, 0);
     }
   }
@@ -290,12 +290,12 @@ void AboutPlugins::on_pluginsTable_currentItemChanged(QTableWidgetItem* current,
   if (NULL != current && current->text() == NOT_FOUND_STRING)
   {
     detailsBtn->setDisabled(true);
-	  removePluginBtn->setVisible(true);
+    removePluginBtn->setVisible(true);
   }
   else
   {
     detailsBtn->setEnabled(true);
-	  removePluginBtn->setVisible(false);
+    removePluginBtn->setVisible(false);
   }
 }
 
@@ -369,8 +369,8 @@ void AboutPlugins::addPlugin(QString pluginPath)
     QString message("The plugin did not load with the following error\n");
     message.append(loader->errorString());
     QMessageBox::critical(this, "DREAM3D Plugin Load Error",
-      message,
-      QMessageBox::Ok | QMessageBox::Default);
+                          message,
+                          QMessageBox::Ok | QMessageBox::Default);
     delete loader;
   }
 }
@@ -451,10 +451,10 @@ void AboutPlugins::writePluginCache()
     QString filePath = (*proxyIter)->getFilePath();
     bool enabled = (*proxyIter)->getEnabled();
 
-  prefs.beginGroup(pluginName);
-  prefs.setValue("Plugin Path", filePath);
-  prefs.setValue("Enabled", enabled);
-  prefs.endGroup();
+    prefs.beginGroup(pluginName);
+    prefs.setValue("Plugin Path", filePath);
+    prefs.setValue("Enabled", enabled);
+    prefs.endGroup();
   }
 
   prefs.endGroup();
@@ -495,7 +495,7 @@ QList<PluginProxy::Pointer> AboutPlugins::getPluginCheckBoxSettingsFromGUI()
   PluginManager* manager = PluginManager::Instance();
   QList<PluginProxy::Pointer> list;
 
-  for (int row=0; row<pluginsTable->rowCount(); row++)
+  for (int row = 0; row < pluginsTable->rowCount(); row++)
   {
     QString pluginName = pluginsTable->item(row, NAME_INDEX)->text();
     IDREAM3DPlugin* plugin = manager->findPlugin(pluginName);

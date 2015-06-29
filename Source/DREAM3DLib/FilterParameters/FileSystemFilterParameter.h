@@ -41,30 +41,30 @@
 
 class DREAM3DLib_EXPORT FileSystemFilterParameter : public FilterParameter
 {
-public:
-  DREAM3D_SHARED_POINTERS(FileSystemFilterParameter)
+  public:
+    DREAM3D_SHARED_POINTERS(FileSystemFilterParameter)
     DREAM3D_STATIC_NEW_MACRO(FileSystemFilterParameter)
     DREAM3D_TYPE_MACRO_SUPER(FileSystemFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-    const QString& widgetType, const QVariant& defaultValue,
-    Category category,
-    const QString& units = QString(""),
-    const QString& fileExtension = QString(""),
-    const QString& fileType = QString(""),
-    int groupIndex = -1);
+                       const QString& widgetType, const QVariant& defaultValue,
+                       Category category,
+                       const QString& units = QString(""),
+                       const QString& fileExtension = QString(""),
+                       const QString& fileType = QString(""),
+                       int groupIndex = -1);
 
-  virtual ~FileSystemFilterParameter();
+    virtual ~FileSystemFilterParameter();
 
-  DREAM3D_INSTANCE_STRING_PROPERTY(FileExtension)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FileExtension)
     DREAM3D_INSTANCE_STRING_PROPERTY(FileType)
 
-protected:
-  FileSystemFilterParameter();
+  protected:
+    FileSystemFilterParameter();
 
-private:
-  FileSystemFilterParameter(const FileSystemFilterParameter&); // Copy Constructor Not Implemented
-  void operator=(const FileSystemFilterParameter&); // Operator '=' Not Implemented
+  private:
+    FileSystemFilterParameter(const FileSystemFilterParameter&); // Copy Constructor Not Implemented
+    void operator=(const FileSystemFilterParameter&); // Operator '=' Not Implemented
 };
 
 #endif /* _FileSystemFilterParameter_H_ */

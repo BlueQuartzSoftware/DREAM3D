@@ -62,13 +62,13 @@ EMMPMInputParser::~EMMPMInputParser()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EMMPMInputParser::parseGrayTable(const std::string &values, EMMPM_Data* inputs)
+int EMMPMInputParser::parseGrayTable(const std::string& values, EMMPM_Data* inputs)
 {
   std::string::size_type pos = values.find(",", 0);
 
 
   size_t index = 0;
- // unsigned int* cPtr = &(inputs->grayTable[index]);
+// unsigned int* cPtr = &(inputs->grayTable[index]);
 
   int n = sscanf(values.substr(0, pos).c_str(), "%d", &(inputs->colorTable[index]) );
   if (n != 1)
@@ -80,15 +80,15 @@ int EMMPMInputParser::parseGrayTable(const std::string &values, EMMPM_Data* inpu
   ++index;
   while(pos != std::string::npos && pos != values.size() - 1)
   {
-    n = sscanf(values.substr(pos+1).c_str(), "%d", &(inputs->colorTable[index]) );
-    pos = values.find(",", pos+1);
+    n = sscanf(values.substr(pos + 1).c_str(), "%d", &(inputs->colorTable[index]) );
+    pos = values.find(",", pos + 1);
     ++index;
   }
 
   if (index != static_cast<size_t>(inputs->classes))
   {
     std::cout << "Mismatch between the number of classes declared [" << inputs->classes <<
-        "] and the number of values declared for the gray level table. [" << index << "]. Both should match." << std::endl;
+              "] and the number of values declared for the gray level table. [" << index << "]. Both should match." << std::endl;
     return -1;
   }
 
@@ -99,7 +99,7 @@ int EMMPMInputParser::parseGrayTable(const std::string &values, EMMPM_Data* inpu
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EMMPMInputParser::parseInitCoords(const std::string &coords, EMMPM_Data* inputs)
+int EMMPMInputParser::parseInitCoords(const std::string& coords, EMMPM_Data* inputs)
 {
   std::string::size_type pos = coords.find(":", 0);
 
@@ -117,15 +117,15 @@ int EMMPMInputParser::parseInitCoords(const std::string &coords, EMMPM_Data* inp
   while(pos != std::string::npos && pos != coords.size() - 1)
   {
     cPtr = inputs->initCoords[index];
-    n = sscanf(coords.substr(pos+1).c_str(), "%d,%d,%d,%d", &(cPtr[0]), &(cPtr[1]), &(cPtr[2]), &(cPtr[3]) );
-    pos = coords.find(":", pos+1);
+    n = sscanf(coords.substr(pos + 1).c_str(), "%d,%d,%d,%d", &(cPtr[0]), &(cPtr[1]), &(cPtr[2]), &(cPtr[3]) );
+    pos = coords.find(":", pos + 1);
     ++index;
   }
 
   if (index != static_cast<size_t>(inputs->classes) )
   {
     std::cout << "Mismatch between the number of classes declared [" << inputs->classes <<
-        "] and the number of sets of coordinated to use for initialization [" << index << "]" << std::endl;
+              "] and the number of sets of coordinated to use for initialization [" << index << "]" << std::endl;
     return -1;
   }
   return 0;
@@ -134,7 +134,7 @@ int EMMPMInputParser::parseInitCoords(const std::string &coords, EMMPM_Data* inp
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EMMPMInputParser::parseMuSigmaValues(const std::string &values, EMMPM_Data* inputs)
+int EMMPMInputParser::parseMuSigmaValues(const std::string& values, EMMPM_Data* inputs)
 {
   std::string::size_type pos = values.find(":", 0);
 
@@ -159,8 +159,8 @@ int EMMPMInputParser::parseMuSigmaValues(const std::string &values, EMMPM_Data* 
   {
     mPtr++;
     vPtr++;
-    n = sscanf(values.substr(pos+1).c_str(), "%f,%f", &(mPtr[0]), &(vPtr[0]) );
-    pos = values.find(":", pos+1);
+    n = sscanf(values.substr(pos + 1).c_str(), "%f,%f", &(mPtr[0]), &(vPtr[0]) );
+    pos = values.find(":", pos + 1);
     ++index;
   }
 
@@ -174,7 +174,7 @@ int EMMPMInputParser::parseMuSigmaValues(const std::string &values, EMMPM_Data* 
   if (index != static_cast<size_t>(inputs->classes) )
   {
     std::cout << "Mismatch between the number of classes declared [" << inputs->classes <<
-        "] and the number of sets of Mean/Variance to use for initialization [" << index << "]" << std::endl;
+              "] and the number of sets of Mean/Variance to use for initialization [" << index << "]" << std::endl;
     return -1;
   }
   return 0;
@@ -183,7 +183,7 @@ int EMMPMInputParser::parseMuSigmaValues(const std::string &values, EMMPM_Data* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-char* EMMPMInputParser::copyFilenameToNewCharBuffer(const std::string &fname)
+char* EMMPMInputParser::copyFilenameToNewCharBuffer(const std::string& fname)
 {
   std::string::size_type size = fname.size() + 1;
   char* buf = NULL;
@@ -199,7 +199,7 @@ char* EMMPMInputParser::copyFilenameToNewCharBuffer(const std::string &fname)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EMMPMInputParser::parseCLIArguments(int argc, char *argv[], EMMPM_Data* inputs)
+int EMMPMInputParser::parseCLIArguments(int argc, char* argv[], EMMPM_Data* inputs)
 {
   if ( NULL == inputs)
   {
@@ -269,7 +269,8 @@ int EMMPMInputParser::parseCLIArguments(int argc, char *argv[], EMMPM_Data* inpu
     int error = 0;
     cmd.parse(argc, argv);
     inputs->in_beta = in_beta.getValue();
-    for(int i = 0; i < EMMPM_MAX_CLASSES; i++) {
+    for(int i = 0; i < EMMPM_MAX_CLASSES; i++)
+    {
       inputs->w_gamma[i] = in_gamma.getValue();
     }
     inputs->mpmIterations = in_mpmIter.getValue();
@@ -292,7 +293,8 @@ int EMMPMInputParser::parseCLIArguments(int argc, char *argv[], EMMPM_Data* inpu
       return -1;
     }
 
-    if (inputs->initType == EMMPM_UserInitArea) {
+    if (inputs->initType == EMMPM_UserInitArea)
+    {
       error = parseInitCoords(initcoords.getValue(), inputs);
       if (error < 0)
       {
@@ -324,12 +326,12 @@ int EMMPMInputParser::parseCLIArguments(int argc, char *argv[], EMMPM_Data* inpu
       int n = inputs->classes - 1;
       for (int value = 0; value < inputs->classes; ++value)
       {
-       unsigned int argb = 0xFF000000; // Black
-       unsigned char* ptr = reinterpret_cast<unsigned char*>(&argb);
-       ptr[1] = value * 255 / n;
-       ptr[2] = value * 255 / n;
-       ptr[3] = value * 255 / n;
-       inputs->colorTable[value] = argb;
+        unsigned int argb = 0xFF000000; // Black
+        unsigned char* ptr = reinterpret_cast<unsigned char*>(&argb);
+        ptr[1] = value * 255 / n;
+        ptr[2] = value * 255 / n;
+        ptr[3] = value * 255 / n;
+        inputs->colorTable[value] = argb;
       }
     }
 
@@ -349,7 +351,7 @@ int EMMPMInputParser::parseCLIArguments(int argc, char *argv[], EMMPM_Data* inpu
       inputs->ccostLoopDelay = em_loop_delay.getValue();
     }
   }
-  catch (TCLAP::ArgException &e)
+  catch (TCLAP::ArgException& e)
   {
     std::cerr << " error: " << e.error() << " for arg " << e.argId() << std::endl;
     std::cout << "** Unknown Arguments. Displaying help listing instead. **" << std::endl;

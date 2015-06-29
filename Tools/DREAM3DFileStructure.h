@@ -30,7 +30,7 @@ class DREAM3DFileStructure : public QObject
     virtual ~DREAM3DFileStructure();
 
 
-    static DataContainerArray::Pointer ReadFileStructure(const QString &filePath);
+    static DataContainerArray::Pointer ReadFileStructure(const QString& filePath);
 
   protected:
     DREAM3DFileStructure();

@@ -81,7 +81,7 @@ class DREAM3DWidgetsLib_EXPORT ChoiceWidget : public FilterParameterWidget, priv
 
 
   public slots:
-    void widgetChanged(int index, bool emitParametersChanged=true);
+    void widgetChanged(int index, bool emitParametersChanged = true);
     void filterNeedsInputParameters(AbstractFilter* filter); // When the filter is ready for us to update its input parameter(s) that we are responsible for
     void beforePreflight(); // Called just before the "dataCheck()" is called
     void afterPreflight(); // Called just after the dataCheck() is called.

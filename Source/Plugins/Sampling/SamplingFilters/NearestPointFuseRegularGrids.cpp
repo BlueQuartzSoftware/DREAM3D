@@ -195,7 +195,7 @@ void NearestPointFuseRegularGrids::execute()
     sampleDims[i] = static_cast<int64_t>(_sampleDims[i]);
   }
 
-  int64_t numRefTuples = refDims[0]*refDims[1]*refDims[2];
+  int64_t numRefTuples = refDims[0] * refDims[1] * refDims[2];
 
   float x = 0.0f, y = 0.0f, z = 0.0f;
   int64_t col = 0, row = 0, plane = 0;
@@ -228,13 +228,13 @@ void NearestPointFuseRegularGrids::execute()
         x = (k * refRes[0] + refOrigin[0]);
         y = (j * refRes[1] + refOrigin[1]);
         z = (i * refRes[2] + refOrigin[2]);
-        if ((x - sampleOrigin[0]) < 0) outside = true;
-        else col = int64_t((x - sampleOrigin[0]) / sampleRes[0]);
-        if ((y - sampleOrigin[1]) < 0) outside = true;
-        else row = int64_t((y - sampleOrigin[1]) / sampleRes[1]);
-        if ((z - sampleOrigin[2]) < 0) outside = true;
-        else plane = int64_t((z - sampleOrigin[2]) / sampleRes[2]);
-        if (col > sampleDims[0] ||  row > sampleDims[1] ||  plane > sampleDims[2]) outside = true;
+        if ((x - sampleOrigin[0]) < 0) { outside = true; }
+        else { col = int64_t((x - sampleOrigin[0]) / sampleRes[0]); }
+        if ((y - sampleOrigin[1]) < 0) { outside = true; }
+        else { row = int64_t((y - sampleOrigin[1]) / sampleRes[1]); }
+        if ((z - sampleOrigin[2]) < 0) { outside = true; }
+        else { plane = int64_t((z - sampleOrigin[2]) / sampleRes[2]); }
+        if (col > sampleDims[0] ||  row > sampleDims[1] ||  plane > sampleDims[2]) { outside = true; }
         if (outside == false)
         {
           sampleIndex = (plane * sampleDims[0] * sampleDims[1]) + (row * sampleDims[0]) + col;

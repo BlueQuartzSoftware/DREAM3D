@@ -259,9 +259,9 @@ void NodesTrianglesToStl::execute()
     }
     nodeIdToIndex[nodeId] = i;
     // nodeKindArray[nodeId] = nodeKind;
-    nodes[nodeId*3] = pos[0];
-    nodes[nodeId*3+1] = pos[1];
-    nodes[nodeId*3+2] = pos[2];
+    nodes[nodeId * 3] = pos[0];
+    nodes[nodeId * 3 + 1] = pos[1];
+    nodes[nodeId * 3 + 2] = pos[2];
   }
 
   // column 1 = triangle id, starts from zero
@@ -282,9 +282,9 @@ void NodesTrianglesToStl::execute()
   {
     // Read from the Input Triangles Temp File
     nread = fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData + 1, tData + 2, tData + 3, tData + 4, tData + 5, tData + 6, tData + 7, tData + 8);
-    triangles[i*3] = tData[1];
-    triangles[i*3+1] = tData[2];
-    triangles[i*3+2] = tData[3];
+    triangles[i * 3] = tData[1];
+    triangles[i * 3 + 1] = tData[2];
+    triangles[i * 3 + 2] = tData[3];
     faceLabels[i * 2] = tData[7];
     faceLabels[i * 2 + 1] = tData[8];
     uniqueSpins.insert(tData[7]);
@@ -338,13 +338,13 @@ void NodesTrianglesToStl::execute()
     for(int t = 0; t < nTriangles; ++t)
     {
       // Get the true indices of the 3 nodes
-      int nId0 = nodeIdToIndex[triangles[t*3]];
-      int nId1 = nodeIdToIndex[triangles[t*3+1]];
-      int nId2 = nodeIdToIndex[triangles[t*3+2]];
+      int nId0 = nodeIdToIndex[triangles[t * 3]];
+      int nId1 = nodeIdToIndex[triangles[t * 3 + 1]];
+      int nId2 = nodeIdToIndex[triangles[t * 3 + 2]];
 
-      vert1[0] = static_cast<float>(nodes[nId0*3]);
-      vert1[1] = static_cast<float>(nodes[nId0*3+1]);
-      vert1[2] = static_cast<float>(nodes[nId0*3+2]);
+      vert1[0] = static_cast<float>(nodes[nId0 * 3]);
+      vert1[1] = static_cast<float>(nodes[nId0 * 3 + 1]);
+      vert1[2] = static_cast<float>(nodes[nId0 * 3 + 2]);
 
       if (faceLabels[t * 2] == spin)
       {
@@ -363,13 +363,13 @@ void NodesTrianglesToStl::execute()
         continue; // We do not match either spin so move to the next triangle
       }
 
-      vert2[0] = static_cast<float>(nodes[nId1*3]);
-      vert2[1] = static_cast<float>(nodes[nId1*3+1]);
-      vert2[2] = static_cast<float>(nodes[nId1*3+2]);
+      vert2[0] = static_cast<float>(nodes[nId1 * 3]);
+      vert2[1] = static_cast<float>(nodes[nId1 * 3 + 1]);
+      vert2[2] = static_cast<float>(nodes[nId1 * 3 + 2]);
 
-      vert3[0] = static_cast<float>(nodes[nId2*3]);
-      vert3[1] = static_cast<float>(nodes[nId2*3+1]);
-      vert3[2] = static_cast<float>(nodes[nId2*3+2]);
+      vert3[0] = static_cast<float>(nodes[nId2 * 3]);
+      vert3[1] = static_cast<float>(nodes[nId2 * 3 + 1]);
+      vert3[2] = static_cast<float>(nodes[nId2 * 3 + 2]);
 
       //
       // Compute the normal

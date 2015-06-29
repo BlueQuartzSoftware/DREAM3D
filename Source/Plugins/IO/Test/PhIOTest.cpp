@@ -61,7 +61,7 @@ void delay(int secs)
 {
   QTime dieTime = QTime::currentTime().addSecs(secs);
   while (QTime::currentTime() < dieTime)
-    QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+  { QCoreApplication::processEvents(QEventLoop::AllEvents, 100); }
 }
 
 // -----------------------------------------------------------------------------
@@ -135,16 +135,16 @@ int TestPhWriter()
       AbstractFilter::Pointer phWriter = filterFactory->create();
 
       DataArrayPath path = DataArrayPath(DREAM3D::Defaults::DataContainerName,
-        DREAM3D::Defaults::CellAttributeMatrixName,
-        DREAM3D::CellData::FeatureIds);
+                                         DREAM3D::Defaults::CellAttributeMatrixName,
+                                         DREAM3D::CellData::FeatureIds);
       QVariant var;
       var.setValue(path);
       bool propWasSet = phWriter->setProperty("FeatureIdsArrayPath", var);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-        propWasSet = phWriter->setProperty("OutputFile", UnitTest::PhIOTest::TestFile);
+      propWasSet = phWriter->setProperty("OutputFile", UnitTest::PhIOTest::TestFile);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-        pipeline->pushBack(phWriter);
+      pipeline->pushBack(phWriter);
     }
     else
     {
@@ -187,16 +187,16 @@ int TestPhWriter()
       AbstractFilter::Pointer phWriter = filterFactory->create();
 
       DataArrayPath path = DataArrayPath(DREAM3D::Defaults::DataContainerName,
-        DREAM3D::Defaults::CellAttributeMatrixName,
-        DREAM3D::CellData::FeatureIds);
+                                         DREAM3D::Defaults::CellAttributeMatrixName,
+                                         DREAM3D::CellData::FeatureIds);
       QVariant var;
       var.setValue(path);
       bool propWasSet = phWriter->setProperty("FeatureIdsArrayPath", var);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-        propWasSet = phWriter->setProperty("OutputFile", UnitTest::PhIOTest::TestFile2);
+      propWasSet = phWriter->setProperty("OutputFile", UnitTest::PhIOTest::TestFile2);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-        pipeline->pushBack(phWriter);
+      pipeline->pushBack(phWriter);
     }
     else
     {
@@ -310,10 +310,10 @@ int TestPhReaderCache()
     if (NULL != filterFactory.get())
     {
       // If we get this far, the Factory is good so creating the filter should not fail unless something has gone horribly wrong in which case the system is going to come down quickly after this.
-      phReader = filterFactory->create();		// Create the reader for the first time
+      phReader = filterFactory->create();   // Create the reader for the first time
       bool propWasSet = phReader->setProperty("InputFile", UnitTest::PhIOTest::TestFile);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-        phReader->setDataContainerArray(dca);
+      phReader->setDataContainerArray(dca);
       phReader->preflight();
       int err = phReader->getErrorCondition();
       DREAM3D_REQUIRE_EQUAL(err, 0);
@@ -333,7 +333,7 @@ int TestPhReaderCache()
     DataContainer::Pointer m = phReader->getDataContainerArray()->getDataContainer(DREAM3D::Defaults::ImageDataContainerName);
     DREAM3D_REQUIRED_PTR(m.get(), != , NULL)
 
-      m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
+    m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
     DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize);
     DREAM3D_REQUIRE_EQUAL(ny, UnitTest::FeatureIdsTest::YSize);
     DREAM3D_REQUIRE_EQUAL(nz, UnitTest::FeatureIdsTest::ZSize);
@@ -351,7 +351,7 @@ int TestPhReaderCache()
     {
       bool propWasSet = phReader->setProperty("InputFile", UnitTest::PhIOTest::TestFile);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-        phReader->setDataContainerArray(dca);
+      phReader->setDataContainerArray(dca);
       phReader->preflight();
       int err = phReader->getErrorCondition();
       DREAM3D_REQUIRE_EQUAL(err, 0);
@@ -371,7 +371,7 @@ int TestPhReaderCache()
     DataContainer::Pointer m = phReader->getDataContainerArray()->getDataContainer(DREAM3D::Defaults::ImageDataContainerName);
     DREAM3D_REQUIRED_PTR(m.get(), != , NULL)
 
-      m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
+    m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
     DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize);
     DREAM3D_REQUIRE_EQUAL(ny, UnitTest::FeatureIdsTest::YSize);
     DREAM3D_REQUIRE_EQUAL(nz, UnitTest::FeatureIdsTest::ZSize);
@@ -389,7 +389,7 @@ int TestPhReaderCache()
     {
       bool propWasSet = phReader->setProperty("InputFile", UnitTest::PhIOTest::TestFile2);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-        phReader->setDataContainerArray(dca);
+      phReader->setDataContainerArray(dca);
       phReader->preflight();
       int err = phReader->getErrorCondition();
       DREAM3D_REQUIRE_EQUAL(err, 0);
@@ -409,7 +409,7 @@ int TestPhReaderCache()
     DataContainer::Pointer m = phReader->getDataContainerArray()->getDataContainer(DREAM3D::Defaults::ImageDataContainerName);
     DREAM3D_REQUIRED_PTR(m.get(), != , NULL)
 
-      m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
+    m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
     DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize);
     DREAM3D_REQUIRE_EQUAL(ny, UnitTest::FeatureIdsTest::YSize);
     DREAM3D_REQUIRE_EQUAL(nz, UnitTest::FeatureIdsTest::ZSize);
@@ -421,7 +421,7 @@ int TestPhReaderCache()
 
   // Reading the same file, but the contents changed outside the program
   {
-    delay(1);	// This delay needs to be here to make the lastModified and lastRead logic in the reader to work for all OSes
+    delay(1); // This delay needs to be here to make the lastModified and lastRead logic in the reader to work for all OSes
     // Change the contents of the file to be read
     {
       QFile file(UnitTest::PhIOTest::TestFile2);
@@ -438,7 +438,7 @@ int TestPhReaderCache()
     {
       bool propWasSet = phReader->setProperty("InputFile", UnitTest::PhIOTest::TestFile2);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-        phReader->setDataContainerArray(dca);
+      phReader->setDataContainerArray(dca);
       phReader->preflight();
       int err = phReader->getErrorCondition();
       DREAM3D_REQUIRE_EQUAL(err, 0);
@@ -458,7 +458,7 @@ int TestPhReaderCache()
     DataContainer::Pointer m = phReader->getDataContainerArray()->getDataContainer(DREAM3D::Defaults::ImageDataContainerName);
     DREAM3D_REQUIRED_PTR(m.get(), != , NULL)
 
-      m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
+    m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
     DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize);
     DREAM3D_REQUIRE_EQUAL(ny, UnitTest::FeatureIdsTest::YSize);
     DREAM3D_REQUIRE_EQUAL(nz, UnitTest::FeatureIdsTest::ZSize);
@@ -480,7 +480,7 @@ int TestPhReaderCache()
       {
         bool propWasSet = phReader->setProperty("InputFile", UnitTest::PhIOTest::TestFile2);
         DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-          phReader->setDataContainerArray(dca);
+        phReader->setDataContainerArray(dca);
         phReader->preflight();
         int err = phReader->getErrorCondition();
         DREAM3D_REQUIRE_EQUAL(err, 0);
@@ -500,7 +500,7 @@ int TestPhReaderCache()
     DataContainer::Pointer m = phReader->getDataContainerArray()->getDataContainer(DREAM3D::Defaults::ImageDataContainerName);
     DREAM3D_REQUIRED_PTR(m.get(), != , NULL)
 
-      m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
+    m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
     DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize);
     DREAM3D_REQUIRE_EQUAL(ny, UnitTest::FeatureIdsTest::YSize);
     DREAM3D_REQUIRE_EQUAL(nz, UnitTest::FeatureIdsTest::ZSize);

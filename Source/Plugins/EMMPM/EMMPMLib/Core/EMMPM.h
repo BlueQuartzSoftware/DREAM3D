@@ -53,7 +53,7 @@
 
 class EMMPMLib_EXPORT EMMPM : public Observable
 {
-	Q_OBJECT;
+    Q_OBJECT;
   public:
     DREAM3D_SHARED_POINTERS(EMMPM);
     DREAM3D_STATIC_NEW_MACRO(EMMPM);
@@ -65,14 +65,14 @@ class EMMPMLib_EXPORT EMMPM : public Observable
     DREAM3D_INSTANCE_PROPERTY(EMMPM_Data::Pointer, Data);
     DREAM3D_INSTANCE_PROPERTY(InitializationFunction::Pointer, InitializationFunction)
     DREAM3D_INSTANCE_PROPERTY(StatsDelegate*, StatsDelegate)
-	DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
-	DREAM3D_INSTANCE_PROPERTY(QString, MessagePrefix)
-	
-	/**
-	* @brief This returns a string that is displayed in the GUI. It should be readable
-	* and understandable by humans.
-	*/
-	virtual const QString getHumanLabel();
+    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
+    DREAM3D_INSTANCE_PROPERTY(QString, MessagePrefix)
+
+    /**
+    * @brief This returns a string that is displayed in the GUI. It should be readable
+    * and understandable by humans.
+    */
+    virtual const QString getHumanLabel();
 
     /**
      * @brief Main entry point for running the EMMPM algorithm. The Inputs and
@@ -83,9 +83,9 @@ class EMMPMLib_EXPORT EMMPM : public Observable
      * @param data The Structure to use
      * @param callbacks The list of callback functions
      */
-     void execute();
+    void execute();
 
-     void printData(EMMPM_Data::Pointer data);
+    void printData(EMMPM_Data::Pointer data);
 
   protected:
     EMMPM();

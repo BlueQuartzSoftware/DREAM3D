@@ -46,7 +46,7 @@
 //
 // -----------------------------------------------------------------------------
 DREAM3DSplitter::DREAM3DSplitter(QWidget* parent) :
-QSplitter(parent)
+  QSplitter(parent)
 {
 
 }
@@ -64,7 +64,7 @@ DREAM3DSplitter::~DREAM3DSplitter()
 // -----------------------------------------------------------------------------
 QSplitterHandle* DREAM3DSplitter::createHandle()
 {
-    return new DREAM3DSplitterHandle(orientation(), this);
+  return new DREAM3DSplitterHandle(orientation(), this);
 }
 
 

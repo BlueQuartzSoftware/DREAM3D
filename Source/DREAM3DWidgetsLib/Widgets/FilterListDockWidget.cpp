@@ -126,7 +126,7 @@ void FilterListDockWidget::setupSearchField()
     m_ActionAllWords->setChecked(m_SearchAllWords);
     filterSearch->addAction(m_ActionAllWords);
     connect(m_ActionAllWords, SIGNAL(toggled(bool)),
-      this, SLOT(searchFieldsChanged(bool)));
+            this, SLOT(searchFieldsChanged(bool)));
     lineEditMenu->addAction(m_ActionAllWords);
   }
 
@@ -138,7 +138,7 @@ void FilterListDockWidget::setupSearchField()
     m_ActionAnyWords->setChecked(m_SearchAnyWords);
     filterSearch->addAction(m_ActionAnyWords);
     connect(m_ActionAnyWords, SIGNAL(toggled(bool)),
-      this, SLOT(searchFieldsChanged(bool)));
+            this, SLOT(searchFieldsChanged(bool)));
     lineEditMenu->addAction(m_ActionAnyWords);
   }
 
@@ -150,7 +150,7 @@ void FilterListDockWidget::setupSearchField()
     m_ActionExactPhrase->setChecked(m_SearchExactPhrase);
     filterSearch->addAction(m_ActionExactPhrase);
     connect(m_ActionExactPhrase, SIGNAL(toggled(bool)),
-      this, SLOT(searchFieldsChanged(bool)));
+            this, SLOT(searchFieldsChanged(bool)));
     lineEditMenu->addAction(m_ActionExactPhrase);
   }
 }
@@ -158,7 +158,7 @@ void FilterListDockWidget::setupSearchField()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterListDockWidget::showContextMenuForWidget(const QPoint &pos)
+void FilterListDockWidget::showContextMenuForWidget(const QPoint& pos)
 {
   // Clear the existing context menu
   m_ContextMenu->clear();
@@ -339,7 +339,7 @@ QString FilterListDockWidget::deserializeString(QList<QString> list, char token)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterListDockWidget::matchFilter(QMapIterator<QString, IFilterFactory::Pointer> iter, QString fullWord, int &filterCount)
+void FilterListDockWidget::matchFilter(QMapIterator<QString, IFilterFactory::Pointer> iter, QString fullWord, int& filterCount)
 {
   QList<QString> wordList = serializeString(fullWord, ' ');
   fullWord = deserializeString(wordList, ' ');
@@ -498,7 +498,7 @@ void FilterListDockWidget::on_filterList_itemDoubleClicked( QListWidgetItem* ite
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterListDockWidget::keyPressEvent(QKeyEvent * event)
+void FilterListDockWidget::keyPressEvent(QKeyEvent* event)
 {
   if (searchInProgress() == true)
   {

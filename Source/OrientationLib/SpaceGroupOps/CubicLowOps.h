@@ -84,7 +84,7 @@ class OrientationLib_EXPORT CubicLowOps : public SpaceGroupOps
     virtual FOrientArrayType getODFFZRod(FOrientArrayType rod);
     virtual FOrientArrayType getMDFFZRod(FOrientArrayType rod);
     virtual void getNearestQuat(QuatF& q1, QuatF& q2);
-   virtual int getMisoBin(FOrientArrayType rod);
+    virtual int getMisoBin(FOrientArrayType rod);
     virtual bool inUnitTriangle(float eta, float chi);
     virtual FOrientArrayType determineEulerAngles(int choose);
     virtual FOrientArrayType randomizeEulerAngles(FOrientArrayType euler);

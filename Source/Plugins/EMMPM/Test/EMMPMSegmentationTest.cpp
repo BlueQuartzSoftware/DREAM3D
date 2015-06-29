@@ -124,7 +124,7 @@ void createAndAddReadImageFilter(FilterPipeline::Pointer pipeline, QString input
     propWasSet = filter->setProperty("InputFileName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-      pipeline->pushBack(filter);
+    pipeline->pushBack(filter);
   }
   else
   {
@@ -155,11 +155,11 @@ void createAndAddConvertRGBToGrayscaleFilter(FilterPipeline::Pointer pipeline, D
     propWasSet = filter->setProperty("SelectedCellArrayArrayPath", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-      var.setValue(name);
+    var.setValue(name);
     propWasSet = filter->setProperty("NewCellArrayName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-      pipeline->pushBack(filter);
+    pipeline->pushBack(filter);
   }
   else
   {
@@ -190,11 +190,11 @@ void createAndAddEMMPMFilter(FilterPipeline::Pointer pipeline, DataArrayPath inp
     propWasSet = filter->setProperty("InputDataArrayPath", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-      var.setValue(output);
+    var.setValue(output);
     propWasSet = filter->setProperty("OutputDataArrayPath", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-      pipeline->pushBack(filter);
+    pipeline->pushBack(filter);
   }
   else
   {
@@ -225,7 +225,7 @@ void createAndAddMultiEMMPMFilter(FilterPipeline::Pointer pipeline, QVector<Data
     propWasSet = filter->setProperty("InputDataArrayVector", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-      pipeline->pushBack(filter);
+    pipeline->pushBack(filter);
   }
   else
   {
@@ -266,7 +266,7 @@ int TestEMMPMSegmentation()
     DREAM3D_REQUIRE_EQUAL(pipeline->getErrorCondition(), COMPONENTS_DONT_MATCH)
   }
 
-    return EXIT_SUCCESS;
+  return EXIT_SUCCESS;
 }
 
 // -----------------------------------------------------------------------------

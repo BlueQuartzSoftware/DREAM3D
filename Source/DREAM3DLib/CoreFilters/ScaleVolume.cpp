@@ -71,9 +71,9 @@ class UpdateVerticesImpl
     {
       for (size_t i = start; i < end; i++)
       {
-        m_Nodes[3*i] = m_Min[0] + (m_Nodes[3*i] - m_Min[0]) * m_ScaleFactor.x;
-        m_Nodes[3*i+1] = m_Min[1] + (m_Nodes[3*i+1] - m_Min[1]) * m_ScaleFactor.y;
-        m_Nodes[3*i+2] = m_Min[2] + (m_Nodes[3*i+2] - m_Min[2]) * m_ScaleFactor.z;
+        m_Nodes[3 * i] = m_Min[0] + (m_Nodes[3 * i] - m_Min[0]) * m_ScaleFactor.x;
+        m_Nodes[3 * i + 1] = m_Min[1] + (m_Nodes[3 * i + 1] - m_Min[1]) * m_ScaleFactor.y;
+        m_Nodes[3 * i + 2] = m_Min[2] + (m_Nodes[3 * i + 2] - m_Min[2]) * m_ScaleFactor.z;
       }
     }
 
@@ -213,30 +213,30 @@ void ScaleVolume::updateSurfaceMesh()
   int64_t count = geom2D->getNumberOfVertices();
   for (int64_t i = 0; i < count; i++)
   {
-    if (nodes[3*i] > max[0])
+    if (nodes[3 * i] > max[0])
     {
-      max[0] = nodes[3*i];
+      max[0] = nodes[3 * i];
     }
-    if (nodes[3*i+1] > max[1])
+    if (nodes[3 * i + 1] > max[1])
     {
-      max[1] = nodes[3*i+1];
+      max[1] = nodes[3 * i + 1];
     }
-    if (nodes[3*i+2] > max[2])
+    if (nodes[3 * i + 2] > max[2])
     {
-      max[2] = nodes[3*i+2];
+      max[2] = nodes[3 * i + 2];
     }
 
-    if (nodes[3*i] < min[0])
+    if (nodes[3 * i] < min[0])
     {
-      min[0] = nodes[3*i];
+      min[0] = nodes[3 * i];
     }
-    if (nodes[3*i+1] < min[1])
+    if (nodes[3 * i + 1] < min[1])
     {
-      min[1] = nodes[3*i+1];
+      min[1] = nodes[3 * i + 1];
     }
-    if (nodes[3*i+2] < min[2])
+    if (nodes[3 * i + 2] < min[2])
     {
-      min[2] = nodes[3*i+2];
+      min[2] = nodes[3 * i + 2];
     }
   }
 

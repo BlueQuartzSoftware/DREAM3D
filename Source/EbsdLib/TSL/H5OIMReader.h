@@ -140,7 +140,7 @@ class EbsdLib_EXPORT H5OIMReader : public AngReader
      * @brief Returns a vector of AngPhase objects corresponding to the phases
      * present in the file
      */
-   // QVector<AngPhase::Pointer> getPhases() { return m_Phases; }
+    // QVector<AngPhase::Pointer> getPhases() { return m_Phases; }
 
     /**
      * @brief Sets the names of the arrays to read out of the file
@@ -178,7 +178,7 @@ class EbsdLib_EXPORT H5OIMReader : public AngReader
     int readData(hid_t parId);
 
   private:
-   // QVector<AngPhase::Pointer> m_Phases;
+    // QVector<AngPhase::Pointer> m_Phases;
     QSet<QString>         m_ArrayNames;
     bool                  m_ReadAllArrays;
 

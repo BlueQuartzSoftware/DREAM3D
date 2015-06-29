@@ -44,32 +44,32 @@
 
 class DataBundleSelectionWidgetCodeGenerator : public FPCodeGenerator
 {
-public:
-  DREAM3D_SHARED_POINTERS(DataBundleSelectionWidgetCodeGenerator)
+  public:
+    DREAM3D_SHARED_POINTERS(DataBundleSelectionWidgetCodeGenerator)
 
     static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
-  {
-    Pointer sharedPtr(new DataBundleSelectionWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
-    return sharedPtr;
-  }
+    {
+      Pointer sharedPtr(new DataBundleSelectionWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
+      return sharedPtr;
+    }
 
-  virtual ~DataBundleSelectionWidgetCodeGenerator();
+    virtual ~DataBundleSelectionWidgetCodeGenerator();
 
-  virtual QString generateSetupFilterParameters();
+    virtual QString generateSetupFilterParameters();
 
-  virtual QString generateReadFilterParameters();
+    virtual QString generateReadFilterParameters();
 
-  virtual QString generateDataCheck();
+    virtual QString generateDataCheck();
 
-  virtual QString generateFilterParameters();
+    virtual QString generateFilterParameters();
 
-protected:
-  DataBundleSelectionWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
+  protected:
+    DataBundleSelectionWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
-private:
+  private:
 
-  DataBundleSelectionWidgetCodeGenerator(const DataBundleSelectionWidgetCodeGenerator&); // Copy Constructor Not Implemented
-  void operator=(const DataBundleSelectionWidgetCodeGenerator&); // Operator '=' Not Implemented
+    DataBundleSelectionWidgetCodeGenerator(const DataBundleSelectionWidgetCodeGenerator&); // Copy Constructor Not Implemented
+    void operator=(const DataBundleSelectionWidgetCodeGenerator&); // Operator '=' Not Implemented
 };
 
 #endif /* DataBundleSelectionWidgetCodeGenerator_H_ */

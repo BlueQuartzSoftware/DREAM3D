@@ -61,65 +61,65 @@ namespace
 
 
   float crystalDirections[12][3][3] = {{{unit111, unit112_1, unit110},
-                                        { -unit111, -unit112_1, unit110},
-                                        {unit111, -unit112_2, 0}
-                                       },
+      { -unit111, -unit112_1, unit110},
+      {unit111, -unit112_2, 0}
+    },
 
-                                       { { -unit111, unit112_1, unit110},
-                                         {unit111, -unit112_1, unit110},
-                                         {unit111, unit112_2, 0}
-                                       },
+    { { -unit111, unit112_1, unit110},
+      {unit111, -unit112_1, unit110},
+      {unit111, unit112_2, 0}
+    },
 
-                                       { {unit111, -unit112_1, unit110},
-                                         {unit111, -unit112_1, -unit110},
-                                         {unit111, unit112_2, 0}
-                                       },
+    { {unit111, -unit112_1, unit110},
+      {unit111, -unit112_1, -unit110},
+      {unit111, unit112_2, 0}
+    },
 
-                                       { {unit111, unit112_1, unit110},
-                                         {unit111, unit112_1, -unit110},
-                                         { -unit111, unit112_2, 0}
-                                       },
+    { {unit111, unit112_1, unit110},
+      {unit111, unit112_1, -unit110},
+      { -unit111, unit112_2, 0}
+    },
 
-                                       { {unit111, unit112_1, unit110},
-                                         {unit111, -unit112_2, 0},
-                                         {unit111, unit112_1, -unit110}
-                                       },
+    { {unit111, unit112_1, unit110},
+      {unit111, -unit112_2, 0},
+      {unit111, unit112_1, -unit110}
+    },
 
-                                       { {unit111, -unit112_1, unit110},
-                                         { -unit111, -unit112_2, 0},
-                                         {unit111, -unit112_1, -unit110}
-                                       },
+    { {unit111, -unit112_1, unit110},
+      { -unit111, -unit112_2, 0},
+      {unit111, -unit112_1, -unit110}
+    },
 
-                                       { {unit111, -unit112_1, unit110},
-                                         {unit111, unit112_2, 0},
-                                         { -unit111, unit112_1, unit110}
-                                       },
+    { {unit111, -unit112_1, unit110},
+      {unit111, unit112_2, 0},
+      { -unit111, unit112_1, unit110}
+    },
 
-                                       { { -unit111, -unit112_1, unit110},
-                                         {unit111, -unit112_2, 0},
-                                         {unit111, unit112_1, unit110}
-                                       },
+    { { -unit111, -unit112_1, unit110},
+      {unit111, -unit112_2, 0},
+      {unit111, unit112_1, unit110}
+    },
 
-                                       { {unit111, -unit112_2, 0},
-                                         {unit111, unit112_1, unit110},
-                                         { -unit111, -unit112_1, unit110}
-                                       },
+    { {unit111, -unit112_2, 0},
+      {unit111, unit112_1, unit110},
+      { -unit111, -unit112_1, unit110}
+    },
 
-                                       { {unit111, unit112_2, 0},
-                                         { -unit111, unit112_1, unit110},
-                                         {unit111, -unit112_1, unit110}
-                                       },
+    { {unit111, unit112_2, 0},
+      { -unit111, unit112_1, unit110},
+      {unit111, -unit112_1, unit110}
+    },
 
-                                       { {unit111, unit112_2, 0},
-                                         {unit111, -unit112_1, unit110},
-                                         {unit111, -unit112_1, -unit110}
-                                       },
+    { {unit111, unit112_2, 0},
+      {unit111, -unit112_1, unit110},
+      {unit111, -unit112_1, -unit110}
+    },
 
-                                       { { -unit111, unit112_2, 0},
-                                         {unit111, unit112_1, unit110},
-                                         {unit111, unit112_1, -unit110}
-                                       }
-                                      };
+    { { -unit111, unit112_2, 0},
+      {unit111, unit112_1, unit110},
+      {unit111, unit112_1, -unit110}
+    }
+  };
 }
 
 // -----------------------------------------------------------------------------

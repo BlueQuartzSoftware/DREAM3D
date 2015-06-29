@@ -40,11 +40,11 @@
 //
 // -----------------------------------------------------------------------------
 FileDragMessageBox::FileDragMessageBox(QWidget* parent) :
-okBtnPressed(false)
+  okBtnPressed(false)
 {
-    setupUi(this);
+  setupUi(this);
 
-    extractPipelineRadioBtn->setChecked(true);
+  extractPipelineRadioBtn->setChecked(true);
 }
 
 // -----------------------------------------------------------------------------

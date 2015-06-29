@@ -119,7 +119,7 @@ void TestWriteQSettingsBasedFile()
   QSet<QString> ensembleArrays;
   ensembleArrays << DREAM3D::EnsembleData::CrystalStructures;
   QSet<QString> blank;
-  dcr->setVolumeSelectedArrayNames(blank,blank,blank,cellArrays,featureArrays,ensembleArrays);
+  dcr->setVolumeSelectedArrayNames(blank, blank, blank, cellArrays, featureArrays, ensembleArrays);
 
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
   pipeline->pushBack(dcr);
@@ -327,7 +327,7 @@ int main(int argc, char* argv[])
 //  DREAM3D_REGISTER_TEST( TestReadQSettingsBasedFile() )
 
 #if REMOVE_TEST_FILES
-   DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 #endif
 
   PRINT_TEST_SUMMARY();

@@ -44,25 +44,25 @@
 
 class CodeGenFactory
 {
-public:
-  DREAM3D_SHARED_POINTERS(CodeGenFactory)
-  DREAM3D_STATIC_NEW_MACRO(CodeGenFactory)
+  public:
+    DREAM3D_SHARED_POINTERS(CodeGenFactory)
+    DREAM3D_STATIC_NEW_MACRO(CodeGenFactory)
 
     /**
     * @brief Creates a new instance for this code generator.
     * @return
     */
     FPCodeGenerator::Pointer create(QString humanLabel, QString propertyName, QString fpType, QString initValue)
-  {
-    #include "DREAM3DWidgetsLib/Filter_Parameter_CodeGenFactory.cpp"
-  }
+    {
+#include "DREAM3DWidgetsLib/Filter_Parameter_CodeGenFactory.cpp"
+    }
 
-protected:
-  CodeGenFactory() {}
+  protected:
+    CodeGenFactory() {}
 
-private:
+  private:
 
-  CodeGenFactory(const CodeGenFactory&); // Copy Constructor Not Implemented
-  void operator=(const CodeGenFactory&); // Operator '=' Not Implemented
+    CodeGenFactory(const CodeGenFactory&); // Copy Constructor Not Implemented
+    void operator=(const CodeGenFactory&); // Operator '=' Not Implemented
 };
 #endif /* FilterFACTORY_H_ */

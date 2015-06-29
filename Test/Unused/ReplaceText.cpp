@@ -106,8 +106,8 @@ void buildInitializerList(QString hFile, QString cppFile)
       {
         QStringList chunks = line.split(',');
         existinInitializerList << chunks.at(0).trimmed();
-        if(chunks.size() == 1) stop = true;
-        else line = sourceLines.next();
+        if(chunks.size() == 1) { stop = true; }
+        else { line = sourceLines.next(); }
       }
       break;
     }
@@ -135,7 +135,8 @@ void buildInitializerList(QString hFile, QString cppFile)
     else
     {
 
-      if(line.contains("NULL") == false) {
+      if(line.contains("NULL") == false)
+      {
         newList << line + QString("");
       }
       else
@@ -217,7 +218,7 @@ void replaceText1(QString hFile, QString cppFile)
   }
 
   //// WRITE THE HEADER BACK OUT TO A FILE
-  if(doReplace== true)
+  if(doReplace == true)
   {
     QFileInfo fi(cppFile);
 #if 0
@@ -265,7 +266,7 @@ void replaceText(QString hFile, QString cppFile)
     sub = sub.trimmed();
     QString _type = cpp.mid(index, endIdx - index);
     endIdx = sub.indexOf("AttributeMatrixName");
-    sub = sub.mid(2, endIdx-2);
+    sub = sub.mid(2, endIdx - 2);
     varNames << sub;
     doReplace = true;
     index = cpp.indexOf("cellAttrMat->getPrereqArray<", index + 1);
@@ -279,7 +280,8 @@ void replaceText(QString hFile, QString cppFile)
   {
     QString s("DREAM3D_INSTANCE_STRING_PROPERTY(" + varNames.at(i) + "AttributeMatrixName)");
     index = header.indexOf(s, 0);
-    if (index < 0) { // Not found
+    if (index < 0)   // Not found
+    {
 
       QString dc("DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)\n");
       int idx = header.indexOf(dc, 0);
@@ -293,7 +295,7 @@ void replaceText(QString hFile, QString cppFile)
 
 
   //// WRITE THE HEADER BACK OUT TO A FILE
-  if(doReplace== true)
+  if(doReplace == true)
   {
     QFileInfo fi(hFile);
 #if 0
@@ -389,7 +391,7 @@ void fixDataCheck(QString hFile, QString cppFile)
   QFile fout("/tmp/out.cpp");
 #else
   QFile fout(cppFile);
-  #endif
+#endif
   fout.open(QFile::WriteOnly);
   QTextStream out(&fout);
 
@@ -434,7 +436,7 @@ void fixDataCheck(QString hFile, QString cppFile)
     }
     else
     {
-      if (sourceLines.hasNext()) out << line << "\n";
+      if (sourceLines.hasNext()) { out << line << "\n"; }
     }
 
   }
@@ -467,7 +469,7 @@ void scanDirIter(QDir dir)
 
 
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
   Q_ASSERT(false); // We don't want anyone to run this program.
 

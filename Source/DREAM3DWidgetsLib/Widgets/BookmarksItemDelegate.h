@@ -45,24 +45,24 @@
 
 class BookmarksItemDelegate : public QStyledItemDelegate
 {
-  Q_OBJECT
+    Q_OBJECT
 
-public:
-  explicit BookmarksItemDelegate(QObject* parent = 0);
+  public:
+    explicit BookmarksItemDelegate(QObject* parent = 0);
 
-  virtual ~BookmarksItemDelegate();
+    virtual ~BookmarksItemDelegate();
 
-protected:
-  QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
-  void setEditorData(QWidget* editor, const QModelIndex & index) const Q_DECL_OVERRIDE;
-  void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex & index) const Q_DECL_OVERRIDE;
-  void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index) const Q_DECL_OVERRIDE;
-  void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
+  protected:
+    QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const Q_DECL_OVERRIDE;
+    void setEditorData(QWidget* editor, const QModelIndex& index) const Q_DECL_OVERRIDE;
+    void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const Q_DECL_OVERRIDE;
+    void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const Q_DECL_OVERRIDE;
+    void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const Q_DECL_OVERRIDE;
 
-private:
+  private:
 
-  BookmarksItemDelegate(const BookmarksItemDelegate&); // Copy Constructor Not Implemented
-  void operator=(const BookmarksItemDelegate&); // Operator '=' Not Implemented
+    BookmarksItemDelegate(const BookmarksItemDelegate&); // Copy Constructor Not Implemented
+    void operator=(const BookmarksItemDelegate&); // Operator '=' Not Implemented
 
 };
 

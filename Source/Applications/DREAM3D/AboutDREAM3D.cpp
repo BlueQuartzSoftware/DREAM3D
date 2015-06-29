@@ -66,7 +66,7 @@
 //
 // -----------------------------------------------------------------------------
 AboutDREAM3D::AboutDREAM3D(QWidget* parent) :
-QDialog(parent)
+  QDialog(parent)
 {
   setupUi(this);
   setupGui();

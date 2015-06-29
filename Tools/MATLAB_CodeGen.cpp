@@ -58,7 +58,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateCodeForFilter(const QString &outDir, AbstractFilter::Pointer filter)
+void GenerateCodeForFilter(const QString& outDir, AbstractFilter::Pointer filter)
 {
   QString filterClassName = filter->getNameOfClass();
 
@@ -85,10 +85,10 @@ void GenerateCodeForFilter(const QString &outDir, AbstractFilter::Pointer filter
         || option->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
     { continue; }
 
-	// creates a working MATLAB m-file function per file per filter
-	out << "Filter_Parts{1}{" << i << "} = '" << option->getPropertyName() << "';\n" 
-	  << "Filter_Parts{2}{" << i << "} = '" << option->getWidgetType() << "';\n";
-	++i;
+    // creates a working MATLAB m-file function per file per filter
+    out << "Filter_Parts{1}{" << i << "} = '" << option->getPropertyName() << "';\n"
+        << "Filter_Parts{2}{" << i << "} = '" << option->getWidgetType() << "';\n";
+    ++i;
   }
 
   out << "end";
@@ -100,7 +100,7 @@ void GenerateCodeForFilter(const QString &outDir, AbstractFilter::Pointer filter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateMatlabCode(const QString &outDir)
+void GenerateMatlabCode(const QString& outDir)
 {
 
   // Sanity check to make sure we have our output directory:
@@ -128,7 +128,7 @@ void GenerateMatlabCode(const QString &outDir)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
@@ -168,7 +168,7 @@ int main(int argc, char *argv[])
 
     GenerateMatlabCode(outDir);
   }
-  catch (TCLAP::ArgException &e) // catch any exceptions
+  catch (TCLAP::ArgException& e) // catch any exceptions
   {
     std::cerr << " error: " << e.error() << " for arg " << e.argId();
     return EXIT_FAILURE;

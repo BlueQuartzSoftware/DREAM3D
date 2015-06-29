@@ -7,9 +7,9 @@ DEBUG=0
 # -----------------------------------------------------------------------------
 function printStatus()
 {
-	if [ "x$DEBUG" = "x1" ]; then
-	    echo "${1}"
-	fi	
+  if [ "x$DEBUG" = "x1" ]; then
+      echo "${1}"
+  fi
 }
 
 printStatus "************** Fixing up Tool @osx_app_name@ **********************"
@@ -40,7 +40,7 @@ ResourcesPath="${ApplicationBundleName}/Contents/${ResourcesDirName}"
 
 BuildDir="@CMAKE_RUNTIME_OUTPUT_DIRECTORY@"
 
-echo "Starting Fix up of Tool @osx_app_name@ to share the frameworks, libraries and plugins" 
+echo "Starting Fix up of Tool @osx_app_name@ to share the frameworks, libraries and plugins"
 
 
 TmpDir="/tmp"
@@ -77,7 +77,7 @@ fi
 # The variable 'line' now contains the absolute path to a library
 #echo ${BUNDLE_LIBRARIES} | tr ";" "\012" | while read line
 #do
-#    
+#
 #done
 
 
@@ -87,18 +87,18 @@ fi
 # -----------------------------------------------------------------------------
 function CorrectLinkedFrameworkInstallName()
 {
-	printStatus "      |-  CorrectLinkedFrameworkInstallName"
-	printStatus "          |- 1: ${1}"
+  printStatus "      |-  CorrectLinkedFrameworkInstallName"
+  printStatus "          |- 1: ${1}"
   printStatus "          |- 2: ${2}"
   oldPath="${1}"
   libName=`basename ${oldPath}`
   frameworkName="${libName}.framework"
   frameworkRootDir="${1%${frameworkName}*}"
   frameworkBundle="${frameworkRootDir}${frameworkName}"
-	newPath="${InstallNameFramework}/${1#${frameworkRootDir}*}" 
-	printStatus "          |- oldPath: ${oldPath}"
-	printStatus "          |- newPath: ${newPath}"
-	install_name_tool -change ${oldPath} ${newPath} ${2}
+  newPath="${InstallNameFramework}/${1#${frameworkRootDir}*}"
+  printStatus "          |- oldPath: ${oldPath}"
+  printStatus "          |- newPath: ${newPath}"
+  install_name_tool -change ${oldPath} ${newPath} ${2}
 }
 
 # -----------------------------------------------------------------------------
@@ -127,7 +127,7 @@ function CorrectLibraryDependency()
       frameworkName="${libName}.framework"
       isFramework=` echo ${oldPath} | grep "${frameworkName}"`
       if [[ "${#isFramework}" = "0" ]]; then
-      	libName=`basename ${oldPath}`
+        libName=`basename ${oldPath}`
         newPath="${InstallNameLib}/${libName}"
         install_name_tool -change "${oldPath}" "${newPath}" "${2}"
       else
@@ -146,7 +146,7 @@ function UpdateLibraryDependencies()
   local libFile
   local libOutFile
   local i
-  
+
   libFile="${1}"
   libOutFile="${TmpDir}/@osx_app_name@-library.out"
   otool -L "${1}" > "${libOutFile}"
@@ -199,7 +199,7 @@ function UpdateFrameworkInstallName()
     # Update the Executables link path to this library
     oldPath="${1}"
     libName=`basename ${oldPath}`
-    newPath="${InstallNameFramework}/${1#${frameworkRootDir}*}" 
+    newPath="${InstallNameFramework}/${1#${frameworkRootDir}*}"
     printStatus "     | oldPath: ${oldPath}"
     printStatus "     | newPath: ${newPath}"
     printStatus "     | 2: ${2}"
@@ -220,27 +220,27 @@ function UpdateFrameworkInstallName()
 # -----------------------------------------------------------------------------
 function UpdateDylibInstallName()
 {
-	printStatus "  |- UpdateDylibInstallName | ${1} | ${2}"
-	if [[ -e ${1} ]]; then
-		#-- Copy the library using the current "install_name" as the path
-		printStatus "  |- Copying Library '${1}' into app bundle"
-		cp "${1}" "${LibPath}/."
-	    
+  printStatus "  |- UpdateDylibInstallName | ${1} | ${2}"
+  if [[ -e ${1} ]]; then
+    #-- Copy the library using the current "install_name" as the path
+    printStatus "  |- Copying Library '${1}' into app bundle"
+    cp "${1}" "${LibPath}/."
+
     # Update the Executables link path to this library
     oldPath="${1}"
     libName=`basename ${oldPath}`
-    newPath="${InstallNameLib}/${libName}" 
+    newPath="${InstallNameLib}/${libName}"
     #echo "   ${oldPath} \n   ${newPath}\n   ${2}"
     install_name_tool -change ${oldPath} ${newPath} ${2}
-    
+
     # Update the install_name of the library itself
     install_name_tool -id ${newPath} "${LibPath}/${libName}"
-    
+
     UpdateLibraryDependencies "${LibPath}/${libName}"
-	fi
+  fi
 
   pathToCopy=${BuildDir}/${1}
-  
+
   isRPath=`expr "${1}" : '@rpath/'`
   if [[ ! "$isRPath" = "0" ]]; then
     base=`basename ${1}`
@@ -251,17 +251,17 @@ function UpdateDylibInstallName()
     #-- Copy the library from the current build directory as the path
     printStatus "  |- Copying Library '${pathToCopy}' into app bundle"
     cp "${pathToCopy}" "${LibPath}/."
-      
+
     # Update the Executables link path to this library
     oldPath="${1}"
     libName=`basename ${oldPath}`
-    newPath="${InstallNameLib}/${libName}" 
+    newPath="${InstallNameLib}/${libName}"
 #    echo "   ${oldPath} | ${newPath} | ${2}"
     install_name_tool -change ${oldPath} ${newPath} ${2}
-    
+
     # Update the install_name of the library itself
     install_name_tool -id ${newPath} "${LibPath}/${libName}"
-    
+
     UpdateLibraryDependencies "${LibPath}/${libName}"
   fi
 
@@ -304,7 +304,8 @@ function UpdateExecutableDependencies()
 # -----------------------------------------------------------------------------
 #  Script really starts here
 # -----------------------------------------------------------------------------
-tmpFile="${TmpDir}/@osx_app_name@.out"
+tmpFile="${TmpDir}/$RANDOM/@osx_app_name@.out"
+mkdir -p "${TmpDir}/$RANDOM"
 otool -L "${ApplicationExe}" > "${tmpFile}"
 
 i=0
@@ -312,7 +313,7 @@ exec 9<"${tmpFile}"
 while read -u 9 line
   do
   if [[ ${i} -gt 0 ]]; then
-    UpdateExecutableDependencies "${line}" "${ApplicationExe}"     
+    UpdateExecutableDependencies "${line}" "${ApplicationExe}"
   fi
   let i=i+1
 done

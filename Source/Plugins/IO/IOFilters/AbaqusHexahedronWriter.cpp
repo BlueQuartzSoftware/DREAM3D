@@ -79,7 +79,8 @@ void AbaqusHexahedronWriter::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Hourglass Stiffness", "HourglassStiffness", FilterParameterWidgetType::IntWidget, getHourglassStiffness(), FilterParameter::Parameter, "", 0));
   parameters.push_back(FilterParameter::New("Job Name", "JobName", FilterParameterWidgetType::StringWidget, getJobName(), FilterParameter::Parameter));
-  parameters.push_back(FileSystemFilterParameter::New("Output Path", "OutputPath", FilterParameterWidgetType::OutputPathWidget, getOutputPath(), FilterParameter::Parameter)); parameters.push_back(FilterParameter::New("Output File Prefix", "FilePrefix", FilterParameterWidgetType::StringWidget, getFilePrefix(), FilterParameter::Parameter));
+  parameters.push_back(FileSystemFilterParameter::New("Output Path", "OutputPath", FilterParameterWidgetType::OutputPathWidget, getOutputPath(), FilterParameter::Parameter));
+  parameters.push_back(FilterParameter::New("Output File Prefix", "FilePrefix", FilterParameterWidgetType::StringWidget, getFilePrefix(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   parameters.push_back(FilterParameter::New("Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray));
   setFilterParameters(parameters);
@@ -151,7 +152,7 @@ void AbaqusHexahedronWriter::dataCheck()
   {
     setErrorCondition(-10200);
     QString ss = QObject::tr("The number of Tuples for the DataArray %1 is %2 and for the associated Image Geometry is %3. The number of tuples must match").arg(m_FeatureIdsPtr.lock()->getName()).arg(m_FeatureIdsPtr.lock()->getNumberOfTuples());
-                                                                                                notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 }
 

@@ -138,7 +138,7 @@ class StringDataArray : public IDataArray
      * @brief Gives this array a human readable name
      * @param name The name of this array
      */
-    virtual void setInitValue(const std::string &initValue)
+    virtual void setInitValue(const std::string& initValue)
     {
       m_InitValue = QString::fromStdString(initValue);
     }
@@ -147,7 +147,7 @@ class StringDataArray : public IDataArray
      * @brief Gives this array a human readable name
      * @param name The name of this array
      */
-    virtual void setInitValue(const QString &initValue)
+    virtual void setInitValue(const QString& initValue)
     {
       m_InitValue = initValue;
     }
@@ -398,7 +398,7 @@ class StringDataArray : public IDataArray
      * @brief initializeWithValue
      * @param value
      */
-    virtual void initializeWithValue(const std::string &value)
+    virtual void initializeWithValue(const std::string& value)
     {
       m_Array.fill(QString::fromStdString(value), m_Array.size());
     }

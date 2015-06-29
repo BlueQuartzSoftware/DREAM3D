@@ -72,11 +72,11 @@ class PluginMaker : public QWidget, public Ui::PluginMaker
     void on_addFilterBtn_clicked();
     void on_removeFilterBtn_clicked();
 
-	void testFileLocationsHandler();
+    void testFileLocationsHandler();
 
   signals:
-	void clicked(QSet<QString> names);
-  void updateStatusBar(QString message);
+    void clicked(QSet<QString> names);
+    void updateStatusBar(QString message);
 
   private:
     QString m_OpenDialogLastDirectory;
@@ -87,12 +87,12 @@ class PluginMaker : public QWidget, public Ui::PluginMaker
 // QString generateQrcContents();
 
     QVector<FilterBundler> m_FilterBundles;
-	QSet<QString> m_TestFileLocationNames;
+    QSet<QString> m_TestFileLocationNames;
     QTreeWidgetItem* F_name;
     QTreeWidgetItem* F_doc;
     QTreeWidgetItem* F_res;
     QTreeWidgetItem* F_res_sub;
-	QTreeWidgetItem* F_test;
+    QTreeWidgetItem* F_test;
     QTreeWidgetItem* F_namefilters;
 };
 

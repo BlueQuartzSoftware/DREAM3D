@@ -333,37 +333,48 @@ int32_t EnsembleInfoReader::readFile()
 void EnsembleInfoReader::ensembleLookup(QStringList list)
 {
   // assign the corresponding number to the crystal structure string read from the input file
-  if (QString::compare(list.at(0), "Hexagonal_High", Qt::CaseInsensitive) == 0) {
+  if (QString::compare(list.at(0), "Hexagonal_High", Qt::CaseInsensitive) == 0)
+  {
     m_crystruct = Ebsd::CrystalStructure::Hexagonal_High;
   }
-  else if (QString::compare(list.at(0), "Cubic_High", Qt::CaseInsensitive) == 0) {
+  else if (QString::compare(list.at(0), "Cubic_High", Qt::CaseInsensitive) == 0)
+  {
     m_crystruct = Ebsd::CrystalStructure::Cubic_High;
   }
-  else if (QString::compare(list.at(0), "Hexagonal_Low", Qt::CaseInsensitive) == 0) {
+  else if (QString::compare(list.at(0), "Hexagonal_Low", Qt::CaseInsensitive) == 0)
+  {
     m_crystruct = Ebsd::CrystalStructure::Hexagonal_Low;
   }
-  else if (QString::compare(list.at(0), "Cubic_Low", Qt::CaseInsensitive) == 0) {
+  else if (QString::compare(list.at(0), "Cubic_Low", Qt::CaseInsensitive) == 0)
+  {
     m_crystruct = Ebsd::CrystalStructure::Cubic_Low;
   }
-  else if (QString::compare(list.at(0), "Triclinic", Qt::CaseInsensitive) == 0) {
+  else if (QString::compare(list.at(0), "Triclinic", Qt::CaseInsensitive) == 0)
+  {
     m_crystruct = Ebsd::CrystalStructure::Triclinic;
   }
-  else if (QString::compare(list.at(0), "Monoclinic", Qt::CaseInsensitive) == 0) {
+  else if (QString::compare(list.at(0), "Monoclinic", Qt::CaseInsensitive) == 0)
+  {
     m_crystruct = Ebsd::CrystalStructure::Monoclinic;
   }
-  else if (QString::compare(list.at(0), "OrthoRhombic", Qt::CaseInsensitive) == 0) {
+  else if (QString::compare(list.at(0), "OrthoRhombic", Qt::CaseInsensitive) == 0)
+  {
     m_crystruct = Ebsd::CrystalStructure::OrthoRhombic;
   }
-  else if (QString::compare(list.at(0), "Tetragonal_Low", Qt::CaseInsensitive) == 0) {
+  else if (QString::compare(list.at(0), "Tetragonal_Low", Qt::CaseInsensitive) == 0)
+  {
     m_crystruct = Ebsd::CrystalStructure::Tetragonal_Low;
   }
-  else if (QString::compare(list.at(0), "Tetragonal_High", Qt::CaseInsensitive) == 0) {
+  else if (QString::compare(list.at(0), "Tetragonal_High", Qt::CaseInsensitive) == 0)
+  {
     m_crystruct = Ebsd::CrystalStructure::Tetragonal_High;
   }
-  else if (QString::compare(list.at(0), "Trigonal_Low", Qt::CaseInsensitive) == 0) {
+  else if (QString::compare(list.at(0), "Trigonal_Low", Qt::CaseInsensitive) == 0)
+  {
     m_crystruct = Ebsd::CrystalStructure::Trigonal_Low;
   }
-  else if (QString::compare(list.at(0), "Trigonal_High", Qt::CaseInsensitive) == 0) {
+  else if (QString::compare(list.at(0), "Trigonal_High", Qt::CaseInsensitive) == 0)
+  {
     m_crystruct = Ebsd::CrystalStructure::Trigonal_High;
   }
   else
@@ -372,22 +383,28 @@ void EnsembleInfoReader::ensembleLookup(QStringList list)
   }
 
   // assign the corresponding number to the phase type string read from the input file
-  if (QString::compare(list.at(1), "PrimaryPhase", Qt::CaseInsensitive) == 0) {
+  if (QString::compare(list.at(1), "PrimaryPhase", Qt::CaseInsensitive) == 0)
+  {
     m_ptype = DREAM3D::PhaseType::PrimaryPhase;
   }
-  else if (QString::compare(list.at(1), "PrecipitatePhase", Qt::CaseInsensitive) == 0) {
+  else if (QString::compare(list.at(1), "PrecipitatePhase", Qt::CaseInsensitive) == 0)
+  {
     m_ptype = DREAM3D::PhaseType::PrecipitatePhase;
   }
-  else if (QString::compare(list.at(1), "TransformationPhase", Qt::CaseInsensitive) == 0) {
+  else if (QString::compare(list.at(1), "TransformationPhase", Qt::CaseInsensitive) == 0)
+  {
     m_ptype = DREAM3D::PhaseType::TransformationPhase;
   }
-  else if (QString::compare(list.at(1), "MatrixPhase", Qt::CaseInsensitive) == 0) {
+  else if (QString::compare(list.at(1), "MatrixPhase", Qt::CaseInsensitive) == 0)
+  {
     m_ptype = DREAM3D::PhaseType::MatrixPhase;
   }
-  else if (QString::compare(list.at(1), "BoundaryPhase", Qt::CaseInsensitive) == 0) {
+  else if (QString::compare(list.at(1), "BoundaryPhase", Qt::CaseInsensitive) == 0)
+  {
     m_ptype = DREAM3D::PhaseType::BoundaryPhase;
   }
-  else if (QString::compare(list.at(1), "UnknownPhaseType", Qt::CaseInsensitive) == 0) {
+  else if (QString::compare(list.at(1), "UnknownPhaseType", Qt::CaseInsensitive) == 0)
+  {
     m_ptype = DREAM3D::PhaseType::UnknownPhaseType;
   }
   else

@@ -47,17 +47,20 @@
 #include "DREAM3DLib/DataContainers/DataArrayPath.h"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 
-typedef struct {
-  int x; int y; int z;
+typedef struct
+{
+  int x;
+  int y;
+  int z;
 
-  void writeJson(QJsonObject &json)
+  void writeJson(QJsonObject& json)
   {
     json["x"] = x;
     json["y"] = y;
     json["z"] = z;
   }
 
-  bool readJson(QJsonObject &json)
+  bool readJson(QJsonObject& json)
   {
     if (json["x"].isDouble() && json["y"].isDouble() && json["z"].isDouble())
     {
@@ -70,17 +73,20 @@ typedef struct {
   }
 } IntVec3_t;
 
-typedef struct {
-  float x; float y; float z;
+typedef struct
+{
+  float x;
+  float y;
+  float z;
 
-  void writeJson(QJsonObject &json)
+  void writeJson(QJsonObject& json)
   {
     json["x"] = x;
     json["y"] = y;
     json["z"] = z;
   }
 
-  bool readJson(QJsonObject &json)
+  bool readJson(QJsonObject& json)
   {
     if (json["x"].isDouble() && json["y"].isDouble() && json["z"].isDouble())
     {
@@ -93,10 +99,14 @@ typedef struct {
   }
 } FloatVec3_t;
 
-typedef struct {
-  float a; float b; float c; float d;
+typedef struct
+{
+  float a;
+  float b;
+  float c;
+  float d;
 
-  void writeJson(QJsonObject &json)
+  void writeJson(QJsonObject& json)
   {
     json["a"] = a;
     json["b"] = b;
@@ -104,7 +114,7 @@ typedef struct {
     json["d"] = d;
   }
 
-  bool readJson(QJsonObject &json)
+  bool readJson(QJsonObject& json)
   {
     if (json["a"].isDouble() && json["b"].isDouble() && json["c"].isDouble() && json["d"].isDouble())
     {
@@ -142,7 +152,7 @@ typedef struct
   float v56;
   float v66;
 
-  void writeJson(QJsonObject &json)
+  void writeJson(QJsonObject& json)
   {
     json["v11"] = v11;
     json["v12"] = v12;
@@ -167,14 +177,14 @@ typedef struct
     json["v66"] = v66;
   }
 
-  bool readJson(QJsonObject &json)
+  bool readJson(QJsonObject& json)
   {
     if (json["v11"].isDouble() && json["v12"].isDouble() && json["v13"].isDouble() && json["v14"].isDouble()
-      && json["v15"].isDouble() && json["v16"].isDouble() && json["v22"].isDouble() && json["v23"].isDouble()
-      && json["v24"].isDouble() && json["v25"].isDouble() && json["v26"].isDouble() && json["v33"].isDouble()
-      && json["v34"].isDouble() && json["v35"].isDouble() && json["v36"].isDouble() && json["v44"].isDouble()
-      && json["v45"].isDouble() && json["v46"].isDouble() && json["v55"].isDouble() && json["v56"].isDouble()
-      && json["v66"].isDouble())
+        && json["v15"].isDouble() && json["v16"].isDouble() && json["v22"].isDouble() && json["v23"].isDouble()
+        && json["v24"].isDouble() && json["v25"].isDouble() && json["v26"].isDouble() && json["v33"].isDouble()
+        && json["v34"].isDouble() && json["v35"].isDouble() && json["v36"].isDouble() && json["v44"].isDouble()
+        && json["v45"].isDouble() && json["v46"].isDouble() && json["v55"].isDouble() && json["v56"].isDouble()
+        && json["v66"].isDouble())
     {
       v11 = static_cast<float>(json["v11"].toDouble());
       v12 = static_cast<float>(json["v12"].toDouble());
@@ -205,9 +215,14 @@ typedef struct
 
 typedef struct
 {
-  float c20; float c02; float c11; float c10; float c01; float c00;
+  float c20;
+  float c02;
+  float c11;
+  float c10;
+  float c01;
+  float c00;
 
-  void writeJson(QJsonObject &json)
+  void writeJson(QJsonObject& json)
   {
     json["c20"] = c20;
     json["c02"] = c02;
@@ -217,10 +232,10 @@ typedef struct
     json["c00"] = c00;
   }
 
-  bool readJson(QJsonObject &json)
+  bool readJson(QJsonObject& json)
   {
     if (json["c20"].isDouble() && json["c02"].isDouble() && json["c11"].isDouble() && json["c10"].isDouble()
-      && json["c01"].isDouble() && json["c00"].isDouble())
+        && json["c01"].isDouble() && json["c00"].isDouble())
     {
       c20 = static_cast<float>(json["c20"].toDouble());
       c02 = static_cast<float>(json["c02"].toDouble());
@@ -236,9 +251,18 @@ typedef struct
 
 typedef struct
 {
-  float c30; float c03; float c21; float c12; float c20; float c02; float c11; float c10; float c01; float c00;
+  float c30;
+  float c03;
+  float c21;
+  float c12;
+  float c20;
+  float c02;
+  float c11;
+  float c10;
+  float c01;
+  float c00;
 
-  void writeJson(QJsonObject &json)
+  void writeJson(QJsonObject& json)
   {
     json["c30"] = c30;
     json["c03"] = c03;
@@ -252,11 +276,11 @@ typedef struct
     json["c00"] = c00;
   }
 
-  bool readJson(QJsonObject &json)
+  bool readJson(QJsonObject& json)
   {
     if (json["c30"].isDouble() && json["c03"].isDouble() && json["c21"].isDouble() && json["c12"].isDouble()
-      && json["c20"].isDouble() && json["c02"].isDouble() && json["c11"].isDouble() && json["c10"].isDouble()
-      && json["c01"].isDouble() && json["c00"].isDouble())
+        && json["c20"].isDouble() && json["c02"].isDouble() && json["c11"].isDouble() && json["c10"].isDouble()
+        && json["c01"].isDouble() && json["c00"].isDouble())
     {
       c30 = static_cast<float>(json["c30"].toDouble());
       c03 = static_cast<float>(json["c03"].toDouble());
@@ -276,10 +300,23 @@ typedef struct
 
 typedef struct
 {
-  float c40; float c04; float c31; float c13; float c22; float c30; float c03; float c21; float c12; float c20;
-  float c02; float c11; float c10; float c01; float c00;
+  float c40;
+  float c04;
+  float c31;
+  float c13;
+  float c22;
+  float c30;
+  float c03;
+  float c21;
+  float c12;
+  float c20;
+  float c02;
+  float c11;
+  float c10;
+  float c01;
+  float c00;
 
-  void writeJson(QJsonObject &json)
+  void writeJson(QJsonObject& json)
   {
     json["c40"] = c40;
     json["c04"] = c04;
@@ -298,12 +335,12 @@ typedef struct
     json["c00"] = c00;
   }
 
-  bool readJson(QJsonObject &json)
+  bool readJson(QJsonObject& json)
   {
     if (json["c40"].isDouble() && json["c04"].isDouble() && json["c31"].isDouble() && json["c13"].isDouble()
-      && json["c22"].isDouble() && json["c30"].isDouble() && json["c03"].isDouble() && json["c21"].isDouble()
-      && json["c12"].isDouble() && json["c20"].isDouble() && json["c02"].isDouble() && json["c11"].isDouble()
-      && json["c10"].isDouble() && json["c01"].isDouble() && json["c00"].isDouble())
+        && json["c22"].isDouble() && json["c30"].isDouble() && json["c03"].isDouble() && json["c21"].isDouble()
+        && json["c12"].isDouble() && json["c20"].isDouble() && json["c02"].isDouble() && json["c11"].isDouble()
+        && json["c10"].isDouble() && json["c01"].isDouble() && json["c00"].isDouble())
     {
       c40 = static_cast<float>(json["c40"].toDouble());
       c04 = static_cast<float>(json["c04"].toDouble());
@@ -337,7 +374,7 @@ typedef struct
   QString FileSuffix;
   QString FileExtension;
 
-  void writeJson(QJsonObject &json)
+  void writeJson(QJsonObject& json)
   {
     json["PaddingDigits"] = static_cast<double>(PaddingDigits);
     json["Ordering"] = static_cast<double>(Ordering);
@@ -349,10 +386,10 @@ typedef struct
     json["FileExtension"] = FileExtension;
   }
 
-  bool readJson(QJsonObject &json)
+  bool readJson(QJsonObject& json)
   {
     if (json["PaddingDigits"].isDouble() && json["Ordering"].isDouble() && json["StartIndex"].isDouble() && json["EndIndex"].isDouble()
-      && json["InputPath"].isString() && json["FilePrefix"].isString() && json["FileSuffix"].isString() && json["FileExtension"].isString())
+        && json["InputPath"].isString() && json["FilePrefix"].isString() && json["FileSuffix"].isString() && json["FileExtension"].isString())
     {
       PaddingDigits = static_cast<qint32>(json["PaddingDigits"].toDouble());
       Ordering = static_cast<quint32>(json["Ordering"].toDouble());

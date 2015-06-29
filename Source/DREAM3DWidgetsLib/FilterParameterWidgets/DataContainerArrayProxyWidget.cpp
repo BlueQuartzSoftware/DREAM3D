@@ -318,7 +318,8 @@ void DataContainerArrayProxyWidget::updateModelFromProxy(DataContainerArrayProxy
         QString daName = dataArraysIter.key();
         //    qDebug() << "#### " << daName;
         QStandardItem* daItem = getColumnItem<DataArrayProxy>(amItem, daName, daProxy);
-        if (NULL == daItem) {
+        if (NULL == daItem)
+        {
           Q_ASSERT_X(daItem != NULL, "daItem was NULL. This can not happen", "");
         }
       }

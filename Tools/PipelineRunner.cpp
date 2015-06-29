@@ -108,7 +108,7 @@ void readPipeline(QFilterParametersReader::Pointer paramsReader, FilterPipeline:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int main (int argc, char  *argv[])
+int main (int argc, char*  argv[])
 {
 
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
@@ -146,7 +146,7 @@ int main (int argc, char  *argv[])
     // Extract the file path passed in by the user.
     pipelineFile = QString::fromStdString(pipelineFileArg.getValue());
   }
-  catch (TCLAP::ArgException &e) // catch any exceptions
+  catch (TCLAP::ArgException& e) // catch any exceptions
   {
     std::cerr << " error: " << e.error() << " for arg " << e.argId();
     return EXIT_FAILURE;
@@ -198,7 +198,8 @@ int main (int argc, char  *argv[])
   pipeline->addMessageReceiver(&obs);
   // Preflight the pipeline
   err = pipeline->preflightPipeline();
-  if (err < 0) {
+  if (err < 0)
+  {
     std::cout << "Errors preflighting the pipeline. Exiting Now." << std::endl;
     return EXIT_FAILURE;
   }

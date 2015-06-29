@@ -71,7 +71,8 @@ class QuaternionMath
       T w;
     } Quaternion;
 
-    enum Order {
+    enum Order
+    {
       QuaternionScalarVector = 0,
       QuaternionVectorScalar = 1
     };
@@ -422,8 +423,8 @@ class QuaternionMath
     static void MultiplyQuatVec(const Quaternion q, T* v, T* out)
     {
       /*
-//    t = 2 * cross(q.xyz, v)
-//    v' = v +  (q.w * t) + cross(q.xyz, t)
+      //    t = 2 * cross(q.xyz, v)
+      //    v' = v +  (q.w * t) + cross(q.xyz, t)
       T w    = q.w;
       T r[3] = { q.x, q.y, q.z};
       T temp2[3] = { 0.0, 0.0, 0.0 };
@@ -483,22 +484,22 @@ class QuaternionMath
        *
        */
 
-       T qx2 = q.x * q.x;
-       T qy2 = q.y * q.y;
-       T qz2 = q.z * q.z;
-       T qw2 = q.w * q.w;
+      T qx2 = q.x * q.x;
+      T qy2 = q.y * q.y;
+      T qz2 = q.z * q.z;
+      T qw2 = q.w * q.w;
 
-       T qxy = q.x * q.y;
-       T qyz = q.y * q.z;
-       T qzx = q.z * q.x;
+      T qxy = q.x * q.y;
+      T qyz = q.y * q.z;
+      T qzx = q.z * q.x;
 
-       T qxw = q.x * q.w;
-       T qyw = q.y * q.w;
-       T qzw = q.z * q.w;
+      T qxw = q.x * q.w;
+      T qyw = q.y * q.w;
+      T qzw = q.z * q.w;
 
-       out[0] = v[0] * (qx2 - qy2 - qz2 + qw2) + 2 * ( v[1] * (qxy + qzw) + v[2] * (qzx - qyw) );
-       out[1] = v[1] * (qy2 - qx2 - qz2 + qw2) + 2 * ( v[2] * (qyz + qxw) + v[0] * (qxy - qzw) );
-       out[2] = v[2] * (qz2 - qx2 - qy2 + qw2) + 2 * ( v[0] * (qzx + qyw) + v[1] * (qyz - qxw) );
+      out[0] = v[0] * (qx2 - qy2 - qz2 + qw2) + 2 * ( v[1] * (qxy + qzw) + v[2] * (qzx - qyw) );
+      out[1] = v[1] * (qy2 - qx2 - qz2 + qw2) + 2 * ( v[2] * (qyz + qxw) + v[0] * (qxy - qzw) );
+      out[2] = v[2] * (qz2 - qx2 - qy2 + qw2) + 2 * ( v[0] * (qzx + qyw) + v[1] * (qyz - qxw) );
     }
 
     /**

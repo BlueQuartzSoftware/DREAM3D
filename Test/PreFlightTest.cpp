@@ -108,32 +108,32 @@ void RemoveTestFiles()
 
 #define MAKE_FILTER_TEST(name, condition)\
   void name##_PreFlightTest() {\
-  int err = 0;\
-  VoxelDataContainer::Pointer m = VoxelDataContainer::New();\
-  std::vector<AbstractFilter::Pointer> pipeline;\
-  name::Pointer filter = name::New();\
-  pipeline.push_back(filter);\
-  int preflightError = 0;\
-  QStringstream ss;\
-  ss << "------------------------------------------------" << std::endl;\
-  ss << "Starting Preflight test for " << #name << std::endl;\
-  for (std::vector<AbstractFilter::Pointer>::iterator filter = pipeline.begin(); filter != pipeline.end(); ++filter) {\
-  (*filter)->setVoxelDataContainer(m.get());\
-  setCurrentFilter(*filter);\
-  (*filter)->preflight();\
-  err = (*filter)->getErrorCondition();\
-  if(err < 0) {\
-  preflightError |= err;\
-  ss << (*filter)->getNameOfClass() << " produced the following preflight errors:" << std::endl;\
-  std::vector<PipelineMessage> ems = (*filter)->getPipelineMessages();\
-  for (std::vector<PipelineMessage>::iterator iter = ems.begin(); iter != ems.end(); ++iter ) {\
-  ss << (*iter).generateErrorString();\
-  }\
-  }\
-  }\
-  std::cout << ss.str() << std::endl;\
-  if (condition) { DREAM3D_REQUIRE_NE(preflightError, 0);}\
-  else { DREAM3D_REQUIRE_EQUAL(preflightError, 0);  }\
+    int err = 0;\
+    VoxelDataContainer::Pointer m = VoxelDataContainer::New();\
+    std::vector<AbstractFilter::Pointer> pipeline;\
+    name::Pointer filter = name::New();\
+    pipeline.push_back(filter);\
+    int preflightError = 0;\
+    QStringstream ss;\
+    ss << "------------------------------------------------" << std::endl;\
+    ss << "Starting Preflight test for " << #name << std::endl;\
+    for (std::vector<AbstractFilter::Pointer>::iterator filter = pipeline.begin(); filter != pipeline.end(); ++filter) {\
+      (*filter)->setVoxelDataContainer(m.get());\
+      setCurrentFilter(*filter);\
+      (*filter)->preflight();\
+      err = (*filter)->getErrorCondition();\
+      if(err < 0) {\
+        preflightError |= err;\
+        ss << (*filter)->getNameOfClass() << " produced the following preflight errors:" << std::endl;\
+        std::vector<PipelineMessage> ems = (*filter)->getPipelineMessages();\
+        for (std::vector<PipelineMessage>::iterator iter = ems.begin(); iter != ems.end(); ++iter ) {\
+          ss << (*iter).generateErrorString();\
+        }\
+      }\
+    }\
+    std::cout << ss.str() << std::endl;\
+    if (condition) { DREAM3D_REQUIRE_NE(preflightError, 0);}\
+    else { DREAM3D_REQUIRE_EQUAL(preflightError, 0);  }\
   }
 
 
@@ -190,7 +190,7 @@ void GenerateCopyCode()
     if(options.size() != properties.count())
     {
       std::cout << "#error The number of Q_PROPERITES " << properties.count() <<
-      " does not match the number of FilterParameters " << options.size() << " created in the setupFilterParameters() function." << std::endl;
+                " does not match the number of FilterParameters " << options.size() << " created in the setupFilterParameters() function." << std::endl;
     }
     std::cout << "  }" << std::endl;
     std::cout << "  return filter;" << std::endl;
@@ -228,7 +228,7 @@ void verifyFilterParameters()
       if (option->getHumanLabel().compare("Required Information") == 0
           || option->getHumanLabel().compare("Created Information") == 0
           || option->getHumanLabel().compare("Optional Information") == 0)
-          { continue; }
+      { continue; }
       if(option->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
       {
         continue;
@@ -275,13 +275,18 @@ void verifySignals()
 }
 
 #if 0
-  if ( (L) == (R) ) {  \
-    QString buf;\
-    QTextStream ss(&buf);\
-    ss << "Your test required the following\n            '";\
-    ss << #L << " != " << #R << "'\n             but this condition was not met.\n";\
-    ss << "             " << L << "==" << R;\
-    DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() ) }
+if ( (L) == (R) )
+{
+  \
+  QString buf;
+  \
+  QTextStream ss(&buf);
+  \
+  ss << "Your test required the following\n            '";
+  \
+  ss << #L << " != " << #R << "'\n             but this condition was not met.\n";\
+  ss << "             " << L << "==" << R;\
+  DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() ) }
 #endif
 
 // -----------------------------------------------------------------------------
@@ -357,9 +362,10 @@ void TestPreflight()
       //DREAM3D_REQUIRE_EQUAL(filter->getInPreflight(), false);
       err = filter->getErrorCondition();
       // An error condition GREATER than ZERO is an anomoly and should be looked at.
-      if (err >= 0) {
+      if (err >= 0)
+      {
         qDebug() << "Anomalous result for Preflight for " << filter->getGroupName() << "/" << filter->getNameOfClass()
-       << " Error Condition = " << filter->getErrorCondition();
+                 << " Error Condition = " << filter->getErrorCondition();
       }
     }
     factoryMapIter++;
@@ -389,7 +395,7 @@ void TestUniqueHumanLabels()
         {
           AbstractFilter::Pointer other = filterMap.value(name);
           qDebug() << "Filters in class names '" << filter->getNameOfClass() << "' and '" << other->getNameOfClass()
-            << "' have the same human label, and this is not allowed.";
+                   << "' have the same human label, and this is not allowed.";
           DREAM3D_REQUIRE_EQUAL(0, 1)
         }
         else
@@ -514,15 +520,15 @@ int main(int argc, char** argv)
 
   //// These functions are just to verify that the filters have certain signals and properties available.
 //  verifyPreflightEmitsProperly();
- verifySignals();
- verifyFilterParameters();
+  verifySignals();
+  verifyFilterParameters();
 
   int err = EXIT_SUCCESS;
- DREAM3D_REGISTER_TEST( verifyPreflightEmitsProperly() )
- DREAM3D_REGISTER_TEST( TestPreflight() )
- DREAM3D_REGISTER_TEST( TestUniqueHumanLabels() )
- DREAM3D_REGISTER_TEST( TestNewInstanceAvailable() )
- DREAM3D_REGISTER_TEST( TestUncategorizedFilterParameters() )
+  DREAM3D_REGISTER_TEST( verifyPreflightEmitsProperly() )
+  DREAM3D_REGISTER_TEST( TestPreflight() )
+  DREAM3D_REGISTER_TEST( TestUniqueHumanLabels() )
+  DREAM3D_REGISTER_TEST( TestNewInstanceAvailable() )
+  DREAM3D_REGISTER_TEST( TestUncategorizedFilterParameters() )
   PRINT_TEST_SUMMARY();
 
 //  GenerateCopyCode();

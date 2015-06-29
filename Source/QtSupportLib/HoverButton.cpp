@@ -40,8 +40,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-HoverButton::HoverButton(QWidget *parent) :
-QPushButton(parent)
+HoverButton::HoverButton(QWidget* parent) :
+  QPushButton(parent)
 {
   setFlat(true);
 }
@@ -54,7 +54,7 @@ HoverButton::~HoverButton() {}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool HoverButton::event(QEvent *event)
+bool HoverButton::event(QEvent* event)
 {
   if (event->type() == QEvent::HoverEnter)
   {

@@ -158,7 +158,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
     * @brief showContextMenuForWidget
     * @param pos
     */
-    void showContextMenuForWidget(const QPoint &pos);
+    void showContextMenuForWidget(const QPoint& pos);
 
     /**
     * @brief launchHelpForItem

@@ -229,7 +229,7 @@ int32_t SPParksWriter::writeFile()
     count++;
     double temp0 = 0.0;
     double temp1 = 0.0;
-    outfile << k + 1 << " " << m_FeatureIds[k] << " " << temp0 << " " << temp1 <<"\n";
+    outfile << k + 1 << " " << m_FeatureIds[k] << " " << temp0 << " " << temp1 << "\n";
   }
   outfile.close();
 

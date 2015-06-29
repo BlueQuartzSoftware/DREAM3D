@@ -53,10 +53,10 @@ ShapeTypesFilterParameter::~ShapeTypesFilterParameter()
 //
 // -----------------------------------------------------------------------------
 ShapeTypesFilterParameter::Pointer ShapeTypesFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QString& widgetType, const QVariant& defaultValue,
-  const QString& phaseTypeCountProperty,
-  const QString& phaseTypeArrayPathProperty,
-  Category category, int groupIndex)
+    const QString& widgetType, const QVariant& defaultValue,
+    const QString& phaseTypeCountProperty,
+    const QString& phaseTypeArrayPathProperty,
+    Category category, int groupIndex)
 {
   ShapeTypesFilterParameter::Pointer ptr = ShapeTypesFilterParameter::New();
   ptr->setHumanLabel(humanLabel);

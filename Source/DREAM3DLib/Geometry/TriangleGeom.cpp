@@ -379,8 +379,8 @@ void TriangleGeom::deleteUnsharedEdges()
 // -----------------------------------------------------------------------------
 void TriangleGeom::getParametricCenter(double pCoords[3])
 {
-  pCoords[0] = 1./3;
-  pCoords[1] = 1./3;
+  pCoords[0] = 1. / 3;
+  pCoords[1] = 1. / 3;
   pCoords[2] = 0.0;
 }
 
@@ -421,12 +421,12 @@ void TriangleGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayTy
     {
       for (size_t k = 0; k < 3; k++)
       {
-        values[k] = fieldPtr[cDims*verts[k]+j];
+        values[k] = fieldPtr[cDims * verts[k] + j];
       }
       DerivativeHelpers::TriangleDeriv()(this, i, values, derivs);
-      derivsPtr[i*3*cDims+j*3] = derivs[0];
-      derivsPtr[i*3*cDims+j*3+1] = derivs[1];
-      derivsPtr[i*3*cDims+j*3+2] = derivs[2];
+      derivsPtr[i * 3 * cDims + j * 3] = derivs[0];
+      derivsPtr[i * 3 * cDims + j * 3 + 1] = derivs[1];
+      derivsPtr[i * 3 * cDims + j * 3 + 2] = derivs[2];
     }
   }
 }

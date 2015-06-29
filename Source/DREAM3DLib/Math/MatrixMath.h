@@ -130,10 +130,10 @@ class DREAM3DLib_EXPORT MatrixMath
     template<typename T>
     static void Divide4x1withConstant(T g[4], T v)
     {
-      g[0] = g[0]/v;
-      g[1] = g[1]/v;
-      g[2] = g[2]/v;
-      g[3] = g[3]/v;
+      g[0] = g[0] / v;
+      g[1] = g[1] / v;
+      g[2] = g[2] / v;
+      g[3] = g[3] / v;
     }
 
 

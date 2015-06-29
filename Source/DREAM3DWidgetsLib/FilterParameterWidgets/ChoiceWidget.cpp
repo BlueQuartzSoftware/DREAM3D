@@ -136,7 +136,8 @@ void ChoiceWidget::widgetChanged(int index, bool emitParametersChanged)
 
 
   // We emit no matter what
-  if(emitParametersChanged) {
+  if(emitParametersChanged)
+  {
     emit parametersChanged();
   }
 }

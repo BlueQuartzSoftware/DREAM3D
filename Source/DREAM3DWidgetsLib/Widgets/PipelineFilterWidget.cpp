@@ -235,7 +235,8 @@ void PipelineFilterWidget::layoutWidgets()
     QWidget* w = fwm->createWidget(parameter, m_Filter.get());
     m_PropertyToWidget.insert(parameter->getPropertyName(), w); // Update our Map of Filter Parameter Properties to the Widget
 
-    if (NULL == w) {
+    if (NULL == w)
+    {
       continue;
     }
     m_FilterParameterWidgets.push_back(w);
@@ -360,16 +361,16 @@ void PipelineFilterWidget::validateFileSystemFilterParameter(FilterParameter* op
 
     if (currentPath.isEmpty() == false && fi.exists() == false)
     {
-    if (NULL != rParam)
-    {
-      Ftype = rParam->getFileType();
-      ext = rParam->getFileExtension();
-    }
-    else
-    {
-      Ftype = fsParam->getFileType();
-      ext = fsParam->getFileExtension();
-    }
+      if (NULL != rParam)
+      {
+        Ftype = rParam->getFileType();
+        ext = rParam->getFileExtension();
+      }
+      else
+      {
+        Ftype = fsParam->getFileType();
+        ext = fsParam->getFileExtension();
+      }
       QString s = Ftype + QString(" Files (*") + ext + QString(");;All Files (*.*)");
       QString defaultName = m_OpenDialogLastDirectory + QDir::separator() + "Untitled";
 
@@ -405,21 +406,21 @@ void PipelineFilterWidget::validateFileSystemFilterParameter(FilterParameter* op
         m_Filter->setProperty(fsParam->getPropertyName().toLatin1().constData(), file);
       }
 
-    else if (fsParam->getWidgetType().compare(FilterParameterWidgetType::DataContainerReaderWidget) == 0)
-    {
-      QString title = QObject::tr("Select a replacement input file for parameter '%1' in filter '%2'").arg(fsParam->getHumanLabel()).arg(m_Filter->getHumanLabel());
-
-      QString file = QFileDialog::getOpenFileName(this, title, defaultName, s);
-      if (true == file.isEmpty())
+      else if (fsParam->getWidgetType().compare(FilterParameterWidgetType::DataContainerReaderWidget) == 0)
       {
-        file = currentPath;
+        QString title = QObject::tr("Select a replacement input file for parameter '%1' in filter '%2'").arg(fsParam->getHumanLabel()).arg(m_Filter->getHumanLabel());
+
+        QString file = QFileDialog::getOpenFileName(this, title, defaultName, s);
+        if (true == file.isEmpty())
+        {
+          file = currentPath;
+        }
+        file = QDir::toNativeSeparators(file);
+        // Store the last used directory into the private instance variable
+        QFileInfo fi(file);
+        m_OpenDialogLastDirectory = fi.path();
+        m_Filter->setProperty(rParam->getInputFileProperty().toLatin1().constData(), file);
       }
-      file = QDir::toNativeSeparators(file);
-      // Store the last used directory into the private instance variable
-      QFileInfo fi(file);
-      m_OpenDialogLastDirectory = fi.path();
-      m_Filter->setProperty(rParam->getInputFileProperty().toLatin1().constData(), file);
-    }
     }
   }
 }
@@ -861,7 +862,7 @@ void PipelineFilterWidget::on_deleteBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineFilterWidget::showContextMenuForWidget(const QPoint &pos)
+void PipelineFilterWidget::showContextMenuForWidget(const QPoint& pos)
 {
   if (NULL != getFilter())
   {
@@ -872,7 +873,7 @@ void PipelineFilterWidget::showContextMenuForWidget(const QPoint &pos)
     actionLaunchHelp->setObjectName(QString::fromUtf8("actionLaunchHelp"));
     actionLaunchHelp->setText(QApplication::translate("DREAM3D_UI", "Filter Help", 0));
     connect(actionLaunchHelp, SIGNAL(triggered()),
-      this, SLOT(launchHelpForItem()));
+            this, SLOT(launchHelpForItem()));
 
     //QAction* actionLaunchHelp = new QAction(m_ContextMenu);
     //actionLaunchHelp->setObjectName(QString::fromUtf8("actionLaunchHelp"));

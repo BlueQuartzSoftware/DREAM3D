@@ -54,41 +54,41 @@
 */
 class DREAM3DLib_EXPORT DynamicTableData : public QObject
 {
-	Q_OBJECT
+    Q_OBJECT
 
-public:
-	DynamicTableData();
-	DynamicTableData(std::vector<std::vector<double> > data, int nRows, int nCols, QStringList rHeaders = QStringList(), QStringList cHeaders = QStringList());
-	DynamicTableData(QAbstractItemModel* model);
+  public:
+    DynamicTableData();
+    DynamicTableData(std::vector<std::vector<double> > data, int nRows, int nCols, QStringList rHeaders = QStringList(), QStringList cHeaders = QStringList());
+    DynamicTableData(QAbstractItemModel* model);
 
-	virtual ~DynamicTableData();
+    virtual ~DynamicTableData();
 
-	std::vector<std::vector<double> > getTableData();
-	void setTableData(std::vector<std::vector<double> > data);
+    std::vector<std::vector<double> > getTableData();
+    void setTableData(std::vector<std::vector<double> > data);
 
-	QStringList getRowHeaders();
-	void setRowHeaders(QStringList rHeaders);
+    QStringList getRowHeaders();
+    void setRowHeaders(QStringList rHeaders);
 
-	QStringList getColHeaders();
-	void setColHeaders(QStringList cHeaders);
+    QStringList getColHeaders();
+    void setColHeaders(QStringList cHeaders);
 
-	int getNumRows();
-	void setNumRows(int nRows);
+    int getNumRows();
+    void setNumRows(int nRows);
 
-	int getNumCols();
-	void setNumCols(int nCols);
+    int getNumCols();
+    void setNumCols(int nCols);
 
-	static QAbstractItemModel* convertToModel(DynamicTableData data);
+    static QAbstractItemModel* convertToModel(DynamicTableData data);
 
-	DynamicTableData(const DynamicTableData& rhs);
-	void operator=(const DynamicTableData& rhs);
+    DynamicTableData(const DynamicTableData& rhs);
+    void operator=(const DynamicTableData& rhs);
 
-private:
-	std::vector<std::vector<double> > tableData;
-	QStringList rowHeaders;
-	QStringList colHeaders;
-	int numRows;
-	int numCols;
+  private:
+    std::vector<std::vector<double> > tableData;
+    QStringList rowHeaders;
+    QStringList colHeaders;
+    int numRows;
+    int numCols;
 };
 
 Q_DECLARE_METATYPE(DynamicTableData)

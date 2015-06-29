@@ -387,11 +387,11 @@ bool DataContainerArray::doesAttributeMatrixExist(const DataArrayPath& path)
 // -----------------------------------------------------------------------------
 bool DataContainerArray::doesAttributeArrayExist(const DataArrayPath& path)
 {
-    if ( !doesDataContainerExist(path.getDataContainerName())) { return false; }
-    if ( !doesAttributeMatrixExist(path) ) { return false; }
-    AttributeMatrix::Pointer attrMat = getAttributeMatrix(path);
+  if ( !doesDataContainerExist(path.getDataContainerName())) { return false; }
+  if ( !doesAttributeMatrixExist(path) ) { return false; }
+  AttributeMatrix::Pointer attrMat = getAttributeMatrix(path);
 
-    return attrMat->doesAttributeArrayExist(path.getDataArrayName());
+  return attrMat->doesAttributeArrayExist(path.getDataArrayName());
 }
 
 

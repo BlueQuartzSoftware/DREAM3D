@@ -51,9 +51,9 @@
 //
 // -----------------------------------------------------------------------------
 EMMPM::EMMPM() :
-Observable(),
-m_StatsDelegate(NULL),
-m_ErrorCondition(0)
+  Observable(),
+  m_StatsDelegate(NULL),
+  m_ErrorCondition(0)
 {
 
 }
@@ -79,42 +79,42 @@ EMMPM::~EMMPM()
 
 
 #define PRINT_CHAR_ARRAY(var)\
-    printf("%s[MAX_CLASSES]; ", #var);\
-    for (i = 0; i < EMMPM_MAX_CLASSES; i++) {\
-      printf("%d  ", data->var[i]);}\
-      printf("\n");
+  printf("%s[MAX_CLASSES]; ", #var);\
+  for (i = 0; i < EMMPM_MAX_CLASSES; i++) {\
+    printf("%d  ", data->var[i]);}\
+  printf("\n");
 
 
 #define PRINT_DOUBLE_ARRAY(var)\
-    printf("%s[MAX_CLASSES]; ", #var);\
-    for (i = 0; i < EMMPM_MAX_CLASSES; i++){ \
-      printf("%f  ", data->var[i]);}\
-    printf("\n");
+  printf("%s[MAX_CLASSES]; ", #var);\
+  for (i = 0; i < EMMPM_MAX_CLASSES; i++){ \
+    printf("%f  ", data->var[i]);}\
+  printf("\n");
 
 #define PRINT_INT_ARRAY(var)\
-    printf("%s[MAX_CLASSES]; ", #var);\
-    for (i = 0; i < EMMPM_MAX_CLASSES; i++){ \
-      printf("%d  ", data->var[i]);}\
-      printf("\n");
+  printf("%s[MAX_CLASSES]; ", #var);\
+  for (i = 0; i < EMMPM_MAX_CLASSES; i++){ \
+    printf("%d  ", data->var[i]);}\
+  printf("\n");
 
 #define PRINT_UINT_ARRAY(var)\
-    {printf("%s[MAX_CLASSES]; ", #var);\
+  {printf("%s[MAX_CLASSES]; ", #var);\
     unsigned int ui;\
     for (i = 0; i < EMMPM_MAX_CLASSES; i++){ \
       ui = data->var[i];\
       printf("%u  ", ui);}\
-      printf("\n");}
+    printf("\n");}
 
 #define PRINT_2D_UINT_ARRAY(var, r, c)\
-    {printf("%s[%s][%s];\n  ", #var, #r, #c);\
+  {printf("%s[%s][%s];\n  ", #var, #r, #c);\
     for (i = 0; i < r; i++){ \
       for (j = 0; j < c; j++) {\
-      ui = data->var[i][j];\
-      printf("%u  ", ui);}\
+        ui = data->var[i][j];\
+        printf("%u  ", ui);}\
       printf("\n  ");} }
 
 #define PRINT_POINTER(var)\
-    printf("%p\n", data->var);
+  printf("%p\n", data->var);
 
 // -----------------------------------------------------------------------------
 //
@@ -129,7 +129,7 @@ void EMMPM::printData(EMMPM_Data::Pointer data)
   PRINT_DATA(emIterations)
   PRINT_DATA( mpmIterations); /**<  */
   PRINT_DATA_DOUBLE( in_beta); /**<  */
- // PRINT_DATA_DOUBLE( in_gamma); /**<  */
+// PRINT_DATA_DOUBLE( in_gamma); /**<  */
   PRINT_DATA( classes); /**<  */
   PRINT_DATA( rows); /**< The height of the image.  Applicable for both input and output images */
   PRINT_DATA( columns); /**< The width of the image. Applicable for both input and output images */
@@ -194,10 +194,10 @@ void EMMPM::execute()
     CurvatureInitialization::Pointer curvatureInit = CurvatureInitialization::New();
     curvatureInit->initCurvatureVariables(m_Data);
 
-    if (data->ccost == NULL) 
+    if (data->ccost == NULL)
     {
       setErrorCondition(-55100);
-	    notifyErrorMessage(getHumanLabel(), "Error Allocating Curvature Variables Memory", getErrorCondition());
+      notifyErrorMessage(getHumanLabel(), "Error Allocating Curvature Variables Memory", getErrorCondition());
       return;
     }
   }
@@ -213,10 +213,10 @@ void EMMPM::execute()
     GradientVariablesInitialization::Pointer gradientInit = GradientVariablesInitialization::New();
     gradientInit->initialize(m_Data);
 
-    if (data->ns == NULL || data->ew == NULL || data->nw == NULL || data->sw == NULL) 
-	{
-	  setErrorCondition(-55000);
-	  notifyErrorMessage(getHumanLabel(), "Error Allocating Gradient Variables Memory", getErrorCondition());
+    if (data->ns == NULL || data->ew == NULL || data->nw == NULL || data->sw == NULL)
+    {
+      setErrorCondition(-55000);
+      notifyErrorMessage(getHumanLabel(), "Error Allocating Gradient Variables Memory", getErrorCondition());
       return;
     }
   }
@@ -251,7 +251,7 @@ void EMMPM::execute()
 
   // Connect up the Error/Warning/Progress object so the filter can report those things
   connect(em.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-	  this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
+          this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
 
   em->execute();
 
@@ -267,6 +267,6 @@ void EMMPM::execute()
 // -----------------------------------------------------------------------------
 const QString EMMPM::getHumanLabel()
 {
-	return "EMMPM";
+  return "EMMPM";
 }
 

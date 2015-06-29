@@ -122,7 +122,7 @@ FilterParameter* ConvertHexGridToSquareGridWidget::getFilterParameter() const
 // -----------------------------------------------------------------------------
 void ConvertHexGridToSquareGridWidget::setWidgetListEnabled(bool b)
 {
-  foreach (QWidget * w, m_WidgetList)
+  foreach (QWidget* w, m_WidgetList)
   {
     w->setEnabled(b);
   }
@@ -192,7 +192,7 @@ void ConvertHexGridToSquareGridWidget::getGuiParametersFromFilter()
   m_InputDir->setText(m_Filter->getInputPath());
 
   QObjectList obs = children();
-  foreach(QObject * ob, obs)
+  foreach(QObject* ob, obs)
   {
     ob->blockSignals(true);
   }
@@ -215,7 +215,7 @@ void ConvertHexGridToSquareGridWidget::getGuiParametersFromFilter()
   m_OutputDir->setText(m_Filter->getOutputPath());
   m_OutputPrefix->setText(m_Filter->getOutputPrefix());
 
-  foreach(QObject * ob, obs)
+  foreach(QObject* ob, obs)
   {
     ob->blockSignals(false);
   }

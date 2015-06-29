@@ -45,16 +45,16 @@
 class QtSupportLib_EXPORT ApplicationFileInfo
 {
 
-public:
-  ApplicationFileInfo();
-  ~ApplicationFileInfo();
+  public:
+    ApplicationFileInfo();
+    ~ApplicationFileInfo();
 
-  static QString GenerateFileSystemPath(QString pathEnding);
+    static QString GenerateFileSystemPath(QString pathEnding);
 
-private:
+  private:
 
-  ApplicationFileInfo(const ApplicationFileInfo&);    // Copy Constructor Not Implemented
-  void operator=(const ApplicationFileInfo&);  // Operator '=' Not Implemented
+    ApplicationFileInfo(const ApplicationFileInfo&);    // Copy Constructor Not Implemented
+    void operator=(const ApplicationFileInfo&);  // Operator '=' Not Implemented
 };
 
 #endif /* _ApplicationFileInfo_H */

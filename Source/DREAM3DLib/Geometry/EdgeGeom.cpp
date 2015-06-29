@@ -345,12 +345,12 @@ void EdgeGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::
     {
       for (size_t k = 0; k < 2; k++)
       {
-        values[k] = fieldPtr[cDims*verts[k]+j];
+        values[k] = fieldPtr[cDims * verts[k] + j];
       }
       DerivativeHelpers::EdgeDeriv()(this, i, values, derivs);
-      derivsPtr[i*3*cDims+j*3] = derivs[0];
-      derivsPtr[i*3*cDims+j*3+1] = derivs[1];
-      derivsPtr[i*3*cDims+j*3+2] = derivs[2];
+      derivsPtr[i * 3 * cDims + j * 3] = derivs[0];
+      derivsPtr[i * 3 * cDims + j * 3 + 1] = derivs[1];
+      derivsPtr[i * 3 * cDims + j * 3 + 2] = derivs[2];
     }
   }
 }

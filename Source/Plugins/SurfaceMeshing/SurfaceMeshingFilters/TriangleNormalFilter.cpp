@@ -77,9 +77,9 @@ class CalculateNormalsImpl
       int64_t nIdx0 = 0, nIdx1 = 0, nIdx2 = 0;
       for (size_t i = start; i < end; i++)
       {
-        nIdx0 = triangles[i*3] * 3;
-        nIdx1 = triangles[i*3+1] * 3;
-        nIdx2 = triangles[i*3+2] * 3;
+        nIdx0 = triangles[i * 3] * 3;
+        nIdx1 = triangles[i * 3 + 1] * 3;
+        nIdx2 = triangles[i * 3 + 2] * 3;
         float* n0 = &(nodes[nIdx0]);
         float* n1 = &(nodes[nIdx1]);
         float* n2 = &(nodes[nIdx2]);

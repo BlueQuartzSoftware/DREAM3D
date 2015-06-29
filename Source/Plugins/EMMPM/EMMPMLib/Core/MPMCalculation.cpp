@@ -71,14 +71,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endif
 
 #define COMPUTE_C_CLIQUE( C, x, y, ci, cj)\
-if((x) < 0 || (x) >= colEnd || (y) < 0 || (y) >= rowEnd) {\
-  C[ci][cj] = classes;\
-}\
-else\
-{\
-  ij = (cols * (y)) + (x);\
-  C[ci][cj] = xt[ij];\
-}
+  if((x) < 0 || (x) >= colEnd || (y) < 0 || (y) >= rowEnd) {\
+    C[ci][cj] = classes;\
+  }\
+  else\
+  {\
+    ij = (cols * (y)) + (x);\
+    C[ci][cj] = xt[ij];\
+  }
 
 
 
@@ -96,26 +96,26 @@ class ParallelMPMLoop
 #if USE_TBB_TASK_GROUP
     ParallelCalcLoop(EMMPM_Data* dPtr, real_t* ykPtr, real_t* rnd, int rowStart, int rowEnd,
                      int colStart, int colEnd) :
-    m_RowStart(rowStart),
-    m_RowEnd(rowEnd),
-    m_ColStart(colStart),
-    m_ColEnd(colEnd),
+      m_RowStart(rowStart),
+      m_RowEnd(rowEnd),
+      m_ColStart(colStart),
+      m_ColEnd(colEnd),
 #else
-    ParallelMPMLoop(EMMPM_Data* dPtr, real_t* ykPtr, real_t* rnd) :
+    ParallelMPMLoop(EMMPM_Data * dPtr, real_t* ykPtr, real_t* rnd) :
 #endif
 
-    data(dPtr),
-    yk(ykPtr),
-    rnd(rnd)
+      data(dPtr),
+      yk(ykPtr),
+      rnd(rnd)
     {}
-    virtual ~ParallelMPMLoop(){}
+    virtual ~ParallelMPMLoop() {}
 
 
     void calc(int rowStart, int rowEnd,
-                  int colStart, int colEnd) const
+              int colStart, int colEnd) const
     {
       //uint64_t millis = EMMPM_getMilliSeconds();
-    //  int l;
+      //  int l;
       real_t prior;
       int32_t ij, lij;
       int rows = data->rows;
@@ -159,52 +159,52 @@ class ParallelMPMLoop
       real_t* coupling = data->couplingBeta;
 
       for (int32_t y = rowStart; y < rowEnd; y++)
-       {
-         for (int32_t x = colStart; x < colEnd; x++)
-         {
+      {
+        for (int32_t x = colStart; x < colEnd; x++)
+        {
 
-           /* -------------  */
-          COMPUTE_C_CLIQUE(C, x-1, y-1, 0, 0);
-          COMPUTE_C_CLIQUE(C,   x, y-1, 1, 0);
-          COMPUTE_C_CLIQUE(C, x+1, y-1, 2, 0);
-          COMPUTE_C_CLIQUE(C, x-1,   y, 0, 1);
-          COMPUTE_C_CLIQUE(C, x+1,   y, 2, 1);
-          COMPUTE_C_CLIQUE(C, x-1, y+1, 0, 2);
-          COMPUTE_C_CLIQUE(C,   x, y+1, 1, 2);
-          COMPUTE_C_CLIQUE(C, x+1, y+1, 2, 2);
+          /* -------------  */
+          COMPUTE_C_CLIQUE(C, x - 1, y - 1, 0, 0);
+          COMPUTE_C_CLIQUE(C,   x, y - 1, 1, 0);
+          COMPUTE_C_CLIQUE(C, x + 1, y - 1, 2, 0);
+          COMPUTE_C_CLIQUE(C, x - 1,   y, 0, 1);
+          COMPUTE_C_CLIQUE(C, x + 1,   y, 2, 1);
+          COMPUTE_C_CLIQUE(C, x - 1, y + 1, 0, 2);
+          COMPUTE_C_CLIQUE(C,   x, y + 1, 1, 2);
+          COMPUTE_C_CLIQUE(C, x + 1, y + 1, 2, 2);
 
 #if 0
           if (y == rowStart + 1 && x == colStart + 1)
           {
-              ss << "------------------------------" << std::endl;
-              ss << "|" << C[0][0] << "\t" << C[1][0] << "\t" << C[2][0] << std::endl;
-              ss << "|" << C[0][1] << "\t" << C[1][1] << "\t" << C[2][1] << std::endl;
-              ss << "|" << C[0][2] << "\t" << C[1][2] << "\t" << C[2][2] << std::endl;
-              ss << "------------------------------" << std::endl;
-              std::cout << ss.str() << std::endl;
+            ss << "------------------------------" << std::endl;
+            ss << "|" << C[0][0] << "\t" << C[1][0] << "\t" << C[2][0] << std::endl;
+            ss << "|" << C[0][1] << "\t" << C[1][1] << "\t" << C[2][1] << std::endl;
+            ss << "|" << C[0][2] << "\t" << C[1][2] << "\t" << C[2][2] << std::endl;
+            ss << "------------------------------" << std::endl;
+            std::cout << ss.str() << std::endl;
           }
 #endif
 
-          ij = (cols*y)+x;
+          ij = (cols * y) + x;
           sum = 0;
           for (int l = 0; l < classes; ++l)
           {
             prior = 0;
             edge = 0;
 
-            prior += coupling[(cSize*l)+ C[0][0]];
-            prior += coupling[(cSize*l)+ C[1][0]];
-            prior += coupling[(cSize*l)+ C[2][0]];
-            prior += coupling[(cSize*l)+ C[0][1]];
-            prior += coupling[(cSize*l)+ C[2][1]];
-            prior += coupling[(cSize*l)+ C[0][2]];
-            prior += coupling[(cSize*l)+ C[1][2]];
-            prior += coupling[(cSize*l)+ C[2][2]];
+            prior += coupling[(cSize * l) + C[0][0]];
+            prior += coupling[(cSize * l) + C[1][0]];
+            prior += coupling[(cSize * l) + C[2][0]];
+            prior += coupling[(cSize * l) + C[0][1]];
+            prior += coupling[(cSize * l) + C[2][1]];
+            prior += coupling[(cSize * l) + C[0][2]];
+            prior += coupling[(cSize * l) + C[1][2]];
+            prior += coupling[(cSize * l) + C[2][2]];
 
 #if 0
             if (y == rowStart + 1 && x == colStart + 1)
             {
-                std::cout << "Class: " << l << "\t prior: " << prior << std::endl;
+              std::cout << "Class: " << l << "\t prior: " << prior << std::endl;
             }
 #endif
 
@@ -213,14 +213,14 @@ class ParallelMPMLoop
             // to the Number of Classes then add in the gradient penalty.
             if (data->useGradientPenalty)
             {
-              if (C[0][0] != l && C[0][0] != classes) edge += sw[(swCols*(y-1))+x-1];
-              if (C[1][0] != l && C[1][0] != classes) edge += ew[(ewCols*(y-1))+x];
-              if (C[2][0] != l && C[2][0] != classes) edge += nw[(nwCols*(y-1))+x];
-              if (C[0][1] != l && C[0][1] != classes) edge += ns[(nsCols*y)+x-1];
-              if (C[2][1] != l && C[2][1] != classes) edge += ns[(nsCols*y)+x];
-              if (C[0][2] != l && C[0][2] != classes) edge += nw[(nwCols*y)+x-1];
-              if (C[1][2] != l && C[1][2] != classes) edge += ew[(ewCols*y)+x];
-              if (C[2][2] != l && C[2][2] != classes) edge += sw[(swCols*y)+x];
+              if (C[0][0] != l && C[0][0] != classes) { edge += sw[(swCols * (y - 1)) + x - 1]; }
+              if (C[1][0] != l && C[1][0] != classes) { edge += ew[(ewCols * (y - 1)) + x]; }
+              if (C[2][0] != l && C[2][0] != classes) { edge += nw[(nwCols * (y - 1)) + x]; }
+              if (C[0][1] != l && C[0][1] != classes) { edge += ns[(nsCols * y) + x - 1]; }
+              if (C[2][1] != l && C[2][1] != classes) { edge += ns[(nsCols * y) + x]; }
+              if (C[0][2] != l && C[0][2] != classes) { edge += nw[(nwCols * y) + x - 1]; }
+              if (C[1][2] != l && C[1][2] != classes) { edge += ew[(ewCols * y) + x]; }
+              if (C[2][2] != l && C[2][2] != classes) { edge += sw[(swCols * y) + x]; }
             }
 
 
@@ -235,43 +235,43 @@ class ParallelMPMLoop
             sum += post[l];
           }
 
-           xrnd = rnd[ij];
-           current = 0.0;
+          xrnd = rnd[ij];
+          current = 0.0;
 
-           for (int l = 0; l < classes; l++)
-           {
-             lij = (cols * rows * l) + ij;
-             real_t arg = post[l] / sum;
-             if ((xrnd >= current) && (xrnd <= (current + arg)))
-             {
-               xt[ij] = l;
-               probs[lij] += 1.0;
-             }
-             current += arg;
-           }
+          for (int l = 0; l < classes; l++)
+          {
+            lij = (cols * rows * l) + ij;
+            real_t arg = post[l] / sum;
+            if ((xrnd >= current) && (xrnd <= (current + arg)))
+            {
+              xt[ij] = l;
+              probs[lij] += 1.0;
+            }
+            current += arg;
+          }
 #if 0
-           Dont even THINK about using this code...
-                   This classifys the pixel based on the largest
-                   in magnitude  probability
-           real_t max = 0.0;
-           int maxClass = 0;
-           for (int l = 0; l < classes; l++)
-           {
-             lij = (cols * rows * l) + ij;
-             //real_t arg = post[l] / sum;
-             if (probs[lij] > max)
-             {
-                 max = probs[lij];
-                 maxClass = l;
-             }
-           }
-           //Assign class based on Maximum probability
-           xt[ij] = maxClass;
+          Dont even THINK about using this code...
+          This classifys the pixel based on the largest
+          in magnitude  probability
+          real_t max = 0.0;
+          int maxClass = 0;
+          for (int l = 0; l < classes; l++)
+          {
+            lij = (cols * rows * l) + ij;
+            //real_t arg = post[l] / sum;
+            if (probs[lij] > max)
+            {
+              max = probs[lij];
+              maxClass = l;
+            }
+          }
+          //Assign class based on Maximum probability
+          xt[ij] = maxClass;
 #endif
-         }
-       }
-    //  std::cout << "     --" << EMMPM_getMilliSeconds() - millis << "--" << std::endl;
-     }
+        }
+      }
+      //  std::cout << "     --" << EMMPM_getMilliSeconds() - millis << "--" << std::endl;
+    }
 
 
 #if defined (EMMPM_USE_PARALLEL_ALGORITHMS)
@@ -281,7 +281,7 @@ class ParallelMPMLoop
       calc(m_RowStart, m_RowEnd, m_ColStart, m_ColEnd);
     }
 #else
-    void operator()(const tbb::blocked_range2d<int> &r) const
+    void operator()(const tbb::blocked_range2d<int>& r) const
     {
       calc(r.rows().begin(), r.rows().end(), r.cols().begin(), r.cols().end());
     }
@@ -289,7 +289,7 @@ class ParallelMPMLoop
 #endif
 
 
-private:
+  private:
 #if USE_TBB_TASK_GROUP
     int m_RowStart;
     int m_RowEnd;
@@ -306,9 +306,9 @@ private:
 //
 // -----------------------------------------------------------------------------
 MPMCalculation::MPMCalculation() :
-Observable(),
-m_StatsDelegate(NULL),
-m_ErrorCondition(0)
+  Observable(),
+  m_StatsDelegate(NULL),
+  m_ErrorCondition(0)
 {
 }
 
@@ -331,7 +331,7 @@ void MPMCalculation::execute()
   real_t post[EMMPM_MAX_CLASSES];
 
   // int k, l;
- // unsigned int i, j, d;
+// unsigned int i, j, d;
   size_t ld, ijd, lij;
   unsigned int dims = data->dims;
   unsigned int rows = data->rows;
@@ -396,7 +396,7 @@ void MPMCalculation::execute()
   typedef boost::uniform_real<real_t> NumberDistribution;
   typedef boost::mt19937 RandomNumberGenerator;
   typedef boost::variate_generator<RandomNumberGenerator&,
-                                   NumberDistribution> Generator;
+          NumberDistribution> Generator;
 
   NumberDistribution distribution(rangeMin, rangeMax);
   RandomNumberGenerator generator;
@@ -427,7 +427,7 @@ void MPMCalculation::execute()
     int threads = init.default_num_threads();
 #if USE_TBB_TASK_GROUP
     tbb::task_group* g = new tbb::task_group;
-    unsigned int rowIncrement = rows/threads;
+    unsigned int rowIncrement = rows / threads;
     unsigned int rowStop = 0 + rowIncrement;
     unsigned int rowStart = 0;
     for (int t = 0; t < threads; ++t)
@@ -443,7 +443,7 @@ void MPMCalculation::execute()
     g->wait();
     delete g;
 #else
-    tbb::parallel_for(tbb::blocked_range2d<int>(0, rows, rows/threads, 0, cols, cols),
+    tbb::parallel_for(tbb::blocked_range2d<int>(0, rows, rows / threads, 0, cols, cols),
                       ParallelMPMLoop(data, yk, &(rndNumbers.front())),
                       tbb::simple_partitioner());
 #endif
@@ -458,25 +458,25 @@ void MPMCalculation::execute()
     EMMPMUtilities::ConvertXtToOutputImage(getData());
 
     data->currentMPMLoop = k;
-	  QString ss = QString("MPM Loop %1").arg(k);
+    QString ss = QString("MPM Loop %1").arg(k);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
     currentLoopCount = data->mpmIterations * data->currentEMLoop + data->currentMPMLoop;
     data->progress = currentLoopCount / totalLoops * 100.0;
 
-   // notify("", data->progress, UpdateProgressValue);
+    // notify("", data->progress, UpdateProgressValue);
     if (m_StatsDelegate != NULL)
     {
       m_StatsDelegate->reportProgress(m_Data);
     }
   }
 #if 0
-  #if defined (EMMPM_USE_PARALLEL_ALGORITHMS)
-    std::cout << "Parrallel MPM Loop Time to Complete:";
+#if defined (EMMPM_USE_PARALLEL_ALGORITHMS)
+  std::cout << "Parrallel MPM Loop Time to Complete:";
 #else
-    std::cout << "Serial MPM Loop Time To Complete: ";
+  std::cout << "Serial MPM Loop Time To Complete: ";
 #endif
-    std::cout << (EMMPM_getMilliSeconds() - millis) << std::endl;
+  std::cout << (EMMPM_getMilliSeconds() - millis) << std::endl;
 #endif
 
 
@@ -484,7 +484,7 @@ void MPMCalculation::execute()
 
   if (!data->cancel)
   {
-  /* Normalize probabilities */
+    /* Normalize probabilities */
     for (uint32_t i = 0; i < data->rows; i++)
     {
       for (uint32_t j = 0; j < data->columns; j++)
@@ -508,6 +508,6 @@ void MPMCalculation::execute()
 // -----------------------------------------------------------------------------
 const QString MPMCalculation::getHumanLabel()
 {
-	return "MPMCalculation";
+  return "MPMCalculation";
 }
 

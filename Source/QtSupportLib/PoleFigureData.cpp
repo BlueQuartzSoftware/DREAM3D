@@ -33,7 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
- #include "PoleFigureData.h"
+#include "PoleFigureData.h"
 
 
 
@@ -43,9 +43,9 @@
 //
 // -----------------------------------------------------------------------------
 PoleFigureData::PoleFigureData(QVector<float>& xData, QVector<float>& yData, const QString& s, qint32* kernelRad, qint32* size) :
-xData(xData),
-yData(yData),
-label(s)
+  xData(xData),
+  yData(yData),
+  label(s)
 {
   imageSize[0] = size[0];
   imageSize[1] = size[1];

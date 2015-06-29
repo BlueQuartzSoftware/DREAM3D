@@ -57,7 +57,7 @@
  */
 class FindUniqueIdsImpl
 {
-   public:
+  public:
     FindUniqueIdsImpl(SharedVertexList::Pointer vertex, QVector<QVector<size_t> > nodesInBin, int64_t* uniqueIds) :
       m_Vertex(vertex),
       m_NodesInBin(nodesInBin),
@@ -268,7 +268,7 @@ void ReadStlFile::readFile()
 
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
   triangleGeom->resizeTriList(triCount);
-  triangleGeom->resizeVertexList(triCount*3);
+  triangleGeom->resizeVertexList(triCount * 3);
   float* nodes = triangleGeom->getVertexPointer(0);
   int64_t* triangles = triangleGeom->getTriPointer(0);
 
@@ -352,9 +352,9 @@ void ReadStlFile::eliminate_duplicate_nodes()
   int32_t bin = 0, xBin = 0, yBin = 0, zBin = 0;
   for (int64_t i = 0; i < nNodes; i++)
   {
-    xBin = (vertex[i*3] - m_minXcoord) / stepX;
-    yBin = (vertex[i*3+1] - m_minYcoord) / stepY;
-    zBin = (vertex[i*3+2] - m_minZcoord) / stepZ;
+    xBin = (vertex[i * 3] - m_minXcoord) / stepX;
+    yBin = (vertex[i * 3 + 1] - m_minYcoord) / stepY;
+    zBin = (vertex[i * 3 + 2] - m_minZcoord) / stepZ;
     if (xBin == 100) { xBin = 99; }
     if (yBin == 100) { yBin = 99; }
     if (zBin == 100) { zBin = 99; }
@@ -408,9 +408,9 @@ void ReadStlFile::eliminate_duplicate_nodes()
   // Move nodes to unique Id and then resize nodes array
   for (int64_t i = 0; i < nNodes; i++)
   {
-    vertex[uniqueIds[i]*3] = vertex[i*3];
-    vertex[uniqueIds[i]*3+1] = vertex[i*3+1];
-    vertex[uniqueIds[i]*3+2] = vertex[i*3+2];
+    vertex[uniqueIds[i] * 3] = vertex[i * 3];
+    vertex[uniqueIds[i] * 3 + 1] = vertex[i * 3 + 1];
+    vertex[uniqueIds[i] * 3 + 2] = vertex[i * 3 + 2];
   }
   triangleGeom->resizeVertexList(uniqueCount);
 
@@ -418,13 +418,13 @@ void ReadStlFile::eliminate_duplicate_nodes()
   int64_t node1 = 0, node2 = 0, node3 = 0;
   for (int64_t i = 0; i < nTriangles; i++)
   {
-    node1 = triangles[i*3];
-    node2 = triangles[i*3+1];
-    node3 = triangles[i*3+2];
+    node1 = triangles[i * 3];
+    node2 = triangles[i * 3 + 1];
+    node3 = triangles[i * 3 + 2];
 
-    triangles[i*3] = uniqueIds[node1];
-    triangles[i*3+1] = uniqueIds[node2];
-    triangles[i*3+2] = uniqueIds[node3];
+    triangles[i * 3] = uniqueIds[node1];
+    triangles[i * 3 + 1] = uniqueIds[node2];
+    triangles[i * 3 + 2] = uniqueIds[node3];
   }
 }
 

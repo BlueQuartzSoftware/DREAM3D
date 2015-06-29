@@ -44,32 +44,32 @@
 
 class StringWidgetCodeGenerator : public FPCodeGenerator
 {
-public:
-  DREAM3D_SHARED_POINTERS(StringWidgetCodeGenerator)
+  public:
+    DREAM3D_SHARED_POINTERS(StringWidgetCodeGenerator)
 
     static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
-  {
-    Pointer sharedPtr(new StringWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
-    return sharedPtr;
-  }
+    {
+      Pointer sharedPtr(new StringWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
+      return sharedPtr;
+    }
 
-  virtual ~StringWidgetCodeGenerator();
+    virtual ~StringWidgetCodeGenerator();
 
-  virtual QString generateSetupFilterParameters();
+    virtual QString generateSetupFilterParameters();
 
-  virtual QString generateReadFilterParameters();
+    virtual QString generateReadFilterParameters();
 
-  virtual QString generateDataCheck();
+    virtual QString generateDataCheck();
 
-  virtual QString generateFilterParameters();
+    virtual QString generateFilterParameters();
 
-protected:
-  StringWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
+  protected:
+    StringWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
-private:
+  private:
 
-  StringWidgetCodeGenerator(const StringWidgetCodeGenerator&); // Copy Constructor Not Implemented
-  void operator=(const StringWidgetCodeGenerator&); // Operator '=' Not Implemented
+    StringWidgetCodeGenerator(const StringWidgetCodeGenerator&); // Copy Constructor Not Implemented
+    void operator=(const StringWidgetCodeGenerator&); // Operator '=' Not Implemented
 };
 
 #endif /* StringWidgetCodeGenerator_H_ */

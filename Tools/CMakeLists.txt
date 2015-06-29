@@ -47,7 +47,7 @@ configure_file( ${DREAM3DTools_SOURCE_DIR}/ToolConfiguration.h.in
 # Install the GMT script and doc file.
 install(FILES ${DREAM3DTools_SOURCE_DIR}/GMT/Draw_stereograms-gmt-v5.1.sh
         DESTINATION ./bin/
-        PERMISSIONS OWNER_EXECUTE GROUP_EXECUTE WORLD_EXECUTE
+        PERMISSIONS OWNER_EXECUTE GROUP_EXECUTE WORLD_EXECUTE OWNER_READ GROUP_READ WORLD_READ OWNER_WRITE GROUP_WRITE WORLD_WRITE
         COMPONENT Applications )
 
 install(FILES ${DREAM3DTools_SOURCE_DIR}/GMT/UsingGMT.md

@@ -108,11 +108,11 @@ int MakeDataContainer::writeFilterParameters(AbstractFilterParametersWriter* wri
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(LatticeConstantsArrayName)
-      /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayName)
-      /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayName)
-      /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayName)
-      /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
-      writer->closeFilterGroup();
+  /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayName)
+  /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayName)
+  /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayName)
+  /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -155,16 +155,16 @@ void MakeDataContainer::dataCheck()
   //image->setDimensions(64, 64, 64);
   //m->setGeometry(image);
 
-    VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(100, "TestVertexGeom");
-    SharedVertexList::Pointer test = vertices->getVertices();
-    float* verts = test->getPointer(0);
-    for (int64_t i=0;i<vertices->getNumberOfVertices();i++)
-    {
-      verts[3*i] = float(0.1 + i);
-      verts[3*i+1] = float(0.2 + i);
-      verts[3*i+2] = float(0.3 + i);
-    }
-    m->setGeometry(vertices);
+  VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(100, "TestVertexGeom");
+  SharedVertexList::Pointer test = vertices->getVertices();
+  float* verts = test->getPointer(0);
+  for (int64_t i = 0; i < vertices->getNumberOfVertices(); i++)
+  {
+    verts[3 * i] = float(0.1 + i);
+    verts[3 * i + 1] = float(0.2 + i);
+    verts[3 * i + 2] = float(0.3 + i);
+  }
+  m->setGeometry(vertices);
 
 }
 
@@ -218,7 +218,7 @@ void MakeDataContainer::execute()
 
   VertexGeom::Pointer verts = getDataContainerArray()->getDataContainer(getDataContainerName())->getGeometryAs<VertexGeom>();
 
-  for (int64_t i=0;i<verts->getNumberOfVertices();i++)
+  for (int64_t i = 0; i < verts->getNumberOfVertices(); i++)
   {
     m_FeatureIds[i] = i;
   }

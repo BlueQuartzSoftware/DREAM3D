@@ -67,7 +67,7 @@ lacking still.
 
 #ifndef M_E
 #define M_E            2.7182818284590452354   /* e */
- #endif
+#endif
 
 #ifndef M_LOG2E
 #define M_LOG2E        1.4426950408889634074   /* log_2 e */

@@ -56,11 +56,11 @@
 //
 // -----------------------------------------------------------------------------
 FilterMaker::FilterMaker(QWidget* parent) :
-QWidget(parent),
-cppGenerator(NULL),
-hGenerator(NULL),
-htmlGenerator(NULL),
-testGenerator(NULL)
+  QWidget(parent),
+  cppGenerator(NULL),
+  hGenerator(NULL),
+  htmlGenerator(NULL),
+  testGenerator(NULL)
 {
   setupUi(this);
 
@@ -141,9 +141,9 @@ void FilterMaker::on_filterName_textChanged(const QString& text)
 void FilterMaker::on_selectBtn_clicked()
 {
   QString pluginPath = QFileDialog::getExistingDirectory(this,
-    tr("Select Plugin Folder"),
-    m_OpenDialogLastDirectory,
-    QFileDialog::ShowDirsOnly);
+                                                         tr("Select Plugin Folder"),
+                                                         m_OpenDialogLastDirectory,
+                                                         QFileDialog::ShowDirsOnly);
 
   if (pluginPath.isEmpty() == false)
   {
@@ -295,7 +295,7 @@ void FilterMaker::addFilterParameterToTable(AddFilterParameter* widget)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterMaker::on_errorString_linkActivated(const QString &link)
+void FilterMaker::on_errorString_linkActivated(const QString& link)
 {
   QMessageBox msgBox;
   msgBox.setWindowTitle("Naming Restrictions");
@@ -333,14 +333,14 @@ void FilterMaker::updateFilterFileGenerators()
     cppGenerator = NULL;
   }
   cppGenerator = new PMFileGenerator(pluginDirText,
-    pathTemplate,
-    QString(filterName + ".cpp"),
-    resourceTemplate,
-    NULL,
-    this);
+                                     pathTemplate,
+                                     QString(filterName + ".cpp"),
+                                     resourceTemplate,
+                                     NULL,
+                                     this);
 
   connect(cppGenerator, SIGNAL(outputError(const QString&)),
-    this, SLOT(generationError(const QString&)));
+          this, SLOT(generationError(const QString&)));
   cppGenerator->setDoesGenerateOutput(true);
   cppGenerator->setPluginName(fi.baseName());
 
@@ -371,14 +371,14 @@ void FilterMaker::updateFilterFileGenerators()
     hGenerator = NULL;
   }
   hGenerator = new PMFileGenerator(pluginDirText,
-    pathTemplate,
-    QString(filterName + ".h"),
-    resourceTemplate,
-    NULL,
-    this);
+                                   pathTemplate,
+                                   QString(filterName + ".h"),
+                                   resourceTemplate,
+                                   NULL,
+                                   this);
 
   connect(hGenerator, SIGNAL(outputError(const QString&)),
-    this, SLOT(generationError(const QString&)));
+          this, SLOT(generationError(const QString&)));
   hGenerator->setDoesGenerateOutput(true);
   hGenerator->setPluginName(fi.baseName());
 
@@ -404,14 +404,14 @@ void FilterMaker::updateFilterFileGenerators()
     htmlGenerator = NULL;
   }
   htmlGenerator = new PMFileGenerator(pluginDirText,
-    pathTemplate,
-    QString(filterName + ".md"),
-    resourceTemplate,
-    NULL,
-    this);
+                                      pathTemplate,
+                                      QString(filterName + ".md"),
+                                      resourceTemplate,
+                                      NULL,
+                                      this);
 
   connect(htmlGenerator, SIGNAL(outputError(const QString&)),
-    this, SLOT(generationError(const QString&)));
+          this, SLOT(generationError(const QString&)));
   htmlGenerator->setDoesGenerateOutput(true);
   htmlGenerator->setPluginName(fi.baseName());
 
@@ -425,14 +425,14 @@ void FilterMaker::updateFilterFileGenerators()
     testGenerator = NULL;
   }
   testGenerator = new PMFileGenerator(pluginDirText,
-    pathTemplate,
-    QString(filterName + "Test.cpp"),
-    resourceTemplate,
-    NULL,
-    this);
+                                      pathTemplate,
+                                      QString(filterName + "Test.cpp"),
+                                      resourceTemplate,
+                                      NULL,
+                                      this);
 
   connect(testGenerator, SIGNAL(outputError(const QString&)),
-    this, SLOT(generationError(const QString&)));
+          this, SLOT(generationError(const QString&)));
   testGenerator->setDoesGenerateOutput(true);
   testGenerator->setPluginName(fi.baseName());
 }
@@ -730,8 +730,8 @@ bool FilterMaker::validityCheck()
   QFileInfo filtersDirInfo(filtersDir);
 
   if (filterName.isEmpty() == false && filterName.contains(QRegExp("[^a-zA-Z_-/\\s]")) == false
-    && filterName.contains(QRegExp("(Filter|Plugin)$")) == false && pluginDir.isEmpty() == false
-    && filtersDirInfo.exists() == true)
+      && filterName.contains(QRegExp("(Filter|Plugin)$")) == false && pluginDir.isEmpty() == false
+      && filtersDirInfo.exists() == true)
   {
     // No Errors
     generateBtn->setEnabled(true);

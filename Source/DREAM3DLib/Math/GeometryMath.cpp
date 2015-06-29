@@ -98,9 +98,9 @@ bool GeometryMath::PointInBox(const float p[3], const float ll[3], const float u
 //
 // -----------------------------------------------------------------------------
 bool GeometryMath::RayIntersectsBox(const float* p,
-  const float* q,
-  const float* ll,
-  const float* ur)
+                                    const float* q,
+                                    const float* ll,
+                                    const float* ur)
 {
   if ((ll[0] > p[0]) && (ll[0] > q[0]))
   {
@@ -133,9 +133,9 @@ bool GeometryMath::RayIntersectsBox(const float* p,
 //
 // -----------------------------------------------------------------------------
 float GeometryMath::LengthOfRayInBox(const float* p,
-  const float* q,
-  const float* ll,
-  const float* ur)
+                                     const float* q,
+                                     const float* ll,
+                                     const float* ur)
 {
   float length = 0.0;
   float frac = 0.0;
@@ -893,12 +893,12 @@ char GeometryMath::RayCrossesTriangle(const float* a, const float* b, const floa
 //
 // -----------------------------------------------------------------------------
 char GeometryMath::PointInPolyhedron(const TriangleGeom::Pointer faces,
-  const Int32Int32DynamicListArray::ElementList& faceIds,
-  const VertexGeom::Pointer faceBBs,
-  const float* q,
-  const float* ll,
-  const float* ur,
-  float radius)
+                                     const Int32Int32DynamicListArray::ElementList& faceIds,
+                                     const VertexGeom::Pointer faceBBs,
+                                     const float* q,
+                                     const float* ll,
+                                     const float* ur,
+                                     float radius)
 {
   float ray[3];  /* Ray */
   float r[3];  /* Ray endpoint. */
@@ -989,13 +989,13 @@ LOOP:
 //
 // -----------------------------------------------------------------------------
 char GeometryMath::PointInPolyhedron(const TriangleGeom::Pointer faces,
-  const Int32Int32DynamicListArray::ElementList& faceIds,
-  const VertexGeom::Pointer faceBBs,
-  const float* q,
-  const float* ll,
-  const float* ur,
-  float radius,
-  float& distToBoundary)
+                                     const Int32Int32DynamicListArray::ElementList& faceIds,
+                                     const VertexGeom::Pointer faceBBs,
+                                     const float* q,
+                                     const float* ll,
+                                     const float* ur,
+                                     float radius,
+                                     float& distToBoundary)
 {
   float ray[3] = { 0.0f, 0.0f, 0.0f };  /* Ray */
   float r[3] = { 0.0f, 0.0f, 0.0f };  /* Ray endpoint. */

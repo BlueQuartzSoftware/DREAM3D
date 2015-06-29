@@ -104,7 +104,7 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryDockWidget : public QDockWidget, pri
     * @brief showContextMenuForWidget
     * @param pos
     */
-    void showContextMenuForWidget(const QPoint &pos);
+    void showContextMenuForWidget(const QPoint& pos);
 
     /**
     * @brief launchHelpForItem

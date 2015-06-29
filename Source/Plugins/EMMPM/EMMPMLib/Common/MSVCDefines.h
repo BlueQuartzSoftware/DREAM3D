@@ -38,7 +38,7 @@
 
 #ifdef _MSC_VER
 
-  #include <stdio.h>
+#include <stdio.h>
 /*
 "It's a known, long-standing bug in the compiler system's headers.  For
 some reason the manufacturer, in its infinite wisdom, chose to #define
@@ -47,16 +47,16 @@ break any legitimate functions with those names, including those in the
 standard C++ library."
 */
 
-  #ifndef NOMINMAX
-    #define NOMINMAX
-  #endif
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
 
-  #define WINDOWS_LARGE_FILE_SUPPORT
-	#if _MSC_VER < 1400
-		#define snprintf _snprintf
-	#else
-		#define snprintf sprintf_s
-	#endif
+#define WINDOWS_LARGE_FILE_SUPPORT
+#if _MSC_VER < 1400
+#define snprintf _snprintf
+#else
+#define snprintf sprintf_s
+#endif
 #endif
 
 

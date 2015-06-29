@@ -204,9 +204,9 @@ DataArrayPath DataArrayPath::Deserialize(QString str, QString delimiter)
 
   int tokenIndex = str.indexOf(delimiter, start);
   QString dcName = str.mid(start, tokenIndex);
-  start = tokenIndex+1;
+  start = tokenIndex + 1;
   tokenIndex = str.indexOf(delimiter, start);
-  QString amName = str.mid(start, tokenIndex-start);
+  QString amName = str.mid(start, tokenIndex - start);
   start = tokenIndex + 1;
   QString daName = str.mid(start);
 
@@ -264,7 +264,7 @@ bool DataArrayPath::isValid() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> DataArrayPath::GetDataArrayNames(const QVector<DataArrayPath> &paths)
+QList<QString> DataArrayPath::GetDataArrayNames(const QVector<DataArrayPath>& paths)
 {
   QList<QString> arrayNames;
   for (int i = 0; i < paths.count(); i++)
@@ -278,7 +278,7 @@ QList<QString> DataArrayPath::GetDataArrayNames(const QVector<DataArrayPath> &pa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataArrayPath DataArrayPath::GetAttributeMatrixPath(const QVector<DataArrayPath> &paths)
+DataArrayPath DataArrayPath::GetAttributeMatrixPath(const QVector<DataArrayPath>& paths)
 {
   if (paths.isEmpty())
   {
@@ -380,7 +380,7 @@ bool DataArrayPath::ValidateVector(const QVector<DataArrayPath>& other)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataArrayPath::writeJson(QJsonObject &json) const
+void DataArrayPath::writeJson(QJsonObject& json) const
 {
   json["Data Container Name"] = getDataContainerName();
   json["Attribute Matrix Name"] = getAttributeMatrixName();
@@ -390,7 +390,7 @@ void DataArrayPath::writeJson(QJsonObject &json) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool DataArrayPath::readJson(QJsonObject &json) const
+bool DataArrayPath::readJson(QJsonObject& json) const
 {
   if (json["Data Container Name"].isString() && json["Attribute Matrix Name"].isString() && json["Data Array Name"].isString())
   {

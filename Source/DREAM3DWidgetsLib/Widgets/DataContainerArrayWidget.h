@@ -51,9 +51,9 @@ class DREAM3DWidgetsLib_EXPORT DataContainerArrayWidget : public QWidget, privat
 
     void preflightCompleted();
 
-    void dcaProxyView_indexChanged(const QModelIndex & current, const QModelIndex & previous);
+    void dcaProxyView_indexChanged(const QModelIndex& current, const QModelIndex& previous);
 
-    void on_dcaProxyView_updatePreviewWidget(const QModelIndex & index);
+    void on_dcaProxyView_updatePreviewWidget(const QModelIndex& index);
 
 
 

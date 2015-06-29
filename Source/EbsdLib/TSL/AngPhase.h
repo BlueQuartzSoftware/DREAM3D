@@ -206,10 +206,10 @@ class EbsdLib_EXPORT AngPhase
 
 struct Ang_Private_Data
 {
-    QVector<size_t> dims;
-    QVector<float> resolution;
-    QVector<float> origin;
-    QVector<AngPhase::Pointer> phases;
+  QVector<size_t> dims;
+  QVector<float> resolution;
+  QVector<float> origin;
+  QVector<AngPhase::Pointer> phases;
 };
 
 enum ANG_READ_FLAG

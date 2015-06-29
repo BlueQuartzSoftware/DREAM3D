@@ -173,7 +173,7 @@ void FilterParameterWidget::fadeWidget(QWidget* widget, bool in)
     connect(m_FaderWidget, SIGNAL(animationComplete() ),
             this, SLOT(show()));
     connect(m_FaderWidget, SIGNAL(animationComplete()),
-      this, SLOT(showBorder()));
+            this, SLOT(showBorder()));
 
     widget->setStyleSheet("border: 2px solid MediumBlue;");
   }
@@ -198,7 +198,8 @@ void FilterParameterWidget::fadeWidget(QWidget* widget, bool in)
   ss << "border-radius: 5px;";
   ss <<  "}";
 
-  if(!fadeIn) {
+  if(!fadeIn)
+  {
     startValue = detail::Max;
     endValue = 0;
   }
@@ -232,7 +233,7 @@ void FilterParameterWidget::fadeWidget(QWidget* widget, bool in)
     connect(animation, SIGNAL(finished()),
             this, SLOT(animationFinished()));
     connect(animation, SIGNAL(finished()),
-      this, SLOT(showBorder()));
+            this, SLOT(showBorder()));
   }
 
   animation->setStartValue(startValue);

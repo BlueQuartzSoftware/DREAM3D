@@ -106,7 +106,7 @@
 #define CHECK_QLABEL_OUTPUT_FILE_EXISTS_ICON_BODY1(ns, prefixname, name)\
   prefixname->setText(m_OutputFilePrefix->text() + ns::name.c_str());\
   prefixname##Icon->setPixmap(QPixmap(iconFile));\
-   
+
 #define CHECK_QLABEL_OUTPUT_FILE_EXISTS_BODY1(ns, prefixname, name)\
   prefixname->setText(m_OutputFilePrefix->text() + ns::name.c_str());
 

@@ -462,7 +462,7 @@ void CropVolume::execute()
     {
       setErrorCondition(-601);
       QString ss = QObject::tr("The FeatureIds array with name '%1' was not found in the destination DataContainer. The expected path was '%2'")
-                                .arg(dap.getDataArrayName()).arg(dap.serialize("/"));
+                   .arg(dap.getDataArrayName()).arg(dap.serialize("/"));
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }

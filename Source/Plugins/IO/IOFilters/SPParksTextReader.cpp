@@ -457,9 +457,9 @@ void SPParksTextReader::parseDataLine(QByteArray& line, QVector<size_t> dims, in
     // if the SPParks users actually wanted to read in the matching XYZ lattice site for the data then actually
     // parsing and storing the data _may_ be of interest to them
     if(dparser->getColumnName().compare("x") == 0
-       || dparser->getColumnName().compare("y") == 0
-       || dparser->getColumnName().compare("z") == 0
-       || dparser->getColumnName().compare("id") == 0)
+        || dparser->getColumnName().compare("y") == 0
+        || dparser->getColumnName().compare("z") == 0
+        || dparser->getColumnName().compare("id") == 0)
     {
       continue;
     }

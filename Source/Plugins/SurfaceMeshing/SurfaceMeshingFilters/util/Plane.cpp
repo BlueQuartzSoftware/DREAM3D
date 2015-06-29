@@ -45,7 +45,7 @@ Plane::Plane(VectorType& normal, VectorType& x)
   ensure_invariant();
 }
 
-Plane::Plane(VectorType& normal, float *x) :
+Plane::Plane(VectorType& normal, float* x) :
   m_normal(normal),
   m_center(x),
   m_d(normal.dot(x))

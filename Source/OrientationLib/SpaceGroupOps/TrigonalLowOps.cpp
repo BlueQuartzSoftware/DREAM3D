@@ -237,7 +237,7 @@ FOrientArrayType TrigonalLowOps::getMDFFZRod(FOrientArrayType rod)
   FOrientArrayType ax(4, 0.0f);
   OrientationTransforms<FOrientArrayType, float>::ro2ax(rod, ax);
 
-  float denom = sqrt(ax[0]*ax[0] + ax[1]*ax[1] + ax[2]*ax[2]);
+  float denom = sqrt(ax[0] * ax[0] + ax[1] * ax[1] + ax[2] * ax[2]);
   ax[0] = ax[0] / denom;
   ax[1] = ax[1] / denom;
   ax[1] = ax[2] / denom;
@@ -255,7 +255,7 @@ FOrientArrayType TrigonalLowOps::getMDFFZRod(FOrientArrayType rod)
   FZn3 = ax[2];
   if(angle > 60.0f)
   {
-    n1n2mag = sqrt(ax[0]*ax[0] + ax[1]*ax[1]);
+    n1n2mag = sqrt(ax[0] * ax[0] + ax[1] * ax[1]);
     if (int(angle / 60) % 2 == 0)
     {
       FZw = angle - (60.0f * int(angle / 60.0f));
@@ -658,7 +658,7 @@ DREAM3D::Rgb TrigonalLowOps::generateIPFColor(double phi1, double phi, double ph
   for (int j = 0; j < 3; j++)
   {
     getQuatSymOp(j, q2);
-	  QuaternionMathF::Multiply(q2, q1, qc);
+    QuaternionMathF::Multiply(q2, q1, qc);
 
     qu.fromQuaternion(qc);
     OrientationTransforms<FOrientArrayType, float>::qu2om(qu, om);

@@ -41,28 +41,28 @@
 
 class DREAM3DLib_EXPORT DataContainerArrayProxyFilterParameter : public FilterParameter
 {
-public:
-  DREAM3D_SHARED_POINTERS(DataContainerArrayProxyFilterParameter)
+  public:
+    DREAM3D_SHARED_POINTERS(DataContainerArrayProxyFilterParameter)
     DREAM3D_STATIC_NEW_MACRO(DataContainerArrayProxyFilterParameter)
     DREAM3D_TYPE_MACRO_SUPER(DataContainerArrayProxyFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-    const QString& widgetType, const QVariant& defaultValue,
-    DataContainerArrayProxy proxy, Qt::CheckState defState,
-    Category category,
-    int groupIndex = -1);
+                       const QString& widgetType, const QVariant& defaultValue,
+                       DataContainerArrayProxy proxy, Qt::CheckState defState,
+                       Category category,
+                       int groupIndex = -1);
 
-  virtual ~DataContainerArrayProxyFilterParameter();
+    virtual ~DataContainerArrayProxyFilterParameter();
 
-  DREAM3D_INSTANCE_PROPERTY(DataContainerArrayProxy, DataContainerArrayProxy)
+    DREAM3D_INSTANCE_PROPERTY(DataContainerArrayProxy, DataContainerArrayProxy)
     DREAM3D_INSTANCE_PROPERTY(Qt::CheckState, DefaultFlagValue)
 
-protected:
-  DataContainerArrayProxyFilterParameter();
+  protected:
+    DataContainerArrayProxyFilterParameter();
 
-private:
-  DataContainerArrayProxyFilterParameter(const DataContainerArrayProxyFilterParameter&); // Copy Constructor Not Implemented
-  void operator=(const DataContainerArrayProxyFilterParameter&); // Operator '=' Not Implemented
+  private:
+    DataContainerArrayProxyFilterParameter(const DataContainerArrayProxyFilterParameter&); // Copy Constructor Not Implemented
+    void operator=(const DataContainerArrayProxyFilterParameter&); // Operator '=' Not Implemented
 };
 
 #endif /* _DataContainerArrayProxyFilterParameter_H_ */

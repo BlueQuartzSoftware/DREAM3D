@@ -59,65 +59,65 @@ class DynamicTableFilterParameter;
 */
 class DREAM3DWidgetsLib_EXPORT DynamicTableWidget : public FilterParameterWidget, private Ui::DynamicTableWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-public:
-  /**
-  * @brief Constructor
-  * @param parameter The FilterParameter object that this widget represents
-  * @param filter The instance of the filter that this parameter is a part of
-  * @param parent The parent QWidget for this Widget
-  */
-  DynamicTableWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
+  public:
+    /**
+    * @brief Constructor
+    * @param parameter The FilterParameter object that this widget represents
+    * @param filter The instance of the filter that this parameter is a part of
+    * @param parent The parent QWidget for this Widget
+    */
+    DynamicTableWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
 
-  virtual ~DynamicTableWidget();
+    virtual ~DynamicTableWidget();
 
-  /**
-  * @brief This method does additional GUI widget connections
-  */
-  void setupGui();
+    /**
+    * @brief This method does additional GUI widget connections
+    */
+    void setupGui();
 
-  /**
-  * @brief initializeWidget
-  * @param parameter
-  * @param filter
-  */
-  void initializeWidget(FilterParameter* parameter, AbstractFilter* filter);
+    /**
+    * @brief initializeWidget
+    * @param parameter
+    * @param filter
+    */
+    void initializeWidget(FilterParameter* parameter, AbstractFilter* filter);
 
 
-  void setFilterParameter(FilterParameter* value);
-  FilterParameter* getFilterParameter() const;
+    void setFilterParameter(FilterParameter* value);
+    FilterParameter* getFilterParameter() const;
 
-  std::vector<std::vector<double> > getData();
+    std::vector<std::vector<double> > getData();
 
 
 
   public slots:
-  void on_dynamicTable_cellChanged(int row, int col);
-  void on_addRowBtn_pressed();
-  void on_deleteRowBtn_pressed();
-  void on_addColBtn_pressed();
-  void on_deleteColBtn_pressed();
-  void filterNeedsInputParameters(AbstractFilter* filter); // When the filter is ready for us to update its input parameter(s) that we are responsible for
-  void beforePreflight(); // Called just before the "dataCheck()" is called
-  void afterPreflight(); // Called just after the dataCheck() is called.
+    void on_dynamicTable_cellChanged(int row, int col);
+    void on_addRowBtn_pressed();
+    void on_deleteRowBtn_pressed();
+    void on_addColBtn_pressed();
+    void on_deleteColBtn_pressed();
+    void filterNeedsInputParameters(AbstractFilter* filter); // When the filter is ready for us to update its input parameter(s) that we are responsible for
+    void beforePreflight(); // Called just before the "dataCheck()" is called
+    void afterPreflight(); // Called just after the dataCheck() is called.
 
-signals:
-  void errorSettingFilterParameter(const QString& msg);
-  void parametersChanged();
+  signals:
+    void errorSettingFilterParameter(const QString& msg);
+    void parametersChanged();
 
-private:
+  private:
 
-  DynamicTableFilterParameter*  m_FilterParameter;
-  bool m_DidCausePreflight;
+    DynamicTableFilterParameter*  m_FilterParameter;
+    bool m_DidCausePreflight;
 
-  void populateTable();
-  void populateHeaders(QStringList rHeaders, QStringList cHeaders);
-  void renumberDynamicHeaders();
-  void updateDynamicButtons();
+    void populateTable();
+    void populateHeaders(QStringList rHeaders, QStringList cHeaders);
+    void renumberDynamicHeaders();
+    void updateDynamicButtons();
 
-  DynamicTableWidget(const DynamicTableWidget&); // Copy Constructor Not Implemented
-  void operator=(const DynamicTableWidget&); // Operator '=' Not Implemented
+    DynamicTableWidget(const DynamicTableWidget&); // Copy Constructor Not Implemented
+    void operator=(const DynamicTableWidget&); // Operator '=' Not Implemented
 
 };
 

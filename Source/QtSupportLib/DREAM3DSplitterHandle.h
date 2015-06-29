@@ -43,16 +43,16 @@
 
 class QtSupportLib_EXPORT DREAM3DSplitterHandle : public QSplitterHandle
 {
-  Q_OBJECT
-public:
-  DREAM3DSplitterHandle(Qt::Orientation orientation, QSplitter *parent)
-    : QSplitterHandle(orientation, parent) {   }
+    Q_OBJECT
+  public:
+    DREAM3DSplitterHandle(Qt::Orientation orientation, QSplitter* parent)
+      : QSplitterHandle(orientation, parent) {   }
 
-  // Paint the horizontal handle as a gradient, paint
-  // the vertical handle as a line.
-  void paintEvent(QPaintEvent *);
+    // Paint the horizontal handle as a gradient, paint
+    // the vertical handle as a line.
+    void paintEvent(QPaintEvent*);
 
-  QSize sizeHint() const;
+    QSize sizeHint() const;
 };
 
 #endif /* _DREAM3DSplitterHandle_H */

@@ -97,8 +97,8 @@ class ExportDataPrivate
       {
         for (int32_t j = 0; j < nComp; j++)
         {
-          out << inputArrayPtr[i*nComp + j];
-          if (j < nComp-1) { out << delimeter; }
+          out << inputArrayPtr[i * nComp + j];
+          if (j < nComp - 1) { out << delimeter; }
         }
         recCount++;
 
@@ -146,7 +146,7 @@ void ExportData::setupFilterParameters()
   parameters.push_back(FilterParameter::New("File Extension", "FileExtension", FilterParameterWidgetType::StringWidget, getFileExtension(), FilterParameter::Parameter));
   parameters.push_back(FilterParameter::New("Maximum Tuples Per Line", "MaxValPerLine", FilterParameterWidgetType::IntWidget, getMaxValPerLine(), FilterParameter::Parameter));
   {
-    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New(); 	//Delimiter choice
+    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();  //Delimiter choice
     parameter->setHumanLabel("Delimiter");
     parameter->setPropertyName("Delimeter");
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);

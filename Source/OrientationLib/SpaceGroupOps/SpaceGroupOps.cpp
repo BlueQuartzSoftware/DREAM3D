@@ -102,8 +102,8 @@ void SpaceGroupOps::getFZQuat(QuatF& qr)
 //
 // -----------------------------------------------------------------------------
 float SpaceGroupOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
-                                    QuatF& q1, QuatF& q2,
-                                    float& n1, float& n2, float& n3)
+                                   QuatF& q1, QuatF& q2,
+                                   float& n1, float& n2, float& n3)
 {
   float wmin = 9999999.0f; //,na,nb,nc;
   float w = 0;
@@ -190,7 +190,7 @@ FOrientArrayType SpaceGroupOps::_calcRodNearestOrigin(const float rodsym[24][3],
       outRod[2] = rc3;
     }
   }
-  float mag = sqrt(outRod[0]*outRod[0] + outRod[1]*outRod[1] + outRod[2]*outRod[2]);
+  float mag = sqrt(outRod[0] * outRod[0] + outRod[1] * outRod[1] + outRod[2] * outRod[2]);
   if(mag == 0.0f)
   {
     outRod[3] = std::numeric_limits<float>::infinity();
@@ -198,9 +198,9 @@ FOrientArrayType SpaceGroupOps::_calcRodNearestOrigin(const float rodsym[24][3],
   else
   {
     outRod[3] = mag;
-    outRod[0] = outRod[0]/outRod[3];
-    outRod[1] = outRod[1]/outRod[3];
-    outRod[2] = outRod[2]/outRod[3];
+    outRod[0] = outRod[0] / outRod[3];
+    outRod[1] = outRod[1] / outRod[3];
+    outRod[2] = outRod[2] / outRod[3];
   }
   return outRod;
 }
@@ -209,8 +209,8 @@ FOrientArrayType SpaceGroupOps::_calcRodNearestOrigin(const float rodsym[24][3],
 //
 // -----------------------------------------------------------------------------
 void SpaceGroupOps::_calcNearestQuat(const QuatF quatsym[24], int numsym,
-                                      QuatF& q1,
-                                      QuatF& q2)
+                                     QuatF& q1,
+                                     QuatF& q2)
 {
   float dist = 0;
   float smallestdist = 1000000.0f;

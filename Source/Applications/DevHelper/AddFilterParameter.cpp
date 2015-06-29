@@ -47,7 +47,7 @@
 //
 // -----------------------------------------------------------------------------
 AddFilterParameter::AddFilterParameter(QWidget* parent) :
-QWidget(parent)
+  QWidget(parent)
 {
   setupUi(this);
 
@@ -98,7 +98,7 @@ void AddFilterParameter::on_addFilterParameterBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AddFilterParameter::on_varName_textChanged(const QString &text)
+void AddFilterParameter::on_varName_textChanged(const QString& text)
 {
   // Update the "Add" button
   if (type->currentText() == "SeparatorWidget")
@@ -114,7 +114,7 @@ void AddFilterParameter::on_varName_textChanged(const QString &text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AddFilterParameter::on_humanName_textChanged(const QString &text)
+void AddFilterParameter::on_humanName_textChanged(const QString& text)
 {
   // Update the "Add" button
   if (type->currentText() == "SeparatorWidget")
@@ -130,7 +130,7 @@ void AddFilterParameter::on_humanName_textChanged(const QString &text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AddFilterParameter::on_type_currentTextChanged(const QString &text)
+void AddFilterParameter::on_type_currentTextChanged(const QString& text)
 {
   if (text == "SeparatorWidget")
   {
@@ -268,7 +268,7 @@ void AddFilterParameter::setInitValue(QString initValue)
 bool AddFilterParameter::filledOutCheck()
 {
   if (type->currentIndex() >= 0 && varName->text().isEmpty() == false
-    && humanName->text().isEmpty() == false /* && initValue->text().isEmpty() == false */)
+      && humanName->text().isEmpty() == false /* && initValue->text().isEmpty() == false */)
   {
     return true;
   }

@@ -137,7 +137,8 @@ void checkInitializationInt(AbstractFilter* filter, double initValue, int32_t er
   QString strType = var->getTypeAsString();
   strType.remove("_t");
 
-  if (!((initValue >= std::numeric_limits<T>::min()) && (initValue <= std::numeric_limits<T>::max()))){
+  if (!((initValue >= std::numeric_limits<T>::min()) && (initValue <= std::numeric_limits<T>::max())))
+  {
     filter->setErrorCondition(err);
     ss = QObject::tr("The %1 initialization value was invalid. The valid range is %2 to %3").arg(strType).arg(std::numeric_limits<T>::min()).arg(std::numeric_limits<T>::max());
   }
@@ -160,7 +161,8 @@ void checkInitializationFloatDouble(AbstractFilter* filter, double initValue, in
   QString strType = var->getTypeAsString();
 
   if (!(((initValue >= static_cast<T>(-1) * std::numeric_limits<T>::max()) && (initValue <= static_cast<T>(-1) * std::numeric_limits<T>::min())) ||
-    (initValue == 0) || ((initValue >= std::numeric_limits<T>::min()) && (initValue <= std::numeric_limits<T>::max())))){
+        (initValue == 0) || ((initValue >= std::numeric_limits<T>::min()) && (initValue <= std::numeric_limits<T>::max()))))
+  {
     filter->setErrorCondition(err);
     ss = QObject::tr("The %1 initialization value was invalid. The valid ranges are -%3 to -%2, 0, %2 to %3").arg(strType).arg(std::numeric_limits<T>::min()).arg(std::numeric_limits<T>::max());
   }

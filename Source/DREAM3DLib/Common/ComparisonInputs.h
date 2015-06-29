@@ -51,7 +51,7 @@ typedef struct
   int compOperator;
   double compValue;
 
-  void writeJson(QJsonObject &json)
+  void writeJson(QJsonObject& json)
   {
     json["Data Container Name"] = dataContainerName;
     json["Attribute Matrix Name"] = attributeMatrixName;
@@ -60,10 +60,10 @@ typedef struct
     json["Comparison Value"] = compValue;
   }
 
-  bool readJson(QJsonObject &json)
+  bool readJson(QJsonObject& json)
   {
     if (json["Data Container Name"].isString() && json["Attribute Matrix Name"].isString() && json["Attribute Array Name"].isString()
-      && json["Comparison Operator"].isDouble() && json["Comparison Value"].isDouble())
+        && json["Comparison Operator"].isDouble() && json["Comparison Value"].isDouble())
     {
       dataContainerName = json["Data Container Name"].toString();
       attributeMatrixName = json["Attribute Matrix Name"].toString();

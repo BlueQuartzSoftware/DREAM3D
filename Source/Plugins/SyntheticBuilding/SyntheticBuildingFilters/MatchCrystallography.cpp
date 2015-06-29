@@ -558,7 +558,7 @@ void MatchCrystallography::MC_LoopBody1(int32_t feature, size_t ensem, size_t j,
   curmiso3 = m_MisorientationLists[feature][3 * j + 2];
 
   FOrientArrayType rod(curmiso1, curmiso2, curmiso3, 0.0f);
-  float mag = sqrt(curmiso1*curmiso1 + curmiso2*curmiso2 + curmiso3*curmiso3);
+  float mag = sqrt(curmiso1 * curmiso1 + curmiso2 * curmiso2 + curmiso3 * curmiso3);
   if(mag == 0.0f)
   {
     rod[3] = std::numeric_limits<float>::infinity();
@@ -566,9 +566,9 @@ void MatchCrystallography::MC_LoopBody1(int32_t feature, size_t ensem, size_t j,
   else
   {
     rod[3] = mag;
-    rod[0] = rod[0]/rod[3];
-    rod[1] = rod[1]/rod[3];
-    rod[2] = rod[2]/rod[3];
+    rod[0] = rod[0] / rod[3];
+    rod[1] = rod[1] / rod[3];
+    rod[2] = rod[2] / rod[3];
   }
 
   curmisobin = m_OrientationOps[sym]->getMisoBin(rod);
@@ -602,7 +602,7 @@ void MatchCrystallography::MC_LoopBody2(int32_t feature, size_t ensem, size_t j,
   curmiso3 = m_MisorientationLists[feature][3 * j + 2];
 
   FOrientArrayType rod(curmiso1, curmiso2, curmiso3, 0.0f);
-  float mag = sqrt(curmiso1*curmiso1 + curmiso2*curmiso2 + curmiso3*curmiso3);
+  float mag = sqrt(curmiso1 * curmiso1 + curmiso2 * curmiso2 + curmiso3 * curmiso3);
   if(mag == 0.0f)
   {
     rod[3] = std::numeric_limits<float>::infinity();
@@ -610,9 +610,9 @@ void MatchCrystallography::MC_LoopBody2(int32_t feature, size_t ensem, size_t j,
   else
   {
     rod[3] = mag;
-    rod[0] = rod[0]/rod[3];
-    rod[1] = rod[1]/rod[3];
-    rod[2] = rod[2]/rod[3];
+    rod[0] = rod[0] / rod[3];
+    rod[1] = rod[1] / rod[3];
+    rod[2] = rod[2] / rod[3];
   }
 
   curmisobin = m_OrientationOps[sym]->getMisoBin(rod);

@@ -47,13 +47,13 @@ class FilterBundler
     FilterBundler();
     FilterBundler(PMFileGenerator* cppfile, PMFileGenerator* hfile,
                   PMFileGenerator* htmlfile, PMFileGenerator* testfile,
-				  bool pub_filter);
+                  bool pub_filter);
     virtual ~FilterBundler() {}
 
     PMFileGenerator* getCPPGenerator();
     PMFileGenerator* getHGenerator();
     PMFileGenerator* getHTMLGenerator();
-	PMFileGenerator* getTestGenerator();
+    PMFileGenerator* getTestGenerator();
     bool             isPublic();
 
 
@@ -65,7 +65,7 @@ class FilterBundler
       hfile = rhs.hfile;
       htmlfile = rhs.htmlfile;
       publicFilter = rhs.publicFilter;
-	  testfile = rhs.testfile;
+      testfile = rhs.testfile;
     }
 
     void operator=(const FilterBundler& rhs)
@@ -74,7 +74,7 @@ class FilterBundler
       hfile = rhs.hfile;
       htmlfile = rhs.htmlfile;
       publicFilter = rhs.publicFilter;
-	  testfile = rhs.testfile;
+      testfile = rhs.testfile;
     }
 
   protected:
@@ -83,7 +83,7 @@ class FilterBundler
     PMFileGenerator* cppfile;
     PMFileGenerator* hfile;
     PMFileGenerator* htmlfile;
-	PMFileGenerator* testfile;
+    PMFileGenerator* testfile;
     bool publicFilter;
 
 

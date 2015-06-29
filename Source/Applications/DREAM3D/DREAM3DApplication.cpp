@@ -75,20 +75,20 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3DApplication::DREAM3DApplication(int & argc, char ** argv) :
+DREAM3DApplication::DREAM3DApplication(int& argc, char** argv) :
   QApplication(argc, argv),
   m_ActiveWindow(NULL),
-  #if defined(Q_OS_MAC)
+#if defined(Q_OS_MAC)
   m_GlobalMenu(NULL),
-  #endif
+#endif
   m_OpenDialogLastDirectory(""),
   show_splash(true),
   Splash(NULL)
 {
   // Connection to update the recent files list on all windows when it changes
   QRecentFileList* recentsList = QRecentFileList::instance();
-  connect(recentsList, SIGNAL(fileListChanged(const QString &)),
-    this, SLOT(updateRecentFileList(const QString &)));
+  connect(recentsList, SIGNAL(fileListChanged(const QString&)),
+          this, SLOT(updateRecentFileList(const QString&)));
 
   // Create the placeholder View Menu
   m_PlaceholderViewMenu = createPlaceholderViewMenu();
@@ -123,9 +123,9 @@ bool DREAM3DApplication::initialize(int argc, char* argv[])
   QApplication::setApplicationVersion(DREAM3DLib::Version::Complete());
 
   // If Mac, initialize global menu
-  #if defined (Q_OS_MAC)
-    m_GlobalMenu = new DREAM3DMenu();
-  #endif
+#if defined (Q_OS_MAC)
+  m_GlobalMenu = new DREAM3DMenu();
+#endif
 
   // Create and show the splash screen as the main window is being created.
   QPixmap pixmap(QLatin1String(":/branded_splash.png"));
@@ -160,7 +160,7 @@ bool DREAM3DApplication::initialize(int argc, char* argv[])
   QApplication::instance()->processEvents();
   if (show_splash)
   {
- //   delay(1);
+//   delay(1);
     this->Splash->finish(NULL);
   }
   QApplication::instance()->processEvents();
@@ -241,7 +241,8 @@ QVector<IDREAM3DPlugin*> DREAM3DApplication::loadPlugins()
       pluginDirs << thePath;
       aPluginDir.cdUp(); // Move back up a directory level
       int no_error = chdir(aPluginDir.absolutePath().toLatin1().constData());
-      if( no_error < 0) {
+      if( no_error < 0)
+      {
         qDebug() << "Could not set the working directory.";
       }
     }
@@ -263,7 +264,7 @@ QVector<IDREAM3DPlugin*> DREAM3DApplication::loadPlugins()
       if (fileName.endsWith("_debug.plugin", Qt::CaseSensitive))
 #else
       if (fileName.endsWith( ".plugin", Qt::CaseSensitive) // We want ONLY Release plugins
-      && ! fileName.endsWith("_debug.plugin", Qt::CaseSensitive)) // so ignore these plugins
+          && ! fileName.endsWith("_debug.plugin", Qt::CaseSensitive)) // so ignore these plugins
 #endif
       {
         pluginFilePaths << aPluginDir.absoluteFilePath(fileName);
@@ -365,7 +366,7 @@ bool DREAM3DApplication::event(QEvent* event)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DApplication::updateRecentFileList(const QString &file)
+void DREAM3DApplication::updateRecentFileList(const QString& file)
 {
 #if defined (Q_OS_MAC)
   QMenu* recentFilesMenu = m_GlobalMenu->getRecentFilesMenu();
@@ -541,7 +542,7 @@ void DREAM3DApplication::on_actionOpen_triggered()
 {
   QString proposedDir = m_OpenDialogLastDirectory;
   QString filePath = QFileDialog::getOpenFileName(NULL, tr("Open Pipeline"),
-    proposedDir, tr("Json File (*.json);;DREAM.3D File (*.dream3d);;Text File (*.txt);;Ini File (*.ini);;All Files (*.*)"));
+                                                  proposedDir, tr("Json File (*.json);;DREAM.3D File (*.dream3d);;Text File (*.txt);;Ini File (*.ini);;All Files (*.*)"));
   if(filePath.isEmpty())
   {
     return;
@@ -815,7 +816,7 @@ void DREAM3DApplication::on_actionLocateFile_triggered()
     }
 
     QString filePath = QFileDialog::getOpenFileName(bookmarksTreeView, tr("Locate Pipeline File"),
-      pathIndex.data().toString(), tr(restrictions.toStdString().c_str()));
+                                                    pathIndex.data().toString(), tr(restrictions.toStdString().c_str()));
     if (true == filePath.isEmpty()) { return; }
 
     filePath = QDir::toNativeSeparators(filePath);
@@ -848,14 +849,14 @@ void DREAM3DApplication::on_actionShowBookmarkInFileSystem_triggered()
       QString pipelinePathDir = pipelinePathInfo.path();
 
       QString s("file://");
-    #if defined(Q_OS_WIN)
+#if defined(Q_OS_WIN)
       s = s + "/"; // Need the third slash on windows because file paths start with a drive letter
-    #elif defined(Q_OS_MAC)
+#elif defined(Q_OS_MAC)
 
-    #else
+#else
       // We are on Linux - I think
 
-    #endif
+#endif
       s = s + pipelinePathDir;
       QDesktopServices::openUrl(s);
     }
@@ -879,14 +880,14 @@ void DREAM3DApplication::on_actionShowPrebuiltInFileSystem_triggered()
     QString pipelinePathDir = pipelinePathInfo.path();
 
     QString s("file://");
-  #if defined(Q_OS_WIN)
+#if defined(Q_OS_WIN)
     s = s + "/"; // Need the third slash on windows because file paths start with a drive letter
-  #elif defined(Q_OS_MAC)
+#elif defined(Q_OS_MAC)
 
-  #else
+#else
     // We are on Linux - I think
 
-  #endif
+#endif
     s = s + pipelinePathDir;
     QDesktopServices::openUrl(s);
   }
@@ -935,14 +936,14 @@ void DREAM3DApplication::on_pipelineViewContextMenuRequested(const QPoint& pos)
   PipelineViewWidget* pipelineView = m_ActiveWindow->getPipelineViewWidget();
   QMenu menu;
 
-  #if defined(Q_OS_MAC)
-    menu.addAction(m_GlobalMenu->getClearPipeline());
-  #else
-    if (NULL != m_ActiveWindow)
-    {
-      menu.addAction(m_ActiveWindow->getDREAM3DMenu()->getClearPipeline());
-    }
-  #endif
+#if defined(Q_OS_MAC)
+  menu.addAction(m_GlobalMenu->getClearPipeline());
+#else
+  if (NULL != m_ActiveWindow)
+  {
+    menu.addAction(m_ActiveWindow->getDREAM3DMenu()->getClearPipeline());
+  }
+#endif
 
   if (NULL != m_ActiveWindow)
   {
@@ -1089,19 +1090,19 @@ void DREAM3DApplication::on_prebuiltsDockContextMenuRequested(const QPoint& pos)
   PrebuiltPipelinesDockWidget* prebuiltsDockWidget = m_ActiveWindow->getPrebuiltsDockWidget();
   QMenu menu;
 
-  #if defined(Q_OS_MAC)
-    menu.addAction(m_GlobalMenu->getShowPrebuiltInFileSystem());
-  #else
-    if (NULL != m_ActiveWindow)
-    {
-      menu.addAction(m_ActiveWindow->getDREAM3DMenu()->getShowPrebuiltInFileSystem());
-    }
-  #endif
+#if defined(Q_OS_MAC)
+  menu.addAction(m_GlobalMenu->getShowPrebuiltInFileSystem());
+#else
+  if (NULL != m_ActiveWindow)
+  {
+    menu.addAction(m_ActiveWindow->getDREAM3DMenu()->getShowPrebuiltInFileSystem());
+  }
+#endif
 
-    if (NULL != m_ActiveWindow)
-    {
-      menu.exec(prebuiltsDockWidget->mapToGlobal(pos));
-    }
+  if (NULL != m_ActiveWindow)
+  {
+    menu.exec(prebuiltsDockWidget->mapToGlobal(pos));
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -1192,7 +1193,7 @@ void DREAM3DApplication::on_actionShowIssues_triggered(bool visible)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DApplication::newInstanceFromFile(const QString &filePath, const bool &setOpenedFilePath, const bool &addToRecentFiles)
+void DREAM3DApplication::newInstanceFromFile(const QString& filePath, const bool& setOpenedFilePath, const bool& addToRecentFiles)
 {
   DREAM3D_UI* ui = getNewDREAM3DInstance();
   QString nativeFilePath = QDir::toNativeSeparators(filePath);
@@ -1247,39 +1248,40 @@ void DREAM3DApplication::activeWindowChanged(DREAM3D_UI* instance)
   {
     m_ActiveWindow = instance;
 
-    #if defined(Q_OS_MAC)
-      // Set this instance's view menu to the global menu
-      QMenuBar* menuBar = m_GlobalMenu->getMenuBar();
-      QMenu* viewMenuToAdd = m_DREAM3DInstanceMap.value(instance, NULL);
-      if (NULL != viewMenuToAdd)
-      {
-        m_GlobalMenu->setViewMenu(viewMenuToAdd);
-      }
+#if defined(Q_OS_MAC)
+    // Set this instance's view menu to the global menu
+    QMenuBar* menuBar = m_GlobalMenu->getMenuBar();
+    QMenu* viewMenuToAdd = m_DREAM3DInstanceMap.value(instance, NULL);
+    if (NULL != viewMenuToAdd)
+    {
+      m_GlobalMenu->setViewMenu(viewMenuToAdd);
+    }
 
-      /* If the active signal got fired and there is now only one window,
-       * this means that the first window has been opened.
-       * Enable menu items. */
-      if (m_DREAM3DInstanceMap.size() == 1)
+    /* If the active signal got fired and there is now only one window,
+     * this means that the first window has been opened.
+     * Enable menu items. */
+    if (m_DREAM3DInstanceMap.size() == 1)
+    {
+      // We are launching the first window, so remove the placeholder view menu
+      if (NULL != m_PlaceholderViewMenu)
       {
-        // We are launching the first window, so remove the placeholder view menu
-        if (NULL != m_PlaceholderViewMenu)
-        {
-          menuBar->removeAction(m_PlaceholderViewMenu->menuAction());
-        }
-        toggleGlobalMenuItems(true);
+        menuBar->removeAction(m_PlaceholderViewMenu->menuAction());
       }
-    #endif
+      toggleGlobalMenuItems(true);
+    }
+#endif
   }
   else
   {
-    #if defined(Q_OS_MAC)
+#if defined(Q_OS_MAC)
     // Remove the inactive window's view menu from the menu bar
     QMenuBar* menuBar = m_GlobalMenu->getMenuBar();
     QMenu* viewMenuToRemove = m_DREAM3DInstanceMap.value(instance, NULL);
-    if(NULL != viewMenuToRemove) {
+    if(NULL != viewMenuToRemove)
+    {
       menuBar->removeAction(viewMenuToRemove->menuAction());
     }
-    #endif
+#endif
 
     /* If the inactive signal got fired and there are no more windows,
      * this means that the last window has been closed.
@@ -1288,10 +1290,10 @@ void DREAM3DApplication::activeWindowChanged(DREAM3D_UI* instance)
     {
       m_ActiveWindow = NULL;
 
-      #if defined(Q_OS_MAC)
-        m_GlobalMenu->setViewMenu(m_PlaceholderViewMenu);
-        toggleGlobalMenuItems(false);
-      #endif
+#if defined(Q_OS_MAC)
+      m_GlobalMenu->setViewMenu(m_PlaceholderViewMenu);
+      toggleGlobalMenuItems(false);
+#endif
     }
   }
 }

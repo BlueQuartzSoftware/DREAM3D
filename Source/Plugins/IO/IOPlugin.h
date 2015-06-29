@@ -64,19 +64,19 @@ class IOPlugin : public QObject, public IDREAM3DPlugin
      */
     virtual QString getPluginName();
 
-     /**
-     * @brief Returns the version
-     */
+    /**
+    * @brief Returns the version
+    */
     virtual QString getVersion();
 
-     /**
-     * @brief Returns the compatibility version
-     */
+    /**
+    * @brief Returns the compatibility version
+    */
     virtual QString getCompatibilityVersion();
 
-     /**
-     * @brief Returns the name of the vendor
-     */
+    /**
+    * @brief Returns the name of the vendor
+    */
     virtual QString getVendor();
 
     /**

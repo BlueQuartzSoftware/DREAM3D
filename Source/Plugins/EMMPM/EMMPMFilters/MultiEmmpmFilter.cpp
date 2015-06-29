@@ -55,10 +55,10 @@
 //
 // -----------------------------------------------------------------------------
 MultiEmmpmFilter::MultiEmmpmFilter() :
-EMMPMFilter(),
-m_OutputAttributeMatrixName("MultiArrayEMMPMOutput"),
-m_OutputArrayPrefix("Segmented_"),
-m_UsePreviousMuSigma(true)
+  EMMPMFilter(),
+  m_OutputAttributeMatrixName("MultiArrayEMMPMOutput"),
+  m_OutputArrayPrefix("Segmented_"),
+  m_UsePreviousMuSigma(true)
 {
   setupFilterParameters();
 }
@@ -189,7 +189,7 @@ void MultiEmmpmFilter::dataCheck()
     m_OutputImage = m_OutputImagePtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
- #endif
+#endif
 
   if (getOutputArrayPrefix().isEmpty())
   {
@@ -332,19 +332,19 @@ AbstractFilter::Pointer MultiEmmpmFilter::newFilterInstance(bool copyFilterParam
   MultiEmmpmFilter::Pointer filter = MultiEmmpmFilter::New();
   if (true == copyFilterParameters)
   {
-  DREAM3D_COPY_INSTANCEVAR(InputDataArrayVector)
-  DREAM3D_COPY_INSTANCEVAR(NumClasses)
-  DREAM3D_COPY_INSTANCEVAR(ExchangeEnergy)
-  DREAM3D_COPY_INSTANCEVAR(HistogramLoops)
-  DREAM3D_COPY_INSTANCEVAR(SegmentationLoops)
-  DREAM3D_COPY_INSTANCEVAR(UseSimulatedAnnealing)
-  DREAM3D_COPY_INSTANCEVAR(UseGradientPenalty)
-  DREAM3D_COPY_INSTANCEVAR(GradientPenalty)
-  DREAM3D_COPY_INSTANCEVAR(UseCurvaturePenalty)
-  DREAM3D_COPY_INSTANCEVAR(CurvaturePenalty)
-  DREAM3D_COPY_INSTANCEVAR(RMax)
-  DREAM3D_COPY_INSTANCEVAR(EMLoopDelay)
-  DREAM3D_COPY_INSTANCEVAR(OutputAttributeMatrixName)
+    DREAM3D_COPY_INSTANCEVAR(InputDataArrayVector)
+    DREAM3D_COPY_INSTANCEVAR(NumClasses)
+    DREAM3D_COPY_INSTANCEVAR(ExchangeEnergy)
+    DREAM3D_COPY_INSTANCEVAR(HistogramLoops)
+    DREAM3D_COPY_INSTANCEVAR(SegmentationLoops)
+    DREAM3D_COPY_INSTANCEVAR(UseSimulatedAnnealing)
+    DREAM3D_COPY_INSTANCEVAR(UseGradientPenalty)
+    DREAM3D_COPY_INSTANCEVAR(GradientPenalty)
+    DREAM3D_COPY_INSTANCEVAR(UseCurvaturePenalty)
+    DREAM3D_COPY_INSTANCEVAR(CurvaturePenalty)
+    DREAM3D_COPY_INSTANCEVAR(RMax)
+    DREAM3D_COPY_INSTANCEVAR(EMLoopDelay)
+    DREAM3D_COPY_INSTANCEVAR(OutputAttributeMatrixName)
   }
   return filter;
 }

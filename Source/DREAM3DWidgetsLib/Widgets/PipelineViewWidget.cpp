@@ -373,7 +373,7 @@ int PipelineViewWidget::writePipeline(QString filePath)
     if (f.remove() == false)
     {
       QMessageBox::warning(this, QString::fromLatin1("Pipeline Write Error"),
-        QString::fromLatin1("There was an error removing the existing pipeline file. The pipeline was NOT saved."));
+                           QString::fromLatin1("There was an error removing the existing pipeline file. The pipeline was NOT saved."));
       return -1;
     }
   }
@@ -412,14 +412,14 @@ int PipelineViewWidget::writePipeline(QString filePath)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PipelineViewWidget::openPipeline(const QString &filePath, int index, const bool &setOpenedFilePath, const bool &changeTitle)
+int PipelineViewWidget::openPipeline(const QString& filePath, int index, const bool& setOpenedFilePath, const bool& changeTitle)
 {
   QFileInfo fi(filePath);
   if (fi.exists() == false)
   {
-      QMessageBox::warning(this, QString::fromLatin1("Pipeline Read Error"),
-        QString::fromLatin1("There was an error opening the specified pipeline file. The pipeline file does not exist."));
-      return -1;
+    QMessageBox::warning(this, QString::fromLatin1("Pipeline Read Error"),
+                         QString::fromLatin1("There was an error opening the specified pipeline file. The pipeline file does not exist."));
+    return -1;
   }
 
   // Clear the pipeline Issues table first so we can collect all the error messages
@@ -453,7 +453,7 @@ int PipelineViewWidget::openPipeline(const QString &filePath, int index, const b
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FilterPipeline::Pointer PipelineViewWidget::readPipelineFromFile(const QString &filePath)
+FilterPipeline::Pointer PipelineViewWidget::readPipelineFromFile(const QString& filePath)
 {
   QFileInfo fi(filePath);
   QString ext = fi.suffix();
@@ -576,7 +576,7 @@ void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, int index)
           this, SLOT(preflightPipeline()));
 
   connect(w, SIGNAL(parametersChanged()),
-    this, SLOT(handleFilterParameterChanged()));
+          this, SLOT(handleFilterParameterChanged()));
 
   // Check to make sure at least the vertical spacer is in the Layout
   if (addSpacer)
@@ -849,7 +849,7 @@ void PipelineViewWidget::dragMoveEvent(QDragMoveEvent* event)
       PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(i)->widget());
       if (w != NULL && m_CurrentFilterBeingDragged != NULL && w != m_CurrentFilterBeingDragged)
       {
-        if (event->pos().y() <= w->geometry().y() + w->geometry().height()/2)
+        if (event->pos().y() <= w->geometry().y() + w->geometry().height() / 2)
         {
           m_DropBox->setLabel("    [" + QString::number(i + 1) + "] " + m_CurrentFilterBeingDragged->getHumanLabel());
           m_FilterWidgetLayout->insertWidget(i, m_DropBox);
@@ -865,7 +865,7 @@ void PipelineViewWidget::dragMoveEvent(QDragMoveEvent* event)
       PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(count - 2)->widget());
       if (w != NULL && m_CurrentFilterBeingDragged != NULL && w != m_CurrentFilterBeingDragged)
       {
-        if (event->pos().y() >= w->geometry().y() + w->geometry().height()/2)
+        if (event->pos().y() >= w->geometry().y() + w->geometry().height() / 2)
         {
           m_DropBox->setLabel("    [" + QString::number(count) + "] " + m_CurrentFilterBeingDragged->getHumanLabel());
           m_FilterWidgetLayout->insertWidget(count - 1, m_DropBox);

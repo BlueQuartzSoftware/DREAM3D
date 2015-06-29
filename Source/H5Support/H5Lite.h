@@ -670,7 +670,7 @@ namespace H5Support_NAMESPACE
       */
       static H5Support_EXPORT herr_t writeVectorOfStringsDataset(hid_t loc_id,
                                                                  const std::string& dsetName,
-                                                                 const std::vector<std::string> &data);
+                                                                 const std::vector<std::string>& data);
       /**
        * @brief Writes an Attribute to an HDF5 Object
        * @param loc_id The Parent Location of the HDFobject that is getting the attribute
@@ -1292,16 +1292,16 @@ namespace H5Support_NAMESPACE
       static H5Support_EXPORT herr_t readStringDataset(hid_t loc_id,
                                                        const std::string& dsetName,
                                                        char* data);
-    /**
-      * @brief
-      * @param loc_id
-      * @param dsetName
-      * @param data
-      * @return
-      */
+      /**
+        * @brief
+        * @param loc_id
+        * @param dsetName
+        * @param data
+        * @return
+        */
       static H5Support_EXPORT herr_t readVectorOfStringDataset(hid_t loc_id,
                                                                const std::string& dsetName,
-                                                               std::vector<std::string> &data);
+                                                               std::vector<std::string>& data);
       /**
        * @brief Reads an Attribute from an HDF5 Object.
        *

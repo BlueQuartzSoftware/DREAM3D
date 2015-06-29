@@ -264,13 +264,13 @@ void WriteStlFile::execute()
     for (int64_t t = 0; t < nTriangles; ++t)
     {
       // Get the true indices of the 3 nodes
-      int64_t nId0 = triangles[t*3];
-      int64_t nId1 = triangles[t*3+1];
-      int64_t nId2 = triangles[t*3+2];
+      int64_t nId0 = triangles[t * 3];
+      int64_t nId1 = triangles[t * 3 + 1];
+      int64_t nId2 = triangles[t * 3 + 2];
 
-      vert1[0] = static_cast<float>(nodes[nId0*3]);
-      vert1[1] = static_cast<float>(nodes[nId0*3+1]);
-      vert1[2] = static_cast<float>(nodes[nId0*3+2]);
+      vert1[0] = static_cast<float>(nodes[nId0 * 3]);
+      vert1[1] = static_cast<float>(nodes[nId0 * 3 + 1]);
+      vert1[2] = static_cast<float>(nodes[nId0 * 3 + 2]);
 
       if (m_SurfaceMeshFaceLabels[t * 2] == spin)
       {
@@ -289,13 +289,13 @@ void WriteStlFile::execute()
         continue; // We do not match either spin so move to the next triangle
       }
 
-      vert2[0] = static_cast<float>(nodes[nId1*3]);
-      vert2[1] = static_cast<float>(nodes[nId1*3+1]);
-      vert2[2] = static_cast<float>(nodes[nId1*3+2]);
+      vert2[0] = static_cast<float>(nodes[nId1 * 3]);
+      vert2[1] = static_cast<float>(nodes[nId1 * 3 + 1]);
+      vert2[2] = static_cast<float>(nodes[nId1 * 3 + 2]);
 
-      vert3[0] = static_cast<float>(nodes[nId2*3]);
-      vert3[1] = static_cast<float>(nodes[nId2*3+1]);
-      vert3[2] = static_cast<float>(nodes[nId2*3+2]);
+      vert3[0] = static_cast<float>(nodes[nId2 * 3]);
+      vert3[1] = static_cast<float>(nodes[nId2 * 3 + 1]);
+      vert3[2] = static_cast<float>(nodes[nId2 * 3 + 2]);
 
       // Compute the normal
       u[0] = vert2[0] - vert1[0];

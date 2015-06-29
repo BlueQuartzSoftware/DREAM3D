@@ -1011,7 +1011,7 @@ bool closeEnough(const float& a, const float& b,
 // -----------------------------------------------------------------------------
 void TestInputs()
 {
-  QVector<size_t> cDims(1,3);
+  QVector<size_t> cDims(1, 3);
   FloatArrayType::Pointer data = FloatArrayType::CreateArray(2, cDims, "Eulers");
   data->initializeWithZeros();
   float* fPtr = data->getPointer(0);

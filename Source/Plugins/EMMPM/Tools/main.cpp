@@ -65,7 +65,7 @@
 class CLIStatsDelegate : public StatsDelegate
 {
   public:
-    CLIStatsDelegate(){}
+    CLIStatsDelegate() {}
     virtual ~CLIStatsDelegate() {};
 
 // -----------------------------------------------------------------------------
@@ -143,7 +143,7 @@ class CLIStatsDelegate : public StatsDelegate
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int main(int argc,char *argv[])
+int main(int argc, char* argv[])
 {
 
 //  unsigned long long int millis = EMMPM_getMilliSeconds();
@@ -282,6 +282,6 @@ int main(int argc,char *argv[])
 
   std::cout << "EM/MPM Ending" << std::endl;
 
-    return 1;
+  return 1;
 }
 

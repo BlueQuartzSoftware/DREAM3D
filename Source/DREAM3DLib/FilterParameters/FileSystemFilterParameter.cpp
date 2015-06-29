@@ -40,9 +40,9 @@
 //
 // -----------------------------------------------------------------------------
 FileSystemFilterParameter::FileSystemFilterParameter() :
-FilterParameter(),
-m_FileExtension(""),
-m_FileType("")
+  FilterParameter(),
+  m_FileExtension(""),
+  m_FileType("")
 {}
 
 // -----------------------------------------------------------------------------
@@ -55,11 +55,11 @@ FileSystemFilterParameter::~FileSystemFilterParameter()
 //
 // -----------------------------------------------------------------------------
 FileSystemFilterParameter::Pointer FileSystemFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QString& widgetType, const QVariant& defaultValue,
-  Category category,
-  const QString& units,
-  const QString& fileExtension,
-  const QString& fileType, int groupIndex)
+    const QString& widgetType, const QVariant& defaultValue,
+    Category category,
+    const QString& units,
+    const QString& fileExtension,
+    const QString& fileType, int groupIndex)
 {
   FileSystemFilterParameter::Pointer ptr = FileSystemFilterParameter::New();
   ptr->setHumanLabel(humanLabel);

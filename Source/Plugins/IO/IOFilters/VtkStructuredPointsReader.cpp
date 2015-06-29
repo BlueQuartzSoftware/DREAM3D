@@ -374,7 +374,7 @@ int32_t vtkReadBinaryData(std::istream& in, T* data, int32_t numTuples, int32_t 
 // -----------------------------------------------------------------------------
 template<typename T>
 int32_t readDataChunk(AttributeMatrix::Pointer attrMat, std::istream& in, bool inPreflight, bool binary,
-                  const QString& scalarName, int32_t scalarNumComp)
+                      const QString& scalarName, int32_t scalarNumComp)
 {
   size_t numTuples = attrMat->getNumTuples();
 

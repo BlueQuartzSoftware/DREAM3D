@@ -46,49 +46,49 @@
 
 class DREAM3DWidgetsLib_EXPORT DREAM3DUserManualDialog : public QDialog, public Ui::DREAM3DUserManualDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-public:
+  public:
 
-  /**
-  * @brief Destructor
-  * @return
-  */
-  virtual ~DREAM3DUserManualDialog();
+    /**
+    * @brief Destructor
+    * @return
+    */
+    virtual ~DREAM3DUserManualDialog();
 
-  /**
-  * @brief Static instance to retrieve the global instance of this class
-  * @return
-  */
-  static DREAM3DUserManualDialog* Instance();
+    /**
+    * @brief Static instance to retrieve the global instance of this class
+    * @return
+    */
+    static DREAM3DUserManualDialog* Instance();
 
-  /**
-  * @brief Static function to launch the help dialog with the given URL
-  * @return
-  */
-  static void LaunchHelpDialog(QUrl url);
+    /**
+    * @brief Static function to launch the help dialog with the given URL
+    * @return
+    */
+    static void LaunchHelpDialog(QUrl url);
 
-  /**
-  * @brief Static function to launch the help dialog with the given filter's classname
-  * @param className The name of the Filter's class in C++ as given by the "getNameOfClass()" static function of the filter.
-  * @return
-  */
-  static void LaunchHelpDialog(QString className);
+    /**
+    * @brief Static function to launch the help dialog with the given filter's classname
+    * @param className The name of the Filter's class in C++ as given by the "getNameOfClass()" static function of the filter.
+    * @return
+    */
+    static void LaunchHelpDialog(QString className);
 
-protected:
-  DREAM3DUserManualDialog();
+  protected:
+    DREAM3DUserManualDialog();
 
-protected slots:
-  void on_backBtn_pressed();
-  void on_forwardBtn_pressed();
-  void on_refreshBtn_pressed();
-  void on_webView_loadFinished(bool ok);
+  protected slots:
+    void on_backBtn_pressed();
+    void on_forwardBtn_pressed();
+    void on_refreshBtn_pressed();
+    void on_webView_loadFinished(bool ok);
 
-private:
-  static DREAM3DUserManualDialog* self;
+  private:
+    static DREAM3DUserManualDialog* self;
 
-  DREAM3DUserManualDialog(const DREAM3DUserManualDialog&); // Copy Constructor Not Implemented
-  void operator=(const DREAM3DUserManualDialog&); // Operator '=' Not Implemented
+    DREAM3DUserManualDialog(const DREAM3DUserManualDialog&); // Copy Constructor Not Implemented
+    void operator=(const DREAM3DUserManualDialog&); // Operator '=' Not Implemented
 
 };
 

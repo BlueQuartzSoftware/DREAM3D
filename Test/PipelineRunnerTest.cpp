@@ -121,7 +121,7 @@ void readPipeline(QFilterParametersReader::Pointer paramsReader, FilterPipeline:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ExecutePipeline(const QString &pipelineFile)
+void ExecutePipeline(const QString& pipelineFile)
 {
   int err = EXIT_SUCCESS;
 
@@ -164,7 +164,8 @@ void ExecutePipeline(const QString &pipelineFile)
   pipeline->addMessageReceiver(&obs);
   // Preflight the pipeline
   err = pipeline->preflightPipeline();
-  if (err < 0) {
+  if (err < 0)
+  {
     std::cout << "Errors preflighting the pipeline. Exiting Now." << std::endl;
   }
   DREAM3D_REQUIRE_EQUAL(err, EXIT_SUCCESS)
@@ -208,7 +209,7 @@ void writeOutput(bool didReplace, QStringList& outLines, QString filename)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString AdjustOutputDirectory(const QString &pipelineFile)
+QString AdjustOutputDirectory(const QString& pipelineFile)
 {
 
   QString contents;
@@ -250,7 +251,7 @@ QString AdjustOutputDirectory(const QString &pipelineFile)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int main (int argc, char  *argv[])
+int main (int argc, char*  argv[])
 {
 
   QString pipelineFile("@DREAM3D_PIPELINE_FILE@");
@@ -302,7 +303,8 @@ int main (int argc, char  *argv[])
     QString pipelineFile = sourceLines.next();
     pipelineFile = pipelineFile.trimmed();
     if(pipelineFile.isEmpty()) { continue; }
-    try {
+    try
+    {
       QFileInfo fi(pipelineFile);
 
       pipelineFile = AdjustOutputDirectory(pipelineFile);

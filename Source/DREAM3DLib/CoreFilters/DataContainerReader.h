@@ -113,9 +113,9 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
      */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-   /**
-    * @brief execute Reimplemented from @see AbstractFilter class
-    */
+    /**
+     * @brief execute Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
 
     /**
@@ -154,11 +154,11 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
      */
     int readDataContainerBundles(hid_t fileId, DataContainerArray::Pointer dca);
 
-  /**
-  * @brief syncProxies Combines the file and cached proxies if they are out-of-sync
-  * @return
-  */
-  void syncProxies();
+    /**
+    * @brief syncProxies Combines the file and cached proxies if they are out-of-sync
+    * @return
+    */
+    void syncProxies();
 
   signals:
     /**

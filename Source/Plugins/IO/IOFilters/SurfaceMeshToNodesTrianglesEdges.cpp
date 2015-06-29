@@ -256,7 +256,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   fprintf(nodesFile, "%lld\n", numNodes);
   for (int i = 0; i < numNodes; i++)
   {
-    fprintf(nodesFile, "%10d    %3d    %8.4f %8.4f %8.4f\n", i, static_cast<int>(m_SurfaceMeshNodeType[i]), nodes[i*3], nodes[i*3+1], nodes[i*3+2]);
+    fprintf(nodesFile, "%10d    %3d    %8.4f %8.4f %8.4f\n", i, static_cast<int>(m_SurfaceMeshNodeType[i]), nodes[i * 3], nodes[i * 3 + 1], nodes[i * 3 + 2]);
   }
   fclose(nodesFile);
 
@@ -338,9 +338,9 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   int n1, n2, n3, e1 = -1, e2 = -1, e3 = -1;
   for (int64_t j = 0; j < numTriangles; ++j)
   {
-    n1 = triangles[j*3];
-    n2 = triangles[j*3+1];
-    n3 = triangles[j*3+2];
+    n1 = triangles[j * 3];
+    n2 = triangles[j * 3 + 1];
+    n3 = triangles[j * 3 + 2];
 
 #if WRITE_EDGES_FILE
     e1 = t[j].e_id[0];

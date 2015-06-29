@@ -41,27 +41,27 @@
 
 class DREAM3DLib_EXPORT LinkedBooleanFilterParameter : public FilterParameter
 {
-public:
-  DREAM3D_SHARED_POINTERS(LinkedBooleanFilterParameter)
+  public:
+    DREAM3D_SHARED_POINTERS(LinkedBooleanFilterParameter)
     DREAM3D_STATIC_NEW_MACRO(LinkedBooleanFilterParameter)
     DREAM3D_TYPE_MACRO_SUPER(LinkedBooleanFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-    const QVariant& defaultValue,
-    QStringList conditionalProperties,
-    Category category,
-    int groupIndex = -1);
+                       const QVariant& defaultValue,
+                       QStringList conditionalProperties,
+                       Category category,
+                       int groupIndex = -1);
 
-  virtual ~LinkedBooleanFilterParameter();
+    virtual ~LinkedBooleanFilterParameter();
 
-  DREAM3D_INSTANCE_PROPERTY(QStringList, ConditionalProperties)
+    DREAM3D_INSTANCE_PROPERTY(QStringList, ConditionalProperties)
 
-protected:
-  LinkedBooleanFilterParameter();
+  protected:
+    LinkedBooleanFilterParameter();
 
-private:
-  LinkedBooleanFilterParameter(const LinkedBooleanFilterParameter&); // Copy Constructor Not Implemented
-  void operator=(const LinkedBooleanFilterParameter&); // Operator '=' Not Implemented
+  private:
+    LinkedBooleanFilterParameter(const LinkedBooleanFilterParameter&); // Copy Constructor Not Implemented
+    void operator=(const LinkedBooleanFilterParameter&); // Operator '=' Not Implemented
 };
 
 #endif /* _LinkedBooleanFilterParameter_H_ */

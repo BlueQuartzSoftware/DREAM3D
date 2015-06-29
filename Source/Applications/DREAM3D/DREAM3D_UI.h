@@ -140,7 +140,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     * @brief setOpenedFilePath
     * @param path
     */
-    void setOpenDialogLastDirectory(const QString &path);
+    void setOpenDialogLastDirectory(const QString& path);
 
     /**
     * @brief
@@ -205,13 +205,13 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     * @brief setOpenedFilePath
     * @param filePath
     */
-    void setOpenedFilePath(const QString &filePath);
+    void setOpenedFilePath(const QString& filePath);
 
     /**
     * @brief setFilterBeingDragged
     * @param w
     */
-    void setStatusBarMessage(const QString &msg);
+    void setStatusBarMessage(const QString& msg);
 
   protected slots:
 
@@ -235,7 +235,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void on_pipelineViewWidget_pipelineChanged();
     void on_pipelineViewWidget_pipelineIssuesCleared();
     void on_pipelineViewWidget_pipelineHasNoErrors();
-    void on_pipelineViewWidget_pipelineOpened(QString& file, const bool &setOpenedFilePath, const bool &changeTitle);
+    void on_pipelineViewWidget_pipelineOpened(QString& file, const bool& setOpenedFilePath, const bool& changeTitle);
 
     /**
     * @brief setFilterInputWidget
@@ -259,7 +259,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     /**
     * @brief bookmarkNeedsToBeAdded
     */
-    void bookmarkNeedsToBeAdded(const QString &filePath, const QModelIndex &parent);
+    void bookmarkNeedsToBeAdded(const QString& filePath, const QModelIndex& parent);
 
     void parentResized();
 

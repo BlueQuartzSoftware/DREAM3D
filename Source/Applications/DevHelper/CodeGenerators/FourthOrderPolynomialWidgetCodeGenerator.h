@@ -44,32 +44,32 @@
 
 class FourthOrderPolynomialWidgetCodeGenerator : public FPCodeGenerator
 {
-public:
-  DREAM3D_SHARED_POINTERS(FourthOrderPolynomialWidgetCodeGenerator)
+  public:
+    DREAM3D_SHARED_POINTERS(FourthOrderPolynomialWidgetCodeGenerator)
 
     static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
-  {
-    Pointer sharedPtr(new FourthOrderPolynomialWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
-    return sharedPtr;
-  }
+    {
+      Pointer sharedPtr(new FourthOrderPolynomialWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
+      return sharedPtr;
+    }
 
-  virtual ~FourthOrderPolynomialWidgetCodeGenerator();
+    virtual ~FourthOrderPolynomialWidgetCodeGenerator();
 
-  virtual QString generateSetupFilterParameters();
+    virtual QString generateSetupFilterParameters();
 
-  virtual QString generateReadFilterParameters();
+    virtual QString generateReadFilterParameters();
 
-  virtual QString generateDataCheck();
+    virtual QString generateDataCheck();
 
-  virtual QString generateFilterParameters();
+    virtual QString generateFilterParameters();
 
-protected:
-  FourthOrderPolynomialWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
+  protected:
+    FourthOrderPolynomialWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
-private:
+  private:
 
-  FourthOrderPolynomialWidgetCodeGenerator(const FourthOrderPolynomialWidgetCodeGenerator&); // Copy Constructor Not Implemented
-  void operator=(const FourthOrderPolynomialWidgetCodeGenerator&); // Operator '=' Not Implemented
+    FourthOrderPolynomialWidgetCodeGenerator(const FourthOrderPolynomialWidgetCodeGenerator&); // Copy Constructor Not Implemented
+    void operator=(const FourthOrderPolynomialWidgetCodeGenerator&); // Operator '=' Not Implemented
 };
 
 #endif /* FourthOrderPolynomialWidgetCodeGenerator_H_ */

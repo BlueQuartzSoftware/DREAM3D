@@ -125,9 +125,9 @@ class PhReader : public FileReader
      */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-   /**
-    * @brief execute Reimplemented from @see AbstractFilter class
-    */
+    /**
+     * @brief execute Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
 
     /**
@@ -136,10 +136,10 @@ class PhReader : public FileReader
     virtual void preflight();
 
   public slots:
-      /**
-       * @brief flushCache Clears the input file cache
-       */
-      void flushCache();
+    /**
+     * @brief flushCache Clears the input file cache
+     */
+    void flushCache();
 
   protected:
     PhReader();

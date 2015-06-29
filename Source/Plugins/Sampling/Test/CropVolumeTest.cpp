@@ -70,7 +70,9 @@ class NumPackage
     NumPackage(int min, int max) { m_Min = min; m_Max = max; m_Diff = m_Max - m_Min; }
     void operator=(const NumPackage& rhs)
     {
-      m_Min = rhs.getMin(); m_Max = rhs.getMax(); m_Diff = m_Max - m_Min;
+      m_Min = rhs.getMin();
+      m_Max = rhs.getMax();
+      m_Diff = m_Max - m_Min;
     }
 
     void setMin(int min) { m_Min = min; m_Diff = m_Max - m_Min; }
@@ -192,7 +194,7 @@ DataContainerArray::Pointer CreateDataContainerArrayTestStructure(NumPackage X, 
       u8ptr[1] = (uint8_t)(y);
       for (size_t x = 0; x < tDims[0]; x++)
       {
-        index = (z*tDims[0] * tDims[1]) + (y*tDims[0]) + x;
+        index = (z * tDims[0] * tDims[1]) + (y * tDims[0]) + x;
 
         u8ptr[0] = (uint8_t)(x);
         genericData->setComponent(index, 0, *ptr);
@@ -247,7 +249,7 @@ void resetTest(AbstractFilter::Pointer cropVolume, NumPackage X, NumPackage Y, N
 template<typename T, typename K>
 void checkCrop(typename DataArray<T>::Pointer data, NumPackage& X, NumPackage& Y, NumPackage& Z)
 {
-  DataArray<T> &p = *(data.get());
+  DataArray<T>& p = *(data.get());
   // We need to add the +1 here because the Crop Volume filter is "inclusive" of the ranges
   // that the user passes to it. This means that for an x range of 0->4 there are actually
   // 5 elements. If the range is 1->5 then there are 5 elements.
@@ -256,7 +258,7 @@ void checkCrop(typename DataArray<T>::Pointer data, NumPackage& X, NumPackage& Y
   int ZP = (Z.getMax() - Z.getMin()) + 1;
   int numComponents = data->getNumberOfComponents();
 
-  require_equal<size_t, size_t>(p.getSize(), "p.getSize()", XP*YP*ZP*numComponents, "XP*YP*ZP*numComponents", __FILE__, __LINE__);
+  require_equal<size_t, size_t>(p.getSize(), "p.getSize()", XP * YP * ZP * numComponents, "XP*YP*ZP*numComponents", __FILE__, __LINE__);
 
   struct { uint8_t r; uint8_t g; uint8_t b; uint8_t a;} rgba;
   K* ptr = reinterpret_cast<K*>(&rgba);
@@ -273,7 +275,7 @@ void checkCrop(typename DataArray<T>::Pointer data, NumPackage& X, NumPackage& Y
       {
         u8ptr[0] = x; // This completes building up our piece of data
 
-        int64_t index = ((z - Z.getMin())*XP*YP) + ((y - Y.getMin()) * XP) + (x - X.getMin());
+        int64_t index = ((z - Z.getMin()) * XP * YP) + ((y - Y.getMin()) * XP) + (x - X.getMin());
         for(int c = 0; c < numComponents; c++)
         {
           T value = p.getComponent(index, c);
@@ -289,7 +291,7 @@ void checkCrop(typename DataArray<T>::Pointer data, NumPackage& X, NumPackage& Y
 template<typename T, typename K>
 void checkFeatureIdsCrop(typename DataArray<T>::Pointer data, NumPackage& X, NumPackage& Y, NumPackage& Z)
 {
-  DataArray<T> &p = *(data.get());
+  DataArray<T>& p = *(data.get());
   // We need to add the +1 here because the Crop Volume filter is "inclusive" of the ranges
   // that the user passes to it. This means that for an x range of 0->4 there are actually
   // 5 elements. If the range is 1->5 then there are 5 elements.
@@ -298,7 +300,7 @@ void checkFeatureIdsCrop(typename DataArray<T>::Pointer data, NumPackage& X, Num
   int ZP = (Z.getMax() - Z.getMin()) + 1;
   int numComponents = data->getNumberOfComponents();
 
-  require_equal<size_t, size_t>(p.getSize(), "p.getSize()", XP*YP*ZP*numComponents, "XP*YP*ZP*numComponents", __FILE__, __LINE__);
+  require_equal<size_t, size_t>(p.getSize(), "p.getSize()", XP * YP * ZP * numComponents, "XP*YP*ZP*numComponents", __FILE__, __LINE__);
 
   for (int64_t z = Z.getMin(); z < Z.getMax(); z++)
   {
@@ -306,8 +308,8 @@ void checkFeatureIdsCrop(typename DataArray<T>::Pointer data, NumPackage& X, Num
     {
       for (int64_t x = X.getMin(); x < X.getMax(); x++)
       {
-        int64_t index = ((z - Z.getMin())*XP*YP) + ((y - Y.getMin()) * XP) + (x - X.getMin());
-        int32_t calc = ((z )*XP*YP) + ((y) * XP) + (x ) + 1; // The +1 is because DREAM3D stars from 1, NOT Zero
+        int64_t index = ((z - Z.getMin()) * XP * YP) + ((y - Y.getMin()) * XP) + (x - X.getMin());
+        int32_t calc = ((z ) * XP * YP) + ((y) * XP) + (x ) + 1; // The +1 is because DREAM3D stars from 1, NOT Zero
         T value = p.getValue(index);
         require_equal<T, T>(value, "Stored", calc, "Calculated", __FILE__, __LINE__);
       }
@@ -322,7 +324,7 @@ void checkFeatureIdsCrop(typename DataArray<T>::Pointer data, NumPackage& X, Num
 template<typename T, typename K>
 void checkRenumber(typename DataArray<T>::Pointer data, NumPackage& X, NumPackage& Y, NumPackage& Z)
 {
-  DataArray<T> &p = *(data.get());
+  DataArray<T>& p = *(data.get());
   // We need to add the +1 here because the Crop Volume filter is "inclusive" of the ranges
   // that the user passes to it. This means that for an x range of 0->4 there are actually
   // 5 elements. If the range is 1->5 then there are 5 elements.
@@ -331,7 +333,7 @@ void checkRenumber(typename DataArray<T>::Pointer data, NumPackage& X, NumPackag
   int ZP = Z.getDiff() + 1; //(Z.getMax() - Z.getMin());
   int numComponents = data->getNumberOfComponents();
 
-  require_equal<size_t, size_t>(p.getSize(), "p.getSize()", XP*YP*ZP*numComponents, "XP*YP*ZP*numComponents", __FILE__, __LINE__);
+  require_equal<size_t, size_t>(p.getSize(), "p.getSize()", XP * YP * ZP * numComponents, "XP*YP*ZP*numComponents", __FILE__, __LINE__);
   int32_t featureId = 1;
   for (int64_t z = Z.getMin(); z < Z.getMax(); z++)
   {
@@ -339,7 +341,7 @@ void checkRenumber(typename DataArray<T>::Pointer data, NumPackage& X, NumPackag
     {
       for (int64_t x = X.getMin(); x < X.getMax(); x++)
       {
-        int64_t index = ((z - Z.getMin())*XP*YP) + ((y - Y.getMin()) * XP) + (x - X.getMin());
+        int64_t index = ((z - Z.getMin()) * XP * YP) + ((y - Y.getMin()) * XP) + (x - X.getMin());
 
         T value = p.getComponent(index, 0);
 
@@ -358,7 +360,7 @@ void checkRenumber(typename DataArray<T>::Pointer data, NumPackage& X, NumPackag
 template<typename T>
 void printArraySlice(typename DataArray<T>::Pointer ptr, NumPackage X, NumPackage Y, NumPackage Z)
 {
-  DataArray<T> &p = *(ptr.get());
+  DataArray<T>& p = *(ptr.get());
   int XP = (X.getMax() - X.getMin());
   int YP = (Y.getMax() - Y.getMin());
   //int ZP = (Z.getMax() - Z.getMin());
@@ -376,7 +378,7 @@ void printArraySlice(typename DataArray<T>::Pointer ptr, NumPackage X, NumPackag
       QTextStream out(&ss);
       for (int64_t x = X.getMin(); x < X.getMax(); x++)
       {
-        int64_t index = ((z - Z.getMin())*XP*YP) + ((y - Y.getMin()) * XP) + (x - X.getMin());
+        int64_t index = ((z - Z.getMin()) * XP * YP) + ((y - Y.getMin()) * XP) + (x - X.getMin());
         out << "[";
         for (int i = 0; i < cDims[0]; i++)
         {
@@ -411,7 +413,7 @@ void preflightTests(AbstractFilter::Pointer cropVolume)
   // Fails because getPrereqGeometryFromDataContainer catches the NULL DataContainer
   // Error code should be -999
   DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCondition(), -999)
-      resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
+  resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
 
   // Test Source Attribute Matrix Does Not Exist
   path.setDataContainerName(DREAM3D::Defaults::ImageDataContainerName);
@@ -422,7 +424,7 @@ void preflightTests(AbstractFilter::Pointer cropVolume)
   // Fails because getPrereqAttributeMatrixFromPath catches the NULL AttributeMatrix
   // Error code should be -301 * 1020 = -307020
   DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCondition(), -307020)
-      resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
+  resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
 
   path.setAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName);
   var.setValue(path);
@@ -440,7 +442,7 @@ void preflightTests(AbstractFilter::Pointer cropVolume)
   DREAM3D_REQUIRE_EQUAL(propWasSet, true);
   cropVolume->preflight();
   DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCondition(), -5550)
-      resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
+  resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
   var.setValue(s_CroppedX.getMin());
   propWasSet = cropVolume->setProperty("XMin", var);
   DREAM3D_REQUIRE_EQUAL(propWasSet, true);
@@ -450,7 +452,7 @@ void preflightTests(AbstractFilter::Pointer cropVolume)
   DREAM3D_REQUIRE_EQUAL(propWasSet, true);
   cropVolume->preflight();
   DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCondition(), -5550)
-      resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
+  resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
   var.setValue(s_CroppedY.getMin());
   propWasSet = cropVolume->setProperty("YMin", var);
   DREAM3D_REQUIRE_EQUAL(propWasSet, true);
@@ -460,7 +462,7 @@ void preflightTests(AbstractFilter::Pointer cropVolume)
   DREAM3D_REQUIRE_EQUAL(propWasSet, true);
   cropVolume->preflight();
   DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCondition(), -5550)
-      resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
+  resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
   var.setValue(s_CroppedZ.getMin());
   propWasSet = cropVolume->setProperty("ZMin", var);
   DREAM3D_REQUIRE_EQUAL(propWasSet, true);
@@ -470,7 +472,7 @@ void preflightTests(AbstractFilter::Pointer cropVolume)
   DREAM3D_REQUIRE_EQUAL(propWasSet, true);
   cropVolume->preflight();
   DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCondition(), -5550)
-      resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
+  resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
   var.setValue(s_CroppedX.getMin());
   propWasSet = cropVolume->setProperty("XMin", var);
   DREAM3D_REQUIRE_EQUAL(propWasSet, true);
@@ -480,7 +482,7 @@ void preflightTests(AbstractFilter::Pointer cropVolume)
   DREAM3D_REQUIRE_EQUAL(propWasSet, true);
   cropVolume->preflight();
   DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCondition(), -5550)
-      resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
+  resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
   var.setValue(s_CroppedY.getMin());
   propWasSet = cropVolume->setProperty("YMin", var);
   DREAM3D_REQUIRE_EQUAL(propWasSet, true);
@@ -490,7 +492,7 @@ void preflightTests(AbstractFilter::Pointer cropVolume)
   DREAM3D_REQUIRE_EQUAL(propWasSet, true);
   cropVolume->preflight();
   DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCondition(), -5550)
-      resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
+  resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
   var.setValue(s_CroppedZ.getMin());
   propWasSet = cropVolume->setProperty("ZMin", var);
   DREAM3D_REQUIRE_EQUAL(propWasSet, true);
@@ -500,7 +502,7 @@ void preflightTests(AbstractFilter::Pointer cropVolume)
   DREAM3D_REQUIRE_EQUAL(propWasSet, true);
   cropVolume->preflight();
   DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCondition(), -5550)
-      resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
+  resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
   var.setValue(s_CroppedX.getMax());
   propWasSet = cropVolume->setProperty("XMax", var);
   DREAM3D_REQUIRE_EQUAL(propWasSet, true);
@@ -510,7 +512,7 @@ void preflightTests(AbstractFilter::Pointer cropVolume)
   DREAM3D_REQUIRE_EQUAL(propWasSet, true);
   cropVolume->preflight();
   DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCondition(), -5550)
-      resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
+  resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
   var.setValue(s_CroppedY.getMax());
   propWasSet = cropVolume->setProperty("YMax", var);
   DREAM3D_REQUIRE_EQUAL(propWasSet, true);
@@ -520,7 +522,7 @@ void preflightTests(AbstractFilter::Pointer cropVolume)
   DREAM3D_REQUIRE_EQUAL(propWasSet, true);
   cropVolume->preflight();
   DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCondition(), -5550)
-      resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
+  resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
   var.setValue(s_CroppedZ.getMax());
   propWasSet = cropVolume->setProperty("ZMax", var);
   DREAM3D_REQUIRE_EQUAL(propWasSet, true);
@@ -814,7 +816,7 @@ void TestCropVolume_3()
   data = cropVolume->getDataContainerArray()->getPrereqIDataArrayFromPath<Int32ArrayType>(cropVolume.get(), dap);
   DREAM3D_REQUIRE_VALID_POINTER(data.get())
 
-      checkCrop<int, int>(data, s_CroppedX, s_CroppedY, s_CroppedZ);
+  checkCrop<int, int>(data, s_CroppedX, s_CroppedY, s_CroppedZ);
 
   if(0)
   {

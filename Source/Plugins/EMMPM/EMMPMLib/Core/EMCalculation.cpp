@@ -62,9 +62,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // -----------------------------------------------------------------------------
 EMCalculation::EMCalculation() :
-Observable(),
-m_StatsDelegate(NULL),
-m_ErrorCondition(0)
+  Observable(),
+  m_StatsDelegate(NULL),
+  m_ErrorCondition(0)
 {
 
 }
@@ -109,10 +109,10 @@ void EMCalculation::execute()
   // If we are using Sim Anneal then create a ramped beta
   if (data->simulatedAnnealing != 0 && data->emIterations > 1)
   {
-    simAnnealKappas = (real_t*)(malloc(sizeof(real_t)*data->emIterations));
+    simAnnealKappas = (real_t*)(malloc(sizeof(real_t) * data->emIterations));
     for (int i = 0; i < data->emIterations; ++i)
     {
-      simAnnealKappas[i] = data->workingKappa + pow(i / (data->emIterations - 1.0), 8) * (10.0*data->workingKappa - data->workingKappa);
+      simAnnealKappas[i] = data->workingKappa + pow(i / (data->emIterations - 1.0), 8) * (10.0 * data->workingKappa - data->workingKappa);
     }
     data->workingKappa = simAnnealKappas[0];
   }
@@ -151,7 +151,7 @@ void EMCalculation::execute()
 
   // Connect up the Error/Warning/Progress object so the filter can report those things
   connect(acvmpm.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-    this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
+          this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
 
   acvmpm->execute();
 

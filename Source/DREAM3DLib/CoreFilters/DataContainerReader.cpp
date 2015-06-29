@@ -50,12 +50,12 @@
 //
 // -----------------------------------------------------------------------------
 DataContainerReader::DataContainerReader() :
-AbstractFilter(),
-m_InputFile(""),
-m_OverwriteExistingDataContainers(false),
-m_LastFileRead(""),
-m_LastRead(QDateTime::currentDateTime()),
-m_InputFileDataContainerArrayProxy()
+  AbstractFilter(),
+  m_InputFile(""),
+  m_OverwriteExistingDataContainers(false),
+  m_LastFileRead(""),
+  m_LastRead(QDateTime::currentDateTime()),
+  m_InputFileDataContainerArrayProxy()
 {
   m_PipelineFromFile = FilterPipeline::New();
 
@@ -99,7 +99,7 @@ void DataContainerReader::readFilterParameters(AbstractFilterParametersReader* r
   reader->openFilterGroup(this, index);
   setInputFile(reader->readString("InputFile", getInputFile() ) );
   setInputFileDataContainerArrayProxy(reader->readDataContainerArrayProxy("InputFileDataContainerArrayProxy", getInputFileDataContainerArrayProxy() ) );
-  syncProxies();	// Sync the file proxy and currently cached proxy together into one proxy
+  syncProxies();  // Sync the file proxy and currently cached proxy together into one proxy
   setOverwriteExistingDataContainers(reader->readValue("OverwriteExistingDataContainers", getOverwriteExistingDataContainers() ) );
   reader->closeFilterGroup();
 }

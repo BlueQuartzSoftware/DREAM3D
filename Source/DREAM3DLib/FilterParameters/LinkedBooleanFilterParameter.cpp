@@ -40,7 +40,7 @@
 //
 // -----------------------------------------------------------------------------
 LinkedBooleanFilterParameter::LinkedBooleanFilterParameter() :
-FilterParameter()
+  FilterParameter()
 {}
 
 // -----------------------------------------------------------------------------
@@ -53,9 +53,9 @@ LinkedBooleanFilterParameter::~LinkedBooleanFilterParameter()
 //
 // -----------------------------------------------------------------------------
 LinkedBooleanFilterParameter::Pointer LinkedBooleanFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QVariant& defaultValue,
-  QStringList conditionalProperties,
-  Category category, int groupIndex)
+    const QVariant& defaultValue,
+    QStringList conditionalProperties,
+    Category category, int groupIndex)
 {
   LinkedBooleanFilterParameter::Pointer ptr = LinkedBooleanFilterParameter::New();
   ptr->setHumanLabel(humanLabel);

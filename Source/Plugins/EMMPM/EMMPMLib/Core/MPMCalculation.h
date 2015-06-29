@@ -51,7 +51,7 @@
 
 class EMMPMLib_EXPORT MPMCalculation : public Observable
 {
-	Q_OBJECT;
+    Q_OBJECT;
   public:
     DREAM3D_SHARED_POINTERS(MPMCalculation)
     DREAM3D_STATIC_NEW_MACRO(MPMCalculation)
@@ -61,14 +61,14 @@ class EMMPMLib_EXPORT MPMCalculation : public Observable
 
     DREAM3D_INSTANCE_PROPERTY(EMMPM_Data::Pointer, Data)
     DREAM3D_INSTANCE_PROPERTY(StatsDelegate*, StatsDelegate);
-	  DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
-	  DREAM3D_INSTANCE_PROPERTY(QString, MessagePrefix)
+    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
+    DREAM3D_INSTANCE_PROPERTY(QString, MessagePrefix)
 
-	/**
-	* @brief This returns a string that is displayed in the GUI. It should be readable
-	* and understandable by humans.
-	*/
-	virtual const QString getHumanLabel();
+    /**
+    * @brief This returns a string that is displayed in the GUI. It should be readable
+    * and understandable by humans.
+    */
+    virtual const QString getHumanLabel();
 
     /**
      * @fn void acvmpm(EMMPM_Data* data, EMMPM_CallbackFunctions* callbacks);

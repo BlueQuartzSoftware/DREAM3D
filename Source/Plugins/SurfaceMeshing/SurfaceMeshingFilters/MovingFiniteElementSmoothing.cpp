@@ -205,7 +205,7 @@ void MovingFiniteElementSmoothing::dataCheck()
 {
   setErrorCondition(0);
 
-DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getSurfaceMeshNodeTypeArrayPath().getDataContainerName(), false);
+  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getSurfaceMeshNodeTypeArrayPath().getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
   // We MUST have Nodes

@@ -61,8 +61,8 @@ class CalculateCentroidsImpl
 
   public:
     CalculateCentroidsImpl(SharedVertexList::Pointer nodes,
-                                SharedTriList::Pointer triangles,
-                                double* centroids) :
+                           SharedTriList::Pointer triangles,
+                           double* centroids) :
       m_Nodes(nodes),
       m_Triangles(triangles),
       m_Centroids(centroids)
@@ -76,9 +76,9 @@ class CalculateCentroidsImpl
 
       for (size_t i = start; i < end; i++)
       {
-        m_Centroids[i * 3]  = (nodes[triangles[i*3]*3+0] + nodes[triangles[i*3+1]*3+0] + nodes[triangles[i*3+2]*3+0]) / 3.0;
-        m_Centroids[i * 3 + 1] = (nodes[triangles[i*3]*3+1] + nodes[triangles[i*3+1]*3+1] + nodes[triangles[i*3+2]*3+1]) / 3.0;
-        m_Centroids[i * 3 + 2]  = (nodes[triangles[i*3]*3+2] + nodes[triangles[i*3+1]*3+2] + nodes[triangles[i*3+2]*3+2]) / 3.0;
+        m_Centroids[i * 3]  = (nodes[triangles[i * 3] * 3 + 0] + nodes[triangles[i * 3 + 1] * 3 + 0] + nodes[triangles[i * 3 + 2] * 3 + 0]) / 3.0;
+        m_Centroids[i * 3 + 1] = (nodes[triangles[i * 3] * 3 + 1] + nodes[triangles[i * 3 + 1] * 3 + 1] + nodes[triangles[i * 3 + 2] * 3 + 1]) / 3.0;
+        m_Centroids[i * 3 + 2]  = (nodes[triangles[i * 3] * 3 + 2] + nodes[triangles[i * 3 + 1] * 3 + 2] + nodes[triangles[i * 3 + 2] * 3 + 2]) / 3.0;
       }
     }
 

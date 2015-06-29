@@ -321,129 +321,129 @@ bool AlmostEqualUlpsFinal(float* A, float* B, int maxUlps)
 // Developer Used Macros
 // -----------------------------------------------------------------------------
 #define DREAM3D_TEST_FAILED( P ) \
-{ \
-  DREAM3D_TEST_THROW_EXCEPTION( s )\
+  { \
+    DREAM3D_TEST_THROW_EXCEPTION( s )\
   }
 
 
 #define DREAM3D_REQUIRE( P ) \
-{ \
-  bool b = (P);\
-  if ( (b) == (false) ) \
-{\
-  std::string s ("Your test required the following\n            '");\
-  s = s.append(#P).append("'\n             but this condition was not met.");\
-  DREAM3D_TEST_THROW_EXCEPTION( s )\
-  }\
+  { \
+    bool b = (P);\
+    if ( (b) == (false) ) \
+    {\
+      std::string s ("Your test required the following\n            '");\
+      s = s.append(#P).append("'\n             but this condition was not met.");\
+      DREAM3D_TEST_THROW_EXCEPTION( s )\
+    }\
   }
 
 #define DREAM3D_REQUIRED(L, Q, R)\
-{ \
-  QString buf;\
-  QTextStream ss(&buf);\
-  bool b = (L Q R);\
-  if ( (b) == (false) ) \
-{\
-  ss <<"Your test required the following\n            '";\
-  ss << #L << " " << #Q << " " << #R << "' but this condition was not met.\n";\
-  ss << "            " << #L << " = " << L << "\n";\
-  ss << "            " << #R << " = " << R << "\n";\
-  DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() )\
-  }\
+  { \
+    QString buf;\
+    QTextStream ss(&buf);\
+    bool b = (L Q R);\
+    if ( (b) == (false) ) \
+    {\
+      ss <<"Your test required the following\n            '";\
+      ss << #L << " " << #Q << " " << #R << "' but this condition was not met.\n";\
+      ss << "            " << #L << " = " << L << "\n";\
+      ss << "            " << #R << " = " << R << "\n";\
+      DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() )\
+    }\
   }
 
 #define DREAM3D_REQUIRED_PTR(L, Q, P)\
-{ \
-  QString buf;\
-  QTextStream ss(&buf);\
-  bool b = (L Q P);\
-  if ( (b) == (false) ) \
-{\
-  ss <<"Your test required the following\n            '";\
-  ss << #L << " " << #Q << " " << #P << "' but this condition was not met.\n";\
-  ss << "            " << #L << " = " << L << "\n";\
-  ss << "            " << #P << " = \n";\
-  DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() )\
-  }\
+  { \
+    QString buf;\
+    QTextStream ss(&buf);\
+    bool b = (L Q P);\
+    if ( (b) == (false) ) \
+    {\
+      ss <<"Your test required the following\n            '";\
+      ss << #L << " " << #Q << " " << #P << "' but this condition was not met.\n";\
+      ss << "            " << #L << " = " << L << "\n";\
+      ss << "            " << #P << " = \n";\
+      DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() )\
+    }\
   }
 
 
 #define DREAM3D_REQUIRE_NE( L, R )\
   if ( (L) == (R) ) {  \
-  QString buf;\
-  QTextStream ss(&buf);\
-  ss << "Your test required the following\n            '";\
-  ss << #L << " != " << #R << "'\n             but this condition was not met.\n";\
-  ss << "             " << L << "==" << R;\
-  DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() ) }
+    QString buf;\
+    QTextStream ss(&buf);\
+    ss << "Your test required the following\n            '";\
+    ss << #L << " != " << #R << "'\n             but this condition was not met.\n";\
+    ss << "             " << L << "==" << R;\
+    DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() ) }
 
 
 
 #define DREAM3D_REQUIRE_EQUAL( L, R) \
   if ( (L) != (R) ) {  \
-  QString buf;\
-  QTextStream ss(&buf);\
-  ss << "Your test required the following\n            '";\
-  ss << #L << " == " << #R << "'\n             but this condition was not met.\n";\
-  ss << "             " << L << "==" << R;\
-  DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() ) }
+    QString buf;\
+    QTextStream ss(&buf);\
+    ss << "Your test required the following\n            '";\
+    ss << #L << " == " << #R << "'\n             but this condition was not met.\n";\
+    ss << "             " << L << "==" << R;\
+    DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() ) }
 
 
 #define DREAM3D_COMPARE_FLOATS(L, R, Ulps)\
   if (false == AlmostEqualUlpsFinal((L), (R), Ulps) ) {  \
-  QString buf;\
-  QTextStream ss(&buf);\
-  ss << "Your test required the following\n            '";\
-  ss << "AlmostEqualUlpsFinal(" << #L << ", " << #R << ", " << #Ulps << "'\n             but this condition was not met with MaxUlps=" << Ulps << "\n";\
-  ss << "             " << L << "==" << R;\
-  DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() ) }
+    QString buf;\
+    QTextStream ss(&buf);\
+    ss << "Your test required the following\n            '";\
+    ss << "AlmostEqualUlpsFinal(" << #L << ", " << #R << ", " << #Ulps << "'\n             but this condition was not met with MaxUlps=" << Ulps << "\n";\
+    ss << "             " << L << "==" << R;\
+    DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() ) }
 
 
 #define DREAM3D_TEST_POINTER(L, Q, R)\
-{ \
-  QString buf;\
-  QTextStream ss(&buf);\
-  bool b = (L Q R);\
-  if ( (b) == (false) ) \
-{\
-  ss <<"Your test required the following\n            '";\
-  ss << #L << " " << #Q << " " << #R << "' but this condition was not met.\n";\
-  ss << "            " << #L << " = ";\
-  if(L) { ss << reinterpret_cast<void*>(L); }\
-  else { ss << "Left side was NULL"; }\
-  ss << "\n";\
-  ss << "            " << #R << " = ";\
-  if(R) { ss << reinterpret_cast<void*>(R);}\
-  else { ss << "Right Side was NULL";}\
-  ss << "\n";\
-  DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() )\
-  }\
+  { \
+    QString buf;\
+    QTextStream ss(&buf);\
+    bool b = (L Q R);\
+    if ( (b) == (false) ) \
+    {\
+      ss <<"Your test required the following\n            '";\
+      ss << #L << " " << #Q << " " << #R << "' but this condition was not met.\n";\
+      ss << "            " << #L << " = ";\
+      if(L) { ss << reinterpret_cast<void*>(L); }\
+      else { ss << "Left side was NULL"; }\
+      ss << "\n";\
+      ss << "            " << #R << " = ";\
+      if(R) { ss << reinterpret_cast<void*>(R);}\
+      else { ss << "Right Side was NULL";}\
+      ss << "\n";\
+      DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() )\
+    }\
   }
 
 #define DREAM3D_REQUIRE_VALID_POINTER(L)\
-{ \
-  QString buf;\
-  QTextStream ss(&buf);\
-  if ( L == NULL ) \
-{\
-  ss <<"Your test requires\n            '";\
-  ss << #L << "' != NULL' but this condition was not met.\n";\
-  ss << "\n";\
-  DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() )\
-  }\
+  { \
+    QString buf;\
+    QTextStream ss(&buf);\
+    if ( L == NULL ) \
+    {\
+      ss <<"Your test requires\n            '";\
+      ss << #L << "' != NULL' but this condition was not met.\n";\
+      ss << "\n";\
+      DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() )\
+    }\
   }
 
 #define DREAM3D_REQUIRE_NULL_POINTER(L)\
-{ \
-  QString buf;\
-  QTextStream ss(&buf);\
-  if ( L != NULL ) \
-{\
-  ss <<"Your test requires\n            '";\
-  ss << #L << " == NULL' but this condition was not met.\n";\
-  ss << "\n";\
-  DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() )\
-  }\
+  { \
+    QString buf;\
+    QTextStream ss(&buf);\
+    if ( L != NULL ) \
+    {\
+      ss <<"Your test requires\n            '";\
+      ss << #L << " == NULL' but this condition was not met.\n";\
+      ss << "\n";\
+      DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() )\
+    }\
   }
 
 // -----------------------------------------------------------------------------
@@ -471,14 +471,14 @@ bool AlmostEqualUlpsFinal(float* A, float* B, int maxUlps)
 
 #define DREAM3D_REGISTER_TEST( test )\
   try {\
-  DREAM3D_ENTER_TEST(test);\
-  test;\
-  DREAM3D_LEAVE_TEST(test)\
+    DREAM3D_ENTER_TEST(test);\
+    test;\
+    DREAM3D_LEAVE_TEST(test)\
   } catch (TestException& e)\
-{\
-  TestFailed(DREAM3D::unittest::CurrentMethod);\
-  std::cout << e.what() << std::endl;\
-  err = EXIT_FAILURE;\
+  {\
+    TestFailed(DREAM3D::unittest::CurrentMethod);\
+    std::cout << e.what() << std::endl;\
+    err = EXIT_FAILURE;\
   }
 
 #define PRINT_TEST_SUMMARY()\
@@ -487,59 +487,62 @@ bool AlmostEqualUlpsFinal(float* A, float* B, int maxUlps)
   std::cout << "  Tests Failed: " << DREAM3D::unittest::numTestFailed << std::endl;\
   std::cout << "  Total Tests:  " << DREAM3D::unittest::numTests << std::endl;\
   if (DREAM3D::unittest::numTestFailed > 0)\
-{\
-  err = EXIT_FAILURE;\
+  {\
+    err = EXIT_FAILURE;\
   }\
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename T, typename K>
-void require_equal(T l, const QString &L, K r, const QString &R, const QString file = "", int line = 0)
-{
-  if ( l != r ) {
-    QString buf;
-    QTextStream ss(&buf);
-    ss << "Your test required the following\n            '";
-    ss << L << " == " << R << "'\n             but this condition was not met.\n";
-    ss << "             " << l << "==" << r;
-    // DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() )
-    throw TestException( buf.toStdString(), file.toStdString(), line);
+  template<typename T, typename K>
+  void require_equal(T l, const QString& L, K r, const QString& R, const QString file = "", int line = 0)
+  {
+    if ( l != r )
+    {
+      QString buf;
+      QTextStream ss(&buf);
+      ss << "Your test required the following\n            '";
+      ss << L << " == " << R << "'\n             but this condition was not met.\n";
+      ss << "             " << l << "==" << r;
+      // DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() )
+      throw TestException( buf.toStdString(), file.toStdString(), line);
+    }
   }
-}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename T, typename K>
-void require_less_than(T l, const QString &L, K r, const QString &R, const QString file = "", int line = 0)
-{
-  if ( l >= r ) {
-    QString buf;
-    QTextStream ss(&buf);
-    ss << "Your test required the following\n            '";
-    ss << L << " < " << R << "'\n             but this condition was not met.\n";
-    ss << "             " << l << "==" << r;
-    throw TestException( buf.toStdString(), file.toStdString(), line);
+  template<typename T, typename K>
+  void require_less_than(T l, const QString& L, K r, const QString& R, const QString file = "", int line = 0)
+  {
+    if ( l >= r )
+    {
+      QString buf;
+      QTextStream ss(&buf);
+      ss << "Your test required the following\n            '";
+      ss << L << " < " << R << "'\n             but this condition was not met.\n";
+      ss << "             " << l << "==" << r;
+      throw TestException( buf.toStdString(), file.toStdString(), line);
+    }
   }
-}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename T, typename K>
-void require_greater_than(T l, const QString &L, K r, const QString &R, const QString file = "", int line = 0)
-{
-  if ( l <= r ) {
-    QString buf;
-    QTextStream ss(&buf);
-    ss << "Your test required the following\n            '";
-    ss << L << " < " << R << "'\n             but this condition was not met.\n";
-    ss << "             " << l << "==" << r;
-    throw TestException( buf.toStdString(), file.toStdString(), line);
+  template<typename T, typename K>
+  void require_greater_than(T l, const QString& L, K r, const QString& R, const QString file = "", int line = 0)
+  {
+    if ( l <= r )
+    {
+      QString buf;
+      QTextStream ss(&buf);
+      ss << "Your test required the following\n            '";
+      ss << L << " < " << R << "'\n             but this condition was not met.\n";
+      ss << "             " << l << "==" << r;
+      throw TestException( buf.toStdString(), file.toStdString(), line);
+    }
   }
-}
 
 
 #endif /* UNITTESTSUPPORT_HPP_ */

@@ -40,8 +40,8 @@
 #include <QtCore/QString>
 
 #define SET_GET_POINTER(name, var, type)\
-type* get##name##Pointer() { return m_##name; }\
-void set##name##Pointer(type* f)\
+  type* get##name##Pointer() { return m_##name; }\
+  void set##name##Pointer(type* f)\
   {\
     if (m_##var != NULL && m_##var != f)\
     {\
@@ -69,7 +69,7 @@ class CSVGrainDataReader
 
 
     /** @brief Sets the file name of the ang file to be read */
-    void setFileName(const QString &f) { m_FileName = f; }
+    void setFileName(const QString& f) { m_FileName = f; }
     QString getFileName() { return m_FileName;}
 
     void setNumberOfElements(size_t n) { m_NumberOfElements = n;}
@@ -102,7 +102,7 @@ class CSVGrainDataReader
     SET_GET_POINTER(NumNeighbors, NumNeighbors, int)
     SET_GET_POINTER(SurfaceGrain, SurfaceGrain, int)
 
-protected:
+  protected:
 
 
     /** @brief Allocates the proper amount of memory (after reading the header portion of the file)
@@ -120,39 +120,39 @@ protected:
      * also optionally produce SSE aligned memory for use with SSE intrinsics
      * @return Pointer to allocated memory
      */
-      template<typename T>
-      T* allocateArray(size_t numberOfElements)
-      {
-  #if defined ( AIM_USE_SSE ) && defined ( __SSE2__ )
-        T* m_buffer = static_cast<T*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
-  #else
-        T*  m_buffer = new T[numberOfElements];
-  #endif
-        m_NumberOfElements = numberOfElements;
-        return m_buffer;
-      }
+    template<typename T>
+    T* allocateArray(size_t numberOfElements)
+    {
+#if defined ( AIM_USE_SSE ) && defined ( __SSE2__ )
+      T* m_buffer = static_cast<T*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
+#else
+      T*  m_buffer = new T[numberOfElements];
+#endif
+      m_NumberOfElements = numberOfElements;
+      return m_buffer;
+    }
 
     /**
      * @brief Deallocates memory that has been previously allocated. This will set the
      * value of the pointer passed in as the argument to NULL.
      * @param ptr The pointer to be freed.
      */
-      template<typename T>
-      void deallocateArrayData(T* &ptr)
+    template<typename T>
+    void deallocateArrayData(T*& ptr)
+    {
+      if (ptr != NULL && this->m_ManageMemory == true)
       {
-        if (ptr != NULL && this->m_ManageMemory == true)
-        {
-  #if defined ( AIM_USE_SSE ) && defined ( __SSE2__ )
-          _mm_free(ptr );
-  #else
-          delete[] ptr;
-  #endif
-          ptr = NULL;
-          m_NumberOfElements = 0;
-        }
+#if defined ( AIM_USE_SSE ) && defined ( __SSE2__ )
+        _mm_free(ptr );
+#else
+        delete[] ptr;
+#endif
+        ptr = NULL;
+        m_NumberOfElements = 0;
       }
+    }
 
-private:
+  private:
     QString m_FileName;
     size_t m_NumberOfElements;
     int    m_NumFeatures;
@@ -180,7 +180,7 @@ private:
     /** @brief Parses the data from a line of data from the TSL .ang file
     * @param line The line of data to parse
     */
-    void readData(const QString &line, int row, size_t i);
+    void readData(const QString& line, int row, size_t i);
 
     CSVGrainDataReader(const CSVGrainDataReader&);    // Copy Constructor Not Implemented
     void operator=(const CSVGrainDataReader&);  // Operator '=' Not Implemented

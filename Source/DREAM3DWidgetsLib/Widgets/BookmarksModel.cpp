@@ -45,9 +45,9 @@ BookmarksModel* BookmarksModel::self = NULL;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-BookmarksModel::BookmarksModel(QObject *parent) :
-QAbstractItemModel(parent),
-m_Watcher(NULL)
+BookmarksModel::BookmarksModel(QObject* parent) :
+  QAbstractItemModel(parent),
+  m_Watcher(NULL)
 {
   QVector<QVariant> vector;
   vector.push_back("Name");
@@ -126,7 +126,7 @@ QFileSystemWatcher* BookmarksModel::getFileSystemWatcher()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksModel::updateRowState(const QString &path)
+void BookmarksModel::updateRowState(const QString& path)
 {
   QFileInfo fi(path);
   if (fi.exists() == false)
@@ -145,7 +145,7 @@ void BookmarksModel::updateRowState(const QString &path)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int BookmarksModel::columnCount(const QModelIndex &parent) const
+int BookmarksModel::columnCount(const QModelIndex& parent) const
 {
   return rootItem->columnCount();
 }
@@ -153,7 +153,7 @@ int BookmarksModel::columnCount(const QModelIndex &parent) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QModelIndex BookmarksModel::sibling(int row, int column, const QModelIndex &currentIndex) const
+QModelIndex BookmarksModel::sibling(int row, int column, const QModelIndex& currentIndex) const
 {
   if (currentIndex.column() == BookmarksItem::Name)
   {
@@ -168,14 +168,14 @@ QModelIndex BookmarksModel::sibling(int row, int column, const QModelIndex &curr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVariant BookmarksModel::data(const QModelIndex &index, int role) const
+QVariant BookmarksModel::data(const QModelIndex& index, int role) const
 {
   if (!index.isValid())
   {
     return QVariant();
   }
 
-  BookmarksItem *item = getItem(index);
+  BookmarksItem* item = getItem(index);
 
   if (role == Qt::DisplayRole)
   {
@@ -242,10 +242,10 @@ QVariant BookmarksModel::data(const QModelIndex &index, int role) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Qt::ItemFlags BookmarksModel::flags(const QModelIndex &index) const
+Qt::ItemFlags BookmarksModel::flags(const QModelIndex& index) const
 {
   if (!index.isValid())
-    return 0;
+  { return 0; }
 
   Qt::ItemFlags defaultFlags = QAbstractItemModel::flags(index);
 
@@ -266,12 +266,13 @@ Qt::ItemFlags BookmarksModel::flags(const QModelIndex &index) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-BookmarksItem *BookmarksModel::getItem(const QModelIndex &index) const
+BookmarksItem* BookmarksModel::getItem(const QModelIndex& index) const
 {
-  if (index.isValid()) {
-    BookmarksItem *item = static_cast<BookmarksItem*>(index.internalPointer());
+  if (index.isValid())
+  {
+    BookmarksItem* item = static_cast<BookmarksItem*>(index.internalPointer());
     if (item)
-      return item;
+    { return item; }
   }
   return rootItem;
 }
@@ -280,10 +281,10 @@ BookmarksItem *BookmarksModel::getItem(const QModelIndex &index) const
 //
 // -----------------------------------------------------------------------------
 QVariant BookmarksModel::headerData(int section, Qt::Orientation orientation,
-  int role) const
+                                    int role) const
 {
   if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
-    return rootItem->data(section);
+  { return rootItem->data(section); }
 
   return QVariant();
 }
@@ -291,26 +292,26 @@ QVariant BookmarksModel::headerData(int section, Qt::Orientation orientation,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QModelIndex BookmarksModel::index(int row, int column, const QModelIndex &parent) const
+QModelIndex BookmarksModel::index(int row, int column, const QModelIndex& parent) const
 {
   if (parent.isValid() && parent.column() != 0)
-    return QModelIndex();
+  { return QModelIndex(); }
 
-  BookmarksItem *parentItem = getItem(parent);
+  BookmarksItem* parentItem = getItem(parent);
 
-  BookmarksItem *childItem = parentItem->child(row);
+  BookmarksItem* childItem = parentItem->child(row);
   if (childItem)
-    return createIndex(row, column, childItem);
+  { return createIndex(row, column, childItem); }
   else
-    return QModelIndex();
+  { return QModelIndex(); }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool BookmarksModel::insertRows(int position, int rows, const QModelIndex &parent)
+bool BookmarksModel::insertRows(int position, int rows, const QModelIndex& parent)
 {
-  BookmarksItem *parentItem = getItem(parent);
+  BookmarksItem* parentItem = getItem(parent);
   bool success;
 
   beginInsertRows(parent, position, position + rows - 1);
@@ -323,9 +324,9 @@ bool BookmarksModel::insertRows(int position, int rows, const QModelIndex &paren
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool BookmarksModel::removeRows(int position, int rows, const QModelIndex &parent)
+bool BookmarksModel::removeRows(int position, int rows, const QModelIndex& parent)
 {
-  BookmarksItem *parentItem = getItem(parent);
+  BookmarksItem* parentItem = getItem(parent);
   bool success = true;
 
   beginRemoveRows(parent, position, position + rows - 1);
@@ -338,16 +339,16 @@ bool BookmarksModel::removeRows(int position, int rows, const QModelIndex &paren
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QModelIndex BookmarksModel::parent(const QModelIndex &index) const
+QModelIndex BookmarksModel::parent(const QModelIndex& index) const
 {
   if (!index.isValid())
-    return QModelIndex();
+  { return QModelIndex(); }
 
-  BookmarksItem *childItem = getItem(index);
-  BookmarksItem *parentItem = childItem->parent();
+  BookmarksItem* childItem = getItem(index);
+  BookmarksItem* parentItem = childItem->parent();
 
   if (parentItem == rootItem)
-    return QModelIndex();
+  { return QModelIndex(); }
 
   return createIndex(parentItem->childNumber(), 0, parentItem);
 }
@@ -355,9 +356,9 @@ QModelIndex BookmarksModel::parent(const QModelIndex &index) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int BookmarksModel::rowCount(const QModelIndex &parent) const
+int BookmarksModel::rowCount(const QModelIndex& parent) const
 {
-  BookmarksItem *parentItem = getItem(parent);
+  BookmarksItem* parentItem = getItem(parent);
 
   return parentItem->childCount();
 }
@@ -365,9 +366,9 @@ int BookmarksModel::rowCount(const QModelIndex &parent) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool BookmarksModel::setData(const QModelIndex &index, const QVariant &value, int role)
+bool BookmarksModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-  BookmarksItem *item = getItem(index);
+  BookmarksItem* item = getItem(index);
   bool result = false;
 
   if (role == Qt::UserRole)
@@ -384,7 +385,7 @@ bool BookmarksModel::setData(const QModelIndex &index, const QVariant &value, in
   }
 
   if (result)
-    emit dataChanged(index, index);
+  { emit dataChanged(index, index); }
 
   return result;
 }
@@ -392,18 +393,18 @@ bool BookmarksModel::setData(const QModelIndex &index, const QVariant &value, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksModel::setNeedsToBeExpanded(const QModelIndex &index, bool value)
+void BookmarksModel::setNeedsToBeExpanded(const QModelIndex& index, bool value)
 {
-  BookmarksItem *item = getItem(index);
+  BookmarksItem* item = getItem(index);
   item->setNeedsToBeExpanded(value);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool BookmarksModel::needsToBeExpanded(const QModelIndex &index)
+bool BookmarksModel::needsToBeExpanded(const QModelIndex& index)
 {
-  BookmarksItem *item = getItem(index);
+  BookmarksItem* item = getItem(index);
   return item->needsToBeExpanded();
 }
 
@@ -430,7 +431,7 @@ bool BookmarksModel::isEmpty()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksModel::copyIndexToTemp(const QModelIndex &index, const QModelIndex &oldParent,const QModelIndex &tempParent, BookmarksModel* tempModel)
+void BookmarksModel::copyIndexToTemp(const QModelIndex& index, const QModelIndex& oldParent, const QModelIndex& tempParent, BookmarksModel* tempModel)
 {
   // Get the name of the index
   QString name = self->index(index.row(), BookmarksItem::Name, oldParent).data().toString();
@@ -463,7 +464,7 @@ void BookmarksModel::copyIndexToTemp(const QModelIndex &index, const QModelIndex
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksModel::copyTempToIndex(QModelIndex &tempIndex, QModelIndex &newParent, const QModelIndex &tempParent, BookmarksModel* tempModel)
+void BookmarksModel::copyTempToIndex(QModelIndex& tempIndex, QModelIndex& newParent, const QModelIndex& tempParent, BookmarksModel* tempModel)
 {
   // Get the name of the index
   QString name = tempModel->index(tempIndex.row(), BookmarksItem::Name, tempParent).data().toString();
@@ -497,7 +498,7 @@ void BookmarksModel::copyTempToIndex(QModelIndex &tempIndex, QModelIndex &newPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksModel::moveIndexInternally(const QModelIndex &index, QModelIndex &oldParent, QModelIndex &newParent)
+void BookmarksModel::moveIndexInternally(const QModelIndex& index, QModelIndex& oldParent, QModelIndex& newParent)
 {
   BookmarksModel* tempModel = new BookmarksModel();
 
@@ -518,7 +519,7 @@ void BookmarksModel::moveIndexInternally(const QModelIndex &index, QModelIndex &
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksModel::addFileToTree(QString &path, QModelIndex &specifiedParent)
+void BookmarksModel::addFileToTree(QString& path, QModelIndex& specifiedParent)
 {
   path = QDir::toNativeSeparators(path);
 
@@ -619,7 +620,7 @@ QModelIndexList BookmarksModel::findIndexByPath(QString filePath)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QModelIndexList BookmarksModel::findIndexByPath(const QModelIndex &current, QString filePath)
+QModelIndexList BookmarksModel::findIndexByPath(const QModelIndex& current, QString filePath)
 {
   QModelIndex actual = index(current.row(), BookmarksItem::Name, current.parent());
 

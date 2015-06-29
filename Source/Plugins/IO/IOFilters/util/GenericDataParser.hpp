@@ -54,7 +54,7 @@ class GenericDataParser
     DREAM3D_INSTANCE_PROPERTY(int, ColumnIndex)
     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(IDataArray::Pointer, DataArray)
 
-    virtual IDataArray::Pointer initializeNewDataArray(size_t numTuples, const QString &name, bool allocate){ return IDataArray::NullPointer(); }
+    virtual IDataArray::Pointer initializeNewDataArray(size_t numTuples, const QString& name, bool allocate) { return IDataArray::NullPointer(); }
 
     virtual void parse(const QByteArray& token, size_t index) {}
 
@@ -90,7 +90,7 @@ class GenericInt32Parser : public GenericDataParser
       m_Ptr = boost::dynamic_pointer_cast<Int32ArrayType>(value);
     }
 
-    IDataArray::Pointer initializeNewDataArray(size_t numTuples, const QString &name, bool allocate)
+    IDataArray::Pointer initializeNewDataArray(size_t numTuples, const QString& name, bool allocate)
     {
       Int32ArrayType::Pointer array = Int32ArrayType::CreateArray(numTuples, name, allocate);
       if (allocate) { array->initializeWithZeros(); }
@@ -145,7 +145,7 @@ class GenericFloatParser : public GenericDataParser
 
     }
 
-    IDataArray::Pointer initializeNewDataArray(size_t numTuples, const QString &name, bool allocate)
+    IDataArray::Pointer initializeNewDataArray(size_t numTuples, const QString& name, bool allocate)
     {
       FloatArrayType::Pointer array = FloatArrayType::CreateArray(numTuples, name, allocate);
       if (allocate) { array->initializeWithZeros(); }

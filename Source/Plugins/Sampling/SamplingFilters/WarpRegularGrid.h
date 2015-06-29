@@ -124,9 +124,9 @@ class WarpRegularGrid : public AbstractFilter
      */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-   /**
-    * @brief execute Reimplemented from @see AbstractFilter class
-    */
+    /**
+     * @brief execute Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
 
     /**
@@ -172,7 +172,7 @@ class WarpRegularGrid : public AbstractFilter
      * @param newX Output warped x coordinate.
      * @param newY Output warped y coordiante.
      */
-    void determine_warped_coordinates(float x, float y, float &newX, float &newY);
+    void determine_warped_coordinates(float x, float y, float& newX, float& newY);
 
   private:
     WarpRegularGrid(const WarpRegularGrid&); // Copy Constructor Not Implemented

@@ -65,7 +65,7 @@ QString quote(const QString& str)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void writeOutput(bool didReplace, QStringList &outLines, QString filename)
+void writeOutput(bool didReplace, QStringList& outLines, QString filename)
 {
   if(didReplace == true)
   {
@@ -88,7 +88,7 @@ void writeOutput(bool didReplace, QStringList &outLines, QString filename)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString createReplacementDataCheck(QStringList &outLines, QString &line, QString searchString)
+QString createReplacementDataCheck(QStringList& outLines, QString& line, QString searchString)
 {
 
   qDebug() << "Found a Prereq Array";
@@ -137,7 +137,7 @@ QString createReplacementDataCheck(QStringList &outLines, QString &line, QString
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString createReplacementReader(QStringList &outLines, QString name)
+QString createReplacementReader(QStringList& outLines, QString name)
 {
   QString str;
   QTextStream out(&str);
@@ -150,7 +150,7 @@ QString createReplacementReader(QStringList &outLines, QString name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString createReplacementWriter(QStringList &outLines, QString name)
+QString createReplacementWriter(QStringList& outLines, QString name)
 {
   QString str;
   QTextStream out(&str);
@@ -162,42 +162,43 @@ QString createReplacementWriter(QStringList &outLines, QString name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void createNewFilterInstance(QStringListIterator &sourceLines, QStringList &outLines)
+void createNewFilterInstance(QStringListIterator& sourceLines, QStringList& outLines)
 {
 
-    outLines.push_back("    //Loop over each Filter Parameter that is registered to the filter either through this class or a parent class");
-    outLines.push_back("    // and copy the value from the current instance of the object into the \"new\" instance that was just created");
-    outLines.push_back("    QVector<FilterParameter::Pointer> options = getFilterParameters(); // Get the current set of filter parameters");
-    outLines.push_back("    for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )");
-    outLines.push_back("    {");
-    outLines.push_back("      FilterParameter* parameter = (*iter).get();");
-    outLines.push_back("      if (parameter->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0 )");
-    outLines.push_back("      {");
-    outLines.push_back("        continue; // Skip this type of filter parameter as it has nothing to do with anything in the filter.");
-    outLines.push_back("      }");
+  outLines.push_back("    //Loop over each Filter Parameter that is registered to the filter either through this class or a parent class");
+  outLines.push_back("    // and copy the value from the current instance of the object into the \"new\" instance that was just created");
+  outLines.push_back("    QVector<FilterParameter::Pointer> options = getFilterParameters(); // Get the current set of filter parameters");
+  outLines.push_back("    for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )");
+  outLines.push_back("    {");
+  outLines.push_back("      FilterParameter* parameter = (*iter).get();");
+  outLines.push_back("      if (parameter->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0 )");
+  outLines.push_back("      {");
+  outLines.push_back("        continue; // Skip this type of filter parameter as it has nothing to do with anything in the filter.");
+  outLines.push_back("      }");
 
-    outLines.push_back("      // Get the property from the current instance of the filter");
-    outLines.push_back("      QVariant var = property(parameter->getPropertyName().toLatin1().constData());");
-    outLines.push_back("      bool ok = filter->setProperty(parameter->getPropertyName().toLatin1().constData(), var);");
-    outLines.push_back("      if(false == ok)");
-    outLines.push_back("      {");
-    outLines.push_back("        QString ss = QString(\"Error occurred transferring the Filter Parameter '%1' in Filter '%2' to the filter instance. The pipeline may run but the underlying filter will NOT be using the values from the GUI.\"");
-    outLines.push_back("                             \" Please report this issue to the developers of this filter.\").arg(parameter->getPropertyName()).arg(filter->getHumanLabel());");
-    outLines.push_back("        Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());");
-    outLines.push_back("      }");
-    outLines.push_back("    }");
+  outLines.push_back("      // Get the property from the current instance of the filter");
+  outLines.push_back("      QVariant var = property(parameter->getPropertyName().toLatin1().constData());");
+  outLines.push_back("      bool ok = filter->setProperty(parameter->getPropertyName().toLatin1().constData(), var);");
+  outLines.push_back("      if(false == ok)");
+  outLines.push_back("      {");
+  outLines.push_back("        QString ss = QString(\"Error occurred transferring the Filter Parameter '%1' in Filter '%2' to the filter instance. The pipeline may run but the underlying filter will NOT be using the values from the GUI.\"");
+  outLines.push_back("                             \" Please report this issue to the developers of this filter.\").arg(parameter->getPropertyName()).arg(filter->getHumanLabel());");
+  outLines.push_back("        Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());");
+  outLines.push_back("      }");
+  outLines.push_back("    }");
 
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString createSetupFilterParameters(QStringListIterator &sourceLines, QStringList &outLines, QString name, int index)
+QString createSetupFilterParameters(QStringListIterator& sourceLines, QStringList& outLines, QString name, int index)
 {
   //  parameters.push_back(FilterParameter::New("Input Statistics", "InputStatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", FilterParameter::Uncategorized, ""));
   QString str;
   QTextStream out(&str);
-  if(index == 0) {
+  if(index == 0)
+  {
     outLines.push_back("  parameters.push_back(FilterParameter::New(\"Required Information\", \"\", FilterParameterWidgetType::SeparatorWidget, \"QString\", true));");
   }
   out << "/*[]*/parameters.push_back(FilterParameter::New(\"" << name << "\", \"" << name << "ArrayPath\", FilterParameterWidgetType::DataArraySelectionWidget, \"DataArrayPath\", true, \"\"));";
@@ -208,7 +209,7 @@ QString createSetupFilterParameters(QStringListIterator &sourceLines, QStringLis
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString createConstructorEntries(QStringListIterator &sourceLines, QStringList &outLines, QString name)
+QString createConstructorEntries(QStringListIterator& sourceLines, QStringList& outLines, QString name)
 {
   QString line = sourceLines.next();
   // Eat up the entries already there
@@ -233,7 +234,7 @@ QString createConstructorEntries(QStringListIterator &sourceLines, QStringList &
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString updateHeader(QStringList &outLines, QString name)
+QString updateHeader(QStringList& outLines, QString name)
 {
   QString str;
   QTextStream out(&str);
@@ -408,7 +409,7 @@ void LoopOnFilters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
   Q_ASSERT(true); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.

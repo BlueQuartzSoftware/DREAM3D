@@ -123,8 +123,8 @@ int32_t FindNRingNeighbors::generate(TriangleGeom::Pointer triangleGeom, int32_t
       for(int32_t i = 0; i < 3; ++i)
       {
         // Get all the triangles for this Node id
-        uint16_t tCount = node2TrianglePtr->getNumberOfElements(triangles[triangleIdx*3+i]);
-        int64_t* data = node2TrianglePtr->getElementListPointer(triangles[triangleIdx*3+i]);
+        uint16_t tCount = node2TrianglePtr->getNumberOfElements(triangles[triangleIdx * 3 + i]);
+        int64_t* data = node2TrianglePtr->getElementListPointer(triangles[triangleIdx * 3 + i]);
 
         // Copy all the triangles into our "2Ring" set which will be the unique set of triangle ids
         for (uint16_t t = 0; t < tCount; ++t)

@@ -13,7 +13,7 @@
 // -----------------------------------------------------------------------------
 RawBinaryWriter::RawBinaryWriter() :
   AbstractFilter()
-/* DO NOT FORGET TO INITIALIZE ALL YOUR DREAM3D Filter Parameters HERE */
+  /* DO NOT FORGET TO INITIALIZE ALL YOUR DREAM3D Filter Parameters HERE */
 {
   setupFilterParameters();
 }

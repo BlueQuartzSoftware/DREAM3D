@@ -44,32 +44,32 @@
 
 class ChoiceWidgetCodeGenerator : public FPCodeGenerator
 {
-public:
-  DREAM3D_SHARED_POINTERS(ChoiceWidgetCodeGenerator)
+  public:
+    DREAM3D_SHARED_POINTERS(ChoiceWidgetCodeGenerator)
 
     static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
-  {
-    Pointer sharedPtr(new ChoiceWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
-    return sharedPtr;
-  }
+    {
+      Pointer sharedPtr(new ChoiceWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
+      return sharedPtr;
+    }
 
-  virtual ~ChoiceWidgetCodeGenerator();
+    virtual ~ChoiceWidgetCodeGenerator();
 
-  virtual QString generateSetupFilterParameters();
+    virtual QString generateSetupFilterParameters();
 
-  virtual QString generateDataCheck();
+    virtual QString generateDataCheck();
 
-  virtual QString generateFilterParameters();
+    virtual QString generateFilterParameters();
 
-  virtual QString generateCPPIncludes();
+    virtual QString generateCPPIncludes();
 
-protected:
-  ChoiceWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
+  protected:
+    ChoiceWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
-private:
+  private:
 
-  ChoiceWidgetCodeGenerator(const ChoiceWidgetCodeGenerator&); // Copy Constructor Not Implemented
-  void operator=(const ChoiceWidgetCodeGenerator&); // Operator '=' Not Implemented
+    ChoiceWidgetCodeGenerator(const ChoiceWidgetCodeGenerator&); // Copy Constructor Not Implemented
+    void operator=(const ChoiceWidgetCodeGenerator&); // Operator '=' Not Implemented
 };
 
 #endif /* ChoiceWidgetCodeGenerator_H_ */

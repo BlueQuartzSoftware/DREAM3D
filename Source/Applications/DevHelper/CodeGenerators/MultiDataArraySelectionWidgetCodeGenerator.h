@@ -44,34 +44,34 @@
 
 class MultiDataArraySelectionWidgetCodeGenerator : public FPCodeGenerator
 {
-public:
-  DREAM3D_SHARED_POINTERS(MultiDataArraySelectionWidgetCodeGenerator)
+  public:
+    DREAM3D_SHARED_POINTERS(MultiDataArraySelectionWidgetCodeGenerator)
 
     static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
-  {
-    Pointer sharedPtr(new MultiDataArraySelectionWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
-    return sharedPtr;
-  }
+    {
+      Pointer sharedPtr(new MultiDataArraySelectionWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
+      return sharedPtr;
+    }
 
-  virtual ~MultiDataArraySelectionWidgetCodeGenerator();
+    virtual ~MultiDataArraySelectionWidgetCodeGenerator();
 
-  virtual QString generateSetupFilterParameters();
+    virtual QString generateSetupFilterParameters();
 
-  virtual QString generateReadFilterParameters();
+    virtual QString generateReadFilterParameters();
 
-  virtual QString generateDataCheck();
+    virtual QString generateDataCheck();
 
-  virtual QString generateFilterParameters();
+    virtual QString generateFilterParameters();
 
-  virtual QString generateCPPIncludes();
+    virtual QString generateCPPIncludes();
 
-protected:
-  MultiDataArraySelectionWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
+  protected:
+    MultiDataArraySelectionWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
-private:
+  private:
 
-  MultiDataArraySelectionWidgetCodeGenerator(const MultiDataArraySelectionWidgetCodeGenerator&); // Copy Constructor Not Implemented
-  void operator=(const MultiDataArraySelectionWidgetCodeGenerator&); // Operator '=' Not Implemented
+    MultiDataArraySelectionWidgetCodeGenerator(const MultiDataArraySelectionWidgetCodeGenerator&); // Copy Constructor Not Implemented
+    void operator=(const MultiDataArraySelectionWidgetCodeGenerator&); // Operator '=' Not Implemented
 };
 
 #endif /* MultiDataArraySelectionWidgetCodeGenerator_H_ */

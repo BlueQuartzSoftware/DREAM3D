@@ -42,27 +42,27 @@
 
 class DREAM3DLib_EXPORT DataContainerReaderFilterParameter : public FileSystemFilterParameter
 {
-public:
-  DREAM3D_SHARED_POINTERS(DataContainerReaderFilterParameter)
+  public:
+    DREAM3D_SHARED_POINTERS(DataContainerReaderFilterParameter)
     DREAM3D_STATIC_NEW_MACRO(DataContainerReaderFilterParameter)
     DREAM3D_TYPE_MACRO_SUPER(DataContainerReaderFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-    const QString& widgetType, const QVariant& defaultValue,
-    Category category,
-    int groupIndex = -1);
+                       const QString& widgetType, const QVariant& defaultValue,
+                       Category category,
+                       int groupIndex = -1);
 
-  virtual ~DataContainerReaderFilterParameter();
+    virtual ~DataContainerReaderFilterParameter();
 
-  DREAM3D_INSTANCE_PROPERTY(Qt::CheckState, DefaultFlagValue)
+    DREAM3D_INSTANCE_PROPERTY(Qt::CheckState, DefaultFlagValue)
     DREAM3D_INSTANCE_PROPERTY(QString, InputFileProperty)
 
-protected:
-  DataContainerReaderFilterParameter();
+  protected:
+    DataContainerReaderFilterParameter();
 
-private:
-  DataContainerReaderFilterParameter(const DataContainerReaderFilterParameter&); // Copy Constructor Not Implemented
-  void operator=(const DataContainerReaderFilterParameter&); // Operator '=' Not Implemented
+  private:
+    DataContainerReaderFilterParameter(const DataContainerReaderFilterParameter&); // Copy Constructor Not Implemented
+    void operator=(const DataContainerReaderFilterParameter&); // Operator '=' Not Implemented
 };
 
 #endif /* _DataContainerReaderFilterParameter_H_ */

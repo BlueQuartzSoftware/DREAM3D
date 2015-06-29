@@ -54,8 +54,8 @@
 //
 // -----------------------------------------------------------------------------
 MultiDataArraySelectionWidget::MultiDataArraySelectionWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-FilterParameterWidget(parameter, filter, parent),
-m_DidCausePreflight(false)
+  FilterParameterWidget(parameter, filter, parent),
+  m_DidCausePreflight(false)
 {
   setupUi(this);
   setupGui();
@@ -65,8 +65,8 @@ m_DidCausePreflight(false)
 //
 // -----------------------------------------------------------------------------
 MultiDataArraySelectionWidget::MultiDataArraySelectionWidget(QWidget* parent) :
-FilterParameterWidget(NULL, NULL, parent),
-m_DidCausePreflight(false)
+  FilterParameterWidget(NULL, NULL, parent),
+  m_DidCausePreflight(false)
 {
   setupUi(this);
   setupGui();
@@ -134,15 +134,15 @@ void MultiDataArraySelectionWidget::setupGui()
   // Lastly, hook up the filter's signals and slots to our own signals and slots
   // Catch when the filter is about to execute the preflight
   connect(getFilter(), SIGNAL(preflightAboutToExecute()),
-    this, SLOT(beforePreflight()));
+          this, SLOT(beforePreflight()));
 
   // Catch when the filter is finished running the preflight
   connect(getFilter(), SIGNAL(preflightExecuted()),
-    this, SLOT(afterPreflight()));
+          this, SLOT(afterPreflight()));
 
   // Catch when the filter wants its values updated
   connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)),
-    this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
+          this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
 }
 
@@ -482,7 +482,7 @@ DataContainerArrayProxy MultiDataArraySelectionWidget::generateDCAProxy()
     DataArrayProxy daProxy(dcaName + "|" + amName, daName, checkState);
     amProxy.dataArrays.insert(daName, daProxy);
     dcProxy.attributeMatricies.insert(amName, amProxy);
-  dcaProxy.dataContainers.insert(dcProxy.name, dcProxy);
+    dcaProxy.dataContainers.insert(dcProxy.name, dcProxy);
   }
 
   return dcaProxy;

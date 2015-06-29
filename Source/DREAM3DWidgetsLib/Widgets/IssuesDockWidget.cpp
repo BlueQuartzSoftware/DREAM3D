@@ -148,34 +148,34 @@ void IssuesDockWidget::displayCachedMessages()
         msgColor.setRed(255);
         msgColor.setGreen(191);
         msgColor.setBlue(193);
-      {
-        QBrush msgBrush(msgColor);
-
-        QString msgDesc = (msg.getText());
-        int msgCode = msg.getCode();
-
-        QString msgPrefix = (msg.getPrefix());
-        QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(msgPrefix);
-        filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
-        QTableWidgetItem* descriptionWidgetItem = new QTableWidgetItem(msgDesc);
-        QTableWidgetItem* codeWidgetItem = new QTableWidgetItem(QString::number(msgCode));
-        codeWidgetItem->setTextAlignment(Qt::AlignCenter);
-
-        filterNameWidgetItem->setBackground(msgBrush);
-        descriptionWidgetItem->setBackground(msgBrush);
-        codeWidgetItem->setBackground(msgBrush);
-
-        if (hyperlinkLabel == NULL)
         {
-          errorTableWidget->setItem(row, 0, filterNameWidgetItem);
+          QBrush msgBrush(msgColor);
+
+          QString msgDesc = (msg.getText());
+          int msgCode = msg.getCode();
+
+          QString msgPrefix = (msg.getPrefix());
+          QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(msgPrefix);
+          filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
+          QTableWidgetItem* descriptionWidgetItem = new QTableWidgetItem(msgDesc);
+          QTableWidgetItem* codeWidgetItem = new QTableWidgetItem(QString::number(msgCode));
+          codeWidgetItem->setTextAlignment(Qt::AlignCenter);
+
+          filterNameWidgetItem->setBackground(msgBrush);
+          descriptionWidgetItem->setBackground(msgBrush);
+          codeWidgetItem->setBackground(msgBrush);
+
+          if (hyperlinkLabel == NULL)
+          {
+            errorTableWidget->setItem(row, 0, filterNameWidgetItem);
+          }
+          else
+          {
+            errorTableWidget->setCellWidget(row, 0, hyperlinkLabel);
+          }
+          errorTableWidget->setItem(row, 1, descriptionWidgetItem);
+          errorTableWidget->setItem(row, 2, codeWidgetItem);
         }
-        else
-        {
-          errorTableWidget->setCellWidget(row, 0, hyperlinkLabel);
-        }
-        errorTableWidget->setItem(row, 1, descriptionWidgetItem);
-        errorTableWidget->setItem(row, 2, codeWidgetItem);
-      }
         row++;
         break;
 
@@ -185,36 +185,36 @@ void IssuesDockWidget::displayCachedMessages()
         msgColor.setGreen(254);
         msgColor.setBlue(137);
 
-      {
-        QBrush msgBrush(msgColor);
-
-        QString msgName = (msg.getPrefix());
-        QString msgDesc = (msg.getText());
-        int msgCode = msg.getCode();
-
-
-
-        QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(msgName);
-        filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
-        QTableWidgetItem* descriptionWidgetItem = new QTableWidgetItem(msgDesc);
-        QTableWidgetItem* codeWidgetItem = new QTableWidgetItem(QString::number(msgCode));
-        codeWidgetItem->setTextAlignment(Qt::AlignCenter);
-
-        filterNameWidgetItem->setBackground(msgBrush);
-        descriptionWidgetItem->setBackground(msgBrush);
-        codeWidgetItem->setBackground(msgBrush);
-
-        if (hyperlinkLabel == NULL)
         {
-          errorTableWidget->setItem(row, 0, filterNameWidgetItem);
+          QBrush msgBrush(msgColor);
+
+          QString msgName = (msg.getPrefix());
+          QString msgDesc = (msg.getText());
+          int msgCode = msg.getCode();
+
+
+
+          QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(msgName);
+          filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
+          QTableWidgetItem* descriptionWidgetItem = new QTableWidgetItem(msgDesc);
+          QTableWidgetItem* codeWidgetItem = new QTableWidgetItem(QString::number(msgCode));
+          codeWidgetItem->setTextAlignment(Qt::AlignCenter);
+
+          filterNameWidgetItem->setBackground(msgBrush);
+          descriptionWidgetItem->setBackground(msgBrush);
+          codeWidgetItem->setBackground(msgBrush);
+
+          if (hyperlinkLabel == NULL)
+          {
+            errorTableWidget->setItem(row, 0, filterNameWidgetItem);
+          }
+          else
+          {
+            errorTableWidget->setCellWidget(row, 0, hyperlinkLabel);
+          }
+          errorTableWidget->setItem(row, 1, descriptionWidgetItem);
+          errorTableWidget->setItem(row, 2, codeWidgetItem);
         }
-        else
-        {
-          errorTableWidget->setCellWidget(row, 0, hyperlinkLabel);
-        }
-        errorTableWidget->setItem(row, 1, descriptionWidgetItem);
-        errorTableWidget->setItem(row, 2, codeWidgetItem);
-      }
         row++;
         break;
 

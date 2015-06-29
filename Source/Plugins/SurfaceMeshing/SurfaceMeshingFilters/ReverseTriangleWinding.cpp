@@ -69,11 +69,11 @@ class ReverseWindingImpl
       for (size_t i = start; i < end; i++)
       {
         // Swap the indices
-        int64_t nId0 = triangles[i*3+0];
-        int64_t nId2 = triangles[i*3+2];
+        int64_t nId0 = triangles[i * 3 + 0];
+        int64_t nId2 = triangles[i * 3 + 2];
 
-        triangles[i*3+0] = nId2;
-        triangles[i*3+2] = nId0;
+        triangles[i * 3 + 0] = nId2;
+        triangles[i * 3 + 2] = nId0;
       }
     }
 

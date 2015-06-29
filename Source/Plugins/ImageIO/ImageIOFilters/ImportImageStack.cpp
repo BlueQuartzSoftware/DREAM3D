@@ -225,7 +225,8 @@ void ImportImageStack::dataCheck()
     {
       pixelBytes = 4;
     }
-    else {
+    else
+    {
       ss = QObject::tr("Image format is of unsupported type. Imported images must be either grayscale, RGB, or ARGB");
       setErrorCondition(-1);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
@@ -327,7 +328,8 @@ void ImportImageStack::execute()
       {
         pixelBytes = 4;
       }
-      else {
+      else
+      {
         ss = QObject::tr("Image format is of unsupported type. Imported images must be either grayscale, RGB, or ARGB");
         setErrorCondition(-1);
         notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());

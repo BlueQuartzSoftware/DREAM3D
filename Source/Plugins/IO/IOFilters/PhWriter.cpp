@@ -136,7 +136,7 @@ void PhWriter::dataCheck()
   {
     setErrorCondition(-10200);
     QString ss = QObject::tr("The number of Tuples for the DataArray %1 is %2 and for the associated Image Geometry is %3. The number of tuples must match").arg(m_FeatureIdsPtr.lock()->getName()).arg(m_FeatureIdsPtr.lock()->getNumberOfTuples());
-                                                                                                notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 }
 

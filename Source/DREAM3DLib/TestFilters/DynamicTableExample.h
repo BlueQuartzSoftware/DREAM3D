@@ -51,99 +51,99 @@
 */
 class DREAM3DLib_EXPORT DynamicTableExample : public AbstractFilter
 {
-	Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
-public:
-	DREAM3D_SHARED_POINTERS(DynamicTableExample)
-		DREAM3D_STATIC_NEW_MACRO(DynamicTableExample)
-		DREAM3D_TYPE_MACRO_SUPER(DynamicTableExample, AbstractFilter)
+    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+  public:
+    DREAM3D_SHARED_POINTERS(DynamicTableExample)
+    DREAM3D_STATIC_NEW_MACRO(DynamicTableExample)
+    DREAM3D_TYPE_MACRO_SUPER(DynamicTableExample, AbstractFilter)
 
-		virtual ~DynamicTableExample();
+    virtual ~DynamicTableExample();
 
-	/* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-		DREAM3D_FILTER_PARAMETER(DynamicTableData, DynamicData1)
-		Q_PROPERTY(DynamicTableData DynamicData1 READ getDynamicData1 WRITE setDynamicData1)
+    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
+    DREAM3D_FILTER_PARAMETER(DynamicTableData, DynamicData1)
+    Q_PROPERTY(DynamicTableData DynamicData1 READ getDynamicData1 WRITE setDynamicData1)
 
-		DREAM3D_FILTER_PARAMETER(DynamicTableData, DynamicData2)
-		Q_PROPERTY(DynamicTableData DynamicData2 READ getDynamicData2 WRITE setDynamicData2)
+    DREAM3D_FILTER_PARAMETER(DynamicTableData, DynamicData2)
+    Q_PROPERTY(DynamicTableData DynamicData2 READ getDynamicData2 WRITE setDynamicData2)
 
-		DREAM3D_FILTER_PARAMETER(DynamicTableData, DynamicData3)
-		Q_PROPERTY(DynamicTableData DynamicData3 READ getDynamicData1 WRITE setDynamicData3)
+    DREAM3D_FILTER_PARAMETER(DynamicTableData, DynamicData3)
+    Q_PROPERTY(DynamicTableData DynamicData3 READ getDynamicData1 WRITE setDynamicData3)
 
-		DREAM3D_FILTER_PARAMETER(DynamicTableData, DynamicData4)
-		Q_PROPERTY(DynamicTableData DynamicData4 READ getDynamicData1 WRITE setDynamicData4)
+    DREAM3D_FILTER_PARAMETER(DynamicTableData, DynamicData4)
+    Q_PROPERTY(DynamicTableData DynamicData4 READ getDynamicData1 WRITE setDynamicData4)
 
-		DREAM3D_FILTER_PARAMETER(DynamicTableData, DynamicData5)
-		Q_PROPERTY(DynamicTableData DynamicData5 READ getDynamicData1 WRITE setDynamicData5)
+    DREAM3D_FILTER_PARAMETER(DynamicTableData, DynamicData5)
+    Q_PROPERTY(DynamicTableData DynamicData5 READ getDynamicData1 WRITE setDynamicData5)
 
 
-		virtual const QString getCompiledLibraryName();
-	virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-	virtual const QString getGroupName();
+    virtual const QString getCompiledLibraryName();
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+    virtual const QString getGroupName();
 
-	/**
-	* @brief This returns a string that is displayed in the GUI. It should be readable
-	* and understandable by humans.
-	*/
-	virtual const QString getHumanLabel();
+    /**
+    * @brief This returns a string that is displayed in the GUI. It should be readable
+    * and understandable by humans.
+    */
+    virtual const QString getHumanLabel();
 
-	/**
-	* @brief This returns a string that is displayed in the GUI and helps to sort the filters into
-	* a subgroup. It should be readable and understandable by humans.
-	*/
-	virtual const QString getSubGroupName();
+    /**
+    * @brief This returns a string that is displayed in the GUI and helps to sort the filters into
+    * a subgroup. It should be readable and understandable by humans.
+    */
+    virtual const QString getSubGroupName();
 
-	/**
-	* @brief This method will instantiate all the end user settable options/parameters
-	* for this filter
-	*/
-	virtual void setupFilterParameters();
+    /**
+    * @brief This method will instantiate all the end user settable options/parameters
+    * for this filter
+    */
+    virtual void setupFilterParameters();
 
-	/**
-	* @brief This method will write the options to a file
-	* @param writer The writer that is used to write the options to a file
-	*/
-	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+    /**
+    * @brief This method will write the options to a file
+    * @param writer The writer that is used to write the options to a file
+    */
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
-	/**
-	* @brief This method will read the options from a file
-	* @param reader The reader that is used to read the options from a file
-	*/
-	virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
+    /**
+    * @brief This method will read the options from a file
+    * @param reader The reader that is used to read the options from a file
+    */
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-	/**
-	* @brief Reimplemented from @see AbstractFilter class
-	*/
-	virtual void execute();
+    /**
+    * @brief Reimplemented from @see AbstractFilter class
+    */
+    virtual void execute();
 
-	/**
-	* @brief This function runs some sanity checks on the DataContainer and inputs
-	* in an attempt to ensure the filter can process the inputs.
-	*/
-	virtual void preflight();
+    /**
+    * @brief This function runs some sanity checks on the DataContainer and inputs
+    * in an attempt to ensure the filter can process the inputs.
+    */
+    virtual void preflight();
 
-signals:
-	void updateFilterParameters(AbstractFilter* filter);
-	void parametersChanged();
-	void preflightAboutToExecute();
-	void preflightExecuted();
+  signals:
+    void updateFilterParameters(AbstractFilter* filter);
+    void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
-protected:
-	DynamicTableExample();
+  protected:
+    DynamicTableExample();
 
-	/**
-	* @brief Checks for the appropriate parameter values and availability of
-	* arrays in the data container
-	* @param preflight
-	* @param voxels The number of voxels
-	* @param features The number of features
-	* @param ensembles The number of ensembles
-	*/
-	void dataCheck();
+    /**
+    * @brief Checks for the appropriate parameter values and availability of
+    * arrays in the data container
+    * @param preflight
+    * @param voxels The number of voxels
+    * @param features The number of features
+    * @param ensembles The number of ensembles
+    */
+    void dataCheck();
 
-private:
+  private:
 
-	DynamicTableExample(const DynamicTableExample&); // Copy Constructor Not Implemented
-	void operator=(const DynamicTableExample&); // Operator '=' Not Implemented
+    DynamicTableExample(const DynamicTableExample&); // Copy Constructor Not Implemented
+    void operator=(const DynamicTableExample&); // Operator '=' Not Implemented
 };
 
 #endif /* _DynamicTableExample_H_ */

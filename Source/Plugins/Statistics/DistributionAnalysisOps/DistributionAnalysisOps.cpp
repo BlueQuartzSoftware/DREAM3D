@@ -34,7 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "DistributionAnalysisOps.h"
- 
+
 #include <limits>
 #include <numeric>
 

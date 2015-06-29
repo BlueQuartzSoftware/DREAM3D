@@ -44,36 +44,36 @@
 
 class DataContainerReaderWidgetCodeGenerator : public FPCodeGenerator
 {
-public:
-  DREAM3D_SHARED_POINTERS(DataContainerReaderWidgetCodeGenerator)
+  public:
+    DREAM3D_SHARED_POINTERS(DataContainerReaderWidgetCodeGenerator)
 
     static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
-  {
-    Pointer sharedPtr(new DataContainerReaderWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
-    return sharedPtr;
-  }
+    {
+      Pointer sharedPtr(new DataContainerReaderWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
+      return sharedPtr;
+    }
 
-  virtual ~DataContainerReaderWidgetCodeGenerator();
+    virtual ~DataContainerReaderWidgetCodeGenerator();
 
-  virtual QString generateSetupFilterParameters();
+    virtual QString generateSetupFilterParameters();
 
-  virtual QString generateReadFilterParameters();
+    virtual QString generateReadFilterParameters();
 
-  virtual QString generateDataCheck();
+    virtual QString generateDataCheck();
 
-  virtual QString generateFilterParameters();
+    virtual QString generateFilterParameters();
 
-  virtual QString generateHIncludes();
+    virtual QString generateHIncludes();
 
-  virtual QString generateCPPIncludes();
+    virtual QString generateCPPIncludes();
 
-protected:
-  DataContainerReaderWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
+  protected:
+    DataContainerReaderWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
-private:
+  private:
 
-  DataContainerReaderWidgetCodeGenerator(const DataContainerReaderWidgetCodeGenerator&); // Copy Constructor Not Implemented
-  void operator=(const DataContainerReaderWidgetCodeGenerator&); // Operator '=' Not Implemented
+    DataContainerReaderWidgetCodeGenerator(const DataContainerReaderWidgetCodeGenerator&); // Copy Constructor Not Implemented
+    void operator=(const DataContainerReaderWidgetCodeGenerator&); // Operator '=' Not Implemented
 };
 
 #endif /* DataContainerReaderWidgetCodeGenerator_H_ */

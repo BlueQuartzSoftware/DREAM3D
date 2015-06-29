@@ -253,7 +253,7 @@ namespace GeometryHelpers
        */
       template<typename T, typename K>
       static int FindElementNeighbors(typename DataArray<K>::Pointer elemList, typename DynamicListArray<T, K>::Pointer elemsContainingVert,
-                                   typename DynamicListArray<T, K>::Pointer dynamicList)
+                                      typename DynamicListArray<T, K>::Pointer dynamicList)
       {
         size_t numElems = elemList->getNumberOfTuples();
         size_t numVertsPerElem = elemList->getNumberOfComponents();
@@ -263,24 +263,24 @@ namespace GeometryHelpers
 
         switch(numVertsPerElem)
         {
-        case 2: // edges
-        {
-          numSharedVerts = 1;
-          break;
-        }
-        case 3: // triangles
-        {
-          numSharedVerts = 2;
-          break;
-        }
-        case 4: // quadrilaterals
-        {
-          numSharedVerts = 2;
-          break;
-        }
-        default:
-          numSharedVerts = 0;
-          break;
+          case 2: // edges
+          {
+            numSharedVerts = 1;
+            break;
+          }
+          case 3: // triangles
+          {
+            numSharedVerts = 2;
+            break;
+          }
+          case 4: // quadrilaterals
+          {
+            numSharedVerts = 2;
+            break;
+          }
+          default:
+            numSharedVerts = 0;
+            break;
         }
 
         dynamicList->allocateLists(linkCount);
@@ -499,10 +499,10 @@ namespace GeometryHelpers
             float vertPos = 0.0;
             for (size_t k = 0; k < numVertsPerElem; k++)
             {
-              vertPos += vertex[3*Elem[k]+i];
+              vertPos += vertex[3 * Elem[k] + i];
             }
             vertPos /= static_cast<float>(numVertsPerElem);
-            elementCentroids[numDims*j+i] = vertPos;
+            elementCentroids[numDims * j + i] = vertPos;
           }
         }
       }
@@ -544,10 +544,10 @@ namespace GeometryHelpers
             float vertValue = 0.0;
             for (size_t k = 0; k < numVertsPerElem; k++)
             {
-              vertValue += vertArray[numDims*Elem[k]+i];
+              vertValue += vertArray[numDims * Elem[k] + i];
             }
             vertValue /= static_cast<float>(numVertsPerElem);
-            elemArray[numDims*j+i] = vertValue;
+            elemArray[numDims * j + i] = vertValue;
           }
         }
       }
@@ -579,7 +579,7 @@ namespace GeometryHelpers
         size_t numDims = 3;
 
         // Vector to hold vertex-centroid distances, 4 per cell
-        std::vector<float> vertCentDist(numElems*numVertsPerElem);
+        std::vector<float> vertCentDist(numElems * numVertsPerElem);
 
         for (size_t i = 0; i < numElems; i++)
         {
@@ -588,9 +588,9 @@ namespace GeometryHelpers
           {
             for (size_t k = 0; k < numDims; k++)
             {
-              vertCentDist[numVertsPerElem*i+j] += (vertex[numDims*Elem[j]+k] - elementCentroids[numDims*i+k]) * (vertex[numDims*Elem[j]+k] - elementCentroids[numDims*i+k]);
+              vertCentDist[numVertsPerElem * i + j] += (vertex[numDims * Elem[j] + k] - elementCentroids[numDims * i + k]) * (vertex[numDims * Elem[j] + k] - elementCentroids[numDims * i + k]);
             }
-            vertCentDist[numVertsPerElem*i+j] = sqrt(vertCentDist[numVertsPerElem*i+j]);
+            vertCentDist[numVertsPerElem * i + j] = sqrt(vertCentDist[numVertsPerElem * i + j]);
           }
         }
 
@@ -603,11 +603,11 @@ namespace GeometryHelpers
             float sumDist = 0.0;
             for (size_t k = 0; k < numVertsPerElem; k++)
             {
-              vertValue += vertArray[cDims*Elem[k]+i] * vertCentDist[numVertsPerElem*j+k];
-              sumDist += vertCentDist[numVertsPerElem*j+k];
+              vertValue += vertArray[cDims * Elem[k] + i] * vertCentDist[numVertsPerElem * j + k];
+              sumDist += vertCentDist[numVertsPerElem * j + k];
             }
             vertValue /= static_cast<float>(sumDist);
-            elemArray[cDims*j+i] = vertValue;
+            elemArray[cDims * j + i] = vertValue;
           }
         }
       }
@@ -636,9 +636,9 @@ namespace GeometryHelpers
             double weight = 1.0 / numElemsPerVert;
             for (size_t k = 0; k < numElemsPerVert; k++)
             {
-              vertValue += static_cast<M>(elemArray[cDims*elemIdxs[k]+i] * weight);
+              vertValue += static_cast<M>(elemArray[cDims * elemIdxs[k] + i] * weight);
             }
-            vertArray[cDims*j+i] = vertValue;
+            vertArray[cDims * j + i] = vertValue;
           }
         }
       }

@@ -160,13 +160,13 @@ class ReadEdaxH5Data : public AbstractFilter
     DREAM3D_PIMPL_PROPERTY_DECL(QVector<int>, PatternDims)
     Q_PROPERTY(QVector<int> PatternDims READ getPatternDims WRITE setPatternDims)
 
-    signals:
-      /**
-         * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-         * be pushed from a user-facing control (such as a widget)
-         * @param filter Filter instance pointer
-         */
-      void updateFilterParameters(AbstractFilter* filter);
+  signals:
+    /**
+       * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+       * be pushed from a user-facing control (such as a widget)
+       * @param filter Filter instance pointer
+       */
+    void updateFilterParameters(AbstractFilter* filter);
 
     /**
        * @brief parametersChanged Emitted when any Filter parameter is changed internally
@@ -203,7 +203,7 @@ class ReadEdaxH5Data : public AbstractFilter
     * @param tDims Tuple dimensions
     * @param cDims Component dimensions
     */
-    void copyRawEbsdData(H5OIMReader* reader, QVector<size_t> &tDims, QVector<size_t> &cDims);
+    void copyRawEbsdData(H5OIMReader* reader, QVector<size_t>& tDims, QVector<size_t>& cDims);
 
     /**
     * @brief loadMaterialInfo Reads the values for the phase type, crystal structure
@@ -219,7 +219,7 @@ class ReadEdaxH5Data : public AbstractFilter
      * @param m DataContainer instance pointer
      * @param tDims Tuple dimensions
      */
-    void readDataFile(H5OIMReader* reader, DataContainer::Pointer m, QVector<size_t> &tDims, ANG_READ_FLAG flag);
+    void readDataFile(H5OIMReader* reader, DataContainer::Pointer m, QVector<size_t>& tDims, ANG_READ_FLAG flag);
 
 
   private:

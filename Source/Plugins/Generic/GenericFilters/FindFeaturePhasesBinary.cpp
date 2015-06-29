@@ -173,11 +173,11 @@ void FindFeaturePhasesBinary::execute()
     gnum = m_FeatureIds[i];
     if (m_GoodVoxels[i] == true)
     {
-        m_FeaturePhases[gnum] = 1;
+      m_FeaturePhases[gnum] = 1;
     }
     else
     {
-        m_FeaturePhases[gnum] = 0;
+      m_FeaturePhases[gnum] = 0;
     }
     //m_FeaturePhases[gnum] = m_CellPhases[i];
   }

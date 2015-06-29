@@ -45,7 +45,7 @@
 
 class AboutDREAM3D : public QDialog, private Ui::AboutDREAM3D
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
     AboutDREAM3D(QWidget* parent = 0);

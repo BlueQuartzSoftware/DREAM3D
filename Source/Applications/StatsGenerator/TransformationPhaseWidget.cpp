@@ -392,7 +392,7 @@ void TransformationPhaseWidget::dataWasEdited()
 // -----------------------------------------------------------------------------
 void TransformationPhaseWidget::setWidgetListEnabled(bool b)
 {
-  foreach (QWidget * w, m_WidgetList)
+  foreach (QWidget* w, m_WidgetList)
   {
     w->setEnabled(b);
   }

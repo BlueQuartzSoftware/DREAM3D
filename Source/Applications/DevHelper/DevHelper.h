@@ -47,32 +47,32 @@
 
 class DevHelper : public QMainWindow, public Ui::DevHelper
 {
-  Q_OBJECT
+    Q_OBJECT
 
-public:
-  DevHelper(QWidget* parent = 0);
-  ~DevHelper();
+  public:
+    DevHelper(QWidget* parent = 0);
+    ~DevHelper();
 
-protected:
-  void setupGui();
+  protected:
+    void setupGui();
 
-protected slots:
-  void updateStatusMessage(QString message);
+  protected slots:
+    void updateStatusMessage(QString message);
 
-  void on_actionShowUserManual_triggered();
-  void on_actionAbout_triggered();
+    void on_actionShowUserManual_triggered();
+    void on_actionAbout_triggered();
 
-private:
+  private:
 
 
-  void closeEvent(QCloseEvent* event);
-  void writeSettings();
-  void readSettings();
-  void readWindowSettings(DREAM3DSettings& prefs);
-  void writeWindowSettings(DREAM3DSettings& prefs);
+    void closeEvent(QCloseEvent* event);
+    void writeSettings();
+    void readSettings();
+    void readWindowSettings(DREAM3DSettings& prefs);
+    void writeWindowSettings(DREAM3DSettings& prefs);
 
-  DevHelper(const DevHelper&);    // Copy Constructor Not Implemented
-  void operator=(const DevHelper&);  // Operator '=' Not Implemented
+    DevHelper(const DevHelper&);    // Copy Constructor Not Implemented
+    void operator=(const DevHelper&);  // Operator '=' Not Implemented
 };
 
 #endif

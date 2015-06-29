@@ -40,8 +40,8 @@
 //
 // -----------------------------------------------------------------------------
 DataContainerArrayProxyFilterParameter::DataContainerArrayProxyFilterParameter() :
-FilterParameter(),
-m_DefaultFlagValue(Qt::Checked)
+  FilterParameter(),
+  m_DefaultFlagValue(Qt::Checked)
 {
 }
 
@@ -55,9 +55,9 @@ DataContainerArrayProxyFilterParameter::~DataContainerArrayProxyFilterParameter(
 //
 // -----------------------------------------------------------------------------
 DataContainerArrayProxyFilterParameter::Pointer DataContainerArrayProxyFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QString& widgetType, const QVariant& defaultValue,
-  DataContainerArrayProxy proxy, Qt::CheckState defValue,
-  Category category, int groupIndex)
+    const QString& widgetType, const QVariant& defaultValue,
+    DataContainerArrayProxy proxy, Qt::CheckState defValue,
+    Category category, int groupIndex)
 {
   DataContainerArrayProxyFilterParameter::Pointer ptr = DataContainerArrayProxyFilterParameter::New();
   ptr->setHumanLabel(humanLabel);

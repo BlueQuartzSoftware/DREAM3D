@@ -129,18 +129,18 @@ class DxReader : public FileReader
     /**
      * @brief execute Reimplemented from @see AbstractFilter class
      */
-     virtual void execute();
+    virtual void execute();
 
     /**
     * @brief preflight Reimplemented from @see AbstractFilter class
     */
     virtual void preflight();
 
-    public slots:
-      /**
-       * @brief flushCache Clears the input file cache
-       */
-      void flushCache();
+  public slots:
+    /**
+     * @brief flushCache Clears the input file cache
+     */
+    void flushCache();
 
   protected:
     DxReader();

@@ -67,17 +67,17 @@ class TriangleOps
     static QSet<int32_t> generateUniqueLabels(DataArray<int32_t>::Pointer faceLabelsPtr);
 
     static QVector<int64_t> findAdjacentTriangles(TriangleGeom::Pointer triangles,
-                                                    int64_t triangleIndex,
-                                                    DataArray<int32_t>::Pointer faceLabelsPtr,
-                                                    int32_t label);
+                                                  int64_t triangleIndex,
+                                                  DataArray<int32_t>::Pointer faceLabelsPtr,
+                                                  int32_t label);
 
     static bool verifyWinding(int64_t source[3], int64_t tri[3],
                               int32_t* faceLabelSource, int32_t* faceLabelTri, int32_t label);
 
 
     static void getWindingIndices4(int64_t triangle[3],
-                                     int32_t* faceLabel,
-                                     int ids[4], int32_t label);
+                                   int32_t* faceLabel,
+                                   int ids[4], int32_t label);
 
   protected:
     TriangleOps();

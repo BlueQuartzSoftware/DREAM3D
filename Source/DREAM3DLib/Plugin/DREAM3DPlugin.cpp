@@ -42,11 +42,11 @@
 //
 // -----------------------------------------------------------------------------
 DREAM3DPlugin::DREAM3DPlugin() :
-m_PluginName(""),
-m_Version(""),
-m_Vendor(""),
-m_Location(""),
-m_Status("")
+  m_PluginName(""),
+  m_Version(""),
+  m_Vendor(""),
+  m_Location(""),
+  m_Status("")
 {
 
 }
@@ -63,7 +63,7 @@ DREAM3DPlugin::~DREAM3DPlugin()
 // -----------------------------------------------------------------------------
 QString DREAM3DPlugin::getPluginName()
 {
-	return m_PluginName;
+  return m_PluginName;
 }
 
 // -----------------------------------------------------------------------------
@@ -71,7 +71,7 @@ QString DREAM3DPlugin::getPluginName()
 // -----------------------------------------------------------------------------
 void DREAM3DPlugin::setPluginName(QString name)
 {
-	m_PluginName = name;
+  m_PluginName = name;
 }
 
 // -----------------------------------------------------------------------------
@@ -79,7 +79,7 @@ void DREAM3DPlugin::setPluginName(QString name)
 // -----------------------------------------------------------------------------
 QString DREAM3DPlugin::getVersion()
 {
-	return m_Version;
+  return m_Version;
 }
 
 // -----------------------------------------------------------------------------
@@ -87,7 +87,7 @@ QString DREAM3DPlugin::getVersion()
 // -----------------------------------------------------------------------------
 void DREAM3DPlugin::setVersion(QString version)
 {
-	m_Version = version;
+  m_Version = version;
 }
 
 // -----------------------------------------------------------------------------
@@ -95,7 +95,7 @@ void DREAM3DPlugin::setVersion(QString version)
 // -----------------------------------------------------------------------------
 QString DREAM3DPlugin::getVendor()
 {
-	return m_Vendor;
+  return m_Vendor;
 }
 
 // -----------------------------------------------------------------------------
@@ -103,7 +103,7 @@ QString DREAM3DPlugin::getVendor()
 // -----------------------------------------------------------------------------
 void DREAM3DPlugin::setVendor(QString vendor)
 {
-	m_Vendor = vendor;
+  m_Vendor = vendor;
 }
 
 // -----------------------------------------------------------------------------
@@ -111,7 +111,7 @@ void DREAM3DPlugin::setVendor(QString vendor)
 // -----------------------------------------------------------------------------
 QString DREAM3DPlugin::getLocation()
 {
-	return m_Location;
+  return m_Location;
 }
 
 // -----------------------------------------------------------------------------
@@ -119,7 +119,7 @@ QString DREAM3DPlugin::getLocation()
 // -----------------------------------------------------------------------------
 void DREAM3DPlugin::setLocation(QString filePath)
 {
-	m_Location = filePath;
+  m_Location = filePath;
 }
 
 // -----------------------------------------------------------------------------
@@ -127,7 +127,7 @@ void DREAM3DPlugin::setLocation(QString filePath)
 // -----------------------------------------------------------------------------
 QString DREAM3DPlugin::getStatus()
 {
-	return m_Status;
+  return m_Status;
 }
 
 // -----------------------------------------------------------------------------
@@ -135,6 +135,6 @@ QString DREAM3DPlugin::getStatus()
 // -----------------------------------------------------------------------------
 void DREAM3DPlugin::setStatus(QString status)
 {
-	m_Status = status;
+  m_Status = status;
 }
 

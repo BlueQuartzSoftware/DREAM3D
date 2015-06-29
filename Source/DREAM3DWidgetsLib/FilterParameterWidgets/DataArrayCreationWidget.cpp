@@ -129,9 +129,9 @@ void DataArrayCreationWidget::setupGui()
   connect(dataArrayName, SIGNAL(textChanged(const QString&)),
           this, SLOT(widgetChanged(const QString&)));
   connect(attributeMatrixCombo, SIGNAL(currentIndexChanged(const QString&)),
-    this, SLOT(widgetChanged(const QString&)));
+          this, SLOT(widgetChanged(const QString&)));
   connect(dataContainerCombo, SIGNAL(currentIndexChanged(const QString&)),
-    this, SLOT(widgetChanged(const QString&)));
+          this, SLOT(widgetChanged(const QString&)));
 
   dataContainerCombo->blockSignals(true);
   attributeMatrixCombo->blockSignals(true);

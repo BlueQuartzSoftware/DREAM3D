@@ -94,9 +94,9 @@ DREAM3D_UI::DREAM3D_UI(QWidget* parent) :
   m_UpdateCheckThread(NULL),
   m_FilterManager(NULL),
   m_FilterWidgetManager(NULL),
-  #if !defined(Q_OS_MAC)
+#if !defined(Q_OS_MAC)
   m_InstanceMenu(NULL),
-  #endif
+#endif
   m_ShouldRestart(false),
   m_OpenedFilePath("")
 {
@@ -267,8 +267,8 @@ bool DREAM3D_UI::savePipelineAs()
 {
   QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.json";
   QString filePath = QFileDialog::getSaveFileName(this, tr("Save Pipeline To File"),
-    proposedFile,
-    tr("Json File (*.json);;DREAM.3D File (*.dream3d);;All Files (*.*)"));
+                                                  proposedFile,
+                                                  tr("Json File (*.json);;DREAM.3D File (*.dream3d);;All Files (*.*)"));
   if (true == filePath.isEmpty()) { return false; }
 
   filePath = QDir::toNativeSeparators(filePath);
@@ -589,31 +589,31 @@ void DREAM3D_UI::setupGui()
 void DREAM3D_UI::disconnectSignalsSlots()
 {
   disconnect(filterLibraryDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
-    pipelineViewWidget, SLOT(addFilter(const QString&)));
+             pipelineViewWidget, SLOT(addFilter(const QString&)));
 
   disconnect(filterListDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
-    pipelineViewWidget, SLOT(addFilter(const QString&)));
+             pipelineViewWidget, SLOT(addFilter(const QString&)));
 
-  disconnect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(const QString&, const bool &, const bool &)),
-    dream3dApp, SLOT(newInstanceFromFile(const QString&, const bool &, const bool &)));
+  disconnect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(const QString&, const bool&, const bool&)),
+             dream3dApp, SLOT(newInstanceFromFile(const QString&, const bool&, const bool&)));
 
-  disconnect(bookmarksDockWidget, SIGNAL(pipelineFileActivated(const QString&, const bool &, const bool &)),
-    dream3dApp, SLOT(newInstanceFromFile(const QString&, const bool &, const bool &)));
+  disconnect(bookmarksDockWidget, SIGNAL(pipelineFileActivated(const QString&, const bool&, const bool&)),
+             dream3dApp, SLOT(newInstanceFromFile(const QString&, const bool&, const bool&)));
 
   disconnect(this, SIGNAL(bookmarkNeedsToBeAdded(const QString&, const QModelIndex&)),
-    bookmarksDockWidget, SLOT(addBookmark(const QString&, const QModelIndex&)));
+             bookmarksDockWidget, SLOT(addBookmark(const QString&, const QModelIndex&)));
 
   disconnect(pipelineViewWidget, SIGNAL(filterInputWidgetChanged(FilterInputWidget*)),
-    this, SLOT(setFilterInputWidget(FilterInputWidget*)));
+             this, SLOT(setFilterInputWidget(FilterInputWidget*)));
 
   disconnect(pipelineViewWidget, SIGNAL(noFilterWidgetsInPipeline()),
-    this, SLOT(clearFilterInputWidget()));
+             this, SLOT(clearFilterInputWidget()));
 
   disconnect(pipelineViewWidget, SIGNAL(filterParameterChanged()),
-    this, SLOT(markDocumentAsDirty()));
+             this, SLOT(markDocumentAsDirty()));
 
   disconnect(bookmarksDockWidget, SIGNAL(updateStatusBar(const QString&)),
-    this, SLOT(setStatusBarMessage(const QString&)));
+             this, SLOT(setStatusBarMessage(const QString&)));
 }
 
 
@@ -638,26 +638,26 @@ void DREAM3D_UI::connectSignalsSlots()
   connect(filterListDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
           pipelineViewWidget, SLOT(addFilter(const QString&)) );
 
-  connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(const QString&, const bool &, const bool &)),
-          dream3dApp, SLOT(newInstanceFromFile(const QString&, const bool &, const bool &)));
+  connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(const QString&, const bool&, const bool&)),
+          dream3dApp, SLOT(newInstanceFromFile(const QString&, const bool&, const bool&)));
 
-  connect(bookmarksDockWidget, SIGNAL(pipelineFileActivated(const QString&, const bool &, const bool &)),
-        dream3dApp, SLOT(newInstanceFromFile(const QString&, const bool &, const bool &)));
+  connect(bookmarksDockWidget, SIGNAL(pipelineFileActivated(const QString&, const bool&, const bool&)),
+          dream3dApp, SLOT(newInstanceFromFile(const QString&, const bool&, const bool&)));
 
   connect(this, SIGNAL(bookmarkNeedsToBeAdded(const QString&, const QModelIndex&)),
-    bookmarksDockWidget, SLOT(addBookmark(const QString&, const QModelIndex&)));
+          bookmarksDockWidget, SLOT(addBookmark(const QString&, const QModelIndex&)));
 
   connect(pipelineViewWidget, SIGNAL(filterInputWidgetChanged(FilterInputWidget*)),
-    this, SLOT(setFilterInputWidget(FilterInputWidget*)));
+          this, SLOT(setFilterInputWidget(FilterInputWidget*)));
 
   connect(pipelineViewWidget, SIGNAL(noFilterWidgetsInPipeline()),
-    this, SLOT(clearFilterInputWidget()));
+          this, SLOT(clearFilterInputWidget()));
 
   connect(pipelineViewWidget, SIGNAL(filterParameterChanged()),
-    this, SLOT(markDocumentAsDirty()));
+          this, SLOT(markDocumentAsDirty()));
 
   connect(bookmarksDockWidget, SIGNAL(updateStatusBar(const QString&)),
-    this, SLOT(setStatusBarMessage(const QString&)));
+          this, SLOT(setStatusBarMessage(const QString&)));
 }
 
 // -----------------------------------------------------------------------------
@@ -666,16 +666,16 @@ void DREAM3D_UI::connectSignalsSlots()
 void DREAM3D_UI::connectSignalsSlots(DREAM3D_UI* other)
 {
   connect(bookmarksDockWidget->getBookmarksTreeView(), SIGNAL(collapsed(const QModelIndex&)),
-    other->getBookmarksDockWidget()->getBookmarksTreeView(), SLOT(collapse(const QModelIndex&)));
+          other->getBookmarksDockWidget()->getBookmarksTreeView(), SLOT(collapse(const QModelIndex&)));
 
   connect(other->getBookmarksDockWidget()->getBookmarksTreeView(), SIGNAL(collapsed(const QModelIndex&)),
-    bookmarksDockWidget->getBookmarksTreeView(), SLOT(collapse(const QModelIndex&)));
+          bookmarksDockWidget->getBookmarksTreeView(), SLOT(collapse(const QModelIndex&)));
 
   connect(bookmarksDockWidget->getBookmarksTreeView(), SIGNAL(expanded(const QModelIndex&)),
-    other->getBookmarksDockWidget()->getBookmarksTreeView(), SLOT(expand(const QModelIndex&)));
+          other->getBookmarksDockWidget()->getBookmarksTreeView(), SLOT(expand(const QModelIndex&)));
 
   connect(other->getBookmarksDockWidget()->getBookmarksTreeView(), SIGNAL(expanded(const QModelIndex&)),
-    bookmarksDockWidget->getBookmarksTreeView(), SLOT(expand(const QModelIndex&)));
+          bookmarksDockWidget->getBookmarksTreeView(), SLOT(expand(const QModelIndex&)));
 }
 
 // -----------------------------------------------------------------------------
@@ -689,7 +689,7 @@ void DREAM3D_UI::setLoadedPlugins(QVector<IDREAM3DPlugin*> plugins)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::on_pipelineViewWidget_pipelineOpened(QString& file, const bool &setOpenedFilePath, const bool &changeTitle)
+void DREAM3D_UI::on_pipelineViewWidget_pipelineOpened(QString& file, const bool& setOpenedFilePath, const bool& changeTitle)
 {
   if (setOpenedFilePath == true)
   {
@@ -995,7 +995,7 @@ void DREAM3D_UI::pipelineDidFinish()
 //  horizontalLayout_2->removeWidget(m_ProgressBar);
 //  horizontalLayout_2->removeWidget(startPipelineBtn);
   //horizontalLayout_2->addSpacerItem(progressSpacer);
- // horizontalLayout_2->addWidget(startPipelineBtn);
+// horizontalLayout_2->addWidget(startPipelineBtn);
 
 
   // Re-enable FilterListDockWidget signals - resume adding filters
@@ -1107,7 +1107,7 @@ IssuesDockWidget* DREAM3D_UI::getIssuesDockWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::setOpenedFilePath(const QString &filePath)
+void DREAM3D_UI::setOpenedFilePath(const QString& filePath)
 {
   m_OpenedFilePath = filePath;
 }
@@ -1115,7 +1115,7 @@ void DREAM3D_UI::setOpenedFilePath(const QString &filePath)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::setOpenDialogLastDirectory(const QString &path)
+void DREAM3D_UI::setOpenDialogLastDirectory(const QString& path)
 {
   m_OpenDialogLastDirectory = path;
 }
@@ -1161,7 +1161,7 @@ void DREAM3D_UI::markDocumentAsDirty()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::setStatusBarMessage(const QString &msg)
+void DREAM3D_UI::setStatusBarMessage(const QString& msg)
 {
   statusbar->showMessage(msg);
 }

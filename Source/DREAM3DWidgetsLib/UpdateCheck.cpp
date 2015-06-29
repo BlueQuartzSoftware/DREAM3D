@@ -135,7 +135,7 @@ void UpdateCheck::networkReplied(QNetworkReply* reply)
 
 
     QByteArray byteArray = reply->readAll();  // bytes
- //   QString serverVersionStr(bytes); // string
+//   QString serverVersionStr(bytes); // string
 
     QJsonParseError parseError;
     QJsonDocument doc = QJsonDocument::fromJson(byteArray, &parseError);

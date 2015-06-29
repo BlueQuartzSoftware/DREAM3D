@@ -120,8 +120,8 @@ herr_t QH5Lite::writeStringDataset(hid_t loc_id, const QString& dsetName, const 
 //
 // -----------------------------------------------------------------------------
 herr_t QH5Lite::writeVectorOfStringsDataset(hid_t loc_id,
-                                           const QString& dsetName,
-                                           const QVector<QString> &data)
+                                            const QString& dsetName,
+                                            const QVector<QString>& data)
 {
   hid_t sid = -1;
   hid_t memspace = -1;
@@ -157,7 +157,7 @@ herr_t QH5Lite::writeVectorOfStringsDataset(hid_t loc_id,
           hsize_t offset[] = { m_pos++ };
           H5Sselect_hyperslab(sid, H5S_SELECT_SET, offset, NULL, count, NULL);
           std::string v = data[i].toStdString(); // MUST be a C String, i.e., null terminated
-          const char * s = v.c_str();
+          const char* s = v.c_str();
           err = H5Dwrite(did, datatype, memspace, sid, H5P_DEFAULT, s);
           if (err < 0 )
           {
@@ -247,8 +247,8 @@ herr_t QH5Lite::readStringDataset(hid_t loc_id,
 //
 // -----------------------------------------------------------------------------
 herr_t QH5Lite::readVectorOfStringDataset(hid_t loc_id,
-                                         const QString& dsetName,
-                                         QVector<QString> &data)
+                                          const QString& dsetName,
+                                          QVector<QString>& data)
 {
 
   hid_t did; // dataset id
@@ -271,8 +271,8 @@ herr_t QH5Lite::readVectorOfStringDataset(hid_t loc_id,
   {
     hsize_t dims[1] = { 0 };
     /*
-  * Get dataspace and allocate memory for read buffer.
-  */
+    * Get dataspace and allocate memory for read buffer.
+    */
     hid_t sid = H5Dget_space(did);
     int ndims = H5Sget_simple_extent_dims(sid, dims, NULL);
     if(ndims != 1)
@@ -289,14 +289,14 @@ herr_t QH5Lite::readVectorOfStringDataset(hid_t loc_id,
     }
 
     /*
-  * Create the memory datatype.
-  */
+    * Create the memory datatype.
+    */
     hid_t memtype = H5Tcopy(H5T_C_S1);
     herr_t status = H5Tset_size(memtype, H5T_VARIABLE);
 
     /*
-  * Read the data.
-  */
+    * Read the data.
+    */
     status = H5Dread(did, memtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, &(rdata.front()));
     if(status < 0)
     {
@@ -309,9 +309,10 @@ herr_t QH5Lite::readVectorOfStringDataset(hid_t loc_id,
     }
     data.resize(dims[0]);
     /*
-  * copy the data into the vector of strings
-  */
-    for (int i = 0; i < dims[0]; i++) {
+    * copy the data into the vector of strings
+    */
+    for (int i = 0; i < dims[0]; i++)
+    {
       // printf("%s[%d]: %s\n", "VlenStrings", i, rdata[i].p);
       QString str = QString::fromLatin1(rdata[i]);
       data[i] = str;

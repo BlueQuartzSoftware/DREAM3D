@@ -971,7 +971,7 @@ void ReplaceRecursively(QDir currentDir)
   filters.append("*.ini");
 
 
-  if(currentDir.dirName().compare("zRel")== 0 || currentDir.dirName().compare("Build") == 0)
+  if(currentDir.dirName().compare("zRel") == 0 || currentDir.dirName().compare("Build") == 0)
   {
     return;
   }

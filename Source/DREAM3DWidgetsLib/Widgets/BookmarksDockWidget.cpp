@@ -62,7 +62,8 @@
 #include "DREAM3DWidgetsLib/Widgets/FilterListDockWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/BookmarksModel.h"
 
-enum ErrorCodes {
+enum ErrorCodes
+{
   UNRECOGNIZED_EXT = -1
 };
 
@@ -266,7 +267,7 @@ QStringList BookmarksDockWidget::generateFilterListFromPipelineFile(QString path
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksDockWidget::on_bookmarksTreeView_clicked(const QModelIndex & index)
+void BookmarksDockWidget::on_bookmarksTreeView_clicked(const QModelIndex& index)
 {
 
 }
@@ -274,7 +275,7 @@ void BookmarksDockWidget::on_bookmarksTreeView_clicked(const QModelIndex & index
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksDockWidget::on_bookmarksTreeView_doubleClicked(const QModelIndex & index)
+void BookmarksDockWidget::on_bookmarksTreeView_doubleClicked(const QModelIndex& index)
 {
   BookmarksModel* model = BookmarksModel::Instance();
 
@@ -348,7 +349,7 @@ QString BookmarksDockWidget::writeNewFavoriteFilePath(QString newFavoriteTitle, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksDockWidget::addBookmark(const QString &filePath, const QModelIndex &parent)
+void BookmarksDockWidget::addBookmark(const QString& filePath, const QModelIndex& parent)
 {
   QFileInfo fi(filePath);
   QString fileTitle = fi.baseName();
@@ -396,12 +397,12 @@ QModelIndex BookmarksDockWidget::getSelectedParentTreeItem()
 //
 // -----------------------------------------------------------------------------
 int BookmarksDockWidget::addTreeItem(QModelIndex parent,
-  QString& favoriteTitle,
-  QIcon icon,
-  QString favoritePath,
-  bool allowEditing,
-  bool editState,
-  bool isExpanded)
+                                     QString& favoriteTitle,
+                                     QIcon icon,
+                                     QString favoritePath,
+                                     bool allowEditing,
+                                     bool editState,
+                                     bool isExpanded)
 {
 
   favoritePath = QDir::toNativeSeparators(favoritePath);

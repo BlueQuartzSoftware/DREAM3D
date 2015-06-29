@@ -148,7 +148,7 @@ void DREAM3DPluginLoader::LoadPluginFilters(FilterManager* filterManager)
       if (fileName.endsWith("_debug.plugin", Qt::CaseSensitive))
 #else
       if (fileName.endsWith( ".plugin", Qt::CaseSensitive) // We want ONLY Release plugins
-      && ! fileName.endsWith("_debug.plugin", Qt::CaseSensitive)) // so ignore these plugins
+          && ! fileName.endsWith("_debug.plugin", Qt::CaseSensitive)) // so ignore these plugins
 #endif
       {
         pluginFilePaths << aPluginDir.absoluteFilePath(fileName);

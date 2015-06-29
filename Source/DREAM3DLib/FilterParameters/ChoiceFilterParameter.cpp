@@ -40,8 +40,8 @@
 //
 // -----------------------------------------------------------------------------
 ChoiceFilterParameter::ChoiceFilterParameter() :
-FilterParameter(),
-m_Editable(false)
+  FilterParameter(),
+  m_Editable(false)
 {}
 
 // -----------------------------------------------------------------------------
@@ -54,9 +54,9 @@ ChoiceFilterParameter::~ChoiceFilterParameter()
 //
 // -----------------------------------------------------------------------------
 ChoiceFilterParameter::Pointer ChoiceFilterParameter::New(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue,
-  QVector<QString> choices,
-  bool editable,
-  Category category, int groupIndex)
+                                                          QVector<QString> choices,
+                                                          bool editable,
+                                                          Category category, int groupIndex)
 
 {
   ChoiceFilterParameter::Pointer ptr = ChoiceFilterParameter::New();

@@ -191,7 +191,7 @@ void QuiltCellData::dataCheck()
   //Establish the dimensions, resolutions and origin of the new data container
   size_t dcDims[3] = { 0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(dcDims[0], dcDims[1], dcDims[2]);
-  float res[3] = {m_QuiltStep.x * m->getGeometryAs<ImageGeom>()->getXRes(), m_QuiltStep.y * m->getGeometryAs<ImageGeom>()->getYRes(), m_QuiltStep.z * m->getGeometryAs<ImageGeom>()->getZRes()};
+  float res[3] = {m_QuiltStep.x* m->getGeometryAs<ImageGeom>()->getXRes(), m_QuiltStep.y* m->getGeometryAs<ImageGeom>()->getYRes(), m_QuiltStep.z* m->getGeometryAs<ImageGeom>()->getZRes()};
 
   // Create a new DataContainer
   DataContainer::Pointer m2 = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getOutputDataContainerName());

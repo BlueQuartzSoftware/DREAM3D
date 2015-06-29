@@ -57,49 +57,49 @@
 
 class FPCodeGenerator
 {
-public:
-  DREAM3D_SHARED_POINTERS(FPCodeGenerator)
+  public:
+    DREAM3D_SHARED_POINTERS(FPCodeGenerator)
 
-  static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
-  {
-    Pointer sharedPtr(new FPCodeGenerator(humanLabel, propertyName, category, initValue));
-    return sharedPtr;
-  }
+    static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
+    {
+      Pointer sharedPtr(new FPCodeGenerator(humanLabel, propertyName, category, initValue));
+      return sharedPtr;
+    }
 
-  virtual ~FPCodeGenerator();
+    virtual ~FPCodeGenerator();
 
-  virtual QString generateSetupFilterParameters();
+    virtual QString generateSetupFilterParameters();
 
-  virtual QString generateReadFilterParameters();
+    virtual QString generateReadFilterParameters();
 
-  virtual QString generateWriteFilterParameters();
+    virtual QString generateWriteFilterParameters();
 
-  virtual QString generateDataCheck();
+    virtual QString generateDataCheck();
 
-  virtual QString generateFilterParameters();
+    virtual QString generateFilterParameters();
 
-  virtual QString generateInitializationList();
+    virtual QString generateInitializationList();
 
-  virtual QString generateHIncludes();
+    virtual QString generateHIncludes();
 
-  virtual QString generateCPPIncludes();
+    virtual QString generateCPPIncludes();
 
-protected:
-  FPCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
+  protected:
+    FPCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
-  QString getPropertyName();
-  QString getHumanLabel();
-  QString getCategory();
-  QString getInitValue();
+    QString getPropertyName();
+    QString getHumanLabel();
+    QString getCategory();
+    QString getInitValue();
 
-private:
-  QString m_PropertyName;
-  QString m_HumanLabel;
-  QString m_Category;
-  QString m_InitValue;
+  private:
+    QString m_PropertyName;
+    QString m_HumanLabel;
+    QString m_Category;
+    QString m_InitValue;
 
-  FPCodeGenerator(const FPCodeGenerator&); // Copy Constructor Not Implemented
-  void operator=(const FPCodeGenerator&); // Operator '=' Not Implemented
+    FPCodeGenerator(const FPCodeGenerator&); // Copy Constructor Not Implemented
+    void operator=(const FPCodeGenerator&); // Operator '=' Not Implemented
 };
 
 #endif /* FPCodeGenerator_H_ */

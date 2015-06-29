@@ -44,34 +44,34 @@
 
 class DynamicChoiceWidgetCodeGenerator : public FPCodeGenerator
 {
-public:
-  DREAM3D_SHARED_POINTERS(DynamicChoiceWidgetCodeGenerator)
+  public:
+    DREAM3D_SHARED_POINTERS(DynamicChoiceWidgetCodeGenerator)
 
     static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
-  {
-    Pointer sharedPtr(new DynamicChoiceWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
-    return sharedPtr;
-  }
+    {
+      Pointer sharedPtr(new DynamicChoiceWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
+      return sharedPtr;
+    }
 
-  virtual ~DynamicChoiceWidgetCodeGenerator();
+    virtual ~DynamicChoiceWidgetCodeGenerator();
 
-  virtual QString generateSetupFilterParameters();
+    virtual QString generateSetupFilterParameters();
 
-  virtual QString generateReadFilterParameters();
+    virtual QString generateReadFilterParameters();
 
-  virtual QString generateDataCheck();
+    virtual QString generateDataCheck();
 
-  virtual QString generateFilterParameters();
+    virtual QString generateFilterParameters();
 
-  virtual QString generateCPPIncludes();
+    virtual QString generateCPPIncludes();
 
-protected:
-  DynamicChoiceWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
+  protected:
+    DynamicChoiceWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
-private:
+  private:
 
-  DynamicChoiceWidgetCodeGenerator(const DynamicChoiceWidgetCodeGenerator&); // Copy Constructor Not Implemented
-  void operator=(const DynamicChoiceWidgetCodeGenerator&); // Operator '=' Not Implemented
+    DynamicChoiceWidgetCodeGenerator(const DynamicChoiceWidgetCodeGenerator&); // Copy Constructor Not Implemented
+    void operator=(const DynamicChoiceWidgetCodeGenerator&); // Operator '=' Not Implemented
 };
 
 #endif /* DynamicChoiceWidgetCodeGenerator_H_ */

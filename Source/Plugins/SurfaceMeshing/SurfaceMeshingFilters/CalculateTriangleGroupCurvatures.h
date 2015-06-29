@@ -67,7 +67,7 @@ class CalculateTriangleGroupCurvatures
 
     void operator()() const;
 
-  typedef std::set<int64_t> UniqueFaceIds_t;
+    typedef std::set<int64_t> UniqueFaceIds_t;
 
   protected:
     CalculateTriangleGroupCurvatures();

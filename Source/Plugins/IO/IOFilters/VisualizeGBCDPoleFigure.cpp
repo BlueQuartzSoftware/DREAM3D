@@ -530,7 +530,7 @@ bool VisualizeGBCDPoleFigure::getSquareCoord(float* xstl1_norm1, float* sqCoord)
 //
 // -----------------------------------------------------------------------------
 int32_t VisualizeGBCDPoleFigure::writeCoords(FILE* f, const char* axis, const char* type,
-                                         int64_t npoints, float min, float step)
+                                             int64_t npoints, float min, float step)
 {
   int32_t err = 0;
   fprintf(f, "%s %lld %s\n", axis, npoints, type);

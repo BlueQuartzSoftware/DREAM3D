@@ -353,9 +353,9 @@ int VASPReader::readFile()
       pos[1] = tokens[1].toFloat(&ok);
       pos[2] = tokens[2].toFloat(&ok);
       MatrixMath::Multiply3x3with3x1(latticeVectors, pos, posMod);
-      vertex[index*3] = posMod[0];
-      vertex[index*3+1] = posMod[1];
-      vertex[index*3+2] = posMod[2];
+      vertex[index * 3] = posMod[0];
+      vertex[index * 3 + 1] = posMod[1];
+      vertex[index * 3 + 2] = posMod[2];
       m_AtomTypes[index] = i;
       index++;
     }

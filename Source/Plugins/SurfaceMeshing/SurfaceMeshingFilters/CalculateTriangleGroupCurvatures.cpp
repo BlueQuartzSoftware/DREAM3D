@@ -285,7 +285,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
 //
 // -----------------------------------------------------------------------------
 DataArray<double>::Pointer CalculateTriangleGroupCurvatures::extractPatchData(int64_t triId,
-  UniqueFaceIds_t& triPatch,
+    UniqueFaceIds_t& triPatch,
     double* data,
     const QString& name) const
 {

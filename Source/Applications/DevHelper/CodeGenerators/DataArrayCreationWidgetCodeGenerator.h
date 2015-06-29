@@ -44,32 +44,32 @@
 
 class DataArrayCreationWidgetCodeGenerator : public FPCodeGenerator
 {
-public:
-  DREAM3D_SHARED_POINTERS(DataArrayCreationWidgetCodeGenerator)
+  public:
+    DREAM3D_SHARED_POINTERS(DataArrayCreationWidgetCodeGenerator)
 
     static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
-  {
-    Pointer sharedPtr(new DataArrayCreationWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
-    return sharedPtr;
-  }
+    {
+      Pointer sharedPtr(new DataArrayCreationWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
+      return sharedPtr;
+    }
 
-  virtual ~DataArrayCreationWidgetCodeGenerator();
+    virtual ~DataArrayCreationWidgetCodeGenerator();
 
-  virtual QString generateSetupFilterParameters();
+    virtual QString generateSetupFilterParameters();
 
-  virtual QString generateReadFilterParameters();
+    virtual QString generateReadFilterParameters();
 
-  virtual QString generateDataCheck();
+    virtual QString generateDataCheck();
 
-  virtual QString generateFilterParameters();
+    virtual QString generateFilterParameters();
 
-protected:
-  DataArrayCreationWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
+  protected:
+    DataArrayCreationWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
-private:
+  private:
 
-  DataArrayCreationWidgetCodeGenerator(const DataArrayCreationWidgetCodeGenerator&); // Copy Constructor Not Implemented
-  void operator=(const DataArrayCreationWidgetCodeGenerator&); // Operator '=' Not Implemented
+    DataArrayCreationWidgetCodeGenerator(const DataArrayCreationWidgetCodeGenerator&); // Copy Constructor Not Implemented
+    void operator=(const DataArrayCreationWidgetCodeGenerator&); // Operator '=' Not Implemented
 };
 
 #endif /* DataArrayCreationWidgetCodeGenerator_H_ */

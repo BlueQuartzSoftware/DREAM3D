@@ -41,30 +41,30 @@
 
 class DREAM3DLib_EXPORT ComparisonFilterParameter : public FilterParameter
 {
-public:
-  DREAM3D_SHARED_POINTERS(ComparisonFilterParameter)
+  public:
+    DREAM3D_SHARED_POINTERS(ComparisonFilterParameter)
     DREAM3D_STATIC_NEW_MACRO(ComparisonFilterParameter)
     DREAM3D_TYPE_MACRO_SUPER(ComparisonFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-    const QString& widgetType, const QVariant& defaultValue,
-    QVector<QString> choices,
-    bool showOperators,
-    Category category,
-    int groupIndex = -1);
+                       const QString& widgetType, const QVariant& defaultValue,
+                       QVector<QString> choices,
+                       bool showOperators,
+                       Category category,
+                       int groupIndex = -1);
 
 
-  virtual ~ComparisonFilterParameter();
+    virtual ~ComparisonFilterParameter();
 
-  DREAM3D_INSTANCE_PROPERTY(QVector<QString>, Choices)
+    DREAM3D_INSTANCE_PROPERTY(QVector<QString>, Choices)
     DREAM3D_INSTANCE_PROPERTY(bool, ShowOperators)
 
-protected:
-  ComparisonFilterParameter();
+  protected:
+    ComparisonFilterParameter();
 
-private:
-  ComparisonFilterParameter(const ComparisonFilterParameter&); // Copy Constructor Not Implemented
-  void operator=(const ComparisonFilterParameter&); // Operator '=' Not Implemented
+  private:
+    ComparisonFilterParameter(const ComparisonFilterParameter&); // Copy Constructor Not Implemented
+    void operator=(const ComparisonFilterParameter&); // Operator '=' Not Implemented
 };
 
 #endif /* _ComparisonFilterParameter_H_ */

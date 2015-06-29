@@ -42,22 +42,22 @@
 template<typename T>
 class DREAM3DLib_EXPORT ConstrainedFilterParameter : public FilterParameter
 {
-public:
-  DREAM3D_SHARED_POINTERS(ConstrainedFilterParameter<T>)
+  public:
+    DREAM3D_SHARED_POINTERS(ConstrainedFilterParameter<T>)
     DREAM3D_STATIC_NEW_MACRO(ConstrainedFilterParameter<T>)
     DREAM3D_TYPE_MACRO_SUPER(ConstrainedFilterParameter<T>, FilterParameter)
 
     virtual ~ConstrainedFilterParameter() {}
 
-  DREAM3D_INSTANCE_PROPERTY(T, Minimum)
+    DREAM3D_INSTANCE_PROPERTY(T, Minimum)
     DREAM3D_INSTANCE_PROPERTY(T, Maximum)
 
-protected:
-  ConstrainedFilterParameter() {}
+  protected:
+    ConstrainedFilterParameter() {}
 
-private:
-  ConstrainedFilterParameter(const ConstrainedFilterParameter&); // Copy Constructor Not Implemented
-  void operator=(const ConstrainedFilterParameter&); // Operator '=' Not Implemented
+  private:
+    ConstrainedFilterParameter(const ConstrainedFilterParameter&); // Copy Constructor Not Implemented
+    void operator=(const ConstrainedFilterParameter&); // Operator '=' Not Implemented
 };
 
 #endif /* _ConstrainedFilterParameter_H_ */

@@ -407,7 +407,7 @@ void RawBinaryReader::execute()
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-          array = p;
+      array = p;
     }
   }
   else if (m_ScalarType == Detail::UInt8)
@@ -417,7 +417,7 @@ void RawBinaryReader::execute()
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-          array = p;
+      array = p;
     }
   }
   else if (m_ScalarType == Detail::Int16)
@@ -427,7 +427,7 @@ void RawBinaryReader::execute()
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-          array = p;
+      array = p;
     }
   }
   else if (m_ScalarType == Detail::UInt16)
@@ -437,7 +437,7 @@ void RawBinaryReader::execute()
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-          array = p;
+      array = p;
     }
   }
   else if (m_ScalarType == Detail::Int32)
@@ -447,7 +447,7 @@ void RawBinaryReader::execute()
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-          array = p;
+      array = p;
     }
   }
   else if (m_ScalarType == Detail::UInt32)
@@ -457,7 +457,7 @@ void RawBinaryReader::execute()
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-          array = p;
+      array = p;
     }
   }
   else if (m_ScalarType == Detail::Int64)
@@ -467,7 +467,7 @@ void RawBinaryReader::execute()
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-          array = p;
+      array = p;
     }
   }
   else if (m_ScalarType == Detail::UInt64)
@@ -477,7 +477,7 @@ void RawBinaryReader::execute()
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-          array = p;
+      array = p;
     }
   }
   else if (m_ScalarType == Detail::Float)
@@ -487,7 +487,7 @@ void RawBinaryReader::execute()
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-          array = p;
+      array = p;
     }
   }
   else if (m_ScalarType == Detail::Double)
@@ -497,7 +497,7 @@ void RawBinaryReader::execute()
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-          array = p;
+      array = p;
     }
   }
 

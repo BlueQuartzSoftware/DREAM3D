@@ -121,7 +121,7 @@ class QtSupportLib_EXPORT QRecentFileList: public QObject
     void clear();
 
   public slots:
-    
+
     /**
     * @brief Removes a file from the list of recent files.
     * @param file The file to remove

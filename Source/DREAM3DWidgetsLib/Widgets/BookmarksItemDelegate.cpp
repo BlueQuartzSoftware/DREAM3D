@@ -49,7 +49,7 @@
 //
 // -----------------------------------------------------------------------------
 BookmarksItemDelegate::BookmarksItemDelegate(QObject* parent) :
-QStyledItemDelegate(parent)
+  QStyledItemDelegate(parent)
 {
 
 }
@@ -65,7 +65,7 @@ BookmarksItemDelegate::~BookmarksItemDelegate()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QWidget* BookmarksItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+QWidget* BookmarksItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
   QLineEdit* editor = new QLineEdit(parent);
   return editor;
@@ -74,7 +74,7 @@ QWidget* BookmarksItemDelegate::createEditor(QWidget* parent, const QStyleOption
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksItemDelegate::setEditorData(QWidget* editor, const QModelIndex &index) const
+void BookmarksItemDelegate::setEditorData(QWidget* editor, const QModelIndex& index) const
 {
   QString value = index.model()->data(index, Qt::DisplayRole).toString();
   QLineEdit* line = static_cast<QLineEdit*>(editor);
@@ -84,7 +84,7 @@ void BookmarksItemDelegate::setEditorData(QWidget* editor, const QModelIndex &in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksItemDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex &index) const
+void BookmarksItemDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
 {
   BookmarksModel* bModel = qobject_cast<BookmarksModel*>(model);
 
@@ -101,7 +101,7 @@ void BookmarksItemDelegate::setModelData(QWidget* editor, QAbstractItemModel* mo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksItemDelegate::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem &option, const QModelIndex &index) const
+void BookmarksItemDelegate::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
   editor->setGeometry(option.rect);
 }
@@ -109,9 +109,9 @@ void BookmarksItemDelegate::updateEditorGeometry(QWidget* editor, const QStyleOp
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+void BookmarksItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
- // Place any painting code here
+// Place any painting code here
 
   QStyledItemDelegate::paint(painter, option, index);
 }

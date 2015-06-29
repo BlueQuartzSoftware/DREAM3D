@@ -151,7 +151,7 @@ unsigned int EditPhaseDialog::getPhaseType()
 
   if (index == 2)
   {
-      return DREAM3D::PhaseType::MatrixPhase;
+    return DREAM3D::PhaseType::MatrixPhase;
   }
   return static_cast<unsigned int>(index);
 }
