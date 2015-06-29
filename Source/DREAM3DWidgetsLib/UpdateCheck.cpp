@@ -172,7 +172,7 @@ void UpdateCheck::networkReplied(QNetworkReply* reply)
       errorMessage.append("Please contact the DREAM3D developers for more information.\n");
       dataObj->setMessageDescription(errorMessage);
       dataObj->setHasError(true);
-      emit LatestVersion(dataObj);
+      emit latestVersion(dataObj);
       return;
     }
 
@@ -197,7 +197,7 @@ void UpdateCheck::networkReplied(QNetworkReply* reply)
     dataObj->setAppString(appVersionStr);
     dataObj->setServerString(serverVersionStr);
 
-    emit LatestVersion(dataObj);
+    emit latestVersion(dataObj);
   }
   // The URL does not exist on the server
   else
@@ -208,7 +208,7 @@ void UpdateCheck::networkReplied(QNetworkReply* reply)
     errorMessage.append( reply->errorString() );
     dataObj->setMessageDescription(errorMessage);
     dataObj->setHasError(true);
-    emit LatestVersion(dataObj);
+    emit latestVersion(dataObj);
     reply->abort();
   }
 

@@ -61,7 +61,7 @@ class DREAM3DWidgetsLib_EXPORT UpdateCheck : public QObject
     void networkReplied(QNetworkReply* reply);
 
   signals:
-    void LatestVersion(UpdateCheckData*);
+    void latestVersion(UpdateCheckData*);
 
   protected:
     void writeUpdateCheckDate();
