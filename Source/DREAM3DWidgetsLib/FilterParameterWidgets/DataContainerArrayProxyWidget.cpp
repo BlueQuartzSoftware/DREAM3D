@@ -318,8 +318,9 @@ void DataContainerArrayProxyWidget::updateModelFromProxy(DataContainerArrayProxy
         QString daName = dataArraysIter.key();
         //    qDebug() << "#### " << daName;
         QStandardItem* daItem = getColumnItem<DataArrayProxy>(amItem, daName, daProxy);
-        assert(daItem != NULL);
-
+        if (NULL == daItem) {
+          Q_ASSERT_X(daItem != NULL, "daItem was NULL. This can not happen", "");
+        }
       }
 
       // Now remove those items that are still in the model but NOT the proxy. This can happen if a filter upstream
@@ -357,32 +358,32 @@ void DataContainerArrayProxyWidget::updateProxyFromModel()
   //  QStringList dcList;
   for (QMap<QString, DataContainerProxy>::iterator containerIter = containers.begin(); containerIter != containers.end(); ++containerIter)
   {
-	  DataContainerProxy& dcProxy = containerIter.value();
-	  //  dcList.push_back(dcProxy.name);
-	  QStandardItem* dcItem = updateProxyItem<DataContainerProxy>(rootItem, dcProxy.name, dcProxy);
+    DataContainerProxy& dcProxy = containerIter.value();
+    //  dcList.push_back(dcProxy.name);
+    QStandardItem* dcItem = updateProxyItem<DataContainerProxy>(rootItem, dcProxy.name, dcProxy);
 
-	  //    qDebug() << "**  " << dcProxy.name;
-	  // We found the proper Data Container, now populate the AttributeMatrix List
-	  QMap<QString, AttributeMatrixProxy>& attrMats = dcProxy.attributeMatricies;
-	  for (QMap<QString, AttributeMatrixProxy>::iterator attrMatsIter = attrMats.begin(); attrMatsIter != attrMats.end(); ++attrMatsIter)
-	  {
-		  QString amName = attrMatsIter.key();
-		  AttributeMatrixProxy& attrProxy = attrMatsIter.value();
-		  QStandardItem* amItem = updateProxyItem<AttributeMatrixProxy>(dcItem, amName, attrProxy);
+    //    qDebug() << "**  " << dcProxy.name;
+    // We found the proper Data Container, now populate the AttributeMatrix List
+    QMap<QString, AttributeMatrixProxy>& attrMats = dcProxy.attributeMatricies;
+    for (QMap<QString, AttributeMatrixProxy>::iterator attrMatsIter = attrMats.begin(); attrMatsIter != attrMats.end(); ++attrMatsIter)
+    {
+      QString amName = attrMatsIter.key();
+      AttributeMatrixProxy& attrProxy = attrMatsIter.value();
+      QStandardItem* amItem = updateProxyItem<AttributeMatrixProxy>(dcItem, amName, attrProxy);
 
-		  //   qDebug() << "@@@ " << amName;
-		  // We found the selected AttributeMatrix, so loop over this attribute matrix arrays and populate the list widget
-		  AttributeMatrixProxy& amProxy = attrMatsIter.value();
-		  QMap<QString, DataArrayProxy>& dataArrays = amProxy.dataArrays;
-		  for (QMap<QString, DataArrayProxy>::iterator dataArraysIter = dataArrays.begin(); dataArraysIter != dataArrays.end(); ++dataArraysIter)
-		  {
-			  DataArrayProxy& daProxy = dataArraysIter.value();
-			  QString daName = dataArraysIter.key();
-			  //    qDebug() << "#### " << daName;
-			  QStandardItem* daItem = updateProxyItem<DataArrayProxy>(amItem, daName, daProxy);
-			  Q_UNUSED(daItem)
-		  }
-	  }
+      //   qDebug() << "@@@ " << amName;
+      // We found the selected AttributeMatrix, so loop over this attribute matrix arrays and populate the list widget
+      AttributeMatrixProxy& amProxy = attrMatsIter.value();
+      QMap<QString, DataArrayProxy>& dataArrays = amProxy.dataArrays;
+      for (QMap<QString, DataArrayProxy>::iterator dataArraysIter = dataArrays.begin(); dataArraysIter != dataArrays.end(); ++dataArraysIter)
+      {
+        DataArrayProxy& daProxy = dataArraysIter.value();
+        QString daName = dataArraysIter.key();
+        //    qDebug() << "#### " << daName;
+        QStandardItem* daItem = updateProxyItem<DataArrayProxy>(amItem, daName, daProxy);
+        Q_UNUSED(daItem)
+      }
+    }
   }
 
   //  m_DcaProxy.print("updateProxy AFTER Updating");
@@ -393,16 +394,16 @@ void DataContainerArrayProxyWidget::updateProxyFromModel()
 // -----------------------------------------------------------------------------
 void transferDataContainFlags(const DataContainerProxy& source, DataContainerArrayProxy& dest)
 {
-	QMap<QString, DataContainerProxy>& dcProxies = dest.dataContainers;
-	for (QMap<QString, DataContainerProxy>::iterator dcIter = dcProxies.begin(); dcIter != dcProxies.end(); ++dcIter)
-	{
-		DataContainerProxy& dcProxy = dcIter.value();
-		if (dcProxy.name.compare(source.name) == 0)
-		{
-			// we have the correct DataContainer, so transfer the flags
-			dcProxy.flag = source.flag;
-		}
-	}
+  QMap<QString, DataContainerProxy>& dcProxies = dest.dataContainers;
+  for (QMap<QString, DataContainerProxy>::iterator dcIter = dcProxies.begin(); dcIter != dcProxies.end(); ++dcIter)
+  {
+    DataContainerProxy& dcProxy = dcIter.value();
+    if (dcProxy.name.compare(source.name) == 0)
+    {
+      // we have the correct DataContainer, so transfer the flags
+      dcProxy.flag = source.flag;
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -410,26 +411,26 @@ void transferDataContainFlags(const DataContainerProxy& source, DataContainerArr
 // -----------------------------------------------------------------------------
 void transferAttributeMatrixFlags(const QString dcName, const AttributeMatrixProxy& source, DataContainerArrayProxy& dest)
 {
-	QMap<QString, DataContainerProxy>& dcProxies = dest.dataContainers;
-	for (QMap<QString, DataContainerProxy>::iterator dcIter = dcProxies.begin(); dcIter != dcProxies.end(); ++dcIter)
-	{
-		DataContainerProxy& dcProxy = dcIter.value();
-		if (dcProxy.name.compare(dcName) == 0)
-		{
-			// we have the correct DataContainer, so transfer the flags
-			//      dcProxy.flag = source.flag;
-			QMap<QString, AttributeMatrixProxy>& amProxies = dcProxy.attributeMatricies;
-			for (QMap<QString, AttributeMatrixProxy>::iterator amIter = amProxies.begin(); amIter != amProxies.end(); ++amIter)
-			{
-				QString amName = amIter.key();
-				if (amName.compare(source.name) == 0)
-				{
-					AttributeMatrixProxy& attrProxy = amIter.value();
-					attrProxy.flag = source.flag;
-				}
-			}
-		}
-	}
+  QMap<QString, DataContainerProxy>& dcProxies = dest.dataContainers;
+  for (QMap<QString, DataContainerProxy>::iterator dcIter = dcProxies.begin(); dcIter != dcProxies.end(); ++dcIter)
+  {
+    DataContainerProxy& dcProxy = dcIter.value();
+    if (dcProxy.name.compare(dcName) == 0)
+    {
+      // we have the correct DataContainer, so transfer the flags
+      //      dcProxy.flag = source.flag;
+      QMap<QString, AttributeMatrixProxy>& amProxies = dcProxy.attributeMatricies;
+      for (QMap<QString, AttributeMatrixProxy>::iterator amIter = amProxies.begin(); amIter != amProxies.end(); ++amIter)
+      {
+        QString amName = amIter.key();
+        if (amName.compare(source.name) == 0)
+        {
+          AttributeMatrixProxy& attrProxy = amIter.value();
+          attrProxy.flag = source.flag;
+        }
+      }
+    }
+  }
 }
 
 
@@ -438,37 +439,37 @@ void transferAttributeMatrixFlags(const QString dcName, const AttributeMatrixPro
 // -----------------------------------------------------------------------------
 void transferDataArrayFlags(const QString dc_name, const QString am_name, const DataArrayProxy& source, DataContainerArrayProxy& dest)
 {
-	QMap<QString, DataContainerProxy>& dcProxies = dest.dataContainers;
-	for (QMap<QString, DataContainerProxy>::iterator dcIter = dcProxies.begin(); dcIter != dcProxies.end(); ++dcIter)
-	{
-		DataContainerProxy& dcProxy = dcIter.value();
-		if (dcProxy.name.compare(dc_name) == 0)
-		{
-			// we have the correct DataContainer, so transfer the flags
-			//dcProxy.flag = source.flag;
-			QMap<QString, AttributeMatrixProxy>& amProxies = dcProxy.attributeMatricies;
-			for (QMap<QString, AttributeMatrixProxy>::iterator amIter = amProxies.begin(); amIter != amProxies.end(); ++amIter)
-			{
-				QString amName = amIter.key();
-				if (amName.compare(am_name) == 0)
-				{
-					AttributeMatrixProxy& attrProxy = amIter.value();
-					//attrProxy.flag = source.flag;
+  QMap<QString, DataContainerProxy>& dcProxies = dest.dataContainers;
+  for (QMap<QString, DataContainerProxy>::iterator dcIter = dcProxies.begin(); dcIter != dcProxies.end(); ++dcIter)
+  {
+    DataContainerProxy& dcProxy = dcIter.value();
+    if (dcProxy.name.compare(dc_name) == 0)
+    {
+      // we have the correct DataContainer, so transfer the flags
+      //dcProxy.flag = source.flag;
+      QMap<QString, AttributeMatrixProxy>& amProxies = dcProxy.attributeMatricies;
+      for (QMap<QString, AttributeMatrixProxy>::iterator amIter = amProxies.begin(); amIter != amProxies.end(); ++amIter)
+      {
+        QString amName = amIter.key();
+        if (amName.compare(am_name) == 0)
+        {
+          AttributeMatrixProxy& attrProxy = amIter.value();
+          //attrProxy.flag = source.flag;
 
-					QMap<QString, DataArrayProxy>& daProxies = attrProxy.dataArrays;
-					for (QMap<QString, DataArrayProxy>::iterator daIter = daProxies.begin(); daIter != daProxies.end(); ++daIter)
-					{
-						QString daName = daIter.key();
-						if (daName.compare(source.name) == 0)
-						{
-							DataArrayProxy& daProxy = daIter.value();
-							daProxy = source;
-						}
-					}
-				}
-			}
-		}
-	}
+          QMap<QString, DataArrayProxy>& daProxies = attrProxy.dataArrays;
+          for (QMap<QString, DataArrayProxy>::iterator daIter = daProxies.begin(); daIter != daProxies.end(); ++daIter)
+          {
+            QString daName = daIter.key();
+            if (daName.compare(source.name) == 0)
+            {
+              DataArrayProxy& daProxy = daIter.value();
+              daProxy = source;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 

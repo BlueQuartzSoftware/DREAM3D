@@ -62,13 +62,15 @@ FileListInfoWidget::FileListInfoWidget(FilterParameter* parameter, AbstractFilte
   m_DidCausePreflight(false)
 {
   FileListInfoFilterParameter* fli = dynamic_cast<FileListInfoFilterParameter*>(parameter);
-  QString msg;
-  QTextStream ss(&msg);
-  ss << "FileListInfoWidget can ONLY be used with FileListInfoFilterParameter objects. The programmer of the filter has a bug.";
-  ss << " The name of the filter was " << filter->getHumanLabel() << " and the name of the Filter Parameter was " << parameter->getHumanLabel();
-  ss << " and is trying to get the propery " << parameter->getPropertyName() << " in the filter";
-  Q_ASSERT_X(NULL != fli, msg.toLatin1().constData(), __FILE__);
-
+  if(NULL == fli)
+  {
+    QString msg;
+    QTextStream ss(&msg);
+    ss << "FileListInfoWidget can ONLY be used with FileListInfoFilterParameter objects. The programmer of the filter has a bug.";
+    ss << " The name of the filter was " << filter->getHumanLabel() << " and the name of the Filter Parameter was " << parameter->getHumanLabel();
+    ss << " and is trying to get the propery " << parameter->getPropertyName() << " in the filter";
+    Q_ASSERT_X(NULL != fli, msg.toLatin1().constData(), __FILE__);
+  }
   setupUi(this);
   setupGui();
 }

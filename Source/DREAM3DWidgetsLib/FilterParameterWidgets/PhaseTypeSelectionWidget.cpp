@@ -58,8 +58,10 @@ PhaseTypeSelectionWidget::PhaseTypeSelectionWidget(FilterParameter* parameter, A
   m_DidCausePreflight(false)
 {
   PhaseTypesFilterParameter* p = dynamic_cast<PhaseTypesFilterParameter*>(parameter);
-  Q_ASSERT_X(NULL != p, "PhaseTypeSelectionWidget can ONLY be used with PhaseTypesFilterParameter FilterParameters", __FILE__);
-
+  if (NULL == p)
+  {
+    Q_ASSERT_X(NULL != p, "PhaseTypeSelectionWidget can ONLY be used with PhaseTypesFilterParameter FilterParameters", __FILE__);
+  }
   setupUi(this);
   setupGui();
 }

@@ -95,6 +95,7 @@ void IssuesDockWidget::on_errorTableWidget_itemClicked( QTableWidgetItem* item )
 void IssuesDockWidget::clearIssues()
 {
   errorTableWidget->clearContents();
+  errorTableWidget->setRowCount(0);
   m_CachedMessages.clear();
 }
 
