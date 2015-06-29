@@ -139,17 +139,7 @@
        </item>
        <item>
         <property name="text">
-         <string>Transformation</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
          <string>Matrix</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Boundary</string>
         </property>
        </item>
        <item>
