@@ -35,7 +35,7 @@ Due to incompatibilities of HDF5 and these environments we can not support compi
 
 # DREAM3D SDK Availability #
 
-The DREAM3D developers keep a downloadable _DREAM3D\_SDK_ for Visual Studio 2013 that contains 64 bit builds of **ALL** the dependent libraries and applications except for Qt 5 and ITK. Please see the DREAM.3D website for more details on the current location of this download.
+The DREAM3D developers keep a downloadable _DREAM3D\_SDK_ for Visual Studio 2013 that contains 64 bit builds of **ALL** the dependent libraries and applications except for Qt 5 and ITK. The _DREAM3D\_SDK_ can be downloaded [here](http://dream3d.bluequartz.net/binaries/SDK/).
 
 
 # Setting Up the Environment #
