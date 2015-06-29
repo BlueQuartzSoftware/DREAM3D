@@ -16,7 +16,7 @@ if(NOT "${DREAM3D_SDK}" STREQUAL "")
 endif()
 
 if(${CMAKE_MAJOR_VERSION} STREQUAL "3")
-  # CMake 3.0 introduces VERSION variables for each Project. 
+  # CMake 3.0 introduces VERSION variables for each Project.
   cmake_policy(SET CMP0048 NEW)
   # CMake 3.0 introduces some OS X RPath policies
   cmake_policy(SET CMP0042 OLD)
@@ -28,14 +28,14 @@ cmake_minimum_required(VERSION 3.1.0)
 
 #------------------------------------------------------------------------------
 # Create the Top level Project
-# 
+#
 project(DREAM3DProj VERSION 6.0.0.0)
 #------------------------------------------------------------------------------
 # There are several different Release Types that we are going to use.
 # Official: This is an official release from BlueQuartz Software
 # Beta: This is a Beta release that has is getting ready to be officially released.
 # Development: This is currently in development and probably has bugs.
-set(DREAM3DProj_RELEASE_TYPE "Beta")
+set(DREAM3DProj_RELEASE_TYPE "Official")
 
 include(CMakeParseArguments)
 
