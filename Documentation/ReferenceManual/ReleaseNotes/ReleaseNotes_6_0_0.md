@@ -93,12 +93,13 @@ Version 6.0. Release Notes {#releasenotes_6_0_0}
 
 
 [0] Test files are not available to verify proper output is being created  
-[1] Introduction of dedicated Geometry classes allow us to remove this **Filter**
+[1] Introduction of dedicated **Geometry** classes allow us to remove this **Filter**
 [2] Original developer is not updating this **Filter** any longer
 [3] This **Filter** is considered legacy and no longer supported 
 [4] This **Filter** is removed for technical reasons 
 
 + Several improvements to the user interface have been made. Consult the updated user manual for details. Most importantly, DREAM.3D now utilizes a document model for its interface, which will allow users to have multiple instances of DREAM.3D open at once, all operating independently.
++ The DDDAnalysisToolbox, ImageProcessing, HEDMAnalysis, and TransformationPhase curated **Plugins** are removed from the current release until they have been properly updated for the v6.x coding and documentation standards. These **Plugins** will be updated and included in future DREAM.3D releases.
 + The core code for orientation transformations has been redone based on the work of M. De Graef et al.
 + Many major and minor bug issues addressed.
 
