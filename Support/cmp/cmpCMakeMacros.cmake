@@ -883,7 +883,7 @@ function(cmpGitRevisionString)
 
 
   # Run 'git describe' to get our tag offset
-  execute_process(COMMAND ${GIT_EXECUTABLE} describe
+  execute_process(COMMAND ${GIT_EXECUTABLE} describe --long
                   OUTPUT_VARIABLE DVERS
                   RESULT_VARIABLE did_run
                   ERROR_VARIABLE git_error
@@ -907,9 +907,11 @@ function(cmpGitRevisionString)
   else()
     string(STRIP ${DVERS} DVERS)
     string(REPLACE  "-" ";" VERSION_LIST ${DVERS})
+    list(LENGTH VERSION_LIST VERSION_LIST_LENGTH)
 
     list(GET VERSION_LIST 1 VERSION_GEN_VER_PATCH)
     list(GET VERSION_LIST 2 VERSION_GEN_VER_REVISION)
+
 
     string(SUBSTRING ${VERSION_GEN_VER_REVISION} 1 -1 VERSION_GEN_VER_REVISION)
 

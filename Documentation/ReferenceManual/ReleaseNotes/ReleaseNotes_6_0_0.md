@@ -1,4 +1,4 @@
-Version 6.0. Release Notes {#releasenotes_6_0_0}
+Version 6.0.0 Release Notes {#releasenotes_6_0_0}
 ===========
 
 # Major Changes #
