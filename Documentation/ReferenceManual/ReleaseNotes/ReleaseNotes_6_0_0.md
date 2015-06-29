@@ -104,7 +104,8 @@ Version 6.0. Release Notes {#releasenotes_6_0_0}
 
 # Known Issues #
 
-+ The DDDAnalysisToolbox, ImageProcessing, HEDMAnalysis, and TransformationPhase curated **Plugins** are removed from the current release until they have been properly updated for the v6.x coding and documentation standards. These **Plugins** will be updated and included in future DREAM.3D releases.
++ The DDDAnalysisToolbox, ImageProcessing, HEDMAnalysis, and TransformationPhase curated **Plugins** are temporarily moved to the _Unsupported_ group until they are updated to the current DREAM.3D standards for code and documentation. These **Plugins** will be moved out of _Unsupported_ as they are updated.
++ The "rolled" preset dialog does not currently verify if the user has entered values such that A > B > C, which may result in incorrect statistics. The user should be aware of this and make sure to enter values such that A > B > C. A check of this condition will be added in a future release.
 + The Match Crystallography **Filter** may intermittenly crash.
 
 

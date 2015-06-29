@@ -1,24 +1,22 @@
 StatsGenerator {#statsgenerator}
 ========
 
-## Introduction ##
-The *StatsGenerator* program was created as an auxiliary tool to DREAM.3D in order to allow users to quickly generate a set of statistics that can be used to create a synthetic microstructure. Using this program, the user can generate the necessary statistics that describe a microstructure, with the aid of visual plots of the statistics, and save them to a DREAM3D file. The saved DREAM.3D file can then be used in a DREAM3D pipeline to generate a synthetic microstructure.
+The **StatsGenerator** program was created as an auxiliary tool to DREAM.3D in order to allow users to quickly generate a set of statistics that can be used to create a synthetic microstructure. Using this program, the user can generate the necessary statistics that describe a microstructure, with the aid of visual plots of the statistics, and save them to a DREAM.3D file. The saved DREAM.3D file can then be used in a DREAM.3D pipeline to generate a synthetic microstructure.
 
-The set(s) of statistics that can be generated in this program correspond to the set(s) used by '**Feature** packing algorithms' in DREAM.3D.  DREAM.3D chooses to classify **Features** in *Phase Types*, which define the set of statistics used to describe the key metrics for those **Features**.  The *Phase Types* that can currently be selected in DREAM.3D are: Primary, Precipitate and Matrix.  The statistics that describe each of these *Phase Types* are listed below:
+The set(s) of statistics that can be generated in this program correspond to the set(s) used by "**Feature** packing algorithms" in DREAM.3D.  DREAM.3D chooses to classify **Features** in *Phase Types*, which define the set of statistics used to describe the key metrics for those **Features**.  The *Phase Types* that can currently be selected in DREAM.3D are Primary, Precipitate and Matrix.  The statistics that describe each of these *Phase Types* are listed below:
 
-+ **Primary**: {Volume Fraction}, {Crystal Structure}, Size, Shape (Aspect Ratios), Omega 3, Number of Neighbors, ODF (Crystallographic Orientation), MDF, Axis ODF (Morphological Orientation)  
-+ **Precipitate**: {Volume Fraction}, {Crystal Structure} , {Fraction on Feature Boundary}, Size, Shape (Aspect Ratios), Omega 3, Radial Distribtion Function (RDF), ODF (Crystallographic Orientation), MDF, Axis ODF (Morphological Orientation)  
-+ **Matrix**: {Volume Fraction}, {Crystal Structure}  
++ **Primary**: {Volume fraction}, {crystal structures}, size, shape (aspect ratios), Omega3, number of neighbors, ODF (crystallographic orientation), MDF, axis ODF (morphological orientation)  
++ **Precipitate**: {Volume fraction}, {crystal structures}, {fraction on **Feature** boundary}, size, shape (aspect ratios), Omega3, radial distribtion function (RDF), ODF (crystallographic orientation), MDF, axis ODF (morphological orientation)  
++ **Matrix**: {Volume fraction}, {crystal structure} 
 
 *Stats designated with a { } are located on the Phase Properties Manager*
 
 ## Phase Properties ##
 
 ![Phase Properties Buttons](Images/image009.png)
-
 @image latex Images/image009.png "Phase Properties Buttons" width=6in 
 
-The user can add, remove or modify properties of the phase by clicking the *Phase Properties Buttons* at the top of the StatsGenerator GUI. The Plus Button allows the user to add a phase, the Minus Button allows the user to remove a phase and the Wheel Button allows the user to edit the currently selected phase.
+The user can add, remove or modify properties of the phase by clicking the *Phase Properties Buttons* at the top of the **StatsGenerator** GUI. The Plus Button allows the user to add a phase, the Minus Button allows the user to remove a phase and the Wheel Button allows the user to edit the currently selected phase.
 
 ![Phase Properties Manager](Images/image002.png)
 
@@ -35,7 +33,6 @@ The *Phase Properties Manager* is a pop-up window where the user can enter infor
 ## Size Distribution Tab ##
 
 ![Size Distribution GUI](Images/image001.png)
-
 @image latex Images/image001.png "Size Distribution GUI" width=6in 
 
 The plot displayed on this tab is the actual size distribution of the features that will be placed for this phase.  The x-axis is the equivalent sphere diameter (ESD) of the feature.  ESD mean the diameter of a sphere that has the equivalent volume of the feature.  The units of ESD in this plot are in arbitrary units of length (ie meters, millimeters, microns, nanometers, etc).  The y-axis of the plot is the probability of sampling that ESD from the distribution.  The parameters listed below are what define the size distribution and how it is binned for correlation with other statistical desciptors to be described later.  When entering the parameters that define the size distribution, it is generally a good work flow to iteratively adjust the parameters while watching the plot until the plot looks 'satisfactory' with respect to the location of the peak and the length of the 'tails', rather that be overly concerned witht he parameter values themselves.
