@@ -139,6 +139,9 @@ void AlignSectionsMutualInformation::dataCheck()
 {
   setErrorCondition(0);
 
+  AlignSections::dataCheck();
+  if(getErrorCondition() < 0) { return; }
+
   INIT_DataArray(m_FeatureCounts, int32_t);
 
   // Set the DataContainerName and AttributematrixName for the Parent Class (AlignSections) to Use.
@@ -183,7 +186,6 @@ void AlignSectionsMutualInformation::preflight()
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
-  AlignSections::preflight();
   setInPreflight(false);
 }
 
@@ -246,7 +248,7 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int64_t>& xshifts, 
 
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
-    QString ss = QObject::tr("Aligning Sections - Determining Shifts - %1 Percent Complete").arg(((float)iter / dims[2]) * 100);
+    QString ss = QObject::tr("Aligning Sections || Determining Shifts || %1% Complete").arg(((float)iter / dims[2]) * 100);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     mindisorientation = std::numeric_limits<float>::max();
     slice = (dims[2] - 1) - iter;
@@ -443,7 +445,7 @@ void AlignSectionsMutualInformation::form_features_sections()
 
   for (DimType slice = 0; slice < dims[2]; slice++)
   {
-    QString ss = QObject::tr("Aligning Sections - Identifying Features on Sections - %1 Percent Complete").arg(((float)slice / dims[2]) * 100);
+    QString ss = QObject::tr("Aligning Sections || Identifying Features on Sections || %1% Complete").arg(((float)slice / dims[2]) * 100);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     featurecount = 1;
     noseeds = false;
@@ -540,7 +542,7 @@ void AlignSectionsMutualInformation::execute()
   AlignSections::execute();
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage(getHumanLabel(), "Aligning Sections Complete");
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

@@ -169,7 +169,7 @@ void VisualizeGBCDPoleFigure::dataCheck()
   QDir parentPath = fi.path();
   if (parentPath.exists() == false)
   {
-    QString ss = QObject::tr( "The directory path for the output file does not exist");
+    QString ss = QObject::tr( "The directory path for the output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
     notifyWarningMessage(getHumanLabel(), ss, -1);
   }
 

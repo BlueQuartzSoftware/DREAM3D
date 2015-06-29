@@ -286,7 +286,7 @@ void ReadEdaxH5Data::dataCheck()
       else
       {
         setErrorCondition(-998);
-        QString ss = QObject::tr("The filter parameter 'Read Pattern Data' has been enabled but there does not seem to be any pattern data in the file for the scan name selected.");
+        QString ss = QObject::tr("The filter parameter 'Read Pattern Data' has been enabled but there does not seem to be any pattern data in the file for the scan name selected");
         notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       }
     }

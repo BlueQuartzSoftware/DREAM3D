@@ -136,6 +136,9 @@ void AlignSectionsMisorientation::dataCheck()
 {
   setErrorCondition(0);
 
+  AlignSections::dataCheck();
+  if(getErrorCondition() < 0) { return; }
+
   // Set the DataContainerName and AttributematrixName for the Parent Class (AlignSections) to Use.
   setDataContainerName(m_QuatsArrayPath.getDataContainerName());
   setCellAttributeMatrixName(m_QuatsArrayPath.getAttributeMatrixName());
@@ -180,7 +183,6 @@ void AlignSectionsMisorientation::preflight()
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
-  AlignSections::preflight();
   setInPreflight(false);
 }
 
@@ -246,7 +248,7 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int64_t>& xshifts, std
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
     progInt = ((float)iter / dims[2]) * 100.0f;
-    QString ss = QObject::tr("Determining Shifts - %1% Complete").arg(progInt);
+    QString ss = QObject::tr("Aligning Sections || Determining Shifts || %1% Complete").arg(progInt);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     if (getCancel() == true)
     {

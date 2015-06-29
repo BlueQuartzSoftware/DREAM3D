@@ -1,6 +1,6 @@
 {
     "0": {
-        "Filter_Human_Label": "Read DREAM3D Data File",
+        "Filter_Human_Label": "Read DREAM.3D Data File",
         "Filter_Name": "DataContainerReader",
         "InputFile": "Data/Output/SmallIN100Cleaned.dream3d",
         "InputFileDataContainerArrayProxy": {

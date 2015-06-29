@@ -55,8 +55,8 @@ static const QString k_DataArrayName("Data");
 static const QString k_4CompDataArrayName("Data 4 Comp");
 static const QString k_FeatureIdsName("FeatureIds");
 static const QString k_ActivesName("Actives");
-static const QString k_DataContainerName = DREAM3D::Defaults::DataContainerName;
-static const QString k_NewDataContainerName = "CroppedDataContainer";
+static const QString k_DataContainerName = DREAM3D::Defaults::ImageDataContainerName;
+static const QString k_NewDataContainerName = DREAM3D::Defaults::NewImageDataContainerName;
 static const QString k_CellAttributeMatrixName = DREAM3D::Defaults::CellAttributeMatrixName;
 static const QString k_FeatureAttributeMatrixName = DREAM3D::Defaults::CellFeatureAttributeMatrixName;
 
@@ -145,7 +145,7 @@ DataContainerArray::Pointer CreateDataContainerArrayTestStructure(NumPackage X, 
   int err = 0;
   DataContainerArray::Pointer dca = DataContainerArray::New();
 
-  DataContainer::Pointer dc1 = DataContainer::New(DREAM3D::Defaults::DataContainerName);
+  DataContainer::Pointer dc1 = DataContainer::New(DREAM3D::Defaults::ImageDataContainerName);
 
   ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
   dc1->setGeometry(image);
@@ -414,7 +414,7 @@ void preflightTests(AbstractFilter::Pointer cropVolume)
       resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
 
   // Test Source Attribute Matrix Does Not Exist
-  path.setDataContainerName(DREAM3D::Defaults::DataContainerName);
+  path.setDataContainerName(DREAM3D::Defaults::ImageDataContainerName);
   var.setValue(path);
   propWasSet = cropVolume->setProperty("CellAttributeMatrixPath", var);
   DREAM3D_REQUIRE_EQUAL(propWasSet, true);

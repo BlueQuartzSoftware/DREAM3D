@@ -1011,6 +1011,9 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
     }
   }
 
+  QString ss = QObject::tr("Packing Features || Starting Feature Placement...");
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+
   tDims[0] = static_cast<size_t>(gid);
   m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->resizeAttributeArrays(tDims);
   totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
@@ -2408,6 +2411,7 @@ void PackPrimaryPhases::assign_gaps_only()
       QString ss = QObject::tr("Assign Gaps || Cycle#: %1 || Remaining Unassigned Voxel Count: %2").arg(iterationCounter).arg(gapVoxelCount);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     }
+    if(getCancel() == true) { return; }
   }
 }
 
@@ -2559,6 +2563,7 @@ void PackPrimaryPhases::cleanup_features()
     }
   }
   assign_gaps_only();
+  if(getCancel() == true) { return; }
   for (size_t i = 0; i < totalPoints; i++)
   {
     if (m_FeatureIds[i] > 0) { gsizes[m_FeatureIds[i]]++; }

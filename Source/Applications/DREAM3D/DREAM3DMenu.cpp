@@ -195,7 +195,7 @@ void DREAM3DMenu::initialize()
   m_ActionShowBookmarkInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in File System", 0));
   m_ActionShowPrebuiltInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in File System", 0));
 #endif
-  m_ActionShowDREAM3DHelp->setText(QApplication::translate("DREAM3D_UI", "DREAM3D Help", 0));
+  m_ActionShowDREAM3DHelp->setText(QApplication::translate("DREAM3D_UI", "DREAM.3D Help", 0));
   m_ActionShowDREAM3DHelp->setShortcut(QApplication::translate("DREAM3D_UI", "Ctrl+H", 0));
   m_ActionAboutDREAM3D->setText(QApplication::translate("DREAM3D_UI", "About DREAM3D", 0));
   m_ActionCheckForUpdates->setText(QApplication::translate("DREAM3D_UI", "Check For Updates", 0));

@@ -29,7 +29,7 @@ This filter reads in files generated using the VASP program. See [the VASP web s
 
 ## License & Copyright ##
 
-Please see the description file distributed with this plugin.
+Please see the description file distributed with this **Plugin**
 
 ## DREAM.3D Mailing Lists ##
 

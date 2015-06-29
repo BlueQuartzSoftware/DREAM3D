@@ -132,7 +132,7 @@ void MinSize::dataCheck()
 
   if (getMinAllowedFeatureSize() < 0)
   {
-    QString ss = QObject::tr("The minimum Feature size (%1) must be 0 or positive.").arg(getMinAllowedFeatureSize());
+    QString ss = QObject::tr("The minimum Feature size (%1) must be 0 or positive").arg(getMinAllowedFeatureSize());
     setErrorCondition(-5555);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }

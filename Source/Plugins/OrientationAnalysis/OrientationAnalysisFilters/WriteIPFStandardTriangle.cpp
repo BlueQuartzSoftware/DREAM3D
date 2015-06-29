@@ -113,7 +113,7 @@ void WriteIPFStandardTriangle::dataCheck()
   QString ss;
   if (getOutputFile().isEmpty() == true)
   {
-    ss = QObject::tr( "The output file must be set.");
+    ss = QObject::tr( "The output file must be set");
     notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
     return;
@@ -125,20 +125,20 @@ void WriteIPFStandardTriangle::dataCheck()
 
   if (parentPath.exists() == false)
   {
-    ss = QObject::tr( "The directory path for the output file does not exist.");
+    ss = QObject::tr( "The directory path for the output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
     notifyWarningMessage(getHumanLabel(), ss, -1);
   }
 
   if (ext.isEmpty())
   {
-    ss = QObject::tr("The output file does not have an extension.");
+    ss = QObject::tr("The output file does not have an extension");
     notifyErrorMessage(getHumanLabel(), ss, -1003);
     setErrorCondition(-1004);
     return;
   }
   else if (ext != "tif" && ext != "bmp" && ext != "png")
   {
-    ss = QObject::tr("The output file has an unsupported extension.  Please select a TIF, BMP, or PNG file.");
+    ss = QObject::tr("The output file has an unsupported extension.  Please select a TIF, BMP, or PNG file");
     notifyErrorMessage(getHumanLabel(), ss, -1004);
     setErrorCondition(-1004);
     return;
@@ -147,7 +147,7 @@ void WriteIPFStandardTriangle::dataCheck()
   if (m_ImageSize <= 0)
   {
     setErrorCondition(-1005);
-    notifyErrorMessage(getHumanLabel(), "The size of the image must be positive.", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "The size of the image must be positive", getErrorCondition());
     return;
   }
 }
@@ -287,7 +287,7 @@ void WriteIPFStandardTriangle::writeImage( QImage& image)
   bool saved = image.save((m_OutputFile));
   if (!saved)
   {
-    QString ss = QObject::tr("The Triangle image file '%1' was not saved.").arg(getOutputFile());
+    QString ss = QObject::tr("The Triangle image file '%1' was not saved").arg(getOutputFile());
     setErrorCondition(-90011);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }

@@ -140,7 +140,7 @@ void GenerateGeometryConnectivity::execute()
     if (err < 0)
     {
       setErrorCondition(-400);
-      QString ss = QObject::tr("Error generating vertex element list for Geometry type %1.").arg(geom->getGeometryTypeAsString());
+      QString ss = QObject::tr("Error generating vertex element list for Geometry type %1").arg(geom->getGeometryTypeAsString());
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
   }
@@ -151,7 +151,7 @@ void GenerateGeometryConnectivity::execute()
     if (err < 0)
     {
       setErrorCondition(-401);
-      QString ss = QObject::tr("Error generating element neighbor list for Geometry type %1.").arg(geom->getGeometryTypeAsString());
+      QString ss = QObject::tr("Error generating element neighbor list for Geometry type %1").arg(geom->getGeometryTypeAsString());
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
   }

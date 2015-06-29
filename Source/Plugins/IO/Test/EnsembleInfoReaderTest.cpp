@@ -36,7 +36,7 @@
 
 
 #include <stdlib.h>
- 
+
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
@@ -139,6 +139,8 @@ QString groups = "[EnsembleInfo]\nNumber_Phases = 2\n\n\
     filter->setDataContainerArray(dca);
     var.setValue(UnitTest::EnsembleInfoReaderTest::TestFileDoc); // should return -10018, .doc extension
     propWasSet = filter->setProperty("InputFile", var);
+    var.setValue(DREAM3D::Defaults::DataContainerName);
+    filter->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
     filter->preflight();
     err = filter->getErrorCondition();
@@ -153,6 +155,8 @@ QString groups = "[EnsembleInfo]\nNumber_Phases = 2\n\n\
 
     var.setValue(UnitTest::EnsembleInfoReaderTest::TestFileTxt); // should pass, .txt extension
     propWasSet = filter->setProperty("InputFile", var);
+    var.setValue(DREAM3D::Defaults::DataContainerName);
+    filter->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
     filter->preflight();
     DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
@@ -204,6 +208,8 @@ int TestEnsembleInfoReader()
     filter->setDataContainerArray(dca);
     var.setValue(UnitTest::EnsembleInfoReaderTest::TestFileIni); // should pass
     propWasSet = filter->setProperty("InputFile", var);
+    var.setValue(DREAM3D::Defaults::DataContainerName);
+    filter->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
     filter->execute();
     DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);

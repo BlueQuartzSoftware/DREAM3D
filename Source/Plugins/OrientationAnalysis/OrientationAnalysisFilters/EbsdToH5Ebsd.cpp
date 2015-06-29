@@ -252,7 +252,7 @@ void EbsdToH5Ebsd::execute()
   if (fileId < 0)
   {
     err = -1;
-    QString ss = QObject::tr("The output HDF5 file could not be created. Check permissions or if the file is in use by another program.");
+    QString ss = QObject::tr("The output HDF5 file could not be created. Check permissions or if the file is in use by another program");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;

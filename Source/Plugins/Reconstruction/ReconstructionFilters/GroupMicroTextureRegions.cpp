@@ -176,6 +176,9 @@ void GroupMicroTextureRegions::dataCheck()
   setErrorCondition(0);
   DataArrayPath tempPath;
 
+  GroupFeatures::dataCheck();
+  if(getErrorCondition() < 0) { return; }
+
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_FeatureIdsArrayPath.getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
 

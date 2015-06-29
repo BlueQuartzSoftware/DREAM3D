@@ -102,7 +102,7 @@ void DataContainerWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FileSystemFilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), FilterParameter::Parameter, "", "*.dream3d", "DREAM.3D Data"));
+  parameters.push_back(FileSystemFilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), FilterParameter::Parameter, "", "*.dream3d", ""));
   parameters.push_back(FilterParameter::New("Write Xdmf File", "WriteXdmfFile", FilterParameterWidgetType::BooleanWidget, getWriteXdmfFile(), FilterParameter::Parameter, "ParaView Compatible File"));
 
   setFilterParameters(parameters);
@@ -151,7 +151,7 @@ void DataContainerWriter::dataCheck()
   QDir parentPath(fi.path());
   if (parentPath.exists() == false)
   {
-    ss = QObject::tr("The directory path for the output file does not exist.");
+    ss = QObject::tr("The directory path for the output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
     notifyWarningMessage(getHumanLabel(), ss, -1);
   }
   if (fi.suffix().compare("") == 0)
@@ -175,7 +175,7 @@ void DataContainerWriter::dataCheck()
   if (dirInfo.isWritable() == false && parentPath.exists() == true)
   {
     setErrorCondition(-10002);
-    ss = QObject::tr("The user does not have the proper permissions to write to the output file.");
+    ss = QObject::tr("The user does not have the proper permissions to write to the output file");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 }

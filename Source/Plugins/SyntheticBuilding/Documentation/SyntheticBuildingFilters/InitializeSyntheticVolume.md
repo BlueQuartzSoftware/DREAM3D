@@ -36,7 +36,7 @@ Not Applicable
 
 ## License & Copyright ##
 
-Please see the description file distributed with this plugin.
+Please see the description file distributed with this **Plugin**
 
 ## DREAM.3D Mailing Lists ##
 

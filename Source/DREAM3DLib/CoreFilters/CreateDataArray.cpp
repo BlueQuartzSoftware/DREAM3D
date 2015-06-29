@@ -139,7 +139,7 @@ void checkInitializationInt(AbstractFilter* filter, double initValue, int32_t er
 
   if (!((initValue >= std::numeric_limits<T>::min()) && (initValue <= std::numeric_limits<T>::max()))){
     filter->setErrorCondition(err);
-    ss = QObject::tr("The %1 initialization value was invalid. The valid range is %2 to %3.").arg(strType).arg(std::numeric_limits<T>::min()).arg(std::numeric_limits<T>::max());
+    ss = QObject::tr("The %1 initialization value was invalid. The valid range is %2 to %3").arg(strType).arg(std::numeric_limits<T>::min()).arg(std::numeric_limits<T>::max());
   }
 
   if (filter->getErrorCondition() < 0)

@@ -1,57 +1,10 @@
 {
     "0": {
-        "Filter_Human_Label": "Read DREAM3D Data File",
+        "Filter_Human_Label": "Read DREAM.3D Data File",
         "Filter_Name": "DataContainerReader",
         "InputFile": "Data/Output/SmallIN100Mesh.dream3d",
         "InputFileDataContainerArrayProxy": {
             "Data Containers": [
-                {
-                    "Attribute Matricies": [
-                        {
-                            "Data Arrays": [
-                                {
-                                    "Component Dimensions": [
-                                        2
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "SurfaceMeshFaceLabels",
-                                    "Object Type": "DataArray<int32_t>",
-                                    "Path": "/DataContainers/TriangleDataContainer/FaceData",
-                                    "Tuple Dimensions": [
-                                        2
-                                    ],
-                                    "Version": 2
-                                }
-                            ],
-                            "Flag": 2,
-                            "Name": "FaceData",
-                            "Type": 2
-                        },
-                        {
-                            "Data Arrays": [
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "SurfaceMeshNodeType",
-                                    "Object Type": "DataArray<int8_t>",
-                                    "Path": "/DataContainers/TriangleDataContainer/VertexData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                }
-                            ],
-                            "Flag": 2,
-                            "Name": "VertexData",
-                            "Type": 0
-                        }
-                    ],
-                    "Flag": 2,
-                    "Name": "TriangleDataContainer",
-                    "Type": 0
-                },
                 {
                     "Attribute Matricies": [
                         {
@@ -136,6 +89,19 @@
                                 },
                                 {
                                     "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "Mask",
+                                    "Object Type": "DataArray<bool>",
+                                    "Path": "/DataContainers/ImageDataContainer/CellData",
+                                    "Tuple Dimensions": [
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
                                         3
                                     ],
                                     "Flag": 2,
@@ -193,19 +159,6 @@
                                     "Flag": 2,
                                     "Name": "SEM Signal",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "ThresholdArray",
-                                    "Object Type": "DataArray<bool>",
                                     "Path": "/DataContainers/ImageDataContainer/CellData",
                                     "Tuple Dimensions": [
                                         1
@@ -374,6 +327,19 @@
                                         1
                                     ],
                                     "Flag": 2,
+                                    "Name": "NumNeighbors2",
+                                    "Object Type": "DataArray<int32_t>",
+                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
+                                    "Tuple Dimensions": [
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
                                     "Name": "ParentIds",
                                     "Object Type": "DataArray<int32_t>",
                                     "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
@@ -437,13 +403,60 @@
                     "Flag": 2,
                     "Name": "ImageDataContainer",
                     "Type": 0
+                },
+                {
+                    "Attribute Matricies": [
+                        {
+                            "Data Arrays": [
+                                {
+                                    "Component Dimensions": [
+                                        2
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "FaceLabels",
+                                    "Object Type": "DataArray<int32_t>",
+                                    "Path": "/DataContainers/TriangleDataContainer/FaceData",
+                                    "Tuple Dimensions": [
+                                        2
+                                    ],
+                                    "Version": 2
+                                }
+                            ],
+                            "Flag": 2,
+                            "Name": "FaceData",
+                            "Type": 2
+                        },
+                        {
+                            "Data Arrays": [
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "NodeType",
+                                    "Object Type": "DataArray<int8_t>",
+                                    "Path": "/DataContainers/TriangleDataContainer/VertexData",
+                                    "Tuple Dimensions": [
+                                        1
+                                    ],
+                                    "Version": 2
+                                }
+                            ],
+                            "Flag": 2,
+                            "Name": "VertexData",
+                            "Type": 0
+                        }
+                    ],
+                    "Flag": 2,
+                    "Name": "TriangleDataContainer",
+                    "Type": 0
                 }
             ]
         },
         "OverwriteExistingDataContainers": 0
     },
     "1": {
-        "FilterVersion": "6.0.1877",
+        "FilterVersion": "6.0.1964",
         "Filter_Human_Label": "Laplacian Smoothing",
         "Filter_Name": "LaplacianSmoothing",
         "IterationSteps": 100,
@@ -451,12 +464,12 @@
         "QuadPointLambda": 0.15000000596046448,
         "SurfaceMeshFaceLabelsArrayPath": {
             "Attribute Matrix Name": "FaceData",
-            "Data Array Name": "SurfaceMeshFaceLabels",
+            "Data Array Name": "FaceLabels",
             "Data Container Name": "TriangleDataContainer"
         },
         "SurfaceMeshNodeTypeArrayPath": {
             "Attribute Matrix Name": "VertexData",
-            "Data Array Name": "SurfaceMeshNodeType",
+            "Data Array Name": "NodeType",
             "Data Container Name": "TriangleDataContainer"
         },
         "SurfacePointLambda": 0,
@@ -465,8 +478,8 @@
         "TripleLineLambda": 0.20000000298023224
     },
     "2": {
-        "FilterVersion": "6.0.1877",
-        "Filter_Human_Label": "Write DREAM3D Data File",
+        "FilterVersion": "6.0.1964",
+        "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100Mesh.dream3d",
         "WriteXdmfFile": 1

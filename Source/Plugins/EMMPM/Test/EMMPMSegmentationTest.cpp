@@ -248,8 +248,8 @@ int TestEMMPMSegmentation()
   {
 
     createAndAddReadImageFilter(pipeline, UnitTest::EMMPMSegmentationTest::TestFile);
-    createAndAddConvertRGBToGrayscaleFilter(pipeline, DataArrayPath("DataContainer", "CellData", "ImageData"), "Gray");
-    createAndAddEMMPMFilter(pipeline, DataArrayPath("DataContainer", "CellData", "Gray"), DataArrayPath("DataContainer", "CellData", "Test"));
+    createAndAddConvertRGBToGrayscaleFilter(pipeline, DataArrayPath("ImageDataContainer", "CellData", "ImageData"), "Gray");
+    createAndAddEMMPMFilter(pipeline, DataArrayPath("ImageDataContainer", "CellData", "Gray"), DataArrayPath("ImageDataContainer", "CellData", "Test"));
 
     pipeline->execute();
     DREAM3D_REQUIRE_EQUAL(pipeline->getErrorCondition(), NO_ERROR)
@@ -260,7 +260,7 @@ int TestEMMPMSegmentation()
   {
     createAndAddReadImageFilter(pipeline, UnitTest::EMMPMSegmentationTest::TestFile);
     //createAndAddConvertRGBToGrayscaleFilter(pipeline, DataArrayPath("DataContainer", "CellData", "ImageData"), "Gray");
-    createAndAddEMMPMFilter(pipeline, DataArrayPath("DataContainer", "CellData", "ImageData"), DataArrayPath("DataContainer", "CellData", "Test"));
+    createAndAddEMMPMFilter(pipeline, DataArrayPath("ImageDataContainer", "CellData", "ImageData"), DataArrayPath("ImageDataContainer", "CellData", "Test"));
 
     pipeline->execute();
     DREAM3D_REQUIRE_EQUAL(pipeline->getErrorCondition(), COMPONENTS_DONT_MATCH)
@@ -282,10 +282,10 @@ int TestMultiEMMPMSegmentation()
 
   {
     createAndAddReadImageFilter(pipeline, UnitTest::EMMPMSegmentationTest::TestFile);
-    createAndAddConvertRGBToGrayscaleFilter(pipeline, DataArrayPath("DataContainer", "CellData", "ImageData"), "Gray");
+    createAndAddConvertRGBToGrayscaleFilter(pipeline, DataArrayPath("ImageDataContainer", "CellData", "ImageData"), "Gray");
 
     QVector<DataArrayPath> vector;
-    vector.push_back(DataArrayPath("DataContainer", "CellData", "Gray"));
+    vector.push_back(DataArrayPath("ImageDataContainer", "CellData", "Gray"));
     createAndAddMultiEMMPMFilter(pipeline, vector);
     pipeline->execute();
     DREAM3D_REQUIRE_EQUAL(pipeline->getErrorCondition(), NO_ERROR)
@@ -295,11 +295,11 @@ int TestMultiEMMPMSegmentation()
 
   {
     createAndAddReadImageFilter(pipeline, UnitTest::EMMPMSegmentationTest::TestFile);
-    createAndAddConvertRGBToGrayscaleFilter(pipeline, DataArrayPath("DataContainer", "CellData", "ImageData"), "Gray");
+    createAndAddConvertRGBToGrayscaleFilter(pipeline, DataArrayPath("ImageDataContainer", "CellData", "ImageData"), "Gray");
 
     QVector<DataArrayPath> vector;
-    vector.push_back(DataArrayPath("DataContainer", "CellData", "Gray"));
-    vector.push_back(DataArrayPath("DataContainer", "CellData", "ImageData"));
+    vector.push_back(DataArrayPath("ImageDataContainer", "CellData", "Gray"));
+    vector.push_back(DataArrayPath("ImageDataContainer", "CellData", "ImageData"));
     createAndAddMultiEMMPMFilter(pipeline, vector);
     pipeline->execute();
     DREAM3D_REQUIRE_EQUAL(pipeline->getErrorCondition(), COMPONENTS_DONT_MATCH)

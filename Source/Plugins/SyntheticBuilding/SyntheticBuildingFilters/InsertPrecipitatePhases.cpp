@@ -696,6 +696,9 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     }
   }
 
+  QString ss = QObject::tr("Packing Precipitates || Starting Feature Placement...");
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+
   // initializing the target RDF vector - this is the radial distribution function we are trying to match to
   if (m_MatchRDF == true)
   {

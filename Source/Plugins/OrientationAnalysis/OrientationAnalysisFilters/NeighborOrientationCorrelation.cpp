@@ -240,7 +240,7 @@ void NeighborOrientationCorrelation::execute()
       if (DimType(i) > prog)
       {
         progressInt = static_cast<int64_t>(((float)i / totalPoints) * 100.0f);
-        QString ss = QObject::tr("|| Level %1 of %2: Processing Data %3%").arg(startLevel - currentLevel).arg(startLevel - m_Level).arg(progressInt);
+        QString ss = QObject::tr("Level %1 of %2 || Processing Data %3%").arg((startLevel - currentLevel) + 1).arg(startLevel - m_Level).arg(progressInt);
         notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
         prog = prog + progIncrement;
       }
@@ -337,7 +337,7 @@ void NeighborOrientationCorrelation::execute()
       if (DimType(i) > prog)
       {
         progressInt = static_cast<int64_t>(((float)i / totalPoints) * 100.0f);
-        QString ss = QObject::tr("|| Level %1 of %2: Copying Data %3%").arg(startLevel - currentLevel).arg(startLevel - m_Level).arg(progressInt);
+        QString ss = QObject::tr("Level %1 of %2 || Copying Data %3%").arg((startLevel - currentLevel) + 2).arg(startLevel - m_Level).arg(progressInt);
         notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
         prog = prog + progIncrement;
       }

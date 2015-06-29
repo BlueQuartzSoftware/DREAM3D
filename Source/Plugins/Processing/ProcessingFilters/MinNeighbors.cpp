@@ -132,7 +132,7 @@ void MinNeighbors::dataCheck()
 
   if (getMinNumNeighbors() < 0)
   {
-    QString ss = QObject::tr("The minimum number of neighbors (%1) must be 0 or positive.").arg(getMinNumNeighbors());
+    QString ss = QObject::tr("The minimum number of neighbors (%1) must be 0 or positive").arg(getMinNumNeighbors());
     setErrorCondition(-5555);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }

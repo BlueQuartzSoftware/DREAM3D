@@ -127,7 +127,7 @@ void CreateImageGeometry::dataCheck()
 
   if(getSelectedDataContainer().isEmpty())
   {
-    QString ss = QObject::tr("The Data Container must have a name.");
+    QString ss = QObject::tr("The Data Container must have a name");
     setErrorCondition(-391);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;

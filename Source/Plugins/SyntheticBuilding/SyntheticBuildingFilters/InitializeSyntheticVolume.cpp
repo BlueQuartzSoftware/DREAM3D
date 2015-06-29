@@ -286,7 +286,7 @@ int InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3_t r
   {
     if (getInputStatsFile().isEmpty())
     {
-      QString ss = QObject::tr("Phase types array has not been allocated and the input statistics file is empty.");
+      QString ss = QObject::tr("Phase types array has not been allocated and the input statistics file is empty");
       setErrorCondition(-1000);
       notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
       return -1;
@@ -317,7 +317,7 @@ int InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3_t r
     err = phaseType->readH5Data(amGid);
     if (err < 0)
     {
-      QString ss = QObject::tr("Error reading phase type data.");
+      QString ss = QObject::tr("Error reading phase type data");
       setErrorCondition(-1003);
       notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
       return -1;

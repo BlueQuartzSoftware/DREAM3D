@@ -105,6 +105,9 @@ void AlignSectionsList::dataCheck()
   setErrorCondition(0);
   QString ss;
 
+  AlignSections::dataCheck();
+  if(getErrorCondition() < 0) { return; }
+
   QFileInfo fi(m_InputFile);
   if (true == m_InputFile.isEmpty())
   {
@@ -130,7 +133,6 @@ void AlignSectionsList::preflight()
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
-  AlignSections::preflight();
   setInPreflight(false);
 }
 

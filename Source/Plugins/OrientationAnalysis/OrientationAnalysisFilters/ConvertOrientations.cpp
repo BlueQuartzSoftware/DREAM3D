@@ -144,14 +144,14 @@ void ConvertOrientations::dataCheck()
 
   if( getInputType() < OrientationConverter<float>::GetMinIndex() || getInputType() > OrientationConverter<float>::GetMaxIndex() )
   {
-    QString ss = QObject::tr("There was an error with teh selection of the input orientation type. The valid values range from 0 to %1.").arg(OrientationConverter<float>::GetMaxIndex());
+    QString ss = QObject::tr("There was an error with teh selection of the input orientation type. The valid values range from 0 to %1").arg(OrientationConverter<float>::GetMaxIndex());
     setErrorCondition(-1001);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if( getOutputType() < OrientationConverter<float>::GetMinIndex() || getOutputType() > OrientationConverter<float>::GetMaxIndex() )
   {
-    QString ss = QObject::tr("There was an error with the selection of the output orientation type. The valid values range from 0 to %1.").arg(OrientationConverter<float>::GetMaxIndex());
+    QString ss = QObject::tr("There was an error with the selection of the output orientation type. The valid values range from 0 to %1").arg(OrientationConverter<float>::GetMaxIndex());
     setErrorCondition(-1002);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
