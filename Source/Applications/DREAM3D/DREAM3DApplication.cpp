@@ -77,13 +77,13 @@
 // -----------------------------------------------------------------------------
 DREAM3DApplication::DREAM3DApplication(int & argc, char ** argv) :
   QApplication(argc, argv),
+  m_ActiveWindow(NULL),
   #if defined(Q_OS_MAC)
   m_GlobalMenu(NULL),
   #endif
   m_OpenDialogLastDirectory(""),
   show_splash(true),
-  Splash(NULL),
-  m_ActiveWindow(NULL)
+  Splash(NULL)
 {
   // Connection to update the recent files list on all windows when it changes
   QRecentFileList* recentsList = QRecentFileList::instance();
