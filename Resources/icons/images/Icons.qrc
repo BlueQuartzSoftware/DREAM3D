@@ -44,25 +44,27 @@
   <file>Groups/Processing_Icon.png</file>
   <file>Groups/Reconstruction_Icon.png</file>
   <file>Groups/Sampling_Icon.png</file>
-  <file>Groups/SolidMeshing_Icon.png</file>
+  <file>Groups/Core_Icon.png</file>
   <file>Groups/Statistics_Icon.png</file>
-  <file>Groups/SurfaceMeshing_Icon.png</file>
-  <file>Groups/SyntheticBuilding_Icon.png</file>
+  <file>Groups/Surface Meshing_Icon.png</file>
+  <file>Groups/Synthetic Building_Icon.png</file>
   <file>Groups/Plugin_Icon.png</file>
   <file>Groups/IO_Icon.png</file>
-  <file>Groups/OrientationAnalysis_Icon.png</file>
+  <file>Groups/Orientation Analysis_Icon.png</file>
+  <file>Groups/Unsupported_Icon.png</file>
 
   <file>Groups/Generic_Icon@2x.png</file>
   <file>Groups/Processing_Icon@2x.png</file>
   <file>Groups/Reconstruction_Icon@2x.png</file>
   <file>Groups/Sampling_Icon@2x.png</file>
-  <file>Groups/SolidMeshing_Icon@2x.png</file>
+  <file>Groups/Core_Icon@2x.png</file>
   <file>Groups/Statistics_Icon@2x.png</file>
-  <file>Groups/SurfaceMeshing_Icon@2x.png</file>
-  <file>Groups/SyntheticBuilding_Icon@2x.png</file>
+  <file>Groups/Surface Meshing_Icon@2x.png</file>
+  <file>Groups/Synthetic Building_Icon@2x.png</file>
   <file>Groups/Plugin_Icon@2x.png</file>
   <file>Groups/IO_Icon@2x.png</file>
-  <file>Groups/OrientationAnalysis_Icon@2x.png</file>
+  <file>Groups/Orientation Analysis_Icon@2x.png</file>
+  <file>Groups/Unsupported_Icon@2x.png</file>
 
   <file>QFilterWidgetHeaders/Generic_Header.png</file>
   <file>QFilterWidgetHeaders/IO_Header.png</file>
@@ -111,6 +113,9 @@
  
   <file>cube_gray.png</file>
   <file>cube_gray@2x.png</file>
+  
+  <file>cube_red.png</file>
+  <file>cube_red@2x.png</file>
 
   <file>nav_right_blue.png</file>
   <file>nav_right_blue@2x.png</file>
