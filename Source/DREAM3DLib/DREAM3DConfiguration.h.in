@@ -17,6 +17,8 @@
 /* define to 1 if we are using the Eigen Library*/
 #cmakedefine DREAM3D_USE_EIGEN @EIGEN_FOUND@
 
+#cmakedefine DREAM3D_BUILD_TEST_FILTERS
+
 #define DREAM3DProj_RELEASE_TYPE "@DREAM3DProj_RELEASE_TYPE@"
 
 /* Include the Overall Configuration header file */

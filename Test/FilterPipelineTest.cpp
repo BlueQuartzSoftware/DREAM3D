@@ -46,13 +46,15 @@
 #include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
+#ifdef DREAM3D_BUILD_TEST_FILTERS
 #include "DREAM3DLib/TestFilters/GenericExample.h"
 #include "DREAM3DLib/TestFilters/ArraySelectionExample.h"
 #include "DREAM3DLib/TestFilters/MakeDataContainer.h"
 #include "DREAM3DLib/TestFilters/ThresholdExample.h"
 #include "DREAM3DLib/TestFilters/TestFilters.h"
+#endif
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
- 
+
 #include "DREAM3DTestFileLocations.h"
 
 // -----------------------------------------------------------------------------
@@ -95,6 +97,8 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 void TestPipelinePushPop()
 {
+
+#ifdef DREAM3D_BUILD_TEST_FILTERS
 
   // Create our Pipeline object
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
@@ -141,14 +145,14 @@ void TestPipelinePushPop()
   pipeline->insert(pipeline->size(), vtkWriter);
   //  pipeline->printFilterNames(std::cout);
   DREAM3D_REQUIRE_EQUAL(6, pipeline->size());
-
+#endif
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void loadPlugins(FilterManager *fm)
+void loadPlugins(FilterManager* fm)
 {
   //  qDebug() << "DREAM3D_UI::loadPlugins" << "\n";
 
@@ -231,12 +235,12 @@ void loadPlugins(FilterManager *fm)
     QPluginLoader loader(path);
     QFileInfo fi(path);
     QString fileName = fi.fileName();
-    QObject *plugin = loader.instance();
+    QObject* plugin = loader.instance();
     qDebug() << "    Pointer: " << plugin << "\n";
     if (plugin && m_PluginFileNames.contains(fileName, Qt::CaseSensitive) == false)
     {
       //populateMenus(plugin);
-      IDREAM3DPlugin* ipPlugin = qobject_cast<IDREAM3DPlugin * > (plugin);
+      IDREAM3DPlugin* ipPlugin = qobject_cast<IDREAM3DPlugin* > (plugin);
       if (ipPlugin)
       {
         m_LoadedPlugins.push_back(ipPlugin);
