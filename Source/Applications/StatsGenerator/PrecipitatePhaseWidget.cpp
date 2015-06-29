@@ -252,8 +252,8 @@ void PrecipitatePhaseWidget::setupGui()
 //    w->setMinCutOff(minCutOff);
 //    w->setMaxCutOff(maxCutOff);
 //    w->setBinStep(binStepSize);
-    connect(m_RdfPlot, SIGNAL(userEditedData()),
-            this, SLOT(dataWasEdited()));
+//    connect(m_RdfPlot, SIGNAL(userEditedData()),
+//            this, SLOT(dataWasEdited()));
   }
 
   m_SizeDistributionPlot->setCanvasBackground(QColor(Qt::white));

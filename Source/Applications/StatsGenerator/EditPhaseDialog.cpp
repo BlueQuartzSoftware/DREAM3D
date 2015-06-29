@@ -148,6 +148,11 @@ void EditPhaseDialog::setPhaseType(unsigned int pt)
 unsigned int EditPhaseDialog::getPhaseType()
 {
   int index = phaseTypeCombo->currentIndex();
+
+  if (index == 2)
+  {
+      return DREAM3D::PhaseType::MatrixPhase;
+  }
   return static_cast<unsigned int>(index);
 }
 
