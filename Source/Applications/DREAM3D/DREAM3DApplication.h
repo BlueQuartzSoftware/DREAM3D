@@ -40,6 +40,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QVector>
+#include <QtCore/QSet>
 
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QWidget>
@@ -72,6 +73,8 @@ class DREAM3DApplication : public QApplication
     void unregisterDREAM3DWindow(DREAM3D_UI* window);
 
     DREAM3D_UI* getNewDREAM3DInstance();
+
+    bool isCurrentlyRunning(DREAM3D_UI* instance);
 
     /**
      * @brief event
@@ -146,6 +149,9 @@ class DREAM3DApplication : public QApplication
 
     // This map stores each DREAM3D instance with its accompanying "View" menu
     QMap<DREAM3D_UI*, QMenu*>               m_DREAM3DInstanceMap;
+
+    // This is the set of DREAM3D instances that are currently running a pipeline
+    QSet<DREAM3D_UI*>                       m_CurrentlyRunningInstances;
 
     // The currently active DREAM3D instance
     DREAM3D_UI*                             m_ActiveWindow;

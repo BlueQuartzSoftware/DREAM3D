@@ -328,6 +328,39 @@ bool DREAM3D_UI::savePipelineAs()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::closeEvent(QCloseEvent* event)
 {
+  if (dream3dApp->isCurrentlyRunning(this) == true)
+  {
+//    QMessageBox* runningPipelineBox = new QMessageBox();
+//    runningPipelineBox->setWindowTitle("Pipeline Is Running");
+//    runningPipelineBox->setText("There is a pipeline currently running.\nWould you like to stop the pipeline?");
+//    QPushButton* stopPipelineBtn = new QPushButton("Stop Pipeline", runningPipelineBox);
+//    runningPipelineBox->addButton(stopPipelineBtn, QMessageBox::YesRole);
+//    runningPipelineBox->setStandardButtons(QMessageBox::Cancel);
+//    runningPipelineBox->setIcon(QMessageBox::Warning);
+//    runningPipelineBox->exec();
+//    if (runningPipelineBox->clickedButton() == stopPipelineBtn)
+//    {
+//      // Cancel the pipeline
+//      on_startPipelineBtn_clicked();
+//      delete runningPipelineBox;
+//    }
+//    else
+//    {
+//      event->ignore();
+//      delete runningPipelineBox;
+//      return;
+//    }
+
+    QMessageBox* runningPipelineBox = new QMessageBox();
+    runningPipelineBox->setWindowTitle("Pipeline Is Running");
+    runningPipelineBox->setText("There is a pipeline currently running.\nPlease cancel the running pipeline and try again.");
+    runningPipelineBox->setStandardButtons(QMessageBox::Ok);
+    runningPipelineBox->setIcon(QMessageBox::Warning);
+    runningPipelineBox->exec();
+    event->ignore();
+    return;
+  }
+
   QMessageBox::StandardButton choice = checkDirtyDocument();
   if (choice == QMessageBox::Cancel)
   {

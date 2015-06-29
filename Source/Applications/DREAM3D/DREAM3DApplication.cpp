@@ -1320,10 +1320,16 @@ void DREAM3DApplication::toggleGlobalMenuItems(bool value)
 void DREAM3DApplication::toPipelineRunningState()
 {
 #if defined (Q_OS_MAC)
-  m_GlobalMenu->getPipelineMenu()->setDisabled(true);
+  m_GlobalMenu->getClearPipeline()->setDisabled(true);
 #else
-  m_ActiveWindow->getDREAM3DMenu()->getPipelineMenu()->setDisabled(true);
+  m_ActiveWindow->getDREAM3DMenu()->getClearPipeline()->setDisabled(true);
 #endif
+
+  DREAM3D_UI* runningInstance = qobject_cast<DREAM3D_UI*>(sender());
+  if (NULL != runningInstance)
+  {
+    m_CurrentlyRunningInstances.insert(runningInstance);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -1332,10 +1338,24 @@ void DREAM3DApplication::toPipelineRunningState()
 void DREAM3DApplication::toPipelineIdleState()
 {
 #if defined (Q_OS_MAC)
-  m_GlobalMenu->getPipelineMenu()->setEnabled(true);
+  m_GlobalMenu->getClearPipeline()->setEnabled(true);
 #else
-  m_ActiveWindow->getDREAM3DMenu()->getPipelineMenu()->setEnabled(true);
+  m_ActiveWindow->getDREAM3DMenu()->getClearPipeline()->setEnabled(true);
 #endif
+
+  DREAM3D_UI* runningInstance = qobject_cast<DREAM3D_UI*>(sender());
+  if (NULL != runningInstance)
+  {
+    m_CurrentlyRunningInstances.remove(runningInstance);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool DREAM3DApplication::isCurrentlyRunning(DREAM3D_UI* instance)
+{
+  return m_CurrentlyRunningInstances.contains(instance);
 }
 
 // -----------------------------------------------------------------------------
