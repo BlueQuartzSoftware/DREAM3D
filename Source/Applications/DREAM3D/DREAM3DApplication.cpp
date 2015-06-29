@@ -1269,6 +1269,16 @@ void DREAM3DApplication::activeWindowChanged(DREAM3D_UI* instance)
       }
       toggleGlobalMenuItems(true);
     }
+
+    // Set the active window's menu state
+    if (isCurrentlyRunning(m_ActiveWindow) == true)
+    {
+      toPipelineRunningState();
+    }
+    else
+    {
+      toPipelineIdleState();
+    }
 #endif
   }
   else
