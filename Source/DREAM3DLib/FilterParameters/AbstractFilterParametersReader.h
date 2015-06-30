@@ -118,9 +118,9 @@ class DREAM3DLib_EXPORT AbstractFilterParametersReader
     virtual DataContainerArrayProxy readDataContainerArrayProxy(const QString& name, DataContainerArrayProxy v) = 0;
 
     virtual DataArrayPath readDataArrayPath(const QString& name, DataArrayPath v) = 0;
-    virtual QVector<DataArrayPath> readDataArrayPathVector(const QString& name, QVector<DataArrayPath> v) = 0;
+	virtual QVector<DataArrayPath> readDataArrayPathVector(const QString& name, QVector<DataArrayPath> v) = 0;
 
-    virtual DynamicTableData readDynamicTableData(const QString& name, DynamicTableData v) = 0;
+	virtual DynamicTableData readDynamicTableData(const QString& name, DynamicTableData v) = 0;
 
   protected:
     AbstractFilterParametersReader();

@@ -38,9 +38,9 @@
 #define _DataContainerReaderFilterParameter_H_
 
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
-#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 
-class DREAM3DLib_EXPORT DataContainerReaderFilterParameter : public FileSystemFilterParameter
+
+class DREAM3DLib_EXPORT DataContainerReaderFilterParameter : public FilterParameter
 {
   public:
     DREAM3D_SHARED_POINTERS(DataContainerReaderFilterParameter)
@@ -48,17 +48,17 @@ class DREAM3DLib_EXPORT DataContainerReaderFilterParameter : public FileSystemFi
     DREAM3D_TYPE_MACRO_SUPER(DataContainerReaderFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const QString& widgetType, const QVariant& defaultValue,
-                       Category category,
-                       int groupIndex = -1);
+                       const QVariant& defaultValue, Category category, int groupIndex = -1);
 
     virtual ~DataContainerReaderFilterParameter();
 
     DREAM3D_INSTANCE_PROPERTY(Qt::CheckState, DefaultFlagValue)
     DREAM3D_INSTANCE_PROPERTY(QString, InputFileProperty)
+    DREAM3D_INSTANCE_PROPERTY(QString, FileExtension)
+    DREAM3D_INSTANCE_PROPERTY(QString, FileType)
 
-  protected:
-    DataContainerReaderFilterParameter();
+    protected:
+      DataContainerReaderFilterParameter();
 
   private:
     DataContainerReaderFilterParameter(const DataContainerReaderFilterParameter&); // Copy Constructor Not Implemented

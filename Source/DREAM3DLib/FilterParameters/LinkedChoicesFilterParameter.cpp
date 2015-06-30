@@ -40,7 +40,7 @@
 //
 // -----------------------------------------------------------------------------
 LinkedChoicesFilterParameter::LinkedChoicesFilterParameter() :
-  ChoiceFilterParameter()
+ChoiceFilterParameter()
 {
   setWidgetType(FilterParameterWidgetType::ChoiceWidget);
 }
@@ -55,10 +55,10 @@ LinkedChoicesFilterParameter::~LinkedChoicesFilterParameter()
 //
 // -----------------------------------------------------------------------------
 LinkedChoicesFilterParameter::Pointer LinkedChoicesFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-    const QVariant& defaultValue,
-    QVector<QString> choices,
-    QStringList linkedProperties,
-    Category category, int groupIndex)
+  const QVariant& defaultValue,
+  QVector<QString> choices,
+  QStringList linkedProperties,
+  Category category, int groupIndex)
 {
   LinkedChoicesFilterParameter::Pointer ptr = LinkedChoicesFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -70,9 +70,6 @@ LinkedChoicesFilterParameter::Pointer LinkedChoicesFilterParameter::New(const QS
   ptr->setLinkedProperties(linkedProperties);
   ptr->setEditable(false);
   ptr->setGroupIndex(groupIndex);
-  if (ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
-  {
-    ptr->setReadOnly(true);
-  }
+
   return ptr;
 }

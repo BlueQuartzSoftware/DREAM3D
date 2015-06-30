@@ -41,33 +41,33 @@
 
 class DREAM3DLib_EXPORT PhaseTypesFilterParameter : public FilterParameter
 {
-  public:
-    DREAM3D_SHARED_POINTERS(PhaseTypesFilterParameter)
+public:
+  DREAM3D_SHARED_POINTERS(PhaseTypesFilterParameter)
     DREAM3D_STATIC_NEW_MACRO(PhaseTypesFilterParameter)
     DREAM3D_TYPE_MACRO_SUPER(PhaseTypesFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel,
-                       const QString& PhaseTypesArrayName,
-                       const QString& phaseTypeCountProperty,
-                       const QString& phaseTYpeDataProperty,
-                       const QString& attributeMatrixProperty,
-                       const DataArrayPath attributeMatrixDefault,
-                       Category category,
-                       int groupIndex = -1);
+    const QString& PhaseTypesArrayName,
+    const QString& phaseTypeCountProperty,
+    const QString& phaseTYpeDataProperty,
+    const QString& attributeMatrixProperty,
+    const DataArrayPath attributeMatrixDefault,
+    Category category,
+    int groupIndex = -1);
 
-    virtual ~PhaseTypesFilterParameter();
+  virtual ~PhaseTypesFilterParameter();
 
-    DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeCountProperty)
+  DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeCountProperty)
     DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeDataProperty)
     DREAM3D_INSTANCE_PROPERTY(QString, AttributeMatrixPathProperty)
     DREAM3D_INSTANCE_PROPERTY(DataArrayPath, AttributeMatrixPathDefault)
 
-  protected:
-    PhaseTypesFilterParameter();
+protected:
+  PhaseTypesFilterParameter();
 
-  private:
-    PhaseTypesFilterParameter(const PhaseTypesFilterParameter&); // Copy Constructor Not Implemented
-    void operator=(const PhaseTypesFilterParameter&); // Operator '=' Not Implemented
+private:
+  PhaseTypesFilterParameter(const PhaseTypesFilterParameter&); // Copy Constructor Not Implemented
+  void operator=(const PhaseTypesFilterParameter&); // Operator '=' Not Implemented
 };
 
 #endif /* _PhaseTypesFilterParameter_H_ */

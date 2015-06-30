@@ -26,7 +26,6 @@ set(DREAM3DLib_FilterParameters_HDRS
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/ChoiceFilterParameter.h
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/LinkedChoicesFilterParameter.h
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/ConstrainedFilterParameter.h
-  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/FileSystemFilterParameter.h
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/VolumeInfoFilterParameter.h
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/DynamicChoiceFilterParameter.h
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/ComparisonFilterParameter.h
@@ -38,6 +37,28 @@ set(DREAM3DLib_FilterParameters_HDRS
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/MultiDataArraySelectionFilterParameter.h
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/DynamicTableFilterParameter.h
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/SeparatorFilterParameter.h
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/StringFilterParameter.h
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/IntFilterParameter.h
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/DoubleFilterParameter.h
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/InputFileFilterParameter.h
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/InputPathFilterParameter.h
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/OutputFileFilterParameter.h
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/OutputPathFilterParameter.h
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/BooleanFilterParameter.h
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/IntVec3FilterParameter.h
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/FloatVec3FilterParameter.h
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/FloatVec4FilterParameter.h
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/SecondOrderPolynomialFilterParameter.h
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/ThirdOrderPolynomialFilterParameter.h
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/FourthOrderPolynomialFilterParameter.h
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/Symmetric6x6FilterParameter.h
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/AxisAngleFilterParameter.h
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/DataArraySelectionFilterParameter.h
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/AttributeMatrixSelectionFilterParameter.h
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/DataBundleSelectionFilterParameter.h
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/DataContainerSelectionFilterParameter.h
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/DataArrayCreationFilterParameter.h
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/UnknownFilterParameter.h
 )
 
 set(DREAM3DLib_FilterParameters_SRCS
@@ -56,7 +77,6 @@ set(DREAM3DLib_FilterParameters_SRCS
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/LinkedBooleanFilterParameter.cpp
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/LinkedChoicesFilterParameter.cpp
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/ConstrainedFilterParameter.cpp
-  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/FileSystemFilterParameter.cpp
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/VolumeInfoFilterParameter.cpp
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/DynamicChoiceFilterParameter.cpp
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/ComparisonFilterParameter.cpp
@@ -68,7 +88,30 @@ set(DREAM3DLib_FilterParameters_SRCS
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/MultiDataArraySelectionFilterParameter.cpp
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/DynamicTableFilterParameter.cpp
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/SeparatorFilterParameter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/StringFilterParameter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/IntFilterParameter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/DoubleFilterParameter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/InputFileFilterParameter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/InputPathFilterParameter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/OutputFileFilterParameter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/OutputPathFilterParameter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/BooleanFilterParameter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/IntVec3FilterParameter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/FloatVec3FilterParameter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/FloatVec4FilterParameter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/SecondOrderPolynomialFilterParameter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/ThirdOrderPolynomialFilterParameter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/FourthOrderPolynomialFilterParameter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/Symmetric6x6FilterParameter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/AxisAngleFilterParameter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/DataArraySelectionFilterParameter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/AttributeMatrixSelectionFilterParameter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/DataBundleSelectionFilterParameter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/DataContainerSelectionFilterParameter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/DataArrayCreationFilterParameter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/UnknownFilterParameter.cpp
 )
+
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/FilterParameters" "${DREAM3DLib_FilterParameters_HDRS}" "${DREAM3DLib_FilterParameters_SRCS}" "0")
 if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${DREAM3DLib_FilterParameters_HDRS}

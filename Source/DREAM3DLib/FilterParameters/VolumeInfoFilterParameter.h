@@ -41,29 +41,28 @@
 
 class DREAM3DLib_EXPORT VolumeInfoFilterParameter : public FilterParameter
 {
-  public:
-    DREAM3D_SHARED_POINTERS(VolumeInfoFilterParameter)
+public:
+  DREAM3D_SHARED_POINTERS(VolumeInfoFilterParameter)
     DREAM3D_STATIC_NEW_MACRO(VolumeInfoFilterParameter)
     DREAM3D_TYPE_MACRO_SUPER(VolumeInfoFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& dimsProperty,
-                       const QString& widgetType, const IntVec3_t& defaultValue,
-                       Category category,
-                       const QString& units = QString(""),
-                       const QString& resProperty = QString(""),
-                       int groupIndex = -1);
+    const QString& widgetType, const IntVec3_t& defaultValue,
+    Category category,
+    const QString& resProperty = QString(""),
+    int groupIndex = -1);
 
-    virtual ~VolumeInfoFilterParameter();
+  virtual ~VolumeInfoFilterParameter();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(DimensionsProperty)
+  DREAM3D_INSTANCE_STRING_PROPERTY(DimensionsProperty)
     DREAM3D_INSTANCE_STRING_PROPERTY(ResolutionProperty)
 
-  protected:
-    VolumeInfoFilterParameter();
+protected:
+  VolumeInfoFilterParameter();
 
-  private:
-    VolumeInfoFilterParameter(const VolumeInfoFilterParameter&); // Copy Constructor Not Implemented
-    void operator=(const VolumeInfoFilterParameter&); // Operator '=' Not Implemented
+private:
+  VolumeInfoFilterParameter(const VolumeInfoFilterParameter&); // Copy Constructor Not Implemented
+  void operator=(const VolumeInfoFilterParameter&); // Operator '=' Not Implemented
 };
 
 #endif /* _VolumeInfoFilterParameter_H_ */

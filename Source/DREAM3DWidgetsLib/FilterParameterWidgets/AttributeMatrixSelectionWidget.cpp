@@ -103,15 +103,7 @@ void AttributeMatrixSelectionWidget::setupGui()
     return;
   }
 
-  QString units = getFilterParameter()->getUnits();
-  if(units.isEmpty() == false)
-  {
-    label->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
-  }
-  else
-  {
-    label->setText(getFilterParameter()->getHumanLabel() );
-  }
+  label->setText(getFilterParameter()->getHumanLabel() );
 
 
   dataContainerCombo->blockSignals(true);

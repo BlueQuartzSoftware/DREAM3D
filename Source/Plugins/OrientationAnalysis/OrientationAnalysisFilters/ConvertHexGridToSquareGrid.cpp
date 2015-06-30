@@ -41,7 +41,8 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/ConvertHexGridToSquareGridFilterParameter.h"
+
 #include "DREAM3DLib/Utilities/FilePathGenerator.h"
 
 #include "EbsdLib/HKL/CtfReader.h"
@@ -86,7 +87,7 @@ void ConvertHexGridToSquareGrid::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FileSystemFilterParameter::New("Convert Hex Grid ANG Files", "HexGridStack", FilterParameterWidgetType::ConvertHexGridToSquareGridWidget, getHexGridStack(), FilterParameter::Parameter));
+  parameters.push_back(ConvertHexGridToSquareGridFilterParameter::New("Convert Hex Grid ANG Files", "HexGridStack", getHexGridStack(), FilterParameter::Parameter));
 
   setFilterParameters(parameters);
 }

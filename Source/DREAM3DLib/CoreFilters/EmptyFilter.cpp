@@ -38,6 +38,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/UnknownFilterParameter.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -68,7 +69,7 @@ void EmptyFilter::setupFilterParameters()
   ss << "The original filter '<b><i>" << getOriginalFilterName() << "</i></b>' was not loaded. ";
   ss << "Either a plugin with the original filter was not loaded or the original ";
   ss << "filter has been renamed.";
-  parameters.push_back(FilterParameter::New(str, "OriginalFilterName", FilterParameterWidgetType::UnknownWidget, getOriginalFilterName(), FilterParameter::Parameter, "Unknown Filter"));
+  parameters.push_back(UnknownFilterParameter::New(str, "OriginalFilterName", getOriginalFilterName(), FilterParameter::Parameter));
   setFilterParameters(parameters);
 }
 

@@ -55,7 +55,7 @@
 
 class QLabel;
 class QFSDropLabel;
-class FileSystemFilterParameter;
+class InputFileFilterParameter;
 
 /**
 * @brief
@@ -108,7 +108,7 @@ class DREAM3DWidgetsLib_EXPORT InputFileWidget : public FilterParameterWidget, p
     void parametersChanged();
 
   private:
-    FileSystemFilterParameter* m_FilterParameter;
+    InputFileFilterParameter* m_FilterParameter;
 
     static QString    m_OpenDialogLastDirectory;
     bool m_DidCausePreflight;

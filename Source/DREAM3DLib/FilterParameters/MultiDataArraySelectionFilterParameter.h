@@ -41,26 +41,26 @@
 
 class DREAM3DLib_EXPORT MultiDataArraySelectionFilterParameter : public FilterParameter
 {
-  public:
-    DREAM3D_SHARED_POINTERS(MultiDataArraySelectionFilterParameter)
+public:
+  DREAM3D_SHARED_POINTERS(MultiDataArraySelectionFilterParameter)
     DREAM3D_STATIC_NEW_MACRO(MultiDataArraySelectionFilterParameter)
     DREAM3D_TYPE_MACRO_SUPER(MultiDataArraySelectionFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const QString& widgetType, const QVector<DataArrayPath>& defaultPaths,
-                       Category category,
-                       int groupIndex = -1);
+    const QString& widgetType, const QVector<DataArrayPath>& defaultPaths,
+    Category category,
+    int groupIndex = -1);
 
-    virtual ~MultiDataArraySelectionFilterParameter();
+  virtual ~MultiDataArraySelectionFilterParameter();
 
-    DREAM3D_INSTANCE_PROPERTY(QVector<DataArrayPath>, DefaultPaths)
+  DREAM3D_INSTANCE_PROPERTY(QVector<DataArrayPath>, DefaultPaths)
 
-  protected:
-    MultiDataArraySelectionFilterParameter();
+protected:
+  MultiDataArraySelectionFilterParameter();
 
-  private:
-    MultiDataArraySelectionFilterParameter(const MultiDataArraySelectionFilterParameter&); // Copy Constructor Not Implemented
-    void operator=(const MultiDataArraySelectionFilterParameter&); // Operator '=' Not Implemented
+private:
+  MultiDataArraySelectionFilterParameter(const MultiDataArraySelectionFilterParameter&); // Copy Constructor Not Implemented
+  void operator=(const MultiDataArraySelectionFilterParameter&); // Operator '=' Not Implemented
 };
 
 #endif /* _MultiDataArraySelectionFilterParameter_H_ */

@@ -40,6 +40,7 @@
 #include "DREAM3DLib/Common/ThresholdFilterHelper.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/ComparisonFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
@@ -79,7 +80,7 @@ void MultiThresholdObjects::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(FilterParameter::New("Output Attribute Array", "DestinationArrayName", FilterParameterWidgetType::StringWidget, getDestinationArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(StringFilterParameter::New("Output Attribute Array", "DestinationArrayName", getDestinationArrayName(), FilterParameter::CreatedArray));
   setFilterParameters(parameters);
 }
 

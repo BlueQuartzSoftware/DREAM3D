@@ -40,8 +40,8 @@
 //
 // -----------------------------------------------------------------------------
 DataContainerReaderFilterParameter::DataContainerReaderFilterParameter() :
-  FileSystemFilterParameter(),
-  m_DefaultFlagValue(Qt::Checked)
+FilterParameter(),
+m_DefaultFlagValue(Qt::Checked)
 {
   setFileExtension(".dream3d");
   setFileType("");
@@ -57,22 +57,16 @@ DataContainerReaderFilterParameter::~DataContainerReaderFilterParameter()
 //
 // -----------------------------------------------------------------------------
 DataContainerReaderFilterParameter::Pointer DataContainerReaderFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-    const QString& widgetType, const QVariant& defaultValue,
-    Category category, int groupIndex)
+  const QVariant& defaultValue, Category category, int groupIndex)
 {
   DataContainerReaderFilterParameter::Pointer ptr = DataContainerReaderFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(ptr->getInputFileProperty());
-  ptr->setWidgetType(widgetType);
   ptr->setDefaultValue(defaultValue);
   ptr->setCategory(category);
-  ptr->setUnits("");
   ptr->setGroupIndex(groupIndex);
   ptr->setFileExtension(".dream3d");
   ptr->setFileType("");
-  if (ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
-  {
-    ptr->setReadOnly(true);
-  }
+
   return ptr;
 }

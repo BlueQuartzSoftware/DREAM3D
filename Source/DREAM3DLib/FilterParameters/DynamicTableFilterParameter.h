@@ -41,20 +41,19 @@
 
 class DREAM3DLib_EXPORT DynamicTableFilterParameter : public FilterParameter
 {
-  public:
-    DREAM3D_SHARED_POINTERS(DynamicTableFilterParameter)
+public:
+  DREAM3D_SHARED_POINTERS(DynamicTableFilterParameter)
     DREAM3D_STATIC_NEW_MACRO(DynamicTableFilterParameter)
     DREAM3D_TYPE_MACRO_SUPER(DynamicTableFilterParameter, FilterParameter)
 
-    static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const QString& widgetType, QStringList rHeaders,
-                       QStringList cHeaders, std::vector<std::vector<double> > defaultTable,
-                       FilterParameter::Category category, bool isRowsDynamic = true,
-                       bool isColsDynamic = true, int minRowCount = 0, int minColCount = 0);
+  static Pointer New(const QString& humanLabel, const QString& propertyName,
+                     QStringList rHeaders, QStringList cHeaders, std::vector<std::vector<double> > defaultTable,
+                     FilterParameter::Category category, bool isRowsDynamic = true, bool isColsDynamic = true,
+                     int minRowCount = 0, int minColCount = 0);
 
-    virtual ~DynamicTableFilterParameter();
+  virtual ~DynamicTableFilterParameter();
 
-    DREAM3D_INSTANCE_PROPERTY(int, DefaultRowCount)
+  DREAM3D_INSTANCE_PROPERTY(int, DefaultRowCount)
     DREAM3D_INSTANCE_PROPERTY(int, DefaultColCount)
     DREAM3D_INSTANCE_PROPERTY(QStringList, ColumnHeaders)
     DREAM3D_INSTANCE_PROPERTY(QStringList, RowHeaders)
@@ -66,12 +65,12 @@ class DREAM3DLib_EXPORT DynamicTableFilterParameter : public FilterParameter
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
     DREAM3D_INSTANCE_PROPERTY(QString, ErrorMessage)
 
-  protected:
-    DynamicTableFilterParameter();
+protected:
+  DynamicTableFilterParameter();
 
-  private:
-    DynamicTableFilterParameter(const DynamicTableFilterParameter&); // Copy Constructor Not Implemented
-    void operator=(const DynamicTableFilterParameter&); // Operator '=' Not Implemented
+private:
+  DynamicTableFilterParameter(const DynamicTableFilterParameter&); // Copy Constructor Not Implemented
+  void operator=(const DynamicTableFilterParameter&); // Operator '=' Not Implemented
 };
 
 #endif /* _DynamicTableFilterParameter_H_ */

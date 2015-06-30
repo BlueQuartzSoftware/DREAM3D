@@ -41,24 +41,24 @@
 
 class DREAM3DLib_EXPORT PreflightUpdatedValue : public FilterParameter
 {
-  public:
-    DREAM3D_SHARED_POINTERS(PreflightUpdatedValue)
+public:
+  DREAM3D_SHARED_POINTERS(PreflightUpdatedValue)
     DREAM3D_STATIC_NEW_MACRO(PreflightUpdatedValue)
     DREAM3D_TYPE_MACRO_SUPER(PreflightUpdatedValue, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const QString& widgetType, const QVariant& defaultValue,
-                       Category category,
-                       int groupIndex = -1);
+    const QString& widgetType, const QVariant& defaultValue,
+    Category category,
+    int groupIndex = -1);
 
-    virtual ~PreflightUpdatedValue();
+  virtual ~PreflightUpdatedValue();
 
-  protected:
-    PreflightUpdatedValue();
+protected:
+  PreflightUpdatedValue();
 
-  private:
-    PreflightUpdatedValue(const PreflightUpdatedValue&); // Copy Constructor Not Implemented
-    void operator=(const PreflightUpdatedValue&); // Operator '=' Not Implemented
+private:
+  PreflightUpdatedValue(const PreflightUpdatedValue&); // Copy Constructor Not Implemented
+  void operator=(const PreflightUpdatedValue&); // Operator '=' Not Implemented
 };
 
 #endif /* _PreflightUpdatedValue_H_ */

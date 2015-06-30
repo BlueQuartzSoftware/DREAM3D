@@ -37,27 +37,32 @@
 #ifndef _FileListInfoFilterParameter_H_
 #define _FileListInfoFilterParameter_H_
 
+#include <QtCore/QMetaType>
+#include <QtCore/QJsonObject>
+
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
 
 class DREAM3DLib_EXPORT FileListInfoFilterParameter : public FilterParameter
 {
-  public:
-    DREAM3D_SHARED_POINTERS(FileListInfoFilterParameter)
+public:
+  DREAM3D_SHARED_POINTERS(FileListInfoFilterParameter)
     DREAM3D_STATIC_NEW_MACRO(FileListInfoFilterParameter)
     DREAM3D_TYPE_MACRO_SUPER(FileListInfoFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const FileListInfo_t& defaultValue,
-                       Category category);
+                      const FileListInfo_t& defaultValue,
+                      Category category);
 
-    virtual ~FileListInfoFilterParameter();
+  virtual ~FileListInfoFilterParameter();
 
-  protected:
-    FileListInfoFilterParameter();
+protected:
+  FileListInfoFilterParameter();
 
-  private:
-    FileListInfoFilterParameter(const FileListInfoFilterParameter&); // Copy Constructor Not Implemented
-    void operator=(const FileListInfoFilterParameter&); // Operator '=' Not Implemented
+private:
+  FileListInfoFilterParameter(const FileListInfoFilterParameter&); // Copy Constructor Not Implemented
+  void operator=(const FileListInfoFilterParameter&); // Operator '=' Not Implemented
 };
 
 #endif /* _FileListInfoFilterParameter_H_ */

@@ -38,6 +38,9 @@
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+
+#include "DREAM3DLib/FilterParameters/BooleanFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
@@ -67,9 +70,9 @@ GenerateGeometryConnectivity::~GenerateGeometryConnectivity()
 void GenerateGeometryConnectivity::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Generate Per Vertex Element List", "GenerateVertexTriangleLists", FilterParameterWidgetType::BooleanWidget, getGenerateVertexTriangleLists(), FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Generate Element Neighbors List", "GenerateTriangleNeighbors", FilterParameterWidgetType::BooleanWidget, getGenerateTriangleNeighbors(), FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Data Container", "SurfaceDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getSurfaceDataContainerName(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(BooleanFilterParameter::New("Generate Per Vertex Element List", "GenerateVertexTriangleLists", getGenerateVertexTriangleLists(), FilterParameter::Parameter));
+  parameters.push_back(BooleanFilterParameter::New("Generate Element Neighbors List", "GenerateTriangleNeighbors", getGenerateTriangleNeighbors(), FilterParameter::Parameter));
+  parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container", "SurfaceDataContainerName", getSurfaceDataContainerName(), FilterParameter::RequiredArray));
   setFilterParameters(parameters);
 }
 

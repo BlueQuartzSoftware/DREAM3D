@@ -40,7 +40,7 @@
 //
 // -----------------------------------------------------------------------------
 DynamicChoiceFilterParameter::DynamicChoiceFilterParameter() :
-  FilterParameter()
+FilterParameter()
 {}
 
 // -----------------------------------------------------------------------------
@@ -53,10 +53,11 @@ DynamicChoiceFilterParameter::~DynamicChoiceFilterParameter()
 //
 // -----------------------------------------------------------------------------
 DynamicChoiceFilterParameter::Pointer DynamicChoiceFilterParameter::New(const QString& humanLabel,
-    const QString& propertyName,
-    const QVariant& defaultValue,
-    const QString& listProperty,
-    Category category, int groupIndex)
+  const QString& propertyName,
+  const QVariant& defaultValue,
+  const QString& listProperty,
+  Category category, const QString& units, 
+  int groupIndex)
 {
   DynamicChoiceFilterParameter::Pointer ptr = DynamicChoiceFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -64,7 +65,7 @@ DynamicChoiceFilterParameter::Pointer DynamicChoiceFilterParameter::New(const QS
   ptr->setWidgetType(FilterParameterWidgetType::DynamicChoiceWidget);
   ptr->setDefaultValue(defaultValue);
   ptr->setCategory(category);
-  ptr->setUnits("");
+  ptr->setUnits(units);
   ptr->setListProperty(listProperty);
   ptr->setGroupIndex(groupIndex);
   return ptr;

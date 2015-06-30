@@ -135,15 +135,7 @@ void VolumeDataContainerInfoWidget::setupGui()
   {
     return;
   }
-  QString units = m_FilterParameter->getUnits();
-  if(units.isEmpty() == false)
-  {
-    label->setText(m_FilterParameter->getHumanLabel() + " (" + units + ")");
-  }
-  else
-  {
-    label->setText(m_FilterParameter->getHumanLabel() );
-  }
+  label->setText(m_FilterParameter->getHumanLabel() );
 
   dataContainerList->blockSignals(true);
 

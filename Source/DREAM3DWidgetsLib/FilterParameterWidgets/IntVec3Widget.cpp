@@ -89,15 +89,8 @@ void IntVec3Widget::setupGui()
 
   if (getFilterParameter() != NULL)
   {
-    QString units = getFilterParameter()->getUnits();
-    if(units.isEmpty() == false)
-    {
-      IntVec3WidgetLabel->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
-    }
-    else
-    {
-      IntVec3WidgetLabel->setText(getFilterParameter()->getHumanLabel() );
-    }
+    IntVec3WidgetLabel->setText(getFilterParameter()->getHumanLabel() );
+
 
     IntVec3_t data = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<IntVec3_t>();
     xData->setText(QString::number(data.x) );

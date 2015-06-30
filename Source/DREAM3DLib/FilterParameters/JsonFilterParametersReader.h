@@ -53,8 +53,8 @@
  */
 class DREAM3DLib_EXPORT JsonFilterParametersReader : public AbstractFilterParametersReader
 {
-  public:
-    DREAM3D_SHARED_POINTERS(JsonFilterParametersReader)
+public:
+  DREAM3D_SHARED_POINTERS(JsonFilterParametersReader)
     DREAM3D_STATIC_NEW_MACRO(JsonFilterParametersReader)
     DREAM3D_TYPE_MACRO_SUPER(JsonFilterParametersReader, AbstractFilterParametersReader)
 
@@ -62,111 +62,111 @@ class DREAM3DLib_EXPORT JsonFilterParametersReader : public AbstractFilterParame
 
     virtual ~JsonFilterParametersReader();
 
-    /**
-    * @brief ReadPipelineFromFile Reads the Json formatted file and returns a FilterPipeline object
-    * that contains all the filters that could be found. If a filter can not be found then that filter is simply skipped.
-    * If the IObserver is NON-Null then an error message will be passed to it with an error message
-    * @param filePath The path to the INI formatted file
-    * @param format The format of the file which is anything that QSettings understands
-    * @param obs An IObserver object to report errors.
-    * @return Shared Pointer to a FilterPipeline Instance
-    */
-    static FilterPipeline::Pointer ReadPipelineFromFile(QString filePath, IObserver* obs = NULL);
+  /**
+  * @brief ReadPipelineFromFile Reads the Json formatted file and returns a FilterPipeline object
+  * that contains all the filters that could be found. If a filter can not be found then that filter is simply skipped.
+  * If the IObserver is NON-Null then an error message will be passed to it with an error message
+  * @param filePath The path to the INI formatted file
+  * @param format The format of the file which is anything that QSettings understands
+  * @param obs An IObserver object to report errors.
+  * @return Shared Pointer to a FilterPipeline Instance
+  */
+  static FilterPipeline::Pointer ReadPipelineFromFile(QString filePath, IObserver* obs = NULL);
 
-    /**
-     * @brief ReadNameOfPipelineFromFile
-     * @param filePath
-     * @param name Sets the name of the pipeline into this variable
-     * @param version Sets the DREAM3D Version into this variable.
-     * @param obs
-     * @return
-     */
-    static void ReadNameOfPipelineFromFile(QString filePath, QString& name, QString& version, IObserver* obs = NULL);
+  /**
+   * @brief ReadNameOfPipelineFromFile
+   * @param filePath
+   * @param name Sets the name of the pipeline into this variable
+   * @param version Sets the DREAM3D Version into this variable.
+   * @param obs
+   * @return
+   */
+  static void ReadNameOfPipelineFromFile(QString filePath, QString &name, QString &version, IObserver* obs = NULL);
 
-    /**
-     * @brief openFile
-     * @param filePath
-     * @return
-     */
-    int openFile(QString filePath);
+  /**
+   * @brief openFile
+   * @param filePath
+   * @return
+   */
+  int openFile(QString filePath);
 
-    /**
-     * @brief closeFile
-     */
-    void closeFile();
+  /**
+   * @brief closeFile
+   */
+  void closeFile();
 
-    /**
-     * @brief openFilterGroup
-     * @param unused
-     * @param index
-     * @return
-     */
-    virtual int openFilterGroup(AbstractFilter* unused, int index);
+  /**
+   * @brief openFilterGroup
+   * @param unused
+   * @param index
+   * @return
+   */
+  virtual int openFilterGroup(AbstractFilter* unused, int index);
 
-    /**
-     * @brief closeFilterGroup
-     * @return
-     */
-    virtual int closeFilterGroup();
+  /**
+   * @brief closeFilterGroup
+   * @return
+   */
+  virtual int closeFilterGroup();
 
-    int openGroup(QString key);
-    int closeGroup();
+  int openGroup(QString key);
+  int closeGroup();
 
-    virtual QString readString(const QString name, QString value);
-    virtual QVector<QString> readStrings(const QString name, QVector<QString> value);
+  virtual QString readString(const QString name, QString value);
+  virtual QVector<QString> readStrings(const QString name, QVector<QString> value);
 
-    virtual int8_t readValue(const QString name, int8_t value);
-    virtual int16_t readValue(const QString name, int16_t value);
-    virtual int32_t readValue(const QString name, int32_t value);
-    virtual int64_t readValue(const QString name, int64_t value);
-    virtual uint8_t readValue(const QString name, uint8_t value);
-    virtual uint16_t readValue(const QString name, uint16_t value);
-    virtual uint32_t readValue(const QString name, uint32_t value);
-    virtual uint64_t readValue(const QString name, uint64_t value);
-    virtual float readValue(const QString name, float def);
-    virtual double readValue(const QString name, double value);
-    virtual bool readValue(const QString name, bool value);
+  virtual int8_t readValue(const QString name, int8_t value);
+  virtual int16_t readValue(const QString name, int16_t value);
+  virtual int32_t readValue(const QString name, int32_t value);
+  virtual int64_t readValue(const QString name, int64_t value);
+  virtual uint8_t readValue(const QString name, uint8_t value);
+  virtual uint16_t readValue(const QString name, uint16_t value);
+  virtual uint32_t readValue(const QString name, uint32_t value);
+  virtual uint64_t readValue(const QString name, uint64_t value);
+  virtual float readValue(const QString name, float def);
+  virtual double readValue(const QString name, double value);
+  virtual bool readValue(const QString name, bool value);
 
-    virtual QVector<int8_t> readArray(const QString name, QVector<int8_t> value);
-    virtual QVector<int16_t> readArray(const QString name, QVector<int16_t> value);
-    virtual QVector<int32_t> readArray(const QString name, QVector<int32_t> value);
-    virtual QVector<int64_t> readArray(const QString name, QVector<int64_t> value);
-    virtual QVector<uint8_t> readArray(const QString name, QVector<uint8_t> value);
-    virtual QVector<uint16_t> readArray(const QString name, QVector<uint16_t> value);
-    virtual QVector<uint32_t> readArray(const QString name, QVector<uint32_t> value);
-    virtual QVector<uint64_t> readArray(const QString name, QVector<uint64_t> value);
-    virtual QVector<float> readArray(const QString name, QVector<float> value);
-    virtual QVector<double> readArray(const QString name, QVector<double> value);
+  virtual QVector<int8_t> readArray(const QString name, QVector<int8_t> value);
+  virtual QVector<int16_t> readArray(const QString name, QVector<int16_t> value);
+  virtual QVector<int32_t> readArray(const QString name, QVector<int32_t> value);
+  virtual QVector<int64_t> readArray(const QString name, QVector<int64_t> value);
+  virtual QVector<uint8_t> readArray(const QString name, QVector<uint8_t> value);
+  virtual QVector<uint16_t> readArray(const QString name, QVector<uint16_t> value);
+  virtual QVector<uint32_t> readArray(const QString name, QVector<uint32_t> value);
+  virtual QVector<uint64_t> readArray(const QString name, QVector<uint64_t> value);
+  virtual QVector<float> readArray(const QString name, QVector<float> value);
+  virtual QVector<double> readArray(const QString name, QVector<double> value);
 
 
-    virtual IntVec3_t readIntVec3(const QString name, IntVec3_t v);
-    virtual FloatVec3_t readFloatVec3(const QString name, FloatVec3_t v);
-    virtual FloatVec4_t readFloatVec4(const QString name, FloatVec4_t v);
-    virtual FloatVec21_t readFloatVec21(const QString name, FloatVec21_t v);
-    virtual Float2ndOrderPoly_t readFloat2ndOrderPoly(const QString name, Float2ndOrderPoly_t v);
-    virtual Float3rdOrderPoly_t readFloat3rdOrderPoly(const QString name, Float3rdOrderPoly_t v);
-    virtual Float4thOrderPoly_t readFloat4thOrderPoly(const QString name, Float4thOrderPoly_t v);
-    virtual FileListInfo_t readFileListInfo(const QString name, FileListInfo_t v);
-    virtual ComparisonInput_t readComparisonInput(const QString name, ComparisonInput_t v, int vectorPos);
-    virtual ComparisonInputs readComparisonInputs(const QString name, ComparisonInputs v);
-    virtual AxisAngleInput_t readAxisAngle(const QString name, AxisAngleInput_t v, int vectorPos = -1);
-    virtual QVector<AxisAngleInput_t> readAxisAngles(const QString name, QVector<AxisAngleInput_t> v);
-    virtual QSet<QString> readArraySelections(const QString name, QSet<QString> v);
+  virtual IntVec3_t readIntVec3(const QString name, IntVec3_t v);
+  virtual FloatVec3_t readFloatVec3(const QString name, FloatVec3_t v);
+  virtual FloatVec4_t readFloatVec4(const QString name, FloatVec4_t v);
+  virtual FloatVec21_t readFloatVec21(const QString name, FloatVec21_t v);
+  virtual Float2ndOrderPoly_t readFloat2ndOrderPoly(const QString name, Float2ndOrderPoly_t v);
+  virtual Float3rdOrderPoly_t readFloat3rdOrderPoly(const QString name, Float3rdOrderPoly_t v);
+  virtual Float4thOrderPoly_t readFloat4thOrderPoly(const QString name, Float4thOrderPoly_t v);
+  virtual FileListInfo_t readFileListInfo(const QString name, FileListInfo_t v);
+  virtual ComparisonInput_t readComparisonInput(const QString name, ComparisonInput_t v, int vectorPos);
+  virtual ComparisonInputs readComparisonInputs(const QString name, ComparisonInputs v);
+  virtual AxisAngleInput_t readAxisAngle(const QString name, AxisAngleInput_t v, int vectorPos = -1);
+  virtual QVector<AxisAngleInput_t> readAxisAngles(const QString name, QVector<AxisAngleInput_t> v);
+  virtual QSet<QString> readArraySelections(const QString name, QSet<QString> v);
 
-    virtual DataContainerArrayProxy readDataContainerArrayProxy(const QString& name, DataContainerArrayProxy v);
-    virtual DataArrayPath readDataArrayPath(const QString& name, DataArrayPath v);
-    virtual QVector<DataArrayPath> readDataArrayPathVector(const QString& name, QVector<DataArrayPath> def);
-    virtual DynamicTableData readDynamicTableData(const QString& name, DynamicTableData def);
+  virtual DataContainerArrayProxy readDataContainerArrayProxy(const QString& name, DataContainerArrayProxy v);
+  virtual DataArrayPath readDataArrayPath(const QString& name, DataArrayPath v);
+  virtual QVector<DataArrayPath> readDataArrayPathVector(const QString& name, QVector<DataArrayPath> def);
+  virtual DynamicTableData readDynamicTableData(const QString& name, DynamicTableData def);
 
-  protected:
-    JsonFilterParametersReader();
+protected:
+  JsonFilterParametersReader();
 
-  private:
-    QJsonObject m_Root;
-    QJsonObject m_CurrentFilterIndex;
+private:
+  QJsonObject m_Root;
+  QJsonObject m_CurrentFilterIndex;
 
-    JsonFilterParametersReader(const JsonFilterParametersReader&); // Copy Constructor Not Implemented
-    void operator=(const JsonFilterParametersReader&); // Operator '=' Not Implemented
+  JsonFilterParametersReader(const JsonFilterParametersReader&); // Copy Constructor Not Implemented
+  void operator=(const JsonFilterParametersReader&); // Operator '=' Not Implemented
 };
 
 #endif /* _QFilterParametersReader_H_ */

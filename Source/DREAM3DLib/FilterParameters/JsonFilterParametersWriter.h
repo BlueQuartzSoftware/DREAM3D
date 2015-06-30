@@ -64,7 +64,7 @@ class DREAM3DLib_EXPORT JsonFilterParametersWriter : public AbstractFilterParame
     DREAM3D_INSTANCE_PROPERTY(QString, FileName)
     DREAM3D_INSTANCE_PROPERTY(QString, PipelineName)
 
-    JsonFilterParametersWriter(QString& fileName, QString& pipelineName, int& numFilters);
+    JsonFilterParametersWriter(QString &fileName, QString &pipelineName, int &numFilters);
 
     virtual ~JsonFilterParametersWriter();
 
@@ -128,9 +128,9 @@ class DREAM3DLib_EXPORT JsonFilterParametersWriter : public AbstractFilterParame
     virtual int writeValue(const QString name, AxisAngleInput_t v);
 
     virtual int writeValue(const QString name, const DataArrayPath& v);
-    virtual int writeValue(const QString name, const QVector<DataArrayPath>& path);
+  virtual int writeValue(const QString name, const QVector<DataArrayPath>& path);
 
-    virtual int writeValue(const QString name, const DynamicTableData& v);
+  virtual int writeValue(const QString name, const DynamicTableData& v);
 
   protected:
     JsonFilterParametersWriter();

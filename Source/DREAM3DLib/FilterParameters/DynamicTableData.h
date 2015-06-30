@@ -52,125 +52,125 @@
 */
 class DREAM3DLib_EXPORT DynamicTableData : public QObject
 {
-    Q_OBJECT
+  Q_OBJECT
 
-  public:
-    DynamicTableData();
-    DynamicTableData(int nRows, int nCols);
-    DynamicTableData(int nRows, int nCols, QStringList rHeaders, QStringList cHeaders);
-    DynamicTableData(std::vector<std::vector<double> > data, QStringList rHeaders = QStringList(), QStringList cHeaders = QStringList());
+public:
+  DynamicTableData();
+  DynamicTableData(int nRows, int nCols);
+  DynamicTableData(int nRows, int nCols, QStringList rHeaders, QStringList cHeaders);
+  DynamicTableData(std::vector<std::vector<double> > data, QStringList rHeaders = QStringList(), QStringList cHeaders = QStringList());
 
-    virtual ~DynamicTableData();
+  virtual ~DynamicTableData();
 
-    /**
-    * @brief This deserializes a string of data and returns the original 2D array.
-    */
-    static std::vector<std::vector<double> > DeserializeData(QString dataStr, int nRows, int nCols, char delimiter);
+  /**
+  * @brief This deserializes a string of data and returns the original 2D array.
+  */
+  static std::vector<std::vector<double> > DeserializeData(QString dataStr, int nRows, int nCols, char delimiter);
 
-    /**
-    * @brief This does the reverse of the flattenData function.  It expands the data back into a 2D array.
-    */
-    static std::vector<std::vector<double> > ExpandData(std::vector<double> orig, int nRows, int nCols);
+  /**
+  * @brief This does the reverse of the flattenData function.  It expands the data back into a 2D array.
+  */
+  static std::vector<std::vector<double> > ExpandData(std::vector<double> orig, int nRows, int nCols);
 
-    /**
-    * @brief This deserializes a string of headers and returns the original QStringList.
-    */
-    static QStringList DeserializeHeaders(QString headersStr, char delimiter);
+  /**
+  * @brief This deserializes a string of headers and returns the original QStringList.
+  */
+  static QStringList DeserializeHeaders(QString headersStr, char delimiter);
 
-    /**
-    * @brief This returns a serialized string of the data, iterating through columns first.
-    */
-    QString serializeData(char delimiter) const;
+  /**
+  * @brief This returns a serialized string of the data, iterating through columns first.
+  */
+  QString serializeData(char delimiter) const;
 
-    /**
-    * @brief This returns a serialized string of the row headers list.
-    */
-    QString serializeRowHeaders(char delimiter) const;
+  /**
+  * @brief This returns a serialized string of the row headers list.
+  */
+  QString serializeRowHeaders(char delimiter) const;
 
-    /**
-    * @brief This returns a serialized string of the column headers list.
-    */
-    QString serializeColumnHeaders(char delimiter) const;
+  /**
+  * @brief This returns a serialized string of the column headers list.
+  */
+  QString serializeColumnHeaders(char delimiter) const;
 
-    /**
-    * @brief This returns a flattened vector of the data.
-    */
-    QVector<double> flattenData() const;
+  /**
+  * @brief This returns a flattened vector of the data.
+  */
+  QVector<double> flattenData() const;
 
-    /**
-    * @brief Writes the contents of the proxy to the json object 'json'
-    * @param json
-    * @return
-    */
-    void writeJson(QJsonObject& json) const;
+  /**
+  * @brief Writes the contents of the proxy to the json object 'json'
+  * @param json
+  * @return
+  */
+  void writeJson(QJsonObject &json) const;
 
-    /**
-    * @brief Reads the contents of the json object 'json' into the proxy
-    * @param json
-    * @return
-    */
-    bool readJson(QJsonObject& json);
+  /**
+  * @brief Reads the contents of the json object 'json' into the proxy
+  * @param json
+  * @return
+  */
+  bool readJson(QJsonObject &json);
 
-    /**
-    * @brief Table data getter and setter
-    */
-    std::vector<std::vector<double> > getTableData();
-    void setTableData(const std::vector<std::vector<double> > data);
+  /**
+  * @brief Table data getter and setter
+  */
+  std::vector<std::vector<double> > getTableData();
+  void setTableData(const std::vector<std::vector<double> > data);
 
-    /**
-    * @brief Row headers getter and setter
-    */
-    QStringList getRowHeaders() const;
-    void setRowHeaders(const QStringList& rHeaders);
+  /**
+  * @brief Row headers getter and setter
+  */
+  QStringList getRowHeaders() const;
+  void setRowHeaders(const QStringList &rHeaders);
 
-    /**
-    * @brief Column headers getter and setter
-    */
-    QStringList getColHeaders() const;
-    void setColHeaders(const QStringList& cHeaders);
+  /**
+  * @brief Column headers getter and setter
+  */
+  QStringList getColHeaders() const;
+  void setColHeaders(const QStringList &cHeaders);
 
-    /**
-    * @brief Calculates and returns the number of rows
-    */
-    int getNumRows() const;
+  /**
+  * @brief Calculates and returns the number of rows
+  */
+  int getNumRows() const;
 
-    /**
-    * @brief Calculates and returns the number of columns
-    */
-    int getNumCols() const;
+  /**
+  * @brief Calculates and returns the number of columns
+  */
+  int getNumCols() const;
 
-    /**
-    * @brief Checks if the DynamicTableData object is empty.
-    */
-    bool isEmpty();
+  /**
+  * @brief Checks if the DynamicTableData object is empty.
+  */
+  bool isEmpty();
 
-    DynamicTableData(const DynamicTableData& rhs);
-    void operator=(const DynamicTableData& rhs);
+  DynamicTableData(const DynamicTableData& rhs);
+  void operator=(const DynamicTableData& rhs);
 
-  private:
-    std::vector<std::vector<double> > m_TableData;
-    QStringList m_RowHeaders;
-    QStringList m_ColHeaders;
+private:
+  std::vector<std::vector<double> > m_TableData;
+  QStringList m_RowHeaders;
+  QStringList m_ColHeaders;
 
-    /**
-    * @brief Writes the contents of the data to a QJsonObject
-    * @param data
-    * @return QJsonArray
-    */
-    QJsonObject writeData() const;
+  /**
+  * @brief Writes the contents of the data to a QJsonObject
+  * @param data
+  * @return QJsonArray
+  */
+  QJsonObject writeData() const;
 
-    /**
-    * @brief Reads the contents of the QJsonObject into a 2D array
-    * @param object
-    * @return 2D array
-    */
-    std::vector<std::vector<double> > readData(QJsonObject object);
+  /**
+  * @brief Reads the contents of the QJsonObject into a 2D array
+  * @param object
+  * @return 2D array
+  */
+  std::vector<std::vector<double> > readData(QJsonObject object);
 
-    /**
-    * @brief Checks that the dimensions between all variables are the same.  If not, adjusts dimensions
-    * to match numRows and numCols.
-    */
-    void checkAndAdjustDimensions();
+  /**
+  * @brief Checks that the dimensions between all variables are the same.  If not, adjusts dimensions
+  * to match numRows and numCols.
+  */
+  void checkAndAdjustDimensions();
 };
 
 Q_DECLARE_METATYPE(DynamicTableData)

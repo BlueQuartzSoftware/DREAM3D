@@ -41,29 +41,29 @@
 
 class DREAM3DLib_EXPORT ShapeTypesFilterParameter : public FilterParameter
 {
-  public:
-    DREAM3D_SHARED_POINTERS(ShapeTypesFilterParameter)
+public:
+  DREAM3D_SHARED_POINTERS(ShapeTypesFilterParameter)
     DREAM3D_STATIC_NEW_MACRO(ShapeTypesFilterParameter)
     DREAM3D_TYPE_MACRO_SUPER(ShapeTypesFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const QString& widgetType, const QVariant& defaultValue,
-                       const QString& phaseTypeCountProperty,
-                       const QString& phaseTypeArrayPathProperty,
-                       Category category,
-                       int groupIndex = -1);
+    const QString& widgetType, const QVariant& defaultValue,
+    const QString& phaseTypeCountProperty,
+    const QString& phaseTypeArrayPathProperty,
+    Category category,
+    int groupIndex = -1);
 
-    virtual ~ShapeTypesFilterParameter();
+  virtual ~ShapeTypesFilterParameter();
 
-    DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeCountProperty)
+  DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeCountProperty)
     DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeArrayPathProperty)
 
-  protected:
-    ShapeTypesFilterParameter();
+protected:
+  ShapeTypesFilterParameter();
 
-  private:
-    ShapeTypesFilterParameter(const ShapeTypesFilterParameter&); // Copy Constructor Not Implemented
-    void operator=(const ShapeTypesFilterParameter&); // Operator '=' Not Implemented
+private:
+  ShapeTypesFilterParameter(const ShapeTypesFilterParameter&); // Copy Constructor Not Implemented
+  void operator=(const ShapeTypesFilterParameter&); // Operator '=' Not Implemented
 };
 
 #endif /* _ShapeTypesFilterParameter_H_ */

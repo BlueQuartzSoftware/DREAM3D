@@ -45,28 +45,28 @@
 // -----------------------------------------------------------------------------
 class DREAM3DLib_EXPORT LinkedChoicesFilterParameter : public ChoiceFilterParameter
 {
-  public:
-    DREAM3D_SHARED_POINTERS(LinkedChoicesFilterParameter)
+public:
+  DREAM3D_SHARED_POINTERS(LinkedChoicesFilterParameter)
     DREAM3D_STATIC_NEW_MACRO(LinkedChoicesFilterParameter)
     DREAM3D_TYPE_MACRO_SUPER(LinkedChoicesFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const QVariant& defaultValue,
-                       QVector<QString> choices,
-                       QStringList linkedProperties,
-                       Category category,
-                       int groupIndex = -1);
+    const QVariant& defaultValue,
+    QVector<QString> choices,
+    QStringList linkedProperties,
+    Category category,
+    int groupIndex = -1);
 
-    virtual ~LinkedChoicesFilterParameter();
+  virtual ~LinkedChoicesFilterParameter();
 
-    DREAM3D_INSTANCE_PROPERTY(QStringList, LinkedProperties)
+  DREAM3D_INSTANCE_PROPERTY(QStringList, LinkedProperties)
 
-  protected:
-    LinkedChoicesFilterParameter();
+protected:
+  LinkedChoicesFilterParameter();
 
-  private:
-    LinkedChoicesFilterParameter(const LinkedChoicesFilterParameter&); // Copy Constructor Not Implemented
-    void operator=(const LinkedChoicesFilterParameter&); // Operator '=' Not Implemented
+private:
+  LinkedChoicesFilterParameter(const LinkedChoicesFilterParameter&); // Copy Constructor Not Implemented
+  void operator=(const LinkedChoicesFilterParameter&); // Operator '=' Not Implemented
 };
 
 #endif /* _LinkedChoicesFilterParameter_H_ */

@@ -123,15 +123,7 @@ void ThirdOrderPolynomialWidget::setupGui()
 
   if (getFilterParameter() != NULL)
   {
-    QString units = getFilterParameter()->getUnits();
-    if(units.isEmpty() == false)
-    {
-      label->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
-    }
-    else
-    {
-      label->setText(getFilterParameter()->getHumanLabel() );
-    }
+    label->setText(getFilterParameter()->getHumanLabel() );
 
     Float3rdOrderPoly_t data = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<Float3rdOrderPoly_t>();
     c30->setText( QString::number(data.c30)  );

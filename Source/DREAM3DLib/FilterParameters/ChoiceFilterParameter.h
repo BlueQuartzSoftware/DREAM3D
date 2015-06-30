@@ -41,30 +41,29 @@
 
 class DREAM3DLib_EXPORT ChoiceFilterParameter : public FilterParameter
 {
-  public:
-    DREAM3D_SHARED_POINTERS(ChoiceFilterParameter)
+public:
+  DREAM3D_SHARED_POINTERS(ChoiceFilterParameter)
     DREAM3D_STATIC_NEW_MACRO(ChoiceFilterParameter)
     DREAM3D_TYPE_MACRO_SUPER(ChoiceFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const QVariant& defaultValue,
-                       QVector<QString> choices,
-                       bool editable,
-                       Category category,
-                       int groupIndex = -1);
+    const QVariant& defaultValue,
+    QVector<QString> choices,
+    bool editable,
+    Category category,
+    int groupIndex = -1);
 
-    virtual ~ChoiceFilterParameter();
+  virtual ~ChoiceFilterParameter();
 
-    DREAM3D_INSTANCE_PROPERTY(QVector<QString>, Choices)
+  DREAM3D_INSTANCE_PROPERTY(QVector<QString>, Choices)
     DREAM3D_INSTANCE_PROPERTY(bool, Editable)
 
-  protected:
-    ChoiceFilterParameter();
+protected:
+  ChoiceFilterParameter();
 
-  private:
-    ChoiceFilterParameter(const ChoiceFilterParameter&); // Copy Constructor Not Implemented
-    void operator=(const ChoiceFilterParameter&); // Operator '=' Not Implemented
+private:
+  ChoiceFilterParameter(const ChoiceFilterParameter&); // Copy Constructor Not Implemented
+  void operator=(const ChoiceFilterParameter&); // Operator '=' Not Implemented
 };
 
 #endif /* _ChoiceFilterParameter_H_ */
-

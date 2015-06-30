@@ -40,9 +40,9 @@
 //
 // -----------------------------------------------------------------------------
 VolumeInfoFilterParameter::VolumeInfoFilterParameter() :
-  FilterParameter(),
-  m_DimensionsProperty(""),
-  m_ResolutionProperty("")
+FilterParameter(),
+m_DimensionsProperty(""),
+m_ResolutionProperty("")
 {}
 
 // -----------------------------------------------------------------------------
@@ -55,10 +55,8 @@ VolumeInfoFilterParameter::~VolumeInfoFilterParameter()
 //
 // -----------------------------------------------------------------------------
 VolumeInfoFilterParameter::Pointer VolumeInfoFilterParameter::New(const QString& humanLabel, const QString& dimsProperty,
-    const QString& widgetType, const IntVec3_t& defaultValue,
-    Category category,
-    const QString& units,
-    const QString& resProperty, int groupIndex)
+  const QString& widgetType, const IntVec3_t& defaultValue,
+  Category category, const QString& resProperty, int groupIndex)
 {
   VolumeInfoFilterParameter::Pointer ptr = VolumeInfoFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -68,7 +66,6 @@ VolumeInfoFilterParameter::Pointer VolumeInfoFilterParameter::New(const QString&
   v.setValue(defaultValue);
   ptr->setDefaultValue(v);
   ptr->setCategory(category);
-  ptr->setUnits(units);
   ptr->setDimensionsProperty(dimsProperty);
   ptr->setResolutionProperty(resProperty);
   ptr->setReadOnly(true);

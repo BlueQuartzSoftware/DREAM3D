@@ -51,7 +51,7 @@
 //
 // -----------------------------------------------------------------------------
 JsonFilterParametersReader::JsonFilterParametersReader() :
-  AbstractFilterParametersReader()
+AbstractFilterParametersReader()
 {
 
 }
@@ -166,7 +166,7 @@ FilterPipeline::Pointer JsonFilterParametersReader::ReadPipelineFromFile(QString
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void JsonFilterParametersReader::ReadNameOfPipelineFromFile(QString filePath, QString& name, QString& version, IObserver* obs)
+void JsonFilterParametersReader::ReadNameOfPipelineFromFile(QString filePath, QString &name, QString &version, IObserver* obs)
 {
   QFileInfo fInfo(filePath);
 

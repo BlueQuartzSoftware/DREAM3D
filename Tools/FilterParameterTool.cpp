@@ -42,20 +42,18 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QMetaProperty>
+#include <QtCore/QTextStream>
+#include <QtCore/QDebug>
 
 // DREAM3DLib includes
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/DREAM3DLibVersion.h"
-#include "DREAM3DLib/Plugin/PluginManager.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/Common/FilterFactory.hpp"
-#include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
-#include "DREAM3DLib/Plugin/DREAM3DPluginLoader.h"
-#include "DREAM3DLib/CoreFilters/EmptyFilter.h"
-#include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/JsonFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/JsonFilterParametersReader.h"
+//#include "DREAM3DLib/DREAM3DLib.h"
+//#include "DREAM3DLib/DREAM3DLibVersion.h"
+//#include "DREAM3DLib/Plugin/PluginManager.h"
+//#include "DREAM3DLib/Common/FilterManager.h"
+//#include "DREAM3DLib/Common/FilterFactory.hpp"
+
+//#include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
+//#include "DREAM3DLib/Plugin/DREAM3DPluginLoader.h"
 
 #include "Tools/ToolConfiguration.h"
 
@@ -347,7 +345,7 @@ void fixInitializerList(QStringListIterator& sourceLines, QStringList& outLines,
   outLines.push_back("{");
 }
 
-
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -401,6 +399,7 @@ bool CorrectInitializerList( AbstractFilter::Pointer filter, const QString& hFil
 
   return didReplace;
 }
+#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -438,6 +437,7 @@ void fixFilterParameter(QStringListIterator& sourceLines, QStringList& outLines,
   outLines.push_back(final);
 }
 
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -828,6 +828,7 @@ bool GroupIncludes( AbstractFilter::Pointer filter, const QString& file)
 
   return didReplace;
 }
+#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -936,42 +937,20 @@ void ReplaceLicenseText(QString absPath)
   writeOutput(didReplace, outLines, absPath);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ProcessFile(const QString& path)
-{
-
-  FilterPipeline::Pointer pipeline = QFilterParametersReader::ReadPipelineFromFile(path, QSettings::IniFormat);
-
-  QFileInfo fi(path);
-
-  Observer obs;
-
-  QDir dir("/tmp/Converted_Pipelines");
-  dir.mkpath(".");
-
-  QString jsonPath = "/tmp/Converted_Pipelines/" + fi.baseName() + ".json";
-  QString name = fi.baseName();
-
-  int err = JsonFilterParametersWriter::WritePipelineToFile(pipeline, jsonPath, name, &obs);
-  if(err > -1)
-  {
-    std::cout << "Wrote new pipeline at " << jsonPath.toStdString() << std::endl;
-  }
-}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReplaceRecursively(QDir currentDir)
+void ReplaceLicenseCodeRecursively(QDir currentDir)
 {
 
   QStringList filters;
-  filters.append("*.ini");
+  filters.append("*.h");
+  filters.append("*.cpp");
+  filters.append("*.hpp");
+  filters.append("*.in");
 
-
-  if(currentDir.dirName().compare("zRel") == 0 || currentDir.dirName().compare("Build") == 0)
+  if(currentDir.dirName().compare("zRel")== 0 || currentDir.dirName().compare("Build") == 0)
   {
     return;
   }
@@ -981,7 +960,7 @@ void ReplaceRecursively(QDir currentDir)
   {
     foreach(QFileInfo fi, dirList)
     {
-      ReplaceRecursively( QDir( fi.absoluteFilePath() ));   // Recursive call
+      ReplaceLicenseCodeRecursively( QDir( fi.absoluteFilePath() ));   // Recursive call
     }
   }
 
@@ -989,12 +968,149 @@ void ReplaceRecursively(QDir currentDir)
   foreach(QFileInfo itemInfo, itemList)
   {
     QString itemFilePath = itemInfo.absoluteFilePath();
-    ProcessFile(itemFilePath);
+    ReplaceLicenseText(itemFilePath);
   }
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReplaceText(QString absPath)
+{
+  QString contents;
+  {
+    // Read the Source File
+    QFileInfo fi(absPath);
+    //    if (fi.baseName().compare("AddFavoriteWidget") != 0)
+    //    {
+    //      return;
+    //    }
 
+    QFile source(absPath);
+    source.open(QFile::ReadOnly);
+    contents = source.readAll();
+    source.close();
+  }
+
+  qDebug() << absPath;
+
+  QStringList names;
+  bool didReplace = false;
+
+  QVector<int> lines(0);
+
+
+  QString searchString = "@@@@INCLUDE";
+  QVector<QString> outLines;
+  QStringList list = contents.split(QRegExp("\\n"));
+  QStringListIterator sourceLines(list);
+  QStringList includes;
+
+  while (sourceLines.hasNext())
+  {
+    QString line = sourceLines.next();
+
+    if(line.startsWith(searchString))
+    {
+      QStringList tokens = line.split(" ");
+      includes.push_back(tokens[1] + " " + tokens[2]);
+      didReplace = true;
+      continue;
+    }
+    else
+    {
+      outLines.push_back(line);
+    }
+  }
+
+  list = outLines.toList();
+  outLines.resize(0);
+  QVector<QString> outVec;
+  sourceLines = QStringListIterator(list);
+  sourceLines.toFront();
+  searchString = QString("#include \"DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h\"");
+  while (sourceLines.hasNext())
+  {
+    QString line = sourceLines.next();
+
+    if(line.startsWith(searchString))
+    {
+      outVec.push_back(line);
+      outVec.push_back(includes.join("\n"));
+      continue;
+    }
+    else
+    {
+      outVec.push_back(line);
+    }
+  }
+
+
+  list = outVec.toList();
+  outVec.resize(0);
+  outVec.clear();
+  sourceLines = QStringListIterator(list);
+  sourceLines.toFront();
+  searchString = QString("#include \"DREAM3DLib/FilterParameters/");
+  while (sourceLines.hasNext())
+  {
+    QString line = sourceLines.next();
+
+    if(line.startsWith(searchString))
+    {
+      if(outVec.contains(line) == false)
+      {
+        outVec.push_back(line);
+      }
+      else
+      {
+        didReplace = true;
+      }
+      continue;
+    }
+    else
+    {
+      outVec.push_back(line);
+    }
+  }
+
+  writeOutput(didReplace, outVec, absPath);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReplaceGrepSearchesRecursively(QDir currentDir)
+{
+
+  QStringList filters;
+  filters.append("*.cpp");
+
+  if(currentDir.dirName().compare("zRel")== 0 || currentDir.dirName().compare("Build") == 0)
+  {
+    return;
+  }
+  // Get a list of all the directories
+  QFileInfoList dirList = currentDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
+  if ( dirList.size() > 0 )
+  {
+    foreach(QFileInfo fi, dirList)
+    {
+      ReplaceGrepSearchesRecursively( QDir( fi.absoluteFilePath() ));   // Recursive call
+    }
+  }
+
+  QFileInfoList itemList = currentDir.entryInfoList(filters);
+  foreach(QFileInfo itemInfo, itemList)
+  {
+    QString itemFilePath = itemInfo.absoluteFilePath();
+    ReplaceText(itemFilePath);
+  }
+}
+
+
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -1063,53 +1179,35 @@ void GenerateMarkDownDocs()
   }
 
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void CreateTableOfChangedFilters(const QString& path)
-{
-  FilterPipeline::Pointer pipeline = JsonFilterParametersReader::ReadPipelineFromFile(path);
-
-  FilterPipeline::FilterContainerType container = pipeline->getFilterContainer();
-  std::cout << "| Version 4 Name | Version 6 Name |" << std::endl;
-  std::cout << "|----------------|----------------|" << std::endl;
-  foreach(AbstractFilter::Pointer filter, container)
-  {
-    EmptyFilter* empty = qobject_cast<EmptyFilter*>(filter.get());
-
-    std::cout << "| " << empty->getOriginalFilterName().toStdString() << " |   |" << std::endl;
-  }
-}
+#endif
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
-  Q_ASSERT(false); // We don't want anyone to run this program.
+  Q_ASSERT(true); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");
   QCoreApplication::setOrganizationDomain("bluequartz.net");
   QCoreApplication::setApplicationName("FilterParameterTool");
 
-  std::cout << "FilterParameterTool Starting. Version " << DREAM3DLib::Version::PackageComplete().toStdString() << std::endl;
+  //std::cout << "FilterParameterTool Starting. Version " << DREAM3DLib::Version::PackageComplete().toStdString() << std::endl;
 
 
   // Register all the filters including trying to load those from Plugins
-  FilterManager* fm = FilterManager::Instance();
-  DREAM3DPluginLoader::LoadPluginFilters(fm);
+//  FilterManager* fm = FilterManager::Instance();
+//  DREAM3DPluginLoader::LoadPluginFilters(fm);
 
 
   // Send progress messages from PipelineBuilder to this object for display
-  qRegisterMetaType<PipelineMessage>();
+  //qRegisterMetaType<PipelineMessage>();
 
   //GenerateMarkDownDocs();
   //GenerateFilterParametersCode();
-  //ReplaceRecursively( QDir ( D3DTools::GetDREAM3DProjDir() ) );
-  //ReplaceRecursively( QDir ( "/Users/mjackson/Library/Preferences/DREAM3D_Favorites" ) );
-  // CreateTableOfChangedFilters( QString::fromLatin1("/Users/mjackson/Desktop/v6_Changed_Names.json"));
+  ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() ) );
+  ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins" ) );
 
   return 0;
 }

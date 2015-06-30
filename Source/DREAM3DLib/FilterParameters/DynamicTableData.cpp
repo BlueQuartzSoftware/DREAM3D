@@ -199,7 +199,7 @@ QString DynamicTableData::serializeData(char delimiter) const
       ss << m_TableData[row][col] << delimiter;
     }
   }
-  str.chop(1);  // Get rid of the last, unnecessary delimiter
+  str.chop(1);	// Get rid of the last, unnecessary delimiter
 
   return str;
 }
@@ -223,7 +223,7 @@ std::vector<std::vector<double> > DynamicTableData::DeserializeData(QString data
   while (tokenIndex >= 0)
   {
     tokenIndex = dataStr.indexOf(delimiter, start);
-    QString valueStr = dataStr.mid(start, tokenIndex - start);
+    QString valueStr = dataStr.mid(start, tokenIndex-start);
     double value = valueStr.toDouble();
     data[row][col] = value;
     start = tokenIndex + 1;
@@ -252,7 +252,7 @@ QString DynamicTableData::serializeRowHeaders(char delimiter) const
     ss << m_RowHeaders[i];
     ss << delimiter;
   }
-  str.chop(1);  // Get rid of the last, unnecessary delimiter
+  str.chop(1);	// Get rid of the last, unnecessary delimiter
 
   return str;
 }
@@ -270,7 +270,7 @@ QString DynamicTableData::serializeColumnHeaders(char delimiter) const
     ss << m_ColHeaders[i];
     ss << delimiter;
   }
-  str.chop(1);  // Get rid of the last, unnecessary delimiter
+  str.chop(1);	// Get rid of the last, unnecessary delimiter
 
   return str;
 }
@@ -309,12 +309,12 @@ QVector<double> DynamicTableData::flattenData() const
   int numRows = getNumRows();
   int numCols = getNumCols();
 
-  QVector<double> flat(numRows * numCols);
+  QVector<double> flat(numRows*numCols);
   for (int row = 0; row < numRows; row++)
   {
     for (int col = 0; col < numCols; col++)
     {
-      flat[row * numCols + col] = m_TableData[row][col];
+      flat[row*numCols + col] = m_TableData[row][col];
     }
   }
 
@@ -328,7 +328,7 @@ std::vector<std::vector<double> > DynamicTableData::ExpandData(std::vector<doubl
 {
   std::vector<std::vector<double> > expand(nRows, std::vector<double>(nCols));
 
-  if (orig.size() != nRows * nCols)
+  if (orig.size() != nRows*nCols)
   {
     // Something went wrong
     return expand;
@@ -338,7 +338,7 @@ std::vector<std::vector<double> > DynamicTableData::ExpandData(std::vector<doubl
   {
     for (int col = 0; col < nCols; col++)
     {
-      expand[row][col] = orig[row * nCols + col];
+      expand[row][col] = orig[row*nCols + col];
     }
   }
 
@@ -348,7 +348,7 @@ std::vector<std::vector<double> > DynamicTableData::ExpandData(std::vector<doubl
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DynamicTableData::writeJson(QJsonObject& json) const
+void DynamicTableData::writeJson(QJsonObject &json) const
 {
   json["Dynamic Table Data"] = writeData();
 
@@ -370,7 +370,7 @@ void DynamicTableData::writeJson(QJsonObject& json) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool DynamicTableData::readJson(QJsonObject& json)
+bool DynamicTableData::readJson(QJsonObject &json)
 {
   if (json["Dynamic Table Data"].isObject())
   {

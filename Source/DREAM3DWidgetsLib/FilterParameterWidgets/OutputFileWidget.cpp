@@ -40,7 +40,7 @@
 
 #include <QtWidgets/QFileDialog>
 
-#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/OutputFileFilterParameter.h"
 
 #include "QtSupportLib/QFileCompleter.h"
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
@@ -57,7 +57,7 @@ QString OutputFileWidget::m_OpenDialogLastDirectory = "";
 OutputFileWidget::OutputFileWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   FilterParameterWidget(parameter, filter, parent)
 {
-  m_FilterParameter = dynamic_cast<FileSystemFilterParameter*>(parameter);
+  m_FilterParameter = dynamic_cast<OutputFileFilterParameter*>(parameter);
   m_OpenDialogLastDirectory = QDir::homePath();
   setupUi(this);
   setupGui();
@@ -74,7 +74,7 @@ OutputFileWidget::~OutputFileWidget()
 // -----------------------------------------------------------------------------
 void OutputFileWidget::setFilterParameter(FilterParameter* value)
 {
-  m_FilterParameter = dynamic_cast<FileSystemFilterParameter*>(value);
+  m_FilterParameter = dynamic_cast<OutputFileFilterParameter*>(value);
 }
 
 // -----------------------------------------------------------------------------
@@ -110,15 +110,7 @@ void OutputFileWidget::setupGui()
 
   if (getFilterParameter() != NULL)
   {
-    QString units = getFilterParameter()->getUnits();
-    if(units.isEmpty() == false)
-    {
-      label->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
-    }
-    else
-    {
-      label->setText(getFilterParameter()->getHumanLabel() );
-    }
+    label->setText(getFilterParameter()->getHumanLabel() );
 
     QString currentPath = getFilter()->property(PROPERTY_NAME_AS_CHAR).toString();
     value->setText(currentPath);

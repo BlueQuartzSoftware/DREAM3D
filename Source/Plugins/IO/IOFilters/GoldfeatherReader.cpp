@@ -40,7 +40,8 @@
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/InputFileFilterParameter.h"
+
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "IO/IOConstants.h"
@@ -98,14 +99,14 @@ void GoldfeatherReader::setupFilterParameters()
   FilterParameterVector parameters;
   /*   For an input file use this code*/
 //  {
-//    FilterParameter::Pointer parameter = FileSystemFilterParameter::New();
+//    FilterParameter::Pointer parameter = FilterParameter::New();
 //    parameter->setHumanLabel("Input File");
 //    parameter->setPropertyName("InputFile");
 //    parameter->setWidgetType(FilterParameterWidgetType::InputFileWidget);
 //    ////parameter->setValueType("QString");
 //    parameters.push_back(parameter);
 //  }
-  parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), FilterParameter::Parameter, "", "*.jg"));
+  parameters.push_back(InputFileFilterParameter::New("Input File", "InputFile", getInputFile(), FilterParameter::Parameter, "*.jg"));
 
 
   parameters.push_back(FilterParameter::New("Surface DataContainer", "SurfaceDataContainerName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::CreatedArray, ""));

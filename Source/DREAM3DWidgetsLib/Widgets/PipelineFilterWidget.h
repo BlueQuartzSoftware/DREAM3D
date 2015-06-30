@@ -239,7 +239,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
      * @brief validateFileSystemFilterParameter
      * @param option
      */
-    void validateFileSystemFilterParameter(FilterParameter* option);
+    void validateFileSystemFilterParameter(FilterParameter* parameter);
 
     /**
      * @brief linkConditionalWidgets

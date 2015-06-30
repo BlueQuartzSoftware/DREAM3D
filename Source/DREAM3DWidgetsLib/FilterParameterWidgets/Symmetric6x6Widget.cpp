@@ -732,15 +732,7 @@ void Symmetric6x6Widget::setupGui()
 
   if (getFilterParameter() != NULL)
   {
-    QString units = getFilterParameter()->getUnits();
-    if(units.isEmpty() == false)
-    {
-      label->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
-    }
-    else
-    {
-      label->setText(getFilterParameter()->getHumanLabel() );
-    }
+    label->setText(getFilterParameter()->getHumanLabel() );
 
     FloatVec21_t data = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<FloatVec21_t>();
     v11->setText( QString::number(data.v11)  );

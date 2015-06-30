@@ -40,7 +40,7 @@
 //
 // -----------------------------------------------------------------------------
 ComparisonFilterParameter::ComparisonFilterParameter() :
-  m_ShowOperators(true) {}
+m_ShowOperators(true) {}
 
 // -----------------------------------------------------------------------------
 //
@@ -52,25 +52,17 @@ ComparisonFilterParameter::~ComparisonFilterParameter()
 //
 // -----------------------------------------------------------------------------
 ComparisonFilterParameter::Pointer ComparisonFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-    const QString& widgetType, const QVariant& defaultValue,
-    QVector<QString> choices,
-    bool showOperators,
-    Category category, int groupIndex)
+  const QVariant& defaultValue, QVector<QString> choices, bool showOperators, Category category, int groupIndex)
 
 {
   ComparisonFilterParameter::Pointer ptr = ComparisonFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
-  ptr->setWidgetType(widgetType);
   ptr->setDefaultValue(defaultValue);
   ptr->setCategory(category);
-  ptr->setUnits("");
   ptr->setChoices(choices);
   ptr->setShowOperators(showOperators);
   ptr->setGroupIndex(groupIndex);
-  if (ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
-  {
-    ptr->setReadOnly(true);
-  }
+
   return ptr;
 }
