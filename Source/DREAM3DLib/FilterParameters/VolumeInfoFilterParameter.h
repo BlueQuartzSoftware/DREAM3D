@@ -37,7 +37,7 @@
 #ifndef _VolumeInfoFilterParameter_H_
 #define _VolumeInfoFilterParameter_H_
 
-#include "DREAM3DLib/FilterParameters/FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/IntVec3FilterParameter.h"
 
 class DREAM3DLib_EXPORT VolumeInfoFilterParameter : public FilterParameter
 {

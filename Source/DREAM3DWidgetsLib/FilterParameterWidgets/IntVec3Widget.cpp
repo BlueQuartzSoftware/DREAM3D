@@ -36,6 +36,9 @@
 #include "IntVec3Widget.h"
 
 #include <QtCore/QMetaProperty>
+
+#include "DREAM3DLib/FilterParameters/IntVec3FilterParameter.h"
+
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"

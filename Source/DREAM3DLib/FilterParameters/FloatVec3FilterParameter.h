@@ -40,6 +40,31 @@
 
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
 
+typedef struct {
+  float x; float y; float z;
+
+  void writeJson(QJsonObject &json)
+  {
+    json["x"] = x;
+    json["y"] = y;
+    json["z"] = z;
+  }
+
+  bool readJson(QJsonObject &json)
+  {
+    if (json["x"].isDouble() && json["y"].isDouble() && json["z"].isDouble())
+    {
+      x = static_cast<float>(json["x"].toDouble());
+      y = static_cast<float>(json["y"].toDouble());
+      z = static_cast<float>(json["z"].toDouble());
+      return true;
+    }
+    return false;
+  }
+} FloatVec3_t;
+
+Q_DECLARE_METATYPE(FloatVec3_t)
+
 class DREAM3DLib_EXPORT FloatVec3FilterParameter : public FilterParameter
 {
 public:

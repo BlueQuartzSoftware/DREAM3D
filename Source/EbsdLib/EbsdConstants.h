@@ -39,6 +39,7 @@
 
 #include <QtCore/QString>
 #include <QtCore/QJsonObject>
+#include <QtCore/QMetaType>
 
 /**
  * @file EbsdConstants.h
@@ -74,6 +75,8 @@ typedef struct
   }
 
 } AxisAngleInput_t;
+
+Q_DECLARE_METATYPE(AxisAngleInput_t)
 
 namespace Ebsd
 {

@@ -38,6 +38,8 @@
 #include <QtCore/QMetaProperty>
 #include <QtCore/QSignalMapper>
 
+#include "DREAM3DLib/FilterParameters/Symmetric6x6FilterParameter.h"
+
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"

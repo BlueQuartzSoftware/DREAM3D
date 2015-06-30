@@ -45,6 +45,7 @@
 #include <QtCore/QUrl>
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
 
 #include "QtSupportLib/DREAM3DPluginFrame.h"
 

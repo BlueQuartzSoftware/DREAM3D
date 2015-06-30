@@ -42,6 +42,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/CoreFilters/FileReader.h"
+#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
 
 // our PIMPL private class
 class PhReaderPrivate;
