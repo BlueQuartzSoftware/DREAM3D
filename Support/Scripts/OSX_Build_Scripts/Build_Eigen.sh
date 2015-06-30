@@ -33,7 +33,7 @@ then
   DOWNLOAD_ARGS=""
 fi
 
-SDK_INSTALL=/Users/Shared/Toolkits
+SDK_INSTALL=/Users/Shared/DREAM3D_SDK
 
 cd $SDK_INSTALL
 
@@ -46,7 +46,7 @@ if [[ $CMAKE == "" ]];
 fi
 
 
-EIGEN_VERSION=3.2.2
+EIGEN_VERSION=3.2.5
 
 
 if [ ! -e "$SDK_INSTALL/Eigen-${EIGEN_VERSION}.tar.gz" ];
