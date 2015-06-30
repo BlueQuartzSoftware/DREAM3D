@@ -38,7 +38,7 @@
 
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
 
-class DREAM3DLib_EXPORT ConvertHexGridToSquareGridFilterParameter : public FilterParameter
+class ConvertHexGridToSquareGridFilterParameter : public FilterParameter
 {
 public:
   DREAM3D_SHARED_POINTERS(ConvertHexGridToSquareGridFilterParameter)

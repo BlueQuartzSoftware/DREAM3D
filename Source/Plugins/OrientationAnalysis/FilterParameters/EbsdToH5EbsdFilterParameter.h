@@ -38,7 +38,7 @@
 
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
 
-class DREAM3DLib_EXPORT EbsdToH5EbsdFilterParameter : public FilterParameter
+class EbsdToH5EbsdFilterParameter : public FilterParameter
 {
 public:
   DREAM3D_SHARED_POINTERS(EbsdToH5EbsdFilterParameter)
