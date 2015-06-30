@@ -47,7 +47,28 @@
 #include "DREAM3DLib/DataContainers/DataArrayPath.h"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 
+typedef struct {
+  int x; int y; int z;
 
+  void writeJson(QJsonObject &json)
+  {
+    json["x"] = x;
+    json["y"] = y;
+    json["z"] = z;
+  }
+
+  bool readJson(QJsonObject &json)
+  {
+    if (json["x"].isDouble() && json["y"].isDouble() && json["z"].isDouble())
+    {
+      x = json["x"].toInt();
+      y = json["y"].toInt();
+      z = json["z"].toInt();
+      return true;
+    }
+    return false;
+  }
+} IntVec3_t;
 
 typedef struct {
   float x; float y; float z;
@@ -351,7 +372,7 @@ FileListInfo_t;
 
 //typedef struct { float angle; float h; float k; float l; } AxisAngleInput_t;
 
-
+Q_DECLARE_METATYPE(IntVec3_t)
 Q_DECLARE_METATYPE(FloatVec3_t)
 Q_DECLARE_METATYPE(FloatVec4_t)
 Q_DECLARE_METATYPE(FloatVec21_t)
