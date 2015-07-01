@@ -183,6 +183,15 @@ void DREAM3DSettings::remove(const QString& key)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void DREAM3DSettings::clear()
+{
+  m_Stack.first()->group = QJsonObject();
+  writeToFile();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QVariant DREAM3DSettings::value(const QString& key, const QVariant& defaultValue)
 {
   if (m_Stack.top()->group.contains(key) == false)

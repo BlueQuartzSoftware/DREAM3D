@@ -83,6 +83,8 @@ class QtSupportLib_EXPORT DREAM3DSettings : public QObject
 
     void remove(const QString& key);
 
+    void clear();
+
     QVariant value(const QString& key, const QVariant& defaultValue = QVariant());
     QJsonObject value(const QString& key, const QJsonObject& defaultObject = QJsonObject());
     QStringList value(const QString& key, const QStringList& defaultList = QStringList());

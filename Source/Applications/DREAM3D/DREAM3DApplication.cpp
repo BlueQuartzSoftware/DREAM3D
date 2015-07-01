@@ -101,6 +101,15 @@ DREAM3DApplication::~DREAM3DApplication()
 {
   delete this->Splash;
   this->Splash = NULL;
+
+  DREAM3DSettings prefs;
+  if (prefs.value("Program Mode", "") == "Clear Cache")
+  {
+    prefs.clear();
+    prefs.setValue("First Run", false);
+
+    prefs.setValue("Program Mode", "Standard");
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -1187,6 +1196,30 @@ void DREAM3DApplication::on_actionShowIssues_triggered(bool visible)
     {
       m_ActiveWindow->updateAndSyncDockWidget(actionShowIssues, issuesDockWidget, visible);
     }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DApplication::on_actionClearCache_triggered()
+{
+  QMessageBox msgBox;
+  msgBox.setWindowTitle("Clear DREAM3D Cache");
+  msgBox.setText("Clearing the DREAM3D cache will clear the bookmarks dock and DREAM3D window settings, and will restore DREAM3D back to its default settings on the program's next run.");
+  msgBox.setInformativeText("Would you like to clear the DREAM3D cache?");
+  msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+  msgBox.setDefaultButton(QMessageBox::Yes);
+  int response = msgBox.exec();
+
+  if (response == QMessageBox::Yes)
+  {
+    DREAM3DSettings prefs;
+
+    // Set a flag in the preferences file, so that we know that we are in "Clear Cache" mode
+    prefs.setValue("Program Mode", "Clear Cache");
+
+    m_ActiveWindow->getPipelineViewWidget()->getStatusBar()->showMessage("The cache has been cleared successfully.  Please restart DREAM3D.");
   }
 }
 

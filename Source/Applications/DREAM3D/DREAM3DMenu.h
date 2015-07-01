@@ -120,6 +120,8 @@ class DREAM3DMenu : public QObject
 
     // Help Menu
     QMenu*                          m_MenuHelp;
+    QMenu*                          m_MenuAdvanced;
+    QAction*                        m_ActionClearCache;
     QAction*                        m_ActionShowDREAM3DHelp;
     QAction*                        m_ActionCheckForUpdates;
     QAction*                        m_ActionAboutDREAM3D;
