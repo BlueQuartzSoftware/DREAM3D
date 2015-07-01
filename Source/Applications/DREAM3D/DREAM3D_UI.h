@@ -167,11 +167,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void updateAndSyncDockWidget(QAction* action, QDockWidget* dock, bool b);
 
     /**
-     * @brief versionCheckReply
-     */
-    void versionCheckReply(UpdateCheckData*);
-
-    /**
     * @brief Reads the preferences from the users pref file
     */
     void readSettings();
@@ -212,6 +207,11 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     * @param w
     */
     void setStatusBarMessage(const QString& msg);
+
+    /**
+    * @brief versionCheckReply
+    */
+    void versionCheckReply(UpdateCheckData*);
 
   protected slots:
 
