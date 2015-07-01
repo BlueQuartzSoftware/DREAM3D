@@ -96,6 +96,7 @@ set(PREBUILT_PIPELINE_NAMES
  "Synthetic/(03) Single Cubic Phase Rolled"
  "Synthetic/(04) Two Phase Cubic Hexagonal Particles Equiaxed"
  "Synthetic/(05) Composite"
+ "Synthetic/(06) SmallIN100 Synthetic"
 )
 
 configure_file(${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.h.in
