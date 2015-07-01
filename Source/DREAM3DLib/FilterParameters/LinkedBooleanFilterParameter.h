@@ -47,7 +47,7 @@ public:
     DREAM3D_TYPE_MACRO_SUPER(LinkedBooleanFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-    const QVariant& defaultValue,
+    const bool& defaultValue,
     QStringList conditionalProperties,
     Category category,
     int groupIndex = -1);

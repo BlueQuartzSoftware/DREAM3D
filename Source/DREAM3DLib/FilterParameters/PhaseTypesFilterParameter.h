@@ -49,7 +49,7 @@ public:
     static Pointer New(const QString& humanLabel,
     const QString& PhaseTypesArrayName,
     const QString& phaseTypeCountProperty,
-    const QString& phaseTYpeDataProperty,
+    const QString& phaseTypeDataProperty,
     const QString& attributeMatrixProperty,
     const DataArrayPath attributeMatrixDefault,
     Category category,

@@ -52,7 +52,7 @@ DoubleFilterParameter::~DoubleFilterParameter()
 //
 // -----------------------------------------------------------------------------
 DoubleFilterParameter::Pointer DoubleFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QVariant& defaultValue, Category category, int groupIndex)
+  const double& defaultValue, Category category, int groupIndex)
 {
 
   DoubleFilterParameter::Pointer ptr = DoubleFilterParameter::New();

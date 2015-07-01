@@ -52,7 +52,7 @@ DataBundleSelectionFilterParameter::~DataBundleSelectionFilterParameter()
 //
 // -----------------------------------------------------------------------------
 DataBundleSelectionFilterParameter::Pointer DataBundleSelectionFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QVariant& defaultValue, Category category, int groupIndex)
+  const QString& defaultValue, Category category, int groupIndex)
 {
   DataBundleSelectionFilterParameter::Pointer ptr = DataBundleSelectionFilterParameter::New();
   ptr->setHumanLabel(humanLabel);

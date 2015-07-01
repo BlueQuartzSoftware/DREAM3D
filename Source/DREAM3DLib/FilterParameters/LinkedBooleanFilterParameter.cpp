@@ -53,7 +53,7 @@ LinkedBooleanFilterParameter::~LinkedBooleanFilterParameter()
 //
 // -----------------------------------------------------------------------------
 LinkedBooleanFilterParameter::Pointer LinkedBooleanFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QVariant& defaultValue,
+  const bool& defaultValue,
   QStringList conditionalProperties,
   Category category, int groupIndex)
 {

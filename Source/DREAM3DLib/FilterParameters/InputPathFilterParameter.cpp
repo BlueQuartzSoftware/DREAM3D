@@ -52,7 +52,7 @@ InputPathFilterParameter::~InputPathFilterParameter()
 //
 // -----------------------------------------------------------------------------
 InputPathFilterParameter::Pointer InputPathFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QVariant& defaultValue, Category category, const QString& fileExtension,
+  const QString& defaultValue, Category category, const QString& fileExtension,
   const QString& fileType, int groupIndex)
 {
   InputPathFilterParameter::Pointer ptr = InputPathFilterParameter::New();

@@ -53,7 +53,7 @@ ChoiceFilterParameter::~ChoiceFilterParameter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ChoiceFilterParameter::Pointer ChoiceFilterParameter::New(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue,
+ChoiceFilterParameter::Pointer ChoiceFilterParameter::New(const QString& humanLabel, const QString& propertyName, const int& defaultValue,
   QVector<QString> choices,
   bool editable,
   Category category, int groupIndex)

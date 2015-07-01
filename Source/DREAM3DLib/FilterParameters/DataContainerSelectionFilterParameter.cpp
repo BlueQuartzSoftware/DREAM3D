@@ -52,7 +52,7 @@ DataContainerSelectionFilterParameter::~DataContainerSelectionFilterParameter()
 //
 // -----------------------------------------------------------------------------
 DataContainerSelectionFilterParameter::Pointer DataContainerSelectionFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QVariant& defaultValue, Category category, int groupIndex)
+  const QString& defaultValue, Category category, int groupIndex)
 {
 
   DataContainerSelectionFilterParameter::Pointer ptr = DataContainerSelectionFilterParameter::New();

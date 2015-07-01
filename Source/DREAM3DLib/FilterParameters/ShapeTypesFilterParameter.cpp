@@ -52,7 +52,7 @@ ShapeTypesFilterParameter::~ShapeTypesFilterParameter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ShapeTypesFilterParameter::Pointer ShapeTypesFilterParameter::New(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue,
+ShapeTypesFilterParameter::Pointer ShapeTypesFilterParameter::New(const QString& humanLabel, const QString& propertyName, const QString& defaultValue,
   const QString& phaseTypeCountProperty,
   const QString& phaseTypeArrayPathProperty,
   Category category, int groupIndex)

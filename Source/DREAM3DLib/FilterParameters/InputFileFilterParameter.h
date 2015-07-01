@@ -46,7 +46,7 @@ public:
     DREAM3D_TYPE_MACRO(InputFileFilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-    const QVariant& defaultValue, Category category,
+    const QString& defaultValue, Category category,
     const QString& fileExtension = QString(""),
     const QString& fileType = QString(""),
     int groupIndex = -1);

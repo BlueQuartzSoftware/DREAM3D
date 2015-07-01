@@ -55,7 +55,7 @@ DataContainerArrayProxyFilterParameter::~DataContainerArrayProxyFilterParameter(
 //
 // -----------------------------------------------------------------------------
 DataContainerArrayProxyFilterParameter::Pointer DataContainerArrayProxyFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QVariant& defaultValue, DataContainerArrayProxy proxy, Qt::CheckState defValue, Category category, int groupIndex)
+  const QString& defaultValue, DataContainerArrayProxy proxy, Qt::CheckState defValue, Category category, int groupIndex)
 {
   DataContainerArrayProxyFilterParameter::Pointer ptr = DataContainerArrayProxyFilterParameter::New();
   ptr->setHumanLabel(humanLabel);

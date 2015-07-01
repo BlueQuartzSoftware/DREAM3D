@@ -46,7 +46,7 @@ public:
     DREAM3D_TYPE_MACRO(DataContainerSelectionFilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-    const QVariant& defaultValue, Category category,
+    const QString& defaultValue, Category category,
      int groupIndex = -1);
 
     virtual ~DataContainerSelectionFilterParameter();

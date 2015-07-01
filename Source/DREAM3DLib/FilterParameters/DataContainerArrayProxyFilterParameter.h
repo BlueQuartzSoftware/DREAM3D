@@ -47,7 +47,7 @@ public:
     DREAM3D_TYPE_MACRO_SUPER(DataContainerArrayProxyFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-                        const QVariant& defaultValue, DataContainerArrayProxy proxy,
+    const QString& defaultValue, DataContainerArrayProxy proxy,
                         Qt::CheckState defState, Category category, int groupIndex = -1);
 
   virtual ~DataContainerArrayProxyFilterParameter();

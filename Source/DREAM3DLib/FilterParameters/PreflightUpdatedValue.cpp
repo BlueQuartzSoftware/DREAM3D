@@ -52,7 +52,7 @@ PreflightUpdatedValue::~PreflightUpdatedValue()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PreflightUpdatedValue::Pointer PreflightUpdatedValue::New(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue,
+PreflightUpdatedValue::Pointer PreflightUpdatedValue::New(const QString& humanLabel, const QString& propertyName, const int& defaultValue,
   Category category, int groupIndex)
 {
   PreflightUpdatedValue::Pointer ptr = PreflightUpdatedValue::New();

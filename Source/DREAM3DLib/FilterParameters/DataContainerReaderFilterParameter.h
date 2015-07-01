@@ -48,7 +48,7 @@ class DREAM3DLib_EXPORT DataContainerReaderFilterParameter : public FilterParame
     DREAM3D_TYPE_MACRO_SUPER(DataContainerReaderFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const QVariant& defaultValue, Category category, int groupIndex = -1);
+                       const QString& defaultValue, Category category, int groupIndex = -1);
 
     virtual ~DataContainerReaderFilterParameter();
 

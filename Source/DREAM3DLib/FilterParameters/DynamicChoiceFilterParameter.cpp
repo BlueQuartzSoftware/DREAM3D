@@ -54,7 +54,7 @@ DynamicChoiceFilterParameter::~DynamicChoiceFilterParameter()
 // -----------------------------------------------------------------------------
 DynamicChoiceFilterParameter::Pointer DynamicChoiceFilterParameter::New(const QString& humanLabel,
   const QString& propertyName,
-  const QVariant& defaultValue,
+  const QString& defaultValue,
   const QString& listProperty,
   Category category,
   int groupIndex)

@@ -46,7 +46,7 @@ public:
     DREAM3D_TYPE_MACRO(IntFilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-    const QVariant& defaultValue, Category category,
+    const int& defaultValue, Category category,
      int groupIndex = -1);
 
     virtual ~IntFilterParameter();

@@ -54,7 +54,7 @@ LinkedChoicesFilterParameter::~LinkedChoicesFilterParameter()
 //
 // -----------------------------------------------------------------------------
 LinkedChoicesFilterParameter::Pointer LinkedChoicesFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QVariant& defaultValue,
+  const int& defaultValue,
   QVector<QString> choices,
   QStringList linkedProperties,
   Category category, int groupIndex)

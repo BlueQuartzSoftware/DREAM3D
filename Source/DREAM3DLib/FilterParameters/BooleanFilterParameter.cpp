@@ -52,7 +52,7 @@ BooleanFilterParameter::~BooleanFilterParameter()
 //
 // -----------------------------------------------------------------------------
 BooleanFilterParameter::Pointer BooleanFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QVariant& defaultValue, Category category, const QString& units, int groupIndex)
+  const bool& defaultValue, Category category, const QString& units, int groupIndex)
 {
 
   BooleanFilterParameter::Pointer ptr = BooleanFilterParameter::New();

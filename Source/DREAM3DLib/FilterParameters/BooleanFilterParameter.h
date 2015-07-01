@@ -46,7 +46,7 @@ public:
     DREAM3D_TYPE_MACRO(BooleanFilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-    const QVariant& defaultValue, Category category,
+    const bool& defaultValue, Category category,
     const QString& units = "", int groupIndex = -1);
 
     virtual ~BooleanFilterParameter();

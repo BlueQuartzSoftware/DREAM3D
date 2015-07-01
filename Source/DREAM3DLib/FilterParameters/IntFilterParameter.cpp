@@ -52,7 +52,7 @@ IntFilterParameter::~IntFilterParameter()
 //
 // -----------------------------------------------------------------------------
 IntFilterParameter::Pointer IntFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QVariant& defaultValue, Category category, int groupIndex)
+  const int& defaultValue, Category category, int groupIndex)
 {
 
   IntFilterParameter::Pointer ptr = IntFilterParameter::New();

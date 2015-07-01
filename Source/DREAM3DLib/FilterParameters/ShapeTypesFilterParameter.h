@@ -47,7 +47,7 @@ public:
     DREAM3D_TYPE_MACRO_SUPER(ShapeTypesFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-     const QVariant& defaultValue,
+     const QString& defaultValue,
     const QString& phaseTypeCountProperty,
     const QString& phaseTypeArrayPathProperty,
     Category category,

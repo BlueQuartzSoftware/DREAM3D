@@ -52,7 +52,7 @@ OutputPathFilterParameter::~OutputPathFilterParameter()
 //
 // -----------------------------------------------------------------------------
 OutputPathFilterParameter::Pointer OutputPathFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QVariant& defaultValue, Category category, const QString& fileExtension,
+  const QString& defaultValue, Category category, const QString& fileExtension,
   const QString& fileType, int groupIndex)
 {
   OutputPathFilterParameter::Pointer ptr = OutputPathFilterParameter::New();

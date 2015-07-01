@@ -52,7 +52,7 @@ ComparisonFilterParameter::~ComparisonFilterParameter()
 //
 // -----------------------------------------------------------------------------
 ComparisonFilterParameter::Pointer ComparisonFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QVariant& defaultValue, QVector<QString> choices, bool showOperators, Category category, int groupIndex)
+  const QString& defaultValue, QVector<QString> choices, bool showOperators, Category category, int groupIndex)
 
 {
   ComparisonFilterParameter::Pointer ptr = ComparisonFilterParameter::New();

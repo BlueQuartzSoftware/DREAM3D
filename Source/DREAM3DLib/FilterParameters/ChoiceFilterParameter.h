@@ -47,7 +47,7 @@ public:
     DREAM3D_TYPE_MACRO_SUPER(ChoiceFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-    const QVariant& defaultValue,
+    const int& defaultValue,
     QVector<QString> choices,
     bool editable,
     Category category,
