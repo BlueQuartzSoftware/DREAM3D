@@ -46,6 +46,7 @@
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/FilterParameters/BooleanFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
@@ -94,6 +95,8 @@ class DREAM3DWidgetsLib_EXPORT BooleanWidget : public FilterParameterWidget, pri
   private:
 
     bool m_DidCausePreflight;
+
+    BooleanFilterParameter*  m_FilterParameter;
 
 
     BooleanWidget(const BooleanWidget&); // Copy Constructor Not Implemented

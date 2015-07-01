@@ -43,6 +43,7 @@
 
 #include "QtSupportLib/FaderWidget.h"
 
+#include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"

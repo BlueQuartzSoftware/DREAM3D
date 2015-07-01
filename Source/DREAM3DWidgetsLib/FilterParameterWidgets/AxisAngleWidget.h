@@ -45,6 +45,7 @@
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/FilterParameters/AxisAngleFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
@@ -92,6 +93,8 @@ class DREAM3DWidgetsLib_EXPORT AxisAngleWidget : public FilterParameterWidget, p
   private:
 
     bool m_DidCausePreflight;
+
+    AxisAngleFilterParameter*  m_FilterParameter;
 
 
     AxisAngleWidget(const AxisAngleWidget&); // Copy Constructor Not Implemented

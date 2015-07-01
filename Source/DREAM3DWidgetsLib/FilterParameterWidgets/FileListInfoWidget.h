@@ -47,6 +47,7 @@
 #include "EbsdLib/EbsdConstants.h"
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/FilterParameters/FileListInfoFilterParameter.h"
 
 #include "QtSupportLib/DREAM3DPluginFrame.h"
 
@@ -68,7 +69,7 @@
  * @date Jan 30, 2011
  * @version 1.0
  */
-class FileListInfoWidget : public FilterParameterWidget, private Ui::FileListInfoWidget
+class DREAM3DWidgetsLib_EXPORT FileListInfoWidget : public FilterParameterWidget, private Ui::FileListInfoWidget
 {
     Q_OBJECT
 
