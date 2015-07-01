@@ -68,7 +68,7 @@
 // -----------------------------------------------------------------------------
 GenerateEnsembleStatistics::GenerateEnsembleStatistics()  :
   AbstractFilter(),
-  m_CellEnsembleAttributeMatrixPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::EnsembleAttributeMatrixName, ""),
+  m_CellEnsembleAttributeMatrixPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, ""),
   m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
   m_NeighborListArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, DREAM3D::FeatureData::NeighborList),
   m_SharedSurfaceAreaListArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, DREAM3D::FeatureData::SharedSurfaceAreaList),
@@ -79,7 +79,7 @@ GenerateEnsembleStatistics::GenerateEnsembleStatistics()  :
   m_AspectRatiosArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, DREAM3D::FeatureData::AspectRatios),
   m_Omega3sArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, DREAM3D::FeatureData::Omega3s),
   m_AxisEulerAnglesArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, DREAM3D::FeatureData::AxisEulerAngles),
-  m_CrystalStructuresArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::EnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
+  m_CrystalStructuresArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
   m_SurfaceFeaturesArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, DREAM3D::FeatureData::SurfaceFeatures),
   m_VolumesArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, DREAM3D::FeatureData::Volumes),
   m_FeatureEulerAnglesArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, DREAM3D::FeatureData::EulerAngles),
