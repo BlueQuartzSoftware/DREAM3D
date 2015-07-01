@@ -96,7 +96,7 @@ class DREAM3DWidgetsLib_EXPORT SeparatorWidget : public FilterParameterWidget, p
 
   private:
 
-
+    SeparatorFilterParameter* m_FilterParameter;
 
     SeparatorWidget(const SeparatorWidget&); // Copy Constructor Not Implemented
     void operator=(const SeparatorWidget&); // Operator '=' Not Implemented

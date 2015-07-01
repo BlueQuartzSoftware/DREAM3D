@@ -122,6 +122,8 @@ class DREAM3DWidgetsLib_EXPORT DataContainerSelectionWidget : public FilterParam
 
     DataContainerArrayProxy m_DcaProxy;
 
+    DataContainerSelectionFilterParameter* m_FilterParameter;
+
     DataContainerSelectionWidget(const DataContainerSelectionWidget&); // Copy Constructor Not Implemented
     void operator=(const DataContainerSelectionWidget&); // Operator '=' Not Implemented
 

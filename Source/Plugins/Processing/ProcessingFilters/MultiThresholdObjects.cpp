@@ -41,7 +41,7 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/ComparisonFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/ComparisonSelectionFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "Processing/ProcessingConstants.h"
@@ -72,7 +72,7 @@ void MultiThresholdObjects::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
+    ComparisonSelectionFilterParameter::Pointer parameter = ComparisonSelectionFilterParameter::New();
     parameter->setHumanLabel("Select Arrays to Threshold");
     parameter->setPropertyName("SelectedThresholds");
     

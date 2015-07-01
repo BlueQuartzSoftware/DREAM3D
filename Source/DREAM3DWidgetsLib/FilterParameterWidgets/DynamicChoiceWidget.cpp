@@ -51,7 +51,7 @@ DynamicChoiceWidget::DynamicChoiceWidget(FilterParameter* parameter, AbstractFil
   FilterParameterWidget(parameter, filter, parent)
 {
   m_FilterParameter = dynamic_cast<DynamicChoiceFilterParameter*>(parameter);
-  Q_ASSERT_X(NULL != m_FilterParameter, "DynamicChoiceWidget can ONLY be used with Dynamic Choice Filter Parameters", __FILE__);
+  Q_ASSERT_X(getFilterParameter() != NULL, "NULL Pointer", "DynamicChoiceWidget can ONLY be used with a DynamicChoiceFilterParameter object");
 
   setupUi(this);
   setupGui();

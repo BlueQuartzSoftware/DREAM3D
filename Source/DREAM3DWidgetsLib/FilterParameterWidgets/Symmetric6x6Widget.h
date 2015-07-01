@@ -108,6 +108,8 @@ class DREAM3DWidgetsLib_EXPORT Symmetric6x6Widget : public FilterParameterWidget
 
     bool m_DidCausePreflight;
 
+    Symmetric6x6FilterParameter* m_FilterParameter;
+
     //functions for changing symmetry type
     void clearSym();
     void setCubicSym();

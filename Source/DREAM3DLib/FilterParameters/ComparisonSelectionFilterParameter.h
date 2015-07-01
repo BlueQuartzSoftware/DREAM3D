@@ -34,29 +34,27 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ShapeTypesFilterParameter_H_
-#define _ShapeTypesFilterParameter_H_
+#ifndef _ComparisonSelectionFilterParameter_H_
+#define _ComparisonSelectionFilterParameter_H_
 
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
 
-class DREAM3DLib_EXPORT ShapeTypesFilterParameter : public FilterParameter
+class DREAM3DLib_EXPORT ComparisonSelectionFilterParameter : public FilterParameter
 {
 public:
-  DREAM3D_SHARED_POINTERS(ShapeTypesFilterParameter)
-    DREAM3D_STATIC_NEW_MACRO(ShapeTypesFilterParameter)
-    DREAM3D_TYPE_MACRO_SUPER(ShapeTypesFilterParameter, FilterParameter)
+  DREAM3D_SHARED_POINTERS(ComparisonSelectionFilterParameter)
+    DREAM3D_STATIC_NEW_MACRO(ComparisonSelectionFilterParameter)
+    DREAM3D_TYPE_MACRO_SUPER(ComparisonSelectionFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-     const QString& defaultValue,
-    const QString& phaseTypeCountProperty,
-    const QString& phaseTypeArrayPathProperty,
-    Category category,
-    int groupIndex = -1);
+    const QString& defaultValue, QVector<QString> choices,
+    bool showOperators, Category category, int groupIndex = -1);
 
-  virtual ~ShapeTypesFilterParameter();
 
-  DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeCountProperty)
-    DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeArrayPathProperty)
+  virtual ~ComparisonSelectionFilterParameter();
+
+  DREAM3D_INSTANCE_PROPERTY(QVector<QString>, Choices)
+    DREAM3D_INSTANCE_PROPERTY(bool, ShowOperators)
 
   /**
    * @brief getWidgetType Returns the type of widget that displays and controls
@@ -64,14 +62,12 @@ public:
    * @return
    */
   QString getWidgetType();
-
-
 protected:
-  ShapeTypesFilterParameter();
+  ComparisonSelectionFilterParameter();
 
 private:
-  ShapeTypesFilterParameter(const ShapeTypesFilterParameter&); // Copy Constructor Not Implemented
-  void operator=(const ShapeTypesFilterParameter&); // Operator '=' Not Implemented
+  ComparisonSelectionFilterParameter(const ComparisonSelectionFilterParameter&); // Copy Constructor Not Implemented
+  void operator=(const ComparisonSelectionFilterParameter&); // Operator '=' Not Implemented
 };
 
-#endif /* _ShapeTypesFilterParameter_H_ */
+#endif /* _ComparisonSelectionFilterParameter_H_ */

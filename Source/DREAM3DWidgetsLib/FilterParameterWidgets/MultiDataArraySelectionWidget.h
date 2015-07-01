@@ -144,6 +144,8 @@ class DREAM3DWidgetsLib_EXPORT MultiDataArraySelectionWidget : public FilterPara
 
     DataContainerArrayProxy m_DcaProxy;
 
+    MultiDataArraySelectionFilterParameter* m_FilterParameter;
+
     MultiDataArraySelectionWidget(const MultiDataArraySelectionWidget&); // Copy Constructor Not Implemented
     void operator=(const MultiDataArraySelectionWidget&); // Operator '=' Not Implemented
 

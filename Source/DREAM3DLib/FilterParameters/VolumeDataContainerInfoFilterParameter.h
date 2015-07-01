@@ -34,17 +34,17 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _VolumeInfoFilterParameter_H_
-#define _VolumeInfoFilterParameter_H_
+#ifndef _VolumeDataContainerInfoFilterParameter_H_
+#define _VolumeDataContainerInfoFilterParameter_H_
 
 #include "DREAM3DLib/FilterParameters/IntVec3FilterParameter.h"
 
-class DREAM3DLib_EXPORT VolumeInfoFilterParameter : public FilterParameter
+class DREAM3DLib_EXPORT VolumeDataContainerInfoFilterParameter : public FilterParameter
 {
 public:
-  DREAM3D_SHARED_POINTERS(VolumeInfoFilterParameter)
-    DREAM3D_STATIC_NEW_MACRO(VolumeInfoFilterParameter)
-    DREAM3D_TYPE_MACRO_SUPER(VolumeInfoFilterParameter, FilterParameter)
+  DREAM3D_SHARED_POINTERS(VolumeDataContainerInfoFilterParameter)
+    DREAM3D_STATIC_NEW_MACRO(VolumeDataContainerInfoFilterParameter)
+    DREAM3D_TYPE_MACRO_SUPER(VolumeDataContainerInfoFilterParameter, FilterParameter)
 
   static Pointer New(const QString& humanLabel, const QString& dimsProperty,
                      const IntVec3_t& defaultValue,
@@ -52,7 +52,7 @@ public:
                      const QString& resProperty = QString(""),
                      int groupIndex = -1);
 
-  virtual ~VolumeInfoFilterParameter();
+  virtual ~VolumeDataContainerInfoFilterParameter();
 
   DREAM3D_INSTANCE_STRING_PROPERTY(DimensionsProperty)
     DREAM3D_INSTANCE_STRING_PROPERTY(ResolutionProperty)
@@ -66,11 +66,11 @@ public:
 
 
 protected:
-  VolumeInfoFilterParameter();
+  VolumeDataContainerInfoFilterParameter();
 
 private:
-  VolumeInfoFilterParameter(const VolumeInfoFilterParameter&); // Copy Constructor Not Implemented
-  void operator=(const VolumeInfoFilterParameter&); // Operator '=' Not Implemented
+  VolumeDataContainerInfoFilterParameter(const VolumeDataContainerInfoFilterParameter&); // Copy Constructor Not Implemented
+  void operator=(const VolumeDataContainerInfoFilterParameter&); // Operator '=' Not Implemented
 };
 
-#endif /* _VolumeInfoFilterParameter_H_ */
+#endif /* _VolumeDataContainerInfoFilterParameter_H_ */

@@ -97,6 +97,8 @@ class DREAM3DWidgetsLib_EXPORT IntVec3Widget : public FilterParameterWidget, pri
 
     bool m_DidCausePreflight;
 
+    IntVec3FilterParameter* m_FilterParameter;
+
 
     IntVec3Widget(const IntVec3Widget&); // Copy Constructor Not Implemented
     void operator=(const IntVec3Widget&); // Operator '=' Not Implemented

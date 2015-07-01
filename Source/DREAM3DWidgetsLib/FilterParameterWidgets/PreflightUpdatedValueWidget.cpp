@@ -48,6 +48,9 @@
 PreflightUpdatedValueWidget::PreflightUpdatedValueWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   FilterParameterWidget(parameter, filter, parent)
 {
+  m_FilterParameter = dynamic_cast<PreflightUpdatedValueFilterParameter*>(parameter);
+  Q_ASSERT_X(getFilterParameter() != NULL, "NULL Pointer", "PreflightUpdatedValueWidget can ONLY be used with a PreflightUpdatedValueFilterParameter object");
+
   setupUi(this);
   setupGui();
 }

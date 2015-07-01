@@ -47,7 +47,7 @@
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/FilterParameters/VolumeInfoFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/VolumeDataContainerInfoFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
@@ -56,7 +56,7 @@
 #include "DREAM3DWidgetsLib/ui_VolumeDataContainerInfoWidget.h"
 
 
-class VolumeInfoFilterParameter;
+class VolumeDataContainerInfoFilterParameter;
 
 /**
 * @brief
@@ -122,7 +122,7 @@ class DREAM3DWidgetsLib_EXPORT VolumeDataContainerInfoWidget : public FilterPara
 
   private:
 
-    VolumeInfoFilterParameter*  m_FilterParameter;
+    VolumeDataContainerInfoFilterParameter*  m_FilterParameter;
     bool m_DidCausePreflight;
 
 

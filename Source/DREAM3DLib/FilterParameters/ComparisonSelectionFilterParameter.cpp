@@ -34,43 +34,44 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "PreflightUpdatedValue.h"
+#include "ComparisonSelectionFilterParameter.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PreflightUpdatedValue::PreflightUpdatedValue()
-{
-}
+ComparisonSelectionFilterParameter::ComparisonSelectionFilterParameter() :
+m_ShowOperators(true) {}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PreflightUpdatedValue::~PreflightUpdatedValue()
+ComparisonSelectionFilterParameter::~ComparisonSelectionFilterParameter()
 {}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PreflightUpdatedValue::Pointer PreflightUpdatedValue::New(const QString& humanLabel, const QString& propertyName, const int& defaultValue,
-  Category category, int groupIndex)
+ComparisonSelectionFilterParameter::Pointer ComparisonSelectionFilterParameter::New(const QString& humanLabel, const QString& propertyName,
+  const QString& defaultValue, QVector<QString> choices, bool showOperators, Category category, int groupIndex)
+
 {
-  PreflightUpdatedValue::Pointer ptr = PreflightUpdatedValue::New();
+  ComparisonSelectionFilterParameter::Pointer ptr = ComparisonSelectionFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
   ptr->setDefaultValue(defaultValue);
   ptr->setCategory(category);
+  ptr->setChoices(choices);
+  ptr->setShowOperators(showOperators);
   ptr->setGroupIndex(groupIndex);
 
   return ptr;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString PreflightUpdatedValue::getWidgetType()
+QString ComparisonSelectionFilterParameter::getWidgetType()
 {
-  return QString("PreflightUpdatedValueWidget");
+  return QString("ComparisonWidget");
 }
 

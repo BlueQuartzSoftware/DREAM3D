@@ -94,7 +94,7 @@ class DREAM3DWidgetsLib_EXPORT DoubleWidget : public FilterParameterWidget, priv
 
     bool m_DidCausePreflight;
 
-
+    DoubleFilterParameter* m_FilterParameter;
 
     DoubleWidget(const DoubleWidget&); // Copy Constructor Not Implemented
     void operator=(const DoubleWidget&); // Operator '=' Not Implemented

@@ -49,8 +49,8 @@ DataContainerArrayProxyWidget::DataContainerArrayProxyWidget(FilterParameter* pa
   FilterParameterWidget(parameter, filter, parent),
   m_DidCausePreflight(false)
 {
-
   m_FilterParameter = dynamic_cast<DataContainerArrayProxyFilterParameter*>(parameter);
+  Q_ASSERT_X(getFilterParameter() != NULL, "NULL Pointer", "DataContainerArrayProxyWidget can ONLY be used with a DataContainerArrayProxyFilterParameter object");
 
   setupUi(this);
   setupGui();

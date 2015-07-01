@@ -45,7 +45,7 @@
 #include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/PhaseTypesFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/PhaseTypeSelectionFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "DREAM3DLib/StatsData/PrimaryStatsData.h"
@@ -149,7 +149,7 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   choices.push_back("Lognormal");
   choices.push_back("Power");
   FilterParameterVector parameters;
-  PhaseTypesFilterParameter::Pointer phaseType_parameter = PhaseTypesFilterParameter::New(
+  PhaseTypeSelectionFilterParameter::Pointer phaseType_parameter = PhaseTypeSelectionFilterParameter::New(
                                                              "Phase Types",
                                                              "PhaseTypesArrayName",
                                                              "PhaseCount",

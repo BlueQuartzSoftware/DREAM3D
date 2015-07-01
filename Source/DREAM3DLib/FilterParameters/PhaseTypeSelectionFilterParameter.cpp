@@ -34,40 +34,45 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "VolumeInfoFilterParameter.h"
+#include "PhaseTypeSelectionFilterParameter.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VolumeInfoFilterParameter::VolumeInfoFilterParameter() :
-FilterParameter(),
-m_DimensionsProperty(""),
-m_ResolutionProperty("")
-{}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-VolumeInfoFilterParameter::~VolumeInfoFilterParameter()
-{}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-VolumeInfoFilterParameter::Pointer VolumeInfoFilterParameter::New(const QString& humanLabel, const QString& dimsProperty, const IntVec3_t& defaultValue,
-  Category category, const QString& resProperty, int groupIndex)
+PhaseTypeSelectionFilterParameter::PhaseTypeSelectionFilterParameter()
 {
-  VolumeInfoFilterParameter::Pointer ptr = VolumeInfoFilterParameter::New();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+PhaseTypeSelectionFilterParameter::~PhaseTypeSelectionFilterParameter()
+{}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+PhaseTypeSelectionFilterParameter::Pointer PhaseTypeSelectionFilterParameter::New(const QString& humanLabel,
+  const QString& PhaseTypesArrayName,
+  const QString& phaseTypeCountProperty,
+  const QString& phaseTypeDataProperty,
+  const QString& attributeMatrixProperty,
+  const DataArrayPath attributeMatrixDefault,
+  Category category,
+  int groupIndex)
+{
+  PhaseTypeSelectionFilterParameter::Pointer ptr = PhaseTypeSelectionFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
-  ptr->setPropertyName(dimsProperty);
-  QVariant v;
-  v.setValue(defaultValue);
-  ptr->setDefaultValue(v);
+  ptr->setPropertyName(PhaseTypesArrayName);
   ptr->setCategory(category);
-  ptr->setDimensionsProperty(dimsProperty);
-  ptr->setResolutionProperty(resProperty);
-  ptr->setReadOnly(true);
   ptr->setGroupIndex(groupIndex);
+
+  ptr->setPhaseTypeCountProperty(phaseTypeCountProperty);
+  ptr->setPhaseTypeDataProperty(phaseTypeDataProperty);
+  ptr->setAttributeMatrixPathProperty(attributeMatrixProperty);
+  ptr->setAttributeMatrixPathDefault(attributeMatrixDefault);
+
+
   return ptr;
 }
 
@@ -75,8 +80,8 @@ VolumeInfoFilterParameter::Pointer VolumeInfoFilterParameter::New(const QString&
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString VolumeInfoFilterParameter::getWidgetType()
+QString PhaseTypeSelectionFilterParameter::getWidgetType()
 {
-  return QString("VolumeInfoWidget");
+  return QString("PhaseTypesWidget");
 }
 

@@ -34,44 +34,38 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "PhaseTypesFilterParameter.h"
+#include "ShapeTypeSelectionFilterParameter.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PhaseTypesFilterParameter::PhaseTypesFilterParameter()
+ShapeTypeSelectionFilterParameter::ShapeTypeSelectionFilterParameter()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PhaseTypesFilterParameter::~PhaseTypesFilterParameter()
+ShapeTypeSelectionFilterParameter::~ShapeTypeSelectionFilterParameter()
 {}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PhaseTypesFilterParameter::Pointer PhaseTypesFilterParameter::New(const QString& humanLabel,
-  const QString& PhaseTypesArrayName,
+ShapeTypeSelectionFilterParameter::Pointer ShapeTypeSelectionFilterParameter::New(const QString& humanLabel, const QString& propertyName, const QString& defaultValue,
   const QString& phaseTypeCountProperty,
-  const QString& phaseTypeDataProperty,
-  const QString& attributeMatrixProperty,
-  const DataArrayPath attributeMatrixDefault,
-  Category category,
-  int groupIndex)
+  const QString& phaseTypeArrayPathProperty,
+  Category category, int groupIndex)
 {
-  PhaseTypesFilterParameter::Pointer ptr = PhaseTypesFilterParameter::New();
+  ShapeTypeSelectionFilterParameter::Pointer ptr = ShapeTypeSelectionFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
-  ptr->setPropertyName(PhaseTypesArrayName);
+  ptr->setPropertyName(propertyName);
+  ptr->setDefaultValue(defaultValue);
   ptr->setCategory(category);
-  ptr->setGroupIndex(groupIndex);
 
   ptr->setPhaseTypeCountProperty(phaseTypeCountProperty);
-  ptr->setPhaseTypeDataProperty(phaseTypeDataProperty);
-  ptr->setAttributeMatrixPathProperty(attributeMatrixProperty);
-  ptr->setAttributeMatrixPathDefault(attributeMatrixDefault);
-
+  ptr->setPhaseTypeArrayPathProperty(phaseTypeArrayPathProperty);
+  ptr->setGroupIndex(groupIndex);
 
   return ptr;
 }
@@ -80,8 +74,9 @@ PhaseTypesFilterParameter::Pointer PhaseTypesFilterParameter::New(const QString&
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString PhaseTypesFilterParameter::getWidgetType()
+QString ShapeTypeSelectionFilterParameter::getWidgetType()
 {
-  return QString("PhaseTypesWidget");
+  return QString("ShapeTypesWidget");
 }
+
 

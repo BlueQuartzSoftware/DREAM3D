@@ -50,6 +50,9 @@
 IntWidget::IntWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   FilterParameterWidget(parameter, filter, parent)
 {
+  m_FilterParameter = dynamic_cast<IntFilterParameter*>(parameter);
+  Q_ASSERT_X(getFilterParameter() != NULL, "NULL Pointer", "IntWidget can ONLY be used with a IntFilterParameter object");
+
   setupUi(this);
   setupGui();
 }

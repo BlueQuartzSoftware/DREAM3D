@@ -50,6 +50,9 @@
 SeparatorWidget::SeparatorWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   FilterParameterWidget(parameter, filter, parent)
 {
+  m_FilterParameter = dynamic_cast<SeparatorFilterParameter*>(parameter);
+  Q_ASSERT_X(getFilterParameter() != NULL, "NULL Pointer", "SeparatorWidget can ONLY be used with a SeparatorFilterParameter object");
+
   setupUi(this);
   setupGui();
 }

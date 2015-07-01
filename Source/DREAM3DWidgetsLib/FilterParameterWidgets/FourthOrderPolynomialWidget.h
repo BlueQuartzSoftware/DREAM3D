@@ -93,6 +93,8 @@ class DREAM3DWidgetsLib_EXPORT FourthOrderPolynomialWidget : public FilterParame
 
     bool m_DidCausePreflight;
 
+    FourthOrderPolynomialFilterParameter* m_FilterParameter;
+
     //helper functions for complex inter dependancies
     // void vbar(QLineEdit* obj);
 

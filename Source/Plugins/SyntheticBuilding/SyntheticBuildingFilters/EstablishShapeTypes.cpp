@@ -41,7 +41,7 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/ShapeTypesFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/ShapeTypeSelectionFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
@@ -76,7 +76,7 @@ void EstablishShapeTypes::setupFilterParameters()
   parameters.push_back(DataArraySelectionFilterParameter::New("Phase Types", "InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath(), FilterParameter::RequiredArray));
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Shape Types", "ShapeTypesArrayName", getShapeTypesArrayName(), FilterParameter::CreatedArray));
-  ShapeTypesFilterParameter::Pointer sType_parameter = ShapeTypesFilterParameter::New( "Shape Types", "ShapeTypeData", "UInt32Vector_t", "PhaseCount", "InputPhaseTypesArrayPath", FilterParameter::CreatedArray);
+  ShapeTypeSelectionFilterParameter::Pointer sType_parameter = ShapeTypeSelectionFilterParameter::New( "Shape Types", "ShapeTypeData", "UInt32Vector_t", "PhaseCount", "InputPhaseTypesArrayPath", FilterParameter::CreatedArray);
   parameters.push_back(sType_parameter);
   setFilterParameters(parameters);
 }

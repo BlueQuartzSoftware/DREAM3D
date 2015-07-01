@@ -50,6 +50,9 @@
 FourthOrderPolynomialWidget::FourthOrderPolynomialWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   FilterParameterWidget(parameter, filter, parent)
 {
+  m_FilterParameter = dynamic_cast<FourthOrderPolynomialFilterParameter*>(parameter);
+  Q_ASSERT_X(getFilterParameter() != NULL, "NULL Pointer", "FourthOrderPolynomialWidget can ONLY be used with a FourthOrderPolynomialFilterParameter object");
+
   setupUi(this);
   setupGui();
 }

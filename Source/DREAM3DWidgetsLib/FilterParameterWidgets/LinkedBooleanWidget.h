@@ -101,6 +101,8 @@ class DREAM3DWidgetsLib_EXPORT LinkedBooleanWidget : public FilterParameterWidge
 
     bool m_DidCausePreflight;
 
+    LinkedBooleanFilterParameter* m_FilterParameter;
+
 
     LinkedBooleanWidget(const LinkedBooleanWidget&); // Copy Constructor Not Implemented
     void operator=(const LinkedBooleanWidget&); // Operator '=' Not Implemented

@@ -36,7 +36,7 @@
 
 #include "ThresholdExample.h"
 
-#include "DREAM3DLib/FilterParameters/ComparisonFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/ComparisonSelectionFilterParameter.h"
 
 
 // -----------------------------------------------------------------------------
@@ -66,7 +66,7 @@ void ThresholdExample::setupFilterParameters()
 
   /* To Compare Arrays like a threshold filter */
   {
-    ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
+    ComparisonSelectionFilterParameter::Pointer parameter = ComparisonSelectionFilterParameter::New();
     parameter->setHumanLabel("Voxel Cell Arrays to Threshold");
     parameter->setPropertyName("CellComparisonInputs");
     
@@ -76,7 +76,7 @@ void ThresholdExample::setupFilterParameters()
 #if 0
   /* To Compare Arrays like a threshold filter */
   {
-    ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
+    ComparisonSelectionFilterParameter::Pointer parameter = ComparisonSelectionFilterParameter::New();
     parameter->setHumanLabel("Voxel Feature Arrays to Threshold");
     parameter->setPropertyName("FeatureComparisonInputs");
     
@@ -85,7 +85,7 @@ void ThresholdExample::setupFilterParameters()
   }
   /* To Compare Arrays like a threshold filter */
   {
-    ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
+    ComparisonSelectionFilterParameter::Pointer parameter = ComparisonSelectionFilterParameter::New();
     parameter->setHumanLabel("Voxel Ensemble Arrays to Threshold");
     parameter->setPropertyName("EnsembleComparisonInputs");
     
@@ -94,7 +94,7 @@ void ThresholdExample::setupFilterParameters()
   }
   /* To Compare Arrays like a threshold filter */
   {
-    ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
+    ComparisonSelectionFilterParameter::Pointer parameter = ComparisonSelectionFilterParameter::New();
     parameter->setHumanLabel("Surface Mesh Point Arrays to Threshold");
     parameter->setPropertyName("PointComparisonInputs");
     
@@ -103,7 +103,7 @@ void ThresholdExample::setupFilterParameters()
   }
   /* To Compare Arrays like a threshold filter */
   {
-    ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
+    ComparisonSelectionFilterParameter::Pointer parameter = ComparisonSelectionFilterParameter::New();
     parameter->setHumanLabel("Surface Mesh Face Arrays to Threshold");
     parameter->setPropertyName("FaceComparisonInputs");
     
@@ -112,7 +112,7 @@ void ThresholdExample::setupFilterParameters()
   }
   /* To Compare Arrays like a threshold filter */
   {
-    ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
+    ComparisonSelectionFilterParameter::Pointer parameter = ComparisonSelectionFilterParameter::New();
     parameter->setHumanLabel("Surface Mesh Edge Arrays to Threshold");
     parameter->setPropertyName("EdgeComparisonInputs");
     

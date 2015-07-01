@@ -52,6 +52,9 @@
 ChoiceWidget::ChoiceWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   FilterParameterWidget(parameter, filter, parent)
 {
+  m_FilterParameter = dynamic_cast<ChoiceFilterParameter*>(parameter);
+  Q_ASSERT_X(getFilterParameter() != NULL, "NULL Pointer", "ChoiceWidget can ONLY be used with a ChoiceFilterParameter object");
+
   setupUi(this);
   setupGui();
 }

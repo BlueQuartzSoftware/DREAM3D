@@ -57,6 +57,9 @@ MultiDataArraySelectionWidget::MultiDataArraySelectionWidget(FilterParameter* pa
   FilterParameterWidget(parameter, filter, parent),
   m_DidCausePreflight(false)
 {
+  m_FilterParameter = dynamic_cast<MultiDataArraySelectionFilterParameter*>(parameter);
+  Q_ASSERT_X(getFilterParameter() != NULL, "NULL Pointer", "MultiDataArraySelectionWidget can ONLY be used with a MultiDataArraySelectionFilterParameter object");
+
   setupUi(this);
   setupGui();
 }

@@ -170,6 +170,8 @@ class DREAM3DWidgetsLib_EXPORT FileListInfoWidget : public FilterParameterWidget
     QList<QWidget*>             m_WidgetList;
     QButtonGroup*               m_OrderingGroup;
 
+    FileListInfoFilterParameter* m_FilterParameter;
+
     static QString                m_OpenDialogLastDirectory;
     bool m_DidCausePreflight;
 

@@ -119,6 +119,8 @@ class DREAM3DWidgetsLib_EXPORT DataBundleSelectionWidget : public FilterParamete
 
     bool m_DidCausePreflight;
 
+    DataBundleSelectionFilterParameter* m_FilterParameter;
+
     DataBundleSelectionWidget(const DataBundleSelectionWidget&); // Copy Constructor Not Implemented
     void operator=(const DataBundleSelectionWidget&); // Operator '=' Not Implemented
 

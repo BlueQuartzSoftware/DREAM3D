@@ -98,6 +98,8 @@ class DREAM3DWidgetsLib_EXPORT ChoiceWidget : public FilterParameterWidget, priv
 
     bool m_DidCausePreflight;
 
+    ChoiceFilterParameter* m_FilterParameter;
+
 
     ChoiceWidget(const ChoiceWidget&); // Copy Constructor Not Implemented
     void operator=(const ChoiceWidget&); // Operator '=' Not Implemented

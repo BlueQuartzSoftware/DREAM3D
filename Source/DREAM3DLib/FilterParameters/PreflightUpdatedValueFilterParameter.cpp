@@ -34,37 +34,32 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "ShapeTypesFilterParameter.h"
+#include "PreflightUpdatedValueFilterParameter.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ShapeTypesFilterParameter::ShapeTypesFilterParameter()
+PreflightUpdatedValueFilterParameter::PreflightUpdatedValueFilterParameter()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ShapeTypesFilterParameter::~ShapeTypesFilterParameter()
+PreflightUpdatedValueFilterParameter::~PreflightUpdatedValueFilterParameter()
 {}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ShapeTypesFilterParameter::Pointer ShapeTypesFilterParameter::New(const QString& humanLabel, const QString& propertyName, const QString& defaultValue,
-  const QString& phaseTypeCountProperty,
-  const QString& phaseTypeArrayPathProperty,
+PreflightUpdatedValueFilterParameter::Pointer PreflightUpdatedValueFilterParameter::New(const QString& humanLabel, const QString& propertyName, const int& defaultValue,
   Category category, int groupIndex)
 {
-  ShapeTypesFilterParameter::Pointer ptr = ShapeTypesFilterParameter::New();
+  PreflightUpdatedValueFilterParameter::Pointer ptr = PreflightUpdatedValueFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
   ptr->setDefaultValue(defaultValue);
   ptr->setCategory(category);
-
-  ptr->setPhaseTypeCountProperty(phaseTypeCountProperty);
-  ptr->setPhaseTypeArrayPathProperty(phaseTypeArrayPathProperty);
   ptr->setGroupIndex(groupIndex);
 
   return ptr;
@@ -74,9 +69,8 @@ ShapeTypesFilterParameter::Pointer ShapeTypesFilterParameter::New(const QString&
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString ShapeTypesFilterParameter::getWidgetType()
+QString PreflightUpdatedValueFilterParameter::getWidgetType()
 {
-  return QString("ShapeTypesWidget");
+  return QString("PreflightUpdatedValueFilterParameterWidget");
 }
-
 

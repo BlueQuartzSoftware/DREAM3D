@@ -34,40 +34,39 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ComparisonFilterParameter_H_
-#define _ComparisonFilterParameter_H_
+#ifndef _PreflightUpdatedValueFilterParameter_H_
+#define _PreflightUpdatedValueFilterParameter_H_
 
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
 
-class DREAM3DLib_EXPORT ComparisonFilterParameter : public FilterParameter
+class DREAM3DLib_EXPORT PreflightUpdatedValueFilterParameter : public FilterParameter
 {
-public:
-  DREAM3D_SHARED_POINTERS(ComparisonFilterParameter)
-    DREAM3D_STATIC_NEW_MACRO(ComparisonFilterParameter)
-    DREAM3D_TYPE_MACRO_SUPER(ComparisonFilterParameter, FilterParameter)
+  public:
+    DREAM3D_SHARED_POINTERS(PreflightUpdatedValueFilterParameter)
+    DREAM3D_STATIC_NEW_MACRO(PreflightUpdatedValueFilterParameter)
+    DREAM3D_TYPE_MACRO_SUPER(PreflightUpdatedValueFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-    const QString& defaultValue, QVector<QString> choices,
-    bool showOperators, Category category, int groupIndex = -1);
+                       const int& defaultValue,
+                       Category category,
+                       int groupIndex = -1);
+
+    virtual ~PreflightUpdatedValueFilterParameter();
+
+    /**
+     * @brief getWidgetType Returns the type of widget that displays and controls
+     * this FilterParameter subclass
+     * @return
+     */
+    QString getWidgetType();
 
 
-  virtual ~ComparisonFilterParameter();
+  protected:
+    PreflightUpdatedValueFilterParameter();
 
-  DREAM3D_INSTANCE_PROPERTY(QVector<QString>, Choices)
-    DREAM3D_INSTANCE_PROPERTY(bool, ShowOperators)
-
-  /**
-   * @brief getWidgetType Returns the type of widget that displays and controls
-   * this FilterParameter subclass
-   * @return
-   */
-  QString getWidgetType();
-protected:
-  ComparisonFilterParameter();
-
-private:
-  ComparisonFilterParameter(const ComparisonFilterParameter&); // Copy Constructor Not Implemented
-  void operator=(const ComparisonFilterParameter&); // Operator '=' Not Implemented
+  private:
+    PreflightUpdatedValueFilterParameter(const PreflightUpdatedValueFilterParameter&); // Copy Constructor Not Implemented
+    void operator=(const PreflightUpdatedValueFilterParameter&); // Operator '=' Not Implemented
 };
 
-#endif /* _ComparisonFilterParameter_H_ */
+#endif /* _PreflightUpdatedValueFilterParameter_H_ */

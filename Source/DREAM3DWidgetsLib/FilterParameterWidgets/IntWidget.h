@@ -93,6 +93,8 @@ class DREAM3DWidgetsLib_EXPORT IntWidget : public FilterParameterWidget, private
 
     bool m_DidCausePreflight;
 
+    IntFilterParameter* m_FilterParameter;
+
 
     IntWidget(const IntWidget&); // Copy Constructor Not Implemented
     void operator=(const IntWidget&); // Operator '=' Not Implemented

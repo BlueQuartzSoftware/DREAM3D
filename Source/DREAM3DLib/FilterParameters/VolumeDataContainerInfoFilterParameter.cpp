@@ -1,6 +1,6 @@
 /* ============================================================================
-* Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
-* Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+* Copyright (c) 2014 Michael A. Jackson (BlueQuartz Software)
+* Copyright (c) 2014 Dr. Michael A. Groeber (US Air Force Research Laboratories)
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without modification,
@@ -33,89 +33,50 @@
 *                           FA8650-10-D-5210
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "UnknownWidget.h"
 
-#include <QtCore/QMetaProperty>
-
-#include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
-
-
-//#include "DREAM3DWidgetsLib/moc_UnknownWidget.cpp"
-
+#include "VolumeDataContainerInfoFilterParameter.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-UnknownWidget::UnknownWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  FilterParameterWidget(parameter, filter, parent)
-{
-  m_FilterParameter = dynamic_cast<UnknownFilterParameter*>(parameter);
-  Q_ASSERT_X(getFilterParameter() != NULL, "NULL Pointer", "UnknownWidget can ONLY be used with a UnknownFilterParameter object");
-
-  setupUi(this);
-  setupGui();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-UnknownWidget::~UnknownWidget()
+VolumeDataContainerInfoFilterParameter::VolumeDataContainerInfoFilterParameter() :
+FilterParameter(),
+m_DimensionsProperty(""),
+m_ResolutionProperty("")
 {}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void UnknownWidget::setupGui()
-{
-  // Catch when the filter is about to execute the preflight
-  connect(getFilter(), SIGNAL(preflightAboutToExecute()),
-          this, SLOT(beforePreflight()));
-
-  // Catch when the filter is finished running the preflight
-  connect(getFilter(), SIGNAL(preflightExecuted()),
-          this, SLOT(afterPreflight()));
-
-  // Catch when the filter wants its values updated
-  connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)),
-          this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
-
-  if (getFilterParameter() != NULL)
-  {
-    QString str = QObject::tr("%1: Unknown Filter ParameterWidgetType: %2.").arg(getFilterParameter()->getHumanLabel()).arg(getFilterParameter()->getWidgetType());
-    label->setText( str );
-  }
-}
+VolumeDataContainerInfoFilterParameter::~VolumeDataContainerInfoFilterParameter()
+{}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void UnknownWidget::widgetChanged(const QString& text)
+VolumeDataContainerInfoFilterParameter::Pointer VolumeDataContainerInfoFilterParameter::New(const QString& humanLabel, const QString& dimsProperty, const IntVec3_t& defaultValue,
+  Category category, const QString& resProperty, int groupIndex)
 {
-  emit parametersChanged();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void UnknownWidget::filterNeedsInputParameters(AbstractFilter* filter)
-{
-
+  VolumeDataContainerInfoFilterParameter::Pointer ptr = VolumeDataContainerInfoFilterParameter::New();
+  ptr->setHumanLabel(humanLabel);
+  ptr->setPropertyName(dimsProperty);
+  QVariant v;
+  v.setValue(defaultValue);
+  ptr->setDefaultValue(v);
+  ptr->setCategory(category);
+  ptr->setDimensionsProperty(dimsProperty);
+  ptr->setResolutionProperty(resProperty);
+  ptr->setReadOnly(true);
+  ptr->setGroupIndex(groupIndex);
+  return ptr;
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void UnknownWidget::afterPreflight()
+QString VolumeDataContainerInfoFilterParameter::getWidgetType()
 {
-  // std::cout << "After Preflight" << std::endl;
+  return QString("VolumeInfoWidget");
 }
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void UnknownWidget::beforePreflight()
-{
-  // std::cout << "After Preflight" << std::endl;
-}

@@ -40,14 +40,14 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/VolumeInfoFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/VolumeDataContainerInfoFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/IntFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/BooleanFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/VolumeInfoFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/VolumeDataContainerInfoFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
@@ -89,7 +89,7 @@ CropVolume::~CropVolume()
 void CropVolume::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(VolumeInfoFilterParameter::New("Geometry Information", "CurrentVolumeDataContainerDimensions", getCurrentVolumeDataContainerDimensions(), FilterParameter::Parameter));
+  parameters.push_back(VolumeDataContainerInfoFilterParameter::New("Geometry Information", "CurrentVolumeDataContainerDimensions", getCurrentVolumeDataContainerDimensions(), FilterParameter::Parameter));
   parameters.push_back(IntFilterParameter::New("X Min (Column)", "XMin", getXMin(), FilterParameter::Parameter));
   parameters.push_back(IntFilterParameter::New("Y Min (Row)", "YMin", getYMin(), FilterParameter::Parameter));
   parameters.push_back(IntFilterParameter::New("Z Min (Plane)", "ZMin", getZMin(), FilterParameter::Parameter));

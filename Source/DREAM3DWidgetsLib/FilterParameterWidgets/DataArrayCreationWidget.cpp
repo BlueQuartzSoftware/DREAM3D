@@ -54,6 +54,9 @@ DataArrayCreationWidget::DataArrayCreationWidget(FilterParameter* parameter, Abs
   FilterParameterWidget(parameter, filter, parent),
   m_DidCausePreflight(false)
 {
+  m_FilterParameter = dynamic_cast<DataArrayCreationFilterParameter*>(parameter);
+  Q_ASSERT_X(getFilterParameter() != NULL, "NULL Pointer", "DataArrayCreationWidget can ONLY be used with a DataArrayCreationFilterParameter object");
+
   setupUi(this);
   setupGui();
 }

@@ -49,6 +49,9 @@
 FloatVec4Widget::FloatVec4Widget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   FilterParameterWidget(parameter, filter, parent)
 {
+  m_FilterParameter = dynamic_cast<FloatVec4FilterParameter*>(parameter);
+  Q_ASSERT_X(getFilterParameter() != NULL, "NULL Pointer", "FloatVec4Widget can ONLY be used with a FloatVec4FilterParameter object");
+
   setupUi(this);
   setupGui();
 }

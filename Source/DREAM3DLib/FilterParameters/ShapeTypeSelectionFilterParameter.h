@@ -34,39 +34,44 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _PreflightUpdatedValue_H_
-#define _PreflightUpdatedValue_H_
+#ifndef _ShapeTypeSelectionFilterParameter_H_
+#define _ShapeTypeSelectionFilterParameter_H_
 
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
 
-class DREAM3DLib_EXPORT PreflightUpdatedValue : public FilterParameter
+class DREAM3DLib_EXPORT ShapeTypeSelectionFilterParameter : public FilterParameter
 {
-  public:
-    DREAM3D_SHARED_POINTERS(PreflightUpdatedValue)
-    DREAM3D_STATIC_NEW_MACRO(PreflightUpdatedValue)
-    DREAM3D_TYPE_MACRO_SUPER(PreflightUpdatedValue, FilterParameter)
+public:
+  DREAM3D_SHARED_POINTERS(ShapeTypeSelectionFilterParameter)
+    DREAM3D_STATIC_NEW_MACRO(ShapeTypeSelectionFilterParameter)
+    DREAM3D_TYPE_MACRO_SUPER(ShapeTypeSelectionFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const int& defaultValue,
-                       Category category,
-                       int groupIndex = -1);
+     const QString& defaultValue,
+    const QString& phaseTypeCountProperty,
+    const QString& phaseTypeArrayPathProperty,
+    Category category,
+    int groupIndex = -1);
 
-    virtual ~PreflightUpdatedValue();
+  virtual ~ShapeTypeSelectionFilterParameter();
 
-    /**
-     * @brief getWidgetType Returns the type of widget that displays and controls
-     * this FilterParameter subclass
-     * @return
-     */
-    QString getWidgetType();
+  DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeCountProperty)
+    DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeArrayPathProperty)
+
+  /**
+   * @brief getWidgetType Returns the type of widget that displays and controls
+   * this FilterParameter subclass
+   * @return
+   */
+  QString getWidgetType();
 
 
-  protected:
-    PreflightUpdatedValue();
+protected:
+  ShapeTypeSelectionFilterParameter();
 
-  private:
-    PreflightUpdatedValue(const PreflightUpdatedValue&); // Copy Constructor Not Implemented
-    void operator=(const PreflightUpdatedValue&); // Operator '=' Not Implemented
+private:
+  ShapeTypeSelectionFilterParameter(const ShapeTypeSelectionFilterParameter&); // Copy Constructor Not Implemented
+  void operator=(const ShapeTypeSelectionFilterParameter&); // Operator '=' Not Implemented
 };
 
-#endif /* _PreflightUpdatedValue_H_ */
+#endif /* _ShapeTypeSelectionFilterParameter_H_ */

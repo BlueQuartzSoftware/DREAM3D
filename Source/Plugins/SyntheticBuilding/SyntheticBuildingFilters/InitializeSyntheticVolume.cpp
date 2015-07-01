@@ -49,7 +49,7 @@
 #include "DREAM3DLib/FilterParameters/IntVec3FilterParameter.h"
 #include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/PreflightUpdatedValue.h"
+#include "DREAM3DLib/FilterParameters/PreflightUpdatedValueFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 #include "DREAM3DLib/StatsData/PrimaryStatsData.h"
 #include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
@@ -110,7 +110,7 @@ void InitializeSyntheticVolume::setupFilterParameters()
   linkedProps << "InputStatsFile";
   parameters.push_back(LinkedBooleanFilterParameter::New("Estimate Number of Features", "EstimateNumberOfFeatures", getEstimateNumberOfFeatures(), linkedProps, FilterParameter::Parameter));
   parameters.push_back(InputFileFilterParameter::New("Input Statistics File", "InputStatsFile", getInputStatsFile(), FilterParameter::Parameter, "*.dream3d"));
-  PreflightUpdatedValue::Pointer param = PreflightUpdatedValue::New("Estimated Primary Features", "EstimatedPrimaryFeatures", getEstimatedPrimaryFeatures(), FilterParameter::Parameter);
+  PreflightUpdatedValueFilterParameter::Pointer param = PreflightUpdatedValueFilterParameter::New("Estimated Primary Features", "EstimatedPrimaryFeatures", getEstimatedPrimaryFeatures(), FilterParameter::Parameter);
   param->setReadOnly(true);
   parameters.push_back(param);
 

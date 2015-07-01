@@ -57,6 +57,9 @@ DataArraySelectionWidget::DataArraySelectionWidget(FilterParameter* parameter, A
   FilterParameterWidget(parameter, filter, parent),
   m_DidCausePreflight(false)
 {
+  m_FilterParameter = dynamic_cast<DataArraySelectionFilterParameter*>(parameter);
+  Q_ASSERT_X(getFilterParameter() != NULL, "NULL Pointer", "DataArraySelectionWidget can ONLY be used with a DataArraySelectionFilterParameter object");
+
   setupUi(this);
   setupGui();
 }

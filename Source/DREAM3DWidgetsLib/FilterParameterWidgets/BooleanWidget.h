@@ -96,8 +96,7 @@ class DREAM3DWidgetsLib_EXPORT BooleanWidget : public FilterParameterWidget, pri
 
     bool m_DidCausePreflight;
 
-    BooleanFilterParameter*  m_FilterParameter;
-
+    BooleanFilterParameter* m_FilterParameter;
 
     BooleanWidget(const BooleanWidget&); // Copy Constructor Not Implemented
     void operator=(const BooleanWidget&); // Operator '=' Not Implemented

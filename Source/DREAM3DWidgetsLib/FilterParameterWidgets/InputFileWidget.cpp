@@ -59,9 +59,11 @@ InputFileWidget::InputFileWidget(FilterParameter* parameter, AbstractFilter* fil
   FilterParameterWidget(parameter, filter, parent)
 {
   m_FilterParameter = dynamic_cast<InputFileFilterParameter*>(parameter);
-  Q_ASSERT_X(NULL != getFilterParameter(), "InputFileWidget", "Failed to dynamic_cast from FilterParameter to InputFileFilterParameter");
+  Q_ASSERT_X(getFilterParameter() != NULL, "NULL Pointer", "InputFileWidget can ONLY be used with a InputFileFilterParameter object");
+
   setupUi(this);
   setupGui();
+
   if ( m_OpenDialogLastDirectory.isEmpty() )
   {
     m_OpenDialogLastDirectory = QDir::homePath();

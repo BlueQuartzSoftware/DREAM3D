@@ -1,6 +1,6 @@
 /* ============================================================================
-* Copyright (c) 2014 Michael A. Jackson (BlueQuartz Software)
-* Copyright (c) 2014 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+* Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+* Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without modification,
@@ -30,48 +30,52 @@
 * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *
 *  This code was written under United States Air Force Contract number
-*                           FA8650-10-D-5210
+*                           FA8650-07-D-5800
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "ComparisonFilterParameter.h"
+#ifndef _PhaseTypeSelectionFilterParameter_H_
+#define _PhaseTypeSelectionFilterParameter_H_
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-ComparisonFilterParameter::ComparisonFilterParameter() :
-m_ShowOperators(true) {}
+#include "DREAM3DLib/FilterParameters/FilterParameter.h"
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-ComparisonFilterParameter::~ComparisonFilterParameter()
-{}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-ComparisonFilterParameter::Pointer ComparisonFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QString& defaultValue, QVector<QString> choices, bool showOperators, Category category, int groupIndex)
-
+class DREAM3DLib_EXPORT PhaseTypeSelectionFilterParameter : public FilterParameter
 {
-  ComparisonFilterParameter::Pointer ptr = ComparisonFilterParameter::New();
-  ptr->setHumanLabel(humanLabel);
-  ptr->setPropertyName(propertyName);
-  ptr->setDefaultValue(defaultValue);
-  ptr->setCategory(category);
-  ptr->setChoices(choices);
-  ptr->setShowOperators(showOperators);
-  ptr->setGroupIndex(groupIndex);
+public:
+  DREAM3D_SHARED_POINTERS(PhaseTypeSelectionFilterParameter)
+    DREAM3D_STATIC_NEW_MACRO(PhaseTypeSelectionFilterParameter)
+    DREAM3D_TYPE_MACRO_SUPER(PhaseTypeSelectionFilterParameter, FilterParameter)
 
-  return ptr;
-}
+    static Pointer New(const QString& humanLabel,
+    const QString& PhaseTypesArrayName,
+    const QString& phaseTypeCountProperty,
+    const QString& phaseTypeDataProperty,
+    const QString& attributeMatrixProperty,
+    const DataArrayPath attributeMatrixDefault,
+    Category category,
+    int groupIndex = -1);
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString ComparisonFilterParameter::getWidgetType()
-{
-  return QString("ComparisonWidget");
-}
+  virtual ~PhaseTypeSelectionFilterParameter();
 
+  DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeCountProperty)
+    DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeDataProperty)
+    DREAM3D_INSTANCE_PROPERTY(QString, AttributeMatrixPathProperty)
+    DREAM3D_INSTANCE_PROPERTY(DataArrayPath, AttributeMatrixPathDefault)
+
+  /**
+   * @brief getWidgetType Returns the type of widget that displays and controls
+   * this FilterParameter subclass
+   * @return
+   */
+  QString getWidgetType();
+
+
+protected:
+  PhaseTypeSelectionFilterParameter();
+
+private:
+  PhaseTypeSelectionFilterParameter(const PhaseTypeSelectionFilterParameter&); // Copy Constructor Not Implemented
+  void operator=(const PhaseTypeSelectionFilterParameter&); // Operator '=' Not Implemented
+};
+
+#endif /* _PhaseTypeSelectionFilterParameter_H_ */

@@ -92,7 +92,7 @@ class DREAM3DWidgetsLib_EXPORT UnknownWidget : public FilterParameterWidget, pri
 
   private:
 
-
+    UnknownFilterParameter* m_FilterParameter;
 
     UnknownWidget(const UnknownWidget&); // Copy Constructor Not Implemented
     void operator=(const UnknownWidget&); // Operator '=' Not Implemented
