@@ -89,7 +89,7 @@ void AboutDREAM3D::setupGui()
   QString str;
   QTextStream out(&str);
 
-  out << "DREAM3D Version " << DREAM3D::Version::Package();
+  out << "DREAM.3D Version " << DREAM3D::Version::Package();
   versionLabel->setText(str);
   versionLabel->setFont(DREAM3DStyles::GetTitleFont());
 

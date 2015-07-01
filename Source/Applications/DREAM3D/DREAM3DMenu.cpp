@@ -183,7 +183,7 @@ void DREAM3DMenu::initialize()
   m_ActionNew->setText(QApplication::translate("DREAM3D_UI", "New...", 0));
   m_ActionNew->setShortcut(QApplication::translate("DREAM3D_UI", "Ctrl+N", 0));
   m_ActionClearRecentFiles->setText(QApplication::translate("DREAM3D_UI", "Clear Recent Files", 0));
-  m_ActionExit->setText(QApplication::translate("DREAM3D_UI", "Exit DREAM3D", 0));
+  m_ActionExit->setText(QApplication::translate("DREAM3D_UI", "Exit DREAM.3D", 0));
 #if defined(Q_OS_WIN)
   m_ActionExit->setShortcut(QKeySequence(Qt::ALT + Qt::Key_F4));
 #else
@@ -201,7 +201,7 @@ void DREAM3DMenu::initialize()
 #endif
   m_ActionShowDREAM3DHelp->setText(QApplication::translate("DREAM3D_UI", "DREAM.3D Help", 0));
   m_ActionShowDREAM3DHelp->setShortcut(QApplication::translate("DREAM3D_UI", "Ctrl+H", 0));
-  m_ActionAboutDREAM3D->setText(QApplication::translate("DREAM3D_UI", "About DREAM3D", 0));
+  m_ActionAboutDREAM3D->setText(QApplication::translate("DREAM3D_UI", "About DREAM.3D", 0));
   m_ActionCheckForUpdates->setText(QApplication::translate("DREAM3D_UI", "Check For Updates", 0));
   m_ActionCheckForUpdates->setShortcut(QApplication::translate("DREAM3D_UI", "Ctrl+U", 0));
   m_ActionPluginInformation->setText(QApplication::translate("DREAM3D_UI", "Plugin Information", 0));
