@@ -42,6 +42,8 @@
 #include <QtWidgets/QTableWidgetItem>
 #include <QtWidgets/QMainWindow>
 
+#include "DREAM3DWidgetsLib/Widgets/DREAM3DUserManualDialog.h"
+
 #include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
 
 
@@ -76,7 +78,6 @@ void IssuesDockWidget::setupGui()
   errorTableWidget->horizontalHeader()->resizeSection(1, 250);
   errorTableWidget->horizontalHeader()->setSectionResizeMode(2, QHeaderView::ResizeToContents);
   errorTableWidget->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-  //errorTableWidget->setShown(true);
   errorTableWidget->setVisible(true);
 }
 
@@ -248,9 +249,19 @@ QLabel* IssuesDockWidget::createHyperlinkLabel(PipelineMessage msg)
   QLabel* hyperlinkLabel = new QLabel(filterHTMLText);
   hyperlinkLabel->setTextFormat(Qt::RichText);
   hyperlinkLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
-  hyperlinkLabel->setOpenExternalLinks(true);
+  hyperlinkLabel->setOpenExternalLinks(false);
+  connect(hyperlinkLabel, SIGNAL(linkActivated(const QString&)), this, SLOT(showFilterHelp(const QString&)));
 
   return hyperlinkLabel;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void IssuesDockWidget::showFilterHelp(const QString &urlString)
+{
+  QUrl url(urlString);
+  DREAM3DUserManualDialog::LaunchHelpDialog(url);
 }
 
 // -----------------------------------------------------------------------------
