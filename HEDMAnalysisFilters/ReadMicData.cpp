@@ -52,7 +52,6 @@
 
 #include "DREAM3DLib/FilterParameters/InputFileFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "HEDMAnalysis/HEDMAnalysisConstants.h"
