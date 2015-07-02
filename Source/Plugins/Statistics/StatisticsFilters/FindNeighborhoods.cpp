@@ -255,9 +255,9 @@ void FindNeighborhoods::find_neighborhoods()
       bin2z = bins[3 * j + 2];
       criticalDistance2 = criticalDistance[j];
 
-      dBinX = fabsf(bin2x - bin1x);
-      dBinY = fabsf(bin2y - bin1y);
-      dBinZ = fabsf(bin2z - bin1z);
+      dBinX = std::fabs(bin2x - bin1x);
+      dBinY = std::fabs(bin2y - bin1y);
+      dBinZ = std::fabs(bin2z - bin1z);
 
       if (dBinX < criticalDistance1 && dBinY < criticalDistance1 && dBinZ < criticalDistance1)
       {

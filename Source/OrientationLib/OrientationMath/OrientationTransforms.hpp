@@ -1341,7 +1341,7 @@ namespace LambertParametersType
         res[0] = r[0];
         res[1] = r[1];
         res[2] = r[2];
-        if (abs(r[3] - DREAM3D::Constants::k_Pi) < thr)
+        if (std::abs(r[3] - DREAM3D::Constants::k_Pi) < thr)
         {
           res[3] = std::numeric_limits<K>::infinity();
         }
@@ -1504,16 +1504,16 @@ namespace LambertParametersType
         oax[3] = 0.0f;
 
         s = om[0] + om[4] + om[8] + 1.0;
-        if (abs(s) < thr) { s = 0.0; }
+        if (std::abs(s) < thr) { s = 0.0; }
         s = sqrt(s);
         s1 = om[0] - om[4] - om[8] + 1.0;
-        if (abs(s1) < thr) { s1 = 0.0; }
+        if (std::abs(s1) < thr) { s1 = 0.0; }
         s1 = sqrt(s1);
         s2 = -om[0] + om[4] - om[8] + 1.0;
-        if (abs(s2) < thr) { s2 = 0.0; }
+        if (std::abs(s2) < thr) { s2 = 0.0; }
         s2 = sqrt(s2);
         s3 = -om[0] - om[4] + om[8] + 1.0;
-        if (abs(s3) < thr) { s3 = 0.0; }
+        if (std::abs(s3) < thr) { s3 = 0.0; }
         s3 = sqrt(s3);
         res[w] = s * 0.5;
         res[x] = s1 * 0.5;
