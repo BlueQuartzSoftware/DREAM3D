@@ -162,13 +162,6 @@ void PhaseTypeSelectionWidget::populateComboBoxes()
   {
     DataContainerProxy dc = iter.next();
     dataContainerCombo->addItem(dc.name);
-//    if(dataContainerCombo->findText(dc.name) == -1 )
-//    {
-//      // Retain the original current index when adding the item
-//      int index = dataContainerCombo->currentIndex();
-//      dataContainerCombo->addItem(dc.name);
-//      dataContainerCombo->setCurrentIndex(index);
-//    }
   }
 
   // Get what is in the filter
@@ -192,7 +185,6 @@ void PhaseTypeSelectionWidget::populateComboBoxes()
   }
   else
   {
-
     // Now to figure out which one of these to use. If this is the first time through then what we picked up from the
     // gui will be empty strings because nothing is there. If there is something in the filter then we should use that.
     // If there is something in both of them and they are NOT equal then we have a problem. Use the flag m_DidCausePreflight
