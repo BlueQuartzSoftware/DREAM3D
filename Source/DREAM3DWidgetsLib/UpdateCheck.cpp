@@ -35,6 +35,7 @@
 
 #include "UpdateCheck.h"
 
+#include <QtCore/QSysInfo>
 #include <QtCore/QDate>
 #include <QtCore/QSettings>
 #include <QtCore/QJsonDocument>
@@ -98,8 +99,11 @@ void UpdateCheck::checkVersion(QUrl website)
   QNetworkRequest request;
   request.setUrl(website);
 
-  QString header = "DREAM3D Version ";
-  header.append(DREAM3DLib::Version::Complete());
+
+  QString header;
+  QTextStream out(&header);
+  out << "DREAM3D Version " << DREAM3DLib::Version::Complete() << " [" << DREAM3DProj_RELEASE_TYPE << "] ";
+  out << "(" << QSysInfo::prettyProductName() << ")";
   request.setRawHeader("User-Agent", header.toLatin1());
 
   m_Nam->get(request);
