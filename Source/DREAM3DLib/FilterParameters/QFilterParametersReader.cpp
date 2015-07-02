@@ -52,12 +52,6 @@ QFilterParametersReader::QFilterParametersReader() :
   AbstractFilterParametersReader(),
   m_Prefs(NULL)
 {
-
-  //  qRegisterMetaType<IntVec3_t>("IntVec3_t");
-  //  qRegisterMetaTypeStreamOperators<IntVec3_t>("IntVec3_t");
-
-  //  qRegisterMetaType<FloatVec3_t>("FloatVec3_t");
-  //  qRegisterMetaTypeStreamOperators<FloatVec3_t>("FloatVec3_t");
 }
 
 // -----------------------------------------------------------------------------

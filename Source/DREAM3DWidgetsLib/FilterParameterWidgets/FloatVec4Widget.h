@@ -45,6 +45,7 @@
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/FilterParameters/FloatVec4FilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
@@ -92,6 +93,8 @@ class DREAM3DWidgetsLib_EXPORT FloatVec4Widget : public FilterParameterWidget, p
   private:
 
     bool m_DidCausePreflight;
+
+    FloatVec4FilterParameter* m_FilterParameter;
 
 
     FloatVec4Widget(const FloatVec4Widget&); // Copy Constructor Not Implemented

@@ -38,7 +38,8 @@
 #include <QtCore/QVector>
 #include <QtCore/QDataStream>
 
-#include "DREAM3DLib/FilterParameters/FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/IntVec3FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "DREAM3DLib/Common/PipelineMessage.h"
 #include "DREAM3DLib/Common/ComparisonInputs.h"
 #include "DREAM3DLib/DataContainers/DataArrayPath.h"

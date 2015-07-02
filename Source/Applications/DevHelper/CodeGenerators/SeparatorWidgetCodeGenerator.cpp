@@ -90,3 +90,11 @@ QString SeparatorWidgetCodeGenerator::generateInitializationList()
 {
   return "";
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString SeparatorWidgetCodeGenerator::generateCPPIncludes()
+{
+  return "#include \"DREAM3DLib/FilterParameters/SeparatorFilterParameter.h\"";
+}

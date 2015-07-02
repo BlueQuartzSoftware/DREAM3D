@@ -53,7 +53,7 @@ ChoiceFilterParameter::~ChoiceFilterParameter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ChoiceFilterParameter::Pointer ChoiceFilterParameter::New(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue,
+ChoiceFilterParameter::Pointer ChoiceFilterParameter::New(const QString& humanLabel, const QString& propertyName, const int& defaultValue,
                                                           QVector<QString> choices,
                                                           bool editable,
                                                           Category category, int groupIndex)
@@ -62,17 +62,21 @@ ChoiceFilterParameter::Pointer ChoiceFilterParameter::New(const QString& humanLa
   ChoiceFilterParameter::Pointer ptr = ChoiceFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
-  ptr->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
   ptr->setDefaultValue(defaultValue);
   ptr->setCategory(category);
-  ptr->setUnits("");
   ptr->setChoices(choices);
   ptr->setEditable(editable);
   ptr->setGroupIndex(groupIndex);
-  if (ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
-  {
-    ptr->setReadOnly(true);
-  }
+
 
   return ptr;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ChoiceFilterParameter::getWidgetType()
+{
+  return QString("ChoiceWidget");
+}
+

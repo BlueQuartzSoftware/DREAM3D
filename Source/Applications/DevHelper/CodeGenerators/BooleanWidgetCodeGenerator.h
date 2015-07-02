@@ -63,6 +63,8 @@ class BooleanWidgetCodeGenerator : public FPCodeGenerator
 
     virtual QString generateFilterParameters();
 
+    virtual QString generateCPPIncludes();
+
   protected:
     BooleanWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 

@@ -53,6 +53,7 @@
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 #include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
 #include "DREAM3DLib/Plugin/DREAM3DPluginLoader.h"
+#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 
 // -----------------------------------------------------------------------------
@@ -78,11 +79,12 @@ void GenerateCodeForFilter(const QString& outDir, AbstractFilter::Pointer filter
   int i = 1;
   for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
   {
+    SeparatorFilterParameter::Pointer sepFiltParam = SeparatorFilterParameter::New();
     FilterParameter* option = (*iter).get();
     if (option->getHumanLabel().compare("Required Information") == 0
         || option->getHumanLabel().compare("Created Information") == 0
         || option->getHumanLabel().compare("Optional Information") == 0
-        || option->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
+        || option->getWidgetType().compare(sepFiltParam->getWidgetType()) == 0)
     { continue; }
 
     // creates a working MATLAB m-file function per file per filter

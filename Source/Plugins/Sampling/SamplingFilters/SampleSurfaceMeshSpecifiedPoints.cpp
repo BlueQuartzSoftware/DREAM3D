@@ -39,7 +39,9 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/InputFileFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/OutputFileFilterParameter.h"
+
 
 #include "Sampling/SamplingConstants.h"
 
@@ -68,8 +70,8 @@ SampleSurfaceMeshSpecifiedPoints::~SampleSurfaceMeshSpecifiedPoints()
 void SampleSurfaceMeshSpecifiedPoints::setupFilterParameters()
 {
   FilterParameterVector parameters = getFilterParameters();
-  parameters.push_back(FileSystemFilterParameter::New("Specified Points File", "InputFilePath", FilterParameterWidgetType::InputFileWidget, getInputFilePath(), FilterParameter::Parameter, "", "*.raw, *.bin"));
-  parameters.push_back(FileSystemFilterParameter::New("Sampled Values File", "OutputFilePath", FilterParameterWidgetType::OutputFileWidget, getOutputFilePath(), FilterParameter::Parameter, "", "*.txt"));
+  parameters.push_back(InputFileFilterParameter::New("Specified Points File", "InputFilePath", getInputFilePath(), FilterParameter::Parameter, "*.raw, *.bin"));
+  parameters.push_back(OutputFileFilterParameter::New("Sampled Values File", "OutputFilePath", getOutputFilePath(), FilterParameter::Parameter, "*.txt"));
   setFilterParameters(parameters);
 }
 

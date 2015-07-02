@@ -54,6 +54,9 @@ DataBundleSelectionWidget::DataBundleSelectionWidget(FilterParameter* parameter,
   FilterParameterWidget(parameter, filter, parent),
   m_DidCausePreflight(false)
 {
+  m_FilterParameter = dynamic_cast<DataBundleSelectionFilterParameter*>(parameter);
+  Q_ASSERT_X(getFilterParameter() != NULL, "NULL Pointer", "DataBundleSelectionWidget can ONLY be used with a DataBundleSelectionFilterParameter object");
+
   setupUi(this);
   setupGui();
 }
@@ -111,15 +114,7 @@ void DataBundleSelectionWidget::setupGui()
   {
     return;
   }
-  QString units = getFilterParameter()->getUnits();
-  if(units.isEmpty() == false)
-  {
-    label->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
-  }
-  else
-  {
-    label->setText(getFilterParameter()->getHumanLabel() );
-  }
+  label->setText(getFilterParameter()->getHumanLabel() );
 
   dataBundleList->blockSignals(true);
 

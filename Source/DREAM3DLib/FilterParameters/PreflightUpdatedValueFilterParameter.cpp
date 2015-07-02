@@ -1,6 +1,6 @@
 /* ============================================================================
-* Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
-* Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+* Copyright (c) 2014 Michael A. Jackson (BlueQuartz Software)
+* Copyright (c) 2014 Dr. Michael A. Groeber (US Air Force Research Laboratories)
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without modification,
@@ -30,40 +30,47 @@
 * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *
 *  This code was written under United States Air Force Contract number
-*                           FA8650-07-D-5800
+*                           FA8650-10-D-5210
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _VolumeInfoFilterParameter_H_
-#define _VolumeInfoFilterParameter_H_
+#include "PreflightUpdatedValueFilterParameter.h"
 
-#include "DREAM3DLib/FilterParameters/FilterParameter.h"
-
-class DREAM3DLib_EXPORT VolumeInfoFilterParameter : public FilterParameter
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+PreflightUpdatedValueFilterParameter::PreflightUpdatedValueFilterParameter()
 {
-  public:
-    DREAM3D_SHARED_POINTERS(VolumeInfoFilterParameter)
-    DREAM3D_STATIC_NEW_MACRO(VolumeInfoFilterParameter)
-    DREAM3D_TYPE_MACRO_SUPER(VolumeInfoFilterParameter, FilterParameter)
+}
 
-    static Pointer New(const QString& humanLabel, const QString& dimsProperty,
-                       const QString& widgetType, const IntVec3_t& defaultValue,
-                       Category category,
-                       const QString& units = QString(""),
-                       const QString& resProperty = QString(""),
-                       int groupIndex = -1);
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+PreflightUpdatedValueFilterParameter::~PreflightUpdatedValueFilterParameter()
+{}
 
-    virtual ~VolumeInfoFilterParameter();
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+PreflightUpdatedValueFilterParameter::Pointer PreflightUpdatedValueFilterParameter::New(const QString& humanLabel, const QString& propertyName, const int& defaultValue,
+  Category category, int groupIndex)
+{
+  PreflightUpdatedValueFilterParameter::Pointer ptr = PreflightUpdatedValueFilterParameter::New();
+  ptr->setHumanLabel(humanLabel);
+  ptr->setPropertyName(propertyName);
+  ptr->setDefaultValue(defaultValue);
+  ptr->setCategory(category);
+  ptr->setGroupIndex(groupIndex);
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(DimensionsProperty)
-    DREAM3D_INSTANCE_STRING_PROPERTY(ResolutionProperty)
+  return ptr;
+}
 
-  protected:
-    VolumeInfoFilterParameter();
 
-  private:
-    VolumeInfoFilterParameter(const VolumeInfoFilterParameter&); // Copy Constructor Not Implemented
-    void operator=(const VolumeInfoFilterParameter&); // Operator '=' Not Implemented
-};
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString PreflightUpdatedValueFilterParameter::getWidgetType()
+{
+  return QString("PreflightUpdatedValueFilterParameterWidget");
+}
 
-#endif /* _VolumeInfoFilterParameter_H_ */

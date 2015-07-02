@@ -42,8 +42,11 @@
 #include "DREAM3DLib/Utilities/DREAM3DEndian.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/AxisAngleFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/OutputFileFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
+
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 #include "DREAM3DLib/Utilities/DREAM3DEndian.h"
 
@@ -89,8 +92,7 @@ void VisualizeGBCDPoleFigure::setupFilterParameters()
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Crystal Structure");
     option->setPropertyName("CrystalStructure");
-    option->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    //option->setValueType("unsigned int");
+
     QVector<QString> choices;
     choices.push_back("Hexagonal-High 6/mmm");
     choices.push_back("Cubic-High m-3m");
@@ -107,10 +109,10 @@ void VisualizeGBCDPoleFigure::setupFilterParameters()
     option->setCategory(FilterParameter::Parameter);
     parameters.push_back(option);
   }
-  parameters.push_back(FilterParameter::New("Misorientation Axis-Angle", "MisorientationRotation", FilterParameterWidgetType::AxisAngleWidget, getMisorientationRotation(), FilterParameter::Parameter));
-  parameters.push_back(FileSystemFilterParameter::New("Output Regular Grid VTK File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), FilterParameter::Parameter, "", "*.vtk", "VTK File"));
+  parameters.push_back(AxisAngleFilterParameter::New("Misorientation Axis-Angle", "MisorientationRotation", getMisorientationRotation(), FilterParameter::Parameter));
+  parameters.push_back(OutputFileFilterParameter::New("Output Regular Grid VTK File", "OutputFile", getOutputFile(), FilterParameter::Parameter, "*.vtk", "VTK File"));
   parameters.push_back(SeparatorFilterParameter::New("Face Ensemble Data", FilterParameter::RequiredArray));
-  parameters.push_back(FilterParameter::New("GBCD", "GBCDArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGBCDArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(DataArraySelectionFilterParameter::New("GBCD", "GBCDArrayPath", getGBCDArrayPath(), FilterParameter::RequiredArray));
   setFilterParameters(parameters);
 }
 

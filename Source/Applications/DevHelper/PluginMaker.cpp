@@ -789,30 +789,7 @@ QString PluginMaker::cleanName_filters(QString name)
 // -----------------------------------------------------------------------------
 void PluginMaker::on_m_PluginName_textChanged(const QString& text)
 {
-  QString filePath = m_OutputDir->text();
-  QFileInfo fi(filePath);
-  if (m_PluginName->text().isEmpty() || m_OutputDir->text().isEmpty() || fi.exists() == false)
-  {
-    generateButton->setDisabled(true);
-    if (m_PluginName->text().isEmpty())
-    {
-      errorString->setText("The plugin name has not been chosen.");
-    }
-    else if (m_OutputDir->text().isEmpty())
-    {
-      errorString->setText("The output directory has not been selected.");
-    }
-    else
-    {
-      errorString->setText("The currently selected output directory does not exist.");
-    }
-  }
-  else
-  {
-    generateButton->setEnabled(true);
-    errorString->setText("");
-    emit updateStatusBar("Ready");
-  }
+  validityCheck();
 }
 
 // -----------------------------------------------------------------------------
@@ -820,30 +797,7 @@ void PluginMaker::on_m_PluginName_textChanged(const QString& text)
 // -----------------------------------------------------------------------------
 void PluginMaker::on_m_OutputDir_textChanged(const QString& text)
 {
-  QString filePath = m_OutputDir->text();
-  QFileInfo fi(filePath);
-  if (m_PluginName->text().isEmpty() || m_OutputDir->text().isEmpty() || fi.exists() == false)
-  {
-    generateButton->setDisabled(true);
-    if (m_PluginName->text().isEmpty())
-    {
-      errorString->setText("The plugin name has not been chosen.  Please choose a plugin name.");
-    }
-    else if (m_OutputDir->text().isEmpty())
-    {
-      errorString->setText("The output directory has not been selected.  Please select an output directory.");
-    }
-    else
-    {
-      errorString->setText("The currently selected output directory does not exist.");
-    }
-  }
-  else
-  {
-    generateButton->setEnabled(true);
-    errorString->setText("");
-    emit updateStatusBar("Ready");
-  }
+  validityCheck();
 }
 
 // -----------------------------------------------------------------------------
@@ -1203,6 +1157,40 @@ QString PluginMaker::generateCmakeContents()
 void PluginMaker::testFileLocationsHandler()
 {
   emit clicked(m_TestFileLocationNames);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool PluginMaker::validityCheck()
+{
+  QString filePath = m_OutputDir->text();
+  QFileInfo fi(filePath);
+  if (m_PluginName->text().isEmpty() || m_OutputDir->text().isEmpty() || fi.exists() == false)
+  {
+    generateButton->setDisabled(true);
+    if (m_PluginName->text().isEmpty())
+    {
+      errorString->setText("The plugin name has not been chosen.");
+    }
+    else if (m_OutputDir->text().isEmpty())
+    {
+      errorString->setText("The output directory has not been selected.");
+    }
+    else
+    {
+      errorString->setText("The currently selected output directory does not exist.");
+    }
+
+    return false;
+  }
+  else
+  {
+    generateButton->setEnabled(true);
+    errorString->setText("");
+    emit updateStatusBar("Ready");
+    return true;
+  }
 }
 
 

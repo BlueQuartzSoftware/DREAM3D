@@ -43,7 +43,14 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/ComparisonInputs.h"
-#include "DREAM3DLib/FilterParameters/FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/IntVec3FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/FloatVec4FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/Symmetric6x6FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/SecondOrderPolynomialFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/ThirdOrderPolynomialFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/FourthOrderPolynomialFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/FileListInfoFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/DynamicTableData.h"
 #include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
 #include "DREAM3DLib/DataContainers/DataArrayPath.h"
@@ -117,7 +124,7 @@ class DREAM3DLib_EXPORT AbstractFilterParametersWriter
 
     virtual int writeArraySelections(const QString name, QSet<QString> v) = 0;
 
-    virtual int writeValue(const QString name, DataContainerArrayProxy& v) = 0;
+    virtual int writeValue(const QString name, const DataContainerArrayProxy& v) = 0;
 
     virtual int writeValue(const QString name, AxisAngleInput_t v) = 0;
 

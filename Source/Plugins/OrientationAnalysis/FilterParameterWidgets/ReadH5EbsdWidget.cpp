@@ -49,7 +49,7 @@
 #include "EbsdLib/HKL/CtfFields.h"
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
+
 
 #include "QtSupportLib/QFileCompleter.h"
 #include "QtSupportLib/DREAM3DQtMacros.h"
@@ -57,6 +57,7 @@
 
 
 #include "OrientationAnalysis/OrientationAnalysisFilters/ReadH5Ebsd.h"
+#include "OrientationAnalysis/FilterParameters/ReadH5EbsdFilterParameter.h"
 
 // This file is auto generated into the build directory
 #include "OrientationAnalysis/moc_ReadH5EbsdWidget.cpp"
@@ -73,7 +74,7 @@ ReadH5EbsdWidget::ReadH5EbsdWidget(FilterParameter* parameter, AbstractFilter* f
   m_DidCausePreflight(false),
   m_NewFileLoaded(false)
 {
-  m_FilterParameter = dynamic_cast<FileSystemFilterParameter*>(parameter);
+  m_FilterParameter = dynamic_cast<ReadH5EbsdFilterParameter*>(parameter);
 
   m_SampleTransformation.angle = 0.0f;
   m_SampleTransformation.h = 0.0f;
@@ -127,7 +128,7 @@ AbstractFilter* ReadH5EbsdWidget::getFilter() const
 // -----------------------------------------------------------------------------
 void ReadH5EbsdWidget::setFilterParameter(FilterParameter* value)
 {
-  m_FilterParameter = dynamic_cast<FileSystemFilterParameter*>(value);
+  m_FilterParameter = dynamic_cast<ReadH5EbsdFilterParameter*>(value);
 }
 
 // -----------------------------------------------------------------------------

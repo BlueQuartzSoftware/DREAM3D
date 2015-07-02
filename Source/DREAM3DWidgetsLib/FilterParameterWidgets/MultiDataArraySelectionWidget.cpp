@@ -57,6 +57,9 @@ MultiDataArraySelectionWidget::MultiDataArraySelectionWidget(FilterParameter* pa
   FilterParameterWidget(parameter, filter, parent),
   m_DidCausePreflight(false)
 {
+  m_FilterParameter = dynamic_cast<MultiDataArraySelectionFilterParameter*>(parameter);
+  Q_ASSERT_X(getFilterParameter() != NULL, "NULL Pointer", "MultiDataArraySelectionWidget can ONLY be used with a MultiDataArraySelectionFilterParameter object");
+
   setupUi(this);
   setupGui();
 }
@@ -106,15 +109,7 @@ void MultiDataArraySelectionWidget::setupGui()
   }
 
   // Generate the text for the QLabel
-  QString units = getFilterParameter()->getUnits();
-  if (units.isEmpty() == false)
-  {
-    label->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
-  }
-  else
-  {
-    label->setText(getFilterParameter()->getHumanLabel());
-  }
+  label->setText(getFilterParameter()->getHumanLabel());
 
   // Block Signals from the ComboBoxes while we clear them
   dataContainerList->blockSignals(true);

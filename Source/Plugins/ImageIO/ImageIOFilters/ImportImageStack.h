@@ -40,6 +40,8 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/FileListInfoFilterParameter.h"
 
 /**
  * @brief The ImportImageStack class. See [Filter documentation](@ref importimagestack) for details.

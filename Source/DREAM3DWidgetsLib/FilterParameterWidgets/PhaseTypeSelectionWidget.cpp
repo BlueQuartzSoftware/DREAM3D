@@ -43,7 +43,7 @@
 
 #include "DREAM3DLib/Common/PhaseType.h"
 #include "DREAM3DLib/DataContainers/DataArrayPath.h"
-#include "DREAM3DLib/FilterParameters/PhaseTypesFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/PhaseTypeSelectionFilterParameter.h"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
@@ -57,11 +57,9 @@ PhaseTypeSelectionWidget::PhaseTypeSelectionWidget(FilterParameter* parameter, A
   FilterParameterWidget(parameter, filter, parent),
   m_DidCausePreflight(false)
 {
-  PhaseTypesFilterParameter* p = dynamic_cast<PhaseTypesFilterParameter*>(parameter);
-  if (NULL == p)
-  {
-    Q_ASSERT_X(NULL != p, "PhaseTypeSelectionWidget can ONLY be used with PhaseTypesFilterParameter FilterParameters", __FILE__);
-  }
+  m_FilterParameter = dynamic_cast<PhaseTypeSelectionFilterParameter*>(parameter);
+  Q_ASSERT_X(getFilterParameter() != NULL, "NULL Pointer", "PhaseTypeSelectionWidget can ONLY be used with a PhaseTypeSelectionFilterParameter object");
+
   setupUi(this);
   setupGui();
 }
@@ -110,15 +108,7 @@ void PhaseTypeSelectionWidget::setupGui()
   {
     return;
   }
-  QString units = getFilterParameter()->getUnits();
-  if(units.isEmpty() == false)
-  {
-    label->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
-  }
-  else
-  {
-    label->setText(getFilterParameter()->getHumanLabel() );
-  }
+  label->setText(getFilterParameter()->getHumanLabel() );
 
 
 
@@ -378,7 +368,7 @@ void PhaseTypeSelectionWidget::updatePhaseComboBoxes()
 {
   bool ok = false;
   // setup the list of choices for the widget
-  PhaseTypesFilterParameter* phaseTypes = dynamic_cast<PhaseTypesFilterParameter*>(getFilterParameter());
+  PhaseTypeSelectionFilterParameter* phaseTypes = dynamic_cast<PhaseTypeSelectionFilterParameter*>(getFilterParameter());
   QString countProp = phaseTypes->getPhaseTypeCountProperty();
   int phaseCount = getFilter()->property(countProp.toLatin1().constData()).toInt(&ok);
   QString phaseDataProp = phaseTypes->getPhaseTypeDataProperty();
@@ -488,7 +478,7 @@ void PhaseTypeSelectionWidget::filterNeedsInputParameters(AbstractFilter* filter
 //    std::cout << "PhaseTypeSelectionWidget::filterNeedsInputParameters Count = " << count << std::endl;
 //  }
 
-  PhaseTypesFilterParameter* p = dynamic_cast<PhaseTypesFilterParameter*>(getFilterParameter());
+  PhaseTypeSelectionFilterParameter* p = dynamic_cast<PhaseTypeSelectionFilterParameter*>(getFilterParameter());
   QVariant var;
 
   // QVector<uint32_t> phaseTypes(count, DREAM3D::PhaseType::UnknownPhaseType);

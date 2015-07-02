@@ -463,7 +463,7 @@ DataContainerProxy& DataContainerArrayProxy::getDataContainerProxy(const QString
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerArrayProxy::writeJson(QJsonObject& json)
+void DataContainerArrayProxy::writeJson(QJsonObject& json) const
 {
   json["Data Containers"] = writeMap(dataContainers);
 }
@@ -484,7 +484,7 @@ bool DataContainerArrayProxy::readJson(QJsonObject& json)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QJsonArray DataContainerArrayProxy::writeMap(QMap<QString, DataContainerProxy> map)
+QJsonArray DataContainerArrayProxy::writeMap(QMap<QString, DataContainerProxy> map) const
 {
   QJsonArray dcArray;
   for (QMap<QString, DataContainerProxy>::iterator iter = map.begin(); iter != map.end(); ++iter)

@@ -47,7 +47,7 @@ class DREAM3DLib_EXPORT ChoiceFilterParameter : public FilterParameter
     DREAM3D_TYPE_MACRO_SUPER(ChoiceFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const QVariant& defaultValue,
+                       const int& defaultValue,
                        QVector<QString> choices,
                        bool editable,
                        Category category,
@@ -58,6 +58,12 @@ class DREAM3DLib_EXPORT ChoiceFilterParameter : public FilterParameter
     DREAM3D_INSTANCE_PROPERTY(QVector<QString>, Choices)
     DREAM3D_INSTANCE_PROPERTY(bool, Editable)
 
+    /**
+     * @brief getWidgetType Returns the type of widget that displays and controls
+     * this FilterParameter subclass
+     * @return
+     */
+    QString getWidgetType();
   protected:
     ChoiceFilterParameter();
 
@@ -67,4 +73,3 @@ class DREAM3DLib_EXPORT ChoiceFilterParameter : public FilterParameter
 };
 
 #endif /* _ChoiceFilterParameter_H_ */
-

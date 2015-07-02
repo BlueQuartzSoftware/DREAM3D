@@ -47,15 +47,21 @@ class DREAM3DLib_EXPORT DataContainerArrayProxyFilterParameter : public FilterPa
     DREAM3D_TYPE_MACRO_SUPER(DataContainerArrayProxyFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const QString& widgetType, const QVariant& defaultValue,
-                       DataContainerArrayProxy proxy, Qt::CheckState defState,
-                       Category category,
-                       int groupIndex = -1);
+                       const QString& defaultValue, DataContainerArrayProxy proxy,
+                       Qt::CheckState defState, Category category, int groupIndex = -1);
 
     virtual ~DataContainerArrayProxyFilterParameter();
 
     DREAM3D_INSTANCE_PROPERTY(DataContainerArrayProxy, DataContainerArrayProxy)
     DREAM3D_INSTANCE_PROPERTY(Qt::CheckState, DefaultFlagValue)
+
+    /**
+     * @brief getWidgetType Returns the type of widget that displays and controls
+     * this FilterParameter subclass
+     * @return
+     */
+    QString getWidgetType();
+
 
   protected:
     DataContainerArrayProxyFilterParameter();

@@ -47,7 +47,7 @@ class DREAM3DLib_EXPORT LinkedBooleanFilterParameter : public FilterParameter
     DREAM3D_TYPE_MACRO_SUPER(LinkedBooleanFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const QVariant& defaultValue,
+                       const bool& defaultValue,
                        QStringList conditionalProperties,
                        Category category,
                        int groupIndex = -1);
@@ -55,6 +55,14 @@ class DREAM3DLib_EXPORT LinkedBooleanFilterParameter : public FilterParameter
     virtual ~LinkedBooleanFilterParameter();
 
     DREAM3D_INSTANCE_PROPERTY(QStringList, ConditionalProperties)
+
+    /**
+     * @brief getWidgetType Returns the type of widget that displays and controls
+     * this FilterParameter subclass
+     * @return
+     */
+    QString getWidgetType();
+
 
   protected:
     LinkedBooleanFilterParameter();

@@ -58,6 +58,7 @@
 #include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
 #include "DREAM3DLib/Plugin/DREAM3DPluginLoader.h"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
+#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 #include "DREAM3DLib/DREAM3DFilters.h"
 
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
@@ -229,7 +230,8 @@ void verifyFilterParameters()
           || option->getHumanLabel().compare("Created Information") == 0
           || option->getHumanLabel().compare("Optional Information") == 0)
       { continue; }
-      if(option->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
+
+      if(NULL != dynamic_cast<SeparatorFilterParameter*>(option))
       {
         continue;
       }

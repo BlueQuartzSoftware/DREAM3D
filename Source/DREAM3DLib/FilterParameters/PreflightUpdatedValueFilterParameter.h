@@ -34,40 +34,39 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _PhaseTypesFilterParameter_H_
-#define _PhaseTypesFilterParameter_H_
+#ifndef _PreflightUpdatedValueFilterParameter_H_
+#define _PreflightUpdatedValueFilterParameter_H_
 
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
 
-class DREAM3DLib_EXPORT PhaseTypesFilterParameter : public FilterParameter
+class DREAM3DLib_EXPORT PreflightUpdatedValueFilterParameter : public FilterParameter
 {
   public:
-    DREAM3D_SHARED_POINTERS(PhaseTypesFilterParameter)
-    DREAM3D_STATIC_NEW_MACRO(PhaseTypesFilterParameter)
-    DREAM3D_TYPE_MACRO_SUPER(PhaseTypesFilterParameter, FilterParameter)
+    DREAM3D_SHARED_POINTERS(PreflightUpdatedValueFilterParameter)
+    DREAM3D_STATIC_NEW_MACRO(PreflightUpdatedValueFilterParameter)
+    DREAM3D_TYPE_MACRO_SUPER(PreflightUpdatedValueFilterParameter, FilterParameter)
 
-    static Pointer New(const QString& humanLabel,
-                       const QString& PhaseTypesArrayName,
-                       const QString& phaseTypeCountProperty,
-                       const QString& phaseTypeDataProperty,
-                       const QString& attributeMatrixProperty,
-                       const DataArrayPath attributeMatrixDefault,
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const int& defaultValue,
                        Category category,
                        int groupIndex = -1);
 
-    virtual ~PhaseTypesFilterParameter();
+    virtual ~PreflightUpdatedValueFilterParameter();
 
-    DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeCountProperty)
-    DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeDataProperty)
-    DREAM3D_INSTANCE_PROPERTY(QString, AttributeMatrixPathProperty)
-    DREAM3D_INSTANCE_PROPERTY(DataArrayPath, AttributeMatrixPathDefault)
+    /**
+     * @brief getWidgetType Returns the type of widget that displays and controls
+     * this FilterParameter subclass
+     * @return
+     */
+    QString getWidgetType();
+
 
   protected:
-    PhaseTypesFilterParameter();
+    PreflightUpdatedValueFilterParameter();
 
   private:
-    PhaseTypesFilterParameter(const PhaseTypesFilterParameter&); // Copy Constructor Not Implemented
-    void operator=(const PhaseTypesFilterParameter&); // Operator '=' Not Implemented
+    PreflightUpdatedValueFilterParameter(const PreflightUpdatedValueFilterParameter&); // Copy Constructor Not Implemented
+    void operator=(const PreflightUpdatedValueFilterParameter&); // Operator '=' Not Implemented
 };
 
-#endif /* _PhaseTypesFilterParameter_H_ */
+#endif /* _PreflightUpdatedValueFilterParameter_H_ */

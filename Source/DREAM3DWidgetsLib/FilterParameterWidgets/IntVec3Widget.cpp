@@ -36,6 +36,9 @@
 #include "IntVec3Widget.h"
 
 #include <QtCore/QMetaProperty>
+
+#include "DREAM3DLib/FilterParameters/IntVec3FilterParameter.h"
+
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
@@ -46,6 +49,9 @@
 IntVec3Widget::IntVec3Widget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   FilterParameterWidget(parameter, filter, parent)
 {
+  m_FilterParameter = dynamic_cast<IntVec3FilterParameter*>(parameter);
+  Q_ASSERT_X(getFilterParameter() != NULL, "NULL Pointer", "IntVec3Widget can ONLY be used with a IntVec3FilterParameter object");
+
   setupUi(this);
   setupGui();
 }
@@ -89,15 +95,8 @@ void IntVec3Widget::setupGui()
 
   if (getFilterParameter() != NULL)
   {
-    QString units = getFilterParameter()->getUnits();
-    if(units.isEmpty() == false)
-    {
-      IntVec3WidgetLabel->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
-    }
-    else
-    {
-      IntVec3WidgetLabel->setText(getFilterParameter()->getHumanLabel() );
-    }
+    IntVec3WidgetLabel->setText(getFilterParameter()->getHumanLabel() );
+
 
     IntVec3_t data = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<IntVec3_t>();
     xData->setText(QString::number(data.x) );

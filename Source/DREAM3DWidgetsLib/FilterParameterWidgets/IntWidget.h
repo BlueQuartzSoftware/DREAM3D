@@ -44,6 +44,8 @@
 #include "QtSupportLib/FaderWidget.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/FilterParameters/IntFilterParameter.h"
+
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 
@@ -90,6 +92,8 @@ class DREAM3DWidgetsLib_EXPORT IntWidget : public FilterParameterWidget, private
   private:
 
     bool m_DidCausePreflight;
+
+    IntFilterParameter* m_FilterParameter;
 
 
     IntWidget(const IntWidget&); // Copy Constructor Not Implemented

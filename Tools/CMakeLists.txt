@@ -42,18 +42,6 @@ ConvertPathToHeaderCompatible(${DREAM3DProj_PARENT_DIR_NORM})
 configure_file( ${DREAM3DTools_SOURCE_DIR}/ToolConfiguration.h.in
                 ${DREAM3DTools_BINARY_DIR}/ToolConfiguration.h)
 
-
-# --------------------------------------------------------------------------
-# Install the GMT script and doc file.
-install(FILES ${DREAM3DTools_SOURCE_DIR}/GMT/Draw_stereograms-gmt-v5.1.sh
-        DESTINATION ./bin/
-        PERMISSIONS OWNER_EXECUTE GROUP_EXECUTE WORLD_EXECUTE OWNER_READ GROUP_READ WORLD_READ OWNER_WRITE GROUP_WRITE WORLD_WRITE
-        COMPONENT Applications )
-
-install(FILES ${DREAM3DTools_SOURCE_DIR}/GMT/UsingGMT.md
-        DESTINATION ./bin/
-        COMPONENT Applications )
-
 #-------------------------------------------------------------------------------
 # Function COMPILE_TOOL to help alleviate lots of extra code below for adding
 # simple command line tools that just need one or two source files
@@ -76,7 +64,7 @@ function(COMPILE_TOOL)
         VERSION_MINOR ${D3DTOOL_DREAM3D_VER_MINOR}
         VERSION_PATCH ${D3DTOOL_DREAM3D_VER_PATCH}
         BINARY_DIR    ${D3DTOOL_BINARY_DIR}
-        LINK_LIBRARIES Qt5::Core EbsdLib DREAM3DLib "${D3DTOOL_LINK_LIBRARIES}"
+        LINK_LIBRARIES Qt5::Core "${D3DTOOL_LINK_LIBRARIES}"
         LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
         COMPONENT     Applications
         INSTALL_DEST  "${D3DTOOL_INSTALL_DEST}"
@@ -96,7 +84,7 @@ COMPILE_TOOL(
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
     INSTALL_DEST  "${install_dir}"
-    LINK_LIBRARIES DREAM3DLib
+    LINK_LIBRARIES EbsdLib DREAM3DLib
 )
 
 
@@ -110,7 +98,7 @@ COMPILE_TOOL(
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
-    LINK_LIBRARIES DREAM3DLib
+    #LINK_LIBRARIES DREAM3DLib
 )
 
 # Create a Command line tool for the MATLAB_CodeGen
@@ -123,7 +111,7 @@ COMPILE_TOOL(
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
-    LINK_LIBRARIES DREAM3DLib
+    LINK_LIBRARIES EbsdLib DREAM3DLib
 )
 
 # --------------------------------------------------------------------
@@ -138,7 +126,7 @@ COMPILE_TOOL(
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
-    LINK_LIBRARIES Qt5::Gui Qt5::Widgets
+    LINK_LIBRARIES EbsdLib DREAM3DLib Qt5::Gui Qt5::Widgets
 )
 
 # --------------------------------------------------------------------
@@ -150,7 +138,7 @@ COMPILE_TOOL(
     VERSION_MINOR ${DREAM3D_VER_MINOR}
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    LINK_LIBRARIES Qt5::Core
+    LINK_LIBRARIES hdf5  Qt5::Core H5Support DREAM3DLib
 )
 
 

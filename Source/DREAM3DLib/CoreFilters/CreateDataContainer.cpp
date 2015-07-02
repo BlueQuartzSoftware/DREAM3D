@@ -7,6 +7,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
 
 
 
@@ -33,7 +34,7 @@ CreateDataContainer::~CreateDataContainer()
 void CreateDataContainer::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Created Data Container", "CreatedDataContainer", FilterParameterWidgetType::StringWidget, getCreatedDataContainer(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(StringFilterParameter::New("Created Data Container", "CreatedDataContainer", getCreatedDataContainer(), FilterParameter::CreatedArray));
   setFilterParameters(parameters);
 }
 

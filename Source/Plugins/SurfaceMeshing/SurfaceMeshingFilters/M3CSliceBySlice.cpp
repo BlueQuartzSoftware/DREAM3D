@@ -328,15 +328,15 @@ M3CSliceBySlice::~M3CSliceBySlice()
 void M3CSliceBySlice::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Delete Temp Files", "DeleteTempFiles", FilterParameterWidgetType::BooleanWidget, getDeleteTempFiles(), FilterParameter::Uncategorized));
+  parameters.push_back(BooleanFilterParameter::New("Delete Temp Files", "DeleteTempFiles", getDeleteTempFiles(), FilterParameter::Uncategorized));
   parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(DataArraySelectionFilterParameter::New("FeatureIds", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::Uncategorized));
   parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Surface Data Container", "SurfaceDataContainerName", FilterParameterWidgetType::StringWidget, getSurfaceDataContainerName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Vertex Attribute Matrix", "VertexAttributeMatrixName", FilterParameterWidgetType::StringWidget, getVertexAttributeMatrixName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Face Attribute Matrix", "FaceAttributeMatrixName", FilterParameterWidgetType::StringWidget, getFaceAttributeMatrixName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Face Labels", "FaceLabelsArrayName", FilterParameterWidgetType::StringWidget, getFaceLabelsArrayName(), FilterParameter::Uncategorized, ""));
-  parameters.push_back(FilterParameter::New("Node Types", "SurfaceMeshNodeTypesArrayName", FilterParameterWidgetType::StringWidget, getSurfaceMeshNodeTypesArrayName(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(StringFilterParameter::New("Surface Data Container", "SurfaceDataContainerName", getSurfaceDataContainerName(), FilterParameter::Uncategorized));
+  parameters.push_back(StringFilterParameter::New("Vertex Attribute Matrix", "VertexAttributeMatrixName", getVertexAttributeMatrixName(), FilterParameter::Uncategorized));
+  parameters.push_back(StringFilterParameter::New("Face Attribute Matrix", "FaceAttributeMatrixName", getFaceAttributeMatrixName(), FilterParameter::Uncategorized));
+  parameters.push_back(StringFilterParameter::New("Face Labels", "FaceLabelsArrayName", getFaceLabelsArrayName(), FilterParameter::Uncategorized));
+  parameters.push_back(StringFilterParameter::New("Node Types", "SurfaceMeshNodeTypesArrayName", getSurfaceMeshNodeTypesArrayName(), FilterParameter::Uncategorized));
   setFilterParameters(parameters);
 }
 

@@ -7,6 +7,8 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/DataContainerSelectionFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/DynamicTableFilterParameter.h"
 
@@ -60,9 +62,9 @@ void CreateAttributeMatrix::setupFilterParameters()
   rHeaders << "Tuple Dimensions";
 
   std::vector<std::vector<double> > defaultTable;
-  parameters.push_back(DynamicTableFilterParameter::New("Tuple Dimensions", "TupleDimensions", FilterParameterWidgetType::DynamicTableWidget, rHeaders, cHeaders, defaultTable, FilterParameter::Parameter, false, true, 0));
-  parameters.push_back(FilterParameter::New("Data Container Destination", "SelectedDataContainer", FilterParameterWidgetType::DataContainerSelectionWidget, getSelectedDataContainer(), FilterParameter::RequiredArray));
-  parameters.push_back(FilterParameter::New("Created Attribute Matrix", "CreatedAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCreatedAttributeMatrixName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(DynamicTableFilterParameter::New("Tuple Dimensions", "TupleDimensions", rHeaders, cHeaders, defaultTable, FilterParameter::Parameter, false, true, 0));
+  parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container Destination", "SelectedDataContainer", getSelectedDataContainer(), FilterParameter::RequiredArray));
+  parameters.push_back(StringFilterParameter::New("Created Attribute Matrix", "CreatedAttributeMatrixName", getCreatedAttributeMatrixName(), FilterParameter::CreatedArray));
 
   setFilterParameters(parameters);
 }

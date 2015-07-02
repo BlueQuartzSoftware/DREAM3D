@@ -40,7 +40,8 @@
 #include <QtWidgets/QListWidgetItem>
 
 #include "DREAM3DLib/DataContainers/DataArrayPath.h"
-#include "DREAM3DLib/FilterParameters/VolumeInfoFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/VolumeDataContainerInfoFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
@@ -55,9 +56,8 @@ VolumeDataContainerInfoWidget::VolumeDataContainerInfoWidget(FilterParameter* pa
   FilterParameterWidget(parameter, filter, parent),
   m_DidCausePreflight(false)
 {
-
-  m_FilterParameter = dynamic_cast<VolumeInfoFilterParameter*>(parameter);
-  Q_ASSERT_X(NULL != m_FilterParameter, "VolumeDataContainerInfoWidget can ONLY be used with VolumeInfoFilterParameter Filter Parameters", __FILE__);
+  m_FilterParameter = dynamic_cast<VolumeDataContainerInfoFilterParameter*>(parameter);
+  Q_ASSERT_X(getFilterParameter() != NULL, "NULL Pointer", "VolumeDataContainerInfoWidget can ONLY be used with a VolumeDataContainerInfoFilterParameter object");
 
   setupUi(this);
   setupGui();
@@ -85,7 +85,7 @@ VolumeDataContainerInfoWidget::~VolumeDataContainerInfoWidget()
 // -----------------------------------------------------------------------------
 void VolumeDataContainerInfoWidget::setFilterParameter(FilterParameter* value)
 {
-  m_FilterParameter = dynamic_cast<VolumeInfoFilterParameter*>(value);
+  m_FilterParameter = dynamic_cast<VolumeDataContainerInfoFilterParameter*>(value);
 }
 
 // -----------------------------------------------------------------------------
@@ -103,8 +103,8 @@ void VolumeDataContainerInfoWidget::initializeWidget(FilterParameter* parameter,
 {
   setFilter(filter);
 
-  m_FilterParameter = dynamic_cast<VolumeInfoFilterParameter*>(parameter);
-  Q_ASSERT_X(NULL != m_FilterParameter, "VolumeDataContainerInfoWidget can ONLY be used with VolumeInfoFilterParameter Filter Parameters", __FILE__);
+  m_FilterParameter = dynamic_cast<VolumeDataContainerInfoFilterParameter*>(parameter);
+  Q_ASSERT_X(NULL != m_FilterParameter, "VolumeDataContainerInfoWidget can ONLY be used with VolumeDataContainerInfoFilterParameter Filter Parameters", __FILE__);
 
   setupGui();
 }
@@ -135,15 +135,7 @@ void VolumeDataContainerInfoWidget::setupGui()
   {
     return;
   }
-  QString units = m_FilterParameter->getUnits();
-  if(units.isEmpty() == false)
-  {
-    label->setText(m_FilterParameter->getHumanLabel() + " (" + units + ")");
-  }
-  else
-  {
-    label->setText(m_FilterParameter->getHumanLabel() );
-  }
+  label->setText(m_FilterParameter->getHumanLabel() );
 
   dataContainerList->blockSignals(true);
 

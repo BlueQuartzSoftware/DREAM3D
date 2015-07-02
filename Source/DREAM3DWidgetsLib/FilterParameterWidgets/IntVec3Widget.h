@@ -48,6 +48,7 @@
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/FilterParameters/IntVec3FilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
@@ -95,6 +96,8 @@ class DREAM3DWidgetsLib_EXPORT IntVec3Widget : public FilterParameterWidget, pri
   private:
 
     bool m_DidCausePreflight;
+
+    IntVec3FilterParameter* m_FilterParameter;
 
 
     IntVec3Widget(const IntVec3Widget&); // Copy Constructor Not Implemented

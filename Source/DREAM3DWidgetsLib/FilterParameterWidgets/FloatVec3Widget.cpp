@@ -37,6 +37,8 @@
 
 #include <QtCore/QMetaProperty>
 
+#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
+
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
@@ -47,6 +49,9 @@
 FloatVec3Widget::FloatVec3Widget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   FilterParameterWidget(parameter, filter, parent)
 {
+  m_FilterParameter = dynamic_cast<FloatVec3FilterParameter*>(parameter);
+  Q_ASSERT_X(getFilterParameter() != NULL, "NULL Pointer", "FloatVec3Widget can ONLY be used with a FloatVec3FilterParameter object");
+
   setupUi(this);
   setupGui();
 }
@@ -91,15 +96,7 @@ void FloatVec3Widget::setupGui()
   zData->setValidator(zVal);
   if (getFilterParameter() != NULL)
   {
-    QString units = getFilterParameter()->getUnits();
-    if(units.isEmpty() == false)
-    {
-      label->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
-    }
-    else
-    {
-      label->setText(getFilterParameter()->getHumanLabel() );
-    }
+    label->setText(getFilterParameter()->getHumanLabel() );
 
     FloatVec3_t data = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<FloatVec3_t>();
     xData->setText(QString::number(data.x) );

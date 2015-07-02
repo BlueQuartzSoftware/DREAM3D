@@ -63,7 +63,7 @@ QString ChoiceWidgetCodeGenerator::generateSetupFilterParameters()
   ss << "    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();\n";
   ss << "    parameter->setHumanLabel(\"" + getHumanLabel() + "\");\n";
   ss << "    parameter->setPropertyName(\"" + getPropertyName() + "\");\n";
-  ss << "    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);\n";
+  ss << "    \n";
   ss << "    QVector<QString> choices;          // Please add choices to the choices QVector to finish this widget\n";
   ss << "    parameter->setChoices(choices);\n";
   ss << "    parameter->setCategory(" + getCategory() + ");\n";

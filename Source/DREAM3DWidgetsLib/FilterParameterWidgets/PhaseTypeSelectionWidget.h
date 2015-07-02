@@ -45,6 +45,7 @@
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/FilterParameters/PhaseTypeSelectionFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
@@ -124,6 +125,8 @@ class DREAM3DWidgetsLib_EXPORT PhaseTypeSelectionWidget : public FilterParameter
 //    QList<QComboBox*>           m_PhaseTypeCombos;
 
     DataContainerArrayProxy m_DcaProxy;
+
+    PhaseTypeSelectionFilterParameter* m_FilterParameter;
 
     PhaseTypeSelectionWidget(const PhaseTypeSelectionWidget&); // Copy Constructor Not Implemented
     void operator=(const PhaseTypeSelectionWidget&); // Operator '=' Not Implemented

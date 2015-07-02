@@ -112,9 +112,9 @@ class DREAM3DLib_EXPORT Filt1 : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(Filt1);
-    DREAM3D_STATIC_NEW_MACRO(Filt1);
-    DREAM3D_TYPE_MACRO_SUPER(Filt1, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(Filt1)
+    DREAM3D_STATIC_NEW_MACRO(Filt1)
+    DREAM3D_TYPE_MACRO_SUPER(Filt1, AbstractFilter)
 
     virtual ~Filt1();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)

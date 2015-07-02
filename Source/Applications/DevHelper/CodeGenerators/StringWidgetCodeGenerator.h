@@ -63,6 +63,8 @@ class StringWidgetCodeGenerator : public FPCodeGenerator
 
     virtual QString generateFilterParameters();
 
+    virtual QString generateCPPIncludes();
+
   protected:
     StringWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 

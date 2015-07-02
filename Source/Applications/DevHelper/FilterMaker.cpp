@@ -91,6 +91,9 @@ void FilterMaker::setupGui()
   splitter->setStretchFactor(1, 1);
 
   generateBtn->setEnabled(false);
+
+  // Populate the code viewer
+  on_codeChooser_currentIndexChanged(codeChooser->currentIndex());
 }
 
 // -----------------------------------------------------------------------------
@@ -480,14 +483,45 @@ QMap<QString, QString> FilterMaker::getFunctionContents()
     QString initValue = filterParametersTable->item(row, INIT_VALUE)->text();
 
     FPCodeGenerator::Pointer generator = factory->create(humanName, propertyName, type, category, initValue);
-    setupFPContents.append(generator->generateSetupFilterParameters() + "\n");
-    readFPContents.append(generator->generateReadFilterParameters() + "\n");
-    writeFPContents.append(generator->generateWriteFilterParameters() + "\n");
-    dataCheckContents.append(generator->generateDataCheck() + "\n");
-    FPContents.append(generator->generateFilterParameters() + "\n\n");
-    initListContents.append(generator->generateInitializationList() + "\n");
-    filterHIncludes.append(generator->generateHIncludes() + "\n");
-    filterCPPIncludes.append(generator->generateCPPIncludes() + "\n");
+    if (generator->generateSetupFilterParameters().isEmpty() == false)
+    {
+      setupFPContents.append(generator->generateSetupFilterParameters() + "\n");
+    }
+
+    if (generator->generateReadFilterParameters().isEmpty() == false)
+    {
+      readFPContents.append(generator->generateReadFilterParameters() + "\n");
+    }
+
+    if (generator->generateWriteFilterParameters().isEmpty() == false)
+    {
+      writeFPContents.append(generator->generateWriteFilterParameters() + "\n");
+    }
+
+    if (generator->generateDataCheck().isEmpty() == false)
+    {
+      dataCheckContents.append(generator->generateDataCheck() + "\n");
+    }
+
+    if (generator->generateFilterParameters().isEmpty() == false)
+    {
+      FPContents.append(generator->generateFilterParameters() + "\n\n");
+    }
+
+    if (generator->generateInitializationList().isEmpty() == false)
+    {
+      initListContents.append(generator->generateInitializationList() + "\n");
+    }
+
+    if (generator->generateHIncludes().isEmpty() == false)
+    {
+      filterHIncludes.append(generator->generateHIncludes() + "\n");
+    }
+
+    if (generator->generateCPPIncludes().isEmpty() == false)
+    {
+      filterCPPIncludes.append(generator->generateCPPIncludes() + "\n");
+    }
   }
 
   // Chop off the last, un-needed new-line character from each contents

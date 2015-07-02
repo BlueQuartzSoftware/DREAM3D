@@ -44,6 +44,8 @@ set(Project_SRCS "")
 include(${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/SourceList.cmake)
 # Add in our Plugin Specific FilterParameterWidgets
 include(${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameterWidgets/SourceList.cmake)
+# Add in our Plugin Specific FilterParameter
+include(${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameters/SourceList.cmake)
 # -- Include all the resources
 include(${${PLUGIN_NAME}_SOURCE_DIR}/Resources/SourceList.cmake)
 
@@ -165,6 +167,8 @@ set(${PLUGIN_NAME}_MODULE_SRCS
   ${${PLUGIN_NAME}_ParameterWidgets_UIS}
   ${${PLUGIN_NAME}_ParameterWidgets_Generated_MOC_SRCS}
   ${${PLUGIN_NAME}_ParameterWidgets_Generated_UI_HDRS}
+  ${${PLUGIN_NAME}_FilterParameters_SRCS}
+  ${${PLUGIN_NAME}_FilterParameters_HDRS}
   # -- Add in the plain Widgets
 #  ${${PLUGIN_NAME}_Widgets_HDRS}
 #  ${${PLUGIN_NAME}_Widgets_SRCS}
@@ -192,7 +196,7 @@ target_link_libraries(${PLUGIN_NAME}
                     Qt5::Core
                     DREAM3DLib
                     OrientationLib
-                    Qt5::Gui 
+                    Qt5::Gui
                     Qt5::Widgets
                     QtSupportLib
                     DREAM3DWidgetsLib

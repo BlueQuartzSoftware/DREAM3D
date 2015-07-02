@@ -47,7 +47,7 @@ class DREAM3DLib_EXPORT DynamicChoiceFilterParameter : public FilterParameter
     DREAM3D_TYPE_MACRO_SUPER(DynamicChoiceFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const QVariant& defaultValue,
+                       const QString& defaultValue,
                        const QString& listProperty,
                        Category category,
                        int groupIndex = -1);
@@ -56,6 +56,15 @@ class DREAM3DLib_EXPORT DynamicChoiceFilterParameter : public FilterParameter
 
 
     DREAM3D_INSTANCE_STRING_PROPERTY(ListProperty)
+    DREAM3D_INSTANCE_STRING_PROPERTY(Units)
+
+    /**
+     * @brief getWidgetType Returns the type of widget that displays and controls
+     * this FilterParameter subclass
+     * @return
+     */
+    QString getWidgetType();
+
 
   protected:
     DynamicChoiceFilterParameter();

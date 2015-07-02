@@ -41,13 +41,14 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
+
 #include "DREAM3DLib/Utilities/FilePathGenerator.h"
 
 #include "EbsdLib/HKL/H5CtfImporter.h"
 #include "EbsdLib/TSL/H5AngImporter.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
+#include "OrientationAnalysis/FilterParameters/EbsdToH5EbsdFilterParameter.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -91,7 +92,7 @@ void EbsdToH5Ebsd::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FileSystemFilterParameter::New("Import Orientation Data", "OrientationData", FilterParameterWidgetType::EbsdToH5EbsdWidget, "", FilterParameter::Parameter));
+  parameters.push_back(EbsdToH5EbsdFilterParameter::New("Import Orientation Data", "OrientationData", getOutputFile(), FilterParameter::Parameter));
 
   setFilterParameters(parameters);
 

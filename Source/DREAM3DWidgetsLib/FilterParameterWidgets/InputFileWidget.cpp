@@ -41,9 +41,10 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QFileDialog>
 
-#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/InputFileFilterParameter.h"
 
 #include "QtSupportLib/QFileCompleter.h"
+
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
@@ -57,10 +58,12 @@ QString InputFileWidget::m_OpenDialogLastDirectory = "";
 InputFileWidget::InputFileWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   FilterParameterWidget(parameter, filter, parent)
 {
-  m_FilterParameter = dynamic_cast<FileSystemFilterParameter*>(parameter);
-  Q_ASSERT_X(NULL != getFilterParameter(), "InputFileWidget", "Failed to dynamic_cast from FilterParameter to FileSystemFilterParameter");
+  m_FilterParameter = dynamic_cast<InputFileFilterParameter*>(parameter);
+  Q_ASSERT_X(getFilterParameter() != NULL, "NULL Pointer", "InputFileWidget can ONLY be used with a InputFileFilterParameter object");
+
   setupUi(this);
   setupGui();
+
   if ( m_OpenDialogLastDirectory.isEmpty() )
   {
     m_OpenDialogLastDirectory = QDir::homePath();
@@ -80,7 +83,7 @@ InputFileWidget::~InputFileWidget()
 // -----------------------------------------------------------------------------
 void InputFileWidget::setFilterParameter(FilterParameter* value)
 {
-  m_FilterParameter = dynamic_cast<FileSystemFilterParameter*>(value);
+  m_FilterParameter = dynamic_cast<InputFileFilterParameter*>(value);
 }
 
 // -----------------------------------------------------------------------------
@@ -134,15 +137,8 @@ void InputFileWidget::setupGui()
   // See if we can get the default value from the filter instance
   if (getFilterParameter() != NULL)
   {
-    QString units = getFilterParameter()->getUnits();
-    if(units.isEmpty() == false)
-    {
-      selectBtn->setText(getFilterParameter()->getHumanLabel() + " (" + units + ") ...");
-    }
-    else
-    {
-      selectBtn->setText(getFilterParameter()->getHumanLabel()  + " ...");
-    }
+    selectBtn->setText(getFilterParameter()->getHumanLabel()  + " ...");
+
     QString currentPath = getFilter()->property(PROPERTY_NAME_AS_CHAR).toString();
     value->setText(currentPath);
   }

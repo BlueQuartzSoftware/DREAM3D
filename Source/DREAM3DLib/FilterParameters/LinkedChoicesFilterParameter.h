@@ -51,7 +51,7 @@ class DREAM3DLib_EXPORT LinkedChoicesFilterParameter : public ChoiceFilterParame
     DREAM3D_TYPE_MACRO_SUPER(LinkedChoicesFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const QVariant& defaultValue,
+                       const int& defaultValue,
                        QVector<QString> choices,
                        QStringList linkedProperties,
                        Category category,
@@ -60,6 +60,14 @@ class DREAM3DLib_EXPORT LinkedChoicesFilterParameter : public ChoiceFilterParame
     virtual ~LinkedChoicesFilterParameter();
 
     DREAM3D_INSTANCE_PROPERTY(QStringList, LinkedProperties)
+
+    /**
+     * @brief getWidgetType Returns the type of widget that displays and controls
+     * this FilterParameter subclass
+     * @return
+     */
+    QString getWidgetType();
+
 
   protected:
     LinkedChoicesFilterParameter();

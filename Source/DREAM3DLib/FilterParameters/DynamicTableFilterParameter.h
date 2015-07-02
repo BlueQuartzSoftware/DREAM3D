@@ -47,10 +47,9 @@ class DREAM3DLib_EXPORT DynamicTableFilterParameter : public FilterParameter
     DREAM3D_TYPE_MACRO_SUPER(DynamicTableFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const QString& widgetType, QStringList rHeaders,
-                       QStringList cHeaders, std::vector<std::vector<double> > defaultTable,
-                       FilterParameter::Category category, bool isRowsDynamic = true,
-                       bool isColsDynamic = true, int minRowCount = 0, int minColCount = 0);
+                       QStringList rHeaders, QStringList cHeaders, std::vector<std::vector<double> > defaultTable,
+                       FilterParameter::Category category, bool isRowsDynamic = true, bool isColsDynamic = true,
+                       int minRowCount = 0, int minColCount = 0);
 
     virtual ~DynamicTableFilterParameter();
 
@@ -65,6 +64,14 @@ class DREAM3DLib_EXPORT DynamicTableFilterParameter : public FilterParameter
     DREAM3D_INSTANCE_PROPERTY(int, MinColCount)
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
     DREAM3D_INSTANCE_PROPERTY(QString, ErrorMessage)
+
+    /**
+     * @brief getWidgetType Returns the type of widget that displays and controls
+     * this FilterParameter subclass
+     * @return
+     */
+    QString getWidgetType();
+
 
   protected:
     DynamicTableFilterParameter();

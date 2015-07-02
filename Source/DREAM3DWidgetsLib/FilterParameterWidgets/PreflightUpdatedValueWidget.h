@@ -46,6 +46,7 @@
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/FilterParameters/PreflightUpdatedValueFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
@@ -91,7 +92,7 @@ class DREAM3DWidgetsLib_EXPORT PreflightUpdatedValueWidget : public FilterParame
 
   private:
 
-
+    PreflightUpdatedValueFilterParameter* m_FilterParameter;
 
     PreflightUpdatedValueWidget(const PreflightUpdatedValueWidget&); // Copy Constructor Not Implemented
     void operator=(const PreflightUpdatedValueWidget&); // Operator '=' Not Implemented

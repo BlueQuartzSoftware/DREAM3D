@@ -1,7 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2014 Michael A. Jackson (BlueQuartz Software)
-* Copyright (c) 2014 Dr. Michael A. Groeber (US Air Force Research Laboratories)
-* All rights reserved.
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -13,10 +11,9 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
-* BlueQuartz Software nor the names of its contributors may be used to endorse
-* or promote products derived from this software without specific prior written
-* permission.
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -29,49 +26,53 @@
 * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
 * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *
-*  This code was written under United States Air Force Contract number
-*                           FA8650-10-D-5210
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "VolumeInfoFilterParameter.h"
+#include "FloatVec4FilterParameter.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VolumeInfoFilterParameter::VolumeInfoFilterParameter() :
-  FilterParameter(),
-  m_DimensionsProperty(""),
-  m_ResolutionProperty("")
+FloatVec4FilterParameter::FloatVec4FilterParameter() :
+FilterParameter()
 {}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VolumeInfoFilterParameter::~VolumeInfoFilterParameter()
+FloatVec4FilterParameter::~FloatVec4FilterParameter()
 {}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VolumeInfoFilterParameter::Pointer VolumeInfoFilterParameter::New(const QString& humanLabel, const QString& dimsProperty,
-    const QString& widgetType, const IntVec3_t& defaultValue,
-    Category category,
-    const QString& units,
-    const QString& resProperty, int groupIndex)
+FloatVec4FilterParameter::Pointer FloatVec4FilterParameter::New(const QString& humanLabel, const QString& propertyName,
+  const FloatVec4_t& defaultValue, Category category, int groupIndex)
 {
-  VolumeInfoFilterParameter::Pointer ptr = VolumeInfoFilterParameter::New();
+
+  FloatVec4FilterParameter::Pointer ptr = FloatVec4FilterParameter::New();
   ptr->setHumanLabel(humanLabel);
-  ptr->setPropertyName(dimsProperty);
-  ptr->setWidgetType(widgetType);
+  ptr->setPropertyName(propertyName);
   QVariant v;
   v.setValue(defaultValue);
   ptr->setDefaultValue(v);
   ptr->setCategory(category);
-  ptr->setUnits(units);
-  ptr->setDimensionsProperty(dimsProperty);
-  ptr->setResolutionProperty(resProperty);
-  ptr->setReadOnly(true);
   ptr->setGroupIndex(groupIndex);
+
   return ptr;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString FloatVec4FilterParameter::getWidgetType()
+{
+  return QString("FloatVec4Widget");
+}
+

@@ -70,7 +70,7 @@ void DynamicTableExample::setupFilterParameters()
   {
     QStringList rHeaders, cHeaders;
     std::vector<std::vector<double> > defaultTable;
-    parameters.push_back(DynamicTableFilterParameter::New("Dynamic Table 1", "DynamicData1", FilterParameterWidgetType::DynamicTableWidget, rHeaders, cHeaders, defaultTable, FilterParameter::Parameter, FilterParameter::Parameter, false, false, 0));
+    parameters.push_back(DynamicTableFilterParameter::New("Dynamic Table 1", "DynamicData1", rHeaders, cHeaders, defaultTable, FilterParameter::Parameter, false, false, 0));
   }
 
   // Table 2 - Fixed rows and columns, default data passed in
@@ -79,7 +79,7 @@ void DynamicTableExample::setupFilterParameters()
     rHeaders << "Passed RowName 1" << "Passed RowName 2";
     cHeaders << "Passed ColName 1" << "Passed ColName 2";
     std::vector<std::vector<double> > defaultTable(4, std::vector<double>(1, 3.87));
-    parameters.push_back(DynamicTableFilterParameter::New("Dynamic Table 2", "DynamicData2", FilterParameterWidgetType::DynamicTableWidget, rHeaders, cHeaders, defaultTable, FilterParameter::Parameter, false, false, 0));
+    parameters.push_back(DynamicTableFilterParameter::New("Dynamic Table 2", "DynamicData2", rHeaders, cHeaders, defaultTable, FilterParameter::Parameter, false, false, 0));
   }
 
   // Table 3 - Dynamic rows and fixed columns, default data passed in
@@ -88,7 +88,7 @@ void DynamicTableExample::setupFilterParameters()
     rHeaders << "Passed RowName 1" << "Passed RowName 2";
     cHeaders << "Passed ColName 1" << "Passed ColName 2";
     std::vector<std::vector<double> > defaultTable(3, std::vector<double>(5, 1.34));
-    parameters.push_back(DynamicTableFilterParameter::New("Dynamic Table 3", "DynamicData3", FilterParameterWidgetType::DynamicTableWidget, rHeaders, cHeaders, defaultTable, FilterParameter::Parameter, true, false, 0));
+    parameters.push_back(DynamicTableFilterParameter::New("Dynamic Table 3", "DynamicData3", rHeaders, cHeaders, defaultTable, FilterParameter::Parameter, true, false, 0));
   }
 
   // Table 4 - Fixed rows and dynamic columns, default data passed in
@@ -97,7 +97,7 @@ void DynamicTableExample::setupFilterParameters()
     rHeaders << "Passed RowName 1" << "Passed RowName 2";
     cHeaders << "Passed ColName 1" << "Passed ColName 2";
     std::vector<std::vector<double> > defaultTable(2, std::vector<double>(2, 3));
-    parameters.push_back(DynamicTableFilterParameter::New("Dynamic Table 4", "DynamicData4", FilterParameterWidgetType::DynamicTableWidget, rHeaders, cHeaders, defaultTable, FilterParameter::Parameter, false, true, 0));
+    parameters.push_back(DynamicTableFilterParameter::New("Dynamic Table 4", "DynamicData4", rHeaders, cHeaders, defaultTable, FilterParameter::Parameter, false, true, 0));
   }
 
   // Table 5 - Dynamic rows and dynamic columns, default data passed in
@@ -106,7 +106,7 @@ void DynamicTableExample::setupFilterParameters()
     rHeaders << "Passed RowName 1" << "Passed RowName 2";
     cHeaders << "Passed ColName 1" << "Passed ColName 2";
     std::vector<std::vector<double> > defaultTable(2, std::vector<double>(2, 3));
-    parameters.push_back(DynamicTableFilterParameter::New("Dynamic Table 5", "DynamicData5", FilterParameterWidgetType::DynamicTableWidget, rHeaders, cHeaders, defaultTable, FilterParameter::Parameter, true, true, 0));
+    parameters.push_back(DynamicTableFilterParameter::New("Dynamic Table 5", "DynamicData5", rHeaders, cHeaders, defaultTable, FilterParameter::Parameter, true, true, 0));
   }
 
 

@@ -45,6 +45,7 @@
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/FilterParameters/Symmetric6x6FilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
@@ -106,6 +107,8 @@ class DREAM3DWidgetsLib_EXPORT Symmetric6x6Widget : public FilterParameterWidget
   private:
 
     bool m_DidCausePreflight;
+
+    Symmetric6x6FilterParameter* m_FilterParameter;
 
     //functions for changing symmetry type
     void clearSym();

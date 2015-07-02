@@ -46,6 +46,7 @@
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/FilterParameters/InputFileFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
@@ -55,7 +56,7 @@
 
 class QLabel;
 class QFSDropLabel;
-class FileSystemFilterParameter;
+class InputFileFilterParameter;
 
 /**
 * @brief
@@ -108,7 +109,7 @@ class DREAM3DWidgetsLib_EXPORT InputFileWidget : public FilterParameterWidget, p
     void parametersChanged();
 
   private:
-    FileSystemFilterParameter* m_FilterParameter;
+    InputFileFilterParameter* m_FilterParameter;
 
     static QString    m_OpenDialogLastDirectory;
     bool m_DidCausePreflight;

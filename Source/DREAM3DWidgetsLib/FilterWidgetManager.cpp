@@ -38,6 +38,8 @@
 
 #include "PipelineFilterWidgetFactory.hpp"
 
+#include "DREAM3DLib/FilterParameters/UnknownFilterParameter.h"
+
 #include "DREAM3DWidgetsLib/FilterWidgetHeaders.h"
 
 FilterWidgetManager* FilterWidgetManager::self = 0;
@@ -125,9 +127,8 @@ QWidget* FilterWidgetManager::createWidget(FilterParameter* parameter, AbstractF
   {
     return factory->createWidget(parameter, filter, NULL);
   }
-  factory = m_Factories.value(FilterParameterWidgetType::UnknownWidget);
-  QWidget* w = factory->createWidget(parameter, filter, NULL);
-  return w;
+  UnknownWidget* unknownWidget = new UnknownWidget(parameter, filter, NULL);
+  return unknownWidget;
 }
 
 

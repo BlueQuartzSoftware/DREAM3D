@@ -109,7 +109,7 @@ void FilterInputWidget::setupGui()
 
   filterHumanLabel->setFont(humanLabelFont);
 
-#if 1
+#if 0
   brandingLabel->hide();
 #else
   brandingLabel->setFont(brandingFont);

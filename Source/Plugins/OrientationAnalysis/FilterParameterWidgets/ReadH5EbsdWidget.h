@@ -54,7 +54,7 @@
 
 class QualityMetricTableModel;
 class ReadH5Ebsd;
-class FileSystemFilterParameter;
+class ReadH5EbsdFilterParameter;
 
 /**
  * @brief The ReadH5EbsdWidget class
@@ -160,7 +160,7 @@ class ReadH5EbsdWidget : public FilterParameterWidget, private Ui::ReadH5EbsdWid
 
   private:
     ReadH5Ebsd*         m_Filter;
-    FileSystemFilterParameter*          m_FilterParameter;
+    ReadH5EbsdFilterParameter*          m_FilterParameter;
     QList<QWidget*>             m_WidgetList;
     AxisAngleInput_t m_SampleTransformation;
     AxisAngleInput_t m_EulerTransformation;

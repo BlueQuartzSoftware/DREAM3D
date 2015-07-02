@@ -45,6 +45,7 @@
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/FilterParameters/UnknownFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
@@ -91,7 +92,7 @@ class DREAM3DWidgetsLib_EXPORT UnknownWidget : public FilterParameterWidget, pri
 
   private:
 
-
+    UnknownFilterParameter* m_FilterParameter;
 
     UnknownWidget(const UnknownWidget&); // Copy Constructor Not Implemented
     void operator=(const UnknownWidget&); // Operator '=' Not Implemented

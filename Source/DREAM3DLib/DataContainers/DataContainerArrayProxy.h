@@ -149,7 +149,7 @@ class DREAM3DLib_EXPORT DataContainerArrayProxy
     * @param json
     * @return
     */
-    void writeJson(QJsonObject& json);
+    void writeJson(QJsonObject& json) const;
 
     /**
     * @brief Reads the contents of the the json object 'json' into the proxy
@@ -168,7 +168,7 @@ class DREAM3DLib_EXPORT DataContainerArrayProxy
     * @param map
     * @return QJsonArray
     */
-    QJsonArray writeMap(QMap<QString, DataContainerProxy> map);
+    QJsonArray writeMap(QMap<QString, DataContainerProxy> map) const;
 
     /**
     * @brief Reads the contents of the json array to a QMap

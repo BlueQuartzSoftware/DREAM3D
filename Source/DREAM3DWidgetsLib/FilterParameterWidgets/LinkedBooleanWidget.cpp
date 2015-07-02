@@ -48,6 +48,9 @@
 LinkedBooleanWidget::LinkedBooleanWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   FilterParameterWidget(parameter, filter, parent)
 {
+  m_FilterParameter = dynamic_cast<LinkedBooleanFilterParameter*>(parameter);
+  Q_ASSERT_X(getFilterParameter() != NULL, "NULL Pointer", "LinkedBooleanWidget can ONLY be used with a LinkedBooleanFilterParameter object");
+
   setupUi(this);
   setupGui();
 }
@@ -81,15 +84,7 @@ void LinkedBooleanWidget::setupGui()
 
   if (getFilterParameter() != NULL)
   {
-    QString units = getFilterParameter()->getUnits();
-    if(units.isEmpty() == false)
-    {
-      label->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
-    }
-    else
-    {
-      label->setText(getFilterParameter()->getHumanLabel() );
-    }
+    label->setText(getFilterParameter()->getHumanLabel() );
 
     QVariant objValue = getFilter()->property(PROPERTY_NAME_AS_CHAR);
     if (objValue.isValid() == true)

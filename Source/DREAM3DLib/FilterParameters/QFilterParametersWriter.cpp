@@ -816,7 +816,7 @@ int QFilterParametersWriter::writeArraySelections(const QString name, QSet<QStri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int QFilterParametersWriter::writeValue(const QString name, DataContainerArrayProxy& v)
+int QFilterParametersWriter::writeValue(const QString name, const DataContainerArrayProxy& v)
 {
   int err = 0;
   QList<DataContainerProxy> dcProxies = v.dataContainers.values();

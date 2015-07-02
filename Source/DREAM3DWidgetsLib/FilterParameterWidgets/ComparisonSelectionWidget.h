@@ -46,6 +46,7 @@
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/FilterParameters/ComparisonSelectionFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
@@ -138,6 +139,8 @@ class ComparisonSelectionWidget : public FilterParameterWidget, private Ui::Comp
 
 
     ComparisonSelectionTableModel*    m_ComparisonSelectionTableModel;
+
+    ComparisonSelectionFilterParameter* m_FilterParameter;
 
     ComparisonSelectionWidget(const ComparisonSelectionWidget&); // Copy Constructor Not Implemented
     void operator=(const ComparisonSelectionWidget&); // Operator '=' Not Implemented

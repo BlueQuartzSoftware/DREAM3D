@@ -43,6 +43,7 @@
 
 #include "QtSupportLib/FaderWidget.h"
 
+#include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
@@ -96,6 +97,8 @@ class DREAM3DWidgetsLib_EXPORT ChoiceWidget : public FilterParameterWidget, priv
   private:
 
     bool m_DidCausePreflight;
+
+    ChoiceFilterParameter* m_FilterParameter;
 
 
     ChoiceWidget(const ChoiceWidget&); // Copy Constructor Not Implemented

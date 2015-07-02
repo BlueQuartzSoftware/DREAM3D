@@ -34,36 +34,44 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ShapeTypesFilterParameter_H_
-#define _ShapeTypesFilterParameter_H_
+#ifndef _ShapeTypeSelectionFilterParameter_H_
+#define _ShapeTypeSelectionFilterParameter_H_
 
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
 
-class DREAM3DLib_EXPORT ShapeTypesFilterParameter : public FilterParameter
+class DREAM3DLib_EXPORT ShapeTypeSelectionFilterParameter : public FilterParameter
 {
-  public:
-    DREAM3D_SHARED_POINTERS(ShapeTypesFilterParameter)
-    DREAM3D_STATIC_NEW_MACRO(ShapeTypesFilterParameter)
-    DREAM3D_TYPE_MACRO_SUPER(ShapeTypesFilterParameter, FilterParameter)
+public:
+  DREAM3D_SHARED_POINTERS(ShapeTypeSelectionFilterParameter)
+    DREAM3D_STATIC_NEW_MACRO(ShapeTypeSelectionFilterParameter)
+    DREAM3D_TYPE_MACRO_SUPER(ShapeTypeSelectionFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const QString& widgetType, const QVariant& defaultValue,
-                       const QString& phaseTypeCountProperty,
-                       const QString& phaseTypeArrayPathProperty,
-                       Category category,
-                       int groupIndex = -1);
+     const QString& defaultValue,
+    const QString& phaseTypeCountProperty,
+    const QString& phaseTypeArrayPathProperty,
+    Category category,
+    int groupIndex = -1);
 
-    virtual ~ShapeTypesFilterParameter();
+  virtual ~ShapeTypeSelectionFilterParameter();
 
-    DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeCountProperty)
+  DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeCountProperty)
     DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeArrayPathProperty)
 
-  protected:
-    ShapeTypesFilterParameter();
+  /**
+   * @brief getWidgetType Returns the type of widget that displays and controls
+   * this FilterParameter subclass
+   * @return
+   */
+  QString getWidgetType();
 
-  private:
-    ShapeTypesFilterParameter(const ShapeTypesFilterParameter&); // Copy Constructor Not Implemented
-    void operator=(const ShapeTypesFilterParameter&); // Operator '=' Not Implemented
+
+protected:
+  ShapeTypeSelectionFilterParameter();
+
+private:
+  ShapeTypeSelectionFilterParameter(const ShapeTypeSelectionFilterParameter&); // Copy Constructor Not Implemented
+  void operator=(const ShapeTypeSelectionFilterParameter&); // Operator '=' Not Implemented
 };
 
-#endif /* _ShapeTypesFilterParameter_H_ */
+#endif /* _ShapeTypeSelectionFilterParameter_H_ */

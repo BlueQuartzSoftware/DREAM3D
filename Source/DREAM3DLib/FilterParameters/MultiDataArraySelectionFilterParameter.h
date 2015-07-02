@@ -47,13 +47,21 @@ class DREAM3DLib_EXPORT MultiDataArraySelectionFilterParameter : public FilterPa
     DREAM3D_TYPE_MACRO_SUPER(MultiDataArraySelectionFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const QString& widgetType, const QVector<DataArrayPath>& defaultPaths,
+                       const QVector<DataArrayPath>& defaultPaths,
                        Category category,
                        int groupIndex = -1);
 
     virtual ~MultiDataArraySelectionFilterParameter();
 
     DREAM3D_INSTANCE_PROPERTY(QVector<DataArrayPath>, DefaultPaths)
+
+    /**
+     * @brief getWidgetType Returns the type of widget that displays and controls
+     * this FilterParameter subclass
+     * @return
+     */
+    QString getWidgetType();
+
 
   protected:
     MultiDataArraySelectionFilterParameter();

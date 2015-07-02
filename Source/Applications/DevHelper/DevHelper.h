@@ -53,6 +53,8 @@ class DevHelper : public QMainWindow, public Ui::DevHelper
     DevHelper(QWidget* parent = 0);
     ~DevHelper();
 
+    bool validityCheck();
+
   protected:
     void setupGui();
 
