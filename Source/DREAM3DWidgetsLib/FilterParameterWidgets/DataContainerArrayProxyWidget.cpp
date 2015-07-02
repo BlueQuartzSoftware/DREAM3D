@@ -36,7 +36,6 @@
 #include "DataContainerArrayProxyWidget.h"
 
 #include <QtCore/QMetaProperty>
-#include <QtGui/QStandardItemModel>
 #include <QtCore/QItemSelectionModel>
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
@@ -112,9 +111,8 @@ void DataContainerArrayProxyWidget::setupGui()
   dcaProxyView->setModel(model);
   delete oldModel;
 
-  //  void activated(const QModelIndex& index);
-  connect(dcaProxyView, SIGNAL(clicked(const QModelIndex&)),
-          this, SLOT(itemActivated(const QModelIndex)));
+  connect(model, SIGNAL(itemChanged(QStandardItem*)),
+          this, SLOT(itemActivated(QStandardItem*)));
 
   if (getFilterParameter() != NULL)
   {
@@ -135,7 +133,7 @@ void DataContainerArrayProxyWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerArrayProxyWidget::itemActivated(const QModelIndex& index)
+void DataContainerArrayProxyWidget::itemActivated(QStandardItem* item)
 {
   m_DidCausePreflight = true;
   updateProxyFromModel();

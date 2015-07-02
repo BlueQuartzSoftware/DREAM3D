@@ -39,11 +39,10 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QPointer>
+#include <QtGui/QStandardItemModel>
 #include <QtWidgets/QWidget>
 
 #include "QtSupportLib/FaderWidget.h"
-
-
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/FilterParameters/DataContainerArrayProxyFilterParameter.h"
@@ -97,7 +96,7 @@ class DREAM3DWidgetsLib_EXPORT DataContainerArrayProxyWidget : public FilterPara
     void beforePreflight();
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
-    void itemActivated(const QModelIndex& index);
+    void itemActivated(QStandardItem* item);
 
 
   signals:
