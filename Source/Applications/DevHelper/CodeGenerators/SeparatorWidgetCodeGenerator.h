@@ -65,6 +65,8 @@ class SeparatorWidgetCodeGenerator : public FPCodeGenerator
 
     virtual QString generateInitializationList();
 
+    virtual QString generateCPPIncludes();
+
   protected:
     SeparatorWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 

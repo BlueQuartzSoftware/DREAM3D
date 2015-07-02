@@ -63,6 +63,8 @@ class FourthOrderPolynomialWidgetCodeGenerator : public FPCodeGenerator
 
     virtual QString generateFilterParameters();
 
+    virtual QString generateCPPIncludes();
+
   protected:
     FourthOrderPolynomialWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 

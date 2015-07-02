@@ -63,6 +63,8 @@ class ThirdOrderPolynomialWidgetCodeGenerator : public FPCodeGenerator
 
     virtual QString generateFilterParameters();
 
+    virtual QString generateCPPIncludes();
+
   protected:
     ThirdOrderPolynomialWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 

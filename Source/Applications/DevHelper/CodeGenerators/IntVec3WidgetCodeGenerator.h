@@ -63,6 +63,8 @@ class IntVec3WidgetCodeGenerator : public FPCodeGenerator
 
     virtual QString generateFilterParameters();
 
+    virtual QString generateCPPIncludes();
+
   protected:
     IntVec3WidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 

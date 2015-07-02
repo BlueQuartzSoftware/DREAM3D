@@ -87,3 +87,11 @@ QString AttributeMatrixSelectionWidgetCodeGenerator::generateFilterParameters()
 
   return contents;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString AttributeMatrixSelectionWidgetCodeGenerator::generateCPPIncludes()
+{
+  return "#include \"DREAM3DLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h\"";
+}
