@@ -232,7 +232,11 @@ void PipelineFilterWidget::layoutWidgets()
   {
     FilterParameter* parameter = (*iter).get();
 
-    validateFileSystemFilterParameter(parameter);
+    // Check to make sure that this is in fact a file system filter parameter
+    if (NULL != dynamic_cast<InputFileFilterParameter*>(parameter) || NULL != dynamic_cast<InputPathFilterParameter*>(parameter) || NULL != dynamic_cast<DataContainerReaderFilterParameter*>(parameter))
+    {
+      validateFileSystemFilterParameter(parameter);
+    }
 
     QWidget* w = fwm->createWidget(parameter, m_Filter.get());
     m_PropertyToWidget.insert(parameter->getPropertyName(), w); // Update our Map of Filter Parameter Properties to the Widget
@@ -341,7 +345,7 @@ void PipelineFilterWidget::handleFilterParameterChanged()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QFileInfo getFilterParameterPath(AbstractFilter* filter, FilterParameter* parameter, QString& fType, QString& ext)
+QFileInfo getFilterParameterPath(AbstractFilter* filter, FilterParameter* parameter, QString& fType, QString& ext, int &err)
 {
   QString currentPath = "";
   fType.clear();
@@ -367,8 +371,16 @@ QFileInfo getFilterParameterPath(AbstractFilter* filter, FilterParameter* parame
     fType.append(rParam->getFileType());
     ext.append(rParam->getFileExtension());
   }
+  else
+  {
+    err = -1;
+  }
 
-  QFileInfo fi(currentPath);
+  QFileInfo fi;
+  if (currentPath.isEmpty() == false)
+  {
+    fi.setFile(currentPath);
+  }
 
   return fi;
 }
@@ -383,7 +395,14 @@ void PipelineFilterWidget::validateFileSystemFilterParameter(FilterParameter* pa
 
   QString fType;
   QString ext;
-  QFileInfo fi = getFilterParameterPath(m_Filter.get(), parameter, fType, ext);
+  int errCode = 0;
+  QFileInfo fi = getFilterParameterPath(m_Filter.get(), parameter, fType, ext, errCode);
+
+  if (errCode < 0)
+  {
+    // Throw an error, because we have the wrong filter parameter type
+  }
+
   QString currentPath = fi.absoluteFilePath();
 
 
