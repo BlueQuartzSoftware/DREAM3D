@@ -172,7 +172,7 @@ void PhaseTypeSelectionWidget::populateComboBoxes()
   }
 
   // Get what is in the filter
-  PhaseTypesFilterParameter* p = dynamic_cast<PhaseTypesFilterParameter*>(getFilterParameter());
+  PhaseTypeSelectionFilterParameter* p = dynamic_cast<PhaseTypeSelectionFilterParameter*>(getFilterParameter());
   QVariant qvSelectedPath = getFilter()->property(p->getAttributeMatrixPathProperty().toLatin1().constData());
   DataArrayPath selectedPath = qvSelectedPath.value<DataArrayPath>();
 
