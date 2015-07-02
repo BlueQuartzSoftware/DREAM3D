@@ -63,7 +63,7 @@ class FloatVec4WidgetCodeGenerator : public FPCodeGenerator
 
     virtual QString generateFilterParameters();
 
-    virtual QString generateCPPIncludes();
+    virtual QString generateHIncludes();
 
   protected:
     FloatVec4WidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);

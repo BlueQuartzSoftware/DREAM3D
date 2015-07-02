@@ -74,6 +74,8 @@ class FilterMaker : public QWidget, public Ui::FilterMaker
     FilterMaker(QWidget* parent = 0);
     ~FilterMaker();
 
+    bool validityCheck();
+
     QString getFilterName();
     QString getPluginDir();
     bool isPublic();
@@ -122,7 +124,6 @@ class FilterMaker : public QWidget, public Ui::FilterMaker
     void updateTestLocations();
     void updateTestList();
     QString createNamespaceString();
-    bool validityCheck();
 
     QMap<QString, QString> getFunctionContents();
 

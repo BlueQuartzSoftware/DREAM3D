@@ -56,7 +56,7 @@ MultiDataArraySelectionWidgetCodeGenerator::~MultiDataArraySelectionWidgetCodeGe
 // -----------------------------------------------------------------------------
 QString MultiDataArraySelectionWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  // MultiDataArraySelectionFilterParameter - Please pass in a default vector of DataArrayPaths\n  parameters.push_back(MultiDataArraySelectionFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::MultiDataArraySelectionWidget, QVector<DataArrayPath>(), " + getCategory() + ", 0));";
+  return "  // MultiDataArraySelectionFilterParameter - Please pass in a default vector of DataArrayPaths\n  parameters.push_back(MultiDataArraySelectionFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", QVector<DataArrayPath>(), " + getCategory() + ", 0));";
 }
 
 // -----------------------------------------------------------------------------

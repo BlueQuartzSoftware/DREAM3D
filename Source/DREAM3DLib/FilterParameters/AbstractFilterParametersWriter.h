@@ -124,7 +124,7 @@ class DREAM3DLib_EXPORT AbstractFilterParametersWriter
 
     virtual int writeArraySelections(const QString name, QSet<QString> v) = 0;
 
-    virtual int writeValue(const QString name, DataContainerArrayProxy& v) = 0;
+    virtual int writeValue(const QString name, const DataContainerArrayProxy& v) = 0;
 
     virtual int writeValue(const QString name, AxisAngleInput_t v) = 0;
 

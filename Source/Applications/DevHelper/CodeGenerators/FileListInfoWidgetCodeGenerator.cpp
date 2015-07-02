@@ -91,7 +91,7 @@ QString FileListInfoWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString FileListInfoWidgetCodeGenerator::generateCPPIncludes()
+QString FileListInfoWidgetCodeGenerator::generateHIncludes()
 {
   return "#include \"DREAM3DLib/FilterParameters/FileListInfoFilterParameter.h\"";
 }

@@ -56,7 +56,7 @@ ThirdOrderPolynomialWidgetCodeGenerator::~ThirdOrderPolynomialWidgetCodeGenerato
 // -----------------------------------------------------------------------------
 QString ThirdOrderPolynomialWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::ThirdOrderPolynomialWidget, get" + getPropertyName() + "(), " + getCategory() + ", \"\"));";
+  return "  parameters.push_back(ThirdOrderPolynomialFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", get" + getPropertyName() + "(), " + getCategory() + "));";
 }
 
 // -----------------------------------------------------------------------------
@@ -86,4 +86,12 @@ QString ThirdOrderPolynomialWidgetCodeGenerator::generateFilterParameters()
   ss << "    Q_PROPERTY(Float3rdOrderPoly_t " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ThirdOrderPolynomialWidgetCodeGenerator::generateHIncludes()
+{
+  return "#include \"DREAM3DLib/FilterParameters/ThirdOrderPolynomialFilterParameter.h\"";
 }

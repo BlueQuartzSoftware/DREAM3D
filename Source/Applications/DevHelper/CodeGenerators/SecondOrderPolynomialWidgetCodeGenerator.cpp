@@ -56,7 +56,7 @@ SecondOrderPolynomialWidgetCodeGenerator::~SecondOrderPolynomialWidgetCodeGenera
 // -----------------------------------------------------------------------------
 QString SecondOrderPolynomialWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::SecondOrderPolynomialWidget, get" + getPropertyName() + "(), " + getCategory() + ", \"\"));";
+  return "  parameters.push_back(SecondOrderPolynomialFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", get" + getPropertyName() + "(), " + getCategory() + "));";
 }
 
 // -----------------------------------------------------------------------------
@@ -86,4 +86,12 @@ QString SecondOrderPolynomialWidgetCodeGenerator::generateFilterParameters()
   ss << "    Q_PROPERTY(Float2ndOrderPoly_t " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString SecondOrderPolynomialWidgetCodeGenerator::generateHIncludes()
+{
+  return "#include \"DREAM3DLib/FilterParameters/SecondOrderPolynomialFilterParameter.h\"";
 }

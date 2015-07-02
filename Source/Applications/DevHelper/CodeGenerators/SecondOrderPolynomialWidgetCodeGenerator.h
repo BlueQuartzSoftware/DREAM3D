@@ -63,7 +63,7 @@ class SecondOrderPolynomialWidgetCodeGenerator : public FPCodeGenerator
 
     virtual QString generateFilterParameters();
 
-    virtual QString generateCPPIncludes();
+    virtual QString generateHIncludes();
 
   protected:
     SecondOrderPolynomialWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);

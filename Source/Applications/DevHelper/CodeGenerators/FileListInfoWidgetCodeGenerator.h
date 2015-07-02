@@ -63,7 +63,7 @@ class FileListInfoWidgetCodeGenerator : public FPCodeGenerator
 
     virtual QString generateFilterParameters();
 
-    virtual QString generateCPPIncludes();
+    virtual QString generateHIncludes();
 
   protected:
     FileListInfoWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);

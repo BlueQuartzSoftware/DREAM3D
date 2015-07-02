@@ -56,7 +56,7 @@ InputFileWidgetCodeGenerator::~InputFileWidgetCodeGenerator()
 // -----------------------------------------------------------------------------
 QString InputFileWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FileSystemFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::InputFileWidget, get" + getPropertyName() + "(), " + getCategory() + ", \"\", \"*.raw *.bin\"));";
+  return "  parameters.push_back(InputFileFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", get" + getPropertyName() + "(), " + getCategory() + ", \"\", \"*.raw *.bin\"));";
 }
 
 // -----------------------------------------------------------------------------
@@ -93,5 +93,5 @@ QString InputFileWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString InputFileWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/FileSystemFilterParameter.h\"";
+  return "#include \"DREAM3DLib/FilterParameters/InputFileFilterParameter.h\"";
 }

@@ -56,7 +56,7 @@ DataArrayCreationWidgetCodeGenerator::~DataArrayCreationWidgetCodeGenerator()
 // -----------------------------------------------------------------------------
 QString DataArrayCreationWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::DataArrayCreationWidget, get" + getPropertyName() + "(), " + getCategory() + "));";
+  return "  parameters.push_back(DataArrayCreationFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", get" + getPropertyName() + "(), " + getCategory() + "));";
 }
 
 // -----------------------------------------------------------------------------
@@ -86,4 +86,12 @@ QString DataArrayCreationWidgetCodeGenerator::generateFilterParameters()
   ss << "    Q_PROPERTY(DataArrayPath " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString DataArrayCreationWidgetCodeGenerator::generateCPPIncludes()
+{
+  return "#include \"DREAM3DLib/FilterParameters/DataArrayCreationFilterParameter.h\"";
 }

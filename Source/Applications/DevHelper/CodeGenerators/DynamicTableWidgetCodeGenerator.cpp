@@ -63,7 +63,7 @@ QString DynamicTableWidgetCodeGenerator::generateSetupFilterParameters()
   ss << "  {\n";
   ss << "    QStringList rHeaders, cHeaders;\n";
   ss << "    std::vector<std::vector<double> > defaultTable;\n";
-  ss << "    parameters.push_back(DynamicTableFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::DynamicTableWidget, rHeaders, cHeaders, defaultTable, " + getCategory() + ", false, false, 0));\n";
+  ss << "    parameters.push_back(DynamicTableFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", rHeaders, cHeaders, defaultTable, " + getCategory() + ", false, false, 0));\n";
   ss << "  }";
 
   return contents;

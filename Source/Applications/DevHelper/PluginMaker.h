@@ -56,6 +56,8 @@ class PluginMaker : public QWidget, public Ui::PluginMaker
   public:
     PluginMaker(QWidget* parent = 0);
 
+    bool validityCheck();
+
   protected:
     void setupGui();
 

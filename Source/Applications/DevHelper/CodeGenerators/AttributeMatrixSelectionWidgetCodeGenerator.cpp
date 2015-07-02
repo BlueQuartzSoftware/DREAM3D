@@ -56,7 +56,7 @@ AttributeMatrixSelectionWidgetCodeGenerator::~AttributeMatrixSelectionWidgetCode
 // -----------------------------------------------------------------------------
 QString AttributeMatrixSelectionWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::AttributeMatrixSelectionWidget, get" + getPropertyName() + "(), " + getCategory() + "));";
+  return "  parameters.push_back(AttributeMatrixSelectionFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", get" + getPropertyName() + "(), " + getCategory() + "));";
 }
 
 // -----------------------------------------------------------------------------

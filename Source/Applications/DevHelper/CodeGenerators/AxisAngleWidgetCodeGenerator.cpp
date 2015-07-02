@@ -56,7 +56,7 @@ AxisAngleWidgetCodeGenerator::~AxisAngleWidgetCodeGenerator()
 // -----------------------------------------------------------------------------
 QString AxisAngleWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::AxisAngleWidget, get" + getPropertyName() + "(), " + getCategory() + "));";
+  return "  parameters.push_back(AxisAngleFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", get" + getPropertyName() + "(), " + getCategory() + "));";
 }
 
 // -----------------------------------------------------------------------------
@@ -86,4 +86,12 @@ QString AxisAngleWidgetCodeGenerator::generateFilterParameters()
   ss << "    Q_PROPERTY(AxisAngleInput_t " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString AxisAngleWidgetCodeGenerator::generateCPPIncludes()
+{
+  return "#include \"DREAM3DLib/FilterParameters/AxisAngleFilterParameter.h\"";
 }

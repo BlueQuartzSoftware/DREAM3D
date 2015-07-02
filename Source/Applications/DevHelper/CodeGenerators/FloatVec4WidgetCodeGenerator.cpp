@@ -56,7 +56,7 @@ FloatVec4WidgetCodeGenerator::~FloatVec4WidgetCodeGenerator()
 // -----------------------------------------------------------------------------
 QString FloatVec4WidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::FloatVec4Widget, get" + getPropertyName() + "(), " + getCategory() + "));";
+  return "  parameters.push_back(FloatVec4FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", get" + getPropertyName() + "(), " + getCategory() + "));";
 }
 
 // -----------------------------------------------------------------------------
@@ -86,4 +86,12 @@ QString FloatVec4WidgetCodeGenerator::generateFilterParameters()
   ss << "    Q_PROPERTY(FloatVec4_t " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString FloatVec4WidgetCodeGenerator::generateHIncludes()
+{
+  return "#include \"DREAM3DLib/FilterParameters/FloatVec4FilterParameter.h\"";
 }

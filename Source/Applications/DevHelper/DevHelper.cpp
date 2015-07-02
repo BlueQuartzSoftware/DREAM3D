@@ -68,6 +68,9 @@ DevHelper::DevHelper(QWidget* parent) :
   setupGui();
 
   readSettings();
+
+  // Do a final validity check on both widgets
+  validityCheck();
 }
 
 // -----------------------------------------------------------------------------
@@ -188,14 +191,14 @@ void DevHelper::readSettings()
   prefs.beginGroup("DevHelper");
 
   prefs.beginGroup("PluginMaker");
-  // Have the PipelineBuilder Widget read its settings
+  // Have PluginMaker read its settings
   pluginMaker->m_PluginName->setText(prefs.value("Plugin Name", "").toString());
   pluginMaker->m_OutputDir->setText(prefs.value("Output Directory", "").toString());
   readWindowSettings(prefs);
   prefs.endGroup();
 
   prefs.beginGroup("FilterMaker");
-  // Have the PipelineBuilder Widget read its settings
+  // Have FilterMaker read its settings
   filterMaker->pluginDir->setText(prefs.value("Plugin Directory", "").toString());
   filterMaker->filterName->setText(prefs.value("Filter Name", "").toString());
 
@@ -262,6 +265,14 @@ void DevHelper::on_actionAbout_triggered()
   ApplicationAboutBoxDialog about(PluginMakerProj::LicenseList, this);
   about.setApplicationInfo("DevHelper", "1.0.0");
   about.exec();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool DevHelper::validityCheck()
+{
+  return (pluginMaker->validityCheck() && filterMaker->validityCheck());
 }
 
 
