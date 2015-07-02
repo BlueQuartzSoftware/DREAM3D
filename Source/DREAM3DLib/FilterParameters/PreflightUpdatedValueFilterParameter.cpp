@@ -52,7 +52,7 @@ PreflightUpdatedValueFilterParameter::~PreflightUpdatedValueFilterParameter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PreflightUpdatedValueFilterParameter::Pointer PreflightUpdatedValueFilterParameter::New(const QString& humanLabel, const QString& propertyName, const int& defaultValue,
+PreflightUpdatedValueFilterParameter::Pointer PreflightUpdatedValueFilterParameter::New(const QString& humanLabel, const QString& propertyName, const QString& defaultValue,
   Category category, int groupIndex)
 {
   PreflightUpdatedValueFilterParameter::Pointer ptr = PreflightUpdatedValueFilterParameter::New();
@@ -71,6 +71,6 @@ PreflightUpdatedValueFilterParameter::Pointer PreflightUpdatedValueFilterParamet
 // -----------------------------------------------------------------------------
 QString PreflightUpdatedValueFilterParameter::getWidgetType()
 {
-  return QString("PreflightUpdatedValueFilterParameterWidget");
+  return QString("PreflightUpdatedValueWidget");
 }
 

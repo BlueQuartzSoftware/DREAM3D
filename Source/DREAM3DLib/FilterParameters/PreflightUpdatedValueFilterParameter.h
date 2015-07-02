@@ -47,7 +47,7 @@ class DREAM3DLib_EXPORT PreflightUpdatedValueFilterParameter : public FilterPara
     DREAM3D_TYPE_MACRO_SUPER(PreflightUpdatedValueFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const int& defaultValue,
+                       const QString& defaultValue,
                        Category category,
                        int groupIndex = -1);
 
