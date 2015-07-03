@@ -307,9 +307,9 @@ int32_t INLWriter::writeFile()
   fprintf(f, "# Y_MAX: %f\r\n", origin[1] + (dims[1]*res[1]));
   fprintf(f, "# Z_MAX: %f\r\n", origin[2] + (dims[2]*res[2]));
   fprintf(f, "#\r\n");
-  fprintf(f, "# X_DIM: %llu\r\n", static_cast<uint64_t>(dims[0]));
-  fprintf(f, "# Y_DIM: %llu\r\n", static_cast<uint64_t>(dims[1]));
-  fprintf(f, "# Z_DIM: %llu\r\n", static_cast<uint64_t>(dims[2]));
+  fprintf(f, "# X_DIM: %llu\r\n", static_cast<long long unsigned int>(dims[0]));
+  fprintf(f, "# Y_DIM: %llu\r\n", static_cast<long long unsigned int>(dims[1]));
+  fprintf(f, "# Z_DIM: %llu\r\n", static_cast<long long unsigned int>(dims[2]));
   fprintf(f, "#\r\n");
 
   StringDataArray* materialNames = m_MaterialNamePtr.lock().get();

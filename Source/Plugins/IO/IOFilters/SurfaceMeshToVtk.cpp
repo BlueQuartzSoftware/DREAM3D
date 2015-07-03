@@ -454,7 +454,7 @@ int SurfaceMeshToVtk::writePointData(FILE* vtkFile)
   }
   // This is the section header
   fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "POINT_DATA %lld\n", numberWrittenumNodes);
+  fprintf(vtkFile, "POINT_DATA %lld\n", (long long int)(numberWrittenumNodes));
 
 
   fprintf(vtkFile, "SCALARS Node_Type char 1\n");

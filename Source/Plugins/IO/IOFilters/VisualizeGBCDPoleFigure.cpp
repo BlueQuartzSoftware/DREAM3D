@@ -535,7 +535,7 @@ int32_t VisualizeGBCDPoleFigure::writeCoords(FILE* f, const char* axis, const ch
                                              int64_t npoints, float min, float step)
 {
   int32_t err = 0;
-  fprintf(f, "%s %lld %s\n", axis, npoints, type);
+  fprintf(f, "%s %lld %s\n", axis, (long long int)(npoints), type);
   float* data = new float[npoints];
   float d;
   for (int64_t idx = 0; idx < npoints; ++idx)

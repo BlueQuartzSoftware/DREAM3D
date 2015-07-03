@@ -339,17 +339,17 @@ int32_t AbaqusSurfaceMeshWriter::writeFeatures(FILE* f)
       // Only print 15 Triangles per line
       if (lineCount == 15)
       {
-        fprintf (f, ", %lld\n", t);
+        fprintf (f, ", %lld\n", (long long int)(t));
         lineCount = 0;
       }
       else if(lineCount == 0) // First value on the line
       {
-        fprintf(f, "%lld", t);
+        fprintf(f, "%lld", (long long int)(t));
         lineCount++;
       }
       else
       {
-        fprintf(f, ", %lld", t);
+        fprintf(f, ", %lld", (long long int)(t));
         lineCount++;
       }
 

@@ -216,7 +216,7 @@ void LammpsFileWriter::execute()
   for (int64_t i = 0; i < numAtoms; i++)
   {
     vertices->getCoords(i, pos);
-    fprintf(lammpsFile, "%lld %d %f %f %f %d %d %d\n", i, atomType, pos[0], pos[1], pos[2], dummy , dummy, dummy); // Write the positions to the output file
+    fprintf(lammpsFile, "%lld %d %f %f %f %d %d %d\n", (long long int)(i), atomType, pos[0], pos[1], pos[2], dummy , dummy, dummy); // Write the positions to the output file
   }
 
   fprintf(lammpsFile, "\n");
