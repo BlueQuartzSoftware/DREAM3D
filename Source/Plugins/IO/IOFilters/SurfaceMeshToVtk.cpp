@@ -48,7 +48,7 @@
 #include "DREAM3DLib/FilterParameters/OutputFileFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/BooleanFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-
+#include "DREAM3DLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 #include "DREAM3DLib/Utilities/DREAM3DEndian.h"
 
@@ -90,6 +90,12 @@ void SurfaceMeshToVtk::setupFilterParameters()
   parameters.push_back(BooleanFilterParameter::New("Write Conformal Mesh", "WriteConformalMesh", getWriteConformalMesh(), FilterParameter::Parameter));
   parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray));
   parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath(), FilterParameter::RequiredArray));
+
+  parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::RequiredArray));
+  parameters.push_back(MultiDataArraySelectionFilterParameter::New("Vertex Arrays", "SelectedVertexArrays", getSelectedVertexArrays(), FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
+  parameters.push_back(MultiDataArraySelectionFilterParameter::New("Face Arrays", "SelectedFaceArrays", getSelectedFaceArrays(), FilterParameter::RequiredArray));
+
 
   setFilterParameters(parameters);
 }
@@ -136,7 +142,36 @@ void SurfaceMeshToVtk::dataCheck()
     notifyErrorMessage(getHumanLabel(), "Vtk Output file is Not set correctly", -1003);
   }
 
-  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
+  QString dcName;
+  if (m_SelectedFaceArrays.size() > 0)
+  {
+    dcName = m_SelectedFaceArrays[0].getDataContainerName();
+  }
+  else if(m_SelectedVertexArrays.size() > 0)
+  {
+    dcName = m_SelectedVertexArrays[0].getDataContainerName();
+  }
+
+  foreach(DataArrayPath dap, m_SelectedFaceArrays)
+  {
+    if(dap.getDataContainerName().compare(dcName) != 0)
+    {
+      setErrorCondition(-385);
+      notifyErrorMessage(getHumanLabel(), "The Face arrays and Vertex arrays must come from the same Data Container.", getErrorCondition());
+      return;
+    }
+  }
+  foreach(DataArrayPath dap, m_SelectedVertexArrays)
+  {
+    if(dap.getDataContainerName().compare(dcName) != 0)
+    {
+      setErrorCondition(-386);
+      notifyErrorMessage(getHumanLabel(), "The Face arrays and Vertex arrays must come from the same Data Container.", getErrorCondition());
+      return;
+    }
+  }
+
+  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, dcName, false);
   if(getErrorCondition() < 0) { return; }
 
   TriangleGeom::Pointer triangles =  sm->getPrereqGeometry<TriangleGeom, AbstractFilter>(this);

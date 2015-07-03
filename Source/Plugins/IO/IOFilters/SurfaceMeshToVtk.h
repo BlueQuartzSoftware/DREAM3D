@@ -77,6 +77,13 @@ class SurfaceMeshToVtk : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshNodeTypeArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshNodeTypeArrayPath READ getSurfaceMeshNodeTypeArrayPath WRITE setSurfaceMeshNodeTypeArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QVector<DataArrayPath>, SelectedFaceArrays)
+    Q_PROPERTY(QVector<DataArrayPath> SelectedFaceArrays READ getSelectedFaceArrays WRITE setSelectedFaceArrays)
+
+    DREAM3D_FILTER_PARAMETER(QVector<DataArrayPath>, SelectedVertexArrays)
+    Q_PROPERTY(QVector<DataArrayPath> SelectedVertexArrays READ getSelectedVertexArrays WRITE setSelectedVertexArrays)
+
+
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */
