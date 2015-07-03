@@ -1,5 +1,10 @@
 #!/bin/bash
 
+
+SDK_INSTALL=/Users/Shared/DREAM3D_SDK
+
+cd $SDK_INSTALL
+
 PARALLEL_BUILD=8
 
 
@@ -33,16 +38,13 @@ then
   DOWNLOAD_ARGS=""
 fi
 
-SDK_INSTALL=/Users/Shared/DREAM3D_SDK
-
-cd $SDK_INSTALL
 
 if [ ! -e "$SDK_INSTALL/boost_1_58_0.tar.gz" ];
   then
   echo "-------------------------------------------"
   echo " Downloading Boost Version boost_1_58_0.tar.gz "
   echo "-------------------------------------------"
-  $DOWNLOAD_PROG  "http://hivelocity.dl.sourceforge.net/project/boost/boost/1.58.0/boost_1_58_0.tar.gz" -o boost_1_58_0.tar.gz
+  $DOWNLOAD_PROG  "http://iweb.dl.sourceforge.net/project/boost/boost/1.58.0/boost_1_58_0.tar.gz" -o boost_1_58_0.tar.gz
 fi
 
 cd $SDK_INSTALL

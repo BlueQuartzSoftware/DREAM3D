@@ -1,5 +1,10 @@
 #!/bin/bash
 
+
+SDK_INSTALL=/Users/Shared/DREAM3D_SDK
+
+cd $SDK_INSTALL
+
 PARALLEL_BUILD=8
 
 
@@ -33,9 +38,6 @@ then
   DOWNLOAD_ARGS=""
 fi
 
-SDK_INSTALL=/Users/Shared/DREAM3D_SDK
-
-cd $SDK_INSTALL
 
 
 CMAKE=`type -P cmake`
@@ -49,29 +51,29 @@ fi
 EIGEN_VERSION=3.2.5
 
 
-if [ ! -e "$SDK_INSTALL/Eigen-${EIGEN_VERSION}.tar.gz" ];
-then
-    echo "-------------------------------------------"
-    echo " Downloading Eigen ${EIGEN_VERSION}"
-    echo "-------------------------------------------"
-    $DOWNLOAD_PROG "https://bitbucket.org/eigen/eigen/get/${EIGEN_VERSION}.tar.gz" -o Eigen-${EIGEN_VERSION}.tar.gz
-fi
+# if [ ! -e "$SDK_INSTALL/Eigen-${EIGEN_VERSION}_src.tar.gz" ];
+# then
+#     echo "-------------------------------------------"
+#     echo " Downloading Eigen ${EIGEN_VERSION}"
+#     echo "-------------------------------------------"
+#     $DOWNLOAD_PROG "https://bitbucket.org/eigen/eigen/get/${EIGEN_VERSION}.tar.gz" -o Eigen-${EIGEN_VERSION}.tar.gz
+# fi
 
 
-if [ ! -e "$SDK_INSTALL/Eigen-${EIGEN_VERSION}_source" ];
+if [ ! -e "$SDK_INSTALL/Eigen-${EIGEN_VERSION}_src" ];
 then
-    tar -xvzf Eigen-${EIGEN_VERSION}.tar.gz
-    echo "Looking for Actual Decompressed Eigen Directory because the Eigen Folks are Idiots...."
-    EIGEN_DIR=`find . -type d -name 'eigen-eigen*'`
-    echo "EIGEN_DIR=$EIGEN_DIR"
-    mv $EIGEN_DIR Eigen-${EIGEN_VERSION}_source
+    tar -xvzf Eigen-${EIGEN_VERSION}_src.tar.gz
+    #echo "Looking for Actual Decompressed Eigen Directory because the Eigen Folks are Idiots...."
+    #EIGEN_DIR=`find . -type d -name 'eigen-eigen*'`
+    #echo "EIGEN_DIR=$EIGEN_DIR"
+    #mv $EIGEN_DIR Eigen-${EIGEN_VERSION}_source
 fi
 
 # We assume we already have downloaded the source for eigen and have it in a folder
-cd Eigen-${EIGEN_VERSION}_source
+cd Eigen-${EIGEN_VERSION}_src
 mkdir Build
 cd Build
-touch $SDK_INSTALL/Eigen-${EIGEN_VERSION}_source/Build/DartConfiguration.tcl
+touch $SDK_INSTALL/Eigen-${EIGEN_VERSION}_src/Build/DartConfiguration.tcl
 cmake -Wno-dev -DQT_QMAKE_EXECUTABLE="" -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/Eigen-${EIGEN_VERSION}  ../
 make -j$PARALLEL_BUILD
 make install
