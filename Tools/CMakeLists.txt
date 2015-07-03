@@ -130,42 +130,18 @@ COMPILE_TOOL(
 )
 
 # --------------------------------------------------------------------
-COMPILE_TOOL(
-    TARGET CreateWebServerJson
-    SOURCES ${DREAM3DTools_SOURCE_DIR}/CreateWebServerJson.cpp
-    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-    VERSION_MINOR ${DREAM3D_VER_MINOR}
-    VERSION_PATCH ${DREAM3D_VER_PATCH}
-    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    LINK_LIBRARIES hdf5  Qt5::Core H5Support DREAM3DLib
-)
-
-
-# Now run the code to generate JSON file for the web server. This file holds all
-# the version information for the current release
-add_custom_command(TARGET CreateWebServerJson POST_BUILD
-                    COMMAND $<TARGET_FILE:CreateWebServerJson> ${DREAM3DProj_BINARY_DIR}/dream3d_version.json
-                    WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-add_dependencies(CreateWebServerJson DREAM3D)
-
-# Create a Command line tool for the DocsToPdf
-if(0)
-    set(DREAM3D_DOCS_PDF_FILENAME ${DREAM3DProj_BINARY_DIR}/DREAM3D_Filter_Docs.pdf)
-    #  message(STATUS "DREAM3D_DOCS_ROOT_DIR: ${DREAM3D_DOCS_ROOT_DIR}")
-    #  message(STATUS "DREAM3D_DOCS_PDF_FILENAME: ${DREAM3D_DOCS_PDF_FILENAME}" )
-
-    configure_file(${DREAM3DTools_SOURCE_DIR}/DocsToPdf.h.in ${DREAM3DTools_BINARY_DIR}/DocsToPdf.h)
-    include_directories(${DREAM3DTools_BINARY_DIR})
-    COMPILE_TOOL(
-        TARGET DocsToPdf
-        SOURCES ${DREAM3DTools_SOURCE_DIR}/DocsToPdf.cpp ${DREAM3DTools_BINARY_DIR}/DocsToPdf.h
-        DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-        VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-        VERSION_MINOR ${DREAM3D_VER_MINOR}
-        VERSION_PATCH ${DREAM3D_VER_PATCH}
-        BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-        COMPONENT     Applications
-        LINK_LIBRARIES Qt5::Core Qt5::Gui Qt5::Widgets
-    )
+# Setup an option to compile the version JSON file. This should be off
+# by default as no one needs it except the web admin
+OPTION (DREAM3D_BUILD_VERSION_FILE "Generate dream3d_version.json for the webserver" OFF)
+if(${DREAM3D_BUILD_VERSION_FILE})
+  COMPILE_TOOL(
+      TARGET CreateWebServerJson
+      SOURCES ${DREAM3DTools_SOURCE_DIR}/CreateWebServerJson.cpp
+      DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
+      VERSION_MAJOR ${DREAM3D_VER_MAJOR}
+      VERSION_MINOR ${DREAM3D_VER_MINOR}
+      VERSION_PATCH ${DREAM3D_VER_PATCH}
+      BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
+      LINK_LIBRARIES hdf5 Qt5::Core H5Support DREAM3DLib
+  )
 endif()
