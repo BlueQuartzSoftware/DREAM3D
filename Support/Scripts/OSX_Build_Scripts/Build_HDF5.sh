@@ -1,10 +1,13 @@
 #!/bin/bash
+# This script requires 2 arguments. The root of the DREAM3D_SDK (/Users/Shared/DREAM3D_SDK
+# or /opt/DREAM3D_SDK) and the number of parallel processes to use to compile. This
+# is typically 2x the number of physical cores in the machine.
 
-SDK_INSTALL=/Users/Shared/DREAM3D_SDK
+SDK_INSTALL=$1
 
 cd $SDK_INSTALL
 
-PARALLEL_BUILD=8
+PARALLEL_BUILD=$2
 
 
 HOST_SYSTEM=`uname`

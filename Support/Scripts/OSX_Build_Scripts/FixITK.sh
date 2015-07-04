@@ -18,7 +18,6 @@ printStatus "************** Fixing up ITK 4.7.1 **********************"
 InstallPrefix="${1}"
 printStatus "InstallPrefix = ${InstallPrefix}"
 
-
 InstallPrefix="${1}"
 PackageInstallDest="${1}"
 ProjectBinaryDir=@PROJECT_INSTALL_DIR@
@@ -242,12 +241,19 @@ tmpFile="${tmpFile}/itk_otool.out"
 
 cd ${LibPath}
 
-#libs=libITKReview-4.7.1.dylib
+
 libs=`ls *.dylib`
+# Get the total number of libs to update
+total=`echo $libs | wc -w`
+# Remove leading spaces in the 'total' variable
+total=`echo ${total} | sed -e 's/^[ \t]*//'`
+# Get a counter
+let k=0
 for l in $libs
 do
-    echo "------------------"
-    echo 'Changing '$l
+    #echo "------------------"
+    echo "[${k}/${total}] Changing " $l
+    let k=k+1
     ApplicationExe=$l
 
     otool -L "${LibPath}/${ApplicationExe}" > "${tmpFile}"

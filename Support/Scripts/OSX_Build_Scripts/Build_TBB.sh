@@ -1,4 +1,14 @@
 #!/bin/bash
+# This script requires 2 arguments. The root of the DREAM3D_SDK (/Users/Shared/DREAM3D_SDK
+# or /opt/DREAM3D_SDK) and the number of parallel processes to use to compile. This
+# is typically 2x the number of physical cores in the machine.
+
+SDK_INSTALL=$1
+
+cd $SDK_INSTALL
+
+PARALLEL_BUILD=$2
+
 
 HOST_SYSTEM=`uname`
 echo "Host System: $HOST_SYSTEM"
@@ -27,14 +37,8 @@ fi
 if [[ "$CURL" != "" ]];
 then
   DOWNLOAD_PROG=$CURL
-  DOWNLOAD_ARGS="-o cmake-2.8.12.2.tar.gz"
 fi
 
-
-
-SDK_INSTALL=/Users/Shared/DREAM3D_SDK
-
-cd $SDK_INSTALL
 
 TBB_VERS=tbb43_20150424
 
