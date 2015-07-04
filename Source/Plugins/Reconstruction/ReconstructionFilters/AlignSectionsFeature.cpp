@@ -146,36 +146,32 @@ void AlignSectionsFeature::find_shifts(std::vector<int64_t>& xshifts, std::vecto
   }
   size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
+
+  int64_t dims[3] =
   {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
+    static_cast<int64_t>(udims[0]),
+    static_cast<int64_t>(udims[1]),
+    static_cast<int64_t>(udims[2]),
   };
 
   float disorientation = 0.0f;
   float mindisorientation = std::numeric_limits<float>::max();
-  int64_t newxshift = 0;
-  int64_t newyshift = 0;
-  int64_t oldxshift = 0;
-  int64_t oldyshift = 0;
+  int32_t newxshift = 0;
+  int32_t newyshift = 0;
+  int32_t oldxshift = 0;
+  int32_t oldyshift = 0;
   float count = 0.0f;
-  DimType slice = 0;
-  DimType refposition = 0;
-  DimType curposition = 0;
+  int64_t slice = 0;
+  int64_t refposition = 0;
+  int64_t curposition = 0;
   std::vector<std::vector<float> >  misorients(dims[0]);
 
-  for (DimType a = 0; a < dims[0]; a++)
+  for (int64_t a = 0; a < dims[0]; a++)
   {
     misorients[a].assign(dims[1], 0.0f);
   }
 
-  for (DimType iter = 1; iter < dims[2]; iter++)
+  for (int64_t iter = 1; iter < dims[2]; iter++)
   {
     QString ss = QObject::tr("Aligning Sections || Determining Shifts || %1% Complete").arg(((float)iter / dims[2]) * 100);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
@@ -185,9 +181,9 @@ void AlignSectionsFeature::find_shifts(std::vector<int64_t>& xshifts, std::vecto
     oldyshift = -1;
     newxshift = 0;
     newyshift = 0;
-    for (DimType a = 0; a < dims[0]; a++)
+    for (int64_t a = 0; a < dims[0]; a++)
     {
-      for (DimType b = 0; b < dims[1]; b++)
+      for (int64_t b = 0; b < dims[1]; b++)
       {
         misorients[a][b] = 0;
       }
@@ -205,9 +201,9 @@ void AlignSectionsFeature::find_shifts(std::vector<int64_t>& xshifts, std::vecto
           if (misorients[k + oldxshift + dims[0] / 2][j + oldyshift + dims[1] / 2] == 0.0f && abs(k + oldxshift) < (dims[0] / 2)
               && (j + oldyshift) < (dims[1] / 2))
           {
-            for (DimType l = 0; l < dims[1]; l = l + 4)
+            for (int64_t l = 0; l < dims[1]; l = l + 4)
             {
-              for (DimType n = 0; n < dims[0]; n = n + 4)
+              for (int64_t n = 0; n < dims[0]; n = n + 4)
               {
                 if ((l + j + oldyshift) >= 0 && (l + j + oldyshift) < dims[1] && (n + k + oldxshift) >= 0 && (n + k + oldxshift) < dims[0])
                 {
