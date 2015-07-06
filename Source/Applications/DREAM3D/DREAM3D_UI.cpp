@@ -893,6 +893,7 @@ void DREAM3D_UI::on_startPipelineBtn_clicked()
   if(err < 0)
   {
     m_PipelineInFlight = FilterPipeline::NullPointer();
+    issuesDockWidget->displayCachedMessages();
     return;
   }
 
