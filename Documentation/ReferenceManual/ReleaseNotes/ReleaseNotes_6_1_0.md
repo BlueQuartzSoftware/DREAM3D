@@ -10,6 +10,10 @@ Users:[https://groups.google.com/forum/?/dream3d-users#!forum/dream3d-users](htt
 
 Developers:[https://groups.google.com/forum/?hl=en#!forum/dream3d-developers](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
+## Version 6.1.3 ##
+
++ Fixed issue with the PhaseTypeSelectionFilterParameter and ShapeTypeSelectionFilterParameter classes where they were not returning the proper widget type.
+
 ## Version 6.1.0 ##
 
 + Major change to the way FilterParameters and user interface widgets interact. There is now an explicit one-to-one mapping of a Filter Parameter to a user interface widget. This mail effects developers.
