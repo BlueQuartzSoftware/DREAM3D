@@ -238,46 +238,48 @@ void PipelineFilterWidget::layoutWidgets()
       validateFileSystemFilterParameter(parameter);
     }
 
-    QWidget* w = fwm->createWidget(parameter, m_Filter.get());
-    m_PropertyToWidget.insert(parameter->getPropertyName(), w); // Update our Map of Filter Parameter Properties to the Widget
+    QWidget* filterParameterWidget = fwm->createWidget(parameter, m_Filter.get());
+    m_PropertyToWidget.insert(parameter->getPropertyName(), filterParameterWidget); // Update our Map of Filter Parameter Properties to the Widget
 
-    if (NULL == w)
+    if (NULL == filterParameterWidget)
     {
       continue;
     }
-    m_FilterParameterWidgets.push_back(w);
+    m_FilterParameterWidgets.push_back(filterParameterWidget);
 
     // Determine which group box to add the widget into
     if(parameter->getCategory() == FilterParameter::Parameter)
     {
-      w->setParent(m_VariablesWidget);
-      pLayout->addWidget(w);
+      filterParameterWidget->setParent(m_VariablesWidget);
+      pLayout->addWidget(filterParameterWidget);
       pCount++;
     }
     else if(parameter->getCategory() == FilterParameter::RequiredArray)
     {
-      w->setParent(m_VariablesWidget);
-      rLayout->addWidget(w);
+      filterParameterWidget->setParent(m_VariablesWidget);
+      rLayout->addWidget(filterParameterWidget);
       rCount++;
     }
     else if(parameter->getCategory() == FilterParameter::CreatedArray)
     {
-      w->setParent(m_VariablesWidget);
-      cLayout->addWidget(w);
+      filterParameterWidget->setParent(m_VariablesWidget);
+      cLayout->addWidget(filterParameterWidget);
       cCount++;
     }
     else
     {
-      w->setParent(m_VariablesWidget);
-      nLayout->addWidget(w);
+      filterParameterWidget->setParent(m_VariablesWidget);
+      nLayout->addWidget(filterParameterWidget);
     }
 
     // Connect up some signals and slots
-    connect(w, SIGNAL(parametersChanged() ),
+    connect(filterParameterWidget, SIGNAL(parametersChanged() ),
             parent(), SLOT(preflightPipeline() ) );
-//    connect(w, SIGNAL(parametersChanged()),
-//      this, SLOT(handleFilterParameterChanged()));
-    connect(w, SIGNAL(errorSettingFilterParameter(const QString&)),
+
+    connect(filterParameterWidget, SIGNAL(parametersChanged() ),
+            parent(), SLOT(handleFilterParameterChanged() ) );
+
+    connect(filterParameterWidget, SIGNAL(errorSettingFilterParameter(const QString&)),
             this, SLOT(displayFilterParameterWidgetError(const QString&)));
 
   }
@@ -330,16 +332,6 @@ void PipelineFilterWidget::layoutWidgets()
   QString curStructName = QString::fromUtf8("advancedInputsScrollWidget_CurrStructWidget");
   m_CurrentStructureWidget->setObjectName(curStructName);
   m_CurrentStructureWidget->setGeometry(QRect(0, 0, 250, 267));
-}
-
-// -----------------------------------------------------------------------------
-//  CONNECT - PipelineFilterWidget::layoutWidgets()
-// -----------------------------------------------------------------------------
-void PipelineFilterWidget::handleFilterParameterChanged()
-{
-  /* SLOT - PipelineViewWidget::handleFilterParameterChanged()
-     CONNECT - PipelineViewWidget::addFilter(...) */
-  emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------

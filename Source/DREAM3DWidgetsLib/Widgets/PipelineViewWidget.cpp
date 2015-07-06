@@ -518,7 +518,7 @@ void PipelineViewWidget::addFilter(const QString& filterClassName, int index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, int index)
+void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* pipelineFilterWidget, int index)
 {
   bool addSpacer = false;
   if (filterCount() <= 0)
@@ -549,33 +549,34 @@ void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, int index)
   }
 
   // The layout will take control of the PipelineFilterWidget 'w' instance
-  m_FilterWidgetLayout->insertWidget(index, w);
+  m_FilterWidgetLayout->insertWidget(index, pipelineFilterWidget);
   // Set the Parent
-  w->setParent(this);
+  pipelineFilterWidget->setParent(this);
 
   if(index == -1)
   {
     index = filterCount() - 1;
   }
 
+
   /// Now setup all the connections between the various widgets
 
   // When the filter is removed from this view
-  connect(w, SIGNAL(filterWidgetRemoved(PipelineFilterWidget*)),
+  connect(pipelineFilterWidget, SIGNAL(filterWidgetRemoved(PipelineFilterWidget*)),
           this, SLOT(removeFilterWidget(PipelineFilterWidget*)) );
 
   // When the FilterWidget is selected
-  connect(w, SIGNAL(widgetSelected(PipelineFilterWidget*)),
+  connect(pipelineFilterWidget, SIGNAL(widgetSelected(PipelineFilterWidget*)),
           this, SLOT(setSelectedFilterWidget(PipelineFilterWidget*)) );
 
   // When the filter widget is dragged
-  connect(w, SIGNAL(dragStarted(PipelineFilterWidget*)),
+  connect(pipelineFilterWidget, SIGNAL(dragStarted(PipelineFilterWidget*)),
           this, SLOT(setFilterBeingDragged(PipelineFilterWidget*)) );
 
-  connect(w, SIGNAL(parametersChanged()),
+  connect(pipelineFilterWidget, SIGNAL(parametersChanged()),
           this, SLOT(preflightPipeline()));
 
-  connect(w, SIGNAL(parametersChanged()),
+  connect(pipelineFilterWidget, SIGNAL(parametersChanged()),
           this, SLOT(handleFilterParameterChanged()));
 
   // Check to make sure at least the vertical spacer is in the Layout
@@ -589,9 +590,9 @@ void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, int index)
   reindexWidgetTitles();
 
   // Finally, set this new filter widget as selected in order to show the input parameters right away
-  w->setIsSelected(true);
+  pipelineFilterWidget->setIsSelected(true);
   // Get the filter to ignore Scroll Wheel Events
-  w->installEventFilter( this);
+  pipelineFilterWidget->installEventFilter( this);
 
   // Emit that the pipeline changed
   emit pipelineChanged();
@@ -1290,7 +1291,7 @@ QStatusBar* PipelineViewWidget::getStatusBar()
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::handleFilterParameterChanged()
 {
-  emit filterParameterChanged();
+  emit filterInputWidgetEdited();
 }
 
 // -----------------------------------------------------------------------------

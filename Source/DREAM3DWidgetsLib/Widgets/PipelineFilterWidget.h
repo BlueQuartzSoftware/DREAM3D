@@ -181,11 +181,6 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
      */
     void on_deleteBtn_clicked();
 
-    /**
-    * @brief handleFilterParameterChanged
-    */
-    void handleFilterParameterChanged();
-
   signals:
 
     /**
