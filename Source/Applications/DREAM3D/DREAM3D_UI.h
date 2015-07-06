@@ -367,8 +367,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     IDREAM3DPlugin*                       m_ActivePlugin;
     QVector<IDREAM3DPlugin*>              m_LoadedPlugins;
 
-    HelpDialog*                           m_HelpDialog;
-
     QSharedPointer<UpdateCheck>           m_UpdateCheck;
 
     QThread*                              m_UpdateCheckThread;

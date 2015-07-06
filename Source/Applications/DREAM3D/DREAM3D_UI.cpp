@@ -90,7 +90,6 @@ DREAM3D_UI::DREAM3D_UI(QWidget* parent) :
   QMainWindow(parent),
   m_WorkerThread(NULL),
   m_ActivePlugin(NULL),
-  m_HelpDialog(NULL),
   m_UpdateCheckThread(NULL),
   m_FilterManager(NULL),
   m_FilterWidgetManager(NULL),
