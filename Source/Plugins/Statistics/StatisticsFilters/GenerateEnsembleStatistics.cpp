@@ -37,6 +37,7 @@
 #include "GenerateEnsembleStatistics.h"
 
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/PhaseType.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
@@ -149,6 +150,8 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   choices.push_back("Lognormal");
   choices.push_back("Power");
   FilterParameterVector parameters;
+  QStringList phaseTypeStrings;
+  PhaseType::getPhaseTypeStrings(phaseTypeStrings);
   PhaseTypeSelectionFilterParameter::Pointer phaseType_parameter = PhaseTypeSelectionFilterParameter::New(
         "Phase Types",
         "PhaseTypesArrayName",
@@ -156,6 +159,7 @@ void GenerateEnsembleStatistics::setupFilterParameters()
         "PhaseTypeData",
         "CellEnsembleAttributeMatrixPath",
         getCellEnsembleAttributeMatrixPath(),
+        phaseTypeStrings,
         FilterParameter::Parameter);
   parameters.push_back(phaseType_parameter);
   parameters.push_back(DoubleFilterParameter::New("Size Correlation Resolution", "SizeCorrelationResolution", getSizeCorrelationResolution(), FilterParameter::Parameter));
