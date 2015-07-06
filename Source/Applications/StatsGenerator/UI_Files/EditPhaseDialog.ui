@@ -142,6 +142,11 @@
          <string>Matrix</string>
         </property>
        </item>
+       <item>
+        <property name="text">
+         <string>Unknown Phase Type</string>
+        </property>
+       </item>
       </widget>
      </item>
      <item row="4" column="0">
