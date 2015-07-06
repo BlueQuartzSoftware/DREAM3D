@@ -12,6 +12,7 @@
 set(DREAM3DLib_FilterParameters_HDRS
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/AbstractFilterParametersReader.h
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/AbstractFilterParametersWriter.h
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/AttributeMatrixCreationFilterParameter.h
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/AttributeMatrixSelectionFilterParameter.h
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/AxisAngleFilterParameter.h
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/BooleanFilterParameter.h
@@ -63,6 +64,7 @@ set(DREAM3DLib_FilterParameters_HDRS
 set(DREAM3DLib_FilterParameters_SRCS
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/AbstractFilterParametersReader.cpp
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/AbstractFilterParametersWriter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/AttributeMatrixCreationFilterParameter.cpp
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/AttributeMatrixSelectionFilterParameter.cpp
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/AxisAngleFilterParameter.cpp
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/BooleanFilterParameter.cpp
