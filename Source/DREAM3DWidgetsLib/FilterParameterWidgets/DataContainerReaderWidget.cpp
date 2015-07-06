@@ -243,7 +243,7 @@ DataContainerReaderWidget::DataContainerReaderWidget(FilterParameter* parameter,
   m_DidCausePreflight(false)
 {
   m_FilterParameter = dynamic_cast<DataContainerReaderFilterParameter*>(parameter);
-  Q_ASSERT_X(getFilterParameter() != NULL, "NULL Pointer", "DataContainerReaderWidget can ONLY be used with a DataContainerReaderFilterParameter object");
+  Q_ASSERT_X(m_FilterParameter != NULL, "NULL Pointer", "DataContainerReaderWidget can ONLY be used with a DataContainerReaderFilterParameter object");
   m_Filter = dynamic_cast<DataContainerReader*>(filter);
   Q_ASSERT_X(getFilter() != NULL, "NULL Pointer", "DataContainerReaderWidget can ONLY be used with a DataContainerReader object");
 

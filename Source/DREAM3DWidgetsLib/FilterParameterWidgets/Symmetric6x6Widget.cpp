@@ -51,7 +51,7 @@ Symmetric6x6Widget::Symmetric6x6Widget(FilterParameter* parameter, AbstractFilte
   FilterParameterWidget(parameter, filter, parent)
 {
   m_FilterParameter = dynamic_cast<Symmetric6x6FilterParameter*>(parameter);
-  Q_ASSERT_X(getFilterParameter() != NULL, "NULL Pointer", "Symmetric6x6Widget can ONLY be used with a Symmetric6x6FilterParameter object");
+  Q_ASSERT_X(m_FilterParameter != NULL, "NULL Pointer", "Symmetric6x6Widget can ONLY be used with a Symmetric6x6FilterParameter object");
 
   setupUi(this);
   setupGui();

@@ -57,7 +57,7 @@ VolumeDataContainerInfoWidget::VolumeDataContainerInfoWidget(FilterParameter* pa
   m_DidCausePreflight(false)
 {
   m_FilterParameter = dynamic_cast<VolumeDataContainerInfoFilterParameter*>(parameter);
-  Q_ASSERT_X(getFilterParameter() != NULL, "NULL Pointer", "VolumeDataContainerInfoWidget can ONLY be used with a VolumeDataContainerInfoFilterParameter object");
+  Q_ASSERT_X(m_FilterParameter != NULL, "NULL Pointer", "VolumeDataContainerInfoWidget can ONLY be used with a VolumeDataContainerInfoFilterParameter object");
 
   setupUi(this);
   setupGui();

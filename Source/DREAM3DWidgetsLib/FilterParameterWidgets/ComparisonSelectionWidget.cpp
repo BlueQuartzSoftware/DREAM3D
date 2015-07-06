@@ -50,7 +50,7 @@ ComparisonSelectionWidget::ComparisonSelectionWidget(FilterParameter* parameter,
   m_ComparisonSelectionTableModel(NULL)
 {
   m_FilterParameter = dynamic_cast<ComparisonSelectionFilterParameter*>(parameter);
-  Q_ASSERT_X(getFilterParameter() != NULL, "NULL Pointer", "ComparisonSelectionWidget can ONLY be used with a ComparisonSelectionFilterParameter object");
+  Q_ASSERT_X(m_FilterParameter != NULL, "NULL Pointer", "ComparisonSelectionWidget can ONLY be used with a ComparisonSelectionFilterParameter object");
 
   setupUi(this);
   setupGui();

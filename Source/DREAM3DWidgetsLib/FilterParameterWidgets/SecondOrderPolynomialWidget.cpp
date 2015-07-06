@@ -51,7 +51,7 @@ SecondOrderPolynomialWidget::SecondOrderPolynomialWidget(FilterParameter* parame
   FilterParameterWidget(parameter, filter, parent)
 {
   m_FilterParameter = dynamic_cast<SecondOrderPolynomialFilterParameter*>(parameter);
-  Q_ASSERT_X(getFilterParameter() != NULL, "NULL Pointer", "SecondOrderPolynomialWidget can ONLY be used with a SecondOrderPolynomialFilterParameter object");
+  Q_ASSERT_X(m_FilterParameter != NULL, "NULL Pointer", "SecondOrderPolynomialWidget can ONLY be used with a SecondOrderPolynomialFilterParameter object");
 
   setupUi(this);
   setupGui();

@@ -51,7 +51,7 @@ AxisAngleWidget::AxisAngleWidget(FilterParameter* parameter, AbstractFilter* fil
   FilterParameterWidget(parameter, filter, parent)
 {
   m_FilterParameter = dynamic_cast<AxisAngleFilterParameter*>(parameter);
-  Q_ASSERT_X(getFilterParameter() != NULL, "NULL Pointer", "AxisAngleWidget can ONLY be used with an AxisAngleFilterParameter object");
+  Q_ASSERT_X(m_FilterParameter != NULL, "NULL Pointer", "AxisAngleWidget can ONLY be used with an AxisAngleFilterParameter object");
 
   setupUi(this);
   setupGui();
