@@ -44,30 +44,32 @@
 
 class DoubleWidgetCodeGenerator : public FPCodeGenerator
 {
-public:
-  DREAM3D_SHARED_POINTERS(DoubleWidgetCodeGenerator)
+  public:
+    DREAM3D_SHARED_POINTERS(DoubleWidgetCodeGenerator)
 
     static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
-  {
-    Pointer sharedPtr(new DoubleWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
-    return sharedPtr;
-  }
+    {
+      Pointer sharedPtr(new DoubleWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
+      return sharedPtr;
+    }
 
-  virtual ~DoubleWidgetCodeGenerator();
+    virtual ~DoubleWidgetCodeGenerator();
 
-  virtual QString generateSetupFilterParameters();
+    virtual QString generateSetupFilterParameters();
 
-  virtual QString generateDataCheck();
+    virtual QString generateDataCheck();
 
-  virtual QString generateFilterParameters();
+    virtual QString generateFilterParameters();
 
-protected:
-  DoubleWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
+    virtual QString generateCPPIncludes();
 
-private:
+  protected:
+    DoubleWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
-  DoubleWidgetCodeGenerator(const DoubleWidgetCodeGenerator&); // Copy Constructor Not Implemented
-  void operator=(const DoubleWidgetCodeGenerator&); // Operator '=' Not Implemented
+  private:
+
+    DoubleWidgetCodeGenerator(const DoubleWidgetCodeGenerator&); // Copy Constructor Not Implemented
+    void operator=(const DoubleWidgetCodeGenerator&); // Operator '=' Not Implemented
 };
 
 #endif /* DoubleWidgetCodeGenerator_H_ */

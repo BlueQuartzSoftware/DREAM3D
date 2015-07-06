@@ -1,6 +1,13 @@
 #!/bin/bash
+# This script requires 2 arguments. The root of the DREAM3D_SDK (/Users/Shared/DREAM3D_SDK
+# or /opt/DREAM3D_SDK) and the number of parallel processes to use to compile. This
+# is typically 2x the number of physical cores in the machine.
 
-PARALLEL_BUILD=8
+SDK_INSTALL=$1
+
+cd $SDK_INSTALL
+
+PARALLEL_BUILD=$2
 
 
 HOST_SYSTEM=`uname`
@@ -33,32 +40,30 @@ then
   DOWNLOAD_ARGS=""
 fi
 
-SDK_INSTALL=/Users/Shared/Toolkits
 
-cd $SDK_INSTALL
-
-if [ ! -e "$SDK_INSTALL/boost_1_56_0.tar.gz" ];
+if [ ! -e "$SDK_INSTALL/boost_1_58_0.tar.gz" ];
   then
   echo "-------------------------------------------"
-  echo " Downloading Boost Version boost_1_56_0.tar.gz "
+  echo " Downloading Boost Version boost_1_58_0.tar.gz "
   echo "-------------------------------------------"
-  $DOWNLOAD_PROG  "http://hivelocity.dl.sourceforge.net/project/boost/boost/1.56.0/boost_1_56_0.tar.gz" -o boost_1_56_0.tar.gz
+  $DOWNLOAD_PROG  "http://iweb.dl.sourceforge.net/project/boost/boost/1.58.0/boost_1_58_0.tar.gz" -o boost_1_58_0.tar.gz
 fi
 
 cd $SDK_INSTALL
 
 # Next decompress the archive
-if [ -e "$SDK_INSTALL/boost_1_56_0.tar.gz" ];
+if [ -e "$SDK_INSTALL/boost_1_58_0.tar.gz" ];
 then
-  tar -xvzf boost_1_56_0.tar.gz
-  mv "$SDK_INSTALL/boost_1_56_0" "$SDK_INSTALL/boost_1_56_0_source"
+  tar -xvzf boost_1_58_0.tar.gz
+  mv "$SDK_INSTALL/boost_1_58_0" "$SDK_INSTALL/boost_1_58_0_source"
 fi
 
-cd "$SDK_INSTALL/boost_1_56_0_source"
+cd "$SDK_INSTALL/boost_1_58_0_source"
 ./bootstrap.sh
 ./b2 headers
-./b2 -j$PARALLEL_BUILD --prefix=$SDK_INSTALL/boost-1.56.0  --layout=system --build-dir=x64 --architecture=x86 address-model=64 variant=release link=shared threading=multi runtime-link=shared install
-  
+./b2 -j$PARALLEL_BUILD --prefix=$SDK_INSTALL/boost-1.58.0  --layout=system --build-dir=x64 --architecture=x86 address-model=64 variant=release link=shared threading=multi runtime-link=shared install
+mkdir -p $SDK_INSTALL/boost-1.58.0/lib/Debug
+mkdir -p $SDK_INSTALL/boost-1.58.0/lib/Release
 
 
 

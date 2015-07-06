@@ -40,7 +40,7 @@
 //
 // -----------------------------------------------------------------------------
 DataContainerReaderWidgetCodeGenerator::DataContainerReaderWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue) :
-FPCodeGenerator(humanLabel, propertyName, category, initValue)
+  FPCodeGenerator(humanLabel, propertyName, category, initValue)
 {
 
 }
@@ -63,7 +63,7 @@ QString DataContainerReaderWidgetCodeGenerator::generateSetupFilterParameters()
   ss << "    DataContainerReaderFilterParameter::Pointer parameter = DataContainerReaderFilterParameter::New();\n";
   ss << "    parameter->setHumanLabel(\"" + getHumanLabel() + "\");\n";
   ss << "    parameter->setPropertyName(\"" + getPropertyName() + "\");\n";
-  ss << "    parameter->setWidgetType(FilterParameterWidgetType::DataContainerReaderWidget);\n";
+  ss << "    \n";
   ss << "    parameter->setDefaultFlagValue(Qt::Checked);\n";
   ss << "    parameter->setInputFileProperty(\"InputFilePropertyName\");    // Set this property name, if needed\n";
   ss << "    parameter->setCategory(" + getCategory() + ");\n";

@@ -17,7 +17,7 @@
  */
 class CreateAttributeMatrix : public AbstractFilter
 {
-  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
 
   public:
     DREAM3D_SHARED_POINTERS(CreateAttributeMatrix)
@@ -26,11 +26,8 @@ class CreateAttributeMatrix : public AbstractFilter
 
     virtual ~CreateAttributeMatrix();
 
-    DREAM3D_FILTER_PARAMETER(QString, SelectedDataContainer)
-    Q_PROPERTY(QString SelectedDataContainer READ getSelectedDataContainer WRITE setSelectedDataContainer)
-
-    DREAM3D_FILTER_PARAMETER(QString, CreatedAttributeMatrixName)
-    Q_PROPERTY(QString CreatedAttributeMatrixName READ getCreatedAttributeMatrixName WRITE setCreatedAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CreatedAttributeMatrix)
+    Q_PROPERTY(DataArrayPath CreatedAttributeMatrix READ getCreatedAttributeMatrix WRITE setCreatedAttributeMatrix)
 
     DREAM3D_FILTER_PARAMETER(int, AttributeMatrixType)
     Q_PROPERTY(int AttributeMatrixType READ getAttributeMatrixType WRITE setAttributeMatrixType)
@@ -78,9 +75,9 @@ class CreateAttributeMatrix : public AbstractFilter
      */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-   /**
-    * @brief execute Reimplemented from @see AbstractFilter class
-    */
+    /**
+     * @brief execute Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
 
     /**

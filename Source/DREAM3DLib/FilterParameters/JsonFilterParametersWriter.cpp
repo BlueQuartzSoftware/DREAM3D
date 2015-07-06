@@ -747,7 +747,7 @@ int JsonFilterParametersWriter::writeArraySelections(const QString name, QSet<QS
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int JsonFilterParametersWriter::writeValue(const QString name, DataContainerArrayProxy& v)
+int JsonFilterParametersWriter::writeValue(const QString name, const DataContainerArrayProxy& v)
 {
   int err = 0;
 

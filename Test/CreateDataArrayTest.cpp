@@ -174,7 +174,7 @@ int TestCreateDataArray()
   DataContainerArray::Pointer dca = DataContainerArray::New();
   DataContainer::Pointer m = DataContainer::New(DREAM3D::Defaults::DataContainerName);
   dca->addDataContainer(m);
-  AttributeMatrix::Pointer attrMatrix = AttributeMatrix::New(QVector<size_t>(1,1), DREAM3D::Defaults::AttributeMatrixName, DREAM3D::AttributeMatrixType::Generic);
+  AttributeMatrix::Pointer attrMatrix = AttributeMatrix::New(QVector<size_t>(1, 1), DREAM3D::Defaults::AttributeMatrixName, DREAM3D::AttributeMatrixType::Generic);
   m->addAttributeMatrix(DREAM3D::Defaults::AttributeMatrixName, attrMatrix);
 
   // Now instantiate the CreateDataArray Filter from the FilterManager
@@ -197,20 +197,20 @@ int TestCreateDataArray()
     propWasSet = filter->setProperty("ScalarType", var); // int32
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-        var.setValue(1);
+    var.setValue(1);
     propWasSet = filter->setProperty("NumberOfComponents", var); // 1 component
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-        DataArrayPath path1 = DataArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::AttributeMatrixName, "testArray");
+    DataArrayPath path1 = DataArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::AttributeMatrixName, "testArray");
     var.setValue(path1);
     propWasSet = filter->setProperty("NewArray", var); // array path
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-        var.setValue(-5);
+    var.setValue(-5);
     propWasSet = filter->setProperty("InitializationValue", var); // initialize with -5
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-        filter->execute();
+    filter->execute();
     err = filter->getErrorCondition();
     DREAM3D_REQUIRE_EQUAL(err, NO_ERROR);
 
@@ -230,12 +230,12 @@ int TestCreateDataArray()
     propWasSet = filter->setProperty("ScalarType", var); // bool
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-        double d = QString("0.000001").toDouble(&ok);
+    double d = QString("0.000001").toDouble(&ok);
     var.setValue(d);
     propWasSet = filter->setProperty("InitializationValue", var); // initialize with d (9.9999999999999995e-007 Visual Studio)
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-        filter->execute();
+    filter->execute();
     err = filter->getErrorCondition();
     DREAM3D_REQUIRE_EQUAL(err, NO_ERROR);
 
@@ -253,11 +253,11 @@ int TestCreateDataArray()
     propWasSet = filter->setProperty("ScalarType", var); // int8
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-        var.setValue(128);
+    var.setValue(128);
     propWasSet = filter->setProperty("InitializationValue", var); // initialize with 128
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-        filter->execute();
+    filter->execute();
     err = filter->getErrorCondition();
     DREAM3D_REQUIRE_EQUAL(err, INT8_ERROR);
   }
@@ -299,7 +299,7 @@ int main(int argc, char** argv)
 
   DREAM3D_REGISTER_TEST(TestCreateDataArray())
 
-      PRINT_TEST_SUMMARY();
+  PRINT_TEST_SUMMARY();
 
   return err;
 }

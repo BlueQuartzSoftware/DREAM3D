@@ -167,7 +167,8 @@ void PoleFigureUtilities::CreateColorImage(DoubleArrayType* data, PoleFigureConf
           b = 0x00;
           g = 0x00;
         }
-        else {
+        else
+        {
           r = colors[3 * bin];
           g = colors[3 * bin + 1];
           b = colors[3 * bin + 2];

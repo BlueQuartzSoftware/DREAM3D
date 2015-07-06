@@ -541,7 +541,7 @@ int StatsDataArray::readH5Data(hid_t parentId)
 //
 // -----------------------------------------------------------------------------
 int StatsDataArray::writeXdmfAttribute(QTextStream& out, int64_t* volDims, const QString& hdfFileName,
-                               const QString& groupPath, const QString& labelb)
+                                       const QString& groupPath, const QString& labelb)
 {
   out << "<!-- Xdmf is not supported for " << getNameOfClass() << " with type " << getTypeAsString() << " --> ";
   return -1;

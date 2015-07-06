@@ -559,9 +559,9 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-/**
-  * @brief Macro to silence compiler warnings for unused parameters in methods.
-  */
+  /**
+    * @brief Macro to silence compiler warnings for unused parameters in methods.
+    */
 #define DREAM3D_NOT_USED(x)
 
 // -----------------------------------------------------------------------------
@@ -570,35 +570,35 @@
 
 // These are simple over-rides from the boost distribution because we don't want the entire boost distribution just
 // for a few boost headers
-namespace DREAM3D
-{
-  class bad_lexical_cast : public std::runtime_error
+  namespace DREAM3D
   {
-    public:
-      bad_lexical_cast(const QString& s)
-        : std::runtime_error(s.toStdString())
-      { }
-  };
+    class bad_lexical_cast : public std::runtime_error
+    {
+      public:
+        bad_lexical_cast(const QString& s)
+          : std::runtime_error(s.toStdString())
+        { }
+    };
 
-  class bad_any_cast : public std::runtime_error
-  {
-    public:
-      bad_any_cast(const QString& s)
-        : std::runtime_error(s.toStdString())
-      { }
-  };
+    class bad_any_cast : public std::runtime_error
+    {
+      public:
+        bad_any_cast(const QString& s)
+          : std::runtime_error(s.toStdString())
+        { }
+    };
 
-  template<typename T>
-  T lexical_cast(const QString& s)
-  {
-    std::istringstream i(s.toStdString());
-    T x;
-    if (!(i >> x))
-    { throw bad_lexical_cast("convertToDouble(\"" + s + "\")"); }
+    template<typename T>
+    T lexical_cast(const QString& s)
+    {
+      std::istringstream i(s.toStdString());
+      T x;
+      if (!(i >> x))
+      { throw bad_lexical_cast("convertToDouble(\"" + s + "\")"); }
 
-    return x;
+      return x;
+    }
   }
-}
 
 
 

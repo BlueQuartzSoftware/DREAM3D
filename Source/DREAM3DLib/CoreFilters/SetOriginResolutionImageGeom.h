@@ -40,6 +40,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
 
 /**
  * @brief The SetOriginResolutionImageGeom class. See [Filter documentation](@ref adjustvolumeorigin) for details.
@@ -115,9 +116,9 @@ class DREAM3DLib_EXPORT SetOriginResolutionImageGeom : public AbstractFilter
      */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-   /**
-    * @brief execute Reimplemented from @see AbstractFilter class
-    */
+    /**
+     * @brief execute Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
 
     /**

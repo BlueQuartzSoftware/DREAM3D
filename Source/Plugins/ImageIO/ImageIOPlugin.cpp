@@ -51,12 +51,12 @@
 //
 // -----------------------------------------------------------------------------
 ImageIOPlugin::ImageIOPlugin() :
-m_Version(DREAM3DLib::Version::Package()),
-m_CompatibilityVersion(DREAM3DLib::Version::Package()),
-m_Vendor(DREAM3D::BlueQuartz::VendorName),
-m_URL(DREAM3D::BlueQuartz::URL),
-m_Location(""),
-m_Copyright(DREAM3D::BlueQuartz::Copyright),
+  m_Version(DREAM3DLib::Version::Package()),
+  m_CompatibilityVersion(DREAM3DLib::Version::Package()),
+  m_Vendor(DREAM3D::BlueQuartz::VendorName),
+  m_URL(DREAM3D::BlueQuartz::URL),
+  m_Location(""),
+  m_Copyright(DREAM3D::BlueQuartz::Copyright),
   m_DidLoad(false)
 {
 

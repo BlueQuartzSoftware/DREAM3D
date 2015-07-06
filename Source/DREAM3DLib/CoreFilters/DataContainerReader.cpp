@@ -42,6 +42,7 @@
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/BooleanFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/DataContainerReaderFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/H5FilterParametersReader.h"
 
@@ -50,12 +51,12 @@
 //
 // -----------------------------------------------------------------------------
 DataContainerReader::DataContainerReader() :
-AbstractFilter(),
-m_InputFile(""),
-m_OverwriteExistingDataContainers(false),
-m_LastFileRead(""),
-m_LastRead(QDateTime::currentDateTime()),
-m_InputFileDataContainerArrayProxy()
+  AbstractFilter(),
+  m_InputFile(""),
+  m_OverwriteExistingDataContainers(false),
+  m_LastFileRead(""),
+  m_LastRead(QDateTime::currentDateTime()),
+  m_InputFileDataContainerArrayProxy()
 {
   m_PipelineFromFile = FilterPipeline::New();
 
@@ -76,12 +77,11 @@ void DataContainerReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FilterParameter::New("Overwrite Existing Data Containers", "OverwriteExistingDataContainers", FilterParameterWidgetType::BooleanWidget, getOverwriteExistingDataContainers(), FilterParameter::Parameter));
+  parameters.push_back(BooleanFilterParameter::New("Overwrite Existing Data Containers", "OverwriteExistingDataContainers", getOverwriteExistingDataContainers(), FilterParameter::Parameter));
   {
     DataContainerReaderFilterParameter::Pointer parameter = DataContainerReaderFilterParameter::New();
     parameter->setHumanLabel("Select Arrays from Input File");
     parameter->setPropertyName("InputFileDataContainerArrayProxy");
-    parameter->setWidgetType(FilterParameterWidgetType::DataContainerReaderWidget);
     parameter->setDefaultFlagValue(Qt::Checked);
     parameter->setInputFileProperty("InputFile");
     parameter->setCategory(FilterParameter::Parameter);
@@ -99,7 +99,7 @@ void DataContainerReader::readFilterParameters(AbstractFilterParametersReader* r
   reader->openFilterGroup(this, index);
   setInputFile(reader->readString("InputFile", getInputFile() ) );
   setInputFileDataContainerArrayProxy(reader->readDataContainerArrayProxy("InputFileDataContainerArrayProxy", getInputFileDataContainerArrayProxy() ) );
-  syncProxies();	// Sync the file proxy and currently cached proxy together into one proxy
+  syncProxies();  // Sync the file proxy and currently cached proxy together into one proxy
   setOverwriteExistingDataContainers(reader->readValue("OverwriteExistingDataContainers", getOverwriteExistingDataContainers() ) );
   reader->closeFilterGroup();
 }

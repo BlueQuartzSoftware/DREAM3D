@@ -39,6 +39,9 @@
 #include "DREAM3DLib/Common/TemplateHelpers.hpp"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/IntFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/DoubleFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
 
 // -----------------------------------------------------------------------------
@@ -72,7 +75,7 @@ void CreateDataArray::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Scalar Type");
     parameter->setPropertyName("ScalarType");
-    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+
     QVector<QString> choices;
     choices.push_back("signed   int 8  bit");
     choices.push_back("unsigned int 8  bit");
@@ -89,10 +92,10 @@ void CreateDataArray::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(FilterParameter::New("Number of Components", "NumberOfComponents", FilterParameterWidgetType::IntWidget, getNumberOfComponents(), FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Initialization Value", "InitializationValue", FilterParameterWidgetType::DoubleWidget, getInitializationValue(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Number of Components", "NumberOfComponents", getNumberOfComponents(), FilterParameter::Parameter));
+  parameters.push_back(DoubleFilterParameter::New("Initialization Value", "InitializationValue", getInitializationValue(), FilterParameter::Parameter));
 
-  parameters.push_back(FilterParameter::New("Created Attribute Array", "NewArray", FilterParameterWidgetType::DataArrayCreationWidget, getNewArray(), FilterParameter::CreatedArray));
+  parameters.push_back(DataArrayCreationFilterParameter::New("Created Attribute Array", "NewArray", getNewArray(), FilterParameter::CreatedArray));
 
   setFilterParameters(parameters);
 }
@@ -137,7 +140,8 @@ void checkInitializationInt(AbstractFilter* filter, double initValue, int32_t er
   QString strType = var->getTypeAsString();
   strType.remove("_t");
 
-  if (!((initValue >= std::numeric_limits<T>::min()) && (initValue <= std::numeric_limits<T>::max()))){
+  if (!((initValue >= std::numeric_limits<T>::min()) && (initValue <= std::numeric_limits<T>::max())))
+  {
     filter->setErrorCondition(err);
     ss = QObject::tr("The %1 initialization value was invalid. The valid range is %2 to %3").arg(strType).arg(std::numeric_limits<T>::min()).arg(std::numeric_limits<T>::max());
   }
@@ -160,7 +164,8 @@ void checkInitializationFloatDouble(AbstractFilter* filter, double initValue, in
   QString strType = var->getTypeAsString();
 
   if (!(((initValue >= static_cast<T>(-1) * std::numeric_limits<T>::max()) && (initValue <= static_cast<T>(-1) * std::numeric_limits<T>::min())) ||
-    (initValue == 0) || ((initValue >= std::numeric_limits<T>::min()) && (initValue <= std::numeric_limits<T>::max())))){
+        (initValue == 0) || ((initValue >= std::numeric_limits<T>::min()) && (initValue <= std::numeric_limits<T>::max()))))
+  {
     filter->setErrorCondition(err);
     ss = QObject::tr("The %1 initialization value was invalid. The valid ranges are -%3 to -%2, 0, %2 to %3").arg(strType).arg(std::numeric_limits<T>::min()).arg(std::numeric_limits<T>::max());
   }

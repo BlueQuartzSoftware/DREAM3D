@@ -45,18 +45,18 @@
 
 class DREAM3Dv6Wizard : public QWizard, private Ui::DREAM3Dv6Wizard
 {
-  Q_OBJECT
+    Q_OBJECT
 
-public:
-  DREAM3Dv6Wizard(QWidget* parent = 0, Qt::WindowFlags flags = 0);
-  virtual ~DREAM3Dv6Wizard();
+  public:
+    DREAM3Dv6Wizard(QWidget* parent = 0, Qt::WindowFlags flags = 0);
+    virtual ~DREAM3Dv6Wizard();
 
-  void setupGui();
+    void setupGui();
 
-  bool isBookmarkBtnChecked();
+    bool isBookmarkBtnChecked();
 
-  DREAM3Dv6Wizard(const DREAM3Dv6Wizard&); // Copy Constructor Not Implemented
-  void operator=(const DREAM3Dv6Wizard&); // Operator '=' Not Implemented
+    DREAM3Dv6Wizard(const DREAM3Dv6Wizard&); // Copy Constructor Not Implemented
+    void operator=(const DREAM3Dv6Wizard&); // Operator '=' Not Implemented
 };
 
 #endif /* DREAM3Dv6Wizard_H_ */

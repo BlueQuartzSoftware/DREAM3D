@@ -44,34 +44,34 @@
 
 class InputFileWidgetCodeGenerator : public FPCodeGenerator
 {
-public:
-  DREAM3D_SHARED_POINTERS(InputFileWidgetCodeGenerator)
+  public:
+    DREAM3D_SHARED_POINTERS(InputFileWidgetCodeGenerator)
 
     static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
-  {
-    Pointer sharedPtr(new InputFileWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
-    return sharedPtr;
-  }
+    {
+      Pointer sharedPtr(new InputFileWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
+      return sharedPtr;
+    }
 
-  virtual ~InputFileWidgetCodeGenerator();
+    virtual ~InputFileWidgetCodeGenerator();
 
-  virtual QString generateSetupFilterParameters();
+    virtual QString generateSetupFilterParameters();
 
-  virtual QString generateReadFilterParameters();
+    virtual QString generateReadFilterParameters();
 
-  virtual QString generateDataCheck();
+    virtual QString generateDataCheck();
 
-  virtual QString generateFilterParameters();
+    virtual QString generateFilterParameters();
 
-  virtual QString generateCPPIncludes();
+    virtual QString generateCPPIncludes();
 
-protected:
-  InputFileWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
+  protected:
+    InputFileWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
-private:
+  private:
 
-  InputFileWidgetCodeGenerator(const InputFileWidgetCodeGenerator&); // Copy Constructor Not Implemented
-  void operator=(const InputFileWidgetCodeGenerator&); // Operator '=' Not Implemented
+    InputFileWidgetCodeGenerator(const InputFileWidgetCodeGenerator&); // Copy Constructor Not Implemented
+    void operator=(const InputFileWidgetCodeGenerator&); // Operator '=' Not Implemented
 };
 
 #endif /* InputFileWidgetCodeGenerator_H_ */

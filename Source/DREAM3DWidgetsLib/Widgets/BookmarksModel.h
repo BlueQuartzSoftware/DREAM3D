@@ -57,77 +57,77 @@ class BookmarksItem;
 
 class DREAM3DWidgetsLib_EXPORT BookmarksModel : public QAbstractItemModel
 {
-  Q_OBJECT
+    Q_OBJECT
 
-public:
-  DREAM3D_TYPE_MACRO(BookmarksModel)
+  public:
+    DREAM3D_TYPE_MACRO(BookmarksModel)
 
-  ~BookmarksModel();
+    ~BookmarksModel();
 
-  static BookmarksModel* Instance();
+    static BookmarksModel* Instance();
 
-  static BookmarksModel* NewInstanceFromFile(QString filePath);
+    static BookmarksModel* NewInstanceFromFile(QString filePath);
 
-  QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
-  QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex& index, int role) const Q_DECL_OVERRIDE;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-  virtual QModelIndex sibling(int row, int column, const QModelIndex &idx) const;
+    virtual QModelIndex sibling(int row, int column, const QModelIndex& idx) const;
 
-  bool isEmpty();
+    bool isEmpty();
 
-  QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-  QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QModelIndex parent(const QModelIndex& index) const Q_DECL_OVERRIDE;
 
-  int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-  int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex& parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex& parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
-  bool insertRows(int position, int rows, const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;
-  bool removeRows(int position, int rows, const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;
+    bool insertRows(int position, int rows, const QModelIndex& parent = QModelIndex()) Q_DECL_OVERRIDE;
+    bool removeRows(int position, int rows, const QModelIndex& parent = QModelIndex()) Q_DECL_OVERRIDE;
 
-  Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    Qt::ItemFlags flags(const QModelIndex& index) const Q_DECL_OVERRIDE;
 
-  bool setData(const QModelIndex &index, const QVariant &value, int role) Q_DECL_OVERRIDE;
+    bool setData(const QModelIndex& index, const QVariant& value, int role) Q_DECL_OVERRIDE;
 
-  bool needsToBeExpanded(const QModelIndex &index);
-  void setNeedsToBeExpanded(const QModelIndex &index, bool value);
+    bool needsToBeExpanded(const QModelIndex& index);
+    void setNeedsToBeExpanded(const QModelIndex& index, bool value);
 
-  BookmarksItem* getRootItem();
+    BookmarksItem* getRootItem();
 
-  void moveIndexInternally(const QModelIndex &index, QModelIndex &oldParent, QModelIndex &newParent);
+    void moveIndexInternally(const QModelIndex& index, QModelIndex& oldParent, QModelIndex& newParent);
 
-  void addFileToTree(QString &path, QModelIndex &specifiedParent);
+    void addFileToTree(QString& path, QModelIndex& specifiedParent);
 
-  QStringList getFilePaths();
+    QStringList getFilePaths();
 
-  QModelIndexList findIndexByPath(QString filePath);
+    QModelIndexList findIndexByPath(QString filePath);
 
-  void setFileSystemWatcher(QFileSystemWatcher* watcher);
-  QFileSystemWatcher* getFileSystemWatcher();
+    void setFileSystemWatcher(QFileSystemWatcher* watcher);
+    QFileSystemWatcher* getFileSystemWatcher();
 
-protected:
-  BookmarksModel(QObject* parent = 0);
+  protected:
+    BookmarksModel(QObject* parent = 0);
 
-protected slots:
-  void updateRowState(const QString &path);
-  void updateModel(const QModelIndex& topLeft, const QModelIndex& bottomRight);
+  protected slots:
+    void updateRowState(const QString& path);
+    void updateModel(const QModelIndex& topLeft, const QModelIndex& bottomRight);
 
-private:
-  BookmarksItem*            rootItem;
-  QFileSystemWatcher*       m_Watcher;
+  private:
+    BookmarksItem*            rootItem;
+    QFileSystemWatcher*       m_Watcher;
 
-  static BookmarksModel* self;
+    static BookmarksModel* self;
 
-  BookmarksItem *getItem(const QModelIndex &index) const;
-  void copyIndexToTemp(const QModelIndex &index, const QModelIndex &oldParent, const QModelIndex &tempParent, BookmarksModel* tempModel);
+    BookmarksItem* getItem(const QModelIndex& index) const;
+    void copyIndexToTemp(const QModelIndex& index, const QModelIndex& oldParent, const QModelIndex& tempParent, BookmarksModel* tempModel);
 
-  void copyTempToIndex(QModelIndex &index, QModelIndex &newParent, const QModelIndex &tempParent, BookmarksModel* tempModel);
+    void copyTempToIndex(QModelIndex& index, QModelIndex& newParent, const QModelIndex& tempParent, BookmarksModel* tempModel);
 
-  QStringList getFilePaths(BookmarksItem* item);
+    QStringList getFilePaths(BookmarksItem* item);
 
-  QModelIndexList findIndexByPath(const QModelIndex &index, QString filePath);
+    QModelIndexList findIndexByPath(const QModelIndex& index, QString filePath);
 
-  BookmarksModel(const BookmarksModel&);    // Copy Constructor Not Implemented
-  void operator=(const BookmarksModel&);  // Operator '=' Not Implemented
+    BookmarksModel(const BookmarksModel&);    // Copy Constructor Not Implemented
+    void operator=(const BookmarksModel&);  // Operator '=' Not Implemented
 };
 
 #endif // BookmarksModel_H

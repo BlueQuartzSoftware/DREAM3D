@@ -44,32 +44,34 @@
 
 class DataArraySelectionWidgetCodeGenerator : public FPCodeGenerator
 {
-public:
-  DREAM3D_SHARED_POINTERS(DataArraySelectionWidgetCodeGenerator)
+  public:
+    DREAM3D_SHARED_POINTERS(DataArraySelectionWidgetCodeGenerator)
 
     static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
-  {
-    Pointer sharedPtr(new DataArraySelectionWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
-    return sharedPtr;
-  }
+    {
+      Pointer sharedPtr(new DataArraySelectionWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
+      return sharedPtr;
+    }
 
-  virtual ~DataArraySelectionWidgetCodeGenerator();
+    virtual ~DataArraySelectionWidgetCodeGenerator();
 
-  virtual QString generateSetupFilterParameters();
+    virtual QString generateSetupFilterParameters();
 
-  virtual QString generateReadFilterParameters();
+    virtual QString generateReadFilterParameters();
 
-  virtual QString generateDataCheck();
+    virtual QString generateDataCheck();
 
-  virtual QString generateFilterParameters();
+    virtual QString generateFilterParameters();
 
-protected:
-  DataArraySelectionWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
+    virtual QString generateCPPIncludes();
 
-private:
+  protected:
+    DataArraySelectionWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
-  DataArraySelectionWidgetCodeGenerator(const DataArraySelectionWidgetCodeGenerator&); // Copy Constructor Not Implemented
-  void operator=(const DataArraySelectionWidgetCodeGenerator&); // Operator '=' Not Implemented
+  private:
+
+    DataArraySelectionWidgetCodeGenerator(const DataArraySelectionWidgetCodeGenerator&); // Copy Constructor Not Implemented
+    void operator=(const DataArraySelectionWidgetCodeGenerator&); // Operator '=' Not Implemented
 };
 
 #endif /* DataArraySelectionWidgetCodeGenerator_H_ */

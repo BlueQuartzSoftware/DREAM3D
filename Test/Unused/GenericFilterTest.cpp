@@ -128,7 +128,7 @@ void TestGenericFilter()
 
   DREAM3D_REQUIRED(err, >=, 0)
 
-      pipeline->execute();
+  pipeline->execute();
   err = pipeline->getErrorCondition();
 
   DREAM3D_REQUIRE(err >= 0)
@@ -141,7 +141,7 @@ void TestGenericFilter()
 void TestTslReadH5Ebsd()
 {
 
- Observer obs;
+  Observer obs;
   // Send progress messages from PipelineBuilder to this object for display
   qRegisterMetaType<PipelineMessage>();
 
@@ -205,7 +205,7 @@ void TestTslReadH5Ebsd()
 void TestHklReadH5Ebsd()
 {
 
- Observer obs;
+  Observer obs;
   // Send progress messages from PipelineBuilder to this object for display
   qRegisterMetaType<PipelineMessage>();
 
@@ -275,17 +275,17 @@ int main(int argc, char** argv)
 
 #if REMOVE_TEST_FILES
   DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-    #endif
+#endif
 
-      DREAM3D_REGISTER_TEST( TestTslReadH5Ebsd() )
-      DREAM3D_REGISTER_TEST( TestHklReadH5Ebsd() )
-      DREAM3D_REGISTER_TEST( TestGenericFilter() )
+  DREAM3D_REGISTER_TEST( TestTslReadH5Ebsd() )
+  DREAM3D_REGISTER_TEST( TestHklReadH5Ebsd() )
+  DREAM3D_REGISTER_TEST( TestGenericFilter() )
 
-    #if REMOVE_TEST_FILES
-      //   DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-    #endif
+#if REMOVE_TEST_FILES
+  //   DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+#endif
 
-      PRINT_TEST_SUMMARY();
+  PRINT_TEST_SUMMARY();
   return err;
 }
 

@@ -47,10 +47,10 @@
 
 struct Ctf_Private_Data
 {
-    QVector<size_t> dims;
-    QVector<float> resolution;
-    QVector<float> origin;
-    QVector<CtfPhase::Pointer> phases;
+  QVector<size_t> dims;
+  QVector<float> resolution;
+  QVector<float> origin;
+  QVector<CtfPhase::Pointer> phases;
 };
 
 enum CTF_READ_FLAG
@@ -136,9 +136,9 @@ class ReadCtfData : public AbstractFilter
      */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-   /**
-    * @brief execute Reimplemented from @see AbstractFilter class
-    */
+    /**
+     * @brief execute Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
 
     /**
@@ -159,11 +159,11 @@ class ReadCtfData : public AbstractFilter
 
     Q_PROPERTY(Ctf_Private_Data Data READ getData WRITE setData)
 
-    public slots:
-      /**
-     * @brief flushCache Resets the cache file state
-     */
-      void flushCache();
+  public slots:
+    /**
+    * @brief flushCache Resets the cache file state
+    */
+    void flushCache();
 
   signals:
     /**
@@ -192,33 +192,33 @@ class ReadCtfData : public AbstractFilter
     ReadCtfData();
 
     /**
-   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-   */
+    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+    */
     void dataCheck();
 
     /**
-  * @brief copyRawEbsdData Reads the Ang file and puts the data into the data container
-  * @param reader CtfReader instance pointer
-  * @param tDims Tuple dimensions
-  * @param cDims Component dimensions
-  */
-    void copyRawEbsdData(CtfReader* reader, QVector<size_t> &tDims, QVector<size_t> &cDims);
+    * @brief copyRawEbsdData Reads the Ang file and puts the data into the data container
+    * @param reader CtfReader instance pointer
+    * @param tDims Tuple dimensions
+    * @param cDims Component dimensions
+    */
+    void copyRawEbsdData(CtfReader* reader, QVector<size_t>& tDims, QVector<size_t>& cDims);
 
     /**
-  * @brief loadMaterialInfo Reads the values for the phase type, crystal structure
-  * and precipitate fractions from the EBSD file.
-  * @param reader CtfReader instance pointer
-  * @return Integer error value
-  */
+    * @brief loadMaterialInfo Reads the values for the phase type, crystal structure
+    * and precipitate fractions from the EBSD file.
+    * @param reader CtfReader instance pointer
+    * @return Integer error value
+    */
     int32_t loadMaterialInfo(CtfReader* reader);
 
     /**
-   * @brief readDataFile Reads the Ctf file
-   * @param reader CtfReader instance pointer
-   * @param m DataContainer instance pointer
-   * @param tDims Tuple dimensions
-   */
-    void readDataFile(CtfReader* reader, DataContainer::Pointer m, QVector<size_t> &tDims, CTF_READ_FLAG flag);
+    * @brief readDataFile Reads the Ctf file
+    * @param reader CtfReader instance pointer
+    * @param m DataContainer instance pointer
+    * @param tDims Tuple dimensions
+    */
+    void readDataFile(CtfReader* reader, DataContainer::Pointer m, QVector<size_t>& tDims, CTF_READ_FLAG flag);
 
   private:
     QScopedPointer<ReadCtfDataPrivate> const d_ptr;

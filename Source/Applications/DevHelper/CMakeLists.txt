@@ -65,6 +65,7 @@ cmp_IDE_SOURCE_PROPERTIES( "DevHelper" "${DevHelper_HDRS};${DevHelper_MOC_HDRS}"
 
 set(DevHelper_CodeGenerator_HDRS
   ${DevHelper_SOURCE_DIR}/CodeGenerators/CodeGenFactory.h
+  ${DevHelper_SOURCE_DIR}/CodeGenerators/AttributeMatrixCreationWidgetCodeGenerator.h
   ${DevHelper_SOURCE_DIR}/CodeGenerators/AttributeMatrixSelectionWidgetCodeGenerator.h
   ${DevHelper_SOURCE_DIR}/CodeGenerators/AxisAngleWidgetCodeGenerator.h
   ${DevHelper_SOURCE_DIR}/CodeGenerators/BooleanWidgetCodeGenerator.h
@@ -102,6 +103,7 @@ set(DevHelper_CodeGenerator_HDRS
 
 set(DevHelper_CodeGenerator_SRCS
   ${DevHelper_SOURCE_DIR}/CodeGenerators/CodeGenFactory.cpp
+  ${DevHelper_SOURCE_DIR}/CodeGenerators/AttributeMatrixCreationWidgetCodeGenerator.cpp
   ${DevHelper_SOURCE_DIR}/CodeGenerators/AttributeMatrixSelectionWidgetCodeGenerator.cpp
   ${DevHelper_SOURCE_DIR}/CodeGenerators/AxisAngleWidgetCodeGenerator.cpp
   ${DevHelper_SOURCE_DIR}/CodeGenerators/BooleanWidgetCodeGenerator.cpp

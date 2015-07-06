@@ -606,7 +606,8 @@ FOrientArrayType CubicOps::getMDFFZRod(FOrientArrayType rod)
   rod = _calcRodNearestOrigin(CubicRodSym, 12, rod);
   FOrientArrayType ax(4, 0.0f);
   OrientationTransforms<FOrientArrayType, float>::ro2ax(rod, ax);
-  n1 = ax[0]; n2 = ax[1], n3 = ax[2], w = ax[3];
+  n1 = ax[0];
+  n2 = ax[1], n3 = ax[2], w = ax[3];
 
   FZw = w;
   n1 = fabs(n1);

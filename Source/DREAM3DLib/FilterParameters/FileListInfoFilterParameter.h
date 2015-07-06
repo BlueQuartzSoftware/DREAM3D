@@ -37,27 +37,85 @@
 #ifndef _FileListInfoFilterParameter_H_
 #define _FileListInfoFilterParameter_H_
 
+#include <QtCore/QMetaType>
+#include <QtCore/QJsonObject>
+
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
+
+typedef struct
+{
+  qint32 PaddingDigits;
+  quint32 Ordering;
+  qint32 StartIndex;
+  qint32 EndIndex;
+  QString InputPath;
+  QString FilePrefix;
+  QString FileSuffix;
+  QString FileExtension;
+
+  void writeJson(QJsonObject& json)
+  {
+    json["PaddingDigits"] = static_cast<double>(PaddingDigits);
+    json["Ordering"] = static_cast<double>(Ordering);
+    json["StartIndex"] = static_cast<double>(StartIndex);
+    json["EndIndex"] = static_cast<double>(EndIndex);
+    json["InputPath"] = InputPath;
+    json["FilePrefix"] = FilePrefix;
+    json["FileSuffix"] = FileSuffix;
+    json["FileExtension"] = FileExtension;
+  }
+
+  bool readJson(QJsonObject& json)
+  {
+    if (json["PaddingDigits"].isDouble() && json["Ordering"].isDouble() && json["StartIndex"].isDouble() && json["EndIndex"].isDouble()
+        && json["InputPath"].isString() && json["FilePrefix"].isString() && json["FileSuffix"].isString() && json["FileExtension"].isString())
+    {
+      PaddingDigits = static_cast<qint32>(json["PaddingDigits"].toDouble());
+      Ordering = static_cast<quint32>(json["Ordering"].toDouble());
+      StartIndex = static_cast<qint32>(json["StartIndex"].toDouble());
+      EndIndex = static_cast<qint32>(json["EndIndex"].toDouble());
+      InputPath = json["InputPath"].toString();
+      FilePrefix = json["FilePrefix"].toString();
+      FileSuffix = json["FileSuffix"].toString();
+      FileExtension = json["FileExtension"].toString();
+      return true;
+    }
+    return false;
+  }
+}
+FileListInfo_t;
+
+Q_DECLARE_METATYPE(FileListInfo_t)
 
 class DREAM3DLib_EXPORT FileListInfoFilterParameter : public FilterParameter
 {
-public:
-  DREAM3D_SHARED_POINTERS(FileListInfoFilterParameter)
+  public:
+    DREAM3D_SHARED_POINTERS(FileListInfoFilterParameter)
     DREAM3D_STATIC_NEW_MACRO(FileListInfoFilterParameter)
     DREAM3D_TYPE_MACRO_SUPER(FileListInfoFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-                      const FileListInfo_t& defaultValue,
-                      Category category);
+                       const FileListInfo_t& defaultValue,
+                       Category category);
 
-  virtual ~FileListInfoFilterParameter();
+    virtual ~FileListInfoFilterParameter();
 
-protected:
-  FileListInfoFilterParameter();
+    /**
+     * @brief getWidgetType Returns the type of widget that displays and controls
+     * this FilterParameter subclass
+     * @return
+     */
+    QString getWidgetType();
 
-private:
-  FileListInfoFilterParameter(const FileListInfoFilterParameter&); // Copy Constructor Not Implemented
-  void operator=(const FileListInfoFilterParameter&); // Operator '=' Not Implemented
+
+  protected:
+    FileListInfoFilterParameter();
+
+  private:
+    FileListInfoFilterParameter(const FileListInfoFilterParameter&); // Copy Constructor Not Implemented
+    void operator=(const FileListInfoFilterParameter&); // Operator '=' Not Implemented
 };
 
 #endif /* _FileListInfoFilterParameter_H_ */

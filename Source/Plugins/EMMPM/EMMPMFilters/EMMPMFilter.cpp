@@ -49,6 +49,12 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+
+#include "DREAM3DLib/FilterParameters/IntFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/DoubleFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/BooleanFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
@@ -85,24 +91,24 @@ EMMPMFilter::~EMMPMFilter()
 void EMMPMFilter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Number of Classes", "NumClasses", FilterParameterWidgetType::IntWidget, getNumClasses(), FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Exchange Energy", "ExchangeEnergy", FilterParameterWidgetType::DoubleWidget, getExchangeEnergy(), FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Histogram Loops (EM)", "HistogramLoops", FilterParameterWidgetType::IntWidget, getHistogramLoops(), FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Segmentation Loops (MPM)", "SegmentationLoops", FilterParameterWidgetType::IntWidget, getSegmentationLoops(), FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Use Simulated Annealing", "UseSimulatedAnnealing", FilterParameterWidgetType::BooleanWidget, getUseSimulatedAnnealing(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Number of Classes", "NumClasses", getNumClasses(), FilterParameter::Parameter));
+  parameters.push_back(DoubleFilterParameter::New("Exchange Energy", "ExchangeEnergy", getExchangeEnergy(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Histogram Loops (EM)", "HistogramLoops", getHistogramLoops(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Segmentation Loops (MPM)", "SegmentationLoops", getSegmentationLoops(), FilterParameter::Parameter));
+  parameters.push_back(BooleanFilterParameter::New("Use Simulated Annealing", "UseSimulatedAnnealing", getUseSimulatedAnnealing(), FilterParameter::Parameter));
   QStringList linkedProps("GradientPenalty");
   parameters.push_back(LinkedBooleanFilterParameter::New("Use Gradient Penalty", "UseGradientPenalty", getUseGradientPenalty(), linkedProps, FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Gradient Penalty (Beta E)", "GradientPenalty", FilterParameterWidgetType::DoubleWidget, getGradientPenalty(), FilterParameter::Parameter));
+  parameters.push_back(DoubleFilterParameter::New("Gradient Penalty (Beta E)", "GradientPenalty", getGradientPenalty(), FilterParameter::Parameter));
   linkedProps.clear();
   linkedProps << "CurvaturePenalty" << "RMax" << "EMLoopDelay";
   parameters.push_back(LinkedBooleanFilterParameter::New("Use Curvature Penalty", "UseCurvaturePenalty", getUseCurvaturePenalty(), linkedProps, FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Curvature Penalty (Beta C)", "CurvaturePenalty", FilterParameterWidgetType::DoubleWidget, getCurvaturePenalty(), FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("R Max", "RMax", FilterParameterWidgetType::DoubleWidget, getRMax(), FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("EM Loop Delay", "EMLoopDelay", FilterParameterWidgetType::IntWidget, getEMLoopDelay(), FilterParameter::Parameter));
+  parameters.push_back(DoubleFilterParameter::New("Curvature Penalty (Beta C)", "CurvaturePenalty", getCurvaturePenalty(), FilterParameter::Parameter));
+  parameters.push_back(DoubleFilterParameter::New("R Max", "RMax", getRMax(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("EM Loop Delay", "EMLoopDelay", getEMLoopDelay(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
-  parameters.push_back(FilterParameter::New("Input Attribute Array", "InputDataArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputDataArrayPath(), FilterParameter::RequiredArray));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Input Attribute Array", "InputDataArrayPath", getInputDataArrayPath(), FilterParameter::RequiredArray));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(FilterParameter::New("Output Attribute Array", "OutputDataArrayPath", FilterParameterWidgetType::DataArrayCreationWidget, getOutputDataArrayPath(), FilterParameter::CreatedArray));
+  parameters.push_back(DataArrayCreationFilterParameter::New("Output Attribute Array", "OutputDataArrayPath", getOutputDataArrayPath(), FilterParameter::CreatedArray));
   setFilterParameters(parameters);
 }
 

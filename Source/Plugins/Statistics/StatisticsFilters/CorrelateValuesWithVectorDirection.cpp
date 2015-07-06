@@ -39,6 +39,8 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+
+#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Math/GeometryMath.h"
@@ -54,9 +56,9 @@ CorrelateValuesWithVectorDirection::CorrelateValuesWithVectorDirection() :
   m_VectorDataArrayPath("", "", ""),
   m_Logfile("CorrelateValuesWithVectorDirection.log"),
   m_VectorData(NULL),
-  m_MaxCoord(sqrt(DREAM3D::Constants::k_2Pi)/2.0),
+  m_MaxCoord(sqrt(DREAM3D::Constants::k_2Pi) / 2.0),
   m_Dimension(72),
-  m_StepSize(sqrt(DREAM3D::Constants::k_2Pi)/72.0)
+  m_StepSize(sqrt(DREAM3D::Constants::k_2Pi) / 72.0)
 {
 
   setupFilterParameters();
@@ -76,8 +78,8 @@ void CorrelateValuesWithVectorDirection::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FilterParameter::New("VectorData", "VectorDataArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getVectorDataArrayPath(), FilterParameter::RequiredArray, ""));
-  parameters.push_back(FilterParameter::New("CorrelatedData", "CorrelatedDataArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCorrelatedDataArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(DataArraySelectionFilterParameter::New("VectorData", "VectorDataArrayPath", getVectorDataArrayPath(), FilterParameter::RequiredArray));
+  parameters.push_back(DataArraySelectionFilterParameter::New("CorrelatedData", "CorrelatedDataArrayPath", getCorrelatedDataArrayPath(), FilterParameter::RequiredArray));
 
   setFilterParameters(parameters);
 }
@@ -169,9 +171,9 @@ void addToLambert(IDataArray::Pointer correlatedData, size_t bin, size_t point, 
   size_t numComps = correlatedArray->getNumberOfComponents();
   T* m_CorrelatedData = correlatedArray->getPointer(0);
 
-  for(int j=0;j<numComps;j++)
+  for(int j = 0; j < numComps; j++)
   {
-    m_LambertProjection[(numComps*bin)+j] += double(m_CorrelatedData[(numComps*point)+j]);
+    m_LambertProjection[(numComps * bin) + j] += double(m_CorrelatedData[(numComps * point) + j]);
   }
 }
 
@@ -198,9 +200,9 @@ void CorrelateValuesWithVectorDirection::execute()
   size_t bin = 0;
   for(int i = 0; i < totalPoints; i++)
   {
-    vec[0] = m_VectorData[3*i+0];
-    vec[1] = m_VectorData[3*i+1];
-    vec[2] = m_VectorData[3*i+2];
+    vec[0] = m_VectorData[3 * i + 0];
+    vec[1] = m_VectorData[3 * i + 1];
+    vec[2] = m_VectorData[3 * i + 2];
     bin = determineSquareCoordsandBin(vec);
     if (dType.compare("int8_t") == 0)
     {
@@ -249,12 +251,12 @@ void CorrelateValuesWithVectorDirection::execute()
     counts[bin]++;
   }
 
-  for(int i=0;i<m_LambertProj->getNumberOfTuples();i++)
+  for(int i = 0; i < m_LambertProj->getNumberOfTuples(); i++)
   {
-    for(int j=0;j<numComps;j++)
+    for(int j = 0; j < numComps; j++)
     {
-      if(counts[i] == 0) m_LambertProjection[(numComps*i)+j] = 0;
-      else m_LambertProjection[(numComps*i)+j] /= double(counts[i]);
+      if(counts[i] == 0) { m_LambertProjection[(numComps * i) + j] = 0; }
+      else { m_LambertProjection[(numComps * i) + j] /= double(counts[i]); }
     }
   }
 
@@ -335,15 +337,15 @@ void CorrelateValuesWithVectorDirection::determineXYZCoords(float sqCoords[2], f
 {
   if(fabs(sqCoords[0]) >= fabs(sqCoords[1]))
   {
-    xyz[0] = (2.0*sqCoords[0]/DREAM3D::Constants::k_Pi) * sqrt((DREAM3D::Constants::k_Pi-((sqCoords[0]*sqCoords[0])/(1.0*1.0)))) * cosf((sqCoords[1]*DREAM3D::Constants::k_Pi)/(4.0*sqCoords[0]));
-    xyz[1] = (2.0*sqCoords[0]/DREAM3D::Constants::k_Pi) * sqrt((DREAM3D::Constants::k_Pi-((sqCoords[0]*sqCoords[0])/(1.0*1.0)))) * sinf((sqCoords[1]*DREAM3D::Constants::k_Pi)/(4.0*sqCoords[0]));
-    xyz[2] = 1.0 - ((2.0*sqCoords[0]*sqCoords[0])/(DREAM3D::Constants::k_Pi*1.0));
+    xyz[0] = (2.0 * sqCoords[0] / DREAM3D::Constants::k_Pi) * sqrt((DREAM3D::Constants::k_Pi - ((sqCoords[0] * sqCoords[0]) / (1.0 * 1.0)))) * cosf((sqCoords[1] * DREAM3D::Constants::k_Pi) / (4.0 * sqCoords[0]));
+    xyz[1] = (2.0 * sqCoords[0] / DREAM3D::Constants::k_Pi) * sqrt((DREAM3D::Constants::k_Pi - ((sqCoords[0] * sqCoords[0]) / (1.0 * 1.0)))) * sinf((sqCoords[1] * DREAM3D::Constants::k_Pi) / (4.0 * sqCoords[0]));
+    xyz[2] = 1.0 - ((2.0 * sqCoords[0] * sqCoords[0]) / (DREAM3D::Constants::k_Pi * 1.0));
   }
   else
   {
-    xyz[0] = (2.0*sqCoords[1]/DREAM3D::Constants::k_Pi) * sqrt((DREAM3D::Constants::k_Pi-((sqCoords[1]*sqCoords[1])/(1.0*1.0)))) * sinf((sqCoords[0]*DREAM3D::Constants::k_Pi)/(4.0*sqCoords[1]));
-    xyz[1] = (2.0*sqCoords[1]/DREAM3D::Constants::k_Pi) * sqrt((DREAM3D::Constants::k_Pi-((sqCoords[1]*sqCoords[1])/(1.0*1.0)))) * cosf((sqCoords[0]*DREAM3D::Constants::k_Pi)/(4.0*sqCoords[1]));
-    xyz[2] = 1.0 - ((2.0*sqCoords[1]*sqCoords[1])/(DREAM3D::Constants::k_Pi*1.0));
+    xyz[0] = (2.0 * sqCoords[1] / DREAM3D::Constants::k_Pi) * sqrt((DREAM3D::Constants::k_Pi - ((sqCoords[1] * sqCoords[1]) / (1.0 * 1.0)))) * sinf((sqCoords[0] * DREAM3D::Constants::k_Pi) / (4.0 * sqCoords[1]));
+    xyz[1] = (2.0 * sqCoords[1] / DREAM3D::Constants::k_Pi) * sqrt((DREAM3D::Constants::k_Pi - ((sqCoords[1] * sqCoords[1]) / (1.0 * 1.0)))) * cosf((sqCoords[0] * DREAM3D::Constants::k_Pi) / (4.0 * sqCoords[1]));
+    xyz[2] = 1.0 - ((2.0 * sqCoords[1] * sqCoords[1]) / (DREAM3D::Constants::k_Pi * 1.0));
   }
 }
 
@@ -359,9 +361,9 @@ void CorrelateValuesWithVectorDirection::createSterographicProjections(size_t nu
   int xpointshalf = xpoints / 2;
   int ypointshalf = ypoints / 2;
 
-  float xres = 2.0/float(xpoints);
-  float yres = 2.0/float(ypoints);
-  float zres = (xres+yres)/2.0;
+  float xres = 2.0 / float(xpoints);
+  float yres = 2.0 / float(ypoints);
+  float zres = (xres + yres) / 2.0;
   float xtmp, ytmp;
   float xyz[3];
 
@@ -394,7 +396,7 @@ void CorrelateValuesWithVectorDirection::createSterographicProjections(size_t nu
 
         for(size_t i = 0; i < numComps; i++)
         {
-          intensity[(numComps*index)+i] = m_LambertProjection[(numComps*sqIndex)+i];
+          intensity[(numComps * index) + i] = m_LambertProjection[(numComps * sqIndex) + i];
         }
       }
     }
@@ -427,7 +429,7 @@ void CorrelateValuesWithVectorDirection::createSterographicProjections(size_t nu
   size_t total = xpoints * ypoints * zpoints;
   fprintf(f, "CELL_DATA %d\n", (int)total);
 
-  for(int iter=0;iter<numComps;iter++)
+  for(int iter = 0; iter < numComps; iter++)
   {
     QString name = "Intensity" + QString::number(iter);
     fprintf(f, "SCALARS %s %s 1\n", name.toLatin1().data(), "float");
@@ -440,7 +442,7 @@ void CorrelateValuesWithVectorDirection::createSterographicProjections(size_t nu
     {
       for (int64_t i = 0; i < (xpoints); i++)
       {
-        t = float(intensity[(numComps*((j * xpoints) + i))+iter]);
+        t = float(intensity[(numComps * ((j * xpoints) + i)) + iter]);
         DREAM3D::Endian::FromSystemToBig::convert(t);
         gn[count] = t;
         count++;
@@ -469,7 +471,7 @@ void CorrelateValuesWithVectorDirection::writeLambertProjection(size_t numComps)
 
   float xres = m_StepSize;
   float yres = m_StepSize;
-  float zres = (xres+yres)/2.0;
+  float zres = (xres + yres) / 2.0;
 
   QVector<size_t> tDims(2, 0);
   tDims[0] = xpoints;
@@ -489,7 +491,7 @@ void CorrelateValuesWithVectorDirection::writeLambertProjection(size_t numComps)
 
       for(size_t i = 0; i < numComps; i++)
       {
-        intensity[(numComps*index)+i] = m_LambertProjection[(numComps*index)+i];
+        intensity[(numComps * index) + i] = m_LambertProjection[(numComps * index) + i];
       }
     }
   }
@@ -521,7 +523,7 @@ void CorrelateValuesWithVectorDirection::writeLambertProjection(size_t numComps)
   size_t total = xpoints * ypoints * zpoints;
   fprintf(f, "CELL_DATA %d\n", (int)total);
 
-  for(int iter=0;iter<numComps;iter++)
+  for(int iter = 0; iter < numComps; iter++)
   {
     QString name = "Intensity" + QString::number(iter);
     fprintf(f, "SCALARS %s %s 1\n", name.toLatin1().data(), "float");
@@ -534,7 +536,7 @@ void CorrelateValuesWithVectorDirection::writeLambertProjection(size_t numComps)
     {
       for (int64_t i = 0; i < (xpoints); i++)
       {
-        t = float(intensity[(numComps*((j * xpoints) + i))+iter]);
+        t = float(intensity[(numComps * ((j * xpoints) + i)) + iter]);
         DREAM3D::Endian::FromSystemToBig::convert(t);
         gn[count] = t;
         count++;
@@ -579,25 +581,25 @@ void CorrelateValuesWithVectorDirection::writePFStats(size_t numComps)
     for (int64_t x = 0; x < xpoints; x++)
     {
       int index = y * xpoints + x;
-      sqCoord[0] = float(x*xres) - (float(xpoints*xres) / 2.0) + float(xres/2.0);
-      sqCoord[1] = float(y*yres) - (float(ypoints*yres) / 2.0) + float(yres/2.0);
+      sqCoord[0] = float(x * xres) - (float(xpoints * xres) / 2.0) + float(xres / 2.0);
+      sqCoord[1] = float(y * yres) - (float(ypoints * yres) / 2.0) + float(yres / 2.0);
 
       determineXYZCoords(sqCoord, xyz);
 
-      zbin = int((asinf(xyz[2])*180.0/DREAM3D::Constants::k_Pi)/5.0);
-      ang = atan2(xyz[1],xyz[0])*180.0/DREAM3D::Constants::k_Pi;
-      if(ang < 0) ang += 360.0;
-      angbin = int(ang/5.0);
+      zbin = int((asinf(xyz[2]) * 180.0 / DREAM3D::Constants::k_Pi) / 5.0);
+      ang = atan2(xyz[1], xyz[0]) * 180.0 / DREAM3D::Constants::k_Pi;
+      if(ang < 0) { ang += 360.0; }
+      angbin = int(ang / 5.0);
 
-      if(zbin >= 18) zbin = 17;
-      if(angbin >= 72) zbin = 71;
+      if(zbin >= 18) { zbin = 17; }
+      if(angbin >= 72) { zbin = 71; }
 
-      means[zbin] += m_LambertProjection[(numComps*index)+0];
-      amps[zbin] += m_LambertProjection[(numComps*index)+0];
+      means[zbin] += m_LambertProjection[(numComps * index) + 0];
+      amps[zbin] += m_LambertProjection[(numComps * index) + 0];
       zbinCnts[zbin]++;
       if(zbin == 0)
       {
-        pshfts[angbin] += m_LambertProjection[(numComps*index)+0];
+        pshfts[angbin] += m_LambertProjection[(numComps * index) + 0];
         angbinCnts[angbin]++;
       }
     }
@@ -614,10 +616,10 @@ void CorrelateValuesWithVectorDirection::writePFStats(size_t numComps)
     return;
   }
 
-  for(int iter=0;iter<72;iter++)
+  for(int iter = 0; iter < 72; iter++)
   {
-    if(iter < 18) fprintf(f, "%d %f %d %f %d %f \n", iter*5, pshfts[iter]/angbinCnts[iter], iter*5, amps[iter]/zbinCnts[iter], iter*5, means[iter]/zbinCnts[iter]);
-    else fprintf(f, "%d %f\n", iter*5, pshfts[iter]/angbinCnts[iter]);
+    if(iter < 18) { fprintf(f, "%d %f %d %f %d %f \n", iter * 5, pshfts[iter] / angbinCnts[iter], iter * 5, amps[iter] / zbinCnts[iter], iter * 5, means[iter] / zbinCnts[iter]); }
+    else { fprintf(f, "%d %f\n", iter * 5, pshfts[iter] / angbinCnts[iter]); }
   }
   fclose(f);
 }

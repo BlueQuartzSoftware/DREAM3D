@@ -226,7 +226,8 @@ FOrientArrayType TriclinicOps::getMDFFZRod(FOrientArrayType rod)
   rod = SpaceGroupOps::_calcRodNearestOrigin(TriclinicRodSym, 1, rod);
   FOrientArrayType ax(4, 0.0f);
   OrientationTransforms<FOrientArrayType, float>::ro2ax(rod, ax);
-  n1 = ax[0]; n2 = ax[1], n3 = ax[2], w = ax[3];
+  n1 = ax[0];
+  n2 = ax[1], n3 = ax[2], w = ax[3];
 
   FZn1 = n1;
   FZn2 = n2;
@@ -621,7 +622,7 @@ DREAM3D::Rgb TriclinicOps::generateIPFColor(double phi1, double phi, double phi2
   for (int j = 0; j < 1; j++)
   {
     getQuatSymOp(j, q2);
-	  QuaternionMathF::Multiply(q2, q1, qc);
+    QuaternionMathF::Multiply(q2, q1, qc);
 
     qu.fromQuaternion(qc);
     OrientationTransforms<FOrientArrayType, float>::qu2om(qu, om);

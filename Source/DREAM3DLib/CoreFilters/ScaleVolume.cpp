@@ -46,6 +46,9 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+
+#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
 
 /**
@@ -71,9 +74,9 @@ class UpdateVerticesImpl
     {
       for (size_t i = start; i < end; i++)
       {
-        m_Nodes[3*i] = m_Min[0] + (m_Nodes[3*i] - m_Min[0]) * m_ScaleFactor.x;
-        m_Nodes[3*i+1] = m_Min[1] + (m_Nodes[3*i+1] - m_Min[1]) * m_ScaleFactor.y;
-        m_Nodes[3*i+2] = m_Min[2] + (m_Nodes[3*i+2] - m_Min[2]) * m_ScaleFactor.z;
+        m_Nodes[3 * i] = m_Min[0] + (m_Nodes[3 * i] - m_Min[0]) * m_ScaleFactor.x;
+        m_Nodes[3 * i + 1] = m_Min[1] + (m_Nodes[3 * i + 1] - m_Min[1]) * m_ScaleFactor.y;
+        m_Nodes[3 * i + 2] = m_Min[2] + (m_Nodes[3 * i + 2] - m_Min[2]) * m_ScaleFactor.z;
       }
     }
 
@@ -116,15 +119,15 @@ void ScaleVolume::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FilterParameter::New("Scaling Factor", "ScaleFactor", FilterParameterWidgetType::FloatVec3Widget, getScaleFactor(), FilterParameter::Parameter));
+  parameters.push_back(FloatVec3FilterParameter::New("Scaling Factor", "ScaleFactor", getScaleFactor(), FilterParameter::Parameter));
 
   QStringList linkedProps("DataContainerName");
   parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Image Geometry", "ApplyToVoxelVolume", getApplyToVoxelVolume(), linkedProps, FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Data Container Image Geometry to Scale", "DataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerName(), FilterParameter::RequiredArray));
+  parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container Image Geometry to Scale", "DataContainerName", getDataContainerName(), FilterParameter::RequiredArray));
   linkedProps.clear();
   linkedProps << "SurfaceDataContainerName";
   parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Surface Geometry", "ApplyToSurfaceMesh", getApplyToSurfaceMesh(), linkedProps, FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Data Container Surface Geometry to Scale", "SurfaceDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getSurfaceDataContainerName(), FilterParameter::RequiredArray));
+  parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container Surface Geometry to Scale", "SurfaceDataContainerName", getSurfaceDataContainerName(), FilterParameter::RequiredArray));
 
   setFilterParameters(parameters);
 }
@@ -213,30 +216,30 @@ void ScaleVolume::updateSurfaceMesh()
   int64_t count = geom2D->getNumberOfVertices();
   for (int64_t i = 0; i < count; i++)
   {
-    if (nodes[3*i] > max[0])
+    if (nodes[3 * i] > max[0])
     {
-      max[0] = nodes[3*i];
+      max[0] = nodes[3 * i];
     }
-    if (nodes[3*i+1] > max[1])
+    if (nodes[3 * i + 1] > max[1])
     {
-      max[1] = nodes[3*i+1];
+      max[1] = nodes[3 * i + 1];
     }
-    if (nodes[3*i+2] > max[2])
+    if (nodes[3 * i + 2] > max[2])
     {
-      max[2] = nodes[3*i+2];
+      max[2] = nodes[3 * i + 2];
     }
 
-    if (nodes[3*i] < min[0])
+    if (nodes[3 * i] < min[0])
     {
-      min[0] = nodes[3*i];
+      min[0] = nodes[3 * i];
     }
-    if (nodes[3*i+1] < min[1])
+    if (nodes[3 * i + 1] < min[1])
     {
-      min[1] = nodes[3*i+1];
+      min[1] = nodes[3 * i + 1];
     }
-    if (nodes[3*i+2] < min[2])
+    if (nodes[3 * i + 2] < min[2])
     {
-      min[2] = nodes[3*i+2];
+      min[2] = nodes[3 * i + 2];
     }
   }
 

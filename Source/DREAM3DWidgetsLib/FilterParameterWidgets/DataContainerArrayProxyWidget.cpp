@@ -36,7 +36,6 @@
 #include "DataContainerArrayProxyWidget.h"
 
 #include <QtCore/QMetaProperty>
-#include <QtGui/QStandardItemModel>
 #include <QtCore/QItemSelectionModel>
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
@@ -49,8 +48,8 @@ DataContainerArrayProxyWidget::DataContainerArrayProxyWidget(FilterParameter* pa
   FilterParameterWidget(parameter, filter, parent),
   m_DidCausePreflight(false)
 {
-
   m_FilterParameter = dynamic_cast<DataContainerArrayProxyFilterParameter*>(parameter);
+  Q_ASSERT_X(m_FilterParameter != NULL, "NULL Pointer", "DataContainerArrayProxyWidget can ONLY be used with a DataContainerArrayProxyFilterParameter object");
 
   setupUi(this);
   setupGui();
@@ -112,21 +111,12 @@ void DataContainerArrayProxyWidget::setupGui()
   dcaProxyView->setModel(model);
   delete oldModel;
 
-  //  void activated(const QModelIndex& index);
-  connect(dcaProxyView, SIGNAL(clicked(const QModelIndex&)),
-          this, SLOT(itemActivated(const QModelIndex)));
+  connect(model, SIGNAL(itemChanged(QStandardItem*)),
+          this, SLOT(itemActivated(QStandardItem*)));
 
   if (getFilterParameter() != NULL)
   {
-    QString units = getFilterParameter()->getUnits();
-    if(units.isEmpty() == false)
-    {
-      label->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
-    }
-    else
-    {
-      label->setText(getFilterParameter()->getHumanLabel() );
-    }
+    label->setText(getFilterParameter()->getHumanLabel() );
 
 
     //If the filter is just being dragged into the pipeline then the filter is going to have an empty
@@ -143,7 +133,7 @@ void DataContainerArrayProxyWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerArrayProxyWidget::itemActivated(const QModelIndex& index)
+void DataContainerArrayProxyWidget::itemActivated(QStandardItem* item)
 {
   m_DidCausePreflight = true;
   updateProxyFromModel();
@@ -318,7 +308,8 @@ void DataContainerArrayProxyWidget::updateModelFromProxy(DataContainerArrayProxy
         QString daName = dataArraysIter.key();
         //    qDebug() << "#### " << daName;
         QStandardItem* daItem = getColumnItem<DataArrayProxy>(amItem, daName, daProxy);
-        if (NULL == daItem) {
+        if (NULL == daItem)
+        {
           Q_ASSERT_X(daItem != NULL, "daItem was NULL. This can not happen", "");
         }
       }

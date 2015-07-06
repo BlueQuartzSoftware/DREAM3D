@@ -158,7 +158,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
     * @brief showContextMenuForWidget
     * @param pos
     */
-    void showContextMenuForWidget(const QPoint &pos);
+    void showContextMenuForWidget(const QPoint& pos);
 
     /**
     * @brief launchHelpForItem
@@ -180,11 +180,6 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
      * @brief on_deleteBtn_clicked
      */
     void on_deleteBtn_clicked();
-
-    /**
-    * @brief handleFilterParameterChanged
-    */
-    void handleFilterParameterChanged();
 
   signals:
 
@@ -239,7 +234,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
      * @brief validateFileSystemFilterParameter
      * @param option
      */
-    void validateFileSystemFilterParameter(FilterParameter* option);
+    void validateFileSystemFilterParameter(FilterParameter* parameter);
 
     /**
      * @brief linkConditionalWidgets

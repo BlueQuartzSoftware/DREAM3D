@@ -46,6 +46,7 @@
 
 #include "DREAM3DLib/DataContainers/DataArrayPath.h"
 #include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
+#include "DREAM3DLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
@@ -63,88 +64,90 @@ class FilterParameter;
 */
 class DREAM3DWidgetsLib_EXPORT MultiDataArraySelectionWidget : public FilterParameterWidget, private Ui::MultiDataArraySelectionWidget
 {
-	Q_OBJECT
+    Q_OBJECT
 
-public:
-	/**
-	* @brief Constructor
-	* @param parameter The FilterParameter object that this widget represents
-	* @param filter The instance of the filter that this parameter is a part of
-	* @param parent The parent QWidget for this Widget
-	*/
-	MultiDataArraySelectionWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
+  public:
+    /**
+    * @brief Constructor
+    * @param parameter The FilterParameter object that this widget represents
+    * @param filter The instance of the filter that this parameter is a part of
+    * @param parent The parent QWidget for this Widget
+    */
+    MultiDataArraySelectionWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
 
-	MultiDataArraySelectionWidget(QWidget* parent = NULL);
+    MultiDataArraySelectionWidget(QWidget* parent = NULL);
 
-	virtual ~MultiDataArraySelectionWidget();
+    virtual ~MultiDataArraySelectionWidget();
 
-	/**
-	* @brief This method does additional GUI widget connections
-	*/
-	void setupGui();
+    /**
+    * @brief This method does additional GUI widget connections
+    */
+    void setupGui();
 
-	/**
-	* @brief checkStringValues
-	* @param current
-	* @param filt
-	* @return
-	*/
-	QString checkStringValues(QString current, QString filtDcName);
+    /**
+    * @brief checkStringValues
+    * @param current
+    * @param filt
+    * @return
+    */
+    QString checkStringValues(QString current, QString filtDcName);
 
-	/**
-	* @brief initializeWidget
-	* @param parameter
-	* @param filter
-	*/
-	void initializeWidget(FilterParameter* parameter, AbstractFilter* filter);
+    /**
+    * @brief initializeWidget
+    * @param parameter
+    * @param filter
+    */
+    void initializeWidget(FilterParameter* parameter, AbstractFilter* filter);
 
-	/**
-	* @brief This method updates the Select All checkbox, based on what items are currently
-	* selected in the list.
-	*/
-	void updateSelectAllCheckbox();
-
-
-	public slots:
-	void beforePreflight();
-	void afterPreflight();
-	void filterNeedsInputParameters(AbstractFilter* filter);
-
-	void on_dataContainerList_currentIndexChanged(int index);
-
-	void on_attributeMatrixList_currentIndexChanged(int index);
-
-	void on_attributeArraysWidget_itemChanged(QListWidgetItem* item);
+    /**
+    * @brief This method updates the Select All checkbox, based on what items are currently
+    * selected in the list.
+    */
+    void updateSelectAllCheckbox();
 
 
-protected:
-	void populateComboBoxes();
-	void populateAttributeMatrixList();
-	void populateAttributeArrayList(QVector<DataArrayPath> selectedPaths);
+  public slots:
+    void beforePreflight();
+    void afterPreflight();
+    void filterNeedsInputParameters(AbstractFilter* filter);
 
-	/**
-	* @brief generateDCAProxy
-	* @return
-	*/
-	DataContainerArrayProxy generateDCAProxy();
+    void on_dataContainerList_currentIndexChanged(int index);
 
-protected slots:
-	void on_selectCheckBox_stateChanged(int state);
+    void on_attributeMatrixList_currentIndexChanged(int index);
+
+    void on_attributeArraysWidget_itemChanged(QListWidgetItem* item);
 
 
-signals:
-	void errorSettingFilterParameter(const QString& msg);
-	void parametersChanged();
+  protected:
+    void populateComboBoxes();
+    void populateAttributeMatrixList();
+    void populateAttributeArrayList(QVector<DataArrayPath> selectedPaths);
 
-private:
+    /**
+    * @brief generateDCAProxy
+    * @return
+    */
+    DataContainerArrayProxy generateDCAProxy();
 
-	bool m_DidCausePreflight;
+  protected slots:
+    void on_selectCheckBox_stateChanged(int state);
 
 
-	DataContainerArrayProxy m_DcaProxy;
+  signals:
+    void errorSettingFilterParameter(const QString& msg);
+    void parametersChanged();
 
-	MultiDataArraySelectionWidget(const MultiDataArraySelectionWidget&); // Copy Constructor Not Implemented
-	void operator=(const MultiDataArraySelectionWidget&); // Operator '=' Not Implemented
+  private:
+
+    bool m_DidCausePreflight;
+
+
+    DataContainerArrayProxy m_DcaProxy;
+
+    MultiDataArraySelectionFilterParameter* m_FilterParameter;
+
+    MultiDataArraySelectionWidget(const MultiDataArraySelectionWidget&); // Copy Constructor Not Implemented
+    void operator=(const MultiDataArraySelectionWidget&); // Operator '=' Not Implemented
 
 };
 

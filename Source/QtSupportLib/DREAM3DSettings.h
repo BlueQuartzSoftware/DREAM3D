@@ -65,48 +65,50 @@ struct DREAM3DSettingsGroup
 
 class QtSupportLib_EXPORT DREAM3DSettings : public QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
-public:
-  DREAM3DSettings(QObject * parent = 0);
-  DREAM3DSettings(const QString &filePath, QObject * parent = 0);
-  ~DREAM3DSettings();
+  public:
+    DREAM3DSettings(QObject* parent = 0);
+    DREAM3DSettings(const QString& filePath, QObject* parent = 0);
+    ~DREAM3DSettings();
 
-  QString fileName();
+    QString fileName();
 
-  bool contains(const QString &key);
+    bool contains(const QString& key);
 
-  bool beginGroup(const QString &prefix);
-  void endGroup();
+    bool beginGroup(const QString& prefix);
+    void endGroup();
 
-  QStringList childGroups();
+    QStringList childGroups();
 
-  void remove(const QString &key);
+    void remove(const QString& key);
 
-  QVariant value(const QString &key, const QVariant &defaultValue = QVariant());
-  QJsonObject value(const QString &key, const QJsonObject &defaultObject = QJsonObject());
-  QStringList value(const QString &key, const QStringList &defaultList = QStringList());
+    void clear();
 
-  void setValue(const QString &key, const QVariant &value);
-  void setValue(const QString &key, const QJsonObject &object);
-  void setValue(const QString &key, const QStringList &list);
+    QVariant value(const QString& key, const QVariant& defaultValue = QVariant());
+    QJsonObject value(const QString& key, const QJsonObject& defaultObject = QJsonObject());
+    QStringList value(const QString& key, const QStringList& defaultList = QStringList());
 
-private:
-  QString m_FilePath;
-  QStack<DREAM3DSettingsGroup*> m_Stack;
+    void setValue(const QString& key, const QVariant& value);
+    void setValue(const QString& key, const QJsonObject& object);
+    void setValue(const QString& key, const QStringList& list);
 
-  void openFile();
-  void closeFile();
-  void writeToFile();
+  private:
+    QString m_FilePath;
+    QStack<DREAM3DSettingsGroup*> m_Stack;
 
-  enum MultiValueLabels
-  {
-    Value,
-    Type
-  };
+    void openFile();
+    void closeFile();
+    void writeToFile();
 
-  DREAM3DSettings(const DREAM3DSettings&);    // Copy Constructor Not Implemented
-  void operator=(const DREAM3DSettings&);  // Operator '=' Not Implemented
+    enum MultiValueLabels
+    {
+      Value,
+      Type
+    };
+
+    DREAM3DSettings(const DREAM3DSettings&);    // Copy Constructor Not Implemented
+    void operator=(const DREAM3DSettings&);  // Operator '=' Not Implemented
 };
 
 #endif /* _DREAM3DSettings_H */

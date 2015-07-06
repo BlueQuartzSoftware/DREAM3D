@@ -52,12 +52,6 @@ QFilterParametersReader::QFilterParametersReader() :
   AbstractFilterParametersReader(),
   m_Prefs(NULL)
 {
-
-  //  qRegisterMetaType<IntVec3_t>("IntVec3_t");
-  //  qRegisterMetaTypeStreamOperators<IntVec3_t>("IntVec3_t");
-
-  //  qRegisterMetaType<FloatVec3_t>("FloatVec3_t");
-  //  qRegisterMetaTypeStreamOperators<FloatVec3_t>("FloatVec3_t");
 }
 
 // -----------------------------------------------------------------------------
@@ -1762,7 +1756,8 @@ QVector<DataArrayPath> QFilterParametersReader::readDataArrayPathVector(const QS
     return def;
   }
 
-  for (int i = 0; i < size; ++i) {
+  for (int i = 0; i < size; ++i)
+  {
     m_Prefs->setArrayIndex(i);
     QString pathStr = m_Prefs->value(DREAM3D::IO::DAPSettingsHeader).toString();
     DataArrayPath path = DataArrayPath::Deserialize(pathStr, "|");

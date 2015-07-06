@@ -40,6 +40,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QVector>
+#include <QtCore/QSet>
 
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QWidget>
@@ -61,7 +62,7 @@ class DREAM3DApplication : public QApplication
     Q_OBJECT
 
   public:
-    DREAM3DApplication(int & argc, char ** argv);
+    DREAM3DApplication(int& argc, char** argv);
     virtual ~DREAM3DApplication();
 
     bool initialize(int argc, char* argv[]);
@@ -73,6 +74,8 @@ class DREAM3DApplication : public QApplication
 
     DREAM3D_UI* getNewDREAM3DInstance();
 
+    bool isCurrentlyRunning(DREAM3D_UI* instance);
+
     /**
      * @brief event
      * @param event
@@ -82,7 +85,7 @@ class DREAM3DApplication : public QApplication
 
   public slots:
 
-    void newInstanceFromFile(const QString &filePath, const bool &setOpenedFilePath, const bool &addToRecentFiles);
+    void newInstanceFromFile(const QString& filePath, const bool& setOpenedFilePath, const bool& addToRecentFiles);
 
 
   protected:
@@ -92,15 +95,15 @@ class DREAM3DApplication : public QApplication
   protected slots:
 
     /**
-   * @brief Updates the QMenu 'Recent Files' with the latest list of files. This
-   * should be connected to the Signal QRecentFileList->fileListChanged
-   * @param file The newly added file.
-   */
-    void updateRecentFileList(const QString &file);
+    * @brief Updates the QMenu 'Recent Files' with the latest list of files. This
+    * should be connected to the Signal QRecentFileList->fileListChanged
+    * @param file The newly added file.
+    */
+    void updateRecentFileList(const QString& file);
 
     /**
-  * @brief activeWindowChanged
-  */
+    * @brief activeWindowChanged
+    */
     void activeWindowChanged(DREAM3D_UI* instance);
 
     // DREAM3D_UI slots
@@ -125,6 +128,7 @@ class DREAM3DApplication : public QApplication
     void on_actionShowPrebuiltInFileSystem_triggered();
     void on_actionLocateFile_triggered();
     void on_actionClearPipeline_triggered();
+    void on_actionClearCache_triggered();
 
     void on_pipelineViewContextMenuRequested(const QPoint&);
     void on_bookmarksDockContextMenuRequested(const QPoint&);
@@ -147,6 +151,9 @@ class DREAM3DApplication : public QApplication
     // This map stores each DREAM3D instance with its accompanying "View" menu
     QMap<DREAM3D_UI*, QMenu*>               m_DREAM3DInstanceMap;
 
+    // This is the set of DREAM3D instances that are currently running a pipeline
+    QSet<DREAM3D_UI*>                       m_CurrentlyRunningInstances;
+
     // The currently active DREAM3D instance
     DREAM3D_UI*                             m_ActiveWindow;
 
@@ -156,7 +163,7 @@ class DREAM3DApplication : public QApplication
 #endif
 
     /* Used on Mac OS X when there are no DREAM3D instances instantiated,
-   * but the application is still running. */
+    * but the application is still running. */
     QMenu*                                  m_PlaceholderViewMenu;
 
     QString                                 m_OpenDialogLastDirectory;

@@ -88,7 +88,7 @@ FileListInfoWidget::~FileListInfoWidget()
 // -----------------------------------------------------------------------------
 void FileListInfoWidget::setWidgetListEnabled(bool b)
 {
-  foreach (QWidget * w, m_WidgetList)
+  foreach (QWidget* w, m_WidgetList)
   {
     w->setEnabled(b);
   }

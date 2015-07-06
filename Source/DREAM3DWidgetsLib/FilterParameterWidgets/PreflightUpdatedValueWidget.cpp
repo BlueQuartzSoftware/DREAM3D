@@ -48,6 +48,9 @@
 PreflightUpdatedValueWidget::PreflightUpdatedValueWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   FilterParameterWidget(parameter, filter, parent)
 {
+  m_FilterParameter = dynamic_cast<PreflightUpdatedValueFilterParameter*>(parameter);
+  Q_ASSERT_X(m_FilterParameter != NULL, "NULL Pointer", "PreflightUpdatedValueWidget can ONLY be used with a PreflightUpdatedValueFilterParameter object");
+
   setupUi(this);
   setupGui();
 }
@@ -80,15 +83,7 @@ void PreflightUpdatedValueWidget::setupGui()
   blockSignals(true);
   if (getFilterParameter() != NULL)
   {
-    QString units = getFilterParameter()->getUnits();
-    if(units.isEmpty() == false)
-    {
-      label->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
-    }
-    else
-    {
-      label->setText(getFilterParameter()->getHumanLabel() );
-    }
+    label->setText(getFilterParameter()->getHumanLabel() );
 
     QString str = getFilter()->property(PROPERTY_NAME_AS_CHAR).toString();
     value->setText(str);

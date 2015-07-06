@@ -37,7 +37,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GEOM_CLASS_NAME::setName(const QString &name)
+void GEOM_CLASS_NAME::setName(const QString& name)
 {
   m_Name = name;
 }
@@ -101,7 +101,7 @@ unsigned int GEOM_CLASS_NAME::getSpatialDimensionality()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AttributeMatrix::Pointer GEOM_CLASS_NAME::getAttributeMatrix(const QString &name)
+AttributeMatrix::Pointer GEOM_CLASS_NAME::getAttributeMatrix(const QString& name)
 {
   AttributeMatrixMap_t::iterator it;
   it = m_AttributeMatrices.find(name);

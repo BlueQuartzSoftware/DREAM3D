@@ -45,23 +45,23 @@
 
 class DynamicTableItemDelegate : public QStyledItemDelegate
 {
-	Q_OBJECT
+    Q_OBJECT
 
-public:
-	explicit DynamicTableItemDelegate(QObject* parent = 0);
+  public:
+    explicit DynamicTableItemDelegate(QObject* parent = 0);
 
-	virtual ~DynamicTableItemDelegate();
+    virtual ~DynamicTableItemDelegate();
 
-protected:
-	QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-	void setEditorData(QWidget* editor, const QModelIndex & index) const;
-	void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex & index) const;
-	void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index) const;
+  protected:
+    QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const;
+    void setEditorData(QWidget* editor, const QModelIndex& index) const;
+    void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const;
+    void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const;
 
-private:
+  private:
 
-	DynamicTableItemDelegate(const DynamicTableItemDelegate&); // Copy Constructor Not Implemented
-	void operator=(const DynamicTableItemDelegate&); // Operator '=' Not Implemented
+    DynamicTableItemDelegate(const DynamicTableItemDelegate&); // Copy Constructor Not Implemented
+    void operator=(const DynamicTableItemDelegate&); // Operator '=' Not Implemented
 
 };
 

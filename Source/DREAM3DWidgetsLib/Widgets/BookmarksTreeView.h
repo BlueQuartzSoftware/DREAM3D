@@ -57,89 +57,89 @@ class QTreeWidgetItem;
 
 class DREAM3DWidgetsLib_EXPORT BookmarksTreeView : public QTreeView
 {
-  Q_OBJECT
+    Q_OBJECT
 
-public:
-  enum ItemType
-  {
-    Node_Item_Type = 1,
-    Leaf_Item_Type = 2,
-    Unknown_Item_Type = 3
-  };
+  public:
+    enum ItemType
+    {
+      Node_Item_Type = 1,
+      Leaf_Item_Type = 2,
+      Unknown_Item_Type = 3
+    };
 
-  /**
-  * @brief BookmarksTreeView
-  * @param parent
-  */
-  BookmarksTreeView(QWidget* parent = 0);
+    /**
+    * @brief BookmarksTreeView
+    * @param parent
+    */
+    BookmarksTreeView(QWidget* parent = 0);
 
-  /**
-  * @brief ~BookmarksTreeView()
-  */
-  ~BookmarksTreeView();
+    /**
+    * @brief ~BookmarksTreeView()
+    */
+    ~BookmarksTreeView();
 
-  /**
-  * @brief fromJsonObject
-  * @param modelObject
-  */
-  static BookmarksModel* FromJsonObject(QJsonObject modelObject);
+    /**
+    * @brief fromJsonObject
+    * @param modelObject
+    */
+    static BookmarksModel* FromJsonObject(QJsonObject modelObject);
 
-  /**
-  * @brief toJsonObject
-  */
-  QJsonObject toJsonObject();
+    /**
+    * @brief toJsonObject
+    */
+    QJsonObject toJsonObject();
 
-  /**
-  * @brief setModel
-  * @param model
-  */
-  void setModel(QAbstractItemModel* model) Q_DECL_OVERRIDE;
+    /**
+    * @brief setModel
+    * @param model
+    */
+    void setModel(QAbstractItemModel* model) Q_DECL_OVERRIDE;
 
-public slots:
-  void collapseIndex(const QModelIndex & index);
-  void expandIndex(const QModelIndex & index);
+  public slots:
+    void collapseIndex(const QModelIndex& index);
+    void expandIndex(const QModelIndex& index);
 
-protected:
-  void mouseMoveEvent(QMouseEvent* event);
-  void dragEnterEvent(QDragEnterEvent* event);
-  void dragLeaveEvent(QDragLeaveEvent* event);
-  void dragMoveEvent(QDragMoveEvent* event);
-  void dropEvent(QDropEvent* event);
+  protected:
+    void mouseMoveEvent(QMouseEvent* event);
+    void dragEnterEvent(QDragEnterEvent* event);
+    void dragLeaveEvent(QDragLeaveEvent* event);
+    void dragMoveEvent(QDragMoveEvent* event);
+    void dropEvent(QDropEvent* event);
 
-  void currentChanged(const QModelIndex & current, const QModelIndex & previous) Q_DECL_OVERRIDE;
+    void currentChanged(const QModelIndex& current, const QModelIndex& previous) Q_DECL_OVERRIDE;
 
-  /**
-  * @brief Adds the actions in the actionList parameter to the right-click menu
-  */
-  void addActionList(QList<QAction*> actionList);
+    /**
+    * @brief Adds the actions in the actionList parameter to the right-click menu
+    */
+    void addActionList(QList<QAction*> actionList);
 
-signals:
-  void itemWasDropped(QModelIndex parent, QString& title, QIcon icon, QString path, bool allowEditing, bool editState, bool isExpanding);
-  void currentIndexChanged(const QModelIndex & current, const QModelIndex & previous);
-  void folderChangedState(const QModelIndex &index, bool expand);
+  signals:
+    void itemWasDropped(QModelIndex parent, QString& title, QIcon icon, QString path, bool allowEditing, bool editState, bool isExpanding);
+    void currentIndexChanged(const QModelIndex& current, const QModelIndex& previous);
+    void folderChangedState(const QModelIndex& index, bool expand);
 
   private slots:
 
-  /**
-  * @brief mousePressEvent
-  * @param event
-  */
-  void mousePressEvent(QMouseEvent* event);
+    /**
+    * @brief mousePressEvent
+    * @param event
+    */
+    void mousePressEvent(QMouseEvent* event);
 
-private:
-  void performDrag();
-  void expandChildren(const QModelIndex &parent, BookmarksModel* model);
-  QJsonObject wrapModel(QModelIndex index);
-  static void UnwrapModel(QString objectName, QJsonObject object, BookmarksModel* model, QModelIndex parentIndex);
+  private:
+    void performDrag();
+    void expandChildren(const QModelIndex& parent, BookmarksModel* model);
+    QJsonObject wrapModel(QModelIndex index);
+    static void UnwrapModel(QString objectName, QJsonObject object, BookmarksModel* model, QModelIndex parentIndex);
 
-  QPoint                    m_StartPos;
-  QMenu                     m_Menu;
-  QList<QAction*>           m_NodeActions;
-  QList<QAction*>           m_LeafActions;
-  QList<QAction*>           m_LeafErrorActions;
-  QList<QAction*>           m_DefaultActions;
-  QModelIndex               m_IndexBeingDragged;
-  QModelIndex               m_TopLevelItemPlaceholder;
+    QPoint                    m_StartPos;
+    QMenu                     m_Menu;
+    QList<QAction*>           m_NodeActions;
+    QList<QAction*>           m_LeafActions;
+    QList<QAction*>           m_LeafErrorActions;
+    QList<QAction*>           m_DefaultActions;
+    QModelIndex               m_IndexBeingDragged;
+    QModelIndex               m_TopLevelItemPlaceholder;
 };
 
 #endif /* _BookmarksTreeView_H_ */

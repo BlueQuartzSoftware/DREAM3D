@@ -142,13 +142,13 @@ class ReadAngData : public AbstractFilter
     DREAM3D_PIMPL_PROPERTY_DECL(Ang_Private_Data, Data)
     Q_PROPERTY(Ang_Private_Data Data READ getData WRITE setData)
 
-    signals:
-      /**
-         * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-         * be pushed from a user-facing control (such as a widget)
-         * @param filter Filter instance pointer
-         */
-      void updateFilterParameters(AbstractFilter* filter);
+  signals:
+    /**
+       * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+       * be pushed from a user-facing control (such as a widget)
+       * @param filter Filter instance pointer
+       */
+    void updateFilterParameters(AbstractFilter* filter);
 
     /**
        * @brief parametersChanged Emitted when any Filter parameter is changed internally
@@ -185,7 +185,7 @@ class ReadAngData : public AbstractFilter
      * @param tDims Tuple dimensions
      * @param cDims Component dimensions
      */
-    void copyRawEbsdData(AngReader* reader, QVector<size_t> &tDims, QVector<size_t> &cDims);
+    void copyRawEbsdData(AngReader* reader, QVector<size_t>& tDims, QVector<size_t>& cDims);
 
     /**
     * @brief loadMaterialInfo Reads the values for the phase type, crystal structure

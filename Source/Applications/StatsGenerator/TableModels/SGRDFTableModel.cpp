@@ -315,34 +315,34 @@ QAbstractItemDelegate* SGRDFTableModel::getItemDelegate()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGRDFTableModel::setInitialValues()
-{
+  void SGRDFTableModel::setInitialValues()
+  {
 
-}
+  }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGRDFTableModel::setTableData(QVector<float> freqs)
-{
-  qint32 count = freqs.count();
-
-  qint32 row = 0;
-  // Remove all the current rows in the table model
-  removeRows(0, rowCount());
-  QModelIndex topLeft;
-  QModelIndex botRight;
-  if (count >= 1)
+  void SGRDFTableModel::setTableData(QVector<float> freqs)
   {
-    // Now mass insert the data to the table then emit that the data has changed
-    beginInsertRows(QModelIndex(), row, row + count - 1);
-    m_Frequencies = freqs;
-    m_RowCount = count;
-    endInsertRows();
-    createIndex(0, 0);
-    createIndex(count - 1, ColumnCount);
+    qint32 count = freqs.count();
+
+    qint32 row = 0;
+    // Remove all the current rows in the table model
+    removeRows(0, rowCount());
+    QModelIndex topLeft;
+    QModelIndex botRight;
+    if (count >= 1)
+    {
+      // Now mass insert the data to the table then emit that the data has changed
+      beginInsertRows(QModelIndex(), row, row + count - 1);
+      m_Frequencies = freqs;
+      m_RowCount = count;
+      endInsertRows();
+      createIndex(0, 0);
+      createIndex(count - 1, ColumnCount);
+    }
+    emit dataChanged(topLeft, botRight);
   }
-  emit dataChanged(topLeft, botRight);
-}
 
 

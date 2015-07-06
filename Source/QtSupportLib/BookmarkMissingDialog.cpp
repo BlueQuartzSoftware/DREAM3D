@@ -43,8 +43,8 @@
 //
 // -----------------------------------------------------------------------------
 BookmarkMissingDialog::BookmarkMissingDialog(QWidget* parent, Qt::WindowFlags flags) :
-QDialog(parent, flags),
-m_OpenDialogLastDirectory("")
+  QDialog(parent, flags),
+  m_OpenDialogLastDirectory("")
 {
   setupUi(this);
 }

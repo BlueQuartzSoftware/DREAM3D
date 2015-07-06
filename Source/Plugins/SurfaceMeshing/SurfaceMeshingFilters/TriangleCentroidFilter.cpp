@@ -45,6 +45,7 @@
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
@@ -61,8 +62,8 @@ class CalculateCentroidsImpl
 
   public:
     CalculateCentroidsImpl(SharedVertexList::Pointer nodes,
-                                SharedTriList::Pointer triangles,
-                                double* centroids) :
+                           SharedTriList::Pointer triangles,
+                           double* centroids) :
       m_Nodes(nodes),
       m_Triangles(triangles),
       m_Centroids(centroids)
@@ -76,9 +77,9 @@ class CalculateCentroidsImpl
 
       for (size_t i = start; i < end; i++)
       {
-        m_Centroids[i * 3]  = (nodes[triangles[i*3]*3+0] + nodes[triangles[i*3+1]*3+0] + nodes[triangles[i*3+2]*3+0]) / 3.0;
-        m_Centroids[i * 3 + 1] = (nodes[triangles[i*3]*3+1] + nodes[triangles[i*3+1]*3+1] + nodes[triangles[i*3+2]*3+1]) / 3.0;
-        m_Centroids[i * 3 + 2]  = (nodes[triangles[i*3]*3+2] + nodes[triangles[i*3+1]*3+2] + nodes[triangles[i*3+2]*3+2]) / 3.0;
+        m_Centroids[i * 3]  = (nodes[triangles[i * 3] * 3 + 0] + nodes[triangles[i * 3 + 1] * 3 + 0] + nodes[triangles[i * 3 + 2] * 3 + 0]) / 3.0;
+        m_Centroids[i * 3 + 1] = (nodes[triangles[i * 3] * 3 + 1] + nodes[triangles[i * 3 + 1] * 3 + 1] + nodes[triangles[i * 3 + 2] * 3 + 1]) / 3.0;
+        m_Centroids[i * 3 + 2]  = (nodes[triangles[i * 3] * 3 + 2] + nodes[triangles[i * 3 + 1] * 3 + 2] + nodes[triangles[i * 3 + 2] * 3 + 2]) / 3.0;
       }
     }
 
@@ -115,7 +116,7 @@ void TriangleCentroidFilter::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
-  parameters.push_back(FilterParameter::New("Face Centroids", "SurfaceMeshTriangleCentroidsArrayPath", FilterParameterWidgetType::DataArrayCreationWidget, getSurfaceMeshTriangleCentroidsArrayPath(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(DataArrayCreationFilterParameter::New("Face Centroids", "SurfaceMeshTriangleCentroidsArrayPath", getSurfaceMeshTriangleCentroidsArrayPath(), FilterParameter::CreatedArray));
   setFilterParameters(parameters);
 }
 

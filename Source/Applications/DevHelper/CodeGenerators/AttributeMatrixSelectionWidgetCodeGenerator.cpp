@@ -40,7 +40,7 @@
 //
 // -----------------------------------------------------------------------------
 AttributeMatrixSelectionWidgetCodeGenerator::AttributeMatrixSelectionWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue) :
-FPCodeGenerator(humanLabel, propertyName, category, initValue)
+  FPCodeGenerator(humanLabel, propertyName, category, initValue)
 {
 
 }
@@ -56,7 +56,7 @@ AttributeMatrixSelectionWidgetCodeGenerator::~AttributeMatrixSelectionWidgetCode
 // -----------------------------------------------------------------------------
 QString AttributeMatrixSelectionWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::AttributeMatrixSelectionWidget, get" + getPropertyName() + "(), " + getCategory() + "));";
+  return "  parameters.push_back(AttributeMatrixSelectionFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", get" + getPropertyName() + "(), " + getCategory() + "));";
 }
 
 // -----------------------------------------------------------------------------
@@ -86,4 +86,12 @@ QString AttributeMatrixSelectionWidgetCodeGenerator::generateFilterParameters()
   ss << "    Q_PROPERTY(DataArrayPath " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString AttributeMatrixSelectionWidgetCodeGenerator::generateCPPIncludes()
+{
+  return "#include \"DREAM3DLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h\"";
 }

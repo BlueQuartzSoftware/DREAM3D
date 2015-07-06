@@ -40,7 +40,7 @@
 //
 // -----------------------------------------------------------------------------
 ComparisonSelectionWidgetCodeGenerator::ComparisonSelectionWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue) :
-FPCodeGenerator(humanLabel, propertyName, category, initValue)
+  FPCodeGenerator(humanLabel, propertyName, category, initValue)
 {
 
 }
@@ -58,10 +58,10 @@ QString ComparisonSelectionWidgetCodeGenerator::generateSetupFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  
+
   ss << "\n";
   ss << "  // Please fill in the QVariant and QVector parameters to complete the setup\n";
-  ss << "  parameters.push_back(ComparisonFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::ComparisonSelectionWidget, QVariant(), QVector<QString>(), true, " + getCategory() + "));\n";
+  ss << "  parameters.push_back(ComparisonSelectionFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", \"\", QVector<QString>(), true, " + getCategory() + "));\n";
   ss << "\n";
 
   return contents;
@@ -109,5 +109,5 @@ QString ComparisonSelectionWidgetCodeGenerator::generateHIncludes()
 // -----------------------------------------------------------------------------
 QString ComparisonSelectionWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/ComparisonFilterParameter.h\"";
+  return "#include \"DREAM3DLib/FilterParameters/ComparisonSelectionFilterParameter.h\"";
 }

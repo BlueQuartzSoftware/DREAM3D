@@ -40,7 +40,7 @@
 //
 // -----------------------------------------------------------------------------
 FilterParameterWidgetCodeGenerator::FilterParameterWidgetCodeGenerator(QString humanLabel, QString propertyName, QString initValue) :
-FPCodeGenerator(humanLabel, propertyName, initValue)
+  FPCodeGenerator(humanLabel, propertyName, initValue)
 {
 
 }

@@ -39,6 +39,8 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -65,9 +67,9 @@ void RenameAttributeArray::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FilterParameter::New("Attribute Array to Rename", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), FilterParameter::RequiredArray));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array to Rename", "SelectedArrayPath", getSelectedArrayPath(), FilterParameter::RequiredArray));
 
-  parameters.push_back(FilterParameter::New("New Attribute Array Name", "NewArrayName", FilterParameterWidgetType::StringWidget, getNewArrayName(), FilterParameter::Parameter));
+  parameters.push_back(StringFilterParameter::New("New Attribute Array Name", "NewArrayName", getNewArrayName(), FilterParameter::Parameter));
 
   setFilterParameters(parameters);
 }

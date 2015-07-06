@@ -119,14 +119,16 @@ void BasicInitialization::initialize(EMMPM_Data::Pointer data)
   /* Initialization of parameter estimation */
   mu = 0;
   sigma = 0;
-  for (i = 0; i < total; i++) {
-      mu += y[i];
+  for (i = 0; i < total; i++)
+  {
+    mu += y[i];
   }
 
   mu /= (rows * cols);
 
-  for (i = 0; i < total; i++) {
-      sigma += (y[i] - mu) * (y[i] - mu);
+  for (i = 0; i < total; i++)
+  {
+    sigma += (y[i] - mu) * (y[i] - mu);
   }
 
   sigma /= (rows * cols);
@@ -136,8 +138,8 @@ void BasicInitialization::initialize(EMMPM_Data::Pointer data)
   {
     for (k = 0; k < classes / 2; k++)
     {
-        data->mean[classes / 2 + k] = mu + (k + 1) * sigma / 2;
-        data->mean[classes / 2 - 1 - k] = mu - (k + 1) * sigma / 2;
+      data->mean[classes / 2 + k] = mu + (k + 1) * sigma / 2;
+      data->mean[classes / 2 - 1 - k] = mu - (k + 1) * sigma / 2;
     }
   }
   else
@@ -187,7 +189,7 @@ void UserDefinedAreasInitialization::initialize(EMMPM_Data::Pointer data)
   unsigned int cols = data->columns;
   char msgbuff[256];
   unsigned char* y = data->y;
-  
+
   if (data->dims != 1)
   {
     printf("User Defined Initialization ONLY works with GrayScale images and not vector images.\n  %s(%d)", __FILE__, __LINE__);
@@ -256,7 +258,7 @@ void XtArrayInitialization::initialize(EMMPM_Data::Pointer data)
   typedef boost::uniform_real<> NumberDistribution;
   typedef boost::mt19937 RandomNumberGenerator;
   typedef boost::variate_generator<RandomNumberGenerator&,
-                                   NumberDistribution> Generator;
+          NumberDistribution> Generator;
 
   NumberDistribution distribution(rangeMin, rangeMax);
   RandomNumberGenerator generator;
@@ -266,7 +268,7 @@ void XtArrayInitialization::initialize(EMMPM_Data::Pointer data)
   /* Initialize classification of each pixel randomly with a uniform disribution */
   for (size_t i = 0; i < total; i++)
   {
-      data->xt[i] = numberGenerator() * data->classes;
+    data->xt[i] = numberGenerator() * data->classes;
   }
 
 }

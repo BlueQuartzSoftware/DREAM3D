@@ -41,28 +41,37 @@
 
 class DREAM3DLib_EXPORT DynamicChoiceFilterParameter : public FilterParameter
 {
-public:
-  DREAM3D_SHARED_POINTERS(DynamicChoiceFilterParameter)
+  public:
+    DREAM3D_SHARED_POINTERS(DynamicChoiceFilterParameter)
     DREAM3D_STATIC_NEW_MACRO(DynamicChoiceFilterParameter)
     DREAM3D_TYPE_MACRO_SUPER(DynamicChoiceFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-    const QVariant& defaultValue,
-    const QString& listProperty,
-    Category category,
-    int groupIndex = -1);
+                       const QString& defaultValue,
+                       const QString& listProperty,
+                       Category category,
+                       int groupIndex = -1);
 
-  virtual ~DynamicChoiceFilterParameter();
+    virtual ~DynamicChoiceFilterParameter();
 
 
-  DREAM3D_INSTANCE_STRING_PROPERTY(ListProperty)
+    DREAM3D_INSTANCE_STRING_PROPERTY(ListProperty)
+    DREAM3D_INSTANCE_STRING_PROPERTY(Units)
 
-protected:
-  DynamicChoiceFilterParameter();
+    /**
+     * @brief getWidgetType Returns the type of widget that displays and controls
+     * this FilterParameter subclass
+     * @return
+     */
+    QString getWidgetType();
 
-private:
-  DynamicChoiceFilterParameter(const DynamicChoiceFilterParameter&); // Copy Constructor Not Implemented
-  void operator=(const DynamicChoiceFilterParameter&); // Operator '=' Not Implemented
+
+  protected:
+    DynamicChoiceFilterParameter();
+
+  private:
+    DynamicChoiceFilterParameter(const DynamicChoiceFilterParameter&); // Copy Constructor Not Implemented
+    void operator=(const DynamicChoiceFilterParameter&); // Operator '=' Not Implemented
 };
 
 #endif /* _DynamicChoiceFilterParameter_H_ */

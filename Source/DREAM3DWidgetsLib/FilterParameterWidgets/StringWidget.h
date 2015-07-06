@@ -46,6 +46,7 @@
 #include "QtSupportLib/FaderWidget.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
@@ -95,14 +96,11 @@ class DREAM3DWidgetsLib_EXPORT StringWidget : public FilterParameterWidget, priv
     void errorSettingFilterParameter(const QString& msg);
     void parametersChanged();
 
-  private slots:
-
-  private:
-
-
   private:
 
     bool m_DidCausePreflight;
+
+    StringFilterParameter* m_FilterParameter;
 
     StringWidget(const StringWidget&); // Copy Constructor Not Implemented
     void operator=(const StringWidget&); // Operator '=' Not Implemented

@@ -50,7 +50,7 @@
 
 class EMMPMLib_EXPORT MorphFilter : public Observable
 {
-	Q_OBJECT;
+    Q_OBJECT;
 
   public:
     DREAM3D_SHARED_POINTERS(MorphFilter);
@@ -60,7 +60,7 @@ class EMMPMLib_EXPORT MorphFilter : public Observable
 
     unsigned int maxi(int a, int b);
 
-   unsigned int mini(int a, int b);
+    unsigned int mini(int a, int b);
 
     /**
      * @brief Performs the Morphological filtering on the input image
@@ -77,13 +77,13 @@ class EMMPMLib_EXPORT MorphFilter : public Observable
      */
     void multiSE(EMMPM_Data* data);
 
-	DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
+    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
 
-	/**
-	* @brief This returns a string that is displayed in the GUI. It should be readable
-	* and understandable by humans.
-	*/
-	virtual const QString getHumanLabel();
+    /**
+    * @brief This returns a string that is displayed in the GUI. It should be readable
+    * and understandable by humans.
+    */
+    virtual const QString getHumanLabel();
 
   protected:
     MorphFilter();

@@ -50,6 +50,9 @@
 AxisAngleWidget::AxisAngleWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   FilterParameterWidget(parameter, filter, parent)
 {
+  m_FilterParameter = dynamic_cast<AxisAngleFilterParameter*>(parameter);
+  Q_ASSERT_X(m_FilterParameter != NULL, "NULL Pointer", "AxisAngleWidget can ONLY be used with an AxisAngleFilterParameter object");
+
   setupUi(this);
   setupGui();
 }
@@ -101,15 +104,7 @@ void AxisAngleWidget::setupGui()
 
   if (getFilterParameter() != NULL)
   {
-    QString units = getFilterParameter()->getUnits();
-    if(units.isEmpty() == false)
-    {
-      label->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
-    }
-    else
-    {
-      label->setText(getFilterParameter()->getHumanLabel() );
-    }
+    label->setText(getFilterParameter()->getHumanLabel() );
 
 
     AxisAngleInput_t data = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<AxisAngleInput_t>();

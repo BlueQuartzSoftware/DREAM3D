@@ -66,7 +66,7 @@ void RemoveTestFiles()
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void AddDataArray(AttributeMatrix::Pointer am, const QString name, QVector<size_t> &tDims, QVector<size_t> &cDims)
+void AddDataArray(AttributeMatrix::Pointer am, const QString name, QVector<size_t>& tDims, QVector<size_t>& cDims)
 {
 
   typename DataArray<T>::Pointer data = DataArray<T>::CreateArray(tDims, cDims, name);
@@ -143,15 +143,15 @@ int main(int argc, char** argv)
 
 #if !REMOVE_TEST_FILES
   DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-    #endif
+#endif
 
-    DREAM3D_REGISTER_TEST( TestDataBundleCommonPaths() )
+  DREAM3D_REGISTER_TEST( TestDataBundleCommonPaths() )
 
-  #if REMOVE_TEST_FILES
-    DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-  #endif
+#if REMOVE_TEST_FILES
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+#endif
 
 
-    PRINT_TEST_SUMMARY();
+  PRINT_TEST_SUMMARY();
   return err;
 }

@@ -44,32 +44,34 @@
 
 class AttributeMatrixSelectionWidgetCodeGenerator : public FPCodeGenerator
 {
-public:
-  DREAM3D_SHARED_POINTERS(AttributeMatrixSelectionWidgetCodeGenerator)
+  public:
+    DREAM3D_SHARED_POINTERS(AttributeMatrixSelectionWidgetCodeGenerator)
 
     static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
-  {
-    Pointer sharedPtr(new AttributeMatrixSelectionWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
-    return sharedPtr;
-  }
+    {
+      Pointer sharedPtr(new AttributeMatrixSelectionWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
+      return sharedPtr;
+    }
 
-  virtual ~AttributeMatrixSelectionWidgetCodeGenerator();
+    virtual ~AttributeMatrixSelectionWidgetCodeGenerator();
 
-  virtual QString generateSetupFilterParameters();
+    virtual QString generateSetupFilterParameters();
 
-  virtual QString generateReadFilterParameters();
+    virtual QString generateReadFilterParameters();
 
-  virtual QString generateDataCheck();
+    virtual QString generateDataCheck();
 
-  virtual QString generateFilterParameters();
+    virtual QString generateFilterParameters();
 
-protected:
-  AttributeMatrixSelectionWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
+    virtual QString generateCPPIncludes();
 
-private:
+  protected:
+    AttributeMatrixSelectionWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
-  AttributeMatrixSelectionWidgetCodeGenerator(const AttributeMatrixSelectionWidgetCodeGenerator&); // Copy Constructor Not Implemented
-  void operator=(const AttributeMatrixSelectionWidgetCodeGenerator&); // Operator '=' Not Implemented
+  private:
+
+    AttributeMatrixSelectionWidgetCodeGenerator(const AttributeMatrixSelectionWidgetCodeGenerator&); // Copy Constructor Not Implemented
+    void operator=(const AttributeMatrixSelectionWidgetCodeGenerator&); // Operator '=' Not Implemented
 };
 
 #endif /* AttributeMatrixSelectionWidgetCodeGenerator_H_ */

@@ -58,10 +58,10 @@ const QString deleteColTT = "Removes the currently selected column from the tabl
 //
 // -----------------------------------------------------------------------------
 DynamicTableWidget::DynamicTableWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-FilterParameterWidget(parameter, filter, parent)
+  FilterParameterWidget(parameter, filter, parent)
 {
   m_FilterParameter = dynamic_cast<DynamicTableFilterParameter*>(parameter);
-  Q_ASSERT_X(NULL != m_FilterParameter, "DynamicTableWidget can ONLY be used with Dynamic Table Filter Parameters", __FILE__);
+  Q_ASSERT_X(m_FilterParameter != NULL, "NULL Pointer", "DynamicTableWidget can ONLY be used with a DynamicTableFilterParameter object");
 
   setupUi(this);
   setupGui();
@@ -107,15 +107,15 @@ void DynamicTableWidget::setupGui()
 {
   // Catch when the filter is about to execute the preflight
   connect(getFilter(), SIGNAL(preflightAboutToExecute()),
-    this, SLOT(beforePreflight()));
+          this, SLOT(beforePreflight()));
 
   // Catch when the filter is finished running the preflight
   connect(getFilter(), SIGNAL(preflightExecuted()),
-    this, SLOT(afterPreflight()));
+          this, SLOT(afterPreflight()));
 
   // Catch when the filter wants its values updated
   connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)),
-    this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
+          this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
   tableLabel->setText(m_FilterParameter->getHumanLabel());
 
@@ -401,7 +401,7 @@ void DynamicTableWidget::populateTable()
       errorBox.setTextFormat(Qt::RichText);
       errorBox.exec();
     }
-    else if (data.isEmpty())	// If there was nothing in the filter, use the defaults
+    else if (data.isEmpty())  // If there was nothing in the filter, use the defaults
     {
       data.setTableData(m_FilterParameter->getDefaultTable());
       data.setRowHeaders(m_FilterParameter->getRowHeaders());
@@ -469,7 +469,7 @@ void DynamicTableWidget::populateHeaders(QStringList rHeaders, QStringList cHead
     dynamicTable->setHorizontalHeaderLabels(cHeaders);
   }
 
-  renumberDynamicHeaders();	// Use this function to populate the dynamic headers for the first time
+  renumberDynamicHeaders(); // Use this function to populate the dynamic headers for the first time
 }
 
 // -----------------------------------------------------------------------------

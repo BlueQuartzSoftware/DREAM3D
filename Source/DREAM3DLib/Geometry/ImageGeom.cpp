@@ -319,34 +319,34 @@ void ImageGeom::getShapeFunctions(double pCoords[3], double* shape)
   tm = 1.0 - pCoords[2];
 
   // r derivatives
-  shape[0] = -sm*tm;
-  shape[1] = sm*tm;
-  shape[2] = -pCoords[1]*tm;
-  shape[3] = pCoords[1]*tm;
-  shape[4] = -sm*pCoords[2];
-  shape[5] = sm*pCoords[2];
-  shape[6] = -pCoords[1]*pCoords[2];
-  shape[7] = pCoords[1]*pCoords[2];
+  shape[0] = -sm * tm;
+  shape[1] = sm * tm;
+  shape[2] = -pCoords[1] * tm;
+  shape[3] = pCoords[1] * tm;
+  shape[4] = -sm * pCoords[2];
+  shape[5] = sm * pCoords[2];
+  shape[6] = -pCoords[1] * pCoords[2];
+  shape[7] = pCoords[1] * pCoords[2];
 
   // s derivatives
-  shape[8] = -rm*tm;
-  shape[9] = -pCoords[0]*tm;
-  shape[10] = rm*tm;
-  shape[11] = pCoords[0]*tm;
-  shape[12] = -rm*pCoords[2];
-  shape[13] = -pCoords[0]*pCoords[2];
-  shape[14] = rm*pCoords[2];
-  shape[15] = pCoords[0]*pCoords[2];
+  shape[8] = -rm * tm;
+  shape[9] = -pCoords[0] * tm;
+  shape[10] = rm * tm;
+  shape[11] = pCoords[0] * tm;
+  shape[12] = -rm * pCoords[2];
+  shape[13] = -pCoords[0] * pCoords[2];
+  shape[14] = rm * pCoords[2];
+  shape[15] = pCoords[0] * pCoords[2];
 
   // t derivatives
-  shape[16] = -rm*sm;
-  shape[17] = -pCoords[0]*sm;
-  shape[18] = -rm*pCoords[1];
-  shape[19] = -pCoords[0]*pCoords[1];
-  shape[20] = rm*sm;
-  shape[21] = pCoords[0]*sm;
-  shape[22] = rm*pCoords[1];
-  shape[23] = pCoords[0]*pCoords[1];
+  shape[16] = -rm * sm;
+  shape[17] = -pCoords[0] * sm;
+  shape[18] = -rm * pCoords[1];
+  shape[19] = -pCoords[0] * pCoords[1];
+  shape[20] = rm * sm;
+  shape[21] = pCoords[0] * sm;
+  shape[22] = rm * pCoords[1];
+  shape[23] = pCoords[0] * pCoords[1];
 }
 
 // -----------------------------------------------------------------------------
@@ -377,7 +377,7 @@ void ImageGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType:
   size_t dims[3];
   getDimensions(dims);
 
-  size_t xysize = dims[0]*dims[1];
+  size_t xysize = dims[0] * dims[1];
 
   for (size_t z = 0; z < dims[2]; z++)
   {
@@ -403,47 +403,47 @@ void ImageGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType:
         else if ( x == 0 )
         {
           factor = 1.0;
-          idx = (x+1) + y*dims[0] + z*xysize;
-          idx2 = x + y*dims[0] + z*xysize;
-          tmpIdx = x+1;
+          idx = (x + 1) + y * dims[0] + z * xysize;
+          idx2 = x + y * dims[0] + z * xysize;
+          tmpIdx = x + 1;
           getCoords(tmpIdx, y, z, xp);
           getCoords(x, y, z, xm);
           for(inputComponent = 0; inputComponent < numberOfInputComponents;
               inputComponent++)
           {
-            plusvalues[inputComponent] = fieldPtr[idx*numberOfInputComponents+inputComponent];
-            minusvalues[inputComponent] = fieldPtr[idx2*numberOfInputComponents+inputComponent];
+            plusvalues[inputComponent] = fieldPtr[idx * numberOfInputComponents + inputComponent];
+            minusvalues[inputComponent] = fieldPtr[idx2 * numberOfInputComponents + inputComponent];
           }
         }
-        else if ( x == (dims[0]-1) )
+        else if ( x == (dims[0] - 1) )
         {
           factor = 1.0;
-          idx = x + y*dims[0] + z*xysize;
-          idx2 = x-1 + y*dims[0] + z*xysize;
-          tmpIdx = x-1;
+          idx = x + y * dims[0] + z * xysize;
+          idx2 = x - 1 + y * dims[0] + z * xysize;
+          tmpIdx = x - 1;
           getCoords(x, y, z, xp);
           getCoords(tmpIdx, y, z, xm);
           for(inputComponent = 0; inputComponent < numberOfInputComponents;
               inputComponent++)
           {
-            plusvalues[inputComponent] = fieldPtr[idx*numberOfInputComponents+inputComponent];
-            minusvalues[inputComponent] = fieldPtr[idx2*numberOfInputComponents+inputComponent];
+            plusvalues[inputComponent] = fieldPtr[idx * numberOfInputComponents + inputComponent];
+            minusvalues[inputComponent] = fieldPtr[idx2 * numberOfInputComponents + inputComponent];
           }
         }
         else
         {
           factor = 0.5;
-          idx = (x+1) + y*dims[0] + z*xysize;
-          idx2 = (x-1) + y*dims[0] + z*xysize;
-          tmpIdx = x+1;
-          tmpIdx2 = x-1;
+          idx = (x + 1) + y * dims[0] + z * xysize;
+          idx2 = (x - 1) + y * dims[0] + z * xysize;
+          tmpIdx = x + 1;
+          tmpIdx2 = x - 1;
           getCoords(tmpIdx, y, z, xp);
           getCoords(tmpIdx2, y, z, xm);
           for(inputComponent = 0; inputComponent < numberOfInputComponents;
               inputComponent++)
           {
-            plusvalues[inputComponent] = fieldPtr[idx*numberOfInputComponents+inputComponent];
-            minusvalues[inputComponent] = fieldPtr[idx2*numberOfInputComponents+inputComponent];
+            plusvalues[inputComponent] = fieldPtr[idx * numberOfInputComponents + inputComponent];
+            minusvalues[inputComponent] = fieldPtr[idx2 * numberOfInputComponents + inputComponent];
           }
         }
 
@@ -453,7 +453,7 @@ void ImageGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType:
         for(inputComponent = 0; inputComponent < numberOfInputComponents; inputComponent++)
         {
           dValuesdXi[inputComponent] = factor *
-              (plusvalues[inputComponent] - minusvalues[inputComponent]);
+                                       (plusvalues[inputComponent] - minusvalues[inputComponent]);
         }
 
         //  Eta derivatives.
@@ -474,47 +474,47 @@ void ImageGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType:
         else if ( y == 0 )
         {
           factor = 1.0;
-          idx = x + (y+1)*dims[0] + z*xysize;
-          idx2 = x + y*dims[0] + z*xysize;
-          tmpIdx = y+1;
+          idx = x + (y + 1) * dims[0] + z * xysize;
+          idx2 = x + y * dims[0] + z * xysize;
+          tmpIdx = y + 1;
           getCoords(x, tmpIdx, z, xp);
           getCoords(x, y, z, xm);
-          for(inputComponent=0;inputComponent<numberOfInputComponents;
+          for(inputComponent = 0; inputComponent < numberOfInputComponents;
               inputComponent++)
           {
-            plusvalues[inputComponent] = fieldPtr[idx*numberOfInputComponents+inputComponent];
-            minusvalues[inputComponent] = fieldPtr[idx2*numberOfInputComponents+inputComponent];
+            plusvalues[inputComponent] = fieldPtr[idx * numberOfInputComponents + inputComponent];
+            minusvalues[inputComponent] = fieldPtr[idx2 * numberOfInputComponents + inputComponent];
           }
         }
-        else if ( y == (dims[1]-1) )
+        else if ( y == (dims[1] - 1) )
         {
           factor = 1.0;
-          idx = x + y*dims[0] + z*xysize;
-          idx2 = x + (y-1)*dims[0] + z*xysize;
-          tmpIdx = y-1;
+          idx = x + y * dims[0] + z * xysize;
+          idx2 = x + (y - 1) * dims[0] + z * xysize;
+          tmpIdx = y - 1;
           getCoords(x, y, z, xp);
           getCoords(x, tmpIdx, z, xm);
-          for(inputComponent=0;inputComponent<numberOfInputComponents;
+          for(inputComponent = 0; inputComponent < numberOfInputComponents;
               inputComponent++)
           {
-            plusvalues[inputComponent] = fieldPtr[idx*numberOfInputComponents+inputComponent];
-            minusvalues[inputComponent] = fieldPtr[idx2*numberOfInputComponents+inputComponent];
+            plusvalues[inputComponent] = fieldPtr[idx * numberOfInputComponents + inputComponent];
+            minusvalues[inputComponent] = fieldPtr[idx2 * numberOfInputComponents + inputComponent];
           }
         }
         else
         {
           factor = 0.5;
-          idx = x + (y+1)*dims[0] + z*xysize;
-          idx2 = x + (y-1)*dims[0] + z*xysize;
-          tmpIdx = y+1;
-          tmpIdx2 = y-1;
+          idx = x + (y + 1) * dims[0] + z * xysize;
+          idx2 = x + (y - 1) * dims[0] + z * xysize;
+          tmpIdx = y + 1;
+          tmpIdx2 = y - 1;
           getCoords(x, tmpIdx, z, xp);
           getCoords(x, tmpIdx2, z, xm);
-          for(inputComponent=0;inputComponent<numberOfInputComponents;
+          for(inputComponent = 0; inputComponent < numberOfInputComponents;
               inputComponent++)
           {
-            plusvalues[inputComponent] = fieldPtr[idx*numberOfInputComponents+inputComponent];
-            minusvalues[inputComponent] = fieldPtr[idx2*numberOfInputComponents+inputComponent];
+            plusvalues[inputComponent] = fieldPtr[idx * numberOfInputComponents + inputComponent];
+            minusvalues[inputComponent] = fieldPtr[idx2 * numberOfInputComponents + inputComponent];
           }
         }
 
@@ -524,7 +524,7 @@ void ImageGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType:
         for(inputComponent = 0; inputComponent < numberOfInputComponents; inputComponent++)
         {
           dValuesdEta[inputComponent] = factor *
-              (plusvalues[inputComponent] - minusvalues[inputComponent]);
+                                        (plusvalues[inputComponent] - minusvalues[inputComponent]);
         }
 
         //  Zeta derivatives.
@@ -545,47 +545,47 @@ void ImageGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType:
         else if ( z == 0 )
         {
           factor = 1.0;
-          idx = x + y*dims[0] + (z+1)*xysize;
-          idx2 = x + y*dims[0] + z*xysize;
-          tmpIdx = z+1;
+          idx = x + y * dims[0] + (z + 1) * xysize;
+          idx2 = x + y * dims[0] + z * xysize;
+          tmpIdx = z + 1;
           getCoords(x, y, tmpIdx, xp);
           getCoords(x, y, z, xm);
           for(inputComponent = 0; inputComponent < numberOfInputComponents;
               inputComponent++)
           {
-            plusvalues[inputComponent] = fieldPtr[idx*numberOfInputComponents+inputComponent];
-            minusvalues[inputComponent] = fieldPtr[idx2*numberOfInputComponents+inputComponent];
+            plusvalues[inputComponent] = fieldPtr[idx * numberOfInputComponents + inputComponent];
+            minusvalues[inputComponent] = fieldPtr[idx2 * numberOfInputComponents + inputComponent];
           }
         }
-        else if ( z == (dims[2]-1) )
+        else if ( z == (dims[2] - 1) )
         {
           factor = 1.0;
-          idx = x + y*dims[0] + z*xysize;
-          idx2 = x + y*dims[0] + (z-1)*xysize;
-          tmpIdx = z-1;
+          idx = x + y * dims[0] + z * xysize;
+          idx2 = x + y * dims[0] + (z - 1) * xysize;
+          tmpIdx = z - 1;
           getCoords(x, y, z, xp);
           getCoords(x, y, tmpIdx, xm);
           for(inputComponent = 0; inputComponent < numberOfInputComponents;
               inputComponent++)
           {
-            plusvalues[inputComponent] = fieldPtr[idx*numberOfInputComponents+inputComponent];
-            minusvalues[inputComponent] = fieldPtr[idx2*numberOfInputComponents+inputComponent];
+            plusvalues[inputComponent] = fieldPtr[idx * numberOfInputComponents + inputComponent];
+            minusvalues[inputComponent] = fieldPtr[idx2 * numberOfInputComponents + inputComponent];
           }
         }
         else
         {
           factor = 0.5;
-          idx = x + y*dims[0] + (z+1)*xysize;
-          idx2 = x + y*dims[0] + (z-1)*xysize;
-          tmpIdx = z+1;
-          tmpIdx2 = z-1;
+          idx = x + y * dims[0] + (z + 1) * xysize;
+          idx2 = x + y * dims[0] + (z - 1) * xysize;
+          tmpIdx = z + 1;
+          tmpIdx2 = z - 1;
           getCoords(x, y, tmpIdx, xp);
           getCoords(x, y, tmpIdx2, xm);
           for(inputComponent = 0; inputComponent < numberOfInputComponents;
               inputComponent++)
           {
-            plusvalues[inputComponent] = fieldPtr[idx*numberOfInputComponents+inputComponent];
-            minusvalues[inputComponent] = fieldPtr[idx2*numberOfInputComponents+inputComponent];
+            plusvalues[inputComponent] = fieldPtr[idx * numberOfInputComponents + inputComponent];
+            minusvalues[inputComponent] = fieldPtr[idx2 * numberOfInputComponents + inputComponent];
           }
         }
 
@@ -595,7 +595,7 @@ void ImageGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType:
         for(inputComponent = 0; inputComponent < numberOfInputComponents; inputComponent++)
         {
           dValuesdZeta[inputComponent] = factor *
-              (plusvalues[inputComponent] - minusvalues[inputComponent]);
+                                         (plusvalues[inputComponent] - minusvalues[inputComponent]);
         }
 
         // Now calculate the Jacobian.  Grids occasionally have
@@ -603,43 +603,43 @@ void ImageGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType:
         // inverse is zero).  For these cases, we'll set the Jacobian to
         // zero, which will result in a zero derivative.
         //
-        aj =  xxi*yeta*zzeta+yxi*zeta*xzeta+zxi*xeta*yzeta
-            -zxi*yeta*xzeta-yxi*xeta*zzeta-xxi*zeta*yzeta;
+        aj =  xxi * yeta * zzeta + yxi * zeta * xzeta + zxi * xeta * yzeta
+              - zxi * yeta * xzeta - yxi * xeta * zzeta - xxi * zeta * yzeta;
         if (aj != 0.0)
         {
           aj = 1. / aj;
         }
 
         //  Xi metrics.
-        xix  =  aj*(yeta*zzeta-zeta*yzeta);
-        xiy  = -aj*(xeta*zzeta-zeta*xzeta);
-        xiz  =  aj*(xeta*yzeta-yeta*xzeta);
+        xix  =  aj * (yeta * zzeta - zeta * yzeta);
+        xiy  = -aj * (xeta * zzeta - zeta * xzeta);
+        xiz  =  aj * (xeta * yzeta - yeta * xzeta);
 
         //  Eta metrics.
-        etax = -aj*(yxi*zzeta-zxi*yzeta);
-        etay =  aj*(xxi*zzeta-zxi*xzeta);
-        etaz = -aj*(xxi*yzeta-yxi*xzeta);
+        etax = -aj * (yxi * zzeta - zxi * yzeta);
+        etay =  aj * (xxi * zzeta - zxi * xzeta);
+        etaz = -aj * (xxi * yzeta - yxi * xzeta);
 
         //  Zeta metrics.
-        zetax =  aj*(yxi*zeta-zxi*yeta);
-        zetay = -aj*(xxi*zeta-zxi*xeta);
-        zetaz =  aj*(xxi*yeta-yxi*xeta);
+        zetax =  aj * (yxi * zeta - zxi * yeta);
+        zetay = -aj * (xxi * zeta - zxi * xeta);
+        zetaz =  aj * (xxi * yeta - yxi * xeta);
 
         // Finally compute the actual derivatives
-        idx = x + y*dims[0] + z*xysize;
+        idx = x + y * dims[0] + z * xysize;
         for(inputComponent = 0; inputComponent < numberOfInputComponents; inputComponent++)
         {
-          derivsPtr[idx*numberOfInputComponents*3+inputComponent*3] =
-              xix*dValuesdXi[inputComponent]+etax*dValuesdEta[inputComponent]+
-              zetax*dValuesdZeta[inputComponent];
+          derivsPtr[idx * numberOfInputComponents * 3 + inputComponent * 3] =
+            xix * dValuesdXi[inputComponent] + etax * dValuesdEta[inputComponent] +
+            zetax * dValuesdZeta[inputComponent];
 
-          derivsPtr[idx*numberOfInputComponents*3+inputComponent*3+1] =
-              xiy*dValuesdXi[inputComponent]+etay*dValuesdEta[inputComponent]+
-              zetay*dValuesdZeta[inputComponent];
+          derivsPtr[idx * numberOfInputComponents * 3 + inputComponent * 3 + 1] =
+            xiy * dValuesdXi[inputComponent] + etay * dValuesdEta[inputComponent] +
+            zetay * dValuesdZeta[inputComponent];
 
-          derivsPtr[idx*numberOfInputComponents*3+inputComponent*3+2] =
-              xiz*dValuesdXi[inputComponent]+etaz*dValuesdEta[inputComponent]+
-              zetaz*dValuesdZeta[inputComponent];
+          derivsPtr[idx * numberOfInputComponents * 3 + inputComponent * 3 + 2] =
+            xiz * dValuesdXi[inputComponent] + etaz * dValuesdEta[inputComponent] +
+            zetaz * dValuesdZeta[inputComponent];
         }
       }
     }
@@ -687,7 +687,7 @@ int ImageGeom::writeGeometryToHDF5(hid_t parentId, bool DREAM3D_NOT_USED(writeXd
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ImageGeom::writeXdmf(QTextStream &out, QString dcName, QString hdfFileName)
+int ImageGeom::writeXdmf(QTextStream& out, QString dcName, QString hdfFileName)
 {
   herr_t err = 0;
 

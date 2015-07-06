@@ -156,7 +156,7 @@ namespace Detail
     QMap<QString, DataContainerProxy>& dcProxies = dest.dataContainers;
     for (QMap<QString, DataContainerProxy>::iterator dcIter = dcProxies.begin(); dcIter != dcProxies.end(); ++dcIter)
     {
-    DataContainerProxy& dcProxy = dcIter.value();
+      DataContainerProxy& dcProxy = dcIter.value();
       if(dcProxy.name.compare(source.name) == 0)
       {
         // we have the correct DataContainer, so transfer the flags
@@ -243,7 +243,7 @@ DataContainerReaderWidget::DataContainerReaderWidget(FilterParameter* parameter,
   m_DidCausePreflight(false)
 {
   m_FilterParameter = dynamic_cast<DataContainerReaderFilterParameter*>(parameter);
-  Q_ASSERT_X(getFilterParameter() != NULL, "NULL Pointer", "DataContainerReaderWidget can ONLY be used with a DataContainerReaderFilterParameter object");
+  Q_ASSERT_X(m_FilterParameter != NULL, "NULL Pointer", "DataContainerReaderWidget can ONLY be used with a DataContainerReaderFilterParameter object");
   m_Filter = dynamic_cast<DataContainerReader*>(filter);
   Q_ASSERT_X(getFilter() != NULL, "NULL Pointer", "DataContainerReaderWidget can ONLY be used with a DataContainerReader object");
 
@@ -338,15 +338,7 @@ void DataContainerReaderWidget::setupGui()
 
   if (getFilterParameter() != NULL)
   {
-    QString units = getFilterParameter()->getUnits();
-    if(units.isEmpty() == false)
-    {
-      label->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
-    }
-    else
-    {
-      label->setText(getFilterParameter()->getHumanLabel() );
-    }
+    label->setText(getFilterParameter()->getHumanLabel() );
   }
 
   if(getFilter() != NULL)
@@ -368,7 +360,7 @@ void DataContainerReaderWidget::itemActivated(const QModelIndex& index)
 {
   m_DidCausePreflight = true;
   updateProxyFromModel();
-  m_Filter->setInputFileDataContainerArrayProxy(m_DcaProxy);		// Set the new proxy into filter
+  m_Filter->setInputFileDataContainerArrayProxy(m_DcaProxy);    // Set the new proxy into filter
 
   emit parametersChanged();
   m_DidCausePreflight = false;
@@ -421,7 +413,8 @@ void DataContainerReaderWidget::updateModelFromProxy(DataContainerArrayProxy& pr
         QString daName = dataArraysIter.key();
         //   qDebug() << "#### " << daName;
         QStandardItem* daItem = Detail::getColumnItem<DataArrayProxy>(amItem, daName, daProxy);
-        if (NULL == daItem) {
+        if (NULL == daItem)
+        {
           Q_ASSERT_X(daItem != NULL, "daItem was NULL. This can not happen", "");
         }
 
@@ -630,20 +623,20 @@ void DataContainerReaderWidget::on_filePath_fileDropped(const QString& text)
           model->clear();
         }
 
-    if (m_Filter->getInputFileDataContainerArrayProxy().dataContainers.size() > 0 && (text == m_Filter->getLastFileRead() || m_Filter->getLastFileRead().isEmpty()))
-    {
-      proxy = m_Filter->getInputFileDataContainerArrayProxy();
-    }
-    else
-    {
-      proxy = m_Filter->readDataContainerArrayStructure(text);
-      m_Filter->setLastRead(QDateTime::currentDateTime());
-    }
+        if (m_Filter->getInputFileDataContainerArrayProxy().dataContainers.size() > 0 && (text == m_Filter->getLastFileRead() || m_Filter->getLastFileRead().isEmpty()))
+        {
+          proxy = m_Filter->getInputFileDataContainerArrayProxy();
+        }
+        else
+        {
+          proxy = m_Filter->readDataContainerArrayStructure(text);
+          m_Filter->setLastRead(QDateTime::currentDateTime());
+        }
 
         m_Filter->setLastFileRead(text); // Update the cached file path in the filter
       }
 
-        updateModelFromProxy(proxy);
+      updateModelFromProxy(proxy);
     }
     emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
   }

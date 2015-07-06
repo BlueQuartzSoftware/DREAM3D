@@ -1,6 +1,13 @@
 #!/bin/bash
+# This script requires 2 arguments. The root of the DREAM3D_SDK (/Users/Shared/DREAM3D_SDK
+# or /opt/DREAM3D_SDK) and the number of parallel processes to use to compile. This
+# is typically 2x the number of physical cores in the machine.
 
-PARALLEL_BUILD=8
+SDK_INSTALL=$1
+
+cd $SDK_INSTALL
+
+PARALLEL_BUILD=$2
 
 
 HOST_SYSTEM=`uname`
@@ -33,9 +40,6 @@ then
   DOWNLOAD_ARGS=""
 fi
 
-SDK_INSTALL=/Users/Shared/Toolkits
-
-cd $SDK_INSTALL
 
 
 CMAKE=`type -P cmake`
@@ -46,32 +50,32 @@ if [[ $CMAKE == "" ]];
 fi
 
 
-EIGEN_VERSION=3.2.2
+EIGEN_VERSION=3.2.5
 
 
-if [ ! -e "$SDK_INSTALL/Eigen-${EIGEN_VERSION}.tar.gz" ];
+# if [ ! -e "$SDK_INSTALL/Eigen-${EIGEN_VERSION}_src.tar.gz" ];
+# then
+#     echo "-------------------------------------------"
+#     echo " Downloading Eigen ${EIGEN_VERSION}"
+#     echo "-------------------------------------------"
+#     $DOWNLOAD_PROG "https://bitbucket.org/eigen/eigen/get/${EIGEN_VERSION}.tar.gz" -o Eigen-${EIGEN_VERSION}.tar.gz
+# fi
+
+
+if [ ! -e "$SDK_INSTALL/Eigen-${EIGEN_VERSION}_src" ];
 then
-    echo "-------------------------------------------"
-    echo " Downloading Eigen ${EIGEN_VERSION}"
-    echo "-------------------------------------------"
-    $DOWNLOAD_PROG "https://bitbucket.org/eigen/eigen/get/${EIGEN_VERSION}.tar.gz" -o Eigen-${EIGEN_VERSION}.tar.gz
-fi
-
-
-if [ ! -e "$SDK_INSTALL/Eigen-${EIGEN_VERSION}_source" ];
-then
-    tar -xvzf Eigen-${EIGEN_VERSION}.tar.gz
-    echo "Looking for Actual Decompressed Eigen Directory because the Eigen Folks are Idiots...."
-    EIGEN_DIR=`find . -type d -name 'eigen-eigen*'`
-    echo "EIGEN_DIR=$EIGEN_DIR"
-    mv $EIGEN_DIR Eigen-${EIGEN_VERSION}_source
+    tar -xvzf Eigen-${EIGEN_VERSION}_src.tar.gz
+    #echo "Looking for Actual Decompressed Eigen Directory because the Eigen Folks are Idiots...."
+    #EIGEN_DIR=`find . -type d -name 'eigen-eigen*'`
+    #echo "EIGEN_DIR=$EIGEN_DIR"
+    #mv $EIGEN_DIR Eigen-${EIGEN_VERSION}_source
 fi
 
 # We assume we already have downloaded the source for eigen and have it in a folder
-cd Eigen-${EIGEN_VERSION}_source
+cd Eigen-${EIGEN_VERSION}_src
 mkdir Build
 cd Build
-touch $SDK_INSTALL/Eigen-${EIGEN_VERSION}_source/Build/DartConfiguration.tcl
+touch $SDK_INSTALL/Eigen-${EIGEN_VERSION}_src/Build/DartConfiguration.tcl
 cmake -Wno-dev -DQT_QMAKE_EXECUTABLE="" -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/Eigen-${EIGEN_VERSION}  ../
 make -j$PARALLEL_BUILD
 make install

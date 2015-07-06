@@ -539,7 +539,7 @@ class Texture
         OrientationTransforms<FOrientArrayType, float>::eu2qu(eu, qu);
         q1 = qu.toQuaternion();
 
-        eu =orientationOps.determineEulerAngles(choose2);
+        eu = orientationOps.determineEulerAngles(choose2);
         OrientationTransforms<FOrientArrayType, float>::eu2qu(eu, qu);
         q2 = qu.toQuaternion();
         w = orientationOps.getMisoQuat(q1, q2, n1, n2, n3);

@@ -52,6 +52,9 @@ padding-left: 5px;
     </property>
     <item>
      <widget class="QTableWidget" name="errorTableWidget">
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
       <property name="alternatingRowColors">
        <bool>false</bool>
       </property>

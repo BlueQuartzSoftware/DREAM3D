@@ -43,7 +43,7 @@
 
 #include "DREAM3DLib/Common/ShapeType.h"
 #include "DREAM3DLib/DataContainers/DataArrayPath.h"
-#include "DREAM3DLib/FilterParameters/ShapeTypesFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/ShapeTypeSelectionFilterParameter.h"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
@@ -57,6 +57,9 @@ ShapeTypeSelectionWidget::ShapeTypeSelectionWidget(FilterParameter* parameter, A
   FilterParameterWidget(parameter, filter, parent),
   m_DidCausePreflight(false)
 {
+  m_FilterParameter = dynamic_cast<ShapeTypeSelectionFilterParameter*>(parameter);
+  Q_ASSERT_X(m_FilterParameter != NULL, "NULL Pointer", "ShapeTypeSelectionWidget can ONLY be used with a ShapeTypeSelectionFilterParameter object");
+
   setupUi(this);
   setupGui();
 }
@@ -104,15 +107,7 @@ void ShapeTypeSelectionWidget::setupGui()
   {
     return;
   }
-  QString units = getFilterParameter()->getUnits();
-  if(units.isEmpty() == false)
-  {
-    label->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
-  }
-  else
-  {
-    label->setText(getFilterParameter()->getHumanLabel() );
-  }
+  label->setText(getFilterParameter()->getHumanLabel() );
 
   updateComboBoxes();
 
@@ -125,7 +120,7 @@ void ShapeTypeSelectionWidget::updateComboBoxes()
 {
   bool ok = false;
   // setup the list of choices for the widget
-  ShapeTypesFilterParameter* shapeType = dynamic_cast<ShapeTypesFilterParameter*>(getFilterParameter());
+  ShapeTypeSelectionFilterParameter* shapeType = dynamic_cast<ShapeTypeSelectionFilterParameter*>(getFilterParameter());
   QString countProp = shapeType->getPhaseTypeCountProperty();
   int size = getFilter()->property(countProp.toLatin1().constData()).toInt(&ok);
 

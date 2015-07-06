@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>DREAM3D Help</string>
+   <string>DREAM.3D Help</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <property name="leftMargin">

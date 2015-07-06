@@ -105,9 +105,9 @@ class GenerateGeometryConnectivity : public SurfaceMeshFilter
      */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-   /**
-    * @brief execute Reimplemented from @see AbstractFilter class
-    */
+    /**
+     * @brief execute Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
 
     /**
@@ -121,7 +121,7 @@ class GenerateGeometryConnectivity : public SurfaceMeshFilter
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
-     void dataCheck();
+    void dataCheck();
 
   private:
     GenerateGeometryConnectivity(const GenerateGeometryConnectivity&); // Copy Constructor Not Implemented

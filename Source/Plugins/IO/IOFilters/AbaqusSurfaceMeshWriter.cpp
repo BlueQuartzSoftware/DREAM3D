@@ -43,7 +43,9 @@
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/OutputFileFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
+
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "IO/IOConstants.h"
@@ -75,9 +77,9 @@ AbaqusSurfaceMeshWriter::~AbaqusSurfaceMeshWriter()
 void AbaqusSurfaceMeshWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FileSystemFilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), FilterParameter::Parameter, "", "*.inp"));
+  parameters.push_back(OutputFileFilterParameter::New("Output File", "OutputFile", getOutputFile(), FilterParameter::Parameter, "*.inp"));
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
-  parameters.push_back(FilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray));
   setFilterParameters(parameters);
 }
 
@@ -261,7 +263,7 @@ int32_t AbaqusSurfaceMeshWriter::writeNodes(FILE* f)
   // Abaqus Starts number at 1 NOT 0(Zero).
   for (int64_t i = 1; i <= numNodes; ++i)
   {
-    fprintf(f, "%lld, %0.6f, %0.6f, %0.6f\n", (long long int)i, nodes[(i-1)*3], nodes[(i-1)*3+1], nodes[(i-1)*3+2]);
+    fprintf(f, "%lld, %0.6f, %0.6f, %0.6f\n", (long long int)i, nodes[(i - 1) * 3], nodes[(i - 1) * 3 + 1], nodes[(i - 1) * 3 + 2]);
   }
 
   return err;
@@ -281,9 +283,9 @@ int32_t AbaqusSurfaceMeshWriter::writeTriangles(FILE* f)
   for (int64_t i = 1; i <= numTri; ++i)
   {
     // When we get the node index, add 1 to it because Abaqus number is 1 based.
-    int64_t nId0 = triangles[(i-1)*3] + 1;
-    int64_t nId1 = triangles[(i-1)*3+1] + 1;
-    int64_t nId2 = triangles[(i-1)*3+2] + 1;
+    int64_t nId0 = triangles[(i - 1) * 3] + 1;
+    int64_t nId1 = triangles[(i - 1) * 3 + 1] + 1;
+    int64_t nId2 = triangles[(i - 1) * 3 + 2] + 1;
     fprintf(f, "%lld, %lld, %lld, %lld\n", (long long int)i, (long long int)nId0, (long long int)nId1, (long long int)nId2);
   }
   return err;
@@ -337,17 +339,17 @@ int32_t AbaqusSurfaceMeshWriter::writeFeatures(FILE* f)
       // Only print 15 Triangles per line
       if (lineCount == 15)
       {
-        fprintf (f, ", %lld\n", t);
+        fprintf (f, ", %lld\n", (long long int)(t));
         lineCount = 0;
       }
       else if(lineCount == 0) // First value on the line
       {
-        fprintf(f, "%lld", t);
+        fprintf(f, "%lld", (long long int)(t));
         lineCount++;
       }
       else
       {
-        fprintf(f, ", %lld", t);
+        fprintf(f, ", %lld", (long long int)(t));
         lineCount++;
       }
 

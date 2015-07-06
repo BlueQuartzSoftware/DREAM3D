@@ -41,7 +41,11 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
+
+#include "DREAM3DLib/FilterParameters/OutputPathFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
+
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
@@ -76,13 +80,13 @@ WriteStlFile::~WriteStlFile()
 void WriteStlFile::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FileSystemFilterParameter::New("Output STL Directory", "OutputStlDirectory", FilterParameterWidgetType::OutputPathWidget, getOutputStlDirectory(), FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("STL File Prefix", "OutputStlPrefix", FilterParameterWidgetType::StringWidget, getOutputStlPrefix(), FilterParameter::Parameter));
+  parameters.push_back(OutputPathFilterParameter::New("Output STL Directory", "OutputStlDirectory", getOutputStlDirectory(), FilterParameter::Parameter));
+  parameters.push_back(StringFilterParameter::New("STL File Prefix", "OutputStlPrefix", getOutputStlPrefix(), FilterParameter::Parameter));
   //QStringList linkedProps("SurfaceMeshFacePhasesArrayPath");
   //parameters.push_back(LinkedBooleanFilterParameter::New("Group Files by Ensemble", "GroupByPhase", getGroupByPhase(), linkedProps, FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
-  parameters.push_back(FilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, ""));
-  //parameters.push_back(FilterParameter::New("Face Phases", "SurfaceMeshFacePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFacePhasesArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray));
+  //parameters.push_back(DataArraySelectionFilterParameter::New("Face Phases", "SurfaceMeshFacePhasesArrayPath", getSurfaceMeshFacePhasesArrayPath(), FilterParameter::RequiredArray));
   setFilterParameters(parameters);
 }
 
@@ -264,13 +268,13 @@ void WriteStlFile::execute()
     for (int64_t t = 0; t < nTriangles; ++t)
     {
       // Get the true indices of the 3 nodes
-      int64_t nId0 = triangles[t*3];
-      int64_t nId1 = triangles[t*3+1];
-      int64_t nId2 = triangles[t*3+2];
+      int64_t nId0 = triangles[t * 3];
+      int64_t nId1 = triangles[t * 3 + 1];
+      int64_t nId2 = triangles[t * 3 + 2];
 
-      vert1[0] = static_cast<float>(nodes[nId0*3]);
-      vert1[1] = static_cast<float>(nodes[nId0*3+1]);
-      vert1[2] = static_cast<float>(nodes[nId0*3+2]);
+      vert1[0] = static_cast<float>(nodes[nId0 * 3]);
+      vert1[1] = static_cast<float>(nodes[nId0 * 3 + 1]);
+      vert1[2] = static_cast<float>(nodes[nId0 * 3 + 2]);
 
       if (m_SurfaceMeshFaceLabels[t * 2] == spin)
       {
@@ -289,13 +293,13 @@ void WriteStlFile::execute()
         continue; // We do not match either spin so move to the next triangle
       }
 
-      vert2[0] = static_cast<float>(nodes[nId1*3]);
-      vert2[1] = static_cast<float>(nodes[nId1*3+1]);
-      vert2[2] = static_cast<float>(nodes[nId1*3+2]);
+      vert2[0] = static_cast<float>(nodes[nId1 * 3]);
+      vert2[1] = static_cast<float>(nodes[nId1 * 3 + 1]);
+      vert2[2] = static_cast<float>(nodes[nId1 * 3 + 2]);
 
-      vert3[0] = static_cast<float>(nodes[nId2*3]);
-      vert3[1] = static_cast<float>(nodes[nId2*3+1]);
-      vert3[2] = static_cast<float>(nodes[nId2*3+2]);
+      vert3[0] = static_cast<float>(nodes[nId2 * 3]);
+      vert3[1] = static_cast<float>(nodes[nId2 * 3 + 1]);
+      vert3[2] = static_cast<float>(nodes[nId2 * 3 + 2]);
 
       // Compute the normal
       u[0] = vert2[0] - vert1[0];

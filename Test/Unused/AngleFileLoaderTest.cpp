@@ -48,7 +48,7 @@
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
- // QFile::remove(UnitTest::XXXX::OutputFile);
+// QFile::remove(UnitTest::XXXX::OutputFile);
 #endif
 }
 

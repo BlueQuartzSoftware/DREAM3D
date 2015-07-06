@@ -42,7 +42,9 @@
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
+
+#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
+
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "EbsdLib/H5EbsdVolumeInfo.h"
@@ -52,6 +54,7 @@
 #include "EbsdLib/TSL/H5AngVolumeReader.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
+#include "OrientationAnalysis/FilterParameters/ReadH5EbsdFilterParameter.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -106,12 +109,12 @@ ReadH5Ebsd::~ReadH5Ebsd()
 void ReadH5Ebsd::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FileSystemFilterParameter::New("Read H5Ebsd File", "", FilterParameterWidgetType::ReadH5EbsdWidget, "", FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Data Container", "DataContainerName", FilterParameterWidgetType::StringWidget, getDataContainerName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(ReadH5EbsdFilterParameter::New("Read H5Ebsd File", "", "", FilterParameter::Parameter));
+  parameters.push_back(StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellAttributeMatrixName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray));
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
-  parameters.push_back(FilterParameter::New("Cell Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellEnsembleAttributeMatrixName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(StringFilterParameter::New("Cell Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName(), FilterParameter::CreatedArray));
   setFilterParameters(parameters);
 }
 
@@ -434,7 +437,7 @@ void ReadH5Ebsd::preflight()
   setInPreflight(true);
   // Read the file to get the data arrays, size, meta data
   readVolumeInfo(); // This is specific to "readers" in general (I think), or at least those readers that need to show
-                    // a structure to the user to allow them to select only specific parts of the file to read
+  // a structure to the user to allow them to select only specific parts of the file to read
   // Now signal that any GUI widget is ready to read the information from this instance
   emit preflightAboutToExecute();
   // Let the GUI Widget (or anything else) update the parameters for this filter

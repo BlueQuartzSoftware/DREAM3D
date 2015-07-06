@@ -46,6 +46,9 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+
+#include "DREAM3DLib/FilterParameters/DataContainerSelectionFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
 
 /**
@@ -71,9 +74,9 @@ class UpdateVerticesImpl
 
       for (size_t i = start; i < end; i++)
       {
-        m_Nodes[3*i] -= m_Delta[0];
-        m_Nodes[3*i+1] -= m_Delta[1];
-        m_Nodes[3*i+2] -= m_Delta[2];
+        m_Nodes[3 * i] -= m_Delta[0];
+        m_Nodes[3 * i + 1] -= m_Delta[1];
+        m_Nodes[3 * i + 2] -= m_Delta[2];
       }
 
     }
@@ -120,16 +123,16 @@ void SetOriginResolutionImageGeom::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FilterParameter::New("Data Container Image Geometry to Modify", "DataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerName(), FilterParameter::RequiredArray));
+  parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container Image Geometry to Modify", "DataContainerName", getDataContainerName(), FilterParameter::RequiredArray));
 
   QStringList linkedProps("Origin");
   parameters.push_back(LinkedBooleanFilterParameter::New("Change Origin", "ChangeOrigin", getChangeOrigin(), linkedProps, FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget, getOrigin(), FilterParameter::Parameter, ""));
+  parameters.push_back(FloatVec3FilterParameter::New("Origin", "Origin", getOrigin(), FilterParameter::Parameter));
 
   linkedProps.clear();
   linkedProps << "Resolution";
   parameters.push_back(LinkedBooleanFilterParameter::New("Change Resolution", "ChangeResolution", getChangeResolution(), linkedProps, FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget, getResolution(), FilterParameter::Parameter, ""));
+  parameters.push_back(FloatVec3FilterParameter::New("Resolution", "Resolution", getResolution(), FilterParameter::Parameter));
 
   setFilterParameters(parameters);
 }

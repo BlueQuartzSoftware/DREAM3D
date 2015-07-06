@@ -44,34 +44,36 @@
 
 class SeparatorWidgetCodeGenerator : public FPCodeGenerator
 {
-public:
-  DREAM3D_SHARED_POINTERS(SeparatorWidgetCodeGenerator)
+  public:
+    DREAM3D_SHARED_POINTERS(SeparatorWidgetCodeGenerator)
 
     static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
-  {
-    Pointer sharedPtr(new SeparatorWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
-    return sharedPtr;
-  }
+    {
+      Pointer sharedPtr(new SeparatorWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
+      return sharedPtr;
+    }
 
-  virtual ~SeparatorWidgetCodeGenerator();
+    virtual ~SeparatorWidgetCodeGenerator();
 
-  virtual QString generateSetupFilterParameters();
+    virtual QString generateSetupFilterParameters();
 
-  virtual QString generateReadFilterParameters();
+    virtual QString generateReadFilterParameters();
 
-  virtual QString generateWriteFilterParameters();
+    virtual QString generateWriteFilterParameters();
 
-  virtual QString generateDataCheck();
+    virtual QString generateDataCheck();
 
-  virtual QString generateInitializationList();
+    virtual QString generateInitializationList();
 
-protected:
-  SeparatorWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
+    virtual QString generateCPPIncludes();
 
-private:
+  protected:
+    SeparatorWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
-  SeparatorWidgetCodeGenerator(const SeparatorWidgetCodeGenerator&); // Copy Constructor Not Implemented
-  void operator=(const SeparatorWidgetCodeGenerator&); // Operator '=' Not Implemented
+  private:
+
+    SeparatorWidgetCodeGenerator(const SeparatorWidgetCodeGenerator&); // Copy Constructor Not Implemented
+    void operator=(const SeparatorWidgetCodeGenerator&); // Operator '=' Not Implemented
 };
 
 #endif /* SeparatorWidgetCodeGenerator_H_ */

@@ -40,7 +40,7 @@
 //
 // -----------------------------------------------------------------------------
 FourthOrderPolynomialWidgetCodeGenerator::FourthOrderPolynomialWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue) :
-FPCodeGenerator(humanLabel, propertyName, category, initValue)
+  FPCodeGenerator(humanLabel, propertyName, category, initValue)
 {
 
 }
@@ -56,7 +56,7 @@ FourthOrderPolynomialWidgetCodeGenerator::~FourthOrderPolynomialWidgetCodeGenera
 // -----------------------------------------------------------------------------
 QString FourthOrderPolynomialWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::FourthOrderPolynomialWidget, get" + getPropertyName() + "(), " + getCategory() + "));";
+  return "  parameters.push_back(FourthOrderPolynomialFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", get" + getPropertyName() + "(), " + getCategory() + "));";
 }
 
 // -----------------------------------------------------------------------------
@@ -86,4 +86,12 @@ QString FourthOrderPolynomialWidgetCodeGenerator::generateFilterParameters()
   ss << "    Q_PROPERTY(Float4thOrderPoly_t " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString FourthOrderPolynomialWidgetCodeGenerator::generateHIncludes()
+{
+  return "#include \"DREAM3DLib/FilterParameters/FourthOrderPolynomialFilterParameter.h\"";
 }

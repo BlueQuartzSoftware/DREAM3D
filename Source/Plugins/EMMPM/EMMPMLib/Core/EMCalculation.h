@@ -58,7 +58,7 @@
  */
 class EMMPMLib_EXPORT EMCalculation : public Observable
 {
-	Q_OBJECT;
+    Q_OBJECT;
 
   public:
     DREAM3D_SHARED_POINTERS(EMCalculation)
@@ -69,14 +69,14 @@ class EMMPMLib_EXPORT EMCalculation : public Observable
 
     DREAM3D_INSTANCE_PROPERTY(EMMPM_Data::Pointer, Data);
     DREAM3D_INSTANCE_PROPERTY(StatsDelegate*, StatsDelegate);
-	  DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
-	  DREAM3D_INSTANCE_PROPERTY(QString, MessagePrefix)
+    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
+    DREAM3D_INSTANCE_PROPERTY(QString, MessagePrefix)
 
-	/**
-	* @brief This returns a string that is displayed in the GUI. It should be readable
-	* and understandable by humans.
-	*/
-	virtual const QString getHumanLabel();
+    /**
+    * @brief This returns a string that is displayed in the GUI. It should be readable
+    * and understandable by humans.
+    */
+    virtual const QString getHumanLabel();
 
     /**
      * @fn void EMMPM_CurvatureEMLoops(EMMPM_Data* data, EMMPM_CallbackFunctions* callbacks)

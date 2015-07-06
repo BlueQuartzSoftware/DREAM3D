@@ -39,6 +39,12 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+
+#include "DREAM3DLib/FilterParameters/SecondOrderPolynomialFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/ThirdOrderPolynomialFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/FourthOrderPolynomialFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/LinkedChoicesFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
@@ -62,16 +68,22 @@ WarpRegularGrid::WarpRegularGrid() :
   m_SecondOrderBCoeff.c10 = 1.0f, m_SecondOrderBCoeff.c01 = 1.0f, m_SecondOrderBCoeff.c00 = 0.0f;
 
   m_ThirdOrderACoeff.c30 = 0.0f, m_ThirdOrderACoeff.c03 = 0.0f, m_ThirdOrderACoeff.c21 = 0.0f, m_ThirdOrderACoeff.c12 = 0.0f, m_ThirdOrderACoeff.c20 = 0.0f;
-  m_ThirdOrderACoeff.c02 = 0.0f, m_ThirdOrderACoeff.c11 = 0.0f, m_ThirdOrderACoeff.c10 = 1.0f; m_ThirdOrderACoeff.c01 = 1.0f, m_ThirdOrderACoeff.c00 = 0.0f;
+  m_ThirdOrderACoeff.c02 = 0.0f, m_ThirdOrderACoeff.c11 = 0.0f, m_ThirdOrderACoeff.c10 = 1.0f;
+  m_ThirdOrderACoeff.c01 = 1.0f, m_ThirdOrderACoeff.c00 = 0.0f;
   m_ThirdOrderBCoeff.c30 = 0.0f, m_ThirdOrderBCoeff.c03 = 0.0f, m_ThirdOrderBCoeff.c21 = 0.0f, m_ThirdOrderBCoeff.c12 = 0.0f, m_ThirdOrderBCoeff.c20 = 0.0f;
-  m_ThirdOrderBCoeff.c02 = 0.0f, m_ThirdOrderBCoeff.c11 = 0.0f, m_ThirdOrderBCoeff.c10 = 1.0f; m_ThirdOrderBCoeff.c01 = 1.0f, m_ThirdOrderBCoeff.c00 = 0.0f;
+  m_ThirdOrderBCoeff.c02 = 0.0f, m_ThirdOrderBCoeff.c11 = 0.0f, m_ThirdOrderBCoeff.c10 = 1.0f;
+  m_ThirdOrderBCoeff.c01 = 1.0f, m_ThirdOrderBCoeff.c00 = 0.0f;
 
-  m_FourthOrderACoeff.c40 = 0.0f, m_FourthOrderACoeff.c04 = 0.0f, m_FourthOrderACoeff.c31 = 0.0f; m_FourthOrderACoeff.c13 = 0.0f, m_FourthOrderACoeff.c22 = 0.0f;
+  m_FourthOrderACoeff.c40 = 0.0f, m_FourthOrderACoeff.c04 = 0.0f, m_FourthOrderACoeff.c31 = 0.0f;
+  m_FourthOrderACoeff.c13 = 0.0f, m_FourthOrderACoeff.c22 = 0.0f;
   m_FourthOrderACoeff.c30 = 0.0f, m_FourthOrderACoeff.c03 = 0.0f, m_FourthOrderACoeff.c21 = 0.0f, m_FourthOrderACoeff.c12 = 0.0f, m_FourthOrderACoeff.c20 = 0.0f;
-  m_FourthOrderACoeff.c02 = 0.0f, m_FourthOrderACoeff.c11 = 0.0f, m_FourthOrderACoeff.c10 = 1.0f; m_FourthOrderACoeff.c01 = 1.0f, m_FourthOrderACoeff.c00 = 0.0f;
-  m_FourthOrderBCoeff.c40 = 0.0f, m_FourthOrderBCoeff.c04 = 0.0f, m_FourthOrderBCoeff.c31 = 0.0f; m_FourthOrderBCoeff.c13 = 0.0f, m_FourthOrderBCoeff.c22 = 0.0f;
+  m_FourthOrderACoeff.c02 = 0.0f, m_FourthOrderACoeff.c11 = 0.0f, m_FourthOrderACoeff.c10 = 1.0f;
+  m_FourthOrderACoeff.c01 = 1.0f, m_FourthOrderACoeff.c00 = 0.0f;
+  m_FourthOrderBCoeff.c40 = 0.0f, m_FourthOrderBCoeff.c04 = 0.0f, m_FourthOrderBCoeff.c31 = 0.0f;
+  m_FourthOrderBCoeff.c13 = 0.0f, m_FourthOrderBCoeff.c22 = 0.0f;
   m_FourthOrderBCoeff.c30 = 0.0f, m_FourthOrderBCoeff.c03 = 0.0f, m_FourthOrderBCoeff.c21 = 0.0f, m_FourthOrderBCoeff.c12 = 0.0f, m_FourthOrderBCoeff.c20 = 0.0f;
-  m_FourthOrderBCoeff.c02 = 0.0f, m_FourthOrderBCoeff.c11 = 0.0f, m_FourthOrderBCoeff.c10 = 1.0f; m_FourthOrderBCoeff.c01 = 1.0f, m_FourthOrderBCoeff.c00 = 0.0f;
+  m_FourthOrderBCoeff.c02 = 0.0f, m_FourthOrderBCoeff.c11 = 0.0f, m_FourthOrderBCoeff.c10 = 1.0f;
+  m_FourthOrderBCoeff.c01 = 1.0f, m_FourthOrderBCoeff.c00 = 0.0f;
 
   setupFilterParameters();
 }
@@ -94,7 +106,7 @@ void WarpRegularGrid::setupFilterParameters()
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
     parameter->setHumanLabel("Polynomial Order");
     parameter->setPropertyName("PolyOrder");
-    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+
     QVector<QString> choices;
     choices.push_back("2nd");
     choices.push_back("3rd");
@@ -108,18 +120,18 @@ void WarpRegularGrid::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(FilterParameter::New("Second Order A Coefficients", "SecondOrderACoeff", FilterParameterWidgetType::SecondOrderPolynomialWidget, getSecondOrderACoeff(), FilterParameter::Parameter, "", 0));
-  parameters.push_back(FilterParameter::New("Second Order B Coefficients", "SecondOrderBCoeff", FilterParameterWidgetType::SecondOrderPolynomialWidget, getSecondOrderBCoeff(), FilterParameter::Parameter, "", 0));
-  parameters.push_back(FilterParameter::New("Third Order A Coefficients", "ThirdOrderACoeff", FilterParameterWidgetType::ThirdOrderPolynomialWidget, getThirdOrderACoeff(), FilterParameter::Parameter, "", 1));
-  parameters.push_back(FilterParameter::New("Third Order B Coefficients", "ThirdOrderBCoeff", FilterParameterWidgetType::ThirdOrderPolynomialWidget, getThirdOrderBCoeff(), FilterParameter::Parameter, "", 1));
-  parameters.push_back(FilterParameter::New("Fourth Order A Coefficients", "FourthOrderACoeff", FilterParameterWidgetType::FourthOrderPolynomialWidget, getFourthOrderACoeff(), FilterParameter::Parameter, "", 2));
-  parameters.push_back(FilterParameter::New("Fourth Order B Coefficients", "FourthOrderBCoeff", FilterParameterWidgetType::FourthOrderPolynomialWidget, getFourthOrderBCoeff(), FilterParameter::Parameter, "", 2));
+  parameters.push_back(SecondOrderPolynomialFilterParameter::New("Second Order A Coefficients", "SecondOrderACoeff", getSecondOrderACoeff(), FilterParameter::Parameter, 0));
+  parameters.push_back(SecondOrderPolynomialFilterParameter::New("Second Order B Coefficients", "SecondOrderBCoeff", getSecondOrderBCoeff(), FilterParameter::Parameter, 0));
+  parameters.push_back(ThirdOrderPolynomialFilterParameter::New("Third Order A Coefficients", "ThirdOrderACoeff", getThirdOrderACoeff(), FilterParameter::Parameter, 1));
+  parameters.push_back(ThirdOrderPolynomialFilterParameter::New("Third Order B Coefficients", "ThirdOrderBCoeff", getThirdOrderBCoeff(), FilterParameter::Parameter, 1));
+  parameters.push_back(FourthOrderPolynomialFilterParameter::New("Fourth Order A Coefficients", "FourthOrderACoeff", getFourthOrderACoeff(), FilterParameter::Parameter, 2));
+  parameters.push_back(FourthOrderPolynomialFilterParameter::New("Fourth Order B Coefficients", "FourthOrderBCoeff", getFourthOrderBCoeff(), FilterParameter::Parameter, 2));
   QStringList linkedProps;
   linkedProps << "NewDataContainerName";
   parameters.push_back(LinkedBooleanFilterParameter::New("Save as New Data Container", "SaveAsNewDataContainer", getSaveAsNewDataContainer(), linkedProps, FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Data Container", "NewDataContainerName", FilterParameterWidgetType::StringWidget, getNewDataContainerName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Data Container", "NewDataContainerName", getNewDataContainerName(), FilterParameter::CreatedArray));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
-  parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellAttributeMatrixPath(), FilterParameter::RequiredArray));
+  parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", getCellAttributeMatrixPath(), FilterParameter::RequiredArray));
   setFilterParameters(parameters);
 }
 
@@ -194,12 +206,12 @@ void WarpRegularGrid::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WarpRegularGrid::determine_warped_coordinates(float x, float y, float &newX, float &newY)
+void WarpRegularGrid::determine_warped_coordinates(float x, float y, float& newX, float& newY)
 {
   if(m_PolyOrder == 0)
   {
-    newX = x*x*m_SecondOrderACoeff.c20 + y*y*m_SecondOrderACoeff.c02 + x*y*m_SecondOrderACoeff.c11 + x*m_SecondOrderACoeff.c10 + y*m_SecondOrderACoeff.c01 + m_SecondOrderACoeff.c00;
-    newY = x*x*m_SecondOrderBCoeff.c20 + y*y*m_SecondOrderBCoeff.c02 + x*y*m_SecondOrderBCoeff.c11 + x*m_SecondOrderBCoeff.c10 + y*m_SecondOrderBCoeff.c01 + m_SecondOrderBCoeff.c00;
+    newX = x * x * m_SecondOrderACoeff.c20 + y * y * m_SecondOrderACoeff.c02 + x * y * m_SecondOrderACoeff.c11 + x * m_SecondOrderACoeff.c10 + y * m_SecondOrderACoeff.c01 + m_SecondOrderACoeff.c00;
+    newY = x * x * m_SecondOrderBCoeff.c20 + y * y * m_SecondOrderBCoeff.c02 + x * y * m_SecondOrderBCoeff.c11 + x * m_SecondOrderBCoeff.c10 + y * m_SecondOrderBCoeff.c01 + m_SecondOrderBCoeff.c00;
   }
   if(m_PolyOrder == 1)
   {
@@ -255,14 +267,14 @@ void WarpRegularGrid::execute()
         index = (i * dims[0] * dims[1]) + (j * dims[0]) + k;
 
         determine_warped_coordinates(x, y, newX, newY);
-        col = newX/res[0];
-        row = newY/res[1];
+        col = newX / res[0];
+        row = newY / res[1];
         plane = i;
 
         index_old = (plane * dims[0] * dims[1]) + (row * dims[0]) + col;
         newindicies[index] = index_old;
-        if (col > 0 && col < dims[0] && row > 0 && row < dims[1]) goodPoint[index] = true;
-        else goodPoint[index] = false;
+        if (col > 0 && col < dims[0] && row > 0 && row < dims[1]) { goodPoint[index] = true; }
+        else { goodPoint[index] = false; }
       }
     }
   }

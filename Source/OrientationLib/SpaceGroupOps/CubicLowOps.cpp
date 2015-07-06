@@ -242,7 +242,7 @@ float CubicLowOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
   QuaternionMathF::Multiply(q1, q2inv, qr);
   for (int i = 0; i < numsym; i++)
   {
-	  QuaternionMathF::Multiply(quatsym[i], qr, qc);
+    QuaternionMathF::Multiply(quatsym[i], qr, qc);
     if (qc.w < -1)
     {
       qc.w = -1;
@@ -315,7 +315,7 @@ void CubicLowOps::getMatSymOp(int i, float g[3][3])
 FOrientArrayType CubicLowOps::getODFFZRod(FOrientArrayType rod)
 {
   int numsym = 12;
- return  _calcRodNearestOrigin(CubicLowRodSym, numsym, rod);
+  return  _calcRodNearestOrigin(CubicLowRodSym, numsym, rod);
 }
 
 // -----------------------------------------------------------------------------
@@ -330,7 +330,8 @@ FOrientArrayType CubicLowOps::getMDFFZRod(FOrientArrayType rod)
   FOrientArrayType ax(4, 0.0f);
   OrientationTransforms<FOrientArrayType, float>::ro2ax(rod, ax);
 
-  n1 = ax[0]; n2 = ax[1], n3 = ax[2], w = ax[3];
+  n1 = ax[0];
+  n2 = ax[1], n3 = ax[2], w = ax[3];
 
   FZw = w;
   n1 = fabs(n1);
@@ -831,7 +832,7 @@ DREAM3D::Rgb CubicLowOps::generateIPFColor(double phi1, double phi, double phi2,
   for (int j = 0; j < 12; j++)
   {
     co.getQuatSymOp(j, q2);
-	  QuaternionMathF::Multiply(q2, q1, qc);
+    QuaternionMathF::Multiply(q2, q1, qc);
 
     qu.fromQuaternion(qc);
     OrientationTransforms<FOrientArrayType, float>::qu2om(qu, om);
@@ -1082,7 +1083,9 @@ DREAM3D::Rgb CubicLowOps::generateMisorientationColor(const QuatF& q, const Quat
   z = n3 * k;
   FOrientArrayType rod(x, y, z);
   rod = getMDFFZRod(rod);
-  x = rod[0]; y = rod[1]; z = rod[2];
+  x = rod[0];
+  y = rod[1];
+  z = rod[2];
 
   //eq c7.2
   k = atan2(y, x);

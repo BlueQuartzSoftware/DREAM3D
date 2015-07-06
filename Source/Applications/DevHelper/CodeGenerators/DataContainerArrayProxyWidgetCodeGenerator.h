@@ -44,34 +44,34 @@
 
 class DataContainerArrayProxyWidgetCodeGenerator : public FPCodeGenerator
 {
-public:
-  DREAM3D_SHARED_POINTERS(DataContainerArrayProxyWidgetCodeGenerator)
+  public:
+    DREAM3D_SHARED_POINTERS(DataContainerArrayProxyWidgetCodeGenerator)
 
     static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
-  {
-    Pointer sharedPtr(new DataContainerArrayProxyWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
-    return sharedPtr;
-  }
+    {
+      Pointer sharedPtr(new DataContainerArrayProxyWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
+      return sharedPtr;
+    }
 
-  virtual ~DataContainerArrayProxyWidgetCodeGenerator();
+    virtual ~DataContainerArrayProxyWidgetCodeGenerator();
 
-  virtual QString generateSetupFilterParameters();
+    virtual QString generateSetupFilterParameters();
 
-  virtual QString generateReadFilterParameters();
+    virtual QString generateReadFilterParameters();
 
-  virtual QString generateDataCheck();
+    virtual QString generateDataCheck();
 
-  virtual QString generateFilterParameters();
+    virtual QString generateFilterParameters();
 
-  virtual QString generateCPPIncludes();
+    virtual QString generateCPPIncludes();
 
-protected:
-  DataContainerArrayProxyWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
+  protected:
+    DataContainerArrayProxyWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
-private:
+  private:
 
-  DataContainerArrayProxyWidgetCodeGenerator(const DataContainerArrayProxyWidgetCodeGenerator&); // Copy Constructor Not Implemented
-  void operator=(const DataContainerArrayProxyWidgetCodeGenerator&); // Operator '=' Not Implemented
+    DataContainerArrayProxyWidgetCodeGenerator(const DataContainerArrayProxyWidgetCodeGenerator&); // Copy Constructor Not Implemented
+    void operator=(const DataContainerArrayProxyWidgetCodeGenerator&); // Operator '=' Not Implemented
 };
 
 #endif /* DataContainerArrayProxyWidgetCodeGenerator_H_ */

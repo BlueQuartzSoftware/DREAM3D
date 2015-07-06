@@ -62,7 +62,7 @@ DataContainer::~DataContainer()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataContainer::Pointer DataContainer::createNewDataContainer(const QString &name)
+DataContainer::Pointer DataContainer::createNewDataContainer(const QString& name)
 {
   DataContainer::Pointer p = DataContainer::New(name);
   return p;
@@ -103,7 +103,7 @@ void DataContainer::ReadDataContainerStructure(hid_t dcArrayGroupId, DataContain
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainer::setName(const QString &name)
+void DataContainer::setName(const QString& name)
 {
   m_Name = name;
 }
@@ -583,7 +583,7 @@ int DataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainer::writeXdmfFooter(QTextStream &xdmf)
+void DataContainer::writeXdmfFooter(QTextStream& xdmf)
 {
   xdmf << "  </Grid>" << "\n";
   xdmf << "  <!-- *************** END OF " << getName() << " *************** -->" << "\n";
@@ -709,7 +709,8 @@ QString DataContainer::getInfoString(DREAM3D::InfoStringFormat format)
     ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Name:</th><td>" << getName() << "</td></tr>";
     ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Attribute Matrix Count:</th><td>" << getNumAttributeMatrices() << "</td></tr>";
     ss << "<tr><td></td><td></td></tr>";
-    if(getGeometry().get() != NULL) {
+    if(getGeometry().get() != NULL)
+    {
       ss << getGeometry()->getInfoString(DREAM3D::HtmlFormat);
     }
 

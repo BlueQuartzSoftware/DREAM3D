@@ -36,6 +36,8 @@
 #include "ArraySelectionExample.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/DataContainerArrayProxyFilterParameter.h"
+#include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
 
 
 
@@ -63,8 +65,9 @@ ArraySelectionExample::~ArraySelectionExample()
 void ArraySelectionExample::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
+  DataContainerArrayProxy proxy;
   /* To select arrays */
-  parameters.push_back(FilterParameter::New("Array to Select", "DataContainerArrayProxy", FilterParameterWidgetType::DataContainerArrayProxyWidget, "", FilterParameter::Parameter));
+  parameters.push_back(DataContainerArrayProxyFilterParameter::New("Array to Select", "DataContainerArrayProxy", "", proxy, Qt::Checked, FilterParameter::Parameter));
 
 
   setFilterParameters(parameters);

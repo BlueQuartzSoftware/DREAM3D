@@ -45,6 +45,7 @@
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/FilterParameters/FourthOrderPolynomialFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
@@ -91,6 +92,8 @@ class DREAM3DWidgetsLib_EXPORT FourthOrderPolynomialWidget : public FilterParame
   private:
 
     bool m_DidCausePreflight;
+
+    FourthOrderPolynomialFilterParameter* m_FilterParameter;
 
     //helper functions for complex inter dependancies
     // void vbar(QLineEdit* obj);

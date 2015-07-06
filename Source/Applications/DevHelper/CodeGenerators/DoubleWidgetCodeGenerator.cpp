@@ -40,7 +40,7 @@
 //
 // -----------------------------------------------------------------------------
 DoubleWidgetCodeGenerator::DoubleWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue) :
-FPCodeGenerator(humanLabel, propertyName, category, initValue)
+  FPCodeGenerator(humanLabel, propertyName, category, initValue)
 {
 
 }
@@ -56,7 +56,7 @@ DoubleWidgetCodeGenerator::~DoubleWidgetCodeGenerator()
 // -----------------------------------------------------------------------------
 QString DoubleWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::DoubleWidget, get" + getPropertyName() + "(), " + getCategory() + "));";
+  return "  parameters.push_back(DoubleFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", get" + getPropertyName() + "(), " + getCategory() + "));";
 }
 
 // -----------------------------------------------------------------------------
@@ -78,4 +78,12 @@ QString DoubleWidgetCodeGenerator::generateFilterParameters()
   ss << "    Q_PROPERTY(double " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString DoubleWidgetCodeGenerator::generateCPPIncludes()
+{
+  return "#include \"DREAM3DLib/FilterParameters/DoubleFilterParameter.h\"";
 }

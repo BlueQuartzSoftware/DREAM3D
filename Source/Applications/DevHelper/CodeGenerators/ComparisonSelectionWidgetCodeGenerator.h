@@ -44,36 +44,36 @@
 
 class ComparisonSelectionWidgetCodeGenerator : public FPCodeGenerator
 {
-public:
-  DREAM3D_SHARED_POINTERS(ComparisonSelectionWidgetCodeGenerator)
+  public:
+    DREAM3D_SHARED_POINTERS(ComparisonSelectionWidgetCodeGenerator)
 
     static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
-  {
-    Pointer sharedPtr(new ComparisonSelectionWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
-    return sharedPtr;
-  }
+    {
+      Pointer sharedPtr(new ComparisonSelectionWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
+      return sharedPtr;
+    }
 
-  virtual ~ComparisonSelectionWidgetCodeGenerator();
+    virtual ~ComparisonSelectionWidgetCodeGenerator();
 
-  virtual QString generateSetupFilterParameters();
+    virtual QString generateSetupFilterParameters();
 
-  virtual QString generateReadFilterParameters();
+    virtual QString generateReadFilterParameters();
 
-  virtual QString generateDataCheck();
+    virtual QString generateDataCheck();
 
-  virtual QString generateFilterParameters();
+    virtual QString generateFilterParameters();
 
-  virtual QString generateHIncludes();
+    virtual QString generateHIncludes();
 
-  virtual QString generateCPPIncludes();
+    virtual QString generateCPPIncludes();
 
-protected:
-  ComparisonSelectionWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
+  protected:
+    ComparisonSelectionWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
-private:
+  private:
 
-  ComparisonSelectionWidgetCodeGenerator(const ComparisonSelectionWidgetCodeGenerator&); // Copy Constructor Not Implemented
-  void operator=(const ComparisonSelectionWidgetCodeGenerator&); // Operator '=' Not Implemented
+    ComparisonSelectionWidgetCodeGenerator(const ComparisonSelectionWidgetCodeGenerator&); // Copy Constructor Not Implemented
+    void operator=(const ComparisonSelectionWidgetCodeGenerator&); // Operator '=' Not Implemented
 };
 
 #endif /* ComparisonSelectionWidgetCodeGenerator_H_ */

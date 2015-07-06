@@ -303,7 +303,8 @@ FOrientArrayType HexagonalOps::getMDFFZRod(FOrientArrayType rod)
 
   FOrientArrayType ax(4, 0.0f);
   OrientationTransforms<FOrientArrayType, float>::ro2ax(rod, ax);
-  n1 = ax[0]; n2 = ax[1], n3 = ax[2], w = ax[3];
+  n1 = ax[0];
+  n2 = ax[1], n3 = ax[2], w = ax[3];
 
   float denom = sqrt((n1 * n1 + n2 * n2 + n3 * n3));
   n1 = n1 / denom;
@@ -1321,7 +1322,7 @@ DREAM3D::Rgb HexagonalOps::generateIPFColor(double phi1, double phi, double phi2
   for (int j = 0; j < 12; j++)
   {
     getQuatSymOp(j, q2);
-	  QuaternionMathF::Multiply(q2, q1, qc);
+    QuaternionMathF::Multiply(q2, q1, qc);
 
     qu.fromQuaternion(qc);
     OrientationTransforms<FOrientArrayType, float>::qu2om(qu, om);
@@ -1576,7 +1577,9 @@ DREAM3D::Rgb HexagonalOps::generateMisorientationColor(const QuatF& q, const Qua
 
   FOrientArrayType rod(xo, yo, zo);
   rod = getMDFFZRod(rod);
-  xo = rod[0]; yo = rod[1]; zo = rod[2];
+  xo = rod[0];
+  yo = rod[1];
+  zo = rod[2];
 
   //eq c5.2
   k = atan2(yo, xo);

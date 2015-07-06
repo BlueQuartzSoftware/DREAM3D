@@ -75,7 +75,7 @@ class PMFileGenerator : public PMDirGenerator
 
     virtual QString generateFileContents(QString replaceStr = "");
 
-  QString createReplacementString(FileType type, QSet<QString> names);
+    QString createReplacementString(FileType type, QSet<QString> names);
 
   public slots:
     virtual void generateOutput();
@@ -83,17 +83,17 @@ class PMFileGenerator : public PMDirGenerator
   protected slots:
     virtual void pluginNameChanged (const QString& plugname);
     virtual void outputDirChanged (const QString& outputDir);
-  virtual void generateOutputWithFilterNames(QSet<QString> names);
+    virtual void generateOutputWithFilterNames(QSet<QString> names);
 
-protected:
-  QString setupFPContents;
-  QString fpContents;
-  QString readFPContents;
-  QString writeFPContents;
-  QString dataCheckContents;
-  QString initListContents;
-  QString filterHIncludesContents;
-  QString filterCPPIncludesContents;
+  protected:
+    QString setupFPContents;
+    QString fpContents;
+    QString readFPContents;
+    QString writeFPContents;
+    QString dataCheckContents;
+    QString initListContents;
+    QString filterHIncludesContents;
+    QString filterCPPIncludesContents;
 
   private:
     QString m_FileName;

@@ -109,7 +109,7 @@ void WriteTestFile(const QString& filePath, const QString& groups)
 // -----------------------------------------------------------------------------
 int TestEnsembleInfoWriter()
 {
-QString groups = "[EnsembleInfo]\nNumber_Phases = 2\n\n\
+  QString groups = "[EnsembleInfo]\nNumber_Phases = 2\n\n\
 [1]\nCrystalStructure = Cubic_High\nPhaseType = PrimaryPhase\n\n\
 [2]\nCrystalStructure = Hexagonal_High\nPhaseType = MatrixPhase\n"; // the correct groups and keys for writing the .ini file
 
@@ -298,7 +298,7 @@ int TestEnsembleInfoReader()
     var.setValue(UnitTest::EnsembleInfoReaderTest::TestFileIni);
     propWasSet = filter->setProperty("InputFile", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-      filter->execute();
+    filter->execute();
     err = filter->getErrorCondition();
     DREAM3D_REQUIRE_EQUAL(err, -10006);
 

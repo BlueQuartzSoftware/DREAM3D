@@ -40,6 +40,10 @@
 #include "DREAM3DLib/Math/GeometryMath.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+
+#include "DREAM3DLib/FilterParameters/IntFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
@@ -76,14 +80,14 @@ RegularGridSampleSurfaceMesh::~RegularGridSampleSurfaceMesh()
 void RegularGridSampleSurfaceMesh::setupFilterParameters()
 {
   FilterParameterVector parameters = getFilterParameters();
-  parameters.push_back(FilterParameter::New("X Points", "XPoints", FilterParameterWidgetType::IntWidget, getXPoints(), FilterParameter::Parameter, "Column"));
-  parameters.push_back(FilterParameter::New("Y Points", "YPoints", FilterParameterWidgetType::IntWidget, getYPoints(), FilterParameter::Parameter, "Row"));
-  parameters.push_back(FilterParameter::New("Z Points", "ZPoints", FilterParameterWidgetType::IntWidget, getZPoints(), FilterParameter::Parameter, "Plane"));
-  parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget, getResolution(), FilterParameter::Parameter, ""));
-  parameters.push_back(FilterParameter::New("Data Container", "DataContainerName", FilterParameterWidgetType::StringWidget, getDataContainerName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(IntFilterParameter::New("X Points (Column)", "XPoints", getXPoints(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Y Points (Row)", "YPoints", getYPoints(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Z Points (Plane)", "ZPoints", getZPoints(), FilterParameter::Parameter));
+  parameters.push_back(FloatVec3FilterParameter::New("Resolution", "Resolution", getResolution(), FilterParameter::Parameter));
+  parameters.push_back(StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellAttributeMatrixName(), FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("Feature Ids", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget, getFeatureIdsArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Feature Ids", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray));
   setFilterParameters(parameters);
 }
 

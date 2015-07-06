@@ -97,7 +97,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     /**
     * @brief Creates a new data container
     */
-    virtual Pointer createNewDataContainer(const QString &name);
+    virtual Pointer createNewDataContainer(const QString& name);
 
     /**
      * @brief ReadDataContainerStructure
@@ -110,7 +110,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     /**
     * @brief Sets the name of the data container
     */
-    virtual void setName(const QString &name);
+    virtual void setName(const QString& name);
 
     /**
     * @brief Gets the name of the data container

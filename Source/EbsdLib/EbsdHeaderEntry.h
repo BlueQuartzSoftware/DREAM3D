@@ -65,56 +65,56 @@
     SuperClass##Type sharedPtr(object); \
     return sharedPtr; \
   }\
-   
 
-/**
- * @class EbsdHeaderEntry EbsdHeaderEntry.h EbsdLib/EbsdHeaderEntry.h
- * @brief  This class defines the interface that subclasses need to implement in
- * order to have a conforming object.
- *
- * @date Aug 8, 2011
- * @version 1.0
- */
-class EbsdLib_EXPORT EbsdHeaderEntry
-{
-  public:
-    EBSD_SHARED_POINTERS(EbsdHeaderEntry)
-    EBSD_TYPE_MACRO(EbsdHeaderEntry)
 
-    virtual ~EbsdHeaderEntry() {}
+  /**
+   * @class EbsdHeaderEntry EbsdHeaderEntry.h EbsdLib/EbsdHeaderEntry.h
+   * @brief  This class defines the interface that subclasses need to implement in
+   * order to have a conforming object.
+   *
+   * @date Aug 8, 2011
+   * @version 1.0
+   */
+  class EbsdLib_EXPORT EbsdHeaderEntry
+  {
+    public:
+      EBSD_SHARED_POINTERS(EbsdHeaderEntry)
+      EBSD_TYPE_MACRO(EbsdHeaderEntry)
 
-    /**
-     * @brief Returns the key of the header entry
-     */
-    virtual QString getKey() = 0;
+      virtual ~EbsdHeaderEntry() {}
+
+      /**
+       * @brief Returns the key of the header entry
+       */
+      virtual QString getKey() = 0;
 
 #if EbsdLib_HDF5_SUPPORT
-    virtual QString getHDFType() = 0;
+      virtual QString getHDFType() = 0;
 #endif
 
-    /**
-     * @brief Parses the value for a given header key
-     * @param value The string as it was parsed from the file
-     * @param start The starting position to look for the value
-     * @param length The ending position to look for the value
-     */
-    virtual void parseValue(QByteArray& value) = 0;
+      /**
+       * @brief Parses the value for a given header key
+       * @param value The string as it was parsed from the file
+       * @param start The starting position to look for the value
+       * @param length The ending position to look for the value
+       */
+      virtual void parseValue(QByteArray& value) = 0;
 
-    /**
-     * @brief prints out the key and value for this header entry
-     * @param out The output stream to printe the key/value pair
-     */
-    virtual void print(std::ostream& out) = 0;
+      /**
+       * @brief prints out the key and value for this header entry
+       * @param out The output stream to printe the key/value pair
+       */
+      virtual void print(std::ostream& out) = 0;
 
-  protected:
-    EbsdHeaderEntry() {}
+    protected:
+      EbsdHeaderEntry() {}
 
 
-  private:
-    EbsdHeaderEntry(const EbsdHeaderEntry&); // Copy Constructor Not Implemented
-    void operator=(const EbsdHeaderEntry&); // Operator '=' Not Implemented
+    private:
+      EbsdHeaderEntry(const EbsdHeaderEntry&); // Copy Constructor Not Implemented
+      void operator=(const EbsdHeaderEntry&); // Operator '=' Not Implemented
 
-};
+  };
 
 
 

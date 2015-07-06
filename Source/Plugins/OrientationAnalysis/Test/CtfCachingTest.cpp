@@ -118,10 +118,10 @@ int TestCtfReader()
     if (NULL != filterFactory.get())
     {
       // If we get this far, the Factory is good so creating the filter should not fail unless something has gone horribly wrong in which case the system is going to come down quickly after this.
-      ctfReader = filterFactory->create();		// Create the reader for the first time
+      ctfReader = filterFactory->create();    // Create the reader for the first time
       bool propWasSet = ctfReader->setProperty("InputFile", CopiedFile1);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-        ctfReader->setDataContainerArray(dca);
+      ctfReader->setDataContainerArray(dca);
       ctfReader->preflight();
       int err = ctfReader->getErrorCondition();
       DREAM3D_REQUIRE_EQUAL(err, 0);
@@ -149,7 +149,7 @@ int TestCtfReader()
     {
       bool propWasSet = ctfReader->setProperty("InputFile", CopiedFile1);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-        ctfReader->setDataContainerArray(dca);
+      ctfReader->setDataContainerArray(dca);
       ctfReader->preflight();
       int err = ctfReader->getErrorCondition();
       DREAM3D_REQUIRE_EQUAL(err, 0);
@@ -177,7 +177,7 @@ int TestCtfReader()
     {
       bool propWasSet = ctfReader->setProperty("InputFile", CopiedFile2);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-        ctfReader->setDataContainerArray(dca);
+      ctfReader->setDataContainerArray(dca);
       ctfReader->preflight();
       int err = ctfReader->getErrorCondition();
       DREAM3D_REQUIRE_EQUAL(err, 0);
@@ -197,8 +197,8 @@ int TestCtfReader()
     DREAM3D_REQUIRE_EQUAL(prop, true)
   }
 
-    // Force the thread to sleep for 1 second for the next test
-    QThread::sleep(1);
+  // Force the thread to sleep for 1 second for the next test
+  QThread::sleep(1);
 
   // Reading the same file, but the contents changed outside the program
   {
@@ -218,7 +218,7 @@ int TestCtfReader()
     {
       bool propWasSet = ctfReader->setProperty("InputFile", CopiedFile2);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-        ctfReader->setDataContainerArray(dca);
+      ctfReader->setDataContainerArray(dca);
       ctfReader->preflight();
       int err = ctfReader->getErrorCondition();
       DREAM3D_REQUIRE_EQUAL(err, 0);
@@ -250,7 +250,7 @@ int TestCtfReader()
       {
         bool propWasSet = ctfReader->setProperty("InputFile", CopiedFile2);
         DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-          ctfReader->setDataContainerArray(dca);
+        ctfReader->setDataContainerArray(dca);
         ctfReader->preflight();
         int err = ctfReader->getErrorCondition();
         DREAM3D_REQUIRE_EQUAL(err, 0);
@@ -300,12 +300,12 @@ int main(int argc, char** argv)
 
   int err = EXIT_SUCCESS;
   DREAM3D_REGISTER_TEST(loadFilterPlugins());
-DREAM3D_REGISTER_TEST(TestFilterAvailability());
+  DREAM3D_REGISTER_TEST(TestFilterAvailability());
 
-DREAM3D_REGISTER_TEST(RemoveTestFiles())
-DREAM3D_REGISTER_TEST(CopyTestFiles())
+  DREAM3D_REGISTER_TEST(RemoveTestFiles())
+  DREAM3D_REGISTER_TEST(CopyTestFiles())
 
-DREAM3D_REGISTER_TEST(TestCtfReader())
+  DREAM3D_REGISTER_TEST(TestCtfReader())
 
   DREAM3D_REGISTER_TEST(RemoveTestFiles())
   PRINT_TEST_SUMMARY();

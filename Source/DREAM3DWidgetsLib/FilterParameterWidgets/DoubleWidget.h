@@ -45,6 +45,7 @@
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/FilterParameters/DoubleFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
@@ -93,7 +94,7 @@ class DREAM3DWidgetsLib_EXPORT DoubleWidget : public FilterParameterWidget, priv
 
     bool m_DidCausePreflight;
 
-
+    DoubleFilterParameter* m_FilterParameter;
 
     DoubleWidget(const DoubleWidget&); // Copy Constructor Not Implemented
     void operator=(const DoubleWidget&); // Operator '=' Not Implemented

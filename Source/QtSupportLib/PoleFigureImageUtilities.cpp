@@ -207,7 +207,7 @@ QImage PoleFigureImageUtilities::GenerateScalarBar(int imageWidth, int imageHeig
   QPointF start = topLeft;
   QPointF end = topLeft;
 
-  for(int i = numColors-1; i >= 0; i--)
+  for(int i = numColors - 1; i >= 0; i--)
   {
     QColor c(colorTable[i]);
     painter.setPen(QPen(c, penWidth, Qt::SolidLine, Qt::SquareCap, Qt::RoundJoin));
@@ -385,7 +385,7 @@ QImage PoleFigureImageUtilities::PaintPoleFigureOverlay(int imageWidth, int imag
   }
   painter.setFont(font);
   pxHigh = metrics.height() + 2;
- // pxWide = metrics.width(label);
+// pxWide = metrics.width(label);
   painter.drawText(pxOffset, pxHigh, label);
 
   // Draw slightly transparent lines

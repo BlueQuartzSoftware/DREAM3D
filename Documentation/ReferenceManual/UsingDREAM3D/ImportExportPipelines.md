@@ -3,7 +3,7 @@ Saving & Opening Pipelines {#importexportsavepipeline}
 
 A current **Pipeline** in the **Pipeline View** can be saved to the disk by selecting the _Save_ option in the _File_ menu. Once saved to the disk, the files can be **Bookmarked** for quick access. For more information on **Bookmarks**, visit the [user interface](@ref userinterface) section. A saved **Pipeline** file can be opened by choosing the _Open..._ option in the _File_ menu and selecting the desired **Pipeline** file. 
 
-DREAM.3D utilizes a _document_ model when dealing with saving and opening **Pipelines**. Whenever a **Pipeline** file is opened, it will appear in a new DREA.3D window. If the **Pipeline** is modified and the user selects the _Save_ option, the **Pipeline** file will be updated with the changes. 
+DREAM.3D utilizes a _document_ model when dealing with saving and opening **Pipelines**. Whenever a **Pipeline** file is opened, it will appear in a new DREAM.3D window. If the **Pipeline** is modified and the user selects the _Save_ option, the **Pipeline** file will be updated with the changes. 
 
 ## Pipeline File Formats ##
 DREAM.3D allows the user to _export_ and _import_ **Pipelines** to a variety of file formats. The currently supported file formats are

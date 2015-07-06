@@ -46,6 +46,7 @@
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/FilterParameters/DataArrayCreationFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
@@ -133,6 +134,8 @@ class DREAM3DWidgetsLib_EXPORT DataArrayCreationWidget : public FilterParameterW
 
 
     DataContainerArrayProxy m_DcaProxy;
+
+    DataArrayCreationFilterParameter* m_FilterParameter;
 
     DataArrayCreationWidget(const DataArrayCreationWidget&); // Copy Constructor Not Implemented
     void operator=(const DataArrayCreationWidget&); // Operator '=' Not Implemented

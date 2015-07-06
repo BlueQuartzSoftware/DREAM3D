@@ -914,7 +914,7 @@ DataContainerArrayProxy H5FilterParametersReader::readDataContainerArrayProxy(co
     HDF5ScopedGroupSentinel sentinal_dc(&dcGid, false);
     DataContainerProxy dcProxy;
     dcProxy.name = dcName;
-  dcProxy.flag = Qt::Checked;
+    dcProxy.flag = Qt::Checked;
     // Loop over the attribute Matrices
     QList<QString> amNames;
     err = QH5Utilities::getGroupObjects(dcGid, H5Utilities::H5Support_GROUP, amNames);
@@ -928,7 +928,7 @@ DataContainerArrayProxy H5FilterParametersReader::readDataContainerArrayProxy(co
       hid_t amGid = QH5Utilities::openHDF5Object(dcGid, amName);
       HDF5ScopedGroupSentinel sentinal_am(&amGid, false);
       AttributeMatrixProxy amProxy(amName, true);
-    amProxy.flag = Qt::Checked;
+      amProxy.flag = Qt::Checked;
       QString data; // Output will be read into this object
       err = QH5Lite::readStringDataset(amGid, "Arrays", data);
       if (err < 0)
@@ -940,7 +940,7 @@ DataContainerArrayProxy H5FilterParametersReader::readDataContainerArrayProxy(co
       for(int k = 0; k < arrayNames.size(); k++)
       {
         DataArrayProxy daProxy(path, arrayNames.at(k), true);
-    daProxy.flag = Qt::Checked;
+        daProxy.flag = Qt::Checked;
         amProxy.dataArrays.insert(arrayNames.at(k), daProxy);
       }
       dcProxy.attributeMatricies.insert(amName, amProxy);
@@ -1005,25 +1005,25 @@ QVector<DataArrayPath> H5FilterParametersReader::readDataArrayPathVector(const Q
 // -----------------------------------------------------------------------------
 DynamicTableData H5FilterParametersReader::readDynamicTableData(const QString& name, DynamicTableData def)
 {
-	std::vector<double> dataVec;
-	QString rHeadersStr, cHeadersStr;
-	int err = 0;
+  std::vector<double> dataVec;
+  QString rHeadersStr, cHeadersStr;
+  int err = 0;
 
-	err = QH5Lite::readVectorDataset(m_CurrentGroupId, name, dataVec);
-	err = QH5Lite::readStringAttribute(m_CurrentGroupId, name, "RowHeaders", rHeadersStr);
-	err = QH5Lite::readStringAttribute(m_CurrentGroupId, name, "ColHeaders", cHeadersStr);
+  err = QH5Lite::readVectorDataset(m_CurrentGroupId, name, dataVec);
+  err = QH5Lite::readStringAttribute(m_CurrentGroupId, name, "RowHeaders", rHeadersStr);
+  err = QH5Lite::readStringAttribute(m_CurrentGroupId, name, "ColHeaders", cHeadersStr);
 
-	if (err == 0)
-	{
-		QStringList rHeaders = DynamicTableData::DeserializeHeaders(rHeadersStr, '|');
-		QStringList cHeaders = DynamicTableData::DeserializeHeaders(cHeadersStr, '|');
-		std::vector<std::vector<double> > data = DynamicTableData::ExpandData(dataVec, rHeaders.size(), cHeaders.size());
+  if (err == 0)
+  {
+    QStringList rHeaders = DynamicTableData::DeserializeHeaders(rHeadersStr, '|');
+    QStringList cHeaders = DynamicTableData::DeserializeHeaders(cHeadersStr, '|');
+    std::vector<std::vector<double> > data = DynamicTableData::ExpandData(dataVec, rHeaders.size(), cHeaders.size());
 
-		DynamicTableData tableData(data, rHeaders, cHeaders);
-		return tableData;
-	}
-	else
-	{
-		return def;
-	}
+    DynamicTableData tableData(data, rHeaders, cHeaders);
+    return tableData;
+  }
+  else
+  {
+    return def;
+  }
 }

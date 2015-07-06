@@ -40,7 +40,7 @@
 //
 // -----------------------------------------------------------------------------
 StringWidgetCodeGenerator::StringWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue) :
-FPCodeGenerator(humanLabel, propertyName, category, initValue)
+  FPCodeGenerator(humanLabel, propertyName, category, initValue)
 {
 
 }
@@ -56,7 +56,7 @@ StringWidgetCodeGenerator::~StringWidgetCodeGenerator()
 // -----------------------------------------------------------------------------
 QString StringWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::StringWidget, get" + getPropertyName() + "(), " + getCategory() + ", \"\"));";
+  return "  parameters.push_back(StringFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", get" + getPropertyName() + "(), " + getCategory() + "));";
 }
 
 // -----------------------------------------------------------------------------
@@ -86,4 +86,12 @@ QString StringWidgetCodeGenerator::generateFilterParameters()
   ss << "    Q_PROPERTY(QString " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString StringWidgetCodeGenerator::generateCPPIncludes()
+{
+  return "#include \"DREAM3DLib/FilterParameters/StringFilterParameter.h\"";
 }

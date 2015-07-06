@@ -49,12 +49,12 @@ FilterListWidget::FilterListWidget(QWidget* parent)
   : QListWidget(parent)
 {
   setAcceptDrops(false);
- setDragEnabled(true);
- setDragDropMode(QAbstractItemView::DragOnly);
- setAlternatingRowColors(true);
- setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
- setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
- setUniformItemSizes(true);
+  setDragEnabled(true);
+  setDragDropMode(QAbstractItemView::DragOnly);
+  setAlternatingRowColors(true);
+  setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+  setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
+  setUniformItemSizes(true);
 }
 
 // -----------------------------------------------------------------------------

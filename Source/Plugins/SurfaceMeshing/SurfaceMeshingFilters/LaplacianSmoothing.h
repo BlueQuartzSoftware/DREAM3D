@@ -137,9 +137,9 @@ class LaplacianSmoothing : public SurfaceMeshFilter
      */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-   /**
-    * @brief execute Reimplemented from @see AbstractFilter class
-    */
+    /**
+     * @brief execute Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
 
     /**
@@ -153,7 +153,7 @@ class LaplacianSmoothing : public SurfaceMeshFilter
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
-     void dataCheck();
+    void dataCheck();
 
     /**
      * @brief generateLambdaArray Generates the Lambda array that will be use during the smoothing

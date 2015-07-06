@@ -40,8 +40,8 @@
 //
 // -----------------------------------------------------------------------------
 DataContainerArrayProxyFilterParameter::DataContainerArrayProxyFilterParameter() :
-FilterParameter(),
-m_DefaultFlagValue(Qt::Checked)
+  FilterParameter(),
+  m_DefaultFlagValue(Qt::Checked)
 {
 }
 
@@ -55,23 +55,27 @@ DataContainerArrayProxyFilterParameter::~DataContainerArrayProxyFilterParameter(
 //
 // -----------------------------------------------------------------------------
 DataContainerArrayProxyFilterParameter::Pointer DataContainerArrayProxyFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QString& widgetType, const QVariant& defaultValue,
-  DataContainerArrayProxy proxy, Qt::CheckState defValue,
-  Category category, int groupIndex)
+    const QString& defaultValue, DataContainerArrayProxy proxy, Qt::CheckState defValue, Category category, int groupIndex)
 {
   DataContainerArrayProxyFilterParameter::Pointer ptr = DataContainerArrayProxyFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
-  ptr->setWidgetType(widgetType);
   ptr->setDefaultValue(defaultValue);
   ptr->setCategory(category);
-  ptr->setUnits("");
   ptr->setDefaultFlagValue(defValue);
   ptr->setDataContainerArrayProxy(proxy);
   ptr->setGroupIndex(groupIndex);
-  if (ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
-  {
-    ptr->setReadOnly(true);
-  }
+
   return ptr;
 }
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString DataContainerArrayProxyFilterParameter::getWidgetType()
+{
+  return QString("DataContainerArrayProxyWidget");
+}
+

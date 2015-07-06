@@ -96,7 +96,7 @@ class AttributeMatrixProxy
     * @param json
     * @return
     */
-    void writeJson(QJsonObject &json)
+    void writeJson(QJsonObject& json)
     {
       json["Flag"] = static_cast<double>(flag);
       json["Name"] = name;
@@ -109,7 +109,7 @@ class AttributeMatrixProxy
     * @param json
     * @return
     */
-    bool readJson(QJsonObject &json)
+    bool readJson(QJsonObject& json)
     {
       if (json["Flag"].isDouble() && json["Name"].isString() && json["Type"].isDouble() && json["Data Arrays"].isArray())
       {

@@ -42,7 +42,11 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
+
+#include "DREAM3DLib/FilterParameters/InputFileFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/DataContainerSelectionFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
+
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "IO/IOConstants.h"
@@ -79,12 +83,12 @@ EnsembleInfoReader::~EnsembleInfoReader()
 void EnsembleInfoReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FileSystemFilterParameter::New("Input Ensemble Info File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), FilterParameter::Parameter, "", "*.ini *.txt"));
-  parameters.push_back(FilterParameter::New("Data Container", "DataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerName(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(InputFileFilterParameter::New("Input Ensemble Info File", "InputFile", getInputFile(), FilterParameter::Parameter, "*.ini *.txt"));
+  parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::RequiredArray));
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::CreatedArray));
-  parameters.push_back(FilterParameter::New("Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellEnsembleAttributeMatrixName(), FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayName", FilterParameterWidgetType::StringWidget, getCrystalStructuresArrayName(), FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("Phase Types", "PhaseTypesArrayName", FilterParameterWidgetType::StringWidget, getPhaseTypesArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(StringFilterParameter::New("Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Crystal Structures", "CrystalStructuresArrayName", getCrystalStructuresArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Phase Types", "PhaseTypesArrayName", getPhaseTypesArrayName(), FilterParameter::CreatedArray));
   setFilterParameters(parameters);
 }
 
@@ -333,37 +337,48 @@ int32_t EnsembleInfoReader::readFile()
 void EnsembleInfoReader::ensembleLookup(QStringList list)
 {
   // assign the corresponding number to the crystal structure string read from the input file
-  if (QString::compare(list.at(0), "Hexagonal_High", Qt::CaseInsensitive) == 0) {
+  if (QString::compare(list.at(0), "Hexagonal_High", Qt::CaseInsensitive) == 0)
+  {
     m_crystruct = Ebsd::CrystalStructure::Hexagonal_High;
   }
-  else if (QString::compare(list.at(0), "Cubic_High", Qt::CaseInsensitive) == 0) {
+  else if (QString::compare(list.at(0), "Cubic_High", Qt::CaseInsensitive) == 0)
+  {
     m_crystruct = Ebsd::CrystalStructure::Cubic_High;
   }
-  else if (QString::compare(list.at(0), "Hexagonal_Low", Qt::CaseInsensitive) == 0) {
+  else if (QString::compare(list.at(0), "Hexagonal_Low", Qt::CaseInsensitive) == 0)
+  {
     m_crystruct = Ebsd::CrystalStructure::Hexagonal_Low;
   }
-  else if (QString::compare(list.at(0), "Cubic_Low", Qt::CaseInsensitive) == 0) {
+  else if (QString::compare(list.at(0), "Cubic_Low", Qt::CaseInsensitive) == 0)
+  {
     m_crystruct = Ebsd::CrystalStructure::Cubic_Low;
   }
-  else if (QString::compare(list.at(0), "Triclinic", Qt::CaseInsensitive) == 0) {
+  else if (QString::compare(list.at(0), "Triclinic", Qt::CaseInsensitive) == 0)
+  {
     m_crystruct = Ebsd::CrystalStructure::Triclinic;
   }
-  else if (QString::compare(list.at(0), "Monoclinic", Qt::CaseInsensitive) == 0) {
+  else if (QString::compare(list.at(0), "Monoclinic", Qt::CaseInsensitive) == 0)
+  {
     m_crystruct = Ebsd::CrystalStructure::Monoclinic;
   }
-  else if (QString::compare(list.at(0), "OrthoRhombic", Qt::CaseInsensitive) == 0) {
+  else if (QString::compare(list.at(0), "OrthoRhombic", Qt::CaseInsensitive) == 0)
+  {
     m_crystruct = Ebsd::CrystalStructure::OrthoRhombic;
   }
-  else if (QString::compare(list.at(0), "Tetragonal_Low", Qt::CaseInsensitive) == 0) {
+  else if (QString::compare(list.at(0), "Tetragonal_Low", Qt::CaseInsensitive) == 0)
+  {
     m_crystruct = Ebsd::CrystalStructure::Tetragonal_Low;
   }
-  else if (QString::compare(list.at(0), "Tetragonal_High", Qt::CaseInsensitive) == 0) {
+  else if (QString::compare(list.at(0), "Tetragonal_High", Qt::CaseInsensitive) == 0)
+  {
     m_crystruct = Ebsd::CrystalStructure::Tetragonal_High;
   }
-  else if (QString::compare(list.at(0), "Trigonal_Low", Qt::CaseInsensitive) == 0) {
+  else if (QString::compare(list.at(0), "Trigonal_Low", Qt::CaseInsensitive) == 0)
+  {
     m_crystruct = Ebsd::CrystalStructure::Trigonal_Low;
   }
-  else if (QString::compare(list.at(0), "Trigonal_High", Qt::CaseInsensitive) == 0) {
+  else if (QString::compare(list.at(0), "Trigonal_High", Qt::CaseInsensitive) == 0)
+  {
     m_crystruct = Ebsd::CrystalStructure::Trigonal_High;
   }
   else
@@ -372,22 +387,28 @@ void EnsembleInfoReader::ensembleLookup(QStringList list)
   }
 
   // assign the corresponding number to the phase type string read from the input file
-  if (QString::compare(list.at(1), "PrimaryPhase", Qt::CaseInsensitive) == 0) {
+  if (QString::compare(list.at(1), "PrimaryPhase", Qt::CaseInsensitive) == 0)
+  {
     m_ptype = DREAM3D::PhaseType::PrimaryPhase;
   }
-  else if (QString::compare(list.at(1), "PrecipitatePhase", Qt::CaseInsensitive) == 0) {
+  else if (QString::compare(list.at(1), "PrecipitatePhase", Qt::CaseInsensitive) == 0)
+  {
     m_ptype = DREAM3D::PhaseType::PrecipitatePhase;
   }
-  else if (QString::compare(list.at(1), "TransformationPhase", Qt::CaseInsensitive) == 0) {
+  else if (QString::compare(list.at(1), "TransformationPhase", Qt::CaseInsensitive) == 0)
+  {
     m_ptype = DREAM3D::PhaseType::TransformationPhase;
   }
-  else if (QString::compare(list.at(1), "MatrixPhase", Qt::CaseInsensitive) == 0) {
+  else if (QString::compare(list.at(1), "MatrixPhase", Qt::CaseInsensitive) == 0)
+  {
     m_ptype = DREAM3D::PhaseType::MatrixPhase;
   }
-  else if (QString::compare(list.at(1), "BoundaryPhase", Qt::CaseInsensitive) == 0) {
+  else if (QString::compare(list.at(1), "BoundaryPhase", Qt::CaseInsensitive) == 0)
+  {
     m_ptype = DREAM3D::PhaseType::BoundaryPhase;
   }
-  else if (QString::compare(list.at(1), "UnknownPhaseType", Qt::CaseInsensitive) == 0) {
+  else if (QString::compare(list.at(1), "UnknownPhaseType", Qt::CaseInsensitive) == 0)
+  {
     m_ptype = DREAM3D::PhaseType::UnknownPhaseType;
   }
   else

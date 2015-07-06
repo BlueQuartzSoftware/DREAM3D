@@ -55,8 +55,8 @@
 
 enum ErrorCodes
 {
-	NO_ERROR = 0,
-	DIFF_MATRICES = -11004
+  NO_ERROR = 0,
+  DIFF_MATRICES = -11004
 };
 
 // -----------------------------------------------------------------------------
@@ -110,19 +110,19 @@ int TestExportDataWriter()
   int size = 20;
 
   {
-	  Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, DREAM3D::CellData::CellPhases);
-	  for (int i = 0; i < size; ++i) // create an array with values 20 to 39
-	  {
-		  intArray->setValue(i, i + 20);
-	  }
-	  attrMatrix->addAttributeArray(DREAM3D::CellData::CellPhases, intArray);
+    Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, DREAM3D::CellData::CellPhases);
+    for (int i = 0; i < size; ++i) // create an array with values 20 to 39
+    {
+      intArray->setValue(i, i + 20);
+    }
+    attrMatrix->addAttributeArray(DREAM3D::CellData::CellPhases, intArray);
   }
   {
     Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, DREAM3D::CellData::ConfidenceIndexNoSpace);
-	  for (int i = 0; i < size; ++i) // create an array with values 20 to 39
-	  {
-		  intArray->setValue(i, i + 20);
-	  }
+    for (int i = 0; i < size; ++i) // create an array with values 20 to 39
+    {
+      intArray->setValue(i, i + 20);
+    }
     attrMatrix->addAttributeArray(DREAM3D::CellData::ConfidenceIndexNoSpace, intArray);
   }
   {
@@ -130,18 +130,18 @@ int TestExportDataWriter()
     for (int i = 0; i < size; ++i) // create an bool array with true and false values
     {
       if (i % 2 == 0)
-        boolArray->setValue(i, 0);
+      { boolArray->setValue(i, 0); }
       else
-        boolArray->setValue(i, 1);
+      { boolArray->setValue(i, 1); }
     }
     attrMatrix->addAttributeArray(DREAM3D::GeneralData::ThresholdArray, boolArray);
   }
   {
     Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, DREAM3D::CellData::ConfidenceIndexNoSpace);
-	  for (int i = 0; i < size; ++i) // create an array with values 20 to 39
-	  {
-		  intArray->setValue(i, i + 20);
-	  }
+    for (int i = 0; i < size; ++i) // create an array with values 20 to 39
+    {
+      intArray->setValue(i, i + 20);
+    }
     attrMatrix2->addAttributeArray(DREAM3D::CellData::ConfidenceIndexNoSpace, intArray);
   }
 
@@ -158,7 +158,7 @@ int TestExportDataWriter()
   // Pipeline Object would over write the DataContainer Array that we have created with a blank one thus defeating the
   // entire purpose of the test.
   QObject::connect(writer.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-    &obs, SLOT(processPipelineMessage(const PipelineMessage&)));
+                   &obs, SLOT(processPipelineMessage(const PipelineMessage&)));
 
   writer->execute();
   int err = writer->getErrorCondition();
@@ -192,19 +192,19 @@ int TestExportDataWriter()
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
     DataArrayPath path1 = DataArrayPath(DREAM3D::Defaults::DataContainerName,
-    DREAM3D::Defaults::AttributeMatrixName,
-    DREAM3D::CellData::CellPhases);
+                                        DREAM3D::Defaults::AttributeMatrixName,
+                                        DREAM3D::CellData::CellPhases);
 
-	  DataArrayPath path2 = DataArrayPath(DREAM3D::Defaults::DataContainerName,
-		DREAM3D::Defaults::AttributeMatrixName,
-    DREAM3D::CellData::ConfidenceIndexNoSpace);
+    DataArrayPath path2 = DataArrayPath(DREAM3D::Defaults::DataContainerName,
+                                        DREAM3D::Defaults::AttributeMatrixName,
+                                        DREAM3D::CellData::ConfidenceIndexNoSpace);
 
     DataArrayPath path4 = DataArrayPath(DREAM3D::Defaults::DataContainerName,
-    DREAM3D::Defaults::AttributeMatrixName,
-    DREAM3D::GeneralData::ThresholdArray);
+                                        DREAM3D::Defaults::AttributeMatrixName,
+                                        DREAM3D::GeneralData::ThresholdArray);
 
-	  QVector<DataArrayPath> vector;
-	  vector.push_back(path1);
+    QVector<DataArrayPath> vector;
+    vector.push_back(path1);
     vector.push_back(path2);
     vector.push_back(path4);
 
@@ -216,19 +216,19 @@ int TestExportDataWriter()
     err = filter->getErrorCondition();
     DREAM3D_REQUIRE_EQUAL(err, NO_ERROR);
 
-	  DataArrayPath path3 = DataArrayPath(DREAM3D::Defaults::DataContainerName,
-		DREAM3D::Defaults::CellAttributeMatrixName,
-    DREAM3D::CellData::ConfidenceIndexNoSpace);
+    DataArrayPath path3 = DataArrayPath(DREAM3D::Defaults::DataContainerName,
+                                        DREAM3D::Defaults::CellAttributeMatrixName,
+                                        DREAM3D::CellData::ConfidenceIndexNoSpace);
 
-	  vector.push_back(path3);
+    vector.push_back(path3);
 
-	  var.setValue(vector);
-	  propWasSet = filter->setProperty("SelectedDataArrayPaths", var); //arrays just created above
-	  DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+    var.setValue(vector);
+    propWasSet = filter->setProperty("SelectedDataArrayPaths", var); //arrays just created above
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-		filter->execute();
-	  err = filter->getErrorCondition();
-	  DREAM3D_REQUIRE_EQUAL(err, DIFF_MATRICES);
+    filter->execute();
+    err = filter->getErrorCondition();
+    DREAM3D_REQUIRE_EQUAL(err, DIFF_MATRICES);
   }
   else
   {
@@ -243,43 +243,43 @@ int TestExportDataWriter()
 // -----------------------------------------------------------------------------
 int TestExportDataReader()
 {
-	{
-		int num = 0;
-		FILE *f;
-		QString exportArrayFile = UnitTest::ExportDataTest::TestTempDir + QDir::separator() + DREAM3D::CellData::CellPhases + ".txt";
-		f = fopen(exportArrayFile.toLatin1().data(), "r"); // open file created from array
-		DREAM3D_REQUIRE_VALID_POINTER(f)
+  {
+    int num = 0;
+    FILE* f;
+    QString exportArrayFile = UnitTest::ExportDataTest::TestTempDir + QDir::separator() + DREAM3D::CellData::CellPhases + ".txt";
+    f = fopen(exportArrayFile.toLatin1().data(), "r"); // open file created from array
+    DREAM3D_REQUIRE_VALID_POINTER(f)
 
-		for (int i = 0; i < 20; i++) // compare file to what was written in array
-		{
-			fscanf(f, "%d,", &num);
+    for (int i = 0; i < 20; i++) // compare file to what was written in array
+    {
+      fscanf(f, "%d,", &num);
       if (i + 20 != num)
       {
         DREAM3D_REQUIRE_EQUAL(0, -3)
       }
-		}
-		fclose(f);
-	}
-	{
-		int num = 0;
-		FILE *f;
-    QString exportArrayFile = UnitTest::ExportDataTest::TestTempDir + QDir::separator() + DREAM3D::CellData::ConfidenceIndexNoSpace + ".txt";
-		f = fopen(exportArrayFile.toLatin1().data(), "r"); // open file created from array
-		DREAM3D_REQUIRE_VALID_POINTER(f)
-
-		for (int i = 0; i < 20; i++) // compare file to what was written in array
-		{
-			fscanf(f, "%d,", &num);
-			if (i + 20 != num)
-			{
-				DREAM3D_REQUIRE_EQUAL(0, -3)
-			}
-		}
-		fclose(f);
-	}
+    }
+    fclose(f);
+  }
   {
     int num = 0;
-    FILE *f;
+    FILE* f;
+    QString exportArrayFile = UnitTest::ExportDataTest::TestTempDir + QDir::separator() + DREAM3D::CellData::ConfidenceIndexNoSpace + ".txt";
+    f = fopen(exportArrayFile.toLatin1().data(), "r"); // open file created from array
+    DREAM3D_REQUIRE_VALID_POINTER(f)
+
+    for (int i = 0; i < 20; i++) // compare file to what was written in array
+    {
+      fscanf(f, "%d,", &num);
+      if (i + 20 != num)
+      {
+        DREAM3D_REQUIRE_EQUAL(0, -3)
+      }
+    }
+    fclose(f);
+  }
+  {
+    int num = 0;
+    FILE* f;
     QString exportArrayFile = UnitTest::ExportDataTest::TestTempDir + QDir::separator() + DREAM3D::GeneralData::ThresholdArray + ".txt";
     f = fopen(exportArrayFile.toLatin1().data(), "r"); // open file created from array
     DREAM3D_REQUIRE_VALID_POINTER(f)

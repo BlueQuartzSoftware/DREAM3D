@@ -39,6 +39,10 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+
+#include "DREAM3DLib/FilterParameters/DoubleFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 
@@ -77,15 +81,15 @@ FindNeighborhoods::~FindNeighborhoods()
 void FindNeighborhoods::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Multiples of Average Diameter", "MultiplesOfAverage", FilterParameterWidgetType::DoubleWidget, getMultiplesOfAverage(), FilterParameter::Parameter));
+  parameters.push_back(DoubleFilterParameter::New("Multiples of Average Diameter", "MultiplesOfAverage", getMultiplesOfAverage(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
-  parameters.push_back(FilterParameter::New("Equivalent Diameters", "EquivalentDiametersArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getEquivalentDiametersArrayPath(), FilterParameter::RequiredArray, ""));
-  parameters.push_back(FilterParameter::New("Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, ""));
-  parameters.push_back(FilterParameter::New("Centroids", "CentroidsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCentroidsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Equivalent Diameters", "EquivalentDiametersArrayPath", getEquivalentDiametersArrayPath(), FilterParameter::RequiredArray));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Centroids", "CentroidsArrayPath", getCentroidsArrayPath(), FilterParameter::RequiredArray));
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(FilterParameter::New("Neighborhoods", "NeighborhoodsArrayName", FilterParameterWidgetType::StringWidget, getNeighborhoodsArrayName(), FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("Neighborhood List", "NeighborhoodListArrayName", FilterParameterWidgetType::StringWidget, getNeighborhoodListArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(StringFilterParameter::New("Neighborhoods", "NeighborhoodsArrayName", getNeighborhoodsArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Neighborhood List", "NeighborhoodListArrayName", getNeighborhoodListArrayName(), FilterParameter::CreatedArray));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
@@ -210,7 +214,7 @@ void FindNeighborhoods::find_neighborhoods()
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
   size_t xbin = 0, ybin = 0, zbin = 0;
-  std::vector<size_t> bins(3 * totalFeatures, 0);
+  std::vector<int64_t> bins(3 * totalFeatures, 0);
   for (size_t i = 1; i < totalFeatures; i++)
   {
     x = m_Centroids[3 * i];
@@ -224,7 +228,7 @@ void FindNeighborhoods::find_neighborhoods()
     bins[3 * i + 2] = zbin;
   }
 
-  size_t bin1x = 0, bin2x = 0, bin1y = 0, bin2y = 0, bin1z = 0, bin2z = 0;
+  int64_t bin1x = 0, bin2x = 0, bin1y = 0, bin2y = 0, bin1z = 0, bin2z = 0;
   float dBinX = 0, dBinY = 0, dBinZ = 0;
   float criticalDistance1 = 0, criticalDistance2 = 0;
 
@@ -250,10 +254,11 @@ void FindNeighborhoods::find_neighborhoods()
       bin2y = bins[3 * j + 1];
       bin2z = bins[3 * j + 2];
       criticalDistance2 = criticalDistance[j];
-
-      dBinX = fabsf(bin2x - bin1x);
-      dBinY = fabsf(bin2y - bin1y);
-      dBinZ = fabsf(bin2z - bin1z);
+      // Use the llabs version of the "C" abs function because we are using int64_t
+      // do NOT try to use the std::abs() function as this is C++11 ONLY
+      dBinX = llabs(bin2x - bin1x);
+      dBinY = llabs(bin2y - bin1y);
+      dBinZ = llabs(bin2z - bin1z);
 
       if (dBinX < criticalDistance1 && dBinY < criticalDistance1 && dBinZ < criticalDistance1)
       {

@@ -40,7 +40,7 @@
 //
 // -----------------------------------------------------------------------------
 DataContainerSelectionWidgetCodeGenerator::DataContainerSelectionWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue) :
-FPCodeGenerator(humanLabel, propertyName, category, initValue)
+  FPCodeGenerator(humanLabel, propertyName, category, initValue)
 {
 
 }
@@ -56,7 +56,7 @@ DataContainerSelectionWidgetCodeGenerator::~DataContainerSelectionWidgetCodeGene
 // -----------------------------------------------------------------------------
 QString DataContainerSelectionWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::DataContainerSelectionWidget, get" + getPropertyName() + "(), " + getCategory() + "));";
+  return "  parameters.push_back(DataContainerSelectionFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", get" + getPropertyName() + "(), " + getCategory() + "));";
 }
 
 // -----------------------------------------------------------------------------
@@ -86,4 +86,12 @@ QString DataContainerSelectionWidgetCodeGenerator::generateFilterParameters()
   ss << "    Q_PROPERTY(QString " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString DataContainerSelectionWidgetCodeGenerator::generateCPPIncludes()
+{
+  return "#include \"DREAM3DLib/FilterParameters/DataContainerSelectionFilterParameter.h\"";
 }

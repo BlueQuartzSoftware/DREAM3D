@@ -245,7 +245,8 @@ FOrientArrayType TetragonalLowOps::getMDFFZRod(FOrientArrayType rod)
   rod = _calcRodNearestOrigin(TetraRodSym, 4, rod);
   FOrientArrayType ax(4, 0.0f);
   OrientationTransforms<FOrientArrayType, float>::ro2ax(rod, ax);
-  n1 = ax[0]; n2 = ax[1], n3 = ax[2], w = ax[3];
+  n1 = ax[0];
+  n2 = ax[1], n3 = ax[2], w = ax[3];
 
   FZn1 = fabs(n1);
   FZn2 = fabs(n2);
@@ -642,7 +643,7 @@ DREAM3D::Rgb TetragonalLowOps::generateIPFColor(double phi1, double phi, double 
   for (int j = 0; j < 4; j++)
   {
     getQuatSymOp(j, q2);
-	  QuaternionMathF::Multiply(q2, q1, qc);
+    QuaternionMathF::Multiply(q2, q1, qc);
 
     qu.fromQuaternion(qc);
     OrientationTransforms<FOrientArrayType, float>::qu2om(qu, om);

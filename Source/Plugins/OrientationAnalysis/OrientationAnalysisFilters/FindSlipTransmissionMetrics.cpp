@@ -39,6 +39,9 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+
+#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
@@ -85,16 +88,16 @@ void FindSlipTransmissionMetrics::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
-  parameters.push_back(FilterParameter::New("Neighbor List", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), FilterParameter::RequiredArray, ""));
-  parameters.push_back(FilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), FilterParameter::RequiredArray, ""));
-  parameters.push_back(FilterParameter::New("Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Neighbor List", "NeighborListArrayPath", getNeighborListArrayPath(), FilterParameter::RequiredArray));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray));
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::RequiredArray));
-  parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(FilterParameter::New("F1 List", "F1ListArrayName", FilterParameterWidgetType::StringWidget, getF1ListArrayName(), FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("F1spt List", "F1sptListArrayName", FilterParameterWidgetType::StringWidget, getF1sptListArrayName(), FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("F7 List", "F7ListArrayName", FilterParameterWidgetType::StringWidget, getF7ListArrayName(), FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("mPrime List", "mPrimeListArrayName", FilterParameterWidgetType::StringWidget, getmPrimeListArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(StringFilterParameter::New("F1 List", "F1ListArrayName", getF1ListArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("F1spt List", "F1sptListArrayName", getF1sptListArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("F7 List", "F7ListArrayName", getF7ListArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("mPrime List", "mPrimeListArrayName", getmPrimeListArrayName(), FilterParameter::CreatedArray));
   setFilterParameters(parameters);
 }
 

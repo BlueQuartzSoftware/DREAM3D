@@ -450,7 +450,7 @@ void PrebuiltPipelinesDockWidget::writeSettings(DREAM3DSettings& prefs)
   prefs.setValue(objectName(), isHidden());
 
   prefs.setValue("PrebuiltsHeaderState", prebuiltsLibraryTree->header()->saveState());
-  
+
   prefs.beginGroup("Prebuilts Expansion Metadata");
   QTreeWidgetItemIterator iter(prebuiltsLibraryTree);
 

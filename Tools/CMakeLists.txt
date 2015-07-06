@@ -42,18 +42,6 @@ ConvertPathToHeaderCompatible(${DREAM3DProj_PARENT_DIR_NORM})
 configure_file( ${DREAM3DTools_SOURCE_DIR}/ToolConfiguration.h.in
                 ${DREAM3DTools_BINARY_DIR}/ToolConfiguration.h)
 
-
-# --------------------------------------------------------------------------
-# Install the GMT script and doc file.
-install(FILES ${DREAM3DTools_SOURCE_DIR}/GMT/Draw_stereograms-gmt-v5.1.sh
-        DESTINATION ./bin/
-        PERMISSIONS OWNER_EXECUTE GROUP_EXECUTE WORLD_EXECUTE
-        COMPONENT Applications )
-
-install(FILES ${DREAM3DTools_SOURCE_DIR}/GMT/UsingGMT.md
-        DESTINATION ./bin/
-        COMPONENT Applications )
-
 #-------------------------------------------------------------------------------
 # Function COMPILE_TOOL to help alleviate lots of extra code below for adding
 # simple command line tools that just need one or two source files
@@ -76,7 +64,7 @@ function(COMPILE_TOOL)
         VERSION_MINOR ${D3DTOOL_DREAM3D_VER_MINOR}
         VERSION_PATCH ${D3DTOOL_DREAM3D_VER_PATCH}
         BINARY_DIR    ${D3DTOOL_BINARY_DIR}
-        LINK_LIBRARIES Qt5::Core EbsdLib DREAM3DLib "${D3DTOOL_LINK_LIBRARIES}"
+        LINK_LIBRARIES Qt5::Core "${D3DTOOL_LINK_LIBRARIES}"
         LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
         COMPONENT     Applications
         INSTALL_DEST  "${D3DTOOL_INSTALL_DEST}"
@@ -96,7 +84,7 @@ COMPILE_TOOL(
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
     INSTALL_DEST  "${install_dir}"
-    LINK_LIBRARIES DREAM3DLib
+    LINK_LIBRARIES EbsdLib DREAM3DLib
 )
 
 
@@ -110,7 +98,7 @@ COMPILE_TOOL(
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
-    LINK_LIBRARIES DREAM3DLib
+    #LINK_LIBRARIES DREAM3DLib
 )
 
 # Create a Command line tool for the MATLAB_CodeGen
@@ -123,7 +111,7 @@ COMPILE_TOOL(
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
-    LINK_LIBRARIES DREAM3DLib
+    LINK_LIBRARIES EbsdLib DREAM3DLib
 )
 
 # --------------------------------------------------------------------
@@ -138,46 +126,22 @@ COMPILE_TOOL(
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
-    LINK_LIBRARIES Qt5::Gui Qt5::Widgets
+    LINK_LIBRARIES EbsdLib DREAM3DLib Qt5::Gui Qt5::Widgets
 )
 
 # --------------------------------------------------------------------
-COMPILE_TOOL(
-    TARGET CreateWebServerJson
-    SOURCES ${DREAM3DTools_SOURCE_DIR}/CreateWebServerJson.cpp
-    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-    VERSION_MINOR ${DREAM3D_VER_MINOR}
-    VERSION_PATCH ${DREAM3D_VER_PATCH}
-    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    LINK_LIBRARIES Qt5::Core
-)
-
-
-# Now run the code to generate JSON file for the web server. This file holds all
-# the version information for the current release
-add_custom_command(TARGET CreateWebServerJson POST_BUILD
-                    COMMAND $<TARGET_FILE:CreateWebServerJson> ${DREAM3DProj_BINARY_DIR}/dream3d_version.json
-                    WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-add_dependencies(CreateWebServerJson DREAM3D)
-
-# Create a Command line tool for the DocsToPdf
-if(0)
-    set(DREAM3D_DOCS_PDF_FILENAME ${DREAM3DProj_BINARY_DIR}/DREAM3D_Filter_Docs.pdf)
-    #  message(STATUS "DREAM3D_DOCS_ROOT_DIR: ${DREAM3D_DOCS_ROOT_DIR}")
-    #  message(STATUS "DREAM3D_DOCS_PDF_FILENAME: ${DREAM3D_DOCS_PDF_FILENAME}" )
-
-    configure_file(${DREAM3DTools_SOURCE_DIR}/DocsToPdf.h.in ${DREAM3DTools_BINARY_DIR}/DocsToPdf.h)
-    include_directories(${DREAM3DTools_BINARY_DIR})
-    COMPILE_TOOL(
-        TARGET DocsToPdf
-        SOURCES ${DREAM3DTools_SOURCE_DIR}/DocsToPdf.cpp ${DREAM3DTools_BINARY_DIR}/DocsToPdf.h
-        DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-        VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-        VERSION_MINOR ${DREAM3D_VER_MINOR}
-        VERSION_PATCH ${DREAM3D_VER_PATCH}
-        BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-        COMPONENT     Applications
-        LINK_LIBRARIES Qt5::Core Qt5::Gui Qt5::Widgets
-    )
+# Setup an option to compile the version JSON file. This should be off
+# by default as no one needs it except the web admin
+OPTION (DREAM3D_BUILD_VERSION_FILE "Generate dream3d_version.json for the webserver" OFF)
+if(${DREAM3D_BUILD_VERSION_FILE})
+  COMPILE_TOOL(
+      TARGET CreateWebServerJson
+      SOURCES ${DREAM3DTools_SOURCE_DIR}/CreateWebServerJson.cpp
+      DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
+      VERSION_MAJOR ${DREAM3D_VER_MAJOR}
+      VERSION_MINOR ${DREAM3D_VER_MINOR}
+      VERSION_PATCH ${DREAM3D_VER_PATCH}
+      BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
+      LINK_LIBRARIES hdf5 Qt5::Core H5Support DREAM3DLib
+  )
 endif()

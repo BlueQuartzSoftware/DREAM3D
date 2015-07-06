@@ -45,6 +45,7 @@
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 
@@ -84,19 +85,19 @@ class CalculateDihedralAnglesImpl
       {
         minDihedralAngle = 180.0f;
 
-        ABx = nodes[triangles[i*3]*3+0] - nodes[triangles[i*3+1]*3+0];
-        ABy = nodes[triangles[i*3]*3+1] - nodes[triangles[i*3+1]*3+1];
-        ABz = nodes[triangles[i*3]*3+2] - nodes[triangles[i*3+1]*3+2];
+        ABx = nodes[triangles[i * 3] * 3 + 0] - nodes[triangles[i * 3 + 1] * 3 + 0];
+        ABy = nodes[triangles[i * 3] * 3 + 1] - nodes[triangles[i * 3 + 1] * 3 + 1];
+        ABz = nodes[triangles[i * 3] * 3 + 2] - nodes[triangles[i * 3 + 1] * 3 + 2];
         magAB = sqrtf(ABx * ABx + ABy * ABy + ABz * ABz);
 
-        ACx = nodes[triangles[i*3]*3+0] - nodes[triangles[i*3+2]*3+0];
-        ACy = nodes[triangles[i*3]*3+1] - nodes[triangles[i*3+2]*3+1];
-        ACz = nodes[triangles[i*3]*3+2] - nodes[triangles[i*3+2]*3+2];
+        ACx = nodes[triangles[i * 3] * 3 + 0] - nodes[triangles[i * 3 + 2] * 3 + 0];
+        ACy = nodes[triangles[i * 3] * 3 + 1] - nodes[triangles[i * 3 + 2] * 3 + 1];
+        ACz = nodes[triangles[i * 3] * 3 + 2] - nodes[triangles[i * 3 + 2] * 3 + 2];
         magAC = sqrtf(ACx * ACx + ACy * ACy + ACz * ACz);
 
-        BCx = nodes[triangles[i*3+1]*3+0] - nodes[triangles[i*3+2]*3+0];
-        BCy = nodes[triangles[i*3+1]*3+1] - nodes[triangles[i*3+2]*3+1];
-        BCz = nodes[triangles[i*3+1]*3+2] - nodes[triangles[i*3+2]*3+2];
+        BCx = nodes[triangles[i * 3 + 1] * 3 + 0] - nodes[triangles[i * 3 + 2] * 3 + 0];
+        BCy = nodes[triangles[i * 3 + 1] * 3 + 1] - nodes[triangles[i * 3 + 2] * 3 + 1];
+        BCz = nodes[triangles[i * 3 + 1] * 3 + 2] - nodes[triangles[i * 3 + 2] * 3 + 2];
         magBC = sqrtf(BCx * BCx + BCy * BCy + BCz * BCz);
 
         dihedralAngle1 = radToDeg * acos(((ABx * ACx) + (ABy * ACy) + (ABz * ACz)) / (magAB * magAC));
@@ -143,7 +144,7 @@ void TriangleDihedralAngleFilter::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
-  parameters.push_back(FilterParameter::New("Face Dihedral Angles", "SurfaceMeshTriangleDihedralAnglesArrayPath", FilterParameterWidgetType::DataArrayCreationWidget, getSurfaceMeshTriangleDihedralAnglesArrayPath(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(DataArrayCreationFilterParameter::New("Face Dihedral Angles", "SurfaceMeshTriangleDihedralAnglesArrayPath", getSurfaceMeshTriangleDihedralAnglesArrayPath(), FilterParameter::CreatedArray));
   setFilterParameters(parameters);
 }
 

@@ -54,6 +54,9 @@ DataContainerSelectionWidget::DataContainerSelectionWidget(FilterParameter* para
   FilterParameterWidget(parameter, filter, parent),
   m_DidCausePreflight(false)
 {
+  m_FilterParameter = dynamic_cast<DataContainerSelectionFilterParameter*>(parameter);
+  Q_ASSERT_X(m_FilterParameter != NULL, "NULL Pointer", "DataContainerSelectionWidget can ONLY be used with a DataContainerSelectionFilterParameter object");
+
   setupUi(this);
   setupGui();
 }
@@ -111,15 +114,7 @@ void DataContainerSelectionWidget::setupGui()
   {
     return;
   }
-  QString units = getFilterParameter()->getUnits();
-  if(units.isEmpty() == false)
-  {
-    label->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
-  }
-  else
-  {
-    label->setText(getFilterParameter()->getHumanLabel() );
-  }
+  label->setText(getFilterParameter()->getHumanLabel() );
 
   dataContainerCombo->blockSignals(true);
 

@@ -48,6 +48,8 @@
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/BooleanFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
@@ -55,10 +57,10 @@
 //
 // -----------------------------------------------------------------------------
 MultiEmmpmFilter::MultiEmmpmFilter() :
-EMMPMFilter(),
-m_OutputAttributeMatrixName("MultiArrayEMMPMOutput"),
-m_OutputArrayPrefix("Segmented_"),
-m_UsePreviousMuSigma(true)
+  EMMPMFilter(),
+  m_OutputAttributeMatrixName("MultiArrayEMMPMOutput"),
+  m_OutputArrayPrefix("Segmented_"),
+  m_UsePreviousMuSigma(true)
 {
   setupFilterParameters();
 }
@@ -77,8 +79,8 @@ void MultiEmmpmFilter::setupFilterParameters()
 {
   FilterParameterVector parameters = getFilterParameters();
 
-  parameters.push_back(FilterParameter::New("Use Mu/Sigma from Previous Image as Initialization for Current Image", "UsePreviousMuSigma", FilterParameterWidgetType::BooleanWidget, getUsePreviousMuSigma(), FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Output Array Prefix", "OutputArrayPrefix", FilterParameterWidgetType::StringWidget, getOutputArrayPrefix(), FilterParameter::Parameter));
+  parameters.push_back(BooleanFilterParameter::New("Use Mu/Sigma from Previous Image as Initialization for Current Image", "UsePreviousMuSigma", getUsePreviousMuSigma(), FilterParameter::Parameter));
+  parameters.push_back(StringFilterParameter::New("Output Array Prefix", "OutputArrayPrefix", getOutputArrayPrefix(), FilterParameter::Parameter));
 
 
   for ( qint32 i = 0; i < parameters.size(); i++ )
@@ -86,7 +88,7 @@ void MultiEmmpmFilter::setupFilterParameters()
     FilterParameter::Pointer& p = parameters[i];
     if ( p->getPropertyName().compare("InputDataArrayPath") == 0 )
     {
-      parameters[i] = MultiDataArraySelectionFilterParameter::New("Input Attribute Arrays", "InputDataArrayVector", FilterParameterWidgetType::MultiDataArraySelectionWidget, getInputDataArrayVector(), FilterParameter::RequiredArray);
+      parameters[i] = MultiDataArraySelectionFilterParameter::New("Input Attribute Arrays", "InputDataArrayVector", getInputDataArrayVector(), FilterParameter::RequiredArray);
     }
   }
 
@@ -96,8 +98,7 @@ void MultiEmmpmFilter::setupFilterParameters()
     FilterParameter::Pointer& p = parameters[i];
     if ( p->getPropertyName().compare("OutputDataArrayPath") == 0 )
     {
-
-      parameters[i] = FilterParameter::New("Output Cell Attribute Matrix", "OutputAttributeMatrixName", FilterParameterWidgetType::StringWidget, getOutputAttributeMatrixName(), FilterParameter::CreatedArray);
+      parameters[i] = StringFilterParameter::New("Output Cell Attribute Matrix", "OutputAttributeMatrixName", getOutputAttributeMatrixName(), FilterParameter::CreatedArray);
     }
   }
 
@@ -189,7 +190,7 @@ void MultiEmmpmFilter::dataCheck()
     m_OutputImage = m_OutputImagePtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
- #endif
+#endif
 
   if (getOutputArrayPrefix().isEmpty())
   {
@@ -332,19 +333,19 @@ AbstractFilter::Pointer MultiEmmpmFilter::newFilterInstance(bool copyFilterParam
   MultiEmmpmFilter::Pointer filter = MultiEmmpmFilter::New();
   if (true == copyFilterParameters)
   {
-  DREAM3D_COPY_INSTANCEVAR(InputDataArrayVector)
-  DREAM3D_COPY_INSTANCEVAR(NumClasses)
-  DREAM3D_COPY_INSTANCEVAR(ExchangeEnergy)
-  DREAM3D_COPY_INSTANCEVAR(HistogramLoops)
-  DREAM3D_COPY_INSTANCEVAR(SegmentationLoops)
-  DREAM3D_COPY_INSTANCEVAR(UseSimulatedAnnealing)
-  DREAM3D_COPY_INSTANCEVAR(UseGradientPenalty)
-  DREAM3D_COPY_INSTANCEVAR(GradientPenalty)
-  DREAM3D_COPY_INSTANCEVAR(UseCurvaturePenalty)
-  DREAM3D_COPY_INSTANCEVAR(CurvaturePenalty)
-  DREAM3D_COPY_INSTANCEVAR(RMax)
-  DREAM3D_COPY_INSTANCEVAR(EMLoopDelay)
-  DREAM3D_COPY_INSTANCEVAR(OutputAttributeMatrixName)
+    DREAM3D_COPY_INSTANCEVAR(InputDataArrayVector)
+    DREAM3D_COPY_INSTANCEVAR(NumClasses)
+    DREAM3D_COPY_INSTANCEVAR(ExchangeEnergy)
+    DREAM3D_COPY_INSTANCEVAR(HistogramLoops)
+    DREAM3D_COPY_INSTANCEVAR(SegmentationLoops)
+    DREAM3D_COPY_INSTANCEVAR(UseSimulatedAnnealing)
+    DREAM3D_COPY_INSTANCEVAR(UseGradientPenalty)
+    DREAM3D_COPY_INSTANCEVAR(GradientPenalty)
+    DREAM3D_COPY_INSTANCEVAR(UseCurvaturePenalty)
+    DREAM3D_COPY_INSTANCEVAR(CurvaturePenalty)
+    DREAM3D_COPY_INSTANCEVAR(RMax)
+    DREAM3D_COPY_INSTANCEVAR(EMLoopDelay)
+    DREAM3D_COPY_INSTANCEVAR(OutputAttributeMatrixName)
   }
   return filter;
 }

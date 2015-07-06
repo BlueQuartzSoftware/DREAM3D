@@ -79,12 +79,12 @@ const int HexagonalLowOps::k_MdfSize = 62208;
 const int HexagonalLowOps::k_NumSymQuats = 6;
 
 static const QuatF HexQuatSym[HexagonalLowOps::k_NumSymQuats] = {QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
-                                    QuaternionMathF::New(0.000000000f, 0.000000000f, 0.500000000f, 0.866025400f),
-                                    QuaternionMathF::New(0.000000000f, 0.000000000f, 0.866025400f, 0.500000000f),
-                                    QuaternionMathF::New(0.000000000f, 0.000000000f, 1.000000000f, 0.000000000f),
-                                    QuaternionMathF::New(0.000000000f, 0.000000000f, 0.866025400f, -0.50000000f),
-                                    QuaternionMathF::New(0.000000000f, 0.000000000f, 0.500000000f, -0.86602540f)
-                                   };
+                                                                 QuaternionMathF::New(0.000000000f, 0.000000000f, 0.500000000f, 0.866025400f),
+                                                                 QuaternionMathF::New(0.000000000f, 0.000000000f, 0.866025400f, 0.500000000f),
+                                                                 QuaternionMathF::New(0.000000000f, 0.000000000f, 1.000000000f, 0.000000000f),
+                                                                 QuaternionMathF::New(0.000000000f, 0.000000000f, 0.866025400f, -0.50000000f),
+                                                                 QuaternionMathF::New(0.000000000f, 0.000000000f, 0.500000000f, -0.86602540f)
+                                                                };
 
 
 static const float HexRodSym[HexagonalLowOps::k_NumSymQuats][3] = {{0.0f, 0.0f, 0.0f},
@@ -169,7 +169,7 @@ float HexagonalLowOps::_calcMisoQuat(const QuatF quatsym[12], int numsym,
   QuaternionMathF::Multiply(q1, q2inv, qr);
   for (int i = 0; i < numsym; i++)
   {
-	  QuaternionMathF::Multiply(quatsym[i], qr, qc);
+    QuaternionMathF::Multiply(quatsym[i], qr, qc);
     if (qc.w < -1)
     {
       qc.w = -1;
@@ -265,7 +265,8 @@ FOrientArrayType HexagonalLowOps::getMDFFZRod(FOrientArrayType rod)
 
   FOrientArrayType ax(4, 0.0f);
   OrientationTransforms<FOrientArrayType, float>::ro2ax(rod, ax);
-  n1 = ax[0]; n2 = ax[1], n3 = ax[2], w = ax[3];
+  n1 = ax[0];
+  n2 = ax[1], n3 = ax[2], w = ax[3];
 
   float denom = sqrt((n1 * n1 + n2 * n2 + n3 * n3));
   n1 = n1 / denom;
@@ -369,7 +370,7 @@ FOrientArrayType HexagonalLowOps::determineEulerAngles(int choose)
   phi[1] = static_cast<float>((choose / 72) % 72);
   phi[2] = static_cast<float>(choose / (72 * 72));
 
- _calcDetermineHomochoricValues(init, step, phi, choose, h1, h2, h3);
+  _calcDetermineHomochoricValues(init, step, phi, choose, h1, h2, h3);
 
   FOrientArrayType ho(h1, h2, h3);
   FOrientArrayType ro(4);

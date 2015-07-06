@@ -40,7 +40,7 @@
 //
 // -----------------------------------------------------------------------------
 OutputFileWidgetCodeGenerator::OutputFileWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue) :
-FPCodeGenerator(humanLabel, propertyName, category, initValue)
+  FPCodeGenerator(humanLabel, propertyName, category, initValue)
 {
 
 }
@@ -56,7 +56,7 @@ OutputFileWidgetCodeGenerator::~OutputFileWidgetCodeGenerator()
 // -----------------------------------------------------------------------------
 QString OutputFileWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FileSystemFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::OutputFileWidget, get" + getPropertyName() + "(), " + getCategory() + ", \"\"));";
+  return "  parameters.push_back(OutputFileFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", get" + getPropertyName() + "(), " + getCategory() + ", \"\"));";
 }
 
 // -----------------------------------------------------------------------------
@@ -93,5 +93,5 @@ QString OutputFileWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString OutputFileWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/FileSystemFilterParameter.h\"";
+  return "#include \"DREAM3DLib/FilterParameters/OutputFileFilterParameter.h\"";
 }

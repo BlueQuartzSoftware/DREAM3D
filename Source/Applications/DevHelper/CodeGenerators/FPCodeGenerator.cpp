@@ -40,9 +40,9 @@
 //
 // -----------------------------------------------------------------------------
 FPCodeGenerator::FPCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue) :
-m_PropertyName(propertyName),
-m_HumanLabel(humanLabel),
-m_InitValue(initValue)
+  m_PropertyName(propertyName),
+  m_HumanLabel(humanLabel),
+  m_InitValue(initValue)
 {
   if (category == "Parameter")
   {

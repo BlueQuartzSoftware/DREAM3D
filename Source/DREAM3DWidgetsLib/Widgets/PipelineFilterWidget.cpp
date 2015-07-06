@@ -62,6 +62,8 @@
 #include "DREAM3DLib/FilterParameters/LinkedChoicesFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/DataContainerReaderFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/InputFileFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/InputPathFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/LinkedBooleanWidget.h"
@@ -230,47 +232,54 @@ void PipelineFilterWidget::layoutWidgets()
   {
     FilterParameter* parameter = (*iter).get();
 
-    validateFileSystemFilterParameter(parameter);
+    // Check to make sure that this is in fact a file system filter parameter
+    if (NULL != dynamic_cast<InputFileFilterParameter*>(parameter) || NULL != dynamic_cast<InputPathFilterParameter*>(parameter) || NULL != dynamic_cast<DataContainerReaderFilterParameter*>(parameter))
+    {
+      validateFileSystemFilterParameter(parameter);
+    }
 
-    QWidget* w = fwm->createWidget(parameter, m_Filter.get());
-    m_PropertyToWidget.insert(parameter->getPropertyName(), w); // Update our Map of Filter Parameter Properties to the Widget
+    QWidget* filterParameterWidget = fwm->createWidget(parameter, m_Filter.get());
+    m_PropertyToWidget.insert(parameter->getPropertyName(), filterParameterWidget); // Update our Map of Filter Parameter Properties to the Widget
 
-    if (NULL == w) {
+    if (NULL == filterParameterWidget)
+    {
       continue;
     }
-    m_FilterParameterWidgets.push_back(w);
+    m_FilterParameterWidgets.push_back(filterParameterWidget);
 
     // Determine which group box to add the widget into
     if(parameter->getCategory() == FilterParameter::Parameter)
     {
-      w->setParent(m_VariablesWidget);
-      pLayout->addWidget(w);
+      filterParameterWidget->setParent(m_VariablesWidget);
+      pLayout->addWidget(filterParameterWidget);
       pCount++;
     }
     else if(parameter->getCategory() == FilterParameter::RequiredArray)
     {
-      w->setParent(m_VariablesWidget);
-      rLayout->addWidget(w);
+      filterParameterWidget->setParent(m_VariablesWidget);
+      rLayout->addWidget(filterParameterWidget);
       rCount++;
     }
     else if(parameter->getCategory() == FilterParameter::CreatedArray)
     {
-      w->setParent(m_VariablesWidget);
-      cLayout->addWidget(w);
+      filterParameterWidget->setParent(m_VariablesWidget);
+      cLayout->addWidget(filterParameterWidget);
       cCount++;
     }
     else
     {
-      w->setParent(m_VariablesWidget);
-      nLayout->addWidget(w);
+      filterParameterWidget->setParent(m_VariablesWidget);
+      nLayout->addWidget(filterParameterWidget);
     }
 
     // Connect up some signals and slots
-    connect(w, SIGNAL(parametersChanged() ),
+    connect(filterParameterWidget, SIGNAL(parametersChanged() ),
             parent(), SLOT(preflightPipeline() ) );
-//    connect(w, SIGNAL(parametersChanged()),
-//      this, SLOT(handleFilterParameterChanged()));
-    connect(w, SIGNAL(errorSettingFilterParameter(const QString&)),
+
+    connect(filterParameterWidget, SIGNAL(parametersChanged() ),
+            parent(), SLOT(handleFilterParameterChanged() ) );
+
+    connect(filterParameterWidget, SIGNAL(errorSettingFilterParameter(const QString&)),
             this, SLOT(displayFilterParameterWidgetError(const QString&)));
 
   }
@@ -326,87 +335,115 @@ void PipelineFilterWidget::layoutWidgets()
 }
 
 // -----------------------------------------------------------------------------
-//  CONNECT - PipelineFilterWidget::layoutWidgets()
+//
 // -----------------------------------------------------------------------------
-void PipelineFilterWidget::handleFilterParameterChanged()
+QFileInfo getFilterParameterPath(AbstractFilter* filter, FilterParameter* parameter, QString& fType, QString& ext, int &err)
 {
-  /* SLOT - PipelineViewWidget::handleFilterParameterChanged()
-     CONNECT - PipelineViewWidget::addFilter(...) */
-  emit parametersChanged();
+  QString currentPath = "";
+  fType.clear();
+  ext.clear();
+  if (NULL != dynamic_cast<DataContainerReaderFilterParameter*>(parameter))
+  {
+    DataContainerReaderFilterParameter* rParam = dynamic_cast<DataContainerReaderFilterParameter*>(parameter);
+    currentPath = filter->property(rParam->getInputFileProperty().toLatin1().constData()).toString();
+    fType.append(rParam->getFileType());
+    ext.append(rParam->getFileExtension());
+  }
+  else if(NULL != dynamic_cast<InputFileFilterParameter*>(parameter))
+  {
+    InputFileFilterParameter* rParam = dynamic_cast<InputFileFilterParameter*>(parameter);
+    currentPath = filter->property(rParam->getPropertyName().toLatin1().constData()).toString();
+    fType.append(rParam->getFileType());
+    ext.append(rParam->getFileExtension());
+  }
+  else if(NULL != dynamic_cast<InputPathFilterParameter*>(parameter))
+  {
+    InputPathFilterParameter* rParam = dynamic_cast<InputPathFilterParameter*>(parameter);
+    currentPath = filter->property(rParam->getPropertyName().toLatin1().constData()).toString();
+    fType.append(rParam->getFileType());
+    ext.append(rParam->getFileExtension());
+  }
+  else
+  {
+    err = -1;
+  }
+
+  QFileInfo fi;
+  if (currentPath.isEmpty() == false)
+  {
+    fi.setFile(currentPath);
+  }
+
+  return fi;
 }
+
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineFilterWidget::validateFileSystemFilterParameter(FilterParameter* option)
+void PipelineFilterWidget::validateFileSystemFilterParameter(FilterParameter* parameter)
 {
-  FileSystemFilterParameter* fsParam = dynamic_cast<FileSystemFilterParameter*>(option);
-  if(fsParam)
+
+  QString fType;
+  QString ext;
+  int errCode = 0;
+  QFileInfo fi = getFilterParameterPath(m_Filter.get(), parameter, fType, ext, errCode);
+
+  if (errCode < 0)
   {
-    DataContainerReaderFilterParameter* rParam = NULL;
-    QString currentPath = "";
-    QString Ftype = "";
-    QString ext = "";
-    if (fsParam->getWidgetType().compare(FilterParameterWidgetType::DataContainerReaderWidget) == 0)
-    {
-      rParam = dynamic_cast<DataContainerReaderFilterParameter*>(fsParam);
-      currentPath = m_Filter->property(rParam->getInputFileProperty().toLatin1().constData()).toString();
-    }
-    else
-    {
-      currentPath = m_Filter->property(fsParam->getPropertyName().toLatin1().constData()).toString();
-    }
-    QFileInfo fi(currentPath);
+    // Throw an error, because we have the wrong filter parameter type
+  }
 
-    if (currentPath.isEmpty() == false && fi.exists() == false)
-    {
-    if (NULL != rParam)
-    {
-      Ftype = rParam->getFileType();
-      ext = rParam->getFileExtension();
-    }
-    else
-    {
-      Ftype = fsParam->getFileType();
-      ext = fsParam->getFileExtension();
-    }
-      QString s = Ftype + QString(" Files (*") + ext + QString(");;All Files (*.*)");
-      QString defaultName = m_OpenDialogLastDirectory + QDir::separator() + "Untitled";
+  QString currentPath = fi.absoluteFilePath();
 
-      if (fsParam->getWidgetType().compare(FilterParameterWidgetType::InputFileWidget) == 0 )
+
+  if (currentPath.isEmpty() == false && fi.exists() == false)
+  {
+
+    QString s = fType + QString(" Files (*") + ext + QString(");;All Files (*.*)");
+    QString defaultName = m_OpenDialogLastDirectory + QDir::separator() + "Untitled";
+
+    if (NULL != dynamic_cast<InputFileFilterParameter*>(parameter))
+    {
+      InputFileFilterParameter* fsParam = dynamic_cast<InputFileFilterParameter*>(parameter);
+
+      QString title = QObject::tr("Select a replacement input file for parameter '%1' in filter '%2'").arg(fsParam->getHumanLabel()).arg(m_Filter->getHumanLabel());
+
+      QString file = QFileDialog::getOpenFileName(this, title, defaultName, s);
+      if(true == file.isEmpty())
       {
-        QString title = QObject::tr("Select a replacement input file for parameter '%1' in filter '%2'").arg(fsParam->getHumanLabel()).arg(m_Filter->getHumanLabel());
-
-        QString file = QFileDialog::getOpenFileName(this, title, defaultName, s);
-        if(true == file.isEmpty())
-        {
-          file = currentPath;
-        }
-        file = QDir::toNativeSeparators(file);
-        // Store the last used directory into the private instance variable
-        QFileInfo fi(file);
-        m_OpenDialogLastDirectory = fi.path();
-        m_Filter->setProperty(fsParam->getPropertyName().toLatin1().constData(), file);
+        file = currentPath;
       }
+      file = QDir::toNativeSeparators(file);
+      // Store the last used directory into the private instance variable
+      QFileInfo fi(file);
+      m_OpenDialogLastDirectory = fi.path();
+      m_Filter->setProperty(fsParam->getPropertyName().toLatin1().constData(), file);
+    }
 
-      else if (fsParam->getWidgetType().compare(FilterParameterWidgetType::InputPathWidget) == 0 )
-      {
-        QString title = QObject::tr("Select a replacement input folder for parameter '%1' in filter '%2'").arg(fsParam->getHumanLabel()).arg(m_Filter->getHumanLabel());
-
-        QString file = QFileDialog::getExistingDirectory(this, title, defaultName, QFileDialog::ShowDirsOnly);
-        file = QDir::toNativeSeparators(file);
-        if(true == file.isEmpty())
-        {
-          file = currentPath;
-        }
-        // Store the last used directory into the private instance variable
-        QFileInfo fi(file);
-        m_OpenDialogLastDirectory = fi.path();
-        m_Filter->setProperty(fsParam->getPropertyName().toLatin1().constData(), file);
-      }
-
-    else if (fsParam->getWidgetType().compare(FilterParameterWidgetType::DataContainerReaderWidget) == 0)
+    else if (NULL != dynamic_cast<InputPathFilterParameter*>(parameter))
     {
+      InputPathFilterParameter* fsParam = dynamic_cast<InputPathFilterParameter*>(parameter);
+
+      QString title = QObject::tr("Select a replacement input folder for parameter '%1' in filter '%2'").arg(fsParam->getHumanLabel()).arg(m_Filter->getHumanLabel());
+
+      QString file = QFileDialog::getExistingDirectory(this, title, defaultName, QFileDialog::ShowDirsOnly);
+      file = QDir::toNativeSeparators(file);
+      if(true == file.isEmpty())
+      {
+        file = currentPath;
+      }
+      // Store the last used directory into the private instance variable
+      QFileInfo fi(file);
+      m_OpenDialogLastDirectory = fi.path();
+      m_Filter->setProperty(fsParam->getPropertyName().toLatin1().constData(), file);
+    }
+
+    else if (NULL != dynamic_cast<DataContainerReaderFilterParameter*>(parameter))
+    {
+      DataContainerReaderFilterParameter* fsParam = dynamic_cast<DataContainerReaderFilterParameter*>(parameter);
+
       QString title = QObject::tr("Select a replacement input file for parameter '%1' in filter '%2'").arg(fsParam->getHumanLabel()).arg(m_Filter->getHumanLabel());
 
       QString file = QFileDialog::getOpenFileName(this, title, defaultName, s);
@@ -418,10 +455,10 @@ void PipelineFilterWidget::validateFileSystemFilterParameter(FilterParameter* op
       // Store the last used directory into the private instance variable
       QFileInfo fi(file);
       m_OpenDialogLastDirectory = fi.path();
-      m_Filter->setProperty(rParam->getInputFileProperty().toLatin1().constData(), file);
-    }
+      m_Filter->setProperty(fsParam->getInputFileProperty().toLatin1().constData(), file);
     }
   }
+
 }
 
 // -----------------------------------------------------------------------------
@@ -434,7 +471,8 @@ void PipelineFilterWidget::linkConditionalWidgets(QVector<FilterParameter::Point
   {
     FilterParameter::Pointer filterParameter = (*iter);
     LinkedBooleanFilterParameter::Pointer filterParameterPtr = boost::dynamic_pointer_cast<LinkedBooleanFilterParameter>(filterParameter);
-    if(NULL != filterParameterPtr.get() && filterParameter->getWidgetType().compare(FilterParameterWidgetType::LinkedBooleanWidget) == 0 )
+
+    if(NULL != filterParameterPtr.get() )
     {
       QStringList linkedProps = filterParameterPtr->getConditionalProperties();
 
@@ -465,7 +503,8 @@ void PipelineFilterWidget::linkConditionalWidgets(QVector<FilterParameter::Point
 
     // Figure out if we have any Linked ComboBox Widgets to hook up to other widgets
     LinkedChoicesFilterParameter::Pointer optionPtr2 = boost::dynamic_pointer_cast<LinkedChoicesFilterParameter>(filterParameter);
-    if(NULL != optionPtr2.get() && filterParameter->getWidgetType().compare(FilterParameterWidgetType::ChoiceWidget) == 0 )
+
+    if(NULL != optionPtr2.get())
     {
       QStringList linkedProps = optionPtr2->getLinkedProperties();
 
@@ -861,7 +900,7 @@ void PipelineFilterWidget::on_deleteBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineFilterWidget::showContextMenuForWidget(const QPoint &pos)
+void PipelineFilterWidget::showContextMenuForWidget(const QPoint& pos)
 {
   if (NULL != getFilter())
   {
@@ -872,7 +911,7 @@ void PipelineFilterWidget::showContextMenuForWidget(const QPoint &pos)
     actionLaunchHelp->setObjectName(QString::fromUtf8("actionLaunchHelp"));
     actionLaunchHelp->setText(QApplication::translate("DREAM3D_UI", "Filter Help", 0));
     connect(actionLaunchHelp, SIGNAL(triggered()),
-      this, SLOT(launchHelpForItem()));
+            this, SLOT(launchHelpForItem()));
 
     //QAction* actionLaunchHelp = new QAction(m_ContextMenu);
     //actionLaunchHelp->setObjectName(QString::fromUtf8("actionLaunchHelp"));

@@ -44,36 +44,36 @@
 
 class DynamicTableWidgetCodeGenerator : public FPCodeGenerator
 {
-public:
-  DREAM3D_SHARED_POINTERS(DynamicTableWidgetCodeGenerator)
+  public:
+    DREAM3D_SHARED_POINTERS(DynamicTableWidgetCodeGenerator)
 
     static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
-  {
-    Pointer sharedPtr(new DynamicTableWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
-    return sharedPtr;
-  }
+    {
+      Pointer sharedPtr(new DynamicTableWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
+      return sharedPtr;
+    }
 
-  virtual ~DynamicTableWidgetCodeGenerator();
+    virtual ~DynamicTableWidgetCodeGenerator();
 
-  virtual QString generateSetupFilterParameters();
+    virtual QString generateSetupFilterParameters();
 
-  virtual QString generateReadFilterParameters();
+    virtual QString generateReadFilterParameters();
 
-  virtual QString generateDataCheck();
+    virtual QString generateDataCheck();
 
-  virtual QString generateFilterParameters();
+    virtual QString generateFilterParameters();
 
-  virtual QString generateHIncludes();
+    virtual QString generateHIncludes();
 
-  virtual QString generateCPPIncludes();
+    virtual QString generateCPPIncludes();
 
-protected:
-  DynamicTableWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
+  protected:
+    DynamicTableWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
-private:
+  private:
 
-  DynamicTableWidgetCodeGenerator(const DynamicTableWidgetCodeGenerator&); // Copy Constructor Not Implemented
-  void operator=(const DynamicTableWidgetCodeGenerator&); // Operator '=' Not Implemented
+    DynamicTableWidgetCodeGenerator(const DynamicTableWidgetCodeGenerator&); // Copy Constructor Not Implemented
+    void operator=(const DynamicTableWidgetCodeGenerator&); // Operator '=' Not Implemented
 };
 
 #endif /* DynamicTableWidgetCodeGenerator_H_ */

@@ -39,6 +39,8 @@
 #include "DREAM3DLib/DataArrays/StringDataArray.hpp"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+
+#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 #include "DREAM3DLib/Geometry/ImageGeom.h"
 #include "DREAM3DLib/Geometry/VertexGeom.h"
@@ -82,11 +84,11 @@ void MakeDataContainer::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget, getFeatureIdsArrayName(), FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("Cell Euler Angles", "CellEulerAnglesArrayName", FilterParameterWidgetType::StringWidget, getCellEulerAnglesArrayName(), FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("Cell Phases", "CellPhasesArrayName", FilterParameterWidgetType::StringWidget, getCellPhasesArrayName(), FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayName", FilterParameterWidgetType::StringWidget, getCrystalStructuresArrayName(), FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("LatticeConstants", "LatticeConstantsArrayName", FilterParameterWidgetType::StringWidget, getLatticeConstantsArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(StringFilterParameter::New("FeatureIds", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Cell Euler Angles", "CellEulerAnglesArrayName", getCellEulerAnglesArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Cell Phases", "CellPhasesArrayName", getCellPhasesArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Crystal Structures", "CrystalStructuresArrayName", getCrystalStructuresArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("LatticeConstants", "LatticeConstantsArrayName", getLatticeConstantsArrayName(), FilterParameter::CreatedArray));
 
   setFilterParameters(parameters);
 }
@@ -108,11 +110,11 @@ int MakeDataContainer::writeFilterParameters(AbstractFilterParametersWriter* wri
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(LatticeConstantsArrayName)
-      /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayName)
-      /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayName)
-      /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayName)
-      /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
-      writer->closeFilterGroup();
+  /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayName)
+  /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayName)
+  /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayName)
+  /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -155,16 +157,16 @@ void MakeDataContainer::dataCheck()
   //image->setDimensions(64, 64, 64);
   //m->setGeometry(image);
 
-    VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(100, "TestVertexGeom");
-    SharedVertexList::Pointer test = vertices->getVertices();
-    float* verts = test->getPointer(0);
-    for (int64_t i=0;i<vertices->getNumberOfVertices();i++)
-    {
-      verts[3*i] = float(0.1 + i);
-      verts[3*i+1] = float(0.2 + i);
-      verts[3*i+2] = float(0.3 + i);
-    }
-    m->setGeometry(vertices);
+  VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(100, "TestVertexGeom");
+  SharedVertexList::Pointer test = vertices->getVertices();
+  float* verts = test->getPointer(0);
+  for (int64_t i = 0; i < vertices->getNumberOfVertices(); i++)
+  {
+    verts[3 * i] = float(0.1 + i);
+    verts[3 * i + 1] = float(0.2 + i);
+    verts[3 * i + 2] = float(0.3 + i);
+  }
+  m->setGeometry(vertices);
 
 }
 
@@ -218,7 +220,7 @@ void MakeDataContainer::execute()
 
   VertexGeom::Pointer verts = getDataContainerArray()->getDataContainer(getDataContainerName())->getGeometryAs<VertexGeom>();
 
-  for (int64_t i=0;i<verts->getNumberOfVertices();i++)
+  for (int64_t i = 0; i < verts->getNumberOfVertices(); i++)
   {
     m_FeatureIds[i] = i;
   }

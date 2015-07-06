@@ -44,32 +44,34 @@
 
 class DataContainerSelectionWidgetCodeGenerator : public FPCodeGenerator
 {
-public:
-  DREAM3D_SHARED_POINTERS(DataContainerSelectionWidgetCodeGenerator)
+  public:
+    DREAM3D_SHARED_POINTERS(DataContainerSelectionWidgetCodeGenerator)
 
     static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
-  {
-    Pointer sharedPtr(new DataContainerSelectionWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
-    return sharedPtr;
-  }
+    {
+      Pointer sharedPtr(new DataContainerSelectionWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
+      return sharedPtr;
+    }
 
-  virtual ~DataContainerSelectionWidgetCodeGenerator();
+    virtual ~DataContainerSelectionWidgetCodeGenerator();
 
-  virtual QString generateSetupFilterParameters();
+    virtual QString generateSetupFilterParameters();
 
-  virtual QString generateReadFilterParameters();
+    virtual QString generateReadFilterParameters();
 
-  virtual QString generateDataCheck();
+    virtual QString generateDataCheck();
 
-  virtual QString generateFilterParameters();
+    virtual QString generateFilterParameters();
 
-protected:
-  DataContainerSelectionWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
+    virtual QString generateCPPIncludes();
 
-private:
+  protected:
+    DataContainerSelectionWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
-  DataContainerSelectionWidgetCodeGenerator(const DataContainerSelectionWidgetCodeGenerator&); // Copy Constructor Not Implemented
-  void operator=(const DataContainerSelectionWidgetCodeGenerator&); // Operator '=' Not Implemented
+  private:
+
+    DataContainerSelectionWidgetCodeGenerator(const DataContainerSelectionWidgetCodeGenerator&); // Copy Constructor Not Implemented
+    void operator=(const DataContainerSelectionWidgetCodeGenerator&); // Operator '=' Not Implemented
 };
 
 #endif /* DataContainerSelectionWidgetCodeGenerator_H_ */

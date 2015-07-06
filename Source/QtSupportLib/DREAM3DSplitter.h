@@ -48,18 +48,18 @@ class QSplitterHandle;
 */
 class QtSupportLib_EXPORT DREAM3DSplitter : public QSplitter
 {
-  Q_OBJECT
+    Q_OBJECT
 
-public:
-  DREAM3DSplitter(QWidget* parent = 0);
-  virtual ~DREAM3DSplitter();
+  public:
+    DREAM3DSplitter(QWidget* parent = 0);
+    virtual ~DREAM3DSplitter();
 
-  QSplitterHandle* createHandle();
+    QSplitterHandle* createHandle();
 
-private:
+  private:
 
-  DREAM3DSplitter(const DREAM3DSplitter&); // Copy Constructor Not Implemented
-  void operator=(const DREAM3DSplitter&); // Operator '=' Not Implemented
+    DREAM3DSplitter(const DREAM3DSplitter&); // Copy Constructor Not Implemented
+    void operator=(const DREAM3DSplitter&); // Operator '=' Not Implemented
 };
 
 #endif /* _DREAM3DSplitter_H */

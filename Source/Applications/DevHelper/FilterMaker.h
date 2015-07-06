@@ -50,84 +50,85 @@
 
 class FilterMaker : public QWidget, public Ui::FilterMaker
 {
-  Q_OBJECT
+    Q_OBJECT
 
-public:
+  public:
 
-  enum FPColumnIndex
-  {
-    VAR_NAME,
-    HUMAN_NAME,
-    TYPE,
-    CATEGORY,
-    INIT_VALUE
-  };
+    enum FPColumnIndex
+    {
+      VAR_NAME,
+      HUMAN_NAME,
+      TYPE,
+      CATEGORY,
+      INIT_VALUE
+    };
 
-  enum CodeChooserIndex
-  {
-    H_INDEX,
-    CPP_INDEX,
-    DOC_INDEX,
-    TEST_INDEX
-  };
+    enum CodeChooserIndex
+    {
+      H_INDEX,
+      CPP_INDEX,
+      DOC_INDEX,
+      TEST_INDEX
+    };
 
-  FilterMaker(QWidget* parent = 0);
-  ~FilterMaker();
+    FilterMaker(QWidget* parent = 0);
+    ~FilterMaker();
 
-  QString getFilterName();
-  QString getPluginDir();
-  bool isPublic();
+    bool validityCheck();
 
-public slots:
-  void addFilterParameterToTable(AddFilterParameter* widget);
+    QString getFilterName();
+    QString getPluginDir();
+    bool isPublic();
 
-protected:
-  void setupGui();
+  public slots:
+    void addFilterParameterToTable(AddFilterParameter* widget);
 
-  QString getDefaultSetupFPContents();
-  QString getDefaultReadFPContents();
-  QString getDefaultWriteFPContents();
-  QString getDefaultDataCheckContents();
-  QString getDefaultFPContents();
-  QString getDefaultInitListContents();
-  QString getDefaultFilterHIncludesContents();
-  QString getDefaultFilterCPPIncludesContents();
+  protected:
+    void setupGui();
 
-protected slots:
-  void on_selectBtn_clicked();
-  void on_codeChooser_currentIndexChanged(int index);
-  void on_pluginDir_textChanged(const QString& text);
-  void on_filterName_textChanged(const QString& text);
-  void on_filterParametersTable_itemChanged(QTableWidgetItem* item);
-  void on_generateBtn_clicked();
-  void on_addFilterParameterBtn_clicked();
-  void on_removeFilterParameterBtn_clicked();
-  void on_errorString_linkActivated(const QString &link);
-  void generationError(const QString& test);
+    QString getDefaultSetupFPContents();
+    QString getDefaultReadFPContents();
+    QString getDefaultWriteFPContents();
+    QString getDefaultDataCheckContents();
+    QString getDefaultFPContents();
+    QString getDefaultInitListContents();
+    QString getDefaultFilterHIncludesContents();
+    QString getDefaultFilterCPPIncludesContents();
 
-signals:
-  void generateBtnPressed();
-  void updateStatusBar(QString message);
+  protected slots:
+    void on_selectBtn_clicked();
+    void on_codeChooser_currentIndexChanged(int index);
+    void on_pluginDir_textChanged(const QString& text);
+    void on_filterName_textChanged(const QString& text);
+    void on_filterParametersTable_itemChanged(QTableWidgetItem* item);
+    void on_generateBtn_clicked();
+    void on_addFilterParameterBtn_clicked();
+    void on_removeFilterParameterBtn_clicked();
+    void on_errorString_linkActivated(const QString& link);
+    void generationError(const QString& test);
 
-private:
-  QString                     m_OpenDialogLastDirectory;
-  PMFileGenerator*            cppGenerator;
-  PMFileGenerator*            hGenerator;
-  PMFileGenerator*            htmlGenerator;
-  PMFileGenerator*            testGenerator;
+  signals:
+    void generateBtnPressed();
+    void updateStatusBar(QString message);
 
-  void updateFilterFileGenerators();
-  void generateFilterFiles();
-  void updateSourceList();
-  void updateTestLocations();
-  void updateTestList();
-  QString createNamespaceString();
-  bool validityCheck();
+  private:
+    QString                     m_OpenDialogLastDirectory;
+    PMFileGenerator*            cppGenerator;
+    PMFileGenerator*            hGenerator;
+    PMFileGenerator*            htmlGenerator;
+    PMFileGenerator*            testGenerator;
 
-  QMap<QString, QString> getFunctionContents();
+    void updateFilterFileGenerators();
+    void generateFilterFiles();
+    void updateSourceList();
+    void updateTestLocations();
+    void updateTestList();
+    QString createNamespaceString();
 
-  FilterMaker(const FilterMaker&);    // Copy Constructor Not Implemented
-  void operator=(const FilterMaker&);  // Operator '=' Not Implemented
+    QMap<QString, QString> getFunctionContents();
+
+    FilterMaker(const FilterMaker&);    // Copy Constructor Not Implemented
+    void operator=(const FilterMaker&);  // Operator '=' Not Implemented
 };
 
 #endif

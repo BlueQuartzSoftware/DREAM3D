@@ -40,7 +40,7 @@
 //
 // -----------------------------------------------------------------------------
 BooleanWidgetCodeGenerator::BooleanWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue) :
-FPCodeGenerator(humanLabel, propertyName, category, initValue)
+  FPCodeGenerator(humanLabel, propertyName, category, initValue)
 {
 
 }
@@ -56,7 +56,7 @@ BooleanWidgetCodeGenerator::~BooleanWidgetCodeGenerator()
 // -----------------------------------------------------------------------------
 QString BooleanWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::BooleanWidget, get" + getPropertyName() + "(), " + getCategory() + "));";
+  return "  parameters.push_back(BooleanFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", get" + getPropertyName() + "(), " + getCategory() + "));";
 }
 
 // -----------------------------------------------------------------------------
@@ -86,4 +86,12 @@ QString BooleanWidgetCodeGenerator::generateFilterParameters()
   ss << "    Q_PROPERTY(bool " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString BooleanWidgetCodeGenerator::generateCPPIncludes()
+{
+  return "#include \"DREAM3DLib/FilterParameters/BooleanFilterParameter.h\"";
 }

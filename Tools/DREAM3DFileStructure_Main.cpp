@@ -28,7 +28,7 @@
 
 #include "DREAM3DFileStructure.h"
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
 
   QString filePath;
@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
     // Extract the file path passed in by the user.
     filePath = QString::fromStdString(fileArg.getValue());
   }
-  catch (TCLAP::ArgException &e) // catch any exceptions
+  catch (TCLAP::ArgException& e) // catch any exceptions
   {
     std::cerr << " error: " << e.error() << " for arg " << e.argId();
     return EXIT_FAILURE;

@@ -1,7 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
-* Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
-* All rights reserved.
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -13,10 +11,9 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
-* BlueQuartz Software nor the names of its contributors may be used to endorse
-* or promote products derived from this software without specific prior written
-* permission.
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -29,42 +26,45 @@
 * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
 * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *
-*  This code was written under United States Air Force Contract number
-*                           FA8650-07-D-5800
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ComparisonFilterParameter_H_
-#define _ComparisonFilterParameter_H_
+#ifndef _DoubleFilterParameter_H_
+#define _DoubleFilterParameter_H_
 
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
 
-class DREAM3DLib_EXPORT ComparisonFilterParameter : public FilterParameter
+class DREAM3DLib_EXPORT DoubleFilterParameter : public FilterParameter
 {
 public:
-  DREAM3D_SHARED_POINTERS(ComparisonFilterParameter)
-    DREAM3D_STATIC_NEW_MACRO(ComparisonFilterParameter)
-    DREAM3D_TYPE_MACRO_SUPER(ComparisonFilterParameter, FilterParameter)
+  DREAM3D_SHARED_POINTERS(DoubleFilterParameter)
+    DREAM3D_STATIC_NEW_MACRO(DoubleFilterParameter)
+    DREAM3D_TYPE_MACRO(DoubleFilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-    const QString& widgetType, const QVariant& defaultValue,
-    QVector<QString> choices,
-    bool showOperators,
-    Category category,
-    int groupIndex = -1);
+    const double& defaultValue, Category category,
+     int groupIndex = -1);
 
+    virtual ~DoubleFilterParameter();
 
-  virtual ~ComparisonFilterParameter();
+  /**
+   * @brief getWidgetType Returns the type of widget that displays and controls
+   * this FilterParameter subclass
+   * @return
+   */
+  QString getWidgetType();
 
-  DREAM3D_INSTANCE_PROPERTY(QVector<QString>, Choices)
-    DREAM3D_INSTANCE_PROPERTY(bool, ShowOperators)
 
 protected:
-  ComparisonFilterParameter();
+  DoubleFilterParameter();
 
 private:
-  ComparisonFilterParameter(const ComparisonFilterParameter&); // Copy Constructor Not Implemented
-  void operator=(const ComparisonFilterParameter&); // Operator '=' Not Implemented
+  DoubleFilterParameter(const DoubleFilterParameter&); // Copy Constructor Not Implemented
+  void operator=(const DoubleFilterParameter&); // Operator '=' Not Implemented
 };
 
-#endif /* _ComparisonFilterParameter_H_ */
+#endif /* _DoubleFilterParameter_H_ */

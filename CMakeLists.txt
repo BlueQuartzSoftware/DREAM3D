@@ -35,7 +35,7 @@ project(DREAM3DProj VERSION 6.0.0.0)
 # Official: This is an official release from BlueQuartz Software
 # Beta: This is a Beta release that has is getting ready to be officially released.
 # Development: This is currently in development and probably has bugs.
-set(DREAM3DProj_RELEASE_TYPE "Official")
+set(DREAM3DProj_RELEASE_TYPE "Development")
 
 include(CMakeParseArguments)
 
@@ -217,7 +217,12 @@ configure_file(${PROJECT_RESOURCES_DIR}/DREAM3D/DREAM3DLicense.txt
                 ${PROJECT_BINARY_DIR}/DREAM3D/DREAM3DLicense.txt )
 configure_file(${PROJECT_SOURCE_DIR}/ReadMe.md
                 ${PROJECT_BINARY_DIR}/ReadMe.md )
-install(FILES ${PROJECT_BINARY_DIR}/ReadMe.md
+configure_file(${PROJECT_SOURCE_DIR}/Resources/ReleaseDocs/ReleaseNotes.md
+                ${PROJECT_BINARY_DIR}/ReleaseNotes.md )
+
+# --------------------------------------------------------------------
+# Generate install rules for the text files
+install(FILES ${PROJECT_BINARY_DIR}/ReadMe.md ${PROJECT_BINARY_DIR}/ReleaseNotes.md 
         DESTINATION .
         COMPONENT Applications)
 

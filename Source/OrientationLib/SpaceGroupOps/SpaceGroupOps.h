@@ -217,7 +217,7 @@ class OrientationLib_EXPORT SpaceGroupOps
     void _calcNearestQuat(const QuatF quatsym[24], int numsym, QuatF& q1, QuatF& q2);
     void _calcQuatNearestOrigin(const QuatF quatsym[24], int numsym, QuatF& qr);
 
-    int _calcMisoBin(float dim[3], float bins[3], float step[3], const FOrientArrayType &homochoric);
+    int _calcMisoBin(float dim[3], float bins[3], float step[3], const FOrientArrayType& homochoric);
     void _calcDetermineHomochoricValues(float init[3], float step[3], float phi[3], int choose, float& r1, float& r2, float& r3);
     int _calcODFBin(float dim[3], float bins[3], float step[3], FOrientArrayType homochoric);
 

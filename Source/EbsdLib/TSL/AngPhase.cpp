@@ -179,7 +179,7 @@ void AngPhase::parseHKLFamilies(QList<QByteArray>& tokens)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AngPhase::parseCategories(QList<QByteArray> &tokens)
+void AngPhase::parseCategories(QList<QByteArray>& tokens)
 {
   m_Categories.clear();
   bool ok = false;

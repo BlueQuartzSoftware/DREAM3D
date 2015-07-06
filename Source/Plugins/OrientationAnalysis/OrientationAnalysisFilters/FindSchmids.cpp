@@ -39,6 +39,10 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+
+#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
@@ -101,26 +105,26 @@ void FindSchmids::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FilterParameter::New("Loading Direction", "LoadingDirection", FilterParameterWidgetType::FloatVec3Widget, getLoadingDirection(), FilterParameter::Parameter));
+  parameters.push_back(FloatVec3FilterParameter::New("Loading Direction", "LoadingDirection", getLoadingDirection(), FilterParameter::Parameter));
   QStringList linkedProps;
   linkedProps << "PhisArrayName" << "LambdasArrayName";
   parameters.push_back(LinkedBooleanFilterParameter::New("Store Angle Components of Schmid Factor", "StoreAngleComponents", getStoreAngleComponents(), linkedProps, FilterParameter::Parameter));
   QStringList linkedProps2;
   linkedProps2 << "SlipPlane" << "SlipDirection";
   parameters.push_back(LinkedBooleanFilterParameter::New("Override Default Slip System", "OverrideSystem", getOverrideSystem(), linkedProps2, FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Slip Plane", "SlipPlane", FilterParameterWidgetType::FloatVec3Widget, getSlipPlane(), FilterParameter::Parameter, ""));
-  parameters.push_back(FilterParameter::New("Slip Direction", "SlipDirection", FilterParameterWidgetType::FloatVec3Widget, getSlipDirection(), FilterParameter::Parameter, ""));
+  parameters.push_back(FloatVec3FilterParameter::New("Slip Plane", "SlipPlane", getSlipPlane(), FilterParameter::Parameter));
+  parameters.push_back(FloatVec3FilterParameter::New("Slip Direction", "SlipDirection", getSlipDirection(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
-  parameters.push_back(FilterParameter::New("Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, ""));
-  parameters.push_back(FilterParameter::New("Average Quats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Average Quats", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray));
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::RequiredArray));
-  parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(FilterParameter::New("Schmids", "SchmidsArrayName", FilterParameterWidgetType::StringWidget, getSchmidsArrayName(), FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("Slip Systems", "SlipSystemsArrayName", FilterParameterWidgetType::StringWidget, getSlipSystemsArrayName(), FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("Poles", "PolesArrayName", FilterParameterWidgetType::StringWidget, getPolesArrayName(), FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("Phis", "PhisArrayName", FilterParameterWidgetType::StringWidget, getPhisArrayName(), FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("Lambdas", "LambdasArrayName", FilterParameterWidgetType::StringWidget, getLambdasArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(StringFilterParameter::New("Schmids", "SchmidsArrayName", getSchmidsArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Slip Systems", "SlipSystemsArrayName", getSlipSystemsArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Poles", "PolesArrayName", getPolesArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Phis", "PhisArrayName", getPhisArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Lambdas", "LambdasArrayName", getLambdasArrayName(), FilterParameter::CreatedArray));
   setFilterParameters(parameters);
 }
 

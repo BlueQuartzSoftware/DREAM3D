@@ -42,8 +42,11 @@
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+
+#include "DREAM3DLib/FilterParameters/InputFileFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/IntFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/LinkedChoicesFilterParameter.h"
@@ -188,12 +191,12 @@ void RawBinaryReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), FilterParameter::Parameter, "", "*.raw *.bin"));
+  parameters.push_back(InputFileFilterParameter::New("Input File", "InputFile", getInputFile(), FilterParameter::Parameter, "*.raw *.bin"));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Scalar Type");
     parameter->setPropertyName("ScalarType");
-    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+
     QVector<QString> choices;
     choices.push_back("signed   int 8  bit");
     choices.push_back("unsigned int 8  bit");
@@ -209,12 +212,12 @@ void RawBinaryReader::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(FilterParameter::New("Number of Components", "NumberOfComponents", FilterParameterWidgetType::IntWidget, getNumberOfComponents(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Number of Components", "NumberOfComponents", getNumberOfComponents(), FilterParameter::Parameter));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Endian");
     parameter->setPropertyName("Endian");
-    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+
     QVector<QString> choices;
     choices.push_back("Little");
     choices.push_back("Big");
@@ -222,9 +225,9 @@ void RawBinaryReader::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(FilterParameter::New("Skip Header Bytes", "SkipHeaderBytes", FilterParameterWidgetType::IntWidget, getSkipHeaderBytes(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Skip Header Bytes", "SkipHeaderBytes", getSkipHeaderBytes(), FilterParameter::Parameter));
 
-  parameters.push_back(FilterParameter::New("Output Attribute Array", "CreatedAttributeArrayPath", FilterParameterWidgetType::DataArrayCreationWidget, getCreatedAttributeArrayPath(), FilterParameter::CreatedArray));
+  parameters.push_back(DataArrayCreationFilterParameter::New("Output Attribute Array", "CreatedAttributeArrayPath", getCreatedAttributeArrayPath(), FilterParameter::CreatedArray));
   setFilterParameters(parameters);
 }
 
@@ -407,7 +410,7 @@ void RawBinaryReader::execute()
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-          array = p;
+      array = p;
     }
   }
   else if (m_ScalarType == Detail::UInt8)
@@ -417,7 +420,7 @@ void RawBinaryReader::execute()
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-          array = p;
+      array = p;
     }
   }
   else if (m_ScalarType == Detail::Int16)
@@ -427,7 +430,7 @@ void RawBinaryReader::execute()
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-          array = p;
+      array = p;
     }
   }
   else if (m_ScalarType == Detail::UInt16)
@@ -437,7 +440,7 @@ void RawBinaryReader::execute()
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-          array = p;
+      array = p;
     }
   }
   else if (m_ScalarType == Detail::Int32)
@@ -447,7 +450,7 @@ void RawBinaryReader::execute()
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-          array = p;
+      array = p;
     }
   }
   else if (m_ScalarType == Detail::UInt32)
@@ -457,7 +460,7 @@ void RawBinaryReader::execute()
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-          array = p;
+      array = p;
     }
   }
   else if (m_ScalarType == Detail::Int64)
@@ -467,7 +470,7 @@ void RawBinaryReader::execute()
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-          array = p;
+      array = p;
     }
   }
   else if (m_ScalarType == Detail::UInt64)
@@ -477,7 +480,7 @@ void RawBinaryReader::execute()
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-          array = p;
+      array = p;
     }
   }
   else if (m_ScalarType == Detail::Float)
@@ -487,7 +490,7 @@ void RawBinaryReader::execute()
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-          array = p;
+      array = p;
     }
   }
   else if (m_ScalarType == Detail::Double)
@@ -497,7 +500,7 @@ void RawBinaryReader::execute()
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-          array = p;
+      array = p;
     }
   }
 

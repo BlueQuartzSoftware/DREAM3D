@@ -57,6 +57,9 @@ DataArraySelectionWidget::DataArraySelectionWidget(FilterParameter* parameter, A
   FilterParameterWidget(parameter, filter, parent),
   m_DidCausePreflight(false)
 {
+  m_FilterParameter = dynamic_cast<DataArraySelectionFilterParameter*>(parameter);
+  Q_ASSERT_X(m_FilterParameter != NULL, "NULL Pointer", "DataArraySelectionWidget can ONLY be used with a DataArraySelectionFilterParameter object");
+
   setupUi(this);
   setupGui();
 }
@@ -107,15 +110,8 @@ void DataArraySelectionWidget::setupGui()
   }
 
   // Generate the text for the QLabel
-  QString units = getFilterParameter()->getUnits();
-  if(units.isEmpty() == false)
-  {
-    label->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
-  }
-  else
-  {
-    label->setText(getFilterParameter()->getHumanLabel() );
-  }
+  label->setText(getFilterParameter()->getHumanLabel() );
+
 
   // Get the default path from the Filter instance to cache
   m_DefaultPath = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<DataArrayPath>();

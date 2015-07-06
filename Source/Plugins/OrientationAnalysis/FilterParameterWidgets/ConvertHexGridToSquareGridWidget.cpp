@@ -43,13 +43,13 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Utilities/FilePathGenerator.h"
 #include "DREAM3DLib/Geometry/ImageGeom.h"
-#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
+
 
 #include "QtSupportLib/QFileCompleter.h"
 
 
 #include "OrientationAnalysis/OrientationAnalysisFilters/ConvertHexGridToSquareGrid.h"
-
+#include "OrientationAnalysis/FilterParameters/ConvertHexGridToSquareGridFilterParameter.h"
 
 // Initialize private static member variable
 QString ConvertHexGridToSquareGridWidget::m_OpenDialogLastDirectory = "";
@@ -65,7 +65,7 @@ ConvertHexGridToSquareGridWidget::ConvertHexGridToSquareGridWidget(FilterParamet
   m_Filter = qobject_cast<ConvertHexGridToSquareGrid*>(filter);
   Q_ASSERT_X(NULL != m_Filter, "ConvertHexGridToSquareGridWidget can ONLY be used with ConvertHexGridToSquareGridWidget filter", __FILE__);
 
-  m_FilterParameter = dynamic_cast<FileSystemFilterParameter*>(parameter);
+  m_FilterParameter = dynamic_cast<ConvertHexGridToSquareGridFilterParameter*>(parameter);
 
   if ( getOpenDialogLastDirectory().isEmpty() )
   {
@@ -106,7 +106,7 @@ AbstractFilter* ConvertHexGridToSquareGridWidget::getFilter() const
 // -----------------------------------------------------------------------------
 void ConvertHexGridToSquareGridWidget::setFilterParameter(FilterParameter* value)
 {
-  m_FilterParameter = dynamic_cast<FileSystemFilterParameter*>(value);
+  m_FilterParameter = dynamic_cast<ConvertHexGridToSquareGridFilterParameter*>(value);
 }
 
 // -----------------------------------------------------------------------------
@@ -122,7 +122,7 @@ FilterParameter* ConvertHexGridToSquareGridWidget::getFilterParameter() const
 // -----------------------------------------------------------------------------
 void ConvertHexGridToSquareGridWidget::setWidgetListEnabled(bool b)
 {
-  foreach (QWidget * w, m_WidgetList)
+  foreach (QWidget* w, m_WidgetList)
   {
     w->setEnabled(b);
   }
@@ -192,7 +192,7 @@ void ConvertHexGridToSquareGridWidget::getGuiParametersFromFilter()
   m_InputDir->setText(m_Filter->getInputPath());
 
   QObjectList obs = children();
-  foreach(QObject * ob, obs)
+  foreach(QObject* ob, obs)
   {
     ob->blockSignals(true);
   }
@@ -215,7 +215,7 @@ void ConvertHexGridToSquareGridWidget::getGuiParametersFromFilter()
   m_OutputDir->setText(m_Filter->getOutputPath());
   m_OutputPrefix->setText(m_Filter->getOutputPrefix());
 
-  foreach(QObject * ob, obs)
+  foreach(QObject* ob, obs)
   {
     ob->blockSignals(false);
   }

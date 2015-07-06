@@ -50,72 +50,72 @@
 */
 class DREAM3DLib_EXPORT DREAM3DPlugin : public QObject
 {
-	Q_OBJECT
+    Q_OBJECT
 
-public:
-	DREAM3DPlugin();
-	virtual ~DREAM3DPlugin();
-	/**
-	* @brief Returns the name of the plugin
-	*/
-	QString getPluginName();
+  public:
+    DREAM3DPlugin();
+    virtual ~DREAM3DPlugin();
+    /**
+    * @brief Returns the name of the plugin
+    */
+    QString getPluginName();
 
-	/**
-	* @brief Sets the plugin name of the plugin
-	*/
-	void setPluginName(QString name);
+    /**
+    * @brief Sets the plugin name of the plugin
+    */
+    void setPluginName(QString name);
 
-	/**
-	* @brief Returns the version
-	*/
-	QString getVersion();
+    /**
+    * @brief Returns the version
+    */
+    QString getVersion();
 
-	/**
-	* @brief Sets the version of the plugin
-	*/
-	void setVersion(QString version);
+    /**
+    * @brief Sets the version of the plugin
+    */
+    void setVersion(QString version);
 
-	/**
-	* @brief Returns the name of the vendor
-	*/
-	QString getVendor();
+    /**
+    * @brief Returns the name of the vendor
+    */
+    QString getVendor();
 
-	/**
-	* @brief Sets the vendor of the plugin
-	*/
-	void setVendor(QString vendor);
+    /**
+    * @brief Sets the vendor of the plugin
+    */
+    void setVendor(QString vendor);
 
-	/**
-	* @brief Returns the location of the plugin
-	*/
-	QString getLocation();
+    /**
+    * @brief Returns the location of the plugin
+    */
+    QString getLocation();
 
-	/**
-	* @brief Sets the location of the plugin on the file system.
-	* This is required so that we can cache the file path information
-	* as the plugin is loaded.
-	*/
-	void setLocation(QString filePath);
+    /**
+    * @brief Sets the location of the plugin on the file system.
+    * This is required so that we can cache the file path information
+    * as the plugin is loaded.
+    */
+    void setLocation(QString filePath);
 
-	/**
-	* @brief Returns the load status of the plugin
-	*/
-	QString getStatus();
+    /**
+    * @brief Returns the load status of the plugin
+    */
+    QString getStatus();
 
-	/**
-	* @brief Sets the load status of the plugin
-	*/
-	void setStatus(QString status);
+    /**
+    * @brief Sets the load status of the plugin
+    */
+    void setStatus(QString status);
 
-private:
-	QString				m_PluginName;
-	QString             m_Version;
-	QString             m_Vendor;
-	QString             m_Location;
-	QString             m_Status;
+  private:
+    QString       m_PluginName;
+    QString             m_Version;
+    QString             m_Vendor;
+    QString             m_Location;
+    QString             m_Status;
 
-	DREAM3DPlugin(const DREAM3DPlugin&); // Copy Constructor Not Implemented
-	void operator=(const DREAM3DPlugin&); // Operator '=' Not Implemented
+    DREAM3DPlugin(const DREAM3DPlugin&); // Copy Constructor Not Implemented
+    void operator=(const DREAM3DPlugin&); // Operator '=' Not Implemented
 };
 
 #endif /* _DREAM3DPlugin_H_ */

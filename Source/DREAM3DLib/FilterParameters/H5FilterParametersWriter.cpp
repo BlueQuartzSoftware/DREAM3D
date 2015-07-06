@@ -699,7 +699,7 @@ int H5FilterParametersWriter::writeArraySelections(const QString name, QSet<QStr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const QString name, DataContainerArrayProxy& v)
+int H5FilterParametersWriter::writeValue(const QString name, const DataContainerArrayProxy& v)
 {
   int err = 0;
   QList<DataContainerProxy> dcProxies = v.dataContainers.values();

@@ -40,7 +40,7 @@
 //
 // -----------------------------------------------------------------------------
 SeparatorWidgetCodeGenerator::SeparatorWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue) :
-FPCodeGenerator(humanLabel, propertyName, category, initValue)
+  FPCodeGenerator(humanLabel, propertyName, category, initValue)
 {
 
 }
@@ -89,4 +89,12 @@ QString SeparatorWidgetCodeGenerator::generateDataCheck()
 QString SeparatorWidgetCodeGenerator::generateInitializationList()
 {
   return "";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString SeparatorWidgetCodeGenerator::generateCPPIncludes()
+{
+  return "#include \"DREAM3DLib/FilterParameters/SeparatorFilterParameter.h\"";
 }

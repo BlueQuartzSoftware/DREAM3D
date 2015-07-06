@@ -43,7 +43,11 @@
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
+
+#include "DREAM3DLib/FilterParameters/InputFileFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/OutputFileFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/BooleanFilterParameter.h"
+
 #include "DREAM3DLib/Utilities/DREAM3DEndian.h"
 
 #include "IO/IOConstants.h"
@@ -77,11 +81,11 @@ void NodesTrianglesToVtk::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FileSystemFilterParameter::New("Nodes File", "NodesFile", FilterParameterWidgetType::InputFileWidget, getNodesFile(), FilterParameter::Parameter));
-  parameters.push_back(FileSystemFilterParameter::New("Triangles File", "TrianglesFile", FilterParameterWidgetType::InputFileWidget, getTrianglesFile(), FilterParameter::Parameter));
-  parameters.push_back(FileSystemFilterParameter::New("Output Vtk File", "OutputVtkFile", FilterParameterWidgetType::OutputFileWidget, getOutputVtkFile(), FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Write Binary Vtk File", "WriteBinaryFile", FilterParameterWidgetType::BooleanWidget, getWriteBinaryFile(), FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Write Conformal Mesh", "WriteConformalMesh", FilterParameterWidgetType::BooleanWidget, getWriteConformalMesh(), FilterParameter::Parameter));
+  parameters.push_back(InputFileFilterParameter::New("Nodes File", "NodesFile", getNodesFile(), FilterParameter::Parameter));
+  parameters.push_back(InputFileFilterParameter::New("Triangles File", "TrianglesFile", getTrianglesFile(), FilterParameter::Parameter));
+  parameters.push_back(OutputFileFilterParameter::New("Output Vtk File", "OutputVtkFile", getOutputVtkFile(), FilterParameter::Parameter));
+  parameters.push_back(BooleanFilterParameter::New("Write Binary Vtk File", "WriteBinaryFile", getWriteBinaryFile(), FilterParameter::Parameter));
+  parameters.push_back(BooleanFilterParameter::New("Write Conformal Mesh", "WriteConformalMesh", getWriteConformalMesh(), FilterParameter::Parameter));
 
   setFilterParameters(parameters);
 }

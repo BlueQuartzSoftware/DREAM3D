@@ -39,6 +39,8 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/DataContainerSelectionFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -65,9 +67,9 @@ void RenameDataContainer::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FilterParameter::New("Data Container to Rename", "SelectedDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getSelectedDataContainerName(), FilterParameter::RequiredArray));
+  parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container to Rename", "SelectedDataContainerName", getSelectedDataContainerName(), FilterParameter::RequiredArray));
 
-  parameters.push_back(FilterParameter::New("New Data Container Name", "NewDataContainerName", FilterParameterWidgetType::StringWidget, getNewDataContainerName(), FilterParameter::Parameter));
+  parameters.push_back(StringFilterParameter::New("New Data Container Name", "NewDataContainerName", getNewDataContainerName(), FilterParameter::Parameter));
 
   setFilterParameters(parameters);
 }

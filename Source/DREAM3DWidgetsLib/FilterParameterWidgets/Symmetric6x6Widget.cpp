@@ -38,6 +38,8 @@
 #include <QtCore/QMetaProperty>
 #include <QtCore/QSignalMapper>
 
+#include "DREAM3DLib/FilterParameters/Symmetric6x6FilterParameter.h"
+
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
@@ -48,6 +50,9 @@
 Symmetric6x6Widget::Symmetric6x6Widget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   FilterParameterWidget(parameter, filter, parent)
 {
+  m_FilterParameter = dynamic_cast<Symmetric6x6FilterParameter*>(parameter);
+  Q_ASSERT_X(m_FilterParameter != NULL, "NULL Pointer", "Symmetric6x6Widget can ONLY be used with a Symmetric6x6FilterParameter object");
+
   setupUi(this);
   setupGui();
 }
@@ -732,15 +737,7 @@ void Symmetric6x6Widget::setupGui()
 
   if (getFilterParameter() != NULL)
   {
-    QString units = getFilterParameter()->getUnits();
-    if(units.isEmpty() == false)
-    {
-      label->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
-    }
-    else
-    {
-      label->setText(getFilterParameter()->getHumanLabel() );
-    }
+    label->setText(getFilterParameter()->getHumanLabel() );
 
     FloatVec21_t data = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<FloatVec21_t>();
     v11->setText( QString::number(data.v11)  );

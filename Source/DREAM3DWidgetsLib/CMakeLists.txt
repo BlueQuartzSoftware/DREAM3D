@@ -175,7 +175,8 @@ endif()
 add_library(DREAM3DWidgetsLib ${LIB_TYPE} ${Project_SRCS})
 target_link_libraries(DREAM3DWidgetsLib
                     Qt5::Core
-                    Qt5::Gui Qt5::Widgets
+                    Qt5::Gui 
+                    Qt5::Widgets
                     Qt5::WebKit
                     Qt5::WebKitWidgets
                     QtSupportLib

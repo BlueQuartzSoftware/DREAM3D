@@ -43,7 +43,9 @@
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/OutputFileFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/DataContainerSelectionFilterParameter.h"
+
 #include "DREAM3DLib/Utilities/DREAM3DEndian.h"
 
 #include "IO/IOConstants.h"
@@ -74,9 +76,9 @@ void LammpsFileWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FileSystemFilterParameter::New("Lammps File", "LammpsFile", FilterParameterWidgetType::OutputFileWidget, getLammpsFile(), FilterParameter::Parameter));
+  parameters.push_back(OutputFileFilterParameter::New("Lammps File", "LammpsFile", getLammpsFile(), FilterParameter::Parameter));
 
-  parameters.push_back(FileSystemFilterParameter::New("Vertex Data Container", "VertexDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getVertexDataContainerName(), FilterParameter::RequiredArray));
+  parameters.push_back(DataContainerSelectionFilterParameter::New("Vertex Data Container", "VertexDataContainerName", getVertexDataContainerName(), FilterParameter::RequiredArray));
 
   setFilterParameters(parameters);
 }
@@ -214,7 +216,7 @@ void LammpsFileWriter::execute()
   for (int64_t i = 0; i < numAtoms; i++)
   {
     vertices->getCoords(i, pos);
-    fprintf(lammpsFile, "%lld %d %f %f %f %d %d %d\n", i, atomType, pos[0], pos[1], pos[2], dummy , dummy, dummy); // Write the positions to the output file
+    fprintf(lammpsFile, "%lld %d %f %f %f %d %d %d\n", (long long int)(i), atomType, pos[0], pos[1], pos[2], dummy , dummy, dummy); // Write the positions to the output file
   }
 
   fprintf(lammpsFile, "\n");

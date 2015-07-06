@@ -67,7 +67,7 @@ class QtSupportLib_EXPORT QFSDropLabel : public QLabel
 
     void dragEnterEvent(QDragEnterEvent* event);
     void dropEvent(QDropEvent* event);
-    void dragLeaveEvent(QDragLeaveEvent *event);
+    void dragLeaveEvent(QDragLeaveEvent* event);
     void changeStyleSheet(int style);
 
   signals:

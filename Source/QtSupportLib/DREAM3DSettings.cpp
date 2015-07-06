@@ -50,7 +50,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3DSettings::DREAM3DSettings(QObject *parent)
+DREAM3DSettings::DREAM3DSettings(QObject* parent)
 {
   setParent(parent);
 
@@ -64,7 +64,7 @@ DREAM3DSettings::DREAM3DSettings(QObject *parent)
   QString oldFilePath = prefs.fileName();
 
   QFileInfo fi(oldFilePath);
- #if defined (Q_OS_MAC)
+#if defined (Q_OS_MAC)
   QString newFilePath = fi.path() + "/net.bluequartz.DREAM3D.json";
 #else
   QString newFilePath = fi.path() + "/DREAM3D.json";
@@ -79,7 +79,7 @@ DREAM3DSettings::DREAM3DSettings(QObject *parent)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3DSettings::DREAM3DSettings(const QString &filePath, QObject *parent)
+DREAM3DSettings::DREAM3DSettings(const QString& filePath, QObject* parent)
 {
   setParent(parent);
 
@@ -108,7 +108,7 @@ QString DREAM3DSettings::fileName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool DREAM3DSettings::contains(const QString &key)
+bool DREAM3DSettings::contains(const QString& key)
 {
   return m_Stack.top()->group.contains(key);
 }
@@ -116,7 +116,7 @@ bool DREAM3DSettings::contains(const QString &key)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool DREAM3DSettings::beginGroup(const QString &prefix)
+bool DREAM3DSettings::beginGroup(const QString& prefix)
 {
   if (prefix.isEmpty())
   {
@@ -173,7 +173,7 @@ QStringList DREAM3DSettings::childGroups()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DSettings::remove(const QString &key)
+void DREAM3DSettings::remove(const QString& key)
 {
   QJsonObject obj = m_Stack.top()->group;
 
@@ -183,7 +183,16 @@ void DREAM3DSettings::remove(const QString &key)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVariant DREAM3DSettings::value(const QString &key, const QVariant &defaultValue)
+void DREAM3DSettings::clear()
+{
+  m_Stack.first()->group = QJsonObject();
+  writeToFile();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QVariant DREAM3DSettings::value(const QString& key, const QVariant& defaultValue)
 {
   if (m_Stack.top()->group.contains(key) == false)
   {
@@ -213,7 +222,7 @@ QVariant DREAM3DSettings::value(const QString &key, const QVariant &defaultValue
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QJsonObject DREAM3DSettings::value(const QString &key, const QJsonObject &defaultObject)
+QJsonObject DREAM3DSettings::value(const QString& key, const QJsonObject& defaultObject)
 {
   if (m_Stack.top()->group[key].isObject())
   {
@@ -225,7 +234,7 @@ QJsonObject DREAM3DSettings::value(const QString &key, const QJsonObject &defaul
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QStringList DREAM3DSettings::value(const QString &key, const QStringList &defaultList)
+QStringList DREAM3DSettings::value(const QString& key, const QStringList& defaultList)
 {
   if (m_Stack.top()->group[key].isArray() == false)
   {
@@ -247,7 +256,7 @@ QStringList DREAM3DSettings::value(const QString &key, const QStringList &defaul
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DSettings::setValue(const QString &key, const QVariant &value)
+void DREAM3DSettings::setValue(const QString& key, const QVariant& value)
 {
   if (QString::fromStdString(std::string(value.typeName())) == "QByteArray")
   {
@@ -285,7 +294,7 @@ void DREAM3DSettings::setValue(const QString &key, const QVariant &value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DSettings::setValue(const QString &key, const QJsonObject &object)
+void DREAM3DSettings::setValue(const QString& key, const QJsonObject& object)
 {
   m_Stack.top()->group.insert(key, object);
 
@@ -299,7 +308,7 @@ void DREAM3DSettings::setValue(const QString &key, const QJsonObject &object)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DSettings::setValue(const QString &key, const QStringList &list)
+void DREAM3DSettings::setValue(const QString& key, const QStringList& list)
 {
   QJsonArray jsonArray;
 

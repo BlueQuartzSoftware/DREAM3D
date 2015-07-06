@@ -47,22 +47,22 @@
 
 class DREAM3DWidgetsLib_EXPORT DropBoxWidget : public QWidget, public Ui::DropBoxWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-public:
-  DropBoxWidget(QWidget* parent = 0);
-  virtual ~DropBoxWidget();
+  public:
+    DropBoxWidget(QWidget* parent = 0);
+    virtual ~DropBoxWidget();
 
-  void setupGui();
+    void setupGui();
 
-  QFrame* getFrame();
+    QFrame* getFrame();
 
-  void setLabel(QString text);
+    void setLabel(QString text);
 
-private:
+  private:
 
-  DropBoxWidget(const DropBoxWidget&); // Copy Constructor Not Implemented
-  void operator=(const DropBoxWidget&); // Operator '=' Not Implemented
+    DropBoxWidget(const DropBoxWidget&); // Copy Constructor Not Implemented
+    void operator=(const DropBoxWidget&); // Operator '=' Not Implemented
 };
 
 #endif /* _DropBoxWidget_H */

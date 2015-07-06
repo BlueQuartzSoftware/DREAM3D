@@ -47,26 +47,26 @@
 
 class QtSupportLib_EXPORT BookmarkMissingDialog : public QDialog, private Ui::BookmarkMissingDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-public:
-  BookmarkMissingDialog(QWidget* parent = 0, Qt::WindowFlags flags = 0);
-  virtual ~BookmarkMissingDialog();
+  public:
+    BookmarkMissingDialog(QWidget* parent = 0, Qt::WindowFlags flags = 0);
+    virtual ~BookmarkMissingDialog();
 
-  void setBookmarkName(QString name);
+    void setBookmarkName(QString name);
 
   protected slots:
-  void on_locateBtn_clicked();
-  void on_cancelBtn_clicked();
+    void on_locateBtn_clicked();
+    void on_cancelBtn_clicked();
 
-signals:
-  void locateBtnPressed();
+  signals:
+    void locateBtnPressed();
 
-private:
-  QString m_OpenDialogLastDirectory;
+  private:
+    QString m_OpenDialogLastDirectory;
 
-  BookmarkMissingDialog(const BookmarkMissingDialog&); // Copy Constructor Not Implemented
-  void operator=(const BookmarkMissingDialog&); // Operator '=' Not Implemented
+    BookmarkMissingDialog(const BookmarkMissingDialog&); // Copy Constructor Not Implemented
+    void operator=(const BookmarkMissingDialog&); // Operator '=' Not Implemented
 };
 
 #endif /* BookmarkMissingDialog_H_ */

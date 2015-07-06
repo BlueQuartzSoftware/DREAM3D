@@ -278,9 +278,9 @@ bool AttributeMatrix::removeInactiveObjects(QVector<bool> activeObjects, Int32Ar
   bool acceptableMatrix = false;
   //Only valid for feature or ensemble type matrices
   if(m_Type == DREAM3D::AttributeMatrixType::VertexFeature || m_Type == DREAM3D::AttributeMatrixType::VertexEnsemble ||
-     m_Type == DREAM3D::AttributeMatrixType::EdgeFeature || m_Type == DREAM3D::AttributeMatrixType::EdgeEnsemble ||
-     m_Type == DREAM3D::AttributeMatrixType::FaceFeature || m_Type == DREAM3D::AttributeMatrixType::FaceEnsemble ||
-     m_Type == DREAM3D::AttributeMatrixType::CellFeature || m_Type == DREAM3D::AttributeMatrixType::CellEnsemble)
+      m_Type == DREAM3D::AttributeMatrixType::EdgeFeature || m_Type == DREAM3D::AttributeMatrixType::EdgeEnsemble ||
+      m_Type == DREAM3D::AttributeMatrixType::FaceFeature || m_Type == DREAM3D::AttributeMatrixType::FaceEnsemble ||
+      m_Type == DREAM3D::AttributeMatrixType::CellFeature || m_Type == DREAM3D::AttributeMatrixType::CellEnsemble)
   {
     acceptableMatrix = true;
   }
@@ -453,7 +453,7 @@ int AttributeMatrix::addAttributeArrayFromHDF5Path(hid_t gid, QString name, bool
   else if(classType.compare("StringDataArray") == 0)
   {
     dPtr = H5DataArrayReader::ReadStringDataArray(gid, name, preflight);
-  if (preflight == true)
+    if (preflight == true)
     {
       dPtr->resize(getNumTuples());
     }
@@ -465,7 +465,7 @@ int AttributeMatrix::addAttributeArrayFromHDF5Path(hid_t gid, QString name, bool
   else if(classType.compare("NeighborList<T>") == 0)
   {
     dPtr = H5DataArrayReader::ReadNeighborListData(gid, name, preflight);
-  if (preflight == true)
+    if (preflight == true)
     {
       dPtr->resize(getNumTuples());
     }
@@ -476,7 +476,7 @@ int AttributeMatrix::addAttributeArrayFromHDF5Path(hid_t gid, QString name, bool
     statsData->setName(DREAM3D::EnsembleData::Statistics);
     statsData->readH5Data(gid);
     dPtr = statsData;
-  if (preflight == true)
+    if (preflight == true)
     {
       dPtr->resize(getNumTuples());
     }
@@ -639,8 +639,9 @@ QString AttributeMatrix::getInfoString(DREAM3D::InfoStringFormat format)
     for(int i = 0; i < m_TupleDims.size(); i++)
     {
       tupleStr = tupleStr + QString::number(m_TupleDims[i]);
-      if(i < m_TupleDims.size() - 1) {
-         tupleStr = tupleStr + QString(", ");
+      if(i < m_TupleDims.size() - 1)
+      {
+        tupleStr = tupleStr + QString(", ");
       }
     }
     tupleStr = tupleStr + ")";

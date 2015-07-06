@@ -42,7 +42,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DSplitterHandle::paintEvent(QPaintEvent *)
+void DREAM3DSplitterHandle::paintEvent(QPaintEvent*)
 {
   QPainter painter(this);
 
@@ -51,7 +51,8 @@ void DREAM3DSplitterHandle::paintEvent(QPaintEvent *)
   QColor gradientStart(252, 252, 252);
   QColor gradientStop(223, 223, 223);
 
-  if (orientation() == Qt::Vertical) {
+  if (orientation() == Qt::Vertical)
+  {
     painter.setPen(topColor);
     painter.drawLine(0, 0, width(), 0);
     painter.setPen(bottomColor);
@@ -62,7 +63,8 @@ void DREAM3DSplitterHandle::paintEvent(QPaintEvent *)
     linearGrad.setColorAt(1, gradientStop);
     painter.fillRect(QRect(QPoint(0, 1), size() - QSize(0, 2)), QBrush(linearGrad));
   }
-  else {
+  else
+  {
     //            painter.setPen(topColor);
     //            painter.drawLine(0, 0, 0, height());
     painter.setPen(topColor);

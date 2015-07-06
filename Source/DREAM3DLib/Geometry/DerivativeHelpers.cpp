@@ -100,8 +100,8 @@ void DerivativeHelpers::EdgeDeriv::operator()(EdgeGeom* edges, int64_t edgeId, d
 
   for (size_t i = 0; i < 3; i++)
   {
-     x0[i] = static_cast<double>(x0f[i]);
-     x1[i] = static_cast<double>(x1f[i]);
+    x0[i] = static_cast<double>(x0f[i]);
+    x1[i] = static_cast<double>(x1f[i]);
   }
 
   for (size_t i = 0; i < 3; i++)
@@ -141,9 +141,9 @@ void DerivativeHelpers::TriangleDeriv::operator()(TriangleGeom* triangles, int64
 
   for (size_t i = 0; i < 3; i++)
   {
-     x0[i] = static_cast<double>(x0f[i]);
-     x1[i] = static_cast<double>(x1f[i]);
-     x2[i] = static_cast<double>(x2f[i]);
+    x0[i] = static_cast<double>(x0f[i]);
+    x1[i] = static_cast<double>(x1f[i]);
+    x2[i] = static_cast<double>(x2f[i]);
   }
 
   GeometryMath::FindPlaneNormalVector(x0, x1, x2, n);
@@ -174,7 +174,8 @@ void DerivativeHelpers::TriangleDeriv::operator()(TriangleGeom* triangles, int64
   MatrixMath::Normalize3x1(v20);
 
   v0[0] = v0[1] = 0.0; //convert points to 2D (i.e., local system)
-  v1[0] = lenX; v1[1] = 0.0;
+  v1[0] = lenX;
+  v1[1] = 0.0;
   v2[0] = MatrixMath::DotProduct3x1(v, v10);
   v2[1] = MatrixMath::DotProduct3x1(v, v20);
 
@@ -205,8 +206,8 @@ void DerivativeHelpers::TriangleDeriv::operator()(TriangleGeom* triangles, int64
     sum[1] += funcDerivs[3 + i] * values[i];
   }
 
-  dBydx = sum[0]*jMatI(0,0) + sum[1]*jMatI(0,1);
-  dBydy = sum[0]*jMatI(1,0) + sum[1]*jMatI(1,1);
+  dBydx = sum[0] * jMatI(0, 0) + sum[1] * jMatI(0, 1);
+  dBydy = sum[0] * jMatI(1, 0) + sum[1] * jMatI(1, 1);
 
   // Transform into global system (dot product with global axes)
   derivs[0] = dBydx * v10[0] + dBydy * v20[0];
@@ -234,10 +235,10 @@ void DerivativeHelpers::QuadDeriv::operator()(QuadGeom* quads, int64_t quadId, d
 
   for (size_t i = 0; i < 3; i++)
   {
-     x0[i] = static_cast<double>(x0f[i]);
-     x1[i] = static_cast<double>(x1f[i]);
-     x2[i] = static_cast<double>(x2f[i]);
-     x3[i] = static_cast<double>(x3f[i]);
+    x0[i] = static_cast<double>(x0f[i]);
+    x1[i] = static_cast<double>(x1f[i]);
+    x2[i] = static_cast<double>(x2f[i]);
+    x3[i] = static_cast<double>(x3f[i]);
   }
 
   GeometryMath::FindPlaneNormalVector(x0, x1, x2, n);
@@ -276,7 +277,8 @@ void DerivativeHelpers::QuadDeriv::operator()(QuadGeom* quads, int64_t quadId, d
   MatrixMath::Normalize3x1(v20);
 
   v0[0] = v0[1] = 0.0; // convert points to 2D (i.e., local system)
-  v1[0] = lenX; v1[1] = 0.0;
+  v1[0] = lenX;
+  v1[1] = 0.0;
   v2[0] = MatrixMath::DotProduct3x1(vec20, v10);
   v2[1] = MatrixMath::DotProduct3x1(vec20, v20);
   v3[0] = MatrixMath::DotProduct3x1(vec30, v10);
@@ -288,14 +290,14 @@ void DerivativeHelpers::QuadDeriv::operator()(QuadGeom* quads, int64_t quadId, d
   // Compute Jacobian and inverse Jacobian using Eigen
   double jPtr[4];
 
-  jPtr[0] = v0[0]*funcDerivs[0] + v1[0]*funcDerivs[1] +
-            v2[0]*funcDerivs[2] + v3[0]*funcDerivs[3];
-  jPtr[1] = v0[1]*funcDerivs[0] + v1[1]*funcDerivs[1] +
-            v2[1]*funcDerivs[2] + v3[1]*funcDerivs[3];
-  jPtr[2] = v0[0]*funcDerivs[4] + v1[0]*funcDerivs[5] +
-            v2[0]*funcDerivs[6] + v3[0]*funcDerivs[7];
-  jPtr[3] = v0[1]*funcDerivs[4] + v1[1]*funcDerivs[5] +
-            v2[1]*funcDerivs[6] + v3[1]*funcDerivs[7];
+  jPtr[0] = v0[0] * funcDerivs[0] + v1[0] * funcDerivs[1] +
+            v2[0] * funcDerivs[2] + v3[0] * funcDerivs[3];
+  jPtr[1] = v0[1] * funcDerivs[0] + v1[1] * funcDerivs[1] +
+            v2[1] * funcDerivs[2] + v3[1] * funcDerivs[3];
+  jPtr[2] = v0[0] * funcDerivs[4] + v1[0] * funcDerivs[5] +
+            v2[0] * funcDerivs[6] + v3[0] * funcDerivs[7];
+  jPtr[3] = v0[1] * funcDerivs[4] + v1[1] * funcDerivs[5] +
+            v2[1] * funcDerivs[6] + v3[1] * funcDerivs[7];
 
   Eigen::Map<QuadJacobian> jMat(jPtr);
   QuadJacobian jMatI;
@@ -322,8 +324,8 @@ void DerivativeHelpers::QuadDeriv::operator()(QuadGeom* quads, int64_t quadId, d
     sum[1] += funcDerivs[4 + i] * values[i];
   }
 
-  dBydx = sum[0]*jMatI(0,0) + sum[1]*jMatI(0,1);
-  dBydy = sum[0]*jMatI(1,0) + sum[1]*jMatI(1,1);
+  dBydx = sum[0] * jMatI(0, 0) + sum[1] * jMatI(0, 1);
+  dBydy = sum[0] * jMatI(1, 0) + sum[1] * jMatI(1, 1);
 
   // Transform into global system (dot product with global axes)
   derivs[0] = dBydx * v10[0] + dBydy * v20[0];

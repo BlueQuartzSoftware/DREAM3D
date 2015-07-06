@@ -369,7 +369,7 @@ class NeighborList : public IDataArray
 
       size_t idxsIndex = 0;
       size_t rIdx = 0;
-      for(size_t dIdx = 0; dIdx <arraySize; ++dIdx)
+      for(size_t dIdx = 0; dIdx < arraySize; ++dIdx)
       {
         if (dIdx != idxs[idxsIndex])
         {

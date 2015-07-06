@@ -43,7 +43,7 @@
 //
 // -----------------------------------------------------------------------------
 DREAM3Dv6Wizard::DREAM3Dv6Wizard(QWidget* parent, Qt::WindowFlags flags) :
-QWizard(parent, flags)
+  QWizard(parent, flags)
 {
   setupUi(this);
 

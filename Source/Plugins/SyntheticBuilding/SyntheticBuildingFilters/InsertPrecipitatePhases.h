@@ -50,13 +50,13 @@
 
 typedef struct
 {
-    float m_Volumes;
-    float m_EquivalentDiameters;
-    float m_AxisLengths[3];
-    float m_AxisEulerAngles[3];
-    float m_Omega3s;
-    int m_FeaturePhases;
-    int m_Neighborhoods;
+  float m_Volumes;
+  float m_EquivalentDiameters;
+  float m_AxisLengths[3];
+  float m_AxisEulerAngles[3];
+  float m_Omega3s;
+  int m_FeaturePhases;
+  int m_Neighborhoods;
 } Precip_t;
 
 /**

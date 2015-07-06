@@ -44,7 +44,11 @@
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
+
+#include "DREAM3DLib/FilterParameters/OutputFileFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/BooleanFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 #include "DREAM3DLib/Utilities/DREAM3DEndian.h"
 
@@ -81,11 +85,17 @@ void SurfaceMeshToVtk::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
 
-  parameters.push_back(FileSystemFilterParameter::New("Output Vtk File", "OutputVtkFile", FilterParameterWidgetType::OutputFileWidget, getOutputVtkFile(), FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Write Binary Vtk File", "WriteBinaryFile", FilterParameterWidgetType::BooleanWidget, getWriteBinaryFile(), FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Write Conformal Mesh", "WriteConformalMesh", FilterParameterWidgetType::BooleanWidget, getWriteConformalMesh(), FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshNodeTypeArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(OutputFileFilterParameter::New("Output Vtk File", "OutputVtkFile", getOutputVtkFile(), FilterParameter::Parameter));
+  parameters.push_back(BooleanFilterParameter::New("Write Binary Vtk File", "WriteBinaryFile", getWriteBinaryFile(), FilterParameter::Parameter));
+  parameters.push_back(BooleanFilterParameter::New("Write Conformal Mesh", "WriteConformalMesh", getWriteConformalMesh(), FilterParameter::Parameter));
+  parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray));
+  parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath(), FilterParameter::RequiredArray));
+
+  parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::RequiredArray));
+  parameters.push_back(MultiDataArraySelectionFilterParameter::New("Vertex Arrays", "SelectedVertexArrays", getSelectedVertexArrays(), FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
+  parameters.push_back(MultiDataArraySelectionFilterParameter::New("Face Arrays", "SelectedFaceArrays", getSelectedFaceArrays(), FilterParameter::RequiredArray));
+
 
   setFilterParameters(parameters);
 }
@@ -132,7 +142,36 @@ void SurfaceMeshToVtk::dataCheck()
     notifyErrorMessage(getHumanLabel(), "Vtk Output file is Not set correctly", -1003);
   }
 
-  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
+  QString dcName;
+  if (m_SelectedFaceArrays.size() > 0)
+  {
+    dcName = m_SelectedFaceArrays[0].getDataContainerName();
+  }
+  else if(m_SelectedVertexArrays.size() > 0)
+  {
+    dcName = m_SelectedVertexArrays[0].getDataContainerName();
+  }
+
+  foreach(DataArrayPath dap, m_SelectedFaceArrays)
+  {
+    if(dap.getDataContainerName().compare(dcName) != 0)
+    {
+      setErrorCondition(-385);
+      notifyErrorMessage(getHumanLabel(), "The Face arrays and Vertex arrays must come from the same Data Container.", getErrorCondition());
+      return;
+    }
+  }
+  foreach(DataArrayPath dap, m_SelectedVertexArrays)
+  {
+    if(dap.getDataContainerName().compare(dcName) != 0)
+    {
+      setErrorCondition(-386);
+      notifyErrorMessage(getHumanLabel(), "The Face arrays and Vertex arrays must come from the same Data Container.", getErrorCondition());
+      return;
+    }
+  }
+
+  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, dcName, false);
   if(getErrorCondition() < 0) { return; }
 
   TriangleGeom::Pointer triangles =  sm->getPrereqGeometry<TriangleGeom, AbstractFilter>(this);
@@ -267,9 +306,9 @@ void SurfaceMeshToVtk::execute()
   {
     if (m_SurfaceMeshNodeType[i] > 0)
     {
-      pos[0] = static_cast<float>(nodes[i*3]);
-      pos[1] = static_cast<float>(nodes[i*3+1]);
-      pos[2] = static_cast<float>(nodes[i*3+2]);
+      pos[0] = static_cast<float>(nodes[i * 3]);
+      pos[1] = static_cast<float>(nodes[i * 3 + 1]);
+      pos[2] = static_cast<float>(nodes[i * 3 + 2]);
 
       if (m_WriteBinaryFile == true)
       {
@@ -301,9 +340,9 @@ void SurfaceMeshToVtk::execute()
   for (int j = 0; j < numTriangles; j++)
   {
     //  Triangle& t = triangles[j];
-    tData[1] = triangles[j*3];
-    tData[2] = triangles[j*3+1];
-    tData[3] = triangles[j*3+2];
+    tData[1] = triangles[j * 3];
+    tData[2] = triangles[j * 3 + 1];
+    tData[3] = triangles[j * 3 + 2];
 
     if (m_WriteBinaryFile == true)
     {
@@ -450,7 +489,7 @@ int SurfaceMeshToVtk::writePointData(FILE* vtkFile)
   }
   // This is the section header
   fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "POINT_DATA %lld\n", numberWrittenumNodes);
+  fprintf(vtkFile, "POINT_DATA %lld\n", (long long int)(numberWrittenumNodes));
 
 
   fprintf(vtkFile, "SCALARS Node_Type char 1\n");
@@ -462,8 +501,8 @@ int SurfaceMeshToVtk::writePointData(FILE* vtkFile)
     {
       if(m_WriteBinaryFile == true)
       {
-      // Normally, we would byte swap to big endian but since we are only writing
-      // 1 byte Char values, nothing to swap.
+        // Normally, we would byte swap to big endian but since we are only writing
+        // 1 byte Char values, nothing to swap.
         fwrite(m_SurfaceMeshNodeType + i, sizeof(char), 1, vtkFile);
       }
       else
@@ -478,23 +517,23 @@ int SurfaceMeshToVtk::writePointData(FILE* vtkFile)
 #if 1
   // This is from the Goldfeather Paper
   writePointVectorData<double>(sm, attrMatName, "Principal_Direction_1",
-                                                     "double", m_WriteBinaryFile, m_WriteConformalMesh, "VECTORS", vtkFile, numNodes);
+                               "double", m_WriteBinaryFile, m_WriteConformalMesh, "VECTORS", vtkFile, numNodes);
   // This is from the Goldfeather Paper
   writePointVectorData<double>(sm, attrMatName, "Principal_Direction_2",
-                                                     "double", m_WriteBinaryFile, m_WriteConformalMesh, "VECTORS", vtkFile, numNodes);
+                               "double", m_WriteBinaryFile, m_WriteConformalMesh, "VECTORS", vtkFile, numNodes);
 
   // This is from the Goldfeather Paper
   writePointScalarData<double>(sm, attrMatName, "Principal_Curvature_1",
-                                                     "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, numNodes);
+                               "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, numNodes);
 
   // This is from the Goldfeather Paper
   writePointScalarData<double>(sm, attrMatName, "Principal_Curvature_2",
-                                                     "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, numNodes);
+                               "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, numNodes);
 #endif
 
   // This is from the Goldfeather Paper
   writePointVectorData<double>(sm, attrMatName, DREAM3D::VertexData::SurfaceMeshNodeNormals,
-                                                     "double", m_WriteBinaryFile, m_WriteConformalMesh, "VECTORS", vtkFile, numNodes);
+                               "double", m_WriteBinaryFile, m_WriteConformalMesh, "VECTORS", vtkFile, numNodes);
 
 
   return err;
@@ -755,31 +794,31 @@ int SurfaceMeshToVtk::writeCellData(FILE* vtkFile)
   QString attrMatName = m_SurfaceMeshFaceLabelsArrayPath.getAttributeMatrixName();
 
   writeCellScalarData<int32_t>(sm, attrMatName, DREAM3D::FaceData::SurfaceMeshFeatureFaceId,
-                                                     "int", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, nT);
+                               "int", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, nT);
 
   writeCellScalarData<double>(sm, attrMatName, DREAM3D::FaceData::SurfaceMeshPrincipalCurvature1,
-                                                    "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, nT);
+                              "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, nT);
 
   writeCellScalarData<double>(sm, attrMatName, DREAM3D::FaceData::SurfaceMeshPrincipalCurvature2,
-                                                    "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, nT);
+                              "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, nT);
 
   writeCellVectorData<double>(sm, attrMatName, DREAM3D::FaceData::SurfaceMeshPrincipalDirection1,
-                                                    "double", m_WriteBinaryFile, m_WriteConformalMesh, "VECTORS", vtkFile, nT);
+                              "double", m_WriteBinaryFile, m_WriteConformalMesh, "VECTORS", vtkFile, nT);
 
   writeCellVectorData<double>(sm, attrMatName, DREAM3D::FaceData::SurfaceMeshPrincipalDirection2,
-                                                    "double", m_WriteBinaryFile, m_WriteConformalMesh, "VECTORS", vtkFile, nT);
+                              "double", m_WriteBinaryFile, m_WriteConformalMesh, "VECTORS", vtkFile, nT);
 
   writeCellScalarData<double>(sm, attrMatName, DREAM3D::FaceData::SurfaceMeshGaussianCurvatures,
-                                                    "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, nT);
+                              "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, nT);
 
   writeCellScalarData<double>(sm, attrMatName, DREAM3D::FaceData::SurfaceMeshMeanCurvatures,
-                                                    "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, nT);
+                              "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, nT);
 
   writeCellNormalData<double>(sm, attrMatName, DREAM3D::FaceData::SurfaceMeshFaceNormals,
-                                                    "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, nT);
+                              "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, nT);
 
   writeCellNormalData<double>(sm, attrMatName, "Goldfeather_Triangle_Normals",
-                                                    "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, nT);
+                              "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, nT);
 
   return err;
 }

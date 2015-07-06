@@ -85,22 +85,22 @@ int TestFilterAvailability()
 int SampleSurfaceMeshSpecifiedPointsTest()
 {
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- /* Please write SampleSurfaceMeshSpecifiedPoints test code here.
-  *
-  * Your IO test files are:
-  * UnitTest::SampleSurfaceMeshSpecifiedPointsTest::TestFile1
-  * UnitTest::SampleSurfaceMeshSpecifiedPointsTest::TestFile2
-  *
-  * DREAM3D provides some macros that will throw exceptions when a test fails
-  * and thus report that during testing. These macros are located in the
-  * DREAM3DLib/Utilities/UnitTestSupport.hpp file. Some examples are:
-  *
-  * DREAM3D_REQUIRE_EQUAL(foo, 0)
-  * This means that if the variable foo is NOT equal to Zero then test will fail
-  * and the current test will exit immediately. If there are more tests registered
-  * with the DREAM3D_REGISTER_TEST() macro, the next test will execute. There are
-  * lots of examples in the DREAM3D/Test folder to look at.
-  */
+  /* Please write SampleSurfaceMeshSpecifiedPoints test code here.
+   *
+   * Your IO test files are:
+   * UnitTest::SampleSurfaceMeshSpecifiedPointsTest::TestFile1
+   * UnitTest::SampleSurfaceMeshSpecifiedPointsTest::TestFile2
+   *
+   * DREAM3D provides some macros that will throw exceptions when a test fails
+   * and thus report that during testing. These macros are located in the
+   * DREAM3DLib/Utilities/UnitTestSupport.hpp file. Some examples are:
+   *
+   * DREAM3D_REQUIRE_EQUAL(foo, 0)
+   * This means that if the variable foo is NOT equal to Zero then test will fail
+   * and the current test will exit immediately. If there are more tests registered
+   * with the DREAM3D_REGISTER_TEST() macro, the next test will execute. There are
+   * lots of examples in the DREAM3D/Test folder to look at.
+   */
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   return EXIT_SUCCESS;

@@ -952,8 +952,8 @@ void GenerateThresholdExamplePipelineFiles()
   filt->setCellComparisonInputs(cellComparisonInputsVector);
 
   QVector<ComparisonInput_t> featureComparisonInputsVector = getComparisonInputsVector(FeatureComparisonInputsArrayName1, FeatureComparisonInputsCompOperator1,
-                                                           FeatureComparisonInputsCompValue1, FeatureComparisonInputsArrayName2,
-                                                           FeatureComparisonInputsCompOperator2, FeatureComparisonInputsCompValue2);
+                                                             FeatureComparisonInputsCompValue1, FeatureComparisonInputsArrayName2,
+                                                             FeatureComparisonInputsCompOperator2, FeatureComparisonInputsCompValue2);
   filt->setFeatureComparisonInputs(featureComparisonInputsVector);
 
   QVector<ComparisonInput_t> ensembleComparisonInputsVector = getComparisonInputsVector(EnsembleComparisonInputsArrayName1, EnsembleComparisonInputsCompOperator1,

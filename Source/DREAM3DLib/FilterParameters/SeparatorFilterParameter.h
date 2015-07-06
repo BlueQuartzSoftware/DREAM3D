@@ -41,21 +41,29 @@
 
 class DREAM3DLib_EXPORT SeparatorFilterParameter : public FilterParameter
 {
-public:
-  DREAM3D_SHARED_POINTERS(SeparatorFilterParameter)
+  public:
+    DREAM3D_SHARED_POINTERS(SeparatorFilterParameter)
     DREAM3D_STATIC_NEW_MACRO(SeparatorFilterParameter)
     DREAM3D_TYPE_MACRO_SUPER(SeparatorFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, FilterParameter::Category category);
 
-  virtual ~SeparatorFilterParameter();
+    virtual ~SeparatorFilterParameter();
 
-protected:
-  SeparatorFilterParameter();
+    /**
+     * @brief getWidgetType Returns the type of widget that displays and controls
+     * this FilterParameter subclass
+     * @return
+     */
+    QString getWidgetType();
 
-private:
-  SeparatorFilterParameter(const SeparatorFilterParameter&); // Copy Constructor Not Implemented
-  void operator=(const SeparatorFilterParameter&); // Operator '=' Not Implemented
+
+  protected:
+    SeparatorFilterParameter();
+
+  private:
+    SeparatorFilterParameter(const SeparatorFilterParameter&); // Copy Constructor Not Implemented
+    void operator=(const SeparatorFilterParameter&); // Operator '=' Not Implemented
 };
 
 #endif /* _SeparatorFilterParameter_H_ */

@@ -205,7 +205,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
      * @param filter
      * @param index
      */
-    void addFilterWidget(PipelineFilterWidget* w, int index = -1);
+    void addFilterWidget(PipelineFilterWidget* pipelineFilterWidget, int index = -1);
 
     /**
      * @brief removeFilterWidget
@@ -249,7 +249,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     /**
     * @brief Open pipeline to a file
     */
-    int openPipeline(const QString &filePath, int index, const bool &setOpenedFilePath, const bool &changeTitle);
+    int openPipeline(const QString& filePath, int index, const bool& setOpenedFilePath, const bool& changeTitle);
 
     /**
      * @brief reindexWidgetTitles
@@ -290,7 +290,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     void removePlaceHolderFilter();
     void preflightHasMessage(PipelineMessage msg);
 
-    void pipelineOpened(QString& file, const bool &setOpenedFilePath, const bool &changeTitle);
+    void pipelineOpened(QString& file, const bool& setOpenedFilePath, const bool& changeTitle);
     void pipelineHasErrorsSignal();
     void pipelineHasNoErrors();
     void pipelineIssuesCleared();
@@ -300,7 +300,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     void filterInputWidgetChanged(FilterInputWidget* widget);
     void noFilterWidgetsInPipeline();
 
-    void filterParameterChanged();
+    void filterInputWidgetEdited();
     void preflightPipelineComplete();
 
   protected:

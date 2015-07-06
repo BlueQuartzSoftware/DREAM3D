@@ -40,6 +40,8 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/FilterParameters/IntVec3FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
 
 /**
  * @brief The InitializeSyntheticVolume class. See [Filter documentation](@ref initializesyntheticvolume) for details.
@@ -84,8 +86,8 @@ class InitializeSyntheticVolume : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, InputStatsFile)
     Q_PROPERTY(QString InputStatsFile READ getInputStatsFile WRITE setInputStatsFile)
 
-    int getEstimatedPrimaryFeatures();
-    Q_PROPERTY(QVariant EstimatedPrimaryFeatures READ getEstimatedPrimaryFeatures)
+    QString getEstimatedPrimaryFeatures();
+    Q_PROPERTY(QString EstimatedPrimaryFeatures READ getEstimatedPrimaryFeatures)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -127,9 +129,9 @@ class InitializeSyntheticVolume : public AbstractFilter
      */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-   /**
-    * @brief execute Reimplemented from @see AbstractFilter class
-    */
+    /**
+     * @brief execute Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
 
     /**
@@ -172,12 +174,12 @@ class InitializeSyntheticVolume : public AbstractFilter
      * @brief estimateNumFeatures Estimates the number of Features that will be generated based on the supplied statistics
      * @param dimensions Vector containing extents of the volume dimensions
      * @param res Vector containing resolution of the volume
-     * @return Integer number of estimated features
+     * @return String Number of estimated features as a string
      */
-    int estimateNumFeatures(IntVec3_t dimensions, FloatVec3_t res);
+    QString estimateNumFeatures(IntVec3_t dimensions, FloatVec3_t res);
 
   private:
-    int32_t m_EstimatedPrimaryFeatures;
+    QString m_EstimatedPrimaryFeatures;
 
     InitializeSyntheticVolume(const InitializeSyntheticVolume&); // Copy Constructor Not Implemented
     void operator=(const InitializeSyntheticVolume&); // Operator '=' Not Implemented

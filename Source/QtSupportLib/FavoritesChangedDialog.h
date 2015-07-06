@@ -47,25 +47,25 @@
 
 class QtSupportLib_EXPORT FavoritesChangedDialog : public QDialog, private Ui::FavoritesChangedDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-public:
-  FavoritesChangedDialog(QWidget* parent = 0);
-  virtual ~FavoritesChangedDialog();
+  public:
+    FavoritesChangedDialog(QWidget* parent = 0);
+    virtual ~FavoritesChangedDialog();
 
   protected slots:
     void on_selectBtn_clicked();
     void on_exportBtn_clicked();
-    void on_outputDir_textChanged(const QString &text);
+    void on_outputDir_textChanged(const QString& text);
 
   signals:
     void exportBtnPressed(QString directory);
 
-private:
-  QString m_OpenDialogLastDirectory;
+  private:
+    QString m_OpenDialogLastDirectory;
 
-  FavoritesChangedDialog(const FavoritesChangedDialog&); // Copy Constructor Not Implemented
-  void operator=(const FavoritesChangedDialog&); // Operator '=' Not Implemented
+    FavoritesChangedDialog(const FavoritesChangedDialog&); // Copy Constructor Not Implemented
+    void operator=(const FavoritesChangedDialog&); // Operator '=' Not Implemented
 };
 
 #endif /* FavoritesChangedDialog_H_ */

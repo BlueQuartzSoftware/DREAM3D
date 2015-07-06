@@ -43,6 +43,7 @@
 
 #include "QtSupportLib/FaderWidget.h"
 
+#include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
@@ -81,7 +82,7 @@ class DREAM3DWidgetsLib_EXPORT ChoiceWidget : public FilterParameterWidget, priv
 
 
   public slots:
-    void widgetChanged(int index, bool emitParametersChanged=true);
+    void widgetChanged(int index, bool emitParametersChanged = true);
     void filterNeedsInputParameters(AbstractFilter* filter); // When the filter is ready for us to update its input parameter(s) that we are responsible for
     void beforePreflight(); // Called just before the "dataCheck()" is called
     void afterPreflight(); // Called just after the dataCheck() is called.
@@ -96,6 +97,8 @@ class DREAM3DWidgetsLib_EXPORT ChoiceWidget : public FilterParameterWidget, priv
   private:
 
     bool m_DidCausePreflight;
+
+    ChoiceFilterParameter* m_FilterParameter;
 
 
     ChoiceWidget(const ChoiceWidget&); // Copy Constructor Not Implemented

@@ -38,6 +38,8 @@
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
 #include "OrientationLib/OrientationMath/OrientationMath.h"
@@ -75,7 +77,7 @@ void ConvertOrientations::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Input Orientation Type");
     parameter->setPropertyName("InputType");
-    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+
     QVector<QString> inputChoices = OrientationConverter<float>::GetOrientationTypeStrings();
     parameter->setChoices(inputChoices);
     parameter->setCategory(FilterParameter::Parameter);
@@ -86,16 +88,16 @@ void ConvertOrientations::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Output Orientation Type");
     parameter->setPropertyName("OutputType");
-    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+
     QVector<QString> inputChoices = OrientationConverter<float>::GetOrientationTypeStrings();
     parameter->setChoices(inputChoices);
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
 
-  parameters.push_back(FilterParameter::New("Input Orientations", "InputOrientationArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputOrientationArrayPath(), FilterParameter::RequiredArray, "", 0));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Input Orientations", "InputOrientationArrayPath", getInputOrientationArrayPath(), FilterParameter::RequiredArray, 0));
 
-  parameters.push_back(FilterParameter::New("Output Orientations", "OutputOrientationArrayName", FilterParameterWidgetType::StringWidget, getOutputOrientationArrayName(), FilterParameter::CreatedArray, "", 0));
+  parameters.push_back(StringFilterParameter::New("Output Orientations", "OutputOrientationArrayName", getOutputOrientationArrayName(), FilterParameter::CreatedArray, 0));
 
   setFilterParameters(parameters);
 }

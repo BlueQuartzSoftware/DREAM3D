@@ -42,6 +42,10 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+
+#include "DREAM3DLib/FilterParameters/IntFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/DoubleFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
@@ -80,17 +84,17 @@ LaplacianSmoothing::~LaplacianSmoothing()
 void LaplacianSmoothing::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Iteration Steps", "IterationSteps", FilterParameterWidgetType::IntWidget, getIterationSteps(), FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Default Lambda", "Lambda", FilterParameterWidgetType::DoubleWidget, getLambda(), FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Triple Line Lambda", "TripleLineLambda", FilterParameterWidgetType::DoubleWidget, getTripleLineLambda(), FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Quadruple Points Lambda", "QuadPointLambda", FilterParameterWidgetType::DoubleWidget, getQuadPointLambda(), FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Outer Points Lambda", "SurfacePointLambda", FilterParameterWidgetType::DoubleWidget, getSurfacePointLambda(), FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Outer Triple Line Lambda", "SurfaceTripleLineLambda", FilterParameterWidgetType::DoubleWidget, getSurfaceTripleLineLambda(), FilterParameter::Parameter));
-  parameters.push_back(FilterParameter::New("Outer Quadruple Points Lambda", "SurfaceQuadPointLambda", FilterParameterWidgetType::DoubleWidget, getSurfaceQuadPointLambda(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Iteration Steps", "IterationSteps", getIterationSteps(), FilterParameter::Parameter));
+  parameters.push_back(DoubleFilterParameter::New("Default Lambda", "Lambda", getLambda(), FilterParameter::Parameter));
+  parameters.push_back(DoubleFilterParameter::New("Triple Line Lambda", "TripleLineLambda", getTripleLineLambda(), FilterParameter::Parameter));
+  parameters.push_back(DoubleFilterParameter::New("Quadruple Points Lambda", "QuadPointLambda", getQuadPointLambda(), FilterParameter::Parameter));
+  parameters.push_back(DoubleFilterParameter::New("Outer Points Lambda", "SurfacePointLambda", getSurfacePointLambda(), FilterParameter::Parameter));
+  parameters.push_back(DoubleFilterParameter::New("Outer Triple Line Lambda", "SurfaceTripleLineLambda", getSurfaceTripleLineLambda(), FilterParameter::Parameter));
+  parameters.push_back(DoubleFilterParameter::New("Outer Quadruple Points Lambda", "SurfaceQuadPointLambda", getSurfaceQuadPointLambda(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::RequiredArray));
-  parameters.push_back(FilterParameter::New("Node Type", "SurfaceMeshNodeTypeArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshNodeTypeArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Node Type", "SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath(), FilterParameter::RequiredArray));
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
-  parameters.push_back(FilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray));
   setFilterParameters(parameters);
 }
 

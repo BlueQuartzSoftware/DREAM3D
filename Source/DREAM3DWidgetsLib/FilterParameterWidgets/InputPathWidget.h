@@ -48,6 +48,7 @@
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/FilterParameters/InputPathFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
@@ -55,7 +56,7 @@
 
 #include "DREAM3DWidgetsLib/ui_InputPathWidget.h"
 
-class FileSystemFilterParameter;
+class InputPathFilterParameter;
 
 
 /**
@@ -107,7 +108,7 @@ class DREAM3DWidgetsLib_EXPORT InputPathWidget : public FilterParameterWidget, p
     void parametersChanged();
 
   private:
-    FileSystemFilterParameter*  m_FilterParameter;
+    InputPathFilterParameter*  m_FilterParameter;
     static QString    m_OpenDialogLastDirectory;
     bool m_DidCausePreflight;
 

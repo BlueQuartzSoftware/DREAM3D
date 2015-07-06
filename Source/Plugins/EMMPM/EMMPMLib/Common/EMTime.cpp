@@ -46,7 +46,7 @@ char* formattedTime(const char* formatting, char* output)
 #endif
   memset(output, 0, 128);
   snprintf(output, 128, formatting, t->tm_year + 1900, t->tm_mon + 1,
-    t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec  );
+           t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec  );
   return output;
 }
 

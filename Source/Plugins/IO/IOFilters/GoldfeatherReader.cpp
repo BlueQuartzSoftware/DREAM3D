@@ -40,7 +40,10 @@
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
+
+#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/InputFileFilterParameter.h"
+
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "IO/IOConstants.h"
@@ -98,26 +101,26 @@ void GoldfeatherReader::setupFilterParameters()
   FilterParameterVector parameters;
   /*   For an input file use this code*/
 //  {
-//    FilterParameter::Pointer parameter = FileSystemFilterParameter::New();
+//    FilterParameter::Pointer parameter = FilterParameter::New();
 //    parameter->setHumanLabel("Input File");
 //    parameter->setPropertyName("InputFile");
-//    parameter->setWidgetType(FilterParameterWidgetType::InputFileWidget);
+//
 //    ////parameter->setValueType("QString");
 //    parameters.push_back(parameter);
 //  }
-  parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), FilterParameter::Parameter, "", "*.jg"));
+  parameters.push_back(InputFileFilterParameter::New("Input File", "InputFile", getInputFile(), FilterParameter::Parameter, "*.jg"));
 
 
-  parameters.push_back(FilterParameter::New("Surface DataContainer", "SurfaceDataContainerName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("Vertex AttributeMatrix", "VertexAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("Face AttributeMatrix", "FaceAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMesh PrincipalCurvature 1 Array Name", "SurfaceMeshPrincipalCurvature1sArrayName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMesh PrincipalCurvature 2 Array Name", "SurfaceMeshPrincipalCurvature2sArrayName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMesh PrincipalDirection 1 Array Name", "SurfaceMeshPrincipalDirection1sArrayName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMesh PrincipalDirection 2 Array Name", "SurfaceMeshPrincipalDirection2sArrayName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMesh NodeNormals", "SurfaceMeshNodeNormalsArrayName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMesh FaceNormals", "SurfaceMeshFaceNormalsArrayName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMesh FaceLabels", "SurfaceMeshFaceLabelsArrayName", FilterParameterWidgetType::StringWidget, "QString", FilterParameter::CreatedArray, ""));
+  parameters.push_back(StringFilterParameter::New("Surface DataContainer", "SurfaceDataContainerName", getSurfaceDataContainerName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Vertex AttributeMatrix", "VertexAttributeMatrixName", getVertexAttributeMatrixName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Face AttributeMatrix", "FaceAttributeMatrixName", getFaceAttributeMatrixName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("SurfaceMesh PrincipalCurvature 1 Array Name", "SurfaceMeshPrincipalCurvature1sArrayName", getSurfaceMeshPrincipalCurvature1sArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("SurfaceMesh PrincipalCurvature 2 Array Name", "SurfaceMeshPrincipalCurvature2sArrayName", getSurfaceMeshPrincipalCurvature2sArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("SurfaceMesh PrincipalDirection 1 Array Name", "SurfaceMeshPrincipalDirection1sArrayName", getSurfaceMeshPrincipalDirection1sArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("SurfaceMesh PrincipalDirection 2 Array Name", "SurfaceMeshPrincipalDirection2sArrayName", getSurfaceMeshPrincipalDirection2sArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("SurfaceMesh NodeNormals", "SurfaceMeshNodeNormalsArrayName", getSurfaceMeshNodeNormalsArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("SurfaceMesh FaceNormals", "SurfaceMeshFaceNormalsArrayName", getSurfaceMeshFaceNormalsArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("SurfaceMesh FaceLabels", "SurfaceMeshFaceLabelsArrayName", getSurfaceMeshFaceLabelsArrayName(), FilterParameter::CreatedArray));
   setFilterParameters(parameters);
 }
 
@@ -247,7 +250,7 @@ void GoldfeatherReader::dataCheck()
   if( NULL != m_SurfaceMeshPrincipalCurvature2sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshPrincipalCurvature2s = m_SurfaceMeshPrincipalCurvature2sPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  dims[0]= 3;
+  dims[0] = 3;
   tempPath.update(getSurfaceDataContainerName(), getVertexAttributeMatrixName(), getSurfaceMeshPrincipalDirection1sArrayName() );
   m_SurfaceMeshPrincipalDirection1sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshPrincipalDirection1sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -325,9 +328,9 @@ void GoldfeatherReader::execute()
   for(int n = 0; n < nNodes; ++n)
   {
     fscanf(f, "%f %f %f %f %f %f %f %f\n", &x, &y, &z, &n0, &n1, &n2, &p1, &p2);
-    nodes[n*3] = x;
-    nodes[n*3+1] = y;
-    nodes[n*3+2] = z;
+    nodes[n * 3] = x;
+    nodes[n * 3 + 1] = y;
+    nodes[n * 3 + 2] = z;
     m_SurfaceMeshNodeNormals[n * 3 + 0] = n0;
     m_SurfaceMeshNodeNormals[n * 3 + 1] = n1;
     m_SurfaceMeshNodeNormals[n * 3 + 2] = n2;
@@ -364,9 +367,9 @@ void GoldfeatherReader::execute()
   for(int t = 0; t < nTriangles; ++t)
   {
     fscanf(f, "%f %f %f %f %f %f", &x, &y, &z, &n0, &n1, &n2);
-    triangles[t*3] = x;
-    triangles[t*3+1] = y;
-    triangles[t*3+2] = z;
+    triangles[t * 3] = x;
+    triangles[t * 3 + 1] = y;
+    triangles[t * 3 + 2] = z;
     //  triangles[t].tIndex = t;
     m_SurfaceMeshFaceLabels[t * 2] = 0;
     m_SurfaceMeshFaceLabels[t * 2 + 1] = 1;

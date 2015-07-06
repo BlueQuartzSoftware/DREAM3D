@@ -85,20 +85,20 @@
 
 #define CHECK_ERROR_ON_WRITE(var, msg)\
   if (err < 0) {\
-  QMessageBox::critical(this, tr("StatsGenerator"),\
-  tr("There was an error writing the " msg " to the HDF5 file"),\
-  QMessageBox::Ok,\
-  QMessageBox::Ok);\
-  return err;\
+    QMessageBox::critical(this, tr("StatsGenerator"),\
+                          tr("There was an error writing the " msg " to the HDF5 file"),\
+                          QMessageBox::Ok,\
+                          QMessageBox::Ok);\
+    return err;\
   }
 
 
 #define CHECK_STATS_READ_ERROR(err, group, dataset)\
   if (err < 0) {\
-  qDebug() << "PrimaryPhaseWidget::on_actionOpen_triggered Error: Could not read '" << group << "' data set '" << dataset << "'" << "\n";\
-  qDebug() << "  File: " << __FILE__ << "\n";\
-  qDebug() << "  Line: " << __LINE__ << "\n";\
-  return err;\
+    qDebug() << "PrimaryPhaseWidget::on_actionOpen_triggered Error: Could not read '" << group << "' data set '" << dataset << "'" << "\n";\
+    qDebug() << "  File: " << __FILE__ << "\n";\
+    qDebug() << "  Line: " << __LINE__ << "\n";\
+    return err;\
   }
 
 // -----------------------------------------------------------------------------
@@ -428,7 +428,7 @@ void PrimaryPhaseWidget::dataWasEdited()
 // -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::setWidgetListEnabled(bool b)
 {
-  foreach (QWidget * w, m_WidgetList)
+  foreach (QWidget* w, m_WidgetList)
   {
     w->setEnabled(b);
   }
@@ -485,7 +485,8 @@ bool PrimaryPhaseWidget::validateValue(QDoubleValidator* val, QLineEdit* lineEdi
     lineEdit->setStyleSheet("border: 1px solid red;");
     return false;
   }
-  else {
+  else
+  {
     lineEdit->setStyleSheet("");
   }
   return true;
@@ -499,7 +500,8 @@ bool PrimaryPhaseWidget::validateMuSigma()
   bool muValid = validateValue(m_MuValidator, m_Mu_SizeDistribution);
   bool sigmaValid = validateValue(m_SigmaValidator, m_Sigma_SizeDistribution);
 
-  if (muValid && sigmaValid) {
+  if (muValid && sigmaValid)
+  {
     m_GenerateDefaultData->setEnabled(true);
     return true;
   }
@@ -514,7 +516,8 @@ bool PrimaryPhaseWidget::validateMuSigma()
 // -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::on_m_Mu_SizeDistribution_textChanged(const QString& text)
 {
-  if (!validateMuSigma()) {
+  if (!validateMuSigma())
+  {
     return;
   }
   updateSizeDistributionPlot();
@@ -526,7 +529,8 @@ void PrimaryPhaseWidget::on_m_Mu_SizeDistribution_textChanged(const QString& tex
 // -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::on_m_Sigma_SizeDistribution_textChanged(const QString& text)
 {
-  if (!validateMuSigma()) {
+  if (!validateMuSigma())
+  {
     return;
   }
   updateSizeDistributionPlot();
@@ -786,13 +790,13 @@ void PrimaryPhaseWidget::plotSizeDistribution()
 
 #define SGWIGET_WRITE_ERROR_CHECK(var)\
   if (err < 0)  {\
-  QString msg ("Error Writing Data ");\
-  msg.append((var));\
-  msg.append(" to the HDF5 file");\
-  QMessageBox::critical(this, tr("StatsGenerator"),\
-  msg,\
-  QMessageBox::Default);\
-  retErr = -1;\
+    QString msg ("Error Writing Data ");\
+    msg.append((var));\
+    msg.append(" to the HDF5 file");\
+    QMessageBox::critical(this, tr("StatsGenerator"),\
+                          msg,\
+                          QMessageBox::Default);\
+    retErr = -1;\
   }
 
 // -----------------------------------------------------------------------------

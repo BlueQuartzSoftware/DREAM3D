@@ -228,8 +228,8 @@ QString PMFileGenerator::getFileContents(QString replaceStr)
 
     if (replaceStr.isEmpty() == false)
     {
-      text.replace("@AddTestText@", replaceStr);		// Replace token for Test/CMakeLists.txt file
-      text.replace("@Namespaces@", replaceStr);		// Replace token for Test/TestFileLocations.h.in file
+      text.replace("@AddTestText@", replaceStr);    // Replace token for Test/CMakeLists.txt file
+      text.replace("@Namespaces@", replaceStr);   // Replace token for Test/TestFileLocations.h.in file
     }
 
     rfile.close();
@@ -281,18 +281,18 @@ void PMFileGenerator::generateOutputWithFilterNames(QSet<QString> names)
       if (getFileName() == "TestFileLocations.h.in")
       {
         QString replaceStr = createReplacementString(TESTFILELOCATIONS, names);
-        text.replace("@Namespaces@", replaceStr);		// Replace token for Test/TestFileLocations.h.in file
+        text.replace("@Namespaces@", replaceStr);   // Replace token for Test/TestFileLocations.h.in file
       }
       else if (getFileName() == "CMakeLists.txt")
       {
         QString replaceStr = createReplacementString(CMAKELISTS, names);
-        text.replace("@AddTestText@", replaceStr);		// Replace token for Test/CMakeLists.txt file
+        text.replace("@AddTestText@", replaceStr);    // Replace token for Test/CMakeLists.txt file
       }
     }
     else
     {
-      text.replace("\n  @Namespaces@\n", "");		// Replace token for Test/TestFileLocations.h.in file
-      text.replace("\n@AddTestText@\n", "");		// Replace token for Test/CMakeLists.txt file
+      text.replace("\n  @Namespaces@\n", "");   // Replace token for Test/TestFileLocations.h.in file
+      text.replace("\n@AddTestText@\n", "");    // Replace token for Test/CMakeLists.txt file
     }
 
     QString parentPath = getOutputDir() + QDir::separator() + getPathTemplate().replace("@PluginName@", getPluginName());

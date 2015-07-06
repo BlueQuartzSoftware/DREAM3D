@@ -43,6 +43,10 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+
+#include "DREAM3DLib/FilterParameters/DoubleFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 #include "DREAM3DLib/Math/GeometryMath.h"
@@ -61,65 +65,65 @@ namespace
 
 
   float crystalDirections[12][3][3] = {{{unit111, unit112_1, unit110},
-                                        { -unit111, -unit112_1, unit110},
-                                        {unit111, -unit112_2, 0}
-                                       },
+      { -unit111, -unit112_1, unit110},
+      {unit111, -unit112_2, 0}
+    },
 
-                                       { { -unit111, unit112_1, unit110},
-                                         {unit111, -unit112_1, unit110},
-                                         {unit111, unit112_2, 0}
-                                       },
+    { { -unit111, unit112_1, unit110},
+      {unit111, -unit112_1, unit110},
+      {unit111, unit112_2, 0}
+    },
 
-                                       { {unit111, -unit112_1, unit110},
-                                         {unit111, -unit112_1, -unit110},
-                                         {unit111, unit112_2, 0}
-                                       },
+    { {unit111, -unit112_1, unit110},
+      {unit111, -unit112_1, -unit110},
+      {unit111, unit112_2, 0}
+    },
 
-                                       { {unit111, unit112_1, unit110},
-                                         {unit111, unit112_1, -unit110},
-                                         { -unit111, unit112_2, 0}
-                                       },
+    { {unit111, unit112_1, unit110},
+      {unit111, unit112_1, -unit110},
+      { -unit111, unit112_2, 0}
+    },
 
-                                       { {unit111, unit112_1, unit110},
-                                         {unit111, -unit112_2, 0},
-                                         {unit111, unit112_1, -unit110}
-                                       },
+    { {unit111, unit112_1, unit110},
+      {unit111, -unit112_2, 0},
+      {unit111, unit112_1, -unit110}
+    },
 
-                                       { {unit111, -unit112_1, unit110},
-                                         { -unit111, -unit112_2, 0},
-                                         {unit111, -unit112_1, -unit110}
-                                       },
+    { {unit111, -unit112_1, unit110},
+      { -unit111, -unit112_2, 0},
+      {unit111, -unit112_1, -unit110}
+    },
 
-                                       { {unit111, -unit112_1, unit110},
-                                         {unit111, unit112_2, 0},
-                                         { -unit111, unit112_1, unit110}
-                                       },
+    { {unit111, -unit112_1, unit110},
+      {unit111, unit112_2, 0},
+      { -unit111, unit112_1, unit110}
+    },
 
-                                       { { -unit111, -unit112_1, unit110},
-                                         {unit111, -unit112_2, 0},
-                                         {unit111, unit112_1, unit110}
-                                       },
+    { { -unit111, -unit112_1, unit110},
+      {unit111, -unit112_2, 0},
+      {unit111, unit112_1, unit110}
+    },
 
-                                       { {unit111, -unit112_2, 0},
-                                         {unit111, unit112_1, unit110},
-                                         { -unit111, -unit112_1, unit110}
-                                       },
+    { {unit111, -unit112_2, 0},
+      {unit111, unit112_1, unit110},
+      { -unit111, -unit112_1, unit110}
+    },
 
-                                       { {unit111, unit112_2, 0},
-                                         { -unit111, unit112_1, unit110},
-                                         {unit111, -unit112_1, unit110}
-                                       },
+    { {unit111, unit112_2, 0},
+      { -unit111, unit112_1, unit110},
+      {unit111, -unit112_1, unit110}
+    },
 
-                                       { {unit111, unit112_2, 0},
-                                         {unit111, -unit112_1, unit110},
-                                         {unit111, -unit112_1, -unit110}
-                                       },
+    { {unit111, unit112_2, 0},
+      {unit111, -unit112_1, unit110},
+      {unit111, -unit112_1, -unit110}
+    },
 
-                                       { { -unit111, unit112_2, 0},
-                                         {unit111, unit112_1, unit110},
-                                         {unit111, unit112_1, -unit110}
-                                       }
-                                      };
+    { { -unit111, unit112_2, 0},
+      {unit111, unit112_1, unit110},
+      {unit111, unit112_1, -unit110}
+    }
+  };
 }
 
 // -----------------------------------------------------------------------------
@@ -171,25 +175,25 @@ MergeColonies::~MergeColonies()
 void MergeColonies::setupFilterParameters()
 {
   FilterParameterVector parameters = getFilterParameters();
-  parameters.push_front(FilterParameter::New("Axis Tolerance", "AxisTolerance", FilterParameterWidgetType::DoubleWidget, getAxisTolerance(), FilterParameter::Parameter, "Degrees"));
-  parameters.push_front(FilterParameter::New("Angle Tolerance", "AngleTolerance", FilterParameterWidgetType::DoubleWidget, getAngleTolerance(), FilterParameter::Parameter, "Degrees"));
+  parameters.push_front(DoubleFilterParameter::New("Axis Tolerance (Degrees)", "AxisTolerance", getAxisTolerance(), FilterParameter::Parameter));
+  parameters.push_front(DoubleFilterParameter::New("Angle Tolerance (Degrees)", "AngleTolerance", getAngleTolerance(), FilterParameter::Parameter));
   QStringList linkedProps("GlobAlphaArrayName");
   parameters.push_back(LinkedBooleanFilterParameter::New("Identify Glob Alpha", "IdentifyGlobAlpha", getIdentifyGlobAlpha(), linkedProps, FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
-  parameters.push_back(FilterParameter::New("Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), FilterParameter::RequiredArray, ""));
-  parameters.push_back(FilterParameter::New("Phases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellPhasesArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
-  parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, ""));
-  parameters.push_back(FilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray));
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::RequiredArray));
-  parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray));
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
-  parameters.push_back(FilterParameter::New("Parent Ids", "CellParentIdsArrayName", FilterParameterWidgetType::StringWidget, getCellParentIdsArrayName(), FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("Glob Alpha", "GlobAlphaArrayName", FilterParameterWidgetType::StringWidget, getGlobAlphaArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(StringFilterParameter::New("Parent Ids", "CellParentIdsArrayName", getCellParentIdsArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Glob Alpha", "GlobAlphaArrayName", getGlobAlphaArrayName(), FilterParameter::CreatedArray));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(FilterParameter::New("Feature Attribute Matrix", "NewCellFeatureAttributeMatrixName", FilterParameterWidgetType::StringWidget, getNewCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("Parent Ids", "FeatureParentIdsArrayName", FilterParameterWidgetType::StringWidget, getFeatureParentIdsArrayName(), FilterParameter::CreatedArray, ""));
-  parameters.push_back(FilterParameter::New("Active", "ActiveArrayName", FilterParameterWidgetType::StringWidget, getActiveArrayName(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(StringFilterParameter::New("Feature Attribute Matrix", "NewCellFeatureAttributeMatrixName", getNewCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Parent Ids", "FeatureParentIdsArrayName", getFeatureParentIdsArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Active", "ActiveArrayName", getActiveArrayName(), FilterParameter::CreatedArray));
   setFilterParameters(parameters);
 }
 

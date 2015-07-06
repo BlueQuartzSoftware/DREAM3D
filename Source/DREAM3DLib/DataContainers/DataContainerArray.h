@@ -603,7 +603,7 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
         {
           filter->setErrorCondition(-10200);
           ss = QObject::tr("The number of tuples for the DataArray %1 is %2 and for DataArray %3 is %4. The number of tuples must match.")
-              .arg(dataArrays[i-1]->getName()).arg(dataArrays[i-1]->getNumberOfTuples()).arg(dataArrays[i]->getName()).arg(dataArrays[i]->getNumberOfTuples());
+               .arg(dataArrays[i - 1]->getName()).arg(dataArrays[i - 1]->getNumberOfTuples()).arg(dataArrays[i]->getName()).arg(dataArrays[i]->getNumberOfTuples());
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
           valid = false;
         }
@@ -643,7 +643,7 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
         {
           filter->setErrorCondition(-10200);
           ss = QObject::tr("The number of tuples for the DataArray %1 is %2 and for DataArray %3 is %4. The number of tuples must match.")
-              .arg(dataArrays[i-1]->getName()).arg(dataArrays[i-1]->getNumberOfTuples()).arg(dataArrays[i]->getName()).arg(dataArrays[i]->getNumberOfTuples());
+               .arg(dataArrays[i - 1]->getName()).arg(dataArrays[i - 1]->getNumberOfTuples()).arg(dataArrays[i]->getName()).arg(dataArrays[i]->getNumberOfTuples());
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
           valid = false;
         }

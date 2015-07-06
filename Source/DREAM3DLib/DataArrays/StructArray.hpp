@@ -1,8 +1,8 @@
 
- //
- //  This code was written under United States Air Force Contract number
- //                           FA8650-07-D-5800
- //
+//
+//  This code was written under United States Air Force Contract number
+//                           FA8650-07-D-5800
+//
 /* ============================================================================
 * Copyright (c) 2009-2015 BlueQuartz Software, LLC
 *

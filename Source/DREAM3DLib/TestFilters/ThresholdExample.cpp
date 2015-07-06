@@ -36,7 +36,7 @@
 
 #include "ThresholdExample.h"
 
-#include "DREAM3DLib/FilterParameters/ComparisonFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/ComparisonSelectionFilterParameter.h"
 
 
 // -----------------------------------------------------------------------------
@@ -66,56 +66,56 @@ void ThresholdExample::setupFilterParameters()
 
   /* To Compare Arrays like a threshold filter */
   {
-    ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
+    ComparisonSelectionFilterParameter::Pointer parameter = ComparisonSelectionFilterParameter::New();
     parameter->setHumanLabel("Voxel Cell Arrays to Threshold");
     parameter->setPropertyName("CellComparisonInputs");
-    parameter->setWidgetType(FilterParameterWidgetType::ComparisonSelectionWidget);
+
     parameter->setShowOperators(true);
     parameters.push_back(parameter);
   }
 #if 0
   /* To Compare Arrays like a threshold filter */
   {
-    ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
+    ComparisonSelectionFilterParameter::Pointer parameter = ComparisonSelectionFilterParameter::New();
     parameter->setHumanLabel("Voxel Feature Arrays to Threshold");
     parameter->setPropertyName("FeatureComparisonInputs");
-    parameter->setWidgetType(FilterParameterWidgetType::FeatureArrayComparisonSelectionWidget);
+
     //parameter->setValueType("QVector<ComparisonInput_t>");
     parameters.push_back(parameter);
   }
   /* To Compare Arrays like a threshold filter */
   {
-    ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
+    ComparisonSelectionFilterParameter::Pointer parameter = ComparisonSelectionFilterParameter::New();
     parameter->setHumanLabel("Voxel Ensemble Arrays to Threshold");
     parameter->setPropertyName("EnsembleComparisonInputs");
-    parameter->setWidgetType(FilterParameterWidgetType::EnsembleArrayComparisonSelectionWidget);
+
     //parameter->setValueType("QVector<ComparisonInput_t>");
     parameters.push_back(parameter);
   }
   /* To Compare Arrays like a threshold filter */
   {
-    ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
+    ComparisonSelectionFilterParameter::Pointer parameter = ComparisonSelectionFilterParameter::New();
     parameter->setHumanLabel("Surface Mesh Point Arrays to Threshold");
     parameter->setPropertyName("PointComparisonInputs");
-    parameter->setWidgetType(FilterParameterWidgetType::VertexArrayComparisonSelectionWidget);
+
     //parameter->setValueType("QVector<ComparisonInput_t>");
     parameters.push_back(parameter);
   }
   /* To Compare Arrays like a threshold filter */
   {
-    ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
+    ComparisonSelectionFilterParameter::Pointer parameter = ComparisonSelectionFilterParameter::New();
     parameter->setHumanLabel("Surface Mesh Face Arrays to Threshold");
     parameter->setPropertyName("FaceComparisonInputs");
-    parameter->setWidgetType(FilterParameterWidgetType::FaceArrayComparisonSelectionWidget);
+
     //parameter->setValueType("QVector<ComparisonInput_t>");
     parameters.push_back(parameter);
   }
   /* To Compare Arrays like a threshold filter */
   {
-    ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
+    ComparisonSelectionFilterParameter::Pointer parameter = ComparisonSelectionFilterParameter::New();
     parameter->setHumanLabel("Surface Mesh Edge Arrays to Threshold");
     parameter->setPropertyName("EdgeComparisonInputs");
-    parameter->setWidgetType(FilterParameterWidgetType::EdgeArrayComparisonSelectionWidget);
+
     //parameter->setValueType("QVector<ComparisonInput_t>");
     parameters.push_back(parameter);
   }

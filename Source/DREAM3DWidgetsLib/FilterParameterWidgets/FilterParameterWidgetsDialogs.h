@@ -49,7 +49,7 @@ class FilterParameterWidgetsDialogs
     static void ShowCouldNotSetFilterParameter(AbstractFilter* filter, FilterParameter* filterParameter);
     static void ShowCouldNotSetConditionalFilterParameter(AbstractFilter* filter, FilterParameter* filterParameter);
     static void ShowFilterPropertyCastError(AbstractFilter* filter, FilterParameter* filterParameter, const QString& filtType, const QString& widgetType);
-		static void ShowEmptyStringError(AbstractFilter* filter, FilterParameter* filterParameter);
+    static void ShowEmptyStringError(AbstractFilter* filter, FilterParameter* filterParameter);
 
   protected:
     FilterParameterWidgetsDialogs();

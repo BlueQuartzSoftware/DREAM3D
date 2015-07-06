@@ -38,6 +38,7 @@
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
@@ -69,11 +70,11 @@ class ReverseWindingImpl
       for (size_t i = start; i < end; i++)
       {
         // Swap the indices
-        int64_t nId0 = triangles[i*3+0];
-        int64_t nId2 = triangles[i*3+2];
+        int64_t nId0 = triangles[i * 3 + 0];
+        int64_t nId2 = triangles[i * 3 + 2];
 
-        triangles[i*3+0] = nId2;
-        triangles[i*3+2] = nId0;
+        triangles[i * 3 + 0] = nId2;
+        triangles[i * 3 + 2] = nId0;
       }
     }
 
@@ -112,7 +113,7 @@ ReverseTriangleWinding::~ReverseTriangleWinding()
 void ReverseTriangleWinding::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Data Container", "SurfaceDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getSurfaceDataContainerName(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container", "SurfaceDataContainerName", getSurfaceDataContainerName(), FilterParameter::RequiredArray));
   setFilterParameters(parameters);
 }
 

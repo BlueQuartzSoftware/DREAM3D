@@ -52,7 +52,7 @@ DREAM3DFileStructure::~DREAM3DFileStructure()
  * then the DataContainer reader would know exactly what to read.
  */
 // -----------------------------------------------------------------------------
-DataContainerArray::Pointer _createDataContainerArray(DataContainerArrayProxy &dcaProxy)
+DataContainerArray::Pointer _createDataContainerArray(DataContainerArrayProxy& dcaProxy)
 {
   DataContainerArray::Pointer dcArray = DataContainerArray::New();
 
@@ -83,7 +83,7 @@ DataContainerArray::Pointer _createDataContainerArray(DataContainerArrayProxy &d
       if(amProxy.flag == Qt::Unchecked) { continue; } // Skip to the next AttributeMatrix if not reading this one
 
       std::cout << "    reading " << amIter.key().toStdString() << std::endl;
-      QVector<size_t> tupleDims(1,0);
+      QVector<size_t> tupleDims(1, 0);
       AttributeMatrix::Pointer attrMatrix = AttributeMatrix::New(tupleDims, amProxy.name, amProxy.amType);
 
       QMapIterator<QString, DataArrayProxy> dIter(amProxy.dataArrays);
@@ -97,21 +97,22 @@ DataContainerArray::Pointer _createDataContainerArray(DataContainerArrayProxy &d
 
         std::cout << "      reading " << dIter.key().toStdString() << std::endl;
 
-        if(daProxy.objectType.compare("DataArray<int8_t>") == 0 ){
+        if(daProxy.objectType.compare("DataArray<int8_t>") == 0 )
+        {
           // attrMatrix->createAndAddAttributeArray /* If we did this then the array is going to get allocated and that may be a LOT of RAM to use for nothing. */
           /* We can not use AttributeMatrix->addAttributeArray() because that will validate the number of Tuples matches
            * the number of tuples in the DataArray. If we set everything to Zero sizes then we loose the meta data of the
            * tuple dimensions at this point which we will need later when we finally read the arrays. */
         }
-        else if(daProxy.objectType.compare("DataArray<uint8_t>") == 0 ){}
-        else if(daProxy.objectType.compare("DataArray<int16_t>") == 0 ){}
-        else if(daProxy.objectType.compare("DataArray<uint16_t>") == 0 ){}
-        else if(daProxy.objectType.compare("DataArray<int32_t>") == 0 ){}
-        else if(daProxy.objectType.compare("DataArray<uint32_t>") == 0 ){}
-        else if(daProxy.objectType.compare("DataArray<int64_t>") == 0 ){}
-        else if(daProxy.objectType.compare("DataArray<uint64_t>") == 0 ){}
-        else if(daProxy.objectType.compare("DataArray<float>") == 0 ){}
-        else if(daProxy.objectType.compare("DataArray<double>") == 0 ){}
+        else if(daProxy.objectType.compare("DataArray<uint8_t>") == 0 ) {}
+        else if(daProxy.objectType.compare("DataArray<int16_t>") == 0 ) {}
+        else if(daProxy.objectType.compare("DataArray<uint16_t>") == 0 ) {}
+        else if(daProxy.objectType.compare("DataArray<int32_t>") == 0 ) {}
+        else if(daProxy.objectType.compare("DataArray<uint32_t>") == 0 ) {}
+        else if(daProxy.objectType.compare("DataArray<int64_t>") == 0 ) {}
+        else if(daProxy.objectType.compare("DataArray<uint64_t>") == 0 ) {}
+        else if(daProxy.objectType.compare("DataArray<float>") == 0 ) {}
+        else if(daProxy.objectType.compare("DataArray<double>") == 0 ) {}
 
 
       }
@@ -126,7 +127,7 @@ DataContainerArray::Pointer _createDataContainerArray(DataContainerArrayProxy &d
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataContainerArray::Pointer DREAM3DFileStructure::ReadFileStructure(const QString &filePath)
+DataContainerArray::Pointer DREAM3DFileStructure::ReadFileStructure(const QString& filePath)
 {
   // Create an instance of the DataContainerReader
   DataContainerReader::Pointer reader = DataContainerReader::New();

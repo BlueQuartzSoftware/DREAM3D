@@ -46,9 +46,9 @@
 //
 // -----------------------------------------------------------------------------
 DynamicTableExample::DynamicTableExample() :
-AbstractFilter()
+  AbstractFilter()
 {
-	setupFilterParameters();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -63,51 +63,51 @@ DynamicTableExample::~DynamicTableExample()
 // -----------------------------------------------------------------------------
 void DynamicTableExample::setupFilterParameters()
 {
-	QVector<FilterParameter::Pointer> parameters;
-	/* Place all your option initialization code here */
+  QVector<FilterParameter::Pointer> parameters;
+  /* Place all your option initialization code here */
 
-	// Table 1 - Fixed rows and columns, no default data passed in
-	{
-		QStringList rHeaders, cHeaders;
-		std::vector<std::vector<double> > defaultTable;
-    parameters.push_back(DynamicTableFilterParameter::New("Dynamic Table 1", "DynamicData1", FilterParameterWidgetType::DynamicTableWidget, rHeaders, cHeaders, defaultTable, FilterParameter::Parameter, FilterParameter::Parameter, false, false, 0));
-	}
+  // Table 1 - Fixed rows and columns, no default data passed in
+  {
+    QStringList rHeaders, cHeaders;
+    std::vector<std::vector<double> > defaultTable;
+    parameters.push_back(DynamicTableFilterParameter::New("Dynamic Table 1", "DynamicData1", rHeaders, cHeaders, defaultTable, FilterParameter::Parameter, false, false, 0));
+  }
 
-	// Table 2 - Fixed rows and columns, default data passed in
-	{
-		QStringList rHeaders, cHeaders;
-		rHeaders << "Passed RowName 1" << "Passed RowName 2";
-		cHeaders << "Passed ColName 1" << "Passed ColName 2";
-		std::vector<std::vector<double> > defaultTable(4, std::vector<double>(1, 3.87));
-    parameters.push_back(DynamicTableFilterParameter::New("Dynamic Table 2", "DynamicData2", FilterParameterWidgetType::DynamicTableWidget, rHeaders, cHeaders, defaultTable, FilterParameter::Parameter, false, false, 0));
-	}
+  // Table 2 - Fixed rows and columns, default data passed in
+  {
+    QStringList rHeaders, cHeaders;
+    rHeaders << "Passed RowName 1" << "Passed RowName 2";
+    cHeaders << "Passed ColName 1" << "Passed ColName 2";
+    std::vector<std::vector<double> > defaultTable(4, std::vector<double>(1, 3.87));
+    parameters.push_back(DynamicTableFilterParameter::New("Dynamic Table 2", "DynamicData2", rHeaders, cHeaders, defaultTable, FilterParameter::Parameter, false, false, 0));
+  }
 
-	// Table 3 - Dynamic rows and fixed columns, default data passed in
-	{
-		QStringList rHeaders, cHeaders;
-		rHeaders << "Passed RowName 1" << "Passed RowName 2";
-		cHeaders << "Passed ColName 1" << "Passed ColName 2";
-		std::vector<std::vector<double> > defaultTable(3, std::vector<double>(5, 1.34));
-    parameters.push_back(DynamicTableFilterParameter::New("Dynamic Table 3", "DynamicData3", FilterParameterWidgetType::DynamicTableWidget, rHeaders, cHeaders, defaultTable, FilterParameter::Parameter, true, false, 0));
-	}
+  // Table 3 - Dynamic rows and fixed columns, default data passed in
+  {
+    QStringList rHeaders, cHeaders;
+    rHeaders << "Passed RowName 1" << "Passed RowName 2";
+    cHeaders << "Passed ColName 1" << "Passed ColName 2";
+    std::vector<std::vector<double> > defaultTable(3, std::vector<double>(5, 1.34));
+    parameters.push_back(DynamicTableFilterParameter::New("Dynamic Table 3", "DynamicData3", rHeaders, cHeaders, defaultTable, FilterParameter::Parameter, true, false, 0));
+  }
 
-	// Table 4 - Fixed rows and dynamic columns, default data passed in
-	{
-		QStringList rHeaders, cHeaders;
-		rHeaders << "Passed RowName 1" << "Passed RowName 2";
-		cHeaders << "Passed ColName 1" << "Passed ColName 2";
-		std::vector<std::vector<double> > defaultTable(2, std::vector<double>(2, 3));
-    parameters.push_back(DynamicTableFilterParameter::New("Dynamic Table 4", "DynamicData4", FilterParameterWidgetType::DynamicTableWidget, rHeaders, cHeaders, defaultTable, FilterParameter::Parameter, false, true, 0));
-	}
+  // Table 4 - Fixed rows and dynamic columns, default data passed in
+  {
+    QStringList rHeaders, cHeaders;
+    rHeaders << "Passed RowName 1" << "Passed RowName 2";
+    cHeaders << "Passed ColName 1" << "Passed ColName 2";
+    std::vector<std::vector<double> > defaultTable(2, std::vector<double>(2, 3));
+    parameters.push_back(DynamicTableFilterParameter::New("Dynamic Table 4", "DynamicData4", rHeaders, cHeaders, defaultTable, FilterParameter::Parameter, false, true, 0));
+  }
 
-	// Table 5 - Dynamic rows and dynamic columns, default data passed in
-	{
-		QStringList rHeaders, cHeaders;
-		rHeaders << "Passed RowName 1" << "Passed RowName 2";
-		cHeaders << "Passed ColName 1" << "Passed ColName 2";
-		std::vector<std::vector<double> > defaultTable(2, std::vector<double>(2, 3));
-    parameters.push_back(DynamicTableFilterParameter::New("Dynamic Table 5", "DynamicData5", FilterParameterWidgetType::DynamicTableWidget, rHeaders, cHeaders, defaultTable, FilterParameter::Parameter, true, true, 0));
-	}
+  // Table 5 - Dynamic rows and dynamic columns, default data passed in
+  {
+    QStringList rHeaders, cHeaders;
+    rHeaders << "Passed RowName 1" << "Passed RowName 2";
+    cHeaders << "Passed ColName 1" << "Passed ColName 2";
+    std::vector<std::vector<double> > defaultTable(2, std::vector<double>(2, 3));
+    parameters.push_back(DynamicTableFilterParameter::New("Dynamic Table 5", "DynamicData5", rHeaders, cHeaders, defaultTable, FilterParameter::Parameter, true, true, 0));
+  }
 
 
 
@@ -121,13 +121,13 @@ void DynamicTableExample::setupFilterParameters()
 void DynamicTableExample::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
 
-	reader->openFilterGroup(this, index);
-	setDynamicData1(reader->readDynamicTableData("DynamicData", getDynamicData1()));
-	setDynamicData2(reader->readDynamicTableData("DynamicData", getDynamicData2()));
-	setDynamicData3(reader->readDynamicTableData("DynamicData", getDynamicData3()));
-	setDynamicData4(reader->readDynamicTableData("DynamicData", getDynamicData4()));
-	setDynamicData5(reader->readDynamicTableData("DynamicData", getDynamicData5()));
-	reader->closeFilterGroup();
+  reader->openFilterGroup(this, index);
+  setDynamicData1(reader->readDynamicTableData("DynamicData", getDynamicData1()));
+  setDynamicData2(reader->readDynamicTableData("DynamicData", getDynamicData2()));
+  setDynamicData3(reader->readDynamicTableData("DynamicData", getDynamicData3()));
+  setDynamicData4(reader->readDynamicTableData("DynamicData", getDynamicData4()));
+  setDynamicData5(reader->readDynamicTableData("DynamicData", getDynamicData5()));
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
@@ -135,15 +135,15 @@ void DynamicTableExample::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 int DynamicTableExample::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-	writer->openFilterGroup(this, index);
-	DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-	DREAM3D_FILTER_WRITE_PARAMETER(DynamicData1)
-	DREAM3D_FILTER_WRITE_PARAMETER(DynamicData2)
-	DREAM3D_FILTER_WRITE_PARAMETER(DynamicData3)
-	DREAM3D_FILTER_WRITE_PARAMETER(DynamicData4)
-	DREAM3D_FILTER_WRITE_PARAMETER(DynamicData5)
-	writer->closeFilterGroup();
-	return ++index; // we want to return the next index that was just written to
+  writer->openFilterGroup(this, index);
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
+  DREAM3D_FILTER_WRITE_PARAMETER(DynamicData1)
+  DREAM3D_FILTER_WRITE_PARAMETER(DynamicData2)
+  DREAM3D_FILTER_WRITE_PARAMETER(DynamicData3)
+  DREAM3D_FILTER_WRITE_PARAMETER(DynamicData4)
+  DREAM3D_FILTER_WRITE_PARAMETER(DynamicData5)
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 
@@ -152,7 +152,7 @@ int DynamicTableExample::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 void DynamicTableExample::dataCheck()
 {
-	// This filter does nothing during the dataCheck!
+  // This filter does nothing during the dataCheck!
 }
 
 // -----------------------------------------------------------------------------
@@ -160,12 +160,12 @@ void DynamicTableExample::dataCheck()
 // -----------------------------------------------------------------------------
 void DynamicTableExample::preflight()
 {
-	setInPreflight(true);
-	emit preflightAboutToExecute();
-	emit updateFilterParameters(this);
-	dataCheck();
-	emit preflightExecuted();
-	setInPreflight(false);
+  setInPreflight(true);
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
+  dataCheck();
+  emit preflightExecuted();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -173,10 +173,10 @@ void DynamicTableExample::preflight()
 // -----------------------------------------------------------------------------
 void DynamicTableExample::execute()
 {
-	// This filter does nothing during execute!
+  // This filter does nothing during execute!
 
-	/* Let the GUI know we are done with this filter */
-	notifyStatusMessage(getHumanLabel(), "Complete");
+  /* Let the GUI know we are done with this filter */
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -184,12 +184,12 @@ void DynamicTableExample::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer DynamicTableExample::newFilterInstance(bool copyFilterParameters)
 {
-	DynamicTableExample::Pointer filter = DynamicTableExample::New();
-	if (true == copyFilterParameters)
-	{
-		copyFilterParameterInstanceVariables(filter.get());
-	}
-	return filter;
+  DynamicTableExample::Pointer filter = DynamicTableExample::New();
+  if (true == copyFilterParameters)
+  {
+    copyFilterParameterInstanceVariables(filter.get());
+  }
+  return filter;
 }
 
 // -----------------------------------------------------------------------------
@@ -197,7 +197,7 @@ AbstractFilter::Pointer DynamicTableExample::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 const QString DynamicTableExample::getCompiledLibraryName()
 {
-	return Test::TestBaseName;
+  return Test::TestBaseName;
 }
 
 
@@ -206,7 +206,7 @@ const QString DynamicTableExample::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 const QString DynamicTableExample::getGroupName()
 {
-	return DREAM3D::FilterGroups::TestFilters;
+  return DREAM3D::FilterGroups::TestFilters;
 }
 
 
@@ -215,7 +215,7 @@ const QString DynamicTableExample::getGroupName()
 // -----------------------------------------------------------------------------
 const QString DynamicTableExample::getSubGroupName()
 {
-	return "Misc";
+  return "Misc";
 }
 
 
@@ -224,6 +224,6 @@ const QString DynamicTableExample::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString DynamicTableExample::getHumanLabel()
 {
-	return "Dynamic Table Example";
+  return "Dynamic Table Example";
 }
 

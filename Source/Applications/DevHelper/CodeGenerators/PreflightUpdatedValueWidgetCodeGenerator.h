@@ -44,30 +44,32 @@
 
 class PreflightUpdatedValueWidgetCodeGenerator : public FPCodeGenerator
 {
-public:
-  DREAM3D_SHARED_POINTERS(PreflightUpdatedValueWidgetCodeGenerator)
+  public:
+    DREAM3D_SHARED_POINTERS(PreflightUpdatedValueWidgetCodeGenerator)
 
     static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
-  {
-    Pointer sharedPtr(new PreflightUpdatedValueWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
-    return sharedPtr;
-  }
+    {
+      Pointer sharedPtr(new PreflightUpdatedValueWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
+      return sharedPtr;
+    }
 
-  virtual ~PreflightUpdatedValueWidgetCodeGenerator();
+    virtual ~PreflightUpdatedValueWidgetCodeGenerator();
 
-  virtual QString generateSetupFilterParameters();
+    virtual QString generateSetupFilterParameters();
 
-  virtual QString generateDataCheck();
+    virtual QString generateDataCheck();
 
-  virtual QString generateFilterParameters();
+    virtual QString generateFilterParameters();
 
-protected:
-  PreflightUpdatedValueWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
+    virtual QString generateCPPIncludes();
 
-private:
+  protected:
+    PreflightUpdatedValueWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
-  PreflightUpdatedValueWidgetCodeGenerator(const PreflightUpdatedValueWidgetCodeGenerator&); // Copy Constructor Not Implemented
-  void operator=(const PreflightUpdatedValueWidgetCodeGenerator&); // Operator '=' Not Implemented
+  private:
+
+    PreflightUpdatedValueWidgetCodeGenerator(const PreflightUpdatedValueWidgetCodeGenerator&); // Copy Constructor Not Implemented
+    void operator=(const PreflightUpdatedValueWidgetCodeGenerator&); // Operator '=' Not Implemented
 };
 
 #endif /* PreflightUpdatedValueWidgetCodeGenerator_H_ */

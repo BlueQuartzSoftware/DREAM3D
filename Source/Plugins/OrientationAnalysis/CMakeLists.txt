@@ -43,6 +43,9 @@ set(Project_SRCS "")
 include(${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/SourceList.cmake)
 # Add in our Plugin Specific FilterParameterWidgets
 include(${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameterWidgets/SourceList.cmake)
+# Add in our Plugin Specific FilterParameter
+include(${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameters/SourceList.cmake)
+
 #-----------------------------------------------------
 # Include any extra Widgets that this plugin needs
 include(${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/SourceList.cmake)
@@ -166,6 +169,8 @@ set(${PLUGIN_NAME}_MODULE_SRCS
   ${${PLUGIN_NAME}_ParameterWidgets_UIS}
   ${${PLUGIN_NAME}_ParameterWidgets_Generated_MOC_SRCS}
   ${${PLUGIN_NAME}_ParameterWidgets_Generated_UI_HDRS}
+  ${${PLUGIN_NAME}_FilterParameters_HDRS}
+  ${${PLUGIN_NAME}_FilterParameters_SRCS}
   # -- Add in the plain Widgets
   ${${PLUGIN_NAME}_Widgets_HDRS}
   ${${PLUGIN_NAME}_Widgets_SRCS}

@@ -42,6 +42,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/CoreFilters/FileReader.h"
+#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
 
 // our PIMPL private class
 class PhReaderPrivate;
@@ -125,9 +126,9 @@ class PhReader : public FileReader
      */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-   /**
-    * @brief execute Reimplemented from @see AbstractFilter class
-    */
+    /**
+     * @brief execute Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
 
     /**
@@ -136,10 +137,10 @@ class PhReader : public FileReader
     virtual void preflight();
 
   public slots:
-      /**
-       * @brief flushCache Clears the input file cache
-       */
-      void flushCache();
+    /**
+     * @brief flushCache Clears the input file cache
+     */
+    void flushCache();
 
   protected:
     PhReader();

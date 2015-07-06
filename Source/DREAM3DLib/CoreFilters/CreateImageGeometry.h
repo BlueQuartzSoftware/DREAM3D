@@ -38,6 +38,8 @@
 #define _CreateImageGeometry_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/FilterParameters/IntVec3FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
@@ -112,9 +114,9 @@ class DREAM3DLib_EXPORT CreateImageGeometry : public AbstractFilter
      */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-   /**
-    * @brief execute Reimplemented from @see AbstractFilter class
-    */
+    /**
+     * @brief execute Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
 
     /**

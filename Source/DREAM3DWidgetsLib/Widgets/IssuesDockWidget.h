@@ -79,6 +79,8 @@ class DREAM3DWidgetsLib_EXPORT IssuesDockWidget : public QDockWidget, public IOb
     void on_errorTableWidget_itemClicked( QTableWidgetItem* item );
     void displayCachedMessages();
 
+    void showFilterHelp(const QString &url);
+
   signals:
 
   protected:

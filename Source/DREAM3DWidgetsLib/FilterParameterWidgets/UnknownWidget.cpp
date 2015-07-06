@@ -39,16 +39,15 @@
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
-
-//#include "DREAM3DWidgetsLib/moc_UnknownWidget.cpp"
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 UnknownWidget::UnknownWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   FilterParameterWidget(parameter, filter, parent)
 {
+  m_FilterParameter = dynamic_cast<UnknownFilterParameter*>(parameter);
+  //Q_ASSERT_X(m_FilterParameter != NULL, "NULL Pointer", "UnknownWidget can ONLY be used with a UnknownFilterParameter object");
+
   setupUi(this);
   setupGui();
 }
@@ -78,17 +77,8 @@ void UnknownWidget::setupGui()
 
   if (getFilterParameter() != NULL)
   {
-    QString units = getFilterParameter()->getUnits();
-    if(units.isEmpty() == false)
-    {
-      label->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
-    }
-    else
-    {
-      QString str = QObject::tr("%1: Unknown Filter ParameterWidgetType: %2.").arg(getFilterParameter()->getHumanLabel()).arg(getFilterParameter()->getWidgetType());
-      label->setText( str );
-    }
-
+    QString str = QObject::tr("%1: Unknown Filter ParameterWidgetType: %2.").arg(getFilterParameter()->getHumanLabel()).arg(getFilterParameter()->getWidgetType());
+    label->setText( str );
   }
 }
 

@@ -118,7 +118,7 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
     * @param filePath
     * @param parent
     */
-    void addBookmark(const QString &filePath, const QModelIndex &parent);
+    void addBookmark(const QString& filePath, const QModelIndex& parent);
 
     /**
     * @brief BookmarksDockWidget::addFavoriteTreeItem
@@ -129,12 +129,12 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
     * @param allowEditing
     */
     int addTreeItem(QModelIndex parent,
-      QString& favoriteTitle,
-      QIcon icon,
-      QString favoritePath,
-      bool allowEditing,
-      bool editState,
-      bool isExpanded);
+                    QString& favoriteTitle,
+                    QIcon icon,
+                    QString favoritePath,
+                    bool allowEditing,
+                    bool editState,
+                    bool isExpanded);
 
   protected:
     QStringList generateFilterListFromPipelineFile(QString path);
@@ -146,8 +146,8 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
   protected slots:
 
     //// Slots to catch signals from the QTreeWidget
-    void on_bookmarksTreeView_clicked(const QModelIndex & index);
-    void on_bookmarksTreeView_doubleClicked(const QModelIndex & index);
+    void on_bookmarksTreeView_clicked(const QModelIndex& index);
+    void on_bookmarksTreeView_doubleClicked(const QModelIndex& index);
 
   signals:
 
@@ -173,9 +173,9 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
     * @param addToRecentFiles A boolean that decides whether to add filePath to the recents file list.
     * @param newWindow A boolean that decides whether to open a new window.
     */
-    void pipelineFileActivated(const QString& filePath, const bool &setOpenedFilePath, const bool &addToRecentFiles);
+    void pipelineFileActivated(const QString& filePath, const bool& setOpenedFilePath, const bool& addToRecentFiles);
 
-    void updateStatusBar(const QString &msg);
+    void updateStatusBar(const QString& msg);
 
   private:
     QString                 m_OpenDialogLastDirectory;

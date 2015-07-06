@@ -104,12 +104,12 @@ void FilterInputWidget::setupGui()
 {
 
   QFont humanLabelFont = DREAM3DStyles::GetHumanLabelFont();
-  QFont brandingFont =DREAM3DStyles::GetBrandingLabelFont();
+  QFont brandingFont = DREAM3DStyles::GetBrandingLabelFont();
   QFont categoryFont = DREAM3DStyles::GetCategoryFont();
 
   filterHumanLabel->setFont(humanLabelFont);
 
-#if 1
+#if 0
   brandingLabel->hide();
 #else
   brandingLabel->setFont(brandingFont);

@@ -45,7 +45,7 @@
 #include "OrientationLibTestFileLocations.h"
 
 
-void Print(std::ostream& o, QuatF &q)
+void Print(std::ostream& o, QuatF& q)
 {
   o << "{" << "<" << q.w << "> (" << q.x << ", " << q.y << ", " << q.z << ") }";
 }
@@ -58,44 +58,44 @@ template<typename T>
 class Mod
 {
   public:
-    Mod(){}
-    virtual ~Mod(){}
+    Mod() {}
+    virtual ~Mod() {}
 
     T operator()(T x, T y)
     {
       //ASSERT(!std::numeric_limits<T>::is_exact , "Mod: floating-point type expected");
 
       if (0. == y)
-        return x;
+      { return x; }
 
-      double m= x - y * floor(x/y);
+      double m = x - y * floor(x / y);
 
       // handle boundary cases resulted from floating-point cut off:
 
       if (y > 0)              // modulo range: [0..y)
       {
-        if (m>=y)           // Mod(-1e-16             , 360.    ): m= 360.
-          return 0;
+        if (m >= y)         // Mod(-1e-16             , 360.    ): m= 360.
+        { return 0; }
 
-        if (m<0 )
+        if (m < 0 )
         {
-          if (y+m == y)
-            return 0  ; // just in case...
+          if (y + m == y)
+          { return 0  ; } // just in case...
           else
-            return y+m; // Mod(106.81415022205296 , _TWO_PI ): m= -1.421e-14
+          { return y + m; } // Mod(106.81415022205296 , _TWO_PI ): m= -1.421e-14
         }
       }
       else                    // modulo range: (y..0]
       {
-        if (m<=y)           // Mod(1e-16              , -360.   ): m= -360.
-          return 0;
+        if (m <= y)         // Mod(1e-16              , -360.   ): m= -360.
+        { return 0; }
 
-        if (m>0 )
+        if (m > 0 )
         {
-          if (y+m == y)
-            return 0  ; // just in case...
+          if (y + m == y)
+          { return 0  ; } // just in case...
           else
-            return y+m; // Mod(-106.81415022205296, -_TWO_PI): m= 1.421e-14
+          { return y + m; } // Mod(-106.81415022205296, -_TWO_PI): m= 1.421e-14
         }
       }
 
@@ -123,10 +123,10 @@ class Mod
     // wrap [deg] angle to [0..360)
     inline T Wrap360(T fAng)
     {
-      return Mod()(fAng ,360.0);
+      return Mod()(fAng , 360.0);
     }
 
-    private:
+  private:
     Mod(const Mod&); // Copy Constructor Not Implemented
     void operator=(const Mod&); // Operator '=' Not Implemented
 };

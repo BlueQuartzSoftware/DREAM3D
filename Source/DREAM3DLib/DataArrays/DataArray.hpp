@@ -1141,8 +1141,9 @@ class DataArray : public IDataArray
         for(int i = 0; i < m_CompDims.size(); i++)
         {
           compDimStr = compDimStr + QString::number(m_CompDims[i]);
-          if(i < m_CompDims.size() - 1) {
-             compDimStr = compDimStr + QString(", ");
+          if(i < m_CompDims.size() - 1)
+          {
+            compDimStr = compDimStr + QString(", ");
           }
         }
         compDimStr = compDimStr + ")";

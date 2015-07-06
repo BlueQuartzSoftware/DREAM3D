@@ -221,7 +221,7 @@ int H5AngReader::readHeader(hid_t parId)
 
 
   foreach(QString phaseGroupName, names)
-  //for (QStringList<QString>::iterator phaseGroupName = names.begin(); phaseGroupName != names.end(); ++phaseGroupName )
+    //for (QStringList<QString>::iterator phaseGroupName = names.begin(); phaseGroupName != names.end(); ++phaseGroupName )
   {
     hid_t pid = H5Gopen(phasesGid, phaseGroupName.toLatin1().data(), H5P_DEFAULT);
     AngPhase::Pointer m_CurrentPhase = AngPhase::New();

@@ -149,11 +149,11 @@ QWidget* ComparisonSelectionItemDelegate::createEditor(QWidget* widgetParent, co
                 this, SLOT(operatorChangedData(int)));
       }
       return operatorCombo;
-      //        case ComparisonSelectionTableModel::FeaturePhaseValue:
-      //          phaseCombo = new QComboBox(parent);
-      //          phaseCombo->addItems(phases);
-      //          phaseCombo->setAutoFillBackground(true);
-      //          return phaseCombo;
+    //        case ComparisonSelectionTableModel::FeaturePhaseValue:
+    //          phaseCombo = new QComboBox(parent);
+    //          phaseCombo->addItems(phases);
+    //          phaseCombo->setAutoFillBackground(true);
+    //          return phaseCombo;
     default:
       break;
   }

@@ -42,6 +42,8 @@
 #include <QtWidgets/QTableWidgetItem>
 #include <QtWidgets/QMainWindow>
 
+#include "DREAM3DWidgetsLib/Widgets/DREAM3DUserManualDialog.h"
+
 #include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
 
 
@@ -76,7 +78,6 @@ void IssuesDockWidget::setupGui()
   errorTableWidget->horizontalHeader()->resizeSection(1, 250);
   errorTableWidget->horizontalHeader()->setSectionResizeMode(2, QHeaderView::ResizeToContents);
   errorTableWidget->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-  //errorTableWidget->setShown(true);
   errorTableWidget->setVisible(true);
 }
 
@@ -148,34 +149,34 @@ void IssuesDockWidget::displayCachedMessages()
         msgColor.setRed(255);
         msgColor.setGreen(191);
         msgColor.setBlue(193);
-      {
-        QBrush msgBrush(msgColor);
-
-        QString msgDesc = (msg.getText());
-        int msgCode = msg.getCode();
-
-        QString msgPrefix = (msg.getPrefix());
-        QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(msgPrefix);
-        filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
-        QTableWidgetItem* descriptionWidgetItem = new QTableWidgetItem(msgDesc);
-        QTableWidgetItem* codeWidgetItem = new QTableWidgetItem(QString::number(msgCode));
-        codeWidgetItem->setTextAlignment(Qt::AlignCenter);
-
-        filterNameWidgetItem->setBackground(msgBrush);
-        descriptionWidgetItem->setBackground(msgBrush);
-        codeWidgetItem->setBackground(msgBrush);
-
-        if (hyperlinkLabel == NULL)
         {
-          errorTableWidget->setItem(row, 0, filterNameWidgetItem);
+          QBrush msgBrush(msgColor);
+
+          QString msgDesc = (msg.getText());
+          int msgCode = msg.getCode();
+
+          QString msgPrefix = (msg.getPrefix());
+          QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(msgPrefix);
+          filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
+          QTableWidgetItem* descriptionWidgetItem = new QTableWidgetItem(msgDesc);
+          QTableWidgetItem* codeWidgetItem = new QTableWidgetItem(QString::number(msgCode));
+          codeWidgetItem->setTextAlignment(Qt::AlignCenter);
+
+          filterNameWidgetItem->setBackground(msgBrush);
+          descriptionWidgetItem->setBackground(msgBrush);
+          codeWidgetItem->setBackground(msgBrush);
+
+          if (hyperlinkLabel == NULL)
+          {
+            errorTableWidget->setItem(row, 0, filterNameWidgetItem);
+          }
+          else
+          {
+            errorTableWidget->setCellWidget(row, 0, hyperlinkLabel);
+          }
+          errorTableWidget->setItem(row, 1, descriptionWidgetItem);
+          errorTableWidget->setItem(row, 2, codeWidgetItem);
         }
-        else
-        {
-          errorTableWidget->setCellWidget(row, 0, hyperlinkLabel);
-        }
-        errorTableWidget->setItem(row, 1, descriptionWidgetItem);
-        errorTableWidget->setItem(row, 2, codeWidgetItem);
-      }
         row++;
         break;
 
@@ -185,36 +186,36 @@ void IssuesDockWidget::displayCachedMessages()
         msgColor.setGreen(254);
         msgColor.setBlue(137);
 
-      {
-        QBrush msgBrush(msgColor);
-
-        QString msgName = (msg.getPrefix());
-        QString msgDesc = (msg.getText());
-        int msgCode = msg.getCode();
-
-
-
-        QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(msgName);
-        filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
-        QTableWidgetItem* descriptionWidgetItem = new QTableWidgetItem(msgDesc);
-        QTableWidgetItem* codeWidgetItem = new QTableWidgetItem(QString::number(msgCode));
-        codeWidgetItem->setTextAlignment(Qt::AlignCenter);
-
-        filterNameWidgetItem->setBackground(msgBrush);
-        descriptionWidgetItem->setBackground(msgBrush);
-        codeWidgetItem->setBackground(msgBrush);
-
-        if (hyperlinkLabel == NULL)
         {
-          errorTableWidget->setItem(row, 0, filterNameWidgetItem);
+          QBrush msgBrush(msgColor);
+
+          QString msgName = (msg.getPrefix());
+          QString msgDesc = (msg.getText());
+          int msgCode = msg.getCode();
+
+
+
+          QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(msgName);
+          filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
+          QTableWidgetItem* descriptionWidgetItem = new QTableWidgetItem(msgDesc);
+          QTableWidgetItem* codeWidgetItem = new QTableWidgetItem(QString::number(msgCode));
+          codeWidgetItem->setTextAlignment(Qt::AlignCenter);
+
+          filterNameWidgetItem->setBackground(msgBrush);
+          descriptionWidgetItem->setBackground(msgBrush);
+          codeWidgetItem->setBackground(msgBrush);
+
+          if (hyperlinkLabel == NULL)
+          {
+            errorTableWidget->setItem(row, 0, filterNameWidgetItem);
+          }
+          else
+          {
+            errorTableWidget->setCellWidget(row, 0, hyperlinkLabel);
+          }
+          errorTableWidget->setItem(row, 1, descriptionWidgetItem);
+          errorTableWidget->setItem(row, 2, codeWidgetItem);
         }
-        else
-        {
-          errorTableWidget->setCellWidget(row, 0, hyperlinkLabel);
-        }
-        errorTableWidget->setItem(row, 1, descriptionWidgetItem);
-        errorTableWidget->setItem(row, 2, codeWidgetItem);
-      }
         row++;
         break;
 
@@ -248,9 +249,19 @@ QLabel* IssuesDockWidget::createHyperlinkLabel(PipelineMessage msg)
   QLabel* hyperlinkLabel = new QLabel(filterHTMLText);
   hyperlinkLabel->setTextFormat(Qt::RichText);
   hyperlinkLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
-  hyperlinkLabel->setOpenExternalLinks(true);
+  hyperlinkLabel->setOpenExternalLinks(false);
+  connect(hyperlinkLabel, SIGNAL(linkActivated(const QString&)), this, SLOT(showFilterHelp(const QString&)));
 
   return hyperlinkLabel;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void IssuesDockWidget::showFilterHelp(const QString &urlString)
+{
+  QUrl url(urlString);
+  DREAM3DUserManualDialog::LaunchHelpDialog(url);
 }
 
 // -----------------------------------------------------------------------------

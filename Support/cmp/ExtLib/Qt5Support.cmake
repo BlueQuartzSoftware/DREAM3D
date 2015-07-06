@@ -296,6 +296,7 @@ set(Qt5_COMPONENTS
     Xml 
     OpenGL 
     PrintSupport 
+    # WebKit Related Libraries
     WebKit 
     WebKitWidgets 
     Sensors

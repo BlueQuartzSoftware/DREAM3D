@@ -156,13 +156,13 @@ MovingFiniteElementSmoothing::~MovingFiniteElementSmoothing()
 void MovingFiniteElementSmoothing::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Iteration Steps", "IterationSteps", FilterParameterWidgetType::IntWidget, getIterationSteps(), FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Apply Node Contraints", "NodeConstraints", FilterParameterWidgetType::BooleanWidget, getNodeConstraints(), FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Constrain Surface Nodes", "ConstrainSurfaceNodes", FilterParameterWidgetType::BooleanWidget, getConstrainSurfaceNodes(), FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Constrain Quad Points", "ConstrainQuadPoints", FilterParameterWidgetType::BooleanWidget, getConstrainQuadPoints(), FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("Smooth Triple Lines", "SmoothTripleLines", FilterParameterWidgetType::BooleanWidget, getSmoothTripleLines(), FilterParameter::Uncategorized));
+  parameters.push_back(IntFilterParameter::New("Iteration Steps", "IterationSteps", getIterationSteps(), FilterParameter::Uncategorized));
+  parameters.push_back(BooleanFilterParameter::New("Apply Node Contraints", "NodeConstraints", getNodeConstraints(), FilterParameter::Uncategorized));
+  parameters.push_back(BooleanFilterParameter::New("Constrain Surface Nodes", "ConstrainSurfaceNodes", getConstrainSurfaceNodes(), FilterParameter::Uncategorized));
+  parameters.push_back(BooleanFilterParameter::New("Constrain Quad Points", "ConstrainQuadPoints", getConstrainQuadPoints(), FilterParameter::Uncategorized));
+  parameters.push_back(BooleanFilterParameter::New("Smooth Triple Lines", "SmoothTripleLines", getSmoothTripleLines(), FilterParameter::Uncategorized));
   parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshNodeTypeArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath(), FilterParameter::Uncategorized));
   setFilterParameters(parameters);
 }
 
@@ -205,7 +205,7 @@ void MovingFiniteElementSmoothing::dataCheck()
 {
   setErrorCondition(0);
 
-DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getSurfaceMeshNodeTypeArrayPath().getDataContainerName(), false);
+  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getSurfaceMeshNodeTypeArrayPath().getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
   // We MUST have Nodes

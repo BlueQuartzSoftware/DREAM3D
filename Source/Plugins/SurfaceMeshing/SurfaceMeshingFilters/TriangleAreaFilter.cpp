@@ -45,6 +45,7 @@
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "DREAM3DLib/Math/MatrixMath.h"
@@ -130,7 +131,7 @@ void TriangleAreaFilter::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
-  parameters.push_back(FilterParameter::New("Face Areas", "SurfaceMeshTriangleAreasArrayPath", FilterParameterWidgetType::DataArrayCreationWidget, getSurfaceMeshTriangleAreasArrayPath(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(DataArrayCreationFilterParameter::New("Face Areas", "SurfaceMeshTriangleAreasArrayPath", getSurfaceMeshTriangleAreasArrayPath(), FilterParameter::CreatedArray));
   setFilterParameters(parameters);
 }
 

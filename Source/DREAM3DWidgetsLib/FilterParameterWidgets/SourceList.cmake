@@ -5,38 +5,39 @@ set(DREAM3DWidgetsLib_ParameterWidgets_UIS "")
 
 
 set(DREAM3D_PARAMETER_WIDGETS
-      StringWidget
-      IntWidget
-      DoubleWidget
-      InputFileWidget
-      InputPathWidget
-      OutputFileWidget
-      OutputPathWidget
-      BooleanWidget
-      ChoiceWidget
-      IntVec3Widget
-      FileListInfoWidget
-      FloatVec3Widget
-      FloatVec4Widget
-      AxisAngleWidget
-      DataArraySelectionWidget
-      MultiDataArraySelectionWidget
-      DataContainerArrayProxyWidget
-      ComparisonSelectionWidget
-      AttributeMatrixSelectionWidget
-      DataContainerSelectionWidget
-      DataBundleSelectionWidget
-      PreflightUpdatedValueWidget
-      DataArrayCreationWidget
-      SeparatorWidget
-      DynamicTableWidget
-      LinkedBooleanWidget
-      DataContainerReaderWidget
-      DynamicChoiceWidget
-	  SecondOrderPolynomialWidget
-	  ThirdOrderPolynomialWidget
-	  FourthOrderPolynomialWidget
-	  Symmetric6x6Widget
+    AttributeMatrixCreationWidget
+    AttributeMatrixSelectionWidget
+    AxisAngleWidget
+    BooleanWidget
+    ChoiceWidget
+    ComparisonSelectionWidget
+    DataArrayCreationWidget
+    DataArraySelectionWidget
+    DataBundleSelectionWidget
+    DataContainerArrayProxyWidget
+    DataContainerReaderWidget
+    DataContainerSelectionWidget
+    DoubleWidget
+    DynamicChoiceWidget
+    DynamicTableWidget
+    FileListInfoWidget
+    FloatVec3Widget
+    FloatVec4Widget
+    FourthOrderPolynomialWidget
+    InputFileWidget
+    InputPathWidget
+    IntVec3Widget
+    IntWidget
+    LinkedBooleanWidget
+    MultiDataArraySelectionWidget
+    OutputFileWidget
+    OutputPathWidget
+    PreflightUpdatedValueWidget
+    SecondOrderPolynomialWidget
+    SeparatorWidget
+    StringWidget
+    Symmetric6x6Widget
+    ThirdOrderPolynomialWidget
 )
 
 set(DREAM3D_PARAMETER_WIDGETS_NO_CODEGEN

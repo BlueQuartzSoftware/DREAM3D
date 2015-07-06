@@ -38,6 +38,8 @@
 #include <QtCore/QMetaProperty>
 #include <QtCore/QSignalMapper>
 
+#include "DREAM3DLib/FilterParameters/FourthOrderPolynomialFilterParameter.h"
+
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
@@ -48,6 +50,9 @@
 FourthOrderPolynomialWidget::FourthOrderPolynomialWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   FilterParameterWidget(parameter, filter, parent)
 {
+  m_FilterParameter = dynamic_cast<FourthOrderPolynomialFilterParameter*>(parameter);
+  Q_ASSERT_X(m_FilterParameter != NULL, "NULL Pointer", "FourthOrderPolynomialWidget can ONLY be used with a FourthOrderPolynomialFilterParameter object");
+
   setupUi(this);
   setupGui();
 }
@@ -143,15 +148,7 @@ void FourthOrderPolynomialWidget::setupGui()
 
   if (getFilterParameter() != NULL)
   {
-    QString units = getFilterParameter()->getUnits();
-    if(units.isEmpty() == false)
-    {
-      label->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
-    }
-    else
-    {
-      label->setText(getFilterParameter()->getHumanLabel() );
-    }
+    label->setText(getFilterParameter()->getHumanLabel() );
 
     Float4thOrderPoly_t data = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<Float4thOrderPoly_t>();
     c40->setText( QString::number(data.c40)  );

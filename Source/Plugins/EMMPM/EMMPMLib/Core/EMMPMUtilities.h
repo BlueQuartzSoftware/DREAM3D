@@ -54,7 +54,7 @@ class EMMPMLib_EXPORT EMMPMUtilities
      * @param data The Structure to use
      * @param callbacks The list of callback functions
      */
-     static void ConvertInputImageToWorkingImage(EMMPM_Data::Pointer data);
+    static void ConvertInputImageToWorkingImage(EMMPM_Data::Pointer data);
 
     /**
      * @brief This function will copy the internal data structure that represents an
@@ -66,7 +66,7 @@ class EMMPMLib_EXPORT EMMPMUtilities
      * @param data The Structure to use
      * @param callbacks The list of callback functions
      */
-     static void ConvertXtToOutputImage(EMMPM_Data::Pointer data);
+    static void ConvertXtToOutputImage(EMMPM_Data::Pointer data);
 
 
     /**
@@ -78,7 +78,7 @@ class EMMPMLib_EXPORT EMMPMUtilities
      * @param var
      * @param N
      */
-    static void ZeroMeanVariance(int nClasses, size_t nDims, real_t *mu, real_t *var, real_t *N);
+    static void ZeroMeanVariance(int nClasses, size_t nDims, real_t* mu, real_t* var, real_t* N);
 
     /**
      * @brief Checks if the error value calculated is less that a tolerance (stopping condition)
@@ -123,8 +123,8 @@ class EMMPMLib_EXPORT EMMPMUtilities
      * @param cols
      * @param classes
      */
-    static void ComputeEntropy(real_t ***probs, unsigned char **output,
-                           unsigned int rows, unsigned int cols, unsigned int classes);
+    static void ComputeEntropy(real_t** *probs, unsigned char** output,
+                               unsigned int rows, unsigned int cols, unsigned int classes);
   protected:
     EMMPMUtilities()
     {

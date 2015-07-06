@@ -373,7 +373,7 @@ int PipelineViewWidget::writePipeline(QString filePath)
     if (f.remove() == false)
     {
       QMessageBox::warning(this, QString::fromLatin1("Pipeline Write Error"),
-        QString::fromLatin1("There was an error removing the existing pipeline file. The pipeline was NOT saved."));
+                           QString::fromLatin1("There was an error removing the existing pipeline file. The pipeline was NOT saved."));
       return -1;
     }
   }
@@ -412,14 +412,14 @@ int PipelineViewWidget::writePipeline(QString filePath)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PipelineViewWidget::openPipeline(const QString &filePath, int index, const bool &setOpenedFilePath, const bool &changeTitle)
+int PipelineViewWidget::openPipeline(const QString& filePath, int index, const bool& setOpenedFilePath, const bool& changeTitle)
 {
   QFileInfo fi(filePath);
   if (fi.exists() == false)
   {
-      QMessageBox::warning(this, QString::fromLatin1("Pipeline Read Error"),
-        QString::fromLatin1("There was an error opening the specified pipeline file. The pipeline file does not exist."));
-      return -1;
+    QMessageBox::warning(this, QString::fromLatin1("Pipeline Read Error"),
+                         QString::fromLatin1("There was an error opening the specified pipeline file. The pipeline file does not exist."));
+    return -1;
   }
 
   // Clear the pipeline Issues table first so we can collect all the error messages
@@ -453,7 +453,7 @@ int PipelineViewWidget::openPipeline(const QString &filePath, int index, const b
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FilterPipeline::Pointer PipelineViewWidget::readPipelineFromFile(const QString &filePath)
+FilterPipeline::Pointer PipelineViewWidget::readPipelineFromFile(const QString& filePath)
 {
   QFileInfo fi(filePath);
   QString ext = fi.suffix();
@@ -518,7 +518,7 @@ void PipelineViewWidget::addFilter(const QString& filterClassName, int index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, int index)
+void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* pipelineFilterWidget, int index)
 {
   bool addSpacer = false;
   if (filterCount() <= 0)
@@ -549,34 +549,35 @@ void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, int index)
   }
 
   // The layout will take control of the PipelineFilterWidget 'w' instance
-  m_FilterWidgetLayout->insertWidget(index, w);
+  m_FilterWidgetLayout->insertWidget(index, pipelineFilterWidget);
   // Set the Parent
-  w->setParent(this);
+  pipelineFilterWidget->setParent(this);
 
   if(index == -1)
   {
     index = filterCount() - 1;
   }
 
+
   /// Now setup all the connections between the various widgets
 
   // When the filter is removed from this view
-  connect(w, SIGNAL(filterWidgetRemoved(PipelineFilterWidget*)),
+  connect(pipelineFilterWidget, SIGNAL(filterWidgetRemoved(PipelineFilterWidget*)),
           this, SLOT(removeFilterWidget(PipelineFilterWidget*)) );
 
   // When the FilterWidget is selected
-  connect(w, SIGNAL(widgetSelected(PipelineFilterWidget*)),
+  connect(pipelineFilterWidget, SIGNAL(widgetSelected(PipelineFilterWidget*)),
           this, SLOT(setSelectedFilterWidget(PipelineFilterWidget*)) );
 
   // When the filter widget is dragged
-  connect(w, SIGNAL(dragStarted(PipelineFilterWidget*)),
+  connect(pipelineFilterWidget, SIGNAL(dragStarted(PipelineFilterWidget*)),
           this, SLOT(setFilterBeingDragged(PipelineFilterWidget*)) );
 
-  connect(w, SIGNAL(parametersChanged()),
+  connect(pipelineFilterWidget, SIGNAL(parametersChanged()),
           this, SLOT(preflightPipeline()));
 
-  connect(w, SIGNAL(parametersChanged()),
-    this, SLOT(handleFilterParameterChanged()));
+  connect(pipelineFilterWidget, SIGNAL(parametersChanged()),
+          this, SLOT(handleFilterParameterChanged()));
 
   // Check to make sure at least the vertical spacer is in the Layout
   if (addSpacer)
@@ -589,9 +590,9 @@ void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, int index)
   reindexWidgetTitles();
 
   // Finally, set this new filter widget as selected in order to show the input parameters right away
-  w->setIsSelected(true);
+  pipelineFilterWidget->setIsSelected(true);
   // Get the filter to ignore Scroll Wheel Events
-  w->installEventFilter( this);
+  pipelineFilterWidget->installEventFilter( this);
 
   // Emit that the pipeline changed
   emit pipelineChanged();
@@ -849,7 +850,7 @@ void PipelineViewWidget::dragMoveEvent(QDragMoveEvent* event)
       PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(i)->widget());
       if (w != NULL && m_CurrentFilterBeingDragged != NULL && w != m_CurrentFilterBeingDragged)
       {
-        if (event->pos().y() <= w->geometry().y() + w->geometry().height()/2)
+        if (event->pos().y() <= w->geometry().y() + w->geometry().height() / 2)
         {
           m_DropBox->setLabel("    [" + QString::number(i + 1) + "] " + m_CurrentFilterBeingDragged->getHumanLabel());
           m_FilterWidgetLayout->insertWidget(i, m_DropBox);
@@ -865,7 +866,7 @@ void PipelineViewWidget::dragMoveEvent(QDragMoveEvent* event)
       PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(count - 2)->widget());
       if (w != NULL && m_CurrentFilterBeingDragged != NULL && w != m_CurrentFilterBeingDragged)
       {
-        if (event->pos().y() >= w->geometry().y() + w->geometry().height()/2)
+        if (event->pos().y() >= w->geometry().y() + w->geometry().height() / 2)
         {
           m_DropBox->setLabel("    [" + QString::number(count) + "] " + m_CurrentFilterBeingDragged->getHumanLabel());
           m_FilterWidgetLayout->insertWidget(count - 1, m_DropBox);
@@ -1290,7 +1291,7 @@ QStatusBar* PipelineViewWidget::getStatusBar()
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::handleFilterParameterChanged()
 {
-  emit filterParameterChanged();
+  emit filterInputWidgetEdited();
 }
 
 // -----------------------------------------------------------------------------

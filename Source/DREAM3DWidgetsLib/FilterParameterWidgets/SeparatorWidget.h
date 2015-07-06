@@ -43,8 +43,8 @@
 
 #include "QtSupportLib/FaderWidget.h"
 
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
@@ -96,7 +96,7 @@ class DREAM3DWidgetsLib_EXPORT SeparatorWidget : public FilterParameterWidget, p
 
   private:
 
-
+    SeparatorFilterParameter* m_FilterParameter;
 
     SeparatorWidget(const SeparatorWidget&); // Copy Constructor Not Implemented
     void operator=(const SeparatorWidget&); // Operator '=' Not Implemented

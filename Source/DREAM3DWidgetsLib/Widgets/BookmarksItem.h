@@ -49,59 +49,59 @@
 
 class DREAM3DWidgetsLib_EXPORT BookmarksItem
 {
-public:
-  BookmarksItem(const QVector<QVariant> &data, BookmarksItem *parent = 0);
-  virtual ~BookmarksItem();
+  public:
+    BookmarksItem(const QVector<QVariant>& data, BookmarksItem* parent = 0);
+    virtual ~BookmarksItem();
 
-  enum ColumnData
-  {
-    Name,
-    Path
-  };
+    enum ColumnData
+    {
+      Name,
+      Path
+    };
 
 
-  BookmarksItem* child(int number);
-  BookmarksItem* parent();
+    BookmarksItem* child(int number);
+    BookmarksItem* parent();
 
-  int childCount() const;
-  int columnCount() const;
+    int childCount() const;
+    int columnCount() const;
 
-  QVariant data(int column) const;
-  bool setData(int column, const QVariant &value);
+    QVariant data(int column) const;
+    bool setData(int column, const QVariant& value);
 
-  bool getItemHasErrors();
-  bool setItemHasErrors(const bool &value);
+    bool getItemHasErrors();
+    bool setItemHasErrors(const bool& value);
 
-  QString getItemTooltip();
-  bool setItemTooltip(const QString &value);
+    QString getItemTooltip();
+    bool setItemTooltip(const QString& value);
 
-  QIcon getIcon();
-  bool setIcon(const QIcon &icon);
+    QIcon getIcon();
+    bool setIcon(const QIcon& icon);
 
-  bool needsToBeExpanded();
-  void setNeedsToBeExpanded(bool value);
+    bool needsToBeExpanded();
+    void setNeedsToBeExpanded(bool value);
 
-  bool insertChildren(int position, int count, int columns);
-  bool insertColumns(int position, int columns);
+    bool insertChildren(int position, int count, int columns);
+    bool insertColumns(int position, int columns);
 
-  bool removeChildren(int position, int count);
-  bool removeColumns(int position, int columns);
+    bool removeChildren(int position, int count);
+    bool removeColumns(int position, int columns);
 
-  int childNumber() const;
+    int childNumber() const;
 
-  static QString TopLevelString();
+    static QString TopLevelString();
 
-private:
-  QList<BookmarksItem*>               m_ChildItems;
-  QVector<QVariant>                   m_ItemData;
-  BookmarksItem*                      m_ParentItem;
-  bool                                m_ItemHasErrors;
-  QString                             m_ItemTooltip;
-  bool                                m_NeedsToBeExpanded;
-  QIcon                               m_Icon;
+  private:
+    QList<BookmarksItem*>               m_ChildItems;
+    QVector<QVariant>                   m_ItemData;
+    BookmarksItem*                      m_ParentItem;
+    bool                                m_ItemHasErrors;
+    QString                             m_ItemTooltip;
+    bool                                m_NeedsToBeExpanded;
+    QIcon                               m_Icon;
 
-  BookmarksItem(const BookmarksItem&);    // Copy Constructor Not Implemented
-  void operator=(const BookmarksItem&);  // Operator '=' Not Implemented
+    BookmarksItem(const BookmarksItem&);    // Copy Constructor Not Implemented
+    void operator=(const BookmarksItem&);  // Operator '=' Not Implemented
 };
 
 #endif // BookmarksItem_H

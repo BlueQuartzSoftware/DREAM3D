@@ -232,7 +232,7 @@ void VerifyTriangleWinding::setupFilterParameters()
   FilterParameterVector parameters;
 
   parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::Uncategorized, ""));
+  parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::Uncategorized));
   setFilterParameters(parameters);
 }
 
@@ -468,335 +468,335 @@ int32_t VerifyTriangleWinding::getSeedTriangle(int32_t label, QSet<int32_t>& tri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VerifyTriangleWinding::verifyTriangleWinding()
-{
-  int err = 0;
-  //  qDebug() << "--------------------------------------------------------------" << "\n";
-  //  FaceListType& masterFaceList = *(mesh->triangles());  // Create a reference variable for better syntax
-  //  NodeVector&       masterNodeList = *(mesh->nodes());
-
-  DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
-  // get the triangle definitions - use the pointer to the start of the Struct Array
-  FaceArray::Pointer masterFaceList = sm->getFaces();
-  if(NULL == masterFaceList.get())
+  int VerifyTriangleWinding::verifyTriangleWinding()
   {
-    setErrorCondition(-556);
-    notifyErrorMessage(getHumanLabel(), "The SurfaceMesh DataContainer Does NOT contain Faces", -556);
-    return getErrorCondition();
-  }
-  FaceArray::Face_t* triangles = masterFaceList->getPointer(0);
+    int err = 0;
+    //  qDebug() << "--------------------------------------------------------------" << "\n";
+    //  FaceListType& masterFaceList = *(mesh->triangles());  // Create a reference variable for better syntax
+    //  NodeVector&       masterNodeList = *(mesh->nodes());
 
-  int numFaces = masterFaceList->getNumberOfTuples();
-
-  VertexArray::Pointer masterNodeListPtr = sm->getVertices();
-  if(NULL == masterNodeListPtr.get())
-  {
-    setErrorCondition(-555);
-    notifyErrorMessage(getHumanLabel(), "The SurfaceMesh DataContainer Does NOT contain Nodes", -555);
-    return getErrorCondition();
-  }
-
-  Mesh::Pointer mesh = Mesh::New();
-  int min = std::numeric_limits<int32_t>::max();
-  int max = std::numeric_limits<int32_t>::min();
-  // Set the min and Max labels in the Mesh class;
-  for(int n = 0; n < numFaces; ++n)
-  {
-    int l = m_SurfaceMeshFaceLabels[n * 2];
-    if (l < min) { min = l;}
-    if (l > max) { max = l;}
-    l = m_SurfaceMeshFaceLabels[n * 2 + 1];
-    if (l < min) { min = l;}
-    if (l > max) { max = l;}
-  }
-  mesh->setMaxLabel(max);
-  mesh->setMinLabel(min);
-
-  // Get a grouping of triangles by feature ID
-  LabelFaceMap_t trianglesToLabelMap;
-  getLabelTriangelMap(trianglesToLabelMap);
-  //  for(LabelFaceMap_t::iterator iter = trianglesToLabelMap.begin(); iter != trianglesToLabelMap.end(); ++iter)
-  //  {
-  //    qDebug() << "Feature: " << iter.key() << "   Face Count: " << iter.value().size() << "\n";
-  //  }
-
-
-  int32_t currentLabel = 0;
-
-  // Find the first Non Zero Feature Id (Label). This is going to be our starting feature.
-  for(LabelFaceMap_t::iterator iter = trianglesToLabelMap.begin(); iter != trianglesToLabelMap.end(); ++iter)
-  {
-    if ( iter.key() > 0)
+    DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
+    // get the triangle definitions - use the pointer to the start of the Struct Array
+    FaceArray::Pointer masterFaceList = sm->getFaces();
+    if(NULL == masterFaceList.get())
     {
-      currentLabel = iter.key();
-      break;
+      setErrorCondition(-556);
+      notifyErrorMessage(getHumanLabel(), "The SurfaceMesh DataContainer Does NOT contain Faces", -556);
+      return getErrorCondition();
     }
-  }
+    FaceArray::Face_t* triangles = masterFaceList->getPointer(0);
 
-  std::deque<LabelVisitorInfo::Pointer> labelObjectsToVisit;
+    int numFaces = masterFaceList->getNumberOfTuples();
 
-  // Keeps a list of all the triangles that have been visited.
-  QVector<bool> masterVisited(masterFaceList->getNumberOfTuples(), false);
-
-  STDEXT::hash_set<int32_t> labelsVisitedSet;
-  STDEXT::hash_set<int32_t> labelsToVisitSet;
-  int32_t triIndex = 0;
-
-  bool firstLabel = false;
-
-  // Get the first triangle in the list
-  // FaceArray::Face_t& triangle = triangles[triIndex];
-
-
-  // Now that we have the starting Feature, lets try and get a seed triangle that is oriented in the proper direction.
-  /* Make sure the winding is correct on the first triangle of the first label that will be checked. */
-  triIndex = getSeedTriangle(currentLabel, trianglesToLabelMap[currentLabel]);
-  if (getErrorCondition() < 0 || triIndex < 0)
-  {
-    return -1;
-  }
-
-  LabelVisitorInfo::Pointer ldo = LabelVisitorInfo::New(currentLabel, triIndex);
-  labelObjectsToVisit.push_back(ldo);
-  LabelVisitorInfo::Pointer curLdo = LabelVisitorInfo::NullPointer();
-  labelsToVisitSet.insert(currentLabel);
-
-  float total = (float)(trianglesToLabelMap.size());
-  float curPercent = 0.0;
-  int progressIndex = 0;
-
-
-  // Start looping on all the Face Labels (Feature Ids) values
-  while (labelObjectsToVisit.empty() == false)
-  {
-    if (getCancel() == true) { return -1; }
-    if ( (progressIndex / total * 100.0f) > (curPercent) )
+    VertexArray::Pointer masterNodeListPtr = sm->getVertices();
+    if(NULL == masterNodeListPtr.get())
     {
-      QString ss = QObject::tr("%1% Complete").arg(static_cast<int>(progressIndex / total * 100.0f));
-      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-      curPercent += 5.0f;
-    }
-    ++progressIndex;
-
-    QMap<int32_t, int32_t> neighborlabels;
-
-    curLdo = labelObjectsToVisit.front();
-    labelObjectsToVisit.pop_front();
-    currentLabel = curLdo->getLabel();
-    labelsToVisitSet.erase(currentLabel);
-    labelsVisitedSet.insert(currentLabel);
-    if (curLdo->getPrimed() == false && curLdo->getRelabeled() == false)
-    {
-      curLdo->m_Faces = trianglesToLabelMap[currentLabel];
-      curLdo->setPrimed(true);
-    }
-    else if (curLdo->getPrimed() == false && curLdo->getRelabeled() == true)
-    {
-      //    qDebug() << "    Reint32_ting could not find a starting index. Using first index in triangle set" << "\n";
-      curLdo->setStartIndex( *(curLdo->m_Faces.begin()) );
-      curLdo->setPrimed(true);
+      setErrorCondition(-555);
+      notifyErrorMessage(getHumanLabel(), "The SurfaceMesh DataContainer Does NOT contain Nodes", -555);
+      return getErrorCondition();
     }
 
-    if (firstLabel == true)
+    Mesh::Pointer mesh = Mesh::New();
+    int min = std::numeric_limits<int32_t>::max();
+    int max = std::numeric_limits<int32_t>::min();
+    // Set the min and Max labels in the Mesh class;
+    for(int n = 0; n < numFaces; ++n)
     {
-      triIndex = 0;
-      firstLabel = false;
+      int l = m_SurfaceMeshFaceLabels[n * 2];
+      if (l < min) { min = l;}
+      if (l > max) { max = l;}
+      l = m_SurfaceMeshFaceLabels[n * 2 + 1];
+      if (l < min) { min = l;}
+      if (l > max) { max = l;}
     }
-    else
+    mesh->setMaxLabel(max);
+    mesh->setMinLabel(min);
+
+    // Get a grouping of triangles by feature ID
+    LabelFaceMap_t trianglesToLabelMap;
+    getLabelTriangelMap(trianglesToLabelMap);
+    //  for(LabelFaceMap_t::iterator iter = trianglesToLabelMap.begin(); iter != trianglesToLabelMap.end(); ++iter)
+    //  {
+    //    qDebug() << "Feature: " << iter.key() << "   Face Count: " << iter.value().size() << "\n";
+    //  }
+
+
+    int32_t currentLabel = 0;
+
+    // Find the first Non Zero Feature Id (Label). This is going to be our starting feature.
+    for(LabelFaceMap_t::iterator iter = trianglesToLabelMap.begin(); iter != trianglesToLabelMap.end(); ++iter)
     {
-      triIndex = curLdo->getStartIndex();
-    }
-    // Get the number of triangles remaining to be visited for the current label
-    QSet<int32_t>::size_type nLabelTriStart = curLdo->m_Faces.size();
-
-
-    STDEXT::hash_set<int> localVisited;
-    std::deque<int> triangleDeque;
-    //FaceArray::Face_t& triangle = triangles[triIndex];
-    triangleDeque.push_back(triIndex);
-
-    while (triangleDeque.empty() == false)
-    {
-      int32_t triangleIndex = triangleDeque.front();
-      FaceArray::Face_t& triangle = triangles[triangleIndex];
-      int32_t* faceLabel = m_SurfaceMeshFaceLabels + (triangleIndex * 2); // Here we are getting a new pointer offset from the start of the labels array
-
-      //   qDebug() << " $ tIndex: " << triangleIndex << "\n";
-      FaceArray::Pointer facesPtr = sm->getFaces();
-      if(facesPtr == NULL)
+      if ( iter.key() > 0)
       {
+        currentLabel = iter.key();
         break;
       }
-      //FaceArray::Face_t* faces = facesPtr->getPointer(0);
+    }
 
-      QVector<int32_t> adjTris = TriangleOps::findAdjacentTriangles(facesPtr, triangleIndex, m_SurfaceMeshFaceLabelsPtr.lock(), currentLabel);
+    std::deque<LabelVisitorInfo::Pointer> labelObjectsToVisit;
 
-      for (FaceList_t::iterator adjTri = adjTris.begin(); adjTri != adjTris.end(); ++adjTri)
+    // Keeps a list of all the triangles that have been visited.
+    QVector<bool> masterVisited(masterFaceList->getNumberOfTuples(), false);
+
+    STDEXT::hash_set<int32_t> labelsVisitedSet;
+    STDEXT::hash_set<int32_t> labelsToVisitSet;
+    int32_t triIndex = 0;
+
+    bool firstLabel = false;
+
+    // Get the first triangle in the list
+    // FaceArray::Face_t& triangle = triangles[triIndex];
+
+
+    // Now that we have the starting Feature, lets try and get a seed triangle that is oriented in the proper direction.
+    /* Make sure the winding is correct on the first triangle of the first label that will be checked. */
+    triIndex = getSeedTriangle(currentLabel, trianglesToLabelMap[currentLabel]);
+    if (getErrorCondition() < 0 || triIndex < 0)
+    {
+      return -1;
+    }
+
+    LabelVisitorInfo::Pointer ldo = LabelVisitorInfo::New(currentLabel, triIndex);
+    labelObjectsToVisit.push_back(ldo);
+    LabelVisitorInfo::Pointer curLdo = LabelVisitorInfo::NullPointer();
+    labelsToVisitSet.insert(currentLabel);
+
+    float total = (float)(trianglesToLabelMap.size());
+    float curPercent = 0.0;
+    int progressIndex = 0;
+
+
+    // Start looping on all the Face Labels (Feature Ids) values
+    while (labelObjectsToVisit.empty() == false)
+    {
+      if (getCancel() == true) { return -1; }
+      if ( (progressIndex / total * 100.0f) > (curPercent) )
       {
-        // qDebug() << "  ^ AdjTri index: " << *adjTri << "\n";
-        if (masterVisited[*adjTri] == false)
+        QString ss = QObject::tr("%1% Complete").arg(static_cast<int>(progressIndex / total * 100.0f));
+        notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+        curPercent += 5.0f;
+      }
+      ++progressIndex;
+
+      QMap<int32_t, int32_t> neighborlabels;
+
+      curLdo = labelObjectsToVisit.front();
+      labelObjectsToVisit.pop_front();
+      currentLabel = curLdo->getLabel();
+      labelsToVisitSet.erase(currentLabel);
+      labelsVisitedSet.insert(currentLabel);
+      if (curLdo->getPrimed() == false && curLdo->getRelabeled() == false)
+      {
+        curLdo->m_Faces = trianglesToLabelMap[currentLabel];
+        curLdo->setPrimed(true);
+      }
+      else if (curLdo->getPrimed() == false && curLdo->getRelabeled() == true)
+      {
+        //    qDebug() << "    Reint32_ting could not find a starting index. Using first index in triangle set" << "\n";
+        curLdo->setStartIndex( *(curLdo->m_Faces.begin()) );
+        curLdo->setPrimed(true);
+      }
+
+      if (firstLabel == true)
+      {
+        triIndex = 0;
+        firstLabel = false;
+      }
+      else
+      {
+        triIndex = curLdo->getStartIndex();
+      }
+      // Get the number of triangles remaining to be visited for the current label
+      QSet<int32_t>::size_type nLabelTriStart = curLdo->m_Faces.size();
+
+
+      STDEXT::hash_set<int> localVisited;
+      std::deque<int> triangleDeque;
+      //FaceArray::Face_t& triangle = triangles[triIndex];
+      triangleDeque.push_back(triIndex);
+
+      while (triangleDeque.empty() == false)
+      {
+        int32_t triangleIndex = triangleDeque.front();
+        FaceArray::Face_t& triangle = triangles[triangleIndex];
+        int32_t* faceLabel = m_SurfaceMeshFaceLabels + (triangleIndex * 2); // Here we are getting a new pointer offset from the start of the labels array
+
+        //   qDebug() << " $ tIndex: " << triangleIndex << "\n";
+        FaceArray::Pointer facesPtr = sm->getFaces();
+        if(facesPtr == NULL)
         {
-          //    qDebug() << "   * Checking Winding: " << *adjTri << "\n";
-          if (TriangleOps::verifyWinding(triangle, triangles[*adjTri], faceLabel, m_SurfaceMeshFaceLabels + (*adjTri * 2), currentLabel) == true)
+          break;
+        }
+        //FaceArray::Face_t* faces = facesPtr->getPointer(0);
+
+        QVector<int32_t> adjTris = TriangleOps::findAdjacentTriangles(facesPtr, triangleIndex, m_SurfaceMeshFaceLabelsPtr.lock(), currentLabel);
+
+        for (FaceList_t::iterator adjTri = adjTris.begin(); adjTri != adjTris.end(); ++adjTri)
+        {
+          // qDebug() << "  ^ AdjTri index: " << *adjTri << "\n";
+          if (masterVisited[*adjTri] == false)
           {
-            //   qDebug() << "Face winding flipped for triangle id = " << *adjTri << " Feature Id: " << currentLabel << "\n";
+            //    qDebug() << "   * Checking Winding: " << *adjTri << "\n";
+            if (TriangleOps::verifyWinding(triangle, triangles[*adjTri], faceLabel, m_SurfaceMeshFaceLabels + (*adjTri * 2), currentLabel) == true)
+            {
+              //   qDebug() << "Face winding flipped for triangle id = " << *adjTri << " Feature Id: " << currentLabel << "\n";
+            }
+          }
+
+          if (localVisited.find(*adjTri) == localVisited.end()
+              && find(triangleDeque.begin(), triangleDeque.end(), *adjTri) == triangleDeque.end())
+          {
+            //qDebug() << "   # Adding to Deque: " << *adjTri << "\n";
+            triangleDeque.push_back(*adjTri);
+            localVisited.insert(*adjTri);
+            masterVisited[*adjTri] = true;
           }
         }
 
-        if (localVisited.find(*adjTri) == localVisited.end()
-            && find(triangleDeque.begin(), triangleDeque.end(), *adjTri) == triangleDeque.end())
+        // Just add the neighbor label to a set so we end up with a list of unique
+        // labels that are neighbors to the current label
+        if (currentLabel != faceLabel[0])
         {
-          //qDebug() << "   # Adding to Deque: " << *adjTri << "\n";
-          triangleDeque.push_back(*adjTri);
-          localVisited.insert(*adjTri);
-          masterVisited[*adjTri] = true;
+          neighborlabels.insert(faceLabel[0], triangleIndex);
         }
-      }
+        if (currentLabel != faceLabel[1])
+        {
+          neighborlabels.insert(faceLabel[1], triangleIndex);
+        }
 
-      // Just add the neighbor label to a set so we end up with a list of unique
-      // labels that are neighbors to the current label
-      if (currentLabel != faceLabel[0])
+
+        localVisited.insert(triangleIndex);
+        masterVisited[triangleIndex] = true;
+        curLdo->m_Faces.remove(triangleIndex);
+        triangleDeque.pop_front();
+      }  // End of loop to visit all triangles in the 'currentLabel'
+
+      // Find the Next label to push onto the end of the labels List, but ONLY if it is NOT
+      // currently on the list and NOT currently on the label visited list.
+      for (QMap<int32_t, int32_t>::iterator neigh = neighborlabels.begin(); neigh != neighborlabels.end(); ++neigh )
       {
-        neighborlabels.insert(faceLabel[0], triangleIndex);
+        int32_t triangleIndex = neigh.value();
+        int32_t* triangleLabel = m_SurfaceMeshFaceLabels + triangleIndex * 2;
+
+        if ( labelsToVisitSet.find(triangleLabel[0]) == labelsToVisitSet.end()
+             && (labelsVisitedSet.find(triangleLabel[0]) == labelsVisitedSet.end() ) )
+        {
+          // Push the int32_t value into the "set"
+          labelsToVisitSet.insert(triangleLabel[0]);
+          LabelVisitorInfo::Pointer l = LabelVisitorInfo::New(triangleLabel[0], triangleIndex);
+          labelObjectsToVisit.push_back(l);
+          // qDebug() << "    Adding Label " << triangle.labels[0] << " to visit starting at tIndex " << triangleIndex << "\n";
+        }
+        if ( labelsToVisitSet.find(triangleLabel[1]) == labelsToVisitSet.end()
+             && (labelsVisitedSet.find(triangleLabel[1]) == labelsVisitedSet.end() ) )
+        {
+          // Push the int32_t value into the "set"
+          labelsToVisitSet.insert(triangleLabel[1]);
+          LabelVisitorInfo::Pointer l = LabelVisitorInfo::New(triangleLabel[1], triangleIndex);
+          labelObjectsToVisit.push_back(l);
+          //  qDebug() << "    Adding Label " << triangle.labels[1] << " to visit starting at tIndex " << triangleIndex << "\n";
+        }
+
       }
-      if (currentLabel != faceLabel[1])
+
+      QSet<int32_t>::size_type nLabelTriEnd = curLdo->m_Faces.size();
+      if (nLabelTriStart == nLabelTriEnd )
       {
-        neighborlabels.insert(faceLabel[1], triangleIndex);
+        // qDebug() << "    !--!++! No new triangles visited for int32_t " << currentLabel << "\n";
+      }
+      else if (nLabelTriEnd == 0)
+      {
+        //  qDebug() << "    No Faces remain to be visited for label " << "\n";
+        // If this currentLabel was the result of a "relabeling" then revert back to the original
+        // label for those triangles.
+        curLdo->revertFaceLabels(m_SurfaceMeshFaceLabelsPtr.lock());
+      }
+      else
+      {
+        //qDebug() << "    Not all triangles visited for label"  << "\n";
+        //qDebug() << "    " << nLabelTriEnd << " Faces Remaining to be visited" << "\n";
+        // At this point relabel the remaining triangles
+        //      if (currentLabel == 28) {
+        //        qDebug() << "break" << "\n";
+        //      }
+        LabelVisitorInfo::Pointer p = curLdo->relabelFaces(mesh, m_SurfaceMeshFaceLabelsPtr.lock(), masterVisited);
+        labelObjectsToVisit.push_back(p);
+        labelsToVisitSet.insert(p->getLabel());
+        // Revert the current labelVisitorObject to its original label
+        curLdo->revertFaceLabels(m_SurfaceMeshFaceLabelsPtr.lock());
+        //qDebug() << "    New label " << mesh->getMaxLabel() << " added to visit" << "\n";
       }
 
+    } // End of Loop over each int32_t
 
-      localVisited.insert(triangleIndex);
-      masterVisited[triangleIndex] = true;
-      curLdo->m_Faces.remove(triangleIndex);
-      triangleDeque.pop_front();
-    }  // End of loop to visit all triangles in the 'currentLabel'
-
-    // Find the Next label to push onto the end of the labels List, but ONLY if it is NOT
-    // currently on the list and NOT currently on the label visited list.
-    for (QMap<int32_t, int32_t>::iterator neigh = neighborlabels.begin(); neigh != neighborlabels.end(); ++neigh )
+    //qDebug() << "Total: "<< total << "\n";
+    //qDebug() << "labelsToVisitSet.size() :" << labelsToVisitSet.size() << "\n";
+    if (labelsToVisitSet.size() != 0)
     {
-      int32_t triangleIndex = neigh.value();
-      int32_t* triangleLabel = m_SurfaceMeshFaceLabels + triangleIndex * 2;
-
-      if ( labelsToVisitSet.find(triangleLabel[0]) == labelsToVisitSet.end()
-           && (labelsVisitedSet.find(triangleLabel[0]) == labelsVisitedSet.end() ) )
+      //qDebug() << " labelsToVisitSet:" << "\n";
+      for (STDEXT::hash_set<int32_t>::iterator iter = labelsToVisitSet.begin(); iter != labelsToVisitSet.end(); ++iter )
       {
-        // Push the int32_t value into the "set"
-        labelsToVisitSet.insert(triangleLabel[0]);
-        LabelVisitorInfo::Pointer l = LabelVisitorInfo::New(triangleLabel[0], triangleIndex);
-        labelObjectsToVisit.push_back(l);
-        // qDebug() << "    Adding Label " << triangle.labels[0] << " to visit starting at tIndex " << triangleIndex << "\n";
+        //qDebug() << "  int32_t: " << *iter << "\n";
       }
-      if ( labelsToVisitSet.find(triangleLabel[1]) == labelsToVisitSet.end()
-           && (labelsVisitedSet.find(triangleLabel[1]) == labelsVisitedSet.end() ) )
-      {
-        // Push the int32_t value into the "set"
-        labelsToVisitSet.insert(triangleLabel[1]);
-        LabelVisitorInfo::Pointer l = LabelVisitorInfo::New(triangleLabel[1], triangleIndex);
-        labelObjectsToVisit.push_back(l);
-        //  qDebug() << "    Adding Label " << triangle.labels[1] << " to visit starting at tIndex " << triangleIndex << "\n";
-      }
+    }
+    //qDebug() << "labelsVisited.size() :" << labelsVisitedSet.size() << "\n";
 
+
+    QSet<int32_t> thelabels = TriangleOps::generateUniqueLabels(m_SurfaceMeshFaceLabelsPtr.lock());
+    for (STDEXT::hash_set<int32_t>::iterator iter = labelsVisitedSet.begin(); iter != labelsVisitedSet.end(); ++iter )
+    {
+      thelabels.remove(*iter);
     }
 
-    QSet<int32_t>::size_type nLabelTriEnd = curLdo->m_Faces.size();
-    if (nLabelTriStart == nLabelTriEnd )
-    {
-      // qDebug() << "    !--!++! No new triangles visited for int32_t " << currentLabel << "\n";
-    }
-    else if (nLabelTriEnd == 0)
-    {
-      //  qDebug() << "    No Faces remain to be visited for label " << "\n";
-      // If this currentLabel was the result of a "relabeling" then revert back to the original
-      // label for those triangles.
-      curLdo->revertFaceLabels(m_SurfaceMeshFaceLabelsPtr.lock());
-    }
-    else
-    {
-      //qDebug() << "    Not all triangles visited for label"  << "\n";
-      //qDebug() << "    " << nLabelTriEnd << " Faces Remaining to be visited" << "\n";
-      // At this point relabel the remaining triangles
-      //      if (currentLabel == 28) {
-      //        qDebug() << "break" << "\n";
-      //      }
-      LabelVisitorInfo::Pointer p = curLdo->relabelFaces(mesh, m_SurfaceMeshFaceLabelsPtr.lock(), masterVisited);
-      labelObjectsToVisit.push_back(p);
-      labelsToVisitSet.insert(p->getLabel());
-      // Revert the current labelVisitorObject to its original label
-      curLdo->revertFaceLabels(m_SurfaceMeshFaceLabelsPtr.lock());
-      //qDebug() << "    New label " << mesh->getMaxLabel() << " added to visit" << "\n";
-    }
-
-  } // End of Loop over each int32_t
-
-  //qDebug() << "Total: "<< total << "\n";
-  //qDebug() << "labelsToVisitSet.size() :" << labelsToVisitSet.size() << "\n";
-  if (labelsToVisitSet.size() != 0)
-  {
-    //qDebug() << " labelsToVisitSet:" << "\n";
-    for (STDEXT::hash_set<int32_t>::iterator iter = labelsToVisitSet.begin(); iter != labelsToVisitSet.end(); ++iter )
+    //qDebug() << "labels NOT visited:" << "\n";
+    for (QSet<int32_t>::iterator iter = thelabels.begin(); iter != thelabels.end(); ++iter )
     {
       //qDebug() << "  int32_t: " << *iter << "\n";
     }
+
+    // qDebug() << "--------------------------------------------------------------" << "\n";
+    return err;
   }
-  //qDebug() << "labelsVisited.size() :" << labelsVisitedSet.size() << "\n";
 
 
-  QSet<int32_t> thelabels = TriangleOps::generateUniqueLabels(m_SurfaceMeshFaceLabelsPtr.lock());
-  for (STDEXT::hash_set<int32_t>::iterator iter = labelsVisitedSet.begin(); iter != labelsVisitedSet.end(); ++iter )
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+  AbstractFilter::Pointer VerifyTriangleWinding::newFilterInstance(bool copyFilterParameters)
   {
-    thelabels.remove(*iter);
+    VerifyTriangleWinding::Pointer filter = VerifyTriangleWinding::New();
+    if(true == copyFilterParameters)
+    {
+      copyFilterParameterInstanceVariables(filter.get());
+    }
+    return filter;
   }
 
-  //qDebug() << "labels NOT visited:" << "\n";
-  for (QSet<int32_t>::iterator iter = thelabels.begin(); iter != thelabels.end(); ++iter )
-  {
-    //qDebug() << "  int32_t: " << *iter << "\n";
-  }
-
-  // qDebug() << "--------------------------------------------------------------" << "\n";
-  return err;
-}
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+  const QString VerifyTriangleWinding::getCompiledLibraryName()
+  { return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer VerifyTriangleWinding::newFilterInstance(bool copyFilterParameters)
-{
-  VerifyTriangleWinding::Pointer filter = VerifyTriangleWinding::New();
-  if(true == copyFilterParameters)
-  {
-    copyFilterParameterInstanceVariables(filter.get());
-  }
-  return filter;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString VerifyTriangleWinding::getCompiledLibraryName()
-{ return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
+  const QString VerifyTriangleWinding::getGroupName()
+  { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VerifyTriangleWinding::getGroupName()
-{ return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+  const QString VerifyTriangleWinding::getSubGroupName()
+  { return DREAM3D::FilterSubGroups::ConnectivityArrangementFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VerifyTriangleWinding::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::ConnectivityArrangementFilters; }
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString VerifyTriangleWinding::getHumanLabel()
-{ return "Verify Triangle Winding"; }
+  const QString VerifyTriangleWinding::getHumanLabel()
+  { return "Verify Triangle Winding"; }
 

@@ -100,7 +100,7 @@ class DataArrayProxy
     * @param json
     * @return
     */
-    void writeJson(QJsonObject &json)
+    void writeJson(QJsonObject& json)
     {
       json["Flag"] = static_cast<double>(flag);
       json["Version"] = static_cast<double>(version);
@@ -116,10 +116,10 @@ class DataArrayProxy
     * @param json
     * @return
     */
-    bool readJson(const QJsonObject &json)
+    bool readJson(const QJsonObject& json)
     {
       if (json["Flag"].isDouble() && json["Version"].isDouble() && json["Path"].isString() && json["Name"].isString()
-        && json["Object Type"].isString() && json["Tuple Dimensions"].isArray() && json["Component Dimensions"].isArray())
+          && json["Object Type"].isString() && json["Tuple Dimensions"].isArray() && json["Component Dimensions"].isArray())
       {
         if (json["Flag"].toDouble() >= std::numeric_limits<uint8_t>().min() && json["Flag"].toDouble() <= std::numeric_limits<uint8_t>().max())
         {
@@ -196,35 +196,35 @@ class DataArrayProxy
     QVector<size_t> tupleDims;
     QVector<size_t> compDims;
 
-    private:
+  private:
 
 
-      QJsonArray writeVector(QVector<size_t> vector)
+    QJsonArray writeVector(QVector<size_t> vector)
+    {
+      QJsonArray jsonArray;
+      foreach(size_t num, compDims)
       {
-        QJsonArray jsonArray;
-        foreach(size_t num, compDims)
-        {
-          jsonArray.push_back(static_cast<double>(num));
-        }
-
-        return jsonArray;
+        jsonArray.push_back(static_cast<double>(num));
       }
 
-      QVector<size_t> readVector(QJsonArray jsonArray)
+      return jsonArray;
+    }
+
+    QVector<size_t> readVector(QJsonArray jsonArray)
+    {
+      QVector<size_t> vector;
+      foreach(QJsonValue val, jsonArray)
       {
-        QVector<size_t> vector;
-        foreach(QJsonValue val, jsonArray)
+        if (val.isDouble())
         {
-          if (val.isDouble())
+          if (val.toDouble() >= std::numeric_limits<size_t>().min() && val.toDouble() <= std::numeric_limits<size_t>().max())
           {
-            if (val.toDouble() >= std::numeric_limits<size_t>().min() && val.toDouble() <= std::numeric_limits<size_t>().max())
-            {
-              vector.push_back(static_cast<size_t>(val.toDouble()));
-            }
+            vector.push_back(static_cast<size_t>(val.toDouble()));
           }
         }
-        return vector;
       }
+      return vector;
+    }
 
 };
 

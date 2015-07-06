@@ -43,7 +43,10 @@
 
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/FileSystemFilterParameter.h"
+
+#include "DREAM3DLib/FilterParameters/OutputFileFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
+
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "IO/IOConstants.h"
@@ -80,21 +83,21 @@ void SurfaceMeshToNodesTrianglesEdges::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FileSystemFilterParameter::New("Output Nodes File", "OutputNodesFile", FilterParameterWidgetType::OutputFileWidget, getOutputNodesFile(), FilterParameter::Parameter));
-  parameters.push_back(FileSystemFilterParameter::New("Output Triangles File", "OutputTrianglesFile", FilterParameterWidgetType::OutputFileWidget, getOutputTrianglesFile(), FilterParameter::Parameter));
+  parameters.push_back(OutputFileFilterParameter::New("Output Nodes File", "OutputNodesFile", getOutputNodesFile(), FilterParameter::Parameter));
+  parameters.push_back(OutputFileFilterParameter::New("Output Triangles File", "OutputTrianglesFile", getOutputTrianglesFile(), FilterParameter::Parameter));
 #if WRITE_EDGES_FILE
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Output Edges File");
     parameter->setPropertyName("OutputEdgesFile");
-    parameter->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
+
     //parameter->setValueType("QString");
     parameters.push_back(parameter);
   }
 #endif
 
-  parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshNodeTypeArrayPath(), FilterParameter::RequiredArray, ""));
+  parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray));
+  parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath(), FilterParameter::RequiredArray));
 
   setFilterParameters(parameters);
 }
@@ -256,7 +259,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   fprintf(nodesFile, "%lld\n", numNodes);
   for (int i = 0; i < numNodes; i++)
   {
-    fprintf(nodesFile, "%10d    %3d    %8.4f %8.4f %8.4f\n", i, static_cast<int>(m_SurfaceMeshNodeType[i]), nodes[i*3], nodes[i*3+1], nodes[i*3+2]);
+    fprintf(nodesFile, "%10d    %3d    %8.4f %8.4f %8.4f\n", i, static_cast<int>(m_SurfaceMeshNodeType[i]), nodes[i * 3], nodes[i * 3 + 1], nodes[i * 3 + 2]);
   }
   fclose(nodesFile);
 
@@ -338,9 +341,9 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   int n1, n2, n3, e1 = -1, e2 = -1, e3 = -1;
   for (int64_t j = 0; j < numTriangles; ++j)
   {
-    n1 = triangles[j*3];
-    n2 = triangles[j*3+1];
-    n3 = triangles[j*3+2];
+    n1 = triangles[j * 3];
+    n2 = triangles[j * 3 + 1];
+    n3 = triangles[j * 3 + 2];
 
 #if WRITE_EDGES_FILE
     e1 = t[j].e_id[0];

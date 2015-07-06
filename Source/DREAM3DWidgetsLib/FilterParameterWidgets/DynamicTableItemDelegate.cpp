@@ -42,7 +42,7 @@
 //
 // -----------------------------------------------------------------------------
 DynamicTableItemDelegate::DynamicTableItemDelegate(QObject* parent) :
-QStyledItemDelegate(parent)
+  QStyledItemDelegate(parent)
 {
 
 }
@@ -58,40 +58,40 @@ DynamicTableItemDelegate::~DynamicTableItemDelegate()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QWidget* DynamicTableItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+QWidget* DynamicTableItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-	QLineEdit* editor = new QLineEdit(parent);
-	QDoubleValidator* validator = new QDoubleValidator();
-	validator->setDecimals(5);
-	validator->setNotation(QDoubleValidator::StandardNotation);
-	editor->setValidator(validator);
-	return editor;
+  QLineEdit* editor = new QLineEdit(parent);
+  QDoubleValidator* validator = new QDoubleValidator();
+  validator->setDecimals(5);
+  validator->setNotation(QDoubleValidator::StandardNotation);
+  editor->setValidator(validator);
+  return editor;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DynamicTableItemDelegate::setEditorData(QWidget* editor, const QModelIndex &index) const
+void DynamicTableItemDelegate::setEditorData(QWidget* editor, const QModelIndex& index) const
 {
-	QString value = index.model()->data(index, Qt::EditRole).toString();
-	QLineEdit* line = static_cast<QLineEdit*>(editor);
-	line->setText(value);
+  QString value = index.model()->data(index, Qt::EditRole).toString();
+  QLineEdit* line = static_cast<QLineEdit*>(editor);
+  line->setText(value);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DynamicTableItemDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex &index) const
+void DynamicTableItemDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
 {
-	QLineEdit* line = static_cast<QLineEdit*>(editor);
-	QString value = line->text();
-	model->setData(index, value);
+  QLineEdit* line = static_cast<QLineEdit*>(editor);
+  QString value = line->text();
+  model->setData(index, value);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DynamicTableItemDelegate::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem &option, const QModelIndex &index) const
+void DynamicTableItemDelegate::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-	editor->setGeometry(option.rect);
+  editor->setGeometry(option.rect);
 }

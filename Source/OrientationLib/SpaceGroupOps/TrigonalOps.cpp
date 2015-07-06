@@ -244,7 +244,7 @@ FOrientArrayType TrigonalOps::getODFFZRod(FOrientArrayType rod)
 {
   int numsym = 6;
 
- return _calcRodNearestOrigin(TrigRodSym, numsym, rod);
+  return _calcRodNearestOrigin(TrigRodSym, numsym, rod);
 }
 
 // -----------------------------------------------------------------------------
@@ -260,7 +260,8 @@ FOrientArrayType TrigonalOps::getMDFFZRod(FOrientArrayType rod)
 
   FOrientArrayType ax(4, 0.0f);
   OrientationTransforms<FOrientArrayType, float>::ro2ax(rod, ax);
-  n1 = ax[0]; n2 = ax[1], n3 = ax[2], w = ax[3];
+  n1 = ax[0];
+  n2 = ax[1], n3 = ax[2], w = ax[3];
 
   float denom = sqrt((n1 * n1 + n2 * n2 + n3 * n3));
   n1 = n1 / denom;
@@ -681,7 +682,7 @@ DREAM3D::Rgb TrigonalOps::generateIPFColor(double phi1, double phi, double phi2,
   for (int j = 0; j < 6; j++)
   {
     getQuatSymOp(j, q2);
-	  QuaternionMathF::Multiply(q2, q1, qc);
+    QuaternionMathF::Multiply(q2, q1, qc);
 
     qu.fromQuaternion(qc);
     OrientationTransforms<FOrientArrayType, float>::qu2om(qu, om);

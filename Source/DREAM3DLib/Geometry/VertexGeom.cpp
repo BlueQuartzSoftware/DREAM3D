@@ -98,7 +98,7 @@ VertexGeom::~VertexGeom()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VertexGeom::Pointer VertexGeom::CreateGeometry(int64_t numVertices, const QString &name)
+VertexGeom::Pointer VertexGeom::CreateGeometry(int64_t numVertices, const QString& name)
 {
   if (name.isEmpty() == true)
   {
@@ -298,9 +298,9 @@ void VertexGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType
   {
     for (int j = 0; j < cDims; j++)
     {
-      derivsPtr[i*3*cDims+j*3] = 0.0;
-      derivsPtr[i*3*cDims+j*3+1] = 0.0;
-      derivsPtr[i*3*cDims+j*3+2] = 0.0;
+      derivsPtr[i * 3 * cDims + j * 3] = 0.0;
+      derivsPtr[i * 3 * cDims + j * 3 + 1] = 0.0;
+      derivsPtr[i * 3 * cDims + j * 3 + 2] = 0.0;
     }
   }
 }

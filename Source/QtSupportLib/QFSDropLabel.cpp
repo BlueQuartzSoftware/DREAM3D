@@ -117,7 +117,7 @@ void QFSDropLabel::dragEnterEvent(QDragEnterEvent* event)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFSDropLabel::dragLeaveEvent(QDragLeaveEvent *event)
+void QFSDropLabel::dragLeaveEvent(QDragLeaveEvent* event)
 {
   changeStyleSheet(FS_STANDARD_STYLE);
 }

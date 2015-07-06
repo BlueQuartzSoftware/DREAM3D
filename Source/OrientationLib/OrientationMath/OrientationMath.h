@@ -150,7 +150,7 @@ class OrientationLib_EXPORT OrientationMath
     static void EulerToAxisAngle(float ea1, float ea2, float ea3, float& w, float& n1, float& n2, float& n3);
 
 
-     static void MattoEuler(float g[3][3], float& ea1, float& ea2, float& ea3);
+    static void MattoEuler(float g[3][3], float& ea1, float& ea2, float& ea3);
 #endif
 
 

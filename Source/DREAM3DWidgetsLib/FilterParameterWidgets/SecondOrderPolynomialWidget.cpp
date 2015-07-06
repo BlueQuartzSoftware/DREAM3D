@@ -38,6 +38,8 @@
 #include <QtCore/QMetaProperty>
 #include <QtCore/QSignalMapper>
 
+#include "DREAM3DLib/FilterParameters/SecondOrderPolynomialFilterParameter.h"
+
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
@@ -48,6 +50,9 @@
 SecondOrderPolynomialWidget::SecondOrderPolynomialWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   FilterParameterWidget(parameter, filter, parent)
 {
+  m_FilterParameter = dynamic_cast<SecondOrderPolynomialFilterParameter*>(parameter);
+  Q_ASSERT_X(m_FilterParameter != NULL, "NULL Pointer", "SecondOrderPolynomialWidget can ONLY be used with a SecondOrderPolynomialFilterParameter object");
+
   setupUi(this);
   setupGui();
 }
@@ -108,15 +113,7 @@ void SecondOrderPolynomialWidget::setupGui()
 
   if (getFilterParameter() != NULL)
   {
-    QString units = getFilterParameter()->getUnits();
-    if(units.isEmpty() == false)
-    {
-      label->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
-    }
-    else
-    {
-      label->setText(getFilterParameter()->getHumanLabel() );
-    }
+    label->setText(getFilterParameter()->getHumanLabel() );
 
     Float2ndOrderPoly_t data = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<Float2ndOrderPoly_t>();
     c20->setText( QString::number(data.c20)  );

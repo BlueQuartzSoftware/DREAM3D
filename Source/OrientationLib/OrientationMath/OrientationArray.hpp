@@ -131,7 +131,7 @@ class OrientationArray
     * @brief OrientationArray Copy constructor
     * @param quat
     */
-   explicit OrientationArray(typename QuaternionMath<T>::Quaternion quat) :
+    explicit OrientationArray(typename QuaternionMath<T>::Quaternion quat) :
       m_Ptr(NULL),
       m_Size(4),
       m_Owns(true)
@@ -147,7 +147,7 @@ class OrientationArray
     * @brief OrientationArray Copy constructor
     * @param quat
     */
-   explicit OrientationArray(T g[3][3]) :
+    explicit OrientationArray(T g[3][3]) :
       m_Ptr(NULL),
       m_Size(9),
       m_Owns(true)
@@ -171,9 +171,9 @@ class OrientationArray
      * @param rhs Incoming OrientationArray class to copy
      */
     OrientationArray(const OrientationArray<T>& rhs) :
-    m_Ptr(NULL),
-    m_Size(rhs.m_Size),
-    m_Owns(true)
+      m_Ptr(NULL),
+      m_Size(rhs.m_Size),
+      m_Owns(true)
     {
       allocate();
       ::memcpy(m_Ptr, rhs.m_Ptr, sizeof(T) * m_Size); // Copy the bytes over to the new array
@@ -182,7 +182,8 @@ class OrientationArray
     /**
      * @brief ~OrientationArray
      */
-    virtual ~OrientationArray() {
+    virtual ~OrientationArray()
+    {
       if(m_Ptr != NULL && m_Owns == true)
       {
         free(m_Ptr);
@@ -219,7 +220,8 @@ class OrientationArray
      * @param i
      * @return
      */
-    T& operator[](size_t i) const {
+    T& operator[](size_t i) const
+    {
       assert(i < m_Size);
       return m_Ptr[i];
     }
@@ -239,8 +241,9 @@ class OrientationArray
     {
       assert(m_Size == 4);
       typename QuaternionMath<T>::Quaternion quat;
-      if(layout == QuaternionMath<T>::QuaternionVectorScalar) {
-         quat.x = m_Ptr[0], quat.y = m_Ptr[1], quat.z = m_Ptr[2], quat.w = m_Ptr[3];
+      if(layout == QuaternionMath<T>::QuaternionVectorScalar)
+      {
+        quat.x = m_Ptr[0], quat.y = m_Ptr[1], quat.z = m_Ptr[2], quat.w = m_Ptr[3];
       }
       else
       {
@@ -304,7 +307,7 @@ class OrientationArray
      * @param z
      * @param w
      */
-    void toAxisAngle(T &x, T &y, T &z, T &w)
+    void toAxisAngle(T& x, T& y, T& z, T& w)
     {
       x = m_Ptr[0];
       y = m_Ptr[1];

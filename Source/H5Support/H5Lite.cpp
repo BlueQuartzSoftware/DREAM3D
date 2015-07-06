@@ -277,7 +277,7 @@ herr_t  H5Lite::writeStringDataset (hid_t loc_id,
 // -----------------------------------------------------------------------------
 herr_t H5Lite::writeVectorOfStringsDataset(hid_t loc_id,
                                            const std::string& dsetName,
-                                           const std::vector<std::string> &data)
+                                           const std::vector<std::string>& data)
 {
   hid_t sid = -1;
   hid_t memspace = -1;
@@ -313,7 +313,7 @@ herr_t H5Lite::writeVectorOfStringsDataset(hid_t loc_id,
           hsize_t offset[] = { m_pos++ };
           H5Sselect_hyperslab(sid, H5S_SELECT_SET, offset, NULL, count, NULL);
           std::string v = data[i];
-          const char * s = v.c_str();
+          const char* s = v.c_str();
           err = H5Dwrite(did, datatype, memspace, sid, H5P_DEFAULT, &s);
           if (err < 0 )
           {
@@ -615,7 +615,7 @@ herr_t H5Lite::readStringDataset(hid_t loc_id,
 // -----------------------------------------------------------------------------
 herr_t H5Lite::readVectorOfStringDataset(hid_t loc_id,
                                          const std::string& dsetName,
-                                         std::vector<std::string> &data)
+                                         std::vector<std::string>& data)
 {
 
   hid_t did; // dataset id
@@ -638,8 +638,8 @@ herr_t H5Lite::readVectorOfStringDataset(hid_t loc_id,
   {
     hsize_t dims[1] = { 0 };
     /*
-  * Get dataspace and allocate memory for read buffer.
-  */
+    * Get dataspace and allocate memory for read buffer.
+    */
     hid_t sid = H5Dget_space(did);
     int ndims = H5Sget_simple_extent_dims(sid, dims, NULL);
     if(ndims != 1)
@@ -656,8 +656,8 @@ herr_t H5Lite::readVectorOfStringDataset(hid_t loc_id,
     }
 
     /*
-  * Create the memory datatype.
-  */
+    * Create the memory datatype.
+    */
     hid_t memtype = H5Tcopy(H5T_C_S1);
     herr_t status = H5Tset_size(memtype, H5T_VARIABLE);
 
@@ -678,7 +678,8 @@ herr_t H5Lite::readVectorOfStringDataset(hid_t loc_id,
     * copy the data into the vector of strings
     */
     data.resize(dims[0]);
-    for (int i = 0; i < dims[0]; i++) {
+    for (int i = 0; i < dims[0]; i++)
+    {
       // printf("%s[%d]: %s\n", "VlenStrings", i, rdata[i].p);
       std::string str = std::string(rdata[i]);
       data[i] = str;

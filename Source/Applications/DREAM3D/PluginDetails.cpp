@@ -77,11 +77,11 @@ void PluginDetails::loadPluginDetails()
 
   if (plugin->getDidLoad() == true)
   {
-      statusLabel->setText("Enabled");
+    statusLabel->setText("Enabled");
   }
   else
   {
-      statusLabel->setText("Disabled");
+    statusLabel->setText("Disabled");
   }
 
   versionLabel->setText(plugin->getVersion());

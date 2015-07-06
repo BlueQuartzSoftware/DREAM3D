@@ -1,6 +1,13 @@
 #!/bin/bash
+# This script requires 2 arguments. The root of the DREAM3D_SDK (/Users/Shared/DREAM3D_SDK
+# or /opt/DREAM3D_SDK) and the number of parallel processes to use to compile. This
+# is typically 2x the number of physical cores in the machine.
 
-PARALLEL_BUILD=8
+SDK_INSTALL=$1
+
+cd $SDK_INSTALL
+
+PARALLEL_BUILD=$2
 
 
 HOST_SYSTEM=`uname`
@@ -33,10 +40,6 @@ then
   DOWNLOAD_ARGS=""
 fi
 
-SDK_INSTALL=/Users/Shared/Toolkits
-
-cd $SDK_INSTALL
-
 
 CMAKE=`type -P cmake`
 if [[ $CMAKE == "" ]];
@@ -46,35 +49,36 @@ if [[ $CMAKE == "" ]];
 fi
 
 # Build the HDF5 libraries we need and set our Environment Variable.
+hdf5ArchiveName="hdf5-1.8.15-patch1"
 
-if [ ! -e "$SDK_INSTALL/hdf5-1.8.14.tar.gz" ];
+if [ ! -e "$SDK_INSTALL/${hdf5ArchiveName}.tar.gz" ];
 then
   echo "-------------------------------------------"
-  echo " Downloading HDF5 Version 1.8.14 "
+  echo " Downloading HDF5 Version 1.8.15 "
   echo "-------------------------------------------"
-  $DOWNLOAD_PROG  "http://www.hdfgroup.org/ftp/HDF5/current/src/hdf5-1.8.14.tar.gz" -o hdf5-1.8.14.tar.gz
+  $DOWNLOAD_PROG  "http://www.hdfgroup.org/ftp/HDF5/current/src/${hdf5ArchiveName}.tar.gz" -o ${hdf5ArchiveName}.tar.gz
 fi
 
-if [ ! -e "$SDK_INSTALL/hdf5-1.8.14_source" ];
+if [ ! -e "$SDK_INSTALL/${hdf5ArchiveName}" ];
 then
-  tar -xvzf hdf5-1.8.14.tar.gz
-  mv hdf5-1.8.14 hdf5-1.8.14_source
+  tar -xvzf ${hdf5ArchiveName}.tar.gz
+# mv hdf5-1.8.15 hdf5-1.8.15_source
 fi
 # We assume we already have downloaded the source for HDF5 Version 1.8.7 and have it in a folder
 # called hdf5-188
-cd hdf5-1.8.14_source
+cd ${hdf5ArchiveName}
 mkdir Build
 cd Build
-cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Debug -DHDF5_BUILD_WITH_INSTALL_NAME=ON -DHDF5_BUILD_CPP_LIB=ON -DHDF5_BUILD_HL_LIB=ON -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/hdf5-1.8.14 ../
-make -j
+cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Debug -DHDF5_BUILD_WITH_INSTALL_NAME=ON -DHDF5_BUILD_CPP_LIB=ON -DHDF5_BUILD_HL_LIB=ON -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/hdf5-1.8.15-Debug ../
+make -j${PARALLEL_BUILD}
 make install
 cd ../
 mkdir zRel
 cd zRel
-cmake  -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DHDF5_BUILD_WITH_INSTALL_NAME=ON -DHDF5_BUILD_CPP_LIB=ON -DHDF5_BUILD_HL_LIB=ON -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/hdf5-1.8.14 ../
-make -j
+cmake  -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DHDF5_BUILD_WITH_INSTALL_NAME=ON -DHDF5_BUILD_CPP_LIB=ON -DHDF5_BUILD_HL_LIB=ON -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/hdf5-1.8.15-Release ../
+make -j${PARALLEL_BUILD}
 make install
-export HDF5_INSTALL=$SDK_INSTALL/hdf5-1.8.14
+export HDF5_INSTALL=$SDK_INSTALL/hdf5-1.8.15
 
 
 

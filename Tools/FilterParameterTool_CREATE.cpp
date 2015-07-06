@@ -65,7 +65,7 @@ QString quote(const QString& str)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void writeOutput(bool didReplace, QStringList &outLines, QString filename)
+void writeOutput(bool didReplace, QStringList& outLines, QString filename)
 {
   if(didReplace == true)
   {
@@ -88,7 +88,7 @@ void writeOutput(bool didReplace, QStringList &outLines, QString filename)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString createReplacementDataCheck(QStringList &outLines, QString &line, QString searchString)
+QString createReplacementDataCheck(QStringList& outLines, QString& line, QString searchString)
 {
 
   qDebug() << "Found a createNonPrereqArray Array";
@@ -141,7 +141,7 @@ QString createReplacementDataCheck(QStringList &outLines, QString &line, QString
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void createReplacementReader(QStringList &outLines, QString name)
+void createReplacementReader(QStringList& outLines, QString name)
 {
   QString str;
   QTextStream out(&str);
@@ -153,7 +153,7 @@ void createReplacementReader(QStringList &outLines, QString name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void createReplacementWriter(QStringList &outLines, QString name)
+void createReplacementWriter(QStringList& outLines, QString name)
 {
   QString str;
   QTextStream out(&str);
@@ -164,7 +164,7 @@ void createReplacementWriter(QStringList &outLines, QString name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void createNewFilterInstance(QStringListIterator &sourceLines, QStringList &outLines, QString name)
+void createNewFilterInstance(QStringListIterator& sourceLines, QStringList& outLines, QString name)
 {
   QString line = sourceLines.next();
   outLines.push_back(line);
@@ -176,8 +176,10 @@ void createNewFilterInstance(QStringListIterator &sourceLines, QStringList &outL
     while(sourceLines.hasNext() )
     {
       QString ll = sourceLines.next().trimmed();
-      if(ll.startsWith("*/") ) {
-        line = sourceLines.next(); break;
+      if(ll.startsWith("*/") )
+      {
+        line = sourceLines.next();
+        break;
       }
     }
   }
@@ -197,11 +199,12 @@ void createNewFilterInstance(QStringListIterator &sourceLines, QStringList &outL
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void createSetupFilterParameters(QStringListIterator &sourceLines, QStringList &outLines, QString name, int index)
+void createSetupFilterParameters(QStringListIterator& sourceLines, QStringList& outLines, QString name, int index)
 {
   QString str;
   QTextStream out(&str);
-  if(index == 0) {
+  if(index == 0)
+  {
     outLines.push_back("  parameters.push_back(FilterParameter::New(\"Created Information\", \"\", FilterParameterWidgetType::SeparatorWidget, \"QString\", true));");
   }
   out << "/*##*/parameters.push_back(FilterParameter::New(\"" << name << "\", \"" << name << "ArrayName\", FilterParameterWidgetType::StringWidget, \"QString\", true, \"\"));";
@@ -211,7 +214,7 @@ void createSetupFilterParameters(QStringListIterator &sourceLines, QStringList &
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void addRequiredSeparator(QStringListIterator sourceLines, QStringList &outLines, QString currentLine)
+void addRequiredSeparator(QStringListIterator sourceLines, QStringList& outLines, QString currentLine)
 {
 #if 0
   sourceLines.previous();
@@ -239,7 +242,7 @@ void addRequiredSeparator(QStringListIterator sourceLines, QStringList &outLines
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString createConstructorEntries(QStringListIterator &sourceLines, QStringList &outLines, QString name)
+QString createConstructorEntries(QStringListIterator& sourceLines, QStringList& outLines, QString name)
 {
 #if 0
   QString line = sourceLines.next();
@@ -268,7 +271,7 @@ QString createConstructorEntries(QStringListIterator &sourceLines, QStringList &
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void addTempDataArrayPathVariable(QStringListIterator &sourceLines, QStringList &outLines)
+void addTempDataArrayPathVariable(QStringListIterator& sourceLines, QStringList& outLines)
 {
   outLines.push_back(sourceLines.next() ); // add in the "{" line
   outLines.push_back(QString("  DataArrayPath tempPath;") );
@@ -278,7 +281,7 @@ void addTempDataArrayPathVariable(QStringListIterator &sourceLines, QStringList 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void updateHeader(QStringList &outLines, QString name)
+void updateHeader(QStringList& outLines, QString name)
 {
   QString str;
   QTextStream out(&str);
@@ -766,7 +769,7 @@ void LoopOnFilters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
   Q_ASSERT(true); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.

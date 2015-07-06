@@ -1270,51 +1270,51 @@ void TestTypeDetection()
 #if 0
 class WriteString
 {
-public:
-  WriteString (hid_t dataset, hid_t datatype
-      , hid_t dataspace, hid_t memspace)
-    : m_dataset (dataset), m_datatype (datatype)
-    , m_dataspace (dataspace), m_memspace (memspace)
-    , m_pos () {}
+  public:
+    WriteString (hid_t dataset, hid_t datatype
+                 , hid_t dataspace, hid_t memspace)
+      : m_dataset (dataset), m_datatype (datatype)
+      , m_dataspace (dataspace), m_memspace (memspace)
+      , m_pos () {}
 
-private:
-  hid_t m_dataset;
-  hid_t m_datatype;
-  hid_t m_dataspace;
-  hid_t m_memspace;
-  int m_pos;
+  private:
+    hid_t m_dataset;
+    hid_t m_datatype;
+    hid_t m_dataspace;
+    hid_t m_memspace;
+    int m_pos;
 //...
 
-public:
-  void operator ()(std::vector<std::string>::value_type const & v)
-  {
-    // Select the file position, 1 record at position 'pos'
-    hsize_t count[] = { 1 } ;
-    hsize_t offset[] = { m_pos++ } ;
-    H5Sselect_hyperslab( m_dataspace
-      , H5S_SELECT_SET
-      , offset
-      , NULL
-      , count
-      , NULL );
+  public:
+    void operator ()(std::vector<std::string>::value_type const& v)
+    {
+      // Select the file position, 1 record at position 'pos'
+      hsize_t count[] = { 1 } ;
+      hsize_t offset[] = { m_pos++ } ;
+      H5Sselect_hyperslab( m_dataspace
+                           , H5S_SELECT_SET
+                           , offset
+                           , NULL
+                           , count
+                           , NULL );
 
-    const char * s = v.c_str ();
-    H5Dwrite (m_dataset
-      , m_datatype
-      , m_memspace
-      , m_dataspace
-      , H5P_DEFAULT
-      , &s );
+      const char* s = v.c_str ();
+      H5Dwrite (m_dataset
+                , m_datatype
+                , m_memspace
+                , m_dataspace
+                , H5P_DEFAULT
+                , &s );
     }
 };
 
-void writeVector (hid_t group, std::vector<std::string> const & v)
+void writeVector (hid_t group, std::vector<std::string> const& v)
 {
   hsize_t     dims[] = { v.size ()  } ;
-  hid_t dataspace = H5Screate_simple(sizeof(dims)/sizeof(*dims), dims, NULL);
+  hid_t dataspace = H5Screate_simple(sizeof(dims) / sizeof(*dims), dims, NULL);
 
   dims[0] = 1;
-  hid_t memspace = H5Screate_simple(sizeof(dims)/sizeof(*dims), dims, NULL);
+  hid_t memspace = H5Screate_simple(sizeof(dims) / sizeof(*dims), dims, NULL);
 
   hid_t datatype = H5Tcopy (H5T_C_S1);
   H5Tset_size (datatype, H5T_VARIABLE);
@@ -1361,29 +1361,29 @@ void TestVLength()
 
 class WriteString
 {
-public:
-  WriteString(hid_t dataset, hid_t datatype, hid_t dataspace, hid_t memspace)
-    : m_dataset(dataset), m_datatype(datatype), m_dataspace(dataspace), m_memspace(memspace), m_pos() {}
+  public:
+    WriteString(hid_t dataset, hid_t datatype, hid_t dataspace, hid_t memspace)
+      : m_dataset(dataset), m_datatype(datatype), m_dataspace(dataspace), m_memspace(memspace), m_pos() {}
 
-private:
-  hid_t m_dataset;
-  hid_t m_datatype;
-  hid_t m_dataspace;
-  hid_t m_memspace;
-  int m_pos;
-  //...
+  private:
+    hid_t m_dataset;
+    hid_t m_datatype;
+    hid_t m_dataspace;
+    hid_t m_memspace;
+    int m_pos;
+    //...
 
-public:
-  void operator ()(std::vector<std::string>::value_type const & v)
-  {
-    // Select the file position, 1 record at position 'pos'
-    hsize_t count[] = { 1 };
-    hsize_t offset[] = { m_pos++ };
-    H5Sselect_hyperslab(m_dataspace, H5S_SELECT_SET, offset, NULL, count, NULL);
+  public:
+    void operator ()(std::vector<std::string>::value_type const& v)
+    {
+      // Select the file position, 1 record at position 'pos'
+      hsize_t count[] = { 1 };
+      hsize_t offset[] = { m_pos++ };
+      H5Sselect_hyperslab(m_dataspace, H5S_SELECT_SET, offset, NULL, count, NULL);
 
-    const char * s = v.c_str();
-    H5Dwrite(m_dataset, m_datatype, m_memspace, m_dataspace, H5P_DEFAULT, &s);
-  }
+      const char* s = v.c_str();
+      H5Dwrite(m_dataset, m_datatype, m_memspace, m_dataspace, H5P_DEFAULT, &s);
+    }
 };
 
 // -----------------------------------------------------------------------------
@@ -1478,8 +1478,9 @@ void TestVLengStringReadWrite()
     /*
     * Output the data to the screen.
     */
-    for (int i = 0; i < dims[0]; i++) {
-     // printf("%s[%d]: %s\n", "VlenStrings", i, rdata[i].p);
+    for (int i = 0; i < dims[0]; i++)
+    {
+      // printf("%s[%d]: %s\n", "VlenStrings", i, rdata[i].p);
       QString str = QString::fromLocal8Bit(rdata[i]);
       qDebug() << str;
     }

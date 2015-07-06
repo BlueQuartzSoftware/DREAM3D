@@ -229,7 +229,8 @@ void OrthoRhombicOps::getMatSymOp(int i, float g[3][3])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FOrientArrayType OrthoRhombicOps::getODFFZRod(FOrientArrayType rod){
+FOrientArrayType OrthoRhombicOps::getODFFZRod(FOrientArrayType rod)
+{
   int  numsym = 4;
   return _calcRodNearestOrigin(OrthoRodSym, numsym, rod);
 }
@@ -247,7 +248,8 @@ FOrientArrayType OrthoRhombicOps::getMDFFZRod(FOrientArrayType rod)
 
   FOrientArrayType ax(4, 0.0f);
   OrientationTransforms<FOrientArrayType, float>::ro2ax(rod, ax);
-  n1 = ax[0]; n2 = ax[1], n3 = ax[2], w = ax[3];
+  n1 = ax[0];
+  n2 = ax[1], n3 = ax[2], w = ax[3];
 
   ///FIXME: Are we missing code for Orthorhombic MDF FZ Rodrigues calculation?
 
@@ -907,7 +909,9 @@ DREAM3D::Rgb OrthoRhombicOps::generateMisorientationColor(const QuatF& q, const 
 
   FOrientArrayType rod(x, y, z);
   rod = getMDFFZRod(rod);
-  x = rod[0]; y = rod[1]; z = rod[2];
+  x = rod[0];
+  y = rod[1];
+  z = rod[2];
 
   //eq c1.2
   k = std::max(x, y);

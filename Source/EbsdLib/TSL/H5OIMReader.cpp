@@ -364,18 +364,21 @@ int H5OIMReader::readScanNames(QStringList& names)
 //
 // -----------------------------------------------------------------------------
 template<typename ClassType, typename T, typename HeaderEntryClass>
-int ReadEbsdHeaderData(ClassType* c, const QString &key, hid_t gid, const QMap<QString, EbsdHeaderEntry::Pointer> &headerMap)
+int ReadEbsdHeaderData(ClassType* c, const QString& key, hid_t gid, const QMap<QString, EbsdHeaderEntry::Pointer>& headerMap)
 {
 
   T t;
   herr_t err = QH5Lite::readScalarDataset(gid, key, t);
-  if (err < 0) {
+  if (err < 0)
+  {
     QString ss = QObject::tr("%1: The header value for '%2' was not found in the EDAX Hdf5 file. Was this header originally found in the files that were imported into this H5EBSD File?")
-        .arg(c->getNameOfClass()).arg(key);
+                 .arg(c->getNameOfClass()).arg(key);
     c->setErrorCode(-90001);
     c->setErrorMessage(ss);
-    return -90001; }
-  else {
+    return -90001;
+  }
+  else
+  {
     EbsdHeaderEntry::Pointer p = headerMap[key];
     typename HeaderEntryClass::Pointer c = boost::dynamic_pointer_cast<HeaderEntryClass>(p);
     c->setValue(t);
@@ -387,18 +390,21 @@ int ReadEbsdHeaderData(ClassType* c, const QString &key, hid_t gid, const QMap<Q
 //
 // -----------------------------------------------------------------------------
 template<typename ClassType, typename T, typename HeaderEntryClass>
-int ReadEbsdHeaderStringData(ClassType* c, const QString &key, hid_t gid, const QMap<QString, EbsdHeaderEntry::Pointer> &headerMap)
+int ReadEbsdHeaderStringData(ClassType* c, const QString& key, hid_t gid, const QMap<QString, EbsdHeaderEntry::Pointer>& headerMap)
 {
 
   T t;
   herr_t err = QH5Lite::readStringDataset(gid, key, t);
-  if (err < 0) {
+  if (err < 0)
+  {
     QString ss = QObject::tr("%1: The header value for '%2' was not found in the EDAX Hdf5 file. Was this header originally found in the files that were imported into this H5EBSD File?")
-        .arg(c->getNameOfClass()).arg(key);
+                 .arg(c->getNameOfClass()).arg(key);
     c->setErrorCode(-90001);
     c->setErrorMessage(ss);
-    return -90001; }
-  else {
+    return -90001;
+  }
+  else
+  {
     EbsdHeaderEntry::Pointer p = headerMap[key];
     typename HeaderEntryClass::Pointer c = boost::dynamic_pointer_cast<HeaderEntryClass>(p);
     c->setValue(t);
@@ -502,22 +508,22 @@ int H5OIMReader::readHeader(hid_t parId)
     AngPhase::Pointer m_CurrentPhase = AngPhase::New();
     m_CurrentPhase->setPhaseIndex(phaseGroupName.toInt());
     READ_PHASE_STRING_DATA("H5OIMReader", pid, Ebsd::Ang::MaterialName, MaterialName, m_CurrentPhase)
-        READ_PHASE_STRING_DATA("H5OIMReader", pid, Ebsd::Ang::Formula, Formula, m_CurrentPhase)
-        READ_PHASE_STRING_DATA("H5OIMReader", pid, Ebsd::Ang::Info, Info, m_CurrentPhase)
-        READ_PHASE_HEADER_DATA("H5OIMReader", pid, int32_t, Ebsd::Ang::Symmetry, Symmetry, m_CurrentPhase)
-        READ_PHASE_HEADER_DATA("H5OIMReader", pid, int32_t, Ebsd::Ang::NumberFamilies, NumberFamilies, m_CurrentPhase)
+    READ_PHASE_STRING_DATA("H5OIMReader", pid, Ebsd::Ang::Formula, Formula, m_CurrentPhase)
+    READ_PHASE_STRING_DATA("H5OIMReader", pid, Ebsd::Ang::Info, Info, m_CurrentPhase)
+    READ_PHASE_HEADER_DATA("H5OIMReader", pid, int32_t, Ebsd::Ang::Symmetry, Symmetry, m_CurrentPhase)
+    READ_PHASE_HEADER_DATA("H5OIMReader", pid, int32_t, Ebsd::Ang::NumberFamilies, NumberFamilies, m_CurrentPhase)
 
-        QVector<float> fillerValues(6,0.0);
+    QVector<float> fillerValues(6, 0.0);
     m_CurrentPhase->setLatticeConstants(fillerValues);
     READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantA, LatticeConstantA, m_CurrentPhase)
-        READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantB, LatticeConstantB, m_CurrentPhase)
-        READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantC, LatticeConstantC, m_CurrentPhase)
-        READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantAlpha, LatticeConstantAlpha, m_CurrentPhase)
-        READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantBeta, LatticeConstantBeta, m_CurrentPhase)
-        READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantGamma, LatticeConstantGamma, m_CurrentPhase)
+    READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantB, LatticeConstantB, m_CurrentPhase)
+    READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantC, LatticeConstantC, m_CurrentPhase)
+    READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantAlpha, LatticeConstantAlpha, m_CurrentPhase)
+    READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantBeta, LatticeConstantBeta, m_CurrentPhase)
+    READ_PHASE_HEADER_DATA("H5OIMReader", pid, float, Ebsd::Ang::LatticeConstantGamma, LatticeConstantGamma, m_CurrentPhase)
 
 
-        if (m_CurrentPhase->getNumberFamilies() > 0)
+    if (m_CurrentPhase->getNumberFamilies() > 0)
     {
       // hid_t hklGid = H5Gopen(pid, Ebsd::Ang::HKLFamilies.toLatin1().data(), H5P_DEFAULT);
       // Only read the HKL Families if they are there. Trying to open the group will tell us if there
@@ -576,7 +582,7 @@ int H5OIMReader::readHKLFamilies(hid_t hklGid, AngPhase::Pointer phase)
   {
     hsize_t dimsFam[1];
     int nDims = H5Sget_simple_extent_dims(dataspace, dimsFam, NULL);
-    if(nDims> 0)
+    if(nDims > 0)
     {
       data = boost::shared_array<HKLFamily_t>(new HKLFamily_t[dimsFam[0]]); // (HKLFamily_t *) calloc(dimsFam[0], sizeof(HKLFamily_t));
       herr_t status = H5Dread (dataset, memtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, (void*)(data.get()) );
@@ -611,21 +617,21 @@ int H5OIMReader::readHKLFamilies(hid_t hklGid, AngPhase::Pointer phase)
 
 #define ANG_READER_ALLOCATE_AND_READ(name, h5name, type)\
   if (m_ReadAllArrays == true || m_ArrayNames.find(Ebsd::Ang::name) != m_ArrayNames.end()) {\
-  type* _##name = allocateArray<type>(totalDataRows);\
-  if (NULL != _##name) {\
-  ::memset(_##name, 0, numBytes);\
-  err = QH5Lite::readPointerDataset(gid, h5name, _##name);\
-  if (err < 0) {\
-  deallocateArrayData(_##name); /*deallocate the array*/\
-  setErrorCode(-90020);\
-  ss << "Error reading dataset '" << #name << "' from the HDF5 file. This data set is required to be in the file because either "\
-  "the program is set to read ALL the Data arrays or the program was instructed to read this array.";\
-  setErrorMessage(ss.string());\
-  err = H5Gclose(gid);\
-  return -90020;\
-  }\
-  }\
-  set##name##Pointer(_##name);\
+    type* _##name = allocateArray<type>(totalDataRows);\
+    if (NULL != _##name) {\
+      ::memset(_##name, 0, numBytes);\
+      err = QH5Lite::readPointerDataset(gid, h5name, _##name);\
+      if (err < 0) {\
+        deallocateArrayData(_##name); /*deallocate the array*/\
+        setErrorCode(-90020);\
+        ss << "Error reading dataset '" << #name << "' from the HDF5 file. This data set is required to be in the file because either "\
+           "the program is set to read ALL the Data arrays or the program was instructed to read this array.";\
+        setErrorMessage(ss.string());\
+        err = H5Gclose(gid);\
+        return -90020;\
+      }\
+    }\
+    set##name##Pointer(_##name);\
   }
 
 // -----------------------------------------------------------------------------

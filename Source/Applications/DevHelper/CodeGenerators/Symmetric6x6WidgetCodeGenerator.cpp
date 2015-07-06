@@ -40,7 +40,7 @@
 //
 // -----------------------------------------------------------------------------
 Symmetric6x6WidgetCodeGenerator::Symmetric6x6WidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue) :
-FPCodeGenerator(humanLabel, propertyName, category, initValue)
+  FPCodeGenerator(humanLabel, propertyName, category, initValue)
 {
 
 }
@@ -56,7 +56,7 @@ Symmetric6x6WidgetCodeGenerator::~Symmetric6x6WidgetCodeGenerator()
 // -----------------------------------------------------------------------------
 QString Symmetric6x6WidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", FilterParameterWidgetType::Symmetric6x6Widget, get" + getPropertyName() + "(), " + getCategory() + "));";
+  return "  parameters.push_back(Symmetric6x6FilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", get" + getPropertyName() + "(), " + getCategory() + "));";
 }
 
 // -----------------------------------------------------------------------------
@@ -86,4 +86,12 @@ QString Symmetric6x6WidgetCodeGenerator::generateFilterParameters()
   ss << "    Q_PROPERTY(FloatVec21_t " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString Symmetric6x6WidgetCodeGenerator::generateHIncludes()
+{
+  return "#include \"DREAM3DLib/FilterParameters/Symmetric6x6FilterParameter.h\"";
 }

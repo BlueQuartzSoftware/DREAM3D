@@ -54,10 +54,11 @@
 typedef float real_t;
 
 
-typedef struct {
-    int label_1;
-    int label_2;
-    real_t beta;
+typedef struct
+{
+  int label_1;
+  int label_2;
+  real_t beta;
 } CoupleType;
 
 /**

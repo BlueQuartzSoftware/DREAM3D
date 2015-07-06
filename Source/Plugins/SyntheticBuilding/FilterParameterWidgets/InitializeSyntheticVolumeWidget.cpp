@@ -127,7 +127,7 @@ AbstractFilter* InitializeSyntheticVolumeWidget::getFilter() const
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolumeWidget::setWidgetListEnabled(bool b)
 {
-  foreach (QWidget * w, m_WidgetList)
+  foreach (QWidget* w, m_WidgetList)
   {
     w->setEnabled(b);
   }
@@ -158,28 +158,19 @@ void InitializeSyntheticVolumeWidget::setupGui()
 
 
 
-  m_StatsArrayPath = FilterParameter::New();
+  m_StatsArrayPath = DataArraySelectionFilterParameter::New();
   m_StatsArrayPath->setHumanLabel("Stats Array");
   m_StatsArrayPath->setPropertyName("InputStatsArrayPath");
-  m_StatsArrayPath->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-//  m_StatsArrayPath->setValueType("DataArrayPath");
-  m_StatsArrayPath->setUnits("");
   statsArrayWidget->initializeWidget(m_StatsArrayPath.get(), m_Filter);
 
-  m_PhaseTypesPath = FilterParameter::New();
+  m_PhaseTypesPath = DataArraySelectionFilterParameter::New();
   m_PhaseTypesPath->setHumanLabel("Phase Types Array");
   m_PhaseTypesPath->setPropertyName("InputPhaseTypesArrayPath");
-  m_PhaseTypesPath->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-//  m_PhaseTypesPath->setValueType("DataArrayPath");
-  m_PhaseTypesPath->setUnits("");
   phaseTypesWidget->initializeWidget(m_PhaseTypesPath.get(), m_Filter);
 
-  m_CrystalStructuresPath = FilterParameter::New();
+  m_CrystalStructuresPath = DataArraySelectionFilterParameter::New();
   m_CrystalStructuresPath->setHumanLabel("Crystal Structures Array");
   m_CrystalStructuresPath->setPropertyName("InputCrystalStructuresArrayPath");
-  m_CrystalStructuresPath->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-//  m_CrystalStructuresPath->setValueType("DataArrayPath");
-  m_CrystalStructuresPath->setUnits("");
   crystalStructuresWidget->initializeWidget(m_CrystalStructuresPath.get(), m_Filter);
 }
 

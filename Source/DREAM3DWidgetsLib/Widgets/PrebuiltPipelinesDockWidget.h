@@ -126,7 +126,7 @@ class DREAM3DWidgetsLib_EXPORT  PrebuiltPipelinesDockWidget : public QDockWidget
      * @param addToRecentFiles A boolean that decides whether to add filePath to the recents file list.
      * @param newWindow A boolean that decides whether to open a new window.
      */
-    void pipelineFileActivated(const QString& filePath, const bool &setOpenedFilePath, const bool &addToRecentFiles);
+    void pipelineFileActivated(const QString& filePath, const bool& setOpenedFilePath, const bool& addToRecentFiles);
 
     /**
      * @brief filterListGenerated

@@ -47,6 +47,7 @@
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/FilterParameters/DataBundleSelectionFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
@@ -117,6 +118,8 @@ class DREAM3DWidgetsLib_EXPORT DataBundleSelectionWidget : public FilterParamete
   private:
 
     bool m_DidCausePreflight;
+
+    DataBundleSelectionFilterParameter* m_FilterParameter;
 
     DataBundleSelectionWidget(const DataBundleSelectionWidget&); // Copy Constructor Not Implemented
     void operator=(const DataBundleSelectionWidget&); // Operator '=' Not Implemented

@@ -112,7 +112,7 @@ void BuildNewDream3dFile()
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  for(int i=0;i<(128*128*128); i++)
+  for(int i = 0; i < (128 * 128 * 128); i++)
   {
     m_FeatureIds[i] = i;
   }
@@ -128,24 +128,30 @@ void BuildNewDream3dFile()
   unsigned int* m_PhaseTypes;
   m_PhaseTypesPtr = cellEnsembleAttrMat->getPrereqArray<DataArray<unsigned int>, AbstractFilter>(filt.get(), "PhaseTypes", -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0);  /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_PhaseTypes[0] = DREAM3D::PhaseType::UnknownPhaseType;}
+  {
+    m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0);  /* Now assign the raw pointer to data from the DataArray<T> object */
+    m_PhaseTypes[0] = DREAM3D::PhaseType::UnknownPhaseType;
+  }
 
   cellEnsembleAttrMat->createAndAddAttributeArray<DataArray<unsigned int>, unsigned int>("ShapeTypes", DREAM3D::ShapeType::EllipsoidShape, dims);
   DataArray<unsigned int>::WeakPointer m_ShapeTypesPtr;
   unsigned int* m_ShapeTypes;
   m_ShapeTypesPtr = cellEnsembleAttrMat->getPrereqArray<DataArray<unsigned int>, AbstractFilter>(filt.get(), "ShapeTypes", -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_ShapeTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_ShapeTypes = m_ShapeTypesPtr.lock()->getPointer(0);  /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_ShapeTypes[0] = DREAM3D::ShapeType::UnknownShapeType;}
+  {
+    m_ShapeTypes = m_ShapeTypesPtr.lock()->getPointer(0);  /* Now assign the raw pointer to data from the DataArray<T> object */
+    m_ShapeTypes[0] = DREAM3D::ShapeType::UnknownShapeType;
+  }
 
   cellEnsembleAttrMat->createAndAddAttributeArray<DataArray<unsigned int>, unsigned int>("CrystalStructures", Ebsd::CrystalStructure::Cubic_High, dims);
   DataArray<unsigned int>::WeakPointer m_CrystalStructuresPtr;
   unsigned int* m_CrystalStructures;
   m_CrystalStructuresPtr = cellEnsembleAttrMat->getPrereqArray<DataArray<unsigned int>, AbstractFilter>(filt.get(), "CrystalStructures", -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_CrystalStructures[0] = Ebsd::CrystalStructure::UnknownCrystalStructure; }
+  {
+    m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); /* Now assign the raw pointer to data from the DataArray<T> object */
+    m_CrystalStructures[0] = Ebsd::CrystalStructure::UnknownCrystalStructure;
+  }
 
   StatsDataArray* m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(cellEnsembleAttrMat->getAttributeArray(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
@@ -167,7 +173,7 @@ void BuildNewDream3dFile()
   float maxdiam = 4.48169;
   float mindiam = 1.64872;
   float binSize = 0.5;
-  int numbins = int(((maxdiam-mindiam)/binSize)+1);
+  int numbins = int(((maxdiam - mindiam) / binSize) + 1);
   pp->setFeatureDiameterInfo(binSize, maxdiam, mindiam);
   FloatArrayType::Pointer binnumbers = FloatArrayType::CreateArray(numbins, DREAM3D::StringConstants::BinNumber);
   DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, binSize, binnumbers);
@@ -230,7 +236,7 @@ void BuildNewDream3dFile()
   pp->setFeatureSize_Neighbors(neighborhoods);
   FloatArrayType::Pointer axisodf;
   axisodf = FloatArrayType::CreateArray((36 * 36 * 36), DREAM3D::StringConstants::AxisOrientation);
-  float val = 1.0/(36.0*36.0*36.0);
+  float val = 1.0 / (36.0 * 36.0 * 36.0);
   for (int j = 0; j < (36 * 36 * 36); j++)
   {
     axisodf->setValue(j, val);

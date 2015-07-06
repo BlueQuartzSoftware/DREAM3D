@@ -68,22 +68,22 @@ ModifiedLambertProjection::Pointer forwardProjectGreyScaleImage(QImage image)
     for (int64_t x = 0; x < xpoints; x++)
     {
       //get (x,y) for stereographic projection pixel
-      xtmp = float(x-xpointshalf)*xres+(xres * 0.5);
-      ytmp = float(y-ypointshalf)*yres+(yres * 0.5);
-     // int index = y * xpoints + x;
-      if((xtmp*xtmp+ytmp*ytmp) <= 1.0)
+      xtmp = float(x - xpointshalf) * xres + (xres * 0.5);
+      ytmp = float(y - ypointshalf) * yres + (yres * 0.5);
+      // int index = y * xpoints + x;
+      if((xtmp * xtmp + ytmp * ytmp) <= 1.0)
       {
         //project xy from stereo projection to the unit spehere
-        xyz[2] = -((xtmp*xtmp+ytmp*ytmp)-1)/((xtmp*xtmp+ytmp*ytmp)+1);
-        xyz[0] = xtmp*(1+xyz[2]);
-        xyz[1] = ytmp*(1+xyz[2]);
+        xyz[2] = -((xtmp * xtmp + ytmp * ytmp) - 1) / ((xtmp * xtmp + ytmp * ytmp) + 1);
+        xyz[0] = xtmp * (1 + xyz[2]);
+        xyz[1] = ytmp * (1 + xyz[2]);
 
         QRgb rgb = image.pixel(x, y);
         int gray = qGray(rgb);
 
         for( int64_t m = 0; m < 2; m++)
         {
-          if(m == 1) MatrixMath::Multiply3x1withConstant(xyz, -1.0);
+          if(m == 1) { MatrixMath::Multiply3x1withConstant(xyz, -1.0); }
           nhCheck = lambert->getSquareCoord(xyz, sqCoord);
           sqIndex = lambert->getSquareIndex(sqCoord);
 
@@ -115,7 +115,7 @@ void forwardAndReverse()
   ModifiedLambertProjection::Pointer lambert = forwardProjectGreyScaleImage(origStereoImage);
 
 
- // QSize size = origStereoImage.size();
+// QSize size = origStereoImage.size();
   size_t dims[3] = {1001, 1001, 1};
   float res[3] = { 1.0, 1.0, 1.0};
   DoubleArrayType::Pointer lambertSquare = lambert->getNorthSquare();
@@ -134,11 +134,11 @@ void forwardAndReverse()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
   forwardAndReverse();
   if(true)
-    return EXIT_SUCCESS;
+  { return EXIT_SUCCESS; }
 
 
   QImageReader reader("/Users/mjackson/Desktop/MikeJackson/Ni-Lambert.jpeg");

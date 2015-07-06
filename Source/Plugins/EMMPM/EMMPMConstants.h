@@ -23,7 +23,7 @@ namespace EMMPMConstants
 namespace FilterParameterWidgetType
 {
 
-/*  const QString SomeCustomWidget("SomeCustomWidget"); */
+  /*  const QString SomeCustomWidget("SomeCustomWidget"); */
 
 }
 #endif

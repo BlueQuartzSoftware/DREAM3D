@@ -40,7 +40,7 @@
 //
 // -----------------------------------------------------------------------------
 FileListInfoFilterParameter::FileListInfoFilterParameter() :
-FilterParameter()
+  FilterParameter()
 {}
 
 // -----------------------------------------------------------------------------
@@ -53,19 +53,27 @@ FileListInfoFilterParameter::~FileListInfoFilterParameter()
 //
 // -----------------------------------------------------------------------------
 FileListInfoFilterParameter::Pointer FileListInfoFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const FileListInfo_t& defaultValue,
-  FilterParameter::Category category)
+    const FileListInfo_t& defaultValue,
+    FilterParameter::Category category)
 {
 
   FileListInfoFilterParameter::Pointer ptr = FileListInfoFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
-  ptr->setWidgetType(FilterParameterWidgetType::FileListInfoWidget);
   QVariant v;
   v.setValue(defaultValue);
   ptr->setDefaultValue(v);
   ptr->setCategory(category);
-  ptr->setUnits("");
 
   return ptr;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString FileListInfoFilterParameter::getWidgetType()
+{
+  return QString("FileListInfoWidget");
+}
+

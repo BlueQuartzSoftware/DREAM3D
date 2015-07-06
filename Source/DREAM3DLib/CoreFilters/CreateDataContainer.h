@@ -14,7 +14,7 @@
  */
 class CreateDataContainer : public AbstractFilter
 {
-  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
 
   public:
     DREAM3D_SHARED_POINTERS(CreateDataContainer)
@@ -66,9 +66,9 @@ class CreateDataContainer : public AbstractFilter
      */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-   /**
-    * @brief execute Reimplemented from @see AbstractFilter class
-    */
+    /**
+     * @brief execute Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
 
     /**
@@ -80,7 +80,7 @@ class CreateDataContainer : public AbstractFilter
     /**
      * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
      * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer 
+     * @param filter Filter instance pointer
      */
     void updateFilterParameters(AbstractFilter* filter);
 

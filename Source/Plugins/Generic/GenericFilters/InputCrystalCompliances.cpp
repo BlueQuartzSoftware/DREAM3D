@@ -39,6 +39,8 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/Symmetric6x6FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "Generic/GenericConstants.h"
@@ -94,9 +96,9 @@ InputCrystalCompliances::~InputCrystalCompliances()
 void InputCrystalCompliances::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Compliance Values", "Compliances", FilterParameterWidgetType::Symmetric6x6Widget, getCompliances(), FilterParameter::Parameter, "10^-11 Pa^-1"));
+  parameters.push_back(Symmetric6x6FilterParameter::New("Compliance Values (10^-11 Pa^-1)", "Compliances", getCompliances(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::CreatedArray));
-  parameters.push_back(FilterParameter::New("Crystal Compliances", "CrystalCompliancesArrayPath", FilterParameterWidgetType::DataArrayCreationWidget, getCrystalCompliancesArrayPath(), FilterParameter::CreatedArray, ""));
+  parameters.push_back(DataArrayCreationFilterParameter::New("Crystal Compliances", "CrystalCompliancesArrayPath", getCrystalCompliancesArrayPath(), FilterParameter::CreatedArray));
   setFilterParameters(parameters);
 }
 

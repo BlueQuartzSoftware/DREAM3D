@@ -218,7 +218,7 @@ void DataContainerArrayWidget::preflightCompleted()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerArrayWidget::dcaProxyView_indexChanged(const QModelIndex & current, const QModelIndex & previous)
+void DataContainerArrayWidget::dcaProxyView_indexChanged(const QModelIndex& current, const QModelIndex& previous)
 {
   QMap<int, QVariant> values = dcaProxyView->model()->itemData(current);
   QString infoString = values.value(Qt::UserRole + 1).toString();
@@ -229,7 +229,7 @@ void DataContainerArrayWidget::dcaProxyView_indexChanged(const QModelIndex & cur
   // dcaProxyView->update();
 }
 
-void DataContainerArrayWidget::on_dcaProxyView_updatePreviewWidget(const QModelIndex & index)
+void DataContainerArrayWidget::on_dcaProxyView_updatePreviewWidget(const QModelIndex& index)
 {
   //  QMap<int, QVariant> values = dcaProxyView->model()->itemData(index);
   //  QString dcName = values.value(Qt::DisplayRole).toString();

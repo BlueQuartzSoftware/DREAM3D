@@ -181,8 +181,9 @@ void TestEulerAngle(float phi1, float phi, float phi2)
         float* orig = eulers->getPointer(i * qStride);
         float* converted = t0_output->getPointer(i * qStride);
         //float* o = t1_output->getPointer(i * strides[t1]);
-        printf("%s -> %s -> %s\n",tStrings[t0].toLatin1().constData(), tStrings[t1].toLatin1().constData(), tStrings[t0].toLatin1().constData());
-        for(size_t j = 0; j < qStride; j++) {
+        printf("%s -> %s -> %s\n", tStrings[t0].toLatin1().constData(), tStrings[t1].toLatin1().constData(), tStrings[t0].toLatin1().constData());
+        for(size_t j = 0; j < qStride; j++)
+        {
           delta[j] = std::abs(orig[j] - converted[j]);
           DREAM3D_REQUIRE(delta[j] < 1.0E6);
         }

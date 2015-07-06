@@ -39,6 +39,8 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
 
 namespace Detail
@@ -209,7 +211,7 @@ void ConvertData::setupFilterParameters()
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Scalar Type");
     parameter->setPropertyName("ScalarType");
-    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+
     QVector<QString> choices;
     choices.push_back("signed   int 8  bit");
     choices.push_back("unsigned int 8  bit");
@@ -226,9 +228,9 @@ void ConvertData::setupFilterParameters()
     parameters.push_back(parameter);
   }
 
-  parameters.push_back(FilterParameter::New("Attribute Array to Convert", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedCellArrayPath(), FilterParameter::RequiredArray));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array to Convert", "SelectedCellArrayPath", getSelectedCellArrayPath(), FilterParameter::RequiredArray));
 
-  parameters.push_back(FilterParameter::New("Converted Attribute Array", "OutputArrayName", FilterParameterWidgetType::StringWidget, getOutputArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Converted Attribute Array", "OutputArrayName", getOutputArrayName(), FilterParameter::CreatedArray));
 
   setFilterParameters(parameters);
 }
