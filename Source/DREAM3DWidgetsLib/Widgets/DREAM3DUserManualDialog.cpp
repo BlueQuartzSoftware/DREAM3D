@@ -43,8 +43,7 @@
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QAction>
 
-#include <QWebHistory>
-#include <QWebHistoryItem>
+#include <QtWebEngineWidgets/QWebEngineHistory>
 
 #include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
 
@@ -63,6 +62,17 @@ DREAM3DUserManualDialog::DREAM3DUserManualDialog()
 
   setupUi(this);
   DREAM3DUserManualDialog::self = this;
+
+  // Create the web view
+  m_WebView = new QWebEngineView(this);
+  m_WebView->setObjectName(QStringLiteral("m_WebView"));
+  QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  sizePolicy1.setHorizontalStretch(0);
+  sizePolicy1.setVerticalStretch(0);
+  sizePolicy1.setHeightForWidth(m_WebView->sizePolicy().hasHeightForWidth());
+  m_WebView->setSizePolicy(sizePolicy1);
+  m_WebView->setUrl(QUrl(QStringLiteral("about:blank")));
+  gridLayout->addWidget(m_WebView, 2, 0, 1, 1);
 
   self->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
 
@@ -94,10 +104,18 @@ DREAM3DUserManualDialog* DREAM3DUserManualDialog::Instance()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QWebEngineView* DREAM3DUserManualDialog::getWebView()
+{
+  return m_WebView;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void DREAM3DUserManualDialog::LaunchHelpDialog(QUrl url)
 {
   DREAM3DUserManualDialog* dialog = DREAM3DUserManualDialog::Instance();
-  dialog->webView->load(url);
+  dialog->getWebView()->load(url);
 
   if (dialog->isVisible() == false)
   {
@@ -122,7 +140,7 @@ void DREAM3DUserManualDialog::LaunchHelpDialog(QString className)
 // -----------------------------------------------------------------------------
 void DREAM3DUserManualDialog::on_backBtn_pressed()
 {
-  webView->back();
+  m_WebView->back();
 }
 
 // -----------------------------------------------------------------------------
@@ -130,7 +148,7 @@ void DREAM3DUserManualDialog::on_backBtn_pressed()
 // -----------------------------------------------------------------------------
 void DREAM3DUserManualDialog::on_forwardBtn_pressed()
 {
-  webView->forward();
+  m_WebView->forward();
 }
 
 // -----------------------------------------------------------------------------
@@ -138,7 +156,7 @@ void DREAM3DUserManualDialog::on_forwardBtn_pressed()
 // -----------------------------------------------------------------------------
 void DREAM3DUserManualDialog::on_refreshBtn_pressed()
 {
-  webView->reload();
+  m_WebView->reload();
 }
 
 // -----------------------------------------------------------------------------
@@ -146,7 +164,7 @@ void DREAM3DUserManualDialog::on_refreshBtn_pressed()
 // -----------------------------------------------------------------------------
 void DREAM3DUserManualDialog::on_webView_loadFinished(bool ok)
 {
-  QWebHistory* history = webView->history();
+  QWebEngineHistory* history = m_WebView->history();
 
   // Check forwards navigation
   if (history->canGoForward() == false)

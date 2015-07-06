@@ -295,17 +295,10 @@ set(Qt5_COMPONENTS
     Svg 
     Xml 
     OpenGL 
-    PrintSupport 
-    WebKit 
-    WebKitWidgets 
-    Sensors
-    Multimedia 
-    MultimediaWidgets 
-    Qml 
-    Quick 
-    Positioning 
-    Sql 
-    WebChannel
+    PrintSupport
+    WebEngine
+    WebEngineWidgets
+    WebEngineCore
     )
 # On Linux we need the DBus library
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
