@@ -217,7 +217,12 @@ configure_file(${PROJECT_RESOURCES_DIR}/DREAM3D/DREAM3DLicense.txt
                 ${PROJECT_BINARY_DIR}/DREAM3D/DREAM3DLicense.txt )
 configure_file(${PROJECT_SOURCE_DIR}/ReadMe.md
                 ${PROJECT_BINARY_DIR}/ReadMe.md )
-install(FILES ${PROJECT_BINARY_DIR}/ReadMe.md
+configure_file(${PROJECT_SOURCE_DIR}/Resources/ReleaseDocs/ReleaseNotes.md
+                ${PROJECT_BINARY_DIR}/ReleaseNotes.md )
+
+# --------------------------------------------------------------------
+# Generate install rules for the text files
+install(FILES ${PROJECT_BINARY_DIR}/ReadMe.md ${PROJECT_BINARY_DIR}/ReleaseNotes.md 
         DESTINATION .
         COMPONENT Applications)
 
