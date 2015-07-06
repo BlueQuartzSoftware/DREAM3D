@@ -7,8 +7,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/DataContainerSelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/AttributeMatrixCreationFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/DynamicTableFilterParameter.h"
 
@@ -17,8 +16,7 @@
 // -----------------------------------------------------------------------------
 CreateAttributeMatrix::CreateAttributeMatrix() :
   AbstractFilter(),
-  m_SelectedDataContainer(""),
-  m_CreatedAttributeMatrixName("AttributeMatrix"),
+  m_CreatedAttributeMatrix("", "AttributeMatrix", ""),
   m_AttributeMatrixType(DREAM3D::AttributeMatrixType::Generic),
   m_TupleDimensions()
 {
@@ -63,8 +61,7 @@ void CreateAttributeMatrix::setupFilterParameters()
 
   std::vector<std::vector<double> > defaultTable;
   parameters.push_back(DynamicTableFilterParameter::New("Tuple Dimensions", "TupleDimensions", rHeaders, cHeaders, defaultTable, FilterParameter::Parameter, false, true, 0));
-  parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container Destination", "SelectedDataContainer", getSelectedDataContainer(), FilterParameter::RequiredArray));
-  parameters.push_back(StringFilterParameter::New("Created Attribute Matrix", "CreatedAttributeMatrixName", getCreatedAttributeMatrixName(), FilterParameter::CreatedArray));
+  parameters.push_back(AttributeMatrixCreationFilterParameter::New("Created Attribute Matrix", "CreatedAttributeMatrix", getCreatedAttributeMatrix(), FilterParameter::CreatedArray));
 
   setFilterParameters(parameters);
 }
@@ -75,8 +72,7 @@ void CreateAttributeMatrix::setupFilterParameters()
 void CreateAttributeMatrix::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSelectedDataContainer(reader->readString("SelectedDataContainer", getSelectedDataContainer()));
-  setCreatedAttributeMatrixName(reader->readString("CreatedAttributeMatrixName", getCreatedAttributeMatrixName()));
+  setCreatedAttributeMatrix(reader->readDataArrayPath("CreatedAttributeMatrix", getCreatedAttributeMatrix()));
   setAttributeMatrixType(reader->readValue("AttributeMatrixType", getAttributeMatrixType()));
   setTupleDimensions(reader->readDynamicTableData("TupleDimensions", getTupleDimensions()));
   reader->closeFilterGroup();
@@ -88,8 +84,7 @@ void CreateAttributeMatrix::readFilterParameters(AbstractFilterParametersReader*
 int CreateAttributeMatrix::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(SelectedDataContainer)
-  DREAM3D_FILTER_WRITE_PARAMETER(CreatedAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CreatedAttributeMatrix)
   DREAM3D_FILTER_WRITE_PARAMETER(AttributeMatrixType)
   DREAM3D_FILTER_WRITE_PARAMETER(TupleDimensions)
   writer->closeFilterGroup();
@@ -103,7 +98,7 @@ void CreateAttributeMatrix::dataCheck()
 {
   setErrorCondition(0);
 
-  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getSelectedDataContainer());
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getCreatedAttributeMatrix().getDataContainerName());
   if(getErrorCondition() < 0) { return; }
 
   DynamicTableData dtd = getTupleDimensions();
@@ -124,7 +119,7 @@ void CreateAttributeMatrix::dataCheck()
     tDims[i] = static_cast<size_t>(cols[i]);
   }
 
-  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCreatedAttributeMatrixName(), tDims, getAttributeMatrixType());
+  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCreatedAttributeMatrix().getAttributeMatrixName(), tDims, getAttributeMatrixType());
   if(getErrorCondition() < 0) { return; }
 
 }
