@@ -109,12 +109,14 @@ void FilterInputWidget::setupGui()
 
   filterHumanLabel->setFont(humanLabelFont);
 
-#if 0
-  brandingLabel->hide();
-#else
-  brandingLabel->setFont(brandingFont);
-  brandingLabel->installEventFilter(this);
-#endif
+  QString releaseType = QString::fromLatin1(DREAM3DProj_RELEASE_TYPE);
+  if(releaseType.compare("Official") == 0)
+  {
+    brandingLabel->hide();
+  } else {
+    brandingLabel->setFont(brandingFont);
+    brandingLabel->installEventFilter(this);
+  }
 }
 
 // -----------------------------------------------------------------------------
