@@ -1,0 +1,34 @@
+#ifndef _PipelineRunnerTest_H_
+#define _PipelineRunnerTest_H_
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString getDream3dDataDir()
+{
+  return QString("@CMAKE_LIBRARY_OUTPUT_DIRECTORY@/@CMAKE_CFG_INTDIR@/");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString getTestTempDirectory()
+{
+  return QString("@TEST_TEMP_DIR@/");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString getPipelineListFile()
+{
+  return QString("@TEST_PIPELINE_LIST_FILE@");
+}
+
+
+
+
+#endif /* _PipelineRunnerTest_H_ */
+
+

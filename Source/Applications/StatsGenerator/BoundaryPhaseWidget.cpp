@@ -1,42 +1,38 @@
 /* ============================================================================
- * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#if QWT_VERSION >= 0x060000
-#include "backwards.h"
-#endif
 
 #include "BoundaryPhaseWidget.h"
 
@@ -48,19 +44,18 @@
 #include <QtCore/QVector>
 #include <QtCore/QRunnable>
 #include <QtCore/QThreadPool>
-#include <QtCore/QtConcurrentRun>
-#include <QtGui/QMessageBox>
+#include <QtConcurrent/QtConcurrentRun>
+#include <QtWidgets/QMessageBox>
 
 
 //-- Qwt Includes
 #include <qwt.h>
 #include <qwt_plot.h>
 #include <qwt_plot_grid.h>
-#if QWT_VERSION >= 0x060000
 #include <qwt_series_data.h>
-#else
-#include <qwt_interval_data.h>
-#endif
+#include <qwt_interval.h>
+#include <qwt_point_3d.h>
+#include <qwt_compat.h>
 #include <qwt_painter.h>
 #include <qwt_scale_map.h>
 #include <qwt_plot_zoomer.h>
@@ -70,42 +65,43 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Common/StatsGen.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
 #include "DREAM3DLib/StatsData/StatsData.h"
 #include "DREAM3DLib/StatsData/BoundaryStatsData.h"
 
+#include "OrientationLib/Texture/StatsGen.hpp"
+
 
 #define CHECK_ERROR_ON_WRITE(var, msg)\
-    if (err < 0) {\
-      QMessageBox::critical(this, tr("StatsGenerator"),\
-      tr("There was an error writing the " msg " to the HDF5 file"),\
-      QMessageBox::Ok,\
-      QMessageBox::Ok);\
-      return err;\
-      }
+  if (err < 0) {\
+    QMessageBox::critical(this, tr("StatsGenerator"),\
+                          tr("There was an error writing the " msg " to the HDF5 file"),\
+                          QMessageBox::Ok,\
+                          QMessageBox::Ok);\
+    return err;\
+  }
 
 
 #define CHECK_STATS_READ_ERROR(err, group, dataset)\
-if (err < 0) {\
-  std::cout << "MatrixPhaseWidget::on_actionOpen_triggered Error: Could not read '" << group << "' data set '" << dataset << "'" << std::endl;\
-  std::cout << "  File: " << __FILE__ << std::endl;\
-  std::cout << "  Line: " << __LINE__ << std::endl;\
-  return err;\
-}
+  if (err < 0) {\
+    qDebug() << "MatrixPhaseWidget::on_actionOpen_triggered Error: Could not read '" << group << "' data set '" << dataset << "'" << "\n";\
+    qDebug() << "  File: " << __FILE__ << "\n";\
+    qDebug() << "  Line: " << __LINE__ << "\n";\
+    return err;\
+  }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-BoundaryPhaseWidget::BoundaryPhaseWidget(QWidget *parent) :
-SGWidget(parent),
-m_PhaseType(DREAM3D::PhaseType::PrimaryPhase),
-m_PhaseFraction(1.0),
-m_TotalPhaseFraction(1.0),
-m_PhaseIndex(0),
-m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High),
-m_grid(NULL)
+BoundaryPhaseWidget::BoundaryPhaseWidget(QWidget* parent) :
+  SGWidget(parent),
+  m_PhaseType(DREAM3D::PhaseType::PrimaryPhase),
+  m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High),
+  m_PhaseIndex(0),
+  m_PhaseFraction(1.0),
+  m_TotalPhaseFraction(1.0),
+  m_grid(NULL)
 {
   setupUi(this);
   setupGui();
@@ -131,48 +127,15 @@ void BoundaryPhaseWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BoundaryPhaseWidget::setPhaseIndex(int index)
-{
-  m_PhaseIndex = index;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int BoundaryPhaseWidget::getPhaseIndex()
-{
-  return m_PhaseIndex;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BoundaryPhaseWidget::setCrystalStructure(unsigned int xtal)
-{
-  m_CrystalStructure = xtal;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-unsigned int BoundaryPhaseWidget::getCrystalStructure()
-{
-  return m_CrystalStructure;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QString BoundaryPhaseWidget::getComboString()
 {
   QString s = QString::number(m_PhaseIndex);
   s.append(" - ");
-  if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure))
+  if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
   {
     s.append("Cubic");
   }
-  else if ( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure))
+  else if ( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
   {
     s.append("Hexagonal");
   }
@@ -182,33 +145,30 @@ QString BoundaryPhaseWidget::getComboString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int BoundaryPhaseWidget::gatherStatsData(VoxelDataContainer::Pointer m)
+int BoundaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
 {
   if (m_PhaseIndex < 1)
   {
     QMessageBox::critical(this, tr("StatsGenerator"),
-                                  tr("The Phase Index is Less than 1. This is not allowed."),
-                                  QMessageBox::Default);
+                          tr("The Phase Index is Less than 1. This is not allowed."),
+                          QMessageBox::Default);
     return -1;
   }
   int retErr = 0;
   float calcPhaseFraction = m_PhaseFraction / m_TotalPhaseFraction;
 
-  typedef DataArray<unsigned int> XTalStructArrayType;
-  typedef DataArray<unsigned int> PhaseTypeArrayType;
-  typedef DataArray<unsigned int> ShapeTypeArrayType;
-  size_t ensembles = m->getNumEnsembleTuples();
+  //size_t ensembles = attrMat->getNumTuples();
 
   // Get pointers
-  unsigned int* crystalStructures = m->getEnsembleDataSizeCheck<unsigned int, XTalStructArrayType, AbstractFilter>(DREAM3D::EnsembleData::CrystalStructures, ensembles, 1, NULL);
-  unsigned int* phaseTypes = m->getEnsembleDataSizeCheck<unsigned int, PhaseTypeArrayType, AbstractFilter>(DREAM3D::EnsembleData::PhaseTypes, ensembles, 1, NULL);
-
-  //unsigned int* shapeTypes = m->getEnsembleDataSizeCheck<unsigned int, ShapeTypeArrayType, AbstractFilter>(DREAM3D::EnsembleData::ShapeTypes, ensembles*1, NULL);
+  IDataArray::Pointer iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::CrystalStructures);
+  unsigned int* crystalStructures = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::PhaseTypes);
+  unsigned int* phaseTypes = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
 
   crystalStructures[m_PhaseIndex] = m_CrystalStructure;
   phaseTypes[m_PhaseIndex] = m_PhaseType;
 
-  StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
+  StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(attrMat->getAttributeArray(DREAM3D::EnsembleData::Statistics).get());
   if (NULL != statsDataArray)
   {
     StatsData::Pointer statsData = statsDataArray->getStatsData(m_PhaseIndex);
@@ -222,23 +182,21 @@ int BoundaryPhaseWidget::gatherStatsData(VoxelDataContainer::Pointer m)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BoundaryPhaseWidget::extractStatsData(VoxelDataContainer::Pointer m, int index)
+void BoundaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int index)
 {
 
   setPhaseIndex(index);
 
-  IDataArray* iDataPtr = NULL;
+  IDataArray::Pointer iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::CrystalStructures);
+  unsigned int* attributeArray = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  m_CrystalStructure = attributeArray[index];
 
-  iDataPtr = m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get();
-  UInt32ArrayType* data = UInt32ArrayType::SafeObjectDownCast<IDataArray*, UInt32ArrayType*>(iDataPtr);
-  m_CrystalStructure = data->GetValue(index);
+  iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::PhaseTypes);
+  attributeArray = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  m_PhaseType = attributeArray[index];
 
-  iDataPtr = m->getEnsembleData(DREAM3D::EnsembleData::PhaseTypes).get();
-  data = UInt32ArrayType::SafeObjectDownCast<IDataArray*, UInt32ArrayType*>(iDataPtr);
-  m_PhaseType = data->GetValue(index);
-
-  iDataPtr = m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get();
-  StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(iDataPtr);
+  iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::Statistics);
+  StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(iDataArray.get());
   if (statsDataArray == NULL)
   {
     return;

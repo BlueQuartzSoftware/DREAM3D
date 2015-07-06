@@ -1,32 +1,38 @@
 /* ============================================================================
- * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 
 
 #include <stdlib.h>
@@ -35,25 +41,40 @@
 #include <string>
 #include <vector>
 
-#include "MXA/Common/LogTime.h"
-#include "MXA/Utilities/MXADir.h"
-#include "MXA/Utilities/MXAFileInfo.h"
+#include <QtCore/QtDebug>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QObject>
+#include <QtCore/QDir>
+#include <QtCore/QFile>
+#include <QtCore/QSettings>
+#include <QtCore/QString>
+#include <QtCore/QMetaProperty>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Observer.h"
+#include "DREAM3DLib/Common/FilterManager.h"
+#include "DREAM3DLib/Common/FilterFactory.hpp"
+#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
+#include "DREAM3DLib/Plugin/DREAM3DPluginLoader.h"
+#include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
+#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 #include "DREAM3DLib/DREAM3DFilters.h"
-#include "DREAM3DLib/SyntheticBuildingFilters/PackPrimaryPhases.h"
-#include "DREAM3DLib/ReconstructionFilters/SegmentGrains.h"
 
-#include "UnitTestSupport.hpp"
-#include "TestFileLocations.h"
+#include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
+#include "DREAM3DTestFileLocations.h"
+
+#include "PreflightVerify.h"
+
+
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string getH5StatsFile()
+QString getH5StatsFile()
 {
-  std::string s = UnitTest::DataDir + MXADir::Separator + "Equiaxed_Precip.h5stats";
+  QString s = UnitTest::DataDir + "/Equiaxed_Precip.h5stats";
   return s;
 }
 
@@ -83,276 +104,436 @@ void RemoveTestFiles()
 #endif
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SyntheticBuilder_PreFlight()
-{
-
-  std::string m_H5StatsFile("");
-  std::string m_OutputDirectory = UnitTest::SyntheticBuilderTest::TestDir;
-  std::string m_OutputFilePrefix("");
-  size_t m_XPoints = 128;
-  size_t m_YPoints = 128;
-  size_t m_ZPoints = 128;
-
-  typedef DataArray<unsigned int> ShapeTypeArrayType;
-  ShapeTypeArrayType::Pointer m_ShapeTypes = ShapeTypeArrayType::CreateArray(3, DREAM3D::EnsembleData::ShapeTypes);
-
-
-  float m_XResolution = 0.1f;
-  float m_YResolution = 0.1f;
-  float m_ZResolution = 0.1f;
-  double m_NeighborhoodErrorWeight = 1.0f;
-//  double m_FractionPrecipitates = 0.0f;
-
-  bool m_PeriodicBoundary = false;
-  std::string m_StructureFile("");
-  bool m_AlreadyFormed = false;
-
-//  int m_Precipitates = 0;
-//
-//  bool m_WriteBinaryVTKFiles = true;
-//  bool m_WriteVtkFile = true;
-//  bool m_WriteSurfaceVoxel = true;
-//  bool m_WritePhaseId = true;
-//  bool m_WriteIPFColor = true;
-//
-//  bool m_WriteHDF5GrainFile = false;
-
-  m_ShapeTypes->SetValue(0, DREAM3D::ShapeType::UnknownShapeType);
-  m_ShapeTypes->SetValue(1, DREAM3D::ShapeType::SuperEllipsoidShape);
-  m_ShapeTypes->SetValue(2, DREAM3D::ShapeType::SuperEllipsoidShape);
-
-  int err = 0;
-  // Instantiate our DataContainer object
-  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
-  // Create a Vector to hold all the filters. Later on we will execute all the filters
-  std::vector<AbstractFilter::Pointer> pipeline;
-
-  if(m_AlreadyFormed == false)
-  {
-    m->setDimensions(m_XPoints, m_YPoints, m_ZPoints);
-    m->setResolution(m_XResolution, m_YResolution, m_ZResolution);
-    m->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, m_ShapeTypes);
-
-    PackPrimaryPhases::Pointer pack_grains = PackPrimaryPhases::New();
-    pack_grains->setPeriodicBoundaries(m_PeriodicBoundary);
-    pack_grains->setNeighborhoodErrorWeight(m_NeighborhoodErrorWeight);
-    pipeline.push_back(pack_grains);
-
-  }
-  else if(m_AlreadyFormed == true)
-  {
-    BOOST_ASSERT(false);
-  }
-
-  if(m_AlreadyFormed == false)
-  {
-    InsertPrecipitatePhases::Pointer place_precipitates = InsertPrecipitatePhases::New();
-    place_precipitates->setPeriodicBoundaries(m_PeriodicBoundary);
-    pipeline.push_back(place_precipitates);
-  }
-
-  MatchCrystallography::Pointer match_crystallography = MatchCrystallography::New();
-  pipeline.push_back(match_crystallography);
-
-  MAKE_OUTPUT_FILE_PATH( FieldDataFile, DREAM3D::SyntheticBuilder::GrainDataFile)
-  FieldDataCSVWriter::Pointer write_fielddata = FieldDataCSVWriter::New();
-  write_fielddata->setFieldDataFile(FieldDataFile);
-  pipeline.push_back(write_fielddata);
-
-  int preflightError = 0;
-  std::stringstream preflightMessageStream;
-  // Start looping through the Pipeline and preflight everything
-
-  for (std::vector<AbstractFilter::Pointer>::iterator filter = pipeline.begin(); filter != pipeline.end(); ++filter)
-  {
-    (*filter)->setVoxelDataContainer(m.get());
-    setCurrentFilter(*filter);
-    (*filter)->preflight();
-    err = (*filter)->getErrorCondition();
-    if(err < 0)
-    {
-      preflightError |= err;
-      preflightMessageStream << (*filter)->getNameOfClass() << " produced the following preflight errors:" << std::endl;
-      std::vector<PipelineMessage> ems = (*filter)->getPipelineMessages();
-      for (std::vector<PipelineMessage>::iterator iter = ems.begin(); iter != ems.end(); ++iter )
-      {
-        preflightMessageStream << (*iter).generateErrorString();
-      }
-    }
-  }
-
-  DREAM3D_REQUIRE_EQUAL(err , 0);
-
-}
-
 #define PASS 0
 #define FAIL_IS_PASS 1
 
 #define MAKE_FILTER_TEST(name, condition)\
-void name##_PreFlightTest() {\
-  int err = 0;\
-  VoxelDataContainer::Pointer m = VoxelDataContainer::New();\
-  std::vector<AbstractFilter::Pointer> pipeline;\
-  name::Pointer filter = name::New();\
-  pipeline.push_back(filter);\
-  int preflightError = 0;\
-  std::stringstream ss;\
-  ss << "------------------------------------------------" << std::endl;\
-  ss << "Starting Preflight test for " << #name << std::endl;\
-  for (std::vector<AbstractFilter::Pointer>::iterator filter = pipeline.begin(); filter != pipeline.end(); ++filter) {\
-    (*filter)->setVoxelDataContainer(m.get());\
-    setCurrentFilter(*filter);\
-    (*filter)->preflight();\
-    err = (*filter)->getErrorCondition();\
-    if(err < 0) {\
-      preflightError |= err;\
-      ss << (*filter)->getNameOfClass() << " produced the following preflight errors:" << std::endl;\
-      std::vector<PipelineMessage> ems = (*filter)->getPipelineMessages();\
-      for (std::vector<PipelineMessage>::iterator iter = ems.begin(); iter != ems.end(); ++iter ) {\
-        ss << (*iter).generateErrorString();\
+  void name##_PreFlightTest() {\
+    int err = 0;\
+    VoxelDataContainer::Pointer m = VoxelDataContainer::New();\
+    std::vector<AbstractFilter::Pointer> pipeline;\
+    name::Pointer filter = name::New();\
+    pipeline.push_back(filter);\
+    int preflightError = 0;\
+    QStringstream ss;\
+    ss << "------------------------------------------------" << std::endl;\
+    ss << "Starting Preflight test for " << #name << std::endl;\
+    for (std::vector<AbstractFilter::Pointer>::iterator filter = pipeline.begin(); filter != pipeline.end(); ++filter) {\
+      (*filter)->setVoxelDataContainer(m.get());\
+      setCurrentFilter(*filter);\
+      (*filter)->preflight();\
+      err = (*filter)->getErrorCondition();\
+      if(err < 0) {\
+        preflightError |= err;\
+        ss << (*filter)->getNameOfClass() << " produced the following preflight errors:" << std::endl;\
+        std::vector<PipelineMessage> ems = (*filter)->getPipelineMessages();\
+        for (std::vector<PipelineMessage>::iterator iter = ems.begin(); iter != ems.end(); ++iter ) {\
+          ss << (*iter).generateErrorString();\
+        }\
       }\
     }\
-  }\
-  std::cout << ss.str() << std::endl;\
-  if (condition) { DREAM3D_REQUIRE_NE(preflightError, 0);}\
-  else { DREAM3D_REQUIRE_EQUAL(preflightError, 0);  }\
+    std::cout << ss.str() << std::endl;\
+    if (condition) { DREAM3D_REQUIRE_NE(preflightError, 0);}\
+    else { DREAM3D_REQUIRE_EQUAL(preflightError, 0);  }\
+  }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GenerateCopyCode()
+{
+  qDebug() << "-------------- GenerateCopyCode ------------------------------";
+
+  FilterManager* fm = FilterManager::Instance();
+  //QByteArray normType = ("updateFilterParameters(AbstractFilter*)");
+  FilterManager::Collection factories = fm->getFactories();
+  QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
+  while(iter.hasNext())
+  {
+    iter.next();
+    IFilterFactory::Pointer factory = iter.value();
+    AbstractFilter::Pointer filter = factory->create();
+    const QMetaObject* meta = filter->metaObject();
+
+
+
+    std::string cn = filter->getNameOfClass().toStdString();
+    std::cout << cn << "::Pointer " << cn << "::newFilterInstance(bool copyFilterParameters)" << std::endl;
+    std::cout << "{" << std::endl;
+
+    QStringList properties;
+    std::cout << "/*" << std::endl;
+    for(int i = meta->propertyOffset(); i < meta->propertyCount(); ++i)
+    {
+      properties << QString::fromLatin1(meta->property(i).name());
+      std::cout << QString::fromLatin1(meta->property(i).name()).toStdString() << std::endl;
+    }
+    std::cout << "*/" << std::endl;
+
+
+    std::cout << "  " << cn << "::Pointer filter = " << cn << "::New();" << std::endl;
+    std::cout << "  if(true == copyFilterParameters)\n  {" << std::endl;
+
+    QVector<FilterParameter::Pointer> options = filter->getFilterParameters();
+    for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
+    {
+      FilterParameter* option = (*iter).get();
+      QByteArray normType = QString("%1").arg( option->getPropertyName()).toLatin1();
+      int index = meta->indexOfProperty(normType);
+      if (index < 0)
+      {
+        std::cout << "#error Filter: " << filter->getNameOfClass().toStdString() << "  Missing Property: " << option->getPropertyName().toStdString() << std::endl;
+      }
+
+      std::cout << "    filter->set" << option->getPropertyName().toStdString() << "( get" << option->getPropertyName().toStdString() << "() );" << std::endl;
+    }
+    if(options.size() != properties.count())
+    {
+      std::cout << "#error The number of Q_PROPERITES " << properties.count() <<
+                " does not match the number of FilterParameters " << options.size() << " created in the setupFilterParameters() function." << std::endl;
+    }
+    std::cout << "  }" << std::endl;
+    std::cout << "  return filter;" << std::endl;
+    std::cout << "}" << std::endl;
+  }
 }
 
 
-MAKE_FILTER_TEST(  FindNeighbors, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  FindGrainPhases, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  FindSurfaceCells, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  FindCellQuats, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  FindGrainCentroids, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  FindSurfaceGrains, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  FindBoundingBoxGrains, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  ReadH5Ebsd, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  DataContainerReader, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  DataContainerWriter, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  FieldDataCSVWriter, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  VtkRectilinearGridWriter, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  H5VoxelFileReader, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  DxWriter, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  DxReader, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  PhWriter, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  PhReader, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  YSChoiAbaqusReader, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  EbsdToH5Ebsd, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  AvizoRectilinearCoordinateWriter, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  AvizoUniformCoordinateWriter, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  MinNeighbors, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  MinSize, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  FillBadData, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  OpenCloseBadData, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  ConvertEulerAngles, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  AlignSectionsMisorientation, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  AlignSectionsMutualInformation, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  AlignSectionsFeature, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  AlignSectionsList, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  EBSDSegmentGrains, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  CAxisSegmentGrains, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  MergeTwins, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  MergeColonies, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  GroupMicroTextureRegions, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  ChangeResolution, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  RegularizeZSpacing, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  CropVolume, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  Hex2SqrConverter, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  FindAvgOrientations, FAIL_IS_PASS)
-//MAKE_FILTER_TEST(  FindAxisODF, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  FindEuclideanDistMap, FAIL_IS_PASS)
-//MAKE_FILTER_TEST(  FindMDF, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  FindNeighborhoods, FAIL_IS_PASS)
-//MAKE_FILTER_TEST(  FindODF, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  FindNumFields, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  FindDeformationStatistics, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  FindSchmids, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  FindShapes, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  FindSizes, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  FindGrainReferenceMisorientations, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  FindKernelAvgMisorientations, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  FindSlicetoSliceRotations, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  PackPrimaryPhases, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  MatchCrystallography, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  InsertPrecipitatePhases, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  EstablishMatrixPhase, FAIL_IS_PASS)
-MAKE_FILTER_TEST(  InitializeSyntheticVolume, FAIL_IS_PASS)
+#define PROPERTY_NAME_AS_CHAR option->getPropertyName().toLatin1().constData()
 
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void verifyFilterParameters()
+{
+  qDebug() << "-------------- verifyFilterParameters ------------------------------";
+
+  FilterManager* fm = FilterManager::Instance();
+  //QByteArray normType = ("updateFilterParameters(AbstractFilter*)");
+  FilterManager::Collection factories = fm->getFactories();
+  QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
+  while(iter.hasNext())
+  {
+    iter.next();
+    IFilterFactory::Pointer factory = iter.value();
+    AbstractFilter::Pointer filter = factory->create();
+    const QMetaObject* meta = filter->metaObject();
+//    qDebug() << filter->getNameOfClass() << "Default Values";
+    QVector<FilterParameter::Pointer> options = filter->getFilterParameters();
+    for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
+    {
+      FilterParameter* option = (*iter).get();
+      if (option->getHumanLabel().compare("Required Information") == 0
+          || option->getHumanLabel().compare("Created Information") == 0
+          || option->getHumanLabel().compare("Optional Information") == 0)
+      { continue; }
+
+      if(NULL != dynamic_cast<SeparatorFilterParameter*>(option))
+      {
+        continue;
+      }
+      QByteArray normType = QString("%1").arg( option->getPropertyName()).toLatin1();
+      int index = meta->indexOfProperty(normType);
+      if (index < 0)
+      {
+        qDebug() << "Filter: " << filter->getNameOfClass() << "  Missing Property: " << option->getHumanLabel() << "  "  << option->getPropertyName();
+      }
+//      qDebug() << "    " << option->getHumanLabel() << "::" << filter->property(PROPERTY_NAME_AS_CHAR);
+    }
+
+    // If something is wrong with the newFilterInstance then the next line will assert
+    AbstractFilter::Pointer nFilter = filter->newFilterInstance(true);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void verifySignals()
+{
+  qDebug() << "-------------- verifySignals ------------------------------";
+
+  FilterManager* fm = FilterManager::Instance();
+  QByteArray normType = ("updateFilterParameters(AbstractFilter*)");
+  FilterManager::Collection factories = fm->getFactories();
+  QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
+  while(iter.hasNext())
+  {
+    iter.next();
+    IFilterFactory::Pointer factory = iter.value();
+    AbstractFilter::Pointer filter = factory->create();
+    const QMetaObject* meta = filter->metaObject();
+    int count = meta->methodCount();
+    int index = meta->indexOfSignal(normType);
+    if (index < 0)
+    {
+      qDebug() << "Filter: " << iter.key() << "  Method Count: " << count;
+      qDebug() << "==>  Signal void updateFilterParameters(AbstractFilter* filter) does not exist";
+    }
+  }
+}
+
+#if 0
+if ( (L) == (R) )
+{
+  \
+  QString buf;
+  \
+  QTextStream ss(&buf);
+  \
+  ss << "Your test required the following\n            '";
+  \
+  ss << #L << " != " << #R << "'\n             but this condition was not met.\n";\
+  ss << "             " << L << "==" << R;\
+  DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() ) }
+#endif
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void verifyPreflightEmitsProperly()
+{
+  qDebug() << "-------------- verifyPreflightEmitsProperly ------------------------------";
+  FilterManager* fm = FilterManager::Instance();
+  FilterManager::Collection factories = fm->getFactories();
+  QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
+
+  while(iter.hasNext())
+  {
+    PreflightVerify p(NULL);
+    iter.next();
+    IFilterFactory::Pointer factory = iter.value();
+    AbstractFilter::Pointer filter = factory->create();
+    filter->connect(filter.get(), SIGNAL(preflightAboutToExecute()),
+                    &p, SLOT(beforePreflight()) );
+    filter->connect(filter.get(), SIGNAL(preflightExecuted()),
+                    &p, SLOT(afterPreflight()) );
+    filter->connect(filter.get(), SIGNAL(updateFilterParameters(AbstractFilter*) ),
+                    &p, SLOT(filterNeedsInputParameters(AbstractFilter*)) );
+
+    filter->preflight();
+
+    QString buf;
+    QTextStream ss(&buf);
+    if(p.m_beforePreflight == false)
+    {
+      ss << filter->getNameOfClass() << " Missing emit preflightAboutToExecute()";
+    }
+    if(p.m_afterPreflight == false)
+    {
+      ss << filter->getNameOfClass() << " Missing emit preflightExecuted()";
+    }
+    if(p.m_filterNeedsInputParameters == false)
+    {
+      ss << filter->getNameOfClass() << " Missing emit updateFilterParameters()";
+    }
+    if (filter->getInPreflight() == true)
+    {
+      ss << filter->getNameOfClass() << " Bool 'InPreflight' was NOT set correctly at end of 'preflight()'";
+    }
+    if(buf.isEmpty() == false)
+    {
+      DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() )
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestPreflight()
+{
+  qDebug() << "-------------- TestPreflight ------------------------------";
+  FilterManager* fm = FilterManager::Instance();
+
+  FilterManager::Collection factories = fm->getFactories();
+  FilterManager::Collection::const_iterator factoryMapIter = factories.constBegin();
+  int err = 0;
+  while (factoryMapIter != factories.constEnd())
+  {
+    IFilterFactory::Pointer factory = fm->getFactoryForFilter(factoryMapIter.key());
+    if(factory.get() != NULL)
+    {
+      AbstractFilter::Pointer filter = factory->create();
+
+      filter->preflight();
+
+      //DREAM3D_REQUIRE_EQUAL(filter->getInPreflight(), false);
+      err = filter->getErrorCondition();
+      // An error condition GREATER than ZERO is an anomoly and should be looked at.
+      if (err >= 0)
+      {
+        qDebug() << "Anomalous result for Preflight for " << filter->getGroupName() << "/" << filter->getNameOfClass()
+                 << " Error Condition = " << filter->getErrorCondition();
+      }
+    }
+    factoryMapIter++;
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestUniqueHumanLabels()
+{
+  FilterManager* fm = FilterManager::Instance();
+
+  FilterManager::Collection factories = fm->getFactories();
+  FilterManager::Collection::const_iterator factoryMapIter = factories.constBegin();
+  QMap<QString, AbstractFilter::Pointer> filterMap;
+  while (factoryMapIter != factories.constEnd())
+  {
+    IFilterFactory::Pointer factory = fm->getFactoryForFilter(factoryMapIter.key());
+    if (factory.get() != NULL)
+    {
+      AbstractFilter::Pointer filter = factory->create();
+      if (filter.get() != NULL)
+      {
+        QString name = filter->getHumanLabel();
+        if (filterMap.contains(name))
+        {
+          AbstractFilter::Pointer other = filterMap.value(name);
+          qDebug() << "Filters in class names '" << filter->getNameOfClass() << "' and '" << other->getNameOfClass()
+                   << "' have the same human label, and this is not allowed.";
+          DREAM3D_REQUIRE_EQUAL(0, 1)
+        }
+        else
+        {
+          filterMap.insert(name, filter);
+        }
+      }
+    }
+    factoryMapIter++;
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestUncategorizedFilterParameters()
+{
+  FilterManager* fm = FilterManager::Instance();
+
+  FilterManager::Collection factories = fm->getFactories();
+  FilterManager::Collection::const_iterator factoryMapIter = factories.constBegin();
+  QMap<QString, AbstractFilter::Pointer> filterMap;
+  while (factoryMapIter != factories.constEnd())
+  {
+    IFilterFactory::Pointer factory = fm->getFactoryForFilter(factoryMapIter.key());
+    if (factory.get() != NULL)
+    {
+      AbstractFilter::Pointer filter = factory->create();
+      if (filter.get() != NULL)
+      {
+        QVector<FilterParameter::Pointer> parameters = filter->getFilterParameters();
+        foreach(FilterParameter::Pointer fp, parameters)
+        {
+          if(fp->getCategory() == FilterParameter::Uncategorized)
+          {
+            qDebug() << "[]" << filter->getCompiledLibraryName() << "  Filter: " << filter->getNameOfClass() << " Filter Parameter: " << fp->getPropertyName() << " IS NOT Categorized.";
+          }
+        }
+      }
+    }
+    factoryMapIter++;
+  }
+}
+
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestNewInstanceAvailable()
+{
+  FilterManager* fm = FilterManager::Instance();
+  QByteArray normType = ("updateFilterParameters(AbstractFilter*)");
+  FilterManager::Collection factories = fm->getFactories();
+  QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
+  while(iter.hasNext())
+  {
+    iter.next();
+    IFilterFactory::Pointer factory = iter.value();
+    AbstractFilter::Pointer filter = factory->create();
+
+    AbstractFilter::Pointer copy = filter->newFilterInstance(true);
+    if(NULL == copy.get())
+    {
+      std::cout << "Filter: '" << filter->getNameOfClass().toStdString() << "' from Library/Plugin '" << filter->getCompiledLibraryName().toStdString() << " has not implemented the newInstance() function" << std::endl;
+    }
+    DREAM3D_REQUIRED_PTR(copy.get(), !=, NULL)
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PrintFilterInfo()
+{
+  qDebug() << "-------------- PrintFilterInfo ------------------------------";
+  FilterManager* fm = FilterManager::Instance();
+
+  FilterManager::Collection factories = fm->getFactories();
+  FilterManager::Collection::const_iterator factoryMapIter = factories.constBegin();
+  while (factoryMapIter != factories.constEnd())
+  {
+    IFilterFactory::Pointer factory = fm->getFactoryForFilter(factoryMapIter.key());
+    if(factory.get() != NULL)
+    {
+      AbstractFilter::Pointer filter = factory->create();
+
+      std::cout << filter->getNameOfClass().toStdString() << "\t"
+                << filter->getCompiledLibraryName().toStdString() << "\t"
+                << filter->getHumanLabel().toStdString() << std::endl;
+    }
+    factoryMapIter++;
+  }
+}
 
 
 // -----------------------------------------------------------------------------
 //  Use unit test framework
 // -----------------------------------------------------------------------------
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
+
+  // Instantiate the QCoreApplication that we need to get the current path and load plugins.
+  QCoreApplication app(argc, argv);
+  QCoreApplication::setOrganizationName("BlueQuartz Software");
+  QCoreApplication::setOrganizationDomain("bluequartz.net");
+  QCoreApplication::setApplicationName("PreflightTest");
+
+
+  // Load all the plugins and
+  // Register all the filters including trying to load those from Plugins
+  FilterManager* fm = FilterManager::Instance();
+  DREAM3DPluginLoader::LoadPluginFilters(fm);
+  // THIS IS A VERY IMPORTANT LINE: It will register all the known filters in the dream3d library. This
+  // will NOT however get filters from plugins. We are going to have to figure out how to compile filters
+  // into their own plugin and load the plugins from a command line.
+  fm->RegisterKnownFilters(fm);
+
+  QMetaObjectUtilities::RegisterMetaTypes();
+
+  //// These functions are just to verify that the filters have certain signals and properties available.
+//  verifyPreflightEmitsProperly();
+  verifySignals();
+  verifyFilterParameters();
+
   int err = EXIT_SUCCESS;
-  DREAM3D_REGISTER_TEST( FindNeighbors_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( FindGrainPhases_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( FindSurfaceCells_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( FindCellQuats_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( FindGrainCentroids_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( FindSurfaceGrains_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( FindBoundingBoxGrains_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( ReadH5Ebsd_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( DataContainerReader_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( DataContainerWriter_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( FieldDataCSVWriter_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( VtkRectilinearGridWriter_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( H5VoxelFileReader_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( DxWriter_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( DxReader_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( PhWriter_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( PhReader_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( YSChoiAbaqusReader_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( EbsdToH5Ebsd_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( AvizoRectilinearCoordinateWriter_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( AvizoUniformCoordinateWriter_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( MinNeighbors_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( MinSize_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( FillBadData_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( OpenCloseBadData_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( ConvertEulerAngles_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( AlignSectionsMisorientation_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( AlignSectionsMutualInformation_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( AlignSectionsFeature_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( AlignSectionsList_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( EBSDSegmentGrains_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( CAxisSegmentGrains_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( MergeTwins_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( MergeColonies_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( GroupMicroTextureRegions_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( ChangeResolution_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( RegularizeZSpacing_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( CropVolume_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( Hex2SqrConverter_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( FindAvgOrientations_PreFlightTest() )
-  //DREAM3D_REGISTER_TEST( FindAxisODF_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( FindEuclideanDistMap_PreFlightTest() )
-  //DREAM3D_REGISTER_TEST( FindMDF_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( FindNeighborhoods_PreFlightTest() )
-  //DREAM3D_REGISTER_TEST( FindODF_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( FindNumFields_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( FindDeformationStatistics_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( FindSchmids_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( FindShapes_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( FindSizes_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( FindGrainReferenceMisorientations_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( FindKernelAvgMisorientations_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( FindSlicetoSliceRotations_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( PackPrimaryPhases_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( MatchCrystallography_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( InsertPrecipitatePhases_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( EstablishMatrixPhase_PreFlightTest() )
-  DREAM3D_REGISTER_TEST( InitializeSyntheticVolume_PreFlightTest() )
-
-
-
-
+  DREAM3D_REGISTER_TEST( verifyPreflightEmitsProperly() )
+  DREAM3D_REGISTER_TEST( TestPreflight() )
+  DREAM3D_REGISTER_TEST( TestUniqueHumanLabels() )
+  DREAM3D_REGISTER_TEST( TestNewInstanceAvailable() )
+  DREAM3D_REGISTER_TEST( TestUncategorizedFilterParameters() )
   PRINT_TEST_SUMMARY();
+
+//  GenerateCopyCode();
   return err;
 }
 

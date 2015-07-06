@@ -1,45 +1,43 @@
-WriteIPFStandardTriangle {#writeipfstandardtriangle}
-=====
+Write IPF Triangle Legend (Cubic m-3m) {#writeipfstandardtriangle}
+=============
 
 ## Group (Subgroup) ##
-IO Filters (Output)
-
+IO (Output)
 
 ## Description ##
-This filter will generate a standard Inverse Pole Figure color Triangle that is used for typical EBSD visualizations and other visualizations from orientation data. The user can adjust the size and type of the output file.
+This **Filter** will generate a standard inverse pole figure color stereographic triangle that is used for typical EBSD visualizations and other visualizations from orientation data. The user can adjust the size and type of the output file.
 
-Currently the only supported triangles are for Cubic (High) crystal symmetry.
+**Currently the only supported triangle is for Cubic (m-3m) crystal symmetry.**
 
-![IPFFilterLegend.png](images/IPFFilterLegend.png)
+-----
+
+![Cubic Standard Stereographic Triangle](images/IPFFilterLegend.tif)
+@image latex images/IPFFilterLegend.tif "Cubic Standard Stereographic Triangle" width=6in
+
+-----
 
 ## Parameters ##
-| Name             | Type |
-|------------------|------|
-| Image Size | Pixels (This will be both the height and width of the image) |  
-|  Image Type | Tiff, PNG and BMP can be selected |  
-| Output File Name |  The path to the output file |
+| Name | Type | Description |
+|------|------| ----------- |
+| Output File | File Path | The output file path. Currently supports .tif, .bmp, and .png file formats |
+| Image Size (Square Pizels) | Int | Size of the output image in square pixels |   
 
+## Required Geoemtry ##
+Not Applicable
 
-## Required Arrays ##
-
+## Required Objects ##
 None
 
-## Created Arrays ##
-
+## Created Objects ##
 None
 
-## Authors ##
+## License & Copyright ##
 
-**Copyright** 2013 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)
+Please see the description file distributed with this **Plugin**
 
-**Contact Info** dream3d@bluequartz.net
+## DREAM.3D Mailing Lists ##
 
-**Version** 1.0.0
+If you need more help with a **Filter**, please consider asking your question on the [DREAM.3D Users Google group!](https://groups.google.com/forum/?hl=en#!forum/dream3d-users)
 
-**License**  See the License.txt file that came with DREAM3D.
-
-
-
-See a bug? Does this documentation need updated with a citation? Send comments, corrections and additions to [The DREAM3D development team](mailto:dream3d@bluequartz.net?subject=Documentation%20Correction)
 
 

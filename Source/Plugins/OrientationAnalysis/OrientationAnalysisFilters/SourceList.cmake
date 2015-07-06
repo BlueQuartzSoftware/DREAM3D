@@ -13,8 +13,35 @@ START_FILTER_GROUP(${OrientationAnalysis_BINARY_DIR} "${_filterGroupName}" "Orie
 #---------
 # List your public filters here
 set(_PublicFilters
-  WritePoleFigure
+  BadDataNeighborOrientationCheck
+  ChangeAngleRepresentation
+  ConvertHexGridToSquareGrid
+  ConvertOrientations
+  EbsdToH5Ebsd
+  FindAvgCAxes
+  FindAvgOrientations
+  FindBoundaryStrengths
+  FindCAxisLocations
+  FindFeatureNeighborCAxisMisalignments
+  FindFeatureReferenceCAxisMisorientations
+  FindFeatureReferenceMisorientations
+  FindKernelAvgMisorientations
+  FindMisorientations
+  FindSchmids
+  FindSlipTransmissionMetrics
+  FindTwinBoundaries
+  FindTwinBoundarySchmidFactors
+  GenerateIPFColors
+  GenerateMisorientationColors
+  NeighborCICorrelation
+  NeighborOrientationCorrelation
+  ReadAngData
+  ReadCtfData
+  ReadEdaxH5Data
+  ReadH5Ebsd
+  RotateEulerRefFrame
   WriteIPFStandardTriangle
+  WritePoleFigure
 )
 
 
@@ -32,7 +59,15 @@ endforeach()
 # This is the list of Private Filters. These filters are available from other filters but the user will not
 # be able to use them from the DREAM3D user interface.
 set(_PrivateFilters
-
+  WriteStatsGenOdfAngleFile
+  FindBasalLoadingFactor
+  FindDirectionalModuli
+  FindLocalAverageCAxisMisalignments
+  FindMicroTextureRegions
+  FindModulusMismatch
+  FindOrientationFieldCurl
+  GenerateEulerColors
+  GenerateRodriguesColors
 )
 
 #-----------------

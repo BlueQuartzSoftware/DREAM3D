@@ -1,45 +1,46 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
- * or promote products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 
 #include "SGPowerLawTableModel.h"
 #include <iostream>
 
-#include <QApplication>
-#include <QtGui/QStyleOptionComboBox>
-#include <QtGui/QAbstractItemDelegate>
+#include <QtWidgets/QStyleOptionComboBox>
+#include <QtWidgets/QAbstractItemDelegate>
+
+#include "Applications/DREAM3D/DREAM3DApplication.h"
 
 #include "StatsGenerator/Delegates/SGPowerLawItemDelegate.h"
 
@@ -62,9 +63,9 @@ SGPowerLawTableModel::~SGPowerLawTableModel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Qt::ItemFlags SGPowerLawTableModel::flags(const QModelIndex &index) const
+Qt::ItemFlags SGPowerLawTableModel::flags(const QModelIndex& index) const
 {
-  //  std::cout << "SGPowerLawTableModel::flags" << std::endl;
+  //  qDebug() << "SGPowerLawTableModel::flags" << "\n";
   if (!index.isValid())
   {
     return Qt::NoItemFlags;
@@ -102,7 +103,7 @@ Qt::ItemFlags SGPowerLawTableModel::flags(const QModelIndex &index) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVariant SGPowerLawTableModel::data(const QModelIndex &index, qint32 role) const
+QVariant SGPowerLawTableModel::data(const QModelIndex& index, qint32 role) const
 {
 
   if (!index.isValid())
@@ -120,28 +121,28 @@ QVariant SGPowerLawTableModel::data(const QModelIndex &index, qint32 role) const
       {
         comboBox.currentText = QString("101");
         const QString header = headerData(BinNumber, Qt::Horizontal, Qt::DisplayRole).toString();
-        if (header.length() > comboBox.currentText.length()) comboBox.currentText = header;
+        if (header.length() > comboBox.currentText.length()) { comboBox.currentText = header; }
         break;
       }
       case Alpha:
       {
         comboBox.currentText = QString("00011");
         const QString header = headerData(BinNumber, Qt::Horizontal, Qt::DisplayRole).toString();
-        if (header.length() > comboBox.currentText.length()) comboBox.currentText = header;
+        if (header.length() > comboBox.currentText.length()) { comboBox.currentText = header; }
         break;
       }
       case K:
       {
         comboBox.currentText = QString("10001");
         const QString header = headerData(BinNumber, Qt::Horizontal, Qt::DisplayRole).toString();
-        if (header.length() > comboBox.currentText.length()) comboBox.currentText = header;
+        if (header.length() > comboBox.currentText.length()) { comboBox.currentText = header; }
         break;
       }
       case Beta:
       {
         comboBox.currentText = QString("10001");
         const QString header = headerData(BinNumber, Qt::Horizontal, Qt::DisplayRole).toString();
-        if (header.length() > comboBox.currentText.length()) comboBox.currentText = header;
+        if (header.length() > comboBox.currentText.length()) { comboBox.currentText = header; }
         break;
       }
       case LineColor:
@@ -160,7 +161,7 @@ QVariant SGPowerLawTableModel::data(const QModelIndex &index, qint32 role) const
     QFontMetrics fontMetrics(data(index, Qt::FontRole) .value<QFont > ());
     comboBox.fontMetrics = fontMetrics;
     QSize size(fontMetrics.width(comboBox.currentText), fontMetrics.height());
-    return qApp->style()->sizeFromContents(QStyle::CT_ComboBox, &comboBox, size);
+    return dream3dApp->style()->sizeFromContents(QStyle::CT_ComboBox, &comboBox, size);
   }
   else if (role == Qt::TextAlignmentRole)
   {
@@ -229,7 +230,7 @@ QVariant SGPowerLawTableModel::headerData(int section, Qt::Orientation orientati
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGPowerLawTableModel::rowCount(const QModelIndex &index) const
+int SGPowerLawTableModel::rowCount(const QModelIndex& index) const
 {
   return index.isValid() ? 0 : m_RowCount;
 }
@@ -237,7 +238,7 @@ int SGPowerLawTableModel::rowCount(const QModelIndex &index) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGPowerLawTableModel::columnCount(const QModelIndex &index) const
+int SGPowerLawTableModel::columnCount(const QModelIndex& index) const
 {
   return index.isValid() ? 0 : m_ColumnCount;
 }
@@ -245,9 +246,9 @@ int SGPowerLawTableModel::columnCount(const QModelIndex &index) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool SGPowerLawTableModel::setData(const QModelIndex & index, const QVariant & value, int role)
+bool SGPowerLawTableModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-  // std::cout << "SGPowerLawTableModel::setData " << value.toString().toStdString() << std::endl;
+  // qDebug() << "SGPowerLawTableModel::setData " << value.toString() << "\n";
   if (!index.isValid() || role != Qt::EditRole || index.row() < 0 || index.row() >= m_BinNumbers.count() || index.column() < 0 || index.column()
       >= m_ColumnCount)
   {
@@ -344,11 +345,14 @@ QVector<float > SGPowerLawTableModel::getData(int col)
   switch(col)
   {
     case Alpha:
-      return m_Alpha;break;
+      return m_Alpha;
+      break;
     case K:
-      return m_K;break;
+      return m_K;
+      break;
     case Beta:
-      return m_Beta;break;
+      return m_Beta;
+      break;
     default:
       Q_ASSERT(false);
   }
@@ -363,11 +367,14 @@ float SGPowerLawTableModel::getDataValue(int col, int row)
   switch(col)
   {
     case Alpha:
-      return m_Alpha[row];break;
+      return m_Alpha[row];
+      break;
     case K:
-      return m_K[row];break;
+      return m_K[row];
+      break;
     case Beta:
-      return m_Beta[row];break;
+      return m_Beta[row];
+      break;
     default:
       Q_ASSERT(false);
   }
@@ -377,16 +384,19 @@ float SGPowerLawTableModel::getDataValue(int col, int row)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGPowerLawTableModel::setColumnData(int col, QVector<float> &data)
+void SGPowerLawTableModel::setColumnData(int col, QVector<float>& data)
 {
   switch(col)
   {
     case Alpha:
-      m_Alpha = data;break;
+      m_Alpha = data;
+      break;
     case K:
-      m_K = data;break;
+      m_K = data;
+      break;
     case Beta:
-      m_Beta = data;break;
+      m_Beta = data;
+      break;
     default:
       Q_ASSERT(false);
   }
@@ -398,8 +408,8 @@ void SGPowerLawTableModel::setColumnData(int col, QVector<float> &data)
 void SGPowerLawTableModel::setTableData(QVector<float> bins, QVector<QVector<float> > data, QVector<QString> colors)
 {
   qint32 count = bins.count();
-  
-  // Now make sure we _really_ have the correct count because the number of 
+
+  // Now make sure we _really_ have the correct count because the number of
   // bins may NOT really reflect what is in the 'data' vectors. This discrepency
   // can happen if not all of the data was written to the stats file
   for(int i = 0; i < data.count(); ++i)
@@ -410,7 +420,7 @@ void SGPowerLawTableModel::setTableData(QVector<float> bins, QVector<QVector<flo
   // Remove all the current rows in the table model
   removeRows(0, rowCount());
 
-  int offset = row + count -1; 
+  int offset = row + count - 1;
   if (offset < 0) { offset = 0;}
   // Now mass insert the data to the table then emit that the data has changed
   beginInsertRows(QModelIndex(), row, offset);

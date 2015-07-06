@@ -1,44 +1,45 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 #include "SGODFTableModel.h"
 #include <iostream>
 
-#include <QApplication>
-#include <QtGui/QStyleOptionComboBox>
-#include <QtGui/QAbstractItemDelegate>
+#include <QtWidgets/QStyleOptionComboBox>
+#include <QtWidgets/QAbstractItemDelegate>
+
+#include "Applications/DREAM3D/DREAM3DApplication.h"
 
 #include "StatsGenerator/Delegates/SGODFItemDelegate.h"
 
@@ -46,9 +47,9 @@
 //
 // -----------------------------------------------------------------------------
 SGODFTableModel::SGODFTableModel(QObject* parent) :
-QAbstractTableModel(parent),
-m_RowCount(0),
-m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High)
+  QAbstractTableModel(parent),
+  m_RowCount(0),
+  m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High)
 {
   m_ColumnCount = ColumnCount;
 }
@@ -63,9 +64,9 @@ SGODFTableModel::~SGODFTableModel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Qt::ItemFlags SGODFTableModel::flags(const QModelIndex &index) const
+Qt::ItemFlags SGODFTableModel::flags(const QModelIndex& index) const
 {
-  //  std::cout << "SGODFTableModel::flags" << std::endl;
+  //  qDebug() << "SGODFTableModel::flags" << "\n";
   if (!index.isValid())
   {
     return Qt::NoItemFlags;
@@ -85,7 +86,7 @@ Qt::ItemFlags SGODFTableModel::flags(const QModelIndex &index) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVariant SGODFTableModel::data(const QModelIndex &index, qint32 role) const
+QVariant SGODFTableModel::data(const QModelIndex& index, qint32 role) const
 {
 
   if (!index.isValid())
@@ -99,8 +100,8 @@ QVariant SGODFTableModel::data(const QModelIndex &index, qint32 role) const
     comboBox.currentText = QString("10001");
     if (index.column() < SGODFTableModel::ColumnCount)
     {
-        const QString header = headerData(index.column(), Qt::Horizontal, Qt::DisplayRole).toString();
-        if (header.length() > comboBox.currentText.length()) comboBox.currentText = header;
+      const QString header = headerData(index.column(), Qt::Horizontal, Qt::DisplayRole).toString();
+      if (header.length() > comboBox.currentText.length()) { comboBox.currentText = header; }
     }
     else
     {
@@ -109,7 +110,7 @@ QVariant SGODFTableModel::data(const QModelIndex &index, qint32 role) const
     QFontMetrics fontMetrics(data(index, Qt::FontRole) .value<QFont > ());
     comboBox.fontMetrics = fontMetrics;
     QSize size(fontMetrics.width(comboBox.currentText), fontMetrics.height());
-    return qApp->style()->sizeFromContents(QStyle::CT_ComboBox, &comboBox, size);
+    return dream3dApp->style()->sizeFromContents(QStyle::CT_ComboBox, &comboBox, size);
   }
   else if (role == Qt::TextAlignmentRole)
   {
@@ -178,7 +179,7 @@ QVariant SGODFTableModel::headerData(int section, Qt::Orientation orientation, i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGODFTableModel::rowCount(const QModelIndex &index) const
+int SGODFTableModel::rowCount(const QModelIndex& index) const
 {
   return index.isValid() ? 0 : m_RowCount;
 }
@@ -186,7 +187,7 @@ int SGODFTableModel::rowCount(const QModelIndex &index) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGODFTableModel::columnCount(const QModelIndex &index) const
+int SGODFTableModel::columnCount(const QModelIndex& index) const
 {
   return index.isValid() ? 0 : m_ColumnCount;
 }
@@ -203,9 +204,9 @@ bool SGODFTableModel::setHeaderData(int col, Qt::Orientation o, const QVariant& 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool SGODFTableModel::setData(const QModelIndex & index, const QVariant & value, int role)
+bool SGODFTableModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-  // std::cout << "SGODFTableModel::setData " << value.toString().toStdString() << std::endl;
+  // qDebug() << "SGODFTableModel::setData " << value.toString() << "\n";
   if (!index.isValid() || role != Qt::EditRole || index.row() < 0
       || index.row() >= m_Euler1s.count()
       || index.column() < 0 || index.column()
@@ -303,15 +304,20 @@ QVector<float > SGODFTableModel::getData(int col)
   switch(col)
   {
     case Euler1:
-      return m_Euler1s; break;
+      return m_Euler1s;
+      break;
     case Euler2:
-      return m_Euler2s; break;
+      return m_Euler2s;
+      break;
     case Euler3:
-      return m_Euler3s; break;
+      return m_Euler3s;
+      break;
     case Weight:
-      return m_Weights;break;
+      return m_Weights;
+      break;
     case Sigma:
-      return m_Sigmas;break;
+      return m_Sigmas;
+      break;
     default:
       Q_ASSERT(false);
   }
@@ -326,15 +332,20 @@ float SGODFTableModel::getDataValue(int col, int row)
   switch(col)
   {
     case Euler1:
-      return m_Euler1s[row]; break;
+      return m_Euler1s[row];
+      break;
     case Euler2:
-      return m_Euler2s[row]; break;
+      return m_Euler2s[row];
+      break;
     case Euler3:
-      return m_Euler3s[row]; break;
+      return m_Euler3s[row];
+      break;
     case Weight:
-      return m_Weights[row];break;
+      return m_Weights[row];
+      break;
     case Sigma:
-      return m_Sigmas[row]; break;
+      return m_Sigmas[row];
+      break;
     default:
       Q_ASSERT(false);
   }
@@ -344,20 +355,25 @@ float SGODFTableModel::getDataValue(int col, int row)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGODFTableModel::setColumnData(int col, QVector<float> &data)
+void SGODFTableModel::setColumnData(int col, QVector<float>& data)
 {
   switch(col)
   {
     case Euler1:
-      m_Euler1s = data; break;
+      m_Euler1s = data;
+      break;
     case Euler2:
-      m_Euler2s = data; break;
+      m_Euler2s = data;
+      break;
     case Euler3:
-      m_Euler3s = data; break;
+      m_Euler3s = data;
+      break;
     case Weight:
-      m_Weights = data; break;
+      m_Weights = data;
+      break;
     case Sigma:
-      m_Sigmas = data; break;
+      m_Sigmas = data;
+      break;
     default:
       Q_ASSERT(false);
   }
@@ -368,11 +384,11 @@ void SGODFTableModel::setColumnData(int col, QVector<float> &data)
 // -----------------------------------------------------------------------------
 void SGODFTableModel::setRowData(int row, float e1, float e2, float e3, float weight, float sigma)
 {
-   m_Euler1s[row] = e1;
-   m_Euler2s[row] = e2;
-   m_Euler3s[row] = e3;
-   m_Weights[row] = weight;
-   m_Sigmas[row] = sigma;
+  m_Euler1s[row] = e1;
+  m_Euler2s[row] = e2;
+  m_Euler3s[row] = e3;
+  m_Weights[row] = weight;
+  m_Sigmas[row] = sigma;
 }
 
 // -----------------------------------------------------------------------------
@@ -384,69 +400,70 @@ QAbstractItemDelegate* SGODFTableModel::getItemDelegate()
 }
 
 #define ADD_INITIAL_ROW_VALUE(name, weight, sigma)\
-    insertRow(rowCount());\
-    QModelIndex textureIndex = index(rowCount() - 1, SGODFTableModel::Texture);\
-    setData(textureIndex, QVariant(QString(name)), Qt::EditRole);\
-    QModelIndex weightIndex = index(rowCount() - 1, SGODFTableModel::Weight);\
-    setData(weightIndex, QVariant(weight), Qt::EditRole);\
-    QModelIndex sigmaIndex = index(rowCount() - 1, SGODFTableModel::Sigma);\
-    setData(sigmaIndex, QVariant(sigma), Qt::EditRole);\
+  insertRow(rowCount());\
+  QModelIndex textureIndex = index(rowCount() - 1, SGODFTableModel::Texture);\
+  setData(textureIndex, QVariant(QString(name)), Qt::EditRole);\
+  QModelIndex weightIndex = index(rowCount() - 1, SGODFTableModel::Weight);\
+  setData(weightIndex, QVariant(weight), Qt::EditRole);\
+  QModelIndex sigmaIndex = index(rowCount() - 1, SGODFTableModel::Sigma);\
+  setData(sigmaIndex, QVariant(sigma), Qt::EditRole);\
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGODFTableModel::setInitialValues()
-{
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SGODFTableModel::setTableData(QVector<float> e1, QVector<float> e2, QVector<float> e3, QVector<float> weights, QVector<float> sigmas)
-{
-  qint32 count = e1.count();
-
-  qint32 row = 0;
-  // Remove all the current rows in the table model
-  removeRows(0, rowCount());
-  QModelIndex topLeft;
-  QModelIndex botRight;
-  if (count >= 1) {
-    // Now mass insert the data to the table then emit that the data has changed
-    beginInsertRows(QModelIndex(), row, row + count - 1);
-    m_Euler1s = e1;
-    m_Euler2s = e2;
-    m_Euler3s = e3;
-    m_Weights = weights;
-    m_Sigmas = sigmas;
-    m_RowCount = count;
-    endInsertRows();
-    QModelIndex topLeft = createIndex(0, 0);
-    QModelIndex botRight = createIndex(count-1, ColumnCount);
-  }
-  emit dataChanged(topLeft, botRight);
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SGODFTableModel::setCrystalStructure(unsigned int value)
-{
-  if (m_CrystalStructure != value)
+  void SGODFTableModel::setInitialValues()
   {
-    this->m_CrystalStructure = value;
+
   }
-}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-unsigned int SGODFTableModel::getCrystalStructure()
-{
-  return m_CrystalStructure;
-}
+  void SGODFTableModel::setTableData(QVector<float> e1, QVector<float> e2, QVector<float> e3, QVector<float> weights, QVector<float> sigmas)
+  {
+    qint32 count = e1.count();
+
+    qint32 row = 0;
+    // Remove all the current rows in the table model
+    removeRows(0, rowCount());
+    QModelIndex topLeft;
+    QModelIndex botRight;
+    if (count >= 1)
+    {
+      // Now mass insert the data to the table then emit that the data has changed
+      beginInsertRows(QModelIndex(), row, row + count - 1);
+      m_Euler1s = e1;
+      m_Euler2s = e2;
+      m_Euler3s = e3;
+      m_Weights = weights;
+      m_Sigmas = sigmas;
+      m_RowCount = count;
+      endInsertRows();
+      createIndex(0, 0);
+      createIndex(count - 1, ColumnCount);
+    }
+    emit dataChanged(topLeft, botRight);
+  }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+  void SGODFTableModel::setCrystalStructure(unsigned int value)
+  {
+    if (m_CrystalStructure != value)
+    {
+      this->m_CrystalStructure = value;
+    }
+  }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+  unsigned int SGODFTableModel::getCrystalStructure()
+  {
+    return m_CrystalStructure;
+  }
 
 
 

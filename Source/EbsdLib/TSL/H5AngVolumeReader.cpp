@@ -1,48 +1,49 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 
 #include "H5AngVolumeReader.h"
 
 #include <cmath>
 
+#include <QtCore/QString>
+
 #include "H5Support/H5Lite.h"
-#include "H5Support/H5Utilities.h"
+#include "H5Support/QH5Utilities.h"
 
 #include "EbsdLib/EbsdConstants.h"
-#include "EbsdLib/Utilities/StringUtils.h"
 #include "EbsdLib/TSL/H5AngReader.h"
 
 #if defined (H5Support_NAMESPACE)
@@ -53,7 +54,7 @@ using namespace H5Support_NAMESPACE;
 //
 // -----------------------------------------------------------------------------
 H5AngVolumeReader::H5AngVolumeReader() :
-    H5EbsdVolumeReader()
+  H5EbsdVolumeReader()
 {
   // Init all the arrays to NULL
   m_Phi1 = NULL;
@@ -79,12 +80,12 @@ H5AngVolumeReader::~H5AngVolumeReader()
 
 #define H5ANGREADER_ALLOCATE_ARRAY(name, type)\
   if (readAllArrays == true || arrayNames.find(Ebsd::Ang::name) != arrayNames.end()) {\
-  type* _##name = allocateArray<type>(numElements);\
-  if (NULL != _##name) {\
-  ::memset(_##name, 0, numBytes);\
-  }\
-  set##name##Pointer(_##name);\
- }
+    type* _##name = allocateArray<type>(numElements);\
+    if (NULL != _##name) {\
+      ::memset(_##name, 0, numBytes);\
+    }\
+    set##name##Pointer(_##name);\
+  }
 
 // -----------------------------------------------------------------------------
 //
@@ -94,7 +95,7 @@ void H5AngVolumeReader::initPointers(size_t numElements)
   setNumberOfElements(numElements);
   size_t numBytes = numElements * sizeof(float);
   bool readAllArrays = getReadAllArrays();
-  std::set<std::string> arrayNames = getArraysToRead();
+  QSet<QString> arrayNames = getArraysToRead();
 
   H5ANGREADER_ALLOCATE_ARRAY(Phi1, float)
   H5ANGREADER_ALLOCATE_ARRAY(Phi, float)
@@ -128,36 +129,36 @@ void H5AngVolumeReader::deletePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void* H5AngVolumeReader::getPointerByName(const std::string &fieldName)
+void* H5AngVolumeReader::getPointerByName(const QString& featureName)
 {
-  if (fieldName.compare(Ebsd::Ang::Phi1) == 0) { return static_cast<void*>(m_Phi1);}
-  if (fieldName.compare(Ebsd::Ang::Phi) == 0) { return static_cast<void*>(m_Phi);}
-  if (fieldName.compare(Ebsd::Ang::Phi2) == 0) { return static_cast<void*>(m_Phi2);}
-  if (fieldName.compare(Ebsd::Ang::ImageQuality) == 0) { return static_cast<void*>(m_Iq);}
-  if (fieldName.compare(Ebsd::Ang::ConfidenceIndex) == 0) { return static_cast<void*>(m_Ci);}
-  if (fieldName.compare(Ebsd::Ang::PhaseData) == 0) { return static_cast<void*>(m_PhaseData);}
-  if (fieldName.compare(Ebsd::Ang::XPosition) == 0) { return static_cast<void*>(m_X);}
-  if (fieldName.compare(Ebsd::Ang::YPosition) == 0) { return static_cast<void*>(m_Y);}
-  if (fieldName.compare(Ebsd::Ang::SEMSignal) == 0) { return static_cast<void*>(m_SEMSignal);}
-  if (fieldName.compare(Ebsd::Ang::Fit) == 0) { return static_cast<void*>(m_Fit);}
+  if (featureName.compare(Ebsd::Ang::Phi1) == 0) { return static_cast<void*>(m_Phi1);}
+  if (featureName.compare(Ebsd::Ang::Phi) == 0) { return static_cast<void*>(m_Phi);}
+  if (featureName.compare(Ebsd::Ang::Phi2) == 0) { return static_cast<void*>(m_Phi2);}
+  if (featureName.compare(Ebsd::Ang::ImageQuality) == 0) { return static_cast<void*>(m_Iq);}
+  if (featureName.compare(Ebsd::Ang::ConfidenceIndex) == 0) { return static_cast<void*>(m_Ci);}
+  if (featureName.compare(Ebsd::Ang::PhaseData) == 0) { return static_cast<void*>(m_PhaseData);}
+  if (featureName.compare(Ebsd::Ang::XPosition) == 0) { return static_cast<void*>(m_X);}
+  if (featureName.compare(Ebsd::Ang::YPosition) == 0) { return static_cast<void*>(m_Y);}
+  if (featureName.compare(Ebsd::Ang::SEMSignal) == 0) { return static_cast<void*>(m_SEMSignal);}
+  if (featureName.compare(Ebsd::Ang::Fit) == 0) { return static_cast<void*>(m_Fit);}
   return NULL;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::NumType H5AngVolumeReader::getPointerType(const std::string &fieldName)
+Ebsd::NumType H5AngVolumeReader::getPointerType(const QString& featureName)
 {
-  if (fieldName.compare(Ebsd::Ang::Phi1) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ang::Phi) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ang::Phi2) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ang::ImageQuality) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ang::ConfidenceIndex) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ang::PhaseData) == 0) { return Ebsd::Int32;}
-  if (fieldName.compare(Ebsd::Ang::XPosition) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ang::YPosition) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ang::SEMSignal) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ang::Fit) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ang::Phi1) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ang::Phi) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ang::Phi2) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ang::ImageQuality) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ang::ConfidenceIndex) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ang::PhaseData) == 0) { return Ebsd::Int32;}
+  if (featureName.compare(Ebsd::Ang::XPosition) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ang::YPosition) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ang::SEMSignal) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ang::Fit) == 0) { return Ebsd::Float;}
   return Ebsd::UnknownNumType;
 }
 
@@ -165,15 +166,15 @@ Ebsd::NumType H5AngVolumeReader::getPointerType(const std::string &fieldName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<AngPhase::Pointer> H5AngVolumeReader::getPhases()
+QVector<AngPhase::Pointer> H5AngVolumeReader::getPhases()
 {
   m_Phases.clear();
 
   // Get the first valid index of a z slice
-  std::string index = StringUtils::numToString(getZStart());
+  QString index = QString::number(getZStart());
 
   // Open the hdf5 file and read the data
-  hid_t fileId = H5Utilities::openFile(getFileName(), true);
+  hid_t fileId = QH5Utilities::openFile(getFileName(), true);
   if(fileId < 0)
   {
     setErrorMessage("Error: Could not open .h5ebsd file for reading.");
@@ -182,7 +183,7 @@ std::vector<AngPhase::Pointer> H5AngVolumeReader::getPhases()
   }
   herr_t err = 0;
 
-  hid_t gid = H5Gopen(fileId, index.c_str(), H5P_DEFAULT);
+  hid_t gid = H5Gopen(fileId, index.toLatin1().data(), H5P_DEFAULT);
   H5AngReader::Pointer reader = H5AngReader::New();
   reader->setHDF5Path(index);
   err = reader->readHeader(gid);
@@ -191,12 +192,12 @@ std::vector<AngPhase::Pointer> H5AngVolumeReader::getPhases()
     setErrorMessage(reader->getErrorMessage());
     setErrorCode(reader->getErrorCode());
     err = H5Gclose(gid);
-    err = H5Utilities::closeFile(fileId);
+    err = QH5Utilities::closeFile(fileId);
     return m_Phases;
   }
   m_Phases = reader->getPhases();
   err = H5Gclose(gid);
-  err = H5Utilities::closeFile(fileId);
+  err = QH5Utilities::closeFile(fileId);
   return m_Phases;
 }
 
@@ -208,7 +209,7 @@ std::vector<AngPhase::Pointer> H5AngVolumeReader::getPhases()
 int H5AngVolumeReader::loadData(int64_t xpoints,
                                 int64_t ypoints,
                                 int64_t zpoints,
-                                Ebsd::RefFrameZDir ZDir )
+                                uint32_t ZDir )
 {
   int index = 0;
   int err = -1;
@@ -216,24 +217,24 @@ int H5AngVolumeReader::loadData(int64_t xpoints,
   initPointers(xpoints * ypoints * zpoints);
 
 
-  int readerIndex;
-  int xpointsslice;
-  int ypointsslice;
-  int xpointstemp;
-  int ypointstemp;
-  int xstop;
-  int ystop;
+  int readerIndex = 0;
+  int xpointsslice = 0;
+  int ypointsslice = 0;
+  int xpointstemp = 0;
+  int ypointstemp = 0;
+  int xstop = 0;
+  int ystop = 0;
   int zval = 0;
 
-  int xstartspot;
-  int ystartspot;
-
+  int xstartspot = 0;
+  int ystartspot = 0;
+  int numPhases = getNumPhases();
   err = readVolumeInfo();
   for (int slice = 0; slice < zpoints; ++slice)
   {
     H5AngReader::Pointer reader = H5AngReader::New();
     reader->setFileName(getFileName());
-    reader->setHDF5Path(StringUtils::numToString(slice + getSliceStart()));
+    reader->setHDF5Path(QString::number(slice + getSliceStart()));
     reader->setUserZDir(getStackingOrder());
     reader->setSampleTransformationAngle(getSampleTransformationAngle());
     reader->setSampleTransformationAxis(getSampleTransformationAxis());
@@ -245,13 +246,14 @@ int H5AngVolumeReader::loadData(int64_t xpoints,
     if(err < 0)
     {
       setErrorCode(reader->getErrorCode());
-      setErrorMessage(getErrorMessage());
+      setErrorMessage(reader->getErrorMessage());
       return getErrorCode();
     }
     readerIndex = 0;
     xpointsslice = reader->getNumEvenCols();
     ypointsslice = reader->getNumRows();
     float* euler1Ptr = reader->getPhi1Pointer();
+    if (NULL == euler1Ptr) { setErrorCode(-99090); setErrorMessage("Euler1 Pointer was NULL from Reader"); return getErrorCode(); }
     float* euler2Ptr = reader->getPhiPointer();
     float* euler3Ptr = reader->getPhi2Pointer();
     float* xPtr = reader->getXPositionPointer();
@@ -270,12 +272,12 @@ int H5AngVolumeReader::loadData(int64_t xpoints,
     ystop = ypointsslice;
 
     // If no stacking order preference was passed, read it from the file and use that value
-    if(ZDir == Ebsd::UnknownRefFrameZDirection)
+    if(ZDir == Ebsd::RefFrameZDir::UnknownRefFrameZDirection)
     {
       ZDir = getStackingOrder();
     }
-	if (ZDir == Ebsd::LowtoHigh) { zval = slice; }
-	else if (ZDir == Ebsd::HightoLow) { zval = static_cast<int>((zpoints - 1) - slice); }
+    if(ZDir == Ebsd::RefFrameZDir::LowtoHigh) { zval = slice; }
+    if(ZDir == Ebsd::RefFrameZDir::HightoLow) { zval = static_cast<int>( (zpoints - 1) - slice ); }
 
     // Copy the data from the current storage into the new memory Location
     for (int j = 0; j < ystop; j++)
@@ -301,7 +303,7 @@ int H5AngVolumeReader::loadData(int64_t xpoints,
          * phase. The next if statement converts all zeros to ones if there is a single
          * phase in the OIM data.
          */
-        if (NULL != phasePtr && m_PhaseData[index] < 1)
+        if (numPhases == 1 && NULL != phasePtr && m_PhaseData[index] < 1)
         {
           m_PhaseData[index] = 1;
         }

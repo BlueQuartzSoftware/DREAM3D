@@ -1,42 +1,48 @@
-/* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
- //
- //  This code was written under United States Air Force Contract number
- //                           FA8650-07-D-5800
- //
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+//
+//  This code was written under United States Air Force Contract number
+//                           FA8650-07-D-5800
+//
+/* ============================================================================
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 
 #ifndef _StructArray_H_
 #define _StructArray_H_
 
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -50,6 +56,7 @@ class StructArray : public IDataArray
   public:
     DREAM3D_SHARED_POINTERS(StructArray<T> )
     DREAM3D_TYPE_MACRO_SUPER(StructArray<T>, IDataArray)
+    DREAM3D_CLASS_VERSION(2)
 
     /**
      * @brief Static constructor
@@ -57,33 +64,49 @@ class StructArray : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of StructArrayTemplate<T>
      */
-    static Pointer CreateArray(size_t numElements, const std::string &name)
+    static Pointer CreateArray(size_t numElements, const QString& name, bool allocate = true)
     {
-      if (name.empty() == true)
+      if (name.isEmpty() == true)
       {
         return NullPointer();
       }
       StructArray<T>* d = new StructArray<T> (numElements, true);
-      if (d->Allocate() < 0)
-      { // Could not allocate enough memory, reset the pointer to null and return
-        delete d;
-        return StructArray<T>::NullPointer();
+      if(allocate)
+      {
+        if (d->Allocate() < 0)
+        {
+          // Could not allocate enough memory, reset the pointer to null and return
+          delete d;
+          return StructArray<T>::NullPointer();
+        }
       }
-      d->SetName(name);
+      d->setName(name);
       Pointer ptr(d);
       return ptr;
     }
 
     /**
-     * @brief Static Method to create a DataArray from a std::vector through a deep copy of the data
+     * @brief Static Method to create a DataArray from a QVector through a deep copy of the data
      * contained in the vector. The number of components will be set to 1.
      * @param vec The vector to copy the data from
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const std::string &name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name, bool allocate = true)
     {
-      IDataArray::Pointer p = StructArray<T>::CreateArray(numElements, name);
+      IDataArray::Pointer p = StructArray<T>::CreateArray(numElements, name, allocate);
+      return p;
+    }
+
+    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name, bool allocate = true)
+    {
+      IDataArray::Pointer p = StructArray<T>::CreateArray(numElements, name, allocate);
+      return p;
+    }
+
+    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<size_t> dims, const QString& name, bool allocate = true)
+    {
+      IDataArray::Pointer p = StructArray<T>::CreateArray(numElements, name, allocate);
       return p;
     }
 
@@ -92,7 +115,7 @@ class StructArray : public IDataArray
      */
     virtual ~StructArray()
     {
-      //std::cout << "~StructArrayTemplate '" << m_Name << "'" << std::endl;
+      //qDebug() << "~StructArrayTemplate '" << m_Name << "'" ;
       if ((NULL != this->Array) && (true == this->_ownsData))
       {
         _deallocate();
@@ -114,7 +137,7 @@ class StructArray : public IDataArray
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(std::string &xdmfTypeName, int &precision)
+    void getXdmfTypeAndSize(QString& xdmfTypeName, int& precision)
     {
       xdmfTypeName = getNameOfClass();
       precision = 0;
@@ -124,17 +147,17 @@ class StructArray : public IDataArray
      * @brief getTypeAsString
      * @return
      */
-    virtual std::string getTypeAsString(){ return "struct"; }
+    virtual QString getTypeAsString() { return "struct"; }
 
-        /**
+    /**
     * @brief Returns the HDF Type for a given primitive value.
-     * @param value A value to use. Can be anything. Just used to get the type info
-     * from
-     * @return The HDF5 native type for the value
-     */
-    virtual std::string getFullNameOfClass()
+    * @param value A value to use. Can be anything. Just used to get the type info
+    * from
+    * @return The HDF5 native type for the value
+    */
+    virtual QString getFullNameOfClass()
     {
-      std::string theType = getTypeAsString();
+      QString theType = getTypeAsString();
       theType = "StructArray<" + theType + ">";
       return theType;
     }
@@ -144,7 +167,7 @@ class StructArray : public IDataArray
      * @brief Gives this array a human readable name
      * @param name The name of this array
      */
-    void SetName(const std::string &name)
+    void setName(const QString& name)
     {
       m_Name = name;
     }
@@ -153,7 +176,7 @@ class StructArray : public IDataArray
      * @brief Returns the human readable name of this array
      * @return
      */
-    std::string GetName()
+    QString getName()
     {
       return m_Name;
     }
@@ -205,7 +228,7 @@ class StructArray : public IDataArray
 #endif
       if (!this->Array)
       {
-        std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
+        qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " ;
         return -1;
       }
       this->m_IsAllocated = true;
@@ -241,9 +264,9 @@ class StructArray : public IDataArray
     /**
      * @brief Sets all the values to value.
      */
-    void initializeWithValues(T value)
+    void initializeWithValue(T value, size_t offset = 0)
     {
-      for (size_t i = 0; i < this->Size; i++)
+      for (size_t i = offset; i < this->Size; i++)
       {
         this->Array[i] = value;
       }
@@ -257,7 +280,7 @@ class StructArray : public IDataArray
      * @param idxs The indices to remove
      * @return error code.
      */
-    virtual int EraseTuples(std::vector<size_t> &idxs)
+    virtual int eraseTuples(QVector<size_t>& idxs)
     {
 
       int err = 0;
@@ -268,36 +291,33 @@ class StructArray : public IDataArray
         return 0;
       }
 
-      if (idxs.size() >= GetNumberOfTuples() )
+      size_t idxs_size = static_cast<size_t>(idxs.size());
+      if (idxs_size >= getNumberOfTuples() )
       {
-        Resize(0);
+        resize(0);
         return 0;
       }
 
       // Sanity Check the Indices in the vector to make sure we are not trying to remove any indices that are
       // off the end of the array and return an error code.
-      for(std::vector<size_t>::size_type i = 0; i < idxs.size(); ++i)
+      for(QVector<size_t>::size_type i = 0; i < idxs.size(); ++i)
       {
         if (idxs[i] > this->MaxId) { return -100; }
       }
 
       // Calculate the new size of the array to copy into
-      size_t newSize = (GetNumberOfTuples() - idxs.size());
+      size_t newSize = (getNumberOfTuples() - idxs.size());
       T* currentSrc = NULL;
 
       // Create a new Array to copy into
       T* newArray = (T*)malloc(newSize * sizeof(T));
-    if (NULL == newArray)
-    {
-      return -1000;
-    }
       // Splat AB across the array so we know if we are copying the values or not
       ::memset(newArray, 0xAB, newSize * sizeof(T));
 
       // Keep the current Destination Pointer
       T* currentDest = newArray;
       size_t j = 0;
-      size_t k = 0;
+      int k = 0;
       // Find the first chunk to copy by walking the idxs array until we get an
       // index that is NOT a continuous increment from the start
       for (k = 0; k < idxs.size(); ++k)
@@ -315,7 +335,7 @@ class StructArray : public IDataArray
       if(k == idxs.size()) // Only front elements are being dropped
       {
         currentSrc = Array + (j);
-        ::memcpy(currentDest, currentSrc, (GetNumberOfTuples() - idxs.size()) * sizeof(T));
+        ::memcpy(currentDest, currentSrc, (getNumberOfTuples() - idxs.size()) * sizeof(T));
         _deallocate(); // We are done copying - delete the current Array
         this->Size = newSize;
         this->Array = newArray;
@@ -324,14 +344,14 @@ class StructArray : public IDataArray
         return 0;
       }
 
-      std::vector<size_t> srcIdx(idxs.size() + 1);
-      std::vector<size_t> destIdx(idxs.size() + 1);
-      std::vector<size_t> copyElements(idxs.size() + 1);
+      QVector<size_t> srcIdx(idxs.size() + 1);
+      QVector<size_t> destIdx(idxs.size() + 1);
+      QVector<size_t> copyElements(idxs.size() + 1);
       srcIdx[0] = 0;
       destIdx[0] = 0;
       copyElements[0] = (idxs[0] - 0);
 
-      for (size_t i = 1; i < srcIdx.size(); ++i)
+      for (int i = 1; i < srcIdx.size(); ++i)
       {
         srcIdx[i] = (idxs[i - 1] + 1);
 
@@ -341,13 +361,13 @@ class StructArray : public IDataArray
         }
         else
         {
-          copyElements[i] = (GetNumberOfTuples() - idxs[i - 1] - 1);
+          copyElements[i] = (getNumberOfTuples() - idxs[i - 1] - 1);
         }
         destIdx[i] = copyElements[i - 1] + destIdx[i - 1];
       }
 
       // Copy the data
-      for (size_t i = 0; i < srcIdx.size(); ++i)
+      for (int i = 0; i < srcIdx.size(); ++i)
       {
         currentDest = newArray + destIdx[i];
         currentSrc = Array + srcIdx[i];
@@ -375,7 +395,7 @@ class StructArray : public IDataArray
      * @param newPos
      * @return
      */
-    virtual int CopyTuple(size_t currentPos, size_t newPos)
+    virtual int copyTuple(size_t currentPos, size_t newPos)
     {
       size_t max =  ((this->MaxId + 1));
       if (currentPos >= max
@@ -389,6 +409,27 @@ class StructArray : public IDataArray
       return 0;
     }
 
+    virtual IDataArray::Pointer reorderCopy(QVector<size_t> newOrderMap)
+    {
+      if(newOrderMap.size() != static_cast<QVector<size_t>::size_type>(getNumberOfTuples()))
+      {
+        return IDataArray::NullPointer();
+      }
+      IDataArray::Pointer daCopy = createNewArray(getNumberOfTuples(), getComponentDimensions(), getName(), m_IsAllocated);
+      if(m_IsAllocated == true)
+      {
+        daCopy->initializeWithZeros();
+        size_t chunkSize = getNumberOfComponents() * sizeof(T);
+        for(size_t i = 0; i < getNumberOfTuples(); i++)
+        {
+          T* src = getPointer(i * getNumberOfComponents());
+          void* dest = daCopy->getVoidPointer(newOrderMap[i] * getNumberOfComponents());
+          ::memcpy(dest, src, chunkSize);
+        }
+      }
+      return daCopy;
+    }
+
     /**
      * @brief Returns the number of bytes that make up the data type.
      * 1 = char
@@ -396,7 +437,7 @@ class StructArray : public IDataArray
      * 4 = 32 bit integer/Float
      * 8 = 64 bit integer/Double
      */
-    virtual size_t GetTypeSize()
+    virtual size_t getTypeSize()
     {
       return sizeof(T);
     }
@@ -404,37 +445,57 @@ class StructArray : public IDataArray
     /**
      * @brief Returns the number of elements in the internal array.
      */
-    virtual size_t GetNumberOfTuples()
+    virtual size_t getNumberOfTuples()
     {
       if (Size == 0) { return 0; }
       return (this->MaxId + 1);
     }
 
     /**
-     * @brief GetSize
+     * @brief getSize
      * @return
      */
-    virtual size_t GetSize()
+    virtual size_t getSize()
     {
       return Size;
     }
 
+    /**
+     * @brief getNumberOfComponents
+     * @return
+     */
+    int getNumberOfComponents()
+    {
+      return 1;
+    }
+
+    /**
+     * @brief getNumberOfComponents
+     * @return
+     */
+    QVector<size_t> getComponentDimensions()
+    {
+      QVector<size_t> dims(1, 1);
+      return dims;
+    }
+
     // Description:
-    // Set/Get the dimension (n) of the components. Must be >= 1. Make sure that
+    // Set/Get the dimension (n) of the rank. Must be >= 1. Make sure that
     // this is set before allocation.
-    void SetNumberOfComponents(int nc)
+    void SetRank(int rnk)
     {
 
     }
 
     /**
-     * @brief GetNumberOfComponents
+     * @brief getRank
      * @return
      */
-    int GetNumberOfComponents()
+    int getRank()
     {
       return 1;
     }
+
 
     /**
      * @brief Returns a void pointer pointing to the index of the array. NULL
@@ -443,7 +504,7 @@ class StructArray : public IDataArray
      * @param i The index to have the returned pointer pointing to.
      * @return Void Pointer. Possibly NULL.
      */
-    virtual void* GetVoidPointer(size_t i)
+    virtual void* getVoidPointer(size_t i)
     {
       if (i >= Size) { return NULL;}
 
@@ -458,7 +519,7 @@ class StructArray : public IDataArray
      * @param i The index to return the pointer to.
      * @return The pointer to the index
      */
-    virtual T* GetPointer(size_t i)
+    virtual T* getPointer(size_t i)
     {
 #ifndef NDEBUG
       if (Size > 0) { BOOST_ASSERT(i < Size);}
@@ -471,7 +532,7 @@ class StructArray : public IDataArray
      * @param i The index of the Tuple
      * @param c The value to splat across all components in the tuple
      */
-    void InitializeTuple(size_t i, double p)
+    void initializeTuple(size_t i, double p)
     {
 #ifndef NDEBUG
       if (Size > 0) { BOOST_ASSERT(i < Size);}
@@ -484,26 +545,27 @@ class StructArray : public IDataArray
       }
     }
 
-
-    virtual IDataArray::Pointer deepCopy()
+    virtual IDataArray::Pointer deepCopy(bool forceNoAllocate = false)
     {
-      IDataArray::Pointer daCopy = createNewArray(GetNumberOfTuples(), GetNumberOfComponents(), GetName());
-      T* src = GetPointer(0);
-      void* dest = daCopy->GetVoidPointer(0);
-      size_t totalBytes = (GetNumberOfTuples()*GetNumberOfComponents()*sizeof(T));
-      ::memcpy(dest, src, totalBytes);
+      IDataArray::Pointer daCopy = createNewArray(getNumberOfTuples(), getComponentDimensions(), getName(), m_IsAllocated);
+      if(m_IsAllocated == true && forceNoAllocate == false)
+      {
+        T* src = getPointer(0);
+        void* dest = daCopy->getVoidPointer(0);
+        size_t totalBytes = (getNumberOfTuples() * getNumberOfComponents() * sizeof(T));
+        ::memcpy(dest, src, totalBytes);
+      }
       return daCopy;
     }
-
 
     /**
      * @brief Reseizes the internal array
      * @param size The new size of the internal array
      * @return 1 on success, 0 on failure
      */
-    virtual int32_t RawResize(size_t size)
+    virtual int32_t resizeTotalElements(size_t size)
     {
-      if (this->ResizeAndExtend(size) || size == 0)
+      if (this->resizeAndExtend(size) || size == 0)
       {
         return 1;
       }
@@ -518,9 +580,9 @@ class StructArray : public IDataArray
      * @param numTuples
      * @return
      */
-    virtual int32_t Resize(size_t numTuples)
+    virtual int32_t resize(size_t numTuples)
     {
-      return RawResize(numTuples );
+      return resizeTotalElements(numTuples );
     }
 
     /**
@@ -529,7 +591,7 @@ class StructArray : public IDataArray
      * @param i
      * @param delimiter
      */
-    virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',')
+    virtual void printTuple(QTextStream& out, size_t i, char delimiter = ',')
     {
       BOOST_ASSERT(false);
       //        for(int j = 0; j < NumberOfComponents; ++j)
@@ -545,7 +607,7 @@ class StructArray : public IDataArray
      * @param i
      * @param j
      */
-    virtual void printComponent(std::ostream &out, size_t i, int j)
+    virtual void printComponent(QTextStream& out, size_t i, int j)
     {
       BOOST_ASSERT(false);
       //        out << Array[i + j];
@@ -557,7 +619,7 @@ class StructArray : public IDataArray
      * @param parentId
      * @return
      */
-    virtual int writeH5Data(hid_t parentId)
+    virtual int writeH5Data(hid_t parentId, QVector<size_t> tDims)
     {
       BOOST_ASSERT(false);
       return -1;
@@ -572,11 +634,54 @@ class StructArray : public IDataArray
      * @param groupPath
      * @return
      */
-    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName,
-                                    const std::string &groupPath, const std::string &labelb)
+    virtual int writeXdmfAttribute(QTextStream& out, int64_t* volDims, const QString& hdfFileName,
+                                   const QString& groupPath, const QString& labelb)
     {
       out << "<!-- Xdmf is not supported for " << getNameOfClass() << " with type " << getTypeAsString() << " --> ";
       return -1;
+    }
+
+    /**
+     * @brief getInfoString
+     * @return Returns a formatted string that contains general infomation about
+     * the instance of the object.
+     */
+    virtual QString getInfoString(DREAM3D::InfoStringFormat format)
+    {
+      QString info;
+      QTextStream ss (&info);
+      if(format == DREAM3D::HtmlFormat)
+      {
+        ss << "<html><head></head>\n";
+        ss << "<body>\n";
+        ss << "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
+        ss << "<tbody>\n";
+        ss << "<tr bgcolor=\"#D3D8E0\"><th colspan=2>Attribute Array Info</th></tr>";
+        ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Name:</th><td>" << getName() << "</td></tr>";
+        ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Type:</th><td>" << getTypeAsString() << "</td></tr>";
+        ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Number of Tuples:</th><td>" << getNumberOfTuples() << "</td></tr>";
+
+//        QString compDimStr = "(";
+//        for(int i = 0; i < m_CompDims.size(); i++)
+//        {
+//          compDimStr = compDimStr + QString::number(m_CompDims[i]);
+//          if(i < m_CompDims.size() - 1) {
+//             compDimStr = compDimStr + QString(", ");
+//          }
+//        }
+//        compDimStr = compDimStr + ")";
+//        ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Component Dimensions:</th><td>" << compDimStr << "</td></tr>";
+//        ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Total Elements:</th><td>" << m_Size << "</td></tr>";
+
+        ss << "</tbody></table>\n";
+        ss << "<br/>";
+        ss << "</body></html>";
+      }
+      else
+      {
+
+      }
+      return info;
     }
 
     /**
@@ -616,7 +721,7 @@ class StructArray : public IDataArray
       _ownsData(ownsData),
       m_IsAllocated(false)
     {
-      MaxId = (Size > 0) ? Size - 1: Size;
+      MaxId = (Size > 0) ? Size - 1 : Size;
       //  MUD_FLAP_0 = MUD_FLAP_1 = MUD_FLAP_2 = MUD_FLAP_3 = MUD_FLAP_4 = MUD_FLAP_5 = 0xABABABABABABABABul;
     }
 
@@ -663,7 +768,7 @@ class StructArray : public IDataArray
      * @param size
      * @return Pointer to the internal array
      */
-    virtual T* ResizeAndExtend(size_t size)
+    virtual T* resizeAndExtend(size_t size)
     {
       T* newArray;
       size_t newSize;
@@ -690,9 +795,9 @@ class StructArray : public IDataArray
       // OS X's realloc does not free memory if the new block is smaller.  This
       // is a very serious problem and causes huge amount of memory to be
       // wasted. Do not use realloc on the Mac.
-      bool dontUseRealloc=false;
+      bool dontUseRealloc = false;
 #if defined __APPLE__
-      dontUseRealloc=true;
+      dontUseRealloc = true;
 #endif
 
       // Allocate a new array if we DO NOT own the current array
@@ -703,7 +808,7 @@ class StructArray : public IDataArray
         newArray = (T*)malloc(newSize * sizeof(T));
         if (!newArray)
         {
-          std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
+          qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " ;
           return 0;
         }
 
@@ -716,7 +821,7 @@ class StructArray : public IDataArray
         newArray = (T*)realloc(this->Array, newSize * sizeof(T));
         if (!newArray)
         {
-          std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
+          qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " ;
           return 0;
         }
       }
@@ -725,12 +830,13 @@ class StructArray : public IDataArray
         newArray = (T*)malloc(newSize * sizeof(T));
         if (!newArray)
         {
-          std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
+          qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " ;
           return 0;
         }
 
         // Copy the data from the old array.
-        if (this->Array != NULL) {
+        if (this->Array != NULL)
+        {
           memcpy(newArray, this->Array, (newSize < this->Size ? newSize : this->Size) * sizeof(T));
         }
         // Free the old array
@@ -743,7 +849,7 @@ class StructArray : public IDataArray
       // This object has now allocated its memory and owns it.
       this->_ownsData = true;
 
-      this->MaxId = newSize-1;
+      this->MaxId = newSize - 1;
       this->m_IsAllocated = true;
 
       return this->Array;
@@ -762,7 +868,7 @@ class StructArray : public IDataArray
 
     bool m_IsAllocated;
     //   unsigned long long int MUD_FLAP_3;
-    std::string m_Name;
+    QString m_Name;
     //  unsigned long long int MUD_FLAP_5;
 
     StructArray(const StructArray&); //Not Implemented
@@ -773,3 +879,4 @@ class StructArray : public IDataArray
 
 
 #endif /* _StructArray_H_ */
+

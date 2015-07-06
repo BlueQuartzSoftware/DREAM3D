@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>658</width>
-    <height>627</height>
+    <width>1104</width>
+    <height>659</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -17,177 +17,515 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>DREAM.3D</string>
+   <string>[*]ActiveDocument.txt</string>
   </property>
-  <property name="unifiedTitleAndToolBarOnMac">
-   <bool>false</bool>
+  <property name="styleSheet">
+   <string notr="true"> QStatusBar {
+     background: rgb(80, 80, 80);
+     color: white;
+ }
+
+ QStatusBar QToolButton {
+  font: bold 12pt &quot;Arial&quot;;
+     border: 1px solid #8f8f91;
+     border-radius: 3px;
+  color: rgb(255, 255, 255);
+  background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(103, 103, 103, 255), stop:1 rgba(158, 158, 158, 255));
+     min-width: 80px;
+  min-height: 20px;
+ }
+
+ QStatusBar QToolButton:checked {
+  color: rgb(0, 0, 0);
+  background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(210, 210, 210, 255), stop:1 rgba(225, 225, 225, 255));
+ }
+sss</string>
   </property>
-  <widget class="QWidget" name="centerWidget">
-   <layout class="QVBoxLayout" name="verticalLayout_2">
+  <widget class="QWidget" name="centralwidget">
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>16777215</height>
+    </size>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
     <property name="spacing">
      <number>0</number>
     </property>
-    <property name="margin">
-     <number>0</number>
-    </property>
+    <item row="0" column="0">
+     <widget class="DREAM3DSplitter" name="splitter">
+      <property name="styleSheet">
+       <string notr="true">QSplitter::handle {
+    
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 0, 0, 255), stop:0.166 rgba(255, 255, 0, 255), stop:0.333 rgba(0, 255, 0, 255), stop:0.5 rgba(0, 255, 255, 255), stop:0.666 rgba(0, 0, 255, 255), stop:0.833 rgba(255, 0, 255, 255), stop:1 rgba(255, 0, 0, 255));
+}</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="lineWidth">
+       <number>4</number>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="opaqueResize">
+       <bool>false</bool>
+      </property>
+      <property name="handleWidth">
+       <number>5</number>
+      </property>
+      <widget class="QWidget" name="verticalLayoutWidget">
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <property name="spacing">
+         <number>1</number>
+        </property>
+        <property name="sizeConstraint">
+         <enum>QLayout::SetDefaultConstraint</enum>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QScrollArea" name="pipelineViewScrollArea">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="mouseTracking">
+           <bool>false</bool>
+          </property>
+          <property name="focusPolicy">
+           <enum>Qt::StrongFocus</enum>
+          </property>
+          <property name="acceptDrops">
+           <bool>true</bool>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::Panel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <property name="lineWidth">
+           <number>1</number>
+          </property>
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="PipelineViewWidget" name="pipelineViewWidget">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>1032</width>
+             <height>578</height>
+            </rect>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>250</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="contextMenuPolicy">
+            <enum>Qt::CustomContextMenu</enum>
+           </property>
+           <property name="acceptDrops">
+            <bool>true</bool>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">PipelineViewWidget
+  {
+  background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(233, 236, 241, 255), stop:1.0 rgba(211, 216, 224, 255));
+  }</string>
+           </property>
+          </widget>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <property name="spacing">
+           <number>5</number>
+          </property>
+          <property name="leftMargin">
+           <number>4</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QProgressBar" name="m_ProgressBar">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="value">
+             <number>0</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="startPipelineBtn">
+            <property name="text">
+             <string>Go</string>
+            </property>
+            <property name="default">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QFrame" name="fiwFrame">
+       <property name="styleSheet">
+        <string notr="true">PipelineViewWidget
+{
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(233, 236, 241, 255), stop:1.0 rgba(211, 216, 224, 255));
+}</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Plain</enum>
+       </property>
+       <layout class="QVBoxLayout" name="fiwFrameVLayout">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+       </layout>
+      </widget>
+     </widget>
+    </item>
    </layout>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>658</width>
-     <height>26</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuFile">
-    <property name="title">
-     <string>File</string>
-    </property>
-    <widget class="QMenu" name="menu_RecentFiles">
-     <property name="title">
-      <string>Recent Files</string>
-     </property>
-     <addaction name="actionSomething"/>
-    </widget>
-    <addaction name="actionOpen_Pipeline_2"/>
-    <addaction name="actionSave_Pipeline_2"/>
-    <addaction name="separator"/>
-    <addaction name="menu_RecentFiles"/>
-    <addaction name="separator"/>
-    <addaction name="actionExit"/>
-   </widget>
-   <widget class="QMenu" name="menuPipeline">
-    <property name="title">
-     <string>Pipeline</string>
-    </property>
-   </widget>
-   <widget class="QMenu" name="menuHelp">
-    <property name="title">
-     <string>Help</string>
-    </property>
-    <addaction name="separator"/>
-    <addaction name="actionAbout"/>
-    <addaction name="actionLicense_Information"/>
-    <addaction name="separator"/>
-    <addaction name="actionShow_User_Manual"/>
-    <addaction name="separator"/>
-    <addaction name="actionCheck_For_Updates"/>
-   </widget>
-   <addaction name="menuFile"/>
-   <addaction name="menuPipeline"/>
-   <addaction name="menuHelp"/>
-  </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <widget class="BookmarksDockWidget" name="bookmarksDockWidget">
+   <property name="windowTitle">
+    <string>[*]Bookmarks</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+  </widget>
+  <widget class="IssuesDockWidget" name="issuesDockWidget">
+   <property name="windowTitle">
+    <string>[*]Pipeline Issues</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+  </widget>
+  <widget class="PrebuiltPipelinesDockWidget" name="prebuiltPipelinesDockWidget">
+   <property name="windowTitle">
+    <string>[*]Prebuilt Pipelines</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+  </widget>
+  <widget class="FilterLibraryDockWidget" name="filterLibraryDockWidget">
+   <property name="windowTitle">
+    <string>[*]Filter Library</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+  </widget>
+  <widget class="FilterListDockWidget" name="filterListDockWidget">
+   <property name="windowTitle">
+    <string>[*]Filter List</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+  </widget>
+  <action name="actionShow_Filter_Library">
+   <property name="text">
+    <string>Filter Library</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>false</bool>
+   </property>
+  </action>
+  <action name="actionShow_Prebuilt_Pipelines">
+   <property name="text">
+    <string>Prebuilt Pipelines</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>false</bool>
+   </property>
+  </action>
   <action name="actionOpen">
    <property name="text">
-    <string>Open</string>
+    <string>Open...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
    </property>
   </action>
-  <action name="actionClose">
+  <action name="actionNew">
    <property name="text">
-    <string>Close</string>
+    <string>New...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
    </property>
   </action>
-  <action name="actionExit">
+  <action name="actionSavePipelineAs">
    <property name="text">
-    <string>Exit</string>
+    <string>Save Pipeline As...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
    </property>
   </action>
-  <action name="actionSomething">
+  <action name="actionShow_Favorites">
    <property name="text">
-    <string>Something</string>
+    <string>Favorites</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>false</bool>
    </property>
   </action>
-  <action name="action_IconText">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
+  <action name="actionClearPipeline">
    <property name="text">
-    <string>Icon and Text</string>
+    <string>Clear</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+Backspace</string>
    </property>
   </action>
-  <action name="action_IconOnly">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
+  <action name="actionClearRecentFiles">
    <property name="text">
-    <string>Icon Only</string>
+    <string>Clear Recent Files</string>
    </property>
   </action>
-  <action name="action_TextOnly">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
+  <action name="actionShow_Issues">
    <property name="text">
-    <string>Text Only</string>
+    <string>Issues</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>false</bool>
    </property>
   </action>
-  <action name="action_ShowPluginToolbar">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
+  <action name="actionShow_Filter_List">
    <property name="text">
-    <string>Show Toolbar</string>
+    <string>Filter List</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>false</bool>
    </property>
   </action>
-  <action name="actionDREAM_3D_Help">
+  <action name="actionShowIndex">
    <property name="text">
-    <string>DREAM.3D Help</string>
+    <string>DREAM3D Help</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+H</string>
    </property>
   </action>
   <action name="actionLicense_Information">
    <property name="text">
-    <string>License Information</string>
+    <string>Show License</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
    </property>
   </action>
-  <action name="actionAbout">
+  <action name="actionAbout_DREAM3D">
    <property name="text">
-    <string>About</string>
-   </property>
-  </action>
-  <action name="actionSave">
-   <property name="text">
-    <string>Save</string>
-   </property>
-  </action>
-  <action name="actionOpen_Pipeline">
-   <property name="text">
-    <string>Open Pipeline</string>
-   </property>
-  </action>
-  <action name="actionOpen_Pipeline_2">
-   <property name="text">
-    <string>Open Pipeline</string>
-   </property>
-  </action>
-  <action name="actionSave_Pipeline_2">
-   <property name="text">
-    <string>Save Pipeline</string>
-   </property>
-  </action>
-  <action name="action_CheckForUpdates">
-   <property name="text">
-    <string>Check for Updates</string>
-   </property>
-  </action>
-  <action name="actionShow_User_Manual">
-   <property name="text">
-    <string>Show User Manual</string>
-   </property>
-  </action>
-  <action name="action_OpenStatsGenerator">
-   <property name="text">
-    <string>Open StatsGenerator</string>
+    <string>About DREAM3D</string>
    </property>
   </action>
   <action name="actionCheck_For_Updates">
    <property name="text">
     <string>Check For Updates</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+U</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit DREAM3D</string>
+   </property>
+  </action>
+  <action name="actionSaveAsNewFavorite">
+   <property name="text">
+    <string>Save As New Favorite</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
+   </property>
+  </action>
+  <action name="actionCopyCurrentFilter">
+   <property name="text">
+    <string>Copy Current Filter</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="actionAppendToExistingFavorite">
+   <property name="text">
+    <string>Append To Existing Favorite</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
+   </property>
+  </action>
+  <action name="actionUpdateFavorite">
+   <property name="text">
+    <string>Update Favorite</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionPasteCopiedFilter">
+   <property name="text">
+    <string>Paste Copied Filter</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+V</string>
+   </property>
+  </action>
+  <action name="actionRemoveCurrentFilter">
+   <property name="text">
+    <string>Remove Current Filter</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Backspace</string>
+   </property>
+  </action>
+  <action name="actionPlugin_Information">
+   <property name="text">
+    <string>Plugin Information</string>
+   </property>
+   <property name="iconText">
+    <string>Plugin Information</string>
+   </property>
+   <property name="toolTip">
+    <string>Plugin Information</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionSaveAs">
+   <property name="text">
+    <string>Save As...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
+   </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PipelineViewWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">PipelineViewWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PrebuiltPipelinesDockWidget</class>
+   <extends>QDockWidget</extends>
+   <header location="global">PrebuiltPipelinesDockWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>FilterLibraryDockWidget</class>
+   <extends>QDockWidget</extends>
+   <header location="global">FilterLibraryDockWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>FilterListDockWidget</class>
+   <extends>QDockWidget</extends>
+   <header location="global">FilterListDockWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>IssuesDockWidget</class>
+   <extends>QDockWidget</extends>
+   <header location="global">IssuesDockWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>DREAM3DSplitter</class>
+   <extends>QSplitter</extends>
+   <header location="global">QtSupportLib/DREAM3DSplitter.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>BookmarksDockWidget</class>
+   <extends>QDockWidget</extends>
+   <header location="global">BookmarksDockWidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

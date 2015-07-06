@@ -1,7 +1,6 @@
 #--////////////////////////////////////////////////////////////////////////////
 #--
-#--  Copyright (c) 2009, Michael A. Jackson. BlueQuartz Software
-#--  Copyright (c) 2009, Michael Groeber, US Air Force Research Laboratory
+#--  Copyright (c) 2015, BlueQuartz Software
 #--  All rights reserved.
 #--  BSD License: http://www.opensource.org/licenses/bsd-license.html
 #--
@@ -11,297 +10,120 @@
 
 project(DREAM3DTest)
 
-set(DREAM3D_DATA_DIR ""  CACHE PATH "The directory where to find test data files")
+include_directories(${DREAM3DTest_SOURCE_DIR})
 
-# --------------------------------------------------------------------------
-macro (ConvertPathToHeaderCompatible INPUT)
-    if(WIN32)
-      STRING(REPLACE "\\" "\\\\" ${INPUT} ${${INPUT}} )
-      STRING(REPLACE "/" "\\\\" ${INPUT} ${${INPUT}}  )
-    endif()
-endmacro()
+include(${DREAM3DProj_SOURCE_DIR}/Test/DREAM3DTestFunctions.cmake)
 
-include_directories(${DREAM3DTest_BINARY_DIR})
-set(MXA_TEMP_DIR ${DREAM3DProj_BINARY_DIR}/Testing/)
 
-GET_FILENAME_COMPONENT(MXA_TEST_SRC_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
-FILE(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/DataImportTest.xml" DATAIMPORT_TEST_IMPORT_XML_FILE)
-file(TO_NATIVE_PATH "${DREAM3DTest_BINARY_DIR}" DREAM3DTest_BINARY_DIR_NATIVE)
-file(TO_NATIVE_PATH "${DREAM3DProj_BINARY_DIR}" MXA_BINARY_DIR_NATIVE)
-#-- Convert all '\' to '\\' so that they are properly escaped in the header file
-set(DATAIMPORT_TEST_XMLH5TIFF_OUTPUT_FILE "${MXA_TEMP_DIR}DataImportTest_XMLH5Tiff.h5")
-ConvertPathToHeaderCompatible(MXA_TEMP_DIR)
-ConvertPathToHeaderCompatible(DATAIMPORT_TEST_XMLH5TIFF_OUTPUT_FILE)
-ConvertPathToHeaderCompatible(DATAIMPORT_TEST_IMPORT_XML_FILE)
-ConvertPathToHeaderCompatible(DREAM3DTest_BINARY_DIR_NATIVE)
-ConvertPathToHeaderCompatible(MXA_BINARY_DIR_NATIVE)
+set(TEST_TEMP_DIR ${DREAM3DTest_BINARY_DIR}/Temp)
+# Make sure the directory is created during CMake time
+file(MAKE_DIRECTORY ${TEST_TEMP_DIR})
 
-configure_file(${PROJECT_RESOURCES_DIR}/EbsdTestFiles/EbsdTestFileLocation.h.in
-               ${DREAM3DTest_BINARY_DIR}/EbsdTestFileLocation.h @ONLY IMMEDIATE)
+
 configure_file(${DREAM3DTest_SOURCE_DIR}/TestFileLocations.h.in
-               ${DREAM3DTest_BINARY_DIR}/TestFileLocations.h @ONLY IMMEDIATE)
+               ${DREAM3DTest_BINARY_DIR}/DREAM3DTestFileLocations.h @ONLY IMMEDIATE)
 
 include_directories(${DREAM3DTest_BINARY_DIR})
-include_directories(${DREAM3DProj_SOURCE_DIR}/Source/Applications)
-include_directories(${DREAM3DProj_SOURCE_DIR}/Source/Plugins)
-include_directories(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport)
-include_directories(${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgets)
-# --------------------------------------------------------------------------
-#
-# --------------------------------------------------------------------------
-macro(MXA_ADD_TEST testname Exename)
-    if(NOT APPLE)
-        ADD_TEST(${testname} ${Exename})
-    else()
-        if(NOT ${CMAKE_OSX_ARCHITECTURES} STREQUAL "")
-        foreach(arch ${CMAKE_OSX_ARCHITECTURES})
-            ADD_TEST( ${arch}_${testname} ${CMP_OSX_TOOLS_SOURCE_DIR}/UBTest.sh ${arch} ${Exename} )
-        endforeach()
-        else()
-            ADD_TEST(${testname} ${Exename})
-        endif()
-    endif()
-endmacro()
-
-# --------------------------------------------------------------------------
-# FilterPipelineTest
-# --------------------------------------------------------------------------
-add_executable(FilterPipelineTest FilterPipelineTest.cpp )
-target_link_libraries(FilterPipelineTest DREAM3DLib)
-set_target_properties(FilterPipelineTest PROPERTIES FOLDER Test)
-add_test(FilterPipelineTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FilterPipelineTest)
-
-# --------------------------------------------------------------------------
-# ManagedPointerArrayTest
-# --------------------------------------------------------------------------
-add_executable(ManagedPointerArrayTest ManagedPointerArrayTest.cpp )
-target_link_libraries(ManagedPointerArrayTest DREAM3DLib)
-set_target_properties(ManagedPointerArrayTest PROPERTIES FOLDER Test)
-add_test(ManagedPointerArrayTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ManagedPointerArrayTest)
 
 
+AddDREAM3DUnitTest(TESTNAME DataContainerTest SOURCES ${DREAM3DTest_SOURCE_DIR}/DataContainerTest.cpp LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib)
 
-# --------------------------------------------------------------------------
-# MXAFileSystemPathTest
-# --------------------------------------------------------------------------
-add_executable(MXAFileSystemPathTest MXAFileSystemPathTest.cpp )
-target_link_libraries(MXAFileSystemPathTest MXA)
-set_target_properties(MXAFileSystemPathTest PROPERTIES FOLDER Test)
-add_test(MXAFileSystemPathTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/MXAFileSystemPathTest)
+AddDREAM3DUnitTest(TESTNAME StructArrayTest SOURCES ${DREAM3DTest_SOURCE_DIR}/StructArrayTest.cpp LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib)
 
+AddDREAM3DUnitTest(TESTNAME FilterPipelineTest SOURCES ${DREAM3DTest_SOURCE_DIR}/FilterPipelineTest.cpp LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib)
 
-# --------------------------------------------------------------------------
-# QuaternionMathTest.cpp Test
-# --------------------------------------------------------------------------
-add_executable(QuaternionMathTest QuaternionMathTest.cpp )
-target_link_libraries(QuaternionMathTest DREAM3DLib)
-add_test(QuaternionMathTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/QuaternionMathTest)
+AddDREAM3DUnitTest(TESTNAME DataArrayTest SOURCES ${DREAM3DTest_SOURCE_DIR}/DataArrayTest.cpp LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib)
 
-# --------------------------------------------------------------------------
-# ErrorMessageTest
-# --------------------------------------------------------------------------
-add_executable(ErrorMessageTest ErrorMessageTest.cpp )
-target_link_libraries(ErrorMessageTest DREAM3DLib)
-add_test(ErrorMessageTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ErrorMessageTest)
+AddDREAM3DUnitTest(TESTNAME ErrorMessageTest SOURCES ${DREAM3DTest_SOURCE_DIR}/ErrorMessageTest.cpp LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib)
 
-# --------------------------------------------------------------------------
-# DataContainer Test
-# --------------------------------------------------------------------------
-add_executable(DataContainerTest DataContainerTest.cpp )
-target_link_libraries(DataContainerTest DREAM3DLib)
-set_target_properties(DataContainerTest PROPERTIES FOLDER Test)
-add_test(DataContainerTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/DataContainerTest)
+AddDREAM3DUnitTest(TESTNAME DataContainerBundleTest SOURCES ${DREAM3DTest_SOURCE_DIR}/DataContainerBundleTest.cpp LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib)
 
-# --------------------------------------------------------------------------
-# EBSD Tests
-# --------------------------------------------------------------------------
-add_executable(EbsdTests EbsdTests.cpp )
-target_link_libraries(EbsdTests DREAM3DLib)
-set_target_properties(EbsdTests PROPERTIES FOLDER Test)
-add_test(EbsdTests ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/EbsdTests)
+AddDREAM3DUnitTest(TESTNAME FilterParametersRWTest SOURCES ${DREAM3DTest_SOURCE_DIR}/FilterParametersRWTest.cpp LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib)
 
-# --------------------------------------------------------------------------
-# FilterParametersRW Test
-# --------------------------------------------------------------------------
-add_executable(FilterParametersRWTest FilterParametersRWTest.cpp TestFilters/TestFilters.cpp TestFilters/GenericFilter.cpp)
-target_link_libraries(FilterParametersRWTest DREAM3DLib)
-set_target_properties(FilterParametersRWTest PROPERTIES FOLDER Test)
-add_test(FilterParametersRWTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FilterParametersRWTest)
+AddDREAM3DUnitTest(TESTNAME CreateDataArrayTest SOURCES ${DREAM3DTest_SOURCE_DIR}/CreateDataArrayTest.cpp LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib)
 
 
-# --------------------------------------------------------------------------
-# H5Support Library Testing
-# --------------------------------------------------------------------------
-add_executable(H5LiteTest ${DREAM3DTest_SOURCE_DIR}/H5LiteTest.cpp)
-target_link_libraries(H5LiteTest H5Support MXA)
-set_target_properties(H5LiteTest PROPERTIES FOLDER Test)
-add_test(H5LiteTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/H5LiteTest)
-
-add_executable(H5UtilitiesTest ${DREAM3DTest_SOURCE_DIR}/H5UtilitiesTest.cpp)
-target_link_libraries(H5UtilitiesTest H5Support MXA)
-set_target_properties(H5UtilitiesTest PROPERTIES FOLDER Test)
-add_test(H5UtilitiesTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/H5UtilitiesTest)
-
-if(0)
-# THis is just a quick test to make sure that the latest HDF5 can actually write data
-# sets that are larger than 4GB in size
-add_executable(BigHDF5DatasetTest ${DREAM3DTest_SOURCE_DIR}/BigHDF5DatasetTest.cpp)
-target_link_libraries(BigHDF5DatasetTest H5Support MXA)
-set_target_properties(BigHDF5DatasetTest PROPERTIES FOLDER Test)
-add_test(BigHDF5DatasetTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/BigHDF5DatasetTest)
-endif()
-
-# --------------------------------------------------------------------------
-# DataArray Testing
-# --------------------------------------------------------------------------
-add_executable(DataArrayTest ${DREAM3DTest_SOURCE_DIR}/DataArrayTest.cpp)
-target_link_libraries(DataArrayTest DREAM3DLib)
-set_target_properties(DataArrayTest PROPERTIES FOLDER Test)
-add_test(DataArrayTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/DataArrayTest)
-
-# --------------------------------------------------------------------------
-# File Conversion Testing
-# --------------------------------------------------------------------------
-add_executable(PhIOTest ${DREAM3DTest_SOURCE_DIR}/PhIOTest.cpp)
-target_link_libraries(PhIOTest DREAM3DLib)
-set_target_properties(PhIOTest PROPERTIES FOLDER Test)
-add_test(PhIOTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PhIOTest)
-
-add_executable(DxIOTest ${DREAM3DTest_SOURCE_DIR}/DxIOTest.cpp)
-target_link_libraries(DxIOTest DREAM3DLib)
-set_target_properties(DxIOTest PROPERTIES FOLDER Test)
-add_test(DxIOTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/DxIOTest)
-
-# --------------------------------------------------------------------------
-# CTF Data File Testing
-# --------------------------------------------------------------------------
-add_executable(CtfReaderTest ${DREAM3DTest_SOURCE_DIR}/CtfReaderTest.cpp)
-target_link_libraries(CtfReaderTest EbsdLib)
-set_target_properties(CtfReaderTest PROPERTIES FOLDER Test)
-add_test(CtfReaderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/CtfReaderTest)
-
-# --------------------------------------------------------------------------
-# ANG Data File Testing
-# --------------------------------------------------------------------------
-add_executable(AngImportTest ${DREAM3DTest_SOURCE_DIR}/AngImportTest.cpp)
-target_link_libraries(AngImportTest MXA EbsdLib)
-set_target_properties(AngImportTest PROPERTIES FOLDER Test)
-add_test(AngImportTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/AngImportTest)
+QT5_WRAP_CPP( RemoveArraysObserver_MOC  "${DREAM3DTest_SOURCE_DIR}/RemoveArraysObserver.h")
+set_source_files_properties(${RemoveArraysObserver_MOC} PROPERTIES HEADER_FILE_ONLY TRUE)
+AddDREAM3DUnitTest(TESTNAME MoveDataTest
+                   SOURCES ${DREAM3DTest_SOURCE_DIR}/MoveDataTest.cpp ${DREAM3DTest_SOURCE_DIR}/RemoveArraysObserver.h ${RemoveArraysObserver_MOC}
+                   LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib  )
 
 
-#add_executable(EbsdImportTest ${DREAM3DTest_SOURCE_DIR}/EbsdImportTest.cpp
-#                              ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/EbsdImport/EbsdImport.cpp)
-#target_link_libraries(EbsdImportTest DREAM3DLib MXA EbsdLib H5Support)
-#add_test(EbsdImportTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/EbsdImportTest)
+set_source_files_properties(moc_PreflightVerify.cpp PROPERTIES HEADER_FILE_ONLY TRUE)
+set(PreFlightTest_SOURCES ${DREAM3DTest_SOURCE_DIR}/PreFlightTest.cpp
+                          ${DREAM3DTest_SOURCE_DIR}/PreflightVerify.h
+                          ${DREAM3DTest_SOURCE_DIR}/PreflightVerify.cpp)
+AddDREAM3DUnitTest(TESTNAME PreFlightTest
+                   SOURCES ${PreFlightTest_SOURCES}
+                   LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib  )
 
+#----------------------------------------------------------------------------
+# Here we are trying to get something together that will run all the PrebuiltPipelines
+# pipelines as a sanity check
+# Reconstruction Pipelines First
+set(PREBUILT_PIPELINES_DIR "PrebuiltPipelines/Workshop")
+set(TEST_PIPELINE_LIST_FILE ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.txt)
+set(TEST_DATA_DIR ${DREAM3D_DATA_DIR})
 
+set(PREBUILT_PIPELINE_NAMES
+ "Reconstruction/(01) SmallIN100 Import"
+ "Reconstruction/(02) SmallIN100 Initial Visualization"
+ "Reconstruction/(03) SmallIN100 Threshold"
+ "Reconstruction/(04) SmallIN100 Alignment"
+ "Reconstruction/(05) SmallIN100 Alignment 2"
+ "Reconstruction/(06) SmallIN100 Cleanup"
+ "Reconstruction/(07) SmallIN100 Segmentation"
+ "Reconstruction/(08) SmallIN100 Merge Twins"
+ "Reconstruction/(09) SmallIN100 Minimum Size"
+ "Reconstruction/(10) SmallIN100 Minimum Neighbors"
+ "Reconstruction/(11) SmallIN100 Fill Bad Data"
+ "Reconstruction/(12) SmallIN100 Close Bad Data"
+ "Reconstruction/(13) Image Initial Visualization"
+ "Reconstruction/(14) Image Segmentation"
+ "Reconstruction/(15) SmallIN100 Full Reconstruction"
+ "Statistics/(01) SmallIN100 Morphological Statistics"
+ "Statistics/(02) SmallIN100 Export Statistics"
+ "Statistics/(03) SmallIN100 Transfer Field Data"
+ "Statistics/(04) SmallIN100 Field Threshold"
+ "Statistics/(05) SmallIN100 Crystallographic Statistics"
+ "SurfaceMeshing/(01) SmallIN100 Quick Mesh"
+ "SurfaceMeshing/(02) SmallIN100 Smooth Mesh"
+ "SurfaceMeshing/(03) SmallIN100 Mesh Statistics"
+ "SurfaceMeshing/(04) SmallIN100 GBCD"
+ "Synthetic/(01) Single Cubic Phase Equiaxed"
+ "Synthetic/(02) Single Hexagonal Phase Equiaxed"
+ "Synthetic/(03) Single Cubic Phase Rolled"
+ "Synthetic/(04) Two Phase Cubic Hexagonal Particles Equiaxed"
+ "Synthetic/(05) Composite"
+ "Synthetic/(06) SmallIN100 Synthetic"
+)
 
+configure_file(${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.h.in
+               ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.h)
 
-if(NOT ${DREAM3D_DATA_DIR} STREQUAL "")
-    message(STATUS "Synthetic Builder Test using ${DREAM3D_DATA_DIR} as data directory.")
-    message(STATUS "  Please make sure the proper files are available in that directory")
+add_executable(PipelineRunnerTest ${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.cpp ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.h)
+target_link_libraries(PipelineRunnerTest Qt5::Core EbsdLib DREAM3DLib)
+set_target_properties(PipelineRunnerTest PROPERTIES FOLDER Test)
+add_test(PipelineRunnerTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PipelineRunnerTest)
 
-    # --------------------------------------------------------------------------
-    # FindNeighbors Testing
-    # --------------------------------------------------------------------------
-    #add_executable(FindNeighborsTest ${DREAM3DTest_SOURCE_DIR}/FindNeighborsTest.cpp)
-    #target_link_libraries(FindNeighborsTest DREAM3DLib)
-    #set_target_properties(FindNeighborsTest PROPERTIES FOLDER Test)
-    #add_test(FindNeighborsTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FindNeighborsTest)
+FILE(WRITE ${TEST_PIPELINE_LIST_FILE} )
 
-    # --------------------------------------------------------------------------
-    # SyntheticBuilder Test
-    # --------------------------------------------------------------------------
-    #add_executable(SyntheticBuilderTest ${DREAM3DTest_SOURCE_DIR}/SyntheticBuilderTest.cpp)
-    #target_link_libraries(SyntheticBuilderTest DREAM3DLib)
-    #set_target_properties(SyntheticBuilderTest PROPERTIES FOLDER Test)
-    #add_test(SyntheticBuilderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/SyntheticBuilderTest)
-endif()
+foreach(f ${PREBUILT_PIPELINE_NAMES} )
+  set(DREAM3D_PIPELINE_FILE "${DREAM3D_SUPPORT_DIR}/${PREBUILT_PIPELINES_DIR}/${f}.json")
+  FILE(APPEND ${TEST_PIPELINE_LIST_FILE} "${DREAM3D_PIPELINE_FILE}\n")
+endforeach()
 
-# --------------------------------------------------------------------------
-# Preflight Test
-# --------------------------------------------------------------------------
-#add_executable(PreFlightTest ${DREAM3DTest_SOURCE_DIR}/PreFlightTest.cpp)
-#target_link_libraries(PreFlightTest DREAM3DLib)
-#add_test(PreFlightTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PreFlightTest)
+# Some more Testing Only pipelines that can be put here
+set(PREBUILT_PIPELINES_DIR "TestPipelines")
+set(TEST_PIPELINE_LIST_FILE ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.txt)
+set(TEST_DATA_DIR ${DREAM3D_DATA_DIR})
+set(PREBUILT_PIPELINE_NAMES
+  
+)
 
-
-# --------
-add_executable(GrainDataReaderTest ${DREAM3DTest_SOURCE_DIR}/GrainDataReaderTest.cpp
-                                ${DREAM3DTest_SOURCE_DIR}/CSVGrainDataReader.cpp )
-set_target_properties(GrainDataReaderTest PROPERTIES FOLDER Test)
-# --------
-add_executable(ODFTest ${DREAM3DTest_SOURCE_DIR}/ODFTest.cpp)
-target_link_libraries(ODFTest DREAM3DLib)
-set_target_properties(ODFTest PROPERTIES FOLDER Test)
-
-# --------
-add_executable(VoxelTest ${DREAM3DTest_SOURCE_DIR}/VoxelTest.cpp)
-set_target_properties(VoxelTest PROPERTIES FOLDER Test)
-
-# --------
-add_executable(TextureTest ${DREAM3DTest_SOURCE_DIR}/TextureTest.cpp)
-target_link_libraries(TextureTest DREAM3DLib)
-set_target_properties(TextureTest PROPERTIES FOLDER Test)
-
-# --------
-#add_executable(DxTest ${DREAM3DTest_SOURCE_DIR}/DxTest.cpp
-#                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/GrainGeneratorFunc.cpp
-#                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/Algorithms/PackGrainsGen3.cpp
-#                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/Algorithms/PackPrimaryPhases.cpp
-#                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/StructureReaders/DXStructureReader.cpp  )
-#target_link_libraries(DxTest DREAM3DLib)
-
-# --------
-add_executable(SurfaceMeshTest ${DREAM3DTest_SOURCE_DIR}/SurfaceMeshTest.cpp)
-target_link_libraries(SurfaceMeshTest DREAM3DLib)
-set_target_properties(SurfaceMeshTest PROPERTIES FOLDER Test)
-
-# --------
-add_executable(StatsGenTest ${DREAM3DTest_SOURCE_DIR}/StatsGenTest.cpp)
-target_link_libraries(StatsGenTest DREAM3DLib)
-set_target_properties(StatsGenTest PROPERTIES FOLDER Test)
-
-# --------
-add_executable(RNGTest ${DREAM3DTest_SOURCE_DIR}/RNGTest.cpp)
-target_link_libraries(RNGTest DREAM3DLib)
-set_target_properties(RNGTest PROPERTIES FOLDER Test)
-
-# --------
-add_executable(ResFixer ${DREAM3DTest_SOURCE_DIR}/ResFixer.cpp)
-target_link_libraries(ResFixer EbsdLib MXA DREAM3DLib)
-set_target_properties(ResFixer PROPERTIES FOLDER Test)
-
-# --------
-add_executable(OrientationMathTest ${DREAM3DTest_SOURCE_DIR}/OrientationMathTest.cpp)
-target_link_libraries(OrientationMathTest EbsdLib MXA DREAM3DLib)
-set_target_properties(OrientationMathTest PROPERTIES FOLDER Test)
-add_test(OrientationMathTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/OrientationMathTest)
-
-# --------
-add_executable(StructArrayTest ${DREAM3DTest_SOURCE_DIR}/StructArrayTest.cpp)
-target_link_libraries(StructArrayTest EbsdLib MXA DREAM3DLib)
-set_target_properties(StructArrayTest PROPERTIES FOLDER Test)
-add_test(StructArrayTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/StructArrayTest)
-
-# --------
-add_executable(RawBinaryReaderTest ${DREAM3DTest_SOURCE_DIR}/RawBinaryReaderTest.cpp)
-target_link_libraries(RawBinaryReaderTest EbsdLib MXA DREAM3DLib)
-set_target_properties(RawBinaryReaderTest PROPERTIES FOLDER Test)
-add_test(RawBinaryReaderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/RawBinaryReaderTest)
-
-# --------------------------------------------------------------------------
-# Synthetic Generation Test
-# --------------------------------------------------------------------------
-add_executable(SyntheticTest SyntheticTest.cpp )
-target_link_libraries(SyntheticTest DREAM3DLib)
-set_target_properties(SyntheticTest PROPERTIES FOLDER Test)
-add_test(SyntheticTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/SyntheticTest)
-
-# --------------------------------------------------------------------------
-# Data Fusion Test
-# --------------------------------------------------------------------------
-add_executable(UMich ${DREAM3DTest_SOURCE_DIR}/UMich.cpp)
-set_target_properties(UMich PROPERTIES FOLDER Test)
-
+foreach(f ${PREBUILT_PIPELINE_NAMES} )
+  set(DREAM3D_PIPELINE_FILE "${DREAM3D_SUPPORT_DIR}/${PREBUILT_PIPELINES_DIR}/${f}.json")
+  FILE(APPEND ${TEST_PIPELINE_LIST_FILE} "${DREAM3D_PIPELINE_FILE}\n")
+endforeach()
 

@@ -1,5 +1,0 @@
-#error This file should be over written during the build process by a file that\
-fully describes the needed widget functionality.
-
-#include "moc_Q${name}Widget.cxx"
-

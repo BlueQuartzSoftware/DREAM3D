@@ -1,38 +1,38 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 
 #ifndef _H5ANGDATALOADER_H_
 #define _H5ANGDATALOADER_H_
@@ -52,7 +52,7 @@
 /**
  * @class H5AngVolumeReader H5AngVolumeReader.h Reconstruction/EbsdSupport/H5AngVolumeReader.h
  * @brief This class loads OIM data from an HDF5 based file.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date May 23, 2011
  * @version 1.0
  */
@@ -87,25 +87,25 @@ class EbsdLib_EXPORT H5AngVolumeReader : public H5EbsdVolumeReader
      * @param filters
      * @return
      */
-    int loadData(int64_t xpoints, int64_t ypoints, int64_t zpoints, Ebsd::RefFrameZDir ZDir);
+    int loadData(int64_t xpoints, int64_t ypoints, int64_t zpoints, uint32_t ZDir);
 
     /**
      * @brief
      * @return
      */
-    std::vector<AngPhase::Pointer> getPhases();
+    QVector<AngPhase::Pointer> getPhases();
     /**
-      * @brief Returns the pointer to the data for a given field
-      * @param fieldName The name of the field to return the pointer to.
+      * @brief Returns the pointer to the data for a given feature
+      * @param featureName The name of the feature to return the pointer to.
       */
-    void* getPointerByName(const std::string &fieldName);
+    void* getPointerByName(const QString& featureName);
 
     /**
       * @brief Returns an enumeration value that depicts the numerical
       * primitive type that the data is stored as (Int, Float, etc).
-      * @param fieldName The name of the field.
+      * @param featureName The name of the feature.
       */
-    Ebsd::NumType getPointerType(const std::string &fieldName);
+    Ebsd::NumType getPointerType(const QString& featureName);
 
     /** @brief Allocates the proper amount of memory (after reading the header portion of the file)
      * and then splats '0' across all the bytes of the memory allocation
@@ -120,7 +120,7 @@ class EbsdLib_EXPORT H5AngVolumeReader : public H5EbsdVolumeReader
     H5AngVolumeReader();
 
   private:
-    std::vector<AngPhase::Pointer> m_Phases;
+    QVector<AngPhase::Pointer> m_Phases;
 
     H5AngVolumeReader(const H5AngVolumeReader&);    // Copy Constructor Not Implemented
     void operator=(const H5AngVolumeReader&);  // Operator '=' Not Implemented
@@ -134,13 +134,14 @@ class EbsdLib_EXPORT H5AngVolumeReader : public H5EbsdVolumeReader
     template<typename T>
     T* allocateArray(size_t numberOfElements)
     {
+      T* buffer = NULL;
+      if(numberOfElements == 0) { return buffer; }
 #if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
-      T* m_buffer = static_cast<T*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
+      buffer = static_cast<T*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
 #else
-      T*  m_buffer = new T[numberOfElements];
+      buffer = static_cast<T*>(malloc(sizeof(T) * numberOfElements));
 #endif
-      //      m_NumberOfElements = numberOfElements;
-      return m_buffer;
+      return buffer;
     }
 
     /**
@@ -149,7 +150,7 @@ class EbsdLib_EXPORT H5AngVolumeReader : public H5EbsdVolumeReader
      * @param ptr The pointer to be freed.
      */
     template<typename T>
-    void deallocateArrayData(T* &ptr)
+    void deallocateArrayData(T*& ptr)
     {
       if (ptr != NULL && getManageMemory() == true)
       {
@@ -166,3 +167,4 @@ class EbsdLib_EXPORT H5AngVolumeReader : public H5EbsdVolumeReader
 };
 
 #endif /* _H5ANGDATALOADER_H_ */
+

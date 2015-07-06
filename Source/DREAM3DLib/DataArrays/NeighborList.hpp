@@ -1,55 +1,59 @@
 /* ============================================================================
- * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef NEIGHBORLIST_H_
-#define NEIGHBORLIST_H_
 
-#include <string>
-#include <map>
+#ifndef _NEIGHBORLIST_H_
+#define _NEIGHBORLIST_H_
+
+#include <QtCore/QString>
+#include <QtCore/QMap>
+#include <QtCore/QTextStream>
+
 #include <vector>
 
 #include <boost/shared_ptr.hpp>
 
+#include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
-
+#include "H5Support/QH5Lite.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/HDF5/VTKH5Constants.h"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
 
 
 /**
@@ -64,19 +68,183 @@ class NeighborList : public IDataArray
 {
   public:
     DREAM3D_SHARED_POINTERS(NeighborList<T> )
-    DREAM3D_STATIC_NEW_MACRO(NeighborList<T> )
     DREAM3D_TYPE_MACRO_SUPER(NeighborList<T>, IDataArray)
+    DREAM3D_CLASS_VERSION(2)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(NumNeighborsArrayName)
 
-    IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const std::string& name)
+    static Pointer New()
     {
-      return NeighborList<T>::New();
+      return CreateArray(0, "NeighborList", false);
     }
+
+    /**
+     * @brief CreateArray
+     * @param numTuples
+     * @param name
+     * @param allocate
+     * @return
+     */
+    static Pointer CreateArray(size_t numTuples, const QString& name, bool allocate = true)
+    {
+      //std::cout << "NeighborList::CreateArray  name= " << name.toStdString() << "   numTuples= " << numTuples << std::endl;
+      if (name.isEmpty() == true)
+      {
+        return NullPointer();
+      }
+      Pointer ptr = Pointer(new NeighborList<T>(numTuples, name));
+      if (allocate) { ptr->resize(numTuples); }
+      return ptr;
+    }
+
+    /**
+     * @brief CreateArray
+     * @param numTuples
+     * @param rank
+     * @param dims
+     * @param name
+     * @param allocate
+     * @return
+     */
+    static Pointer CreateArray(size_t numTuples, int rank, size_t* dims, const QString& name, bool allocate = true)
+    {
+      //std::cout << "NeighborList::CreateArray  name= " << name.toStdString() << "   numTuples= " << numTuples << std::endl;
+      if (name.isEmpty() == true)
+      {
+        return NullPointer();
+      }
+
+      size_t numElements = numTuples;
+      for(int iter = 0; iter < rank; iter++)
+      {
+        numElements *= dims[iter];
+      }
+      Pointer ptr = Pointer(new NeighborList<T>(numElements, name));
+      if (allocate) { ptr->resize(numElements); }
+      return ptr;
+    }
+
+    /**
+     * @brief CreateArray
+     * @param numTuples
+     * @param cDims
+     * @param name
+     * @param allocate
+     * @return
+     */
+    static Pointer CreateArray(size_t numTuples, std::vector<size_t> cDims, const QString& name, bool allocate = true)
+    {
+      if (name.isEmpty() == true)
+      {
+        return NullPointer();
+      }
+      size_t numElements = numTuples;
+      for(size_t iter = 0; iter < cDims.size(); iter++)
+      {
+        numElements *= cDims[iter];
+      }
+      Pointer ptr = Pointer(new NeighborList<T>(numElements, name));
+      if (allocate) { ptr->resize(numElements); }
+      return ptr;
+    }
+
+    /**
+     * @brief CreateArray
+     * @param numTuples
+     * @param cDims
+     * @param name
+     * @param allocate
+     * @return
+     */
+    static Pointer CreateArray(size_t numTuples, QVector<size_t> cDims, const QString& name, bool allocate = true)
+    {
+      if (name.isEmpty() == true)
+      {
+        return NullPointer();
+      }
+      size_t numElements = numTuples;
+      for(int iter = 0; iter < cDims.size(); iter++)
+      {
+        numElements *= cDims[iter];
+      }
+      Pointer ptr = Pointer(new NeighborList<T>(numElements, name));
+      if (allocate) { ptr->resize(numElements); }
+      return ptr;
+    }
+
+    /**
+     * @brief CreateArray
+     * @param tDims
+     * @param cDims
+     * @param name
+     * @param allocate
+     * @return
+     */
+    static Pointer CreateArray(QVector<size_t> tDims, QVector<size_t> cDims, const QString& name, bool allocate = true)
+    {
+      if (name.isEmpty() == true)
+      {
+        return NullPointer();
+      }
+      size_t numElements = tDims[0];
+      for(int iter = 1; iter < tDims.size(); iter++)
+      {
+        numElements *= tDims[iter];
+      }
+      for(int iter = 0; iter < cDims.size(); iter++)
+      {
+        numElements *= cDims[iter];
+      }
+      Pointer ptr = Pointer(new NeighborList<T>(numElements, name));
+      if (allocate) { ptr->resize(numElements); }
+      return ptr;
+    }
+
+    /**
+     * @brief createNewArray
+     * @param numElements
+     * @param rank
+     * @param dims
+     * @param name
+     * @return
+     */
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name, bool allocate = true)
+    {
+      return NeighborList<T>::CreateArray(numElements, rank, dims, name, allocate);
+    }
+
+    /**
+     * @brief createNewArray
+     * @param numElements
+     * @param dims
+     * @param name
+     * @return
+     */
+    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name, bool allocate = true)
+    {
+      return NeighborList<T>::CreateArray(numElements, dims, name, allocate);
+    }
+
+    /**
+     * @brief createNewArray
+     * @param numElements
+     * @param dims
+     * @param name
+     * @return
+     */
+    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<size_t> dims, const QString& name, bool allocate = true)
+    {
+      return NeighborList<T>::CreateArray(numElements, dims, name, allocate);
+    }
+
+
     typedef std::vector<T> VectorType;
     typedef boost::shared_ptr<VectorType> SharedVectorType;
 
-    virtual ~NeighborList() {}
+    virtual ~NeighborList()
+    {
+      //std::cout << "~NeighborList<T> size()=" << _data.size() << std::endl;
+    }
 
     /**
      * @brief isAllocated
@@ -84,13 +252,29 @@ class NeighborList : public IDataArray
      */
     virtual bool isAllocated() { return true; }
 
+    /**
+     * @brief Gives this array a human readable name
+     * @param name The name of this array
+     */
+    virtual void setInitValue(T initValue)
+    {
+      m_InitValue = initValue;
+    }
 
     /**
-     * @brief GetTypeName Returns a string representation of the type of data that is stored by this class. This
+     * @brief Sets all the values to value.
+     */
+    virtual void initializeWithValue(T initValue, size_t offset = 0)
+    {
+
+    }
+
+    /**
+     * @brief getTypeName Returns a string representation of the type of data that is stored by this class. This
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(std::string& xdmfTypeName, int& precision)
+    void getXdmfTypeAndSize(QString& xdmfTypeName, int& precision)
     {
       T value = 0x00;
       xdmfTypeName = "UNKNOWN";
@@ -118,17 +302,36 @@ class NeighborList : public IDataArray
      * @brief getTypeAsString
      * @return
      */
-    virtual std::string getTypeAsString() { return NeighborList<T>::ClassName();}
+    virtual QString getTypeAsString() { return NeighborList<T>::ClassName();}
 
-    void SetName(const std::string& name) { m_Name = name; }
-    std::string GetName() { return m_Name; }
+    /**
+     * @brief setName
+     * @param name
+     */
+    void setName(const QString& name) { m_Name = name; }
 
+    /**
+     * @brief getName
+     * @return
+     */
+    QString getName() { return m_Name; }
 
+    /**
+     * @brief takeOwnership
+     */
     void takeOwnership() {    }
+
+    /**
+     * @brief releaseOwnership
+     */
     void releaseOwnership()  { }
 
-
-    void* GetVoidPointer(size_t i) { return NULL; }
+    /**
+     * @brief getVoidPointer
+     * @param i
+     * @return
+     */
+    void* getVoidPointer(size_t i) { return NULL; }
 
     /**
      * @brief Removes Tuples from the Array. If the size of the vector is Zero nothing is done. If the size of the
@@ -138,7 +341,7 @@ class NeighborList : public IDataArray
      * @param idxs The indices to remove
      * @return error code.
      */
-    virtual int EraseTuples(std::vector<size_t>& idxs)
+    virtual int eraseTuples(QVector<size_t>& idxs)
     {
       int err = 0;
       // If nothing is to be erased just return
@@ -147,44 +350,79 @@ class NeighborList : public IDataArray
         return 0;
       }
 
-      if (idxs.size() >= GetNumberOfTuples() )
+      size_t idxsSize = static_cast<size_t>(idxs.size());
+      if (idxsSize >= getNumberOfTuples() )
       {
-        Resize(0);
+        resize(0);
         return 0;
       }
 
+      size_t arraySize = m_Array.size();
       // Sanity Check the Indices in the vector to make sure we are not trying to remove any indices that are
       // off the end of the array and return an error code.
-      for(std::vector<size_t>::size_type i = 0; i < idxs.size(); ++i)
+      for(QVector<size_t>::size_type i = 0; i < idxs.size(); ++i)
       {
-        if (idxs[i] >= _data.size()) { return -100; }
+        if (idxs[i] >= arraySize) { return -100; }
       }
 
+      std::vector<SharedVectorType> replacement(arraySize - idxsSize);
 
-      std::vector<SharedVectorType> replacement(_data.size() - idxs.size());
       size_t idxsIndex = 0;
       size_t rIdx = 0;
-      for(size_t dIdx = 0; dIdx < _data.size(); ++dIdx)
+      for(size_t dIdx = 0; dIdx < arraySize; ++dIdx)
       {
         if (dIdx != idxs[idxsIndex])
         {
-          replacement[rIdx] = _data[dIdx];
+          replacement[rIdx] = m_Array[dIdx];
           ++rIdx;
         }
         else
         {
           ++idxsIndex;
-          if (idxsIndex == idxs.size() ) { idxsIndex--;}
+          if (idxsIndex == idxsSize ) { idxsIndex--;}
         }
       }
-      _data = replacement;
+      m_Array = replacement;
+      m_NumTuples = m_Array.size();
       return err;
     }
 
-    virtual int CopyTuple(size_t currentPos, size_t newPos)
+    /**
+     * @brief copyTuple
+     * @param currentPos
+     * @param newPos
+     * @return
+     */
+    virtual int copyTuple(size_t currentPos, size_t newPos)
     {
-      _data[newPos] = _data[currentPos];
+      m_Array[newPos] = m_Array[currentPos];
       return 0;
+    }
+
+    /**
+     * @brief reorderCopy
+     * @param newOrderMap
+     * @return
+     */
+    virtual IDataArray::Pointer reorderCopy(QVector<size_t> newOrderMap)
+    {
+      size_t newOrderMapSize = static_cast<size_t>(newOrderMap.size());
+      if( newOrderMapSize != getNumberOfTuples())
+      {
+        return IDataArray::NullPointer();
+      }
+
+      typename NeighborList<T>::Pointer daCopyPtr = NeighborList<T>::CreateArray(getNumberOfTuples(), "Copy of NeighborList", true);
+      daCopyPtr->initializeWithZeros();
+      size_t numTuples = getNumberOfTuples();
+      for(size_t i = 0; i < numTuples; i++)
+      {
+        typename NeighborList<T>::SharedVectorType sharedNeiLst; //(new std::vector<T>);
+        sharedNeiLst = m_Array[i];
+        daCopyPtr->setList(newOrderMap[i], sharedNeiLst);
+      }
+
+      return daCopyPtr;
     }
 
     /**
@@ -192,70 +430,115 @@ class NeighborList : public IDataArray
      * @param i The index of the Tuple
      * @param c The value to splat across all components in the tuple
      */
-    void InitializeTuple(size_t i, double p)
+    void initializeTuple(size_t i, double p)
     {
       BOOST_ASSERT(false);
     }
 
+    /**
+     * @brief Returns the number of elements in the internal array.
+     */
+    virtual size_t getNumberOfTuples()
+    {
+      return m_NumTuples;
+    }
 
-
-    size_t GetNumberOfTuples() {   return _data.size(); }
 
     /**
-     * @brief GetSize Returns the total number of data items that are being stored. This is the sum of all the sizes
+     * @brief getSize Returns the total number of data items that are being stored. This is the sum of all the sizes
      * of the internal storage arrays for this class.
      * @return
      */
-    size_t GetSize()
+    size_t getSize()
     {
       size_t total = 0;
-      for(size_t dIdx = 0; dIdx < _data.size(); ++dIdx)
+      for(size_t dIdx = 0; dIdx < m_Array.size(); ++dIdx)
       {
-        total += _data[dIdx]->size();
+        total += m_Array[dIdx]->size();
       }
       return total;
     }
 
+    /**
+     * @brief setNumberOfComponents
+     * @param nc
+     */
+    void setNumberOfComponents(int nc) { }
 
-    void SetNumberOfComponents(int nc) { }
+    /**
+     * @brief getNumberOfComponents
+     * @return
+     */
+    int getNumberOfComponents() { return 1; }
 
+    /**
+     * @brief getComponentDimensions
+     * @return
+     */
+    QVector<size_t> getComponentDimensions()
+    {
+      QVector<size_t> dims(1, 1);
+      return dims;
+    }
 
-    int GetNumberOfComponents() { return 1; }
+    /**
+     * @brief SetRank
+     * @param rnk
+     */
+    void SetRank(int rnk) { }
 
+    /**
+     * @brief getRank
+     * @return
+     */
+    int getRank() { return 1; }
 
-    size_t GetTypeSize()  { return sizeof(SharedVectorType); }
+    /**
+     * @brief getTypeSize
+     * @return
+     */
+    size_t getTypeSize()  { return sizeof(SharedVectorType); }
 
-
-    void initializeWithZeros() { _data.clear(); }
+    /**
+     * @brief initializeWithZeros
+     */
+    void initializeWithZeros() { m_Array.clear(); }
 
     /**
      * @brief deepCopy
      * @return
      */
-    IDataArray::Pointer deepCopy()
+    IDataArray::Pointer deepCopy(bool forceNoAllocate = false)
     {
-      typename NeighborList<T>::Pointer daCopyPtr = NeighborList<T>::New();
-      daCopyPtr->Resize(GetNumberOfTuples());
+      typename NeighborList<T>::Pointer daCopyPtr = NeighborList<T>::CreateArray(getNumberOfTuples(), "Copy of NeighborList", true);
 
-      //NeighborList<T>* daCopy = NeighborList<T>::SafeObjectDownCast<IDataArray*, NeighborList<T>*>(daCopyPtr.get());
-      for(size_t i=0;i<GetNumberOfTuples();i++)
+      if(forceNoAllocate == false)
       {
-        typename NeighborList<T>::SharedVectorType sharedNeiLst(new std::vector<T>);
-        sharedNeiLst = _data[i];
-        daCopyPtr->setList(static_cast<int>(i), sharedNeiLst);
+        for(size_t i = 0; i < getNumberOfTuples(); i++)
+        {
+          typename NeighborList<T>::SharedVectorType sharedNeiLst(new std::vector<T>);
+          sharedNeiLst = m_Array[i];
+          daCopyPtr->setList(static_cast<int>(i), sharedNeiLst);
+        }
       }
-
       return daCopyPtr;
     }
 
-    int32_t RawResize(size_t size)
+    /**
+     * @brief resizeTotalElements
+     * @param size
+     * @return
+     */
+    int32_t resizeTotalElements(size_t size)
     {
-      size_t old = _data.size();
-      _data.resize(size);
+      //std::cout << "NeighborList::resizeTotalElements(" << size << ")" << std::endl;
+      size_t old = m_Array.size();
+      m_Array.resize(size);
+      m_NumTuples = size;
       // Initialize with zero length Vectors
-      for (size_t i = old; i < _data.size(); ++i)
+      for (size_t i = old; i < m_Array.size(); ++i)
       {
-        _data[i] = SharedVectorType(new VectorType);
+        m_Array[i] = SharedVectorType(new VectorType);
       }
       return 1;
     }
@@ -265,22 +548,28 @@ class NeighborList : public IDataArray
      * @param numTuples
      * @return
      */
-    virtual int32_t Resize(size_t numTuples) { return RawResize(numTuples); }
+    virtual int32_t resize(size_t numTuples) { return resizeTotalElements(numTuples); }
 
     //FIXME: These need to be implemented
-    virtual void printTuple(std::ostream& out, size_t i, char delimiter = ',')
+    virtual void printTuple(QTextStream& out, size_t i, char delimiter = ',')
     {
-      SharedVectorType sharedVec = _data[i];
+      SharedVectorType sharedVec = m_Array[i];
       VectorType* vec = sharedVec.get();
       size_t size = vec->size();
       out << size;
-      for(size_t i = 0; i < size; i++)
+      for(size_t j = 0; j < size; j++)
       {
-        out << delimiter << vec->at(i);
+        out << delimiter << vec->at(j);
       }
     }
 
-    virtual void printComponent(std::ostream& out, size_t i, int j)
+    /**
+     * @brief printComponent
+     * @param out
+     * @param i
+     * @param j
+     */
+    virtual void printComponent(QTextStream& out, size_t i, int j)
     {
       BOOST_ASSERT(false);
     }
@@ -290,7 +579,7 @@ class NeighborList : public IDataArray
      * @param parentId
      * @return
      */
-    virtual int writeH5Data(hid_t parentId)
+    virtual int writeH5Data(hid_t parentId, QVector<size_t> tDims)
     {
       int err = 0;
 
@@ -299,57 +588,42 @@ class NeighborList : public IDataArray
       // can compare this with what is written in the file. If they are
       // different we are going to overwrite what is in the file with what
       // we compute here.
-      std::vector<int32_t> numNeighbors(_data.size());
+      Int32ArrayType::Pointer numNeighborsPtr = Int32ArrayType::CreateArray(m_Array.size(), m_NumNeighborsArrayName);
+      int32_t* numNeighbors = numNeighborsPtr->getPointer(0);
       size_t total = 0;
-      for(size_t dIdx = 0; dIdx < _data.size(); ++dIdx)
+      for(size_t dIdx = 0; dIdx < m_Array.size(); ++dIdx)
       {
-        numNeighbors[dIdx] = static_cast<int32_t>(_data[dIdx]->size());
-        total += _data[dIdx]->size();
+        numNeighbors[dIdx] = static_cast<int32_t>(m_Array[dIdx]->size());
+        total += m_Array[dIdx]->size();
       }
 
       // Check to see if the NumNeighbors is already written to the file
       bool rewrite = false;
-      if (H5Lite::datasetExists(parentId, m_NumNeighborsArrayName) == false)
+      if (QH5Lite::datasetExists(parentId, m_NumNeighborsArrayName) == false)
       {
         // The NumNeighbors Array is NOT already in the file so write it to the file
-        std::vector<hsize_t> dims(1, numNeighbors.size());
-        err = H5Lite::writeVectorDataset(parentId, m_NumNeighborsArrayName, dims, numNeighbors);
-        if(err < 0)
-        {
-          return -601;
-        }
-        err = H5Lite::writeScalarAttribute(parentId, m_NumNeighborsArrayName, std::string(H5_NUMCOMPONENTS), 1);
-        if(err < 0)
-        {
-          return -602;
-        }
-        err = H5Lite::writeStringAttribute(parentId, m_NumNeighborsArrayName, DREAM3D::HDF5::ObjectType, "DataArray<T>");
-        if(err < 0)
-        {
-          return -603;
-        }
+        numNeighborsPtr->writeH5Data(parentId, tDims);
       }
       else
       {
         // The NumNeighbors array is in the dream3d file so read it up into memory and compare with what
         // we have in memory.
-        std::vector<int32_t> fileNumNeigh(_data.size());
-        err = H5Lite::readVectorDataset(parentId, m_NumNeighborsArrayName, fileNumNeigh);
+        std::vector<int32_t> fileNumNeigh(m_Array.size());
+        err = QH5Lite::readVectorDataset(parentId, m_NumNeighborsArrayName, fileNumNeigh);
         if (err < 0)
         {
-          return -604;
+          return -602;
         }
 
         // Compare the 2 vectors to make sure they are exactly the same;
-        if (fileNumNeigh.size() != numNeighbors.size())
+        if (fileNumNeigh.size() != numNeighborsPtr->getNumberOfTuples())
         {
           rewrite = true;
         }
         // The sizes are the same, now compare each value;
-        int32_t* numNeighPtr = &(numNeighbors.front());
         int32_t* fileNumNeiPtr = &(fileNumNeigh.front());
-        size_t nBytes = numNeighbors.size() * sizeof(int32_t);
-        if (::memcmp(numNeighPtr, fileNumNeiPtr, nBytes) != 0)
+        size_t nBytes = numNeighborsPtr->getNumberOfTuples() * sizeof(int32_t);
+        if (::memcmp(numNeighbors, fileNumNeiPtr, nBytes) != 0)
         {
           rewrite = true;
         }
@@ -359,40 +633,24 @@ class NeighborList : public IDataArray
       // the top of the function versus what is in memory
       if(rewrite == true)
       {
-        hsize_t dims[1] = {numNeighbors.size()};
-        hsize_t rank = 1;
-        err = H5Lite::replacePointerDataset(parentId, m_NumNeighborsArrayName, rank, dims, &(numNeighbors.front()) );
-        if(err < 0)
-        {
-          return -605;
-        }
-        err = H5Lite::writeScalarAttribute(parentId, m_NumNeighborsArrayName, std::string(H5_NUMCOMPONENTS), 1);
-        if(err < 0)
-        {
-          return -606;
-        }
-        err = H5Lite::writeStringAttribute(parentId, m_NumNeighborsArrayName, DREAM3D::HDF5::ObjectType, "DataArray<T>");
-        if(err < 0)
-        {
-          return -607;
-        }
+        numNeighborsPtr->writeH5Data(parentId, tDims);
       }
 
       // Allocate an array of the proper size to we can concatenate all the arrays together into a single array that
       // can be written to the HDF5 File. This operation can ballon the memory size temporarily until this operation
       // is complete.
-      std::vector<T> flat (total);
+      QVector<T> flat (total);
       size_t currentStart = 0;
-      for(size_t dIdx = 0; dIdx < _data.size(); ++dIdx)
+      for(size_t dIdx = 0; dIdx < m_Array.size(); ++dIdx)
       {
-        size_t nEle = _data[dIdx]->size();
+        size_t nEle = m_Array[dIdx]->size();
         if (nEle == 0) { continue; }
-        T* start = &(_data[dIdx]->front()); // Get the pointer to the front of the array
-        //    T* end = start + nEle; // Get the pointer to the end of the array
+        T* start = &(m_Array[dIdx]->front()); // get the pointer to the front of the array
+        //    T* end = start + nEle; // get the pointer to the end of the array
         T* dst = &(flat.front()) + currentStart;
         ::memcpy(dst, start, nEle * sizeof(T));
 
-        currentStart += _data[dIdx]->size();
+        currentStart += m_Array[dIdx]->size();
       }
 
       // Now we can actually write the actual array data.
@@ -400,27 +658,44 @@ class NeighborList : public IDataArray
       hsize_t dims[1] = { total };
       if (total > 0)
       {
-        err = H5Lite::writePointerDataset(parentId, GetName(), rank, dims, &(flat.front()));
+        err = QH5Lite::writePointerDataset(parentId, getName(), rank, dims, &(flat.front()));
         if(err < 0)
         {
-          return -608;
+          return -605;
         }
-        err = H5Lite::writeScalarAttribute(parentId, GetName(), std::string(H5_NUMCOMPONENTS), 1);
+
+        err = QH5Lite::writeScalarAttribute(parentId, getName(), DREAM3D::HDF5::DataArrayVersion, getClassVersion());
         if(err < 0)
+        {
+          return -604;
+        }
+        err = QH5Lite::writeStringAttribute(parentId, getName(), DREAM3D::HDF5::ObjectType, getNameOfClass());
+        if(err < 0)
+        {
+          return -607;
+        }
+
+        // Write the tuple dimensions as an attribute
+        hsize_t size = tDims.size();
+        err = QH5Lite::writePointerAttribute(parentId, getName(), DREAM3D::HDF5::TupleDimensions, 1, &size, tDims.data());
+        if (err < 0)
         {
           return -609;
         }
 
-        err = H5Lite::writeStringAttribute(parentId, GetName(), DREAM3D::HDF5::ObjectType, getNameOfClass());
-        if(err < 0)
+        QVector<size_t> cDims = getComponentDimensions();
+        // write the component dimensions as  an attribute
+        size = cDims.size();
+        err = QH5Lite::writePointerAttribute(parentId, getName(), DREAM3D::HDF5::ComponentDimensions, 1, &size, cDims.data());
+        if (err < 0)
         {
           return -610;
         }
 
-        err = H5Lite::writeStringAttribute(parentId, GetName(), "Linked NumNeighbors Dataset", m_NumNeighborsArrayName);
+        err = QH5Lite::writeStringAttribute(parentId, getName(), "Linked NumNeighbors Dataset", m_NumNeighborsArrayName);
         if(err < 0)
         {
-          return -611;
+          return -608;
         }
       }
       return err;
@@ -434,32 +709,66 @@ class NeighborList : public IDataArray
      * @param groupPath
      * @return
      */
-    virtual int writeXdmfAttribute(std::ostream& out, int64_t* volDims, const std::string& hdfFileName,
-                                   const std::string& groupPath, const std::string& label)
+    virtual int writeXdmfAttribute(QTextStream& out, int64_t* volDims, const QString& hdfFileName,
+                                   const QString& groupPath, const QString& label)
     {
-
-      std::stringstream dimStr;
-      dimStr << volDims[0] << " " << volDims[1] << " " << volDims[2] << " ";
       int precision = 0;
-      std::string xdmfTypeName;
-      GetXdmfTypeAndSize(xdmfTypeName, precision);
+      QString xdmfTypeName;
+      getXdmfTypeAndSize(xdmfTypeName, precision);
 
-      /*
-      <Attribute Name="MisorientationList" AttributeType="Scalar" Center="Cell">
-      <DataItem Format="HDF" Dimensions="52140" NumberType="Float" Precision="4" >
-        test40638_01.dream3d:/VolumeDataContainer/FIELD_DATA/MisorientationList
-      </DataItem>
-      </Attribute>
-      */
-      out << "    <Attribute Name=\"" << GetName() << label << "\" AttributeType=\"Scalar\" Center=\"Node\">" << std::endl;
-      out << "      <DataItem Format=\"HDF\" Dimensions=\"" << dimStr.str() <<  "\" ";
-      out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << std::endl;
-      out << "        " << hdfFileName << groupPath << "/" << GetName() << std::endl;
-      out << "      </DataItem>" << std::endl;
-      out << "    </Attribute>" << std::endl << std::endl;
+      out << "    <Attribute Name=\"" << getName() << label << "\" AttributeType=\"Scalar\" Center=\"Node\">";
+      out << "      <DataItem Format=\"HDF\" Dimensions=\"" << volDims[0] << " " << volDims[1] << " " << volDims[2] << "\" ";
+      out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >";
+      out << "        " << hdfFileName.toLatin1().data() << groupPath.toLatin1().data() << "/" << getName();
+      out << "      </DataItem>";
+      out << "    </Attribute>";
       return 1;
     }
 
+    /**
+     * @brief getInfoString
+     * @return Returns a formatted string that contains general infomation about
+     * the instance of the object.
+     */
+    virtual QString getInfoString(DREAM3D::InfoStringFormat format)
+    {
+      QString info;
+      QTextStream ss (&info);
+      if(format == DREAM3D::HtmlFormat)
+      {
+        ss << "<html><head></head>\n";
+        ss << "<body>\n";
+        ss << "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
+        ss << "<tbody>\n";
+        ss << "<tr bgcolor=\"#D3D8E0\"><th colspan=2>Attribute Array Info</th></tr>";
+
+        ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Name:</th><td>" << getName() << "</td></tr>";
+
+        ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Type:</th><td>" << getTypeAsString() << "</td></tr>";
+        ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Number of Tuples:</th><td>" << getNumberOfTuples() << "</td></tr>";
+
+//        QString compDimStr = "(";
+//        for(int i = 0; i < m_CompDims.size(); i++)
+//        {
+//          compDimStr = compDimStr + QString::number(m_CompDims[i]);
+//          if(i < m_CompDims.size() - 1) {
+//             compDimStr = compDimStr + QString(", ");
+//          }
+//        }
+//        compDimStr = compDimStr + ")";
+//        ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Component Dimensions:</th><td>" << compDimStr << "</td></tr>";
+        ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Number of Lists:</th><td>" << getNumberOfLists() << "</td></tr>";
+
+        ss << "</tbody></table>\n";
+        ss << "<br/>";
+        ss << "</body></html>";
+      }
+      else
+      {
+
+      }
+      return info;
+    }
     /**
      *
      * @param parentId
@@ -474,9 +783,9 @@ class NeighborList : public IDataArray
       std::vector<int32_t> numNeighbors;
 
       // Check to see if the NumNeighbors exists in the file, which it must.
-      if(H5Lite::datasetExists(parentId, m_NumNeighborsArrayName) == true)
+      if(QH5Lite::datasetExists(parentId, m_NumNeighborsArrayName) == true)
       {
-        err = H5Lite::readVectorDataset(parentId, m_NumNeighborsArrayName, numNeighbors);
+        err = QH5Lite::readVectorDataset(parentId, m_NumNeighborsArrayName, numNeighbors);
         if(err < 0)
         {
           return -702;
@@ -489,92 +798,100 @@ class NeighborList : public IDataArray
       }
 
       std::vector<T> flat;
-      err = H5Lite::readVectorDataset(parentId, GetName(), flat);
+      err = QH5Lite::readVectorDataset(parentId, getName(), flat);
       if (err < 0)
       {
         return err;
       }
-
       // Loop over all the entries and make new Vectors to hold the incoming data
-      _data.resize(numNeighbors.size());
+      m_Array.resize(numNeighbors.size());
       size_t currentStart = 0;
-      for(std::vector<int32_t>::size_type dIdx = 0; dIdx < numNeighbors.size(); ++dIdx)
+      qint32 count = static_cast<qint32>(numNeighbors.size());
+      for(QVector<int32_t>::size_type dIdx = 0; dIdx < count; ++dIdx)
       {
         size_t nEle = numNeighbors[dIdx];
         if(nEle > 0)
         {
-          _data[dIdx] = SharedVectorType(new VectorType(numNeighbors[dIdx]));
+          m_Array[dIdx] = SharedVectorType(new VectorType(numNeighbors[dIdx]));
 
-          T* dst = &(_data[dIdx]->front()); // Get the pointer to the front of the array
-          //    T* end = start + nEle; // Get the pointer to the end of the array
+          T* dst = &(m_Array[dIdx]->front()); // get the pointer to the front of the array
+          //    T* end = start + nEle; // get the pointer to the end of the array
           T* start = &(flat.front()) + currentStart;
           ::memcpy(dst, start, nEle * sizeof(T));
           currentStart += nEle;
         }
         else
         {
-          _data[dIdx] = SharedVectorType(new VectorType(0));
+          m_Array[dIdx] = SharedVectorType(new VectorType(0));
         }
       }
-
-
+      m_NumTuples = m_Array.size(); // Sync up the numTuples property with the size of the internal array
       return err;
     }
 
     /**
-    *
-    */
+     * @brief addEntry
+     * @param grainId
+     * @param value
+     */
     void addEntry(int grainId, int value)
     {
-      if(grainId >= static_cast<int>(_data.size()) )
+      if(grainId >= static_cast<int>(m_Array.size()) )
       {
-        size_t old = _data.size();
-        _data.resize(grainId + 1);
+        size_t old = m_Array.size();
+        m_Array.resize(grainId + 1);
         // Initialize with zero length Vectors
-        for(size_t i = old; i < _data.size(); ++i)
+        for(size_t i = old; i < m_Array.size(); ++i)
         {
-          _data[i] = SharedVectorType(new VectorType);
+          m_Array[i] = SharedVectorType(new VectorType);
         }
       }
-      _data[grainId]->push_back(value);
+      m_Array[grainId]->push_back(value);
+      m_NumTuples = m_Array.size();
     }
 
     /**
-     *
+     * @brief clearAllLists
      */
     void clearAllLists()
     {
-      _data.clear();
+      m_Array.clear();
     }
 
 
     /**
-     *
+     * @brief setList
+     * @param grainId
+     * @param neighborList
      */
     void setList(int grainId, SharedVectorType neighborList)
     {
-      if(grainId >= static_cast<int>(_data.size()) )
+      if(grainId >= static_cast<int>(m_Array.size()) )
       {
-        size_t old = _data.size();
-        _data.resize(grainId + 1);
+        size_t old = m_Array.size();
+        m_Array.resize(grainId + 1);
         // Initialize with zero length Vectors
-        for(size_t i = old; i < _data.size(); ++i)
+        for(size_t i = old; i < m_Array.size(); ++i)
         {
-          _data[i] = SharedVectorType(new VectorType);
+          m_Array[i] = SharedVectorType(new VectorType);
         }
       }
-      _data[grainId] = neighborList;
+      m_Array[grainId] = neighborList;
     }
 
     /**
-     *
+     * @brief getValue
+     * @param grainId
+     * @param index
+     * @param ok
+     * @return
      */
     T getValue(int grainId, int index, bool& ok)
     {
 #ifndef NDEBUG
-      if (_data.size() > 0u) { BOOST_ASSERT(grainId < static_cast<int>(_data.size()));}
+      if (m_Array.size() > 0u) { BOOST_ASSERT(grainId < static_cast<int>(m_Array.size()));}
 #endif
-      SharedVectorType vec = _data[grainId];
+      SharedVectorType vec = m_Array[grainId];
       if(index < 0 || static_cast<size_t>(index) >= vec->size())
       {
         ok = false;
@@ -589,7 +906,7 @@ class NeighborList : public IDataArray
      */
     int getNumberOfLists()
     {
-      return static_cast<int>(_data.size());
+      return static_cast<int>(m_Array.size());
     }
 
     /**
@@ -600,11 +917,18 @@ class NeighborList : public IDataArray
     int getListSize(int grainId)
     {
 #ifndef NDEBUG
-      if (_data.size() > 0u) { BOOST_ASSERT(grainId < static_cast<int>(_data.size()));}
+      if (m_Array.size() > 0u) { BOOST_ASSERT(grainId < static_cast<int>(m_Array.size()));}
 #endif
-      return static_cast<int>(_data[grainId]->size());
+      return static_cast<int>(m_Array[grainId]->size());
     }
 
+    VectorType& getListReference(int grainId)
+    {
+#ifndef NDEBUG
+      if (m_Array.size() > 0u) { BOOST_ASSERT(grainId < static_cast<int>(m_Array.size()));}
+#endif
+      return *(m_Array[grainId]);
+    }
 
     /**
      * @brief getList
@@ -614,9 +938,9 @@ class NeighborList : public IDataArray
     SharedVectorType getList(int grainId)
     {
 #ifndef NDEBUG
-      if (_data.size() > 0u) { BOOST_ASSERT(grainId < static_cast<int>(_data.size()));}
+      if (m_Array.size() > 0u) { BOOST_ASSERT(grainId < static_cast<int>(m_Array.size()));}
 #endif
-      return _data[grainId];
+      return m_Array[grainId];
     }
 
     /**
@@ -627,10 +951,10 @@ class NeighborList : public IDataArray
     VectorType copyOfList(int grainId)
     {
 #ifndef NDEBUG
-      if (_data.size() > 0u) { BOOST_ASSERT(grainId < static_cast<int>(_data.size()));}
+      if (m_Array.size() > 0u) { BOOST_ASSERT(grainId < static_cast<int>(m_Array.size()));}
 #endif
 
-      VectorType copy(*(_data[grainId]));
+      VectorType copy(*(m_Array[grainId]));
       return copy;
     }
 
@@ -642,9 +966,9 @@ class NeighborList : public IDataArray
     VectorType& operator[](int grainId)
     {
 #ifndef NDEBUG
-      if (_data.size() > 0u) { BOOST_ASSERT(grainId < static_cast<int>(_data.size()));}
+      if (m_Array.size() > 0u) { BOOST_ASSERT(grainId < static_cast<int>(m_Array.size()));}
 #endif
-      return *(_data[grainId]);
+      return *(m_Array[grainId]);
     }
 
     /**
@@ -655,9 +979,9 @@ class NeighborList : public IDataArray
     VectorType& operator[](size_t grainId)
     {
 #ifndef NDEBUG
-      if (_data.size() > 0ul) { BOOST_ASSERT(grainId < _data.size());}
+      if (m_Array.size() > 0ul) { BOOST_ASSERT(grainId < m_Array.size());}
 #endif
-      return *(_data[grainId]);
+      return *(m_Array[grainId]);
 
     }
 
@@ -666,18 +990,25 @@ class NeighborList : public IDataArray
     /**
      * @brief NeighborList
      */
-    NeighborList() :
-      m_NumNeighborsArrayName(DREAM3D::FieldData::NumNeighbors),
-      m_Name("NeighborList")
-    {}
+    NeighborList(size_t numTuples, const QString name) :
+      m_NumNeighborsArrayName(DREAM3D::FeatureData::NumNeighbors),
+      m_Name(name),
+      m_NumTuples(numTuples)
+    {    }
 
   private:
-    std::string m_Name;
+    std::vector<SharedVectorType> m_Array;
+    QString m_Name;
+    size_t m_NumTuples;
+    T m_InitValue;
 
-    std::vector<SharedVectorType> _data;
 
     NeighborList(const NeighborList&); // Copy Constructor Not Implemented
     void operator=(const NeighborList&); // Operator '=' Not Implemented
 };
 
+typedef NeighborList<int32_t> Int32NeighborListType;
+typedef NeighborList<float> FloatNeighborListType;
+
 #endif /* NEIGHBORLIST_H_ */
+

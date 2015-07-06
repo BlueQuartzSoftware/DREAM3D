@@ -2,33 +2,30 @@ Import & Export File Formats {#miscfileformats}
 =======
 
 ## Supported Input File Types
-+ TSL .ang files
-+ HKL .ctf files
-+ HEDM .mic files
-+ Raw Binary Files
-+ Dx files (Limited Subset)
++ Native .dream3d files
 + H5Ebsd files
++ TSL .ang files
++ TSL .h5 files
++ HKL .ctf files
++ Raw Binary files
++ Image formats (.tif, .png, .bmp, .jpeg)
++ STL files
++ Dx files (Limited Subset)
 + Ph files
-+ Vtk file (Structured Points)
-+ DREAM3D Native Files
-
++ VTK files (STRUCTURED\_POINTS)
++ SPParks files
 
 
 ## Supported Output File Types
-+ Avizo Rectilinear Coordinate
-+ Avizo Uniform Coordinate Writer
++ Native .dream3d files
++ Raw ASCII files (various delimiters)
 + H5EBSD files
-+ DREAM3D Native files
 + Dx files (Limited Subset)
 + Ph files
-+ SPParks file
-+ STL Files (StereoLithography Format)
-+ VTK Rectilinear Grid (Voxel Based Data)
-+ VTK Polydata (Surfacemesh Based Data)
-+ VTK Polydata (Solidmesh Based Data)
-+ INL (CSV File of Voxel attributes)
-+ Nodes/Triangles from Surfacemesh
-+ CSV File of Field Values
-
-Please take a look at each of the various filters that read or write these files for notes on each type of file.
++ SPParks files
++ Image formats (.tif, .png, .bmp)
++ Abaqus hexahedron .inp files
++ Abaqus surface mesh .inp files
++ INL (CSV file of voxel attributes)
++ GBCD triangle information files
 

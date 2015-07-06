@@ -2,31 +2,10 @@
 
 @mainpage DREAM3D Developer Documentation
 
-@subpage addingfilters Adding Filters to DREAM3D
+@subpage codeguidelines Coding Guidelines
 
-@subpage compilingdream3d "Compiling DREAM.3D"
-If you would like to make changes to the DREAM.3D applications then you will need
-to be able to compile DREAM.3D your self. This page will attemp to describe the
-prerequisites that are needed to compile DREAM.3D
+@subpage compilingexternallibraries "Compiling External Libraries"
 
-@subpage writingplugins "Writing Plugins"
-These documents will show you what needs to be written in order to create a plugin
-for the DREAM.3D environment
-
-@subpage DataContainerStrategies "DataContainer Use Strategies"
-  How to properly use the Data Container object
-
-@subpage codeguidelines Best Practices for Portable Code in DREAM.3D
-  This section details some basic coding guidelines for developers wishing to
-constribute to DREAM.3D
-
-
-@subpage writingplugins Writing Plugins
- This section shows how to add a new plugin into DREAM3D.
-
-@subpage developmentnotes General ideas that need to be implemented
-
-@subpage todo "ToDo List"
-List of things that need to be done in the code
+@subpage compilingdream3d "Compiling DREAM3D"
 
 */

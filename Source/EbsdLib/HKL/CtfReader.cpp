@@ -1,38 +1,38 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 
 
 
@@ -59,8 +59,8 @@
 //
 // -----------------------------------------------------------------------------
 CtfReader::CtfReader() :
-EbsdReader(),
-m_SingleSliceRead(-1)
+  EbsdReader(),
+  m_SingleSliceRead(-1)
 {
 
   // Initialize the map of header key to header value
@@ -114,58 +114,31 @@ void CtfReader::initPointers(size_t numElements)
 // -----------------------------------------------------------------------------
 void CtfReader::deletePointers()
 {
-  typedef std::map<std::string, void*> NamePointerMapType;
-
-  for (NamePointerMapType::iterator iter = m_NamePointerMap.begin(); iter != m_NamePointerMap.end(); ++iter )
-  {
-    Ebsd::NumType pType = getPointerType( (*iter).first );
-    if (Ebsd::Int32 == pType)
-    {
-      int32_t* ptr = static_cast<int32_t*>((*iter).second);
-      this->deallocateArrayData<int32_t>(ptr);
-    }
-    else if (Ebsd::Float == pType)
-    {
-      float* ptr = static_cast<float*>((*iter).second);
-      this->deallocateArrayData<float>(ptr);
-    }
-  }
-
   // Clear out all the maps and vectors
-  m_NamePointerMap.clear();
-  m_NameIndexMap.clear();
-  m_ColumnData.clear();
-  m_DataParsers.clear();
+//  m_NameIndexMap.clear();
+//  m_DataParsers.clear();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CtfReader::setPointerByName(const std::string &name, void* p)
+void CtfReader::setPointerByName(const QString& name, void* p)
 {
   // First we need to see if the pointer already exists
-  std::map<std::string, int>::iterator iter = m_NameIndexMap.find(name);
-  if (iter == m_NameIndexMap.end())
+  QMap<QString, DataParser::Pointer>::iterator iter = m_NamePointerMap.find(name);
+  if (iter == m_NamePointerMap.end())
   {
     // Data does not exist in Map
-    size_t i = m_ColumnData.size();
-    m_ColumnData.push_back(p);
-    m_NameIndexMap[name] = static_cast<int>(i);
-    m_NamePointerMap[name] = m_ColumnData[i];
-    if (m_DataParsers.size() <= i)
-    {
-      m_DataParsers.resize(i+1);
-    }
-    m_DataParsers[i] = getParser(name, m_ColumnData[i], getXCells()*getYCells());
+    DataParser::Pointer dparser = getParser(name, NULL, getXCells() * getYCells());
+    dparser->setVoidPointer(p);
+    m_NamePointerMap[name] = dparser;
   }
   else
   {
-    void* ptr = m_NamePointerMap[name];
+    DataParser::Pointer dparser = m_NamePointerMap[name];
+    void* ptr = dparser->getVoidPointer();
     deallocateArrayData(ptr);
-    m_NamePointerMap[name] = p;
-    int index = m_NameIndexMap[name];
-    m_ColumnData[index] = p;
-    m_DataParsers[index] = getParser(name, m_ColumnData[index], getXCells()*getYCells());
+    dparser->setVoidPointer(p);
   }
 
 }
@@ -174,14 +147,12 @@ void CtfReader::setPointerByName(const std::string &name, void* p)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void* CtfReader::getPointerByName(const std::string &fieldName)
+void* CtfReader::getPointerByName(const QString& featureName)
 {
   void* ptr = NULL;
-  std::map<std::string, void*>::iterator iter = m_NamePointerMap.find(fieldName);
-  if(iter != m_NamePointerMap.end())
+  if(m_NamePointerMap.contains(featureName) == true)
   {
-    ptr = (*iter).second;
-    return ptr;
+    ptr = m_NamePointerMap.value(featureName)->getVoidPointer();
   }
   return ptr;
 }
@@ -189,74 +160,75 @@ void* CtfReader::getPointerByName(const std::string &fieldName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::NumType CtfReader::getPointerType(const std::string &fieldName)
+Ebsd::NumType CtfReader::getPointerType(const QString& featureName)
 {
- // std::cout << "fieldName: " << fieldName << std::endl;
-  if (fieldName.compare(Ebsd::Ctf::Phase) == 0) { return Ebsd::Int32;}
-  if (fieldName.compare(Ebsd::Ctf::X) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ctf::Y) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ctf::Z) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ctf::Bands) == 0) { return Ebsd::Int32;}
-  if (fieldName.compare(Ebsd::Ctf::Error) == 0) { return Ebsd::Int32;}
-  if (fieldName.compare(Ebsd::Ctf::Euler1) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ctf::Euler2) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ctf::Euler3) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ctf::MAD) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ctf::BC) == 0) { return Ebsd::Int32;}
-  if (fieldName.compare(Ebsd::Ctf::BS) == 0) { return Ebsd::Int32;}
-  if (fieldName.compare(Ebsd::Ctf::GrainIndex) == 0) { return Ebsd::Int32;}
-  if (fieldName.compare(Ebsd::Ctf::GrainRandomColourR) == 0) { return Ebsd::Int32;}
-  if (fieldName.compare(Ebsd::Ctf::GrainRandomColourG) == 0) { return Ebsd::Int32;}
-  if (fieldName.compare(Ebsd::Ctf::GrainRandomColourB) == 0) { return Ebsd::Int32;}
- // std::cout << "THIS IS NOT GOOD. Fieldname: " << fieldName << " was not found in the list" << std::endl;
+  // std::cout << "featureName: " << featureName << std::endl;
+  if (featureName.compare(Ebsd::Ctf::Phase) == 0) { return Ebsd::Int32;}
+  if (featureName.compare(Ebsd::Ctf::X) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ctf::Y) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ctf::Z) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ctf::Bands) == 0) { return Ebsd::Int32;}
+  if (featureName.compare(Ebsd::Ctf::Error) == 0) { return Ebsd::Int32;}
+  if (featureName.compare(Ebsd::Ctf::Euler1) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ctf::Euler2) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ctf::Euler3) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ctf::MAD) == 0) { return Ebsd::Float;}
+  if (featureName.compare(Ebsd::Ctf::BC) == 0) { return Ebsd::Int32;}
+  if (featureName.compare(Ebsd::Ctf::BS) == 0) { return Ebsd::Int32;}
+  if (featureName.compare(Ebsd::Ctf::GrainIndex) == 0) { return Ebsd::Int32;}
+  if (featureName.compare(Ebsd::Ctf::GrainRandomColourR) == 0) { return Ebsd::Int32;}
+  if (featureName.compare(Ebsd::Ctf::GrainRandomColourG) == 0) { return Ebsd::Int32;}
+  if (featureName.compare(Ebsd::Ctf::GrainRandomColourB) == 0) { return Ebsd::Int32;}
+  // std::cout << "THIS IS NOT GOOD. Featurename: " << featureName << " was not found in the list" << std::endl;
   return Ebsd::UnknownNumType;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int CtfReader::getTypeSize(const std::string &fieldName)
+int CtfReader::getTypeSize(const QString& featureName)
 {
-  if (fieldName.compare(Ebsd::Ctf::Phase) == 0) { return 4;}
-  if (fieldName.compare(Ebsd::Ctf::X) == 0) { return 4;}
-  if (fieldName.compare(Ebsd::Ctf::Y) == 0) { return 4;}
-  if (fieldName.compare(Ebsd::Ctf::Z) == 0) { return 4;}
-  if (fieldName.compare(Ebsd::Ctf::Bands) == 0) { return 4;}
-  if (fieldName.compare(Ebsd::Ctf::Error) == 0) { return 4;}
-  if (fieldName.compare(Ebsd::Ctf::Euler1) == 0) { return 4;}
-  if (fieldName.compare(Ebsd::Ctf::Euler2) == 0) { return 4;}
-  if (fieldName.compare(Ebsd::Ctf::Euler3) == 0) { return 4;}
-  if (fieldName.compare(Ebsd::Ctf::MAD) == 0) { return 4;}
-  if (fieldName.compare(Ebsd::Ctf::BC) == 0) { return 4;}
-  if (fieldName.compare(Ebsd::Ctf::BS) == 0) { return 4;}
-  if (fieldName.compare(Ebsd::Ctf::GrainIndex) == 0) { return 4;}
-  if (fieldName.compare(Ebsd::Ctf::GrainRandomColourR) == 0) { return 4;}
-  if (fieldName.compare(Ebsd::Ctf::GrainRandomColourG) == 0) { return 4;}
-  if (fieldName.compare(Ebsd::Ctf::GrainRandomColourB) == 0) { return 4;}
+  if (featureName.compare(Ebsd::Ctf::Phase) == 0) { return 4;}
+  if (featureName.compare(Ebsd::Ctf::X) == 0) { return 4;}
+  if (featureName.compare(Ebsd::Ctf::Y) == 0) { return 4;}
+  if (featureName.compare(Ebsd::Ctf::Z) == 0) { return 4;}
+  if (featureName.compare(Ebsd::Ctf::Bands) == 0) { return 4;}
+  if (featureName.compare(Ebsd::Ctf::Error) == 0) { return 4;}
+  if (featureName.compare(Ebsd::Ctf::Euler1) == 0) { return 4;}
+  if (featureName.compare(Ebsd::Ctf::Euler2) == 0) { return 4;}
+  if (featureName.compare(Ebsd::Ctf::Euler3) == 0) { return 4;}
+  if (featureName.compare(Ebsd::Ctf::MAD) == 0) { return 4;}
+  if (featureName.compare(Ebsd::Ctf::BC) == 0) { return 4;}
+  if (featureName.compare(Ebsd::Ctf::BS) == 0) { return 4;}
+  if (featureName.compare(Ebsd::Ctf::GrainIndex) == 0) { return 4;}
+  if (featureName.compare(Ebsd::Ctf::GrainRandomColourR) == 0) { return 4;}
+  if (featureName.compare(Ebsd::Ctf::GrainRandomColourG) == 0) { return 4;}
+  if (featureName.compare(Ebsd::Ctf::GrainRandomColourB) == 0) { return 4;}
   return 0;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataParser::Pointer CtfReader::getParser(const std::string &fieldName, void* ptr, size_t size)
+DataParser::Pointer CtfReader::getParser(const QString& featureName, void* ptr, size_t size)
 {
-  if (fieldName.compare(Ebsd::Ctf::Phase) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName);}
-  if (fieldName.compare(Ebsd::Ctf::X) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, fieldName);}
-  if (fieldName.compare(Ebsd::Ctf::Y) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, fieldName);}
-  if (fieldName.compare(Ebsd::Ctf::Z) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, fieldName);}
-  if (fieldName.compare(Ebsd::Ctf::Bands) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName);}
-  if (fieldName.compare(Ebsd::Ctf::Error) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName);}
-  if (fieldName.compare(Ebsd::Ctf::Euler1) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, fieldName);}
-  if (fieldName.compare(Ebsd::Ctf::Euler2) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, fieldName);}
-  if (fieldName.compare(Ebsd::Ctf::Euler3) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, fieldName);}
-  if (fieldName.compare(Ebsd::Ctf::MAD) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, fieldName);}
-  if (fieldName.compare(Ebsd::Ctf::BC) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName);}
-  if (fieldName.compare(Ebsd::Ctf::BS) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName);}
-  if (fieldName.compare(Ebsd::Ctf::GrainIndex) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName);}
-  if (fieldName.compare(Ebsd::Ctf::GrainRandomColourR) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName);}
-  if (fieldName.compare(Ebsd::Ctf::GrainRandomColourG) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName);}
-  if (fieldName.compare(Ebsd::Ctf::GrainRandomColourB) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName);}
+  // These are defaulted to a "3D" CTF file with Feature IDS already determined and their colors
+  if (featureName.compare(Ebsd::Ctf::Phase) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, featureName, 0);}
+  if (featureName.compare(Ebsd::Ctf::X) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, featureName, 1);}
+  if (featureName.compare(Ebsd::Ctf::Y) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, featureName, 2);}
+  if (featureName.compare(Ebsd::Ctf::Z) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, featureName, 3);}
+  if (featureName.compare(Ebsd::Ctf::Bands) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, featureName, 4);}
+  if (featureName.compare(Ebsd::Ctf::Error) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, featureName, 5);}
+  if (featureName.compare(Ebsd::Ctf::Euler1) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, featureName, 6);}
+  if (featureName.compare(Ebsd::Ctf::Euler2) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, featureName, 7);}
+  if (featureName.compare(Ebsd::Ctf::Euler3) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, featureName, 8);}
+  if (featureName.compare(Ebsd::Ctf::MAD) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, featureName, 9);}
+  if (featureName.compare(Ebsd::Ctf::BC) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, featureName, 10);}
+  if (featureName.compare(Ebsd::Ctf::BS) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, featureName, 11);}
+  if (featureName.compare(Ebsd::Ctf::GrainIndex) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, featureName, 12);}
+  if (featureName.compare(Ebsd::Ctf::GrainRandomColourR) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, featureName, 13);}
+  if (featureName.compare(Ebsd::Ctf::GrainRandomColourG) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, featureName, 14);}
+  if (featureName.compare(Ebsd::Ctf::GrainRandomColourB) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, featureName, 15);}
   return DataParser::NullPointer();
 }
 
@@ -266,22 +238,23 @@ DataParser::Pointer CtfReader::getParser(const std::string &fieldName, void* ptr
 int CtfReader::readHeaderOnly()
 {
   int err = 1;
-
+  QByteArray buf;
+  QFile in(getFileName());
   setHeaderIsComplete(false);
-  std::ifstream in(getFileName().c_str());
-
-  if (!in.is_open())
+  if (!in.open(QIODevice::ReadOnly | QIODevice::Text))
   {
-    std::cout << "ctf file could not be opened: " << getFileName() << std::endl;
+    QString msg = QString("Ctf file could not be opened: ") + getFileName();
+    setErrorCode(-100);
+    setErrorMessage(msg);
     return -100;
   }
 
-  std::string origHeader;
+  QString origHeader;
   setOriginalHeader(origHeader);
   m_PhaseVector.clear();
 
   // Parse the header
-  std::vector<std::vector<std::string> > headerLines;
+  QList<QByteArray> headerLines;
   err = getHeaderLines(in, headerLines);
   err = parseHeaderLines(headerLines);
   return err;
@@ -293,22 +266,24 @@ int CtfReader::readHeaderOnly()
 int CtfReader::readFile()
 {
   int err = 1;
-
+  setErrorCode(0);
+  setErrorMessage("");
+  QByteArray buf;
+  QFile in(getFileName());
   setHeaderIsComplete(false);
-  std::ifstream in(getFileName().c_str());
-
-  if (!in.is_open())
+  if (!in.open(QIODevice::ReadOnly | QIODevice::Text))
   {
-    std::cout << "ctf file could not be opened: " << getFileName() << std::endl;
+    QString msg = QString("Ctf file could not be opened: ") + getFileName();
+    setErrorCode(-100);
+    setErrorMessage(msg);
     return -100;
   }
-
-  std::string origHeader;
+  QString origHeader;
   setOriginalHeader(origHeader);
   m_PhaseVector.clear();
 
   // Parse the header
-  std::vector<std::vector<std::string> > headerLines;
+  QList<QByteArray> headerLines;
   err = getHeaderLines(in, headerLines);
   if (err < 0) { return err;}
   err = parseHeaderLines(headerLines);
@@ -321,8 +296,15 @@ int CtfReader::readFile()
     return -102;
   }
 
+  if (getXCells() == 0 || getYCells() == 0 )
+  {
+    setErrorMessage("Either the X Cells or Y Cells was Zero (0) which is NOT allowed. Please update the CTF file header with appropriate values.");
+    return -103;
+  }
+
   err = readData(in);
-  if (err < 0) {
+  if (err < 0)
+  {
     return err;
   }
 
@@ -340,11 +322,12 @@ void CtfReader::readOnlySliceIndex(int slice)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int CtfReader::readData(std::ifstream &in)
+int CtfReader::readData(QFile& in)
 {
   // Delete any currently existing pointers
   deletePointers();
-  std::stringstream ss;
+  QString sBuf;
+  QTextStream ss(&sBuf);
   // Initialize new pointers
   size_t yCells = getYCells();
   size_t xCells = getXCells();
@@ -355,58 +338,74 @@ int CtfReader::readData(std::ifstream &in)
   {
     zCells = 1;
   }
-  size_t totalDataRows = yCells * xCells * zCells;
+  size_t totalScanPoints = yCells * xCells * zCells;
 
-  setNumberOfElements(totalDataRows);
+  setNumberOfElements(totalScanPoints);
 
-  char buf[kBufferSize];
-  ::memset(buf, 0, kBufferSize);
-  in.getline(buf, kBufferSize);
-  // over write the newline at the end of the line with a NULL character
-  uint32_t idx = 0;
-  while (idx < kBufferSize && buf[idx] != 0 ) { ++idx; }
-  if(buf[idx - 1] < 32) { buf[idx - 1] = 0; }
+  QByteArray buf;
 
-  std::vector<std::string> tokens = tokenize(buf, '\t');
+  // Read the column Headers and allocate the necessary arrays
+  buf = in.readLine();
+  buf = buf.trimmed(); // Remove leading and trailing whitespace
 
-  m_ColumnData.resize(tokens.size());
-  m_DataParsers.resize(tokens.size());
+  QList<QByteArray> tokens = buf.split('\t'); // Tokenize the array with a tab
 
   Ebsd::NumType pType = Ebsd::UnknownNumType;
-  size_t size = tokens.size();
-  for (size_t i = 0; i < size; ++i)
+  qint32 size = tokens.size();
+  bool didAllocate = false;
+  for (qint32 i = 0; i < size; ++i)
   {
-    pType = getPointerType(tokens[i]);
+    QString name = QString::fromLatin1(tokens[i]);
+    pType = getPointerType(name);
     if(Ebsd::Int32 == pType)
     {
-      m_ColumnData[i] = static_cast<void*>(allocateArray<int>(totalDataRows));
-      ::memset(m_ColumnData[i], 0xAB, sizeof(int) * totalDataRows);
+      Int32Parser::Pointer dparser = Int32Parser::New(NULL, totalScanPoints, name, i);
+      didAllocate = dparser->allocateArray(totalScanPoints);
+      //Q_ASSERT_X(dparser->getVoidPointer() != NULL, __FILE__, "Could not allocate memory for Integer data in CTF File.");
+      if( didAllocate == true)
+      {
+        ::memset(dparser->getVoidPointer(), 0xAB, sizeof(int32_t) * totalScanPoints);
+        m_NamePointerMap.insert(name, dparser);
+      }
     }
     else if(Ebsd::Float == pType)
     {
-      m_ColumnData[i] = static_cast<void*>(allocateArray<float>(totalDataRows));
-      ::memset(m_ColumnData[i], 0xFF, sizeof(float) * totalDataRows);
+      FloatParser::Pointer dparser = FloatParser::New(NULL, totalScanPoints, name, i);
+      didAllocate = dparser->allocateArray(totalScanPoints);
+      //Q_ASSERT_X(dparser->getVoidPointer() != NULL, __FILE__, "Could not allocate memory for Integer data in CTF File.");
+      if( didAllocate == true)
+      {
+        ::memset(dparser->getVoidPointer(), 0xAB, sizeof(float) * totalScanPoints);
+        m_NamePointerMap.insert(name, dparser);
+      }
     }
     else
     {
-      ss.str("");
+      ss.string()->clear();
       ss << "Column Header '" << tokens[i] << "' is not a recognized column for CTF Files. Please recheck your .ctf file and report this error to the DREAM3D developers.";
-      setErrorMessage(ss.str());
+      setErrorMessage(ss.string());
       deletePointers();
       return -107;
     }
 
-    if(m_ColumnData[i] == NULL)
+
+    if(didAllocate == false)
     {
       setErrorCode(-106);
-      setErrorMessage("The CTF reader could not allocate memory for the data.");
+      QString msg;
+      QTextStream ss(&msg);
+      ss << "The CTF reader could not allocate memory for the data. Check the header for the number of X, Y and Z Cells.";
+      ss << "\n X Cells: " << getXCells();
+      ss << "\n Y Cells: " << getYCells();
+      ss << "\n Z Cells: " << getZCells();
+      ss << "\n Total Scan Points: " << totalScanPoints;
+      setErrorMessage(msg);
       return -106; // Could not allocate the memory
     }
-    m_NameIndexMap[tokens[i]] = static_cast<int>(i);
-    m_NamePointerMap[tokens[i]] = m_ColumnData[i];
-    m_DataParsers[i] = getParser(tokens[i], m_ColumnData[i], totalDataRows);
+
   }
 
+  // Now start reading the data line by line
   size_t counter = 0;
   for (int slice = zStart; slice < zEnd; ++slice)
   {
@@ -414,15 +413,16 @@ int CtfReader::readData(std::ifstream &in)
     {
       for (size_t col = 0; col < xCells; ++col)
       {
-        ::memset(buf, 0, kBufferSize);
-        in.getline(buf, kBufferSize);
+        buf = in.readLine(); // Read the line into a QByteArray including the newline
+        buf = buf.trimmed(); // Remove leading and trailing whitespace
 
         if ( (m_SingleSliceRead < 0) || (m_SingleSliceRead >= 0 && slice == m_SingleSliceRead) )
         {
-          idx = 0;
-          while (buf[idx] != 0 && idx < kBufferSize) { ++idx; }
-          if(buf[idx - 1] < 32) { buf[idx - 1] = 0; }
-          if(in.eof() == true) {
+
+          if(in.atEnd() == true && buf.isEmpty() == true) // We have to have read to the end of the file AND the buffer is empty
+            // otherwise we read EXACTLY the last line and we still need to parse the line.
+          {
+            //  ++counter; // We need to make sure this gets incremented before leaving
             break;
           }
           parseDataLine(buf, row, col, counter, xCells, yCells);
@@ -430,24 +430,24 @@ int CtfReader::readData(std::ifstream &in)
         }
 
       }
-      if(in.eof() == true)
+      if(in.atEnd() == true)
       {
         break;
       }
     }
- //   std::cout << ".ctf Z Slice " << slice << " Reading complete." << std::endl;
+    //   std::cout << ".ctf Z Slice " << slice << " Reading complete." << std::endl;
     if(m_SingleSliceRead >= 0 && slice == m_SingleSliceRead)
     {
       break;
     }
   }
 
-  if(counter != getNumberOfElements() && in.eof() == true)
+  if(counter != getNumberOfElements() && in.atEnd() == true)
   {
-    ss.str("");
+    ss.string()->clear();
     ss << "Premature End Of File reached.\n" << getFileName() << "\nNumRows=" << getNumberOfElements() << "\ncounter=" << counter
-        << "\nTotal Data Points Read=" << counter << std::endl;
-    setErrorMessage(ss.str());
+       << "\nTotal Data Points Read=" << counter << "\n";
+    setErrorMessage(ss.string());
     setErrorCode(-105);
     return -105;
   }
@@ -456,28 +456,49 @@ int CtfReader::readData(std::ifstream &in)
 
 #if 0
 #define PRINT_HTML_TABLE_ROW(p)\
-      std::cout << "<tr>\n    <td>" << p->getKey() << "</td>\n    <td>" << p->getHDFType() << "</td>\n";\
-      std::cout << "    <td colspan=\"2\"> Contains value for the header entry " << p->getKey() << "</td>\n</tr>" << std::endl;
+  std::cout << "<tr>\n    <td>" << p->getKey() << "</td>\n    <td>" << p->getHDFType() << "</td>\n";\
+  std::cout << "    <td colspan=\"2\"> Contains value for the header entry " << p->getKey() << "</td>\n</tr>" << std::endl;
 #else
-    #define PRINT_HTML_TABLE_ROW(p)
+#define PRINT_HTML_TABLE_ROW(p)
 #endif
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int CtfReader::parseHeaderLines(std::vector<std::vector<std::string> > &headerLines)
+int CtfReader::parseHeaderLines(QList<QByteArray>& headerLines)
 {
   int err = 0;
-  size_t size = headerLines.size();
-  for (size_t i = 0; i < size; ++i)
+  qint32 size = headerLines.size();
+  for (qint32 i = 0; i < size; ++i)
   {
-    std::vector<std::string> line = headerLines[i];
-    //  std::cout << "Parsing Header Line: " << line[0] << std::endl;
-    if(line[0].compare(Ebsd::Ctf::NumPhases) == 0)
+    QByteArray line = headerLines[i];
+    QString sLine = line; // Turn the line into a QString
+    QList<QByteArray> spcTokens = line.split(' '); // Space Delimit the line
+    QList<QByteArray> tabTokens = line.split('\t'); // Tab Delimit the line
+
+    if(line.startsWith("Prj"))  // This is a special case/bug in HKL's writing code. This line is space delimited
     {
-      //  std::cout << "Parsing Phases" << std::endl;
-      EbsdHeaderEntry::Pointer p = m_HeaderMap[line[0]];
-      p->parseValue(const_cast<char*>(line[1].c_str()), 0, line[1].length());
+      line = line.trimmed();
+      line = line.simplified();
+
+      QByteArray value = line.mid(4); // Get the value part of the line
+      EbsdHeaderEntry::Pointer p = m_HeaderMap["Prj"];
+      if(NULL == p.get())
+      {
+        std::cout << "---------------------------" << std::endl;
+        std::cout << "Could not find header entry for key 'Prj'" << std::endl;
+      }
+      else
+      {
+        p->parseValue(value);
+        PRINT_HTML_TABLE_ROW(p)
+      }
+    }
+    else if(sLine.startsWith(Ebsd::Ctf::NumPhases) == true)
+    {
+      QByteArray key = tabTokens[0];
+      EbsdHeaderEntry::Pointer p = m_HeaderMap[key];
+      p->parseValue(tabTokens[1]);
       int nPhases = getNumPhases();
       // We start the Phase Index at "1" instead of Zero by convention
       for (int p = 1; p <= nPhases; ++p)
@@ -490,57 +511,59 @@ int CtfReader::parseHeaderLines(std::vector<std::vector<std::string> > &headerLi
 
         m_PhaseVector.push_back(phase);
       }
+      ++i;
     }
-    else if(line[0].compare("Euler angles refer to Sample Coordinate system (CS0)!") == 0)
+    else if(sLine.startsWith("Euler angles refer to Sample Coordinate system (CS0)!") == true)
     {
       // We parse out lots of stuff from this one line
       //Mag
-      EbsdHeaderEntry::Pointer p0 = m_HeaderMap[line[1]];
-      p0->parseValue(const_cast<char*>(line[2].c_str()), 0, line[2].length());
-        PRINT_HTML_TABLE_ROW(p0)
+      EbsdHeaderEntry::Pointer p0 = m_HeaderMap[tabTokens[1]];
+      p0->parseValue(tabTokens[2]);
+      PRINT_HTML_TABLE_ROW(p0);
       //Coverage
-      EbsdHeaderEntry::Pointer p1 = m_HeaderMap[line[3]];
-      p1->parseValue(const_cast<char*>(line[4].c_str()), 0, line[4].length());
-      PRINT_HTML_TABLE_ROW(p1)
+      EbsdHeaderEntry::Pointer p1 = m_HeaderMap[tabTokens[3]];
+      p1->parseValue(tabTokens[4]);
+      PRINT_HTML_TABLE_ROW(p1);
       //Device
-      EbsdHeaderEntry::Pointer p2 = m_HeaderMap[line[5]];
-      p2->parseValue(const_cast<char*>(line[6].c_str()), 0, line[6].length());
-      PRINT_HTML_TABLE_ROW(p2)
+      EbsdHeaderEntry::Pointer p2 = m_HeaderMap[tabTokens[5]];
+      p2->parseValue(tabTokens[6]);
+      PRINT_HTML_TABLE_ROW(p2);
       //KV
-      EbsdHeaderEntry::Pointer p3 = m_HeaderMap[line[7]];
-      p3->parseValue(const_cast<char*>(line[8].c_str()), 0, line[8].length());
-      PRINT_HTML_TABLE_ROW(p3)
+      EbsdHeaderEntry::Pointer p3 = m_HeaderMap[tabTokens[7]];
+      p3->parseValue(tabTokens[8]);
+      PRINT_HTML_TABLE_ROW(p3);
       //TiltAngle
-      EbsdHeaderEntry::Pointer p4 = m_HeaderMap[line[9]];
-      p4->parseValue(const_cast<char*>(line[10].c_str()), 0, line[10].length());
-      PRINT_HTML_TABLE_ROW(p4)
+      EbsdHeaderEntry::Pointer p4 = m_HeaderMap[tabTokens[9]];
+      p4->parseValue(tabTokens[10]);
+      PRINT_HTML_TABLE_ROW(p4);
       //TiltAxis
-      EbsdHeaderEntry::Pointer p5 = m_HeaderMap[line[11]];
-      p5->parseValue(const_cast<char*>(line[12].c_str()), 0, line[12].length());
-      PRINT_HTML_TABLE_ROW(p5)
+      EbsdHeaderEntry::Pointer p5 = m_HeaderMap[tabTokens[11]];
+      p5->parseValue(tabTokens[12]);
+      PRINT_HTML_TABLE_ROW(p5);
     }
-    else if(line[0].compare("Channel Text File") == 0 || line[0].compare(":Channel Text File") == 0)
+    else if(sLine.startsWith("Channel Text File") == true || sLine.startsWith(":Channel Text File") == true)
     {
       // We do not really do anything with this entry
     }
     else // This is the generic Catch all
     {
-      EbsdHeaderEntry::Pointer p = m_HeaderMap[line[0]];
+      EbsdHeaderEntry::Pointer p = m_HeaderMap[tabTokens[0]];
       if(NULL == p.get())
       {
         std::cout << "---------------------------" << std::endl;
-        std::cout << "Could not find header entry for key'" << line[0] << "'" << std::endl;
-//        std::string upper(line[0]);
-//        std::transform(upper.begin(), upper.end(), upper.begin(), ::toupper);
-//        std::cout << "#define ANG_" << upper << "     \"" << line[0] << "\"" << std::endl;
-//        std::cout << "const std::string " << line[0] << "(ANG_" << upper << ");" << std::endl;
-//        std::cout << "angInstanceProperty(AngHeaderEntry<float>. float, " << line[0] << "Ebsd::Ctf::" << line[0] << std::endl;
-//        std::cout << "m_Headermap[Ebsd::Ctf::" << line[0] << "] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::" << line[0] << ");" << std::endl;
+        std::cout << "Could not find header entry for key '" << line[0] << "'" << std::endl;
+        //        QString upper(line[0]);
+        //        std::transform(upper.begin(), upper.end(), upper.begin(), ::toupper);
+        //        std::cout << "#define ANG_" << upper << "     \"" << line[0] << "\"" << std::endl;
+        //        std::cout << "const QString " << line[0] << "(ANG_" << upper << ");" << std::endl;
+        //        std::cout << "angInstanceProperty(AngHeaderEntry<float>. float, " << line[0] << "Ebsd::Ctf::" << line[0] << std::endl;
+        //        std::cout << "m_Headermap[Ebsd::Ctf::" << line[0] << "] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::" << line[0] << ");" << std::endl;
       }
       else
       {
-        if (line.size() > 1) {
-          p->parseValue(const_cast<char*>(line[1].c_str()), 0, line[1].length());
+        if (line.size() > 1)
+        {
+          p->parseValue(tabTokens[1]);
           PRINT_HTML_TABLE_ROW(p)
         }
       }
@@ -555,132 +578,117 @@ int CtfReader::parseHeaderLines(std::vector<std::vector<std::string> > &headerLi
 // -----------------------------------------------------------------------------
 //  Read the data part of the .ctf file
 // -----------------------------------------------------------------------------
-void CtfReader::parseDataLine(const std::string &line, size_t row, size_t col, size_t offset, size_t xCells, size_t yCells )
+void CtfReader::parseDataLine(QByteArray& line, size_t row, size_t col, size_t offset, size_t xCells, size_t yCells )
 {
   /* When reading the data there should be at least 11 cols of data.
    */
-//  float x, y,  p1, p, p2, mad;
-//  int phase, bCount, error, bc, bs;
-//  size_t offset = i;
+  //  float x, y,  p1, p, p2, mad;
+  //  int phase, bCount, error, bc, bs;
+  //  size_t offset = i;
 
   // Filter the line to convert European command style decimals to US/UK style points
-  std::vector<char> cLine(line.size()+1);
-  ::memcpy( &(cLine.front()), line.c_str(), line.size() + 1);
-  for (size_t c = 0; c < cLine.size(); ++c)
+  //  QVector<char> cLine(line.size()+1);
+  //  ::memcpy( &(cLine.front()), line.c_str(), line.size() + 1);
+  for (int c = 0; c < line.size(); ++c)
   {
-    if(cLine[c] == ',')
+    if(line.at(c) == ',')
     {
-      cLine[c] = '.';
+      line[c] = '.';
     }
   }
 
-  std::vector<std::string> tokens = tokenize( &(cLine.front()), '\t');
-  BOOST_ASSERT(tokens.size() == m_DataParsers.size());
+  QList<QByteArray> tokens = line.split('\t');
+  BOOST_ASSERT(tokens.size() == m_NamePointerMap.size());
 
-  for (unsigned int i = 0; i < m_DataParsers.size(); ++i)
+  QMapIterator<QString, DataParser::Pointer> iter(m_NamePointerMap);
+  while (iter.hasNext())
   {
-    m_DataParsers[i]->parse(tokens[i], offset);
+    iter.next();
+
+    DataParser::Pointer dparser = iter.value();
+    dparser->parse(tokens[dparser->getColumnIndex()], offset);
   }
 
 }
 
-
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<std::string> CtfReader::tokenize(char* buf, char delimiter)
+QVector<QString> CtfReader::tokenize(char* buf, char delimiter)
 {
-  std::vector<std::string> output;
-  std::string values(buf);
-  std::string::size_type start = 0;
-  std::string::size_type pos = 0;
-//  std::cout << "-----------------------------" << std::endl;
-  while(pos != std::string::npos && pos != values.size() - 1)
+  QVector<QString> output;
+  QString values(buf);
+  QString::size_type start = 0;
+  QString::size_type pos = 0;
+  //  std::cout << "-----------------------------" << std::endl;
+  while(pos != QString::npos && pos != values.size() - 1)
   {
     pos = values.find(delimiter, start);
-    output.push_back(values.substr(start, pos-start));
- //   std::cout << "Adding: " << output.back() << std::endl;
-    if (pos != std::string::npos)
+    output.push_back(values.substr(start, pos - start));
+    //   std::cout << "Adding: " << output.back() << std::endl;
+    if (pos != QString::npos)
     {
       start = pos + 1;
     }
   }
   return output;
 }
+#endif
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int CtfReader::getHeaderLines(std::ifstream &reader, std::vector<std::vector<std::string> > &headerLines)
+int CtfReader::getHeaderLines(QFile& reader, QList<QByteArray>& headerLines)
 {
   int err = 0;
-  char buf[kBufferSize];
-  int index = 0;
-  int numPhases = 0;
-  while (!reader.eof() && false == getHeaderIsComplete())
+  QByteArray buf;
+  bool ok = false;
+  int numPhases = -1;
+  while (!reader.atEnd() && false == getHeaderIsComplete())
   {
-    ::memset(buf, 0, kBufferSize);
-    reader.getline(buf, kBufferSize);
+    buf = reader.readLine();
     // Append the line to the complete header
-    appendOriginalHeader(std::string(buf));
+    appendOriginalHeader(QString(buf));
 
-    // Replace the newline at the end of the line with a NULL character
-    int i = 0;
-	while (i < kBufferSize && buf[i] != 0) { ++i; }
-    if(buf[i - 1] < 32) { buf[i - 1] = 0; }
-
-    std::vector<std::string> tokens = tokenize(buf, '\t');
-
-    // Once we hit the "Phases" header line we know exactly how many lines we have left to read
-    if (tokens[0].compare("Phases") == 0)
+    // remove the newline at the end of the line
+    buf.chop(1);
+    headerLines.push_back(buf);
+    if (buf.startsWith("Phases") == true)
     {
-      numPhases = atoi(tokens[1].c_str());
-      headerLines.push_back(tokens);
-      for(int n = 0; n < numPhases; ++n)
-      {
-        ::memset(buf, 0, kBufferSize);
-        reader.getline(buf, kBufferSize);
-        appendOriginalHeader(std::string(buf));
-        i = 0;
-        while (buf[i] != 0 && i < kBufferSize) { ++i; }
-        if(buf[i - 1] < 32) { buf[i - 1] = 0; }
-        tokens = tokenize(buf, '\t');
-        headerLines.push_back(tokens);
-      }
-      setHeaderIsComplete(true);
-      break;
+      QList<QByteArray> tokens = buf.split('\t');
+      numPhases = tokens.at(1).toInt(&ok, 10);
+      break; //
     }
-
-
-    ++index;
-
-    // Remove empty lines
-    if (buf[0] == 0) continue;
-
-    // End when column header line is read
-    if (isDataHeaderLine(tokens))
-    {
-      setHeaderIsComplete(true);
-      break;
-    }
-    headerLines.push_back(tokens);
   }
+  // Now read the phases line
+  for(int p = 0; p < numPhases; ++p)
+  {
+    buf = reader.readLine();
+    appendOriginalHeader(QString(buf));
+
+    // remove the newline at the end of the line
+    buf.chop(1);
+    headerLines.push_back(buf);
+  }
+  setHeaderIsComplete(true);
   return err;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool CtfReader::isDataHeaderLine(std::vector<std::string> &columns)
+bool CtfReader::isDataHeaderLine(QVector<QString>& columns)
 {
-    if (columns.size() != 11)
-        return false;
-    if (columns[0].compare("Phase") != 0)
-        return false;
-    if (columns[9].compare("BC") != 0)
-        return false;
+  if (columns.size() != 11)
+  { return false; }
+  if (columns[0].compare("Phase") != 0)
+  { return false; }
+  if (columns[9].compare("BC") != 0)
+  { return false; }
 
-    return true;
+  return true;
 }
 
 
@@ -728,30 +736,27 @@ void CtfReader::setYDimension(int ydim)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<std::string> CtfReader::getColumnNames()
+QList<QString> CtfReader::getColumnNames()
 {
-  std::vector<std::string> names;
-  for (std::map<std::string, int>::iterator iter = m_NameIndexMap.begin(); iter != m_NameIndexMap.end(); ++iter )
-  {
-    names.push_back((*iter).first);
-  }
-
-  return names;
+  return m_NamePointerMap.keys();
 }
 
+#define CTF_PRINT_QSTRING(var, out)\
+  out << #var << ": " << get##var().toStdString() << std::endl;
+
 #define CTF_PRINT_HEADER_VALUE(var, out)\
- out << #var << ": " << get##var () << std::endl;
+  out << #var << ": " << get##var() << std::endl;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CtfReader::printHeader(std::ostream &out)
+void CtfReader::printHeader(std::ostream& out)
 {
   std::cout << "-------------------- CtfReader Header Values --------------------" << std::endl;
-  CTF_PRINT_HEADER_VALUE(Channel, out);
-  CTF_PRINT_HEADER_VALUE(Prj, out);
-  CTF_PRINT_HEADER_VALUE(Author, out);
-  CTF_PRINT_HEADER_VALUE(JobMode, out);
+  CTF_PRINT_QSTRING(Channel, out);
+  CTF_PRINT_QSTRING(Prj, out);
+  CTF_PRINT_QSTRING(Author, out);
+  CTF_PRINT_QSTRING(JobMode, out);
   CTF_PRINT_HEADER_VALUE(XCells, out);
   CTF_PRINT_HEADER_VALUE(YCells, out);
   CTF_PRINT_HEADER_VALUE(XStep, out);
@@ -759,7 +764,7 @@ void CtfReader::printHeader(std::ostream &out)
   CTF_PRINT_HEADER_VALUE(AcqE1, out);
   CTF_PRINT_HEADER_VALUE(AcqE2, out);
   CTF_PRINT_HEADER_VALUE(AcqE3, out);
-  CTF_PRINT_HEADER_VALUE(Euler, out);
+  CTF_PRINT_QSTRING(Euler, out);
   CTF_PRINT_HEADER_VALUE(Mag, out);
   CTF_PRINT_HEADER_VALUE(Coverage, out);
   CTF_PRINT_HEADER_VALUE(Device, out);

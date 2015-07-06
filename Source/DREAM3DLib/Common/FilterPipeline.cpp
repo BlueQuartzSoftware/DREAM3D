@@ -1,47 +1,50 @@
 /* ============================================================================
- * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 
 #include "FilterPipeline.h"
-
-#include "MXA/MXA.h"
-#include "MXA/Common/LogTime.h"
-#include "MXA/Utilities/MXADir.h"
+#include "DREAM3DLib/DataContainers/DataContainerArray.h"
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 FilterPipeline::FilterPipeline() :
-    Observer(),
-    m_ErrorCondition(0),
-    m_Cancel(false)
+  QObject(),
+  m_ErrorCondition(0),
+  m_Cancel(false)
 {
 
 }
@@ -51,15 +54,6 @@ FilterPipeline::FilterPipeline() :
 // -----------------------------------------------------------------------------
 FilterPipeline::~FilterPipeline()
 {
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FilterPipeline::pipelineFinished()
-{
-
 }
 
 // -----------------------------------------------------------------------------
@@ -80,6 +74,15 @@ void FilterPipeline::setCancel(bool value)
 bool FilterPipeline::getCancel()
 {
   return m_Cancel;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterPipeline::cancelPipeline()
+{
+  qDebug() << "FilterPipeline::cancelPipeline()";
+  setCancel(true);
 }
 
 // -----------------------------------------------------------------------------
@@ -173,13 +176,13 @@ size_t FilterPipeline::size()
 // -----------------------------------------------------------------------------
 bool FilterPipeline::empty()
 {
-  return m_Pipeline.empty();
+  return m_Pipeline.isEmpty();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FilterPipeline::removeFirstFilterByName(const std::string &name)
+AbstractFilter::Pointer FilterPipeline::removeFirstFilterByName(const QString& name)
 {
   AbstractFilter::Pointer f = AbstractFilter::NullPointer();
   for(FilterContainerType::iterator it = m_Pipeline.begin(); it != m_Pipeline.end(); ++it)
@@ -214,7 +217,8 @@ void FilterPipeline::updatePrevNextFilters()
 
   for (FilterContainerType::iterator iter = m_Pipeline.begin(); iter != m_Pipeline.end(); ++iter)
   {
-    // currFilt = *iter;
+    (*iter)->setPreviousFilter(AbstractFilter::NullPointer());
+    (*iter)->setNextFilter(AbstractFilter::NullPointer());
     if(iter != m_Pipeline.begin())
     {
       prev = iter;
@@ -228,7 +232,10 @@ void FilterPipeline::updatePrevNextFilters()
       next = iter;
       next++;
       //  nextFilt = *next;
-      if(next != m_Pipeline.end()) { (*iter)->setNextFilter(*next); }
+      if(next != m_Pipeline.end())
+      {
+        (*iter)->setNextFilter(*next);
+      }
     }
   }
   int index = 0;
@@ -241,61 +248,61 @@ void FilterPipeline::updatePrevNextFilters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FilterPipeline::addMessageReceiver(QObject* obj)
+{
+  m_MessageReceivers.push_back(obj);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterPipeline::connectFilterNotifications(QObject* filter)
+{
+  for(int i = 0; i < m_MessageReceivers.size(); i++)
+  {
+    connect(filter, SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+            m_MessageReceivers.at(i), SLOT(processPipelineMessage(const PipelineMessage&)) );
+  }
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterPipeline::disconnectFilterNotifications(QObject* filter)
+{
+  for(int i = 0; i < m_MessageReceivers.size(); i++)
+  {
+    disconnect(filter, SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+               m_MessageReceivers.at(i), SLOT(processPipelineMessage(const PipelineMessage&)) );
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int FilterPipeline::preflightPipeline()
 {
   // Create the DataContainer object
-  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
-  SurfaceMeshDataContainer::Pointer sm = SurfaceMeshDataContainer::New();
-  SolidMeshDataContainer::Pointer solid = SolidMeshDataContainer::New();
+  DataContainerArray::Pointer dca = DataContainerArray::New();
 
-  m->addObserver(static_cast<Observer*>(this));
   setErrorCondition(0);
   int preflightError = 0;
-  std::stringstream ss;
-  int err = 0;
 
-  // Start looping through the Pipeline and preflight everything
+  // Start looping through each filter in the Pipeline and preflight everything
   for (FilterContainerType::iterator filter = m_Pipeline.begin(); filter != m_Pipeline.end(); ++filter)
   {
-    (*filter)->setVoxelDataContainer(m.get());
-    (*filter)->setSurfaceMeshDataContainer(sm.get());
-    (*filter)->setSolidMeshDataContainer(solid.get());
+    (*filter)->setDataContainerArray(dca);
     setCurrentFilter(*filter);
+    connectFilterNotifications( (*filter).get() );
+    //qDebug() << "Preflighting Filter [" << (*filter)->getHumanLabel() << "] (" << (*filter)->getNameOfClass() << ")";
     (*filter)->preflight();
-    (*filter)->setVoxelDataContainer(NULL);
-    (*filter)->setSurfaceMeshDataContainer(NULL);
-    (*filter)->setSolidMeshDataContainer(NULL);
-    std::vector<PipelineMessage> msgs = (*filter)->getPipelineMessages();
-    // Loop through all the messages making sure they are all error messages. If they are all
-    // warning messages we are going to let the preflight pass. Hopefully if the warning
-    // turns into an error the filter will handle it correctly and gracefully fail with
-    // a nice message to the user.
-    for(std::vector<PipelineMessage>::iterator iter = msgs.begin(); iter != msgs.end(); ++iter)
-    {
-       if ( (*iter).getMessageType() == PipelineMessage::Error)
-        {
-          err |= (*filter)->getErrorCondition();
-        }
-        else if ((*iter).getMessageType() == PipelineMessage::Warning)
-        {
-          err |= 0;
-        }
-    }
-    if(err < 0)
-    {
-      preflightError |= err;
-      setErrorCondition(preflightError);
-      sendPipelineMessages( (*filter)->getPipelineMessages());
-    }
-  }
+    disconnectFilterNotifications( (*filter).get() );
 
-#if 0
-  std::list<std::string> cellNames = m->getCellArrayNameList();
-  for (std::list<std::string>::iterator name = cellNames.begin(); name != cellNames.end(); ++name )
-  {
-    std::cout << *name << std::endl;
+    (*filter)->setDataContainerArray(DataContainerArray::NullPointer());
+    preflightError |= (*filter)->getErrorCondition();
   }
-#endif
+  setCurrentFilter(AbstractFilter::NullPointer());
   return preflightError;
 }
 
@@ -307,71 +314,49 @@ void FilterPipeline::execute()
 {
   int err = 0;
 
-  // Run the preflight first to make sure we can run this combination of filters
-  // Inside the function we create a new DataContainer object so we don't mess
-  // with any currently set DataContainer
-  // err = preflightPipeline();
-//  if(err < 0)
-//  {
-//    return;
-//  }
-
-  // Create the DataContainer object
-//  if(NULL == m_DataContainer.get())
-//  {
-//    m_DataContainer = DataContainer::New();
-//  }
-
-  VoxelDataContainer::Pointer dataContainer = VoxelDataContainer::New();
-  dataContainer->addObserver(static_cast<Observer*>(this));
-
-  SurfaceMeshDataContainer::Pointer sm = SurfaceMeshDataContainer::New();
-  sm->addObserver(static_cast<Observer*>(this));
-
-  SolidMeshDataContainer::Pointer solid = SolidMeshDataContainer::New();
-  solid->addObserver(static_cast<Observer*>(this));
+  DataContainerArray::Pointer dca = DataContainerArray::New();
 
   // Start looping through the Pipeline
   float progress = 0.0f;
-  std::stringstream ss;
 
-// Start a Benchmark Clock so we can keep track of each filter's execution time
-  DEFINE_CLOCK;
-  START_CLOCK;
-  PipelineMessage progValue("", "", 0, PipelineMessage::StatusValue, -1);
-  for (FilterContainerType::iterator iter = m_Pipeline.begin(); iter != m_Pipeline.end(); ++iter)
+  // Connect this object to anything that wants to know about PipelineMessages
+  for(int i = 0; i < m_MessageReceivers.size(); i++)
+  {
+    connect(this, SIGNAL(pipelineGeneratedMessage(const PipelineMessage&)),
+            m_MessageReceivers.at(i), SLOT(processPipelineMessage(const PipelineMessage&)) );
+  }
+
+  PipelineMessage progValue("", "", 0, PipelineMessage::ProgressValue, -1);
+  for (FilterContainerType::iterator filter = m_Pipeline.begin(); filter != m_Pipeline.end(); ++filter)
   {
     progress = progress + 1.0f;
-    progValue.setMessageType(PipelineMessage::StatusValue);
+    progValue.setType(PipelineMessage::ProgressValue);
     progValue.setProgressValue(static_cast<int>( progress / (m_Pipeline.size() + 1) * 100.0f ));
-    sendPipelineMessage(progValue);
-    //pipelineProgress(static_cast<int>( progress / (m_Pipeline.size() + 1) * 100.0f ));
+    emit pipelineGeneratedMessage(progValue);
 
-    ss.str("");
-    ss << "[" << progress << "/" << m_Pipeline.size() << "] " << (*iter)->getHumanLabel() << " ";
-  //  std::cout << ss.str() << std::endl;
-    progValue.setMessageType(PipelineMessage::StatusMessage);
-    progValue.setMessageText(ss.str());
-    sendPipelineMessage(progValue);
-    (*iter)->setMessagePrefix(ss.str());
-    (*iter)->addObserver(static_cast<Observer*>(this));
-    (*iter)->setVoxelDataContainer(dataContainer.get());
-    (*iter)->setSurfaceMeshDataContainer(sm.get());
-    (*iter)->setSolidMeshDataContainer(solid.get());
-    setCurrentFilter(*iter);
-    (*iter)->execute();
-    (*iter)->removeObserver(static_cast<Observer*>(this));
-    (*iter)->setVoxelDataContainer(NULL);
-    (*iter)->setSurfaceMeshDataContainer(NULL);
-    (*iter)->setSolidMeshDataContainer(NULL);
-    err = (*iter)->getErrorCondition();
+    QString ss = QObject::tr("[%1/%2] %3 ").arg(progress).arg(m_Pipeline.size()).arg( (*filter)->getHumanLabel());
+
+    progValue.setType(PipelineMessage::StatusMessage);
+    progValue.setText(ss);
+    emit pipelineGeneratedMessage(progValue);
+
+
+    (*filter)->setMessagePrefix(ss);
+    connectFilterNotifications( (*filter).get() );
+    (*filter)->setDataContainerArray(dca);
+    setCurrentFilter(*filter);
+    (*filter)->execute();
+    disconnectFilterNotifications( (*filter).get() );
+    (*filter)->setDataContainerArray(DataContainerArray::NullPointer());
+    err = (*filter)->getErrorCondition();
     if(err < 0)
     {
       setErrorCondition(err);
-      sendPipelineMessages((*iter)->getPipelineMessages());
-      progValue.setMessageType(PipelineMessage::Error);
+
+      progValue.setType(PipelineMessage::Error);
       progValue.setProgressValue(100);
-      sendPipelineMessage(progValue);
+      emit pipelineGeneratedMessage(progValue);
+
       pipelineFinished();
       return;
     }
@@ -379,24 +364,22 @@ void FilterPipeline::execute()
     {
       break;
     }
-    ss.str("");
-     ss << (*iter)->getNameOfClass() << " Filter Complete";
-    END_CLOCK(ss.str());
+    ss = QObject::tr("%1 Filter Complete").arg((*filter)->getNameOfClass());
   }
 
   PipelineMessage completMessage("", "Pipeline Complete", 0, PipelineMessage::StatusMessage, -1);
-  sendPipelineMessage(completMessage);
+  emit pipelineGeneratedMessage(completMessage);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterPipeline::printFilterNames(std::ostream &out)
+void FilterPipeline::printFilterNames(QTextStream& out)
 {
-  out << "---------------------------------------------------------------------" << std::endl;
+  out << "---------------------------------------------------------------------" ;
   for (FilterContainerType::iterator iter = m_Pipeline.begin(); iter != m_Pipeline.end(); ++iter )
   {
-    out << (*iter)->getNameOfClass() << std::endl;
+    out << (*iter)->getNameOfClass() << "\n";
   }
-  out << "---------------------------------------------------------------------" << std::endl;
+  out << "---------------------------------------------------------------------" ;
 }

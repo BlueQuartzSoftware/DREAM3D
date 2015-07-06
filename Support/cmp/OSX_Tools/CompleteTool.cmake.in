@@ -1,28 +1,23 @@
 # -----------------------------------------------------------------------------------
-# This file was auto generated from the template file "CompleteBundle.cmake.in", if you 
-# need to make changes edit the template file NOT this one. Your changes will be 
+# This file was auto generated from the template file "CompleteBundle.cmake.in", if you
+# need to make changes edit the template file NOT this one. Your changes will be
 # lost the next time CMake is run. You have been warned.
 #   This file is called from CMake's installation generated scripts. It is added
-# via a CMake call 
+# via a CMake call
 #   install(SCRIPT "${OSX_MAKE_STANDALONE_BUNDLE_CMAKE_SCRIPT}")
 # which can be sometime found in the macro 'MakeOSXBundleApp' which is sometimes located
 # in the file OSX_BundleTools.cmake
 # -----------------------------------------------------------------------------------
 
 message (STATUS "#------------ Starting OS X Tool Fixup --------------------------")
-cmake_minimum_required(VERSION 2.8)
+
+include (CMakeParseArguments)
 
 #-- Need this for link line stuff?
 if(COMMAND cmake_policy)
   cmake_policy(SET CMP0009 NEW)
-endif(COMMAND cmake_policy)
-
-
-if (${CMAKE_VERSION} VERSION_GREATER 2.6.2)
-if(COMMAND cmake_policy)
   cmake_policy(SET CMP0011 NEW)
 endif(COMMAND cmake_policy)
-endif()
 
 
 # gp_item_default_embedded_path item default_embedded_path_var
@@ -46,22 +41,37 @@ function(gp_item_default_embedded_path_override item default_embedded_path_var)
   # By default, embed things right next to the main bundle executable:
   #
   set(path "@executable_path/../lib")
+  #message(STATUS "%%%=> item: ${item}")
+  #message(STATUS "%%%=> default_embedded_path_var: ${default_embedded_path_var}")
 
   set(overridden 0)
-  # Embed .dylibs right next to the main bundle executable:
+  # For Qt Based Plugins for the image formats, the Plugins MUST reside in
+  # the "PlugIns/imageformats" directory. Since THIS particular project ONLY has
+  # the Qt Frameworks AND the Plugins the below regex will suffice to separate
+  # them from each other. On other projects we could use better logic to
+  # put things where they go. Maybe using some "configured" CMake List of libraries
+  # then looking through each list for the currect library being fixed up.
   #
-  if(item MATCHES "\\.dylib$")
+
+  # First look for Plugins that have a ".plugin" extension
+  if(item MATCHES "\\.plugin$")
+    message(STATUS "Just a Plugin: ${item}")
+    set(path "@executable_path/../Plugins")
+    set(overridden 1)
+  endif(item MATCHES "\\.plugin$")
+
+  # Next look for the Qt Image Format Plugins in case those are needed
+  if ( item MATCHES "imageformats/libq?")
+    message(STATUS "^^^^^^==> Qt Image Format Plugin Found: ${item}")
+    set(path "@executable_path/../Plugins/imageformats")
+    set(overridden 1)
+  # Lastly pick up any Plugins that simply have the ".dylib" extension
+  elseif(item MATCHES "\\.dylib$")
+    message(STATUS "%%%%%==> Other Library Found: ${item}")
     set(path "@executable_path/../lib")
     set(overridden 1)
-  endif(item MATCHES "\\.dylib$")
+  endif()
 
-  # Embed .so right next to the main bundle executable:
-  #
-  if(item MATCHES "\\.so$")
-    set(path "@executable_path/../plugins")
-    set(overridden 1)
-  endif(item MATCHES "\\.so$")
-  
   # Embed frameworks in the embedded "Frameworks" directory (sibling of MacOS):
   #
   if(NOT overridden)
@@ -72,7 +82,7 @@ function(gp_item_default_embedded_path_override item default_embedded_path_var)
   endif(NOT overridden)
 
   set(${default_embedded_path_var} "${path}" PARENT_SCOPE)
-endfunction(gp_item_default_embedded_path_override)
+endfunction()
 
 #-- Be sure all the internal directories are created first before calling the 'fixup_bundle'
 #file(MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/Utilities")
@@ -83,18 +93,15 @@ endfunction(gp_item_default_embedded_path_override)
 
 # -- Run the BundleUtilities cmake code
 include(BundleUtilities)
-#fixup_bundle("${CMAKE_INSTALL_PREFIX}/tools/@osx_app_name@" 
+#fixup_bundle("${CMAKE_INSTALL_PREFIX}/tools/@osx_app_name@"
              # Plugins to Install
 #             "@app_plugin_list@"
              # Directories to Search for Libraries
 #             "@lib_search_dirs@")
 
-             # Now we need to fix up the package to have a shared Frameworks and lib directory
-list(APPEND @osx_app_name@archs "@CMAKE_OSX_ARCHITECTURES@" )
-list(LENGTH @osx_app_name@archs @osx_app_name@archLength )
-message(STATUS "@osx_app_name@archLength: ${@osx_app_name@archLength}")
-if (@osx_app_name@archLength EQUAL 1)    
-    # Move the frameworks from the contents of the .app bundle out to top level of the install directory
-    execute_process(COMMAND /bin/bash @OPTIMIZE_BUNDLE_SHELL_SCRIPT@ ${CMAKE_INSTALL_PREFIX})
-endif()
+# Now we need to fix up the package to have a shared Frameworks and lib directory
+
+
+execute_process(COMMAND /bin/bash @OPTIMIZE_BUNDLE_SHELL_SCRIPT@ ${CMAKE_INSTALL_PREFIX})
+
              

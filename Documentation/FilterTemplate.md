@@ -11,7 +11,7 @@ This filter does the following...
 ## Parameters ##
 | Name             | Type |
 |------------------|------|
-| Field Array Name | String |
+| Feature Array Name | String |
 
 ## Required Arrays ##
 
@@ -30,7 +30,7 @@ This filter does the following...
 
 ## Authors ##
 
-**Copyright** 2012 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)
+**Copyright** 2014 Michael A. Groeber (AFRL), 2014 Michael A. Jackson (BlueQuartz Software)
 
 **Contact Info** dream3d@bluequartz.net
 
@@ -40,4 +40,12 @@ This filter does the following...
 
 
 
-See a bug? Does this documentation need updated with a citation? Send comments, corrections and additions to [The DREAM3D development team](mailto:dream3d@bluequartz.net?subject=Documentation%20Correction)
+## License & Copyright ##
+
+Please see the description file distributed with this plugin.
+
+## DREAM3D Mailing Lists ##
+
+If you need more help with a filter, please consider asking your question on the DREAM3D Users mailing list:
+https://groups.google.com/forum/?hl=en#!forum/dream3d-users
+

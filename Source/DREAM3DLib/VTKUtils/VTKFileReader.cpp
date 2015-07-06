@@ -1,38 +1,38 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 
 #include "VTKFileReader.h"
 
@@ -43,8 +43,9 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "MXA/Common/LogTime.h"
-#include "MXA/Common/MXAEndian.h"
+
+#include <QtCore/QFile>
+#include <QtCore/QByteArray>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 
@@ -54,8 +55,9 @@
 //
 // -----------------------------------------------------------------------------
 VTKFileReader::VTKFileReader() :
-FileReader(),
-m_InputFile("")
+  FileReader(),
+  m_DataContainerName(DREAM3D::Defaults::DataContainerName),
+  m_InputFile("")
 {
 }
 
@@ -85,23 +87,53 @@ size_t VTKFileReader::parseByteSize(char text[256])
   char cfloat [64] = "float";
   char cdouble [64] = " double";
 
-  if (strcmp(text, cunsigned_char) == 0 ) { return 1;}
-  if (strcmp(text, cchar) == 0 ) { return 1;}
-  if (strcmp(text, cunsigned_short) == 0 ) { return 2;}
-  if (strcmp(text, cshort) == 0 ) { return 2;}
-  if (strcmp(text, cunsigned_int) == 0 ) { return 4;}
-  if (strcmp(text, cint) == 0 ) { return 4;}
-  if (strcmp(text, cunsigned_long) == 0 ) { return 8;}
-  if (strcmp(text, clong) == 0 ) { return 8;}
-  if (strcmp(text, cfloat) == 0 ) { return 4;}
-  if (strcmp(text, cdouble) == 0 ) { return  8;}
+  if (strcmp(text, cunsigned_char) == 0 )
+  {
+    return 1;
+  }
+  if (strcmp(text, cchar) == 0 )
+  {
+    return 1;
+  }
+  if (strcmp(text, cunsigned_short) == 0 )
+  {
+    return 2;
+  }
+  if (strcmp(text, cshort) == 0 )
+  {
+    return 2;
+  }
+  if (strcmp(text, cunsigned_int) == 0 )
+  {
+    return 4;
+  }
+  if (strcmp(text, cint) == 0 )
+  {
+    return 4;
+  }
+  if (strcmp(text, cunsigned_long) == 0 )
+  {
+    return 8;
+  }
+  if (strcmp(text, clong) == 0 )
+  {
+    return 8;
+  }
+  if (strcmp(text, cfloat) == 0 )
+  {
+    return 4;
+  }
+  if (strcmp(text, cdouble) == 0 )
+  {
+    return  8;
+  }
   return 0;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VTKFileReader::ignoreData(std::ifstream &in, int byteSize, char* text, int xDim, int yDim, int zDim)
+int VTKFileReader::ignoreData(std::ifstream& in, int byteSize, char* text, int xDim, int yDim, int zDim)
 {
   char cunsigned_char [64] = "unsigned_char";
   char cchar [64] = "char";
@@ -114,18 +146,46 @@ int VTKFileReader::ignoreData(std::ifstream &in, int byteSize, char* text, int x
   char cfloat [64] = "float";
   char cdouble [64] = " double";
   int err = 0;
-  if (strcmp(text, cunsigned_char) == 0 ) {
+  if (strcmp(text, cunsigned_char) == 0 )
+  {
     err |= skipVolume<unsigned char>(in, byteSize, xDim, yDim, zDim);
   }
-  if (strcmp(text, cchar) == 0 ) { err |= skipVolume<char>(in, byteSize, xDim, yDim, zDim);}
-  if (strcmp(text, cunsigned_short) == 0 ) { err |= skipVolume<unsigned short>(in, byteSize, xDim, yDim, zDim);}
-  if (strcmp(text, cshort) == 0 ) {err |= skipVolume<short>(in, byteSize, xDim, yDim, zDim);}
-  if (strcmp(text, cunsigned_int) == 0 ) { err |= skipVolume<unsigned int>(in, byteSize, xDim, yDim, zDim);}
-  if (strcmp(text, cint) == 0 ) { err |= skipVolume<int>(in, byteSize, xDim, yDim, zDim);}
-  if (strcmp(text, cunsigned_long) == 0 ) { err |= skipVolume<unsigned long long int>(in, byteSize, xDim, yDim, zDim);}
-  if (strcmp(text, clong) == 0 ) { err |= skipVolume<long long int>(in, byteSize, xDim, yDim, zDim);}
-  if (strcmp(text, cfloat) == 0 ) { err |= skipVolume<float>(in, byteSize, xDim, yDim, zDim);}
-  if (strcmp(text, cdouble) == 0 ) { err |= skipVolume<double>(in, byteSize, xDim, yDim, zDim);}
+  if (strcmp(text, cchar) == 0 )
+  {
+    err |= skipVolume<char>(in, byteSize, xDim, yDim, zDim);
+  }
+  if (strcmp(text, cunsigned_short) == 0 )
+  {
+    err |= skipVolume<unsigned short>(in, byteSize, xDim, yDim, zDim);
+  }
+  if (strcmp(text, cshort) == 0 )
+  {
+    err |= skipVolume<short>(in, byteSize, xDim, yDim, zDim);
+  }
+  if (strcmp(text, cunsigned_int) == 0 )
+  {
+    err |= skipVolume<unsigned int>(in, byteSize, xDim, yDim, zDim);
+  }
+  if (strcmp(text, cint) == 0 )
+  {
+    err |= skipVolume<int>(in, byteSize, xDim, yDim, zDim);
+  }
+  if (strcmp(text, cunsigned_long) == 0 )
+  {
+    err |= skipVolume<unsigned long long int>(in, byteSize, xDim, yDim, zDim);
+  }
+  if (strcmp(text, clong) == 0 )
+  {
+    err |= skipVolume<long long int>(in, byteSize, xDim, yDim, zDim);
+  }
+  if (strcmp(text, cfloat) == 0 )
+  {
+    err |= skipVolume<float>(in, byteSize, xDim, yDim, zDim);
+  }
+  if (strcmp(text, cdouble) == 0 )
+  {
+    err |= skipVolume<double>(in, byteSize, xDim, yDim, zDim);
+  }
   return err;
 }
 
@@ -137,117 +197,123 @@ int VTKFileReader::readHeader()
 {
 
   int err = 0;
-  if (getInputFile().empty() == true)
+  if (getInputFile().isEmpty() == true)
   {
     setErrorCondition(-1);
-    PipelineMessage em (getHumanLabel(), "FileName was not set and must be valid", -1);
-    addErrorMessage(em);
+    notifyErrorMessage(getHumanLabel(), "FileName was not set and must be valid", -1);
     return -1;
   }
 
-  if (NULL == getVoxelDataContainer())
+  if (NULL == getDataContainerArray()->getDataContainer(getDataContainerName()).get())
   {
     setErrorCondition(-1);
-    PipelineMessage em (getHumanLabel(), "DataContainer Pointer was NULL and must be valid", -1);
-    addErrorMessage(em);
+    notifyErrorMessage(getHumanLabel(), "DataContainer Pointer was NULL and must be valid", -1);
     return -1;
   }
 
-  std::ifstream instream;
-  instream.open(getInputFile().c_str(), std::ios_base::binary);
-  if (!instream.is_open())
+  QFile in(getInputFile());
+  if (!in.open(QIODevice::ReadOnly | QIODevice::Text))
   {
-    std::cout << logTime() << " vtk file could not be opened: " << getInputFile() << std::endl;
-    return -1;
+    QString msg = QObject::tr("VTF file could not be opened: %1").arg(getInputFile());
+    setErrorCondition(-100);
+    notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
+    return -100;
   }
-  char buf[kBufferSize];
-  instream.getline(buf, kBufferSize); // Read Line 1 - VTK Version Info
-  ::memset(buf, 0, kBufferSize);
-  instream.getline(buf, kBufferSize); // Read Line 2 - User Comment
-  setComment(std::string(buf));
-  ::memset(buf, 0, kBufferSize);
-  instream.getline(buf, kBufferSize); // Read Line 3 - BINARY or ASCII
-  std::string fileType(buf);
-  if (fileType.find("BINARY", 0) == 0)
+
+  QByteArray buf;
+  buf = in.readLine(); // Read Line 1 - VTK Version Info
+
+  buf = in.readLine(); // Read Line 2 - User Comment
+  setComment(QString(buf.trimmed()));
+
+  buf = in.readLine(); // Read Line 3 - BINARY or ASCII
+  QString fileType(buf);
+  if (fileType.startsWith("BINARY") == true)
   {
     setFileIsBinary(true);
   }
-  else if (fileType.find("ASCII", 0) == 0)
+  else if (fileType.startsWith("ASCII") == true)
   {
     setFileIsBinary(false);
   }
   else
   {
     err = -1;
-    std::cout << logTime()
+    qDebug()
         << "The file type of the VTK legacy file could not be determined. It should be ASCII' or 'BINARY' and should appear on line 3 of the file."
-        << std::endl;
+        ;
     return err;
   }
-  ::memset(buf, 0, kBufferSize);
-  instream.getline(buf, kBufferSize); // Read Line 4 - Type of Dataset
+
+
+  QList<QByteArray> tokens;
+  buf = in.readLine(); // Read Line 4 - Type of Dataset
   {
-    char text[256];
-    int n = sscanf(buf, "%s %s", text, &(text[16]) );
-    if (n < 2)
-    {
-      std::cout << "Error Reading the type of data set. Was expecting 2 fields but got " << n << std::endl;
-      return -1;
-    }
-    std::string dataset(&(text[16]));
-    setDatasetType(dataset);
+    tokens = buf.split(' ');
+    setDatasetType(QString(tokens[1]));
   }
 
-  ::memset(buf, 0, kBufferSize);
-  instream.getline(buf, kBufferSize); // Read Line 5 which is the Dimension values
+
+  buf = in.readLine(); // Read Line 5 which is the Dimension values
+  bool ok = false;
   int64_t dims[3];
-  err = parse64_3V(buf, dims, 0);
+  tokens = buf.split(' ');
+  dims[0] = tokens[1].toLongLong(&ok, 10);
+  dims[1] = tokens[2].toLongLong(&ok, 10);
+  dims[2] = tokens[3].toLongLong(&ok, 10);
 #if   (CMP_SIZEOF_SSIZE_T==4)
-    int64_t max = std::numeric_limits<size_t>::max();
+  int64_t max = std::numeric_limits<size_t>::max();
 #else
-    int64_t max = std::numeric_limits<int64_t>::max();
+  int64_t max = std::numeric_limits<int64_t>::max();
 #endif
   if (dims[0] * dims[1] * dims[2] > max )
   {
     err = -1;
-    std::stringstream s;
-    s << "The total number of elements '" << (dims[0] * dims[1] * dims[2])
-                << "' is greater than this program can hold. Try the 64 bit version.";
+    QString ss = QObject::tr("The total number of elements '%1' is greater than this program can hold. Try the 64 bit version.").arg(dims[0] * dims[1] * dims[2]);
     setErrorCondition(err);
-    addErrorMessage(getHumanLabel(), s.str(), err);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return err;
   }
 
   if (dims[0] > max || dims[1] > max || dims[2] > max)
   {
     err = -1;
-    std::stringstream s;
-    s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
-    s << " dim[0]="<< dims[0] << "  dim[1]="<<dims[1] << "  dim[2]=" << dims[2];
+    QString ss = QObject::tr("One of the dimensions is greater than the max index for this sysem. Try the 64 bit version. dim[0]=%1  dim[1]=%2im[2]=%3")\
+                 .arg(dims[0]).arg(dims[1]).arg(dims[2]);
     setErrorCondition(err);
-    addErrorMessage(getHumanLabel(), s.str(), -1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return err;
   }
 
-  size_t dcDims[3] = {dims[0], dims[1], dims[2]};
-  getVoxelDataContainer()->setDimensions(dcDims);
+  size_t dcDims[3] = { static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2]) };
+  DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(getDataContainerName());
+  if (dc.get() == NULL)
+  {
+    return -1;
+  }
+  ImageGeom::Pointer image = dc->getGeometryAs<ImageGeom>();
+  if (image.get() == NULL)
+  {
+    return -1;
+  }
+  image->setDimensions(dcDims);
 
-
-  ::memset(buf, 0, kBufferSize);
-  instream.getline(buf, kBufferSize); // Read Line 6 which is the Origin values
+  buf = in.readLine(); // Read Line 6 which is the Origin values
   float origin[3];
-  err = parseFloat3V(buf, origin, 0.0f);
-  getVoxelDataContainer()->setOrigin(origin);
+  tokens = buf.split(' ');
+  origin[0] = tokens[1].toFloat(&ok);
+  origin[1] = tokens[2].toFloat(&ok);
+  origin[2] = tokens[3].toFloat(&ok);
+  image->setOrigin(origin);
 
-  ::memset(buf, 0, kBufferSize);
-  instream.getline(buf, kBufferSize); // Read Line 7 which is the Scaling values
+  buf = in.readLine(); // Read Line 7 which is the Scaling values
   float resolution[3];
-  err = parseFloat3V(buf, resolution, 1.0f);
-  getVoxelDataContainer()->setResolution(resolution);
+  tokens = buf.split(' ');
+  resolution[0] = tokens[1].toFloat(&ok);
+  resolution[1] = tokens[2].toFloat(&ok);
+  resolution[2] = tokens[3].toFloat(&ok);
+  image->setResolution(resolution);
 
-  ::memset(buf, 0, kBufferSize);
-
-  instream.close();
   return err;
 
 }

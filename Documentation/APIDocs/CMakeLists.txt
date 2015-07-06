@@ -8,7 +8,7 @@
 #
 # -----------------------------------------------------------------------------
 PROJECT(DREAM3DAPIDocs)
-cmake_minimum_required(VERSION 2.8.9)
+cmake_minimum_required(VERSION 3.1.0)
 
 if(NOT DEFINED PROJECT_RESOURCES_DIR)
 set(PROJECT_RESOURCES_DIR ${PROJECT_SOURCE_DIR}/Resources)
@@ -28,9 +28,6 @@ set(DOCUMENTATION_SOURCE_FILES
   ${DREAM3DProj_SOURCE_DIR}/Source
 )
 
-
-
-
 include(${DOCUMENTATION_RESOURCES_DIR}/CMake/Macros.cmake)
 
 #---- Set some LATEX Varaibles
@@ -38,14 +35,10 @@ set(LATEX_TITLE "DREAM3D\\\\[0.45cm] Developers API Documentation")
 set(LATEX_AUTHOR "DREAM3D Development Team")
 
 
-set(LATEX_EPS_FILES
-
-)
+set(LATEX_EPS_FILES )
 
 
-set(DOXYGEN_IMAGE_DIRS
-
-)
+set(DOXYGEN_IMAGE_DIRS )
 
 if(DOX_GENERATE_LATEX)
   ADD_DOXYGEN_TARGETS(PDF_FILENAME "DREAM3D Developers API Documentation"
@@ -64,9 +57,7 @@ if(DOX_GENERATE_LATEX)
                      OUTPUT_SUB_DIR "latex")
 endif()
 
-set(DOCUMENTATION_SOURCE_FILES
-
-        ${DOCUMENTATION_SOURCE_FILES})
+set(DOCUMENTATION_SOURCE_FILES ${DOCUMENTATION_SOURCE_FILES})
 
 
 if(DOX_GENERATE_HTML)

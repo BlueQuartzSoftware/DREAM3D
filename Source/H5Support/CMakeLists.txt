@@ -12,9 +12,7 @@
 #///////////////////////////////////////////////////////////////////////////////
 
 # set project's name
-PROJECT( H5Support )
-cmake_minimum_required(VERSION 2.8.9)
-
+PROJECT( H5Support VERSION ${DREAM3DProj_VERSION_MAJOR}.${DREAM3DProj_VERSION_MINOR})
 
 set(H5Support_BUILT_AS_DYNAMIC_LIB)
 if(BUILD_SHARED_LIBS)
@@ -50,6 +48,17 @@ set(CMP_ENABLE_PLUGINS "0")
 set(CMP_LIB_SEARCH_DIRS "")
 INCLUDE (${CMP_SOURCE_DIR}/cmpProject.cmake)
 
+#-------------------------------------------------------------------------------
+# Set our H5Lite codes to also compile the Qt API version of H5Lite
+#-------------------------------------------------------------------------------
+set(H5Support_USE_QT 0)
+option(H5Support_INCLUDE_QT_API "Include support for using Qt classes with H5Lite" ON)
+if(H5Support_INCLUDE_QT_API)
+  set(H5Support_USE_QT 1)
+endif()
+MARK_AS_ADVANCED(H5Support_INCLUDE_QT_API)
+MARK_AS_ADVANCED(H5Support_USE_QT)
+
 set(H5Support_SRCS
     ${H5Support_SOURCE_DIR}/H5Lite.cpp
     ${H5Support_SOURCE_DIR}/H5Utilities.cpp
@@ -60,7 +69,22 @@ set(H5Support_HDRS
     ${H5Support_SOURCE_DIR}/H5Lite.h
     ${H5Support_SOURCE_DIR}/H5Utilities.h
     ${H5Support_SOURCE_DIR}/HDF5ScopedFileSentinel.h
+    ${H5Support_SOURCE_DIR}/H5Macros.h
 )
+
+if(H5Support_USE_QT)
+  set(H5Support_SRCS
+    ${H5Support_SRCS}
+    ${H5Support_SOURCE_DIR}/QH5Lite.cpp
+    ${H5Support_SOURCE_DIR}/QH5Utilities.cpp
+  )
+  set(H5Support_HDRS
+    ${H5Support_HDRS}
+    ${H5Support_SOURCE_DIR}/QH5Lite.h
+    ${H5Support_SOURCE_DIR}/QH5Utilities.h
+  )
+endif()
+
 cmp_IDE_SOURCE_PROPERTIES( "H5Support" "${H5Support_HDRS}" "${H5Support_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 # --------------------------------------------------------------------
@@ -73,6 +97,7 @@ set(VERSION_GEN_COMPLETE  "1.0.0")
 set(VERSION_GEN_VER_MAJOR "1")
 set(VERSION_GEN_VER_MINOR "0")
 set(VERSION_GEN_VER_PATCH "0")
+set(VERSION_GEN_HEADER_FILE_NAME "H5SupportVersion.h")
 
 configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in
                ${H5Support_BINARY_DIR}/H5SupportVersion.h  )
@@ -92,13 +117,13 @@ set(PROJECT_SRCS
     ${H5Support_BINARY_DIR}/${CMP_VERSION_SOURCE_FILE_NAME}
 )
 
-add_library(${PROJECT_NAME}  ${LIB_TYPE} ${PROJECT_SRCS})
-target_link_libraries(${PROJECT_NAME} ${HDF5_LIBRARIES} )
+add_library(${PROJECT_NAME} ${LIB_TYPE} ${PROJECT_SRCS})
+target_link_libraries(${PROJECT_NAME} hdf5 Qt5::Core )
 
 
 LibraryProperties( ${PROJECT_NAME}  ${EXE_DEBUG_EXTENSION} )
 
-set(install_dir "tools")
+set(install_dir "bin")
 set(lib_install_dir "lib")
 if(WIN32)
     set(install_dir ".")
@@ -115,3 +140,15 @@ if(BUILD_SHARED_LIBS AND NOT APPLE)
         BUNDLE DESTINATION "."
     )
 endif()
+
+
+
+
+# ------- Enable the CTest testing. Use make test to run all tests ---------------
+if(DREAM3D_BUILD_TESTING)
+    add_subdirectory(${H5Support_SOURCE_DIR}/Test ${H5Support_BINARY_DIR}/Test)
+endif()
+
+
+
+

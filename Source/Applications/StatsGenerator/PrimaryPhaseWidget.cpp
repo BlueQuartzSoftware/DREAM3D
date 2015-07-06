@@ -1,42 +1,37 @@
 /* ============================================================================
- * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-#if QWT_VERSION >= 0x060000
-#include "backwards.h"
-#endif
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "PrimaryPhaseWidget.h"
 
@@ -49,19 +44,22 @@
 #include <QtCore/QVector>
 #include <QtCore/QRunnable>
 #include <QtCore/QThreadPool>
-#include <QtCore/QtConcurrentRun>
-#include <QtGui/QMessageBox>
+#include <QtConcurrent/QtConcurrentRun>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QProgressDialog>
+#include <QtWidgets/QLineEdit>
+#include <QtGui/QIntValidator>
+#include <QtGui/QDoubleValidator>
 
 
 //-- Qwt Includes
 #include <qwt.h>
 #include <qwt_plot.h>
 #include <qwt_plot_grid.h>
-#if QWT_VERSION >= 0x060000
 #include <qwt_series_data.h>
-#else
-#include <qwt_interval_data.h>
-#endif
+#include <qwt_interval.h>
+#include <qwt_point_3d.h>
+#include <qwt_compat.h>
 #include <qwt_painter.h>
 #include <qwt_scale_map.h>
 #include <qwt_plot_zoomer.h>
@@ -71,41 +69,42 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Common/StatsGen.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
 #include "DREAM3DLib/StatsData/StatsData.h"
 #include "DREAM3DLib/StatsData/PrimaryStatsData.h"
 
+#include "OrientationLib/Texture/StatsGen.hpp"
+
+
 #include "StatsGenerator/Presets/MicrostructurePresetManager.h"
-#include "StatsGenerator/Presets/DefaultStatsPreset.h"
-#include "StatsGenerator/Presets/EquiaxedPreset.h"
-#include "StatsGenerator/Presets/RolledPreset.h"
-#include "StatsGenerator/Presets/RecrystallizedPreset.h"
+#include "StatsGenerator/Presets/PrimaryEquiaxedPreset.h"
+#include "StatsGenerator/Presets/PrimaryRolledPreset.h"
+#include "StatsGenerator/Presets/PrimaryRecrystallizedPreset.h"
 
 
 #define CHECK_ERROR_ON_WRITE(var, msg)\
   if (err < 0) {\
-  QMessageBox::critical(this, tr("StatsGenerator"),\
-  tr("There was an error writing the " msg " to the HDF5 file"),\
-  QMessageBox::Ok,\
-  QMessageBox::Ok);\
-  return err;\
+    QMessageBox::critical(this, tr("StatsGenerator"),\
+                          tr("There was an error writing the " msg " to the HDF5 file"),\
+                          QMessageBox::Ok,\
+                          QMessageBox::Ok);\
+    return err;\
   }
 
 
 #define CHECK_STATS_READ_ERROR(err, group, dataset)\
   if (err < 0) {\
-  std::cout << "PrimaryPhaseWidget::on_actionOpen_triggered Error: Could not read '" << group << "' data set '" << dataset << "'" << std::endl;\
-  std::cout << "  File: " << __FILE__ << std::endl;\
-  std::cout << "  Line: " << __LINE__ << std::endl;\
-  return err;\
+    qDebug() << "PrimaryPhaseWidget::on_actionOpen_triggered Error: Could not read '" << group << "' data set '" << dataset << "'" << "\n";\
+    qDebug() << "  File: " << __FILE__ << "\n";\
+    qDebug() << "  Line: " << __LINE__ << "\n";\
+    return err;\
   }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PrimaryPhaseWidget::PrimaryPhaseWidget(QWidget *parent) :
+PrimaryPhaseWidget::PrimaryPhaseWidget(QWidget* parent) :
   SGWidget(parent),
   m_PhaseType(DREAM3D::PhaseType::PrimaryPhase),
   m_PhaseFraction(1.0),
@@ -116,7 +115,9 @@ PrimaryPhaseWidget::PrimaryPhaseWidget(QWidget *parent) :
   m_SizeDistributionCurve(NULL),
   m_CutOffMin(NULL),
   m_CutOffMax(NULL),
-  m_grid(NULL)
+  m_grid(NULL),
+  m_MuValidator(NULL),
+  m_SigmaValidator(NULL)
 {
   setupUi(this);
   setupGui();
@@ -136,12 +137,12 @@ PrimaryPhaseWidget::~PrimaryPhaseWidget()
 // -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::on_microstructurePresetCombo_currentIndexChanged(int index)
 {
-  //std::cout << "on_microstructurePresetCombo_currentIndexChanged" << std::endl;
+  //qDebug() << "on_microstructurePresetCombo_currentIndexChanged" << "\n";
   QString presetName = microstructurePresetCombo->currentText();
 
   //Factory Method to get an instantiated object of the correct type?
   MicrostructurePresetManager::Pointer manager = MicrostructurePresetManager::instance();
-  m_MicroPreset = manager->createNewPreset(presetName.toStdString());
+  m_MicroPreset = manager->createNewPreset(presetName);
   m_MicroPreset->displayUserInputDialog();
 }
 
@@ -153,7 +154,7 @@ AbstractMicrostructurePresetFactory::Pointer RegisterPresetFactory(QComboBox* mi
 {
   AbstractMicrostructurePresetFactory::Pointer presetFactory = T::New();
   MicrostructurePresetManager::registerFactory(presetFactory);
-  QString displayString = QString::fromStdString(presetFactory->displayName());
+  QString displayString = (presetFactory->displayName());
   microstructurePresetCombo->addItem(displayString);
   return presetFactory;
 }
@@ -163,9 +164,9 @@ AbstractMicrostructurePresetFactory::Pointer RegisterPresetFactory(QComboBox* mi
 // -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::setupGui()
 {
-  distributionTypeCombo->addItem(DREAM3D::HDF5::BetaDistribution.c_str());
-  distributionTypeCombo->addItem(DREAM3D::HDF5::LogNormalDistribution.c_str());
-  distributionTypeCombo->addItem(DREAM3D::HDF5::PowerLawDistribution.c_str());
+  distributionTypeCombo->addItem(DREAM3D::StringConstants::BetaDistribution.toLatin1().data());
+  distributionTypeCombo->addItem(DREAM3D::StringConstants::LogNormalDistribution.toLatin1().data());
+  distributionTypeCombo->addItem(DREAM3D::StringConstants::PowerLawDistribution.toLatin1().data());
   distributionTypeCombo->setCurrentIndex(DREAM3D::DistributionType::LogNormal);
   // Turn off all the plot widgets
   setTabsPlotTabsEnabled(false);
@@ -175,13 +176,24 @@ void PrimaryPhaseWidget::setupGui()
   AbstractMicrostructurePresetFactory::Pointer presetFactory = AbstractMicrostructurePresetFactory::NullPointer();
 
   //Register the Equiaxed Preset
-  presetFactory = RegisterPresetFactory<EquiaxedPresetFactory>(microstructurePresetCombo);
-  QString presetName = QString::fromStdString(presetFactory->displayName());
+  presetFactory = RegisterPresetFactory<PrimaryEquiaxedPresetFactory>(microstructurePresetCombo);
+  QString presetName = (presetFactory->displayName());
   MicrostructurePresetManager::Pointer manager = MicrostructurePresetManager::instance();
-  m_MicroPreset = manager->createNewPreset(presetName.toStdString());
+  m_MicroPreset = manager->createNewPreset(presetName);
 
   // Register the Rolled Preset
-  presetFactory = RegisterPresetFactory<RolledPresetFactory>(microstructurePresetCombo);
+  presetFactory = RegisterPresetFactory<PrimaryRolledPresetFactory>(microstructurePresetCombo);
+
+  m_MuValidator = new QDoubleValidator(m_Mu_SizeDistribution);
+  m_MuValidator->setRange(0.0001, 10.0, 4);
+  m_Mu_SizeDistribution->setValidator(m_MuValidator);
+
+  m_SigmaValidator = new QDoubleValidator(m_Sigma_SizeDistribution);
+  m_SigmaValidator->setRange(0.0000, 1.0, 4);
+  m_Sigma_SizeDistribution->setValidator(m_SigmaValidator);
+
+  m_MinSigmaCutOff->setValidator(new QDoubleValidator(0.000, std::numeric_limits<double>::infinity(), 4, m_MinSigmaCutOff));
+  m_MaxSigmaCutOff->setValidator(new QDoubleValidator(0.000, std::numeric_limits<double>::infinity(), 4, m_MinSigmaCutOff));
 
 
   // Select the first Preset in the list
@@ -201,7 +213,7 @@ void PrimaryPhaseWidget::setupGui()
   w->setXAxisName(QString("Omega 3"));
   w->setYAxisName(QString("Frequency"));
   w->setDistributionType(DREAM3D::DistributionType::Beta);
-  w->setStatisticsType(DREAM3D::StatisticsType::Grain_SizeVOmega3);
+  w->setStatisticsType(DREAM3D::StatisticsType::Feature_SizeVOmega3);
   w->blockDistributionTypeChanges(true);
   w->setRowOperationEnabled(false);
   w->setMu(mu);
@@ -218,7 +230,7 @@ void PrimaryPhaseWidget::setupGui()
   w->setXAxisName(QString("B/A"));
   w->setYAxisName(QString("Frequency"));
   w->setDistributionType(DREAM3D::DistributionType::Beta);
-  w->setStatisticsType(DREAM3D::StatisticsType::Grain_SizeVBoverA);
+  w->setStatisticsType(DREAM3D::StatisticsType::Feature_SizeVBoverA);
   w->blockDistributionTypeChanges(true);
   w->setRowOperationEnabled(false);
   w->setMu(mu);
@@ -234,7 +246,7 @@ void PrimaryPhaseWidget::setupGui()
   w->setXAxisName(QString("C/A"));
   w->setYAxisName(QString("Frequency"));
   w->setDistributionType(DREAM3D::DistributionType::Beta);
-  w->setStatisticsType(DREAM3D::StatisticsType::Grain_SizeVCoverA);
+  w->setStatisticsType(DREAM3D::StatisticsType::Feature_SizeVCoverA);
   w->blockDistributionTypeChanges(true);
   w->setRowOperationEnabled(false);
   w->setMu(mu);
@@ -247,10 +259,10 @@ void PrimaryPhaseWidget::setupGui()
 
   w = m_NeighborPlot;
   w->setPlotTitle(QString("Neighbors Distributions"));
-  w->setXAxisName(QString("Number of Grains (within 1 diameter)"));
+  w->setXAxisName(QString("Number of Features (within 1 diameter)"));
   w->setYAxisName(QString("Frequency"));
   w->setDistributionType(DREAM3D::DistributionType::LogNormal);
-  w->setStatisticsType(DREAM3D::StatisticsType::Grain_SizeVNeighbors);
+  w->setStatisticsType(DREAM3D::StatisticsType::Feature_SizeVNeighbors);
   w->blockDistributionTypeChanges(true);
   w->setRowOperationEnabled(false);
   w->setMu(mu);
@@ -268,8 +280,13 @@ void PrimaryPhaseWidget::setupGui()
   m_grid = new QwtPlotGrid;
   m_grid->enableXMin(true);
   m_grid->enableYMin(true);
+#if (QWT_VERSION > 0x060000)
+  m_grid->setMajorPen(QPen(Qt::gray, 0, Qt::SolidLine));
+  m_grid->setMinorPen(QPen(Qt::lightGray, 0, Qt::DotLine));
+#else
   m_grid->setMajPen(QPen(Qt::gray, 0, Qt::SolidLine));
   m_grid->setMinPen(QPen(Qt::lightGray, 0, Qt::DotLine));
+#endif
   m_grid->attach(m_SizeDistributionPlot);
 
   // For the ODF Tab we want the MDF functionality
@@ -301,7 +318,7 @@ void PrimaryPhaseWidget::setPhaseIndex(int index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PrimaryPhaseWidget::getPhaseIndex()
+int PrimaryPhaseWidget::getPhaseIndex() const
 {
   return m_PhaseIndex;
 }
@@ -325,7 +342,7 @@ void PrimaryPhaseWidget::setCrystalStructure(unsigned int xtal)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-unsigned int PrimaryPhaseWidget::getCrystalStructure()
+unsigned int PrimaryPhaseWidget::getCrystalStructure() const
 {
   return m_CrystalStructure;
 }
@@ -338,11 +355,11 @@ QString PrimaryPhaseWidget::getComboString()
 {
   QString s = QString::number(m_PhaseIndex);
   s.append(" - ");
-  if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure))
+  if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
   {
     s.append("Cubic");
   }
-  else if ( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure))
+  else if ( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
   {
     s.append("Hexagonal");
   }
@@ -352,7 +369,7 @@ QString PrimaryPhaseWidget::getComboString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PrimaryPhaseWidget::gatherSizeDistributionFromGui(float &mu, float &sigma, float &minCutOff, float &maxCutOff, float &stepSize)
+int PrimaryPhaseWidget::gatherSizeDistributionFromGui(float& mu, float& sigma, float& minCutOff, float& maxCutOff, float& stepSize)
 {
   bool ok = false;
   mu = m_Mu_SizeDistribution->text().toFloat(&ok);
@@ -425,10 +442,25 @@ void PrimaryPhaseWidget::updatePlots()
 {
   if (m_DataHasBeenGenerated == true)
   {
+    QProgressDialog progress("Generating Data ....", "Cancel", 0, 4, this);
+    progress.setWindowModality(Qt::WindowModal);
+    progress.setMinimumDuration(2000);
+
+    progress.setValue(1);
+    progress.setLabelText("[1/3] Calculating Size Distributions ...");
     plotSizeDistribution();
+
+    progress.setValue(2);
+    progress.setLabelText("[2/3] Calculating ODF Data ...");
     m_ODFWidget->updatePlots();
+
+    progress.setValue(3);
+    progress.setLabelText("[3/3] Calculating Axis ODF Data ...");
     m_AxisODFWidget->updatePlots();
+
+    progress.setValue(4);
   }
+
 }
 
 // -----------------------------------------------------------------------------
@@ -443,8 +475,51 @@ void PrimaryPhaseWidget::on_m_GenerateDefaultData_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryPhaseWidget::on_m_Mu_SizeDistribution_textChanged(const QString &text)
+bool PrimaryPhaseWidget::validateValue(QDoubleValidator* val, QLineEdit* lineEdit)
 {
+  QString value(lineEdit->text());
+  int not_used = 0;
+  QValidator::State state = val->validate(value, not_used);
+  if(state != QValidator::Acceptable)
+  {
+    lineEdit->setStyleSheet("border: 1px solid red;");
+    return false;
+  }
+  else
+  {
+    lineEdit->setStyleSheet("");
+  }
+  return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool PrimaryPhaseWidget::validateMuSigma()
+{
+  bool muValid = validateValue(m_MuValidator, m_Mu_SizeDistribution);
+  bool sigmaValid = validateValue(m_SigmaValidator, m_Sigma_SizeDistribution);
+
+  if (muValid && sigmaValid)
+  {
+    m_GenerateDefaultData->setEnabled(true);
+    return true;
+  }
+
+  m_NumberBinsGenerated->setText("Error");
+  m_GenerateDefaultData->setEnabled(false);
+  return false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PrimaryPhaseWidget::on_m_Mu_SizeDistribution_textChanged(const QString& text)
+{
+  if (!validateMuSigma())
+  {
+    return;
+  }
   updateSizeDistributionPlot();
   m_Mu_SizeDistribution->setFocus();
   calculateNumberOfBins();
@@ -452,8 +527,12 @@ void PrimaryPhaseWidget::on_m_Mu_SizeDistribution_textChanged(const QString &tex
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryPhaseWidget::on_m_Sigma_SizeDistribution_textChanged(const QString &text)
+void PrimaryPhaseWidget::on_m_Sigma_SizeDistribution_textChanged(const QString& text)
 {
+  if (!validateMuSigma())
+  {
+    return;
+  }
   updateSizeDistributionPlot();
   m_Sigma_SizeDistribution->setFocus();
   calculateNumberOfBins();
@@ -462,7 +541,7 @@ void PrimaryPhaseWidget::on_m_Sigma_SizeDistribution_textChanged(const QString &
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryPhaseWidget::on_m_MinSigmaCutOff_textChanged(const QString &text)
+void PrimaryPhaseWidget::on_m_MinSigmaCutOff_textChanged(const QString& text)
 {
   updateSizeDistributionPlot();
   m_MinSigmaCutOff->setFocus();
@@ -472,7 +551,7 @@ void PrimaryPhaseWidget::on_m_MinSigmaCutOff_textChanged(const QString &text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryPhaseWidget::on_m_MaxSigmaCutOff_textChanged(const QString &text)
+void PrimaryPhaseWidget::on_m_MaxSigmaCutOff_textChanged(const QString& text)
 {
   updateSizeDistributionPlot();
   m_MaxSigmaCutOff->setFocus();
@@ -505,9 +584,16 @@ void PrimaryPhaseWidget::calculateNumberOfBins()
     return;
   }
 
-  StatsGen sg;
-  int n = sg.computeNumberOfBins(mu, sigma, minCutOff, maxCutOff, stepSize, max, min);
-  m_NumberBinsGenerated->setText(QString::number(n));
+
+  int n = StatsGen::ComputeNumberOfBins(mu, sigma, minCutOff, maxCutOff, stepSize, max, min);
+  if(err < 0)
+  {
+    m_NumberBinsGenerated->setText("Error");
+  }
+  else
+  {
+    m_NumberBinsGenerated->setText(QString::number(n));
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -516,8 +602,8 @@ void PrimaryPhaseWidget::calculateNumberOfBins()
 int PrimaryPhaseWidget::calculateNumberOfBins(float mu, float sigma, float minCutOff, float maxCutOff, float stepSize)
 {
   float max, min; // Only needed for the method. Not used otherwise.
-  StatsGen sg;
-  return sg.computeNumberOfBins(mu, sigma, minCutOff, maxCutOff, stepSize, max, min);
+
+  return StatsGen::ComputeNumberOfBins(mu, sigma, minCutOff, maxCutOff, stepSize, max, min);
 }
 
 // -----------------------------------------------------------------------------
@@ -526,18 +612,18 @@ int PrimaryPhaseWidget::calculateNumberOfBins(float mu, float sigma, float minCu
 int PrimaryPhaseWidget::computeBinsAndCutOffs( float mu, float sigma,
                                                float minCutOff, float maxCutOff,
                                                float binStepSize,
-                                               QwtArray<float> &binsizes,
-                                               QwtArray<float> &xCo,
-                                               QwtArray<float> &yCo,
-                                               float &xMax, float &yMax,
-                                               QwtArray<float> &x,
-                                               QwtArray<float> &y)
+                                               QwtArray<float>& binsizes,
+                                               QwtArray<float>& xCo,
+                                               QwtArray<float>& yCo,
+                                               float& xMax, float& yMax,
+                                               QwtArray<float>& x,
+                                               QwtArray<float>& y)
 {
   int err = 0;
   int size = 250;
 
-  StatsGen sg;
-  err = sg.GenLogNormalPlotData<QwtArray<float> > (mu, sigma, x, y, size);
+
+  err = StatsGen::GenLogNormalPlotData<QwtArray<float> > (mu, sigma, x, y, size);
   if (err == 1)
   {
     //TODO: Present Error Message
@@ -548,7 +634,7 @@ int PrimaryPhaseWidget::computeBinsAndCutOffs( float mu, float sigma,
   //  float yMax = std::numeric_limits<float >::min();
   for (int i = 0; i < size; ++i)
   {
-    //   std::cout << x[i] << "  " << y[i] << std::endl;
+    //   qDebug() << x[i] << "  " << y[i] << "\n";
     if (x[i] > xMax)
     {
       xMax = x[i];
@@ -563,10 +649,10 @@ int PrimaryPhaseWidget::computeBinsAndCutOffs( float mu, float sigma,
   yCo.clear();
   int numsizebins = 1;
   binsizes.clear();
-  // QwtArray<int> numgrains;
-  err = sg.GenCutOff<float, QwtArray<float> > (mu, sigma, minCutOff, maxCutOff, binStepSize, xCo, yCo, yMax, numsizebins, binsizes);
+  // QwtArray<int> numfeatures;
+  err = StatsGen::GenCutOff<float, QwtArray<float> > (mu, sigma, minCutOff, maxCutOff, binStepSize, xCo, yCo, yMax, numsizebins, binsizes);
 
-  return 0;
+  return err;
 }
 
 
@@ -611,7 +697,7 @@ void PrimaryPhaseWidget::updateSizeDistributionPlot()
     m_CutOffMin = new QwtPlotMarker();
     m_CutOffMin->attach(m_SizeDistributionPlot);
   }
-  m_CutOffMin->setLabel(QString::fromLatin1("Cut Off Min Grain Diameter"));
+  m_CutOffMin->setLabel(QString::fromLatin1("Cut Off Min Feature Diameter"));
   m_CutOffMin->setLabelAlignment(Qt::AlignLeft | Qt::AlignBottom);
   m_CutOffMin->setLabelOrientation(Qt::Vertical);
   m_CutOffMin->setLineStyle(QwtPlotMarker::VLine);
@@ -623,7 +709,7 @@ void PrimaryPhaseWidget::updateSizeDistributionPlot()
     m_CutOffMax = new QwtPlotMarker();
     m_CutOffMax->attach(m_SizeDistributionPlot);
   }
-  m_CutOffMax->setLabel(QString::fromLatin1("Cut Off Max Grain Diameter"));
+  m_CutOffMax->setLabel(QString::fromLatin1("Cut Off Max Feature Diameter"));
   m_CutOffMax->setLabelAlignment(Qt::AlignLeft | Qt::AlignBottom);
   m_CutOffMax->setLabelOrientation(Qt::Vertical);
   m_CutOffMax->setLineStyle(QwtPlotMarker::VLine);
@@ -679,7 +765,7 @@ void PrimaryPhaseWidget::plotSizeDistribution()
   err = computeBinsAndCutOffs(mu, sigma, minCutOff, maxCutOff, stepSize, binsizes, xCo, yCo, xMax, yMax, x, y);
   if (err < 0) { return; }
 
-  // Now that we have bins and grain sizes, push those to the other plot widgets
+  // Now that we have bins and feature sizes, push those to the other plot widgets
   // Setup Each Plot Widget
   // The MicroPreset class will set the distribution for each of the plots
   m_Omega3Plot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, stepSize);
@@ -704,19 +790,19 @@ void PrimaryPhaseWidget::plotSizeDistribution()
 
 #define SGWIGET_WRITE_ERROR_CHECK(var)\
   if (err < 0)  {\
-  QString msg ("Error Writing Data ");\
-  msg.append(QString::fromStdString(var));\
-  msg.append(" to the HDF5 file");\
-  QMessageBox::critical(this, tr("StatsGenerator"),\
-  msg,\
-  QMessageBox::Default);\
-  retErr = -1;\
+    QString msg ("Error Writing Data ");\
+    msg.append((var));\
+    msg.append(" to the HDF5 file");\
+    QMessageBox::critical(this, tr("StatsGenerator"),\
+                          msg,\
+                          QMessageBox::Default);\
+    retErr = -1;\
   }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PrimaryPhaseWidget::gatherStatsData(VoxelDataContainer::Pointer m)
+int PrimaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
 {
   if (m_PhaseIndex < 1)
   {
@@ -756,113 +842,92 @@ int PrimaryPhaseWidget::gatherStatsData(VoxelDataContainer::Pointer m)
   float sdlogdiam = sigma;
   float stepSize = binStep;
 
-  // size_t nBins = 0;
-
-  typedef DataArray<unsigned int> XTalStructArrayType;
-  typedef DataArray<unsigned int> PhaseTypeArrayType;
-  typedef DataArray<unsigned int> ShapeTypeArrayType;
-  size_t ensembles = m->getNumEnsembleTuples();
-
   // Get pointers
-  unsigned int* crystalStructures = m->getEnsembleDataSizeCheck<unsigned int, XTalStructArrayType, AbstractFilter>(DREAM3D::EnsembleData::CrystalStructures, ensembles, 1, NULL);
-  unsigned int* phaseTypes = m->getEnsembleDataSizeCheck<unsigned int, PhaseTypeArrayType, AbstractFilter>(DREAM3D::EnsembleData::PhaseTypes, ensembles, 1, NULL);
-
-  //unsigned int* shapeTypes = m->getEnsembleDataSizeCheck<unsigned int, ShapeTypeArrayType, AbstractFilter>(DREAM3D::EnsembleData::ShapeTypes, ensembles*1, NULL);
+  IDataArray::Pointer iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::CrystalStructures);
+  unsigned int* crystalStructures = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::PhaseTypes);
+  unsigned int* phaseTypes = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
 
   crystalStructures[m_PhaseIndex] = m_CrystalStructure;
   phaseTypes[m_PhaseIndex] = m_PhaseType;
 
-  StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
-  StatsData::Pointer statsData = statsDataArray->getStatsData(m_PhaseIndex);
-  PrimaryStatsData* primaryStatsData = PrimaryStatsData::SafePointerDownCast(statsData.get());
-
-
-  //H5StatsWriter::Pointer writer = H5StatsWriter::New();
-
-  primaryStatsData->setPhaseFraction(calcPhaseFraction);
-  // Grain Diameter Info
-  primaryStatsData->setBinStepSize(stepSize);
-  primaryStatsData->setMaxGrainDiameter(maxdiameter);
-  primaryStatsData->setMinGrainDiameter(mindiameter);
-  // Grain Size Distribution
+  StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(attrMat->getAttributeArray(DREAM3D::EnsembleData::Statistics).get());
+  if (NULL != statsDataArray)
   {
-    VectorOfFloatArray data;
-    FloatArrayType::Pointer d1 = FloatArrayType::CreateArray(1, DREAM3D::HDF5::Average);
-    FloatArrayType::Pointer d2 = FloatArrayType::CreateArray(1, DREAM3D::HDF5::StandardDeviation);
-    data.push_back(d1);
-    data.push_back(d2);
-    d1->SetValue(0, avglogdiam);
-    d2->SetValue(0, sdlogdiam);
-    primaryStatsData->setGrainSizeDistribution(data);
-    primaryStatsData->setGrainSize_DistType(DREAM3D::DistributionType::LogNormal);
+    StatsData::Pointer statsData = statsDataArray->getStatsData(m_PhaseIndex);
+    PrimaryStatsData* primaryStatsData = PrimaryStatsData::SafePointerDownCast(statsData.get());
+
+    primaryStatsData->setPhaseFraction(calcPhaseFraction);
+    // Feature Diameter Info
+    primaryStatsData->setBinStepSize(stepSize);
+    primaryStatsData->setMaxFeatureDiameter(maxdiameter);
+    primaryStatsData->setMinFeatureDiameter(mindiameter);
+    // Feature Size Distribution
+    {
+      VectorOfFloatArray data;
+      FloatArrayType::Pointer d1 = FloatArrayType::CreateArray(1, DREAM3D::StringConstants::Average);
+      FloatArrayType::Pointer d2 = FloatArrayType::CreateArray(1, DREAM3D::StringConstants::StandardDeviation);
+      data.push_back(d1);
+      data.push_back(d2);
+      d1->setValue(0, avglogdiam);
+      d2->setValue(0, sdlogdiam);
+      primaryStatsData->setFeatureSizeDistribution(data);
+      primaryStatsData->setFeatureSize_DistType(DREAM3D::DistributionType::LogNormal);
+    }
+
+    // Now that we have bins and feature sizes, push those to the other plot widgets
+    {
+      VectorOfFloatArray data = m_Omega3Plot->getStatisticsData();
+      primaryStatsData->setFeatureSize_Omegas(data);
+      primaryStatsData->setOmegas_DistType(m_Omega3Plot->getDistributionType());
+    }
+    {
+      VectorOfFloatArray data = m_BOverAPlot->getStatisticsData();
+      primaryStatsData->setFeatureSize_BOverA(data);
+      primaryStatsData->setBOverA_DistType(m_BOverAPlot->getDistributionType());
+    }
+    {
+      VectorOfFloatArray data = m_COverAPlot->getStatisticsData();
+      primaryStatsData->setFeatureSize_COverA(data);
+      primaryStatsData->setCOverA_DistType(m_COverAPlot->getDistributionType());
+    }
+    {
+      VectorOfFloatArray data = m_NeighborPlot->getStatisticsData();
+      primaryStatsData->setFeatureSize_Neighbors(data);
+      primaryStatsData->setNeighbors_DistType(m_NeighborPlot->getDistributionType());
+    }
+
+    m_ODFWidget->getOrientationData(primaryStatsData, DREAM3D::PhaseType::PrimaryPhase);
+
+    err = m_AxisODFWidget->getOrientationData(primaryStatsData, DREAM3D::PhaseType::PrimaryPhase);
   }
-  // Now that we have bins and grain sizes, push those to the other plot widgets
-
-  //err = m_Omega3Plot->writeDataToHDF5(m, DREAM3D::HDF5::Grain_SizeVOmega3_Distributions);
-  {
-    VectorOfFloatArray data = m_Omega3Plot->getStatisticsData();
-    primaryStatsData->setGrainSize_Omegas(data);
-    primaryStatsData->setOmegas_DistType(m_Omega3Plot->getDistributionType());
-  }
-
-  //err = m_BOverAPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVBoverA_Distributions);
-  {
-    VectorOfFloatArray data = m_BOverAPlot->getStatisticsData();
-    primaryStatsData->setGrainSize_BOverA(data);
-    primaryStatsData->setBOverA_DistType(m_BOverAPlot->getDistributionType());
-  }
-
-  //err = m_COverAPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVCoverA_Distributions);
-  {
-    VectorOfFloatArray data = m_COverAPlot->getStatisticsData();
-    primaryStatsData->setGrainSize_COverA(data);
-    primaryStatsData->setCOverA_DistType(m_COverAPlot->getDistributionType());
-  }
-
-  // err = m_NeighborPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions);
-  {
-    VectorOfFloatArray data = m_NeighborPlot->getStatisticsData();
-    primaryStatsData->setGrainSize_Neighbors(data);
-    primaryStatsData->setNeighbors_DistType(m_NeighborPlot->getDistributionType());
-  }
-
-
-  //err = m_ODFWidget->writeDataToHDF5(writer);
-  m_ODFWidget->getOrientationData(primaryStatsData, DREAM3D::PhaseType::PrimaryPhase);
-
-
-  err = m_AxisODFWidget->getOrientationData(primaryStatsData, DREAM3D::PhaseType::PrimaryPhase);
-
   return retErr;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryPhaseWidget::extractStatsData(VoxelDataContainer::Pointer m, int index)
+void PrimaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int index)
 {
   setWidgetListEnabled(true);
   float mu = 1.0f;
   float sigma = 1.0f;
   float minCutOff = 5.0f;
   float maxCutOff = 5.0f;
-  float binStepSize, maxGrainSize, minGrainSize;
+  float binStepSize, maxFeatureSize, minFeatureSize;
 
   setPhaseIndex(index);
 
-  IDataArray* iDataPtr = NULL;
+  IDataArray::Pointer iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::CrystalStructures);
+  unsigned int* attributeArray = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  m_CrystalStructure = attributeArray[index];
 
-  iDataPtr = m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get();
-  UInt32ArrayType* data = UInt32ArrayType::SafeObjectDownCast<IDataArray*, UInt32ArrayType*>(iDataPtr);
-  m_CrystalStructure = data->GetValue(index);
+  iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::PhaseTypes);
+  attributeArray = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  m_PhaseType = attributeArray[index];
 
-  iDataPtr = m->getEnsembleData(DREAM3D::EnsembleData::PhaseTypes).get();
-  data = UInt32ArrayType::SafeObjectDownCast<IDataArray*, UInt32ArrayType*>(iDataPtr);
-  m_PhaseType = data->GetValue(index);
-
-  iDataPtr = m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get();
-  data = UInt32ArrayType::SafeObjectDownCast<IDataArray*, UInt32ArrayType*>(iDataPtr);
-  StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(iDataPtr);
+  iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::Statistics);
+  StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(iDataArray.get());
   if (statsDataArray == NULL)
   {
     return;
@@ -883,20 +948,19 @@ void PrimaryPhaseWidget::extractStatsData(VoxelDataContainer::Pointer m, int ind
   /* SEt the BinNumbers data set */
   FloatArrayType::Pointer bins = primaryStatsData->getBinNumbers();
 
-
-  /* Set the Grain_Diameter_Info Data */
+  /* Set the Feature_Diameter_Info Data */
 
   binStepSize = primaryStatsData->getBinStepSize();
   m_BinStepSize->blockSignals(true);
   m_BinStepSize->setValue(binStepSize);
   m_BinStepSize->blockSignals(false);
-  maxGrainSize = primaryStatsData->getMaxGrainDiameter();
-  minGrainSize = primaryStatsData->getMinGrainDiameter();
+  maxFeatureSize = primaryStatsData->getMaxFeatureDiameter();
+  minFeatureSize = primaryStatsData->getMinFeatureDiameter();
 
-  /* Set the Grain_Size_Distribution Data */
-  VectorOfFloatArray distData = primaryStatsData->getGrainSizeDistribution();
-  mu = distData[0]->GetValue(0);
-  sigma = distData[1]->GetValue(0);
+  /* Set the Feature_Size_Distribution Data */
+  VectorOfFloatArray distData = primaryStatsData->getFeatureSizeDistribution();
+  mu = distData[0]->getValue(0);
+  sigma = distData[1]->getValue(0);
   m_Mu_SizeDistribution->blockSignals(true);
   m_Sigma_SizeDistribution->blockSignals(true);
 
@@ -906,8 +970,8 @@ void PrimaryPhaseWidget::extractStatsData(VoxelDataContainer::Pointer m, int ind
   m_Mu_SizeDistribution->blockSignals(false);
   m_Sigma_SizeDistribution->blockSignals(false);
 
-  minCutOff = (mu - log(minGrainSize))/sigma;
-  maxCutOff = (log(maxGrainSize) - mu)/sigma;
+  minCutOff = (mu - log(minFeatureSize)) / sigma;
+  maxCutOff = (log(maxFeatureSize) - mu) / sigma;
 
   m_MinSigmaCutOff->blockSignals(true);
   m_MinSigmaCutOff->setText(QString::number(minCutOff));
@@ -919,37 +983,37 @@ void PrimaryPhaseWidget::extractStatsData(VoxelDataContainer::Pointer m, int ind
 
   // Update the Size/Weights Plot
   updateSizeDistributionPlot();
-  m_NumberBinsGenerated->setText(QString::number(bins->GetNumberOfTuples()));
+  m_NumberBinsGenerated->setText(QString::number(bins->getNumberOfTuples()));
 
   // Now have each of the plots set it's own data
-  QVector<float> qbins (bins->GetNumberOfTuples());
+  QVector<float> qbins (bins->getNumberOfTuples());
   for(int i = 0; i < qbins.size(); ++i)
   {
-    qbins[i] = bins->GetValue(i);
+    qbins[i] = bins->getValue(i);
   }
 
   m_Omega3Plot->setDistributionType(primaryStatsData->getOmegas_DistType(), false);
-  m_Omega3Plot->extractStatsData(m, index, qbins, primaryStatsData->getGrainSize_Omegas());
+  m_Omega3Plot->extractStatsData(index, qbins, primaryStatsData->getFeatureSize_Omegas());
   m_Omega3Plot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
   m_BOverAPlot->setDistributionType(primaryStatsData->getBOverA_DistType(), false);
-  m_BOverAPlot->extractStatsData(m, index, qbins, primaryStatsData->getGrainSize_BOverA());
+  m_BOverAPlot->extractStatsData(index, qbins, primaryStatsData->getFeatureSize_BOverA());
   m_BOverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
   m_COverAPlot->setDistributionType(primaryStatsData->getCOverA_DistType(), false);
-  m_COverAPlot->extractStatsData(m, index, qbins, primaryStatsData->getGrainSize_COverA());
+  m_COverAPlot->extractStatsData(index, qbins, primaryStatsData->getFeatureSize_COverA());
   m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
   m_NeighborPlot->setDistributionType(primaryStatsData->getNeighbors_DistType(), false);
-  m_NeighborPlot->extractStatsData(m, index, qbins, primaryStatsData->getGrainSize_Neighbors());
+  m_NeighborPlot->extractStatsData(index, qbins, primaryStatsData->getFeatureSize_Neighbors());
   m_NeighborPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
 
   // Set the ODF Data
-  m_ODFWidget->extractStatsData(m, index, primaryStatsData, DREAM3D::PhaseType::PrimaryPhase);
+  m_ODFWidget->extractStatsData(index, primaryStatsData, DREAM3D::PhaseType::PrimaryPhase);
 
   // Set the Axis ODF Data
-  m_AxisODFWidget->extractStatsData(m, index, primaryStatsData, DREAM3D::PhaseType::PrimaryPhase);
+  m_AxisODFWidget->extractStatsData(index, primaryStatsData, DREAM3D::PhaseType::PrimaryPhase);
 
   // Enable all the tabs
   setTabsPlotTabsEnabled(true);

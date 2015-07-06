@@ -1,46 +1,57 @@
 /* ============================================================================
- * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 
 #include "AbstractFilter.h"
+
+#include "DREAM3DLib/DREAM3DLibVersion.h"
+#include "DREAM3DLib/Plugin/PluginManager.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 AbstractFilter::AbstractFilter() :
-m_VoxelDataContainer(NULL),
-m_SurfaceMeshDataContainer(NULL),
-m_SolidMeshDataContainer(NULL),
-m_ErrorCondition(0),
-m_Cancel(false)
+  Observable(),
+  m_ErrorCondition(0),
+  m_InPreflight(false),
+  m_Cancel(false)
 {
+  m_DataContainerArray = DataContainerArray::New();
   setupFilterParameters();
+  m_PreviousFilter = NullPointer();
+  m_NextFilter = NullPointer();
 }
 
 // -----------------------------------------------------------------------------
@@ -48,7 +59,24 @@ m_Cancel(false)
 // -----------------------------------------------------------------------------
 AbstractFilter::~AbstractFilter()
 {
+  //  if(NULL != m_PreviousFilter.get())
+  //  std::cout << "~PipelineFilterWidget() m_PreviousFilter " << this  << "  " << m_PreviousFilter->getNameOfClass().toStdString()
+  //            << "  " << m_PreviousFilter.use_count() << std::endl;
+  // m_PreviousFilter = AbstractFilter::NullPointer();
 
+  //  if(NULL != m_NextFilter.get())
+  //  std::cout << "~PipelineFilterWidget() m_NextFilter " << this  << "  " << m_NextFilter->getNameOfClass().toStdString()
+  //            << "  " << m_NextFilter.use_count() << std::endl;
+  //  m_NextFilter = AbstractFilter::NullPointer();
+  //  std::cout << "~AbstractFilter" << std::endl;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::setCancel(bool value)
+{
+  m_Cancel = value;
 }
 
 // -----------------------------------------------------------------------------
@@ -64,7 +92,7 @@ void AbstractFilter::setupFilterParameters()
 void AbstractFilter::execute()
 {
   setErrorCondition(-999);
-  notifyErrorMessage("AbstractFilter does not implement an execute method. Please use a subclass instead.", -999);
+  notifyErrorMessage(getNameOfClass(), "QAbstractFilter does not implement an execute method. Please use a subclass instead.", -999);
 }
 
 // -----------------------------------------------------------------------------
@@ -72,18 +100,19 @@ void AbstractFilter::execute()
 // -----------------------------------------------------------------------------
 void AbstractFilter::preflight()
 {
+  setInPreflight(true);
   setErrorCondition(-999);
-  notifyErrorMessage("AbstractFilter does not implement a preflight method. Please use a subclass instead.", -999);
+  notifyErrorMessage(getNameOfClass(), "AbstractFilter does not implement a preflight method. Please use a subclass instead.", -999);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool AbstractFilter::doesPipelineContainFilterBeforeThis(const std::string &name)
+bool AbstractFilter::doesPipelineContainFilterBeforeThis(const QString& name)
 {
   bool contains = false;
   // Check the previous filter
-  AbstractFilter::Pointer prev = getPreviousFilter();
+  AbstractFilter::Pointer prev = getPreviousFilter().lock();
   while(prev.get() != NULL)
   {
     if (prev->getNameOfClass().compare(name) == 0)
@@ -91,7 +120,7 @@ bool AbstractFilter::doesPipelineContainFilterBeforeThis(const std::string &name
       contains = true;
       break;
     }
-    prev = prev->getPreviousFilter();
+    prev = prev->getPreviousFilter().lock();
   }
   return contains;
 }
@@ -99,11 +128,11 @@ bool AbstractFilter::doesPipelineContainFilterBeforeThis(const std::string &name
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool AbstractFilter::doesPipelineContainFilterAfterThis(const std::string &name)
+bool AbstractFilter::doesPipelineContainFilterAfterThis(const QString& name)
 {
   bool contains = false;
   // Check the previous filter
-  AbstractFilter::Pointer next = getNextFilter();
+  AbstractFilter::Pointer next = getNextFilter().lock();
   while(next.get() != NULL)
   {
     if (next->getNameOfClass().compare(name) == 0)
@@ -111,28 +140,20 @@ bool AbstractFilter::doesPipelineContainFilterAfterThis(const std::string &name)
       contains = true;
       break;
     }
-    next = next->getNextFilter();
+    next = next->getNextFilter().lock();
   }
   return contains;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractFilter::addCreatedArrayHelpIndexEntry(CreatedArrayHelpIndexEntry::Pointer entry)
-{
-  m_CreatedArrayHelpIndexEntries.push_back(entry);
-}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void AbstractFilter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
-  reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-////!!##
-  reader->closeFilterGroup();
+  BOOST_ASSERT(reader != NULL);
+  qDebug() << "AbstractFilter::readFilterParameters() -> Writing Filter Options" << "\n";
+  return;
 }
 
 // -----------------------------------------------------------------------------
@@ -141,130 +162,140 @@ void AbstractFilter::readFilterParameters(AbstractFilterParametersReader* reader
 int AbstractFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   BOOST_ASSERT(writer != NULL);
-  std::cout << "AbstractFilter::writeFilterParameters() -> Writing Filter Options" << std::endl;
+  qDebug() << "AbstractFilter::writeFilterParameters() -> Writing Filter Options" << "\n";
   return -1;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::addErrorMessage(PipelineMessage &msg)
+bool AbstractFilter::getCancel()
 {
-  m_PipelineMessages.push_back(msg);
+  return m_Cancel;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::addErrorMessage(const std::string &filterHumanLabel, const std::string &errorDescription, int errorCode)
+IDREAM3DPlugin* AbstractFilter::getPluginInstance()
 {
-  PipelineMessage em(getNameOfClass(), errorDescription, errorCode, PipelineMessage::Error);
-  em.setFilterHumanLabel(getHumanLabel());
-  m_PipelineMessages.push_back(em);
+  PluginManager* manager = PluginManager::Instance();
+  QString pluginName = manager->getPluginName(getNameOfClass());
+  IDREAM3DPlugin* plugin = manager->findPlugin(pluginName);
+  return plugin;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::addErrorMessages(std::vector<PipelineMessage> msgVector) {
-  for (std::vector<PipelineMessage>::size_type i=0; i < msgVector.size(); ++i) {
-    m_PipelineMessages.push_back(msgVector[i]);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractFilter::addWarningMessage(PipelineMessage &msg)
+AbstractFilter::Pointer AbstractFilter::newFilterInstance(bool copyFilterParameters)
 {
-  msg.setFilterHumanLabel(getHumanLabel());
-  msg.setFilterClassName(getNameOfClass());
-  m_PipelineMessages.push_back(msg);
+  return NullPointer();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::addWarningMessage(const std::string &filterName, const std::string &warnDescription, int warnCode)
+void AbstractFilter::copyFilterParameterInstanceVariables(AbstractFilter* filter)
 {
-  PipelineMessage em(getNameOfClass(), warnDescription, warnCode, PipelineMessage::Warning);
-  em.setFilterHumanLabel(getHumanLabel());
-  em.setFilterClassName(getNameOfClass());
-  m_PipelineMessages.push_back(em);
-}
+  filter->setFilterParameters(getFilterParameters() );
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractFilter::addWarningMessages(std::vector<PipelineMessage> msgVector) {
-  for (std::vector<PipelineMessage>::size_type i=0; i < msgVector.size(); ++i) {
-    m_PipelineMessages.push_back(msgVector[i]);
-  }
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractFilter::removeErrorMessage(PipelineMessage msg) {
-  for (std::vector<PipelineMessage>::iterator iter = m_PipelineMessages.begin(); iter!=m_PipelineMessages.end(); ++iter) {
-    if (*iter == msg) {
-      m_PipelineMessages.erase(iter);
-      return;
+  //Loop over each Filter Parameter that is registered to the filter either through this class or a parent class
+  // and copy the value from the current instance of the object into the "new" instance that was just created
+  QVector<FilterParameter::Pointer> options = getFilterParameters(); // Get the current set of filter parameters
+  for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
+  {
+    FilterParameter* parameter = (*iter).get();
+    if (parameter->getReadOnly() == true )
+    {
+      continue; // Skip this type of filter parameter as it has nothing to do with anything in the filter.
     }
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractFilter::removeErrorMessage(int index) {
-  int count = 0;
-
-  for (std::vector<PipelineMessage>::iterator iter = m_PipelineMessages.begin(); iter!=m_PipelineMessages.end(); ++iter) {
-    if (count == index) {
-      m_PipelineMessages.erase(iter);
-      return;
-    }
-    count++;
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractFilter::removeErrorMessages(int start, int end) {
-  int count = 0;
-
-  for (std::vector<PipelineMessage>::iterator iter = m_PipelineMessages.begin(); iter!=m_PipelineMessages.end(); ++iter) {
-    if (count == start) {
-      while (count <= end) {
-        iter = m_PipelineMessages.erase(iter);
-        count++;
+    // Get the property from the current instance of the filter
+    QVariant var = property(parameter->getPropertyName().toLatin1().constData());
+    if(parameter->getReadOnly() == false)
+    {
+      bool ok = filter->setProperty(parameter->getPropertyName().toLatin1().constData(), var);
+      if(false == ok)
+      {
+        QString ss = QString("Error occurred transferring the Filter Parameter '%1' in Filter '%2' to the filter instance. The pipeline may run but the underlying filter will NOT be using the values from the GUI."
+                             " Please report this issue to the developers of this filter.").arg(parameter->getPropertyName()).arg(filter->getHumanLabel());
+        Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
       }
-      return;
     }
-    count++;
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::clearErrorMessages() {
-  std::vector<PipelineMessage>::iterator iter = m_PipelineMessages.begin();
-
-  while ( iter != m_PipelineMessages.end() ) {
-    iter = m_PipelineMessages.erase(iter);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractFilter::tbbTaskProgress()
+const QString AbstractFilter::getGroupName()
 {
-
+  return "YOUR CLASS SHOULD IMPLEMENT THIS";
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AbstractFilter::getSubGroupName()
+{
+  return "YOUR CLASS SHOULD IMPLEMENT THIS";
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AbstractFilter::getHumanLabel()
+{
+  return "YOUR CLASS SHOULD IMPLEMENT THIS";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AbstractFilter::getBrandingString()
+{
+  return "DREAM3D Core Filter";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AbstractFilter::getCompiledLibraryName()
+{
+  return "DREAM3DLib";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AbstractFilter::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  DREAM3DLib::Version::Major() << "." << DREAM3DLib::Version::Minor() << "." << DREAM3DLib::Version::Patch();
+  return version;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AbstractFilter::generateHtmlSummary()
+{
+  QString html;
+  QTextStream ss(&html);
+  ss << "<html><head></head>\n";
+  ss << "<body>\n";
+
+  // A table for the summary items
+  ss << "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n";
+  ss << "<tbody>\n";
+  ss << "	<tr><th align=\"right\">Filter Name:</th><td>" << getHumanLabel() << "</td></tr>\n";
+  ss << "	<tr><th align=\"right\">Filter Class Name:</th><td>" << getNameOfClass() << "</td></tr>\n";
+  ss << "	<tr><th align=\"right\">Filter Group Name:</th><td>" << getGroupName() << "</td></tr>\n";
+  ss << "	<tr><th align=\"right\">Filter Subroup Name:</th><td>" << getSubGroupName() << "</td></tr>\n";
+  ss << "	<tr><th align=\"right\">Branding String:</th><td>" << getBrandingString() << "</td></tr>\n";
+  ss << "	<tr><th align=\"right\">Compiled Plugin Name:</th><td>" << getCompiledLibraryName() << "</td></tr>\n";
+  ss << "</tbody></table>\n";
+  ss << "</body></html>";
+  return html;
+}

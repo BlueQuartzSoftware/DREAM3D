@@ -13,14 +13,15 @@
 
 
 //-- C++
-#include <string>
-#include <iostream>
+#include <QtCore/QString>
+#include <QtCore/QtDebug>
 #include <vector>
 
 #include <hdf5.h>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 
 /**
@@ -53,34 +54,27 @@ class DREAM3DLib_EXPORT IDataArray
      * @return
      */
     template <class Source, class Target, typename Raw>
-    static Raw SafeReinterpretCast(Source x) {
-        if( dynamic_cast<Target>(x) != x ) {
-          return 0;
-        }
-        return reinterpret_cast<Raw>(x->GetVoidPointer(0));
+    static Raw SafeReinterpretCast(Source x)
+    {
+      if( dynamic_cast<Target>(x) != x )
+      {
+        return 0;
+      }
+      return reinterpret_cast<Raw>(x->getVoidPointer(0));
     }
 
 
     IDataArray();
     virtual ~IDataArray();
 
-    virtual void SetName(const std::string &name) = 0;
-    virtual std::string GetName() = 0;
+    virtual void setName(const QString& name) = 0;
+    virtual QString getName() = 0;
 
-    /**
-     * @brief createNewArray
-     * @param numElements
-     * @param numComponents
-     * @param name
-     * @return
-     */
-    virtual Pointer createNewArray(size_t numElements, int numComponents, const std::string &name) = 0;
+    virtual Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name, bool allocate = true) = 0;
+    virtual Pointer createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name, bool allocate = true) = 0;
+    virtual Pointer createNewArray(size_t numElements, QVector<size_t> dims, const QString& name, bool allocate = true) = 0;
 
-    /**
-     * @brief createDeepCopy
-     * @return
-     */
-    virtual Pointer deepCopy() = 0;
+    virtual int getClassVersion() = 0;
 
     /**
      * @brief Has all the memory needed for this class been allocated?
@@ -106,22 +100,23 @@ class DREAM3DLib_EXPORT IDataArray
      * @param i The index to have the returned pointer pointing to.
      * @return Void Pointer. Possibly NULL.
      */
-    virtual void* GetVoidPointer ( size_t i) = 0;
+    virtual void* getVoidPointer ( size_t i) = 0;
 
-     /**
-     * @brief Returns the number of Tuples in the array.
-     */
-    virtual size_t GetNumberOfTuples () = 0;
+    /**
+    * @brief Returns the number of Tuples in the array.
+    */
+    virtual size_t getNumberOfTuples () = 0;
 
 
     /**
      * @brief Return the number of elements in the array
      * @return
      */
-    virtual size_t GetSize() = 0;
+    virtual size_t getSize() = 0;
 
-    virtual void SetNumberOfComponents(int nc)  = 0;
-    virtual int GetNumberOfComponents()  = 0;
+    virtual int getNumberOfComponents() = 0;
+    virtual QVector<size_t> getComponentDimensions() = 0;
+
 
     /**
      * @brief Returns the number of bytes that make up the data type.
@@ -130,21 +125,21 @@ class DREAM3DLib_EXPORT IDataArray
      * 4 = 32 bit integer/Float
      * 8 = 64 bit integer/Double
      */
-    virtual size_t GetTypeSize() = 0;
+    virtual size_t getTypeSize() = 0;
 
     /**
      * @brief GetTypeName Returns a string representation of the type of data that is stored by this class. This
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    virtual void GetXdmfTypeAndSize(std::string &xdmfTypeName, int &precision) = 0;
+    virtual void getXdmfTypeAndSize(QString& xdmfTypeName, int& precision) = 0;
 
     /**
      * @brief Erases tuples based on a list of specific Tuple indices
      * @param idxs The indices to erase
      * @return
      */
-    virtual int EraseTuples(std::vector<size_t> &idxs) = 0;
+    virtual int eraseTuples(QVector<size_t>& idxs) = 0;
 
     /**
      * @brief Copies a Tuple from one position to another.
@@ -152,15 +147,22 @@ class DREAM3DLib_EXPORT IDataArray
      * @param newPos The destination index to place the copied data
      * @return
      */
-    virtual int CopyTuple(size_t currentPos, size_t newPos) = 0;
+    virtual int copyTuple(size_t currentPos, size_t newPos) = 0;
 
+
+    /**
+     * @brief Creates a copy with the given reordering.
+     * @param newOrderMap the vector containing the new position for each index
+     * @return pointer to new data array
+     */
+    virtual IDataArray::Pointer reorderCopy(QVector<size_t> newOrderMap) = 0;
 
     /**
      * @brief Splats the same value c across all values in the Tuple
      * @param pos The index of the Tuple
      * @param value pointer to value
      */
-    virtual void InitializeTuple(size_t pos, double value) = 0;
+    virtual void initializeTuple(size_t pos, double value) = 0;
 
     /**
      * @brief Sets all the values to zero.
@@ -172,43 +174,103 @@ class DREAM3DLib_EXPORT IDataArray
      * @param size The new size of the internal array
      * @return 1 on success, 0 on failure
      */
-    virtual int32_t RawResize(size_t size) = 0;
+    virtual int32_t resizeTotalElements(size_t size) = 0;
 
     /**
      * @brief Reseizes the internal array
      * @param size The new size of the internal array
      * @return 1 on success, 0 on failure
      */
-    virtual int32_t Resize(size_t numTuples) = 0;
-
-
-    virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',') = 0;
-    virtual void printComponent(std::ostream &out, size_t i, int j) = 0;
-
+    virtual int32_t resize(size_t numTuples) = 0;
 
     /**
-     *
+     * @brief printTuple
+     * @param out
+     * @param i
+     * @param delimiter
+     */
+    virtual void printTuple(QTextStream& out, size_t i, char delimiter = ',') = 0;
+
+    /**
+     * @brief printComponent
+     * @param out
+     * @param i
+     * @param j
+     */
+    virtual void printComponent(QTextStream& out, size_t i, int j) = 0;
+
+    /**
+     * @brief deepCopy
+     * @param forceNoAllocate
+     * @return
+     */
+    virtual IDataArray::Pointer deepCopy(bool forceNoAllocate = false) = 0;
+
+    /**
+     * @brief writeH5Data
+     * @param parentId
+     * @param tDims
+     * @return
+     */
+    virtual int writeH5Data(hid_t parentId, QVector<size_t> tDims) = 0;
+
+    /**
+     * @brief readH5Data
      * @param parentId
      * @return
      */
-    virtual int writeH5Data(hid_t parentId) = 0;
     virtual int readH5Data(hid_t parentId) = 0;
 
-    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName, const std::string &groupPath, const std::string &label) = 0;
-//    {
-//      std::cout << "IDataArray::writeXdmfAttribute needs to be implemented for the data being written." << std::endl;
-//      return -1;
-//    }
+    /**
+     * @brief writeXdmfAttribute
+     * @param out
+     * @param volDims
+     * @param hdfFileName
+     * @param groupPath
+     * @param label
+     * @return
+     */
+    virtual int writeXdmfAttribute(QTextStream& out, int64_t* volDims, const QString& hdfFileName, const QString& groupPath, const QString& label) = 0;
 
-    virtual std::string getTypeAsString() = 0;
+    /**
+     * @brief getTypeAsString
+     * @return
+     */
+    virtual QString getTypeAsString() = 0;
+
+    /**
+     * @brief getInfoString
+     * @return Returns a formatted string that contains general infomation about
+     * the instance of the object.
+     */
+    virtual QString getInfoString(DREAM3D::InfoStringFormat format) = 0;
 
   protected:
 
   private:
-      IDataArray (const IDataArray&);    //Not Implemented
-      void operator=(const IDataArray&); //Not Implemented
+    IDataArray (const IDataArray&);    //Not Implemented
+    void operator=(const IDataArray&); //Not Implemented
 
 };
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename T>
+class CheckDataArrayType
+{
+  public:
+    CheckDataArrayType() {}
+    virtual ~CheckDataArrayType() {}
+    bool operator()(IDataArray::Pointer p)
+    {
+      return (boost::dynamic_pointer_cast<T>(p).get() != NULL);
+    }
+};
+
+
 
 #endif //_IDATAARRAY_HPP_
 

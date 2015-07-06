@@ -1,66 +1,42 @@
-Surface Meshing Tutorial {#tutorialsurfacemeshingtutorial}
+Surface Meshing {#tutorialsurfacemeshingtutorial}
 ========
 
-## Surface Mesh Definitions
-Creating a surface mesh in DREAM3D can be accomplished in several ways. There are a pair of filters [Multi-Material Marching Cubes (Slice at a Time)](#m3cslicebyslice) and [Quick Surface Mesh](#quicksurfacemesh) that will generate a triangular based mesh of the primary **Field** for you. The terminology of the underlying data structures is something that the user should understand so that the user can be well informed. We start out by defining a triangle **T**,  which we will call a  **Face**. Each Triangle has three (3) **Vertices** (V0, V1, V2) which are  referred to as a **Point**, **Vertex** and/or **Node** interchangeably within DREAM3D.
+Creating a surface mesh in DREAM.3D can currently be accomplished by using the [Quick Surface Mesh](@ref quicksurfacemesh) **Filter**. This **Filter** will surface mesh a set of **Features** that exists on an **Image Geometry**. For example, you could mesh a structure [created synthetically](@ref tutorialsyntheticsingle), or mesh a structure [reconstructed from a serial sectioning experiment](@ref tutorialebsdreconstruction). The [Quick Surface Mesh](@ref quicksurfacemesh) **Filter** is "quick" because it simply draws triangles across the voxel faces of an **Image Geometry**.  Thus, the result of the **Filter** is a **Triangle Geometry** where the boundaries between **Features** are defined by connected triangles. Note that this means that any given triangle is shared by _two_ **Features**.
+
+Most **Geometry** objects in DREAM.3D are defined by their _shared vertex list_. A shared vertex list is a complete list of all the _unique_ vertices in a **Geometry**, defined by their spatial coordinates. The exception to this rule is an **Image Geometry**, which can be defined implicitly by its dimensions, resolution, and origin. All other **Geometries**, including a **Triangle Geometry**, will also have a list of _shared elements_, where the elements are the primary unit element of the **Geometry**. For example, a **Triangle Geometry** has primary elements that are triangles with three vertices, so such a **Geometry** will have a list of triangles that are defined by referencing the three _vertex Ids_ of which they are composed. 
+
+-------------------
 
 ![Triangle/Face](Images/TriangleSmall.png)
-@image latex Images/TriangleSmall.png " " width=1.75in
+@image latex Images/TriangleSmall.png "Triangle/Face" width=6in
 
-These data structures are declared in DREAM3D in the following code:
+-------------------
 
-    typedef struct
-    {
-        Float_t pos[3];
-    } Vert_t;
+As explained in the [data structure](@ref datastructure) section, **Attributes** can be associated with any of the _unit elements_ that make up a **Geometry**. The type of **Attribute Matrix** that holds these data is defined by the _dimensional topology_ of the underlying unit element. So for a **Triangle Geometry**, data can lie on the **Vertices**, the **Edges**, or the **Faces** of the triangles. For **Geometries** that have a shared vertex list, understanding the _winding_ of the **Vertices** is important. The winding defines the order you go around the object while labeling of the **Vertices**. For example, a **Triangle** can be wound going around _clockwise_ or _counter-clockwise_. In DREAM.3D, the "right hand rule" is adopted for windings. This means that the **Vertex** winding goes in a counter-clockwise manner. If the user desires, it is possible to [reverse the winding](@ref reversetrianglewinding) of a **Triangle Geometry**.
 
-    typedef struct
-    {
-        signed int verts[3];
-    } Face_t;
-
-DREAM3D stores all the vertices in a single array. DREAM3D has the notion of a "shared vertex list" where each vertex is only listed once in the vertex list. Each Triangle is then created by referencing three(3) indexes out of the vertex list to form the three(3) points of the triangle.
-
-## Vertex & Triangle Attributes
-DREAM3D filters can attach _attributes_ to each vertex or triangle. These attributes can be _scalar_ or _vector_ of any numerical type. Some attributes are dependent on the winding of the triangle. From OpenGL the normal is computed via a right-hand-rule, and, so, proper triangle winding is important when visualizing the mesh and also is important to some filters such as the [Grain Face Curvature Filter](#grainfacecurvaturefilter). This is why there are filters such as [Reverse Triangle Winding](#reversetrianglewinding) and [Verify Triangle Winding](#verifytrianglewinding) in order to ensure proper winding and normal calculations.
-
-## Surface Mesh Data Container
-To support the creation and manipulation of a surface mesh DREAM3D introduced a new data container type called the ``SurfaceMeshDataContainer`` and has  the shared vertex array and triangle array as its core properties. These arrays have default names given to them which are defined in ``DREAM3DLib/Common/Constants.h``
-
-    const std::string SurfaceMeshNodes("SurfaceMeshNodes");
-    const std::string SurfaceMeshTriangles("SurfaceMeshTriangles");
-
-In order to stay consistent with the VoxelDataContainer and its terminology, DREAM3D refers to _Vertex Attributes_ as **Cell** data and _Triangle Attributes_ as **Field** data. There are also convenience methods that are named ``setPointData(...)``, ``setFaceData(...)`` and ``setEdgeData(...)`` that map loosely to the **Cell**, **Field** and **Ensemble** syntax of the ``VoxelDataContainer``
-
-In the filter documentation the following terminology will be used:
-
-+ Vertex Array: Refers to the shared vertex array stored in the ``SurfaceMeshDataContainer``
-+ Triangle Array:  Refers to the triangle array stored in the ``SurfaceMeshDataContainer``
-+ Edge Array: Refers to the edge array stored in the ``SurfaceMeshDataContainer``
+## Geometry Connectivity ##
+Consider a **Triangle Geometry**. The least amount of information that is needed to describe this **Geometry** is a shared vertex list and a shared triangle list that indexes into the vertex list. However, it is often desirable to know more about the _connectivity_ of a given **Geometry**. This means knowing not just the **Vertices** and the **Faces**, but also the shared **Edges**. Additional connectivity information includes generating a list of triangle _neighbors_, or generating the reverse associations from **Vertices** to triangles. This sort of connectivity information can be [generated](@ref generategeometryconnectivity) within DREAM.3D. Additionally, due to the design of the **Geometry** objcets, all implemented **Geometries** can have their connectivities generated.
 
 
-## Edge Data
- Update with algorithm to generate Unique Edge Ids
+## Generating a Surface Mesh ##
+There are several **Prebuilt Pipelines** that showcase the steps to generate a surface mesh, using the Small IN100 data set as an example. These **Pipelines** include <i>(01) SmallIN100 Quick Mesh</i> and <i>(02) SmallIN100 Smooth Mesh</i>. Ultimately, generating a surface mesh is as simple as running the [Quick Surface Mesh](@ref quicksurfacemesh) **Filter** on a set of **Features** defined on an **Image Geometry**. However, the resulting surface mesh is usually not satisfactory, since it will remain "blocky" from the original **Image Geometry**. To solve this problem, the user can _smooth_ the surface mesh by applying the [Laplacian Smoothing](@ref laplaciansmoothing) **Filter**. To understand the parameters of the Laplacian smoothing procedure, visit that **Filter's** [documentation](@ref laplaciansmoothing).
 
+After running the **Prebuilt Pipelines** <i>(01) SmallIN100 Quick Mesh</i> and <i>(02) SmallIN100 Smooth Mesh</i>, a .dream3d file and a .xdmf file will be written to the _Data/Output_ directory. Opening the .xdmf in [ParaView](http://www.paraview.org) does not yield what you may expect. First, make sure that you are only viewing the **Data Container** that contains your **Triangle Geometry**. Even when doing this, the surface mesh will still look "incorrect". To get a view of what the internal meshed surfaces look like, apply ParaView's *Threshold* filter on the *SurfaceMeshNodeTypes* array. This array is a set of **Attribute** data that sits on the **Vertices** of the surface mesh. The array defines an integer Id that indentifies what _kind_ of node it is:
 
-## Surface Meshing Tutorial
-For this tutorial we are going to be using a pre-made DREAM3D data file. The file is a Single Phase Synthetic Structure that was quickly generated using the Synthetic Microstructure Creation abilities of DREAM3D. There are other options that exist to create a surface mesh. One can read in a Ph or Dx file, use the Raw Binary Reader to read in the Raw Grain Ids from a binary file or have an already existing set of Grain Ids from a DREAM3D pipeline that segmented the grains for you.
+| Id Value | Node Type |
+|----------|-----------|
+| 2 | Normal **Vertex** |
+| 3 | Triple Line |
+| 4 | Quadruple Point |
+| 12 | Normal **Vertex** on the outer surface |
+| 13 | Triple Line on the outer surface |
+| 14 | Quadruple Point on the outer surface |
 
-![Surface Meshing Pipeline](Images/SurfaceMeshingPipeline.png)
+Thus, to see the internal mesh structure, simply apply the ParaView *Threshold* filter for the values _2_ to _4_ of the _SurfaceMeshNodeTypes_ array. Additionally, to see the triangles, select the _Surface With Edges_ rendering type.
 
-@image latex Images/SurfaceMeshingPipeline.png "Surface Meshing Pipeline" width=4.5in
+-------------------
 
+![Surface Mesh of Small IN100](Images/surfacemesh.png)
+@image latex Images/surfacemesh.png "Surface Mesh of Small IN100" width=6in
 
-Start by adding the "Read DREAM3D Data File" filter. Select the file that you just downloaded and then only check the "GrainIds" data under the "Cell Data" section. This will ensure that this is the only data that is loaded from the file. Because creating the mesh can take large amounts of memory, we only want to load the data necessary. 
-
-Next add in the "M3C Surface Meshing (Slice at a time)" filter which will create the actual surface mesh. Leave the option to "Delete Temp Files" checked ON. The files are in a binary format meant for debugging if things go wrong during the meshing.
-
-After we get the surface mesh we could simply write out a DREAM3D file or a VTK legacy file, but we are selecting to also smooth the surface mesh to prepare it for other analyses.
-
-In order to smooth the mesh, we now add the "Laplacian Smoothing Filter" which takes 7 arguments. The first argument is the number of iterations of smoothing to use. The remaining 6 arguments are two (2) sets of three (3) arguments where you can set the lambda value for the bulk nodes, triple line nodes and quad point nodes for both the "inside triangles" and those triangles that touch the outer surface of the model. The user should understand that a side effect of the Laplacian smoothing algorithm is shrinkage of the actual value due to movement of the nodes. If enough iterations are run and all 6 arguments have valid value (0 to 1), then the volume can collapse on itself. This is why we have the 6 arguments to alleviate some of the shrinkage by pinning the outer shell of triangles in place and only allowing the internal triangles to move. We can also allow the bulk triangles to move more than the triple line or quad point nodes.
-
-Finally, after the Smoothing filter, add a "Write DREAM3D Data File" filter. Be sure to check the option to write the SurfaceMesh Data and also make sure the "Write Xdmf File" is also checked. After smoothing, the mesh can be viewed with ParaView, as seen in the image below. See the DREAM3D documentation for more details on the exact storage layout of the mesh within the DREAM3D data file.
-
-![Surface Meshing Resulting Mesh](Images/SurfaceMeshingResult.png)
-
-@image latex Images/SurfaceMeshingResult.png "Surface Meshing Resulting Mesh" width=6in
+-------------------

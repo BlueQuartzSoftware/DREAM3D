@@ -1,68 +1,63 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 
 #include "StatsGenPlotWidget.h"
-
-#if QWT_VERSION >= 0x060000
-#include "backwards.h"
-#endif
 
 //-- C++ Includes
 #include <iostream>
 #include <limits>
 
 //-- Qt Includes
-#include <QtGui/QMessageBox>
-#include <QtGui/QAbstractItemDelegate>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QAbstractItemDelegate>
 
 //-- Qwt Includes
 #include <qwt.h>
 #include <qwt_plot.h>
-#include <qwt_plot_grid.h>
-#if QWT_VERSION >= 0x060000
-#include <qwt_series_data.h>
-#else
-#include <qwt_interval_data.h>
-#endif
-#include <qwt_painter.h>
-#include <qwt_scale_map.h>
-#include <qwt_plot_zoomer.h>
-#include <qwt_plot_panner.h>
 #include <qwt_plot_curve.h>
+#include <qwt_abstract_scale_draw.h>
+#include <qwt_scale_draw.h>
 #include <qwt_plot_canvas.h>
+#include <qwt_plot_marker.h>
+#include <qwt_plot_grid.h>
+#include <qwt_symbol.h>
+#include <qwt_series_data.h>
+#include <qwt_interval.h>
+#include <qwt_point_3d.h>
+#include <qwt_compat.h>
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
@@ -70,29 +65,29 @@
 #include "StatsGenerator/TableModels/SGBetaTableModel.h"
 #include "StatsGenerator/TableModels/SGLogNormalTableModel.h"
 #include "StatsGenerator/TableModels/SGPowerLawTableModel.h"
-#include "DREAM3DLib/Common/StatsGen.h"
+#include "OrientationLib/Texture/StatsGen.hpp"
 
 #define SG_ERROR_CHECK(name)\
-    std::cout << "Error writing HDF5 data to " << name << std::endl;\
-    std::cout << "  File: " << __FILE__ << std::endl;\
-    std::cout << "  Line: " << __LINE__ << std::endl;
+  qDebug() << "Error writing HDF5 data to " << name << "\n";\
+  qDebug() << "  File: " << __FILE__ << "\n";\
+  qDebug() << "  Line: " << __LINE__ << "\n";
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsGenPlotWidget::StatsGenPlotWidget(QWidget *parent) :
-QWidget(parent),
-m_Mu(1.0f),
-m_Sigma(0.1f),
-m_MinCutOff(3.0f),
-m_MaxCutOff(3.0f),
-m_BinStep(1.0f),
-m_PhaseIndex(-1),
-m_DistributionType(DREAM3D::DistributionType::UnknownDistributionType),
-m_TableModel(NULL),
-m_grid(NULL),
-m_StatsType(DREAM3D::StatisticsType::UnknownStatisticsGroup),
-m_UserUpdatedData(false)
+StatsGenPlotWidget::StatsGenPlotWidget(QWidget* parent) :
+  QWidget(parent),
+  m_Mu(1.0f),
+  m_Sigma(0.1f),
+  m_MinCutOff(3.0f),
+  m_MaxCutOff(3.0f),
+  m_BinStep(1.0f),
+  m_PhaseIndex(-1),
+  m_DistributionType(DREAM3D::DistributionType::UnknownDistributionType),
+  m_TableModel(NULL),
+  m_grid(NULL),
+  m_StatsType(DREAM3D::StatisticsType::UnknownStatisticsGroup),
+  m_UserUpdatedData(false)
 {
   this->setupUi(this);
   this->setupGui();
@@ -139,26 +134,26 @@ void StatsGenPlotWidget::setSizeDistributionValues(float mu, float sigma,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGenPlotWidget::extractStatsData(VoxelDataContainer::Pointer m, int index,
-                                         QVector<float>  &binNumbers,
+int StatsGenPlotWidget::extractStatsData(int index,
+                                         QVector<float>&  binNumbers,
                                          VectorOfFloatArray arrays)
 {
   int err = 0;
   if (m_StatsType == DREAM3D::StatisticsType::UnknownStatisticsGroup)
   {
     QMessageBox::critical(this, tr("StatsGenerator"),
-    tr("This Plot has not been assigned a Statistics Group. This should be happening from within the program. Contact the developer."),
-    QMessageBox::Ok,
-    QMessageBox::Ok);
+                          tr("This Plot has not been assigned a Statistics Group. This should be happening from within the program. Contact the developer."),
+                          QMessageBox::Ok,
+                          QMessageBox::Ok);
     return -1;
   }
 
   if (m_DistributionType == DREAM3D::DistributionType::UnknownDistributionType)
   {
     QMessageBox::critical(this, tr("StatsGenerator"),
-    tr("The 'Distribution Type' was of an unknown type."),
-    QMessageBox::Ok,
-    QMessageBox::Ok);
+                          tr("The 'Distribution Type' was of an unknown type."),
+                          QMessageBox::Ok,
+                          QMessageBox::Ok);
     return -1;
   }
 
@@ -181,9 +176,10 @@ int StatsGenPlotWidget::extractStatsData(VoxelDataContainer::Pointer m, int inde
 
   for(VectorOfFloatArray::size_type i = 0; i < arrays.size(); ++i)
   {
-    QVector<float> col(static_cast<int>(arrays[i]->GetNumberOfTuples()));
-    if (arrays[i]->GetNumberOfTuples() > 0) {
-      ::memcpy( &(col.front()), arrays[i]->GetVoidPointer(0), sizeof(float)*col.size() );
+    QVector<float> col(static_cast<int>(arrays[i]->getNumberOfTuples()));
+    if (arrays[i]->getNumberOfTuples() > 0)
+    {
+      ::memcpy( &(col.front()), arrays[i]->getVoidPointer(0), sizeof(float)*col.size() );
     }
     data.push_back(col);
   }
@@ -209,18 +205,18 @@ VectorOfFloatArray StatsGenPlotWidget::getStatisticsData()
   if (m_StatsType == DREAM3D::StatisticsType::UnknownStatisticsGroup)
   {
     QMessageBox::critical(this, tr("StatsGenerator"),
-    tr("This Plot has not been assigned a Statistics Group. This should be happening from within the program. Contact the developer."),
-    QMessageBox::Ok,
-    QMessageBox::Ok);
+                          tr("This Plot has not been assigned a Statistics Group. This should be happening from within the program. Contact the developer."),
+                          QMessageBox::Ok,
+                          QMessageBox::Ok);
     return data;
   }
 
   if (m_DistributionType == DREAM3D::DistributionType::UnknownDistributionType)
   {
     QMessageBox::critical(this, tr("StatsGenerator"),
-    tr("This Plot has not been assigned a known Distribution Type. This should be happening from within the program. Contact the developer."),
-    QMessageBox::Ok,
-    QMessageBox::Ok);
+                          tr("This Plot has not been assigned a known Distribution Type. This should be happening from within the program. Contact the developer."),
+                          QMessageBox::Ok,
+                          QMessageBox::Ok);
     return data;
   }
 
@@ -229,44 +225,44 @@ VectorOfFloatArray StatsGenPlotWidget::getStatisticsData()
   FloatArrayType::Pointer col1;
   FloatArrayType::Pointer col2;
 
-  std::vector<float> v0;
-  std::vector<float> v1;
-  std::vector<float> v2;
+  QVector<float> v0;
+  QVector<float> v1;
+  QVector<float> v2;
   Q_ASSERT(m_PhaseIndex >= 0);
 
   // Create a new Table Model
   switch(m_DistributionType)
   {
-  case DREAM3D::DistributionType::Beta:
-    v0 = m_TableModel->getData(SGBetaTableModel::Alpha).toStdVector();
-    v1 = m_TableModel->getData(SGBetaTableModel::Beta).toStdVector();
-    col0 = FloatArrayType::FromStdVector(v0, DREAM3D::HDF5::Alpha);
-    col1 = FloatArrayType::FromStdVector(v1, DREAM3D::HDF5::Beta);
-    data.push_back(col0);
-    data.push_back(col1);
-    break;
-  case DREAM3D::DistributionType::LogNormal:
-    v0 = m_TableModel->getData(SGLogNormalTableModel::Average).toStdVector();
-    v1 = m_TableModel->getData(SGLogNormalTableModel::StdDev).toStdVector();
-    col0 = FloatArrayType::FromStdVector(v0, DREAM3D::HDF5::Average);
-    col1 = FloatArrayType::FromStdVector(v1, DREAM3D::HDF5::StandardDeviation);
-    data.push_back(col0);
-    data.push_back(col1);
-    break;
-  case DREAM3D::DistributionType::Power:
-    v0 = m_TableModel->getData(SGPowerLawTableModel::Alpha).toStdVector();
-    v1 = m_TableModel->getData(SGPowerLawTableModel::K).toStdVector();
-    v2 = m_TableModel->getData(SGPowerLawTableModel::Beta).toStdVector();
-    col0 = FloatArrayType::FromStdVector(v0, DREAM3D::HDF5::Alpha);
-    col1 = FloatArrayType::FromStdVector(v1, DREAM3D::HDF5::Exp_k);
-    col2 = FloatArrayType::FromStdVector(v2, DREAM3D::HDF5::Beta);
-    data.push_back(col0);
-    data.push_back(col1);
-    data.push_back(col2);
-    break;
+    case DREAM3D::DistributionType::Beta:
+      v0 = m_TableModel->getData(SGBetaTableModel::Alpha);
+      v1 = m_TableModel->getData(SGBetaTableModel::Beta);
+      col0 = FloatArrayType::FromQVector(v0, DREAM3D::StringConstants::Alpha);
+      col1 = FloatArrayType::FromQVector(v1, DREAM3D::StringConstants::Beta);
+      data.push_back(col0);
+      data.push_back(col1);
+      break;
+    case DREAM3D::DistributionType::LogNormal:
+      v0 = m_TableModel->getData(SGLogNormalTableModel::Average);
+      v1 = m_TableModel->getData(SGLogNormalTableModel::StdDev);
+      col0 = FloatArrayType::FromQVector(v0, DREAM3D::StringConstants::Average);
+      col1 = FloatArrayType::FromQVector(v1, DREAM3D::StringConstants::StandardDeviation);
+      data.push_back(col0);
+      data.push_back(col1);
+      break;
+    case DREAM3D::DistributionType::Power:
+      v0 = m_TableModel->getData(SGPowerLawTableModel::Alpha);
+      v1 = m_TableModel->getData(SGPowerLawTableModel::K);
+      v2 = m_TableModel->getData(SGPowerLawTableModel::Beta);
+      col0 = FloatArrayType::FromQVector(v0, DREAM3D::StringConstants::Alpha);
+      col1 = FloatArrayType::FromQVector(v1, DREAM3D::StringConstants::Exp_k);
+      col2 = FloatArrayType::FromQVector(v2, DREAM3D::StringConstants::Beta);
+      data.push_back(col0);
+      data.push_back(col1);
+      data.push_back(col2);
+      break;
 
-  default:
-    return data;
+    default:
+      return data;
   }
   return data;
 }
@@ -308,9 +304,9 @@ void StatsGenPlotWidget::resetTableModel()
   m_TableView->setItemDelegate(aid);
 
   connect(m_TableModel, SIGNAL(layoutChanged()),
-    this, SLOT(updatePlotCurves()));
-  connect(m_TableModel, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
-    this, SLOT(updatePlotCurves()));
+          this, SLOT(updatePlotCurves()));
+  connect(m_TableModel, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)),
+          this, SLOT(updatePlotCurves()));
   connect(aid, SIGNAL(commitData(QWidget*)),
           this, SLOT(userCommittedData(QWidget*)));
 
@@ -333,7 +329,8 @@ void StatsGenPlotWidget::setDistributionType(unsigned int curveType, bool update
   m_DistributionType = curveType;
   distributionTypeCombo->setCurrentIndex(m_DistributionType);
   resetTableModel();
-  if (updatePlots) {
+  if (updatePlots)
+  {
     // Update the plots
     updatePlotCurves();
   }
@@ -380,31 +377,37 @@ void StatsGenPlotWidget::setYAxisName(QString name)
 void StatsGenPlotWidget::setupGui()
 {
   distributionTypeCombo->blockSignals(true);
-  distributionTypeCombo->addItem(DREAM3D::HDF5::BetaDistribution.c_str());
-  distributionTypeCombo->addItem(DREAM3D::HDF5::LogNormalDistribution.c_str());
-  distributionTypeCombo->addItem(DREAM3D::HDF5::PowerLawDistribution.c_str());
+  distributionTypeCombo->addItem(DREAM3D::StringConstants::BetaDistribution.toLatin1().data());
+  distributionTypeCombo->addItem(DREAM3D::StringConstants::LogNormalDistribution.toLatin1().data());
+  distributionTypeCombo->addItem(DREAM3D::StringConstants::PowerLawDistribution.toLatin1().data());
   distributionTypeCombo->blockSignals(false);
 
 
   // Setup the TableView and Table Models
   QHeaderView* headerView = new QHeaderView(Qt::Horizontal, m_TableView);
-  headerView->setResizeMode(QHeaderView::Interactive);
+  headerView->sectionResizeMode(QHeaderView::Interactive);
   m_TableView->setHorizontalHeader(headerView);
   headerView->show();
 
   // Setup the Qwt Plot Widget
   //plot->setCanvasBackground(QColor(Qt::white));
-  m_PlotView->canvas()->setFrameShape(QFrame::NoFrame);
+  //m_PlotView->canvas()->setFrameShape(QFrame::NoFrame);
 
   m_grid = new QwtPlotGrid;
   m_grid->enableXMin(true);
   m_grid->enableYMin(true);
+#if (QWT_VERSION > 0x060000)
+  m_grid->setMajorPen(QPen(Qt::gray, 0, Qt::SolidLine));
+  m_grid->setMinorPen(QPen(Qt::lightGray, 0, Qt::DotLine));
+#else
   m_grid->setMajPen(QPen(Qt::gray, 0, Qt::SolidLine));
   m_grid->setMinPen(QPen(Qt::lightGray, 0, Qt::DotLine));
+#endif
   m_grid->attach(m_PlotView);
 
   resetTableModel();
-  if (NULL != m_TableModel) {
+  if (NULL != m_TableModel)
+  {
     // Update the plots
     updatePlotCurves();
   }
@@ -415,7 +418,7 @@ void StatsGenPlotWidget::setupGui()
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::updatePlotCurves()
 {
-// std::cout << "StatsGenPlotWidget::updatePlotCurves" << std::endl;
+// qDebug() << "StatsGenPlotWidget::updatePlotCurves" << "\n";
   //Loop over each entry in the table
   QwtPlotCurve* curve = NULL;
 
@@ -483,7 +486,7 @@ bool StatsGenPlotWidget::userUpdatedData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::createBetaCurve(int tableRow, float &xMax, float &yMax)
+void StatsGenPlotWidget::createBetaCurve(int tableRow, float& xMax, float& yMax)
 {
   QwtPlotCurve* curve = m_PlotCurves[tableRow];
   int err = 0;
@@ -492,8 +495,8 @@ void StatsGenPlotWidget::createBetaCurve(int tableRow, float &xMax, float &yMax)
   int size = 256;
   QwtArray<float > x;
   QwtArray<float > y;
-  StatsGen sg;
-  err = sg.GenBetaPlotData<QwtArray<float > > (alpha, beta, x, y, size);
+
+  err = StatsGen::GenBetaPlotData<QwtArray<float > > (alpha, beta, x, y, size);
   if (err == 1)
   {
     //TODO: Present Error Message
@@ -504,7 +507,7 @@ void StatsGenPlotWidget::createBetaCurve(int tableRow, float &xMax, float &yMax)
   QwtArray<double> yD(size);
   for (int i = 0; i < size; ++i)
   {
-    //   std::cout << x[i] << "  " << y[i] << std::endl;
+    //   qDebug() << x[i] << "  " << y[i] << "\n";
     if (x[i] > xMax)
     {
       xMax = x[i];
@@ -530,7 +533,7 @@ void StatsGenPlotWidget::createBetaCurve(int tableRow, float &xMax, float &yMax)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::createLogNormalCurve(int tableRow, float &xMax, float &yMax)
+void StatsGenPlotWidget::createLogNormalCurve(int tableRow, float& xMax, float& yMax)
 {
   QwtPlotCurve* curve = m_PlotCurves[tableRow];
   int err = 0;
@@ -539,8 +542,8 @@ void StatsGenPlotWidget::createLogNormalCurve(int tableRow, float &xMax, float &
   int size = 256;
   QwtArray<float > x;
   QwtArray<float > y;
-  StatsGen sg;
-  err = sg.GenLogNormalPlotData<QwtArray<float > > (avg, stdDev, x, y, size);
+
+  err = StatsGen::GenLogNormalPlotData<QwtArray<float > > (avg, stdDev, x, y, size);
   if (err == 1)
   {
     //TODO: Present Error Message
@@ -551,7 +554,7 @@ void StatsGenPlotWidget::createLogNormalCurve(int tableRow, float &xMax, float &
   QwtArray<double> yD(size);
   for (int i = 0; i < size; ++i)
   {
-    //   std::cout << x[i] << "  " << y[i] << std::endl;
+    //   qDebug() << x[i] << "  " << y[i] << "\n";
     if (x[i] > xMax)
     {
       xMax = x[i];
@@ -576,7 +579,7 @@ void StatsGenPlotWidget::createLogNormalCurve(int tableRow, float &xMax, float &
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::createPowerCurve(int tableRow, float &xMax, float &yMax)
+void StatsGenPlotWidget::createPowerCurve(int tableRow, float& xMax, float& yMax)
 {
   QwtPlotCurve* curve = m_PlotCurves[tableRow];
   int err = 0;
@@ -586,8 +589,8 @@ void StatsGenPlotWidget::createPowerCurve(int tableRow, float &xMax, float &yMax
   int size = 256;
   QwtArray<float> x;
   QwtArray<float> y;
-  StatsGen sg;
-  err = sg.GenPowerLawPlotData<QwtArray<float > > (alpha, k, beta, x, y, size);
+
+  err = StatsGen::GenPowerLawPlotData<QwtArray<float > > (alpha, k, beta, x, y, size);
   if (err == 1)
   {
     //TODO: Present Error Message
@@ -598,7 +601,7 @@ void StatsGenPlotWidget::createPowerCurve(int tableRow, float &xMax, float &yMax
   QwtArray<double> yD(size);
   for (int i = 0; i < size; ++i)
   {
-    //   std::cout << x[i] << "  " << y[i] << std::endl;
+    //   qDebug() << x[i] << "  " << y[i] << "\n";
     if (x[i] > xMax)
     {
       xMax = x[i];
@@ -632,7 +635,7 @@ void StatsGenPlotWidget::setRowOperationEnabled(bool b)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::setBins(QVector<float> &binNumbers)
+void StatsGenPlotWidget::setBins(QVector<float>& binNumbers)
 {
 
 
@@ -643,17 +646,17 @@ void StatsGenPlotWidget::setBins(QVector<float> &binNumbers)
 
     switch(m_StatsType)
     {
-      case DREAM3D::Reconstruction::Grain_SizeVBoverA:
-        msg.append(DREAM3D::HDF5::Grain_SizeVBoverA_Distributions.c_str());
+      case DREAM3D::Reconstruction::Feature_SizeVBoverA:
+        msg.append(DREAM3D::StringConstants::Feature_SizeVBoverA_Distributions.toLatin1().data());
         break;
-      case DREAM3D::Reconstruction::Grain_SizeVCoverA:
-        msg.append(DREAM3D::HDF5::Grain_SizeVCoverA_Distributions.c_str());
+      case DREAM3D::Reconstruction::Feature_SizeVCoverA:
+        msg.append(DREAM3D::StringConstants::Feature_SizeVCoverA_Distributions.toLatin1().data());
         break;
-      case DREAM3D::Reconstruction::Grain_SizeVNeighbors:
-        msg.append(DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions.c_str());
+      case DREAM3D::Reconstruction::Feature_SizeVNeighbors:
+        msg.append(DREAM3D::StringConstants::Feature_SizeVNeighbors_Distributions.toLatin1().data());
         break;
-      case DREAM3D::Reconstruction::Grain_SizeVOmega3:
-        msg.append(DREAM3D::HDF5::Grain_SizeVOmega3_Distributions.c_str());
+      case DREAM3D::Reconstruction::Feature_SizeVOmega3:
+        msg.append(DREAM3D::StringConstants::Feature_SizeVOmega3_Distributions.toLatin1().data());
         break;
       default:
         msg.append("Unknown");
@@ -663,10 +666,11 @@ void StatsGenPlotWidget::setBins(QVector<float> &binNumbers)
 
 
     int r = QMessageBox::critical(this,
-                          tr("Stats Generator"),
-                          msg, QMessageBox::Ok
-        | QMessageBox::Cancel, QMessageBox::Ok);
-    if (r != QMessageBox::Ok) {
+                                  tr("Stats Generator"),
+                                  msg, QMessageBox::Ok
+                                  | QMessageBox::Cancel, QMessageBox::Ok);
+    if (r != QMessageBox::Ok)
+    {
       return;
     }
   }
@@ -686,7 +690,7 @@ void StatsGenPlotWidget::setBins(QVector<float> &binNumbers)
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::on_addRowBtn_clicked()
 {
-  if (!m_TableModel->insertRow(m_TableModel->rowCount())) return;
+  if (!m_TableModel->insertRow(m_TableModel->rowCount())) { return; }
   m_TableView->resizeColumnsToContents();
   m_TableView->scrollToBottom();
   m_TableView->setFocus();
@@ -699,10 +703,10 @@ void StatsGenPlotWidget::on_addRowBtn_clicked()
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::on_deleteRowBtn_clicked()
 {
-  QItemSelectionModel *selectionModel = m_TableView->selectionModel();
-  if (!selectionModel->hasSelection()) return;
+  QItemSelectionModel* selectionModel = m_TableView->selectionModel();
+  if (!selectionModel->hasSelection()) { return; }
   QModelIndex index = selectionModel->currentIndex();
-  if (!index.isValid()) return;
+  if (!index.isValid()) { return; }
   m_TableModel->removeRow(index.row(), index.parent());
   if (m_TableModel->rowCount() > 0)
   {

@@ -10,14 +10,37 @@
 #--////////////////////////////////////////////////////////////////////////////
 # set project's name
 PROJECT( DREAM3DTools )
-cmake_minimum_required(VERSION 2.8.9)
+cmake_minimum_required(VERSION 3.1.0)
 
 # --------------------------------------------------------------------
 # Setup the install rules for the various platforms
-set(install_dir "tools")
+set(install_dir "bin")
 if(WIN32)
     set(install_dir ".")
 endif()
+
+# --------------------------------------------------------------------------
+macro(ConvertPathToHeaderCompatible INPUT)
+    if(WIN32)
+      STRING(REPLACE "\\" "\\\\" ${INPUT} ${INPUT} )
+      STRING(REPLACE "/" "\\\\" ${INPUT} ${INPUT}  )
+    endif()
+endmacro()
+
+
+set(DREAM3DProj_SOURCE_DIR_NORM ${DREAM3DProj_SOURCE_DIR})
+ConvertPathToHeaderCompatible(${DREAM3DProj_SOURCE_DIR_NORM})
+set(DREAM3DLib_SOURCE_DIR_NORM ${DREAM3DLib_SOURCE_DIR})
+ConvertPathToHeaderCompatible(${DREAM3DLib_SOURCE_DIR_NORM})
+set(DREAM3DLib_PLUGIN_DIR_NORM "${DREAM3DProj_SOURCE_DIR}/Source/Plugins")
+ConvertPathToHeaderCompatible(${DREAM3DLib_PLUGIN_DIR_NORM})
+
+get_filename_component(DREAM3DProj_PARENT_DIR_NORM ${DREAM3DProj_SOURCE_DIR} PATH)
+ConvertPathToHeaderCompatible(${DREAM3DProj_PARENT_DIR_NORM})
+
+
+configure_file( ${DREAM3DTools_SOURCE_DIR}/ToolConfiguration.h.in
+                ${DREAM3DTools_BINARY_DIR}/ToolConfiguration.h)
 
 #-------------------------------------------------------------------------------
 # Function COMPILE_TOOL to help alleviate lots of extra code below for adding
@@ -30,7 +53,7 @@ function(COMPILE_TOOL)
     cmake_parse_arguments(D3DTOOL "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
     if( ${D3DTOOL_DEFINITION} )
-    add_definitions(-D${DEFINITION})
+        add_definitions(-D${DEFINITION})
     endif()
 
     BuildToolBundle(
@@ -41,88 +64,14 @@ function(COMPILE_TOOL)
         VERSION_MINOR ${D3DTOOL_DREAM3D_VER_MINOR}
         VERSION_PATCH ${D3DTOOL_DREAM3D_VER_PATCH}
         BINARY_DIR    ${D3DTOOL_BINARY_DIR}
-        LINK_LIBRARIES ${D3DTOOL_LINK_LIBRARIES}
+        LINK_LIBRARIES Qt5::Core "${D3DTOOL_LINK_LIBRARIES}"
         LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
         COMPONENT     Applications
         INSTALL_DEST  "${D3DTOOL_INSTALL_DEST}"
-        SOLUTION_FOLDER "Tools"
+        SOLUTION_FOLDER "Applications"
     )
 
 endfunction()
-#
-#-------------------------------------------------------------------------------
-
-# Create a Command line tool for the AxisAngle Widget
-include_directories(${DREAM3DProj_BINARY_DIR}/PipelineBuilder)
-COMPILE_TOOL(
-    TARGET AxisAngleWidgetTest
-    SOURCES ${DREAM3DTools_SOURCE_DIR}/AxisAngleWidgetTest.cpp
-    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-    VERSION_MINOR ${DREAM3D_VER_MINOR}
-    VERSION_PATCH ${DREAM3D_VER_PATCH}
-    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    COMPONENT     Applications
-    INSTALL_DEST  "${install_dir}"
-    LINK_LIBRARIES PipelineBuilderLib ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY}
-)
-
-# Create a Command line tool for the AngReaderTest
-COMPILE_TOOL(
-    TARGET AngReaderDump
-    SOURCES ${DREAM3DTools_SOURCE_DIR}/AngReaderDump.cpp
-    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-    VERSION_MINOR ${DREAM3D_VER_MINOR}
-    VERSION_PATCH ${DREAM3D_VER_PATCH}
-    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    COMPONENT     Applications
-    INSTALL_DEST  "${install_dir}"
-    LINK_LIBRARIES EbsdLib
-)
-
-# Create a Command line tool for the CtfReaderTest
-COMPILE_TOOL(
-    TARGET CtfReaderDump
-    SOURCES ${DREAM3DTools_SOURCE_DIR}/CtfReaderDump.cpp
-    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-    VERSION_MINOR ${DREAM3D_VER_MINOR}
-    VERSION_PATCH ${DREAM3D_VER_PATCH}
-    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    COMPONENT     Applications
-    INSTALL_DEST  "${install_dir}"
-    LINK_LIBRARIES EbsdLib
-)
-
-# Create a Command line tool for the CtfReaderTest
-COMPILE_TOOL(
-    TARGET PhFileFixer
-    SOURCES ${DREAM3DTools_SOURCE_DIR}/PhFileFixer.cpp
-    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-    VERSION_MINOR ${DREAM3D_VER_MINOR}
-    VERSION_PATCH ${DREAM3D_VER_PATCH}
-    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    COMPONENT     Applications
-    INSTALL_DEST  "${install_dir}"
-
-)
-
-
-# Create a Command line tool for the PhToHDF5
-COMPILE_TOOL(
-    TARGET PhToHDF5
-    SOURCES ${DREAM3DTools_SOURCE_DIR}/PhToHDF5.cpp
-    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-    VERSION_MINOR ${DREAM3D_VER_MINOR}
-    VERSION_PATCH ${DREAM3D_VER_PATCH}
-    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    COMPONENT     Applications
-    INSTALL_DEST  "${install_dir}"
-    LINK_LIBRARIES DREAM3DLib
-)
 
 # Create a Command line tool for the PipelineRunner
 COMPILE_TOOL(
@@ -135,87 +84,64 @@ COMPILE_TOOL(
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
     INSTALL_DEST  "${install_dir}"
-    LINK_LIBRARIES DREAM3DLib
+    LINK_LIBRARIES EbsdLib DREAM3DLib
 )
 
-# Create a Command line tool for the DocsToPdf
-if(0)
-set(DREAM3D_DOCS_PDF_FILENAME ${DREAM3DProj_BINARY_DIR}/DREAM3D_Filter_Docs.pdf)
-#  message(STATUS "DREAM3D_DOCS_ROOT_DIR: ${DREAM3D_DOCS_ROOT_DIR}")
-#  message(STATUS "DREAM3D_DOCS_PDF_FILENAME: ${DREAM3D_DOCS_PDF_FILENAME}" )
 
-configure_file(${DREAM3DTools_SOURCE_DIR}/DocsToPdf.h.in ${DREAM3DTools_BINARY_DIR}/DocsToPdf.h)
-include_directories(${DREAM3DTools_BINARY_DIR})
+# Create a Command line tool for the FilterParameterTool
 COMPILE_TOOL(
-    TARGET DocsToPdf
-    SOURCES ${DREAM3DTools_SOURCE_DIR}/DocsToPdf.cpp ${DREAM3DTools_BINARY_DIR}/DocsToPdf.h
+    TARGET FilterParameterTool
+    SOURCES ${DREAM3DTools_SOURCE_DIR}/FilterParameterTool.cpp
     DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
     VERSION_MAJOR ${DREAM3D_VER_MAJOR}
     VERSION_MINOR ${DREAM3D_VER_MINOR}
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
-    INSTALL_DEST  "${install_dir}"
-    LINK_LIBRARIES ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY}
+    #LINK_LIBRARIES DREAM3DLib
 )
-endif()
 
-option(COMPILE_EBSD_TO_TIFF "Compile the EbsdToTiff program" OFF)
-if(COMPILE_EBSD_TO_TIFF)
-     # Prepend our own "FindTiff" code in front of what CMake itself provides
-        set(CMAKE_MODULE_PATH ${CMP_MODULES_SOURCE_DIR} ${CMAKE_MODULE_PATH} )
-        FIND_PACKAGE(Tiff)
-        if(NOT TIFF_FOUND)
-              MESSAGE (FATAL_ERROR " Tiff Library was NOT Found and is needed.")
-        endif(NOT TIFF_FOUND)
-        INCLUDE_DIRECTORIES(${TIFF_INCLUDE_DIRS})
-      # Copy DLL libraries into the correct build location on MSVC platforms
-      if(HAVE_TIFF_DLL)
-        CMP_COPY_DEPENDENT_LIBRARIES ("tiff")
-        CMP_LIBRARIES_INSTALL_RULES ("tiff" "." )
-      endif()
-if(0)
-    COMPILE_TOOL(
-        TARGET EbsdToTiff
-        SOURCES ${DREAM3DTools_SOURCE_DIR}/EbsdToTiff.cpp
-        DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-        VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-        VERSION_MINOR ${DREAM3D_VER_MINOR}
-        VERSION_PATCH ${DREAM3D_VER_PATCH}
-        BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-        COMPONENT     Applications
-        INSTALL_DEST  "${install_dir}"
-        LINK_LIBRARIES  ${TIFF_LIBRARY} EbsdLib MXA DREAM3DLib
-    )
-endif()
+# Create a Command line tool for the MATLAB_CodeGen
+COMPILE_TOOL(
+    TARGET MATLAB_CodeGen
+    SOURCES ${DREAM3DTools_SOURCE_DIR}/MATLAB_CodeGen.cpp
+    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
+    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
+    VERSION_MINOR ${DREAM3D_VER_MINOR}
+    VERSION_PATCH ${DREAM3D_VER_PATCH}
+    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
+    COMPONENT     Applications
+    LINK_LIBRARIES EbsdLib DREAM3DLib
+)
 
-    # Create a Command line tool for the AngReaderTest
-    COMPILE_TOOL(
-        TARGET BcfDumper
-        SOURCES ${DREAM3DTools_SOURCE_DIR}/BcfDumper.cpp ${DREAM3DTools_SOURCE_DIR}/TiffUtilities.cpp ${DREAM3DTools_SOURCE_DIR}/TiffUtilities.h
-        DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-        VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-        VERSION_MINOR ${DREAM3D_VER_MINOR}
-        VERSION_PATCH ${DREAM3D_VER_PATCH}
-        BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-        COMPONENT     Applications
-        INSTALL_DEST  "${install_dir}"
-        LINK_LIBRARIES MXA ${TIFF_LIBRARY}
-    )
+# --------------------------------------------------------------------
+COMPILE_TOOL(
+    TARGET DREAM3DFileStructure
+    SOURCES ${DREAM3DTools_SOURCE_DIR}/DREAM3DFileStructure.cpp
+            ${DREAM3DTools_SOURCE_DIR}/DREAM3DFileStructure_Main.cpp
+            ${DREAM3DFileStructure_Generated_MOC_SRCS}
+    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
+    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
+    VERSION_MINOR ${DREAM3D_VER_MINOR}
+    VERSION_PATCH ${DREAM3D_VER_PATCH}
+    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
+    COMPONENT     Applications
+    LINK_LIBRARIES EbsdLib DREAM3DLib Qt5::Gui Qt5::Widgets
+)
 
-    # create a tool to generate the IPF Triangle
+# --------------------------------------------------------------------
+# Setup an option to compile the version JSON file. This should be off
+# by default as no one needs it except the web admin
+OPTION (DREAM3D_BUILD_VERSION_FILE "Generate dream3d_version.json for the webserver" OFF)
+if(${DREAM3D_BUILD_VERSION_FILE})
   COMPILE_TOOL(
-       TARGET TSLTriangle
-       SOURCES ${DREAM3DTools_SOURCE_DIR}/TSLTriangle.cpp
-       DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-       VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-       VERSION_MINOR ${DREAM3D_VER_MINOR}
-       VERSION_PATCH ${DREAM3D_VER_PATCH}
-       BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-       COMPONENT     Applications
-       INSTALL_DEST  "${install_dir}"
-       LINK_LIBRARIES ${TIFF_LIBRARY}
-   )
-
-
+      TARGET CreateWebServerJson
+      SOURCES ${DREAM3DTools_SOURCE_DIR}/CreateWebServerJson.cpp
+      DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
+      VERSION_MAJOR ${DREAM3D_VER_MAJOR}
+      VERSION_MINOR ${DREAM3D_VER_MINOR}
+      VERSION_PATCH ${DREAM3D_VER_PATCH}
+      BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
+      LINK_LIBRARIES hdf5 Qt5::Core H5Support DREAM3DLib
+  )
 endif()

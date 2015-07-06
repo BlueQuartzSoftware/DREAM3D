@@ -19,19 +19,20 @@ function(ADD_DOXYGEN_TARGETS)
     if("${DOX_OUTPUT_DIR}" STREQUAL "")
       message(FATAL_ERROR "DOX_OUTPUT_DIR Variable MUST be set and it is empty")
     endif()
-#    message(STATUS "------------------------------------------")
-#    message(STATUS "Adding Doxygen Targets for ${DOX_PROJECT_NAME}")
-#    message(STATUS "DOX_PROJECT_NAME: ${DOX_PROJECT_NAME}")
-#    message(STATUS "DOX_GENERATE_HTML: ${DOX_GENERATE_HTML}")
-#    message(STATUS "DOX_GENERATE_LATEX: ${DOX_GENERATE_LATEX}")
-#    message(STATUS "DOX_GENERATE_RTF: ${DOX_GENERATE_RTF}")
-#    message(STATUS "DOX_PROJECT_NAME: ${DOX_PROJECT_NAME}")
-#    message(STATUS "DOX_PROJECT_BINARY_DIR: ${DOX_PROJECT_BINARY_DIR}")
-#    message(STATUS "DOX_TITLE:${LATEX_TITLE}")
-#    message(STATUS "DOX_AUTHOR:${LATEX_AUTHOR}")
-#    message(STATUS "DOX_TEMPLATE_FILE: ${DOX_TEMPLATE_FILE}")
-#    message(STATUS "DOX_OUTPUT_DIR: ${DOX_OUTPUT_DIR}")
-
+  if(0)
+		message(STATUS "------------------------------------------")
+		message(STATUS "Adding Doxygen Targets for ${DOX_PROJECT_NAME}")
+		message(STATUS "DOX_PROJECT_NAME: ${DOX_PROJECT_NAME}")
+		message(STATUS "DOX_GENERATE_HTML: ${DOX_GENERATE_HTML}")
+		message(STATUS "DOX_GENERATE_LATEX: ${DOX_GENERATE_LATEX}")
+		message(STATUS "DOX_GENERATE_RTF: ${DOX_GENERATE_RTF}")
+		message(STATUS "DOX_PROJECT_NAME: ${DOX_PROJECT_NAME}")
+		message(STATUS "DOX_PROJECT_BINARY_DIR: ${DOX_PROJECT_BINARY_DIR}")
+		message(STATUS "DOX_TITLE:${LATEX_TITLE}")
+		message(STATUS "DOX_AUTHOR:${LATEX_AUTHOR}")
+		message(STATUS "DOX_TEMPLATE_FILE: ${DOX_TEMPLATE_FILE}")
+		message(STATUS "DOX_OUTPUT_DIR: ${DOX_OUTPUT_DIR}")
+	endif()
     set(GENERATE_HTML ${GENERATE_HTML})
     set(GENERATE_LATEX ${GENERATE_LATEX})
     set(GENERATE_RTF  ${GENERATE_RTF})
@@ -49,6 +50,12 @@ function(ADD_DOXYGEN_TARGETS)
       set(LATEX_STYLE_FILE  "" )
     endif()
 
+    option(DOXYGEN_QUIET_OUTPUT "Do not output anything from Doxygen Run" ON)
+    if(DOXYGEN_QUIET_OUTPUT)
+      set(DOXYGEN_QUIET "YES")
+    else()
+      set(DOXYGEN_QUIET "NO")
+    endif()
 
     configure_file(${DOX_TEMPLATE_DIR}/Doxyfile.in
                    ${DOX_PROJECT_BINARY_DIR}/${DOXYFILE} @ONLY IMMEDIATE)
@@ -56,6 +63,8 @@ function(ADD_DOXYGEN_TARGETS)
     add_custom_target(${DOX_PROJECT_NAME}
               COMMAND ${DOXYGEN_EXECUTABLE} ${DOX_PROJECT_BINARY_DIR}/${DOXYFILE}
               SOURCES ${DOX_PROJECT_BINARY_DIR}/${DOXYFILE} )
+    SET_TARGET_PROPERTIES(${DOX_PROJECT_NAME} PROPERTIES FOLDER DocumentationTargets)
+
 
 #-- If we are generating PDF output then we need to make a few passes on the PDF to make sure things
 # like the table of contents and references are all up to date.
@@ -132,7 +141,7 @@ function(ADD_DOXYGEN_TARGETS)
     endif()
 
         if(APPLE)
-          if(DREAM3D_AUTO_OPEN_PDF)
+          if(AUTO_OPEN_PDF)
               add_custom_command(TARGET ${DOX_PROJECT_NAME}  POST_BUILD
                 COMMAND /usr/bin/open ${LATEX_OUTPUT_PATH}/${DOX_PDF_FILENAME}.pdf
                 COMMENT "Opening PDF file with default Viewer")

@@ -44,14 +44,25 @@ if(APPLE)
     install(FILES ${PROJECT_RESOURCES_DIR}/CPack/OS_X_ReadMe.txt DESTINATION .)
 endif()
 
-# Get a shorter version number:
-set(DREAM3D_VERSION_SHORT "${DREAM3DLib_VER_MAJOR}.${DREAM3DLib_VER_MINOR}")
+message(STATUS "DREAM3DProj_RELEASE_TYPE: ${DREAM3DProj_RELEASE_TYPE}")
+if("${DREAM3DProj_RELEASE_TYPE}" STREQUAL "Official")
+  set(DREAM3D_VERSION_SHORT "${DREAM3DProj_VERSION_MAJOR}.${DREAM3DProj_VERSION_MINOR}.${DREAM3DProj_VERSION_PATCH}")
+elseif("${DREAM3DProj_RELEASE_TYPE}" STREQUAL "Beta")
+  set(DREAM3D_VERSION_SHORT "${DREAM3DProj_VERSION_MAJOR}.${DREAM3DProj_VERSION_MINOR}-${DREAM3DProj_RELEASE_TYPE}-${DREAM3DProj_VERSION_TWEAK}")
+elseif("${DREAM3DProj_RELEASE_TYPE}" STREQUAL "Development")
+  set(DREAM3D_VERSION_SHORT "${DREAM3DProj_VERSION_MAJOR}.${DREAM3DProj_VERSION_MINOR}.${DREAM3DProj_VERSION_PATCH}.${DREAM3DProj_VERSION_TWEAK}")
+else()
+  set(DREAM3D_VERSION_SHORT "0.0.0")
+endif()
 
 
-SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "DREAM3D Tools")
-SET(CPACK_PACKAGE_VENDOR "BlueQuartz Software, Michael A. Jackson, AFRL, Michael A Groeber")
-SET(CPACK_PACKAGE_DESCRIPTION_FILE "${PROJECT_BINARY_DIR}/ReadMe.txt")
-SET(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_BINARY_DIR}/License.txt")
+message(STATUS "DREAM3D_VERSION_SHORT: ${DREAM3D_VERSION_SHORT}")
+
+
+SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "DREAM.3D Tools")
+SET(CPACK_PACKAGE_VENDOR "BlueQuartz Software, LLC")
+SET(CPACK_PACKAGE_DESCRIPTION_FILE "${PROJECT_BINARY_DIR}/ReadMe.md")
+SET(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_RESOURCES_DIR}/DREAM3D/DREAM3DLicense.txt")
 SET(CPACK_PACKAGE_VERSION_MAJOR ${DREAM3D_VER_MAJOR})
 SET(CPACK_PACKAGE_VERSION_MINOR ${DREAM3D_VER_MINOR})
 SET(CPACK_PACKAGE_VERSION_PATCH ${DREAM3D_VER_PATCH})
@@ -68,7 +79,7 @@ SET(CPACK_PACKAGE_VERSION ${DREAM3D_VERSION})
 #set(CPACK_COMPONENT_RUNTIME_REQUIRED 1)
 
 set(CPACK_PACKAGE_EXECUTABLES
-    DREAM3D DREAM3D StatsGenerator StatsGenerator PluginMaker PluginMaker)
+    DREAM3D DREAM3D StatsGenerator StatsGenerator DevHelper DevHelper)
 set(UPLOAD_FILE_NAME "")
 
 if(APPLE)
@@ -101,14 +112,18 @@ else()
 endif()
 
 
-set(DREAM3D_WEBSITE_SERVER "dream3d.bluequartz.net")
+set(DREAM3D_WEBSITE_SERVER "thor.bluequartz.net")
 set(DREAM3D_WEBSITE_SERVER_PATH "/var/www/dream3d-wp.bluequartz.net")
 set(DREAM3D_WEBSITE_SCP_USERNAME "mjackson")
 #-- Create a bash script file that will upload the latest version to the web server
 configure_file(${PROJECT_RESOURCES_DIR}/upload.sh.in
             ${PROJECT_BINARY_DIR}/upload.sh)
+if(WIN32)
+    configure_file(${PROJECT_RESOURCES_DIR}/copy_nightly.bat.in
+            ${PROJECT_BINARY_DIR}/copy_nightly.bat)
+endif()
 
-# Create an NSIS based installer for Windows Systems
+# Create an ZIP based installer for Windows Systems
 if(WIN32 AND NOT UNIX)
   # There is a bug in NSIS that does not handle full unix paths properly. Make
   # sure there is at least one set of four (4) backlasshes.
@@ -117,30 +132,33 @@ if(WIN32 AND NOT UNIX)
   SET(CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\dream3d.bluequartz.net")
   SET(CPACK_NSIS_CONTACT "dream3d@bluequartz.net")
   SET(CPACK_NSIS_MODIFY_PATH ON)
-  SET(CPACK_GENERATOR "ZIP")
-  SET(CPACK_BINARY_ZIP "ON")
   SET(CPACK_PACKAGE_INSTALL_REGISTRY_KEY "DREAM3D Software Tools")
-ELSE(WIN32 AND NOT UNIX)
-    SET(CPACK_BINARY_BUNDLE "OFF")
-    SET(CPACK_BINARY_CYGWIN "OFF")
-    SET(CPACK_BINARY_DEB "OFF")
-    if(NOT APPLE)
-        SET(CPACK_INCLUDE_TOPLEVEL_DIRECTORY 1)
-    else()
-        SET(CPACK_INCLUDE_TOPLEVEL_DIRECTORY 0)
-    endif()
-    SET(CPACK_BINARY_DRAGNDROP "OFF")
-    SET(CPACK_BINARY_NSIS "OFF")
-    SET(CPACK_BINARY_OSXX11 "OFF")
-    SET(CPACK_BINARY_PACKAGEMAKER "OFF")
-    SET(CPACK_BINARY_RPM "OFF")
-    SET(CPACK_BINARY_STGZ "OFF")
-    SET(CPACK_BINARY_TBZ2 "OFF")
-    SET(CPACK_BINARY_TGZ "ON")
-    SET(CPACK_BINARY_TZ "OFF")
-    SET(CPACK_BINARY_ZIP "OFF")
 ENDif(WIN32 AND NOT UNIX)
 
+if(NOT CPACK_GENERATOR)
+  if(UNIX)
+    if(CYGWIN)
+      option(CPACK_BINARY_CYGWIN "Enable to build Cygwin binary packages" ON)
+    else(CYGWIN)
+      if(APPLE)
+        option(CPACK_BINARY_PACKAGEMAKER "Enable to build PackageMaker packages" OFF)
+        option(CPACK_BINARY_OSXX11       "Enable to build OSX X11 packages"      OFF)
+      else(APPLE)
+        option(CPACK_BINARY_TZ  "Enable to build TZ packages"     OFF)
+      endif(APPLE)
+      option(CPACK_BINARY_STGZ "Enable to build STGZ packages"    OFF)
+      option(CPACK_BINARY_TGZ  "Enable to build TGZ packages"     ON)
+      option(CPACK_BINARY_TBZ2 "Enable to build TBZ2 packages"    OFF)
+      option(CPACK_BINARY_DEB  "Enable to build Debian packages"  OFF)
+      option(CPACK_BINARY_RPM  "Enable to build RPM packages"     OFF)
+      option(CPACK_BINARY_NSIS "Enable to build NSIS packages"    OFF)
+    endif(CYGWIN)
+  else(UNIX)
+    option(CPACK_BINARY_NSIS "Enable to build NSIS packages" OFF)
+    option(CPACK_BINARY_ZIP  "Enable to build ZIP packages" ON)
+  endif(UNIX)
+
+endif(NOT CPACK_GENERATOR)
 
 
 SET(CPACK_SOURCE_GENERATOR "TGZ")
@@ -151,7 +169,7 @@ set(UPLOAD_FILE_NAME ${CPACK_SOURCE_PACKAGE_FILE_NAME}.tar.gz)
 configure_file(${PROJECT_RESOURCES_DIR}/upload.sh.in
                ${PROJECT_BINARY_DIR}/src_upload.sh)
 
-#-- Create a bash script file that will upload the latest version to the web server
+#-- Create a bash script file that will upload a version file to the server
 configure_file(${PROJECT_RESOURCES_DIR}/version_upload.sh.in
                ${PROJECT_BINARY_DIR}/version_upload.sh)
 

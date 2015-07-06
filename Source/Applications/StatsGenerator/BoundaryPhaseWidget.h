@@ -5,15 +5,18 @@
  *      Author: mjackson
  */
 
-#ifndef BoundaryPhaseWidget_H_
-#define BoundaryPhaseWidget_H_
+#ifndef _BoundaryPhaseWidget_H_
+#define _BoundaryPhaseWidget_H_
 
-#include "SGWidget.h"
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Common/Constants.h"
+
+#include "StatsGenerator/SGWidget.h"
+#include "StatsGenerator/Presets/AbstractMicrostructurePreset.h"
+
 #include "ui_BoundaryPhaseWidget.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataContainers/VoxelDataContainer.h"
-#include "StatsGenerator/Presets/AbstractMicrostructurePreset.h"
 
 class QwtPlotZoomer;
 class QwtPlotPicker;
@@ -28,63 +31,57 @@ class QwtPlotMarker;
 class BoundaryPhaseWidget : public SGWidget, private Ui::BoundaryPhaseWidget
 {
 
-  Q_OBJECT
+    Q_OBJECT
 
-   public:
-     BoundaryPhaseWidget(QWidget *parent = 0);
-     virtual ~BoundaryPhaseWidget();
+  public:
+    BoundaryPhaseWidget(QWidget* parent = 0);
+    virtual ~BoundaryPhaseWidget();
 
-     void updatePlots();
+    void updatePlots();
 
-     void setPhaseIndex(int index);
-     int getPhaseIndex();
+    DREAM3D_INSTANCE_PROPERTY(unsigned int, PhaseType)
+    DREAM3D_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
+    DREAM3D_INSTANCE_PROPERTY(int, PhaseIndex)
+    DREAM3D_INSTANCE_PROPERTY(float, PhaseFraction)
+    DREAM3D_INSTANCE_PROPERTY(float, TotalPhaseFraction)
+    //    DREAM3D_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
 
-     MXA_INSTANCE_PROPERTY(unsigned int, PhaseType)
-     MXA_INSTANCE_PROPERTY(float, PhaseFraction)
-     MXA_INSTANCE_PROPERTY(float, TotalPhaseFraction)
- //    MXA_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
+    void extractStatsData(AttributeMatrix::Pointer attrMat, int index);
 
-     void extractStatsData(VoxelDataContainer::Pointer m, int index);
+    QString getComboString();
+    QString getTabTitle();
 
-     void setCrystalStructure(unsigned int xtal);
-     unsigned int getCrystalStructure();
+    int gatherStatsData(AttributeMatrix::Pointer attrMat);
 
-     QString getComboString();
-     QString getTabTitle();
+    // public slots:
+    //   void on_m_GenerateDefaultData_clicked();
 
-     int gatherStatsData(VoxelDataContainer::Pointer m);
+  protected slots:
 
-  // public slots:
-  //   void on_m_GenerateDefaultData_clicked();
+    void dataWasEdited();
+  protected:
 
-   protected slots:
-
-     void dataWasEdited();
-   protected:
-
-     /**
+    /**
       * @brief Enables or Disables all the widgets in a list
       * @param b
       */
-     void setWidgetListEnabled(bool b);
+    void setWidgetListEnabled(bool b);
 
-     void setupGui();
+    void setupGui();
 
-     /**
+    /**
       * @brief Enables or disables the various PlotWidgetTabs
       * @param b Enable or disable the plotwidgets
       */
-     void setTabsPlotTabsEnabled(bool b);
+    void setTabsPlotTabsEnabled(bool b);
 
-   private:
-     int                  m_PhaseIndex;
-     unsigned int  m_CrystalStructure;
+  private:
+    QList<QWidget*>      m_WidgetList;
+    QwtPlotGrid*         m_grid;
 
-     QList<QWidget*>      m_WidgetList;
-     QwtPlotGrid*         m_grid;
-
-     BoundaryPhaseWidget(const BoundaryPhaseWidget&); // Copy Constructor Not Implemented
-     void operator=(const BoundaryPhaseWidget&); // Operator '=' Not Implemented
+    BoundaryPhaseWidget(const BoundaryPhaseWidget&); // Copy Constructor Not Implemented
+    void operator=(const BoundaryPhaseWidget&); // Operator '=' Not Implemented
 };
 
 #endif /* BoundaryPhaseWidget_H_ */
+

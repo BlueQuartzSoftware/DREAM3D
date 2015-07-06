@@ -1,44 +1,42 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 
 
 #ifndef _DREAM3D_UI_H_
 #define _DREAM3D_UI_H_
-
-#include <MXA/Common/MXASetGetMacros.h>
 
 
 //-- Qt Includes
@@ -46,25 +44,36 @@
 #include <QtCore/QString>
 #include <QtCore/QList>
 #include <QtCore/QVector>
-#include <QtCore/QSettings>
-#include <QtGui/QWidget>
-#include <QtGui/QMainWindow>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QMessageBox>
 #include <QtGui/QResizeEvent>
-#include <QtGui/QToolBar>
+#include <QtWidgets/QToolBar>
+
+#include "Applications/DREAM3D/DREAM3DMenu.h"
+
+#include "DREAM3DLib/Common/FilterManager.h"
+#include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
+#include "DREAM3DWidgetsLib/FilterWidgetManager.h"
+
+#include "QtSupportLib/DREAM3DSettings.h"
 
 
 //-- UIC generated Header
-#include <ui_DREAM3D_UI.h>
-
-#include <DREAM3DLib/Common/FilterManager.h>
+#include "ui_DREAM3D_UI.h"
 
 
-class DREAM3DPluginInterface;
-class HelpDialog;
-class PipelineBuilderWidget;
+class IDREAM3DPlugin;
+class FilterLibraryDockWidget;
+class BookmarksDockWidget;
+class PrebuiltPipelinesDockWidget;
+class FilterListWidget;
 class DREAM3DUpdateCheckDialog;
 class UpdateCheckData;
 class UpdateCheck;
+class HelpDialog;
+class QToolButton;
+class AboutDREAM3D;
 
 
 /**
@@ -81,29 +90,85 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     Q_OBJECT
 
   public:
-    DREAM3D_UI(QWidget *parent = 0);
+    DREAM3D_UI(QWidget* parent = 0);
     virtual ~DREAM3D_UI();
 
-  protected slots:
-
-    /* Menu Slots */
-    // File MENU
-    void on_actionExit_triggered();
-    void on_actionOpen_Pipeline_2_triggered();
-    void on_actionSave_Pipeline_2_triggered();
-    void on_actionCheck_For_Updates_triggered();
-
-    //Tools Menu
-    //void on_action_OpenStatsGenerator_triggered();
-
-    // Help Menu
-    void on_actionLicense_Information_triggered();
-    void on_actionAbout_triggered();
-    void on_actionShow_User_Manual_triggered();
+    /**
+     * @brief setLoadedPlugins This will set the plugins that have already been loaded by another mechanism. The plugins are NOT
+     * deleted by this class and the unloading and clean up of the plugin pointers is the responsibility of the caller.
+     * @param plugins The plugins that adhere to the IDREAM3DPlugin
+     */
+    void setLoadedPlugins(QVector<IDREAM3DPlugin*> plugins);
 
     /**
-     * @brief Reads the Preferences from the users pref file
+    * @brief getPipelineViewWidget
+    * @param
+    */
+    PipelineViewWidget* getPipelineViewWidget();
+
+    /**
+    * @brief getPrebuiltsDockWidget
+    * @param
+    */
+    PrebuiltPipelinesDockWidget* getPrebuiltsDockWidget();
+
+    /**
+    * @brief getBookmarksDockWidget
+    * @param
+    */
+    BookmarksDockWidget* getBookmarksDockWidget();
+
+    /**
+    * @brief getFilterListDockWidget
+    * @param
+    */
+    FilterListDockWidget* getFilterListDockWidget();
+
+    /**
+    * @brief getFilterLibraryDockWidget
+    * @param
+    */
+    FilterLibraryDockWidget* getFilterLibraryDockWidget();
+
+    /**
+    * @brief getFilterListDockWidget
+    * @param
+    */
+    IssuesDockWidget* getIssuesDockWidget();
+
+    /**
+    * @brief setOpenedFilePath
+    * @param path
+    */
+    void setOpenDialogLastDirectory(const QString& path);
+
+    /**
+    * @brief
+    */
+    void connectSignalsSlots(DREAM3D_UI* other);
+#if !defined(Q_OS_MAC)
+    /**
+    * @brief setDREAM3DMenu
+    * @param menu
+    */
+    void setDREAM3DMenu(DREAM3DMenu* menu);
+
+    /**
+    * @brief getDREAM3DMenu
+    */
+    DREAM3DMenu* getDREAM3DMenu();
+#endif
+    /**
+     * @brief updateAndSyncDockWidget
+     * @param action
+     * @param dock
+     * @param b
      */
+    void updateAndSyncDockWidget(QAction* action, QDockWidget* dock, bool b);
+
+    /**
+    * @brief Reads the preferences from the users pref file
+    */
     void readSettings();
 
     /**
@@ -112,56 +177,135 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void writeSettings();
 
     /**
-     * @brief Writes the pipeline order to a text file
-     */
-    void savePipeline(QSettings &prefs);
+    * @brief Checks if this the first run of DREAM3D
+    * and if so, displays an informative dialog box.
+    */
+    void checkFirstRun();
 
     /**
-     * @brief Updates the QMenu 'Recent Files' with the latest list of files. This
-     * should be connected to the Signal QRecentFileList->fileListChanged
-     * @param file The newly added file.
+     * @brief savePipeline Helper function that saves the pipeline
      */
-    void updateRecentFileList(const QString &file);
+    bool savePipeline();
 
     /**
-     * @brief Qt Slot that fires in response to a click on a "Recent File' Menu entry.
+     * @brief savePipelineAs Helper function that saves the pipeline
      */
-    void openRecentFile();
+    bool savePipelineAs();
 
-    void setInputUI();
+  public slots:
 
-    void displayHelp(QString helpFile);
+    void clearPipeline();
 
+    /**
+    * @brief setOpenedFilePath
+    * @param filePath
+    */
+    void setOpenedFilePath(const QString& filePath);
+
+    /**
+    * @brief setFilterBeingDragged
+    * @param w
+    */
+    void setStatusBarMessage(const QString& msg);
+
+    /**
+    * @brief versionCheckReply
+    */
     void versionCheckReply(UpdateCheckData*);
 
-  private slots:
-    // slots for our worker thread to communicate
-    void threadHasMessage(QString message);
+  protected slots:
 
+    // Buttons and other widgets that send signals that we want to catch
+    void on_startPipelineBtn_clicked();
+
+    /**
+     * @brief pipelineDidFinish
+     */
+    void pipelineDidFinish();
+
+    /**
+     * @brief processPipelineMessage
+     * @param msg
+     */
+    void processPipelineMessage(const PipelineMessage& msg);
+
+    /**
+     * @brief on_pipelineViewWidget_pipelineChanged AUTO HOOKUP by name
+     */
+    void on_pipelineViewWidget_pipelineChanged();
+    void on_pipelineViewWidget_pipelineIssuesCleared();
+    void on_pipelineViewWidget_pipelineHasNoErrors();
+    void on_pipelineViewWidget_pipelineOpened(QString& file, const bool& setOpenedFilePath, const bool& changeTitle);
+
+    /**
+    * @brief setFilterInputWidget
+    * @param widget
+    */
+    void setFilterInputWidget(FilterInputWidget* widget);
+
+    /**
+    * @brief clearFilterInputWidget
+    */
+    void clearFilterInputWidget();
+
+    /**
+    * @brief markDocumentAsDirty
+    */
+    void markDocumentAsDirty();
 
     // Our Signals that we can emit custom for this class
   signals:
+
+    /**
+    * @brief bookmarkNeedsToBeAdded
+    */
+    void bookmarkNeedsToBeAdded(const QString& filePath, const QModelIndex& parent);
+
     void parentResized();
 
     /**
      * @brief A signal that is emitted when we want to cancel a process
      */
-    void sig_CancelWorker();
+    void pipelineCanceled();
+
+    /**
+     * @brief pipelineStarted
+     */
+    void pipelineStarted();
+
+    /**
+    * @brief pipelineFinished
+    */
+    void pipelineFinished();
+
+    /**
+    * @brief dream3dWindowChangedState
+    */
+    void dream3dWindowChangedState(DREAM3D_UI* self);
 
   protected:
 
-    void loadPlugins(FilterManager* fm);
-    void populateMenus(QObject *plugin);
-    void addToPluginMenu(QObject *plugin, const QString &text,
-                         QMenu *menu, const char *member,
-                         QActionGroup *actionGroup, QIcon icon);
+    /**
+     * @brief populateMenus This is a planned API that plugins would use to add Menus to the main application
+     * @param plugin
+     */
+    void populateMenus(QObject* plugin);
 
+    /**
+    * @brief
+    */
+    void connectSignalsSlots();
+
+    /**
+    * @brief
+    */
+    void disconnectSignalsSlots();
 
     /**
      * @brief Implements the CloseEvent to Quit the application and write settings
      * to the preference file
      */
-    void closeEvent(QCloseEvent *event);
+    void closeEvent(QCloseEvent* event);
 
     /**
      * @brief Drag and drop implementation
@@ -173,22 +317,17 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      */
     void dropEvent(QDropEvent*);
 
-    /**
-     * @brief Enables or Disables all the widgets in a list
-     * @param b
-     */
-    void setWidgetListEnabled(bool b);
+    void changeEvent(QEvent* event);
 
     /**
      *
      * @param prefs
      */
-    void writeWindowSettings(QSettings &prefs);
+    void writeWindowSettings(DREAM3DSettings& prefs);
+    void writeVersionCheckSettings(DREAM3DSettings& prefs);
 
-    void readWindowSettings(QSettings &prefs);
-
-    void readVersionCheckSettings(QSettings &prefs);
-    void writeVersionCheckSettings(QSettings &prefs);
+    void readWindowSettings(DREAM3DSettings& prefs);
+    void readVersionSettings(DREAM3DSettings& prefs);
 
     void checkForUpdatesAtStartup();
 
@@ -197,37 +336,65 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      */
     void setupGui();
 
+    /**
+     * @brief DREAM3D_UI::setupDockWidget
+     * @param prefs
+     * @param dw
+     */
+    void readDockWidgetSettings(DREAM3DSettings& prefs, QDockWidget* dw);
+
+    /**
+     * @brief writeDockWidgetSettings
+     * @param prefs
+     * @param dw
+     */
+    void writeDockWidgetSettings(DREAM3DSettings& prefs, QDockWidget* dw);
 
     /**
      * @brief Checks the currently open file for changes that need to be saved
-     * @return
+     * @return QMessageBox::StandardButton
      */
-    qint32 checkDirtyDocument();
+    QMessageBox::StandardButton checkDirtyDocument();
 
     /**
      * @brief Over ride the resize event
      * @param event The event to process
      */
-    void resizeEvent ( QResizeEvent * event );
+    void resizeEvent ( QResizeEvent* event );
 
   private:
-    QList<QWidget*>             m_WidgetList;
-    QThread*                    m_WorkerThread;
-    QStringList                 m_PluginDirs;
-    QStringList                 m_PluginFileNames;
-    QActionGroup*               m_PluginActionGroup;
-    QActionGroup*               m_PluginPrefsActionGroup;
-    DREAM3DPluginInterface*     m_ActivePlugin;
-    QVector<DREAM3DPluginInterface*> m_LoadedPlugins;
-    QToolBar*                   m_PluginToolBar;
-    HelpDialog*                 m_HelpDialog;
-    PipelineBuilderWidget*      m_PipelineBuilderWidget;
-    UpdateCheck*                m_UpdateCheck;
+    QThread*                              m_WorkerThread;
+    IDREAM3DPlugin*                       m_ActivePlugin;
+    QVector<IDREAM3DPlugin*>              m_LoadedPlugins;
 
-    QString                     m_OpenDialogLastDirectory;
+    HelpDialog*                           m_HelpDialog;
 
-    QThread*                    m_UpdateCheckThread;
-    FilterManager::Pointer      m_FilterManager;
+    QSharedPointer<UpdateCheck>           m_UpdateCheck;
+
+    QThread*                              m_UpdateCheckThread;
+    FilterManager*                        m_FilterManager;
+    FilterWidgetManager*                  m_FilterWidgetManager;
+
+    FilterPipeline::Pointer               m_PipelineInFlight;
+#if !defined(Q_OS_MAC)
+    DREAM3DMenu*                          m_InstanceMenu;
+#endif
+    bool                                  m_ShouldRestart;
+
+    QString                               m_OpenedFilePath;
+    static QString                        m_OpenDialogLastDirectory;
+
+    /**
+    * @brief Creates a view menu for the DREAM3D instance.  We need to
+    * do this separately because there is a different View menu for each
+    * DREAM3D instance on all OSes.
+    */
+    QMenu* createViewMenu();
+
+    /**
+    * @brief Updates the "first run" variable in the preferences file
+    */
+    void updateFirstRun();
 
     DREAM3D_UI(const DREAM3D_UI&);    // Copy Constructor Not Implemented
     void operator=(const DREAM3D_UI&);  // Operator '=' Not Implemented
@@ -235,3 +402,4 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 };
 
 #endif /* _DREAM3D_UI_H_ */
+

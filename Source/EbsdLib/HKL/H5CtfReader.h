@@ -1,49 +1,45 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
-
-
-#ifndef H5CTFREADER_H_
-#define H5CTFREADER_H_
+#ifndef _H5CTFREADER_H_
+#define _H5CTFREADER_H_
 
 #include <hdf5.h>
 
-#include <vector>
-#include <set>
+#include <QtCore/QString>
+#include <QtCore/QSet>
 
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
@@ -53,11 +49,11 @@
 /**
  * @class H5CtfReader H5CtfReader EbsdLib/HKL/H5CtfReader.h
  * @brief
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Aug 2, 2011
  * @version 1.0
  *
- * HKL OIM Scans are stored in the HDF5 file into a heirarchy of folders where
+ * HKL EBSD Scans are stored in the HDF5 file into a heirarchy of folders where
  * each folder stores an individual .ctf file. The folder has a simple index as
  * its name, for example if the index of the .ctf file was 11 then the HDF folder
  * that contains that .ctf file's data has an HDF Group name of "11". Within this
@@ -113,13 +109,13 @@ class EbsdLib_EXPORT H5CtfReader : public CtfReader
      * @brief Returns a vector of AngPhase objects corresponding to the phases
      * present in the file
      */
-    std::vector<CtfPhase::Pointer> getPhases() { return m_Phases; }
+    QVector<CtfPhase::Pointer> getPhases() { return m_Phases; }
 
     /**
      * @brief Sets the names of the arrays to read out of the file
      * @param names
      */
-    virtual void setArraysToRead(std::set<std::string> names);
+    virtual void setArraysToRead(QSet<QString> names);
 
     /**
      * @brief Over rides the setArraysToReads to tell the reader to load ALL the data from the HDF5 file. If the
@@ -140,12 +136,13 @@ class EbsdLib_EXPORT H5CtfReader : public CtfReader
     int readData(hid_t parId);
 
   private:
-    std::vector<CtfPhase::Pointer> m_Phases;
-    std::set<std::string> m_ArrayNames;
+    QVector<CtfPhase::Pointer> m_Phases;
+    QSet<QString> m_ArrayNames;
     bool                  m_ReadAllArrays;
 
     H5CtfReader(const H5CtfReader&); // Copy Constructor Not Implemented
     void operator=(const H5CtfReader&); // Operator '=' Not Implemented
 };
 
-#endif /* H5CTFREADER_H_ */
+#endif /* _H5CTFREADER_H_ */
+

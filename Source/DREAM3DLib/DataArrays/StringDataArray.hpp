@@ -1,38 +1,38 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 
 #ifndef _StrignDataArray_H_
 #define _StrignDataArray_H_
@@ -40,8 +40,8 @@
 #include <string>
 #include <vector>
 
-#include "MXA/Utilities/StringUtils.h"
 
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -50,8 +50,8 @@
 
 /**
  * @class StringDataArray StringDataArray.h DREAM3DLib/Common/StringDataArray.h
- * @brief Stores an array of std::string objects
- * @author Michael A. Jackson for BlueQuartz Software
+ * @brief Stores an array of QString objects
+ *
  * @date Nov 13, 2012
  * @version 1.0
  */
@@ -60,15 +60,43 @@ class StringDataArray : public IDataArray
   public:
     DREAM3D_SHARED_POINTERS(StringDataArray )
     DREAM3D_TYPE_MACRO_SUPER(StringDataArray, IDataArray)
+    DREAM3D_CLASS_VERSION(2)
 
-    static Pointer CreateArray(size_t numElements, const std::string &name)
+    /**
+     * @brief CreateArray
+     * @param numTuples
+     * @param name
+     * @param allocate
+     * @return
+     */
+    static Pointer CreateArray(size_t numTuples, const QString& name, bool allocate = true)
     {
-      if (name.empty() == true)
+      if (name.isEmpty() == true)
       {
         return NullPointer();
       }
-      StringDataArray* d = new StringDataArray(numElements, true);
-      d->SetName(name);
+      StringDataArray* d = new StringDataArray(numTuples, name, allocate);
+      d->setName(name);
+      Pointer ptr(d);
+      return ptr;
+    }
+
+    /**
+     * @brief CreateArray
+     * @param numTuples
+     * @param compDims
+     * @param name
+     * @param allocate
+     * @return
+     */
+    static Pointer CreateArray(size_t numTuples, QVector<size_t> compDims, const QString& name, bool allocate = true)
+    {
+      if (name.isEmpty() == true)
+      {
+        return NullPointer();
+      }
+      StringDataArray* d = new StringDataArray(numTuples, name, allocate);
+      d->setName(name);
       Pointer ptr(d);
       return ptr;
     }
@@ -80,27 +108,25 @@ class StringDataArray : public IDataArray
      * @param name
      * @return
      */
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const std::string &name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name, bool allocate = true)
     {
-      IDataArray::Pointer p = StringDataArray::CreateArray(numElements, name);
+      IDataArray::Pointer p = StringDataArray::CreateArray(numElements, name, allocate);
       return p;
     }
 
-    /**
-     * @brief deepCopy
-     * @return
-     */
-    virtual IDataArray::Pointer deepCopy()
+    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name, bool allocate = true)
     {
-      StringDataArray::Pointer daCopy = StringDataArray::CreateArray(GetNumberOfTuples(), GetName());
-      for(size_t i = 0; i < m_Array.size(); ++i)
-      {
-        daCopy->SetValue(i, m_Array[i]);
-      }
-      return daCopy;
+      IDataArray::Pointer p = StringDataArray::CreateArray(numElements, name, allocate);
+      return p;
     }
 
-    virtual ~StringDataArray(){}
+    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<size_t> dims, const QString& name, bool allocate = true)
+    {
+      IDataArray::Pointer p = StringDataArray::CreateArray(numElements, name, allocate);
+      return p;
+    }
+
+    virtual ~StringDataArray() {}
 
     /**
      * @brief isAllocated
@@ -108,13 +134,30 @@ class StringDataArray : public IDataArray
      */
     virtual bool isAllocated() { return true; }
 
+    /**
+     * @brief Gives this array a human readable name
+     * @param name The name of this array
+     */
+    virtual void setInitValue(const std::string& initValue)
+    {
+      m_InitValue = QString::fromStdString(initValue);
+    }
+
+    /**
+     * @brief Gives this array a human readable name
+     * @param name The name of this array
+     */
+    virtual void setInitValue(const QString& initValue)
+    {
+      m_InitValue = initValue;
+    }
 
     /**
      * @brief GetTypeName Returns a string representation of the type of data that is stored by this class. This
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(std::string &xdmfTypeName, int &precision)
+    void getXdmfTypeAndSize(QString& xdmfTypeName, int& precision)
     {
       xdmfTypeName = getNameOfClass();
       precision = 0;
@@ -124,13 +167,13 @@ class StringDataArray : public IDataArray
      * @brief getTypeAsString
      * @return
      */
-    virtual std::string getTypeAsString() { return "StringDataArray";}
+    virtual QString getTypeAsString() { return "StringDataArray";}
 
     /**
      * @brief Gives this array a human readable name
      * @param name The name of this array
      */
-    void SetName(const std::string &name)
+    void setName(const QString& name)
     {
       m_Name = name;
     }
@@ -139,7 +182,7 @@ class StringDataArray : public IDataArray
      * @brief Returns the human readable name of this array
      * @return
      */
-    std::string GetName()
+    QString getName()
     {
       return m_Name;
     }
@@ -161,23 +204,32 @@ class StringDataArray : public IDataArray
     }
 
     /**
-     * @brief Returns a void pointer pointing to the index of the array. NULL
-     * pointers are entirely possible. No checks are performed to make sure
-     * the index is with in the range of the internal data array.
-     * @param i The index to have the returned pointer pointing to.
-     * @return Void Pointer. Possibly NULL.
-     */
-    virtual void* GetVoidPointer ( size_t i)
+    * @brief Returns a void pointer pointing to the index of the array. NULL
+    * pointers are entirely possible. No checks are performed to make sure
+    * the index is with in the range of the internal data array.
+    * @param i The index to have the returned pointer pointing to.
+    * @return Void Pointer. Possibly NULL.
+    */
+    virtual void* getVoidPointer ( size_t i)
     {
       return static_cast<void*>( &(m_Array[i]));
     }
 
     /**
-     * @brief Returns the number of Tuples in the array.
+     * @brief getStringArray
+     * @return
      */
-    virtual size_t GetNumberOfTuples ()
+    virtual QVector<QString>& getStringArray()
     {
-      return m_Array.size();
+      return m_Array;
+    }
+
+    /**
+    * @brief Returns the number of Tuples in the array.
+    */
+    virtual size_t getNumberOfTuples ()
+    {
+      return m_NumTuples;
     }
 
 
@@ -185,17 +237,35 @@ class StringDataArray : public IDataArray
      * @brief Return the number of elements in the array
      * @return
      */
-    virtual size_t GetSize()
+    virtual size_t getSize()
     {
       return m_Array.size();
     }
 
-    virtual void SetNumberOfComponents(int nc)
+    virtual int getNumberOfComponents()
     {
-      ;
+      return 1;
     }
 
-    virtual int GetNumberOfComponents()
+    QVector<size_t> getComponentDimensions()
+    {
+      QVector<size_t> dims(1, 1);
+      return dims;
+    }
+
+    // Description:
+    // Set/Get the dimension (n) of the rank. Must be >= 1. Make sure that
+    // this is set before allocation.
+    void SetRank(int rnk)
+    {
+
+    }
+
+    /**
+     * @brief getRank
+     * @return
+     */
+    int getRank()
     {
       return 1;
     }
@@ -207,9 +277,9 @@ class StringDataArray : public IDataArray
      * 4 = 32 bit integer/Float
      * 8 = 64 bit integer/Double
      */
-    virtual size_t GetTypeSize()
+    virtual size_t getTypeSize()
     {
-      return sizeof(std::string);
+      return sizeof(QString);
     }
 
     /**
@@ -220,7 +290,7 @@ class StringDataArray : public IDataArray
      * @param idxs The indices to remove
      * @return error code.
      */
-    virtual int EraseTuples(std::vector<size_t> &idxs)
+    virtual int eraseTuples(QVector<size_t>& idxs)
     {
 
       int err = 0;
@@ -230,36 +300,37 @@ class StringDataArray : public IDataArray
       {
         return 0;
       }
-
-      if (idxs.size() >= GetNumberOfTuples() )
+      size_t idxs_size = static_cast<size_t>(idxs.size());
+      if (idxs_size >= getNumberOfTuples() )
       {
-        Resize(0);
+        resize(0);
         return 0;
       }
 
       // Sanity Check the Indices in the vector to make sure we are not trying to remove any indices that are
       // off the end of the array and return an error code.
-      for(std::vector<size_t>::size_type i = 0; i < idxs.size(); ++i)
+      for(QVector<size_t>::size_type i = 0; i < idxs.size(); ++i)
       {
-        if (idxs[i] >= m_Array.size()) { return -100; }
+        if (idxs[i] >= static_cast<size_t>(m_Array.size())) { return -100; }
       }
 
 
       // Create a new Array to copy into
-      std::vector<std::string> newArray;
-      std::vector<size_t>::size_type start = 0;
-      for(std::vector<std::string>::size_type i = 0; i < m_Array.size(); ++i)
+      QVector<QString> newArray;
+      QVector<size_t>::size_type start = 0;
+      for(QVector<QString>::size_type i = 0; i < m_Array.size(); ++i)
       {
         bool keep = true;
-        for(std::vector<size_t>::size_type j = start; j < idxs.size(); ++j)
+        for(QVector<size_t>::size_type j = start; j < idxs.size(); ++j)
         {
-          if (i == idxs[j]) { keep = false; break;}
+          if (static_cast<size_t>(i) == idxs[j]) { keep = false; break;}
         }
         if (keep)
         {
           newArray.push_back(m_Array[i]);
         }
       }
+      m_NumTuples = m_Array.size();
       return err;
     }
 
@@ -269,20 +340,39 @@ class StringDataArray : public IDataArray
      * @param newPos The destination index to place the copied data
      * @return
      */
-    virtual int CopyTuple(size_t currentPos, size_t newPos)
+    virtual int copyTuple(size_t currentPos, size_t newPos)
     {
-      std::string s = m_Array[currentPos];
+      QString s = m_Array[currentPos];
       m_Array[newPos] = s;
       return 0;
     }
 
+    /**
+     * @brief reorderCopy
+     * @param newOrderMap
+     * @return
+     */
+    virtual IDataArray::Pointer reorderCopy(QVector<size_t> newOrderMap)
+    {
+      if(static_cast<size_t>(newOrderMap.size()) != getNumberOfTuples())
+      {
+        return IDataArray::NullPointer();
+      }
+      StringDataArray::Pointer daCopy = StringDataArray::CreateArray(getNumberOfTuples(), getName());
+      daCopy->initializeWithZeros();
+      for(QVector<QString>::size_type i = 0; i < m_Array.size(); ++i)
+      {
+        daCopy->setValue(newOrderMap[i], m_Array[i]);
+      }
+      return daCopy;
+    }
 
     /**
      * @brief Does Nothing
      * @param pos The index of the Tuple
      * @param value pointer to value
      */
-    virtual void InitializeTuple(size_t pos, double value)
+    virtual void initializeTuple(size_t pos, double value)
     {
 
     }
@@ -292,17 +382,55 @@ class StringDataArray : public IDataArray
      */
     virtual void initializeWithZeros()
     {
-      m_Array.assign(m_Array.size(), std::string(""));
+      m_Array.fill(QString(""), m_Array.size());
     }
+
+    /**
+     * @brief initializeWithValue
+     * @param value
+     */
+    virtual void initializeWithValue(QString value)
+    {
+      m_Array.fill(value, m_Array.size());
+    }
+
+    /**
+     * @brief initializeWithValue
+     * @param value
+     */
+    virtual void initializeWithValue(const std::string& value)
+    {
+      m_Array.fill(QString::fromStdString(value), m_Array.size());
+    }
+
+    /**
+     * @brief deepCopy
+     * @param forceNoAllocate
+     * @return
+     */
+    virtual IDataArray::Pointer deepCopy(bool forceNoAllocate = false)
+    {
+      StringDataArray::Pointer daCopy = StringDataArray::CreateArray(getNumberOfTuples(), getName());
+      if(forceNoAllocate == false)
+      {
+        for(QVector<QString>::size_type i = 0; i < m_Array.size(); ++i)
+        {
+          daCopy->setValue(i, m_Array[i]);
+        }
+      }
+      return daCopy;
+    }
+
 
     /**
      * @brief Reseizes the internal array
      * @param size The new size of the internal array
      * @return 1 on success, 0 on failure
      */
-    virtual int32_t RawResize(size_t size)
+    virtual int32_t resizeTotalElements(size_t size)
     {
       m_Array.resize(size);
+      m_NumTuples = size;
       return 1;
     }
 
@@ -311,9 +439,10 @@ class StringDataArray : public IDataArray
      * @param size The new size of the internal array
      * @return 1 on success, 0 on failure
      */
-    virtual int32_t Resize(size_t numTuples)
+    virtual int32_t resize(size_t numTuples)
     {
       m_Array.resize(numTuples);
+      m_NumTuples = numTuples;
       return 1;
     }
 
@@ -323,7 +452,7 @@ class StringDataArray : public IDataArray
      * @param i
      * @param delimiter
      */
-    virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',')
+    virtual void printTuple(QTextStream& out, size_t i, char delimiter = ',')
     {
       out << m_Array[i];
     }
@@ -334,7 +463,7 @@ class StringDataArray : public IDataArray
      * @param i
      * @param j
      */
-    virtual void printComponent(std::ostream &out, size_t i, int j)
+    virtual void printComponent(QTextStream& out, size_t i, int j)
     {
       out << m_Array[i];
     }
@@ -343,7 +472,7 @@ class StringDataArray : public IDataArray
      * @brief getFullNameOfClass
      * @return
      */
-    std::string getFullNameOfClass()
+    QString getFullNameOfClass()
     {
       return "StringDataArray";
     }
@@ -353,24 +482,9 @@ class StringDataArray : public IDataArray
      * @param parentId
      * @return
      */
-    virtual int writeH5Data(hid_t parentId)
+    virtual int writeH5Data(hid_t parentId, QVector<size_t> tDims)
     {
-      size_t totalSize = 0;
-      for(size_t i = 0; i < m_Array.size(); ++i)
-      {
-        totalSize += 1 + m_Array[i].size();
-      }
-      DataArray<int8_t>::Pointer strPtr = DataArray<int8_t>::CreateArray(totalSize, "Strings");
-      strPtr->initializeWithZeros();
-      int8_t* str = strPtr->GetPointer(0);
-
-      for(size_t i = 0; i < m_Array.size(); ++i)
-      {
-        ::memcpy(str, m_Array[i].c_str(), m_Array[i].size());
-        str = str + m_Array[i].size() + 1;
-      }
-
-      return H5DataArrayWriter<int8_t>::writeArray(parentId, GetName(), totalSize, 1, strPtr->GetPointer(0), getFullNameOfClass());
+      return H5DataArrayWriter::writeStringDataArray<StringDataArray>(parentId, this);
     }
 
     /**
@@ -381,12 +495,56 @@ class StringDataArray : public IDataArray
      * @param groupPath
      * @return
      */
-    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName,
-                                   const std::string &groupPath, const std::string &labelb)
+    virtual int writeXdmfAttribute(QTextStream& out, int64_t* volDims, const QString& hdfFileName,
+                                   const QString& groupPath, const QString& labelb)
     {
       out << "<!-- Xdmf is not supported for " << getNameOfClass() << " with type " << getTypeAsString() << " --> ";
       return -1;
     }
+
+    /**
+     * @brief getInfoString
+     * @return Returns a formatted string that contains general infomation about
+     * the instance of the object.
+     */
+    virtual QString getInfoString(DREAM3D::InfoStringFormat format)
+    {
+      QString info;
+      QTextStream ss (&info);
+      if(format == DREAM3D::HtmlFormat)
+      {
+        ss << "<html><head></head>\n";
+        ss << "<body>\n";
+        ss << "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
+        ss << "<tbody>\n";
+        ss << "<tr bgcolor=\"#D3D8E0\"><th colspan=2>Attribute Array Info</th></tr>";
+        ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Name:</th><td>" << getName() << "</td></tr>";
+        ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Type:</th><td>" << getTypeAsString() << "</td></tr>";
+        ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Number of Tuples:</th><td>" << getNumberOfTuples() << "</td></tr>";
+
+//        QString compDimStr = "(";
+//        for(int i = 0; i < m_CompDims.size(); i++)
+//        {
+//          compDimStr = compDimStr + QString::number(m_CompDims[i]);
+//          if(i < m_CompDims.size() - 1) {
+//             compDimStr = compDimStr + QString(", ");
+//          }
+//        }
+//        compDimStr = compDimStr + ")";
+//        ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Component Dimensions:</th><td>" << compDimStr << "</td></tr>";
+//        ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Total Elements:</th><td>" << m_Size << "</td></tr>";
+
+        ss << "</tbody></table>\n";
+        ss << "<br/>";
+        ss << "</body></html>";
+      }
+      else
+      {
+
+      }
+      return info;
+    }
+
 
     /**
      * @brief readH5Data
@@ -396,74 +554,68 @@ class StringDataArray : public IDataArray
     virtual int readH5Data(hid_t parentId)
     {
       int err = 0;
-      this->Resize(0);
-      IDataArray::Pointer p = H5DataArrayReader::readStringDataArray(parentId, GetName());
+      this->resize(0);
+
+      err = QH5Lite::readVectorOfStringDataset(parentId, getName(), m_Array);
+#if 0
+      IDataArray::Pointer p = H5DataArrayReader::ReadStringDataArray(parentId, getName());
       if (p.get() == NULL)
       {
         return -1;
       }
       StringDataArray* srcPtr = StringDataArray::SafePointerDownCast(p.get());
-      size_t count = srcPtr->GetNumberOfTuples();
+      size_t count = srcPtr->getNumberOfTuples();
       for (size_t i = 0; i < count; ++i)
       {
-        m_Array.push_back( srcPtr->GetValue(i) );
+        m_Array.push_back( srcPtr->getValue(i) );
       }
+#endif
       return err;
     }
 
     /**
-     * @brief SetValue
+     * @brief setValue
      * @param i
      * @param value
      */
-    void SetValue(size_t i, const std::string &value)
+    void setValue(size_t i, const QString& value)
     {
-      m_Array.at(i) = value;
+      m_Array[i] = value;
     }
 
     /**
-     * @brief GetValue
+     * @brief getValue
      * @param i
      * @return
      */
-    std::string GetValue(size_t i)
+    QString getValue(size_t i)
     {
       return m_Array.at(i);
     }
 
-    /**
-     * @brief Returns a copy of the internal array
-     * @return
-     */
-    std::vector<std::string> getStringArray() {
-      return m_Array;
-    }
-
   protected:
     /**
-     * @brief Protected Constructor
-     * @param numElements The number of elements in the internal array.
-     * @param takeOwnership Will the class clean up the memory. Default=true
-     */
-    StringDataArray(size_t numElements, bool ownsData = true) :
-      _ownsData(ownsData)
+    * @brief Protected Constructor
+    * @param numElements The number of elements in the internal array.
+    * @param takeOwnership Will the class clean up the memory. Default=true
+    */
+    StringDataArray(size_t numTuples, const QString name, bool allocate = true) :
+      m_Name(name),
+      m_NumTuples(numTuples),
+      _ownsData(true)
     {
-      m_Array.resize(numElements);
-      //  MUD_FLAP_0 = MUD_FLAP_1 = MUD_FLAP_2 = MUD_FLAP_3 = MUD_FLAP_4 = MUD_FLAP_5 = 0xABABABABABABABABul;
+      if (allocate == true)
+      {
+        m_Array.resize(numTuples);
+      }
     }
 
   private:
-    //  unsigned long long int MUD_FLAP_0;
-    std::vector<std::string> m_Array;
-    //  unsigned long long int MUD_FLAP_1;
-    //size_t Size;
-    //  unsigned long long int MUD_FLAP_4;
+    QVector<QString> m_Array;
+    QString m_Name;
+    size_t m_NumTuples;
     bool _ownsData;
-    //  unsigned long long int MUD_FLAP_2;
-    //  size_t MaxId;
-    //   unsigned long long int MUD_FLAP_3;
-    std::string m_Name;
-    //  unsigned long long int MUD_FLAP_5;
+    QString m_InitValue;
 
     StringDataArray(const StringDataArray&); //Not Implemented
     void operator=(const StringDataArray&); //Not Implemented
@@ -471,3 +623,4 @@ class StringDataArray : public IDataArray
 };
 
 #endif /* _StrignDataArray_H_ */
+

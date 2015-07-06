@@ -7,17 +7,50 @@
 # -----------------------------------------------------------------------------
 #
 # -----------------------------------------------------------------------------
-project(DeveloperManual)
-cmake_minimum_required(VERSION 2.8.9)
+project (DeveloperManual)
+cmake_minimum_required(VERSION 3.1.0)
 
 if(NOT DEFINED PROJECT_RESOURCES_DIR)
-  set(PROJECT_RESOURCES_DIR ${PROJECT_SOURCE_DIR}/Resources)
+set(PROJECT_RESOURCES_DIR ${PROJECT_SOURCE_DIR}/Resources)
 endif()
 
 set(DOCUMENTATION_RESOURCES_DIR ${PROJECT_RESOURCES_DIR}/DocConfigFiles)
 
+FIND_PACKAGE(Doxygen)
+if(NOT DOXYGEN_FOUND)
+  message(FATAL_ERROR "Doxygen is needed to build the documentation but was not found on your system. Please install it correctly and rerun cmake.")
+endif()
 
-include(${DOCUMENTATION_RESOURCES_DIR}/CMake/Macros.cmake)
+set(DOX_GENERATE_RTF "NO")
+option(DREAM3D_GENERATE_RTF "Generate RTF Documentation" OFF)
+if(DREAM3D_GENERATE_RTF STREQUAL "ON")
+    set(DOX_GENERATE_RTF "YES")
+endif()
+
+
+set(DOX_GENERATE_HTML "YES")
+option(DREAM3D_GENERATE_HTML "Generate HTML Documentation" ON)
+if(DREAM3D_GENERATE_HTML STREQUAL "ON")
+    set(DOX_GENERATE_HTML "YES")
+endif()
+
+
+set(DOX_GENERATE_LATEX "NO")
+option(DREAM3D_GENERATE_LATEX "Generate HTML Documentation" OFF)
+if(DREAM3D_GENERATE_LATEX STREQUAL "ON")
+    set(DOX_GENERATE_LATEX "YES")
+    # Check for existence of LaTex executable files
+    INCLUDE( ${DOCUMENTATION_RESOURCES_DIR}/CMake/UseLATEX.cmake)
+endif()
+
+if(APPLE)
+    option(AUTO_OPEN_PDF "Automatically open generated PDF files with default PDF reading application" ON)
+endif()
+
+
+
+include ( ${DOCUMENTATION_RESOURCES_DIR}/CMake/Macros.cmake)
+
 
 
 set(LATEX_TITLE "DREAM.3D:\\\\Developer Documentation")

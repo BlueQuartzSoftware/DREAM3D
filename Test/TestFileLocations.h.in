@@ -1,6 +1,7 @@
 #ifndef _TestFileLocation_h_
 #define _TestFileLocation_h_
-#include <string>
+
+#include <QtCore/QString>
 
 #define REMOVE_TEST_FILES 1
 
@@ -16,57 +17,33 @@
 namespace UnitTest
 {
 
-  const std::string DataDir("@DREAM3D_DATA_DIR@");
-  const std::string DREAM3DTest_BINARY_DIR("@DREAM3DTest_BINARY_DIR@");
-
-  // -----------------------------------------------------------------------------
-  //  Define where to put our temporary files for the H5Utilities Test
-  // -----------------------------------------------------------------------------
-  namespace H5UtilTest
-  {
-    const std::string TestDir("H5UtilTest");
-    const std::string FileName("@DREAM3DTest_BINARY_DIR@/H5Utilities_Test.h5");
-    const std::string GroupTest("@DREAM3DTest_BINARY_DIR@/H5Utilities_GroupTest.h5");
-  }
-
-  // -----------------------------------------------------------------------------
-  //  Define where to put our temporary files for the H5Lite Test
-  // -----------------------------------------------------------------------------
-  namespace H5LiteTest
-  {
-    const std::string TestDir("@DREAM3DTest_BINARY_DIR@/H5LiteTest");
-    const std::string FileName("@DREAM3DTest_BINARY_DIR@/H5Lite_Test.h5");
-    const std::string LargeFile("@DREAM3DTest_BINARY_DIR@/H5Lite_LargeFile_Test.h5");
-  }
+  const QString DataDir("@DREAM3D_DATA_DIR@");
+  const QString TestTempDir("@TEST_TEMP_DIR@");
+  const QString DREAM3DProjDir("@DREAM3DProj_SOURCE_DIR@");
 
   namespace DataArrayTest
   {
-    const std::string TestDir("@DREAM3DTest_BINARY_DIR@/DataArrayTest");
-    const std::string TestFile("@DREAM3DTest_BINARY_DIR@/DataArrayTest/DataArrayTest.h5");
+    const QString TestDir("@TEST_TEMP_DIR@/DataArrayTest");
+    const QString TestFile("@TEST_TEMP_DIR@/DataArrayTest/DataArrayTest.h5");
   }
 
-
-  namespace DxIOTest
+  namespace DataContainerBundleTest
   {
-    static const std::string TestFile("@DREAM3DTest_BINARY_DIR@/DxIOTest.dx");
+    const QString TestDir("@TEST_TEMP_DIR@/DataContainerBundleTest");
+    const QString TestFile("@TEST_TEMP_DIR@/DataContainerBundleTest/DataContainerBundleTest.h5");
+  }
+
+  namespace FeatureIdsTest
+  {
     static const size_t XSize = 3;
     static const size_t YSize = 4;
     static const size_t ZSize = 5;
-    static const size_t Offset = 100;
-  }
-
-  namespace PhIOTest
-  {
-    const std::string TestFile("@DREAM3DTest_BINARY_DIR@/PhIOTest.ph");
-    static const size_t XSize = 5;
-    static const size_t YSize = 4;
-    static const size_t ZSize = 3;
     static const size_t Offset = 200;
   }
 
   namespace VtkGrainIdIOTest
   {
-    const std::string TestFile("@DREAM3DTest_BINARY_DIR@/VtkGrainIdIOTest.vtk");
+    const QString TestFile("@TEST_TEMP_DIR@/VtkGrainIdIOTest.vtk");
     static const size_t XSize = 5;
     static const size_t YSize = 4;
     static const size_t ZSize = 3;
@@ -75,7 +52,7 @@ namespace UnitTest
 
   namespace VTKFileWritersTest
   {
-    static const std::string TestFile("@DREAM3DTest_BINARY_DIR@/VtkIOTest.vtk");
+    static const QString TestFile("@TEST_TEMP_DIR@/VtkIOTest.vtk");
     static const size_t XSize = 2;
     static const size_t YSize = 10;
     static const size_t ZSize = 5;
@@ -84,129 +61,115 @@ namespace UnitTest
 
   namespace NeighborListTest
   {
-    const std::string TestDir("@DREAM3DTest_BINARY_DIR@/NeighborListTest");
+    const QString TestDir("@TEST_TEMP_DIR@/NeighborListTest");
   }
 
   namespace SyntheticBuilderTest
   {
-    const std::string TestDir("@DREAM3DTest_BINARY_DIR@/SyntheticBuilderTest");
-    const std::string CsvFile("@DREAM3DTest_BINARY_DIR@/SyntheticBuilderTest/SyntheticBuilderTest.csv");
-    const std::string OutputFile("@DREAM3DTest_BINARY_DIR@/SyntheticBuilderTest/SyntheticBuilderTest.h5");
-    const std::string VtkOutputFile("@DREAM3DTest_BINARY_DIR@/SyntheticBuilderTest/SyntheticBuilderTest.vtk");
+    const QString TestDir("@TEST_TEMP_DIR@/SyntheticBuilderTest");
+    const QString CsvFile("@TEST_TEMP_DIR@/SyntheticBuilderTest/SyntheticBuilderTest.csv");
+    const QString OutputFile("@TEST_TEMP_DIR@/SyntheticBuilderTest/SyntheticBuilderTest.h5");
+    const QString VtkOutputFile("@TEST_TEMP_DIR@/SyntheticBuilderTest/SyntheticBuilderTest.vtk");
 
   }
 
   namespace FindNeighborTest
   {
-    const std::string TestDir("@DREAM3DTest_BINARY_DIR@/FindNeighborTest");
-    const std::string OutputFile("@DREAM3DTest_BINARY_DIR@/FindNeighborTest/FindNeighborTest.h5");
-    const std::string StatsFile("@DREAM3DTest_BINARY_DIR@/FindNeighborTest/FindNeighborTest_Stats.h5");
-    const std::string OutputFile2("@DREAM3DTest_BINARY_DIR@/FindNeighborTest/OtherTestOutput.h5");
-    const std::string VtkOutputFile("@DREAM3DTest_BINARY_DIR@/FindNeighborTest/FindNeighborTest.vtk");
+    const QString TestDir("@TEST_TEMP_DIR@/FindNeighborTest");
+    const QString OutputFile("@TEST_TEMP_DIR@/FindNeighborTest/FindNeighborTest.h5");
+    const QString StatsFile("@TEST_TEMP_DIR@/FindNeighborTest/FindNeighborTest_Stats.h5");
+    const QString OutputFile2("@TEST_TEMP_DIR@/FindNeighborTest/OtherTestOutput.h5");
+    const QString VtkOutputFile("@TEST_TEMP_DIR@/FindNeighborTest/FindNeighborTest.vtk");
   }
 
-  namespace DataContainerIOTest
+  namespace DREAM3DSettingsTest
   {
-    static const size_t Offset = 800;
-    static const size_t XSize = 5;
-    static const size_t YSize = 4;
-    static const size_t ZSize = 3;
-    const std::string TestDir("@DREAM3DTest_BINARY_DIR@/DataContainerIOTest");
-    const std::string TestFile("@DREAM3DTest_BINARY_DIR@/DataContainerIOTest/DataContainerIOTest.h5");
-    const std::string TestFile2("@DREAM3DTest_BINARY_DIR@/DataContainerIOTest/DataContainerIOTest_Rewrite.h5");
+    const QString TestFile("@TEST_TEMP_DIR@/DREAM3DSettingsTest/DREAM3DSettingsTest.json");
   }
 
   namespace StatsDataTest
   {
-    const std::string TestDir("@DREAM3DTest_BINARY_DIR@/StatsDataTest");
-    const std::string TestFile("@DREAM3DTest_BINARY_DIR@/StatsDataTest/StatsDataTest.h5");
-    const std::string TestFile2("@DREAM3DTest_BINARY_DIR@/StatsDataTest/StatsDataTest_rewrite.h5");
+    const QString TestDir("@TEST_TEMP_DIR@/StatsDataTest");
+    const QString TestFile("@TEST_TEMP_DIR@/StatsDataTest/StatsDataTest.h5");
+    const QString TestFile2("@TEST_TEMP_DIR@/StatsDataTest/StatsDataTest_rewrite.h5");
   }
 
   namespace RawBinaryReaderTest
   {
-    const std::string TestDir("@MXA_TEMP_DIR@RawBinaryReaderTest");
-    const std::string OutputFile("@MXA_TEMP_DIR@RawBinaryReaderTest/Output.bin");
+    const QString TestDir("@TEST_TEMP_DIR@/RawBinaryReaderTest");
+    const QString OutputFile("@TEST_TEMP_DIR@/RawBinaryReaderTest/Output.bin");
   }
 
   namespace SyntheticTest
   {
-    const std::string TestDir("@DREAM3DTest_BINARY_DIR@SyntheticTest");
-    const std::string MatrixPrecipitateInputFile("@DREAM3D_SUPPORT_DIR@/Data/2Phase_Matrix_Precipitate.dream3d");
-    const std::string OutputFile("@DREAM3DTest_BINARY_DIR@SyntheticTestOutput.dream3d");
+    const QString TestDir("@TEST_TEMP_DIR@/SyntheticTest");
+    const QString MatrixPrecipitateInputFile("@DREAM3D_SUPPORT_DIR@/Data/2Phase_Matrix_Precipitate.dream3d");
+    const QString OutputFile("@TEST_TEMP_DIR@/SyntheticTestOutput.dream3d");
   }
 
   namespace FilterParametersRWTest
   {
-    const std::string TestDir("@MXA_TEMP_DIR@FilterParametersRWTest");
-    const std::string OutputFile("@MXA_TEMP_DIR@FilterParametersRWTest/Output.h5");
-    const std::string TestFile_1("@MXA_TEMP_DIR@FilterParametersRWTest/TestFile_1.h5");
-    const std::string TestFile_2("@MXA_TEMP_DIR@FilterParametersRWTest/TestFile_2.h5");
-    const std::string TestFile_3("@MXA_TEMP_DIR@FilterParametersRWTest/TestFile_3.h5");
+    const QString TestDir("@TEST_TEMP_DIR@/FilterParametersRWTest");
+    const QString ArraySelectionFile("@TEST_TEMP_DIR@/FilterParametersRWTest/ArraySelectionFile.h5");
+    const QString ArraySelectionFileQSettings("@TEST_TEMP_DIR@/FilterParametersRWTest/ArraySelectionFile.ini");
+    const QString GenericExampleFile("@TEST_TEMP_DIR@/FilterParametersRWTest/GenericExampleFile.h5");
+    const QString GenericExampleFileQSettings("@TEST_TEMP_DIR@/FilterParametersRWTest/GenericExampleFile.ini");
+    const QString ThresholdFile("@TEST_TEMP_DIR@/FilterParametersRWTest/ThresholdFile.h5");
+    const QString ThresholdFileQSettings("@TEST_TEMP_DIR@/FilterParametersRWTest/ThresholdFile.ini");
+    const QString TestFile_1("@TEST_TEMP_DIR@/FilterParametersRWTest/TestFile_1.h5");
+    const QString TestFile_2("@TEST_TEMP_DIR@/FilterParametersRWTest/TestFile_2.h5");
+    const QString TestFile_3("@TEST_TEMP_DIR@/FilterParametersRWTest/TestFile_3.h5");
   }
 
   namespace PFTest
   {
-    const std::string TestDir("@DREAM3DTest_BINARY_DIR@/PoleFigureTest/");
+    const QString TestDir("@TEST_TEMP_DIR@/PoleFigureTest/");
+  }
+
+  namespace AngleFileLoaderTest
+  {
+    const QString TestDir("@TEST_TEMP_DIR@/AngleFileLoaderTest");
+    const QString OutputFile("@TEST_TEMP_DIR@/AngleFileLoaderTest/AngleTestFile.txt");
+  }
+
+  namespace LambertRWTest
+  {
+    const QString TestFile("@TEST_TEMP_DIR@/LambertRWTest.h5");
+  }
+
+  namespace QFilterParameterIOTest
+  {
+    const QString SmallIn100_H5EBSD_FILE("@DREAM3D_DATA_DIR@/SmallIN100/SmallIN100.h5ebsd");
+    const QString SmallIN100Folder("@DREAM3D_DATA_DIR@/SmallIN100");
+    const QString TestFile("@TEST_TEMP_DIR@/QFilterParameters.txt");
+    const QString Prebuilt1("@DREAM3D_SUPPORT_DIR@/PrebuiltPipelines/Workshop/Reconstruction/(01) SmallIN100 Import.txt");
+    const QString Prebuilt17("@DREAM3D_SUPPORT_DIR@/PrebuiltPipelines/Workshop/Reconstruction/(17) Small IN100 Full Reconstruction.txt");
+  }
+
+  namespace NewDataContainerStructureTest
+  {
+      const QString VASPInputFile("@DREAM3D_DATA_DIR@/Atomistics/pos_swf2_vrst");
+      const QString VASPOutputFile("@TEST_TEMP_DIR@/pos_swf2_vrst.dream3d");
+
+      const QString ParaDisInputFile("@DREAM3D_DATA_DIR@/Dislocation/rs57226.data");
+      const QString ParaDisOutputFile("@TEST_TEMP_DIR@/rs57226.dream3d");
+
+      const QString ParaDisInputFile2("@DREAM3D_DATA_DIR@/Dislocation/simulation1.dream3d");
+      const QString ParaDisOutputFile2("@TEST_TEMP_DIR@/simulation1_BackOut.dream3d");
+
+      const QString SyntheticInputFile("@DREAM3D_DATA_DIR@/SyntheticTest/SynthTest.dream3d");
+      const QString SyntheticOutputFile("@DREAM3D_DATA_DIR@/SyntheticTest/SynthTestOut.dream3d");
+      const QString SmallIN100InputFile("@DREAM3D_DATA_DIR@/SmallIN100/SmallIN100Cleaned.dream3d");
+      const QString SmallIN100OutputFile("@DREAM3D_DATA_DIR@/SmallIN100/SmallIN100Cleaned_Fit.dream3d");
+      const QString SyntheticOutputFile2("@DREAM3D_DATA_DIR@/SyntheticTest/SynthTestOut2.dream3d");
+      const QString SyntheticOutputFile3("@DREAM3D_DATA_DIR@/SyntheticTest/SynthTestOut3.dream3d");
+      const QString SyntheticOutputFile4("@DREAM3D_DATA_DIR@/SyntheticTest/SynthTestOut4.dream3d");
+  }
+
+  namespace FilterParametersRWTest
+  {
+      const QString OutputFile("@TEST_TEMP_DIR@/FilterParametersRWTest/OutputFile.json");
   }
 }
 
-// -----------------------------------------------------------------------------
-//  Define the temp directory for this system
-// -----------------------------------------------------------------------------
-//#define MXA_TEMP_DIR "@MXA_TEMP_DIR@"
-namespace MXAUnitTest
-{
-  const std::string MXATempDir("@MXA_TEMP_DIR@");
-  const std::string MXATestBinaryDirectory("@DREAM3DTest_BINARY_DIR_NATIVE@");
-  const std::string MXABuildDir("@MXA_BINARY_DIR_NATIVE@");
-
-#if defined (WIN32)
-  static const char DirSeparator = '\\';
-#else
-  static const char DirSeparator = '/';
-#endif
-
-  namespace SupportFileTest
-  {
-    const std::string OutputFile("@MXA_TEMP_DIR@SupportFileTest.h5");
-    const std::string BinaryInputFile("@MXA_TEMP_DIR@SupportFileTest_Input.bin");
-    const std::string TextInputFile("@DATAIMPORT_TEST_IMPORT_XML_FILE@");
-  }
-
-  namespace MXAFileReaderWriterTest
-  {
-    const std::string OutputFile("@MXA_TEMP_DIR@MXAFileReaderWriter.bin");
-  }
-
-  namespace MXAFileSystemPathTest
-  {
-    const std::string OutputFile("@MXA_TEMP_DIR@MXAFileSystemPath.bin");
-    const std::string OutputFileName("MXAFileSystemPath.bin");
-    const std::string TestDirName1("Directory1");
-    const std::string TestDirName2("Directory2");
-    const std::string TestDir("MXAFileSystemPathTest");
-    const std::string Extension("bin");
-  }
-
-  namespace DataImportTest
-  {
-    const std::string TestDir("DataImportTest");
-    const std::string H5TiffOutputFile("@DATAIMPORT_TEST_XMLH5TIFF_OUTPUT_FILE@");
-    const std::string ImportXMLFile("@DATAIMPORT_TEST_IMPORT_XML_FILE@");
-    const std::string SimpleImport("@MXA_TEMP_DIR@DataImportTestSimpleFile.h5");
-  }
-
-  // -----------------------------------------------------------------------------
-  //  Define where to put our temporary files for the DataModel Test
-  // -----------------------------------------------------------------------------
-  namespace DataModelTest
-  {
-    const std::string TestDir("DataModelTest");
-    const std::string BeforeH5File("@MXA_TEMP_DIR@DataModelTest-Before.h5");
-    const std::string AfterH5File("@MXA_TEMP_DIR@DataModelTest-After.h5");
-    const std::string OverwriteH5File("@MXA_TEMP_DIR@DataModelOverWrite_Test.h5");
-  }
-
-}
 #endif

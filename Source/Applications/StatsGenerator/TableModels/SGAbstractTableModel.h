@@ -1,40 +1,40 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef SGABSTRACTTABLEMODEL_H_
-#define SGABSTRACTTABLEMODEL_H_
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+#ifndef _SGABSTRACTTABLEMODEL_H_
+#define _SGABSTRACTTABLEMODEL_H_
 
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QVector>
@@ -45,7 +45,7 @@ class QAbstractItemDelegate;
 
 /**
  * @class SGAbstractTableModel SGAbstractTableModel.h StatsGenerator/SGAbstractTableModel.h
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Jan 6, 2011
  * @version 1.0
  *
@@ -74,9 +74,9 @@ class QAbstractItemDelegate;
  */
 class SGAbstractTableModel : public QAbstractTableModel
 {
-Q_OBJECT
+    Q_OBJECT
 
-    public:
+  public:
 
     enum ColumnIndexes
     {
@@ -91,7 +91,7 @@ Q_OBJECT
      * @param index
      * @return
      */
-    virtual Qt::ItemFlags flags(const QModelIndex &index) const = 0;
+    virtual Qt::ItemFlags flags(const QModelIndex& index) const = 0;
 
     /**
      *
@@ -99,7 +99,7 @@ Q_OBJECT
      * @param role
      * @return
      */
-    virtual QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const = 0;
+    virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const = 0;
 
     /**
      *
@@ -108,21 +108,21 @@ Q_OBJECT
      * @param role
      * @return
      */
-    virtual QVariant headerData(int section, Qt::Orientation orientation, int role=Qt::DisplayRole) const = 0;
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const = 0;
 
     /**
      *
      * @param parent
      * @return
      */
-    virtual int rowCount(const QModelIndex &parent=QModelIndex()) const = 0;
+    virtual int rowCount(const QModelIndex& parent = QModelIndex()) const = 0;
 
     /**
      *
      * @param parent
      * @return
      */
-    virtual int columnCount(const QModelIndex &parent=QModelIndex()) const = 0;
+    virtual int columnCount(const QModelIndex& parent = QModelIndex()) const = 0;
 
     /**
      *
@@ -131,7 +131,7 @@ Q_OBJECT
      * @param role
      * @return
      */
-    virtual bool setData(const QModelIndex &index, const QVariant &value, int role=Qt::EditRole) = 0;
+    virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) = 0;
 
     /**
      *
@@ -141,7 +141,7 @@ Q_OBJECT
      * @param role
      * @return
      */
-    virtual bool setHeaderData(int col, Qt::Orientation orientation, const QVariant& data, int role=Qt::EditRole) = 0;
+    virtual bool setHeaderData(int col, Qt::Orientation orientation, const QVariant& data, int role = Qt::EditRole) = 0;
 
     /**
      *
@@ -150,7 +150,7 @@ Q_OBJECT
      * @param parent
      * @return
      */
-    virtual bool insertRows(int row, int count, const QModelIndex &parent=QModelIndex()) = 0;
+    virtual bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex()) = 0;
 
     /**
      *
@@ -159,7 +159,7 @@ Q_OBJECT
      * @param parent
      * @return
      */
-    virtual bool removeRows(int row, int count, const QModelIndex &parent=QModelIndex()) = 0;
+    virtual bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) = 0;
 
     /**
      *
@@ -217,14 +217,15 @@ Q_OBJECT
     virtual float getDataValue(int col, int row) = 0;
 
 
-    virtual void setColumnData(int col, QVector<float> &data) = 0;
+    virtual void setColumnData(int col, QVector<float>& data) = 0;
 
 
-    private:
+  private:
 
     SGAbstractTableModel(const SGAbstractTableModel&); // Copy Constructor Not Implemented
     void operator=(const SGAbstractTableModel&); // Operator '=' Not Implemented
 
-  };
+};
 
 #endif /* SGABSTRACTTABLEMODEL_H_ */
+

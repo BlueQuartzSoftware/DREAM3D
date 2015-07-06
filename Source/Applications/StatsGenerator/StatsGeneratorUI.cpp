@@ -1,38 +1,38 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 
 #include "StatsGeneratorUI.h"
 
@@ -44,53 +44,44 @@
 #include <QtCore/QSettings>
 #include <QtCore/QVector>
 #include <QtGui/QCloseEvent>
-#include <QtGui/QMessageBox>
-#include <QtGui/QFileDialog>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QFileDialog>
 #include <QtGui/QDesktopServices>
+#include <QtWidgets/QProgressDialog>
 
 
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
+#include "H5Support/HDF5ScopedFileSentinel.h"
 
-#include "DREAM3DLib/DREAM3DVersion.h"
-#include "DREAM3DLib/DataContainers/VoxelDataContainer.h"
+#include "DREAM3DLib/DREAM3DLibVersion.h"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
-#include "DREAM3DLib/Common/FilterPipeline.h"
-#include "DREAM3DLib/IOFilters/VoxelDataContainerWriter.h"
-#include "DREAM3DLib/IOFilters/VoxelDataContainerReader.h"
+#include "DREAM3DLib/StatsData/PrimaryStatsData.h"
+#include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
+#include "DREAM3DLib/StatsData/TransformationStatsData.h"
+#include "DREAM3DLib/StatsData/BoundaryStatsData.h"
+#include "DREAM3DLib/StatsData/MatrixStatsData.h"
 
-#include "QtSupport/ApplicationAboutBoxDialog.h"
-#include "QtSupport/QRecentFileList.h"
-#include "QtSupport/HelpDialog.h"
+#include "DREAM3DLib/Common/FilterPipeline.h"
+#include "DREAM3DLib/CoreFilters/DataContainerWriter.h"
+#include "DREAM3DLib/CoreFilters/DataContainerReader.h"
+
+#include "QtSupportLib/ApplicationAboutBoxDialog.h"
+#include "QtSupportLib/QRecentFileList.h"
+#include "QtSupportLib/HelpDialog.h"
+
+#include "Applications/DREAM3D/DREAM3DApplication.h"
 
 #include "DREAM3D/License/StatsGeneratorLicenseFiles.h"
 
 #include "SGApplication.h"
 #include "EditPhaseDialog.h"
 
-/**
- * @brief The HDF5FileSentinel class ensures the HDF5 file that is currently open
- * is closed when the variable goes out of Scope
- */
-class HDF5ScopedFileSentinel
-{
-  public:
-    HDF5ScopedFileSentinel(hid_t fileId) : m_FileId(fileId)
-    {}
-    virtual ~HDF5ScopedFileSentinel()
-    {
-      if (m_FileId > 0) {
-        H5Utilities::closeFile(m_FileId);
-      }
-    }
-    DREAM3D_INSTANCE_PROPERTY(hid_t, FileId)
-};
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsGeneratorUI::StatsGeneratorUI(QWidget *parent) :
+StatsGeneratorUI::StatsGeneratorUI(QWidget* parent) :
   QMainWindow(parent),
   m_FileSelected(false),
   m_HelpDialog(NULL)
@@ -101,7 +92,7 @@ StatsGeneratorUI::StatsGeneratorUI(QWidget *parent) :
   setupGui();
 
   QRecentFileList* recentFileList = QRecentFileList::instance();
-  connect(recentFileList, SIGNAL (fileListChanged(const QString &)), this, SLOT(updateRecentFileList(const QString &)));
+  connect(recentFileList, SIGNAL (fileListChanged(const QString&)), this, SLOT(updateRecentFileList(const QString&)));
   // Get out initial Recent File List
   this->updateRecentFileList(QString::null);
 }
@@ -124,7 +115,7 @@ void StatsGeneratorUI::on_actionExit_triggered()
 // -----------------------------------------------------------------------------
 //  Called when the main window is closed.
 // -----------------------------------------------------------------------------
-void StatsGeneratorUI::closeEvent(QCloseEvent *event)
+void StatsGeneratorUI::closeEvent(QCloseEvent* event)
 {
   qint32 err = checkDirtyDocument();
   if (err < 0)
@@ -144,12 +135,9 @@ void StatsGeneratorUI::closeEvent(QCloseEvent *event)
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::readSettings()
 {
-#if defined (Q_OS_MAC)
-  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#else
-  QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#endif
+  DREAM3DSettings prefs;
 
+  // Read preferences here
 }
 
 // -----------------------------------------------------------------------------
@@ -157,12 +145,9 @@ void StatsGeneratorUI::readSettings()
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::writeSettings()
 {
-#if defined (Q_OS_MAC)
-  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#else
-  QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#endif
+  DREAM3DSettings prefs;
 
+  // Write preferences here
 }
 
 // -----------------------------------------------------------------------------
@@ -332,25 +317,25 @@ void StatsGeneratorUI::on_editPhase_clicked()
 
   if(dialog.getPhaseType() == DREAM3D::PhaseType::PrimaryPhase)
   {
-//    PrimaryPhaseWidget* ppw = qobject_cast<PrimaryPhaseWidget*>(sgwidget);
+    //    PrimaryPhaseWidget* ppw = qobject_cast<PrimaryPhaseWidget*>(sgwidget);
   }
   else if(dialog.getPhaseType() == DREAM3D::PhaseType::PrecipitatePhase)
   {
     PrecipitatePhaseWidget* ppw = qobject_cast<PrecipitatePhaseWidget*>(sgwidget);
-    if (ppw) dialog.setPptFraction(ppw->getPptFraction());
+    if (ppw) { dialog.setPptFraction(ppw->getPptFraction()); }
   }
   else if(dialog.getPhaseType() == DREAM3D::PhaseType::TransformationPhase)
   {
     TransformationPhaseWidget* tpw = qobject_cast<TransformationPhaseWidget*>(sgwidget);
-    if (tpw) dialog.setParentPhase(tpw->getParentPhase());
+    if (tpw) { dialog.setParentPhase(tpw->getParentPhase()); }
   }
   else if(dialog.getPhaseType() == DREAM3D::PhaseType::MatrixPhase)
   {
-//    MatrixPhaseWidget* mpw = qobject_cast<MatrixPhaseWidget*>(sgwidget);
+    //    MatrixPhaseWidget* mpw = qobject_cast<MatrixPhaseWidget*>(sgwidget);
   }
   else if(dialog.getPhaseType() == DREAM3D::PhaseType::BoundaryPhase)
   {
-//    BoundaryPhaseWidget* bpw = qobject_cast<BoundaryPhaseWidget*>(sgwidget);
+    //    BoundaryPhaseWidget* bpw = qobject_cast<BoundaryPhaseWidget*>(sgwidget);
   }
   int r = dialog.exec();
   if(r == QDialog::Accepted)
@@ -425,7 +410,7 @@ void StatsGeneratorUI::on_phaseTabs_tabCloseRequested ( int index )
     for (int p = 0; p < phaseTabs->count(); ++p)
     {
       SGWidget* sgwidget = qobject_cast<SGWidget*>(phaseTabs->widget(p));
-      sgwidget->setPhaseIndex(p+1);
+      sgwidget->setPhaseIndex(p + 1);
       sgwidget->setObjectName(sgwidget->getComboString());
     }
 
@@ -462,7 +447,7 @@ qint32 StatsGeneratorUI::checkDirtyDocument()
   if (isWindowModified() == true)
   {
     int r = QMessageBox::warning(this, tr("StatsGenerator"), tr("The Data has been modified.\nDo you want to save your changes?"), QMessageBox::Save
-        | QMessageBox::Default, QMessageBox::Discard, QMessageBox::Cancel | QMessageBox::Escape);
+                                 | QMessageBox::Default, QMessageBox::Discard, QMessageBox::Cancel | QMessageBox::Escape);
     if (r == QMessageBox::Save)
     {
       on_actionSave_triggered(); // Save the hdf5 file
@@ -490,7 +475,7 @@ qint32 StatsGeneratorUI::checkDirtyDocument()
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::on_actionClose_triggered()
 {
-  // std::cout << "RepresentationUI::on_actionClose_triggered" << std::endl;
+  // qDebug() << "RepresentationUI::on_actionClose_triggered" << "\n";
   qint32 err = -1;
   err = checkDirtyDocument();
   if (err >= 0)
@@ -538,9 +523,9 @@ bool StatsGeneratorUI::verifyPathExists(QString outFilePath, QLineEdit* lineEdit
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGeneratorUI::updateRecentFileList(const QString &file)
+void StatsGeneratorUI::updateRecentFileList(const QString& file)
 {
-  // std::cout << "IPHelperMainWindow::updateRecentFileList" << std::endl;
+  // qDebug() << "IPHelperMainWindow::updateRecentFileList" << "\n";
 
   // Clear the Recent Items Menu
   this->menu_RecentFiles->clear();
@@ -548,14 +533,14 @@ void StatsGeneratorUI::updateRecentFileList(const QString &file)
   // Get the list from the static object
   QStringList files = QRecentFileList::instance()->fileList();
   foreach (QString file, files)
-    {
-      QAction* action = new QAction(this->menu_RecentFiles);
-      action->setText(QRecentFileList::instance()->parentAndFileName(file));
-      action->setData(file);
-      action->setVisible(true);
-      this->menu_RecentFiles->addAction(action);
-      connect(action, SIGNAL(triggered()), this, SLOT(openRecentFile()));
-    }
+  {
+    QAction* action = new QAction(this->menu_RecentFiles);
+    action->setText(QRecentFileList::instance()->parentAndFileName(file));
+    action->setData(file);
+    action->setVisible(true);
+    this->menu_RecentFiles->addAction(action);
+    connect(action, SIGNAL(triggered()), this, SLOT(openRecentFile()));
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -563,12 +548,12 @@ void StatsGeneratorUI::updateRecentFileList(const QString &file)
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::openRecentFile()
 {
-  //std::cout << "QRecentFileList::openRecentFile()" << std::endl;
+  //qDebug() << "QRecentFileList::openRecentFile()" << "\n";
 
-  QAction *action = qobject_cast<QAction * > (sender());
+  QAction* action = qobject_cast<QAction* > (sender());
   if (action)
   {
-    //std::cout << "Opening Recent file: " << action->data().toString().toStdString() << std::endl;
+    //qDebug() << "Opening Recent file: " << action->data().toString() << "\n";
     QString file = action->data().toString();
     openFile(file);
   }
@@ -580,10 +565,10 @@ void StatsGeneratorUI::openRecentFile()
 void StatsGeneratorUI::on_actionSaveAs_triggered()
 {
   QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled";
-  QString h5file = QFileDialog::getSaveFileName(this, tr("Save DREAM3D File"),
-    proposedFile,
-    tr("DREAM3D Files (*.dream3d)") );
-  if ( true == h5file.isEmpty() ){ return;  }
+  QString h5file = QFileDialog::getSaveFileName(this, tr("Save DREAM.3D File"),
+                                                proposedFile,
+                                                tr("DREAM.3D Files (*.dream3d)") );
+  if ( true == h5file.isEmpty() ) { return;  }
   m_FilePath = h5file;
   QFileInfo fi (m_FilePath);
   QString ext = fi.suffix();
@@ -597,7 +582,7 @@ void StatsGeneratorUI::on_actionSaveAs_triggered()
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::on_action_OpenDREAM3D_triggered()
 {
-    QString appPath = qApp->applicationDirPath();
+  QString appPath = dream3dApp->applicationDirPath();
 
   QDir appDir = QDir(appPath);
   QString s("file://");
@@ -639,14 +624,15 @@ void StatsGeneratorUI::on_action_OpenDREAM3D_triggered()
 void StatsGeneratorUI::on_actionSave_triggered()
 {
   int err = 0;
-  //std::cout << "StatsGeneratorUI::on_actionSave_triggered()" << std::endl;
+  //qDebug() << "StatsGeneratorUI::on_actionSave_triggered()" << "\n";
   if (m_FileSelected == false)
   {
     //QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + m_FileName;
-    QString h5file = QFileDialog::getSaveFileName(this, tr("Save DREAM3D File"),
+    QString h5file = QFileDialog::getSaveFileName(this, tr("Save DREAM.3D File"),
                                                   m_FilePath,
-                                                   tr("DREAM3D Files (*.dream3d)") );
-    if ( true == h5file.isEmpty() ){ return;  }
+                                                  tr("DREAM.3D Files (*.dream3d)") );
+
+    if ( true == h5file.isEmpty() ) { return;  }
     m_FilePath = h5file;
     QFileInfo fi (m_FilePath);
     QString ext = fi.suffix();
@@ -660,22 +646,30 @@ void StatsGeneratorUI::on_actionSave_triggered()
     phaseFractionTotal += sgwidget->getPhaseFraction();
   }
 
-  int nPhases = phaseTabs->count();
-  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+  int nPhases = phaseTabs->count() + 1;
+  DataContainerArray::Pointer dca = DataContainerArray::New();
+  DataContainer::Pointer m = DataContainer::New(DREAM3D::Defaults::StatsGenerator);
+  dca->addDataContainer(m);
+  QVector<size_t> tDims(1, nPhases);
+  AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::AttributeMatrixType::CellEnsemble);
+  m->addAttributeMatrix(DREAM3D::Defaults::CellEnsembleAttributeMatrixName, cellEnsembleAttrMat);
+
   StatsDataArray::Pointer statsDataArray = StatsDataArray::New();
-  m->addEnsembleData(DREAM3D::EnsembleData::Statistics, statsDataArray);
+  statsDataArray->resize(nPhases);
+  cellEnsembleAttrMat->addAttributeArray(DREAM3D::EnsembleData::Statistics, statsDataArray);
 
-  UInt32ArrayType::Pointer crystalStructures = UInt32ArrayType::CreateArray(nPhases + 1, DREAM3D::EnsembleData::CrystalStructures);
-  crystalStructures->SetValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
-  m->addEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
+  QVector<size_t> cDims(1, 1);
+  UInt32ArrayType::Pointer crystalStructures = UInt32ArrayType::CreateArray(tDims, cDims, DREAM3D::EnsembleData::CrystalStructures);
+  crystalStructures->setValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
+  cellEnsembleAttrMat->addAttributeArray(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
 
-  UInt32ArrayType::Pointer phaseTypes = UInt32ArrayType::CreateArray(nPhases + 1, DREAM3D::EnsembleData::PhaseTypes);
-  phaseTypes->SetValue(0, DREAM3D::PhaseType::UnknownPhaseType);
-  m->addEnsembleData(DREAM3D::EnsembleData::PhaseTypes, phaseTypes);
+  UInt32ArrayType::Pointer phaseTypes = UInt32ArrayType::CreateArray(tDims, cDims, DREAM3D::EnsembleData::PhaseTypes);
+  phaseTypes->setValue(0, DREAM3D::PhaseType::UnknownPhaseType);
+  cellEnsembleAttrMat->addAttributeArray(DREAM3D::EnsembleData::PhaseTypes, phaseTypes);
 
   // Loop on all the phases
 
-  for(int i = 0; i < nPhases; ++i)
+  for(int i = 0; i < phaseTabs->count(); ++i)
   {
     SGWidget* sgwidget = qobject_cast<SGWidget*>(phaseTabs->widget(i));
     sgwidget->setTotalPhaseFraction(phaseFractionTotal);
@@ -704,7 +698,7 @@ void StatsGeneratorUI::on_actionSave_triggered()
       BoundaryStatsData::Pointer data = BoundaryStatsData::New();
       statsDataArray->setStatsData(i + 1, data);
     }
-    err = sgwidget->gatherStatsData(m);
+    err = sgwidget->gatherStatsData(cellEnsembleAttrMat);
     if(err < 0)
     {
       QString  msg("Could not save file due to an internal error gathering statistics.\nError code ");
@@ -714,18 +708,15 @@ void StatsGeneratorUI::on_actionSave_triggered()
     }
   }
 
-
-  hid_t fileId = H5Utilities::createFile (m_FilePath.toStdString());
-    // This will make sure if we return early from this method that the HDF5 File is properly closed.
-  HDF5ScopedFileSentinel scopedFileSentinel(fileId);
-
-  VoxelDataContainerWriter::Pointer writer = VoxelDataContainerWriter::New();
-  writer->setVoxelDataContainer(m.get());
-  writer->setHdfFileId(fileId);
+  DataContainerWriter::Pointer writer = DataContainerWriter::New();
+  writer->setDataContainerArray(dca);
+  writer->setOutputFile(m_FilePath);
+  writer->setWriteXdmfFile(false);
+  writer->setWritePipeline(false);
   writer->execute();
   // Force the clean up of the writer by assigning a NULL pointer which will
   // have the effect of executing the destructor of the H5StatsWriter Class
-  writer = VoxelDataContainerWriter::NullPointer();
+  writer = DataContainerWriter::NullPointer();
 
   setWindowTitle(m_FilePath + " - StatsGenerator");
   setWindowModified(false);
@@ -762,9 +753,9 @@ void StatsGeneratorUI::on_actionOpen_triggered()
 {
   QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.dream3d";
   QString h5file = QFileDialog::getOpenFileName(this,
-                  tr("Open Statistics File"),
-                  proposedFile,
-                  tr("DREAM3D Files (*.dream3d);;H5Stats Files(*.h5stats);;HDF5 Files(*.h5 *.hdf5);;All Files(*.*)"));
+                                                tr("Open Statistics File"),
+                                                proposedFile,
+                                                tr("DREAM3D Files (*.dream3d);;H5Stats Files(*.h5stats);;HDF5 Files(*.h5 *.hdf5);;All Files(*.*)"));
   if(true == h5file.isEmpty())
   {
     return;
@@ -773,7 +764,13 @@ void StatsGeneratorUI::on_actionOpen_triggered()
   SGApplication* app = qobject_cast<SGApplication*>(SGApplication::instance());
   // Create a new Window
   StatsGeneratorUI* window = app->createNewStatsGenerator();
-  window->openFile(h5file);
+  int err = window->openFile(h5file);
+  if (err < 0)
+  {
+    delete window;
+    window = NULL;
+    return;
+  }
 
   // Offset the window a bit from the current window
   QRect geometry = this->geometry();
@@ -791,19 +788,22 @@ void StatsGeneratorUI::on_actionOpen_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGeneratorUI::openFile(QString h5file)
+int StatsGeneratorUI::openFile(QString h5file)
 {
-  int err = 0;
   // Make sure the file path is not empty and does exist on the system
   if (true == h5file.isEmpty())
   {
-    return;
+    QString ss = QObject::tr("Input file was empty").arg(h5file);
+    QMessageBox::critical(this, QString("File Open Error"), ss , QMessageBox::Ok);
+    return -1;
   }
 
   QFileInfo fi(h5file);
   if (fi.exists() == false)
   {
-    return;
+    QString ss = QObject::tr("Input file does not exist").arg(fi.absoluteFilePath());
+    QMessageBox::critical(this, QString("File Open Error"), ss , QMessageBox::Ok);
+    return -2;
   }
 
   // Tell the RecentFileList to update itself then broadcast those changes.
@@ -815,105 +815,132 @@ void StatsGeneratorUI::openFile(QString h5file)
   m_FilePath = h5file;
   m_FileSelected = true;
 
-  std::string path;
-
-
   // Delete any existing phases from the GUI
   phaseTabs->clear();
 
-  // Instantiate a Reader object
-  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
-  {
-    // We are going to scope this next section so that we make sure the HDF5 file gets closed after the reading is complete
-    std::stringstream ss;
-    hid_t fileId = H5Utilities::openFile(m_FilePath.toStdString(), true); // Open the file Read Only
-    if(fileId < 0)
-    {
-      ss.str("");
-      ss << ": Error opening input file '" << m_FilePath.toStdString() << "'";
-      return;
-    }
-    // This will make sure if we return early from this method that the HDF5 File is properly closed.
-    HDF5ScopedFileSentinel scopedFileSentinel(fileId);
+  DataContainerArray::Pointer dca = DataContainerArray::New();
+  DataContainer::Pointer m = DataContainer::New(DREAM3D::Defaults::StatsGenerator);
+  dca->addDataContainer(m);
+  QVector<size_t> tDims(1, 0);
+  AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::AttributeMatrixType::CellEnsemble);
+  m->addAttributeMatrix(DREAM3D::Defaults::CellEnsembleAttributeMatrixName, cellEnsembleAttrMat);
 
-    VoxelDataContainerReader::Pointer reader = VoxelDataContainerReader::New();
-    reader->setHdfFileId(fileId);
-    reader->setVoxelDataContainer(m.get());
-    reader->setReadCellData(false);
-    reader->setReadFieldData(false);
-    reader->setReadEnsembleData(true);
-    reader->setReadAllArrays(true);
-    reader->execute();
-    err = reader->getErrorCondition();
-    if (err < 0)
-    {
-      this->statusBar()->showMessage("Error Reading the DREAM3D Data File");
-      return;
-    }
-  } // The HDF5 file will get properly closed when we move to the next line because the ScopedFileMonitor will go out of scope and close the file
+  hid_t fileId = QH5Utilities::openFile(h5file, true); // Open the file Read Only
+  if(fileId < 0)
+  {
+    QString ss = QObject::tr(": Error opening input file '%1'").arg(h5file);
+    QMessageBox::critical(this, QString("File Open Error"), ss , QMessageBox::Ok);
+    return -3;
+  }
+  // This will make sure if we return early from this method that the HDF5 File is properly closed.
+  HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
+  hid_t dcaGid = H5Gopen(fileId, DREAM3D::StringConstants::DataContainerGroupName.toLatin1().constData(), 0);
+  scopedFileSentinel.addGroupId(&dcaGid);
+
+  hid_t dcGid = H5Gopen(dcaGid, DREAM3D::Defaults::StatsGenerator.toLatin1().constData(), 0);
+  if(dcGid < 0)
+  {
+    QString title = QObject::tr("Error Opening Data Container");
+    QString msg = QObject::tr("Error opening default Data Container with name '%1'").arg(DREAM3D::Defaults::StatsGenerator);
+    QMessageBox::critical(this, title, msg, QMessageBox::Ok, QMessageBox::Ok);
+    return -4;
+  }
+  scopedFileSentinel.addGroupId(&dcGid);
+  hid_t amGid = H5Gopen(dcGid, DREAM3D::Defaults::CellEnsembleAttributeMatrixName.toLatin1().constData(), 0);
+  scopedFileSentinel.addGroupId(&amGid);
+
+
+  // We need to read one of the arrays to get the number of phases so that we can resize our attributeMatrix
+  UInt32ArrayType::Pointer phases = UInt32ArrayType::CreateArray(1, DREAM3D::EnsembleData::PhaseTypes);
+  int err = phases->readH5Data(amGid);
+  if (err < 0)
+  {
+
+    QString title = QObject::tr("Error Opening DataArray");
+    QString msg = QObject::tr("Error opening 'PhaseTypes' data array at location '%1/%2/%3/%4'").arg(DREAM3D::StringConstants::DataContainerGroupName)
+                  .arg(DREAM3D::Defaults::StatsGenerator).arg(DREAM3D::Defaults::CellEnsembleAttributeMatrixName).arg(DREAM3D::EnsembleData::PhaseTypes);
+    QMessageBox::critical(this, title, msg, QMessageBox::Ok, QMessageBox::Ok);
+    return -4;
+  }
+  tDims[0] = phases->getNumberOfTuples();
+  cellEnsembleAttrMat->resizeAttributeArrays(tDims);
+
+  cellEnsembleAttrMat->addAttributeArrayFromHDF5Path(amGid, "Statistics", false);
+  cellEnsembleAttrMat->addAttributeArrayFromHDF5Path(amGid, "CrystalStructures", false);
+  cellEnsembleAttrMat->addAttributeArrayFromHDF5Path(amGid, "PhaseTypes", false);
 
   // Get the number of Phases
-  size_t ensembles = m->getNumEnsembleTuples();
+  size_t ensembles = cellEnsembleAttrMat->getNumTuples();
 
-  typedef DataArray<unsigned int> PhaseTypeArrayType;
-  unsigned int* phaseTypes = m->getEnsembleDataSizeCheck<unsigned int, PhaseTypeArrayType, AbstractFilter>(DREAM3D::EnsembleData::PhaseTypes, ensembles, 1, NULL);
+  QProgressDialog progress("Opening Stats File....", "Cancel", 0, ensembles, this);
+  progress.setWindowModality(Qt::WindowModal);
+
+
+  IDataArray::Pointer iDataArray = cellEnsembleAttrMat->getAttributeArray(DREAM3D::EnsembleData::PhaseTypes);
+  unsigned int* phaseTypes = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
 
   // We should iterate on all the phases here to start setting data and creating
   // all of the StatsGenPhase Objects
   for (size_t phase = 1; phase < ensembles; ++phase)
   {
+    progress.setValue(phase);
+
+    if (progress.wasCanceled())
+    {
+      return -5;
+    }
+
     if(phaseTypes[phase] == DREAM3D::PhaseType::BoundaryPhase)
     {
-   //   BoundaryStatsData* bsd = BoundaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
+      progress.setLabelText("Opening Boundaray Phase...");
       BoundaryPhaseWidget* w = new BoundaryPhaseWidget(this);
       phaseTabs->addTab(w, w->getTabTitle());
-      w->extractStatsData(m, static_cast<int>(phase));
+      w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
     }
     else if(phaseTypes[phase] == DREAM3D::PhaseType::MatrixPhase)
     {
-   //   MatrixStatsData* msd = MatrixStatsData::SafePointerDownCast(statsDataArray[phase].get());
+      progress.setLabelText("Opening Matrix Phase...");
       MatrixPhaseWidget* w = new MatrixPhaseWidget(this);
       phaseTabs->addTab(w, w->getTabTitle());
-      w->extractStatsData(m, static_cast<int>(phase));
+      w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
     }
     if(phaseTypes[phase] == DREAM3D::PhaseType::PrecipitatePhase)
     {
-  //    PrecipitateStatsData* psd = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
+      progress.setLabelText("Opening Precipitate Phase...");
       PrecipitatePhaseWidget* w = new PrecipitatePhaseWidget(this);
       phaseTabs->addTab(w, w->getTabTitle());
-      w->extractStatsData(m, static_cast<int>(phase));
+      w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
     }
     if(phaseTypes[phase] == DREAM3D::PhaseType::PrimaryPhase)
     {
-   //   PrimaryStatsData* prisd = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
+      progress.setLabelText("Opening Primary Phase...");
       PrimaryPhaseWidget* w = new PrimaryPhaseWidget(this);
       phaseTabs->addTab(w, w->getTabTitle());
-      w->extractStatsData(m, static_cast<int>(phase));
+      w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
     }
     if(phaseTypes[phase] == DREAM3D::PhaseType::TransformationPhase)
     {
-    //  TransformationStatsData* tsd = TransformationStatsData::SafePointerDownCast(statsDataArray[phase].get());
+      progress.setLabelText("Opening Transformation Phase...");
       TransformationPhaseWidget* w = new TransformationPhaseWidget(this);
       phaseTabs->addTab(w, w->getTabTitle());
-      w->extractStatsData(m, static_cast<int>(phase));
+      w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
     }
     else
     {
 
     }
-
   }
+  progress.setValue(ensembles);
 
   // Now delete the first Phase from the Combo which was left over from something else
   phaseTabs->setCurrentIndex(0);
-  //on_deletePhase_clicked();
 
   // Set the window title correctly
   setWindowModified(false);
   QString windowTitle = QString("");
   windowTitle = windowTitle +  m_FilePath + QString(" - StatsGenerator");
   setWindowTitle(windowTitle);
-
+  return 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -932,7 +959,7 @@ void StatsGeneratorUI::adjustWindowTitle()
   setWindowModified(true);
 
   QString windowTitle("*");
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
   windowTitle = QString("");
 #endif
   windowTitle = windowTitle +  m_FilePath + QString(" - StatsGenerator");
@@ -946,7 +973,7 @@ void StatsGeneratorUI::adjustWindowTitle()
 void StatsGeneratorUI::on_actionAbout_triggered()
 {
   QString msg ("StatsGenerator Version ");
-  msg.append(DREAM3DLib::Version::Complete().c_str());
+  msg.append(DREAM3DLib::Version::Complete().toLatin1().data());
   msg.append("\n\nThe Primary Developers are:\n");
   msg.append("Dr. Michael Groeber\n  US Air Force Research Laboratory\n  michael.groeber@wpafb.af.mil\n");
   msg.append("Mr. Michael Jackson\n  BlueQuartz Software\n  mike.jackson@bluequartz.net\n\n");
@@ -963,7 +990,7 @@ void StatsGeneratorUI::on_actionLicense_Information_triggered()
   ApplicationAboutBoxDialog about(StatsGenerator::LicenseList, this);
   QString an = QCoreApplication::applicationName();
   QString version("");
-  version.append(DREAM3DLib::Version::PackageComplete().c_str());
+  version.append(DREAM3DLib::Version::PackageComplete().toLatin1().data());
   about.setApplicationInfo(an, version);
   about.exec();
 }
@@ -990,7 +1017,7 @@ QString StatsGeneratorUI::getFilePath()
 // -----------------------------------------------------------------------------
 QUrl StatsGeneratorUI::htmlHelpIndexFile()
 {
-  QString appPath = qApp->applicationDirPath();
+  QString appPath = dream3dApp->applicationDirPath();
 
   QDir helpDir = QDir(appPath);
   QString s("file://");
@@ -1011,7 +1038,7 @@ QUrl StatsGeneratorUI::htmlHelpIndexFile()
 
 
 
- #if defined(Q_OS_WIN)
+#if defined(Q_OS_WIN)
   QFileInfo fi( helpDir.absolutePath() + "/Help/DREAM3D/index.html");
   if (fi.exists() == false)
   {
@@ -1019,7 +1046,7 @@ QUrl StatsGeneratorUI::htmlHelpIndexFile()
     // Try up one more directory
     helpDir.cdUp();
   }
- #endif
+#endif
 
   s = s + helpDir.absolutePath() + "/Help/DREAM3D/index.html";
   return QUrl(s);
@@ -1047,14 +1074,14 @@ void StatsGeneratorUI::displayDialogBox(QString title, QString text, QMessageBox
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::on_actionStatsGenerator_Help_triggered()
 {
-   // m_HelpDialog->setContentFile(htmlHelpIndexFile());
-   QUrl url = htmlHelpIndexFile();
-   bool didOpen = QDesktopServices::openUrl(url);
-   if(false == didOpen)
-   {
-   //  std::cout << "Could not open URL: " << url.path().toStdString() << std::endl;
-       displayDialogBox(QString::fromStdString("Error Opening Help File"),
-         QString::fromAscii("DREAM3D could not open the help file path ") + url.path(),
-         QMessageBox::Critical);
-   }
+  // m_HelpDialog->setContentFile(htmlHelpIndexFile());
+  QUrl url = htmlHelpIndexFile();
+  bool didOpen = QDesktopServices::openUrl(url);
+  if(false == didOpen)
+  {
+    //  qDebug() << "Could not open URL: " << url.path() << "\n";
+    displayDialogBox(("Error Opening Help File"),
+                     QString::fromLatin1("DREAM3D could not open the help file path ") + url.path(),
+                     QMessageBox::Critical);
+  }
 }

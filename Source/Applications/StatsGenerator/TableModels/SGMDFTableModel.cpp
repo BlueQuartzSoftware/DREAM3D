@@ -1,46 +1,47 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
- * or promote products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 
 #include "SGMDFTableModel.h"
 
 #include <iostream>
 
-#include <QApplication>
-#include <QtGui/QStyleOptionComboBox>
-#include <QtGui/QAbstractItemDelegate>
+#include <QtWidgets/QStyleOptionComboBox>
+#include <QtWidgets/QAbstractItemDelegate>
+
+#include "Applications/DREAM3D/DREAM3DApplication.h"
 
 #include "StatsGenerator/Delegates/SGMDFItemDelegate.h"
 
@@ -48,8 +49,8 @@
 //
 // -----------------------------------------------------------------------------
 SGMDFTableModel::SGMDFTableModel(QObject* parent) :
-QAbstractTableModel(parent),
-m_RowCount(0)
+  QAbstractTableModel(parent),
+  m_RowCount(0)
 {
   m_ColumnCount = ColumnCount;
 }
@@ -65,9 +66,9 @@ SGMDFTableModel::~SGMDFTableModel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Qt::ItemFlags SGMDFTableModel::flags(const QModelIndex &index) const
+Qt::ItemFlags SGMDFTableModel::flags(const QModelIndex& index) const
 {
-  //  std::cout << "SGMDFTableModel::flags" << std::endl;
+  //  qDebug() << "SGMDFTableModel::flags" << "\n";
   if (!index.isValid())
   {
     return Qt::NoItemFlags;
@@ -75,7 +76,7 @@ Qt::ItemFlags SGMDFTableModel::flags(const QModelIndex &index) const
   Qt::ItemFlags theFlags = QAbstractTableModel::flags(index);
   if (index.isValid())
   {
-  //  theFlags |= Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+    //  theFlags |= Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
 
     int col = index.column();
     if (col == Angle)
@@ -98,7 +99,7 @@ Qt::ItemFlags SGMDFTableModel::flags(const QModelIndex &index) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVariant SGMDFTableModel::data(const QModelIndex &index, qint32 role) const
+QVariant SGMDFTableModel::data(const QModelIndex& index, qint32 role) const
 {
 
   if (!index.isValid())
@@ -116,21 +117,21 @@ QVariant SGMDFTableModel::data(const QModelIndex &index, qint32 role) const
       {
         contents.setText( QString("11.") );
         const QString header = headerData(Angle, Qt::Horizontal, Qt::DisplayRole).toString();
-        if (header.length() > contents.text().length()) contents.text() = header;
+        if (header.length() > contents.text().length()) { contents.text() = header; }
         break;
       }
       case Axis:
       {
         contents.setText( QString("1,1,1") );
         const QString header = headerData(Axis, Qt::Horizontal, Qt::DisplayRole).toString();
-        if (header.length() > contents.text().length()) contents.text() = header;
+        if (header.length() > contents.text().length()) { contents.text() = header; }
         break;
       }
       case Weight:
       {
         contents.setText( QString("11.") );
         const QString header = headerData(Weight, Qt::Horizontal, Qt::DisplayRole).toString();
-        if (header.length() > contents.text().length()) contents.text() = header;
+        if (header.length() > contents.text().length()) { contents.text() = header; }
         break;
       }
       default:
@@ -139,7 +140,7 @@ QVariant SGMDFTableModel::data(const QModelIndex &index, qint32 role) const
     QFontMetrics fontMetrics(data(index, Qt::FontRole) .value<QFont > ());
     comboBox.fontMetrics = fontMetrics;
     QSize size(fontMetrics.width(contents.text()), fontMetrics.height());
-    return qApp->style()->sizeFromContents(QStyle::CT_ComboBox, &comboBox, size);
+    return dream3dApp->style()->sizeFromContents(QStyle::CT_ComboBox, &comboBox, size);
   }
   else if (role == Qt::TextAlignmentRole)
   {
@@ -194,7 +195,7 @@ QVariant SGMDFTableModel::headerData(int section, Qt::Orientation orientation, i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGMDFTableModel::rowCount(const QModelIndex &index) const
+int SGMDFTableModel::rowCount(const QModelIndex& index) const
 {
   return index.isValid() ? 0 : m_RowCount;
 }
@@ -202,7 +203,7 @@ int SGMDFTableModel::rowCount(const QModelIndex &index) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGMDFTableModel::columnCount(const QModelIndex &index) const
+int SGMDFTableModel::columnCount(const QModelIndex& index) const
 {
   return index.isValid() ? 0 : m_ColumnCount;
 }
@@ -219,9 +220,9 @@ bool SGMDFTableModel::setHeaderData(int col, Qt::Orientation o, const QVariant& 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool SGMDFTableModel::setData(const QModelIndex & index, const QVariant & value, int role)
+bool SGMDFTableModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-  // std::cout << "SGMDFTableModel::setData " << value.toString().toStdString() << std::endl;
+  // qDebug() << "SGMDFTableModel::setData " << value.toString() << "\n";
   if (!index.isValid() || role != Qt::EditRole || index.row() < 0 || index.row() >= m_Angles.count() || index.column() < 0 || index.column()
       >= m_ColumnCount)
   {
@@ -301,13 +302,16 @@ bool SGMDFTableModel::removeRows(int row, int count, const QModelIndex& index)
 // -----------------------------------------------------------------------------
 QVector<float > SGMDFTableModel::getData(int col)
 {
-  if (col == Angle) {
-      return m_Angles;
+  if (col == Angle)
+  {
+    return m_Angles;
   }
-  else if (col == Weight) {
-      return m_Weights;
+  else if (col == Weight)
+  {
+    return m_Weights;
   }
-  else if (col == Axis) {
+  else if (col == Axis)
+  {
     int count = rowCount();
     QVector<float> values;
     float h = 0.0;
@@ -316,8 +320,9 @@ QVector<float > SGMDFTableModel::getData(int col)
     int err = 0;
     for (int r = 0; r < count; ++r)
     {
-      err = parseHKLRow(r, h,k,l);
-      if (err >= 0) {
+      err = parseHKLRow(r, h, k, l);
+      if (err >= 0)
+      {
         values.push_back(h);
         values.push_back(k);
         values.push_back(l);
@@ -331,15 +336,15 @@ QVector<float > SGMDFTableModel::getData(int col)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGMDFTableModel::parseHKLRow(int row, float &h, float &k, float &l)
+int SGMDFTableModel::parseHKLRow(int row, float& h, float& k, float& l)
 {
   QString hklStr = m_Axis[row];
   hklStr.chop(1); // remove the ">" charater from the end;
   hklStr.remove(0, 1); // Remove the front "<" character
   bool ok = false;
-  h = hklStr.section(',', 0,0).toFloat(&ok);
-  k = hklStr.section(',', 1,1).toFloat(&ok);
-  l = hklStr.section(',', 2,2).toFloat(&ok);
+  h = hklStr.section(',', 0, 0).toFloat(&ok);
+  k = hklStr.section(',', 1, 1).toFloat(&ok);
+  l = hklStr.section(',', 2, 2).toFloat(&ok);
   if (ok) { return 0; }
   return -1;
 }
@@ -368,14 +373,16 @@ float SGMDFTableModel::getDataValue(int col, int row)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGMDFTableModel::setColumnData(int col, QVector<float> &data)
+void SGMDFTableModel::setColumnData(int col, QVector<float>& data)
 {
   switch(col)
   {
     case Angle:
-      m_Angles = data; break;
+      m_Angles = data;
+      break;
     case Weight:
-      m_Weights = data;break;
+      m_Weights = data;
+      break;
     case Axis:
 //      m_Axis = data; break;
     default:
@@ -396,14 +403,15 @@ void SGMDFTableModel::setTableData(QVector<float> angles, QVector<float> axis, Q
   QModelIndex topLeft;
   QModelIndex botRight;
 
-  if (count > 0) {
+  if (count > 0)
+  {
     // Now mass insert the data to the table then emit that the data has changed
     beginInsertRows(QModelIndex(), row, row + count - 1);
     m_Angles = angles;
     m_Weights = weights;
 
     m_Axis.clear();
-    int h,k,l;
+    int h, k, l;
     for (int i = 0; i < axis.size(); ++i)
     {
       h = axis[i];
@@ -415,8 +423,8 @@ void SGMDFTableModel::setTableData(QVector<float> angles, QVector<float> axis, Q
 
     m_RowCount = count;
     endInsertRows();
-    QModelIndex topLeft = createIndex(0, 0);
-    QModelIndex botRight = createIndex(count-1, ColumnCount);
+    createIndex(0, 0);
+    createIndex(count - 1, ColumnCount);
   }
   emit dataChanged(topLeft, botRight);
 }
@@ -424,11 +432,11 @@ void SGMDFTableModel::setTableData(QVector<float> angles, QVector<float> axis, Q
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGMDFTableModel::setRowData(int row, float angle, std::string axis, float weight)
+void SGMDFTableModel::setRowData(int row, float angle, QString axis, float weight)
 {
-   m_Angles[row] = angle;
-   m_Axis[row] = QString::fromStdString(axis);
-   m_Weights[row] = weight;
+  m_Angles[row] = angle;
+  m_Axis[row] = (axis);
+  m_Weights[row] = weight;
 }
 
 // -----------------------------------------------------------------------------

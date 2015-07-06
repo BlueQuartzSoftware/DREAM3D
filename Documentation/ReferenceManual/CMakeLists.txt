@@ -8,7 +8,7 @@
 #
 # -----------------------------------------------------------------------------
 PROJECT(DREAM3DReferenceManual)
-cmake_minimum_required(VERSION 2.8.9)
+cmake_minimum_required(VERSION 3.1.0)
 
 if(NOT DEFINED PROJECT_RESOURCES_DIR)
 set(PROJECT_RESOURCES_DIR ${PROJECT_SOURCE_DIR}/Resources)
@@ -20,34 +20,41 @@ set(DOCUMENTATION_RESOURCES_DIR ${PROJECT_RESOURCES_DIR}/DocConfigFiles)
 #-------------------------------------------------------------------------------
 # Create the initial list of Files for DOxygen to process
 set(DOCUMENTATION_SOURCE_FILES
-  ${PROJECT_SOURCE_DIR}/Index.dox
-  ${PROJECT_SOURCE_DIR}/Acknowledgements.md
-  ${PROJECT_SOURCE_DIR}/DataStructure.md
-  ${PROJECT_SOURCE_DIR}/UserInterface.md
-  ${PROJECT_SOURCE_DIR}/CreatingPipeline.md
-  ${PROJECT_SOURCE_DIR}/ImportExportPipelines.md
-  ${PROJECT_SOURCE_DIR}/SupportedFileFormats/SupportedFileFormats.dox
-  ${PROJECT_SOURCE_DIR}/SupportedFileFormats/NativeDREAM3DFileFormat.md
-  ${PROJECT_SOURCE_DIR}/SupportedFileFormats/XdmfForVisualization.md
-  ${PROJECT_SOURCE_DIR}/SupportedFileFormats/MiscFileFormats.md
-  ${PROJECT_SOURCE_DIR}/SupportedFileFormats/H5EbsdFile.md
-  ${PROJECT_SOURCE_DIR}/Tutorials/Tutorials.dox
-  ${PROJECT_SOURCE_DIR}/Tutorials/EBSDReconstruction.md
-  ${PROJECT_SOURCE_DIR}/Tutorials/SurfaceMeshing.md
-  ${PROJECT_SOURCE_DIR}/Tutorials/SyntheticSinglePhase.md
-  ${PROJECT_SOURCE_DIR}/Tutorials/CroppingData.md
-  ${PROJECT_SOURCE_DIR}/Tutorials/DownloadingExampleData.md
-  ${PROJECT_SOURCE_DIR}/AuxiliaryTools/StatsGenerator.md
-  ${PROJECT_SOURCE_DIR}/AuxiliaryTools/AuxiliaryTools.dox
+  \"${PROJECT_SOURCE_DIR}/Index.dox\"
+  \"${PROJECT_SOURCE_DIR}/Acknowledgements.md\"
+  \"${PROJECT_SOURCE_DIR}/DataStructure.md\"
+  \"${PROJECT_SOURCE_DIR}/UsingDREAM3D/UsingDREAM3D.dox\"
+  \"${PROJECT_SOURCE_DIR}/UsingDREAM3D/UserInterface.md\"
+  \"${PROJECT_SOURCE_DIR}/UsingDREAM3D/CreatingPipeline.md\"
+  \"${PROJECT_SOURCE_DIR}/UsingDREAM3D/ImportExportPipelines.md\"
+  \"${PROJECT_SOURCE_DIR}/SupportedFileFormats/SupportedFileFormats.dox\"
+  \"${PROJECT_SOURCE_DIR}/SupportedFileFormats/NativeDREAM3DFileFormat.md\"
+  \"${PROJECT_SOURCE_DIR}/SupportedFileFormats/XdmfForVisualization.md\"
+  \"${PROJECT_SOURCE_DIR}/SupportedFileFormats/MiscFileFormats.md\"
+  \"${PROJECT_SOURCE_DIR}/SupportedFileFormats/H5EbsdFile.md\"
+  \"${PROJECT_SOURCE_DIR}/Tutorials/Tutorials.dox\"
+  \"${PROJECT_SOURCE_DIR}/Tutorials/EBSDReconstruction.md\"
+  \"${PROJECT_SOURCE_DIR}/Tutorials/SurfaceMeshing.md\"
+  \"${PROJECT_SOURCE_DIR}/Tutorials/SyntheticSinglePhase.md\"
+  \"${PROJECT_SOURCE_DIR}/Tutorials/CroppingData.md\"
+  \"${PROJECT_SOURCE_DIR}/AuxiliaryTools/StatsGenerator.md\"
+  \"${PROJECT_SOURCE_DIR}/AuxiliaryTools/DevHelper.md\"
+  \"${PROJECT_SOURCE_DIR}/AuxiliaryTools/PipelineRunner.md\"
+  \"${PROJECT_SOURCE_DIR}/AuxiliaryTools/AuxiliaryTools.dox\"
+  \"${PROJECT_SOURCE_DIR}/ReleaseNotes/ReleaseNotes.dox\"
+  \"${PROJECT_SOURCE_DIR}/ReleaseNotes/ReleaseNotes_6_0_0.md\"
+  \"${PROJECT_SOURCE_DIR}/ReleaseNotes/ReleaseNotes_6_1_0.md\"
 )
 
 set(DOXYGEN_IMAGE_DIRS
-  ${PROJECT_SOURCE_DIR}/Images
-  ${PROJECT_SOURCE_DIR}/SupportedFileFormats/Images
-  ${PROJECT_SOURCE_DIR}/Tutorials/Images
-  ${PROJECT_SOURCE_DIR}/Tutorials/CroppingImages
-  ${PROJECT_SOURCE_DIR}/AuxiliaryTools/Images
-)
+  \"${PROJECT_SOURCE_DIR}/Images\"
+  \"${PROJECT_SOURCE_DIR}/SupportedFileFormats/Images\"
+  \"${PROJECT_SOURCE_DIR}/UsingDREAM3D/Images\"
+  \"${PROJECT_SOURCE_DIR}/Tutorials/Images\"
+  \"${PROJECT_SOURCE_DIR}/Tutorials/CroppingImages\"
+  \"${PROJECT_SOURCE_DIR}/AuxiliaryTools/Images\"
+  \"${PROJECT_SOURCE_DIR}/AuxiliaryTools/Images/DevHelper\"
+  )
 
 #-------------------------------------------------------------------------------
 # Read the list of Groups back into CMake
@@ -76,10 +83,10 @@ foreach( group ${DREAM3D_DOC_GROUPS_FILE_LIST} )
   foreach(filterPath ${filter_path_list})
     get_filename_component(filter  ${filterPath} NAME_WE)
     get_filename_component(group_path ${filterPath} PATH)
-    list(APPEND DOXYGEN_IMAGE_DIRS ${group_path})
+    list(APPEND DOXYGEN_IMAGE_DIRS "\"${group_path}\"")
     string(TOLOWER ${filter} filter_Lower)
     file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox "@subpage ${filter_Lower}\n\n")
-    list(APPEND DOCUMENTATION_SOURCE_FILES ${filterPath})
+    list(APPEND DOCUMENTATION_SOURCE_FILES "\"${filterPath}\"")
   endforeach()
   list(REMOVE_DUPLICATES DOXYGEN_IMAGE_DIRS)
   file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox "*/\n\n")
@@ -89,8 +96,8 @@ file(REMOVE ${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList)
 
 set(DOCUMENTATION_SOURCE_FILES
     "${DOCUMENTATION_SOURCE_FILES}"
-    "${DREAM3DProj_BINARY_DIR}/createdarrayindex.md"
-  ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox
+  #  "${DREAM3DProj_BINARY_DIR}/createdarrayindex.md"
+     "\"${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox\""
 )
 
 
@@ -98,7 +105,7 @@ set(DOCUMENTATION_SOURCE_FILES
 include(${DOCUMENTATION_RESOURCES_DIR}/CMake/Macros.cmake)
 
 #---- Set some LATEX Varaibles
-set(LATEX_TITLE "DREAM.3D\\\\[0.45cm]User Manual and Filter Reference")
+set(LATEX_TITLE "DREAM.3D v6.0\\\\[0.45cm]User Manual and Filter Reference")
 set(LATEX_AUTHOR "DREAM3D Development Team")
 
 
@@ -109,7 +116,7 @@ set(LATEX_EPS_FILES
 
 
 if(DOX_GENERATE_LATEX)
-  ADD_DOXYGEN_TARGETS(PDF_FILENAME "DREAM3D_User_Manual"
+  ADD_DOXYGEN_TARGETS(PDF_FILENAME "DREAM3D_v6_User_Manual"
                      PROJECT_NAME  "${PROJECT_NAME}_LATEX"
                      PROJECT_BINARY_DIR "${PROJECT_BINARY_DIR}_LATEX"
                      SOURCE_FILES "${DOCUMENTATION_SOURCE_FILES}"
@@ -126,12 +133,12 @@ if(DOX_GENERATE_LATEX)
 endif()
 
 set(DOCUMENTATION_SOURCE_FILES
-        ${PROJECT_SOURCE_DIR}/Index.dox
+        \"${PROJECT_SOURCE_DIR}/Index.dox\"
         ${DOCUMENTATION_SOURCE_FILES})
 
 
 if(DOX_GENERATE_HTML)
-  ADD_DOXYGEN_TARGETS(PDF_FILENAME "DREAM3D User Manual"
+  ADD_DOXYGEN_TARGETS(PDF_FILENAME "DREAM.3D v6 User Manual"
                      PROJECT_NAME  "${PROJECT_NAME}_HTML"
                      PROJECT_BINARY_DIR "${PROJECT_BINARY_DIR}"
                      SOURCE_FILES "${DOCUMENTATION_SOURCE_FILES}"
@@ -167,14 +174,16 @@ endif()
 #-------------------------------------------------------------------------------
 # Make Sure this target is built so that the DREAM3D Application has access to
 # the HTML help files
-if(TARGET DREAM3D)
+if (TARGET DREAM3DReferenceManual_HTML AND TARGET DREAM3D)
   add_dependencies(DREAM3D DREAM3DReferenceManual_HTML)
-  add_dependencies(DREAM3DReferenceManual_HTML FilterWidgetsLib)
-
-  #- This installs all the help files. Note that we assume a flat directory structure
-  #- in the "Help" folder, ie, all html files, images, etc are all in the "Help"
-  #- folder and NOT in any subfolders beyond that.
-  install(DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Help/DREAM3D
-          DESTINATION Help/
-          COMPONENT Applications )
 endif()
+
+
+#- This installs all the help files. Note that we assume a flat directory structure
+#- in the "Help" folder, ie, all html files, images, etc are all in the "Help"
+#- folder and NOT in any subfolders beyond that.
+file(MAKE_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Help/DREAM3D)
+install(DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Help/DREAM3D
+        DESTINATION Help/
+        COMPONENT Applications )
+

@@ -1,52 +1,49 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
-
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #ifndef _CTFREADER_H_
 #define _CTFREADER_H_
 
-#include <string>
-#include <map>
-#include <vector>
-#include <fstream>
+#include <QtCore/QString>
+#include <QtCore/QMap>
+#include <QtCore/QVector>
+#include <QtCore/QFile>
+#include <QtCore/QtDebug>
 
-#include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdLib.h"
+#include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/EbsdReader.h"
 #include "CtfConstants.h"
@@ -71,10 +68,10 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
 
     EBSD_TYPE_MACRO_SUPER(CtfReader, EbsdReader)
 
-    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, Channel, Ebsd::Ctf::ChannelTextFile)
-    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, Prj, Ebsd::Ctf::Prj)
-    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, Author, Ebsd::Ctf::Author)
-    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, JobMode, Ebsd::Ctf::JobMode)
+    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, QString, Channel, Ebsd::Ctf::ChannelTextFile)
+    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, QString, Prj, Ebsd::Ctf::Prj)
+    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, QString, Author, Ebsd::Ctf::Author)
+    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, QString, JobMode, Ebsd::Ctf::JobMode)
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, XCells, Ebsd::Ctf::XCells)
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, YCells, Ebsd::Ctf::YCells)
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, ZCells, Ebsd::Ctf::ZCells)
@@ -84,7 +81,7 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, AcqE1, Ebsd::Ctf::AcqE1)
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, AcqE2, Ebsd::Ctf::AcqE2)
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, AcqE3, Ebsd::Ctf::AcqE3)
-    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, Euler, Ebsd::Ctf::Euler)
+    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, QString, Euler, Ebsd::Ctf::Euler)
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, Mag, Ebsd::Ctf::Mag)
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, Coverage, Ebsd::Ctf::Coverage)
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, Device, Ebsd::Ctf::Device)
@@ -93,7 +90,7 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, TiltAxis, Ebsd::Ctf::TiltAxis)
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, NumPhases, Ebsd::Ctf::NumPhases)
 
-    EBSD_INSTANCE_PROPERTY(std::vector<CtfPhase::Pointer>, PhaseVector)
+    EBSD_INSTANCE_PROPERTY(QVector<CtfPhase::Pointer>, PhaseVector)
 
     EBSD_POINTER_PROP(Phase, Phase, int)
     EBSD_POINTER_PROP(X, X, float)
@@ -115,24 +112,24 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
     EBSD_POINTER_PROP(GrainRandomColourB, GrainRandomColourB, int)
 
     /**
-     * @brief Returns the pointer to the data for a given field
-     * @param fieldName The name of the field to return the pointer to.
+     * @brief Returns the pointer to the data for a given feature
+     * @param featureName The name of the feature to return the pointer to.
      */
-    void* getPointerByName(const std::string &fieldName);
-    void setPointerByName(const std::string &name, void* p);
+    void* getPointerByName(const QString& featureName);
+    void setPointerByName(const QString& name, void* p);
 
 
 
     /**
      * @brief Returns an enumeration value that depicts the numerical
      * primitive type that the data is stored as (Int, Float, etc).
-     * @param fieldName The name of the field.
+     * @param featureName The name of the feature.
      */
-    Ebsd::NumType getPointerType(const std::string &fieldName);
-    int getTypeSize(const std::string &fieldName);
-    DataParser::Pointer getParser(const std::string &fieldName, void* ptr, size_t size);
+    Ebsd::NumType getPointerType(const QString& featureName);
+    int getTypeSize(const QString& featureName);
+    DataParser::Pointer getParser(const QString& featureName, void* ptr, size_t size);
 
-    std::vector<std::string> getColumnNames();
+    QList<QString> getColumnNames();
 
     /**
     * @brief Reads the complete HKL .ctf file.
@@ -163,26 +160,13 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
     virtual int getYDimension();
     virtual void setYDimension(int ydim);
 
-
-
-
-    virtual void printHeader(std::ostream &out);
+    virtual void printHeader(std::ostream& out);
 
   protected:
 
   private:
     int m_SingleSliceRead;
-    std::vector<void*>  m_ColumnData;
-    std::map<std::string, int> m_NameIndexMap;
-    std::map<std::string, void*> m_NamePointerMap;
-    std::vector<DataParser::Pointer> m_DataParsers;
-
-    /**
-     * @brief Breaks a string apart into string tokens using the delimiter
-     * @param buf
-     * @param delimiter
-     */
-    std::vector<std::string> tokenize(char* buf, char delimiter);
+    QMap<QString, DataParser::Pointer> m_NamePointerMap;
 
     /**
      * @brief
@@ -190,7 +174,7 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
      * @param headerLines
      * @return
      */
-    int getHeaderLines(std::ifstream &reader, std::vector<std::vector<std::string> > &headerLines);
+    int getHeaderLines(QFile& reader, QList<QByteArray>& headerLines);
 
     /**
     * Checks that the line is the header of the columns for the data.
@@ -200,18 +184,18 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
     * @return <code>true</code> if the line is the columns header line,
     *         <code>false</code> otherwise
     */
-    bool isDataHeaderLine(std::vector<std::string> &columns);
+    bool isDataHeaderLine(QVector<QString>& columns);
 
     /**
     *
     */
-    int parseHeaderLines(std::vector<std::vector<std::string> > &headerLines);
-	
-	/**
-     * @brief
-     * @param in The input file stream to read from
-     */
-    int readData(std::ifstream &in);
+    int parseHeaderLines(QList<QByteArray>& headerLines);
+
+    /**
+       * @brief
+       * @param in The input file stream to read from
+       */
+    int readData(QFile& in);
 
     /**
     * @brief Reads a line of Data from the ASCII based file
@@ -222,7 +206,7 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
     * @param yCells Number of Y Data Points
     * @param col The current Column of Data
     */
-    void parseDataLine(const std::string &line, size_t row, size_t col, size_t i, size_t xCells, size_t yCells );
+    void parseDataLine(QByteArray& line, size_t row, size_t col, size_t i, size_t xCells, size_t yCells );
 
     CtfReader(const CtfReader&); // Copy Constructor Not Implemented
     void operator=(const CtfReader&); // Operator '=' Not Implemented
@@ -230,3 +214,4 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
 
 
 #endif /* _CTFREADER_H_ */
+

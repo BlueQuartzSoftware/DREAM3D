@@ -1,41 +1,41 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 #ifndef _DREAM3D_MATH_H_
 #define _DREAM3D_MATH_H_
-/** @file EMMath.h
+/** @file DREAM3DMath.h
  * @brief This file performs the necessary including of <math.h> with certain
  * define constants (like M_PI) defined on all platforms.
  */
@@ -58,12 +58,14 @@
    BSD and Linux at least and other code may expect these).
 
    Microsoft doesn't define M_2PI ever, other compilers may lack some of these
-   too, hence the sequence as it is: load math.h, then see what's
-lacking still.
+   too, hence the sequence as it is: load math.h, then see what's lacking still.
 */
-//#define _USE_MATH_DEFINES 1
+#ifndef _USE_MATH_DEFINES
+#define _USE_MATH_DEFINES 1
+#endif
 #endif
 
+#include <stddef.h>
 #include <math.h>
 #include <vector>
 
@@ -138,6 +140,7 @@ namespace DREAM3D
     static const double k_PiOver180 = M_PI / 180.0;
     static const double k_360OverPi = 360.0 / M_PI;
     static const double k_180OverPi = 180.0 / M_PI;
+    static const double k_PiOver2 = M_PI / 2.0;
     static const double k_PiOver4 = M_PI / 4.0;
     static const double k_PiOver8 = M_PI / 8.0;
     static const double k_PiOver12 = M_PI / 12.0;
@@ -186,6 +189,43 @@ class DREAM3DMath
     static DREAM3DLib_EXPORT float incompletebetafe(float, float, float, float, float);
     static DREAM3DLib_EXPORT float incompletebetafe2(float, float, float, float, float);
     static DREAM3DLib_EXPORT float incompletebetaps(float, float, float, float);
+
+    /**
+     * @brief computes linear regression
+     * @param fit slope
+     * @param fit intercept
+     * @param x values to fit
+     * @param y values to fit
+     * @return true if no errors encounterd in regression, false otherwise
+     */
+    template<typename T>
+    static bool linearRegression(double& slope, double& intercept, typename std::vector<T>& x, typename std::vector<T>& y)
+    {
+      //make sure x and y are same length
+      size_t count = x.size();
+      if(count != y.size())
+      {
+        slope = 0;
+        intercept = 0;
+        return false;
+      }
+
+      //compute sums
+      double sumX = 0, sumY = 0, sumX2 = 0, sumXY = 0;
+      for(size_t i = 0; i < count; i++)
+      {
+        sumX += static_cast<double> (x[i]);
+        sumY += static_cast<double> (y[i]);
+        sumX2 += static_cast<double> (x[i] * x[i]);
+        sumXY += static_cast<double> (x[i] * y[i]);
+      }
+
+      //fit line
+      slope = (static_cast<double>(count) * sumXY - sumX * sumY) / (static_cast<double>(count) * sumX2 - sumX * sumX);
+      intercept = (sumY - slope * sumX) / static_cast<double>(count);
+      return true;
+    }
+
     /**
      * @brief generates a linearly space array between 2 numbers (inclusive, assumes first number <= second number) [as matlabs linspace]
      * @param first number
@@ -204,3 +244,4 @@ class DREAM3DMath
 };
 
 #endif /* _EMMATH_H_ */
+

@@ -1,45 +1,44 @@
 /* ============================================================================
- * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 
 // C Includes
 #include <stdlib.h>
 #include <assert.h>
 
 // C++ Includes
-#include <string>
 #include <iostream>
 
 // TCLAP Includes
@@ -50,160 +49,168 @@
 #include <boost/assert.hpp>
 
 // Qt Includes
-#include "QtGui/QApplication"
-#include "QtCore/QSettings"
-
-
-// MXA Includes
-#include "MXA/Common/LogTime.h"
+#include <QtCore/QtDebug>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QString>
+#include <QtCore/QDir>
+#include <QtCore/QFile>
+#include <QtCore/QSettings>
 
 // DREAM3DLib includes
-#include "DREAM3DLib/DREAM3DVersion.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
-
-#include "FilterWidgets/FilterWidgetsLib.h"
-#include "PipelineBuilder/FilterWidgetManager.h"
-#include "PipelineBuilder/IFilterWidgetFactory.h"
-
-
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int main (int argc, char  *argv[])
-{
-
-  QuatF q = QuaternionMathF::NewXYZW(0.565907, -0.24196, 0.106982, -0.7808710);
-  float euler[3] = {0.0, 0.0, 0.0};
-
-
-  OrientationMath::QuattoEuler(q, euler[0], euler[1], euler[2]);
-
-//2.6014, 1.32595, 3.40947
-  std::cout << "Quat:  " << q.x << ", " << q.y << ", " << q.z << ", " << q.w << std::endl;
-  std::cout << "Euler: " << euler[0] << ", " << euler[1] << ", "  << euler[2] << std::endl;
-}
-
-
-#if 0
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int main (int argc, char  *argv[])
-{
-  QApplication app(argc, argv);
-
-  FilterWidgetsLib::RegisterKnownQFilterWidgets();
-
-
-
-
-  FilterWidgetManager::Pointer wm = FilterWidgetManager::Instance();
-
-  FilterWidgetManager::Collection allFactories = wm->getFactories();
-
-
-  for(FilterWidgetManager::Collection::iterator iter = allFactories.begin(); iter != allFactories.end(); ++iter)
-  {
-    QString filterName = QString::fromStdString((*iter).first);
-    std::cout << "Writing " << filterName.toStdString() << std::endl;
-    IFilterWidgetFactory::Pointer wf = (*iter).second;
-    if (NULL == wf) { return EXIT_FAILURE;}
-    QFilterWidget* w = wf->createWidget();
-    QString filePath = QString("/tmp/") + filterName + QString(".ini");
-    QSettings prefs(filePath, QSettings::IniFormat, NULL);
-    prefs.beginGroup(QString("FILTER_NUMBER"));
-    w->writeOptions(prefs);
-    prefs.endGroup();
-
-  }
-
-
-  return EXIT_SUCCESS;
-}
-
-
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/DREAM3DLibVersion.h"
+#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/FilterManager.h"
+#include "DREAM3DLib/Common/FilterFactory.hpp"
+#include "DREAM3DLib/Common/FilterPipeline.h"
+#include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
+#include "DREAM3DLib/Plugin/DREAM3DPluginLoader.h"
+#include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/H5FilterParametersReader.h"
+#include "DREAM3DLib/FilterParameters/JsonFilterParametersReader.h"
+#include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void readSettings(QSettings &prefs)
+void readPipeline(QFilterParametersReader::Pointer paramsReader, FilterPipeline::Pointer pipeline)
 {
-
-  //PipelineViewWidget viewWidget;
-
-  prefs.beginGroup("PipelineBuilder");
-
+  FilterManager* filtManager = FilterManager::Instance();
+  QSettings* prefs = paramsReader->getPrefs();
+  prefs->beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
   bool ok = false;
-  int filterCount = prefs.value("Number_Filters").toInt(&ok);
-  prefs.endGroup();
-
+  int filterCount = prefs->value("Number_Filters").toInt(&ok);
+  prefs->endGroup();
   if (false == ok) {filterCount = 0;}
+
   for (int i = 0; i < filterCount; ++i)
   {
     QString gName = QString::number(i);
 
-    prefs.beginGroup(gName);
+    // Open the group to get the name of the filter then close again.
+    prefs->beginGroup(gName);
+    QString filterName = prefs->value("Filter_Name", "").toString();
+    prefs->endGroup();
+    //  qDebug() << filterName;
 
-    QString filterName = prefs.value("Filter_Name", "").toString();
+    IFilterFactory::Pointer factory = filtManager->getFactoryForFilter(filterName);
+    AbstractFilter::Pointer filter = factory->create();
 
-    std::cout << "Adding Filter " << filterName.toStdString() << std::endl;
-//    QFilterWidget* w = viewWidget.addFilter(filterName); // This will set the variable m_SelectedFilterWidget
-//    if(w) {
-//      w->blockSignals(true);
-//      w->readOptions(prefs);
-//      w->blockSignals(false);
-//      //w->emitParametersChanged();
-//    }
-    prefs.endGroup();
+    if(NULL != filter.get())
+    {
+      filter->readFilterParameters(paramsReader.get(), i);
+      pipeline->pushBack(filter);
+    }
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int main (int argc, char const *argv[])
+int main (int argc, char*  argv[])
 {
-   // This code is NOT READY to run AT ALL. IT was just a PLACE TO START
-  BOOST_ASSERT(false);
-  QString configFile;
 
+  // Instantiate the QCoreApplication that we need to get the current path and load plugins.
+  QCoreApplication app(argc, argv);
+  QCoreApplication::setOrganizationName("BlueQuartz Software");
+  QCoreApplication::setOrganizationDomain("bluequartz.net");
+  QCoreApplication::setApplicationName("PipelineRunner");
+
+  std::cout << "PipelineRunner Starting. Version " << DREAM3DLib::Version::PackageComplete().toStdString() << std::endl;
+
+
+  // Register all the filters including trying to load those from Plugins
+  FilterManager* fm = FilterManager::Instance();
+  DREAM3DPluginLoader::LoadPluginFilters(fm);
+
+  // Send progress messages from PipelineBuilder to this object for display
+  QMetaObjectUtilities::RegisterMetaTypes();
+
+  QString pipelineFile;
   try
   {
+    // Handle program options passed on command line.
+    TCLAP::CmdLine cmd("PipelineRunner", ' ', DREAM3DLib::Version::Complete().toStdString());
 
-   // Handle program options passed on command line.
-    TCLAP::CmdLine cmd("PipelineRunner", ' ', DREAM3DLib::Version::Complete());
-
-    TCLAP::ValueArg<std::string> inputFileArg( "c", "config", "The text file containing the pipeline information.", true, "", "Pipeline Config File");
-    cmd.add(inputFileArg);
-
+    TCLAP::ValueArg<std::string> pipelineFileArg( "p", "pipeline", "Pipeline File", true, "", "Pipeline Input File (*.txt or *.ini)");
+    cmd.add(pipelineFileArg);
 
     // Parse the argv array.
     cmd.parse(argc, argv);
     if (argc == 1)
     {
-      std::cout << "PipelineRunner program was not provided any arguments. Use the --help argument to show the help listing." << std::endl;
+      qDebug() << "PipelineRunner program was not provided any arguments. Use the --help argument to show the help listing.";
       return EXIT_FAILURE;
     }
-
-    configFile = QString::fromStdString(inputFileArg.getValue());
-
-
+    // Extract the file path passed in by the user.
+    pipelineFile = QString::fromStdString(pipelineFileArg.getValue());
   }
-  catch (TCLAP::ArgException &e) // catch any exceptions
+  catch (TCLAP::ArgException& e) // catch any exceptions
   {
-    std::cerr << logTime() << " error: " << e.error() << " for arg " << e.argId() << std::endl;
+    std::cerr << " error: " << e.error() << " for arg " << e.argId();
     return EXIT_FAILURE;
   }
 
 
-  // Create the QSettings Object
-  QSettings prefs(configFile, QSettings::IniFormat, NULL);
-  readSettings(prefs);
 
+
+  int err = 0;
+
+  // Sanity Check the filepath to make sure it exists, Report an error and bail if it does not
+  QFileInfo fi(pipelineFile);
+  if(fi.exists() == false)
+  {
+    std::cout << "The input file '" << pipelineFile.toStdString() << "' does not exist" << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  // Use the static method to read the Pipeline file and return a Filter Pipeline
+  QString ext = fi.completeSuffix();
+
+  FilterPipeline::Pointer pipeline;
+  if (ext == "ini" || ext == "txt")
+  {
+    pipeline = QFilterParametersReader::ReadPipelineFromFile(pipelineFile, QSettings::IniFormat);
+  }
+  else if (ext == "dream3d")
+  {
+    pipeline = H5FilterParametersReader::ReadPipelineFromFile(pipelineFile);
+  }
+  else if (ext == "json")
+  {
+    pipeline = JsonFilterParametersReader::ReadPipelineFromFile(pipelineFile);
+  }
+  else
+  {
+    std::cout << "Unsupported pipeline file type. Exiting now." << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  if (NULL == pipeline.get())
+  {
+    std::cout << "An error occurred trying to read the pipeline file. Exiting now." << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  std::cout << "Pipeline COunt: " << pipeline->size() << std::endl;
+  Observer obs; // Create an Observer to report errors/progress from the executing pipeline
+  pipeline->addMessageReceiver(&obs);
+  // Preflight the pipeline
+  err = pipeline->preflightPipeline();
+  if (err < 0)
+  {
+    std::cout << "Errors preflighting the pipeline. Exiting Now." << std::endl;
+    return EXIT_FAILURE;
+  }
+  // Now actually execute the pipeline
+  pipeline->execute();
+  err = pipeline->getErrorCondition();
+  if (err < 0)
+  {
+    std::cout << "Error Condition of Pipeline: " << err << std::endl;
+    return EXIT_FAILURE;
+  }
   return EXIT_SUCCESS;
 }
-#endif
+

@@ -1,36 +1,40 @@
 H5EBSD Data File Specification {#h5ebsdfile}
 ================
 
-## Introduction
-The EBSD Data from multiple vendors is stored in a data file using the HDF5 file format library. Although the general layout of the HDF5 file is the same between vendors, there are details that are NOT the same between vendors, because each vendor chooses to save different types of data. The top-level datasets that deal with the basic volume information is the same for every file.
+DREAM.3D can store EBSD data from multiple vendors in a data file using the [HDF5](http://www.hdfgroup.org) file format library. Although the general layout of the HDF5 file is the same between vendors, there are details that are _not_ the same between vendors, because each vendor chooses to save different types of data. The top level datasets that deal with the basic volume information is the same for every file.
 
 
 
-## HDF5 File Layout
+## HDF5 File Layout ##
 
-### HDF5 Root Level Layout Specification
 
-| H5Ebsd Specification |   |  |
-|----------------------|---|--|
-|Root Level Datasets and Group | Attribute Name "FileVersion" Current Value="4" |   |
-| **Name** | **HDF5 Type** | **Value** |
-| Index | H5T\_NATIVE\_INT32 | List of all Slice index values |
-| EulerTransformationAngle | H5T\_NATIVE\_FLOAT |  |
-| EulerTransformationAngle | H5T\_NATIVE\_FLOAT |  |
+### HDF5 Root Level Layout Specification ###
+
+| Root Level Attributes | Type | Name/Comments/Default Value  |
+|----------|---------------|-----------|
+| FileVersion |  H5T\_NATIVE\_INT32   | Current Value="5"  |
+| EsdLibVersion | H5T\_STRING | Optional value that states what version of the library wrote the file |
+
+
+| Root Level Data sets | HDF5 Type | Name/Comments/Default Value |
+|----------|---------------|-----------|
+| Index | An array of all the slice values. As of DREAM3D Version 5 this is not really used but could handy if the list of slices starts to get large.  |  |
+| EulerTransformationAngle | H5T\_NATIVE\_FLOAT | Degrees |
+| EulerTransformationAxis | H5T\_NATIVE\_FLOAT |  3x1 Array (Example 0,0,1)|
 | Manufacturer | H5T\_STRING | The **Manufacturer** currently is either _TSL_ or _HKL_ |
 | Max X Points | H5T\_NATIVE\_INT64 | The maximum number of X points in the sample grid |
 | Max Y Points | H5T\_NATIVE\_INT64 | The maximum number of Y points in the sample grid |
-| SampleTransformationAngle | H5T\_NATIVE\_FLOAT |  |
-| SampleTransformationAngle | H5T\_NATIVE\_FLOAT |  |
-| Stacking Order | H5T\_NATIVE\_UINT32 | Defines which slice corresponds to the Z=0 in the coordinate system. Optional Attribute of type H5T\_STRING, with Name "Name" and Value ("Low To High" or "High To Low") |
+| SampleTransformationAngle | H5T\_NATIVE\_FLOAT | Degrees |
+| SampleTransformationAxis | H5T\_NATIVE\_FLOAT |  3x1 Array (Example 0,0,1) |
+| Stacking Order | H5T\_NATIVE\_UINT32 | Defines which slice corresponds to the Z=0 in the coordinate system. 0=Low to High. 1 = High to Low. Optional Attribute of type H5T\_STRING, with Name "Name" and Value ("Low To High" or "High To Low") |
 | X Resolution | H5T\_NATIVE\_FLOAT | Resolution between sample points in the X direction |
 | Y Resolution | H5T\_NATIVE\_FLOAT | Resolution between sample points in the Y direction |
 | Z Resolution | H5T\_NATIVE\_FLOAT | Resolution between slices in the Z Direction |
 | ZEndIndex | H5T\_NATIVE\_INT64 | Starting Slice index |
 | ZStartIndex | H5T\_NATIVE\_INT64 | Ending Slice index (inclusive) |
-| Slice Data organized by Slice index |  |  |
+| Index | An array of all the slice values. As of DREAM3D Version 5 this is not really used but could handy if the list of slices starts to get large.  |  |
 
-### Slice Group Specification
+### Slice Group Specification ###
 Each Slice is grouped into its own H5G_GROUP with the Name of the group as the index of the slice. Within each slice group there are two (2) more groups with names **Data** and **Header**
 
 | **Name** | **HDF5 Type** | **Value** |
@@ -40,10 +44,10 @@ Each Slice is grouped into its own H5G_GROUP with the Name of the group as the i
 
 
 
-## TSL Specification
+## TSL Specification ##
  This section details the data to be imported from a .ang file into the .h5ebsd file.
  
-### TSL (.ang) Data Group Specification
+### TSL (.ang) Data Group Specification ###
 
 | **Name** | **HDF5 Type** | **Value** |
 |----------|---------------|-----------|
@@ -59,7 +63,7 @@ Each Slice is grouped into its own H5G_GROUP with the Name of the group as the i
 | Fit | H5T\_NATIVE\_FLOAT | Contains all the Fit of Solution data in a 1D Array with length equal to the total number of points. |
 
 
-### TSL (.ang) Header Group Specification
+### TSL (.ang) Header Group Specification ###
 
 
 | **Name** | **HDF5 Type** | **Value** |
@@ -84,7 +88,7 @@ Each Slice is grouped into its own H5G_GROUP with the Name of the group as the i
 | Phases | H5G_GROUP | Group that contains a subgroup for each phase where the name of each subgroup is the index of the phase starting at 1. |
 
 
-### TSL (.ang) Phase Group Specification
+### TSL (.ang) Phase Group Specification ###
 
 | **Name** | **HDF5 Type** | **Value** |
 |----------|---------------|-----------|
@@ -92,14 +96,14 @@ Each Slice is grouped into its own H5G_GROUP with the Name of the group as the i
 | Formula | H5T\_STRING |  |
 | Info | H5T\_STRING |  |
 | LatticeConstants | H5T\_NATIVE\_FLOAT |  |
-| LatticeConstants | H5T\_STRING |  |
+| Material Name | H5T\_STRING |  |
 | NumberFamilies | H5T\_NATIVE\_INT32 |  |
 | Phase | H5T\_NATIVE\_INT32 |  |
 | Symmetry | H5T\_NATIVE\_INT32 |  |
 | hklFamilies | H5G_GROUP | Contains all the HKL Family information where the number of datasets contained in this group is the number of HKL Families |
 
 
-### TSL (.ang) HKLFamily Group Specification
+### TSL (.ang) HKLFamily Group Specification ###
 
 | **Name** | **HDF5 Type** | **Value** |
 |----------|---------------|-----------|
@@ -107,20 +111,20 @@ Each Slice is grouped into its own H5G_GROUP with the Name of the group as the i
  
     typedef struct
     {
-        int h;@n
-        int k;@n
-        int l;@n
-        int s1;@n
-        float diffractionIntensity;@n
-        int s2;@n
+        int h;
+        int k;
+        int l;
+        int s1;
+        float diffractionIntensity;
+        int s2;
     } HKLFamily_t;
 
 ---------------
 
-## HKL Specification
+## HKL Specification  ##
  This section details the data to be imported from a .ctf file into the .h5ebsd file
 
-### HKL (.ctf) Data Group Specification
+### HKL (.ctf) Data Group Specification ###
 1D Array of Values, where the number of elements in the array is equal to the total number of points per 2D Slice.
 
 | **Name** | **HDF5 Type** | **Value** |
@@ -143,7 +147,7 @@ Each Slice is grouped into its own H5G_GROUP with the Name of the group as the i
 | GrainRandomColourB | H5T\_NATIVE\_UINT8 |  |
 
 
-### HKL (.ctf) Header Specification
+### HKL (.ctf) Header Specification ###
 
 | **Name** | **HDF5 Type** | **Value** |
 |----------|---------------|-----------|
@@ -170,7 +174,7 @@ Each Slice is grouped into its own H5G_GROUP with the Name of the group as the i
 | Phases | H5G_GROUP | Group that contains a subgroup for each phase where the name of each subgroup is the index of the phase starting at **1.** |
 
 
-### HKL (.ctf) Phase Group Specification
+### HKL (.ctf) Phase Group Specification ###
 
 | **Name** | **HDF5 Type** | **Value** |
 |----------|---------------|-----------|
@@ -185,9 +189,9 @@ Each Slice is grouped into its own H5G_GROUP with the Name of the group as the i
 
 
 
-## Stacking Order Discussion
+## Stacking Order Discussion ##
 
-The **Stacking Order** refers to the order in which the z slices are stacked together when they are read from the file. The enumerations are also in the EbsdLibConstants.h header file.
+The _stacking order_ refers to the order in which the z slices are stacked together when they are read from the file. The enumerations are also in the EbsdLibConstants.h header file.
 
 As a further explanation, if the ordering is **Low To High**, then the slice with the lowest number is positioned at Z=0 in 3D Cartesian space. For example, if your data set is numbered from 23 to 86 with file names of the form Slice\_023.ang and you select "Low To High", then the data inside of file Slice\_023.ang will be positioned at Z=0 during any method that has to deal with the data. The opposite of this is if the user were to select to have their data **High to Low**, in which case, the file with name Slice\_086.ang will be positioned at Z=0 and the file with name "Slice_023.ang" will be positioned at Z=64.
 

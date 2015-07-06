@@ -1,90 +1,54 @@
-WritePoleFigure {#writepolefigure}
-=====
-
+Write Pole Figure Images {#writepolefigure}
+=============
 
 ## Group (Subgroup) ##
-IOFilters (Output)
-
+IO (Output)
 
 ## Description ##
-This filter creates standard pole figure images for the microstructure that is being analyzed. The filter uses Euler Angles which MUST be in radians to work correctly. The filter also requires the Crystal Structures ensemble array and the Cell Phases data array.
+This **Filter** creates a standard pole figure image for each **Ensemble** in a selected **Data Container** with an **Image Geometry**. The **Filter** uses Euler angles in radians and requires the crystal structures for each **Ensemble** array and the corresponding **Ensemble** Ids on the **Cells**. The **Filter** also requires a _mask_ array to determine which **Cells** are valid for the pole figure computation.
 
-If the "Good Voxels" array has been created from another filter this filter will use that information to determine if a voxel's Euler Angle data should be added to the array that will be used for the calculation of the Pole Figure. Allowing the use of non-indexed EBSD data (which shows up as Bad Data) will cause errors or undefined behavior in this filter. The user is strongly cautioned to understand their data and where it comes from before running this filter.
+The pole figure algorithm uses a _modified Lambert square_ to perform the interpolations onto the circle. This is an alternate type of interpolation that the EBSD OEMs do not perform which may make the output from DREAM.3D look slightly different than output obtained from the OEM programs.
 
+**Only an advanced user with intimate knowledge of the modified Lambert projection should attempt to change the value for the "Lambert Image Size (Pixels)" input parameter.**
 
-## Crystal Symmetry Implementations ##
+-----
 
+![Example Pole Figure Using Square Layout](images/PoleFigure_Example.png)
+@image latex images/PoleFigure_Example.png "Example Pole Figure Using Square Layout" width=6in
 
-| Symmetry | Laue Group   | Implemented |
-|-------------|-----|------|
-| Triclinic | -1 | Yes |
-| Monoclinic | -2/m| Yes |
-| Orthorhombic | mmm | Yes |
-| Tetragonal-Low | 4/m | No |
-| Tetragonal-High |4/mmm | No |
-| Trigonal-Low | -3 | No |
-| Trigonal-High  | -3m | No |
-| Hexagonal-Low  |6/m| Yes |
-| Hexagonal-High  | 6/mmm | Yes |
-| Cubic-Low (Tetrahedral) |m3 | Yes |
-| Cubic Cubic-High | m3m | Yes |
-
-## Example Output Image ##
-
-![Example Random Texture Pole Figure: Data Courtesey of [1]](images/PoleFigure_Random.png)
-
-
-![Example Textured Pole Figure: Data courtesy of [2] ](images/PoleFigure_Textured.png)
-
-
-## Notes  ##
-
-The implementation for the Pole Figure is to use a modified Lambert projection algorithm. This type of algorithm is new and has NOT been proven or accepted by the greater materials community. We are including it here to solicit the community for comments.
-
-
+-----
 
 ## Parameters ##
+| Name | Type | Description |
+|------|------| ----------- |
+| Image Format | Enumeration | Image file format to write. Currently supports .tif, .bmp, and .png file formats |
+| Lambert Image Size (Pixels) | int32_t | Size of the Lambert square in pixels |
+| Number of Colors | int32_t | Number of colors to use to make the pole figure |
+| Image Layout | Enumeration | Layout for the resulting pole figure images, either square, horizontal, or vertical |
+| Image Prefix | String | Prefix the prepend each pole figure file with |
+| Output Path | File Path | Output directory path for images |
+| Image Size (Square Pixels) | int32_t | Size of the output image in square pixels |
+ 
+## Required Geometry ##
+Image
 
+## Required Objects ##
+| Kind | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| **Cell Attribute Array** | EulerAngles | float | (3)  | Three angles defining the orientation of the **Cell** in Bunge convention (Z-X-Z) |
+| **Cell Attribute Array** | Phases | int32_t | (1) | Specifies to which **Ensemble** each **Cell** belongs |
+| **Cell Attribute Array** | Mask | bool | (1) | Used to define **Cells** as *good* or *bad* |
+| **Ensemble Attribute Array** | CrystalStructures | uint32_t | (1) | Enumeration representing the crystal structure for each **Ensemble** |
 
-| Name             | Type |
-|------------------|------|
-| Output Path | String |
-| Image Type | Constant Value |
-| Image Prefix| String |
-| Size of Image | Int (Pixels) |
-
-
-## Required Arrays ##
-
-| Type | Default Array Name | Description | Comment |
-|------|--------------------|-------------|---------|
-| Int  | Phases           | ....        | other   |
-| Float x 3  | Eulers           | ....        | Must be in Radians   |
-|   Int | Crystal Structures           | ....        | Ensemble Array   |
-
-
-## Created Arrays ##
-
+## Created Objects ##
 None
 
 
+## License & Copyright ##
 
-## Authors ##
+Please see the description file distributed with this **Plugin**
 
-**Copyright** 2012 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)
+## DREAM.3D Mailing Lists ##
 
-**Contact Info** dream3d@bluequartz.net
+If you need more help with a **Filter**, please consider asking your question on the [DREAM.3D Users Google group!](https://groups.google.com/forum/?hl=en#!forum/dream3d-users)
 
-**Version** 1.0.0
-
-**License**  See the License.txt file that came with DREAM3D.
-
-## References ##
-
-[1] Groeber M, Haley BK, , Uchic MD, Dimiduk DM, Ghosh S: 3D reconstruction and characterization of polycrystalline microstructures using a FIB–SEM system Data Sets. Materials Characterization 2006, 57:259—-273.
-
-[2] Nathalie Allain-Bonasso, Francis Wagner, Stéphane Berbenni, David P. Field, A study of the heterogeneity of plastic deformation in IF steel by EBSD, Materials Science and Engineering: A, Volume 548, 30 June 2012, Pages 56-63, ISSN 0921-5093, http://dx.doi.org/10.1016/j.msea.2012.03.068.
-(http://www.sciencedirect.com/science/article/pii/S0921509312004388)
-
-
-See a bug? Does this documentation need updated with a citation? Send comments, corrections and additions to [The DREAM3D development team](mailto:dream3d@bluequartz.net?subject=Documentation%20Correction)

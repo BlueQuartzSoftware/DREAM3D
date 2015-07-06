@@ -14,7 +14,16 @@
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
-   <property name="margin">
+   <property name="leftMargin">
+    <number>4</number>
+   </property>
+   <property name="topMargin">
+    <number>4</number>
+   </property>
+   <property name="rightMargin">
+    <number>4</number>
+   </property>
+   <property name="bottomMargin">
     <number>4</number>
    </property>
    <item>
@@ -100,7 +109,7 @@ font-size: 150%;
         </widget>
        </item>
        <item>
-        <layout class="QGridLayout" name="gridLayout">
+        <layout class="QGridLayout" name="widgetLayout">
          <item row="0" column="0">
           <widget class="QLabel" name="label">
            <property name="styleSheet">
@@ -393,21 +402,36 @@ font-size: 12px;
          </item>
          <item row="1" column="5">
           <widget class="QLabel" name="label_9">
-           <property name="text">
-            <string/>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
            </property>
-           <property name="pixmap">
-            <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/MaxCutOff_Eqn.png</pixmap>
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;x&lt;/span&gt;&lt;span style=&quot; font-size:24pt; vertical-align:super;&quot;&gt;(μ + max * σ)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
          <item row="0" column="5">
           <widget class="QLabel" name="label_10">
-           <property name="text">
-            <string/>
+           <property name="maximumSize">
+            <size>
+             <width>1431324</width>
+             <height>16777215</height>
+            </size>
            </property>
-           <property name="pixmap">
-            <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/MinCutOff_Eqn.png</pixmap>
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;x&lt;/span&gt;&lt;span style=&quot; font-size:24pt; vertical-align:super;&quot;&gt;(μ + min * σ)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="textFormat">
+            <enum>Qt::RichText</enum>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -458,7 +482,16 @@ font-size: 12px;
        <string>Omega 3 Distributions</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_4">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>4</number>
+       </property>
+       <property name="topMargin">
+        <number>4</number>
+       </property>
+       <property name="rightMargin">
+        <number>4</number>
+       </property>
+       <property name="bottomMargin">
         <number>4</number>
        </property>
        <item>
@@ -471,7 +504,16 @@ font-size: 12px;
        <string>Shape Distributions</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_3">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>4</number>
+       </property>
+       <property name="topMargin">
+        <number>4</number>
+       </property>
+       <property name="rightMargin">
+        <number>4</number>
+       </property>
+       <property name="bottomMargin">
         <number>4</number>
        </property>
        <item>
@@ -489,7 +531,16 @@ font-size: 12px;
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
-           <property name="margin">
+           <property name="leftMargin">
+            <number>4</number>
+           </property>
+           <property name="topMargin">
+            <number>4</number>
+           </property>
+           <property name="rightMargin">
+            <number>4</number>
+           </property>
+           <property name="bottomMargin">
             <number>4</number>
            </property>
            <item>
@@ -509,7 +560,16 @@ font-size: 12px;
        <string>Neighbor Distributions</string>
       </attribute>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>4</number>
+       </property>
+       <property name="topMargin">
+        <number>4</number>
+       </property>
+       <property name="rightMargin">
+        <number>4</number>
+       </property>
+       <property name="bottomMargin">
         <number>4</number>
        </property>
        <item>
@@ -574,8 +634,6 @@ font-size: 12px;
   <tabstop>distributionTypeCombo</tabstop>
   <tabstop>scrollArea</tabstop>
  </tabstops>
- <resources>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

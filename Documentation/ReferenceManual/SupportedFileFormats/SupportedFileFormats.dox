@@ -1,15 +1,15 @@
 /*!
 
 @page supportedfileformats Supported File Formats
-DREAM3D supports the reading from and writing to a number of different file formats from data acquisition systems to visualization systems. The various file formats are discussed in this section.
+DREAM.3D supports reading from and writing to a number of different file formats. The various file formats are discussed in this section.
 
 @subpage nativedream3d 
 
-A discussion of the native DREAM3D file format based on HDF5.
+Discussion of the native DREAM.3D file format based on HDF5
 
 @subpage h5ebsdfile
 
-A discussion of the H5EBSD file format
+Discussion of the H5EBSD file format
  
 @subpage xdmf 
 
@@ -17,6 +17,6 @@ How to use the Xdmf wrapper for visualizing data with ParaView
 
 @subpage miscfileformats
 
-This sections lists the various file formats that can be used as import and export of data.
+This sections lists the various file formats that can be used to import and export of data
 
 */

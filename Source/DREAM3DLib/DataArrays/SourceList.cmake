@@ -12,11 +12,11 @@
 set(DREAM3DLib_DataArrays_HDRS
   ${DREAM3DLib_SOURCE_DIR}/DataArrays/DataArray.hpp
   ${DREAM3DLib_SOURCE_DIR}/DataArrays/IDataArray.h
-  ${DREAM3DLib_SOURCE_DIR}/DataArrays/ManagedArrayOfArrays.hpp
+  ${DREAM3DLib_SOURCE_DIR}/DataArrays/NeighborList.hpp
   ${DREAM3DLib_SOURCE_DIR}/DataArrays/StatsDataArray.h
   ${DREAM3DLib_SOURCE_DIR}/DataArrays/StringDataArray.hpp
   ${DREAM3DLib_SOURCE_DIR}/DataArrays/StructArray.hpp
-  ${DREAM3DLib_SOURCE_DIR}/DataArrays/NeighborList.hpp
+  ${DREAM3DLib_SOURCE_DIR}/DataArrays/DynamicListArray.hpp
 )
 
 set(DREAM3DLib_DataArrays_SRCS
@@ -26,6 +26,6 @@ set(DREAM3DLib_DataArrays_SRCS
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/DataArrays" "${DREAM3DLib_DataArrays_HDRS}" "${DREAM3DLib_DataArrays_SRCS}" "0")
 if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${DREAM3DLib_DataArrays_HDRS}
-            DESTINATION include/DREAM3D/Common
+            DESTINATION include/DREAM3D/DataArrays
             COMPONENT Headers   )
 endif()

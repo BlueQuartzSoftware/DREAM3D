@@ -1,39 +1,46 @@
 /* ============================================================================
- * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FILTERPIPELINE_H_
-#define FILTERPIPELINE_H_
 
+#ifndef _FILTERPIPELINE_H_
+#define _FILTERPIPELINE_H_
 
-#include <string>
-#include <list>
+#include <QtCore/QObject>
+#include <QtCore/QString>
+#include <QtCore/QList>
+#include <QtCore/QTextStream>
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -46,20 +53,22 @@
  * @brief  This class holds the list of filters that will be run. This should be
  * the class (or a subclass) that you use to build up a pipeline in order to run
  * it.
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Sep 28, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT FilterPipeline : public Observer
+class DREAM3DLib_EXPORT FilterPipeline : public QObject
 {
+    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+
   public:
     DREAM3D_SHARED_POINTERS(FilterPipeline)
-    DREAM3D_TYPE_MACRO_SUPER(FilterPipeline, Observer)
+    DREAM3D_TYPE_MACRO(FilterPipeline)
     DREAM3D_STATIC_NEW_MACRO(FilterPipeline)
 
     virtual ~FilterPipeline();
 
-    typedef std::list<AbstractFilter::Pointer>  FilterContainerType;
+    typedef QList<AbstractFilter::Pointer>  FilterContainerType;
 
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
     DREAM3D_INSTANCE_PROPERTY(AbstractFilter::Pointer, CurrentFilter)
@@ -70,10 +79,6 @@ class DREAM3DLib_EXPORT FilterPipeline : public Observer
     virtual void setCancel(bool value);
     virtual bool getCancel();
 
-    /**
-     * @brief This method is called to start the pipeline for a plugin
-     */
-    virtual void run();
 
     /**
      * @brief A pure virtual function that gets called from the "run()" method. Subclasses
@@ -86,12 +91,6 @@ class DREAM3DLib_EXPORT FilterPipeline : public Observer
      * execution of the pipeline
      */
     virtual int preflightPipeline();
-
-    /**
-     * @brief This method is called from the run() method just before exiting and
-     * signals the end of the pipeline execution
-     */
-    virtual void pipelineFinished();
 
 
     /**
@@ -112,24 +111,59 @@ class DREAM3DLib_EXPORT FilterPipeline : public Observer
     /**
      * @brief
      */
-    virtual AbstractFilter::Pointer removeFirstFilterByName(const std::string &name);
+    virtual AbstractFilter::Pointer removeFirstFilterByName(const QString& name);
 
 
-    virtual void printFilterNames(std::ostream &out);
+    virtual void printFilterNames(QTextStream& out);
 
+    /**
+     * @brief This method adds a QObject based class that is capable of being connected with the following signals from
+     * AbstractFilter:
+     * @li processPipelineMessage(PipelineMessage&)
+     * @param obj Class that implements needed processPipelineMessage(PipelineMessage&) method
+     */
+    void addMessageReceiver(QObject* obj);
 
+    void connectFilterNotifications(QObject* filter);
+    void disconnectFilterNotifications(QObject* filter);
+
+  public slots:
+
+    /**
+     * @brief This method is called to start the pipeline for a plugin
+     */
+    virtual void run();
+
+    /**
+     * @brief cancelPipeline
+     */
+    virtual void cancelPipeline();
 
   protected:
     FilterPipeline();
+
+
     void updatePrevNextFilters();
 
+  signals:
+    void pipelineGeneratedMessage(const PipelineMessage& message);
+
+    /**
+    * @brief This method is called from the run() method just before exiting and
+    * signals the end of the pipeline execution
+    */
+    void pipelineFinished();
 
   private:
     bool m_Cancel;
     FilterContainerType  m_Pipeline;
+
+    QVector<QObject*> m_MessageReceivers;
+
 
     FilterPipeline(const FilterPipeline&); // Copy Constructor Not Implemented
     void operator=(const FilterPipeline&); // Operator '=' Not Implemented
 };
 
 #endif /* FILTERPIPELINE_H_ */
+

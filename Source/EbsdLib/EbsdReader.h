@@ -1,44 +1,44 @@
 /* ============================================================================
- * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef EBSDREADER_H_
-#define EBSDREADER_H_
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <string>
-#include <map>
+#ifndef _EBSDREADER_H_
+#define _EBSDREADER_H_
 
+#include <QtCore/QString>
+#include <QtCore/QVector>
+#include <QtCore/QMap>
 
 #include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdLib.h"
@@ -52,7 +52,7 @@
  * can be written for those data files. The current subclasses are for TSL (.ang)
  * and HKL (.ctf) data files and their HDF5 versions also.
  *
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Aug 24, 2011
  * @version 1.0
  */
@@ -73,16 +73,16 @@ class EbsdLib_EXPORT EbsdReader
 
 
     /** @brief Allow the user to set the origin of the scan */
-    EBSD_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, UserZDir)
+    EBSD_INSTANCE_PROPERTY(uint32_t, UserZDir)
     EBSD_INSTANCE_PROPERTY(float, SampleTransformationAngle)
-    EBSD_INSTANCE_PROPERTY(std::vector<float>, SampleTransformationAxis)
+    EBSD_INSTANCE_PROPERTY(QVector<float>, SampleTransformationAxis)
     EBSD_INSTANCE_PROPERTY(float, EulerTransformationAngle)
-    EBSD_INSTANCE_PROPERTY(std::vector<float>, EulerTransformationAxis)
+    EBSD_INSTANCE_PROPERTY(QVector<float>, EulerTransformationAxis)
 
     /** @brief Sets the file name of the ebsd file to be read */
     EBSD_INSTANCE_STRING_PROPERTY(FileName)
     /** @brief The Number of Columns of Data in the Ebsd Data file */
-    EBSD_INSTANCE_PROPERTY(int, NumFields)
+    EBSD_INSTANCE_PROPERTY(int, NumFeatures)
 
     /** @brief The unchanged header from the data file */
     EBSD_INSTANCE_STRING_PROPERTY(OriginalHeader)
@@ -90,7 +90,7 @@ class EbsdLib_EXPORT EbsdReader
      * @brief Appends text to the current Original Header Text
      * @param more The text to be appended
      */
-    void appendOriginalHeader(const std::string &more);
+    void appendOriginalHeader(const QString& more);
 
 
     /* These variables pertain to the memory that this class or subclass will allocate
@@ -129,17 +129,17 @@ class EbsdLib_EXPORT EbsdReader
     virtual void setYDimension(int ydim) = 0;
 
     /**
-     * @brief Returns the pointer to the data for a given field
-     * @param fieldName The name of the field to return the pointer to.
+     * @brief Returns the pointer to the data for a given feature
+     * @param featureName The name of the feature to return the pointer to.
      */
-    virtual void* getPointerByName(const std::string &fieldName) = 0;
+    virtual void* getPointerByName(const QString& featureName) = 0;
 
     /**
      * @brief Returns an enumeration value that depicts the numerical
      * primitive type that the data is stored as (Int, Float, etc).
-     * @param fieldName The name of the field.
+     * @param featureName The name of the feature.
      */
-    virtual Ebsd::NumType getPointerType(const std::string &fieldName) = 0;
+    virtual Ebsd::NumType getPointerType(const QString& featureName) = 0;
 
     /**
     * @brief Reads the complete EBSD data file storing all columns of data and the
@@ -170,41 +170,41 @@ class EbsdLib_EXPORT EbsdReader
      * also optionally produce SSE aligned memory for use with SSE intrinsics
      * @return Pointer to allocated memory
      */
-      template<typename T>
-      T* allocateArray(size_t numberOfElements)
-      {
-  #if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
-        T* m_buffer = static_cast<T*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
-  #else
-        //T*  m_buffer = new T[numberOfElements];
-        T* m_buffer = static_cast<T*>(malloc(sizeof(T) * numberOfElements));
-  #endif
-        return m_buffer;
-      }
+    template<typename T>
+    T* allocateArray(size_t numberOfElements)
+    {
+#if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
+      T* m_buffer = static_cast<T*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
+#else
+      //T*  m_buffer = new T[numberOfElements];
+      T* m_buffer = static_cast<T*>(malloc(sizeof(T) * numberOfElements));
+#endif
+      return m_buffer;
+    }
 
     /**
      * @brief Deallocates memory that has been previously allocated. This will set the
      * value of the pointer passed in as the argument to NULL.
      * @param ptr The pointer to be freed.
      */
-      template<typename T>
-      void deallocateArrayData(T* &ptr)
+    template<typename T>
+    void deallocateArrayData(T*& ptr)
+    {
+      if (ptr != NULL && this->m_ManageMemory == true)
       {
-        if (ptr != NULL && this->m_ManageMemory == true)
-        {
-  #if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
-          _mm_free(ptr );
-  #else
-          //delete[] ptr;
-          free(ptr);
-  #endif
-          ptr = NULL;
-   //       m_NumberOfElements = 0;
-        }
+#if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
+        _mm_free(ptr );
+#else
+        free(ptr);
+#endif
+        ptr = NULL;
       }
+    }
+
+    QMap<QString, EbsdHeaderEntry::Pointer>& getHeaderMap() { return m_HeaderMap; }
 
   protected:
-    std::map<std::string, EbsdHeaderEntry::Pointer> m_HeaderMap;
+    QMap<QString, EbsdHeaderEntry::Pointer> m_HeaderMap;
 
 
   private:
@@ -214,3 +214,4 @@ class EbsdLib_EXPORT EbsdReader
 };
 
 #endif /* EBSDREADER_H_ */
+

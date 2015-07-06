@@ -1,49 +1,47 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 
 
 #include "H5CtfReader.h"
 
-#include "EbsdLib/Utilities/StringUtils.h"
-#include "H5Support/H5Lite.h"
-#include "H5Support/H5Utilities.h"
+#include "H5Support/QH5Lite.h"
+#include "H5Support/QH5Utilities.h"
+
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/EbsdMacros.h"
-#include "EbsdLib/Utilities/StringUtils.h"
-
 #include "EbsdLib/HKL/CtfConstants.h"
 
 #if defined (H5Support_NAMESPACE)
@@ -73,30 +71,30 @@ H5CtfReader::~H5CtfReader()
 int H5CtfReader::readHeaderOnly()
 {
   int err = -1;
-  if (m_HDF5Path.empty() == true)
+  if (m_HDF5Path.isEmpty() == true)
   {
-    std::cout << "H5CtfReader Error: HDF5 Path is empty." << std::endl;
+    qDebug() << "H5CtfReader Error: HDF5 Path is empty.";
     return -1;
   }
 
-  hid_t fileId = H5Utilities::openFile(getFileName(), true);
+  hid_t fileId = QH5Utilities::openFile(getFileName(), true);
   if (fileId < 0)
   {
-    std::cout << "H5CtfReader Error: Could not open HDF5 file '" << getFileName() << "'" << std::endl;
+    qDebug() << "H5CtfReader Error: Could not open HDF5 file '" << getFileName() << "'";
     return -1;
   }
 
-  hid_t gid = H5Gopen(fileId, m_HDF5Path.c_str(), H5P_DEFAULT);
+  hid_t gid = H5Gopen(fileId, m_HDF5Path.toLatin1().data(), H5P_DEFAULT);
   if (gid < 0)
   {
-    std::cout << "H5CtfReader Error: Could not open path '" << m_HDF5Path << "'" << std::endl;
-    err = H5Utilities::closeFile(fileId);
+    qDebug() << "H5CtfReader Error: Could not open path '" << m_HDF5Path << "'";
+    err = QH5Utilities::closeFile(fileId);
     return -1;
   }
 
   // Read all the header information
   err = readHeader(gid);
-  err = H5Utilities::closeFile(fileId);
+  err = QH5Utilities::closeFile(fileId);
   return err;
 }
 
@@ -106,37 +104,37 @@ int H5CtfReader::readHeaderOnly()
 int H5CtfReader::readFile()
 {
   int err = -1;
-  if (m_HDF5Path.empty() == true)
+  if (m_HDF5Path.isEmpty() == true)
   {
-    std::cout << "H5CtfReader Error: HDF5 Path is empty." << std::endl;
+    qDebug() << "H5CtfReader Error: HDF5 Path is empty.";
     return -1;
   }
 
-  hid_t fileId = H5Utilities::openFile(getFileName(), true);
+  hid_t fileId = QH5Utilities::openFile(getFileName(), true);
   if (fileId < 0)
   {
-    std::cout << "H5CtfReader Error: Could not open HDF5 file '" << getFileName() << "'" << std::endl;
+    qDebug() << "H5CtfReader Error: Could not open HDF5 file '" << getFileName() << "'";
     return -1;
   }
 
-  hid_t gid = H5Gopen(fileId, m_HDF5Path.c_str(), H5P_DEFAULT);
+  hid_t gid = H5Gopen(fileId, m_HDF5Path.toLatin1().data(), H5P_DEFAULT);
   if (gid < 0)
   {
-    std::cout << "H5CtfReader Error: Could not open path '" << m_HDF5Path << "'" << std::endl;
-    err = H5Utilities::closeFile(fileId);
+    qDebug() << "H5CtfReader Error: Could not open path '" << m_HDF5Path << "'";
+    err = QH5Utilities::closeFile(fileId);
     return -1;
   }
 
   // Read all the header information
-  // std::cout << "H5CtfReader:: reading Header .. " << std::endl;
+// qDebug() << "H5CtfReader:: reading Header .. ";
   err = readHeader(gid);
 
   // Read and transform data
-  // std::cout << "H5CtfReader:: Reading Data .. " << std::endl;
+// qDebug() << "H5CtfReader:: Reading Data .. ";
   err = readData(gid);
 
   err = H5Gclose(gid);
-  err = H5Utilities::closeFile(fileId);
+  err = QH5Utilities::closeFile(fileId);
 
   return err;
 }
@@ -147,75 +145,78 @@ int H5CtfReader::readFile()
 // -----------------------------------------------------------------------------
 int H5CtfReader::readHeader(hid_t parId)
 {
+  QString sBuf;
+  QTextStream ss(&sBuf);
   int err = -1;
-  hid_t gid = H5Gopen(parId, Ebsd::H5::Header.c_str(), H5P_DEFAULT);
+  hid_t gid = H5Gopen(parId, Ebsd::H5::Header.toLatin1().data(), H5P_DEFAULT);
   if (gid < 0)
   {
-    std::cout << "H5CtfReader Error: Could not open 'Header' Group" << std::endl;
+    qDebug() << "H5CtfReader Error: Could not open 'Header' Group";
     return -1;
   }
 
-  READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, std::string, Prj, Ebsd::Ctf::Prj)
-      READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, std::string, Author, Ebsd::Ctf::Author)
-      READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, std::string, JobMode, Ebsd::Ctf::JobMode)
-      READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, XCells, Ebsd::Ctf::XCells)
-      READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, YCells, Ebsd::Ctf::YCells)
-      READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, XStep, Ebsd::Ctf::XStep)
-      READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, YStep, Ebsd::Ctf::YStep)
-      READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, AcqE1, Ebsd::Ctf::AcqE1)
-      READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, AcqE2, Ebsd::Ctf::AcqE2)
-      READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, AcqE3, Ebsd::Ctf::AcqE3)
-      READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, std::string, Euler, Ebsd::Ctf::Euler)
-      READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, Mag, Ebsd::Ctf::Mag)
-      READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, Coverage, Ebsd::Ctf::Coverage)
-      READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, Device, Ebsd::Ctf::Device)
-      READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, KV, Ebsd::Ctf::KV)
-      READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, TiltAngle, Ebsd::Ctf::TiltAngle)
-      READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, TiltAxis, Ebsd::Ctf::TiltAxis)
+  READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, QString, Prj, Ebsd::Ctf::Prj, gid)
+  READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, QString, Author, Ebsd::Ctf::Author, gid)
+  READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, QString, JobMode, Ebsd::Ctf::JobMode, gid)
+  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, XCells, Ebsd::Ctf::XCells, gid)
+  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, YCells, Ebsd::Ctf::YCells, gid)
+  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, XStep, Ebsd::Ctf::XStep, gid)
+  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, YStep, Ebsd::Ctf::YStep, gid)
+  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, AcqE1, Ebsd::Ctf::AcqE1, gid)
+  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, AcqE2, Ebsd::Ctf::AcqE2, gid)
+  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, AcqE3, Ebsd::Ctf::AcqE3, gid)
+  READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, QString, Euler, Ebsd::Ctf::Euler, gid)
+  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, Mag, Ebsd::Ctf::Mag, gid)
+  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, Coverage, Ebsd::Ctf::Coverage, gid)
+  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, Device, Ebsd::Ctf::Device, gid)
+  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, KV, Ebsd::Ctf::KV, gid)
+  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, TiltAngle, Ebsd::Ctf::TiltAngle, gid)
+  READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, TiltAxis, Ebsd::Ctf::TiltAxis, gid)
 
-      hid_t phasesGid = H5Gopen(gid, Ebsd::H5::Phases.c_str(), H5P_DEFAULT);
+  hid_t phasesGid = H5Gopen(gid, Ebsd::H5::Phases.toLatin1().data(), H5P_DEFAULT);
   if (phasesGid < 0)
   {
-    std::cout << "H5CtfReader Error: Could not open Header/Phases HDF Group. Is this an older file?" << std::endl;
+    qDebug() << "H5CtfReader Error: Could not open Header/Phases HDF Group. Is this an older file?";
     H5Gclose(gid);
     return -1;
   }
 
-  std::list<std::string> names;
-  err = H5Utilities::getGroupObjects(phasesGid, H5Utilities::H5Support_GROUP, names);
+  QList<QString> names;
+  err = QH5Utilities::getGroupObjects(phasesGid, H5Utilities::H5Support_GROUP, names);
   if (err < 0 || names.size() == 0)
   {
-    std::cout << "H5CtfReader Error: There were no Phase groups present in the HDF5 file" << std::endl;
+    qDebug() << "H5CtfReader Error: There were no Phase groups present in the HDF5 file";
     H5Gclose(phasesGid);
     H5Gclose(gid);
     return -1;
   }
+  bool ok = false;
   m_Phases.clear();
-  for (std::list<std::string>::iterator phaseGroupName = names.begin(); phaseGroupName != names.end(); ++phaseGroupName )
+  for (int p = 0; p < names.size(); ++p)
   {
-    hid_t pid = H5Gopen(phasesGid, (*phaseGroupName).c_str(), H5P_DEFAULT);
+    QString phaseGroupName = names[p];
+    hid_t pid = H5Gopen(phasesGid, phaseGroupName.toLatin1().data(), H5P_DEFAULT);
     CtfPhase::Pointer m_CurrentPhase = CtfPhase::New();
 
-    READ_PHASE_HEADER_ARRAY("H5CtfReader", pid, std::vector<float>, Ebsd::Ctf::LatticeConstants, LatticeConstants, m_CurrentPhase);
+    READ_PHASE_HEADER_ARRAY("H5CtfReader", pid, float, Ebsd::Ctf::LatticeConstants, LatticeConstants, m_CurrentPhase);
     READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::PhaseName, PhaseName, m_CurrentPhase)
-        READ_PHASE_HEADER_DATA_CAST("H5CtfReader", pid, Ebsd::Ctf::LaueGroupTable, int, Ebsd::Ctf::LaueGroup, LaueGroup, m_CurrentPhase)
-        READ_PHASE_HEADER_DATA_CAST("H5CtfReader", pid, int, int, Ebsd::Ctf::SpaceGroup, SpaceGroup, m_CurrentPhase)
-        READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::Internal1, Internal1, m_CurrentPhase)
-        READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::Internal2, Internal2, m_CurrentPhase)
-        READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::Comment, Comment, m_CurrentPhase)
+    READ_PHASE_HEADER_DATA_CAST("H5CtfReader", pid, Ebsd::Ctf::LaueGroupTable, int, Ebsd::Ctf::LaueGroup, LaueGroup, m_CurrentPhase)
+    READ_PHASE_HEADER_DATA_CAST("H5CtfReader", pid, int, int, Ebsd::Ctf::SpaceGroup, SpaceGroup, m_CurrentPhase)
+    READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::Internal1, Internal1, m_CurrentPhase)
+    READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::Internal2, Internal2, m_CurrentPhase)
+    READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::Comment, Comment, m_CurrentPhase)
 
-        // For HKL Imports, the phase index is the HDF5 Group Name for this phase so
-        // convert the phaseGroupName string variable into an integer
-        int pIndex = 0;
-    StringUtils::stringToNum(pIndex, *phaseGroupName);
+    // For HKL Imports, the phase index is the HDF5 Group Name for this phase so
+    // convert the phaseGroupName string variable into an integer
+    int pIndex = phaseGroupName.toInt(&ok, 10);
     m_CurrentPhase->setPhaseIndex(pIndex);
     m_Phases.push_back(m_CurrentPhase);
     err = H5Gclose(pid);
   }
   err = H5Gclose(phasesGid);
 
-  std::string completeHeader;
-  err = H5Lite::readStringDataset(gid, Ebsd::H5::OriginalHeader, completeHeader);
+  QString completeHeader;
+  err = QH5Lite::readStringDataset(gid, Ebsd::H5::OriginalHeader, completeHeader);
   setOriginalHeader(completeHeader);
 
   err = H5Gclose(gid);
@@ -223,21 +224,21 @@ int H5CtfReader::readHeader(hid_t parId)
 }
 
 
-
 #define CTF_READER_ALLOCATE_AND_READ(name, type)\
   if (m_ReadAllArrays == true || m_ArrayNames.find(Ebsd::Ctf::name) != m_ArrayNames.end()) {\
     type* _##name = allocateArray<type>(totalDataRows);\
     if (NULL != _##name) {\
       ::memset(_##name, 0, numBytes);\
-      err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::name, _##name);\
+      err = QH5Lite::readPointerDataset(gid, Ebsd::Ctf::name, _##name);\
       if (err < 0) {\
         deallocateArrayData(_##name); /*deallocate the array*/\
+        _##name = NULL;\
         setErrorCode(-90020);\
         ss << "Error reading dataset '" << #name << "' from the HDF5 file. This data set is required to be in the file because either "\
-        "the program is set to read ALL the Data arrays or the program was instructed to read this array.";\
-        setErrorMessage(ss.str());\
-        err = H5Gclose(gid);\
-        return -90020;\
+           "the program is set to read ALL the Data arrays or the program was instructed to read this array.";\
+        setErrorMessage(ss.string());\
+        err = H5Gclose(gid);if (err < 0) {}\
+        return getErrorCode();\
       }\
     }\
     setPointerByName(#name, _##name);\
@@ -256,10 +257,15 @@ int H5CtfReader::readData(hid_t parId)
   size_t yCells = getYCells();
   size_t xCells = getXCells();
   size_t totalDataRows = yCells * xCells;
+  if( totalDataRows == 0)
+  {
+    setErrorCode(-1);
+    setErrorMessage(QString("TotalDataRows = 0;"));
+    return -1;
+  }
 
 
-
-  hid_t gid = H5Gopen(parId, Ebsd::H5::Data.c_str(), H5P_DEFAULT);
+  hid_t gid = H5Gopen(parId, Ebsd::H5::Data.toLatin1(), H5P_DEFAULT);
   if (gid < 0)
   {
     std::cout << "H5CtfReader Error: Could not open 'Data' Group" << std::endl;
@@ -268,7 +274,8 @@ int H5CtfReader::readData(hid_t parId)
 
   setNumberOfElements(totalDataRows);
   size_t numBytes = totalDataRows * sizeof(float);
-  std::stringstream ss;
+  QString sBuf;
+  QTextStream ss(&sBuf);
 
   CTF_READER_ALLOCATE_AND_READ(Phase, int);
   CTF_READER_ALLOCATE_AND_READ(Bands, int);
@@ -293,7 +300,7 @@ int H5CtfReader::readData(hid_t parId)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void H5CtfReader::setArraysToRead(std::set<std::string> names)
+void H5CtfReader::setArraysToRead(QSet<QString> names)
 {
   m_ArrayNames = names;
 }

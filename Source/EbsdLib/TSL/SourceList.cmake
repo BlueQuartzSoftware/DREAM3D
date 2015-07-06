@@ -13,15 +13,13 @@
 
 #-- Get the TSL Sources
 set(TSL_SRCS
-    ${EbsdLib_SOURCE_DIR}/TSL/AngDirectoryPatterns.cpp
     ${EbsdLib_SOURCE_DIR}/TSL/AngReader.cpp
     ${EbsdLib_SOURCE_DIR}/TSL/AngPhase.cpp
     ${EbsdLib_SOURCE_DIR}/TSL/AngFields.cpp
     )
- 
+
 set(TSL_HDRS
     ${EbsdLib_SOURCE_DIR}/TSL/AngConstants.h
-    ${EbsdLib_SOURCE_DIR}/TSL/AngDirectoryPatterns.h
     ${EbsdLib_SOURCE_DIR}/TSL/AngHeaderEntry.h
     ${EbsdLib_SOURCE_DIR}/TSL/AngReader.h
     ${EbsdLib_SOURCE_DIR}/TSL/AngPhase.h
@@ -34,11 +32,13 @@ if(EbsdLib_ENABLE_HDF5)
         ${EbsdLib_SOURCE_DIR}/TSL/H5AngImporter.cpp
         ${EbsdLib_SOURCE_DIR}/TSL/H5AngReader.cpp
         ${EbsdLib_SOURCE_DIR}/TSL/H5AngVolumeReader.cpp
+        ${EbsdLib_SOURCE_DIR}/TSL/H5OIMReader.cpp
     )
     set(TSL_HDRS ${TSL_HDRS}
         ${EbsdLib_SOURCE_DIR}/TSL/H5AngImporter.h
         ${EbsdLib_SOURCE_DIR}/TSL/H5AngReader.h
         ${EbsdLib_SOURCE_DIR}/TSL/H5AngVolumeReader.h
+        ${EbsdLib_SOURCE_DIR}/TSL/H5OIMReader.h
     )
     set(EbsdLib_HDF5_SUPPORT 1)
 endif()

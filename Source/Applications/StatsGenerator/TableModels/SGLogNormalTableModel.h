@@ -1,38 +1,38 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+*
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+*
+* Redistributions of source code must retain the above copyright notice, this
+* list of conditions and the following disclaimer.
+*
+* Redistributions in binary form must reproduce the above copyright notice, this
+* list of conditions and the following disclaimer in the documentation and/or
+* other materials provided with the distribution.
+*
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
+*
+* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 
 #ifndef _SG_LOG_NORMAL_TABLEMODEL_H_
 #define _SG_LOG_NORMAL_TABLEMODEL_H_
@@ -47,16 +47,16 @@ class QAbstractItemDelegate;
 /**
  * @class SGLogNormalTableModel SGLogNormalTableModel.h StatsGenerator/SGLogNormalTableModel.h
  * @brief
- * @author Michael A. Jackson for BlueQuartz Software
+ *
  * @date Dec 22, 2010
  * @version 1.0
  */
 class SGLogNormalTableModel : public SGAbstractTableModel
 {
 
-Q_OBJECT
+    Q_OBJECT
 
-    public:
+  public:
 
     enum ColumnIndexes
     {
@@ -70,16 +70,16 @@ Q_OBJECT
     SGLogNormalTableModel(QObject* parent = 0);
     virtual ~SGLogNormalTableModel();
 
-    Qt::ItemFlags flags(const QModelIndex &index) const;
-    QVariant data(const QModelIndex &index,
-        int role=Qt::DisplayRole) const;
+    Qt::ItemFlags flags(const QModelIndex& index) const;
+    QVariant data(const QModelIndex& index,
+                  int role = Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation,
-        int role=Qt::DisplayRole) const;
-    int rowCount(const QModelIndex &parent=QModelIndex()) const;
-    int columnCount(const QModelIndex &parent=QModelIndex()) const;
+                        int role = Qt::DisplayRole) const;
+    int rowCount(const QModelIndex& parent = QModelIndex()) const;
+    int columnCount(const QModelIndex& parent = QModelIndex()) const;
 
-    bool setData(const QModelIndex &index, const QVariant &value,
-        int role=Qt::EditRole);
+    bool setData(const QModelIndex& index, const QVariant& value,
+                 int role = Qt::EditRole);
     /**
      *
      * @param col
@@ -88,13 +88,13 @@ Q_OBJECT
      * @param role
      * @return
      */
-    bool setHeaderData(int col, Qt::Orientation orientation, const QVariant& data, int role=Qt::EditRole)
+    bool setHeaderData(int col, Qt::Orientation orientation, const QVariant& data, int role = Qt::EditRole)
     { return false;}
 
     bool insertRows(int row, int count,
-        const QModelIndex &parent=QModelIndex());
+                    const QModelIndex& parent = QModelIndex());
     bool removeRows(int row, int count,
-        const QModelIndex &parent=QModelIndex());
+                    const QModelIndex& parent = QModelIndex());
 
     QAbstractItemDelegate* getItemDelegate();
 
@@ -112,7 +112,7 @@ Q_OBJECT
 
     virtual QVector<float> getData(int col);
     virtual float getDataValue(int col, int row);
-    virtual void setColumnData(int col, QVector<float> &data);
+    virtual void setColumnData(int col, QVector<float>& data);
 
     QVector<float>& getAvergaes()
     { return m_Average;}
@@ -124,7 +124,7 @@ Q_OBJECT
     float getStdDev(qint32 row)
     { return m_StdDev[row];}
 
-    private:
+  private:
     int m_ColumnCount;
     int m_RowCount;
 
@@ -135,6 +135,7 @@ Q_OBJECT
 
     SGLogNormalTableModel(const SGLogNormalTableModel&); // Copy Constructor Not Implemented
     void operator=(const SGLogNormalTableModel&); // Operator '=' Not Implemented
-  };
+};
 
 #endif /* _SG_LOG_NORMAL_TABLEMODEL_H_ */
+
