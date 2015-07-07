@@ -1,10 +1,30 @@
 Version 6.0.0 Release Notes {#releasenotes_6_0_0}
 ===========
 
+These release notes summarize the major changes for each officially released version of DREAM.3D. The official bug report is located at [https://github.com/DREAM3D/DREAM3D/issues](https://github.com/DREAM3D/DREAM3D/issues).
+
+## Getting Help ##
+
+Users:[https://groups.google.com/forum/?/dream3d-users#!forum/dream3d-users](https://groups.google.com/forum/?/dream3d-users#!forum/dream3d-users)
+
+Developers:[https://groups.google.com/forum/?hl=en#!forum/dream3d-developers](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
+
+
 # Major Changes #
+
+This is a major version update with breaking changes that will invalidate any previous .dream3d file and pipeline. Breaking changes are:
+
 
 + The core DREAM.3D data structure has been rewritten. **This is a major change that breaks compatibility with previous DREAM.3D version files. Files generated with a version of DREAM.3D before v6.x are INCOMPATIBLE with v6.x and any subsequent versions!**
 + Several **Filters** have been renamed or removed. Consult the table below for a detailed list. **The removal or renaming of Filters may break compatibility with Pipelines generated in previous versions of DREAM.3D. Users are encouraged to update their Pipelines to utilize the current Filter suite of v6.x!**
++ Pipeline files are now stored as JSON files instead of INI files
++ .dream3d files now have an updated internal structure that is not compatible with any previous version of DREAM.3D
++ **Bookmarks** (formerly **Favorites**) now store direct links to the json file on the file system. This means the user can store the bookmarked json file where ever they want.
++ The **User Interface** has been completely updated and mostly rewritten using Qt version 5.
++ Added new filter searching field which allows the user to easily find filters by name
++ Prebuilt Pipelines have all been updated with bug fixes
++ Internal data structures have been updated to allow DREAM.3D to scale better to larger datasets.
++ DREAM.3D now contains over 200 filters to process data
 
 # Filters that have changed names in Version 6 #
 

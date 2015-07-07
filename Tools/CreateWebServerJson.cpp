@@ -45,6 +45,7 @@ void WriteWebServerJSON(const QString& filePath)
   meta["Minor"] = DREAM3DLib::Version::Minor();
   meta["Patch"] = DREAM3DLib::Version::Patch();
   meta["Revision"] = DREAM3DLib::Version::Revision();
+  meta["Download WebSite"] = "http://dream3d.bluequartz.net/?page_id=32";
   QJsonObject m_Root;
   m_Root["DREAM3D"] = meta;
 

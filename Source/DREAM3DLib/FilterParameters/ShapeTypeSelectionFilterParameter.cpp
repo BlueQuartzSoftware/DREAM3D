@@ -76,7 +76,7 @@ ShapeTypeSelectionFilterParameter::Pointer ShapeTypeSelectionFilterParameter::Ne
 // -----------------------------------------------------------------------------
 QString ShapeTypeSelectionFilterParameter::getWidgetType()
 {
-  return QString("ShapeTypesWidget");
+  return QString("ShapeTypeSelectionWidget");
 }
 
 

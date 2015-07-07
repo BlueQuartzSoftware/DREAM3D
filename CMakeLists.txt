@@ -29,7 +29,7 @@ cmake_minimum_required(VERSION 3.1.0)
 #------------------------------------------------------------------------------
 # Create the Top level Project
 #
-project(DREAM3DProj VERSION 6.0.0.0)
+project(DREAM3DProj VERSION 6.1.0.0)
 #------------------------------------------------------------------------------
 # There are several different Release Types that we are going to use.
 # Official: This is an official release from BlueQuartz Software
@@ -217,12 +217,10 @@ configure_file(${PROJECT_RESOURCES_DIR}/DREAM3D/DREAM3DLicense.txt
                 ${PROJECT_BINARY_DIR}/DREAM3D/DREAM3DLicense.txt )
 configure_file(${PROJECT_SOURCE_DIR}/ReadMe.md
                 ${PROJECT_BINARY_DIR}/ReadMe.md )
-configure_file(${PROJECT_SOURCE_DIR}/Resources/ReleaseDocs/ReleaseNotes.md
-                ${PROJECT_BINARY_DIR}/ReleaseNotes.md )
 
 # --------------------------------------------------------------------
 # Generate install rules for the text files
-install(FILES ${PROJECT_BINARY_DIR}/ReadMe.md ${PROJECT_BINARY_DIR}/ReleaseNotes.md 
+install(FILES ${PROJECT_BINARY_DIR}/ReadMe.md
         DESTINATION .
         COMPONENT Applications)
 
@@ -342,8 +340,8 @@ endif()
 
 
 #- Add in the DevHelper application
-option(DREAM3D_BUILD_PLUGINMAKER "Compile the DevHelper Application" ON)
-if(DREAM3D_BUILD_PLUGINMAKER)
+option(DREAM3D_BUILD_DEVHELPER "Compile the DevHelper Application" ON)
+if(DREAM3D_BUILD_DEVHELPER)
     add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/DevHelper  ${PROJECT_BINARY_DIR}/Applications/DevHelper)
 endif()
 
