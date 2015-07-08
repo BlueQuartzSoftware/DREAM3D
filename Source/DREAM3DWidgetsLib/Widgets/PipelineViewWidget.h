@@ -205,7 +205,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
      * @param filter
      * @param index
      */
-    void addFilterWidget(PipelineFilterWidget* w, int index = -1);
+    void addFilterWidget(PipelineFilterWidget* pipelineFilterWidget, int index = -1);
 
     /**
      * @brief removeFilterWidget
@@ -300,7 +300,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     void filterInputWidgetChanged(FilterInputWidget* widget);
     void noFilterWidgetsInPipeline();
 
-    void filterParameterChanged();
+    void filterInputWidgetEdited();
     void preflightPipelineComplete();
 
   protected:

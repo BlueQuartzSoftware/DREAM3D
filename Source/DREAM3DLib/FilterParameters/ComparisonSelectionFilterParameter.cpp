@@ -53,7 +53,6 @@ ComparisonSelectionFilterParameter::~ComparisonSelectionFilterParameter()
 // -----------------------------------------------------------------------------
 ComparisonSelectionFilterParameter::Pointer ComparisonSelectionFilterParameter::New(const QString& humanLabel, const QString& propertyName,
   const QString& defaultValue, QVector<QString> choices, bool showOperators, Category category, int groupIndex)
-
 {
   ComparisonSelectionFilterParameter::Pointer ptr = ComparisonSelectionFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -72,6 +71,6 @@ ComparisonSelectionFilterParameter::Pointer ComparisonSelectionFilterParameter::
 // -----------------------------------------------------------------------------
 QString ComparisonSelectionFilterParameter::getWidgetType()
 {
-  return QString("ComparisonWidget");
+  return QString("ComparisonSelectionWidget");
 }
 

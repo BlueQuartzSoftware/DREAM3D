@@ -48,7 +48,7 @@ Our **Workspace** is location at
 	
 Our **DREAM3D\_SDK** is located at 
 
-	C:\Developer\DREAM3D_SDK
+	C:\DREAM3D_SDK
 
 With this environment setup proceed to download and install Git, CMake and Doxygen into the **DREAM3D\_SDK** directory. Then proceed to download, build and install the rest of the dependent libraries.
 

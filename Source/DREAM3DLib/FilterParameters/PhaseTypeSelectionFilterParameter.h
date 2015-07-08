@@ -52,15 +52,17 @@ public:
                       const QString& phaseTypeDataProperty,
                       const QString& attributeMatrixProperty,
                       const DataArrayPath attributeMatrixDefault,
+                      const QStringList phaseListChoices,
                       Category category,
                       int groupIndex = -1);
 
   virtual ~PhaseTypeSelectionFilterParameter();
 
   DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeCountProperty)
-    DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeDataProperty)
-    DREAM3D_INSTANCE_PROPERTY(QString, AttributeMatrixPathProperty)
-    DREAM3D_INSTANCE_PROPERTY(DataArrayPath, AttributeMatrixPathDefault)
+  DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeDataProperty)
+  DREAM3D_INSTANCE_PROPERTY(QString, AttributeMatrixPathProperty)
+  DREAM3D_INSTANCE_PROPERTY(DataArrayPath, AttributeMatrixPathDefault)
+  DREAM3D_INSTANCE_PROPERTY(QStringList, PhaseListChoices)
 
   /**
    * @brief getWidgetType Returns the type of widget that displays and controls

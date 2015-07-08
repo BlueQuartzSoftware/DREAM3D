@@ -641,7 +641,7 @@ void DREAM3D_UI::disconnectSignalsSlots()
   disconnect(pipelineViewWidget, SIGNAL(noFilterWidgetsInPipeline()),
              this, SLOT(clearFilterInputWidget()));
 
-  disconnect(pipelineViewWidget, SIGNAL(filterParameterChanged()),
+  disconnect(pipelineViewWidget, SIGNAL(filterInputWidgetEdited()),
              this, SLOT(markDocumentAsDirty()));
 
   disconnect(bookmarksDockWidget, SIGNAL(updateStatusBar(const QString&)),
@@ -685,7 +685,7 @@ void DREAM3D_UI::connectSignalsSlots()
   connect(pipelineViewWidget, SIGNAL(noFilterWidgetsInPipeline()),
           this, SLOT(clearFilterInputWidget()));
 
-  connect(pipelineViewWidget, SIGNAL(filterParameterChanged()),
+  connect(pipelineViewWidget, SIGNAL(filterInputWidgetEdited()),
           this, SLOT(markDocumentAsDirty()));
 
   connect(bookmarksDockWidget, SIGNAL(updateStatusBar(const QString&)),
@@ -863,10 +863,6 @@ void DREAM3D_UI::on_startPipelineBtn_clicked()
     return;
   }
 
-//  horizontalLayout_2->removeWidget(startPipelineBtn);
-//  horizontalLayout_2->removeItem(progressSpacer);
-//  horizontalLayout_2->addWidget(m_ProgressBar, 1);
-//  horizontalLayout_2->addWidget(startPipelineBtn);
   m_ProgressBar->show();
 
   if (m_WorkerThread != NULL)
@@ -892,6 +888,7 @@ void DREAM3D_UI::on_startPipelineBtn_clicked()
   if(err < 0)
   {
     m_PipelineInFlight = FilterPipeline::NullPointer();
+    issuesDockWidget->displayCachedMessages();
     return;
   }
 
@@ -1018,17 +1015,11 @@ void DREAM3D_UI::processPipelineMessage(const PipelineMessage& msg)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::pipelineDidFinish()
 {
-  std::cout << "DREAM3D_UI::pipelineDidFinish()" << std::endl;
   m_PipelineInFlight = FilterPipeline::NullPointer();// This _should_ remove all the filters and deallocate them
   startPipelineBtn->setText("Go");
   m_ProgressBar->setValue(0);
 
   m_ProgressBar->hide();
-//  horizontalLayout_2->removeWidget(m_ProgressBar);
-//  horizontalLayout_2->removeWidget(startPipelineBtn);
-  //horizontalLayout_2->addSpacerItem(progressSpacer);
-// horizontalLayout_2->addWidget(startPipelineBtn);
-
 
   // Re-enable FilterListDockWidget signals - resume adding filters
   filterListDockWidget->blockSignals(false);

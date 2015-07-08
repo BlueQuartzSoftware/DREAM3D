@@ -47,7 +47,8 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/DoubleFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 
@@ -137,22 +138,9 @@ RotateEulerRefFrame::~RotateEulerRefFrame()
 void RotateEulerRefFrame::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
-    parameter->setHumanLabel("Rotation Axis (ijk)");
-    parameter->setPropertyName("RotationAxis");
+  parameters.push_back(FloatVec3FilterParameter::New("Rotation Axis (ijk)", "RotationAxis", getRotationAxis(), FilterParameter::Parameter));
+  parameters.push_back(DoubleFilterParameter::New("Rotation Angle (Degrees)", "RotationAngle", getRotationAngle(), FilterParameter::Parameter));
 
-    parameter->setCategory(FilterParameter::Parameter);
-    parameters.push_back(parameter);
-  }
-  {
-    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
-    parameter->setHumanLabel("Rotation Angle (Degrees)");
-    parameter->setPropertyName("RotationAngle");
-
-    parameter->setCategory(FilterParameter::Parameter);
-    parameters.push_back(parameter);
-  }
   parameters.push_back(DataArraySelectionFilterParameter::New("Euler Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray));
   setFilterParameters(parameters);
 }

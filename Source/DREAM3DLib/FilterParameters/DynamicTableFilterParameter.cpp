@@ -40,7 +40,14 @@
 //
 // -----------------------------------------------------------------------------
 DynamicTableFilterParameter::DynamicTableFilterParameter() :
-  FilterParameter()
+  FilterParameter(),
+  m_DefaultRowCount(0),
+  m_DefaultColCount(0),
+  m_AreRowsDynamic(false),
+  m_AreColsDynamic(false),
+  m_MinRowCount(0),
+  m_MinColCount(0),
+  m_ErrorCondition(0)
 {}
 
 // -----------------------------------------------------------------------------
@@ -67,7 +74,7 @@ DynamicTableFilterParameter::Pointer DynamicTableFilterParameter::New(const QStr
   ptr->setAreColsDynamic(areColsDynamic);
   ptr->setMinRowCount(minRowCount);
   ptr->setMinColCount(minColCount);
-  ptr->setReadOnly(true);
+  ptr->setReadOnly(false);
 
   // Check that all columns are initialized to the same size
   if (defaultTable.size() > 0)
