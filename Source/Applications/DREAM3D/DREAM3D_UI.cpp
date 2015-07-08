@@ -592,6 +592,7 @@ void DREAM3D_UI::setupGui()
   // Stretch Factors
   splitter->setStretchFactor(0, 0);
   splitter->setStretchFactor(1, 1);
+  splitter->setOpaqueResize(true);
 
   pipelineViewScrollArea->verticalScrollBar()->setSingleStep(5);
 
