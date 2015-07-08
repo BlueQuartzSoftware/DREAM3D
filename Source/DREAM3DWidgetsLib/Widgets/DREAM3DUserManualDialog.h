@@ -90,7 +90,7 @@ class DREAM3DWidgetsLib_EXPORT DREAM3DUserManualDialog : public QDialog, public 
     void on_backBtn_pressed();
     void on_forwardBtn_pressed();
     void on_refreshBtn_pressed();
-    void on_webView_loadFinished(bool ok);
+    void updateButtons(bool ok);
 
   private:
     static DREAM3DUserManualDialog* self;

@@ -82,6 +82,8 @@ DREAM3DUserManualDialog::DREAM3DUserManualDialog()
   connect(closeAction, SIGNAL(triggered()), this, SLOT(close()));
   addAction(closeAction);
 #endif
+
+  connect(m_WebView, SIGNAL(loadFinished(bool)), this, SLOT(updateButtons(bool)));
 }
 
 // -----------------------------------------------------------------------------
@@ -162,7 +164,7 @@ void DREAM3DUserManualDialog::on_refreshBtn_pressed()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DUserManualDialog::on_webView_loadFinished(bool ok)
+void DREAM3DUserManualDialog::updateButtons(bool ok)
 {
   QWebEngineHistory* history = m_WebView->history();
 
