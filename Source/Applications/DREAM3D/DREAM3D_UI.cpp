@@ -932,6 +932,9 @@ void DREAM3D_UI::on_startPipelineBtn_clicked()
   // Allow the GUI to receive messages - We are only interested in the progress messages
   m_PipelineInFlight->addMessageReceiver(this);
 
+  // Clear the Error table
+  issuesDockWidget->clearIssues();
+
   /* Connect the signal 'started()' from the QThread to the 'run' slot of the
    * PipelineBuilder object. Since the PipelineBuilder object has been moved to another
    * thread of execution and the actual QThread lives in *this* thread then the
@@ -950,8 +953,8 @@ void DREAM3D_UI::on_startPipelineBtn_clicked()
           this, SLOT( pipelineDidFinish() ) );
 
   // Add in a connection to clear the Error/Warnings table when the thread starts
-  connect(m_WorkerThread, SIGNAL(started()),
-          issuesDockWidget, SLOT( clearIssues() ) );
+//  connect(m_WorkerThread, SIGNAL(started()),
+//          issuesDockWidget, SLOT( clearIssues() ) );
 
   // Tell the Error/Warnings Table that we are finished and to display any cached messages
   connect(m_WorkerThread, SIGNAL(finished()),
