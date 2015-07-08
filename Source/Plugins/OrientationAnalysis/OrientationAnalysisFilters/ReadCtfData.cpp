@@ -310,8 +310,8 @@ void ReadCtfData::readDataFile(CtfReader* reader, DataContainer::Pointer m, QVec
       if (err < 0)
       {
         setErrorCondition(err);
-        notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
         notifyErrorMessage(getHumanLabel(), "CtfReader could not read the .ctf file header.", getErrorCondition());
+        notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
         m_FileWasRead = false;
         return;
       }
@@ -575,6 +575,10 @@ void ReadCtfData::execute()
   ebsdAttrMat->setType(DREAM3D::AttributeMatrixType::Cell);
 
   readDataFile(reader.get(), m, tDims, CTF_FULL_FILE);
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   copyRawEbsdData(reader.get(), tDims, cDims);
 
