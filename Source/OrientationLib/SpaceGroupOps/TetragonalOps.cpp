@@ -936,15 +936,16 @@ DREAM3D::Rgb TetragonalOps::generateMisorientationColor(const QuatF& q, const Qu
 
   //eq c5.1
   k = tan(w / 2.0f);
-  xo = n1 * k;
-  yo = n2 * k;
-  zo = n3 * k;
+  xo = n1;
+  yo = n2;
+  zo = n3;
 
-  FOrientArrayType rod(xo, yo, zo);
+  FOrientArrayType rod(xo, yo, zo, k);
   rod = getMDFFZRod(rod);
   xo = rod[0];
   yo = rod[1];
   zo = rod[2];
+  k = rod[3];
 
   //eq c3.2
   k = atan2(yo, xo);
