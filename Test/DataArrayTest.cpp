@@ -46,6 +46,7 @@
 #include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/DataContainers/AttributeMatrix.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
@@ -655,6 +656,39 @@ QString TypeToString(T v)
     }
   }
 
+  // -----------------------------------------------------------------------------
+  //
+  // -----------------------------------------------------------------------------
+  template<typename T>
+  void _TestNeighborListDeepCopy()
+  {
+
+    QVector<size_t> tDims(10);
+    AttributeMatrix::Pointer am = AttributeMatrix::New(tDims, "AttributeMatrix", DREAM3D::AttributeMatrixType::Cell);
+
+    typename NeighborList<T>::Pointer neiList = NeighborList<T>::CreateArray(10, "NeighborList");
+
+    for(int i = 0; i < 10; ++i)
+    {
+      for(T j = 0; j < (T)(i + 4); ++j)
+      {
+        neiList->addEntry(i, static_cast<T>(i + 3) );
+      }
+    }
+
+    typename NeighborList<T>::Pointer copy = boost::dynamic_pointer_cast<NeighborList<T> >(neiList->deepCopy());
+    for(int i = 0; i < 10; ++i)
+    {
+      typename NeighborList<T>::SharedVectorType nEntry = neiList->getList(i);
+      typename NeighborList<T>::SharedVectorType cEntry = copy->getList(i);
+      DREAM3D_REQUIRED(nEntry.get(), !=, cEntry.get());
+      (*nEntry)[0] = static_cast<T>(255);
+      DREAM3D_REQUIRED( (*cEntry)[0], !=, 10000000);
+    }
+
+
+  }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -670,6 +704,8 @@ QString TypeToString(T v)
     __TestNeighborList<uint64_t>();
     __TestNeighborList<float>();
     __TestNeighborList<double>();
+
+    _TestNeighborListDeepCopy<int8_t>();
   }
 
 // -----------------------------------------------------------------------------
