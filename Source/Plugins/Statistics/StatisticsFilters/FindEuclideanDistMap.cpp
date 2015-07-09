@@ -109,8 +109,13 @@ class FindEuclideanMap
       neighbors[3] = 1;
       neighbors[4] = xpoints;
       neighbors[5] = xpoints * ypoints;
-      int64_t* voxel_NearestNeighbor = new int64_t[totalPoints];
-      double* voxel_EuclideanDistance = new double[totalPoints];
+
+      // Use a std::vector to get an auto cleaned up array thus not needing the 'delete' keyword later on.
+      std::vector<int64_t> voxNN(totalPoints, 0);
+      int64_t* voxel_NearestNeighbor = &(voxNN.front());
+      std::vector<double> voxEDist(totalPoints, 0.0);
+      double* voxel_EuclideanDistance = &(voxEDist.front());
+
       euclideanDistance = 0;
       for (size_t a = 0; a < totalPoints; ++a)
       {
@@ -236,8 +241,7 @@ class FindEuclideanMap
         else if (mapType == 1) { m_TJEuclideanDistances[a] = static_cast<float>(voxel_EuclideanDistance[a]); }
         else if (mapType == 2) { m_QPEuclideanDistances[a] = static_cast<float>(voxel_EuclideanDistance[a]); }
       }
-      delete[] voxel_NearestNeighbor;
-      delete[] voxel_EuclideanDistance;
+
     }
 };
 
