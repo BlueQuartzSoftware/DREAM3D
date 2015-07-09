@@ -536,6 +536,7 @@ void FindGBCD::execute()
   if (totalFaces < faceChunkSize) { faceChunkSize = totalFaces; }
   // call the sizeGBCD function with proper chunkSize and numMisoReps to get Bins array set up properly
   sizeGBCD(faceChunkSize, numMisoReps);
+  int32_t totalGBCDBins = m_GbcdSizes[0] * m_GbcdSizes[1] * m_GbcdSizes[2] * m_GbcdSizes[3] * m_GbcdSizes[4] * 2;
 
   uint64_t millis = QDateTime::currentMSecsSinceEpoch();
   uint64_t currentMillis = millis;
@@ -582,16 +583,22 @@ void FindGBCD::execute()
 
     if(getCancel() == true) { return; }
 
+    int32_t phase = 0;
+    int32_t feature = 0;
+    double area = 0.0;
     for (size_t j = 0; j < faceChunkSize; j++)
     {
+      area = m_SurfaceMeshFaceAreas[i + j];
+      feature = m_SurfaceMeshFaceLabels[2 * (i + j)];
+      phase = m_FeaturePhases[feature];
       for (size_t k = 0; k < numMisoReps; k++)
       {
         if (m_GbcdBins[(j * numMisoReps) + (k)] >= 0)
         {
           hemisphere = 0;
           if (m_HemiCheck[(j * numMisoReps) + k] == false) { hemisphere = 1; }
-          m_GBCD[2 * m_GbcdBins[(j * numMisoReps) + (k)] + hemisphere] += (m_SurfaceMeshFaceAreas[i + j]);
-          totalFaceArea += (m_SurfaceMeshFaceAreas[i + j]);
+          m_GBCD[(phase * totalGBCDBins) + (2 * m_GbcdBins[(j * numMisoReps) + (k)] + hemisphere)] += area;
+          totalFaceArea += area;
         }
       }
     }
@@ -600,9 +607,8 @@ void FindGBCD::execute()
   ss = QObject::tr("Starting GBCD Normalization");
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
-  int32_t totalBins = m_GbcdSizes[0] * m_GbcdSizes[1] * m_GbcdSizes[2] * m_GbcdSizes[3] * m_GbcdSizes[4] * 2;
-  double MRDfactor = double(totalBins) / totalFaceArea;
-  for (int32_t i = 0; i < totalBins; i++)
+  double MRDfactor = double(totalGBCDBins) / totalFaceArea;
+  for (int32_t i = 0; i < totalGBCDBins; i++)
   {
     m_GBCD[i] *= MRDfactor;
   }
