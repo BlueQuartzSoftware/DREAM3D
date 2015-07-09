@@ -141,14 +141,14 @@ void AlignSectionsMutualInformation::dataCheck()
 {
   setErrorCondition(0);
 
+  // Set the DataContainerName and AttributematrixName for the Parent Class (AlignSections) to Use.
+  setDataContainerName(m_QuatsArrayPath.getDataContainerName());
+  setCellAttributeMatrixName(m_QuatsArrayPath.getAttributeMatrixName());
+
   AlignSections::dataCheck();
   if(getErrorCondition() < 0) { return; }
 
   INIT_DataArray(m_FeatureCounts, int32_t);
-
-  // Set the DataContainerName and AttributematrixName for the Parent Class (AlignSections) to Use.
-  setDataContainerName(m_QuatsArrayPath.getDataContainerName());
-  setCellAttributeMatrixName(m_QuatsArrayPath.getAttributeMatrixName());
 
   QVector<DataArrayPath> dataArrayPaths;
 
