@@ -325,36 +325,6 @@ font-size: 11px;
      <property name="spacing">
       <number>6</number>
      </property>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_2">
-       <property name="styleSheet">
-        <string notr="true">QLabel {
-font-weight: bold;
-font-size: 11px;
-}</string>
-       </property>
-       <property name="text">
-        <string>Stacking Order</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QRadioButton" name="m_StackLowToHigh">
-       <property name="text">
-        <string>Low To High</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
-      <widget class="QRadioButton" name="m_StackHighToLow">
-       <property name="text">
-        <string>High To Low</string>
-       </property>
-      </widget>
-     </item>
      <item row="3" column="2">
       <widget class="QPushButton" name="m_RefFrameOptionsBtn">
        <property name="toolTip">
@@ -365,48 +335,6 @@ font-size: 11px;
        </property>
        <property name="default">
         <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
-      <widget class="QLabel" name="label_3">
-       <property name="styleSheet">
-        <string notr="true">QLabel {
-font-weight: bold;
-font-size: 11px;
-}</string>
-       </property>
-       <property name="text">
-        <string>Reference Frame Options</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QLabel" name="label_4">
-       <property name="styleSheet">
-        <string notr="true">QLabel {
-font-weight: bold;
-font-size: 11px;
-}</string>
-       </property>
-       <property name="text">
-        <string>Z Spacing (Microns)</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QLineEdit" name="m_zSpacing">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="toolTip">
-        <string>The spacing between each layer.</string>
-       </property>
-       <property name="text">
-        <string>0.25</string>
        </property>
       </widget>
      </item>
@@ -425,19 +353,6 @@ font-size: 12px;
        </property>
       </widget>
      </item>
-     <item row="2" column="3">
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
      <item row="3" column="3">
       <widget class="QLabel" name="referenceFrameCheck">
        <property name="styleSheet">
@@ -448,6 +363,87 @@ font-size: 12px;
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_4">
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+font-weight: bold;
+font-size: 11px;
+}</string>
+       </property>
+       <property name="text">
+        <string>Z Spacing (Microns)</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="m_zSpacing">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="toolTip">
+        <string>The spacing between each layer.</string>
+       </property>
+       <property name="text">
+        <string>0.25</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QRadioButton" name="m_StackLowToHigh">
+       <property name="text">
+        <string>Low To High</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QRadioButton" name="m_StackHighToLow">
+       <property name="text">
+        <string>High To Low</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2" colspan="2">
+      <widget class="QLabel" name="label_3">
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+font-weight: bold;
+font-size: 12px;
+}</string>
+       </property>
+       <property name="text">
+        <string>Reference Frame Options</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0" rowspan="2">
+      <widget class="QLabel" name="label_2">
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+font-weight: bold;
+font-size: 11px;
+}</string>
+       </property>
+       <property name="text">
+        <string>Stacking Order</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
@@ -598,9 +594,6 @@ font-size: 11px;
   <tabstop>m_InputDirBtn</tabstop>
   <tabstop>m_OutputFile</tabstop>
   <tabstop>m_OutputFileBtn</tabstop>
-  <tabstop>m_StackLowToHigh</tabstop>
-  <tabstop>m_StackHighToLow</tabstop>
-  <tabstop>m_zSpacing</tabstop>
   <tabstop>m_RefFrameOptionsBtn</tabstop>
   <tabstop>m_FilePrefix</tabstop>
   <tabstop>m_FileSuffix</tabstop>

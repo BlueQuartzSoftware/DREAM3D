@@ -903,15 +903,16 @@ DREAM3D::Rgb OrthoRhombicOps::generateMisorientationColor(const QuatF& q, const 
 
   //eq c1.1
   k = tan(w / 2.0f);
-  x = n1 * k;
-  y = n2 * k;
-  z = n3 * k;
+  x = n1;
+  y = n2;
+  z = n3;
 
-  FOrientArrayType rod(x, y, z);
+  FOrientArrayType rod(x, y, z, k);
   rod = getMDFFZRod(rod);
   x = rod[0];
   y = rod[1];
   z = rod[2];
+  k = rod[3];
 
   //eq c1.2
   k = std::max(x, y);

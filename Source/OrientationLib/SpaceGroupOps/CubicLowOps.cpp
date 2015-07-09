@@ -1078,14 +1078,15 @@ DREAM3D::Rgb CubicLowOps::generateMisorientationColor(const QuatF& q, const Quat
 
   //eq c7.1
   k = tan(w / 2.0f);
-  x = n1 * k;
-  y = n2 * k;
-  z = n3 * k;
-  FOrientArrayType rod(x, y, z);
+  x = n1;
+  y = n2;
+  z = n3;
+  FOrientArrayType rod(x, y, z, k);
   rod = getMDFFZRod(rod);
   x = rod[0];
   y = rod[1];
   z = rod[2];
+  k = rod[3];
 
   //eq c7.2
   k = atan2(y, x);
