@@ -1,6 +1,10 @@
 Compiling External Libraries {#compilingexternallibraries}
 ========
 
+# Online SDK Installation Tutorial #
+
+A tutorial is available for [Windows 7/8](http://dream3d.bluequartz.net/?p=954) and [OS X](http://dream3d.bluequartz.net/?p=930) that covers the installation of a DREAM3D_SDK using either prebuilt binaries (Windows) or a shell script (OS X). Please use those web sites. The instructions below are for special cases where using the precompiled binaries is not a viable option for the developers environment.
+
 # Preliminaries #
 
 A Compiler suite for your Operating System (Visual Studio, Xcode, GCC). The following table lists the compilers that DREAM3D is commonly compiled against.
@@ -16,7 +20,11 @@ A Compiler suite for your Operating System (Visual Studio, Xcode, GCC). The foll
 Due to incompatibilities of HDF5 and these environments we can not support compiling DREAM3D using these environments. Visual Studio Community 2013 is Free for anyone to use and has no restrictions on the software produced and its distribution.
 
 
+# DREAM3D SDK Availability - PLEASE USE this option. #
 
+The DREAM3D developers keep a downloadable _DREAM3D\_SDK_ for Visual Studio 2013 that contains 64 bit builds of **ALL** the dependent libraries and applications except for Qt 5 and ITK. The _DREAM3D\_SDK_ can be downloaded [here](http://dream3d.bluequartz.net/binaries/SDK/).
+
+**The developer is strongly urged to utilize the available SDK as everything is included except a Git install**. Unless the developer has a special need to compile everything, it is best to use the precompiled SDK. 
 
 # External Dependencies (Recommended Order of Installation) #
 
@@ -24,18 +32,13 @@ Due to incompatibilities of HDF5 and these environments we can not support compi
 |  ------	| ------	| ------	|
 | Git | 1.97.x | [http://www.git-scm.com](http://www.git-scm.com) |
 | CMake | 3.2.3 | [http://www.cmake.org/cmake/resources/software.html](http://www.cmake.org/cmake/resources/software.html) |
-| Doxygen | 1.8.9.1 | [http://www.stack.nl/~dimitri/doxygen/download.html](http://www.stack.nl/~dimitri/doxygen/download.html) |
+| Doxygen | 1.8.10 | [http://www.stack.nl/~dimitri/doxygen/download.html](http://www.stack.nl/~dimitri/doxygen/download.html) |
 | HDF5 | 1.8.15 | [http://www.hdfgroup.org/HDF5/release/obtain5.html](http://www.hdfgroup.org/HDF5/release/obtain5.html) |
 | Boost | 1.58.0 | [http://www.boost.org](http://www.boost.org) |
 | Eigen | 3.2.4 | [Eigen Home Page](http://eigen.tuxfamily.org/index.php?title=Main_Page) |
-| Intel Threading Building Blocks | tbb42_20150424oss | [http://threadingbuildingblocks.org/download](http://threadingbuildingblocks.org/download) |
-| Qt 5.4.x | 5.4.1 (Qt 4.x will NOT work) |  The developer should obtain a precompiled package from [http://www.qt.io](http://www.qt.io) and install that version rather than trying to compile Qt itself. Visual Studio uses should get Qt 5.4.1 at the minimum. Qt 5.4.0 is **known** to produce bad compiled code for 64 bit builds. |
+| Intel Threading Building Blocks | tbb43_20150424oss | [http://threadingbuildingblocks.org/download](http://threadingbuildingblocks.org/download) |
+| Qt 5.4.x | 5.4.2 (Qt 4.x will NOT work) |  The developer should obtain a precompiled package from [http://www.qt.io](http://www.qt.io) and install that version rather than trying to compile Qt itself. Visual Studio uses should get Qt 5.4.2 at the minimum. Qt 5.4.0 is **known** to produce bad compiled code for 64 bit builds. |
 | Qwt | 6.1.2 | Obtain from source forge. This is the first version to be compatible with Qt 5.4.x |
-
-
-# DREAM3D SDK Availability #
-
-The DREAM3D developers keep a downloadable _DREAM3D\_SDK_ for Visual Studio 2013 that contains 64 bit builds of **ALL** the dependent libraries and applications except for Qt 5 and ITK. The _DREAM3D\_SDK_ can be downloaded [here](http://dream3d.bluequartz.net/binaries/SDK/).
 
 
 # Setting Up the Environment #
@@ -63,7 +66,7 @@ Download CMake for your system. Unpack and drop the folder into the **DREAM3D\_S
 The default packages are usually not new enough from the package maintainers and you will need to download the prebuilt binaries for linux.
 
 
-# DOxygen 1.8.9.1 #
+# DOxygen 1.8.10 #
 
 [Doxygen Download Link](http://www.stack.nl/~dimitri/doxygen/download.html)
 
