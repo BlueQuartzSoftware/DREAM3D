@@ -190,12 +190,23 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, unsigned int pha
   QVector<float> sigmas;
   QVector<float> odf;
 
+  SGODFTableModel* tableModel = NULL;
+
+  if(weightSpreadGroupBox->isChecked() )
+  {
+    tableModel = m_ODFTableModel;
+  }
+  else
+  {
+    tableModel = m_OdfBulkTableModel;
+  }
+
   // Initialize xMax and yMax....
-  e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1);
-  e2s = m_ODFTableModel->getData(SGODFTableModel::Euler2);
-  e3s = m_ODFTableModel->getData(SGODFTableModel::Euler3);
-  weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
-  sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
+  e1s = tableModel->getData(SGODFTableModel::Euler1);
+  e2s = tableModel->getData(SGODFTableModel::Euler2);
+  e3s = tableModel->getData(SGODFTableModel::Euler3);
+  weights = tableModel->getData(SGODFTableModel::Weight);
+  sigmas = tableModel->getData(SGODFTableModel::Sigma);
 
   for (QVector<float>::size_type i = 0; i < e1s.size(); i++)
   {
@@ -687,6 +698,7 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
     progress.setLabelText("[1/3] Reading File ...");
     AngReader loader;
     loader.setFileName(angleFilePath->text());
+    loader.setReadHexGrid(true);
     int err = loader.readFile();
     if(err < 0)
     {
