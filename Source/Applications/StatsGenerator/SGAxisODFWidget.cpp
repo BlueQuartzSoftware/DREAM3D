@@ -459,10 +459,10 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
   }
   size_t numEntries = e1s.size();
 
-  int imageSize = 226;
-  int lamberSize = 22;
+  int imageSize = pfImageSize->value();
+  int lamberSize = pfLambertSize->value();
   int numColors = 16;
-  int npoints = 5000;
+  int npoints = pfSamplePoints->value();
   QVector<size_t> dims(1, 3);
   FloatArrayType::Pointer eulers = FloatArrayType::CreateArray(npoints, dims, "Eulers");
 
