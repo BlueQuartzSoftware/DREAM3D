@@ -118,6 +118,7 @@ int VisualizeGBCDGMT::writeFilterParameters(AbstractFilterParametersWriter* writ
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(GBCDArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
   DREAM3D_FILTER_WRITE_PARAMETER(MisorientationRotation)
   DREAM3D_FILTER_WRITE_PARAMETER(PhaseOfInterest)
@@ -163,6 +164,13 @@ void VisualizeGBCDGMT::dataCheck()
     setOutputFile(absPath);
   }
 
+  QVector<size_t> cDims(1, 1);
+  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if (NULL != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  {
+    m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+
   IDataArray::Pointer tmpGBCDPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getGBCDArrayPath());
   if(getErrorCondition() < 0) { return; }
 
@@ -174,7 +182,7 @@ void VisualizeGBCDGMT::dataCheck()
     { m_GBCD = m_GBCDPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
-  if (getPhaseOfInterest() >= m_GBCDPtr.lock()->getNumberOfTuples() )
+  if (NULL != m_GBCDPtr.lock().get() && getPhaseOfInterest() >= m_GBCDPtr.lock()->getNumberOfTuples())
   {
     QString ss = QObject::tr("The Phase you entered is larger than the number of phases").arg(ClassName());
     notifyErrorMessage(getHumanLabel(), ss, -1);
