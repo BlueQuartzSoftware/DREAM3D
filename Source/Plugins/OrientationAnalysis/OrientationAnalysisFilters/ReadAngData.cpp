@@ -205,6 +205,10 @@ void ReadAngData::dataCheck()
     {
       boost::shared_ptr<AngReader> reader(new AngReader());
       readDataFile(reader.get(), m, tDims, ANG_HEADER_ONLY);
+      if (getErrorCondition() < 0)
+      {
+        return;
+      }
 
       // Update the size of the Cell Attribute Matrix now that the dimensions of the volume are known
       cellAttrMat->resizeAttributeArrays(tDims);
@@ -317,6 +321,14 @@ void ReadAngData::readDataFile(AngReader* reader, DataContainer::Pointer m, QVec
       else
       {
         m_FileWasRead = true;
+      }
+
+      if(reader->getGrid().compare(Ebsd::Ang::HexGrid) == 0)
+      {
+        setErrorCondition(-1000);
+        notifyErrorMessage(getHumanLabel(), "DREAM.3D does not directly read HEX grid .ang files. Please use the 'Convert Hexagonal Grid Data to Square Grid Data (TSL - .ang)' filter first to batch convert the Hex grid files.", getErrorCondition());
+        m_FileWasRead = false;
+        return;
       }
     }
     else
@@ -548,7 +560,10 @@ void ReadAngData::execute()
   ebsdAttrMat->setType(DREAM3D::AttributeMatrixType::Cell);
 
   readDataFile(reader.get(), m, tDims, ANG_FULL_FILE);
-
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
   copyRawEbsdData(reader.get(), tDims, cDims);
 
   // Set the file name and time stamp into the cache, if we are reading from the file and after all the reading has been done
