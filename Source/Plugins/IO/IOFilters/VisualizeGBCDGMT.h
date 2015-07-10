@@ -59,14 +59,17 @@ class VisualizeGBCDGMT : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, OutputFile)
     Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
-    DREAM3D_FILTER_PARAMETER(unsigned int, CrystalStructure)
-    Q_PROPERTY(unsigned int CrystalStructure READ getCrystalStructure WRITE setCrystalStructure)
+    DREAM3D_FILTER_PARAMETER(int, PhaseOfInterest)
+    Q_PROPERTY(int PhaseOfInterest READ getPhaseOfInterest WRITE setPhaseOfInterest)
 
     DREAM3D_FILTER_PARAMETER(AxisAngleInput_t, MisorientationRotation)
     Q_PROPERTY(AxisAngleInput_t MisorientationRotation READ getMisorientationRotation WRITE setMisorientationRotation)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, GBCDArrayPath)
     Q_PROPERTY(DataArrayPath GBCDArrayPath READ getGBCDArrayPath WRITE setGBCDArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+    Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -159,6 +162,7 @@ class VisualizeGBCDGMT : public AbstractFilter
 
   private:
     DEFINE_DATAARRAY_VARIABLE(double, GBCD)
+    DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
     QVector<float> gmtValues;
