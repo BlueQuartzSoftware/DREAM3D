@@ -102,6 +102,7 @@ class SGAxisODFWidget : public QWidget, private Ui::SGAxisODFWidget
     void on_addODFTextureBtn_clicked();
     void on_deleteODFTextureBtn_clicked();
     void on_loadODFTextureBtn_clicked();
+    void on_savePoleFigureImage_clicked();
 
   protected:
     DREAM3D_INSTANCE_PROPERTY(bool, Initializing)
