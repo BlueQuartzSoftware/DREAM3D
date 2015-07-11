@@ -1328,11 +1328,12 @@ DREAM3D::Rgb HexagonalLowOps::generateRodriguesColor(float r1, float r2, float r
 // -----------------------------------------------------------------------------
 QVector<UInt8ArrayType::Pointer> HexagonalLowOps::generatePoleFigure(PoleFigureConfiguration_t& config)
 {
-  QVector<UInt8ArrayType::Pointer> poleFigures;
   QString label0("Hex Low <0001>");
   QString label1("Hex Low <-1-120>");
   QString label2("Hex Low <2-1-10>");
-
+  if(config.labels.size() > 0) { label0 = config.labels.at(0); }
+  if(config.labels.size() > 1) { label1 = config.labels.at(1); }
+  if(config.labels.size() > 2) { label2 = config.labels.at(2); }
 
   int numOrientations = config.eulers->getNumberOfTuples();
 
@@ -1435,16 +1436,25 @@ QVector<UInt8ArrayType::Pointer> HexagonalLowOps::generatePoleFigure(PoleFigureC
   UInt8ArrayType::Pointer image001 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label0);
   UInt8ArrayType::Pointer image011 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label1);
   UInt8ArrayType::Pointer image111 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label2);
+
+  QVector<UInt8ArrayType::Pointer> poleFigures(3);
+  if(config.order.size() == 3)
+  {
+    poleFigures[config.order[0]] = image001;
+    poleFigures[config.order[1]] = image011;
+    poleFigures[config.order[2]] = image111;
+  }
+  else
+  {
+    poleFigures[0] = image001;
+    poleFigures[1] = image011;
+    poleFigures[2] = image111;
+  }
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-
-  poleFigures.push_back(image001);
-  poleFigures.push_back(image011);
-  poleFigures.push_back(image111);
-
-  g = new tbb::task_group;
 
   if(doParallel == true)
   {
+    g = new tbb::task_group;
     g->run(GeneratePoleFigureRgbaImageImpl(intensity001.get(), &config, image001.get()));
     g->run(GeneratePoleFigureRgbaImageImpl(intensity011.get(), &config, image011.get()));
     g->run(GeneratePoleFigureRgbaImageImpl(intensity111.get(), &config, image111.get()));

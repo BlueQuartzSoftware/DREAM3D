@@ -50,6 +50,8 @@ typedef struct
   double minScale;
   double maxScale;
   float sphereRadius;
+  QVector<QString> labels;
+  QVector<unsigned int> order;
 } PoleFigureConfiguration_t;
 
 /**

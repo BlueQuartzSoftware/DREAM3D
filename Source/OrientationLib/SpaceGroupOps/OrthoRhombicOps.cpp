@@ -740,34 +740,34 @@ DREAM3D::Rgb OrthoRhombicOps::generateRodriguesColor(float r1, float r2, float r
 // -----------------------------------------------------------------------------
 QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureConfiguration_t& config)
 {
-  QVector<UInt8ArrayType::Pointer> poleFigures;
+
   QString label0("Orthorhombic <001>");
   QString label1("Orthorhombic <100>");
   QString label2("Orthorhombic <010>");
-
+  if(config.labels.size() > 0) { label0 = config.labels.at(0); }
+  if(config.labels.size() > 1) { label1 = config.labels.at(1); }
+  if(config.labels.size() > 2) { label2 = config.labels.at(2); }
 
   int numOrientations = config.eulers->getNumberOfTuples();
 
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
-  // this is size for CUBIC ONLY, <001> Family
   QVector<size_t> dims(1, 3);
-  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * Detail::Orthorhombic::symSize0, dims, label0 + QString("xyzCoords"));
-  // this is size for CUBIC ONLY, <011> Family
-  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * Detail::Orthorhombic::symSize1, dims, label1 + QString("xyzCoords"));
-  // this is size for CUBIC ONLY, <111> Family
-  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * Detail::Orthorhombic::symSize2, dims, label2 + QString("xyzCoords"));
+  std::vector<FloatArrayType::Pointer> coords(3);
+  coords[0] = FloatArrayType::CreateArray(numOrientations * Detail::Orthorhombic::symSize0, dims, label0 + QString("001_Coords"));
+  coords[1] = FloatArrayType::CreateArray(numOrientations * Detail::Orthorhombic::symSize1, dims, label1 + QString("100_Coords"));
+  coords[2] = FloatArrayType::CreateArray(numOrientations * Detail::Orthorhombic::symSize2, dims, label2 + QString("010_Coords"));
 
   config.sphereRadius = 1.0f;
 
   // Generate the coords on the sphere **** Parallelized
-  generateSphereCoordsFromEulers(config.eulers, xyz001.get(), xyz011.get(), xyz111.get());
+  generateSphereCoordsFromEulers(config.eulers, coords[0].get(), coords[1].get(), coords[2].get());
 
 
   // These arrays hold the "intensity" images which eventually get converted to an actual Color RGB image
   // Generate the modified Lambert projection images (Squares, 2 of them, 1 for northern hemisphere, 1 for southern hemisphere
   DoubleArrayType::Pointer intensity001 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label0 + "_Intensity_Image");
-  DoubleArrayType::Pointer intensity011 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label1 + "_Intensity_Image");
-  DoubleArrayType::Pointer intensity111 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label2 + "_Intensity_Image");
+  DoubleArrayType::Pointer intensity100 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label1 + "_Intensity_Image");
+  DoubleArrayType::Pointer intensity010 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label2 + "_Intensity_Image");
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
@@ -775,9 +775,9 @@ QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureC
 
   if(doParallel == true)
   {
-    g->run(GenerateIntensityMapImpl(xyz001.get(), &config, intensity001.get()));
-    g->run(GenerateIntensityMapImpl(xyz011.get(), &config, intensity011.get()));
-    g->run(GenerateIntensityMapImpl(xyz111.get(), &config, intensity111.get()));
+    g->run(GenerateIntensityMapImpl(coords[0].get(), &config, intensity001.get()));
+    g->run(GenerateIntensityMapImpl(coords[1].get(), &config, intensity100.get()));
+    g->run(GenerateIntensityMapImpl(coords[2].get(), &config, intensity010.get()));
     g->wait(); // Wait for all the threads to complete before moving on.
     delete g;
     g = NULL;
@@ -785,11 +785,11 @@ QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureC
   else
 #endif
   {
-    GenerateIntensityMapImpl m001(xyz001.get(), &config, intensity001.get());
+    GenerateIntensityMapImpl m001(coords[0].get(), &config, intensity001.get());
     m001();
-    GenerateIntensityMapImpl m011(xyz011.get(), &config, intensity011.get());
+    GenerateIntensityMapImpl m011(coords[1].get(), &config, intensity100.get());
     m011();
-    GenerateIntensityMapImpl m111(xyz111.get(), &config, intensity111.get());
+    GenerateIntensityMapImpl m111(coords[2].get(), &config, intensity010.get());
     m111();
   }
 
@@ -812,8 +812,8 @@ QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureC
   }
 
 
-  dPtr = intensity011->getPointer(0);
-  count = intensity011->getNumberOfTuples();
+  dPtr = intensity100->getPointer(0);
+  count = intensity100->getNumberOfTuples();
   for(size_t i = 0; i < count; ++i)
   {
     if (dPtr[i] > max)
@@ -826,8 +826,8 @@ QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureC
     }
   }
 
-  dPtr = intensity111->getPointer(0);
-  count = intensity111->getNumberOfTuples();
+  dPtr = intensity010->getPointer(0);
+  count = intensity010->getNumberOfTuples();
   for(size_t i = 0; i < count; ++i)
   {
     if (dPtr[i] > max)
@@ -845,21 +845,30 @@ QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureC
 
   dims[0] = 4;
   UInt8ArrayType::Pointer image001 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label0);
-  UInt8ArrayType::Pointer image011 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label1);
-  UInt8ArrayType::Pointer image111 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label2);
+  UInt8ArrayType::Pointer image100 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label1);
+  UInt8ArrayType::Pointer image010 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label2);
+
+  QVector<UInt8ArrayType::Pointer> poleFigures(3);
+  if(config.order.size() == 3)
+  {
+    poleFigures[config.order[0]] = image001;
+    poleFigures[config.order[1]] = image100;
+    poleFigures[config.order[2]] = image010;
+  }
+  else
+  {
+    poleFigures[0] = image001;
+    poleFigures[1] = image100;
+    poleFigures[2] = image010;
+  }
+
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-
-  poleFigures.push_back(image001);
-  poleFigures.push_back(image011);
-  poleFigures.push_back(image111);
-
-  g = new tbb::task_group;
-
   if(doParallel == true)
   {
+    g = new tbb::task_group;
     g->run(GeneratePoleFigureRgbaImageImpl(intensity001.get(), &config, image001.get()));
-    g->run(GeneratePoleFigureRgbaImageImpl(intensity011.get(), &config, image011.get()));
-    g->run(GeneratePoleFigureRgbaImageImpl(intensity111.get(), &config, image111.get()));
+    g->run(GeneratePoleFigureRgbaImageImpl(intensity100.get(), &config, image100.get()));
+    g->run(GeneratePoleFigureRgbaImageImpl(intensity010.get(), &config, image010.get()));
     g->wait(); // Wait for all the threads to complete before moving on.
     delete g;
     g = NULL;
@@ -869,9 +878,9 @@ QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureC
   {
     GeneratePoleFigureRgbaImageImpl m001(intensity001.get(), &config, image001.get());
     m001();
-    GeneratePoleFigureRgbaImageImpl m011(intensity011.get(), &config, image011.get());
+    GeneratePoleFigureRgbaImageImpl m011(intensity100.get(), &config, image100.get());
     m011();
-    GeneratePoleFigureRgbaImageImpl m111(intensity111.get(), &config, image111.get());
+    GeneratePoleFigureRgbaImageImpl m111(intensity010.get(), &config, image010.get());
     m111();
   }
 
