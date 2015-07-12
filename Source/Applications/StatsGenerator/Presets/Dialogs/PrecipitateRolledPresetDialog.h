@@ -59,6 +59,10 @@ class PrecipitateRolledPresetDialog : public QDialog
     float getB();
     float getC();
 
+  public slots:
+
+    void checkInputs(const QString& text);
+
   protected:
     void setupGui();
 

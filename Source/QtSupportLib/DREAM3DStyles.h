@@ -56,7 +56,7 @@ class QtSupportLib_EXPORT DREAM3DStyles : public QObject
     static QFont GetTitleFont();
     static void LineEditErrorStyle(QLineEdit* lineEdit);
     static void LineEditClearStyle(QLineEdit* lineEdit);
-
+    static void LineEditRedErrorStyle(QLineEdit* lineEdit);
 };
 
 #endif /* _DREAM3DStyles_H_ */

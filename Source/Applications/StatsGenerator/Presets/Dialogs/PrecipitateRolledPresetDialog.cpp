@@ -32,14 +32,18 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
 #include "PrecipitateRolledPresetDialog.h"
+
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QDialogButtonBox>
-#include <QtGui/QDoubleValidator>
 #include <QtWidgets/QApplication>
+
+#include <QtGui/QDoubleValidator>
+
+
+#include "QtSupportLib/DREAM3DStyles.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -96,10 +100,15 @@ void PrecipitateRolledPresetDialog::setupGui()
 
   C = new QLineEdit(this);
   C->setText(QString("1.0"));
-  C->setObjectName(QString::fromUtf8("B"));
+  C->setObjectName(QString::fromUtf8("C"));
   formLayout->setWidget(2, QFormLayout::FieldRole, C);
   QDoubleValidator* CValidator = new QDoubleValidator(C);
   CValidator->setDecimals(4);
+
+  QLabel* infoLabel = new QLabel(this);
+  infoLabel->setObjectName(QString::fromUtf8("infoLabel"));
+  infoLabel->setText("The following must be true: A > B > C");
+  formLayout->setWidget(3, QFormLayout::SpanningRole, infoLabel);
 
   verticalLayout_2->addLayout(formLayout);
 
@@ -117,6 +126,13 @@ void PrecipitateRolledPresetDialog::setupGui()
   QObject::connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
   QObject::connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
+  connect(A, SIGNAL(textEdited(const QString&)),
+          this, SLOT(checkInputs(const QString&)));
+  connect(B, SIGNAL(textEdited(const QString&)),
+          this, SLOT(checkInputs(const QString&)));
+  connect(C, SIGNAL(textEdited(const QString&)),
+          this, SLOT(checkInputs(const QString&)));
+
   QMetaObject::connectSlotsByName(this);
 
   setWindowTitle("Rolled Preset Options");
@@ -128,6 +144,28 @@ void PrecipitateRolledPresetDialog::setupGui()
   sizePolicy.setVerticalStretch(0);
   //sizePolicy.setHeightForWidth(this->sizePolicy().hasHeightForWidth());
   this->setSizePolicy(sizePolicy);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PrecipitateRolledPresetDialog::checkInputs(const QString& text)
+{
+  float a = getA();
+  float b = getB();
+  float c = getC();
+  if (a >= b && b >= c)
+  {
+    DREAM3DStyles::LineEditClearStyle(A);
+    DREAM3DStyles::LineEditClearStyle(B);
+    DREAM3DStyles::LineEditClearStyle(C);
+  }
+  else
+  {
+    DREAM3DStyles::LineEditRedErrorStyle(A);
+    DREAM3DStyles::LineEditRedErrorStyle(B);
+    DREAM3DStyles::LineEditRedErrorStyle(C);
+  }
 }
 
 // -----------------------------------------------------------------------------
