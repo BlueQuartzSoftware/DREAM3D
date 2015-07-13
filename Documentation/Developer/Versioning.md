@@ -2,7 +2,7 @@
 
 The DREAM3D version scheme is a set of 4 values, the first 3 are integers, the last is the first part of a SHA1 hash. An example is the following:
 
-    5.3.2.as34fd
+    6.1.3.as34fd
 
 The scheme is [major].[minor].[patch].[revision]
 
