@@ -188,6 +188,51 @@ int FeatureFaceCurvatureFilter::writeFilterParameters(AbstractFilterParametersWr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FeatureFaceCurvatureFilter::updateEdgePointers()
+{
+  if (NULL != m_SurfaceMeshPrincipalCurvature1sPtr.lock().get())
+  {
+    m_SurfaceMeshPrincipalCurvature1s = m_SurfaceMeshPrincipalCurvature1sPtr.lock()->getPointer(0);
+  }
+
+  if (NULL != m_SurfaceMeshPrincipalCurvature2sPtr.lock().get()) 
+  {
+    m_SurfaceMeshPrincipalCurvature2s = m_SurfaceMeshPrincipalCurvature2sPtr.lock()->getPointer(0);
+  }
+
+  if (m_ComputeGaussianCurvature == true)
+  {
+    if (NULL != m_SurfaceMeshGaussianCurvaturesPtr.lock().get())
+    {
+      m_SurfaceMeshGaussianCurvatures = m_SurfaceMeshGaussianCurvaturesPtr.lock()->getPointer(0);
+    }
+  }
+
+  if (m_ComputeMeanCurvature == true)
+  {
+    if (NULL != m_SurfaceMeshMeanCurvaturesPtr.lock().get())
+    {
+      m_SurfaceMeshMeanCurvatures = m_SurfaceMeshMeanCurvaturesPtr.lock()->getPointer(0);
+    } 
+  }
+
+  if (m_ComputePrincipalDirectionVectors == true)
+  {
+    if (NULL != m_SurfaceMeshPrincipalDirection1sPtr.lock().get())
+    {
+      m_SurfaceMeshPrincipalDirection1s = m_SurfaceMeshPrincipalDirection1sPtr.lock()->getPointer(0);
+    } 
+
+    if (NULL != m_SurfaceMeshPrincipalDirection2sPtr.lock().get())
+    {
+      m_SurfaceMeshPrincipalDirection2s = m_SurfaceMeshPrincipalDirection2sPtr.lock()->getPointer(0);
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FeatureFaceCurvatureFilter::dataCheck()
 {
   setErrorCondition(0);
@@ -313,6 +358,13 @@ void FeatureFaceCurvatureFilter::execute()
     triangleGeom->findElementsContainingVert();
   }
 
+  int64_t numEdges = triangleGeom->getNumberOfEdges();
+
+  AttributeMatrix::Pointer edgeAttrMat = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName())->getAttributeMatrix(getEdgeAttributeMatrixName());
+  QVector<size_t> tDims(1, numEdges);
+  edgeAttrMat->resizeAttributeArrays(tDims);
+  updateEdgePointers();
+  
   // get the QMap from the SharedFeatureFaces filter
   SharedFeatureFaces_t sharedFeatureFaces;
 
@@ -321,7 +373,7 @@ void FeatureFaceCurvatureFilter::execute()
   {
     if (m_SurfaceMeshFeatureFaceIds[t] > maxFaceId) { maxFaceId = m_SurfaceMeshFeatureFaceIds[t]; }
   }
-  std::vector<int32_t> faceSizes(maxFaceId, 0);
+  std::vector<int32_t> faceSizes(maxFaceId + 1, 0);
   // Loop through all the Triangles and assign each one to a unique Feature Face Id.
   for (int64_t t = 0; t < numTriangles; ++t)
   {

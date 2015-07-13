@@ -191,6 +191,11 @@ class FeatureFaceCurvatureFilter : public SurfaceMeshFilter
     int32_t  m_TotalFeatureFaces;
     int32_t  m_CompletedFeatureFaces;
 
+    /**
+     * @brief updateEdgePointers Updates raw Edge pointers
+     */
+    void updateEdgePointers();
+
     FeatureFaceCurvatureFilter(const FeatureFaceCurvatureFilter&); // Copy Constructor Not Implemented
     void operator=(const FeatureFaceCurvatureFilter&); // Operator '=' Not Implemented
 };
