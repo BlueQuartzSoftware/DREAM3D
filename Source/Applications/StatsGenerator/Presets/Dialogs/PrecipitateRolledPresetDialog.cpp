@@ -107,7 +107,7 @@ void PrecipitateRolledPresetDialog::setupGui()
 
   QLabel* infoLabel = new QLabel(this);
   infoLabel->setObjectName(QString::fromUtf8("infoLabel"));
-  infoLabel->setText("The following must be true: A > B > C");
+  infoLabel->setText("The following must be true: A >= B >= C");
   formLayout->setWidget(3, QFormLayout::SpanningRole, infoLabel);
 
   verticalLayout_2->addLayout(formLayout);
