@@ -250,7 +250,7 @@ void AlignSections::execute()
 
       progressInt = ((float)i / dims[2]) * 100.0f;
       QString ss = QObject::tr("Transferring Cell Data || %1% Complete").arg(progressInt);
-      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+      notifyProgressMessage(getMessagePrefix(), getHumanLabel(), ss, progressInt);
       prog = prog + progIncrement;
     }
     if (getCancel() == true)

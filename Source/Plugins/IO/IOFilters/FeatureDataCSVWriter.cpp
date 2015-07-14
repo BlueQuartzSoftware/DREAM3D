@@ -231,7 +231,7 @@ void FeatureDataCSVWriter::execute()
     if (((float)i / numTuples) * 100.0f > threshold)
     {
       QString ss = QObject::tr("Writing Feature Data || %1% Complete").arg(((float)i / numTuples) * 100.0f);
-      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+      notifyProgressMessage(getMessagePrefix(), getHumanLabel(), ss, int((((float)i / numTuples) * 100.0f) ));
       threshold = threshold + 5.0f;
       if (threshold < ((float)i / numTuples) * 100.0f)
       {

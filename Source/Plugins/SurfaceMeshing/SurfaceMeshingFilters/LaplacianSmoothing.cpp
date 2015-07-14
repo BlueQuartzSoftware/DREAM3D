@@ -296,7 +296,7 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
   {
     if (getCancel() == true) { return -1; }
     QString ss = QObject::tr("Iteration %1").arg(q);
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyProgressMessage(getMessagePrefix(), getHumanLabel(), ss, q);
     for (int64_t i = 0; i < nedges; i++)
     {
       int64_t in1 = uedges[2 * i];   // row of the first vertex
