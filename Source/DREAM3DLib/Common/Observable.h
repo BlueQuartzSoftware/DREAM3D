@@ -73,6 +73,8 @@ class DREAM3DLib_EXPORT Observable : public QObject
 
     virtual void notifyStatusMessage(const QString& prefix, const QString& humanLabel, const QString& ss);
 
+    virtual void notifyProgressMessage(const QString& prefix, const QString& humanLabel, const QString& str, int progress);
+
   public slots:
 
     /**
