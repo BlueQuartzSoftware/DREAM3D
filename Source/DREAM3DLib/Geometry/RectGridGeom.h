@@ -40,6 +40,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Geometry/IGeometry.h"
+#include "DREAM3DLib/Geometry/GeometryHelpers.hpp"
 
 /**
  * @brief The RectGridGeom class represents a structured rectlinear grid
@@ -66,13 +67,13 @@ class DREAM3DLib_EXPORT RectGridGeom : public IGeometry
     size_t getYPoints() {return m_Dimensions[1];}
     size_t getZPoints() {return m_Dimensions[2];}
 
-    DREAM3D_INSTANCE_VEC3_PROPERTY(float, Resolution)
+    void setXBounds(FloatArrayType::Pointer xBounds);
+    void setYBounds(FloatArrayType::Pointer yBounds);
+    void setZBounds(FloatArrayType::Pointer zBounds);
 
-    float getXRes() {return m_Resolution[0];}
-    float getYRes() {return m_Resolution[1];}
-    float getZRes() {return m_Resolution[2];}
-
-    DREAM3D_INSTANCE_VEC3_PROPERTY(float, Origin)
+    FloatArrayType::Pointer getXBounds() { return xBounds; }
+    FloatArrayType::Pointer getYBounds() { return yBounds; }
+    FloatArrayType::Pointer getZBounds() { return zBounds; }
 
     void getCoords(size_t idx[3], float coords[3]);
 
@@ -285,7 +286,7 @@ class DREAM3DLib_EXPORT RectGridGeom : public IGeometry
      * @param origin
      * @return
      */
-    virtual int gatherMetaData(hid_t parentid, size_t volDims[3], float spacing[3], float origin[3], unsigned int spatialDims, QString geomName);
+    virtual int gatherMetaData(hid_t parentid, size_t volDims[3], FloatArrayType::Pointer xBounds, FloatArrayType::Pointer yBounds, FloatArrayType::Pointer zBounds, unsigned int spatialDims, QString geomName, bool preflight);
 
     /**
      * @brief setElementsContaingVert
@@ -314,6 +315,9 @@ class DREAM3DLib_EXPORT RectGridGeom : public IGeometry
     unsigned int m_UnitDimensionality;
     unsigned int m_SpatialDimensionality;
     AttributeMatrixMap_t m_AttributeMatrices;
+    FloatArrayType::Pointer xBounds;
+    FloatArrayType::Pointer yBounds;
+    FloatArrayType::Pointer zBounds;
 
     RectGridGeom(const RectGridGeom&); // Copy Constructor Not Implemented
     void operator=(const RectGridGeom&); // Operator '=' Not Implemented

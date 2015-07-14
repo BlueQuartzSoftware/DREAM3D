@@ -723,6 +723,9 @@ namespace DREAM3D
     const DREAM3D_STRING TriangleGeometry("TriangleGeometry");
     const DREAM3D_STRING QuadGeometry("QuadrilateralGeometry");
 
+    const DREAM3D_STRING xBoundsList("xBounds");
+    const DREAM3D_STRING yBoundsList("yBounds");
+    const DREAM3D_STRING zBoundsList("zBounds");
     const DREAM3D_STRING SharedVertexList("SharedVertexList");
     const DREAM3D_STRING SharedEdgeList("SharedEdgeList");
     const DREAM3D_STRING SharedTriList("SharedTriList");
