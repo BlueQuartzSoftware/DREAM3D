@@ -241,8 +241,11 @@ void ChangeResolution::preflight()
   if (m_RenumberFeatures == true)
   {
     AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
-    QVector<bool> activeObjects(cellFeatureAttrMat->getNumTuples(), true);
-    cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
+    if (NULL != cellFeatureAttrMat.get())
+    {
+      QVector<bool> activeObjects(cellFeatureAttrMat->getNumTuples(), true);
+      cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
+    }
   }
   emit preflightExecuted();
   setInPreflight(false);
