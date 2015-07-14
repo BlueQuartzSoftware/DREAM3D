@@ -141,7 +141,18 @@ void RotateEulerRefFrame::setupFilterParameters()
   parameters.push_back(FloatVec3FilterParameter::New("Rotation Axis (ijk)", "RotationAxis", getRotationAxis(), FilterParameter::Parameter));
   parameters.push_back(DoubleFilterParameter::New("Rotation Angle (Degrees)", "RotationAngle", getRotationAngle(), FilterParameter::Parameter));
 
-  parameters.push_back(DataArraySelectionFilterParameter::New("Euler Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray));
+  {
+    FilterParameter::DataStructureRequirements req;
+    QVector<unsigned int> amTypes;
+    amTypes.push_back(DREAM3D::AttributeMatrixType::Cell);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::Face);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::Edge);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::Vertex);
+    req.amTypes = amTypes;
+    req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Float);
+    req.componentDimensions = QVector<size_t>(1, 3);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Euler Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, req));
+  }
   setFilterParameters(parameters);
 }
 

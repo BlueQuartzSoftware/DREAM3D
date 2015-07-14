@@ -122,8 +122,16 @@ void FindModulusMismatch::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(DataArraySelectionFilterParameter::New("Moduli", "ModuliArrayPath", getModuliArrayPath(), FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray));
+  {
+    FilterParameter::DataStructureRequirements req;
+    req.componentDimensions = QVector<size_t>(1, 1);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Moduli", "ModuliArrayPath", getModuliArrayPath(), FilterParameter::RequiredArray, req));
+  }
+  {
+    FilterParameter::DataStructureRequirements req;
+    req.componentDimensions = QVector<size_t>(1, 2);
+    parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req));
+  }
 
   parameters.push_back(StringFilterParameter::New("SurfaceMeshDeltaModulus", "SurfaceMeshDeltaModulusArrayName", getSurfaceMeshDeltaModulusArrayName(), FilterParameter::CreatedArray));
 

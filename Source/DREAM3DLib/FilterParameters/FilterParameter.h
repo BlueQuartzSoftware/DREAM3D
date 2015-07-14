@@ -69,6 +69,14 @@ class DREAM3DLib_EXPORT FilterParameter
       Uncategorized = 3
     };
 
+    struct DataStructureRequirements
+    {
+      QVector<unsigned int> dcGeometryTypes;
+      QVector<unsigned int> amTypes;
+      QVector<QString> daTypes;
+      QVector<size_t> componentDimensions;
+    };
+
     virtual ~FilterParameter();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(HumanLabel)

@@ -82,8 +82,35 @@ void GenerateVectorColors::setupFilterParameters()
   QStringList linkedProps("GoodVoxelsArrayPath");
   parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Good Voxels Only (Bad Voxels Will Be Black)", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Vector Attribute Array", "VectorsArrayPath", getVectorsArrayPath(), FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray));
+  {
+    FilterParameter::DataStructureRequirements req;
+    QVector<unsigned int> amTypes;
+    amTypes.push_back(DREAM3D::AttributeMatrixType::Cell);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::Edge);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::Face);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::Vertex);
+    QVector<QString> daTypes;
+    daTypes.push_back(DREAM3D::TypeNames::Float);
+    req.amTypes = amTypes;
+    req.daTypes = daTypes;
+    req.componentDimensions = QVector<size_t>(1, 3);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Vector Attribute Array", "VectorsArrayPath", getVectorsArrayPath(), FilterParameter::RequiredArray, req));
+  }
+
+  {
+    FilterParameter::DataStructureRequirements req;
+    QVector<unsigned int> amTypes;
+    amTypes.push_back(DREAM3D::AttributeMatrixType::Cell);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::Edge);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::Face);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::Vertex);
+    QVector<QString> daTypes;
+    daTypes.push_back(DREAM3D::TypeNames::Bool);
+    req.amTypes = amTypes;
+    req.daTypes = daTypes;
+    req.componentDimensions = QVector<size_t>(1, 1);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req));
+  }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Vector Colors", "CellVectorColorsArrayName", getCellVectorColorsArrayName(), FilterParameter::CreatedArray));
   setFilterParameters(parameters);

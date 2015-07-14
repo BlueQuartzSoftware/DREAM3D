@@ -91,7 +91,21 @@ void AlignSectionsMisorientation::setupFilterParameters()
   QStringList linkedProps("GoodVoxelsArrayPath");
   parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask Array", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Quaternions", "QuatsArrayPath", getQuatsArrayPath(), FilterParameter::RequiredArray));
+  {
+    QVector<unsigned int> dcTypes;
+    dcTypes.push_back(DREAM3D::GeometryType::ImageGeometry);
+    QVector<unsigned int> amTypes;
+    amTypes.push_back(DREAM3D::AttributeMatrixType::Cell);
+    QVector<QString> daTypes;
+    daTypes.push_back(DREAM3D::TypeNames::Float);
+    QVector<size_t> cDims(1, 4);
+    FilterParameter::DataStructureRequirements req;
+    req.dcGeometryTypes = dcTypes;
+    req.amTypes = amTypes;
+    req.daTypes = daTypes;
+    req.componentDimensions = cDims;
+    parameters.push_back(DataArraySelectionFilterParameter::New("Quaternions", "QuatsArrayPath", getQuatsArrayPath(), FilterParameter::RequiredArray, req));
+  }
   parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray));
   parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray));
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));

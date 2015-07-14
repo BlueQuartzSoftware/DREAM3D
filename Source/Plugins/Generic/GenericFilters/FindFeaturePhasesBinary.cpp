@@ -77,8 +77,20 @@ void FindFeaturePhasesBinary::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray));
+  {
+    FilterParameter::DataStructureRequirements req;
+    req.amTypes = QVector<unsigned int>(1, DREAM3D::AttributeMatrixType::Cell);
+    req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Int32);
+    req.componentDimensions = QVector<size_t>(1, 1);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
+  }
+  {
+    FilterParameter::DataStructureRequirements req;
+    req.amTypes = QVector<unsigned int>(1, DREAM3D::AttributeMatrixType::Cell);
+    req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Bool);
+    req.componentDimensions = QVector<size_t>(1, 1);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req));
+  }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
   parameters.push_back(DataArrayCreationFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::CreatedArray));
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));

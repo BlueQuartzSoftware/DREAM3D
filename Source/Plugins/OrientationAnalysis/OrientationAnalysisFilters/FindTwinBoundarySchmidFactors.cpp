@@ -259,14 +259,89 @@ void FindTwinBoundarySchmidFactors::setupFilterParameters()
   parameters.push_back(LinkedBooleanFilterParameter::New("Write Twin Boundary Info File", "WriteFile", getWriteFile(), linkedProps, FilterParameter::Parameter));
   parameters.push_back(OutputFileFilterParameter::New("Twin Boundary Info File", "TwinBoundarySchmidFactorsFile", getTwinBoundarySchmidFactorsFile(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray));
+  {
+    FilterParameter::DataStructureRequirements req;
+    QVector<unsigned int> dcTypes;
+    dcTypes.push_back(DREAM3D::GeometryType::ImageGeometry);
+    dcTypes.push_back(DREAM3D::GeometryType::TriangleGeometry);
+    req.dcGeometryTypes = dcTypes;
+    QVector<unsigned int> amTypes;
+    amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeFeature);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::VertexFeature);
+    req.amTypes = amTypes;
+    req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Float);
+    req.componentDimensions = QVector<size_t>(1, 4);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req));
+  }
+  {
+    FilterParameter::DataStructureRequirements req;
+    QVector<unsigned int> dcTypes;
+    dcTypes.push_back(DREAM3D::GeometryType::ImageGeometry);
+    dcTypes.push_back(DREAM3D::GeometryType::TriangleGeometry);
+    req.dcGeometryTypes = dcTypes;
+    QVector<unsigned int> amTypes;
+    amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeFeature);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::VertexFeature);
+    req.amTypes = amTypes;
+    req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Int32);
+    req.componentDimensions = QVector<size_t>(1, 1);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req));
+  }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray));
+  {
+    FilterParameter::DataStructureRequirements req;
+    QVector<unsigned int> dcTypes;
+    dcTypes.push_back(DREAM3D::GeometryType::ImageGeometry);
+    dcTypes.push_back(DREAM3D::GeometryType::TriangleGeometry);
+    req.dcGeometryTypes = dcTypes;
+    QVector<unsigned int> amTypes;
+    amTypes.push_back(DREAM3D::AttributeMatrixType::CellEnsemble);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::FaceEnsemble);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeEnsemble);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::VertexEnsemble);
+    req.amTypes = amTypes;
+    req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::UInt32);
+    req.componentDimensions = QVector<size_t>(1, 1);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
+  }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Face Normals", "SurfaceMeshFaceNormalsArrayPath", getSurfaceMeshFaceNormalsArrayPath(), FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Twin Boundary", "SurfaceMeshTwinBoundaryArrayPath", getSurfaceMeshTwinBoundaryArrayPath(), FilterParameter::RequiredArray));
+  {
+    FilterParameter::DataStructureRequirements req;
+    QVector<unsigned int> dcTypes;
+    dcTypes.push_back(DREAM3D::GeometryType::ImageGeometry);
+    dcTypes.push_back(DREAM3D::GeometryType::TriangleGeometry);
+    req.dcGeometryTypes = dcTypes;
+    req.amTypes = QVector<unsigned int>(1, DREAM3D::AttributeMatrixType::Face);
+    req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Int32);
+    req.componentDimensions = QVector<size_t>(1, 2);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req));
+  }
+  {
+    FilterParameter::DataStructureRequirements req;
+    QVector<unsigned int> dcTypes;
+    dcTypes.push_back(DREAM3D::GeometryType::ImageGeometry);
+    dcTypes.push_back(DREAM3D::GeometryType::TriangleGeometry);
+    req.dcGeometryTypes = dcTypes;
+    req.amTypes = QVector<unsigned int>(1, DREAM3D::AttributeMatrixType::Face);
+    req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Double);
+    req.componentDimensions = QVector<size_t>(1, 3);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Face Normals", "SurfaceMeshFaceNormalsArrayPath", getSurfaceMeshFaceNormalsArrayPath(), FilterParameter::RequiredArray, req));
+  }
+  {
+    FilterParameter::DataStructureRequirements req;
+    QVector<unsigned int> dcTypes;
+    dcTypes.push_back(DREAM3D::GeometryType::ImageGeometry);
+    dcTypes.push_back(DREAM3D::GeometryType::TriangleGeometry);
+    req.dcGeometryTypes = dcTypes;
+    req.amTypes = QVector<unsigned int>(1, DREAM3D::AttributeMatrixType::Face);
+    req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Bool);
+    req.componentDimensions = QVector<size_t>(1, 1);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Twin Boundary", "SurfaceMeshTwinBoundaryArrayPath", getSurfaceMeshTwinBoundaryArrayPath(), FilterParameter::RequiredArray, req));
+  }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Twin Boundary Schmid Factors", "SurfaceMeshTwinBoundarySchmidFactorsArrayName", getSurfaceMeshTwinBoundarySchmidFactorsArrayName(), FilterParameter::CreatedArray));
   setFilterParameters(parameters);

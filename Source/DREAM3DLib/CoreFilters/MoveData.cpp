@@ -100,7 +100,9 @@ void MoveData::setupFilterParameters()
 
   parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Attribute Matrix Source", "AttributeMatrixSource", getAttributeMatrixSource(), FilterParameter::RequiredArray, 0));
   parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container Destination", "DataContainerDestination", getDataContainerDestination(), FilterParameter::RequiredArray, 0));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array Source", "DataArraySource", getDataArraySource(), FilterParameter::RequiredArray, 1));
+
+  FilterParameter::DataStructureRequirements req;
+  parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array Source", "DataArraySource", getDataArraySource(), FilterParameter::RequiredArray, req, 1));
   parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Attribute Matrix Destination", "AttributeMatrixDestination", getAttributeMatrixDestination(), FilterParameter::RequiredArray, 1));
 
   setFilterParameters(parameters);
