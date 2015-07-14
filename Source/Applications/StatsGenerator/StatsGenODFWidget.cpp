@@ -190,12 +190,23 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, unsigned int pha
   QVector<float> sigmas;
   QVector<float> odf;
 
+  SGODFTableModel* tableModel = NULL;
+
+  if(weightSpreadGroupBox->isChecked() )
+  {
+    tableModel = m_ODFTableModel;
+  }
+  else
+  {
+    tableModel = m_OdfBulkTableModel;
+  }
+
   // Initialize xMax and yMax....
-  e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1);
-  e2s = m_ODFTableModel->getData(SGODFTableModel::Euler2);
-  e3s = m_ODFTableModel->getData(SGODFTableModel::Euler3);
-  weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
-  sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
+  e1s = tableModel->getData(SGODFTableModel::Euler1);
+  e2s = tableModel->getData(SGODFTableModel::Euler2);
+  e3s = tableModel->getData(SGODFTableModel::Euler3);
+  weights = tableModel->getData(SGODFTableModel::Weight);
+  sigmas = tableModel->getData(SGODFTableModel::Sigma);
 
   for (QVector<float>::size_type i = 0; i < e1s.size(); i++)
   {
@@ -366,6 +377,14 @@ void StatsGenODFWidget::setupGui()
   m_PlotCurves.push_back(new QwtPlotCurve);
   m_PlotCurves.push_back(new QwtPlotCurve);
   m_PlotCurves.push_back(new QwtPlotCurve);
+
+  // In release mode hide the Lambert Square Size.
+  QString releaseType = QString::fromLatin1(DREAM3DProj_RELEASE_TYPE);
+  if(releaseType.compare("Official") == 0)
+  {
+    pfLambertSize->hide();
+    pfLambertLabel->hide();
+  }
 
 }
 
@@ -647,7 +666,7 @@ void StatsGenODFWidget::on_addODFTextureBtn_clicked()
 void StatsGenODFWidget::on_selectAnglesFile_clicked()
 {
   QString proposedFile = m_OpenDialogLastDirectory;
-  QString file = QFileDialog::getOpenFileName(this, tr("Select Angles File"), proposedFile, tr("Text Document (*.txt *.ang *.ctf)"));
+  QString file = QFileDialog::getOpenFileName(this, tr("Select Angles File"), proposedFile, tr("Text Document (*.txt)"));
   angleFilePath->setText(file);
 }
 
@@ -680,13 +699,23 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
   QProgressDialog progress("Loading Data ....", "Cancel", 0, 3, this);
   progress.setWindowModality(Qt::WindowModal);
   progress.setMinimumDuration(2000);
+  progress.show();
 
   if (fi.suffix().compare(Ebsd::Ang::FileExt) == 0)
   {
+    QMessageBox::critical(this, "ANG File Loading not Supported",
+                          "Please use the 'Write StatsGenerator ODF Angle File' filter from DREAM.3D to generate a file. See that filter's help for the proper format.", QMessageBox::Ok);
+    return;
+#if 0
+    phaseOfInterest->setEnabled(true);
+    anglesInDegrees->setEnabled(true);
+    angleRepresentation->setEnabled(false);
+    delimiter->setEnabled(false);
     progress.setValue(1);
     progress.setLabelText("[1/3] Reading File ...");
     AngReader loader;
     loader.setFileName(angleFilePath->text());
+    loader.setReadHexGrid(true);
     int err = loader.readFile();
     if(err < 0)
     {
@@ -696,26 +725,57 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
     float* phi1 = loader.getPhi1Pointer();
     float* phi = loader.getPhiPointer();
     float* phi2 = loader.getPhi2Pointer();
+    int32_t* phase = loader.getPhaseDataPointer();
+    QVector<AngPhase::Pointer> phaseInfo = loader.getPhaseVector();
+    phaseOfInterest->setRange(0, phaseInfo.size());
+    int phaseSelection = phaseOfInterest->value();
 
     int xDim = loader.getXDimension();
     int yDim = loader.getYDimension();
-    count = xDim * yDim;
+    size_t totalScanPoints = xDim * yDim;
+
+
+    count = 0;
+    for(size_t i = 0; i < totalScanPoints; ++i)
+    {
+      if(phase[i] == phaseSelection)
+      {
+        count++;
+      }
+    }
+
     e1s.resize(count);
     e2s.resize(count);
     e3s.resize(count);
     weights.resize(count);
     sigmas.resize(count);
-    for(size_t i = 0; i < count; ++i)
+    count = 0;
+    for(size_t i = 0; i < totalScanPoints; ++i)
     {
-      e1s[i] = phi1[i];
-      e2s[i] = phi[i];
-      e3s[i] = phi2[i];
-      weights[i] = 1.0;
-      sigmas[i] = 0.0;
+      if(phase[i] == phaseSelection)
+      {
+        // Be sure to convert the ANG Radians into degrees because this part of
+        // DREAM.3D stores the angles as Degrees.
+        e1s[count] = phi1[i] * DREAM3D::Constants::k_180OverPi;
+        e2s[count] = phi[i] * DREAM3D::Constants::k_180OverPi;
+        e3s[count] = phi2[i] * DREAM3D::Constants::k_180OverPi;
+        weights[count] = 1.0;
+        sigmas[count] = 0.0;
+        count++;
+      }
     }
+#endif
   }
   else if (fi.suffix().compare(Ebsd::Ctf::FileExt) == 0)
   {
+    QMessageBox::critical(this, "CTF File Loading not Supported",
+                          "Please use the 'Write StatsGenerator ODF Angle File' filter from DREAM.3D to generate a file. See that filter's help for the proper format.", QMessageBox::Ok);
+    return;
+#if 0
+    phaseOfInterest->setEnabled(true);
+    anglesInDegrees->setEnabled(true);
+    angleRepresentation->setEnabled(false);
+    delimiter->setEnabled(false);
     progress.setValue(1);
     progress.setLabelText("[1/3] Reading File ...");
     CtfReader loader;
@@ -729,26 +789,49 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
     float* phi1 = loader.getEuler1Pointer();
     float* phi = loader.getEuler2Pointer();
     float* phi2 = loader.getEuler3Pointer();
+    int32_t* phase = loader.getPhasePointer();
+    QVector<CtfPhase::Pointer> phaseInfo = loader.getPhaseVector();
+    phaseOfInterest->setRange(0, phaseInfo.size());
+    int phaseSelection = phaseOfInterest->value();
 
     int xDim = loader.getXDimension();
     int yDim = loader.getYDimension();
-    count = xDim * yDim;
+    size_t totalScanPoints = xDim * yDim;
+
+    count = 0;
+    for(size_t i = 0; i < totalScanPoints; ++i)
+    {
+      if(phase[i] == phaseSelection)
+      {
+        count++;
+      }
+    }
+
     e1s.resize(count);
     e2s.resize(count);
     e3s.resize(count);
     weights.resize(count);
     sigmas.resize(count);
-    for(size_t i = 0; i < count; ++i)
+    count = 0;
+    for(size_t i = 0; i < totalScanPoints; ++i)
     {
-      e1s[i] = phi1[i];
-      e2s[i] = phi[i];
-      e3s[i] = phi2[i];
-      weights[i] = 1.0;
-      sigmas[i] = 0.0;
+      if(phase[i] == phaseSelection)
+      {
+        e1s[count] = phi1[i];
+        e2s[count] = phi[i];
+        e3s[count] = phi2[i];
+        weights[count] = 1.0;
+        sigmas[count] = 0.0;
+        count++;
+      }
     }
+#endif
   }
   else
   {
+    anglesInDegrees->setEnabled(true);
+    angleRepresentation->setEnabled(true);
+    delimiter->setEnabled(true);
     progress.setValue(1);
     progress.setLabelText("[1/3] Reading File ...");
     AngleFileLoader::Pointer loader = AngleFileLoader::New();

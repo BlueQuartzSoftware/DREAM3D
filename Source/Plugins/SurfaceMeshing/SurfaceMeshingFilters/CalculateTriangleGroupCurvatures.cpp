@@ -109,6 +109,11 @@ void CalculateTriangleGroupCurvatures::operator()() const
 {
   int32_t err = 0;
 
+  if (m_TriangleIds.size() == 0)
+  {
+    return;
+  }
+
   // Instantiate a FindNRingNeighbors class to use during the loop
   FindNRingNeighbors::Pointer nRingNeighborAlg = FindNRingNeighbors::New();
 

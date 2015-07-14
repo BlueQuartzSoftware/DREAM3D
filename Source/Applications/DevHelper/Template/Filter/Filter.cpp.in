@@ -125,7 +125,7 @@ const QString @ClassName@::getCompiledLibraryName()
 //
 // -----------------------------------------------------------------------------
 const QString @ClassName@::getGroupName()
-{ return "DREAM3D::FilterGroups::Unsupported"; }
+{ return DREAM3D::FilterGroups::Unsupported; }
 
 // -----------------------------------------------------------------------------
 //

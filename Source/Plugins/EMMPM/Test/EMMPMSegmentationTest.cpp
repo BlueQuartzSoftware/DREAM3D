@@ -107,7 +107,7 @@ int TestFilterAvailability()
 // -----------------------------------------------------------------------------
 void createAndAddReadImageFilter(FilterPipeline::Pointer pipeline, QString inputFile)
 {
-  QString filtName = "ReadImage";
+  QString filtName = "ItkReadImage";
   FilterManager* fm = FilterManager::Instance();
   IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
 
