@@ -83,6 +83,55 @@
 #include "PipelineRunnerTest.h"
 
 
+class TestObserver : public QObject, public IObserver
+{
+    Q_OBJECT
+
+  public:
+    TestObserver(){}
+    DREAM3D_TYPE_MACRO_SUPER(TestObserver, IObserver)
+
+    virtual ~TestObserver(){}
+
+  public slots:
+    virtual void processPipelineMessage(const PipelineMessage& pm)
+    {
+      PipelineMessage msg = pm;
+      QString filterHumanLabel = pm.getFilterHumanLabel();
+      QString str;
+      QTextStream ss(&str);
+      if(msg.getType() == PipelineMessage::Error)
+      {
+        ss << msg.generateErrorString();
+        std::cout << msg.getFilterHumanLabel().toStdString() << ": " << str.toStdString() << std::endl;
+      }
+      else if(msg.getType() == PipelineMessage::Warning)
+      {
+        ss << msg.generateWarningString();
+        std::cout << msg.getFilterHumanLabel().toStdString() << ": " << str.toStdString() << std::endl;
+      }
+      else if(msg.getType() == PipelineMessage::StatusMessage)
+      {
+        ss << msg.generateStatusString();
+        std::cout << msg.getFilterHumanLabel().toStdString() << ": " << str.toStdString() << std::endl;
+      }
+      else if(msg.getType() == PipelineMessage::ProgressValue)
+      {
+      //  ss << msg.getProgressValue() << "%";
+      }
+      else if(msg.getType() == PipelineMessage::StatusMessageAndProgressValue)
+      {
+      //  ss << msg.getProgressValue() << msg.generateStatusString();
+      }
+    }
+
+  private:
+    TestObserver(const TestObserver&); // Copy Constructor Not Implemented
+    void operator=(const TestObserver&); // Operator '=' Not Implemented
+};
+
+#include "PipelineRunnerTest.moc"
+
 
 // -----------------------------------------------------------------------------
 //
@@ -127,7 +176,7 @@ void ExecutePipeline(const QString& pipelineFile)
 
   // Sanity Check the filepath to make sure it exists, Report an error and bail if it does not
   QFileInfo fi(pipelineFile);
-  std::cout << "<--------------Test Pipeline File: " << fi.absoluteFilePath().toStdString() << " --------------------------->" << std::endl;
+  std::cout << "#--------------Test Pipeline File: " << fi.absoluteFilePath().toStdString() << " ---------------------------#" << std::endl;
   if(fi.exists() == false)
   {
     std::cout << "The input file '" << pipelineFile.toStdString() << "' does not exist" << std::endl;
@@ -160,7 +209,7 @@ void ExecutePipeline(const QString& pipelineFile)
   DREAM3D_REQUIRE_EQUAL(err, EXIT_SUCCESS)
 
 
-  Observer obs; // Create an Observer to report errors/progress from the executing pipeline
+  TestObserver obs; // Create an Observer to report errors/progress from the executing pipeline
   pipeline->addMessageReceiver(&obs);
   // Preflight the pipeline
   err = pipeline->preflightPipeline();
@@ -231,20 +280,26 @@ QString AdjustOutputDirectory(const QString& pipelineFile)
   while (sourceLines.hasNext())
   {
     QString line = sourceLines.next();
+
+    if(line.contains(QString("Data/") ) )
+    {
+      line = line.replace(QString("Data/"), getDream3dDataDir() + "Data/");
+    }
+
     if(line.contains(searchString) )
     {
       line = line.replace(searchString, replaceString);
-      outLines.push_back(line);
     }
-    else
-    {
-      outLines.push_back(line);
-    }
+
+    outLines.push_back(line);
+
   }
 
   QString outFile = getTestTempDirectory() + fi.fileName();
 
   writeOutput(true, outLines, outFile);
+
+
   return outFile;
 }
 
