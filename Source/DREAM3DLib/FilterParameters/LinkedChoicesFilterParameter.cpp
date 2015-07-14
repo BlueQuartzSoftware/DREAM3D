@@ -78,6 +78,6 @@ LinkedChoicesFilterParameter::Pointer LinkedChoicesFilterParameter::New(const QS
 // -----------------------------------------------------------------------------
 QString LinkedChoicesFilterParameter::getWidgetType()
 {
-  return QString("LinkedChoicesWidget");
+  return QString("ChoiceWidget");
 }
 
