@@ -717,6 +717,7 @@ namespace DREAM3D
 
     const DREAM3D_STRING UnknownGeometry("UnkownGeometry");
     const DREAM3D_STRING ImageGeometry("ImageGeometry");
+    const DREAM3D_STRING RectGridGeometry("RectGridGeometry");
     const DREAM3D_STRING VertexGeometry("VertexGeometry");
     const DREAM3D_STRING EdgeGeometry("EdgeGeometry");
     const DREAM3D_STRING TriangleGeometry("TriangleGeometry");
@@ -732,6 +733,7 @@ namespace DREAM3D
   namespace GeometryType
   {
     const unsigned int ImageGeometry = 11;
+    const unsigned int RectGridGeometry = 11;
     const unsigned int VertexGeometry = 1;
     const unsigned int EdgeGeometry = 3;
     const unsigned int TriangleGeometry = 5;
