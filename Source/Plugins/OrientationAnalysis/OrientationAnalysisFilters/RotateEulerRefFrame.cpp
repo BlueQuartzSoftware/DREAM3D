@@ -150,7 +150,7 @@ void RotateEulerRefFrame::setupFilterParameters()
     amTypes.push_back(DREAM3D::AttributeMatrixType::Vertex);
     req.amTypes = amTypes;
     req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Float);
-    req.componentDimensions = QVector<size_t>(1, 3);
+    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 3));
     parameters.push_back(DataArraySelectionFilterParameter::New("Euler Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, req));
   }
   setFilterParameters(parameters);

@@ -79,7 +79,7 @@ void FindMicroTextureRegions::setupFilterParameters()
 
   {
     FilterParameter::DataStructureRequirements req;
-    req.componentDimensions = QVector<size_t>(1, 1);
+    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
     parameters.push_back(DataArraySelectionFilterParameter::New("FeatureIds", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::RequiredArray));

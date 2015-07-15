@@ -152,17 +152,17 @@ void FindOrientationFieldCurl::setupFilterParameters()
 
   {
     FilterParameter::DataStructureRequirements req;
-    req.componentDimensions = QVector<size_t>(1, 1);
+    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
     parameters.push_back(DataArraySelectionFilterParameter::New("Cell Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
     FilterParameter::DataStructureRequirements req;
-    req.componentDimensions = QVector<size_t>(1, 1);
+    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
     parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
     FilterParameter::DataStructureRequirements req;
-    req.componentDimensions = QVector<size_t>(1, 4);
+    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 4));
     parameters.push_back(DataArraySelectionFilterParameter::New("Quats", "QuatsArrayPath", getQuatsArrayPath(), FilterParameter::RequiredArray, req));
   }
 

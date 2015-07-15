@@ -76,7 +76,7 @@ void FindSurfaceFeatures::setupFilterParameters()
     FilterParameter::DataStructureRequirements req;
     req.amTypes = QVector<unsigned int>(1, DREAM3D::AttributeMatrixType::Cell);
     req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Int32);
-    req.componentDimensions = QVector<size_t>(1, 1);
+    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));

@@ -93,7 +93,7 @@ void GenerateVectorColors::setupFilterParameters()
     daTypes.push_back(DREAM3D::TypeNames::Float);
     req.amTypes = amTypes;
     req.daTypes = daTypes;
-    req.componentDimensions = QVector<size_t>(1, 3);
+    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 3));
     parameters.push_back(DataArraySelectionFilterParameter::New("Vector Attribute Array", "VectorsArrayPath", getVectorsArrayPath(), FilterParameter::RequiredArray, req));
   }
 
@@ -108,7 +108,7 @@ void GenerateVectorColors::setupFilterParameters()
     daTypes.push_back(DREAM3D::TypeNames::Bool);
     req.amTypes = amTypes;
     req.daTypes = daTypes;
-    req.componentDimensions = QVector<size_t>(1, 1);
+    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
     parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));

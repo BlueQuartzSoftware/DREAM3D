@@ -94,7 +94,7 @@ void FindAvgOrientations::setupFilterParameters()
     amTypes.push_back(DREAM3D::AttributeMatrixType::Vertex);
     req.amTypes = amTypes;
     req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Int32);
-    req.componentDimensions = QVector<size_t>(1, 1);
+    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
@@ -106,7 +106,7 @@ void FindAvgOrientations::setupFilterParameters()
     amTypes.push_back(DREAM3D::AttributeMatrixType::Vertex);
     req.amTypes = amTypes;
     req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Int32);
-    req.componentDimensions = QVector<size_t>(1, 1);
+    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
     parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
@@ -118,7 +118,7 @@ void FindAvgOrientations::setupFilterParameters()
     amTypes.push_back(DREAM3D::AttributeMatrixType::Vertex);
     req.amTypes = amTypes;
     req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Float);
-    req.componentDimensions = QVector<size_t>(1, 4);
+    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 4));
     parameters.push_back(DataArraySelectionFilterParameter::New("Quaternions", "QuatsArrayPath", getQuatsArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::RequiredArray));
@@ -131,7 +131,7 @@ void FindAvgOrientations::setupFilterParameters()
     amTypes.push_back(DREAM3D::AttributeMatrixType::VertexEnsemble);
     req.amTypes = amTypes;
     req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::UInt32);
-    req.componentDimensions = QVector<size_t>(1, 1);
+    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
     parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));

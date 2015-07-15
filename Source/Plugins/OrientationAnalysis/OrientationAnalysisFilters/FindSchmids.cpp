@@ -124,7 +124,7 @@ void FindSchmids::setupFilterParameters()
     amTypes.push_back(DREAM3D::AttributeMatrixType::VertexFeature);
     req.amTypes = amTypes;
     req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Int32);
-    req.componentDimensions = QVector<size_t>(1, 1);
+    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
     parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
@@ -136,7 +136,7 @@ void FindSchmids::setupFilterParameters()
     amTypes.push_back(DREAM3D::AttributeMatrixType::VertexFeature);
     req.amTypes = amTypes;
     req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Float);
-    req.componentDimensions = QVector<size_t>(1, 4);
+    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 4));
     parameters.push_back(DataArraySelectionFilterParameter::New("Average Quats", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::RequiredArray));
@@ -149,7 +149,7 @@ void FindSchmids::setupFilterParameters()
     amTypes.push_back(DREAM3D::AttributeMatrixType::VertexEnsemble);
     req.amTypes = amTypes;
     req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::UInt32);
-    req.componentDimensions = QVector<size_t>(1, 1);
+    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
     parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));

@@ -473,7 +473,7 @@ void DataArraySelectionWidget::populateAttributeArrayList()
   QList<DataContainerProxy> containers = m_DcaProxy.dataContainers.values();
   QListIterator<DataContainerProxy> containerIter(containers);
   QVector<QString> daTypes = m_FilterParameter->getDefaultAttributeArrayTypes();
-  QVector<QVector<size_t>> cDims = m_FilterParameter->getDefaultComponentDimensions();
+  QVector< QVector<size_t> > cDims = m_FilterParameter->getDefaultComponentDimensions();
   while (containerIter.hasNext())
   {
     DataContainerProxy dc = containerIter.next();

@@ -83,7 +83,7 @@ void LinkFeatureMapToElementArray::setupFilterParameters()
     daTypes.push_back(DREAM3D::TypeNames::Int32);
     req.amTypes = amTypes;
     req.daTypes = daTypes;
-    req.componentDimensions = QVector<size_t>(1, 1);
+    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
     parameters.push_back(DataArraySelectionFilterParameter::New("Element Attribute Array to Link", "SelectedCellArrayPath", getSelectedCellArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));

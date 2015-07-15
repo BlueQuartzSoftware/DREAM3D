@@ -91,7 +91,7 @@ void FindBoundingBoxFeatures::setupFilterParameters()
     req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::ImageGeometry);
     req.amTypes = amTypes;
     req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Float);
-    req.componentDimensions = QVector<size_t>(1, 3);
+    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 3));
     parameters.push_back(DataArraySelectionFilterParameter::New("Centroids", "CentroidsArrayPath", getCentroidsArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
@@ -104,7 +104,7 @@ void FindBoundingBoxFeatures::setupFilterParameters()
     req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::ImageGeometry);
     req.amTypes = amTypes;
     req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Bool);
-    req.componentDimensions = QVector<size_t>(1, 1);
+    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
     parameters.push_back(DataArraySelectionFilterParameter::New("Surface Features", "SurfaceFeaturesArrayPath", getSurfaceFeaturesArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
@@ -117,7 +117,7 @@ void FindBoundingBoxFeatures::setupFilterParameters()
     req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::ImageGeometry);
     req.amTypes = amTypes;
     req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Int32);
-    req.componentDimensions = QVector<size_t>(1, 1);
+    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
     parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "PhasesArrayPath", getPhasesArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
