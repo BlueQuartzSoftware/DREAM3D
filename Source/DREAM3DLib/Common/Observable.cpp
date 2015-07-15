@@ -94,3 +94,15 @@ void Observable::notifyWarningMessage(const QString& humanLabel, const QString& 
   PipelineMessage pm = PipelineMessage::CreateWarningMessage(getNameOfClass(), humanLabel, str, code);
   emit filterGeneratedMessage(pm);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void Observable::notifyProgressMessage(const QString& prefix, const QString& humanLabel, const QString& str, int progress)
+{
+  PipelineMessage pm = PipelineMessage::CreateStatusMessage(getNameOfClass(), humanLabel, str);
+  pm.setPrefix(prefix);
+  pm.setProgressValue(progress);
+  pm.setType(PipelineMessage::StatusMessageAndProgressValue);
+  emit filterGeneratedMessage(pm);
+}

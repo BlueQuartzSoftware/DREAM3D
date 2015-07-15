@@ -1906,21 +1906,14 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
 
   float indexConst1 = 0.414 / imageDim;
   float indexConst2 = 0.207 / imageDim;
-  //  float temp = 0.0f;
   float red1 = 0.0f;
-  //  float green1 = 0.0f;
-  //  float blue1 = 0.0f;
-  //  float red2 = 0.0f;
-  //  float green2 = 0.0f;
-  //  float blue2 = 0.0f;
+
   float x = 0.0f;
   float y = 0.0f;
-  //  float z = 0.0f;
   float a = 0.0f;
   float b = 0.0f;
   float c = 0.0f;
-  //  float check1 = 0.0f;
-  //  float check2 = 0.0f;
+
   float val = 0.0f;
   float x1 = 0.0f;
   float y1 = 0.0f;
@@ -1944,21 +1937,14 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
     for (int32_t xIndex = 0; xIndex < imageDim; ++xIndex)
     {
       idx = (imageDim * yScanLineIndex) + xIndex;
-      //      temp = 0;
-      //      red1 = 0;
-      //      green1 = 0;
-      //      blue1 = 0;
-      //      red2 = 0;
-      //      green2 = 0;
-      //      blue2 = 0;
+
       x = xIndex * indexConst1 + indexConst2;
       y = yIndex * indexConst1 + indexConst2;
       //     z = -1.0;
       a = (x * x + y * y + 1);
       b = (2 * x * x + 2 * y * y);
       c = (x * x + y * y - 1);
-      //      check1 = b * b;
-      //      check2 = 4 * a * c;
+
       val = (-b + sqrtf(b * b - 4.0 * a * c)) / (2.0 * a);
       x1 = (1 + val) * x;
       y1 = (1 + val) * y;
