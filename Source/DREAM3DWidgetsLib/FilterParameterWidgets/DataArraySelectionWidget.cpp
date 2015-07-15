@@ -473,7 +473,7 @@ void DataArraySelectionWidget::populateAttributeArrayList()
   QList<DataContainerProxy> containers = m_DcaProxy.dataContainers.values();
   QListIterator<DataContainerProxy> containerIter(containers);
   QVector<QString> daTypes = m_FilterParameter->getDefaultAttributeArrayTypes();
-  QVector<size_t> cDims = m_FilterParameter->getDefaultComponentDimensions();
+  QVector<QVector<size_t>> cDims = m_FilterParameter->getDefaultComponentDimensions();
   while (containerIter.hasNext())
   {
     DataContainerProxy dc = containerIter.next();
@@ -502,7 +502,7 @@ void DataArraySelectionWidget::populateAttributeArrayList()
             IDataArray::Pointer da = dca->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(NULL, DataArrayPath(dc.name, amProxy.name, daName));
             attributeArrayCombo->addItem(daName);
 
-            if (NULL != da.get() && ((daTypes.isEmpty() == false && daTypes.contains(da->getTypeAsString()) == false) || (cDims.isEmpty() == false && cDims == da->getComponentDimensions() == false)))
+            if (NULL != da.get() && ((daTypes.isEmpty() == false && daTypes.contains(da->getTypeAsString()) == false) || (cDims.isEmpty() == false && cDims.contains(da->getComponentDimensions()) == false)))
             {
               QStandardItemModel* model = qobject_cast<QStandardItemModel*>(attributeArrayCombo->model());
               if (NULL != model)

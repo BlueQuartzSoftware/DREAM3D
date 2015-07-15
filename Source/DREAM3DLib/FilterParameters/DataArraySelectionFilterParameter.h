@@ -65,7 +65,7 @@ public:
   DREAM3D_INSTANCE_PROPERTY(QVector<unsigned int>, DefaultGeometryTypes)
   DREAM3D_INSTANCE_PROPERTY(QVector<unsigned int>, DefaultAttributeMatrixTypes)
   DREAM3D_INSTANCE_PROPERTY(QVector<QString>, DefaultAttributeArrayTypes)
-  DREAM3D_INSTANCE_PROPERTY(QVector<size_t>, DefaultComponentDimensions)
+  DREAM3D_INSTANCE_PROPERTY(QVector<QVector<size_t>>, DefaultComponentDimensions)
 
 protected:
   DataArraySelectionFilterParameter();

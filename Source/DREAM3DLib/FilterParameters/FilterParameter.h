@@ -74,7 +74,7 @@ class DREAM3DLib_EXPORT FilterParameter
       QVector<unsigned int> dcGeometryTypes;
       QVector<unsigned int> amTypes;
       QVector<QString> daTypes;
-      QVector<size_t> componentDimensions;
+      QVector<QVector<size_t>> componentDimensions;
     };
 
     virtual ~FilterParameter();
