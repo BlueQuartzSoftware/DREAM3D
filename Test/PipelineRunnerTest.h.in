@@ -7,7 +7,7 @@
 // -----------------------------------------------------------------------------
 QString getDream3dDataDir()
 {
-  return QString("@CMAKE_LIBRARY_OUTPUT_DIRECTORY@/@CMAKE_CFG_INTDIR@/");
+  return QString("@DREAM3D_DATA_DIR@");
 }
 
 // -----------------------------------------------------------------------------

@@ -175,7 +175,17 @@ void EbsdToH5Ebsd::dataCheck()
 
   if (fileList.size() == 0)
   {
-    ss = QObject::tr("No files have been selected for import. Have you set the input directory and other values so that input files will be generated?");
+    ss.clear();
+    QTextStream out(&ss);
+    out <<" No files have been selected for import. Have you set the input directory and other values so that input files will be generated?\n";
+    out << "InputPath: " << m_InputPath << "\n";
+    out << "FilePrefix: " << m_FilePrefix << "\n";
+    out << "FileSuffix: " << m_FileSuffix << "\n";
+    out << "FileExtension: " << m_FileExtension << "\n";
+    out << "PaddingDigits: " << m_PaddingDigits << "\n";
+    out << "StartIndex: " << m_ZStartIndex << "\n";
+    out << "EndIndex: " << m_ZEndIndex << "\n";
+    
     notifyErrorMessage(getHumanLabel(), ss, -11);
     setErrorCondition(-11);
   }
