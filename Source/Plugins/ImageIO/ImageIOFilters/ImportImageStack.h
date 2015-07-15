@@ -68,6 +68,18 @@ class ImportImageStack : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
     Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
 
+    DREAM3D_FILTER_PARAMETER(QString, xBoundsFile)
+    Q_PROPERTY(QString xBoundsFile READ getxBoundsFile WRITE setxBoundsFile)
+
+    DREAM3D_FILTER_PARAMETER(QString, yBoundsFile)
+    Q_PROPERTY(QString yBoundsFile READ getyBoundsFile WRITE setyBoundsFile)
+
+    DREAM3D_FILTER_PARAMETER(QString, zBoundsFile)
+    Q_PROPERTY(QString zBoundsFile READ getzBoundsFile WRITE setzBoundsFile)
+
+    DREAM3D_FILTER_PARAMETER(int, GeometryType)
+    Q_PROPERTY(int GeometryType READ getGeometryType WRITE setGeometryType)
+
     DREAM3D_FILTER_PARAMETER(FileListInfo_t, InputFileListInfo)
     Q_PROPERTY(FileListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
 
@@ -157,6 +169,11 @@ class ImportImageStack : public AbstractFilter
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+    * @brief readBounds Reads the bounds for voxels from the specified file
+    */
+    void readBounds(QString filename, FloatArrayType::Pointer bounds);
 
   private:
     DEFINE_DATAARRAY_VARIABLE(uint8_t, ImageData)

@@ -45,6 +45,8 @@
 #include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/FileListInfoFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/LinkedChoicesFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/InputFileFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 #include "DREAM3DLib/Utilities/FilePathGenerator.h"
 
@@ -57,6 +59,10 @@ ImportImageStack::ImportImageStack() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::ImageDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_xBoundsFile(""),
+  m_yBoundsFile(""),
+  m_zBoundsFile(""),
+  m_GeometryType(0),
   m_ImageDataArrayName(DREAM3D::CellData::ImageData)
 {
   m_Origin.x = 0.0f;
@@ -89,8 +95,27 @@ void ImportImageStack::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
   parameters.push_back(FileListInfoFilterParameter::New("Input File List", "InputFileListInfo", getInputFileListInfo(), FilterParameter::Parameter));
-  parameters.push_back(FloatVec3FilterParameter::New("Origin", "Origin", getOrigin(), FilterParameter::Parameter));
-  parameters.push_back(FloatVec3FilterParameter::New("Resolution", "Resolution", getResolution(), FilterParameter::Parameter));
+  {
+    LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
+    parameter->setHumanLabel("Geometry Type");
+    parameter->setPropertyName("GeometryType");
+
+    QVector<QString> choices;
+    choices.push_back("Image");
+    choices.push_back("Rectilinear Grid");
+    parameter->setChoices(choices);
+    QStringList linkedProps;
+    linkedProps << "Origin" << "Resolution" << "xBoundsFile" << "yBoundsFile" << "zBoundsFile";
+    parameter->setLinkedProperties(linkedProps);
+    parameter->setEditable(false);
+    parameter->setCategory(FilterParameter::Parameter);
+    parameters.push_back(parameter);
+  }
+  parameters.push_back(FloatVec3FilterParameter::New("Origin", "Origin", getOrigin(), FilterParameter::Parameter, 0));
+  parameters.push_back(FloatVec3FilterParameter::New("Resolution", "Resolution", getResolution(), FilterParameter::Parameter, 0));
+  parameters.push_back(InputFileFilterParameter::New("X Bounds File", "xBoundsFile", getxBoundsFile(), FilterParameter::Parameter, "*.txt", "", 1));
+  parameters.push_back(InputFileFilterParameter::New("Y Bounds File", "yBoundsFile", getyBoundsFile(), FilterParameter::Parameter, "*.txt", "", 1));
+  parameters.push_back(InputFileFilterParameter::New("Z Bounds File", "zBoundsFile", getzBoundsFile(), FilterParameter::Parameter, "*.txt", "", 1));
   parameters.push_back(StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray));
@@ -110,6 +135,10 @@ void ImportImageStack::readFilterParameters(AbstractFilterParametersReader* read
   setInputFileListInfo( reader->readFileListInfo("InputFileListInfo", getInputFileListInfo() ) );
   setOrigin( reader->readFloatVec3("Origin", getOrigin()) );
   setResolution( reader->readFloatVec3("Resolution", getResolution()) );
+  setGeometryType(reader->readValue("GeometryType", getGeometryType()));
+  setxBoundsFile(reader->readString("xBoundsFile", getxBoundsFile()));
+  setyBoundsFile(reader->readString("yBoundsFile", getyBoundsFile()));
+  setzBoundsFile(reader->readString("zBoundsFile", getzBoundsFile()));
   reader->closeFilterGroup();
 }
 
@@ -126,6 +155,10 @@ int ImportImageStack::writeFilterParameters(AbstractFilterParametersWriter* writ
   DREAM3D_FILTER_WRITE_PARAMETER(InputFileListInfo)
   DREAM3D_FILTER_WRITE_PARAMETER(Origin)
   DREAM3D_FILTER_WRITE_PARAMETER(Resolution)
+  DREAM3D_FILTER_WRITE_PARAMETER(GeometryType)
+  DREAM3D_FILTER_WRITE_PARAMETER(xBoundsFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(yBoundsFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(zBoundsFile)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -150,8 +183,35 @@ void ImportImageStack::dataCheck()
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
   if(getErrorCondition() < 0 || NULL == m.get()) { return; }
 
-  ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
-  m->setGeometry(image);
+  if (m_GeometryType == 0)
+  {
+    ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+    m->setGeometry(image);
+  }
+  else if (m_GeometryType == 1)
+  {
+    RectGridGeom::Pointer rectGrid = RectGridGeom::CreateGeometry(DREAM3D::Geometry::RectGridGeometry);
+    m->setGeometry(rectGrid);
+
+    if (m_xBoundsFile.isEmpty() == true)
+    {
+      ss = QObject::tr("The XBounds file must be set");
+      notifyErrorMessage(getHumanLabel(), ss, -14);
+      setErrorCondition(-14);
+    }
+    if (m_yBoundsFile.isEmpty() == true)
+    {
+      ss = QObject::tr("The YBounds file must be set");
+      notifyErrorMessage(getHumanLabel(), ss, -15);
+      setErrorCondition(-15);
+    }
+    if (m_zBoundsFile.isEmpty() == true)
+    {
+      ss = QObject::tr("The ZBounds file must be set");
+      notifyErrorMessage(getHumanLabel(), ss, -16);
+      setErrorCondition(-16);
+    }
+  }
 
   bool hasMissingFiles = false;
   bool orderAscending = false;
@@ -207,9 +267,16 @@ void ImportImageStack::dataCheck()
     }
     /* ************ End Sanity Check *************************** */
 
-    m->getGeometryAs<ImageGeom>()->setDimensions(static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2]));
-    m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-    m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+    if (m_GeometryType == 0)
+    {
+      m->getGeometryAs<ImageGeom>()->setDimensions(static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2]));
+      m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+      m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+    }
+    else if (m_GeometryType == 1)
+    {
+      m->getGeometryAs<RectGridGeom>()->setDimensions(static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2]));
+    }
 
     QVector<size_t> tDims(3, 0);
     for (int32_t i = 0; i < 3; i++)
@@ -269,9 +336,41 @@ void ImportImageStack::execute()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
-  m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-  m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
-
+  if (m_GeometryType == 0)
+  {
+    m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+    m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+  }
+  else if (m_GeometryType == 1)
+  {
+    QString aName = "";
+    QString fName = "";
+    size_t dims[3];
+    m->getGeometryAs<RectGridGeom>()->getDimensions(dims);
+    for (size_t iter = 0; iter < 3; iter++)
+    {
+      if (iter == 0) 
+      {
+        aName = "xBounds";
+        fName = m_xBoundsFile;
+      }
+      else if (iter == 1) 
+      { 
+        aName = "yBounds";
+        fName = m_yBoundsFile;
+      }
+      else if (iter == 2) 
+      {
+        aName = "zBounds"; 
+        fName = m_zBoundsFile;
+      }
+      FloatArrayType::Pointer bounds = FloatArrayType::CreateArray(dims[iter]+1, aName);
+      readBounds(fName, bounds);
+      if (iter == 0) { m->getGeometryAs<RectGridGeom>()->setXBounds(bounds); }
+      else if (iter == 1) { m->getGeometryAs<RectGridGeom>()->setYBounds(bounds); }
+      else if (iter == 2) { m->getGeometryAs<RectGridGeom>()->setZBounds(bounds); }
+    }
+  }
   UInt8ArrayType::Pointer data = UInt8ArrayType::NullPointer();
 
   uint8_t* imagePtr = NULL;
@@ -322,7 +421,8 @@ void ImportImageStack::execute()
     // This is the first image so we need to create our block of data to store the data
     if (z == m_InputFileListInfo.StartIndex)
     {
-      m->getGeometryAs<ImageGeom>()->setDimensions(width, height, fileList.size());
+      if (m_GeometryType == 0) { m->getGeometryAs<ImageGeom>()->setDimensions(width, height, fileList.size()); }
+      else if (m_GeometryType == 1) { m->getGeometryAs<RectGridGeom>()->setDimensions(width, height, fileList.size()); }
       if (image.format() == QImage::Format_Indexed8)
       {
         pixelBytes = 1;
@@ -365,6 +465,24 @@ void ImportImageStack::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ImportImageStack::readBounds(QString filename, FloatArrayType::Pointer bounds)
+{
+  float* bnds = bounds->getPointer(0);
+
+  std::ifstream inFile;
+  inFile.open(filename.toLatin1().data());
+
+  for (size_t iter = 0; iter < bounds->getNumberOfTuples(); iter++)
+  {
+    inFile >> bnds[iter];
+  }
+
+  inFile.close();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 AbstractFilter::Pointer ImportImageStack::newFilterInstance(bool copyFilterParameters)
 {
   ImportImageStack::Pointer filter = ImportImageStack::New();
@@ -375,8 +493,12 @@ AbstractFilter::Pointer ImportImageStack::newFilterInstance(bool copyFilterParam
     // miss some of them because we are not enumerating all of them.
     DREAM3D_COPY_INSTANCEVAR(DataContainerName)
     DREAM3D_COPY_INSTANCEVAR(CellAttributeMatrixName)
+    DREAM3D_COPY_INSTANCEVAR(GeometryType)
     DREAM3D_COPY_INSTANCEVAR(Resolution)
     DREAM3D_COPY_INSTANCEVAR(Origin)
+    DREAM3D_COPY_INSTANCEVAR(xBoundsFile)
+    DREAM3D_COPY_INSTANCEVAR(yBoundsFile)
+    DREAM3D_COPY_INSTANCEVAR(zBoundsFile)
 #if 0
     DREAM3D_COPY_INSTANCEVAR(ZStartIndex)
     DREAM3D_COPY_INSTANCEVAR(ZEndIndex)

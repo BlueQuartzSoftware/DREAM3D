@@ -122,6 +122,7 @@ RectGridGeom::Pointer RectGridGeom::CreateGeometry(const QString& name)
 void RectGridGeom::setXBounds(FloatArrayType::Pointer xBnds)
 {
   xBounds = xBnds;
+  xBounds->setName("xBounds");
 }
 
 // -----------------------------------------------------------------------------
@@ -130,6 +131,7 @@ void RectGridGeom::setXBounds(FloatArrayType::Pointer xBnds)
 void RectGridGeom::setYBounds(FloatArrayType::Pointer yBnds)
 {
   yBounds = yBnds;
+  yBounds->setName("yBounds");
 }
 
 // -----------------------------------------------------------------------------
@@ -138,6 +140,7 @@ void RectGridGeom::setYBounds(FloatArrayType::Pointer yBnds)
 void RectGridGeom::setZBounds(FloatArrayType::Pointer zBnds)
 {
   zBounds = zBnds;
+  zBounds->setName("zBounds");
 }
 
 // -----------------------------------------------------------------------------
@@ -745,14 +748,14 @@ int RectGridGeom::writeXdmf(QTextStream& out, QString dcName, QString hdfFileNam
   out << "  <Grid Name=\"" << dcName << "\" GridType=\"Uniform\">" << "\n";
   out << "    <Topology TopologyType=\"3DRectMesh\" Dimensions=\"" << volDims[2] + 1 << " " << volDims[1] + 1 << " " << volDims[0] + 1 << " \"></Topology>" << "\n";
   out << "    <Geometry Type=\"VxVyVz\">" << "\n";
-  out << "    <DataItem Format=\"HDF\" Dimensions=\"" << zBounds->getNumberOfTuples() << "\" NumberType=\"Float\" Precision=\"4\">" << "\n";
-  out << "      " << hdfFileName << ":/DataContainers/" << dcName << "/" << DREAM3D::Geometry::Geometry << "/" << DREAM3D::Geometry::zBoundsList << "\n";
+  out << "    <DataItem Format=\"HDF\" Dimensions=\"" << xBounds->getNumberOfTuples() << "\" NumberType=\"Float\" Precision=\"4\">" << "\n";
+  out << "      " << hdfFileName << ":/DataContainers/" << dcName << "/" << DREAM3D::Geometry::Geometry << "/" << DREAM3D::Geometry::xBoundsList << "\n";
   out << "    </DataItem>" << "\n";
   out << "    <DataItem Format=\"HDF\" Dimensions=\"" << yBounds->getNumberOfTuples() << "\" NumberType=\"Float\" Precision=\"4\">" << "\n";
   out << "      " << hdfFileName << ":/DataContainers/" << dcName << "/" << DREAM3D::Geometry::Geometry << "/" << DREAM3D::Geometry::yBoundsList << "\n";
   out << "    </DataItem>" << "\n";
-  out << "    <DataItem Format=\"HDF\" Dimensions=\"" << xBounds->getNumberOfTuples() << "\" NumberType=\"Float\" Precision=\"4\">" << "\n";
-  out << "      " << hdfFileName << ":/DataContainers/" << dcName << "/" << DREAM3D::Geometry::Geometry << "/" << DREAM3D::Geometry::xBoundsList << "\n";
+  out << "    <DataItem Format=\"HDF\" Dimensions=\"" << zBounds->getNumberOfTuples() << "\" NumberType=\"Float\" Precision=\"4\">" << "\n";
+  out << "      " << hdfFileName << ":/DataContainers/" << dcName << "/" << DREAM3D::Geometry::Geometry << "/" << DREAM3D::Geometry::zBoundsList << "\n";
   out << "    </DataItem>" << "\n";
   out << "    </Geometry>" << "\n";
 
@@ -767,10 +770,6 @@ QString RectGridGeom::getInfoString(DREAM3D::InfoStringFormat format)
   QString info;
   QTextStream ss (&info);
 
-  float* xBnds = xBounds->getPointer(0);
-  float* yBnds = yBounds->getPointer(0);
-  float* zBnds = zBounds->getPointer(0);
-
   int64_t volDims[3] =
   { static_cast<int64_t>(getXPoints()), static_cast<int64_t>(getYPoints()), static_cast<int64_t>(getZPoints()) };
 
@@ -778,24 +777,7 @@ QString RectGridGeom::getInfoString(DREAM3D::InfoStringFormat format)
   {
     ss << "<tr bgcolor=\"#D3D8E0\"><th colspan=2>RectGrid Geometry Info</th></tr>";
     ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Dimensions:</th><td>" << volDims[0] << " x " << volDims[1] << " x " << volDims[2] << "</td></tr>";
-    ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">XBounds:</th><td>";
-    for (size_t iter = 0; iter < xBounds->getNumberOfTuples(); iter++)
-    {
-      ss << xBnds[iter] << ", ";
-    }
-    ss << "</td></tr>";
-    ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">YBounds:</th><td>";
-    for (size_t iter = 0; iter < yBounds->getNumberOfTuples(); iter++)
-    {
-      ss << yBnds[iter] << ", ";
-    }
-    ss << "</td></tr>";
-    ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">ZBounds:</th><td>";
-    for (size_t iter = 0; iter < zBounds->getNumberOfTuples(); iter++)
-    {
-      ss << zBnds[iter] << ", ";
-    }
-    ss << "</td></tr>";
+    ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Resolution: Variable</th><tr>";
   }
   else
   {
