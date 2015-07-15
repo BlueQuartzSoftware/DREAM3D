@@ -890,6 +890,86 @@ QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureC
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+UInt8ArrayType::Pointer OrthoRhombicOps::generateIPFTriangleLegend(int imageDim)
+{
+
+  QVector<size_t> dims(1, 4);
+  UInt8ArrayType::Pointer image =  UInt8ArrayType::CreateArray( static_cast<size_t>(imageDim * imageDim), dims, "Orthorhombic Triangle Legend");
+  uint32_t* pixelPtr = reinterpret_cast<uint32_t*>(image->getPointer(0));
+
+  static const float xInc = 1.0 / (imageDim);
+  static const float yInc = 1.0 / (imageDim);
+  static const float rad = 1.0f;
+
+  float x = 0.0f;
+  float y = 0.0f;
+  float a = 0.0f;
+  float b = 0.0f;
+  float c = 0.0f;
+
+  float val = 0.0f;
+  float x1 = 0.0f;
+  float y1 = 0.0f;
+  float z1 = 0.0f;
+  float denom = 0.0f;
+
+  DREAM3D::Rgb color;
+  size_t idx = 0;
+  size_t yScanLineIndex = 0; // We use this to control where the data is drawn. Otherwise the image will come out flipped vertically
+  // Loop over every pixel in the image and project up to the sphere to get the angle and then figure out the RGB from
+  // there.
+  for (int32_t yIndex = 0; yIndex < imageDim; ++yIndex)
+  {
+
+    for (int32_t xIndex = 0; xIndex < imageDim; ++xIndex)
+    {
+      idx = (imageDim * yScanLineIndex) + xIndex;
+
+      x = xIndex * xInc;
+      y = yIndex * yInc;
+
+      float sumSquares = (x * x) + (y * y);
+      if( sumSquares > 1.0f) // Outside unit circle
+      {
+        color = 0xFFFFFFFF;
+      }
+      else if ( sumSquares > (rad-2*xInc) && sumSquares < (rad+2*xInc))
+      {
+        color = 0xFF000000;
+      }
+      else if (xIndex == 0 || yIndex == 0)
+      {
+        color = 0xFF000000;
+      }
+      else
+      {
+        a = (x * x + y * y + 1);
+        b = (2 * x * x + 2 * y * y);
+        c = (x * x + y * y - 1);
+
+        val = (-b + sqrtf(b * b - 4.0 * a * c)) / (2.0 * a);
+        x1 = (1 + val) * x;
+        y1 = (1 + val) * y;
+        z1 = val;
+        denom = (x1 * x1) + (y1 * y1) + (z1 * z1);
+        denom = sqrtf(denom);
+        x1 = x1 / denom;
+        y1 = y1 / denom;
+        z1 = z1 / denom;
+
+        color = generateIPFColor(0.0, 0.0, 0.0, x1, y1, z1, false);
+      }
+
+      pixelPtr[idx] = color;
+    }
+    yScanLineIndex++;
+  }
+  return image;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 DREAM3D::Rgb OrthoRhombicOps::generateMisorientationColor(const QuatF& q, const QuatF& refFrame)
 {
   BOOST_ASSERT(false);

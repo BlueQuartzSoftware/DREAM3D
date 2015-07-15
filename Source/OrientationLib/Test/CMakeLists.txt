@@ -51,3 +51,8 @@ AddDREAM3DUnitTest(TESTNAME OrientationConverterTest
                     SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/OrientationConverterTest.cpp
                     FOLDER "Test/OrientationLib"
                     LINK_LIBRARIES ${OrientationLib_Link_Libs})
+
+AddDREAM3DUnitTest(TESTNAME IPFLegendTest
+                    SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/IPFLegendTest.cpp
+                    FOLDER "Test/OrientationLib"
+                    LINK_LIBRARIES ${OrientationLib_Link_Libs} Qt5::Core Qt5::Gui )

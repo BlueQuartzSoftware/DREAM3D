@@ -148,6 +148,12 @@ class OrientationLib_EXPORT TetragonalOps : public SpaceGroupOps
      */
     virtual QVector<UInt8ArrayType::Pointer> generatePoleFigure(PoleFigureConfiguration_t& config);
 
+    /**
+     * @brief generateStandardTriangle Generates an RGBA array that is a color "Standard" IPF Triangle Legend used for IPF Color Maps.
+     * @return
+     */
+    virtual UInt8ArrayType::Pointer generateIPFTriangleLegend(int imageDim);
+
   protected:
     float _calcMisoQuat(const QuatF quatsym[8], int numsym,
                         QuatF& q1, QuatF& q2,
