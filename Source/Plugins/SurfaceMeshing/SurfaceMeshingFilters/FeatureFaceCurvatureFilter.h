@@ -58,8 +58,8 @@ class FeatureFaceCurvatureFilter : public SurfaceMeshFilter
     typedef std::vector<int64_t> FaceIds_t;
     typedef std::map<int32_t, FaceIds_t> SharedFeatureFaces_t;
 
-    DREAM3D_FILTER_PARAMETER(QString, EdgeAttributeMatrixName)
-    Q_PROPERTY(QString EdgeAttributeMatrixName READ getEdgeAttributeMatrixName WRITE setEdgeAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, FaceAttributeMatrixPath)
+    Q_PROPERTY(DataArrayPath FaceAttributeMatrixPath READ getFaceAttributeMatrixPath WRITE setFaceAttributeMatrixPath)
 
     DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshPrincipalCurvature1sArrayName)
     Q_PROPERTY(QString SurfaceMeshPrincipalCurvature1sArrayName READ getSurfaceMeshPrincipalCurvature1sArrayName WRITE setSurfaceMeshPrincipalCurvature1sArrayName)
@@ -190,6 +190,7 @@ class FeatureFaceCurvatureFilter : public SurfaceMeshFilter
     int32_t* m_SurfaceMeshFaceEdges;
     int32_t  m_TotalFeatureFaces;
     int32_t  m_CompletedFeatureFaces;
+
 
     FeatureFaceCurvatureFilter(const FeatureFaceCurvatureFilter&); // Copy Constructor Not Implemented
     void operator=(const FeatureFaceCurvatureFilter&); // Operator '=' Not Implemented

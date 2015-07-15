@@ -124,7 +124,7 @@ Windows developers should select the *.zip file and OS X users should select the
 	Decompress and open up a Visual Studio x64 command prompt.
 	CD into the boost-1.58.0 directory.
 	./bootstrap
-	C:\Users\mjackson\Workspace\boost_1_57_0>.\b2 --build-dir=Build toolset=msvc  --prefix=C:/DREAM3D_SDK/boost-1.57.0 variant=debug,release link=static threading=multi address-model=64 install
+	C:\\Users\\mjackson\\Workspace\boost_1_57_0>.\b2 --build-dir=Build toolset=msvc  --prefix=C:/DREAM3D_SDK/boost-1.57.0 variant=debug,release link=static threading=multi address-model=64 install
 
 ## OS X Notes ##
 
@@ -157,7 +157,7 @@ The distribution of boost with most modern Linux distributions is usually good e
 
  If you use Ninja to configure and build Eigen there are a few steps. this is what worked for me.
 
-+ C:\Users\mjackson\Workspace\eigen-3.2.4\zRel>cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=C:/DREAM3D_SDK/Eigen-3.2.4 -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTING=OFF ../
++ C:\\Users\\mjackson\\Workspace\\eigen-3.2.4\\zRel>cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=C:/DREAM3D_SDK/Eigen-3.2.4 -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTING=OFF ../
 + Then create an empty file called "DartConfiguration.tcl" in the build directory.
 + Run the CMake command again
 + ninja install

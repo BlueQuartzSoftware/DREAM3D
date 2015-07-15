@@ -87,7 +87,7 @@ void PrimaryRolledPreset::displayUserInputDialog()
       }
       else
       {
-        QMessageBox::critical(&d, "Rolled Preset Error", "The ratios have been entenered incorrectly. The following MUST be true: A > B > C", QMessageBox::Default);
+        QMessageBox::critical(&d, "Rolled Preset Error", "The ratios have been entenered incorrectly. The following MUST be true: A >= B >= C", QMessageBox::Default);
       }
     }
     else

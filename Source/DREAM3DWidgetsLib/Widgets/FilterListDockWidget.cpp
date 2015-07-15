@@ -371,7 +371,6 @@ void FilterListDockWidget::matchFilter(QMapIterator<QString, IFilterFactory::Poi
 
       if (filterHumanLabel.contains(keyword, Qt::CaseInsensitive) == true && filterList->findItems(filterHumanLabel, Qt::MatchExactly).size() <= 0)
       {
-        filterCount++;
         bitArray.setBit(i, true);
 
         QList<QString> phraseList;
@@ -419,6 +418,7 @@ void FilterListDockWidget::matchFilter(QMapIterator<QString, IFilterFactory::Poi
       if ((*iter)->getHumanLabel().startsWith(fullWord))
       {
         addItemToList(*iter);
+        filterCount++;
       }
     }
   }
@@ -436,6 +436,7 @@ void FilterListDockWidget::matchFilter(QMapIterator<QString, IFilterFactory::Poi
       if (filterList.contains(filter))
       {
         addItemToList(filter);
+        filterCount++;
       }
     }
   }
@@ -451,6 +452,7 @@ void FilterListDockWidget::matchFilter(QMapIterator<QString, IFilterFactory::Poi
       AbstractFilter::Pointer filter = iter.value();
 
       addItemToList(filter);
+      filterCount++;
     }
   }
 }
