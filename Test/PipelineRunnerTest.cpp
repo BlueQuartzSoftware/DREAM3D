@@ -281,14 +281,14 @@ QString AdjustOutputDirectory(const QString& pipelineFile)
   {
     QString line = sourceLines.next();
 
-    if(line.contains(QString("Data/") ) )
+    if( line.contains(QString("Data/")) == true && line.contains(searchString) == false )
     {
-      line = line.replace(QString("Data/"), getDream3dDataDir() + "Data/");
+      line = line.replace(QString("Data/"), getDream3dDataDir() + "/Data/");
     }
 
     if(line.contains(searchString) )
     {
-      line = line.replace(searchString, replaceString);
+      line = line.replace(searchString, getTestTempDirectory());
     }
 
     outLines.push_back(line);
