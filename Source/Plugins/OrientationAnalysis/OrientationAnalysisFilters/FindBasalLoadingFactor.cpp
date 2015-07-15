@@ -83,7 +83,10 @@ void FindBasalLoadingFactor::setupFilterParameters()
 
   parameters.push_back(FloatVec3FilterParameter::New("Loading Direction", "LoadingDirection", getLoadingDirection(), FilterParameter::Parameter));
 
-  parameters.push_back(DataArraySelectionFilterParameter::New("AvgQuats", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray));
+  {
+    FilterParameter::DataStructureRequirements req;
+    parameters.push_back(DataArraySelectionFilterParameter::New("AvgQuats", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req));
+  }
 
   parameters.push_back(DataArrayCreationFilterParameter::New("Basal Loading Factor", "BasalLoadingFactorArrayPath", getBasalLoadingFactorArrayPath(), FilterParameter::CreatedArray));
 
