@@ -154,7 +154,7 @@ class OrientationLib_EXPORT TrigonalLowOps : public SpaceGroupOps
      * @brief generateStandardTriangle Generates an RGBA array that is a color "Standard" IPF Triangle Legend used for IPF Color Maps.
      * @return
      */
-    //virtual UInt8ArrayType::Pointer generateIPFTriangleLegend(int imageDim);
+    virtual UInt8ArrayType::Pointer generateIPFTriangleLegend(int imageDim);
 
   protected:
     float _calcMisoQuat(const QuatF quatsym[6], int numsym,

@@ -907,7 +907,7 @@ UInt8ArrayType::Pointer MonoclinicOps::generateIPFTriangleLegend(int imageDim)
     {
       idx = (imageDim * yScanLineIndex) + xIndex;
 
-      x =  -1.0f + 2.0f * xIndex * xInc;
+      x = -1.0f + 2.0f * xIndex * xInc;
       y = 2.0f * yIndex * yInc;
 
       float sumSquares = (x * x) + (y * y);

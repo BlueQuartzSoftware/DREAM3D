@@ -918,7 +918,6 @@ QVector<UInt8ArrayType::Pointer> TrigonalOps::generatePoleFigure(PoleFigureConfi
   return poleFigures;
 }
 
-#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -946,11 +945,11 @@ UInt8ArrayType::Pointer TrigonalOps::generateIPFTriangleLegend(int imageDim)
   float denom = 0.0f;
 
   // Find the slope of the bounding line.
-  static const float m = sinf(60.0 * DREAM3D::Constants::k_PiOver180) / cosf(60.0 * DREAM3D::Constants::k_PiOver180);
+  static const float m = sinf(30.0 * DREAM3D::Constants::k_PiOver180) / cosf(30.0 * DREAM3D::Constants::k_PiOver180);
 
   DREAM3D::Rgb color;
   size_t idx = 0;
-  size_t yScanLineIndex = imageDim-1; // We use this to control where the data is drawn. Otherwise the image will come out flipped vertically
+  size_t yScanLineIndex = 0; // We use this to control where the data is drawn. Otherwise the image will come out flipped vertically
   // Loop over every pixel in the image and project up to the sphere to get the angle and then figure out the RGB from
   // there.
   for (int32_t yIndex = 0; yIndex < imageDim; ++yIndex)
@@ -964,7 +963,7 @@ UInt8ArrayType::Pointer TrigonalOps::generateIPFTriangleLegend(int imageDim)
       y = yIndex * yInc;
 
       float sumSquares = (x * x) + (y * y);
-      if( sumSquares > 1.0f || x < y/m) // Outside unit circle
+      if( sumSquares > 1.0f || x > y/m) // Outside unit circle
       {
         color = 0xFFFFFFFF;
       }
@@ -972,7 +971,7 @@ UInt8ArrayType::Pointer TrigonalOps::generateIPFTriangleLegend(int imageDim)
       {
         color = 0xFF000000;
       }
-      else if( x - y/m < 0.001)
+      else if( fabs(x - y/m) < 0.005)
       {
         color = 0xFF000000;
       }
@@ -1001,12 +1000,10 @@ UInt8ArrayType::Pointer TrigonalOps::generateIPFTriangleLegend(int imageDim)
 
       pixelPtr[idx] = color;
     }
-    yScanLineIndex--;
+    yScanLineIndex++;
   }
   return image;
 }
-#endif
-
 
 // -----------------------------------------------------------------------------
 //
