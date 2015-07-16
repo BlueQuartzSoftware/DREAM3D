@@ -10,7 +10,7 @@ Users:[https://groups.google.com/forum/?/dream3d-users#!forum/dream3d-users](htt
 
 Developers:[https://groups.google.com/forum/?hl=en#!forum/dream3d-developers](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
-## Version 6.1. ##
+## Version 6.1.77 ##
 
 + Fixed incorrect calulation of Euclidean distance in the Find Euclidean Distance Map **Filter**.
 + Fixed crashes in generation of misorientation colors due to the incorrect sizes of Rodrigues vectors. All space groups should now return the correctly sized Rodrigues vectors.
