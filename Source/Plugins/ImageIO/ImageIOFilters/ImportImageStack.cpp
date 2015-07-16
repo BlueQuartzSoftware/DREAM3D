@@ -256,6 +256,8 @@ void ImportImageStack::dataCheck()
     else if (m_GeometryType == 1)
     {
       m->getGeometryAs<RectGridGeom>()->setDimensions(static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2]));
+      err = readBounds();
+      if (err < 0) { setErrorCondition(err); }
     }
 
     QVector<size_t> tDims(3, 0);
@@ -456,16 +458,16 @@ int ImportImageStack::readBounds()
   buf = buf.simplified();
   tokens = buf.split(' ');
   word = tokens.at(0);
-  if (word.compare("XPOINTS") != 0)
+  if (word.compare("X_COORDINATES") != 0)
   {
-    QString ss = QObject::tr("XPOINTS keyword not found in proper location in: %1.").arg(m_BoundsFile);
+    QString ss = QObject::tr("X_COORDINATES keyword not found in proper location in: %1.").arg(m_BoundsFile);
     setErrorCondition(-100);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -1;
   }
   if (tokens.size() != 2)
   {
-    QString ss = QObject::tr("XPOINTS keyword line not properly formatted in: %1.").arg(m_BoundsFile);
+    QString ss = QObject::tr("X_COORDINATES keyword line not properly formatted in: %1.").arg(m_BoundsFile);
     setErrorCondition(-100);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -1;
@@ -498,16 +500,16 @@ int ImportImageStack::readBounds()
   buf = buf.simplified();
   tokens = buf.split(' ');
   word = tokens.at(0);
-  if (word.compare("YPOINTS") != 0)
+  if (word.compare("Y_COORDINATES") != 0)
   {
-    QString ss = QObject::tr("YPOINTS keyword not found in proper location in: %1.").arg(m_BoundsFile);
+    QString ss = QObject::tr("Y_COORDINATES keyword not found in proper location in: %1.").arg(m_BoundsFile);
     setErrorCondition(-100);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -1;
   }
   if (tokens.size() != 2)
   {
-    QString ss = QObject::tr("YPOINTS keyword line not properly formatted in: %1.").arg(m_BoundsFile);
+    QString ss = QObject::tr("Y_COORDINATES keyword line not properly formatted in: %1.").arg(m_BoundsFile);
     setErrorCondition(-100);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -1;
@@ -540,16 +542,16 @@ int ImportImageStack::readBounds()
   buf = buf.simplified();
   tokens = buf.split(' ');
   word = tokens.at(0);
-  if (word.compare("ZPOINTS") != 0)
+  if (word.compare("Z_COORDINATES") != 0)
   {
-    QString ss = QObject::tr("ZPOINTS keyword not found in proper location in: %1.").arg(m_BoundsFile);
+    QString ss = QObject::tr("Z_COORDINATES keyword not found in proper location in: %1.").arg(m_BoundsFile);
     setErrorCondition(-100);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -1;
   }
   if (tokens.size() != 2)
   {
-    QString ss = QObject::tr("ZPOINTS keyword line not properly formatted in: %1.").arg(m_BoundsFile);
+    QString ss = QObject::tr("Z_COORDINATES keyword line not properly formatted in: %1.").arg(m_BoundsFile);
     setErrorCondition(-100);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -1;
