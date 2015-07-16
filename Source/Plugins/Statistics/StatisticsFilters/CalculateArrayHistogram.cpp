@@ -93,7 +93,11 @@ void CalculateArrayHistogram::setupFilterParameters()
   linkedProps.clear();
   linkedProps << "NewDataContainerName";
   parameters.push_back(LinkedBooleanFilterParameter::New("New Data Container", "NewDataContainer", getNewDataContainer(), linkedProps, FilterParameter::Parameter));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array to Histogram", "SelectedArrayPath", getSelectedArrayPath(), FilterParameter::RequiredArray));
+  {
+    FilterParameter::DataStructureRequirements req;
+    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array to Histogram", "SelectedArrayPath", getSelectedArrayPath(), FilterParameter::RequiredArray, req));
+  }
   parameters.push_back(StringFilterParameter::New("Data Container ", "NewDataContainerName", getNewDataContainerName(), FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Attribute Matrix", "NewAttributeMatrixName", getNewAttributeMatrixName(), FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Histogram", "NewDataArrayName", getNewDataArrayName(), FilterParameter::CreatedArray));

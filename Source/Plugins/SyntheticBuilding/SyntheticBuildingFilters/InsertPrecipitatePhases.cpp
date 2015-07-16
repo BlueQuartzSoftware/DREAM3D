@@ -151,18 +151,98 @@ void InsertPrecipitatePhases::setupFilterParameters()
   parameters.push_back(BooleanFilterParameter::New("Match Radial Distribution Function", "MatchRDF", getMatchRDF(), FilterParameter::Parameter));
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Boundary Cells", "BoundaryCellsArrayPath", getBoundaryCellsArrayPath(), FilterParameter::RequiredArray));
+  {
+    FilterParameter::DataStructureRequirements req;
+    req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::ImageGeometry);
+    req.amTypes = QVector<unsigned int>(1, DREAM3D::AttributeMatrixType::Cell);
+    req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Int32);
+    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
+  }
+  {
+    FilterParameter::DataStructureRequirements req;
+    req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::ImageGeometry);
+    req.amTypes = QVector<unsigned int>(1, DREAM3D::AttributeMatrixType::Cell);
+    req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Int32);
+    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req));
+  }
+  {
+    FilterParameter::DataStructureRequirements req;
+    req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::ImageGeometry);
+    req.amTypes = QVector<unsigned int>(1, DREAM3D::AttributeMatrixType::Cell);
+    req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Int32);
+    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Boundary Cells", "BoundaryCellsArrayPath", getBoundaryCellsArrayPath(), FilterParameter::RequiredArray, req));
+  }
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray));
+  {
+    FilterParameter::DataStructureRequirements req;
+    req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::ImageGeometry);
+    QVector<unsigned int> amTypes;
+    amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeFeature);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::VertexFeature);
+    req.amTypes = amTypes;
+    req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Int32);
+    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req));
+  }
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Statistics", "InputStatsArrayPath", getInputStatsArrayPath(), FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Phase Types", "InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath(), FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Shape Types", "InputShapeTypesArrayPath", getInputShapeTypesArrayPath(), FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Number of Features", "NumFeaturesArrayPath", getNumFeaturesArrayPath(), FilterParameter::RequiredArray));
+  {
+    FilterParameter::DataStructureRequirements req;
+    req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::ImageGeometry);
+    QVector<unsigned int> amTypes;
+    amTypes.push_back(DREAM3D::AttributeMatrixType::CellEnsemble);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::FaceEnsemble);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeEnsemble);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::VertexEnsemble);
+    req.amTypes = amTypes;
+    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Statistics", "InputStatsArrayPath", getInputStatsArrayPath(), FilterParameter::RequiredArray, req));
+  }
+  {
+    FilterParameter::DataStructureRequirements req;
+    req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::ImageGeometry);
+    QVector<unsigned int> amTypes;
+    amTypes.push_back(DREAM3D::AttributeMatrixType::CellEnsemble);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::FaceEnsemble);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeEnsemble);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::VertexEnsemble);
+    req.amTypes = amTypes;
+    req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::UInt32);
+    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phase Types", "InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath(), FilterParameter::RequiredArray, req));
+  }
+  {
+    FilterParameter::DataStructureRequirements req;
+    req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::ImageGeometry);
+    QVector<unsigned int> amTypes;
+    amTypes.push_back(DREAM3D::AttributeMatrixType::CellEnsemble);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::FaceEnsemble);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeEnsemble);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::VertexEnsemble);
+    req.amTypes = amTypes;
+    req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::UInt32);
+    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Shape Types", "InputShapeTypesArrayPath", getInputShapeTypesArrayPath(), FilterParameter::RequiredArray, req));
+  }
+  {
+    FilterParameter::DataStructureRequirements req;
+    req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::ImageGeometry);
+    QVector<unsigned int> amTypes;
+    amTypes.push_back(DREAM3D::AttributeMatrixType::CellEnsemble);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::FaceEnsemble);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeEnsemble);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::VertexEnsemble);
+    req.amTypes = amTypes;
+    req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Int32);
+    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Number of Features", "NumFeaturesArrayPath", getNumFeaturesArrayPath(), FilterParameter::RequiredArray, req));
+  }
 
   QStringList linkedProps("PrecipInputFile");
   parameters.push_back(LinkedBooleanFilterParameter::New("Already Have Precipitates", "HavePrecips", getHavePrecips(), linkedProps, FilterParameter::Parameter));

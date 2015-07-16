@@ -92,9 +92,23 @@ void LaplacianSmoothing::setupFilterParameters()
   parameters.push_back(DoubleFilterParameter::New("Outer Triple Line Lambda", "SurfaceTripleLineLambda", getSurfaceTripleLineLambda(), FilterParameter::Parameter));
   parameters.push_back(DoubleFilterParameter::New("Outer Quadruple Points Lambda", "SurfaceQuadPointLambda", getSurfaceQuadPointLambda(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Node Type", "SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath(), FilterParameter::RequiredArray));
+  {
+    FilterParameter::DataStructureRequirements req;
+    req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::TriangleGeometry);
+    req.amTypes = QVector<unsigned int>(1, DREAM3D::AttributeMatrixType::Vertex);
+    req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Int8);
+    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Node Type", "SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath(), FilterParameter::RequiredArray, req));
+  }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray));
+  {
+    FilterParameter::DataStructureRequirements req;
+    req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::TriangleGeometry);
+    req.amTypes = QVector<unsigned int>(1, DREAM3D::AttributeMatrixType::Face);
+    req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Int32);
+    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 2));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req));
+  }
   setFilterParameters(parameters);
 }
 

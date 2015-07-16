@@ -52,25 +52,6 @@ DataArraySelectionFilterParameter::~DataArraySelectionFilterParameter()
 //
 // -----------------------------------------------------------------------------
 DataArraySelectionFilterParameter::Pointer DataArraySelectionFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const DataArrayPath& defaultValue, Category category, int groupIndex)
-{
-
-  DataArraySelectionFilterParameter::Pointer ptr = DataArraySelectionFilterParameter::New();
-  ptr->setHumanLabel(humanLabel);
-  ptr->setPropertyName(propertyName);
-  QVariant v;
-  v.setValue(defaultValue);
-  ptr->setDefaultValue(v);
-  ptr->setCategory(category);
-  ptr->setGroupIndex(groupIndex);
-
-  return ptr;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DataArraySelectionFilterParameter::Pointer DataArraySelectionFilterParameter::New(const QString& humanLabel, const QString& propertyName,
   const DataArrayPath& defaultValue, Category category, const DataStructureRequirements req, int groupIndex)
 {
 

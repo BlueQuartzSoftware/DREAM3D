@@ -133,7 +133,21 @@ void FlattenImage::setupFilterParameters()
     parameters.push_back(parameter);
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Image Data", "ImageDataArrayPath", getImageDataArrayPath(), FilterParameter::RequiredArray));
+  {
+    FilterParameter::DataStructureRequirements req;
+    QVector<unsigned int> amTypes;
+    amTypes.push_back(DREAM3D::AttributeMatrixType::Cell);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::Face);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::Edge);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::Vertex);
+    req.amTypes = amTypes;
+    req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::UInt8);
+    QVector< QVector<size_t> > cDims;
+    cDims.push_back(QVector<size_t>(1, 3));
+    cDims.push_back(QVector<size_t>(1, 4));
+    req.componentDimensions = cDims;
+    parameters.push_back(DataArraySelectionFilterParameter::New("Image Data", "ImageDataArrayPath", getImageDataArrayPath(), FilterParameter::RequiredArray, req));
+  }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Flat Image Data", "FlatImageDataArrayName", getFlatImageDataArrayName(), FilterParameter::CreatedArray));
   setFilterParameters(parameters);

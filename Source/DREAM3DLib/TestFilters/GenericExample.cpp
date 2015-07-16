@@ -139,7 +139,10 @@ void GenericExample::setupFilterParameters()
   /* Display a group of 3 text boxes to collect 3 integer values */
   parameters.push_back(IntVec3FilterParameter::New("Dimensions (XYZ)", "Dimensions", getDimensions(), FilterParameter::Parameter));
 
-  parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::Parameter));
+  {
+    FilterParameter::DataStructureRequirements req;
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::Parameter, req));
+  }
 
 
   {

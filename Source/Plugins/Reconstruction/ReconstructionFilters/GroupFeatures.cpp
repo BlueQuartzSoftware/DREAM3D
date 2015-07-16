@@ -76,8 +76,14 @@ void GroupFeatures::setupFilterParameters()
   QStringList linkedProps("NonContiguousNeighborListArrayPath");
   parameters.push_back(LinkedBooleanFilterParameter::New("Use Non-Contiguous Neighbors", "UseNonContiguousNeighbors", getUseNonContiguousNeighbors(), linkedProps, FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Non-Contiguous Neighbor List", "NonContiguousNeighborListArrayPath", getNonContiguousNeighborListArrayPath(), FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Contiguous Neighbor List", "ContiguousNeighborListArrayPath", getContiguousNeighborListArrayPath(), FilterParameter::RequiredArray));
+  {
+    FilterParameter::DataStructureRequirements req;
+    parameters.push_back(DataArraySelectionFilterParameter::New("Non-Contiguous Neighbor List", "NonContiguousNeighborListArrayPath", getNonContiguousNeighborListArrayPath(), FilterParameter::RequiredArray, req));
+  }
+  {
+    FilterParameter::DataStructureRequirements req;
+    parameters.push_back(DataArraySelectionFilterParameter::New("Contiguous Neighbor List", "ContiguousNeighborListArrayPath", getContiguousNeighborListArrayPath(), FilterParameter::RequiredArray, req));
+  }
   setFilterParameters(parameters);
 }
 
