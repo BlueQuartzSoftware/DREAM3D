@@ -37,6 +37,8 @@
 #ifndef _ImportImageStack_H_
 #define _ImportImageStack_H_
 
+#include <QtCore/QFile>
+
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -68,14 +70,8 @@ class ImportImageStack : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
     Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
 
-    DREAM3D_FILTER_PARAMETER(QString, xBoundsFile)
-    Q_PROPERTY(QString xBoundsFile READ getxBoundsFile WRITE setxBoundsFile)
-
-    DREAM3D_FILTER_PARAMETER(QString, yBoundsFile)
-    Q_PROPERTY(QString yBoundsFile READ getyBoundsFile WRITE setyBoundsFile)
-
-    DREAM3D_FILTER_PARAMETER(QString, zBoundsFile)
-    Q_PROPERTY(QString zBoundsFile READ getzBoundsFile WRITE setzBoundsFile)
+    DREAM3D_FILTER_PARAMETER(QString, BoundsFile)
+    Q_PROPERTY(QString BoundsFile READ getBoundsFile WRITE setBoundsFile)
 
     DREAM3D_FILTER_PARAMETER(int, GeometryType)
     Q_PROPERTY(int GeometryType READ getGeometryType WRITE setGeometryType)
@@ -173,7 +169,7 @@ class ImportImageStack : public AbstractFilter
     /**
     * @brief readBounds Reads the bounds for voxels from the specified file
     */
-    void readBounds(QString filename, FloatArrayType::Pointer bounds);
+    int readBounds();
 
   private:
     DEFINE_DATAARRAY_VARIABLE(uint8_t, ImageData)
