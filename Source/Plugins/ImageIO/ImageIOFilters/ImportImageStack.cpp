@@ -167,9 +167,19 @@ void ImportImageStack::dataCheck()
                               m_InputFileListInfo.PaddingDigits);
   if (fileList.size() == 0)
   {
-    QString ss = QObject::tr("No files have been selected for import");
+    ss.clear();
+    QTextStream out(&ss);
+    out <<" No files have been selected for import. Have you set the input directory and other values so that input files will be generated?\n";
+    out << "InputPath: " << m_InputFileListInfo.InputPath << "\n";
+    out << "FilePrefix: " << m_InputFileListInfo.FilePrefix << "\n";
+    out << "FileSuffix: " << m_InputFileListInfo.FileSuffix << "\n";
+    out << "FileExtension: " << m_InputFileListInfo.FileExtension << "\n";
+    out << "PaddingDigits: " << m_InputFileListInfo.PaddingDigits << "\n";
+    out << "StartIndex: " << m_InputFileListInfo.StartIndex << "\n";
+    out << "EndIndex: " << m_InputFileListInfo.EndIndex << "\n";
+
+    notifyErrorMessage(getHumanLabel(), ss, -11);
     setErrorCondition(-11);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else
   {
