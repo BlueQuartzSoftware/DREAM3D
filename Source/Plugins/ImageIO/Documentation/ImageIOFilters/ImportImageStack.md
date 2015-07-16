@@ -13,6 +13,8 @@ The user selects the directory that contains all the files to be imported then u
 The user has the option to read the images in as an **Image Geometry** or a **Rectilinear Grid Geometry**.  If the user chooses **Image Geometry**, then they must enter the origin and resolution of the imported images.  The resolution (or size of the **Cells**) is the same for all **Cells** in this case.  If the user chooses **Rectilinear Grid Geometry**, then they must provide a file path to a file that lists the *bounds* of **Cells** in the X, Y and Z directions.  The format of the file is provided below. Note that the *bounds* array for each direction will be the number of **Cells** in that direction plus 1 (i.e. a 100x90x80 **Cell** dataset will have 101x91x81 *bounds* values).
 
 Bounds File format:
+# Comment line
+# Comment line
 X_COORDINATES nx 
 x0 x1 ... x(nx-1)
 Y_COORDINATES ny 

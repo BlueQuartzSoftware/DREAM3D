@@ -452,8 +452,13 @@ int ImportImageStack::readBounds()
   bool ok = false;
   QString word;
 
-  //Read the line that should have the format: XPOINTS number
-  buf = inFile.readLine();
+  //Read header until we get to the line that should have the format: XPOINTS number
+  bool header = true;
+  while (header == true)
+  {
+    buf = inFile.readLine();
+    if (buf.startsWith("#") == false) { header = false; }
+  }
   buf = buf.trimmed();
   buf = buf.simplified();
   tokens = buf.split(' ');
