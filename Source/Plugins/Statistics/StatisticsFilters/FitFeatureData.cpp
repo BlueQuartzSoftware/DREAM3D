@@ -102,7 +102,7 @@ void FitFeatureData::setupFilterParameters()
   parameters.push_back(LinkedBooleanFilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", getRemoveBiasedFeatures(), linkedProps, FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> amTypes;
     amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
     amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
@@ -113,7 +113,7 @@ void FitFeatureData::setupFilterParameters()
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Array to Fit", "SelectedFeatureArrayPath", getSelectedFeatureArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> amTypes;
     amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
     amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
@@ -125,7 +125,7 @@ void FitFeatureData::setupFilterParameters()
     parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> amTypes;
     amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
     amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);

@@ -76,7 +76,7 @@ void FindNumFeatures::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> amTypes;
     amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
     amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);

@@ -165,7 +165,7 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   parameters.push_back(DoubleFilterParameter::New("Size Correlation Resolution", "SizeCorrelationResolution", getSizeCorrelationResolution(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> amTypes;
     amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
     amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
@@ -177,7 +177,7 @@ void GenerateEnsembleStatistics::setupFilterParameters()
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> amTypes;
     amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
     amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
@@ -204,7 +204,7 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Morphological Statistics", "CalculateMorphologicalStats", getCalculateMorphologicalStats(), linkedProps, FilterParameter::Parameter));
   parameters.push_back(ChoiceFilterParameter::New("Size Distribution Fit Type", "SizeDistributionFitType", getSizeDistributionFitType(), choices, false, FilterParameter::Parameter));
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> amTypes;
     amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
     amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
@@ -216,7 +216,7 @@ void GenerateEnsembleStatistics::setupFilterParameters()
     parameters.push_back(DataArraySelectionFilterParameter::New("Biased Features", "BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> amTypes;
     amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
     amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
@@ -229,7 +229,7 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   }
   parameters.push_back(ChoiceFilterParameter::New("Aspect Ratio Distribution Fit Type", "AspectRatioDistributionFitType", getAspectRatioDistributionFitType(), choices, false, FilterParameter::Parameter));
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> amTypes;
     amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
     amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
@@ -242,7 +242,7 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   }
   parameters.push_back(ChoiceFilterParameter::New("Omega3 Distribution Fit Type", "Omega3DistributionFitType", getOmega3DistributionFitType(), choices, false, FilterParameter::Parameter));
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> amTypes;
     amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
     amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
@@ -255,7 +255,7 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   }
   parameters.push_back(ChoiceFilterParameter::New("Neighborhood Distribution Fit Type", "NeighborhoodDistributionFitType", getNeighborhoodDistributionFitType(), choices, false, FilterParameter::Parameter));
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> amTypes;
     amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
     amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
@@ -267,7 +267,7 @@ void GenerateEnsembleStatistics::setupFilterParameters()
     parameters.push_back(DataArraySelectionFilterParameter::New("Neighborhoods", "NeighborhoodsArrayPath", getNeighborhoodsArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> amTypes;
     amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
     amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
@@ -285,7 +285,7 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   linkedProps << "CalculateMDF" << "SharedSurfaceAreaListArrayPath" << "AvgQuatsArrayPath";
   parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Crystallographic Statistics", "CalculateCrystallographicStats", getCalculateCrystallographicStats(), linkedProps, FilterParameter::Parameter));
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> amTypes;
     amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
     amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
@@ -297,7 +297,7 @@ void GenerateEnsembleStatistics::setupFilterParameters()
     parameters.push_back(DataArraySelectionFilterParameter::New("Surface Features", "SurfaceFeaturesArrayPath", getSurfaceFeaturesArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> amTypes;
     amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
     amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
@@ -309,7 +309,7 @@ void GenerateEnsembleStatistics::setupFilterParameters()
     parameters.push_back(DataArraySelectionFilterParameter::New("Volumes", "VolumesArrayPath", getVolumesArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> amTypes;
     amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
     amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
@@ -321,7 +321,7 @@ void GenerateEnsembleStatistics::setupFilterParameters()
     parameters.push_back(DataArraySelectionFilterParameter::New("Average Euler Angles", "FeatureEulerAnglesArrayPath", getFeatureEulerAnglesArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> amTypes;
     amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
     amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
@@ -333,7 +333,7 @@ void GenerateEnsembleStatistics::setupFilterParameters()
     parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> amTypes;
     amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
     amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
@@ -346,7 +346,7 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> amTypes;
     amTypes.push_back(DREAM3D::AttributeMatrixType::CellEnsemble);
     amTypes.push_back(DREAM3D::AttributeMatrixType::FaceEnsemble);

@@ -93,7 +93,7 @@ void LaplacianSmoothing::setupFilterParameters()
   parameters.push_back(DoubleFilterParameter::New("Outer Quadruple Points Lambda", "SurfaceQuadPointLambda", getSurfaceQuadPointLambda(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::RequiredArray));
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::TriangleGeometry);
     req.amTypes = QVector<unsigned int>(1, DREAM3D::AttributeMatrixType::Vertex);
     req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Int8);
@@ -102,7 +102,7 @@ void LaplacianSmoothing::setupFilterParameters()
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::TriangleGeometry);
     req.amTypes = QVector<unsigned int>(1, DREAM3D::AttributeMatrixType::Face);
     req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Int32);

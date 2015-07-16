@@ -46,6 +46,14 @@ public:
     DREAM3D_STATIC_NEW_MACRO(DataArraySelectionFilterParameter)
     DREAM3D_TYPE_MACRO(DataArraySelectionFilterParameter)
 
+  struct DataStructureRequirements
+  {
+    QVector<unsigned int> dcGeometryTypes;
+    QVector<unsigned int> amTypes;
+    QVector<QString> daTypes;
+    QVector< QVector<size_t> > componentDimensions;
+  };
+
     static Pointer New(const QString& humanLabel, const QString& propertyName,
     const DataArrayPath& defaultValue, Category category, 
     const DataStructureRequirements req, int groupIndex = -1);

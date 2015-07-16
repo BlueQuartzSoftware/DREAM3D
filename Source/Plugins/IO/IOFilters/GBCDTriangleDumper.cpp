@@ -81,7 +81,7 @@ void GBCDTriangleDumper::setupFilterParameters()
   parameters.push_back(OutputFileFilterParameter::New("Output File", "OutputFile", getOutputFile(), FilterParameter::Parameter, "*.ph", "CMU Feature Growth"));
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::TriangleGeometry);
     req.amTypes = QVector<unsigned int>(1, DREAM3D::AttributeMatrixType::Face);
     req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Int32);
@@ -89,7 +89,7 @@ void GBCDTriangleDumper::setupFilterParameters()
     parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::TriangleGeometry);
     req.amTypes = QVector<unsigned int>(1, DREAM3D::AttributeMatrixType::Face);
     req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Double);
@@ -97,7 +97,7 @@ void GBCDTriangleDumper::setupFilterParameters()
     parameters.push_back(DataArraySelectionFilterParameter::New("Face Normals", "SurfaceMeshFaceNormalsArrayPath", getSurfaceMeshFaceNormalsArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::TriangleGeometry);
     req.amTypes = QVector<unsigned int>(1, DREAM3D::AttributeMatrixType::Face);
     req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Double);
@@ -106,7 +106,7 @@ void GBCDTriangleDumper::setupFilterParameters()
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::ImageGeometry);
     QVector<unsigned int> amTypes;
     amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);

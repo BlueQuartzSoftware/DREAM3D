@@ -98,7 +98,7 @@ void ErodeDilateBadData::setupFilterParameters()
   parameters.push_back(BooleanFilterParameter::New("Replace Bad Data", "ReplaceBadData", getReplaceBadData(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::ImageGeometry);
     req.amTypes = QVector<unsigned int>(1, DREAM3D::AttributeMatrixType::Cell);
     req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Int32);

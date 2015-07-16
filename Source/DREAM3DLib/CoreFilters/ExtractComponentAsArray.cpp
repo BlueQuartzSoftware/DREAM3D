@@ -76,7 +76,7 @@ void ExtractComponentAsArray::setupFilterParameters()
   parameters.push_back(IntFilterParameter::New("Component Number to Extract", "CompNumber", getCompNumber(), FilterParameter::Parameter));
 
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     parameters.push_back(DataArraySelectionFilterParameter::New("Multicomponent Attribute Array", "SelectedArrayPath", getSelectedArrayPath(), FilterParameter::RequiredArray, req));
   }
 

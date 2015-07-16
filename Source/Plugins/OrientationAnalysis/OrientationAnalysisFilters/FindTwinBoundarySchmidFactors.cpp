@@ -260,7 +260,7 @@ void FindTwinBoundarySchmidFactors::setupFilterParameters()
   parameters.push_back(OutputFileFilterParameter::New("Twin Boundary Info File", "TwinBoundarySchmidFactorsFile", getTwinBoundarySchmidFactorsFile(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> dcTypes;
     dcTypes.push_back(DREAM3D::GeometryType::ImageGeometry);
     dcTypes.push_back(DREAM3D::GeometryType::TriangleGeometry);
@@ -276,7 +276,7 @@ void FindTwinBoundarySchmidFactors::setupFilterParameters()
     parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> dcTypes;
     dcTypes.push_back(DREAM3D::GeometryType::ImageGeometry);
     dcTypes.push_back(DREAM3D::GeometryType::TriangleGeometry);
@@ -293,7 +293,7 @@ void FindTwinBoundarySchmidFactors::setupFilterParameters()
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> dcTypes;
     dcTypes.push_back(DREAM3D::GeometryType::ImageGeometry);
     dcTypes.push_back(DREAM3D::GeometryType::TriangleGeometry);
@@ -310,7 +310,7 @@ void FindTwinBoundarySchmidFactors::setupFilterParameters()
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> dcTypes;
     dcTypes.push_back(DREAM3D::GeometryType::ImageGeometry);
     dcTypes.push_back(DREAM3D::GeometryType::TriangleGeometry);
@@ -321,7 +321,7 @@ void FindTwinBoundarySchmidFactors::setupFilterParameters()
     parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> dcTypes;
     dcTypes.push_back(DREAM3D::GeometryType::ImageGeometry);
     dcTypes.push_back(DREAM3D::GeometryType::TriangleGeometry);
@@ -332,7 +332,7 @@ void FindTwinBoundarySchmidFactors::setupFilterParameters()
     parameters.push_back(DataArraySelectionFilterParameter::New("Face Normals", "SurfaceMeshFaceNormalsArrayPath", getSurfaceMeshFaceNormalsArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> dcTypes;
     dcTypes.push_back(DREAM3D::GeometryType::ImageGeometry);
     dcTypes.push_back(DREAM3D::GeometryType::TriangleGeometry);

@@ -116,7 +116,7 @@ void InitializeSyntheticVolume::setupFilterParameters()
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> amTypes;
     amTypes.push_back(DREAM3D::AttributeMatrixType::CellEnsemble);
     amTypes.push_back(DREAM3D::AttributeMatrixType::FaceEnsemble);
@@ -127,7 +127,7 @@ void InitializeSyntheticVolume::setupFilterParameters()
     parameters.push_back(DataArraySelectionFilterParameter::New("Statistics", "InputStatsArrayPath", getInputStatsArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> amTypes;
     amTypes.push_back(DREAM3D::AttributeMatrixType::CellEnsemble);
     amTypes.push_back(DREAM3D::AttributeMatrixType::FaceEnsemble);

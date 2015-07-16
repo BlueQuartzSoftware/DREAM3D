@@ -49,6 +49,16 @@ public:
     const DataArrayPath& defaultValue, Category category,
      int groupIndex = -1);
 
+    struct DataStructureRequirements
+    {
+      QVector<unsigned int> dcGeometryTypes;
+      QVector<unsigned int> amTypes;
+    };
+
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+      const DataArrayPath& defaultValue, Category category,
+      const DataStructureRequirements req, int groupIndex = -1);
+
     virtual ~AttributeMatrixSelectionFilterParameter();
 
     /**
@@ -57,6 +67,9 @@ public:
      * @return
      */
     QString getWidgetType();
+
+    DREAM3D_INSTANCE_PROPERTY(QVector<unsigned int>, DefaultGeometryTypes)
+    DREAM3D_INSTANCE_PROPERTY(QVector<unsigned int>, DefaultAttributeMatrixTypes)
 
 protected:
   AttributeMatrixSelectionFilterParameter();

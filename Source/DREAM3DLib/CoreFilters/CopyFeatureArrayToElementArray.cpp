@@ -80,7 +80,7 @@ void CopyFeatureArrayToElementArray::setupFilterParameters()
     amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeFeature);
     amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
     amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     req.amTypes = amTypes;
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Data to Copy to Element Data", "SelectedFeatureArrayPath", getSelectedFeatureArrayPath(), FilterParameter::RequiredArray, req));
   }
@@ -94,7 +94,7 @@ void CopyFeatureArrayToElementArray::setupFilterParameters()
     amTypes.push_back(DREAM3D::AttributeMatrixType::Cell);
     QVector<QString> daTypes;
     daTypes.push_back(DREAM3D::TypeNames::Int32);
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     req.amTypes = amTypes;
     req.daTypes = daTypes;
     req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));

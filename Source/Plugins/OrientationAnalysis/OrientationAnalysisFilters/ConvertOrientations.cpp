@@ -96,7 +96,7 @@ void ConvertOrientations::setupFilterParameters()
   }
 
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Float);
     parameters.push_back(DataArraySelectionFilterParameter::New("Input Orientations", "InputOrientationArrayPath", getInputOrientationArrayPath(), FilterParameter::RequiredArray, req, 0));
   }

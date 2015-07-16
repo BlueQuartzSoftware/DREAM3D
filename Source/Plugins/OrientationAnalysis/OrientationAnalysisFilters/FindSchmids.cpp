@@ -116,7 +116,7 @@ void FindSchmids::setupFilterParameters()
   parameters.push_back(FloatVec3FilterParameter::New("Slip Direction", "SlipDirection", getSlipDirection(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> amTypes;
     amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
     amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
@@ -128,7 +128,7 @@ void FindSchmids::setupFilterParameters()
     parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> amTypes;
     amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
     amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
@@ -141,7 +141,7 @@ void FindSchmids::setupFilterParameters()
   }
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::RequiredArray));
   {
-    FilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> amTypes;
     amTypes.push_back(DREAM3D::AttributeMatrixType::CellEnsemble);
     amTypes.push_back(DREAM3D::AttributeMatrixType::FaceEnsemble);
