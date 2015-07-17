@@ -45,10 +45,6 @@ public:
     DREAM3D_STATIC_NEW_MACRO(AttributeMatrixSelectionFilterParameter)
     DREAM3D_TYPE_MACRO(AttributeMatrixSelectionFilterParameter)
 
-    static Pointer New(const QString& humanLabel, const QString& propertyName,
-    const DataArrayPath& defaultValue, Category category,
-     int groupIndex = -1);
-
     struct DataStructureRequirements
     {
       QVector<unsigned int> dcGeometryTypes;
