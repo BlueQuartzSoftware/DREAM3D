@@ -135,8 +135,27 @@ void FindAvgOrientations::setupFilterParameters()
     parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(DataArrayCreationFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::CreatedArray));
-  parameters.push_back(DataArrayCreationFilterParameter::New("Average Euler Angles", "AvgEulerAnglesArrayPath", getAvgEulerAnglesArrayPath(), FilterParameter::CreatedArray));
+
+  {
+    DataArrayCreationFilterParameter::DataStructureRequirements req;
+    QVector<unsigned int> amTypes;
+    amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeFeature);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::VertexFeature);
+    req.amTypes = amTypes;
+    parameters.push_back(DataArrayCreationFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::CreatedArray, req));
+  }
+  {
+    DataArrayCreationFilterParameter::DataStructureRequirements req;
+    QVector<unsigned int> amTypes;
+    amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeFeature);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::VertexFeature);
+    req.amTypes = amTypes;
+    parameters.push_back(DataArrayCreationFilterParameter::New("Average Euler Angles", "AvgEulerAnglesArrayPath", getAvgEulerAnglesArrayPath(), FilterParameter::CreatedArray, req));
+  }
   setFilterParameters(parameters);
 }
 

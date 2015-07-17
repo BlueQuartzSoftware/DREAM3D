@@ -115,7 +115,12 @@ void EMMPMFilter::setupFilterParameters()
     parameters.push_back(DataArraySelectionFilterParameter::New("Input Attribute Array", "InputDataArrayPath", getInputDataArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(DataArrayCreationFilterParameter::New("Output Attribute Array", "OutputDataArrayPath", getOutputDataArrayPath(), FilterParameter::CreatedArray));
+  {
+    DataArrayCreationFilterParameter::DataStructureRequirements req;
+    req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::ImageGeometry);
+    req.amTypes = QVector<unsigned int>(1, DREAM3D::AttributeMatrixType::Cell);
+    parameters.push_back(DataArrayCreationFilterParameter::New("Output Attribute Array", "OutputDataArrayPath", getOutputDataArrayPath(), FilterParameter::CreatedArray, req));
+  }
   setFilterParameters(parameters);
 }
 

@@ -216,8 +216,10 @@ void GenericExample::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
 
-
-    parameters.push_back(DataArrayCreationFilterParameter::New("Created Data Array", "CreatedDataArray", getCreatedDataArray(), FilterParameter::Parameter, 0));
+    {
+      DataArrayCreationFilterParameter::DataStructureRequirements req;
+      parameters.push_back(DataArrayCreationFilterParameter::New("Created Data Array", "CreatedDataArray", getCreatedDataArray(), FilterParameter::Parameter, req, 0));
+    }
     /* Display a group of 3 text boxes to collect 3 float values */
     parameters.push_back(FloatVec3FilterParameter::New("Origin", "Origin", getOrigin(), FilterParameter::Parameter, 1));
 
