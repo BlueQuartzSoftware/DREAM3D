@@ -530,6 +530,7 @@ void FindGBCD::execute()
   bool doParallel = true;
 #endif
 
+  size_t totalPhases = m_CrystalStructuresPtr.lock()->getNumberOfTuples();
   size_t totalFaces = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();
   size_t faceChunkSize = 50000;
   size_t numMisoReps = 576 * 4;
@@ -546,7 +547,11 @@ void FindGBCD::execute()
   startMillis =  QDateTime::currentMSecsSinceEpoch();
   int32_t hemisphere = 0;
 
-  double totalFaceArea = 0.0;
+  //create an array to hold the total face area for each phase and initialize the array to 0.0
+  DoubleArrayType::Pointer totalFaceAreaPtr = DoubleArrayType::CreateArray(totalPhases, "totalFaceArea");
+  totalFaceAreaPtr->initializeWithValue(0.0);
+  double* totalFaceArea = totalFaceAreaPtr->getPointer(0);
+
   QString ss = QObject::tr("Calculating GBCD || 0/%1 Completed").arg(totalFaces);
   for (size_t i = 0; i < totalFaces; i = i + faceChunkSize)
   {
@@ -598,7 +603,7 @@ void FindGBCD::execute()
           hemisphere = 0;
           if (m_HemiCheck[(j * numMisoReps) + k] == false) { hemisphere = 1; }
           m_GBCD[(phase * totalGBCDBins) + (2 * m_GbcdBins[(j * numMisoReps) + (k)] + hemisphere)] += area;
-          totalFaceArea += area;
+          totalFaceArea[phase] += area;
         }
       }
     }
@@ -607,10 +612,14 @@ void FindGBCD::execute()
   ss = QObject::tr("Starting GBCD Normalization");
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
-  double MRDfactor = double(totalGBCDBins) / totalFaceArea;
-  for (int32_t i = 0; i < totalGBCDBins; i++)
+  for (int32_t i = 0; i < totalPhases; i++)
   {
-    m_GBCD[i] *= MRDfactor;
+    size_t phaseShift = i * totalGBCDBins;
+    double MRDfactor = double(totalGBCDBins) / totalFaceArea[i];
+    for (int32_t j = 0; j < totalGBCDBins; j++)
+    {
+      m_GBCD[phaseShift + j] *= MRDfactor;
+    }
   }
 
   /* Let the GUI know we are done with this filter */
