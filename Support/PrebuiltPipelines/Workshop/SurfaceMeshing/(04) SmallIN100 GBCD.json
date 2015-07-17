@@ -537,7 +537,7 @@
             "Data Array Name": "Phases",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.0.1964",
+        "FilterVersion": "6.1.87",
         "Filter_Human_Label": "Find GBCD",
         "Filter_Name": "FindGBCD",
         "GBCDArrayName": "GBCD",
@@ -559,8 +559,12 @@
         }
     },
     "2": {
-        "CrystalStructure": 1,
-        "FilterVersion": "6.0.1964",
+        "CrystalStructuresArrayPath": {
+            "Attribute Matrix Name": "CellEnsembleData",
+            "Data Array Name": "CrystalStructures",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "FilterVersion": "6.1.87",
         "Filter_Human_Label": "Write GBCD Pole Figure (GMT 5)",
         "Filter_Name": "VisualizeGBCDGMT",
         "GBCDArrayPath": {
@@ -574,11 +578,16 @@
             "k": 1,
             "l": 1
         },
-        "OutputFile": "Data/Output/SmallIN100GBCD/SmallIn100GMT_1.dat"
+        "OutputFile": "Data/Output/SmallIN100GBCD/SmallIn100GMT_1.dat",
+        "PhaseOfInterest": 1
     },
     "3": {
-        "CrystalStructure": 1,
-        "FilterVersion": "6.0.1964",
+        "CrystalStructuresArrayPath": {
+            "Attribute Matrix Name": "CellEnsembleData",
+            "Data Array Name": "CrystalStructures",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "FilterVersion": "6.1.87",
         "Filter_Human_Label": "Write GBCD Pole Figure (VTK)",
         "Filter_Name": "VisualizeGBCDPoleFigure",
         "GBCDArrayPath": {
@@ -592,10 +601,11 @@
             "k": 1,
             "l": 1
         },
-        "OutputFile": "Data/Output/SmallIN100GBCD/SmallIn100VTK.vtk"
+        "OutputFile": "Data/Output/SmallIN100GBCD/SmallIn100VTK.vtk",
+        "PhaseOfInterest": 1
     },
     "4": {
-        "FilterVersion": "6.0.1964",
+        "FilterVersion": "6.1.87",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100Mesh_GBCD.dream3d",
@@ -604,6 +614,6 @@
     "PipelineBuilder": {
         "Name": "(04) SmallIN100 GBCD",
         "Number_Filters": 5,
-        "Version": "6.0"
+        "Version": "6.1"
     }
 }

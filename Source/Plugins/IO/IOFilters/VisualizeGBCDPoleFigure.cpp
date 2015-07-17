@@ -89,7 +89,7 @@ VisualizeGBCDPoleFigure::~VisualizeGBCDPoleFigure()
 void VisualizeGBCDPoleFigure::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntFilterParameter::New("Phase Of Interest", "PhaseOfInterest", getPhaseOfInterest(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Phase of Interest", "PhaseOfInterest", getPhaseOfInterest(), FilterParameter::Parameter));
   parameters.push_back(AxisAngleFilterParameter::New("Misorientation Axis-Angle", "MisorientationRotation", getMisorientationRotation(), FilterParameter::Parameter));
   parameters.push_back(OutputFileFilterParameter::New("Output Regular Grid VTK File", "OutputFile", getOutputFile(), FilterParameter::Parameter, "*.vtk", "VTK File"));
   parameters.push_back(SeparatorFilterParameter::New("Face Ensemble Data", FilterParameter::RequiredArray));
@@ -174,10 +174,10 @@ void VisualizeGBCDPoleFigure::dataCheck()
     if( NULL != m_GBCDPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_GBCD = m_GBCDPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
- 
+
   if (NULL != m_GBCDPtr.lock().get() && getPhaseOfInterest() >= m_GBCDPtr.lock()->getNumberOfTuples())
   {
-    QString ss = QObject::tr("The Phase you entered is larger than the number of phases").arg(ClassName());
+    QString ss = QObject::tr("The phase index is larger than the number of Ensembles").arg(ClassName());
     notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-381);
   }
