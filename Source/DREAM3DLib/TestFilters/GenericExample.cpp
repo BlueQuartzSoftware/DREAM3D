@@ -224,7 +224,10 @@ void GenericExample::setupFilterParameters()
     /* Display the AxisAngleWidget to collect Axis-Angle pairs from the user */
     parameters.push_back(AxisAngleFilterParameter::New("Crystal Rotations", "CrystalSymmetryRotations", getCrystalSymmetryRotations(), FilterParameter::Parameter, 2));
 
-    parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::Parameter, 2));
+    {
+      DataContainerSelectionFilterParameter::DataStructureRequirements req;
+      parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::Parameter, req, 2));
+    }
   }
   QVector<DataArrayPath> paths;
   paths.push_back(DataArrayPath("StatsGeneratorDataContainer", "CellEnsembleData", "CrystalStructures"));
