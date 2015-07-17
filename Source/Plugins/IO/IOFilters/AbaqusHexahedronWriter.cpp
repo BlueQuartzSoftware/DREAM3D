@@ -629,16 +629,16 @@ std::vector<int64_t> AbaqusHexahedronWriter::getNodeIds(size_t x, size_t y, size
 
   if (0)
   {
-    printf("           %lld-------%lld  \n", nodeId[4], nodeId[5]);
+    printf("           %lld-------%lld  \n", static_cast<long long int>(nodeId[4]), static_cast<long long int>(nodeId[5]) );
     printf("            /|        /|   \n");
     printf("           / |       / |   \n");
     printf("          /  |      /  |   \n");
-    printf("       %lld--------%lld  |   \n", nodeId[6], nodeId[7]);
+    printf("       %lld--------%lld  |   \n", static_cast<long long int>(nodeId[6]), static_cast<long long int>(nodeId[7]));
     printf("         |   |      |  |   \n");
-    printf("         | %lld------|-%lld  \n", nodeId[0], nodeId[1]);
+    printf("         | %lld------|-%lld  \n", static_cast<long long int>(nodeId[0]), static_cast<long long int>(nodeId[1]));
     printf("         |  /       | /    \n");
     printf("         | /        |/     \n");
-    printf("        %lld--------%lld     \n", nodeId[2], nodeId[3]);
+    printf("        %lld--------%lld     \n", static_cast<long long int>(nodeId[2]), static_cast<long long int>(nodeId[3]));
   }
   return nodeId;
 }

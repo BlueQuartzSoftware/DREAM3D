@@ -134,15 +134,6 @@ int ChangeResolution::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ChangeResolution::updateCellInstancePointers()
-{
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ChangeResolution::dataCheck()
 {
   setErrorCondition(0);
@@ -261,7 +252,7 @@ void ChangeResolution::execute()
   if(getErrorCondition() < 0) { return; }
 
   DataContainer::Pointer m;
-  if(m_SaveAsNewDataContainer == false)
+  if (m_SaveAsNewDataContainer == false)
   {
     m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
   }
@@ -338,7 +329,7 @@ void ChangeResolution::execute()
     void* source = NULL;
     void* destination = NULL;
     size_t newIndicies_I = 0;
-    int nComp = data->getNumberOfComponents();
+    int32_t nComp = data->getNumberOfComponents();
     for (size_t i = 0; i < static_cast<size_t>(totalPoints); i++)
     {
       newIndicies_I = newindicies[i];
@@ -353,7 +344,7 @@ void ChangeResolution::execute()
   m->getGeometryAs<ImageGeom>()->setDimensions(m_XP, m_YP, m_ZP);
   m->removeAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
   m->addAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName(), newCellAttrMat);
-
+  
   // Feature Ids MUST already be renumbered.
   if (m_RenumberFeatures == true)
   {
@@ -366,15 +357,18 @@ void ChangeResolution::execute()
       notifyErrorMessage(getHumanLabel(), "The number of Features is 0 and should be greater than 0", -600);
       return;
     }
-
-    updateCellInstancePointers();
-
+    
+    // We have blown away the old FeatureIds array during the above copy loop, so grab it again here
+    IDataArray::Pointer featureIdsPtr = m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName())->getAttributeArray(getFeatureIdsArrayPath().getDataArrayName());
+    Int32ArrayType::Pointer featureIds = boost::dynamic_pointer_cast<Int32ArrayType>(featureIdsPtr);
+    int32_t* fIds = featureIds->getPointer(0);
+    
     // Find the unique set of feature ids
     for (size_t i = 0; i < totalPoints; ++i)
     {
-      activeObjects[m_FeatureIds[i]] = true;
+      activeObjects[fIds[i]] = true;
     }
-    cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
+    cellFeatureAttrMat->removeInactiveObjects(activeObjects, featureIds);
   }
 
   notifyStatusMessage(getHumanLabel(), "Complete");

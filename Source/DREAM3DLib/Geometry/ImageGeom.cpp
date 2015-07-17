@@ -124,9 +124,9 @@ ImageGeom::Pointer ImageGeom::CreateGeometry(const QString& name)
 // -----------------------------------------------------------------------------
 void ImageGeom::getCoords(size_t idx[3], float coords[3])
 {
-  coords[0] = idx[0] * getXRes();
-  coords[1] = idx[1] * getYRes();
-  coords[2] = idx[2] * getZRes();
+  coords[0] = idx[0] * getXRes() + m_Origin[0];
+  coords[1] = idx[1] * getYRes() + m_Origin[1];
+  coords[2] = idx[2] * getZRes() + m_Origin[2];
 }
 
 // -----------------------------------------------------------------------------
@@ -134,9 +134,9 @@ void ImageGeom::getCoords(size_t idx[3], float coords[3])
 // -----------------------------------------------------------------------------
 void ImageGeom::getCoords(size_t& x, size_t& y, size_t& z, float coords[3])
 {
-  coords[0] = x * getXRes();
-  coords[1] = y * getYRes();
-  coords[2] = z * getZRes();
+  coords[0] = x * getXRes() + m_Origin[0];
+  coords[1] = y * getYRes() + m_Origin[1];
+  coords[2] = z * getZRes() + m_Origin[2];
 }
 
 // -----------------------------------------------------------------------------
@@ -144,9 +144,9 @@ void ImageGeom::getCoords(size_t& x, size_t& y, size_t& z, float coords[3])
 // -----------------------------------------------------------------------------
 void ImageGeom::getCoords(size_t idx[3], double coords[3])
 {
-  coords[0] = static_cast<double>(idx[0] * getXRes());
-  coords[1] = static_cast<double>(idx[1] * getYRes());
-  coords[2] = static_cast<double>(idx[2] * getZRes());
+  coords[0] = static_cast<double>(idx[0] * getXRes() + m_Origin[0]);
+  coords[1] = static_cast<double>(idx[1] * getYRes() + m_Origin[1]);
+  coords[2] = static_cast<double>(idx[2] * getZRes() + m_Origin[2]);
 }
 
 // -----------------------------------------------------------------------------
@@ -154,9 +154,9 @@ void ImageGeom::getCoords(size_t idx[3], double coords[3])
 // -----------------------------------------------------------------------------
 void ImageGeom::getCoords(size_t& x, size_t& y, size_t& z, double coords[3])
 {
-  coords[0] = static_cast<double>(x * getXRes());
-  coords[1] = static_cast<double>(y * getYRes());
-  coords[2] = static_cast<double>(z * getZRes());
+  coords[0] = static_cast<double>(x * getXRes() + m_Origin[0]);
+  coords[1] = static_cast<double>(y * getYRes() + m_Origin[1]);
+  coords[2] = static_cast<double>(z * getZRes() + m_Origin[2]);
 }
 
 // -----------------------------------------------------------------------------
