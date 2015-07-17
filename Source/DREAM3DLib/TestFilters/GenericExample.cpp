@@ -234,7 +234,11 @@ void GenericExample::setupFilterParameters()
   QVector<DataArrayPath> paths;
   paths.push_back(DataArrayPath("StatsGeneratorDataContainer", "CellEnsembleData", "CrystalStructures"));
   paths.push_back(DataArrayPath("StatsGeneratorDataContainer", "CellEnsembleData", "Statistics"));
-  parameters.push_back(MultiDataArraySelectionFilterParameter::New("Multi Data Array Test", "SelectedMultiArrayPaths", paths, FilterParameter::Parameter, 0));
+
+  {
+    MultiDataArraySelectionFilterParameter::DataStructureRequirements req;
+    parameters.push_back(MultiDataArraySelectionFilterParameter::New("Multi Data Array Test", "SelectedMultiArrayPaths", paths, FilterParameter::Parameter, req, 0));
+  }
 
   setFilterParameters(parameters);
 }

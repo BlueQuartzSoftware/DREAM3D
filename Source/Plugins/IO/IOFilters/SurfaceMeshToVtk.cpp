@@ -98,9 +98,19 @@ void SurfaceMeshToVtk::setupFilterParameters()
   }
 
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::RequiredArray));
-  parameters.push_back(MultiDataArraySelectionFilterParameter::New("Vertex Arrays", "SelectedVertexArrays", getSelectedVertexArrays(), FilterParameter::RequiredArray));
+  {
+    MultiDataArraySelectionFilterParameter::DataStructureRequirements req;
+    req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::TriangleGeometry);
+    req.amTypes = QVector<unsigned int>(1, DREAM3D::AttributeMatrixType::Vertex);
+    parameters.push_back(MultiDataArraySelectionFilterParameter::New("Vertex Arrays", "SelectedVertexArrays", getSelectedVertexArrays(), FilterParameter::RequiredArray, req));
+  }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
-  parameters.push_back(MultiDataArraySelectionFilterParameter::New("Face Arrays", "SelectedFaceArrays", getSelectedFaceArrays(), FilterParameter::RequiredArray));
+  {
+    MultiDataArraySelectionFilterParameter::DataStructureRequirements req;
+    req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::TriangleGeometry);
+    req.amTypes = QVector<unsigned int>(1, DREAM3D::AttributeMatrixType::Face);
+    parameters.push_back(MultiDataArraySelectionFilterParameter::New("Face Arrays", "SelectedFaceArrays", getSelectedFaceArrays(), FilterParameter::RequiredArray, req));
+  }
 
 
   setFilterParameters(parameters);
