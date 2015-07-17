@@ -52,9 +52,8 @@ AttributeMatrixCreationFilterParameter::~AttributeMatrixCreationFilterParameter(
 //
 // -----------------------------------------------------------------------------
 AttributeMatrixCreationFilterParameter::Pointer AttributeMatrixCreationFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const DataArrayPath& defaultValue, Category category, int groupIndex)
+  const DataArrayPath& defaultValue, Category category, const DataStructureRequirements req, int groupIndex)
 {
-
   AttributeMatrixCreationFilterParameter::Pointer ptr = AttributeMatrixCreationFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
@@ -62,11 +61,11 @@ AttributeMatrixCreationFilterParameter::Pointer AttributeMatrixCreationFilterPar
   v.setValue(defaultValue);
   ptr->setDefaultValue(v);
   ptr->setCategory(category);
+  ptr->setDefaultGeometryTypes(req.dcGeometryTypes);
   ptr->setGroupIndex(groupIndex);
 
   return ptr;
 }
-
 
 // -----------------------------------------------------------------------------
 //
