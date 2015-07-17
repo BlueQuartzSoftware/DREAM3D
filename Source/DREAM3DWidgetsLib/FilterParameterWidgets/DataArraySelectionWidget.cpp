@@ -301,7 +301,6 @@ void DataArraySelectionWidget::populateComboBoxes()
   }
 
   if(didBlock) { attributeArrayCombo->blockSignals(false); didBlock = false; }// not be triggering an infinte recursion of preflights
-
 }
 
 // -----------------------------------------------------------------------------
@@ -325,8 +324,6 @@ QString DataArraySelectionWidget::checkStringValues(QString curDcName, QString f
 // -----------------------------------------------------------------------------
 void DataArraySelectionWidget::populateAttributeMatrixList()
 {
-  //qDebug() << getFilter()->getHumanLabel() << "  " << getFilterParameter()->getHumanLabel() << " DataArraySelectionWidget::populateAttributeMatrixList()";
-
   DataContainerArray::Pointer dca = getFilter()->getDataContainerArray();
   if (NULL == dca.get()) { return; }
 
