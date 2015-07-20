@@ -13,6 +13,101 @@
 #include "DREAM3DLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "Statistics/StatisticsConstants.h"
 
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#include <tbb/parallel_for.h>
+#include <tbb/blocked_range.h>
+#include <tbb/partitioner.h>
+#include <tbb/task_scheduler_init.h>
+#endif
+
+/**
+ * @brief The FindDifferenceMapImpl class implements a threaded algorithm that computes the difference map
+ * between two arrays
+ */
+template<typename DataType>
+class FindDifferenceMapImpl
+{
+  public:
+    FindDifferenceMapImpl(IDataArray::Pointer firstArray, IDataArray::Pointer secondArray, IDataArray::Pointer differenceMap) :
+      m_FirstArray(firstArray),
+      m_SecondArray(secondArray),
+      m_DifferenceMap(differenceMap)
+    {}
+    virtual ~FindDifferenceMapImpl() {}
+
+    void generate(size_t start, size_t end) const
+    {
+      typename DataArray<DataType>::Pointer firstArrayPtr = boost::dynamic_pointer_cast<DataArray<DataType> >(m_FirstArray);
+      typename DataArray<DataType>::Pointer secondArrayPtr = boost::dynamic_pointer_cast<DataArray<DataType> >(m_SecondArray);
+      typename DataArray<DataType>::Pointer differenceMapPtr = boost::dynamic_pointer_cast<DataArray<DataType> >(m_DifferenceMap);
+
+      DataType* firstArray = firstArrayPtr->getPointer(0);
+      DataType* secondArray = secondArrayPtr->getPointer(0);
+      DataType* differenceMap = differenceMapPtr->getPointer(0);
+
+      int32_t numComps = firstArrayPtr->getNumberOfComponents();
+
+      for (size_t i = start; i < end; i++)
+      {
+        for (int32_t j = 0; j < numComps; j++)
+        {
+          differenceMap[numComps * i + j] = firstArray[numComps * i + j] - secondArray[numComps * i + j];
+        }
+      }
+    }
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+    void operator()(const tbb::blocked_range<size_t>& r) const
+    {
+      generate(r.begin(), r.end());
+    }
+#endif
+
+  private:
+    IDataArray::Pointer m_FirstArray;
+    IDataArray::Pointer m_SecondArray;
+    IDataArray::Pointer m_DifferenceMap;
+};
+
+/**
+ * @brief The ExecuteFindDifferenceMap class wraps the FindDifferenceMapImpl class so that the
+ * EXECUTE_TEMPLATE macro can be used in the main execute() of the Filter
+ */
+template<typename DataType>
+class ExecuteFindDifferenceMap
+{
+  public:
+    ExecuteFindDifferenceMap() {}
+    virtual ~ExecuteFindDifferenceMap() {}
+
+    bool operator()(IDataArray::Pointer p)
+    {
+      return (TemplateHelpers::CanDynamicCast<DataArray<DataType> >()(p));
+    }
+
+    void Execute(IDataArray::Pointer firstArrayPtr, IDataArray::Pointer secondArrayPtr, IDataArray::Pointer differenceMapPtr)
+    {
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+      tbb::task_scheduler_init init;
+      bool doParallel = true;
+#endif
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+      size_t numTuples = firstArrayPtr->getNumberOfTuples();
+
+      if (doParallel == true)
+      {
+        tbb::parallel_for(tbb::blocked_range<size_t>(0, numTuples), FindDifferenceMapImpl<DataType>(firstArrayPtr, secondArrayPtr, differenceMapPtr), tbb::auto_partitioner());
+      }
+      else
+#endif
+      {
+        FindDifferenceMapImpl<DataType> serial(firstArrayPtr, secondArrayPtr, differenceMapPtr);
+        serial.generate(0, numTuples);
+      }
+    }
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -20,7 +115,7 @@ FindDifferenceMap::FindDifferenceMap() :
   AbstractFilter(),
   m_FirstInputArrayPath("", "", ""),
   m_SecondInputArrayPath("", "", ""),
-  m_DifferenceMapArrayPath("", "", ""),
+  m_DifferenceMapArrayPath("", "", "DifferenceMap"),
   m_FirstInputArray(NULL),
   m_SecondInputArray(NULL),
   m_DifferenceMap(NULL)
@@ -80,7 +175,14 @@ void validateArrayTypes(AbstractFilter* filter, QVector<IDataArray::Pointer> ptr
 {
   for (QVector<IDataArray::Pointer>::iterator it = ptrArray.begin(); it != ptrArray.end(); ++it)
   {
-    if (!TemplateHelpers::CanDynamicCast<DataArray<DataType> >()((*it)))
+    if (TemplateHelpers::CanDynamicCast<DataArray<bool> >()(*it))
+    {
+      filter->setErrorCondition(-90000);
+      QString ss = QObject::tr("Selected Attribute Arrays cannot be of type bool");
+      filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+      return;
+    }
+    if (!TemplateHelpers::CanDynamicCast<DataArray<DataType> >()(*it))
     {
       filter->setErrorCondition(-90000);
       QString ss = QObject::tr("Selected Attribute Arrays must all be of the same type");
@@ -105,10 +207,27 @@ void FindDifferenceMap::dataCheck()
   m_SecondInputArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getSecondInputArrayPath());
   if (getErrorCondition() >= 0) { dataArrays.push_back(m_SecondInputArrayPtr.lock()); }
 
-  EXECUTE_FUNCTION_TEMPLATE(this, validateArrayTypes, dataArrays[0], this, dataArrays)
+  if (dataArrays.size() > 0) { EXECUTE_FUNCTION_TEMPLATE(this, validateArrayTypes, dataArrays[0], this, dataArrays) }
 
-  //if (NULL != m_FirstInputArrayPtr.lock())
+  if (getErrorCondition() < 0) { return; }
 
+  // Safe to check array component dimensions since we won't get here if the pointers are null
+  if (m_FirstInputArrayPtr.lock()->getComponentDimensions() != m_SecondInputArrayPtr.lock()->getComponentDimensions())
+  {
+    setErrorCondition(-90000);
+    QString ss = QObject::tr("Selected Attribute Arrays must have the same component dimensions");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+
+  if (getErrorCondition() < 0) { return; }
+
+  // At this point we have two valid arrays of the same type and component dimensions, so we
+  // are safe to make the output array with the correct type and component dimensions
+  QVector<size_t> cDims = m_FirstInputArrayPtr.lock()->getComponentDimensions();
+  m_DifferenceMapPtr = TemplateHelpers::CreateNonPrereqArrayFromArrayType()(this, getDifferenceMapArrayPath(), cDims, m_FirstInputArrayPtr.lock());
+  if (getErrorCondition() >= 0) { dataArrays.push_back(m_DifferenceMapPtr.lock()); }
+
+  getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrays);
 }
 
 // -----------------------------------------------------------------------------
@@ -134,15 +253,7 @@ void FindDifferenceMap::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  if (getCancel() == true) { return; }
-
-  if (getErrorCondition() < 0)
-  {
-    QString ss = QObject::tr("Some error message");
-    setErrorCondition(-99999999);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
+  EXECUTE_TEMPLATE(this, ExecuteFindDifferenceMap, m_FirstInputArrayPtr.lock(), m_FirstInputArrayPtr.lock(), m_SecondInputArrayPtr.lock(), m_DifferenceMapPtr.lock())
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
