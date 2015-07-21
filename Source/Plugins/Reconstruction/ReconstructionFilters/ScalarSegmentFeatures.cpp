@@ -253,11 +253,13 @@ void ScalarSegmentFeatures::dataCheck()
   setErrorCondition(0);
   DataArrayPath tempPath;
 
+  // Set the DataContainerName for the Parent Class (SegmentFeatures) to Use
+  setDataContainerName(m_ScalarArrayPath.getDataContainerName());
+
   SegmentFeatures::dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  // Set the DataContainerName for the Parent Class (SegmentFeatures) to Use
-  setDataContainerName(m_ScalarArrayPath.getDataContainerName());
+
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m.get()) { return; }

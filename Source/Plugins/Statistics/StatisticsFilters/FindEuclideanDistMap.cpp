@@ -90,7 +90,7 @@ class FindEuclideanMap
     void operator()() const
     {
       size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
-      int64_t euclideanDistance = 0;
+      double euclideanDistance = 0.0f;
       size_t count = 1;
       size_t changed = 1;
       size_t neighpoint = 0;
@@ -109,16 +109,21 @@ class FindEuclideanMap
       neighbors[3] = 1;
       neighbors[4] = xpoints;
       neighbors[5] = xpoints * ypoints;
-      int* voxel_NearestNeighbor = new int[totalPoints];
-      double* voxel_EuclideanDistance = new double[totalPoints];
+
+      // Use a std::vector to get an auto cleaned up array thus not needing the 'delete' keyword later on.
+      std::vector<int64_t> voxNN(totalPoints, 0);
+      int64_t* voxel_NearestNeighbor = &(voxNN.front());
+      std::vector<double> voxEDist(totalPoints, 0.0);
+      double* voxel_EuclideanDistance = &(voxEDist.front());
+
       euclideanDistance = 0;
       for (size_t a = 0; a < totalPoints; ++a)
       {
         if (m_NearestNeighbors[a * 3 + mapType] >= 0) { voxel_NearestNeighbor[a] = a; } // if voxel is boundary voxel, then want to use itself as nearest boundary voxel
         else { voxel_NearestNeighbor[a] = -1; }
-        if (mapType == 0) { voxel_EuclideanDistance[a] = m_GBEuclideanDistances[a]; }
-        else if (mapType == 1) { voxel_EuclideanDistance[a] = m_TJEuclideanDistances[a]; }
-        else if (mapType == 2) { voxel_EuclideanDistance[a] = m_QPEuclideanDistances[a]; }
+        if (mapType == 0) { voxel_EuclideanDistance[a] = static_cast<double>(m_GBEuclideanDistances[a]); }
+        else if (mapType == 1) { voxel_EuclideanDistance[a] = static_cast<double>(m_TJEuclideanDistances[a]); }
+        else if (mapType == 2) { voxel_EuclideanDistance[a] = static_cast<double>(m_QPEuclideanDistances[a]); }
       }
       count = 1;
       changed = 1;
@@ -191,7 +196,7 @@ class FindEuclideanMap
         }
         for (size_t j = 0; j < totalPoints; ++j)
         {
-          if (voxel_NearestNeighbor[j] != -1 && voxel_EuclideanDistance[j] == -1 && m_FeatureIds[j] > 0)
+          if (voxel_NearestNeighbor[j] != -1 && voxel_EuclideanDistance[j] == -1.0 && m_FeatureIds[j] > 0)
           {
             changed++;
             voxel_EuclideanDistance[j] = euclideanDistance;
@@ -220,7 +225,7 @@ class FindEuclideanMap
               {
                 x2 = resx * double(nearestneighbor % xpoints); // find_xcoord(nearestneighbor);
                 y2 = resy * double(int64_t(nearestneighbor * oneOverxpoints) % ypoints); // find_ycoord(nearestneighbor);
-                z2 = resz * double(nearestneighbor * oneOverzBlock); // find_zcoord(nearestneighbor);
+                z2 = resz * floor(nearestneighbor * oneOverzBlock); // find_zcoord(nearestneighbor);
                 dist = ((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)) + ((z1 - z2) * (z1 - z2));
                 dist = sqrt(dist);
                 voxel_EuclideanDistance[zStride + yStride + p] = dist;
@@ -236,8 +241,7 @@ class FindEuclideanMap
         else if (mapType == 1) { m_TJEuclideanDistances[a] = static_cast<float>(voxel_EuclideanDistance[a]); }
         else if (mapType == 2) { m_QPEuclideanDistances[a] = static_cast<float>(voxel_EuclideanDistance[a]); }
       }
-      delete[] voxel_NearestNeighbor;
-      delete[] voxel_EuclideanDistance;
+
     }
 };
 
@@ -492,9 +496,9 @@ void FindEuclideanDistMap::find_euclideandistmap()
         }
       }
       if (coordination.size() == 0) { m_NearestNeighbors[a * 3 + 0] = -1, m_NearestNeighbors[a * 3 + 1] = -1, m_NearestNeighbors[a * 3 + 2] = -1; }
-      if (coordination.size() >= 1 && m_DoBoundaries == true) { m_GBEuclideanDistances[a] = 0, m_NearestNeighbors[a * 3 + 0] = coordination[0], m_NearestNeighbors[a * 3 + 1] = -1, m_NearestNeighbors[a * 3 + 2] = -1; }
-      if (coordination.size() >= 2 && m_DoTripleLines == true) { m_TJEuclideanDistances[a] = 0, m_NearestNeighbors[a * 3 + 0] = coordination[0], m_NearestNeighbors[a * 3 + 1] = coordination[0], m_NearestNeighbors[a * 3 + 2] = -1; }
-      if (coordination.size() > 2 && m_DoQuadPoints == true) { m_QPEuclideanDistances[a] = 0, m_NearestNeighbors[a * 3 + 0] = coordination[0], m_NearestNeighbors[a * 3 + 1] = coordination[0], m_NearestNeighbors[a * 3 + 2] = coordination[0]; }
+      if (coordination.size() >= 1 && m_DoBoundaries == true) { m_GBEuclideanDistances[a] = 0.0f, m_NearestNeighbors[a * 3 + 0] = coordination[0], m_NearestNeighbors[a * 3 + 1] = -1, m_NearestNeighbors[a * 3 + 2] = -1; }
+      if (coordination.size() >= 2 && m_DoTripleLines == true) { m_TJEuclideanDistances[a] = 0.0f, m_NearestNeighbors[a * 3 + 0] = coordination[0], m_NearestNeighbors[a * 3 + 1] = coordination[0], m_NearestNeighbors[a * 3 + 2] = -1; }
+      if (coordination.size() > 2 && m_DoQuadPoints == true) { m_QPEuclideanDistances[a] = 0.0f, m_NearestNeighbors[a * 3 + 0] = coordination[0], m_NearestNeighbors[a * 3 + 1] = coordination[0], m_NearestNeighbors[a * 3 + 2] = coordination[0]; }
       coordination.resize(0);
     }
   }

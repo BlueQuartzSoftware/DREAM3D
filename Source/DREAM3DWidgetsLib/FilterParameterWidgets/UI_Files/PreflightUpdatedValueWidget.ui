@@ -14,7 +14,16 @@
    <property name="spacing">
     <number>5</number>
    </property>
-   <property name="margin">
+   <property name="leftMargin">
+    <number>2</number>
+   </property>
+   <property name="topMargin">
+    <number>2</number>
+   </property>
+   <property name="rightMargin">
+    <number>2</number>
+   </property>
+   <property name="bottomMargin">
     <number>2</number>
    </property>
    <item>
@@ -29,7 +38,7 @@
      <property name="styleSheet">
       <string notr="true">QLabel {
 font-weight: bold;
-font-size: 10px;
+font-size: 12px;
 }</string>
      </property>
      <property name="text">

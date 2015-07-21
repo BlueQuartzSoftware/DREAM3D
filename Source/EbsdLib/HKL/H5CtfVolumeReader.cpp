@@ -57,6 +57,7 @@ H5CtfVolumeReader::H5CtfVolumeReader() :
   m_Phase = NULL;
   m_X = NULL;
   m_Y = NULL;
+  m_Z = NULL;
   m_Bands = NULL;
   m_Error = NULL;
   m_Euler1 = NULL;

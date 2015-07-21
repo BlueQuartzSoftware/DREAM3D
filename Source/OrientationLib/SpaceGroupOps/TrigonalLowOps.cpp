@@ -750,11 +750,12 @@ DREAM3D::Rgb TrigonalLowOps::generateRodriguesColor(float r1, float r2, float r3
 // -----------------------------------------------------------------------------
 QVector<UInt8ArrayType::Pointer> TrigonalLowOps::generatePoleFigure(PoleFigureConfiguration_t& config)
 {
-  QVector<UInt8ArrayType::Pointer> poleFigures;
   QString label0("Trigonal Low <0001>");
   QString label1("Trigonal Low <-1-120>");
   QString label2("Trigonal Low <2-1-10>");
-
+  if(config.labels.size() > 0) { label0 = config.labels.at(0); }
+  if(config.labels.size() > 1) { label1 = config.labels.at(1); }
+  if(config.labels.size() > 2) { label2 = config.labels.at(2); }
 
   int numOrientations = config.eulers->getNumberOfTuples();
 
@@ -857,15 +858,26 @@ QVector<UInt8ArrayType::Pointer> TrigonalLowOps::generatePoleFigure(PoleFigureCo
   UInt8ArrayType::Pointer image001 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label0);
   UInt8ArrayType::Pointer image011 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label1);
   UInt8ArrayType::Pointer image111 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label2);
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-  poleFigures.push_back(image001);
-  poleFigures.push_back(image011);
-  poleFigures.push_back(image111);
 
-  g = new tbb::task_group;
+  QVector<UInt8ArrayType::Pointer> poleFigures(3);
+  if(config.order.size() == 3)
+  {
+    poleFigures[config.order[0]] = image001;
+    poleFigures[config.order[1]] = image011;
+    poleFigures[config.order[2]] = image111;
+  }
+  else
+  {
+    poleFigures[0] = image001;
+    poleFigures[1] = image011;
+    poleFigures[2] = image111;
+  }
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 
   if(doParallel == true)
   {
+    g = new tbb::task_group;
     g->run(GeneratePoleFigureRgbaImageImpl(intensity001.get(), &config, image001.get()));
     g->run(GeneratePoleFigureRgbaImageImpl(intensity011.get(), &config, image011.get()));
     g->run(GeneratePoleFigureRgbaImageImpl(intensity111.get(), &config, image111.get()));
@@ -885,6 +897,98 @@ QVector<UInt8ArrayType::Pointer> TrigonalLowOps::generatePoleFigure(PoleFigureCo
   }
 
   return poleFigures;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+UInt8ArrayType::Pointer TrigonalLowOps::generateIPFTriangleLegend(int imageDim)
+{
+
+  QVector<size_t> dims(1, 4);
+  UInt8ArrayType::Pointer image =  UInt8ArrayType::CreateArray( static_cast<size_t>(imageDim * imageDim), dims, "Orthorhombic Triangle Legend");
+  uint32_t* pixelPtr = reinterpret_cast<uint32_t*>(image->getPointer(0));
+
+  static const float xInc = 1.0 / (imageDim);
+  static const float yInc = 1.0 / (imageDim);
+  static const float rad = 1.0f;
+
+  float x = 0.0f;
+  float y = 0.0f;
+  float a = 0.0f;
+  float b = 0.0f;
+  float c = 0.0f;
+
+  float val = 0.0f;
+  float x1 = 0.0f;
+  float y1 = 0.0f;
+  float z1 = 0.0f;
+  float denom = 0.0f;
+
+  // Find the slope of the bounding line.
+  static const float m = sinf(60.0 * DREAM3D::Constants::k_PiOver180) / cosf(60.0 * DREAM3D::Constants::k_PiOver180);
+
+  DREAM3D::Rgb color;
+  size_t idx = 0;
+  size_t yScanLineIndex = 0; // We use this to control where the data is drawn. Otherwise the image will come out flipped vertically
+  // Loop over every pixel in the image and project up to the sphere to get the angle and then figure out the RGB from
+  // there.
+  for (int32_t yIndex = 0; yIndex < imageDim; ++yIndex)
+  {
+
+    for (int32_t xIndex = 0; xIndex < imageDim; ++xIndex)
+    {
+      idx = (imageDim * yScanLineIndex) + xIndex;
+
+      x = -1.0f + 2.0f * xIndex * xInc; // X Scales from ( -1 -> +1)
+      y = 1.0f - 2.0f * yIndex * yInc; // Y Scales from (+1 -> -1)
+
+      float sumSquares = (x * x) + (y * y);
+      if( sumSquares > 1.0f || y > 0.0f) // Outside unit circle
+      {
+        color = 0xFFFFFFFF;
+      }
+      else if (  fabs(y - yInc) <= yInc && x >= 0.0f) // Black Border line
+      {
+        color = 0xFF000000;
+      }
+      else if ( x <= 0.0f && y <= 0.0 && x < y/m)
+      {
+        color = 0xFFFFFFFF;
+      }
+      else if( x < 0.0f && y < 0.0 && fabs(x - y/m) < 0.005) // Black Diagonal Border line
+      {
+        color = 0xFF000000;
+      }
+      else if ( sumSquares > (rad-2*xInc) && sumSquares < (rad+2*xInc)) // Black Border line on circle
+      {
+        color = 0xFF000000;
+      }
+
+      else
+      {
+        a = (x * x + y * y + 1);
+        b = (2 * x * x + 2 * y * y);
+        c = (x * x + y * y - 1);
+
+        val = (-b + sqrtf(b * b - 4.0 * a * c)) / (2.0 * a);
+        x1 = (1 + val) * x;
+        y1 = (1 + val) * y;
+        z1 = val;
+        denom = (x1 * x1) + (y1 * y1) + (z1 * z1);
+        denom = sqrtf(denom);
+        x1 = x1 / denom;
+        y1 = y1 / denom;
+        z1 = z1 / denom;
+
+        color = generateIPFColor(0.0, 0.0, 0.0, x1, y1, z1, false);
+      }
+
+      pixelPtr[idx] = color;
+    }
+    yScanLineIndex++;
+  }
+  return image;
 }
 
 // -----------------------------------------------------------------------------

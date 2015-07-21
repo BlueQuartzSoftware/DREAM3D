@@ -54,6 +54,9 @@ class RemoveFlaggedFeatures : public AbstractFilter
 
     virtual ~RemoveFlaggedFeatures();
 
+    DREAM3D_FILTER_PARAMETER(bool, FillRemovedFeatures)
+    Q_PROPERTY(bool FillRemovedFeatures READ getFillRemovedFeatures WRITE setFillRemovedFeatures)
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 

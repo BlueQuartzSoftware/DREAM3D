@@ -106,12 +106,13 @@ void WriteImages::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
+
+  parameters.push_back(OutputPathFilterParameter::New("Output Directory Path", "OutputPath", getOutputPath(), FilterParameter::Parameter));
   {
     QStringList linkedProps;
     linkedProps << "ImagePrefix";
     parameters.push_back(LinkedBooleanFilterParameter::New("File Prefix", "FilePrefix", getFilePrefix(), linkedProps, FilterParameter::Parameter));
   }
-  parameters.push_back(OutputPathFilterParameter::New("Output Directory Path", "OutputPath", getOutputPath(), FilterParameter::Parameter));
   parameters.push_back(StringFilterParameter::New("Image File Prefix", "ImagePrefix", getImagePrefix(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   parameters.push_back(DataArraySelectionFilterParameter::New("Color Data", "ColorsArrayPath", getColorsArrayPath(), FilterParameter::RequiredArray));

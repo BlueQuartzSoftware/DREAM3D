@@ -502,7 +502,10 @@ class NeighborList : public IDataArray
     /**
      * @brief initializeWithZeros
      */
-    void initializeWithZeros() { m_Array.clear(); }
+    void initializeWithZeros() {
+      m_Array.clear();
+      m_IsAllocated = false;
+    }
 
     /**
      * @brief deepCopy
@@ -510,14 +513,14 @@ class NeighborList : public IDataArray
      */
     IDataArray::Pointer deepCopy(bool forceNoAllocate = false)
     {
-      typename NeighborList<T>::Pointer daCopyPtr = NeighborList<T>::CreateArray(getNumberOfTuples(), "Copy of NeighborList", true);
+      typename NeighborList<T>::Pointer daCopyPtr = NeighborList<T>::CreateArray(getNumberOfTuples(), getName(), true);
 
       if(forceNoAllocate == false)
       {
-        for(size_t i = 0; i < getNumberOfTuples(); i++)
+        size_t count = (m_IsAllocated ? getNumberOfTuples(): 0);
+        for(size_t i = 0; i < count; i++)
         {
-          typename NeighborList<T>::SharedVectorType sharedNeiLst(new std::vector<T>);
-          sharedNeiLst = m_Array[i];
+          typename NeighborList<T>::SharedVectorType sharedNeiLst(new std::vector<T>(*(m_Array[i])));
           daCopyPtr->setList(static_cast<int>(i), sharedNeiLst);
         }
       }
@@ -535,6 +538,8 @@ class NeighborList : public IDataArray
       size_t old = m_Array.size();
       m_Array.resize(size);
       m_NumTuples = size;
+      if (size == 0) { m_IsAllocated = false; }
+      else { m_IsAllocated = true; }
       // Initialize with zero length Vectors
       for (size_t i = old; i < m_Array.size(); ++i)
       {
@@ -636,7 +641,7 @@ class NeighborList : public IDataArray
         numNeighborsPtr->writeH5Data(parentId, tDims);
       }
 
-      // Allocate an array of the proper size to we can concatenate all the arrays together into a single array that
+      // Allocate an array of the proper size so we can concatenate all the arrays together into a single array that
       // can be written to the HDF5 File. This operation can ballon the memory size temporarily until this operation
       // is complete.
       QVector<T> flat (total);
@@ -805,6 +810,7 @@ class NeighborList : public IDataArray
       }
       // Loop over all the entries and make new Vectors to hold the incoming data
       m_Array.resize(numNeighbors.size());
+      m_IsAllocated = true;
       size_t currentStart = 0;
       qint32 count = static_cast<qint32>(numNeighbors.size());
       for(QVector<int32_t>::size_type dIdx = 0; dIdx < count; ++dIdx)
@@ -840,6 +846,7 @@ class NeighborList : public IDataArray
       {
         size_t old = m_Array.size();
         m_Array.resize(grainId + 1);
+        m_IsAllocated = true;
         // Initialize with zero length Vectors
         for(size_t i = old; i < m_Array.size(); ++i)
         {
@@ -856,6 +863,7 @@ class NeighborList : public IDataArray
     void clearAllLists()
     {
       m_Array.clear();
+      m_IsAllocated = false;
     }
 
 
@@ -870,6 +878,7 @@ class NeighborList : public IDataArray
       {
         size_t old = m_Array.size();
         m_Array.resize(grainId + 1);
+        m_IsAllocated = true;
         // Initialize with zero length Vectors
         for(size_t i = old; i < m_Array.size(); ++i)
         {
@@ -993,13 +1002,15 @@ class NeighborList : public IDataArray
     NeighborList(size_t numTuples, const QString name) :
       m_NumNeighborsArrayName(DREAM3D::FeatureData::NumNeighbors),
       m_Name(name),
-      m_NumTuples(numTuples)
+      m_NumTuples(numTuples),
+      m_IsAllocated(false)
     {    }
 
   private:
     std::vector<SharedVectorType> m_Array;
     QString m_Name;
     size_t m_NumTuples;
+    bool m_IsAllocated;
     T m_InitValue;
 
 

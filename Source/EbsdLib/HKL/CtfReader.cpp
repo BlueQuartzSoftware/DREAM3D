@@ -303,10 +303,6 @@ int CtfReader::readFile()
   }
 
   err = readData(in);
-  if (err < 0)
-  {
-    return err;
-  }
 
   return err;
 }
@@ -406,6 +402,7 @@ int CtfReader::readData(QFile& in)
   }
 
   // Now start reading the data line by line
+  int err = 0;
   size_t counter = 0;
   for (int slice = zStart; slice < zEnd; ++slice)
   {
@@ -425,7 +422,8 @@ int CtfReader::readData(QFile& in)
             //  ++counter; // We need to make sure this gets incremented before leaving
             break;
           }
-          parseDataLine(buf, row, col, counter, xCells, yCells);
+          err = parseDataLine(buf, row, col, counter, xCells, yCells);
+          if (err < 0) { return err; }
           ++counter;
         }
 
@@ -578,7 +576,7 @@ int CtfReader::parseHeaderLines(QList<QByteArray>& headerLines)
 // -----------------------------------------------------------------------------
 //  Read the data part of the .ctf file
 // -----------------------------------------------------------------------------
-void CtfReader::parseDataLine(QByteArray& line, size_t row, size_t col, size_t offset, size_t xCells, size_t yCells )
+int CtfReader::parseDataLine(QByteArray& line, size_t row, size_t col, size_t offset, size_t xCells, size_t yCells )
 {
   /* When reading the data there should be at least 11 cols of data.
    */
@@ -598,8 +596,20 @@ void CtfReader::parseDataLine(QByteArray& line, size_t row, size_t col, size_t o
   }
 
   QList<QByteArray> tokens = line.split('\t');
-  BOOST_ASSERT(tokens.size() == m_NamePointerMap.size());
+  if(tokens.size() != m_NamePointerMap.size())
+  {
+    setErrorCode(-107);
+    QString msg;
+    QTextStream ss(&msg);
+    ss << "The number of tab delimited data columns (" << tokens.size() << ") does not match the number of tab delimited header columns (";
+    ss << m_NamePointerMap.size() << "). Please check the CTF file for mistakes.";
+    ss << "The error occurred at data row " << row << " which is " << row << " past ";
+    ss << "the column header row.";
+    ss << "\nThe CTF Reader will now abort reading any further in the file.";
 
+    setErrorMessage(msg);
+    return -106; // Could not allocate the memory
+  }
   QMapIterator<QString, DataParser::Pointer> iter(m_NamePointerMap);
   while (iter.hasNext())
   {
@@ -608,7 +618,7 @@ void CtfReader::parseDataLine(QByteArray& line, size_t row, size_t col, size_t o
     DataParser::Pointer dparser = iter.value();
     dparser->parse(tokens[dparser->getColumnIndex()], offset);
   }
-
+  return 0;
 }
 
 #if 0

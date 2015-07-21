@@ -115,13 +115,14 @@ void AlignSectionsFeatureCentroid::dataCheck()
 {
   setErrorCondition(0);
 
-  AlignSections::dataCheck();
-  if(getErrorCondition() < 0) { return; }
-
   // Set the DataContainerName and AttributematrixName for the Parent Class (AlignSections) to Use.
   // These are checked for validity in the Parent Class dataCheck
   setDataContainerName(m_GoodVoxelsArrayPath.getDataContainerName());
   setCellAttributeMatrixName(m_GoodVoxelsArrayPath.getAttributeMatrixName());
+
+  AlignSections::dataCheck();
+  if(getErrorCondition() < 0) { return; }
+
 
   ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, m_GoodVoxelsArrayPath.getDataContainerName());
   if(getErrorCondition() < 0) { return; }

@@ -41,15 +41,32 @@
 
 #include "OrientationLib/OrientationLib.h"
 
+/**
+ * @struct PoleFigureConfiguration_t
+ * @brief This structure controls how Pole Figures are generated. The Order member
+ * is the trickiest to understad. Each SpaceGroup has a default order for displaying
+ * the 3 pole figures that are created. If you need a different order then the
+ * developer needs to create a 3 element QVector and set the order index for the
+ * Pole Figure. For example the OrthorhombicOps generates 3 Pole Figures in the order
+ * of <001>, <100>, <010>. If the developer would like the Pole Figures to appear
+ * in the order of <100>, <010>, <100> then the oder needs to be set as [2, 0, 1].
+ *
+ * The other interesting item is the Labels. Each SpaceGroupOps subclass uses a default
+ * label for each Pole Figure. If the developer would like to over ride those labels
+ * then this member can be set with a 3 Element QVector<QString> with the new labels.
+ * Note that the new lables will REPLACE the default labels.
+ */
 typedef struct
 {
-  FloatArrayType* eulers;
-  int imageDim;
-  int lambertDim;
-  int numColors;
-  double minScale;
-  double maxScale;
-  float sphereRadius;
+  FloatArrayType* eulers; ///<* The Euler Angles (in Radians) to use for the pole figure
+  int imageDim; ///<* The height/width of the generated pole figure
+  int lambertDim; ///<* The dimensions in voxels of the Lambert Square used for interpolation
+  int numColors; ///<* The number of colors to use in the Pole figure
+  double minScale; ///<* The minimum scale of the Pole Figure
+  double maxScale; ///<* The maximum scale of the Pole Figure
+  float sphereRadius; ///<* The radius of the Sphere to compute XYZ coords. Should ALWAYS be 1.0
+  QVector<QString> labels; ///<* The labels for each of the 3 Pole Figures
+  QVector<unsigned int> order; ///<* The order that the pole figures should appear in.
 } PoleFigureConfiguration_t;
 
 /**

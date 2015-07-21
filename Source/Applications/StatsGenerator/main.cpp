@@ -57,6 +57,9 @@ int main (int argc, char* argv[])
   app.setQuitOnLastWindowClosed( true );
 #endif //APPLE
 
+  QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+
+
 //#if defined (Q_OS_MAC)
 //  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 //#else

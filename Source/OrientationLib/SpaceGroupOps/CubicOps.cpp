@@ -1734,11 +1734,12 @@ DREAM3D::Rgb CubicOps::generateRodriguesColor(float r1, float r2, float r3)
 // -----------------------------------------------------------------------------
 QVector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfiguration_t& config)
 {
-  QVector<UInt8ArrayType::Pointer> poleFigures;
   QString label0("<001>");
   QString label1("<011>");
   QString label2("<111>");
-
+  if(config.labels.size() > 0) { label0 = config.labels.at(0); }
+  if(config.labels.size() > 1) { label1 = config.labels.at(1); }
+  if(config.labels.size() > 2) { label2 = config.labels.at(2); }
 
   int numOrientations = config.eulers->getNumberOfTuples();
 
@@ -1841,16 +1842,26 @@ QVector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfigur
   UInt8ArrayType::Pointer image001 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label0);
   UInt8ArrayType::Pointer image011 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label1);
   UInt8ArrayType::Pointer image111 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label2);
+
+  QVector<UInt8ArrayType::Pointer> poleFigures(3);
+  if(config.order.size() == 3)
+  {
+    poleFigures[config.order[0]] = image001;
+    poleFigures[config.order[1]] = image011;
+    poleFigures[config.order[2]] = image111;
+  }
+  else
+  {
+    poleFigures[0] = image001;
+    poleFigures[1] = image011;
+    poleFigures[2] = image111;
+  }
+
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-
-  poleFigures.push_back(image001);
-  poleFigures.push_back(image011);
-  poleFigures.push_back(image111);
-
-  g = new tbb::task_group;
 
   if(doParallel == true)
   {
+    g = new tbb::task_group;
     g->run(GeneratePoleFigureRgbaImageImpl(intensity001.get(), &config, image001.get()));
     g->run(GeneratePoleFigureRgbaImageImpl(intensity011.get(), &config, image011.get()));
     g->run(GeneratePoleFigureRgbaImageImpl(intensity111.get(), &config, image111.get()));
@@ -1895,21 +1906,14 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
 
   float indexConst1 = 0.414 / imageDim;
   float indexConst2 = 0.207 / imageDim;
-  //  float temp = 0.0f;
   float red1 = 0.0f;
-  //  float green1 = 0.0f;
-  //  float blue1 = 0.0f;
-  //  float red2 = 0.0f;
-  //  float green2 = 0.0f;
-  //  float blue2 = 0.0f;
+
   float x = 0.0f;
   float y = 0.0f;
-  //  float z = 0.0f;
   float a = 0.0f;
   float b = 0.0f;
   float c = 0.0f;
-  //  float check1 = 0.0f;
-  //  float check2 = 0.0f;
+
   float val = 0.0f;
   float x1 = 0.0f;
   float y1 = 0.0f;
@@ -1933,21 +1937,14 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
     for (int32_t xIndex = 0; xIndex < imageDim; ++xIndex)
     {
       idx = (imageDim * yScanLineIndex) + xIndex;
-      //      temp = 0;
-      //      red1 = 0;
-      //      green1 = 0;
-      //      blue1 = 0;
-      //      red2 = 0;
-      //      green2 = 0;
-      //      blue2 = 0;
+
       x = xIndex * indexConst1 + indexConst2;
       y = yIndex * indexConst1 + indexConst2;
       //     z = -1.0;
       a = (x * x + y * y + 1);
       b = (2 * x * x + 2 * y * y);
       c = (x * x + y * y - 1);
-      //      check1 = b * b;
-      //      check2 = 4 * a * c;
+
       val = (-b + sqrtf(b * b - 4.0 * a * c)) / (2.0 * a);
       x1 = (1 + val) * x;
       y1 = (1 + val) * y;

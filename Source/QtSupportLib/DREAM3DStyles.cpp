@@ -155,8 +155,6 @@ QFont DREAM3DStyles::GetTitleFont()
 // -----------------------------------------------------------------------------
 void DREAM3DStyles::LineEditErrorStyle(QLineEdit* lineEdit)
 {
-  //if (lineEdit->text().isEmpty())
-  {
     QString str;
     QTextStream ss(&str);
     ss << "QLineEdit#" << lineEdit->objectName() << "{";
@@ -164,11 +162,6 @@ void DREAM3DStyles::LineEditErrorStyle(QLineEdit* lineEdit)
     ss << "background-color: rgb(255, 246, 179);"; // Yellow background
     ss << "}";
     lineEdit->setStyleSheet(str);
-  }
-//  else
-//  {
-//    lineEdit->setStyleSheet("");
-//  }
 }
 
 // -----------------------------------------------------------------------------
@@ -177,4 +170,18 @@ void DREAM3DStyles::LineEditErrorStyle(QLineEdit* lineEdit)
 void DREAM3DStyles::LineEditClearStyle(QLineEdit* lineEdit)
 {
   lineEdit->setStyleSheet("");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DStyles::LineEditRedErrorStyle(QLineEdit* lineEdit)
+{
+  QString str;
+  QTextStream ss(&str);
+  ss << "QLineEdit#" << lineEdit->objectName() << "{";
+  //  ss << "border: 1px solid rgb(180, 0, 0);";
+  ss << "background-color: rgb(208, 128, 139);"; // Yellow background
+  ss << "}";
+  lineEdit->setStyleSheet(str);
 }

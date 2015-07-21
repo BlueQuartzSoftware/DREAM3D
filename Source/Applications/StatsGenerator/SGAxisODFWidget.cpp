@@ -309,6 +309,16 @@ void SGAxisODFWidget::setupGui()
   m_PlotCurves.push_back(new QwtPlotCurve);
   m_PlotCurves.push_back(new QwtPlotCurve);
 
+  // In release mode hide the Lambert Square Size.
+  QString releaseType = QString::fromLatin1(DREAM3DProj_RELEASE_TYPE);
+  if(releaseType.compare("Official") == 0)
+  {
+    pfLambertSize->hide();
+    pfLambertLabel->hide();
+  }
+
+  bulkLoadGroupBox->hide();
+
 }
 
 // -----------------------------------------------------------------------------
@@ -459,10 +469,10 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
   }
   size_t numEntries = e1s.size();
 
-  int imageSize = 226;
-  int lamberSize = 22;
+  int imageSize = pfImageSize->value();
+  int lamberSize = pfLambertSize->value();
   int numColors = 16;
-  int npoints = 5000;
+  int npoints = pfSamplePoints->value();
   QVector<size_t> dims(1, 3);
   FloatArrayType::Pointer eulers = FloatArrayType::CreateArray(npoints, dims, "Eulers");
 
@@ -480,6 +490,18 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
   config.imageDim = imageSize;
   config.lambertDim = lamberSize;
   config.numColors = numColors;
+  QVector<QString> labels(3);
+  labels[0] = QString("C Axis"); //001
+  labels[1] = QString("A Axis"); //100
+  labels[2] = QString("B Axis"); //010
+  config.labels = labels;
+
+  QVector<unsigned int> order(3);
+  order[0] = 2; // Show C last
+  order[1] = 0; // Show A First
+  order[2] = 1; // Show B Second
+  config.order = order;
+
 
   QVector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
   if (err == 1)
@@ -581,3 +603,30 @@ SGODFTableModel* SGAxisODFWidget::tableModel()
 {
   return m_ODFTableModel;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SGAxisODFWidget::on_savePoleFigureImage_clicked()
+{
+
+  QString Ftype = "Image Files";
+  QString ext = "*.png";
+  QString s = "Image Files (*.tiff *.png *.bmp);;All Files(*.*)";
+  QString defaultName = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.png";
+  QString file = QFileDialog::getSaveFileName(this, tr("Save File As"), defaultName, s);
+
+  if(true == file.isEmpty())
+  {
+    return;
+  }
+  // bool ok = false;
+  file = QDir::toNativeSeparators(file);
+  // Store the last used directory into the private instance variable
+  QFileInfo fi(file);
+  m_OpenDialogLastDirectory = fi.path();
+
+  QImage image = m_PoleFigureLabel->pixmap()->toImage();
+  image.save(file);
+}
+

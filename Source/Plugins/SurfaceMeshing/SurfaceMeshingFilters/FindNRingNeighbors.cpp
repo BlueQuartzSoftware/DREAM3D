@@ -81,6 +81,9 @@ int32_t FindNRingNeighbors::generate(TriangleGeom::Pointer triangleGeom, int32_t
   int64_t* triangles = triangleGeom->getTriPointer(0);
   int32_t err = 0;
 
+  //Clear out all the previous triangles.
+  m_NRingTriangles.clear();
+
   // Make sure we have the proper connectivity built
   ElementDynamicList::Pointer node2TrianglePtr = triangleGeom->getElementsContainingVert();
   if (node2TrianglePtr.get() == NULL)

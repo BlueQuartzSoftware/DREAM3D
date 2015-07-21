@@ -77,6 +77,6 @@ VolumeDataContainerInfoFilterParameter::Pointer VolumeDataContainerInfoFilterPar
 // -----------------------------------------------------------------------------
 QString VolumeDataContainerInfoFilterParameter::getWidgetType()
 {
-  return QString("VolumeInfoWidget");
+  return QString("VolumeDataContainerInfoWidget");
 }
 

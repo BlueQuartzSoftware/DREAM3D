@@ -157,11 +157,11 @@ void SineParamsSegmentFeatures::dataCheck()
   DataArrayPath tempPath;
   setErrorCondition(0);
 
-  SegmentFeatures::dataCheck();
-  if(getErrorCondition() < 0) { return; }
-
   //Set the DataContainerName for the Parent Class (SegmentFeatures) to Use
   setDataContainerName(m_SineParamsArrayPath.getDataContainerName());
+
+  SegmentFeatures::dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }

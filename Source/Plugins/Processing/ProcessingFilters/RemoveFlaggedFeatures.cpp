@@ -40,6 +40,7 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
+#include "DREAM3DLib/FilterParameters/BooleanFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
@@ -50,6 +51,7 @@
 // -----------------------------------------------------------------------------
 RemoveFlaggedFeatures::RemoveFlaggedFeatures() :
   AbstractFilter(),
+  m_FillRemovedFeatures(true),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_FlaggedFeaturesArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Active),
   m_Neighbors(NULL),
@@ -72,6 +74,7 @@ RemoveFlaggedFeatures::~RemoveFlaggedFeatures()
 void RemoveFlaggedFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
+  parameters.push_back(BooleanFilterParameter::New("Fill-in Removed Features", "FillRemovedFeatures", getFillRemovedFeatures(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
@@ -85,6 +88,7 @@ void RemoveFlaggedFeatures::setupFilterParameters()
 void RemoveFlaggedFeatures::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setFillRemovedFeatures(reader->readValue("FillRemovedFeatures", getFillRemovedFeatures()));
   setFlaggedFeaturesArrayPath(reader->readDataArrayPath("FlaggedFeaturesArrayPath", getFlaggedFeaturesArrayPath() ) );
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   reader->closeFilterGroup();
@@ -97,6 +101,7 @@ int RemoveFlaggedFeatures::writeFilterParameters(AbstractFilterParametersWriter*
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
+  DREAM3D_FILTER_WRITE_PARAMETER(FillRemovedFeatures)
   DREAM3D_FILTER_WRITE_PARAMETER(FlaggedFeaturesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   writer->closeFilterGroup();
@@ -145,7 +150,11 @@ void RemoveFlaggedFeatures::execute()
   if(getErrorCondition() < 0) { return; }
 
   QVector<bool> activeObjects = remove_flaggedfeatures();
-  assign_badpoints();
+
+  if (m_FillRemovedFeatures == true)
+  {
+    assign_badpoints();
+  }
 
   AttributeMatrix::Pointer cellFeatureAttrMat = getDataContainerArray()->getAttributeMatrix(getFlaggedFeaturesArrayPath());
   cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
@@ -313,7 +322,8 @@ QVector<bool> RemoveFlaggedFeatures::remove_flaggedfeatures()
     gnum = m_FeatureIds[i];
     if (activeObjects[gnum] == false)
     {
-      m_FeatureIds[i] = -1;
+      if (m_FillRemovedFeatures == false) m_FeatureIds[i] = 0;
+      else m_FeatureIds[i] = -1;
     }
   }
   return activeObjects;

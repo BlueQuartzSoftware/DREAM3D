@@ -105,13 +105,13 @@ void AlignSectionsFeature::dataCheck()
 {
   setErrorCondition(0);
 
-  AlignSections::dataCheck();
-  if(getErrorCondition() < 0) { return; }
-
   // Set the DataContainerName and AttributematrixName for the Parent Class (AlignSections) to Use.
   // These are checked for validity in the Parent Class dataCheck
   setDataContainerName(m_GoodVoxelsArrayPath.getDataContainerName());
   setCellAttributeMatrixName(m_GoodVoxelsArrayPath.getAttributeMatrixName());
+
+  AlignSections::dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   QVector<size_t> cDims(1, 1);
   m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */

@@ -88,7 +88,7 @@ QString ApplicationFileInfo::GenerateFileSystemPath(QString pathEnding)
   }
 #endif
 
-#if defined(Q_OS_WIN)
+#if defined(Q_OS_WIN) || defined (Q_OS_MAC)
   QFileInfo fi(dir.absolutePath() + pathEnding);
   if (fi.exists() == false)
   {

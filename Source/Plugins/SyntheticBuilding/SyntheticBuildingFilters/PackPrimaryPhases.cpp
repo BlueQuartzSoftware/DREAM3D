@@ -2314,6 +2314,7 @@ void PackPrimaryPhases::assign_gaps_only()
   int32_t current = 0;
   int32_t most = 0;
   int64_t gapVoxelCount = 1;
+  int64_t previousGapVoxelCount = 0;
   int32_t iterationCounter = 0;
   int64_t neighpoint;
   bool good = false;
@@ -2339,9 +2340,10 @@ void PackPrimaryPhases::assign_gaps_only()
 
   std::vector<int32_t> n(totalFeatures + 1, 0);
 
-  while (gapVoxelCount != 0)
+  while (gapVoxelCount != 0 && gapVoxelCount != previousGapVoxelCount)
   {
     iterationCounter++;
+    previousGapVoxelCount = gapVoxelCount;
     gapVoxelCount = 0;
     int64_t zStride, yStride;
     for (int64_t i = 0; i < zPoints; i++)
@@ -2419,6 +2421,13 @@ void PackPrimaryPhases::assign_gaps_only()
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     }
     if(getCancel() == true) { return; }
+  }
+  if (gapVoxelCount != 0)
+  {
+    for (size_t j = 0; j < totalPoints; j++)
+    {
+      if (m_FeatureIds[j] < 0) m_FeatureIds[j] = 0;
+    }
   }
 }
 

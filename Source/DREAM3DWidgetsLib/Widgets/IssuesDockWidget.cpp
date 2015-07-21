@@ -220,7 +220,7 @@ void IssuesDockWidget::displayCachedMessages()
         break;
 
       default:
-        return;
+        break;
     }
   }
 }

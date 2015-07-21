@@ -139,12 +139,12 @@ void AlignSectionsMisorientation::dataCheck()
 {
   setErrorCondition(0);
 
-  AlignSections::dataCheck();
-  if(getErrorCondition() < 0) { return; }
-
   // Set the DataContainerName and AttributematrixName for the Parent Class (AlignSections) to Use.
   setDataContainerName(m_QuatsArrayPath.getDataContainerName());
   setCellAttributeMatrixName(m_QuatsArrayPath.getAttributeMatrixName());
+
+  AlignSections::dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   QVector<DataArrayPath> dataArrayPaths;
 
@@ -279,7 +279,7 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int64_t>& xshifts, std
           xIdx = k + oldxshift + halfDim0;
           yIdx = j + oldyshift + halfDim1;
           idx = (dims[0] * yIdx) + xIdx;
-          if (misorients[idx] == false && abs(k + oldxshift) < halfDim0 && abs(j + oldyshift) < halfDim1)
+          if (misorients[idx] == false && llabs(k + oldxshift) < halfDim0 && llabs(j + oldyshift) < halfDim1)
           {
             for (DimType l = 0; l < dims[1]; l = l + 4)
             {
@@ -323,7 +323,7 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int64_t>& xshifts, std
             yIdx = j + oldyshift + halfDim1;
             idx = (dims[0] * yIdx) + xIdx;
             misorients[idx] = true;
-            if (disorientation < mindisorientation || (disorientation == mindisorientation && ((abs(k + oldxshift) < abs(newxshift)) || (abs(j + oldyshift) < abs(newyshift)))))
+            if (disorientation < mindisorientation || (disorientation == mindisorientation && ((llabs(k + oldxshift) < llabs(newxshift)) || (llabs(j + oldyshift) < llabs(newyshift)))))
             {
               newxshift = k + oldxshift;
               newyshift = j + oldyshift;

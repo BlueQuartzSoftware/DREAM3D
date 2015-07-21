@@ -32,9 +32,9 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #include "PrecipitateRolledPreset.h"
+
+#include <QtWidgets/QMessageBox>
 
 #include "StatsGenerator/Presets/Dialogs/PrecipitateRolledPresetDialog.h"
 #include "StatsGenerator/StatsGenPlotWidget.h"
@@ -69,16 +69,31 @@ PrecipitateRolledPreset::~PrecipitateRolledPreset()
 void PrecipitateRolledPreset::displayUserInputDialog()
 {
   PrecipitateRolledPresetDialog d(NULL);
-  int ret = d.exec();
-  if (ret == QDialog::Accepted)
+  bool keepGoing = true;
+  while (keepGoing)
   {
-    // The user clicked the OK button so transfer the values from the dialog into this class
-    m_AspectRatio1 = d.getA() / d.getB();
-    m_AspectRatio2 = d.getA() / d.getC();
-  }
-  else
-  {
-    // Perform any cancellation actions if the user canceled the dialog box
+    int ret = d.exec();
+    if (ret == QDialog::Accepted)
+    {
+      float a = d.getA();
+      float b = d.getB();
+      float c = d.getC();
+      if (a >= b && b >= c)
+      {
+        // The user clicked the OK button so transfer the values from the dialog into this class
+        m_AspectRatio1 = d.getA() / d.getB();
+        m_AspectRatio2 = d.getA() / d.getC();
+        keepGoing = false;
+      }
+      else
+      {
+        QMessageBox::critical(&d, "Rolled Preset Error", "The ratios have been entenered incorrectly. The following MUST be true: A >= B >= C", QMessageBox::Default);
+      }
+    }
+    else
+    {
+      keepGoing = false; // user clicked the Cancel button
+    }
   }
 }
 

@@ -365,8 +365,9 @@ void ConvertHexGridToSquareGridWidget::on_m_OutputDirBtn_clicked()
   // Store the last used directory into the private instance variable
   QFileInfo fi(file);
   m_OpenDialogLastDirectory = fi.path();
+  m_OutputDir->setText(file);
 
-  on_m_OutputDir_textChanged(file);
+ // on_m_OutputDir_textChanged(file);
 }
 
 // -----------------------------------------------------------------------------

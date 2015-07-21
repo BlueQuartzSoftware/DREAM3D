@@ -118,6 +118,7 @@ void CopyAttributeMatrix::dataCheck()
   DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(getSelectedAttributeMatrixPath().getDataContainerName());
 
   AttributeMatrix::Pointer p = attrMat->deepCopy();
+  p->setName(getNewAttributeMatrix());
   dc->addAttributeMatrix(getNewAttributeMatrix(), p );
 }
 
