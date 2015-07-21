@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _SurfaceMeshToNodesTrianglesEdges_H_
-#define _SurfaceMeshToNodesTrianglesEdges_H_
+#ifndef _WriteTriangleGeometry_H_
+#define _WriteTriangleGeometry_H_
 
 #include <QtCore/QString>
 
@@ -48,35 +48,30 @@
 #include "DREAM3DLib/DataContainers/DataContainer.h"
 
 /**
- * @class SurfaceMeshToNodesTrianglesEdges SurfaceMeshToNodesTrianglesEdges.h FilterCategory/Code/FilterCategoryFilters/SurfaceMeshToNodesTrianglesEdges.h
+ * @class WriteTriangleGeometry WriteTriangleGeometry.h FilterCategory/Code/FilterCategoryFilters/WriteTriangleGeometry.h
  * @brief This filter writes a Nodes, Triangles and Edges file from a Surface Mesh.
  * @author
  * @date
  * @version 1.0
  */
-class SurfaceMeshToNodesTrianglesEdges : public AbstractFilter
+class WriteTriangleGeometry : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(SurfaceMeshToNodesTrianglesEdges)
-    DREAM3D_STATIC_NEW_MACRO(SurfaceMeshToNodesTrianglesEdges)
-    DREAM3D_TYPE_MACRO_SUPER(SurfaceMeshToNodesTrianglesEdges, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(WriteTriangleGeometry)
+    DREAM3D_STATIC_NEW_MACRO(WriteTriangleGeometry)
+    DREAM3D_TYPE_MACRO_SUPER(WriteTriangleGeometry, AbstractFilter)
 
-    virtual ~SurfaceMeshToNodesTrianglesEdges();
+    virtual ~WriteTriangleGeometry();
+
+    DREAM3D_FILTER_PARAMETER(QString, DataContainerSelection)
+    Q_PROPERTY(QString DataContainerSelection READ getDataContainerSelection WRITE setDataContainerSelection)
 
     DREAM3D_FILTER_PARAMETER(QString, OutputNodesFile)
     Q_PROPERTY(QString OutputNodesFile READ getOutputNodesFile WRITE setOutputNodesFile)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputEdgesFile)
-
     DREAM3D_FILTER_PARAMETER(QString, OutputTrianglesFile)
     Q_PROPERTY(QString OutputTrianglesFile READ getOutputTrianglesFile WRITE setOutputTrianglesFile)
-
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
-    Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
-
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshNodeTypeArrayPath)
-    Q_PROPERTY(DataArrayPath SurfaceMeshNodeTypeArrayPath READ getSurfaceMeshNodeTypeArrayPath WRITE setSurfaceMeshNodeTypeArrayPath)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -152,7 +147,7 @@ class SurfaceMeshToNodesTrianglesEdges : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    SurfaceMeshToNodesTrianglesEdges();
+    WriteTriangleGeometry();
 
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -160,11 +155,10 @@ class SurfaceMeshToNodesTrianglesEdges : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
-    DEFINE_DATAARRAY_VARIABLE(int8_t, SurfaceMeshNodeType)
 
-    SurfaceMeshToNodesTrianglesEdges(const SurfaceMeshToNodesTrianglesEdges&); // Copy Constructor Not Implemented
-    void operator=(const SurfaceMeshToNodesTrianglesEdges&); // Operator '=' Not Implemented
+
+    WriteTriangleGeometry(const WriteTriangleGeometry&); // Copy Constructor Not Implemented
+    void operator=(const WriteTriangleGeometry&); // Operator '=' Not Implemented
 };
 
-#endif /* _SurfaceMeshToNodesTrianglesEdges_H_ */
+#endif /* _WriteTriangleGeometry_H_ */
