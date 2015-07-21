@@ -2,30 +2,35 @@ FindDifferenceMap {#finddifferencemap}
 =============
 
 ## Group (Subgroup) ##
-Statistics (Statistics)
+Statistics (Misc)
 
 ## Description ##
-This **Filter** does the following...
+This **Filter** calculates the difference between two **Attribute Arrays**. The arrays must have the same _primitive type_ (e.g., float), _component dimensions_ and _number of tuples_. The **Filter** uses the following pseudocode to calculate the difference map:
+
+	for i to all tuples in the arrays
+		for j to number of components of the arrays
+			differenceMap[number of components * i + j] = firstSelectedArray[number of components * i + j] - secondSelectedArray[number of components * i + j]
+		end loop over number of components
+	end loop over all tuples
+
+Note that in the above algorithm, the difference is taken as the _first selected_ **Attribute Array** minus the _second selected_ **Attribute Array**. The resulting difference values _may be negative_ if the values of the first array are smaller than those in the second array. The differences are also taken _component by component_. Therefore, two selected scalar arrays will result in a scalar difference map, whereas two selected 3 component vector arrays would result in a 3 component vector difference map, where component values are the scalar differences between the components of the input arrays.
 
 ## Parameters ##
-| Name | Type | Description |
-|------|------|------|
-| Parameter Name | Parameter Type | Description of parameter... |
+None
 
 ## Required Geometry ##
-Required Geometry Type -or- Not Applicable
+Not Applicable
 
 ## Required Objects ##
-| Type | Default Name | Type | Component Dimensions | Description |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| **Data Container** | Data Container Name | N/A | N/A | Description of object... |
-| **Attribute Matrix** | Attribute Matrix Name | Element/Feature/Ensemble/etc. | N/A | Description of object... |
-| **Element/Feature/Ensemble/etc. Attribute Array** | AttributeArray Name | int32_t/float/etc. | (1)/(3)/etc. | Description of object... |
+| Any **Attribute Array** | None | Any | Any | The first selected **Attribute Array**. This array's values will be the first argument for the subtraction operation |
+| Any **Attribute Array** | None | Any | Any | The second selected **Attribute Array**. This array's values will be subtracted from the first selected **Attribute Array** values |
 
 ## Created Objects ##
-| **Data Container** | Data Container Name | N/A | N/A | Description of object... |
-| **Attribute Matrix** | Attribute Matrix Name | Element/Feature/Ensemble/etc. | N/A | Description of object... |
-| **Element/Feature/Ensemble/etc. Attribute Array** | AttributeArray Name | int32_t/float/etc. | (1)/(3)/etc. | Description of object... |
+| Kind | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| Any **Attribute Array** | DifferenceMap | Same as input arrays | Same as input arrays | The difference map **Attribute Array** |
 
 ## License & Copyright ##
 

@@ -293,5 +293,5 @@ const QString FindDifferenceMap::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString FindDifferenceMap::getSubGroupName()
-{ return "Statistics"; }
+{ return DREAM3D::FilterSubGroups::MiscFilters; }
 
