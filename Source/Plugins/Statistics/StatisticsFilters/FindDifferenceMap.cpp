@@ -184,7 +184,7 @@ void validateArrayTypes(AbstractFilter* filter, QVector<IDataArray::Pointer> ptr
     }
     if (!TemplateHelpers::CanDynamicCast<DataArray<DataType> >()(*it))
     {
-      filter->setErrorCondition(-90000);
+      filter->setErrorCondition(-90001);
       QString ss = QObject::tr("Selected Attribute Arrays must all be of the same type");
       filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
       return;
@@ -214,7 +214,7 @@ void FindDifferenceMap::dataCheck()
   // Safe to check array component dimensions since we won't get here if the pointers are null
   if (m_FirstInputArrayPtr.lock()->getComponentDimensions() != m_SecondInputArrayPtr.lock()->getComponentDimensions())
   {
-    setErrorCondition(-90000);
+    setErrorCondition(-90003);
     QString ss = QObject::tr("Selected Attribute Arrays must have the same component dimensions");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
