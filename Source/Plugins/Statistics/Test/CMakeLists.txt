@@ -33,5 +33,5 @@ AddDREAM3DUnitTest(TESTNAME CalculateArrayHistogramTest
 
 
 
-AddDREAM3DUnitTest(TESTNAME FindDifferenceMapTest SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/FindDifferenceMapTest.cpp LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib)
+AddDREAM3DUnitTest(TESTNAME FindDifferenceMapTest SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/FindDifferenceMapTest.cpp FOLDER "${PLUGIN_NAME}Plugin/Test" LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib)
 
