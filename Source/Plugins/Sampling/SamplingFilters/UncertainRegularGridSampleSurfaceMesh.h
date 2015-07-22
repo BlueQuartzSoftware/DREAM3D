@@ -75,6 +75,9 @@ class UncertainRegularGridSampleSurfaceMesh : public SampleSurfaceMesh
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
     Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
 
+    DREAM3D_FILTER_PARAMETER(FloatVec3_t, Origin)
+    Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
+
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Uncertainty)
     Q_PROPERTY(FloatVec3_t Uncertainty READ getUncertainty WRITE setUncertainty)
 
