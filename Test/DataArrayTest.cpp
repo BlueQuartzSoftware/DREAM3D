@@ -679,10 +679,12 @@ QString TypeToString(T v)
     typename NeighborList<T>::Pointer copy = boost::dynamic_pointer_cast<NeighborList<T> >(neiList->deepCopy());
     for(int i = 0; i < 10; ++i)
     {
+
+      unsigned char value = 255;
       typename NeighborList<T>::SharedVectorType nEntry = neiList->getList(i);
       typename NeighborList<T>::SharedVectorType cEntry = copy->getList(i);
       DREAM3D_REQUIRED(nEntry.get(), !=, cEntry.get());
-      (*nEntry)[0] = static_cast<T>(255);
+      (*nEntry)[0] = static_cast<T>(value);
       DREAM3D_REQUIRED( (*cEntry)[0], !=, 10000000);
     }
 

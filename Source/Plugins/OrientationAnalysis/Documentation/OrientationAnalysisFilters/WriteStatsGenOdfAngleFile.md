@@ -1,68 +1,52 @@
-Write StatsGenerator ODF Angle File{#writestatsgenodfanglefile}
+Write StatsGenerator ODF Angle File {#writestatsgenodfanglefile}
 =====
 
 ## Group (Subgroup) ##
 
-IOFilters (Output)
-
+IO (Output)
 
 ## Description ##
 
-This filter is used in a workflow where the user would like to generate a synthetic microstructure with an ODF that matches (as closely as possible) an existing experimental data set or other data set that is being mimicked. The basic workflow is the following:
+This **Filter** is used in a workflow where the user would like to generate a synthetic microstructure with an ODF that matches (as closely as possible) an existing experimental data set or other data set that is being mimicked. The basic workflow is the following:
 
-0. Import or Read in Euler Angle data
-1. Optionally threshold the data so each cell is marked as allowable or not-allowable.
-2. Insert the "Write StatsGenerator ODF Angle File" filter in the pipeline.
-3. Run the pipeline to produce the file.
-4. Launch StatsGenerator
-5. Generate the data
-6. Click on the ODF Tab
-7. Click on the *Bulk Load* sub tab
-8. Select the file that was just written
-9. Load the data and inspect the ODF that was generated.
-
+1. Import Euler angle data (e.g., ANG or CTF files)
+2. Optionally threshold the data so each cell is marked as allowable or not-allowable
+3. Insert the "Write StatsGenerator ODF Angle File" **Filter** in the **Pipeline**
+4. Run the **Pipeline** to produce the file
+5. Launch **StatsGenerator**
+6. Generate the data
+7. Click on the ODF Tab
+8. Click on the *Bulk Load* sub tab
+9. Select the file that was just written
+10. Load the data and inspect the ODF that was generated
 
 **StatsGenerator can not load data from standard .ang or .ctf files. So if you want to get the ODF from an existing experimental data set and you have one of those files then you can use that functionality in StatsGenerator**
 
 ## Notes on Implementation ##
 
-+ A separate file is written for each phase.
++ A separate file is written for each phase
 + Spaces are used as the delimiters between values
 + Default values of 1.0 are used for both the weight and sigma
-+ Because DREAM3D typically works with Radians, the Euler Angles are converted to Degrees by default. This is a user configurable option
-
-
++ The user has the option to convert the supplied Euler angles to degrees. **StatsGenerator** is able to import Euler angles as either degrees or radians based on user input, so the output type from this **Filter** could remain as radians or be converted to degrees. The user should remain cognizant of what representation their angles are in so that the correct option is chosen during the import process in **StatsGenerator**
 
 ## Parameters ##
-| Name             | Type |
-|------------------|------|
-| Output File | File Path |  
+| Name | Type | Description |
+|------|------| ----------- |
+| Output File | File Path | Output angles file path |  
+| Convert to Degrees | bool | Whether to convert the Euler angles from radians to degrees. If the Euler angles are already in degrees, this option will "convert" the data again, resulting in garbage orientations! |  
+| Only Write Good Elements | bool | Whether to only write the Euler angles for those elements denoted as true in the supplied mask array |  
 
 
 ## Required Objects ##
-
-| Type | Default Array Name | Description | Comment |
-|--------|----------------------------|-----------------|---------------|
-| Int  | Cell Phases                   | The phase data for each cell                 |    |  
-| Float | Cell Euler Angles      | The Euler Angles for each cell        |    |  
-| Bool | Convert to Degrees    | Should the filter convert the output to Degrees      |    |  
-| Bool  | Apply to Good Voxels | Should only cells marked as **good** be used.     |    |  
+| Kind | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| **Element Attribute Array** | EulerAngles | float | (3) | Three angles defining the orientation of the **Element** in Bunge convention (Z-X-Z) |
+| **Element Attribute Array** | Phases | int32_t | (1) |  Specifies to which **Ensemble** each **Element** belongs |
+| **Element Attribute Array** | Mask | bool | (1) | Used to define **Elements** as *good* or *bad*. Only required if _Only Write Good Elements_ is checked |
 
 ## Created Objects ##
 
-NONE
-
-## Authors ##
-
-**Copyright** 2014 Michael A. Jackson (BlueQuartz Software)
-
-**Contact Info** dream3d@bluequartz.net
-
-**Version** 1.0.0
-
-**License**  See the License.txt file that came with DREAM3D.
-
-
+None
 
 ## License & Copyright ##
 

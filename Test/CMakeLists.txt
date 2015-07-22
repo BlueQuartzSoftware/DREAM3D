@@ -72,7 +72,7 @@ set(PREBUILT_PIPELINE_NAMES
  "Reconstruction/(03) SmallIN100 Threshold"
  "Reconstruction/(04) SmallIN100 Alignment"
  "Reconstruction/(05) SmallIN100 Alignment 2"
- "Reconstruction/(06) SmallIN100 Cleanup"
+ "Reconstruction/(06) SmallIN100 CleanUp"
  "Reconstruction/(07) SmallIN100 Segmentation"
  "Reconstruction/(08) SmallIN100 Merge Twins"
  "Reconstruction/(09) SmallIN100 Minimum Size"

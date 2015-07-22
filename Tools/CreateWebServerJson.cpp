@@ -87,7 +87,7 @@ int main(int argc, char** argv)
   QCoreApplication::setOrganizationDomain("bluequartz.net");
   QCoreApplication::setApplicationName("CreateWebServerJson");
 
-  QString filePath = "/tmp/Version.json";
+  QString filePath = "/tmp/dream3d_version.json";
   if(argc == 2)
   {
     filePath = QString::fromLatin1(argv[1]);
