@@ -108,11 +108,11 @@ void WriteStatsGenOdfAngleFile::setupFilterParameters()
   parameters.push_back(OutputFileFilterParameter::New("Output File", "OutputFile", getOutputFile(), FilterParameter::Parameter));
   parameters.push_back(BooleanFilterParameter::New("Convert to Degrees", "ConvertToDegrees", getConvertToDegrees(), FilterParameter::Parameter));
   QStringList linkedProps("GoodVoxelsArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Only Write Good Voxels", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Only Write Good Elements", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter));
 
-  parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Cell Euler Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Cell Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Euler Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray));
   parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray));
 
 
@@ -162,7 +162,7 @@ void WriteStatsGenOdfAngleFile::dataCheck()
   QString ss;
   if (getOutputFile().isEmpty() == true)
   {
-    ss = QObject::tr( "The output file must be set before executing this filter.");
+    ss = QObject::tr( "The output file must be set");
     notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
   }
@@ -170,18 +170,18 @@ void WriteStatsGenOdfAngleFile::dataCheck()
   QDir parentPath = fi.path();
   if (parentPath.exists() == false)
   {
-    ss = QObject::tr( "The directory path for the output file does not exist.");
+    ss = QObject::tr( "The directory path for the output file does not exist");
     notifyWarningMessage(getHumanLabel(), ss, -1);
   }
 
 
-  QVector<size_t> dims(1, 1);
-  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  QVector<size_t> cDims(1, 1);
+  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  dims[0] = 3;
-  m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  cDims[0] = 3;
+  m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -189,8 +189,8 @@ void WriteStatsGenOdfAngleFile::dataCheck()
   if (getUseGoodVoxels() == true)
   {
     // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
-    dims[0] = 1;
-    m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    cDims[0] = 1;
+    m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -200,7 +200,6 @@ void WriteStatsGenOdfAngleFile::dataCheck()
   }
 
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -231,7 +230,7 @@ void WriteStatsGenOdfAngleFile::execute()
   // Figure out how many unique phase values we have by looping over all the phase values
   int64_t totalPoints = m_CellPhasesPtr.lock()->getNumberOfTuples();
   std::set<int32_t> uniquePhases;
-  for(int64_t i = 0; i < totalPoints; i++)
+  for (int64_t i = 0; i < totalPoints; i++)
   {
     uniquePhases.insert(m_CellPhases[i]);
   }
@@ -246,7 +245,7 @@ void WriteStatsGenOdfAngleFile::execute()
   fname = fname.mid(0, pos - 1);
   QString suffix = fi.suffix();
 
-  for(std::set<int32_t>::iterator iter = uniquePhases.begin(); iter != uniquePhases.end(); iter++)
+  for (std::set<int32_t>::iterator iter = uniquePhases.begin(); iter != uniquePhases.end(); iter++)
   {
     /* Let the GUI know we are done with this filter */
     QString ss = QObject::tr("Writing file for phase '%1'").arg(*iter);
@@ -270,7 +269,7 @@ void WriteStatsGenOdfAngleFile::execute()
     int32_t lineCount = determineOutputLineCount(totalPoints, *iter);
 
     int err = writeOutputFile(out, lineCount, totalPoints, *iter);
-    if(err < 0)
+    if (err < 0)
     {
       setErrorCondition(-99001);
       QString ss = QObject::tr("Error writing output file '%1'").arg(absFilePath);
