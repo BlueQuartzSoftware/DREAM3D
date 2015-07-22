@@ -13,7 +13,9 @@ This **Filter** calculates the difference between two **Attribute Arrays**. The 
 		end loop over number of components
 	end loop over all tuples
 
-Note that in the above algorithm, the difference is taken as the _first selected_ **Attribute Array** minus the _second selected_ **Attribute Array**. The resulting difference values _may be negative_ if the values of the first array are smaller than those in the second array. Therefore, if the two arrays are _unsigned integers_, it may be possible to underflow the resulting difference map values if the first array is sufficiently smaller than the second array. The differences are also taken _component by component_. Therefore, two selected scalar arrays will result in a scalar difference map, whereas two selected 3 component vector arrays would result in a 3 component vector difference map, where component values are the scalar differences between the components of the input arrays.
+Note that in the above algorithm, the difference is taken as the _first selected_ **Attribute Array** minus the _second selected_ **Attribute Array**. The differences are also taken _component by component_. Therefore, two selected scalar arrays will result in a scalar difference map, whereas two selected 3 component vector arrays would result in a 3 component vector difference map, where component values are the scalar differences between the components of the input arrays.
+
+**WARNING: The resulting difference values _may be negative_ if the values of the first array are smaller than those in the second array. Therefore, if the two arrays are _unsigned integers_, it may be possible to underflow the resulting difference map values if the first array is sufficiently smaller than the second array. "Underflow" means that what should be a negative value will end up being a potentially very large value!**
 
 ## Parameters ##
 None
