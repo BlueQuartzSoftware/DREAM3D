@@ -175,13 +175,6 @@ void ReplaceValueInArray::dataCheck()
 {
   setErrorCondition(0);
 
-  if (m_SelectedArray.isEmpty() == true)
-  {
-    setErrorCondition(-11003);
-    notifyErrorMessage(getHumanLabel(), "Array name must be set.", getErrorCondition());
-    return;
-  }
-
   m_ArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getSelectedArray());
   if (getErrorCondition() < 0) { return; }
 
@@ -204,6 +197,23 @@ void ReplaceValueInArray::dataCheck()
   else if (dType.compare(DREAM3D::TypeNames::UInt64) == 0) { checkValuesInt<uint64_t>(this, m_RemoveValue, m_ReplaceValue, DREAM3D::TypeNames::UInt64); }
   else if (dType.compare(DREAM3D::TypeNames::Float) == 0) { checkValuesFloatDouble<float>(this, m_RemoveValue, m_ReplaceValue, DREAM3D::TypeNames::Float); }
   else if (dType.compare(DREAM3D::TypeNames::Double) == 0) { checkValuesFloatDouble<double>(this, m_RemoveValue, m_ReplaceValue, DREAM3D::TypeNames::Double); }
+  else if (dType.compare(DREAM3D::TypeNames::Bool) == 0) 
+  {
+    if (m_RemoveValue != 0.0)
+    {
+      m_RemoveValue = 1.0; // anything that is not a zero is a one
+    }
+    if (m_ReplaceValue != 0.0)
+    {
+      m_ReplaceValue = 1.0; // anything that is not a zero is a one
+    }
+  }
+  else
+  {
+    setErrorCondition(-4060);
+    QString ss = QObject::tr("Incorrect data scalar type");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
 }
 
 // -----------------------------------------------------------------------------

@@ -28,6 +28,8 @@ include_directories(${DREAM3DTest_BINARY_DIR})
 
 AddDREAM3DUnitTest(TESTNAME DataContainerTest SOURCES ${DREAM3DTest_SOURCE_DIR}/DataContainerTest.cpp LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib)
 
+AddDREAM3DUnitTest(TESTNAME ReplaceValueTest SOURCES ${DREAM3DTest_SOURCE_DIR}/ReplaceValueTest.cpp LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib)
+
 AddDREAM3DUnitTest(TESTNAME StructArrayTest SOURCES ${DREAM3DTest_SOURCE_DIR}/StructArrayTest.cpp LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib)
 
 AddDREAM3DUnitTest(TESTNAME FilterPipelineTest SOURCES ${DREAM3DTest_SOURCE_DIR}/FilterPipelineTest.cpp LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib)
