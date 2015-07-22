@@ -104,13 +104,13 @@
   DREAM3D_REQUIRE_EQUAL(err, 0);\
   diffMap = dc->getAttributeMatrix(diffMapPath.getAttributeMatrixName())->getAttributeArray(diffMapPath.getDataArrayName());\
   firstArray = dc->getAttributeMatrix(firstPath.getAttributeMatrixName())->getAttributeArray(firstPath.getDataArrayName());\
-  if (!TemplateHelpers::CanDynamicCast<DataArray<type> >()(firstArray))\
+  if (!TemplateHelpers::CanDynamicCast<DataArray<type> >()(diffMap))\
   {\
     err = -1;\
   }\
   DREAM3D_REQUIRE_EQUAL(err, 0);\
   checkDims1 = firstArray->getComponentDimensions();\
-  checkDims2 = firstArray->getComponentDimensions();\
+  checkDims2 = diffMap->getComponentDimensions();\
   if (checkDims1 != checkDims2)\
   {\
     err = -1;\

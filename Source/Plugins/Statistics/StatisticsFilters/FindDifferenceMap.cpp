@@ -195,6 +195,34 @@ void validateArrayTypes(AbstractFilter* filter, QVector<IDataArray::Pointer> ptr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+template<typename DataType>
+void warnOnUnsignedTypes(AbstractFilter* filter, IDataArray::Pointer ptr)
+{
+  if (TemplateHelpers::CanDynamicCast<DataArray<uint8_t> >()(ptr))
+  {
+    QString ss = QObject::tr("Selected Attribute Arrays are of type uint8_t. Using unsigned integer types may result in underflow leading to extremely large values!");
+    filter->notifyWarningMessage(filter->getHumanLabel(), ss, -90004);
+  }
+  if (TemplateHelpers::CanDynamicCast<DataArray<uint16_t> >()(ptr))
+  {
+    QString ss = QObject::tr("Selected Attribute Arrays are of type uint16_t. Using unsigned integer types may result in underflow leading to extremely large values!");
+    filter->notifyWarningMessage(filter->getHumanLabel(), ss, -90004);
+  }
+  if (TemplateHelpers::CanDynamicCast<DataArray<uint32_t> >()(ptr))
+  {
+    QString ss = QObject::tr("Selected Attribute Arrays are of type uint32_t. Using unsigned integer types may result in underflow leading to extremely large values!");
+    filter->notifyWarningMessage(filter->getHumanLabel(), ss, -90004);
+  }
+  if (TemplateHelpers::CanDynamicCast<DataArray<uint64_t> >()(ptr))
+  {
+    QString ss = QObject::tr("Selected Attribute Arrays are of type uint64_t. Using unsigned integer types may result in underflow leading to extremely large values!");
+    filter->notifyWarningMessage(filter->getHumanLabel(), ss, -90004);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindDifferenceMap::dataCheck()
 {
   setErrorCondition(0);
@@ -210,6 +238,8 @@ void FindDifferenceMap::dataCheck()
   if (dataArrays.size() > 0) { EXECUTE_FUNCTION_TEMPLATE(this, validateArrayTypes, dataArrays[0], this, dataArrays) }
 
   if (getErrorCondition() < 0) { return; }
+  
+  if (dataArrays.size() > 0) { EXECUTE_FUNCTION_TEMPLATE(this, warnOnUnsignedTypes, dataArrays[0], this, dataArrays[0]) }
 
   // Safe to check array component dimensions since we won't get here if the pointers are null
   if (m_FirstInputArrayPtr.lock()->getComponentDimensions() != m_SecondInputArrayPtr.lock()->getComponentDimensions())
