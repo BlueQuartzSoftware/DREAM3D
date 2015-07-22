@@ -178,5 +178,7 @@ fixup_bundle("${CMAKE_INSTALL_PREFIX}/@osx_app_name@.app"
 # Create a qt.conf file in the app bundle
 file(WRITE "${CMAKE_INSTALL_PREFIX}/@osx_app_name@.app/Contents/Resources/qt.conf")
 file(APPEND "${CMAKE_INSTALL_PREFIX}/@osx_app_name@.app/Contents/Resources/qt.conf" "[Paths]\nPlugins = Plugins\n")
+FILE(APPEND "${CMAKE_INSTALL_PREFIX}/@osx_app_name@.app/Contents/Resources/qt.conf" "Prefix = .\n")
+FILE(APPEND "${CMAKE_INSTALL_PREFIX}/@osx_app_name@.app/Contents/Resources/qt.conf" "LibraryExecutables = bin\n")
 
 
