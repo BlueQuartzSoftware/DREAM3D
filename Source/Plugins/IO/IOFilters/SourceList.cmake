@@ -34,6 +34,8 @@ set(_PublicFilters
   VtkStructuredPointsReader
   WriteStlFile
   WriteTriangleGeometry
+
+  VtkRectilinearGridWriter
 )
 
 #--------------
@@ -60,7 +62,7 @@ set(_PrivateFilters
 
   SurfaceMeshToVtk
   VASPReader
-  VtkRectilinearGridWriter
+
   YSChoiAbaqusReader
 )
 
