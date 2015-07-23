@@ -138,7 +138,7 @@ void createAndAddReadImageFilter(FilterPipeline::Pointer pipeline, QString input
 // -----------------------------------------------------------------------------
 void createAndAddConvertRGBToGrayscaleFilter(FilterPipeline::Pointer pipeline, DataArrayPath path, QString name)
 {
-  QString filtName = "RGBToGray";
+  QString filtName = "ItkRGBToGray";
   FilterManager* fm = FilterManager::Instance();
   IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
 
