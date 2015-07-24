@@ -88,9 +88,6 @@ void FindNeighborhoods::setupFilterParameters()
     req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::ImageGeometry);
     QVector<unsigned int> amTypes;
     amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeFeature);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::VertexFeature);
     req.amTypes = amTypes;
     req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Float);
     req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
@@ -101,9 +98,6 @@ void FindNeighborhoods::setupFilterParameters()
     req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::ImageGeometry);
     QVector<unsigned int> amTypes;
     amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeFeature);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::VertexFeature);
     req.amTypes = amTypes;
     req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Int32);
     req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
@@ -114,9 +108,6 @@ void FindNeighborhoods::setupFilterParameters()
     req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::ImageGeometry);
     QVector<unsigned int> amTypes;
     amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeFeature);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::VertexFeature);
     req.amTypes = amTypes;
     req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Float);
     req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 3));

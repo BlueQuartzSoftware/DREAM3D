@@ -77,9 +77,6 @@ void EstablishShapeTypes::setupFilterParameters()
     DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> amTypes;
     amTypes.push_back(DREAM3D::AttributeMatrixType::CellEnsemble);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::FaceEnsemble);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeEnsemble);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::VertexEnsemble);
     req.amTypes = amTypes;
     req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::UInt32);
     req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
@@ -91,6 +88,9 @@ void EstablishShapeTypes::setupFilterParameters()
   parameters.push_back(sType_parameter);
   setFilterParameters(parameters);
 }
+
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void EstablishShapeTypes::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {

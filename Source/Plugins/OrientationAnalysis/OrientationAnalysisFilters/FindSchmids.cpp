@@ -137,7 +137,7 @@ void FindSchmids::setupFilterParameters()
     req.amTypes = amTypes;
     req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Float);
     req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 4));
-    parameters.push_back(DataArraySelectionFilterParameter::New("Average Quats", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::RequiredArray));
   {

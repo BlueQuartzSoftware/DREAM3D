@@ -99,8 +99,8 @@ void FindFeatureNeighborCAxisMisalignments::setupFilterParameters()
     amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeFeature);
     amTypes.push_back(DREAM3D::AttributeMatrixType::VertexFeature);
     req.amTypes = amTypes;
-    req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Float);
-    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 4));
+    req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Int32);
+    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
     parameters.push_back(DataArraySelectionFilterParameter::New("Neighbor List", "NeighborListArrayPath", getNeighborListArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
@@ -111,8 +111,8 @@ void FindFeatureNeighborCAxisMisalignments::setupFilterParameters()
     amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeFeature);
     amTypes.push_back(DREAM3D::AttributeMatrixType::VertexFeature);
     req.amTypes = amTypes;
-    req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Int32);
-    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
+    req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Float);
+    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 4));
     parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req));
   }
   {

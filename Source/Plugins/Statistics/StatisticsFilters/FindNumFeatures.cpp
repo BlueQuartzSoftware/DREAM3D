@@ -96,7 +96,7 @@ void FindNumFeatures::setupFilterParameters()
     amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeEnsemble);
     amTypes.push_back(DREAM3D::AttributeMatrixType::VertexEnsemble);
     req.amTypes = amTypes;
-    parameters.push_back(DataArrayCreationFilterParameter::New("Number Of Features", "NumFeaturesArrayPath", getNumFeaturesArrayPath(), FilterParameter::CreatedArray, req));
+    parameters.push_back(DataArrayCreationFilterParameter::New("Number of Features", "NumFeaturesArrayPath", getNumFeaturesArrayPath(), FilterParameter::CreatedArray, req));
   }
   setFilterParameters(parameters);
 }

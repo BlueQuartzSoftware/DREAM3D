@@ -246,13 +246,9 @@ void FindTwinBoundaries::setupFilterParameters()
     DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> dcTypes;
     dcTypes.push_back(DREAM3D::GeometryType::ImageGeometry);
-    dcTypes.push_back(DREAM3D::GeometryType::TriangleGeometry);
     req.dcGeometryTypes = dcTypes;
     QVector<unsigned int> amTypes;
     amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeFeature);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::VertexFeature);
     req.amTypes = amTypes;
     req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Float);
     req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 4));
@@ -262,13 +258,9 @@ void FindTwinBoundaries::setupFilterParameters()
     DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> dcTypes;
     dcTypes.push_back(DREAM3D::GeometryType::ImageGeometry);
-    dcTypes.push_back(DREAM3D::GeometryType::TriangleGeometry);
     req.dcGeometryTypes = dcTypes;
     QVector<unsigned int> amTypes;
     amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeFeature);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::VertexFeature);
     req.amTypes = amTypes;
     req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Int32);
     req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
@@ -279,13 +271,9 @@ void FindTwinBoundaries::setupFilterParameters()
     DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> dcTypes;
     dcTypes.push_back(DREAM3D::GeometryType::ImageGeometry);
-    dcTypes.push_back(DREAM3D::GeometryType::TriangleGeometry);
     req.dcGeometryTypes = dcTypes;
     QVector<unsigned int> amTypes;
     amTypes.push_back(DREAM3D::AttributeMatrixType::CellEnsemble);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::FaceEnsemble);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeEnsemble);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::VertexEnsemble);
     req.amTypes = amTypes;
     req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::UInt32);
     req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
@@ -296,7 +284,6 @@ void FindTwinBoundaries::setupFilterParameters()
   {
     DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> dcTypes;
-    dcTypes.push_back(DREAM3D::GeometryType::ImageGeometry);
     dcTypes.push_back(DREAM3D::GeometryType::TriangleGeometry);
     req.dcGeometryTypes = dcTypes;
     req.amTypes = QVector<unsigned int>(1, DREAM3D::AttributeMatrixType::Face);
@@ -308,7 +295,6 @@ void FindTwinBoundaries::setupFilterParameters()
   {
     DataArraySelectionFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> dcTypes;
-    dcTypes.push_back(DREAM3D::GeometryType::ImageGeometry);
     dcTypes.push_back(DREAM3D::GeometryType::TriangleGeometry);
     req.dcGeometryTypes = dcTypes;
     req.amTypes = QVector<unsigned int>(1, DREAM3D::AttributeMatrixType::Face);

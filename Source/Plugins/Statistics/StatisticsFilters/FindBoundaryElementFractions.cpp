@@ -95,7 +95,7 @@ void FindBoundaryElementFractions::setupFilterParameters()
     amTypes.push_back(DREAM3D::AttributeMatrixType::Edge);
     amTypes.push_back(DREAM3D::AttributeMatrixType::Vertex);
     req.amTypes = amTypes;
-    req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Int32);
+    req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Int8);
     req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
     parameters.push_back(DataArraySelectionFilterParameter::New("Surface Elements", "BoundaryCellsArrayPath", getBoundaryCellsArrayPath(), FilterParameter::RequiredArray, req));
   }
