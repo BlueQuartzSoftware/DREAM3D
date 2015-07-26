@@ -283,15 +283,18 @@ function(AddQWebEngineSupportFiles)
   endif()
 
   if(WIN32)
-
     install(FILES ${P_QT_INSTALL_PREFIX}/icudtl.dat  ${P_QT_INSTALL_PREFIX}/qtwebengine_resources.pak
               DESTINATION ${QTCONF_DIR}
               COMPONENT Applications)
     install(FILES ${P_QT_INSTALL_PREFIX}/bin/QtWebEngineProcess.exe
               DESTINATION ${QTCONF_DIR}
               COMPONENT Applications)
-    
   endif()
+
+  if(APPLE)
+
+  endif()
+
 endfunction()
 
 # ------------------------------------------------------------------------------
@@ -313,12 +316,22 @@ set(Qt5_COMPONENTS
     Xml 
     OpenGL 
     PrintSupport
+  )
+
+
+option(DREAM3D_USE_QtWebEngine "DREAM.3D Uses QtWebEngine to show help" ON)
+if(DREAM3D_USE_QtWebEngine)
+  set(Qt5_COMPONENTS
+    ${Qt5_COMPONENTS}
     WebEngine
     WebEngineWidgets
     WebEngineCore
     Quick
     Qml
-    )
+)
+
+endif()
+
 # On Linux we need the DBus library
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
   set(Qt5_COMPONENTS ${Qt5_COMPONENTS} DBus)
