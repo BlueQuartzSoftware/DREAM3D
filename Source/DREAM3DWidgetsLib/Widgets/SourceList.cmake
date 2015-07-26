@@ -9,7 +9,6 @@ set(DREAM3DWidgetsLib_Widgets_UIS "")
 set(DREAM3D_WIDGETS
     BookmarksDockWidget
     DREAM3DUpdateCheckDialog
-    DREAM3DUserManualDialog
     FilterInputWidget
     FilterLibraryDockWidget
     FilterListDockWidget
@@ -19,6 +18,11 @@ set(DREAM3D_WIDGETS
     DataContainerArrayWidget
     DropBoxWidget
 )
+
+#-- Only include this widget if we are compiling against QtWebEngine
+if(DREAM3D_USE_QtWebEngine)
+  set(DREAM3D_WIDGETS ${DREAM3D_WIDGETS} DREAM3DUserManualDialog)
+endif()
 
 foreach(FPW ${DREAM3D_WIDGETS})
   set(DREAM3DWidgetsLib_Widgets_HDRS ${DREAM3DWidgetsLib_Widgets_HDRS}

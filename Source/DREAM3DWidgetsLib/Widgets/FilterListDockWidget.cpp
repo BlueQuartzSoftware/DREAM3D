@@ -32,7 +32,6 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
 #include "FilterListDockWidget.h"
 
 #include <QtCore/QBitArray>
@@ -42,14 +41,18 @@
 #include <QtWidgets/QMainWindow>
 #include <QtGui/QPainter>
 
-#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
-
-
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 
+
+#ifdef DREAM3D_USE_QtWebEngine
 #include "DREAM3DWidgetsLib/Widgets/DREAM3DUserManualDialog.h"
+#else
+#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
+#include <QtWidgets/QMessageBox>
+#include <QtGui/QDesktopServices>
+#endif
 
 #include "DREAM3DWidgetsLib/moc_FilterListDockWidget.cpp"
 
@@ -205,7 +208,23 @@ void FilterListDockWidget::launchHelpForItem(QString humanLabel)
   }
   QString className = filter->getNameOfClass();
   // Launch the dialog
-  DREAM3DUserManualDialog::LaunchHelpDialog(className);
+#ifdef DREAM3D_USE_QtWebEngine
+    DREAM3DUserManualDialog::LaunchHelpDialog(className);
+#else
+  QUrl helpURL = DREAM3DHelpUrlGenerator::generateHTMLUrl(className.toLower());
+
+  bool didOpen = QDesktopServices::openUrl(helpURL);
+  if(false == didOpen)
+  {
+    QMessageBox msgBox;
+    msgBox.setText(QString("Error Opening Help File"));
+    msgBox.setInformativeText(QString::fromLatin1("DREAM3D could not open the help file path ") + helpURL.path());
+    msgBox.setStandardButtons(QMessageBox::Ok);
+    msgBox.setDefaultButton(QMessageBox::Ok);
+    msgBox.setIcon(QMessageBox::Critical);
+    msgBox.exec();
+  }
+#endif
 }
 
 // -----------------------------------------------------------------------------

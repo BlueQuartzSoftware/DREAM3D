@@ -32,8 +32,6 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #include "FilterLibraryDockWidget.h"
 
 #include <QtCore/QFileInfo>
@@ -45,7 +43,14 @@
 
 #include "FilterListDockWidget.h"
 
+
+#ifdef DREAM3D_USE_QtWebEngine
 #include "DREAM3DWidgetsLib/Widgets/DREAM3DUserManualDialog.h"
+#else
+#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
+#include <QtWidgets/QMessageBox>
+#include <QtGui/QDesktopServices>
+#endif
 
 #include "DREAM3DWidgetsLib/moc_FilterLibraryDockWidget.cpp"
 
@@ -252,7 +257,23 @@ void FilterLibraryDockWidget::launchHelpForItem(QString humanLabel)
   }
   QString className = filter->getNameOfClass();
   // Launch the dialog
-  DREAM3DUserManualDialog::LaunchHelpDialog(className);
+#ifdef DREAM3D_USE_QtWebEngine
+    DREAM3DUserManualDialog::LaunchHelpDialog(className);
+#else
+  QUrl helpURL = DREAM3DHelpUrlGenerator::generateHTMLUrl(className.toLower());
+
+  bool didOpen = QDesktopServices::openUrl(helpURL);
+  if(false == didOpen)
+  {
+    QMessageBox msgBox;
+    msgBox.setText(QString("Error Opening Help File"));
+    msgBox.setInformativeText(QString::fromLatin1("DREAM3D could not open the help file path ") + helpURL.path());
+    msgBox.setStandardButtons(QMessageBox::Ok);
+    msgBox.setDefaultButton(QMessageBox::Ok);
+    msgBox.setIcon(QMessageBox::Critical);
+    msgBox.exec();
+  }
+#endif
 }
 
 // -----------------------------------------------------------------------------

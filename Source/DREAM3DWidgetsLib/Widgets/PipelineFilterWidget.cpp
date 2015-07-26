@@ -54,7 +54,6 @@
 
 
 #include "QtSupportLib/DREAM3DStyles.h"
-#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
 
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
@@ -70,8 +69,14 @@
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/ChoiceWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/PipelineViewWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/DataContainerArrayWidget.h"
-#include "DREAM3DWidgetsLib/Widgets/DREAM3DUserManualDialog.h"
 
+#ifdef DREAM3D_USE_QtWebEngine
+#include "DREAM3DWidgetsLib/Widgets/DREAM3DUserManualDialog.h"
+#else
+#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
+#include <QtWidgets/QMessageBox>
+#include <QtGui/QDesktopServices>
+#endif
 
 
 #define PADDING 5
@@ -932,7 +937,23 @@ void PipelineFilterWidget::launchHelpForItem()
   QString className = getFilterClassName();
 
   // Launch the dialog
-  DREAM3DUserManualDialog::LaunchHelpDialog(className);
+#ifdef DREAM3D_USE_QtWebEngine
+    DREAM3DUserManualDialog::LaunchHelpDialog(className);
+#else
+  QUrl helpURL = DREAM3DHelpUrlGenerator::generateHTMLUrl(className.toLower());
+
+  bool didOpen = QDesktopServices::openUrl(helpURL);
+  if(false == didOpen)
+  {
+    QMessageBox msgBox;
+    msgBox.setText(QString("Error Opening Help File"));
+    msgBox.setInformativeText(QString::fromLatin1("DREAM3D could not open the help file path ") + helpURL.path());
+    msgBox.setStandardButtons(QMessageBox::Ok);
+    msgBox.setDefaultButton(QMessageBox::Ok);
+    msgBox.setIcon(QMessageBox::Critical);
+    msgBox.exec();
+  }
+#endif
 }
 
 // -----------------------------------------------------------------------------

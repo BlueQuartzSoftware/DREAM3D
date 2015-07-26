@@ -1074,12 +1074,10 @@ void StatsGeneratorUI::displayDialogBox(QString title, QString text, QMessageBox
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::on_actionStatsGenerator_Help_triggered()
 {
-  // m_HelpDialog->setContentFile(htmlHelpIndexFile());
   QUrl url = htmlHelpIndexFile();
   bool didOpen = QDesktopServices::openUrl(url);
   if(false == didOpen)
   {
-    //  qDebug() << "Could not open URL: " << url.path() << "\n";
     displayDialogBox(("Error Opening Help File"),
                      QString::fromLatin1("DREAM3D could not open the help file path ") + url.path(),
                      QMessageBox::Critical);
