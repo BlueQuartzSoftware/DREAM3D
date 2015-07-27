@@ -32,8 +32,6 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #include "AlignSectionsMutualInformation.h"
 
 #include "DREAM3DLib/Common/Constants.h"
@@ -291,7 +289,7 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int64_t>& xshifts, 
         {
           disorientation = 0;
           count = 0;
-          if (misorients[k + oldxshift + dims[0] / 2][j + oldyshift + dims[1] / 2] == 0 && abs(k + oldxshift) < (dims[0] / 2)
+          if (misorients[k + oldxshift + dims[0] / 2][j + oldyshift + dims[1] / 2] == 0 && llabs(k + oldxshift) < (dims[0] / 2)
               && (j + oldyshift) < (dims[1] / 2))
           {
             for (DimType l = 0; l < dims[1]; l = l + 4)
