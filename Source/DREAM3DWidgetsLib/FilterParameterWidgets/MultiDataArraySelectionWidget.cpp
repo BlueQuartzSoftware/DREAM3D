@@ -372,6 +372,7 @@ void MultiDataArraySelectionWidget::on_attributeMatrixList_currentIndexChanged(i
   QVector<DataArrayPath> selectedPaths = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<QVector<DataArrayPath> >();
 
   populateAttributeArrayList(selectedPaths);
+  updateSelectAllCheckbox();
 
   m_DidCausePreflight = true;
   emit parametersChanged();
@@ -603,21 +604,38 @@ void MultiDataArraySelectionWidget::updateSelectAllCheckbox()
   bool checkedStateExists = false;
   int checkedStateCount = 0;
   bool uncheckedStateExists = false;
+  bool oneItemEnabled = false;
 
   for (int i = 0; i < attributeArraysWidget->count(); i++)
   {
-    if (attributeArraysWidget->item(i)->checkState() == Qt::Checked)
+    if (attributeArraysWidget->item(i)->flags().testFlag(Qt::ItemIsEnabled) == true)
     {
-      checkedStateExists = true;
-      checkedStateCount++;
-    }
-    else
-    {
-      uncheckedStateExists = true;
+      oneItemEnabled = true;
+      if (attributeArraysWidget->item(i)->checkState() == Qt::Checked)
+      {
+        checkedStateExists = true;
+        checkedStateCount++;
+      }
+      else
+      {
+        uncheckedStateExists = true;
+      }
     }
   }
 
-  if (checkedStateExists == true && uncheckedStateExists == true)
+  if (oneItemEnabled == false)
+  {
+    selectCheckBox->blockSignals(true);
+    selectCheckBox->setDisabled(true);
+    selectCheckBox->blockSignals(false);
+  }
+  else if (oneItemEnabled == true)
+  {
+    selectCheckBox->blockSignals(true);
+    selectCheckBox->setDisabled(false);
+    selectCheckBox->blockSignals(false);
+  }
+  else if (checkedStateExists == true && uncheckedStateExists == true)
   {
     selectCheckBox->blockSignals(true);
     selectCheckBox->setCheckState(Qt::PartiallyChecked);
@@ -625,7 +643,7 @@ void MultiDataArraySelectionWidget::updateSelectAllCheckbox()
     attributeMatrixList->setDisabled(true);
     selectCheckBox->blockSignals(false);
   }
-  else if (checkedStateCount == attributeArraysWidget->count() && attributeArraysWidget->count() > 0)
+  else if (checkedStateCount == attributeArraysWidget->count())
   {
     selectCheckBox->blockSignals(true);
     selectCheckBox->setCheckState(Qt::Checked);
