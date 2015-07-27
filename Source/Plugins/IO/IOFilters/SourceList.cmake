@@ -33,6 +33,9 @@ set(_PublicFilters
   VisualizeGBCDPoleFigure
   VtkStructuredPointsReader
   WriteStlFile
+  WriteTriangleGeometry
+
+  VtkRectilinearGridWriter
 )
 
 #--------------
@@ -54,12 +57,12 @@ set(_PrivateFilters
   GoldfeatherReader
   LammpsFileWriter
   NodesTrianglesToStl
-  NodesTrianglesToVtk 
+  NodesTrianglesToVtk
   SurfaceMeshToNonconformalVtk
-  SurfaceMeshToNodesTrianglesEdges
+
   SurfaceMeshToVtk
   VASPReader
-  VtkRectilinearGridWriter
+
   YSChoiAbaqusReader
 )
 

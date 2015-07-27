@@ -14,6 +14,7 @@ set(_PublicFilters
   CalculateArrayHistogram
   FindAvgScalarValueForFeatures
   FindBoundaryElementFractions
+  FindDifferenceMap
   FindEuclideanDistMap
   FindLargestCrossSections
   FindNeighborhoods

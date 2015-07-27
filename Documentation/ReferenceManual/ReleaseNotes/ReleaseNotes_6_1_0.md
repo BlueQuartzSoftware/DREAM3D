@@ -12,7 +12,7 @@ Developers:[https://groups.google.com/forum/?hl=en#!forum/dream3d-developers](ht
 
 ## Version 6.1.77 ##
 
-+ Fixed incorrect calulation of Euclidean distance in the Find Euclidean Distance Map **Filter**.
++ Fixed incorrect calculation of Euclidean distance in the Find Euclidean Distance Map **Filter**.
 + Fixed crashes in generation of misorientation colors due to the incorrect sizes of Rodrigues vectors. All space groups should now return the correctly sized Rodrigues vectors.
 + Added a check to ensure the proper number of columns are read from a CTF file.
 + Fixed issues with preflighting certain parameters in **Filters** that subclass from another **Filter**. This includes the align sections **Filters** and the segmentation **Filters**.
