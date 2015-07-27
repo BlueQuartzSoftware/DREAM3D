@@ -571,18 +571,21 @@ void MultiDataArraySelectionWidget::on_selectCheckBox_stateChanged(int state)
 
   for (int i = 0; i < attributeArraysWidget->count(); i++)
   {
-    if (state == Qt::Checked)
+    if (attributeArraysWidget->item(i)->flags().testFlag(Qt::ItemIsEnabled) == true)
     {
-      attributeArraysWidget->item(i)->setCheckState(Qt::Checked);
-    }
-    else if (state == Qt::Unchecked)
-    {
-      attributeArraysWidget->item(i)->setCheckState(Qt::Unchecked);
-    }
-    else
-    {
-      // Skip the "Partially Checked" check state when merely toggling the "Select All/Deselect All" checkbox
-      selectCheckBox->setCheckState(Qt::Checked);
+      if (state == Qt::Checked)
+      {
+        attributeArraysWidget->item(i)->setCheckState(Qt::Checked);
+      }
+      else if (state == Qt::Unchecked)
+      {
+        attributeArraysWidget->item(i)->setCheckState(Qt::Unchecked);
+      }
+      else
+      {
+        // Skip the "Partially Checked" check state when merely toggling the "Select All/Deselect All" checkbox
+        selectCheckBox->setCheckState(Qt::Checked);
+      }
     }
   }
 
