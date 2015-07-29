@@ -51,11 +51,7 @@
 #include <QtGui/QImage>
 #include <QtGui/QColor>
 
-#include "EbsdLib/EbsdLib.h"
-#include "EbsdLib/HKL/CtfReader.h"
-#include "EbsdLib/TSL/AngReader.h"
-
-
+#include "DREAM3DLib/DREAM3DLibVersion.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/OutputFileFilterParameter.h"
@@ -240,9 +236,7 @@ void WriteStatsGenOdfAngleFile::execute()
 
   QFileInfo fi(getOutputFile());
   QString absPath = fi.absolutePath();
-  QString fname = fi.fileName();
-  int pos = fname.lastIndexOf('.');
-  fname = fname.mid(0, pos - 1);
+  QString fname = fi.completeBaseName();
   QString suffix = fi.suffix();
 
   for (std::set<int32_t>::iterator iter = uniquePhases.begin(); iter != uniquePhases.end(); iter++)
@@ -315,8 +309,12 @@ int WriteStatsGenOdfAngleFile::determineOutputLineCount(int64_t totalPoints, int
 int WriteStatsGenOdfAngleFile::writeOutputFile(QTextStream& out, int32_t lineCount, int64_t totalPoints, int32_t phase)
 {
   bool writeLine = false;
-  // write out the total number of lines
-  out << lineCount << "\n";
+  out <<  "# All lines starting with '#' are comments and should come before the header.\n";
+  out <<  "# DREAM.3D StatsGenerator Angles Input File\n";
+  out <<  "# DREAM.3D Version " << DREAM3DLib::Version::Complete() << "\n";
+  out <<  "# Angle Data is space delimited.\n";
+  out <<  "# Euler0 Euler1 Euler2 Weight Sigma\n";
+  out <<  "Angle Count:" << lineCount << "\n";
 
   float weight = 1.0f;
   float sigma = 1.0f;

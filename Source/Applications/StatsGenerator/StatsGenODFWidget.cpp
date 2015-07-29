@@ -64,11 +64,10 @@
 #include <qwt_symbol.h>
 
 
-#include "EbsdLib/TSL/AngConstants.h"
+//#include "EbsdLib/TSL/AngConstants.h"
 #include "EbsdLib/TSL/AngReader.h"
-#include "EbsdLib/HKL/CtfConstants.h"
+//#include "EbsdLib/HKL/CtfConstants.h"
 #include "EbsdLib/HKL/CtfReader.h"
-
 
 
 #include "OrientationLib/Texture/Texture.hpp"
