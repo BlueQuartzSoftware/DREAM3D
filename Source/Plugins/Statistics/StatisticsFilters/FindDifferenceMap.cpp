@@ -92,8 +92,9 @@ class ExecuteFindDifferenceMap
       bool doParallel = true;
 #endif
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
       size_t numTuples = firstArrayPtr->getNumberOfTuples();
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 
       if (doParallel == true)
       {
@@ -238,7 +239,7 @@ void FindDifferenceMap::dataCheck()
   if (dataArrays.size() > 0) { EXECUTE_FUNCTION_TEMPLATE(this, validateArrayTypes, dataArrays[0], this, dataArrays) }
 
   if (getErrorCondition() < 0) { return; }
-  
+
   if (dataArrays.size() > 0) { EXECUTE_FUNCTION_TEMPLATE(this, warnOnUnsignedTypes, dataArrays[0], this, dataArrays[0]) }
 
   // Safe to check array component dimensions since we won't get here if the pointers are null
