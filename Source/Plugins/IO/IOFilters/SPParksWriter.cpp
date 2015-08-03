@@ -198,10 +198,10 @@ int32_t SPParksWriter::writeFile()
     return getErrorCondition();
   }
 
-  uint64_t millis = QDateTime::currentMSecsSinceEpoch();
-  uint64_t currentMillis = millis;
-  uint64_t startMillis = millis;
-  uint64_t estimatedTime = 0;
+  qint64 millis = QDateTime::currentMSecsSinceEpoch();
+  qint64 currentMillis = millis;
+  qint64 startMillis = millis;
+  qint64 estimatedTime = 0;
   float timeDiff = 0.0f;
 
   int64_t increment = static_cast<int64_t>(totalpoints * 0.01f);
@@ -229,9 +229,11 @@ int32_t SPParksWriter::writeFile()
       }
     }
     count++;
-    double temp0 = 0.0;
-    double temp1 = 0.0;
-    outfile << k + 1 << " " << m_FeatureIds[k] << " " << temp0 << " " << temp1 << "\n";
+//    double temp0 = 0.0;
+//    double temp1 = 0.0;
+    outfile << k + 1 << " " << m_FeatureIds[k]
+               /* << " " << temp0 << " " << temp1 */
+               << "\n";
   }
   outfile.close();
 
