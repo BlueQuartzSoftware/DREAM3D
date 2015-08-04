@@ -320,3 +320,5 @@ while read -u 9 line
 done
 exec 9<&-
 
+rm -rf ${tmpFile}
+

@@ -63,6 +63,9 @@ class NeighborCICorrelation : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, ConfidenceIndexArrayPath)
     Q_PROPERTY(DataArrayPath ConfidenceIndexArrayPath READ getConfidenceIndexArrayPath WRITE setConfidenceIndexArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(int, SelectedComparison)
+    Q_PROPERTY(int SelectedComparison READ getSelectedComparison WRITE setSelectedComparison)
+
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */
