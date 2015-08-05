@@ -18,6 +18,7 @@ START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}" "Generic
 # List your public filters here
 
 set(_PublicFilters
+  ConditionalSetValue
   ConvertData
   CopyAttributeArray
   CopyAttributeMatrix
