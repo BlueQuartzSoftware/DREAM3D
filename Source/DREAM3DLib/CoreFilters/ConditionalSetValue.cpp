@@ -149,7 +149,7 @@ void replaceValue(AbstractFilter* filter, IDataArray::Pointer inDataPtr, BoolArr
   T* inData = inputArrayPtr->getPointer(0);
   bool* condData = condDataPtr->getPointer(0);
   size_t numTuples = inputArrayPtr->getNumberOfTuples();
-  
+
   for (size_t iter = 0; iter < numTuples; iter++)
   {
     if (condData[iter] == true) { inData[iter] = replaceVal; }
@@ -198,7 +198,7 @@ void ConditionalSetValue::dataCheck()
   else if (dType.compare(DREAM3D::TypeNames::UInt64) == 0) { checkValuesInt<uint64_t>(this, m_ReplaceValue, DREAM3D::TypeNames::UInt64); }
   else if (dType.compare(DREAM3D::TypeNames::Float) == 0) { checkValuesFloatDouble<float>(this, m_ReplaceValue, DREAM3D::TypeNames::Float); }
   else if (dType.compare(DREAM3D::TypeNames::Double) == 0) { checkValuesFloatDouble<double>(this, m_ReplaceValue, DREAM3D::TypeNames::Double); }
-  else if (dType.compare(DREAM3D::TypeNames::Bool) == 0) 
+  else if (dType.compare(DREAM3D::TypeNames::Bool) == 0)
   {
     if (m_ReplaceValue != 0.0)
     {
@@ -237,7 +237,7 @@ void ConditionalSetValue::execute()
   { return; }
 
   EXECUTE_FUNCTION_TEMPLATE(this, replaceValue, m_ArrayPtr.lock(), this, m_ArrayPtr.lock(), m_ConditionalArrayPtr.lock(), m_ReplaceValue)
-  
+
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
@@ -277,4 +277,4 @@ const QString ConditionalSetValue::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString ConditionalSetValue::getHumanLabel()
-{ return "Replace Value in Array"; }
+{ return "Replace Value in Array (Conditional)"; }

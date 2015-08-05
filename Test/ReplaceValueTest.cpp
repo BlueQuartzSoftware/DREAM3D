@@ -186,7 +186,6 @@ void validateReplacedValues(IDataArray::Pointer iArray)
   typename DataArray<T>::Pointer dataArrayPtr = boost::dynamic_pointer_cast<DataArray<T> >(iArray);
   T* dataArray = dataArrayPtr->getPointer(0);
   size_t numTuples = dataArrayPtr->getNumberOfTuples();
-  int32_t numComps = dataArrayPtr->getNumberOfComponents();
 
   for (size_t i = 0; i < numTuples; i++)
   {
