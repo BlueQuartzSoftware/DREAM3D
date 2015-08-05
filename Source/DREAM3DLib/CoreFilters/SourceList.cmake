@@ -38,6 +38,7 @@ set(_PublicFilters
   RenameAttributeArray
   RenameAttributeMatrix
   RenameDataContainer
+  ReplaceValueInArray
   ScaleVolume
   SetOriginResolutionImageGeom
 )
