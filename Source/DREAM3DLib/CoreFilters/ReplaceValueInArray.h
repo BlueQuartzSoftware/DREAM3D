@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @brief The ReplaceValueInArray class. See [Filter documentation](@ref ReplaceValueInArray) for details.
+ * @brief The ReplaceValueInArray class. See [Filter documentation](@ref replacevalueinarray) for details.
  */
 class DREAM3DLib_EXPORT ReplaceValueInArray : public AbstractFilter
 {
@@ -56,7 +56,7 @@ class DREAM3DLib_EXPORT ReplaceValueInArray : public AbstractFilter
     virtual ~ReplaceValueInArray();
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedArray)
-      Q_PROPERTY(DataArrayPath SelectedArray READ getSelectedArray WRITE setSelectedArray)
+    Q_PROPERTY(DataArrayPath SelectedArray READ getSelectedArray WRITE setSelectedArray)
 
     DREAM3D_FILTER_PARAMETER(double, RemoveValue)
     Q_PROPERTY(double RemoveValue READ getRemoveValue WRITE setRemoveValue)

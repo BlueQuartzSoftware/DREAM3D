@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @brief The ConditionalSetValue class. See [Filter documentation](@ref ConditionalSetValue) for details.
+ * @brief The ConditionalSetValue class. See [Filter documentation](@ref conditionalsetvalue) for details.
  */
 class DREAM3DLib_EXPORT ConditionalSetValue : public AbstractFilter
 {

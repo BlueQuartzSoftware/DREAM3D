@@ -1,4 +1,4 @@
-Replace Value In Array {#replacevalueinarray}
+Replace Value in Array {#replacevalueinarray}
 =============
 
 ## Group (Subgroup) ##
@@ -25,7 +25,7 @@ This **Filter** replaces a user specified value in a user specified **Attribute 
 ## Parameters ##
 | Name             | Type | Description |
 |------------------|------|-------------|
-| Value to Remove | double | Value to be removed from array |
+| Value to Replace | double | Value to be removed from array |
 | New Value | double | Value to replace the removed values in the array |
 
 ## Required Geometry ##

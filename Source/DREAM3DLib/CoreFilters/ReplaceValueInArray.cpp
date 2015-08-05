@@ -120,7 +120,6 @@ void checkValuesInt(AbstractFilter* filter, double removeValue, double replaceVa
     filter->setErrorCondition(-100);
     filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -161,7 +160,7 @@ void replaceValue(AbstractFilter* filter, IDataArray::Pointer inDataPtr, double 
 
   T* inData = inputArrayPtr->getPointer(0);
   size_t numTuples = inputArrayPtr->getNumberOfTuples();
-  
+
   for (size_t iter = 0; iter < numTuples; iter++)
   {
     if (inData[iter] == removeVal) { inData[iter] = replaceVal; }
@@ -197,7 +196,7 @@ void ReplaceValueInArray::dataCheck()
   else if (dType.compare(DREAM3D::TypeNames::UInt64) == 0) { checkValuesInt<uint64_t>(this, m_RemoveValue, m_ReplaceValue, DREAM3D::TypeNames::UInt64); }
   else if (dType.compare(DREAM3D::TypeNames::Float) == 0) { checkValuesFloatDouble<float>(this, m_RemoveValue, m_ReplaceValue, DREAM3D::TypeNames::Float); }
   else if (dType.compare(DREAM3D::TypeNames::Double) == 0) { checkValuesFloatDouble<double>(this, m_RemoveValue, m_ReplaceValue, DREAM3D::TypeNames::Double); }
-  else if (dType.compare(DREAM3D::TypeNames::Bool) == 0) 
+  else if (dType.compare(DREAM3D::TypeNames::Bool) == 0)
   {
     if (m_RemoveValue != 0.0)
     {
@@ -240,7 +239,7 @@ void ReplaceValueInArray::execute()
   { return; }
 
   EXECUTE_FUNCTION_TEMPLATE(this, replaceValue, m_ArrayPtr.lock(), this, m_ArrayPtr.lock(), m_RemoveValue, m_ReplaceValue)
-  
+
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
 }

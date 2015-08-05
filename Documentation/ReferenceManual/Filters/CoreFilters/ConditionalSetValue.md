@@ -1,4 +1,4 @@
-Conditionally Set Values in Array {#conditionalsetvalue}
+Replace Value in Array (Conditional) {#conditionalsetvalue}
 =============
 
 ## Group (Subgroup) ##
@@ -33,8 +33,8 @@ Not Applicable
 ## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|----------------|
-| Any **Attribute Array** | None | Any | (1) | Path to **Attribute Array** that will have values replaced |
 | Any **Attribute Array** | None | Bool | (1) | Path to conditional **Attribute Array** that will determine which values/entries will be replaced |
+| Any **Attribute Array** | None | Any | (1) | Path to **Attribute Array** that will have values replaced |
 
 ## Created Objects ##
 None
