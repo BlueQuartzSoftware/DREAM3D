@@ -88,6 +88,8 @@ InsertPrecipitatePhases::InsertPrecipitatePhases() :
   m_AxisEulerAnglesArrayName(DREAM3D::FeatureData::AxisEulerAngles),
   m_AxisLengthsArrayName(DREAM3D::FeatureData::AxisLengths),
   m_NumFeaturesArrayPath(DREAM3D::Defaults::SyntheticVolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::NumFeatures),
+  m_MaskArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Mask),
+  m_UseMask(false),
   m_FeatureIds(NULL),
   m_CellPhases(NULL),
   m_BoundaryCells(NULL),
@@ -96,6 +98,7 @@ InsertPrecipitatePhases::InsertPrecipitatePhases() :
   m_AxisLengths(NULL),
   m_Volumes(NULL),
   m_Omega3s(NULL),
+  m_Mask(NULL),
   m_EquivalentDiameters(NULL),
   m_FeaturePhases(NULL),
   m_NumCells(NULL),
@@ -107,7 +110,7 @@ InsertPrecipitatePhases::InsertPrecipitatePhases() :
   m_FirstPrecipitateFeature  = 1;
   Seed = QDateTime::currentMSecsSinceEpoch();
   m_SizeX = m_SizeY = m_SizeZ = 0.0f;
-  m_XRes = m_YRes = m_ZRes = m_TotalVol = 0.0f;
+  m_XRes = m_YRes = m_ZRes = m_TotalVol = m_UseableTotalVol = 0.0f;
   m_XPoints = m_YPoints = m_ZPoints = m_TotalPoints = 0;
 
   m_EllipsoidOps = EllipsoidOps::New();
@@ -149,11 +152,14 @@ void InsertPrecipitatePhases::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(BooleanFilterParameter::New("Periodic Boundaries", "PeriodicBoundaries", getPeriodicBoundaries(), FilterParameter::Parameter));
   parameters.push_back(BooleanFilterParameter::New("Match Radial Distribution Function", "MatchRDF", getMatchRDF(), FilterParameter::Parameter));
+  QStringList linkedProps("MaskArrayPath");
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask", "UseMask", getUseMask(), linkedProps, FilterParameter::Parameter));
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray));
   parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray));
   parameters.push_back(DataArraySelectionFilterParameter::New("Boundary Cells", "BoundaryCellsArrayPath", getBoundaryCellsArrayPath(), FilterParameter::RequiredArray));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "MaskArrayPath", getMaskArrayPath(), FilterParameter::RequiredArray));
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray));
@@ -164,7 +170,8 @@ void InsertPrecipitatePhases::setupFilterParameters()
   parameters.push_back(DataArraySelectionFilterParameter::New("Shape Types", "InputShapeTypesArrayPath", getInputShapeTypesArrayPath(), FilterParameter::RequiredArray));
   parameters.push_back(DataArraySelectionFilterParameter::New("Number of Features", "NumFeaturesArrayPath", getNumFeaturesArrayPath(), FilterParameter::RequiredArray));
 
-  QStringList linkedProps("PrecipInputFile");
+  linkedProps.clear();
+  linkedProps << "PrecipInputFile";
   parameters.push_back(LinkedBooleanFilterParameter::New("Already Have Precipitates", "HavePrecips", getHavePrecips(), linkedProps, FilterParameter::Parameter));
   parameters.push_back(InputFileFilterParameter::New("Precipitate Input File", "PrecipInputFile", getPrecipInputFile(), FilterParameter::Parameter, "*.txt", "Text File"));
   linkedProps.clear();
@@ -188,9 +195,11 @@ void InsertPrecipitatePhases::readFilterParameters(AbstractFilterParametersReade
   setBoundaryCellsArrayPath(reader->readDataArrayPath("BoundaryCellsArrayPath", getBoundaryCellsArrayPath() ) );
   setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath() ) );
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
-  setPeriodicBoundaries( reader->readValue("PeriodicBoundaries", getPeriodicBoundaries()) );
+  setMaskArrayPath(reader->readDataArrayPath("MaskArrayPath", getMaskArrayPath()));
+  setPeriodicBoundaries(reader->readValue("PeriodicBoundaries", getPeriodicBoundaries()));
   setMatchRDF(reader->readValue("MatchRDF", getMatchRDF()));
-  setHavePrecips( reader->readValue("HavePrecips", getHavePrecips()) );
+  setUseMask(reader->readValue("UseMask", getUseMask()));
+  setHavePrecips(reader->readValue("HavePrecips", getHavePrecips()));
   setPrecipInputFile( reader->readString( "PrecipInputFile", getPrecipInputFile() ) );
   setWriteGoalAttributes( reader->readValue("WriteGoalAttributes", getWriteGoalAttributes()) );
   setCsvOutputFile( reader->readString( "CsvOutputFile", getCsvOutputFile() ) );
@@ -212,7 +221,9 @@ int InsertPrecipitatePhases::writeFilterParameters(AbstractFilterParametersWrite
   DREAM3D_FILTER_WRITE_PARAMETER(BoundaryCellsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(MaskArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(PeriodicBoundaries)
+  DREAM3D_FILTER_WRITE_PARAMETER(UseMask)
   DREAM3D_FILTER_WRITE_PARAMETER(MatchRDF)
   DREAM3D_FILTER_WRITE_PARAMETER(HavePrecips)
   DREAM3D_FILTER_WRITE_PARAMETER(WriteGoalAttributes)
@@ -294,6 +305,14 @@ void InsertPrecipitatePhases::dataCheck()
   if( NULL != m_BoundaryCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_BoundaryCells = m_BoundaryCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() >= 0) { cellDataArrayPaths.push_back(getBoundaryCellsArrayPath()); }
+
+  if (m_UseMask == true)
+  {
+    m_MaskPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getMaskArrayPath(), cDims);
+    if (NULL != m_MaskPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_Mask = m_MaskPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    if (getErrorCondition() >= 0) { cellDataArrayPaths.push_back(getMaskArrayPath()); }
+  }
 
   // Feature Data
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this,  getFeaturePhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -555,6 +574,10 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   DimType dims[3] =
   { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[1]), static_cast<DimType>(udims[2]), };
 
+  m_XPoints = static_cast<int64_t>(dims[0]);
+  m_YPoints = static_cast<int64_t>(dims[1]);
+  m_ZPoints = static_cast<int64_t>(dims[2]);
+  m_TotalPoints = dims[0] * dims[1] * dims[2];
   m_XRes = m->getGeometryAs<ImageGeom>()->getXRes();
   m_YRes = m->getGeometryAs<ImageGeom>()->getYRes();
   m_ZRes = m->getGeometryAs<ImageGeom>()->getZRes();
@@ -562,10 +585,18 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   m_SizeY = dims[1] * m_YRes;
   m_SizeZ = dims[2] * m_ZRes;
   m_TotalVol = m_SizeX * m_SizeY * m_SizeZ;
-  m_XPoints = static_cast<int64_t>(dims[0]);
-  m_YPoints = static_cast<int64_t>(dims[1]);
-  m_ZPoints = static_cast<int64_t>(dims[2]);
-  m_TotalPoints = dims[0] * dims[1] * dims[2];
+  if (m_UseMask == false) { m_UseableTotalVol = m_TotalVol; }
+  else if (m_UseMask == true)
+  {
+    float cellVol = m_XRes * m_YRes * m_ZRes;
+    for (int64_t i = 0; i < m_TotalPoints; i++)
+    {
+      if (m_Mask[i] == false)
+      {
+        m_UseableTotalVol += cellVol;
+      }
+    }
+  }
 
   // figure out how many grains we already have so we can start the counter at +1 this
 
@@ -670,7 +701,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   for (size_t j = 0; j < precipitatephases.size(); ++j)
   {
     curphasevol[j] = 0;
-    float curphasetotalvol = static_cast<float>(m_TotalVol * totalprecipitatefractions * precipitatephasefractions[j]);
+    float curphasetotalvol = static_cast<float>(m_UseableTotalVol * totalprecipitatefractions * precipitatephasefractions[j]);
     while (curphasevol[j] < (factor * curphasetotalvol))
     {
       iter++;
@@ -1505,7 +1536,7 @@ void InsertPrecipitatePhases::determine_currentRDF(int32_t gnum, int32_t add, bo
     }
   }
 
-  m_rdfCurrentDistNorm = normalizeRDF(m_rdfCurrentDist, m_numRDFbins, m_StepSize, m_rdfMin, numPPTfeatures, m_TotalVol);
+  m_rdfCurrentDistNorm = normalizeRDF(m_rdfCurrentDist, m_numRDFbins, m_StepSize, m_rdfMin, numPPTfeatures);
 }
 
 // -----------------------------------------------------------------------------
@@ -1558,7 +1589,7 @@ void InsertPrecipitatePhases::determine_randomRDF(size_t gnum, int32_t add, bool
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<float> InsertPrecipitatePhases::normalizeRDF(std::vector<float> rdf, int32_t num_bins, float m_StepSize, float rdfmin, int32_t numPPTfeatures, float volume)
+std::vector<float> InsertPrecipitatePhases::normalizeRDF(std::vector<float> rdf, int32_t num_bins, float m_StepSize, float rdfmin, int32_t numPPTfeatures)
 {
   //  //Normalizing the RDF by number density of particles (4/3*pi*(r2^3-r1^3)*numPPTfeatures/volume)
   //  float normfactor;
@@ -2045,6 +2076,7 @@ void InsertPrecipitatePhases::assign_voxels()
   int32_t gnum = 0;
   for (size_t i = 0; i < static_cast<size_t>(totalPoints); i++)
   {
+    if (m_UseMask == true && m_Mask[i] == false) { m_FeatureIds[i] = 0; }
     gnum = m_FeatureIds[i];
     if (gnum >= 0) { activeObjects[gnum] = true; }
   }

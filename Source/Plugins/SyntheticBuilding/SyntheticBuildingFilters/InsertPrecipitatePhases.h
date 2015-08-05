@@ -79,6 +79,12 @@ class InsertPrecipitatePhases : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, CsvOutputFile)
     Q_PROPERTY(QString CsvOutputFile READ getCsvOutputFile WRITE setCsvOutputFile)
 
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, MaskArrayPath)
+    Q_PROPERTY(DataArrayPath MaskArrayPath READ getMaskArrayPath WRITE setMaskArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(bool, UseMask)
+    Q_PROPERTY(bool UseMask READ getUseMask WRITE setUseMask)
+
     DREAM3D_FILTER_PARAMETER(bool, HavePrecips)
     Q_PROPERTY(bool HavePrecips READ getHavePrecips WRITE setHavePrecips)
 
@@ -321,7 +327,7 @@ class InsertPrecipitatePhases : public AbstractFilter
      * @param volume Volume for a given precipitate
      * @return Normalized RDF
      */
-    std::vector<float> normalizeRDF(std::vector<float> rdf, int num_bins, float stepsize, float rdfmin, int32_t numPPTfeatures, float volume);
+    std::vector<float> normalizeRDF(std::vector<float> rdf, int num_bins, float stepsize, float rdfmin, int32_t numPPTfeatures);
 
     /**
      * @brief check_RDFerror Computes the error between the current radial distribution function
@@ -400,22 +406,19 @@ class InsertPrecipitatePhases : public AbstractFilter
     float m_YRes;
     float m_ZRes;
     float m_TotalVol;
+    float m_UseableTotalVol;
     int64_t m_XPoints;
     int64_t m_YPoints;
     int64_t m_ZPoints;
     int64_t m_TotalPoints;
 
-    QMap<uint32_t, ShapeOps*> m_ShapeOps;
-    ShapeOps::Pointer m_UnknownShapeOps;
-    ShapeOps::Pointer m_CubicOctohedronOps;
-    ShapeOps::Pointer m_CylinderOps;
-    ShapeOps::Pointer m_EllipsoidOps;
-    ShapeOps::Pointer m_SuperEllipsoidOps;
-
+    // Cell Data - make sure these are all initialized to NULL in the constructor
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_DATAARRAY_VARIABLE(bool, Mask)
     DEFINE_DATAARRAY_VARIABLE(int8_t, BoundaryCells)
 
+    // Feature Data - make sure these are all initialized to NULL in the constructor
     DEFINE_DATAARRAY_VARIABLE(float, AxisEulerAngles)
     DEFINE_DATAARRAY_VARIABLE(float, Centroids)
     DEFINE_DATAARRAY_VARIABLE(float, AxisLengths)
@@ -426,14 +429,22 @@ class InsertPrecipitatePhases : public AbstractFilter
     DEFINE_DATAARRAY_VARIABLE(int32_t, NumCells)
     NeighborList<float>::WeakPointer m_ClusteringList;
 
+    // Ensemble Data - make sure these are all initialized to NULL in the constructor
     DEFINE_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
     DEFINE_DATAARRAY_VARIABLE(uint32_t, ShapeTypes)
     DEFINE_DATAARRAY_VARIABLE(int32_t, NumFeatures)
 
+    // All other private variables
+    QMap<uint32_t, ShapeOps*> m_ShapeOps;
+    ShapeOps::Pointer m_UnknownShapeOps;
+    ShapeOps::Pointer m_CubicOctohedronOps;
+    ShapeOps::Pointer m_CylinderOps;
+    ShapeOps::Pointer m_EllipsoidOps;
+    ShapeOps::Pointer m_SuperEllipsoidOps;
+    OrthoRhombicOps::Pointer m_OrthoOps;
+
     int64_t* m_Neighbors;
     StatsDataArray::WeakPointer m_StatsDataArray;
-
-    OrthoRhombicOps::Pointer m_OrthoOps;
 
     std::vector<std::vector<int64_t> > columnlist;
     std::vector<std::vector<int64_t> > rowlist;
