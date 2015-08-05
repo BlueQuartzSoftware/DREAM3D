@@ -1,11 +1,11 @@
-Replace Value In Array {#replacevalueinarray}
+Conditionally Set Values in Array {#conditionalsetvalue}
 =============
 
 ## Group (Subgroup) ##
 Core (Misc)
 
 ## Description ##
-This **Filter** replaces a user specified value in a user specified **Attribute Array** with a second user specified value. For example, if the user entered a *Remove Value* of *2.0* and a *Replace Value* of *5.5*, then every occurence of 2.0 in the selected **Attribute Array** would be changed to 5.5. Below are the ranges for the values that can be entered for the different primitive types of arrays (for user reference). The selected **Attribute Array** must be a scalar array.
+This **Filter** replaces values in a user specified **Attribute Array** with a user specified value, but only when a second boolean **Attribute Array** specifies. For example, if the user entered a *Replace Value* of *5.5*, then for every occurence of *true* in the conditional boolean array, the selected **Attribute Array** would be changed to 5.5. Below are the ranges for the values that can be entered for the different primitive types of arrays (for user reference). The selected **Attribute Array** must be a scalar array.
     
 ### Primitive Data Types ##
 | Type             | Size |        Range       |
@@ -25,7 +25,6 @@ This **Filter** replaces a user specified value in a user specified **Attribute 
 ## Parameters ##
 | Name             | Type | Description |
 |------------------|------|-------------|
-| Value to Remove | double | Value to be removed from array |
 | New Value | double | Value to replace the removed values in the array |
 
 ## Required Geometry ##
@@ -35,10 +34,10 @@ Not Applicable
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|----------------|
 | Any **Attribute Array** | None | Any | (1) | Path to **Attribute Array** that will have values replaced |
+| Any **Attribute Array** | None | Bool | (1) | Path to conditional **Attribute Array** that will determine which values/entries will be replaced |
 
 ## Created Objects ##
 None
-
 
 ## License & Copyright ##
 
