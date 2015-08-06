@@ -64,10 +64,6 @@
 #include "DREAM3DLib/StatsData/PrimaryStatsData.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "DREAM3DLib/Utilities/TimeUtilities.h"
-#include "DREAM3DLib/Geometry/ShapeOps/CubeOctohedronOps.h"
-#include "DREAM3DLib/Geometry/ShapeOps/CylinderOps.h"
-#include "DREAM3DLib/Geometry/ShapeOps/EllipsoidOps.h"
-#include "DREAM3DLib/Geometry/ShapeOps/SuperEllipsoidOps.h"
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 
@@ -270,16 +266,7 @@ PackPrimaryPhases::PackPrimaryPhases() :
 {
   m_StatsDataArray = StatsDataArray::NullPointer();
 
-  m_EllipsoidOps = EllipsoidOps::New();
-  m_ShapeOps[DREAM3D::ShapeType::EllipsoidShape] = m_EllipsoidOps.get();
-  m_SuperEllipsoidOps = SuperEllipsoidOps::New();
-  m_ShapeOps[DREAM3D::ShapeType::SuperEllipsoidShape] = m_SuperEllipsoidOps.get();
-  m_CubicOctohedronOps = CubeOctohedronOps::New();
-  m_ShapeOps[DREAM3D::ShapeType::CubeOctahedronShape] = m_CubicOctohedronOps.get();
-  m_CylinderOps = CylinderOps::New();
-  m_ShapeOps[DREAM3D::ShapeType::CylinderShape] = m_CylinderOps.get();
-  m_UnknownShapeOps = ShapeOps::New();
-  m_ShapeOps[DREAM3D::ShapeType::UnknownShapeType] = m_UnknownShapeOps.get();
+  m_ShapeOps = ShapeOps::getShapeOpsQVector();
 
   m_OrthoOps = OrthoRhombicOps::New();
 
@@ -2032,9 +2019,10 @@ void PackPrimaryPhases::insert_feature(size_t gnum)
   }
 
   // init any values for each of the Shape Ops
-  for (QMap<uint32_t, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops)
+  // init any values for each of the Shape Ops
+  for (size_t iter = 0; iter < m_ShapeOps.size(); iter++)
   {
-    ops.value()->init();
+    m_ShapeOps[iter]->init();
   }
   // Create our Argument Map
   QMap<ShapeOps::ArgName, float> shapeArgMap;
@@ -2193,9 +2181,10 @@ void PackPrimaryPhases::assign_voxels()
     }
 
     // init any values for each of the Shape Ops
-    for (QMap<uint32_t, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
+    // init any values for each of the Shape Ops
+    for (size_t iter = 0; iter < m_ShapeOps.size(); iter++)
     {
-      ops.value()->init();
+      m_ShapeOps[iter]->init();
     }
     // Create our Argument Map
     QMap<ShapeOps::ArgName, float> shapeArgMap;
@@ -2246,7 +2235,7 @@ void PackPrimaryPhases::assign_voxels()
 
     float radCur[3] = { radcur1, radcur2, radcur3 };
     float xx[3] = {xc, yc, zc };
-    ShapeOps* shapeOps = m_ShapeOps[shapeclass];
+    ShapeOps* shapeOps = m_ShapeOps[shapeclass].get();
     //#if 0
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)

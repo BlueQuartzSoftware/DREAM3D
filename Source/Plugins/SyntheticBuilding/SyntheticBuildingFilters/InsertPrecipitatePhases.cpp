@@ -51,10 +51,6 @@
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 #include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-#include "DREAM3DLib/Geometry/ShapeOps/CubeOctohedronOps.h"
-#include "DREAM3DLib/Geometry/ShapeOps/CylinderOps.h"
-#include "DREAM3DLib/Geometry/ShapeOps/EllipsoidOps.h"
-#include "DREAM3DLib/Geometry/ShapeOps/SuperEllipsoidOps.h"
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 
@@ -113,16 +109,7 @@ InsertPrecipitatePhases::InsertPrecipitatePhases() :
   m_XRes = m_YRes = m_ZRes = m_TotalVol = m_UseableTotalVol = 0.0f;
   m_XPoints = m_YPoints = m_ZPoints = m_TotalPoints = 0;
 
-  m_EllipsoidOps = EllipsoidOps::New();
-  m_ShapeOps[DREAM3D::ShapeType::EllipsoidShape] = m_EllipsoidOps.get();
-  m_SuperEllipsoidOps = SuperEllipsoidOps::New();
-  m_ShapeOps[DREAM3D::ShapeType::SuperEllipsoidShape] = m_SuperEllipsoidOps.get();
-  m_CubicOctohedronOps = CubeOctohedronOps::New();
-  m_ShapeOps[DREAM3D::ShapeType::CubeOctahedronShape] = m_CubicOctohedronOps.get();
-  m_CylinderOps = CylinderOps::New();
-  m_ShapeOps[DREAM3D::ShapeType::CylinderShape] = m_CylinderOps.get();
-  m_UnknownShapeOps = ShapeOps::New();
-  m_ShapeOps[DREAM3D::ShapeType::UnknownShapeType] = m_UnknownShapeOps.get();
+  m_ShapeOps = ShapeOps::getShapeOpsQVector();
 
   m_ClusteringList = NeighborList<float>::NullPointer();
   m_StatsDataArray = StatsDataArray::NullPointer();
@@ -591,7 +578,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     float cellVol = m_XRes * m_YRes * m_ZRes;
     for (int64_t i = 0; i < m_TotalPoints; i++)
     {
-      if (m_Mask[i] == false)
+      if (m_Mask[i] == true)
       {
         m_UseableTotalVol += cellVol;
       }
@@ -1841,9 +1828,9 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
   }
 
   // init any values for each of the Shape Ops
-  for (QMap<uint32_t, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops)
+  for (size_t iter = 0; iter < m_ShapeOps.size(); iter++)
   {
-    ops.value()->init();
+    m_ShapeOps[iter]->init();
   }
   // Create our Argument Map
   QMap<ShapeOps::ArgName, float> shapeArgMap;
@@ -1970,9 +1957,9 @@ void InsertPrecipitatePhases::assign_voxels()
     uint32_t shapeclass = m_ShapeTypes[m_FeaturePhases[i]];
 
     // init any values for each of the Shape Ops
-    for (QMap<uint32_t, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
+    for (size_t iter = 0; iter < m_ShapeOps.size(); iter++)
     {
-      ops.value()->init();
+      m_ShapeOps[iter]->init();
     }
     // Create our Argument Map
     QMap<ShapeOps::ArgName, float> shapeArgMap;

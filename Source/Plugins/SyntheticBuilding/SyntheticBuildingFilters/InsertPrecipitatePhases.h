@@ -435,7 +435,7 @@ class InsertPrecipitatePhases : public AbstractFilter
     DEFINE_DATAARRAY_VARIABLE(int32_t, NumFeatures)
 
     // All other private variables
-    QMap<uint32_t, ShapeOps*> m_ShapeOps;
+    QVector<ShapeOps::Pointer> m_ShapeOps;
     ShapeOps::Pointer m_UnknownShapeOps;
     ShapeOps::Pointer m_CubicOctohedronOps;
     ShapeOps::Pointer m_CylinderOps;

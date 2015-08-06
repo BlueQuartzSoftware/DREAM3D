@@ -392,7 +392,7 @@ class PackPrimaryPhases : public AbstractFilter
     StatsDataArray::WeakPointer m_StatsDataArray;
 
     // All other private variables
-    QMap<uint32_t, ShapeOps*> m_ShapeOps;
+    QVector<ShapeOps::Pointer> m_ShapeOps;
     ShapeOps::Pointer m_UnknownShapeOps;
     ShapeOps::Pointer m_CubicOctohedronOps;
     ShapeOps::Pointer m_CylinderOps;

@@ -64,7 +64,9 @@ float CylinderOps::radcur1(QMap<ArgName, float> args)
   float bovera = args[B_OverA];
   float covera = args[C_OverA];
 
-  radcur1 = static_cast<float>( (volcur * (1.0 / DREAM3D::Constants::k_Pi) * (1.0 / bovera) * (1.0 / covera)) );
+  //the 2.0f over the covera value is because the equation for volume is pi*a*b*h where a and b are semi axis lengths, but
+  //h is a full axis length - meaning h = 2c
+  radcur1 = static_cast<float>( (volcur * (1.0f / DREAM3D::Constants::k_Pi) * (1.0f / bovera) * (2.0f / covera)) );
   radcur1 = powf(radcur1, 0.333333333333f);
   return radcur1;
 }

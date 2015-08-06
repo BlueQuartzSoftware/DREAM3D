@@ -760,6 +760,7 @@ namespace DREAM3D
     const unsigned int SuperEllipsoidShape = 1; //!<
     const unsigned int CubeOctahedronShape = 2; //!<
     const unsigned int CylinderShape = 3; //!<
+    const unsigned int ShapeTypeEnd = 4;
     const unsigned int UnknownShapeType = 999; //!<
   }
 
