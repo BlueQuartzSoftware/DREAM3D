@@ -271,7 +271,7 @@ const QString ConditionalSetValue::getGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString ConditionalSetValue::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::MiscFilters; }
+{ return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
 
 // -----------------------------------------------------------------------------
 //

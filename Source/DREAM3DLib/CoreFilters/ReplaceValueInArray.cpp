@@ -273,7 +273,7 @@ const QString ReplaceValueInArray::getGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString ReplaceValueInArray::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::MiscFilters; }
+{ return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
 
 // -----------------------------------------------------------------------------
 //
