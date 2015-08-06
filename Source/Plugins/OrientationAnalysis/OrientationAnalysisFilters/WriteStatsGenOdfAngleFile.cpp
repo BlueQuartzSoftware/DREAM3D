@@ -79,7 +79,7 @@ WriteStatsGenOdfAngleFile::WriteStatsGenOdfAngleFile() :
   m_OutputFile(""),
   m_CellPhasesArrayPath("", "", ""),
   m_CellEulerAnglesArrayPath("", "", ""),
-  m_ConvertToDegrees(true),
+  m_ConvertToDegrees(false),
   m_UseGoodVoxels(false),
   m_GoodVoxelsArrayPath("", "", "")
 {
