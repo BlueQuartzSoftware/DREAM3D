@@ -250,17 +250,18 @@ function(AddQt5Plugins)
         set(QTCONF_DIR ".")
         set(QTPLUGINS_DIR "")
       endif()
+
       # Create the qt.conf file so that the image plugins will be loaded correctly
-      FILE(WRITE ${PROJECT_BINARY_DIR}/${QTCONF_DIR}/qt.conf "[Paths]\nPlugins = ${QTPLUGINS_DIR}Plugins\n")
-      FILE(APPEND ${PROJECT_BINARY_DIR}/${QTCONF_DIR}/qt.conf "Prefix = .\n")
-      FILE(APPEND ${PROJECT_BINARY_DIR}/${QTCONF_DIR}/qt.conf "LibraryExecutables = .\n")
-      
-      install(FILES ${PROJECT_BINARY_DIR}/${QTCONF_DIR}/qt.conf
+      FILE(WRITE ${PROJECT_BINARY_DIR}/qt.conf "[Paths]\nPlugins = ${QTPLUGINS_DIR}Plugins\n")
+      FILE(APPEND ${PROJECT_BINARY_DIR}/qt.conf "Prefix = .\n")
+      FILE(APPEND ${PROJECT_BINARY_DIR}/qt.conf "LibraryExecutables = .\n")
+
+      install(FILES ${PROJECT_BINARY_DIR}/qt.conf
               DESTINATION ${QTCONF_DIR}
               COMPONENT Applications)
   endif()
 
-
+ 
   #file(APPEND ${P_LIBRARY_SEARCH_FILE} "${QT_PLUGINS_DIR}/${plugintype};")
 endfunction()
 

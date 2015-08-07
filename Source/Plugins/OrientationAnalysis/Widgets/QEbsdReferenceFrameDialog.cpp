@@ -53,14 +53,17 @@
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMessageBox>
 
-#include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/TSL/AngConstants.h"
 #include "EbsdLib/HKL/CtfConstants.h"
 
-#include "DREAM3DLib/DataContainers/DataContainer.h"
+#include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/DataContainers/DataContainer.h"
+#include "DREAM3DLib/FilterParameters/FilterParameter.h"
+
 
 #include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
 
@@ -283,16 +286,9 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
   if(fi.suffix().compare(Ebsd::Ang::FileExtLower) == 0)
   {
     ReadAngData::Pointer reader = ReadAngData::New();
-
     reader->setInputFile(m_EbsdFileName);
     reader->setDataContainerArray(dca);
     reader->execute();
-    dcName = reader->getDataContainerName();
-    cellAttrMatName = reader->getCellAttributeMatrixName();
-    cellEnsembleName = reader->getCellEnsembleAttributeMatrixName();
-    cellPhasesArrayPath = DataArrayPath(dcName, cellAttrMatName, Ebsd::AngFile::Phases);
-    cellEulerAnglesArrayPath = DataArrayPath(dcName, cellAttrMatName, Ebsd::AngFile::EulerAngles);
-    crystalStructuresArrayPath = DataArrayPath(dcName, cellEnsembleName, Ebsd::AngFile::CrystalStructures);
     int err = reader->getErrorCondition();
     if (err < 0)
     {
@@ -309,6 +305,12 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
       m_DisplayedImage = QImage();
       return;
     }
+    dcName = reader->getDataContainerName();
+    cellAttrMatName = reader->getCellAttributeMatrixName();
+    cellEnsembleName = reader->getCellEnsembleAttributeMatrixName();
+    cellPhasesArrayPath = DataArrayPath(dcName, cellAttrMatName, Ebsd::AngFile::Phases);
+    cellEulerAnglesArrayPath = DataArrayPath(dcName, cellAttrMatName, Ebsd::AngFile::EulerAngles);
+    crystalStructuresArrayPath = DataArrayPath(dcName, cellEnsembleName, Ebsd::AngFile::CrystalStructures);
   }
   else if(fi.suffix().compare(Ebsd::Ctf::FileExt) == 0)
   {
@@ -316,20 +318,15 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
     reader->setInputFile(m_EbsdFileName);
     reader->setDataContainerArray(dca);
     reader->execute();
-    dcName = reader->getDataContainerName();
-    cellAttrMatName = reader->getCellAttributeMatrixName();
-    cellEnsembleName = reader->getCellEnsembleAttributeMatrixName();
-    cellPhasesArrayPath = DataArrayPath(dcName, cellAttrMatName, Ebsd::CtfFile::Phases);
-    cellEulerAnglesArrayPath = DataArrayPath(dcName, cellAttrMatName, Ebsd::CtfFile::EulerAngles);
-    crystalStructuresArrayPath = DataArrayPath(dcName, cellEnsembleName, Ebsd::CtfFile::CrystalStructures);
     int err = reader->getErrorCondition();
+
     if (err < 0)
     {
       QMessageBox msgBox;
-      msgBox.setText("Error Reading ANG File");
+      msgBox.setText("Error Reading CTF File");
       QString iText;
       QTextStream ss(&iText);
-      ss << "There was an error reading the ang file.\n. The error code returned was " << err;
+      ss << "There was an error reading the ctf file.\n. The error code returned was " << err;
       msgBox.setInformativeText(iText);
       msgBox.setStandardButtons(QMessageBox::Ok);
       msgBox.setDefaultButton(QMessageBox::Ok);
@@ -338,6 +335,12 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
       m_DisplayedImage = QImage();
       return;
     }
+    dcName = reader->getDataContainerName();
+    cellAttrMatName = reader->getCellAttributeMatrixName();
+    cellEnsembleName = reader->getCellEnsembleAttributeMatrixName();
+    cellPhasesArrayPath = DataArrayPath(dcName, cellAttrMatName, Ebsd::CtfFile::Phases);
+    cellEulerAnglesArrayPath = DataArrayPath(dcName, cellAttrMatName, Ebsd::CtfFile::EulerAngles);
+    crystalStructuresArrayPath = DataArrayPath(dcName, cellEnsembleName, Ebsd::CtfFile::CrystalStructures);
   }
 
   //If they want to convert the Eulers to Radians
@@ -370,7 +373,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
     else
     {
       QMessageBox msgBox;
-      msgBox.setText("Missing Dependent Filter");
+      msgBox.setText("Missing Dependent Filter to change Degrees to Radians");
       QString iText;
       QTextStream ss(&iText);
       ss << "A filter is needed to convert the data from Degrees to Radians. That filter is missing from this instance of the application. You can proceed with the import if you wish.";

@@ -34,52 +34,35 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _RegularGridSampleSurfaceMesh_H_
-#define _RegularGridSampleSurfaceMesh_H_
+#ifndef _ConditionalSetValue_H_
+#define _ConditionalSetValue_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
-
-#include "Sampling/SamplingFilters/SampleSurfaceMesh.h"
 
 /**
- * @brief The RegularGridSampleSurfaceMesh class. See [Filter documentation](@ref regulargridsamplesurfacemesh) for details.
+ * @brief The ConditionalSetValue class. See [Filter documentation](@ref conditionalsetvalue) for details.
  */
-class RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
+class DREAM3DLib_EXPORT ConditionalSetValue : public AbstractFilter
 {
-    Q_OBJECT
+    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(RegularGridSampleSurfaceMesh)
-    DREAM3D_STATIC_NEW_MACRO(RegularGridSampleSurfaceMesh)
-    DREAM3D_TYPE_MACRO_SUPER(RegularGridSampleSurfaceMesh, AbstractFilter)
 
-    virtual ~RegularGridSampleSurfaceMesh();
+    DREAM3D_SHARED_POINTERS(ConditionalSetValue)
+    DREAM3D_STATIC_NEW_MACRO(ConditionalSetValue)
+    DREAM3D_TYPE_MACRO_SUPER(ConditionalSetValue, AbstractFilter)
 
-    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
-    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+    virtual ~ConditionalSetValue();
 
-    DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-    Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
+    Q_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(int, XPoints)
-    Q_PROPERTY(int XPoints READ getXPoints WRITE setXPoints)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, ConditionalArrayPath)
+    Q_PROPERTY(DataArrayPath ConditionalArrayPath READ getConditionalArrayPath WRITE setConditionalArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(int, YPoints)
-    Q_PROPERTY(int YPoints READ getYPoints WRITE setYPoints)
-
-    DREAM3D_FILTER_PARAMETER(int, ZPoints)
-    Q_PROPERTY(int ZPoints READ getZPoints WRITE setZPoints)
-
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
-    Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
-
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, Origin)
-    Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
-
-    DREAM3D_FILTER_PARAMETER(QString, FeatureIdsArrayName)
-    Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
+    DREAM3D_FILTER_PARAMETER(double, ReplaceValue)
+    Q_PROPERTY(double ReplaceValue READ getReplaceValue WRITE setReplaceValue)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -131,31 +114,43 @@ class RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
     */
     virtual void preflight();
 
+  signals:
+    /**
+     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+     * be pushed from a user-facing control (such as a widget)
+     * @param filter Filter instance pointer
+     */
+    void updateFilterParameters(AbstractFilter* filter);
+
+    /**
+     * @brief parametersChanged Emitted when any Filter parameter is changed internally
+     */
+    void parametersChanged();
+
+    /**
+     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+     */
+    void preflightAboutToExecute();
+
+    /**
+     * @brief preflightExecuted Emitted just after calling dataCheck()
+     */
+    void preflightExecuted();
+
   protected:
-    RegularGridSampleSurfaceMesh();
+    ConditionalSetValue();
 
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
 
-    /**
-     * @brief generate_points Reimplemented from @see SampleSurfaceMesh class
-     * @return VertexGeom object
-     */
-    virtual VertexGeom::Pointer generate_points();
-
-    /**
-     * @brief assign_points Reimplemented from @see SampleSurfaceMesh class
-     * @param iArray Sampled Feature Ids from superclass
-     */
-    virtual void assign_points(Int32ArrayType::Pointer iArray);
-
   private:
-    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_IDATAARRAY_VARIABLE(Array)
+    DEFINE_DATAARRAY_VARIABLE(bool, ConditionalArray)
 
-    RegularGridSampleSurfaceMesh(const RegularGridSampleSurfaceMesh&); // Copy Constructor Not Implemented
-    void operator=(const RegularGridSampleSurfaceMesh&); // Operator '=' Not Implemented
+    ConditionalSetValue(const ConditionalSetValue&); // Copy Constructor Not Implemented
+    void operator=(const ConditionalSetValue&); // Operator '=' Not Implemented
 };
 
-#endif /* RegularGridSampleSurfaceMesh_H_ */
+#endif /* _ConditionalSetValue_H_ */

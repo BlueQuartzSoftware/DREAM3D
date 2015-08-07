@@ -103,14 +103,15 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
       && m_AngleRepresentation != QuaternionAngles
       && m_AngleRepresentation != RodriguezAngles)
   {
-    setErrorMessage("The Angle representation was not set to anything know to this code");
+    setErrorMessage("The Angle representation was not set to anything known to this code");
     setErrorCode(-3);
     return angles;
   }
 
 
-  // The format of the file is quite simple. The first line of the file lists the total
-  // number of angles in the file. This is followed by a single angle on each line
+  // The format of the file is quite simple. Comment lines start with a "#" symbol
+  // The only Key-Value pair we are looking for is 'Angle Count' which will have
+  // the total number of angles that will be read
 
   int numOrients = 0;
   QByteArray buf;
@@ -127,14 +128,34 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
 
   bool ok = false;
   buf = reader.readLine();
+  while(buf[0] == '#')
+  {
+    buf = reader.readLine();
+  }
   buf = buf.trimmed();
-  numOrients = buf.toInt(&ok, 10);
+
+  //Split the next line into a pair of tokens delimited by the ":" character
+  QList<QByteArray> tokens = buf.split(':');
+  if(tokens.count() != 2)
+  {
+    QString msg = QObject::tr("Proper Header was not detected. The file should have a single header line of 'Angle Count:XXXX'");
+    setErrorCode(-101);
+    setErrorMessage(msg);
+    return angles;
+  }
+
+  if(tokens[0].toStdString().compare("Angle Count") != 0)
+  {
+    QString msg = QObject::tr("Proper Header was not detected. The file should have a single header line of 'Angle Count:XXXX'");
+    setErrorCode(-102);
+    setErrorMessage(msg);
+    return angles;
+  }
+  numOrients = tokens[1].toInt(&ok, 10);
 
   // Allocate enough for the angles
   QVector<size_t> dims(1, 5);
   angles = FloatArrayType::CreateArray(numOrients, dims, "EulerAngles_From_File");
-
-  QList<QByteArray> tokens;
 
   for(int i = 0; i < numOrients; i++)
   {

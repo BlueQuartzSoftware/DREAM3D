@@ -21,6 +21,7 @@ set(DREAM3DLib_VTKUtils_Moc_HDRS
 
 set(DREAM3DLib_VTKUtils_HDRS
   ${DREAM3DLib_SOURCE_DIR}/VTKUtils/VTKWriterMacros.h
+  ${DREAM3DLib_SOURCE_DIR}/VTKUtils/VTKUtil.hpp
 )
 
 set(DREAM3DLib_VTKUtils_SRCS

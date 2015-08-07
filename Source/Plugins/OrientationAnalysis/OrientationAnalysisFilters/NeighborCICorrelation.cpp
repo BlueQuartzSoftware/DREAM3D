@@ -32,19 +32,63 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #include "NeighborCICorrelation.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/DoubleFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/BooleanFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
+
+
+namespace Detail
+{
+  static const int LessThan = 0;
+  static const int GreaterThan = 1;
+
+  class LessThanComparison
+  {
+    public:
+      DREAM3D_SHARED_POINTERS(LessThanComparison)
+      DREAM3D_STATIC_NEW_MACRO(LessThanComparison)
+      DREAM3D_TYPE_MACRO(LessThanComparison)
+      virtual ~LessThanComparison(){}
+
+      virtual bool compare(float a, float b) { return a < b; }
+      virtual bool compare1(float a, float b) { return a >= b; }
+      virtual bool compare2(float a, float b) { return a > b; }
+
+    protected:
+      LessThanComparison(){}
+
+
+  };
+
+  class GreaterThanComparison : public LessThanComparison
+  {
+    public:
+      DREAM3D_SHARED_POINTERS(GreaterThanComparison)
+      DREAM3D_STATIC_NEW_MACRO(GreaterThanComparison)
+      DREAM3D_TYPE_MACRO_SUPER(GreaterThanComparison, LessThanComparison)
+      virtual ~GreaterThanComparison() {}
+
+      virtual bool compare(float a, float b) { return a > b; }
+      virtual bool compare1(float a, float b) { return a <= b; }
+      virtual bool compare2(float a, float b) { return a < b; }
+
+    protected:
+      GreaterThanComparison(){}
+
+  };
+
+}
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -54,6 +98,7 @@ NeighborCICorrelation::NeighborCICorrelation() :
   m_MinConfidence(0.1f),
   m_Loop(false),
   m_ConfidenceIndexArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::ConfidenceIndex),
+  m_SelectedComparison(Detail::LessThan),
   m_ConfidenceIndex(NULL)
 {
   setupFilterParameters();
@@ -72,10 +117,23 @@ NeighborCICorrelation::~NeighborCICorrelation()
 void NeighborCICorrelation::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(DoubleFilterParameter::New("Minimum Confidence Index", "MinConfidence", getMinConfidence(), FilterParameter::Parameter));
+  parameters.push_back(DoubleFilterParameter::New("Threshold Value", "MinConfidence", getMinConfidence(), FilterParameter::Parameter));
+  {
+    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
+    parameter->setHumanLabel("Comparison Operator");
+    parameter->setPropertyName("SelectedComparison");
+
+    QVector<QString> choices;
+    choices.push_back("<");
+    choices.push_back(">");
+    parameter->setChoices(choices);
+    parameter->setCategory(FilterParameter::Parameter);
+    parameters.push_back(parameter);
+  }
+
   parameters.push_back(BooleanFilterParameter::New("Loop Until Gone", "Loop", getLoop(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Confidence Index", "ConfidenceIndexArrayPath", getConfidenceIndexArrayPath(), FilterParameter::RequiredArray));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Comparison Array", "ConfidenceIndexArrayPath", getConfidenceIndexArrayPath(), FilterParameter::RequiredArray));
   setFilterParameters(parameters);
 }
 
@@ -177,6 +235,13 @@ void NeighborCICorrelation::execute()
   float best = 0.0f;
   bool keepGoing = true;
 
+  Detail::LessThanComparison::Pointer comp = Detail::LessThanComparison::New();
+  if(m_SelectedComparison == Detail::GreaterThan)
+  {
+    comp = Detail::GreaterThanComparison::New();
+  }
+
+
   while (keepGoing == true)
   {
     keepGoing = false;
@@ -188,7 +253,7 @@ void NeighborCICorrelation::execute()
     int64_t progressInt = 0;
     for (size_t i = 0; i < totalPoints; i++)
     {
-      if (m_ConfidenceIndex[i] < m_MinConfidence)
+      if(comp->compare(m_ConfidenceIndex[i], m_MinConfidence))
       {
         column = i % dims[0];
         row = (i / dims[0]) % dims[1];
@@ -207,7 +272,7 @@ void NeighborCICorrelation::execute()
           if (j == 3 && column == (dims[0] - 1)) { good = false; }
           if (good == true)
           {
-            if (m_ConfidenceIndex[neighbor] >= m_MinConfidence && m_ConfidenceIndex[neighbor] > best)
+            if (comp->compare1(m_ConfidenceIndex[neighbor], m_MinConfidence) && comp->compare2(m_ConfidenceIndex[neighbor], best) )
             {
               best = m_ConfidenceIndex[neighbor];
               bestNeighbor[i] = neighbor;

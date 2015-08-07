@@ -35,3 +35,6 @@ AddDREAM3DUnitTest(TESTNAME CtfCachingTest SOURCES ${${PROJECT_NAME}_SOURCE_DIR}
 					FOLDER "${PLUGIN_NAME}Plugin/Test"
 					LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})
 
+AddDREAM3DUnitTest(TESTNAME AngleFileIOTest SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/AngleFileIOTest.cpp 
+          FOLDER "${PLUGIN_NAME}Plugin/Test"
+          LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})
