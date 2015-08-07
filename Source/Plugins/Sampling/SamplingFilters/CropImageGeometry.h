@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _CropVolume_H_
-#define _CropVolume_H_
+#ifndef _CropImageGeometry_H_
+#define _CropImageGeometry_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
@@ -44,17 +44,17 @@
 #include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
 
 /**
- * @brief The CropVolume class. See [Filter documentation](@ref cropvolume) for details.
+ * @brief The CropImageGeometry class. See [Filter documentation](@ref CropImageGeometry) for details.
  */
-class CropVolume : public AbstractFilter
+class CropImageGeometry : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(CropVolume)
-    DREAM3D_STATIC_NEW_MACRO(CropVolume)
-    DREAM3D_TYPE_MACRO_SUPER(CropVolume, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(CropImageGeometry)
+    DREAM3D_STATIC_NEW_MACRO(CropImageGeometry)
+    DREAM3D_TYPE_MACRO_SUPER(CropImageGeometry, AbstractFilter)
 
-    virtual ~CropVolume();
+    virtual ~CropImageGeometry();
 
     DREAM3D_FILTER_PARAMETER(QString, NewDataContainerName)
     Q_PROPERTY(QString NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
@@ -175,7 +175,7 @@ class CropVolume : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    CropVolume();
+    CropImageGeometry();
 
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -185,8 +185,8 @@ class CropVolume : public AbstractFilter
   private:
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
-    CropVolume(const CropVolume&); // Copy Constructor Not Implemented
-    void operator=(const CropVolume&); // Operator '=' Not Implemented
+    CropImageGeometry(const CropImageGeometry&); // Copy Constructor Not Implemented
+    void operator=(const CropImageGeometry&); // Operator '=' Not Implemented
 };
 
-#endif /* CROPVOLUME_H_ */
+#endif /* CropImageGeometry_H_ */

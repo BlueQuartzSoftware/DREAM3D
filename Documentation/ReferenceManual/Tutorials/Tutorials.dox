@@ -18,6 +18,6 @@ Serves as an introduction to creating a triangle based surface mesh from a 3D vo
 
 @subpage tutorialcroppingdata
 
-Shows how to use the @ref cropvolume <b>Filter</b> to crop a section of data by illustration in ParaView
+Shows how to use the @ref cropimagegeometry <b>Filter</b> to crop a section of data by illustration in ParaView
 
 */
