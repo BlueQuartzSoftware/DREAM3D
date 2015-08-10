@@ -168,10 +168,6 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   parameters.push_back(DataArraySelectionFilterParameter::New("Neighbor List", "NeighborListArrayPath", getNeighborListArrayPath(), FilterParameter::RequiredArray));
 
   QStringList linkedProps;
-  linkedProps << "RDFArrayPath" << "MaxMinRDFArrayPath";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Include Radial Distribution Function", "IncludeRadialDistFunc", getIncludeRadialDistFunc(), linkedProps, FilterParameter::Parameter));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Radial Distribution Function", "RDFArrayPath", getRDFArrayPath(), FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Max and Min Separation Distances", "MaxMinRDFArrayPath", getMaxMinRDFArrayPath(), FilterParameter::RequiredArray));
 
   linkedProps.clear();
   linkedProps << "SizeDistributionFitType" << "BiasedFeaturesArrayPath" << "EquivalentDiametersArrayPath";
@@ -208,6 +204,12 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   parameters.push_back(StringFilterParameter::New("Phase Types", "PhaseTypesArrayName", getPhaseTypesArrayName(), FilterParameter::CreatedArray));
   // The user types in an array name for Statistics
   parameters.push_back(StringFilterParameter::New("Statistics", "StatisticsArrayName", getStatisticsArrayName(), FilterParameter::CreatedArray));
+  linkedProps << "RDFArrayPath" << "MaxMinRDFArrayPath";
+  parameters.push_back(LinkedBooleanFilterParameter::New("Include Radial Distribution Function", "IncludeRadialDistFunc", getIncludeRadialDistFunc(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Radial Distribution Function", "RDFArrayPath", getRDFArrayPath(), FilterParameter::RequiredArray));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Max and Min Separation Distances", "MaxMinRDFArrayPath", getMaxMinRDFArrayPath(), FilterParameter::RequiredArray));
+
+
   setFilterParameters(parameters);
 }
 
