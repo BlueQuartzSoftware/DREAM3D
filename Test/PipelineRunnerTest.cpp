@@ -77,61 +77,10 @@
 #include "DREAM3DLib/FilterParameters/H5FilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/JsonFilterParametersReader.h"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
-
+#include "DREAM3DLib/Utilities/TestObserver.h"
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 
 #include "PipelineRunnerTest.h"
-
-
-class TestObserver : public QObject, public IObserver
-{
-    Q_OBJECT
-
-  public:
-    TestObserver(){}
-    DREAM3D_TYPE_MACRO_SUPER(TestObserver, IObserver)
-
-    virtual ~TestObserver(){}
-
-  public slots:
-    virtual void processPipelineMessage(const PipelineMessage& pm)
-    {
-      PipelineMessage msg = pm;
-      QString filterHumanLabel = pm.getFilterHumanLabel();
-      QString str;
-      QTextStream ss(&str);
-      if(msg.getType() == PipelineMessage::Error)
-      {
-        ss << msg.generateErrorString();
-        std::cout << msg.getFilterHumanLabel().toStdString() << ": " << str.toStdString() << std::endl;
-      }
-      else if(msg.getType() == PipelineMessage::Warning)
-      {
-        ss << msg.generateWarningString();
-        std::cout << msg.getFilterHumanLabel().toStdString() << ": " << str.toStdString() << std::endl;
-      }
-      else if(msg.getType() == PipelineMessage::StatusMessage)
-      {
-        ss << msg.generateStatusString();
-        std::cout << msg.getFilterHumanLabel().toStdString() << ": " << str.toStdString() << std::endl;
-      }
-      else if(msg.getType() == PipelineMessage::ProgressValue)
-      {
-      //  ss << msg.getProgressValue() << "%";
-      }
-      else if(msg.getType() == PipelineMessage::StatusMessageAndProgressValue)
-      {
-      //  ss << msg.getProgressValue() << msg.generateStatusString();
-      }
-    }
-
-  private:
-    TestObserver(const TestObserver&); // Copy Constructor Not Implemented
-    void operator=(const TestObserver&); // Operator '=' Not Implemented
-};
-
-#include "PipelineRunnerTest.moc"
-
 
 // -----------------------------------------------------------------------------
 //
@@ -176,10 +125,10 @@ void ExecutePipeline(const QString& pipelineFile)
 
   // Sanity Check the filepath to make sure it exists, Report an error and bail if it does not
   QFileInfo fi(pipelineFile);
-  std::cout << "#--------------Test Pipeline File: " << fi.absoluteFilePath().toStdString() << " ---------------------------#" << std::endl;
+  std::cout << "\"Test Pipeline File\": \"" << fi.absoluteFilePath().toStdString() << "\"," << std::endl;
   if(fi.exists() == false)
   {
-    std::cout << "The input file '" << pipelineFile.toStdString() << "' does not exist" << std::endl;
+    std::cout << "\"Error Message\":The input file '" << pipelineFile.toStdString() << "' does not exist\"," << std::endl;
     err = EXIT_FAILURE;
   }
   DREAM3D_REQUIRE_EQUAL(err, EXIT_SUCCESS)
@@ -229,6 +178,7 @@ void ExecutePipeline(const QString& pipelineFile)
   }
   DREAM3D_REQUIRE_EQUAL(err, EXIT_SUCCESS)
 
+
 }
 
 #define OVERWRITE_SOURCE_FILE 1
@@ -251,7 +201,7 @@ void writeOutput(bool didReplace, QStringList& outLines, QString filename)
     stream << outLines.join("\n");
     hOut.close();
 
-    qDebug() << "Saved File " << fi2.absoluteFilePath();
+    //qDebug() << "Saved File " << fi2.absoluteFilePath();
   }
 }
 
@@ -353,6 +303,7 @@ int main (int argc, char*  argv[])
 
   // Iterate over all the entries in the file and process each pipeline. Note that the order of the
   // pipelines will probably matter
+  int testNum = 0;
   while (sourceLines.hasNext())
   {
     QString pipelineFile = sourceLines.next();
@@ -367,9 +318,12 @@ int main (int argc, char*  argv[])
       DREAM3D::unittest::CurrentMethod = fi.fileName().toStdString();
       DREAM3D::unittest::numTests++;
 
+      std::cout << "\"" << testNum++ << "\": {" << std::endl;
+
       ExecutePipeline(pipelineFile);
 
       TestPassed(fi.fileName().toStdString());
+      std::cout << "}," << std::endl;
       DREAM3D::unittest::CurrentMethod = "";
     }
     catch (TestException& e)

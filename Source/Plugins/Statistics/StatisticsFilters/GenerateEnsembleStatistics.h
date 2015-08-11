@@ -111,11 +111,11 @@ class GenerateEnsembleStatistics : public AbstractFilter
 
     // These filter parameters are tied to RDF data, but the filter that can calculate them (FindFeatureClustering)
     // is not slated for public release yet, so turning these off for now
-    //DREAM3D_FILTER_PARAMETER(DataArrayPath, RDFArrayPath)
-    //Q_PROPERTY(DataArrayPath RDFArrayPath READ getRDFArrayPath WRITE setRDFArrayPath)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, RDFArrayPath)
+    Q_PROPERTY(DataArrayPath RDFArrayPath READ getRDFArrayPath WRITE setRDFArrayPath)
 
-    //DREAM3D_FILTER_PARAMETER(DataArrayPath, MaxMinRDFArrayPath)
-    //Q_PROPERTY(DataArrayPath MaxMinRDFArrayPath READ getMaxMinRDFArrayPath WRITE setMaxMinRDFArrayPath)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, MaxMinRDFArrayPath)
+    Q_PROPERTY(DataArrayPath MaxMinRDFArrayPath READ getMaxMinRDFArrayPath WRITE setMaxMinRDFArrayPath)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureEulerAnglesArrayPath)
     Q_PROPERTY(DataArrayPath FeatureEulerAnglesArrayPath READ getFeatureEulerAnglesArrayPath WRITE setFeatureEulerAnglesArrayPath)
@@ -287,7 +287,10 @@ class GenerateEnsembleStatistics : public AbstractFilter
      */
     void gatherAxisODFStats();
 
-    //void gatherRadialDistFunc();
+    /**
+     * @brief gatherRadialDistFunc Consolidates Feature RDF statistics
+     */
+    void gatherRadialDistFunc();
 
     /**
      * @brief calculatePPTBoundaryFrac Consolidates Feature precipitate boundary fraction statistics
@@ -302,8 +305,8 @@ class GenerateEnsembleStatistics : public AbstractFilter
     DEFINE_DATAARRAY_VARIABLE(bool, SurfaceFeatures)
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
     DEFINE_DATAARRAY_VARIABLE(float, AxisEulerAngles)
-    //DEFINE_DATAARRAY_VARIABLE(float, RadialDistFunc)
-    //DEFINE_DATAARRAY_VARIABLE(float, MaxMinRadialDistFunc)
+    DEFINE_DATAARRAY_VARIABLE(float, RadialDistFunc)
+    DEFINE_DATAARRAY_VARIABLE(float, MaxMinRadialDistFunc)
     DEFINE_DATAARRAY_VARIABLE(float, Omega3s)
     DEFINE_DATAARRAY_VARIABLE(float, AspectRatios)
     DEFINE_DATAARRAY_VARIABLE(float, EquivalentDiameters)

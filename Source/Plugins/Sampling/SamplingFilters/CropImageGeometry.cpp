@@ -34,7 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#include "CropVolume.h"
+#include "CropImageGeometry.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -56,7 +56,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CropVolume::CropVolume() :
+CropImageGeometry::CropImageGeometry() :
   AbstractFilter(),
   m_NewDataContainerName(DREAM3D::Defaults::NewImageDataContainerName),
   m_CellAttributeMatrixPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
@@ -79,23 +79,23 @@ CropVolume::CropVolume() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CropVolume::~CropVolume()
+CropImageGeometry::~CropImageGeometry()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CropVolume::setupFilterParameters()
+void CropImageGeometry::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(VolumeDataContainerInfoFilterParameter::New("Geometry Information", "CurrentVolumeDataContainerDimensions", getCurrentVolumeDataContainerDimensions(), FilterParameter::Parameter));
+ // parameters.push_back(VolumeDataContainerInfoFilterParameter::New("Geometry Information", "CurrentVolumeDataContainerDimensions", getCurrentVolumeDataContainerDimensions(), FilterParameter::Parameter));
   parameters.push_back(IntFilterParameter::New("X Min (Column)", "XMin", getXMin(), FilterParameter::Parameter));
   parameters.push_back(IntFilterParameter::New("Y Min (Row)", "YMin", getYMin(), FilterParameter::Parameter));
   parameters.push_back(IntFilterParameter::New("Z Min (Plane)", "ZMin", getZMin(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("X Max (Column)", "XMax", getXMax(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("Y Max (Row)", "YMax", getYMax(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("Z Max (Plane)", "ZMax", getZMax(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("X Max (Column) [Inclusive]", "XMax", getXMax(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Y Max (Row) [Inclusive]", "YMax", getYMax(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Z Max (Plane) [Inclusive]", "ZMax", getZMax(), FilterParameter::Parameter));
   QStringList linkedProps;
   linkedProps << "CellFeatureAttributeMatrixPath" << "FeatureIdsArrayPath";
   parameters.push_back(LinkedBooleanFilterParameter::New("Renumber Features", "RenumberFeatures", getRenumberFeatures(), linkedProps, FilterParameter::Parameter));
@@ -115,7 +115,7 @@ void CropVolume::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CropVolume::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void CropImageGeometry::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   setNewDataContainerName( reader->readString("NewDataContainerName", getNewDataContainerName() ) );
@@ -137,7 +137,7 @@ void CropVolume::readFilterParameters(AbstractFilterParametersReader* reader, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int CropVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int CropImageGeometry::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
@@ -161,7 +161,7 @@ int CropVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CropVolume::dataCheck()
+void CropImageGeometry::dataCheck()
 {
   if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
@@ -297,7 +297,7 @@ void CropVolume::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CropVolume::preflight()
+void CropImageGeometry::preflight()
 {
   setInPreflight(true);
   emit preflightAboutToExecute();
@@ -310,7 +310,7 @@ void CropVolume::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CropVolume::execute()
+void CropImageGeometry::execute()
 {
   setErrorCondition(0);
 
@@ -515,7 +515,7 @@ void CropVolume::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IntVec3_t CropVolume::getCurrentVolumeDataContainerDimensions()
+IntVec3_t CropImageGeometry::getCurrentVolumeDataContainerDimensions()
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
 
@@ -548,7 +548,7 @@ IntVec3_t CropVolume::getCurrentVolumeDataContainerDimensions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FloatVec3_t CropVolume::getCurrentVolumeDataContainerResolutions()
+FloatVec3_t CropImageGeometry::getCurrentVolumeDataContainerResolutions()
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
   FloatVec3_t data;
@@ -581,9 +581,9 @@ FloatVec3_t CropVolume::getCurrentVolumeDataContainerResolutions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer CropVolume::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer CropImageGeometry::newFilterInstance(bool copyFilterParameters)
 {
-  CropVolume::Pointer filter = CropVolume::New();
+  CropImageGeometry::Pointer filter = CropImageGeometry::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -594,23 +594,23 @@ AbstractFilter::Pointer CropVolume::newFilterInstance(bool copyFilterParameters)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CropVolume::getCompiledLibraryName()
+const QString CropImageGeometry::getCompiledLibraryName()
 { return SamplingConstants::SamplingBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CropVolume::getGroupName()
+const QString CropImageGeometry::getGroupName()
 { return DREAM3D::FilterGroups::SamplingFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CropVolume::getHumanLabel()
-{ return "Crop Volume"; }
+const QString CropImageGeometry::getHumanLabel()
+{ return "Crop Geometry (Image)"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CropVolume::getSubGroupName()
+const QString CropImageGeometry::getSubGroupName()
 { return DREAM3D::FilterSubGroups::CropCutFilters; }

@@ -34,38 +34,35 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _CreateDataArray_H_
-#define _CreateDataArray_H_
+#ifndef _ReplaceValueInArray_H_
+#define _ReplaceValueInArray_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @brief The CreateDataArray class. See [Filter documentation](@ref createdataarray) for details.
+ * @brief The ReplaceValueInArray class. See [Filter documentation](@ref replacevalueinarray) for details.
  */
-class DREAM3DLib_EXPORT CreateDataArray : public AbstractFilter
+class DREAM3DLib_EXPORT ReplaceValueInArray : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
 
-    DREAM3D_SHARED_POINTERS(CreateDataArray)
-    DREAM3D_STATIC_NEW_MACRO(CreateDataArray)
-    DREAM3D_TYPE_MACRO_SUPER(CreateDataArray, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(ReplaceValueInArray)
+    DREAM3D_STATIC_NEW_MACRO(ReplaceValueInArray)
+    DREAM3D_TYPE_MACRO_SUPER(ReplaceValueInArray, AbstractFilter)
 
-    virtual ~CreateDataArray();
+    virtual ~ReplaceValueInArray();
 
-    DREAM3D_FILTER_PARAMETER(int, ScalarType)
-    Q_PROPERTY(int ScalarType READ getScalarType WRITE setScalarType)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedArray)
+    Q_PROPERTY(DataArrayPath SelectedArray READ getSelectedArray WRITE setSelectedArray)
 
-    DREAM3D_FILTER_PARAMETER(int, NumberOfComponents)
-    Q_PROPERTY(int NumberOfComponents READ getNumberOfComponents WRITE setNumberOfComponents)
+    DREAM3D_FILTER_PARAMETER(double, RemoveValue)
+    Q_PROPERTY(double RemoveValue READ getRemoveValue WRITE setRemoveValue)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, NewArray)
-    Q_PROPERTY(DataArrayPath NewArray READ getNewArray WRITE setNewArray)
-
-    DREAM3D_FILTER_PARAMETER(QString, InitializationValue)
-    Q_PROPERTY(QString InitializationValue READ getInitializationValue WRITE setInitializationValue)
+    DREAM3D_FILTER_PARAMETER(double, ReplaceValue)
+    Q_PROPERTY(double ReplaceValue READ getReplaceValue WRITE setReplaceValue)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -141,7 +138,7 @@ class DREAM3DLib_EXPORT CreateDataArray : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    CreateDataArray();
+    ReplaceValueInArray();
 
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -149,12 +146,10 @@ class DREAM3DLib_EXPORT CreateDataArray : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_IDATAARRAY_VARIABLE(OutputArray)
+    DEFINE_IDATAARRAY_VARIABLE(Array)
 
-    void checkInitialization();
-
-    CreateDataArray(const CreateDataArray&); // Copy Constructor Not Implemented
-    void operator=(const CreateDataArray&); // Operator '=' Not Implemented
+    ReplaceValueInArray(const ReplaceValueInArray&); // Copy Constructor Not Implemented
+    void operator=(const ReplaceValueInArray&); // Operator '=' Not Implemented
 };
 
-#endif /* _CreateDataArray_H_ */
+#endif /* _ReplaceValueInArray_H_ */

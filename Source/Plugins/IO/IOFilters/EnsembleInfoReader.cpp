@@ -183,7 +183,21 @@ void EnsembleInfoReader::dataCheck()
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
 
-  QVector<size_t> tDims(1, 0);
+  int32_t numphases = 0;
+
+  QSettings settings(getInputFile(), QSettings::IniFormat); // The .ini or .txt input file
+  settings.beginGroup("EnsembleInfo");
+  numphases = settings.value("Number_Phases").toInt(); // read number of phases from input file
+  settings.endGroup();
+
+  if (0 == numphases) // Either the group name "EnsembleInfo" is incorrect or 0 was entered as the Number_Phases
+  {
+    QString ss = QObject::tr("Check the group name EnsembleInfo and that Number_Phases > 0");
+    setErrorCondition(-10003);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+
+  QVector<size_t> tDims(1, numphases + 1);
   m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellEnsemble);
   if(getErrorCondition() < 0) { return; }
 

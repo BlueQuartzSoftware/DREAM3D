@@ -447,7 +447,7 @@ bool SplitFilterHeaderCodes( AbstractFilter::Pointer filter, const QString& hFil
   {
     // Read the Source File
     QFileInfo fi(cppFile);
-    //        if (fi.baseName().compare("CropVolume") != 0)
+    //        if (fi.baseName().compare("CropImageGeometry") != 0)
     //        {
     //          return false;
     //        }
