@@ -2010,7 +2010,7 @@ void PackPrimaryPhases::insert_feature(size_t gnum)
   uint32_t shapeclass = m_ShapeTypes[m_FeaturePhases[gnum]];
 
   // Bail if the shapeclass is not one of our enumerated types
-  if (shapeclass != 0 && shapeclass != 1 && shapeclass != 2 && shapeclass != 3)
+  if (shapeclass >= DREAM3D::ShapeType::ShapeTypeEnd)
   {
     QString ss = QObject::tr("Undefined shape class in shape types array with path %1").arg(m_InputShapeTypesArrayPath.serialize());
     notifyErrorMessage(getHumanLabel(), ss, -666);

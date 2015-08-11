@@ -1819,7 +1819,7 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
   uint32_t shapeclass = m_ShapeTypes[m_FeaturePhases[gnum]];
 
   // Bail if the shapeclass is not one of our enumerated types
-  if (shapeclass != 0 && shapeclass != 1 && shapeclass != 2 && shapeclass != 3)
+  if (shapeclass >= DREAM3D::ShapeType::ShapeTypeEnd)
   {
     QString ss = QObject::tr("Undefined shape class in shape types array with path %1").arg(m_InputShapeTypesArrayPath.serialize());
     notifyErrorMessage(getHumanLabel(), ss, -666);
@@ -1979,6 +1979,17 @@ void InsertPrecipitatePhases::assign_voxels()
     FOrientArrayType om(9, 0.0);
     FOrientTransformsType::eu2om(FOrientArrayType(&(m_AxisEulerAngles[3 * i]), 3), om);
     om.toGMatrix(ga);
+
+    //temp REMOVE THIS
+    ga[0][0] = 1.0f;
+    ga[0][1] = 0.0f;
+    ga[0][2] = 0.0f;
+    ga[1][0] = 0.0f;
+    ga[1][1] = 1.0f;
+    ga[1][2] = 0.0f;
+    ga[2][0] = 0.0f;
+    ga[2][1] = 0.0f;
+    ga[2][2] = 1.0f;
 
     column = static_cast<DimType>( (xc - (xRes / 2.0f)) / xRes );
     row = static_cast<DimType>( (yc - (yRes / 2.0f)) / yRes );

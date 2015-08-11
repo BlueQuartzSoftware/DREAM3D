@@ -62,7 +62,9 @@ class DREAM3DLib_EXPORT ShapeType
     static QString EllipsoidStr() { return QString("Ellipsoid"); }
     static QString SuperEllipsoid() { return QString("Super Ellipsoid"); }
     static QString CubeOctahedronStr() { return QString("Cube Octahedron"); }
-    static QString CylinderStr() { return QString("Cylinder"); }
+    static QString CylinderAStr() { return QString("Cylinder (A)"); }
+    static QString CylinderBStr() { return QString("Cylinder (B)"); }
+    static QString CylinderCStr() { return QString("Cylinder (C)"); }
     static QString UnknownShapeTypeStr() { return QString("Unknown Shape Type"); }
 
     static QString getShapeTypeString(unsigned int ShapeType)
@@ -75,8 +77,12 @@ class DREAM3DLib_EXPORT ShapeType
           return SuperEllipsoid();
         case DREAM3D::ShapeType::CubeOctahedronShape:
           return CubeOctahedronStr();
-        case DREAM3D::ShapeType::CylinderShape:
-          return CylinderStr();
+        case DREAM3D::ShapeType::CylinderAShape:
+          return CylinderAStr();
+        case DREAM3D::ShapeType::CylinderBShape:
+          return CylinderBStr();
+        case DREAM3D::ShapeType::CylinderCShape:
+          return CylinderCStr();
         case DREAM3D::ShapeType::UnknownShapeType:
           return UnknownShapeTypeStr();
         default:
@@ -99,9 +105,17 @@ class DREAM3DLib_EXPORT ShapeType
       {
         return DREAM3D::ShapeType::CubeOctahedronShape;
       }
-      else if (CylinderStr().compare(str) == 0)
+      else if (CylinderAStr().compare(str) == 0)
       {
-        return DREAM3D::ShapeType::CylinderShape;
+        return DREAM3D::ShapeType::CylinderAShape;
+      }
+      else if (CylinderBStr().compare(str) == 0)
+      {
+        return DREAM3D::ShapeType::CylinderBShape;
+      }
+      else if (CylinderCStr().compare(str) == 0)
+      {
+        return DREAM3D::ShapeType::CylinderCShape;
       }
       return DREAM3D::ShapeType::UnknownShapeType;
     }
@@ -113,7 +127,9 @@ class DREAM3DLib_EXPORT ShapeType
       strings.push_back(EllipsoidStr());
       strings.push_back(SuperEllipsoid());
       strings.push_back(CubeOctahedronStr());
-      strings.push_back(CylinderStr());
+      strings.push_back(CylinderAStr());
+      strings.push_back(CylinderBStr());
+      strings.push_back(CylinderCStr());
       strings.push_back(UnknownShapeTypeStr());
     }
 
@@ -123,7 +139,9 @@ class DREAM3DLib_EXPORT ShapeType
       types.push_back(DREAM3D::ShapeType::EllipsoidShape);
       types.push_back(DREAM3D::ShapeType::SuperEllipsoidShape);
       types.push_back(DREAM3D::ShapeType::CubeOctahedronShape);
-      types.push_back(DREAM3D::ShapeType::CylinderShape);
+      types.push_back(DREAM3D::ShapeType::CylinderAShape);
+      types.push_back(DREAM3D::ShapeType::CylinderBShape);
+      types.push_back(DREAM3D::ShapeType::CylinderCShape);
       types.push_back(DREAM3D::ShapeType::UnknownShapeType);
     }
 
@@ -133,7 +151,9 @@ class DREAM3DLib_EXPORT ShapeType
       map[DREAM3D::ShapeType::EllipsoidShape] = EllipsoidStr();
       map[DREAM3D::ShapeType::SuperEllipsoidShape] = SuperEllipsoid();
       map[DREAM3D::ShapeType::CubeOctahedronShape] = CubeOctahedronStr();
-      map[DREAM3D::ShapeType::CylinderShape] = CylinderStr();
+      map[DREAM3D::ShapeType::CylinderAShape] = CylinderAStr();
+      map[DREAM3D::ShapeType::CylinderBShape] = CylinderBStr();
+      map[DREAM3D::ShapeType::CylinderCShape] = CylinderCStr();
       map[DREAM3D::ShapeType::UnknownShapeType] = UnknownShapeTypeStr();
     }
   protected:
