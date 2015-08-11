@@ -1,51 +1,42 @@
 Find Feature Clustering {#findfeatureclustering}
-======
+=============
 
 ## Group (Subgroup) ##
-Statistics Filters (Morphological)
-
-
+Statistics (Morphological)
 
 ## Description ##
-This filter determines the radial distribution function (RDF), as a histogram, of a given set of **Features**. Currently, the features need to be of the same phase (specified by the user), and the resulting RDF is stored as **Ensemble** data. This filter also returns the clustering list (the list of all the inter**Feature** distances) and the min and max separation distances.
+This Filter determines the radial distribution function (RDF), as a histogram, of a given set of **Features**. Currently, the **Features** need to be of the same **Ensemble** (specified by the user), and the resulting RDF is stored as **Ensemble** data. This Filter also returns the clustering list (the list of all the inter-**Feature** distances) and the minimum and maximum separation distances. The algorithm proceeds as follows:
 
+1. Find the Euclidean distance from the current **Feature** centroid to all other **Feature** centroids of the same specified phase
+2. Put all caclulated distances in a clustering list
+3. Repeat 1-2 for all **Features**
+4. Sort the data into the specified number of bins, all equally sized in distance from the minimum distance to the maximum distance between **Features**. For example, if the user chooses 10 bins, and the minimum distance between **Features** is 10 units and the maximum distance is 80 units, each bin will be 8 units 
+5. Normalize the RDF by the probability of finding the **Features** if distributed randomly in the given box 
 
-1. Find the distance from the current **Feature** to all other **Features** of the same, specified phase. 
-2. Put all distances in a Clustering List. 
-3. Repeat 1-2 for all **Features**.
-3. Sort the data into the specified number of bins, all equally sized in distance from the minimum distance to the maximum distance between particles. For example, if the user chooses 10 bins, and the min distance between **Features** is 10 microns and the max distance is 80 microns, each bin will be 8 microns. 
-4. Normalize the RDF by the probability of finding the features if distributed randomly in the given box. 
-
-Note, because this iterates over all the features, each distance will be double counted. For example, the distance from **Feature** 1 to **Feature** 2 will be counted along with the distance from **Feature** 2 to **Feature** 1, which will be identical. 
-
-
+*Note:* Because the algorithm iterates over all the **Features**, each distance will be double counted. For example, the distance from **Feature** 1 to **Feature** 2 will be counted along with the distance from **Feature** 2 to **Feature** 1, which will be identical. 
 
 ## Parameters ##
 | Name | Type | Description |
-|------|------|-------------|
-| Number of Bins for RDF | Integer | Number of bins to split the RDF into |
-| Phase Number | Integer | Phase number to calculate the RDF and clustering list for |
+|------|------| ----------- |
+| Number of Bins for RDF | int32_t | Number of bins to split the RDF |
+| Phase Index | int32_t | **Ensemble** number for which to calculate the RDF and clustering list |
 
-
-## Required DataContainers ##
-Volume
+## Required Geometry ##
+Image
 
 ## Required Objects ##
-
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
+| Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| Feature | Centroids | X, Y, Z coordinates (floats) of **Feature** center of mass |  | Find Feature Centroids (Generic) |
-| Feature | EquivalentDiameters | Diameter (float) of a sphere with the same volume as the **Feature**. | | Find Feature Sizes (Statistics) |
-| Feature | FeaturePhases | Phase Id (int) specifying the phase of the **Feature**| | Find Feature Phases (Generic), Read Feature Info File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| **Feature Attribute Array** | EquivalentDiameters | float | (1) | Diameter of a sphere with the same volume as the **Feature** |
+| **Feature Attribute Array** | Phases | int32_t | (1) | Specifies to which **Ensemble** each **Feature** belongs |
+| **Feature Attribute Array** | Centroids | float | (3) | X, Y, Z coordinates of **Feature** center of mass |
 
 ## Created Objects ##
-
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Feature | Clustering List | Distance (float) of each **Features**'s centroid to ever other **Features**'s centroid. |  |
-| Ensemble | RDF | A histogram (float vector) of the normalized frequency at each bin  |  |
-| Ensemble | RDFMaxMinDistances | The max and min distance (float) found between particles  | This array will automatically be created and the named by appending “MaxMinDistances” to whatever the RDF array is named|
-
+| Kind | Default Name | Type | Component Dimensions | Description |
+|------|--------------|-------------|---------|-----|
+| **Feature Attribute Array** | ClusteringList | float | (1) | Distance of each **Features**'s centroid to ever other **Features**'s centroid |
+| **Ensemble Attribute Array** | RDF | float | (Number of Bins) | A histogram of the normalized frequency at each bin | 
+| **Ensemble Attribute Array** | RDFMaxMinDistances | float | (2) | The max and min distance found between **Features** |
 
 ## License & Copyright ##
 
