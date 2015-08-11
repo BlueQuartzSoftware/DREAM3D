@@ -17,6 +17,8 @@ set(DREAM3DLib_Utilities_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Utilities/DREAM3DRandom.h
   ${DREAM3DLib_SOURCE_DIR}/Utilities/FilePathGenerator.h
   ${DREAM3DLib_SOURCE_DIR}/Utilities/QMetaObjectUtilities.h
+  ${DREAM3DLib_SOURCE_DIR}/Utilities/UnitTestSupport.hpp
+  ${DREAM3DLib_SOURCE_DIR}/Utilities/TestObserver.h
 )
 
 set(DREAM3DLib_Utilities_SRCS
@@ -25,6 +27,7 @@ set(DREAM3DLib_Utilities_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Utilities/DREAM3DRandom.cpp
   ${DREAM3DLib_SOURCE_DIR}/Utilities/FilePathGenerator.cpp
   ${DREAM3DLib_SOURCE_DIR}/Utilities/QMetaObjectUtilities.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Utilities/TestObserver.cpp
 )
 
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/Utilities" "${DREAM3DLib_Utilities_HDRS}" "${DREAM3DLib_Utilities_SRCS}" "0")
@@ -34,5 +37,3 @@ if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
             COMPONENT Headers   )
 endif()
 
-set(DREAM3DLib_Utilities_HDRS ${DREAM3DLib_Utilities_HDRS} ${DREAM3DLib_Utilities_IO_HDRS})
-set(DREAM3DLib_Utilities_SRCS ${DREAM3DLib_Utilities_SRCS} ${DREAM3DLib_Utilities_IO_SRCS})
