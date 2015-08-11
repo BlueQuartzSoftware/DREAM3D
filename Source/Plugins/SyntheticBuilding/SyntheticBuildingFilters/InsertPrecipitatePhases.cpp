@@ -1284,7 +1284,7 @@ void InsertPrecipitatePhases::move_precipitate(int32_t gnum, float xc, float yc,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void InsertPrecipitatePhases::update_exclusionZones(size_t gadd, int32_t gremove, Int32ArrayType::Pointer exclusionZonesPtr)
+void InsertPrecipitatePhases::update_exclusionZones(int32_t gadd, int32_t gremove, Int32ArrayType::Pointer exclusionZonesPtr)
 {
   size_t featureOwnersIdx = 0;
   int32_t* exclusionZones = exclusionZonesPtr->getPointer(0);

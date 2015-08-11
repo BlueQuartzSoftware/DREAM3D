@@ -278,7 +278,7 @@ class InsertPrecipitatePhases : public AbstractFilter
      * @param gremove Index used to determine which precipitate to remove
      * @param exlusionZonesPtr Array of exclusion zone Feature Ids for each packing point
      */
-    void update_exclusionZones(size_t gadd, int32_t gremove, Int32ArrayType::Pointer exlusionZonesPtr);
+    void update_exclusionZones(int32_t gadd, int32_t gremove, Int32ArrayType::Pointer exlusionZonesPtr);
 
     /**
      * @brief check_for_overlap Checks if the current placement will result in overlap for precipitate gNum
