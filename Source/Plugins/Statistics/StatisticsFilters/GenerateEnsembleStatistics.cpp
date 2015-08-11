@@ -1133,15 +1133,15 @@ void GenerateEnsembleStatistics::gatherRadialDistFunc()
       }
       rdfData->setFrequencies(freqs);
 
-      std::cout << "index" << i << std::endl;
-      std::cout << "Rad Dist" << m_MaxMinRadialDistFunc[i * 2] << std::endl;
-      std::cout << "Rad Dist" << m_MaxMinRadialDistFunc[i * 2 + 1] << std::endl;
+      //std::cout << "index" << i << std::endl;
+      //std::cout << "Rad Dist" << m_MaxMinRadialDistFunc[i * 2] << std::endl;
+      //std::cout << "Rad Dist" << m_MaxMinRadialDistFunc[i * 2 + 1] << std::endl;
 
       rdfData->setMaxDistance(m_MaxMinRadialDistFunc[i * 2]);
       rdfData->setMinDistance(m_MaxMinRadialDistFunc[i * 2 + 1]);
 
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
-      if(NULL == pp)
+      if (NULL == pp)
       {
         Q_ASSERT_X(NULL != pp, "StatsDataArray could not be down-cast to a PrecipitatesStatsDataArray", "");
       }
