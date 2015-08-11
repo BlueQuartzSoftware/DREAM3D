@@ -111,7 +111,7 @@ GenerateEnsembleStatistics::GenerateEnsembleStatistics()  :
   m_SurfaceFeatures(NULL),
   m_FeaturePhases(NULL),
   m_AxisEulerAngles(NULL),
-  //m_RadialDistFunc(NULL),
+  m_RadialDistFunc(NULL),
   m_Omega3s(NULL),
   m_AspectRatios(NULL),
   m_EquivalentDiameters(NULL),
