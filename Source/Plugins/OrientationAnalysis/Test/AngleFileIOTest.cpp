@@ -33,27 +33,31 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
-//#include <QtCore/QThread>
 
 #include "DREAM3DLib/DREAM3DLib.h"
-//#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/DataContainers/DataContainerArray.h"
 #include "DREAM3DLib/DataContainers/DataContainer.h"
 #include "DREAM3DLib/DataContainers/AttributeMatrix.h"
-//#include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 #include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
 #include "DREAM3DLib/Plugin/DREAM3DPluginLoader.h"
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
-//#include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
+#include "DREAM3DLib/Utilities/TestObserver.h"
 
 #include "OrientationLib/IO/AngleFileLoader.h"
 
 #include "OrientationAnalysis/OrientationAnalysisFilters/WriteStatsGenOdfAngleFile.h"
 
 #include "OrientationAnalysisTestFileLocations.h"
+
+namespace
+{
+static const int k_AngleCount = 100;
+}
+
+
 
 
 DataContainerArray::Pointer InitializeDataContainerArray()
@@ -65,24 +69,24 @@ DataContainerArray::Pointer InitializeDataContainerArray()
   dca->addDataContainer(m);
 
   // Create Attribute Matrices with different tDims to test validation of tuple compatibility
-  QVector<size_t> tDims(1, 100);
-  AttributeMatrix::Pointer attrMat1 = AttributeMatrix::New(tDims, "CellData", DREAM3D::AttributeMatrixType::Cell);
+  QVector<size_t> tDims(1, k_AngleCount);
+  AttributeMatrix::Pointer attrMat1 = AttributeMatrix::New(tDims, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::AttributeMatrixType::Cell);
   m->addAttributeMatrix(attrMat1->getName(), attrMat1);
 
   QVector<size_t> cDims(1, 3);
-  DataArray<float>::Pointer angles = DataArray<float>::CreateArray(100, cDims, "Eulers", true);
+  DataArray<float>::Pointer angles = DataArray<float>::CreateArray(k_AngleCount, cDims, DREAM3D::CellData::EulerAngles, true);
   attrMat1->addAttributeArray(angles->getName(), angles);
   cDims[0] = 1;
-  DataArray<int32_t>::Pointer phases = DataArray<int32_t>::CreateArray(100, cDims, "Phases", true);
+  DataArray<int32_t>::Pointer phases = DataArray<int32_t>::CreateArray(k_AngleCount, cDims, DREAM3D::CellData::Phases, true);
   attrMat1->addAttributeArray(phases->getName(), phases);
-  for(int i = 0; i < 100; i++)
+  for(int i = 0; i < k_AngleCount; i++)
   {
 
-    float angle = 360.0/100.0 * i;
+    float angle = 360.0/k_AngleCount * i;
     angles->setComponent(i, 0, angle);
 
     angles->setComponent(i, 2, angle);
-    angle = 180.0/100.0 * i;
+    angle = 180.0/k_AngleCount * i;
     angles->setComponent(i, 1, angle);
 
     phases->setValue(i, 1);
@@ -91,16 +95,13 @@ DataContainerArray::Pointer InitializeDataContainerArray()
   return dca;
 }
 
-
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void TestWriter()
 {
 
-  Observer obs;
+  TestObserver obs;
 
   DataContainerArray::Pointer dca = InitializeDataContainerArray();
 
@@ -121,12 +122,12 @@ void TestWriter()
   bool propWasSet = filter->setProperty("OutputFile", UnitTest::AngleFileIOTest::OutputFile);
   DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-      DataArrayPath dap("AngleFileIO", "CellData", "Eulers");
+      DataArrayPath dap("AngleFileIO", DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerAngles);
   var.setValue(dap);
   propWasSet = filter->setProperty("CellEulerAnglesArrayPath", var);
   DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-      dap.setDataArrayName("Phases");
+      dap.setDataArrayName(DREAM3D::CellData::Phases);
   var.setValue(dap);
   propWasSet = filter->setProperty("CellPhasesArrayPath", var);
   DREAM3D_REQUIRE_EQUAL(propWasSet, true)
@@ -180,20 +181,17 @@ void TestReader()
   DREAM3D_REQUIRED(reader->getErrorCode(), >=, 0)
   DREAM3D_REQUIRE_VALID_POINTER(angles.get())
 
-  DREAM3D_REQUIRED(angles->getNumberOfTuples(), ==, 100)
+  DREAM3D_REQUIRED(angles->getNumberOfTuples(), ==, k_AngleCount)
   DREAM3D_REQUIRED(angles->getNumberOfComponents(), ==, 5)
-
 
   for(int i = 0; i < 100; i++)
   {
-
     float angle = 360.0/100.0 * i;
     DREAM3D_REQUIRED(angle, ==, angles->getComponent(i, 0) );
     DREAM3D_REQUIRED(angle, ==, angles->getComponent(i, 2) );
 
     angle = 180.0/100.0 * i;
     DREAM3D_REQUIRED(angle, ==, angles->getComponent(i, 1) );
-
   }
 
 }

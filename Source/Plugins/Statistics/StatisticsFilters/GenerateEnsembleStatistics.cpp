@@ -168,10 +168,10 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   parameters.push_back(DataArraySelectionFilterParameter::New("Neighbor List", "NeighborListArrayPath", getNeighborListArrayPath(), FilterParameter::RequiredArray));
 
   QStringList linkedProps;
-  //linkedProps << "RDFArrayPath" << "MaxMinRDFArrayPath";
-  //parameters.push_back(LinkedBooleanFilterParameter::New("Include Radial Distribution Function", "IncludeRadialDistFunc", getIncludeRadialDistFunc(), linkedProps, FilterParameter::Parameter));
-  //parameters.push_back(DataArraySelectionFilterParameter::New("Radial Distribution Function", "RDFArrayPath", getRDFArrayPath(), FilterParameter::RequiredArray));
-  //parameters.push_back(DataArraySelectionFilterParameter::New("Max and Min Separation Distances", "MaxMinRDFArrayPath", getMaxMinRDFArrayPath(), FilterParameter::RequiredArray));
+  linkedProps << "RDFArrayPath" << "MaxMinRDFArrayPath";
+  parameters.push_back(LinkedBooleanFilterParameter::New("Include Radial Distribution Function", "IncludeRadialDistFunc", getIncludeRadialDistFunc(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Radial Distribution Function", "RDFArrayPath", getRDFArrayPath(), FilterParameter::RequiredArray));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Max and Min Separation Distances", "MaxMinRDFArrayPath", getMaxMinRDFArrayPath(), FilterParameter::RequiredArray));
 
   linkedProps.clear();
   linkedProps << "SizeDistributionFitType" << "BiasedFeaturesArrayPath" << "EquivalentDiametersArrayPath";
@@ -231,8 +231,8 @@ void GenerateEnsembleStatistics::readFilterParameters(AbstractFilterParametersRe
   setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() ) );
   setAxisEulerAnglesArrayPath(reader->readDataArrayPath("AxisEulerAnglesArrayPath", getAxisEulerAnglesArrayPath() ) );
   setOmega3sArrayPath(reader->readDataArrayPath("Omega3sArrayPath", getOmega3sArrayPath() ) );
-  //setRDFArrayPath(reader->readDataArrayPath("RDFArrayPath", getRDFArrayPath()));
-  //setMaxMinRDFArrayPath(reader->readDataArrayPath("MaxMinRDFArrayPath", getMaxMinRDFArrayPath()));
+  setRDFArrayPath(reader->readDataArrayPath("RDFArrayPath", getRDFArrayPath()));
+  setMaxMinRDFArrayPath(reader->readDataArrayPath("MaxMinRDFArrayPath", getMaxMinRDFArrayPath()));
   setAspectRatiosArrayPath(reader->readDataArrayPath("AspectRatiosArrayPath", getAspectRatiosArrayPath() ) );
   setNeighborhoodsArrayPath(reader->readDataArrayPath("NeighborhoodsArrayPath", getNeighborhoodsArrayPath() ) );
   setSharedSurfaceAreaListArrayPath(reader->readDataArrayPath("SharedSurfaceAreaListArrayPath", getSharedSurfaceAreaListArrayPath()));
@@ -281,8 +281,8 @@ int GenerateEnsembleStatistics::writeFilterParameters(AbstractFilterParametersWr
   DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(AxisEulerAnglesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(Omega3sArrayPath)
-  //DREAM3D_FILTER_WRITE_PARAMETER(RDFArrayPath)
-  //DREAM3D_FILTER_WRITE_PARAMETER(MaxMinRDFArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(RDFArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(MaxMinRDFArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(AspectRatiosArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(NeighborhoodsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(NeighborListArrayPath)
@@ -383,20 +383,20 @@ void GenerateEnsembleStatistics::dataCheck()
     if(getErrorCondition() >= 0) { dataArrayPaths.push_back(getAxisEulerAnglesArrayPath()); }
   }
 
-//  if (m_IncludeRadialDistFunc == true)
-//  {
-//    DataArray<float>::Pointer tempPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<float>, AbstractFilter>(this, getRDFArrayPath());
-//    if (NULL != tempPtr.get())
-//    {
-//      m_RadialDistFuncPtr = tempPtr;
-//      m_RadialDistFunc = tempPtr->getPointer(0);
-//    }
+  if (m_IncludeRadialDistFunc == true)
+  {
+    DataArray<float>::Pointer tempPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<float>, AbstractFilter>(this, getRDFArrayPath());
+    if (NULL != tempPtr.get())
+    {
+      m_RadialDistFuncPtr = tempPtr;
+      m_RadialDistFunc = tempPtr->getPointer(0);
+    }
 
-//    cDims[0] = 2;
-//    m_MaxMinRadialDistFuncPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getMaxMinRDFArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-//    if( NULL != m_MaxMinRadialDistFuncPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-//    { m_MaxMinRadialDistFunc = m_MaxMinRadialDistFuncPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-//  }
+    cDims[0] = 2;
+    m_MaxMinRadialDistFuncPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getMaxMinRDFArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_MaxMinRadialDistFuncPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_MaxMinRadialDistFunc = m_MaxMinRadialDistFuncPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 
   if (m_CalculateODF == true || m_CalculateMDF == true)
   {
@@ -657,11 +657,16 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
   }
   for (size_t i = 1; i < numfeatures; i++)
   {
-    if (m_BiasedFeatures[i] == false)
+    if (m_PhaseTypes[m_FeaturePhases[i]] == DREAM3D::PhaseType::PrimaryPhase ||
+        m_PhaseTypes[m_FeaturePhases[i]] == DREAM3D::PhaseType::PrecipitatePhase ||
+        m_PhaseTypes[m_FeaturePhases[i]] == DREAM3D::PhaseType::TransformationPhase)
     {
-      bin = size_t((m_EquivalentDiameters[i] - mindiams[m_FeaturePhases[i]]) / binsteps[m_FeaturePhases[i]]);
-      bvalues[m_FeaturePhases[i]][bin].push_back(m_AspectRatios[2 * i]);
-      cvalues[m_FeaturePhases[i]][bin].push_back(m_AspectRatios[2 * i + 1]);
+      if (m_BiasedFeatures[i] == false)
+      {
+        bin = size_t((m_EquivalentDiameters[i] - mindiams[m_FeaturePhases[i]]) / binsteps[m_FeaturePhases[i]]);
+        bvalues[m_FeaturePhases[i]][bin].push_back(m_AspectRatios[2 * i]);
+        cvalues[m_FeaturePhases[i]][bin].push_back(m_AspectRatios[2 * i + 1]);
+      }
     }
   }
   for (size_t i = 1; i < numensembles; i++)
@@ -741,10 +746,15 @@ void GenerateEnsembleStatistics::gatherOmega3Stats()
   }
   for (size_t i = 1; i < numfeatures; i++)
   {
-    if (m_BiasedFeatures[i] == false)
+    if (m_PhaseTypes[m_FeaturePhases[i]] == DREAM3D::PhaseType::PrimaryPhase ||
+        m_PhaseTypes[m_FeaturePhases[i]] == DREAM3D::PhaseType::PrecipitatePhase ||
+        m_PhaseTypes[m_FeaturePhases[i]] == DREAM3D::PhaseType::TransformationPhase)
     {
-      bin = size_t((m_EquivalentDiameters[i] - mindiams[m_FeaturePhases[i]]) / binsteps[m_FeaturePhases[i]]);
-      values[m_FeaturePhases[i]][bin].push_back(m_Omega3s[i]);
+      if (m_BiasedFeatures[i] == false)
+      {
+        bin = size_t((m_EquivalentDiameters[i] - mindiams[m_FeaturePhases[i]]) / binsteps[m_FeaturePhases[i]]);
+        values[m_FeaturePhases[i]][bin].push_back(m_Omega3s[i]);
+      }
     }
   }
   for (size_t i = 1; i < numensembles; i++)
@@ -819,10 +829,15 @@ void GenerateEnsembleStatistics::gatherNeighborhoodStats()
 
   for (size_t i = 1; i < numfeatures; i++)
   {
-    if (m_BiasedFeatures[i] == false)
+    if (m_PhaseTypes[m_FeaturePhases[i]] == DREAM3D::PhaseType::PrimaryPhase ||
+        m_PhaseTypes[m_FeaturePhases[i]] == DREAM3D::PhaseType::PrecipitatePhase ||
+        m_PhaseTypes[m_FeaturePhases[i]] == DREAM3D::PhaseType::TransformationPhase)
     {
-      bin = size_t((m_EquivalentDiameters[i] - mindiams[m_FeaturePhases[i]]) / binsteps[m_FeaturePhases[i]]);
-      values[m_FeaturePhases[i]][bin].push_back(static_cast<float>( m_Neighborhoods[i] ));
+      if (m_BiasedFeatures[i] == false)
+      {
+        bin = size_t((m_EquivalentDiameters[i] - mindiams[m_FeaturePhases[i]]) / binsteps[m_FeaturePhases[i]]);
+        values[m_FeaturePhases[i]][bin].push_back(static_cast<float>( m_Neighborhoods[i] ));
+      }
     }
   }
   for (size_t i = 1; i < numensembles; i++)
@@ -906,7 +921,7 @@ void GenerateEnsembleStatistics::gatherODFStats()
       eulerodf[m_FeaturePhases[i]]->setValue(bin, (eulerodf[m_FeaturePhases[i]]->getValue(bin) + (m_Volumes[i] / totalvol[m_FeaturePhases[i]])));
     }
   }
-  for(size_t i = 1; i < numensembles; i++)
+  for (size_t i = 1; i < numensembles; i++)
   {
     if (m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
     {
@@ -956,7 +971,7 @@ void GenerateEnsembleStatistics::gatherMDFStats()
 
   misobin.resize(numensembles);
   totalSurfaceArea.resize(numensembles);
-  for(size_t i = 1; i < numensembles; ++i)
+  for (size_t i = 1; i < numensembles; ++i)
   {
     totalSurfaceArea[i] = 0;
     if (Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructures[i] )
@@ -1063,7 +1078,7 @@ void GenerateEnsembleStatistics::gatherAxisODFStats()
   }
   for (size_t i = 1; i < numfeatures; i++)
   {
-    if(m_BiasedFeatures[i] == false)
+    if (m_BiasedFeatures[i] == false)
     {
       FOrientArrayType rod(4);
       FOrientTransformsType::eu2ro( FOrientArrayType( &(m_AxisEulerAngles[3 * i]), 3), rod);
@@ -1096,7 +1111,6 @@ void GenerateEnsembleStatistics::gatherAxisODFStats()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-#if 0
 void GenerateEnsembleStatistics::gatherRadialDistFunc()
 {
   StatsDataArray& statsDataArray = *(m_StatsDataArray);
@@ -1133,7 +1147,6 @@ void GenerateEnsembleStatistics::gatherRadialDistFunc()
     }
   }
 }
-#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -1162,7 +1175,8 @@ void GenerateEnsembleStatistics::calculatePPTBoundaryFrac()
 
           for (size_t j = 0; j < neighborlist[i].size(); j++)
           {
-            if (m_FeaturePhases[i] != m_FeaturePhases[neighborlist[i][j]])  // Currently counts something as on the boundary if it has at least two neighbors of a different phase. Might want to specify which phase in the future.
+            if (m_FeaturePhases[i] != m_FeaturePhases[neighborlist[i][j]] &&
+                m_PhaseTypes[m_FeaturePhases[neighborlist[i][j]]] != DREAM3D::PhaseType::MatrixPhase)  // Currently counts something as on the boundary if it has at least two neighbors of a different non-matrix phase. Might want to specify which phase in the future.
             {
               count++;
             }
@@ -1283,10 +1297,10 @@ void GenerateEnsembleStatistics::execute()
   {
     gatherAxisODFStats();
   }
-//  if(m_IncludeRadialDistFunc == true)
-//  {
-//    gatherRadialDistFunc();
-//  }
+  if(m_IncludeRadialDistFunc == true)
+  {
+    gatherRadialDistFunc();
+  }
 
   calculatePPTBoundaryFrac();
 

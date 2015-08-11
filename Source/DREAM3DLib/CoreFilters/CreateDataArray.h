@@ -64,8 +64,8 @@ class DREAM3DLib_EXPORT CreateDataArray : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, NewArray)
     Q_PROPERTY(DataArrayPath NewArray READ getNewArray WRITE setNewArray)
 
-    DREAM3D_FILTER_PARAMETER(double, InitializationValue)
-    Q_PROPERTY(double InitializationValue READ getInitializationValue WRITE setInitializationValue)
+    DREAM3D_FILTER_PARAMETER(QString, InitializationValue)
+    Q_PROPERTY(QString InitializationValue READ getInitializationValue WRITE setInitializationValue)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class

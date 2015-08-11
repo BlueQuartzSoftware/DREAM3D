@@ -361,7 +361,7 @@ void StatsGenODFWidget::setupGui()
   m_OdfBulkTableModel = new SGODFTableModel;
   m_OdfBulkTableModel->setCrystalStructure(m_CrystalStructure);
   m_OdfBulkTableModel->setInitialValues();
-  m_ODFTableView->setModel(m_OdfBulkTableModel);
+  //m_ODFTableView->setModel(m_OdfBulkTableModel);
 
   m_ODFTableModel = new SGODFTableModel;
   m_ODFTableModel->setCrystalStructure(m_CrystalStructure);
@@ -521,13 +521,16 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   QwtArray<float> odf;
   SGODFTableModel* tableModel = NULL;
 
+  int npoints = 0;
   if(weightSpreadGroupBox->isChecked() )
   {
     tableModel = m_ODFTableModel;
+    npoints = pfSamplePoints->value();
   }
   else
   {
     tableModel = m_OdfBulkTableModel;
+    npoints = tableModel->rowCount();
   }
 
 
@@ -550,7 +553,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   int imageSize = pfImageSize->value();
   int lamberSize = pfLambertSize->value();
   int numColors = 16;
-  int npoints = pfSamplePoints->value();
+
   QVector<size_t> dims(1, 3);
   FloatArrayType::Pointer eulers = FloatArrayType::CreateArray(npoints, dims, "Eulers");
   PoleFigureConfiguration_t config;
@@ -559,13 +562,26 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
   {
     // We now need to resize all the arrays here to make sure they are all allocated
-    odf.resize(CubicOps::k_OdfSize);
-    Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(),
-                                   weights.data(), sigmas.data(), true,
-                                   odf.data(), numEntries);
+    if(weightSpreadGroupBox->isChecked() )
+    {
+      odf.resize(CubicOps::k_OdfSize);
+      Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(),
+                                     weights.data(), sigmas.data(), true,
+                                     odf.data(), numEntries);
 
-    err = StatsGen::GenCubicODFPlotData(odf.data(), eulers->getPointer(0), npoints);
+      err = StatsGen::GenCubicODFPlotData(odf.data(), eulers->getPointer(0), npoints);
+    } else {
 
+      // The user bulk loaded the angles which represent our angles. No need to sample
+      // the angles to generate an ODF.
+      for(int i = 0; i < e1s.size(); i++)
+      {
+        eulers->setComponent(i, 0, e1s[i]);
+        eulers->setComponent(i, 1, e2s[i]);
+        eulers->setComponent(i, 2, e3s[i]);
+      }
+
+    }
     CubicOps ops;
     config.eulers = eulers.get();
     config.imageDim = imageSize;
@@ -576,14 +592,26 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   }
   else if ( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
   {
-    // We now need to resize all the arrays here to make sure they are all allocated
-    odf.resize(HexagonalOps::k_OdfSize);
-    Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(),
-                                 weights.data(), sigmas.data(), true,
-                                 odf.data(), numEntries);
 
-    err = StatsGen::GenHexODFPlotData(odf.data(), eulers->getPointer(0), npoints);
+    if(weightSpreadGroupBox->isChecked() )
+    {
+      // We now need to resize all the arrays here to make sure they are all allocated
+      odf.resize(HexagonalOps::k_OdfSize);
+      Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(),
+                                   weights.data(), sigmas.data(), true,
+                                   odf.data(), numEntries);
 
+      err = StatsGen::GenHexODFPlotData(odf.data(), eulers->getPointer(0), npoints);
+    } else {
+      // The user bulk loaded the angles which represent our angles. No need to sample
+      // the angles to generate an ODF.
+      for(int i = 0; i < e1s.size(); i++)
+      {
+        eulers->setComponent(i, 0, e1s[i]);
+        eulers->setComponent(i, 1, e2s[i]);
+        eulers->setComponent(i, 2, e3s[i]);
+      }
+    }
     HexagonalOps ops;
     config.eulers = eulers.get();
     config.imageDim = imageSize;
@@ -594,14 +622,25 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   }
   else if ( Ebsd::CrystalStructure::OrthoRhombic == m_CrystalStructure)
   {
-    //    // We now need to resize all the arrays here to make sure they are all allocated
-    odf.resize(OrthoRhombicOps::k_OdfSize);
-    Texture::CalculateOrthoRhombicODFData(e1s.data(), e2s.data(), e3s.data(),
-                                          weights.data(), sigmas.data(), true,
-                                          odf.data(), numEntries);
+    if(weightSpreadGroupBox->isChecked() )
+    {
+      //    // We now need to resize all the arrays here to make sure they are all allocated
+      odf.resize(OrthoRhombicOps::k_OdfSize);
+      Texture::CalculateOrthoRhombicODFData(e1s.data(), e2s.data(), e3s.data(),
+                                            weights.data(), sigmas.data(), true,
+                                            odf.data(), numEntries);
 
-    err = StatsGen::GenOrthoRhombicODFPlotData(odf.data(), eulers->getPointer(0), npoints);
-
+      err = StatsGen::GenOrthoRhombicODFPlotData(odf.data(), eulers->getPointer(0), npoints);
+    } else {
+      // The user bulk loaded the angles which represent our angles. No need to sample
+      // the angles to generate an ODF.
+      for(int i = 0; i < e1s.size(); i++)
+      {
+        eulers->setComponent(i, 0, e1s[i]);
+        eulers->setComponent(i, 1, e2s[i]);
+        eulers->setComponent(i, 2, e3s[i]);
+      }
+    }
     OrthoRhombicOps ops;
     config.eulers = eulers.get();
     config.imageDim = imageSize;
@@ -886,7 +925,12 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
   progress.setValue(2);
   progress.setLabelText("[2/3] Rendering Pole Figure ...");
 
-  m_OdfBulkTableModel->removeRows(0, m_OdfBulkTableModel->rowCount());
+  // Just blow away our table and create a new one. Quicker than removing all the rows
+  // first, the repopulating them
+  if(m_OdfBulkTableModel) { delete m_OdfBulkTableModel; m_OdfBulkTableModel = NULL; }
+  m_OdfBulkTableModel = new SGODFTableModel;
+  m_OdfBulkTableModel->setCrystalStructure(m_CrystalStructure);
+  m_OdfBulkTableModel->setInitialValues();
 
 #if 1
   m_OdfBulkTableModel->blockSignals(true);
@@ -897,6 +941,7 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
   m_OdfBulkTableModel->setColumnData(SGODFTableModel::Sigma, sigmas);
   m_OdfBulkTableModel->blockSignals(false);
 #endif
+
   on_m_CalculateODFBtn_clicked();
   progress.setValue(3);
 }

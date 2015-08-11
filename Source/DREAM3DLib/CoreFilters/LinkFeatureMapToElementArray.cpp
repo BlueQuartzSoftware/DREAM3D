@@ -229,4 +229,4 @@ const QString LinkFeatureMapToElementArray::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString LinkFeatureMapToElementArray::getHumanLabel()
-{ return "Link Feature Attribute Matrix to Element Attribute Array"; }\
+{ return "Link Feature Attribute Matrix to Element Attribute Array"; }

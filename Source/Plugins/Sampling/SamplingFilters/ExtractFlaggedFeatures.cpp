@@ -44,7 +44,7 @@
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "Sampling/SamplingConstants.h"
-#include "Sampling/SamplingFilters/CropVolume.h"
+#include "Sampling/SamplingFilters/CropImageGeometry.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -203,7 +203,7 @@ void ExtractFlaggedFeatures::execute()
   find_feature_bounds();
 
   QString newDCName = "";
-  CropVolume::Pointer cropVol = CropVolume::New();
+  CropImageGeometry::Pointer cropVol = CropImageGeometry::New();
   for(size_t i = 1; i < totalFeatures; i++)
   {
     if(m_FlaggedFeatures[i] == true)

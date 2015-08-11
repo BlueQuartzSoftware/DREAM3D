@@ -40,6 +40,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 
 /*
 * @brief This file contains a namespace and some C++ Functors that help to reduce the amout of code that filters

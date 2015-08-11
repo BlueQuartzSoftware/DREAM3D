@@ -40,7 +40,7 @@
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/IntFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DoubleFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
 
@@ -50,9 +50,9 @@
 CreateDataArray::CreateDataArray() :
   AbstractFilter(),
   m_ScalarType(0),
-  m_NumberOfComponents(-1),
+  m_NumberOfComponents(0),
   m_NewArray("", "", ""),
-  m_InitializationValue(0.0)
+  m_InitializationValue("0")
 {
   setupFilterParameters();
 }
@@ -93,7 +93,7 @@ void CreateDataArray::setupFilterParameters()
     parameters.push_back(parameter);
   }
   parameters.push_back(IntFilterParameter::New("Number of Components", "NumberOfComponents", getNumberOfComponents(), FilterParameter::Parameter));
-  parameters.push_back(DoubleFilterParameter::New("Initialization Value", "InitializationValue", getInitializationValue(), FilterParameter::Parameter));
+  parameters.push_back(StringFilterParameter::New("Initialization Value", "InitializationValue", getInitializationValue(), FilterParameter::Parameter));
 
   parameters.push_back(DataArrayCreationFilterParameter::New("Created Attribute Array", "NewArray", getNewArray(), FilterParameter::CreatedArray));
 
@@ -109,7 +109,7 @@ void CreateDataArray::readFilterParameters(AbstractFilterParametersReader* reade
   setScalarType( reader->readValue("ScalarType", getScalarType()) );
   setNumberOfComponents( reader->readValue("NumberOfComponents", getNumberOfComponents()) );
   setNewArray(reader->readDataArrayPath("NewArray", getNewArray()));
-  setInitializationValue(reader->readValue("InitializationValue", getInitializationValue()));
+  setInitializationValue(reader->readString("InitializationValue", getInitializationValue()));
   reader->closeFilterGroup();
 }
 
@@ -119,11 +119,11 @@ void CreateDataArray::readFilterParameters(AbstractFilterParametersReader* reade
 int CreateDataArray::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(ScalarType)
-  DREAM3D_FILTER_WRITE_PARAMETER(NumberOfComponents)
-  DREAM3D_FILTER_WRITE_PARAMETER(NewArray)
-  DREAM3D_FILTER_WRITE_PARAMETER(InitializationValue)
+  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion);
+  DREAM3D_FILTER_WRITE_PARAMETER(ScalarType);
+  DREAM3D_FILTER_WRITE_PARAMETER(NumberOfComponents);
+  DREAM3D_FILTER_WRITE_PARAMETER(NewArray);
+  DREAM3D_FILTER_WRITE_PARAMETER(InitializationValue);
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -132,7 +132,7 @@ int CreateDataArray::writeFilterParameters(AbstractFilterParametersWriter* write
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void checkInitializationInt(AbstractFilter* filter, double initValue, int32_t err)
+void checkInitializationInt(AbstractFilter* filter, IDataArray::Pointer iDataArray, T initValue, bool ok, int32_t err)
 {
   filter->setErrorCondition(0);
   QString ss;
@@ -140,40 +140,60 @@ void checkInitializationInt(AbstractFilter* filter, double initValue, int32_t er
   QString strType = var->getTypeAsString();
   strType.remove("_t");
 
-  if (!((initValue >= std::numeric_limits<T>::min()) && (initValue <= std::numeric_limits<T>::max())))
+  if(!ok)
   {
     filter->setErrorCondition(err);
-    ss = QObject::tr("The %1 initialization value was invalid. The valid range is %2 to %3").arg(strType).arg(std::numeric_limits<T>::min()).arg(std::numeric_limits<T>::max());
+    ss = QObject::tr("The string could not be converted to type '%1'. The valid range is %2 to %3").arg(strType).arg(std::numeric_limits<T>::min()).arg(std::numeric_limits<T>::max());
   }
 
   if (filter->getErrorCondition() < 0)
   {
     filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
   }
+
+  // Now set the initial Value into the array
+  typename DataArray<T>::Pointer array = boost::dynamic_pointer_cast<DataArray<T> >(iDataArray);
+  if(NULL != array.get())
+  {
+    array->initializeWithValue(initValue, 0);
+  }
+
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void checkInitializationFloatDouble(AbstractFilter* filter, double initValue, int32_t err)
+void checkInitializationFloatDouble(AbstractFilter* filter, IDataArray::Pointer iDataArray, T initValue, bool ok, int32_t err)
 {
   filter->setErrorCondition(0);
   QString ss;
   typename DataArray<T>::Pointer var = DataArray<T>::CreateArray(1, "_INTERNAL_USE_ONLY_DO_NOT_USE"); // temporary for use of getTypeAsString()
   QString strType = var->getTypeAsString();
 
+  if(!ok)
+  {
+    filter->setErrorCondition(err);
+    ss = QObject::tr("The %1 initialization value was invalid. The valid ranges are -%3 to -%2, 0, %2 to %3").arg(strType).arg(std::numeric_limits<T>::min()).arg(std::numeric_limits<T>::max());
+    filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+  }
+
+  /* This is special because floats/doubles can not represent numbers very close to Zero (+-). */
   if (!(((initValue >= static_cast<T>(-1) * std::numeric_limits<T>::max()) && (initValue <= static_cast<T>(-1) * std::numeric_limits<T>::min())) ||
         (initValue == 0) || ((initValue >= std::numeric_limits<T>::min()) && (initValue <= std::numeric_limits<T>::max()))))
   {
     filter->setErrorCondition(err);
     ss = QObject::tr("The %1 initialization value was invalid. The valid ranges are -%3 to -%2, 0, %2 to %3").arg(strType).arg(std::numeric_limits<T>::min()).arg(std::numeric_limits<T>::max());
+    filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+
   }
 
-  if (filter->getErrorCondition() < 0)
+  typename DataArray<T>::Pointer array = boost::dynamic_pointer_cast<DataArray<T> >(iDataArray);
+  if(NULL != array.get())
   {
-    filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+    array->initializeWithValue(initValue, 0);
   }
+
 }
 
 // -----------------------------------------------------------------------------
@@ -182,44 +202,77 @@ void checkInitializationFloatDouble(AbstractFilter* filter, double initValue, in
 void CreateDataArray::checkInitialization()
 {
   setErrorCondition(0);
-
+  bool ok = false;
   switch (m_ScalarType) // check user input value to data type
   {
     case DREAM3D::TypeEnums::Int8:
-      checkInitializationInt<int8_t>(this, m_InitializationValue, -4050);
+    {
+      int val = m_InitializationValue.toInt(&ok);
+      if(val < -128 || val > 127) { ok = false; }
+      checkInitializationInt<int8_t>(this, m_OutputArrayPtr.lock(), static_cast<int8_t>(val), ok, -4050);
       break;
+    }
     case DREAM3D::TypeEnums::UInt8:
-      checkInitializationInt<uint8_t>(this, m_InitializationValue, -4051);
+    {
+      uint32_t val = m_InitializationValue.toUInt(&ok);
+      if( val > 255) { ok = false; }
+      checkInitializationInt<uint8_t>(this, m_OutputArrayPtr.lock(), static_cast<uint8_t>(val), ok, -4051);
       break;
+    }
     case DREAM3D::TypeEnums::Int16:
-      checkInitializationInt<int16_t>(this, m_InitializationValue, -4052);
+    {
+      int16_t i16 = static_cast<int16_t>(m_InitializationValue.toShort(&ok));
+      checkInitializationInt<int16_t>(this, m_OutputArrayPtr.lock(), i16, ok, -4052);
       break;
+    }
     case DREAM3D::TypeEnums::UInt16:
-      checkInitializationInt<uint16_t>(this, m_InitializationValue, -4053);
+    {
+      uint16_t ui16 = static_cast<uint16_t>(m_InitializationValue.toUShort(&ok));
+      checkInitializationInt<uint16_t>(this, m_OutputArrayPtr.lock(), ui16, ok, -4053);
       break;
+    }
     case DREAM3D::TypeEnums::Int32:
-      checkInitializationInt<int32_t>(this, m_InitializationValue, -4054);
+    {
+      int32_t i32 = static_cast<int32_t>(m_InitializationValue.toInt(&ok));
+      checkInitializationInt<int32_t>(this, m_OutputArrayPtr.lock(), i32, ok, -4054);
       break;
+    }
     case DREAM3D::TypeEnums::UInt32:
-      checkInitializationInt<uint32_t>(this, m_InitializationValue, -4055);
+    {
+      uint32_t ui32 = static_cast<uint32_t>(m_InitializationValue.toUInt(&ok));
+      checkInitializationInt<uint32_t>(this, m_OutputArrayPtr.lock(), ui32, ok, -4055);
       break;
+    }
     case DREAM3D::TypeEnums::Int64:
-      checkInitializationInt<int64_t>(this, m_InitializationValue, -4056);
+    {
+      int64_t i64 = static_cast<int64_t>(m_InitializationValue.toLongLong(&ok));
+      checkInitializationInt<int64_t>(this, m_OutputArrayPtr.lock(), i64, ok, -4056);
       break;
+    }
     case DREAM3D::TypeEnums::UInt64:
-      checkInitializationInt<uint64_t>(this, m_InitializationValue, -4057);
+    {
+      uint64_t ui64 = static_cast<uint64_t>(m_InitializationValue.toULongLong(&ok));
+      checkInitializationInt<uint64_t>(this, m_OutputArrayPtr.lock(), ui64, ok, -4057);
       break;
+    }
     case DREAM3D::TypeEnums::Float:
-      checkInitializationFloatDouble<float>(this, m_InitializationValue, -4058);
+    {
+      float f = static_cast<float>(m_InitializationValue.toFloat(&ok));
+      checkInitializationFloatDouble<float>(this, m_OutputArrayPtr.lock(), f, ok, -4058);
       break;
+    }
     case DREAM3D::TypeEnums::Double:
-      checkInitializationFloatDouble<double>(this, m_InitializationValue, -4059);
+    {
+      double d = static_cast<double>(m_InitializationValue.toFloat(&ok));
+      checkInitializationFloatDouble<double>(this, m_OutputArrayPtr.lock(), d, ok, -4059);
       break;
+    }
     case DREAM3D::TypeEnums::Bool:
     {
-      if (m_InitializationValue != 0.0)
+      int8_t b = static_cast<int8_t>(m_InitializationValue.toInt(&ok));
+      if (b != 0)
       {
-        m_InitializationValue = 1.0; // anything that is not a zero is a one
+        m_InitializationValue = 1; // anything that is not a zero is a one
       }
       break;
     }
@@ -239,11 +292,28 @@ void CreateDataArray::dataCheck()
 {
   setErrorCondition(0);
 
-  checkInitialization(); // check the initialization value range for that data type
   if (getErrorCondition() < 0) { return; }
 
+  if (getNumberOfComponents() < 0)
+  {
+    setErrorCondition(-8050);
+    QString ss = QObject::tr("The number of components must non-negative");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+  if(getNumberOfComponents() == 0)
+  {
+    setErrorCondition(0);
+    QString ss = QObject::tr("The number of components is Zero. This will result in an array that has no memory allocated. Are you sure you wanted to do this?");
+    notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
   QVector<size_t> cDims(1, getNumberOfComponents());
-  m_OutputArrayPtr = TemplateHelpers::CreateNonPrereqArrayFromTypeEnum()(this, getNewArray(), cDims, getScalarType(), getInitializationValue());
+
+  m_OutputArrayPtr = TemplateHelpers::CreateNonPrereqArrayFromTypeEnum()(this, getNewArray(), cDims, getScalarType(), 0.0);
+
+  checkInitialization(); // check the initialization value range for that data type
+
 }
 
 // -----------------------------------------------------------------------------
