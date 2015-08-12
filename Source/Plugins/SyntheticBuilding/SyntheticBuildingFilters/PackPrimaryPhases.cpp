@@ -862,7 +862,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
   }
 
   QVector<size_t> cDim(1, 1);
-  Int32ArrayType::Pointer exclusionOwnersPtr = Int32ArrayType::CreateArray(featureOwnersPtr->getNumberOfTuples(), cDim, "_INTERNAL_USE_ONLY_PackPrimaryFeatures::exclusions_owners");
+  Int32ArrayType::Pointer exclusionOwnersPtr = Int32ArrayType::CreateArray(m_TotalPackingPoints, cDim, "_INTERNAL_USE_ONLY_PackPrimaryFeatures::exclusions_owners");
   exclusionOwnersPtr->initializeWithValue(0);
 
   // This is the set that we are going to keep updated with the points that are not in an exclusion zone
@@ -873,6 +873,21 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
   int32_t* featureOwners = featureOwnersPtr->getPointer(0);
   int32_t* exclusionOwners = exclusionOwnersPtr->getPointer(0);
   int64_t featureOwnersIdx = 0;
+
+  // determine initial set of available points
+  availablePointsCount = 0;
+  for (size_t i = 0; i < m_TotalPackingPoints; i++)
+  {
+    if ((exclusionOwners[i] == 0 && m_UseMask == false) || (exclusionOwners[i] == 0 && m_UseMask == true && m_Mask[i] == true))
+    {
+      availablePoints[i] = availablePointsCount;
+      availablePointsInv[availablePointsCount] = i;
+      availablePointsCount++;
+    }
+  }
+  // and clear the pointsToRemove and pointsToAdd vectors from the initial packing
+  pointsToRemove.clear();
+  pointsToAdd.clear();
 
   // initialize the sim and goal size distributions for the primary phases
   featuresizedist.resize(primaryphases.size());
@@ -1157,7 +1172,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
   availablePointsCount = 0;
   for (int64_t i = 0; i < m_TotalPackingPoints; i++)
   {
-    if (exclusionOwners[i] == 0)
+    if ((exclusionOwners[i] == 0 && m_UseMask == false) || (exclusionOwners[i] == 0 && m_UseMask == true && m_Mask[i] == true))
     {
       availablePoints[i] = availablePointsCount;
       availablePointsInv[availablePointsCount] = i;

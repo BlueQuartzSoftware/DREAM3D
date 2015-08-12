@@ -421,9 +421,9 @@ void InsertPrecipitatePhases::execute()
   {
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Packing Precipitates || Generating and Placing Precipitates");
     // this initializes the arrays to hold the details of the locations of all of the features during packing
-    Int32ArrayType::Pointer exlusionZonesPtr = Int32ArrayType::CreateArray(m_TotalPoints, "_INTERNAL_USE_ONLY_PackPrimaryFeatures::exclusion_zones");
-    exlusionZonesPtr->initializeWithZeros();
-    place_precipitates(exlusionZonesPtr);
+    Int32ArrayType::Pointer exclusionZonesPtr = Int32ArrayType::CreateArray(m_TotalPoints, "_INTERNAL_USE_ONLY_PackPrimaryFeatures::exclusion_zones");
+    exclusionZonesPtr->initializeWithZeros();
+    place_precipitates(exclusionZonesPtr);
     if(getErrorCondition() < 0) { return; }
     if (getCancel() == true) { return; }
   }
@@ -762,7 +762,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   availablePointsCount = 0;
   for (int64_t i = 0; i < m_TotalPoints; i++)
   {
-    if (exclusionZones[i] == 0)
+    if ((exclusionZones[i] == 0 && m_UseMask == false) || (exclusionZones[i] == 0 && m_UseMask == true && m_Mask[i] == true))
     {
       availablePoints[i] = availablePointsCount;
       availablePointsInv[availablePointsCount] = i;
@@ -1972,24 +1972,10 @@ void InsertPrecipitatePhases::assign_voxels()
 
     float radcur2 = (radcur1 * bovera);
     float radcur3 = (radcur1 * covera);
-    //    float phi1 = m_AxisEulerAngles[3 * i];
-    //    float PHI = m_AxisEulerAngles[3 * i + 1];
-    //    float phi2 = m_AxisEulerAngles[3 * i + 2];
     float ga[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
     FOrientArrayType om(9, 0.0);
     FOrientTransformsType::eu2om(FOrientArrayType(&(m_AxisEulerAngles[3 * i]), 3), om);
     om.toGMatrix(ga);
-
-    //temp REMOVE THIS
-    ga[0][0] = 1.0f;
-    ga[0][1] = 0.0f;
-    ga[0][2] = 0.0f;
-    ga[1][0] = 0.0f;
-    ga[1][1] = 1.0f;
-    ga[1][2] = 0.0f;
-    ga[2][0] = 0.0f;
-    ga[2][1] = 0.0f;
-    ga[2][2] = 1.0f;
 
     column = static_cast<DimType>( (xc - (xRes / 2.0f)) / xRes );
     row = static_cast<DimType>( (yc - (yRes / 2.0f)) / yRes );
