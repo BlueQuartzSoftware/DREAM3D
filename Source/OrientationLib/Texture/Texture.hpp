@@ -437,8 +437,8 @@ class Texture
       const int odfsize = orientationOps.getODFSize();
       const int mdfsize = orientationOps.getMDFSize();
 
-
-      DREAM3D_RANDOMNG_NEW()
+      uint64_t m_Seed = QDateTime::currentMSecsSinceEpoch();
+      DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
 
       int mbin;
       float w = 0;
@@ -469,6 +469,8 @@ class Texture
 
       for (int i = 0; i < remainingcount; i++)
       {
+        m_Seed++;
+        DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
         random1 = rg.genrand_res53();
         random2 = rg.genrand_res53();
         choose1 = 0;
@@ -484,12 +486,13 @@ class Texture
           if(random2 >= d && random2 < totaldensity) { choose2 = static_cast<int>(j); }
         }
 
-        FOrientArrayType eu = orientationOps.determineEulerAngles(choose1);
+        FOrientArrayType eu = orientationOps.determineEulerAngles(m_Seed, choose1);
         FOrientArrayType qu(4);
         OrientationTransforms<FOrientArrayType, float>::eu2qu(eu, qu);
         q1 = qu.toQuaternion();
 
-        eu = orientationOps.determineEulerAngles(choose2);
+        m_Seed++;
+        eu = orientationOps.determineEulerAngles(m_Seed, choose2);
         OrientationTransforms<FOrientArrayType, float>::eu2qu(eu, qu);
         q2 = qu.toQuaternion();
         w = orientationOps.getMisoQuat(q1, q2, n1, n2, n3);

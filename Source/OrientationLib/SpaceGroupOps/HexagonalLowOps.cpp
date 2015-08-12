@@ -353,7 +353,7 @@ int HexagonalLowOps::getMisoBin(FOrientArrayType rod)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FOrientArrayType HexagonalLowOps::determineEulerAngles(int choose)
+FOrientArrayType HexagonalLowOps::determineEulerAngles(uint64_t seed, int choose)
 {
   float init[3];
   float step[3];
@@ -370,7 +370,7 @@ FOrientArrayType HexagonalLowOps::determineEulerAngles(int choose)
   phi[1] = static_cast<float>((choose / 72) % 72);
   phi[2] = static_cast<float>(choose / (72 * 72));
 
-  _calcDetermineHomochoricValues(init, step, phi, choose, h1, h2, h3);
+  _calcDetermineHomochoricValues(seed, init, step, phi, choose, h1, h2, h3);
 
   FOrientArrayType ho(h1, h2, h3);
   FOrientArrayType ro(4);
@@ -404,7 +404,7 @@ FOrientArrayType HexagonalLowOps::randomizeEulerAngles(FOrientArrayType synea)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FOrientArrayType HexagonalLowOps::determineRodriguesVector( int choose)
+FOrientArrayType HexagonalLowOps::determineRodriguesVector(uint64_t seed, int choose)
 {
   float init[3];
   float step[3];
@@ -421,7 +421,7 @@ FOrientArrayType HexagonalLowOps::determineRodriguesVector( int choose)
   phi[1] = static_cast<float>((choose / 72) % 72);
   phi[2] = static_cast<float>(choose / (72 * 72));
 
-  _calcDetermineHomochoricValues(init, step, phi, choose, h1, h2, h3);
+  _calcDetermineHomochoricValues(seed, init, step, phi, choose, h1, h2, h3);
   FOrientArrayType ho(h1, h2, h3);
   FOrientArrayType ro(4);
   OrientationTransforms<FOrientArrayType, float>::ho2ro(ho, ro);

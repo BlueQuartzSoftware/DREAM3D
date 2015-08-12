@@ -303,11 +303,11 @@ int SpaceGroupOps::_calcMisoBin(float dim[3], float bins[3], float step[3], cons
   return (static_cast<int>( (bins[0] * bins[1] * miso3bin) + (bins[0] * miso2bin) + miso1bin ));
 }
 
-void SpaceGroupOps::_calcDetermineHomochoricValues(float init[3], float step[3], float phi[3], int choose, float& r1, float& r2, float& r3)
+void SpaceGroupOps::_calcDetermineHomochoricValues(uint64_t seed, float init[3], float step[3], float phi[3], int choose, float& r1, float& r2, float& r3)
 {
   float random;
 
-  DREAM3D_RANDOMNG_NEW()
+  DREAM3D_RANDOMNG_NEW_SEEDED(seed)
   random = static_cast<float>( rg.genrand_res53() );
   r1 = (step[0] * phi[0]) + (step[0] * random) - (init[0]);
   random = static_cast<float>( rg.genrand_res53() );

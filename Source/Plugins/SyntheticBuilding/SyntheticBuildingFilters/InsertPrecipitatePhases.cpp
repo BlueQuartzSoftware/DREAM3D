@@ -1231,7 +1231,7 @@ void InsertPrecipitatePhases::generate_precipitate(int32_t phase, Precip_t* prec
     totaldensity = totaldensity + density;
     if (random < totaldensity && random >= td1) { bin = j; break; }
   }
-  FOrientArrayType eulers = OrthoOps->determineEulerAngles((bin));
+  FOrientArrayType eulers = OrthoOps->determineEulerAngles(m_Seed, bin);
   VectorOfFloatArray omega3 = pp->getFeatureSize_Omegas();
   float mf = omega3[0]->getValue(diameter);
   float s = omega3[1]->getValue(diameter);

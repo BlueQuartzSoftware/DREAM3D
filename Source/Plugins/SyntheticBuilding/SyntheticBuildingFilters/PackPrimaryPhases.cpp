@@ -1467,7 +1467,7 @@ void PackPrimaryPhases::generate_feature(int32_t phase, Feature_t* feature, uint
     totaldensity = totaldensity + density;
     if (random < totaldensity && random >= td1) { bin = j; break; }
   }
-  FOrientArrayType eulers = m_OrthoOps->determineEulerAngles((bin));
+  FOrientArrayType eulers = m_OrthoOps->determineEulerAngles(m_Seed, bin);
   VectorOfFloatArray omega3 = pp->getFeatureSize_Omegas();
   float mf = omega3[0]->getValue(diameter);
   float s = omega3[1]->getValue(diameter);
