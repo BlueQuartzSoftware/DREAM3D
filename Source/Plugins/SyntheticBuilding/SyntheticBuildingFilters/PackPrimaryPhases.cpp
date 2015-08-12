@@ -951,7 +951,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
       iter++;
       m_Seed++;
       phase = primaryphases[j];
-      generate_feature(phase, m_Seed, &feature, m_ShapeTypes[phase]);
+      generate_feature(phase, &feature, m_ShapeTypes[phase]);
       currentsizedisterror = check_sizedisterror(&feature);
       change = (currentsizedisterror) - (oldsizedisterror);
       if (change > 0.0f || currentsizedisterror > (1.0f - (float(iter) * 0.001f)) || curphasevol[j] < (0.75f * factor * curphasetotalvol))
@@ -995,7 +995,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
         iter++;
         m_Seed++;
         phase = primaryphases[j];
-        generate_feature(phase, static_cast<int32_t>(m_Seed), &feature, m_ShapeTypes[phase]);
+        generate_feature(phase, &feature, m_ShapeTypes[phase]);
         currentsizedisterror = check_sizedisterror(&feature);
         change = (currentsizedisterror) - (oldsizedisterror);
         if (change > 0 || currentsizedisterror > (1.0f - (iter * 0.001f)) || curphasevol[j] < (0.75f * factor * curphasetotalvol))
@@ -1388,9 +1388,9 @@ Int32ArrayType::Pointer PackPrimaryPhases::initialize_packinggrid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::generate_feature(int32_t phase, uint64_t Seed, Feature_t* feature, uint32_t shapeclass)
+void PackPrimaryPhases::generate_feature(int32_t phase, Feature_t* feature, uint32_t shapeclass)
 {
-  DREAM3D_RANDOMNG_NEW_SEEDED(Seed)
+  DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed)
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock().get());
 
@@ -1455,17 +1455,19 @@ void PackPrimaryPhases::generate_feature(int32_t phase, uint64_t Seed, Feature_t
     r2 = static_cast<float>(rg.genrand_beta(a2, b2));
     r3 = static_cast<float>(rg.genrand_beta(a3, b3));
   }
-
+  FloatArrayType::Pointer axisodf = pp->getAxisOrientation();
+  int32_t numbins = axisodf->getNumberOfTuples();
   float random = static_cast<float>(rg.genrand_res53());
   float totaldensity = 0.0f;
   int32_t bin = 0;
-  FloatArrayType::Pointer axisodf = pp->getAxisOrientation();
-  while (random > totaldensity && bin < static_cast<int32_t>(axisodf->getSize()) )
+  for (int32_t j = 0; j < numbins; j++)
   {
-    totaldensity = totaldensity + axisodf->getValue(bin);
-    bin++;
+    float density = axisodf->getValue(j);
+    float td1 = totaldensity;
+    totaldensity = totaldensity + density;
+    if (random < totaldensity && random >= td1) { bin = j; break; }
   }
-  FOrientArrayType eulers = m_OrthoOps->determineEulerAngles(bin);
+  FOrientArrayType eulers = m_OrthoOps->determineEulerAngles((bin));
   VectorOfFloatArray omega3 = pp->getFeatureSize_Omegas();
   float mf = omega3[0]->getValue(diameter);
   float s = omega3[1]->getValue(diameter);

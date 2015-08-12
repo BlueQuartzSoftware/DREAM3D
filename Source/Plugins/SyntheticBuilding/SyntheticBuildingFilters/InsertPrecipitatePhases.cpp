@@ -104,7 +104,7 @@ InsertPrecipitatePhases::InsertPrecipitatePhases() :
   m_Neighbors(NULL)
 {
   m_FirstPrecipitateFeature  = 1;
-  Seed = QDateTime::currentMSecsSinceEpoch();
+  m_Seed = QDateTime::currentMSecsSinceEpoch();
   m_SizeX = m_SizeY = m_SizeZ = 0.0f;
   m_XRes = m_YRes = m_ZRes = m_TotalVol = m_UseableTotalVol = 0.0f;
   m_XPoints = m_YPoints = m_ZPoints = m_TotalPoints = 0;
@@ -544,7 +544,9 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     writeErrorFile = true;
   }
 
-  DREAM3D_RANDOMNG_NEW()
+  setErrorCondition(0);
+  m_Seed = QDateTime::currentMSecsSinceEpoch();
+  DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
@@ -692,9 +694,9 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     while (curphasevol[j] < (factor * curphasetotalvol))
     {
       iter++;
-      Seed++;
+      m_Seed++;
       phase = precipitatephases[j];
-      generate_precipitate(phase, Seed, &precip, m_ShapeTypes[phase], m_OrthoOps);
+      generate_precipitate(phase, &precip, m_ShapeTypes[phase], m_OrthoOps);
       m_CurrentSizeDistError = check_sizedisterror(&precip);
       change = (m_CurrentSizeDistError) - (m_OldSizeDistError);
       if (change > 0.0f || m_CurrentSizeDistError > (1.0f - (float(iter) * 0.001f)) || curphasevol[j] < (0.75f * factor * curphasetotalvol))
@@ -1003,7 +1005,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
         {
           randomfeature = static_cast<int32_t>(numfeatures) - 1;
         }
-        Seed++;
+        m_Seed++;
 
         PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FeaturePhases[randomfeature]].get());
         if (NULL == pp)
@@ -1150,9 +1152,9 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void InsertPrecipitatePhases::generate_precipitate(int32_t phase, uint64_t seed, Precip_t* precip, uint32_t shapeclass, SpaceGroupOps::Pointer OrthoOps)
+void InsertPrecipitatePhases::generate_precipitate(int32_t phase, Precip_t* precip, uint32_t shapeclass, SpaceGroupOps::Pointer OrthoOps)
 {
-  DREAM3D_RANDOMNG_NEW_SEEDED(seed)
+  DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed)
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
 
@@ -1217,17 +1219,19 @@ void InsertPrecipitatePhases::generate_precipitate(int32_t phase, uint64_t seed,
     r2 = static_cast<float>(rg.genrand_beta(a2, b2));
     r3 = static_cast<float>(rg.genrand_beta(a3, b3));
   }
-
-  float random = static_cast<float>( rg.genrand_res53() );
+  FloatArrayType::Pointer axisodf = pp->getAxisOrientation();
+  int32_t numbins = axisodf->getNumberOfTuples();
+  float random = static_cast<float>(rg.genrand_res53());
   float totaldensity = 0.0f;
   int32_t bin = 0;
-  FloatArrayType::Pointer axisodf = pp->getAxisOrientation();
-  while (random > totaldensity && bin < static_cast<int>(axisodf->getSize()))
+  for (int32_t j = 0; j < numbins; j++)
   {
-    totaldensity = totaldensity + axisodf->getValue(bin);
-    bin++;
+    float density = axisodf->getValue(j);
+    float td1 = totaldensity;
+    totaldensity = totaldensity + density;
+    if (random < totaldensity && random >= td1) { bin = j; break; }
   }
-  FOrientArrayType eulers = OrthoOps->determineEulerAngles(bin);
+  FOrientArrayType eulers = OrthoOps->determineEulerAngles((bin));
   VectorOfFloatArray omega3 = pp->getFeatureSize_Omegas();
   float mf = omega3[0]->getValue(diameter);
   float s = omega3[1]->getValue(diameter);

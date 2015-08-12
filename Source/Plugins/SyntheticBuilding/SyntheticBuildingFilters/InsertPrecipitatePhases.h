@@ -236,12 +236,11 @@ class InsertPrecipitatePhases : public AbstractFilter
     /**
      * @brief generate_precipitate Creates a precipitate by sampling the size and morphological statistical distributions
      * @param phase Index of the Ensemble type for the Feature to be generated
-     * @param Seed Value to intialize random number generator
      * @param precip Precip_t struct pointer to be intialized
      * @param shapeclass Type of precipitate shape to be generated
      * @param OrthoOps Pointer to SpaceGroupOps object
      */
-    void generate_precipitate(int32_t phase, uint64_t Seed, Precip_t* precip, uint32_t shapeclass, SpaceGroupOps::Pointer OrthoOps);
+    void generate_precipitate(int32_t phase, Precip_t* precip, uint32_t shapeclass, SpaceGroupOps::Pointer OrthoOps);
 
     /**
      * @brief load_precipitates Reads a list of precipitates from a file to be used as the packed volume
@@ -398,7 +397,6 @@ class InsertPrecipitatePhases : public AbstractFilter
 
   private:
     int32_t m_FirstPrecipitateFeature;
-    uint64_t Seed;
     float m_SizeX;
     float m_SizeY;
     float m_SizeZ;
@@ -452,6 +450,8 @@ class InsertPrecipitatePhases : public AbstractFilter
 
     std::vector<size_t> pointsToAdd;
     std::vector<size_t> pointsToRemove;
+
+    uint64_t m_Seed;
 
     std::vector<std::vector<float> > featuresizedist;
     std::vector<std::vector<float> > simfeaturesizedist;
