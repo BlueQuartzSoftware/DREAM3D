@@ -263,12 +263,12 @@ void FindShapes::find_moments()
         x = float(k * modXRes);
         y = float(j * modYRes);
         z = float(i * modZRes);
-        x1 = x + (modXRes / 4);
-        x2 = x - (modXRes / 4);
-        y1 = y + (modYRes / 4);
-        y2 = y - (modYRes / 4);
-        z1 = z + (modZRes / 4);
-        z2 = z - (modZRes / 4);
+        x1 = x + (modXRes / 4.0f);
+        x2 = x - (modXRes / 4.0f);
+        y1 = y + (modYRes / 4.0f);
+        y2 = y - (modYRes / 4.0f);
+        z1 = z + (modZRes / 4.0f);
+        z2 = z - (modZRes / 4.0f);
         xdist1 = (x1 - (m_Centroids[gnum * 3 + 0] * scaleFactor));
         ydist1 = (y1 - (m_Centroids[gnum * 3 + 1] * scaleFactor));
         zdist1 = (z1 - (m_Centroids[gnum * 3 + 2] * scaleFactor));
@@ -411,18 +411,18 @@ void FindShapes::find_moments2D()
       int32_t gnum = m_FeatureIds[yStride + k];
       x = float(k) * modXRes;
       y = float(j) * modYRes;
-      x1 = x + (modXRes / 2);
-      x2 = x - (modXRes / 2);
-      y1 = y + (modYRes / 2);
-      y2 = y - (modYRes / 2);
-      xdist1 = (x1 - m_Centroids[gnum * 3 + 0]);
-      ydist1 = (y1 - m_Centroids[gnum * 3 + 1]);
-      xdist2 = (x1 - m_Centroids[gnum * 3 + 0]);
-      ydist2 = (y2 - m_Centroids[gnum * 3 + 1]);
-      xdist3 = (x2 - m_Centroids[gnum * 3 + 0]);
-      ydist3 = (y1 - m_Centroids[gnum * 3 + 1]);
-      xdist4 = (x2 - m_Centroids[gnum * 3 + 0]);
-      ydist4 = (y2 - m_Centroids[gnum * 3 + 1]);
+      x1 = x + (modXRes / 4.0f);
+      x2 = x - (modXRes / 4.0f);
+      y1 = y + (modYRes / 4.0f);
+      y2 = y - (modYRes / 4.0f);
+      xdist1 = (x1 - (m_Centroids[gnum * 3 + 0] * scaleFactor));
+      ydist1 = (y1 - (m_Centroids[gnum * 3 + 1] * scaleFactor));
+      xdist2 = (x1 - (m_Centroids[gnum * 3 + 0] * scaleFactor));
+      ydist2 = (y2 - (m_Centroids[gnum * 3 + 1] * scaleFactor));
+      xdist3 = (x2 - (m_Centroids[gnum * 3 + 0] * scaleFactor));
+      ydist3 = (y1 - (m_Centroids[gnum * 3 + 1] * scaleFactor));
+      xdist4 = (x2 - (m_Centroids[gnum * 3 + 0] * scaleFactor));
+      ydist4 = (y2 - (m_Centroids[gnum * 3 + 1] * scaleFactor));
       xx = ((ydist1) * (ydist1)) + ((ydist2) * (ydist2)) + ((ydist3) * (ydist3)) + ((ydist4) * (ydist4));
       yy = ((xdist1) * (xdist1)) + ((xdist2) * (xdist2)) + ((xdist3) * (xdist3)) + ((xdist4) * (xdist4));
       xy = ((xdist1) * (ydist1)) + ((xdist2) * (ydist2)) + ((xdist3) * (ydist3)) + ((xdist4) * (ydist4));
@@ -783,6 +783,23 @@ void FindShapes::find_axiseulers2D()
     double Ixx = featuremoments[i * 6 + 0];
     double Iyy = featuremoments[i * 6 + 1];
     double Ixy = featuremoments[i * 6 + 2];
+    if (Ixy == 0)
+    {
+      if (Ixx > Iyy)
+      {
+        m_AxisEulerAngles[3 * i] = M_PI_2;
+        m_AxisEulerAngles[3 * i + 1] = 0.0f;
+        m_AxisEulerAngles[3 * i + 2] = 0.0f;
+        continue;
+      }
+      if (Iyy >= Ixx)
+      {
+        m_AxisEulerAngles[3 * i] = 0.0f;
+        m_AxisEulerAngles[3 * i + 1] = 0.0f;
+        m_AxisEulerAngles[3 * i + 2] = 0.0f;
+        continue;
+      }
+    }
     double I1 = (Ixx + Iyy) / 2.0 + sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0 + (Ixy * Ixy - Ixx * Iyy));
     double I2 = (Ixx + Iyy) / 2.0 - sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0 + (Ixy * Ixy - Ixx * Iyy));
     double n1x = (Ixx - I1) / Ixy;
