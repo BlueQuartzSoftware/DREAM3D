@@ -100,7 +100,7 @@ class Texture
 
       float addweight = 0;
       float totaladdweight = 0;
-      float totalweight = float(3 * ops.getODFSize());
+      float totalweight = float(ops.getODFSize());
       int bin, addbin;
       int bin1, bin2, bin3;
       int addbin1, addbin2, addbin3;
@@ -174,13 +174,16 @@ class Texture
           odf[i] = odf[i] / scale;
         }
       }
-      float remainingweight = totalweight - totaladdweight;
-      float background = remainingweight / static_cast<float>(ops.getODFSize());
-      for (int i = 0; i < ops.getODFSize(); i++)
+      else
       {
-        odf[i] += background;
+        float remainingweight = totalweight - totaladdweight;
+        float background = remainingweight / static_cast<float>(ops.getODFSize());
+        for (int i = 0; i < ops.getODFSize(); i++)
+        {
+          odf[i] += background;
+        }
       }
-      if(normalize == true)
+      if (normalize == true)
       {
         // Normalize the odf
         for (int i = 0; i < ops.getODFSize(); i++)
@@ -215,7 +218,7 @@ class Texture
       int32_t* TextureBins = textureBins->getPointer(0);
       float addweight = 0;
       float totaladdweight = 0;
-      float totalweight = 3 * hexOps.getODFSize();
+      float totalweight = float(hexOps.getODFSize());
       int bin, addbin;
       int bin1, bin2, bin3;
       int addbin1, addbin2, addbin3;
@@ -289,11 +292,14 @@ class Texture
           odf[i] = odf[i] / scale;
         }
       }
-      float remainingweight = totalweight - totaladdweight;
-      float background = remainingweight / static_cast<float>(ops.getODFSize());
-      for (int i = 0; i < ops.getODFSize(); i++)
+      else
       {
-        odf[i] += background;
+        float remainingweight = totalweight - totaladdweight;
+        float background = remainingweight / static_cast<float>(ops.getODFSize());
+        for (int i = 0; i < ops.getODFSize(); i++)
+        {
+          odf[i] += background;
+        }
       }
       if (normalize == true)
       {
@@ -330,7 +336,7 @@ class Texture
       int32_t* TextureBins = textureBins->getPointer(0);
       float addweight = 0;
       float totaladdweight = 0;
-      float totalweight = 3 * ops.getODFSize();
+      float totalweight = float(ops.getODFSize());
       int bin, addbin;
       int bin1, bin2, bin3;
       int addbin1, addbin2, addbin3;
@@ -403,11 +409,14 @@ class Texture
           odf[i] = odf[i] / scale;
         }
       }
-      float remainingweight = totalweight - totaladdweight;
-      float background = remainingweight / static_cast<float>(ops.getODFSize());
-      for (int i = 0; i < ops.getODFSize(); i++)
+      else
       {
-        odf[i] += background;
+        float remainingweight = totalweight - totaladdweight;
+        float background = remainingweight / static_cast<float>(ops.getODFSize());
+        for (int i = 0; i < ops.getODFSize(); i++)
+        {
+          odf[i] += background;
+        }
       }
       if (normalize == true)
       {

@@ -572,6 +572,12 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
       err = StatsGen::GenCubicODFPlotData(odf.data(), eulers->getPointer(0), npoints);
     } else {
 
+      //odf.resize(CubicOps::k_OdfSize);
+      //Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(),
+      //  weights.data(), sigmas.data(), true,
+      //  odf.data(), numEntries);
+
+      //err = StatsGen::GenCubicODFPlotData(odf.data(), eulers->getPointer(0), npoints);
       // The user bulk loaded the angles which represent our angles. No need to sample
       // the angles to generate an ODF.
       for(int i = 0; i < e1s.size(); i++)
