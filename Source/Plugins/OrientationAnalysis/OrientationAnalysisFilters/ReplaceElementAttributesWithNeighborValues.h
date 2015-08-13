@@ -32,27 +32,25 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
-#ifndef _NeighborCICorrelation_H_
-#define _NeighborCICorrelation_H_
+#ifndef _ReplaceElementAttributesWithNeighborValues_H_
+#define _ReplaceElementAttributesWithNeighborValues_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @brief The NeighborCICorrelation class. See [Filter documentation](@ref neighborcicorrelation) for details.
+ * @brief The ReplaceElementAttributesWithNeighborValues class. See [Filter documentation](@ref ReplaceElementAttributesWithNeighborValues) for details.
  */
-class NeighborCICorrelation : public AbstractFilter
+class ReplaceElementAttributesWithNeighborValues : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(NeighborCICorrelation)
-    DREAM3D_STATIC_NEW_MACRO(NeighborCICorrelation)
-    DREAM3D_TYPE_MACRO_SUPER(NeighborCICorrelation, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(ReplaceElementAttributesWithNeighborValues)
+    DREAM3D_STATIC_NEW_MACRO(ReplaceElementAttributesWithNeighborValues)
+    DREAM3D_TYPE_MACRO_SUPER(ReplaceElementAttributesWithNeighborValues, AbstractFilter)
 
-    virtual ~NeighborCICorrelation();
+    virtual ~ReplaceElementAttributesWithNeighborValues();
 
     DREAM3D_FILTER_PARAMETER(float, MinConfidence)
     Q_PROPERTY(float MinConfidence READ getMinConfidence WRITE setMinConfidence)
@@ -140,7 +138,7 @@ class NeighborCICorrelation : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    NeighborCICorrelation();
+    ReplaceElementAttributesWithNeighborValues();
 
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -148,10 +146,10 @@ class NeighborCICorrelation : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_DATAARRAY_VARIABLE(float, ConfidenceIndex)
+    DEFINE_IDATAARRAY_VARIABLE(InArray)
 
-    NeighborCICorrelation(const NeighborCICorrelation&); // Copy Constructor Not Implemented
-    void operator=(const NeighborCICorrelation&); // Operator '=' Not Implemented
+    ReplaceElementAttributesWithNeighborValues(const ReplaceElementAttributesWithNeighborValues&); // Copy Constructor Not Implemented
+    void operator=(const ReplaceElementAttributesWithNeighborValues&); // Operator '=' Not Implemented
 };
 
-#endif /* NeighborCICorrelation_H_ */
+#endif /* _ReplaceElementAttributesWithNeighborValues_H_ */

@@ -651,6 +651,7 @@ class DataArray : public IDataArray
         m_Array = newArray;
         m_OwnsData = true;
         m_MaxId = newSize - 1;
+        m_IsAllocated = true;
         return 0;
       }
 
@@ -693,7 +694,7 @@ class DataArray : public IDataArray
       m_Array = newArray;
       // This object has now allocated its memory and owns it.
       m_OwnsData = true;
-
+      m_IsAllocated = true;
       m_MaxId = newSize - 1;
 
       return err;

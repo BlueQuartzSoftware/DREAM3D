@@ -113,7 +113,8 @@ int BetaOps::calculateCorrelatedParameters(std::vector<std::vector<float> >& dat
       }
       stddev = stddev / float(data[i].size());
       if (stddev == 0)
-      { alpha = 0;
+      {
+        alpha = 0;
         beta = 0;
       }
       else
