@@ -703,7 +703,7 @@ FOrientArrayType CubicOps::determineEulerAngles(uint64_t seed, int choose)
 {
   float init[3];
   float step[3];
-  float phi[3];
+  int32_t phi[3];
   float h1, h2, h3;
 
   init[0] = Detail::CubicDim1InitValue;
@@ -712,9 +712,9 @@ FOrientArrayType CubicOps::determineEulerAngles(uint64_t seed, int choose)
   step[0] = Detail::CubicDim1StepValue;
   step[1] = Detail::CubicDim2StepValue;
   step[2] = Detail::CubicDim3StepValue;
-  phi[0] = static_cast<float>(choose % 18);
-  phi[1] = static_cast<float>((choose / 18) % 18);
-  phi[2] = static_cast<float>(choose / (18 * 18));
+  phi[0] = static_cast<int32_t>(choose % 18);
+  phi[1] = static_cast<int32_t>((choose / 18) % 18);
+  phi[2] = static_cast<int32_t>(choose / (18 * 18));
 
   _calcDetermineHomochoricValues(seed, init, step, phi, choose, h1, h2, h3);
 
@@ -754,7 +754,7 @@ FOrientArrayType CubicOps::determineRodriguesVector(uint64_t seed, int choose)
 {
   float init[3];
   float step[3];
-  float phi[3];
+  int32_t phi[3];
   float h1, h2, h3;
 
   init[0] = Detail::CubicDim1InitValue;
@@ -763,9 +763,9 @@ FOrientArrayType CubicOps::determineRodriguesVector(uint64_t seed, int choose)
   step[0] = Detail::CubicDim1StepValue;
   step[1] = Detail::CubicDim2StepValue;
   step[2] = Detail::CubicDim3StepValue;
-  phi[0] = static_cast<float>(choose % 18);
-  phi[1] = static_cast<float>((choose / 18) % 18);
-  phi[2] = static_cast<float>(choose / (18 * 18));
+  phi[0] = static_cast<int32_t>(choose % 18);
+  phi[1] = static_cast<int32_t>((choose / 18) % 18);
+  phi[2] = static_cast<int32_t>(choose / (18 * 18));
 
   _calcDetermineHomochoricValues(seed, init, step, phi, choose, h1, h2, h3);
   FOrientArrayType ho(h1, h2, h3);
