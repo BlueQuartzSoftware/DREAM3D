@@ -140,10 +140,10 @@ class OrientationLib_EXPORT SpaceGroupOps
     virtual void getFZQuat(QuatF& qr);
     virtual int getMisoBin(FOrientArrayType rod) = 0;
     virtual bool inUnitTriangle(float eta, float chi) = 0;
-    virtual FOrientArrayType determineEulerAngles(int choose) = 0;
+    virtual FOrientArrayType determineEulerAngles(uint64_t seed, int choose) = 0;
     virtual FOrientArrayType randomizeEulerAngles(FOrientArrayType euler) = 0;
     virtual size_t getRandomSymmetryOperatorIndex(int numSymOps);
-    virtual FOrientArrayType determineRodriguesVector(int choose) = 0;
+    virtual FOrientArrayType determineRodriguesVector(uint64_t seed, int choose) = 0;
     virtual int getOdfBin(FOrientArrayType rod) = 0;
     virtual void getSchmidFactorAndSS(float load[3], float& schmidfactor, float angleComps[2], int& slipsys) = 0;
     virtual void getSchmidFactorAndSS(float load[3], float plane[3], float direction[3], float& schmidfactor, float angleComps[2], int& slipsys) = 0;
@@ -218,7 +218,7 @@ class OrientationLib_EXPORT SpaceGroupOps
     void _calcQuatNearestOrigin(const QuatF quatsym[24], int numsym, QuatF& qr);
 
     int _calcMisoBin(float dim[3], float bins[3], float step[3], const FOrientArrayType& homochoric);
-    void _calcDetermineHomochoricValues(float init[3], float step[3], float phi[3], int choose, float& r1, float& r2, float& r3);
+    void _calcDetermineHomochoricValues(uint64_t seed, float init[3], float step[3], int32_t phi[3], int choose, float& r1, float& r2, float& r3);
     int _calcODFBin(float dim[3], float bins[3], float step[3], FOrientArrayType homochoric);
 
   private:

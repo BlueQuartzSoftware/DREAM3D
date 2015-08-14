@@ -33,82 +33,59 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
-#include "ShapeOps.h"
+#include "CylinderAOps.h"
 
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 
-#include "DREAM3DLib/Geometry/ShapeOps/CubeOctohedronOps.h"
-#include "DREAM3DLib/Geometry/ShapeOps/CylinderAOps.h"
-#include "DREAM3DLib/Geometry/ShapeOps/CylinderBOps.h"
-#include "DREAM3DLib/Geometry/ShapeOps/CylinderCOps.h"
-#include "DREAM3DLib/Geometry/ShapeOps/EllipsoidOps.h"
-#include "DREAM3DLib/Geometry/ShapeOps/SuperEllipsoidOps.h"
-
-
-static const float cube_root_of_one = powf(1.0f, 0.333333333f);
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ShapeOps::ShapeOps()
+CylinderAOps::CylinderAOps()
 {
-
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ShapeOps::~ShapeOps()
+CylinderAOps::~CylinderAOps()
 {
+}
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+float CylinderAOps::radcur1(QMap<ArgName, float> args)
+{
+  float radcur1 = 0.0f;
+
+  float volcur = args[VolCur];
+  float bovera = args[B_OverA];
+  float covera = args[C_OverA];
+
+  //the equation for volume for an A cylinder is pi*b*c*h where b and c are semi axis lengths, but
+  //h is a full axis length - meaning h = 2a. However, since our aspect ratios relate semi axis lengths, the 2.0
+  //factor can be ingored in this part
+  radcur1 = static_cast<float>((volcur * DREAM3D::Constants::k_1OverPi * (1.0f / bovera) * (1.0f / covera)));
+  radcur1 = powf(radcur1, 0.333333333333f);
+  return radcur1;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<ShapeOps::Pointer> ShapeOps::getShapeOpsQVector()
+float CylinderAOps::inside(float axis1comp, float axis2comp, float axis3comp)
 {
-  QVector<ShapeOps::Pointer> m_ShapeOps;
-  m_ShapeOps.push_back(EllipsoidOps::New());
-  m_ShapeOps.push_back(SuperEllipsoidOps::New());
-  m_ShapeOps.push_back(CubeOctohedronOps::New());
-  m_ShapeOps.push_back(CylinderAOps::New());
-  m_ShapeOps.push_back(CylinderBOps::New());
-  m_ShapeOps.push_back(CylinderCOps::New());
-
-  return m_ShapeOps;
+  float inside = -1.0;
+  if (fabs(axis1comp) <= 1.0)
+  {
+    // inside = 1.0;
+    axis2comp = fabs(axis2comp);
+    axis3comp = fabs(axis3comp);
+    axis2comp = axis2comp * axis2comp;
+    axis3comp = axis3comp * axis3comp;
+    inside = static_cast<float>( 1.0 - axis2comp - axis3comp );
+  }
+  return inside;
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-std::vector<ShapeOps::Pointer> ShapeOps::getShapeOpsVector()
-{
-  std::vector<ShapeOps::Pointer> m_ShapeOps;
-  m_ShapeOps.push_back(EllipsoidOps::New());
-  m_ShapeOps.push_back(SuperEllipsoidOps::New());
-  m_ShapeOps.push_back(CubeOctohedronOps::New());
-  m_ShapeOps.push_back(CylinderAOps::New());
-  m_ShapeOps.push_back(CylinderBOps::New());
-  m_ShapeOps.push_back(CylinderCOps::New());
-
-  return m_ShapeOps;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-float ShapeOps::radcur1(QMap<ArgName, float> args)
-{
-  return cube_root_of_one;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-float ShapeOps::inside(float axis1comp, float axis2comp, float axis3comp)
-{
-  return -1.0;
-}
-

@@ -100,7 +100,7 @@ class Texture
 
       float addweight = 0;
       float totaladdweight = 0;
-      float totalweight = float(3 * ops.getODFSize());
+      float totalweight = float(ops.getODFSize());
       int bin, addbin;
       int bin1, bin2, bin3;
       int addbin1, addbin2, addbin3;
@@ -174,30 +174,16 @@ class Texture
           odf[i] = odf[i] / scale;
         }
       }
-      float remainingweight = totalweight;
-      for (int i = 0; i < ops.getODFSize(); i++)
+      else
       {
-        remainingweight = remainingweight - odf[i];
+        float remainingweight = totalweight - totaladdweight;
+        float background = remainingweight / static_cast<float>(ops.getODFSize());
+        for (int i = 0; i < ops.getODFSize(); i++)
+        {
+          odf[i] += background;
+        }
       }
-      float random1, random2, random3;
-      float ea1, ea2, ea3;
-      for (float i = 0.0f; i < remainingweight; i++)
-      {
-        random1 = rg.genrand_res53();
-        random2 = rg.genrand_res53();
-        random3 = rg.genrand_res53();
-        ea1 = 2.0 * DREAM3D::Constants::k_Pi * random1;
-        ea2 = acos(2.0 * (random2 - 0.5));
-        ea3 = 2.0 * DREAM3D::Constants::k_Pi * random3;
-
-        FOrientArrayType eu(ea1, ea2, ea3);
-        FOrientArrayType rod(4);
-        OrientationTransforms<FOrientArrayType, float>::eu2ro(eu, rod);
-        rod = ops.getODFFZRod(rod);
-        bin = ops.getOdfBin(rod);
-        odf[bin]++;
-      }
-      if(normalize == true)
+      if (normalize == true)
       {
         // Normalize the odf
         for (int i = 0; i < ops.getODFSize(); i++)
@@ -232,7 +218,7 @@ class Texture
       int32_t* TextureBins = textureBins->getPointer(0);
       float addweight = 0;
       float totaladdweight = 0;
-      float totalweight = 3 * hexOps.getODFSize();
+      float totalweight = float(hexOps.getODFSize());
       int bin, addbin;
       int bin1, bin2, bin3;
       int addbin1, addbin2, addbin3;
@@ -298,40 +284,27 @@ class Texture
           }
         }
       }
-      if(totaladdweight > totalweight)
+      if (totaladdweight > totalweight)
       {
         float scale = (totaladdweight / totalweight);
-        for (int i = 0; i < hexOps.getODFSize(); i++)
+        for (int i = 0; i < ops.getODFSize(); i++)
         {
           odf[i] = odf[i] / scale;
         }
       }
-      float remainingweight = totalweight;
-      for (int i = 0; i < hexOps.getODFSize(); i++)
+      else
       {
-        remainingweight = remainingweight - odf[i];
+        float remainingweight = totalweight - totaladdweight;
+        float background = remainingweight / static_cast<float>(ops.getODFSize());
+        for (int i = 0; i < ops.getODFSize(); i++)
+        {
+          odf[i] += background;
+        }
       }
-      float random1, random2, random3;
-      float ea1, ea2, ea3;
-      for (float i = 0.0f; i < remainingweight; i++)
-      {
-        random1 = rg.genrand_res53();
-        random2 = rg.genrand_res53();
-        random3 = rg.genrand_res53();
-        ea1 = 2.0 * DREAM3D::Constants::k_Pi * random1;
-        ea2 = acos(2.0 * (random2 - 0.5));
-        ea3 = 2.0 * DREAM3D::Constants::k_Pi * random3;
-        FOrientArrayType eu(ea1, ea2, ea3);
-        FOrientArrayType rod(4);
-        OrientationTransforms<FOrientArrayType, float>::eu2ro(eu, rod);
-        rod = ops.getODFFZRod(rod);
-        bin = ops.getOdfBin(rod);
-        odf[bin]++;
-      }
-      if(normalize == true)
+      if (normalize == true)
       {
         // Normalize the odf
-        for (int i = 0; i < hexOps.getODFSize(); i++)
+        for (int i = 0; i < ops.getODFSize(); i++)
         {
           odf[i] = odf[i] / totalweight;
         }
@@ -363,7 +336,7 @@ class Texture
       int32_t* TextureBins = textureBins->getPointer(0);
       float addweight = 0;
       float totaladdweight = 0;
-      float totalweight = 3 * ops.getODFSize();
+      float totalweight = float(ops.getODFSize());
       int bin, addbin;
       int bin1, bin2, bin3;
       int addbin1, addbin2, addbin3;
@@ -428,7 +401,7 @@ class Texture
           }
         }
       }
-      if(totaladdweight > totalweight)
+      if (totaladdweight > totalweight)
       {
         float scale = (totaladdweight / totalweight);
         for (int i = 0; i < ops.getODFSize(); i++)
@@ -436,27 +409,14 @@ class Texture
           odf[i] = odf[i] / scale;
         }
       }
-      float remainingweight = totalweight;
-      for (int i = 0; i < ops.getODFSize(); i++)
+      else
       {
-        remainingweight = remainingweight - odf[i];
-      }
-      float random1, random2, random3;
-      float ea1, ea2, ea3;
-      for (float i = 0.0; i < remainingweight; i++)
-      {
-        random1 = rg.genrand_res53();
-        random2 = rg.genrand_res53();
-        random3 = rg.genrand_res53();
-        ea1 = 2.0 * DREAM3D::Constants::k_Pi * random1;
-        ea2 = acos(2.0 * (random2 - 0.5));
-        ea3 = 2.0 * DREAM3D::Constants::k_Pi * random3;
-        FOrientArrayType eu(ea1, ea2, ea3);
-        FOrientArrayType rod(4);
-        OrientationTransforms<FOrientArrayType, float>::eu2ro(eu, rod);
-        rod = ops.getODFFZRod(rod);
-        bin = ops.getOdfBin(rod);
-        odf[bin]++;
+        float remainingweight = totalweight - totaladdweight;
+        float background = remainingweight / static_cast<float>(ops.getODFSize());
+        for (int i = 0; i < ops.getODFSize(); i++)
+        {
+          odf[i] += background;
+        }
       }
       if (normalize == true)
       {
@@ -466,7 +426,6 @@ class Texture
           odf[i] = odf[i] / totalweight;
         }
       }
-
     }
 
     /**
@@ -487,8 +446,8 @@ class Texture
       const int odfsize = orientationOps.getODFSize();
       const int mdfsize = orientationOps.getMDFSize();
 
-
-      DREAM3D_RANDOMNG_NEW()
+      uint64_t m_Seed = QDateTime::currentMSecsSinceEpoch();
+      DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
 
       int mbin;
       float w = 0;
@@ -519,6 +478,8 @@ class Texture
 
       for (int i = 0; i < remainingcount; i++)
       {
+        m_Seed++;
+        DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
         random1 = rg.genrand_res53();
         random2 = rg.genrand_res53();
         choose1 = 0;
@@ -534,12 +495,13 @@ class Texture
           if(random2 >= d && random2 < totaldensity) { choose2 = static_cast<int>(j); }
         }
 
-        FOrientArrayType eu = orientationOps.determineEulerAngles(choose1);
+        FOrientArrayType eu = orientationOps.determineEulerAngles(m_Seed, choose1);
         FOrientArrayType qu(4);
         OrientationTransforms<FOrientArrayType, float>::eu2qu(eu, qu);
         q1 = qu.toQuaternion();
 
-        eu = orientationOps.determineEulerAngles(choose2);
+        m_Seed++;
+        eu = orientationOps.determineEulerAngles(m_Seed, choose2);
         OrientationTransforms<FOrientArrayType, float>::eu2qu(eu, qu);
         q2 = qu.toQuaternion();
         w = orientationOps.getMisoQuat(q1, q2, n1, n2, n3);

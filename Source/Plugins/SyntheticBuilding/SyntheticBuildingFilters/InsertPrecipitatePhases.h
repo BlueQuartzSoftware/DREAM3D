@@ -79,6 +79,12 @@ class InsertPrecipitatePhases : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, CsvOutputFile)
     Q_PROPERTY(QString CsvOutputFile READ getCsvOutputFile WRITE setCsvOutputFile)
 
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, MaskArrayPath)
+    Q_PROPERTY(DataArrayPath MaskArrayPath READ getMaskArrayPath WRITE setMaskArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(bool, UseMask)
+    Q_PROPERTY(bool UseMask READ getUseMask WRITE setUseMask)
+
     DREAM3D_FILTER_PARAMETER(bool, HavePrecips)
     Q_PROPERTY(bool HavePrecips READ getHavePrecips WRITE setHavePrecips)
 
@@ -230,12 +236,11 @@ class InsertPrecipitatePhases : public AbstractFilter
     /**
      * @brief generate_precipitate Creates a precipitate by sampling the size and morphological statistical distributions
      * @param phase Index of the Ensemble type for the Feature to be generated
-     * @param Seed Value to intialize random number generator
      * @param precip Precip_t struct pointer to be intialized
      * @param shapeclass Type of precipitate shape to be generated
      * @param OrthoOps Pointer to SpaceGroupOps object
      */
-    void generate_precipitate(int32_t phase, uint64_t Seed, Precip_t* precip, uint32_t shapeclass, SpaceGroupOps::Pointer OrthoOps);
+    void generate_precipitate(int32_t phase, Precip_t* precip, uint32_t shapeclass, SpaceGroupOps::Pointer OrthoOps);
 
     /**
      * @brief load_precipitates Reads a list of precipitates from a file to be used as the packed volume
@@ -321,7 +326,7 @@ class InsertPrecipitatePhases : public AbstractFilter
      * @param volume Volume for a given precipitate
      * @return Normalized RDF
      */
-    std::vector<float> normalizeRDF(std::vector<float> rdf, int num_bins, float stepsize, float rdfmin, int32_t numPPTfeatures, float volume);
+    std::vector<float> normalizeRDF(std::vector<float> rdf, int num_bins, float stepsize, float rdfmin, int32_t numPPTfeatures);
 
     /**
      * @brief check_RDFerror Computes the error between the current radial distribution function
@@ -392,7 +397,6 @@ class InsertPrecipitatePhases : public AbstractFilter
 
   private:
     int32_t m_FirstPrecipitateFeature;
-    uint64_t Seed;
     float m_SizeX;
     float m_SizeY;
     float m_SizeZ;
@@ -400,22 +404,19 @@ class InsertPrecipitatePhases : public AbstractFilter
     float m_YRes;
     float m_ZRes;
     float m_TotalVol;
+    float m_UseableTotalVol;
     int64_t m_XPoints;
     int64_t m_YPoints;
     int64_t m_ZPoints;
     int64_t m_TotalPoints;
 
-    QMap<uint32_t, ShapeOps*> m_ShapeOps;
-    ShapeOps::Pointer m_UnknownShapeOps;
-    ShapeOps::Pointer m_CubicOctohedronOps;
-    ShapeOps::Pointer m_CylinderOps;
-    ShapeOps::Pointer m_EllipsoidOps;
-    ShapeOps::Pointer m_SuperEllipsoidOps;
-
+    // Cell Data - make sure these are all initialized to NULL in the constructor
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_DATAARRAY_VARIABLE(bool, Mask)
     DEFINE_DATAARRAY_VARIABLE(int8_t, BoundaryCells)
 
+    // Feature Data - make sure these are all initialized to NULL in the constructor
     DEFINE_DATAARRAY_VARIABLE(float, AxisEulerAngles)
     DEFINE_DATAARRAY_VARIABLE(float, Centroids)
     DEFINE_DATAARRAY_VARIABLE(float, AxisLengths)
@@ -426,14 +427,22 @@ class InsertPrecipitatePhases : public AbstractFilter
     DEFINE_DATAARRAY_VARIABLE(int32_t, NumCells)
     NeighborList<float>::WeakPointer m_ClusteringList;
 
+    // Ensemble Data - make sure these are all initialized to NULL in the constructor
     DEFINE_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
     DEFINE_DATAARRAY_VARIABLE(uint32_t, ShapeTypes)
     DEFINE_DATAARRAY_VARIABLE(int32_t, NumFeatures)
 
+    // All other private variables
+    QVector<ShapeOps::Pointer> m_ShapeOps;
+    ShapeOps::Pointer m_UnknownShapeOps;
+    ShapeOps::Pointer m_CubicOctohedronOps;
+    ShapeOps::Pointer m_CylinderOps;
+    ShapeOps::Pointer m_EllipsoidOps;
+    ShapeOps::Pointer m_SuperEllipsoidOps;
+    OrthoRhombicOps::Pointer m_OrthoOps;
+
     int64_t* m_Neighbors;
     StatsDataArray::WeakPointer m_StatsDataArray;
-
-    OrthoRhombicOps::Pointer m_OrthoOps;
 
     std::vector<std::vector<int64_t> > columnlist;
     std::vector<std::vector<int64_t> > rowlist;
@@ -441,6 +450,8 @@ class InsertPrecipitatePhases : public AbstractFilter
 
     std::vector<size_t> pointsToAdd;
     std::vector<size_t> pointsToRemove;
+
+    uint64_t m_Seed;
 
     std::vector<std::vector<float> > featuresizedist;
     std::vector<std::vector<float> > simfeaturesizedist;

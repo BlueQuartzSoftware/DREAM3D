@@ -477,7 +477,8 @@ void MatchCrystallography::determine_boundary_areas()
 // -----------------------------------------------------------------------------
 void MatchCrystallography::assign_eulers(size_t ensem)
 {
-  DREAM3D_RANDOMNG_NEW()
+  uint64_t m_Seed = QDateTime::currentMSecsSinceEpoch();
+  DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
 
   int32_t numbins = 0;
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
@@ -494,7 +495,8 @@ void MatchCrystallography::assign_eulers(size_t ensem)
     phase = m_FeaturePhases[i];
     if (phase == ensem)
     {
-      random = static_cast<float>( rg.genrand_res53() );
+      m_Seed++;
+      random = static_cast<float>(rg.genrand_res53());
 
       if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructures[phase] ) { numbins = cOps.getODFSize(); };
       if ( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructures[phase] ) { numbins = hOps.getODFSize(); }
@@ -511,7 +513,7 @@ void MatchCrystallography::assign_eulers(size_t ensem)
 
       choose = pick_euler(random, numbins);
 
-      FOrientArrayType eulers = m_OrientationOps[m_CrystalStructures[ensem]]->determineEulerAngles(choose);
+      FOrientArrayType eulers = m_OrientationOps[m_CrystalStructures[ensem]]->determineEulerAngles(m_Seed, choose);
       eulers = m_OrientationOps[m_CrystalStructures[ensem]]->randomizeEulerAngles(eulers);
       m_FeatureEulerAngles[3 * i] = eulers[0];
       m_FeatureEulerAngles[3 * i + 1] = eulers[1];
@@ -644,7 +646,9 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
 
-  DREAM3D_RANDOMNG_NEW()
+  uint64_t m_Seed = QDateTime::currentMSecsSinceEpoch();
+  DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
+
   int32_t numbins = 0;
   int32_t iterations = 0, badtrycount = 0;
   float random = 0.0f;
@@ -670,6 +674,7 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
   int32_t lastIteration = 0;
   while (badtrycount < (m_MaxIterations / 10) && iterations < m_MaxIterations)
   {
+    m_Seed++;
     uint64_t currentMillis = QDateTime::currentMSecsSinceEpoch();
     if (currentMillis - millis > 1000)
     {
@@ -731,7 +736,7 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
 
         choose = pick_euler(random, numbins);
 
-        FOrientArrayType g1ea = m_OrientationOps[m_CrystalStructures[ensem]]->determineEulerAngles(choose);
+        FOrientArrayType g1ea = m_OrientationOps[m_CrystalStructures[ensem]]->determineEulerAngles(m_Seed, choose);
         g1ea = m_OrientationOps[m_CrystalStructures[ensem]]->randomizeEulerAngles(g1ea);
         FOrientArrayType quat(4, 0.0);
         FOrientTransformsType::eu2qu(g1ea, quat);

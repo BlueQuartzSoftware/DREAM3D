@@ -64,10 +64,6 @@
 #include "DREAM3DLib/StatsData/PrimaryStatsData.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "DREAM3DLib/Utilities/TimeUtilities.h"
-#include "DREAM3DLib/Geometry/ShapeOps/CubeOctohedronOps.h"
-#include "DREAM3DLib/Geometry/ShapeOps/CylinderOps.h"
-#include "DREAM3DLib/Geometry/ShapeOps/EllipsoidOps.h"
-#include "DREAM3DLib/Geometry/ShapeOps/SuperEllipsoidOps.h"
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 
@@ -270,16 +266,7 @@ PackPrimaryPhases::PackPrimaryPhases() :
 {
   m_StatsDataArray = StatsDataArray::NullPointer();
 
-  m_EllipsoidOps = EllipsoidOps::New();
-  m_ShapeOps[DREAM3D::ShapeType::EllipsoidShape] = m_EllipsoidOps.get();
-  m_SuperEllipsoidOps = SuperEllipsoidOps::New();
-  m_ShapeOps[DREAM3D::ShapeType::SuperEllipsoidShape] = m_SuperEllipsoidOps.get();
-  m_CubicOctohedronOps = CubeOctohedronOps::New();
-  m_ShapeOps[DREAM3D::ShapeType::CubeOctahedronShape] = m_CubicOctohedronOps.get();
-  m_CylinderOps = CylinderOps::New();
-  m_ShapeOps[DREAM3D::ShapeType::CylinderShape] = m_CylinderOps.get();
-  m_UnknownShapeOps = ShapeOps::New();
-  m_ShapeOps[DREAM3D::ShapeType::UnknownShapeType] = m_UnknownShapeOps.get();
+  m_ShapeOps = ShapeOps::getShapeOpsQVector();
 
   m_OrthoOps = OrthoRhombicOps::New();
 
@@ -875,7 +862,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
   }
 
   QVector<size_t> cDim(1, 1);
-  Int32ArrayType::Pointer exclusionOwnersPtr = Int32ArrayType::CreateArray(featureOwnersPtr->getNumberOfTuples(), cDim, "_INTERNAL_USE_ONLY_PackPrimaryFeatures::exclusions_owners");
+  Int32ArrayType::Pointer exclusionOwnersPtr = Int32ArrayType::CreateArray(m_TotalPackingPoints, cDim, "_INTERNAL_USE_ONLY_PackPrimaryFeatures::exclusions_owners");
   exclusionOwnersPtr->initializeWithValue(0);
 
   // This is the set that we are going to keep updated with the points that are not in an exclusion zone
@@ -886,6 +873,21 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
   int32_t* featureOwners = featureOwnersPtr->getPointer(0);
   int32_t* exclusionOwners = exclusionOwnersPtr->getPointer(0);
   int64_t featureOwnersIdx = 0;
+
+  // determine initial set of available points
+  availablePointsCount = 0;
+  for (size_t i = 0; i < m_TotalPackingPoints; i++)
+  {
+    if ((exclusionOwners[i] == 0 && m_UseMask == false) || (exclusionOwners[i] == 0 && m_UseMask == true && m_Mask[i] == true))
+    {
+      availablePoints[i] = availablePointsCount;
+      availablePointsInv[availablePointsCount] = i;
+      availablePointsCount++;
+    }
+  }
+  // and clear the pointsToRemove and pointsToAdd vectors from the initial packing
+  pointsToRemove.clear();
+  pointsToAdd.clear();
 
   // initialize the sim and goal size distributions for the primary phases
   featuresizedist.resize(primaryphases.size());
@@ -949,7 +951,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
       iter++;
       m_Seed++;
       phase = primaryphases[j];
-      generate_feature(phase, m_Seed, &feature, m_ShapeTypes[phase]);
+      generate_feature(phase, &feature, m_ShapeTypes[phase]);
       currentsizedisterror = check_sizedisterror(&feature);
       change = (currentsizedisterror) - (oldsizedisterror);
       if (change > 0.0f || currentsizedisterror > (1.0f - (float(iter) * 0.001f)) || curphasevol[j] < (0.75f * factor * curphasetotalvol))
@@ -993,7 +995,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
         iter++;
         m_Seed++;
         phase = primaryphases[j];
-        generate_feature(phase, static_cast<int32_t>(m_Seed), &feature, m_ShapeTypes[phase]);
+        generate_feature(phase, &feature, m_ShapeTypes[phase]);
         currentsizedisterror = check_sizedisterror(&feature);
         change = (currentsizedisterror) - (oldsizedisterror);
         if (change > 0 || currentsizedisterror > (1.0f - (iter * 0.001f)) || curphasevol[j] < (0.75f * factor * curphasetotalvol))
@@ -1170,7 +1172,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
   availablePointsCount = 0;
   for (int64_t i = 0; i < m_TotalPackingPoints; i++)
   {
-    if (exclusionOwners[i] == 0)
+    if ((exclusionOwners[i] == 0 && m_UseMask == false) || (exclusionOwners[i] == 0 && m_UseMask == true && m_Mask[i] == true))
     {
       availablePoints[i] = availablePointsCount;
       availablePointsInv[availablePointsCount] = i;
@@ -1386,9 +1388,9 @@ Int32ArrayType::Pointer PackPrimaryPhases::initialize_packinggrid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::generate_feature(int32_t phase, uint64_t Seed, Feature_t* feature, uint32_t shapeclass)
+void PackPrimaryPhases::generate_feature(int32_t phase, Feature_t* feature, uint32_t shapeclass)
 {
-  DREAM3D_RANDOMNG_NEW_SEEDED(Seed)
+  DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed)
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock().get());
 
@@ -1453,17 +1455,19 @@ void PackPrimaryPhases::generate_feature(int32_t phase, uint64_t Seed, Feature_t
     r2 = static_cast<float>(rg.genrand_beta(a2, b2));
     r3 = static_cast<float>(rg.genrand_beta(a3, b3));
   }
-
+  FloatArrayType::Pointer axisodf = pp->getAxisOrientation();
+  int32_t numbins = axisodf->getNumberOfTuples();
   float random = static_cast<float>(rg.genrand_res53());
   float totaldensity = 0.0f;
   int32_t bin = 0;
-  FloatArrayType::Pointer axisodf = pp->getAxisOrientation();
-  while (random > totaldensity && bin < static_cast<int32_t>(axisodf->getSize()) )
+  for (int32_t j = 0; j < numbins; j++)
   {
-    totaldensity = totaldensity + axisodf->getValue(bin);
-    bin++;
+    float density = axisodf->getValue(j);
+    float td1 = totaldensity;
+    totaldensity = totaldensity + density;
+    if (random < totaldensity && random >= td1) { bin = j; break; }
   }
-  FOrientArrayType eulers = m_OrthoOps->determineEulerAngles(bin);
+  FOrientArrayType eulers = m_OrthoOps->determineEulerAngles(m_Seed, bin);
   VectorOfFloatArray omega3 = pp->getFeatureSize_Omegas();
   float mf = omega3[0]->getValue(diameter);
   float s = omega3[1]->getValue(diameter);
@@ -2023,7 +2027,7 @@ void PackPrimaryPhases::insert_feature(size_t gnum)
   uint32_t shapeclass = m_ShapeTypes[m_FeaturePhases[gnum]];
 
   // Bail if the shapeclass is not one of our enumerated types
-  if (shapeclass != 0 && shapeclass != 1 && shapeclass != 2 && shapeclass != 3)
+  if (shapeclass >= DREAM3D::ShapeType::ShapeTypeEnd)
   {
     QString ss = QObject::tr("Undefined shape class in shape types array with path %1").arg(m_InputShapeTypesArrayPath.serialize());
     notifyErrorMessage(getHumanLabel(), ss, -666);
@@ -2032,9 +2036,10 @@ void PackPrimaryPhases::insert_feature(size_t gnum)
   }
 
   // init any values for each of the Shape Ops
-  for (QMap<uint32_t, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops)
+  // init any values for each of the Shape Ops
+  for (size_t iter = 0; iter < m_ShapeOps.size(); iter++)
   {
-    ops.value()->init();
+    m_ShapeOps[iter]->init();
   }
   // Create our Argument Map
   QMap<ShapeOps::ArgName, float> shapeArgMap;
@@ -2193,9 +2198,10 @@ void PackPrimaryPhases::assign_voxels()
     }
 
     // init any values for each of the Shape Ops
-    for (QMap<uint32_t, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
+    // init any values for each of the Shape Ops
+    for (size_t iter = 0; iter < m_ShapeOps.size(); iter++)
     {
-      ops.value()->init();
+      m_ShapeOps[iter]->init();
     }
     // Create our Argument Map
     QMap<ShapeOps::ArgName, float> shapeArgMap;
@@ -2246,7 +2252,7 @@ void PackPrimaryPhases::assign_voxels()
 
     float radCur[3] = { radcur1, radcur2, radcur3 };
     float xx[3] = {xc, yc, zc };
-    ShapeOps* shapeOps = m_ShapeOps[shapeclass];
+    ShapeOps* shapeOps = m_ShapeOps[shapeclass].get();
     //#if 0
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)

@@ -562,26 +562,13 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
   {
     // We now need to resize all the arrays here to make sure they are all allocated
-    if(weightSpreadGroupBox->isChecked() )
-    {
-      odf.resize(CubicOps::k_OdfSize);
-      Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(),
+    odf.resize(CubicOps::k_OdfSize);
+    Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(),
                                      weights.data(), sigmas.data(), true,
                                      odf.data(), numEntries);
 
-      err = StatsGen::GenCubicODFPlotData(odf.data(), eulers->getPointer(0), npoints);
-    } else {
+    err = StatsGen::GenCubicODFPlotData(odf.data(), eulers->getPointer(0), npoints);
 
-      // The user bulk loaded the angles which represent our angles. No need to sample
-      // the angles to generate an ODF.
-      for(int i = 0; i < e1s.size(); i++)
-      {
-        eulers->setComponent(i, 0, e1s[i]);
-        eulers->setComponent(i, 1, e2s[i]);
-        eulers->setComponent(i, 2, e3s[i]);
-      }
-
-    }
     CubicOps ops;
     config.eulers = eulers.get();
     config.imageDim = imageSize;
@@ -592,26 +579,14 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   }
   else if ( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
   {
-
-    if(weightSpreadGroupBox->isChecked() )
-    {
-      // We now need to resize all the arrays here to make sure they are all allocated
-      odf.resize(HexagonalOps::k_OdfSize);
-      Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(),
+    // We now need to resize all the arrays here to make sure they are all allocated
+    odf.resize(HexagonalOps::k_OdfSize);
+    Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(),
                                    weights.data(), sigmas.data(), true,
                                    odf.data(), numEntries);
 
-      err = StatsGen::GenHexODFPlotData(odf.data(), eulers->getPointer(0), npoints);
-    } else {
-      // The user bulk loaded the angles which represent our angles. No need to sample
-      // the angles to generate an ODF.
-      for(int i = 0; i < e1s.size(); i++)
-      {
-        eulers->setComponent(i, 0, e1s[i]);
-        eulers->setComponent(i, 1, e2s[i]);
-        eulers->setComponent(i, 2, e3s[i]);
-      }
-    }
+    err = StatsGen::GenHexODFPlotData(odf.data(), eulers->getPointer(0), npoints);
+
     HexagonalOps ops;
     config.eulers = eulers.get();
     config.imageDim = imageSize;
@@ -622,25 +597,14 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   }
   else if ( Ebsd::CrystalStructure::OrthoRhombic == m_CrystalStructure)
   {
-    if(weightSpreadGroupBox->isChecked() )
-    {
-      //    // We now need to resize all the arrays here to make sure they are all allocated
-      odf.resize(OrthoRhombicOps::k_OdfSize);
-      Texture::CalculateOrthoRhombicODFData(e1s.data(), e2s.data(), e3s.data(),
+    // We now need to resize all the arrays here to make sure they are all allocated
+    odf.resize(OrthoRhombicOps::k_OdfSize);
+    Texture::CalculateOrthoRhombicODFData(e1s.data(), e2s.data(), e3s.data(),
                                             weights.data(), sigmas.data(), true,
                                             odf.data(), numEntries);
 
-      err = StatsGen::GenOrthoRhombicODFPlotData(odf.data(), eulers->getPointer(0), npoints);
-    } else {
-      // The user bulk loaded the angles which represent our angles. No need to sample
-      // the angles to generate an ODF.
-      for(int i = 0; i < e1s.size(); i++)
-      {
-        eulers->setComponent(i, 0, e1s[i]);
-        eulers->setComponent(i, 1, e2s[i]);
-        eulers->setComponent(i, 2, e3s[i]);
-      }
-    }
+    err = StatsGen::GenOrthoRhombicODFPlotData(odf.data(), eulers->getPointer(0), npoints);
+
     OrthoRhombicOps ops;
     config.eulers = eulers.get();
     config.imageDim = imageSize;
