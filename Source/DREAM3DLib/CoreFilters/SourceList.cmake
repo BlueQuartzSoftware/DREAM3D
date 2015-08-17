@@ -36,6 +36,7 @@ set(_PublicFilters
   MoveData
   RawBinaryReader
   RemoveArrays
+  RemoveComponentFromArray
   RenameAttributeArray
   RenameAttributeMatrix
   RenameDataContainer
