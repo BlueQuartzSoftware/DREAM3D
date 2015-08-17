@@ -394,9 +394,8 @@ void FilterPipeline::printCitations(QTextStream& out)
     QString citation = (*iter)->getCitations();
     if(!citation.isEmpty())
     {
-      out << (*iter)->getNameOfClass() << ":\n";
-      out << citation;
+      out << (*iter)->getHumanLabel() << ":\n";
+      out << citation << "\n";
     }
-    // out << (*iter)->getCitations() << "\n";
   }
 }

@@ -188,6 +188,8 @@ void EMMPMFilter::dataCheck()
     QString ss = QObject::tr("The minimum number of classes is 2");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
+
+  notifyWarningMessage(getHumanLabel(), "this filter contains references (a BibTeX file can be exported with 'Pipeline->Export Pipeline Citations...')", 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -362,6 +364,49 @@ AbstractFilter::Pointer EMMPMFilter::newFilterInstance(bool copyFilterParameters
 // -----------------------------------------------------------------------------
 const QString EMMPMFilter::getCompiledLibraryName()
 { return EMMPMConstants::EMMPMBaseName; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EMMPMFilter::getCitations()
+{
+  return "\
+@inproceedings{chuang2008texture,\n\
+  title={Texture Classification in Microstructure Images of Advanced Materials},\n\
+  author={Chuang, Haiso-Chiang and Comer, Mary L and Simmons, Jeff P},\n\
+  booktitle={Image Analysis and Interpretation, 2008. SSIAI 2008. IEEE Southwest Symposium on},\n\
+  pages={1--4},\n\
+  year={2008},\n\
+  organization={IEEE}\n\
+}\n\
+@article{comer2000mpm,\n\
+  title={The EM/MPM algorithm for segmentation of textured images: analysis and further experimental results},\n\
+  author={Comer, Mary L and Delp, Edward J},\n\
+  journal={Image Processing, IEEE Transactions on},\n\
+  volume={9},\n\
+  number={10},\n\
+  pages={1731--1744},\n\
+  year={2000},\n\
+  publisher={IEEE}\n\
+}\n\
+@article{simmons2009application,\n\
+  title={Application and further development of advanced image processing algorithms for automated analysis of serial section image data},\n\
+  author={Simmons, JP and Chuang, P and Comer, M and Spowart, JE and Uchic, MD and De Graef, M},\n\
+  journal={Modelling and Simulation in Materials Science and Engineering},\n\
+  volume={17},\n\
+  number={2},\n\
+  pages={025002},\n\
+  year={2009},\n\
+  publisher={IOP Publishing}\n\
+}\n\
+@article{doria2009expectation,\n\
+  title={Expectation-Maximization: Application to Gaussian Mixture Model Parameter Estimation},\n\
+  author={Doria, David},\n\
+  journal={Lecture notes published on April},\n\
+  volume={23},\n\
+  year={2009}\n\
+}";
+}
 
 // -----------------------------------------------------------------------------
 //
