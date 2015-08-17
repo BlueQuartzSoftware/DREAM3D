@@ -43,6 +43,7 @@
 #include "DREAM3DLib/FilterParameters/IntFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 // -----------------------------------------------------------------------------
@@ -52,9 +53,12 @@ RemoveComponentFromArray::RemoveComponentFromArray() :
   AbstractFilter(),
   m_SelectedArrayPath("", "", ""),
   m_CompNumber(0),
+  m_SaveRemovedComponent(false),
   m_NewArrayArrayName(""),
+  m_ReducedArrayArrayName(""),
   m_InArray(NULL),
-  m_NewArray(NULL)
+  m_NewArray(NULL),
+  m_ReducedArray(NULL)
 {
   setupFilterParameters();
 }
@@ -73,11 +77,20 @@ void RemoveComponentFromArray::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(IntFilterParameter::New("Component Number to Extract", "CompNumber", getCompNumber(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Component Number to Remove", "CompNumber", getCompNumber(), FilterParameter::Parameter));
 
   parameters.push_back(DataArraySelectionFilterParameter::New("Multicomponent Attribute Array", "SelectedArrayPath", getSelectedArrayPath(), FilterParameter::RequiredArray));
 
-  parameters.push_back(StringFilterParameter::New("Scalar Attribute Array", "NewArrayArrayName", getNewArrayArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Removed Component Attribute Array", "NewArrayArrayName", getNewArrayArrayName(), FilterParameter::CreatedArray));
+
+  parameters.push_back(StringFilterParameter::New("Reduced Attribute Array", "ReducedArrayArrayName", getReducedArrayArrayName(), FilterParameter::CreatedArray));
+
+  QStringList linkedProps;
+  linkedProps.clear();
+  linkedProps << "NewArrayArrayName";
+  parameters.push_back(LinkedBooleanFilterParameter::New("Save Removed Component in New Array", "SaveRemovedComponent", getSaveRemovedComponent(), linkedProps, FilterParameter::Parameter));
+
+
 
   setFilterParameters(parameters);
 }
@@ -89,8 +102,10 @@ void RemoveComponentFromArray::readFilterParameters(AbstractFilterParametersRead
 {
   reader->openFilterGroup(this, index);
   setNewArrayArrayName(reader->readString("NewArrayArrayName", getNewArrayArrayName() ) );
+  setNewArrayArrayName(reader->readString("ReducedArrayArrayName", getReducedArrayArrayName() ) );
   setCompNumber(reader->readValue("CompNumber", getCompNumber() ) );
   setSelectedArrayPath( reader->readDataArrayPath( "SelectedArrayPath", getSelectedArrayPath() ) );
+  setSaveRemovedComponent(reader->readValue("SaveRemovedComponent", getSaveRemovedComponent()));
   reader->closeFilterGroup();
 }
 
@@ -103,7 +118,9 @@ int RemoveComponentFromArray::writeFilterParameters(AbstractFilterParametersWrit
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CompNumber)
   DREAM3D_FILTER_WRITE_PARAMETER(NewArrayArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(ReducedArrayArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(SaveRemovedComponent)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -117,10 +134,20 @@ void RemoveComponentFromArray::dataCheck()
 
   m_InArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getSelectedArrayPath());
 
+  if (m_SaveRemovedComponent == true)
+  {
   if (m_NewArrayArrayName.isEmpty() == true)
   {
     setErrorCondition(-11003);
-    notifyErrorMessage(getHumanLabel(), "New array name must be set.", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "Removed Component array name must be set.", getErrorCondition());
+    return;
+  }
+  }
+
+  if (m_ReducedArrayArrayName.isEmpty() == true)
+  {
+    setErrorCondition(-11003);
+    notifyErrorMessage(getHumanLabel(), "Reduced array name must be set.", getErrorCondition());
     return;
   }
 
@@ -143,8 +170,15 @@ void RemoveComponentFromArray::dataCheck()
   }
 
   QVector<size_t> cDims(1, 1);
-  DataArrayPath tempPath(getSelectedArrayPath().getDataContainerName(), getSelectedArrayPath().getAttributeMatrixName(), getNewArrayArrayName());
-  m_NewArrayPtr = TemplateHelpers::CreateNonPrereqArrayFromArrayType()(this, tempPath, cDims, m_InArrayPtr.lock());
+  if (m_SaveRemovedComponent == true)
+  {
+      DataArrayPath tempPath(getSelectedArrayPath().getDataContainerName(), getSelectedArrayPath().getAttributeMatrixName(), getNewArrayArrayName());
+      m_NewArrayPtr = TemplateHelpers::CreateNonPrereqArrayFromArrayType()(this, tempPath, cDims, m_InArrayPtr.lock());
+  }
+
+  cDims[0] = m_InArrayPtr.lock()->getNumberOfComponents() - 1;
+  DataArrayPath tempPath2(getSelectedArrayPath().getDataContainerName(), getSelectedArrayPath().getAttributeMatrixName(), getReducedArrayArrayName());
+  m_ReducedArrayPtr = TemplateHelpers::CreateNonPrereqArrayFromArrayType()(this, tempPath2, cDims, m_InArrayPtr.lock());
 }
 
 // -----------------------------------------------------------------------------
@@ -164,23 +198,75 @@ void RemoveComponentFromArray::preflight()
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void extractComponent(IDataArray::Pointer inputData, IDataArray::Pointer newData, int compNumber)
+void extractComponent(IDataArray::Pointer inputData, IDataArray::Pointer newData, IDataArray::Pointer reducedData, int compNumber)
 {
   typename DataArray<T>::Pointer inputArrayPtr = boost::dynamic_pointer_cast<DataArray<T> >(inputData);
   typename DataArray<T>::Pointer newArrayPtr = boost::dynamic_pointer_cast<DataArray<T> >(newData);
+    typename DataArray<T>::Pointer reducedArrayPtr = boost::dynamic_pointer_cast<DataArray<T> >(reducedData);
 
   if (NULL == inputArrayPtr || NULL == newArrayPtr) { return; }
 
   T* inputArray = inputArrayPtr->getPointer(0);
   T* newArray = newArrayPtr->getPointer(0);
+  T* reducedArray = reducedArrayPtr->getPointer(0);
+
   size_t numPoints = inputArrayPtr->getNumberOfTuples();
   size_t numComps = inputArrayPtr->getNumberOfComponents();
 
   for (size_t i = 0; i < numPoints; i++)
   {
-    newArray[i] = inputArray[numComps * i + compNumber];
+    for (size_t j = 0; j < numComps; j++)
+    {
+        if (j == compNumber)
+        {
+            newArray[i] = inputArray[numComps * i + j];
+        }
+        else if (j > compNumber)
+        {
+            reducedArray[(numComps-1)*i + j-1] = inputArray[numComps*i + j];
+        }
+        else if (j < compNumber)
+        {
+            reducedArray[(numComps-1)*i + j] = inputArray[numComps*i + j];
+        }
+    }
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename T>
+void reduceArrayOnly(IDataArray::Pointer inputData, IDataArray::Pointer reducedData, int compNumber)
+{
+  typename DataArray<T>::Pointer inputArrayPtr = boost::dynamic_pointer_cast<DataArray<T> >(inputData);
+    typename DataArray<T>::Pointer reducedArrayPtr = boost::dynamic_pointer_cast<DataArray<T> >(reducedData);
+
+  if (NULL == inputArrayPtr) { return; }
+
+  T* inputArray = inputArrayPtr->getPointer(0);
+  T* reducedArray = reducedArrayPtr->getPointer(0);
+
+  size_t numPoints = inputArrayPtr->getNumberOfTuples();
+  size_t numComps = inputArrayPtr->getNumberOfComponents();
+
+  for (size_t i = 0; i < numPoints; i++)
+  {
+    for (size_t j = 0; j < numComps; j++)
+    {
+
+        if (j > compNumber)
+        {
+            reducedArray[(numComps-1)*i + j-1] = inputArray[numComps*i + j];
+        }
+        else if (j < compNumber)
+        {
+            reducedArray[(numComps-1)*i + j] = inputArray[numComps*i + j];
+        }
+    }
+  }
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -191,7 +277,15 @@ void RemoveComponentFromArray::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  EXECUTE_FUNCTION_TEMPLATE(this, extractComponent, m_InArrayPtr.lock(), m_InArrayPtr.lock(), m_NewArrayPtr.lock(), m_CompNumber)
+  if (m_SaveRemovedComponent == true)
+  {
+    EXECUTE_FUNCTION_TEMPLATE(this, extractComponent, m_InArrayPtr.lock(), m_InArrayPtr.lock(), m_NewArrayPtr.lock(), m_ReducedArrayPtr.lock(), m_CompNumber)
+  }
+  else if (m_SaveRemovedComponent == false)
+  {
+      EXECUTE_FUNCTION_TEMPLATE(this, reduceArrayOnly, m_InArrayPtr.lock(), m_InArrayPtr.lock(), m_ReducedArrayPtr.lock(), m_CompNumber)
+  }
+
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }

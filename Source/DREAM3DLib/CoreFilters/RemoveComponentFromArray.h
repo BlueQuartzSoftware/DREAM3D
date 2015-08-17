@@ -60,8 +60,14 @@ class RemoveComponentFromArray : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(int, CompNumber)
     Q_PROPERTY(int CompNumber READ getCompNumber WRITE setCompNumber)
 
+    DREAM3D_FILTER_PARAMETER(bool, SaveRemovedComponent)
+    Q_PROPERTY(bool SaveRemovedComponent READ getSaveRemovedComponent WRITE setSaveRemovedComponent)
+
     DREAM3D_FILTER_PARAMETER(QString, NewArrayArrayName)
     Q_PROPERTY(QString NewArrayArrayName READ getNewArrayArrayName WRITE setNewArrayArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, ReducedArrayArrayName)
+    Q_PROPERTY(QString ReducedArrayArrayName READ getReducedArrayArrayName WRITE setReducedArrayArrayName)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -148,6 +154,8 @@ class RemoveComponentFromArray : public AbstractFilter
     DEFINE_IDATAARRAY_VARIABLE(InArray)
 
     DEFINE_IDATAARRAY_VARIABLE(NewArray)
+
+    DEFINE_IDATAARRAY_VARIABLE(ReducedArray)
 
     RemoveComponentFromArray(const RemoveComponentFromArray&); // Copy Constructor Not Implemented
     void operator=(const RemoveComponentFromArray&); // Operator '=' Not Implemented
