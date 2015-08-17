@@ -378,6 +378,15 @@ void EbsdToH5Ebsd::execute()
 
     }
     fileImporter = H5CtfImporter::New();
+    CtfReader ctfReader;
+    ctfReader.setFileName(fileList.front());
+    err = ctfReader.readHeaderOnly();
+    if(ctfReader.getZCells() > 1 && fileList.size() == 1)
+    {
+      m_ZStartIndex = 0;
+      m_ZEndIndex = 0;
+    }
+
   }
   else
   {
