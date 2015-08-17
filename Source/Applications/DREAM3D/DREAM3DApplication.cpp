@@ -654,7 +654,7 @@ void DREAM3DApplication::on_actionClearPipeline_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DApplication::on_actionActionGeneratePipelineBibliography_triggered()
+void DREAM3DApplication::on_actionGeneratePipelineBibliography_triggered()
 {
   if (NULL != m_ActiveWindow)
   {

@@ -240,7 +240,7 @@ void DREAM3DMenu::initialize()
   connect(m_ActionAddBookmark, SIGNAL(triggered()), dream3dApp, SLOT(on_actionAddBookmark_triggered()));
   connect(m_ActionNewFolder, SIGNAL(triggered()), dream3dApp, SLOT(on_actionNewFolder_triggered()));
   connect(m_ActionClearPipeline, SIGNAL(triggered()), dream3dApp, SLOT(on_actionClearPipeline_triggered()));
-  connect(m_ActionGeneratePipelineBibliography, SIGNAL(triggered()), dream3dApp, SLOT(on_actionActionGeneratePipelineBibliography_triggered()));
+  connect(m_ActionGeneratePipelineBibliography, SIGNAL(triggered()), dream3dApp, SLOT(on_actionGeneratePipelineBibliography_triggered()));
   connect(m_ActionShowBookmarkInFileSystem, SIGNAL(triggered()), dream3dApp, SLOT(on_actionShowBookmarkInFileSystem_triggered()));
   connect(m_ActionShowPrebuiltInFileSystem, SIGNAL(triggered()), dream3dApp, SLOT(on_actionShowPrebuiltInFileSystem_triggered()));
   connect(m_ActionRenamePipeline, SIGNAL(triggered()), dream3dApp, SLOT(on_actionRenamePipeline_triggered()));
