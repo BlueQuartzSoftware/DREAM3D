@@ -654,6 +654,17 @@ void DREAM3DApplication::on_actionClearPipeline_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void DREAM3DApplication::on_actionActionGeneratePipelineBibliography_triggered()
+{
+  if (NULL != m_ActiveWindow)
+  {
+    m_ActiveWindow->generateBibliography();
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void DREAM3DApplication::on_actionShowDREAM3DHelp_triggered()
 {
   // Generate help page

@@ -120,6 +120,12 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     virtual const QString getCompiledLibraryName();
 
     /**
+     * @brief getCitations Returns citations the filter in a BibTex format
+     * @return BibTex citation (or empty string if the filter has no citations)
+     */
+    virtual const QString getCitations();
+
+    /**
      * @brief generateHtmlSummary Generates a brief HTML summary of the filter
      * @return HTML summary
      */

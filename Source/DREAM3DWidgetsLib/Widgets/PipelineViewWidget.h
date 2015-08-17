@@ -247,6 +247,11 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     int writePipeline(QString filePath);
 
     /**
+    * @brief Write citation list to a file
+    */
+    int writeBibliography(QString filePath);
+
+    /**
     * @brief Open pipeline to a file
     */
     int openPipeline(const QString& filePath, int index, const bool& setOpenedFilePath, const bool& changeTitle);

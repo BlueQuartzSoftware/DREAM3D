@@ -75,6 +75,7 @@ DREAM3DMenu::DREAM3DMenu() :
   // Pipeline Menu
   m_MenuPipeline(NULL),
   m_ActionClearPipeline(NULL),
+  m_ActionGeneratePipelineBibliography(NULL),
 
   // Help Menu
   m_MenuHelp(NULL),
@@ -135,6 +136,8 @@ void DREAM3DMenu::initialize()
   m_ActionRemovePipeline->setObjectName(QString::fromUtf8("m_ActionRemovePipeline"));
   m_ActionClearPipeline = new QAction(m_MenuPipeline);
   m_ActionClearPipeline->setObjectName(QString::fromUtf8("m_ActionClearPipeline"));
+  m_ActionGeneratePipelineBibliography = new QAction(m_MenuPipeline);
+  m_ActionGeneratePipelineBibliography->setObjectName(QString::fromUtf8("m_ActionGeneratePipelineBibliography"));
   m_ActionLocateFile = new QAction(this);
   m_ActionLocateFile->setObjectName(QString::fromUtf8("m_ActionLocateFile"));
   m_ActionShowBookmarkInFileSystem = new QAction(this);
@@ -178,6 +181,7 @@ void DREAM3DMenu::initialize()
   m_ActionNewFolder->setShortcut(QApplication::translate("DREAM3D_UI", "Ctrl+F", 0));
   m_ActionClearPipeline->setText(QApplication::translate("DREAM3D_UI", "Clear Pipeline", 0));
   m_ActionClearPipeline->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Backspace));
+  m_ActionGeneratePipelineBibliography->setText(QApplication::translate("DREAM3D_UI", "Export Pipeline Citations...", 0));
   m_ActionOpen->setText(QApplication::translate("DREAM3D_UI", "Open...", 0));
   m_ActionOpen->setShortcut(QApplication::translate("DREAM3D_UI", "Ctrl+O", 0));
   m_ActionNew->setText(QApplication::translate("DREAM3D_UI", "New...", 0));
@@ -236,6 +240,7 @@ void DREAM3DMenu::initialize()
   connect(m_ActionAddBookmark, SIGNAL(triggered()), dream3dApp, SLOT(on_actionAddBookmark_triggered()));
   connect(m_ActionNewFolder, SIGNAL(triggered()), dream3dApp, SLOT(on_actionNewFolder_triggered()));
   connect(m_ActionClearPipeline, SIGNAL(triggered()), dream3dApp, SLOT(on_actionClearPipeline_triggered()));
+  connect(m_ActionGeneratePipelineBibliography, SIGNAL(triggered()), dream3dApp, SLOT(on_actionActionGeneratePipelineBibliography_triggered()));
   connect(m_ActionShowBookmarkInFileSystem, SIGNAL(triggered()), dream3dApp, SLOT(on_actionShowBookmarkInFileSystem_triggered()));
   connect(m_ActionShowPrebuiltInFileSystem, SIGNAL(triggered()), dream3dApp, SLOT(on_actionShowPrebuiltInFileSystem_triggered()));
   connect(m_ActionRenamePipeline, SIGNAL(triggered()), dream3dApp, SLOT(on_actionRenamePipeline_triggered()));
@@ -266,6 +271,7 @@ void DREAM3DMenu::initialize()
   }
   m_MenuBookmarks->addAction(m_ActionNewFolder);
   m_MenuPipeline->addAction(m_ActionClearPipeline);
+  m_MenuPipeline->addAction(m_ActionGeneratePipelineBibliography);
   m_MenuHelp->addAction(m_ActionShowDREAM3DHelp);
   m_MenuHelp->addSeparator();
   m_MenuHelp->addAction(m_ActionCheckForUpdates);
@@ -457,6 +463,14 @@ QAction* DREAM3DMenu::getSaveAs()
 QAction* DREAM3DMenu::getClearPipeline()
 {
   return m_ActionClearPipeline;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QAction* DREAM3DMenu::getGeneratePipelineBibliography()
+{
+  return m_ActionGeneratePipelineBibliography;
 }
 
 // -----------------------------------------------------------------------------
