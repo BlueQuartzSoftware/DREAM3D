@@ -521,7 +521,11 @@ float JsonFilterParametersReader::readValue(const QString name, float value)
 
   if (m_CurrentFilterIndex.value(name).isDouble())
   {
-    value = m_CurrentFilterIndex.value(name).toDouble(value);
+    double val = m_CurrentFilterIndex.value(name).toDouble();
+    if (val >= std::numeric_limits<float>().min() && val <= std::numeric_limits<float>().max())
+    {
+      return static_cast<float>(val);
+    }
   }
 
   return value;
