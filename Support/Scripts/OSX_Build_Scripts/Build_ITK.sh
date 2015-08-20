@@ -9,6 +9,8 @@ cd $SDK_INSTALL
 
 PARALLEL_BUILD=$2
 
+HDFVERSION=$3
+
 
 HOST_SYSTEM=`uname`
 echo "Host System: $HOST_SYSTEM"
@@ -49,8 +51,8 @@ if [[ $CMAKE == "" ]];
 fi
 
 
-# Build the HDF5 libraries we need and set our Environment Variable.
-version=4.7.1
+# Build the ITK libraries we need and set our Environment Variable.
+version=4.7.2
 archiveName="InsightToolkit-${version}"
 
 if [ ! -e "${SDK_INSTALL}/${archiveName}.tar.gz" ];
@@ -124,9 +126,9 @@ function ConfigureITK()
   cd ../
 }
 
-ConfigureITK hdf5-1.8.15 Debug
+ConfigureITK hdf5-${HDFVERSION} Debug
 ./FixITK.sh $SDK_INSTALL/ITK-${version}-Debug 
 
-ConfigureITK hdf5-1.8.15 Release
+ConfigureITK hdf5-${HDFVERSION} Release
 ./FixITK.sh $SDK_INSTALL/ITK-${version}-Release 
 
