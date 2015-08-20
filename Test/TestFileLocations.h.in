@@ -169,6 +169,7 @@ namespace UnitTest
   namespace FilterParametersRWTest
   {
       const QString OutputFile("@TEST_TEMP_DIR@/FilterParametersRWTest/OutputFile.json");
+      const QString OutputDir("@TEST_TEMP_DIR@/FilterParametersRWTest/");
   }
 }
 
