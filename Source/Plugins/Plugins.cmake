@@ -104,7 +104,6 @@ function(DREAM3D_ADD_PLUGINS)
 
 endfunction()
 
-
 #-----------------
 # These are the core plugins that need to be built
 set(DREAM3D_BASE_PLUGINS
@@ -121,16 +120,18 @@ set(DREAM3D_BASE_PLUGINS
   EMMPM
 )
 
-
 get_filename_component(DREAM3D_PARENT_DIR  ${DREAM3DProj_SOURCE_DIR} DIRECTORY)
 include_directories(${DREAM3D_PARENT_DIR}/DREAM3D_Plugins)
 include_directories(${DREAM3D_PARENT_DIR})
 
-
-message(STATUS "Base plugins being compiled ......")
+message(STATUS "*******************************************************")
+message(STATUS "* Base Plugins                                        *")
+message(STATUS "*******************************************************")
 DREAM3D_ADD_PLUGINS(PLUGIN_NAMES ${DREAM3D_BASE_PLUGINS})
 
 
-message(STATUS "User defined plugins being compiled ......")
+message(STATUS "*******************************************************")
+message(STATUS "* Extra External Plugins                              *")
+message(STATUS "*******************************************************")
 DREAM3D_ADD_PLUGINS(PLUGIN_NAMES ${DREAM3D_EXTRA_PLUGINS})
 

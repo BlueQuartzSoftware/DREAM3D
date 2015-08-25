@@ -248,6 +248,7 @@ void __TestEraseElements()
     DREAM3D_REQUIRE_EQUAL(array->getValue(0), 2);
     DREAM3D_REQUIRE_EQUAL(array->getValue(1), 3);
     DREAM3D_REQUIRE_EQUAL(array->getValue(2), 4);
+    DREAM3D_REQUIRE_EQUAL(array->isAllocated(), true);
   }
 
   // Test Dropping of internal elements

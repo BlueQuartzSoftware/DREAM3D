@@ -538,7 +538,7 @@ AbstractFilter::Pointer CreateCropVolumeFilter(NumPackage x, NumPackage y, NumPa
 {
   AbstractFilter::Pointer cropVolume = AbstractFilter::NullPointer();
 
-  QString filtName = "CropVolume";
+  QString filtName = "CropImageGeometry";
   FilterManager* fm = FilterManager::Instance();
   IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
   if (NULL != filterFactory.get())

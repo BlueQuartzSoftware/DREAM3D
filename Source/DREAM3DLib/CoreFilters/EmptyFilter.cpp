@@ -107,7 +107,7 @@ int EmptyFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 // -----------------------------------------------------------------------------
 void EmptyFilter::dataCheck()
 {
-  QString ss = QObject::tr("This filter does nothing and was was inserted as a place holder for filter '%1' that does not exist anymore.").arg(getOriginalFilterName());
+  QString ss = QObject::tr("This filter does nothing and was inserted as a place holder for filter '%1' that does not exist anymore.").arg(getOriginalFilterName());
   setErrorCondition(-9999);
   notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
 }

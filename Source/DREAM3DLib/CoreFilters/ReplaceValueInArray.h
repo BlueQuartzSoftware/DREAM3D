@@ -34,34 +34,35 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _NeighborCICorrelation_H_
-#define _NeighborCICorrelation_H_
+#ifndef _ReplaceValueInArray_H_
+#define _ReplaceValueInArray_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
- * @brief The NeighborCICorrelation class. See [Filter documentation](@ref neighborcicorrelation) for details.
+ * @brief The ReplaceValueInArray class. See [Filter documentation](@ref replacevalueinarray) for details.
  */
-class NeighborCICorrelation : public AbstractFilter
+class DREAM3DLib_EXPORT ReplaceValueInArray : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(NeighborCICorrelation)
-    DREAM3D_STATIC_NEW_MACRO(NeighborCICorrelation)
-    DREAM3D_TYPE_MACRO_SUPER(NeighborCICorrelation, AbstractFilter)
 
-    virtual ~NeighborCICorrelation();
+    DREAM3D_SHARED_POINTERS(ReplaceValueInArray)
+    DREAM3D_STATIC_NEW_MACRO(ReplaceValueInArray)
+    DREAM3D_TYPE_MACRO_SUPER(ReplaceValueInArray, AbstractFilter)
 
-    DREAM3D_FILTER_PARAMETER(float, MinConfidence)
-    Q_PROPERTY(float MinConfidence READ getMinConfidence WRITE setMinConfidence)
+    virtual ~ReplaceValueInArray();
 
-    DREAM3D_FILTER_PARAMETER(bool, Loop)
-    Q_PROPERTY(bool Loop READ getLoop WRITE setLoop)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedArray)
+    Q_PROPERTY(DataArrayPath SelectedArray READ getSelectedArray WRITE setSelectedArray)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, ConfidenceIndexArrayPath)
-    Q_PROPERTY(DataArrayPath ConfidenceIndexArrayPath READ getConfidenceIndexArrayPath WRITE setConfidenceIndexArrayPath)
+    DREAM3D_FILTER_PARAMETER(double, RemoveValue)
+    Q_PROPERTY(double RemoveValue READ getRemoveValue WRITE setRemoveValue)
+
+    DREAM3D_FILTER_PARAMETER(double, ReplaceValue)
+    Q_PROPERTY(double ReplaceValue READ getReplaceValue WRITE setReplaceValue)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -137,7 +138,7 @@ class NeighborCICorrelation : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    NeighborCICorrelation();
+    ReplaceValueInArray();
 
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -145,10 +146,10 @@ class NeighborCICorrelation : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_DATAARRAY_VARIABLE(float, ConfidenceIndex)
+    DEFINE_IDATAARRAY_VARIABLE(Array)
 
-    NeighborCICorrelation(const NeighborCICorrelation&); // Copy Constructor Not Implemented
-    void operator=(const NeighborCICorrelation&); // Operator '=' Not Implemented
+    ReplaceValueInArray(const ReplaceValueInArray&); // Copy Constructor Not Implemented
+    void operator=(const ReplaceValueInArray&); // Operator '=' Not Implemented
 };
 
-#endif /* NeighborCICorrelation_H_ */
+#endif /* _ReplaceValueInArray_H_ */

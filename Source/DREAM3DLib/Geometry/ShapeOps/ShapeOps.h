@@ -64,6 +64,20 @@ class DREAM3DLib_EXPORT ShapeOps
 
     float ShapeClass2Omega[41][2];
 
+    /**
+    * @brief getShapeOpsVector This method returns a vector of each type of ShapeOps placed such that the
+    * index into the vector is the value of the constant at DRAM3D::ShapeType::***
+    * @return Vector of ShapeOps subclasses.
+    */
+    static QVector<ShapeOps::Pointer> getShapeOpsQVector();
+
+    /**
+    * @brief getOrientationOpsVector This method returns a vector of each type of SpaceGroupOps placed such that the
+    * index into the vector is the value of the constant at EBSD::CrystalStructure::***
+    * @return Vector of SpaceGroupOps subclasses.
+    */
+    static std::vector<ShapeOps::Pointer> getShapeOpsVector();
+
     virtual float radcur1(QMap<ArgName, float> args);
 
     virtual float inside(float axis1comp, float axis2comp, float axis3comp);

@@ -33,7 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "CylinderOps.h"
+#include "CylinderCOps.h"
 
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 
@@ -41,14 +41,14 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CylinderOps::CylinderOps()
+CylinderCOps::CylinderCOps()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CylinderOps::~CylinderOps()
+CylinderCOps::~CylinderCOps()
 {
 }
 
@@ -56,7 +56,7 @@ CylinderOps::~CylinderOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float CylinderOps::radcur1(QMap<ArgName, float> args)
+float CylinderCOps::radcur1(QMap<ArgName, float> args)
 {
   float radcur1 = 0.0f;
 
@@ -64,7 +64,10 @@ float CylinderOps::radcur1(QMap<ArgName, float> args)
   float bovera = args[B_OverA];
   float covera = args[C_OverA];
 
-  radcur1 = static_cast<float>( (volcur * (1.0 / DREAM3D::Constants::k_Pi) * (1.0 / bovera) * (1.0 / covera)) );
+  //the equation for volume for a C cylinder is pi*a*b*h where a and b are semi axis lengths, but
+  //h is a full axis length - meaning h = 2c.  However, since our aspect ratios relate semi axis lengths, the 2.0
+  //factor can be ingored in this part
+  radcur1 = static_cast<float>((volcur * DREAM3D::Constants::k_1OverPi * (1.0f / bovera) * (1.0f / covera)));
   radcur1 = powf(radcur1, 0.333333333333f);
   return radcur1;
 }
@@ -72,17 +75,17 @@ float CylinderOps::radcur1(QMap<ArgName, float> args)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float CylinderOps::inside(float axis1comp, float axis2comp, float axis3comp)
+float CylinderCOps::inside(float axis1comp, float axis2comp, float axis3comp)
 {
   float inside = -1.0;
-  if (fabs(axis1comp) <= 1.0)
+  if (fabs(axis3comp) <= 1.0)
   {
     // inside = 1.0;
+    axis1comp = fabs(axis1comp);
     axis2comp = fabs(axis2comp);
-    axis3comp = fabs(axis3comp);
+    axis1comp = axis1comp * axis1comp;
     axis2comp = axis2comp * axis2comp;
-    axis3comp = axis3comp * axis3comp;
-    inside = static_cast<float>( 1.0 - axis2comp - axis3comp );
+    inside = static_cast<float>( 1.0 - axis1comp - axis2comp );
   }
   return inside;
 }

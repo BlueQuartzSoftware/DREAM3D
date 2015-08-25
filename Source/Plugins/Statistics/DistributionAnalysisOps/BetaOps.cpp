@@ -112,8 +112,16 @@ int BetaOps::calculateCorrelatedParameters(std::vector<std::vector<float> >& dat
         stddev = stddev + ((avg - data[i][j]) * (avg - data[i][j]));
       }
       stddev = stddev / float(data[i].size());
-      alpha = avg * (((avg * (1 - avg)) / stddev) - 1);
-      beta = (1 - avg) * (((avg * (1 - avg)) / stddev) - 1);
+      if (stddev == 0)
+      {
+        alpha = 0;
+        beta = 0;
+      }
+      else
+      {
+        alpha = avg * (((avg * (1 - avg)) / stddev) - 1);
+        beta = (1 - avg) * (((avg * (1 - avg)) / stddev) - 1);
+      }
     }
     else
     {

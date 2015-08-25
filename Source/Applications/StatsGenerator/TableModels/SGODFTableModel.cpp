@@ -377,6 +377,7 @@ void SGODFTableModel::setColumnData(int col, QVector<float>& data)
     default:
       Q_ASSERT(false);
   }
+  m_RowCount = data.size();
 }
 
 // -----------------------------------------------------------------------------

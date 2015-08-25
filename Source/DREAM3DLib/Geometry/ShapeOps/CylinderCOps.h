@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _CYLINDEROPS_H_
-#define _CYLINDEROPS_H_
+#ifndef _CYLINDERCOPS_H_
+#define _CYLINDERCOPS_H_
 
 
 #include "ShapeOps.h"
@@ -44,27 +44,27 @@
 /*
  *
  */
-class DREAM3DLib_EXPORT CylinderOps : public ShapeOps
+class DREAM3DLib_EXPORT CylinderCOps : public ShapeOps
 {
   public:
-    DREAM3D_SHARED_POINTERS(CylinderOps)
-    DREAM3D_TYPE_MACRO(CylinderOps)
-    DREAM3D_STATIC_NEW_MACRO(CylinderOps)
+    DREAM3D_SHARED_POINTERS(CylinderCOps)
+    DREAM3D_TYPE_MACRO(CylinderCOps)
+    DREAM3D_STATIC_NEW_MACRO(CylinderCOps)
 
 
-    virtual ~CylinderOps();
+    virtual ~CylinderCOps();
 
     virtual float radcur1(QMap<ArgName, float> args);
     virtual float inside(float axis1comp, float axis2comp, float axis3comp);
     virtual void init() {  }
 
   protected:
-    CylinderOps();
+    CylinderCOps();
   private:
-    CylinderOps(const CylinderOps&); // Copy Constructor Not Implemented
-    void operator=(const CylinderOps&); // Operator '=' Not Implemented
+    CylinderCOps(const CylinderCOps&); // Copy Constructor Not Implemented
+    void operator=(const CylinderCOps&); // Operator '=' Not Implemented
 
 };
 
-#endif /* CYLINDEROPS_H_ */
+#endif /* CYLINDERCOPS_H_ */
 

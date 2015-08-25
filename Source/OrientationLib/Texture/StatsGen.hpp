@@ -229,8 +229,8 @@ class StatsGen
     template<typename T>
     static int GenCubicODFPlotData(const T* odf, T* eulers, size_t npoints)
     {
-
-      DREAM3D_RANDOMNG_NEW()
+      uint64_t m_Seed = QDateTime::currentMSecsSinceEpoch();
+      DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
       int err = 0;
       int choose;
       T totaldensity;
@@ -241,6 +241,7 @@ class StatsGen
       //float* odfPtr = &(odf.front());
       for (size_t i = 0; i < npoints; i++)
       {
+        m_Seed++;
         random = rg.genrand_res53();
         choose = 0;
         totaldensity = 0;
@@ -251,7 +252,7 @@ class StatsGen
           totaldensity = totaldensity + density;
           if (random < totaldensity && random >= td1) { choose = static_cast<int> (j); break; }
         }
-        FOrientArrayType eu = ops.determineEulerAngles(choose);
+        FOrientArrayType eu = ops.determineEulerAngles(m_Seed, choose);
         eulers[3 * i + 0] = eu[0];
         eulers[3 * i + 1] = eu[1];
         eulers[3 * i + 2] = eu[2];
@@ -273,7 +274,8 @@ class StatsGen
     template<typename T>
     static int GenHexODFPlotData(T* odf, T* eulers, int npoints)
     {
-      DREAM3D_RANDOMNG_NEW()
+      uint64_t m_Seed = QDateTime::currentMSecsSinceEpoch();
+      DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
       int err = 0;
       int choose;
       float totaldensity;
@@ -283,6 +285,7 @@ class StatsGen
       float td1;
       for (int i = 0; i < npoints; i++)
       {
+        m_Seed++;
         random = rg.genrand_res53();
         choose = 0;
         totaldensity = 0;
@@ -293,7 +296,7 @@ class StatsGen
           totaldensity = totaldensity + density;
           if (random < totaldensity && random >= td1) { choose = static_cast<int> (j); break; }
         }
-        FOrientArrayType eu = ops.determineEulerAngles(choose);
+        FOrientArrayType eu = ops.determineEulerAngles(m_Seed, choose);
         eulers[3 * i + 0] = eu[0];
         eulers[3 * i + 1] = eu[1];
         eulers[3 * i + 2] = eu[2];
@@ -315,7 +318,8 @@ class StatsGen
     template<typename T>
     static int GenOrthoRhombicODFPlotData(T* odf, T* eulers, int npoints)
     {
-      DREAM3D_RANDOMNG_NEW()
+      uint64_t m_Seed = QDateTime::currentMSecsSinceEpoch();
+      DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
       int err = 0;
       int choose;
       float totaldensity;
@@ -325,6 +329,7 @@ class StatsGen
       float td1;
       for (int i = 0; i < npoints; i++)
       {
+        m_Seed++;
         random = rg.genrand_res53();
         choose = 0;
         totaldensity = 0;
@@ -339,7 +344,7 @@ class StatsGen
             break;
           }
         }
-        FOrientArrayType eu = ops.determineEulerAngles(choose);
+        FOrientArrayType eu = ops.determineEulerAngles(m_Seed, choose);
         eulers[3 * i + 0] = eu[0];
         eulers[3 * i + 1] = eu[1];
         eulers[3 * i + 2] = eu[2];
@@ -370,7 +375,8 @@ class StatsGen
     template<typename T>
     static int GenAxisODFPlotData(T* odf, T* eulers, int npoints)
     {
-      DREAM3D_RANDOMNG_NEW()
+      uint64_t m_Seed = QDateTime::currentMSecsSinceEpoch();
+      DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
       int err = 0;
       int choose;
       float totaldensity;
@@ -380,6 +386,7 @@ class StatsGen
       float td1;
       for (int i = 0; i < npoints; i++)
       {
+        m_Seed++;
         random = rg.genrand_res53();
         choose = 0;
         totaldensity = 0;
@@ -394,7 +401,7 @@ class StatsGen
             break;
           }
         }
-        FOrientArrayType eu = ops.determineEulerAngles(choose);
+        FOrientArrayType eu = ops.determineEulerAngles(m_Seed, choose);
         eulers[3 * i + 0] = eu[0];
         eulers[3 * i + 1] = eu[1];
         eulers[3 * i + 2] = eu[2];
@@ -414,9 +421,11 @@ class StatsGen
     template<typename T>
     static int GenCubicMDFPlotData(T* mdf, T* xval, T* yval, int npoints, int size)
     {
-
       float radtodeg = 180.0f / float(M_PI);
-      DREAM3D_RANDOMNG_NEW()
+
+      uint64_t m_Seed = QDateTime::currentMSecsSinceEpoch();
+      DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
+
       int err = 0;
       float density;
       float totaldensity;
@@ -434,6 +443,7 @@ class StatsGen
       float td1;
       for (int i = 0; i < size; i++)
       {
+        m_Seed++;
         random = rg.genrand_res53();
         choose = 0;
         totaldensity = 0;
@@ -448,7 +458,7 @@ class StatsGen
             break;
           }
         }
-        FOrientArrayType rod = ops.determineRodriguesVector(choose);
+        FOrientArrayType rod = ops.determineRodriguesVector(m_Seed, choose);
         FOrientArrayType ax(4, 0.0);
         FOrientTransformsType::ro2ax(rod, ax);
 
@@ -475,9 +485,11 @@ class StatsGen
     template<typename T>
     static int GenHexMDFPlotData(T* mdf, T* xval, T* yval, int npoints, int size)
     {
-
       float radtodeg = 180.0f / float(M_PI);
-      DREAM3D_RANDOMNG_NEW()
+
+      uint64_t m_Seed = QDateTime::currentMSecsSinceEpoch();
+      DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
+
       int err = 0;
       int choose = 0;
       float density;
@@ -493,6 +505,7 @@ class StatsGen
       float td1;
       for (int i = 0; i < size; i++)
       {
+        m_Seed++;
         random = rg.genrand_res53();
         choose = 0;
         totaldensity = 0;
@@ -503,7 +516,7 @@ class StatsGen
           totaldensity = totaldensity + density;
           if (random < totaldensity && random >= td1) { choose = static_cast<int> (j); break; }
         }
-        FOrientArrayType rod = ops.determineRodriguesVector(choose);
+        FOrientArrayType rod = ops.determineRodriguesVector(m_Seed, choose);
         FOrientArrayType ax(4, 0.0);
         FOrientTransformsType::ro2ax(rod, ax);
 

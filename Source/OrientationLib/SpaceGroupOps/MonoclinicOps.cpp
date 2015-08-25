@@ -280,11 +280,11 @@ int MonoclinicOps::getMisoBin(FOrientArrayType rod)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FOrientArrayType MonoclinicOps::determineEulerAngles(int choose)
+FOrientArrayType MonoclinicOps::determineEulerAngles(uint64_t seed, int choose)
 {
   float init[3];
   float step[3];
-  float phi[3];
+  int32_t phi[3];
   float h1, h2, h3;
 
   init[0] = Detail::MonoclinicDim1InitValue;
@@ -293,11 +293,11 @@ FOrientArrayType MonoclinicOps::determineEulerAngles(int choose)
   step[0] = Detail::MonoclinicDim1StepValue;
   step[1] = Detail::MonoclinicDim2StepValue;
   step[2] = Detail::MonoclinicDim3StepValue;
-  phi[0] = static_cast<float>(choose % 72);
-  phi[1] = static_cast<float>((choose / 72) % 36);
-  phi[2] = static_cast<float>(choose / (72 * 36));
+  phi[0] = static_cast<int32_t>(choose % 72);
+  phi[1] = static_cast<int32_t>((choose / 72) % 36);
+  phi[2] = static_cast<int32_t>(choose / (72 * 36));
 
-  _calcDetermineHomochoricValues(init, step, phi, choose, h1, h2, h3);
+  _calcDetermineHomochoricValues(seed, init, step, phi, choose, h1, h2, h3);
 
   FOrientArrayType ho(h1, h2, h3);
   FOrientArrayType ro(4);
@@ -332,11 +332,11 @@ FOrientArrayType MonoclinicOps::randomizeEulerAngles(FOrientArrayType synea)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FOrientArrayType MonoclinicOps::determineRodriguesVector( int choose)
+FOrientArrayType MonoclinicOps::determineRodriguesVector(uint64_t seed, int choose)
 {
   float init[3];
   float step[3];
-  float phi[3];
+  int32_t phi[3];
   float h1, h2, h3;
 
   init[0] = Detail::MonoclinicDim1InitValue;
@@ -345,11 +345,11 @@ FOrientArrayType MonoclinicOps::determineRodriguesVector( int choose)
   step[0] = Detail::MonoclinicDim1StepValue;
   step[1] = Detail::MonoclinicDim2StepValue;
   step[2] = Detail::MonoclinicDim3StepValue;
-  phi[0] = static_cast<float>(choose % 72);
-  phi[1] = static_cast<float>((choose / 72) % 36);
-  phi[2] = static_cast<float>(choose / (72 * 36));
+  phi[0] = static_cast<int32_t>(choose % 72);
+  phi[1] = static_cast<int32_t>((choose / 72) % 36);
+  phi[2] = static_cast<int32_t>(choose / (72 * 36));
 
-  _calcDetermineHomochoricValues(init, step, phi, choose, h1, h2, h3);
+  _calcDetermineHomochoricValues(seed, init, step, phi, choose, h1, h2, h3);
   FOrientArrayType ho(h1, h2, h3);
   FOrientArrayType ro(4);
   OrientationTransforms<FOrientArrayType, float>::ho2ro(ho, ro);

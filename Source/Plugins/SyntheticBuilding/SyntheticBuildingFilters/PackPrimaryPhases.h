@@ -223,11 +223,10 @@ class PackPrimaryPhases : public AbstractFilter
     /**
      * @brief generate_feature Creates a Feature by sampling the size and morphological statistical distributions
      * @param phase Index of the Ensemble type for the Feature to be generated
-     * @param Seed Value to intialize random number generator
      * @param feature Feature_t struct pointer to be intialized
      * @param shapeclass Type of Feature shape to be generated
      */
-    void generate_feature(int32_t phase, uint64_t Seed, Feature_t* feature, uint32_t shapeclass);
+    void generate_feature(int32_t phase, Feature_t* feature, uint32_t shapeclass);
 
     /**
      * @brief load_features Reads a list of Features from a file to be used as the packed volume
@@ -392,7 +391,7 @@ class PackPrimaryPhases : public AbstractFilter
     StatsDataArray::WeakPointer m_StatsDataArray;
 
     // All other private variables
-    QMap<uint32_t, ShapeOps*> m_ShapeOps;
+    QVector<ShapeOps::Pointer> m_ShapeOps;
     ShapeOps::Pointer m_UnknownShapeOps;
     ShapeOps::Pointer m_CubicOctohedronOps;
     ShapeOps::Pointer m_CylinderOps;

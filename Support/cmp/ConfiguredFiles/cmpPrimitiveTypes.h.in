@@ -12,19 +12,9 @@
 
 #include "@CMP_CONFIGURATION_FILE_NAME@"
 
-#if 0
-#ifdef CMP_TOP_HEADER_FILE
-#undef CMP_TOP_HEADER_FILE
-#endif
-
-#cmakedefine CMP_TOP_HEADER_FILE @CMP_TOP_HEADER_FILE@
-#ifdef CMP_TOP_HEADER_FILE
-#include "@CMP_TOP_HEADER_FILE@"
-#undef CMP_TOP_HEADER_FILE
-#endif
-
-#endif
-
+/* These typedefs are non-standard but sometimes they get used in various codes */
+typedef float float32;
+typedef double float64;
 
 #if CMP_HAVE_STDINT_H
 /* The ISO C99 standard specifies that in C++ implementations the Min/Max value
@@ -34,8 +24,18 @@
 #define __STDC_LIMIT_MACROS 1
 #endif
 #endif
+
+#ifdef _MSVC_VER
+#if (_MSVC_VER > 1700)
+#include <cstdint>
+#endif
+
+#else
+/* All UNIX style platforms */
 #include <stdint.h>
 #endif
+
+#else
 
 /*--------------------------------------------------------------------------*/
 /* Define named types and constants corresponding to specific integer
@@ -216,6 +216,8 @@ typedef double float64;
 # error "No native data type can represent a 64-bit floating point value."
 #endif
 
+
+
 /* For those operating systems that don't actually have a stdint.h file, this section
  * is taken from an OS X stdint.h file and should work just fine with the include
  * guard.
@@ -262,6 +264,8 @@ typedef double float64;
 
 #define INTMAX_C(v)  (v ## LL)
 #define UINTMAX_C(v) (v ## ULL)
+
+#endif
 
 #endif
 

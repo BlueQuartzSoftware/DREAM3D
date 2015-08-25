@@ -103,7 +103,7 @@ class DREAM3DLib_EXPORT IGeometry2D : public IGeometry
     virtual int64_t getNumberOfVertices() = 0;
 
 // -----------------------------------------------------------------------------
-// Inherited from SharedVertexOps
+// Inherited from SharedEdgeOps
 // -----------------------------------------------------------------------------
 
     /**

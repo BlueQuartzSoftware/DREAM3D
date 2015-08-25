@@ -34,72 +34,35 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _CropVolume_H_
-#define _CropVolume_H_
+#ifndef _ConditionalSetValue_H_
+#define _ConditionalSetValue_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/FilterParameters/IntVec3FilterParameter.h"
-#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
 
 /**
- * @brief The CropVolume class. See [Filter documentation](@ref cropvolume) for details.
+ * @brief The ConditionalSetValue class. See [Filter documentation](@ref conditionalsetvalue) for details.
  */
-class CropVolume : public AbstractFilter
+class DREAM3DLib_EXPORT ConditionalSetValue : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(CropVolume)
-    DREAM3D_STATIC_NEW_MACRO(CropVolume)
-    DREAM3D_TYPE_MACRO_SUPER(CropVolume, AbstractFilter)
 
-    virtual ~CropVolume();
+    DREAM3D_SHARED_POINTERS(ConditionalSetValue)
+    DREAM3D_STATIC_NEW_MACRO(ConditionalSetValue)
+    DREAM3D_TYPE_MACRO_SUPER(ConditionalSetValue, AbstractFilter)
 
-    DREAM3D_FILTER_PARAMETER(QString, NewDataContainerName)
-    Q_PROPERTY(QString NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
+    virtual ~ConditionalSetValue();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
-    Q_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
+    Q_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixPath)
-    Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, ConditionalArrayPath)
+    Q_PROPERTY(DataArrayPath ConditionalArrayPath READ getConditionalArrayPath WRITE setConditionalArrayPath)
 
-    IntVec3_t getCurrentVolumeDataContainerDimensions();
-    Q_PROPERTY(IntVec3_t CurrentVolumeDataContainerDimensions READ getCurrentVolumeDataContainerDimensions)
-
-    FloatVec3_t getCurrentVolumeDataContainerResolutions();
-    Q_PROPERTY(FloatVec3_t CurrentVolumeDataContainerResolutions READ getCurrentVolumeDataContainerResolutions)
-
-    DREAM3D_FILTER_PARAMETER(int, XMin)
-    Q_PROPERTY(int XMin READ getXMin WRITE setXMin)
-
-    DREAM3D_FILTER_PARAMETER(int, YMin)
-    Q_PROPERTY(int YMin READ getYMin WRITE setYMin)
-
-    DREAM3D_FILTER_PARAMETER(int, ZMin)
-    Q_PROPERTY(int ZMin READ getZMin WRITE setZMin)
-
-    DREAM3D_FILTER_PARAMETER(int, XMax)
-    Q_PROPERTY(int XMax READ getXMax WRITE setXMax)
-
-    DREAM3D_FILTER_PARAMETER(int, YMax)
-    Q_PROPERTY(int YMax READ getYMax WRITE setYMax)
-
-    DREAM3D_FILTER_PARAMETER(int, ZMax)
-    Q_PROPERTY(int ZMax READ getZMax WRITE setZMax)
-
-    DREAM3D_FILTER_PARAMETER(bool, RenumberFeatures)
-    Q_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures)
-
-    DREAM3D_FILTER_PARAMETER(bool, SaveAsNewDataContainer)
-    Q_PROPERTY(bool SaveAsNewDataContainer READ getSaveAsNewDataContainer WRITE setSaveAsNewDataContainer)
-
-    DREAM3D_FILTER_PARAMETER(bool, UpdateOrigin)
-    Q_PROPERTY(bool UpdateOrigin READ getUpdateOrigin WRITE setUpdateOrigin)
-
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-    Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    DREAM3D_FILTER_PARAMETER(double, ReplaceValue)
+    Q_PROPERTY(double ReplaceValue READ getReplaceValue WRITE setReplaceValue)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -175,7 +138,7 @@ class CropVolume : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    CropVolume();
+    ConditionalSetValue();
 
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -183,10 +146,11 @@ class CropVolume : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_IDATAARRAY_VARIABLE(Array)
+    DEFINE_DATAARRAY_VARIABLE(bool, ConditionalArray)
 
-    CropVolume(const CropVolume&); // Copy Constructor Not Implemented
-    void operator=(const CropVolume&); // Operator '=' Not Implemented
+    ConditionalSetValue(const ConditionalSetValue&); // Copy Constructor Not Implemented
+    void operator=(const ConditionalSetValue&); // Operator '=' Not Implemented
 };
 
-#endif /* CROPVOLUME_H_ */
+#endif /* _ConditionalSetValue_H_ */

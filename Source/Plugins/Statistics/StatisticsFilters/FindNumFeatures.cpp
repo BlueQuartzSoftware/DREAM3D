@@ -36,10 +36,7 @@
 
 #include "FindNumFeatures.h"
 
-#include <sstream>
-
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -88,6 +85,7 @@ void FindNumFeatures::setupFilterParameters()
     parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::CreatedArray));
+
   {
     DataArrayCreationFilterParameter::DataStructureRequirements req;
     QVector<unsigned int> amTypes;
@@ -98,6 +96,7 @@ void FindNumFeatures::setupFilterParameters()
     req.amTypes = amTypes;
     parameters.push_back(DataArrayCreationFilterParameter::New("Number of Features", "NumFeaturesArrayPath", getNumFeaturesArrayPath(), FilterParameter::CreatedArray, req));
   }
+
   setFilterParameters(parameters);
 }
 

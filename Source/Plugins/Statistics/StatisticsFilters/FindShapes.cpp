@@ -265,8 +265,8 @@ void FindShapes::find_moments()
     featuremoments[6 * i + 3] = 0.0f;
     featuremoments[6 * i + 4] = 0.0f;
     featuremoments[6 * i + 5] = 0.0f;
-    m_Volumes[i] = 0.0f;
   }
+
   float x = 0.0f, y = 0.0f, z = 0.0f, x1 = 0.0f, x2 = 0.0f, y1 = 0.0f, y2 = 0.0f, z1 = 0.0f, z2 = 0.0f;
   float xdist1 = 0.0f, xdist2 = 0.0f, xdist3 = 0.0f, xdist4 = 0.0f, xdist5 = 0.0f, xdist6 = 0.0f, xdist7 = 0.0f, xdist8 = 0.0f;
   float ydist1 = 0.0f, ydist2 = 0.0f, ydist3 = 0.0f, ydist4 = 0.0f, ydist5 = 0.0f, ydist6 = 0.0f, ydist7 = 0.0f, ydist8 = 0.0f;
@@ -284,12 +284,12 @@ void FindShapes::find_moments()
         x = float(k * modXRes);
         y = float(j * modYRes);
         z = float(i * modZRes);
-        x1 = x + (modXRes / 4);
-        x2 = x - (modXRes / 4);
-        y1 = y + (modYRes / 4);
-        y2 = y - (modYRes / 4);
-        z1 = z + (modZRes / 4);
-        z2 = z - (modZRes / 4);
+        x1 = x + (modXRes / 4.0f);
+        x2 = x - (modXRes / 4.0f);
+        y1 = y + (modYRes / 4.0f);
+        y2 = y - (modYRes / 4.0f);
+        z1 = z + (modZRes / 4.0f);
+        z2 = z - (modZRes / 4.0f);
         xdist1 = (x1 - (m_Centroids[gnum * 3 + 0] * scaleFactor));
         ydist1 = (y1 - (m_Centroids[gnum * 3 + 1] * scaleFactor));
         zdist1 = (z1 - (m_Centroids[gnum * 3 + 2] * scaleFactor));
@@ -432,29 +432,32 @@ void FindShapes::find_moments2D()
       int32_t gnum = m_FeatureIds[yStride + k];
       x = float(k) * modXRes;
       y = float(j) * modYRes;
-      x1 = x + (modXRes / 2);
-      x2 = x - (modXRes / 2);
-      y1 = y + (modYRes / 2);
-      y2 = y - (modYRes / 2);
-      xdist1 = (x1 - m_Centroids[gnum * 3 + 0]);
-      ydist1 = (y1 - m_Centroids[gnum * 3 + 1]);
-      xdist2 = (x1 - m_Centroids[gnum * 3 + 0]);
-      ydist2 = (y2 - m_Centroids[gnum * 3 + 1]);
-      xdist3 = (x2 - m_Centroids[gnum * 3 + 0]);
-      ydist3 = (y1 - m_Centroids[gnum * 3 + 1]);
-      xdist4 = (x2 - m_Centroids[gnum * 3 + 0]);
-      ydist4 = (y2 - m_Centroids[gnum * 3 + 1]);
+      x1 = x + (modXRes / 4.0f);
+      x2 = x - (modXRes / 4.0f);
+      y1 = y + (modYRes / 4.0f);
+      y2 = y - (modYRes / 4.0f);
+      xdist1 = (x1 - (m_Centroids[gnum * 3 + 0] * scaleFactor));
+      ydist1 = (y1 - (m_Centroids[gnum * 3 + 1] * scaleFactor));
+      xdist2 = (x1 - (m_Centroids[gnum * 3 + 0] * scaleFactor));
+      ydist2 = (y2 - (m_Centroids[gnum * 3 + 1] * scaleFactor));
+      xdist3 = (x2 - (m_Centroids[gnum * 3 + 0] * scaleFactor));
+      ydist3 = (y1 - (m_Centroids[gnum * 3 + 1] * scaleFactor));
+      xdist4 = (x2 - (m_Centroids[gnum * 3 + 0] * scaleFactor));
+      ydist4 = (y2 - (m_Centroids[gnum * 3 + 1] * scaleFactor));
       xx = ((ydist1) * (ydist1)) + ((ydist2) * (ydist2)) + ((ydist3) * (ydist3)) + ((ydist4) * (ydist4));
       yy = ((xdist1) * (xdist1)) + ((xdist2) * (xdist2)) + ((xdist3) * (xdist3)) + ((xdist4) * (xdist4));
       xy = ((xdist1) * (ydist1)) + ((xdist2) * (ydist2)) + ((xdist3) * (ydist3)) + ((xdist4) * (ydist4));
       featuremoments[gnum * 6 + 0] = featuremoments[gnum * 6 + 0] + xx;
       featuremoments[gnum * 6 + 1] = featuremoments[gnum * 6 + 1] + yy;
       featuremoments[gnum * 6 + 2] = featuremoments[gnum * 6 + 2] + xy;
+      m_Volumes[gnum] = m_Volumes[gnum] + 1.0;
     }
   }
   double konst1 = static_cast<double>((modXRes / 2.0) * (modYRes / 2.0));
+  double konst2 = static_cast<double>(xRes * yRes);
   for (size_t i = 1; i < numfeatures; i++)
   {
+    m_Volumes[i] = m_Volumes[i] * konst2;
     featuremoments[i * 6 + 0] = featuremoments[i * 6 + 0] * konst1;
     featuremoments[i * 6 + 1] = featuremoments[i * 6 + 1] * konst1;
     featuremoments[i * 6 + 2] = -featuremoments[i * 6 + 2] * konst1;
@@ -560,6 +563,33 @@ void FindShapes::find_axes2D()
   double Ixx = 0.0f, Iyy = 0.0f, Ixy = 0.0f;
 
   size_t numfeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
+  size_t xPoints = 0;
+  size_t yPoints = 0;
+  float xRes = 0.0f;
+  float yRes = 0.0f;
+
+  if (m->getGeometryAs<ImageGeom>()->getXPoints() == 1)
+  {
+    xPoints = m->getGeometryAs<ImageGeom>()->getYPoints();
+    xRes = m->getGeometryAs<ImageGeom>()->getYRes();
+    yPoints = m->getGeometryAs<ImageGeom>()->getZPoints();
+    yRes = m->getGeometryAs<ImageGeom>()->getZRes();
+  }
+  if (m->getGeometryAs<ImageGeom>()->getYPoints() == 1)
+  {
+    xPoints = m->getGeometryAs<ImageGeom>()->getXPoints();
+    xRes = m->getGeometryAs<ImageGeom>()->getXRes();
+    yPoints = m->getGeometryAs<ImageGeom>()->getZPoints();
+    yRes = m->getGeometryAs<ImageGeom>()->getZRes();
+  }
+  if (m->getGeometryAs<ImageGeom>()->getZPoints() == 1)
+  {
+    xPoints = m->getGeometryAs<ImageGeom>()->getXPoints();
+    xRes = m->getGeometryAs<ImageGeom>()->getXRes();
+    yPoints = m->getGeometryAs<ImageGeom>()->getYPoints();
+    yRes = m->getGeometryAs<ImageGeom>()->getYRes();
+  }
 
   m_FeatureMoments->resize(numfeatures * 6);
   featuremoments = m_FeatureMoments->getPointer(0);
@@ -571,6 +601,26 @@ void FindShapes::find_axes2D()
     Ixy = featuremoments[i * 6 + 2];
     double r1 = (Ixx + Iyy) / 2.0 + sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0 - (Ixx * Iyy - Ixy * Ixy));
     double r2 = (Ixx + Iyy) / 2.0 - sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0 - (Ixx * Iyy - Ixy * Ixy));
+    if (r2 <= 0)
+    {
+      float tempScale1 = 1.0f;
+      float tempScale2 = 1.0f;
+      if (Ixx >= Iyy)
+      {
+        tempScale1 = xRes;
+        tempScale2 = yRes;
+      }
+      if (Ixx < Iyy)
+      {
+        tempScale1 = yRes;
+        tempScale2 = xRes;
+      }
+      m_AxisLengths[3 * i] = m_Volumes[i] / tempScale1;
+      m_AxisLengths[3 * i + 1] = m_Volumes[i] / tempScale2;
+      m_AspectRatios[2 * i] = tempScale2 / tempScale1;
+      m_AspectRatios[2 * i + 1] = 0.0f;
+      continue;
+    }
     double preterm = 4.0 / M_PI;
     preterm = pow(preterm, 0.25);
     double postterm1 = r1 * r1 * r1 / r2;
@@ -754,6 +804,23 @@ void FindShapes::find_axiseulers2D()
     double Ixx = featuremoments[i * 6 + 0];
     double Iyy = featuremoments[i * 6 + 1];
     double Ixy = featuremoments[i * 6 + 2];
+    if (Ixy == 0)
+    {
+      if (Ixx > Iyy)
+      {
+        m_AxisEulerAngles[3 * i] = M_PI_2;
+        m_AxisEulerAngles[3 * i + 1] = 0.0f;
+        m_AxisEulerAngles[3 * i + 2] = 0.0f;
+        continue;
+      }
+      if (Iyy >= Ixx)
+      {
+        m_AxisEulerAngles[3 * i] = 0.0f;
+        m_AxisEulerAngles[3 * i + 1] = 0.0f;
+        m_AxisEulerAngles[3 * i + 2] = 0.0f;
+        continue;
+      }
+    }
     double I1 = (Ixx + Iyy) / 2.0 + sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0 + (Ixy * Ixy - Ixx * Iyy));
     double I2 = (Ixx + Iyy) / 2.0 - sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0 + (Ixy * Ixy - Ixx * Iyy));
     double n1x = (Ixx - I1) / Ixy;
