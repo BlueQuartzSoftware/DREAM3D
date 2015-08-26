@@ -103,7 +103,7 @@ void ImportImageStack::setupFilterParameters()
     choices.push_back("Rectilinear Grid");
     parameter->setChoices(choices);
     QStringList linkedProps;
-    linkedProps << "Origin" << "Resolution" << "xBoundsFile" << "yBoundsFile" << "zBoundsFile";
+    linkedProps << "Origin" << "Resolution" << "BoundsFile";
     parameter->setLinkedProperties(linkedProps);
     parameter->setEditable(false);
     parameter->setCategory(FilterParameter::Parameter);
@@ -504,6 +504,13 @@ int ImportImageStack::readBounds()
   count = 0;
   while (count < numXBounds)
   {
+    if (inFile.atEnd())
+    {
+      QString ss = QObject::tr(" %1..").arg(m_BoundsFile);
+      setErrorCondition(-100);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return -1;
+    }
     buf = inFile.readLine();
     buf = buf.trimmed();
     buf = buf.simplified();
@@ -511,6 +518,13 @@ int ImportImageStack::readBounds()
     for (size_t iter2 = 0; iter2 < tokens.size(); iter2++)
     {
       xbnds[count] = tokens[iter2].toFloat(&ok);
+      if (!ok)
+      {
+        QString ss = QObject::tr("Could not read X coordinte number %1. Could not interpret as float value.").arg(count+1);
+        setErrorCondition(-100);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return -1;
+      }
       count++;
     }
   }
@@ -553,6 +567,13 @@ int ImportImageStack::readBounds()
     for (size_t iter2 = 0; iter2 < tokens.size(); iter2++)
     {
       ybnds[count] = tokens[iter2].toFloat(&ok);
+      if (!ok)
+      {
+        QString ss = QObject::tr("Could not read Y coordinte number %1. Could not interpret as float value.").arg(count + 1);
+        setErrorCondition(-100);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return -1;
+      }
       count++;
     }
   }
@@ -595,6 +616,13 @@ int ImportImageStack::readBounds()
     for (size_t iter2 = 0; iter2 < tokens.size(); iter2++)
     {
       zbnds[count] = tokens[iter2].toFloat(&ok);
+      if (!ok)
+      {
+        QString ss = QObject::tr("Could not read Z coordinte number %1. Could not interpret as float value.").arg(count + 1);
+        setErrorCondition(-100);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return -1;
+      }
       count++;
     }
   }

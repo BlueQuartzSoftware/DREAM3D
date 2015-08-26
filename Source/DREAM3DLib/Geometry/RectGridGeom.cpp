@@ -90,9 +90,9 @@ RectGridGeom::RectGridGeom()
   m_Dimensions[0] = 0;
   m_Dimensions[1] = 0;
   m_Dimensions[2] = 0;
-  xBounds = FloatArrayType::NullPointer();
-  yBounds = FloatArrayType::NullPointer();
-  zBounds = FloatArrayType::NullPointer();
+  m_xBounds = FloatArrayType::NullPointer();
+  m_yBounds = FloatArrayType::NullPointer();
+  m_zBounds = FloatArrayType::NullPointer();
 }
 
 // -----------------------------------------------------------------------------
@@ -121,8 +121,8 @@ RectGridGeom::Pointer RectGridGeom::CreateGeometry(const QString& name)
 // -----------------------------------------------------------------------------
 void RectGridGeom::setXBounds(FloatArrayType::Pointer xBnds)
 {
-  xBounds = xBnds;
-  xBounds->setName("xBounds");
+  m_xBounds = xBnds;
+  m_xBounds->setName(DREAM3D::Geometry::zBoundsList);
 }
 
 // -----------------------------------------------------------------------------
@@ -130,8 +130,8 @@ void RectGridGeom::setXBounds(FloatArrayType::Pointer xBnds)
 // -----------------------------------------------------------------------------
 void RectGridGeom::setYBounds(FloatArrayType::Pointer yBnds)
 {
-  yBounds = yBnds;
-  yBounds->setName("yBounds");
+  m_yBounds = yBnds;
+  m_yBounds->setName(DREAM3D::Geometry::zBoundsList);
 }
 
 // -----------------------------------------------------------------------------
@@ -139,8 +139,8 @@ void RectGridGeom::setYBounds(FloatArrayType::Pointer yBnds)
 // -----------------------------------------------------------------------------
 void RectGridGeom::setZBounds(FloatArrayType::Pointer zBnds)
 {
-  zBounds = zBnds;
-  zBounds->setName("zBounds");
+  m_zBounds = zBnds;
+  m_zBounds->setName(DREAM3D::Geometry::zBoundsList);
 }
 
 // -----------------------------------------------------------------------------
@@ -148,13 +148,13 @@ void RectGridGeom::setZBounds(FloatArrayType::Pointer zBnds)
 // -----------------------------------------------------------------------------
 void RectGridGeom::getCoords(size_t idx[3], float coords[3])
 {
-  float* xBnds = xBounds->getPointer(0);
-  float* yBnds = yBounds->getPointer(0);
-  float* zBnds = zBounds->getPointer(0);
+  float* xBnds = m_xBounds->getPointer(0);
+  float* yBnds = m_yBounds->getPointer(0);
+  float* zBnds = m_zBounds->getPointer(0);
 
   coords[0] = 0.5f * (xBnds[idx[0]] + xBnds[idx[0] + 1]);
-  coords[1] = 0.5f * (xBnds[idx[1]] + xBnds[idx[1] + 1]);
-  coords[2] = 0.5f * (xBnds[idx[2]] + xBnds[idx[2] + 1]);
+  coords[1] = 0.5f * (yBnds[idx[1]] + yBnds[idx[1] + 1]);
+  coords[2] = 0.5f * (zBnds[idx[2]] + zBnds[idx[2] + 1]);
 }
 
 // -----------------------------------------------------------------------------
@@ -162,13 +162,13 @@ void RectGridGeom::getCoords(size_t idx[3], float coords[3])
 // -----------------------------------------------------------------------------
 void RectGridGeom::getCoords(size_t& x, size_t& y, size_t& z, float coords[3])
 {
-  float* xBnds = xBounds->getPointer(0);
-  float* yBnds = yBounds->getPointer(0);
-  float* zBnds = zBounds->getPointer(0);
+  float* xBnds = m_xBounds->getPointer(0);
+  float* yBnds = m_yBounds->getPointer(0);
+  float* zBnds = m_zBounds->getPointer(0);
 
   coords[0] = 0.5f * (xBnds[x] + xBnds[x + 1]);
-  coords[1] = 0.5f * (xBnds[y] + xBnds[y + 1]);
-  coords[2] = 0.5f * (xBnds[z] + xBnds[z + 1]);
+  coords[1] = 0.5f * (yBnds[y] + yBnds[y + 1]);
+  coords[2] = 0.5f * (zBnds[z] + zBnds[z + 1]);
 }
 
 // -----------------------------------------------------------------------------
@@ -176,13 +176,13 @@ void RectGridGeom::getCoords(size_t& x, size_t& y, size_t& z, float coords[3])
 // -----------------------------------------------------------------------------
 void RectGridGeom::getCoords(size_t idx[3], double coords[3])
 {
-  float* xBnds = xBounds->getPointer(0);
-  float* yBnds = yBounds->getPointer(0);
-  float* zBnds = zBounds->getPointer(0);
+  float* xBnds = m_xBounds->getPointer(0);
+  float* yBnds = m_yBounds->getPointer(0);
+  float* zBnds = m_zBounds->getPointer(0);
 
   coords[0] = static_cast<double>(0.5 * (xBnds[idx[0]] + xBnds[idx[0] + 1]));
-  coords[1] = static_cast<double>(0.5 * (xBnds[idx[1]] + xBnds[idx[1] + 1]));
-  coords[2] = static_cast<double>(0.5 * (xBnds[idx[2]] + xBnds[idx[2] + 1]));
+  coords[1] = static_cast<double>(0.5 * (yBnds[idx[1]] + yBnds[idx[1] + 1]));
+  coords[2] = static_cast<double>(0.5 * (zBnds[idx[2]] + zBnds[idx[2] + 1]));
 }
 
 // -----------------------------------------------------------------------------
@@ -190,13 +190,13 @@ void RectGridGeom::getCoords(size_t idx[3], double coords[3])
 // -----------------------------------------------------------------------------
 void RectGridGeom::getCoords(size_t& x, size_t& y, size_t& z, double coords[3])
 {
-  float* xBnds = xBounds->getPointer(0);
-  float* yBnds = yBounds->getPointer(0);
-  float* zBnds = zBounds->getPointer(0);
+  float* xBnds = m_xBounds->getPointer(0);
+  float* yBnds = m_yBounds->getPointer(0);
+  float* zBnds = m_zBounds->getPointer(0);
 
   coords[0] = static_cast<double>(0.5 * (xBnds[x] + xBnds[x + 1]));
-  coords[1] = static_cast<double>(0.5 * (xBnds[y] + xBnds[y + 1]));
-  coords[2] = static_cast<double>(0.5 * (xBnds[z] + xBnds[z + 1]));
+  coords[1] = static_cast<double>(0.5 * (yBnds[y] + yBnds[y + 1]));
+  coords[2] = static_cast<double>(0.5 * (zBnds[z] + zBnds[z + 1]));
 }
 
 // -----------------------------------------------------------------------------
@@ -208,9 +208,9 @@ void RectGridGeom::initializeWithZeros()
   {
     m_Dimensions[i] = 0;
   }
-  xBounds = FloatArrayType::NullPointer();
-  yBounds = FloatArrayType::NullPointer();
-  zBounds = FloatArrayType::NullPointer();
+  m_xBounds = FloatArrayType::NullPointer();
+  m_yBounds = FloatArrayType::NullPointer();
+  m_zBounds = FloatArrayType::NullPointer();
 }
 
 // -----------------------------------------------------------------------------
@@ -704,25 +704,25 @@ int RectGridGeom::writeGeometryToHDF5(hid_t parentId, bool DREAM3D_NOT_USED(writ
   {
     return err;
   }
-  if (xBounds.get() != NULL)
+  if (m_xBounds.get() != NULL)
   {
-    err = GeometryHelpers::GeomIO::WriteListToHDF5(parentId, xBounds);
+    err = GeometryHelpers::GeomIO::WriteListToHDF5(parentId, m_xBounds);
     if (err < 0)
     {
       return err;
     }
   }
-  if (yBounds.get() != NULL)
+  if (m_yBounds.get() != NULL)
   {
-    err = GeometryHelpers::GeomIO::WriteListToHDF5(parentId, yBounds);
+    err = GeometryHelpers::GeomIO::WriteListToHDF5(parentId, m_yBounds);
     if (err < 0)
     {
       return err;
     }
   }
-  if (zBounds.get() != NULL)
+  if (m_zBounds.get() != NULL)
   {
-    err = GeometryHelpers::GeomIO::WriteListToHDF5(parentId, zBounds);
+    err = GeometryHelpers::GeomIO::WriteListToHDF5(parentId, m_zBounds);
     if (err < 0)
     {
       return err;
@@ -748,13 +748,13 @@ int RectGridGeom::writeXdmf(QTextStream& out, QString dcName, QString hdfFileNam
   out << "  <Grid Name=\"" << dcName << "\" GridType=\"Uniform\">" << "\n";
   out << "    <Topology TopologyType=\"3DRectMesh\" Dimensions=\"" << volDims[2] + 1 << " " << volDims[1] + 1 << " " << volDims[0] + 1 << " \"></Topology>" << "\n";
   out << "    <Geometry Type=\"VxVyVz\">" << "\n";
-  out << "    <DataItem Format=\"HDF\" Dimensions=\"" << xBounds->getNumberOfTuples() << "\" NumberType=\"Float\" Precision=\"4\">" << "\n";
+  out << "    <DataItem Format=\"HDF\" Dimensions=\"" << m_xBounds->getNumberOfTuples() << "\" NumberType=\"Float\" Precision=\"4\">" << "\n";
   out << "      " << hdfFileName << ":/DataContainers/" << dcName << "/" << DREAM3D::Geometry::Geometry << "/" << DREAM3D::Geometry::xBoundsList << "\n";
   out << "    </DataItem>" << "\n";
-  out << "    <DataItem Format=\"HDF\" Dimensions=\"" << yBounds->getNumberOfTuples() << "\" NumberType=\"Float\" Precision=\"4\">" << "\n";
+  out << "    <DataItem Format=\"HDF\" Dimensions=\"" << m_yBounds->getNumberOfTuples() << "\" NumberType=\"Float\" Precision=\"4\">" << "\n";
   out << "      " << hdfFileName << ":/DataContainers/" << dcName << "/" << DREAM3D::Geometry::Geometry << "/" << DREAM3D::Geometry::yBoundsList << "\n";
   out << "    </DataItem>" << "\n";
-  out << "    <DataItem Format=\"HDF\" Dimensions=\"" << zBounds->getNumberOfTuples() << "\" NumberType=\"Float\" Precision=\"4\">" << "\n";
+  out << "    <DataItem Format=\"HDF\" Dimensions=\"" << m_zBounds->getNumberOfTuples() << "\" NumberType=\"Float\" Precision=\"4\">" << "\n";
   out << "      " << hdfFileName << ":/DataContainers/" << dcName << "/" << DREAM3D::Geometry::Geometry << "/" << DREAM3D::Geometry::zBoundsList << "\n";
   out << "    </DataItem>" << "\n";
   out << "    </Geometry>" << "\n";
@@ -796,7 +796,7 @@ int RectGridGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
   { 0, 0, 0 };
   unsigned int spatialDims = 0;
   QString geomName = "";
-  err = gatherMetaData(parentId, volDims, xBounds, yBounds, zBounds, spatialDims, geomName, preflight);
+  err = gatherMetaData(parentId, volDims, preflight);
   if (err < 0)
   {
     return err;
@@ -830,7 +830,7 @@ IGeometry::Pointer RectGridGeom::deepCopy()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int RectGridGeom::gatherMetaData(hid_t parentId, size_t volDims[3], FloatArrayType::Pointer xBounds, FloatArrayType::Pointer yBounds, FloatArrayType::Pointer zBounds, unsigned int spatialDims, QString geomName, bool preflight)
+int RectGridGeom::gatherMetaData(hid_t parentId, size_t volDims[3], bool preflight)
 {
   int err = QH5Lite::readPointerDataset(parentId, H5_DIMENSIONS, volDims);
   if(err < 0)

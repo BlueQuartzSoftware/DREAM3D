@@ -71,9 +71,9 @@ class DREAM3DLib_EXPORT RectGridGeom : public IGeometry
     void setYBounds(FloatArrayType::Pointer yBounds);
     void setZBounds(FloatArrayType::Pointer zBounds);
 
-    FloatArrayType::Pointer getXBounds() { return xBounds; }
-    FloatArrayType::Pointer getYBounds() { return yBounds; }
-    FloatArrayType::Pointer getZBounds() { return zBounds; }
+    FloatArrayType::Pointer getXBounds() { return m_xBounds; }
+    FloatArrayType::Pointer getYBounds() { return m_yBounds; }
+    FloatArrayType::Pointer getZBounds() { return m_zBounds; }
 
     void getCoords(size_t idx[3], float coords[3]);
 
@@ -286,7 +286,7 @@ class DREAM3DLib_EXPORT RectGridGeom : public IGeometry
      * @param origin
      * @return
      */
-    virtual int gatherMetaData(hid_t parentid, size_t volDims[3], FloatArrayType::Pointer xBounds, FloatArrayType::Pointer yBounds, FloatArrayType::Pointer zBounds, unsigned int spatialDims, QString geomName, bool preflight);
+    virtual int gatherMetaData(hid_t parentid, size_t volDims[3], bool preflight);
 
     /**
      * @brief setElementsContaingVert
@@ -315,9 +315,9 @@ class DREAM3DLib_EXPORT RectGridGeom : public IGeometry
     unsigned int m_UnitDimensionality;
     unsigned int m_SpatialDimensionality;
     AttributeMatrixMap_t m_AttributeMatrices;
-    FloatArrayType::Pointer xBounds;
-    FloatArrayType::Pointer yBounds;
-    FloatArrayType::Pointer zBounds;
+    FloatArrayType::Pointer m_xBounds;
+    FloatArrayType::Pointer m_yBounds;
+    FloatArrayType::Pointer m_zBounds;
 
     RectGridGeom(const RectGridGeom&); // Copy Constructor Not Implemented
     void operator=(const RectGridGeom&); // Operator '=' Not Implemented
