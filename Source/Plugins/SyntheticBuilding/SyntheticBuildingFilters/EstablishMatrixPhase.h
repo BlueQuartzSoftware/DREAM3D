@@ -76,6 +76,12 @@ class EstablishMatrixPhase : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, NumFeaturesArrayName)
     Q_PROPERTY(QString NumFeaturesArrayName READ getNumFeaturesArrayName WRITE setNumFeaturesArrayName)
 
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, MaskArrayPath)
+    Q_PROPERTY(DataArrayPath MaskArrayPath READ getMaskArrayPath WRITE setMaskArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(bool, UseMask)
+    Q_PROPERTY(bool UseMask READ getUseMask WRITE setUseMask)
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, InputStatsArrayPath)
     Q_PROPERTY(DataArrayPath InputStatsArrayPath READ getInputStatsArrayPath WRITE setInputStatsArrayPath)
 
@@ -179,9 +185,15 @@ class EstablishMatrixPhase : public AbstractFilter
     float sizez;
     float totalvol;
 
+    // Cell Data - make sure these are all initialized to NULL in the constructor
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_DATAARRAY_VARIABLE(bool, Mask)
+
+    // Feature Data - make sure these are all initialized to NULL in the constructor
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+
+    // Ensemble Data - make sure these are all initialized to NULL in the constructor
     DEFINE_DATAARRAY_VARIABLE(int32_t, NumFeatures)
     DEFINE_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
     StatsDataArray::WeakPointer m_StatsDataArray;

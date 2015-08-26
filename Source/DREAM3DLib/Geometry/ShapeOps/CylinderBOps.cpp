@@ -33,104 +33,59 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
-#include "BetaOps.h"
+#include "CylinderBOps.h"
 
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-BetaOps::~BetaOps()
+CylinderBOps::CylinderBOps()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-BetaOps::BetaOps()
+CylinderBOps::~CylinderBOps()
 {
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+float CylinderBOps::radcur1(QMap<ArgName, float> args)
+{
+  float radcur1 = 0.0f;
+
+  float volcur = args[VolCur];
+  float bovera = args[B_OverA];
+  float covera = args[C_OverA];
+
+  //the equation for volume for a B cylinder is pi*a*c*h where a and c are semi axis lengths, but
+  //h is a full axis length - meaning h = 2b.  However, since our aspect ratios relate semi axis lengths, the 2.0
+  //factor can be ingored in this part
+  radcur1 = static_cast<float>((volcur * DREAM3D::Constants::k_1OverPi * (1.0f / bovera) * (1.0f / covera)) );
+  radcur1 = powf(radcur1, 0.333333333333f);
+  return radcur1;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int BetaOps::calculateParameters(std::vector<float>& data, FloatArrayType::Pointer outputs)
+float CylinderBOps::inside(float axis1comp, float axis2comp, float axis3comp)
 {
-  int err = 0;
-  float avg = 0;
-  float stddev = 0;
-  float alpha = 0;
-  float beta = 0;
-  if(data.size() > 1)
+  float inside = -1.0;
+  if (fabs(axis2comp) <= 1.0)
   {
-    for(std::vector<float>::size_type i = 0; i < data.size(); i++)
-    {
-      avg = avg + data[i];
-    }
-    avg = avg / float(data.size());
-    for(std::vector<float>::size_type i = 0; i < data.size(); i++)
-    {
-      stddev = stddev + ((avg - data[i]) * (avg - data[i]));
-    }
-    stddev = stddev / float(data.size());
-    alpha = avg * (((avg * (1 - avg)) / stddev) - 1);
-    beta = (1 - avg) * (((avg * (1 - avg)) / stddev) - 1);
+    // inside = 1.0;
+    axis1comp = fabs(axis1comp);
+    axis3comp = fabs(axis3comp);
+    axis1comp = axis1comp * axis1comp;
+    axis3comp = axis3comp * axis3comp;
+    inside = static_cast<float>( 1.0 - axis1comp - axis3comp );
   }
-  else
-  {
-    alpha = 0;
-    beta = 0;
-  }
-  outputs->setValue(0, alpha);
-  outputs->setValue(1, beta);
-  return err;
+  return inside;
 }
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int BetaOps::calculateCorrelatedParameters(std::vector<std::vector<float> >& data, VectorOfFloatArray outputs)
-{
-  int err = 0;
-  float avg = 0;
-  float stddev = 0;
-  float alpha = 0;
-  float beta = 0;
-  for(std::vector<float>::size_type i = 0; i < data.size(); i++)
-  {
-    avg = 0;
-    stddev = 0;
-    if(data[i].size() > 1)
-    {
-      for(std::vector<float>::size_type j = 0; j < data[i].size(); j++)
-      {
-        avg = avg + data[i][j];
-      }
-      avg = avg / float(data[i].size());
-      for(std::vector<float>::size_type j = 0; j < data[i].size(); j++)
-      {
-        stddev = stddev + ((avg - data[i][j]) * (avg - data[i][j]));
-      }
-      stddev = stddev / float(data[i].size());
-      if (stddev == 0)
-      {
-        alpha = 0;
-        beta = 0;
-      }
-      else
-      {
-        alpha = avg * (((avg * (1 - avg)) / stddev) - 1);
-        beta = (1 - avg) * (((avg * (1 - avg)) / stddev) - 1);
-      }
-    }
-    else
-    {
-      alpha = 0;
-      beta = 0;
-    }
-    outputs[0]->setValue(i, alpha);
-    outputs[1]->setValue(i, beta);
-  }
-  return err;
-}
-

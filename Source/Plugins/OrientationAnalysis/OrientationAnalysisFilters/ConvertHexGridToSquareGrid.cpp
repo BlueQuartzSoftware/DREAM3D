@@ -143,12 +143,20 @@ void ConvertHexGridToSquareGrid::dataCheck()
   DataArrayPath tempPath;
   QString ss;
 
-  if(m_OutputPath.isEmpty() == true)
+
+  QDir dir(getOutputPath());
+
+  if (getOutputPath().isEmpty() == true)
   {
-    ss = QObject::tr("The output directory must be set");
-    notifyErrorMessage(getHumanLabel(), ss, -12);
-    setErrorCondition(-12);
+    setErrorCondition(-1003);
+    notifyErrorMessage(getHumanLabel(), "The output directory must be set", getErrorCondition());
   }
+  else if (dir.exists() == false)
+  {
+    QString ss = QObject::tr("The output directory path does not exist. DREAM.3D will attempt to create this path during execution");
+    notifyWarningMessage(getHumanLabel(), ss, -1);
+  }
+
 
   if(m_InputPath.isEmpty() == true)
   {
@@ -372,6 +380,15 @@ void ConvertHexGridToSquareGrid::execute()
 
 
         QFile outFile(newEbsdFName);
+        QFileInfo fi(newEbsdFName);
+        // Ensure the output path exists by creating it if necessary
+        QDir parent(fi.absolutePath());
+        if (parent.exists() == false)
+        {
+          parent.mkpath(fi.absolutePath());
+        }
+
+
         if (!outFile.open(QIODevice::WriteOnly | QIODevice::Text))
         {
           QString msg = QObject::tr("Ang square output file could not be opened for writing: %1").arg(newEbsdFName);

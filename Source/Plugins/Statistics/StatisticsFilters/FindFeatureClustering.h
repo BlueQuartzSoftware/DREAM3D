@@ -37,24 +37,13 @@
 #ifndef _FindFeatureClustering_H_
 #define _FindFeatureClustering_H_
 
-#include <vector>
-#include <string>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
-#include "Statistics/StatisticsConstants.h"
 
 /**
- * @class FindFeatureClustering FindFeatureClustering.h DREAM3DLib/GenericFilters/FindFeatureClustering.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The FindFeatureClustering class. See [Filter documentation](@ref findfeatureclustering) for details.
  */
 class FindFeatureClustering : public AbstractFilter
 {
@@ -73,9 +62,6 @@ class FindFeatureClustering : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(int, PhaseNumber)
     Q_PROPERTY(int PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)
-
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedFeatureArrayPath)
-    Q_PROPERTY(DataArrayPath SelectedFeatureArrayPath READ getSelectedFeatureArrayPath WRITE setSelectedFeatureArrayPath)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEnsembleAttributeMatrixName)
     Q_PROPERTY(DataArrayPath CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
@@ -185,6 +171,9 @@ class FindFeatureClustering : public AbstractFilter
      */
     void dataCheck();
 
+    /**
+     * @brief find_clustering Determines the Feature clustering
+     */
     void find_clustering();
 
   private:
@@ -194,8 +183,8 @@ class FindFeatureClustering : public AbstractFilter
     DEFINE_DATAARRAY_VARIABLE(float, NewEnsembleArray)
     DEFINE_DATAARRAY_VARIABLE(float, MaxMinArray)
     DEFINE_DATAARRAY_VARIABLE(bool, BiasedFeatures)
-    NeighborList<float>::WeakPointer m_ClusteringList;
 
+    NeighborList<float>::WeakPointer m_ClusteringList;
     std::vector<float> m_RandomCentroids;
 
     FindFeatureClustering(const FindFeatureClustering&); // Copy Constructor Not Implemented

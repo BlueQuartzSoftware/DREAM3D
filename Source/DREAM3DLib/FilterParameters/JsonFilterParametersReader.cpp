@@ -412,6 +412,14 @@ int64_t JsonFilterParametersReader::readValue(const QString name, int64_t value)
       return static_cast<int64_t>(val);
     }
   }
+  else if (m_CurrentFilterIndex.value(name).isString())
+  {
+    qint64 val = m_CurrentFilterIndex.value(name).toString().toLongLong();
+    if (val >= std::numeric_limits<int64_t>().min() && val <= std::numeric_limits<int64_t>().max())
+    {
+      return static_cast<int64_t>(val);
+    }
+  }
 
   return value;
 }
@@ -504,7 +512,14 @@ uint64_t JsonFilterParametersReader::readValue(const QString name, uint64_t valu
       return static_cast<uint64_t>(val);
     }
   }
-
+  else if (m_CurrentFilterIndex.value(name).isString())
+  {
+    quint64 val = m_CurrentFilterIndex.value(name).toString().toULongLong();
+    if (val >= std::numeric_limits<quint64>().min() && val <= std::numeric_limits<quint64>().max())
+    {
+      return static_cast<quint64>(val);
+    }
+  }
   return value;
 }
 
@@ -523,6 +538,14 @@ float JsonFilterParametersReader::readValue(const QString name, float value)
   {
     double val = m_CurrentFilterIndex.value(name).toDouble();
     if (val >= std::numeric_limits<float>().min() && val <= std::numeric_limits<float>().max())
+    {
+      return static_cast<float>(val);
+    }
+    else if (val >= -std::numeric_limits<float>().max() && val <= -std::numeric_limits<float>().min())
+    {
+      return static_cast<float>(val);
+    }
+    else if (val == 0.0f)
     {
       return static_cast<float>(val);
     }
@@ -685,6 +708,14 @@ QVector<int64_t> JsonFilterParametersReader::readArray(const QString name, QVect
           vector.push_back(static_cast<int64_t>(val));
         }
       }
+      else if ((*iter).isString())
+      {
+        qint64 val = (*iter).toString().toLongLong();
+        if (val >= std::numeric_limits<int64_t>().min() && val <= std::numeric_limits<int64_t>().max())
+        {
+          vector.push_back(static_cast<int64_t>(val));
+        }
+      }
     }
     return vector;
   }
@@ -813,6 +844,14 @@ QVector<uint64_t> JsonFilterParametersReader::readArray(const QString name, QVec
           vector.push_back(static_cast<uint64_t>(val));
         }
       }
+      else if ((*iter).isString())
+      {
+        quint64 val = (*iter).toString().toULongLong();
+        if (val >= std::numeric_limits<quint64>().min() && val <= std::numeric_limits<quint64>().max())
+        {
+          vector.push_back(static_cast<uint64_t>(val));
+        }
+      }
     }
     return vector;
   }
@@ -844,6 +883,15 @@ QVector<float> JsonFilterParametersReader::readArray(const QString name, QVector
         {
           vector.push_back(static_cast<float>(val));
         }
+        else if (val >= -std::numeric_limits<float>().max() && val <= -std::numeric_limits<float>().min())
+        {
+          vector.push_back(static_cast<float>(val));
+        }
+        else if (val == 0.0f)
+        {
+          vector.push_back(static_cast<float>(val));
+        }
+
       }
     }
     return vector;

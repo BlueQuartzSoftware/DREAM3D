@@ -33,12 +33,12 @@ set(_PublicFilters
   FindTwinBoundarySchmidFactors
   GenerateIPFColors
   GenerateMisorientationColors
-  NeighborCICorrelation
   NeighborOrientationCorrelation
   ReadAngData
   ReadCtfData
   ReadEdaxH5Data
   ReadH5Ebsd
+  ReplaceElementAttributesWithNeighborValues
   RotateEulerRefFrame
   WriteIPFStandardTriangle
   WritePoleFigure

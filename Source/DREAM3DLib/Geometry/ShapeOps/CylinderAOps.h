@@ -33,64 +33,38 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#ifndef _CYLINDERAOPS_H_
+#define _CYLINDERAOPS_H_
 
-#ifndef _SHAPEOPS_H_
-#define _SHAPEOPS_H_
 
-#include <map>
-
-#include "DREAM3DLib/DREAM3DLib.h"
+#include "ShapeOps.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-/**
- * @brief The ShapeOps class
+
+/*
+ *
  */
-class DREAM3DLib_EXPORT ShapeOps
+class DREAM3DLib_EXPORT CylinderAOps : public ShapeOps
 {
   public:
-    DREAM3D_SHARED_POINTERS(ShapeOps)
-    DREAM3D_TYPE_MACRO(ShapeOps)
-    DREAM3D_STATIC_NEW_MACRO(ShapeOps)
+    DREAM3D_SHARED_POINTERS(CylinderAOps)
+    DREAM3D_TYPE_MACRO(CylinderAOps)
+    DREAM3D_STATIC_NEW_MACRO(CylinderAOps)
 
-    virtual ~ShapeOps();
 
-    enum ArgName
-    {
-      Omega3 = 0,
-      B_OverA = 1,
-      C_OverA = 2,
-      VolCur = 3
-    };
-
-    float ShapeClass2Omega[41][2];
-
-    /**
-    * @brief getShapeOpsVector This method returns a vector of each type of ShapeOps placed such that the
-    * index into the vector is the value of the constant at DRAM3D::ShapeType::***
-    * @return Vector of ShapeOps subclasses.
-    */
-    static QVector<ShapeOps::Pointer> getShapeOpsQVector();
-
-    /**
-    * @brief getOrientationOpsVector This method returns a vector of each type of SpaceGroupOps placed such that the
-    * index into the vector is the value of the constant at EBSD::CrystalStructure::***
-    * @return Vector of SpaceGroupOps subclasses.
-    */
-    static std::vector<ShapeOps::Pointer> getShapeOpsVector();
+    virtual ~CylinderAOps();
 
     virtual float radcur1(QMap<ArgName, float> args);
-
     virtual float inside(float axis1comp, float axis2comp, float axis3comp);
-
-    virtual void init() {}
+    virtual void init() {  }
 
   protected:
-    ShapeOps();
-
+    CylinderAOps();
   private:
-    ShapeOps(const ShapeOps&); // Copy Constructor Not Implemented
-    void operator=(const ShapeOps&); // Operator '=' Not Implemented
+    CylinderAOps(const CylinderAOps&); // Copy Constructor Not Implemented
+    void operator=(const CylinderAOps&); // Operator '=' Not Implemented
+
 };
 
-#endif /* SHAPEOPS_H_ */
+#endif /* CYLINDERAOPS_H_ */
 

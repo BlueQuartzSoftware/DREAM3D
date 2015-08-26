@@ -84,9 +84,9 @@ class OrientationLib_EXPORT HexagonalLowOps : public SpaceGroupOps
     virtual void getFZQuat(QuatF& qr);
     virtual int getMisoBin(FOrientArrayType rod);
     virtual bool inUnitTriangle(float eta, float chi);
-    virtual FOrientArrayType determineEulerAngles(int choose);
+    virtual FOrientArrayType determineEulerAngles(uint64_t seed, int choose);
     virtual FOrientArrayType randomizeEulerAngles(FOrientArrayType euler);
-    virtual FOrientArrayType determineRodriguesVector(int choose);
+    virtual FOrientArrayType determineRodriguesVector(uint64_t seed, int choose);
     virtual int getOdfBin(FOrientArrayType rod);
     virtual void getSchmidFactorAndSS(float load[3], float& schmidfactor, float angleComps[2], int& slipsys);
     virtual void getSchmidFactorAndSS(float load[3], float plane[3], float direction[3], float& schmidfactor, float angleComps[2], int& slipsys);

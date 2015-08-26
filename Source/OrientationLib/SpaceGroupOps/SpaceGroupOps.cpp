@@ -178,9 +178,9 @@ FOrientArrayType SpaceGroupOps::_calcRodNearestOrigin(const float rodsym[24][3],
   for(int i = 0; i < numsym; i++)
   {
     denom = 1 - (rod[0] * rodsym[i][0] + rod[1] * rodsym[i][1] + rod[2] * rodsym[i][2]);
-    rc1 = (rod[0] + rodsym[i][0] - (rod[2] * rodsym[i][1] - rod[1] * rodsym[i][2])) / denom;
-    rc2 = (rod[1] + rodsym[i][1] - (rod[0] * rodsym[i][2] - rod[2] * rodsym[i][0])) / denom;
-    rc3 = (rod[2] + rodsym[i][2] - (rod[1] * rodsym[i][0] - rod[0] * rodsym[i][1])) / denom;
+    rc1 = (rod[0] + rodsym[i][0] - (rod[1] * rodsym[i][2] - rod[2] * rodsym[i][1])) / denom;
+    rc2 = (rod[1] + rodsym[i][1] - (rod[2] * rodsym[i][0] - rod[0] * rodsym[i][2])) / denom;
+    rc3 = (rod[2] + rodsym[i][2] - (rod[0] * rodsym[i][1] - rod[1] * rodsym[i][0])) / denom;
     dist = rc1 * rc1 + rc2 * rc2 + rc3 * rc3;
     if(dist < smallestdist)
     {
@@ -303,11 +303,11 @@ int SpaceGroupOps::_calcMisoBin(float dim[3], float bins[3], float step[3], cons
   return (static_cast<int>( (bins[0] * bins[1] * miso3bin) + (bins[0] * miso2bin) + miso1bin ));
 }
 
-void SpaceGroupOps::_calcDetermineHomochoricValues(float init[3], float step[3], float phi[3], int choose, float& r1, float& r2, float& r3)
+void SpaceGroupOps::_calcDetermineHomochoricValues(uint64_t seed, float init[3], float step[3], int32_t phi[3], int choose, float& r1, float& r2, float& r3)
 {
   float random;
 
-  DREAM3D_RANDOMNG_NEW()
+  DREAM3D_RANDOMNG_NEW_SEEDED(seed)
   random = static_cast<float>( rg.genrand_res53() );
   r1 = (step[0] * phi[0]) + (step[0] * random) - (init[0]);
   random = static_cast<float>( rg.genrand_res53() );
@@ -420,7 +420,7 @@ std::vector<SpaceGroupOps::Pointer> SpaceGroupOps::getOrientationOpsVector()
 size_t SpaceGroupOps::getRandomSymmetryOperatorIndex(int numSymOps)
 {
   const int rangeMin = 0;
-  const int rangeMax = numSymOps;
+  const int rangeMax = numSymOps-1;
   typedef boost::uniform_int<int> NumberDistribution;
   typedef boost::mt19937 RandomNumberGenerator;
   typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;

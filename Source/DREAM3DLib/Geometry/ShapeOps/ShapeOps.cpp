@@ -38,6 +38,12 @@
 
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 
+#include "DREAM3DLib/Geometry/ShapeOps/CubeOctohedronOps.h"
+#include "DREAM3DLib/Geometry/ShapeOps/CylinderAOps.h"
+#include "DREAM3DLib/Geometry/ShapeOps/CylinderBOps.h"
+#include "DREAM3DLib/Geometry/ShapeOps/CylinderCOps.h"
+#include "DREAM3DLib/Geometry/ShapeOps/EllipsoidOps.h"
+#include "DREAM3DLib/Geometry/ShapeOps/SuperEllipsoidOps.h"
 
 
 static const float cube_root_of_one = powf(1.0f, 0.333333333f);
@@ -56,6 +62,38 @@ ShapeOps::ShapeOps()
 ShapeOps::~ShapeOps()
 {
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QVector<ShapeOps::Pointer> ShapeOps::getShapeOpsQVector()
+{
+  QVector<ShapeOps::Pointer> m_ShapeOps;
+  m_ShapeOps.push_back(EllipsoidOps::New());
+  m_ShapeOps.push_back(SuperEllipsoidOps::New());
+  m_ShapeOps.push_back(CubeOctohedronOps::New());
+  m_ShapeOps.push_back(CylinderAOps::New());
+  m_ShapeOps.push_back(CylinderBOps::New());
+  m_ShapeOps.push_back(CylinderCOps::New());
+
+  return m_ShapeOps;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<ShapeOps::Pointer> ShapeOps::getShapeOpsVector()
+{
+  std::vector<ShapeOps::Pointer> m_ShapeOps;
+  m_ShapeOps.push_back(EllipsoidOps::New());
+  m_ShapeOps.push_back(SuperEllipsoidOps::New());
+  m_ShapeOps.push_back(CubeOctohedronOps::New());
+  m_ShapeOps.push_back(CylinderAOps::New());
+  m_ShapeOps.push_back(CylinderBOps::New());
+  m_ShapeOps.push_back(CylinderCOps::New());
+
+  return m_ShapeOps;
 }
 
 // -----------------------------------------------------------------------------

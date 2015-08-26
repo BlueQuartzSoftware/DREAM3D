@@ -38,6 +38,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QSet>
 
+
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
@@ -73,229 +74,11 @@ namespace StringVectorTest
   QString Value4 = "VecString4";
 };
 
-namespace Int8Test
-{
-  QString Key = "int8_t test";
-  QString ErrorValueMaxKey = "Error_Value_Max_8";
-  QString ErrorValueMinKey = "Error_Value_Min_8";
-
-  int8_t Value = 1;
-  double ErrorValueMax = static_cast<double>(std::numeric_limits<int8_t>().max()) + 1;
-  double ErrorValueMin = static_cast<double>(std::numeric_limits<int8_t>().min()) - 1;
-};
-
-namespace Int16Test
-{
-  QString Key = "int16_t test";
-  QString ErrorValueMaxKey = "Error_Value_Max_16";
-  QString ErrorValueMinKey = "Error_Value_Min_16";
-
-  int16_t Value = 2;
-  double ErrorValueMax = static_cast<double>(std::numeric_limits<int16_t>().max()) + 1;
-  double ErrorValueMin = static_cast<double>(std::numeric_limits<int16_t>().min()) - 1;
-};
-
-namespace Int32Test
-{
-  QString Key = "int32_t test";
-  QString ErrorValueMaxKey = "Error_Value_Max_32";
-  QString ErrorValueMinKey = "Error_Value_Min_32";
-
-  int32_t Value = 3;
-  double ErrorValueMax = static_cast<double>(std::numeric_limits<int32_t>().max()) + 1;
-  double ErrorValueMin = static_cast<double>(std::numeric_limits<int32_t>().min()) - 1;
-};
-
-namespace Int64Test
-{
-  QString Key = "int64_t test";
-  QString ErrorValueMaxKey = "Error_Value_Max_64";
-  QString ErrorValueMinKey = "Error_Value_Min_64";
-
-  int64_t Value = 4;
-  double ErrorValueMax = static_cast<double>(std::numeric_limits<int64_t>().max()) + 1e4;
-  double ErrorValueMin = static_cast<double>(std::numeric_limits<int64_t>().min()) - 1e4;
-};
-
-namespace uInt8Test
-{
-  QString Key = "uint8_t test";
-  QString ErrorValueMaxKey = "Error_Value_Max_u8";
-  QString ErrorValueMinKey = "Error_Value_Min_u8";
-
-  uint8_t Value = 5;
-  double ErrorValueMax = static_cast<double>(std::numeric_limits<uint8_t>().max()) + 1;
-  double ErrorValueMin = static_cast<double>(std::numeric_limits<uint8_t>().min()) - 1;
-};
-
-namespace uInt16Test
-{
-  QString Key = "uint16_t test";
-  QString ErrorValueMaxKey = "Error_Value_Max_u16";
-  QString ErrorValueMinKey = "Error_Value_Min_u16";
-
-  uint16_t Value = 6;
-  double ErrorValueMax = static_cast<double>(std::numeric_limits<uint16_t>().max()) + 1;
-  double ErrorValueMin = static_cast<double>(std::numeric_limits<uint16_t>().min()) - 1;
-};
-
-namespace uInt32Test
-{
-  QString Key = "uint32_t test";
-  QString ErrorValueMaxKey = "Error_Value_Max_u32";
-  QString ErrorValueMinKey = "Error_Value_Min_u32";
-
-  uint32_t Value = 7;
-  double ErrorValueMax = static_cast<double>(std::numeric_limits<uint32_t>().max()) + 1;
-  double ErrorValueMin = static_cast<double>(std::numeric_limits<uint32_t>().min()) - 1;
-};
-
-namespace uInt64Test
-{
-  QString Key = "uint64_t test";
-  QString ErrorValueMaxKey = "Error_Value_Max_u64";
-  QString ErrorValueMinKey = "Error_Value_Min_u64";
-
-  uint64_t Value = 8;
-  double ErrorValueMax = static_cast<double>(std::numeric_limits<uint64_t>().max()) + 1e4;
-  double ErrorValueMin = static_cast<double>(std::numeric_limits<uint64_t>().min()) - 1e4;
-};
-
-namespace DoubleTest
-{
-  QString Key = "double test";
-  QString ErrorValueMaxKey = "Error_Value_Max_double";
-  QString ErrorValueMinKey = "Error_Value_Min_double";
-
-  double Value = 9.91235;
-};
-
-namespace FloatTest
-{
-  QString Key = "float test";
-  QString ErrorValueMaxKey = "Error_Value_Max_float";
-  QString ErrorValueMinKey = "Error_Value_Min_float";
-
-  float Value = 10.287f;
-  double ErrorValueMax = static_cast<double>(std::numeric_limits<float>().max()) + 1e23;
-  double ErrorValueMin = static_cast<double>(std::numeric_limits<float>().min()) - 1e23;
-};
-
-namespace Int8VectorTest
-{
-  QString Key = "QVector<int8_t> test";
-
-  const int8_t Value1 = 11;
-  const int8_t Value2 = 12;
-  const int8_t Value3 = 13;
-  const int8_t Value4 = 14;
-  const int8_t Value5 = 15;
-};
-
-namespace Int16VectorTest
-{
-  QString Key = "QVector<int16_t> test";
-
-  const int16_t Value1 = 11;
-  const int16_t Value2 = 12;
-  const int16_t Value3 = 13;
-  const int16_t Value4 = 14;
-  const int16_t Value5 = 15;
-};
-
-namespace Int32VectorTest
-{
-  QString Key = "QVector<int32_t> test";
-
-  const int32_t Value1 = 11;
-  const int32_t Value2 = 12;
-  const int32_t Value3 = 13;
-  const int32_t Value4 = 14;
-  const int32_t Value5 = 15;
-};
-
-namespace Int64VectorTest
-{
-  QString Key = "QVector<int64_t> test";
-
-  const int64_t Value1 = 11;
-  const int64_t Value2 = 12;
-  const int64_t Value3 = 13;
-  const int64_t Value4 = 14;
-  const int64_t Value5 = 15;
-};
-
-namespace uInt8VectorTest
-{
-  QString Key = "QVector<uint8_t> test";
-
-  const uint8_t Value1 = 11;
-  const uint8_t Value2 = 12;
-  const uint8_t Value3 = 13;
-  const uint8_t Value4 = 14;
-  const uint8_t Value5 = 15;
-};
-
-namespace uInt16VectorTest
-{
-  QString Key = "QVector<uint16_t> test";
-
-  const uint16_t Value1 = 11;
-  const uint16_t Value2 = 12;
-  const uint16_t Value3 = 13;
-  const uint16_t Value4 = 14;
-  const uint16_t Value5 = 15;
-};
-
-namespace uInt32VectorTest
-{
-  QString Key = "QVector<uint32_t> test";
-
-  const uint32_t Value1 = 11;
-  const uint32_t Value2 = 12;
-  const uint32_t Value3 = 13;
-  const uint32_t Value4 = 14;
-  const uint32_t Value5 = 15;
-};
-
-namespace uInt64VectorTest
-{
-  QString Key = "QVector<uint64_t> test";
-
-  const uint64_t Value1 = 11;
-  const uint64_t Value2 = 12;
-  const uint64_t Value3 = 13;
-  const uint64_t Value4 = 14;
-  const uint64_t Value5 = 15;
-};
-
-namespace DoubleVectorTest
-{
-  QString Key = "QVector<double> test";
-
-  const double Value1 = 11;
-  const double Value2 = 12;
-  const double Value3 = 13;
-  const double Value4 = 14;
-  const double Value5 = 15;
-};
-
-namespace FloatVectorTest
-{
-  QString Key = "QVector<float> test";
-
-  const float Value1 = 11.2f;
-  const float Value2 = 12.3f;
-  const float Value3 = 13.4f;
-  const float Value4 = 14.5f;
-  const float Value5 = 15.6f;
-};
-
 namespace IntVec3Test
 {
   QString Key = "IntVec3_t test";
 
-  int X = 1;
+  int X = -1;
   int Y = 2;
   int Z = 3;
 };
@@ -304,26 +87,26 @@ namespace FloatVec3Test
 {
   QString Key = "FloatVec3_t test";
 
-  float X = 1.2f;
+  float X = 0.0f;
   float Y = 2.65f;
-  float Z = 3.975f;
+  float Z = -3.975f;
 };
 
 namespace FloatVec4Test
 {
   QString Key = "FloatVec4_t test";
 
-  float A = 1.2f;
+  float A = 0.0f;
   float B = 2.65f;
   float C = 3.975f;
-  float D = 4.6876f;
+  float D = -4.6876f;
 };
 
 namespace FloatVec21Test
 {
   QString Key = "FloatVec21_t test";
 
-  float Val1 = 1.2f;
+  float Val1 = 0.0f;
   float Val2 = 2.65f;
   float Val3 = 3.975f;
   float Val4 = 4.6876f;
@@ -350,7 +133,7 @@ namespace Float2ndOrderPolyTest
 {
   QString Key = "Float2ndOrderPoly_t test";
 
-  float Val1 = 1.2f;
+  float Val1 = 0.0f;
   float Val2 = 2.65f;
   float Val3 = 3.975f;
   float Val4 = 4.6876f;
@@ -362,7 +145,7 @@ namespace Float3rdOrderPolyTest
 {
   QString Key = "Float3rdOrderPoly_t test";
 
-  float Val1 = 1.2f;
+  float Val1 = 0.0f;
   float Val2 = 2.65f;
   float Val3 = 3.975f;
   float Val4 = 4.6876f;
@@ -378,7 +161,7 @@ namespace Float4thOrderPolyTest
 {
   QString Key = "Float4thOrderPoly_t test";
 
-  float Val1 = 1.2f;
+  float Val1 = 0.0f;
   float Val2 = 2.65f;
   float Val3 = 3.975f;
   float Val4 = 4.6876f;
@@ -441,7 +224,7 @@ namespace AxisAngleInputTest
 {
   QString Key = "AxisAngleInput_t test";
 
-  float Angle = 0.234f;
+  float Angle = 0.0f;
   float H = 1.23f;
   float K = 4.32f;
   float L = 3.54f;
@@ -451,7 +234,7 @@ namespace MultipleAxisAngleInputTest
 {
   QString Key = "QVector<AxisAngleInput_t> test";
 
-  float Angle1 = 0.234f;
+  float Angle1 = 0.0f;
   float H1 = 1.23f;
   float K1 = 4.32f;
   float L1 = 3.54f;
@@ -538,6 +321,8 @@ void RemoveTestFiles()
 #endif
 }
 
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -566,240 +351,6 @@ int TestJsonWriter()
     vector.push_back(StringVectorTest::Value3);
     vector.push_back(StringVectorTest::Value4);
     err = writer->writeValue(StringVectorTest::Key, vector);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-  }
-
-  // int8_t write test
-  {
-    err = writer->writeValue(Int8Test::Key, Int8Test::Value);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-
-    err = writer->writeValue(Int8Test::ErrorValueMaxKey, Int8Test::ErrorValueMax);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-
-    err = writer->writeValue(Int8Test::ErrorValueMinKey, Int8Test::ErrorValueMin);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-  }
-
-  // int16_t write test
-  {
-    err = writer->writeValue(Int16Test::Key, Int16Test::Value);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-
-    err = writer->writeValue(Int16Test::ErrorValueMaxKey, Int16Test::ErrorValueMax);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-
-    err = writer->writeValue(Int16Test::ErrorValueMinKey, Int16Test::ErrorValueMin);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-  }
-
-  // int32_t write test
-  {
-    err = writer->writeValue(Int32Test::Key, Int32Test::Value);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-
-    err = writer->writeValue(Int32Test::ErrorValueMaxKey, Int32Test::ErrorValueMax);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-
-    err = writer->writeValue(Int32Test::ErrorValueMinKey, Int32Test::ErrorValueMin);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-  }
-
-  // int64_t write test
-  {
-    err = writer->writeValue(Int64Test::Key, Int64Test::Value);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-
-    err = writer->writeValue(Int64Test::ErrorValueMaxKey, Int64Test::ErrorValueMax);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-
-    err = writer->writeValue(Int64Test::ErrorValueMinKey, Int64Test::ErrorValueMin);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-  }
-
-  // uint8_t write test
-  {
-    err = writer->writeValue(uInt8Test::Key, uInt8Test::Value);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-
-    err = writer->writeValue(uInt8Test::ErrorValueMaxKey, uInt8Test::ErrorValueMax);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-
-    err = writer->writeValue(uInt8Test::ErrorValueMinKey, uInt8Test::ErrorValueMin);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-  }
-
-  // uint16_t write test
-  {
-    err = writer->writeValue(uInt16Test::Key, uInt16Test::Value);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-
-    err = writer->writeValue(uInt16Test::ErrorValueMaxKey, uInt16Test::ErrorValueMax);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-
-    err = writer->writeValue(uInt16Test::ErrorValueMinKey, uInt16Test::ErrorValueMin);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-  }
-
-  // uint32_t write test
-  {
-    err = writer->writeValue(uInt32Test::Key, uInt32Test::Value);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-
-    err = writer->writeValue(uInt32Test::ErrorValueMaxKey, uInt32Test::ErrorValueMax);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-
-    err = writer->writeValue(uInt32Test::ErrorValueMinKey, uInt32Test::ErrorValueMin);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-  }
-
-  // uint64_t write test
-  {
-    err = writer->writeValue(uInt64Test::Key, uInt64Test::Value);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-
-    err = writer->writeValue(uInt64Test::ErrorValueMaxKey, uInt64Test::ErrorValueMax);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-
-    err = writer->writeValue(uInt64Test::ErrorValueMinKey, uInt64Test::ErrorValueMin);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-  }
-
-  // double write test
-  {
-    err = writer->writeValue(DoubleTest::Key, DoubleTest::Value);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-  }
-
-  // float write test
-  {
-    err = writer->writeValue(FloatTest::Key, FloatTest::Value);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-
-    err = writer->writeValue(FloatTest::ErrorValueMaxKey, FloatTest::ErrorValueMax);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-
-    err = writer->writeValue(FloatTest::ErrorValueMinKey, FloatTest::ErrorValueMin);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-  }
-
-  // QVector<int8_t> write test
-  {
-    QVector<int8_t> vector;
-    vector.push_back(Int8VectorTest::Value1);
-    vector.push_back(Int8VectorTest::Value2);
-    vector.push_back(Int8VectorTest::Value3);
-    vector.push_back(Int8VectorTest::Value4);
-    vector.push_back(Int8VectorTest::Value5);
-    err = writer->writeValue(Int8VectorTest::Key, vector);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-  }
-
-  // QVector<int16_t> write test
-  {
-    QVector<int16_t> vector;
-    vector.push_back(Int16VectorTest::Value1);
-    vector.push_back(Int16VectorTest::Value2);
-    vector.push_back(Int16VectorTest::Value3);
-    vector.push_back(Int16VectorTest::Value4);
-    vector.push_back(Int16VectorTest::Value5);
-    err = writer->writeValue(Int16VectorTest::Key, vector);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-  }
-
-  // QVector<int32_t> write test
-  {
-    QVector<int32_t> vector;
-    vector.push_back(Int32VectorTest::Value1);
-    vector.push_back(Int32VectorTest::Value2);
-    vector.push_back(Int32VectorTest::Value3);
-    vector.push_back(Int32VectorTest::Value4);
-    vector.push_back(Int32VectorTest::Value5);
-    err = writer->writeValue(Int32VectorTest::Key, vector);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-  }
-
-  // QVector<int64_t> write test
-  {
-    QVector<int64_t> vector;
-    vector.push_back(Int64VectorTest::Value1);
-    vector.push_back(Int64VectorTest::Value2);
-    vector.push_back(Int64VectorTest::Value3);
-    vector.push_back(Int64VectorTest::Value4);
-    vector.push_back(Int64VectorTest::Value5);
-    err = writer->writeValue(Int64VectorTest::Key, vector);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-  }
-
-  // QVector<uint8_t> write test
-  {
-    QVector<uint8_t> vector;
-    vector.push_back(uInt8VectorTest::Value1);
-    vector.push_back(uInt8VectorTest::Value2);
-    vector.push_back(uInt8VectorTest::Value3);
-    vector.push_back(uInt8VectorTest::Value4);
-    vector.push_back(uInt8VectorTest::Value5);
-    err = writer->writeValue(uInt8VectorTest::Key, vector);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-  }
-
-  // QVector<uint16_t> write test
-  {
-    QVector<uint16_t> vector;
-    vector.push_back(uInt16VectorTest::Value1);
-    vector.push_back(uInt16VectorTest::Value2);
-    vector.push_back(uInt16VectorTest::Value3);
-    vector.push_back(uInt16VectorTest::Value4);
-    vector.push_back(uInt16VectorTest::Value5);
-    err = writer->writeValue(uInt16VectorTest::Key, vector);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-  }
-
-  // QVector<uint32_t> write test
-  {
-    QVector<uint32_t> vector;
-    vector.push_back(uInt32VectorTest::Value1);
-    vector.push_back(uInt32VectorTest::Value2);
-    vector.push_back(uInt32VectorTest::Value3);
-    vector.push_back(uInt32VectorTest::Value4);
-    vector.push_back(uInt32VectorTest::Value5);
-    err = writer->writeValue(uInt32VectorTest::Key, vector);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-  }
-
-  // QVector<uint64_t> write test
-  {
-    QVector<uint64_t> vector;
-    vector.push_back(uInt64VectorTest::Value1);
-    vector.push_back(uInt64VectorTest::Value2);
-    vector.push_back(uInt64VectorTest::Value3);
-    vector.push_back(uInt64VectorTest::Value4);
-    vector.push_back(uInt64VectorTest::Value5);
-    err = writer->writeValue(uInt64VectorTest::Key, vector);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-  }
-
-  // QVector<double> write test
-  {
-    QVector<double> vector;
-    vector.push_back(DoubleVectorTest::Value1);
-    vector.push_back(DoubleVectorTest::Value2);
-    vector.push_back(DoubleVectorTest::Value3);
-    vector.push_back(DoubleVectorTest::Value4);
-    vector.push_back(DoubleVectorTest::Value5);
-    err = writer->writeValue(DoubleVectorTest::Key, vector);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-  }
-
-  // QVector<float> write test
-  {
-    QVector<float> vector;
-    vector.push_back(FloatVectorTest::Value1);
-    vector.push_back(FloatVectorTest::Value2);
-    vector.push_back(FloatVectorTest::Value3);
-    vector.push_back(FloatVectorTest::Value4);
-    vector.push_back(FloatVectorTest::Value5);
-    err = writer->writeValue(FloatVectorTest::Key, vector);
     DREAM3D_REQUIRE_EQUAL(err, 0)
   }
 
@@ -1100,240 +651,6 @@ int TestJsonReader()
     DREAM3D_REQUIRE_EQUAL(vector[3], StringVectorTest::Value4)
   }
 
-  // int8_t read test
-  {
-    int8_t def = 0;
-    int8_t val = reader->readValue(Int8Test::Key, def);
-    DREAM3D_REQUIRE_EQUAL(val, Int8Test::Value)
-
-    int8_t errorValMax = reader->readValue(Int8Test::ErrorValueMaxKey, def);
-    DREAM3D_REQUIRE_EQUAL(errorValMax, def)
-
-    int8_t errorValMin = reader->readValue(Int8Test::ErrorValueMinKey, def);
-    DREAM3D_REQUIRE_EQUAL(errorValMin, def)
-  }
-
-  // int16_t read test
-  {
-    int16_t def = 0;
-    int16_t val = reader->readValue(Int16Test::Key, def);
-    DREAM3D_REQUIRE_EQUAL(val, Int16Test::Value)
-
-    int16_t errorValMax = reader->readValue(Int16Test::ErrorValueMaxKey, def);
-    DREAM3D_REQUIRE_EQUAL(errorValMax, def)
-
-    int16_t errorValMin = reader->readValue(Int16Test::ErrorValueMinKey, def);
-    DREAM3D_REQUIRE_EQUAL(errorValMin, def)
-  }
-
-  // int32_t read test
-  {
-    int32_t def = 0;
-    int32_t val = reader->readValue(Int32Test::Key, def);
-    DREAM3D_REQUIRE_EQUAL(val, Int32Test::Value)
-
-    int32_t errorValMax = reader->readValue(Int32Test::ErrorValueMaxKey, def);
-    DREAM3D_REQUIRE_EQUAL(errorValMax, def)
-
-    int32_t errorValMin = reader->readValue(Int32Test::ErrorValueMinKey, def);
-    DREAM3D_REQUIRE_EQUAL(errorValMin, def)
-  }
-
-  // int64_t read test
-  {
-    int64_t def = 0;
-    int64_t val = reader->readValue(Int64Test::Key, def);
-    DREAM3D_REQUIRE_EQUAL(val, Int64Test::Value)
-
-    int64_t errorValMax = reader->readValue(Int64Test::ErrorValueMaxKey, def);
-    DREAM3D_REQUIRE_EQUAL(errorValMax, def)
-
-    int64_t errorValMin = reader->readValue(Int64Test::ErrorValueMinKey, def);
-    DREAM3D_REQUIRE_EQUAL(errorValMin, def)
-  }
-
-  // uint8_t read test
-  {
-    uint8_t def = 0;
-    uint8_t val = reader->readValue(uInt8Test::Key, def);
-    DREAM3D_REQUIRE_EQUAL(val, uInt8Test::Value)
-
-    uint8_t errorValMax = reader->readValue(uInt8Test::ErrorValueMaxKey, def);
-    DREAM3D_REQUIRE_EQUAL(errorValMax, def)
-
-    uint8_t errorValMin = reader->readValue(uInt8Test::ErrorValueMinKey, def);
-    DREAM3D_REQUIRE_EQUAL(errorValMin, def)
-  }
-
-  // uint16_t read test
-  {
-    uint16_t def = 0;
-    uint16_t val = reader->readValue(uInt16Test::Key, def);
-    DREAM3D_REQUIRE_EQUAL(val, uInt16Test::Value)
-
-    uint16_t errorValMax = reader->readValue(uInt16Test::ErrorValueMaxKey, def);
-    DREAM3D_REQUIRE_EQUAL(errorValMax, def)
-
-    uint16_t errorValMin = reader->readValue(uInt16Test::ErrorValueMinKey, def);
-    DREAM3D_REQUIRE_EQUAL(errorValMin, def)
-  }
-
-  // uint32_t read test
-  {
-    uint32_t def = 0;
-    uint32_t val = reader->readValue(uInt32Test::Key, def);
-    DREAM3D_REQUIRE_EQUAL(val, uInt32Test::Value)
-
-    uint32_t errorValMax = reader->readValue(uInt32Test::ErrorValueMaxKey, def);
-    DREAM3D_REQUIRE_EQUAL(errorValMax, def)
-
-    uint32_t errorValMin = reader->readValue(uInt32Test::ErrorValueMinKey, def);
-    DREAM3D_REQUIRE_EQUAL(errorValMin, def)
-  }
-
-  // uint64_t read test
-  {
-    uint64_t def = 0;
-    uint64_t val = reader->readValue(uInt64Test::Key, def);
-    DREAM3D_REQUIRE_EQUAL(val, uInt64Test::Value)
-
-    uint64_t errorValMax = reader->readValue(uInt64Test::ErrorValueMaxKey, def);
-    DREAM3D_REQUIRE_EQUAL(errorValMax, def)
-
-    uint64_t errorValMin = reader->readValue(uInt64Test::ErrorValueMinKey, def);
-    DREAM3D_REQUIRE_EQUAL(errorValMin, def)
-  }
-
-  // double read test
-  {
-    double def = 0;
-    double val = reader->readValue(DoubleTest::Key, def);
-    DREAM3D_REQUIRE_EQUAL(val, DoubleTest::Value)
-  }
-
-  // float read test
-  {
-    float def = 0;
-    float val = reader->readValue(FloatTest::Key, def);
-    DREAM3D_REQUIRE_EQUAL(val, FloatTest::Value)
-
-    float errorValMax = reader->readValue(FloatTest::ErrorValueMaxKey, def);
-    DREAM3D_REQUIRE_EQUAL(errorValMax, def)
-
-    float errorValMin = reader->readValue(FloatTest::ErrorValueMinKey, def);
-    DREAM3D_REQUIRE_EQUAL(errorValMin, def)
-  }
-
-  // QVector<int8_t> read test
-  {
-    QVector<int8_t> vector = reader->readArray(Int8VectorTest::Key, QVector<int8_t>());
-    DREAM3D_REQUIRE_EQUAL(vector.size(), 5)
-    DREAM3D_REQUIRE_EQUAL(vector[0], Int8VectorTest::Value1)
-    DREAM3D_REQUIRE_EQUAL(vector[1], Int8VectorTest::Value2)
-    DREAM3D_REQUIRE_EQUAL(vector[2], Int8VectorTest::Value3)
-    DREAM3D_REQUIRE_EQUAL(vector[3], Int8VectorTest::Value4)
-    DREAM3D_REQUIRE_EQUAL(vector[4], Int8VectorTest::Value5)
-  }
-
-  // QVector<int16_t> read test
-  {
-    QVector<int16_t> vector = reader->readArray(Int16VectorTest::Key, QVector<int16_t>());
-    DREAM3D_REQUIRE_EQUAL(vector.size(), 5)
-    DREAM3D_REQUIRE_EQUAL(vector[0], Int16VectorTest::Value1)
-    DREAM3D_REQUIRE_EQUAL(vector[1], Int16VectorTest::Value2)
-    DREAM3D_REQUIRE_EQUAL(vector[2], Int16VectorTest::Value3)
-    DREAM3D_REQUIRE_EQUAL(vector[3], Int16VectorTest::Value4)
-    DREAM3D_REQUIRE_EQUAL(vector[4], Int16VectorTest::Value5)
-  }
-
-  // QVector<int32_t> read test
-  {
-    QVector<int32_t> vector = reader->readArray(Int32VectorTest::Key, QVector<int32_t>());
-    DREAM3D_REQUIRE_EQUAL(vector.size(), 5)
-    DREAM3D_REQUIRE_EQUAL(vector[0], Int32VectorTest::Value1)
-    DREAM3D_REQUIRE_EQUAL(vector[1], Int32VectorTest::Value2)
-    DREAM3D_REQUIRE_EQUAL(vector[2], Int32VectorTest::Value3)
-    DREAM3D_REQUIRE_EQUAL(vector[3], Int32VectorTest::Value4)
-    DREAM3D_REQUIRE_EQUAL(vector[4], Int32VectorTest::Value5)
-  }
-
-  // QVector<int64_t> read test
-  {
-    QVector<int64_t> vector = reader->readArray(Int64VectorTest::Key, QVector<int64_t>());
-    DREAM3D_REQUIRE_EQUAL(vector.size(), 5)
-    DREAM3D_REQUIRE_EQUAL(vector[0], Int64VectorTest::Value1)
-    DREAM3D_REQUIRE_EQUAL(vector[1], Int64VectorTest::Value2)
-    DREAM3D_REQUIRE_EQUAL(vector[2], Int64VectorTest::Value3)
-    DREAM3D_REQUIRE_EQUAL(vector[3], Int64VectorTest::Value4)
-    DREAM3D_REQUIRE_EQUAL(vector[4], Int64VectorTest::Value5)
-  }
-
-  // QVector<uint8_t> read test
-  {
-    QVector<uint8_t> vector = reader->readArray(uInt8VectorTest::Key, QVector<uint8_t>());
-    DREAM3D_REQUIRE_EQUAL(vector.size(), 5)
-    DREAM3D_REQUIRE_EQUAL(vector[0], uInt8VectorTest::Value1)
-    DREAM3D_REQUIRE_EQUAL(vector[1], uInt8VectorTest::Value2)
-    DREAM3D_REQUIRE_EQUAL(vector[2], uInt8VectorTest::Value3)
-    DREAM3D_REQUIRE_EQUAL(vector[3], uInt8VectorTest::Value4)
-    DREAM3D_REQUIRE_EQUAL(vector[4], uInt8VectorTest::Value5)
-  }
-
-  // QVector<uint16_t> read test
-  {
-    QVector<uint16_t> vector = reader->readArray(uInt16VectorTest::Key, QVector<uint16_t>());
-    DREAM3D_REQUIRE_EQUAL(vector.size(), 5)
-    DREAM3D_REQUIRE_EQUAL(vector[0], uInt16VectorTest::Value1)
-    DREAM3D_REQUIRE_EQUAL(vector[1], uInt16VectorTest::Value2)
-    DREAM3D_REQUIRE_EQUAL(vector[2], uInt16VectorTest::Value3)
-    DREAM3D_REQUIRE_EQUAL(vector[3], uInt16VectorTest::Value4)
-    DREAM3D_REQUIRE_EQUAL(vector[4], uInt16VectorTest::Value5)
-  }
-
-  // QVector<uint32_t> read test
-  {
-    QVector<uint32_t> vector = reader->readArray(uInt32VectorTest::Key, QVector<uint32_t>());
-    DREAM3D_REQUIRE_EQUAL(vector.size(), 5)
-    DREAM3D_REQUIRE_EQUAL(vector[0], uInt32VectorTest::Value1)
-    DREAM3D_REQUIRE_EQUAL(vector[1], uInt32VectorTest::Value2)
-    DREAM3D_REQUIRE_EQUAL(vector[2], uInt32VectorTest::Value3)
-    DREAM3D_REQUIRE_EQUAL(vector[3], uInt32VectorTest::Value4)
-    DREAM3D_REQUIRE_EQUAL(vector[4], uInt32VectorTest::Value5)
-  }
-
-  // QVector<uint64_t> read test
-  {
-    QVector<uint64_t> vector = reader->readArray(uInt64VectorTest::Key, QVector<uint64_t>());
-    DREAM3D_REQUIRE_EQUAL(vector.size(), 5)
-    DREAM3D_REQUIRE_EQUAL(vector[0], uInt64VectorTest::Value1)
-    DREAM3D_REQUIRE_EQUAL(vector[1], uInt64VectorTest::Value2)
-    DREAM3D_REQUIRE_EQUAL(vector[2], uInt64VectorTest::Value3)
-    DREAM3D_REQUIRE_EQUAL(vector[3], uInt64VectorTest::Value4)
-    DREAM3D_REQUIRE_EQUAL(vector[4], uInt64VectorTest::Value5)
-  }
-
-  // QVector<double> read test
-  {
-    QVector<double> vector = reader->readArray(DoubleVectorTest::Key, QVector<double>());
-    DREAM3D_REQUIRE_EQUAL(vector.size(), 5)
-    DREAM3D_REQUIRE_EQUAL(vector[0], DoubleVectorTest::Value1)
-    DREAM3D_REQUIRE_EQUAL(vector[1], DoubleVectorTest::Value2)
-    DREAM3D_REQUIRE_EQUAL(vector[2], DoubleVectorTest::Value3)
-    DREAM3D_REQUIRE_EQUAL(vector[3], DoubleVectorTest::Value4)
-    DREAM3D_REQUIRE_EQUAL(vector[4], DoubleVectorTest::Value5)
-  }
-
-  // QVector<float> read test
-  {
-    QVector<float> vector = reader->readArray(FloatVectorTest::Key, QVector<float>());
-    DREAM3D_REQUIRE_EQUAL(vector.size(), 5)
-    DREAM3D_REQUIRE_EQUAL(vector[0], FloatVectorTest::Value1)
-    DREAM3D_REQUIRE_EQUAL(vector[1], FloatVectorTest::Value2)
-    DREAM3D_REQUIRE_EQUAL(vector[2], FloatVectorTest::Value3)
-    DREAM3D_REQUIRE_EQUAL(vector[3], FloatVectorTest::Value4)
-    DREAM3D_REQUIRE_EQUAL(vector[4], FloatVectorTest::Value5)
-  }
-
   // IntVec3_t read test
   {
     IntVec3_t intvec3 = reader->readIntVec3(IntVec3Test::Key, IntVec3_t());
@@ -1597,6 +914,188 @@ int TestJsonReader()
   return EXIT_SUCCESS;
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename T>
+void RWIntegerTest()
+{
+  int err = 0;
+
+
+  typename DataArray<T>::Pointer data = DataArray<T>::CreateArray(1, "Junk");
+  QString primType = data->getTypeAsString();
+
+  QString jsonFile = UnitTest::FilterParametersRWTest::OutputDir + primType + ".json";
+
+
+  JsonFilterParametersWriter::Pointer writer = JsonFilterParametersWriter::New();
+  writer->setFileName(jsonFile);
+  writer->setPipelineName("TestPipelineName");
+
+  err = writer->openFilterGroup(NULL, 0);
+  DREAM3D_REQUIRE_EQUAL(err, 0)
+
+  err = writer->writeValue(primType + QString("_min"), std::numeric_limits<T>::min() );
+  DREAM3D_REQUIRE_EQUAL(err, 0)
+
+  err = writer->writeValue(primType + QString("_max"), std::numeric_limits<T>::max() );
+  DREAM3D_REQUIRE_EQUAL(err, 0)
+
+  err = writer->writeValue(primType + QString("_zero"), static_cast<T>(0) );
+  DREAM3D_REQUIRE_EQUAL(err, 0)
+
+  // QVector<T> write test
+  {
+    QVector<T> vector;
+    vector.push_back(std::numeric_limits<T>::min());
+    vector.push_back(std::numeric_limits<T>::max());
+    vector.push_back(static_cast<T>(0));
+    vector.push_back(std::numeric_limits<T>::min() + 1);
+    vector.push_back(std::numeric_limits<T>::max() - 1);
+    err = writer->writeValue(primType + QString("_vector"), vector);
+    DREAM3D_REQUIRE_EQUAL(err, 0)
+  }
+
+
+  err = writer->closeFilterGroup();
+  DREAM3D_REQUIRE_EQUAL(err, 0)
+
+  writer = JsonFilterParametersWriter::NullPointer();
+
+
+  JsonFilterParametersReader::Pointer reader = JsonFilterParametersReader::New();
+  err = reader->openFile(jsonFile);
+  DREAM3D_REQUIRE_EQUAL(err, 0)
+
+  err = reader->openFilterGroup(NULL, 0);
+  DREAM3D_REQUIRE_EQUAL(err, 0)
+
+  T def = std::numeric_limits<T>::max() - 10;
+
+  T val = reader->readValue(primType + QString("_min"), def);
+  DREAM3D_REQUIRE_EQUAL(val, std::numeric_limits<T>::min() )
+
+  val = reader->readValue(primType + QString("_max"), def);
+  DREAM3D_REQUIRE_EQUAL(val, std::numeric_limits<T>::max() )
+
+  val = reader->readValue(primType + QString("_zero"), def);
+  DREAM3D_REQUIRE_EQUAL(val, 0 )
+
+
+  // QVector<T> read test
+  {
+    QVector<T> vector = reader->readArray(primType + QString("_vector"), QVector<T>());
+    DREAM3D_REQUIRE_EQUAL(vector.size(), 5)
+    DREAM3D_REQUIRE_EQUAL(vector[0], std::numeric_limits<T>::min())
+    DREAM3D_REQUIRE_EQUAL(vector[1], std::numeric_limits<T>::max())
+    DREAM3D_REQUIRE_EQUAL(vector[2], 0)
+    DREAM3D_REQUIRE_EQUAL(vector[3], std::numeric_limits<T>::min() + 1)
+    DREAM3D_REQUIRE_EQUAL(vector[4], std::numeric_limits<T>::max() - 1)
+  }
+
+  err = reader->closeFilterGroup();
+  DREAM3D_REQUIRE_EQUAL(err, 0)
+
+  reader = JsonFilterParametersReader::NullPointer();
+
+#if REMOVE_TEST_FILES
+  QFile::remove(jsonFile);
+#endif
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename T>
+void RWFloatTest()
+{
+  int err = 0;
+
+
+  typename DataArray<T>::Pointer data = DataArray<T>::CreateArray(1, "Junk");
+  QString primType = data->getTypeAsString();
+
+  QString jsonFile = UnitTest::FilterParametersRWTest::OutputDir + primType + ".json";
+
+
+  JsonFilterParametersWriter::Pointer writer = JsonFilterParametersWriter::New();
+  writer->setFileName(jsonFile);
+  writer->setPipelineName("TestPipelineName");
+
+  err = writer->openFilterGroup(NULL, 0);
+  DREAM3D_REQUIRE_EQUAL(err, 0)
+
+  err = writer->writeValue(primType + QString("_min"), std::numeric_limits<T>::min() );
+  DREAM3D_REQUIRE_EQUAL(err, 0)
+
+  err = writer->writeValue(primType + QString("_max"), std::numeric_limits<T>::max() );
+  DREAM3D_REQUIRE_EQUAL(err, 0)
+
+  err = writer->writeValue(primType + QString("_zero"), static_cast<T>(0) );
+  DREAM3D_REQUIRE_EQUAL(err, 0)
+
+  // QVector<T> write test
+  {
+    QVector<T> vector;
+    vector.push_back(std::numeric_limits<T>::min());
+    vector.push_back(std::numeric_limits<T>::max());
+    vector.push_back(static_cast<T>(0.0));
+    vector.push_back(std::numeric_limits<T>::min() + 1);
+    vector.push_back(std::numeric_limits<T>::max() - 1);
+    err = writer->writeValue(primType + QString("_vector"), vector);
+    DREAM3D_REQUIRE_EQUAL(err, 0)
+  }
+
+
+  err = writer->closeFilterGroup();
+  DREAM3D_REQUIRE_EQUAL(err, 0)
+
+  writer = JsonFilterParametersWriter::NullPointer();
+
+
+  JsonFilterParametersReader::Pointer reader = JsonFilterParametersReader::New();
+  err = reader->openFile(jsonFile);
+  DREAM3D_REQUIRE_EQUAL(err, 0)
+
+  err = reader->openFilterGroup(NULL, 0);
+  DREAM3D_REQUIRE_EQUAL(err, 0)
+
+  T def = std::numeric_limits<T>::max() - static_cast<T>(10.0);
+
+  T val = reader->readValue(primType + QString("_min"), def);
+  DREAM3D_REQUIRE_EQUAL(val, std::numeric_limits<T>::min() )
+
+  val = reader->readValue(primType + QString("_max"), def);
+  DREAM3D_REQUIRE_EQUAL(val, std::numeric_limits<T>::max() )
+
+  val = reader->readValue(primType + QString("_zero"), def);
+  DREAM3D_REQUIRE_EQUAL(val, 0 )
+
+
+  // QVector<T> read test
+  {
+    QVector<T> vector = reader->readArray(primType + QString("_vector"), QVector<T>());
+    DREAM3D_REQUIRE_EQUAL(vector.size(), 5)
+    DREAM3D_REQUIRE_EQUAL(vector[0], std::numeric_limits<T>::min())
+    DREAM3D_REQUIRE_EQUAL(vector[1], std::numeric_limits<T>::max())
+    DREAM3D_REQUIRE_EQUAL(vector[2], static_cast<T>(0.0))
+    DREAM3D_REQUIRE_EQUAL(vector[3], std::numeric_limits<T>::min() + 1)
+    DREAM3D_REQUIRE_EQUAL(vector[4], std::numeric_limits<T>::max() - 1)
+  }
+
+  err = reader->closeFilterGroup();
+  DREAM3D_REQUIRE_EQUAL(err, 0)
+
+  reader = JsonFilterParametersReader::NullPointer();
+
+#if REMOVE_TEST_FILES
+  QFile::remove(jsonFile);
+#endif
+}
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -1624,6 +1123,18 @@ int main(int argc, char** argv)
 
   int err = EXIT_SUCCESS;
   DREAM3D_REGISTER_TEST(loadFilterPlugins());
+
+  DREAM3D_REGISTER_TEST(RWIntegerTest<uint8_t>())
+  DREAM3D_REGISTER_TEST(RWIntegerTest<int8_t>())
+  DREAM3D_REGISTER_TEST(RWIntegerTest<uint16_t>())
+  DREAM3D_REGISTER_TEST(RWIntegerTest<int16_t>())
+  DREAM3D_REGISTER_TEST(RWIntegerTest<uint32_t>())
+  DREAM3D_REGISTER_TEST(RWIntegerTest<int32_t>())
+  DREAM3D_REGISTER_TEST(RWIntegerTest<uint64_t>())
+  DREAM3D_REGISTER_TEST(RWIntegerTest<int64_t>())
+
+  DREAM3D_REGISTER_TEST(RWFloatTest<float>())
+  DREAM3D_REGISTER_TEST(RWFloatTest<double>())
 
   DREAM3D_REGISTER_TEST(TestJsonWriter())
   DREAM3D_REGISTER_TEST(TestJsonReader())

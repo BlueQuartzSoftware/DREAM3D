@@ -64,6 +64,21 @@ OutputFileWidget::OutputFileWidget(FilterParameter* parameter, AbstractFilter* f
 
   setupUi(this);
   setupGui();
+  if(filter)
+  {
+    QString currentPath = filter->property(PROPERTY_NAME_AS_CHAR).toString();
+    if(currentPath.isEmpty() == false)
+    {
+      currentPath = QDir::toNativeSeparators(currentPath);
+      // Store the last used directory into the private instance variable
+      QFileInfo fi(currentPath);
+      m_OpenDialogLastDirectory = fi.path();
+    }
+    else
+    {
+      m_OpenDialogLastDirectory = QDir::homePath();
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------

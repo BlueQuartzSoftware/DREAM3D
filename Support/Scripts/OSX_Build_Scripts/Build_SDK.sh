@@ -55,6 +55,17 @@ then
   exit
 fi
 
+if [ ! -e "/Applications/Doxygen.app" ];
+then
+  echo "--------------------------------------------"
+  echo "Doxygen is missing from your system."
+  echo "Downloading Doxygen 1.8.10 for you."
+  $DOWNLOAD_PROG  "http://ftp.stack.nl/pub/users/dimitri/Doxygen-1.8.10.dmg" -o "${DREAM3D_SDK}/Doxygen-1.8.10.dmg"
+  open "${DREAM3D_SDK}/Doxygen-1.8.10.dmg"
+  echo "Please Copy the Doxygen.app from the mounted disk image into the /Applications directory. CMake can most"
+  echo "easily find it in this location."
+fi
+
 #-------------------------------------------------
 # Copy our scripts over to the SDK directory
 cp Build_Boost.sh ${SDK_INSTALL}/.
@@ -64,6 +75,17 @@ cp Build_TBB.sh ${SDK_INSTALL}/.
 cp Build_Qwt.sh ${SDK_INSTALL}/.
 cp Build_ITK.sh ${SDK_INSTALL}/.
 cp FixITK.sh ${SDK_INSTALL}/.
+
+
+
+#-------------------------------------------------
+# Move one Directory Above the SDK Folder and untar the
+if [ -e "$SDK_INSTALL/../DREAM3D_SDK_61_OSX.tar.gz" ];
+  then
+
+  cd "$SDK_INSTALL/../"
+  tar -xvzf DREAM3D_SDK_61_OSX.tar.gz
+fi
 
 #-------------------------------------------------
 # Move into the SDK directory
@@ -75,11 +97,11 @@ tar -xvzf ${SDK_INSTALL}/DREAM3D_Data.tar.gz
 
 #-------------------------------------------------
 # Unpack CMake
-tar -xvzf ${SDK_INSTALL}/cmake-3.3.0-rc3-Darwin-x86_64.tar.gz
+tar -xvzf ${SDK_INSTALL}/cmake-3.3.1-Darwin-x86_64.tar.gz
 
 #-------------------------------------------------
 # Get CMake on our path
-export PATH=$PATH:${SDK_INSTALL}/cmake-3.3.0-rc3-Darwin-x86_64/CMake.app/Contents/bin
+export PATH=$PATH:${SDK_INSTALL}/cmake-3.3.1-Darwin-x86_64/CMake.app/Contents/bin
 
 #-------------------------------------------------
 # Start building all the packages
@@ -102,9 +124,10 @@ rm ${SDK_INSTALL}/Build_Boost.sh
 #-------------------------------------------------
 # We are NOT going to build ITK at this time since it is so difficult
 # to get correct with our HDF5. This knocks out the ImageProcessing plugin
-#${SDK_INSTALL}/Build_ITK.sh "${SDK_INSTALL}" ${PARALLEL_BUILD}
-echo "------------------------------------------------------------"
-echo "- NOT building ITK. ImageProcessing Plugin will NOT compile."
-echo "------------------------------------------------------------"
+# The third argument is the Version of HDF5 that we are using
+${SDK_INSTALL}/Build_ITK.sh "${SDK_INSTALL}" ${PARALLEL_BUILD} "1.8.15"
+#echo "------------------------------------------------------------"
+#echo "- NOT building ITK. ImageProcessing Plugin will NOT compile."
+#echo "------------------------------------------------------------"
 rm ${SDK_INSTALL}/Build_ITK.sh
 rm ${SDK_INSTALL}/FixITK.sh

@@ -32,9 +32,10 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "NeighborCICorrelation.h"
+#include "ReplaceElementAttributesWithNeighborValues.h"
 
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/TemplateHelpers.hpp"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/DoubleFilterParameter.h"
@@ -51,17 +52,18 @@ namespace Detail
   static const int LessThan = 0;
   static const int GreaterThan = 1;
 
+  template<typename T>
   class LessThanComparison
   {
     public:
-      DREAM3D_SHARED_POINTERS(LessThanComparison)
-      DREAM3D_STATIC_NEW_MACRO(LessThanComparison)
-      DREAM3D_TYPE_MACRO(LessThanComparison)
+      DREAM3D_SHARED_POINTERS(LessThanComparison<T>)
+      DREAM3D_STATIC_NEW_MACRO(LessThanComparison<T>)
+      DREAM3D_TYPE_MACRO(LessThanComparison<T>)
       virtual ~LessThanComparison(){}
 
-      virtual bool compare(float a, float b) { return a < b; }
-      virtual bool compare1(float a, float b) { return a >= b; }
-      virtual bool compare2(float a, float b) { return a > b; }
+      virtual bool compare(T a, T b) { return a < b; }
+      virtual bool compare1(T a, T b) { return a >= b; }
+      virtual bool compare2(T a, T b) { return a > b; }
 
     protected:
       LessThanComparison(){}
@@ -69,22 +71,152 @@ namespace Detail
 
   };
 
-  class GreaterThanComparison : public LessThanComparison
+  template<typename T>
+  class GreaterThanComparison : public LessThanComparison<T>
   {
     public:
-      DREAM3D_SHARED_POINTERS(GreaterThanComparison)
-      DREAM3D_STATIC_NEW_MACRO(GreaterThanComparison)
-      DREAM3D_TYPE_MACRO_SUPER(GreaterThanComparison, LessThanComparison)
+      DREAM3D_SHARED_POINTERS(GreaterThanComparison<T>)
+      DREAM3D_STATIC_NEW_MACRO(GreaterThanComparison<T>)
+      DREAM3D_TYPE_MACRO_SUPER(GreaterThanComparison<T>, LessThanComparison<T>)
       virtual ~GreaterThanComparison() {}
 
-      virtual bool compare(float a, float b) { return a > b; }
-      virtual bool compare1(float a, float b) { return a <= b; }
-      virtual bool compare2(float a, float b) { return a < b; }
+      virtual bool compare(T a, T b) { return a > b; }
+      virtual bool compare1(T a, T b) { return a <= b; }
+      virtual bool compare2(T a, T b) { return a < b; }
 
     protected:
       GreaterThanComparison(){}
 
   };
+
+  template<typename T>
+  void ExecuteTemplate(ReplaceElementAttributesWithNeighborValues* filter, IDataArray::Pointer inArrayPtr)
+  {
+    typedef DataArray<T> DataArrayType;
+    typedef typename DataArrayType::Pointer DataArrayPointerType;
+
+
+    DataArrayPath dataArrayPath = filter->getConfidenceIndexArrayPath();
+    DataContainer::Pointer m = filter->getDataContainerArray()->getDataContainer(dataArrayPath.getDataContainerName());
+    size_t totalPoints = inArrayPtr->getNumberOfTuples();
+
+    size_t udims[3] = { 0, 0, 0 };
+    m->getGeometryAs<ImageGeom>()->getDimensions(udims);
+    int64_t dims[3] =
+    {
+      static_cast<int64_t>(udims[0]),
+      static_cast<int64_t>(udims[1]),
+      static_cast<int64_t>(udims[2]),
+    };
+
+    bool good = true;
+    int64_t neighbor = 0;
+    int64_t column = 0, row = 0, plane = 0;
+
+    int64_t neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
+    neighpoints[0] = static_cast<int64_t>(-dims[0] * dims[1]);
+    neighpoints[1] = static_cast<int64_t>(-dims[0]);
+    neighpoints[2] = static_cast<int64_t>(-1);
+    neighpoints[3] = static_cast<int64_t>(1);
+    neighpoints[4] = static_cast<int64_t>(dims[0]);
+    neighpoints[5] = static_cast<int64_t>(dims[0] * dims[1]);
+
+    QVector<int64_t> bestNeighbor(totalPoints, -1);
+
+    size_t count = 0;
+    float best = 0.0f;
+    bool keepGoing = true;
+
+    typename Detail::LessThanComparison<T>::Pointer comp = Detail::LessThanComparison<T>::New();
+    if(filter->getSelectedComparison() == Detail::GreaterThan)
+    {
+      comp = Detail::GreaterThanComparison<T>::New();
+    }
+
+    DataArrayPointerType inData = boost::dynamic_pointer_cast<DataArrayType>(inArrayPtr);
+    DataArrayType& data = *inData;
+
+    float thresholdValue = filter->getMinConfidence();
+
+    while (keepGoing == true)
+    {
+      keepGoing = false;
+      count = 0;
+      if (filter->getCancel()) { break; }
+
+      int64_t progIncrement = static_cast<int64_t>(totalPoints / 50);
+      int64_t prog = 1;
+      int64_t progressInt = 0;
+      for (size_t i = 0; i < totalPoints; i++)
+      {
+        if(comp->compare(data[i], thresholdValue))
+        {
+          column = i % dims[0];
+          row = (i / dims[0]) % dims[1];
+          plane = i / (dims[0] * dims[1]);
+          count++;
+          best = data[i];
+          for (int64_t j = 0; j < 6; j++)
+          {
+            good = true;
+            neighbor = int64_t(i) + neighpoints[j];
+            if (j == 0 && plane == 0) { good = false; }
+            if (j == 5 && plane == (dims[2] - 1)) { good = false; }
+            if (j == 1 && row == 0) { good = false; }
+            if (j == 4 && row == (dims[1] - 1)) { good = false; }
+            if (j == 2 && column == 0) { good = false; }
+            if (j == 3 && column == (dims[0] - 1)) { good = false; }
+            if (good == true)
+            {
+              if (comp->compare1(data[neighbor], thresholdValue) && comp->compare2(data[neighbor], best) )
+              {
+                best = data[neighbor];
+                bestNeighbor[i] = neighbor;
+              }
+            }
+          }
+        }
+        if (int64_t(i) > prog)
+        {
+          progressInt = static_cast<int64_t>(((float)i / totalPoints) * 100.0f);
+          QString ss = QObject::tr("|| Processing Data Current Loop (%1) Progress: %2% Complete").arg(count).arg(progressInt);
+          filter->notifyStatusMessage(filter->getMessagePrefix(), filter->getHumanLabel(), ss);
+          prog = prog + progIncrement;
+        }
+      }
+      QString attrMatName = dataArrayPath.getAttributeMatrixName();
+      QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNames();
+
+      if (filter->getCancel()) { break; }
+
+      progIncrement = static_cast<int64_t>(totalPoints / 50);
+      prog = 1;
+      progressInt = 0;
+      for (size_t i = 0; i < totalPoints; i++)
+      {
+        if (int64_t(i) > prog)
+        {
+          progressInt = static_cast<int64_t>(((float)i / totalPoints) * 100.0f);
+          QString ss = QObject::tr("|| Processing Data Current Loop (%1) || Transferring Cell Data: %2% Complete").arg(count).arg(progressInt);
+          filter->notifyStatusMessage(filter->getMessagePrefix(), filter->getHumanLabel(), ss);
+          prog = prog + progIncrement;
+        }
+
+        neighbor = bestNeighbor[i];
+        if (neighbor != -1)
+        {
+          for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          {
+            IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
+            p->copyTuple(neighbor, i);
+          }
+        }
+      }
+      if (filter->getLoop() == true && count > 0) { keepGoing = true; }
+    }
+
+
+  }
 
 }
 
@@ -93,13 +225,12 @@ namespace Detail
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-NeighborCICorrelation::NeighborCICorrelation() :
+ReplaceElementAttributesWithNeighborValues::ReplaceElementAttributesWithNeighborValues() :
   AbstractFilter(),
   m_MinConfidence(0.1f),
   m_Loop(false),
   m_ConfidenceIndexArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::ConfidenceIndex),
-  m_SelectedComparison(Detail::LessThan),
-  m_ConfidenceIndex(NULL)
+  m_SelectedComparison(Detail::LessThan)
 {
   setupFilterParameters();
 }
@@ -107,14 +238,14 @@ NeighborCICorrelation::NeighborCICorrelation() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-NeighborCICorrelation::~NeighborCICorrelation()
+ReplaceElementAttributesWithNeighborValues::~ReplaceElementAttributesWithNeighborValues()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void NeighborCICorrelation::setupFilterParameters()
+void ReplaceElementAttributesWithNeighborValues::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(DoubleFilterParameter::New("Threshold Value", "MinConfidence", getMinConfidence(), FilterParameter::Parameter));
@@ -140,7 +271,7 @@ void NeighborCICorrelation::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void NeighborCICorrelation::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void ReplaceElementAttributesWithNeighborValues::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   setConfidenceIndexArrayPath(reader->readDataArrayPath("ConfidenceIndexArrayPath", getConfidenceIndexArrayPath() ) );
@@ -152,7 +283,7 @@ void NeighborCICorrelation::readFilterParameters(AbstractFilterParametersReader*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int NeighborCICorrelation::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int ReplaceElementAttributesWithNeighborValues::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
@@ -166,22 +297,30 @@ int NeighborCICorrelation::writeFilterParameters(AbstractFilterParametersWriter*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void NeighborCICorrelation::dataCheck()
+void ReplaceElementAttributesWithNeighborValues::dataCheck()
 {
   setErrorCondition(0);
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getConfidenceIndexArrayPath().getDataContainerName());
 
-  QVector<size_t> cDims(1, 1);
-  m_ConfidenceIndexPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getConfidenceIndexArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_ConfidenceIndexPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_ConfidenceIndex = m_ConfidenceIndexPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_InArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getConfidenceIndexArrayPath());
+  if(getErrorCondition() < 0) { return; }
+
+
+  QVector<size_t> cDims = m_InArrayPtr.lock()->getComponentDimensions();
+  if(cDims.size() != 1 && cDims.at(0) != 1)
+  {
+    QString ss = QObject::tr("The number of components must be 1.");
+    setErrorCondition(-5655);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void NeighborCICorrelation::preflight()
+void ReplaceElementAttributesWithNeighborValues::preflight()
 {
   setInPreflight(true);
   emit preflightAboutToExecute();
@@ -194,132 +333,16 @@ void NeighborCICorrelation::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void NeighborCICorrelation::execute()
+void ReplaceElementAttributesWithNeighborValues::execute()
 {
   setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_ConfidenceIndexArrayPath.getDataContainerName());
-  size_t totalPoints = m_ConfidenceIndexPtr.lock()->getNumberOfTuples();
-
-  size_t udims[3] = { 0, 0, 0 };
-  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
-  {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
-  };
-
-  bool good = true;
-  DimType neighbor = 0;
-  DimType column = 0, row = 0, plane = 0;
-
-  DimType neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
-  neighpoints[0] = static_cast<DimType>(-dims[0] * dims[1]);
-  neighpoints[1] = static_cast<DimType>(-dims[0]);
-  neighpoints[2] = static_cast<DimType>(-1);
-  neighpoints[3] = static_cast<DimType>(1);
-  neighpoints[4] = static_cast<DimType>(dims[0]);
-  neighpoints[5] = static_cast<DimType>(dims[0] * dims[1]);
-
-  QVector<DimType> bestNeighbor(totalPoints, -1);
-
-  size_t count = 0;
-  float best = 0.0f;
-  bool keepGoing = true;
-
-  Detail::LessThanComparison::Pointer comp = Detail::LessThanComparison::New();
-  if(m_SelectedComparison == Detail::GreaterThan)
-  {
-    comp = Detail::GreaterThanComparison::New();
-  }
-
-
-  while (keepGoing == true)
-  {
-    keepGoing = false;
-    count = 0;
-    if (getCancel()) { break; }
-
-    DimType progIncrement = static_cast<DimType>(totalPoints / 50);
-    DimType prog = 1;
-    int64_t progressInt = 0;
-    for (size_t i = 0; i < totalPoints; i++)
-    {
-      if(comp->compare(m_ConfidenceIndex[i], m_MinConfidence))
-      {
-        column = i % dims[0];
-        row = (i / dims[0]) % dims[1];
-        plane = i / (dims[0] * dims[1]);
-        count++;
-        best = m_ConfidenceIndex[i];
-        for (DimType j = 0; j < 6; j++)
-        {
-          good = true;
-          neighbor = DimType(i) + neighpoints[j];
-          if (j == 0 && plane == 0) { good = false; }
-          if (j == 5 && plane == (dims[2] - 1)) { good = false; }
-          if (j == 1 && row == 0) { good = false; }
-          if (j == 4 && row == (dims[1] - 1)) { good = false; }
-          if (j == 2 && column == 0) { good = false; }
-          if (j == 3 && column == (dims[0] - 1)) { good = false; }
-          if (good == true)
-          {
-            if (comp->compare1(m_ConfidenceIndex[neighbor], m_MinConfidence) && comp->compare2(m_ConfidenceIndex[neighbor], best) )
-            {
-              best = m_ConfidenceIndex[neighbor];
-              bestNeighbor[i] = neighbor;
-            }
-          }
-        }
-      }
-      if (DimType(i) > prog)
-      {
-        progressInt = static_cast<int64_t>(((float)i / totalPoints) * 100.0f);
-        QString ss = QObject::tr("|| Processing Data Current Loop (%1) Progress: %2% Complete").arg(count).arg(progressInt);
-        notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-        prog = prog + progIncrement;
-      }
-    }
-    QString attrMatName = m_ConfidenceIndexArrayPath.getAttributeMatrixName();
-    QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNames();
-
-    if (getCancel()) { break; }
-
-    progIncrement = static_cast<DimType>(totalPoints / 50);
-    prog = 1;
-    progressInt = 0;
-    for (size_t i = 0; i < totalPoints; i++)
-    {
-      if (DimType(i) > prog)
-      {
-        progressInt = static_cast<int64_t>(((float)i / totalPoints) * 100.0f);
-        QString ss = QObject::tr("|| Processing Data Current Loop (%1) || Transferring Cell Data: %2% Complete").arg(count).arg(progressInt);
-        notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-        prog = prog + progIncrement;
-      }
-
-      neighbor = bestNeighbor[i];
-      if (neighbor != -1)
-      {
-        for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
-        {
-          IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
-          p->copyTuple(neighbor, i);
-        }
-      }
-    }
-    if (m_Loop == true && count > 0) { keepGoing = true; }
-  }
-
-  if (getCancel()) { return; }
+  // This function is templated over the primitive type so we are going to use
+  // the macros provided in TemplateHelpers.hpp to cut down on the amount of
+  // redundant code
+  EXECUTE_FUNCTION_TEMPLATE(this, Detail::ExecuteTemplate, m_InArrayPtr.lock(), this, m_InArrayPtr.lock());
 
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage(getHumanLabel(), "Complete");
@@ -328,9 +351,9 @@ void NeighborCICorrelation::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer NeighborCICorrelation::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ReplaceElementAttributesWithNeighborValues::newFilterInstance(bool copyFilterParameters)
 {
-  NeighborCICorrelation::Pointer filter = NeighborCICorrelation::New();
+  ReplaceElementAttributesWithNeighborValues::Pointer filter = ReplaceElementAttributesWithNeighborValues::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -341,23 +364,23 @@ AbstractFilter::Pointer NeighborCICorrelation::newFilterInstance(bool copyFilter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NeighborCICorrelation::getCompiledLibraryName()
+const QString ReplaceElementAttributesWithNeighborValues::getCompiledLibraryName()
 { return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NeighborCICorrelation::getGroupName()
+const QString ReplaceElementAttributesWithNeighborValues::getGroupName()
 { return DREAM3D::FilterGroups::ProcessingFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NeighborCICorrelation::getSubGroupName()
+const QString ReplaceElementAttributesWithNeighborValues::getSubGroupName()
 { return DREAM3D::FilterSubGroups::CleanupFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NeighborCICorrelation::getHumanLabel()
-{ return "Neighbor CI Correlation"; }
+const QString ReplaceElementAttributesWithNeighborValues::getHumanLabel()
+{ return "Replace Element Attributes with Neighbor (Threshold)"; }
