@@ -876,7 +876,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
 
   // determine initial set of available points
   availablePointsCount = 0;
-  for (size_t i = 0; i < m_TotalPackingPoints; i++)
+  for (int64_t i = 0; i < m_TotalPackingPoints; i++)
   {
     if ((exclusionOwners[i] == 0 && m_UseMask == false) || (exclusionOwners[i] == 0 && m_UseMask == true && m_Mask[i] == true))
     {
