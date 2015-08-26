@@ -264,8 +264,9 @@ int JsonFilterParametersWriter::writeValue(const QString name, int32_t value)
 int JsonFilterParametersWriter::writeValue(const QString name, int64_t value)
 {
   int err = 0;
-
-  m_CurrentFilterIndex[name] = static_cast<double>(value);
+  // We write this number as a string because if the value is greater than
+  // 2^53 bits then the conversion to a double would truncate the value
+  m_CurrentFilterIndex[name] = QString::number(value); // static_cast<double>(value);
 
   return err;
 }
@@ -313,7 +314,9 @@ int JsonFilterParametersWriter::writeValue(const QString name, uint64_t value)
 {
   int err = 0;
 
-  m_CurrentFilterIndex[name] = static_cast<double>(value);
+  // We write this number as a string because if the value is greater than
+  // 2^53 bits then the conversion to a double would truncate the value
+  m_CurrentFilterIndex[name] = QString::number(value); // static_cast<double>(value);
 
   return err;
 }
@@ -410,7 +413,10 @@ int JsonFilterParametersWriter::writeValue(const QString name, QVector<int64_t> 
 
   foreach(int64_t val, value)
   {
-    jsonArray << QJsonValue(static_cast<double>(val));
+    // We write this number as a string because if the value is greater than
+    // 2^53 bits then the conversion to a double would truncate the value
+    //jsonArray << QJsonValue(static_cast<double>(val));
+    jsonArray << QJsonValue(QString::number(val));
   }
 
   m_CurrentFilterIndex[name] = jsonArray;
@@ -486,7 +492,10 @@ int JsonFilterParametersWriter::writeValue(const QString name, QVector<uint64_t>
 
   foreach(uint64_t val, value)
   {
-    jsonArray << QJsonValue(static_cast<double>(val));
+    // We write this number as a string because if the value is greater than
+    // 2^53 bits then the conversion to a double would truncate the value
+    //jsonArray << QJsonValue(static_cast<double>(val));
+    jsonArray << QJsonValue(QString::number(val));
   }
 
   m_CurrentFilterIndex[name] = jsonArray;

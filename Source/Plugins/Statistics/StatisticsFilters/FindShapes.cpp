@@ -787,7 +787,7 @@ void FindShapes::find_axiseulers2D()
     {
       if (Ixx > Iyy)
       {
-        m_AxisEulerAngles[3 * i] = M_PI_2;
+        m_AxisEulerAngles[3 * i] = static_cast<float>(DREAM3D::Constants::k_PiOver2);
         m_AxisEulerAngles[3 * i + 1] = 0.0f;
         m_AxisEulerAngles[3 * i + 2] = 0.0f;
         continue;

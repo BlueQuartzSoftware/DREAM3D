@@ -326,6 +326,12 @@ void ImportImageStack::execute()
       notifyErrorMessage(getHumanLabel(), "Failed to load image file", getErrorCondition());
       return;
     }
+#if defined (CMP_WORDS_BIGENDIAN)
+#error
+#else
+    // We need to convert from Little Endian based ARGB to a physical RGB layout
+    image = image.rgbSwapped();
+#endif
     height = image.height();
     width = image.width();
     totalPixels = width * height;

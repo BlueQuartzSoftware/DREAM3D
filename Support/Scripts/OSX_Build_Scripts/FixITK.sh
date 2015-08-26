@@ -12,7 +12,7 @@ function printStatus()
     fi  
 }
 
-printStatus "************** Fixing up ITK 4.7.1 **********************"
+printStatus "************** Fixing up ITK 4.7.2 **********************"
 
 
 InstallPrefix="${1}"
