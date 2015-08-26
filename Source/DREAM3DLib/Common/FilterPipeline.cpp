@@ -295,11 +295,18 @@ int FilterPipeline::preflightPipeline()
     (*filter)->setDataContainerArray(dca);
     setCurrentFilter(*filter);
     connectFilterNotifications( (*filter).get() );
-    //qDebug() << "Preflighting Filter [" << (*filter)->getHumanLabel() << "] (" << (*filter)->getNameOfClass() << ")";
     (*filter)->preflight();
     disconnectFilterNotifications( (*filter).get() );
 
-    (*filter)->setDataContainerArray(DataContainerArray::NullPointer());
+//    (*filter)->setDataContainerArray(DataContainerArray::NullPointer());
+    DataContainerArray::Pointer dcaCopy = DataContainerArray::New();
+    QList<DataContainer::Pointer> dcs = dca->getDataContainers();
+    for (int i=0; i<dcs.size(); i++)
+    {
+      DataContainer::Pointer dcCopy = dcs[i]->deepCopy();
+      dcaCopy->addDataContainer(dcCopy);
+    }
+    (*filter)->setDataContainerArray(dcaCopy);
     preflightError |= (*filter)->getErrorCondition();
   }
   setCurrentFilter(AbstractFilter::NullPointer());

@@ -52,19 +52,20 @@ DataContainerSelectionFilterParameter::~DataContainerSelectionFilterParameter()
 //
 // -----------------------------------------------------------------------------
 DataContainerSelectionFilterParameter::Pointer DataContainerSelectionFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QString& defaultValue, Category category, int groupIndex)
+  const QString& defaultValue, Category category, const DataStructureRequirements req, int groupIndex)
 {
-
   DataContainerSelectionFilterParameter::Pointer ptr = DataContainerSelectionFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
-  ptr->setDefaultValue(defaultValue);
+  QVariant v;
+  v.setValue(defaultValue);
+  ptr->setDefaultValue(v);
   ptr->setCategory(category);
+  ptr->setDefaultGeometryTypes(req.dcGeometryTypes);
   ptr->setGroupIndex(groupIndex);
 
   return ptr;
 }
-
 
 // -----------------------------------------------------------------------------
 //

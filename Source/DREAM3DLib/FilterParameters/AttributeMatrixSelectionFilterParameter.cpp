@@ -52,7 +52,7 @@ AttributeMatrixSelectionFilterParameter::~AttributeMatrixSelectionFilterParamete
 //
 // -----------------------------------------------------------------------------
 AttributeMatrixSelectionFilterParameter::Pointer AttributeMatrixSelectionFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const DataArrayPath& defaultValue, Category category, int groupIndex)
+  const DataArrayPath& defaultValue, Category category, const DataStructureRequirements req, int groupIndex)
 {
 
   AttributeMatrixSelectionFilterParameter::Pointer ptr = AttributeMatrixSelectionFilterParameter::New();
@@ -62,6 +62,8 @@ AttributeMatrixSelectionFilterParameter::Pointer AttributeMatrixSelectionFilterP
   v.setValue(defaultValue);
   ptr->setDefaultValue(v);
   ptr->setCategory(category);
+  ptr->setDefaultGeometryTypes(req.dcGeometryTypes);
+  ptr->setDefaultAttributeMatrixTypes(req.amTypes);
   ptr->setGroupIndex(groupIndex);
 
   return ptr;

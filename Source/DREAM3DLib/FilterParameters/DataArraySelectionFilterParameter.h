@@ -36,6 +36,7 @@
 #ifndef _DataArraySelectionFilterParameter_H_
 #define _DataArraySelectionFilterParameter_H_
 
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
 
 class DREAM3DLib_EXPORT DataArraySelectionFilterParameter : public FilterParameter
@@ -45,9 +46,17 @@ public:
     DREAM3D_STATIC_NEW_MACRO(DataArraySelectionFilterParameter)
     DREAM3D_TYPE_MACRO(DataArraySelectionFilterParameter)
 
+  struct DataStructureRequirements
+  {
+    QVector<unsigned int> dcGeometryTypes;
+    QVector<unsigned int> amTypes;
+    QVector<QString> daTypes;
+    QVector< QVector<size_t> > componentDimensions;
+  };
+
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-    const DataArrayPath& defaultValue, Category category,
-    int groupIndex = -1);
+    const DataArrayPath& defaultValue, Category category, 
+    const DataStructureRequirements req, int groupIndex = -1);
 
     virtual ~DataArraySelectionFilterParameter();
 
@@ -58,6 +67,10 @@ public:
    */
   QString getWidgetType();
 
+  DREAM3D_INSTANCE_PROPERTY(QVector<unsigned int>, DefaultGeometryTypes)
+  DREAM3D_INSTANCE_PROPERTY(QVector<unsigned int>, DefaultAttributeMatrixTypes)
+  DREAM3D_INSTANCE_PROPERTY(QVector<QString>, DefaultAttributeArrayTypes)
+  DREAM3D_INSTANCE_PROPERTY(QVector< QVector<size_t> >, DefaultComponentDimensions)
 
 protected:
   DataArraySelectionFilterParameter();

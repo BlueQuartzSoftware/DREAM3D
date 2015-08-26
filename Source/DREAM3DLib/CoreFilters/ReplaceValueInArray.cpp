@@ -69,8 +69,13 @@ void ReplaceValueInArray::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(DoubleFilterParameter::New("Value to Replace", "RemoveValue", getRemoveValue(), FilterParameter::Parameter));
+
   parameters.push_back(DoubleFilterParameter::New("New Value", "ReplaceValue", getReplaceValue(), FilterParameter::Parameter));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array", "SelectedArray", getSelectedArray(), FilterParameter::RequiredArray));
+  {
+  DataArraySelectionFilterParameter::DataStructureRequirements req;
+  req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
+  parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array", "SelectedArray", getSelectedArray(), FilterParameter::RequiredArray, req));
+  }
   setFilterParameters(parameters);
 }
 

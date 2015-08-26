@@ -37,6 +37,9 @@
 
 #include <QtCore/QMetaProperty>
 #include <QtCore/QList>
+
+#include <QtGui/QStandardItemModel>
+
 #include <QtWidgets/QListWidgetItem>
 
 
@@ -183,10 +186,25 @@ void DataArraySelectionWidget::populateComboBoxes()
   QList<DataContainerProxy> dcList = m_DcaProxy.dataContainers.values();
   QListIterator<DataContainerProxy> iter(dcList);
   dataContainerCombo->clear();
+  QVector<unsigned int> defVec = m_FilterParameter->getDefaultGeometryTypes();
   while(iter.hasNext() )
   {
-    DataContainerProxy dc = iter.next();
-    dataContainerCombo->addItem(dc.name);
+    DataContainerProxy dcProxy = iter.next();
+    DataContainer::Pointer dc = dca->getDataContainer(dcProxy.name);
+    dataContainerCombo->addItem(dcProxy.name);
+
+    if (NULL != dc.get() && defVec.isEmpty() == false && defVec.contains(dc->getGeometry()->getGeometryType()) == false)
+    {
+      QStandardItemModel* model = qobject_cast<QStandardItemModel*>(dataContainerCombo->model());
+      if (NULL != model)
+      {
+        QStandardItem* item = model->item(dataContainerCombo->findText(dcProxy.name));
+        if (NULL != item)
+        {
+          item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
+        }
+      }
+    }
 //    if(dataContainerCombo->findText(dc.name) == -1 )
 //    {
 //      int index = dataContainerCombo->currentIndex();
@@ -283,7 +301,6 @@ void DataArraySelectionWidget::populateComboBoxes()
   }
 
   if(didBlock) { attributeArrayCombo->blockSignals(false); didBlock = false; }// not be triggering an infinte recursion of preflights
-
 }
 
 // -----------------------------------------------------------------------------
@@ -307,7 +324,8 @@ QString DataArraySelectionWidget::checkStringValues(QString curDcName, QString f
 // -----------------------------------------------------------------------------
 void DataArraySelectionWidget::populateAttributeMatrixList()
 {
-  //qDebug() << getFilter()->getHumanLabel() << "  " << getFilterParameter()->getHumanLabel() << " DataArraySelectionWidget::populateAttributeMatrixList()";
+  DataContainerArray::Pointer dca = getFilter()->getDataContainerArray();
+  if (NULL == dca.get()) { return; }
 
   QString dcName = dataContainerCombo->currentText();
 
@@ -318,6 +336,7 @@ void DataArraySelectionWidget::populateAttributeMatrixList()
   // Loop over the data containers until we find the proper data container
   QList<DataContainerProxy> containers = m_DcaProxy.dataContainers.values();
   QListIterator<DataContainerProxy> containerIter(containers);
+  QVector<unsigned int> defVec = m_FilterParameter->getDefaultAttributeMatrixTypes();
   while(containerIter.hasNext())
   {
     DataContainerProxy dc = containerIter.next();
@@ -331,7 +350,21 @@ void DataArraySelectionWidget::populateAttributeMatrixList()
       {
         attrMatsIter.next();
         QString amName = attrMatsIter.key();
+        AttributeMatrix::Pointer am = dca->getAttributeMatrix(DataArrayPath(dc.name, amName, ""));
         attributeMatrixCombo->addItem(amName);
+
+        if (NULL != am.get() && defVec.isEmpty() == false && defVec.contains(am->getType()) == false)
+        {
+          QStandardItemModel* model = qobject_cast<QStandardItemModel*>(attributeMatrixCombo->model());
+          if (NULL != model)
+          {
+            QStandardItem* item = model->item(attributeMatrixCombo->findText(amName));
+            if (NULL != item)
+            {
+              item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
+            }
+          }
+        }
       }
     }
   }
@@ -423,6 +456,9 @@ void DataArraySelectionWidget::setSelectedPath(QString dcName, QString attrMatNa
 // -----------------------------------------------------------------------------
 void DataArraySelectionWidget::populateAttributeArrayList()
 {
+  DataContainerArray::Pointer dca = getFilter()->getDataContainerArray();
+  if (NULL == dca.get()) { return; }
+
   attributeArrayCombo->blockSignals(true);
   attributeArrayCombo->clear();
 
@@ -433,19 +469,21 @@ void DataArraySelectionWidget::populateAttributeArrayList()
   // Loop over the data containers until we find the proper data container
   QList<DataContainerProxy> containers = m_DcaProxy.dataContainers.values();
   QListIterator<DataContainerProxy> containerIter(containers);
-  while(containerIter.hasNext())
+  QVector<QString> daTypes = m_FilterParameter->getDefaultAttributeArrayTypes();
+  QVector< QVector<size_t> > cDims = m_FilterParameter->getDefaultComponentDimensions();
+  while (containerIter.hasNext())
   {
     DataContainerProxy dc = containerIter.next();
-    if(dc.name.compare(currentDCName) == 0 )
+    if (dc.name.compare(currentDCName) == 0)
     {
       // We found the proper Data Container, now populate the AttributeMatrix List
       QMap<QString, AttributeMatrixProxy> attrMats = dc.attributeMatricies;
       QMapIterator<QString, AttributeMatrixProxy> attrMatsIter(attrMats);
-      while(attrMatsIter.hasNext() )
+      while (attrMatsIter.hasNext())
       {
         attrMatsIter.next();
         QString amName = attrMatsIter.key();
-        if(amName.compare(currentAttrMatName) == 0 )
+        if (amName.compare(currentAttrMatName) == 0)
         {
           // Clear the list of arrays from the QListWidget
           attributeArrayCombo->clear();
@@ -453,22 +491,35 @@ void DataArraySelectionWidget::populateAttributeArrayList()
           AttributeMatrixProxy amProxy = attrMatsIter.value();
           QMap<QString, DataArrayProxy> dataArrays = amProxy.dataArrays;
           QMapIterator<QString, DataArrayProxy> dataArraysIter(dataArrays);
-          while(dataArraysIter.hasNext() )
+          while (dataArraysIter.hasNext())
           {
             dataArraysIter.next();
             //DataArrayProxy daProxy = dataArraysIter.value();
             QString daName = dataArraysIter.key();
+            IDataArray::Pointer da = dca->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(NULL, DataArrayPath(dc.name, amProxy.name, daName));
             attributeArrayCombo->addItem(daName);
+
+            if (NULL != da.get() && ((daTypes.isEmpty() == false && daTypes.contains(da->getTypeAsString()) == false) || (cDims.isEmpty() == false && cDims.contains(da->getComponentDimensions()) == false)))
+            {
+              QStandardItemModel* model = qobject_cast<QStandardItemModel*>(attributeArrayCombo->model());
+              if (NULL != model)
+              {
+                QStandardItem* item = model->item(attributeArrayCombo->findText(daName));
+                if (NULL != item)
+                {
+                  item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
+                }
+              }
+            }
           }
         }
       }
     }
+
+    attributeArrayCombo->setCurrentIndex(-1);
+    attributeArrayCombo->blockSignals(false);
   }
-
-  attributeArrayCombo->setCurrentIndex(-1);
-  attributeArrayCombo->blockSignals(false);
 }
-
 
 // -----------------------------------------------------------------------------
 //blockSignals(false);

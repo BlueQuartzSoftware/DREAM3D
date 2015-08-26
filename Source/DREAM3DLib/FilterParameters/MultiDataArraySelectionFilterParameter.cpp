@@ -53,19 +53,25 @@ MultiDataArraySelectionFilterParameter::~MultiDataArraySelectionFilterParameter(
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MultiDataArraySelectionFilterParameter::Pointer MultiDataArraySelectionFilterParameter::New(const QString& humanLabel, const QString& propertyName, const QVector<DataArrayPath>& defaultPaths,
-    Category category, int groupIndex)
+MultiDataArraySelectionFilterParameter::Pointer MultiDataArraySelectionFilterParameter::New(const QString& humanLabel, const QString& propertyName,
+  const QVector<DataArrayPath>& defaultValue, Category category, const DataStructureRequirements req, int groupIndex)
 {
+
   MultiDataArraySelectionFilterParameter::Pointer ptr = MultiDataArraySelectionFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
-  ptr->setDefaultPaths(defaultPaths);
+  QVariant v;
+  v.setValue(defaultValue);
+  ptr->setDefaultValue(v);
   ptr->setCategory(category);
+  ptr->setDefaultGeometryTypes(req.dcGeometryTypes);
+  ptr->setDefaultAttributeMatrixTypes(req.amTypes);
+  ptr->setDefaultAttributeArrayTypes(req.daTypes);
+  ptr->setDefaultComponentDimensions(req.componentDimensions);
   ptr->setGroupIndex(groupIndex);
 
   return ptr;
 }
-
 
 // -----------------------------------------------------------------------------
 //

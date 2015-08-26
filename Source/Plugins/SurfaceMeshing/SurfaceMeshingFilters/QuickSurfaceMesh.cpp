@@ -91,8 +91,22 @@
     linkedProps << "CellPhasesArrayPath" << "FacePhasesArrayName";
     parameters.push_back(LinkedBooleanFilterParameter::New("Transfer Phase Id", "TransferPhaseId", getTransferPhaseId(), linkedProps, FilterParameter::Parameter));
     parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray));
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray));
+    {
+      DataArraySelectionFilterParameter::DataStructureRequirements req;
+      req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::ImageGeometry);
+      req.amTypes = QVector<unsigned int>(1, DREAM3D::AttributeMatrixType::Cell);
+      req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Int32);
+      req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
+      parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
+    }
+    {
+      DataArraySelectionFilterParameter::DataStructureRequirements req;
+      req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::ImageGeometry);
+      req.amTypes = QVector<unsigned int>(1, DREAM3D::AttributeMatrixType::Cell);
+      req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Int32);
+      req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
+      parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req));
+    }
 
     parameters.push_back(StringFilterParameter::New("Data Container", "SurfaceDataContainerName", getSurfaceDataContainerName(), FilterParameter::CreatedArray));
     parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::CreatedArray));
