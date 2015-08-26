@@ -98,7 +98,7 @@ COMPILE_TOOL(
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
-    #LINK_LIBRARIES DREAM3DLib
+    LINK_LIBRARIES hdf5 Qt5::Core H5Support DREAM3DLib
 )
 
 # Create a Command line tool for the MATLAB_CodeGen

@@ -6,7 +6,7 @@
 namespace ImageIOConstants
 {
   const QString ImageIOPluginFile("ImageIOPlugin");
-  const QString ImageIOPluginDisplayName("ImageIOPlugin");
+  const QString ImageIOPluginDisplayName("ImageIO");
   const QString ImageIOBaseName("ImageIOPlugin");
 }
 

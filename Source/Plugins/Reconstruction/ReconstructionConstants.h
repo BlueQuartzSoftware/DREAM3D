@@ -6,7 +6,7 @@
 namespace ReconstructionConstants
 {
   const QString ReconstructionPluginFile("ReconstructionPlugin");
-  const QString ReconstructionPluginDisplayName("ReconstructionPlugin");
+  const QString ReconstructionPluginDisplayName("Reconstruction");
   const QString ReconstructionBaseName("ReconstructionPlugin");
 }
 #endif

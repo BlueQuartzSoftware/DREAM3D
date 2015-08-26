@@ -6,7 +6,7 @@
 namespace SurfaceMeshingConstants
 {
   const QString SurfaceMeshingPluginFile("SurfaceMeshingPlugin");
-  const QString SurfaceMeshingPluginDisplayName("SurfaceMeshingPlugin");
+  const QString SurfaceMeshingPluginDisplayName("SurfaceMeshing");
   const QString SurfaceMeshingBaseName("SurfaceMeshingPlugin");
 }
 #endif
