@@ -4,14 +4,14 @@
 This tutorial uses a **Prebuilt Pipeline** to reconstruct a 3D data set of a Ni based superalloy called the "Small IN100" data set. This data set was collected by M. Uchic et. al. at the Air Force Research Laboratory (AFRL) and is provided to the DREAM.3D community as a learning tool. The data set consists of 117 slices of EBSD data where each slice is 189 x 201 scan points.
 
 ## Downloading the Example Data ##
-Download the compressed archive named "SmallIN100.zip" from [the DREAM.3D nightly downloads web site](http://dream3d.bluequartz.net/binaries/experimental/). After downloading the archive, unzip the files and place the  "SmallIN100" folder into the DREAM.3D _Data_ folder. The _Data_ folder should be located at the same level as your DREAM.3D executable. The resulting folder hierarchy is exactly as follows:
+Download the compressed archive named "SmallIN100.zip" from [the DREAM.3D nightly downloads web site](http://dream3d.bluequartz.net/Data/SmallIN100.zip). After downloading the archive, unzip the files and place the  "SmallIN100" folder into the DREAM.3D _Data_ folder. The _Data_ folder should be located at the same level as your DREAM.3D executable. The resulting folder hierarchy is exactly as follows:
 
-  DREAM3D-XXXX
-    Data
-      SmallIN100
-        Slice_1.ang
-        Slice_2.ang
-        ...
+ 	DREAM3D-XXXX
+   		Data
+     		SmallIN100
+       		Slice_1.ang
+        		Slice_2.ang
+        		...
 
 The .ang files should be numbered from 1 to 117.
 
