@@ -56,6 +56,7 @@
 #include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/Geometry/IGeometry.h"
 #include "DREAM3DLib/Geometry/ImageGeom.h"
+#include "DREAM3DLib/Geometry/RectGridGeom.h"
 #include "DREAM3DLib/Geometry/VertexGeom.h"
 #include "DREAM3DLib/Geometry/EdgeGeom.h"
 #include "DREAM3DLib/Geometry/TriangleGeom.h"

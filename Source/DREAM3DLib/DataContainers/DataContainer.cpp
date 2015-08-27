@@ -595,9 +595,9 @@ void DataContainer::writeXdmfFooter(QTextStream& xdmf)
 int DataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
 {
   herr_t err = 0;
-  unsigned int geometryType = DREAM3D::GeometryType::UnknownGeometry;
+  QString geometryTypeName = DREAM3D::Geometry::UnknownGeometry;
 
-  err = QH5Lite::readScalarAttribute(dcGid, DREAM3D::Geometry::Geometry, DREAM3D::Geometry::GeometryType, geometryType);
+  err = QH5Lite::readStringAttribute(dcGid, DREAM3D::Geometry::Geometry, DREAM3D::Geometry::GeometryTypeName, geometryTypeName);
   if (err < 0)
   {
     return err;
@@ -614,54 +614,55 @@ int DataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
 
   if (NULL == m_Geometry.get())
   {
-    switch(geometryType)
+    if (geometryTypeName.compare(DREAM3D::Geometry::ImageGeometry) == 0)
     {
-      case DREAM3D::GeometryType::ImageGeometry:
-      {
-        ImageGeom::Pointer image = ImageGeom::New();
-        err = image->readGeometryFromHDF5(geometryId, preflight);
-        err = GeometryHelpers::GeomIO::ReadMetaDataFromHDF5(dcGid, image);
-        setGeometry(image);
-        break;
-      }
-      case DREAM3D::GeometryType::VertexGeometry:
-      {
-        VertexGeom::Pointer vertices = VertexGeom::New();
-        err = vertices->readGeometryFromHDF5(geometryId, preflight);
-        err = GeometryHelpers::GeomIO::ReadMetaDataFromHDF5(dcGid, vertices);
-        setGeometry(vertices);
-        break;
-      }
-      case DREAM3D::GeometryType::EdgeGeometry:
-      {
-        EdgeGeom::Pointer edges = EdgeGeom::New();
-        err = edges->readGeometryFromHDF5(geometryId, preflight);
-        err = GeometryHelpers::GeomIO::ReadMetaDataFromHDF5(dcGid, edges);
-        setGeometry(edges);
-        break;
-      }
-      case DREAM3D::GeometryType::TriangleGeometry:
-      {
-        TriangleGeom::Pointer triangles = TriangleGeom::New();
-        err = triangles->readGeometryFromHDF5(geometryId, preflight);
-        err = GeometryHelpers::GeomIO::ReadMetaDataFromHDF5(dcGid, triangles);
-        setGeometry(triangles);
-        break;
-      }
-      case DREAM3D::GeometryType::QuadGeometry:
-      {
-        QuadGeom::Pointer quads = QuadGeom::New();
-        err = quads->readGeometryFromHDF5(geometryId, preflight);
-        err = GeometryHelpers::GeomIO::ReadMetaDataFromHDF5(dcGid, quads);
-        setGeometry(quads);
-        break;
-      }
-      case DREAM3D::GeometryType::UnknownGeometry:
-        setGeometry(geomPtr);
-        break;
-      default:
-        setGeometry(geomPtr);
-        break;
+      ImageGeom::Pointer image = ImageGeom::New();
+      err = image->readGeometryFromHDF5(geometryId, preflight);
+      err = GeometryHelpers::GeomIO::ReadMetaDataFromHDF5(dcGid, image);
+      setGeometry(image);
+    }
+    else if (geometryTypeName.compare(DREAM3D::Geometry::RectGridGeometry) == 0)
+    {
+      RectGridGeom::Pointer rectGrid = RectGridGeom::New();
+      err = rectGrid->readGeometryFromHDF5(geometryId, preflight);
+      err = GeometryHelpers::GeomIO::ReadMetaDataFromHDF5(dcGid, rectGrid);
+      setGeometry(rectGrid);
+    }
+    else if (geometryTypeName.compare(DREAM3D::Geometry::VertexGeometry) == 0)
+    {
+      VertexGeom::Pointer vertices = VertexGeom::New();
+      err = vertices->readGeometryFromHDF5(geometryId, preflight);
+      err = GeometryHelpers::GeomIO::ReadMetaDataFromHDF5(dcGid, vertices);
+      setGeometry(vertices);
+    }
+    else if (geometryTypeName.compare(DREAM3D::Geometry::EdgeGeometry) == 0)
+    {
+      EdgeGeom::Pointer edges = EdgeGeom::New();
+      err = edges->readGeometryFromHDF5(geometryId, preflight);
+      err = GeometryHelpers::GeomIO::ReadMetaDataFromHDF5(dcGid, edges);
+      setGeometry(edges);
+    }
+    else if (geometryTypeName.compare(DREAM3D::Geometry::TriangleGeometry) == 0)
+    {
+      TriangleGeom::Pointer triangles = TriangleGeom::New();
+      err = triangles->readGeometryFromHDF5(geometryId, preflight);
+      err = GeometryHelpers::GeomIO::ReadMetaDataFromHDF5(dcGid, triangles);
+      setGeometry(triangles);
+    }
+    else if (geometryTypeName.compare(DREAM3D::Geometry::QuadGeometry) == 0)
+    {
+      QuadGeom::Pointer quads = QuadGeom::New();
+      err = quads->readGeometryFromHDF5(geometryId, preflight);
+      err = GeometryHelpers::GeomIO::ReadMetaDataFromHDF5(dcGid, quads);
+      setGeometry(quads);
+    }
+    else if (geometryTypeName.compare(DREAM3D::Geometry::UnknownGeometry) == 0)
+    {
+      setGeometry(geomPtr);
+    }
+    else
+    {
+      setGeometry(geomPtr);
     }
   }
 
