@@ -10,18 +10,16 @@ This **Filter** is used to import a stack of 2D images that represent a 3D volum
 ## Importing a Stack of Images ##
 This **Filter** will import a directory of sequentially numbered image files into the DREAM.3D data structure, creating a **Data Container**, **Cell Attribute Matrix**, and **Attribute Array** in the process, which the user may name. 
 The user selects the directory that contains all the files to be imported then uses the additional input widgets on the **Filter** interface (_File Prefix_, _File Suffix_, _File Extension_, and _Padding Digits_) to make adjustments to the generated file name until the correct number of files is found. The user may also select starting and ending indices to import. The user interface indicates through red and green icons if an expected file exists on the file system. This **Filter** may also be used to import single images in addition to stacks of images.  
-The user has the option to read the images in as an **Image Geometry** or a **Rectilinear Grid Geometry**.  If the user chooses **Image Geometry**, then they must enter the origin and resolution of the imported images.  The resolution (or size of the **Cells**) is the same for all **Cells** in this case.  If the user chooses **Rectilinear Grid Geometry**, then they must provide a file path to a file that lists the *bounds* of **Cells** in the X, Y and Z directions.  The format of the file is provided below. Note that the *bounds* array for each direction will be the number of **Cells** in that direction plus 1 (i.e. a 100x90x80 **Cell** dataset will have 101x91x81 *bounds* values).
+The user has the option to read the images in as an **Image Geometry** or a **Rectilinear Grid Geometry**.  If the user chooses **Image Geometry**, then the origin and resolution of the imported images must be entered.  The resolution (or size of the **Cells**) is the same for all **Cells** in this case.  If the user chooses **Rectilinear Grid Geometry**, then a file path to a file that lists the *bounds* of **Cells** in the X, Y and Z directions must be provided.  The format of the file is provided below. Note that the *bounds* array for each direction will be the number of **Cells** in that direction plus 1 (i.e., a 100x90x80 **Cell** dataset will have 101x91x81 *bounds* values).
 
-Bounds File format:
-# Comment line
-# Comment line
-X_COORDINATES nx 
-x0 x1 ... x(nx-1)
-Y_COORDINATES ny 
-y0 y1 ... y(ny-1)
-Z_COORDINATES nz 
-z0 z1 ... z(nz-1)
-
+	# Comment line
+	# Comments can start with the '#' character
+	X_COORDINATES [number of X coordinates] 
+	x0 x1 ... x(nx-1)
+	Y_COORDINATES [number of Y coordinates] 
+	y0 y1 ... y(ny-1)
+	Z_COORDINATES [number of Z coordinates] 
+	z0 z1 ... z(nz-1)
 
 -----
 

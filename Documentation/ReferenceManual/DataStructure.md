@@ -36,10 +36,11 @@ Data attributes can be associated with any of these element types, as long as th
 |------------------|------|------------------------|-----------|
 | Unknown | N/A | Any | A null geometry, used if the underlying data have no spatial layout |
 | Vertex | 0 | Vertex | A collection of points, commonly referred to as a _point cloud_ |
-| Edge | 1 | Edge | A collection of edges defined by two vertices, forming _lines_ |
-| Triangle | 2 | Face | A collection of triangles; one type of _surface mesh_ |
-| Quad | 2 | Face | A collection of quadrilaterals; one type of _surface mesh_ |
-| Image | 3 | Cell | A _structured_, _rectilinear_ grid; this **Geometry** is composed of _pixels_ (in 2D) or _voxels_ (in 3D) |
+| Edge | 1 | Edge/Vertex | A collection of edges defined by two vertices, forming _lines_ |
+| Triangle | 2 | Face/Edge/Vertex | A collection of triangles; one type of _surface mesh_ |
+| Quad | 2 | Face/Edge/Vertex | A collection of quadrilaterals; one type of _surface mesh_ |
+| Image | 3 | Cell | A _structured_, _rectilinear_ grid; this **Geometry** is composed of _pixels_ (in 2D) or _voxels_ (in 3D) with constant resolution |
+| RectGrid | 3 | Cell | An _unstructured_, _rectilinear_ grid; this **Geometry** is composed of _pixels_ (in 2D) or _voxels_ (in 3D) with variable resolution |
 
 ## Attribute Matrices & Data Hierarchy ##
 Data is organized in DREAM.3D using **Attribute Matrix** objects. These objects themselves do not store data; instead, they store the last level in the object hierarchy, called **Attribute Arrays**, which are the low-level containers for contiguous regions of data. There are a variety of different types of **Attribute Matrices**:
