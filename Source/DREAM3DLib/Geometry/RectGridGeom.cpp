@@ -794,8 +794,6 @@ int RectGridGeom::readGeometryFromHDF5(hid_t parentId, bool preflight)
   int err = 0;
   size_t volDims[3] =
   { 0, 0, 0 };
-  unsigned int spatialDims = 0;
-  QString geomName = "";
   err = gatherMetaData(parentId, volDims, preflight);
   if (err < 0)
   {
