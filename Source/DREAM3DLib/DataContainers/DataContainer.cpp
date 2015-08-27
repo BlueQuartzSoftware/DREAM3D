@@ -621,7 +621,7 @@ int DataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
       err = GeometryHelpers::GeomIO::ReadMetaDataFromHDF5(dcGid, image);
       setGeometry(image);
     }
-    if (geometryTypeName.compare(DREAM3D::Geometry::RectGridGeometry) == 0)
+    else if (geometryTypeName.compare(DREAM3D::Geometry::RectGridGeometry) == 0)
     {
       RectGridGeom::Pointer rectGrid = RectGridGeom::New();
       err = rectGrid->readGeometryFromHDF5(geometryId, preflight);
