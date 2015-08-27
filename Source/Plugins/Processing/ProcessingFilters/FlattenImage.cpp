@@ -133,7 +133,14 @@ void FlattenImage::setupFilterParameters()
     parameters.push_back(parameter);
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Image Data", "ImageDataArrayPath", getImageDataArrayPath(), FilterParameter::RequiredArray));
+  {
+    DataArraySelectionFilterParameter::DataStructureRequirements req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::UInt8, UINT32_MAX, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    QVector< QVector<size_t> > cDims;
+    cDims.push_back(QVector<size_t>(1, 3));
+    cDims.push_back(QVector<size_t>(1, 4));
+    req.componentDimensions = cDims;
+    parameters.push_back(DataArraySelectionFilterParameter::New("Image Data", "ImageDataArrayPath", getImageDataArrayPath(), FilterParameter::RequiredArray, req));
+  }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Flat Image Data", "FlatImageDataArrayName", getFlatImageDataArrayName(), FilterParameter::CreatedArray));
   setFilterParameters(parameters);
@@ -175,9 +182,11 @@ void FlattenImage::dataCheck()
   DataArrayPath tempPath;
   int32_t numImageComp = 1;
 
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getImageDataArrayPath().getDataContainerName());
+
   IDataArray::Pointer iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getImageDataArrayPath());
-  if(getErrorCondition() < 0) { return; }
-  if(NULL != iDataArray.get())
+  if (getErrorCondition() < 0) { return; }
+  if (NULL != iDataArray.get())
   {
     numImageComp = iDataArray->getNumberOfComponents();
   }

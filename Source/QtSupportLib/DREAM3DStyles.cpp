@@ -64,8 +64,14 @@ QString DREAM3DStyles::GetUIFont()
 #elif defined (Q_OS_WIN)
   return QString::fromUtf8("Trebuchet MS");
 #else
-  QFont font;
-  return font.defaultFamily();
+  QFont font("DejaVu Sans");
+  if (font.fromString("DejaVu Sans") )
+  {
+    return font.toString();
+  } else {
+    QFont font;
+    return font.defaultFamily();
+  }
 #endif
 }
 
@@ -105,6 +111,8 @@ QFont DREAM3DStyles::GetBrandingLabelFont()
   brandingFont.setPointSize(11);
 #elif defined (Q_OS_WIN)
   brandingFont.setPointSize(8);
+#else
+  brandingFont.setPointSize(9);
 #endif
   return brandingFont;
 }

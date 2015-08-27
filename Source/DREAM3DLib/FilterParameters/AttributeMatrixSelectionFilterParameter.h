@@ -45,11 +45,33 @@ public:
     DREAM3D_STATIC_NEW_MACRO(AttributeMatrixSelectionFilterParameter)
     DREAM3D_TYPE_MACRO(AttributeMatrixSelectionFilterParameter)
 
+    typedef struct
+    {
+      QVector<unsigned int> dcGeometryTypes;
+      QVector<unsigned int> amTypes;
+    } DataStructureRequirements;
+
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-    const DataArrayPath& defaultValue, Category category,
-     int groupIndex = -1);
+      const DataArrayPath& defaultValue, Category category,
+      const DataStructureRequirements req, int groupIndex = -1);
 
     virtual ~AttributeMatrixSelectionFilterParameter();
+
+    /**
+     * @brief CreateRequirement
+     * @param attributeMatrixType
+     * @return
+     */
+    static DataStructureRequirements CreateRequirement(unsigned int attributeMatrixObjectType);
+
+    /**
+     * @brief CreateRequirement
+     * @param attributeMatrixType
+     * @param geometryType
+     * @return
+     */
+    static DataStructureRequirements CreateRequirement(uint32_t attributeMatrixType,
+                                                       uint32_t geometryType);
 
     /**
      * @brief getWidgetType Returns the type of widget that displays and controls
@@ -57,6 +79,9 @@ public:
      * @return
      */
     QString getWidgetType();
+
+    DREAM3D_INSTANCE_PROPERTY(QVector<unsigned int>, DefaultGeometryTypes)
+    DREAM3D_INSTANCE_PROPERTY(QVector<unsigned int>, DefaultAttributeMatrixTypes)
 
 protected:
   AttributeMatrixSelectionFilterParameter();

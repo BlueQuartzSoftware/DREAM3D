@@ -37,6 +37,9 @@
 
 #include <QtCore/QMetaProperty>
 #include <QtCore/QList>
+
+#include <QtGui/QStandardItemModel>
+
 #include <QtWidgets/QListWidgetItem>
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
@@ -156,10 +159,25 @@ void AttributeMatrixSelectionWidget::populateComboBoxes()
   QList<DataContainerProxy> dcList = m_DcaProxy.dataContainers.values();
   QListIterator<DataContainerProxy> iter(dcList);
   dataContainerCombo->clear();
+  QVector<unsigned int> defVec = m_FilterParameter->getDefaultGeometryTypes();
   while(iter.hasNext() )
   {
-    DataContainerProxy dc = iter.next();
-    dataContainerCombo->addItem(dc.name);
+    DataContainerProxy dcProxy = iter.next();
+    DataContainer::Pointer dc = dca->getDataContainer(dcProxy.name);
+    dataContainerCombo->addItem(dcProxy.name);
+
+    if (NULL != dc.get() && defVec.isEmpty() == false && defVec.contains(dc->getGeometry()->getGeometryType()) == false)
+    {
+      QStandardItemModel* model = qobject_cast<QStandardItemModel*>(dataContainerCombo->model());
+      if (NULL != model)
+      {
+        QStandardItem* item = model->item(dataContainerCombo->findText(dcProxy.name));
+        if (NULL != item)
+        {
+          item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
+        }
+      }
+    }
 //    if(dataContainerCombo->findText(dc.name) == -1 )
 //    {
 //      int index = dataContainerCombo->currentIndex();
@@ -316,6 +334,9 @@ void AttributeMatrixSelectionWidget::on_dataContainerCombo_currentIndexChanged(i
 // -----------------------------------------------------------------------------
 void AttributeMatrixSelectionWidget::populateAttributeMatrixList()
 {
+  DataContainerArray::Pointer dca = getFilter()->getDataContainerArray();
+  if (NULL == dca.get()) { return; }
+
   QString dcName = dataContainerCombo->currentText();
 
   // Clear the AttributeMatrix List
@@ -325,6 +346,7 @@ void AttributeMatrixSelectionWidget::populateAttributeMatrixList()
   // Loop over the data containers until we find the proper data container
   QList<DataContainerProxy> containers = m_DcaProxy.dataContainers.values();
   QListIterator<DataContainerProxy> containerIter(containers);
+  QVector<unsigned int> defVec = m_FilterParameter->getDefaultAttributeMatrixTypes();
   while(containerIter.hasNext())
   {
     DataContainerProxy dc = containerIter.next();
@@ -338,7 +360,21 @@ void AttributeMatrixSelectionWidget::populateAttributeMatrixList()
       {
         attrMatsIter.next();
         QString amName = attrMatsIter.key();
+        AttributeMatrix::Pointer am = dca->getAttributeMatrix(DataArrayPath(dc.name, amName, ""));
         attributeMatrixCombo->addItem(amName);
+
+        if (NULL != am.get() && defVec.isEmpty() == false && defVec.contains(am->getType()) == false)
+        {
+          QStandardItemModel* model = qobject_cast<QStandardItemModel*>(attributeMatrixCombo->model());
+          if (NULL != model)
+          {
+            QStandardItem* item = model->item(attributeMatrixCombo->findText(amName));
+            if (NULL != item)
+            {
+              item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
+            }
+          }
+        }
       }
     }
   }

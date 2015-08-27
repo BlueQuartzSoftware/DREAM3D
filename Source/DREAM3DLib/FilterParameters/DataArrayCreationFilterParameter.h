@@ -37,33 +37,61 @@
 #define _DataArrayCreationFilterParameter_H_
 
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/FilterParameterHelpers.hpp"
 
 class DREAM3DLib_EXPORT DataArrayCreationFilterParameter : public FilterParameter
 {
-public:
-  DREAM3D_SHARED_POINTERS(DataArrayCreationFilterParameter)
+  public:
+    DREAM3D_SHARED_POINTERS(DataArrayCreationFilterParameter)
     DREAM3D_STATIC_NEW_MACRO(DataArrayCreationFilterParameter)
     DREAM3D_TYPE_MACRO(DataArrayCreationFilterParameter)
 
+    typedef struct
+    {
+      QVector<unsigned int> dcGeometryTypes;
+      QVector<unsigned int> amTypes;
+    } DataStructureRequirements;
+
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-    const DataArrayPath& defaultValue, Category category,
-     int groupIndex = -1);
+                       const DataArrayPath& defaultValue, Category category,
+                       const DataStructureRequirements req, int groupIndex = -1);
 
     virtual ~DataArrayCreationFilterParameter();
 
-  /**
+    /**
+     * @brief CreateRequirement
+     * @param attributeMatrixType
+     * @return
+     */
+    static DataStructureRequirements CreateRequirement(unsigned int attributeMatrixObjectType);
+
+    /**
+     * @brief CreateRequirement
+     * @param attributeMatrixType
+     * @param geometryType
+     * @return
+     */
+    static DataStructureRequirements CreateRequirement(uint32_t attributeMatrixType,
+                                                       uint32_t geometryType);
+
+    /**
    * @brief getWidgetType Returns the type of widget that displays and controls
    * this FilterParameter subclass
    * @return
    */
-  QString getWidgetType();
+    QString getWidgetType();
 
-protected:
-  DataArrayCreationFilterParameter();
+    DREAM3D_INSTANCE_PROPERTY(QVector<unsigned int>, DefaultGeometryTypes)
+    DREAM3D_INSTANCE_PROPERTY(QVector<unsigned int>, DefaultAttributeMatrixTypes)
 
-private:
-  DataArrayCreationFilterParameter(const DataArrayCreationFilterParameter&); // Copy Constructor Not Implemented
-  void operator=(const DataArrayCreationFilterParameter&); // Operator '=' Not Implemented
+    protected:
+      DataArrayCreationFilterParameter();
+
+  private:
+    DataArrayCreationFilterParameter(const DataArrayCreationFilterParameter&); // Copy Constructor Not Implemented
+    void operator=(const DataArrayCreationFilterParameter&); // Operator '=' Not Implemented
 };
+
+
 
 #endif /* _DataArrayCreationFilterParameter_H_ */

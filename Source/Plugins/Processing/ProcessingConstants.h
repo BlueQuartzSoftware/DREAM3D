@@ -6,7 +6,7 @@
 namespace ProcessingConstants
 {
   const QString ProcessingPluginFile("ProcessingPlugin");
-  const QString ProcessingPluginDisplayName("ProcessingPlugin");
+  const QString ProcessingPluginDisplayName("Processing");
   const QString ProcessingBaseName("ProcessingPlugin");
 }
 #endif

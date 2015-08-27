@@ -46,12 +46,43 @@ class DREAM3DLib_EXPORT MultiDataArraySelectionFilterParameter : public FilterPa
     DREAM3D_STATIC_NEW_MACRO(MultiDataArraySelectionFilterParameter)
     DREAM3D_TYPE_MACRO_SUPER(MultiDataArraySelectionFilterParameter, FilterParameter)
 
+    struct DataStructureRequirements
+    {
+      QVector<unsigned int> dcGeometryTypes;
+      QVector<unsigned int> amTypes;
+      QVector<QString> daTypes;
+      QVector< QVector<size_t> > componentDimensions;
+    };
+
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const QVector<DataArrayPath>& defaultPaths,
-                       Category category,
-                       int groupIndex = -1);
+      const QVector<DataArrayPath>& defaultValue, Category category,
+      const DataStructureRequirements req, int groupIndex = -1);
 
     virtual ~MultiDataArraySelectionFilterParameter();
+
+    /**
+     * @brief CreateRequirement
+     * @param primitiveType
+     * @param allowedCompDim
+     * @param attributeMatrixCategory
+     * @return
+     */
+    static DataStructureRequirements CreateCategoryRequirement(const QString& primitiveType,
+                                                      size_t allowedCompDim,
+                                                      unsigned int attributeMatrixCategory);
+
+    /**
+     * @brief CreateRequirement
+     * @param primitiveType
+     * @param allowedCompDim
+     * @param attributeMatrixType
+     * @param geometryType
+     * @return
+     */
+    static DataStructureRequirements CreateRequirement(const QString& primitiveType,
+                                                       size_t allowedCompDim,
+                                                       unsigned int attributeMatrixType,
+                                                       unsigned int geometryType);
 
     DREAM3D_INSTANCE_PROPERTY(QVector<DataArrayPath>, DefaultPaths)
 
@@ -62,6 +93,10 @@ class DREAM3DLib_EXPORT MultiDataArraySelectionFilterParameter : public FilterPa
      */
     QString getWidgetType();
 
+    DREAM3D_INSTANCE_PROPERTY(QVector<unsigned int>, DefaultGeometryTypes)
+    DREAM3D_INSTANCE_PROPERTY(QVector<unsigned int>, DefaultAttributeMatrixTypes)
+    DREAM3D_INSTANCE_PROPERTY(QVector<QString>, DefaultAttributeArrayTypes)
+    DREAM3D_INSTANCE_PROPERTY(QVector< QVector<size_t> >, DefaultComponentDimensions)
 
   protected:
     MultiDataArraySelectionFilterParameter();

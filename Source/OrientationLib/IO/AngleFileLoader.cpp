@@ -162,6 +162,8 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
     float weight = 0.0f;
     float sigma = 1.0f;
     buf = reader.readLine();
+    // Skip any lines that start with a '#' character
+    if(buf[0] == '#') { continue; }
     buf = buf.trimmed();
 
     // Remove multiple Delimiters if wanted by the user.

@@ -184,7 +184,22 @@ void FindProjectedImageStatistics::setupFilterParameters()
     parameters.push_back(parameter);
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array to Quantify", "SelectedArrayPath", getSelectedArrayPath(), FilterParameter::RequiredArray));
+  {
+    DataArraySelectionFilterParameter::DataStructureRequirements req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::UnknownType, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    QVector<QString> daTypes;
+    daTypes.push_back(DREAM3D::TypeNames::Int8);
+    daTypes.push_back(DREAM3D::TypeNames::Int16);
+    daTypes.push_back(DREAM3D::TypeNames::Int32);
+    daTypes.push_back(DREAM3D::TypeNames::Int64);
+    daTypes.push_back(DREAM3D::TypeNames::UInt8);
+    daTypes.push_back(DREAM3D::TypeNames::UInt16);
+    daTypes.push_back(DREAM3D::TypeNames::UInt32);
+    daTypes.push_back(DREAM3D::TypeNames::UInt64);
+    daTypes.push_back(DREAM3D::TypeNames::Float);
+    daTypes.push_back(DREAM3D::TypeNames::Double);
+    req.daTypes = daTypes;
+    parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array to Quantify", "SelectedArrayPath", getSelectedArrayPath(), FilterParameter::RequiredArray, req));
+  }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Projected Image Min", "ProjectedImageMinArrayName", getProjectedImageMinArrayName(), FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Projected Image Max", "ProjectedImageMaxArrayName", getProjectedImageMaxArrayName(), FilterParameter::CreatedArray));

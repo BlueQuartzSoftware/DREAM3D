@@ -46,14 +46,14 @@
 #include <QtCore/QDebug>
 
 // DREAM3DLib includes
-//#include "DREAM3DLib/DREAM3DLib.h"
-//#include "DREAM3DLib/DREAM3DLibVersion.h"
-//#include "DREAM3DLib/Plugin/PluginManager.h"
-//#include "DREAM3DLib/Common/FilterManager.h"
-//#include "DREAM3DLib/Common/FilterFactory.hpp"
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/DREAM3DLibVersion.h"
+#include "DREAM3DLib/Plugin/PluginManager.h"
+#include "DREAM3DLib/Common/FilterManager.h"
+#include "DREAM3DLib/Common/FilterFactory.hpp"
 
-//#include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
-//#include "DREAM3DLib/Plugin/DREAM3DPluginLoader.h"
+#include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
+#include "DREAM3DLib/Plugin/DREAM3DPluginLoader.h"
 
 #include "Tools/ToolConfiguration.h"
 
@@ -345,7 +345,7 @@ void fixInitializerList(QStringListIterator& sourceLines, QStringList& outLines,
   outLines.push_back("{");
 }
 
-#if 0
+#if 1
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -355,10 +355,11 @@ bool CorrectInitializerList( AbstractFilter::Pointer filter, const QString& hFil
   {
     // Read the Source File
     QFileInfo fi(cppFile);
-    //    if (fi.baseName().compare("TiDwellFatigueCrystallographicAnalysis") != 0)
-    //    {
-    //      return false;
-    //    }
+    //
+    if (fi.baseName().compare("RegisterPointSets") != 0)
+    {
+      return false;
+    }
     QFile source(cppFile);
     source.open(QFile::ReadOnly);
     contents = source.readAll();
@@ -680,61 +681,6 @@ bool ValidateParameterReader( AbstractFilter::Pointer filter, const QString& hFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString findPath(const QString& groupName, const QString& filtName, const QString ext)
-{
-  //  std::cout << groupName.toStdString() << "::" << filtName.toStdString() << std::endl;
-  QString prefix = D3DTools::GetDREAM3DProjDir() + ("Source/");
-  {
-    QString path = D3DTools::GetDREAM3DLibDir() + "/" + groupName + "Filters/" + filtName + ext;
-    QFileInfo fi(path);
-    if(fi.exists() == true)
-    {
-      return path;
-    }
-  }
-
-  PluginManager* pm = PluginManager::Instance();
-  QStringList libs = pm->getPluginNames();
-
-  prefix = D3DTools::GetDREAM3DPluginDir();
-
-  //  libs << "ProcessModeling" << "UCSB" << "ImageProcessing" << "DDDAnalysisToolbox" << "ImageIO" <<
-  //          "OrientationAnalysis" << "Processing" <<  "Reconstruction" << "Sampling" << "Statistics"  <<
-  //          "SurfaceMeshing" << "SyntheticBuilding" << "ImageProcessing" << "BrukerIntegration" <<
-  //          "ProcessModeling" << "TransformationPhase" << "IO" << "Generic" << "ZeissImport";
-
-  for (int i = 0; i < libs.size(); ++i)
-  {
-    QString path = prefix + "/" + libs.at(i) + "/" + libs.at(i) + "Filters/" + filtName + ext;
-    // std::cout << "    ****" << path.toStdString() << std::endl;
-
-    QFileInfo fi(path);
-    if(fi.exists() == true)
-    {
-      return path;
-    }
-  }
-
-
-  prefix = D3DTools::GetDREAM3DProjParentDir() + "/DREAM3D_Plugins";
-  for (int i = 0; i < libs.size(); ++i)
-  {
-    QString path = prefix + "/" + libs.at(i) + "/" + libs.at(i) + "Filters/" + filtName + ext;
-    //  std::cout << "    ****" << path.toStdString() << std::endl;
-
-    QFileInfo fi(path);
-    if(fi.exists() == true)
-    {
-      return path;
-    }
-  }
-
-  return "NOT FOUND";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void FindFiltersWithMultipleDataArrayPaths(AbstractFilter::Pointer filter)
 {
   //std::cout << "Filter: " << filter->getNameOfClass().toStdString() << std::endl;
@@ -829,6 +775,62 @@ bool GroupIncludes( AbstractFilter::Pointer filter, const QString& file)
   return didReplace;
 }
 #endif
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString findPath(const QString& groupName, const QString& filtName, const QString ext)
+{
+  //  std::cout << groupName.toStdString() << "::" << filtName.toStdString() << std::endl;
+  QString prefix = D3DTools::GetDREAM3DSourceDir() + "/";
+  {
+    QString path = D3DTools::GetDREAM3DLibDir() + "/" + groupName + "Filters/" + filtName + ext;
+    QFileInfo fi(path);
+    if(fi.exists() == true)
+    {
+      return path;
+    }
+  }
+
+  PluginManager* pm = PluginManager::Instance();
+  QStringList libs = pm->getPluginNames();
+
+  prefix = D3DTools::GetDREAM3DPluginDir();
+
+  //  libs << "ProcessModeling" << "UCSB" << "ImageProcessing" << "DDDAnalysisToolbox" << "ImageIO" <<
+  //          "OrientationAnalysis" << "Processing" <<  "Reconstruction" << "Sampling" << "Statistics"  <<
+  //          "SurfaceMeshing" << "SyntheticBuilding" << "ImageProcessing" << "BrukerIntegration" <<
+  //          "ProcessModeling" << "TransformationPhase" << "IO" << "Generic" << "ZeissImport";
+
+  for (int i = 0; i < libs.size(); ++i)
+  {
+    QString path = prefix + "/" + libs.at(i) + "/" + libs.at(i) + "Filters/" + filtName + ext;
+    // std::cout << "    ****" << path.toStdString() << std::endl;
+
+    QFileInfo fi(path);
+    if(fi.exists() == true)
+    {
+      return path;
+    }
+  }
+
+
+  prefix = D3DTools::GetDREAM3DProjParentDir() + "/DREAM3D_Plugins";
+  for (int i = 0; i < libs.size(); ++i)
+  {
+    QString path = prefix + "/" + libs.at(i) + "/" + libs.at(i) + "Filters/" + filtName + ext;
+    //  std::cout << "    ****" << path.toStdString() << std::endl;
+
+    QFileInfo fi(path);
+    if(fi.exists() == true)
+    {
+      return path;
+    }
+  }
+
+  return "NOT FOUND";
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -1110,7 +1112,7 @@ void ReplaceGrepSearchesRecursively(QDir currentDir)
 }
 
 
-#if 0
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -1137,11 +1139,11 @@ void GenerateFilterParametersCode()
     //FindFiltersWithMultipleDataArrayPaths(filter);
     //GroupIncludes(filter, cpp);
     //GroupIncludes(filter, h);
-
   }
-
 }
 
+
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -1186,7 +1188,7 @@ void GenerateMarkDownDocs()
 // -----------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
-  Q_ASSERT(true); // We don't want anyone to run this program.
+  Q_ASSERT(false); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");
@@ -1195,19 +1197,20 @@ int main(int argc, char* argv[])
 
   //std::cout << "FilterParameterTool Starting. Version " << DREAM3DLib::Version::PackageComplete().toStdString() << std::endl;
 
-
+#if 1
   // Register all the filters including trying to load those from Plugins
-//  FilterManager* fm = FilterManager::Instance();
-//  DREAM3DPluginLoader::LoadPluginFilters(fm);
+  FilterManager* fm = FilterManager::Instance();
+  DREAM3DPluginLoader::LoadPluginFilters(fm);
 
 
   // Send progress messages from PipelineBuilder to this object for display
-  //qRegisterMetaType<PipelineMessage>();
-
-  //GenerateMarkDownDocs();
-  //GenerateFilterParametersCode();
+  qRegisterMetaType<PipelineMessage>();
+  GenerateFilterParametersCode();
+//  GenerateMarkDownDocs();
+//  GenerateFilterParametersCode();
+#else
   ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() ) );
   ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins" ) );
-
+#endif
   return 0;
 }

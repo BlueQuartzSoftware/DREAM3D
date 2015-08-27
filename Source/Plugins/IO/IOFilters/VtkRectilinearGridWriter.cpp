@@ -49,6 +49,7 @@
 #include "DREAM3DLib/FilterParameters/OutputFileFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/BooleanFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "DREAM3DLib/VTKUtils/VTKUtil.hpp"
 
 #include "IO/IOConstants.h"
@@ -217,7 +218,10 @@ void VtkRectilinearGridWriter::setupFilterParameters()
   parameters.push_back(OutputFileFilterParameter::New("Output File", "OutputFile", getOutputFile(), FilterParameter::Parameter, "*.vtk", "VTK Rectilinear Grid"));
   parameters.push_back(BooleanFilterParameter::New("Write Binary File", "WriteBinaryFile", getWriteBinaryFile(), FilterParameter::Parameter));
 
-  parameters.push_back(MultiDataArraySelectionFilterParameter::New("Attribute Arrays to Write", "SelectedDataArrayPaths", getSelectedDataArrayPaths(), FilterParameter::RequiredArray));
+  {
+    MultiDataArraySelectionFilterParameter::DataStructureRequirements req;
+    parameters.push_back(MultiDataArraySelectionFilterParameter::New("Attribute Arrays to Write", "SelectedDataArrayPaths", getSelectedDataArrayPaths(), FilterParameter::RequiredArray, req));
+  }
 
   setFilterParameters(parameters);
 }

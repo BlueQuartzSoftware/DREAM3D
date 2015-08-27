@@ -39,7 +39,7 @@
 //
 // -----------------------------------------------------------------------------
 DataArraySelectionFilterParameter::DataArraySelectionFilterParameter() :
-FilterParameter()
+  FilterParameter()
 {}
 
 // -----------------------------------------------------------------------------
@@ -52,7 +52,7 @@ DataArraySelectionFilterParameter::~DataArraySelectionFilterParameter()
 //
 // -----------------------------------------------------------------------------
 DataArraySelectionFilterParameter::Pointer DataArraySelectionFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const DataArrayPath& defaultValue, Category category, int groupIndex)
+                                                                                  const DataArrayPath& defaultValue, Category category, const DataStructureRequirements req, int groupIndex)
 {
 
   DataArraySelectionFilterParameter::Pointer ptr = DataArraySelectionFilterParameter::New();
@@ -62,11 +62,14 @@ DataArraySelectionFilterParameter::Pointer DataArraySelectionFilterParameter::Ne
   v.setValue(defaultValue);
   ptr->setDefaultValue(v);
   ptr->setCategory(category);
+  ptr->setDefaultGeometryTypes(req.dcGeometryTypes);
+  ptr->setDefaultAttributeMatrixTypes(req.amTypes);
+  ptr->setDefaultAttributeArrayTypes(req.daTypes);
+  ptr->setDefaultComponentDimensions(req.componentDimensions);
   ptr->setGroupIndex(groupIndex);
 
   return ptr;
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -76,3 +79,77 @@ QString DataArraySelectionFilterParameter::getWidgetType()
   return QString("DataArraySelectionWidget");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataArraySelectionFilterParameter::DataStructureRequirements DataArraySelectionFilterParameter::CreateCategoryRequirement(const QString& primitiveType,
+                                                                               size_t allowedCompDim,
+                                                                               unsigned int attributeMatrixCategory)
+{
+  typedef QVector<size_t> QVectorOfSizeType;
+  DataArraySelectionFilterParameter::DataStructureRequirements req;
+  QVector<unsigned int> amTypes;
+  if(attributeMatrixCategory == DREAM3D::AttributeMatrixObjectType::Element)
+  {
+    amTypes.push_back(DREAM3D::AttributeMatrixType::Cell);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::Face);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::Edge);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::Vertex);
+  }
+  else if(attributeMatrixCategory == DREAM3D::AttributeMatrixObjectType::Feature)
+  {
+    amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeFeature);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::VertexFeature);
+  }
+  else if(attributeMatrixCategory == DREAM3D::AttributeMatrixObjectType::Ensemble)
+  {
+    amTypes.push_back(DREAM3D::AttributeMatrixType::CellEnsemble);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::FaceEnsemble);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeEnsemble);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::VertexEnsemble);
+  }
+  req.amTypes = amTypes;
+  if(primitiveType.isEmpty() == false)
+  {
+    req.daTypes = QVector<QString>(1, primitiveType);
+  }
+  if(std::numeric_limits<unsigned int>::max() != allowedCompDim)
+  {
+    req.componentDimensions = QVector<QVectorOfSizeType>(1, QVectorOfSizeType(1, allowedCompDim));
+  }
+//  if(DREAM3D::GeometryType::UnknownGeometry != geometryType)
+//  {
+//    req.dcGeometryTypes = QVector<unsigned int>(1, geometryType);
+//  }
+  return req;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataArraySelectionFilterParameter::DataStructureRequirements DataArraySelectionFilterParameter::CreateRequirement(const QString& primitiveType,
+                                                                               size_t allowedCompDim,
+                                                                               unsigned int attributeMatrixType,
+                                                                               unsigned int geometryType)
+{
+  typedef QVector<size_t> QVectorOfSizeType;
+  DataArraySelectionFilterParameter::DataStructureRequirements req;
+  QVector<unsigned int> amTypes;
+  amTypes.push_back(attributeMatrixType);
+  req.amTypes = amTypes;
+  if(primitiveType.isEmpty() == false)
+  {
+    req.daTypes = QVector<QString>(1, primitiveType);
+  }
+  if(std::numeric_limits<unsigned int>::max() != allowedCompDim)
+  {
+    req.componentDimensions = QVector<QVectorOfSizeType>(1, QVectorOfSizeType(1, allowedCompDim));
+  }
+  if(DREAM3D::GeometryType::UnknownGeometry != geometryType)
+  {
+    req.dcGeometryTypes = QVector<unsigned int>(1, geometryType);
+  }
+  return req;
+}

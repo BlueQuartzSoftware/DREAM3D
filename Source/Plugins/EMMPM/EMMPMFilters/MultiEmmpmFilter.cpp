@@ -88,7 +88,10 @@ void MultiEmmpmFilter::setupFilterParameters()
     FilterParameter::Pointer& p = parameters[i];
     if ( p->getPropertyName().compare("InputDataArrayPath") == 0 )
     {
-      parameters[i] = MultiDataArraySelectionFilterParameter::New("Input Attribute Arrays", "InputDataArrayVector", getInputDataArrayVector(), FilterParameter::RequiredArray);
+      {
+        MultiDataArraySelectionFilterParameter::DataStructureRequirements req = MultiDataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::UInt8, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+        parameters[i] = MultiDataArraySelectionFilterParameter::New("Input Attribute Arrays", "InputDataArrayVector", getInputDataArrayVector(), FilterParameter::RequiredArray, req);
+      }
     }
   }
 
