@@ -73,27 +73,13 @@ void FindNumFeatures::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::DataStructureRequirements req;
-    QVector<unsigned int> amTypes;
-    amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeFeature);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::VertexFeature);
-    req.amTypes = amTypes;
-    req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Int32);
-    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
+    DataArraySelectionFilterParameter::DataStructureRequirements req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixObjectType::Feature);
     parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::CreatedArray));
 
   {
-    DataArrayCreationFilterParameter::DataStructureRequirements req;
-    QVector<unsigned int> amTypes;
-    amTypes.push_back(DREAM3D::AttributeMatrixType::CellEnsemble);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::FaceEnsemble);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeEnsemble);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::VertexEnsemble);
-    req.amTypes = amTypes;
+    DataArrayCreationFilterParameter::DataStructureRequirements req = DataArrayCreationFilterParameter::CreateRequirement(DREAM3D::AttributeMatrixObjectType::Ensemble);
     parameters.push_back(DataArrayCreationFilterParameter::New("Number of Features", "NumFeaturesArrayPath", getNumFeaturesArrayPath(), FilterParameter::CreatedArray, req));
   }
 

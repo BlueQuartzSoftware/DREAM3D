@@ -60,6 +60,30 @@ class DREAM3DLib_EXPORT MultiDataArraySelectionFilterParameter : public FilterPa
 
     virtual ~MultiDataArraySelectionFilterParameter();
 
+    /**
+     * @brief CreateRequirement
+     * @param primitiveType
+     * @param allowedCompDim
+     * @param attributeMatrixCategory
+     * @return
+     */
+    static DataStructureRequirements CreateCategoryRequirement(const QString& primitiveType,
+                                                      size_t allowedCompDim,
+                                                      unsigned int attributeMatrixCategory);
+
+    /**
+     * @brief CreateRequirement
+     * @param primitiveType
+     * @param allowedCompDim
+     * @param attributeMatrixType
+     * @param geometryType
+     * @return
+     */
+    static DataStructureRequirements CreateRequirement(const QString& primitiveType,
+                                                       size_t allowedCompDim,
+                                                       unsigned int attributeMatrixType,
+                                                       unsigned int geometryType);
+
     DREAM3D_INSTANCE_PROPERTY(QVector<DataArrayPath>, DefaultPaths)
 
     /**

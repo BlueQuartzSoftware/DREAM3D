@@ -126,14 +126,7 @@ void ChangeAngleRepresentation::setupFilterParameters()
     parameters.push_back(parameter);
   }
   {
-    DataArraySelectionFilterParameter::DataStructureRequirements req;
-    QVector<unsigned int> amTypes;
-    amTypes.push_back(DREAM3D::AttributeMatrixType::Cell);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::Face);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::Edge);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::Vertex);
-    req.amTypes = amTypes;
-    req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Float);
+    DataArraySelectionFilterParameter::DataStructureRequirements req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Float, std::numeric_limits<uint32_t>::max(), DREAM3D::AttributeMatrixObjectType::Element);
     parameters.push_back(DataArraySelectionFilterParameter::New("Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, req));
   }
 

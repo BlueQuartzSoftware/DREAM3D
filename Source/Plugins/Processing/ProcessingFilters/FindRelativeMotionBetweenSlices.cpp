@@ -175,9 +175,7 @@ void FindRelativeMotionBetweenSlices::setupFilterParameters()
   parameters.push_back(IntFilterParameter::New("Slice Step", "SliceStep", getSliceStep(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::DataStructureRequirements req;
-    req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::ImageGeometry);
-    req.amTypes = QVector<unsigned int>(1, DREAM3D::AttributeMatrixType::Cell);
+    DataArraySelectionFilterParameter::DataStructureRequirements req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::UnknownType, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
     QVector<QString> daTypes;
     daTypes.push_back(DREAM3D::TypeNames::Int8);
     daTypes.push_back(DREAM3D::TypeNames::Int16);
@@ -190,7 +188,6 @@ void FindRelativeMotionBetweenSlices::setupFilterParameters()
     daTypes.push_back(DREAM3D::TypeNames::Float);
     daTypes.push_back(DREAM3D::TypeNames::Double);
     req.daTypes = daTypes;
-    req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
     parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array to Track Motion", "SelectedArrayPath", getSelectedArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));

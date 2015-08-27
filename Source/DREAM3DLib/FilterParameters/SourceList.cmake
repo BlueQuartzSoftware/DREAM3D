@@ -30,6 +30,7 @@ set(DREAM3DLib_FilterParameters_HDRS
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/DynamicTableFilterParameter.h
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/FileListInfoFilterParameter.h
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/FilterParameter.h
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/FilterParameterHelpers.hpp
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/FloatVec3FilterParameter.h
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/FloatVec4FilterParameter.h
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/FourthOrderPolynomialFilterParameter.h

@@ -72,9 +72,8 @@ void ReplaceValueInArray::setupFilterParameters()
 
   parameters.push_back(DoubleFilterParameter::New("New Value", "ReplaceValue", getReplaceValue(), FilterParameter::Parameter));
   {
-  DataArraySelectionFilterParameter::DataStructureRequirements req;
-  req.componentDimensions = QVector< QVector<size_t> >(1, QVector<size_t>(1, 1));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array", "SelectedArray", getSelectedArray(), FilterParameter::RequiredArray, req));
+    DataArraySelectionFilterParameter::DataStructureRequirements req = DataArraySelectionFilterParameter::CreateCategoryRequirement(QString(""), 1, DREAM3D::AttributeMatrixObjectType::Unknown);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array", "SelectedArray", getSelectedArray(), FilterParameter::RequiredArray, req));
   }
   setFilterParameters(parameters);
 }

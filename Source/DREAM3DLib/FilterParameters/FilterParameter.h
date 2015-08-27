@@ -40,8 +40,11 @@
 #include <QtCore/QMetaType>
 #include <QtCore/QVector>
 #include <QtCore/QJsonObject>
+
 #include "EbsdLib/EbsdConstants.h"
+
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
 #include "DREAM3DLib/DataContainers/DataArrayPath.h"
@@ -68,6 +71,8 @@ class DREAM3DLib_EXPORT FilterParameter
       CreatedArray = 2,
       Uncategorized = 3
     };
+
+
 
     virtual ~FilterParameter();
 

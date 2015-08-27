@@ -93,6 +93,7 @@ namespace DREAM3D
     const QString Int64("int64_t");
     const QString UInt64("uint64_t");
     const QString UnknownType("UnknownType");
+    const QString Empty("");
     const QString SupportedTypeList(TypeNames::Int8 + ", " + TypeNames::UInt8 + ", " + TypeNames::Int16 + ", " + TypeNames::UInt16 + ", " + TypeNames::Int32 + ", " + TypeNames::UInt32 + ", " + TypeNames::Int64 + ", " + TypeNames::UInt64 + ", " + TypeNames::Float + ", " + TypeNames::Double);
   }
 
@@ -703,6 +704,14 @@ namespace DREAM3D
     const unsigned int MetaData = 12; //!<
     const unsigned int Generic = 13; //!<
     const unsigned int Unknown = 999; //!<
+  }
+
+  namespace AttributeMatrixObjectType
+  {
+    const unsigned int Element = 0;
+    const unsigned int Feature = 1;
+    const unsigned int Ensemble = 2;
+    const unsigned int Unknown = 3;
   }
 
   namespace Geometry
