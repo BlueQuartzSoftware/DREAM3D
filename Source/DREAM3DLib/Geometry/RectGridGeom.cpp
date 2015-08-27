@@ -122,7 +122,7 @@ RectGridGeom::Pointer RectGridGeom::CreateGeometry(const QString& name)
 void RectGridGeom::setXBounds(FloatArrayType::Pointer xBnds)
 {
   m_xBounds = xBnds;
-  m_xBounds->setName(DREAM3D::Geometry::zBoundsList);
+  m_xBounds->setName(DREAM3D::Geometry::xBoundsList);
 }
 
 // -----------------------------------------------------------------------------
@@ -131,7 +131,7 @@ void RectGridGeom::setXBounds(FloatArrayType::Pointer xBnds)
 void RectGridGeom::setYBounds(FloatArrayType::Pointer yBnds)
 {
   m_yBounds = yBnds;
-  m_yBounds->setName(DREAM3D::Geometry::zBoundsList);
+  m_yBounds->setName(DREAM3D::Geometry::yBoundsList);
 }
 
 // -----------------------------------------------------------------------------
