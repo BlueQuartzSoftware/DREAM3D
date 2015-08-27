@@ -14,6 +14,7 @@ set(DREAM3DLib_Geometry_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Geometry/IGeometry2D.h
   ${DREAM3DLib_SOURCE_DIR}/Geometry/IGeometry3D.h
   ${DREAM3DLib_SOURCE_DIR}/Geometry/ImageGeom.h
+  ${DREAM3DLib_SOURCE_DIR}/Geometry/RectGridGeom.h
   ${DREAM3DLib_SOURCE_DIR}/Geometry/VertexGeom.h
   ${DREAM3DLib_SOURCE_DIR}/Geometry/EdgeGeom.h
   ${DREAM3DLib_SOURCE_DIR}/Geometry/TriangleGeom.h
@@ -35,6 +36,7 @@ set(DREAM3DLib_Geometry_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Geometry/IGeometry2D.cpp
   ${DREAM3DLib_SOURCE_DIR}/Geometry/IGeometry3D.cpp
   ${DREAM3DLib_SOURCE_DIR}/Geometry/ImageGeom.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Geometry/RectGridGeom.cpp
   ${DREAM3DLib_SOURCE_DIR}/Geometry/VertexGeom.cpp
   ${DREAM3DLib_SOURCE_DIR}/Geometry/EdgeGeom.cpp
   ${DREAM3DLib_SOURCE_DIR}/Geometry/TriangleGeom.cpp

@@ -356,7 +356,7 @@ bool CorrectInitializerList( AbstractFilter::Pointer filter, const QString& hFil
     // Read the Source File
     QFileInfo fi(cppFile);
     //
-    if (fi.baseName().compare("MatchFeatureIds") != 0)
+    if (fi.baseName().compare("RegisterPointSets") != 0)
     {
       return false;
     }
@@ -1188,7 +1188,7 @@ void GenerateMarkDownDocs()
 // -----------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
-  Q_ASSERT(true); // We don't want anyone to run this program.
+  Q_ASSERT(false); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");
