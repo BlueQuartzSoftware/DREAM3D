@@ -56,7 +56,11 @@ AttributeMatrixCreationWidgetCodeGenerator::~AttributeMatrixCreationWidgetCodeGe
 // -----------------------------------------------------------------------------
 QString AttributeMatrixCreationWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(AttributeMatrixCreationFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", get" + getPropertyName() + "(), " + getCategory() + "));";
+  QString s;
+  QTextStream out(&s);
+  out << "  AttributeMatrixCreationFilterParameter::RequirementType amReq;";
+  out << "  parameters.push_back(AttributeMatrixCreationFilterParameter::New(\"" << getHumanLabel() << "\", \"" + getPropertyName() << "\", get" + getPropertyName() << "(), " + getCategory() << ", amReq));";
+  return s;
 }
 
 // -----------------------------------------------------------------------------

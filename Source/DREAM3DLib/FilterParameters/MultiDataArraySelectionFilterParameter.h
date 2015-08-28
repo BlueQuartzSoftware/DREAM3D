@@ -46,13 +46,13 @@ class DREAM3DLib_EXPORT MultiDataArraySelectionFilterParameter : public FilterPa
     DREAM3D_STATIC_NEW_MACRO(MultiDataArraySelectionFilterParameter)
     DREAM3D_TYPE_MACRO_SUPER(MultiDataArraySelectionFilterParameter, FilterParameter)
 
-    struct RequirementType
+    typedef struct
     {
       QVector<unsigned int> dcGeometryTypes;
       QVector<unsigned int> amTypes;
       QVector<QString> daTypes;
       QVector< QVector<size_t> > componentDimensions;
-    };
+    } RequirementType;
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QVector<DataArrayPath>& defaultValue, Category category,

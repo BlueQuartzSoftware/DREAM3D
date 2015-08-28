@@ -56,7 +56,11 @@ DataContainerSelectionWidgetCodeGenerator::~DataContainerSelectionWidgetCodeGene
 // -----------------------------------------------------------------------------
 QString DataContainerSelectionWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(DataContainerSelectionFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", get" + getPropertyName() + "(), " + getCategory() + "));";
+  QString s;
+  QTextStream out(&s);
+  out << "  DataContainerSelectionFilterParameter::RequirementType dcsReq;";
+  out << "  parameters.push_back(DataContainerSelectionFilterParameter::New(\"" << getHumanLabel() << "\", \"" + getPropertyName() << "\", get" + getPropertyName() << "(), " + getCategory() << ", dcsReq));";
+  return s;
 }
 
 // -----------------------------------------------------------------------------

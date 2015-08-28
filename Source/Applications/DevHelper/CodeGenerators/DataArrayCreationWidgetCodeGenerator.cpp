@@ -56,7 +56,11 @@ DataArrayCreationWidgetCodeGenerator::~DataArrayCreationWidgetCodeGenerator()
 // -----------------------------------------------------------------------------
 QString DataArrayCreationWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(DataArrayCreationFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", get" + getPropertyName() + "(), " + getCategory() + "));";
+  QString s;
+  QTextStream out(&s);
+  out << "  DataArrayCreationFilterParameter::RequirementType dacReq;";
+  out << "  parameters.push_back(DataArrayCreationFilterParameter::New(\"" << getHumanLabel() << "\", \"" + getPropertyName() << "\", get" + getPropertyName() << "(), " + getCategory() << ", dacReq));";
+  return s;
 }
 
 // -----------------------------------------------------------------------------

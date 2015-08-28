@@ -56,7 +56,11 @@ AttributeMatrixSelectionWidgetCodeGenerator::~AttributeMatrixSelectionWidgetCode
 // -----------------------------------------------------------------------------
 QString AttributeMatrixSelectionWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(AttributeMatrixSelectionFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", get" + getPropertyName() + "(), " + getCategory() + "));";
+    QString s;
+  QTextStream out(&s);
+  out << "  AttributeMatrixSelectionFilterParameter::RequirementType amsReq;";
+  out << "  parameters.push_back(AttributeMatrixSelectionFilterParameter::New(\"" << getHumanLabel() << "\", \"" << getPropertyName() << "\", get" << getPropertyName() << "(), " << getCategory() << ", amsReq));";
+  return s;
 }
 
 // -----------------------------------------------------------------------------
