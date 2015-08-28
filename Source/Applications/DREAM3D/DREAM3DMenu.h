@@ -78,6 +78,7 @@ class DREAM3DMenu : public QObject
     QAction* getSaveAs();
 
     QAction* getClearPipeline();
+    QAction* getGeneratePipelineBibliography();
     QAction* getShowBookmarkInFileSystem();
     QAction* getShowPrebuiltInFileSystem();
 
@@ -117,6 +118,7 @@ class DREAM3DMenu : public QObject
     // Pipeline Menu
     QMenu*                          m_MenuPipeline;
     QAction*                        m_ActionClearPipeline;
+    QAction*                        m_ActionGeneratePipelineBibliography;
 
     // Help Menu
     QMenu*                          m_MenuHelp;

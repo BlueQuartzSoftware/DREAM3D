@@ -115,6 +115,7 @@ class DREAM3DLib_EXPORT FilterPipeline : public QObject
 
 
     virtual void printFilterNames(QTextStream& out);
+    virtual void printCitations(QTextStream& out);
 
     /**
      * @brief This method adds a QObject based class that is capable of being connected with the following signals from

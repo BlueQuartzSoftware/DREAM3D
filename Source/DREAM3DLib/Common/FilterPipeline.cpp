@@ -390,3 +390,19 @@ void FilterPipeline::printFilterNames(QTextStream& out)
   }
   out << "---------------------------------------------------------------------" ;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterPipeline::printCitations(QTextStream& out)
+{
+  for (FilterContainerType::iterator iter = m_Pipeline.begin(); iter != m_Pipeline.end(); ++iter )
+  {
+    QString citation = (*iter)->getCitations();
+    if(!citation.isEmpty())
+    {
+      out << (*iter)->getHumanLabel() << ":\n";
+      out << citation << "\n";
+    }
+  }
+}
