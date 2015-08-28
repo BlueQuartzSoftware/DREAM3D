@@ -67,7 +67,7 @@ void RenameAttributeArray::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  DataArraySelectionFilterParameter::DataStructureRequirements req;
+  DataArraySelectionFilterParameter::RequirementType req;
   parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array to Rename", "SelectedArrayPath", getSelectedArrayPath(), FilterParameter::RequiredArray, req));
 
   parameters.push_back(StringFilterParameter::New("New Attribute Array Name", "NewArrayName", getNewArrayName(), FilterParameter::Parameter));

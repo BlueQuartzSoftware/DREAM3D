@@ -68,7 +68,7 @@ void RenameDataContainer::setupFilterParameters()
   FilterParameterVector parameters;
 
   {
-    DataContainerSelectionFilterParameter::DataStructureRequirements req;
+    DataContainerSelectionFilterParameter::RequirementType req;
     parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container to Rename", "SelectedDataContainerName", getSelectedDataContainerName(), FilterParameter::RequiredArray, req));
   }
 

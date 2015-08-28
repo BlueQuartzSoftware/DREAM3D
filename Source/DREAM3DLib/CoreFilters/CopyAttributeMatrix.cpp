@@ -68,7 +68,7 @@ void CopyAttributeMatrix::setupFilterParameters()
   FilterParameterVector parameters;
 
   {
-    AttributeMatrixSelectionFilterParameter::DataStructureRequirements req;
+    AttributeMatrixSelectionFilterParameter::RequirementType req;
     parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Attribute Matrix to Copy", "SelectedAttributeMatrixPath", getSelectedAttributeMatrixPath(), FilterParameter::RequiredArray, req));
   }
 

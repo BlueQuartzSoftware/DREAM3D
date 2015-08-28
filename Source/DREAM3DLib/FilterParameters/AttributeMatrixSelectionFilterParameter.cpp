@@ -39,7 +39,7 @@
 //
 // -----------------------------------------------------------------------------
 AttributeMatrixSelectionFilterParameter::AttributeMatrixSelectionFilterParameter() :
-FilterParameter()
+  FilterParameter()
 {}
 
 // -----------------------------------------------------------------------------
@@ -52,7 +52,7 @@ AttributeMatrixSelectionFilterParameter::~AttributeMatrixSelectionFilterParamete
 //
 // -----------------------------------------------------------------------------
 AttributeMatrixSelectionFilterParameter::Pointer AttributeMatrixSelectionFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const DataArrayPath& defaultValue, Category category, const DataStructureRequirements req, int groupIndex)
+    const DataArrayPath& defaultValue, Category category, const RequirementType req, int groupIndex)
 {
 
   AttributeMatrixSelectionFilterParameter::Pointer ptr = AttributeMatrixSelectionFilterParameter::New();
@@ -80,10 +80,10 @@ QString AttributeMatrixSelectionFilterParameter::getWidgetType()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AttributeMatrixSelectionFilterParameter::DataStructureRequirements AttributeMatrixSelectionFilterParameter::CreateRequirement(uint32_t attributeMatrixObjectType)
+AttributeMatrixSelectionFilterParameter::RequirementType AttributeMatrixSelectionFilterParameter::CreateRequirement(uint32_t attributeMatrixObjectType)
 {
   typedef QVector<size_t> QVectorOfSizeType;
-  AttributeMatrixSelectionFilterParameter::DataStructureRequirements req;
+  AttributeMatrixSelectionFilterParameter::RequirementType req;
   QVector<unsigned int> amTypes;
   if(attributeMatrixObjectType == DREAM3D::AttributeMatrixObjectType::Element)
   {
@@ -114,11 +114,11 @@ AttributeMatrixSelectionFilterParameter::DataStructureRequirements AttributeMatr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AttributeMatrixSelectionFilterParameter::DataStructureRequirements AttributeMatrixSelectionFilterParameter::CreateRequirement(uint32_t attributeMatrixType,
-                                                                                                                uint32_t geometryType)
+AttributeMatrixSelectionFilterParameter::RequirementType AttributeMatrixSelectionFilterParameter::CreateRequirement(uint32_t attributeMatrixType,
+    uint32_t geometryType)
 {
   typedef QVector<size_t> QVectorOfSizeType;
-  AttributeMatrixSelectionFilterParameter::DataStructureRequirements req;
+  AttributeMatrixSelectionFilterParameter::RequirementType req;
   if(attributeMatrixType != DREAM3D::AttributeMatrixType::Unknown)
   {
     req.amTypes = QVector<unsigned int>(1, attributeMatrixType);;

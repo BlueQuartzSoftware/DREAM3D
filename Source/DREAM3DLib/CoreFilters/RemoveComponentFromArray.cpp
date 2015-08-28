@@ -79,7 +79,8 @@ void RemoveComponentFromArray::setupFilterParameters()
 
   parameters.push_back(IntFilterParameter::New("Component Number to Remove", "CompNumber", getCompNumber(), FilterParameter::Parameter));
 
-  parameters.push_back(DataArraySelectionFilterParameter::New("Multicomponent Attribute Array", "SelectedArrayPath", getSelectedArrayPath(), FilterParameter::RequiredArray));
+  DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Empty, UINT32_MAX, DREAM3D::AttributeMatrixObjectType::Unknown);
+  parameters.push_back(DataArraySelectionFilterParameter::New("Multicomponent Attribute Array", "SelectedArrayPath", getSelectedArrayPath(), FilterParameter::RequiredArray, req));
 
   parameters.push_back(StringFilterParameter::New("Removed Component Attribute Array", "NewArrayArrayName", getNewArrayArrayName(), FilterParameter::CreatedArray));
 
@@ -136,12 +137,12 @@ void RemoveComponentFromArray::dataCheck()
 
   if (m_SaveRemovedComponent == true)
   {
-      if (m_NewArrayArrayName.isEmpty() == true)
-      {
-        setErrorCondition(-11001);
-        notifyErrorMessage(getHumanLabel(), "Removed Component array name must be set.", getErrorCondition());
-        return;
-      }
+    if (m_NewArrayArrayName.isEmpty() == true)
+    {
+      setErrorCondition(-11001);
+      notifyErrorMessage(getHumanLabel(), "Removed Component array name must be set.", getErrorCondition());
+      return;
+    }
   }
 
   if (m_ReducedArrayArrayName.isEmpty() == true)
@@ -172,8 +173,8 @@ void RemoveComponentFromArray::dataCheck()
   QVector<size_t> cDims(1, 1);
   if (m_SaveRemovedComponent == true)
   {
-      DataArrayPath tempPath(getSelectedArrayPath().getDataContainerName(), getSelectedArrayPath().getAttributeMatrixName(), getNewArrayArrayName());
-      m_NewArrayPtr = TemplateHelpers::CreateNonPrereqArrayFromArrayType()(this, tempPath, cDims, m_InArrayPtr.lock());
+    DataArrayPath tempPath(getSelectedArrayPath().getDataContainerName(), getSelectedArrayPath().getAttributeMatrixName(), getNewArrayArrayName());
+    m_NewArrayPtr = TemplateHelpers::CreateNonPrereqArrayFromArrayType()(this, tempPath, cDims, m_InArrayPtr.lock());
   }
 
   cDims[0] = m_InArrayPtr.lock()->getNumberOfComponents() - 1;
@@ -202,7 +203,7 @@ void extractComponent(IDataArray::Pointer inputData, IDataArray::Pointer newData
 {
   typename DataArray<T>::Pointer inputArrayPtr = boost::dynamic_pointer_cast<DataArray<T> >(inputData);
   typename DataArray<T>::Pointer newArrayPtr = boost::dynamic_pointer_cast<DataArray<T> >(newData);
-    typename DataArray<T>::Pointer reducedArrayPtr = boost::dynamic_pointer_cast<DataArray<T> >(reducedData);
+  typename DataArray<T>::Pointer reducedArrayPtr = boost::dynamic_pointer_cast<DataArray<T> >(reducedData);
 
   if (NULL == inputArrayPtr || NULL == newArrayPtr) { return; }
 
@@ -217,18 +218,18 @@ void extractComponent(IDataArray::Pointer inputData, IDataArray::Pointer newData
   {
     for (size_t j = 0; j < numComps; j++)
     {
-        if (j == compNumber)
-        {
-            newArray[i] = inputArray[numComps * i + j];
-        }
-        else if (j > compNumber)
-        {
-            reducedArray[(numComps-1)*i + j-1] = inputArray[numComps*i + j];
-        }
-        else if (j < compNumber)
-        {
-            reducedArray[(numComps-1)*i + j] = inputArray[numComps*i + j];
-        }
+      if (j == compNumber)
+      {
+        newArray[i] = inputArray[numComps * i + j];
+      }
+      else if (j > compNumber)
+      {
+        reducedArray[(numComps - 1)*i + j - 1] = inputArray[numComps * i + j];
+      }
+      else if (j < compNumber)
+      {
+        reducedArray[(numComps - 1)*i + j] = inputArray[numComps * i + j];
+      }
     }
   }
 }
@@ -240,7 +241,7 @@ template<typename T>
 void reduceArrayOnly(IDataArray::Pointer inputData, IDataArray::Pointer reducedData, int compNumber)
 {
   typename DataArray<T>::Pointer inputArrayPtr = boost::dynamic_pointer_cast<DataArray<T> >(inputData);
-    typename DataArray<T>::Pointer reducedArrayPtr = boost::dynamic_pointer_cast<DataArray<T> >(reducedData);
+  typename DataArray<T>::Pointer reducedArrayPtr = boost::dynamic_pointer_cast<DataArray<T> >(reducedData);
 
   if (NULL == inputArrayPtr) { return; }
 
@@ -255,14 +256,14 @@ void reduceArrayOnly(IDataArray::Pointer inputData, IDataArray::Pointer reducedD
     for (size_t j = 0; j < numComps; j++)
     {
 
-        if (j > compNumber)
-        {
-            reducedArray[(numComps-1)*i + j-1] = inputArray[numComps*i + j];
-        }
-        else if (j < compNumber)
-        {
-            reducedArray[(numComps-1)*i + j] = inputArray[numComps*i + j];
-        }
+      if (j > compNumber)
+      {
+        reducedArray[(numComps - 1)*i + j - 1] = inputArray[numComps * i + j];
+      }
+      else if (j < compNumber)
+      {
+        reducedArray[(numComps - 1)*i + j] = inputArray[numComps * i + j];
+      }
     }
   }
 }
@@ -283,7 +284,7 @@ void RemoveComponentFromArray::execute()
   }
   else if (m_SaveRemovedComponent == false)
   {
-      EXECUTE_FUNCTION_TEMPLATE(this, reduceArrayOnly, m_InArrayPtr.lock(), m_InArrayPtr.lock(), m_ReducedArrayPtr.lock(), m_CompNumber)
+    EXECUTE_FUNCTION_TEMPLATE(this, reduceArrayOnly, m_InArrayPtr.lock(), m_InArrayPtr.lock(), m_ReducedArrayPtr.lock(), m_CompNumber)
   }
 
 

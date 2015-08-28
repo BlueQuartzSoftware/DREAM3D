@@ -68,7 +68,7 @@ void CopyAttributeArray::setupFilterParameters()
   FilterParameterVector parameters;
 
   {
-    DataArraySelectionFilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::RequirementType req;
     parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array to Copy", "SelectedArrayPath", getSelectedArrayPath(), FilterParameter::RequiredArray, req));
   }
 

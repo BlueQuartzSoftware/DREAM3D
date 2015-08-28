@@ -59,14 +59,14 @@ namespace Detail
       DREAM3D_SHARED_POINTERS(LessThanComparison<T>)
       DREAM3D_STATIC_NEW_MACRO(LessThanComparison<T>)
       DREAM3D_TYPE_MACRO(LessThanComparison<T>)
-      virtual ~LessThanComparison(){}
+      virtual ~LessThanComparison() {}
 
       virtual bool compare(T a, T b) { return a < b; }
       virtual bool compare1(T a, T b) { return a >= b; }
       virtual bool compare2(T a, T b) { return a > b; }
 
     protected:
-      LessThanComparison(){}
+      LessThanComparison() {}
 
 
   };
@@ -85,7 +85,7 @@ namespace Detail
       virtual bool compare2(T a, T b) { return a < b; }
 
     protected:
-      GreaterThanComparison(){}
+      GreaterThanComparison() {}
 
   };
 
@@ -266,7 +266,7 @@ void ReplaceElementAttributesWithNeighborValues::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
 
   {
-    DataArraySelectionFilterParameter::DataStructureRequirements req = DataArraySelectionFilterParameter::CreateCategoryRequirement(QString(""), 1, DREAM3D::AttributeMatrixObjectType::Unknown);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(QString(""), 1, DREAM3D::AttributeMatrixObjectType::Unknown);
     parameters.push_back(DataArraySelectionFilterParameter::New("Comparison Array", "ConfidenceIndexArrayPath", getConfidenceIndexArrayPath(), FilterParameter::RequiredArray, req));
   }
   setFilterParameters(parameters);

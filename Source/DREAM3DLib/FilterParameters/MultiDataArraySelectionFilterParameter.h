@@ -46,7 +46,7 @@ class DREAM3DLib_EXPORT MultiDataArraySelectionFilterParameter : public FilterPa
     DREAM3D_STATIC_NEW_MACRO(MultiDataArraySelectionFilterParameter)
     DREAM3D_TYPE_MACRO_SUPER(MultiDataArraySelectionFilterParameter, FilterParameter)
 
-    struct DataStructureRequirements
+    struct RequirementType
     {
       QVector<unsigned int> dcGeometryTypes;
       QVector<unsigned int> amTypes;
@@ -55,8 +55,8 @@ class DREAM3DLib_EXPORT MultiDataArraySelectionFilterParameter : public FilterPa
     };
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-      const QVector<DataArrayPath>& defaultValue, Category category,
-      const DataStructureRequirements req, int groupIndex = -1);
+                       const QVector<DataArrayPath>& defaultValue, Category category,
+                       const RequirementType req, int groupIndex = -1);
 
     virtual ~MultiDataArraySelectionFilterParameter();
 
@@ -67,9 +67,9 @@ class DREAM3DLib_EXPORT MultiDataArraySelectionFilterParameter : public FilterPa
      * @param attributeMatrixCategory
      * @return
      */
-    static DataStructureRequirements CreateCategoryRequirement(const QString& primitiveType,
-                                                      size_t allowedCompDim,
-                                                      unsigned int attributeMatrixCategory);
+    static RequirementType CreateCategoryRequirement(const QString& primitiveType,
+                                                     size_t allowedCompDim,
+                                                     unsigned int attributeMatrixCategory);
 
     /**
      * @brief CreateRequirement
@@ -79,10 +79,10 @@ class DREAM3DLib_EXPORT MultiDataArraySelectionFilterParameter : public FilterPa
      * @param geometryType
      * @return
      */
-    static DataStructureRequirements CreateRequirement(const QString& primitiveType,
-                                                       size_t allowedCompDim,
-                                                       unsigned int attributeMatrixType,
-                                                       unsigned int geometryType);
+    static RequirementType CreateRequirement(const QString& primitiveType,
+                                             size_t allowedCompDim,
+                                             unsigned int attributeMatrixType,
+                                             unsigned int geometryType);
 
     DREAM3D_INSTANCE_PROPERTY(QVector<DataArrayPath>, DefaultPaths)
 

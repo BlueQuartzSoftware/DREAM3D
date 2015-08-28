@@ -123,7 +123,7 @@ void SetOriginResolutionImageGeom::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    DataContainerSelectionFilterParameter::DataStructureRequirements req;
+    DataContainerSelectionFilterParameter::RequirementType req;
     req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::ImageGeometry);
     parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container Image Geometry to Modify", "DataContainerName", getDataContainerName(), FilterParameter::RequiredArray, req));
   }

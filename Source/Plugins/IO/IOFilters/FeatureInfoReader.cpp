@@ -97,7 +97,7 @@ void FeatureInfoReader::setupFilterParameters()
   parameters.push_back(BooleanFilterParameter::New("Renumber Features", "RenumberFeatures", getRenumberFeatures(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {
-    AttributeMatrixSelectionFilterParameter::DataStructureRequirements req;
+    AttributeMatrixSelectionFilterParameter::RequirementType req;
     QVector<unsigned int> amTypes;
     amTypes.push_back(DREAM3D::AttributeMatrixType::Cell);
     amTypes.push_back(DREAM3D::AttributeMatrixType::Edge);
@@ -106,7 +106,7 @@ void FeatureInfoReader::setupFilterParameters()
     parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Element Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::DataStructureRequirements req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixObjectType::Element);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixObjectType::Element);
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));

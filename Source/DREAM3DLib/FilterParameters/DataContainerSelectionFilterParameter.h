@@ -40,37 +40,37 @@
 
 class DREAM3DLib_EXPORT DataContainerSelectionFilterParameter : public FilterParameter
 {
-public:
-  DREAM3D_SHARED_POINTERS(DataContainerSelectionFilterParameter)
+  public:
+    DREAM3D_SHARED_POINTERS(DataContainerSelectionFilterParameter)
     DREAM3D_STATIC_NEW_MACRO(DataContainerSelectionFilterParameter)
     DREAM3D_TYPE_MACRO(DataContainerSelectionFilterParameter)
 
-  struct DataStructureRequirements
-  {
-    QVector<unsigned int> dcGeometryTypes;
-  };
+    typedef struct
+    {
+      QVector<unsigned int> dcGeometryTypes;
+    } RequirementType;
 
-  static Pointer New(const QString& humanLabel, const QString& propertyName,
-    const QString& defaultValue, Category category,
-    const DataStructureRequirements req, int groupIndex = -1);
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const QString& defaultValue, Category category,
+                       const RequirementType req, int groupIndex = -1);
 
     virtual ~DataContainerSelectionFilterParameter();
 
-  /**
-   * @brief getWidgetType Returns the type of widget that displays and controls
-   * this FilterParameter subclass
-   * @return
-   */
-  QString getWidgetType();
-  
-  DREAM3D_INSTANCE_PROPERTY(QVector<unsigned int>, DefaultGeometryTypes)
+    /**
+     * @brief getWidgetType Returns the type of widget that displays and controls
+     * this FilterParameter subclass
+     * @return
+     */
+    QString getWidgetType();
 
-protected:
-  DataContainerSelectionFilterParameter();
+    DREAM3D_INSTANCE_PROPERTY(QVector<unsigned int>, DefaultGeometryTypes)
 
-private:
-  DataContainerSelectionFilterParameter(const DataContainerSelectionFilterParameter&); // Copy Constructor Not Implemented
-  void operator=(const DataContainerSelectionFilterParameter&); // Operator '=' Not Implemented
+  protected:
+    DataContainerSelectionFilterParameter();
+
+  private:
+    DataContainerSelectionFilterParameter(const DataContainerSelectionFilterParameter&); // Copy Constructor Not Implemented
+    void operator=(const DataContainerSelectionFilterParameter&); // Operator '=' Not Implemented
 };
 
 #endif /* _DataContainerSelectionFilterParameter_H_ */

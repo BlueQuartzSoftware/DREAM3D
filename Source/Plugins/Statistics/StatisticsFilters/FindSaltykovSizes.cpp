@@ -74,12 +74,12 @@ void FindSaltykovSizes::setupFilterParameters()
   FilterParameterVector parameters;
 
   {
-    DataArraySelectionFilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::RequirementType req;
     parameters.push_back(DataArraySelectionFilterParameter::New("Equivalent Diameters", "EquivalentDiametersArrayPath", getEquivalentDiametersArrayPath(), FilterParameter::RequiredArray, req));
   }
 
   {
-    DataArrayCreationFilterParameter::DataStructureRequirements req;
+    DataArrayCreationFilterParameter::RequirementType req;
     parameters.push_back(DataArrayCreationFilterParameter::New("Saltykov Equivalent Diameters", "SaltykovEquivalentDiametersArrayPath", getSaltykovEquivalentDiametersArrayPath(), FilterParameter::CreatedArray, req));
   }
 

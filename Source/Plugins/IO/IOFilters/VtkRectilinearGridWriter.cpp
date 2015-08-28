@@ -100,11 +100,11 @@ namespace Detail
   int WriteCoords(FILE* f, const char* axis, const char* type, int64_t npoints, T min, T max, T step, bool binary)
   {
     int err = 0;
-  #if CMP_SIZEOF_LONG == 8 && !defined (__APPLE__)
+#if CMP_SIZEOF_LONG == 8 && !defined (__APPLE__)
     fprintf(f, "%s %ld %s\n", axis, npoints, type);
-  #else
+#else
     fprintf(f, "%s %lld %s\n", axis, npoints, type);
-  #endif
+#endif
     if (binary == true)
     {
       T* data = new T[npoints];
@@ -154,7 +154,8 @@ namespace Detail
 
     typename ArrayType::Pointer array = boost::dynamic_pointer_cast<ArrayType>(iDataPtr);
 
-    if(NULL != array.get()) {
+    if(NULL != array.get())
+    {
       size_t totalElements = array->getSize();
       T* val = array->getPointer(0);
       int numComps = array->getNumberOfComponents();
@@ -170,18 +171,22 @@ namespace Detail
         if(BIGENDIAN == 0) { array->byteSwapElements(); }
         size_t totalWritten = fwrite(val, array->getTypeSize(), totalElements, f);
         if(totalWritten != totalElements) {}
-        fprintf(f,"\n");
+        fprintf(f, "\n");
         if(BIGENDIAN == 0) { array->byteSwapElements(); }
-      } else {
+      }
+      else
+      {
         std::stringstream ss;
-        for (size_t i = 0; i < totalElements; i++) {
-          if(i%20 == 0 && i > 0) {
+        for (size_t i = 0; i < totalElements; i++)
+        {
+          if(i % 20 == 0 && i > 0)
+          {
             ss << "\n";
           }
           ss << " " << val[i];
         }
         ss << "\n";
-        fprintf(f,"%s", ss.str().c_str());
+        fprintf(f, "%s", ss.str().c_str());
       }
     }
   }
@@ -219,7 +224,7 @@ void VtkRectilinearGridWriter::setupFilterParameters()
   parameters.push_back(BooleanFilterParameter::New("Write Binary File", "WriteBinaryFile", getWriteBinaryFile(), FilterParameter::Parameter));
 
   {
-    MultiDataArraySelectionFilterParameter::DataStructureRequirements req;
+    MultiDataArraySelectionFilterParameter::RequirementType req;
     parameters.push_back(MultiDataArraySelectionFilterParameter::New("Attribute Arrays to Write", "SelectedDataArrayPaths", getSelectedDataArrayPaths(), FilterParameter::RequiredArray, req));
   }
 
@@ -355,7 +360,7 @@ void VtkRectilinearGridWriter::execute()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(dcName);
 
   ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
-  size_t dims[3] = {0,0,0};
+  size_t dims[3] = {0, 0, 0};
   image->getDimensions(dims);
   float res[3] = { 0.0f, 0.0f, 0.0f};
   image->getResolution(res);
