@@ -39,7 +39,7 @@
 //
 // -----------------------------------------------------------------------------
 DataContainerSelectionFilterParameter::DataContainerSelectionFilterParameter() :
-FilterParameter()
+  FilterParameter()
 {}
 
 // -----------------------------------------------------------------------------
@@ -52,7 +52,7 @@ DataContainerSelectionFilterParameter::~DataContainerSelectionFilterParameter()
 //
 // -----------------------------------------------------------------------------
 DataContainerSelectionFilterParameter::Pointer DataContainerSelectionFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QString& defaultValue, Category category, const DataStructureRequirements req, int groupIndex)
+    const QString& defaultValue, Category category, const RequirementType req, int groupIndex)
 {
   DataContainerSelectionFilterParameter::Pointer ptr = DataContainerSelectionFilterParameter::New();
   ptr->setHumanLabel(humanLabel);

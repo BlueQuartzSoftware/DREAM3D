@@ -72,7 +72,7 @@ void ReplaceValueInArray::setupFilterParameters()
 
   parameters.push_back(DoubleFilterParameter::New("New Value", "ReplaceValue", getReplaceValue(), FilterParameter::Parameter));
   {
-    DataArraySelectionFilterParameter::DataStructureRequirements req = DataArraySelectionFilterParameter::CreateCategoryRequirement(QString(""), 1, DREAM3D::AttributeMatrixObjectType::Unknown);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(QString(""), 1, DREAM3D::AttributeMatrixObjectType::Unknown);
     parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array", "SelectedArray", getSelectedArray(), FilterParameter::RequiredArray, req));
   }
   setFilterParameters(parameters);
@@ -135,14 +135,14 @@ void checkValuesFloatDouble(AbstractFilter* filter, double removeValue, double r
   QString ss;
 
   if (!(((removeValue >= static_cast<T>(-1) * std::numeric_limits<T>::max()) && (removeValue <= static_cast<T>(-1) * std::numeric_limits<T>::min())) ||
-    (removeValue == 0) || ((removeValue >= std::numeric_limits<T>::min()) && (removeValue <= std::numeric_limits<T>::max()))))
+        (removeValue == 0) || ((removeValue >= std::numeric_limits<T>::min()) && (removeValue <= std::numeric_limits<T>::max()))))
   {
     ss = QObject::tr("The %1 remove value was invalid. The valid ranges are -%3 to -%2, 0, %2 to %3").arg(strType).arg(std::numeric_limits<T>::min()).arg(std::numeric_limits<T>::max());
     filter->setErrorCondition(-101);
     filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
   }
   if (!(((replaceValue >= static_cast<T>(-1) * std::numeric_limits<T>::max()) && (replaceValue <= static_cast<T>(-1) * std::numeric_limits<T>::min())) ||
-    (replaceValue == 0) || ((replaceValue >= std::numeric_limits<T>::min()) && (replaceValue <= std::numeric_limits<T>::max()))))
+        (replaceValue == 0) || ((replaceValue >= std::numeric_limits<T>::min()) && (replaceValue <= std::numeric_limits<T>::max()))))
   {
     ss = QObject::tr("The %1 replace value was invalid. The valid ranges are -%3 to -%2, 0, %2 to %3").arg(strType).arg(std::numeric_limits<T>::min()).arg(std::numeric_limits<T>::max());
     filter->setErrorCondition(-101);

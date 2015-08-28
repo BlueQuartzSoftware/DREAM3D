@@ -96,19 +96,19 @@ void FindDirectionalModuli::setupFilterParameters()
 
   parameters.push_back(FloatVec3FilterParameter::New("Loading Direction", "LoadingDirection", getLoadingDirection(), FilterParameter::Parameter));
   {
-    DataArraySelectionFilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::RequirementType req;
     parameters.push_back(DataArraySelectionFilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::RequirementType req;
     parameters.push_back(DataArraySelectionFilterParameter::New("AvgQuats", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::RequirementType req;
     parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::RequirementType req;
     parameters.push_back(DataArraySelectionFilterParameter::New("Single Crystal Compliances", "CrystalCompliancesArrayPath", getCrystalCompliancesArrayPath(), FilterParameter::RequiredArray, req));
   }
 

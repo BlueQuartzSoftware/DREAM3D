@@ -83,7 +83,7 @@ void AvizoRectilinearCoordinateWriter::setupFilterParameters()
   parameters.push_back(BooleanFilterParameter::New("Write Binary File", "WriteBinaryFile", getWriteBinaryFile(), FilterParameter::Parameter));
 
   {
-    DataArraySelectionFilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::RequirementType req;
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
   }
 

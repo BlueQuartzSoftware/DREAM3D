@@ -74,16 +74,16 @@ void FindBoundaryAreas::setupFilterParameters()
   FilterParameterVector parameters;
 
   {
-    DataArraySelectionFilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::RequirementType req;
     parameters.push_back(DataArraySelectionFilterParameter::New("Triangle Areas", "SurfaceMeshTriangleAreasArrayPath", getSurfaceMeshTriangleAreasArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::RequirementType req;
     parameters.push_back(DataArraySelectionFilterParameter::New("Face Feature Ids", "SurfaceMeshFeatureFaceIdsArrayPath", getSurfaceMeshFeatureFaceIdsArrayPath(), FilterParameter::RequiredArray, req));
   }
 
   {
-    DataArrayCreationFilterParameter::DataStructureRequirements req;
+    DataArrayCreationFilterParameter::RequirementType req;
     parameters.push_back(DataArrayCreationFilterParameter::New("Boundary Areas Array", "SurfaceMeshBoundaryAreasArrayPath", getSurfaceMeshBoundaryAreasArrayPath(), FilterParameter::CreatedArray, req));
   }
 

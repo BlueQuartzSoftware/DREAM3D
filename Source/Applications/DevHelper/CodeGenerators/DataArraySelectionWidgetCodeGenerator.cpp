@@ -56,7 +56,11 @@ DataArraySelectionWidgetCodeGenerator::~DataArraySelectionWidgetCodeGenerator()
 // -----------------------------------------------------------------------------
 QString DataArraySelectionWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(DataArraySelectionFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", get" + getPropertyName() + "(), " + getCategory() + "));";
+  QString s;
+  QTextStream out(&s);
+  out << "  DataArraySelectionFilterParameter::RequirementType dasReq;";
+  out << "  parameters.push_back(DataArraySelectionFilterParameter::New(\"" << getHumanLabel() << "\", \"" + getPropertyName() << "\", get" + getPropertyName() << "(), " + getCategory() << ", dasReq));";
+  return s;
 }
 
 // -----------------------------------------------------------------------------

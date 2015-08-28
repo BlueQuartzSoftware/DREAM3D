@@ -77,7 +77,7 @@ void SPParksWriter::setupFilterParameters()
   parameters.push_back(OutputFileFilterParameter::New("Output File", "OutputFile", getOutputFile(), FilterParameter::Parameter, "*.spparks", "SPParks Sites File"));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::DataStructureRequirements req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
   }
   setFilterParameters(parameters);
@@ -235,8 +235,8 @@ int32_t SPParksWriter::writeFile()
 //    double temp0 = 0.0;
 //    double temp1 = 0.0;
     outfile << k + 1 << " " << m_FeatureIds[k]
-               /* << " " << temp0 << " " << temp1 */
-               << "\n";
+            /* << " " << temp0 << " " << temp1 */
+            << "\n";
   }
   outfile.close();
 

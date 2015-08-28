@@ -140,7 +140,7 @@ void GenericExample::setupFilterParameters()
   parameters.push_back(IntVec3FilterParameter::New("Dimensions (XYZ)", "Dimensions", getDimensions(), FilterParameter::Parameter));
 
   {
-    DataArraySelectionFilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::RequirementType req;
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::Parameter, req));
   }
 
@@ -158,7 +158,7 @@ void GenericExample::setupFilterParameters()
     parameters.push_back(LinkedBooleanFilterParameter::New("Bool2", "Bool2", getBool2(), linkedProps, FilterParameter::Parameter));
   }
   {
-    AttributeMatrixSelectionFilterParameter::DataStructureRequirements req;
+    AttributeMatrixSelectionFilterParameter::RequirementType req;
     parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Attribute Matrix", "AttributeMatrixPath", getAttributeMatrixPath(), FilterParameter::Parameter, req));
   }
 
@@ -217,7 +217,7 @@ void GenericExample::setupFilterParameters()
     parameters.push_back(parameter);
 
     {
-      DataArrayCreationFilterParameter::DataStructureRequirements req;
+      DataArrayCreationFilterParameter::RequirementType req;
       parameters.push_back(DataArrayCreationFilterParameter::New("Created Data Array", "CreatedDataArray", getCreatedDataArray(), FilterParameter::Parameter, req, 0));
     }
     /* Display a group of 3 text boxes to collect 3 float values */
@@ -227,7 +227,7 @@ void GenericExample::setupFilterParameters()
     parameters.push_back(AxisAngleFilterParameter::New("Crystal Rotations", "CrystalSymmetryRotations", getCrystalSymmetryRotations(), FilterParameter::Parameter, 2));
 
     {
-      DataContainerSelectionFilterParameter::DataStructureRequirements req;
+      DataContainerSelectionFilterParameter::RequirementType req;
       parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::Parameter, req, 2));
     }
   }
@@ -236,7 +236,7 @@ void GenericExample::setupFilterParameters()
   paths.push_back(DataArrayPath("StatsGeneratorDataContainer", "CellEnsembleData", "Statistics"));
 
   {
-    MultiDataArraySelectionFilterParameter::DataStructureRequirements req;
+    MultiDataArraySelectionFilterParameter::RequirementType req;
     parameters.push_back(MultiDataArraySelectionFilterParameter::New("Multi Data Array Test", "SelectedMultiArrayPaths", paths, FilterParameter::Parameter, req, 0));
   }
 

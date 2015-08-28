@@ -73,7 +73,7 @@ void GenerateGeometryConnectivity::setupFilterParameters()
   parameters.push_back(BooleanFilterParameter::New("Generate Per Vertex Element List", "GenerateVertexTriangleLists", getGenerateVertexTriangleLists(), FilterParameter::Parameter));
   parameters.push_back(BooleanFilterParameter::New("Generate Element Neighbors List", "GenerateTriangleNeighbors", getGenerateTriangleNeighbors(), FilterParameter::Parameter));
   {
-    DataContainerSelectionFilterParameter::DataStructureRequirements req;
+    DataContainerSelectionFilterParameter::RequirementType req;
     parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container", "SurfaceDataContainerName", getSurfaceDataContainerName(), FilterParameter::RequiredArray, req));
   }
   setFilterParameters(parameters);

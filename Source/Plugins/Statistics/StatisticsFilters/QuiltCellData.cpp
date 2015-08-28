@@ -86,7 +86,7 @@ void QuiltCellData::setupFilterParameters()
   parameters.push_back(IntVec3FilterParameter::New("Patch Size (Voxels)", "PatchSize", getPatchSize(), FilterParameter::Parameter));
 
   {
-    DataArraySelectionFilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::RequirementType req;
     parameters.push_back(DataArraySelectionFilterParameter::New("Cell Array To Quilt", "SelectedCellArrayPath", getSelectedCellArrayPath(), FilterParameter::RequiredArray, req));
   }
 

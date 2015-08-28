@@ -50,11 +50,11 @@ class DREAM3DLib_EXPORT DataArrayCreationFilterParameter : public FilterParamete
     {
       QVector<unsigned int> dcGeometryTypes;
       QVector<unsigned int> amTypes;
-    } DataStructureRequirements;
+    } RequirementType;
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const DataArrayPath& defaultValue, Category category,
-                       const DataStructureRequirements req, int groupIndex = -1);
+                       const RequirementType req, int groupIndex = -1);
 
     virtual ~DataArrayCreationFilterParameter();
 
@@ -63,7 +63,7 @@ class DREAM3DLib_EXPORT DataArrayCreationFilterParameter : public FilterParamete
      * @param attributeMatrixType
      * @return
      */
-    static DataStructureRequirements CreateRequirement(unsigned int attributeMatrixObjectType);
+    static RequirementType CreateRequirement(unsigned int attributeMatrixObjectType);
 
     /**
      * @brief CreateRequirement
@@ -71,21 +71,21 @@ class DREAM3DLib_EXPORT DataArrayCreationFilterParameter : public FilterParamete
      * @param geometryType
      * @return
      */
-    static DataStructureRequirements CreateRequirement(uint32_t attributeMatrixType,
-                                                       uint32_t geometryType);
+    static RequirementType CreateRequirement(uint32_t attributeMatrixType,
+                                             uint32_t geometryType);
 
     /**
-   * @brief getWidgetType Returns the type of widget that displays and controls
-   * this FilterParameter subclass
-   * @return
-   */
+    * @brief getWidgetType Returns the type of widget that displays and controls
+    * this FilterParameter subclass
+    * @return
+    */
     QString getWidgetType();
 
     DREAM3D_INSTANCE_PROPERTY(QVector<unsigned int>, DefaultGeometryTypes)
     DREAM3D_INSTANCE_PROPERTY(QVector<unsigned int>, DefaultAttributeMatrixTypes)
 
-    protected:
-      DataArrayCreationFilterParameter();
+  protected:
+    DataArrayCreationFilterParameter();
 
   private:
     DataArrayCreationFilterParameter(const DataArrayCreationFilterParameter&); // Copy Constructor Not Implemented

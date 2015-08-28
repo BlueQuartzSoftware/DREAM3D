@@ -79,11 +79,11 @@ void CorrelateValuesWithVectorDirection::setupFilterParameters()
   FilterParameterVector parameters;
 
   {
-    DataArraySelectionFilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::RequirementType req;
     parameters.push_back(DataArraySelectionFilterParameter::New("VectorData", "VectorDataArrayPath", getVectorDataArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::RequirementType req;
     parameters.push_back(DataArraySelectionFilterParameter::New("CorrelatedData", "CorrelatedDataArrayPath", getCorrelatedDataArrayPath(), FilterParameter::RequiredArray, req));
   }
 

@@ -227,7 +227,7 @@ void RawBinaryReader::setupFilterParameters()
   }
   parameters.push_back(IntFilterParameter::New("Skip Header Bytes", "SkipHeaderBytes", getSkipHeaderBytes(), FilterParameter::Parameter));
   {
-    DataArrayCreationFilterParameter::DataStructureRequirements req;
+    DataArrayCreationFilterParameter::RequirementType req;
     parameters.push_back(DataArrayCreationFilterParameter::New("Output Attribute Array", "CreatedAttributeArrayPath", getCreatedAttributeArrayPath(), FilterParameter::CreatedArray, req));
   }
   setFilterParameters(parameters);

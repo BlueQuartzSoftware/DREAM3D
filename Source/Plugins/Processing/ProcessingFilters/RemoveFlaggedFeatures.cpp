@@ -77,12 +77,12 @@ void RemoveFlaggedFeatures::setupFilterParameters()
   parameters.push_back(BooleanFilterParameter::New("Fill-in Removed Features", "FillRemovedFeatures", getFillRemovedFeatures(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::DataStructureRequirements req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::DataStructureRequirements req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Bool, 1, DREAM3D::AttributeMatrixType::CellFeature, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Bool, 1, DREAM3D::AttributeMatrixType::CellFeature, DREAM3D::GeometryType::ImageGeometry);
 
     parameters.push_back(DataArraySelectionFilterParameter::New("Flagged Features", "FlaggedFeaturesArrayPath", getFlaggedFeaturesArrayPath(), FilterParameter::RequiredArray, req));
   }
@@ -329,8 +329,8 @@ QVector<bool> RemoveFlaggedFeatures::remove_flaggedfeatures()
     gnum = m_FeatureIds[i];
     if (activeObjects[gnum] == false)
     {
-      if (m_FillRemovedFeatures == false) m_FeatureIds[i] = 0;
-      else m_FeatureIds[i] = -1;
+      if (m_FillRemovedFeatures == false) { m_FeatureIds[i] = 0; }
+      else { m_FeatureIds[i] = -1; }
     }
   }
   return activeObjects;

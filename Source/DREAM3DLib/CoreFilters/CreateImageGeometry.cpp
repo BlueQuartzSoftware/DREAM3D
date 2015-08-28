@@ -81,7 +81,7 @@ void CreateImageGeometry::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    DataContainerSelectionFilterParameter::DataStructureRequirements req;
+    DataContainerSelectionFilterParameter::RequirementType req;
     parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container Destination", "SelectedDataContainer", getSelectedDataContainer(), FilterParameter::Parameter, req));
   }
   parameters.push_back(IntVec3FilterParameter::New("Dimensions", "Dimensions", getDimensions(), FilterParameter::Parameter));

@@ -40,37 +40,37 @@
 
 class DREAM3DLib_EXPORT AttributeMatrixCreationFilterParameter : public FilterParameter
 {
-public:
-  DREAM3D_SHARED_POINTERS(AttributeMatrixCreationFilterParameter)
+  public:
+    DREAM3D_SHARED_POINTERS(AttributeMatrixCreationFilterParameter)
     DREAM3D_STATIC_NEW_MACRO(AttributeMatrixCreationFilterParameter)
     DREAM3D_TYPE_MACRO(AttributeMatrixCreationFilterParameter)
 
-  struct DataStructureRequirements
-  {
-    QVector<unsigned int> dcGeometryTypes;
-  };
+    typedef struct
+    {
+      QVector<unsigned int> dcGeometryTypes;
+    } RequirementType;
 
-  static Pointer New(const QString& humanLabel, const QString& propertyName,
-    const DataArrayPath& defaultValue, Category category,
-    const DataStructureRequirements req, int groupIndex = -1);
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const DataArrayPath& defaultValue, Category category,
+                       const RequirementType req, int groupIndex = -1);
 
     virtual ~AttributeMatrixCreationFilterParameter();
 
-  /**
-   * @brief getWidgetType Returns the type of widget that displays and controls
-   * this FilterParameter subclass
-   * @return
-   */
-  QString getWidgetType();
+    /**
+     * @brief getWidgetType Returns the type of widget that displays and controls
+     * this FilterParameter subclass
+     * @return
+     */
+    QString getWidgetType();
 
-  DREAM3D_INSTANCE_PROPERTY(QVector<unsigned int>, DefaultGeometryTypes)
+    DREAM3D_INSTANCE_PROPERTY(QVector<unsigned int>, DefaultGeometryTypes)
 
-protected:
-  AttributeMatrixCreationFilterParameter();
+  protected:
+    AttributeMatrixCreationFilterParameter();
 
-private:
-  AttributeMatrixCreationFilterParameter(const AttributeMatrixCreationFilterParameter&); // Copy Constructor Not Implemented
-  void operator=(const AttributeMatrixCreationFilterParameter&); // Operator '=' Not Implemented
+  private:
+    AttributeMatrixCreationFilterParameter(const AttributeMatrixCreationFilterParameter&); // Copy Constructor Not Implemented
+    void operator=(const AttributeMatrixCreationFilterParameter&); // Operator '=' Not Implemented
 };
 
 #endif /* _AttributeMatrixCreationFilterParameter_H_ */

@@ -93,12 +93,12 @@ void LaplacianSmoothing::setupFilterParameters()
   parameters.push_back(DoubleFilterParameter::New("Outer Quadruple Points Lambda", "SurfaceQuadPointLambda", getSurfaceQuadPointLambda(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::DataStructureRequirements req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int8, 1, DREAM3D::AttributeMatrixType::Vertex, DREAM3D::GeometryType::TriangleGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int8, 1, DREAM3D::AttributeMatrixType::Vertex, DREAM3D::GeometryType::TriangleGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Node Type", "SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::DataStructureRequirements req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 2, DREAM3D::AttributeMatrixType::Face, DREAM3D::GeometryType::TriangleGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 2, DREAM3D::AttributeMatrixType::Face, DREAM3D::GeometryType::TriangleGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req));
   }
   setFilterParameters(parameters);

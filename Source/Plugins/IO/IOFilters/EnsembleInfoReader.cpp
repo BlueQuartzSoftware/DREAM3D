@@ -85,7 +85,7 @@ void EnsembleInfoReader::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(InputFileFilterParameter::New("Input Ensemble Info File", "InputFile", getInputFile(), FilterParameter::Parameter, "*.ini *.txt"));
   {
-    DataContainerSelectionFilterParameter::DataStructureRequirements req;
+    DataContainerSelectionFilterParameter::RequirementType req;
     parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::CreatedArray));

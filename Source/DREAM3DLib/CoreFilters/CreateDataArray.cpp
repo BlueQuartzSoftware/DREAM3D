@@ -96,7 +96,7 @@ void CreateDataArray::setupFilterParameters()
   parameters.push_back(StringFilterParameter::New("Initialization Value", "InitializationValue", getInitializationValue(), FilterParameter::Parameter));
 
   {
-    DataArrayCreationFilterParameter::DataStructureRequirements req;
+    DataArrayCreationFilterParameter::RequirementType req;
     parameters.push_back(DataArrayCreationFilterParameter::New("Created Attribute Array", "NewArray", getNewArray(), FilterParameter::CreatedArray, req));
   }
 

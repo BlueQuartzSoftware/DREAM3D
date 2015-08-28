@@ -40,7 +40,7 @@
 
 class DREAM3DLib_EXPORT AttributeMatrixSelectionFilterParameter : public FilterParameter
 {
-public:
+  public:
     DREAM3D_SHARED_POINTERS(AttributeMatrixSelectionFilterParameter)
     DREAM3D_STATIC_NEW_MACRO(AttributeMatrixSelectionFilterParameter)
     DREAM3D_TYPE_MACRO(AttributeMatrixSelectionFilterParameter)
@@ -49,11 +49,11 @@ public:
     {
       QVector<unsigned int> dcGeometryTypes;
       QVector<unsigned int> amTypes;
-    } DataStructureRequirements;
+    } RequirementType;
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-      const DataArrayPath& defaultValue, Category category,
-      const DataStructureRequirements req, int groupIndex = -1);
+                       const DataArrayPath& defaultValue, Category category,
+                       const RequirementType req, int groupIndex = -1);
 
     virtual ~AttributeMatrixSelectionFilterParameter();
 
@@ -62,7 +62,7 @@ public:
      * @param attributeMatrixType
      * @return
      */
-    static DataStructureRequirements CreateRequirement(unsigned int attributeMatrixObjectType);
+    static RequirementType CreateRequirement(unsigned int attributeMatrixObjectType);
 
     /**
      * @brief CreateRequirement
@@ -70,8 +70,8 @@ public:
      * @param geometryType
      * @return
      */
-    static DataStructureRequirements CreateRequirement(uint32_t attributeMatrixType,
-                                                       uint32_t geometryType);
+    static RequirementType CreateRequirement(uint32_t attributeMatrixType,
+                                             uint32_t geometryType);
 
     /**
      * @brief getWidgetType Returns the type of widget that displays and controls
@@ -83,12 +83,12 @@ public:
     DREAM3D_INSTANCE_PROPERTY(QVector<unsigned int>, DefaultGeometryTypes)
     DREAM3D_INSTANCE_PROPERTY(QVector<unsigned int>, DefaultAttributeMatrixTypes)
 
-protected:
-  AttributeMatrixSelectionFilterParameter();
+  protected:
+    AttributeMatrixSelectionFilterParameter();
 
-private:
-  AttributeMatrixSelectionFilterParameter(const AttributeMatrixSelectionFilterParameter&); // Copy Constructor Not Implemented
-  void operator=(const AttributeMatrixSelectionFilterParameter&); // Operator '=' Not Implemented
+  private:
+    AttributeMatrixSelectionFilterParameter(const AttributeMatrixSelectionFilterParameter&); // Copy Constructor Not Implemented
+    void operator=(const AttributeMatrixSelectionFilterParameter&); // Operator '=' Not Implemented
 };
 
 #endif /* _AttributeMatrixSelectionFilterParameter_H_ */

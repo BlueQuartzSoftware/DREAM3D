@@ -39,7 +39,7 @@
 //
 // -----------------------------------------------------------------------------
 DataArrayCreationFilterParameter::DataArrayCreationFilterParameter() :
-FilterParameter()
+  FilterParameter()
 {}
 
 // -----------------------------------------------------------------------------
@@ -52,7 +52,7 @@ DataArrayCreationFilterParameter::~DataArrayCreationFilterParameter()
 //
 // -----------------------------------------------------------------------------
 DataArrayCreationFilterParameter::Pointer DataArrayCreationFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const DataArrayPath& defaultValue, Category category, const DataStructureRequirements req, int groupIndex)
+    const DataArrayPath& defaultValue, Category category, const RequirementType req, int groupIndex)
 {
 
   DataArrayCreationFilterParameter::Pointer ptr = DataArrayCreationFilterParameter::New();
@@ -81,10 +81,10 @@ QString DataArrayCreationFilterParameter::getWidgetType()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataArrayCreationFilterParameter::DataStructureRequirements DataArrayCreationFilterParameter::CreateRequirement(uint32_t attributeMatrixObjectType)
+DataArrayCreationFilterParameter::RequirementType DataArrayCreationFilterParameter::CreateRequirement(uint32_t attributeMatrixObjectType)
 {
   typedef QVector<size_t> QVectorOfSizeType;
-  DataArrayCreationFilterParameter::DataStructureRequirements req;
+  DataArrayCreationFilterParameter::RequirementType req;
   QVector<unsigned int> amTypes;
   if(attributeMatrixObjectType == DREAM3D::AttributeMatrixObjectType::Element)
   {
@@ -115,11 +115,11 @@ DataArrayCreationFilterParameter::DataStructureRequirements DataArrayCreationFil
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataArrayCreationFilterParameter::DataStructureRequirements DataArrayCreationFilterParameter::CreateRequirement(uint32_t attributeMatrixType,
-                                                                                                                uint32_t geometryType)
+DataArrayCreationFilterParameter::RequirementType DataArrayCreationFilterParameter::CreateRequirement(uint32_t attributeMatrixType,
+    uint32_t geometryType)
 {
   typedef QVector<size_t> QVectorOfSizeType;
-  DataArrayCreationFilterParameter::DataStructureRequirements req;
+  DataArrayCreationFilterParameter::RequirementType req;
   if(attributeMatrixType != DREAM3D::AttributeMatrixType::Unknown)
   {
     req.amTypes = QVector<unsigned int>(1, attributeMatrixType);;

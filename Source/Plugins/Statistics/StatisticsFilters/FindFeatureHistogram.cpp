@@ -92,20 +92,20 @@ void FindFeatureHistogram::setupFilterParameters()
   QStringList linkedProps("BiasedFeaturesArrayPath");
   parameters.push_back(LinkedBooleanFilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", getRemoveBiasedFeatures(), linkedProps, FilterParameter::Parameter));
   {
-    DataArraySelectionFilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::RequirementType req;
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Array To Bin", "SelectedFeatureArrayPath", getSelectedFeatureArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::RequirementType req;
     parameters.push_back(DataArraySelectionFilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::RequirementType req;
     parameters.push_back(DataArraySelectionFilterParameter::New("BiasedFeatures", "BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath(), FilterParameter::RequiredArray, req));
   }
 
   {
-    DataArrayCreationFilterParameter::DataStructureRequirements req;
+    DataArrayCreationFilterParameter::RequirementType req;
     parameters.push_back(DataArrayCreationFilterParameter::New("New Ensemble Array", "NewEnsembleArrayArrayPath", getNewEnsembleArrayArrayPath(), FilterParameter::CreatedArray, req));
   }
 

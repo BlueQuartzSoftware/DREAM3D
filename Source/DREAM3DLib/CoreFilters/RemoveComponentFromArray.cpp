@@ -34,7 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#include "ExtractComponentAsArray.h"
+#include "RemoveComponentFromArray.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/TemplateHelpers.hpp"
@@ -43,18 +43,22 @@
 #include "DREAM3DLib/FilterParameters/IntFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
+#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ExtractComponentAsArray::ExtractComponentAsArray() :
+RemoveComponentFromArray::RemoveComponentFromArray() :
   AbstractFilter(),
   m_SelectedArrayPath("", "", ""),
   m_CompNumber(0),
+  m_SaveRemovedComponent(false),
   m_NewArrayArrayName(""),
+  m_ReducedArrayArrayName(""),
   m_InArray(NULL),
-  m_NewArray(NULL)
+  m_NewArray(NULL),
+  m_ReducedArray(NULL)
 {
   setupFilterParameters();
 }
@@ -62,25 +66,32 @@ ExtractComponentAsArray::ExtractComponentAsArray() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ExtractComponentAsArray::~ExtractComponentAsArray()
+RemoveComponentFromArray::~RemoveComponentFromArray()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ExtractComponentAsArray::setupFilterParameters()
+void RemoveComponentFromArray::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(IntFilterParameter::New("Component Number to Extract", "CompNumber", getCompNumber(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Component Number to Remove", "CompNumber", getCompNumber(), FilterParameter::Parameter));
 
-  {
-    DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Multicomponent Attribute Array", "SelectedArrayPath", getSelectedArrayPath(), FilterParameter::RequiredArray, req));
-  }
+  DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Empty, UINT32_MAX, DREAM3D::AttributeMatrixObjectType::Unknown);
+  parameters.push_back(DataArraySelectionFilterParameter::New("Multicomponent Attribute Array", "SelectedArrayPath", getSelectedArrayPath(), FilterParameter::RequiredArray, req));
 
-  parameters.push_back(StringFilterParameter::New("Scalar Attribute Array", "NewArrayArrayName", getNewArrayArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Removed Component Attribute Array", "NewArrayArrayName", getNewArrayArrayName(), FilterParameter::CreatedArray));
+
+  parameters.push_back(StringFilterParameter::New("Reduced Attribute Array", "ReducedArrayArrayName", getReducedArrayArrayName(), FilterParameter::CreatedArray));
+
+  QStringList linkedProps;
+  linkedProps.clear();
+  linkedProps << "NewArrayArrayName";
+  parameters.push_back(LinkedBooleanFilterParameter::New("Save Removed Component in New Array", "SaveRemovedComponent", getSaveRemovedComponent(), linkedProps, FilterParameter::Parameter));
+
+
 
   setFilterParameters(parameters);
 }
@@ -88,25 +99,29 @@ void ExtractComponentAsArray::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ExtractComponentAsArray::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void RemoveComponentFromArray::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   setNewArrayArrayName(reader->readString("NewArrayArrayName", getNewArrayArrayName() ) );
+  setNewArrayArrayName(reader->readString("ReducedArrayArrayName", getReducedArrayArrayName() ) );
   setCompNumber(reader->readValue("CompNumber", getCompNumber() ) );
   setSelectedArrayPath( reader->readDataArrayPath( "SelectedArrayPath", getSelectedArrayPath() ) );
+  setSaveRemovedComponent(reader->readValue("SaveRemovedComponent", getSaveRemovedComponent()));
   reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ExtractComponentAsArray::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int RemoveComponentFromArray::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
   DREAM3D_FILTER_WRITE_PARAMETER(CompNumber)
   DREAM3D_FILTER_WRITE_PARAMETER(NewArrayArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(ReducedArrayArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(SaveRemovedComponent)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -114,16 +129,26 @@ int ExtractComponentAsArray::writeFilterParameters(AbstractFilterParametersWrite
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ExtractComponentAsArray::dataCheck()
+void RemoveComponentFromArray::dataCheck()
 {
   setErrorCondition(0);
 
   m_InArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getSelectedArrayPath());
 
-  if (m_NewArrayArrayName.isEmpty() == true)
+  if (m_SaveRemovedComponent == true)
   {
-    setErrorCondition(-11003);
-    notifyErrorMessage(getHumanLabel(), "New array name must be set.", getErrorCondition());
+    if (m_NewArrayArrayName.isEmpty() == true)
+    {
+      setErrorCondition(-11001);
+      notifyErrorMessage(getHumanLabel(), "Removed Component array name must be set.", getErrorCondition());
+      return;
+    }
+  }
+
+  if (m_ReducedArrayArrayName.isEmpty() == true)
+  {
+    setErrorCondition(-11002);
+    notifyErrorMessage(getHumanLabel(), "Reduced array name must be set.", getErrorCondition());
     return;
   }
 
@@ -131,29 +156,36 @@ void ExtractComponentAsArray::dataCheck()
 
   if (m_InArrayPtr.lock()->getNumberOfComponents() < 2)
   {
+    setErrorCondition(-11003);
     QString ss = QObject::tr("Selected array '%1' must have more than 1 component. The number of components is %2").arg(getSelectedArrayPath().getDataArrayName()).arg(m_InArrayPtr.lock()->getNumberOfComponents());
-    setErrorCondition(-11002);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
   if(m_CompNumber >= m_InArrayPtr.lock()->getNumberOfComponents())
   {
-    setErrorCondition(-11003);
+    setErrorCondition(-11004);
     QString ss = QObject::tr("Component to extract (%1) is larger than the number of components (%2) for array selected: '%1'").arg(m_CompNumber).arg(m_InArrayPtr.lock()->getNumberOfComponents()).arg(getSelectedArrayPath().getDataArrayName());
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
   QVector<size_t> cDims(1, 1);
-  DataArrayPath tempPath(getSelectedArrayPath().getDataContainerName(), getSelectedArrayPath().getAttributeMatrixName(), getNewArrayArrayName());
-  m_NewArrayPtr = TemplateHelpers::CreateNonPrereqArrayFromArrayType()(this, tempPath, cDims, m_InArrayPtr.lock());
+  if (m_SaveRemovedComponent == true)
+  {
+    DataArrayPath tempPath(getSelectedArrayPath().getDataContainerName(), getSelectedArrayPath().getAttributeMatrixName(), getNewArrayArrayName());
+    m_NewArrayPtr = TemplateHelpers::CreateNonPrereqArrayFromArrayType()(this, tempPath, cDims, m_InArrayPtr.lock());
+  }
+
+  cDims[0] = m_InArrayPtr.lock()->getNumberOfComponents() - 1;
+  DataArrayPath tempPath2(getSelectedArrayPath().getDataContainerName(), getSelectedArrayPath().getAttributeMatrixName(), getReducedArrayArrayName());
+  m_ReducedArrayPtr = TemplateHelpers::CreateNonPrereqArrayFromArrayType()(this, tempPath2, cDims, m_InArrayPtr.lock());
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ExtractComponentAsArray::preflight()
+void RemoveComponentFromArray::preflight()
 {
   setInPreflight(true);
   emit preflightAboutToExecute();
@@ -167,34 +199,94 @@ void ExtractComponentAsArray::preflight()
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void extractComponent(IDataArray::Pointer inputData, IDataArray::Pointer newData, int compNumber)
+void extractComponent(IDataArray::Pointer inputData, IDataArray::Pointer newData, IDataArray::Pointer reducedData, int compNumber)
 {
   typename DataArray<T>::Pointer inputArrayPtr = boost::dynamic_pointer_cast<DataArray<T> >(inputData);
   typename DataArray<T>::Pointer newArrayPtr = boost::dynamic_pointer_cast<DataArray<T> >(newData);
+  typename DataArray<T>::Pointer reducedArrayPtr = boost::dynamic_pointer_cast<DataArray<T> >(reducedData);
 
   if (NULL == inputArrayPtr || NULL == newArrayPtr) { return; }
 
   T* inputArray = inputArrayPtr->getPointer(0);
   T* newArray = newArrayPtr->getPointer(0);
+  T* reducedArray = reducedArrayPtr->getPointer(0);
+
   size_t numPoints = inputArrayPtr->getNumberOfTuples();
   size_t numComps = inputArrayPtr->getNumberOfComponents();
 
   for (size_t i = 0; i < numPoints; i++)
   {
-    newArray[i] = inputArray[numComps * i + compNumber];
+    for (size_t j = 0; j < numComps; j++)
+    {
+      if (j == compNumber)
+      {
+        newArray[i] = inputArray[numComps * i + j];
+      }
+      else if (j > compNumber)
+      {
+        reducedArray[(numComps - 1)*i + j - 1] = inputArray[numComps * i + j];
+      }
+      else if (j < compNumber)
+      {
+        reducedArray[(numComps - 1)*i + j] = inputArray[numComps * i + j];
+      }
+    }
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ExtractComponentAsArray::execute()
+template<typename T>
+void reduceArrayOnly(IDataArray::Pointer inputData, IDataArray::Pointer reducedData, int compNumber)
+{
+  typename DataArray<T>::Pointer inputArrayPtr = boost::dynamic_pointer_cast<DataArray<T> >(inputData);
+  typename DataArray<T>::Pointer reducedArrayPtr = boost::dynamic_pointer_cast<DataArray<T> >(reducedData);
+
+  if (NULL == inputArrayPtr) { return; }
+
+  T* inputArray = inputArrayPtr->getPointer(0);
+  T* reducedArray = reducedArrayPtr->getPointer(0);
+
+  size_t numPoints = inputArrayPtr->getNumberOfTuples();
+  size_t numComps = inputArrayPtr->getNumberOfComponents();
+
+  for (size_t i = 0; i < numPoints; i++)
+  {
+    for (size_t j = 0; j < numComps; j++)
+    {
+
+      if (j > compNumber)
+      {
+        reducedArray[(numComps - 1)*i + j - 1] = inputArray[numComps * i + j];
+      }
+      else if (j < compNumber)
+      {
+        reducedArray[(numComps - 1)*i + j] = inputArray[numComps * i + j];
+      }
+    }
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RemoveComponentFromArray::execute()
 {
   setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  EXECUTE_FUNCTION_TEMPLATE(this, extractComponent, m_InArrayPtr.lock(), m_InArrayPtr.lock(), m_NewArrayPtr.lock(), m_CompNumber)
+  if (m_SaveRemovedComponent == true)
+  {
+    EXECUTE_FUNCTION_TEMPLATE(this, extractComponent, m_InArrayPtr.lock(), m_InArrayPtr.lock(), m_NewArrayPtr.lock(), m_ReducedArrayPtr.lock(), m_CompNumber)
+  }
+  else if (m_SaveRemovedComponent == false)
+  {
+    EXECUTE_FUNCTION_TEMPLATE(this, reduceArrayOnly, m_InArrayPtr.lock(), m_InArrayPtr.lock(), m_ReducedArrayPtr.lock(), m_CompNumber)
+  }
+
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
@@ -202,9 +294,9 @@ void ExtractComponentAsArray::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ExtractComponentAsArray::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer RemoveComponentFromArray::newFilterInstance(bool copyFilterParameters)
 {
-  ExtractComponentAsArray::Pointer filter = ExtractComponentAsArray::New();
+  RemoveComponentFromArray::Pointer filter = RemoveComponentFromArray::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -215,23 +307,23 @@ AbstractFilter::Pointer ExtractComponentAsArray::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ExtractComponentAsArray::getCompiledLibraryName()
+const QString RemoveComponentFromArray::getCompiledLibraryName()
 { return Core::CoreBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ExtractComponentAsArray::getGroupName()
+const QString RemoveComponentFromArray::getGroupName()
 { return DREAM3D::FilterGroups::CoreFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ExtractComponentAsArray::getSubGroupName()
+const QString RemoveComponentFromArray::getSubGroupName()
 { return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ExtractComponentAsArray::getHumanLabel()
-{ return "Extract Component as Attribute Array"; }
+const QString RemoveComponentFromArray::getHumanLabel()
+{ return "Remove Component From Array"; }

@@ -165,7 +165,7 @@ void ExportData::setupFilterParameters()
     parameters.push_back(parameter);
   }
   {
-    MultiDataArraySelectionFilterParameter::DataStructureRequirements req;
+    MultiDataArraySelectionFilterParameter::RequirementType req;
     parameters.push_back(MultiDataArraySelectionFilterParameter::New("Attribute Arrays to Export", "SelectedDataArrayPaths", getSelectedDataArrayPaths(), FilterParameter::RequiredArray, req));
   }
   setFilterParameters(parameters);

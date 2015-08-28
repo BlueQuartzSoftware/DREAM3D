@@ -124,7 +124,7 @@ void ScaleVolume::setupFilterParameters()
   QStringList linkedProps("DataContainerName");
   parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Image Geometry", "ApplyToVoxelVolume", getApplyToVoxelVolume(), linkedProps, FilterParameter::Parameter));
   {
-    DataContainerSelectionFilterParameter::DataStructureRequirements req;
+    DataContainerSelectionFilterParameter::RequirementType req;
     req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::ImageGeometry);
     parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container Image Geometry to Scale", "DataContainerName", getDataContainerName(), FilterParameter::RequiredArray, req));
   }
@@ -132,7 +132,7 @@ void ScaleVolume::setupFilterParameters()
   linkedProps << "SurfaceDataContainerName";
   parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Surface Geometry", "ApplyToSurfaceMesh", getApplyToSurfaceMesh(), linkedProps, FilterParameter::Parameter));
   {
-    DataContainerSelectionFilterParameter::DataStructureRequirements req;
+    DataContainerSelectionFilterParameter::RequirementType req;
     QVector<unsigned int> dcGeometryTypes;
     dcGeometryTypes.push_back(DREAM3D::GeometryType::TriangleGeometry);
     dcGeometryTypes.push_back(DREAM3D::GeometryType::QuadGeometry);

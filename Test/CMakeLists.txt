@@ -46,6 +46,8 @@ AddDREAM3DUnitTest(TESTNAME FilterParametersRWTest SOURCES ${DREAM3DTest_SOURCE_
 
 AddDREAM3DUnitTest(TESTNAME CreateDataArrayTest SOURCES ${DREAM3DTest_SOURCE_DIR}/CreateDataArrayTest.cpp LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib)
 
+AddDREAM3DUnitTest(TESTNAME RemoveComponentFromArrayTest SOURCES ${DREAM3DTest_SOURCE_DIR}/RemoveComponentFromArrayTest.cpp LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib)
+
 
 QT5_WRAP_CPP( RemoveArraysObserver_MOC  "${DREAM3DTest_SOURCE_DIR}/RemoveArraysObserver.h")
 set_source_files_properties(${RemoveArraysObserver_MOC} PROPERTIES HEADER_FILE_ONLY TRUE)

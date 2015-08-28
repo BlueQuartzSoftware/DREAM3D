@@ -84,7 +84,7 @@ void WriteTriangleGeometry::setupFilterParameters()
   parameters.push_back(OutputFileFilterParameter::New("Output Triangles File", "OutputTrianglesFile", getOutputTrianglesFile(), FilterParameter::Parameter));
 
   {
-    DataContainerSelectionFilterParameter::DataStructureRequirements req;
+    DataContainerSelectionFilterParameter::RequirementType req;
     parameters.push_back(DataContainerSelectionFilterParameter::New("DataContainer", "DataContainerSelection", getDataContainerSelection(), FilterParameter::RequiredArray, req));
   }
 

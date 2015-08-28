@@ -62,7 +62,7 @@ void CreateAttributeMatrix::setupFilterParameters()
   std::vector<std::vector<double> > defaultTable;
   parameters.push_back(DynamicTableFilterParameter::New("Tuple Dimensions", "TupleDimensions", rHeaders, cHeaders, defaultTable, FilterParameter::Parameter, false, true, 0));
   {
-    AttributeMatrixCreationFilterParameter::DataStructureRequirements req;
+    AttributeMatrixCreationFilterParameter::RequirementType req;
     parameters.push_back(AttributeMatrixCreationFilterParameter::New("Created Attribute Matrix", "CreatedAttributeMatrix", getCreatedAttributeMatrix(), FilterParameter::CreatedArray, req));
   }
 

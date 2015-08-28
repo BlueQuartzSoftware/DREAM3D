@@ -89,7 +89,7 @@ CropImageGeometry::~CropImageGeometry()
 void CropImageGeometry::setupFilterParameters()
 {
   FilterParameterVector parameters;
- // parameters.push_back(VolumeDataContainerInfoFilterParameter::New("Geometry Information", "CurrentVolumeDataContainerDimensions", getCurrentVolumeDataContainerDimensions(), FilterParameter::Parameter));
+// parameters.push_back(VolumeDataContainerInfoFilterParameter::New("Geometry Information", "CurrentVolumeDataContainerDimensions", getCurrentVolumeDataContainerDimensions(), FilterParameter::Parameter));
   parameters.push_back(IntFilterParameter::New("X Min (Column)", "XMin", getXMin(), FilterParameter::Parameter));
   parameters.push_back(IntFilterParameter::New("Y Min (Row)", "YMin", getYMin(), FilterParameter::Parameter));
   parameters.push_back(IntFilterParameter::New("Z Min (Plane)", "ZMin", getZMin(), FilterParameter::Parameter));
@@ -105,16 +105,16 @@ void CropImageGeometry::setupFilterParameters()
   parameters.push_back(LinkedBooleanFilterParameter::New("Save As New Data Container", "SaveAsNewDataContainer", getSaveAsNewDataContainer(), linkedProps, FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    AttributeMatrixSelectionFilterParameter::DataStructureRequirements req = AttributeMatrixSelectionFilterParameter::CreateRequirement(DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
     parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", getCellAttributeMatrixPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::DataStructureRequirements req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
-    AttributeMatrixSelectionFilterParameter::DataStructureRequirements req = AttributeMatrixSelectionFilterParameter::CreateRequirement(DREAM3D::AttributeMatrixType::CellFeature, DREAM3D::GeometryType::ImageGeometry);
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(DREAM3D::AttributeMatrixType::CellFeature, DREAM3D::GeometryType::ImageGeometry);
     parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(StringFilterParameter::New("Data Container", "NewDataContainerName", getNewDataContainerName(), FilterParameter::CreatedArray));

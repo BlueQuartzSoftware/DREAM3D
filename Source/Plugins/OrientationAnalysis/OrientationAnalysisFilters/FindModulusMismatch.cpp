@@ -123,11 +123,11 @@ void FindModulusMismatch::setupFilterParameters()
   FilterParameterVector parameters;
 
   {
-    DataArraySelectionFilterParameter::DataStructureRequirements req = DataArraySelectionFilterParameter::CreateCategoryRequirement(QString(""), 1, DREAM3D::AttributeMatrixObjectType::Unknown);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(QString(""), 1, DREAM3D::AttributeMatrixObjectType::Unknown);
     parameters.push_back(DataArraySelectionFilterParameter::New("Moduli", "ModuliArrayPath", getModuliArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::DataStructureRequirements req = DataArraySelectionFilterParameter::CreateCategoryRequirement(QString(""), 2, DREAM3D::AttributeMatrixObjectType::Unknown);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(QString(""), 2, DREAM3D::AttributeMatrixObjectType::Unknown);
     parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req));
   }
 

@@ -51,11 +51,11 @@ class DREAM3DLib_EXPORT DataArraySelectionFilterParameter : public FilterParamet
       QVector<unsigned int> amTypes;
       QVector<QString> daTypes;
       QVector< QVector<size_t> > componentDimensions;
-    } DataStructureRequirements;
+    } RequirementType;
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const DataArrayPath& defaultValue, Category category,
-                       const DataStructureRequirements req, int groupIndex = -1);
+                       const RequirementType req, int groupIndex = -1);
 
     virtual ~DataArraySelectionFilterParameter();
 
@@ -66,9 +66,9 @@ class DREAM3DLib_EXPORT DataArraySelectionFilterParameter : public FilterParamet
      * @param attributeMatrixCategory
      * @return
      */
-    static DataStructureRequirements CreateCategoryRequirement(const QString& primitiveType,
-                                                      size_t allowedCompDim,
-                                                      unsigned int attributeMatrixCategory);
+    static RequirementType CreateCategoryRequirement(const QString& primitiveType,
+                                                     size_t allowedCompDim,
+                                                     unsigned int attributeMatrixCategory);
 
     /**
      * @brief CreateRequirement
@@ -78,17 +78,17 @@ class DREAM3DLib_EXPORT DataArraySelectionFilterParameter : public FilterParamet
      * @param geometryType
      * @return
      */
-    static DataStructureRequirements CreateRequirement(const QString& primitiveType,
-                                                       size_t allowedCompDim,
-                                                       unsigned int attributeMatrixType,
-                                                       unsigned int geometryType);
+    static RequirementType CreateRequirement(const QString& primitiveType,
+                                             size_t allowedCompDim,
+                                             unsigned int attributeMatrixType,
+                                             unsigned int geometryType);
 
 
-   /**
-   * @brief getWidgetType Returns the type of widget that displays and controls
-   * this FilterParameter subclass
-   * @return
-   */
+    /**
+    * @brief getWidgetType Returns the type of widget that displays and controls
+    * this FilterParameter subclass
+    * @return
+    */
     QString getWidgetType();
 
     DREAM3D_INSTANCE_PROPERTY(QVector<unsigned int>, DefaultGeometryTypes)
@@ -96,8 +96,8 @@ class DREAM3DLib_EXPORT DataArraySelectionFilterParameter : public FilterParamet
     DREAM3D_INSTANCE_PROPERTY(QVector<QString>, DefaultAttributeArrayTypes)
     DREAM3D_INSTANCE_PROPERTY(QVector< QVector<size_t> >, DefaultComponentDimensions)
 
-    protected:
-      DataArraySelectionFilterParameter();
+  protected:
+    DataArraySelectionFilterParameter();
 
   private:
     DataArraySelectionFilterParameter(const DataArraySelectionFilterParameter&); // Copy Constructor Not Implemented

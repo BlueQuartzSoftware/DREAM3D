@@ -68,7 +68,7 @@ void RenameAttributeMatrix::setupFilterParameters()
   FilterParameterVector parameters;
 
   {
-    AttributeMatrixSelectionFilterParameter::DataStructureRequirements req;
+    AttributeMatrixSelectionFilterParameter::RequirementType req;
     parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Attribute Matrix to Rename", "SelectedAttributeMatrixPath", getSelectedAttributeMatrixPath(), FilterParameter::RequiredArray, req));
   }
 

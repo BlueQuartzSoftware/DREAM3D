@@ -54,7 +54,7 @@ MultiDataArraySelectionFilterParameter::~MultiDataArraySelectionFilterParameter(
 //
 // -----------------------------------------------------------------------------
 MultiDataArraySelectionFilterParameter::Pointer MultiDataArraySelectionFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QVector<DataArrayPath>& defaultValue, Category category, const DataStructureRequirements req, int groupIndex)
+    const QVector<DataArrayPath>& defaultValue, Category category, const RequirementType req, int groupIndex)
 {
 
   MultiDataArraySelectionFilterParameter::Pointer ptr = MultiDataArraySelectionFilterParameter::New();
@@ -85,12 +85,12 @@ QString MultiDataArraySelectionFilterParameter::getWidgetType()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MultiDataArraySelectionFilterParameter::DataStructureRequirements MultiDataArraySelectionFilterParameter::CreateCategoryRequirement(const QString& primitiveType,
-                                                                               size_t allowedCompDim,
-                                                                               unsigned int attributeMatrixCategory)
+MultiDataArraySelectionFilterParameter::RequirementType MultiDataArraySelectionFilterParameter::CreateCategoryRequirement(const QString& primitiveType,
+    size_t allowedCompDim,
+    unsigned int attributeMatrixCategory)
 {
   typedef QVector<size_t> QVectorOfSizeType;
-  MultiDataArraySelectionFilterParameter::DataStructureRequirements req;
+  MultiDataArraySelectionFilterParameter::RequirementType req;
   QVector<unsigned int> amTypes;
   if(attributeMatrixCategory == DREAM3D::AttributeMatrixObjectType::Element)
   {
@@ -132,13 +132,13 @@ MultiDataArraySelectionFilterParameter::DataStructureRequirements MultiDataArray
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MultiDataArraySelectionFilterParameter::DataStructureRequirements MultiDataArraySelectionFilterParameter::CreateRequirement(const QString& primitiveType,
-                                                                               size_t allowedCompDim,
-                                                                               unsigned int attributeMatrixType,
-                                                                               unsigned int geometryType)
+MultiDataArraySelectionFilterParameter::RequirementType MultiDataArraySelectionFilterParameter::CreateRequirement(const QString& primitiveType,
+    size_t allowedCompDim,
+    unsigned int attributeMatrixType,
+    unsigned int geometryType)
 {
   typedef QVector<size_t> QVectorOfSizeType;
-  MultiDataArraySelectionFilterParameter::DataStructureRequirements req;
+  MultiDataArraySelectionFilterParameter::RequirementType req;
   QVector<unsigned int> amTypes;
   amTypes.push_back(attributeMatrixType);
   req.amTypes = amTypes;

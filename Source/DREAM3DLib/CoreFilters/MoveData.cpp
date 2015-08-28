@@ -98,19 +98,19 @@ void MoveData::setupFilterParameters()
   }
 
   {
-    AttributeMatrixSelectionFilterParameter::DataStructureRequirements req;
+    AttributeMatrixSelectionFilterParameter::RequirementType req;
     parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Attribute Matrix Source", "AttributeMatrixSource", getAttributeMatrixSource(), FilterParameter::RequiredArray, req, 0));
   }
   {
-    DataContainerSelectionFilterParameter::DataStructureRequirements req;
+    DataContainerSelectionFilterParameter::RequirementType req;
     parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container Destination", "DataContainerDestination", getDataContainerDestination(), FilterParameter::RequiredArray, req, 0));
   }
   {
-    DataArraySelectionFilterParameter::DataStructureRequirements req;
+    DataArraySelectionFilterParameter::RequirementType req;
     parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array Source", "DataArraySource", getDataArraySource(), FilterParameter::RequiredArray, req, 1));
   }
   {
-    AttributeMatrixSelectionFilterParameter::DataStructureRequirements req;
+    AttributeMatrixSelectionFilterParameter::RequirementType req;
     parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Attribute Matrix Destination", "AttributeMatrixDestination", getAttributeMatrixDestination(), FilterParameter::RequiredArray, req, 1));
   }
 

@@ -87,8 +87,8 @@ FindFeatureClustering::~FindFeatureClustering()
 // -----------------------------------------------------------------------------
 void FindFeatureClustering::setupFilterParameters()
 {
-  DataArraySelectionFilterParameter::DataStructureRequirements req;
-  AttributeMatrixSelectionFilterParameter::DataStructureRequirements amReq;
+  DataArraySelectionFilterParameter::RequirementType req;
+  AttributeMatrixSelectionFilterParameter::RequirementType amReq;
 
   FilterParameterVector parameters;
   parameters.push_back(IntFilterParameter::New("Number of Bins for RDF", "NumberOfBins", getNumberOfBins(), FilterParameter::Parameter));

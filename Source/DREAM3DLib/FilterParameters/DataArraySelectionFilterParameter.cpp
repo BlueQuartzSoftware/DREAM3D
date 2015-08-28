@@ -52,7 +52,7 @@ DataArraySelectionFilterParameter::~DataArraySelectionFilterParameter()
 //
 // -----------------------------------------------------------------------------
 DataArraySelectionFilterParameter::Pointer DataArraySelectionFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-                                                                                  const DataArrayPath& defaultValue, Category category, const DataStructureRequirements req, int groupIndex)
+    const DataArrayPath& defaultValue, Category category, const RequirementType req, int groupIndex)
 {
 
   DataArraySelectionFilterParameter::Pointer ptr = DataArraySelectionFilterParameter::New();
@@ -82,12 +82,12 @@ QString DataArraySelectionFilterParameter::getWidgetType()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataArraySelectionFilterParameter::DataStructureRequirements DataArraySelectionFilterParameter::CreateCategoryRequirement(const QString& primitiveType,
-                                                                               size_t allowedCompDim,
-                                                                               unsigned int attributeMatrixCategory)
+DataArraySelectionFilterParameter::RequirementType DataArraySelectionFilterParameter::CreateCategoryRequirement(const QString& primitiveType,
+    size_t allowedCompDim,
+    unsigned int attributeMatrixCategory)
 {
   typedef QVector<size_t> QVectorOfSizeType;
-  DataArraySelectionFilterParameter::DataStructureRequirements req;
+  DataArraySelectionFilterParameter::RequirementType req;
   QVector<unsigned int> amTypes;
   if(attributeMatrixCategory == DREAM3D::AttributeMatrixObjectType::Element)
   {
@@ -129,13 +129,13 @@ DataArraySelectionFilterParameter::DataStructureRequirements DataArraySelectionF
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataArraySelectionFilterParameter::DataStructureRequirements DataArraySelectionFilterParameter::CreateRequirement(const QString& primitiveType,
-                                                                               size_t allowedCompDim,
-                                                                               unsigned int attributeMatrixType,
-                                                                               unsigned int geometryType)
+DataArraySelectionFilterParameter::RequirementType DataArraySelectionFilterParameter::CreateRequirement(const QString& primitiveType,
+    size_t allowedCompDim,
+    unsigned int attributeMatrixType,
+    unsigned int geometryType)
 {
   typedef QVector<size_t> QVectorOfSizeType;
-  DataArraySelectionFilterParameter::DataStructureRequirements req;
+  DataArraySelectionFilterParameter::RequirementType req;
   QVector<unsigned int> amTypes;
   amTypes.push_back(attributeMatrixType);
   req.amTypes = amTypes;
