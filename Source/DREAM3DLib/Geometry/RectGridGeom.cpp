@@ -121,8 +121,14 @@ RectGridGeom::Pointer RectGridGeom::CreateGeometry(const QString& name)
 // -----------------------------------------------------------------------------
 void RectGridGeom::setXBounds(FloatArrayType::Pointer xBnds)
 {
+  if (xBnds.get() != NULL)
+  {
+    if (xBnds->getName().compare(DREAM3D::Geometry::xBoundsList))
+    {
+      xBnds->setName(DREAM3D::Geometry::xBoundsList);
+    }
+  }
   m_xBounds = xBnds;
-  m_xBounds->setName(DREAM3D::Geometry::xBoundsList);
 }
 
 // -----------------------------------------------------------------------------
@@ -130,8 +136,14 @@ void RectGridGeom::setXBounds(FloatArrayType::Pointer xBnds)
 // -----------------------------------------------------------------------------
 void RectGridGeom::setYBounds(FloatArrayType::Pointer yBnds)
 {
+  if (yBnds.get() != NULL)
+  {
+    if (yBnds->getName().compare(DREAM3D::Geometry::yBoundsList))
+    {
+      yBnds->setName(DREAM3D::Geometry::yBoundsList);
+    }
+  }
   m_yBounds = yBnds;
-  m_yBounds->setName(DREAM3D::Geometry::yBoundsList);
 }
 
 // -----------------------------------------------------------------------------
@@ -139,8 +151,14 @@ void RectGridGeom::setYBounds(FloatArrayType::Pointer yBnds)
 // -----------------------------------------------------------------------------
 void RectGridGeom::setZBounds(FloatArrayType::Pointer zBnds)
 {
+  if (zBnds.get() != NULL)
+  {
+    if (zBnds->getName().compare(DREAM3D::Geometry::zBoundsList))
+    {
+      zBnds->setName(DREAM3D::Geometry::zBoundsList);
+    }
+  }
   m_zBounds = zBnds;
-  m_zBounds->setName(DREAM3D::Geometry::zBoundsList);
 }
 
 // -----------------------------------------------------------------------------
