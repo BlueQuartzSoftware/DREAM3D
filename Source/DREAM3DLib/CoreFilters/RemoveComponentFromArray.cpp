@@ -79,7 +79,7 @@ void RemoveComponentFromArray::setupFilterParameters()
 
   parameters.push_back(IntFilterParameter::New("Component Number to Remove", "CompNumber", getCompNumber(), FilterParameter::Parameter));
 
-  DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Empty, UINT32_MAX, DREAM3D::AttributeMatrixObjectType::Unknown);
+  DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::Defaults::AnyPrimitive, DREAM3D::Defaults::AnyComponentSize, DREAM3D::AttributeMatrixObjectType::Any);
   parameters.push_back(DataArraySelectionFilterParameter::New("Multicomponent Attribute Array", "SelectedArrayPath", getSelectedArrayPath(), FilterParameter::RequiredArray, req));
 
   parameters.push_back(StringFilterParameter::New("Removed Component Attribute Array", "NewArrayArrayName", getNewArrayArrayName(), FilterParameter::CreatedArray));

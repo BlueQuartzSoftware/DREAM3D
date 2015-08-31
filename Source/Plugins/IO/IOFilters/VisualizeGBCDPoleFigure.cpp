@@ -94,7 +94,7 @@ void VisualizeGBCDPoleFigure::setupFilterParameters()
   parameters.push_back(OutputFileFilterParameter::New("Output Regular Grid VTK File", "OutputFile", getOutputFile(), FilterParameter::Parameter, "*.vtk", "VTK File"));
   parameters.push_back(SeparatorFilterParameter::New("Face Ensemble Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Double, UINT32_MAX, DREAM3D::AttributeMatrixType::FaceEnsemble, DREAM3D::GeometryType::TriangleGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Double, DREAM3D::Defaults::AnyComponentSize, DREAM3D::AttributeMatrixType::FaceEnsemble, DREAM3D::GeometryType::TriangleGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("GBCD", "GBCDArrayPath", getGBCDArrayPath(), FilterParameter::RequiredArray, req));
   }
   {

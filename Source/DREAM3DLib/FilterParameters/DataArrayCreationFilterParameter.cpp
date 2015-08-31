@@ -52,7 +52,7 @@ DataArrayCreationFilterParameter::~DataArrayCreationFilterParameter()
 //
 // -----------------------------------------------------------------------------
 DataArrayCreationFilterParameter::Pointer DataArrayCreationFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-    const DataArrayPath& defaultValue, Category category, const RequirementType req, int groupIndex)
+                                              const DataArrayPath& defaultValue, Category category, const RequirementType req, int groupIndex)
 {
 
   DataArrayCreationFilterParameter::Pointer ptr = DataArrayCreationFilterParameter::New();
@@ -120,11 +120,11 @@ DataArrayCreationFilterParameter::RequirementType DataArrayCreationFilterParamet
 {
   typedef QVector<size_t> QVectorOfSizeType;
   DataArrayCreationFilterParameter::RequirementType req;
-  if(attributeMatrixType != DREAM3D::AttributeMatrixType::Unknown)
+  if(DREAM3D::Defaults::AnyAttributeMatrix != attributeMatrixType)
   {
     req.amTypes = QVector<unsigned int>(1, attributeMatrixType);;
   }
-  if(geometryType != DREAM3D::GeometryType::UnknownGeometry)
+  if(DREAM3D::Defaults::AnyGeometry != geometryType)
   {
     req.dcGeometryTypes = QVector<uint32_t>(1, geometryType);
   }

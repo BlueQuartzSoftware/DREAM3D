@@ -116,7 +116,7 @@ void WriteImages::setupFilterParameters()
   parameters.push_back(StringFilterParameter::New("Image File Prefix", "ImagePrefix", getImagePrefix(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::UInt8, UINT32_MAX, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::UInt8, DREAM3D::Defaults::AnyComponentSize, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Color Data", "ColorsArrayPath", getColorsArrayPath(), FilterParameter::RequiredArray, req));
   }
   setFilterParameters(parameters);

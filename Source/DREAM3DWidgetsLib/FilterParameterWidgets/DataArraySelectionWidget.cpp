@@ -191,17 +191,24 @@ void DataArraySelectionWidget::populateComboBoxes()
   {
     DataContainerProxy dcProxy = iter.next();
     DataContainer::Pointer dc = dca->getDataContainer(dcProxy.name);
+    IGeometry::Pointer geom = IGeometry::NullPointer();
+    uint32_t geomType = 999;
+    if (NULL != dc.get()) { geom = dc->getGeometry(); }
+    if (NULL != geom.get()) { geomType = geom->getGeometryType(); }
     dataContainerCombo->addItem(dcProxy.name);
 
-    if (NULL != dc.get() && defVec.isEmpty() == false && defVec.contains(dc->getGeometry()->getGeometryType()) == false)
+    if (defVec.isEmpty() == false)
     {
-      QStandardItemModel* model = qobject_cast<QStandardItemModel*>(dataContainerCombo->model());
-      if (NULL != model)
+      if (defVec.contains(geomType) == false)
       {
-        QStandardItem* item = model->item(dataContainerCombo->findText(dcProxy.name));
-        if (NULL != item)
+        QStandardItemModel* model = qobject_cast<QStandardItemModel*>(dataContainerCombo->model());
+        if (NULL != model)
         {
-          item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
+          QStandardItem* item = model->item(dataContainerCombo->findText(dcProxy.name));
+          if (NULL != item)
+          {
+            item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
+          }
         }
       }
     }
@@ -275,31 +282,41 @@ void DataArraySelectionWidget::populateComboBoxes()
     attributeMatrixCombo->setCurrentIndex(amIndex);
     populateAttributeArrayList();
   }
-
+  
   if(didBlock) { attributeMatrixCombo->blockSignals(false); didBlock = false; }
   if(!attributeArrayCombo->signalsBlocked()) { didBlock = true; }
   attributeArrayCombo->blockSignals(true);
-
+  
   if (amIndex < 0)
   {
     attributeArrayCombo->setCurrentIndex(-1);
   }
   else
   {
-    int daIndex = attributeArrayCombo->findText(daName);
-
-    // The DataArray Name was empty, lets instantiate the filter and get the default value and try that
-    if (daIndex < 0)
+    QStandardItemModel* model = qobject_cast<QStandardItemModel*>(attributeArrayCombo->model());
+    if (NULL != model)
     {
-      QVariant var = getFilterParameter()->getDefaultValue();
-      DataArrayPath path = var.value<DataArrayPath>();
-      daName = path.getDataArrayName(); // Pick up the DataArray Name from a Default instantiation of the filter
-      daIndex = attributeArrayCombo->findText(daName);
+      int daIndex = attributeArrayCombo->findText(daName);
+      // The DataArray Name was empty, lets instantiate the filter and get the default value and try that
+      if (daIndex < 0)
+      {
+        QVariant var = getFilterParameter()->getDefaultValue();
+        DataArrayPath path = var.value<DataArrayPath>();
+        daName = path.getDataArrayName(); // Pick up the DataArray Name from a Default instantiation of the filter
+        daIndex = attributeArrayCombo->findText(daName);
+      }
+      
+      QStandardItem* item = model->item(daIndex);
+      if (NULL != item)
+      {
+        if (item->isEnabled())
+        {
+          attributeArrayCombo->setCurrentIndex(daIndex); // we set the selection but we are NOT triggering anything so we should
+        }
+      }
     }
-
-    attributeArrayCombo->setCurrentIndex(daIndex); // we set the selection but we are NOT triggering anything so we should
   }
-
+  
   if(didBlock) { attributeArrayCombo->blockSignals(false); didBlock = false; }// not be triggering an infinte recursion of preflights
 }
 
@@ -458,7 +475,8 @@ void DataArraySelectionWidget::populateAttributeArrayList()
 {
   DataContainerArray::Pointer dca = getFilter()->getDataContainerArray();
   if (NULL == dca.get()) { return; }
-
+  bool alreadyBlocked = false;
+  if(attributeArrayCombo->signalsBlocked()) { alreadyBlocked = true; }
   attributeArrayCombo->blockSignals(true);
   attributeArrayCombo->clear();
 
@@ -517,7 +535,10 @@ void DataArraySelectionWidget::populateAttributeArrayList()
     }
 
     attributeArrayCombo->setCurrentIndex(-1);
-    attributeArrayCombo->blockSignals(false);
+    if(alreadyBlocked == false)
+    {
+      attributeArrayCombo->blockSignals(false);
+    }
   }
 }
 
@@ -547,8 +568,9 @@ void DataArraySelectionWidget::beforePreflight()
   dataContainerCombo->blockSignals(true);
   attributeMatrixCombo->blockSignals(true);
   attributeArrayCombo->blockSignals(true);
-  // Reset all the combo box widgets to have the default selection of the first index in the list
+
   populateComboBoxes();
+
   dataContainerCombo->blockSignals(false);
   attributeMatrixCombo->blockSignals(false);
   attributeArrayCombo->blockSignals(false);
@@ -590,7 +612,13 @@ DataContainerArrayProxy DataArraySelectionWidget::generateDCAProxy()
 void DataArraySelectionWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
   // Generate the path to the AttributeArray
-  DataArrayPath path(dataContainerCombo->currentText(), attributeMatrixCombo->currentText(), attributeArrayCombo->currentText());
+  QString dc = dataContainerCombo->currentText();
+  QString am = attributeMatrixCombo->currentText();
+  QString da = attributeArrayCombo->currentText();
+  qDebug() << "++++++++++++++++++++++++++++++++++++++++++++";
+  qDebug() << getFilterParameter()->getHumanLabel() << ":" << dc << "/" << am << "/" << da << "   m_DidCausePreflight:" << (int)(m_DidCausePreflight) << " " << (int)(attributeArrayCombo->signalsBlocked());
+  qDebug() << "++++++++++++++++++++++++++++++++++++++++++++";
+  DataArrayPath path(dc, am, da);
   QVariant var;
   var.setValue(path);
   bool ok = false;

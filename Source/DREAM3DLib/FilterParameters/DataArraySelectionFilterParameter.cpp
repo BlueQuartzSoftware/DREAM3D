@@ -111,11 +111,11 @@ DataArraySelectionFilterParameter::RequirementType DataArraySelectionFilterParam
     amTypes.push_back(DREAM3D::AttributeMatrixType::VertexEnsemble);
   }
   req.amTypes = amTypes;
-  if(primitiveType.isEmpty() == false)
+  if(primitiveType.compare(DREAM3D::Defaults::AnyPrimitive) != 0)
   {
     req.daTypes = QVector<QString>(1, primitiveType);
   }
-  if(std::numeric_limits<unsigned int>::max() != allowedCompDim)
+  if(DREAM3D::Defaults::AnyComponentSize != allowedCompDim)
   {
     req.componentDimensions = QVector<QVectorOfSizeType>(1, QVectorOfSizeType(1, allowedCompDim));
   }
@@ -130,24 +130,26 @@ DataArraySelectionFilterParameter::RequirementType DataArraySelectionFilterParam
 //
 // -----------------------------------------------------------------------------
 DataArraySelectionFilterParameter::RequirementType DataArraySelectionFilterParameter::CreateRequirement(const QString& primitiveType,
-    size_t allowedCompDim,
-    unsigned int attributeMatrixType,
-    unsigned int geometryType)
+                                                                                    size_t allowedCompDim,
+                                                                                    unsigned int attributeMatrixType,
+                                                                                    unsigned int geometryType)
 {
   typedef QVector<size_t> QVectorOfSizeType;
   DataArraySelectionFilterParameter::RequirementType req;
-  QVector<unsigned int> amTypes;
-  amTypes.push_back(attributeMatrixType);
-  req.amTypes = amTypes;
-  if(primitiveType.isEmpty() == false)
+  if(primitiveType.compare(DREAM3D::Defaults::AnyPrimitive) != 0)
   {
     req.daTypes = QVector<QString>(1, primitiveType);
   }
-  if(std::numeric_limits<unsigned int>::max() != allowedCompDim)
+  if(DREAM3D::Defaults::AnyComponentSize != allowedCompDim)
   {
     req.componentDimensions = QVector<QVectorOfSizeType>(1, QVectorOfSizeType(1, allowedCompDim));
   }
-  if(DREAM3D::GeometryType::UnknownGeometry != geometryType)
+  if(DREAM3D::Defaults::AnyAttributeMatrix != attributeMatrixType)
+  {
+    QVector<unsigned int> amTypes(1, attributeMatrixType);
+    req.amTypes = amTypes;
+  }
+  if(DREAM3D::Defaults::AnyGeometry != geometryType)
   {
     req.dcGeometryTypes = QVector<unsigned int>(1, geometryType);
   }
