@@ -284,10 +284,8 @@ void InsertAtoms::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Float, 4, DREAM3D::AttributeMatrixType::CellFeature, DREAM3D::GeometryType::ImageGeometry);
-
     parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req));
   }
-
   parameters.push_back(StringFilterParameter::New("Data Container", "VertexDataContainerName", getVertexDataContainerName(), FilterParameter::CreatedArray));
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Vertex Attribute Matrix", "VertexAttributeMatrixName", getVertexAttributeMatrixName(), FilterParameter::CreatedArray));
