@@ -164,17 +164,24 @@ void AttributeMatrixSelectionWidget::populateComboBoxes()
   {
     DataContainerProxy dcProxy = iter.next();
     DataContainer::Pointer dc = dca->getDataContainer(dcProxy.name);
+    IGeometry::Pointer geom = IGeometry::NullPointer();
+    uint32_t geomType = 0;
+    if (NULL != dc.get()) { geom = dc->getGeometry(); }
+    if (NULL != geom.get()) { geomType = geom->getGeometryType(); }
     dataContainerCombo->addItem(dcProxy.name);
 
-    if (NULL != dc.get() && defVec.isEmpty() == false && defVec.contains(dc->getGeometry()->getGeometryType()) == false)
+    if (defVec.isEmpty() == false)
     {
-      QStandardItemModel* model = qobject_cast<QStandardItemModel*>(dataContainerCombo->model());
-      if (NULL != model)
+      if ((NULL == geom.get()) || (defVec.contains(geomType) == false))
       {
-        QStandardItem* item = model->item(dataContainerCombo->findText(dcProxy.name));
-        if (NULL != item)
+        QStandardItemModel* model = qobject_cast<QStandardItemModel*>(dataContainerCombo->model());
+        if (NULL != model)
         {
-          item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
+          QStandardItem* item = model->item(dataContainerCombo->findText(dcProxy.name));
+          if (NULL != item)
+          {
+            item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
+          }
         }
       }
     }
