@@ -192,14 +192,14 @@ void DataArraySelectionWidget::populateComboBoxes()
     DataContainerProxy dcProxy = iter.next();
     DataContainer::Pointer dc = dca->getDataContainer(dcProxy.name);
     IGeometry::Pointer geom = IGeometry::NullPointer();
-    uint32_t geomType = 0;
+    uint32_t geomType = 999;
     if (NULL != dc.get()) { geom = dc->getGeometry(); }
     if (NULL != geom.get()) { geomType = geom->getGeometryType(); }
     dataContainerCombo->addItem(dcProxy.name);
 
     if (defVec.isEmpty() == false)
     {
-      if ((NULL == geom.get()) || (defVec.contains(geomType) == false))
+      if (defVec.contains(geomType) == false)
       {
         QStandardItemModel* model = qobject_cast<QStandardItemModel*>(dataContainerCombo->model());
         if (NULL != model)
@@ -282,31 +282,41 @@ void DataArraySelectionWidget::populateComboBoxes()
     attributeMatrixCombo->setCurrentIndex(amIndex);
     populateAttributeArrayList();
   }
-
+  
   if(didBlock) { attributeMatrixCombo->blockSignals(false); didBlock = false; }
   if(!attributeArrayCombo->signalsBlocked()) { didBlock = true; }
   attributeArrayCombo->blockSignals(true);
-
+  
   if (amIndex < 0)
   {
     attributeArrayCombo->setCurrentIndex(-1);
   }
   else
   {
-    int daIndex = attributeArrayCombo->findText(daName);
-
-    // The DataArray Name was empty, lets instantiate the filter and get the default value and try that
-    if (daIndex < 0)
+    QStandardItemModel* model = qobject_cast<QStandardItemModel*>(attributeArrayCombo->model());
+    if (NULL != model)
     {
-      QVariant var = getFilterParameter()->getDefaultValue();
-      DataArrayPath path = var.value<DataArrayPath>();
-      daName = path.getDataArrayName(); // Pick up the DataArray Name from a Default instantiation of the filter
-      daIndex = attributeArrayCombo->findText(daName);
+      int daIndex = attributeArrayCombo->findText(daName);
+      // The DataArray Name was empty, lets instantiate the filter and get the default value and try that
+      if (daIndex < 0)
+      {
+        QVariant var = getFilterParameter()->getDefaultValue();
+        DataArrayPath path = var.value<DataArrayPath>();
+        daName = path.getDataArrayName(); // Pick up the DataArray Name from a Default instantiation of the filter
+        daIndex = attributeArrayCombo->findText(daName);
+      }
+      
+      QStandardItem* item = model->item(daIndex);
+      if (NULL != item)
+      {
+        if (item->isEnabled())
+        {
+          attributeArrayCombo->setCurrentIndex(daIndex); // we set the selection but we are NOT triggering anything so we should
+        }
+      }
     }
-
-    attributeArrayCombo->setCurrentIndex(daIndex); // we set the selection but we are NOT triggering anything so we should
   }
-
+  
   if(didBlock) { attributeArrayCombo->blockSignals(false); didBlock = false; }// not be triggering an infinte recursion of preflights
 }
 
@@ -465,7 +475,8 @@ void DataArraySelectionWidget::populateAttributeArrayList()
 {
   DataContainerArray::Pointer dca = getFilter()->getDataContainerArray();
   if (NULL == dca.get()) { return; }
-
+  bool alreadyBlocked = false;
+  if(attributeArrayCombo->signalsBlocked()) { alreadyBlocked = true; }
   attributeArrayCombo->blockSignals(true);
   attributeArrayCombo->clear();
 
@@ -524,7 +535,7 @@ void DataArraySelectionWidget::populateAttributeArrayList()
     }
 
     attributeArrayCombo->setCurrentIndex(-1);
-    if(m_DidCausePreflight)
+    if(alreadyBlocked == false)
     {
       attributeArrayCombo->blockSignals(false);
     }
@@ -604,9 +615,9 @@ void DataArraySelectionWidget::filterNeedsInputParameters(AbstractFilter* filter
   QString dc = dataContainerCombo->currentText();
   QString am = attributeMatrixCombo->currentText();
   QString da = attributeArrayCombo->currentText();
-//  qDebug() << "++++++++++++++++++++++++++++++++++++++++++++";
-//  qDebug() << dc << "/" << am << "/" << da << "   m_DidCausePreflight:" << (int)(m_DidCausePreflight);
-//  qDebug() << "++++++++++++++++++++++++++++++++++++++++++++";
+  qDebug() << "++++++++++++++++++++++++++++++++++++++++++++";
+  qDebug() << getFilterParameter()->getHumanLabel() << ":" << dc << "/" << am << "/" << da << "   m_DidCausePreflight:" << (int)(m_DidCausePreflight) << " " << (int)(attributeArrayCombo->signalsBlocked());
+  qDebug() << "++++++++++++++++++++++++++++++++++++++++++++";
   DataArrayPath path(dc, am, da);
   QVariant var;
   var.setValue(path);

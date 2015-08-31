@@ -162,14 +162,14 @@ void DataContainerSelectionWidget::populateComboBoxes()
     DataContainerProxy dcProxy = iter.next();
     DataContainer::Pointer dc = dca->getDataContainer(dcProxy.name);
     IGeometry::Pointer geom = IGeometry::NullPointer();
-    uint32_t geomType = 0;
+    uint32_t geomType = 999;
     if (NULL != dc.get()) { geom = dc->getGeometry(); }
     if (NULL != geom.get()) { geomType = geom->getGeometryType(); }
     dataContainerCombo->addItem(dcProxy.name);
 
     if (defVec.isEmpty() == false)
     {
-      if ((NULL == geom.get()) || (defVec.contains(geomType) == false))
+      if (defVec.contains(geomType) == false)
       {
         QStandardItemModel* model = qobject_cast<QStandardItemModel*>(dataContainerCombo->model());
         if (NULL != model)
