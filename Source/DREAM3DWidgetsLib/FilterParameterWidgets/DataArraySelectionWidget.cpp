@@ -517,7 +517,10 @@ void DataArraySelectionWidget::populateAttributeArrayList()
     }
 
     attributeArrayCombo->setCurrentIndex(-1);
-    attributeArrayCombo->blockSignals(false);
+    if(m_DidCausePreflight)
+    {
+      attributeArrayCombo->blockSignals(false);
+    }
   }
 }
 
@@ -547,8 +550,9 @@ void DataArraySelectionWidget::beforePreflight()
   dataContainerCombo->blockSignals(true);
   attributeMatrixCombo->blockSignals(true);
   attributeArrayCombo->blockSignals(true);
-  // Reset all the combo box widgets to have the default selection of the first index in the list
+
   populateComboBoxes();
+
   dataContainerCombo->blockSignals(false);
   attributeMatrixCombo->blockSignals(false);
   attributeArrayCombo->blockSignals(false);
@@ -590,7 +594,13 @@ DataContainerArrayProxy DataArraySelectionWidget::generateDCAProxy()
 void DataArraySelectionWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
   // Generate the path to the AttributeArray
-  DataArrayPath path(dataContainerCombo->currentText(), attributeMatrixCombo->currentText(), attributeArrayCombo->currentText());
+  QString dc = dataContainerCombo->currentText();
+  QString am = attributeMatrixCombo->currentText();
+  QString da = attributeArrayCombo->currentText();
+//  qDebug() << "++++++++++++++++++++++++++++++++++++++++++++";
+//  qDebug() << dc << "/" << am << "/" << da << "   m_DidCausePreflight:" << (int)(m_DidCausePreflight);
+//  qDebug() << "++++++++++++++++++++++++++++++++++++++++++++";
+  DataArrayPath path(dc, am, da);
   QVariant var;
   var.setValue(path);
   bool ok = false;
