@@ -115,8 +115,6 @@ class DREAM3DWidgetsLib_EXPORT DataArrayCreationWidget : public FilterParameterW
 
   protected:
     void populateComboBoxes();
-    void populateAttributeMatrixList();
-    void populateAttributeArrayList();
 
     DataContainerArrayProxy generateDCAProxy();
     void setSelectedPath(QString dcName, QString attrMatName, QString attrArrName);

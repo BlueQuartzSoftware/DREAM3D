@@ -105,7 +105,6 @@ class DREAM3DWidgetsLib_EXPORT AttributeMatrixSelectionWidget : public FilterPar
 
   protected:
     void populateComboBoxes();
-    void populateAttributeMatrixList();
 
     DataContainerArrayProxy generateDCAProxy();
     void setSelectedPath(QString dcName, QString attrMatName, QString attrArrName);
