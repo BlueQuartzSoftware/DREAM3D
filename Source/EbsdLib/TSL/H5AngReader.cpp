@@ -46,6 +46,7 @@
 
 #include "H5Support/QH5Lite.h"
 #include "H5Support/QH5Utilities.h"
+#include "H5Support/HDF5ScopedFileSentinel.h"
 
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/EbsdMacros.h"
@@ -154,6 +155,8 @@ int H5AngReader::readHeaderOnly()
     return -1;
   }
 
+  HDF5ScopedFileSentinel sentinel(&fileId, true);
+
   hid_t gid = H5Gopen(fileId, m_HDF5Path.toLatin1().data(), H5P_DEFAULT);
   if (gid < 0)
   {
@@ -161,11 +164,11 @@ int H5AngReader::readHeaderOnly()
     err = QH5Utilities::closeFile(fileId);
     return -1;
   }
+  sentinel.addGroupId(&gid);
 
   // Read all the header information
   // qDebug() << "H5AngReader:: reading Header .. ";
   err = readHeader(gid);
-  err = QH5Utilities::closeFile(fileId);
   return err;
 }
 
