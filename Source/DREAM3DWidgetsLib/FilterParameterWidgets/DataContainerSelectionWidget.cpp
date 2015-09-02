@@ -169,17 +169,17 @@ void DataContainerSelectionWidget::populateComboBoxes()
   }
   else if( QString("DataArrayPath").compare(qvSelectedPath.typeName()) == 0 )
   {
+    // Now to figure out which one of these to use. If this is the first time through then what we picked up from the
+    // gui will be empty strings because nothing is there. If there is something in the filter then we should use that.
+    // If there is something in both of them and they are NOT equal then we have a problem. Use the flag m_DidCausePreflight
+    // to determine if the change from the GUI should over ride the filter or vice versa. there is a potential that in future
+    // versions that something else is driving DREAM3D and pushing the changes to the filter and we need to reflect those
+    // changes in the GUI, like a testing script?
     DataArrayPath selectedPath = qvSelectedPath.value<DataArrayPath>();
     filtDcName = selectedPath.getDataContainerName();
     filtAmName = selectedPath.getAttributeMatrixName();
   }
 
-  // Now to figure out which one of these to use. If this is the first time through then what we picked up from the
-  // gui will be empty strings because nothing is there. If there is something in the filter then we should use that.
-  // If there is something in both of them and they are NOT equal then we have a problem. Use the flag m_DidCausePreflight
-  // to determine if the change from the GUI should over ride the filter or vice versa. there is a potential that in future
-  // versions that something else is driving DREAM3D and pushing the changes to the filter and we need to reflect those
-  // changes in the GUI, like a testing script?
 
   QString dcName = checkStringValues(curDcName, filtDcName);
   if( !dca->doesDataContainerExist(dcName) ) { dcName = ""; }

@@ -3,6 +3,7 @@
 
 #include <QtCore/QString>
 #include <QtWidgets/QComboBox>
+#include <QtWidgets/QListWidgetItem>
 #include <QtGui/QStandardItemModel>
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
@@ -13,11 +14,22 @@
 
 
 
-
+/**
+ * @brief The FilterPararameterWidgetUtils class implements some common methods that
+ * can be used by widgets that present QComboBoxes populated with DataContainers,
+ * AttributeMatrices or DataArrays.
+ */
 class FilterPararameterWidgetUtils
 {
   public:
 
+    /**
+     * @brief PopulateDataContainerComboBox
+     * @param filter
+     * @param filterParameter
+     * @param dcCombo
+     * @param dcaProxy
+     */
     template<typename FilterParameterType>
     static void PopulateDataContainerComboBox(AbstractFilter* filter, FilterParameter* filterParameter,
                                               QComboBox* dcCombo, DataContainerArrayProxy& dcaProxy)
@@ -54,7 +66,14 @@ class FilterPararameterWidgetUtils
 
 
 
-
+    /**
+     * @brief PopulateAttributeMatrixComboBox
+     * @param filter
+     * @param filterParameter
+     * @param dcCombo
+     * @param amCombo
+     * @param dcaProxy
+     */
     template<typename FilterParameterType>
     static void PopulateAttributeMatrixComboBox(AbstractFilter* filter, FilterParameter* filterParameter,
                                             QComboBox* dcCombo, QComboBox* amCombo,
@@ -115,10 +134,15 @@ class FilterPararameterWidgetUtils
     }
 
 
-
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
+    /**
+     * @brief PopulateAttributeArrayComboBox
+     * @param filter
+     * @param filterParameter
+     * @param dcCombo
+     * @param amCombo
+     * @param aaCombo
+     * @param dcaProxy
+     */
     template<typename FilterParameterType>
     static void PopulateAttributeArrayComboBox(AbstractFilter* filter, FilterParameter* filterParameter,
                                       QComboBox* dcCombo, QComboBox* amCombo, QComboBox* aaCombo,
@@ -194,6 +218,98 @@ class FilterPararameterWidgetUtils
           aaCombo->blockSignals(false);
         }
       }
+    }
+
+
+    /**
+     * @brief PopulateAttributeArrayList This method populates a QListWidget with
+     * items representing AttributeArrays
+     * @param filter
+     * @param filterParameter
+     * @param dcCombo
+     * @param amCombo
+     * @param attributeArraysWidget
+     * @param dcaProxy
+     * @param selectedPaths The paths that need to be set to selected
+     */
+    template <typename FilterParameterType, typename WidgetType>
+    static void PopulateAttributeArrayList(AbstractFilter* filter, FilterParameter* filterParameter,
+                                           QComboBox* dcCombo, QComboBox* amCombo, WidgetType* attributeArraysWidget,
+                                           DataContainerArrayProxy& dcaProxy,
+                                           QVector<DataArrayPath> selectedPaths)
+    {
+      FilterParameterType* fp = dynamic_cast<FilterParameterType*>(filterParameter);
+      assert(fp != NULL);
+
+      DataContainerArray::Pointer dca = filter->getDataContainerArray();
+      if (NULL == dca.get()) { return; }
+
+      attributeArraysWidget->blockSignals(true);
+      attributeArraysWidget->clear();
+
+      // Get the selected Data Container Name from the DataContainerList Widget
+      QString currentDCName = dcCombo->currentText();
+      QString currentAttrMatName = amCombo->currentText();
+
+      // Loop over the data containers until we find the proper data container
+      QList<DataContainerProxy> containers = dcaProxy.dataContainers.values();
+      QListIterator<DataContainerProxy> containerIter(containers);
+      QVector<QString> daTypes = fp->getDefaultAttributeArrayTypes();
+      QVector< QVector<size_t> > cDims = fp->getDefaultComponentDimensions();
+      while (containerIter.hasNext())
+      {
+        DataContainerProxy dc = containerIter.next();
+        if (dc.name.compare(currentDCName) == 0)
+        {
+          // We found the proper Data Container, now populate the AttributeMatrix List
+          QMap<QString, AttributeMatrixProxy> attrMats = dc.attributeMatricies;
+          QMapIterator<QString, AttributeMatrixProxy> attrMatsIter(attrMats);
+          while (attrMatsIter.hasNext())
+          {
+            attrMatsIter.next();
+            QString amName = attrMatsIter.key();
+            if (amName.compare(currentAttrMatName) == 0)
+            {
+              // Clear the list of arrays from the QListWidget
+              attributeArraysWidget->clear();
+              // We found the selected AttributeMatrix, so loop over this attribute matrix arrays and populate the list widget
+              AttributeMatrixProxy amProxy = attrMatsIter.value();
+              QMap<QString, DataArrayProxy> dataArrays = amProxy.dataArrays;
+              QMapIterator<QString, DataArrayProxy> dataArraysIter(dataArrays);
+              while (dataArraysIter.hasNext())
+              {
+                dataArraysIter.next();
+                QString daName = dataArraysIter.key();
+                QListWidgetItem* daItem = new QListWidgetItem(daName);
+                daItem->setCheckState(Qt::Unchecked);
+
+                for (int i = 0; i < selectedPaths.size(); i++)
+                {
+                  if (selectedPaths.at(i).getDataArrayName() == daName)
+                  {
+                    daItem->setCheckState(Qt::Checked);
+                  }
+                }
+
+                IDataArray::Pointer da = dca->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(NULL, DataArrayPath(dc.name, amProxy.name, daName));
+                attributeArraysWidget->addItem(daItem);
+
+                if (NULL != da.get() && ((daTypes.isEmpty() == false && daTypes.contains(da->getTypeAsString()) == false) || (cDims.isEmpty() == false && cDims.contains(da->getComponentDimensions()) == false)))
+                {
+                  QList<QListWidgetItem*> rejectList = attributeArraysWidget->findItems(daName, Qt::MatchRecursive);
+                  for (int i = 0; i < rejectList.size(); i++)
+                  {
+                    QListWidgetItem* item = rejectList[i];
+                    item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      attributeArraysWidget->blockSignals(false);
     }
 
 

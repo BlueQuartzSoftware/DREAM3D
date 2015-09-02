@@ -111,17 +111,15 @@ class DREAM3DWidgetsLib_EXPORT MultiDataArraySelectionWidget : public FilterPara
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
 
-    void on_dataContainerList_currentIndexChanged(int index);
+    void on_dataContainerCombo_currentIndexChanged(int index);
 
-    void on_attributeMatrixList_currentIndexChanged(int index);
+    void on_attributeMatrixCombo_currentIndexChanged(int index);
 
     void on_attributeArraysWidget_itemChanged(QListWidgetItem* item);
 
 
   protected:
     void populateComboBoxes();
-    void populateAttributeMatrixList();
-    void populateAttributeArrayList(QVector<DataArrayPath> selectedPaths);
 
     /**
     * @brief generateDCAProxy

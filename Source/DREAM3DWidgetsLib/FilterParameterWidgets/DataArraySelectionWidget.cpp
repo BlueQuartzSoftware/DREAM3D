@@ -99,7 +99,6 @@ void DataArraySelectionWidget::initializeWidget(FilterParameter* parameter, Abst
 // -----------------------------------------------------------------------------
 void DataArraySelectionWidget::setupGui()
 {
-
   // Sanity Check the filter and the filter parameter
   if(getFilter() == NULL)
   {
@@ -112,7 +111,6 @@ void DataArraySelectionWidget::setupGui()
 
   // Generate the text for the QLabel
   label->setText(getFilterParameter()->getHumanLabel() );
-
 
   // Get the default path from the Filter instance to cache
   m_DefaultPath = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<DataArrayPath>();
@@ -227,6 +225,7 @@ void DataArraySelectionWidget::populateComboBoxes()
   dataContainerCombo->blockSignals(true);
   int dcIndex = dataContainerCombo->findText(dcName);
   dataContainerCombo->setCurrentIndex(dcIndex);
+
   FilterPararameterWidgetUtils::PopulateAttributeMatrixComboBox<DataArraySelectionFilterParameter>(getFilter(), getFilterParameter(), dataContainerCombo, attributeMatrixCombo, m_DcaProxy);
 
   if(didBlock) { dataContainerCombo->blockSignals(false); didBlock = false; }
@@ -247,6 +246,7 @@ void DataArraySelectionWidget::populateComboBoxes()
   }
 
   if(didBlock) { attributeMatrixCombo->blockSignals(false); didBlock = false; }
+
   if(!attributeArrayCombo->signalsBlocked()) { didBlock = true; }
   attributeArrayCombo->blockSignals(true);
 
@@ -289,12 +289,18 @@ void DataArraySelectionWidget::populateComboBoxes()
 QString DataArraySelectionWidget::checkStringValues(QString curDcName, QString filtDcName)
 {
   ////qDebug() << "    checkStringValues(...)" << curDcName << "  " << filtDcName;
-  if(curDcName.isEmpty() == true && filtDcName.isEmpty() == false)
-  {return filtDcName;}
-  else if(curDcName.isEmpty() == false && filtDcName.isEmpty() == true)
-  {return curDcName;}
-  else if(curDcName.isEmpty() == false && filtDcName.isEmpty() == false && m_DidCausePreflight == true)
-  { return curDcName;}
+  if (curDcName.isEmpty() == true && filtDcName.isEmpty() == false)
+  {
+    return filtDcName;
+  }
+  else if (curDcName.isEmpty() == false && filtDcName.isEmpty() == true)
+  {
+    return curDcName;
+  }
+  else if (curDcName.isEmpty() == false && filtDcName.isEmpty() == false && m_DidCausePreflight == true)
+  {
+    return curDcName;
+  }
 
   return filtDcName;
 }
@@ -452,9 +458,9 @@ void DataArraySelectionWidget::filterNeedsInputParameters(AbstractFilter* filter
   QString dc = dataContainerCombo->currentText();
   QString am = attributeMatrixCombo->currentText();
   QString da = attributeArrayCombo->currentText();
-  qDebug() << "++++++++++++++++++++++++++++++++++++++++++++";
-  qDebug() << getFilterParameter()->getHumanLabel() << ":" << dc << "/" << am << "/" << da << "   m_DidCausePreflight:" << (int)(m_DidCausePreflight) << " " << (int)(attributeArrayCombo->signalsBlocked());
-  qDebug() << "++++++++++++++++++++++++++++++++++++++++++++";
+ // qDebug() << "++++++++++++++++++++++++++++++++++++++++++++";
+ // qDebug() << getFilterParameter()->getHumanLabel() << ":" << dc << "/" << am << "/" << da << "   m_DidCausePreflight:" << (int)(m_DidCausePreflight) << " " << (int)(attributeArrayCombo->signalsBlocked());
+ // qDebug() << "++++++++++++++++++++++++++++++++++++++++++++";
   DataArrayPath path(dc, am, da);
   QVariant var;
   var.setValue(path);
