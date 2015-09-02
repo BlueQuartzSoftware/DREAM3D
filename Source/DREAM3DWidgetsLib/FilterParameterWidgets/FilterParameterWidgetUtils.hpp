@@ -46,25 +46,29 @@ class FilterPararameterWidgetUtils
       {
         DataContainerProxy dcProxy = iter.next();
         DataContainer::Pointer dc = dca->getDataContainer(dcProxy.name);
+        IGeometry::Pointer geom = IGeometry::NullPointer();
+        uint32_t geomType = 999;
+        if (NULL != dc.get()) { geom = dc->getGeometry(); }
+        if (NULL != geom.get()) { geomType = geom->getGeometryType(); }
         dcCombo->addItem(dcProxy.name);
 
-        if (NULL != dc.get() && defVec.isEmpty() == false && defVec.contains(dc->getGeometry()->getGeometryType()) == false)
+        if (defVec.isEmpty() == false)
         {
-          QStandardItemModel* model = qobject_cast<QStandardItemModel*>(dcCombo->model());
-          if (NULL != model)
+          if (defVec.contains(geomType) == false)
           {
-            QStandardItem* item = model->item(dcCombo->findText(dcProxy.name));
-            if (NULL != item)
+            QStandardItemModel* model = qobject_cast<QStandardItemModel*>(dcCombo->model());
+            if (NULL != model)
             {
-              item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
+              QStandardItem* item = model->item(dcCombo->findText(dcProxy.name));
+              if (NULL != item)
+              {
+                item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
+              }
             }
           }
         }
       }
-
     }
-
-
 
     /**
      * @brief PopulateAttributeMatrixComboBox

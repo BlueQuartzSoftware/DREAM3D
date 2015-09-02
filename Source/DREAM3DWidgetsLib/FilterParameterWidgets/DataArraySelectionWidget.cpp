@@ -404,7 +404,7 @@ void DataArraySelectionWidget::beforePreflight()
   if (NULL == getFilter()) { return; }
   if(m_DidCausePreflight == true)
   {
-    std::cout << "***  DataArraySelectionWidget already caused a preflight, just returning" << std::endl;
+    // std::cout << "***  DataArraySelectionWidget already caused a preflight, just returning" << std::endl;
     return;
   }
 

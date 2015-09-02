@@ -305,7 +305,7 @@ void VolumeDataContainerInfoWidget::beforePreflight()
   if (NULL == getFilter()) { return; }
   if(m_DidCausePreflight == true)
   {
-    std::cout << "***  VolumeDataContainerInfoWidget already caused a preflight, just returning" << std::endl;
+   // std::cout << "***  VolumeDataContainerInfoWidget already caused a preflight, just returning" << std::endl;
     return;
   }
 

@@ -279,7 +279,7 @@ void AttributeMatrixCreationWidget::beforePreflight()
   if (NULL == getFilter()) { return; }
   if (m_DidCausePreflight == true)
   {
-    std::cout << "***  AttributeMatrixCreationWidget already caused a preflight, just returning" << std::endl;
+   // std::cout << "***  AttributeMatrixCreationWidget already caused a preflight, just returning" << std::endl;
     return;
   }
 
