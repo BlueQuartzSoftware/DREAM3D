@@ -36,14 +36,14 @@
 #ifndef _ImportVectorImageStackFilterParameter_H_
 #define _ImportVectorImageStackFilterParameter_H_
 
-#include "DREAM3DLib/FilterParameters/FilterParameter.h"
+#include "SIMPLib/FilterParameters/FilterParameter.h"
 
 class ImportVectorImageStackFilterParameter : public FilterParameter
 {
 public:
-  DREAM3D_SHARED_POINTERS(ImportVectorImageStackFilterParameter)
-    DREAM3D_STATIC_NEW_MACRO(ImportVectorImageStackFilterParameter)
-    DREAM3D_TYPE_MACRO(ImportVectorImageStackFilterParameter)
+  SIMPL_SHARED_POINTERS(ImportVectorImageStackFilterParameter)
+    SIMPL_STATIC_NEW_MACRO(ImportVectorImageStackFilterParameter)
+    SIMPL_TYPE_MACRO(ImportVectorImageStackFilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
     const QVariant& defaultValue, Category category, int groupIndex = -1);

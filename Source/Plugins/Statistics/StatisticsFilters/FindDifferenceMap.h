@@ -5,9 +5,9 @@
 #ifndef _FindDifferenceMap_H_
 #define _FindDifferenceMap_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Common/AbstractFilter.h"
 
 /**
  * @brief The FindDifferenceMap class. See [Filter documentation](@ref finddifferencemap) for details.
@@ -17,19 +17,19 @@ class FindDifferenceMap : public AbstractFilter
   Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
 
   public:
-    DREAM3D_SHARED_POINTERS(FindDifferenceMap)
-    DREAM3D_STATIC_NEW_MACRO(FindDifferenceMap)
-    DREAM3D_TYPE_MACRO_SUPER(FindDifferenceMap, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FindDifferenceMap)
+    SIMPL_STATIC_NEW_MACRO(FindDifferenceMap)
+    SIMPL_TYPE_MACRO_SUPER(FindDifferenceMap, AbstractFilter)
 
     virtual ~FindDifferenceMap();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FirstInputArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FirstInputArrayPath)
     Q_PROPERTY(DataArrayPath FirstInputArrayPath READ getFirstInputArrayPath WRITE setFirstInputArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SecondInputArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SecondInputArrayPath)
     Q_PROPERTY(DataArrayPath SecondInputArrayPath READ getSecondInputArrayPath WRITE setSecondInputArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, DifferenceMapArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, DifferenceMapArrayPath)
     Q_PROPERTY(DataArrayPath DifferenceMapArrayPath READ getDifferenceMapArrayPath WRITE setDifferenceMapArrayPath)
 
     /**

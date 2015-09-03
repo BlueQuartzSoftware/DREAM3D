@@ -37,11 +37,11 @@
 #ifndef _CropImageGeometry_H_
 #define _CropImageGeometry_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/FilterParameters/IntVec3FilterParameter.h"
-#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 
 /**
  * @brief The CropImageGeometry class. See [Filter documentation](@ref CropImageGeometry) for details.
@@ -50,19 +50,19 @@ class CropImageGeometry : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(CropImageGeometry)
-    DREAM3D_STATIC_NEW_MACRO(CropImageGeometry)
-    DREAM3D_TYPE_MACRO_SUPER(CropImageGeometry, AbstractFilter)
+    SIMPL_SHARED_POINTERS(CropImageGeometry)
+    SIMPL_STATIC_NEW_MACRO(CropImageGeometry)
+    SIMPL_TYPE_MACRO_SUPER(CropImageGeometry, AbstractFilter)
 
     virtual ~CropImageGeometry();
 
-    DREAM3D_FILTER_PARAMETER(QString, NewDataContainerName)
+    SIMPL_FILTER_PARAMETER(QString, NewDataContainerName)
     Q_PROPERTY(QString NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
     Q_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixPath)
     Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
 
     IntVec3_t getCurrentVolumeDataContainerDimensions();
@@ -71,34 +71,34 @@ class CropImageGeometry : public AbstractFilter
     FloatVec3_t getCurrentVolumeDataContainerResolutions();
     Q_PROPERTY(FloatVec3_t CurrentVolumeDataContainerResolutions READ getCurrentVolumeDataContainerResolutions)
 
-    DREAM3D_FILTER_PARAMETER(int, XMin)
+    SIMPL_FILTER_PARAMETER(int, XMin)
     Q_PROPERTY(int XMin READ getXMin WRITE setXMin)
 
-    DREAM3D_FILTER_PARAMETER(int, YMin)
+    SIMPL_FILTER_PARAMETER(int, YMin)
     Q_PROPERTY(int YMin READ getYMin WRITE setYMin)
 
-    DREAM3D_FILTER_PARAMETER(int, ZMin)
+    SIMPL_FILTER_PARAMETER(int, ZMin)
     Q_PROPERTY(int ZMin READ getZMin WRITE setZMin)
 
-    DREAM3D_FILTER_PARAMETER(int, XMax)
+    SIMPL_FILTER_PARAMETER(int, XMax)
     Q_PROPERTY(int XMax READ getXMax WRITE setXMax)
 
-    DREAM3D_FILTER_PARAMETER(int, YMax)
+    SIMPL_FILTER_PARAMETER(int, YMax)
     Q_PROPERTY(int YMax READ getYMax WRITE setYMax)
 
-    DREAM3D_FILTER_PARAMETER(int, ZMax)
+    SIMPL_FILTER_PARAMETER(int, ZMax)
     Q_PROPERTY(int ZMax READ getZMax WRITE setZMax)
 
-    DREAM3D_FILTER_PARAMETER(bool, RenumberFeatures)
+    SIMPL_FILTER_PARAMETER(bool, RenumberFeatures)
     Q_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures)
 
-    DREAM3D_FILTER_PARAMETER(bool, SaveAsNewDataContainer)
+    SIMPL_FILTER_PARAMETER(bool, SaveAsNewDataContainer)
     Q_PROPERTY(bool SaveAsNewDataContainer READ getSaveAsNewDataContainer WRITE setSaveAsNewDataContainer)
 
-    DREAM3D_FILTER_PARAMETER(bool, UpdateOrigin)
+    SIMPL_FILTER_PARAMETER(bool, UpdateOrigin)
     Q_PROPERTY(bool UpdateOrigin READ getUpdateOrigin WRITE setUpdateOrigin)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
     /**

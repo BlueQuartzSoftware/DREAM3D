@@ -36,16 +36,16 @@
 
 #include "FindBasalLoadingFactor.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArrayCreationFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Math/GeometryMath.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Math/GeometryMath.h"
+#include "SIMPLib/Math/MatrixMath.h"
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
@@ -111,10 +111,10 @@ void FindBasalLoadingFactor::readFilterParameters(AbstractFilterParametersReader
 int FindBasalLoadingFactor::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(BasalLoadingFactorArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(LoadingDirection)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(BasalLoadingFactorArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(LoadingDirection)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -195,7 +195,7 @@ void FindBasalLoadingFactor::execute()
     if(c1[2] < 0) { MatrixMath::Multiply3x1withConstant(c1, -1); }
     w = GeometryMath::CosThetaBetweenVectors(c1, sampleLoading);
     w = acos(w);
-    w *= DREAM3D::Constants::k_180OverPi;
+    w *= SIMPLib::Constants::k_180OverPi;
     m_BasalLoadingFactor[i] = w;
   }
 

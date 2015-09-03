@@ -56,11 +56,11 @@
 #include "Applications/DREAM3D/AboutPlugins.h"
 #include "Applications/DREAM3D/DREAM3DConstants.h"
 
-#include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/DREAM3DLibVersion.h"
-#include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
-#include "DREAM3DLib/Plugin/PluginManager.h"
-#include "DREAM3DLib/Plugin/PluginProxy.h"
+#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/SIMPLibVersion.h"
+#include "SIMPLib/Utilities/QMetaObjectUtilities.h"
+#include "SIMPLib/Plugin/PluginManager.h"
+#include "SIMPLib/Plugin/PluginProxy.h"
 
 #include "DREAM3DWidgetsLib/Widgets/DREAM3DUserManualDialog.h"
 #include "DREAM3DWidgetsLib/Widgets/DREAM3DUpdateCheckDialog.h"
@@ -129,7 +129,7 @@ void delay(int seconds)
 // -----------------------------------------------------------------------------
 bool DREAM3DApplication::initialize(int argc, char* argv[])
 {
-  QApplication::setApplicationVersion(DREAM3DLib::Version::Complete());
+  QApplication::setApplicationVersion(SIMPLib::Version::Complete());
 
   // If Mac, initialize global menu
 #if defined (Q_OS_MAC)
@@ -163,7 +163,7 @@ bool DREAM3DApplication::initialize(int argc, char* argv[])
   QMetaObjectUtilities::RegisterMetaTypes();
 
   // Load application plugins.
-  QVector<IDREAM3DPlugin*> plugins = loadPlugins();
+  QVector<ISIMPLibPlugin*> plugins = loadPlugins();
 
   // give GUI components time to update before the mainwindow is shown
   QApplication::instance()->processEvents();
@@ -180,7 +180,7 @@ bool DREAM3DApplication::initialize(int argc, char* argv[])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<IDREAM3DPlugin*> DREAM3DApplication::loadPlugins()
+QVector<ISIMPLibPlugin*> DREAM3DApplication::loadPlugins()
 {
   QStringList pluginDirs;
   pluginDirs << applicationDirPath();
@@ -313,7 +313,7 @@ QVector<IDREAM3DPlugin*> DREAM3DApplication::loadPlugins()
     qDebug() << "    Pointer: " << plugin << "\n";
     if (plugin)
     {
-      IDREAM3DPlugin* ipPlugin = qobject_cast<IDREAM3DPlugin*>(plugin);
+      ISIMPLibPlugin* ipPlugin = qobject_cast<ISIMPLibPlugin*>(plugin);
       if (ipPlugin)
       {
         QString pluginName = ipPlugin->getPluginName();
@@ -321,7 +321,7 @@ QVector<IDREAM3DPlugin*> DREAM3DApplication::loadPlugins()
         {
           QString msg = QObject::tr("Loading Plugin %1").arg(fileName);
           this->Splash->showMessage(msg);
-          //IDREAM3DPlugin::Pointer ipPluginPtr(ipPlugin);
+          //ISIMPLibPlugin::Pointer ipPluginPtr(ipPlugin);
           ipPlugin->registerFilterWidgets(fwm);
           ipPlugin->registerFilters(fm);
           ipPlugin->setDidLoad(true);
@@ -677,7 +677,7 @@ void DREAM3DApplication::on_actionCheckForUpdates_triggered()
 {
   DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(NULL);
 
-  d->setCurrentVersion((DREAM3DLib::Version::Complete()));
+  d->setCurrentVersion((SIMPLib::Version::Complete()));
   d->setUpdateWebSite(DREAM3D::UpdateWebsite::UpdateWebSite);
   d->setApplicationName("DREAM3D");
 
@@ -1248,7 +1248,7 @@ void DREAM3DApplication::newInstanceFromFile(const QString& filePath, const bool
 DREAM3D_UI* DREAM3DApplication::getNewDREAM3DInstance()
 {
   PluginManager* pluginManager = PluginManager::Instance();
-  QVector<IDREAM3DPlugin*> plugins = pluginManager->getPluginsVector();
+  QVector<ISIMPLibPlugin*> plugins = pluginManager->getPluginsVector();
 
   // Create new DREAM3D instance
   DREAM3D_UI* newInstance = new DREAM3D_UI(NULL);

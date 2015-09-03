@@ -39,8 +39,8 @@
 #include <QtWidgets/QWidget>
 
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataContainers/AttributeMatrix.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/DataContainers/AttributeMatrix.h"
 #include "StatsGenerator/Presets/AbstractMicrostructurePreset.h"
 
 class QwtPlotZoomer;
@@ -62,12 +62,12 @@ class SGWidget : public QWidget
     SGWidget(QWidget* parent = 0);
     virtual ~SGWidget();
 
-    DREAM3D_VIRTUAL_INSTANCE_PROPERTY(unsigned int, PhaseType)
-    DREAM3D_VIRTUAL_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
-    DREAM3D_VIRTUAL_INSTANCE_PROPERTY(int, PhaseIndex)
-    DREAM3D_VIRTUAL_INSTANCE_PROPERTY(float, PhaseFraction)
-    DREAM3D_VIRTUAL_INSTANCE_PROPERTY(float, TotalPhaseFraction)
-    DREAM3D_VIRTUAL_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
+    SIMPL_VIRTUAL_INSTANCE_PROPERTY(unsigned int, PhaseType)
+    SIMPL_VIRTUAL_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
+    SIMPL_VIRTUAL_INSTANCE_PROPERTY(int, PhaseIndex)
+    SIMPL_VIRTUAL_INSTANCE_PROPERTY(float, PhaseFraction)
+    SIMPL_VIRTUAL_INSTANCE_PROPERTY(float, TotalPhaseFraction)
+    SIMPL_VIRTUAL_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
 
     virtual void extractStatsData(AttributeMatrix::Pointer attrMat, int index);
     virtual int gatherStatsData(AttributeMatrix::Pointer attrMat);

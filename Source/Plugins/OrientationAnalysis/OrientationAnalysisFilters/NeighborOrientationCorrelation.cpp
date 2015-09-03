@@ -36,14 +36,14 @@
 
 #include "NeighborOrientationCorrelation.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/DoubleFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/IntFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
@@ -129,14 +129,14 @@ void NeighborOrientationCorrelation::readFilterParameters(AbstractFilterParamete
 int NeighborOrientationCorrelation::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(ConfidenceIndexArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(MisorientationTolerance)
-  DREAM3D_FILTER_WRITE_PARAMETER(MinConfidence)
-  DREAM3D_FILTER_WRITE_PARAMETER(Level)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(QuatsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(ConfidenceIndexArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(MisorientationTolerance)
+  SIMPL_FILTER_WRITE_PARAMETER(MinConfidence)
+  SIMPL_FILTER_WRITE_PARAMETER(Level)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -201,7 +201,7 @@ void NeighborOrientationCorrelation::execute()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_ConfidenceIndexArrayPath.getDataContainerName());
   size_t totalPoints = m_ConfidenceIndexPtr.lock()->getNumberOfTuples();
 
-  m_MisorientationTolerance = m_MisorientationTolerance * DREAM3D::Constants::k_Pi / 180.0f;
+  m_MisorientationTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_Pi / 180.0f;
 
   size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);

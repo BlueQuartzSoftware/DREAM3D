@@ -55,15 +55,15 @@
 #include <QtWidgets/QScrollBar>
 
 //-- DREAM3D Includes
-#include "DREAM3DLib/DREAM3DLibVersion.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
-#include "DREAM3DLib/Plugin/PluginManager.h"
+#include "SIMPLib/SIMPLibVersion.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/FilterParameters/QFilterParametersWriter.h"
+#include "SIMPLib/Plugin/PluginManager.h"
 
 #include "QtSupportLib/QRecentFileList.h"
-#include "QtSupportLib/DREAM3DQtMacros.h"
-#include "QtSupportLib/DREAM3DPluginFrame.h"
+#include "QtSupportLib/SIMPLQtMacros.h"
+#include "QtSupportLib/SIMPLPluginFrame.h"
 
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
 #include "DREAM3DWidgetsLib/UpdateCheck.h"
@@ -715,7 +715,7 @@ void DREAM3D_UI::connectSignalsSlots(DREAM3D_UI* other)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::setLoadedPlugins(QVector<IDREAM3DPlugin*> plugins)
+void DREAM3D_UI::setLoadedPlugins(QVector<ISIMPLibPlugin*> plugins)
 {
   m_LoadedPlugins = plugins;
 }
@@ -1041,7 +1041,7 @@ void DREAM3D_UI::pipelineDidFinish()
 void DREAM3D_UI::versionCheckReply(UpdateCheckData* dataObj)
 {
   DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(this);
-  d->setCurrentVersion((DREAM3DLib::Version::Complete()));
+  d->setCurrentVersion((SIMPLib::Version::Complete()));
   d->setApplicationName("DREAM3D");
 
   if ( dataObj->hasUpdate() && !dataObj->hasError() )

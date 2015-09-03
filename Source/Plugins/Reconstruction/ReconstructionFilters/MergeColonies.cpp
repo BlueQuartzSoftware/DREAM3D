@@ -40,17 +40,17 @@
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/variate_generator.hpp>
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/DoubleFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/Math/GeometryMath.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Math/GeometryMath.h"
+#include "SIMPLib/Utilities/SIMPLibRandom.h"
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 
@@ -243,19 +243,19 @@ int MergeColonies::writeFilterParameters(AbstractFilterParametersWriter* writer,
 {
   GroupFeatures::writeFilterParameters(writer, index);
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(ActiveArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(NewCellFeatureAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureParentIdsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(GlobAlphaArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellParentIdsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(AxisTolerance)
-  DREAM3D_FILTER_WRITE_PARAMETER(AngleTolerance)
-  DREAM3D_FILTER_WRITE_PARAMETER(IdentifyGlobAlpha)
+  SIMPL_FILTER_WRITE_PARAMETER(ActiveArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(NewCellFeatureAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureParentIdsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(GlobAlphaArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(CellParentIdsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(AxisTolerance)
+  SIMPL_FILTER_WRITE_PARAMETER(AngleTolerance)
+  SIMPL_FILTER_WRITE_PARAMETER(IdentifyGlobAlpha)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -369,7 +369,7 @@ int32_t MergeColonies::getSeed(int32_t newFid)
 
   int32_t numfeatures = static_cast<int32_t>(m_FeaturePhasesPtr.lock()->getNumberOfTuples());
 
-  DREAM3D_RANDOMNG_NEW()
+  SIMPL_RANDOMNG_NEW()
   int32_t seed = -1;
   int32_t randfeature = 0;
 
@@ -425,7 +425,7 @@ bool MergeColonies::determineGrouping(int32_t referenceFeature, int32_t neighbor
       OrientationTransforms<FOrientArrayType, float>::ro2ax(rod, ax);
       ax.toAxisAngle(n1, n2, n3, w);
 
-      w = w * (180.0f / DREAM3D::Constants::k_Pi);
+      w = w * (180.0f / SIMPLib::Constants::k_Pi);
       float angdiff1 = fabsf(w - 10.53f);
       float axisdiff1 = acosf(fabsf(n1) * 0.0000f + fabsf(n2) * 0.0000f + fabsf(n3) * 1.0000f);
       if (angdiff1 < m_AngleTolerance && axisdiff1 < axisTolerance) { colony = true; }
@@ -484,7 +484,7 @@ bool MergeColonies::check_for_burgers(QuatF betaQuat, QuatF alphaQuat)
 {
   float dP = 0.0f;
   float angle = 0.0f;
-  float radToDeg = 180.0f / DREAM3D::Constants::k_Pi;
+  float radToDeg = 180.0f / SIMPLib::Constants::k_Pi;
 
   float gBeta[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
   float gBetaT[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
@@ -583,7 +583,7 @@ void MergeColonies::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  axisTolerance = m_AxisTolerance * DREAM3D::Constants::k_Pi / 180.0f;
+  axisTolerance = m_AxisTolerance * SIMPLib::Constants::k_Pi / 180.0f;
 
   GroupFeatures::execute();
 

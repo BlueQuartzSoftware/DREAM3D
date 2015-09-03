@@ -37,12 +37,12 @@
 #include <stdlib.h>
 #include <iostream>
 
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "SIMPLib/Utilities/SIMPLibRandom.h"
 
 int main(int argc, char** argv)
 {
   std::cout << "RNGTest Start..." << std::endl;
-  DREAM3D_RANDOMNG_NEW()
+  SIMPL_RANDOMNG_NEW()
   float random;
   for (int i = 0; i < 1000000; ++i)
   {

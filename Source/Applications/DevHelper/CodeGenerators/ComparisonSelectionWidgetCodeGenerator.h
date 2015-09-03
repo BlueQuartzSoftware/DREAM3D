@@ -37,15 +37,15 @@
 #ifndef _ComparisonSelectionWidgetCodeGenerator_H_
 #define _ComparisonSelectionWidgetCodeGenerator_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "DevHelper/CodeGenerators/FPCodeGenerator.h"
 
 class ComparisonSelectionWidgetCodeGenerator : public FPCodeGenerator
 {
   public:
-    DREAM3D_SHARED_POINTERS(ComparisonSelectionWidgetCodeGenerator)
+    SIMPL_SHARED_POINTERS(ComparisonSelectionWidgetCodeGenerator)
 
     static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
     {

@@ -36,15 +36,15 @@
 
 #include "FindFeatureNeighborCAxisMisalignments.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/Math/GeometryMath.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Math/GeometryMath.h"
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 
@@ -136,14 +136,14 @@ void FindFeatureNeighborCAxisMisalignments::readFilterParameters(AbstractFilterP
 int FindFeatureNeighborCAxisMisalignments::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(AvgCAxisMisalignmentsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CAxisMisalignmentListArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(NeighborListArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FindAvgMisals)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(AvgCAxisMisalignmentsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(CAxisMisalignmentListArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(NeighborListArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FindAvgMisals)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -278,11 +278,11 @@ void FindFeatureNeighborCAxisMisalignments::execute()
         MatrixMath::Normalize3x1(c2);
 
         w = GeometryMath::CosThetaBetweenVectors(c1, c2);
-        DREAM3DMath::boundF(w, -1, 1);
+        SIMPLibMath::boundF(w, -1, 1);
         w = acosf(w);
-        if (w > (DREAM3D::Constants::k_Pi / 2)) { w = DREAM3D::Constants::k_Pi - w; }
+        if (w > (SIMPLib::Constants::k_Pi / 2)) { w = SIMPLib::Constants::k_Pi - w; }
 
-        misalignmentlists[i][j] = w * DREAM3D::Constants::k_180OverPi;
+        misalignmentlists[i][j] = w * SIMPLib::Constants::k_180OverPi;
         if (m_FindAvgMisals == true) { m_AvgCAxisMisalignments[i] += misalignmentlists[i][j]; }
       }
       else

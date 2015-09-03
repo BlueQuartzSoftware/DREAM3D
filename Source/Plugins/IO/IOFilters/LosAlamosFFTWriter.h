@@ -37,11 +37,11 @@
 #ifndef _LosAlamosFFTWriter_H_
 #define _LosAlamosFFTWriter_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/CoreFilters/FileWriter.h"
-#include "DREAM3DLib/DataArrays/StringDataArray.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/CoreFilters/FileWriter.h"
+#include "SIMPLib/DataArrays/StringDataArray.hpp"
 
 /**
  * @brief The LosAlamosFFTWriter class. See [Filter documentation](@ref losalamosfftwriter) for details.
@@ -50,19 +50,19 @@ class  LosAlamosFFTWriter : public FileWriter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(LosAlamosFFTWriter)
-    DREAM3D_STATIC_NEW_MACRO(LosAlamosFFTWriter)
-    DREAM3D_TYPE_MACRO_SUPER(LosAlamosFFTWriter, FileWriter)
+    SIMPL_SHARED_POINTERS(LosAlamosFFTWriter)
+    SIMPL_STATIC_NEW_MACRO(LosAlamosFFTWriter)
+    SIMPL_TYPE_MACRO_SUPER(LosAlamosFFTWriter, FileWriter)
 
     virtual ~LosAlamosFFTWriter();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
     Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
     Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
     /**

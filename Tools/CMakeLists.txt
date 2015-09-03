@@ -30,10 +30,10 @@ endmacro()
 
 set(DREAM3DProj_SOURCE_DIR_NORM ${DREAM3DProj_SOURCE_DIR})
 ConvertPathToHeaderCompatible(${DREAM3DProj_SOURCE_DIR_NORM})
-set(DREAM3DLib_SOURCE_DIR_NORM ${DREAM3DLib_SOURCE_DIR})
-ConvertPathToHeaderCompatible(${DREAM3DLib_SOURCE_DIR_NORM})
-set(DREAM3DLib_PLUGIN_DIR_NORM "${DREAM3DProj_SOURCE_DIR}/Source/Plugins")
-ConvertPathToHeaderCompatible(${DREAM3DLib_PLUGIN_DIR_NORM})
+set(SIMPLib_SOURCE_DIR_NORM ${SIMPLib_SOURCE_DIR})
+ConvertPathToHeaderCompatible(${SIMPLib_SOURCE_DIR_NORM})
+set(SIMPLib_PLUGIN_DIR_NORM "${DREAM3DProj_SOURCE_DIR}/Source/Plugins")
+ConvertPathToHeaderCompatible(${SIMPLib_PLUGIN_DIR_NORM})
 
 get_filename_component(DREAM3DProj_PARENT_DIR_NORM ${DREAM3DProj_SOURCE_DIR} PATH)
 ConvertPathToHeaderCompatible(${DREAM3DProj_PARENT_DIR_NORM})
@@ -84,7 +84,7 @@ COMPILE_TOOL(
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
     INSTALL_DEST  "${install_dir}"
-    LINK_LIBRARIES EbsdLib DREAM3DLib
+    LINK_LIBRARIES EbsdLib SIMPLib
 )
 
 
@@ -98,7 +98,7 @@ COMPILE_TOOL(
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
-    LINK_LIBRARIES hdf5 Qt5::Core H5Support DREAM3DLib
+    LINK_LIBRARIES hdf5 Qt5::Core H5Support SIMPLib
 )
 
 # Create a Command line tool for the MATLAB_CodeGen
@@ -111,7 +111,7 @@ COMPILE_TOOL(
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
-    LINK_LIBRARIES EbsdLib DREAM3DLib
+    LINK_LIBRARIES EbsdLib SIMPLib
 )
 
 # --------------------------------------------------------------------
@@ -126,7 +126,7 @@ COMPILE_TOOL(
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
-    LINK_LIBRARIES EbsdLib DREAM3DLib Qt5::Gui Qt5::Widgets
+    LINK_LIBRARIES EbsdLib SIMPLib Qt5::Gui Qt5::Widgets
 )
 
 # --------------------------------------------------------------------
@@ -142,6 +142,6 @@ if(${DREAM3D_BUILD_VERSION_FILE})
       VERSION_MINOR ${DREAM3D_VER_MINOR}
       VERSION_PATCH ${DREAM3D_VER_PATCH}
       BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-      LINK_LIBRARIES hdf5 Qt5::Core H5Support DREAM3DLib
+      LINK_LIBRARIES hdf5 Qt5::Core H5Support SIMPLib
   )
 endif()

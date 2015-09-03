@@ -41,9 +41,9 @@
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/variate_generator.hpp>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The IdentifyMicroTextureRegions class. See [Filter documentation](@ref identifymicrotextureregions) for details.
@@ -56,39 +56,39 @@ class IdentifyMicroTextureRegions : public AbstractFilter
     typedef boost::mt19937 RandomNumberGenerator;
     typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;
 
-    DREAM3D_SHARED_POINTERS(IdentifyMicroTextureRegions)
-    DREAM3D_STATIC_NEW_MACRO(IdentifyMicroTextureRegions)
-    DREAM3D_TYPE_MACRO_SUPER(IdentifyMicroTextureRegions, AbstractFilter)
+    SIMPL_SHARED_POINTERS(IdentifyMicroTextureRegions)
+    SIMPL_STATIC_NEW_MACRO(IdentifyMicroTextureRegions)
+    SIMPL_TYPE_MACRO_SUPER(IdentifyMicroTextureRegions, AbstractFilter)
 
     virtual ~IdentifyMicroTextureRegions();
 
-    DREAM3D_FILTER_PARAMETER(QString, NewCellFeatureAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, NewCellFeatureAttributeMatrixName)
     Q_PROPERTY(QString NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(float, CAxisTolerance)
+    SIMPL_FILTER_PARAMETER(float, CAxisTolerance)
     Q_PROPERTY(float CAxisTolerance READ getCAxisTolerance WRITE setCAxisTolerance)
 
-    DREAM3D_FILTER_PARAMETER(float, MinMTRSize)
+    SIMPL_FILTER_PARAMETER(float, MinMTRSize)
     Q_PROPERTY(float MinMTRSize READ getMinMTRSize WRITE setMinMTRSize)
 
-    DREAM3D_FILTER_PARAMETER(float, MinVolFrac)
+    SIMPL_FILTER_PARAMETER(float, MinVolFrac)
     Q_PROPERTY(float MinVolFrac READ getMinVolFrac WRITE setMinVolFrac)
 
-    DREAM3D_INSTANCE_PROPERTY(bool, RandomizeMTRIds)
+    SIMPL_INSTANCE_PROPERTY(bool, RandomizeMTRIds)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CAxisLocationsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CAxisLocationsArrayPath)
     Q_PROPERTY(DataArrayPath CAxisLocationsArrayPath READ getCAxisLocationsArrayPath WRITE setCAxisLocationsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
     Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, MTRIdsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, MTRIdsArrayName)
     Q_PROPERTY(QString MTRIdsArrayName READ getMTRIdsArrayName WRITE setMTRIdsArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, ActiveArrayName)
+    SIMPL_FILTER_PARAMETER(QString, ActiveArrayName)
     Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
 
     /**

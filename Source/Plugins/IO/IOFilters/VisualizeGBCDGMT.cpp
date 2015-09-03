@@ -38,15 +38,15 @@
 
 #include <QtCore/QDir>
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/AxisAngleFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/OutputFileFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/AxisAngleFilterParameter.h"
+#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 
-#include "DREAM3DLib/FilterParameters/IntFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 
@@ -122,12 +122,12 @@ void VisualizeGBCDGMT::readFilterParameters(AbstractFilterParametersReader* read
 int VisualizeGBCDGMT::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(GBCDArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(MisorientationRotation)
-  DREAM3D_FILTER_WRITE_PARAMETER(PhaseOfInterest)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(GBCDArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputFile)
+  SIMPL_FILTER_WRITE_PARAMETER(MisorientationRotation)
+  SIMPL_FILTER_WRITE_PARAMETER(PhaseOfInterest)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -273,13 +273,13 @@ void VisualizeGBCDGMT::execute()
   gbcdLimits[0] = 0.0f;
   gbcdLimits[1] = 0.0f;
   gbcdLimits[2] = 0.0f;
-  gbcdLimits[3] = -sqrtf(DREAM3D::Constants::k_Pi / 2.0f);
-  gbcdLimits[4] = -sqrtf(DREAM3D::Constants::k_Pi / 2.0f);
-  gbcdLimits[5] = DREAM3D::Constants::k_Pi / 2.0f;
+  gbcdLimits[3] = -sqrtf(SIMPLib::Constants::k_Pi / 2.0f);
+  gbcdLimits[4] = -sqrtf(SIMPLib::Constants::k_Pi / 2.0f);
+  gbcdLimits[5] = SIMPLib::Constants::k_Pi / 2.0f;
   gbcdLimits[6] = 1.0f;
-  gbcdLimits[7] = DREAM3D::Constants::k_Pi / 2.0f;
-  gbcdLimits[8] = sqrtf(DREAM3D::Constants::k_Pi / 2.0f);
-  gbcdLimits[9] = sqrtf(DREAM3D::Constants::k_Pi / 2.0f);
+  gbcdLimits[7] = SIMPLib::Constants::k_Pi / 2.0f;
+  gbcdLimits[8] = sqrtf(SIMPLib::Constants::k_Pi / 2.0f);
+  gbcdLimits[9] = sqrtf(SIMPLib::Constants::k_Pi / 2.0f);
 
   // get num components of GBCD
   QVector<size_t> cDims = m_GBCDPtr.lock()->getComponentDimensions();
@@ -310,7 +310,7 @@ void VisualizeGBCDGMT::execute()
   float sym2t[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
   float mis_euler1[3] = { 0.0f, 0.0f, 0.0f };
 
-  float misAngle = m_MisorientationRotation.angle * DREAM3D::Constants::k_PiOver180;
+  float misAngle = m_MisorientationRotation.angle * SIMPLib::Constants::k_PiOver180;
   // convert axis angle to matrix representation of misorientation
   FOrientArrayType om(9);
   FOrientTransformsType::ax2om(FOrientArrayType(m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l, misAngle), om);
@@ -331,7 +331,7 @@ void VisualizeGBCDGMT::execute()
   float phiRes = 90.0f / float(phiPoints);
   float theta = 0.0f, phi = 0.0f;
   float thetaRad = 0.0f, phiRad = 0.0f;
-  float degToRad = DREAM3D::Constants::k_PiOver180;
+  float degToRad = SIMPLib::Constants::k_PiOver180;
   float sum = 0.0f;
   int32_t count = 0;
   bool nhCheck = false;
@@ -378,7 +378,7 @@ void VisualizeGBCDGMT::execute()
           // convert to euler angle
           FOrientArrayType mEuler(mis_euler1, 3);
           FOrientTransformsType::om2eu(FOrientArrayType(dg2), mEuler);
-          if (mis_euler1[0] < DREAM3D::Constants::k_PiOver2 && mis_euler1[1] < DREAM3D::Constants::k_PiOver2 && mis_euler1[2] < DREAM3D::Constants::k_PiOver2)
+          if (mis_euler1[0] < SIMPLib::Constants::k_PiOver2 && mis_euler1[1] < SIMPLib::Constants::k_PiOver2 && mis_euler1[2] < SIMPLib::Constants::k_PiOver2)
           {
             mis_euler1[1] = cosf(mis_euler1[1]);
             // find bins in GBCD
@@ -408,7 +408,7 @@ void VisualizeGBCDGMT::execute()
           MatrixMath::Multiply3x3with3x3(sym1, dg1, dg2);
           // convert to euler angle
           FOrientTransformsType::om2eu(FOrientArrayType(dg2), mEuler);
-          if (mis_euler1[0] < DREAM3D::Constants::k_PiOver2 && mis_euler1[1] < DREAM3D::Constants::k_PiOver2 && mis_euler1[2] < DREAM3D::Constants::k_PiOver2)
+          if (mis_euler1[0] < SIMPLib::Constants::k_PiOver2 && mis_euler1[1] < SIMPLib::Constants::k_PiOver2 && mis_euler1[2] < SIMPLib::Constants::k_PiOver2)
           {
             mis_euler1[1] = cosf(mis_euler1[1]);
             // find bins in GBCD
@@ -477,13 +477,13 @@ bool VisualizeGBCDGMT::getSquareCoord(float* xstl1_norm1, float* sqCoord)
   }
   if (fabsf(xstl1_norm1[0]) >= fabsf(xstl1_norm1[1]))
   {
-    sqCoord[0] = (xstl1_norm1[0] / fabsf(xstl1_norm1[0])) * sqrt(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * (DREAM3D::Constants::k_SqrtPi / 2.0f);
-    sqCoord[1] = (xstl1_norm1[0] / fabsf(xstl1_norm1[0])) * sqrt(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * ((2.0f / DREAM3D::Constants::k_SqrtPi) * atanf(xstl1_norm1[1] / xstl1_norm1[0]));
+    sqCoord[0] = (xstl1_norm1[0] / fabsf(xstl1_norm1[0])) * sqrt(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * (SIMPLib::Constants::k_SqrtPi / 2.0f);
+    sqCoord[1] = (xstl1_norm1[0] / fabsf(xstl1_norm1[0])) * sqrt(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * ((2.0f / SIMPLib::Constants::k_SqrtPi) * atanf(xstl1_norm1[1] / xstl1_norm1[0]));
   }
   else
   {
-    sqCoord[0] = (xstl1_norm1[1] / fabsf(xstl1_norm1[1])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * ((2.0f / DREAM3D::Constants::k_SqrtPi) * atanf(xstl1_norm1[0] / xstl1_norm1[1]));
-    sqCoord[1] = (xstl1_norm1[1] / fabsf(xstl1_norm1[1])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * (DREAM3D::Constants::k_SqrtPi / 2.0f);
+    sqCoord[0] = (xstl1_norm1[1] / fabsf(xstl1_norm1[1])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * ((2.0f / SIMPLib::Constants::k_SqrtPi) * atanf(xstl1_norm1[0] / xstl1_norm1[1]));
+    sqCoord[1] = (xstl1_norm1[1] / fabsf(xstl1_norm1[1])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * (SIMPLib::Constants::k_SqrtPi / 2.0f);
   }
   return nhCheck;
 }

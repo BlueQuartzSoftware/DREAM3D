@@ -8,7 +8,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
 
-#include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
+#include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 
 
 /**
@@ -18,10 +18,10 @@
  * @date May 10, 2012
  * @version 1.0
  */
-class SamplingPlugin : public QObject, public IDREAM3DPlugin
+class SamplingPlugin : public QObject, public ISIMPLibPlugin
 {
     Q_OBJECT
-    Q_INTERFACES(IDREAM3DPlugin)
+    Q_INTERFACES(ISIMPLibPlugin)
     Q_PLUGIN_METADATA(IID "net.bluequartz.dream3d.SamplingPlugin")
 
 

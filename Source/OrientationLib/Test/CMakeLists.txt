@@ -24,7 +24,7 @@ file(MAKE_DIRECTORY ${TEST_TEMP_DIR})
 configure_file(${${PROJECT_NAME}_SOURCE_DIR}/TestFileLocations.h.in
                ${${PROJECT_NAME}_BINARY_DIR}/${PROJECT_NAME}FileLocations.h @ONLY IMMEDIATE)
 
-set(OrientationLib_Link_Libs Qt5::Core H5Support DREAM3DLib OrientationLib)
+set(OrientationLib_Link_Libs Qt5::Core H5Support SIMPLib OrientationLib)
 
 AddDREAM3DUnitTest(TESTNAME QuaternionMathTest
                     SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/QuaternionMathTest.cpp

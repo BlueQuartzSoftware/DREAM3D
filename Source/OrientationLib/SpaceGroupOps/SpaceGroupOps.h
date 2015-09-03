@@ -44,10 +44,10 @@
 #include <QtCore/QString>
 
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/Math/QuaternionMath.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Math/QuaternionMath.hpp"
 
 #include "OrientationLib/OrientationLib.h"
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
@@ -65,8 +65,8 @@
 class OrientationLib_EXPORT SpaceGroupOps
 {
   public:
-    DREAM3D_SHARED_POINTERS(SpaceGroupOps)
-    DREAM3D_TYPE_MACRO(SpaceGroupOps)
+    SIMPL_SHARED_POINTERS(SpaceGroupOps)
+    SIMPL_TYPE_MACRO(SpaceGroupOps)
 
     virtual ~SpaceGroupOps();
 

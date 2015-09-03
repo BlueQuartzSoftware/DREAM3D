@@ -37,10 +37,10 @@
 #ifndef _FindSchmids_H_
 #define _FindSchmids_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
@@ -51,49 +51,49 @@ class FindSchmids : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindSchmids)
-    DREAM3D_STATIC_NEW_MACRO(FindSchmids)
-    DREAM3D_TYPE_MACRO_SUPER(FindSchmids, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FindSchmids)
+    SIMPL_STATIC_NEW_MACRO(FindSchmids)
+    SIMPL_TYPE_MACRO_SUPER(FindSchmids, AbstractFilter)
 
     virtual ~FindSchmids();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
     Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
     Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, SchmidsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, SchmidsArrayName)
     Q_PROPERTY(QString SchmidsArrayName READ getSchmidsArrayName WRITE setSchmidsArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, SlipSystemsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, SlipSystemsArrayName)
     Q_PROPERTY(QString SlipSystemsArrayName READ getSlipSystemsArrayName WRITE setSlipSystemsArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, PolesArrayName)
+    SIMPL_FILTER_PARAMETER(QString, PolesArrayName)
     Q_PROPERTY(QString PolesArrayName READ getPolesArrayName WRITE setPolesArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, PhisArrayName)
+    SIMPL_FILTER_PARAMETER(QString, PhisArrayName)
     Q_PROPERTY(QString PhisArrayName READ getPhisArrayName WRITE setPhisArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, LambdasArrayName)
+    SIMPL_FILTER_PARAMETER(QString, LambdasArrayName)
     Q_PROPERTY(QString LambdasArrayName READ getLambdasArrayName WRITE setLambdasArrayName)
 
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, LoadingDirection)
+    SIMPL_FILTER_PARAMETER(FloatVec3_t, LoadingDirection)
     Q_PROPERTY(FloatVec3_t LoadingDirection READ getLoadingDirection WRITE setLoadingDirection)
 
-    DREAM3D_FILTER_PARAMETER(bool, StoreAngleComponents)
+    SIMPL_FILTER_PARAMETER(bool, StoreAngleComponents)
     Q_PROPERTY(bool StoreAngleComponents READ getStoreAngleComponents WRITE setStoreAngleComponents)
 
-    DREAM3D_FILTER_PARAMETER(bool, OverrideSystem)
+    SIMPL_FILTER_PARAMETER(bool, OverrideSystem)
     Q_PROPERTY(bool OverrideSystem READ getOverrideSystem WRITE setOverrideSystem)
 
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, SlipPlane)
+    SIMPL_FILTER_PARAMETER(FloatVec3_t, SlipPlane)
     Q_PROPERTY(FloatVec3_t SlipPlane READ getSlipPlane WRITE setSlipPlane)
 
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, SlipDirection)
+    SIMPL_FILTER_PARAMETER(FloatVec3_t, SlipDirection)
     Q_PROPERTY(FloatVec3_t SlipDirection READ getSlipDirection WRITE setSlipDirection)
 
     /**

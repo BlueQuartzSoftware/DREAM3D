@@ -36,16 +36,16 @@
 
 #include "FindFeatureClustering.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/IntFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/Math/RadialDistributionFunction.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Math/RadialDistributionFunction.h"
 
 #include "Statistics/StatisticsConstants.h"
 
@@ -148,18 +148,18 @@ void FindFeatureClustering::readFilterParameters(AbstractFilterParametersReader*
 int FindFeatureClustering::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(NumberOfBins)
-  DREAM3D_FILTER_WRITE_PARAMETER(ClusteringListArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CentroidsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(EquivalentDiametersArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(NewEnsembleArrayArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(MaxMinArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(PhaseNumber)
-  DREAM3D_FILTER_WRITE_PARAMETER(RemoveBiasedFeatures)
-  DREAM3D_FILTER_WRITE_PARAMETER(BiasedFeaturesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(NumberOfBins)
+  SIMPL_FILTER_WRITE_PARAMETER(ClusteringListArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(CentroidsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(EquivalentDiametersArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(NewEnsembleArrayArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(MaxMinArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(PhaseNumber)
+  SIMPL_FILTER_WRITE_PARAMETER(RemoveBiasedFeatures)
+  SIMPL_FILTER_WRITE_PARAMETER(BiasedFeaturesArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

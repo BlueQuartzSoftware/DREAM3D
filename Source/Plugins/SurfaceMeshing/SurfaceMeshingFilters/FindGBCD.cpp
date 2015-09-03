@@ -35,7 +35,7 @@
 
 #include "FindGBCD.h"
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/partitioner.h>
@@ -44,14 +44,14 @@
 
 #include <QtCore/QDateTime>
 
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/DoubleFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/Utilities/TimeUtilities.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Utilities/TimeUtilities.h"
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
@@ -217,7 +217,7 @@ class CalculateGBCDImpl
                 FOrientArrayType eu(euler_mis, 3);
                 FOrientTransformsType::om2eu(om, eu);
 
-                if (euler_mis[0] < DREAM3D::Constants::k_PiOver2 && euler_mis[1] < DREAM3D::Constants::k_PiOver2 && euler_mis[2] < DREAM3D::Constants::k_PiOver2)
+                if (euler_mis[0] < SIMPLib::Constants::k_PiOver2 && euler_mis[1] < SIMPLib::Constants::k_PiOver2 && euler_mis[2] < SIMPLib::Constants::k_PiOver2)
                 {
                   // PHI euler angle is stored in GBCD as cos(PHI)
                   euler_mis[1] = cosf(euler_mis[1]);
@@ -249,7 +249,7 @@ class CalculateGBCDImpl
       }
     }
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     void operator()(const tbb::blocked_range<size_t>& r) const
     {
       generate(r.begin(), r.end());
@@ -311,13 +311,13 @@ class CalculateGBCDImpl
       }
       if (fabsf(xstl1_norm1[0]) >= fabsf(xstl1_norm1[1]))
       {
-        sqCoord[0] = (xstl1_norm1[0] / fabsf(xstl1_norm1[0])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * (DREAM3D::Constants::k_SqrtPi / 2.0f);
-        sqCoord[1] = (xstl1_norm1[0] / fabsf(xstl1_norm1[0])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * ((2.0f / DREAM3D::Constants::k_SqrtPi) * atanf(xstl1_norm1[1] / xstl1_norm1[0]));
+        sqCoord[0] = (xstl1_norm1[0] / fabsf(xstl1_norm1[0])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * (SIMPLib::Constants::k_SqrtPi / 2.0f);
+        sqCoord[1] = (xstl1_norm1[0] / fabsf(xstl1_norm1[0])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * ((2.0f / SIMPLib::Constants::k_SqrtPi) * atanf(xstl1_norm1[1] / xstl1_norm1[0]));
       }
       else
       {
-        sqCoord[0] = (xstl1_norm1[1] / fabsf(xstl1_norm1[1])) * sqrtf(2.0 * 1.0 * (1.0 + (xstl1_norm1[2] * adjust))) * ((2.0f / DREAM3D::Constants::k_SqrtPi) * atanf(xstl1_norm1[0] / xstl1_norm1[1]));
-        sqCoord[1] = (xstl1_norm1[1] / fabsf(xstl1_norm1[1])) * sqrtf(2.0 * 1.0 * (1.0 + (xstl1_norm1[2] * adjust))) * (DREAM3D::Constants::k_SqrtPi / 2.0f);
+        sqCoord[0] = (xstl1_norm1[1] / fabsf(xstl1_norm1[1])) * sqrtf(2.0 * 1.0 * (1.0 + (xstl1_norm1[2] * adjust))) * ((2.0f / SIMPLib::Constants::k_SqrtPi) * atanf(xstl1_norm1[0] / xstl1_norm1[1]));
+        sqCoord[1] = (xstl1_norm1[1] / fabsf(xstl1_norm1[1])) * sqrtf(2.0 * 1.0 * (1.0 + (xstl1_norm1[2] * adjust))) * (SIMPLib::Constants::k_SqrtPi / 2.0f);
       }
       return nhCheck;
     }
@@ -433,16 +433,16 @@ void FindGBCD::readFilterParameters(AbstractFilterParametersReader* reader, int 
 int FindGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(FaceEnsembleAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(GBCDArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureEulerAnglesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceAreasArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceNormalsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(GBCDRes)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(FaceEnsembleAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(GBCDArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureEulerAnglesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceAreasArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceNormalsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(GBCDRes)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -546,7 +546,7 @@ void FindGBCD::execute()
   dataCheckSurfaceMesh();
   if(getErrorCondition() < 0) { return; }
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
 #endif
@@ -582,7 +582,7 @@ void FindGBCD::execute()
       faceChunkSize = totalFaces - i;
     }
     m_GbcdBinsArray->initializeWithValue(-1);
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(i, i + faceChunkSize),
@@ -688,14 +688,14 @@ void FindGBCD::sizeGBCD(size_t faceChunkSize, size_t numMisoReps)
   m_GbcdLimits[2] = 0.0f;
   m_GbcdLimits[3] = 0.0f;
   m_GbcdLimits[4] = 0.0f;
-  m_GbcdLimits[5] = DREAM3D::Constants::k_PiOver2;
+  m_GbcdLimits[5] = SIMPLib::Constants::k_PiOver2;
   m_GbcdLimits[6] = 1.0f;
-  m_GbcdLimits[7] = DREAM3D::Constants::k_PiOver2;
+  m_GbcdLimits[7] = SIMPLib::Constants::k_PiOver2;
   m_GbcdLimits[8] = 1.0f;
-  m_GbcdLimits[9] = DREAM3D::Constants::k_2Pi;
+  m_GbcdLimits[9] = SIMPLib::Constants::k_2Pi;
 
-  float binsize = m_GBCDRes * DREAM3D::Constants::k_PiOver180;
-  float binsize2 = binsize * (2.0 / DREAM3D::Constants::k_Pi);
+  float binsize = m_GBCDRes * SIMPLib::Constants::k_PiOver180;
+  float binsize2 = binsize * (2.0 / SIMPLib::Constants::k_Pi);
   m_GbcdDeltas[0] = binsize;
   m_GbcdDeltas[1] = binsize2;
   m_GbcdDeltas[2] = binsize;
@@ -712,10 +712,10 @@ void FindGBCD::sizeGBCD(size_t faceChunkSize, size_t numMisoReps)
   float totalNormalBins = m_GbcdSizes[3] * m_GbcdSizes[4];
   m_GbcdSizes[3] = int32_t(sqrtf(totalNormalBins) + 0.5f);
   m_GbcdSizes[4] = int32_t(sqrtf(totalNormalBins) + 0.5f);
-  m_GbcdLimits[3] = -sqrtf(DREAM3D::Constants::k_PiOver2);
-  m_GbcdLimits[4] = -sqrtf(DREAM3D::Constants::k_PiOver2);
-  m_GbcdLimits[8] = sqrtf(DREAM3D::Constants::k_PiOver2);
-  m_GbcdLimits[9] = sqrtf(DREAM3D::Constants::k_PiOver2);
+  m_GbcdLimits[3] = -sqrtf(SIMPLib::Constants::k_PiOver2);
+  m_GbcdLimits[4] = -sqrtf(SIMPLib::Constants::k_PiOver2);
+  m_GbcdLimits[8] = sqrtf(SIMPLib::Constants::k_PiOver2);
+  m_GbcdLimits[9] = sqrtf(SIMPLib::Constants::k_PiOver2);
   m_GbcdDeltas[3] = (m_GbcdLimits[8] - m_GbcdLimits[3]) / float(m_GbcdSizes[3]);
   m_GbcdDeltas[4] = (m_GbcdLimits[9] - m_GbcdLimits[4]) / float(m_GbcdSizes[4]);
 }

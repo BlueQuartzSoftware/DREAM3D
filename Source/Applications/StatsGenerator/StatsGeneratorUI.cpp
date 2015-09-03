@@ -54,17 +54,17 @@
 #include "H5Support/H5Lite.h"
 #include "H5Support/HDF5ScopedFileSentinel.h"
 
-#include "DREAM3DLib/DREAM3DLibVersion.h"
-#include "DREAM3DLib/DataArrays/StatsDataArray.h"
-#include "DREAM3DLib/StatsData/PrimaryStatsData.h"
-#include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
-#include "DREAM3DLib/StatsData/TransformationStatsData.h"
-#include "DREAM3DLib/StatsData/BoundaryStatsData.h"
-#include "DREAM3DLib/StatsData/MatrixStatsData.h"
+#include "SIMPLib/SIMPLibVersion.h"
+#include "SIMPLib/DataArrays/StatsDataArray.h"
+#include "SIMPLib/StatsData/PrimaryStatsData.h"
+#include "SIMPLib/StatsData/PrecipitateStatsData.h"
+#include "SIMPLib/StatsData/TransformationStatsData.h"
+#include "SIMPLib/StatsData/BoundaryStatsData.h"
+#include "SIMPLib/StatsData/MatrixStatsData.h"
 
-#include "DREAM3DLib/Common/FilterPipeline.h"
-#include "DREAM3DLib/CoreFilters/DataContainerWriter.h"
-#include "DREAM3DLib/CoreFilters/DataContainerReader.h"
+#include "SIMPLib/Common/FilterPipeline.h"
+#include "SIMPLib/CoreFilters/DataContainerWriter.h"
+#include "SIMPLib/CoreFilters/DataContainerReader.h"
 
 #include "QtSupportLib/ApplicationAboutBoxDialog.h"
 #include "QtSupportLib/QRecentFileList.h"
@@ -973,7 +973,7 @@ void StatsGeneratorUI::adjustWindowTitle()
 void StatsGeneratorUI::on_actionAbout_triggered()
 {
   QString msg ("StatsGenerator Version ");
-  msg.append(DREAM3DLib::Version::Complete().toLatin1().data());
+  msg.append(SIMPLib::Version::Complete().toLatin1().data());
   msg.append("\n\nThe Primary Developers are:\n");
   msg.append("Dr. Michael Groeber\n  US Air Force Research Laboratory\n  michael.groeber@wpafb.af.mil\n");
   msg.append("Mr. Michael Jackson\n  BlueQuartz Software\n  mike.jackson@bluequartz.net\n\n");
@@ -990,7 +990,7 @@ void StatsGeneratorUI::on_actionLicense_Information_triggered()
   ApplicationAboutBoxDialog about(StatsGenerator::LicenseList, this);
   QString an = QCoreApplication::applicationName();
   QString version("");
-  version.append(DREAM3DLib::Version::PackageComplete().toLatin1().data());
+  version.append(SIMPLib::Version::PackageComplete().toLatin1().data());
   about.setApplicationInfo(an, version);
   about.exec();
 }

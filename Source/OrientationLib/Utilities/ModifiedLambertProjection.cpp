@@ -39,8 +39,8 @@
 #include <QtCore/QSet>
 
 
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Math/MatrixMath.h"
 
 #define WRITE_LAMBERT_SQUARE_COORD_VTK 0
 
@@ -425,13 +425,13 @@ bool ModifiedLambertProjection::getSquareCoord(float* xyz, float* sqCoord)
   }
   if(fabs(xyz[0]) >= fabs(xyz[1]))
   {
-    sqCoord[0] = (xyz[0] / fabs(xyz[0]) ) * sqrt(2.0 * m_SphereRadius * (m_SphereRadius + (xyz[2] * adjust) ) ) * DREAM3D::Constants::k_HalfOfSqrtPi;
-    sqCoord[1] = (xyz[0] / fabs(xyz[0]) ) * sqrt(2.0 * m_SphereRadius * (m_SphereRadius + (xyz[2] * adjust) ) ) * ((DREAM3D::Constants::k_2OverSqrtPi) * atan(xyz[1] / xyz[0]));
+    sqCoord[0] = (xyz[0] / fabs(xyz[0]) ) * sqrt(2.0 * m_SphereRadius * (m_SphereRadius + (xyz[2] * adjust) ) ) * SIMPLib::Constants::k_HalfOfSqrtPi;
+    sqCoord[1] = (xyz[0] / fabs(xyz[0]) ) * sqrt(2.0 * m_SphereRadius * (m_SphereRadius + (xyz[2] * adjust) ) ) * ((SIMPLib::Constants::k_2OverSqrtPi) * atan(xyz[1] / xyz[0]));
   }
   else
   {
-    sqCoord[0] = (xyz[1] / fabs(xyz[1])) * sqrt(2.0 * m_SphereRadius * (m_SphereRadius + (xyz[2] * adjust))) * ((DREAM3D::Constants::k_2OverSqrtPi) * atan(xyz[0] / xyz[1]));
-    sqCoord[1] = (xyz[1] / fabs(xyz[1])) * sqrt(2.0 * m_SphereRadius * (m_SphereRadius + (xyz[2] * adjust))) * (DREAM3D::Constants::k_HalfOfSqrtPi);
+    sqCoord[0] = (xyz[1] / fabs(xyz[1])) * sqrt(2.0 * m_SphereRadius * (m_SphereRadius + (xyz[2] * adjust))) * ((SIMPLib::Constants::k_2OverSqrtPi) * atan(xyz[0] / xyz[1]));
+    sqCoord[1] = (xyz[1] / fabs(xyz[1])) * sqrt(2.0 * m_SphereRadius * (m_SphereRadius + (xyz[2] * adjust))) * (SIMPLib::Constants::k_HalfOfSqrtPi);
   }
 
   if (sqCoord[0] >= m_MaxCoord)

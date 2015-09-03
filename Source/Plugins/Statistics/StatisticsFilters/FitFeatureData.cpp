@@ -36,16 +36,16 @@
 
 #include "FitFeatureData.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/TemplateHelpers.hpp"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/TemplateHelpers.hpp"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArrayCreationFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "Statistics/DistributionAnalysisOps/BetaOps.h"
 #include "Statistics/DistributionAnalysisOps/PowerLawOps.h"
@@ -142,13 +142,13 @@ void FitFeatureData::readFilterParameters(AbstractFilterParametersReader* reader
 int FitFeatureData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(NewEnsembleArrayArray)
-  DREAM3D_FILTER_WRITE_PARAMETER(BiasedFeaturesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(SelectedFeatureArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(DistributionType)
-  DREAM3D_FILTER_WRITE_PARAMETER(RemoveBiasedFeatures)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(NewEnsembleArrayArray)
+  SIMPL_FILTER_WRITE_PARAMETER(BiasedFeaturesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(SelectedFeatureArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(DistributionType)
+  SIMPL_FILTER_WRITE_PARAMETER(RemoveBiasedFeatures)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

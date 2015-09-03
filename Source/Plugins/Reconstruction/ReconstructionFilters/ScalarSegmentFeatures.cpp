@@ -38,15 +38,15 @@
 
 #include <QtCore/QDateTime>
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/DoubleFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 
@@ -228,14 +228,14 @@ void ScalarSegmentFeatures::readFilterParameters(AbstractFilterParametersReader*
 int ScalarSegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(ActiveArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(UseGoodVoxels)
-  DREAM3D_FILTER_WRITE_PARAMETER(ScalarArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(ScalarTolerance)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(ActiveArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(UseGoodVoxels)
+  SIMPL_FILTER_WRITE_PARAMETER(ScalarArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(ScalarTolerance)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

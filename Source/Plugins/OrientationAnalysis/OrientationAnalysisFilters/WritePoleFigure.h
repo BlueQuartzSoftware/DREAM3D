@@ -37,9 +37,9 @@
 #ifndef _WritePoleFigure_H_
 #define _WritePoleFigure_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The WritePoleFigure class. See [Filter documentation](@ref writepolefigure) for details.
@@ -48,31 +48,31 @@ class WritePoleFigure : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(WritePoleFigure)
-    DREAM3D_STATIC_NEW_MACRO(WritePoleFigure)
-    DREAM3D_TYPE_MACRO_SUPER(WritePoleFigure, AbstractFilter)
+    SIMPL_SHARED_POINTERS(WritePoleFigure)
+    SIMPL_STATIC_NEW_MACRO(WritePoleFigure)
+    SIMPL_TYPE_MACRO_SUPER(WritePoleFigure, AbstractFilter)
 
     virtual ~WritePoleFigure();
 
-    DREAM3D_FILTER_PARAMETER(QString, ImagePrefix)
+    SIMPL_FILTER_PARAMETER(QString, ImagePrefix)
     Q_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix)
 
-    DREAM3D_FILTER_PARAMETER(QString, OutputPath)
+    SIMPL_FILTER_PARAMETER(QString, OutputPath)
     Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
 
-    DREAM3D_FILTER_PARAMETER(int, ImageFormat)
+    SIMPL_FILTER_PARAMETER(int, ImageFormat)
     Q_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat)
 
-    DREAM3D_FILTER_PARAMETER(int, ImageSize)
+    SIMPL_FILTER_PARAMETER(int, ImageSize)
     Q_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
 
-    DREAM3D_FILTER_PARAMETER(int, LambertSize)
+    SIMPL_FILTER_PARAMETER(int, LambertSize)
     Q_PROPERTY(int LambertSize READ getLambertSize WRITE setLambertSize)
 
-    DREAM3D_FILTER_PARAMETER(int, NumColors)
+    SIMPL_FILTER_PARAMETER(int, NumColors)
     Q_PROPERTY(int NumColors READ getNumColors WRITE setNumColors)
 
-    DREAM3D_FILTER_PARAMETER(int, ImageLayout)
+    SIMPL_FILTER_PARAMETER(int, ImageLayout)
     Q_PROPERTY(int ImageLayout READ getImageLayout WRITE setImageLayout)
 
     enum ImageFormatType
@@ -84,16 +84,16 @@ class WritePoleFigure : public AbstractFilter
     };
 
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
     Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
     Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
     Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
     /**

@@ -37,7 +37,7 @@
 #ifndef _MICROSTRUCTUREPRESETMANAGER_H_
 #define _MICROSTRUCTUREPRESETMANAGER_H_
 
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "AbstractMicrostructurePresetFactory.h"
 #include "AbstractMicrostructurePreset.h"
@@ -57,8 +57,8 @@
 class MicrostructurePresetManager
 {
   public:
-    DREAM3D_SHARED_POINTERS(MicrostructurePresetManager)
-    DREAM3D_TYPE_MACRO(MicrostructurePresetManager)
+    SIMPL_SHARED_POINTERS(MicrostructurePresetManager)
+    SIMPL_TYPE_MACRO(MicrostructurePresetManager)
 
     virtual ~MicrostructurePresetManager();
 

@@ -35,7 +35,7 @@
 
 #include "CubicLowOps.h"
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/partitioner.h>
@@ -47,8 +47,8 @@
 
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Utilities/ColorTable.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Utilities/ColorTable.h"
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
@@ -58,9 +58,9 @@
 
 namespace Detail
 {
-  static const float CubicLowDim1InitValue = powf((0.75f * ((DREAM3D::Constants::k_Pi / 2.0f) - sinf((DREAM3D::Constants::k_Pi / 2.0f)))), (1.0f / 3.0f));
-  static const float CubicLowDim2InitValue = powf((0.75f * ((DREAM3D::Constants::k_Pi / 2.0f) - sinf((DREAM3D::Constants::k_Pi / 2.0f)))), (1.0f / 3.0f));
-  static const float CubicLowDim3InitValue = powf((0.75f * ((DREAM3D::Constants::k_Pi / 2.0f) - sinf((DREAM3D::Constants::k_Pi / 2.0f)))), (1.0f / 3.0f));
+  static const float CubicLowDim1InitValue = powf((0.75f * ((SIMPLib::Constants::k_Pi / 2.0f) - sinf((SIMPLib::Constants::k_Pi / 2.0f)))), (1.0f / 3.0f));
+  static const float CubicLowDim2InitValue = powf((0.75f * ((SIMPLib::Constants::k_Pi / 2.0f) - sinf((SIMPLib::Constants::k_Pi / 2.0f)))), (1.0f / 3.0f));
+  static const float CubicLowDim3InitValue = powf((0.75f * ((SIMPLib::Constants::k_Pi / 2.0f) - sinf((SIMPLib::Constants::k_Pi / 2.0f)))), (1.0f / 3.0f));
   static const float CubicLowDim1StepValue = CubicLowDim1InitValue / 18.0f;
   static const float CubicLowDim2StepValue = CubicLowDim2InitValue / 18.0f;
   static const float CubicLowDim3StepValue = CubicLowDim3InitValue / 18.0f;
@@ -256,9 +256,9 @@ float CubicLowOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
     FOrientTransformsType::qu2ax(FOrientArrayType(qc.x, qc.y, qc.z, qc.w), ax);
     ax.toAxisAngle(n1, n2, n3, w);
 
-    if (w > DREAM3D::Constants::k_Pi)
+    if (w > SIMPLib::Constants::k_Pi)
     {
-      w = DREAM3D::Constants::k_2Pi - w;
+      w = SIMPLib::Constants::k_2Pi - w;
     }
     if (w < wmin)
     {
@@ -651,66 +651,66 @@ namespace Detail
 
             // -----------------------------------------------------------------------------
             // 011 Family
-            direction[0] = DREAM3D::Constants::k_1OverRoot2;
-            direction[1] = DREAM3D::Constants::k_1OverRoot2;
+            direction[0] = SIMPLib::Constants::k_1OverRoot2;
+            direction[1] = SIMPLib::Constants::k_1OverRoot2;
             direction[2] = 0.0;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36));
             MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36), m_xyz011->getPointer(i * 36 + 3));
             MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 3), -1);
-            direction[0] = DREAM3D::Constants::k_1OverRoot2;
+            direction[0] = SIMPLib::Constants::k_1OverRoot2;
             direction[1] = 0.0;
-            direction[2] = DREAM3D::Constants::k_1OverRoot2;
+            direction[2] = SIMPLib::Constants::k_1OverRoot2;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36 + 6));
             MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36 + 6), m_xyz011->getPointer(i * 36 + 9));
             MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 9), -1);
             direction[0] = 0.0;
-            direction[1] = DREAM3D::Constants::k_1OverRoot2;
-            direction[2] = DREAM3D::Constants::k_1OverRoot2;
+            direction[1] = SIMPLib::Constants::k_1OverRoot2;
+            direction[2] = SIMPLib::Constants::k_1OverRoot2;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36 + 12));
             MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36 + 12), m_xyz011->getPointer(i * 36 + 15));
             MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 15), -1);
-            direction[0] = -DREAM3D::Constants::k_1OverRoot2;
-            direction[1] = -DREAM3D::Constants::k_1OverRoot2;
+            direction[0] = -SIMPLib::Constants::k_1OverRoot2;
+            direction[1] = -SIMPLib::Constants::k_1OverRoot2;
             direction[2] = 0.0;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36 + 18));
             MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36 + 18), m_xyz011->getPointer(i * 36 + 21));
             MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 21), -1);
-            direction[0] = -DREAM3D::Constants::k_1OverRoot2;
+            direction[0] = -SIMPLib::Constants::k_1OverRoot2;
             direction[1] = 0.0;
-            direction[2] = DREAM3D::Constants::k_1OverRoot2;
+            direction[2] = SIMPLib::Constants::k_1OverRoot2;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36 + 24));
             MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36 + 24), m_xyz011->getPointer(i * 36 + 27));
             MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 27), -1);
             direction[0] = 0.0;
-            direction[1] = -DREAM3D::Constants::k_1OverRoot2;
-            direction[2] = DREAM3D::Constants::k_1OverRoot2;
+            direction[1] = -SIMPLib::Constants::k_1OverRoot2;
+            direction[2] = SIMPLib::Constants::k_1OverRoot2;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36 + 30));
             MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36 + 30), m_xyz011->getPointer(i * 36 + 33));
             MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 33), -1);
 
             // -----------------------------------------------------------------------------
             // 111 Family
-            direction[0] = DREAM3D::Constants::k_1OverRoot3;
-            direction[1] = DREAM3D::Constants::k_1OverRoot3;
-            direction[2] = DREAM3D::Constants::k_1OverRoot3;
+            direction[0] = SIMPLib::Constants::k_1OverRoot3;
+            direction[1] = SIMPLib::Constants::k_1OverRoot3;
+            direction[2] = SIMPLib::Constants::k_1OverRoot3;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 24));
             MatrixMath::Copy3x1(m_xyz111->getPointer(i * 24), m_xyz111->getPointer(i * 24 + 3));
             MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 24 + 3), -1);
-            direction[0] = -DREAM3D::Constants::k_1OverRoot3;
-            direction[1] = DREAM3D::Constants::k_1OverRoot3;
-            direction[2] = DREAM3D::Constants::k_1OverRoot3;
+            direction[0] = -SIMPLib::Constants::k_1OverRoot3;
+            direction[1] = SIMPLib::Constants::k_1OverRoot3;
+            direction[2] = SIMPLib::Constants::k_1OverRoot3;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 24 + 6));
             MatrixMath::Copy3x1(m_xyz111->getPointer(i * 24 + 6), m_xyz111->getPointer(i * 24 + 9));
             MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 24 + 9), -1);
-            direction[0] = DREAM3D::Constants::k_1OverRoot3;
-            direction[1] = -DREAM3D::Constants::k_1OverRoot3;
-            direction[2] = DREAM3D::Constants::k_1OverRoot3;
+            direction[0] = SIMPLib::Constants::k_1OverRoot3;
+            direction[1] = -SIMPLib::Constants::k_1OverRoot3;
+            direction[2] = SIMPLib::Constants::k_1OverRoot3;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 24 + 12));
             MatrixMath::Copy3x1(m_xyz111->getPointer(i * 24 + 12), m_xyz111->getPointer(i * 24 + 15));
             MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 24 + 15), -1);
-            direction[0] = DREAM3D::Constants::k_1OverRoot3;
-            direction[1] = DREAM3D::Constants::k_1OverRoot3;
-            direction[2] = -DREAM3D::Constants::k_1OverRoot3;
+            direction[0] = SIMPLib::Constants::k_1OverRoot3;
+            direction[1] = SIMPLib::Constants::k_1OverRoot3;
+            direction[2] = -SIMPLib::Constants::k_1OverRoot3;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 24 + 18));
             MatrixMath::Copy3x1(m_xyz111->getPointer(i * 24 + 18), m_xyz111->getPointer(i * 24 + 21));
             MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 24 + 21), -1);
@@ -718,7 +718,7 @@ namespace Detail
 
         }
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
         void operator()(const tbb::blocked_range<size_t>& r) const
         {
           generate(r.begin(), r.end());
@@ -749,12 +749,12 @@ void CubicLowOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatAr
     xyz111->resize(nOrientations * Detail::CubicLow::symSize2 * 3);
   }
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
 #endif
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, nOrientations),
@@ -774,19 +774,19 @@ void CubicLowOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatAr
 // -----------------------------------------------------------------------------
 bool CubicLowOps::inUnitTriangle(float eta, float chi)
 {
-  float etaDeg = eta * DREAM3D::Constants::k_180OverPi;
+  float etaDeg = eta * SIMPLib::Constants::k_180OverPi;
   float chiMax;
   if(etaDeg > 45.0)
   {
-    chiMax = sqrt(1.0 / (2.0 + tanf(0.5 * DREAM3D::Constants::k_Pi - eta) * tanf(0.5 * DREAM3D::Constants::k_Pi - eta)));
+    chiMax = sqrt(1.0 / (2.0 + tanf(0.5 * SIMPLib::Constants::k_Pi - eta) * tanf(0.5 * SIMPLib::Constants::k_Pi - eta)));
   }
   else
   {
     chiMax = sqrt(1.0 / (2.0 + tanf(eta) * tanf(eta)));
   }
-  DREAM3DMath::boundF(chiMax, -1.0f, 1.0f);
+  SIMPLibMath::boundF(chiMax, -1.0f, 1.0f);
   chiMax = acos(chiMax);
-  if( eta < 0.0 || eta > (90.0 * DREAM3D::Constants::k_PiOver180) || chi < 0.0 || chi > chiMax )
+  if( eta < 0.0 || eta > (90.0 * SIMPLib::Constants::k_PiOver180) || chi < 0.0 || chi > chiMax )
   {
     return false;
   }
@@ -808,9 +808,9 @@ DREAM3D::Rgb CubicLowOps::generateIPFColor(double phi1, double phi, double phi2,
 {
   if (degToRad == true)
   {
-    phi1 = phi1 * DREAM3D::Constants::k_DegToRad;
-    phi = phi * DREAM3D::Constants::k_DegToRad;
-    phi2 = phi2 * DREAM3D::Constants::k_DegToRad;
+    phi1 = phi1 * SIMPLib::Constants::k_DegToRad;
+    phi = phi * SIMPLib::Constants::k_DegToRad;
+    phi2 = phi2 * SIMPLib::Constants::k_DegToRad;
   }
   QuatF qc;
   QuatF q1;
@@ -866,17 +866,17 @@ DREAM3D::Rgb CubicLowOps::generateIPFColor(double phi1, double phi, double phi2,
 
   float etaMin = 0.0;
   float etaMax = 90.0;
-  float etaDeg = eta * DREAM3D::Constants::k_180OverPi;
+  float etaDeg = eta * SIMPLib::Constants::k_180OverPi;
   float chiMax;
   if(etaDeg > 45.0)
   {
-    chiMax = sqrt(1.0 / (2.0 + tanf(0.5 * DREAM3D::Constants::k_Pi - eta) * tanf(0.5 * DREAM3D::Constants::k_Pi - eta)));
+    chiMax = sqrt(1.0 / (2.0 + tanf(0.5 * SIMPLib::Constants::k_Pi - eta) * tanf(0.5 * SIMPLib::Constants::k_Pi - eta)));
   }
   else
   {
     chiMax = sqrt(1.0 / (2.0 + tanf(eta) * tanf(eta)));
   }
-  DREAM3DMath::boundF(chiMax, -1.0f, 1.0f);
+  SIMPLibMath::boundF(chiMax, -1.0f, 1.0f);
   chiMax = acos(chiMax);
 
   _rgb[0] = 1.0 - chi / chiMax;
@@ -948,7 +948,7 @@ QVector<UInt8ArrayType::Pointer> CubicLowOps::generatePoleFigure(PoleFigureConfi
   DoubleArrayType::Pointer intensity001 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label0 + "_Intensity_Image");
   DoubleArrayType::Pointer intensity011 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label1 + "_Intensity_Image");
   DoubleArrayType::Pointer intensity111 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label2 + "_Intensity_Image");
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
   tbb::task_group* g = new tbb::task_group;
@@ -1042,7 +1042,7 @@ QVector<UInt8ArrayType::Pointer> CubicLowOps::generatePoleFigure(PoleFigureConfi
     poleFigures[2] = image111;
   }
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 
   if(doParallel == true)
   {

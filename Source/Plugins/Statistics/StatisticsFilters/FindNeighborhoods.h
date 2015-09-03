@@ -37,10 +37,10 @@
 #ifndef _FindNeighborhoods_H_
 #define _FindNeighborhoods_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/NeighborList.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/NeighborList.hpp"
 
 /**
  * @brief The FindNeighborhoods class. See [Filter documentation](@ref findneighborhoods) for details.
@@ -49,28 +49,28 @@ class FindNeighborhoods : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindNeighborhoods)
-    DREAM3D_STATIC_NEW_MACRO(FindNeighborhoods)
-    DREAM3D_TYPE_MACRO_SUPER(FindNeighborhoods, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FindNeighborhoods)
+    SIMPL_STATIC_NEW_MACRO(FindNeighborhoods)
+    SIMPL_TYPE_MACRO_SUPER(FindNeighborhoods, AbstractFilter)
 
     virtual ~FindNeighborhoods();
 
-    DREAM3D_FILTER_PARAMETER(QString, NeighborhoodListArrayName)
+    SIMPL_FILTER_PARAMETER(QString, NeighborhoodListArrayName)
     Q_PROPERTY(QString NeighborhoodListArrayName READ getNeighborhoodListArrayName WRITE setNeighborhoodListArrayName)
 
-    DREAM3D_FILTER_PARAMETER(float, MultiplesOfAverage)
+    SIMPL_FILTER_PARAMETER(float, MultiplesOfAverage)
     Q_PROPERTY(float MultiplesOfAverage READ getMultiplesOfAverage WRITE setMultiplesOfAverage)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, EquivalentDiametersArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, EquivalentDiametersArrayPath)
     Q_PROPERTY(DataArrayPath EquivalentDiametersArrayPath READ getEquivalentDiametersArrayPath WRITE setEquivalentDiametersArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
     Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
     Q_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, NeighborhoodsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, NeighborhoodsArrayName)
     Q_PROPERTY(QString NeighborhoodsArrayName READ getNeighborhoodsArrayName WRITE setNeighborhoodsArrayName)
 
     /**

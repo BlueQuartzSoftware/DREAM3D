@@ -36,14 +36,14 @@
 #ifndef _ConvertHexGridToSquareGridFilterParameter_H_
 #define _ConvertHexGridToSquareGridFilterParameter_H_
 
-#include "DREAM3DLib/FilterParameters/FilterParameter.h"
+#include "SIMPLib/FilterParameters/FilterParameter.h"
 
 class ConvertHexGridToSquareGridFilterParameter : public FilterParameter
 {
 public:
-  DREAM3D_SHARED_POINTERS(ConvertHexGridToSquareGridFilterParameter)
-    DREAM3D_STATIC_NEW_MACRO(ConvertHexGridToSquareGridFilterParameter)
-    DREAM3D_TYPE_MACRO(ConvertHexGridToSquareGridFilterParameter)
+  SIMPL_SHARED_POINTERS(ConvertHexGridToSquareGridFilterParameter)
+    SIMPL_STATIC_NEW_MACRO(ConvertHexGridToSquareGridFilterParameter)
+    SIMPL_TYPE_MACRO(ConvertHexGridToSquareGridFilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
     const QVariant& defaultValue, Category category,
@@ -53,8 +53,8 @@ public:
 
   virtual ~ConvertHexGridToSquareGridFilterParameter();
 
-  DREAM3D_INSTANCE_STRING_PROPERTY(FileExtension)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FileType)
+  SIMPL_INSTANCE_STRING_PROPERTY(FileExtension)
+    SIMPL_INSTANCE_STRING_PROPERTY(FileType)
 
   QString getWidgetType();
 

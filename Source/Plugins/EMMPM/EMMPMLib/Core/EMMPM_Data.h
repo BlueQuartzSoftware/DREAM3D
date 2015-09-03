@@ -43,8 +43,8 @@
 // C++ Includes
 #include <vector>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 // emmpm includes
 #include "EMMPMLib/EMMPMLib.h"
@@ -70,9 +70,9 @@ typedef struct
 class EMMPMLib_EXPORT EMMPM_Data
 {
   public:
-    DREAM3D_SHARED_POINTERS(EMMPM_Data)
-    DREAM3D_STATIC_NEW_MACRO(EMMPM_Data)
-    DREAM3D_TYPE_MACRO(EMMPM_Data)
+    SIMPL_SHARED_POINTERS(EMMPM_Data)
+    SIMPL_STATIC_NEW_MACRO(EMMPM_Data)
+    SIMPL_TYPE_MACRO(EMMPM_Data)
 
     virtual ~EMMPM_Data();
 

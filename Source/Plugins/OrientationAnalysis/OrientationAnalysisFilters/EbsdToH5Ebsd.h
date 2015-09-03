@@ -37,9 +37,9 @@
 #ifndef _EbsdToH5Ebsd_H_
 #define _EbsdToH5Ebsd_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The EbsdToH5Ebsd class. See [Filter documentation](@ref ebsdtoh5ebsd) for details.
@@ -48,35 +48,35 @@ class EbsdToH5Ebsd : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(EbsdToH5Ebsd)
-    DREAM3D_STATIC_NEW_MACRO(EbsdToH5Ebsd)
-    DREAM3D_TYPE_MACRO_SUPER(EbsdToH5Ebsd, AbstractFilter)
+    SIMPL_SHARED_POINTERS(EbsdToH5Ebsd)
+    SIMPL_STATIC_NEW_MACRO(EbsdToH5Ebsd)
+    SIMPL_TYPE_MACRO_SUPER(EbsdToH5Ebsd, AbstractFilter)
 
     virtual ~EbsdToH5Ebsd();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
+    SIMPL_INSTANCE_STRING_PROPERTY(OutputFile)
 
-    DREAM3D_INSTANCE_PROPERTY(int64_t, ZStartIndex)
+    SIMPL_INSTANCE_PROPERTY(int64_t, ZStartIndex)
 
-    DREAM3D_INSTANCE_PROPERTY(int64_t, ZEndIndex)
+    SIMPL_INSTANCE_PROPERTY(int64_t, ZEndIndex)
 
-    DREAM3D_INSTANCE_PROPERTY(float, ZResolution)
+    SIMPL_INSTANCE_PROPERTY(float, ZResolution)
 
-    DREAM3D_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
+    SIMPL_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
 
-    DREAM3D_FILTER_PARAMETER(QString, InputPath)
+    SIMPL_FILTER_PARAMETER(QString, InputPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, FilePrefix)
+    SIMPL_FILTER_PARAMETER(QString, FilePrefix)
 
-    DREAM3D_FILTER_PARAMETER(QString, FileSuffix)
+    SIMPL_FILTER_PARAMETER(QString, FileSuffix)
 
-    DREAM3D_FILTER_PARAMETER(QString, FileExtension)
+    SIMPL_FILTER_PARAMETER(QString, FileExtension)
 
-    DREAM3D_FILTER_PARAMETER(int, PaddingDigits)
+    SIMPL_FILTER_PARAMETER(int, PaddingDigits)
 
-    DREAM3D_FILTER_PARAMETER(AxisAngleInput_t, SampleTransformation)
+    SIMPL_FILTER_PARAMETER(AxisAngleInput_t, SampleTransformation)
 
-    DREAM3D_FILTER_PARAMETER(AxisAngleInput_t, EulerTransformation)
+    SIMPL_FILTER_PARAMETER(AxisAngleInput_t, EulerTransformation)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class

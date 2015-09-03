@@ -45,7 +45,7 @@
 #include "EbsdLib/TSL/H5OIMReader.h"
 #include "EbsdLib/Test/EbsdLibTestFileLocation.h"
 
-#include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
+#include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
 
 

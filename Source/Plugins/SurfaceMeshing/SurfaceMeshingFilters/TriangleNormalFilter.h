@@ -37,9 +37,9 @@
 #ifndef _TriangleNormalFilter_H_
 #define _TriangleNormalFilter_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
@@ -50,13 +50,13 @@ class TriangleNormalFilter : public SurfaceMeshFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(TriangleNormalFilter)
-    DREAM3D_STATIC_NEW_MACRO(TriangleNormalFilter)
-    DREAM3D_TYPE_MACRO_SUPER(TriangleNormalFilter, SurfaceMeshFilter)
+    SIMPL_SHARED_POINTERS(TriangleNormalFilter)
+    SIMPL_STATIC_NEW_MACRO(TriangleNormalFilter)
+    SIMPL_TYPE_MACRO_SUPER(TriangleNormalFilter, SurfaceMeshFilter)
 
     virtual ~TriangleNormalFilter();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTriangleNormalsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTriangleNormalsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshTriangleNormalsArrayPath READ getSurfaceMeshTriangleNormalsArrayPath WRITE setSurfaceMeshTriangleNormalsArrayPath)
 
     /**

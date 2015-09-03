@@ -37,17 +37,17 @@
 #include <QtCore/QCoreApplication>
 
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/Common/FilterPipeline.h"
-#include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/Common/FilterFactory.hpp"
-#include "DREAM3DLib/CoreFilters/DataContainerWriter.h"
-#include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
-#include "DREAM3DLib/Plugin/DREAM3DPluginLoader.h"
-#include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
-#include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Common/FilterPipeline.h"
+#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/Common/FilterFactory.hpp"
+#include "SIMPLib/CoreFilters/DataContainerWriter.h"
+#include "SIMPLib/Plugin/ISIMPLibPlugin.h"
+#include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
+#include "SIMPLib/Utilities/UnitTestSupport.hpp"
+#include "SIMPLib/Utilities/QMetaObjectUtilities.h"
 
 #include "SamplingTestFileLocations.h"
 
@@ -959,7 +959,7 @@ void loadFilterPlugins()
 {
   // Register all the filters including trying to load those from Plugins
   FilterManager* fm = FilterManager::Instance();
-  DREAM3DPluginLoader::LoadPluginFilters(fm);
+  SIMPLibPluginLoader::LoadPluginFilters(fm);
 
   // Send progress messages from PipelineBuilder to this object for display
   QMetaObjectUtilities::RegisterMetaTypes();

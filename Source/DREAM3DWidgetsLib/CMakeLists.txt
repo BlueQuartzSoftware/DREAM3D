@@ -180,7 +180,7 @@ target_link_libraries(DREAM3DWidgetsLib
                     Qt5::WebKit
                     Qt5::WebKitWidgets
                     QtSupportLib
-                    DREAM3DLib
+                    SIMPLib
 )
 
 LibraryProperties( DREAM3DWidgetsLib ${EXE_DEBUG_EXTENSION})

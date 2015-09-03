@@ -24,7 +24,7 @@
 #include "H5Support/QH5Lite.h"
 #include "H5Support/QH5Utilities.h"
 
-#include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
+#include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
 #include "H5SupportTestFileLocations.h"
 

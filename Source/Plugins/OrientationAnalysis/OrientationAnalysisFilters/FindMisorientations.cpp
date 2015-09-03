@@ -36,14 +36,14 @@
 
 #include "FindMisorientations.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
@@ -133,14 +133,14 @@ void FindMisorientations::readFilterParameters(AbstractFilterParametersReader* r
 int FindMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(AvgMisorientationsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(MisorientationListArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(NeighborListArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FindAvgMisors)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(AvgMisorientationsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(MisorientationListArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(NeighborListArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FindAvgMisors)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -250,7 +250,7 @@ void FindMisorientations::execute()
       if (phase1 == phase2)
       {
         w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
-        misorientationlists[i][j] = w * DREAM3D::Constants::k_180OverPi;
+        misorientationlists[i][j] = w * SIMPLib::Constants::k_180OverPi;
         if (m_FindAvgMisors == true) { m_AvgMisorientations[i] += misorientationlists[i][j]; }
       }
       else

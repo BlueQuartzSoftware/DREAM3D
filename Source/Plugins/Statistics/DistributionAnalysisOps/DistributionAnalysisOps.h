@@ -39,10 +39,10 @@
 
 #include <vector>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/StatsData/StatsData.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/StatsData/StatsData.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "DistributionAnalysisOps/DistributionAnalysisOps.h"
 
@@ -53,9 +53,9 @@
 class DistributionAnalysisOps
 {
   public:
-    DREAM3D_SHARED_POINTERS(DistributionAnalysisOps)
-    DREAM3D_TYPE_MACRO(DistributionAnalysisOps)
-//   DREAM3D_STATIC_NEW_MACRO(DistributionAnalysisOps)
+    SIMPL_SHARED_POINTERS(DistributionAnalysisOps)
+    SIMPL_TYPE_MACRO(DistributionAnalysisOps)
+//   SIMPL_STATIC_NEW_MACRO(DistributionAnalysisOps)
     virtual ~DistributionAnalysisOps();
 
     virtual int calculateParameters(std::vector<float>& data, FloatArrayType::Pointer outputs) = 0;

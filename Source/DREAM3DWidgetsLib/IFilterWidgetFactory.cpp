@@ -40,7 +40,7 @@
 
 
 
-#include "DREAM3DLib/FilterParameters/FilterParameter.h"
+#include "SIMPLib/FilterParameters/FilterParameter.h"
 
 
 // -----------------------------------------------------------------------------

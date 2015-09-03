@@ -38,15 +38,15 @@
 
 #include <QtCore/QDateTime>
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "Statistics/StatisticsConstants.h"
 
@@ -138,16 +138,16 @@ void FindNeighbors::readFilterParameters(AbstractFilterParametersReader* reader,
 int FindNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(BoundaryCellsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceFeaturesArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(StoreBoundaryCells)
-  DREAM3D_FILTER_WRITE_PARAMETER(StoreSurfaceFeatures)
-  DREAM3D_FILTER_WRITE_PARAMETER(NumNeighborsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(NeighborListArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SharedSurfaceAreaListArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(BoundaryCellsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceFeaturesArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(StoreBoundaryCells)
+  SIMPL_FILTER_WRITE_PARAMETER(StoreSurfaceFeatures)
+  SIMPL_FILTER_WRITE_PARAMETER(NumNeighborsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(NeighborListArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(SharedSurfaceAreaListArrayName)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

@@ -37,15 +37,15 @@
 
 #include <limits>
 
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Math/MatrixMath.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
@@ -128,13 +128,13 @@ void GenerateEulerColors::readFilterParameters(AbstractFilterParametersReader* r
 int GenerateEulerColors::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(UseGoodVoxels)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellEulerColorsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(UseGoodVoxels)
+  SIMPL_FILTER_WRITE_PARAMETER(CellEulerColorsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -210,10 +210,10 @@ void GenerateEulerColors::execute()
   size_t index = 0;
 
   int phase;
-  float twoPi = 2.0f * DREAM3D::Constants::k_Pi;
-  float halfPi = 0.5f * DREAM3D::Constants::k_Pi;
-  float thirdPi = 0.333 * DREAM3D::Constants::k_Pi;
-  float twoThirdPi = 0.6666 * DREAM3D::Constants::k_Pi;
+  float twoPi = 2.0f * SIMPLib::Constants::k_Pi;
+  float halfPi = 0.5f * SIMPLib::Constants::k_Pi;
+  float thirdPi = 0.333 * SIMPLib::Constants::k_Pi;
+  float twoThirdPi = 0.6666 * SIMPLib::Constants::k_Pi;
 
   // Write the Euler Coloring Cell Data
   for (int i = 0; i < totalPoints; ++i)

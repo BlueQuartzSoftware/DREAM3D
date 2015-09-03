@@ -41,10 +41,10 @@
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QLabel>
 
-#include "DREAM3DLib/Common/ShapeType.h"
-#include "DREAM3DLib/DataContainers/DataArrayPath.h"
-#include "DREAM3DLib/FilterParameters/ShapeTypeSelectionFilterParameter.h"
-#include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
+#include "SIMPLib/Common/ShapeType.h"
+#include "SIMPLib/DataContainers/DataArrayPath.h"
+#include "SIMPLib/FilterParameters/ShapeTypeSelectionFilterParameter.h"
+#include "SIMPLib/Utilities/QMetaObjectUtilities.h"
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"

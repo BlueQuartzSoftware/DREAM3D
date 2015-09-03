@@ -44,10 +44,10 @@
 #include <boost/shared_array.hpp>
 
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Utilities/SIMPLibRandom.h"
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
@@ -93,7 +93,7 @@ class Texture
                                       T* weights, T* sigmas,
                                       bool normalize, T* odf, size_t numEntries)
     {
-      DREAM3D_RANDOMNG_NEW()
+      SIMPL_RANDOMNG_NEW()
       CubicOps ops;
       Int32ArrayType::Pointer textureBins = Int32ArrayType::CreateArray(numEntries, "TextureBins");
       int32_t* TextureBins = textureBins->getPointer(0);
@@ -213,7 +213,7 @@ class Texture
     static void CalculateHexODFData(T* e1s, T* e2s, T* e3s, T* weights, T* sigmas, bool normalize, T* odf, size_t numEntries)
     {
       HexagonalOps hexOps;
-      DREAM3D_RANDOMNG_NEW()
+      SIMPL_RANDOMNG_NEW()
       Int32ArrayType::Pointer textureBins = Int32ArrayType::CreateArray(numEntries, "TextureBins");
       int32_t* TextureBins = textureBins->getPointer(0);
       float addweight = 0;
@@ -331,7 +331,7 @@ class Texture
     static void CalculateOrthoRhombicODFData(T* e1s, T* e2s, T* e3s, T* weights, T* sigmas, bool normalize, T* odf, size_t numEntries)
     {
       OrthoRhombicOps ops;
-      DREAM3D_RANDOMNG_NEW()
+      SIMPL_RANDOMNG_NEW()
       Int32ArrayType::Pointer textureBins = Int32ArrayType::CreateArray(numEntries, "TextureBins");
       int32_t* TextureBins = textureBins->getPointer(0);
       float addweight = 0;
@@ -447,7 +447,7 @@ class Texture
       const int mdfsize = orientationOps.getMDFSize();
 
       uint64_t m_Seed = QDateTime::currentMSecsSinceEpoch();
-      DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
+      SIMPL_RANDOMNG_NEW_SEEDED(m_Seed);
 
       int mbin;
       float w = 0;
@@ -479,7 +479,7 @@ class Texture
       for (int i = 0; i < remainingcount; i++)
       {
         m_Seed++;
-        DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
+        SIMPL_RANDOMNG_NEW_SEEDED(m_Seed);
         random1 = rg.genrand_res53();
         random2 = rg.genrand_res53();
         choose1 = 0;

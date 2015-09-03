@@ -40,9 +40,9 @@
 #include <QtCore/QVector>
 #include <QtCore/QString>
 
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "OrientationLib/OrientationLib.h"
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
@@ -54,9 +54,9 @@ class OrientationConverter
 
   public:
 
-    DREAM3D_SHARED_POINTERS(OrientationConverter<T> )
-    DREAM3D_TYPE_MACRO(OrientationConverter<T>)
-    DREAM3D_CLASS_VERSION(1)
+    SIMPL_SHARED_POINTERS(OrientationConverter<T> )
+    SIMPL_TYPE_MACRO(OrientationConverter<T>)
+    SIMPL_CLASS_VERSION(1)
 
     enum OrientationType
     {
@@ -109,8 +109,8 @@ class OrientationConverter
 
     virtual void printRepresentation(T* a) = 0;
 
-    DREAM3D_INSTANCE_PROPERTY(typename DataArray<T>::Pointer, InputData)
-    DREAM3D_INSTANCE_PROPERTY(typename DataArray<T>::Pointer, OutputData)
+    SIMPL_INSTANCE_PROPERTY(typename DataArray<T>::Pointer, InputData)
+    SIMPL_INSTANCE_PROPERTY(typename DataArray<T>::Pointer, OutputData)
 
     static QVector<QString> GetOrientationTypeStrings()
     {
@@ -189,11 +189,11 @@ template<typename T>
 class EulerConverter : public OrientationConverter<T>
 {
   public:
-    DREAM3D_SHARED_POINTERS(EulerConverter<T> )
-    DREAM3D_TYPE_MACRO_SUPER(EulerConverter<T>, OrientationConverter<T>)
-    DREAM3D_CLASS_VERSION(1)
+    SIMPL_SHARED_POINTERS(EulerConverter<T> )
+    SIMPL_TYPE_MACRO_SUPER(EulerConverter<T>, OrientationConverter<T>)
+    SIMPL_CLASS_VERSION(1)
 
-    DREAM3D_STATIC_NEW_MACRO(EulerConverter<T> )
+    SIMPL_STATIC_NEW_MACRO(EulerConverter<T> )
 
     virtual ~EulerConverter() {}
 
@@ -253,9 +253,9 @@ class EulerConverter : public OrientationConverter<T>
       for (size_t i = 0; i < nTuples; ++i)
       {
 
-        inPtr[0] = fmod(inPtr[0], DREAM3D::Constants::k_2Pi);
-        inPtr[1] = fmod(inPtr[1], DREAM3D::Constants::k_Pi);
-        inPtr[2] = fmod(inPtr[2], DREAM3D::Constants::k_2Pi);
+        inPtr[0] = fmod(inPtr[0], SIMPLib::Constants::k_2Pi);
+        inPtr[1] = fmod(inPtr[1], SIMPLib::Constants::k_Pi);
+        inPtr[2] = fmod(inPtr[2], SIMPLib::Constants::k_2Pi);
 
         if(inPtr[0] < 0.0) { inPtr[0] *= static_cast<T>(-1.0); }
         if(inPtr[1] < 0.0) { inPtr[1] *= static_cast<T>(-1.0); }
@@ -305,10 +305,10 @@ template<typename T>
 class OrientationMatrixConverter : public OrientationConverter<T>
 {
   public:
-    DREAM3D_SHARED_POINTERS(OrientationMatrixConverter<T> )
-    DREAM3D_TYPE_MACRO_SUPER(OrientationMatrixConverter<T>, OrientationConverter<T>)
-    DREAM3D_CLASS_VERSION(1)
-    DREAM3D_STATIC_NEW_MACRO(OrientationMatrixConverter<T> )
+    SIMPL_SHARED_POINTERS(OrientationMatrixConverter<T> )
+    SIMPL_TYPE_MACRO_SUPER(OrientationMatrixConverter<T>, OrientationConverter<T>)
+    SIMPL_CLASS_VERSION(1)
+    SIMPL_STATIC_NEW_MACRO(OrientationMatrixConverter<T> )
 
     virtual ~OrientationMatrixConverter() {}
 
@@ -390,10 +390,10 @@ template<typename T>
 class QuaternionConverter : public OrientationConverter<T>
 {
   public:
-    DREAM3D_SHARED_POINTERS(QuaternionConverter<T> )
-    DREAM3D_TYPE_MACRO_SUPER(QuaternionConverter<T>, OrientationConverter<T>)
-    DREAM3D_CLASS_VERSION(1)
-    DREAM3D_STATIC_NEW_MACRO(QuaternionConverter<T> )
+    SIMPL_SHARED_POINTERS(QuaternionConverter<T> )
+    SIMPL_TYPE_MACRO_SUPER(QuaternionConverter<T>, OrientationConverter<T>)
+    SIMPL_CLASS_VERSION(1)
+    SIMPL_STATIC_NEW_MACRO(QuaternionConverter<T> )
 
     virtual ~QuaternionConverter() {}
 
@@ -481,10 +481,10 @@ template<typename T>
 class AxisAngleConverter : public OrientationConverter<T>
 {
   public:
-    DREAM3D_SHARED_POINTERS(AxisAngleConverter<T> )
-    DREAM3D_TYPE_MACRO_SUPER(AxisAngleConverter<T>, OrientationConverter<T>)
-    DREAM3D_CLASS_VERSION(1)
-    DREAM3D_STATIC_NEW_MACRO(AxisAngleConverter<T> )
+    SIMPL_SHARED_POINTERS(AxisAngleConverter<T> )
+    SIMPL_TYPE_MACRO_SUPER(AxisAngleConverter<T>, OrientationConverter<T>)
+    SIMPL_CLASS_VERSION(1)
+    SIMPL_STATIC_NEW_MACRO(AxisAngleConverter<T> )
 
     virtual ~AxisAngleConverter() {}
 
@@ -566,10 +566,10 @@ template<typename T>
 class RodriguesConverter : public OrientationConverter<T>
 {
   public:
-    DREAM3D_SHARED_POINTERS(RodriguesConverter<T> )
-    DREAM3D_TYPE_MACRO_SUPER(RodriguesConverter<T>, OrientationConverter<T>)
-    DREAM3D_CLASS_VERSION(1)
-    DREAM3D_STATIC_NEW_MACRO(RodriguesConverter<T> )
+    SIMPL_SHARED_POINTERS(RodriguesConverter<T> )
+    SIMPL_TYPE_MACRO_SUPER(RodriguesConverter<T>, OrientationConverter<T>)
+    SIMPL_CLASS_VERSION(1)
+    SIMPL_STATIC_NEW_MACRO(RodriguesConverter<T> )
 
 
     virtual ~RodriguesConverter() {}
@@ -652,10 +652,10 @@ template<typename T>
 class HomochoricConverter : public OrientationConverter<T>
 {
   public:
-    DREAM3D_SHARED_POINTERS(HomochoricConverter<T> )
-    DREAM3D_TYPE_MACRO_SUPER(HomochoricConverter<T>, OrientationConverter<T>)
-    DREAM3D_CLASS_VERSION(1)
-    DREAM3D_STATIC_NEW_MACRO(HomochoricConverter<T> )
+    SIMPL_SHARED_POINTERS(HomochoricConverter<T> )
+    SIMPL_TYPE_MACRO_SUPER(HomochoricConverter<T>, OrientationConverter<T>)
+    SIMPL_CLASS_VERSION(1)
+    SIMPL_STATIC_NEW_MACRO(HomochoricConverter<T> )
 
 
     virtual ~HomochoricConverter() {}
@@ -738,10 +738,10 @@ template<typename T>
 class CubochoricConverter : public OrientationConverter<T>
 {
   public:
-    DREAM3D_SHARED_POINTERS(CubochoricConverter<T> )
-    DREAM3D_TYPE_MACRO_SUPER(CubochoricConverter<T>, OrientationConverter<T>)
-    DREAM3D_CLASS_VERSION(1)
-    DREAM3D_STATIC_NEW_MACRO(CubochoricConverter<T> )
+    SIMPL_SHARED_POINTERS(CubochoricConverter<T> )
+    SIMPL_TYPE_MACRO_SUPER(CubochoricConverter<T>, OrientationConverter<T>)
+    SIMPL_CLASS_VERSION(1)
+    SIMPL_STATIC_NEW_MACRO(CubochoricConverter<T> )
 
 
     virtual ~CubochoricConverter() {}

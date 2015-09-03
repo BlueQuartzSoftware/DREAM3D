@@ -48,11 +48,11 @@
 #include "EbsdLib/HKL/H5CtfVolumeReader.h"
 #include "EbsdLib/HKL/CtfFields.h"
 
-#include "DREAM3DLib/Common/Constants.h"
+#include "SIMPLib/Common/Constants.h"
 
 
 #include "QtSupportLib/QFileCompleter.h"
-#include "QtSupportLib/DREAM3DQtMacros.h"
+#include "QtSupportLib/SIMPLQtMacros.h"
 #include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
 
 

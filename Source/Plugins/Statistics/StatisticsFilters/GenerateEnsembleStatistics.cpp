@@ -36,24 +36,24 @@
 
 #include "GenerateEnsembleStatistics.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/PhaseType.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/PhaseType.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/DoubleFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/PhaseTypeSelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/PhaseTypeSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
-#include "DREAM3DLib/StatsData/PrimaryStatsData.h"
-#include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
-#include "DREAM3DLib/StatsData/TransformationStatsData.h"
-#include "DREAM3DLib/StatsData/BoundaryStatsData.h"
-#include "DREAM3DLib/StatsData/MatrixStatsData.h"
+#include "SIMPLib/StatsData/PrimaryStatsData.h"
+#include "SIMPLib/StatsData/PrecipitateStatsData.h"
+#include "SIMPLib/StatsData/TransformationStatsData.h"
+#include "SIMPLib/StatsData/BoundaryStatsData.h"
+#include "SIMPLib/StatsData/MatrixStatsData.h"
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
@@ -317,41 +317,41 @@ void GenerateEnsembleStatistics::readFilterParameters(AbstractFilterParametersRe
 int GenerateEnsembleStatistics::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(CalculateMorphologicalStats)
-  DREAM3D_FILTER_WRITE_PARAMETER(IncludeRadialDistFunc)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(PhaseTypesArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(StatisticsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureEulerAnglesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(VolumesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceFeaturesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(AxisEulerAnglesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(Omega3sArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(RDFArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(MaxMinRDFArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(AspectRatiosArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(NeighborhoodsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(NeighborListArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(EquivalentDiametersArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(BiasedFeaturesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(SharedSurfaceAreaListArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(ComputeSizeDistribution)
-  DREAM3D_FILTER_WRITE_PARAMETER(SizeDistributionFitType)
-  DREAM3D_FILTER_WRITE_PARAMETER(ComputeAspectRatioDistribution)
-  DREAM3D_FILTER_WRITE_PARAMETER(AspectRatioDistributionFitType)
-  DREAM3D_FILTER_WRITE_PARAMETER(ComputeOmega3Distribution)
-  DREAM3D_FILTER_WRITE_PARAMETER(Omega3DistributionFitType)
-  DREAM3D_FILTER_WRITE_PARAMETER(ComputeNeighborhoodDistribution)
-  DREAM3D_FILTER_WRITE_PARAMETER(NeighborhoodDistributionFitType)
-  DREAM3D_FILTER_WRITE_PARAMETER(CalculateCrystallographicStats)
-  DREAM3D_FILTER_WRITE_PARAMETER(CalculateODF)
-  DREAM3D_FILTER_WRITE_PARAMETER(CalculateMDF)
-  DREAM3D_FILTER_WRITE_PARAMETER(CalculateAxisODF)
-  DREAM3D_FILTER_WRITE_PARAMETER(SizeCorrelationResolution)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(CalculateMorphologicalStats)
+  SIMPL_FILTER_WRITE_PARAMETER(IncludeRadialDistFunc)
+  SIMPL_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixPath)
+  SIMPL_FILTER_WRITE_PARAMETER(PhaseTypesArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(StatisticsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureEulerAnglesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(VolumesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceFeaturesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(AxisEulerAnglesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(Omega3sArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(RDFArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(MaxMinRDFArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(AspectRatiosArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(NeighborhoodsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(NeighborListArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(EquivalentDiametersArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(BiasedFeaturesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(SharedSurfaceAreaListArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(ComputeSizeDistribution)
+  SIMPL_FILTER_WRITE_PARAMETER(SizeDistributionFitType)
+  SIMPL_FILTER_WRITE_PARAMETER(ComputeAspectRatioDistribution)
+  SIMPL_FILTER_WRITE_PARAMETER(AspectRatioDistributionFitType)
+  SIMPL_FILTER_WRITE_PARAMETER(ComputeOmega3Distribution)
+  SIMPL_FILTER_WRITE_PARAMETER(Omega3DistributionFitType)
+  SIMPL_FILTER_WRITE_PARAMETER(ComputeNeighborhoodDistribution)
+  SIMPL_FILTER_WRITE_PARAMETER(NeighborhoodDistributionFitType)
+  SIMPL_FILTER_WRITE_PARAMETER(CalculateCrystallographicStats)
+  SIMPL_FILTER_WRITE_PARAMETER(CalculateODF)
+  SIMPL_FILTER_WRITE_PARAMETER(CalculateMDF)
+  SIMPL_FILTER_WRITE_PARAMETER(CalculateAxisODF)
+  SIMPL_FILTER_WRITE_PARAMETER(SizeCorrelationResolution)
   writer->writeValue("PhaseTypeArray", getPhaseTypeData().d );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -596,7 +596,7 @@ void GenerateEnsembleStatistics::gatherSizeStats()
     {
       values[m_FeaturePhases[i]][0].push_back(m_EquivalentDiameters[i]);
     }
-    vol = (1.0f / 6.0f) * DREAM3D::Constants::k_Pi * m_EquivalentDiameters[i] * m_EquivalentDiameters[i] * m_EquivalentDiameters[i];
+    vol = (1.0f / 6.0f) * SIMPLib::Constants::k_Pi * m_EquivalentDiameters[i] * m_EquivalentDiameters[i] * m_EquivalentDiameters[i];
     fractions[m_FeaturePhases[i]] = fractions[m_FeaturePhases[i]] + vol;
     totalUnbiasedVolume = totalUnbiasedVolume + vol;
   }
@@ -1367,7 +1367,7 @@ AbstractFilter::Pointer GenerateEnsembleStatistics::newFilterInstance(bool copyF
   {
     copyFilterParameterInstanceVariables(filter.get());
     // Here we need to set all sorts of stuff that is going to get missed. This
-    // is predominantly for FilterParameters that take multiple DREAM3D_FILTER_PARAMETERS
+    // is predominantly for FilterParameters that take multiple SIMPL_FILTER_PARAMETERS
     // Those will get missed.
     filter->setPhaseTypeData(getPhaseTypeData());
     filter->setCellEnsembleAttributeMatrixPath(getCellEnsembleAttributeMatrixPath());

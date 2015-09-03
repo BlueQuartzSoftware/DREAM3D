@@ -43,9 +43,9 @@
 #include <QtWidgets/QListWidgetItem>
 
 
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/DataContainers/DataArrayPath.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
+#include "SIMPLib/DataContainers/DataArrayPath.h"
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"

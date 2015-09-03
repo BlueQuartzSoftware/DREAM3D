@@ -42,15 +42,15 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/OutputFileFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/BooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
+#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Utilities/SIMPLibEndian.h"
 
 #include "IO/IOConstants.h"
 
@@ -136,12 +136,12 @@ void SurfaceMeshToVtk::readFilterParameters(AbstractFilterParametersReader* read
 int SurfaceMeshToVtk::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshNodeTypeArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputVtkFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(WriteBinaryFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(WriteConformalMesh)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshNodeTypeArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputVtkFile)
+  SIMPL_FILTER_WRITE_PARAMETER(WriteBinaryFile)
+  SIMPL_FILTER_WRITE_PARAMETER(WriteConformalMesh)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -328,9 +328,9 @@ void SurfaceMeshToVtk::execute()
 
       if (m_WriteBinaryFile == true)
       {
-        DREAM3D::Endian::FromSystemToBig::convert(pos[0]);
-        DREAM3D::Endian::FromSystemToBig::convert(pos[1]);
-        DREAM3D::Endian::FromSystemToBig::convert(pos[2]);
+        SIMPLib::Endian::FromSystemToBig::convert(pos[0]);
+        SIMPLib::Endian::FromSystemToBig::convert(pos[1]);
+        SIMPLib::Endian::FromSystemToBig::convert(pos[2]);
         totalWritten = fwrite(pos, sizeof(float), 3, vtkFile);
         if (totalWritten != sizeof(float) * 3)
         {
@@ -363,10 +363,10 @@ void SurfaceMeshToVtk::execute()
     if (m_WriteBinaryFile == true)
     {
       tData[0] = 3; // Push on the total number of entries for this entry
-      DREAM3D::Endian::FromSystemToBig::convert(tData[0]);
-      DREAM3D::Endian::FromSystemToBig::convert(tData[1]); // Index of Vertex 0
-      DREAM3D::Endian::FromSystemToBig::convert(tData[2]); // Index of Vertex 1
-      DREAM3D::Endian::FromSystemToBig::convert(tData[3]); // Index of Vertex 2
+      SIMPLib::Endian::FromSystemToBig::convert(tData[0]);
+      SIMPLib::Endian::FromSystemToBig::convert(tData[1]); // Index of Vertex 0
+      SIMPLib::Endian::FromSystemToBig::convert(tData[2]); // Index of Vertex 1
+      SIMPLib::Endian::FromSystemToBig::convert(tData[3]); // Index of Vertex 2
       fwrite(tData, sizeof(int), 4, vtkFile);
       if (false == m_WriteConformalMesh)
       {
@@ -374,7 +374,7 @@ void SurfaceMeshToVtk::execute()
         tData[1] = tData[3];
         tData[3] = tData[0];
         tData[0] = 3;
-        DREAM3D::Endian::FromSystemToBig::convert(tData[0]);
+        SIMPLib::Endian::FromSystemToBig::convert(tData[0]);
         fwrite(tData, sizeof(int), 4, vtkFile);
       }
     }
@@ -420,7 +420,7 @@ void writePointScalarData(DataContainer::Pointer dc, const QString& vertexAttrib
       if(writeBinaryData == true)
       {
         swapped = static_cast<T>(m[i]);
-        DREAM3D::Endian::FromSystemToBig::convert(swapped);
+        SIMPLib::Endian::FromSystemToBig::convert(swapped);
         fwrite(&swapped, sizeof(T), 1, vtkFile);
       }
       else
@@ -460,9 +460,9 @@ void writePointVectorData(DataContainer::Pointer dc, const QString& vertexAttrib
         s0 = static_cast<T>(m[i * 3 + 0]);
         s1 = static_cast<T>(m[i * 3 + 1]);
         s2 = static_cast<T>(m[i * 3 + 2]);
-        DREAM3D::Endian::FromSystemToBig::convert(s0);
-        DREAM3D::Endian::FromSystemToBig::convert(s1);
-        DREAM3D::Endian::FromSystemToBig::convert(s2);
+        SIMPLib::Endian::FromSystemToBig::convert(s0);
+        SIMPLib::Endian::FromSystemToBig::convert(s1);
+        SIMPLib::Endian::FromSystemToBig::convert(s2);
         fwrite(&s0, sizeof(T), 1, vtkFile);
         fwrite(&s1, sizeof(T), 1, vtkFile);
         fwrite(&s1, sizeof(T), 1, vtkFile);
@@ -578,7 +578,7 @@ void writeCellScalarData(DataContainer::Pointer dc, const QString& faceAttribute
       if(writeBinaryData == true)
       {
         swapped = static_cast<T>(m[i]);
-        DREAM3D::Endian::FromSystemToBig::convert(swapped);
+        SIMPLib::Endian::FromSystemToBig::convert(swapped);
         fwrite(&swapped, sizeof(T), 1, vtkFile);
         if(false == writeConformalMesh)
         {
@@ -628,9 +628,9 @@ void writeCellVectorData(DataContainer::Pointer dc, const QString& faceAttribute
         s0 = static_cast<T>(m[i * 3 + 0]);
         s1 = static_cast<T>(m[i * 3 + 1]);
         s2 = static_cast<T>(m[i * 3 + 2]);
-        DREAM3D::Endian::FromSystemToBig::convert(s0);
-        DREAM3D::Endian::FromSystemToBig::convert(s1);
-        DREAM3D::Endian::FromSystemToBig::convert(s2);
+        SIMPLib::Endian::FromSystemToBig::convert(s0);
+        SIMPLib::Endian::FromSystemToBig::convert(s1);
+        SIMPLib::Endian::FromSystemToBig::convert(s2);
         fwrite(&s0, sizeof(T), 1, vtkFile);
         fwrite(&s1, sizeof(T), 1, vtkFile);
         fwrite(&s2, sizeof(T), 1, vtkFile);
@@ -682,9 +682,9 @@ void writeCellNormalData(DataContainer::Pointer dc, const QString& faceAttribute
         s0 = static_cast<T>(m[i * 3 + 0]);
         s1 = static_cast<T>(m[i * 3 + 1]);
         s2 = static_cast<T>(m[i * 3 + 2]);
-        DREAM3D::Endian::FromSystemToBig::convert(s0);
-        DREAM3D::Endian::FromSystemToBig::convert(s1);
-        DREAM3D::Endian::FromSystemToBig::convert(s2);
+        SIMPLib::Endian::FromSystemToBig::convert(s0);
+        SIMPLib::Endian::FromSystemToBig::convert(s1);
+        SIMPLib::Endian::FromSystemToBig::convert(s2);
         fwrite(&s0, sizeof(T), 1, vtkFile);
         fwrite(&s1, sizeof(T), 1, vtkFile);
         fwrite(&s2, sizeof(T), 1, vtkFile);
@@ -693,9 +693,9 @@ void writeCellNormalData(DataContainer::Pointer dc, const QString& faceAttribute
           s0 = static_cast<T>(m[i * 3 + 0]) * -1.0;
           s1 = static_cast<T>(m[i * 3 + 1]) * -1.0;
           s2 = static_cast<T>(m[i * 3 + 2]) * -1.0;
-          DREAM3D::Endian::FromSystemToBig::convert(s0);
-          DREAM3D::Endian::FromSystemToBig::convert(s1);
-          DREAM3D::Endian::FromSystemToBig::convert(s2);
+          SIMPLib::Endian::FromSystemToBig::convert(s0);
+          SIMPLib::Endian::FromSystemToBig::convert(s1);
+          SIMPLib::Endian::FromSystemToBig::convert(s2);
           fwrite(&s0, sizeof(T), 1, vtkFile);
           fwrite(&s1, sizeof(T), 1, vtkFile);
           fwrite(&s2, sizeof(T), 1, vtkFile);
@@ -757,12 +757,12 @@ int SurfaceMeshToVtk::writeCellData(FILE* vtkFile)
     if(m_WriteBinaryFile == true)
     {
       swapped = m_SurfaceMeshFaceLabels[i * 2];
-      DREAM3D::Endian::FromSystemToBig::convert(swapped);
+      SIMPLib::Endian::FromSystemToBig::convert(swapped);
       fwrite(&swapped, sizeof(int), 1, vtkFile);
       if(false == m_WriteConformalMesh)
       {
         swapped = m_SurfaceMeshFaceLabels[i * 2 + 1];
-        DREAM3D::Endian::FromSystemToBig::convert(swapped);
+        SIMPLib::Endian::FromSystemToBig::convert(swapped);
         fwrite(&swapped, sizeof(int), 1, vtkFile);
       }
     }
@@ -789,7 +789,7 @@ int SurfaceMeshToVtk::writeCellData(FILE* vtkFile)
     if(m_WriteBinaryFile == true)
     {
       swapped = i;
-      DREAM3D::Endian::FromSystemToBig::convert(swapped);
+      SIMPLib::Endian::FromSystemToBig::convert(swapped);
       fwrite(&swapped, sizeof(int), 1, vtkFile);
       if(false == m_WriteConformalMesh)
       {

@@ -6,11 +6,11 @@
 #include <QtWidgets/QListWidgetItem>
 #include <QtGui/QStandardItemModel>
 
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/DataContainerArray.h"
-#include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
-#include "DREAM3DLib/DataContainers/DataContainerProxy.h"
-#include "DREAM3DLib/FilterParameters/FilterParameter.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainerArrayProxy.h"
+#include "SIMPLib/DataContainers/DataContainerProxy.h"
+#include "SIMPLib/FilterParameters/FilterParameter.h"
 
 
 

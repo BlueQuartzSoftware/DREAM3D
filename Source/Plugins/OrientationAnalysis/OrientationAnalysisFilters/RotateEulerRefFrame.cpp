@@ -36,7 +36,7 @@
 
 #include "RotateEulerRefFrame.h"
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/blocked_range3d.h>
@@ -44,12 +44,12 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DoubleFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
@@ -103,7 +103,7 @@ class RotateEulerRefFrameImpl
       }
     }
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     void operator()(const tbb::blocked_range<size_t>& r) const
     {
       convert(r.begin(), r.end());
@@ -168,10 +168,10 @@ void RotateEulerRefFrame::readFilterParameters(AbstractFilterParametersReader* r
 int RotateEulerRefFrame::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(RotationAxis)
-  DREAM3D_FILTER_WRITE_PARAMETER(RotationAngle)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(RotationAxis)
+  SIMPL_FILTER_WRITE_PARAMETER(RotationAngle)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -213,16 +213,16 @@ void RotateEulerRefFrame::execute()
 
   size_t totalPoints = m_CellEulerAnglesPtr.lock()->getNumberOfTuples();
 
-  float rotAngle = m_RotationAngle * DREAM3D::Constants::k_Pi / 180.0f;
+  float rotAngle = m_RotationAngle * SIMPLib::Constants::k_Pi / 180.0f;
   float rotAxis[3] = {m_RotationAxis.x, m_RotationAxis.y, m_RotationAxis.z};
   MatrixMath::Normalize3x1(rotAxis);
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
 #endif
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),

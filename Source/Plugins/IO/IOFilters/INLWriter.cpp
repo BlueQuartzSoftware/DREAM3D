@@ -39,15 +39,15 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QDir>
 
-#include "DREAM3DLib/DREAM3DLibVersion.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/SIMPLibVersion.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/OutputFileFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "EbsdLib/TSL/AngConstants.h"
 
@@ -138,14 +138,14 @@ void INLWriter::readFilterParameters(AbstractFilterParametersReader* reader, int
 int INLWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(NumFeaturesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(MaterialNameArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputFile)
+  SIMPL_FILTER_WRITE_PARAMETER(NumFeaturesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(MaterialNameArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -311,7 +311,7 @@ int32_t INLWriter::writeFile()
   }
 
   // Write the header, Each line starts with a "#" symbol
-  fprintf(f, "# File written from %s\r\n", DREAM3DLib::Version::PackageComplete().toLatin1().data());
+  fprintf(f, "# File written from %s\r\n", SIMPLib::Version::PackageComplete().toLatin1().data());
   fprintf(f, "# DateTime: %s\r\n", QDateTime::currentDateTime().toString().toLatin1().data());
   fprintf(f, "# X_STEP: %f\r\n", res[0]);
   fprintf(f, "# Y_STEP: %f\r\n", res[1]);

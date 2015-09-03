@@ -40,18 +40,18 @@
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/variate_generator.hpp>
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Math/GeometryMath.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Math/GeometryMath.h"
 
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "SIMPLib/Utilities/SIMPLibRandom.h"
 
 
 #define ERROR_TXT_OUT 1
@@ -132,14 +132,14 @@ void SineParamsSegmentFeatures::readFilterParameters(AbstractFilterParametersRea
 int SineParamsSegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(ActiveArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(UseGoodVoxels)
-  DREAM3D_FILTER_WRITE_PARAMETER(SineParamsArrayPath)
-  //DREAM3D_FILTER_WRITE_PARAMETER(AngleTolerance)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(ActiveArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(UseGoodVoxels)
+  SIMPL_FILTER_WRITE_PARAMETER(SineParamsArrayPath)
+  //SIMPL_FILTER_WRITE_PARAMETER(AngleTolerance)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -234,7 +234,7 @@ void SineParamsSegmentFeatures::execute()
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
 
   //Convert user defined tolerance to radians.
-  //angleTolerance = m_AngleTolerance * DREAM3D::Constants::k_Pi / 180.0f;
+  //angleTolerance = m_AngleTolerance * SIMPLib::Constants::k_Pi / 180.0f;
   for(int64_t i = 0; i < totalPoints; i++)
   {
     m_FeatureIds[i] = 0;
@@ -353,7 +353,7 @@ bool SineParamsSegmentFeatures::determineGrouping(int64_t referencepoint, int64_
   float v1;
   float v2;
   float shift;
-  float step = 45.0 * DREAM3D::Constants::k_PiOver180;
+  float step = 45.0 * SIMPLib::Constants::k_PiOver180;
   float avgDiff = 0;
   if(m_FeatureIds[neighborpoint] == 0 && (m_UseGoodVoxels == false || m_GoodVoxels[neighborpoint] == true))
   {

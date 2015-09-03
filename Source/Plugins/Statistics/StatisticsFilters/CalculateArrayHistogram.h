@@ -37,9 +37,9 @@
 #ifndef _CalculateArrayHistogram_H_
 #define _CalculateArrayHistogram_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The CalculateArrayHistogram class. See [Filter documentation](@ref calculatearrayhistogram) for details.
@@ -48,40 +48,40 @@ class CalculateArrayHistogram : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(CalculateArrayHistogram)
-    DREAM3D_STATIC_NEW_MACRO(CalculateArrayHistogram)
-    DREAM3D_TYPE_MACRO_SUPER(CalculateArrayHistogram, AbstractFilter)
+    SIMPL_SHARED_POINTERS(CalculateArrayHistogram)
+    SIMPL_STATIC_NEW_MACRO(CalculateArrayHistogram)
+    SIMPL_TYPE_MACRO_SUPER(CalculateArrayHistogram, AbstractFilter)
 
     virtual ~CalculateArrayHistogram();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
     Q_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(int, NumberOfBins)
+    SIMPL_FILTER_PARAMETER(int, NumberOfBins)
     Q_PROPERTY(int NumberOfBins READ getNumberOfBins WRITE setNumberOfBins)
 
-    DREAM3D_FILTER_PARAMETER(double, MinRange)
+    SIMPL_FILTER_PARAMETER(double, MinRange)
     Q_PROPERTY(double MinRange READ getMinRange WRITE setMinRange)
 
-    DREAM3D_FILTER_PARAMETER(double, MaxRange)
+    SIMPL_FILTER_PARAMETER(double, MaxRange)
     Q_PROPERTY(double MaxRange READ getMaxRange WRITE setMaxRange)
 
-    DREAM3D_FILTER_PARAMETER(bool, UserDefinedRange)
+    SIMPL_FILTER_PARAMETER(bool, UserDefinedRange)
     Q_PROPERTY(bool UserDefinedRange READ getUserDefinedRange WRITE setUserDefinedRange)
 
-    DREAM3D_FILTER_PARAMETER(bool, Normalize)
+    SIMPL_FILTER_PARAMETER(bool, Normalize)
     Q_PROPERTY(bool Normalize READ getNormalize WRITE setNormalize)
 
-    DREAM3D_FILTER_PARAMETER(QString, NewAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, NewAttributeMatrixName)
     Q_PROPERTY(QString NewAttributeMatrixName READ getNewAttributeMatrixName WRITE setNewAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(QString, NewDataArrayName)
+    SIMPL_FILTER_PARAMETER(QString, NewDataArrayName)
     Q_PROPERTY(QString NewDataArrayName READ getNewDataArrayName WRITE setNewDataArrayName)
 
-    DREAM3D_FILTER_PARAMETER(bool, NewDataContainer)
+    SIMPL_FILTER_PARAMETER(bool, NewDataContainer)
     Q_PROPERTY(bool NewDataContainer READ getNewDataContainer WRITE setNewDataContainer)
 
-    DREAM3D_FILTER_PARAMETER(QString, NewDataContainerName)
+    SIMPL_FILTER_PARAMETER(QString, NewDataContainerName)
     Q_PROPERTY(QString NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
 
     /**

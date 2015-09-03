@@ -41,11 +41,11 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/Common/FilterPipeline.h"
-#include "DREAM3DLib/IOFilters/VtkGrainIdWriter.h"
-#include "DREAM3DLib/IOFilters/VtkGrainIdReader.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Common/FilterPipeline.h"
+#include "SIMPLib/IOFilters/VtkGrainIdWriter.h"
+#include "SIMPLib/IOFilters/VtkGrainIdReader.h"
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
@@ -54,12 +54,12 @@ class GenerateGrainIds : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(GenerateGrainIds)
-    DREAM3D_STATIC_NEW_MACRO(GenerateGrainIds)
-    DREAM3D_TYPE_MACRO_SUPER(GenerateGrainIds, AbstractFilter)
+    SIMPL_SHARED_POINTERS(GenerateGrainIds)
+    SIMPL_STATIC_NEW_MACRO(GenerateGrainIds)
+    SIMPL_TYPE_MACRO_SUPER(GenerateGrainIds, AbstractFilter)
 
     //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    SIMPL_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
     virtual ~GenerateGrainIds() {};
     virtual const QString getGroupName()

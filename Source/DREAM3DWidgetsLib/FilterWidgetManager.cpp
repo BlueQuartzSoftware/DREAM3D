@@ -38,7 +38,7 @@
 
 #include "PipelineFilterWidgetFactory.hpp"
 
-#include "DREAM3DLib/FilterParameters/UnknownFilterParameter.h"
+#include "SIMPLib/FilterParameters/UnknownFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/FilterWidgetHeaders.h"
 

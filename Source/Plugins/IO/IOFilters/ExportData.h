@@ -37,9 +37,9 @@
 #ifndef _ExportData_H_
 #define _ExportData_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The ExportData class. See [Filter documentation](@ref exportdata) for details.
@@ -48,25 +48,25 @@ class ExportData : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(ExportData)
-    DREAM3D_STATIC_NEW_MACRO(ExportData)
-    DREAM3D_TYPE_MACRO_SUPER(ExportData, AbstractFilter)
+    SIMPL_SHARED_POINTERS(ExportData)
+    SIMPL_STATIC_NEW_MACRO(ExportData)
+    SIMPL_TYPE_MACRO_SUPER(ExportData, AbstractFilter)
 
     virtual ~ExportData();
 
-    DREAM3D_FILTER_PARAMETER(QVector<DataArrayPath>, SelectedDataArrayPaths)
+    SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, SelectedDataArrayPaths)
     Q_PROPERTY(QVector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
 
-    DREAM3D_FILTER_PARAMETER(QString, OutputPath)
+    SIMPL_FILTER_PARAMETER(QString, OutputPath)
     Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
 
-    DREAM3D_FILTER_PARAMETER(int, Delimeter)
+    SIMPL_FILTER_PARAMETER(int, Delimeter)
     Q_PROPERTY(int Delimeter READ getDelimeter WRITE setDelimeter)
 
-    DREAM3D_FILTER_PARAMETER(QString, FileExtension)
+    SIMPL_FILTER_PARAMETER(QString, FileExtension)
     Q_PROPERTY(QString FileExtension READ getFileExtension WRITE setFileExtension)
 
-    DREAM3D_FILTER_PARAMETER(int, MaxValPerLine)
+    SIMPL_FILTER_PARAMETER(int, MaxValPerLine)
     Q_PROPERTY(int MaxValPerLine READ getMaxValPerLine WRITE setMaxValPerLine)
 
     enum DelimeterType

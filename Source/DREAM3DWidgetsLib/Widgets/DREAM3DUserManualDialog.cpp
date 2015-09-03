@@ -48,7 +48,7 @@
 
 #include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
 
-#include "DREAM3DLib/Common/FilterManager.h"
+#include "SIMPLib/Common/FilterManager.h"
 
 #include "DREAM3DWidgetsLib/Widgets/DREAM3DUserManualDialog.h"
 

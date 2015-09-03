@@ -38,18 +38,18 @@
 
 #include <QtCore/QDateTime>
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/DoubleFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Math/GeometryMath.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Math/GeometryMath.h"
+#include "SIMPLib/Math/MatrixMath.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 
@@ -132,14 +132,14 @@ void VectorSegmentFeatures::readFilterParameters(AbstractFilterParametersReader*
 int VectorSegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(ActiveArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(UseGoodVoxels)
-  DREAM3D_FILTER_WRITE_PARAMETER(SelectedVectorArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(AngleTolerance)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(ActiveArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(UseGoodVoxels)
+  SIMPL_FILTER_WRITE_PARAMETER(SelectedVectorArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(AngleTolerance)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -320,7 +320,7 @@ bool VectorSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t ne
     if (v2[2] < 0) { MatrixMath::Multiply3x1withConstant(v2, -1); }
     float w = GeometryMath::CosThetaBetweenVectors(v1, v2);
     w = acosf(w);
-    if (w > DREAM3D::Constants::k_PiOver2) { w = DREAM3D::Constants::k_Pi - w; }
+    if (w > SIMPLib::Constants::k_PiOver2) { w = SIMPLib::Constants::k_Pi - w; }
     if (w < angleTolerance)
     {
       group = true;
@@ -364,7 +364,7 @@ void VectorSegmentFeatures::execute()
   int64_t totalPoints = static_cast<int64_t>(m_FeatureIdsPtr.lock()->getNumberOfTuples());
 
   // Convert user defined tolerance to radians.
-  angleTolerance = m_AngleTolerance * DREAM3D::Constants::k_Pi / 180.0f;
+  angleTolerance = m_AngleTolerance * SIMPLib::Constants::k_Pi / 180.0f;
 
   // Generate the random voxel indices that will be used for the seed points to start a new grain growth/agglomeration
   const int64_t rangeMin = 0;

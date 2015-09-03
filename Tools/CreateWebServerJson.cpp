@@ -11,12 +11,12 @@
 #include <QtCore/QSet>
 #include <QtCore/QDate>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/DREAM3DLibVersion.h"
-#include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
-#include "DREAM3DLib/Plugin/PluginManager.h"
-#include "DREAM3DLib/Plugin/DREAM3DPluginLoader.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/SIMPLibVersion.h"
+#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/Plugin/ISIMPLibPlugin.h"
+#include "SIMPLib/Plugin/PluginManager.h"
+#include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 
 
 // -----------------------------------------------------------------------------
@@ -28,9 +28,9 @@ void WriteWebServerJSON(const QString& filePath)
 
   // Register all the filters including trying to load those from Plugins
   FilterManager* fm = FilterManager::Instance();
-  DREAM3DPluginLoader::LoadPluginFilters(fm);
+  SIMPLibPluginLoader::LoadPluginFilters(fm);
   PluginManager* pm = PluginManager::Instance();
-  QVector<IDREAM3DPlugin*> plugins = pm->getPluginsVector();
+  QVector<ISIMPLibPlugin*> plugins = pm->getPluginsVector();
 
   // Send progress messages from PipelineBuilder to this object for display
   QMetaObjectUtilities::RegisterMetaTypes();
@@ -41,10 +41,10 @@ void WriteWebServerJSON(const QString& filePath)
 
   meta["Release Date"] = QDate::currentDate().toString();
   meta["Release Type"] = DREAM3DProj_RELEASE_TYPE;
-  meta["Major"] = DREAM3DLib::Version::Major();
-  meta["Minor"] = DREAM3DLib::Version::Minor();
-  meta["Patch"] = DREAM3DLib::Version::Patch();
-  meta["Revision"] = DREAM3DLib::Version::Revision();
+  meta["Major"] = SIMPLib::Version::Major();
+  meta["Minor"] = SIMPLib::Version::Minor();
+  meta["Patch"] = SIMPLib::Version::Patch();
+  meta["Revision"] = SIMPLib::Version::Revision();
   meta["Download WebSite"] = "http://dream3d.bluequartz.net/?page_id=32";
   QJsonObject m_Root;
   m_Root["DREAM3D"] = meta;
@@ -54,7 +54,7 @@ void WriteWebServerJSON(const QString& filePath)
 
   for(int i = 0; i < plugins.size(); i++)
   {
-    IDREAM3DPlugin* plug = plugins[i];
+    ISIMPLibPlugin* plug = plugins[i];
     QJsonObject jobj;
     jobj["Plugin Name"] = plug->getPluginName();
     jobj["Plugin Version"] = plug->getVersion();

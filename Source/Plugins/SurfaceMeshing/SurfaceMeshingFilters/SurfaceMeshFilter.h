@@ -37,9 +37,9 @@
 #ifndef _SurfaceMeshFilter_H_
 #define _SurfaceMeshFilter_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 
@@ -51,9 +51,9 @@ class SurfaceMeshFilter : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(SurfaceMeshFilter)
-    DREAM3D_STATIC_NEW_MACRO(SurfaceMeshFilter)
-    DREAM3D_TYPE_MACRO_SUPER(SurfaceMeshFilter, AbstractFilter)
+    SIMPL_SHARED_POINTERS(SurfaceMeshFilter)
+    SIMPL_STATIC_NEW_MACRO(SurfaceMeshFilter)
+    SIMPL_TYPE_MACRO_SUPER(SurfaceMeshFilter, AbstractFilter)
 
     virtual ~SurfaceMeshFilter();
 

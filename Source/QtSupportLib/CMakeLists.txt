@@ -83,7 +83,7 @@ set(Project_HDRS "")
 
 set(QtSupportLib_SRCS
     ${QtSupportLib_SOURCE_DIR}/AIMImageGraphicsDelegate.cpp
-    ${QtSupportLib_SOURCE_DIR}/DREAM3DPluginFrame.cpp
+    ${QtSupportLib_SOURCE_DIR}/SIMPLPluginFrame.cpp
     ${QtSupportLib_SOURCE_DIR}/ApplicationAboutBoxDialog.cpp
     ${QtSupportLib_SOURCE_DIR}/ColorComboPicker.cpp
     ${QtSupportLib_SOURCE_DIR}/QFileCompleter.cpp
@@ -114,7 +114,7 @@ set(QtSupportLib_SRCS
 set(QtSupportLib_HDRS
     ${QtSupportLib_SOURCE_DIR}/QtSupportLibDLLExport.h
     ${QtSupportLib_SOURCE_DIR}/AIMImageGraphicsDelegate.h
-    ${QtSupportLib_SOURCE_DIR}/DREAM3DPluginFrame.h
+    ${QtSupportLib_SOURCE_DIR}/SIMPLPluginFrame.h
     ${QtSupportLib_SOURCE_DIR}/ApplicationAboutBoxDialog.h
     ${QtSupportLib_SOURCE_DIR}/ColorComboPicker.h
     ${QtSupportLib_SOURCE_DIR}/QFileCompleter.h
@@ -204,7 +204,7 @@ endif()
 add_library(${PROJECT_NAME} ${LIB_TYPE} ${Project_SRCS})
 
 
-set(QtSupportLib_LINK_LIBRARIES DREAM3DLib)
+set(QtSupportLib_LINK_LIBRARIES SIMPLib)
 #if we are compiling HDF5 support, include those libraries
 if(${QtSupportLib_ENABLE_HDF5})
   set(QtSupportLib_LINK_LIBRARIES

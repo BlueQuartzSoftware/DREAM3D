@@ -39,9 +39,9 @@
 
 #include <QtWidgets/QDockWidget>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/IObserver.h"
-#include "DREAM3DLib/Common/PipelineMessage.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/IObserver.h"
+#include "SIMPLib/Common/PipelineMessage.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 

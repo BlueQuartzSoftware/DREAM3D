@@ -44,10 +44,10 @@
 #include <QtCore/QVector>
 #include <QtCore/QUrl>
 
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 
-#include "QtSupportLib/DREAM3DPluginFrame.h"
+#include "QtSupportLib/SIMPLPluginFrame.h"
 
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"

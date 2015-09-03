@@ -41,10 +41,10 @@
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QLabel>
 
-#include "DREAM3DLib/Common/PhaseType.h"
-#include "DREAM3DLib/DataContainers/DataArrayPath.h"
-#include "DREAM3DLib/FilterParameters/PhaseTypeSelectionFilterParameter.h"
-#include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
+#include "SIMPLib/Common/PhaseType.h"
+#include "SIMPLib/DataContainers/DataArrayPath.h"
+#include "SIMPLib/FilterParameters/PhaseTypeSelectionFilterParameter.h"
+#include "SIMPLib/Utilities/QMetaObjectUtilities.h"
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"

@@ -82,7 +82,7 @@ QString MultiDataArraySelectionWidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(QVector<DataArrayPath>, " + getPropertyName() + ")\n";
+  ss << "    SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, " + getPropertyName() + ")\n";
   ss << "    Q_PROPERTY(QVector<DataArrayPath> " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;

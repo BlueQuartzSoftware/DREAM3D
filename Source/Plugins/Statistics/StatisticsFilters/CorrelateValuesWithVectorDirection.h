@@ -40,13 +40,13 @@
 #include <vector>
 #include <QtCore/QString>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/IDataArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
-#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
+#include "SIMPLib/Utilities/SIMPLibEndian.h"
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
 #include "Statistics/StatisticsConstants.h"
@@ -61,18 +61,18 @@ class CorrelateValuesWithVectorDirection : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(CorrelateValuesWithVectorDirection)
-    DREAM3D_STATIC_NEW_MACRO(CorrelateValuesWithVectorDirection)
-    DREAM3D_TYPE_MACRO_SUPER(CorrelateValuesWithVectorDirection, AbstractFilter)
+    SIMPL_SHARED_POINTERS(CorrelateValuesWithVectorDirection)
+    SIMPL_STATIC_NEW_MACRO(CorrelateValuesWithVectorDirection)
+    SIMPL_TYPE_MACRO_SUPER(CorrelateValuesWithVectorDirection, AbstractFilter)
 
     virtual ~CorrelateValuesWithVectorDirection();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CorrelatedDataArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CorrelatedDataArrayPath)
     Q_PROPERTY(DataArrayPath CorrelatedDataArrayPath READ getCorrelatedDataArrayPath WRITE setCorrelatedDataArrayPath)
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, VectorDataArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, VectorDataArrayPath)
     Q_PROPERTY(DataArrayPath VectorDataArrayPath READ getVectorDataArrayPath WRITE setVectorDataArrayPath)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(Logfile)
+    SIMPL_INSTANCE_STRING_PROPERTY(Logfile)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class

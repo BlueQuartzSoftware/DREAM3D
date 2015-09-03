@@ -39,7 +39,7 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QTextStream>
 
-#include "DREAM3DLib/Utilities/ColorUtilities.h"
+#include "SIMPLib/Utilities/ColorUtilities.h"
 
 
 #include "OrientationLib/Utilities/ModifiedLambertProjection.h"

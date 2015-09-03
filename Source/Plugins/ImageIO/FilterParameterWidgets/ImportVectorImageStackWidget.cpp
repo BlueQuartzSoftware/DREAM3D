@@ -49,9 +49,9 @@
 #include <QtWidgets/QListWidgetItem>
 
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Geometry/ImageGeom.h"
-#include "DREAM3DLib/Utilities/FilePathGenerator.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Utilities/FilePathGenerator.h"
 
 #include "QtSupportLib/QFileCompleter.h"
 

@@ -41,10 +41,10 @@
 
 #include <QtCore/QObject>
 
-#include <DREAM3DLib/Plugin/PluginProxy.h>
-#include <DREAM3DLib/Plugin/PluginManager.h>
-#include <DREAM3DLib/Plugin/IDREAM3DPlugin.h>
-#include <DREAM3DLib/Plugin/DREAM3DPlugin.h>
+#include <SIMPLib/Plugin/PluginProxy.h>
+#include <SIMPLib/Plugin/PluginManager.h>
+#include <SIMPLib/Plugin/ISIMPLibPlugin.h>
+#include <SIMPLib/Plugin/SIMPLibPlugin.h>
 
 
 //-- UIC generated Header
@@ -60,8 +60,8 @@ class AboutPlugins : public QDialog, private Ui::AboutPlugins
 
     void setupGui();
 
-    void addPluginToTable(IDREAM3DPlugin* plugin, int row);
-    void addPlaceHolderToTable(DREAM3DPlugin* plugin, int row);
+    void addPluginToTable(ISIMPLibPlugin* plugin, int row);
+    void addPlaceHolderToTable(SIMPLibPlugin* plugin, int row);
 
     void loadPlugins(QList<PluginProxy::Pointer> proxies);
 

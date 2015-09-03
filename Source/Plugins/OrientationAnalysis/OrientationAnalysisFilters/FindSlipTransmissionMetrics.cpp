@@ -36,13 +36,13 @@
 
 #include "FindSlipTransmissionMetrics.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
@@ -136,15 +136,15 @@ void FindSlipTransmissionMetrics::readFilterParameters(AbstractFilterParametersR
 int FindSlipTransmissionMetrics::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(NeighborListArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(F1ListArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(F1sptListArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(F7ListArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(mPrimeListArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(NeighborListArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(F1ListArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(F1sptListArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(F7ListArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(mPrimeListArrayName)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

@@ -1,7 +1,7 @@
 #include "PipelineViewEntry.h"
 
-#include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/Common/FilterFactory.hpp"
+#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/Common/FilterFactory.hpp"
 
 
 #include "FilterWidgetsLib/FilterWidgetManager.h"

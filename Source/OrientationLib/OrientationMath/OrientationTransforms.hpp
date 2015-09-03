@@ -53,10 +53,10 @@
 #include <Eigen/Eigen>
 
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Math/QuaternionMath.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/Math/QuaternionMath.hpp"
 
 
 #include "OrientationLib/OrientationLib.h"
@@ -180,7 +180,7 @@ namespace LambertParametersType
 // Condense some of the namespaces to same some typing later on.
   namespace LPs = LambertParametersType;
   namespace RConst = Rotations::Constants;
-  namespace DConst = DREAM3D::Constants;
+  namespace DConst = SIMPLib::Constants;
 
 
   /**
@@ -388,17 +388,17 @@ namespace LambertParametersType
         ResultType res;
         res.result = 1;
 
-        if ((eu[0] < 0.0) || (eu[0] > (DREAM3D::Constants::k_2Pi)))
+        if ((eu[0] < 0.0) || (eu[0] > (SIMPLib::Constants::k_2Pi)))
         {
           res.msg = "rotations:eu_check:: phi1 Euler angle outside of valid range [0,2pi]";
           res.result = 0;
         }
-        if ((eu[1] < 0.0) || (eu[1] > DREAM3D::Constants::k_Pi))
+        if ((eu[1] < 0.0) || (eu[1] > SIMPLib::Constants::k_Pi))
         {
           res.msg = "rotations:eu_check:: phi Euler angle outside of valid range [0,pi]";
           res.result = 0;
         }
-        if ((eu[2] < 0.0) || (eu[2] > (DREAM3D::Constants::k_2Pi)))
+        if ((eu[2] < 0.0) || (eu[2] > (SIMPLib::Constants::k_2Pi)))
         {
           res.msg = "rotations:eu_check:: phi2 Euler angle outside of valid range [0,2pi]";
           res.result = 0;
@@ -552,7 +552,7 @@ namespace LambertParametersType
       {
         ResultType res;
         res.result = 1;
-        if ((ax[3] < 0.0) || (ax[3] > DREAM3D::Constants::k_Pi))
+        if ((ax[3] < 0.0) || (ax[3] > SIMPLib::Constants::k_Pi))
         {
           res.msg = "rotations:ax_check: angle must be in range [0,pi]";
           res.result = 0;
@@ -763,9 +763,9 @@ namespace LambertParametersType
         K sig = 0.5 * (e[0] + e[2]);
         K del = 0.5 * (e[0] - e[2]);
         K tau = sqrt(t * t + sin(sig) * sin(sig));
-        if (sig == DREAM3D::Constants::k_PiOver2)    //Infinity
+        if (sig == SIMPLib::Constants::k_PiOver2)    //Infinity
         {
-          alpha = DREAM3D::Constants::k_Pi;
+          alpha = SIMPLib::Constants::k_Pi;
         }
         else
         {
@@ -814,7 +814,7 @@ namespace LambertParametersType
 
         SelfType::eu2ax(e, res);
         K t = res[3];
-        if (std::abs(t - DREAM3D::Constants::k_Pi) < thr)
+        if (std::abs(t - SIMPLib::Constants::k_Pi) < thr)
         {
           res[3] = std::numeric_limits<K>::infinity();
           return;
@@ -929,7 +929,7 @@ namespace LambertParametersType
           else
           {
             res[0] = -atan2(-o[1], o[0]);
-            res[1] = DREAM3D::Constants::k_Pi;
+            res[1] = SIMPLib::Constants::k_Pi;
             res[2] = 0.0;
           }
         }
@@ -1045,7 +1045,7 @@ namespace LambertParametersType
           }
           else
           {
-            Phi = DREAM3D::Constants::k_Pi;
+            Phi = SIMPLib::Constants::k_Pi;
             phi2 = 0.0;                //arbitrarily due to degeneracy
             phi1 = atan2(2.0 * qq[x] * qq[y], qq[x] * qq[x] - qq[y] * qq[y]);
           }
@@ -1137,10 +1137,10 @@ namespace LambertParametersType
           res[0] = hn[0];
           res[1] = hn[1];
           res[2] = hn[2];
-          K delta = std::fabs(s - DREAM3D::Constants::k_Pi);
+          K delta = std::fabs(s - SIMPLib::Constants::k_Pi);
           if ( delta < thr)
           {
-            res[3] = DREAM3D::Constants::k_Pi;
+            res[3] = SIMPLib::Constants::k_Pi;
           }
           else
           {
@@ -1341,7 +1341,7 @@ namespace LambertParametersType
         res[0] = r[0];
         res[1] = r[1];
         res[2] = r[2];
-        if (std::abs(r[3] - DREAM3D::Constants::k_Pi) < thr)
+        if (std::abs(r[3] - SIMPLib::Constants::k_Pi) < thr)
         {
           res[3] = std::numeric_limits<K>::infinity();
         }
@@ -1418,7 +1418,7 @@ namespace LambertParametersType
         }
         if (r[3] == std::numeric_limits<K>::infinity())
         {
-          f = 0.75 * DREAM3D::Constants::k_Pi;
+          f = 0.75 * SIMPLib::Constants::k_Pi;
         }
         else
         {
@@ -1589,7 +1589,7 @@ namespace LambertParametersType
             res[0] = q[x];
             res[1] = q[y];
             res[2] = q[z];
-            res[3] = DREAM3D::Constants::k_Pi;
+            res[3] = SIMPLib::Constants::k_Pi;
           }
         }
       }

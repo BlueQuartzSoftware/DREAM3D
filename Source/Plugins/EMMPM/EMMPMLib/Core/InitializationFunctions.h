@@ -38,8 +38,8 @@
 #define INITIALIZATIONFUNCTIONS_H_
 
 //-- MXA Includes
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 
 //-- EM/MPM Lib Includes
@@ -54,9 +54,9 @@
 class EMMPMLib_EXPORT InitializationFunction
 {
   public:
-    DREAM3D_SHARED_POINTERS(InitializationFunction);
-    DREAM3D_STATIC_NEW_MACRO(InitializationFunction);
-    DREAM3D_TYPE_MACRO(InitializationFunction);
+    SIMPL_SHARED_POINTERS(InitializationFunction);
+    SIMPL_STATIC_NEW_MACRO(InitializationFunction);
+    SIMPL_TYPE_MACRO(InitializationFunction);
     virtual ~InitializationFunction();
 
     virtual void initialize(EMMPM_Data::Pointer data);
@@ -79,9 +79,9 @@ class EMMPMLib_EXPORT BasicInitialization : public InitializationFunction
 {
 
   public:
-    DREAM3D_SHARED_POINTERS(BasicInitialization);
-    DREAM3D_STATIC_NEW_MACRO(BasicInitialization);
-    DREAM3D_TYPE_MACRO(BasicInitialization);
+    SIMPL_SHARED_POINTERS(BasicInitialization);
+    SIMPL_STATIC_NEW_MACRO(BasicInitialization);
+    SIMPL_TYPE_MACRO(BasicInitialization);
 
     virtual ~BasicInitialization();
 
@@ -105,9 +105,9 @@ class EMMPMLib_EXPORT UserDefinedAreasInitialization : public InitializationFunc
 {
 
   public:
-    DREAM3D_SHARED_POINTERS(UserDefinedAreasInitialization);
-    DREAM3D_STATIC_NEW_MACRO(UserDefinedAreasInitialization);
-    DREAM3D_TYPE_MACRO(UserDefinedAreasInitialization);
+    SIMPL_SHARED_POINTERS(UserDefinedAreasInitialization);
+    SIMPL_STATIC_NEW_MACRO(UserDefinedAreasInitialization);
+    SIMPL_TYPE_MACRO(UserDefinedAreasInitialization);
 
     virtual ~UserDefinedAreasInitialization();
 
@@ -132,9 +132,9 @@ class EMMPMLib_EXPORT XtArrayInitialization : public InitializationFunction
 {
 
   public:
-    DREAM3D_SHARED_POINTERS(XtArrayInitialization);
-    DREAM3D_STATIC_NEW_MACRO(XtArrayInitialization);
-    DREAM3D_TYPE_MACRO(XtArrayInitialization);
+    SIMPL_SHARED_POINTERS(XtArrayInitialization);
+    SIMPL_STATIC_NEW_MACRO(XtArrayInitialization);
+    SIMPL_TYPE_MACRO(XtArrayInitialization);
 
     virtual ~XtArrayInitialization();
 
@@ -157,9 +157,9 @@ class EMMPMLib_EXPORT GradientVariablesInitialization : public InitializationFun
 {
 
   public:
-    DREAM3D_SHARED_POINTERS(GradientVariablesInitialization);
-    DREAM3D_STATIC_NEW_MACRO(GradientVariablesInitialization);
-    DREAM3D_TYPE_MACRO(GradientVariablesInitialization);
+    SIMPL_SHARED_POINTERS(GradientVariablesInitialization);
+    SIMPL_STATIC_NEW_MACRO(GradientVariablesInitialization);
+    SIMPL_TYPE_MACRO(GradientVariablesInitialization);
 
     virtual ~GradientVariablesInitialization();
 
@@ -182,9 +182,9 @@ class EMMPMLib_EXPORT CurvatureInitialization : public InitializationFunction
 {
 
   public:
-    DREAM3D_SHARED_POINTERS(CurvatureInitialization);
-    DREAM3D_STATIC_NEW_MACRO(CurvatureInitialization);
-    DREAM3D_TYPE_MACRO(CurvatureInitialization);
+    SIMPL_SHARED_POINTERS(CurvatureInitialization);
+    SIMPL_STATIC_NEW_MACRO(CurvatureInitialization);
+    SIMPL_TYPE_MACRO(CurvatureInitialization);
 
     virtual ~CurvatureInitialization();
 

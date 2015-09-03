@@ -39,7 +39,7 @@
 #include <QtCore/QList>
 #include <QtWidgets/QListWidgetItem>
 
-#include "DREAM3DLib/DataContainers/DataArrayPath.h"
+#include "SIMPLib/DataContainers/DataArrayPath.h"
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"

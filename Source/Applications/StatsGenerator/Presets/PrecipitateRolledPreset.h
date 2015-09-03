@@ -40,7 +40,7 @@
 #include <string>
 
 //-- MXA Includes
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 //-- StatsGen Includes
 #include "AbstractMicrostructurePresetFactory.h"
@@ -58,9 +58,9 @@
 class PrecipitateRolledPreset : public AbstractMicrostructurePreset
 {
   public:
-    DREAM3D_SHARED_POINTERS(PrecipitateRolledPreset)
-    DREAM3D_STATIC_NEW_MACRO(PrecipitateRolledPreset)
-    DREAM3D_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, PrecipitateRolledPreset)
+    SIMPL_SHARED_POINTERS(PrecipitateRolledPreset)
+    SIMPL_STATIC_NEW_MACRO(PrecipitateRolledPreset)
+    SIMPL_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, PrecipitateRolledPreset)
     virtual ~PrecipitateRolledPreset();
 
     void displayUserInputDialog();
@@ -73,8 +73,8 @@ class PrecipitateRolledPreset : public AbstractMicrostructurePreset
     void initializeAxisODFTableModel(SGAxisODFWidget* widget);
 
 
-    DREAM3D_INSTANCE_PROPERTY(float, AspectRatio1)
-    DREAM3D_INSTANCE_PROPERTY(float, AspectRatio2)
+    SIMPL_INSTANCE_PROPERTY(float, AspectRatio1)
+    SIMPL_INSTANCE_PROPERTY(float, AspectRatio2)
 
   protected:
     PrecipitateRolledPreset();

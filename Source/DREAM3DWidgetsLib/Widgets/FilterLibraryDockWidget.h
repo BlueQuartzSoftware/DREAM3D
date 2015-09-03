@@ -42,7 +42,7 @@
 
 #include <QtCore/QSignalMapper>
 
-#include "DREAM3DLib/Common/FilterManager.h"
+#include "SIMPLib/Common/FilterManager.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 

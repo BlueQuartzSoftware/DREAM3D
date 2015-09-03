@@ -38,17 +38,17 @@
 
 #include <QtGui/QImageReader>
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/FileListInfoFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedChoicesFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/InputFileFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/Utilities/FilePathGenerator.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/FileListInfoFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
+#include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Utilities/FilePathGenerator.h"
 
 #include "ImageIO/ImageIOConstants.h"
 
@@ -142,15 +142,15 @@ void ImportImageStack::readFilterParameters(AbstractFilterParametersReader* read
 int ImportImageStack::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(ImageDataArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputFileListInfo)
-  DREAM3D_FILTER_WRITE_PARAMETER(Origin)
-  DREAM3D_FILTER_WRITE_PARAMETER(Resolution)
-  DREAM3D_FILTER_WRITE_PARAMETER(GeometryType)
-  DREAM3D_FILTER_WRITE_PARAMETER(BoundsFile)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(DataContainerName)
+  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(ImageDataArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(InputFileListInfo)
+  SIMPL_FILTER_WRITE_PARAMETER(Origin)
+  SIMPL_FILTER_WRITE_PARAMETER(Resolution)
+  SIMPL_FILTER_WRITE_PARAMETER(GeometryType)
+  SIMPL_FILTER_WRITE_PARAMETER(BoundsFile)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -647,25 +647,25 @@ AbstractFilter::Pointer ImportImageStack::newFilterInstance(bool copyFilterParam
     filter->setFilterParameters(getFilterParameters() );
     // We are going to hand copy all of the parameters because the other way of copying the parameters are going to
     // miss some of them because we are not enumerating all of them.
-    DREAM3D_COPY_INSTANCEVAR(DataContainerName)
-    DREAM3D_COPY_INSTANCEVAR(CellAttributeMatrixName)
-    DREAM3D_COPY_INSTANCEVAR(GeometryType)
-    DREAM3D_COPY_INSTANCEVAR(Resolution)
-    DREAM3D_COPY_INSTANCEVAR(Origin)
-    DREAM3D_COPY_INSTANCEVAR(BoundsFile)
+    SIMPL_COPY_INSTANCEVAR(DataContainerName)
+    SIMPL_COPY_INSTANCEVAR(CellAttributeMatrixName)
+    SIMPL_COPY_INSTANCEVAR(GeometryType)
+    SIMPL_COPY_INSTANCEVAR(Resolution)
+    SIMPL_COPY_INSTANCEVAR(Origin)
+    SIMPL_COPY_INSTANCEVAR(BoundsFile)
 #if 0
-    DREAM3D_COPY_INSTANCEVAR(ZStartIndex)
-    DREAM3D_COPY_INSTANCEVAR(ZEndIndex)
-    DREAM3D_COPY_INSTANCEVAR(InputPath)
-    DREAM3D_COPY_INSTANCEVAR(FilePrefix)
-    DREAM3D_COPY_INSTANCEVAR(FileSuffix)
-    DREAM3D_COPY_INSTANCEVAR(FileExtension)
-    DREAM3D_COPY_INSTANCEVAR(PaddingDigits)
-    DREAM3D_COPY_INSTANCEVAR(RefFrameZDir)
+    SIMPL_COPY_INSTANCEVAR(ZStartIndex)
+    SIMPL_COPY_INSTANCEVAR(ZEndIndex)
+    SIMPL_COPY_INSTANCEVAR(InputPath)
+    SIMPL_COPY_INSTANCEVAR(FilePrefix)
+    SIMPL_COPY_INSTANCEVAR(FileSuffix)
+    SIMPL_COPY_INSTANCEVAR(FileExtension)
+    SIMPL_COPY_INSTANCEVAR(PaddingDigits)
+    SIMPL_COPY_INSTANCEVAR(RefFrameZDir)
 #endif
-    DREAM3D_COPY_INSTANCEVAR(InputFileListInfo)
-    DREAM3D_COPY_INSTANCEVAR(ImageStack)
-    DREAM3D_COPY_INSTANCEVAR(ImageDataArrayName)
+    SIMPL_COPY_INSTANCEVAR(InputFileListInfo)
+    SIMPL_COPY_INSTANCEVAR(ImageStack)
+    SIMPL_COPY_INSTANCEVAR(ImageDataArrayName)
   }
   return filter;
 }

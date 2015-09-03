@@ -44,9 +44,9 @@
 #include "QtSupportLib/FaderWidget.h"
 
 
-#include "DREAM3DLib/DataContainers/DataArrayPath.h"
-#include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/DataContainers/DataArrayPath.h"
+#include "SIMPLib/DataContainers/DataContainerArrayProxy.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"

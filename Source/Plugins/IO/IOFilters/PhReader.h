@@ -38,11 +38,11 @@
 #ifndef _PhReader_H_
 #define _PhReader_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/CoreFilters/FileReader.h"
-#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/CoreFilters/FileReader.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 
 // our PIMPL private class
 class PhReaderPrivate;
@@ -55,36 +55,36 @@ class PhReader : public FileReader
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
     Q_DECLARE_PRIVATE(PhReader)
   public:
-    DREAM3D_SHARED_POINTERS(PhReader)
-    DREAM3D_STATIC_NEW_MACRO(PhReader)
-    DREAM3D_TYPE_MACRO_SUPER(PhReader, FileReader)
+    SIMPL_SHARED_POINTERS(PhReader)
+    SIMPL_STATIC_NEW_MACRO(PhReader)
+    SIMPL_TYPE_MACRO_SUPER(PhReader, FileReader)
 
     virtual ~PhReader();
 
-    DREAM3D_FILTER_PARAMETER(QString, VolumeDataContainerName)
+    SIMPL_FILTER_PARAMETER(QString, VolumeDataContainerName)
     Q_PROPERTY(QString VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
 
-    DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
     Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(QString, InputFile)
+    SIMPL_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, Origin)
+    SIMPL_FILTER_PARAMETER(FloatVec3_t, Origin)
     Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
 
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
+    SIMPL_FILTER_PARAMETER(FloatVec3_t, Resolution)
     Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
 
-    DREAM3D_FILTER_PARAMETER(bool, FileWasRead)
+    SIMPL_FILTER_PARAMETER(bool, FileWasRead)
     Q_PROPERTY(bool FileWasRead READ getFileWasRead)
 
-    DREAM3D_FILTER_PARAMETER(QString, FeatureIdsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, FeatureIdsArrayName)
     Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
-    DREAM3D_PIMPL_PROPERTY_DECL(QVector<size_t>, Dims)
-    DREAM3D_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
-    DREAM3D_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
+    SIMPL_PIMPL_PROPERTY_DECL(QVector<size_t>, Dims)
+    SIMPL_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
+    SIMPL_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class

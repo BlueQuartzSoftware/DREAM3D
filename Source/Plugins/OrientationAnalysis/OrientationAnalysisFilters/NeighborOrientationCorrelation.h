@@ -37,9 +37,9 @@
 #ifndef _NeighborOrientationCorrelation_H_
 #define _NeighborOrientationCorrelation_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
@@ -50,31 +50,31 @@ class NeighborOrientationCorrelation : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(NeighborOrientationCorrelation)
-    DREAM3D_STATIC_NEW_MACRO(NeighborOrientationCorrelation)
-    DREAM3D_TYPE_MACRO_SUPER(NeighborOrientationCorrelation, AbstractFilter)
+    SIMPL_SHARED_POINTERS(NeighborOrientationCorrelation)
+    SIMPL_STATIC_NEW_MACRO(NeighborOrientationCorrelation)
+    SIMPL_TYPE_MACRO_SUPER(NeighborOrientationCorrelation, AbstractFilter)
 
     virtual ~NeighborOrientationCorrelation();
 
-    DREAM3D_FILTER_PARAMETER(float, MisorientationTolerance)
+    SIMPL_FILTER_PARAMETER(float, MisorientationTolerance)
     Q_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)
 
-    DREAM3D_FILTER_PARAMETER(float, MinConfidence)
+    SIMPL_FILTER_PARAMETER(float, MinConfidence)
     Q_PROPERTY(float MinConfidence READ getMinConfidence WRITE setMinConfidence)
 
-    DREAM3D_FILTER_PARAMETER(int, Level)
+    SIMPL_FILTER_PARAMETER(int, Level)
     Q_PROPERTY(int Level READ getLevel WRITE setLevel)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, ConfidenceIndexArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, ConfidenceIndexArrayPath)
     Q_PROPERTY(DataArrayPath ConfidenceIndexArrayPath READ getConfidenceIndexArrayPath WRITE setConfidenceIndexArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
     Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
     Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
     /**

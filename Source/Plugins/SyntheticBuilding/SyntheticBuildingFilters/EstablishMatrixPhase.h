@@ -37,10 +37,10 @@
 #ifndef _EstablishMatrixPhase_H_
 #define _EstablishMatrixPhase_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/StatsDataArray.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/StatsDataArray.h"
 
 /**
  * @brief The EstablishMatrixPhase class. See [Filter documentation](@ref establishmatrixphase) for details.
@@ -49,43 +49,43 @@ class EstablishMatrixPhase : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(EstablishMatrixPhase)
-    DREAM3D_STATIC_NEW_MACRO(EstablishMatrixPhase)
-    DREAM3D_TYPE_MACRO_SUPER(EstablishMatrixPhase, AbstractFilter)
+    SIMPL_SHARED_POINTERS(EstablishMatrixPhase)
+    SIMPL_STATIC_NEW_MACRO(EstablishMatrixPhase)
+    SIMPL_TYPE_MACRO_SUPER(EstablishMatrixPhase, AbstractFilter)
 
     virtual ~EstablishMatrixPhase();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, OutputCellAttributeMatrixPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, OutputCellAttributeMatrixPath)
     Q_PROPERTY(DataArrayPath OutputCellAttributeMatrixPath READ getOutputCellAttributeMatrixPath WRITE setOutputCellAttributeMatrixPath)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputCellFeatureAttributeMatrixName)
+    SIMPL_INSTANCE_STRING_PROPERTY(OutputCellFeatureAttributeMatrixName)
     Q_PROPERTY(QString OutputCellFeatureAttributeMatrixName READ getOutputCellFeatureAttributeMatrixName WRITE setOutputCellFeatureAttributeMatrixName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputCellEnsembleAttributeMatrixName)
+    SIMPL_INSTANCE_STRING_PROPERTY(OutputCellEnsembleAttributeMatrixName)
     Q_PROPERTY(QString OutputCellEnsembleAttributeMatrixName READ getOutputCellEnsembleAttributeMatrixName WRITE setOutputCellEnsembleAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(QString, FeatureIdsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, FeatureIdsArrayName)
     Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, CellPhasesArrayName)
+    SIMPL_FILTER_PARAMETER(QString, CellPhasesArrayName)
     Q_PROPERTY(QString CellPhasesArrayName READ getCellPhasesArrayName WRITE setCellPhasesArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, FeaturePhasesArrayName)
+    SIMPL_FILTER_PARAMETER(QString, FeaturePhasesArrayName)
     Q_PROPERTY(QString FeaturePhasesArrayName READ getFeaturePhasesArrayName WRITE setFeaturePhasesArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, NumFeaturesArrayName)
+    SIMPL_FILTER_PARAMETER(QString, NumFeaturesArrayName)
     Q_PROPERTY(QString NumFeaturesArrayName READ getNumFeaturesArrayName WRITE setNumFeaturesArrayName)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, MaskArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, MaskArrayPath)
     Q_PROPERTY(DataArrayPath MaskArrayPath READ getMaskArrayPath WRITE setMaskArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(bool, UseMask)
+    SIMPL_FILTER_PARAMETER(bool, UseMask)
     Q_PROPERTY(bool UseMask READ getUseMask WRITE setUseMask)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, InputStatsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, InputStatsArrayPath)
     Q_PROPERTY(DataArrayPath InputStatsArrayPath READ getInputStatsArrayPath WRITE setInputStatsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, InputPhaseTypesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, InputPhaseTypesArrayPath)
     Q_PROPERTY(DataArrayPath InputPhaseTypesArrayPath READ getInputPhaseTypesArrayPath WRITE setInputPhaseTypesArrayPath)
 
     /**

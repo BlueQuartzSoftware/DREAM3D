@@ -52,7 +52,7 @@
 #include "EbsdLib/TSL/AngReader.h"
 #include "EbsdLib/TSL/H5AngImporter.h"
 
-#include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
+#include "SIMPLib/Utilities/UnitTestSupport.hpp"
 #include "EbsdLib/Test/EbsdLibTestFileLocation.h"
 
 // -----------------------------------------------------------------------------

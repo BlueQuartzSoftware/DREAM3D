@@ -36,16 +36,16 @@
 
 #include "FindShapes.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "OrientationLib/OrientationMath/OrientationMath.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "Statistics/StatisticsConstants.h"
 
@@ -139,15 +139,15 @@ void FindShapes::readFilterParameters(AbstractFilterParametersReader* reader, in
 int FindShapes::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(AspectRatiosArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(AxisEulerAnglesArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(AxisLengthsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(VolumesArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(Omega3sArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CentroidsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(AspectRatiosArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(AxisEulerAnglesArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(AxisLengthsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(VolumesArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(Omega3sArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(CentroidsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -797,7 +797,7 @@ void FindShapes::find_axiseulers2D()
     {
       if (Ixx > Iyy)
       {
-        m_AxisEulerAngles[3 * i] = static_cast<float>(DREAM3D::Constants::k_PiOver2);
+        m_AxisEulerAngles[3 * i] = static_cast<float>(SIMPLib::Constants::k_PiOver2);
         m_AxisEulerAngles[3 * i + 1] = 0.0f;
         m_AxisEulerAngles[3 * i + 2] = 0.0f;
         continue;

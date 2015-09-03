@@ -36,12 +36,12 @@
 
 #include "GroupFeatures.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 
 // -----------------------------------------------------------------------------
@@ -105,10 +105,10 @@ void GroupFeatures::readFilterParameters(AbstractFilterParametersReader* reader,
 int GroupFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(UseNonContiguousNeighbors)
-  DREAM3D_FILTER_WRITE_PARAMETER(ContiguousNeighborListArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(NonContiguousNeighborListArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(UseNonContiguousNeighbors)
+  SIMPL_FILTER_WRITE_PARAMETER(ContiguousNeighborListArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(NonContiguousNeighborListArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

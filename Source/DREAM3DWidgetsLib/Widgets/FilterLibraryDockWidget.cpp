@@ -40,8 +40,8 @@
 
 #include <QtWidgets/QMainWindow>
 
-#include "DREAM3DLib/Common/IFilterFactory.hpp"
-#include "DREAM3DLib/Common/FilterFactory.hpp"
+#include "SIMPLib/Common/IFilterFactory.hpp"
+#include "SIMPLib/Common/FilterFactory.hpp"
 
 #include "FilterListDockWidget.h"
 

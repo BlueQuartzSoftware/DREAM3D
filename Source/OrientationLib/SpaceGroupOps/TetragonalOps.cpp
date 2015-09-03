@@ -36,7 +36,7 @@
 
 #include "TetragonalOps.h"
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/partitioner.h>
@@ -47,8 +47,8 @@
 
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Utilities/ColorTable.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Utilities/ColorTable.h"
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
@@ -60,9 +60,9 @@
 namespace Detail
 {
 
-  static const float TetraDim1InitValue = powf((0.75f * ((DREAM3D::Constants::k_Pi / 2.0f) - sinf((DREAM3D::Constants::k_Pi / 2.0f)))), (1.0f / 3.0f));
-  static const float TetraDim2InitValue = powf((0.75f * ((DREAM3D::Constants::k_Pi / 2.0f) - sinf((DREAM3D::Constants::k_Pi / 2.0f)))), (1.0f / 3.0f));
-  static const float TetraDim3InitValue = powf((0.75f * ((DREAM3D::Constants::k_Pi / 4.0f) - sinf((DREAM3D::Constants::k_Pi / 4.0f)))), (1.0f / 3.0f));
+  static const float TetraDim1InitValue = powf((0.75f * ((SIMPLib::Constants::k_Pi / 2.0f) - sinf((SIMPLib::Constants::k_Pi / 2.0f)))), (1.0f / 3.0f));
+  static const float TetraDim2InitValue = powf((0.75f * ((SIMPLib::Constants::k_Pi / 2.0f) - sinf((SIMPLib::Constants::k_Pi / 2.0f)))), (1.0f / 3.0f));
+  static const float TetraDim3InitValue = powf((0.75f * ((SIMPLib::Constants::k_Pi / 4.0f) - sinf((SIMPLib::Constants::k_Pi / 4.0f)))), (1.0f / 3.0f));
   static const float TetraDim1StepValue = TetraDim1InitValue / 18.0f;
   static const float TetraDim2StepValue = TetraDim2InitValue / 18.0f;
   static const float TetraDim3StepValue = TetraDim3InitValue / 9.0f;
@@ -89,10 +89,10 @@ static const QuatF TetraQuatSym[8] = {QuaternionMathF::New(0.000000000f, 0.00000
                                       QuaternionMathF::New(1.000000000f, 0.000000000f, 0.000000000f, 0.000000000f),
                                       QuaternionMathF::New(0.000000000f, 1.000000000f, 0.000000000f, 0.000000000f),
                                       QuaternionMathF::New(0.000000000f, 0.000000000f, 1.000000000f, 0.000000000f),
-                                      QuaternionMathF::New(0.000000000f, 0.000000000f, DREAM3D::Constants::k_1OverRoot2, -DREAM3D::Constants::k_1OverRoot2),
-                                      QuaternionMathF::New(0.000000000f, 0.000000000f, DREAM3D::Constants::k_1OverRoot2, DREAM3D::Constants::k_1OverRoot2),
-                                      QuaternionMathF::New(DREAM3D::Constants::k_1OverRoot2, DREAM3D::Constants::k_1OverRoot2, 0.000000000f, 0.000000000f),
-                                      QuaternionMathF::New(-DREAM3D::Constants::k_1OverRoot2, DREAM3D::Constants::k_1OverRoot2, 0.000000000f, 0.000000000f)
+                                      QuaternionMathF::New(0.000000000f, 0.000000000f, SIMPLib::Constants::k_1OverRoot2, -SIMPLib::Constants::k_1OverRoot2),
+                                      QuaternionMathF::New(0.000000000f, 0.000000000f, SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2),
+                                      QuaternionMathF::New(SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2, 0.000000000f, 0.000000000f),
+                                      QuaternionMathF::New(-SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2, 0.000000000f, 0.000000000f)
                                      };
 
 
@@ -190,9 +190,9 @@ float TetragonalOps::_calcMisoQuat(const QuatF quatsym[8], int numsym,
     FOrientTransformsType::qu2ax(FOrientArrayType(qc.x, qc.y, qc.z, qc.w), ax);
     ax.toAxisAngle(n1, n2, n3, w);
 
-    if (w > DREAM3D::Constants::k_Pi)
+    if (w > SIMPLib::Constants::k_Pi)
     {
-      w = DREAM3D::Constants::k_2Pi - w;
+      w = SIMPLib::Constants::k_2Pi - w;
     }
     if (w < wmin)
     {
@@ -563,14 +563,14 @@ namespace Detail
 
             // -----------------------------------------------------------------------------
             // 111 Family
-            direction[0] = DREAM3D::Constants::k_1OverRoot2;
-            direction[1] = DREAM3D::Constants::k_1OverRoot2;
+            direction[0] = SIMPLib::Constants::k_1OverRoot2;
+            direction[1] = SIMPLib::Constants::k_1OverRoot2;
             direction[2] = 0;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 12));
             MatrixMath::Copy3x1(m_xyz111->getPointer(i * 12), m_xyz111->getPointer(i * 12 + 3));
             MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 12 + 3), -1);
-            direction[0] = -DREAM3D::Constants::k_1OverRoot2;
-            direction[1] = DREAM3D::Constants::k_1OverRoot2;
+            direction[0] = -SIMPLib::Constants::k_1OverRoot2;
+            direction[1] = SIMPLib::Constants::k_1OverRoot2;
             direction[2] = 0.0;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 12 + 6));
             MatrixMath::Copy3x1(m_xyz111->getPointer(i * 12 + 6), m_xyz111->getPointer(i * 12 + 9));
@@ -579,7 +579,7 @@ namespace Detail
 
         }
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
         void operator()(const tbb::blocked_range<size_t>& r) const
         {
           generate(r.begin(), r.end());
@@ -610,12 +610,12 @@ void TetragonalOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, Float
     xyz111->resize(nOrientations * Detail::TetragonalHigh::symSize2 * 3);
   }
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
 #endif
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, nOrientations),
@@ -635,7 +635,7 @@ void TetragonalOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, Float
 // -----------------------------------------------------------------------------
 bool TetragonalOps::inUnitTriangle(float eta, float chi)
 {
-  if( eta < 0 || eta > (45.0 * DREAM3D::Constants::k_PiOver180) || chi < 0 || chi > (90.0 * DREAM3D::Constants::k_PiOver180) )
+  if( eta < 0 || eta > (45.0 * SIMPLib::Constants::k_PiOver180) || chi < 0 || chi > (90.0 * SIMPLib::Constants::k_PiOver180) )
   {
     return false;
   }
@@ -657,9 +657,9 @@ DREAM3D::Rgb TetragonalOps::generateIPFColor(double phi1, double phi, double phi
 {
   if (degToRad == true)
   {
-    phi1 = phi1 * DREAM3D::Constants::k_DegToRad;
-    phi = phi * DREAM3D::Constants::k_DegToRad;
-    phi2 = phi2 * DREAM3D::Constants::k_DegToRad;
+    phi1 = phi1 * SIMPLib::Constants::k_DegToRad;
+    phi = phi * SIMPLib::Constants::k_DegToRad;
+    phi2 = phi2 * SIMPLib::Constants::k_DegToRad;
   }
   QuatF qc;
   QuatF q2;
@@ -714,8 +714,8 @@ DREAM3D::Rgb TetragonalOps::generateIPFColor(double phi1, double phi, double phi
   float etaMin = 0.0;
   float etaMax = 45.0;
   float chiMax = 90.0;
-  float etaDeg = eta * DREAM3D::Constants::k_180OverPi;
-  float chiDeg = chi * DREAM3D::Constants::k_180OverPi;
+  float etaDeg = eta * SIMPLib::Constants::k_180OverPi;
+  float chiDeg = chi * SIMPLib::Constants::k_180OverPi;
 
   _rgb[0] = 1.0 - chiDeg / chiMax;
   _rgb[2] = fabs(etaDeg - etaMin) / (etaMax - etaMin);
@@ -802,7 +802,7 @@ QVector<UInt8ArrayType::Pointer> TetragonalOps::generatePoleFigure(PoleFigureCon
   DoubleArrayType::Pointer intensity001 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label0 + "_Intensity_Image");
   DoubleArrayType::Pointer intensity011 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label1 + "_Intensity_Image");
   DoubleArrayType::Pointer intensity111 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label2 + "_Intensity_Image");
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
   tbb::task_group* g = new tbb::task_group;
@@ -896,7 +896,7 @@ QVector<UInt8ArrayType::Pointer> TetragonalOps::generatePoleFigure(PoleFigureCon
     poleFigures[2] = image111;
   }
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 
   if(doParallel == true)
   {
@@ -1102,9 +1102,9 @@ DREAM3D::Rgb TetragonalOps::generateMisorientationColor(const QuatF& q, const Qu
   z2 = (x1 + y1 + z1) / sqrt(3.0f);
 
   //eq c1.4
-  k = fmodf(atan2f(y2, x2) + 2.0f * DREAM3D::Constants::k_Pi, 2.0f * DREAM3D::Constants::k_Pi);
-  x3 = cos(k) * sqrt((x2 * x2 + y2 * y2) / 2.0f) * sin(DREAM3D::Constants::k_Pi / 6.0f + fmodf(k, 2.0f * DREAM3D::Constants::k_Pi / 3.0f)) / 0.5f;
-  y3 = sin(k) * sqrt((x2 * x2 + y2 * y2) / 2.0f) * sin(DREAM3D::Constants::k_Pi / 6.0f + fmodf(k, 2.0f * DREAM3D::Constants::k_Pi / 3.0f)) / 0.5f;
+  k = fmodf(atan2f(y2, x2) + 2.0f * SIMPLib::Constants::k_Pi, 2.0f * SIMPLib::Constants::k_Pi);
+  x3 = cos(k) * sqrt((x2 * x2 + y2 * y2) / 2.0f) * sin(SIMPLib::Constants::k_Pi / 6.0f + fmodf(k, 2.0f * SIMPLib::Constants::k_Pi / 3.0f)) / 0.5f;
+  y3 = sin(k) * sqrt((x2 * x2 + y2 * y2) / 2.0f) * sin(SIMPLib::Constants::k_Pi / 6.0f + fmodf(k, 2.0f * SIMPLib::Constants::k_Pi / 3.0f)) / 0.5f;
   z3 = z2 - 1.0f;
 
   //eq c1.5

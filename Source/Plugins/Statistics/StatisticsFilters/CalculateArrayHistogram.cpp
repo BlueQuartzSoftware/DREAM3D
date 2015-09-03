@@ -36,17 +36,17 @@
 
 #include "CalculateArrayHistogram.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/TemplateHelpers.hpp"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/TemplateHelpers.hpp"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/IntFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DoubleFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "Statistics/StatisticsConstants.h"
 
@@ -126,14 +126,14 @@ void CalculateArrayHistogram::readFilterParameters(AbstractFilterParametersReade
 int CalculateArrayHistogram::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(SelectedArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(NumberOfBins)
-  DREAM3D_FILTER_WRITE_PARAMETER(Normalize)
-  DREAM3D_FILTER_WRITE_PARAMETER(NewDataArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(NewAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(NewDataContainer)
-  DREAM3D_FILTER_WRITE_PARAMETER(NewDataContainerName)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(SelectedArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(NumberOfBins)
+  SIMPL_FILTER_WRITE_PARAMETER(Normalize)
+  SIMPL_FILTER_WRITE_PARAMETER(NewDataArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(NewAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(NewDataContainer)
+  SIMPL_FILTER_WRITE_PARAMETER(NewDataContainerName)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
