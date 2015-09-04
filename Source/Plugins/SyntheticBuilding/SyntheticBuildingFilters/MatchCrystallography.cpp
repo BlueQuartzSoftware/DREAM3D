@@ -36,18 +36,18 @@
 
 #include "MatchCrystallography.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/IntFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
-#include "DREAM3DLib/StatsData/PrimaryStatsData.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-#include "DREAM3DLib/Utilities/TimeUtilities.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/StatsData/PrecipitateStatsData.h"
+#include "SIMPLib/StatsData/PrimaryStatsData.h"
+#include "SIMPLib/Utilities/SIMPLibRandom.h"
+#include "SIMPLib/Utilities/TimeUtilities.h"
 
 #include "OrientationLib/SpaceGroupOps/CubicOps.h"
 #include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
@@ -121,23 +121,58 @@ void MatchCrystallography::setupFilterParameters()
   parameters.push_back(IntFilterParameter::New("Maximum Number of Iterations (Swaps)", "MaxIterations", getMaxIterations(), FilterParameter::Parameter));
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray));
-
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
+  }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Surface Features", "SurfaceFeaturesArrayPath", getSurfaceFeaturesArrayPath(), FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Neighbor List", "NeighborListArrayPath", getNeighborListArrayPath(), FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Shared Surface Area List", "SharedSurfaceAreaListArrayPath", getSharedSurfaceAreaListArrayPath(), FilterParameter::RequiredArray));
-
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::CellFeature, DREAM3D::GeometryType::ImageGeometry);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req));
+  }
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Bool, 1, DREAM3D::AttributeMatrixType::CellFeature, DREAM3D::GeometryType::ImageGeometry);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Surface Features", "SurfaceFeaturesArrayPath", getSurfaceFeaturesArrayPath(), FilterParameter::RequiredArray, req));
+  }
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::NeighborList, 1, DREAM3D::AttributeMatrixType::CellFeature, DREAM3D::GeometryType::ImageGeometry);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Neighbor List", "NeighborListArrayPath", getNeighborListArrayPath(), FilterParameter::RequiredArray, req));
+  }
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::NeighborList, 1, DREAM3D::AttributeMatrixType::CellFeature, DREAM3D::GeometryType::ImageGeometry);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Shared Surface Area List", "SharedSurfaceAreaListArrayPath", getSharedSurfaceAreaListArrayPath(), FilterParameter::RequiredArray, req));
+  }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Statistics", "InputStatsArrayPath", getInputStatsArrayPath(), FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Phase Types", "PhaseTypesArrayPath", getPhaseTypesArrayPath(), FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Number of Features", "NumFeaturesArrayPath", getNumFeaturesArrayPath(), FilterParameter::RequiredArray));
-
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::StatsDataArray, 1, DREAM3D::AttributeMatrixType::CellEnsemble, DREAM3D::Defaults::AnyGeometry);
+    QVector<uint32_t> geomTypes;
+    geomTypes.push_back(DREAM3D::GeometryType::ImageGeometry);
+    geomTypes.push_back(DREAM3D::GeometryType::UnknownGeometry);
+    req.dcGeometryTypes = geomTypes;
+    parameters.push_back(DataArraySelectionFilterParameter::New("Statistics", "InputStatsArrayPath", getInputStatsArrayPath(), FilterParameter::RequiredArray, req));
+  }
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::UInt32, 1, DREAM3D::AttributeMatrixType::CellEnsemble, DREAM3D::Defaults::AnyGeometry);
+    QVector<uint32_t> geomTypes;
+    geomTypes.push_back(DREAM3D::GeometryType::ImageGeometry);
+    geomTypes.push_back(DREAM3D::GeometryType::UnknownGeometry);
+    req.dcGeometryTypes = geomTypes;
+    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
+  }
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::UInt32, 1, DREAM3D::AttributeMatrixType::CellEnsemble, DREAM3D::Defaults::AnyGeometry);
+    QVector<uint32_t> geomTypes;
+    geomTypes.push_back(DREAM3D::GeometryType::ImageGeometry);
+    geomTypes.push_back(DREAM3D::GeometryType::UnknownGeometry);
+    req.dcGeometryTypes = geomTypes;
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phase Types", "PhaseTypesArrayPath", getPhaseTypesArrayPath(), FilterParameter::RequiredArray, req));
+  }
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::CellEnsemble, DREAM3D::GeometryType::ImageGeometry);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Number of Features", "NumFeaturesArrayPath", getNumFeaturesArrayPath(), FilterParameter::RequiredArray, req));
+  }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Euler Angles", "CellEulerAnglesArrayName", getCellEulerAnglesArrayName(), FilterParameter::CreatedArray));
-
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Volumes", "VolumesArrayName", getVolumesArrayName(), FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Average Euler Angles", "FeatureEulerAnglesArrayName", getFeatureEulerAnglesArrayName(), FilterParameter::CreatedArray));
@@ -174,21 +209,21 @@ void MatchCrystallography::readFilterParameters(AbstractFilterParametersReader* 
 int MatchCrystallography::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(MaxIterations)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputStatsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(PhaseTypesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceFeaturesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(NeighborListArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(SharedSurfaceAreaListArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(NumFeaturesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(VolumesArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureEulerAnglesArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(AvgQuatsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(MaxIterations)
+  SIMPL_FILTER_WRITE_PARAMETER(InputStatsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(PhaseTypesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceFeaturesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(NeighborListArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(SharedSurfaceAreaListArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(NumFeaturesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(VolumesArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureEulerAnglesArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayName)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -477,7 +512,8 @@ void MatchCrystallography::determine_boundary_areas()
 // -----------------------------------------------------------------------------
 void MatchCrystallography::assign_eulers(size_t ensem)
 {
-  DREAM3D_RANDOMNG_NEW()
+  uint64_t m_Seed = QDateTime::currentMSecsSinceEpoch();
+  SIMPL_RANDOMNG_NEW_SEEDED(m_Seed);
 
   int32_t numbins = 0;
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
@@ -494,7 +530,8 @@ void MatchCrystallography::assign_eulers(size_t ensem)
     phase = m_FeaturePhases[i];
     if (phase == ensem)
     {
-      random = static_cast<float>( rg.genrand_res53() );
+      m_Seed++;
+      random = static_cast<float>(rg.genrand_res53());
 
       if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructures[phase] ) { numbins = cOps.getODFSize(); };
       if ( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructures[phase] ) { numbins = hOps.getODFSize(); }
@@ -511,7 +548,7 @@ void MatchCrystallography::assign_eulers(size_t ensem)
 
       choose = pick_euler(random, numbins);
 
-      FOrientArrayType eulers = m_OrientationOps[m_CrystalStructures[ensem]]->determineEulerAngles(choose);
+      FOrientArrayType eulers = m_OrientationOps[m_CrystalStructures[ensem]]->determineEulerAngles(m_Seed, choose);
       eulers = m_OrientationOps[m_CrystalStructures[ensem]]->randomizeEulerAngles(eulers);
       m_FeatureEulerAngles[3 * i] = eulers[0];
       m_FeatureEulerAngles[3 * i + 1] = eulers[1];
@@ -644,7 +681,9 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
 
-  DREAM3D_RANDOMNG_NEW()
+  uint64_t m_Seed = QDateTime::currentMSecsSinceEpoch();
+  SIMPL_RANDOMNG_NEW_SEEDED(m_Seed);
+
   int32_t numbins = 0;
   int32_t iterations = 0, badtrycount = 0;
   float random = 0.0f;
@@ -670,6 +709,7 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
   int32_t lastIteration = 0;
   while (badtrycount < (m_MaxIterations / 10) && iterations < m_MaxIterations)
   {
+    m_Seed++;
     uint64_t currentMillis = QDateTime::currentMSecsSinceEpoch();
     if (currentMillis - millis > 1000)
     {
@@ -731,7 +771,7 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
 
         choose = pick_euler(random, numbins);
 
-        FOrientArrayType g1ea = m_OrientationOps[m_CrystalStructures[ensem]]->determineEulerAngles(choose);
+        FOrientArrayType g1ea = m_OrientationOps[m_CrystalStructures[ensem]]->determineEulerAngles(m_Seed, choose);
         g1ea = m_OrientationOps[m_CrystalStructures[ensem]]->randomizeEulerAngles(g1ea);
         FOrientArrayType quat(4, 0.0);
         FOrientTransformsType::eu2qu(g1ea, quat);

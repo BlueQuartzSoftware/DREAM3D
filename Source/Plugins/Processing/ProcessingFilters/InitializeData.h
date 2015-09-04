@@ -37,9 +37,9 @@
 #ifndef _InitializeData_H_
 #define _InitializeData_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The InitializeData class. See [Filter documentation](@ref initializedata) for details.
@@ -48,31 +48,31 @@ class InitializeData : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(InitializeData)
-    DREAM3D_STATIC_NEW_MACRO(InitializeData)
-    DREAM3D_TYPE_MACRO_SUPER(InitializeData, AbstractFilter)
+    SIMPL_SHARED_POINTERS(InitializeData)
+    SIMPL_STATIC_NEW_MACRO(InitializeData)
+    SIMPL_TYPE_MACRO_SUPER(InitializeData, AbstractFilter)
 
     virtual ~InitializeData();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
     Q_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
 
-    DREAM3D_FILTER_PARAMETER(int, XMin)
+    SIMPL_FILTER_PARAMETER(int, XMin)
     Q_PROPERTY(int XMin READ getXMin WRITE setXMin)
 
-    DREAM3D_FILTER_PARAMETER(int, YMin)
+    SIMPL_FILTER_PARAMETER(int, YMin)
     Q_PROPERTY(int YMin READ getYMin WRITE setYMin)
 
-    DREAM3D_FILTER_PARAMETER(int, ZMin)
+    SIMPL_FILTER_PARAMETER(int, ZMin)
     Q_PROPERTY(int ZMin READ getZMin WRITE setZMin)
 
-    DREAM3D_FILTER_PARAMETER(int, XMax)
+    SIMPL_FILTER_PARAMETER(int, XMax)
     Q_PROPERTY(int XMax READ getXMax WRITE setXMax)
 
-    DREAM3D_FILTER_PARAMETER(int, YMax)
+    SIMPL_FILTER_PARAMETER(int, YMax)
     Q_PROPERTY(int YMax READ getYMax WRITE setYMax)
 
-    DREAM3D_FILTER_PARAMETER(int, ZMax)
+    SIMPL_FILTER_PARAMETER(int, ZMax)
     Q_PROPERTY(int ZMax READ getZMax WRITE setZMax)
 
     /**

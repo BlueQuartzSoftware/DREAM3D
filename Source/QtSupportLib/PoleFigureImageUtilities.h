@@ -40,8 +40,8 @@
 #include <QtCore/QVector>
 #include <QtGui/QImage>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationLib/Utilities/PoleFigureUtilities.h"
 

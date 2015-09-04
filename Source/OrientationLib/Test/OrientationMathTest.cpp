@@ -37,11 +37,11 @@
 
 
 
-#include "DREAM3DLib/Math/QuaternionMath.hpp"
+#include "SIMPLib/Math/QuaternionMath.hpp"
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 
 
-#include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
+#include "SIMPLib/Utilities/UnitTestSupport.hpp"
 #include "OrientationLibTestFileLocations.h"
 
 
@@ -105,13 +105,13 @@ class Mod
     // wrap [rad] angle to [-PI..PI)
     inline static T WrapPosNegPI(T fAng)
     {
-      return Mod()(fAng + DREAM3D::Constants::k_Pi, DREAM3D::Constants::k_2Pi) - DREAM3D::Constants::k_Pi;
+      return Mod()(fAng + SIMPLib::Constants::k_Pi, SIMPLib::Constants::k_2Pi) - SIMPLib::Constants::k_Pi;
     }
 
     // wrap [rad] angle to [0..TWO_PI)
     inline T WrapTwoPI(T fAng)
     {
-      return Mod()(fAng, DREAM3D::Constants::k_2Pi);
+      return Mod()(fAng, SIMPLib::Constants::k_2Pi);
     }
 
     // wrap [deg] angle to [-180..180)
@@ -137,7 +137,7 @@ class Mod
 void TestFMod()
 {
   Mod<float> fmod;
-  float pi = DREAM3D::Constants::k_Pi;
+  float pi = SIMPLib::Constants::k_Pi;
 
   pi = fmod.WrapTwoPI(pi);
 

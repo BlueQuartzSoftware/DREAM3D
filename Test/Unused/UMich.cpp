@@ -39,7 +39,7 @@
 
 #include <iostream>
 
-#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 static const float CubicQuatSym[24][4] =
 {
@@ -47,18 +47,18 @@ static const float CubicQuatSym[24][4] =
   { 1.000000000f, 0.000000000f, 0.000000000f, 0.000000000f},
   { 0.000000000f, 1.000000000f, 0.000000000f, 0.000000000f},
   { 0.000000000f, 0.000000000f, 1.000000000f, 0.000000000f},
-  { DREAM3D::Constants::k_1OverRoot2, 0.000000000f, 0.000000000f, DREAM3D::Constants::k_1OverRoot2},
-  { 0.000000000f, DREAM3D::Constants::k_1OverRoot2, 0.000000000f, DREAM3D::Constants::k_1OverRoot2},
-  { 0.000000000f, 0.000000000f, DREAM3D::Constants::k_1OverRoot2, DREAM3D::Constants::k_1OverRoot2},
-  { -DREAM3D::Constants::k_1OverRoot2, 0.000000000f, 0.000000000f, DREAM3D::Constants::k_1OverRoot2},
-  { 0.000000000f, -DREAM3D::Constants::k_1OverRoot2, 0.000000000f, DREAM3D::Constants::k_1OverRoot2},
-  { 0.000000000f, 0.000000000f, -DREAM3D::Constants::k_1OverRoot2, DREAM3D::Constants::k_1OverRoot2},
-  { DREAM3D::Constants::k_1OverRoot2, DREAM3D::Constants::k_1OverRoot2, 0.000000000f, 0.000000000f},
-  { -DREAM3D::Constants::k_1OverRoot2, DREAM3D::Constants::k_1OverRoot2, 0.000000000f, 0.000000000f},
-  { 0.000000000f, DREAM3D::Constants::k_1OverRoot2, DREAM3D::Constants::k_1OverRoot2, 0.000000000f},
-  { 0.000000000f, -DREAM3D::Constants::k_1OverRoot2, DREAM3D::Constants::k_1OverRoot2, 0.000000000f},
-  { DREAM3D::Constants::k_1OverRoot2, 0.000000000f, DREAM3D::Constants::k_1OverRoot2, 0.000000000f},
-  { -DREAM3D::Constants::k_1OverRoot2, 0.000000000f, DREAM3D::Constants::k_1OverRoot2, 0.000000000f},
+  { SIMPLib::Constants::k_1OverRoot2, 0.000000000f, 0.000000000f, SIMPLib::Constants::k_1OverRoot2},
+  { 0.000000000f, SIMPLib::Constants::k_1OverRoot2, 0.000000000f, SIMPLib::Constants::k_1OverRoot2},
+  { 0.000000000f, 0.000000000f, SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2},
+  { -SIMPLib::Constants::k_1OverRoot2, 0.000000000f, 0.000000000f, SIMPLib::Constants::k_1OverRoot2},
+  { 0.000000000f, -SIMPLib::Constants::k_1OverRoot2, 0.000000000f, SIMPLib::Constants::k_1OverRoot2},
+  { 0.000000000f, 0.000000000f, -SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2},
+  { SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2, 0.000000000f, 0.000000000f},
+  { -SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2, 0.000000000f, 0.000000000f},
+  { 0.000000000f, SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2, 0.000000000f},
+  { 0.000000000f, -SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2, 0.000000000f},
+  { SIMPLib::Constants::k_1OverRoot2, 0.000000000f, SIMPLib::Constants::k_1OverRoot2, 0.000000000f},
+  { -SIMPLib::Constants::k_1OverRoot2, 0.000000000f, SIMPLib::Constants::k_1OverRoot2, 0.000000000f},
   { 0.500000000f, 0.500000000f, 0.500000000f, 0.500000000f},
   { -0.500000000f, -0.500000000f, -0.500000000f, 0.500000000f},
   { 0.500000000f, -0.500000000f, 0.500000000f, 0.500000000f},

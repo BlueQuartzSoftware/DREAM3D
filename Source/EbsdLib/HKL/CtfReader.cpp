@@ -471,7 +471,7 @@ int CtfReader::parseHeaderLines(QList<QByteArray>& headerLines)
   {
     QByteArray line = headerLines[i];
     QString sLine = line; // Turn the line into a QString
-    QList<QByteArray> spcTokens = line.split(' '); // Space Delimit the line
+ //   QList<QByteArray> spcTokens = line.split(' '); // Space Delimit the line
     QList<QByteArray> tabTokens = line.split('\t'); // Tab Delimit the line
 
     if(line.startsWith("Prj"))  // This is a special case/bug in HKL's writing code. This line is space delimited

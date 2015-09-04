@@ -65,11 +65,11 @@
 #include <qwt_compat.h>
 #include <qwt_plot_grid.h>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataArrays/StatsDataArray.h"
-#include "DREAM3DLib/StatsData/StatsData.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/DataArrays/StatsDataArray.h"
+#include "SIMPLib/StatsData/StatsData.h"
 
 #include "OrientationLib/Texture/StatsGen.hpp"
 

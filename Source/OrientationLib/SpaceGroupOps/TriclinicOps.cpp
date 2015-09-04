@@ -35,7 +35,7 @@
 
 #include "TriclinicOps.h"
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/partitioner.h>
@@ -46,8 +46,8 @@
 
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Utilities/ColorTable.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Utilities/ColorTable.h"
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
@@ -58,9 +58,9 @@
 
 namespace Detail
 {
-  static const float TriclinicDim1InitValue = powf((0.75f * ((DREAM3D::Constants::k_Pi) - sinf((DREAM3D::Constants::k_Pi)))), (1.0f / 3.0f));
-  static const float TriclinicDim2InitValue = powf((0.75f * ((DREAM3D::Constants::k_Pi) - sinf((DREAM3D::Constants::k_Pi)))), (1.0f / 3.0f));
-  static const float TriclinicDim3InitValue = powf((0.75f * ((DREAM3D::Constants::k_Pi) - sinf((DREAM3D::Constants::k_Pi)))), (1.0f / 3.0f));
+  static const float TriclinicDim1InitValue = powf((0.75f * ((SIMPLib::Constants::k_Pi) - sinf((SIMPLib::Constants::k_Pi)))), (1.0f / 3.0f));
+  static const float TriclinicDim2InitValue = powf((0.75f * ((SIMPLib::Constants::k_Pi) - sinf((SIMPLib::Constants::k_Pi)))), (1.0f / 3.0f));
+  static const float TriclinicDim3InitValue = powf((0.75f * ((SIMPLib::Constants::k_Pi) - sinf((SIMPLib::Constants::k_Pi)))), (1.0f / 3.0f));
   static const float TriclinicDim1StepValue = TriclinicDim1InitValue / 36.0f;
   static const float TriclinicDim2StepValue = TriclinicDim2InitValue / 36.0f;
   static const float TriclinicDim3StepValue = TriclinicDim3InitValue / 36.0f;
@@ -152,9 +152,9 @@ float TriclinicOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
     FOrientTransformsType::qu2ax(FOrientArrayType(qc.x, qc.y, qc.z, qc.w), ax);
     ax.toAxisAngle(n1, n2, n3, w);
 
-    if (w > DREAM3D::Constants::k_Pi)
+    if (w > SIMPLib::Constants::k_Pi)
     {
-      w = DREAM3D::Constants::k_2Pi - w;
+      w = SIMPLib::Constants::k_2Pi - w;
     }
     if (w < wmin)
     {
@@ -277,11 +277,11 @@ int TriclinicOps::getMisoBin(FOrientArrayType rod)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FOrientArrayType TriclinicOps::determineEulerAngles(int choose)
+FOrientArrayType TriclinicOps::determineEulerAngles(uint64_t seed, int choose)
 {
   float init[3];
   float step[3];
-  float phi[3];
+  int32_t phi[3];
   float h1, h2, h3;
 
   init[0] = Detail::TriclinicDim1InitValue;
@@ -290,11 +290,11 @@ FOrientArrayType TriclinicOps::determineEulerAngles(int choose)
   step[0] = Detail::TriclinicDim1StepValue;
   step[1] = Detail::TriclinicDim2StepValue;
   step[2] = Detail::TriclinicDim3StepValue;
-  phi[0] = static_cast<float>(choose % 72);
-  phi[1] = static_cast<float>((choose / 72) % 72);
-  phi[2] = static_cast<float>(choose / (72 * 72));
+  phi[0] = static_cast<int32_t>(choose % 72);
+  phi[1] = static_cast<int32_t>((choose / 72) % 72);
+  phi[2] = static_cast<int32_t>(choose / (72 * 72));
 
-  _calcDetermineHomochoricValues(init, step, phi, choose, h1, h2, h3);
+  _calcDetermineHomochoricValues(seed, init, step, phi, choose, h1, h2, h3);
 
   FOrientArrayType ho(h1, h2, h3);
   FOrientArrayType ro(4);
@@ -328,11 +328,11 @@ FOrientArrayType TriclinicOps::randomizeEulerAngles(FOrientArrayType synea)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FOrientArrayType TriclinicOps::determineRodriguesVector( int choose)
+FOrientArrayType TriclinicOps::determineRodriguesVector(uint64_t seed, int choose)
 {
   float init[3];
   float step[3];
-  float phi[3];
+  int32_t phi[3];
   float h1, h2, h3;
 
   init[0] = Detail::TriclinicDim1InitValue;
@@ -341,11 +341,11 @@ FOrientArrayType TriclinicOps::determineRodriguesVector( int choose)
   step[0] = Detail::TriclinicDim1StepValue;
   step[1] = Detail::TriclinicDim2StepValue;
   step[2] = Detail::TriclinicDim3StepValue;
-  phi[0] = static_cast<float>(choose % 72);
-  phi[1] = static_cast<float>((choose / 72) % 72);
-  phi[2] = static_cast<float>(choose / (72 * 72));
+  phi[0] = static_cast<int32_t>(choose % 72);
+  phi[1] = static_cast<int32_t>((choose / 72) % 72);
+  phi[2] = static_cast<int32_t>(choose / (72 * 72));
 
-  _calcDetermineHomochoricValues(init, step, phi, choose, h1, h2, h3);
+  _calcDetermineHomochoricValues(seed, init, step, phi, choose, h1, h2, h3);
   FOrientArrayType ho(h1, h2, h3);
   FOrientArrayType ro(4);
   OrientationTransforms<FOrientArrayType, float>::ho2ro(ho, ro);
@@ -520,7 +520,7 @@ namespace Detail
 
         }
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
         void operator()(const tbb::blocked_range<size_t>& r) const
         {
           generate(r.begin(), r.end());
@@ -552,12 +552,12 @@ void TriclinicOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatA
     xyz111->resize(nOrientations * Detail::Triclinic::symSize2 * 3);
   }
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
 #endif
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, nOrientations),
@@ -578,7 +578,7 @@ void TriclinicOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatA
 // -----------------------------------------------------------------------------
 bool TriclinicOps::inUnitTriangle(float eta, float chi)
 {
-  if( eta < 0 || eta > (180.0 * DREAM3D::Constants::k_PiOver180) || chi < 0 || chi > (90.0 * DREAM3D::Constants::k_PiOver180) )
+  if( eta < 0 || eta > (180.0 * SIMPLib::Constants::k_PiOver180) || chi < 0 || chi > (90.0 * SIMPLib::Constants::k_PiOver180) )
   {
     return false;
   }
@@ -600,9 +600,9 @@ DREAM3D::Rgb TriclinicOps::generateIPFColor(double phi1, double phi, double phi2
 {
   if (degToRad == true)
   {
-    phi1 = phi1 * DREAM3D::Constants::k_DegToRad;
-    phi = phi * DREAM3D::Constants::k_DegToRad;
-    phi2 = phi2 * DREAM3D::Constants::k_DegToRad;
+    phi1 = phi1 * SIMPLib::Constants::k_DegToRad;
+    phi = phi * SIMPLib::Constants::k_DegToRad;
+    phi2 = phi2 * SIMPLib::Constants::k_DegToRad;
   }
   QuatF qc;
   QuatF q2;
@@ -657,8 +657,8 @@ DREAM3D::Rgb TriclinicOps::generateIPFColor(double phi1, double phi, double phi2
   float etaMin = 0.0;
   float etaMax = 180.0;
   float chiMax = 90.0;
-  float etaDeg = eta * DREAM3D::Constants::k_180OverPi;
-  float chiDeg = chi * DREAM3D::Constants::k_180OverPi;
+  float etaDeg = eta * SIMPLib::Constants::k_180OverPi;
+  float chiDeg = chi * SIMPLib::Constants::k_180OverPi;
 
   _rgb[0] = 1.0 - chiDeg / chiMax;
   _rgb[2] = fabs(etaDeg - etaMin) / (etaMax - etaMin);
@@ -744,7 +744,7 @@ QVector<UInt8ArrayType::Pointer> TriclinicOps::generatePoleFigure(PoleFigureConf
   DoubleArrayType::Pointer intensity001 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label0 + "_Intensity_Image");
   DoubleArrayType::Pointer intensity011 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label1 + "_Intensity_Image");
   DoubleArrayType::Pointer intensity111 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label2 + "_Intensity_Image");
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
   tbb::task_group* g = new tbb::task_group;
@@ -837,7 +837,7 @@ QVector<UInt8ArrayType::Pointer> TriclinicOps::generatePoleFigure(PoleFigureConf
     poleFigures[2] = image111;
   }
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 
   if(doParallel == true)
   {

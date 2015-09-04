@@ -37,71 +37,57 @@
 #ifndef _FindFeatureClustering_H_
 #define _FindFeatureClustering_H_
 
-#include <vector>
-#include <string>
-
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/NeighborList.hpp"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-
-#include "Statistics/StatisticsConstants.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/NeighborList.hpp"
 
 /**
- * @class FindFeatureClustering FindFeatureClustering.h DREAM3DLib/GenericFilters/FindFeatureClustering.h
- * @brief
- * @author
- * @date Nov 19, 2011
- * @version 1.0
+ * @brief The FindFeatureClustering class. See [Filter documentation](@ref findfeatureclustering) for details.
  */
 class FindFeatureClustering : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindFeatureClustering)
-    DREAM3D_STATIC_NEW_MACRO(FindFeatureClustering)
-    DREAM3D_TYPE_MACRO_SUPER(FindFeatureClustering, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FindFeatureClustering)
+    SIMPL_STATIC_NEW_MACRO(FindFeatureClustering)
+    SIMPL_TYPE_MACRO_SUPER(FindFeatureClustering, AbstractFilter)
 
     virtual ~FindFeatureClustering();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
+    SIMPL_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
 
-    DREAM3D_FILTER_PARAMETER(int, NumberOfBins)
+    SIMPL_FILTER_PARAMETER(int, NumberOfBins)
     Q_PROPERTY(int NumberOfBins READ getNumberOfBins WRITE setNumberOfBins)
 
-    DREAM3D_FILTER_PARAMETER(int, PhaseNumber)
+    SIMPL_FILTER_PARAMETER(int, PhaseNumber)
     Q_PROPERTY(int PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedFeatureArrayPath)
-    Q_PROPERTY(DataArrayPath SelectedFeatureArrayPath READ getSelectedFeatureArrayPath WRITE setSelectedFeatureArrayPath)
-
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEnsembleAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellEnsembleAttributeMatrixName)
     Q_PROPERTY(DataArrayPath CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(bool, RemoveBiasedFeatures)
+    SIMPL_FILTER_PARAMETER(bool, RemoveBiasedFeatures)
     Q_PROPERTY(bool RemoveBiasedFeatures READ getRemoveBiasedFeatures WRITE setRemoveBiasedFeatures)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, BiasedFeaturesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, BiasedFeaturesArrayPath)
     Q_PROPERTY(DataArrayPath BiasedFeaturesArrayPath READ getBiasedFeaturesArrayPath WRITE setBiasedFeaturesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, EquivalentDiametersArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, EquivalentDiametersArrayPath)
     Q_PROPERTY(DataArrayPath EquivalentDiametersArrayPath READ getEquivalentDiametersArrayPath WRITE setEquivalentDiametersArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
     Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
     Q_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, ClusteringListArrayName)
+    SIMPL_FILTER_PARAMETER(QString, ClusteringListArrayName)
     Q_PROPERTY(QString ClusteringListArrayName READ getClusteringListArrayName WRITE setClusteringListArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, NewEnsembleArrayArrayName)
+    SIMPL_FILTER_PARAMETER(QString, NewEnsembleArrayArrayName)
     Q_PROPERTY(QString NewEnsembleArrayArrayName READ getNewEnsembleArrayArrayName WRITE setNewEnsembleArrayArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, MaxMinArrayName)
+    SIMPL_FILTER_PARAMETER(QString, MaxMinArrayName)
     Q_PROPERTY(QString MaxMinArrayName READ getMaxMinArrayName WRITE setMaxMinArrayName)
 
     /**
@@ -185,6 +171,9 @@ class FindFeatureClustering : public AbstractFilter
      */
     void dataCheck();
 
+    /**
+     * @brief find_clustering Determines the Feature clustering
+     */
     void find_clustering();
 
   private:
@@ -194,8 +183,8 @@ class FindFeatureClustering : public AbstractFilter
     DEFINE_DATAARRAY_VARIABLE(float, NewEnsembleArray)
     DEFINE_DATAARRAY_VARIABLE(float, MaxMinArray)
     DEFINE_DATAARRAY_VARIABLE(bool, BiasedFeatures)
-    NeighborList<float>::WeakPointer m_ClusteringList;
 
+    NeighborList<float>::WeakPointer m_ClusteringList;
     std::vector<float> m_RandomCentroids;
 
     FindFeatureClustering(const FindFeatureClustering&); // Copy Constructor Not Implemented

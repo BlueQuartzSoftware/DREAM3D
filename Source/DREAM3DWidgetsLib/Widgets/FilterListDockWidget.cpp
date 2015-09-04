@@ -41,10 +41,10 @@
 #include <QtWidgets/QMainWindow>
 #include <QtGui/QPainter>
 
-#include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/Common/IFilterFactory.hpp"
-#include "DREAM3DLib/Common/FilterFactory.hpp"
 
+#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/Common/IFilterFactory.hpp"
+#include "SIMPLib/Common/FilterFactory.hpp"
 
 #ifdef DREAM3D_USE_QtWebEngine
 #include "DREAM3DWidgetsLib/Widgets/DREAM3DUserManualDialog.h"

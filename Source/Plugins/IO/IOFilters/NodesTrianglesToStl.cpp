@@ -40,16 +40,16 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
-#include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/ScopedFileMonitor.hpp"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/InputFileFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/OutputPathFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/OutputPathFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
-#include "DREAM3DLib/Geometry/MeshStructs.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "SIMPLib/Geometry/MeshStructs.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "IO/IOConstants.h"
 
@@ -109,11 +109,11 @@ void NodesTrianglesToStl::readFilterParameters(AbstractFilterParametersReader* r
 int NodesTrianglesToStl::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(NodesFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(TrianglesFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputStlDirectory)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputStlPrefix)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(NodesFile)
+  SIMPL_FILTER_WRITE_PARAMETER(TrianglesFile)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputStlDirectory)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputStlPrefix)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

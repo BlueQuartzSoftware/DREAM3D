@@ -40,9 +40,9 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/Observable.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Common/Observable.h"
 
 #include "EMMPMLib/Core/EMMPM_Constants.h"
 #include "EMMPMLib/Core/EMMPM_Data.h"
@@ -53,9 +53,9 @@ class EMMPMLib_EXPORT MorphFilter : public Observable
     Q_OBJECT;
 
   public:
-    DREAM3D_SHARED_POINTERS(MorphFilter);
-    DREAM3D_STATIC_NEW_MACRO(MorphFilter);
-    DREAM3D_TYPE_MACRO(MorphFilter);
+    SIMPL_SHARED_POINTERS(MorphFilter);
+    SIMPL_STATIC_NEW_MACRO(MorphFilter);
+    SIMPL_TYPE_MACRO(MorphFilter);
     virtual ~MorphFilter();
 
     unsigned int maxi(int a, int b);
@@ -77,7 +77,7 @@ class EMMPMLib_EXPORT MorphFilter : public Observable
      */
     void multiSE(EMMPM_Data* data);
 
-    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
+    SIMPL_INSTANCE_PROPERTY(int, ErrorCondition)
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable

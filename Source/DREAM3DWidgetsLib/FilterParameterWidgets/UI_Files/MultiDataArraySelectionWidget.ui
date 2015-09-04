@@ -30,7 +30,7 @@
     <number>2</number>
    </property>
    <item row="1" column="2">
-    <widget class="QComboBox" name="dataContainerList">
+    <widget class="QComboBox" name="dataContainerCombo">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Maximum">
        <horstretch>0</horstretch>
@@ -43,11 +43,6 @@
      <property name="sizeAdjustPolicy">
       <enum>QComboBox::AdjustToContents</enum>
      </property>
-     <item>
-      <property name="text">
-       <string>VolumeDataContainer</string>
-      </property>
-     </item>
     </widget>
    </item>
    <item row="0" column="4">
@@ -77,7 +72,7 @@
     </widget>
    </item>
    <item row="1" column="3">
-    <widget class="QComboBox" name="attributeMatrixList">
+    <widget class="QComboBox" name="attributeMatrixCombo">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Maximum">
        <horstretch>0</horstretch>
@@ -90,11 +85,6 @@
      <property name="sizeAdjustPolicy">
       <enum>QComboBox::AdjustToContents</enum>
      </property>
-     <item>
-      <property name="text">
-       <string>CellFeatureData</string>
-      </property>
-     </item>
     </widget>
    </item>
    <item row="1" column="0">

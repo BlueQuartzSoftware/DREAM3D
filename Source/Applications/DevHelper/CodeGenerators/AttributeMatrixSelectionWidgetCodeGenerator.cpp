@@ -56,7 +56,11 @@ AttributeMatrixSelectionWidgetCodeGenerator::~AttributeMatrixSelectionWidgetCode
 // -----------------------------------------------------------------------------
 QString AttributeMatrixSelectionWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(AttributeMatrixSelectionFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", get" + getPropertyName() + "(), " + getCategory() + "));";
+    QString s;
+  QTextStream out(&s);
+  out << "  AttributeMatrixSelectionFilterParameter::RequirementType amsReq;";
+  out << "  parameters.push_back(AttributeMatrixSelectionFilterParameter::New(\"" << getHumanLabel() << "\", \"" << getPropertyName() << "\", get" << getPropertyName() << "(), " << getCategory() << ", amsReq));";
+  return s;
 }
 
 // -----------------------------------------------------------------------------
@@ -82,7 +86,7 @@ QString AttributeMatrixSelectionWidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(DataArrayPath, " + getPropertyName() + ")\n";
+  ss << "    SIMPL_FILTER_PARAMETER(DataArrayPath, " + getPropertyName() + ")\n";
   ss << "    Q_PROPERTY(DataArrayPath " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;

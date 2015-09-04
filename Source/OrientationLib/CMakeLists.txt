@@ -189,7 +189,7 @@ if(APPLE)
   include_directories("-FvecLib")
 endif(APPLE)
 
-target_link_libraries(${PROJECT_NAME} DREAM3DLib ${OrientationLib_LINK_LIBRARIES} ${LAPACK_LIB})
+target_link_libraries(${PROJECT_NAME} SIMPLib ${OrientationLib_LINK_LIBRARIES} ${LAPACK_LIB})
 
 LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} )
 

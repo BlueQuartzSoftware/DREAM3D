@@ -189,7 +189,7 @@ set(EMMPMLib_PROJECT_SRCS
 
 
 add_library(${PROJECT_NAME} ${LIB_TYPE} ${EMMPMLib_PROJECT_SRCS})
-target_link_libraries(${PROJECT_NAME} Qt5::Core ${TBB_LIBRARIES} DREAM3DLib)
+target_link_libraries(${PROJECT_NAME} Qt5::Core ${TBB_LIBRARIES} SIMPLib)
 
 LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} )
 

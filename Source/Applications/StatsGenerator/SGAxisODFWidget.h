@@ -43,11 +43,11 @@
 
 #include "ui_SGAxisODFWidget.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/StatsData/StatsData.h"
-#include "DREAM3DLib/StatsData/PrimaryStatsData.h"
-#include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
-#include "DREAM3DLib/StatsData/TransformationStatsData.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/StatsData/StatsData.h"
+#include "SIMPLib/StatsData/PrimaryStatsData.h"
+#include "SIMPLib/StatsData/PrecipitateStatsData.h"
+#include "SIMPLib/StatsData/TransformationStatsData.h"
 
 
 #include "QtSupportLib/PoleFigureImageUtilities.h"
@@ -79,7 +79,7 @@ class SGAxisODFWidget : public QWidget, private Ui::SGAxisODFWidget
     void initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot);
     void enableMDFTab(bool b);
 
-    DREAM3D_INSTANCE_PROPERTY(bool, EnableAxisDecorations)
+    SIMPL_INSTANCE_PROPERTY(bool, EnableAxisDecorations)
 
     void setPhaseIndex(int value);
     int getPhaseIndex();
@@ -105,7 +105,7 @@ class SGAxisODFWidget : public QWidget, private Ui::SGAxisODFWidget
     void on_savePoleFigureImage_clicked();
 
   protected:
-    DREAM3D_INSTANCE_PROPERTY(bool, Initializing)
+    SIMPL_INSTANCE_PROPERTY(bool, Initializing)
 
   private:
     int      m_PhaseIndex;

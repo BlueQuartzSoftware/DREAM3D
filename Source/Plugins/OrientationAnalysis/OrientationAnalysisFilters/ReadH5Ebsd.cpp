@@ -38,14 +38,14 @@
 
 #include <QtCore/QFileInfo>
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "EbsdLib/H5EbsdVolumeInfo.h"
 #include "EbsdLib/HKL/CtfFields.h"
@@ -140,15 +140,15 @@ void ReadH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, in
 int ReadH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(RefFrameZDir)
-  DREAM3D_FILTER_WRITE_PARAMETER(ZStartIndex)
-  DREAM3D_FILTER_WRITE_PARAMETER(ZEndIndex)
-  DREAM3D_FILTER_WRITE_PARAMETER(UseTransformations)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(DataContainerName)
+  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(InputFile)
+  SIMPL_FILTER_WRITE_PARAMETER(RefFrameZDir)
+  SIMPL_FILTER_WRITE_PARAMETER(ZStartIndex)
+  SIMPL_FILTER_WRITE_PARAMETER(ZEndIndex)
+  SIMPL_FILTER_WRITE_PARAMETER(UseTransformations)
   writer->writeArraySelections("SelectedArrayNames", getSelectedArrayNames() );
 
   writer->closeFilterGroup();

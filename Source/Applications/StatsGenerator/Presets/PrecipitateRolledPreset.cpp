@@ -45,8 +45,8 @@
 #include "StatsGenerator/TableModels/SGPowerLawTableModel.h"
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
 
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "SIMPLib/Utilities/SIMPLibRandom.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -116,7 +116,7 @@ void PrecipitateRolledPreset::initializeOmega3TableModel(StatsGenPlotWidget* plo
   //  model->removeRows(0, model->rowCount());
 
   float alpha, beta;
-  DREAM3D_RANDOMNG_NEW()
+  SIMPL_RANDOMNG_NEW()
 
   QVector<float> alphas;
   QVector<float> betas;
@@ -161,7 +161,7 @@ void PrecipitateRolledPreset::initializeBOverATableModel(StatsGenPlotWidget* plo
   model->removeRows(0, model->rowCount());
 
   float alpha, beta;
-  DREAM3D_RANDOMNG_NEW()
+  SIMPL_RANDOMNG_NEW()
 
   QVector<float> alphas;
   QVector<float> betas;
@@ -206,7 +206,7 @@ void PrecipitateRolledPreset::initializeCOverATableModel(StatsGenPlotWidget* plo
   model->removeRows(0, model->rowCount());
 
   float alpha, beta;
-  DREAM3D_RANDOMNG_NEW()
+  SIMPL_RANDOMNG_NEW()
 
   QVector<float> alphas;
   QVector<float> betas;
@@ -252,7 +252,7 @@ void PrecipitateRolledPreset::initializeClusteringTableModel(StatsGenPlotWidget*
   model->removeRows(0, model->rowCount());
 
   float mu, sigma;
-  DREAM3D_RANDOMNG_NEW()
+  SIMPL_RANDOMNG_NEW()
 
   QVector<float> mus;
   QVector<float> sigmas;

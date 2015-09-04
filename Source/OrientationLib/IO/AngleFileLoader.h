@@ -42,9 +42,9 @@
 #include <vector>
 
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationLib/OrientationLib.h"
 
@@ -57,9 +57,9 @@
 class OrientationLib_EXPORT AngleFileLoader
 {
   public:
-    DREAM3D_SHARED_POINTERS(AngleFileLoader)
-    DREAM3D_STATIC_NEW_MACRO(AngleFileLoader)
-    DREAM3D_TYPE_MACRO(AngleFileLoader)
+    SIMPL_SHARED_POINTERS(AngleFileLoader)
+    SIMPL_STATIC_NEW_MACRO(AngleFileLoader)
+    SIMPL_TYPE_MACRO(AngleFileLoader)
 
     virtual ~AngleFileLoader();
 
@@ -70,15 +70,15 @@ class OrientationLib_EXPORT AngleFileLoader
       RodriguezAngles
     };
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorMessage)
-    DREAM3D_INSTANCE_PROPERTY(int, ErrorCode)
+    SIMPL_INSTANCE_STRING_PROPERTY(ErrorMessage)
+    SIMPL_INSTANCE_PROPERTY(int, ErrorCode)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
-    DREAM3D_INSTANCE_PROPERTY(bool, FileAnglesInDegrees)
-    DREAM3D_INSTANCE_PROPERTY(bool, OutputAnglesInDegrees)
-    DREAM3D_INSTANCE_PROPERTY(uint32_t, AngleRepresentation)
-    DREAM3D_INSTANCE_STRING_PROPERTY(Delimiter)
-    DREAM3D_INSTANCE_PROPERTY(bool, IgnoreMultipleDelimiters)
+    SIMPL_INSTANCE_STRING_PROPERTY(InputFile)
+    SIMPL_INSTANCE_PROPERTY(bool, FileAnglesInDegrees)
+    SIMPL_INSTANCE_PROPERTY(bool, OutputAnglesInDegrees)
+    SIMPL_INSTANCE_PROPERTY(uint32_t, AngleRepresentation)
+    SIMPL_INSTANCE_STRING_PROPERTY(Delimiter)
+    SIMPL_INSTANCE_PROPERTY(bool, IgnoreMultipleDelimiters)
 
 
     FloatArrayType::Pointer loadData();

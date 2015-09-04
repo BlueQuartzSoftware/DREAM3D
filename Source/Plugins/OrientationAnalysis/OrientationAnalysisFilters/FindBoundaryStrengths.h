@@ -37,10 +37,10 @@
 #ifndef _FindBoundaryStrengths_H_
 #define _FindBoundaryStrengths_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
@@ -51,37 +51,37 @@ class FindBoundaryStrengths : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindBoundaryStrengths)
-    DREAM3D_STATIC_NEW_MACRO(FindBoundaryStrengths)
-    DREAM3D_TYPE_MACRO_SUPER(FindBoundaryStrengths, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FindBoundaryStrengths)
+    SIMPL_STATIC_NEW_MACRO(FindBoundaryStrengths)
+    SIMPL_TYPE_MACRO_SUPER(FindBoundaryStrengths, AbstractFilter)
 
     virtual ~FindBoundaryStrengths();
 
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, Loading)
+    SIMPL_FILTER_PARAMETER(FloatVec3_t, Loading)
     Q_PROPERTY(FloatVec3_t Loading READ getLoading WRITE setLoading)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
     Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
     Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshF1sArrayName)
+    SIMPL_FILTER_PARAMETER(QString, SurfaceMeshF1sArrayName)
     Q_PROPERTY(QString SurfaceMeshF1sArrayName READ getSurfaceMeshF1sArrayName WRITE setSurfaceMeshF1sArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshF1sptsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, SurfaceMeshF1sptsArrayName)
     Q_PROPERTY(QString SurfaceMeshF1sptsArrayName READ getSurfaceMeshF1sptsArrayName WRITE setSurfaceMeshF1sptsArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshF7sArrayName)
+    SIMPL_FILTER_PARAMETER(QString, SurfaceMeshF7sArrayName)
     Q_PROPERTY(QString SurfaceMeshF7sArrayName READ getSurfaceMeshF7sArrayName WRITE setSurfaceMeshF7sArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshmPrimesArrayName)
+    SIMPL_FILTER_PARAMETER(QString, SurfaceMeshmPrimesArrayName)
     Q_PROPERTY(QString SurfaceMeshmPrimesArrayName READ getSurfaceMeshmPrimesArrayName WRITE setSurfaceMeshmPrimesArrayName)
 
     /**

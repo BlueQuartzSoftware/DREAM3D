@@ -38,10 +38,10 @@
 
 #include <QtCore/QFileInfo>
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 
 
 #include "Reconstruction/ReconstructionConstants.h"
@@ -93,7 +93,7 @@ int AlignSectionsList::writeFilterParameters(AbstractFilterParametersWriter* wri
 {
   AlignSections::writeFilterParameters(writer, index);
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
+  SIMPL_FILTER_WRITE_PARAMETER(InputFile)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

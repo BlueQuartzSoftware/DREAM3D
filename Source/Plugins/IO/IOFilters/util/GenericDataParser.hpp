@@ -38,21 +38,21 @@
 
 #include <QtCore/QString>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 class GenericDataParser
 {
   public:
-    DREAM3D_SHARED_POINTERS(GenericDataParser)
-    DREAM3D_TYPE_MACRO(GenericDataParser)
+    SIMPL_SHARED_POINTERS(GenericDataParser)
+    SIMPL_TYPE_MACRO(GenericDataParser)
 
     virtual ~GenericDataParser() {}
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(ColumnName)
-    DREAM3D_INSTANCE_PROPERTY(int, ColumnIndex)
-    DREAM3D_VIRTUAL_INSTANCE_PROPERTY(IDataArray::Pointer, DataArray)
+    SIMPL_INSTANCE_STRING_PROPERTY(ColumnName)
+    SIMPL_INSTANCE_PROPERTY(int, ColumnIndex)
+    SIMPL_VIRTUAL_INSTANCE_PROPERTY(IDataArray::Pointer, DataArray)
 
     virtual IDataArray::Pointer initializeNewDataArray(size_t numTuples, const QString& name, bool allocate) { return IDataArray::NullPointer(); }
 
@@ -72,8 +72,8 @@ class GenericDataParser
 class GenericInt32Parser : public GenericDataParser
 {
   public:
-    DREAM3D_SHARED_POINTERS(GenericInt32Parser)
-    DREAM3D_TYPE_MACRO(GenericInt32Parser)
+    SIMPL_SHARED_POINTERS(GenericInt32Parser)
+    SIMPL_TYPE_MACRO(GenericInt32Parser)
     static Pointer New(Int32ArrayType::Pointer ptr, const QString& name, int colIndex)
     {
       Pointer sharedPtr (new GenericInt32Parser(ptr, name, colIndex));
@@ -125,8 +125,8 @@ class GenericInt32Parser : public GenericDataParser
 class GenericFloatParser : public GenericDataParser
 {
   public:
-    DREAM3D_SHARED_POINTERS(GenericFloatParser)
-    DREAM3D_TYPE_MACRO(GenericFloatParser)
+    SIMPL_SHARED_POINTERS(GenericFloatParser)
+    SIMPL_TYPE_MACRO(GenericFloatParser)
     static Pointer New(FloatArrayType::Pointer ptr, const QString& name, int colIndex)
     {
       Pointer sharedPtr (new GenericFloatParser(ptr, name, colIndex));

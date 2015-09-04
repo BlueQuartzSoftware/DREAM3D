@@ -92,7 +92,7 @@ QString DynamicTableWidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(DynamicTableData, " + getPropertyName() + ")\n";
+  ss << "    SIMPL_FILTER_PARAMETER(DynamicTableData, " + getPropertyName() + ")\n";
   ss << "    Q_PROPERTY(DynamicTableData " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;

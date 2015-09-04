@@ -45,9 +45,9 @@
 #include <QtCore/QFileInfo>
 
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
-#include "DREAM3DLib/IOFilters/RawBinaryReader.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/ScopedFileMonitor.hpp"
+#include "SIMPLib/IOFilters/RawBinaryReader.h"
 
 
 #include "UnitTestSupport.hpp"

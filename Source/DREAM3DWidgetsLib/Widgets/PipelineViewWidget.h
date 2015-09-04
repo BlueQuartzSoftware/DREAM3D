@@ -49,11 +49,11 @@
 #include <QtGui/QPainter>
 
 
-#include "DREAM3DLib/Common/PipelineMessage.h"
-#include "DREAM3DLib/Common/FilterPipeline.h"
-#include "DREAM3DLib/FilterParameters/H5FilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/H5FilterParametersWriter.h"
-#include "DREAM3DLib/CoreFilters/DataContainerReader.h"
+#include "SIMPLib/Common/PipelineMessage.h"
+#include "SIMPLib/Common/FilterPipeline.h"
+#include "SIMPLib/FilterParameters/H5FilterParametersReader.h"
+#include "SIMPLib/FilterParameters/H5FilterParametersWriter.h"
+#include "SIMPLib/CoreFilters/DataContainerReader.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"

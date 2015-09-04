@@ -37,9 +37,9 @@
 #ifndef _FindLargestCrossSections_H_
 #define _FindLargestCrossSections_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The FindLargestCrossSections class. See [Filter documentation](@ref findlargestcrosssections) for details.
@@ -48,19 +48,19 @@ class FindLargestCrossSections : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindLargestCrossSections)
-    DREAM3D_STATIC_NEW_MACRO(FindLargestCrossSections)
-    DREAM3D_TYPE_MACRO_SUPER(FindLargestCrossSections, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FindLargestCrossSections)
+    SIMPL_STATIC_NEW_MACRO(FindLargestCrossSections)
+    SIMPL_TYPE_MACRO_SUPER(FindLargestCrossSections, AbstractFilter)
 
     virtual ~FindLargestCrossSections();
 
-    DREAM3D_FILTER_PARAMETER(unsigned int, Plane)
+    SIMPL_FILTER_PARAMETER(unsigned int, Plane)
     Q_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, LargestCrossSectionsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, LargestCrossSectionsArrayPath)
     Q_PROPERTY(DataArrayPath LargestCrossSectionsArrayPath READ getLargestCrossSectionsArrayPath WRITE setLargestCrossSectionsArrayPath)
 
     /**

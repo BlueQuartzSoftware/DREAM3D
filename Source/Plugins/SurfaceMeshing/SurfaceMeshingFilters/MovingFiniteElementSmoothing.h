@@ -38,8 +38,8 @@
 
 #include <QtCore/QString>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
@@ -61,22 +61,22 @@ class MovingFiniteElementSmoothing : public SurfaceMeshFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(MovingFiniteElementSmoothing)
-    DREAM3D_STATIC_NEW_MACRO(MovingFiniteElementSmoothing)
-    DREAM3D_TYPE_MACRO_SUPER(MovingFiniteElementSmoothing, SurfaceMeshFilter)
+    SIMPL_SHARED_POINTERS(MovingFiniteElementSmoothing)
+    SIMPL_STATIC_NEW_MACRO(MovingFiniteElementSmoothing)
+    SIMPL_TYPE_MACRO_SUPER(MovingFiniteElementSmoothing, SurfaceMeshFilter)
 
     virtual ~MovingFiniteElementSmoothing();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_FILTER_PARAMETER(int, IterationSteps)
+    SIMPL_FILTER_PARAMETER(int, IterationSteps)
     Q_PROPERTY(int IterationSteps READ getIterationSteps WRITE setIterationSteps)
-    DREAM3D_FILTER_PARAMETER(bool, NodeConstraints)
+    SIMPL_FILTER_PARAMETER(bool, NodeConstraints)
     Q_PROPERTY(bool NodeConstraints READ getNodeConstraints WRITE setNodeConstraints)
-    DREAM3D_FILTER_PARAMETER(bool, ConstrainSurfaceNodes)
+    SIMPL_FILTER_PARAMETER(bool, ConstrainSurfaceNodes)
     Q_PROPERTY(bool ConstrainSurfaceNodes READ getConstrainSurfaceNodes WRITE setConstrainSurfaceNodes)
-    DREAM3D_FILTER_PARAMETER(bool, ConstrainQuadPoints)
+    SIMPL_FILTER_PARAMETER(bool, ConstrainQuadPoints)
     Q_PROPERTY(bool ConstrainQuadPoints READ getConstrainQuadPoints WRITE setConstrainQuadPoints)
-    DREAM3D_FILTER_PARAMETER(bool, SmoothTripleLines)
+    SIMPL_FILTER_PARAMETER(bool, SmoothTripleLines)
     Q_PROPERTY(bool SmoothTripleLines READ getSmoothTripleLines WRITE setSmoothTripleLines)
 
     /**
@@ -84,7 +84,7 @@ class MovingFiniteElementSmoothing : public SurfaceMeshFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshNodeTypeArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshNodeTypeArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshNodeTypeArrayPath READ getSurfaceMeshNodeTypeArrayPath WRITE setSurfaceMeshNodeTypeArrayPath)
 
     virtual const QString getCompiledLibraryName();

@@ -37,9 +37,9 @@
 #ifndef _ErodeDilateMask_H_
 #define _ErodeDilateMask_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The ErodeDilateMask class. See [Filter documentation](@ref erodedilatemask) for details.
@@ -48,28 +48,28 @@ class ErodeDilateMask : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(ErodeDilateMask)
-    DREAM3D_STATIC_NEW_MACRO(ErodeDilateMask)
-    DREAM3D_TYPE_MACRO_SUPER(ErodeDilateMask, AbstractFilter)
+    SIMPL_SHARED_POINTERS(ErodeDilateMask)
+    SIMPL_STATIC_NEW_MACRO(ErodeDilateMask)
+    SIMPL_TYPE_MACRO_SUPER(ErodeDilateMask, AbstractFilter)
 
     virtual ~ErodeDilateMask();
 
-    DREAM3D_FILTER_PARAMETER(unsigned int, Direction)
+    SIMPL_FILTER_PARAMETER(unsigned int, Direction)
     Q_PROPERTY(unsigned int Direction READ getDirection WRITE setDirection)
 
-    DREAM3D_FILTER_PARAMETER(int, NumIterations)
+    SIMPL_FILTER_PARAMETER(int, NumIterations)
     Q_PROPERTY(int NumIterations READ getNumIterations WRITE setNumIterations)
 
-    DREAM3D_FILTER_PARAMETER(bool, XDirOn)
+    SIMPL_FILTER_PARAMETER(bool, XDirOn)
     Q_PROPERTY(bool XDirOn READ getXDirOn WRITE setXDirOn)
 
-    DREAM3D_FILTER_PARAMETER(bool, YDirOn)
+    SIMPL_FILTER_PARAMETER(bool, YDirOn)
     Q_PROPERTY(bool YDirOn READ getYDirOn WRITE setYDirOn)
 
-    DREAM3D_FILTER_PARAMETER(bool, ZDirOn)
+    SIMPL_FILTER_PARAMETER(bool, ZDirOn)
     Q_PROPERTY(bool ZDirOn READ getZDirOn WRITE setZDirOn)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, MaskArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, MaskArrayPath)
     Q_PROPERTY(DataArrayPath MaskArrayPath READ getMaskArrayPath WRITE setMaskArrayPath)
 
     /**

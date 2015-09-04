@@ -6,7 +6,7 @@
 #include <QLineEdit>
 #include <QAbstractButton>
 
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "QtSupportLib/QtSupportLib.h"
 

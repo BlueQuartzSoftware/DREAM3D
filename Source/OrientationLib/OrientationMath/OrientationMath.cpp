@@ -37,9 +37,9 @@
 
 #include <cmath>
 
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Math/GeometryMath.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/Math/GeometryMath.h"
 #include "OrientationLib/SpaceGroupOps/CubicOps.h"
 #include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
 #include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
@@ -111,13 +111,13 @@ class Mod
     // wrap [rad] angle to [-PI..PI)
     inline static T WrapPosNegPI(T fAng)
     {
-      return Mod()(fAng + DREAM3D::Constants::k_Pi, DREAM3D::Constants::k_2Pi) - DREAM3D::Constants::k_Pi;
+      return Mod()(fAng + SIMPLib::Constants::k_Pi, SIMPLib::Constants::k_2Pi) - SIMPLib::Constants::k_Pi;
     }
 
     // wrap [rad] angle to [0..TWO_PI)
     inline T WrapTwoPI(T fAng)
     {
-      return Mod()(fAng, DREAM3D::Constants::k_2Pi);
+      return Mod()(fAng, SIMPLib::Constants::k_2Pi);
     }
 
     // wrap [deg] angle to [-180..180)
@@ -171,16 +171,16 @@ void OrientationMath::AxisAngletoHomochoric(float w, float n1, float n2, float n
   n1 = n1 / denom;
   n2 = n2 / denom;
   n3 = n3 / denom;
-  if (w >= 0.0f && w < DREAM3D::Constants::k_Pi)
+  if (w >= 0.0f && w < SIMPLib::Constants::k_Pi)
   {
-    float temp = powf(((0.75f) * (w - sinf(w))), DREAM3D::Constants::k_1Over3);
+    float temp = powf(((0.75f) * (w - sinf(w))), SIMPLib::Constants::k_1Over3);
     r1 = n1 * temp;
     r2 = n2 * temp;
     r3 = n3 * temp;
   }
   else
   {
-    float temp = powf(((0.75f) * (DREAM3D::Constants::k_2Pi - w + sinf(w))), DREAM3D::Constants::k_1Over3);
+    float temp = powf(((0.75f) * (SIMPLib::Constants::k_2Pi - w + sinf(w))), SIMPLib::Constants::k_1Over3);
     r1 = n1 * temp;
     r2 = n2 * temp;
     r3 = n3 * temp;
@@ -286,7 +286,7 @@ void OrientationMath::RodtoHomochoric(float& r1, float& r2, float& r3)
   r2 = r2 / rmag;
   r3 = r3 / rmag;
   w = static_cast<float>( 2.0 * atan(rmag) );
-  float const1 = powf(((3.0f / 4.0f) * (w - sinf(w))), DREAM3D::Constants::k_1Over3);
+  float const1 = powf(((3.0f / 4.0f) * (w - sinf(w))), SIMPLib::Constants::k_1Over3);
   r1 = r1 * const1;
   r2 = r2 * const1;
   r3 = r3 * const1;
@@ -343,9 +343,9 @@ void OrientationMath::RodtoAxisAngle(float r1, float r2, float r3, float& w, flo
   n1 = r1 / rmag;
   n2 = r2 / rmag;
   n3 = r3 / rmag;
-  if(w > DREAM3D::Constants::k_Pi)
+  if(w > SIMPLib::Constants::k_Pi)
   {
-    w = (2 * DREAM3D::Constants::k_Pi) - w;
+    w = (2 * SIMPLib::Constants::k_Pi) - w;
     n1 = -n1;
     n2 = -n2;
     n3 = -n3;
@@ -404,9 +404,9 @@ void OrientationMath::QuattoAxisAngle(QuatF& q, float& w, float& n1, float& n2, 
   n1 = q.x / sqrt(1 - (q.w * q.w));
   n2 = q.y / sqrt(1 - (q.w * q.w));
   n3 = q.z / sqrt(1 - (q.w * q.w));
-  if(w > DREAM3D::Constants::k_Pi)
+  if(w > SIMPLib::Constants::k_Pi)
   {
-    w = (2 * DREAM3D::Constants::k_Pi) - w;
+    w = (2 * SIMPLib::Constants::k_Pi) - w;
     n1 = -n1;
     n2 = -n2;
     n3 = -n3;
@@ -471,10 +471,10 @@ void OrientationMath::QuattoEuler(QuatF& q, float& ea1, float& ea2, float& ea3)
     tmp = 1.0f;
   }
   ea2 = 2 * acos(tmp);
-  ea1 = ea1 + DREAM3D::Constants::k_2Pi;
-  ea3 = ea3 + DREAM3D::Constants::k_2Pi;
-  ea1 = fmodf(ea1, DREAM3D::Constants::k_2Pi);
-  ea3 = fmodf(ea3, DREAM3D::Constants::k_2Pi);
+  ea1 = ea1 + SIMPLib::Constants::k_2Pi;
+  ea3 = ea3 + SIMPLib::Constants::k_2Pi;
+  ea1 = fmodf(ea1, SIMPLib::Constants::k_2Pi);
+  ea3 = fmodf(ea3, SIMPLib::Constants::k_2Pi);
 }
 
 

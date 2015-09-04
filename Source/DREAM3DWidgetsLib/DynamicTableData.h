@@ -43,7 +43,7 @@
 
 #include <QtWidgets/QWidget>
 
-#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/AbstractFilter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
@@ -52,7 +52,7 @@
 * @author
 * @version
 */
-class DREAM3DLib_EXPORT DynamicTableData : public QObject
+class SIMPLib_EXPORT DynamicTableData : public QObject
 {
     Q_OBJECT
 

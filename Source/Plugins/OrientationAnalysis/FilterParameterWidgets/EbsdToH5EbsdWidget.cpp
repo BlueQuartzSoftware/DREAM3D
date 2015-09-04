@@ -51,12 +51,12 @@
 #include <QtWidgets/QListWidgetItem>
 #include <QtWidgets/QButtonGroup>
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Utilities/FilePathGenerator.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Utilities/FilePathGenerator.h"
 
 #include "QtSupportLib/QCheckboxDialog.h"
 #include "QtSupportLib/QFileCompleter.h"
-#include "QtSupportLib/DREAM3DQtMacros.h"
+#include "QtSupportLib/SIMPLQtMacros.h"
 #include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
 #include "QtSupportLib/DREAM3DStyles.h"
 

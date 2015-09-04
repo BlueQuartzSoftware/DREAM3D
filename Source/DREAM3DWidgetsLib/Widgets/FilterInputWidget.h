@@ -42,11 +42,10 @@
 
 #include "QtSupportLib/FaderWidget.h"
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
+
+#include "SIMPLib/Common/AbstractFilter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
-
 
 #include "DREAM3DWidgetsLib/ui_FilterInputWidget.h"
 

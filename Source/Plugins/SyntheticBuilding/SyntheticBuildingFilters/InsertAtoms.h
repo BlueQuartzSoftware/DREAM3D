@@ -37,10 +37,10 @@
 #ifndef _InsertAtoms_H_
 #define _InsertAtoms_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 
 /**
  * @brief The InsertAtoms class. See [Filter documentation](@ref insertatoms) for details.
@@ -49,31 +49,31 @@ class InsertAtoms : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(InsertAtoms)
-    DREAM3D_STATIC_NEW_MACRO(InsertAtoms)
-    DREAM3D_TYPE_MACRO_SUPER(InsertAtoms, AbstractFilter)
+    SIMPL_SHARED_POINTERS(InsertAtoms)
+    SIMPL_STATIC_NEW_MACRO(InsertAtoms)
+    SIMPL_TYPE_MACRO_SUPER(InsertAtoms, AbstractFilter)
 
     virtual ~InsertAtoms();
 
-    DREAM3D_FILTER_PARAMETER(QString, VertexDataContainerName)
+    SIMPL_FILTER_PARAMETER(QString, VertexDataContainerName)
     Q_PROPERTY(QString VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
 
-    DREAM3D_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
     Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, LatticeConstants)
+    SIMPL_FILTER_PARAMETER(FloatVec3_t, LatticeConstants)
     Q_PROPERTY(FloatVec3_t LatticeConstants READ getLatticeConstants WRITE setLatticeConstants)
 
-    DREAM3D_FILTER_PARAMETER(int, Basis)
+    SIMPL_FILTER_PARAMETER(int, Basis)
     Q_PROPERTY(int Basis READ getBasis WRITE setBasis)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
     Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, AtomFeatureLabelsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, AtomFeatureLabelsArrayName)
     Q_PROPERTY(QString AtomFeatureLabelsArrayName READ getAtomFeatureLabelsArrayName WRITE setAtomFeatureLabelsArrayName)
 
     /**

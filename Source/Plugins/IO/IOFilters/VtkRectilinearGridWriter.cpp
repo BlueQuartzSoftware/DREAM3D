@@ -41,15 +41,16 @@
 #include <QtCore/QFile>
 
 
-#include "DREAM3DLib/DREAM3DLibVersion.h"
-#include "DREAM3DLib/Common/TemplateHelpers.hpp"
-#include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/OutputFileFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/BooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/VTKUtils/VTKUtil.hpp"
+#include "SIMPLib/SIMPLibVersion.h"
+#include "SIMPLib/Common/TemplateHelpers.hpp"
+#include "SIMPLib/Common/ScopedFileMonitor.hpp"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
+#include "SIMPLib/VTKUtils/VTKUtil.hpp"
 
 #include "IO/IOConstants.h"
 
@@ -70,7 +71,7 @@ namespace Detail
     size_t zpoints = m->getGeometryAs<Geometry>()->getZPoints() + 1;
 
     fprintf(f, "# vtk DataFile Version 2.0\n");
-    fprintf(f, "Data set from %s\n", DREAM3DLib::Version::PackageComplete().toLatin1().constData());
+    fprintf(f, "Data set from %s\n", SIMPLib::Version::PackageComplete().toLatin1().constData());
     if(isBinary)
     {
       fprintf(f, "BINARY\n");
@@ -99,11 +100,11 @@ namespace Detail
   int WriteCoords(FILE* f, const char* axis, const char* type, int64_t npoints, T min, T max, T step, bool binary)
   {
     int err = 0;
-  #if CMP_SIZEOF_LONG == 8 && !defined (__APPLE__)
+#if CMP_SIZEOF_LONG == 8 && !defined (__APPLE__)
     fprintf(f, "%s %ld %s\n", axis, npoints, type);
-  #else
+#else
     fprintf(f, "%s %lld %s\n", axis, npoints, type);
-  #endif
+#endif
     if (binary == true)
     {
       T* data = new T[npoints];
@@ -111,7 +112,7 @@ namespace Detail
       for (int idx = 0; idx < npoints; ++idx)
       {
         d = idx * step + min;
-        DREAM3D::Endian::FromSystemToBig::convert(d);
+        SIMPLib::Endian::FromSystemToBig::convert(d);
         data[idx] = d;
       }
       size_t totalWritten = fwrite(static_cast<void*>(data), sizeof(T), static_cast<size_t>(npoints), f);
@@ -153,7 +154,8 @@ namespace Detail
 
     typename ArrayType::Pointer array = boost::dynamic_pointer_cast<ArrayType>(iDataPtr);
 
-    if(NULL != array.get()) {
+    if(NULL != array.get())
+    {
       size_t totalElements = array->getSize();
       T* val = array->getPointer(0);
       int numComps = array->getNumberOfComponents();
@@ -169,18 +171,22 @@ namespace Detail
         if(BIGENDIAN == 0) { array->byteSwapElements(); }
         size_t totalWritten = fwrite(val, array->getTypeSize(), totalElements, f);
         if(totalWritten != totalElements) {}
-        fprintf(f,"\n");
+        fprintf(f, "\n");
         if(BIGENDIAN == 0) { array->byteSwapElements(); }
-      } else {
+      }
+      else
+      {
         std::stringstream ss;
-        for (size_t i = 0; i < totalElements; i++) {
-          if(i%20 == 0 && i > 0) {
+        for (size_t i = 0; i < totalElements; i++)
+        {
+          if(i % 20 == 0 && i > 0)
+          {
             ss << "\n";
           }
           ss << " " << val[i];
         }
         ss << "\n";
-        fprintf(f,"%s", ss.str().c_str());
+        fprintf(f, "%s", ss.str().c_str());
       }
     }
   }
@@ -217,7 +223,10 @@ void VtkRectilinearGridWriter::setupFilterParameters()
   parameters.push_back(OutputFileFilterParameter::New("Output File", "OutputFile", getOutputFile(), FilterParameter::Parameter, "*.vtk", "VTK Rectilinear Grid"));
   parameters.push_back(BooleanFilterParameter::New("Write Binary File", "WriteBinaryFile", getWriteBinaryFile(), FilterParameter::Parameter));
 
-  parameters.push_back(MultiDataArraySelectionFilterParameter::New("Attribute Arrays to Write", "SelectedDataArrayPaths", getSelectedDataArrayPaths(), FilterParameter::RequiredArray));
+  {
+    MultiDataArraySelectionFilterParameter::RequirementType req;
+    parameters.push_back(MultiDataArraySelectionFilterParameter::New("Attribute Arrays to Write", "SelectedDataArrayPaths", getSelectedDataArrayPaths(), FilterParameter::RequiredArray, req));
+  }
 
   setFilterParameters(parameters);
 }
@@ -238,10 +247,10 @@ void VtkRectilinearGridWriter::readFilterParameters(AbstractFilterParametersRead
 int VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(SelectedDataArrayPaths)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(WriteBinaryFile)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(SelectedDataArrayPaths)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputFile)
+  SIMPL_FILTER_WRITE_PARAMETER(WriteBinaryFile)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -351,7 +360,7 @@ void VtkRectilinearGridWriter::execute()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(dcName);
 
   ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
-  size_t dims[3] = {0,0,0};
+  size_t dims[3] = {0, 0, 0};
   image->getDimensions(dims);
   float res[3] = { 0.0f, 0.0f, 0.0f};
   image->getResolution(res);

@@ -37,9 +37,9 @@
 #ifndef _TriangleDihedralAngleFilter_H_
 #define _TriangleDihedralAngleFilter_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
@@ -50,13 +50,13 @@ class TriangleDihedralAngleFilter : public SurfaceMeshFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(TriangleDihedralAngleFilter)
-    DREAM3D_STATIC_NEW_MACRO(TriangleDihedralAngleFilter)
-    DREAM3D_TYPE_MACRO_SUPER(TriangleDihedralAngleFilter, SurfaceMeshFilter)
+    SIMPL_SHARED_POINTERS(TriangleDihedralAngleFilter)
+    SIMPL_STATIC_NEW_MACRO(TriangleDihedralAngleFilter)
+    SIMPL_TYPE_MACRO_SUPER(TriangleDihedralAngleFilter, SurfaceMeshFilter)
 
     virtual ~TriangleDihedralAngleFilter();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTriangleDihedralAnglesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTriangleDihedralAnglesArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshTriangleDihedralAnglesArrayPath READ getSurfaceMeshTriangleDihedralAnglesArrayPath WRITE setSurfaceMeshTriangleDihedralAnglesArrayPath)
 
     /**

@@ -37,9 +37,9 @@
 #ifndef _FindShapes_H_
 #define _FindShapes_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The FindShapes class. See [Filter documentation](@ref findshapes) for details.
@@ -48,37 +48,37 @@ class FindShapes : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindShapes)
-    DREAM3D_STATIC_NEW_MACRO(FindShapes)
-    DREAM3D_TYPE_MACRO_SUPER(FindShapes, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FindShapes)
+    SIMPL_STATIC_NEW_MACRO(FindShapes)
+    SIMPL_TYPE_MACRO_SUPER(FindShapes, AbstractFilter)
 
     virtual ~FindShapes();
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
     Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
-    DREAM3D_DECLARE_ARRAY(double, featuremoments, FeatureMoments) // N x 6 Array
+    SIMPL_DECLARE_ARRAY(double, featuremoments, FeatureMoments) // N x 6 Array
 
-    DREAM3D_DECLARE_ARRAY(double, featureeigenvals, FeatureEigenVals) // N x 3 Array
+    SIMPL_DECLARE_ARRAY(double, featureeigenvals, FeatureEigenVals) // N x 3 Array
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
     Q_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, Omega3sArrayName)
+    SIMPL_FILTER_PARAMETER(QString, Omega3sArrayName)
     Q_PROPERTY(QString Omega3sArrayName READ getOmega3sArrayName WRITE setOmega3sArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, VolumesArrayName)
+    SIMPL_FILTER_PARAMETER(QString, VolumesArrayName)
     Q_PROPERTY(QString VolumesArrayName READ getVolumesArrayName WRITE setVolumesArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, AxisLengthsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, AxisLengthsArrayName)
     Q_PROPERTY(QString AxisLengthsArrayName READ getAxisLengthsArrayName WRITE setAxisLengthsArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, AxisEulerAnglesArrayName)
+    SIMPL_FILTER_PARAMETER(QString, AxisEulerAnglesArrayName)
     Q_PROPERTY(QString AxisEulerAnglesArrayName READ getAxisEulerAnglesArrayName WRITE setAxisEulerAnglesArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, AspectRatiosArrayName)
+    SIMPL_FILTER_PARAMETER(QString, AspectRatiosArrayName)
     Q_PROPERTY(QString AspectRatiosArrayName READ getAspectRatiosArrayName WRITE setAspectRatiosArrayName)
 
     /**

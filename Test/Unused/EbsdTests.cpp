@@ -38,19 +38,19 @@
 
 
 #include "EbsdLib/EbsdConstants.h"
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/OrientationOps/CubicOps.h"
-#include "DREAM3DLib/OrientationOps/CubicLowOps.h"
-#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
-#include "DREAM3DLib/OrientationOps/HexagonalLowOps.h"
-#include "DREAM3DLib/OrientationOps/MonoclinicOps.h"
-#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
-#include "DREAM3DLib/OrientationOps/TetragonalLowOps.h"
-#include "DREAM3DLib/OrientationOps/TetragonalOps.h"
-#include "DREAM3DLib/OrientationOps/TriclinicOps.h"
-#include "DREAM3DLib/OrientationOps/TrigonalLowOps.h"
-#include "DREAM3DLib/OrientationOps/TrigonalOps.h"
-#include "DREAM3DLib/Utilities/ColorTable.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/OrientationOps/CubicOps.h"
+#include "SIMPLib/OrientationOps/CubicLowOps.h"
+#include "SIMPLib/OrientationOps/HexagonalOps.h"
+#include "SIMPLib/OrientationOps/HexagonalLowOps.h"
+#include "SIMPLib/OrientationOps/MonoclinicOps.h"
+#include "SIMPLib/OrientationOps/OrthoRhombicOps.h"
+#include "SIMPLib/OrientationOps/TetragonalLowOps.h"
+#include "SIMPLib/OrientationOps/TetragonalOps.h"
+#include "SIMPLib/OrientationOps/TriclinicOps.h"
+#include "SIMPLib/OrientationOps/TrigonalLowOps.h"
+#include "SIMPLib/OrientationOps/TrigonalOps.h"
+#include "SIMPLib/Utilities/ColorTable.h"
 
 
 

@@ -37,9 +37,9 @@
 #ifndef _FindRelativeMotionBetweenSlices_H_
 #define _FindRelativeMotionBetweenSlices_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The FindRelativeMotionBetweenSlices class. See [Filter documentation](@ref findrelativemotionbetweenslices) for details.
@@ -48,34 +48,34 @@ class FindRelativeMotionBetweenSlices : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindRelativeMotionBetweenSlices)
-    DREAM3D_STATIC_NEW_MACRO(FindRelativeMotionBetweenSlices)
-    DREAM3D_TYPE_MACRO_SUPER(FindRelativeMotionBetweenSlices, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FindRelativeMotionBetweenSlices)
+    SIMPL_STATIC_NEW_MACRO(FindRelativeMotionBetweenSlices)
+    SIMPL_TYPE_MACRO_SUPER(FindRelativeMotionBetweenSlices, AbstractFilter)
 
     virtual ~FindRelativeMotionBetweenSlices();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
     Q_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(unsigned int, Plane)
+    SIMPL_FILTER_PARAMETER(unsigned int, Plane)
     Q_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane)
 
-    DREAM3D_FILTER_PARAMETER(int, PSize1)
+    SIMPL_FILTER_PARAMETER(int, PSize1)
     Q_PROPERTY(int PSize1 READ getPSize1 WRITE setPSize1)
 
-    DREAM3D_FILTER_PARAMETER(int, PSize2)
+    SIMPL_FILTER_PARAMETER(int, PSize2)
     Q_PROPERTY(int PSize2 READ getPSize2 WRITE setPSize2)
 
-    DREAM3D_FILTER_PARAMETER(int, SSize1)
+    SIMPL_FILTER_PARAMETER(int, SSize1)
     Q_PROPERTY(int SSize1 READ getSSize1 WRITE setSSize1)
 
-    DREAM3D_FILTER_PARAMETER(int, SSize2)
+    SIMPL_FILTER_PARAMETER(int, SSize2)
     Q_PROPERTY(int SSize2 READ getSSize2 WRITE setSSize2)
 
-    DREAM3D_FILTER_PARAMETER(int, SliceStep)
+    SIMPL_FILTER_PARAMETER(int, SliceStep)
     Q_PROPERTY(int SliceStep READ getSliceStep WRITE setSliceStep)
 
-    DREAM3D_FILTER_PARAMETER(QString, MotionDirectionArrayName)
+    SIMPL_FILTER_PARAMETER(QString, MotionDirectionArrayName)
     Q_PROPERTY(QString MotionDirectionArrayName READ getMotionDirectionArrayName WRITE setMotionDirectionArrayName)
 
     /**

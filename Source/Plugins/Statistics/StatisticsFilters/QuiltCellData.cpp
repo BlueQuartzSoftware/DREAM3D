@@ -36,15 +36,15 @@
 
 #include "QuiltCellData.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/IntVec3FilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -85,7 +85,10 @@ void QuiltCellData::setupFilterParameters()
   parameters.push_back(IntVec3FilterParameter::New("Quilt Step (Voxels)", "QuiltStep", getQuiltStep(), FilterParameter::Parameter));
   parameters.push_back(IntVec3FilterParameter::New("Patch Size (Voxels)", "PatchSize", getPatchSize(), FilterParameter::Parameter));
 
-  parameters.push_back(DataArraySelectionFilterParameter::New("Cell Array To Quilt", "SelectedCellArrayPath", getSelectedCellArrayPath(), FilterParameter::RequiredArray));
+  {
+    DataArraySelectionFilterParameter::RequirementType req;
+    parameters.push_back(DataArraySelectionFilterParameter::New("Cell Array To Quilt", "SelectedCellArrayPath", getSelectedCellArrayPath(), FilterParameter::RequiredArray, req));
+  }
 
   parameters.push_back(StringFilterParameter::New("Output DataContainer Name", "OutputDataContainerName", getOutputDataContainerName(), FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Output AttributeMatrix Name", "OutputAttributeMatrixName", getOutputAttributeMatrixName(), FilterParameter::CreatedArray));
@@ -115,13 +118,13 @@ void QuiltCellData::readFilterParameters(AbstractFilterParametersReader* reader,
 int QuiltCellData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputDataContainerName)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(QuiltStep)
-  DREAM3D_FILTER_WRITE_PARAMETER(PatchSize)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputDataContainerName)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(QuiltStep)
+  SIMPL_FILTER_WRITE_PARAMETER(PatchSize)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

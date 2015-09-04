@@ -37,9 +37,9 @@
 #ifndef _FindBoundingBoxFeatures_H_
 #define _FindBoundingBoxFeatures_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The FindBoundingBoxFeatures class. See [Filter documentation](@ref findboundingboxfeatures) for details.
@@ -48,25 +48,25 @@ class FindBoundingBoxFeatures : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindBoundingBoxFeatures)
-    DREAM3D_STATIC_NEW_MACRO(FindBoundingBoxFeatures)
-    DREAM3D_TYPE_MACRO_SUPER(FindBoundingBoxFeatures, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FindBoundingBoxFeatures)
+    SIMPL_STATIC_NEW_MACRO(FindBoundingBoxFeatures)
+    SIMPL_TYPE_MACRO_SUPER(FindBoundingBoxFeatures, AbstractFilter)
 
     virtual ~FindBoundingBoxFeatures();
 
-    DREAM3D_FILTER_PARAMETER(bool, CalcByPhase)
+    SIMPL_FILTER_PARAMETER(bool, CalcByPhase)
     Q_PROPERTY(bool CalcByPhase READ getCalcByPhase WRITE setCalcByPhase)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
     Q_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, PhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, PhasesArrayPath)
     Q_PROPERTY(DataArrayPath PhasesArrayPath READ getPhasesArrayPath WRITE setPhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceFeaturesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceFeaturesArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceFeaturesArrayPath READ getSurfaceFeaturesArrayPath WRITE setSurfaceFeaturesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, BiasedFeaturesArrayName)
+    SIMPL_FILTER_PARAMETER(QString, BiasedFeaturesArrayName)
     Q_PROPERTY(QString BiasedFeaturesArrayName READ getBiasedFeaturesArrayName WRITE setBiasedFeaturesArrayName)
 
     /**

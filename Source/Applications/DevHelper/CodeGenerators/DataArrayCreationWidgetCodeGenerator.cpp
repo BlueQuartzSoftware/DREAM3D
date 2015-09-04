@@ -56,7 +56,11 @@ DataArrayCreationWidgetCodeGenerator::~DataArrayCreationWidgetCodeGenerator()
 // -----------------------------------------------------------------------------
 QString DataArrayCreationWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  parameters.push_back(DataArrayCreationFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", get" + getPropertyName() + "(), " + getCategory() + "));";
+  QString s;
+  QTextStream out(&s);
+  out << "  DataArrayCreationFilterParameter::RequirementType dacReq;";
+  out << "  parameters.push_back(DataArrayCreationFilterParameter::New(\"" << getHumanLabel() << "\", \"" + getPropertyName() << "\", get" + getPropertyName() << "(), " + getCategory() << ", dacReq));";
+  return s;
 }
 
 // -----------------------------------------------------------------------------
@@ -82,7 +86,7 @@ QString DataArrayCreationWidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(DataArrayPath, " + getPropertyName() + ")\n";
+  ss << "    SIMPL_FILTER_PARAMETER(DataArrayPath, " + getPropertyName() + ")\n";
   ss << "    Q_PROPERTY(DataArrayPath " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;

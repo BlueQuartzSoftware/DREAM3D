@@ -37,9 +37,9 @@
 #ifndef _FillBadData_H_
 #define _FillBadData_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The FillBadData class. See [Filter documentation](@ref fillbaddata) for details.
@@ -48,25 +48,25 @@ class FillBadData : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FillBadData)
-    DREAM3D_STATIC_NEW_MACRO(FillBadData)
-    DREAM3D_TYPE_MACRO_SUPER(FillBadData, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FillBadData)
+    SIMPL_STATIC_NEW_MACRO(FillBadData)
+    SIMPL_TYPE_MACRO_SUPER(FillBadData, AbstractFilter)
 
     virtual ~FillBadData();
 
-    DREAM3D_FILTER_PARAMETER(bool, StoreAsNewPhase)
+    SIMPL_FILTER_PARAMETER(bool, StoreAsNewPhase)
     Q_PROPERTY(bool StoreAsNewPhase READ getStoreAsNewPhase WRITE setStoreAsNewPhase)
 
-    DREAM3D_FILTER_PARAMETER(bool, ReplaceBadData)
+    SIMPL_FILTER_PARAMETER(bool, ReplaceBadData)
     Q_PROPERTY(bool ReplaceBadData READ getReplaceBadData WRITE setReplaceBadData)
 
-    DREAM3D_FILTER_PARAMETER(int, MinAllowedDefectSize)
+    SIMPL_FILTER_PARAMETER(int, MinAllowedDefectSize)
     Q_PROPERTY(int MinAllowedDefectSize READ getMinAllowedDefectSize WRITE setMinAllowedDefectSize)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
     Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
     /**

@@ -37,9 +37,9 @@
 #ifndef _GenerateVectorColors_H_
 #define _GenerateVectorColors_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The GenerateVectorColors class. See [Filter documentation](@ref generatevectorcolors) for details.
@@ -48,22 +48,22 @@ class GenerateVectorColors : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(GenerateVectorColors)
-    DREAM3D_STATIC_NEW_MACRO(GenerateVectorColors)
-    DREAM3D_TYPE_MACRO_SUPER(GenerateVectorColors, AbstractFilter)
+    SIMPL_SHARED_POINTERS(GenerateVectorColors)
+    SIMPL_STATIC_NEW_MACRO(GenerateVectorColors)
+    SIMPL_TYPE_MACRO_SUPER(GenerateVectorColors, AbstractFilter)
 
     virtual ~GenerateVectorColors();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, VectorsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, VectorsArrayPath)
     Q_PROPERTY(DataArrayPath VectorsArrayPath READ getVectorsArrayPath WRITE setVectorsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
     Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, CellVectorColorsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, CellVectorColorsArrayName)
     Q_PROPERTY(QString CellVectorColorsArrayName READ getCellVectorColorsArrayName WRITE setCellVectorColorsArrayName)
 
-    DREAM3D_FILTER_PARAMETER(bool, UseGoodVoxels)
+    SIMPL_FILTER_PARAMETER(bool, UseGoodVoxels)
     Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
 
     /**

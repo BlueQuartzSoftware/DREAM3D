@@ -37,7 +37,7 @@
 
 #include <QtCore/QMetaProperty>
 
-#include "DREAM3DLib/FilterParameters/DynamicChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/DynamicChoiceFilterParameter.h"
 
 #include "FilterParameterWidgetsDialogs.h"
 

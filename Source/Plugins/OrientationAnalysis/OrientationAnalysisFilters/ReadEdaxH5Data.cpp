@@ -42,16 +42,16 @@
 #include "EbsdLib/TSL/AngFields.h"
 #include "EbsdLib/TSL/H5OIMReader.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/InputFileFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/BooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
-#include "DREAM3DLib/FilterParameters/DynamicChoiceFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/DynamicChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 /**
  * @brief The ReadEdaxH5DataPrivate class is a private implementation of the ReadEdaxH5Data class
@@ -117,11 +117,11 @@ ReadEdaxH5Data::~ReadEdaxH5Data()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D_PIMPL_PROPERTY_DEF(ReadEdaxH5Data, Ang_Private_Data, Data)
-DREAM3D_PIMPL_PROPERTY_DEF(ReadEdaxH5Data, QStringList, FileScanNames)
-DREAM3D_PIMPL_PROPERTY_DEF(ReadEdaxH5Data, QVector<int32_t>, PatternDims)
-DREAM3D_PIMPL_PROPERTY_DEF(ReadEdaxH5Data, QString, InputFile_Cache)
-DREAM3D_PIMPL_PROPERTY_DEF(ReadEdaxH5Data, QDateTime, TimeStamp_Cache)
+SIMPL_PIMPL_PROPERTY_DEF(ReadEdaxH5Data, Ang_Private_Data, Data)
+SIMPL_PIMPL_PROPERTY_DEF(ReadEdaxH5Data, QStringList, FileScanNames)
+SIMPL_PIMPL_PROPERTY_DEF(ReadEdaxH5Data, QVector<int32_t>, PatternDims)
+SIMPL_PIMPL_PROPERTY_DEF(ReadEdaxH5Data, QString, InputFile_Cache)
+SIMPL_PIMPL_PROPERTY_DEF(ReadEdaxH5Data, QDateTime, TimeStamp_Cache)
 
 // -----------------------------------------------------------------------------
 //
@@ -161,12 +161,12 @@ void ReadEdaxH5Data::readFilterParameters(AbstractFilterParametersReader* reader
 int ReadEdaxH5Data::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(ScanName)
-  DREAM3D_FILTER_WRITE_PARAMETER(ReadPatternData)
+  SIMPL_FILTER_WRITE_PARAMETER(DataContainerName)
+  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(InputFile)
+  SIMPL_FILTER_WRITE_PARAMETER(ScanName)
+  SIMPL_FILTER_WRITE_PARAMETER(ReadPatternData)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

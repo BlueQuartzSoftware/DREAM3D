@@ -36,7 +36,7 @@
 
 #include "CalculateTriangleGroupCurvatures.h"
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 #include <tbb/task_scheduler_init.h>
 #include <tbb/task_group.h>
 #include <tbb/task.h>
@@ -44,7 +44,7 @@
 
 #include <Eigen/Dense>
 
-#include "DREAM3DLib/Math/MatrixMath.h"
+#include "SIMPLib/Math/MatrixMath.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/FindNRingNeighbors.h"
 
 // -----------------------------------------------------------------------------

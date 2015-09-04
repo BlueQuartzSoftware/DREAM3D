@@ -39,8 +39,8 @@
 #include <QtCore/QString>
 #include <QtWidgets/QMessageBox>
 
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/FilterParameters/FilterParameter.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/FilterParameters/FilterParameter.h"
 
 // -----------------------------------------------------------------------------
 //

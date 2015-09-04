@@ -36,14 +36,14 @@
 
 #include "QuickSurfaceMesh.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 
@@ -91,8 +91,14 @@
     linkedProps << "CellPhasesArrayPath" << "FacePhasesArrayName";
     parameters.push_back(LinkedBooleanFilterParameter::New("Transfer Phase Id", "TransferPhaseId", getTransferPhaseId(), linkedProps, FilterParameter::Parameter));
     parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray));
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray));
+    {
+      DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+      parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
+    }
+    {
+      DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+      parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req));
+    }
 
     parameters.push_back(StringFilterParameter::New("Data Container", "SurfaceDataContainerName", getSurfaceDataContainerName(), FilterParameter::CreatedArray));
     parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::CreatedArray));
@@ -129,16 +135,16 @@
   int QuickSurfaceMesh::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
   {
     writer->openFilterGroup(this, index);
-    DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-    DREAM3D_FILTER_WRITE_PARAMETER(SurfaceDataContainerName)
-    DREAM3D_FILTER_WRITE_PARAMETER(VertexAttributeMatrixName)
-    DREAM3D_FILTER_WRITE_PARAMETER(FaceAttributeMatrixName)
-    DREAM3D_FILTER_WRITE_PARAMETER(FacePhasesArrayName)
-    DREAM3D_FILTER_WRITE_PARAMETER(NodeTypesArrayName)
-    DREAM3D_FILTER_WRITE_PARAMETER(FaceLabelsArrayName)
-    DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-    DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-    DREAM3D_FILTER_WRITE_PARAMETER(TransferPhaseId)
+    SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+    SIMPL_FILTER_WRITE_PARAMETER(SurfaceDataContainerName)
+    SIMPL_FILTER_WRITE_PARAMETER(VertexAttributeMatrixName)
+    SIMPL_FILTER_WRITE_PARAMETER(FaceAttributeMatrixName)
+    SIMPL_FILTER_WRITE_PARAMETER(FacePhasesArrayName)
+    SIMPL_FILTER_WRITE_PARAMETER(NodeTypesArrayName)
+    SIMPL_FILTER_WRITE_PARAMETER(FaceLabelsArrayName)
+    SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+    SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+    SIMPL_FILTER_WRITE_PARAMETER(TransferPhaseId)
     writer->closeFilterGroup();
     return ++index; // we want to return the next index that was just written to
   }

@@ -38,12 +38,12 @@
 
 #include <QtCore/QString>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "SIMPLib/DataArrays/IDataArray.h"
 
 /**
  * @class SurfaceMeshToNonconformalVtk SurfaceMeshToNonconformalVtk.h IOFilters/Code/IOFiltersFilters/SurfaceMeshToNonconformalVtk.h
@@ -56,22 +56,22 @@ class SurfaceMeshToNonconformalVtk : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(SurfaceMeshToNonconformalVtk)
-    DREAM3D_STATIC_NEW_MACRO(SurfaceMeshToNonconformalVtk)
-    DREAM3D_TYPE_MACRO_SUPER(SurfaceMeshToNonconformalVtk, AbstractFilter)
+    SIMPL_SHARED_POINTERS(SurfaceMeshToNonconformalVtk)
+    SIMPL_STATIC_NEW_MACRO(SurfaceMeshToNonconformalVtk)
+    SIMPL_TYPE_MACRO_SUPER(SurfaceMeshToNonconformalVtk, AbstractFilter)
 
     virtual ~SurfaceMeshToNonconformalVtk();
 
-    DREAM3D_FILTER_PARAMETER(QString, OutputVtkFile)
+    SIMPL_FILTER_PARAMETER(QString, OutputVtkFile)
     Q_PROPERTY(QString OutputVtkFile READ getOutputVtkFile WRITE setOutputVtkFile)
 
-    DREAM3D_FILTER_PARAMETER(bool, WriteBinaryFile)
+    SIMPL_FILTER_PARAMETER(bool, WriteBinaryFile)
     Q_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshNodeTypeArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshNodeTypeArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshNodeTypeArrayPath READ getSurfaceMeshNodeTypeArrayPath WRITE setSurfaceMeshNodeTypeArrayPath)
 
     /**

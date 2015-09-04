@@ -37,9 +37,9 @@
 #ifndef _GenerateGeometryConnectivity_H_
 #define _GenerateGeometryConnectivity_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
@@ -50,19 +50,19 @@ class GenerateGeometryConnectivity : public SurfaceMeshFilter
 {
     Q_OBJECT
   public:
-    DREAM3D_SHARED_POINTERS(GenerateGeometryConnectivity)
-    DREAM3D_STATIC_NEW_MACRO(GenerateGeometryConnectivity)
-    DREAM3D_TYPE_MACRO_SUPER(GenerateGeometryConnectivity, SurfaceMeshFilter)
+    SIMPL_SHARED_POINTERS(GenerateGeometryConnectivity)
+    SIMPL_STATIC_NEW_MACRO(GenerateGeometryConnectivity)
+    SIMPL_TYPE_MACRO_SUPER(GenerateGeometryConnectivity, SurfaceMeshFilter)
 
     virtual ~GenerateGeometryConnectivity();
 
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceDataContainerName)
+    SIMPL_FILTER_PARAMETER(QString, SurfaceDataContainerName)
     Q_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
 
-    DREAM3D_FILTER_PARAMETER(bool, GenerateVertexTriangleLists)
+    SIMPL_FILTER_PARAMETER(bool, GenerateVertexTriangleLists)
     Q_PROPERTY(bool GenerateVertexTriangleLists READ getGenerateVertexTriangleLists WRITE setGenerateVertexTriangleLists)
 
-    DREAM3D_FILTER_PARAMETER(bool, GenerateTriangleNeighbors)
+    SIMPL_FILTER_PARAMETER(bool, GenerateTriangleNeighbors)
     Q_PROPERTY(bool GenerateTriangleNeighbors READ getGenerateTriangleNeighbors WRITE setGenerateTriangleNeighbors)
 
     /**

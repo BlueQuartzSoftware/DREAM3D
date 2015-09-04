@@ -38,7 +38,7 @@
 #include <QtCore/QMetaProperty>
 #include <QtCore/QSignalMapper>
 
-#include "DREAM3DLib/FilterParameters/SecondOrderPolynomialFilterParameter.h"
+#include "SIMPLib/FilterParameters/SecondOrderPolynomialFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 

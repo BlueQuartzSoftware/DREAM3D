@@ -67,12 +67,12 @@
 #include <qwt_plot_curve.h>
 #include <qwt_plot_marker.h>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataArrays/StatsDataArray.h"
-#include "DREAM3DLib/StatsData/StatsData.h"
-#include "DREAM3DLib/StatsData/PrimaryStatsData.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/DataArrays/StatsDataArray.h"
+#include "SIMPLib/StatsData/StatsData.h"
+#include "SIMPLib/StatsData/PrimaryStatsData.h"
 
 #include "OrientationLib/Texture/StatsGen.hpp"
 

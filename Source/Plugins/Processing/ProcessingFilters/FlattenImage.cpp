@@ -36,20 +36,20 @@
 
 #include "FlattenImage.h"
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 #endif
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "Processing/ProcessingConstants.h"
 
@@ -77,7 +77,7 @@ class FlattenImageImpl
       }
     }
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     void operator()(const tbb::blocked_range<size_t>& r) const
     {
       convert(r.begin(), r.end());
@@ -133,7 +133,14 @@ void FlattenImage::setupFilterParameters()
     parameters.push_back(parameter);
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Image Data", "ImageDataArrayPath", getImageDataArrayPath(), FilterParameter::RequiredArray));
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::UInt8, DREAM3D::Defaults::AnyComponentSize, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    QVector< QVector<size_t> > cDims;
+    cDims.push_back(QVector<size_t>(1, 3));
+    cDims.push_back(QVector<size_t>(1, 4));
+    req.componentDimensions = cDims;
+    parameters.push_back(DataArraySelectionFilterParameter::New("Image Data", "ImageDataArrayPath", getImageDataArrayPath(), FilterParameter::RequiredArray, req));
+  }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Flat Image Data", "FlatImageDataArrayName", getFlatImageDataArrayName(), FilterParameter::CreatedArray));
   setFilterParameters(parameters);
@@ -157,10 +164,10 @@ void FlattenImage::readFilterParameters(AbstractFilterParametersReader* reader, 
 int FlattenImage::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(FlatImageDataArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(ImageDataArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FlattenMethod)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(FlatImageDataArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(ImageDataArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FlattenMethod)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -175,9 +182,11 @@ void FlattenImage::dataCheck()
   DataArrayPath tempPath;
   int32_t numImageComp = 1;
 
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getImageDataArrayPath().getDataContainerName());
+
   IDataArray::Pointer iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getImageDataArrayPath());
-  if(getErrorCondition() < 0) { return; }
-  if(NULL != iDataArray.get())
+  if (getErrorCondition() < 0) { return; }
+  if (NULL != iDataArray.get())
   {
     numImageComp = iDataArray->getNumberOfComponents();
   }
@@ -234,7 +243,7 @@ void FlattenImage::execute()
     Bfactor = 0.07f;
   }
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
 #endif
@@ -242,7 +251,7 @@ void FlattenImage::execute()
   int32_t comp = m_ImageDataPtr.lock()->getNumberOfComponents();
 
   //  qDebug() << "FlattenImage: " << m_ConversionFactor << "\n";
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),

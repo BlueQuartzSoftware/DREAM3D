@@ -37,15 +37,15 @@
 #ifndef _AxisAngleWidgetCodeGenerator_H_
 #define _AxisAngleWidgetCodeGenerator_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "DevHelper/CodeGenerators/FPCodeGenerator.h"
 
 class AxisAngleWidgetCodeGenerator : public FPCodeGenerator
 {
   public:
-    DREAM3D_SHARED_POINTERS(AxisAngleWidgetCodeGenerator)
+    SIMPL_SHARED_POINTERS(AxisAngleWidgetCodeGenerator)
 
     static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
     {

@@ -37,9 +37,9 @@
 #ifndef _FindBoundaryCells_H_
 #define _FindBoundaryCells_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The FindBoundaryCells class. See [Filter documentation](@ref findboundarycells) for details.
@@ -48,16 +48,16 @@ class FindBoundaryCells : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindBoundaryCells)
-    DREAM3D_STATIC_NEW_MACRO(FindBoundaryCells)
-    DREAM3D_TYPE_MACRO_SUPER(FindBoundaryCells, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FindBoundaryCells)
+    SIMPL_STATIC_NEW_MACRO(FindBoundaryCells)
+    SIMPL_TYPE_MACRO_SUPER(FindBoundaryCells, AbstractFilter)
 
     virtual ~FindBoundaryCells();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, BoundaryCellsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, BoundaryCellsArrayName)
     Q_PROPERTY(QString BoundaryCellsArrayName READ getBoundaryCellsArrayName WRITE setBoundaryCellsArrayName)
 
     /**

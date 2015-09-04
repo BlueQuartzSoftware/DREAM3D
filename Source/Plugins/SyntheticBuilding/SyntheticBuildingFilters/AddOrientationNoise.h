@@ -37,9 +37,9 @@
 #ifndef _AddOrientationNoise_H_
 #define _AddOrientationNoise_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The AddOrientationNoise class. See [Filter documentation](@ref addorientationnoise) for details.
@@ -48,16 +48,16 @@ class AddOrientationNoise : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(AddOrientationNoise)
-    DREAM3D_STATIC_NEW_MACRO(AddOrientationNoise)
-    DREAM3D_TYPE_MACRO_SUPER(AddOrientationNoise, AbstractFilter)
+    SIMPL_SHARED_POINTERS(AddOrientationNoise)
+    SIMPL_STATIC_NEW_MACRO(AddOrientationNoise)
+    SIMPL_TYPE_MACRO_SUPER(AddOrientationNoise, AbstractFilter)
 
     virtual ~AddOrientationNoise();
 
-    DREAM3D_FILTER_PARAMETER(float, Magnitude)
+    SIMPL_FILTER_PARAMETER(float, Magnitude)
     Q_PROPERTY(float Magnitude READ getMagnitude WRITE setMagnitude)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
     Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
     /**

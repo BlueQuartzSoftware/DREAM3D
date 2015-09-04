@@ -43,8 +43,8 @@
 
 #include "QtSupportLib/FaderWidget.h"
 
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
@@ -105,7 +105,6 @@ class DREAM3DWidgetsLib_EXPORT AttributeMatrixSelectionWidget : public FilterPar
 
   protected:
     void populateComboBoxes();
-    void populateAttributeMatrixList();
 
     DataContainerArrayProxy generateDCAProxy();
     void setSelectedPath(QString dcName, QString attrMatName, QString attrArrName);

@@ -36,22 +36,22 @@
 
 #include "FindProjectedImageStatistics.h"
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 #endif
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/TemplateHelpers.hpp"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/TemplateHelpers.hpp"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "Processing/ProcessingConstants.h"
 
@@ -117,7 +117,7 @@ class CalcProjectedStatsImpl
       }
     }
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     void operator()(const tbb::blocked_range<size_t>& r) const
     {
       convert(r.begin(), r.end());
@@ -184,7 +184,22 @@ void FindProjectedImageStatistics::setupFilterParameters()
     parameters.push_back(parameter);
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array to Quantify", "SelectedArrayPath", getSelectedArrayPath(), FilterParameter::RequiredArray));
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::Defaults::AnyPrimitive, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    QVector<QString> daTypes;
+    daTypes.push_back(DREAM3D::TypeNames::Int8);
+    daTypes.push_back(DREAM3D::TypeNames::Int16);
+    daTypes.push_back(DREAM3D::TypeNames::Int32);
+    daTypes.push_back(DREAM3D::TypeNames::Int64);
+    daTypes.push_back(DREAM3D::TypeNames::UInt8);
+    daTypes.push_back(DREAM3D::TypeNames::UInt16);
+    daTypes.push_back(DREAM3D::TypeNames::UInt32);
+    daTypes.push_back(DREAM3D::TypeNames::UInt64);
+    daTypes.push_back(DREAM3D::TypeNames::Float);
+    daTypes.push_back(DREAM3D::TypeNames::Double);
+    req.daTypes = daTypes;
+    parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array to Quantify", "SelectedArrayPath", getSelectedArrayPath(), FilterParameter::RequiredArray, req));
+  }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Projected Image Min", "ProjectedImageMinArrayName", getProjectedImageMinArrayName(), FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Projected Image Max", "ProjectedImageMaxArrayName", getProjectedImageMaxArrayName(), FilterParameter::CreatedArray));
@@ -214,14 +229,14 @@ void FindProjectedImageStatistics::readFilterParameters(AbstractFilterParameters
 int FindProjectedImageStatistics::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(ProjectedImageVarArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(ProjectedImageStdArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(ProjectedImageAvgArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(ProjectedImageMaxArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(ProjectedImageMinArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SelectedArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(Plane)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(ProjectedImageVarArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(ProjectedImageStdArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(ProjectedImageAvgArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(ProjectedImageMaxArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(ProjectedImageMinArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(SelectedArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(Plane)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -306,7 +321,7 @@ void FindProjectedImageStatistics::execute()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getSelectedArrayPath().getDataContainerName());
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
 #endif
@@ -380,7 +395,7 @@ void FindProjectedImageStatistics::execute()
   {
     Int8ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<Int8ArrayType>(m_InDataPtr.lock());
     int8_t* cPtr = cellArray->getPointer(0);
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, count), CalcProjectedStatsImpl<int8_t>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth), tbb::auto_partitioner());
@@ -396,7 +411,7 @@ void FindProjectedImageStatistics::execute()
   {
     UInt8ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<UInt8ArrayType>(m_InDataPtr.lock());
     uint8_t* cPtr = cellArray->getPointer(0);
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, count), CalcProjectedStatsImpl<uint8_t>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth), tbb::auto_partitioner());
@@ -412,7 +427,7 @@ void FindProjectedImageStatistics::execute()
   {
     Int16ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<Int16ArrayType>(m_InDataPtr.lock());
     int16_t* cPtr = cellArray->getPointer(0);
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, count), CalcProjectedStatsImpl<int16_t>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth), tbb::auto_partitioner());
@@ -428,7 +443,7 @@ void FindProjectedImageStatistics::execute()
   {
     UInt16ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<UInt16ArrayType>(m_InDataPtr.lock());
     uint16_t* cPtr = cellArray->getPointer(0);
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, count), CalcProjectedStatsImpl<uint16_t>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth), tbb::auto_partitioner());
@@ -444,7 +459,7 @@ void FindProjectedImageStatistics::execute()
   {
     Int32ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<Int32ArrayType>(m_InDataPtr.lock());
     int32_t* cPtr = cellArray->getPointer(0);
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, count), CalcProjectedStatsImpl<int32_t>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth), tbb::auto_partitioner());
@@ -460,7 +475,7 @@ void FindProjectedImageStatistics::execute()
   {
     UInt32ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<UInt32ArrayType>(m_InDataPtr.lock());
     uint32_t* cPtr = cellArray->getPointer(0);
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, count), CalcProjectedStatsImpl<uint32_t>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth), tbb::auto_partitioner());
@@ -476,7 +491,7 @@ void FindProjectedImageStatistics::execute()
   {
     Int64ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<Int64ArrayType>(m_InDataPtr.lock());
     int64_t* cPtr = cellArray->getPointer(0);
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, count), CalcProjectedStatsImpl<int64_t>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth), tbb::auto_partitioner());
@@ -492,7 +507,7 @@ void FindProjectedImageStatistics::execute()
   {
     UInt64ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<UInt64ArrayType>(m_InDataPtr.lock());
     uint64_t* cPtr = cellArray->getPointer(0);
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, count), CalcProjectedStatsImpl<uint64_t>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth), tbb::auto_partitioner());
@@ -508,7 +523,7 @@ void FindProjectedImageStatistics::execute()
   {
     FloatArrayType::Pointer cellArray = boost::dynamic_pointer_cast<FloatArrayType>(m_InDataPtr.lock());
     float* cPtr = cellArray->getPointer(0);
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, count), CalcProjectedStatsImpl<float>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth), tbb::auto_partitioner());
@@ -524,7 +539,7 @@ void FindProjectedImageStatistics::execute()
   {
     DoubleArrayType::Pointer cellArray = boost::dynamic_pointer_cast<DoubleArrayType>(m_InDataPtr.lock());
     double* cPtr = cellArray->getPointer(0);
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, count), CalcProjectedStatsImpl<double>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth), tbb::auto_partitioner());

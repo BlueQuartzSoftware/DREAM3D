@@ -36,8 +36,8 @@
 #ifndef _PoleFigureUtilities_H_
 #define _PoleFigureUtilities_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationLib/OrientationLib.h"
 

@@ -37,9 +37,9 @@
 #ifndef _FindCAxisLocations_H_
 #define _FindCAxisLocations_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
@@ -50,16 +50,16 @@ class FindCAxisLocations : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindCAxisLocations)
-    DREAM3D_STATIC_NEW_MACRO(FindCAxisLocations)
-    DREAM3D_TYPE_MACRO_SUPER(FindCAxisLocations, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FindCAxisLocations)
+    SIMPL_STATIC_NEW_MACRO(FindCAxisLocations)
+    SIMPL_TYPE_MACRO_SUPER(FindCAxisLocations, AbstractFilter)
 
     virtual ~FindCAxisLocations();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
     Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, CAxisLocationsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, CAxisLocationsArrayName)
     Q_PROPERTY(QString CAxisLocationsArrayName READ getCAxisLocationsArrayName WRITE setCAxisLocationsArrayName)
 
     /**

@@ -50,18 +50,18 @@
 #include <QtCore/QString>
 #include <QtCore/QMetaProperty>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/Observer.h"
-#include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/Common/FilterFactory.hpp"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
-#include "DREAM3DLib/Plugin/DREAM3DPluginLoader.h"
-#include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/DREAM3DFilters.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/Observer.h"
+#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/Common/FilterFactory.hpp"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Plugin/ISIMPLibPlugin.h"
+#include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
+#include "SIMPLib/Utilities/QMetaObjectUtilities.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/SIMPLibFilters.h"
 
-#include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
+#include "SIMPLib/Utilities/UnitTestSupport.hpp"
 #include "DREAM3DTestFileLocations.h"
 
 #include "PreflightVerify.h"
@@ -512,7 +512,7 @@ int main(int argc, char** argv)
   // Load all the plugins and
   // Register all the filters including trying to load those from Plugins
   FilterManager* fm = FilterManager::Instance();
-  DREAM3DPluginLoader::LoadPluginFilters(fm);
+  SIMPLibPluginLoader::LoadPluginFilters(fm);
   // THIS IS A VERY IMPORTANT LINE: It will register all the known filters in the dream3d library. This
   // will NOT however get filters from plugins. We are going to have to figure out how to compile filters
   // into their own plugin and load the plugins from a command line.

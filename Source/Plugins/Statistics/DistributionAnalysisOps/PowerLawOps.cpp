@@ -38,7 +38,7 @@
 #include <limits>
 #include <numeric>
 
-#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 // -----------------------------------------------------------------------------
 //

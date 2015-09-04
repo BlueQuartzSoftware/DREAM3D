@@ -45,7 +45,7 @@
 #include <QtCore/QByteArray>
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
-#include "DREAM3DLib/Math/QuaternionMath.hpp"
+#include "SIMPLib/Math/QuaternionMath.hpp"
 
 
 
@@ -159,8 +159,11 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
 
   for(int i = 0; i < numOrients; i++)
   {
+    float weight = 0.0f;
+    float sigma = 1.0f;
     buf = reader.readLine();
-
+    // Skip any lines that start with a '#' character
+    if(buf[0] == '#') { continue; }
     buf = buf.trimmed();
 
     // Remove multiple Delimiters if wanted by the user.
@@ -176,6 +179,8 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
       euler[0] = tokens[0].toFloat(&ok);
       euler[1] = tokens[1].toFloat(&ok);
       euler[2] = tokens[2].toFloat(&ok);
+      weight = tokens[3].toFloat(&ok);
+      sigma = tokens[4].toFloat(&ok);
     }
     else if (m_AngleRepresentation == QuaternionAngles)
     {
@@ -185,6 +190,8 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
       quat[2] = tokens[2].toFloat(&ok);
       quat[3] = tokens[3].toFloat(&ok);
       FOrientTransformsType::qu2eu(quat, euler);
+      weight = tokens[4].toFloat(&ok);
+      sigma = tokens[5].toFloat(&ok);
     }
     else if (m_AngleRepresentation == RodriguezAngles)
     {
@@ -193,25 +200,24 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
       rod[1] = tokens[1].toFloat(&ok);
       rod[2] = tokens[2].toFloat(&ok);
       FOrientTransformsType::ro2eu(rod, euler);
+      weight = tokens[3].toFloat(&ok);
+      sigma = tokens[4].toFloat(&ok);
     }
 
     // Values in File are in Radians and the user wants them in Degrees
     if (m_FileAnglesInDegrees == false && m_OutputAnglesInDegrees == true)
     {
-      euler[0] = euler[0] * DREAM3D::Constants::k_RadToDeg;
-      euler[1] = euler[1] * DREAM3D::Constants::k_RadToDeg;
-      euler[2] = euler[2] * DREAM3D::Constants::k_RadToDeg;
+      euler[0] = euler[0] * SIMPLib::Constants::k_RadToDeg;
+      euler[1] = euler[1] * SIMPLib::Constants::k_RadToDeg;
+      euler[2] = euler[2] * SIMPLib::Constants::k_RadToDeg;
     }
     // Values are in Degrees but user wants them in Radians
     else if (m_FileAnglesInDegrees == true && m_OutputAnglesInDegrees == false)
     {
-      euler[0] = euler[0] * DREAM3D::Constants::k_DegToRad;
-      euler[1] = euler[1] * DREAM3D::Constants::k_DegToRad;
-      euler[2] = euler[2] * DREAM3D::Constants::k_DegToRad;
+      euler[0] = euler[0] * SIMPLib::Constants::k_DegToRad;
+      euler[1] = euler[1] * SIMPLib::Constants::k_DegToRad;
+      euler[2] = euler[2] * SIMPLib::Constants::k_DegToRad;
     }
-
-    float weight = tokens[3].toFloat(&ok);
-    float sigma = tokens[4].toFloat(&ok);
 
     // Store the values into our array
     angles->setComponent(i, 0, euler[0]);

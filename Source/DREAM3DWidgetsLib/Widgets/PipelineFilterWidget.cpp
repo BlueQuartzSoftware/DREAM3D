@@ -55,14 +55,14 @@
 
 #include "QtSupportLib/DREAM3DStyles.h"
 
-#include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/Common/IFilterFactory.hpp"
-#include "DREAM3DLib/Common/FilterFactory.hpp"
-#include "DREAM3DLib/FilterParameters/LinkedChoicesFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataContainerReaderFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/InputFileFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/InputPathFilterParameter.h"
+#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/Common/IFilterFactory.hpp"
+#include "SIMPLib/Common/FilterFactory.hpp"
+#include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataContainerReaderFilterParameter.h"
+#include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/InputPathFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/LinkedBooleanWidget.h"
@@ -713,11 +713,11 @@ void PipelineFilterWidget::changeStyle()
 
   if(m_HasPreflightWarnings)
   {
-    ss << "border: 3px solid rgb(172, 168, 0);";
+    ss << "border: 2px solid rgb(172, 168, 0);";
   }
   else if(m_IsSelected == true )
   {
-    ss << "border: 3px solid MediumBlue;";
+    ss << "border: 2px solid MediumBlue;";
   }
   else
   {
@@ -746,7 +746,7 @@ void PipelineFilterWidget::updateWidgetStyle()
   }
   else
   {
-    ss << "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(185, 185, 185, 255), stop:0.5 rgba(226, 226, 226, 255), stop:1 rgba(150, 150, 150, 255));\n";
+    ss << "background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(185, 185, 185, 255), stop:0.5 rgba(216, 216, 216, 255), stop:1 rgba(170, 170, 170, 255));\n";
   }
 
   ss << "background-position: top ;\n background-repeat: repeat-x;";
@@ -764,9 +764,10 @@ void PipelineFilterWidget::updateWidgetStyle()
 #elif defined(Q_OS_MAC)
   ss << "font: 100 12pt \"" << DREAM3DStyles::GetUIFont() << "\";";
 #else
-  ss << "font: 100 10pt \"" << DREAM3DStyles::GetUIFont() << "\";";
+  ss << "font: 100 9pt \"" << DREAM3DStyles::GetUIFont() << "\";";
+  ss << "font-weight: bold;";
 #endif
-  ss << "/* font-weight: bold; */";
+
   if (m_HasPreflightErrors == true)
   {
     ss << "color: rgb(240, 240, 240);";

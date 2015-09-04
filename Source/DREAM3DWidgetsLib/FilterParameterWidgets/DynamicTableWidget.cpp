@@ -39,10 +39,10 @@
 
 #include <QMessageBox>
 
-#include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
-#include "DREAM3DLib/FilterParameters/FilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DynamicTableData.h"
-#include "DREAM3DLib/FilterParameters/DynamicTableFilterParameter.h"
+#include "SIMPLib/Plugin/ISIMPLibPlugin.h"
+#include "SIMPLib/FilterParameters/FilterParameter.h"
+#include "SIMPLib/FilterParameters/DynamicTableData.h"
+#include "SIMPLib/FilterParameters/DynamicTableFilterParameter.h"
 
 #include "FilterParameterWidgetsDialogs.h"
 

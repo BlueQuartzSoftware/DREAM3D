@@ -37,12 +37,12 @@
 #ifndef _InsertPrecipitatePhases_H_
 #define _InsertPrecipitatePhases_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/NeighborList.hpp"
-#include "DREAM3DLib/DataArrays/StatsDataArray.h"
-#include "DREAM3DLib/Geometry/ShapeOps/ShapeOps.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/NeighborList.hpp"
+#include "SIMPLib/DataArrays/StatsDataArray.h"
+#include "SIMPLib/Geometry/ShapeOps/ShapeOps.h"
 #include "OrientationLib/SpaceGroupOps/CubicOps.h"
 #include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
@@ -66,77 +66,83 @@ class InsertPrecipitatePhases : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(InsertPrecipitatePhases)
-    DREAM3D_STATIC_NEW_MACRO(InsertPrecipitatePhases)
-    DREAM3D_TYPE_MACRO_SUPER(InsertPrecipitatePhases, AbstractFilter)
+    SIMPL_SHARED_POINTERS(InsertPrecipitatePhases)
+    SIMPL_STATIC_NEW_MACRO(InsertPrecipitatePhases)
+    SIMPL_TYPE_MACRO_SUPER(InsertPrecipitatePhases, AbstractFilter)
 
     virtual ~InsertPrecipitatePhases();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(ClusteringListArrayName)
+    SIMPL_INSTANCE_STRING_PROPERTY(ClusteringListArrayName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
+    SIMPL_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
 
-    DREAM3D_FILTER_PARAMETER(QString, CsvOutputFile)
+    SIMPL_FILTER_PARAMETER(QString, CsvOutputFile)
     Q_PROPERTY(QString CsvOutputFile READ getCsvOutputFile WRITE setCsvOutputFile)
 
-    DREAM3D_FILTER_PARAMETER(bool, HavePrecips)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, MaskArrayPath)
+    Q_PROPERTY(DataArrayPath MaskArrayPath READ getMaskArrayPath WRITE setMaskArrayPath)
+
+    SIMPL_FILTER_PARAMETER(bool, UseMask)
+    Q_PROPERTY(bool UseMask READ getUseMask WRITE setUseMask)
+
+    SIMPL_FILTER_PARAMETER(bool, HavePrecips)
     Q_PROPERTY(bool HavePrecips READ getHavePrecips WRITE setHavePrecips)
 
-    DREAM3D_FILTER_PARAMETER(QString, PrecipInputFile)
+    SIMPL_FILTER_PARAMETER(QString, PrecipInputFile)
     Q_PROPERTY(QString PrecipInputFile READ getPrecipInputFile WRITE setPrecipInputFile)
 
-    DREAM3D_FILTER_PARAMETER(bool, PeriodicBoundaries)
+    SIMPL_FILTER_PARAMETER(bool, PeriodicBoundaries)
     Q_PROPERTY(bool PeriodicBoundaries READ getPeriodicBoundaries WRITE setPeriodicBoundaries)
 
-    DREAM3D_FILTER_PARAMETER(bool, MatchRDF)
+    SIMPL_FILTER_PARAMETER(bool, MatchRDF)
     Q_PROPERTY(bool MatchRDF READ getMatchRDF WRITE setMatchRDF)
 
-    DREAM3D_FILTER_PARAMETER(bool, WriteGoalAttributes)
+    SIMPL_FILTER_PARAMETER(bool, WriteGoalAttributes)
     Q_PROPERTY(bool WriteGoalAttributes READ getWriteGoalAttributes WRITE setWriteGoalAttributes)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, InputStatsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, InputStatsArrayPath)
     Q_PROPERTY(DataArrayPath InputStatsArrayPath READ getInputStatsArrayPath WRITE setInputStatsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, InputPhaseTypesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, InputPhaseTypesArrayPath)
     Q_PROPERTY(DataArrayPath InputPhaseTypesArrayPath READ getInputPhaseTypesArrayPath WRITE setInputPhaseTypesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, InputShapeTypesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, InputShapeTypesArrayPath)
     Q_PROPERTY(DataArrayPath InputShapeTypesArrayPath READ getInputShapeTypesArrayPath WRITE setInputShapeTypesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
     Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, BoundaryCellsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, BoundaryCellsArrayPath)
     Q_PROPERTY(DataArrayPath BoundaryCellsArrayPath READ getBoundaryCellsArrayPath WRITE setBoundaryCellsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
     Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, NumCellsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, NumCellsArrayName)
     Q_PROPERTY(QString NumCellsArrayName READ getNumCellsArrayName WRITE setNumCellsArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, EquivalentDiametersArrayName)
+    SIMPL_FILTER_PARAMETER(QString, EquivalentDiametersArrayName)
     Q_PROPERTY(QString EquivalentDiametersArrayName READ getEquivalentDiametersArrayName WRITE setEquivalentDiametersArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, VolumesArrayName)
+    SIMPL_FILTER_PARAMETER(QString, VolumesArrayName)
     Q_PROPERTY(QString VolumesArrayName READ getVolumesArrayName WRITE setVolumesArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, Omega3sArrayName)
+    SIMPL_FILTER_PARAMETER(QString, Omega3sArrayName)
     Q_PROPERTY(QString Omega3sArrayName READ getOmega3sArrayName WRITE setOmega3sArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, CentroidsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, CentroidsArrayName)
     Q_PROPERTY(QString CentroidsArrayName READ getCentroidsArrayName WRITE setCentroidsArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, AxisEulerAnglesArrayName)
+    SIMPL_FILTER_PARAMETER(QString, AxisEulerAnglesArrayName)
     Q_PROPERTY(QString AxisEulerAnglesArrayName READ getAxisEulerAnglesArrayName WRITE setAxisEulerAnglesArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, AxisLengthsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, AxisLengthsArrayName)
     Q_PROPERTY(QString AxisLengthsArrayName READ getAxisLengthsArrayName WRITE setAxisLengthsArrayName)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, NumFeaturesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, NumFeaturesArrayPath)
     Q_PROPERTY(DataArrayPath NumFeaturesArrayPath READ getNumFeaturesArrayPath WRITE setNumFeaturesArrayPath)
 
     /**
@@ -230,12 +236,11 @@ class InsertPrecipitatePhases : public AbstractFilter
     /**
      * @brief generate_precipitate Creates a precipitate by sampling the size and morphological statistical distributions
      * @param phase Index of the Ensemble type for the Feature to be generated
-     * @param Seed Value to intialize random number generator
      * @param precip Precip_t struct pointer to be intialized
      * @param shapeclass Type of precipitate shape to be generated
      * @param OrthoOps Pointer to SpaceGroupOps object
      */
-    void generate_precipitate(int32_t phase, uint64_t Seed, Precip_t* precip, uint32_t shapeclass, SpaceGroupOps::Pointer OrthoOps);
+    void generate_precipitate(int32_t phase, Precip_t* precip, uint32_t shapeclass, SpaceGroupOps::Pointer OrthoOps);
 
     /**
      * @brief load_precipitates Reads a list of precipitates from a file to be used as the packed volume
@@ -278,7 +283,7 @@ class InsertPrecipitatePhases : public AbstractFilter
      * @param gremove Index used to determine which precipitate to remove
      * @param exlusionZonesPtr Array of exclusion zone Feature Ids for each packing point
      */
-    void update_exclusionZones(size_t gadd, int32_t gremove, Int32ArrayType::Pointer exlusionZonesPtr);
+    void update_exclusionZones(int32_t gadd, int32_t gremove, Int32ArrayType::Pointer exlusionZonesPtr);
 
     /**
      * @brief check_for_overlap Checks if the current placement will result in overlap for precipitate gNum
@@ -321,7 +326,7 @@ class InsertPrecipitatePhases : public AbstractFilter
      * @param volume Volume for a given precipitate
      * @return Normalized RDF
      */
-    std::vector<float> normalizeRDF(std::vector<float> rdf, int num_bins, float stepsize, float rdfmin, int32_t numPPTfeatures, float volume);
+    std::vector<float> normalizeRDF(std::vector<float> rdf, int num_bins, float stepsize, float rdfmin, int32_t numPPTfeatures);
 
     /**
      * @brief check_RDFerror Computes the error between the current radial distribution function
@@ -392,7 +397,6 @@ class InsertPrecipitatePhases : public AbstractFilter
 
   private:
     int32_t m_FirstPrecipitateFeature;
-    uint64_t Seed;
     float m_SizeX;
     float m_SizeY;
     float m_SizeZ;
@@ -400,22 +404,19 @@ class InsertPrecipitatePhases : public AbstractFilter
     float m_YRes;
     float m_ZRes;
     float m_TotalVol;
+    float m_UseableTotalVol;
     int64_t m_XPoints;
     int64_t m_YPoints;
     int64_t m_ZPoints;
     int64_t m_TotalPoints;
 
-    QMap<uint32_t, ShapeOps*> m_ShapeOps;
-    ShapeOps::Pointer m_UnknownShapeOps;
-    ShapeOps::Pointer m_CubicOctohedronOps;
-    ShapeOps::Pointer m_CylinderOps;
-    ShapeOps::Pointer m_EllipsoidOps;
-    ShapeOps::Pointer m_SuperEllipsoidOps;
-
+    // Cell Data - make sure these are all initialized to NULL in the constructor
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_DATAARRAY_VARIABLE(bool, Mask)
     DEFINE_DATAARRAY_VARIABLE(int8_t, BoundaryCells)
 
+    // Feature Data - make sure these are all initialized to NULL in the constructor
     DEFINE_DATAARRAY_VARIABLE(float, AxisEulerAngles)
     DEFINE_DATAARRAY_VARIABLE(float, Centroids)
     DEFINE_DATAARRAY_VARIABLE(float, AxisLengths)
@@ -426,14 +427,22 @@ class InsertPrecipitatePhases : public AbstractFilter
     DEFINE_DATAARRAY_VARIABLE(int32_t, NumCells)
     NeighborList<float>::WeakPointer m_ClusteringList;
 
+    // Ensemble Data - make sure these are all initialized to NULL in the constructor
     DEFINE_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
     DEFINE_DATAARRAY_VARIABLE(uint32_t, ShapeTypes)
     DEFINE_DATAARRAY_VARIABLE(int32_t, NumFeatures)
 
+    // All other private variables
+    QVector<ShapeOps::Pointer> m_ShapeOps;
+    ShapeOps::Pointer m_UnknownShapeOps;
+    ShapeOps::Pointer m_CubicOctohedronOps;
+    ShapeOps::Pointer m_CylinderOps;
+    ShapeOps::Pointer m_EllipsoidOps;
+    ShapeOps::Pointer m_SuperEllipsoidOps;
+    OrthoRhombicOps::Pointer m_OrthoOps;
+
     int64_t* m_Neighbors;
     StatsDataArray::WeakPointer m_StatsDataArray;
-
-    OrthoRhombicOps::Pointer m_OrthoOps;
 
     std::vector<std::vector<int64_t> > columnlist;
     std::vector<std::vector<int64_t> > rowlist;
@@ -441,6 +450,8 @@ class InsertPrecipitatePhases : public AbstractFilter
 
     std::vector<size_t> pointsToAdd;
     std::vector<size_t> pointsToRemove;
+
+    uint64_t m_Seed;
 
     std::vector<std::vector<float> > featuresizedist;
     std::vector<std::vector<float> > simfeaturesizedist;

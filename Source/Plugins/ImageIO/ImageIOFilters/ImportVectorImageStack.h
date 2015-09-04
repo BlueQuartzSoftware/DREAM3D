@@ -38,11 +38,11 @@
 
 #include <QtCore/QString>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/IDataArray.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 
 #include "ImageIO/ImageIOConstants.h"
 /**
@@ -56,36 +56,36 @@ class ImportVectorImageStack : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(ImportVectorImageStack)
-    DREAM3D_STATIC_NEW_MACRO(ImportVectorImageStack)
-    DREAM3D_TYPE_MACRO_SUPER(ImportVectorImageStack, AbstractFilter)
+    SIMPL_SHARED_POINTERS(ImportVectorImageStack)
+    SIMPL_STATIC_NEW_MACRO(ImportVectorImageStack)
+    SIMPL_TYPE_MACRO_SUPER(ImportVectorImageStack, AbstractFilter)
 
     virtual ~ImportVectorImageStack();
 
-    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
+    SIMPL_FILTER_PARAMETER(QString, DataContainerName)
     Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
-    DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
     Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(int64_t, StartIndex)
-    DREAM3D_FILTER_PARAMETER(int64_t, EndIndex)
-    DREAM3D_FILTER_PARAMETER(int64_t, StartComp)
-    DREAM3D_FILTER_PARAMETER(int64_t, EndComp)
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, Origin)
+    SIMPL_FILTER_PARAMETER(int64_t, StartIndex)
+    SIMPL_FILTER_PARAMETER(int64_t, EndIndex)
+    SIMPL_FILTER_PARAMETER(int64_t, StartComp)
+    SIMPL_FILTER_PARAMETER(int64_t, EndComp)
+    SIMPL_FILTER_PARAMETER(FloatVec3_t, Resolution)
+    SIMPL_FILTER_PARAMETER(FloatVec3_t, Origin)
 
-    DREAM3D_FILTER_PARAMETER(QString, InputPath)
-    DREAM3D_FILTER_PARAMETER(QString, FilePrefix)
-    DREAM3D_FILTER_PARAMETER(QString, Separator)
-    DREAM3D_FILTER_PARAMETER(QString, FileSuffix)
-    DREAM3D_FILTER_PARAMETER(QString, FileExtension)
-    DREAM3D_FILTER_PARAMETER(int, PaddingDigits)
-    DREAM3D_FILTER_PARAMETER(uint32_t, RefFrameZDir)
+    SIMPL_FILTER_PARAMETER(QString, InputPath)
+    SIMPL_FILTER_PARAMETER(QString, FilePrefix)
+    SIMPL_FILTER_PARAMETER(QString, Separator)
+    SIMPL_FILTER_PARAMETER(QString, FileSuffix)
+    SIMPL_FILTER_PARAMETER(QString, FileExtension)
+    SIMPL_FILTER_PARAMETER(int, PaddingDigits)
+    SIMPL_FILTER_PARAMETER(uint32_t, RefFrameZDir)
 
-    DREAM3D_FILTER_PARAMETER(int, ImageVector)
+    SIMPL_FILTER_PARAMETER(int, ImageVector)
     Q_PROPERTY(int ImageVector READ getImageVector WRITE setImageVector)
 
-    DREAM3D_FILTER_PARAMETER(QString, VectorDataArrayName)
+    SIMPL_FILTER_PARAMETER(QString, VectorDataArrayName)
     Q_PROPERTY(QString VectorDataArrayName READ getVectorDataArrayName WRITE setVectorDataArrayName)
 
     /**

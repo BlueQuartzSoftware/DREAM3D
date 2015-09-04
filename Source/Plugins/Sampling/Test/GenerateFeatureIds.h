@@ -4,9 +4,9 @@
 
 
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Common/AbstractFilter.h"
 
 #include "TestFileLocations.h"
 
@@ -18,16 +18,16 @@ class GenerateFeatureIds : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(GenerateFeatureIds)
-    DREAM3D_STATIC_NEW_MACRO(GenerateFeatureIds)
-    DREAM3D_TYPE_MACRO_SUPER(GenerateFeatureIds, AbstractFilter)
+    SIMPL_SHARED_POINTERS(GenerateFeatureIds)
+    SIMPL_STATIC_NEW_MACRO(GenerateFeatureIds)
+    SIMPL_TYPE_MACRO_SUPER(GenerateFeatureIds, AbstractFilter)
 
     virtual ~GenerateFeatureIds() {}
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    SIMPL_INSTANCE_STRING_PROPERTY(DataContainerName)
     //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
+    SIMPL_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    SIMPL_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
+    SIMPL_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
 
     virtual const QString getGroupName()
     {
@@ -125,9 +125,9 @@ class CreateDataContainer : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(CreateDataContainer)
-    DREAM3D_STATIC_NEW_MACRO(CreateDataContainer)
-    DREAM3D_TYPE_MACRO_SUPER(CreateDataContainer, AbstractFilter)
+    SIMPL_SHARED_POINTERS(CreateDataContainer)
+    SIMPL_STATIC_NEW_MACRO(CreateDataContainer)
+    SIMPL_TYPE_MACRO_SUPER(CreateDataContainer, AbstractFilter)
 
     virtual ~CreateDataContainer() {}
 

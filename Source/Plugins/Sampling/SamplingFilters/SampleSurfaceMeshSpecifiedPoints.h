@@ -37,9 +37,9 @@
 #ifndef _SampleSurfaceMeshSpecifiedPoints_H_
 #define _SampleSurfaceMeshSpecifiedPoints_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "Sampling/SamplingFilters/SampleSurfaceMesh.h"
 
@@ -50,16 +50,16 @@ class SampleSurfaceMeshSpecifiedPoints : public SampleSurfaceMesh
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(SampleSurfaceMeshSpecifiedPoints)
-    DREAM3D_STATIC_NEW_MACRO(SampleSurfaceMeshSpecifiedPoints)
-    DREAM3D_TYPE_MACRO_SUPER(SampleSurfaceMeshSpecifiedPoints, AbstractFilter)
+    SIMPL_SHARED_POINTERS(SampleSurfaceMeshSpecifiedPoints)
+    SIMPL_STATIC_NEW_MACRO(SampleSurfaceMeshSpecifiedPoints)
+    SIMPL_TYPE_MACRO_SUPER(SampleSurfaceMeshSpecifiedPoints, AbstractFilter)
 
     virtual ~SampleSurfaceMeshSpecifiedPoints();
 
-    DREAM3D_FILTER_PARAMETER(QString, InputFilePath)
+    SIMPL_FILTER_PARAMETER(QString, InputFilePath)
     Q_PROPERTY(QString InputFilePath READ getInputFilePath WRITE setInputFilePath)
 
-    DREAM3D_FILTER_PARAMETER(QString, OutputFilePath)
+    SIMPL_FILTER_PARAMETER(QString, OutputFilePath)
     Q_PROPERTY(QString OutputFilePath READ getOutputFilePath WRITE setOutputFilePath)
 
     /**

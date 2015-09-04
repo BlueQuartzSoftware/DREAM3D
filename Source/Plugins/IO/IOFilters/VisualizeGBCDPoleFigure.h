@@ -37,9 +37,9 @@
 #ifndef _VisualizeGBCDPoleFigure_H_
 #define _VisualizeGBCDPoleFigure_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
@@ -50,25 +50,25 @@ class VisualizeGBCDPoleFigure : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(VisualizeGBCDPoleFigure)
-    DREAM3D_STATIC_NEW_MACRO(VisualizeGBCDPoleFigure)
-    DREAM3D_TYPE_MACRO_SUPER(VisualizeGBCDPoleFigure, AbstractFilter)
+    SIMPL_SHARED_POINTERS(VisualizeGBCDPoleFigure)
+    SIMPL_STATIC_NEW_MACRO(VisualizeGBCDPoleFigure)
+    SIMPL_TYPE_MACRO_SUPER(VisualizeGBCDPoleFigure, AbstractFilter)
 
     virtual ~VisualizeGBCDPoleFigure();
 
-    DREAM3D_FILTER_PARAMETER(QString, OutputFile)
+    SIMPL_FILTER_PARAMETER(QString, OutputFile)
     Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
-    DREAM3D_FILTER_PARAMETER(int, PhaseOfInterest)
+    SIMPL_FILTER_PARAMETER(int, PhaseOfInterest)
     Q_PROPERTY(int PhaseOfInterest READ getPhaseOfInterest WRITE setPhaseOfInterest)
 
-    DREAM3D_FILTER_PARAMETER(AxisAngleInput_t, MisorientationRotation)
+    SIMPL_FILTER_PARAMETER(AxisAngleInput_t, MisorientationRotation)
     Q_PROPERTY(AxisAngleInput_t MisorientationRotation READ getMisorientationRotation WRITE setMisorientationRotation)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, GBCDArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, GBCDArrayPath)
     Q_PROPERTY(DataArrayPath GBCDArrayPath READ getGBCDArrayPath WRITE setGBCDArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
     /**

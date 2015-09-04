@@ -41,9 +41,9 @@
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/variate_generator.hpp>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "Reconstruction/ReconstructionFilters/SegmentFeatures.h"
 
@@ -60,33 +60,33 @@ class ScalarSegmentFeatures : public SegmentFeatures
     typedef boost::mt19937 RandomNumberGenerator;
     typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;
 
-    DREAM3D_SHARED_POINTERS(ScalarSegmentFeatures)
-    DREAM3D_STATIC_NEW_MACRO(ScalarSegmentFeatures)
-    DREAM3D_TYPE_MACRO_SUPER(ScalarSegmentFeatures, AbstractFilter)
+    SIMPL_SHARED_POINTERS(ScalarSegmentFeatures)
+    SIMPL_STATIC_NEW_MACRO(ScalarSegmentFeatures)
+    SIMPL_TYPE_MACRO_SUPER(ScalarSegmentFeatures, AbstractFilter)
 
     virtual ~ScalarSegmentFeatures();
 
-    DREAM3D_FILTER_PARAMETER(QString, CellFeatureAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, CellFeatureAttributeMatrixName)
     Q_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, ScalarArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, ScalarArrayPath)
     Q_PROPERTY(DataArrayPath ScalarArrayPath READ getScalarArrayPath WRITE setScalarArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(float, ScalarTolerance)
+    SIMPL_FILTER_PARAMETER(float, ScalarTolerance)
     Q_PROPERTY(float ScalarTolerance READ getScalarTolerance WRITE setScalarTolerance)
 
-    DREAM3D_INSTANCE_PROPERTY(bool, RandomizeFeatureIds)
+    SIMPL_INSTANCE_PROPERTY(bool, RandomizeFeatureIds)
 
-    DREAM3D_FILTER_PARAMETER(bool, UseGoodVoxels)
+    SIMPL_FILTER_PARAMETER(bool, UseGoodVoxels)
     Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
     Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, FeatureIdsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, FeatureIdsArrayName)
     Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, ActiveArrayName)
+    SIMPL_FILTER_PARAMETER(QString, ActiveArrayName)
     Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
 
     /**
