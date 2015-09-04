@@ -321,7 +321,7 @@ int32_t FeatureInfoReader::readFile()
   for (int32_t i = 0; i < numfeatures; i++)
   {
     inFile >> gnum >> phase >> ea1 >> ea2 >> ea3;
-    if (gnum >= maxFeatureId)
+    if (gnum > maxFeatureId)
     {
       QString ss = QObject::tr("A Feature Id (%1) specified in the file is larger than the maximum Feature Id (%2) in the selected Feature Ids array").arg(numfeatures).arg(maxFeatureId);
       setErrorCondition(-600);
