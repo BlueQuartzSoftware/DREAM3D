@@ -42,6 +42,8 @@
 
 #include <QtWidgets/QDialog>
 
+#include <QtWebEngineWidgets/QWebEngineView>
+
 #include "ui_DREAM3DUserManualDialog.h"
 
 class DREAM3DWidgetsLib_EXPORT DREAM3DUserManualDialog : public QDialog, public Ui::DREAM3DUserManualDialog
@@ -75,6 +77,12 @@ class DREAM3DWidgetsLib_EXPORT DREAM3DUserManualDialog : public QDialog, public 
     */
     static void LaunchHelpDialog(QString className);
 
+    /**
+    * @brief getWebView
+    * @return QWebEngineView*
+    */
+    QWebEngineView* getWebView();
+
   protected:
     DREAM3DUserManualDialog();
 
@@ -82,10 +90,12 @@ class DREAM3DWidgetsLib_EXPORT DREAM3DUserManualDialog : public QDialog, public 
     void on_backBtn_pressed();
     void on_forwardBtn_pressed();
     void on_refreshBtn_pressed();
-    void on_webView_loadFinished(bool ok);
+    void updateButtons(bool ok);
 
   private:
     static DREAM3DUserManualDialog* self;
+
+    QWebEngineView* m_WebView;
 
     DREAM3DUserManualDialog(const DREAM3DUserManualDialog&); // Copy Constructor Not Implemented
     void operator=(const DREAM3DUserManualDialog&); // Operator '=' Not Implemented

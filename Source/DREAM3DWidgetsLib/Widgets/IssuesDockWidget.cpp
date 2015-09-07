@@ -42,10 +42,7 @@
 #include <QtWidgets/QTableWidgetItem>
 #include <QtWidgets/QMainWindow>
 
-#include "DREAM3DWidgetsLib/Widgets/DREAM3DUserManualDialog.h"
-
 #include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
-
 
 #include "DREAM3DWidgetsLib/moc_IssuesDockWidget.cpp"
 
@@ -260,8 +257,9 @@ QLabel* IssuesDockWidget::createHyperlinkLabel(PipelineMessage msg)
 // -----------------------------------------------------------------------------
 void IssuesDockWidget::showFilterHelp(const QString &urlString)
 {
-  QUrl url(urlString);
-  DREAM3DUserManualDialog::LaunchHelpDialog(url);
+  QUrl helpURL(urlString);
+
+  emit filterHelpRequested(helpURL);
 }
 
 // -----------------------------------------------------------------------------

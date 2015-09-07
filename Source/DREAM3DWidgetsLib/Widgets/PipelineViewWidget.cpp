@@ -579,6 +579,9 @@ void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* pipelineFilterWid
   connect(pipelineFilterWidget, SIGNAL(parametersChanged()),
           this, SLOT(handleFilterParameterChanged()));
 
+  connect(pipelineFilterWidget, SIGNAL(filterHelpRequested(const QString&)),
+          this, SLOT(showFilterHelp(const QString&)));
+
   // Check to make sure at least the vertical spacer is in the Layout
   if (addSpacer)
   {
@@ -1310,5 +1313,11 @@ void PipelineViewWidget::toIdleState()
   setAcceptDrops(true);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::showFilterHelp(const QString& className)
+{
 
+}
 

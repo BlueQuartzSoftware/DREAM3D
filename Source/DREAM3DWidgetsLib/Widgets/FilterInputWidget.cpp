@@ -50,9 +50,9 @@
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
-#include "DREAM3DWidgetsLib/Widgets/DREAM3DUserManualDialog.h"
 #include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/DataContainerArrayWidget.h"
+
 
 enum TabIndices
 {
@@ -124,7 +124,7 @@ void FilterInputWidget::setupGui()
 // -----------------------------------------------------------------------------
 void FilterInputWidget::on_filterHelpBtn_pressed()
 {
-  DREAM3DUserManualDialog::LaunchHelpDialog(m_FilterClassName);
+  emit filterHelpRequested(m_FilterClassName);
 }
 
 // -----------------------------------------------------------------------------

@@ -222,7 +222,6 @@ QString AdjustOutputDirectory(const QString& pipelineFile)
 
 
   QString searchString = QString::fromLatin1("Data/Output/");
-  QString replaceString = QString::fromLatin1("Data/zz_PipelineRunnerTest_Output/");
   QStringList outLines;
   QStringList list = contents.split(QRegExp("\\n"));
   QStringListIterator sourceLines(list);
@@ -333,6 +332,9 @@ int main (int argc, char*  argv[])
       err = EXIT_FAILURE;
     }
   }
+
+  QDir tempDir(getTestTempDirectory());
+  tempDir.removeRecursively();
 
   return err;
 }

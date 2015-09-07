@@ -54,7 +54,6 @@
 
 
 #include "QtSupportLib/DREAM3DStyles.h"
-#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
 
 #include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/Common/IFilterFactory.hpp"
@@ -70,8 +69,6 @@
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/ChoiceWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/PipelineViewWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/DataContainerArrayWidget.h"
-#include "DREAM3DWidgetsLib/Widgets/DREAM3DUserManualDialog.h"
-
 
 
 #define PADDING 5
@@ -932,8 +929,8 @@ void PipelineFilterWidget::launchHelpForItem()
 {
   QString className = getFilterClassName();
 
-  // Launch the dialog
-  DREAM3DUserManualDialog::LaunchHelpDialog(className);
+  emit filterHelpRequested(className);
+
 }
 
 // -----------------------------------------------------------------------------

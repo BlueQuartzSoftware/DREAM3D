@@ -195,7 +195,8 @@ target_link_libraries(${PLUGIN_NAME}
                     Qt5::Core
                     EMMPMLib
                     SIMPLib
-                    Qt5::Gui Qt5::Widgets
+                    Qt5::Gui 
+                    Qt5::Widgets
                     QtSupportLib
                     DREAM3DWidgetsLib
                     )

@@ -173,15 +173,14 @@ if(UNIX AND NOT APPLE)
 endif()
 
 add_library(DREAM3DWidgetsLib ${LIB_TYPE} ${Project_SRCS})
-target_link_libraries(DREAM3DWidgetsLib
-                    Qt5::Core
-                    Qt5::Gui 
-                    Qt5::Widgets
-                    Qt5::WebKit
-                    Qt5::WebKitWidgets
-                    QtSupportLib
-                    SIMPLib
-)
+
+set(D3D_LINK_LIBRARIES Qt5::Core
+                      Qt5::Gui
+                      Qt5::Widgets
+                      QtSupportLib
+                      SIMPLib)
+
+target_link_libraries(DREAM3DWidgetsLib ${D3D_LINK_LIBRARIES} )
 
 LibraryProperties( DREAM3DWidgetsLib ${EXE_DEBUG_EXTENSION})
 

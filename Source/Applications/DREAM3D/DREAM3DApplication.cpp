@@ -34,8 +34,9 @@
 *                           FA8650-07-D-5800
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
 #include "DREAM3DApplication.h"
+
+#include <iostream>
 
 #include <QtCore/QTime>
 #include <QtCore/QPluginLoader>
@@ -49,12 +50,6 @@
 #include <QtGui/QDesktopServices>
 #include <QtGui/QBitmap>
 #include <QtGui/QFileOpenEvent>
-#include <iostream>
-
-#include "Applications/DREAM3D/DREAM3D_UI.h"
-#include "Applications/DREAM3D/AboutDREAM3D.h"
-#include "Applications/DREAM3D/AboutPlugins.h"
-#include "Applications/DREAM3D/DREAM3DConstants.h"
 
 #include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/SIMPLibVersion.h"
@@ -62,13 +57,20 @@
 #include "SIMPLib/Plugin/PluginManager.h"
 #include "SIMPLib/Plugin/PluginProxy.h"
 
-#include "DREAM3DWidgetsLib/Widgets/DREAM3DUserManualDialog.h"
-#include "DREAM3DWidgetsLib/Widgets/DREAM3DUpdateCheckDialog.h"
-#include "DREAM3DWidgetsLib/FilterWidgetManager.h"
-
 #include "QtSupportLib/QRecentFileList.h"
 #include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
 #include "QtSupportLib/ApplicationAboutBoxDialog.h"
+
+#include "DREAM3DWidgetsLib/FilterWidgetManager.h"
+#include "DREAM3DWidgetsLib/Widgets/DREAM3DUpdateCheckDialog.h"
+#ifdef DREAM3D_USE_QtWebEngine
+#include "Applications/Common/DREAM3DUserManualDialog.h"
+#endif
+
+#include "Applications/DREAM3D/DREAM3D_UI.h"
+#include "Applications/DREAM3D/AboutDREAM3D.h"
+#include "Applications/DREAM3D/AboutPlugins.h"
+#include "Applications/DREAM3D/DREAM3DConstants.h"
 
 #include "DSplashScreen.h"
 
@@ -658,7 +660,21 @@ void DREAM3DApplication::on_actionShowDREAM3DHelp_triggered()
 {
   // Generate help page
   QUrl helpURL = DREAM3DHelpUrlGenerator::generateHTMLUrl("index");
-  DREAM3DUserManualDialog::LaunchHelpDialog(helpURL);
+  #ifdef DREAM3D_USE_QtWebEngine
+    DREAM3DUserManualDialog::LaunchHelpDialog(helpURL);
+  #else
+    bool didOpen = QDesktopServices::openUrl(helpURL);
+    if(false == didOpen)
+    {
+      QMessageBox msgBox;
+      msgBox.setText(QString("Error Opening Help File"));
+      msgBox.setInformativeText(QString::fromLatin1("DREAM3D could not open the help file path ") + helpURL.path());
+      msgBox.setStandardButtons(QMessageBox::Ok);
+      msgBox.setDefaultButton(QMessageBox::Ok);
+      msgBox.setIcon(QMessageBox::Critical);
+      msgBox.exec();
+    }
+  #endif
 }
 
 // -----------------------------------------------------------------------------

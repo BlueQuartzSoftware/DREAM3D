@@ -188,22 +188,6 @@ function(AddQt5LibraryInstallRule)
     endforeach()
   endforeach()
 
-#-- This will create install rules for the dylibs on linux hopefully creating
-#-- a stand alone .zip or .tgz file
-  if(0)
-    if(UNIX AND NOT APPLE)
-      GET_FILENAME_COMPONENT(QT_LIB_PATH ${QtQMake_location} PATH)
-      #GET_FILENAME_COMPONENT(QT_LIB_PATH ${QT_LIB_PATH} PATH)
-      set(QT_LIB_PATH ${QT_LIB_PATH}/lib)
-      foreach(qtlib ${QTLIBLIST})
-         FILE(GLOB libFiles ${QT_LIB_PATH}/lib${qtlib}.so*)
-         install(FILES ${libFiles}
-              DESTINATION "lib"
-              CONFIGURATIONS ${CMAKE_BUILD_TYPE}
-              COMPONENT Applications)
-      endforeach(qtlib)
-    endif(UNIX AND NOT APPLE)
-  endif()
 endfunction()
 
 
@@ -268,7 +252,10 @@ function(AddQt5Plugins)
       endif()
 
       # Create the qt.conf file so that the image plugins will be loaded correctly
-      FILE(WRITE ${PROJECT_BINARY_DIR}/qt.conf "[Paths]\nPlugins = ${QTPLUGINS_DIR}Plugins")
+      FILE(WRITE ${PROJECT_BINARY_DIR}/qt.conf "[Paths]\nPlugins = ${QTPLUGINS_DIR}Plugins\n")
+      FILE(APPEND ${PROJECT_BINARY_DIR}/qt.conf "Prefix = .\n")
+      FILE(APPEND ${PROJECT_BINARY_DIR}/qt.conf "LibraryExecutables = .\n")
+
       install(FILES ${PROJECT_BINARY_DIR}/qt.conf
               DESTINATION ${QTCONF_DIR}
               COMPONENT Applications)
@@ -276,6 +263,39 @@ function(AddQt5Plugins)
 
  
   #file(APPEND ${P_LIBRARY_SEARCH_FILE} "${QT_PLUGINS_DIR}/${plugintype};")
+endfunction()
+
+# ------------------------------------------------------------------------------
+#  Function AddQWebEngineSupportFiles
+# ------------------------------------------------------------------------------
+function(AddQWebEngineSupportFiles)
+  set(options)
+  set(oneValueArgs QT_INSTALL_PREFIX)
+  set(multiValueArgs )
+  if("${CMAKE_BUILD_TYPE}" STREQUAL "")
+    set(CMAKE_BUILD_TYPE "Release")
+  endif()
+  cmake_parse_arguments(P "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+  set(build_types "Debug;Release")
+
+  set(QTCONF_DIR "bin")
+  if(WIN32)
+    set(QTCONF_DIR ".")
+  endif()
+
+  if(WIN32)
+    install(FILES ${P_QT_INSTALL_PREFIX}/icudtl.dat  ${P_QT_INSTALL_PREFIX}/qtwebengine_resources.pak
+              DESTINATION ${QTCONF_DIR}
+              COMPONENT Applications)
+    install(FILES ${P_QT_INSTALL_PREFIX}/bin/QtWebEngineProcess.exe
+              DESTINATION ${QTCONF_DIR}
+              COMPONENT Applications)
+  endif()
+
+  if(APPLE)
+
+  endif()
+
 endfunction()
 
 # ------------------------------------------------------------------------------
@@ -296,19 +316,23 @@ set(Qt5_COMPONENTS
     Svg 
     Xml 
     OpenGL 
-    PrintSupport 
-    # WebKit Related Libraries
-    WebKit 
-    WebKitWidgets 
-    Sensors
-    Multimedia 
-    MultimediaWidgets 
-    Qml 
-    Quick 
-    Positioning 
-    Sql 
-    WebChannel
-    )
+    PrintSupport
+  )
+
+
+option(DREAM3D_USE_QtWebEngine "DREAM.3D Uses QtWebEngine to show help" ON)
+if(DREAM3D_USE_QtWebEngine)
+  set(Qt5_COMPONENTS
+    ${Qt5_COMPONENTS}
+    WebEngine
+    WebEngineWidgets
+    WebEngineCore
+    Quick
+    Qml
+)
+
+endif()
+
 # On Linux we need the DBus library
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
   set(Qt5_COMPONENTS ${Qt5_COMPONENTS} DBus)
@@ -377,7 +401,9 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
               PLUGIN_TYPE platforms)
 endif()
 
-
+#-----------------------------------------------------------------------------------
+# Copy over the proper QWebEngine Components
+AddQWebEngineSupportFiles(QT_INSTALL_PREFIX ${QM_QT_INSTALL_PREFIX})
 
 if(0)
   AddQt5Plugins(PLUGIN_NAMES AccessibleFactory

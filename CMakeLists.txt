@@ -271,8 +271,8 @@ file(WRITE ${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList "")
 
 
 # ------- Enable the CTest testing. Use make test to run all tests ---------------
-OPTION(SIMPLib_BUILD_TESTING "Compile the test programs" ON)
-if(SIMPLib_BUILD_TESTING)
+OPTION(DREAM3D_BUILD_TESTING "Compile the test programs" ON)
+if(DREAM3D_BUILD_TESTING)
     #ENABLE_TESTING()
     include( CTest )
 endif()
@@ -397,7 +397,7 @@ endif()
 include(${PROJECT_RESOURCES_DIR}/CPack/PackageProject.cmake)
 
 # ------- Enable the CTest testing. Use make test to run all tests ---------------
-if(SIMPLib_BUILD_TESTING)
+if(DREAM3D_BUILD_TESTING)
     add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Test ${PROJECT_BINARY_DIR}/Test)
 endif()
 

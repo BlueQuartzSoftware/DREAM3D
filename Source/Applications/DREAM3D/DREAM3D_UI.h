@@ -213,6 +213,18 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     */
     void versionCheckReply(UpdateCheckData*);
 
+    /**
+     * @brief showFilterHelp
+     * @param className
+     */
+    void showFilterHelp(const QString& className);
+
+    /**
+     * @brief showFilterHelp
+     * @param url
+     */
+    void showFilterHelp(const QUrl& url);
+
   protected slots:
 
     // Buttons and other widgets that send signals that we want to catch
@@ -366,8 +378,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     QThread*                              m_WorkerThread;
     ISIMPLibPlugin*                       m_ActivePlugin;
     QVector<ISIMPLibPlugin*>              m_LoadedPlugins;
-
-    HelpDialog*                           m_HelpDialog;
 
     QSharedPointer<UpdateCheck>           m_UpdateCheck;
 
