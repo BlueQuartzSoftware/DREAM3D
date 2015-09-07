@@ -19,11 +19,6 @@ set(DREAM3D_WIDGETS
     DropBoxWidget
 )
 
-#-- Only include this widget if we are compiling against QtWebEngine
-if(DREAM3D_USE_QtWebEngine)
-  set(DREAM3D_WIDGETS ${DREAM3D_WIDGETS} DREAM3DUserManualDialog)
-endif()
-
 foreach(FPW ${DREAM3D_WIDGETS})
   set(DREAM3DWidgetsLib_Widgets_HDRS ${DREAM3DWidgetsLib_Widgets_HDRS}
     ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/${FPW}.h

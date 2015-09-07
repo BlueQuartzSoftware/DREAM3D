@@ -64,7 +64,7 @@
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
 #include "DREAM3DWidgetsLib/Widgets/DREAM3DUpdateCheckDialog.h"
 #ifdef DREAM3D_USE_QtWebEngine
-#include "DREAM3DWidgetsLib/Widgets/DREAM3DUserManualDialog.h"
+#include "Applications/Common/DREAM3DUserManualDialog.h"
 #endif
 
 #include "Applications/DREAM3D/DREAM3D_UI.h"

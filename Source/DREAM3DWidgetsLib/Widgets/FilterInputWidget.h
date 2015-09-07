@@ -70,6 +70,14 @@ class DREAM3DWidgetsLib_EXPORT FilterInputWidget : public QWidget, private Ui::F
 
   protected:
 
+  signals:
+
+    /**
+     * @brief showHelpForClass
+     * @param name
+     */
+    void filterHelpRequested(const QString& name);
+
   public slots :
     void on_filterHelpBtn_pressed();
 

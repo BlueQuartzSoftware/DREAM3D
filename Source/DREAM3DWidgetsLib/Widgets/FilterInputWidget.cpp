@@ -53,12 +53,6 @@
 #include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/DataContainerArrayWidget.h"
 
-#ifdef DREAM3D_USE_QtWebEngine
-#include "DREAM3DWidgetsLib/Widgets/DREAM3DUserManualDialog.h"
-#else
-#include <QtWidgets/QMessageBox>
-#include <QtGui/QDesktopServices>
-#endif
 
 enum TabIndices
 {
@@ -130,23 +124,7 @@ void FilterInputWidget::setupGui()
 // -----------------------------------------------------------------------------
 void FilterInputWidget::on_filterHelpBtn_pressed()
 {
-#ifdef DREAM3D_USE_QtWebEngine
-    DREAM3DUserManualDialog::LaunchHelpDialog(m_FilterClassName);
-#else
-  QUrl helpURL = DREAM3DHelpUrlGenerator::generateHTMLUrl(m_FilterClassName.toLower());
-
-  bool didOpen = QDesktopServices::openUrl(helpURL);
-  if(false == didOpen)
-  {
-    QMessageBox msgBox;
-    msgBox.setText(QString("Error Opening Help File"));
-    msgBox.setInformativeText(QString::fromLatin1("DREAM3D could not open the help file path ") + helpURL.path());
-    msgBox.setStandardButtons(QMessageBox::Ok);
-    msgBox.setDefaultButton(QMessageBox::Ok);
-    msgBox.setIcon(QMessageBox::Critical);
-    msgBox.exec();
-  }
-#endif
+  emit filterHelpRequested(m_FilterClassName);
 }
 
 // -----------------------------------------------------------------------------

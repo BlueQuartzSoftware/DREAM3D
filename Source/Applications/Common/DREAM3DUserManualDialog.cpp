@@ -45,11 +45,11 @@
 
 #include <QtWebEngineWidgets/QWebEngineHistory>
 
-#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
-
 #include "SIMPLib/Common/FilterManager.h"
 
-#include "DREAM3DWidgetsLib/Widgets/DREAM3DUserManualDialog.h"
+#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
+
+
 
 DREAM3DUserManualDialog* DREAM3DUserManualDialog::self = NULL;
 

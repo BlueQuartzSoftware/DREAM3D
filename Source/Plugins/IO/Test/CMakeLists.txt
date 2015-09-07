@@ -25,6 +25,7 @@ file(MAKE_DIRECTORY ${TEST_TEMP_DIR})
 configure_file(${${PROJECT_NAME}_SOURCE_DIR}/TestFileLocations.h.in
                ${${PROJECT_NAME}_BINARY_DIR}/${PROJECT_NAME}FileLocations.h @ONLY IMMEDIATE)
 
+set(${PROJECT_NAME}_Link_Libs Qt5::Core H5Support SIMPLib)
 
 
 QT5_WRAP_CPP( GenerateFeatureIds_MOC  "${${PROJECT_NAME}_SOURCE_DIR}/GenerateFeatureIds.h")
@@ -32,22 +33,23 @@ set_source_files_properties(${GenerateFeatureIds_MOC} PROPERTIES HEADER_FILE_ONL
 AddDREAM3DUnitTest(TESTNAME PhIOTest
                    SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/PhIOTest.cpp ${${PROJECT_NAME}_SOURCE_DIR}/GenerateFeatureIds.h ${GenerateFeatureIds_MOC}
                    FOLDER "${PLUGIN_NAME}Plugin/Test"
-                   LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib  )
+                   LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})
 
 AddDREAM3DUnitTest(TESTNAME DxIOTest
                    SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/DxIOTest.cpp ${${PROJECT_NAME}_SOURCE_DIR}/GenerateFeatureIds.h ${GenerateFeatureIds_MOC}
                    FOLDER "${PLUGIN_NAME}Plugin/Test"
-                   LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib  )
+                   LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})
 
 AddDREAM3DUnitTest(TESTNAME VtkStruturedPointsReaderTest
-                  SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/VtkStruturedPointsReaderTest.cpp 
-					        FOLDER "${PLUGIN_NAME}Plugin/Test"
-					        LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib)
+                  SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/VtkStruturedPointsReaderTest.cpp
+                  FOLDER "${PLUGIN_NAME}Plugin/Test"
+                   LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})
 
-AddDREAM3DUnitTest(TESTNAME EnsembleInfoReaderTest SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/EnsembleInfoReaderTest.cpp 
-					        FOLDER "${PLUGIN_NAME}Plugin/Test"
-					        LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib)
-AddDREAM3DUnitTest(TESTNAME ExportDataTest SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/ExportDataTest.cpp 
-          				FOLDER "${PLUGIN_NAME}Plugin/Test"
-          				LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib)
+AddDREAM3DUnitTest(TESTNAME EnsembleInfoReaderTest SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/EnsembleInfoReaderTest.cpp
+                  FOLDER "${PLUGIN_NAME}Plugin/Test"
+                   LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})
+
+AddDREAM3DUnitTest(TESTNAME ExportDataTest SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/ExportDataTest.cpp
+                  FOLDER "${PLUGIN_NAME}Plugin/Test"
+                   LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})
 

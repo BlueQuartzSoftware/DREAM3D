@@ -86,6 +86,8 @@ void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
   QFile::remove(UnitTest::DataArrayTest::TestFile);
+  QDir tempDir(UnitTest::DataArrayTest::TestDir);
+  tempDir.removeRecursively();
 #endif
 }
 

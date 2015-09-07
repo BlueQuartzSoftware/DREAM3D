@@ -46,14 +46,6 @@
 #include "SIMPLib/Common/IFilterFactory.hpp"
 #include "SIMPLib/Common/FilterFactory.hpp"
 
-#ifdef DREAM3D_USE_QtWebEngine
-#include "DREAM3DWidgetsLib/Widgets/DREAM3DUserManualDialog.h"
-#else
-#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
-#include <QtWidgets/QMessageBox>
-#include <QtGui/QDesktopServices>
-#endif
-
 #include "DREAM3DWidgetsLib/moc_FilterListDockWidget.cpp"
 
 
@@ -207,24 +199,8 @@ void FilterListDockWidget::launchHelpForItem(QString humanLabel)
     return;
   }
   QString className = filter->getNameOfClass();
-  // Launch the dialog
-#ifdef DREAM3D_USE_QtWebEngine
-    DREAM3DUserManualDialog::LaunchHelpDialog(className);
-#else
-  QUrl helpURL = DREAM3DHelpUrlGenerator::generateHTMLUrl(className.toLower());
+  emit filterHelpRequested(className);
 
-  bool didOpen = QDesktopServices::openUrl(helpURL);
-  if(false == didOpen)
-  {
-    QMessageBox msgBox;
-    msgBox.setText(QString("Error Opening Help File"));
-    msgBox.setInformativeText(QString::fromLatin1("DREAM3D could not open the help file path ") + helpURL.path());
-    msgBox.setStandardButtons(QMessageBox::Ok);
-    msgBox.setDefaultButton(QMessageBox::Ok);
-    msgBox.setIcon(QMessageBox::Critical);
-    msgBox.exec();
-  }
-#endif
 }
 
 // -----------------------------------------------------------------------------

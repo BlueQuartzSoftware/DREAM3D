@@ -138,6 +138,10 @@ void RemoveTestFiles()
   QFile::remove(DataContainerIOTest::TestFile2());
   QFile::remove(DataContainerIOTest::TestFile3());
   QFile::remove(DataContainerIOTest::IniFile());
+  QFile::remove(DataContainerIOTest::H5File());
+
+  QDir tempDir(DataContainerIOTest::TestDir());
+  tempDir.removeRecursively();
 #endif
 }
 
@@ -919,7 +923,7 @@ int main(int argc, char** argv)
   DREAM3D_REGISTER_TEST(TestDataArrayPath() )
 
 #if REMOVE_TEST_FILES
-  //DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 #endif
 
   PRINT_TEST_SUMMARY();

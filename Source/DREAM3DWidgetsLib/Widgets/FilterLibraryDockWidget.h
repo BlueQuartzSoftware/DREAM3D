@@ -113,11 +113,24 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryDockWidget : public QDockWidget, pri
     void launchHelpForItem(QString name);
 
   signals:
-
+    /**
+     * @brief filterItemDoubleClicked
+     * @param filterName
+     */
     void filterItemDoubleClicked(const QString& filterName);
 
-
+    /**
+     * @brief filterListGenerated
+     * @param filterList
+     * @param sort
+     */
     void filterListGenerated(const QStringList& filterList, bool sort);
+
+    /**
+     * @brief showHelpForClass
+     * @param name
+     */
+    void filterHelpRequested(const QString& name);
 
   private:
     QMenu* m_ContextMenu;

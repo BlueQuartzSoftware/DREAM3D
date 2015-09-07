@@ -83,6 +83,8 @@ class DREAM3DWidgetsLib_EXPORT IssuesDockWidget : public QDockWidget, public IOb
 
   signals:
 
+    void filterHelpRequested(const QUrl& url);
+
   protected:
     void setupGui();
 

@@ -68,6 +68,8 @@ cmpConfigureFileWithMD5Check(CONFIGURED_TEMPLATE_PATH ${DREAM3D_SOURCE_DIR}/DREA
 
 include(${DREAM3DProj_SOURCE_DIR}/License/License.cmake)
 
+include(${DREAM3DProj_SOURCE_DIR}/Source/Applications/Common/SourceList.cmake)
+
 # List the source files here
 set(DREAM3D_SRCS
   ${DREAM3D_SOURCE_DIR}/main.cpp
@@ -121,7 +123,7 @@ SET(DREAM3D_RCS
 QT5_ADD_RESOURCES( DREAM3D_Generated_RC_SRCS ${DREAM3D_RCS} ${QRC_LICENSE_FILES})
 
 # this will run uic on .ui files:
-QT5_WRAP_UI( DREAM3D_Generated_UI_HDRS ${DREAM3D_UIS} )
+QT5_WRAP_UI( DREAM3D_Generated_UI_HDRS ${DREAM3D_UIS} ${AppsCommon_Widgets_UIS})
 
 # and finally this will run moc:
 #QT5_WRAP_CPP( DREAM3D_Generated_MOC_SRCS ${DREAM3D_MOC_HDRS} )
@@ -142,6 +144,11 @@ set(DREAM3D_PROJECT_SRCS
     ${DREAM3D_BINARY_DIR}/DREAM3D.h
     ${DREAM3D_BINARY_DIR}/DREAM3DVersion.h
     ${DREAM3D_BINARY_DIR}/DREAM3DVersion.cpp
+
+    ${AppsCommon_Widgets_HDRS}
+    ${AppsCommon_Widgets_SRCS}
+    ${AppsCommon_Widgets_Generated_MOC_SRCS}
+    ${AppsCommon_Widgets_Generated_UI_HDRS}
 )
 
 

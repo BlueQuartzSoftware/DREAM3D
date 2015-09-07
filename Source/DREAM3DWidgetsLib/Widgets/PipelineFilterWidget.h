@@ -206,6 +206,12 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
      */
     void parametersChanged();
 
+    /**
+     * @brief showHelpForClass
+     * @param name
+     */
+    void filterHelpRequested(const QString& name);
+
   protected:
     /**
      * @brief mousePressEvent
