@@ -182,8 +182,6 @@ void FlattenImage::dataCheck()
   DataArrayPath tempPath;
   int32_t numImageComp = 1;
 
-  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getImageDataArrayPath().getDataContainerName());
-
   IDataArray::Pointer iDataArray = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getImageDataArrayPath());
   if (getErrorCondition() < 0) { return; }
   if (NULL != iDataArray.get())
