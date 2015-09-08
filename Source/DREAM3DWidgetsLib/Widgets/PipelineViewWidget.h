@@ -305,8 +305,6 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     void filterInputWidgetEdited();
     void preflightPipelineComplete();
 
-    void filterHelpRequested(const QString& className);
-
   protected:
     void setupGui();
     void dragEnterEvent(QDragEnterEvent* event);

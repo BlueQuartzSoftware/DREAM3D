@@ -126,12 +126,6 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryDockWidget : public QDockWidget, pri
      */
     void filterListGenerated(const QStringList& filterList, bool sort);
 
-    /**
-     * @brief showHelpForClass
-     * @param name
-     */
-    void filterHelpRequested(const QString& name);
-
   private:
     QMenu* m_ContextMenu;
     QSignalMapper* m_Mapper;

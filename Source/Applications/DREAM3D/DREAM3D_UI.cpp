@@ -67,6 +67,7 @@
 #include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/Common/DocRequestManager.h"
 #include "SIMPLib/FilterParameters/QFilterParametersWriter.h"
 #include "SIMPLib/Plugin/PluginManager.h"
 
@@ -633,14 +634,8 @@ void DREAM3D_UI::disconnectSignalsSlots()
   disconnect(filterLibraryDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
              pipelineViewWidget, SLOT(addFilter(const QString&)));
 
-  disconnect(filterLibraryDockWidget, SIGNAL(filterHelpRequested(const QString&)),
-            this, SLOT(showFilterHelp(const QString&)) );
-
   disconnect(filterListDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
              pipelineViewWidget, SLOT(addFilter(const QString&)));
-
-  disconnect(filterListDockWidget, SIGNAL(filterHelpRequested(const QString&)),
-            this, SLOT(showFilterHelp(const QString&)) );
 
   disconnect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(const QString&, const bool&, const bool&)),
              dream3dApp, SLOT(newInstanceFromFile(const QString&, const bool&, const bool&)));
@@ -683,14 +678,16 @@ void DREAM3D_UI::connectSignalsSlots()
   connect(filterLibraryDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
           pipelineViewWidget, SLOT(addFilter(const QString&)) );
 
-  connect(filterLibraryDockWidget, SIGNAL(filterHelpRequested(const QString&)),
+  DocRequestManager* docRequester = DocRequestManager::Instance();
+
+  connect(docRequester, SIGNAL(showFilterDocs(const QString&)),
           this, SLOT(showFilterHelp(const QString&)) );
+
+  connect(docRequester, SIGNAL(showFilterDocUrl(const QUrl &)),
+          this, SLOT(showFilterHelpUrl(const QUrl &)));
 
   connect(filterListDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
           pipelineViewWidget, SLOT(addFilter(const QString&)) );
-
-  connect(filterListDockWidget, SIGNAL(filterHelpRequested(const QString&)),
-          this, SLOT(showFilterHelp(const QString&)) );
 
   connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(const QString&, const bool&, const bool&)),
           dream3dApp, SLOT(newInstanceFromFile(const QString&, const bool&, const bool&)));
@@ -707,22 +704,12 @@ void DREAM3D_UI::connectSignalsSlots()
   connect(pipelineViewWidget, SIGNAL(noFilterWidgetsInPipeline()),
           this, SLOT(clearFilterInputWidget()));
 
-  connect(pipelineViewWidget, SIGNAL(filterHelpRequested(const QString&)),
-          this, SLOT(showFilterHelp(const QString&)) );
-
   connect(pipelineViewWidget, SIGNAL(filterInputWidgetEdited()),
           this, SLOT(markDocumentAsDirty()));
 
   connect(bookmarksDockWidget, SIGNAL(updateStatusBar(const QString&)),
           this, SLOT(setStatusBarMessage(const QString&)));
 
-
-  connect(issuesDockWidget, SIGNAL(filterHelpRequested(const QString&)),
-          this, SLOT(showFilterHelp(const QString&)) );
-
-
-  connect(filterListDockWidget, SIGNAL(filterHelpRequested(const QString&)),
-          this, SLOT(showFilterHelp(const QString&)) );
 }
 
 // -----------------------------------------------------------------------------
@@ -1116,7 +1103,7 @@ void DREAM3D_UI::showFilterHelp(const QString& className)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::showFilterHelp(const QUrl& helpURL)
+void DREAM3D_UI::showFilterHelpUrl(const QUrl& helpURL)
 {
 #ifdef DREAM3D_USE_QtWebEngine
   DREAM3DUserManualDialog::LaunchHelpDialog(helpURL);

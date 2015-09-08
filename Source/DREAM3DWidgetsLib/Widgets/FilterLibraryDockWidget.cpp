@@ -40,6 +40,7 @@
 
 #include "SIMPLib/Common/IFilterFactory.hpp"
 #include "SIMPLib/Common/FilterFactory.hpp"
+#include "SIMPLib/Common/DocRequestManager.h"
 
 #include "FilterListDockWidget.h"
 
@@ -247,7 +248,9 @@ void FilterLibraryDockWidget::launchHelpForItem(QString humanLabel)
     return;
   }
   QString className = filter->getNameOfClass();
-  emit filterHelpRequested(className);
+
+  DocRequestManager* docRequester = DocRequestManager::Instance();
+  docRequester->requestFilterDocs(className);
 
 }
 

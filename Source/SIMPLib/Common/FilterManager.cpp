@@ -44,7 +44,6 @@ FilterManager* FilterManager::self = NULL;
 // -----------------------------------------------------------------------------
 FilterManager::FilterManager()
 {
-//  qDebug() << "FilterManager()" << this;
   Q_ASSERT_X(!self, "FilterManager", "there should be only one FilterManager object");
   FilterManager::self = this;
 }
@@ -54,7 +53,6 @@ FilterManager::FilterManager()
 // -----------------------------------------------------------------------------
 FilterManager::~FilterManager()
 {
-//  qDebug() << "~FilterManager()" << this;
 }
 
 // -----------------------------------------------------------------------------
@@ -62,12 +60,9 @@ FilterManager::~FilterManager()
 // -----------------------------------------------------------------------------
 FilterManager* FilterManager::Instance()
 {
-
   if (self == NULL)
   {
-    //  qDebug() << "FilterManager::Instance self was NULL" << "\n";
     self = new FilterManager();
-    //    self->RegisterKnownFilters();
   }
   return self;
 }

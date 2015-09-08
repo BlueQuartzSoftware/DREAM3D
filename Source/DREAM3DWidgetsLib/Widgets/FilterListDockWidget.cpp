@@ -45,6 +45,7 @@
 #include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/Common/IFilterFactory.hpp"
 #include "SIMPLib/Common/FilterFactory.hpp"
+#include "SIMPLib/Common/DocRequestManager.h"
 
 #include "DREAM3DWidgetsLib/moc_FilterListDockWidget.cpp"
 
@@ -199,7 +200,9 @@ void FilterListDockWidget::launchHelpForItem(QString humanLabel)
     return;
   }
   QString className = filter->getNameOfClass();
-  emit filterHelpRequested(className);
+
+  DocRequestManager* docRequester = DocRequestManager::Instance();
+  docRequester->requestFilterDocs(className);
 
 }
 

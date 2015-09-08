@@ -53,7 +53,6 @@
 class SIMPLib_EXPORT FilterManager
 {
   public:
-//    SIMPL_SHARED_POINTERS(FilterManager)
     SIMPL_TYPE_MACRO(FilterManager)
 
     virtual ~FilterManager();

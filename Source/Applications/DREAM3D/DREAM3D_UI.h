@@ -223,7 +223,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      * @brief showFilterHelp
      * @param url
      */
-    void showFilterHelp(const QUrl& url);
+    void showFilterHelpUrl(const QUrl& url);
 
   protected slots:
 

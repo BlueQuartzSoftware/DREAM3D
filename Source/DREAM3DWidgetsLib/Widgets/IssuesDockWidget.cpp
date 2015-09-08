@@ -42,6 +42,8 @@
 #include <QtWidgets/QTableWidgetItem>
 #include <QtWidgets/QMainWindow>
 
+#include "SIMPLib/Common/DocRequestManager.h"
+
 #include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
 
 #include "DREAM3DWidgetsLib/moc_IssuesDockWidget.cpp"
@@ -259,7 +261,8 @@ void IssuesDockWidget::showFilterHelp(const QString &urlString)
 {
   QUrl helpURL(urlString);
 
-  emit filterHelpRequested(helpURL);
+  DocRequestManager* docRequester = DocRequestManager::Instance();
+  docRequester->requestFilterDocUrl(helpURL);
 }
 
 // -----------------------------------------------------------------------------

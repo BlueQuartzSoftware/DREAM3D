@@ -58,6 +58,7 @@
 #include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/Common/IFilterFactory.hpp"
 #include "SIMPLib/Common/FilterFactory.hpp"
+#include "SIMPLib/Common/DocRequestManager.h"
 #include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataContainerReaderFilterParameter.h"
@@ -929,7 +930,8 @@ void PipelineFilterWidget::launchHelpForItem()
 {
   QString className = getFilterClassName();
 
-  emit filterHelpRequested(className);
+  DocRequestManager* docRequester = DocRequestManager::Instance();
+  docRequester->requestFilterDocs(className);
 
 }
 

@@ -45,6 +45,8 @@
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QLineEdit>
 
+#include "SIMPLib/Common/DocRequestManager.h"
+
 #include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
 #include "QtSupportLib/DREAM3DStyles.h"
 
@@ -124,7 +126,8 @@ void FilterInputWidget::setupGui()
 // -----------------------------------------------------------------------------
 void FilterInputWidget::on_filterHelpBtn_pressed()
 {
-  emit filterHelpRequested(m_FilterClassName);
+  DocRequestManager* docRequester = DocRequestManager::Instance();
+  docRequester->requestFilterDocs(m_FilterClassName);
 }
 
 // -----------------------------------------------------------------------------

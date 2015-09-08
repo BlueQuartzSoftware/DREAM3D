@@ -28,8 +28,7 @@ set(SIMPLib_Common_HDRS
   ${SIMPLib_SOURCE_DIR}/Common/AppVersion.h
   ${SIMPLib_SOURCE_DIR}/Common/Constants.h
   ${SIMPLib_SOURCE_DIR}/Common/CreatedArrayHelpIndexEntry.h
-  ${SIMPLib_SOURCE_DIR}/Common/SIMPLibDLLExport.h
-  ${SIMPLib_SOURCE_DIR}/Common/SIMPLibSetGetMacros.h
+  ${SIMPLib_SOURCE_DIR}/Common/DocRequestManager.h
   ${SIMPLib_SOURCE_DIR}/Common/FilterFactory.hpp
   ${SIMPLib_SOURCE_DIR}/Common/FilterManager.h
   ${SIMPLib_SOURCE_DIR}/Common/IDataArrayFilter.h
@@ -39,14 +38,17 @@ set(SIMPLib_Common_HDRS
   ${SIMPLib_SOURCE_DIR}/Common/PipelineMessage.h
   ${SIMPLib_SOURCE_DIR}/Common/ScopedFileMonitor.hpp
   ${SIMPLib_SOURCE_DIR}/Common/ShapeType.h
-  ${SIMPLib_SOURCE_DIR}/Common/ThresholdFilterHelper.h
+  ${SIMPLib_SOURCE_DIR}/Common/SIMPLibDLLExport.h
+  ${SIMPLib_SOURCE_DIR}/Common/SIMPLibSetGetMacros.h
   ${SIMPLib_SOURCE_DIR}/Common/TemplateHelpers.hpp
+  ${SIMPLib_SOURCE_DIR}/Common/ThresholdFilterHelper.h
 )
 
 
 set(SIMPLib_Common_SRCS
   ${SIMPLib_SOURCE_DIR}/Common/AbstractFilter.cpp
   ${SIMPLib_SOURCE_DIR}/Common/AppVersion.cpp
+  ${SIMPLib_SOURCE_DIR}/Common/DocRequestManager.cpp
   ${SIMPLib_SOURCE_DIR}/Common/ComparisonInputs.cpp
   ${SIMPLib_SOURCE_DIR}/Common/CreatedArrayHelpIndexEntry.cpp
   ${SIMPLib_SOURCE_DIR}/Common/FilterManager.cpp
