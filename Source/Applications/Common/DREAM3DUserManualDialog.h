@@ -46,7 +46,7 @@
 
 #include "ui_DREAM3DUserManualDialog.h"
 
-class DREAM3DWidgetsLib_EXPORT DREAM3DUserManualDialog : public QDialog, public Ui::DREAM3DUserManualDialog
+class  DREAM3DUserManualDialog : public QDialog, public Ui::DREAM3DUserManualDialog
 {
     Q_OBJECT
 
