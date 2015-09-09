@@ -339,6 +339,14 @@ void ReadH5Ebsd::dataCheck()
     m_Manufacturer = Ebsd::HKL;
   }
 
+  if(m_ZEndIndex < m_ZStartIndex)
+  {
+    QString ss = QObject::tr("The End Slice [%1] MUST be larger than the Start Slice [%2]. This condition was not met.").arg(m_ZEndIndex).arg(m_ZStartIndex);
+    setErrorCondition(-12);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
   size_t dcDims[3] = { static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2]) };
   //Now Calculate our "subvolume" of slices, ie, those start and end values that the user selected from the GUI
   dcDims[2] = m_ZEndIndex - m_ZStartIndex + 1;

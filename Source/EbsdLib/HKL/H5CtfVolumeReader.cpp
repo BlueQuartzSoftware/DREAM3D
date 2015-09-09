@@ -247,7 +247,7 @@ int H5CtfVolumeReader::loadData(int64_t xpoints,
     if (err < 0)
     {
       std::cout << "H5CtfVolumeReader Error: There was an issue loading the data from the hdf5 file." << std::endl;
-      return -1;
+      return -77000;
     }
     readerIndex = 0;
     xpointsslice = reader->getXCells();

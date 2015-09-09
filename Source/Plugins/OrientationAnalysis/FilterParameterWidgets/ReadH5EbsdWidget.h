@@ -101,6 +101,9 @@ class ReadH5EbsdWidget : public FilterParameterWidget, private Ui::ReadH5EbsdWid
     void on_m_InputFile_textChanged(const QString& text);
     void on_m_CellList_itemClicked(QListWidgetItem* item);
     void on_m_DataArraysCheckBox_stateChanged(int state);
+    void on_m_ZStartIndex_valueChanged(int value);
+    void on_m_ZEndIndex_valueChanged(int value);
+    void on_m_UseTransformations_stateChanged(int state);
 
 
   protected:

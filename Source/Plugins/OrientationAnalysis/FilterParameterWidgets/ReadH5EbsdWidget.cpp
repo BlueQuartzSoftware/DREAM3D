@@ -173,10 +173,11 @@ void ReadH5EbsdWidget::setupGui()
   QObject::connect( com, SIGNAL(activated(const QString&)),
                     this, SLOT(on_m_InputFile_textChanged(const QString&)));
 
-
   validateInputFile();
 
   // Setup the GUI widgets from what ever is in the Filter instance
+
+
   m_InputFile->setText( m_Filter->getInputFile() );
   m_ZStartIndex->setValue( m_Filter->getZStartIndex() );
   m_ZEndIndex->setValue( m_Filter->getZEndIndex() );
@@ -335,6 +336,36 @@ void ReadH5EbsdWidget::on_m_DataArraysCheckBox_stateChanged(int state)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ReadH5EbsdWidget::on_m_ZStartIndex_valueChanged(int value)
+{
+  m_DidCausePreflight = true;
+  emit parametersChanged();
+  m_DidCausePreflight = false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReadH5EbsdWidget::on_m_ZEndIndex_valueChanged(int value)
+{
+  m_DidCausePreflight = true;
+  emit parametersChanged();
+  m_DidCausePreflight = false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReadH5EbsdWidget::on_m_UseTransformations_stateChanged(int state)
+{
+  m_DidCausePreflight = true;
+  emit parametersChanged();
+  m_DidCausePreflight = false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 bool ReadH5EbsdWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
 {
   //  std::cout << "outFilePath: " << outFilePath.toStdString() << std::endl;
@@ -356,7 +387,7 @@ bool ReadH5EbsdWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdit
 // -----------------------------------------------------------------------------
 void ReadH5EbsdWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
-  if (NULL == m_Filter)
+  if (NULL == filter)
   {
     QString ss = QObject::tr("Error Setting ReadH5Ebsd Gui values to Filter instance. Filter instance was NULL.").arg(m_FilterParameter->getPropertyName());
     emit errorSettingFilterParameter(ss);
@@ -509,10 +540,19 @@ void ReadH5EbsdWidget::updateFileInfoWidgets()
         zEnd = h5Reader->getZEnd();
         m_ZMin->setText(QString::number(zStart));
         m_ZMax->setText(QString::number(zEnd));
+
+        int currentZ = m_ZStartIndex->value();
         m_ZStartIndex->setRange(zStart, zEnd);
-        m_ZStartIndex->setValue(zStart);
+
+        if(currentZ < zStart || currentZ > zEnd) {
+          m_ZStartIndex->setValue(zStart);
+        }
+
+        currentZ = m_ZEndIndex->value();
         m_ZEndIndex->setRange(zStart, zEnd);
-        m_ZEndIndex->setValue(zEnd);
+        if(currentZ < zStart || currentZ > zEnd) {
+          m_ZEndIndex->setValue(zEnd);
+        }
 
       }
       else
