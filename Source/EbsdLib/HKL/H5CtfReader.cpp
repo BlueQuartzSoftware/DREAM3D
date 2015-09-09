@@ -287,12 +287,12 @@ int H5CtfReader::readData(hid_t parId)
   CTF_READER_ALLOCATE_AND_READ(Euler2, float);
   CTF_READER_ALLOCATE_AND_READ(Euler3, float);
   CTF_READER_ALLOCATE_AND_READ(MAD, float);
-  CTF_READER_ALLOCATE_AND_READ(BC, float);
-  CTF_READER_ALLOCATE_AND_READ(BS, float);
-  CTF_READER_ALLOCATE_AND_READ(GrainIndex, float);
-  CTF_READER_ALLOCATE_AND_READ(GrainRandomColourR, float);
-  CTF_READER_ALLOCATE_AND_READ(GrainRandomColourG, float);
-  CTF_READER_ALLOCATE_AND_READ(GrainRandomColourB, float);
+  CTF_READER_ALLOCATE_AND_READ(BC, int);
+  CTF_READER_ALLOCATE_AND_READ(BS, int);
+  CTF_READER_ALLOCATE_AND_READ(GrainIndex, int);
+  CTF_READER_ALLOCATE_AND_READ(GrainRandomColourR, int);
+  CTF_READER_ALLOCATE_AND_READ(GrainRandomColourG, int);
+  CTF_READER_ALLOCATE_AND_READ(GrainRandomColourB, int);
 
 
   err = H5Gclose(gid);
