@@ -159,8 +159,8 @@ class VectorSegmentFeatures : public SegmentFeatures
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
     DEFINE_DATAARRAY_VARIABLE(bool, Active)
+    DEFINE_DATAARRAY_VARIABLE(bool, BeenPicked)
 
-    DREAM3D_DECLARE_ARRAY(bool, beenPicked, BeenPicked)
 
     boost::shared_ptr<NumberDistribution> m_Distribution;
     boost::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;

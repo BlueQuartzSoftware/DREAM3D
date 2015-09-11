@@ -163,7 +163,7 @@ class ScalarSegmentFeatures : public SegmentFeatures
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_DATAARRAY_VARIABLE(bool, Active)
 
-    DREAM3D_DECLARE_ARRAY(bool, beenPicked, BeenPicked)
+    DEFINE_DATAARRAY_VARIABLE(bool, BeenPicked)
 
     boost::shared_ptr<CompareFunctor> m_Compare;
 

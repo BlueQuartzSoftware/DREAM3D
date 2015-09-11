@@ -165,7 +165,7 @@ class SineParamsSegmentFeatures : public SegmentFeatures
     DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
     DEFINE_DATAARRAY_VARIABLE(bool, Active)
 
-    DREAM3D_DECLARE_ARRAY(bool, beenPicked, BeenPicked)
+    DEFINE_DATAARRAY_VARIABLE(bool, BeenPicked)
 
     ///Boost Random Number generator stuff. We use the boost::shared_ptr to ensure the pointers are cleaned up when the
     ///filter is deleted

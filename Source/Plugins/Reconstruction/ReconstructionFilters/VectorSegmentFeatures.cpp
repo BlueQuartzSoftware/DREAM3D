@@ -71,7 +71,7 @@ VectorSegmentFeatures::VectorSegmentFeatures() :
   m_GoodVoxels(NULL),
   m_Active(NULL)
 {
-  beenPicked = NULL;
+  m_BeenPicked = NULL;
 
   angleTolerance = 0.0f;
 
@@ -171,7 +171,7 @@ void VectorSegmentFeatures::dataCheck()
   SegmentFeatures::dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  INIT_DataArray(m_BeenPicked, bool);
+  m_BeenPickedPtr.lock()->initializeWithValue(0);
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m.get()) { return; }
@@ -285,8 +285,8 @@ int64_t VectorSegmentFeatures::getSeed(int32_t gnum)
   {
     // Get the next voxel index in the precomputed list of voxel seeds
     int64_t randpoint = numberGenerator();
-    if (beenPicked[randpoint] == false) { m_TotalRandomNumbersGenerated++; } // Increment this counter
-    beenPicked[randpoint] = true;
+    if (m_BeenPicked[randpoint] == false) { m_TotalRandomNumbersGenerated++; } // Increment this counter
+    m_BeenPicked[randpoint] = true;
     if (m_FeatureIds[randpoint] == 0) // If the FeatureId of the voxel is ZERO then we can use this as a seed point
     {
       if (m_UseGoodVoxels == false || m_GoodVoxels[randpoint] == true)
@@ -368,9 +368,9 @@ void VectorSegmentFeatures::execute()
 
   int64_t totalPoints = static_cast<int64_t>(m_FeatureIdsPtr.lock()->getNumberOfTuples());
 
-  m_BeenPicked->resize(totalPoints);
-  m_BeenPicked->initializeWithValue(false);
-  beenPicked = m_BeenPicked->getPointer(0);
+  m_BeenPickedPtr.lock()->resize(totalPoints);
+  m_BeenPickedPtr.lock()->initializeWithValue(0);
+  m_BeenPicked = m_BeenPickedPtr.lock()->getPointer(0);
 
   // Convert user defined tolerance to radians.
   angleTolerance = m_AngleTolerance * SIMPLib::Constants::k_Pi / 180.0f;

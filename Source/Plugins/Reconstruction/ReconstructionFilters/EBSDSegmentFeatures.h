@@ -170,8 +170,8 @@ class EBSDSegmentFeatures : public SegmentFeatures
 
     DEFINE_DATAARRAY_VARIABLE(bool, Active)
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(bool, BeenPicked)
 
-    DREAM3D_DECLARE_ARRAY(bool, beenPicked, BeenPicked)
 
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 

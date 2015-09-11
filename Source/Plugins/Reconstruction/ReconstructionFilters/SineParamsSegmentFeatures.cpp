@@ -74,7 +74,7 @@ SineParamsSegmentFeatures::SineParamsSegmentFeatures() :
   m_GoodVoxels(NULL),
   m_Active(NULL)
 {
-  beenPicked = NULL;
+  m_BeenPicked = NULL;
 
   setupFilterParameters();
 }
@@ -171,7 +171,7 @@ void SineParamsSegmentFeatures::dataCheck()
   SegmentFeatures::dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  INIT_DataArray(m_BeenPicked, bool);
+  m_BeenPickedPtr.lock()->initializeWithValue(0);
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
@@ -235,9 +235,9 @@ void SineParamsSegmentFeatures::execute()
   // This runs a subfilter
   int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
 
-  m_BeenPicked->resize(totalPoints);
-  m_BeenPicked->initializeWithValue(false);
-  beenPicked = m_BeenPicked->getPointer(0);
+  m_BeenPickedPtr.lock()->resize(totalPoints);
+  m_BeenPickedPtr.lock()->initializeWithValue(0);
+  m_BeenPicked = m_BeenPickedPtr.lock()->getPointer(0);
 
   // Tell the user we are starting the filter
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
@@ -334,8 +334,8 @@ int64_t SineParamsSegmentFeatures::getSeed(int32_t gnum)
   {
     // Get the next voxel index in the precomputed list of voxel seeds
     size_t randpoint = numberGenerator();
-    if (beenPicked[randpoint] == false) { m_TotalRandomNumbersGenerated++; } // Increment this counter
-    beenPicked[randpoint] = true;
+    if (m_BeenPicked[randpoint] == false) { m_TotalRandomNumbersGenerated++; } // Increment this counter
+    m_BeenPicked[randpoint] = true;
     if(m_FeatureIds[randpoint] == 0) // If the GrainId of the voxel is ZERO then we can use this as a seed point
     {
       if (m_UseGoodVoxels == false || m_GoodVoxels[randpoint] == true)
