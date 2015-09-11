@@ -11,11 +11,11 @@
 #include <QtCore/QItemSelectionModel>
 
 
-#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/AbstractFilter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
-#include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
+#include "SIMPLib/DataContainers/DataContainerArrayProxy.h"
 
 #include "ui_DataContainerArrayWidget.h"
 

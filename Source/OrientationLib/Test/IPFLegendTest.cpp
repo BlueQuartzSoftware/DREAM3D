@@ -37,8 +37,8 @@
 #include <QtCore/QDir>
 #include <QtGui/QImage>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
 #include "OrientationLib.h"
 #include "OrientationLib/SpaceGroupOps/CubicLowOps.h"

@@ -37,10 +37,10 @@
 #ifndef _GroupFeatures_H_
 #define _GroupFeatures_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/NeighborList.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/NeighborList.hpp"
 
 #include "Plugins/Reconstruction/ReconstructionConstants.h"
 
@@ -52,22 +52,22 @@ class GroupFeatures : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(GroupFeatures)
-    DREAM3D_STATIC_NEW_MACRO(GroupFeatures)
-    DREAM3D_TYPE_MACRO_SUPER(GroupFeatures, AbstractFilter)
+    SIMPL_SHARED_POINTERS(GroupFeatures)
+    SIMPL_STATIC_NEW_MACRO(GroupFeatures)
+    SIMPL_TYPE_MACRO_SUPER(GroupFeatures, AbstractFilter)
 
     virtual ~GroupFeatures();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, ContiguousNeighborListArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, ContiguousNeighborListArrayPath)
     Q_PROPERTY(DataArrayPath ContiguousNeighborListArrayPath READ getContiguousNeighborListArrayPath WRITE setContiguousNeighborListArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, NonContiguousNeighborListArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, NonContiguousNeighborListArrayPath)
     Q_PROPERTY(DataArrayPath NonContiguousNeighborListArrayPath READ getNonContiguousNeighborListArrayPath WRITE setNonContiguousNeighborListArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(bool, UseNonContiguousNeighbors)
+    SIMPL_FILTER_PARAMETER(bool, UseNonContiguousNeighbors)
     Q_PROPERTY(float UseNonContiguousNeighbors READ getUseNonContiguousNeighbors WRITE setUseNonContiguousNeighbors)
 
-    DREAM3D_FILTER_PARAMETER(bool, PatchGrouping)
+    SIMPL_FILTER_PARAMETER(bool, PatchGrouping)
     Q_PROPERTY(float PatchGrouping READ getPatchGrouping WRITE setPatchGrouping)
 
     /**

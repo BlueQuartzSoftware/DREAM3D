@@ -34,20 +34,20 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "FeatureFaceCurvatureFilter.h"
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 #include <tbb/task_scheduler_init.h>
 #include <tbb/task_group.h>
 #include <tbb/task.h>
 #endif
 
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/IntFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 
 #include "CalculateTriangleGroupCurvatures.h"
 
@@ -177,23 +177,23 @@ void FeatureFaceCurvatureFilter::readFilterParameters(AbstractFilterParametersRe
 int FeatureFaceCurvatureFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(FaceAttributeMatrixPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalCurvature1sArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalCurvature2sArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalDirection1sArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalDirection2sArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshGaussianCurvaturesArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshMeanCurvaturesArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshTriangleCentroidsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceNormalsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFeatureFaceIdsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(NRing)
-  DREAM3D_FILTER_WRITE_PARAMETER(ComputePrincipalDirectionVectors)
-  DREAM3D_FILTER_WRITE_PARAMETER(ComputeGaussianCurvature)
-  DREAM3D_FILTER_WRITE_PARAMETER(ComputeMeanCurvature)
-  DREAM3D_FILTER_WRITE_PARAMETER(UseNormalsForCurveFitting)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(FaceAttributeMatrixPath)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalCurvature1sArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalCurvature2sArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalDirection1sArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalDirection2sArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshGaussianCurvaturesArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshMeanCurvaturesArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshTriangleCentroidsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceNormalsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFeatureFaceIdsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(NRing)
+  SIMPL_FILTER_WRITE_PARAMETER(ComputePrincipalDirectionVectors)
+  SIMPL_FILTER_WRITE_PARAMETER(ComputeGaussianCurvature)
+  SIMPL_FILTER_WRITE_PARAMETER(ComputeMeanCurvature)
+  SIMPL_FILTER_WRITE_PARAMETER(UseNormalsForCurveFitting)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -357,13 +357,13 @@ void FeatureFaceCurvatureFilter::execute()
   m_TotalFeatureFaces = sharedFeatureFaces.size();
   m_CompletedFeatureFaces = 0;
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
 #endif
 
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_group* g = new tbb::task_group;
 #else
 
@@ -377,7 +377,7 @@ void FeatureFaceCurvatureFilter::execute()
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
     FaceIds_t& triangleIds = (*iter).second;
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
       g->run(CalculateTriangleGroupCurvatures(m_NRing, triangleIds, m_UseNormalsForCurveFitting,
@@ -405,7 +405,7 @@ void FeatureFaceCurvatureFilter::execute()
   }
   // *********************** END END END END END END  ********************************************************************
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   g->wait(); // Wait for all the threads to complete before moving on.
   delete g;
 #endif
@@ -417,7 +417,7 @@ void FeatureFaceCurvatureFilter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 void FeatureFaceCurvatureFilter::tbbTaskProgress()
 {
   m_CompletedFeatureFaces++;

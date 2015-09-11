@@ -44,9 +44,9 @@
 #include "QtSupportLib/FaderWidget.h"
 
 
-#include "DREAM3DLib/DataContainers/DataArrayPath.h"
-#include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
-#include "DREAM3DLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
+#include "SIMPLib/DataContainers/DataArrayPath.h"
+#include "SIMPLib/DataContainers/DataContainerArrayProxy.h"
+#include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
@@ -111,17 +111,15 @@ class DREAM3DWidgetsLib_EXPORT MultiDataArraySelectionWidget : public FilterPara
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
 
-    void on_dataContainerList_currentIndexChanged(int index);
+    void on_dataContainerCombo_currentIndexChanged(int index);
 
-    void on_attributeMatrixList_currentIndexChanged(int index);
+    void on_attributeMatrixCombo_currentIndexChanged(int index);
 
     void on_attributeArraysWidget_itemChanged(QListWidgetItem* item);
 
 
   protected:
     void populateComboBoxes();
-    void populateAttributeMatrixList();
-    void populateAttributeArrayList(QVector<DataArrayPath> selectedPaths);
 
     /**
     * @brief generateDCAProxy

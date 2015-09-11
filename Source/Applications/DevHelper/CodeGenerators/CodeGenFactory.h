@@ -37,16 +37,16 @@
 #ifndef _CodeGenFactory_H_
 #define _CodeGenFactory_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "DevHelper/CodeGenerators/FPCodeGenerator.h"
 
 class CodeGenFactory
 {
   public:
-    DREAM3D_SHARED_POINTERS(CodeGenFactory)
-    DREAM3D_STATIC_NEW_MACRO(CodeGenFactory)
+    SIMPL_SHARED_POINTERS(CodeGenFactory)
+    SIMPL_STATIC_NEW_MACRO(CodeGenFactory)
 
     /**
     * @brief Creates a new instance for this code generator.

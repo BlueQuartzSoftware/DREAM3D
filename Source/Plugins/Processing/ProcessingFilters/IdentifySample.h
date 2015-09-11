@@ -37,9 +37,9 @@
 #ifndef _IdentifySample_H_
 #define _IdentifySample_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "Processing/ProcessingConstants.h"
 
@@ -50,16 +50,16 @@ class IdentifySample : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(IdentifySample)
-    DREAM3D_STATIC_NEW_MACRO(IdentifySample)
-    DREAM3D_TYPE_MACRO_SUPER(IdentifySample, AbstractFilter)
+    SIMPL_SHARED_POINTERS(IdentifySample)
+    SIMPL_STATIC_NEW_MACRO(IdentifySample)
+    SIMPL_TYPE_MACRO_SUPER(IdentifySample, AbstractFilter)
 
     virtual ~IdentifySample();
 
-    DREAM3D_FILTER_PARAMETER(bool, FillHoles)
+    SIMPL_FILTER_PARAMETER(bool, FillHoles)
     Q_PROPERTY(bool FillHoles READ getFillHoles WRITE setFillHoles)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
     Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
     /**

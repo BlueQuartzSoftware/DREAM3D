@@ -85,7 +85,7 @@ class Int32Parser : public DataParser
     {
       if (m_Ptr != NULL && getManageMemory() == true)
       {
-#if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
+#if defined ( SIMPL_USE_SSE ) && defined ( __SSE2__ )
         _mm_free(m_Ptr );
 #else
         free(m_Ptr);
@@ -98,7 +98,7 @@ class Int32Parser : public DataParser
 
     virtual bool allocateArray(size_t numberOfElements)
     {
-#if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
+#if defined ( SIMPL_USE_SSE ) && defined ( __SSE2__ )
       m_Ptr = static_cast<int32_t*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
 #else
       m_Ptr = static_cast<int32_t*>(malloc(sizeof(int32_t) * numberOfElements));
@@ -153,7 +153,7 @@ class FloatParser : public DataParser
     {
       if (m_Ptr != NULL && getManageMemory() == true)
       {
-#if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
+#if defined ( SIMPL_USE_SSE ) && defined ( __SSE2__ )
         _mm_free(m_Ptr );
 #else
         free(m_Ptr);
@@ -166,7 +166,7 @@ class FloatParser : public DataParser
 
     virtual bool allocateArray(size_t numberOfElements)
     {
-#if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
+#if defined ( SIMPL_USE_SSE ) && defined ( __SSE2__ )
       m_Ptr = static_cast<float*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
 #else
       m_Ptr = static_cast<float*>(malloc(sizeof(float) * numberOfElements));

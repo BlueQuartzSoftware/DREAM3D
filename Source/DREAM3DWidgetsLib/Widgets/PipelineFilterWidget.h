@@ -44,8 +44,8 @@
 #include <QtWidgets/QMenu>
 
 
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/FilterParameters/FilterParameter.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/FilterParameters/FilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/Widgets/FilterInputWidget.h"
@@ -111,7 +111,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
      */
     void setContextMenuActions(QList<QAction*> list);
 
-    DREAM3D_INSTANCE_PROPERTY(QString, BorderColorStyle)
+    SIMPL_INSTANCE_PROPERTY(QString, BorderColorStyle)
 
   public slots:
 

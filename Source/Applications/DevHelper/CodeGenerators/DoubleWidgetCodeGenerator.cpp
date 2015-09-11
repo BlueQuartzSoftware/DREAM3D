@@ -74,7 +74,7 @@ QString DoubleWidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(double, " + getPropertyName() + ")\n";
+  ss << "    SIMPL_FILTER_PARAMETER(double, " + getPropertyName() + ")\n";
   ss << "    Q_PROPERTY(double " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;

@@ -5,23 +5,18 @@
 # changes will be over written the next time CMake is run. If you need changes
 # to this file then edit the original file.
 
-
-echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-echo "Installing/Packaging ITK Libraries"
-echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-
 InstallPrefix="${1}"
 
 function copyLibraries()
 {
-	echo "Copy ${2} Lib/Links into Deployment Lib Directory"  
+	#echo "Copy ${2} Lib/Links into Deployment Lib Directory"  
 	cd $1
 	libs=`ls lib${2}@lib_suffix@.s*`
 	for l in ${libs}
 		do
 		name=`basename ${l}`
 		if [ ! -e "${InstallPrefix}/lib/${name}" ]; then
-			echo "Copy ${l} into Deployment Lib Directory"  
+			echo "    Copy ${l} into Deployment Lib Directory"  
 			cp --no-dereference ${l} ${InstallPrefix}/lib/.
 		fi
 	done
@@ -31,6 +26,8 @@ function copyLibraries()
 #------------------------------------------------------------------------------
 # ONLY copy ITK Libraries if they were used in the build.
 if [ "x@ITK_FOUND@" = "x1" ]; then
+	echo "  Installing/Packaging ITK Libraries"
+
 	ITK_LIBS="itk* ITK*"
 	arr=$(echo $ITK_LIBS | tr ";" "\n")
 	for x in $arr

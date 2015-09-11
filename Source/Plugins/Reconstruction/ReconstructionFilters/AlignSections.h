@@ -37,9 +37,9 @@
 #ifndef _ALIGNSECTIONS_H_
 #define _ALIGNSECTIONS_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The AlignSections class. This class serves as a superclass for other classes
@@ -49,23 +49,23 @@ class AlignSections : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(AlignSections)
-    DREAM3D_STATIC_NEW_MACRO(AlignSections)
-    DREAM3D_TYPE_MACRO_SUPER(AlignSections, AbstractFilter)
+    SIMPL_SHARED_POINTERS(AlignSections)
+    SIMPL_STATIC_NEW_MACRO(AlignSections)
+    SIMPL_TYPE_MACRO_SUPER(AlignSections, AbstractFilter)
 
     virtual ~AlignSections();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    SIMPL_INSTANCE_STRING_PROPERTY(DataContainerName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    SIMPL_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteAlignmentShifts)
+    SIMPL_INSTANCE_PROPERTY(bool, WriteAlignmentShifts)
     Q_PROPERTY(bool WriteAlignmentShifts READ getWriteAlignmentShifts WRITE setWriteAlignmentShifts)
 
-    DREAM3D_INSTANCE_PROPERTY(bool, SubtractBackground)
+    SIMPL_INSTANCE_PROPERTY(bool, SubtractBackground)
     Q_PROPERTY(bool SubtractBackground READ getSubtractBackground WRITE setSubtractBackground)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(AlignmentShiftFileName)
+    SIMPL_INSTANCE_STRING_PROPERTY(AlignmentShiftFileName)
     Q_PROPERTY(QString AlignmentShiftFileName READ getAlignmentShiftFileName WRITE setAlignmentShiftFileName)
 
     /**

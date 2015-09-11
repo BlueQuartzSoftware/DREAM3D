@@ -55,10 +55,10 @@
 #include <iomanip>
 #include <limits>
 
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Geometry/MeshStructs.h"
-#include "DREAM3DLib/DataArrays/StructArray.hpp"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Geometry/MeshStructs.h"
+#include "SIMPLib/DataArrays/StructArray.hpp"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/MeshFunctions.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/MeshLinearAlgebra.h"
@@ -187,13 +187,13 @@ void MovingFiniteElementSmoothing::readFilterParameters(AbstractFilterParameters
 int MovingFiniteElementSmoothing::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshNodeTypeArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(IterationSteps)
-  DREAM3D_FILTER_WRITE_PARAMETER(NodeConstraints)
-  DREAM3D_FILTER_WRITE_PARAMETER(ConstrainSurfaceNodes)
-  DREAM3D_FILTER_WRITE_PARAMETER(ConstrainQuadPoints)
-  DREAM3D_FILTER_WRITE_PARAMETER(SmoothTripleLines)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshNodeTypeArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(IterationSteps)
+  SIMPL_FILTER_WRITE_PARAMETER(NodeConstraints)
+  SIMPL_FILTER_WRITE_PARAMETER(ConstrainSurfaceNodes)
+  SIMPL_FILTER_WRITE_PARAMETER(ConstrainQuadPoints)
+  SIMPL_FILTER_WRITE_PARAMETER(SmoothTripleLines)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

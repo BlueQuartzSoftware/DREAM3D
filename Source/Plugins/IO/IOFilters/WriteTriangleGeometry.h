@@ -39,13 +39,13 @@
 
 #include <QtCore/QString>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataArrays/IDataArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 /**
  * @class WriteTriangleGeometry WriteTriangleGeometry.h FilterCategory/Code/FilterCategoryFilters/WriteTriangleGeometry.h
@@ -58,19 +58,19 @@ class WriteTriangleGeometry : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(WriteTriangleGeometry)
-    DREAM3D_STATIC_NEW_MACRO(WriteTriangleGeometry)
-    DREAM3D_TYPE_MACRO_SUPER(WriteTriangleGeometry, AbstractFilter)
+    SIMPL_SHARED_POINTERS(WriteTriangleGeometry)
+    SIMPL_STATIC_NEW_MACRO(WriteTriangleGeometry)
+    SIMPL_TYPE_MACRO_SUPER(WriteTriangleGeometry, AbstractFilter)
 
     virtual ~WriteTriangleGeometry();
 
-    DREAM3D_FILTER_PARAMETER(QString, DataContainerSelection)
+    SIMPL_FILTER_PARAMETER(QString, DataContainerSelection)
     Q_PROPERTY(QString DataContainerSelection READ getDataContainerSelection WRITE setDataContainerSelection)
 
-    DREAM3D_FILTER_PARAMETER(QString, OutputNodesFile)
+    SIMPL_FILTER_PARAMETER(QString, OutputNodesFile)
     Q_PROPERTY(QString OutputNodesFile READ getOutputNodesFile WRITE setOutputNodesFile)
 
-    DREAM3D_FILTER_PARAMETER(QString, OutputTrianglesFile)
+    SIMPL_FILTER_PARAMETER(QString, OutputTrianglesFile)
     Q_PROPERTY(QString OutputTrianglesFile READ getOutputTrianglesFile WRITE setOutputTrianglesFile)
 
     /**

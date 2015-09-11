@@ -11,8 +11,8 @@
 #include <QtCore/QString>
 
 
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 
 
@@ -22,9 +22,9 @@ class DREAM3DFileStructure : public QObject
     Q_OBJECT
 
   public:
-    DREAM3D_SHARED_POINTERS(DREAM3DFileStructure)
-    DREAM3D_STATIC_NEW_MACRO(DREAM3DFileStructure)
-    DREAM3D_TYPE_MACRO(DREAM3DFileStructure)
+    SIMPL_SHARED_POINTERS(DREAM3DFileStructure)
+    SIMPL_STATIC_NEW_MACRO(DREAM3DFileStructure)
+    SIMPL_TYPE_MACRO(DREAM3DFileStructure)
 
 
     virtual ~DREAM3DFileStructure();

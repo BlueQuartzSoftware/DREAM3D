@@ -45,8 +45,8 @@
 #include "QtSupportLib/FaderWidget.h"
 
 
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/FilterParameters/ComparisonSelectionFilterParameter.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/FilterParameters/ComparisonSelectionFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
@@ -84,8 +84,8 @@ class ComparisonSelectionWidget : public FilterParameterWidget, private Ui::Comp
       FaceListType,
     };
 
-    DREAM3D_INSTANCE_PROPERTY(ArrayListType, ArrayListType)
-    DREAM3D_INSTANCE_PROPERTY(bool, ShowOperators)
+    SIMPL_INSTANCE_PROPERTY(ArrayListType, ArrayListType)
+    SIMPL_INSTANCE_PROPERTY(bool, ShowOperators)
 
     /**
      * @brief Initializes some of the GUI elements with selections or other GUI related items

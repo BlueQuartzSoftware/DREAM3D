@@ -39,8 +39,8 @@
 
 #include <QtCore/QObject>
 
-#include <DREAM3DLib/Plugin/PluginManager.h>
-#include <DREAM3DLib/Plugin/IDREAM3DPlugin.h>
+#include <SIMPLib/Plugin/PluginManager.h>
+#include <SIMPLib/Plugin/ISIMPLibPlugin.h>
 
 
 //-- UIC generated Header
@@ -56,7 +56,7 @@ class PluginDetails : public QDialog, private Ui::PluginDetails
     PluginDetails(QString pluginName, QWidget* parent = 0);
     virtual ~PluginDetails();
 
-    DREAM3D_INSTANCE_PROPERTY(QString, PluginName)
+    SIMPL_INSTANCE_PROPERTY(QString, PluginName)
 
     void setupGui();
 

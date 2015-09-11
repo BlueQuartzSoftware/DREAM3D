@@ -37,9 +37,9 @@
 #ifndef _AlignSectionsMutualInformation_H_
 #define _AlignSectionsMutualInformation_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
@@ -52,30 +52,30 @@ class AlignSectionsMutualInformation : public AlignSections
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(AlignSectionsMutualInformation)
-    DREAM3D_STATIC_NEW_MACRO(AlignSectionsMutualInformation)
-    DREAM3D_TYPE_MACRO_SUPER(AlignSectionsMutualInformation, AlignSections)
+    SIMPL_SHARED_POINTERS(AlignSectionsMutualInformation)
+    SIMPL_STATIC_NEW_MACRO(AlignSectionsMutualInformation)
+    SIMPL_TYPE_MACRO_SUPER(AlignSectionsMutualInformation, AlignSections)
 
     virtual ~AlignSectionsMutualInformation();
 
-    DREAM3D_FILTER_PARAMETER(float, MisorientationTolerance)
+    SIMPL_FILTER_PARAMETER(float, MisorientationTolerance)
     Q_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)
 
-    DREAM3D_DECLARE_ARRAY(int32_t, featurecounts, FeatureCounts)
+    SIMPL_DECLARE_ARRAY(int32_t, featurecounts, FeatureCounts)
 
-    DREAM3D_FILTER_PARAMETER(bool, UseGoodVoxels)
+    SIMPL_FILTER_PARAMETER(bool, UseGoodVoxels)
     Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
     Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
     Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
     Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
     /**

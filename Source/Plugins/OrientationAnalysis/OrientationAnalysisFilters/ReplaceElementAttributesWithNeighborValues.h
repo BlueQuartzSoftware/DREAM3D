@@ -35,9 +35,9 @@
 #ifndef _ReplaceElementAttributesWithNeighborValues_H_
 #define _ReplaceElementAttributesWithNeighborValues_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The ReplaceElementAttributesWithNeighborValues class. See [Filter documentation](@ref ReplaceElementAttributesWithNeighborValues) for details.
@@ -46,22 +46,22 @@ class ReplaceElementAttributesWithNeighborValues : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(ReplaceElementAttributesWithNeighborValues)
-    DREAM3D_STATIC_NEW_MACRO(ReplaceElementAttributesWithNeighborValues)
-    DREAM3D_TYPE_MACRO_SUPER(ReplaceElementAttributesWithNeighborValues, AbstractFilter)
+    SIMPL_SHARED_POINTERS(ReplaceElementAttributesWithNeighborValues)
+    SIMPL_STATIC_NEW_MACRO(ReplaceElementAttributesWithNeighborValues)
+    SIMPL_TYPE_MACRO_SUPER(ReplaceElementAttributesWithNeighborValues, AbstractFilter)
 
     virtual ~ReplaceElementAttributesWithNeighborValues();
 
-    DREAM3D_FILTER_PARAMETER(float, MinConfidence)
+    SIMPL_FILTER_PARAMETER(float, MinConfidence)
     Q_PROPERTY(float MinConfidence READ getMinConfidence WRITE setMinConfidence)
 
-    DREAM3D_FILTER_PARAMETER(bool, Loop)
+    SIMPL_FILTER_PARAMETER(bool, Loop)
     Q_PROPERTY(bool Loop READ getLoop WRITE setLoop)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, ConfidenceIndexArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, ConfidenceIndexArrayPath)
     Q_PROPERTY(DataArrayPath ConfidenceIndexArrayPath READ getConfidenceIndexArrayPath WRITE setConfidenceIndexArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(int, SelectedComparison)
+    SIMPL_FILTER_PARAMETER(int, SelectedComparison)
     Q_PROPERTY(int SelectedComparison READ getSelectedComparison WRITE setSelectedComparison)
 
     /**

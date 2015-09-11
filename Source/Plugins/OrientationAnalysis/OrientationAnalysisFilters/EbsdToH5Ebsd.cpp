@@ -38,11 +38,11 @@
 
 #include <QtCore/QDir>
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/Utilities/FilePathGenerator.h"
+#include "SIMPLib/Utilities/FilePathGenerator.h"
 
 #include "EbsdLib/HKL/H5CtfImporter.h"
 #include "EbsdLib/TSL/H5AngImporter.h"
@@ -125,19 +125,19 @@ void EbsdToH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, 
 int EbsdToH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(ZStartIndex)
-  DREAM3D_FILTER_WRITE_PARAMETER(ZEndIndex)
-  DREAM3D_FILTER_WRITE_PARAMETER(ZResolution)
-  DREAM3D_FILTER_WRITE_PARAMETER(RefFrameZDir)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FilePrefix)
-  DREAM3D_FILTER_WRITE_PARAMETER(FileSuffix)
-  DREAM3D_FILTER_WRITE_PARAMETER(FileExtension)
-  DREAM3D_FILTER_WRITE_PARAMETER(PaddingDigits)
-  DREAM3D_FILTER_WRITE_PARAMETER(SampleTransformation)
-  DREAM3D_FILTER_WRITE_PARAMETER(EulerTransformation)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputFile)
+  SIMPL_FILTER_WRITE_PARAMETER(ZStartIndex)
+  SIMPL_FILTER_WRITE_PARAMETER(ZEndIndex)
+  SIMPL_FILTER_WRITE_PARAMETER(ZResolution)
+  SIMPL_FILTER_WRITE_PARAMETER(RefFrameZDir)
+  SIMPL_FILTER_WRITE_PARAMETER(InputPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FilePrefix)
+  SIMPL_FILTER_WRITE_PARAMETER(FileSuffix)
+  SIMPL_FILTER_WRITE_PARAMETER(FileExtension)
+  SIMPL_FILTER_WRITE_PARAMETER(PaddingDigits)
+  SIMPL_FILTER_WRITE_PARAMETER(SampleTransformation)
+  SIMPL_FILTER_WRITE_PARAMETER(EulerTransformation)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -539,18 +539,18 @@ AbstractFilter::Pointer EbsdToH5Ebsd::newFilterInstance(bool copyFilterParameter
     filter->setFilterParameters(getFilterParameters() );
     // We are going to hand copy all of the parameters because the other way of copying the parameters are going to
     // miss some of them because we are not enumerating all of them.
-    DREAM3D_COPY_INSTANCEVAR(OutputFile)
-    DREAM3D_COPY_INSTANCEVAR(ZStartIndex)
-    DREAM3D_COPY_INSTANCEVAR(ZEndIndex)
-    DREAM3D_COPY_INSTANCEVAR(ZResolution)
-    DREAM3D_COPY_INSTANCEVAR(RefFrameZDir)
-    DREAM3D_COPY_INSTANCEVAR(InputPath)
-    DREAM3D_COPY_INSTANCEVAR(FilePrefix)
-    DREAM3D_COPY_INSTANCEVAR(FileSuffix)
-    DREAM3D_COPY_INSTANCEVAR(FileExtension)
-    DREAM3D_COPY_INSTANCEVAR(PaddingDigits)
-    DREAM3D_COPY_INSTANCEVAR(SampleTransformation)
-    DREAM3D_COPY_INSTANCEVAR(EulerTransformation)
+    SIMPL_COPY_INSTANCEVAR(OutputFile)
+    SIMPL_COPY_INSTANCEVAR(ZStartIndex)
+    SIMPL_COPY_INSTANCEVAR(ZEndIndex)
+    SIMPL_COPY_INSTANCEVAR(ZResolution)
+    SIMPL_COPY_INSTANCEVAR(RefFrameZDir)
+    SIMPL_COPY_INSTANCEVAR(InputPath)
+    SIMPL_COPY_INSTANCEVAR(FilePrefix)
+    SIMPL_COPY_INSTANCEVAR(FileSuffix)
+    SIMPL_COPY_INSTANCEVAR(FileExtension)
+    SIMPL_COPY_INSTANCEVAR(PaddingDigits)
+    SIMPL_COPY_INSTANCEVAR(SampleTransformation)
+    SIMPL_COPY_INSTANCEVAR(EulerTransformation)
   }
   return filter;
 }

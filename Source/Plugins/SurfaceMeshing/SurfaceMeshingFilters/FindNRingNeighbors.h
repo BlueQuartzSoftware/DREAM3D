@@ -37,9 +37,9 @@
 #ifndef _FindNRingNeighbors_H_
 #define _FindNRingNeighbors_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Geometry/TriangleGeom.h"
 
 /**
  * @brief The FindNRingNeighbors class calculates the set of triangles that are "N" rings (based on vertex) from a seed triangle
@@ -47,25 +47,25 @@
 class FindNRingNeighbors
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindNRingNeighbors)
-    DREAM3D_STATIC_NEW_MACRO(FindNRingNeighbors)
-    DREAM3D_TYPE_MACRO(FindNRingNeighbors)
+    SIMPL_SHARED_POINTERS(FindNRingNeighbors)
+    SIMPL_STATIC_NEW_MACRO(FindNRingNeighbors)
+    SIMPL_TYPE_MACRO(FindNRingNeighbors)
 
     virtual ~FindNRingNeighbors();
 
     typedef std::set<int64_t> UniqueFaceIds_t;
 
-    DREAM3D_INSTANCE_PROPERTY(int64_t, TriangleId)
+    SIMPL_INSTANCE_PROPERTY(int64_t, TriangleId)
 
     /**
      * @brief This sets the region id (Feature Id) that we are interested in.
      */
-    DREAM3D_INSTANCE_PROPERTY(int32_t, RegionId0)
+    SIMPL_INSTANCE_PROPERTY(int32_t, RegionId0)
 
     /**
      * @brief This sets the region id (Feature Id) that we are interested in.
      */
-    DREAM3D_INSTANCE_PROPERTY(int32_t, RegionId1)
+    SIMPL_INSTANCE_PROPERTY(int32_t, RegionId1)
 
     /**
      * @brief setRegionIds Sets the local variables for region Ids
@@ -77,7 +77,7 @@ class FindNRingNeighbors
     /**
      * @brief This is the number of rings to find
      **/
-    DREAM3D_INSTANCE_PROPERTY(int64_t, Ring)
+    SIMPL_INSTANCE_PROPERTY(int64_t, Ring)
 
     /**
      * @brief getNRingTriangles Returns the N ring set
@@ -93,8 +93,8 @@ class FindNRingNeighbors
      */
     int32_t generate(TriangleGeom::Pointer triangleGeom, int32_t* faceLabels);
 
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFile)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteConformalMesh)
+    SIMPL_INSTANCE_PROPERTY(bool, WriteBinaryFile)
+    SIMPL_INSTANCE_PROPERTY(bool, WriteConformalMesh)
 
   protected:
     FindNRingNeighbors();

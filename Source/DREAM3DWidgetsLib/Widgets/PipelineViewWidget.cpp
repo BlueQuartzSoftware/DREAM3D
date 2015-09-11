@@ -60,16 +60,16 @@
 
 #include "Applications/DREAM3D/DREAM3DApplication.h"
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/PipelineMessage.h"
-#include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/Common/IFilterFactory.hpp"
-#include "DREAM3DLib/Common/FilterFactory.hpp"
-#include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/JsonFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/JsonFilterParametersWriter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Common/PipelineMessage.h"
+#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/Common/IFilterFactory.hpp"
+#include "SIMPLib/Common/FilterFactory.hpp"
+#include "SIMPLib/FilterParameters/QFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/QFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/JsonFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/JsonFilterParametersWriter.h"
 
 #include "QtSupportLib/QDroppableScrollArea.h"
 
@@ -649,6 +649,7 @@ void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* pipelineFilterWid
 
   connect(pipelineFilterWidget, SIGNAL(parametersChanged()),
           this, SLOT(handleFilterParameterChanged()));
+
 
   // Check to make sure at least the vertical spacer is in the Layout
   if (addSpacer)
@@ -1381,5 +1382,11 @@ void PipelineViewWidget::toIdleState()
   setAcceptDrops(true);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::showFilterHelp(const QString& className)
+{
 
+}
 

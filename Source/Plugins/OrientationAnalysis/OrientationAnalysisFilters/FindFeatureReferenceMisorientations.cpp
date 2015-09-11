@@ -36,14 +36,14 @@
 
 #include "FindFeatureReferenceMisorientations.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedChoicesFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 
@@ -162,16 +162,16 @@ void FindFeatureReferenceMisorientations::readFilterParameters(AbstractFilterPar
 int FindFeatureReferenceMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureReferenceMisorientationsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureAvgMisorientationsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(GBEuclideanDistancesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(ReferenceOrientation)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureReferenceMisorientationsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureAvgMisorientationsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(GBEuclideanDistancesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(QuatsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(ReferenceOrientation)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -335,7 +335,7 @@ void FindFeatureReferenceMisorientations::execute()
             QuaternionMathF::Copy(quats[m_Centers[gnum]], q2);
             phase2 = m_CrystalStructures[m_CellPhases[m_Centers[gnum]]];
           }
-          m_FeatureReferenceMisorientations[point] = DREAM3D::Constants::k_180OverPi * m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+          m_FeatureReferenceMisorientations[point] = SIMPLib::Constants::k_180OverPi * m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
           idx = m_FeatureIds[point] * 2;
           avgMiso[idx + 0]++;
           avgMiso[idx + 1] = avgMiso[idx + 1] + m_FeatureReferenceMisorientations[point];

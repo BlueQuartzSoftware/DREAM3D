@@ -39,9 +39,9 @@
 
 #include <QtCore/QString>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/IDataArray.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 
@@ -56,14 +56,14 @@ class VerifyTriangleWinding : public SurfaceMeshFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(VerifyTriangleWinding)
-    DREAM3D_STATIC_NEW_MACRO(VerifyTriangleWinding)
-    DREAM3D_TYPE_MACRO_SUPER(VerifyTriangleWinding, SurfaceMeshFilter)
+    SIMPL_SHARED_POINTERS(VerifyTriangleWinding)
+    SIMPL_STATIC_NEW_MACRO(VerifyTriangleWinding)
+    SIMPL_TYPE_MACRO_SUPER(VerifyTriangleWinding, SurfaceMeshFilter)
 
     virtual ~VerifyTriangleWinding();
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
+    SIMPL_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeFacesArrayName)
+    SIMPL_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeFacesArrayName)
 
     typedef QMap<int, QSet<int> >                      LabelFaceMap_t;
     typedef QVector<int32_t>                               FaceList_t;
@@ -73,7 +73,7 @@ class VerifyTriangleWinding : public SurfaceMeshFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
     virtual const QString getCompiledLibraryName();

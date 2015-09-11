@@ -37,9 +37,9 @@
 #ifndef _MinNeighbors_H_
 #define _MinNeighbors_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "Processing/ProcessingConstants.h"
 
@@ -50,28 +50,28 @@ class MinNeighbors : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(MinNeighbors)
-    DREAM3D_STATIC_NEW_MACRO(MinNeighbors)
-    DREAM3D_TYPE_MACRO_SUPER(MinNeighbors, AbstractFilter)
+    SIMPL_SHARED_POINTERS(MinNeighbors)
+    SIMPL_STATIC_NEW_MACRO(MinNeighbors)
+    SIMPL_TYPE_MACRO_SUPER(MinNeighbors, AbstractFilter)
 
     virtual ~MinNeighbors();
 
-    DREAM3D_FILTER_PARAMETER(int, MinNumNeighbors)
+    SIMPL_FILTER_PARAMETER(int, MinNumNeighbors)
     Q_PROPERTY(int MinNumNeighbors READ getMinNumNeighbors WRITE setMinNumNeighbors)
 
-    DREAM3D_FILTER_PARAMETER(bool, ApplyToSinglePhase)
+    SIMPL_FILTER_PARAMETER(bool, ApplyToSinglePhase)
     Q_PROPERTY(bool ApplyToSinglePhase READ getApplyToSinglePhase WRITE setApplyToSinglePhase)
 
-    DREAM3D_FILTER_PARAMETER(int, PhaseNumber)
+    SIMPL_FILTER_PARAMETER(int, PhaseNumber)
     Q_PROPERTY(int PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
     Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, NumNeighborsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, NumNeighborsArrayPath)
     Q_PROPERTY(DataArrayPath NumNeighborsArrayPath READ getNumNeighborsArrayPath WRITE setNumNeighborsArrayPath)
 
     /**

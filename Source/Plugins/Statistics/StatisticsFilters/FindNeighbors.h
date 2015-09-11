@@ -37,10 +37,10 @@
 #ifndef _FindNeighbors_H_
 #define _FindNeighbors_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/NeighborList.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/NeighborList.hpp"
 
 /**
  * @brief The FindNeighbors class. See [Filter documentation](@ref findneighbors) for details.
@@ -49,37 +49,37 @@ class FindNeighbors : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindNeighbors)
-    DREAM3D_STATIC_NEW_MACRO(FindNeighbors)
-    DREAM3D_TYPE_MACRO_SUPER(FindNeighbors, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FindNeighbors)
+    SIMPL_STATIC_NEW_MACRO(FindNeighbors)
+    SIMPL_TYPE_MACRO_SUPER(FindNeighbors, AbstractFilter)
 
     virtual ~FindNeighbors();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixPath)
     Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, SharedSurfaceAreaListArrayName)
+    SIMPL_FILTER_PARAMETER(QString, SharedSurfaceAreaListArrayName)
     Q_PROPERTY(QString SharedSurfaceAreaListArrayName READ getSharedSurfaceAreaListArrayName WRITE setSharedSurfaceAreaListArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, NeighborListArrayName)
+    SIMPL_FILTER_PARAMETER(QString, NeighborListArrayName)
     Q_PROPERTY(QString NeighborListArrayName READ getNeighborListArrayName WRITE setNeighborListArrayName)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, BoundaryCellsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, BoundaryCellsArrayName)
     Q_PROPERTY(QString BoundaryCellsArrayName READ getBoundaryCellsArrayName WRITE setBoundaryCellsArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, NumNeighborsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, NumNeighborsArrayName)
     Q_PROPERTY(QString NumNeighborsArrayName READ getNumNeighborsArrayName WRITE setNumNeighborsArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceFeaturesArrayName)
+    SIMPL_FILTER_PARAMETER(QString, SurfaceFeaturesArrayName)
     Q_PROPERTY(QString SurfaceFeaturesArrayName READ getSurfaceFeaturesArrayName WRITE setSurfaceFeaturesArrayName)
 
-    DREAM3D_FILTER_PARAMETER(bool, StoreBoundaryCells)
+    SIMPL_FILTER_PARAMETER(bool, StoreBoundaryCells)
     Q_PROPERTY(bool StoreBoundaryCells READ getStoreBoundaryCells WRITE setStoreBoundaryCells)
 
-    DREAM3D_FILTER_PARAMETER(bool, StoreSurfaceFeatures)
+    SIMPL_FILTER_PARAMETER(bool, StoreSurfaceFeatures)
     Q_PROPERTY(bool StoreSurfaceFeatures READ getStoreSurfaceFeatures WRITE setStoreSurfaceFeatures)
 
     /**

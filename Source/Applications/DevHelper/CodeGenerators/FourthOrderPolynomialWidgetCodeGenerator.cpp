@@ -82,7 +82,7 @@ QString FourthOrderPolynomialWidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(Float4thOrderPoly_t, " + getPropertyName() + ")\n";
+  ss << "    SIMPL_FILTER_PARAMETER(Float4thOrderPoly_t, " + getPropertyName() + ")\n";
   ss << "    Q_PROPERTY(Float4thOrderPoly_t " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;

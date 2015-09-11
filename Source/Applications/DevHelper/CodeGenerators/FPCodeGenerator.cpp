@@ -121,7 +121,7 @@ QString FPCodeGenerator::generateReadFilterParameters()
 // -----------------------------------------------------------------------------
 QString FPCodeGenerator::generateWriteFilterParameters()
 {
-  return "  DREAM3D_FILTER_WRITE_PARAMETER(" + m_PropertyName + ")";
+  return "  SIMPL_FILTER_WRITE_PARAMETER(" + m_PropertyName + ")";
 }
 
 // -----------------------------------------------------------------------------

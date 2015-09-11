@@ -38,10 +38,10 @@
 
 #include <QtCore/QString>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/IDataArray.h"
 
 
 /**
@@ -55,28 +55,28 @@ class GenerateRodriguesColors : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(GenerateRodriguesColors)
-    DREAM3D_STATIC_NEW_MACRO(GenerateRodriguesColors)
-    DREAM3D_TYPE_MACRO_SUPER(GenerateRodriguesColors, AbstractFilter)
+    SIMPL_SHARED_POINTERS(GenerateRodriguesColors)
+    SIMPL_STATIC_NEW_MACRO(GenerateRodriguesColors)
+    SIMPL_TYPE_MACRO_SUPER(GenerateRodriguesColors, AbstractFilter)
 
     virtual ~GenerateRodriguesColors();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
     Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
     Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
     Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, CellRodriguesColorsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, CellRodriguesColorsArrayName)
     Q_PROPERTY(QString CellRodriguesColorsArrayName READ getCellRodriguesColorsArrayName WRITE setCellRodriguesColorsArrayName)
 
-    DREAM3D_FILTER_PARAMETER(bool, UseGoodVoxels)
+    SIMPL_FILTER_PARAMETER(bool, UseGoodVoxels)
     Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
 
     /**

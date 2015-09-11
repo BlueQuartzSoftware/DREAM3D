@@ -36,7 +36,7 @@
 
 #include "FindEuclideanDistMap.h"
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/atomic.h>
@@ -45,15 +45,15 @@
 #include <tbb/task_group.h>
 #endif
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/BooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "Statistics/StatisticsConstants.h"
 
@@ -335,17 +335,17 @@ void FindEuclideanDistMap::readFilterParameters(AbstractFilterParametersReader* 
 int FindEuclideanDistMap::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(NearestNeighborsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(QPEuclideanDistancesArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(TJEuclideanDistancesArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(GBEuclideanDistancesArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(DoBoundaries)
-  DREAM3D_FILTER_WRITE_PARAMETER(DoTripleLines)
-  DREAM3D_FILTER_WRITE_PARAMETER(DoQuadPoints)
-  DREAM3D_FILTER_WRITE_PARAMETER(SaveNearestNeighbors)
-  DREAM3D_FILTER_WRITE_PARAMETER(CalcOnlyManhattanDist)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(NearestNeighborsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(QPEuclideanDistancesArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(TJEuclideanDistancesArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(GBEuclideanDistancesArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(DoBoundaries)
+  SIMPL_FILTER_WRITE_PARAMETER(DoTripleLines)
+  SIMPL_FILTER_WRITE_PARAMETER(DoQuadPoints)
+  SIMPL_FILTER_WRITE_PARAMETER(SaveNearestNeighbors)
+  SIMPL_FILTER_WRITE_PARAMETER(CalcOnlyManhattanDist)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -506,13 +506,13 @@ void FindEuclideanDistMap::find_euclideandistmap()
     }
   }
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
 #endif
 
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
     tbb::task_group* g = new tbb::task_group;

@@ -38,15 +38,15 @@
 
 #include <QtCore/QDateTime>
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/DoubleFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 
@@ -170,6 +170,8 @@ ScalarSegmentFeatures::ScalarSegmentFeatures() :
   m_FeatureIds(NULL),
   m_Active(NULL)
 {
+  m_BeenPicked = NULL;
+
   setupFilterParameters();
 }
 
@@ -191,7 +193,7 @@ void ScalarSegmentFeatures::setupFilterParameters()
   parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask Array", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Empty, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::Defaults::AnyPrimitive, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Scalar Array to Segment", "ScalarArrayPath", getScalarArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
@@ -228,14 +230,14 @@ void ScalarSegmentFeatures::readFilterParameters(AbstractFilterParametersReader*
 int ScalarSegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(ActiveArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(UseGoodVoxels)
-  DREAM3D_FILTER_WRITE_PARAMETER(ScalarArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(ScalarTolerance)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(ActiveArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(UseGoodVoxels)
+  SIMPL_FILTER_WRITE_PARAMETER(ScalarArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(ScalarTolerance)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -265,7 +267,7 @@ void ScalarSegmentFeatures::dataCheck()
   SegmentFeatures::dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-
+  m_BeenPickedPtr.lock()->initializeWithValue(0);
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m.get()) { return; }
@@ -386,7 +388,8 @@ int64_t ScalarSegmentFeatures::getSeed(int32_t gnum)
   {
     // Get the next voxel index in the precomputed list of voxel seeds
     int64_t randpoint = numberGenerator();
-    m_TotalRandomNumbersGenerated++; // Increment this counter
+    if (m_BeenPicked[randpoint] == false) { m_TotalRandomNumbersGenerated++; } // Increment this counter
+    m_BeenPicked[randpoint] = true;
     if (m_FeatureIds[randpoint] == 0) // If the GrainId of the voxel is ZERO then we can use this as a seed point
     {
       if (m_UseGoodVoxels == false || m_GoodVoxels[randpoint] == true)
@@ -427,10 +430,6 @@ bool ScalarSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t ne
 // -----------------------------------------------------------------------------
 void ScalarSegmentFeatures::initializeVoxelSeedGenerator(const int64_t rangeMin, const int64_t rangeMax)
 {
-  // The way we are using the boost random number generators is that we are asking for a NumberDistribution (see the typedef)
-  // to guarantee the numbers are betwee a specific range and will only be generated once. We also keep a tally of the
-  // total number of numbers generated as a way to make sure the while loops eventually terminate. This setup should
-  // make sure that every voxel can be a seed point.
   m_Distribution = boost::shared_ptr<NumberDistribution>(new NumberDistribution(rangeMin, rangeMax));
   m_RandomNumberGenerator = boost::shared_ptr<RandomNumberGenerator>(new RandomNumberGenerator);
   m_NumberGenerator = boost::shared_ptr<Generator>(new Generator(*m_RandomNumberGenerator, *m_Distribution));
@@ -455,6 +454,10 @@ void ScalarSegmentFeatures::execute()
 
   int64_t totalPoints = static_cast<int64_t>(m_FeatureIdsPtr.lock()->getNumberOfTuples());
   int64_t inDataPoints = static_cast<int64_t>(m_InputDataPtr.lock()->getNumberOfTuples());
+
+  m_BeenPickedPtr.lock()->resize(totalPoints);
+  m_BeenPickedPtr.lock()->initializeWithValue(0);
+  m_BeenPicked = m_BeenPickedPtr.lock()->getPointer(0);
 
   QString dType = m_InputDataPtr.lock()->getTypeAsString();
   if (m_InputDataPtr.lock()->getNumberOfComponents() != 1)

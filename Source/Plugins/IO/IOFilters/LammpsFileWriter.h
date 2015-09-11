@@ -39,12 +39,12 @@
 
 #include <QtCore/QString>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/IDataArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 /**
  * @class CMUSmoothingToVtk CMUSmoothingToVtk.h NeverMind/Code/NeverMindFilters/CMUSmoothingToVtk.h
@@ -58,16 +58,16 @@ class LammpsFileWriter : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(LammpsFileWriter)
-    DREAM3D_STATIC_NEW_MACRO(LammpsFileWriter)
-    DREAM3D_TYPE_MACRO_SUPER(LammpsFileWriter, AbstractFilter)
+    SIMPL_SHARED_POINTERS(LammpsFileWriter)
+    SIMPL_STATIC_NEW_MACRO(LammpsFileWriter)
+    SIMPL_TYPE_MACRO_SUPER(LammpsFileWriter, AbstractFilter)
 
     virtual ~LammpsFileWriter();
 
-    DREAM3D_FILTER_PARAMETER(QString, VertexDataContainerName)
+    SIMPL_FILTER_PARAMETER(QString, VertexDataContainerName)
     Q_PROPERTY(QString VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
 
-    DREAM3D_FILTER_PARAMETER(QString, LammpsFile)
+    SIMPL_FILTER_PARAMETER(QString, LammpsFile)
     Q_PROPERTY(QString LammpsFile READ getLammpsFile WRITE setLammpsFile)
 
     /**

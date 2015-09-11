@@ -42,14 +42,13 @@
 
 #include <QtWidgets/QListWidgetItem>
 
-#include "DREAM3DLib/DataContainers/DataArrayPath.h"
+#include "SIMPLib/DataContainers/DataArrayPath.h"
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
+#include "FilterParameterWidgetUtils.hpp"
 
-#define DATA_CONTAINER_LEVEL 0
-#define ATTRIBUTE_MATRIX_LEVEL 1
-#define ATTRIBUTE_ARRAY_LEVEL 2
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -161,30 +160,8 @@ void AttributeMatrixCreationWidget::populateComboBoxes()
   // Cache the DataContainerArray Structure for our use during all the selections
   m_DcaProxy = DataContainerArrayProxy(dca.get());
 
-  // Populate the DataContainerArray Combo Box with all the DataContainers
-  QList<DataContainerProxy> dcList = m_DcaProxy.dataContainers.values();
-  QListIterator<DataContainerProxy> iter(dcList);
-  dataContainerCombo->clear();
-  QVector<unsigned int> defVec = m_FilterParameter->getDefaultGeometryTypes();
-  while (iter.hasNext())
-  {
-    DataContainerProxy dcProxy = iter.next();
-    DataContainer::Pointer dc = dca->getDataContainer(dcProxy.name);
-    dataContainerCombo->addItem(dcProxy.name);
-
-    if (NULL != dc.get() && defVec.isEmpty() == false && defVec.contains(dc->getGeometry()->getGeometryType()) == false)
-    {
-      QStandardItemModel* model = qobject_cast<QStandardItemModel*>(dataContainerCombo->model());
-      if (NULL != model)
-      {
-        QStandardItem* item = model->item(dataContainerCombo->findText(dcProxy.name));
-        if (NULL != item)
-        {
-          item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
-        }
-      }
-    }
-  }
+  // Populate the DataContainer ComboBox
+  FilterPararameterWidgetUtils::PopulateDataContainerComboBox<AttributeMatrixCreationFilterParameter>(getFilter(), getFilterParameter(), dataContainerCombo, m_DcaProxy);
 
   // Grab what is currently selected
   QString curDcName = dataContainerCombo->currentText();
@@ -207,7 +184,6 @@ void AttributeMatrixCreationWidget::populateComboBoxes()
 
   QString dcName = checkStringValues(curDcName, filtDcName);
   if (!dca->doesDataContainerExist(dcName)) { dcName = ""; }
-  QString amName = checkStringValues(curAmName, filtAmName);
 
   bool didBlock = false;
 
@@ -221,6 +197,8 @@ void AttributeMatrixCreationWidget::populateComboBoxes()
 
   if (!attributeMatrixName->signalsBlocked()) { didBlock = true; }
   attributeMatrixName->blockSignals(true);
+
+  QString amName = checkStringValues(curAmName, filtAmName);
 
   attributeMatrixName->setText(amName);
 
@@ -301,7 +279,7 @@ void AttributeMatrixCreationWidget::beforePreflight()
   if (NULL == getFilter()) { return; }
   if (m_DidCausePreflight == true)
   {
-    std::cout << "***  AttributeMatrixCreationWidget already caused a preflight, just returning" << std::endl;
+   // std::cout << "***  AttributeMatrixCreationWidget already caused a preflight, just returning" << std::endl;
     return;
   }
 

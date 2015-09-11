@@ -42,11 +42,11 @@
 #include <QtCore/QVector>
 
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "DREAM3DLib/Common/PipelineMessage.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/Common/PipelineMessage.h"
 
 /**
  * @brief The IOSupport class
@@ -55,22 +55,22 @@ class  IOSupport : public Observable
 {
 
   public:
-    DREAM3D_SHARED_POINTERS(IOSupport)
-    DREAM3D_STATIC_NEW_MACRO(IOSupport)
-    DREAM3D_TYPE_MACRO(IOSupport)
+    SIMPL_SHARED_POINTERS(IOSupport)
+    SIMPL_STATIC_NEW_MACRO(IOSupport)
+    SIMPL_TYPE_MACRO(IOSupport)
 
     virtual ~IOSupport();
 
 
-    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
-    DREAM3D_VIRTUAL_INSTANCE_PROPERTY(bool, Cancel)
-    DREAM3D_INSTANCE_PROPERTY(DataContainer*, DataContainer)
-    DREAM3D_INSTANCE_PROPERTY(unsigned int, DataContainerType)
-    DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
-    DREAM3D_INSTANCE_PROPERTY(hid_t, HdfGroupId)
+    SIMPL_INSTANCE_PROPERTY(int, ErrorCondition)
+    SIMPL_VIRTUAL_INSTANCE_PROPERTY(bool, Cancel)
+    SIMPL_INSTANCE_PROPERTY(DataContainer*, DataContainer)
+    SIMPL_INSTANCE_PROPERTY(unsigned int, DataContainerType)
+    SIMPL_INSTANCE_PROPERTY(hid_t, HdfFileId)
+    SIMPL_INSTANCE_PROPERTY(hid_t, HdfGroupId)
 
 
-    DREAM3D_INSTANCE_PROPERTY(QVector<PipelineMessage>, PipelineMessages)
+    SIMPL_INSTANCE_PROPERTY(QVector<PipelineMessage>, PipelineMessages)
 
     void addErrorMessage(PipelineMessage& msg);
     void addErrorMessage(const QString& filterName, const QString& errorDescription, int errorCode);

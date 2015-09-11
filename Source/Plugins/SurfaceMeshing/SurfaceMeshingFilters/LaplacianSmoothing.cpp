@@ -39,14 +39,14 @@
 #include <stdio.h>
 #include <sstream>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/IntFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DoubleFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 
@@ -128,16 +128,16 @@ void LaplacianSmoothing::readFilterParameters(AbstractFilterParametersReader* re
 int LaplacianSmoothing::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(IterationSteps)
-  DREAM3D_FILTER_WRITE_PARAMETER(Lambda)
-  DREAM3D_FILTER_WRITE_PARAMETER(TripleLineLambda)
-  DREAM3D_FILTER_WRITE_PARAMETER(QuadPointLambda)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfacePointLambda)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceTripleLineLambda)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceQuadPointLambda)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshNodeTypeArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(IterationSteps)
+  SIMPL_FILTER_WRITE_PARAMETER(Lambda)
+  SIMPL_FILTER_WRITE_PARAMETER(TripleLineLambda)
+  SIMPL_FILTER_WRITE_PARAMETER(QuadPointLambda)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfacePointLambda)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceTripleLineLambda)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceQuadPointLambda)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshNodeTypeArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -390,9 +390,9 @@ void LaplacianSmoothing::writeVTKFile(const QString& outputVtkFile)
       pos[2] = static_cast<float>(n.pos[2]);
       if (m_WriteBinaryFile == true)
       {
-        DREAM3D::Endian::FromSystemToBig::convert<float>(pos[0]);
-        DREAM3D::Endian::FromSystemToBig::convert<float>(pos[1]);
-        DREAM3D::Endian::FromSystemToBig::convert<float>(pos[2]);
+        SIMPLib::Endian::FromSystemToBig::convert<float>(pos[0]);
+        SIMPLib::Endian::FromSystemToBig::convert<float>(pos[1]);
+        SIMPLib::Endian::FromSystemToBig::convert<float>(pos[2]);
         totalWritten = fwrite(pos, sizeof(float), 3, vtkFile);
         if (totalWritten != sizeof(float) * 3)
         {
@@ -443,10 +443,10 @@ void LaplacianSmoothing::writeVTKFile(const QString& outputVtkFile)
       if (m_WriteBinaryFile == true)
       {
         tData[0] = 3; // Push on the total number of entries for this entry
-        DREAM3D::Endian::FromSystemToBig::convert<int>(tData[0]);
-        DREAM3D::Endian::FromSystemToBig::convert<int>(tData[1]); // Index of Vertex 0
-        DREAM3D::Endian::FromSystemToBig::convert<int>(tData[2]); // Index of Vertex 1
-        DREAM3D::Endian::FromSystemToBig::convert<int>(tData[3]); // Index of Vertex 2
+        SIMPLib::Endian::FromSystemToBig::convert<int>(tData[0]);
+        SIMPLib::Endian::FromSystemToBig::convert<int>(tData[1]); // Index of Vertex 0
+        SIMPLib::Endian::FromSystemToBig::convert<int>(tData[2]); // Index of Vertex 1
+        SIMPLib::Endian::FromSystemToBig::convert<int>(tData[3]); // Index of Vertex 2
         fwrite(tData, sizeof(int), 4, vtkFile);
       }
       else

@@ -53,7 +53,7 @@
 #endif
 
 
-#include "DREAM3DLib/Math/MatrixMath.h"
+#include "SIMPLib/Math/MatrixMath.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/util/Vector3.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/util/Plane.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/util/TriangleOps.h"
@@ -66,8 +66,8 @@ class Mesh
 {
   public:
 
-    DREAM3D_SHARED_POINTERS(Mesh)
-    DREAM3D_STATIC_NEW_MACRO(Mesh)
+    SIMPL_SHARED_POINTERS(Mesh)
+    SIMPL_STATIC_NEW_MACRO(Mesh)
     virtual ~Mesh() {}
     int getMaxLabel() {return -1;}
     int getMinLabel() {return -1;}
@@ -96,7 +96,7 @@ class LabelVisitorInfo
     typedef FaceArray::Face_t                   FaceType;
     typedef QVector<int32_t>      FaceListType;
 
-    DREAM3D_SHARED_POINTERS(LabelVisitorInfo)
+    SIMPL_SHARED_POINTERS(LabelVisitorInfo)
     static Pointer New(int32_t label, size_t tIndex)
     {
       Pointer sharedPtr (new LabelVisitorInfo(label, tIndex));
@@ -117,10 +117,10 @@ class LabelVisitorInfo
       return m_Label;
     }
 
-    DREAM3D_INSTANCE_PROPERTY(size_t, StartIndex)
-    DREAM3D_INSTANCE_PROPERTY(bool, Primed)
-    DREAM3D_INSTANCE_PROPERTY(int32_t, NewLabel)
-    DREAM3D_INSTANCE_PROPERTY(bool, Relabeled)
+    SIMPL_INSTANCE_PROPERTY(size_t, StartIndex)
+    SIMPL_INSTANCE_PROPERTY(bool, Primed)
+    SIMPL_INSTANCE_PROPERTY(int32_t, NewLabel)
+    SIMPL_INSTANCE_PROPERTY(bool, Relabeled)
 
     QSet<int32_t>  m_Faces;
     QSet<int32_t>  m_OriginalFaceList;
@@ -252,8 +252,8 @@ void VerifyTriangleWinding::readFilterParameters(AbstractFilterParametersReader*
 int VerifyTriangleWinding::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

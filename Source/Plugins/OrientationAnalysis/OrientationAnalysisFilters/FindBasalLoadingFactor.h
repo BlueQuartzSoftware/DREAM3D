@@ -40,12 +40,12 @@
 #include <vector>
 #include <string>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/IDataArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 
 /**
  * @class FindBasalLoadingFactor FindBasalLoadingFactor.h DREAM3DLib/GenericFilters/FindBasalLoadingFactor.h
@@ -58,19 +58,19 @@ class FindBasalLoadingFactor : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindBasalLoadingFactor)
-    DREAM3D_STATIC_NEW_MACRO(FindBasalLoadingFactor)
-    DREAM3D_TYPE_MACRO_SUPER(FindBasalLoadingFactor, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FindBasalLoadingFactor)
+    SIMPL_STATIC_NEW_MACRO(FindBasalLoadingFactor)
+    SIMPL_TYPE_MACRO_SUPER(FindBasalLoadingFactor, AbstractFilter)
 
     virtual ~FindBasalLoadingFactor();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
     Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, BasalLoadingFactorArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, BasalLoadingFactorArrayPath)
     Q_PROPERTY(DataArrayPath BasalLoadingFactorArrayPath READ getBasalLoadingFactorArrayPath WRITE setBasalLoadingFactorArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, LoadingDirection)
+    SIMPL_FILTER_PARAMETER(FloatVec3_t, LoadingDirection)
     Q_PROPERTY(FloatVec3_t LoadingDirection READ getLoadingDirection WRITE setLoadingDirection)
 
     /**

@@ -45,7 +45,7 @@
 #include <QtWidgets/QStyledItemDelegate>
 
 
-#include "DREAM3DLib/Common/Constants.h"
+#include "SIMPLib/Common/Constants.h"
 #include "ComparisonSelectionTableModel.h"
 
 class QPainter;

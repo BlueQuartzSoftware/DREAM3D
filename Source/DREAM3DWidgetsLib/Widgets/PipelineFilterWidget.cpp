@@ -54,24 +54,22 @@
 
 
 #include "QtSupportLib/DREAM3DStyles.h"
-#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
 
-#include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/Common/IFilterFactory.hpp"
-#include "DREAM3DLib/Common/FilterFactory.hpp"
-#include "DREAM3DLib/FilterParameters/LinkedChoicesFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataContainerReaderFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/InputFileFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/InputPathFilterParameter.h"
+#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/Common/IFilterFactory.hpp"
+#include "SIMPLib/Common/FilterFactory.hpp"
+#include "SIMPLib/Common/DocRequestManager.h"
+#include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataContainerReaderFilterParameter.h"
+#include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/InputPathFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/LinkedBooleanWidget.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/ChoiceWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/PipelineViewWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/DataContainerArrayWidget.h"
-#include "DREAM3DWidgetsLib/Widgets/DREAM3DUserManualDialog.h"
-
 
 
 #define PADDING 5
@@ -932,8 +930,9 @@ void PipelineFilterWidget::launchHelpForItem()
 {
   QString className = getFilterClassName();
 
-  // Launch the dialog
-  DREAM3DUserManualDialog::LaunchHelpDialog(className);
+  DocRequestManager* docRequester = DocRequestManager::Instance();
+  docRequester->requestFilterDocs(className);
+
 }
 
 // -----------------------------------------------------------------------------

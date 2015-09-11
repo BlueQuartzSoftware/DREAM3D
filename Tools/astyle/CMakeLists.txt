@@ -36,7 +36,7 @@ if(GIT_FOUND)
 
   file(WRITE ${AStyle_BINARY_DIR}/GitChangedFiles.txt ${GIT_CHANGED_FILES})
   file(STRINGS ${AStyle_BINARY_DIR}/GitChangedFiles.txt GIT_CHANGED_FILES REGEX ".*\.cpp|.*\.h")
-  message(STATUS "Git Changed Files:\n${GIT_CHANGED_FILES}")
+#  message(STATUS "Git Changed Files:\n${GIT_CHANGED_FILES}")
 
   ADD_CUSTOM_TARGET(FormatCode
     DEPENDS astyle

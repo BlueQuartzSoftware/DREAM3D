@@ -41,10 +41,10 @@
 
 #include "ui_StatsGenPlotWidget.h"
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/StatsData/StatsData.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/StatsData/StatsData.h"
 
 
 class SGAbstractTableModel;
@@ -98,14 +98,14 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 //    void setBins(QVector<float> &binValues);
     bool userUpdatedData();
 
-    DREAM3D_INSTANCE_PROPERTY(float, Mu)
-    DREAM3D_INSTANCE_PROPERTY(float, Sigma)
-    DREAM3D_INSTANCE_PROPERTY(float, MinCutOff)
-    DREAM3D_INSTANCE_PROPERTY(float, MaxCutOff)
-    DREAM3D_INSTANCE_PROPERTY(float, BinStep)
+    SIMPL_INSTANCE_PROPERTY(float, Mu)
+    SIMPL_INSTANCE_PROPERTY(float, Sigma)
+    SIMPL_INSTANCE_PROPERTY(float, MinCutOff)
+    SIMPL_INSTANCE_PROPERTY(float, MaxCutOff)
+    SIMPL_INSTANCE_PROPERTY(float, BinStep)
 
-    DREAM3D_INSTANCE_PROPERTY(int, PhaseIndex)
-    DREAM3D_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
+    SIMPL_INSTANCE_PROPERTY(int, PhaseIndex)
+    SIMPL_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
 
 
     void setSizeDistributionValues(float mu, float sigma,

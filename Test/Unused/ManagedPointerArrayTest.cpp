@@ -40,8 +40,8 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/DataArrays/ManagedArrayOfArrays.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/ManagedArrayOfArrays.hpp"
 
 
 #include "UnitTestSupport.hpp"

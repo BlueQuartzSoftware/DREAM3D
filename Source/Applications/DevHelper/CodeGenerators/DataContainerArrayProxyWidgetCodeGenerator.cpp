@@ -82,7 +82,7 @@ QString DataContainerArrayProxyWidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(DataContainerArrayProxy, " + getPropertyName() + ")\n";
+  ss << "    SIMPL_FILTER_PARAMETER(DataContainerArrayProxy, " + getPropertyName() + ")\n";
   ss << "    Q_PROPERTY(DataContainerArrayProxy " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;

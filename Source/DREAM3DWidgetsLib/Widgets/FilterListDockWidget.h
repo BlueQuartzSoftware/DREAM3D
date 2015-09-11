@@ -43,7 +43,7 @@
 #include <QtCore/QList>
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
-#include "DREAM3DLib/Common/FilterManager.h"
+#include "SIMPLib/Common/FilterManager.h"
 
 #include "QtSupportLib/DREAM3DSettings.h"
 
@@ -143,7 +143,6 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
      * @param filterName
      */
     void filterItemDoubleClicked(const QString& filterName);
-
 
   protected:
 

@@ -37,17 +37,17 @@
 
 #include <QtCore/QDir>
 
-#include "DREAM3DLib/DREAM3DLibVersion.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/OutputPathFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/SIMPLibVersion.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/OutputPathFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "ImageIO/ImageIOConstants.h"
 
@@ -116,7 +116,7 @@ void WriteImages::setupFilterParameters()
   parameters.push_back(StringFilterParameter::New("Image File Prefix", "ImagePrefix", getImagePrefix(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::UInt8, UINT32_MAX, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::UInt8, DREAM3D::Defaults::AnyComponentSize, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Color Data", "ColorsArrayPath", getColorsArrayPath(), FilterParameter::RequiredArray, req));
   }
   setFilterParameters(parameters);
@@ -143,13 +143,13 @@ void WriteImages::readFilterParameters(AbstractFilterParametersReader* reader, i
 int WriteImages::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(ImagePrefix)
-  DREAM3D_FILTER_WRITE_PARAMETER(FilePrefix)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(ColorsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(ImageFormat)
-  DREAM3D_FILTER_WRITE_PARAMETER(Plane)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(ImagePrefix)
+  SIMPL_FILTER_WRITE_PARAMETER(FilePrefix)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputPath)
+  SIMPL_FILTER_WRITE_PARAMETER(ColorsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(ImageFormat)
+  SIMPL_FILTER_WRITE_PARAMETER(Plane)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -160,8 +160,6 @@ int WriteImages::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 void WriteImages::dataCheck()
 {
   setErrorCondition(0);
-
-  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getColorsArrayPath().getDataContainerName());
 
   QDir dir(getOutputPath());
 
@@ -176,6 +174,44 @@ void WriteImages::dataCheck()
     notifyWarningMessage(getHumanLabel(), ss, -1);
   }
 
+  ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getColorsArrayPath().getDataContainerName());
+  if(getErrorCondition() < 0) { return; }
+
+  size_t dims[3] = { 0, 0, 0 };
+  image->getDimensions(dims);
+  if (0 == m_Plane) // XY plane
+  {
+    size_t total = dims[0] * dims[1] * 4;
+    if(total > std::numeric_limits<int32_t>::max())
+    {
+      QString ss = QObject::tr("The image will have more than 2GB worth of pixels. Try cropping the data so that the total pixels on a single plane is less than 2GB.");
+      setErrorCondition(-1012);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+  }
+  else if (1 == m_Plane) // XZ plane
+  {
+    size_t total = dims[0] * dims[2] * 4;
+    if(total > std::numeric_limits<int32_t>::max())
+    {
+      QString ss = QObject::tr("The image will have more than 2GB worth of pixels. Try cropping the data so that the total pixels on a single plane is less than 2GB.");
+      setErrorCondition(-1012);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+  }
+  else if (2 == m_Plane) // YZ plane
+  {
+    size_t total = dims[1] * dims[2] * 4;
+    if(total > std::numeric_limits<int32_t>::max())
+    {
+      QString ss = QObject::tr("The image will have more than 2GB worth of pixels. Try cropping the data so that the total pixels on a single plane is less than 2GB.");
+      setErrorCondition(-1012);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+  }
   IDataArray::Pointer iDa = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getColorsArrayPath());
   if (getErrorCondition() < 0) { return; }
 
@@ -307,7 +343,25 @@ int32_t WriteImages::saveImage(size_t slice, size_t dB, size_t dA, size_t* dims)
   }
 
   int32_t index = 0;
+  size_t total = dB * dA * 4; // The '4' is there because QImage will convert it to RGBA image.
+  if(total > std::numeric_limits<int32_t>::max())
+  {
+    QString ss = QObject::tr("The image will have more than 2GB worth of pixels. Try cropping the data so that the total pixels on a single plane is less than 2GB.");
+    setErrorCondition(-1012);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return getErrorCondition();
+  }
+
+
   QImage image(dB, dA, QImage::Format_RGB32);
+  if(image.isNull())
+  {
+    QString ss = QObject::tr("The memory for the image could not be allocated using a QImage. The total number of bytes would be greater than 2GB");
+    setErrorCondition(-1014);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return getErrorCondition();
+  }
+
   for (size_t axisA = 0; axisA < dA; ++axisA)
   {
     uint8_t* scanLine = image.scanLine(axisA);
@@ -335,7 +389,7 @@ int32_t WriteImages::saveImage(size_t slice, size_t dB, size_t dA, size_t* dims)
 #endif
     }
   }
-  image.setText("Description", DREAM3DLib::Version::PackageComplete());
+  image.setText("Description", SIMPLib::Version::PackageComplete());
   bool success = image.save(path);
   if (success)
   {

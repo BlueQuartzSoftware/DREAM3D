@@ -37,8 +37,8 @@
 #ifndef _FPCodeGenerator_H_
 #define _FPCodeGenerator_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 // stringised version of line number (must be done in two steps)
 #define STRINGISE(N) #N
@@ -58,7 +58,7 @@
 class FPCodeGenerator
 {
   public:
-    DREAM3D_SHARED_POINTERS(FPCodeGenerator)
+    SIMPL_SHARED_POINTERS(FPCodeGenerator)
 
     static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
     {

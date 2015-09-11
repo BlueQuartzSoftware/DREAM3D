@@ -46,10 +46,10 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/FilterParameters/FileListInfoFilterParameter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/FilterParameters/FileListInfoFilterParameter.h"
 
-#include "QtSupportLib/DREAM3DPluginFrame.h"
+#include "QtSupportLib/SIMPLPluginFrame.h"
 
 #include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"

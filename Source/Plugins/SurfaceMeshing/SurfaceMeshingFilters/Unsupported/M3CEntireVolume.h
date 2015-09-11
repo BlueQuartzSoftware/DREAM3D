@@ -43,13 +43,13 @@
 
 #include <string>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/IDataArray.h"
 
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "DREAM3DLib/Common/SurfaceMeshStructs.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/Common/SurfaceMeshStructs.h"
 
 /**
  * @class M3CEntireVolume M3CEntireVolume.h DREAM3DLic/SurfaceMeshingFilters/M3CEntireVolume.h
@@ -68,20 +68,20 @@ class M3CEntireVolume : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(M3CEntireVolume)
-    DREAM3D_STATIC_NEW_MACRO(M3CEntireVolume)
-    DREAM3D_TYPE_MACRO_SUPER(M3CEntireVolume, AbstractFilter)
+    SIMPL_SHARED_POINTERS(M3CEntireVolume)
+    SIMPL_STATIC_NEW_MACRO(M3CEntireVolume)
+    SIMPL_TYPE_MACRO_SUPER(M3CEntireVolume, AbstractFilter)
 
     virtual ~M3CEntireVolume();
 
     //------ Created Surface Mesh Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshEdgesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshInternalEdgesArrayName)
+    SIMPL_INSTANCE_STRING_PROPERTY(SurfaceMeshEdgesArrayName)
+    SIMPL_INSTANCE_STRING_PROPERTY(SurfaceMeshInternalEdgesArrayName)
 
     //------ Required Cell Data
 
     //--------- Input Parameters
-    DREAM3D_INSTANCE_PROPERTY(bool, AddSurfaceLayer)
+    SIMPL_INSTANCE_PROPERTY(bool, AddSurfaceLayer)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

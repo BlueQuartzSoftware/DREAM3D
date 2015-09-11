@@ -39,6 +39,7 @@
 
 #include "H5Support/QH5Lite.h"
 #include "H5Support/QH5Utilities.h"
+#include "H5Support/HDF5ScopedFileSentinel.h"
 
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/EbsdMacros.h"
@@ -84,6 +85,8 @@ int H5CtfReader::readHeaderOnly()
     return -1;
   }
 
+  HDF5ScopedFileSentinel sentinel(&fileId, true);
+
   hid_t gid = H5Gopen(fileId, m_HDF5Path.toLatin1().data(), H5P_DEFAULT);
   if (gid < 0)
   {
@@ -91,10 +94,10 @@ int H5CtfReader::readHeaderOnly()
     err = QH5Utilities::closeFile(fileId);
     return -1;
   }
+  sentinel.addGroupId(&gid);
 
   // Read all the header information
   err = readHeader(gid);
-  err = QH5Utilities::closeFile(fileId);
   return err;
 }
 
@@ -284,12 +287,12 @@ int H5CtfReader::readData(hid_t parId)
   CTF_READER_ALLOCATE_AND_READ(Euler2, float);
   CTF_READER_ALLOCATE_AND_READ(Euler3, float);
   CTF_READER_ALLOCATE_AND_READ(MAD, float);
-  CTF_READER_ALLOCATE_AND_READ(BC, float);
-  CTF_READER_ALLOCATE_AND_READ(BS, float);
-  CTF_READER_ALLOCATE_AND_READ(GrainIndex, float);
-  CTF_READER_ALLOCATE_AND_READ(GrainRandomColourR, float);
-  CTF_READER_ALLOCATE_AND_READ(GrainRandomColourG, float);
-  CTF_READER_ALLOCATE_AND_READ(GrainRandomColourB, float);
+  CTF_READER_ALLOCATE_AND_READ(BC, int);
+  CTF_READER_ALLOCATE_AND_READ(BS, int);
+  CTF_READER_ALLOCATE_AND_READ(GrainIndex, int);
+  CTF_READER_ALLOCATE_AND_READ(GrainRandomColourR, int);
+  CTF_READER_ALLOCATE_AND_READ(GrainRandomColourG, int);
+  CTF_READER_ALLOCATE_AND_READ(GrainRandomColourB, int);
 
 
   err = H5Gclose(gid);

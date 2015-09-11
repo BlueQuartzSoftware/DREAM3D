@@ -35,7 +35,7 @@
 
 #include "CubicOps.h"
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/partitioner.h>
@@ -46,9 +46,9 @@
 
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Math/GeometryMath.h"
-#include "DREAM3DLib/Utilities/ColorUtilities.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Math/GeometryMath.h"
+#include "SIMPLib/Utilities/ColorUtilities.h"
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
@@ -58,9 +58,9 @@
 namespace Detail
 {
 
-  static const float CubicDim1InitValue = powf((0.75f * ((DREAM3D::Constants::k_Pi / 4.0f) - sinf((DREAM3D::Constants::k_Pi / 4.0f)))), (1.0f / 3.0f));
-  static const float CubicDim2InitValue = powf((0.75f * ((DREAM3D::Constants::k_Pi / 4.0f) - sinf((DREAM3D::Constants::k_Pi / 4.0f)))), (1.0f / 3.0f));
-  static const float CubicDim3InitValue = powf((0.75f * ((DREAM3D::Constants::k_Pi / 4.0f) - sinf((DREAM3D::Constants::k_Pi / 4.0f)))), (1.0f / 3.0f));
+  static const float CubicDim1InitValue = powf((0.75f * ((SIMPLib::Constants::k_Pi / 4.0f) - sinf((SIMPLib::Constants::k_Pi / 4.0f)))), (1.0f / 3.0f));
+  static const float CubicDim2InitValue = powf((0.75f * ((SIMPLib::Constants::k_Pi / 4.0f) - sinf((SIMPLib::Constants::k_Pi / 4.0f)))), (1.0f / 3.0f));
+  static const float CubicDim3InitValue = powf((0.75f * ((SIMPLib::Constants::k_Pi / 4.0f) - sinf((SIMPLib::Constants::k_Pi / 4.0f)))), (1.0f / 3.0f));
   static const float CubicDim1StepValue = CubicDim1InitValue / 9.0f;
   static const float CubicDim2StepValue = CubicDim2InitValue / 9.0f;
   static const float CubicDim3StepValue = CubicDim3InitValue / 9.0f;
@@ -79,18 +79,18 @@ static const QuatF CubicQuatSym[24] =
   QuaternionMathF::New(1.000000000f, 0.000000000f, 0.000000000f, 0.000000000f),
   QuaternionMathF::New(0.000000000f, 1.000000000f, 0.000000000f, 0.000000000f),
   QuaternionMathF::New(0.000000000f, 0.000000000f, 1.000000000f, 0.000000000f),
-  QuaternionMathF::New(DREAM3D::Constants::k_1OverRoot2, 0.000000000f, 0.000000000f, DREAM3D::Constants::k_1OverRoot2),
-  QuaternionMathF::New(0.000000000f, DREAM3D::Constants::k_1OverRoot2, 0.000000000f, DREAM3D::Constants::k_1OverRoot2),
-  QuaternionMathF::New(0.000000000f, 0.000000000f, DREAM3D::Constants::k_1OverRoot2, DREAM3D::Constants::k_1OverRoot2),
-  QuaternionMathF::New(-DREAM3D::Constants::k_1OverRoot2, 0.000000000f, 0.000000000f, DREAM3D::Constants::k_1OverRoot2),
-  QuaternionMathF::New(0.000000000f, -DREAM3D::Constants::k_1OverRoot2, 0.000000000f, DREAM3D::Constants::k_1OverRoot2),
-  QuaternionMathF::New(0.000000000f, 0.000000000f, -DREAM3D::Constants::k_1OverRoot2, DREAM3D::Constants::k_1OverRoot2),
-  QuaternionMathF::New(DREAM3D::Constants::k_1OverRoot2, DREAM3D::Constants::k_1OverRoot2, 0.000000000f, 0.000000000f),
-  QuaternionMathF::New(-DREAM3D::Constants::k_1OverRoot2, DREAM3D::Constants::k_1OverRoot2, 0.000000000f, 0.000000000f),
-  QuaternionMathF::New(0.000000000f, DREAM3D::Constants::k_1OverRoot2, DREAM3D::Constants::k_1OverRoot2, 0.000000000f),
-  QuaternionMathF::New(0.000000000f, -DREAM3D::Constants::k_1OverRoot2, DREAM3D::Constants::k_1OverRoot2, 0.000000000f),
-  QuaternionMathF::New(DREAM3D::Constants::k_1OverRoot2, 0.000000000f, DREAM3D::Constants::k_1OverRoot2, 0.000000000f),
-  QuaternionMathF::New(-DREAM3D::Constants::k_1OverRoot2, 0.000000000f, DREAM3D::Constants::k_1OverRoot2, 0.000000000f),
+  QuaternionMathF::New(SIMPLib::Constants::k_1OverRoot2, 0.000000000f, 0.000000000f, SIMPLib::Constants::k_1OverRoot2),
+  QuaternionMathF::New(0.000000000f, SIMPLib::Constants::k_1OverRoot2, 0.000000000f, SIMPLib::Constants::k_1OverRoot2),
+  QuaternionMathF::New(0.000000000f, 0.000000000f, SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2),
+  QuaternionMathF::New(-SIMPLib::Constants::k_1OverRoot2, 0.000000000f, 0.000000000f, SIMPLib::Constants::k_1OverRoot2),
+  QuaternionMathF::New(0.000000000f, -SIMPLib::Constants::k_1OverRoot2, 0.000000000f, SIMPLib::Constants::k_1OverRoot2),
+  QuaternionMathF::New(0.000000000f, 0.000000000f, -SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2),
+  QuaternionMathF::New(SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2, 0.000000000f, 0.000000000f),
+  QuaternionMathF::New(-SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2, 0.000000000f, 0.000000000f),
+  QuaternionMathF::New(0.000000000f, SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2, 0.000000000f),
+  QuaternionMathF::New(0.000000000f, -SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2, 0.000000000f),
+  QuaternionMathF::New(SIMPLib::Constants::k_1OverRoot2, 0.000000000f, SIMPLib::Constants::k_1OverRoot2, 0.000000000f),
+  QuaternionMathF::New(-SIMPLib::Constants::k_1OverRoot2, 0.000000000f, SIMPLib::Constants::k_1OverRoot2, 0.000000000f),
   QuaternionMathF::New(0.500000000f, 0.500000000f, 0.500000000f, 0.500000000f),
   QuaternionMathF::New(-0.500000000f, -0.500000000f, -0.500000000f, 0.500000000f),
   QuaternionMathF::New(0.500000000f, -0.500000000f, 0.500000000f, 0.500000000f),
@@ -498,9 +498,9 @@ float CubicOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
     }
   }
   wmin = qco.w;
-  if (((qco.z + qco.w) / (DREAM3D::Constants::k_Sqrt2)) > wmin)
+  if (((qco.z + qco.w) / (SIMPLib::Constants::k_Sqrt2)) > wmin)
   {
-    wmin = ((qco.z + qco.w) / (DREAM3D::Constants::k_Sqrt2));
+    wmin = ((qco.z + qco.w) / (SIMPLib::Constants::k_Sqrt2));
     type = 2;
   }
   if (((qco.x + qco.y + qco.z + qco.w) / 2) > wmin)
@@ -511,13 +511,13 @@ float CubicOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
   if (wmin < -1.0)
   {
     //  wmin = -1.0;
-    wmin = DREAM3D::Constants::k_ACosNeg1;
+    wmin = SIMPLib::Constants::k_ACosNeg1;
     sin_wmin_over_2 = sinf(wmin);
   }
   else if (wmin > 1.0)
   {
     //   wmin = 1.0;
-    wmin = DREAM3D::Constants::k_ACos1;
+    wmin = SIMPLib::Constants::k_ACos1;
     sin_wmin_over_2 = sinf(wmin);
   }
   else
@@ -534,9 +534,9 @@ float CubicOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
   }
   if(type == 2)
   {
-    n1 = ((qco.x - qco.y) / (DREAM3D::Constants::k_Sqrt2)) / sin_wmin_over_2;
-    n2 = ((qco.x + qco.y) / (DREAM3D::Constants::k_Sqrt2)) / sin_wmin_over_2;
-    n3 = ((qco.z - qco.w) / (DREAM3D::Constants::k_Sqrt2)) / sin_wmin_over_2;
+    n1 = ((qco.x - qco.y) / (SIMPLib::Constants::k_Sqrt2)) / sin_wmin_over_2;
+    n2 = ((qco.x + qco.y) / (SIMPLib::Constants::k_Sqrt2)) / sin_wmin_over_2;
+    n3 = ((qco.z - qco.w) / (SIMPLib::Constants::k_Sqrt2)) / sin_wmin_over_2;
   }
   if(type == 3)
   {
@@ -1338,66 +1338,66 @@ namespace Detail
 
             // -----------------------------------------------------------------------------
             // 011 Family
-            direction[0] = DREAM3D::Constants::k_1OverRoot2;
-            direction[1] = DREAM3D::Constants::k_1OverRoot2;
+            direction[0] = SIMPLib::Constants::k_1OverRoot2;
+            direction[1] = SIMPLib::Constants::k_1OverRoot2;
             direction[2] = 0.0;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36));
             MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36), m_xyz011->getPointer(i * 36 + 3));
             MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 3), -1);
-            direction[0] = DREAM3D::Constants::k_1OverRoot2;
+            direction[0] = SIMPLib::Constants::k_1OverRoot2;
             direction[1] = 0.0;
-            direction[2] = DREAM3D::Constants::k_1OverRoot2;
+            direction[2] = SIMPLib::Constants::k_1OverRoot2;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36 + 6));
             MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36 + 6), m_xyz011->getPointer(i * 36 + 9));
             MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 9), -1);
             direction[0] = 0.0;
-            direction[1] = DREAM3D::Constants::k_1OverRoot2;
-            direction[2] = DREAM3D::Constants::k_1OverRoot2;
+            direction[1] = SIMPLib::Constants::k_1OverRoot2;
+            direction[2] = SIMPLib::Constants::k_1OverRoot2;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36 + 12));
             MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36 + 12), m_xyz011->getPointer(i * 36 + 15));
             MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 15), -1);
-            direction[0] = -DREAM3D::Constants::k_1OverRoot2;
-            direction[1] = DREAM3D::Constants::k_1OverRoot2;
+            direction[0] = -SIMPLib::Constants::k_1OverRoot2;
+            direction[1] = SIMPLib::Constants::k_1OverRoot2;
             direction[2] = 0.0;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36 + 18));
             MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36 + 18), m_xyz011->getPointer(i * 36 + 21));
             MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 21), -1);
-            direction[0] = -DREAM3D::Constants::k_1OverRoot2;
+            direction[0] = -SIMPLib::Constants::k_1OverRoot2;
             direction[1] = 0.0;
-            direction[2] = DREAM3D::Constants::k_1OverRoot2;
+            direction[2] = SIMPLib::Constants::k_1OverRoot2;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36 + 24));
             MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36 + 24), m_xyz011->getPointer(i * 36 + 27));
             MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 27), -1);
             direction[0] = 0.0;
-            direction[1] = -DREAM3D::Constants::k_1OverRoot2;
-            direction[2] = DREAM3D::Constants::k_1OverRoot2;
+            direction[1] = -SIMPLib::Constants::k_1OverRoot2;
+            direction[2] = SIMPLib::Constants::k_1OverRoot2;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36 + 30));
             MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36 + 30), m_xyz011->getPointer(i * 36 + 33));
             MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 33), -1);
 
             // -----------------------------------------------------------------------------
             // 111 Family
-            direction[0] = DREAM3D::Constants::k_1OverRoot3;
-            direction[1] = DREAM3D::Constants::k_1OverRoot3;
-            direction[2] = DREAM3D::Constants::k_1OverRoot3;
+            direction[0] = SIMPLib::Constants::k_1OverRoot3;
+            direction[1] = SIMPLib::Constants::k_1OverRoot3;
+            direction[2] = SIMPLib::Constants::k_1OverRoot3;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 24));
             MatrixMath::Copy3x1(m_xyz111->getPointer(i * 24), m_xyz111->getPointer(i * 24 + 3));
             MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 24 + 3), -1);
-            direction[0] = -DREAM3D::Constants::k_1OverRoot3;
-            direction[1] = DREAM3D::Constants::k_1OverRoot3;
-            direction[2] = DREAM3D::Constants::k_1OverRoot3;
+            direction[0] = -SIMPLib::Constants::k_1OverRoot3;
+            direction[1] = SIMPLib::Constants::k_1OverRoot3;
+            direction[2] = SIMPLib::Constants::k_1OverRoot3;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 24 + 6));
             MatrixMath::Copy3x1(m_xyz111->getPointer(i * 24 + 6), m_xyz111->getPointer(i * 24 + 9));
             MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 24 + 9), -1);
-            direction[0] = DREAM3D::Constants::k_1OverRoot3;
-            direction[1] = -DREAM3D::Constants::k_1OverRoot3;
-            direction[2] = DREAM3D::Constants::k_1OverRoot3;
+            direction[0] = SIMPLib::Constants::k_1OverRoot3;
+            direction[1] = -SIMPLib::Constants::k_1OverRoot3;
+            direction[2] = SIMPLib::Constants::k_1OverRoot3;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 24 + 12));
             MatrixMath::Copy3x1(m_xyz111->getPointer(i * 24 + 12), m_xyz111->getPointer(i * 24 + 15));
             MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 24 + 15), -1);
-            direction[0] = DREAM3D::Constants::k_1OverRoot3;
-            direction[1] = DREAM3D::Constants::k_1OverRoot3;
-            direction[2] = -DREAM3D::Constants::k_1OverRoot3;
+            direction[0] = SIMPLib::Constants::k_1OverRoot3;
+            direction[1] = SIMPLib::Constants::k_1OverRoot3;
+            direction[2] = -SIMPLib::Constants::k_1OverRoot3;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 24 + 18));
             MatrixMath::Copy3x1(m_xyz111->getPointer(i * 24 + 18), m_xyz111->getPointer(i * 24 + 21));
             MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 24 + 21), -1);
@@ -1405,7 +1405,7 @@ namespace Detail
 
         }
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
         void operator()(const tbb::blocked_range<size_t>& r) const
         {
           generate(r.begin(), r.end());
@@ -1437,12 +1437,12 @@ void CubicOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatArray
   }
 
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
 #endif
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, nOrientations),
@@ -1582,19 +1582,19 @@ void _TripletSort(T a, T b, T c, T& x, T& y, T& z)
 // -----------------------------------------------------------------------------
 bool CubicOps::inUnitTriangle(float eta, float chi)
 {
-  float etaDeg = eta * DREAM3D::Constants::k_180OverPi;
+  float etaDeg = eta * SIMPLib::Constants::k_180OverPi;
   float chiMax;
   if(etaDeg > 45.0)
   {
-    chiMax = sqrt(1.0 / (2.0 + tanf(0.5 * DREAM3D::Constants::k_Pi - eta) * tanf(0.5 * DREAM3D::Constants::k_Pi - eta)));
+    chiMax = sqrt(1.0 / (2.0 + tanf(0.5 * SIMPLib::Constants::k_Pi - eta) * tanf(0.5 * SIMPLib::Constants::k_Pi - eta)));
   }
   else
   {
     chiMax = sqrt(1.0 / (2.0 + tanf(eta) * tanf(eta)));
   }
-  DREAM3DMath::boundF(chiMax, -1.0f, 1.0f);
+  SIMPLibMath::boundF(chiMax, -1.0f, 1.0f);
   chiMax = acos(chiMax);
-  if( eta < 0.0 || eta > (45.0 * DREAM3D::Constants::k_PiOver180) || chi < 0.0 || chi > chiMax )
+  if( eta < 0.0 || eta > (45.0 * SIMPLib::Constants::k_PiOver180) || chi < 0.0 || chi > chiMax )
   {
     return false;
   }
@@ -1616,9 +1616,9 @@ DREAM3D::Rgb CubicOps::generateIPFColor(double phi1, double phi, double phi2, do
 {
   if (degToRad == true)
   {
-    phi1 = phi1 * DREAM3D::Constants::k_DegToRad;
-    phi = phi * DREAM3D::Constants::k_DegToRad;
-    phi2 = phi2 * DREAM3D::Constants::k_DegToRad;
+    phi1 = phi1 * SIMPLib::Constants::k_DegToRad;
+    phi = phi * SIMPLib::Constants::k_DegToRad;
+    phi2 = phi2 * SIMPLib::Constants::k_DegToRad;
   }
 
   QuatF qc = QuaternionMath<float>::New();
@@ -1671,17 +1671,17 @@ DREAM3D::Rgb CubicOps::generateIPFColor(double phi1, double phi, double phi2, do
 
   float etaMin = 0.0;
   float etaMax = 45.0;
-  float etaDeg = eta * DREAM3D::Constants::k_180OverPi;
+  float etaDeg = eta * SIMPLib::Constants::k_180OverPi;
   float chiMax;
   if(etaDeg > 45.0)
   {
-    chiMax = sqrt(1.0 / (2.0 + tanf(0.5 * DREAM3D::Constants::k_Pi - eta) * tanf(0.5 * DREAM3D::Constants::k_Pi - eta)));
+    chiMax = sqrt(1.0 / (2.0 + tanf(0.5 * SIMPLib::Constants::k_Pi - eta) * tanf(0.5 * SIMPLib::Constants::k_Pi - eta)));
   }
   else
   {
     chiMax = sqrt(1.0 / (2.0 + tanf(eta) * tanf(eta)));
   }
-  DREAM3DMath::boundF(chiMax, -1.0f, 1.0f);
+  SIMPLibMath::boundF(chiMax, -1.0f, 1.0f);
   chiMax = acos(chiMax);
 
   _rgb[0] = 1.0 - chi / chiMax;
@@ -1763,7 +1763,7 @@ QVector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfigur
   DoubleArrayType::Pointer intensity001 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label0 + "_Intensity_Image");
   DoubleArrayType::Pointer intensity011 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label1 + "_Intensity_Image");
   DoubleArrayType::Pointer intensity111 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label2 + "_Intensity_Image");
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
   tbb::task_group* g = new tbb::task_group;
@@ -1857,7 +1857,7 @@ QVector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfigur
     poleFigures[2] = image111;
   }
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 
   if(doParallel == true)
   {
@@ -1961,9 +1961,9 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
       x1alt = x1alt / sqrt((x1alt * x1alt) + (y1 * y1));
       theta = acos(x1alt);
 
-      if (phi < (45 * DREAM3D::Constants::k_PiOver180) ||
-          phi > (90 * DREAM3D::Constants::k_PiOver180) ||
-          theta > (35.26 * DREAM3D::Constants::k_PiOver180))
+      if (phi < (45 * SIMPLib::Constants::k_PiOver180) ||
+          phi > (90 * SIMPLib::Constants::k_PiOver180) ||
+          theta > (35.26 * SIMPLib::Constants::k_PiOver180))
       {
         color = 0xFFFFFFFF;
       }
@@ -2019,26 +2019,26 @@ DREAM3D::Rgb CubicOps::generateMisorientationColor(const QuatF& q, const QuatF& 
   x1 = x;
   y1 = y;
   z1 = z;
-  if(x >= DREAM3D::Constants::k_1Over3 && atan2(z, y) >= ((1.0f - 2.0f * x) / x))
+  if(x >= SIMPLib::Constants::k_1Over3 && atan2(z, y) >= ((1.0f - 2.0f * x) / x))
   {
     y1 = (x * (y + z)) / (1.0f - x);
     z1 = (x * z * (y + z)) / (y * (1.0f - x));
   }
 
   //eq c9.3
-  x2 = x1 - DREAM3D::Constants::k_Tan_OneEigthPi;
-  y2 = y1 * DREAM3D::Constants::k_Cos_ThreeEightPi - z1 * DREAM3D::Constants::k_Sin_ThreeEightPi;
-  z2 = y1 * DREAM3D::Constants::k_Sin_ThreeEightPi + z1 * DREAM3D::Constants::k_Cos_ThreeEightPi;
+  x2 = x1 - SIMPLib::Constants::k_Tan_OneEigthPi;
+  y2 = y1 * SIMPLib::Constants::k_Cos_ThreeEightPi - z1 * SIMPLib::Constants::k_Sin_ThreeEightPi;
+  z2 = y1 * SIMPLib::Constants::k_Sin_ThreeEightPi + z1 * SIMPLib::Constants::k_Cos_ThreeEightPi;
 
   //eq c9.4
   x3 = x2;
-  y3 = y2 * (1 + (y2 / z2) * DREAM3D::Constants::k_Tan_OneEigthPi);
-  z3 = z2 + y2 * DREAM3D::Constants::k_Tan_OneEigthPi;
+  y3 = y2 * (1 + (y2 / z2) * SIMPLib::Constants::k_Tan_OneEigthPi);
+  z3 = z2 + y2 * SIMPLib::Constants::k_Tan_OneEigthPi;
 
   //eq c9.5
   x4 = x3;
-  y4 = (y3 * DREAM3D::Constants::k_Cos_OneEigthPi) / DREAM3D::Constants::k_Tan_OneEigthPi;
-  z4 = z3 - x3 / DREAM3D::Constants::k_Cos_OneEigthPi;
+  y4 = (y3 * SIMPLib::Constants::k_Cos_OneEigthPi) / SIMPLib::Constants::k_Tan_OneEigthPi;
+  z4 = z3 - x3 / SIMPLib::Constants::k_Cos_OneEigthPi;
 
   //eq c9.6
   k = atan2(-x4, y4);
@@ -2053,9 +2053,9 @@ DREAM3D::Rgb CubicOps::generateMisorientationColor(const QuatF& q, const QuatF& 
   z6 = z5;
 
   //eq c9.8 these hsv are from 0 to 1 in cartesian coordinates
-  x7 = (x6 * DREAM3D::Constants::k_Sqrt3 - y6) / (2.0f * DREAM3D::Constants::k_Tan_OneEigthPi);
-  y7 = (x6 + y6 * DREAM3D::Constants::k_Sqrt3) / (2.0f * DREAM3D::Constants::k_Tan_OneEigthPi);
-  z7 = z6 * (DREAM3D::Constants::k_Cos_OneEigthPi / DREAM3D::Constants::k_Tan_OneEigthPi);
+  x7 = (x6 * SIMPLib::Constants::k_Sqrt3 - y6) / (2.0f * SIMPLib::Constants::k_Tan_OneEigthPi);
+  y7 = (x6 + y6 * SIMPLib::Constants::k_Sqrt3) / (2.0f * SIMPLib::Constants::k_Tan_OneEigthPi);
+  z7 = z6 * (SIMPLib::Constants::k_Cos_OneEigthPi / SIMPLib::Constants::k_Tan_OneEigthPi);
 
   //convert to traditional hsv (0-1)
   h = fmod(atan2f(y7, x7) + M_2PI, M_2PI) / M_2PI;
@@ -2082,7 +2082,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
 #if 0
   //uint32_t* pixelPtr = reinterpret_cast<uint32_t*>(image->getPointer(0));
 
-  double maxk = DREAM3D::Constants::k_Sqrt2 - 1;
+  double maxk = SIMPLib::Constants::k_Sqrt2 - 1;
   double maxdeg = 2 * atan(sqrt(6 * maxk * maxk - 4 * maxk + 1));
   double deg1 = 2 * atan(sqrt(2 * maxk * maxk));
 
@@ -2095,10 +2095,10 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
   {
     double theta1 = atan(1 / sin(M_PI_4));
     double theta2 = M_PI_2;
-    B = DREAM3DMath::linspace(theta1, theta2, n2);
+    B = SIMPLibMath::linspace(theta1, theta2, n2);
     for(int i = 0; i < n2; i++)
     {
-      C.push_back(DREAM3DMath::linspace(asin(1 / tan(B[i])), M_PI_4, n1));
+      C.push_back(SIMPLibMath::linspace(asin(1 / tan(B[i])), M_PI_4, n1));
     }
   }
   else if(A > M_PI / 8 && A <= M_PI / 6)
@@ -2108,8 +2108,8 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     double theta3 = M_PI_2;
     int frac1 = floor((n2 - 3) * (theta2 - theta1) / (theta3 - theta1));
     int frac2 = (n2 - 3) - frac1;
-    std::vector<double> temptheta1 = DREAM3DMath::linspace(theta1, theta2, frac1 + 2);
-    std::vector<double> temptheta2 = DREAM3DMath::linspace(theta2, theta3, frac2 + 2);
+    std::vector<double> temptheta1 = SIMPLibMath::linspace(theta1, theta2, frac1 + 2);
+    std::vector<double> temptheta2 = SIMPLibMath::linspace(theta2, theta3, frac2 + 2);
     temptheta2.erase(temptheta2.begin());
     B.insert(B.end(), temptheta1.begin(), temptheta1.end());
     B.insert(B.end(), temptheta2.begin(), temptheta2.end());
@@ -2118,11 +2118,11 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
       double theta = B[i];
       if(theta >= theta1 && theta <= theta2)
       {
-        C.push_back(DREAM3DMath::linspace(asin(1 / tan(theta)), M_PI_4, n1));
+        C.push_back(SIMPLibMath::linspace(asin(1 / tan(theta)), M_PI_4, n1));
       }
       else
       {
-        C.push_back(DREAM3DMath::linspace(acos(maxk / (tan(A)*sin(theta))), M_PI_4, n1));
+        C.push_back(SIMPLibMath::linspace(acos(maxk / (tan(A)*sin(theta))), M_PI_4, n1));
       }
     }
   }
@@ -2143,10 +2143,10 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     int frac1 = (floor((n2 - 4) * (theta2 - theta1) / (theta4 - theta1)));
     int frac2 = (floor((n2 - 4) * (theta3 - theta2) / (theta4 - theta1)));
     int frac3 = n2 - 4 - frac1 - frac2;
-    std::vector<double> temptheta3 = DREAM3DMath::linspace(theta1, theta2, (frac1 + 2));
-    std::vector<double> temptheta4 = DREAM3DMath::linspace(theta2, theta3, (frac2 + 2));
+    std::vector<double> temptheta3 = SIMPLibMath::linspace(theta1, theta2, (frac1 + 2));
+    std::vector<double> temptheta4 = SIMPLibMath::linspace(theta2, theta3, (frac2 + 2));
     temptheta4.erase(temptheta4.begin());
-    std::vector<double>temptheta5 = DREAM3DMath::linspace(theta3, theta4, (frac3 + 2));
+    std::vector<double>temptheta5 = SIMPLibMath::linspace(theta3, theta4, (frac3 + 2));
     temptheta5.erase(temptheta5.begin());
     B.insert(B.end(), temptheta3.begin(), temptheta3.end());
     B.insert(B.end(), temptheta4.begin(), temptheta4.end());
@@ -2161,7 +2161,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
         if(theta <= theta2)
         {
           phi1 = asin(1 / tan(theta));
-          double k = (1 - tan(A) * cos(theta)) / (DREAM3D::Constants::k_Sqrt2 * (tan(A) * sin(theta)));
+          double k = (1 - tan(A) * cos(theta)) / (SIMPLib::Constants::k_Sqrt2 * (tan(A) * sin(theta)));
           if(k > 1)
           {
             k = 1;
@@ -2174,7 +2174,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
         }
         else if(theta > theta2 && theta < theta3)
         {
-          phi1 = acos((DREAM3D::Constants::k_Sqrt2 - 1) / (tan(A) * sin(theta)));
+          phi1 = acos((SIMPLib::Constants::k_Sqrt2 - 1) / (tan(A) * sin(theta)));
           phi2 = M_PI_4;
         }
       }
@@ -2206,7 +2206,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
         phi1 = acos(maxk / (tan(A) * sin(theta)));
         phi2 = M_PI_4;
       }
-      C.push_back(DREAM3DMath::linspace(phi1, phi2, n1));
+      C.push_back(SIMPLibMath::linspace(phi1, phi2, n1));
     }
   }
   else if(A >= deg1 / 2 && A <= maxdeg / 2)
@@ -2216,8 +2216,8 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     double theta3 = acos((sqrt(tan(A) * tan(A) - 2 * (maxk * maxk))) / (tan(A)));
     int frac1 = (floor((n2 - 3) * (theta2 - theta1) / (theta3 - theta1)));
     int frac2 = (n2 - 3) - frac1;
-    std::vector<double> temptheta1 = DREAM3DMath::linspace(theta1, theta2, (frac1 + 2));
-    std::vector<double> temptheta2 = DREAM3DMath::linspace(theta2, theta3, (frac2 + 2));
+    std::vector<double> temptheta1 = SIMPLibMath::linspace(theta1, theta2, (frac1 + 2));
+    std::vector<double> temptheta2 = SIMPLibMath::linspace(theta2, theta3, (frac2 + 2));
     temptheta2.erase(temptheta2.begin());
     B.insert(B.end(), temptheta1.begin(), temptheta1.end());
     B.insert(B.end(), temptheta2.begin(), temptheta2.end());
@@ -2236,7 +2236,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
       {
         phi2 = M_PI_4;
       }
-      C.push_back(DREAM3DMath::linspace(phi1, phi2, n1));
+      C.push_back(SIMPLibMath::linspace(phi1, phi2, n1));
     }
   }
 
@@ -2262,7 +2262,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
   */
   double r = tan(A);
   std::vector<double> x, y, z;
-  y = DREAM3DMath::linspace(0, r / DREAM3D::Constants::k_Sqrt2, 100);
+  y = SIMPLibMath::linspace(0, r / SIMPLib::Constants::k_Sqrt2, 100);
   for(std::vector<double>::size_type i = 0; i < y.size(); i++)
   {
     double k = r * r - y[i] * y[i];
@@ -2281,7 +2281,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
   x.clear();
   y.clear();
   z.clear();
-  x = DREAM3DMath::linspace(r / DREAM3D::Constants::k_Sqrt3, r, 100);
+  x = SIMPLibMath::linspace(r / SIMPLib::Constants::k_Sqrt3, r, 100);
   for(std::vector<double>::size_type i = 0; i < x.size(); i++)
   {
     double k = r * r - x[i] * x[i];
@@ -2300,7 +2300,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
   x.clear();
   y.clear();
   z.clear();
-  x = DREAM3DMath::linspace(r / DREAM3D::Constants::k_Sqrt3, r / DREAM3D::Constants::k_Sqrt2, 100);
+  x = SIMPLibMath::linspace(r / SIMPLib::Constants::k_Sqrt3, r / SIMPLib::Constants::k_Sqrt2, 100);
   for(std::vector<double>::size_type i = 0; i < x.size(); i++)
   {
     y.push_back(x[i]);
@@ -2344,9 +2344,9 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     }
     else
     {
-      d1.push_back(r / DREAM3D::Constants::k_Sqrt3);
-      d2.push_back(r / DREAM3D::Constants::k_Sqrt3);
-      d3.push_back(r / DREAM3D::Constants::k_Sqrt3);
+      d1.push_back(r / SIMPLib::Constants::k_Sqrt3);
+      d2.push_back(r / SIMPLib::Constants::k_Sqrt3);
+      d3.push_back(r / SIMPLib::Constants::k_Sqrt3);
     }
   }
   ba = rodri2pair(d1, d2, d3);
@@ -2549,7 +2549,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     x.clear();
     y.clear();
     z.clear();
-    y = DREAM3DMath::linspace(0.0f, r / sqrt(2.0f), 100);
+    y = SIMPLibMath::linspace(0.0f, r / sqrt(2.0f), 100);
     for(std::vector<double>::size_type i = 0; i < y.size(); i++)
     {
       z.push_back(0);
@@ -2568,7 +2568,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     x.clear();
     y.clear();
     z.clear();
-    x = DREAM3DMath::linspace(r / DREAM3D::Constants::k_Sqrt3, r, 100);
+    x = SIMPLibMath::linspace(r / SIMPLib::Constants::k_Sqrt3, r, 100);
     for(std::vector<double>::size_type i = 0; i < x.size(); i++)
     {
       k = (r * r - x[i] * x[i]) / 2;
@@ -2587,7 +2587,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     x.clear();
     y.clear();
     z.clear();
-    x = DREAM3DMath::linspace(r / DREAM3D::Constants::k_Sqrt3, r / DREAM3D::Constants::k_Sqrt2, 100);
+    x = SIMPLibMath::linspace(r / SIMPLib::Constants::k_Sqrt3, r / SIMPLib::Constants::k_Sqrt2, 100);
     for(std::vector<double>::size_type i = 0; i < x.size(); i++)
     {
       y.push_back(x[i]);
@@ -2614,7 +2614,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     double theta3 = M_PI_2;
     double phi3 = acos(maxk / (tan(A) * sin(theta3)));
 
-    y = DREAM3DMath::linspace(r * sin(phi3), r / (DREAM3D::Constants::k_Sqrt2), 100);
+    y = SIMPLibMath::linspace(r * sin(phi3), r / (SIMPLib::Constants::k_Sqrt2), 100);
     for(std::vector<double>::size_type i = 0; i < y.size(); i++)
     {
       x.push_back(sqrt(r * r - y[i]*y[i]));
@@ -2628,7 +2628,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     x.clear();
     y.clear();
     z.clear();
-    z = DREAM3DMath::linspace(r * cos(theta1), r * cos(theta2), 100);
+    z = SIMPLibMath::linspace(r * cos(theta1), r * cos(theta2), 100);
     for(std::vector<double>::size_type i = 0; i < z.size(); i++)
     {
       y.push_back(z[i]);
@@ -2642,7 +2642,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     x.clear();
     y.clear();
     z.clear();
-    z = DREAM3DMath::linspace(r * cos(theta1), r * cos(theta3), 100);
+    z = SIMPLibMath::linspace(r * cos(theta1), r * cos(theta3), 100);
     for(std::vector<double>::size_type i = 0; i < z.size(); i++)
     {
       x.push_back(sqrt((r * r - z[i]*z[i]) / 2));
@@ -2656,7 +2656,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     x.clear();
     y.clear();
     z.clear();
-    z = DREAM3DMath::linspace(r * cos(theta2), r * cos(theta3), 100);
+    z = SIMPLibMath::linspace(r * cos(theta2), r * cos(theta3), 100);
     for(std::vector<double>::size_type i = 0; i < z.size(); i++)
     {
       x.push_back(maxk);
@@ -2679,7 +2679,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     double thetab = M_PI_2;
     double phi3 = acos(maxk / (tan(A) * sin(thetab)));
 
-    y = DREAM3DMath::linspace(r * sin(phi3), r / (DREAM3D::Constants::k_Sqrt2), 100);
+    y = SIMPLibMath::linspace(r * sin(phi3), r / (SIMPLib::Constants::k_Sqrt2), 100);
     for(std::vector<double>::size_type i = 0; i < y.size(); i++)
     {
       z.push_back(0);
@@ -2693,7 +2693,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     x.clear();
     y.clear();
     z.clear();
-    z = DREAM3DMath::linspace(r * cos(thetac), r * cos(thetad), 100);
+    z = SIMPLibMath::linspace(r * cos(thetac), r * cos(thetad), 100);
     for(std::vector<double>::size_type i = 0; i < z.size(); i++)
     {
       y.push_back(z[i]);
@@ -2712,7 +2712,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     x.clear();
     y.clear();
     z.clear();
-    z = DREAM3DMath::linspace(r * cos(thetaa), r * cos(thetab), 100);
+    z = SIMPLibMath::linspace(r * cos(thetaa), r * cos(thetab), 100);
     for(std::vector<double>::size_type i = 0; i < z.size(); i++)
     {
       x.push_back(sqrt((r * r - (z[i]*z[i])) / 2));
@@ -2726,7 +2726,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     x.clear();
     y.clear();
     z.clear();
-    z = DREAM3DMath::linspace(r * cos(thetad), r * cos(thetab), 100);
+    z = SIMPLibMath::linspace(r * cos(thetad), r * cos(thetab), 100);
     for(std::vector<double>::size_type i = 0; i < z.size(); i++)
     {
       x.push_back(maxk);
@@ -2741,7 +2741,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     y.clear();
     z.clear();
     std::vector<double> theta, tempd3, phi;
-    theta = DREAM3DMath::linspace(thetac, thetaa, 100);
+    theta = SIMPLibMath::linspace(thetac, thetaa, 100);
     for(std::vector<double>::size_type i = 0; i < theta.size(); i++)
     {
       tempd3.push_back(tan(A)*cos(theta[i]));
@@ -2769,7 +2769,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     double theta2 = acos((1 - sqrt(6 * tan(A) * tan(A) - 2)) / (3 * tan(A)));
     double theta3 = acos((sqrt(tan(A) * tan(A) - 2 * maxk * maxk)) / (tan(A)));
 
-    z = DREAM3DMath::linspace(r * cos(theta2), r * cos(theta3), 100);
+    z = SIMPLibMath::linspace(r * cos(theta2), r * cos(theta3), 100);
     for(std::vector<double>::size_type i = 0; i < z.size(); i++)
     {
       x.push_back(sqrt((r * r - z[i]*z[i]) / 2));
@@ -2784,7 +2784,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     y.clear();
     z.clear();
     std::vector<double> theta, tempd3, phi;
-    theta = DREAM3DMath::linspace(theta1, theta2, 100);
+    theta = SIMPLibMath::linspace(theta1, theta2, 100);
     for(std::vector<double>::size_type i = 0; i < theta.size(); i++)
     {
       tempd3.push_back(tan(A)*cos(theta[i]));
@@ -2806,7 +2806,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     x.clear();
     y.clear();
     z.clear();
-    z = DREAM3DMath::linspace(r * cos(theta1), r * cos(theta3), 100);
+    z = SIMPLibMath::linspace(r * cos(theta1), r * cos(theta3), 100);
     for(std::vector<double>::size_type i = 0; i < z.size(); i++)
     {
       x.push_back(maxk);

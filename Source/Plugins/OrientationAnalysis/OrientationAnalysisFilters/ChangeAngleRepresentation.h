@@ -37,9 +37,9 @@
 #ifndef _ChangeAngleRepresentation_H_
 #define _ChangeAngleRepresentation_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The ChangeAngleRepresentation class. See [Filter documentation](@ref changeanglerepresentation) for details.
@@ -48,16 +48,16 @@ class ChangeAngleRepresentation : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(ChangeAngleRepresentation)
-    DREAM3D_STATIC_NEW_MACRO(ChangeAngleRepresentation)
-    DREAM3D_TYPE_MACRO_SUPER(ChangeAngleRepresentation, AbstractFilter)
+    SIMPL_SHARED_POINTERS(ChangeAngleRepresentation)
+    SIMPL_STATIC_NEW_MACRO(ChangeAngleRepresentation)
+    SIMPL_TYPE_MACRO_SUPER(ChangeAngleRepresentation, AbstractFilter)
 
     virtual ~ChangeAngleRepresentation();
 
-    DREAM3D_FILTER_PARAMETER(int, ConversionType)
+    SIMPL_FILTER_PARAMETER(int, ConversionType)
     Q_PROPERTY(int ConversionType READ getConversionType WRITE setConversionType)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
     Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
     /**

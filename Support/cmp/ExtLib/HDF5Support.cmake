@@ -118,6 +118,7 @@ if(HDF5_FOUND)
 
   message(STATUS "HDF5 Location: ${HDF5_INSTALL}")
   message(STATUS "HDF5 Version: ${HDF5_VERSION_STRING}")
+  message(STATUS "HDF5 LIBRARY DIR: ${HDF5_LIBRARY_DIRS}")
   if(MSVC_IDE)
     set(BUILD_TYPES Debug Release)
   else()

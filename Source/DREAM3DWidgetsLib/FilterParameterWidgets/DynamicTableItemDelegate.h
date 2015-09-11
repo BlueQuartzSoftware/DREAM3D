@@ -41,7 +41,7 @@
 
 #include <QStyledItemDelegate>
 
-#include "DREAM3DLib/Common/Constants.h"
+#include "SIMPLib/Common/Constants.h"
 
 class DynamicTableItemDelegate : public QStyledItemDelegate
 {

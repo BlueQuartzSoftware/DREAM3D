@@ -53,8 +53,8 @@
 
 #include "EbsdLib/TSL/AngReader.h"
 
-#include "DREAM3DLib/DREAM3DLibVersion.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLibVersion.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #define kBufferSize 1024
 
@@ -74,10 +74,10 @@ class AngResFixer
                         QVector<QString>& headerLines);
 
     /** @brief Sets the file name of the ebsd file to be read */
-    DREAM3D_INSTANCE_STRING_PROPERTY(FileName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputFileName)
-    DREAM3D_INSTANCE_PROPERTY(float, XStepFix)
-    DREAM3D_INSTANCE_PROPERTY(float, YStepFix)
+    SIMPL_INSTANCE_STRING_PROPERTY(FileName)
+    SIMPL_INSTANCE_STRING_PROPERTY(OutputFileName)
+    SIMPL_INSTANCE_PROPERTY(float, XStepFix)
+    SIMPL_INSTANCE_PROPERTY(float, YStepFix)
   private:
 
 
@@ -193,7 +193,7 @@ int main(int argc, char** argv)
   try
   {
     // Handle program options passed on command line.
-    TCLAP::CmdLine cmd("ResFixer", ' ', DREAM3DLib::Version::Complete().toStdString());
+    TCLAP::CmdLine cmd("ResFixer", ' ', SIMPLib::Version::Complete().toStdString());
 
     TCLAP::ValueArg<float> xres( "x", "xres", "New X Resolution", true, 0.0f, "New X Resolution");
     cmd.add(xres);
