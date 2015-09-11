@@ -30,8 +30,9 @@ call "%~dp0bin\arm\vcvarsarm.bat"
 goto :SetVisualStudioVersion
 
 :x86_amd64
-if not exist "%~dp0bin\x86_amd64\vcvarsx86_amd64.bat" goto missing
-call "%~dp0bin\x86_amd64\vcvarsx86_amd64.bat"
+if not exist "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\vcvarsx86_amd64.bat" goto missing
+call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\vcvarsx86_amd64.bat"
+@set ARCH_TYPE=x64
 goto :SetVisualStudioVersion
 
 :x86_arm
