@@ -11,32 +11,29 @@ Users:[https://groups.google.com/forum/?/dream3d-users#!forum/dream3d-users](htt
 Developers:[https://groups.google.com/forum/?hl=en#!forum/dream3d-developers](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
 ## Version 6.1. ##
-+ Added feature where Attribute Matrix and Attribute Array combo boxes can be filtered out by the type of object that is required. This helps the user make more informed decisions.
-+ Fixed crash using QImage to save an image whose total byte count would exceed the 32 bit signed integer limit
-+ Fixed issue where user adjusted start and end slices would be ignored or reset in the 'Read H5Ebsd' filter GUI
-+ Fixed issue in EbsdLib where the BS, BC and Grain ID columns from CTF Data were not being read correctly from the H5Ebsd file
-+ Fixed crashes in FilterParameterUtilities due to missing check for NULL pointers
-+ Fixed error when trying to import EBSD files into an H5Ebsd file and the full output path was not available on the filesystem
-+ Fixed issue where some filter parameters that represent extremely large numbers (> 2^33) were not read from the JSON files correctly
-+ Fixed issue where the Red and Blue Channels were swapped when using the QImage based image importers
-+ Fixed issue where a DataArray object that was resized could potentially have its internal array marked as NOT ALLOCATED
-+ Added additional Operators (<, >) to the "Neighbor CI Correlation" filter and renamed the filter to "Replace Element Attributes with Neighbor Values"
++ Added feature where **Data Container**, **Attribute Matrix** and **Attribute Array** combo boxes can be filtered out by the type of object that is required. This helps the user make more informed decisions.
++ Fixed crash when using QImage to save an image whose total byte count would exceed the 32 bit signed integer limit.
++ Fixed issue where user adjusted start and end slices would be ignored or reset in the "Read H5Ebsd" **Filter** GUI.
++ Fixed issue in EbsdLib where the BS, BC and Grain ID columns from CTF data were not being read correctly from the H5Ebsd file.
++ Fixed crashes in FilterParameterUtilities due to missing checks for NULL pointers.
++ Fixed error when trying to import EBSD files into an H5Ebsd file when the full output path was not available on the file system.
++ Fixed issue where some **Filter** parameters that represent extremely large numbers (> 2^33) were not read from the JSON files correctly.
++ Fixed issue where the red and blue channels were swapped when using the QImage based image importers.
++ Fixed issue where a DataArray object that was resized could potentially have its internal array marked as NOT ALLOCATED.
++ Added additional operators (<, >) to the "Neighbor CI Correlation" **Filter** and renamed the **Filter** to "Replace Element Attributes with Neighbor Values".
 + Added ability to build DREAM.3D *without* the use of QtWebEngine libraries. This allows DREAM.3D to be built on some HPC systems.
-+ Fixed issue where erroneous coordinates would be returned for ImageGeometry objects.
++ Fixed issue where erroneous coordinates would be returned for **Image Geometry** objects.
 + Added ability to have DREAM.3D open .json files on OS X.
-+ Fix bug in erode/dilate mask filter.
++ Fix bug in erode/dilate mask **Filter**.
 + Added more data types that can be written to a VTK RectilinearGrid file
-+ Added filter to find the difference between two data arrays.
-+ Added additional information to the Triangle Geometry export file.
-+ Fixed crashing bugs and incorrect results for the Feature Face Curvature filter.
-+ Fixed 2D Calculation issues with the *FindShapes* filter.
-+ Added a *RectGrid* Geometry type.
-+ Added a "Replace Value in Array" and "Replace Value in Array (Conditional)" filters.
-+ Added a "Find Feature Clustering" filter.
-+ Added additional capabilities to the "Generate Ensemble Statistics" filter.
-
-
-
++ Added **Filter** to find the difference between two data arrays.
++ Added additional information to the **Triangle Geometry** export file.
++ Fixed crashing bugs and incorrect results for the "Feature Face Curvature" **Filter**.
++ Fixed 2D calculation issues with the "Find Shapes" **Filter**.
++ Added a **RectGrid Geometry** type, which represents an unstructured, rectilinear grid with variable resolution.
++ Added "Replace Value in Array" and "Replace Value in Array (Conditional)" **Filters**.
++ Added a "Find Feature Clustering" **Filter**.
++ Added additional capabilities to the "Generate Ensemble Statistics" **Filter**.  The **Filter** can now compute statistics for a matrix phase correctly and incorporate an RDF for a precipitate phase as calculated by the "Find Feature Clustering" **Filter**.
 
 ## Version 6.1.77 ##
 
@@ -62,15 +59,15 @@ Developers:[https://groups.google.com/forum/?hl=en#!forum/dream3d-developers](ht
 ## Version 6.1.0 ##
 
 + Major change to the way FilterParameters and user interface widgets interact. There is now an explicit one-to-one mapping of a Filter Parameter to a user interface widget. This mail effects developers.
-+ Added widget to create an AttributeMatrix
++ Added widget to create an AttributeMatrix.
 + Fixed issue detecting when the pipeline document has changed. This would manifest itself by not allowing the user to save the pipeline.
-+ Fixed issue with DynamicTableFilterParameter not copying its data to a new filter instance.
++ Fixed issue with DynamicTableFilterParameter not copying its data to a new **Filter** instance.
 + Fixed issue where preflight errors that occur just before actually executing the pipeline would not appear in the Issues Table.
-+ Fixed issue with the "**Rotate Sample Reference Frame**" filter where the inputs would show as combo boxes instead of edit fields to set the axis and angle.
-+ Fixed issue with the "**Rotate Euler Reference Frame**" filter where the inputs would show as combo boxes instead of edit fields to set the axis and angle.
++ Fixed issue with the "Rotate Sample Reference Frame" **Filter** where the inputs would show as combo boxes instead of edit fields to set the axis and angle.
++ Fixed issue with the "Rotate Euler Reference Frame" **Filter** where the inputs would show as combo boxes instead of edit fields to set the axis and angle.
 + Updated the shell scripts to compile the DREAM3D_SDK libraries.
-+ Added additional information to update request headers
-+ Fix bug in PreflightUpdatedValue widget
-+ DataContainerArrayProxyWidget now only preflights when a value changes
-+ Hyperlinks in the Issues table now open the filter in the normal help window instead of the users web browser
-+ Added new Menu Item to clear the users preferences file
++ Added additional information to update request headers.
++ Fix bug in PreflightUpdatedValue widget.
++ DataContainerArrayProxyWidget now only preflights when a value changes.
++ Hyperlinks in the Issues table now open the **Filter** in the normal help window instead of the users web browser.
++ Added new Menu Item to clear the users preferences file.
