@@ -36,18 +36,18 @@
 
 #include "TriangleDihedralAngleFilter.h"
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 #endif
 
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/DataArrayCreationFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 
@@ -76,7 +76,7 @@ class CalculateDihedralAnglesImpl
       float* nodes = m_Nodes->getPointer(0);
       int64_t* triangles = m_Triangles->getPointer(0);
 
-      float radToDeg = 180.0f / DREAM3D::Constants::k_Pi;
+      float radToDeg = 180.0f / SIMPLib::Constants::k_Pi;
 
       float ABx = 0.0f, ABy = 0.0f, ABz = 0.0f, ACx = 0.0f, ACy = 0.0f, ACz = 0.0f, BCx = 0.0f, BCy = 0.0f, BCz = 0.0f;
       float magAB = 0.0f, magAC = 0.0f, magBC = 0.0f;
@@ -111,7 +111,7 @@ class CalculateDihedralAnglesImpl
       }
     }
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     void operator()(const tbb::blocked_range<size_t>& r) const
     {
       generate(r.begin(), r.end());
@@ -167,8 +167,8 @@ void TriangleDihedralAngleFilter::readFilterParameters(AbstractFilterParametersR
 int TriangleDihedralAngleFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshTriangleDihedralAnglesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshTriangleDihedralAnglesArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -219,14 +219,14 @@ void TriangleDihedralAngleFilter::execute()
 
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceMeshTriangleDihedralAnglesArrayPath().getDataContainerName());
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
 #endif
 
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, triangleGeom->getNumberOfTris()),

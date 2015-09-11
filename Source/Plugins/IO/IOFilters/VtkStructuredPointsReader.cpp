@@ -38,15 +38,15 @@
 
 #include <QtCore/QFileInfo>
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/InputFileFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "IO/IOConstants.h"
 
@@ -126,14 +126,14 @@ void VtkStructuredPointsReader::readFilterParameters(AbstractFilterParametersRea
 int VtkStructuredPointsReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(VertexDataContainerName)
-  DREAM3D_FILTER_WRITE_PARAMETER(VolumeDataContainerName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(VertexAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(ReadPointData)
-  DREAM3D_FILTER_WRITE_PARAMETER(ReadCellData)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(InputFile)
+  SIMPL_FILTER_WRITE_PARAMETER(VertexDataContainerName)
+  SIMPL_FILTER_WRITE_PARAMETER(VolumeDataContainerName)
+  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(VertexAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(ReadPointData)
+  SIMPL_FILTER_WRITE_PARAMETER(ReadCellData)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

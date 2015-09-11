@@ -66,7 +66,7 @@
 #include <qwt_compat.h>
 
 
-#include "DREAM3DLib/Math/RadialDistributionFunction.h"
+#include "SIMPLib/Math/RadialDistributionFunction.h"
 
 #include "Applications/StatsGenerator/TableModels/SGMDFTableModel.h"
 

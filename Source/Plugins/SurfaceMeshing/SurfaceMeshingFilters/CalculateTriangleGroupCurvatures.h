@@ -37,9 +37,9 @@
 #ifndef _CalculateTriangleGroupCurvatures_H_
 #define _CalculateTriangleGroupCurvatures_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Common/AbstractFilter.h"
 
 /**
  * @brief The CalculateTriangleGroupCurvatures class calculates the curvature values for a group of triangles

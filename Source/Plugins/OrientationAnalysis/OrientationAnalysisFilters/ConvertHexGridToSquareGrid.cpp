@@ -38,11 +38,11 @@
 
 #include <QtCore/QDir>
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/Utilities/FilePathGenerator.h"
+#include "SIMPLib/Utilities/FilePathGenerator.h"
 
 #include "EbsdLib/HKL/CtfReader.h"
 #include "EbsdLib/TSL/AngReader.h"
@@ -118,18 +118,18 @@ void ConvertHexGridToSquareGrid::readFilterParameters(AbstractFilterParametersRe
 int ConvertHexGridToSquareGrid::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(ZStartIndex)
-  DREAM3D_FILTER_WRITE_PARAMETER(ZEndIndex)
-  DREAM3D_FILTER_WRITE_PARAMETER(PaddingDigits)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputPrefix)
-  DREAM3D_FILTER_WRITE_PARAMETER(FilePrefix)
-  DREAM3D_FILTER_WRITE_PARAMETER(FileSuffix)
-  DREAM3D_FILTER_WRITE_PARAMETER(FileExtension)
-  DREAM3D_FILTER_WRITE_PARAMETER(XResolution)
-  DREAM3D_FILTER_WRITE_PARAMETER(YResolution)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(ZStartIndex)
+  SIMPL_FILTER_WRITE_PARAMETER(ZEndIndex)
+  SIMPL_FILTER_WRITE_PARAMETER(PaddingDigits)
+  SIMPL_FILTER_WRITE_PARAMETER(InputPath)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputPath)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputPrefix)
+  SIMPL_FILTER_WRITE_PARAMETER(FilePrefix)
+  SIMPL_FILTER_WRITE_PARAMETER(FileSuffix)
+  SIMPL_FILTER_WRITE_PARAMETER(FileExtension)
+  SIMPL_FILTER_WRITE_PARAMETER(XResolution)
+  SIMPL_FILTER_WRITE_PARAMETER(YResolution)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -493,18 +493,18 @@ AbstractFilter::Pointer ConvertHexGridToSquareGrid::newFilterInstance(bool copyF
     filter->setFilterParameters(getFilterParameters() );
     // We are going to hand copy all of the parameters because the other way of copying the parameters are going to
     // miss some of them because we are not enumerating all of them.
-    DREAM3D_COPY_INSTANCEVAR(ZStartIndex)
-    DREAM3D_COPY_INSTANCEVAR(ZEndIndex)
-    DREAM3D_COPY_INSTANCEVAR(XResolution)
-    DREAM3D_COPY_INSTANCEVAR(YResolution)
-    DREAM3D_COPY_INSTANCEVAR(InputPath)
-    DREAM3D_COPY_INSTANCEVAR(OutputPath)
-    DREAM3D_COPY_INSTANCEVAR(OutputPrefix)
-    DREAM3D_COPY_INSTANCEVAR(FilePrefix)
-    DREAM3D_COPY_INSTANCEVAR(FileSuffix)
-    DREAM3D_COPY_INSTANCEVAR(FileExtension)
-    DREAM3D_COPY_INSTANCEVAR(PaddingDigits)
-    DREAM3D_COPY_INSTANCEVAR(HexGridStack)
+    SIMPL_COPY_INSTANCEVAR(ZStartIndex)
+    SIMPL_COPY_INSTANCEVAR(ZEndIndex)
+    SIMPL_COPY_INSTANCEVAR(XResolution)
+    SIMPL_COPY_INSTANCEVAR(YResolution)
+    SIMPL_COPY_INSTANCEVAR(InputPath)
+    SIMPL_COPY_INSTANCEVAR(OutputPath)
+    SIMPL_COPY_INSTANCEVAR(OutputPrefix)
+    SIMPL_COPY_INSTANCEVAR(FilePrefix)
+    SIMPL_COPY_INSTANCEVAR(FileSuffix)
+    SIMPL_COPY_INSTANCEVAR(FileExtension)
+    SIMPL_COPY_INSTANCEVAR(PaddingDigits)
+    SIMPL_COPY_INSTANCEVAR(HexGridStack)
   }
   return filter;
 }

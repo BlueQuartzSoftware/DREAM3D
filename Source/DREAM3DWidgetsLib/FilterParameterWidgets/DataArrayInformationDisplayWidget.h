@@ -45,7 +45,7 @@
 
 
 
-#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/AbstractFilter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
@@ -64,8 +64,8 @@ class DREAM3DWidgetsLib_EXPORT DataArrayInformationDisplayWidget : public Filter
     Q_OBJECT
 
   public:
-    DREAM3D_SHARED_POINTERS(DataArrayInformationDisplayWidget)
-    DREAM3D_STATIC_NEW_MACRO(DataArrayInformationDisplayWidget)
+    SIMPL_SHARED_POINTERS(DataArrayInformationDisplayWidget)
+    SIMPL_STATIC_NEW_MACRO(DataArrayInformationDisplayWidget)
 
     /**
     * @brief Constructor

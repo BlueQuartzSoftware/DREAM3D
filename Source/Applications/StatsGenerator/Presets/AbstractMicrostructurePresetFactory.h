@@ -39,7 +39,7 @@
 #include <string>
 #include <vector>
 
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "AbstractMicrostructurePreset.h"
 
@@ -63,10 +63,10 @@
 #define DECLARE_FACTORY_CLASS(name, m_msgType, display)\
   class name : public AbstractMicrostructurePresetFactory {\
     public:\
-      DREAM3D_SHARED_POINTERS(name)\
-      DREAM3D_TYPE_MACRO(name)\
-      DREAM3D_STATIC_NEW_MACRO(name)\
-      DREAM3D_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePresetFactory, name)\
+      SIMPL_SHARED_POINTERS(name)\
+      SIMPL_TYPE_MACRO(name)\
+      SIMPL_STATIC_NEW_MACRO(name)\
+      SIMPL_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePresetFactory, name)\
       virtual ~name(){}\
       AbstractMicrostructurePreset::Pointer newMicrostructurePreset() {\
         return m_msgType::New();\
@@ -100,8 +100,8 @@
 class AbstractMicrostructurePresetFactory
 {
   public:
-    DREAM3D_SHARED_POINTERS(AbstractMicrostructurePresetFactory)
-    DREAM3D_TYPE_MACRO(AbstractMicrostructurePresetFactory)
+    SIMPL_SHARED_POINTERS(AbstractMicrostructurePresetFactory)
+    SIMPL_TYPE_MACRO(AbstractMicrostructurePresetFactory)
 
     typedef QVector<Pointer>                        Collection;
     virtual ~AbstractMicrostructurePresetFactory() {}

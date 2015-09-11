@@ -41,12 +41,12 @@
 #include <QtCore/QFile>
 #include <QtCore/QtEndian>
 
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/OutputFileFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataContainerSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 
-#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
+#include "SIMPLib/Utilities/SIMPLibEndian.h"
 
 #include "IO/IOConstants.h"
 
@@ -103,9 +103,9 @@ void LammpsFileWriter::readFilterParameters(AbstractFilterParametersReader* read
 int LammpsFileWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(LammpsFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(VertexDataContainerName)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(LammpsFile)
+  SIMPL_FILTER_WRITE_PARAMETER(VertexDataContainerName)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

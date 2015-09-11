@@ -38,15 +38,15 @@
 
 #include <QtCore/QDir>
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/OutputFileFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "IO/IOConstants.h"
 
@@ -114,11 +114,11 @@ void LosAlamosFFTWriter::readFilterParameters(AbstractFilterParametersReader* re
 int LosAlamosFFTWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputFile)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -242,9 +242,9 @@ int32_t LosAlamosFFTWriter::writeFile()
       for (size_t x = 0; x < dims[0]; ++x)
       {
         index = (z * dims[0] * dims[1]) + (dims[0] * y) + x;
-        phi1 = m_CellEulerAngles[index * 3] * 180.0 * DREAM3D::Constants::k_1OverPi;
-        phi = m_CellEulerAngles[index * 3 + 1] * 180.0 * DREAM3D::Constants::k_1OverPi;
-        phi2 = m_CellEulerAngles[index * 3 + 2] * 180.0 * DREAM3D::Constants::k_1OverPi;
+        phi1 = m_CellEulerAngles[index * 3] * 180.0 * SIMPLib::Constants::k_1OverPi;
+        phi = m_CellEulerAngles[index * 3 + 1] * 180.0 * SIMPLib::Constants::k_1OverPi;
+        phi2 = m_CellEulerAngles[index * 3 + 2] * 180.0 * SIMPLib::Constants::k_1OverPi;
         featureId = m_FeatureIds[index];
         phaseId = m_CellPhases[index];
         fprintf(f, "%.3f %.3f %.3f %lu %lu %lu %d %d\n", phi1, phi, phi2, x + 1, y + 1, z + 1, featureId, phaseId);

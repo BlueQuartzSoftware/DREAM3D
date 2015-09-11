@@ -38,7 +38,7 @@
 #include "H5Support/QH5Utilities.h"
 #include "H5Support/QH5Lite.h"
 
-#include "DREAM3DLib/HDF5/VTKH5Constants.h"
+#include "SIMPLib/HDF5/VTKH5Constants.h"
 
 // -----------------------------------------------------------------------------
 //

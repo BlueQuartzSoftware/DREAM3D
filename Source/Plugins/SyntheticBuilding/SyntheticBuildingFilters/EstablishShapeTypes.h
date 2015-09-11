@@ -37,9 +37,9 @@
 #ifndef _EstablishShapeTypes_H_
 #define _EstablishShapeTypes_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The EstablishShapeTypes class. See [Filter documentation](@ref establishshapetypes) for details.
@@ -48,19 +48,19 @@ class EstablishShapeTypes : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(EstablishShapeTypes)
-    DREAM3D_STATIC_NEW_MACRO(EstablishShapeTypes)
-    DREAM3D_TYPE_MACRO_SUPER(EstablishShapeTypes, AbstractFilter)
+    SIMPL_SHARED_POINTERS(EstablishShapeTypes)
+    SIMPL_STATIC_NEW_MACRO(EstablishShapeTypes)
+    SIMPL_TYPE_MACRO_SUPER(EstablishShapeTypes, AbstractFilter)
 
     virtual ~EstablishShapeTypes();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, InputPhaseTypesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, InputPhaseTypesArrayPath)
     Q_PROPERTY(DataArrayPath InputPhaseTypesArrayPath READ getInputPhaseTypesArrayPath WRITE setInputPhaseTypesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, ShapeTypesArrayName)
+    SIMPL_FILTER_PARAMETER(QString, ShapeTypesArrayName)
     Q_PROPERTY(QString ShapeTypesArrayName READ getShapeTypesArrayName WRITE setShapeTypesArrayName)
 
-    DREAM3D_FILTER_PARAMETER(UInt32Vector_t, ShapeTypeData)
+    SIMPL_FILTER_PARAMETER(UInt32Vector_t, ShapeTypeData)
     Q_PROPERTY(UInt32Vector_t ShapeTypeData READ getShapeTypeData WRITE setShapeTypeData)
 
     int getPhaseCount();

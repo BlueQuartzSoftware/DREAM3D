@@ -40,12 +40,12 @@
 #include <vector>
 #include <QtCore/QString>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataArrays/IDataArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 #include "OrientationLib/SpaceGroupOps/CubicOps.h"
 #include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
@@ -63,19 +63,19 @@ class FindModulusMismatch : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindModulusMismatch)
-    DREAM3D_STATIC_NEW_MACRO(FindModulusMismatch)
-    DREAM3D_TYPE_MACRO_SUPER(FindModulusMismatch, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FindModulusMismatch)
+    SIMPL_STATIC_NEW_MACRO(FindModulusMismatch)
+    SIMPL_TYPE_MACRO_SUPER(FindModulusMismatch, AbstractFilter)
 
     virtual ~FindModulusMismatch();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, ModuliArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, ModuliArrayPath)
     Q_PROPERTY(DataArrayPath ModuliArrayPath READ getModuliArrayPath WRITE setModuliArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshDeltaModulusArrayName)
+    SIMPL_FILTER_PARAMETER(QString, SurfaceMeshDeltaModulusArrayName)
     Q_PROPERTY(QString SurfaceMeshDeltaModulusArrayName READ getSurfaceMeshDeltaModulusArrayName WRITE setSurfaceMeshDeltaModulusArrayName)
 
     /**

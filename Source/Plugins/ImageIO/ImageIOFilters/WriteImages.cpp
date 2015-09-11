@@ -37,17 +37,17 @@
 
 #include <QtCore/QDir>
 
-#include "DREAM3DLib/DREAM3DLibVersion.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/OutputPathFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/SIMPLibVersion.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/OutputPathFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "ImageIO/ImageIOConstants.h"
 
@@ -143,13 +143,13 @@ void WriteImages::readFilterParameters(AbstractFilterParametersReader* reader, i
 int WriteImages::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(ImagePrefix)
-  DREAM3D_FILTER_WRITE_PARAMETER(FilePrefix)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(ColorsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(ImageFormat)
-  DREAM3D_FILTER_WRITE_PARAMETER(Plane)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(ImagePrefix)
+  SIMPL_FILTER_WRITE_PARAMETER(FilePrefix)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputPath)
+  SIMPL_FILTER_WRITE_PARAMETER(ColorsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(ImageFormat)
+  SIMPL_FILTER_WRITE_PARAMETER(Plane)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -335,7 +335,7 @@ int32_t WriteImages::saveImage(size_t slice, size_t dB, size_t dA, size_t* dims)
 #endif
     }
   }
-  image.setText("Description", DREAM3DLib::Version::PackageComplete());
+  image.setText("Description", SIMPLib::Version::PackageComplete());
   bool success = image.save(path);
   if (success)
   {

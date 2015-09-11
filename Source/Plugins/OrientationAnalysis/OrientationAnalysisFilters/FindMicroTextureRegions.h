@@ -40,12 +40,12 @@
 #include <vector>
 #include <QtCore/QString>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataArrays/IDataArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 /**
  * @class FindMicroTextureRegions FindMicroTextureRegions.h DREAM3DLib/GenericFilters/FindMicroTextureRegions.h
  * @brief
@@ -57,21 +57,21 @@ class FindMicroTextureRegions : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindMicroTextureRegions)
-    DREAM3D_STATIC_NEW_MACRO(FindMicroTextureRegions)
-    DREAM3D_TYPE_MACRO_SUPER(FindMicroTextureRegions, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FindMicroTextureRegions)
+    SIMPL_STATIC_NEW_MACRO(FindMicroTextureRegions)
+    SIMPL_TYPE_MACRO_SUPER(FindMicroTextureRegions, AbstractFilter)
 
     virtual ~FindMicroTextureRegions();
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
     Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, MicroTextureRegionNumCellsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, MicroTextureRegionNumCellsArrayName)
     Q_PROPERTY(QString MicroTextureRegionNumCellsArrayName READ getMicroTextureRegionNumCellsArrayName WRITE setMicroTextureRegionNumCellsArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, MicroTextureRegionFractionOccupiedArrayName)
+    SIMPL_FILTER_PARAMETER(QString, MicroTextureRegionFractionOccupiedArrayName)
     Q_PROPERTY(QString MicroTextureRegionFractionOccupiedArrayName READ getMicroTextureRegionFractionOccupiedArrayName WRITE setMicroTextureRegionFractionOccupiedArrayName)
 
     /**

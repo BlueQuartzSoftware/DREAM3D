@@ -37,10 +37,10 @@
 #ifndef _ReadH5Ebsd_H_
 #define _ReadH5Ebsd_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/StringDataArray.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/StringDataArray.hpp"
 
 #include "EbsdLib/H5EbsdVolumeReader.h"
 
@@ -53,56 +53,56 @@ class ReadH5Ebsd : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(ReadH5Ebsd)
-    DREAM3D_STATIC_NEW_MACRO(ReadH5Ebsd)
-    DREAM3D_TYPE_MACRO_SUPER(ReadH5Ebsd, AbstractFilter)
+    SIMPL_SHARED_POINTERS(ReadH5Ebsd)
+    SIMPL_STATIC_NEW_MACRO(ReadH5Ebsd)
+    SIMPL_TYPE_MACRO_SUPER(ReadH5Ebsd, AbstractFilter)
 
     virtual ~ReadH5Ebsd();
 
-    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
+    SIMPL_FILTER_PARAMETER(QString, DataContainerName)
     Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-    DREAM3D_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
     Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
     Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
+    SIMPL_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
+    SIMPL_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, InputFile)
+    SIMPL_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-    DREAM3D_FILTER_PARAMETER(int, ZStartIndex)
+    SIMPL_FILTER_PARAMETER(int, ZStartIndex)
     Q_PROPERTY(int ZStartIndex READ getZStartIndex WRITE setZStartIndex)
 
-    DREAM3D_FILTER_PARAMETER(int, ZEndIndex)
+    SIMPL_FILTER_PARAMETER(int, ZEndIndex)
     Q_PROPERTY(int ZEndIndex READ getZEndIndex WRITE setZEndIndex)
 
-    DREAM3D_FILTER_PARAMETER(bool, UseTransformations)
+    SIMPL_FILTER_PARAMETER(bool, UseTransformations)
     Q_PROPERTY(bool UseTransformations READ getUseTransformations WRITE setUseTransformations)
 
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedArrayNames)
+    SIMPL_INSTANCE_PROPERTY(QSet<QString>, SelectedArrayNames)
     Q_PROPERTY(QSet<QString> SelectedArrayNames READ getSelectedArrayNames WRITE setSelectedArrayNames)
 
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, DataArrayNames) // These are for reading the names of the arrays during a preflight
+    SIMPL_INSTANCE_PROPERTY(QSet<QString>, DataArrayNames) // These are for reading the names of the arrays during a preflight
     Q_PROPERTY(QSet<QString> DataArrayNames READ getDataArrayNames WRITE setDataArrayNames)
 
     //-------------------------------------------------------
     // Not sure why these are here. We would be reading all of these from the file
     //
-    DREAM3D_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
-    DREAM3D_INSTANCE_PROPERTY(int32_t, Manufacturer)
-    DREAM3D_INSTANCE_PROPERTY(AxisAngleInput_t, SampleTransformation)
-    DREAM3D_INSTANCE_PROPERTY(AxisAngleInput_t, EulerTransformation)
+    SIMPL_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
+    SIMPL_INSTANCE_PROPERTY(int32_t, Manufacturer)
+    SIMPL_INSTANCE_PROPERTY(AxisAngleInput_t, SampleTransformation)
+    SIMPL_INSTANCE_PROPERTY(AxisAngleInput_t, EulerTransformation)
     //-------------------------------------------------------
 
-    DREAM3D_INSTANCE_PROPERTY(QString, CrystalStructuresArrayName)
-    DREAM3D_INSTANCE_PROPERTY(QString, LatticeConstantsArrayName)
-    DREAM3D_INSTANCE_PROPERTY(QString, CellPhasesArrayName)
-    DREAM3D_INSTANCE_PROPERTY(QString, CellEulerAnglesArrayName)
+    SIMPL_INSTANCE_PROPERTY(QString, CrystalStructuresArrayName)
+    SIMPL_INSTANCE_PROPERTY(QString, LatticeConstantsArrayName)
+    SIMPL_INSTANCE_PROPERTY(QString, CellPhasesArrayName)
+    SIMPL_INSTANCE_PROPERTY(QString, CellEulerAnglesArrayName)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class

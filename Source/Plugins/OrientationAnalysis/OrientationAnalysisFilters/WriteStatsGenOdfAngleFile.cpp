@@ -51,15 +51,15 @@
 #include <QtGui/QImage>
 #include <QtGui/QColor>
 
-#include "DREAM3DLib/DREAM3DLibVersion.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/OutputFileFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/BooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "SIMPLib/SIMPLibVersion.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
@@ -144,13 +144,13 @@ void WriteStatsGenOdfAngleFile::readFilterParameters(AbstractFilterParametersRea
 int WriteStatsGenOdfAngleFile::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(ConvertToDegrees)
-  DREAM3D_FILTER_WRITE_PARAMETER(UseGoodVoxels)
-  DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputFile)
+  SIMPL_FILTER_WRITE_PARAMETER(ConvertToDegrees)
+  SIMPL_FILTER_WRITE_PARAMETER(UseGoodVoxels)
+  SIMPL_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
 
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -314,7 +314,7 @@ int WriteStatsGenOdfAngleFile::writeOutputFile(QTextStream& out, int32_t lineCou
   bool writeLine = false;
   out <<  "# All lines starting with '#' are comments and should come before the header.\n";
   out <<  "# DREAM.3D StatsGenerator Angles Input File\n";
-  out <<  "# DREAM.3D Version " << DREAM3DLib::Version::Complete() << "\n";
+  out <<  "# DREAM.3D Version " << SIMPLib::Version::Complete() << "\n";
   out <<  "# Angle Data is space delimited.\n";
   out <<  "# Euler0 Euler1 Euler2 Weight Sigma\n";
   out <<  "Angle Count:" << lineCount << "\n";
@@ -339,9 +339,9 @@ int WriteStatsGenOdfAngleFile::writeOutputFile(QTextStream& out, int32_t lineCou
       float e2 = m_CellEulerAngles[i * 3 + 2];
       if(m_ConvertToDegrees == true)
       {
-        e0 = e0 * DREAM3D::Constants::k_180OverPi;
-        e1 = e1 * DREAM3D::Constants::k_180OverPi;
-        e2 = e2 * DREAM3D::Constants::k_180OverPi;
+        e0 = e0 * SIMPLib::Constants::k_180OverPi;
+        e1 = e1 * SIMPLib::Constants::k_180OverPi;
+        e2 = e2 * SIMPLib::Constants::k_180OverPi;
       }
       out << e0 << " " << e1 << " " << e2 << " " << weight << " " << sigma << "\n";
     }

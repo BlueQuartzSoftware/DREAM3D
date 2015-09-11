@@ -37,9 +37,9 @@
 #ifndef _WriteStlFile_H_
 #define _WriteStlFile_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The WriteStlFile class. See [Filter documentation](@ref surfacemeshtostl) for details.
@@ -48,26 +48,26 @@ class WriteStlFile : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(WriteStlFile)
-    DREAM3D_STATIC_NEW_MACRO(WriteStlFile)
-    DREAM3D_TYPE_MACRO_SUPER(WriteStlFile, AbstractFilter)
+    SIMPL_SHARED_POINTERS(WriteStlFile)
+    SIMPL_STATIC_NEW_MACRO(WriteStlFile)
+    SIMPL_TYPE_MACRO_SUPER(WriteStlFile, AbstractFilter)
 
     virtual ~WriteStlFile();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_FILTER_PARAMETER(QString, OutputStlDirectory)
+    SIMPL_FILTER_PARAMETER(QString, OutputStlDirectory)
     Q_PROPERTY(QString OutputStlDirectory READ getOutputStlDirectory WRITE setOutputStlDirectory)
 
-    DREAM3D_FILTER_PARAMETER(QString, OutputStlPrefix)
+    SIMPL_FILTER_PARAMETER(QString, OutputStlPrefix)
     Q_PROPERTY(QString OutputStlPrefix READ getOutputStlPrefix WRITE setOutputStlPrefix)
 
-    DREAM3D_FILTER_PARAMETER(bool, GroupByPhase)
+    SIMPL_FILTER_PARAMETER(bool, GroupByPhase)
     Q_PROPERTY(bool GroupByPhase READ getGroupByPhase WRITE setGroupByPhase)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFacePhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFacePhasesArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFacePhasesArrayPath READ getSurfaceMeshFacePhasesArrayPath WRITE setSurfaceMeshFacePhasesArrayPath)
 
     /**

@@ -37,9 +37,9 @@
 #ifndef _FindSizes_H_
 #define _FindSizes_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The FindSizes class. See [Filter documentation](@ref findsizes) for details.
@@ -48,25 +48,25 @@ class FindSizes : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindSizes)
-    DREAM3D_STATIC_NEW_MACRO(FindSizes)
-    DREAM3D_TYPE_MACRO_SUPER(FindSizes, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FindSizes)
+    SIMPL_STATIC_NEW_MACRO(FindSizes)
+    SIMPL_TYPE_MACRO_SUPER(FindSizes, AbstractFilter)
 
     virtual ~FindSizes();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
     Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, VolumesArrayName)
+    SIMPL_FILTER_PARAMETER(QString, VolumesArrayName)
     Q_PROPERTY(QString VolumesArrayName READ getVolumesArrayName WRITE setVolumesArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, EquivalentDiametersArrayName)
+    SIMPL_FILTER_PARAMETER(QString, EquivalentDiametersArrayName)
     Q_PROPERTY(QString EquivalentDiametersArrayName READ getEquivalentDiametersArrayName WRITE setEquivalentDiametersArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, NumCellsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, NumCellsArrayName)
     Q_PROPERTY(QString NumCellsArrayName READ getNumCellsArrayName WRITE setNumCellsArrayName)
 
     /**

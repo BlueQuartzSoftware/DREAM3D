@@ -40,12 +40,12 @@
 #include <sstream>
 
 
-#include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
-#include "DREAM3DLib/Geometry/MeshStructs.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/Common/ScopedFileMonitor.hpp"
+#include "SIMPLib/Geometry/MeshStructs.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 
 #include "BinaryNodesTrianglesReader.h"
 
@@ -103,11 +103,11 @@ void BinaryNodesTrianglesReader::readFilterParameters(AbstractFilterParametersRe
 int BinaryNodesTrianglesReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
-  DREAM3D_FILTER_WRITE_PARAMETER(BinaryNodesFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(BinaryTrianglesFile)
+  SIMPL_FILTER_WRITE_PARAMETER(BinaryNodesFile)
+  SIMPL_FILTER_WRITE_PARAMETER(BinaryTrianglesFile)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

@@ -45,15 +45,15 @@
 #include <QtCore/QVector>
 #include <QtCore/QString>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/DataContainers/AttributeMatrix.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/DataArrays/NeighborList.hpp"
-#include "DREAM3DLib/DataArrays/StringDataArray.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataContainers/AttributeMatrix.h"
+#include "SIMPLib/DataArrays/IDataArray.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/DataArrays/NeighborList.hpp"
+#include "SIMPLib/DataArrays/StringDataArray.hpp"
 
 
-#include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
+#include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
 #include "Test/DREAM3DTestFileLocations.h"
 
@@ -86,6 +86,8 @@ void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
   QFile::remove(UnitTest::DataArrayTest::TestFile);
+  QDir tempDir(UnitTest::DataArrayTest::TestDir);
+  tempDir.removeRecursively();
 #endif
 }
 

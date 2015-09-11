@@ -39,7 +39,7 @@
 #include "SGWidget.h"
 #include "ui_TransformationPhaseWidget.h"
 
-#include "DREAM3DLib/Common/Constants.h"
+#include "SIMPLib/Common/Constants.h"
 #include "StatsGenerator/Presets/AbstractMicrostructurePreset.h"
 
 class QwtPlotZoomer;
@@ -63,15 +63,15 @@ class TransformationPhaseWidget : public SGWidget, private Ui::TransformationPha
 
     void updatePlots();
 
-    DREAM3D_INSTANCE_PROPERTY(unsigned int, PhaseType)
+    SIMPL_INSTANCE_PROPERTY(unsigned int, PhaseType)
     void setCrystalStructure(unsigned int xtal);
     unsigned int getCrystalStructure() const;
     void setPhaseIndex(int index);
     int getPhaseIndex() const;
-    DREAM3D_INSTANCE_PROPERTY(float, PhaseFraction)
-    DREAM3D_INSTANCE_PROPERTY(float, TotalPhaseFraction)
-    DREAM3D_INSTANCE_PROPERTY(unsigned int, ParentPhase)
-    DREAM3D_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
+    SIMPL_INSTANCE_PROPERTY(float, PhaseFraction)
+    SIMPL_INSTANCE_PROPERTY(float, TotalPhaseFraction)
+    SIMPL_INSTANCE_PROPERTY(unsigned int, ParentPhase)
+    SIMPL_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
 
     void extractStatsData(AttributeMatrix::Pointer attrMat, int index);
 

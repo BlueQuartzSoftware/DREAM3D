@@ -36,16 +36,16 @@
 
 #include "FindSaltykovSizes.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArrayCreationFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "Statistics/StatisticsConstants.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "SIMPLib/Utilities/SIMPLibRandom.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -102,9 +102,9 @@ void FindSaltykovSizes::readFilterParameters(AbstractFilterParametersReader* rea
 int FindSaltykovSizes::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(EquivalentDiametersArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(SaltykovEquivalentDiametersArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(EquivalentDiametersArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(SaltykovEquivalentDiametersArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -157,7 +157,7 @@ void FindSaltykovSizes::execute()
 // -----------------------------------------------------------------------------
 void FindSaltykovSizes::find_saltykov_sizes()
 {
-  DREAM3D_RANDOMNG_NEW()
+  SIMPL_RANDOMNG_NEW()
 
   const int MaxAttempts = 10;
   const unsigned long RandMaxFloat = 0xffffffff;

@@ -36,14 +36,14 @@
 
 #include "QuickSurfaceMesh.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 
@@ -135,16 +135,16 @@
   int QuickSurfaceMesh::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
   {
     writer->openFilterGroup(this, index);
-    DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-    DREAM3D_FILTER_WRITE_PARAMETER(SurfaceDataContainerName)
-    DREAM3D_FILTER_WRITE_PARAMETER(VertexAttributeMatrixName)
-    DREAM3D_FILTER_WRITE_PARAMETER(FaceAttributeMatrixName)
-    DREAM3D_FILTER_WRITE_PARAMETER(FacePhasesArrayName)
-    DREAM3D_FILTER_WRITE_PARAMETER(NodeTypesArrayName)
-    DREAM3D_FILTER_WRITE_PARAMETER(FaceLabelsArrayName)
-    DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-    DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-    DREAM3D_FILTER_WRITE_PARAMETER(TransferPhaseId)
+    SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+    SIMPL_FILTER_WRITE_PARAMETER(SurfaceDataContainerName)
+    SIMPL_FILTER_WRITE_PARAMETER(VertexAttributeMatrixName)
+    SIMPL_FILTER_WRITE_PARAMETER(FaceAttributeMatrixName)
+    SIMPL_FILTER_WRITE_PARAMETER(FacePhasesArrayName)
+    SIMPL_FILTER_WRITE_PARAMETER(NodeTypesArrayName)
+    SIMPL_FILTER_WRITE_PARAMETER(FaceLabelsArrayName)
+    SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+    SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+    SIMPL_FILTER_WRITE_PARAMETER(TransferPhaseId)
     writer->closeFilterGroup();
     return ++index; // we want to return the next index that was just written to
   }

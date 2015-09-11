@@ -40,14 +40,14 @@
 #include <QtCore/QString>
 #include <set>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/IDataArray.h"
 
-#include "DREAM3DLib/DataArrays/StatsDataArray.h"
+#include "SIMPLib/DataArrays/StatsDataArray.h"
 
-#include "DREAM3DLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 #include "Statistics/DistributionAnalysisOps/DistributionAnalysisOps.h"
 
 #include "Statistics/StatisticsConstants.h"
@@ -63,22 +63,22 @@ class FitCorrelatedFeatureData : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FitCorrelatedFeatureData)
-    DREAM3D_STATIC_NEW_MACRO(FitCorrelatedFeatureData)
-    DREAM3D_TYPE_MACRO_SUPER(FitCorrelatedFeatureData, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FitCorrelatedFeatureData)
+    SIMPL_STATIC_NEW_MACRO(FitCorrelatedFeatureData)
+    SIMPL_TYPE_MACRO_SUPER(FitCorrelatedFeatureData, AbstractFilter)
 
     virtual ~FitCorrelatedFeatureData();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedFeatureArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedFeatureArrayPath)
     Q_PROPERTY(DataArrayPath SelectedFeatureArrayPath READ getSelectedFeatureArrayPath WRITE setSelectedFeatureArrayPath)
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CorrelatedFeatureArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CorrelatedFeatureArrayPath)
     Q_PROPERTY(DataArrayPath CorrelatedFeatureArrayPath READ getCorrelatedFeatureArrayPath WRITE setCorrelatedFeatureArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(unsigned int, DistributionType)
+    SIMPL_FILTER_PARAMETER(unsigned int, DistributionType)
     Q_PROPERTY(unsigned int DistributionType READ getDistributionType WRITE setDistributionType)
-    DREAM3D_FILTER_PARAMETER(int, NumberOfCorrelatedBins)
+    SIMPL_FILTER_PARAMETER(int, NumberOfCorrelatedBins)
     Q_PROPERTY(int NumberOfCorrelatedBins READ getNumberOfCorrelatedBins WRITE setNumberOfCorrelatedBins)
-    DREAM3D_FILTER_PARAMETER(bool, RemoveBiasedFeatures)
+    SIMPL_FILTER_PARAMETER(bool, RemoveBiasedFeatures)
     Q_PROPERTY(bool RemoveBiasedFeatures READ getRemoveBiasedFeatures WRITE setRemoveBiasedFeatures)
 
     /**
@@ -86,13 +86,13 @@ class FitCorrelatedFeatureData : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
     Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, BiasedFeaturesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, BiasedFeaturesArrayPath)
     Q_PROPERTY(DataArrayPath BiasedFeaturesArrayPath READ getBiasedFeaturesArrayPath WRITE setBiasedFeaturesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, NewEnsembleArrayArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, NewEnsembleArrayArrayPath)
     Q_PROPERTY(DataArrayPath NewEnsembleArrayArrayPath READ getNewEnsembleArrayArrayPath WRITE setNewEnsembleArrayArrayPath)
 
     /**

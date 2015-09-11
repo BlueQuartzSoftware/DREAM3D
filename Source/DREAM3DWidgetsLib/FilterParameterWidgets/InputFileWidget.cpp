@@ -41,7 +41,7 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QFileDialog>
 
-#include "DREAM3DLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 
 #include "QtSupportLib/QFileCompleter.h"
 

@@ -39,10 +39,10 @@
 
 #include <string>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/IDataArray.h"
+#include "SIMPLib/Common/AbstractFilter.h"
 
 
 /**
@@ -62,14 +62,14 @@ class GenerateNodeTriangleConnectivity : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(GenerateNodeTriangleConnectivity)
-    DREAM3D_STATIC_NEW_MACRO(GenerateNodeTriangleConnectivity)
-    DREAM3D_TYPE_MACRO_SUPER(GenerateNodeTriangleConnectivity, AbstractFilter)
+    SIMPL_SHARED_POINTERS(GenerateNodeTriangleConnectivity)
+    SIMPL_STATIC_NEW_MACRO(GenerateNodeTriangleConnectivity)
+    SIMPL_TYPE_MACRO_SUPER(GenerateNodeTriangleConnectivity, AbstractFilter)
 
     virtual ~GenerateNodeTriangleConnectivity();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)
+    SIMPL_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)
 
 //   NodeTrianglesMap_t& getNode2TriangleMap();
 

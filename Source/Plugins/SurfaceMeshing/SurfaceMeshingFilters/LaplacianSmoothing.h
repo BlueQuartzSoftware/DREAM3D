@@ -37,9 +37,9 @@
 #ifndef _LaplacianSmoothing_H_
 #define _LaplacianSmoothing_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
@@ -52,40 +52,40 @@ class LaplacianSmoothing : public SurfaceMeshFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(LaplacianSmoothing)
-    DREAM3D_STATIC_NEW_MACRO(LaplacianSmoothing)
-    DREAM3D_TYPE_MACRO_SUPER(LaplacianSmoothing, SurfaceMeshFilter)
+    SIMPL_SHARED_POINTERS(LaplacianSmoothing)
+    SIMPL_STATIC_NEW_MACRO(LaplacianSmoothing)
+    SIMPL_TYPE_MACRO_SUPER(LaplacianSmoothing, SurfaceMeshFilter)
 
     virtual ~LaplacianSmoothing();
 
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceDataContainerName)
+    SIMPL_FILTER_PARAMETER(QString, SurfaceDataContainerName)
     Q_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshNodeTypeArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshNodeTypeArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshNodeTypeArrayPath READ getSurfaceMeshNodeTypeArrayPath WRITE setSurfaceMeshNodeTypeArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(int, IterationSteps)
+    SIMPL_FILTER_PARAMETER(int, IterationSteps)
     Q_PROPERTY(int IterationSteps READ getIterationSteps WRITE setIterationSteps)
 
-    DREAM3D_FILTER_PARAMETER(float, Lambda)
+    SIMPL_FILTER_PARAMETER(float, Lambda)
     Q_PROPERTY(float Lambda READ getLambda WRITE setLambda)
 
-    DREAM3D_FILTER_PARAMETER(float, SurfacePointLambda)
+    SIMPL_FILTER_PARAMETER(float, SurfacePointLambda)
     Q_PROPERTY(float SurfacePointLambda READ getSurfacePointLambda WRITE setSurfacePointLambda)
 
-    DREAM3D_FILTER_PARAMETER(float, TripleLineLambda)
+    SIMPL_FILTER_PARAMETER(float, TripleLineLambda)
     Q_PROPERTY(float TripleLineLambda READ getTripleLineLambda WRITE setTripleLineLambda)
 
-    DREAM3D_FILTER_PARAMETER(float, QuadPointLambda)
+    SIMPL_FILTER_PARAMETER(float, QuadPointLambda)
     Q_PROPERTY(float QuadPointLambda READ getQuadPointLambda WRITE setQuadPointLambda)
 
-    DREAM3D_FILTER_PARAMETER(float, SurfaceTripleLineLambda)
+    SIMPL_FILTER_PARAMETER(float, SurfaceTripleLineLambda)
     Q_PROPERTY(float SurfaceTripleLineLambda READ getSurfaceTripleLineLambda WRITE setSurfaceTripleLineLambda)
 
-    DREAM3D_FILTER_PARAMETER(float, SurfaceQuadPointLambda)
+    SIMPL_FILTER_PARAMETER(float, SurfaceQuadPointLambda)
     Q_PROPERTY(float SurfaceQuadPointLambda READ getSurfaceQuadPointLambda WRITE setSurfaceQuadPointLambda)
 
 
@@ -95,7 +95,7 @@ class LaplacianSmoothing : public SurfaceMeshFilter
      * this array then simply call the 'smooth' protected method to actually run the
      * smoothing iterations
      */
-    DREAM3D_VIRTUAL_INSTANCE_PROPERTY(DataArray<float>::Pointer, LambdaArray)
+    SIMPL_VIRTUAL_INSTANCE_PROPERTY(DataArray<float>::Pointer, LambdaArray)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class

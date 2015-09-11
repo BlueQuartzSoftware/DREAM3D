@@ -37,10 +37,10 @@
 #ifndef _FindKernelAvgMisorientations_H_
 #define _FindKernelAvgMisorientations_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/FilterParameters/IntVec3FilterParameter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
 
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
@@ -51,28 +51,28 @@ class FindKernelAvgMisorientations : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindKernelAvgMisorientations)
-    DREAM3D_STATIC_NEW_MACRO(FindKernelAvgMisorientations)
-    DREAM3D_TYPE_MACRO_SUPER(FindKernelAvgMisorientations, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FindKernelAvgMisorientations)
+    SIMPL_STATIC_NEW_MACRO(FindKernelAvgMisorientations)
+    SIMPL_TYPE_MACRO_SUPER(FindKernelAvgMisorientations, AbstractFilter)
 
     virtual ~FindKernelAvgMisorientations();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
     Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
     Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, KernelAverageMisorientationsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, KernelAverageMisorientationsArrayName)
     Q_PROPERTY(QString KernelAverageMisorientationsArrayName READ getKernelAverageMisorientationsArrayName WRITE setKernelAverageMisorientationsArrayName)
 
-    DREAM3D_FILTER_PARAMETER(IntVec3_t, KernelSize)
+    SIMPL_FILTER_PARAMETER(IntVec3_t, KernelSize)
     Q_PROPERTY(IntVec3_t KernelSize READ getKernelSize WRITE setKernelSize)
 
     /**

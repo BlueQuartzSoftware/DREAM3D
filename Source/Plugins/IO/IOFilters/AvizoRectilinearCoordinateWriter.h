@@ -40,12 +40,12 @@
 #include <QtCore/QString>
 #include <QtCore/QDataStream>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/IDataArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 
 /**
@@ -60,26 +60,26 @@ class AvizoRectilinearCoordinateWriter : public AbstractFilter
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
 
-    DREAM3D_SHARED_POINTERS(AvizoRectilinearCoordinateWriter)
-    DREAM3D_STATIC_NEW_MACRO(AvizoRectilinearCoordinateWriter)
-    DREAM3D_TYPE_MACRO_SUPER(AvizoRectilinearCoordinateWriter, AbstractFilter)
+    SIMPL_SHARED_POINTERS(AvizoRectilinearCoordinateWriter)
+    SIMPL_STATIC_NEW_MACRO(AvizoRectilinearCoordinateWriter)
+    SIMPL_TYPE_MACRO_SUPER(AvizoRectilinearCoordinateWriter, AbstractFilter)
 
     virtual ~AvizoRectilinearCoordinateWriter();
 
-    DREAM3D_FILTER_PARAMETER(QString, OutputFile)
+    SIMPL_FILTER_PARAMETER(QString, OutputFile)
     Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
-    DREAM3D_FILTER_PARAMETER(bool, WriteBinaryFile)
+    SIMPL_FILTER_PARAMETER(bool, WriteBinaryFile)
     Q_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
 
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteFeatureIds)
+    SIMPL_INSTANCE_PROPERTY(bool, WriteFeatureIds)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
     /**

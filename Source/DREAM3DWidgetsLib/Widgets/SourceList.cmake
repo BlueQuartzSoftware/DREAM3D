@@ -9,7 +9,6 @@ set(DREAM3DWidgetsLib_Widgets_UIS "")
 set(DREAM3D_WIDGETS
     BookmarksDockWidget
     DREAM3DUpdateCheckDialog
-    DREAM3DUserManualDialog
     FilterInputWidget
     FilterLibraryDockWidget
     FilterListDockWidget

@@ -42,11 +42,11 @@
 #include <vector>
 #include <set>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "DREAM3DLib/DataContainers/MeshStructs.h"
-#include "DREAM3DLib/Common/Observer.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/ScopedFileMonitor.hpp"
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/MeshStructs.h"
+#include "SIMPLib/Common/Observer.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/util/TriangleOps.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/BinaryNodesTrianglesReader.h"
 

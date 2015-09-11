@@ -37,8 +37,8 @@
 #ifndef STATSDELEGATE_H_
 #define STATSDELEGATE_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 
 #include "EMMPMLib/EMMPMLib.h"
@@ -49,9 +49,9 @@
 class EMMPMLib_EXPORT StatsDelegate
 {
   public:
-    DREAM3D_SHARED_POINTERS(StatsDelegate)
-    DREAM3D_STATIC_NEW_MACRO(StatsDelegate)
-    DREAM3D_TYPE_MACRO(StatsDelegate)
+    SIMPL_SHARED_POINTERS(StatsDelegate)
+    SIMPL_STATIC_NEW_MACRO(StatsDelegate)
+    SIMPL_TYPE_MACRO(StatsDelegate)
 
     virtual ~StatsDelegate();
 

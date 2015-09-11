@@ -36,14 +36,14 @@
 #ifndef _ImportVectorImageStackFilterParameter_H_
 #define _ImportVectorImageStackFilterParameter_H_
 
-#include "DREAM3DLib/FilterParameters/FilterParameter.h"
+#include "SIMPLib/FilterParameters/FilterParameter.h"
 
 class EbsdToH5EbsdFilterParameter : public FilterParameter
 {
 public:
-  DREAM3D_SHARED_POINTERS(EbsdToH5EbsdFilterParameter)
-    DREAM3D_STATIC_NEW_MACRO(EbsdToH5EbsdFilterParameter)
-    DREAM3D_TYPE_MACRO(EbsdToH5EbsdFilterParameter)
+  SIMPL_SHARED_POINTERS(EbsdToH5EbsdFilterParameter)
+    SIMPL_STATIC_NEW_MACRO(EbsdToH5EbsdFilterParameter)
+    SIMPL_TYPE_MACRO(EbsdToH5EbsdFilterParameter)
 
   static Pointer New(const QString& humanLabel, const QString& propertyName,
                      const QVariant& defaultValue, Category category,
@@ -53,8 +53,8 @@ public:
 
   virtual ~EbsdToH5EbsdFilterParameter();
 
-  DREAM3D_INSTANCE_STRING_PROPERTY(FileExtension)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FileType)
+  SIMPL_INSTANCE_STRING_PROPERTY(FileExtension)
+    SIMPL_INSTANCE_STRING_PROPERTY(FileType)
 
   QString getWidgetType();
 

@@ -36,12 +36,12 @@
 
 #include "NearestPointFuseRegularGrids.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "Sampling/SamplingConstants.h"
 
@@ -98,9 +98,9 @@ void NearestPointFuseRegularGrids::readFilterParameters(AbstractFilterParameters
 int NearestPointFuseRegularGrids::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(ReferenceCellAttributeMatrixPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(SamplingCellAttributeMatrixPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(ReferenceCellAttributeMatrixPath)
+  SIMPL_FILTER_WRITE_PARAMETER(SamplingCellAttributeMatrixPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

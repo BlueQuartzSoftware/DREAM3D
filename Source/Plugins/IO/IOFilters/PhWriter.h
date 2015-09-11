@@ -37,10 +37,10 @@
 #ifndef _PhWriter_H_
 #define _PhWriter_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/CoreFilters/FileWriter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/CoreFilters/FileWriter.h"
 
 /**
  * @brief The PhWriter class. See [Filter documentation](@ref phwriter) for details.
@@ -49,13 +49,13 @@ class PhWriter : public FileWriter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(PhWriter)
-    DREAM3D_STATIC_NEW_MACRO(PhWriter)
-    DREAM3D_TYPE_MACRO_SUPER(PhWriter, FileWriter)
+    SIMPL_SHARED_POINTERS(PhWriter)
+    SIMPL_STATIC_NEW_MACRO(PhWriter)
+    SIMPL_TYPE_MACRO_SUPER(PhWriter, FileWriter)
 
     virtual ~PhWriter();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
     /**

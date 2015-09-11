@@ -44,9 +44,9 @@
 
 
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/Constants.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Common/Constants.h"
 
 #include "OrientationLib/OrientationLib.h"
 
@@ -57,11 +57,11 @@
 class OrientationLib_EXPORT TexturePreset
 {
   public:
-    DREAM3D_SHARED_POINTERS(TexturePreset)
+    SIMPL_SHARED_POINTERS(TexturePreset)
     typedef QVector<Pointer> Container;
 
-    DREAM3D_STATIC_NEW_MACRO(TexturePreset)
-    DREAM3D_TYPE_MACRO(TexturePreset)
+    SIMPL_STATIC_NEW_MACRO(TexturePreset)
+    SIMPL_TYPE_MACRO(TexturePreset)
     static Pointer New(unsigned int xtal,
                        const QString& name,
                        double e1, double e2, double e3)
@@ -77,11 +77,11 @@ class OrientationLib_EXPORT TexturePreset
 
     virtual ~TexturePreset();
 
-    DREAM3D_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
-    DREAM3D_INSTANCE_STRING_PROPERTY(Name)
-    DREAM3D_INSTANCE_PROPERTY(double, Euler1)
-    DREAM3D_INSTANCE_PROPERTY(double, Euler2)
-    DREAM3D_INSTANCE_PROPERTY(double, Euler3)
+    SIMPL_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
+    SIMPL_INSTANCE_STRING_PROPERTY(Name)
+    SIMPL_INSTANCE_PROPERTY(double, Euler1)
+    SIMPL_INSTANCE_PROPERTY(double, Euler2)
+    SIMPL_INSTANCE_PROPERTY(double, Euler3)
 
   protected:
     TexturePreset();

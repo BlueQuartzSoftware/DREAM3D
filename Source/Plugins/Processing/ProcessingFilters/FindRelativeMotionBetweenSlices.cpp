@@ -36,24 +36,24 @@
 
 #include "FindRelativeMotionBetweenSlices.h"
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 #endif
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/TemplateHelpers.hpp"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/TemplateHelpers.hpp"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/IntFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Math/MatrixMath.h"
 
 #include "Processing/ProcessingConstants.h"
 
@@ -107,7 +107,7 @@ class CalcRelativeMotion
       }
     }
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     void operator()(const tbb::blocked_range<size_t>& r) const
     {
       convert(r.begin(), r.end());
@@ -216,15 +216,15 @@ void FindRelativeMotionBetweenSlices::readFilterParameters(AbstractFilterParamet
 int FindRelativeMotionBetweenSlices::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(MotionDirectionArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SelectedArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(Plane)
-  DREAM3D_FILTER_WRITE_PARAMETER(PSize1)
-  DREAM3D_FILTER_WRITE_PARAMETER(PSize2)
-  DREAM3D_FILTER_WRITE_PARAMETER(SSize1)
-  DREAM3D_FILTER_WRITE_PARAMETER(SSize2)
-  DREAM3D_FILTER_WRITE_PARAMETER(SliceStep)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(MotionDirectionArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(SelectedArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(Plane)
+  SIMPL_FILTER_WRITE_PARAMETER(PSize1)
+  SIMPL_FILTER_WRITE_PARAMETER(PSize2)
+  SIMPL_FILTER_WRITE_PARAMETER(SSize1)
+  SIMPL_FILTER_WRITE_PARAMETER(SSize2)
+  SIMPL_FILTER_WRITE_PARAMETER(SliceStep)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -336,7 +336,7 @@ void FindRelativeMotionBetweenSlices::execute()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_SelectedArrayPath.getDataContainerName());
   ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
 #endif
@@ -493,7 +493,7 @@ void FindRelativeMotionBetweenSlices::execute()
   {
     Int8ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<Int8ArrayType>(m_InDataPtr.lock());
     int8_t* cPtr = cellArray->getPointer(0);
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<int8_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
@@ -509,7 +509,7 @@ void FindRelativeMotionBetweenSlices::execute()
   {
     UInt8ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<UInt8ArrayType>(m_InDataPtr.lock());
     uint8_t* cPtr = cellArray->getPointer(0);
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<uint8_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
@@ -525,7 +525,7 @@ void FindRelativeMotionBetweenSlices::execute()
   {
     Int16ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<Int16ArrayType>(m_InDataPtr.lock());
     int16_t* cPtr = cellArray->getPointer(0);
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<int16_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
@@ -541,7 +541,7 @@ void FindRelativeMotionBetweenSlices::execute()
   {
     UInt16ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<UInt16ArrayType>(m_InDataPtr.lock());
     uint16_t* cPtr = cellArray->getPointer(0);
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<uint16_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
@@ -557,7 +557,7 @@ void FindRelativeMotionBetweenSlices::execute()
   {
     Int32ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<Int32ArrayType>(m_InDataPtr.lock());
     int32_t* cPtr = cellArray->getPointer(0);
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<int32_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
@@ -573,7 +573,7 @@ void FindRelativeMotionBetweenSlices::execute()
   {
     UInt32ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<UInt32ArrayType>(m_InDataPtr.lock());
     uint32_t* cPtr = cellArray->getPointer(0);
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<uint32_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
@@ -589,7 +589,7 @@ void FindRelativeMotionBetweenSlices::execute()
   {
     Int64ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<Int64ArrayType>(m_InDataPtr.lock());
     int64_t* cPtr = cellArray->getPointer(0);
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<int64_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
@@ -605,7 +605,7 @@ void FindRelativeMotionBetweenSlices::execute()
   {
     UInt64ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<UInt64ArrayType>(m_InDataPtr.lock());
     uint64_t* cPtr = cellArray->getPointer(0);
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<uint64_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
@@ -621,7 +621,7 @@ void FindRelativeMotionBetweenSlices::execute()
   {
     FloatArrayType::Pointer cellArray = boost::dynamic_pointer_cast<FloatArrayType>(m_InDataPtr.lock());
     float* cPtr = cellArray->getPointer(0);
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<float>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
@@ -637,7 +637,7 @@ void FindRelativeMotionBetweenSlices::execute()
   {
     DoubleArrayType::Pointer cellArray = boost::dynamic_pointer_cast<DoubleArrayType>(m_InDataPtr.lock());
     double* cPtr = cellArray->getPointer(0);
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<double>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());

@@ -37,9 +37,9 @@
 #ifndef _TriangleCentroidFilter_H_
 #define _TriangleCentroidFilter_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
@@ -50,13 +50,13 @@ class TriangleCentroidFilter : public SurfaceMeshFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(TriangleCentroidFilter)
-    DREAM3D_STATIC_NEW_MACRO(TriangleCentroidFilter)
-    DREAM3D_TYPE_MACRO_SUPER(TriangleCentroidFilter, SurfaceMeshFilter)
+    SIMPL_SHARED_POINTERS(TriangleCentroidFilter)
+    SIMPL_STATIC_NEW_MACRO(TriangleCentroidFilter)
+    SIMPL_TYPE_MACRO_SUPER(TriangleCentroidFilter, SurfaceMeshFilter)
 
     virtual ~TriangleCentroidFilter();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTriangleCentroidsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTriangleCentroidsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshTriangleCentroidsArrayPath READ getSurfaceMeshTriangleCentroidsArrayPath WRITE setSurfaceMeshTriangleCentroidsArrayPath)
 
     /**

@@ -36,16 +36,16 @@
 
 #include "GenerateVectorColors.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
-#include "DREAM3DLib/Utilities/ColorTable.h"
+#include "SIMPLib/Utilities/ColorTable.h"
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 
 #include "Generic/GenericConstants.h"
@@ -115,11 +115,11 @@ void GenerateVectorColors::readFilterParameters(AbstractFilterParametersReader* 
 int GenerateVectorColors::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(UseGoodVoxels)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellVectorColorsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(VectorsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(UseGoodVoxels)
+  SIMPL_FILTER_WRITE_PARAMETER(CellVectorColorsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(VectorsArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -216,8 +216,8 @@ void GenerateVectorColors::execute()
       dir[2] = m_Vectors[index + 2];
       MatrixMath::Normalize3x1(dir);
       if (dir[2] < 0) { MatrixMath::Multiply3x1withConstant(dir, -1); }
-      float trend = atan2f(dir[1], dir[0]) * (180.0 / DREAM3D::Constants::k_Pi);
-      float plunge = acosf(dir[2]) * (180.0 / DREAM3D::Constants::k_Pi);
+      float trend = atan2f(dir[1], dir[0]) * (180.0 / SIMPLib::Constants::k_Pi);
+      float plunge = acosf(dir[2]) * (180.0 / SIMPLib::Constants::k_Pi);
       if (trend < 0.0) { trend += 360.0; }
       if (trend <= 120.0)
       {

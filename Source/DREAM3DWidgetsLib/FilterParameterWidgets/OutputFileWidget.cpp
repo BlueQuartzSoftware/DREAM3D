@@ -40,7 +40,7 @@
 
 #include <QtWidgets/QFileDialog>
 
-#include "DREAM3DLib/FilterParameters/OutputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 
 #include "QtSupportLib/QFileCompleter.h"
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"

@@ -37,9 +37,9 @@
 #ifndef _ErodeDilateBadData_H_
 #define _ErodeDilateBadData_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "Processing/ProcessingConstants.h"
 
@@ -50,31 +50,31 @@ class ErodeDilateBadData : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(ErodeDilateBadData)
-    DREAM3D_STATIC_NEW_MACRO(ErodeDilateBadData)
-    DREAM3D_TYPE_MACRO_SUPER(ErodeDilateBadData, AbstractFilter)
+    SIMPL_SHARED_POINTERS(ErodeDilateBadData)
+    SIMPL_STATIC_NEW_MACRO(ErodeDilateBadData)
+    SIMPL_TYPE_MACRO_SUPER(ErodeDilateBadData, AbstractFilter)
 
     virtual ~ErodeDilateBadData();
 
-    DREAM3D_FILTER_PARAMETER(unsigned int, Direction)
+    SIMPL_FILTER_PARAMETER(unsigned int, Direction)
     Q_PROPERTY(unsigned int Direction READ getDirection WRITE setDirection)
 
-    DREAM3D_FILTER_PARAMETER(int, NumIterations)
+    SIMPL_FILTER_PARAMETER(int, NumIterations)
     Q_PROPERTY(int NumIterations READ getNumIterations WRITE setNumIterations)
 
-    DREAM3D_FILTER_PARAMETER(bool, XDirOn)
+    SIMPL_FILTER_PARAMETER(bool, XDirOn)
     Q_PROPERTY(bool XDirOn READ getXDirOn WRITE setXDirOn)
 
-    DREAM3D_FILTER_PARAMETER(bool, YDirOn)
+    SIMPL_FILTER_PARAMETER(bool, YDirOn)
     Q_PROPERTY(bool YDirOn READ getYDirOn WRITE setYDirOn)
 
-    DREAM3D_FILTER_PARAMETER(bool, ZDirOn)
+    SIMPL_FILTER_PARAMETER(bool, ZDirOn)
     Q_PROPERTY(bool ZDirOn READ getZDirOn WRITE setZDirOn)
 
-    DREAM3D_FILTER_PARAMETER(bool, ReplaceBadData)
+    SIMPL_FILTER_PARAMETER(bool, ReplaceBadData)
     Q_PROPERTY(bool ReplaceBadData READ getReplaceBadData WRITE setReplaceBadData)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
     /**

@@ -36,14 +36,14 @@
 
 #include "FindFeatureReferenceCAxisMisorientations.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/Math/GeometryMath.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Math/GeometryMath.h"
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 
@@ -130,14 +130,14 @@ void FindFeatureReferenceCAxisMisorientations::readFilterParameters(AbstractFilt
 int FindFeatureReferenceCAxisMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureReferenceCAxisMisorientationsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureStdevCAxisMisorientationsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureAvgCAxisMisorientationsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(AvgCAxesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureReferenceCAxisMisorientationsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureStdevCAxisMisorientationsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureAvgCAxisMisorientationsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(QuatsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(AvgCAxesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -284,9 +284,9 @@ void FindFeatureReferenceCAxisMisorientations::execute()
           // normalize so that the magnitude is 1
           MatrixMath::Normalize3x1(AvgCAxis);
           w = GeometryMath::CosThetaBetweenVectors(c1, AvgCAxis);
-          DREAM3DMath::boundF(w, -1, 1);
+          SIMPLibMath::boundF(w, -1, 1);
           w = acosf(w);
-          w = w * DREAM3D::Constants::k_180OverPi;
+          w = w * SIMPLib::Constants::k_180OverPi;
           if (w > 90.0) { w = 180.0 - w; }
 
           m_FeatureReferenceCAxisMisorientations[point] = w;

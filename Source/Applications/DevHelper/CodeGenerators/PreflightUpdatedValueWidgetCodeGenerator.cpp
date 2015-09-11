@@ -74,7 +74,7 @@ QString PreflightUpdatedValueWidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(int, " + getPropertyName() + ")\n";
+  ss << "    SIMPL_FILTER_PARAMETER(int, " + getPropertyName() + ")\n";
   ss << "    Q_PROPERTY(int " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;

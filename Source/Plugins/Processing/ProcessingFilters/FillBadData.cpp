@@ -36,15 +36,15 @@
 
 #include "FillBadData.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/IntFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/BooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "Processing/ProcessingConstants.h"
 
@@ -116,12 +116,12 @@ void FillBadData::readFilterParameters(AbstractFilterParametersReader* reader, i
 int FillBadData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(MinAllowedDefectSize)
-  DREAM3D_FILTER_WRITE_PARAMETER(StoreAsNewPhase)
-  DREAM3D_FILTER_WRITE_PARAMETER(ReplaceBadData)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(MinAllowedDefectSize)
+  SIMPL_FILTER_WRITE_PARAMETER(StoreAsNewPhase)
+  SIMPL_FILTER_WRITE_PARAMETER(ReplaceBadData)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

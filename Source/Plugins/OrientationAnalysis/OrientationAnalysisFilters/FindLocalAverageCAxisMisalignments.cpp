@@ -36,18 +36,18 @@
 
 #include "FindLocalAverageCAxisMisalignments.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/Utilities/SIMPLibRandom.h"
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
@@ -178,20 +178,20 @@ void FindLocalAverageCAxisMisalignments::readFilterParameters(AbstractFilterPara
 int FindLocalAverageCAxisMisalignments::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(NewCellFeatureAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(NeighborListArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CAxisMisalignmentListArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(NumFeaturesPerParentArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(LocalCAxisMisalignmentsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(UnbiasedLocalCAxisMisalignmentsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureParentIdsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(AvgCAxisMisalignmentsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellParentIdsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CalcUnbiasedAvg)
-  DREAM3D_FILTER_WRITE_PARAMETER(CalcBiasedAvg)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(NewCellFeatureAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(NeighborListArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CAxisMisalignmentListArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(NumFeaturesPerParentArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(LocalCAxisMisalignmentsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(UnbiasedLocalCAxisMisalignmentsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureParentIdsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(AvgCAxisMisalignmentsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CellParentIdsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CalcUnbiasedAvg)
+  SIMPL_FILTER_WRITE_PARAMETER(CalcBiasedAvg)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

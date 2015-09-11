@@ -39,7 +39,7 @@
 
 #include <QtCore/QPluginLoader>
 
-#include "DREAM3DLib/Common/FilterManager.h"
+#include "SIMPLib/Common/FilterManager.h"
 
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
 
@@ -140,13 +140,13 @@ void AboutPlugins::setupGui()
 void AboutPlugins::loadPlugins(QList<PluginProxy::Pointer> proxies)
 {
   PluginManager* manager = PluginManager::Instance();
-  QVector<IDREAM3DPlugin*> vector = manager->getPluginsVector();
+  QVector<ISIMPLibPlugin*> vector = manager->getPluginsVector();
   pluginsTable->setRowCount(vector.size());
 
   // Iterate over PluginManager and add each entry to the plugin table
   for (int row = 0; row < vector.size(); row++)
   {
-    IDREAM3DPlugin* plugin = vector.at(row);
+    ISIMPLibPlugin* plugin = vector.at(row);
     addPluginToTable(plugin, row);
   }
 
@@ -165,7 +165,7 @@ void AboutPlugins::loadPlugins(QList<PluginProxy::Pointer> proxies)
     if ( managerNames.contains(proxyName) == false )
     {
       qDebug() << "The plugin " << proxyName << " was not found in the PluginManager.";
-      DREAM3DPlugin* plugin = new DREAM3DPlugin();
+      SIMPLibPlugin* plugin = new SIMPLibPlugin();
       plugin->setPluginName(proxyName);
       plugin->setStatus(NOT_FOUND_STRING);
       addPlaceHolderToTable(plugin, 0);
@@ -176,7 +176,7 @@ void AboutPlugins::loadPlugins(QList<PluginProxy::Pointer> proxies)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AboutPlugins::addPluginToTable(IDREAM3DPlugin* plugin, int row)
+void AboutPlugins::addPluginToTable(ISIMPLibPlugin* plugin, int row)
 {
   QColor defaultColor(Qt::white);
 
@@ -228,7 +228,7 @@ void AboutPlugins::addPluginToTable(IDREAM3DPlugin* plugin, int row)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AboutPlugins::addPlaceHolderToTable(DREAM3DPlugin* plugin, int row)
+void AboutPlugins::addPlaceHolderToTable(SIMPLibPlugin* plugin, int row)
 {
   // Insert the empty row
   pluginsTable->insertRow(row);
@@ -348,7 +348,7 @@ void AboutPlugins::addPlugin(QString pluginPath)
   QObject* plugin = loader->instance();
   if (plugin)
   {
-    IDREAM3DPlugin* ipPlugin = qobject_cast<IDREAM3DPlugin*>(plugin);
+    ISIMPLibPlugin* ipPlugin = qobject_cast<ISIMPLibPlugin*>(plugin);
     if (ipPlugin)
     {
       QString pluginName = ipPlugin->getPluginName();
@@ -498,7 +498,7 @@ QList<PluginProxy::Pointer> AboutPlugins::getPluginCheckBoxSettingsFromGUI()
   for (int row = 0; row < pluginsTable->rowCount(); row++)
   {
     QString pluginName = pluginsTable->item(row, NAME_INDEX)->text();
-    IDREAM3DPlugin* plugin = manager->findPlugin(pluginName);
+    ISIMPLibPlugin* plugin = manager->findPlugin(pluginName);
 
     PluginProxy::Pointer proxy = PluginProxy::New();
     proxy->setPluginName(pluginName);

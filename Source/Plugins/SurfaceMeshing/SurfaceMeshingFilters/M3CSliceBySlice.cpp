@@ -39,7 +39,7 @@
 
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
-#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 
 // C Includes
@@ -58,8 +58,8 @@
 #include <QtCore/QDir>
 
 
-#include "DREAM3DLib/Common/PipelineMessage.h"
-#include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
+#include "SIMPLib/Common/PipelineMessage.h"
+#include "SIMPLib/Common/ScopedFileMonitor.hpp"
 #include "SurfaceMeshing/SurfaceMeshingFilters/BinaryNodesTrianglesReader.h"
 
 
@@ -133,8 +133,8 @@ namespace Detail
 class SMTempFile
 {
   public:
-    DREAM3D_SHARED_POINTERS(SMTempFile)
-    DREAM3D_STATIC_NEW_MACRO(SMTempFile)
+    SIMPL_SHARED_POINTERS(SMTempFile)
+    SIMPL_STATIC_NEW_MACRO(SMTempFile)
     virtual ~SMTempFile()
     {
       if (m_AutoDelete == true)
@@ -144,8 +144,8 @@ class SMTempFile
       }
     }
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(FilePath)
-    DREAM3D_INSTANCE_PROPERTY(bool, AutoDelete)
+    SIMPL_INSTANCE_STRING_PROPERTY(FilePath)
+    SIMPL_INSTANCE_PROPERTY(bool, AutoDelete)
 
   protected:
     SMTempFile()
@@ -160,8 +160,8 @@ class SMTempFile
 class FeatureChecker
 {
   public:
-    DREAM3D_SHARED_POINTERS(FeatureChecker)
-    DREAM3D_STATIC_NEW_MACRO(FeatureChecker)
+    SIMPL_SHARED_POINTERS(FeatureChecker)
+    SIMPL_STATIC_NEW_MACRO(FeatureChecker)
     virtual ~FeatureChecker() {}
     typedef QMap<int, int>  MapType;
 
@@ -362,14 +362,14 @@ void M3CSliceBySlice::readFilterParameters(AbstractFilterParametersReader* reade
 int M3CSliceBySlice::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceDataContainerName)
-  DREAM3D_FILTER_WRITE_PARAMETER(VertexAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(FaceAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshNodeTypesArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(FaceLabelsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(DeleteTempFiles)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceDataContainerName)
+  SIMPL_FILTER_WRITE_PARAMETER(VertexAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(FaceAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshNodeTypesArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(FaceLabelsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(DeleteTempFiles)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

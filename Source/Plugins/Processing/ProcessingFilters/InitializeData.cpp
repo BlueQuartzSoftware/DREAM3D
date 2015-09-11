@@ -36,13 +36,13 @@
 
 #include "InitializeData.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/IntFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "Processing/ProcessingConstants.h"
 
@@ -111,14 +111,14 @@ void InitializeData::readFilterParameters(AbstractFilterParametersReader* reader
 int InitializeData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(XMin)
-  DREAM3D_FILTER_WRITE_PARAMETER(YMin)
-  DREAM3D_FILTER_WRITE_PARAMETER(ZMin)
-  DREAM3D_FILTER_WRITE_PARAMETER(XMax)
-  DREAM3D_FILTER_WRITE_PARAMETER(YMax)
-  DREAM3D_FILTER_WRITE_PARAMETER(ZMax)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
+  SIMPL_FILTER_WRITE_PARAMETER(XMin)
+  SIMPL_FILTER_WRITE_PARAMETER(YMin)
+  SIMPL_FILTER_WRITE_PARAMETER(ZMin)
+  SIMPL_FILTER_WRITE_PARAMETER(XMax)
+  SIMPL_FILTER_WRITE_PARAMETER(YMax)
+  SIMPL_FILTER_WRITE_PARAMETER(ZMax)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

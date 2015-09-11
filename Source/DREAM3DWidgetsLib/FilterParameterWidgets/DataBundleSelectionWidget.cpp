@@ -39,7 +39,7 @@
 #include <QtCore/QList>
 #include <QtWidgets/QListWidgetItem>
 
-#include "DREAM3DLib/DataContainers/DataArrayPath.h"
+#include "SIMPLib/DataContainers/DataArrayPath.h"
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
@@ -296,7 +296,7 @@ void DataBundleSelectionWidget::beforePreflight()
   if (NULL == getFilter()) { return; }
   if(m_DidCausePreflight == true)
   {
-    std::cout << "***  DataBundleSelectionWidget already caused a preflight, just returning" << std::endl;
+    //std::cout << "***  DataBundleSelectionWidget already caused a preflight, just returning" << std::endl;
     return;
   }
 

@@ -47,15 +47,15 @@
 
 #include "Applications/DREAM3D/DREAM3DMenu.h"
 
-#include "DREAM3DLib/DREAM3DLib.h"
-//#include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
+#include "SIMPLib/SIMPLib.h"
+//#include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 
 #define dream3dApp (static_cast<DREAM3DApplication *>(qApp))
 
 class DSplashScreen;
 class DREAM3D_UI;
 class QPluginLoader;
-class IDREAM3DPlugin;
+class ISIMPLibPlugin;
 
 class DREAM3DApplication : public QApplication
 {
@@ -173,7 +173,7 @@ class DREAM3DApplication : public QApplication
 
     QVector<QPluginLoader*>                 m_PluginLoaders;
 
-    QVector<IDREAM3DPlugin*> loadPlugins();
+    QVector<ISIMPLibPlugin*> loadPlugins();
 
     QMenu* createPlaceholderViewMenu();
 

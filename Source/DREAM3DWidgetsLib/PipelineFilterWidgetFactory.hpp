@@ -38,7 +38,7 @@
 #define _PipelineFilterWidgetFACTORY_H_
 
 
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "DREAM3DWidgetsLib/IFilterWidgetFactory.h"
 
@@ -47,9 +47,9 @@ template <class Widget>
 class PipelineFilterWidgetFactory : public IFilterWidgetFactory
 {
   public:
-    DREAM3D_SHARED_POINTERS(PipelineFilterWidgetFactory<Widget> )
-    DREAM3D_TYPE_MACRO_SUPER(PipelineFilterWidgetFactory<Widget>, IFilterWidgetFactory)
-    DREAM3D_STATIC_NEW_MACRO(PipelineFilterWidgetFactory<Widget>)
+    SIMPL_SHARED_POINTERS(PipelineFilterWidgetFactory<Widget> )
+    SIMPL_TYPE_MACRO_SUPER(PipelineFilterWidgetFactory<Widget>, IFilterWidgetFactory)
+    SIMPL_STATIC_NEW_MACRO(PipelineFilterWidgetFactory<Widget>)
 
     virtual ~PipelineFilterWidgetFactory()
     {

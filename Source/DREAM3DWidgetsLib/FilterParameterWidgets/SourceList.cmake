@@ -134,6 +134,7 @@ set(DREAM3DWidgetsLib_ParameterWidgets_HDRS
   ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/ComparisonSelectionItemDelegate.h
   ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/DynamicTableItemDelegate.h
   ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/FilterParameterWidgetsDialogs.h
+  ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/FilterParameterWidgetUtils.hpp
 )
 set(DREAM3DWidgetsLib_ParameterWidgets_SRCS
   ${DREAM3DWidgetsLib_ParameterWidgets_SRCS}

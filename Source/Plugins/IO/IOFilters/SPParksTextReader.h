@@ -41,11 +41,11 @@
 
 #include "EbsdLib/HKL/DataParser.hpp"
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/CoreFilters/FileReader.h"
-#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/CoreFilters/FileReader.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 
 /**
  * @brief The SPParksTextReader class. See [Filter documentation](@ref spparkstextreader) for details.
@@ -55,31 +55,31 @@ class SPParksTextReader : public FileReader
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
 
   public:
-    DREAM3D_SHARED_POINTERS(SPParksTextReader)
-    DREAM3D_STATIC_NEW_MACRO(SPParksTextReader)
-    DREAM3D_TYPE_MACRO_SUPER(SPParksTextReader, FileReader)
+    SIMPL_SHARED_POINTERS(SPParksTextReader)
+    SIMPL_STATIC_NEW_MACRO(SPParksTextReader)
+    SIMPL_TYPE_MACRO_SUPER(SPParksTextReader, FileReader)
 
     virtual ~SPParksTextReader();
 
-    DREAM3D_FILTER_PARAMETER(QString, VolumeDataContainerName)
+    SIMPL_FILTER_PARAMETER(QString, VolumeDataContainerName)
     Q_PROPERTY(QString VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
 
-    DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
     Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(QString, InputFile)
+    SIMPL_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, Origin)
+    SIMPL_FILTER_PARAMETER(FloatVec3_t, Origin)
     Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
 
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
+    SIMPL_FILTER_PARAMETER(FloatVec3_t, Resolution)
     Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
 
-    DREAM3D_FILTER_PARAMETER(bool, OneBasedArrays)
+    SIMPL_FILTER_PARAMETER(bool, OneBasedArrays)
     Q_PROPERTY(bool OneBasedArrays READ getOneBasedArrays WRITE setOneBasedArrays)
 
-    DREAM3D_FILTER_PARAMETER(QString, FeatureIdsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, FeatureIdsArrayName)
     Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
     /**

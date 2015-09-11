@@ -37,9 +37,9 @@
 #ifndef _FindProjectedImageStatistics_H_
 #define _FindProjectedImageStatistics_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The FindProjectedImageStatistics class. See [Filter documentation](@ref findprojectedimagestatistics) for details.
@@ -48,31 +48,31 @@ class FindProjectedImageStatistics : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindProjectedImageStatistics)
-    DREAM3D_STATIC_NEW_MACRO(FindProjectedImageStatistics)
-    DREAM3D_TYPE_MACRO_SUPER(FindProjectedImageStatistics, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FindProjectedImageStatistics)
+    SIMPL_STATIC_NEW_MACRO(FindProjectedImageStatistics)
+    SIMPL_TYPE_MACRO_SUPER(FindProjectedImageStatistics, AbstractFilter)
 
     virtual ~FindProjectedImageStatistics();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
     Q_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(unsigned int, Plane)
+    SIMPL_FILTER_PARAMETER(unsigned int, Plane)
     Q_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane)
 
-    DREAM3D_FILTER_PARAMETER(QString, ProjectedImageMinArrayName)
+    SIMPL_FILTER_PARAMETER(QString, ProjectedImageMinArrayName)
     Q_PROPERTY(QString ProjectedImageMinArrayName READ getProjectedImageMinArrayName WRITE setProjectedImageMinArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, ProjectedImageMaxArrayName)
+    SIMPL_FILTER_PARAMETER(QString, ProjectedImageMaxArrayName)
     Q_PROPERTY(QString ProjectedImageMaxArrayName READ getProjectedImageMaxArrayName WRITE setProjectedImageMaxArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, ProjectedImageAvgArrayName)
+    SIMPL_FILTER_PARAMETER(QString, ProjectedImageAvgArrayName)
     Q_PROPERTY(QString ProjectedImageAvgArrayName READ getProjectedImageAvgArrayName WRITE setProjectedImageAvgArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, ProjectedImageStdArrayName)
+    SIMPL_FILTER_PARAMETER(QString, ProjectedImageStdArrayName)
     Q_PROPERTY(QString ProjectedImageStdArrayName READ getProjectedImageStdArrayName WRITE setProjectedImageStdArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, ProjectedImageVarArrayName)
+    SIMPL_FILTER_PARAMETER(QString, ProjectedImageVarArrayName)
     Q_PROPERTY(QString ProjectedImageVarArrayName READ getProjectedImageVarArrayName WRITE setProjectedImageVarArrayName)
 
     /**

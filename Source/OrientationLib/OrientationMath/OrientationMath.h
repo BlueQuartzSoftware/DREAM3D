@@ -37,8 +37,8 @@
 #ifndef _OrientationMath_H_
 #define _OrientationMath_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Math/QuaternionMath.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Math/QuaternionMath.hpp"
 
 #include "OrientationLib/OrientationLib.h"
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"

@@ -44,8 +44,8 @@
 #include "QtSupportLib/FaderWidget.h"
 
 
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/FilterParameters/FloatVec4FilterParameter.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/FilterParameters/FloatVec4FilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"

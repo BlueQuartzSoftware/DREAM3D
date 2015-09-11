@@ -45,7 +45,7 @@
 #include <QtCore/QByteArray>
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
-#include "DREAM3DLib/Math/QuaternionMath.hpp"
+#include "SIMPLib/Math/QuaternionMath.hpp"
 
 
 
@@ -207,16 +207,16 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
     // Values in File are in Radians and the user wants them in Degrees
     if (m_FileAnglesInDegrees == false && m_OutputAnglesInDegrees == true)
     {
-      euler[0] = euler[0] * DREAM3D::Constants::k_RadToDeg;
-      euler[1] = euler[1] * DREAM3D::Constants::k_RadToDeg;
-      euler[2] = euler[2] * DREAM3D::Constants::k_RadToDeg;
+      euler[0] = euler[0] * SIMPLib::Constants::k_RadToDeg;
+      euler[1] = euler[1] * SIMPLib::Constants::k_RadToDeg;
+      euler[2] = euler[2] * SIMPLib::Constants::k_RadToDeg;
     }
     // Values are in Degrees but user wants them in Radians
     else if (m_FileAnglesInDegrees == true && m_OutputAnglesInDegrees == false)
     {
-      euler[0] = euler[0] * DREAM3D::Constants::k_DegToRad;
-      euler[1] = euler[1] * DREAM3D::Constants::k_DegToRad;
-      euler[2] = euler[2] * DREAM3D::Constants::k_DegToRad;
+      euler[0] = euler[0] * SIMPLib::Constants::k_DegToRad;
+      euler[1] = euler[1] * SIMPLib::Constants::k_DegToRad;
+      euler[2] = euler[2] * SIMPLib::Constants::k_DegToRad;
     }
 
     // Store the values into our array

@@ -41,7 +41,7 @@
 #include <string>
 
 //-- MXA Includes
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 //-- StatsGen Includes
 #include "AbstractMicrostructurePresetFactory.h"
@@ -59,9 +59,9 @@
 class PrimaryRecrystallizedPreset : public AbstractMicrostructurePreset
 {
   public:
-    DREAM3D_SHARED_POINTERS(PrimaryRecrystallizedPreset)
-    DREAM3D_STATIC_NEW_MACRO(PrimaryRecrystallizedPreset)
-    DREAM3D_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, PrimaryRecrystallizedPreset)
+    SIMPL_SHARED_POINTERS(PrimaryRecrystallizedPreset)
+    SIMPL_STATIC_NEW_MACRO(PrimaryRecrystallizedPreset)
+    SIMPL_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, PrimaryRecrystallizedPreset)
     virtual ~PrimaryRecrystallizedPreset();
 
 
@@ -73,7 +73,7 @@ class PrimaryRecrystallizedPreset : public AbstractMicrostructurePreset
     void initializeClusteringTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
 
 
-    DREAM3D_INSTANCE_PROPERTY(float, PercentRecrystallized)
+    SIMPL_INSTANCE_PROPERTY(float, PercentRecrystallized)
 
   protected:
     PrimaryRecrystallizedPreset();

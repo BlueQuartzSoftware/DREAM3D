@@ -40,13 +40,13 @@
 #include <QtWidgets/QWidget>
 #include "ui_StatsGenMDFWidget.h"
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/StatsData/StatsData.h"
-#include "DREAM3DLib/StatsData/PrimaryStatsData.h"
-#include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
-#include "DREAM3DLib/StatsData/TransformationStatsData.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/StatsData/StatsData.h"
+#include "SIMPLib/StatsData/PrimaryStatsData.h"
+#include "SIMPLib/StatsData/PrecipitateStatsData.h"
+#include "SIMPLib/StatsData/TransformationStatsData.h"
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
 
 
@@ -72,9 +72,9 @@ class StatsGenMDFWidget : public QWidget, private Ui::StatsGenMDFWidget
     void setupGui();
     void initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot);
 
-    DREAM3D_INSTANCE_PROPERTY(int, PhaseIndex)
-    DREAM3D_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
-    DREAM3D_INSTANCE_PROPERTY(SGODFTableModel*, ODFTableModel)
+    SIMPL_INSTANCE_PROPERTY(int, PhaseIndex)
+    SIMPL_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
+    SIMPL_INSTANCE_PROPERTY(SGODFTableModel*, ODFTableModel)
 
     int getMisorientationData(StatsData* statsData, unsigned int phaseType);
     void extractStatsData(int index, StatsData* statsData, unsigned int phaseType);

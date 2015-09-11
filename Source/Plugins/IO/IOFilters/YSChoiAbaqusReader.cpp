@@ -49,15 +49,15 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QFile>
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/InputFileFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Math/MatrixMath.h"
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 
@@ -155,20 +155,20 @@ void YSChoiAbaqusReader::readFilterParameters(AbstractFilterParametersReader* re
 int YSChoiAbaqusReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceFeaturesArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(AvgQuatsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputFeatureInfoFile)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(DataContainerName)
+  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceFeaturesArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(QuatsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(InputFile)
+  SIMPL_FILTER_WRITE_PARAMETER(InputFeatureInfoFile)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

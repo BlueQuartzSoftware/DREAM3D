@@ -40,13 +40,13 @@
 #include <vector>
 #include <QtCore/QString>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/FilterParameters/IntVec3FilterParameter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataArrays/IDataArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
 /**
@@ -60,25 +60,25 @@ class FindOrientationFieldCurl : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindOrientationFieldCurl)
-    DREAM3D_STATIC_NEW_MACRO(FindOrientationFieldCurl)
-    DREAM3D_TYPE_MACRO_SUPER(FindOrientationFieldCurl, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FindOrientationFieldCurl)
+    SIMPL_STATIC_NEW_MACRO(FindOrientationFieldCurl)
+    SIMPL_TYPE_MACRO_SUPER(FindOrientationFieldCurl, AbstractFilter)
 
     virtual ~FindOrientationFieldCurl();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
     Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
     Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, DislocationTensorsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, DislocationTensorsArrayName)
     Q_PROPERTY(QString DislocationTensorsArrayName READ getDislocationTensorsArrayName WRITE setDislocationTensorsArrayName)
 
-    DREAM3D_FILTER_PARAMETER(IntVec3_t, CurlSize)
+    SIMPL_FILTER_PARAMETER(IntVec3_t, CurlSize)
     Q_PROPERTY(IntVec3_t CurlSize READ getCurlSize WRITE setCurlSize)
 
     /**

@@ -37,9 +37,9 @@
 #ifndef _FindAvgOrientations_H_
 #define _FindAvgOrientations_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
@@ -50,28 +50,28 @@ class FindAvgOrientations : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindAvgOrientations)
-    DREAM3D_STATIC_NEW_MACRO(FindAvgOrientations)
-    DREAM3D_TYPE_MACRO_SUPER(FindAvgOrientations, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FindAvgOrientations)
+    SIMPL_STATIC_NEW_MACRO(FindAvgOrientations)
+    SIMPL_TYPE_MACRO_SUPER(FindAvgOrientations, AbstractFilter)
 
     virtual ~FindAvgOrientations();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
     Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
     Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
     Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, AvgEulerAnglesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, AvgEulerAnglesArrayPath)
     Q_PROPERTY(DataArrayPath AvgEulerAnglesArrayPath READ getAvgEulerAnglesArrayPath WRITE setAvgEulerAnglesArrayPath)
 
     /**

@@ -32,7 +32,6 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
 #include "FilterListDockWidget.h"
 
 #include <QtCore/QBitArray>
@@ -42,14 +41,11 @@
 #include <QtWidgets/QMainWindow>
 #include <QtGui/QPainter>
 
-#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
 
-
-#include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/Common/IFilterFactory.hpp"
-#include "DREAM3DLib/Common/FilterFactory.hpp"
-
-#include "DREAM3DWidgetsLib/Widgets/DREAM3DUserManualDialog.h"
+#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/Common/IFilterFactory.hpp"
+#include "SIMPLib/Common/FilterFactory.hpp"
+#include "SIMPLib/Common/DocRequestManager.h"
 
 #include "DREAM3DWidgetsLib/moc_FilterListDockWidget.cpp"
 
@@ -204,8 +200,10 @@ void FilterListDockWidget::launchHelpForItem(QString humanLabel)
     return;
   }
   QString className = filter->getNameOfClass();
-  // Launch the dialog
-  DREAM3DUserManualDialog::LaunchHelpDialog(className);
+
+  DocRequestManager* docRequester = DocRequestManager::Instance();
+  docRequester->requestFilterDocs(className);
+
 }
 
 // -----------------------------------------------------------------------------

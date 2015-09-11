@@ -37,10 +37,10 @@
 #ifndef _MultiThresholdObjects_H_
 #define _MultiThresholdObjects_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
 /**
  * @brief The MultiThresholdObjects class. See [Filter documentation](@ref multithresholdobjects) for details.
@@ -49,16 +49,16 @@ class MultiThresholdObjects : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(MultiThresholdObjects)
-    DREAM3D_STATIC_NEW_MACRO(MultiThresholdObjects)
-    DREAM3D_TYPE_MACRO_SUPER(MultiThresholdObjects, AbstractFilter)
+    SIMPL_SHARED_POINTERS(MultiThresholdObjects)
+    SIMPL_STATIC_NEW_MACRO(MultiThresholdObjects)
+    SIMPL_TYPE_MACRO_SUPER(MultiThresholdObjects, AbstractFilter)
 
     virtual ~MultiThresholdObjects();
 
-    DREAM3D_FILTER_PARAMETER(QString, DestinationArrayName)
+    SIMPL_FILTER_PARAMETER(QString, DestinationArrayName)
     Q_PROPERTY(QString DestinationArrayName READ getDestinationArrayName WRITE setDestinationArrayName)
 
-    DREAM3D_FILTER_PARAMETER(ComparisonInputs, SelectedThresholds)
+    SIMPL_FILTER_PARAMETER(ComparisonInputs, SelectedThresholds)
     Q_PROPERTY(ComparisonInputs SelectedThresholds READ getSelectedThresholds WRITE setSelectedThresholds)
 
     /**

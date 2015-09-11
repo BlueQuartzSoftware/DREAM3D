@@ -42,14 +42,13 @@
 
 #include <QtWidgets/QListWidgetItem>
 
-#include "DREAM3DLib/DataContainers/DataArrayPath.h"
+#include "SIMPLib/DataContainers/DataArrayPath.h"
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
+#include "FilterParameterWidgetUtils.hpp"
 
-#define DATA_CONTAINER_LEVEL 0
-#define ATTRIBUTE_MATRIX_LEVEL 1
-#define ATTRIBUTE_ARRAY_LEVEL 2
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -164,36 +163,8 @@ void DataArrayCreationWidget::populateComboBoxes()
   // Cache the DataContainerArray Structure for our use during all the selections
   m_DcaProxy = DataContainerArrayProxy(dca.get());
 
-  // Populate the DataContainerArray Combo Box with all the DataContainers
-  QList<DataContainerProxy> dcList = m_DcaProxy.dataContainers.values();
-  QListIterator<DataContainerProxy> iter(dcList);
-  dataContainerCombo->clear();
-  QVector<unsigned int> defVec = m_FilterParameter->getDefaultGeometryTypes();
-  while(iter.hasNext() )
-  {
-    DataContainerProxy dcProxy = iter.next();
-    DataContainer::Pointer dc = dca->getDataContainer(dcProxy.name);
-    dataContainerCombo->addItem(dcProxy.name);
-
-    if (NULL != dc.get() && defVec.isEmpty() == false && defVec.contains(dc->getGeometry()->getGeometryType()) == false)
-    {
-      QStandardItemModel* model = qobject_cast<QStandardItemModel*>(dataContainerCombo->model());
-      if (NULL != model)
-      {
-        QStandardItem* item = model->item(dataContainerCombo->findText(dcProxy.name));
-        if (NULL != item)
-        {
-          item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
-        }
-      }
-    }
-//    if(dataContainerCombo->findText(dc.name) == -1 )
-//    {
-//      int index = dataContainerCombo->currentIndex();
-//      dataContainerCombo->addItem(dc.name);
-//      dataContainerCombo->setCurrentIndex(index);
-//    }
-  }
+  // Populate the DataContainer ComboBox
+  FilterPararameterWidgetUtils::PopulateDataContainerComboBox<DataArrayCreationFilterParameter>(getFilter(), getFilterParameter(), dataContainerCombo, m_DcaProxy);
 
   // Grab what is currently selected
   QString curDcName = dataContainerCombo->currentText();
@@ -230,7 +201,7 @@ void DataArrayCreationWidget::populateComboBoxes()
 
   int dcIndex = dataContainerCombo->findText(dcName);
   dataContainerCombo->setCurrentIndex(dcIndex);
-  populateAttributeMatrixList();
+  FilterPararameterWidgetUtils::PopulateAttributeMatrixComboBox<DataArrayCreationFilterParameter>(getFilter(), getFilterParameter(), dataContainerCombo, attributeMatrixCombo, m_DcaProxy);
 
   if(didBlock) { dataContainerCombo->blockSignals(false); didBlock = false; }
 
@@ -272,137 +243,20 @@ QString DataArrayCreationWidget::checkStringValues(QString curDcName, QString fi
   { return curDcName;}
 
   return filtDcName;
-
 }
-
-#if 0
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataArrayCreationWidget::selectDefaultPath()
-{
-
-  // set the default DataContainer
-  if(dataContainerList->count() > 0)
-  {
-    dataContainerList->setCurrentIndex(0);
-  }
-
-  // Select the first AttributeMatrix in the list
-  if(attributeMatrixList->count() > 0)
-  {
-    attributeMatrixList->setCurrentIndex(0);
-  }
-
-  // Set the default AttributeArray
-  getFilter()->blockSignals(true);
-  dataArrayName->setText("Default");
-  getFilter()->blockSignals(false);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataArrayCreationWidget::setSelectedPath(QString dcName, QString attrMatName, QString attrArrName)
-{
-  //dataContainerList->blockSignals(true);
-  // Set the correct DataContainer
-  int count = dataContainerList->count();
-  for(int i = 0; i < count; i++)
-  {
-    if (dataContainerList->itemText(i).compare(dcName) == 0 )
-    {
-      dataContainerList->setCurrentIndex(i); // This will fire the currentItemChanged(...) signal
-      break;
-    }
-  }
-  //dataContainerList->blockSignals(false);
-
-  //attributeMatrixList->blockSignals(true);
-  // Set the correct AttributeMatrix
-  count = attributeMatrixList->count();
-  for(int i = 0; i < count; i++)
-  {
-    if (attributeMatrixList->itemText(i).compare(attrMatName) == 0 )
-    {
-      attributeMatrixList->setCurrentIndex(i); // This will fire the currentItemChanged(...) signal
-      break;
-    }
-  }
-  //attributeMatrixList->blockSignals(false);
-
-  dataArrayName->blockSignals(true);
-  // Set the correct Data Array (if Possible). It may have changed since we started
-  dataArrayName->setText("Foo");
-  dataArrayName->blockSignals(false);
-}
-#endif
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void DataArrayCreationWidget::on_dataContainerCombo_currentIndexChanged(int index)
 {
-  populateAttributeMatrixList();
+  FilterPararameterWidgetUtils::PopulateAttributeMatrixComboBox<DataArrayCreationFilterParameter>(getFilter(), getFilterParameter(), dataContainerCombo, attributeMatrixCombo, m_DcaProxy);
 
   // Do not select an attribute matrix from the list
   if (attributeMatrixCombo->count() > 0)
   {
     attributeMatrixCombo->setCurrentIndex(-1);
   }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataArrayCreationWidget::populateAttributeMatrixList()
-{
-  DataContainerArray::Pointer dca = getFilter()->getDataContainerArray();
-  if (NULL == dca.get()) { return; }
-
-  QString dcName = dataContainerCombo->currentText();
-
-  // Clear the AttributeMatrix List
-  attributeMatrixCombo->blockSignals(true);
-  attributeMatrixCombo->clear();
-
-  // Loop over the data containers until we find the proper data container
-  QList<DataContainerProxy> containers = m_DcaProxy.dataContainers.values();
-  QListIterator<DataContainerProxy> containerIter(containers);
-  QVector<unsigned int> defVec = m_FilterParameter->getDefaultAttributeMatrixTypes();
-  while(containerIter.hasNext())
-  {
-    DataContainerProxy dc = containerIter.next();
-
-    if(dc.name.compare(dcName) == 0 )
-    {
-      // We found the proper Data Container, now populate the AttributeMatrix List
-      QMap<QString, AttributeMatrixProxy> attrMats = dc.attributeMatricies;
-      QMapIterator<QString, AttributeMatrixProxy> attrMatsIter(attrMats);
-      while(attrMatsIter.hasNext() )
-      {
-        attrMatsIter.next();
-        QString amName = attrMatsIter.key();
-        AttributeMatrix::Pointer am = dca->getAttributeMatrix(DataArrayPath(dc.name, amName, ""));
-        attributeMatrixCombo->addItem(amName);
-
-        if (NULL != am.get() && defVec.isEmpty() == false && defVec.contains(am->getType()) == false)
-        {
-          QStandardItemModel* model = qobject_cast<QStandardItemModel*>(attributeMatrixCombo->model());
-          if (NULL != model)
-          {
-            QStandardItem* item = model->item(attributeMatrixCombo->findText(amName));
-            if (NULL != item)
-            {
-              item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
-            }
-          }
-        }
-      }
-    }
-  }
-
-  attributeMatrixCombo->blockSignals(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -450,23 +304,6 @@ void DataArrayCreationWidget::widgetChanged(const QString& text)
   }
 }
 
-
-
-#if 0
-// -----------------------------------------------------------------------------
-//blockSignals(false);
-// -----------------------------------------------------------------------------
-void DataArrayCreationWidget::on_dataArrayName_textChanged(const QString& string)
-{
-  //qDebug() << "void DataArrayCreationWidget::on_dataArrayName_currentIndexChanged(int index)";
-  m_DidCausePreflight = true;
-  emit parametersChanged();
-  m_DidCausePreflight = false;
-}
-
-#endif
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -475,7 +312,7 @@ void DataArrayCreationWidget::beforePreflight()
   if (NULL == getFilter()) { return; }
   if(m_DidCausePreflight == true)
   {
-    std::cout << "***  DataArrayCreationWidget already caused a preflight, just returning" << std::endl;
+   // std::cout << "***  DataArrayCreationWidget already caused a preflight, just returning" << std::endl;
     return;
   }
 

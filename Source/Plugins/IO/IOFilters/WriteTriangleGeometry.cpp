@@ -41,13 +41,13 @@
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/DREAM3DLibVersion.h"
-#include "DREAM3DLib/FilterParameters/OutputFileFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataContainerSelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/SIMPLibVersion.h"
+#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "IO/IOConstants.h"
 
@@ -109,10 +109,10 @@ void WriteTriangleGeometry::readFilterParameters(AbstractFilterParametersReader*
 int WriteTriangleGeometry::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(DataContainerSelection)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputNodesFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputTrianglesFile)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(DataContainerSelection)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputNodesFile)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputTrianglesFile)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -217,7 +217,7 @@ void WriteTriangleGeometry::execute()
   }
   fprintf(nodesFile, "# All lines starting with '#' are comments\n");
   fprintf(nodesFile, "# DREAM.3D Nodes file\n");
-  fprintf(nodesFile, "# DREAM.3D Version %s\n", DREAM3DLib::Version::Complete().toLatin1().constData());
+  fprintf(nodesFile, "# DREAM.3D Version %s\n", SIMPLib::Version::Complete().toLatin1().constData());
   fprintf(nodesFile, "# Node Data is X Y Z space delimited.\n");
   fprintf(nodesFile, "Node Count: %lld\n", numNodes);
   for (int i = 0; i < numNodes; i++)
@@ -248,7 +248,7 @@ void WriteTriangleGeometry::execute()
 
   fprintf(triFile, "# All lines starting with '#' are comments\n");
   fprintf(triFile, "# DREAM.3D Triangle file\n");
-  fprintf(triFile, "# DREAM.3D Version %s\n", DREAM3DLib::Version::Complete().toLatin1().constData());
+  fprintf(triFile, "# DREAM.3D Version %s\n", SIMPLib::Version::Complete().toLatin1().constData());
   fprintf(triFile, "# Each Triangle consists of 3 Node Ids.\n");
   fprintf(triFile, "# NODE IDs START AT 0.\n");
   fprintf(triFile, "Geometry Type: %s\n", geometryType.toLatin1().constData());

@@ -36,14 +36,14 @@
 
 #include "FindBoundingBoxFeatures.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "Generic/GenericConstants.h"
 
@@ -118,12 +118,12 @@ void FindBoundingBoxFeatures::readFilterParameters(AbstractFilterParametersReade
 int FindBoundingBoxFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(CalcByPhase)
-  DREAM3D_FILTER_WRITE_PARAMETER(PhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(BiasedFeaturesArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceFeaturesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CentroidsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(CalcByPhase)
+  SIMPL_FILTER_WRITE_PARAMETER(PhasesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(BiasedFeaturesArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceFeaturesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CentroidsArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

@@ -37,11 +37,11 @@
 #ifndef _InitializeSyntheticVolume_H_
 #define _InitializeSyntheticVolume_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/FilterParameters/IntVec3FilterParameter.h"
-#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 
 /**
  * @brief The InitializeSyntheticVolume class. See [Filter documentation](@ref initializesyntheticvolume) for details.
@@ -50,40 +50,40 @@ class InitializeSyntheticVolume : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(InitializeSyntheticVolume)
-    DREAM3D_STATIC_NEW_MACRO(InitializeSyntheticVolume)
-    DREAM3D_TYPE_MACRO_SUPER(InitializeSyntheticVolume, AbstractFilter)
+    SIMPL_SHARED_POINTERS(InitializeSyntheticVolume)
+    SIMPL_STATIC_NEW_MACRO(InitializeSyntheticVolume)
+    SIMPL_TYPE_MACRO_SUPER(InitializeSyntheticVolume, AbstractFilter)
 
     virtual ~InitializeSyntheticVolume();
 
-    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
+    SIMPL_FILTER_PARAMETER(QString, DataContainerName)
     Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-    DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
     Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(IntVec3_t, Dimensions)
+    SIMPL_FILTER_PARAMETER(IntVec3_t, Dimensions)
     Q_PROPERTY(IntVec3_t Dimensions READ getDimensions WRITE setDimensions)
 
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
+    SIMPL_FILTER_PARAMETER(FloatVec3_t, Resolution)
     Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
 
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, Origin)
+    SIMPL_FILTER_PARAMETER(FloatVec3_t, Origin)
     Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
 
     // These are for estimating the number of features that will be generated farther down the line.
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, InputStatsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, InputStatsArrayPath)
     Q_PROPERTY(DataArrayPath InputStatsArrayPath READ getInputStatsArrayPath WRITE setInputStatsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, InputPhaseTypesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, InputPhaseTypesArrayPath)
     Q_PROPERTY(DataArrayPath InputPhaseTypesArrayPath READ getInputPhaseTypesArrayPath WRITE setInputPhaseTypesArrayPath)
 
 
-    DREAM3D_FILTER_PARAMETER(bool, EstimateNumberOfFeatures)
+    SIMPL_FILTER_PARAMETER(bool, EstimateNumberOfFeatures)
     Q_PROPERTY(bool EstimateNumberOfFeatures READ getEstimateNumberOfFeatures WRITE setEstimateNumberOfFeatures)
 
-    DREAM3D_FILTER_PARAMETER(QString, InputStatsFile)
+    SIMPL_FILTER_PARAMETER(QString, InputStatsFile)
     Q_PROPERTY(QString InputStatsFile READ getInputStatsFile WRITE setInputStatsFile)
 
     QString getEstimatedPrimaryFeatures();

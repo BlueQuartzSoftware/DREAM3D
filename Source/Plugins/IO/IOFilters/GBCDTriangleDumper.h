@@ -37,9 +37,9 @@
 #ifndef _GBCDTriangleDumper_H_
 #define _GBCDTriangleDumper_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The GBCDTriangleDumper class. See [Filter documentation](@ref gbcdtriangledumper) for details.
@@ -48,25 +48,25 @@ class GBCDTriangleDumper : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(GBCDTriangleDumper)
-    DREAM3D_STATIC_NEW_MACRO(GBCDTriangleDumper)
-    DREAM3D_TYPE_MACRO_SUPER(GBCDTriangleDumper, AbstractFilter)
+    SIMPL_SHARED_POINTERS(GBCDTriangleDumper)
+    SIMPL_STATIC_NEW_MACRO(GBCDTriangleDumper)
+    SIMPL_TYPE_MACRO_SUPER(GBCDTriangleDumper, AbstractFilter)
 
     virtual ~GBCDTriangleDumper();
 
-    DREAM3D_FILTER_PARAMETER(QString, OutputFile)
+    SIMPL_FILTER_PARAMETER(QString, OutputFile)
     Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceNormalsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceNormalsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceNormalsArrayPath READ getSurfaceMeshFaceNormalsArrayPath WRITE setSurfaceMeshFaceNormalsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceAreasArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceAreasArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceAreasArrayPath READ getSurfaceMeshFaceAreasArrayPath WRITE setSurfaceMeshFaceAreasArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureEulerAnglesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureEulerAnglesArrayPath)
     Q_PROPERTY(DataArrayPath FeatureEulerAnglesArrayPath READ getFeatureEulerAnglesArrayPath WRITE setFeatureEulerAnglesArrayPath)
 
     /**

@@ -37,10 +37,10 @@
 #ifndef _FindSlipTransmissionMetrics_H_
 #define _FindSlipTransmissionMetrics_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/NeighborList.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/NeighborList.hpp"
 
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
@@ -51,34 +51,34 @@ class FindSlipTransmissionMetrics : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindSlipTransmissionMetrics)
-    DREAM3D_STATIC_NEW_MACRO(FindSlipTransmissionMetrics)
-    DREAM3D_TYPE_MACRO_SUPER(FindSlipTransmissionMetrics, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FindSlipTransmissionMetrics)
+    SIMPL_STATIC_NEW_MACRO(FindSlipTransmissionMetrics)
+    SIMPL_TYPE_MACRO_SUPER(FindSlipTransmissionMetrics, AbstractFilter)
 
     virtual ~FindSlipTransmissionMetrics();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, NeighborListArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, NeighborListArrayPath)
     Q_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, F1ListArrayName)
+    SIMPL_FILTER_PARAMETER(QString, F1ListArrayName)
     Q_PROPERTY(QString F1ListArrayName READ getF1ListArrayName WRITE setF1ListArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, F1sptListArrayName)
+    SIMPL_FILTER_PARAMETER(QString, F1sptListArrayName)
     Q_PROPERTY(QString F1sptListArrayName READ getF1sptListArrayName WRITE setF1sptListArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, F7ListArrayName)
+    SIMPL_FILTER_PARAMETER(QString, F7ListArrayName)
     Q_PROPERTY(QString F7ListArrayName READ getF7ListArrayName WRITE setF7ListArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, mPrimeListArrayName)
+    SIMPL_FILTER_PARAMETER(QString, mPrimeListArrayName)
     Q_PROPERTY(QString mPrimeListArrayName READ getmPrimeListArrayName WRITE setmPrimeListArrayName)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
     Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
     Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
     /**

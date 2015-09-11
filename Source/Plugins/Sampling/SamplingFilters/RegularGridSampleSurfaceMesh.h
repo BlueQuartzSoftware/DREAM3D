@@ -37,10 +37,10 @@
 #ifndef _RegularGridSampleSurfaceMesh_H_
 #define _RegularGridSampleSurfaceMesh_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 
 #include "Sampling/SamplingFilters/SampleSurfaceMesh.h"
 
@@ -51,34 +51,34 @@ class RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
 {
     Q_OBJECT
   public:
-    DREAM3D_SHARED_POINTERS(RegularGridSampleSurfaceMesh)
-    DREAM3D_STATIC_NEW_MACRO(RegularGridSampleSurfaceMesh)
-    DREAM3D_TYPE_MACRO_SUPER(RegularGridSampleSurfaceMesh, AbstractFilter)
+    SIMPL_SHARED_POINTERS(RegularGridSampleSurfaceMesh)
+    SIMPL_STATIC_NEW_MACRO(RegularGridSampleSurfaceMesh)
+    SIMPL_TYPE_MACRO_SUPER(RegularGridSampleSurfaceMesh, AbstractFilter)
 
     virtual ~RegularGridSampleSurfaceMesh();
 
-    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
+    SIMPL_FILTER_PARAMETER(QString, DataContainerName)
     Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-    DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
     Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(int, XPoints)
+    SIMPL_FILTER_PARAMETER(int, XPoints)
     Q_PROPERTY(int XPoints READ getXPoints WRITE setXPoints)
 
-    DREAM3D_FILTER_PARAMETER(int, YPoints)
+    SIMPL_FILTER_PARAMETER(int, YPoints)
     Q_PROPERTY(int YPoints READ getYPoints WRITE setYPoints)
 
-    DREAM3D_FILTER_PARAMETER(int, ZPoints)
+    SIMPL_FILTER_PARAMETER(int, ZPoints)
     Q_PROPERTY(int ZPoints READ getZPoints WRITE setZPoints)
 
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
+    SIMPL_FILTER_PARAMETER(FloatVec3_t, Resolution)
     Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
 
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, Origin)
+    SIMPL_FILTER_PARAMETER(FloatVec3_t, Origin)
     Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
 
-    DREAM3D_FILTER_PARAMETER(QString, FeatureIdsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, FeatureIdsArrayName)
     Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
     /**

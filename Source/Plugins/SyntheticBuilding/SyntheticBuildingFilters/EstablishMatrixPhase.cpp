@@ -36,21 +36,21 @@
 
 #include "EstablishMatrixPhase.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/StatsData/PrimaryStatsData.h"
-#include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
-#include "DREAM3DLib/StatsData/TransformationStatsData.h"
-#include "DREAM3DLib/StatsData/BoundaryStatsData.h"
-#include "DREAM3DLib/StatsData/MatrixStatsData.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/StatsData/PrimaryStatsData.h"
+#include "SIMPLib/StatsData/PrecipitateStatsData.h"
+#include "SIMPLib/StatsData/TransformationStatsData.h"
+#include "SIMPLib/StatsData/BoundaryStatsData.h"
+#include "SIMPLib/StatsData/MatrixStatsData.h"
+#include "SIMPLib/Utilities/SIMPLibRandom.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 
@@ -166,18 +166,18 @@ void EstablishMatrixPhase::readFilterParameters(AbstractFilterParametersReader* 
 int EstablishMatrixPhase::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputCellAttributeMatrixPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputCellFeatureAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputCellEnsembleAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(NumFeaturesArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputStatsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(UseMask)
-  DREAM3D_FILTER_WRITE_PARAMETER(MaskArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputPhaseTypesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputCellAttributeMatrixPath)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputCellFeatureAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputCellEnsembleAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(NumFeaturesArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(InputStatsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(UseMask)
+  SIMPL_FILTER_WRITE_PARAMETER(MaskArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(InputPhaseTypesArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -294,7 +294,7 @@ void EstablishMatrixPhase::execute()
 void  EstablishMatrixPhase::establish_matrix()
 {
   notifyStatusMessage(getHumanLabel(), "Establishing Matrix");
-  DREAM3D_RANDOMNG_NEW()
+  SIMPL_RANDOMNG_NEW()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
 

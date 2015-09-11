@@ -36,19 +36,19 @@
 
 #include "GroupMicroTextureRegions.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/BooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DoubleFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/Math/GeometryMath.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Math/GeometryMath.h"
+#include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/Utilities/SIMPLibRandom.h"
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 
@@ -164,17 +164,17 @@ int GroupMicroTextureRegions::writeFilterParameters(AbstractFilterParametersWrit
 {
   GroupFeatures::writeFilterParameters(writer, index);
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(ActiveArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(NewCellFeatureAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureParentIdsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellParentIdsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(VolumesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CAxisTolerance)
-  DREAM3D_FILTER_WRITE_PARAMETER(UseRunningAverage)
+  SIMPL_FILTER_WRITE_PARAMETER(ActiveArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(NewCellFeatureAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureParentIdsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(CellParentIdsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(VolumesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CAxisTolerance)
+  SIMPL_FILTER_WRITE_PARAMETER(UseRunningAverage)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -335,7 +335,7 @@ int32_t GroupMicroTextureRegions::getSeed(int32_t newFid)
   float g1[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
   float g1t[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
 
-  DREAM3D_RANDOMNG_NEW()
+  SIMPL_RANDOMNG_NEW()
   int32_t seed = -1;
   int32_t randfeature = 0;
 
@@ -431,9 +431,9 @@ bool GroupMicroTextureRegions::determineGrouping(int32_t referenceFeature, int32
 
       if (m_UseRunningAverage == true) { w = GeometryMath::CosThetaBetweenVectors(avgCaxes, c2); }
       else { w = GeometryMath::CosThetaBetweenVectors(c1, c2); }
-      DREAM3DMath::boundF(w, -1, 1);
+      SIMPLibMath::boundF(w, -1, 1);
       w = acosf(w);
-      if (w <= caxisTolerance || (DREAM3D::Constants::k_Pi - w) <= caxisTolerance)
+      if (w <= caxisTolerance || (SIMPLib::Constants::k_Pi - w) <= caxisTolerance)
       {
         m_FeatureParentIds[neighborFeature] = newFid;
         if (m_UseRunningAverage == true)
@@ -475,7 +475,7 @@ void GroupMicroTextureRegions::execute()
   if(getErrorCondition() < 0) { return; }
 
   // Convert user defined tolerance to radians.
-  caxisTolerance = m_CAxisTolerance * DREAM3D::Constants::k_Pi / 180.0f;
+  caxisTolerance = m_CAxisTolerance * SIMPLib::Constants::k_Pi / 180.0f;
 
   avgCaxes[0] = 0.0f;
   avgCaxes[1] = 0.0f;

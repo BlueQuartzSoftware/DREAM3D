@@ -48,12 +48,12 @@ typedef boost::uniform_int<int> NumberDistribution;
 typedef boost::mt19937 RandomNumberGenerator;
 typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataArrays/IDataArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Reconstruction/ReconstructionFilters/SegmentFeatures.h"
 #include "Reconstruction/ReconstructionConstants.h"
@@ -72,29 +72,29 @@ class SineParamsSegmentFeatures : public SegmentFeatures
 {
     Q_OBJECT
   public:
-    DREAM3D_SHARED_POINTERS(SineParamsSegmentFeatures)
-    DREAM3D_STATIC_NEW_MACRO(SineParamsSegmentFeatures)
-    DREAM3D_TYPE_MACRO_SUPER(SineParamsSegmentFeatures, AbstractFilter)
+    SIMPL_SHARED_POINTERS(SineParamsSegmentFeatures)
+    SIMPL_STATIC_NEW_MACRO(SineParamsSegmentFeatures)
+    SIMPL_TYPE_MACRO_SUPER(SineParamsSegmentFeatures, AbstractFilter)
 
     virtual ~SineParamsSegmentFeatures();
-    DREAM3D_FILTER_PARAMETER(QString, CellFeatureAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, CellFeatureAttributeMatrixName)
     Q_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SineParamsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SineParamsArrayPath)
     Q_PROPERTY(DataArrayPath SineParamsArrayPath READ getSineParamsArrayPath WRITE setSineParamsArrayPath)
 
-    DREAM3D_INSTANCE_PROPERTY(bool, RandomizeFeatureIds)
+    SIMPL_INSTANCE_PROPERTY(bool, RandomizeFeatureIds)
 
-    DREAM3D_FILTER_PARAMETER(bool, UseGoodVoxels)
+    SIMPL_FILTER_PARAMETER(bool, UseGoodVoxels)
     Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
     Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, FeatureIdsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, FeatureIdsArrayName)
     Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, ActiveArrayName)
+    SIMPL_FILTER_PARAMETER(QString, ActiveArrayName)
     Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
 
     /**

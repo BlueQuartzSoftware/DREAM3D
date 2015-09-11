@@ -39,11 +39,11 @@
 
 #include <QtCore/QString>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/IDataArray.h"
 
 
 /**
@@ -57,34 +57,34 @@ class GoldfeatherReader : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(GoldfeatherReader)
-    DREAM3D_STATIC_NEW_MACRO(GoldfeatherReader)
-    DREAM3D_TYPE_MACRO_SUPER(GoldfeatherReader, AbstractFilter)
+    SIMPL_SHARED_POINTERS(GoldfeatherReader)
+    SIMPL_STATIC_NEW_MACRO(GoldfeatherReader)
+    SIMPL_TYPE_MACRO_SUPER(GoldfeatherReader, AbstractFilter)
 
     virtual ~GoldfeatherReader();
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceDataContainerName)
+    SIMPL_FILTER_PARAMETER(QString, SurfaceDataContainerName)
     Q_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
-    DREAM3D_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
     Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
-    DREAM3D_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
     Q_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshPrincipalCurvature1sArrayName)
+    SIMPL_FILTER_PARAMETER(QString, SurfaceMeshPrincipalCurvature1sArrayName)
     Q_PROPERTY(QString SurfaceMeshPrincipalCurvature1sArrayName READ getSurfaceMeshPrincipalCurvature1sArrayName WRITE setSurfaceMeshPrincipalCurvature1sArrayName)
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshPrincipalCurvature2sArrayName)
+    SIMPL_FILTER_PARAMETER(QString, SurfaceMeshPrincipalCurvature2sArrayName)
     Q_PROPERTY(QString SurfaceMeshPrincipalCurvature2sArrayName READ getSurfaceMeshPrincipalCurvature2sArrayName WRITE setSurfaceMeshPrincipalCurvature2sArrayName)
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshPrincipalDirection1sArrayName)
+    SIMPL_FILTER_PARAMETER(QString, SurfaceMeshPrincipalDirection1sArrayName)
     Q_PROPERTY(QString SurfaceMeshPrincipalDirection1sArrayName READ getSurfaceMeshPrincipalDirection1sArrayName WRITE setSurfaceMeshPrincipalDirection1sArrayName)
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshPrincipalDirection2sArrayName)
+    SIMPL_FILTER_PARAMETER(QString, SurfaceMeshPrincipalDirection2sArrayName)
     Q_PROPERTY(QString SurfaceMeshPrincipalDirection2sArrayName READ getSurfaceMeshPrincipalDirection2sArrayName WRITE setSurfaceMeshPrincipalDirection2sArrayName)
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshNodeNormalsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, SurfaceMeshNodeNormalsArrayName)
     Q_PROPERTY(QString SurfaceMeshNodeNormalsArrayName READ getSurfaceMeshNodeNormalsArrayName WRITE setSurfaceMeshNodeNormalsArrayName)
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshFaceLabelsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, SurfaceMeshFaceLabelsArrayName)
     Q_PROPERTY(QString SurfaceMeshFaceLabelsArrayName READ getSurfaceMeshFaceLabelsArrayName WRITE setSurfaceMeshFaceLabelsArrayName)
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshFaceNormalsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, SurfaceMeshFaceNormalsArrayName)
     Q_PROPERTY(QString SurfaceMeshFaceNormalsArrayName READ getSurfaceMeshFaceNormalsArrayName WRITE setSurfaceMeshFaceNormalsArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, InputFile)
+    SIMPL_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
     /**

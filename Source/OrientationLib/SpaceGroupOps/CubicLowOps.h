@@ -38,10 +38,10 @@
 #define _CubicLowOPS_H_
 
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/Math/QuaternionMath.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Math/QuaternionMath.hpp"
 
 #include "OrientationLib/OrientationLib.h"
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
@@ -59,9 +59,9 @@
 class OrientationLib_EXPORT CubicLowOps : public SpaceGroupOps
 {
   public:
-    DREAM3D_SHARED_POINTERS(CubicLowOps)
-    DREAM3D_TYPE_MACRO_SUPER(CubicLowOps, SpaceGroupOps)
-    DREAM3D_STATIC_NEW_MACRO(CubicLowOps)
+    SIMPL_SHARED_POINTERS(CubicLowOps)
+    SIMPL_TYPE_MACRO_SUPER(CubicLowOps, SpaceGroupOps)
+    SIMPL_STATIC_NEW_MACRO(CubicLowOps)
 
     CubicLowOps();
     virtual ~CubicLowOps();

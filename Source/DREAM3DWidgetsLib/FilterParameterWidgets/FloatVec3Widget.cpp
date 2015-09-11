@@ -37,7 +37,7 @@
 
 #include <QtCore/QMetaProperty>
 
-#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 

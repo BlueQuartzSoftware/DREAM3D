@@ -56,13 +56,13 @@
 #include "EbsdLib/TSL/AngConstants.h"
 #include "EbsdLib/HKL/CtfConstants.h"
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/Common/IFilterFactory.hpp"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "DREAM3DLib/FilterParameters/FilterParameter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/Common/IFilterFactory.hpp"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/FilterParameters/FilterParameter.h"
 
 
 #include "QtSupportLib/DREAM3DHelpUrlGenerator.h"

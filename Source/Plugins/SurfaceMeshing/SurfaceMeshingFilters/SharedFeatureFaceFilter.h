@@ -37,9 +37,9 @@
 #ifndef _SharedFeatureFaceFilter_H_
 #define _SharedFeatureFaceFilter_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
@@ -50,28 +50,28 @@ class SharedFeatureFaceFilter : public SurfaceMeshFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(SharedFeatureFaceFilter)
-    DREAM3D_STATIC_NEW_MACRO(SharedFeatureFaceFilter)
-    DREAM3D_TYPE_MACRO_SUPER(SharedFeatureFaceFilter, SurfaceMeshFilter)
+    SIMPL_SHARED_POINTERS(SharedFeatureFaceFilter)
+    SIMPL_STATIC_NEW_MACRO(SharedFeatureFaceFilter)
+    SIMPL_TYPE_MACRO_SUPER(SharedFeatureFaceFilter, SurfaceMeshFilter)
 
     virtual ~SharedFeatureFaceFilter();
 
     typedef QVector<int32_t> FaceIds_t;
     typedef QMap<int32_t, FaceIds_t> SharedFeatureFaces_t;
 
-    DREAM3D_FILTER_PARAMETER(QString, FaceFeatureAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, FaceFeatureAttributeMatrixName)
     Q_PROPERTY(QString FaceFeatureAttributeMatrixName READ getFaceFeatureAttributeMatrixName WRITE setFaceFeatureAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshFeatureFaceIdsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, SurfaceMeshFeatureFaceIdsArrayName)
     Q_PROPERTY(QString SurfaceMeshFeatureFaceIdsArrayName READ getSurfaceMeshFeatureFaceIdsArrayName WRITE setSurfaceMeshFeatureFaceIdsArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshFeatureFaceLabelsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, SurfaceMeshFeatureFaceLabelsArrayName)
     Q_PROPERTY(QString SurfaceMeshFeatureFaceLabelsArrayName READ getSurfaceMeshFeatureFaceLabelsArrayName WRITE setSurfaceMeshFeatureFaceLabelsArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshFeatureFaceNumTrianglesArrayName)
+    SIMPL_FILTER_PARAMETER(QString, SurfaceMeshFeatureFaceNumTrianglesArrayName)
     Q_PROPERTY(QString SurfaceMeshFeatureFaceNumTrianglesArrayName READ getSurfaceMeshFeatureFaceNumTrianglesArrayName WRITE setSurfaceMeshFeatureFaceNumTrianglesArrayName)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
     /**

@@ -22,9 +22,9 @@
 
 
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/DREAM3DLibVersion.h"
-#include "DREAM3DLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/SIMPLibVersion.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "DREAM3DFileStructure.h"
 
@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
   try
   {
     // Handle program options passed on command line.
-    TCLAP::CmdLine cmd("DREAM3DFileStructure", ' ', DREAM3DLib::Version::Complete().toStdString());
+    TCLAP::CmdLine cmd("DREAM3DFileStructure", ' ', SIMPLib::Version::Complete().toStdString());
 
     TCLAP::ValueArg<std::string> fileArg( "d", "file", "DREAM3D File", true, "", "DREAM3D Input File (*.dream3d)");
     cmd.add(fileArg);
@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
   QCoreApplication::setOrganizationDomain("bluequartz.net");
   QCoreApplication::setApplicationName("DREAM3DFileStructure");
 
-  std::cout << "DREAM3DFileStructure Starting. Version " << DREAM3DLib::Version::PackageComplete().toStdString() << std::endl;
+  std::cout << "DREAM3DFileStructure Starting. Version " << SIMPLib::Version::PackageComplete().toStdString() << std::endl;
 
   // Sanity Check the filepath to make sure it exists, Report an error and bail if it does not
   QFileInfo fi(filePath);

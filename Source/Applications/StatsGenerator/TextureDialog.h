@@ -45,7 +45,7 @@
 
 
 
-#include "DREAM3DLib/Common/Constants.h"
+#include "SIMPLib/Common/Constants.h"
 
 #include "OrientationLib/Texture/TexturePreset.h"
 
@@ -64,7 +64,7 @@ class TextureDialog : public QDialog , private Ui::TextureDialog
     TextureDialog(unsigned int xtal, QWidget* parent = 0);
     virtual ~TextureDialog();
 
-    DREAM3D_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
+    SIMPL_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
 
     void getODFEntry(float& e1, float& e2, float& e3, float& weight, float& sigma);
 

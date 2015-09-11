@@ -38,15 +38,15 @@
 
 #include <QtCore/QDir>
 
-#include "DREAM3DLib/DREAM3DLibVersion.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/OutputFileFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/SIMPLibVersion.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/ScopedFileMonitor.hpp"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "IO/IOConstants.h"
 
@@ -103,9 +103,9 @@ void AbaqusSurfaceMeshWriter::readFilterParameters(AbstractFilterParametersReade
 int AbaqusSurfaceMeshWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputFile)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -241,7 +241,7 @@ int32_t AbaqusSurfaceMeshWriter::writeHeader(FILE* f, int64_t nodeCount, int64_t
     return -1;
   }
   fprintf(f, "*HEADING\n");
-  fprintf(f, "** File Created with DREAM3D Version %s\n", DREAM3DLib::Version::Complete().toStdString().c_str());
+  fprintf(f, "** File Created with DREAM3D Version %s\n", SIMPLib::Version::Complete().toStdString().c_str());
   fprintf(f, "** There are 3 Sections to this INP File: Nodes, Elements and Sets of Elements for each grain\n");
   fprintf(f, "** This file represents a trianguglar based mesh. The element type selected is %s for the triangles\n", TRI_ELEMENT_TYPE);
   fprintf(f, "** This file is an experimental output from DREAM3D. The user is responsible for verifying all elements in Abaqus\n");

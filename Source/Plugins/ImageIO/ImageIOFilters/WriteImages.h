@@ -37,9 +37,9 @@
 #ifndef _WriteImages_H_
 #define _WriteImages_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The WriteImages class. See [Filter documentation](@ref writeimages) for details.
@@ -48,28 +48,28 @@ class WriteImages : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(WriteImages)
-    DREAM3D_STATIC_NEW_MACRO(WriteImages)
-    DREAM3D_TYPE_MACRO_SUPER(WriteImages, AbstractFilter)
+    SIMPL_SHARED_POINTERS(WriteImages)
+    SIMPL_STATIC_NEW_MACRO(WriteImages)
+    SIMPL_TYPE_MACRO_SUPER(WriteImages, AbstractFilter)
 
     virtual ~WriteImages();
 
-    DREAM3D_FILTER_PARAMETER(bool, FilePrefix)
+    SIMPL_FILTER_PARAMETER(bool, FilePrefix)
     Q_PROPERTY(bool FilePrefix READ getFilePrefix WRITE setFilePrefix)
 
-    DREAM3D_FILTER_PARAMETER(QString, ImagePrefix)
+    SIMPL_FILTER_PARAMETER(QString, ImagePrefix)
     Q_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix)
 
-    DREAM3D_FILTER_PARAMETER(QString, OutputPath)
+    SIMPL_FILTER_PARAMETER(QString, OutputPath)
     Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
 
-    DREAM3D_FILTER_PARAMETER(int, ImageFormat)
+    SIMPL_FILTER_PARAMETER(int, ImageFormat)
     Q_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat)
 
-    DREAM3D_FILTER_PARAMETER(int, Plane)
+    SIMPL_FILTER_PARAMETER(int, Plane)
     Q_PROPERTY(int Plane READ getPlane WRITE setPlane)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, ColorsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, ColorsArrayPath)
     Q_PROPERTY(DataArrayPath ColorsArrayPath READ getColorsArrayPath WRITE setColorsArrayPath)
 
     enum ImageFormatType

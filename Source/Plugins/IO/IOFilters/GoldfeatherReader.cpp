@@ -38,13 +38,13 @@
 
 #include <QtCore/QFileInfo>
 
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "IO/IOConstants.h"
 
@@ -150,18 +150,18 @@ void GoldfeatherReader::readFilterParameters(AbstractFilterParametersReader* rea
 int GoldfeatherReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceDataContainerName)
-  DREAM3D_FILTER_WRITE_PARAMETER(VertexAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(FaceAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalCurvature1sArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalCurvature2sArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalDirection1sArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalDirection2sArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshNodeNormalsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceNormalsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceDataContainerName)
+  SIMPL_FILTER_WRITE_PARAMETER(VertexAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(FaceAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalCurvature1sArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalCurvature2sArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalDirection1sArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalDirection2sArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshNodeNormalsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceNormalsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(InputFile)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

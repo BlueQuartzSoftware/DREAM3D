@@ -36,9 +36,9 @@
 #ifndef _FindVolFractions_H_
 #define _FindVolFractions_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The FindVolFractions class. See [Filter documentation](@ref findvolfractions) for details.
@@ -47,16 +47,16 @@ class FindVolFractions : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindVolFractions)
-    DREAM3D_STATIC_NEW_MACRO(FindVolFractions)
-    DREAM3D_TYPE_MACRO_SUPER(FindVolFractions, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FindVolFractions)
+    SIMPL_STATIC_NEW_MACRO(FindVolFractions)
+    SIMPL_TYPE_MACRO_SUPER(FindVolFractions, AbstractFilter)
 
     virtual ~FindVolFractions();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
     Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, VolFractionsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, VolFractionsArrayPath)
     Q_PROPERTY(DataArrayPath VolFractionsArrayPath READ getVolFractionsArrayPath WRITE setVolFractionsArrayPath)
 
     /**

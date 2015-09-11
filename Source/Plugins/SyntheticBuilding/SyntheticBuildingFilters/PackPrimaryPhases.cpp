@@ -36,7 +36,7 @@
 
 #include "PackPrimaryPhases.h"
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range3d.h>
 #include <tbb/partitioner.h>
@@ -47,23 +47,23 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataArrays/NeighborList.hpp"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/DataArrays/NeighborList.hpp"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/BooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/InputFileFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/OutputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/StatsData/PrimaryStatsData.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-#include "DREAM3DLib/Utilities/TimeUtilities.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/StatsData/PrimaryStatsData.h"
+#include "SIMPLib/Utilities/SIMPLibRandom.h"
+#include "SIMPLib/Utilities/TimeUtilities.h"
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 
@@ -204,7 +204,7 @@ class AssignVoxelsGapsImpl
       }
     }
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     void operator()(const tbb::blocked_range3d<DimType, DimType, DimType>& r) const
     {
       convert(r.pages().begin(), r.pages().end(), r.rows().begin(), r.rows().end(), r.cols().begin(), r.cols().end());
@@ -404,26 +404,26 @@ void PackPrimaryPhases::readFilterParameters(AbstractFilterParametersReader* rea
 int PackPrimaryPhases::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputCellAttributeMatrixPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputCellFeatureAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputCellEnsembleAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(NumFeaturesArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(PeriodicBoundaries)
-  DREAM3D_FILTER_WRITE_PARAMETER(UseMask)
-  DREAM3D_FILTER_WRITE_PARAMETER(HaveFeatures)
-  DREAM3D_FILTER_WRITE_PARAMETER(WriteGoalAttributes)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureInputFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(CsvOutputFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputStatsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputPhaseTypesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputShapeTypesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(MaskArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(VtkOutputFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(ErrorOutputFile)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputCellAttributeMatrixPath)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputCellFeatureAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputCellEnsembleAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(NumFeaturesArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(PeriodicBoundaries)
+  SIMPL_FILTER_WRITE_PARAMETER(UseMask)
+  SIMPL_FILTER_WRITE_PARAMETER(HaveFeatures)
+  SIMPL_FILTER_WRITE_PARAMETER(WriteGoalAttributes)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureInputFile)
+  SIMPL_FILTER_WRITE_PARAMETER(CsvOutputFile)
+  SIMPL_FILTER_WRITE_PARAMETER(InputStatsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(InputPhaseTypesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(InputShapeTypesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(MaskArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(VtkOutputFile)
+  SIMPL_FILTER_WRITE_PARAMETER(ErrorOutputFile)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -770,8 +770,8 @@ void PackPrimaryPhases::load_features()
   for (int32_t i = 0; i < numFeatures; i++)
   {
     inFile >> phase >> xC >> yC >> zC >> axisA >> axisB >> axisC >> omega3 >> phi1 >> PHI >> phi2;
-    vol = fourThirds * DREAM3D::Constants::k_Pi * axisA * axisB * axisC;
-    eqDiam = 2.0f * powf((vol * (0.75f) * (DREAM3D::Constants::k_1OverPi)), (DREAM3D::Constants::k_1Over3));
+    vol = fourThirds * SIMPLib::Constants::k_Pi * axisA * axisB * axisC;
+    eqDiam = 2.0f * powf((vol * (0.75f) * (SIMPLib::Constants::k_1OverPi)), (SIMPLib::Constants::k_1Over3));
     m_Centroids[3 * currentFeature + 0] = xC;
     m_Centroids[3 * currentFeature + 1] = yC;
     m_Centroids[3 * currentFeature + 2] = zC;
@@ -804,7 +804,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
 
   setErrorCondition(0);
   m_Seed = QDateTime::currentMSecsSinceEpoch();
-  DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
+  SIMPL_RANDOMNG_NEW_SEEDED(m_Seed);
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
 
@@ -939,11 +939,11 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
       float logInput = logf(input);
       if (logInput <= avg)
       {
-        featuresizedist[i][j] = 0.5f - 0.5f * (DREAM3DMath::erf((avg - logInput) * denominatorConst)) - previoustotal;
+        featuresizedist[i][j] = 0.5f - 0.5f * (SIMPLibMath::erf((avg - logInput) * denominatorConst)) - previoustotal;
       }
       if (logInput > avg)
       {
-        featuresizedist[i][j] = 0.5f + 0.5f * (DREAM3DMath::erf((logInput - avg) * denominatorConst)) - previoustotal;
+        featuresizedist[i][j] = 0.5f + 0.5f * (SIMPLibMath::erf((logInput - avg) * denominatorConst)) - previoustotal;
       }
       previoustotal = previoustotal + featuresizedist[i][j];
     }
@@ -1084,11 +1084,11 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
         float logInput = logf(input);
         if (logInput <= avg)
         {
-          neighbordist[i][j][k] = 0.5f - 0.5f * (DREAM3DMath::erf((avg - logInput) * denominatorConst )) - previoustotal;
+          neighbordist[i][j][k] = 0.5f - 0.5f * (SIMPLibMath::erf((avg - logInput) * denominatorConst )) - previoustotal;
         }
         if (logInput > avg)
         {
-          neighbordist[i][j][k] = 0.5f + 0.5f * (DREAM3DMath::erf((logInput - avg) * denominatorConst)) - previoustotal;
+          neighbordist[i][j][k] = 0.5f + 0.5f * (SIMPLibMath::erf((logInput - avg) * denominatorConst)) - previoustotal;
         }
         previoustotal = previoustotal + neighbordist[i][j][k];
       }
@@ -1415,7 +1415,7 @@ Int32ArrayType::Pointer PackPrimaryPhases::initialize_packinggrid()
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::generate_feature(int32_t phase, Feature_t* feature, uint32_t shapeclass)
 {
-  DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed)
+  SIMPL_RANDOMNG_NEW_SEEDED(m_Seed)
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock().get());
 
@@ -1425,7 +1425,7 @@ void PackPrimaryPhases::generate_feature(int32_t phase, Feature_t* feature, uint
   float diam = 0.0f;
   float vol = 0.0f;
   bool volgood = false;
-  float fourThirdsPiOverEight =  static_cast<float>(((4.0f / 3.0f) * (DREAM3D::Constants::k_Pi)) / 8.0f);
+  float fourThirdsPiOverEight =  static_cast<float>(((4.0f / 3.0f) * (SIMPLib::Constants::k_Pi)) / 8.0f);
   PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
   VectorOfFloatArray GSdist = pp->getFeatureSizeDistribution();
   float avg = GSdist[0]->getValue(0);
@@ -2035,7 +2035,7 @@ void PackPrimaryPhases::update_availablepoints(std::map<size_t, size_t>& availab
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::insert_feature(size_t gnum)
 {
-  DREAM3D_RANDOMNG_NEW();
+  SIMPL_RANDOMNG_NEW();
 
   float inside = -1.0f;
   int64_t column = 0, row = 0, plane = 0;
@@ -2161,7 +2161,7 @@ void PackPrimaryPhases::assign_voxels()
   };
 
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
 #endif
@@ -2279,7 +2279,7 @@ void PackPrimaryPhases::assign_voxels()
     float xx[3] = {xc, yc, zc };
     ShapeOps* shapeOps = m_ShapeOps[shapeclass].get();
     //#if 0
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range3d<DimType, DimType, DimType>(zmin, zmax + 1, ymin, ymax + 1, xmin, xmax + 1),
@@ -2678,7 +2678,7 @@ int32_t PackPrimaryPhases::estimate_numfeatures(size_t xpoints, size_t ypoints, 
   // Create a Reference Variable so we can use the [] syntax
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock().get());
 
-  DREAM3D_RANDOMNG_NEW()
+  SIMPL_RANDOMNG_NEW()
 
   std::vector<int32_t> primaryPhasesLocal;
   std::vector<double> primaryPhaseFractionsLocal;

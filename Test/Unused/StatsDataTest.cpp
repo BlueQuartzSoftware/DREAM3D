@@ -48,15 +48,15 @@
 
 #include "H5Support/H5Utilities.h"
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Common/StatsGen.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "DREAM3DLib/DataArrays/StatsDataArray.h"
-#include "DREAM3DLib/StatsData/StatsData.h"
-#include "DREAM3DLib/IOFilters/DataContainerWriter.h"
-#include "DREAM3DLib/IOFilters/DataContainerReader.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Common/StatsGen.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataArrays/StatsDataArray.h"
+#include "SIMPLib/StatsData/StatsData.h"
+#include "SIMPLib/IOFilters/DataContainerWriter.h"
+#include "SIMPLib/IOFilters/DataContainerReader.h"
 
 #include "UnitTestSupport.hpp"
 
@@ -77,7 +77,7 @@ void RemoveTestFiles()
 void initializeOmega3(StatsData::Pointer statsData, int count, uint32_t distType = DREAM3D::DistributionType::Beta)
 {
   float alpha, beta;
-  DREAM3D_RANDOMNG_NEW()
+  SIMPL_RANDOMNG_NEW()
   VectorOfFloatArray data;
   FloatArrayType::Pointer alphas = FloatArrayType::CreateArray(count, DREAM3D::StringConstants::Alpha);
   FloatArrayType::Pointer betas = FloatArrayType::CreateArray(count, DREAM3D::StringConstants::Beta);
@@ -100,7 +100,7 @@ void initializeOmega3(StatsData::Pointer statsData, int count, uint32_t distType
 void initializeBOverA(StatsData::Pointer statsData, int count, uint32_t distType = DREAM3D::DistributionType::Beta)
 {
   float alpha, beta;
-  DREAM3D_RANDOMNG_NEW()
+  SIMPL_RANDOMNG_NEW()
   VectorOfFloatArray data;
   FloatArrayType::Pointer alphas = FloatArrayType::CreateArray(count, DREAM3D::StringConstants::Alpha);
   FloatArrayType::Pointer betas = FloatArrayType::CreateArray(count, DREAM3D::StringConstants::Beta);
@@ -123,7 +123,7 @@ void initializeBOverA(StatsData::Pointer statsData, int count, uint32_t distType
 void initializeCOverA(StatsData::Pointer statsData, int count, uint32_t distType = DREAM3D::DistributionType::Beta)
 {
   float alpha, beta;
-  DREAM3D_RANDOMNG_NEW()
+  SIMPL_RANDOMNG_NEW()
   VectorOfFloatArray data;
   FloatArrayType::Pointer alphas = FloatArrayType::CreateArray(count, DREAM3D::StringConstants::Alpha);
   FloatArrayType::Pointer betas = FloatArrayType::CreateArray(count, DREAM3D::StringConstants::Beta);
@@ -148,7 +148,7 @@ void initializeNeighbors(StatsData::Pointer statsData, std::vector<float> binNum
   float alpha, k, beta;
   int32_t count = binNumbers.size();
 
-  DREAM3D_RANDOMNG_NEW()
+  SIMPL_RANDOMNG_NEW()
   VectorOfFloatArray data;
   FloatArrayType::Pointer alphas = FloatArrayType::CreateArray(count, DREAM3D::StringConstants::Alpha);
   FloatArrayType::Pointer betas = FloatArrayType::CreateArray(count, DREAM3D::StringConstants::Beta);

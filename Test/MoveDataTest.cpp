@@ -43,15 +43,15 @@
 
 #include <QtCore/QObject>
 
-#include "DREAM3DLib/CoreFilters/RemoveArrays.h"
-#include "DREAM3DLib/CoreFilters/RenameDataContainer.h"
-#include "DREAM3DLib/CoreFilters/RenameAttributeMatrix.h"
-#include "DREAM3DLib/CoreFilters/RenameAttributeArray.h"
-#include "DREAM3DLib/CoreFilters/MoveData.h"
-#include "DREAM3DLib/CoreFilters/CopyDataContainer.h"
-#include "DREAM3DLib/CoreFilters/CopyAttributeMatrix.h"
-#include "DREAM3DLib/CoreFilters/CopyAttributeArray.h"
-#include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
+#include "SIMPLib/CoreFilters/RemoveArrays.h"
+#include "SIMPLib/CoreFilters/RenameDataContainer.h"
+#include "SIMPLib/CoreFilters/RenameAttributeMatrix.h"
+#include "SIMPLib/CoreFilters/RenameAttributeArray.h"
+#include "SIMPLib/CoreFilters/MoveData.h"
+#include "SIMPLib/CoreFilters/CopyDataContainer.h"
+#include "SIMPLib/CoreFilters/CopyAttributeMatrix.h"
+#include "SIMPLib/CoreFilters/CopyAttributeArray.h"
+#include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
 #include "DREAM3DTestFileLocations.h"
 
