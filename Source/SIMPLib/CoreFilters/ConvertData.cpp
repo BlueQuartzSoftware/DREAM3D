@@ -294,43 +294,43 @@ void ConvertData::dataCheck()
     size_t voxels = cellAttrMat->getNumTuples();
     if (m_ScalarType == Detail::Int8)
     {
-      p = Int8ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
+      p = Int8ArrayType::CreateArray(voxels, dims, m_OutputArrayName, false);
     }
     else if (m_ScalarType == Detail::UInt8)
     {
-      p = UInt8ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
+      p = UInt8ArrayType::CreateArray(voxels, dims, m_OutputArrayName, false);
     }
     else if (m_ScalarType == Detail::Int16)
     {
-      p = Int16ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
+      p = Int16ArrayType::CreateArray(voxels, dims, m_OutputArrayName, false);
     }
     else if (m_ScalarType == Detail::UInt16)
     {
-      p = UInt16ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
+      p = UInt16ArrayType::CreateArray(voxels, dims, m_OutputArrayName, false);
     }
     else if (m_ScalarType == Detail::Int32)
     {
-      p = Int32ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
+      p = Int32ArrayType::CreateArray(voxels, dims, m_OutputArrayName, false);
     }
     else if (m_ScalarType == Detail::UInt32)
     {
-      p = UInt32ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
+      p = UInt32ArrayType::CreateArray(voxels, dims, m_OutputArrayName, false);
     }
     else if (m_ScalarType == Detail::Int64)
     {
-      p = Int64ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
+      p = Int64ArrayType::CreateArray(voxels, dims, m_OutputArrayName, false);
     }
     else if (m_ScalarType == Detail::UInt64)
     {
-      p = UInt64ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
+      p = UInt64ArrayType::CreateArray(voxels, dims, m_OutputArrayName, false);
     }
     else if (m_ScalarType == Detail::Float)
     {
-      p = FloatArrayType::CreateArray(voxels, dims, m_OutputArrayName);
+      p = FloatArrayType::CreateArray(voxels, dims, m_OutputArrayName, false);
     }
     else if (m_ScalarType == Detail::Double)
     {
-      p = DoubleArrayType::CreateArray(voxels, dims, m_OutputArrayName);
+      p = DoubleArrayType::CreateArray(voxels, dims, m_OutputArrayName, false);
     }
     cellAttrMat->addAttributeArray(p->getName(), p);
   }
