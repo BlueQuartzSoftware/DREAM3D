@@ -176,6 +176,42 @@ void WriteImages::dataCheck()
     notifyWarningMessage(getHumanLabel(), ss, -1);
   }
 
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_ColorsArrayPath.getDataContainerName());
+  size_t dims[3] = { 0, 0, 0 };
+  m->getGeometryAs<ImageGeom>()->getDimensions(dims);
+  if (0 == m_Plane) // XY plane
+  {
+    size_t total = dims[0] * dims[1] * 4;
+    if(total > std::numeric_limits<int32_t>::max())
+    {
+      QString ss = QObject::tr("The image will have more than 2GB worth of pixels. Try cropping the data so that the total pixels on a single plane is less than 2GB.");
+      setErrorCondition(-1012);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+  }
+  else if (1 == m_Plane) // XZ plane
+  {
+    size_t total = dims[0] * dims[2] * 4;
+    if(total > std::numeric_limits<int32_t>::max())
+    {
+      QString ss = QObject::tr("The image will have more than 2GB worth of pixels. Try cropping the data so that the total pixels on a single plane is less than 2GB.");
+      setErrorCondition(-1012);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+  }
+  else if (2 == m_Plane) // YZ plane
+  {
+    size_t total = dims[1] * dims[2] * 4;
+    if(total > std::numeric_limits<int32_t>::max())
+    {
+      QString ss = QObject::tr("The image will have more than 2GB worth of pixels. Try cropping the data so that the total pixels on a single plane is less than 2GB.");
+      setErrorCondition(-1012);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+  }
   IDataArray::Pointer iDa = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getColorsArrayPath());
   if (getErrorCondition() < 0) { return; }
 
@@ -307,7 +343,25 @@ int32_t WriteImages::saveImage(size_t slice, size_t dB, size_t dA, size_t* dims)
   }
 
   int32_t index = 0;
+  size_t total = dB * dA * 4; // The '4' is there because QImage will convert it to RGBA image.
+  if(total > std::numeric_limits<int32_t>::max())
+  {
+    QString ss = QObject::tr("The image will have more than 2GB worth of pixels. Try cropping the data so that the total pixels on a single plane is less than 2GB.");
+    setErrorCondition(-1012);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return getErrorCondition();
+  }
+
+
   QImage image(dB, dA, QImage::Format_RGB32);
+  if(image.isNull())
+  {
+    QString ss = QObject::tr("The memory for the image could not be allocated using a QImage. The total number of bytes would be greater than 2GB");
+    setErrorCondition(-1014);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return getErrorCondition();
+  }
+
   for (size_t axisA = 0; axisA < dA; ++axisA)
   {
     uint8_t* scanLine = image.scanLine(axisA);
