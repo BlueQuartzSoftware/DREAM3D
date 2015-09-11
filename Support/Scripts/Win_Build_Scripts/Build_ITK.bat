@@ -77,6 +77,6 @@ goto :eof
 @set ITK_VERSION=4.7.2
 
 @set CMAKE_INSTALL=%DREAM3D_SDK%\cmake-3.3.1-win32-x86
-@set PATH=%PATH%;%CMAKE_INSTALL%\ bin
+@set PATH=%PATH%;%CMAKE_INSTALL%\bin
 
 cmake -P Build_ITK.cmake
