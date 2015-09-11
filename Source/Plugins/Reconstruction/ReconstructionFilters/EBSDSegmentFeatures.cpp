@@ -72,6 +72,8 @@ EBSDSegmentFeatures::EBSDSegmentFeatures() :
   m_Active(NULL),
   m_FeatureIds(NULL)
 {
+  beenPicked = NULL;
+
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
   misoTolerance = 0.0f;
@@ -185,6 +187,7 @@ void EBSDSegmentFeatures::dataCheck()
   SegmentFeatures::dataCheck();
   if(getErrorCondition() < 0) { return; }
 
+  INIT_DataArray(m_BeenPicked, bool);
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m.get()) { return; }
@@ -306,7 +309,8 @@ int64_t EBSDSegmentFeatures::getSeed(int32_t gnum)
   {
     // Get the next voxel index in the precomputed list of voxel seeds
     int64_t randpoint = numberGenerator();
-    m_TotalRandomNumbersGenerated++; // Increment this counter
+    if (beenPicked[randpoint] == false) { m_TotalRandomNumbersGenerated++; } // Increment this counter
+    beenPicked[randpoint] = true;
     if (m_FeatureIds[randpoint] == 0) // If the GrainId of the voxel is ZERO then we can use this as a seed point
     {
       if ((m_UseGoodVoxels == false || m_GoodVoxels[randpoint] == true) && m_CellPhases[randpoint] > 0)
@@ -392,6 +396,10 @@ void EBSDSegmentFeatures::execute()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
   int64_t totalPoints = static_cast<int64_t>(m_FeatureIdsPtr.lock()->getNumberOfTuples());
+
+  m_BeenPicked->resize(totalPoints);
+  m_BeenPicked->initializeWithValue(false);
+  beenPicked = m_BeenPicked->getPointer(0);
 
   QVector<size_t> tDims(1, 1);
   m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
