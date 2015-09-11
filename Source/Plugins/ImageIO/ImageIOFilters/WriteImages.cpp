@@ -161,8 +161,6 @@ void WriteImages::dataCheck()
 {
   setErrorCondition(0);
 
-  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getColorsArrayPath().getDataContainerName());
-
   QDir dir(getOutputPath());
 
   if (getOutputPath().isEmpty() == true)
@@ -176,9 +174,11 @@ void WriteImages::dataCheck()
     notifyWarningMessage(getHumanLabel(), ss, -1);
   }
 
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_ColorsArrayPath.getDataContainerName());
+  ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getColorsArrayPath().getDataContainerName());
+  if(getErrorCondition() < 0) { return; }
+
   size_t dims[3] = { 0, 0, 0 };
-  m->getGeometryAs<ImageGeom>()->getDimensions(dims);
+  image->getDimensions(dims);
   if (0 == m_Plane) // XY plane
   {
     size_t total = dims[0] * dims[1] * 4;
