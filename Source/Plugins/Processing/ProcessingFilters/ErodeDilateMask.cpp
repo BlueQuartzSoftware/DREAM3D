@@ -215,6 +215,10 @@ void ErodeDilateMask::execute()
 
   for (int32_t iteration = 0; iteration < m_NumIterations; iteration++)
   {
+    for (size_t j = 0; j < totalPoints; j++)
+    {
+      m_MaskCopy[j] = m_Mask[j];
+    }
     for (DimType k = 0; k < dims[2]; k++)
     {
       kstride = dims[0] * dims[1] * k;
@@ -224,7 +228,6 @@ void ErodeDilateMask::execute()
         for (DimType i = 0; i < dims[0]; i++)
         {
           count = kstride + jstride + i;
-          m_MaskCopy[count] = m_Mask[count];
           if (m_Mask[count] == false)
           {
             for (int32_t l = 0; l < 6; l++)
