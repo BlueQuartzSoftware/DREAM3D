@@ -285,7 +285,25 @@ void CropImageGeometry::dataCheck()
   // If any of the sanity checks fail above then we should NOT attempt to go any further.
   if (getErrorCondition() < 0) { return; }
 
-  destCellAttrMat->setTupleDimensions(tDims);
+  size_t totalPoints = 1;
+  for(int i = 0; i < 3; i++) {
+    if(tDims[i] != 0) { totalPoints *= tDims[i]; }
+  }
+  AttributeMatrix::Pointer newCellAttrMat = AttributeMatrix::New(tDims, destCellAttrMat->getName(), destCellAttrMat->getType());
+
+  QList<QString> voxelArrayNames = destCellAttrMat->getAttributeArrayNames();
+  for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+  {
+    IDataArray::Pointer p = destCellAttrMat->getAttributeArray(*iter);
+    //
+    IDataArray::Pointer data = p->createNewArray(totalPoints, p->getComponentDimensions(), p->getName(), false);
+
+    destCellAttrMat->removeAttributeArray(*iter);
+    newCellAttrMat->addAttributeArray(*iter, data);
+  }
+  destCellDataContainer->removeAttributeMatrix(destCellAttrMat->getName());
+  destCellDataContainer->addAttributeMatrix(newCellAttrMat->getName(), newCellAttrMat);
+
 
   if(m_RenumberFeatures == true)
   {

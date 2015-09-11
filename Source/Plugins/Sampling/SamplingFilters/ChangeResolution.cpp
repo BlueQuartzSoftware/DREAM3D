@@ -217,11 +217,13 @@ void ChangeResolution::preflight()
   }
 
   size_t dims[3] = { 0, 0, 0 };
-  m->getGeometryAs<ImageGeom>()->getDimensions(dims);
 
-  float sizex = (dims[0]) * m->getGeometryAs<ImageGeom>()->getXRes();
-  float sizey = (dims[1]) * m->getGeometryAs<ImageGeom>()->getYRes();
-  float sizez = (dims[2]) * m->getGeometryAs<ImageGeom>()->getZRes();
+  ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
+  image->getDimensions(dims);
+
+  float sizex = (dims[0]) * image->getXRes();
+  float sizey = (dims[1]) * image->getYRes();
+  float sizez = (dims[2]) * image->getZRes();
   size_t m_XP = size_t(sizex / m_Resolution.x);
   size_t m_YP = size_t(sizey / m_Resolution.y);
   size_t m_ZP = size_t(sizez / m_Resolution.z);
@@ -229,14 +231,35 @@ void ChangeResolution::preflight()
   if (m_YP == 0) { m_YP = 1; }
   if (m_ZP == 0) { m_ZP = 1; }
 
-  m->getGeometryAs<ImageGeom>()->setDimensions(m_XP, m_YP, m_ZP);
-  m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+  image->setDimensions(m_XP, m_YP, m_ZP);
+  image->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
 
   QVector<size_t> tDims(3, 0);
   tDims[0] = m_XP;
   tDims[1] = m_YP;
   tDims[2] = m_ZP;
-  m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName())->setTupleDimensions(tDims);
+  //m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName())->setTupleDimensions(tDims);
+
+  AttributeMatrix::Pointer  cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
+
+  size_t totalPoints = 1;
+  for(int i = 0; i < 3; i++) {
+    if(tDims[i] != 0) { totalPoints *= tDims[i]; }
+  }
+  AttributeMatrix::Pointer newCellAttrMat = AttributeMatrix::New(tDims, cellAttrMat->getName(), cellAttrMat->getType());
+
+  QList<QString> voxelArrayNames = cellAttrMat->getAttributeArrayNames();
+  for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+  {
+    IDataArray::Pointer p = cellAttrMat->getAttributeArray(*iter);
+    //
+    IDataArray::Pointer data = p->createNewArray(totalPoints, p->getComponentDimensions(), p->getName(), false);
+
+    cellAttrMat->removeAttributeArray(*iter);
+    newCellAttrMat->addAttributeArray(*iter, data);
+  }
+  m->removeAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
+  m->addAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName(), newCellAttrMat);
 
   if (m_RenumberFeatures == true)
   {
