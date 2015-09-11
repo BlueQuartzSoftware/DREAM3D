@@ -281,11 +281,11 @@ void RotateSampleRefFrame::preflight()
   float coords[3] = { 0.0f, 0.0f, 0.0f };
   float newcoords[3] = { 0.0f, 0.0f, 0.0f };
   float xMin = std::numeric_limits<float>::max();
-  float xMax = std::numeric_limits<float>::min();
+  float xMax = -xMin;
   float yMin = std::numeric_limits<float>::max();
-  float yMax = std::numeric_limits<float>::min();
+  float yMax = -yMin;
   float zMin = std::numeric_limits<float>::max();
-  float zMax = std::numeric_limits<float>::min();
+  float zMax = -zMin;
 
   FOrientArrayType om(9);
   FOrientTransformsType::ax2om(FOrientArrayType(m_RotationAxis.x, m_RotationAxis.y, m_RotationAxis.z, rotAngle), om);
