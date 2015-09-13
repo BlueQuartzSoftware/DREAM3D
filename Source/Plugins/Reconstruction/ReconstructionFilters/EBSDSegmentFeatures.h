@@ -170,8 +170,9 @@ class EBSDSegmentFeatures : public SegmentFeatures
 
     DEFINE_DATAARRAY_VARIABLE(bool, Active)
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_DATAARRAY_VARIABLE(bool, BeenPicked)
 
+    BoolArrayType::Pointer m_BeenPickedPtr;
+    bool* m_BeenPicked;
 
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 

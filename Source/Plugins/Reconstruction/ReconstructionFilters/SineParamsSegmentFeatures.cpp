@@ -171,8 +171,6 @@ void SineParamsSegmentFeatures::dataCheck()
   SegmentFeatures::dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  m_BeenPickedPtr.lock()->initializeWithValue(0);
-
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
   QVector<size_t> tDims(1, 0);
@@ -235,9 +233,9 @@ void SineParamsSegmentFeatures::execute()
   // This runs a subfilter
   int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
 
-  m_BeenPickedPtr.lock()->resize(totalPoints);
-  m_BeenPickedPtr.lock()->initializeWithValue(0);
-  m_BeenPicked = m_BeenPickedPtr.lock()->getPointer(0);
+  m_BeenPickedPtr = BoolArrayType::CreateArray(totalPoints, "BeenPicked INTERNAL ARRAY ONLY");
+  m_BeenPickedPtr->initializeWithValue(0);
+  m_BeenPicked = m_BeenPickedPtr->getPointer(0);
 
   // Tell the user we are starting the filter
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
