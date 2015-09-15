@@ -129,6 +129,7 @@ set(OrientationLib_SRCS
 )
 set(OrientationLib_HDRS
     ${OrientationLib_SOURCE_DIR}/OrientationLibDLLExport.h
+    ${OrientationLib_SOURCE_DIR}/OrientationLibConstants.h
 )
 
 if(${OrientationLib_ENABLE_HDF5})
