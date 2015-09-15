@@ -30,18 +30,22 @@ AddDREAM3DUnitTest(TESTNAME QuaternionMathTest
                     SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/QuaternionMathTest.cpp
                     FOLDER "Test/OrientationLib"
                     LINK_LIBRARIES ${OrientationLib_Link_Libs})
+
 AddDREAM3DUnitTest(TESTNAME OrientationMathTest
                     SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/OrientationMathTest.cpp
                     FOLDER "Test/OrientationLib"
                     LINK_LIBRARIES ${OrientationLib_Link_Libs})
+
 AddDREAM3DUnitTest(TESTNAME TextureTest
                     SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/TextureTest.cpp
                     FOLDER "Test/OrientationLib"
                     LINK_LIBRARIES ${OrientationLib_Link_Libs})
+
 AddDREAM3DUnitTest(TESTNAME ODFTest
                     SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/ODFTest.cpp
                     FOLDER "Test/OrientationLib"
                     LINK_LIBRARIES ${OrientationLib_Link_Libs})
+
 AddDREAM3DUnitTest(TESTNAME OrientationArrayTest
                     SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/OrientationArrayTest.cpp
                     FOLDER "Test/OrientationLib"
@@ -54,5 +58,10 @@ AddDREAM3DUnitTest(TESTNAME OrientationConverterTest
 
 AddDREAM3DUnitTest(TESTNAME IPFLegendTest
                     SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/IPFLegendTest.cpp
+                    FOLDER "Test/OrientationLib"
+                    LINK_LIBRARIES ${OrientationLib_Link_Libs} Qt5::Core Qt5::Gui )
+
+AddDREAM3DUnitTest(TESTNAME SO3SamplerTest
+                    SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/SO3SamplerTest.cpp
                     FOLDER "Test/OrientationLib"
                     LINK_LIBRARIES ${OrientationLib_Link_Libs} Qt5::Core Qt5::Gui )

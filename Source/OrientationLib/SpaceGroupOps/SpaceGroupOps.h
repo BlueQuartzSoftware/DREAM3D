@@ -57,10 +57,6 @@
 /*
  * @class SpaceGroupOps SpaceGroupOps.h DREAM3DLib/Common/SpaceGroupOps.h
  * @brief This class performs Crystallographic Misorientation Calculations
- * @author Michael A. Jackson (BlueQuartz Software)
- * @author Michael A. Groeber (US Air Force Research Laboratory)
- * @date Feb 19, 2011
- * @version 1.0
  */
 class OrientationLib_EXPORT SpaceGroupOps
 {

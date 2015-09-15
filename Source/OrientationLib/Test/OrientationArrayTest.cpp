@@ -35,7 +35,8 @@ using namespace SIMPLib::Constants;
 typedef OrientationArray<float> FOrientArrayType;
 typedef std::vector<float> FloatVectorType;
 typedef QVector<float> FloatQVectorType;
-
+typedef std::vector<double> DoubleVectorType;
+typedef QVector<double> DoubleQVectorType;
 
 // -----------------------------------------------------------------------------
 //
@@ -638,7 +639,7 @@ void Print_CU(const T& om)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void EU_2_XXX(float* in)
+void EU_2_XXX(double* in)
 {
   T eu(3);
   eu[0] = in[0];
@@ -681,11 +682,11 @@ void EU_2_XXX(float* in)
 void Test_eu2_XXX()
 {
   std::cout << "Test_eu2_XXX  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << std::endl;
-  float eu[3] = {k_PiOver2, 0.0f, 0.0f};
-  Print_EU<float*>(eu);
-  EU_2_XXX<FOrientArrayType>(eu);
-  EU_2_XXX<FloatVectorType>(eu);
-  EU_2_XXX<FloatQVectorType>(eu);
+  double eu[3] = {214.4487933 * SIMPLib::Constants::k_DegToRad, 58.8567729 * SIMPLib::Constants::k_DegToRad, 124.4487933 * SIMPLib::Constants::k_DegToRad};
+  Print_EU<double*>(eu);
+  EU_2_XXX<DOrientArrayType>(eu);
+  EU_2_XXX<DoubleVectorType>(eu);
+  EU_2_XXX<DoubleQVectorType>(eu);
 }
 
 // -----------------------------------------------------------------------------
@@ -1076,23 +1077,23 @@ int main(int argc, char* argv[])
 
   int err = EXIT_SUCCESS;
 
-  DREAM3D_REGISTER_TEST( TestRotArray() );
-  DREAM3D_REGISTER_TEST( Test_eu_check() );
-  DREAM3D_REGISTER_TEST( Test_ro_check() );
-  DREAM3D_REGISTER_TEST( Test_ho_check() );
-  DREAM3D_REGISTER_TEST( Test_cu_check() );
-  DREAM3D_REGISTER_TEST( Test_qu_check() );
-  DREAM3D_REGISTER_TEST( Test_ax_check() );
-  DREAM3D_REGISTER_TEST( Test_om_check() );
-  DREAM3D_REGISTER_TEST( Test_GenRot() )
+//  DREAM3D_REGISTER_TEST( TestRotArray() );
+//  DREAM3D_REGISTER_TEST( Test_eu_check() );
+//  DREAM3D_REGISTER_TEST( Test_ro_check() );
+//  DREAM3D_REGISTER_TEST( Test_ho_check() );
+//  DREAM3D_REGISTER_TEST( Test_cu_check() );
+//  DREAM3D_REGISTER_TEST( Test_qu_check() );
+//  DREAM3D_REGISTER_TEST( Test_ax_check() );
+//  DREAM3D_REGISTER_TEST( Test_om_check() );
+//  DREAM3D_REGISTER_TEST( Test_GenRot() )
 
 
   DREAM3D_REGISTER_TEST( Test_eu2_XXX() );
-  DREAM3D_REGISTER_TEST( Test_ax2_XXX() );
-  DREAM3D_REGISTER_TEST( Test_om2_XXX() );
-  DREAM3D_REGISTER_TEST( Test_ro2_XXX() );
-  DREAM3D_REGISTER_TEST( Test_qu2_XXX() );
-  DREAM3D_REGISTER_TEST( Test_ho2_XXX() );
+//  DREAM3D_REGISTER_TEST( Test_ax2_XXX() );
+//  DREAM3D_REGISTER_TEST( Test_om2_XXX() );
+//  DREAM3D_REGISTER_TEST( Test_ro2_XXX() );
+//  DREAM3D_REGISTER_TEST( Test_qu2_XXX() );
+//  DREAM3D_REGISTER_TEST( Test_ho2_XXX() );
 
 
   DREAM3D_REGISTER_TEST( TestInputs() );
