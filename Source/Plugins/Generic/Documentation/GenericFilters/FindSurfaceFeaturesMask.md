@@ -5,7 +5,7 @@ Find Surface Features (Mask) {#findsurfacefeaturesmask}
 Generic (Spatial)
 
 ## Description ##
-This **Filter** determines whether a **Feature** touches an outer surface of the sample. Any **Feature** containing an **Element** at x<sub>min</sub>, x<sub>max</sub>, y<sub>min</sub>, y<sub>max</sub>, z<sub>min</sub> or z<sub>max</sub> is considered a surface **Feature**. Any **Feature** containing an **Element** that is false in the *Mask* array or shares a face with an **Element** that is false in the *Mask* array is considered a surface **Feautre**
+This **Filter** determines whether a **Feature** touches an outer surface of the sample. Any **Feature** containing an **Element** at x<sub>min</sub>, x<sub>max</sub>, y<sub>min</sub>, y<sub>max</sub>, z<sub>min</sub> or z<sub>max</sub> is considered a surface **Feature**. Any **Feature** containing an **Element** that is false in the *Mask* array or shares a face with an **Element** that is false in the *Mask* array is considered a surface **Feature**
 
 *Note:* If the structure/data is actually 2D, then the dimension that is planar is not considered and only the **Features** touching the edges are considered surface **Features**.
 
