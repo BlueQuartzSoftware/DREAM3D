@@ -13,7 +13,9 @@ set(OrientationLib_Utilities_HDRS
   ${OrientationLib_SOURCE_DIR}/Utilities/PoleFigureUtilities.h
   ${OrientationLib_SOURCE_DIR}/Utilities/ModifiedLambertProjection.h
   ${OrientationLib_SOURCE_DIR}/Utilities/ModifiedLambertProjectionArray.h
-)
+  ${OrientationLib_SOURCE_DIR}/Utilities/ModifiedLambertProjection3D.hpp
+  ${OrientationLib_SOURCE_DIR}/Utilities/OrientationMathHelpers.hpp
+  )
 
 set(OrientationLib_Utilities_SRCS
   ${OrientationLib_SOURCE_DIR}/Utilities/PoleFigureUtilities.cpp
