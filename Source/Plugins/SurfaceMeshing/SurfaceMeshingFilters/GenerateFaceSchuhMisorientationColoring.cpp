@@ -347,6 +347,25 @@ AbstractFilter::Pointer GenerateFaceSchuhMisorientationColoring::newFilterInstan
 const QString GenerateFaceSchuhMisorientationColoring::getCompiledLibraryName()
 { return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GenerateFaceSchuhMisorientationColoring::getCitations()
+{
+  return "\
+  @article{Patala20121383b,\n\
+    title = {Improved representations of misorientation information for grain boundary science and engineering},\n\
+    journal = {Progress in Materials Science},\n\
+    volume = {57},\n\
+    number = {8},\n\
+    pages = {1383 - 1425},\n\
+    year = {2012},\n\
+    issn = {0079-6425},\n\
+    doi = {http://dx.doi.org/10.1016/j.pmatsci.2012.04.002},\n\
+    url = {http://www.sciencedirect.com/science/article/pii/S0079642512000370},\n\
+    author = {Srikanth Patala and Jeremy K. Mason and Christopher A. Schuh}\n\
+  }";
+}
 
 // -----------------------------------------------------------------------------
 //
