@@ -103,6 +103,9 @@ class EMMPMFilter : public AbstractFilter
      */
     virtual const QString getCompiledLibraryName();
 
+    /**
+     * @brief getCitations Reimplemented from @see AbstractFilter class
+     */
     virtual const QString getCitations();
 
     /**
