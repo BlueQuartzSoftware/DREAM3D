@@ -194,8 +194,6 @@ void EMMPMFilter::dataCheck()
     QString ss = QObject::tr("The minimum number of classes is 2");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-
-  notifyWarningMessage(getHumanLabel(), "this filter contains references (a BibTeX file can be exported with 'Pipeline->Export Pipeline Citations...')", 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -411,7 +409,7 @@ const QString EMMPMFilter::getCitations()
   journal={Lecture notes published on April},\n\
   volume={23},\n\
   year={2009}\n\
-}";
+}\n";
 }
 
 // -----------------------------------------------------------------------------

@@ -1,5 +1,6 @@
 /* ============================================================================
 * Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2015 William Lenthe
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -36,6 +37,7 @@
 
 #include "FilterPipeline.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 
 
 // -----------------------------------------------------------------------------
@@ -374,6 +376,17 @@ void FilterPipeline::execute()
     ss = QObject::tr("%1 Filter Complete").arg((*filter)->getNameOfClass());
   }
 
+  //notify if references have been used
+  QString ss;
+  printCitations(QTextStream(&ss));
+  int refCount = ss.count('@');
+  if(refCount > 0)
+  {
+    QString msg = QObject::tr("This Pipeline contains %1 reference(s). (a BibTeX file can be exported with 'Pipeline->Export Pipeline Citations...')").arg(refCount);
+    PipelineMessage message("", msg, 0, PipelineMessage::Warning, 0);
+    emit pipelineGeneratedMessage(message);
+  }
+
   PipelineMessage completMessage("", "Pipeline Complete", 0, PipelineMessage::StatusMessage, -1);
   emit pipelineGeneratedMessage(completMessage);
 }
@@ -396,13 +409,55 @@ void FilterPipeline::printFilterNames(QTextStream& out)
 // -----------------------------------------------------------------------------
 void FilterPipeline::printCitations(QTextStream& out)
 {
+  //start with general dream3d citations
+  out << "DREAM.3D:\n\
+@article{\n\
+  year={2014},\n\
+  issn={2193-9764},\n\
+  journal={Integrating Materials and Manufacturing Innovation},\n\
+  eid={5},\n\
+  volume={3},\n\
+  number={1},\n\
+  doi={10.1186/2193-9772-3-5},\n\
+  title={DREAM.3D: A Digital Representation Environment for the Analysis of Microstructure in 3D},\n\
+  url={http://dx.doi.org/10.1186/2193-9772-3-5},\n\
+  publisher={Springer Berlin Heidelberg},\n\
+  author={Groeber, MichaelA and Jackson, MichaelA},\n\
+  language={English}\n\
+}\n\n";
+
+  //keep track of filters and pipelines cited to prevent duplicates
+  std::set<QString> pluginList;
+  std::set<QString> filterList;
+
   for (FilterContainerType::iterator iter = m_Pipeline.begin(); iter != m_Pipeline.end(); ++iter )
   {
-    QString citation = (*iter)->getCitations();
-    if(!citation.isEmpty())
+    //add citations for plugin if it hasn't been used yet
+    QString pluginName = (*iter)->getCompiledLibraryName();
+    if((pluginList.insert(pluginName)).second)
     {
-      out << (*iter)->getHumanLabel() << ":\n";
-      out << citation << "\n";
+      ISIMPLibPlugin* plugin = (*iter)->getPluginInstance();
+      if(plugin)
+      {
+        QString citation = plugin->getCitations();
+        if(!citation.isEmpty())
+        {
+          out << pluginName << ":\n";//any text outside a bibtex entry is considered a comment
+          out << citation << "\n";
+        }
+      }
+    }
+
+    //add citations for filter if it hasn't been used yet
+    QString filterName = pluginName + "/" + (*iter)->getNameOfClass();//there may be filters with the same name in different plugins
+    if((filterList.insert(filterName)).second)
+    {
+      QString citation = (*iter)->getCitations();
+      if(!citation.isEmpty())
+      {
+        out << (*iter)->getHumanLabel() << ":\n";
+        out << citation << "\n";
+      }
     }
   }
 }

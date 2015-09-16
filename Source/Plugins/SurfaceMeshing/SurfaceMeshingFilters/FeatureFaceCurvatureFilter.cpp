@@ -453,25 +453,25 @@ const QString FeatureFaceCurvatureFilter::getCompiledLibraryName()
 const QString FeatureFaceCurvatureFilter::getCitations()
 {
   return "\
-  @article{Goldfeather:2004:NCA:966131.966134,\n\
-    author = {Goldfeather, Jack and Interrante, Victoria},\n\
-    title = {A Novel Cubic-order Algorithm for Approximating Principal Direction Vectors},\n\
-    journal = {ACM Trans. Graph.},\n\
-    issue_date = {January 2004},\n\
-    volume = {23},\n\
-    number = {1},\n\
-    month = jan,\n\
-    year = {2004},\n\
-    issn = {0730-0301},\n\
-    pages = {45--63},\n\
-    numpages = {19},\n\
-    url = {http://doi.acm.org/10.1145/966131.966134},\n\
-    doi = {10.1145/966131.966134},\n\
-    acmid = {966134},\n\
-    publisher = {ACM},\n\
-    address = {New York, NY, USA},\n\
-    keywords = {3D shape, principal directions},\n\
-  }";
+@article{Goldfeather:2004:NCA:966131.966134,\n\
+  author = {Goldfeather, Jack and Interrante, Victoria},\n\
+  title = {A Novel Cubic-order Algorithm for Approximating Principal Direction Vectors},\n\
+  journal = {ACM Trans. Graph.},\n\
+  issue_date = {January 2004},\n\
+  volume = {23},\n\
+  number = {1},\n\
+  month = jan,\n\
+  year = {2004},\n\
+  issn = {0730-0301},\n\
+  pages = {45--63},\n\
+  numpages = {19},\n\
+  url = {http://doi.acm.org/10.1145/966131.966134},\n\
+  doi = {10.1145/966131.966134},\n\
+  acmid = {966134},\n\
+  publisher = {ACM},\n\
+  address = {New York, NY, USA},\n\
+  keywords = {3D shape, principal directions},\n\
+}\n";
 }
 
 // -----------------------------------------------------------------------------

@@ -885,34 +885,46 @@ const QString FindShapes::getCompiledLibraryName()
 const QString FindShapes::getCitations()
 {
   return "\
-  @techreport{de2010representation,\n\
-    title={Representation and Reconstruction of Three-dimensional Microstructures in Ni-based Superalloys},\n\
-    author={De Graef, Marc},\n\
-    year={2010},\n\
-    institution={DTIC Document}\n\
-  }\n\
-  @article{0965-0393-16-4-045008,\n\
-    author={J P MacSleyne and J P Simmons and M De Graef},\n\
-    title={On the use of moment invariants for the automated analysis of 3D particle shapes},\n\
-    journal={Modelling and Simulation in Materials Science and Engineering},\n\
-    volume={16},\n\
-    number={4},\n\
-    pages={045008},\n\
-    url={http://stacks.iop.org/0965-0393/16/i=4/a=045008},\n\
-    year={2008},\n\
-  }\n\
-  @ARTICLE{709598,\n\
-    author={Mamistvalov, A.G.},\n\
-    journal={Pattern Analysis and Machine Intelligence, IEEE Transactions on},\n\
-    title={n-dimensional moment invariants and conceptual mathematical theory of recognition n-dimensional solids},\n\
-    year={1998},\n\
-    volume={20},\n\
-    number={8},\n\
-    pages={819-831},\n\
-    doi={10.1109/34.709598},\n\
-    ISSN={0162-8828},\n\
-    month={Aug},\n\
-  }";
+@techreport{de2010representation,\n\
+  title={Representation and Reconstruction of Three-dimensional Microstructures in Ni-based Superalloys},\n\
+  author={De Graef, Marc},\n\
+  year={2010},\n\
+  institution={DTIC Document}\n\
+}\n\
+@article{0965-0393-16-4-045008,\n\
+  author={J P MacSleyne and J P Simmons and M De Graef},\n\
+  title={On the use of moment invariants for the automated analysis of 3D particle shapes},\n\
+  journal={Modelling and Simulation in Materials Science and Engineering},\n\
+  volume={16},\n\
+  number={4},\n\
+  pages={045008},\n\
+  url={http://stacks.iop.org/0965-0393/16/i=4/a=045008},\n\
+  year={2008},\n\
+}\n\
+@ARTICLE{709598,\n\
+  author={Mamistvalov, A.G.},\n\
+  journal={Pattern Analysis and Machine Intelligence, IEEE Transactions on},\n\
+  title={n-dimensional moment invariants and conceptual mathematical theory of recognition n-dimensional solids},\n\
+  year={1998},\n\
+  volume={20},\n\
+  number={8},\n\
+  pages={819-831},\n\
+  doi={10.1109/34.709598},\n\
+  ISSN={0162-8828},\n\
+  month={Aug},\n\
+}\n\
+@article{Groeber20081257,\n\
+  title = {A framework for automated analysis and simulation of 3D polycrystalline microstructures.: Part 1: Statistical characterization},\n\
+  journal = {Acta Materialia },\n\
+  volume = {56},\n\
+  number = {6},\n\
+  pages = {1257 - 1273},\n\
+  year = {2008},\n\
+  issn = {1359-6454},\n\
+  doi = {http://dx.doi.org/10.1016/j.actamat.2007.11.041},\n\
+  url = {http://www.sciencedirect.com/science/article/pii/S1359645407007914},\n\
+  author = {Michael Groeber and Somnath Ghosh and Michael D. Uchic and Dennis M. Dimiduk},\n\
+}\n";
 }
 
 // -----------------------------------------------------------------------------

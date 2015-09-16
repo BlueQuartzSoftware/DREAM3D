@@ -485,19 +485,19 @@ const QString LaplacianSmoothing::getCompiledLibraryName()
 const QString LaplacianSmoothing::getCitations()
 {
   return "\
-  @article {CNM:CNM1630040603,\n\
-    author = {Field, David A.},\n\
-    title = {Laplacian smoothing and Delaunay triangulations},\n\
-    journal = {Communications in Applied Numerical Methods},\n\
-    volume = {4},\n\
-    number = {6},\n\
-    publisher = {John Wiley & Sons, Ltd},\n\
-    issn = {1555-2047},\n\
-    url = {http://dx.doi.org/10.1002/cnm.1630040603},\n\
-    doi = {10.1002/cnm.1630040603},\n\
-    pages = {709--712},\n\
-    year = {1988},\n\
-  }";
+@article {CNM:CNM1630040603,\n\
+  author = {Field, David A.},\n\
+  title = {Laplacian smoothing and Delaunay triangulations},\n\
+  journal = {Communications in Applied Numerical Methods},\n\
+  volume = {4},\n\
+  number = {6},\n\
+  publisher = {John Wiley & Sons, Ltd},\n\
+  issn = {1555-2047},\n\
+  url = {http://dx.doi.org/10.1002/cnm.1630040603},\n\
+  doi = {10.1002/cnm.1630040603},\n\
+  pages = {709--712},\n\
+  year = {1988},\n\
+}\n";
 }
 
 // -----------------------------------------------------------------------------
