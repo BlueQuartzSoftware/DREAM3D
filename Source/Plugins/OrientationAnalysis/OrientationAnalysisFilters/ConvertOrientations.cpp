@@ -206,7 +206,7 @@ void ConvertOrientations::execute()
   if(getErrorCondition() < 0) { return; }
 
   typedef OrientationConverter<float> OCType;
-  QVector<OCType::Pointer> converters(6);
+  QVector<OCType::Pointer> converters(7);
 
   converters[0] = EulerConverter<float>::New();
   converters[1] = OrientationMatrixConverter<float>::New();
@@ -214,7 +214,7 @@ void ConvertOrientations::execute()
   converters[3] = AxisAngleConverter<float>::New();
   converters[4] = RodriguesConverter<float>::New();
   converters[5] = HomochoricConverter<float>::New();
-  //converters[6] = CubochoricConverter<float>::New();
+  converters[6] = CubochoricConverter<float>::New();
 
   QVector<OCType::OrientationType> ocTypes = OCType::GetOrientationTypes();
 

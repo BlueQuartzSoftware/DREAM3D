@@ -131,7 +131,8 @@ namespace SIMPLib
 {
   namespace Constants
   {
-    static const float k_Pi = static_cast<float>(M_PI);
+    static const float k_Pif = static_cast<float>(M_PI);
+    static const double k_Pi = M_PI;
     static const double k_SqrtPi = sqrt(M_PI);
     static const double k_2OverSqrtPi = 2.0 / sqrt(M_PI);
     static const double k_HalfOfSqrtPi = sqrt(M_PI) / 2.0;

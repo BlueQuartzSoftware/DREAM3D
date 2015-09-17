@@ -167,6 +167,28 @@ int main(int argc, char** argv)
   return err;
 }
 
+#if 0
+
+double numer = -5.3071794585508802e-06 + 100.0 * M_PI;
+ double denom = DConst::k_2Pi;
+ int quot;
+ double result = remquo (numer,denom,&quot);
+ printf ("numerator: %f\n", numer);
+ printf ("denominator: %f\n", denom);
+ printf ("remainder: %f\n", result);
+ printf ("quotient: %d\n", quot);
+
+ result = fmod(numer, denom);
+ printf ("fmod: %f\n", result);
+
+ result = Mod<double>()(numer, denom);
+    printf ("Mod: %f\n", result);
+
+ numer = -5.3071794585508802e-06 + 100.0 * DConst::k_Pi;
+ result = fmod(numer, denom);
+ printf ("fmod (float): %f\n", result);
+
+#endif
 
 
 

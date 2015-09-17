@@ -114,45 +114,45 @@ class OrientationConverter
 
     static QVector<QString> GetOrientationTypeStrings()
     {
-      QVector<QString> otypes(6);
+      QVector<QString> otypes(7);
       otypes[0] = "Euler";
       otypes[1] = "Orientation Matrix";
       otypes[2] = "Quaternion";
       otypes[3] = "Axis-Angle";
       otypes[4] = "Rodrigues";
       otypes[5] = "Homochoric";
-      //otypes[6] = "Cubochoric";
+      otypes[6] = "Cubochoric";
       return otypes;
     }
 
     static QVector<int> GetComponentCounts()
     {
-      QVector<int> counts(6);
+      QVector<int> counts(7);
       counts[0] = 3; // Euler
       counts[1] = 9; // Orientation Matrix
       counts[2] = 4; // Quaternion
       counts[3] = 4; // Axis-Angle
       counts[4] = 4; // Rodrigues
       counts[5] = 3; // Homchoric
-      //counts[6] = 3; // Cubochoric
+      counts[6] = 3; // Cubochoric
       return counts;
     }
 
     static QVector<OrientationType> GetOrientationTypes()
     {
-      QVector<OrientationType> ocTypes(6);
+      QVector<OrientationType> ocTypes(7);
       ocTypes[0] = Euler;
       ocTypes[1] = OrientationMatrix;
       ocTypes[2] = Quaternion;
       ocTypes[3] = AxisAngle;
       ocTypes[4] = Rodrigues;
       ocTypes[5] = Homochoric;
-      //ocTypes[6] = Cubochoric;
+      ocTypes[6] = Cubochoric;
       return ocTypes;
     }
 
     static int GetMinIndex() { return 0; }
-    static int GetMaxIndex() { return 5; }
+    static int GetMaxIndex() { return 6; }
 
   protected:
     OrientationConverter() {}
@@ -241,7 +241,7 @@ class EulerConverter : public OrientationConverter<T>
     virtual void toCubochoric()
     {
       sanityCheckInputData();
-      OC_CONVERT_BODY(4, Cubochoric, eu2cu)
+      OC_CONVERT_BODY(3, Cubochoric, eu2cu)
     }
 
     virtual void sanityCheckInputData()
@@ -350,7 +350,7 @@ class OrientationMatrixConverter : public OrientationConverter<T>
 
     virtual void toCubochoric()
     {
-      OC_CONVERT_BODY(4, Cubochoric, om2cu)
+      OC_CONVERT_BODY(3, Cubochoric, om2cu)
     }
 
     virtual void sanityCheckInputData()
@@ -435,7 +435,7 @@ class QuaternionConverter : public OrientationConverter<T>
 
     virtual void toCubochoric()
     {
-      OC_CONVERT_BODY(4, Cubochoric, qu2cu)
+      OC_CONVERT_BODY(3, Cubochoric, qu2cu)
     }
 
     virtual void sanityCheckInputData()
@@ -526,7 +526,7 @@ class AxisAngleConverter : public OrientationConverter<T>
 
     virtual void toCubochoric()
     {
-      OC_CONVERT_BODY(4, Cubochoric, ax2cu)
+      OC_CONVERT_BODY(3, Cubochoric, ax2cu)
     }
 
     virtual void sanityCheckInputData()
@@ -612,7 +612,7 @@ class RodriguesConverter : public OrientationConverter<T>
 
     virtual void toCubochoric()
     {
-      OC_CONVERT_BODY(4, Cubochoric, ro2cu)
+      OC_CONVERT_BODY(3, Cubochoric, ro2cu)
     }
 
     virtual void sanityCheckInputData()
@@ -698,7 +698,7 @@ class HomochoricConverter : public OrientationConverter<T>
 
     virtual void toCubochoric()
     {
-      OC_CONVERT_BODY(4, Cubochoric, ho2cu)
+      OC_CONVERT_BODY(3, Cubochoric, ho2cu)
     }
 
     virtual void sanityCheckInputData()
@@ -766,12 +766,12 @@ class CubochoricConverter : public OrientationConverter<T>
 
     virtual void toAxisAngle()
     {
-      OC_CONVERT_BODY(4, AxisAngle, cu2ax)
+      //OC_CONVERT_BODY(4, AxisAngle, cu2ax)
     }
 
     virtual void toRodrigues()
     {
-      // OC_CONVERT_BODY(4, Rodrigues, cu2ro)
+      OC_CONVERT_BODY(4, Rodrigues, cu2ro)
     }
 
     virtual void toHomochoric()

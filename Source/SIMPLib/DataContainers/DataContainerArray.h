@@ -455,7 +455,7 @@ class SIMPLib_EXPORT DataContainerArray : public QObject
       {
         if(filter)
         {
-          filter->setErrorCondition(-999);
+          filter->setErrorCondition(-307040);
           ss = QObject::tr("The DataContainer '%1' was not found in the DataContainerArray").arg(dcName);
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }

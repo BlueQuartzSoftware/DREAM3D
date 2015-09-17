@@ -1077,23 +1077,23 @@ int main(int argc, char* argv[])
 
   int err = EXIT_SUCCESS;
 
-//  DREAM3D_REGISTER_TEST( TestRotArray() );
-//  DREAM3D_REGISTER_TEST( Test_eu_check() );
-//  DREAM3D_REGISTER_TEST( Test_ro_check() );
-//  DREAM3D_REGISTER_TEST( Test_ho_check() );
-//  DREAM3D_REGISTER_TEST( Test_cu_check() );
-//  DREAM3D_REGISTER_TEST( Test_qu_check() );
-//  DREAM3D_REGISTER_TEST( Test_ax_check() );
-//  DREAM3D_REGISTER_TEST( Test_om_check() );
-//  DREAM3D_REGISTER_TEST( Test_GenRot() )
+  DREAM3D_REGISTER_TEST( TestRotArray() );
+  DREAM3D_REGISTER_TEST( Test_eu_check() );
+  DREAM3D_REGISTER_TEST( Test_ro_check() );
+  DREAM3D_REGISTER_TEST( Test_ho_check() );
+  DREAM3D_REGISTER_TEST( Test_cu_check() );
+  DREAM3D_REGISTER_TEST( Test_qu_check() );
+  DREAM3D_REGISTER_TEST( Test_ax_check() );
+  DREAM3D_REGISTER_TEST( Test_om_check() );
+  DREAM3D_REGISTER_TEST( Test_GenRot() )
 
 
   DREAM3D_REGISTER_TEST( Test_eu2_XXX() );
-//  DREAM3D_REGISTER_TEST( Test_ax2_XXX() );
-//  DREAM3D_REGISTER_TEST( Test_om2_XXX() );
-//  DREAM3D_REGISTER_TEST( Test_ro2_XXX() );
-//  DREAM3D_REGISTER_TEST( Test_qu2_XXX() );
-//  DREAM3D_REGISTER_TEST( Test_ho2_XXX() );
+  DREAM3D_REGISTER_TEST( Test_ax2_XXX() );
+  DREAM3D_REGISTER_TEST( Test_om2_XXX() );
+  DREAM3D_REGISTER_TEST( Test_ro2_XXX() );
+  DREAM3D_REGISTER_TEST( Test_qu2_XXX() );
+  DREAM3D_REGISTER_TEST( Test_ho2_XXX() );
 
 
   DREAM3D_REGISTER_TEST( TestInputs() );

@@ -61,22 +61,20 @@ include(${CMP_SOURCE_DIR}/cmpProject.cmake)
 configure_file(${DREAM3DWidgetsLib_SOURCE_DIR}/DREAM3DWidgetsLibConfiguration.h.in
                ${DREAM3DWidgetsLib_BINARY_DIR}/${CMP_TOP_HEADER_FILE})
 
-
 set(Project_SRCS "")
 
-set(DREAM3DWidgetsLib_Generated_HDRS
-        ${DREAM3DWidgetsLib_BINARY_DIR}/DREAM3DWidgetsLibConfiguration.h
-        ${DREAM3DWidgetsLib_BINARY_DIR}/DREAM3DWidgetsLibTypes.h
-        ${DREAM3DWidgetsLib_BINARY_DIR}/DREAM3DWidgetsLibVersion.h
-        ${DREAM3DWidgetsLib_BINARY_DIR}/DREAM3DWidgetsLib.h
-        ${DREAM3DWidgetsLib_BINARY_DIR}/${CMP_TOP_HEADER_FILE}
+set(${PROJECT_NAME}_Generated_HDRS
+        ${CMP_HEADER_DIR}/${CMP_CONFIGURATION_FILE_NAME}
+        ${CMP_HEADER_DIR}/${CMP_TYPES_FILE_NAME}
+        ${CMP_HEADER_DIR}/${CMP_VERSION_HEADER_FILE_NAME}
+        ${CMP_HEADER_DIR}/${CMP_TOP_HEADER_FILE}
 )
 
-set(DREAM3DWidgetsLib_Generated_SRCS
-        ${DREAM3DWidgetsLib_BINARY_DIR}/DREAM3DWidgetsLibVersion.cpp
+set(${PROJECT_NAME}_Generated_SRCS
+        ${CMP_HEADER_DIR}/${CMP_VERSION_SOURCE_FILE_NAME}
 )
 
-cmp_IDE_GENERATED_PROPERTIES("Generated" "${DREAM3DWidgetsLib_Generated_HDRS}" "${DREAM3DWidgetsLib_Generated_SRCS}")
+cmp_IDE_GENERATED_PROPERTIES("Generated" "${${PROJECT_NAME}_Generated_HDRS}" "${${PROJECT_NAME}_Generated_SRCS}")
 
 set(DREAM3DWidgetsLib_HDRS
   ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterWidgetManager.h
@@ -136,8 +134,8 @@ set(Project_SRCS
         ${DREAM3DWidgetsLib_HDRS}
         ${DREAM3DWidgetsLib_MOC_HDRS}
         ${DREAM3DWidgetsLib_SRCS}
-        ${DREAM3DWidgetsLib_Generated_HDRS}
-        ${DREAM3DWidgetsLib_Generated_SRCS}
+        ${${PROJECT_NAME}_Generated_HDRS}
+        ${${PROJECT_NAME}_Generated_SRCS}
         ${DREAM3DWidgetsLib_Generated_MOC_SRCS}
         ${DREAM3DWidgetsLib_Generated_UI_HDRS}
         ${DREAM3DWidgetsLib_Generated_RC_SRCS}

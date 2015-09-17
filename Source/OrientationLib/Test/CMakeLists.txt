@@ -59,9 +59,18 @@ AddDREAM3DUnitTest(TESTNAME OrientationConverterTest
 AddDREAM3DUnitTest(TESTNAME IPFLegendTest
                     SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/IPFLegendTest.cpp
                     FOLDER "Test/OrientationLib"
-                    LINK_LIBRARIES ${OrientationLib_Link_Libs} Qt5::Core Qt5::Gui )
+                    LINK_LIBRARIES ${OrientationLib_Link_Libs} Qt5::Gui )
 
 AddDREAM3DUnitTest(TESTNAME SO3SamplerTest
                     SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/SO3SamplerTest.cpp
                     FOLDER "Test/OrientationLib"
-                    LINK_LIBRARIES ${OrientationLib_Link_Libs} Qt5::Core Qt5::Gui )
+                    LINK_LIBRARIES ${OrientationLib_Link_Libs})
+
+AddDREAM3DUnitTest(TESTNAME OrientationTransformsTest
+                    SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/OrientationTransformsTest.cpp 
+                              ${${PROJECT_NAME}_SOURCE_DIR}/GenerateEulerAngles.cpp 
+                              ${${PROJECT_NAME}_SOURCE_DIR}/GenerateEulerAngles.h
+                              ${${PROJECT_NAME}_SOURCE_DIR}/GenerateFunctionList.h
+                    FOLDER "Test/OrientationLib"
+                    LINK_LIBRARIES ${OrientationLib_Link_Libs})
+
