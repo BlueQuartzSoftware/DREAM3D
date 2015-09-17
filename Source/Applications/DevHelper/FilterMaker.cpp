@@ -710,7 +710,7 @@ void FilterMaker::updateTestList()
     return;
   }
 
-  out << " SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/" << filterName << "Test.cpp LINK_LIBRARIES Qt5::Core H5Support DREAM3DLib)\n\n";
+  out << " SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/" << filterName << "Test.cpp LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})\n\n";
 
   QStringList list = contents.split(QRegExp("\\n"));
   list.push_back(testCMakeCode);

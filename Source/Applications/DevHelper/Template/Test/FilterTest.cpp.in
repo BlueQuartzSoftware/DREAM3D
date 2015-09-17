@@ -37,16 +37,16 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/Common/FilterPipeline.h"
-#include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/Common/FilterFactory.hpp"
-#include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
-#include "DREAM3DLib/Plugin/DREAM3DPluginLoader.h"
-#include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
-#include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Common/FilterPipeline.h"
+#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/Common/FilterFactory.hpp"
+#include "SIMPLib/Plugin/ISIMPLibPlugin.h"
+#include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
+#include "SIMPLib/Utilities/UnitTestSupport.hpp"
+#include "SIMPLib/Utilities/QMetaObjectUtilities.h"
 
 #include "@PluginName@TestFileLocations.h"
 
@@ -91,15 +91,15 @@ int @FilterName@Test()
   * UnitTest::@FilterName@Test::TestFile1
   * UnitTest::@FilterName@Test::TestFile2
   *
-  * DREAM3D provides some macros that will throw exceptions when a test fails
+  * SIMPLib provides some macros that will throw exceptions when a test fails
   * and thus report that during testing. These macros are located in the
-  * DREAM3DLib/Utilities/UnitTestSupport.hpp file. Some examples are:
+  * SIMPLib/Utilities/UnitTestSupport.hpp file. Some examples are:
   *
-  * DREAM3D_REQUIRE_EQUAL(foo, 0)
+  * SIMPLib_REQUIRE_EQUAL(foo, 0)
   * This means that if the variable foo is NOT equal to Zero then test will fail
   * and the current test will exit immediately. If there are more tests registered
-  * with the DREAM3D_REGISTER_TEST() macro, the next test will execute. There are
-  * lots of examples in the DREAM3D/Test folder to look at.
+  * with the SIMPLib_REGISTER_TEST() macro, the next test will execute. There are
+  * lots of examples in the SIMPLib/Test folder to look at.
   */
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -116,7 +116,7 @@ void loadFilterPlugins()
 {
   // Register all the filters including trying to load those from Plugins
   FilterManager* fm = FilterManager::Instance();
-  DREAM3DPluginLoader::LoadPluginFilters(fm);
+  SIMPLibPluginLoader::LoadPluginFilters(fm);
 
   // Send progress messages from PipelineBuilder to this object for display
   QMetaObjectUtilities::RegisterMetaTypes();
