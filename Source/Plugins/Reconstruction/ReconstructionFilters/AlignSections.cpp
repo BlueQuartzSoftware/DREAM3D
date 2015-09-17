@@ -119,7 +119,7 @@ void AlignSections::dataCheck()
   if (image->getXPoints() <= 1 || image->getYPoints() <= 1 || image->getZPoints() <= 1)
   {
     QString ss = QObject::tr("The Image Geometry is not 3D and cannot be run through this filter. The dimensions are (%1,%2,%3)").arg(image->getXPoints()).arg(image->getYPoints()).arg(image->getZPoints());
-    setErrorCondition(-999);
+    setErrorCondition(-3010);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 

@@ -1303,14 +1303,14 @@ void GenerateEnsembleStatistics::execute()
   {
     if( static_cast<int32_t>(m_PhaseTypeData.d.size()) < totalEnsembles)
     {
-      setErrorCondition(-999);
+      setErrorCondition(-3013);
       notifyErrorMessage(getHumanLabel(), "The number of phase types entered is less than the number of Ensembles", -999);
       return;
     }
     if (static_cast<int32_t>(m_PhaseTypeData.d.size()) > totalEnsembles)
     {
       QString ss = QObject::tr("The number of phase types entered is more than the number of Ensembles. Only the first %1 will be used").arg(totalEnsembles - 1);
-      notifyErrorMessage(getHumanLabel(), ss, -999);
+      notifyErrorMessage(getHumanLabel(), ss, -3014);
     }
     for (int32_t r = 0; r < totalEnsembles; ++r)
     {

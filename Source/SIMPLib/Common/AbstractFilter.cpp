@@ -91,8 +91,8 @@ void AbstractFilter::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void AbstractFilter::execute()
 {
-  setErrorCondition(-999);
-  notifyErrorMessage(getNameOfClass(), "QAbstractFilter does not implement an execute method. Please use a subclass instead.", -999);
+  setErrorCondition(-3015);
+  notifyErrorMessage(getNameOfClass(), "QAbstractFilter does not implement an execute method. Please use a subclass instead.", getErrorCondition());
 }
 
 // -----------------------------------------------------------------------------
@@ -101,8 +101,8 @@ void AbstractFilter::execute()
 void AbstractFilter::preflight()
 {
   setInPreflight(true);
-  setErrorCondition(-999);
-  notifyErrorMessage(getNameOfClass(), "AbstractFilter does not implement a preflight method. Please use a subclass instead.", -999);
+  setErrorCondition(-3016);
+  notifyErrorMessage(getNameOfClass(), "AbstractFilter does not implement a preflight method. Please use a subclass instead.", getErrorCondition());
 }
 
 // -----------------------------------------------------------------------------

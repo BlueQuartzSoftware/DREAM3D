@@ -288,7 +288,7 @@ void ScalarSegmentFeatures::dataCheck()
     if (m_InputDataPtr.lock()->getNumberOfComponents() != 1)
     {
       QString ss = QObject::tr("The selected array is not a scalar array. The number of components is %1").arg(m_InputDataPtr.lock()->getNumberOfComponents());
-      setErrorCondition(-999);
+      setErrorCondition(-3011);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
   }
