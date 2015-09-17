@@ -117,7 +117,7 @@ void GenerateEulers(size_t nSteps, AttributeMatrix::Pointer attrMat)
   size_t counter = 0;
   for(int i = 0; i < nSteps; i++)
   {
-    for(int j = 0; j < nSteps; j++)
+    for(int j = 1; j < nSteps+1; j++)
     {
       for(int k = 0; k < nSteps; k++)
       {
@@ -351,7 +351,7 @@ void StartTest()
   QVector<QString> functionNames = OrientationConverter<float>::GetOrientationTypeStrings();
 
   GenerateFunctionList generator;
-  std::vector<GenerateFunctionList::EntryType> entries = generator.GeneratePermutationsOfCombinations(6, 3);
+  std::vector<GenerateFunctionList::EntryType> entries = generator.GeneratePermutationsOfCombinations(6, 2);
 
   // Start looping on each entry in the function table.
   for(std::vector<GenerateFunctionList::EntryType>::size_type i = 0; i < entries.size(); i++)
