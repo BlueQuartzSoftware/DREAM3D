@@ -318,13 +318,15 @@ void ChangeResolution::execute()
 
   float x = 0.0f, y = 0.0f, z = 0.0f;
   size_t col = 0, row = 0, plane = 0;
-  size_t index;
-  size_t index_old;
+  size_t index = 0;
+  size_t index_old = 0 ;
+  size_t progressInt = 0;
   std::vector<size_t> newindicies(totalPoints);
 
   for (size_t i = 0; i < m_ZP; i++)
   {
-    QString ss = QObject::tr("Changing Resolution - %1 Percent Complete").arg(((float)i / m->getGeometryAs<ImageGeom>()->getZPoints()) * 100);
+    progressInt = static_cast<size_t>((static_cast<float>(i) / m_ZP) * 100.0f);
+    QString ss = QObject::tr("Changing Resolution - %1% Complete").arg(progressInt);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     for (size_t j = 0; j < m_YP; j++)
     {
@@ -342,6 +344,9 @@ void ChangeResolution::execute()
       }
     }
   }
+
+  QString ss = QObject::tr("Copying Data...");
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
   QVector<size_t> tDims(3, 0);
   tDims[0] = m_XP;
