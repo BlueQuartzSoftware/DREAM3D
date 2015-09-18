@@ -632,16 +632,16 @@
             QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId4] * 3 + 2], m_OriginZ);
 
             triangle[triangleIndex * 3 + 0] = m_NodeIds[nodeId1];
-            triangle[triangleIndex * 3 + 1] = m_NodeIds[nodeId3];
-            triangle[triangleIndex * 3 + 2] = m_NodeIds[nodeId2];
+            triangle[triangleIndex * 3 + 1] = m_NodeIds[nodeId2];
+            triangle[triangleIndex * 3 + 2] = m_NodeIds[nodeId3];
             m_FaceLabels[triangleIndex * 2] = m_FeatureIds[point];
             m_FaceLabels[triangleIndex * 2 + 1] = -1;
             if (m_TransferPhaseId == true) { m_FacePhases[triangleIndex * 2] = m_CellPhases[point]; m_FacePhases[triangleIndex * 2 + 1] = 0;}
             triangleIndex++;
 
             triangle[triangleIndex * 3 + 0] = m_NodeIds[nodeId2];
-            triangle[triangleIndex * 3 + 1] = m_NodeIds[nodeId3];
-            triangle[triangleIndex * 3 + 2] = m_NodeIds[nodeId4];
+            triangle[triangleIndex * 3 + 1] = m_NodeIds[nodeId4];
+            triangle[triangleIndex * 3 + 2] = m_NodeIds[nodeId3];
             m_FaceLabels[triangleIndex * 2] = m_FeatureIds[point];
             m_FaceLabels[triangleIndex * 2 + 1] = -1;
             if (m_TransferPhaseId == true) { m_FacePhases[triangleIndex * 2] = m_CellPhases[point]; m_FacePhases[triangleIndex * 2 + 1] = 0;}
@@ -679,16 +679,16 @@
             QSM_GETCOORD((k + 1), zRes, vertex[m_NodeIds[nodeId4] * 3 + 2], m_OriginZ);
 
             triangle[triangleIndex * 3 + 0] = m_NodeIds[nodeId1];
-            triangle[triangleIndex * 3 + 1] = m_NodeIds[nodeId2];
-            triangle[triangleIndex * 3 + 2] = m_NodeIds[nodeId3];
+            triangle[triangleIndex * 3 + 1] = m_NodeIds[nodeId3];
+            triangle[triangleIndex * 3 + 2] = m_NodeIds[nodeId2];
             m_FaceLabels[triangleIndex * 2] = m_FeatureIds[point];
             m_FaceLabels[triangleIndex * 2 + 1] = -1;
             if (m_TransferPhaseId == true) { m_FacePhases[triangleIndex * 2] = m_CellPhases[point]; m_FacePhases[triangleIndex * 2 + 1] = 0;}
             triangleIndex++;
 
             triangle[triangleIndex * 3 + 0] = m_NodeIds[nodeId2];
-            triangle[triangleIndex * 3 + 1] = m_NodeIds[nodeId4];
-            triangle[triangleIndex * 3 + 2] = m_NodeIds[nodeId3];
+            triangle[triangleIndex * 3 + 1] = m_NodeIds[nodeId3];
+            triangle[triangleIndex * 3 + 2] = m_NodeIds[nodeId4];
             m_FaceLabels[triangleIndex * 2] = m_FeatureIds[point];
             m_FaceLabels[triangleIndex * 2 + 1] = -1;
             if (m_TransferPhaseId == true) { m_FacePhases[triangleIndex * 2] = m_CellPhases[point]; m_FacePhases[triangleIndex * 2 + 1] = 0;}
@@ -726,16 +726,16 @@
             QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId4] * 3 + 2], m_OriginZ);
 
             triangle[triangleIndex * 3 + 0] = m_NodeIds[nodeId1];
-            triangle[triangleIndex * 3 + 1] = m_NodeIds[nodeId3];
-            triangle[triangleIndex * 3 + 2] = m_NodeIds[nodeId2];
+            triangle[triangleIndex * 3 + 1] = m_NodeIds[nodeId2];
+            triangle[triangleIndex * 3 + 2] = m_NodeIds[nodeId3];
             m_FaceLabels[triangleIndex * 2] = m_FeatureIds[point];
             m_FaceLabels[triangleIndex * 2 + 1] = -1;
             if (m_TransferPhaseId == true) { m_FacePhases[triangleIndex * 2] = m_CellPhases[point]; m_FacePhases[triangleIndex * 2 + 1] = 0;}
             triangleIndex++;
 
             triangle[triangleIndex * 3 + 0] = m_NodeIds[nodeId2];
-            triangle[triangleIndex * 3 + 1] = m_NodeIds[nodeId3];
-            triangle[triangleIndex * 3 + 2] = m_NodeIds[nodeId4];
+            triangle[triangleIndex * 3 + 1] = m_NodeIds[nodeId4];
+            triangle[triangleIndex * 3 + 2] = m_NodeIds[nodeId3];
             m_FaceLabels[triangleIndex * 2] = m_FeatureIds[point];
             m_FaceLabels[triangleIndex * 2 + 1] = -1;
             if (m_TransferPhaseId == true) { m_FacePhases[triangleIndex * 2] = m_CellPhases[point]; m_FacePhases[triangleIndex * 2 + 1] = 0;}
