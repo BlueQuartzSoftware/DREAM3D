@@ -249,7 +249,7 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   linkedProps << "RDFArrayPath" << "MaxMinRDFArrayPath";
   parameters.push_back(LinkedBooleanFilterParameter::New("Include Radial Distribution Function", "IncludeRadialDistFunc", getIncludeRadialDistFunc(), linkedProps, FilterParameter::Parameter));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Float, 1, DREAM3D::AttributeMatrixObjectType::Ensemble);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Float, DREAM3D::Defaults::AnyComponentSize, DREAM3D::AttributeMatrixObjectType::Ensemble);
     parameters.push_back(DataArraySelectionFilterParameter::New("Radial Distribution Function", "RDFArrayPath", getRDFArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
@@ -434,8 +434,7 @@ void GenerateEnsembleStatistics::dataCheck()
 
   if (m_IncludeRadialDistFunc == true)
   {
-    cDims[0] = 1;
-    DataArray<float>::Pointer tempPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getRDFArrayPath(), cDims);
+    DataArray<float>::Pointer tempPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<DataArray<float>, AbstractFilter>(this, getRDFArrayPath());
     if (NULL != tempPtr.get())
     {
       m_RadialDistFuncPtr = tempPtr;
