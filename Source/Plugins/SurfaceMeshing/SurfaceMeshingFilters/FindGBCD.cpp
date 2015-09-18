@@ -741,6 +741,26 @@ const QString FindGBCD::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QString FindGBCD::getCitations()
+{
+  return "\
+@article{Saylor20033663,\n\
+  title = {Distribution of grain boundaries in magnesia as a function of five macroscopic parameters },\n\
+  journal = {Acta Materialia},\n\
+  volume = {51},\n\
+  number = {13},\n\
+  pages = {3663 - 3674},\n\
+  year = {2003},\n\
+  issn = {1359-6454},\n\
+  doi = {http://dx.doi.org/10.1016/S1359-6454(03)00181-2},\n\
+  url = {http://www.sciencedirect.com/science/article/pii/S1359645403001812},\n\
+  author = {David M. Saylor and Adam Morawiec and Gregory S. Rohrer},\n\
+}\n";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString FindGBCD::getGroupName()
 { return DREAM3D::FilterGroups::StatisticsFilters; }
 

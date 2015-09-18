@@ -411,7 +411,7 @@ void FilterPipeline::printCitations(QTextStream& out)
 {
   //start with general dream3d citations
   out << "DREAM.3D:\n\
-@article{\n\
+@article{Groeber2014dream\n\
   year={2014},\n\
   issn={2193-9764},\n\
   journal={Integrating Materials and Manufacturing Innovation},\n\
