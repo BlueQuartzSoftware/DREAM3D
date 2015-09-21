@@ -93,5 +93,5 @@ QString BooleanWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString BooleanWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/BooleanFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/BooleanFilterParameter.h\"";
 }

@@ -99,5 +99,5 @@ QString DynamicChoiceWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString DynamicChoiceWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/DynamicChoiceFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/DynamicChoiceFilterParameter.h\"";
 }

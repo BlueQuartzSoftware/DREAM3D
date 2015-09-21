@@ -101,7 +101,7 @@ QString ComparisonSelectionWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString ComparisonSelectionWidgetCodeGenerator::generateHIncludes()
 {
-  return "#include \"DREAM3DLib/Common/ComparisonInputs.h\"";
+  return "#include \"SIMPLib/Common/ComparisonInputs.h\"";
 }
 
 // -----------------------------------------------------------------------------
@@ -109,5 +109,5 @@ QString ComparisonSelectionWidgetCodeGenerator::generateHIncludes()
 // -----------------------------------------------------------------------------
 QString ComparisonSelectionWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/ComparisonSelectionFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/ComparisonSelectionFilterParameter.h\"";
 }

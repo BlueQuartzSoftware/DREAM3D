@@ -130,12 +130,12 @@ const QString @ClassName@::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString @ClassName@::getHumanLabel()
-{ return "@ClassName@"; }
+const QString @ClassName@::getSubGroupName()
+{ return "@PluginName@"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString @ClassName@::getSubGroupName()
-{ return "@PluginName@"; }
+const QString @ClassName@::getHumanLabel()
+{ return "@ClassName@"; }
 

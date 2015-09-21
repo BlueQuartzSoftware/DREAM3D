@@ -97,5 +97,5 @@ QString DataContainerSelectionWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString DataContainerSelectionWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/DataContainerSelectionFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h\"";
 }

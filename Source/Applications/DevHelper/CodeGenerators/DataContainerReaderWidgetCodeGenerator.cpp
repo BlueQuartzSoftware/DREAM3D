@@ -107,7 +107,7 @@ QString DataContainerReaderWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString DataContainerReaderWidgetCodeGenerator::generateHIncludes()
 {
-  return "#include \"DREAM3DLib/DataContainers/DataContainerArrayProxy.h\"";
+  return "#include \"SIMPLib/DataContainers/DataContainerArrayProxy.h\"";
 }
 
 // -----------------------------------------------------------------------------
@@ -115,5 +115,5 @@ QString DataContainerReaderWidgetCodeGenerator::generateHIncludes()
 // -----------------------------------------------------------------------------
 QString DataContainerReaderWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/DataContainerReaderFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/DataContainerReaderFilterParameter.h\"";
 }

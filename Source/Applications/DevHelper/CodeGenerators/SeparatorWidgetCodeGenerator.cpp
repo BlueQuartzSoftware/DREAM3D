@@ -96,5 +96,5 @@ QString SeparatorWidgetCodeGenerator::generateInitializationList()
 // -----------------------------------------------------------------------------
 QString SeparatorWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/SeparatorFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/SeparatorFilterParameter.h\"";
 }

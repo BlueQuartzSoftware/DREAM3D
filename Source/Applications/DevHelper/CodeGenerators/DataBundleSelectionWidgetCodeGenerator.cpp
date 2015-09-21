@@ -93,5 +93,5 @@ QString DataBundleSelectionWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString DataBundleSelectionWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/DataBundleSelectionFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/DataBundleSelectionFilterParameter.h\"";
 }

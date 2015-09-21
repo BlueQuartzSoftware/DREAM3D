@@ -85,5 +85,5 @@ QString PreflightUpdatedValueWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString PreflightUpdatedValueWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/PreflightUpdatedValueFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/PreflightUpdatedValueFilterParameter.h\"";
 }

@@ -93,5 +93,5 @@ QString InputPathWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString InputPathWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/InputPathFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/InputPathFilterParameter.h\"";
 }

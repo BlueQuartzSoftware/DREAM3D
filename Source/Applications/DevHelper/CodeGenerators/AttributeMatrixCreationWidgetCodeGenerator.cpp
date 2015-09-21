@@ -97,5 +97,5 @@ QString AttributeMatrixCreationWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString AttributeMatrixCreationWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/AttributeMatrixCreationFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/AttributeMatrixCreationFilterParameter.h\"";
 }

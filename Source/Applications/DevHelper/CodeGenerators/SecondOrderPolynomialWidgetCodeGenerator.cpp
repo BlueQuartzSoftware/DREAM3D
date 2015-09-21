@@ -93,5 +93,5 @@ QString SecondOrderPolynomialWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString SecondOrderPolynomialWidgetCodeGenerator::generateHIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/SecondOrderPolynomialFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/SecondOrderPolynomialFilterParameter.h\"";
 }

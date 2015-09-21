@@ -93,5 +93,5 @@ QString Symmetric6x6WidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString Symmetric6x6WidgetCodeGenerator::generateHIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/Symmetric6x6FilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/Symmetric6x6FilterParameter.h\"";
 }

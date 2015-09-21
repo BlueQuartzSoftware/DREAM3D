@@ -103,7 +103,7 @@ QString DynamicTableWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString DynamicTableWidgetCodeGenerator::generateHIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/DynamicTableData.h\"";
+  return "#include \"SIMPLib/FilterParameters/DynamicTableData.h\"";
 }
 
 // -----------------------------------------------------------------------------
@@ -111,5 +111,5 @@ QString DynamicTableWidgetCodeGenerator::generateHIncludes()
 // -----------------------------------------------------------------------------
 QString DynamicTableWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/DynamicTableFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/DynamicTableFilterParameter.h\"";
 }

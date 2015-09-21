@@ -93,5 +93,5 @@ QString FloatVec3WidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString FloatVec3WidgetCodeGenerator::generateHIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/FloatVec3FilterParameter.h\"";
 }

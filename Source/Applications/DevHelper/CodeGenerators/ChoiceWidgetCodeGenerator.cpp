@@ -99,5 +99,5 @@ QString ChoiceWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString ChoiceWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/ChoiceFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/ChoiceFilterParameter.h\"";
 }

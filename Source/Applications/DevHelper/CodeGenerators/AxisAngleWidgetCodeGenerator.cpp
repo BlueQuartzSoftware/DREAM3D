@@ -93,5 +93,5 @@ QString AxisAngleWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString AxisAngleWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/AxisAngleFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/AxisAngleFilterParameter.h\"";
 }

@@ -93,5 +93,5 @@ QString StringWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString StringWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/StringFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/StringFilterParameter.h\"";
 }

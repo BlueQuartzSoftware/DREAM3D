@@ -97,5 +97,5 @@ QString DataArraySelectionWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString DataArraySelectionWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h\"";
 }

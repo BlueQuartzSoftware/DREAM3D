@@ -85,5 +85,5 @@ QString IntWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString IntWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/IntFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/IntFilterParameter.h\"";
 }

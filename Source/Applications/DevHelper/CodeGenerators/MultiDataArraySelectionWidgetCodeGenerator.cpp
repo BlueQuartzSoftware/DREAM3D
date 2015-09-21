@@ -93,5 +93,5 @@ QString MultiDataArraySelectionWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString MultiDataArraySelectionWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/MultiDataArraySelectionFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h\"";
 }

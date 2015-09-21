@@ -93,5 +93,5 @@ QString DataContainerArrayProxyWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString DataContainerArrayProxyWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/DataContainerArrayProxyFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/DataContainerArrayProxyFilterParameter.h\"";
 }

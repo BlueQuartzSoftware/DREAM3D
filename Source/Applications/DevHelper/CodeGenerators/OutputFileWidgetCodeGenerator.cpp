@@ -93,5 +93,5 @@ QString OutputFileWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString OutputFileWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/OutputFileFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/OutputFileFilterParameter.h\"";
 }

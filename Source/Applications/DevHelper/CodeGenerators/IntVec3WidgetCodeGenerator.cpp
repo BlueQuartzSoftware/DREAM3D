@@ -93,5 +93,5 @@ QString IntVec3WidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString IntVec3WidgetCodeGenerator::generateHIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/IntVec3FilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/IntVec3FilterParameter.h\"";
 }

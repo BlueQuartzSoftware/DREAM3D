@@ -93,5 +93,5 @@ QString FourthOrderPolynomialWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString FourthOrderPolynomialWidgetCodeGenerator::generateHIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/FourthOrderPolynomialFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/FourthOrderPolynomialFilterParameter.h\"";
 }

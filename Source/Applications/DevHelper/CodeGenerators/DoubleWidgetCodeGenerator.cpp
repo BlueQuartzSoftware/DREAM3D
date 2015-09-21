@@ -85,5 +85,5 @@ QString DoubleWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString DoubleWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/DoubleFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/DoubleFilterParameter.h\"";
 }
