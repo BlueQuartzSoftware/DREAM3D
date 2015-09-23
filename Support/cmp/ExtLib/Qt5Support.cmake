@@ -368,6 +368,7 @@ AddQt5SupportLibraryCopyInstallRules( LIBRARIES ${Qt5_ICU_COMPONENTS} PREFIX "" 
 
 #-- Let CMake determine which files need to have 'moc' run on them
 set(CMAKE_AUTOMOC TRUE)
+set_property(GLOBAL PROPERTY AUTOGEN_TARGETS_FOLDER "Qt5AutoMocTargets")
 
 #-- Make sure we include the proper Qt5 include directories
 foreach(qtlib ${Qt5_COMPONENTS})

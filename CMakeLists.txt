@@ -398,6 +398,6 @@ include(${PROJECT_RESOURCES_DIR}/CPack/PackageProject.cmake)
 
 # ------- Enable the CTest testing. Use make test to run all tests ---------------
 if(DREAM3D_BUILD_TESTING)
-    add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Test ${PROJECT_BINARY_DIR}/Test)
+    include(${DREAM3DProj_SOURCE_DIR}/Test/CMakeLists.txt)
 endif()
 

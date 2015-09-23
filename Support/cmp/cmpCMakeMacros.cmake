@@ -26,12 +26,12 @@ endmacro (cmp_IDE_GENERATED_PROPERTIES SOURCE_PATH HEADERS SOURCES)
 macro (cmp_IDE_SOURCE_PROPERTIES SOURCE_PATH HEADERS SOURCES INSTALL_FILES)
     if(${INSTALL_FILES} EQUAL "1")
         INSTALL (FILES ${HEADERS}
-                 DESTINATION include/${SOURCE_PATH}
+                 DESTINATION "include/${SOURCE_PATH}"
                  COMPONENT Headers
         )
     endif()
-    STRING(REPLACE "/" "\\\\" source_group_path ${SOURCE_PATH}  )
-    source_group(${source_group_path} FILES ${HEADERS} ${SOURCES})
+    STRING(REPLACE "/" "\\\\" source_group_path "${SOURCE_PATH}"  )
+    source_group("${source_group_path}" FILES ${HEADERS} ${SOURCES})
 
   #-- The following is needed if we ever start to use OS X Frameworks but only
   #--  works on CMake 2.6 and greater

@@ -77,7 +77,7 @@ endforeach()
 
 #-------------
 # These are files that need to be compiled into DREAM3DLib but are NOT filters
-ADD_DREAM3D_SUPPORT_HEADER(${IO_SOURCE_DIR} ${_filterGroupName} util/GenericDataParser.hpp)
+ADD_DREAM3D_SUPPORT_HEADER_SUBDIR(${IO_SOURCE_DIR} ${_filterGroupName} GenericDataParser.hpp util)
 
 #---------------------
 # This macro must come last after we are done adding all the filters and support files.
