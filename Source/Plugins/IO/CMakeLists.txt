@@ -124,9 +124,9 @@ set(${PLUGIN_NAME}_SRCS
 )
 
 set(${PLUGIN_NAME}_MISC_HDRS
-    ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}Constants.h
+
 )
-cmp_IDE_SOURCE_PROPERTIES( "${PLUGIN_NAME}/" "${${PLUGIN_NAME}_HDRS};${${PLUGIN_NAME}_MISC_HDRS}" "${${PLUGIN_NAME}_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "" "${${PLUGIN_NAME}_HDRS};${${PLUGIN_NAME}_MISC_HDRS}" "${${PLUGIN_NAME}_SRCS}" "0")
 
 # -----------------------------------------------------------------------------
 # Collect all of our Generated header and source files so that they show up in the various projects
@@ -219,5 +219,5 @@ if( DREAM3D_BUILD_CLI_TOOLS )
 endif()
 
 if(DREAM3D_BUILD_TESTING)
-  ADD_SUBDIRECTORY(${PROJECT_SOURCE_DIR}/Test ${PROJECT_BINARY_DIR}/Test)
+  include(${PROJECT_SOURCE_DIR}/Test/CMakeLists.txt)
 endif()
