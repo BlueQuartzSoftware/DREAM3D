@@ -59,9 +59,6 @@
 #include "OrientationAnalysis/OrientationAnalysisFilters/ReadH5Ebsd.h"
 #include "OrientationAnalysis/FilterParameters/ReadH5EbsdFilterParameter.h"
 
-// This file is auto generated into the build directory
-#include "OrientationAnalysis/moc_ReadH5EbsdWidget.cpp"
-
 // Initialize private static member variable
 QString ReadH5EbsdWidget::m_OpenDialogLastDirectory = "";
 

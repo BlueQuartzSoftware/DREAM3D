@@ -47,6 +47,11 @@
 
 #include "Statistics/StatisticsConstants.h"
 
+// Include the MOC generated file for this class
+#include "moc_FindAvgScalarValueForFeatures.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

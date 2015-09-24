@@ -53,6 +53,9 @@
 // Initialize private static member variable
 QString FileListInfoWidget::m_OpenDialogLastDirectory = "";
 
+// Include the MOC generated file for this class
+#include "moc_FileListInfoWidget.cpp"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

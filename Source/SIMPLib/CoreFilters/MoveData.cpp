@@ -51,6 +51,11 @@ namespace
   static const int32_t k_MoveDataArray = 1;
 }
 
+// Include the MOC generated file for this class
+#include "moc_MoveData.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

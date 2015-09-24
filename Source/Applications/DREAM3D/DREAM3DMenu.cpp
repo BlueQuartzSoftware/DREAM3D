@@ -42,6 +42,8 @@
 
 #include "Applications/DREAM3D/DREAM3DApplication.h"
 
+ // Include the MOC generated CPP file which has all the QMetaObject methods/data
+ #include "moc_DREAM3DMenu.cpp"
 
 // -----------------------------------------------------------------------------
 //

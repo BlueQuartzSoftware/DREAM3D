@@ -47,6 +47,11 @@
 #include "SIMPLib/Math/MatrixMath.h"
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 
+// Include the MOC generated file for this class
+#include "moc_CorrelateValuesWithVectorDirection.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

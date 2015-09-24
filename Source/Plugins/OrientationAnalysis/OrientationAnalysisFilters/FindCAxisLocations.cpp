@@ -47,6 +47,11 @@
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
+// Include the MOC generated file for this class
+#include "moc_FindCAxisLocations.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

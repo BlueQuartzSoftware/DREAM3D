@@ -42,7 +42,8 @@
 #include "Applications/DREAM3D/DREAM3DApplication.h"
 
 #include "StatsGenerator/Delegates/SGRDFItemDelegate.h"
-
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_SGRDFTableModel.cpp"
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

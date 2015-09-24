@@ -50,6 +50,7 @@
 #include "QtSupportLib/ColorComboPicker.h"
 #include "StatsGenerator/TableModels/SGLogNormalTableModel.h"
 
+
 /**
  * @class SGLogNormalItemDelegate SGLogNormalItemDelegate.h StatsGenerator/SGLogNormalItemDelegate.h
  * @brief This class creates the appropriate Editor Widget for the Tables

@@ -50,10 +50,15 @@
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
+// Include the MOC generated file for this class
+#include "moc_FindFeatureNeighborCAxisMisalignments.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindFeatureNeighborCAxisMisalignments::FindFeatureNeighborCAxisMisalignments()  :
+FindFeatureNeighborCAxisMisalignments::FindFeatureNeighborCAxisMisalignments() :
   AbstractFilter(),
   m_FindAvgMisals(false),
   m_NeighborListArrayPath("", "", ""),

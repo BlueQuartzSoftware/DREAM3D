@@ -46,11 +46,15 @@
 
 #include "Statistics/StatisticsConstants.h"
 
+// Include the MOC generated file for this class
+#include "moc_FindSurfaceAreaToVolume.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-
-FindSurfaceAreaToVolume::FindSurfaceAreaToVolume()  :
+FindSurfaceAreaToVolume::FindSurfaceAreaToVolume() :
   AbstractFilter(),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_NumCellsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::NumCells),

@@ -81,6 +81,11 @@ ReadEdaxH5DataPrivate::ReadEdaxH5DataPrivate(ReadEdaxH5Data* ptr) :
 {
 }
 
+// Include the MOC generated file for this class
+#include "moc_ReadEdaxH5Data.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

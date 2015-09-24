@@ -37,6 +37,8 @@
 
 #include "DREAM3DSettings.h"
 
+#include <iostream>
+
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
 #include <QtCore/QCoreApplication>
@@ -45,8 +47,7 @@
 
 #include <QtWidgets/QTreeWidgetItemIterator>
 
-#include <iostream>
-
+#include "moc_DREAM3DSettings.cpp"
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

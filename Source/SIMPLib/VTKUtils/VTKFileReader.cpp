@@ -32,8 +32,6 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #include "VTKFileReader.h"
 
 #include <string.h>
@@ -50,6 +48,10 @@
 #include "SIMPLib/SIMPLib.h"
 
 #define kBufferSize 1024
+
+// Include the MOC generated file for this class
+#include "moc_VTKFileReader.cpp"
+
 
 // -----------------------------------------------------------------------------
 //

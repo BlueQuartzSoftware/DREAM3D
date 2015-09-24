@@ -56,6 +56,11 @@
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/FilterParameters/ReadH5EbsdFilterParameter.h"
 
+// Include the MOC generated file for this class
+#include "moc_ReadH5Ebsd.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

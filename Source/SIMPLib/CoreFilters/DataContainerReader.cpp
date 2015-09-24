@@ -47,6 +47,11 @@
 #include "SIMPLib/FilterParameters/H5FilterParametersReader.h"
 
 
+// Include the MOC generated file for this class
+#include "moc_DataContainerReader.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

@@ -12,7 +12,7 @@
 set(_filterGroupName CoreFilters)
 set(${_filterGroupName}_FILTERS_HDRS "")
 
-START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}" "Generic Filters")
+START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}" "Core Filters")
 
 #---------
 # List your public filters here
@@ -72,6 +72,9 @@ foreach(f ${_PrivateFilters} )
                         ${_filterGroupName} ${f}
                         ${SIMPLib_FILTER_DOC_DIR}/${_filterGroupName}/${f}.md FALSE)
 endforeach()
+
+# -- Add the binary directory for this subdirectory to the include path which is where the moc files are generated
+include_directories( ${SIMPLib_BINARY_DIR}/${_filterGroupName})
 
 
 #-----------------

@@ -210,10 +210,15 @@ class CalculateTwinBoundarySchmidFactorsImpl
 #endif
 };
 
+// Include the MOC generated file for this class
+#include "moc_FindTwinBoundarySchmidFactors.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindTwinBoundarySchmidFactors::FindTwinBoundarySchmidFactors()  :
+FindTwinBoundarySchmidFactors::FindTwinBoundarySchmidFactors() :
   AbstractFilter(),
   m_WriteFile(false),
   m_TwinBoundarySchmidFactorsFile(""),

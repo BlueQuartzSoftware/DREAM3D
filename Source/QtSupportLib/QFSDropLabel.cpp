@@ -47,7 +47,7 @@
 
 #include "QtSupportLib/DREAM3DStyles.h"
 
-
+#include "moc_QFSDropLabel.cpp"
 
 // -----------------------------------------------------------------------------
 //

@@ -48,16 +48,11 @@
 #include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
-
 #include "OrientationLib/OrientationMath/OrientationConverter.hpp"
 
 
-
-
 #include "OrientationLibTestFileLocations.h"
-
 #include "GenerateFunctionList.h"
-
 
 static const QString DCName("Orientation Transforms Test");
 static const QString AMName("Angles");

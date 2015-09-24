@@ -10,13 +10,15 @@ set(APPS_WIDGETS
 
 )
 
+set(DREAM3D_AppsCommon_DIR ${CMAKE_CURRENT_LIST_DIR})
+
 #-- Only include this widget if we are compiling against QtWebEngine
 if(DREAM3D_USE_QtWebEngine)
   set(APPS_WIDGETS ${APPS_WIDGETS} DREAM3DUserManualDialog)
 endif()
 
 foreach(FPW ${APPS_WIDGETS})
-  set(AppsCommon_Widgets_HDRS ${AppsCommon_Widgets_HDRS}
+  set(AppsCommon_Widgets_MOC_HDRS ${AppsCommon_Widgets_MOC_HDRS}
     ${DREAM3DProj_SOURCE_DIR}/Source/Applications/Common/${FPW}.h
     )
   set(AppsCommon_Widgets_SRCS ${AppsCommon_Widgets_SRCS}
@@ -31,10 +33,11 @@ endforeach()
 # inheritance through a .ui file
 set(AppsCommon_Widgets_HDRS
   ${AppsCommon_Widgets_HDRS}
-  )
+  ${AppsCommon_Widgets_MOC_HDRS}
+)
 set(AppsCommon_Widgets_SRCS
   ${AppsCommon_Widgets_SRCS}
-  )
+)
 
 
 
@@ -44,17 +47,19 @@ cmp_IDE_GENERATED_PROPERTIES("Applications/Common/UI_Files" "${AppsCommon_Widget
 
 # --------------------------------------------------------------------
 # and finally this will run moc:
-#QT5_WRAP_CPP( AppsCommon_Widgets_Generated_MOC_SRCS ${AppsCommon_Widgets_HDRS} )
+QT5_WRAP_CPP( AppsCommon_Widgets_Generated_MOC_SRCS ${AppsCommon_Widgets_MOC_HDRS} )
 
 # These generated moc files will be #include in the FilterWidget source file that
 # are generated so we need to tell the build system to NOT compile these files
+set_source_files_properties( ${AppsCommon_Widgets_Generated_MOC_SRCS} PROPERTIES GENERATED TRUE)
 set_source_files_properties( ${AppsCommon_Widgets_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
+
 
 # -- Run MOC and UIC on the necessary files
 # QT5_ADD_RESOURCES( AppsCommon_Generated_RC_SRCS "${DREAM3DProj_SOURCE_DIR}/Documentation/Filters/Generated_FilterDocs.qrc"  )
 
 # --------------------------------------------------------------------
-# Continue on with our Qt4 section
+# Continue on with our Qt5 section
 QT5_WRAP_UI( AppsCommon_Widgets_Generated_UI_HDRS ${AppsCommon_Widgets_UIS} )
 
 # --------------------------------------------------------------------

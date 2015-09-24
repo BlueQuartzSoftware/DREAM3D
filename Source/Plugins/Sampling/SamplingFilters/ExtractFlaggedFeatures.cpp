@@ -46,6 +46,11 @@
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingFilters/CropImageGeometry.h"
 
+// Include the MOC generated file for this class
+#include "moc_ExtractFlaggedFeatures.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

@@ -55,6 +55,11 @@
 #include "IO/IOConstants.h"
 
 
+// Include the MOC generated file for this class
+#include "moc_SurfaceMeshToVtk.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

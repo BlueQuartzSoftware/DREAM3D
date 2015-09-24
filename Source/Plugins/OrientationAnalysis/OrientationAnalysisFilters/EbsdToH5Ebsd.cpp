@@ -50,10 +50,16 @@
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/FilterParameters/EbsdToH5EbsdFilterParameter.h"
 
+// Include the MOC generated file for this class
+#include "moc_EbsdToH5Ebsd.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 EbsdToH5Ebsd::EbsdToH5Ebsd() :
+  AbstractFilter(),
   m_OutputFile(""),
   m_ZStartIndex(0),
   m_ZEndIndex(0),

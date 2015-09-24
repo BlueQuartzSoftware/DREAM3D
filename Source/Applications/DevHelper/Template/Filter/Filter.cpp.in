@@ -10,6 +10,9 @@
 @Filter_CPP_Includes@
 #include "@PluginName@/@PluginName@Constants.h"
 
+// Include the MOC generated file for this class
+#include "moc_@ClassName@.cpp"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

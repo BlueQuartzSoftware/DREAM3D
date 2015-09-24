@@ -39,6 +39,9 @@
 #include "SIMPLib/FilterParameters/DataContainerArrayProxyFilterParameter.h"
 #include "SIMPLib/DataContainers/DataContainerArrayProxy.h"
 
+// Include the MOC generated file for this class
+#include "moc_ArraySelectionExample.cpp"
+
 
 
 // -----------------------------------------------------------------------------

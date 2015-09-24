@@ -68,6 +68,10 @@
 #define RES "SPACING"
 #define LOOKUP "LOOKUP_TABLE"
 
+// Include the MOC generated file for this class
+#include "moc_YSChoiAbaqusReader.cpp"
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

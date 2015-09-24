@@ -77,7 +77,8 @@
 #define IMAGE_WIDTH 17
 #define IMAGE_HEIGHT 17
 
-
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_PipelineFilterWidget.cpp"
 
 // Initialize private static member variable
 QString PipelineFilterWidget::m_OpenDialogLastDirectory = "";

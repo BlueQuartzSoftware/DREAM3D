@@ -45,8 +45,10 @@
 #include "SIMPLib/Common/FilterFactory.hpp"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
-#include "moc_SurfaceMeshingPlugin.cpp"
 
+
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_SurfaceMeshingPlugin.cpp"
 
 // -----------------------------------------------------------------------------
 //

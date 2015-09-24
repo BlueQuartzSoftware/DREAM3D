@@ -135,6 +135,11 @@ class CalcProjectedStatsImpl
     size_t m_Depth;
 };
 
+// Include the MOC generated file for this class
+#include "moc_FindProjectedImageStatistics.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

@@ -46,6 +46,7 @@
 
 #include "Reconstruction/ReconstructionConstants.h"
 
+#include "moc_AlignSectionsMutualInformation.cpp"
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

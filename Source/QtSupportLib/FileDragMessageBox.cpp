@@ -35,6 +35,7 @@
 
 
 #include "FileDragMessageBox.h"
+#include "moc_FileDragMessageBox.cpp"
 
 // -----------------------------------------------------------------------------
 //

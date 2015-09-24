@@ -49,10 +49,13 @@
 
 #include "Sampling/SamplingConstants.h"
 
+#include "moc_RegularGridSampleSurfaceMesh.cpp"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 RegularGridSampleSurfaceMesh::RegularGridSampleSurfaceMesh() :
+  SampleSurfaceMesh(),
   m_DataContainerName(DREAM3D::Defaults::ImageDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_XPoints(0),

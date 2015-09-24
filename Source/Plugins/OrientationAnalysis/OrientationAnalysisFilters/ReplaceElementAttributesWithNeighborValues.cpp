@@ -222,6 +222,11 @@ namespace Detail
 
 
 
+// Include the MOC generated file for this class
+#include "moc_ReplaceElementAttributesWithNeighborValues.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

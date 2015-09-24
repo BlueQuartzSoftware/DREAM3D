@@ -41,7 +41,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtWidgets/QMenu>
-
+#include "moc_QRecentFileList.cpp"
 
 // -----------------------------------------------------------------------------
 //

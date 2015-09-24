@@ -47,6 +47,11 @@
 
 #include "Sampling/SamplingConstants.h"
 
+// Include the MOC generated file for this class
+#include "moc_RegularizeZSpacing.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

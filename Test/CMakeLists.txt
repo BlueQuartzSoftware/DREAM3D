@@ -8,7 +8,7 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-# project(DREAM3DTest)
+# # project(DREAM3DTest)
 
 set(DREAM3DTest_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR}/Test)
 set(DREAM3DTest_BINARY_DIR ${DREAM3DProj_BINARY_DIR}/Test)
@@ -88,17 +88,19 @@ AddDREAM3DUnitTest(TESTNAME RemoveComponentFromArrayTest
 
 
 QT5_WRAP_CPP( RemoveArraysObserver_MOC  "${DREAM3DTest_SOURCE_DIR}/RemoveArraysObserver.h")
-set_source_files_properties(${RemoveArraysObserver_MOC} PROPERTIES HEADER_FILE_ONLY TRUE)
+set_source_files_properties(${DREAM3DTest_SOURCE_DIR}/RemoveArraysObserver.h PROPERTIES HEADER_FILE_ONLY TRUE)
 AddDREAM3DUnitTest(TESTNAME MoveDataTest
                    SOURCES ${DREAM3DTest_SOURCE_DIR}/MoveDataTest.cpp ${DREAM3DTest_SOURCE_DIR}/RemoveArraysObserver.h ${RemoveArraysObserver_MOC}
                    FOLDER "SIMPLib/Test"
                    LINK_LIBRARIES Qt5::Core H5Support SIMPLib  )
 
-
-set_source_files_properties(moc_PreflightVerify.cpp PROPERTIES HEADER_FILE_ONLY TRUE)
+QT5_WRAP_CPP( PreflightVerify_MOC  "${DREAM3DTest_SOURCE_DIR}/PreflightVerify.h")
+#set_source_files_properties(${DREAM3DTest_SOURCE_DIR}/PreflightVerify.h PROPERTIES HEADER_FILE_ONLY TRUE)
 set(PreFlightTest_SOURCES ${DREAM3DTest_SOURCE_DIR}/PreFlightTest.cpp
                           ${DREAM3DTest_SOURCE_DIR}/PreflightVerify.h
-                          ${DREAM3DTest_SOURCE_DIR}/PreflightVerify.cpp)
+                          ${DREAM3DTest_SOURCE_DIR}/PreflightVerify.cpp
+                          ${PreflightVerify_MOC}
+                          )
 AddDREAM3DUnitTest(TESTNAME PreFlightTest
                    SOURCES ${PreFlightTest_SOURCES}
                    FOLDER "SIMPLib/Test"

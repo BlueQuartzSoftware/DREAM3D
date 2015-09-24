@@ -54,6 +54,11 @@
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 
+// Include the MOC generated file for this class
+#include "moc_EstablishMatrixPhase.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

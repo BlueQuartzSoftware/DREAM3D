@@ -89,6 +89,8 @@
 #include "Applications/DREAM3D/DREAM3DApplication.h"
 #include "Applications/DREAM3D/DREAM3DMenu.h"
 
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_DREAM3D_UI.cpp"
 
 // Initialize private static member variable
 QString DREAM3D_UI::m_OpenDialogLastDirectory = "";

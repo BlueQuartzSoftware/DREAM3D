@@ -9,77 +9,87 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
+set(SUBDIR_NAME Common)
+
 # --------------------------------------------------------------------
 # Any Class that inherits from QObject, either directly or through the heirarchy needs to have its header listed here
-set(SIMPLib_Common_Moc_HDRS
-  ${SIMPLib_SOURCE_DIR}/Common/AbstractFilter.h
-  ${SIMPLib_SOURCE_DIR}/Common/ComparisonInputs.h
-  ${SIMPLib_SOURCE_DIR}/Common/FilterPipeline.h
-  ${SIMPLib_SOURCE_DIR}/Common/Observer.h
-  ${SIMPLib_SOURCE_DIR}/Common/Observable.h
+set(SIMPLib_${SUBDIR_NAME}_Moc_HDRS
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/AbstractFilter.h
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/ComparisonInputs.h
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/DocRequestManager.h
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/FilterPipeline.h
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/Observer.h
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/Observable.h
 )
+
 # --------------------------------------------------------------------
 # Run Qts automoc program to generate some source files that get compiled
-#QT5_WRAP_CPP( SIMPLib_Common_Generated_MOC_SRCS ${SIMPLib_Common_Moc_HDRS})
+QT5_WRAP_CPP( SIMPLib_${SUBDIR_NAME}_Generated_MOC_SRCS ${SIMPLib_${SUBDIR_NAME}_Moc_HDRS})
+set_source_files_properties( ${SIMPLib_${SUBDIR_NAME}_Generated_MOC_SRCS} PROPERTIES GENERATED TRUE)
+set_source_files_properties( ${SIMPLib_${SUBDIR_NAME}_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
-
-set(SIMPLib_Common_HDRS
-  ${SIMPLib_Common_Moc_HDRS}  # Add the headers that get Moc'ed here so they show up in solutions/IDEs/Project files
-  ${SIMPLib_SOURCE_DIR}/Common/AppVersion.h
-  ${SIMPLib_SOURCE_DIR}/Common/Constants.h
-  ${SIMPLib_SOURCE_DIR}/Common/CreatedArrayHelpIndexEntry.h
-  ${SIMPLib_SOURCE_DIR}/Common/DocRequestManager.h
-  ${SIMPLib_SOURCE_DIR}/Common/FilterFactory.hpp
-  ${SIMPLib_SOURCE_DIR}/Common/FilterManager.h
-  ${SIMPLib_SOURCE_DIR}/Common/IDataArrayFilter.h
-  ${SIMPLib_SOURCE_DIR}/Common/IFilterFactory.hpp
-  ${SIMPLib_SOURCE_DIR}/Common/IObserver.h
-  ${SIMPLib_SOURCE_DIR}/Common/PhaseType.h
-  ${SIMPLib_SOURCE_DIR}/Common/PipelineMessage.h
-  ${SIMPLib_SOURCE_DIR}/Common/ScopedFileMonitor.hpp
-  ${SIMPLib_SOURCE_DIR}/Common/ShapeType.h
-  ${SIMPLib_SOURCE_DIR}/Common/SIMPLibDLLExport.h
-  ${SIMPLib_SOURCE_DIR}/Common/SIMPLibSetGetMacros.h
-  ${SIMPLib_SOURCE_DIR}/Common/TemplateHelpers.hpp
-  ${SIMPLib_SOURCE_DIR}/Common/ThresholdFilterHelper.h
+set(SIMPLib_${SUBDIR_NAME}_HDRS
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/AppVersion.h
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/Constants.h
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/CreatedArrayHelpIndexEntry.h
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/FilterFactory.hpp
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/FilterManager.h
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/IDataArrayFilter.h
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/IFilterFactory.hpp
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/IObserver.h
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/PhaseType.h
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/PipelineMessage.h
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/ScopedFileMonitor.hpp
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/ShapeType.h
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/SIMPLibDLLExport.h
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/SIMPLibSetGetMacros.h
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/TemplateHelpers.hpp
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/ThresholdFilterHelper.h
 )
 
 
-set(SIMPLib_Common_SRCS
-  ${SIMPLib_SOURCE_DIR}/Common/AbstractFilter.cpp
-  ${SIMPLib_SOURCE_DIR}/Common/AppVersion.cpp
-  ${SIMPLib_SOURCE_DIR}/Common/DocRequestManager.cpp
-  ${SIMPLib_SOURCE_DIR}/Common/ComparisonInputs.cpp
-  ${SIMPLib_SOURCE_DIR}/Common/CreatedArrayHelpIndexEntry.cpp
-  ${SIMPLib_SOURCE_DIR}/Common/FilterManager.cpp
-  ${SIMPLib_SOURCE_DIR}/Common/FilterPipeline.cpp
-  ${SIMPLib_SOURCE_DIR}/Common/IDataArrayFilter.cpp
-  ${SIMPLib_SOURCE_DIR}/Common/IObserver.cpp
-  ${SIMPLib_SOURCE_DIR}/Common/Observable.cpp
-  ${SIMPLib_SOURCE_DIR}/Common/Observer.cpp
-  ${SIMPLib_SOURCE_DIR}/Common/PhaseType.cpp
-  ${SIMPLib_SOURCE_DIR}/Common/ShapeType.cpp
-  ${SIMPLib_SOURCE_DIR}/Common/ThresholdFilterHelper.cpp
+set(SIMPLib_${SUBDIR_NAME}_SRCS
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/AbstractFilter.cpp
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/AppVersion.cpp
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/DocRequestManager.cpp
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/ComparisonInputs.cpp
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/CreatedArrayHelpIndexEntry.cpp
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/FilterManager.cpp
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/FilterPipeline.cpp
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/IDataArrayFilter.cpp
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/IObserver.cpp
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/Observable.cpp
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/Observer.cpp
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/PhaseType.cpp
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/ShapeType.cpp
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/ThresholdFilterHelper.cpp
 )
 
+cmp_IDE_SOURCE_PROPERTIES( "SIMPLib/${SUBDIR_NAME}" "${SIMPLib_${SUBDIR_NAME}_HDRS};${SIMPLib_${SUBDIR_NAME}_Moc_HDRS}" "${SIMPLib_${SUBDIR_NAME}_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "Generated/SIMPLib/${SUBDIR_NAME}" "" "${SIMPLib_${SUBDIR_NAME}_Generated_MOC_SRCS}" "0")
 
-
-cmp_IDE_SOURCE_PROPERTIES( "SIMPLibLib/Common" "${SIMPLib_Common_HDRS};${SIMPLib_Common_Moc_HDRS}" "${SIMPLib_Common_SRCS}" "0")
-cmp_IDE_SOURCE_PROPERTIES( "Generated/SIMPLibLib/Common" "" "${SIMPLib_Common_Generated_MOC_SRCS}" "0")
-
-set(SIMPLib_Common_SRCS
-  ${SIMPLib_Common_SRCS}
-  ${SIMPLib_Common_Generated_MOC_SRCS}  # Add the generated source files here so they get compiled.
+set(SIMPLib_${SUBDIR_NAME}_HDRS
+  ${SIMPLib_${SUBDIR_NAME}_HDRS}
+  ${SIMPLib_${SUBDIR_NAME}_Moc_HDRS}  # Add the headers that get Moc'ed here so they show up in solutions/IDEs/Project files
 )
+
+set(SIMPLib_${SUBDIR_NAME}_SRCS
+  ${SIMPLib_${SUBDIR_NAME}_SRCS}
+  ${SIMPLib_${SUBDIR_NAME}_Generated_MOC_SRCS}
+)
+
+# -- Add the binary directory for this subdirectory to the include path which is where the moc files are generated
+include_directories( ${SIMPLib_BINARY_DIR}/${SUBDIR_NAME})
+
 
 if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
-    INSTALL (FILES ${SIMPLib_Common_HDRS}
-                   ${SIMPLib_Common_Moc_HDRS}
-            DESTINATION include/SIMPLib/Common
+    INSTALL (FILES ${SIMPLib_${SUBDIR_NAME}_HDRS}
+                   ${SIMPLib_${SUBDIR_NAME}_Moc_HDRS}
+            DESTINATION include/SIMPLib/${SUBDIR_NAME}
             COMPONENT Headers   )
 endif()
 
 if(MSVC)
-  set_source_files_properties(${SIMPLib_SOURCE_DIR}/Common/FilterManager.cpp PROPERTIES COMPILE_FLAGS /bigobj)
-  set_source_files_properties(${SIMPLib_SOURCE_DIR}/Common/FilterManager.h PROPERTIES COMPILE_FLAGS /bigobj)
+  set_source_files_properties(${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/FilterManager.cpp PROPERTIES COMPILE_FLAGS /bigobj)
+  set_source_files_properties(${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/FilterManager.h PROPERTIES COMPILE_FLAGS /bigobj)
 endif()

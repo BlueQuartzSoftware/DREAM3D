@@ -54,6 +54,9 @@ const QString addColTT = "Adds a column to the table.";
 const QString deleteRowTT = "Removes the currently selected row from the table.";
 const QString deleteColTT = "Removes the currently selected column from the table.";
 
+// Include the MOC generated file for this class
+#include "moc_DynamicTableWidget.cpp"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

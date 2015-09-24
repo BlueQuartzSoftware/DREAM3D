@@ -8,19 +8,19 @@ set(DREAM3DWidgetsLib_Widgets_UIS "")
 # List the Classes here that are QWidget Derived Classes
 set(DREAM3D_WIDGETS
     BookmarksDockWidget
+    DataContainerArrayWidget
     DREAM3DUpdateCheckDialog
+    DropBoxWidget
     FilterInputWidget
     FilterLibraryDockWidget
     FilterListDockWidget
     IssuesDockWidget
     PipelineFilterWidget
     PrebuiltPipelinesDockWidget
-    DataContainerArrayWidget
-    DropBoxWidget
 )
 
 foreach(FPW ${DREAM3D_WIDGETS})
-  set(DREAM3DWidgetsLib_Widgets_HDRS ${DREAM3DWidgetsLib_Widgets_HDRS}
+  set(DREAM3DWidgetsLib_Widgets_MOC_HDRS ${DREAM3DWidgetsLib_Widgets_MOC_HDRS}
     ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/${FPW}.h
     )
   set(DREAM3DWidgetsLib_Widgets_SRCS ${DREAM3DWidgetsLib_Widgets_SRCS}
@@ -33,17 +33,23 @@ endforeach()
 
 # Add in the remaining sources that are actually widgets but are completely Custom and do NOT use private
 # inheritance through a .ui file
-set(DREAM3DWidgetsLib_Widgets_HDRS
-  ${DREAM3DWidgetsLib_Widgets_HDRS}
+set(DREAM3DWidgetsLib_Widgets_MOC_HDRS
+  ${DREAM3DWidgetsLib_Widgets_MOC_HDRS}
   ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/PipelineViewWidget.h
   ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/FilterListWidget.h
   ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/FilterTreeWidget.h
   ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/FilterLibraryTreeWidget.h
-  ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/BookmarksItem.h
+
   ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/BookmarksModel.h
   ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/BookmarksTreeView.h
   ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/BookmarksItemDelegate.h
-  )
+)
+
+
+set(DREAM3DWidgetsLib_Widgets_HDRS
+    ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/BookmarksItem.h
+)
+
 set(DREAM3DWidgetsLib_Widgets_SRCS
   ${DREAM3DWidgetsLib_Widgets_SRCS}
   ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/PipelineViewWidget.cpp
@@ -58,17 +64,21 @@ set(DREAM3DWidgetsLib_Widgets_SRCS
 
 
 
-cmp_IDE_SOURCE_PROPERTIES( "DREAM3DWidgetsLib/Widgets" "${DREAM3DWidgetsLib_Widgets_HDRS}" "${DREAM3DWidgetsLib_Widgets_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "DREAM3DWidgetsLib/Widgets" "${DREAM3DWidgetsLib_Widgets_MOC_HDRS};${DREAM3DWidgetsLib_Widgets_HDRS}" "${DREAM3DWidgetsLib_Widgets_SRCS}" "0")
 
 cmp_IDE_GENERATED_PROPERTIES("DREAM3DWidgetsLib/Widgets/UI_Files" "${DREAM3DWidgetsLib_Widgets_UIS}" "")
 
 # --------------------------------------------------------------------
 # and finally this will run moc:
-#QT5_WRAP_CPP( DREAM3DWidgetsLib_Widgets_Generated_MOC_SRCS ${DREAM3DWidgetsLib_Widgets_HDRS} )
-
-# These generated moc files will be #include in the FilterWidget source file that
-# are generated so we need to tell the build system to NOT compile these files
+QT5_WRAP_CPP( DREAM3DWidgetsLib_Widgets_Generated_MOC_SRCS ${DREAM3DWidgetsLib_Widgets_MOC_HDRS} )
+set_source_files_properties( ${DREAM3DWidgetsLib_Widgets_Generated_MOC_SRCS} PROPERTIES GENERATED TRUE)
 set_source_files_properties( ${DREAM3DWidgetsLib_Widgets_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
+
+
+set(DREAM3DWidgetsLib_Widgets_SRCS
+  ${DREAM3DWidgetsLib_Widgets_SRCS}
+  ${DREAM3DWidgetsLib_Widgets_Generated_MOC_SRCS}
+)
 
 # -- Run MOC and UIC on the necessary files
 # QT5_ADD_RESOURCES( DREAM3DWidgetsLib_Generated_RC_SRCS "${DREAM3DProj_SOURCE_DIR}/Documentation/Filters/Generated_FilterDocs.qrc"  )

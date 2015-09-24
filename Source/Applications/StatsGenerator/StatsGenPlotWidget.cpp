@@ -72,6 +72,9 @@
   qDebug() << "  File: " << __FILE__ << "\n";\
   qDebug() << "  Line: " << __LINE__ << "\n";
 
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_StatsGenPlotWidget.cpp"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

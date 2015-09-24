@@ -43,23 +43,23 @@ set(DevHelper_SRCS
   ${DevHelper_SOURCE_DIR}/PMFileGenerator.cpp
   ${DevHelper_SOURCE_DIR}/AddFilterWidget.cpp
   ${DevHelper_SOURCE_DIR}/FilterBundler.cpp
-  )
+)
 
 SET(DevHelper_HDRS
-    ${DevHelper_SOURCE_DIR}/FilterBundler.h
-    ${DevHelper_SOURCE_DIR}/PMGeneratorTreeItem.h
-  )
+  ${DevHelper_SOURCE_DIR}/FilterBundler.h
+  ${DevHelper_SOURCE_DIR}/PMGeneratorTreeItem.h
+)
 
 SET(DevHelper_MOC_HDRS
-    ${DevHelper_SOURCE_DIR}/PluginMaker.h
-    ${DevHelper_SOURCE_DIR}/FilterMaker.h
-    ${DevHelper_SOURCE_DIR}/DevHelper.h
-    ${DevHelper_SOURCE_DIR}/AddFilterParameter.h
-    ${DevHelper_SOURCE_DIR}/HelpWidget.h
-    ${DevHelper_SOURCE_DIR}/PMDirGenerator.h
-    ${DevHelper_SOURCE_DIR}/PMFileGenerator.h
+  ${DevHelper_SOURCE_DIR}/PluginMaker.h
+  ${DevHelper_SOURCE_DIR}/FilterMaker.h
+  ${DevHelper_SOURCE_DIR}/DevHelper.h
+  ${DevHelper_SOURCE_DIR}/AddFilterParameter.h
+  ${DevHelper_SOURCE_DIR}/HelpWidget.h
+  ${DevHelper_SOURCE_DIR}/PMDirGenerator.h
+  ${DevHelper_SOURCE_DIR}/PMFileGenerator.h
   ${DevHelper_SOURCE_DIR}/AddFilterWidget.h
-  )
+)
 
 cmp_IDE_SOURCE_PROPERTIES( "DevHelper" "${DevHelper_HDRS};${DevHelper_MOC_HDRS}" "${DevHelper_SRCS}" "${PROJECT_INSTALL_HEADERS}")
 
@@ -156,9 +156,7 @@ cmp_IDE_GENERATED_PROPERTIES("DevHelper/UI_Files" "${DevHelper_UIS}" "")
 
 # and finally any resource files
 # SET(DevHelper_RCS ${DevHelper_SOURCE_DIR}/Templates.qrc)
-SET(DevHelper_RCS
-    ${PROJECT_RESOURCES_DIR}/icons/images/Icons.qrc
-)
+SET(DevHelper_RCS ${PROJECT_RESOURCES_DIR}/icons/images/Icons.qrc)
 
 # -- Run MOC and UIC on the necessary files
 QT5_ADD_RESOURCES( DevHelper_Generated_RC_SRCS ${DevHelper_RCS} ${QRC_LICENSE_FILES})
@@ -167,7 +165,10 @@ QT5_ADD_RESOURCES( DevHelper_Generated_RC_SRCS ${DevHelper_RCS} ${QRC_LICENSE_FI
 QT5_WRAP_UI( DevHelper_Generated_UI_HDRS ${DevHelper_UIS} )
 
 # and finally this will run moc:
-#QT5_WRAP_CPP( DevHelper_Generated_MOC_SRCS ${DevHelper_MOC_HDRS} )
+QT5_WRAP_CPP( DevHelper_Generated_MOC_SRCS ${DevHelper_MOC_HDRS} )
+set_source_files_properties( ${DevHelper_Generated_MOC_SRCS} PROPERTIES GENERATED TRUE)
+set_source_files_properties( ${DevHelper_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
+
 
 #-- Put the generated files into their own group for IDEs
 cmp_IDE_GENERATED_PROPERTIES("Generated/ui" "${DevHelper_Generated_UI_HDRS}" "")
@@ -183,9 +184,10 @@ set(${PROJECT_NAME}_PROJECT_SRCS
   ${DevHelper_Generated_UI_HDRS}
   ${DevHelper_CodeGenerator_SRCS}
   ${DevHelper_CodeGenerator_HDRS}
-  #    ${DevHelper_Generated_MOC_SRCS}
-  )
-#message(STATUS "${PROJECT_NAME}_PROJECT_SRCS: ${${PROJECT_NAME}_PROJECT_SRCS}")
+
+  ${DevHelper_Generated_MOC_SRCS}
+)
+
 include_directories(${DevHelper_SOURCE_DIR} )
 include_directories(${DevHelper_SOURCE_DIR}/.. )
 include_directories(${DevHelper_BINARY_DIR} )
