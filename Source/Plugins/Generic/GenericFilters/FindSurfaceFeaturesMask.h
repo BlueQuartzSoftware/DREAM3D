@@ -38,9 +38,9 @@
 #ifndef _FindSurfaceFeaturesMask_H_
 #define _FindSurfaceFeaturesMask_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLIBSetGetMacros.h"
 
 /**
  * @brief The FindSurfaceFeaturesMask class. See [Filter documentation](@ref FindSurfaceFeaturesMask) for details.
@@ -49,19 +49,19 @@ class FindSurfaceFeaturesMask : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindSurfaceFeaturesMask)
-    DREAM3D_STATIC_NEW_MACRO(FindSurfaceFeaturesMask)
-    DREAM3D_TYPE_MACRO_SUPER(FindSurfaceFeaturesMask, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FindSurfaceFeaturesMask)
+    SIMPL_STATIC_NEW_MACRO(FindSurfaceFeaturesMask)
+    SIMPL_TYPE_MACRO_SUPER(FindSurfaceFeaturesMask, AbstractFilter)
 
     virtual ~FindSurfaceFeaturesMask();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, MaskArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, MaskArrayPath)
     Q_PROPERTY(DataArrayPath MaskArrayPath READ getMaskArrayPath WRITE setMaskArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceFeaturesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceFeaturesArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceFeaturesArrayPath READ getSurfaceFeaturesArrayPath WRITE setSurfaceFeaturesArrayPath)
 
     /**

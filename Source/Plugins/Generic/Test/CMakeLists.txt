@@ -1,6 +1,7 @@
 #--////////////////////////////////////////////////////////////////////////////
 #--
 #--  Copyright (c) 2015, BlueQuartz Software
+#--  Copyright (c) 2015, William Lenthe
 #--  All rights reserved.
 #--  BSD License: http://www.opensource.org/licenses/bsd-license.html
 #--
@@ -25,3 +26,6 @@ file(MAKE_DIRECTORY ${TEST_TEMP_DIR})
 configure_file(${${PROJECT_NAME}_SOURCE_DIR}/TestFileLocations.h.in
                ${${PROJECT_NAME}_BINARY_DIR}/${PROJECT_NAME}FileLocations.h @ONLY IMMEDIATE)
 
+set(${PROJECT_NAME}_Link_Libs Qt5::Core H5Support SIMPLib)
+
+AddDREAM3DUnitTest(TESTNAME FindSurfaceFeaturesMaskTest SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/FindSurfaceFeaturesMaskTest.cpp LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})
