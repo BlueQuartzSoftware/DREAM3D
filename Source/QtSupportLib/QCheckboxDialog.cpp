@@ -39,7 +39,7 @@
 #include <QtWidgets/QCheckBox>
 #include <QtWidgets/QDialogButtonBox>
 
-
+#include "moc_QCheckboxDialog.cpp"
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

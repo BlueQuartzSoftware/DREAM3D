@@ -103,6 +103,11 @@ class FindUniqueIdsImpl
     int64_t* m_UniqueIds;
 };
 
+// Include the MOC generated file for this class
+#include "moc_ReadStlFile.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

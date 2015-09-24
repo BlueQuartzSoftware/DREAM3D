@@ -49,11 +49,15 @@
 
 #include "Statistics/StatisticsConstants.h"
 
+// Include the MOC generated file for this class
+#include "moc_FindShapes.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-
-FindShapes::FindShapes()  :
+FindShapes::FindShapes() :
   AbstractFilter(),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),

@@ -111,6 +111,11 @@ class FindMisorientationVectorsImpl
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 };
 
+// Include the MOC generated file for this class
+#include "moc_FindOrientationFieldCurl.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

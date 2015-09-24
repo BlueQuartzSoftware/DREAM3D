@@ -76,7 +76,9 @@ cmp_IDE_GENERATED_PROPERTIES("DREAM3D" "${DREAM3D_CMP_FILES}" ${PROJECT_INSTALL_
 
 include(${DREAM3DProj_SOURCE_DIR}/License/License.cmake)
 
+#-- Include the Common Code and set an include directory for the MOC generated files
 include(${DREAM3DProj_SOURCE_DIR}/Source/Applications/Common/SourceList.cmake)
+include_directories(${DREAM3D_BINARY_DIR}/__/Common)
 
 # List the source files here
 set(DREAM3D_SRCS
@@ -134,7 +136,12 @@ QT5_ADD_RESOURCES( DREAM3D_Generated_RC_SRCS ${DREAM3D_RCS} ${QRC_LICENSE_FILES}
 QT5_WRAP_UI( DREAM3D_Generated_UI_HDRS ${DREAM3D_UIS} ${AppsCommon_Widgets_UIS})
 
 # and finally this will run moc:
-#QT5_WRAP_CPP( DREAM3D_Generated_MOC_SRCS ${DREAM3D_MOC_HDRS} )
+QT5_WRAP_CPP( DREAM3D_Generated_MOC_SRCS ${DREAM3D_MOC_HDRS} )
+# These generated moc files will be #include in the FilterWidget source file that
+# are generated so we need to tell the build system to NOT compile these files
+set_source_files_properties( ${DREAM3D_Generated_MOC_SRCS} PROPERTIES GENERATED TRUE)
+set_source_files_properties( ${DREAM3D_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
+
 
 #-- Put the generated files into their own group for IDEs
 cmp_IDE_GENERATED_PROPERTIES("Generated/ui" "${DREAM3D_Generated_UI_HDRS}" "")
@@ -143,17 +150,19 @@ cmp_IDE_GENERATED_PROPERTIES("Generated/qrc" "${QRC_LICENSE_FILES}" "${DREAM3D_G
 
 # -- Finally set the Project Sources to include all the sources
 set(DREAM3D_PROJECT_SRCS
-    ${DREAM3D_SRCS}
-    ${DREAM3D_HDRS}
-    ${DREAM3D_MOC_HDRS}
-    ${DREAM3D_Generated_RC_SRCS}
-    ${DREAM3D_Generated_UI_HDRS}
-    ${DREAM3D_Generated_MOC_SRCS}
-    ${DREAM3D_CMP_FILES}
-    ${AppsCommon_Widgets_HDRS}
-    ${AppsCommon_Widgets_SRCS}
-    ${AppsCommon_Widgets_Generated_MOC_SRCS}
-    ${AppsCommon_Widgets_Generated_UI_HDRS}
+  ${DREAM3D_SRCS}
+  ${DREAM3D_HDRS}
+  ${DREAM3D_MOC_HDRS}
+  ${DREAM3D_Generated_RC_SRCS}
+  ${DREAM3D_Generated_UI_HDRS}
+  ${DREAM3D_CMP_FILES}
+  ${AppsCommon_Widgets_HDRS}
+  ${AppsCommon_Widgets_SRCS}
+  ${AppsCommon_Widgets_Generated_MOC_SRCS}
+  ${AppsCommon_Widgets_Generated_UI_HDRS}
+
+  # -- This file has all the MOC sources in it
+  ${DREAM3D_Generated_MOC_SRCS}
 )
 
 

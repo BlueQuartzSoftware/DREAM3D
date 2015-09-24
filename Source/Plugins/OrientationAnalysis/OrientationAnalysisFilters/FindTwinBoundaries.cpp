@@ -197,10 +197,15 @@ class CalculateTwinBoundaryImpl
 #endif
 };
 
+// Include the MOC generated file for this class
+#include "moc_FindTwinBoundaries.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindTwinBoundaries::FindTwinBoundaries()  :
+FindTwinBoundaries::FindTwinBoundaries() :
   AbstractFilter(),
   m_AxisTolerance(0.0f),
   m_AngleTolerance(0.0f),

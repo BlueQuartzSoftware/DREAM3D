@@ -47,10 +47,15 @@
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
+// Include the MOC generated file for this class
+#include "moc_FindMisorientations.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindMisorientations::FindMisorientations()  :
+FindMisorientations::FindMisorientations() :
   AbstractFilter(),
   m_NeighborListArrayPath("", "", ""),
   m_MisorientationListArrayName(DREAM3D::FeatureData::MisorientationList),

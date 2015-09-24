@@ -8,7 +8,9 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-project(SamplingTest)
+# project(SamplingTest)
+set(${PLUGIN_NAME}Test_SOURCE_DIR ${${PLUGIN_NAME}_SOURCE_DIR}/Test)
+set(${PLUGIN_NAME}Test_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test)
 
 include(${DREAM3DProj_SOURCE_DIR}/Test/DREAM3DTestFunctions.cmake)
 
@@ -17,22 +19,23 @@ include_directories(${${PROJECT_NAME}_SOURCE_DIR})
 include_directories(${${PROJECT_NAME}_BINARY_DIR})
 
 
-set(TEST_TEMP_DIR ${${PROJECT_NAME}_BINARY_DIR}/Temp)
+set(TEST_TEMP_DIR ${${PLUGIN_NAME}Test_BINARY_DIR}/Temp)
 # Make sure the directory is created during CMake time
 file(MAKE_DIRECTORY ${TEST_TEMP_DIR})
 
 
-configure_file(${${PROJECT_NAME}_SOURCE_DIR}/TestFileLocations.h.in
-               ${${PROJECT_NAME}_BINARY_DIR}/${PROJECT_NAME}FileLocations.h @ONLY IMMEDIATE)
+configure_file(${${PLUGIN_NAME}_SOURCE_DIR}/Test/TestFileLocations.h.in
+               ${${PLUGIN_NAME}_BINARY_DIR}/Test/${PLUGIN_NAME}TestFileLocations.h @ONLY IMMEDIATE)
+
 
 set(${PROJECT_NAME}_Link_Libs Qt5::Core H5Support SIMPLib)
 
 AddDREAM3DUnitTest(TESTNAME SampleSurfaceMeshSpecifiedPointsTest
-                    SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/SampleSurfaceMeshSpecifiedPointsTest.cpp
+                    SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/Test/SampleSurfaceMeshSpecifiedPointsTest.cpp
                     LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})
 
 AddDREAM3DUnitTest(TESTNAME CropVolumeTest
-                    SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/CropVolumeTest.cpp
+                    SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/Test/CropVolumeTest.cpp
                     FOLDER "${PLUGIN_NAME}Plugin/Test"
                     LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})
 

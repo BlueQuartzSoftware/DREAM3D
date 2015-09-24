@@ -37,6 +37,8 @@
 
 #include "FilterMaker.h"
 
+#include <iostream>
+
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
 
@@ -50,7 +52,8 @@
 
 #include "QtSupportLib/ApplicationFileInfo.h"
 
-#include <iostream>
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_FilterMaker.cpp"
 
 // -----------------------------------------------------------------------------
 //

@@ -15,7 +15,8 @@
 
 #include "EMMPM/EMMPMConstants.h"
 
-#include "EMMPM/moc_EMMPMPlugin.cpp"
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_EMMPMPlugin.cpp"
 
 // -----------------------------------------------------------------------------
 //

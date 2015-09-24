@@ -11,12 +11,7 @@ macro(START_FILTER_GROUP WidgetsBinaryDir filterGroup humanGroup)
 
    file(APPEND "${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList" "${filterGroup}\n")
    file(WRITE "${DREAM3DProj_BINARY_DIR}/DREAM3DDoc_${filterGroup}" "")
-   #string(TOLOWER ${filterGroup} filterGroup_Lower)
-   #file(APPEND ${DOX_FILTER_INDEX_FILE} "#--- Filter Group ${filterGroup} \n")
-   #file(APPEND ${DOX_FILTER_INDEX_FILE} "  \${PROJECT_SOURCE_DIR}/Filters/${filterGroup}/${filterGroup}.dox\n")
-   #file(APPEND ${DOX_FILTER_INDEX_FILE} "${filterGroup_Lower} ${filterGroup}\n\n")
-
-   # message(STATUS "Adding Filters for Group ${filterGroup}")
+#   FILE(WRITE ${PluginAutoMocSourceFile} "/* This file is Auto Generated. Do Not Edit */\n")
 endmacro()
 
 #-------------------------------------------------------------------------------
@@ -50,7 +45,9 @@ endmacro()
 #-------------------------------------------------------------------------------
 # Macro ADD_DREAM3D_SUPPORT_MOC_HEADER
 macro(ADD_DREAM3D_SUPPORT_MOC_HEADER SourceDir filterGroup headerFileName)
-  #QT5_WRAP_CPP( _moc_filter_source  ${SourceDir}/${filterGroup}/${headerFileName})
+  QT5_WRAP_CPP( _moc_filter_source  ${SourceDir}/${filterGroup}/${headerFileName})
+  set_source_files_properties( ${_moc_filter_source} PROPERTIES GENERATED TRUE)
+  set_source_files_properties( ${_moc_filter_source} PROPERTIES HEADER_FILE_ONLY TRUE)
 
   set(Project_SRCS ${Project_SRCS}
                     ${SourceDir}/${filterGroup}/${headerFileName}
@@ -86,12 +83,14 @@ endmacro()
 #-------------------------------------------------------------------------------
 # Macro ADD_DREAM3D_FILTER
 macro(ADD_DREAM3D_FILTER FilterLib WidgetLib filterGroup filterName filterDocPath publicFilter)
-    #QT5_WRAP_CPP( _moc_filter_source  ${${FilterLib}_SOURCE_DIR}/${filterGroup}/${filterName}.h)
+    QT5_WRAP_CPP( _moc_filter_source  ${${FilterLib}_SOURCE_DIR}/${filterGroup}/${filterName}.h)
+    set_source_files_properties( ${_moc_filter_source} PROPERTIES GENERATED TRUE)
+    set_source_files_properties( ${_moc_filter_source} PROPERTIES HEADER_FILE_ONLY TRUE)
 
     set(Project_SRCS ${Project_SRCS}
                     ${${FilterLib}_SOURCE_DIR}/${filterGroup}/${filterName}.h
                     ${${FilterLib}_SOURCE_DIR}/${filterGroup}/${filterName}.cpp
- #                   ${_moc_filter_source}
+                    ${_moc_filter_source}
                     )
     #--- Organize inside the Visual Studio/Xcode Projects
     cmp_IDE_SOURCE_PROPERTIES( "${filterGroup}" "${${FilterLib}_SOURCE_DIR}/${filterGroup}/${filterName}.h" "${${FilterLib}_SOURCE_DIR}/${filterGroup}/${filterName}.cpp" "0")

@@ -32,18 +32,10 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-#include <QtGui/QColor>
-
-#include <QtCore/QStringList>
-
 #include "BookmarksItem.h"
 
-
-QString BookmarksItem::TopLevelString()
-{
-  return QString::fromLatin1("[Top Level]");
-}
+#include <QtGui/QColor>
+#include <QtCore/QStringList>
 
 
 // -----------------------------------------------------------------------------
@@ -65,6 +57,14 @@ BookmarksItem::BookmarksItem(const QVector<QVariant>& data, BookmarksItem* paren
 BookmarksItem::~BookmarksItem()
 {
   qDeleteAll(m_ChildItems);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString BookmarksItem::TopLevelString()
+{
+  return QString::fromLatin1("[Top Level]");
 }
 
 // -----------------------------------------------------------------------------

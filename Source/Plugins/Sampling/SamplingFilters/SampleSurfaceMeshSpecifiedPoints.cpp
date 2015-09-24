@@ -45,10 +45,13 @@
 
 #include "Sampling/SamplingConstants.h"
 
+#include "moc_SampleSurfaceMeshSpecifiedPoints.cpp"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 SampleSurfaceMeshSpecifiedPoints::SampleSurfaceMeshSpecifiedPoints() :
+  SampleSurfaceMesh(),
   m_InputFilePath(""),
   m_OutputFilePath(""),
   m_FeatureIds(NULL),

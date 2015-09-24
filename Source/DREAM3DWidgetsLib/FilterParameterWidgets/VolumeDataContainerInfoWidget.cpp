@@ -49,6 +49,9 @@
 #define DATA_CONTAINER_LEVEL 0
 #define ATTRIBUTE_MATRIX_LEVEL 1
 #define ATTRIBUTE_ARRAY_LEVEL 2
+// Include the MOC generated file for this class
+#include "moc_VolumeDataContainerInfoWidget.cpp"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

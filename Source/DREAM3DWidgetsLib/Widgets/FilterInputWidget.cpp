@@ -55,6 +55,9 @@
 #include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/DataContainerArrayWidget.h"
 
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_FilterInputWidget.cpp"
+
 
 enum TabIndices
 {

@@ -144,6 +144,11 @@ class GenerateMisorientationColorsImpl
     uint8_t* m_MisorientationColor;
 };
 
+// Include the MOC generated file for this class
+#include "moc_GenerateMisorientationColors.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

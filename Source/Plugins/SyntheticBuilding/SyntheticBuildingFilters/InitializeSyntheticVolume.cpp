@@ -63,6 +63,11 @@
 #define INIT_SYNTH_VOLUME_CHECK(var, errCond) \
   if (m_##var <= 0) { QString ss = QObject::tr("%1 must be positive").arg( #var); notifyErrorMessage(getHumanLabel(), ss, errCond);}
 
+// Include the MOC generated file for this class
+#include "moc_InitializeSyntheticVolume.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

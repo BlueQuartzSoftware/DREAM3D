@@ -62,6 +62,9 @@
 #include "Applications/DREAM3D/DREAM3D/License/DREAM3DLicenseFiles.h"
 #include "Applications/DREAM3D/DREAM3DVersion.h"
 
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_AboutDREAM3D.cpp"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

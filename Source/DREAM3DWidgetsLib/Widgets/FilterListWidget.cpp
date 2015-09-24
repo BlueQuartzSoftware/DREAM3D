@@ -41,6 +41,8 @@
 #include <QtGui/QDrag>
 #include <QtWidgets/QApplication>
 
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_FilterListWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //

@@ -50,10 +50,16 @@
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/FilterParameters/ConvertHexGridToSquareGridFilterParameter.h"
 
+// Include the MOC generated file for this class
+#include "moc_ConvertHexGridToSquareGrid.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ConvertHexGridToSquareGrid::ConvertHexGridToSquareGrid() :
+  AbstractFilter(),
   m_ZStartIndex(0),
   m_ZEndIndex(0),
   m_XResolution(1.0f),

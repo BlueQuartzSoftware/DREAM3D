@@ -54,6 +54,10 @@
 
 #include "Reconstruction/ReconstructionConstants.h"
 
+// Include the MOC generated file for this class
+#include "moc_GroupMicroTextureRegions.cpp"
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

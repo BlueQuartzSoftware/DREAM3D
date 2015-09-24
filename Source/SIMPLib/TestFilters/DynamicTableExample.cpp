@@ -33,12 +33,16 @@
 *                           FA8650-10-D-5210
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#include "DynamicTableExample.h"
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DynamicTableFilterParameter.h"
 
-#include "DynamicTableExample.h"
+
+
+// Include the MOC generated file for this class
+#include "moc_DynamicTableExample.cpp"
 
 
 

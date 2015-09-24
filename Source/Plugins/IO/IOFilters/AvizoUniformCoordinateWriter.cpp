@@ -51,6 +51,11 @@
 
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
+// Include the MOC generated file for this class
+#include "moc_AvizoUniformCoordinateWriter.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

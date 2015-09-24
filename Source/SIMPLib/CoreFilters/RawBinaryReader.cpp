@@ -160,6 +160,11 @@ int32_t readBinaryFile(typename DataArray<T>::Pointer p, const QString& filename
   return RBR_NO_ERROR;
 }
 
+// Include the MOC generated file for this class
+#include "moc_RawBinaryReader.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

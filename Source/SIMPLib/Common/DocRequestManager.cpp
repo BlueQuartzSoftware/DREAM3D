@@ -31,7 +31,9 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "DocRequestManager.h"
 
+#include "moc_DocRequestManager.cpp"
 
+ 
 DocRequestManager* DocRequestManager::self = NULL;
 
 // -----------------------------------------------------------------------------

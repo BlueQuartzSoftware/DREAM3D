@@ -45,7 +45,9 @@
 #include "SIMPLib/SIMPLibVersion.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
-#include "OrientationAnalysis/moc_OrientationAnalysisPlugin.cpp"
+
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_OrientationAnalysisPlugin.cpp"
 
 // -----------------------------------------------------------------------------
 //

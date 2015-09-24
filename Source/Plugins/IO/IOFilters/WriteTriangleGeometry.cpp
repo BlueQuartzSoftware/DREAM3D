@@ -53,6 +53,11 @@
 
 
 #define WRITE_EDGES_FILE 0
+// Include the MOC generated file for this class
+#include "moc_WriteTriangleGeometry.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

@@ -45,6 +45,8 @@
 #include "DREAM3DWidgetsLib/Widgets/BookmarksItem.h"
 #include "DREAM3DWidgetsLib/Widgets/BookmarksModel.h"
 
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_BookmarksItemDelegate.cpp"
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

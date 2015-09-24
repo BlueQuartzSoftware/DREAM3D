@@ -43,8 +43,12 @@
 
 #include <iostream>
 
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_FilterLibraryTreeWidget.cpp"
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 FilterLibraryTreeWidget::FilterLibraryTreeWidget(QWidget* parent) :
   QTreeWidget(parent),
   m_ItemBeingDragged(NULL),

@@ -67,11 +67,15 @@ include(${SIMPLib_SOURCE_DIR}/SIMPLibMacros.cmake)
 
 #-------------------------------------------------------------------------------
 macro(D3DCompileDir DirName)
+    set(SIMPLib_${DirName}_Generated_MOC_SRCS "")
     include(${SIMPLib_SOURCE_DIR}/${DirName}/SourceList.cmake)
-    set(Project_SRCS ${Project_SRCS} ${SIMPLib_${DirName}_SRCS} ${SIMPLib_${DirName}_HDRS})
+
+    foreach(f ${SIMPLib_${DirName}_Generated_MOC_SRCS})
+        set_source_files_properties( ${f} PROPERTIES GENERATED TRUE)
+        set_source_files_properties( ${f} PROPERTIES HEADER_FILE_ONLY TRUE)
+    endforeach()
+    set(Project_SRCS ${Project_SRCS} ${SIMPLib_${DirName}_SRCS} ${SIMPLib_${DirName}_HDRS} ${SIMPLib_${SUBDIR_NAME}_Generated_MOC_SRCS})
 endMacro()
-
-
 
 # Add in our NON-Filter classes
 D3DCompileDir(Common)
@@ -85,7 +89,6 @@ D3DCompileDir(Plugin)
 D3DCompileDir(StatsData)
 D3DCompileDir(Utilities)
 D3DCompileDir(VTKUtils)
-
 
 
 #-------
@@ -106,16 +109,22 @@ file(APPEND ${RegisterKnownFiltersFile} "#include \"SIMPLibFilters.h\"\n")
 file(APPEND ${RegisterKnownFiltersFile} "\nvoid FilterManager::RegisterKnownFilters(FilterManager* fm)\n{\n")
 
 
-
-
 # Add in our Filter classes
+# set(PluginAutoMocSourceFile ${${PROJECT_NAME}_BINARY_DIR}/CoreFilters_automoc_cmake.cpp)
+# set_source_files_properties( ${PluginAutoMocSourceFile} PROPERTIES GENERATED TRUE)
+# Add the generated moc file to the project sources
+# set(Project_SRCS ${Project_SRCS} ${PluginAutoMocSourceFile} )
 include(${SIMPLib_SOURCE_DIR}/CoreFilters/SourceList.cmake)
 
 #-----------------------------------------------------
 # conditionally compile our example codes- These should be turned off for a release
 option(SIMPLib_BUILD_TEST_FILTERS "Build the Test filters: These should be OFF when doing a release" ON)
 if(SIMPLib_BUILD_TEST_FILTERS)
-  include(${SIMPLib_SOURCE_DIR}/TestFilters/SourceList.cmake)
+    # set(PluginAutoMocSourceFile ${${PROJECT_NAME}_BINARY_DIR}/TestFilters_automoc_cmake.cpp)
+    # set_source_files_properties( ${PluginAutoMocSourceFile} PROPERTIES GENERATED TRUE)  
+    # Add the generated moc file to the project sources
+    set(Project_SRCS ${Project_SRCS} ${PluginAutoMocSourceFile} )
+    include(${SIMPLib_SOURCE_DIR}/TestFilters/SourceList.cmake)
 endif()
 
 #-----------------------------------------------------
@@ -133,6 +142,7 @@ cmpReplaceFileIfDifferent(OLD_FILE_PATH  ${SIMPLib_BINARY_DIR}/RegisterKnownFilt
 include_directories( ${HDF5_INCLUDE_DIR} )
 include_directories( ${PROJECT_CODE_DIR} )
 include_directories( ${SIMPLib_BINARY_DIR} )
+
 
 #-- Add a library for the SIMPLib Code
 add_library(${PROJECT_NAME} ${LIB_TYPE} ${Project_SRCS} )

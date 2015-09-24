@@ -45,7 +45,9 @@
 #include "SIMPLib/SIMPLibVersion.h"
 
 #include "IO/IOConstants.h"
-#include "IO/moc_IOPlugin.cpp"
+
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_IOPlugin.cpp"
 
 // -----------------------------------------------------------------------------
 //

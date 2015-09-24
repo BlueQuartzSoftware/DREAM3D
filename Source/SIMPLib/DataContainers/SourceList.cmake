@@ -9,48 +9,63 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
+set(SUBDIR_NAME DataContainers)
+
 # --------------------------------------------------------------------
 # Any Class that inherits from QObject, either directly or through the heirarchy needs to have its header listed here
-set(SIMPLib_DataContainers_Moc_HDRS
-  ${SIMPLib_SOURCE_DIR}/DataContainers/DataContainerArray.h
-)
+set(SIMPLib_${SUBDIR_NAME}_Moc_HDRS
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/DataContainerArray.h
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/DataArrayPath.h
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/IDataContainerBundle.h
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/DataContainerBundle.h
+  )
 # --------------------------------------------------------------------
 # Run Qts automoc program to generate some source files that get compiled
-#QT5_WRAP_CPP( SIMPLib_DataContainers_Generated_MOC_SRCS ${SIMPLib_DataContainers_Moc_HDRS})
+QT5_WRAP_CPP( SIMPLib_${SUBDIR_NAME}_Generated_MOC_SRCS ${SIMPLib_${SUBDIR_NAME}_Moc_HDRS})
+set_source_files_properties( ${SIMPLib_${SUBDIR_NAME}_Generated_MOC_SRCS} PROPERTIES GENERATED TRUE)
+set_source_files_properties( ${SIMPLib_${SUBDIR_NAME}_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
-set(SIMPLib_DataContainers_HDRS
-  ${SIMPLib_DataContainers_Moc_HDRS}  # Add the headers that get Moc'ed here so they show up in solutions/IDEs/Project files
-  ${SIMPLib_SOURCE_DIR}/DataContainers/DataContainer.h
-  ${SIMPLib_SOURCE_DIR}/DataContainers/AttributeMatrix.h
-  ${SIMPLib_SOURCE_DIR}/DataContainers/DataContainerArrayProxy.h
-  ${SIMPLib_SOURCE_DIR}/DataContainers/DataContainerProxy.h
-  ${SIMPLib_SOURCE_DIR}/DataContainers/AttributeMatrixProxy.h
-  ${SIMPLib_SOURCE_DIR}/DataContainers/DataArrayProxy.h
-  ${SIMPLib_SOURCE_DIR}/DataContainers/DataArrayPath.h
-  ${SIMPLib_SOURCE_DIR}/DataContainers/IDataContainerBundle.h
-  ${SIMPLib_SOURCE_DIR}/DataContainers/DataContainerBundle.h
+set(SIMPLib_${SUBDIR_NAME}_HDRS
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/DataContainer.h
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/AttributeMatrix.h
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/DataContainerArrayProxy.h
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/DataContainerProxy.h
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/AttributeMatrixProxy.h
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/DataArrayProxy.h
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/DataArrayPath.h
+
 )
 
-set(SIMPLib_DataContainers_SRCS
-  ${SIMPLib_DataContainers_Generated_MOC_SRCS}  # Add the generated source files here so they get compiled.
-  ${SIMPLib_SOURCE_DIR}/DataContainers/DataContainer.cpp
-  ${SIMPLib_SOURCE_DIR}/DataContainers/DataContainerArray.cpp
-  ${SIMPLib_SOURCE_DIR}/DataContainers/AttributeMatrix.cpp
-  ${SIMPLib_SOURCE_DIR}/DataContainers/DataContainerArrayProxy.cpp
-  ${SIMPLib_SOURCE_DIR}/DataContainers/DataArrayPath.cpp
-  ${SIMPLib_SOURCE_DIR}/DataContainers/DataContainerBundle.cpp
+set(SIMPLib_${SUBDIR_NAME}_SRCS
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/DataContainer.cpp
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/DataContainerArray.cpp
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/AttributeMatrix.cpp
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/DataContainerArrayProxy.cpp
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/DataArrayPath.cpp
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/DataContainerBundle.cpp
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/IDataContainerBundle.cpp
 )
 
-cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/DataContainers" "${SIMPLib_DataContainers_HDRS}" "${SIMPLib_DataContainers_SRCS}" "0")
-cmp_IDE_SOURCE_PROPERTIES( "Generated/DREAM3DLib/DataContainers" "" "${SIMPLib_DataContainers_Generated_MOC_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "SIMPLib/${SUBDIR_NAME}" "${SIMPLib_${SUBDIR_NAME}_HDRS}" "${SIMPLib_${SUBDIR_NAME}_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "Generated/${SUBDIR_NAME}/${SUBDIR_NAME}" "" "${SIMPLib_${SUBDIR_NAME}_Generated_MOC_SRCS}" "0")
 
-set(SIMPLib_DataContainers_HDRS
-  ${SIMPLib_DataContainers_HDRS}
-  ${SIMPLib_DataContainers_Moc_HDRS}  # Add the headers that get Moc'ed here so they show up in solutions/IDEs/Project files
+set(SIMPLib_${SUBDIR_NAME}_HDRS
+  ${SIMPLib_${SUBDIR_NAME}_HDRS}
+  ${SIMPLib_${SUBDIR_NAME}_Moc_HDRS}  # Add the headers that get Moc'ed here so they show up in solutions/IDEs/Project files
 )
+
+set(SIMPLib_${SUBDIR_NAME}_SRCS
+  ${SIMPLib_${SUBDIR_NAME}_SRCS}
+  ${SIMPLib_${SUBDIR_NAME}_Generated_MOC_SRCS}
+)
+
+# -- Add the binary directory for this subdirectory to the include path which is where the moc files are generated
+include_directories( ${SIMPLib_BINARY_DIR}/${SUBDIR_NAME})
+
 
 if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
-    INSTALL (FILES ${SIMPLib_DataContainers_HDRS}
-            DESTINATION include/DREAM3D/DataContainers
+    INSTALL (FILES ${SIMPLib_${SUBDIR_NAME}_HDRS}
+                   ${SIMPLib_${SUBDIR_NAME}_Moc_HDRS}
+            DESTINATION include/SIMPLib/${SUBDIR_NAME}
             COMPONENT Headers   )
 endif()

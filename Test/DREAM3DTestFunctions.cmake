@@ -26,6 +26,8 @@ function(AddDREAM3DUnitTest)
         set(Z_FOLDER "Test")
     endif()
     set_target_properties( ${Z_TESTNAME} PROPERTIES FOLDER ${Z_FOLDER})
+    cmp_IDE_SOURCE_PROPERTIES( "" "" "${Z_SOURCES}" "0")
+
     add_test(${Z_TESTNAME} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${Z_TESTNAME})
 
 endfunction()

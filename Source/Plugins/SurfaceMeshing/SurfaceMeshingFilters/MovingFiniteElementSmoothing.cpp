@@ -126,6 +126,10 @@ double AngleLineCurvature(Node& n0, Node& n1, Node& n2)
   return 2. * angle / (d1 + d2);
 }
 
+// Include the MOC generated file for this class
+#include "moc_MovingFiniteElementSmoothing.cpp"
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

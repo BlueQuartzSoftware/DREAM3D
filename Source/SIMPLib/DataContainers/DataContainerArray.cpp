@@ -32,9 +32,9 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #include "DataContainerArray.h"
+
+#include "moc_DataContainerArray.cpp"
 
 
 // -----------------------------------------------------------------------------

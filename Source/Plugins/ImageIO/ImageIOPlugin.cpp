@@ -45,7 +45,9 @@
 #include "SIMPLib/SIMPLibVersion.h"
 
 #include "ImageIO/ImageIOConstants.h"
-#include "ImageIO/moc_ImageIOPlugin.cpp"
+
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_ImageIOPlugin.cpp"
 
 // -----------------------------------------------------------------------------
 //

@@ -52,7 +52,7 @@ class SIMPLib_EXPORT IDataContainerBundle : public QObject
     //SIMPL_STATIC_NEW_MACRO (IDataContainerBundle)
     SIMPL_TYPE_MACRO(IDataContainerBundle)
 
-    virtual ~IDataContainerBundle() {}
+    virtual ~IDataContainerBundle();
 
     virtual void setName(const QString& getDataContainer) = 0;
     virtual QString getName() const = 0;
@@ -76,7 +76,7 @@ class SIMPLib_EXPORT IDataContainerBundle : public QObject
     virtual int readH5Data(hid_t groupId) = 0;
 
   protected:
-    IDataContainerBundle() {}
+    IDataContainerBundle();
 
   private:
     IDataContainerBundle(const IDataContainerBundle&); // Copy Constructor Not Implemented

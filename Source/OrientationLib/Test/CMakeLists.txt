@@ -9,68 +9,71 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-project(OrientationLibTest)
+# project(OrientationLibTest)
+set(PLUGIN_NAME "OrientationLib")
+set(${PLUGIN_NAME}Test_SOURCE_DIR ${${PLUGIN_NAME}_SOURCE_DIR}/Test/Test)
+set(${PLUGIN_NAME}Test_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test)
+
+include(${DREAM3DProj_SOURCE_DIR}/Test/DREAM3DTestFunctions.cmake)
+
+include_directories(${${PLUGIN_NAME}_SOURCE_DIR}/Test)
+include_directories(${${PLUGIN_NAME}_BINARY_DIR})
 
 
-include_directories(${${PROJECT_NAME}_SOURCE_DIR})
-include_directories(${${PROJECT_NAME}_BINARY_DIR})
-
-
-set(TEST_TEMP_DIR ${${PROJECT_NAME}_BINARY_DIR}/Temp)
+set(TEST_TEMP_DIR ${${PLUGIN_NAME}Test_BINARY_DIR}/Test/Temp)
 # Make sure the directory is created during CMake time
 file(MAKE_DIRECTORY ${TEST_TEMP_DIR})
 
 
-configure_file(${${PROJECT_NAME}_SOURCE_DIR}/TestFileLocations.h.in
-               ${${PROJECT_NAME}_BINARY_DIR}/${PROJECT_NAME}FileLocations.h @ONLY IMMEDIATE)
+configure_file(${${PLUGIN_NAME}_SOURCE_DIR}/Test/TestFileLocations.h.in
+               ${${PLUGIN_NAME}_BINARY_DIR}/Test/${PLUGIN_NAME}TestFileLocations.h @ONLY IMMEDIATE)
+
 
 set(OrientationLib_Link_Libs Qt5::Core H5Support SIMPLib OrientationLib)
 
 AddDREAM3DUnitTest(TESTNAME QuaternionMathTest
-                    SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/QuaternionMathTest.cpp
+                    SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/QuaternionMathTest.cpp
                     FOLDER "Test/OrientationLib"
                     LINK_LIBRARIES ${OrientationLib_Link_Libs})
 
 AddDREAM3DUnitTest(TESTNAME OrientationMathTest
-                    SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/OrientationMathTest.cpp
+                    SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/OrientationMathTest.cpp
                     FOLDER "Test/OrientationLib"
                     LINK_LIBRARIES ${OrientationLib_Link_Libs})
 
 AddDREAM3DUnitTest(TESTNAME TextureTest
-                    SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/TextureTest.cpp
+                    SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/TextureTest.cpp
                     FOLDER "Test/OrientationLib"
                     LINK_LIBRARIES ${OrientationLib_Link_Libs})
 
 AddDREAM3DUnitTest(TESTNAME ODFTest
-                    SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/ODFTest.cpp
+                    SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/ODFTest.cpp
                     FOLDER "Test/OrientationLib"
                     LINK_LIBRARIES ${OrientationLib_Link_Libs})
 
 AddDREAM3DUnitTest(TESTNAME OrientationArrayTest
-                    SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/OrientationArrayTest.cpp
+                    SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/OrientationArrayTest.cpp
                     FOLDER "Test/OrientationLib"
                     LINK_LIBRARIES ${OrientationLib_Link_Libs})
 
 AddDREAM3DUnitTest(TESTNAME OrientationConverterTest
-                    SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/OrientationConverterTest.cpp
+                    SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/OrientationConverterTest.cpp
                     FOLDER "Test/OrientationLib"
                     LINK_LIBRARIES ${OrientationLib_Link_Libs})
 
 AddDREAM3DUnitTest(TESTNAME IPFLegendTest
-                    SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/IPFLegendTest.cpp
+                    SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/IPFLegendTest.cpp
                     FOLDER "Test/OrientationLib"
                     LINK_LIBRARIES ${OrientationLib_Link_Libs} Qt5::Gui )
 
 AddDREAM3DUnitTest(TESTNAME SO3SamplerTest
-                    SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/SO3SamplerTest.cpp
+                    SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/SO3SamplerTest.cpp
                     FOLDER "Test/OrientationLib"
                     LINK_LIBRARIES ${OrientationLib_Link_Libs})
 
 AddDREAM3DUnitTest(TESTNAME OrientationTransformsTest
-                    SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/OrientationTransformsTest.cpp 
-                              ${${PROJECT_NAME}_SOURCE_DIR}/GenerateEulerAngles.cpp 
-                              ${${PROJECT_NAME}_SOURCE_DIR}/GenerateEulerAngles.h
-                              ${${PROJECT_NAME}_SOURCE_DIR}/GenerateFunctionList.h
+                    SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/OrientationTransformsTest.cpp 
+                            ${${PLUGIN_NAME}_SOURCE_DIR}/Test/GenerateFunctionList.h
                     FOLDER "Test/OrientationLib"
                     LINK_LIBRARIES ${OrientationLib_Link_Libs})
 

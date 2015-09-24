@@ -34,13 +34,14 @@
 *                           FA8650-07-D-5800
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
 #include "AddFilterParameter.h"
+
+#include <iostream>
 
 #include "DevHelper/PluginMaker.h"
 #include "DevHelper/FilterMaker.h"
 
-#include <iostream>
+#include "moc_AddFilterParameter.cpp"
 
 
 // -----------------------------------------------------------------------------

@@ -39,6 +39,7 @@
 #include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Plugin/PluginManager.h"
 
+#include "moc_AbstractFilter.cpp"
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

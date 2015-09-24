@@ -95,10 +95,15 @@ class FindModulusMismatchImpl
 #endif
 };
 
+// Include the MOC generated file for this class
+#include "moc_FindModulusMismatch.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindModulusMismatch::FindModulusMismatch()  :
+FindModulusMismatch::FindModulusMismatch() :
   AbstractFilter(),
   m_ModuliArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, "ElasticModuli"),
   m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::TriangleDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),

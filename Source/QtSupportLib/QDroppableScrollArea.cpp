@@ -46,7 +46,7 @@
 #include <QtGui/QDragLeaveEvent>
 #include <QtGui/QDragMoveEvent>
 
-
+#include "moc_QDroppableScrollArea.cpp"
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

@@ -49,6 +49,9 @@
 #include "FilterParameterWidgetUtils.hpp"
 
 
+// Include the MOC generated file for this class
+#include "moc_DataContainerSelectionWidget.cpp"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

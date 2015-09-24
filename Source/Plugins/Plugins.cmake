@@ -107,9 +107,10 @@ endfunction()
 #-----------------
 # These are the core plugins that need to be built
 set(DREAM3D_BASE_PLUGINS
+  EMMPM
   Generic
-  IO
   ImageIO
+  IO
   OrientationAnalysis
   Processing
   Reconstruction
@@ -117,7 +118,6 @@ set(DREAM3D_BASE_PLUGINS
   Statistics
   SurfaceMeshing
   SyntheticBuilding
-  EMMPM
 )
 
 get_filename_component(DREAM3D_PARENT_DIR  ${DREAM3DProj_SOURCE_DIR} DIRECTORY)

@@ -38,6 +38,7 @@
 
 #include <QtWidgets/QFileDialog>
 
+#include "moc_BookmarkMissingDialog.cpp"
 
 // -----------------------------------------------------------------------------
 //

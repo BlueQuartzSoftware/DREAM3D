@@ -32,9 +32,10 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #include "PluginDetails.h"
+
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_PluginDetails.cpp"
 
 // -----------------------------------------------------------------------------
 //

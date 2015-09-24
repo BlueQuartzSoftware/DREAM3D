@@ -68,10 +68,15 @@
 //FIXME: #1 Need to update this to link the phase selectionwidget to the rest of the GUI, so that it preflights after it's updated.
 //FIXME: #2 Need to fix phase selectionWidget to not show phase 0
 //FIXME: #3 Need to link phase selectionWidget to option to include Radial Distribution Function instead of an extra linkedProps boolean.
+// Include the MOC generated file for this class
+#include "moc_GenerateEnsembleStatistics.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenerateEnsembleStatistics::GenerateEnsembleStatistics()  :
+GenerateEnsembleStatistics::GenerateEnsembleStatistics() :
   AbstractFilter(),
   m_CellEnsembleAttributeMatrixPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, ""),
   m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),

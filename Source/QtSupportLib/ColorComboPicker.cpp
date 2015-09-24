@@ -36,7 +36,7 @@
 #include "ColorComboPicker.h"
 #include <QtWidgets>
 
-
+#include "moc_ColorComboPicker.cpp"
 
 // -----------------------------------------------------------------------------
 //

@@ -35,9 +35,9 @@
 
 #include "DataArrayPath.h"
 
-
-
 #include "SIMPLib/Common/Constants.h"
+
+#include "moc_DataArrayPath.cpp"
 
 // -----------------------------------------------------------------------------
 //

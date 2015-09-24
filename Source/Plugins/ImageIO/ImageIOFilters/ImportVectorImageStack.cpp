@@ -55,6 +55,11 @@
 #include "ImageIO/ImageIOConstants.h"
 #include "ImageIO/FilterParameters/ImportVectorImageStackFilterParameter.h"
 
+// Include the MOC generated file for this class
+#include "moc_ImportVectorImageStack.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

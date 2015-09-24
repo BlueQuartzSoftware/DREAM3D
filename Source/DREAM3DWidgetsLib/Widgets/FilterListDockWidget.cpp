@@ -47,8 +47,8 @@
 #include "SIMPLib/Common/FilterFactory.hpp"
 #include "SIMPLib/Common/DocRequestManager.h"
 
-#include "DREAM3DWidgetsLib/moc_FilterListDockWidget.cpp"
-
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_FilterListDockWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //

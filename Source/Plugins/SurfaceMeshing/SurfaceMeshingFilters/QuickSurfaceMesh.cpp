@@ -50,6 +50,8 @@
 #define QSM_GETCOORD(index, res, coord, origin)\
   coord = float((float(index)*float(res)) + float(origin));\
 
+#include "moc_QuickSurfaceMesh.cpp"
+  
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

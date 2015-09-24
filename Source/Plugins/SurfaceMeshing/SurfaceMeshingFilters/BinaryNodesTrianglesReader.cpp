@@ -49,6 +49,10 @@
 
 #include "BinaryNodesTrianglesReader.h"
 
+// Include the MOC generated file for this class
+#include "moc_BinaryNodesTrianglesReader.cpp"
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

@@ -37,6 +37,8 @@
 
 #include "DevHelper.h"
 
+#include <iostream>
+
 #include <QtCore/QtDebug>
 #include <QtWidgets/QDesktopWidget>
 
@@ -47,9 +49,10 @@
 
 #include "DREAM3D/License/DevHelperLicenseFiles.h"
 
-#include <iostream>
-
 #include "HelpWidget.h"
+
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_DevHelper.cpp"
 
 enum WidgetIndices
 {

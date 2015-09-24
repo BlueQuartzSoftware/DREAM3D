@@ -46,6 +46,11 @@
 
 #include "Generic/GenericConstants.h"
 
+// Include the MOC generated file for this class
+#include "moc_FindFeaturePhases.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

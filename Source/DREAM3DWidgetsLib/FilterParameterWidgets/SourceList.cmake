@@ -63,7 +63,7 @@ file(APPEND  ${FILTER_PARAMETER_TYPELIST_FILE} "QList<QString> list;\n")
 
 set(loopCounter 1)
 foreach(FPW ${DREAM3D_PARAMETER_WIDGETS})
-  set(DREAM3DWidgetsLib_ParameterWidgets_HDRS ${DREAM3DWidgetsLib_ParameterWidgets_HDRS}
+  set(DREAM3DWidgetsLib_Widgets_MOC_HDRS ${DREAM3DWidgetsLib_Widgets_MOC_HDRS}
     ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/${FPW}.h
     )
   set(DREAM3DWidgetsLib_ParameterWidgets_SRCS ${DREAM3DWidgetsLib_ParameterWidgets_SRCS}
@@ -96,7 +96,7 @@ foreach(FPW ${DREAM3D_PARAMETER_WIDGETS})
 endforeach()
 
 foreach(FPW ${DREAM3D_PARAMETER_WIDGETS_NO_CODEGEN})
-  set(DREAM3DWidgetsLib_ParameterWidgets_HDRS ${DREAM3DWidgetsLib_ParameterWidgets_HDRS}
+  set(DREAM3DWidgetsLib_Widgets_MOC_HDRS ${DREAM3DWidgetsLib_Widgets_MOC_HDRS}
     ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/${FPW}.h
     )
   set(DREAM3DWidgetsLib_ParameterWidgets_SRCS ${DREAM3DWidgetsLib_ParameterWidgets_SRCS}
@@ -127,15 +127,22 @@ cmpReplaceFileIfDifferent(OLD_FILE_PATH ${DREAM3DWidgetsLib_BINARY_DIR}/FilterWi
 
 # --------------------------------------------------------------------
 # Add some support files that still need MOC and UIC to be run on them
-set(DREAM3DWidgetsLib_ParameterWidgets_HDRS
-  ${DREAM3DWidgetsLib_ParameterWidgets_HDRS}
+set(DREAM3DWidgetsLib_Widgets_MOC_HDRS
+  ${DREAM3DWidgetsLib_Widgets_MOC_HDRS}
   ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/FilterParameterWidget.h
   ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/ComparisonSelectionTableModel.h
   ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/ComparisonSelectionItemDelegate.h
   ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/DynamicTableItemDelegate.h
+
+)
+
+set(DREAM3DWidgetsLib_Widgets_HDRS
+  ${DREAM3DWidgetsLib_Widgets_MOC_HDRS}
   ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/FilterParameterWidgetsDialogs.h
   ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/FilterParameterWidgetUtils.hpp
 )
+
+
 set(DREAM3DWidgetsLib_ParameterWidgets_SRCS
   ${DREAM3DWidgetsLib_ParameterWidgets_SRCS}
   ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/FilterParameterWidget.cpp
@@ -149,19 +156,22 @@ set(DREAM3DWidgetsLib_ParameterWidgets_UIS
 )
 
 
-
-
-cmp_IDE_SOURCE_PROPERTIES( "DREAM3DWidgetsLib/FilterParameterWidgets" "${DREAM3DWidgetsLib_ParameterWidgets_HDRS}" "${DREAM3DWidgetsLib_ParameterWidgets_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "DREAM3DWidgetsLib/FilterParameterWidgets" "${DREAM3DWidgetsLib_Widgets_HDRS}" "${DREAM3DWidgetsLib_ParameterWidgets_SRCS}" "0")
 
 cmp_IDE_GENERATED_PROPERTIES("DREAM3DWidgetsLib/FilterParameterWidgets/UI_Files" "${DREAM3DWidgetsLib_ParameterWidgets_UIS}" "")
 
 # --------------------------------------------------------------------
 # and finally this will run moc:
-#QT5_WRAP_CPP( DREAM3DWidgetsLib_ParameterWidgets_Generated_MOC_SRCS ${DREAM3DWidgetsLib_ParameterWidgets_HDRS} )
-
-# These generated moc files will be #include in the FilterWidget source file that
-# are generated so we need to tell the build system to NOT compile these files
+QT5_WRAP_CPP( DREAM3DWidgetsLib_ParameterWidgets_Generated_MOC_SRCS ${DREAM3DWidgetsLib_Widgets_MOC_HDRS} )
+set_source_files_properties( ${DREAM3DWidgetsLib_ParameterWidgets_Generated_MOC_SRCS} PROPERTIES GENERATED TRUE)
 set_source_files_properties( ${DREAM3DWidgetsLib_ParameterWidgets_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
+
+
+set(DREAM3DWidgetsLib_Widgets_SRCS
+  ${DREAM3DWidgetsLib_Widgets_SRCS}
+  ${DREAM3DWidgetsLib_Widgets_Generated_MOC_SRCS}
+)
+
 
 # -- Run MOC and UIC on the necessary files
 # QT5_ADD_RESOURCES( DREAM3DWidgetsLib_Generated_RC_SRCS "${DREAM3DProj_SOURCE_DIR}/Documentation/Filters/Generated_FilterDocs.qrc"  )

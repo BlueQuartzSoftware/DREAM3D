@@ -69,9 +69,16 @@ else()
                             GENERATED_FILE_PATH ${QtSupportLib_BINARY_DIR}/${CMP_TOP_HEADER_FILE})
 endif()
 
-cmp_IDE_GENERATED_PROPERTIES("Generated"
-                             "${QtSupportLib_BINARY_DIR}/${CMP_TOP_HEADER_FILE};${QtSupportLib_BINARY_DIR}/${PROJECT_NAME}/${CMP_CONFIGURATION_FILE_NAME};${QtSupportLib_BINARY_DIR}/${PROJECT_NAME}/${CMP_TYPES_FILE_NAME};${QtSupportLib_BINARY_DIR}/${PROJECT_NAME}/${CMP_VERSION_HEADER_FILE_NAME}"
-                             "${QtSupportLib_BINARY_DIR}/${PROJECT_NAME}/${CMP_VERSION_SOURCE_FILE_NAME}")
+
+set(QtSupportLib_CMP_Generated_SRCS
+      ${QtSupportLib_BINARY_DIR}/${CMP_TOP_HEADER_FILE}
+      ${QtSupportLib_BINARY_DIR}/${PROJECT_NAME}/${CMP_CONFIGURATION_FILE_NAME}
+      ${QtSupportLib_BINARY_DIR}/${PROJECT_NAME}/${CMP_TYPES_FILE_NAME}
+      ${QtSupportLib_BINARY_DIR}/${PROJECT_NAME}/${CMP_VERSION_HEADER_FILE_NAME}
+      ${QtSupportLib_BINARY_DIR}/${CMP_VERSION_HEADER_FILE_NAME}
+      ${QtSupportLib_BINARY_DIR}/${CMP_VERSION_SOURCE_FILE_NAME}
+  )
+cmp_IDE_GENERATED_PROPERTIES("Generated" "${QtSupportLib_CMP_Generated_SRCS}" "")
 
 # Setup the Include Directories
 include_directories(${PROJECT_CODE_DIR})
@@ -83,71 +90,72 @@ set(Project_HDRS "")
 
 set(QtSupportLib_SRCS
     ${QtSupportLib_SOURCE_DIR}/AIMImageGraphicsDelegate.cpp
-    ${QtSupportLib_SOURCE_DIR}/SIMPLPluginFrame.cpp
     ${QtSupportLib_SOURCE_DIR}/ApplicationAboutBoxDialog.cpp
-    ${QtSupportLib_SOURCE_DIR}/ColorComboPicker.cpp
-    ${QtSupportLib_SOURCE_DIR}/QFileCompleter.cpp
-    ${QtSupportLib_SOURCE_DIR}/QRecentFileList.cpp
-    ${QtSupportLib_SOURCE_DIR}/QFSDropLineEdit.cpp
-    ${QtSupportLib_SOURCE_DIR}/QDroppableScrollArea.cpp
-    ${QtSupportLib_SOURCE_DIR}/QCheckboxDialog.cpp
-    ${QtSupportLib_SOURCE_DIR}/HelpDialog.cpp
-    ${QtSupportLib_SOURCE_DIR}/HoverButton.cpp
-    ${QtSupportLib_SOURCE_DIR}/DistributionTypeWidget.cpp
-    ${QtSupportLib_SOURCE_DIR}/DREAM3DHelpUrlGenerator.cpp
-    ${QtSupportLib_SOURCE_DIR}/PoleFigureImageUtilities.cpp
-    ${QtSupportLib_SOURCE_DIR}/PoleFigureData.cpp
-    ${QtSupportLib_SOURCE_DIR}/DREAM3DGraphicsView.cpp
-    ${QtSupportLib_SOURCE_DIR}/FaderWidget.cpp
-    ${QtSupportLib_SOURCE_DIR}/SearchLineEdit.cpp
-    ${QtSupportLib_SOURCE_DIR}/QFSDropLabel.cpp
-    ${QtSupportLib_SOURCE_DIR}/FileDragMessageBox.cpp
-    ${QtSupportLib_SOURCE_DIR}/DREAM3DStyles.cpp
     ${QtSupportLib_SOURCE_DIR}/ApplicationFileInfo.cpp
+    ${QtSupportLib_SOURCE_DIR}/BookmarkMissingDialog.cpp
+    ${QtSupportLib_SOURCE_DIR}/ColorComboPicker.cpp
+    ${QtSupportLib_SOURCE_DIR}/DistributionTypeWidget.cpp
+    ${QtSupportLib_SOURCE_DIR}/DREAM3DGraphicsView.cpp
+    ${QtSupportLib_SOURCE_DIR}/DREAM3DHelpUrlGenerator.cpp
+    ${QtSupportLib_SOURCE_DIR}/DREAM3DSettings.cpp
     ${QtSupportLib_SOURCE_DIR}/DREAM3DSplitter.cpp
     ${QtSupportLib_SOURCE_DIR}/DREAM3DSplitterHandle.cpp
+    ${QtSupportLib_SOURCE_DIR}/DREAM3DStyles.cpp
+    ${QtSupportLib_SOURCE_DIR}/FaderWidget.cpp
     ${QtSupportLib_SOURCE_DIR}/FavoritesChangedDialog.cpp
-    ${QtSupportLib_SOURCE_DIR}/DREAM3DSettings.cpp
-    ${QtSupportLib_SOURCE_DIR}/BookmarkMissingDialog.cpp
+    ${QtSupportLib_SOURCE_DIR}/FileDragMessageBox.cpp
+    ${QtSupportLib_SOURCE_DIR}/HelpDialog.cpp
+    ${QtSupportLib_SOURCE_DIR}/HoverButton.cpp
+    ${QtSupportLib_SOURCE_DIR}/PoleFigureData.cpp
+    ${QtSupportLib_SOURCE_DIR}/PoleFigureImageUtilities.cpp
+    ${QtSupportLib_SOURCE_DIR}/QCheckboxDialog.cpp
+    ${QtSupportLib_SOURCE_DIR}/QDroppableScrollArea.cpp
+    ${QtSupportLib_SOURCE_DIR}/QFileCompleter.cpp
+    ${QtSupportLib_SOURCE_DIR}/QFSDropLabel.cpp
+    ${QtSupportLib_SOURCE_DIR}/QFSDropLineEdit.cpp
+    ${QtSupportLib_SOURCE_DIR}/QRecentFileList.cpp
+    ${QtSupportLib_SOURCE_DIR}/SearchLineEdit.cpp
+    ${QtSupportLib_SOURCE_DIR}/SIMPLPluginFrame.cpp
 )
 
-set(QtSupportLib_HDRS
-    ${QtSupportLib_SOURCE_DIR}/QtSupportLibDLLExport.h
+set(QtSupportLib_Moc_HDRS
     ${QtSupportLib_SOURCE_DIR}/AIMImageGraphicsDelegate.h
-    ${QtSupportLib_SOURCE_DIR}/SIMPLPluginFrame.h
     ${QtSupportLib_SOURCE_DIR}/ApplicationAboutBoxDialog.h
+    ${QtSupportLib_SOURCE_DIR}/BookmarkMissingDialog.h
     ${QtSupportLib_SOURCE_DIR}/ColorComboPicker.h
-    ${QtSupportLib_SOURCE_DIR}/QFileCompleter.h
-    ${QtSupportLib_SOURCE_DIR}/QRecentFileList.h
-    ${QtSupportLib_SOURCE_DIR}/QFSDropLineEdit.h
-    ${QtSupportLib_SOURCE_DIR}/QDroppableScrollArea.h
-    ${QtSupportLib_SOURCE_DIR}/QCheckboxDialog.h
-    ${QtSupportLib_SOURCE_DIR}/HelpDialog.h
-    ${QtSupportLib_SOURCE_DIR}/HoverButton.h
-    ${QtSupportLib_SOURCE_DIR}/PoleFigureImageUtilities.h
-    ${QtSupportLib_SOURCE_DIR}/PoleFigureData.h
     ${QtSupportLib_SOURCE_DIR}/DREAM3DGraphicsView.h
-    ${QtSupportLib_SOURCE_DIR}/FaderWidget.h
-    ${QtSupportLib_SOURCE_DIR}/SearchLineEdit.h
-    ${QtSupportLib_SOURCE_DIR}/QFSDropLabel.h
-    ${QtSupportLib_SOURCE_DIR}/FileDragMessageBox.h
-    ${QtSupportLib_SOURCE_DIR}/DREAM3DStyles.h
-    ${QtSupportLib_SOURCE_DIR}/ApplicationFileInfo.h
+    ${QtSupportLib_SOURCE_DIR}/DREAM3DSettings.h
     ${QtSupportLib_SOURCE_DIR}/DREAM3DSplitter.h
     ${QtSupportLib_SOURCE_DIR}/DREAM3DSplitterHandle.h
+    ${QtSupportLib_SOURCE_DIR}/DREAM3DStyles.h
+    ${QtSupportLib_SOURCE_DIR}/DistributionTypeWidget.h    
+    ${QtSupportLib_SOURCE_DIR}/FaderWidget.h
     ${QtSupportLib_SOURCE_DIR}/FavoritesChangedDialog.h
-    ${QtSupportLib_SOURCE_DIR}/DREAM3DSettings.h
-    ${QtSupportLib_SOURCE_DIR}/BookmarkMissingDialog.h
+    ${QtSupportLib_SOURCE_DIR}/FileDragMessageBox.h
+    ${QtSupportLib_SOURCE_DIR}/HelpDialog.h
+    ${QtSupportLib_SOURCE_DIR}/HoverButton.h
+    ${QtSupportLib_SOURCE_DIR}/PoleFigureData.h
+    ${QtSupportLib_SOURCE_DIR}/QCheckboxDialog.h
+    ${QtSupportLib_SOURCE_DIR}/QDroppableScrollArea.h
+    ${QtSupportLib_SOURCE_DIR}/QFSDropLabel.h
+    ${QtSupportLib_SOURCE_DIR}/QFSDropLineEdit.h
+    ${QtSupportLib_SOURCE_DIR}/QFileCompleter.h
+    ${QtSupportLib_SOURCE_DIR}/QRecentFileList.h
+    ${QtSupportLib_SOURCE_DIR}/SearchLineEdit.h
+    ${QtSupportLib_SOURCE_DIR}/SIMPLPluginFrame.h
 )
 
 # --------------------------------------------------------------------
 # These are headers that do NOT inherit from QObject and do NOT need MOC run on them
 # --------------------------------------------------------------------
-set(QtSupportLib_NO_MOC_HDRS
-    ${QtSupportLib_SOURCE_DIR}/DREAM3DHelpUrlGenerator.h
+set(QtSupportLib_HDRS
+  ${QtSupportLib_SOURCE_DIR}/ApplicationFileInfo.h
+  ${QtSupportLib_SOURCE_DIR}/PoleFigureImageUtilities.h
+  ${QtSupportLib_SOURCE_DIR}/QtSupportLibDLLExport.h
+  ${QtSupportLib_SOURCE_DIR}/DREAM3DHelpUrlGenerator.h
 )
 
-cmp_IDE_SOURCE_PROPERTIES("QtSupportLib" "${QtSupportLib_HDRS};${QtSupportLib_NO_MOC_HDRS}" "${QtSupportLib_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES("QtSupportLib" "${QtSupportLib_HDRS};${QtSupportLib_MOC_HDRS}" "${QtSupportLib_SRCS}" "0")
 
 # --------------------------------------------------------------------
 # The UI files As generated by Qt Designer
@@ -174,22 +182,29 @@ cmp_IDE_SOURCE_PROPERTIES( "QtSupportLib/UI_Files" "${DREAM3D_QT_UI_FILES}" "" "
 QT5_WRAP_UI( QtSupportLib_Generated_UI_HDRS ${DREAM3D_QT_UI_FILES} )
 
 # --------------------------------------------------------------------
-# and finally this will run moc:
-#QT5_WRAP_CPP( QtSupportLib_Generated_MOC_SRCS ${QtSupportLib_HDRS} )
+# Run Qts automoc program to generate some source files that get compiled
+QT5_WRAP_CPP( QtSupportLib_Generated_MOC_SRCS ${QtSupportLib_Moc_HDRS})
+set_source_files_properties( ${QtSupportLib_Generated_MOC_SRCS} PROPERTIES GENERATED TRUE)
+set_source_files_properties( ${QtSupportLib_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 # --------------------------------------------------------------------
-#-- Put the generated files into their own group for IDEs
-#cmp_IDE_SOURCE_PROPERTIES( "Generated" "${QtSupportLib_Generated_UI_HDRS}" "${QtSupportLib_Generated_MOC_SRCS};${QtSupportLib_Generated_RC_SRCS}" "0")
+#-- Put the Qt generated files into their own group for IDEs
+cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Moc" "" "${QtSupportLib_Generated_MOC_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Uic" "${QtSupportLib_Generated_UI_HDRS}" "" "0")
+cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Qrc" "${QtSupportLib_Generated_RC_SRCS}" "" "0")
+
+
 
 set(Project_SRCS ${Project_SRCS}
   ${QtSupportLib_SRCS}
   ${QtSupportLib_HDRS}
-  ${QtSupportLib_NO_MOC_HDRS}
+  ${QtSupportLib_MOC_HDRS}
   ${QtSupportLib_Generated_UI_HDRS}
-  ${QtSupportLib_Generated_MOC_SRCS}
   # -- Add in our Generated Version Files
   ${QtSupportLib_BINARY_DIR}/${CMP_VERSION_HEADER_FILE_NAME}
   ${QtSupportLib_BINARY_DIR}/${CMP_VERSION_SOURCE_FILE_NAME}
+  # -- These are the generated MOC source files 
+  ${QtSupportLib_Generated_MOC_SRCS}
 )
 
 include_directories(${QtSupportLib_SOURCE_DIR}/..)

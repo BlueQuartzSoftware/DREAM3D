@@ -37,7 +37,7 @@
 #include "FavoritesChangedDialog.h"
 
 #include <QtWidgets/QFileDialog>
-
+#include "moc_FavoritesChangedDialog.cpp"
 
 // -----------------------------------------------------------------------------
 //
