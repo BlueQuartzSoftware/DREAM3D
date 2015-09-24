@@ -166,11 +166,7 @@ set(OrientationLib_PROJECT_SRCS
     ${OrientationLib_Texture_HDRS}
     ${OrientationLib_Texture_SRCS}
     #-- Our Generated Header Files
-    ${OrientationLib_BINARY_DIR}/${CMP_TOP_HEADER_FILE}
-    ${OrientationLib_BINARY_DIR}/${PROJECT_NAME}/${CMP_CONFIGURATION_FILE_NAME}
-    ${OrientationLib_BINARY_DIR}/${PROJECT_NAME}/${CMP_TYPES_FILE_NAME}
-    ${OrientationLib_BINARY_DIR}/${CMP_VERSION_HEADER_FILE_NAME}
-    ${OrientationLib_BINARY_DIR}/${CMP_VERSION_SOURCE_FILE_NAME}
+    ${OrientationLib_Generated_CMP_SRCS}
 )
 
 
