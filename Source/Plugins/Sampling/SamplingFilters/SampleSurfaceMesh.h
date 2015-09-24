@@ -37,9 +37,9 @@
 #ifndef _SampleSurfaceMesh_H_
 #define _SampleSurfaceMesh_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The SampleSurfaceMesh class serves as a superclass for filters to sample IGeometry surface mesh objects.
@@ -48,13 +48,13 @@ class SampleSurfaceMesh : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(SampleSurfaceMesh)
-    DREAM3D_STATIC_NEW_MACRO(SampleSurfaceMesh)
-    DREAM3D_TYPE_MACRO_SUPER(SampleSurfaceMesh, AbstractFilter)
+    SIMPL_SHARED_POINTERS(SampleSurfaceMesh)
+    SIMPL_STATIC_NEW_MACRO(SampleSurfaceMesh)
+    SIMPL_TYPE_MACRO_SUPER(SampleSurfaceMesh, AbstractFilter)
 
     virtual ~SampleSurfaceMesh();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
     /**

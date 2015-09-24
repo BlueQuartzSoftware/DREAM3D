@@ -36,15 +36,15 @@
 
 #include "FindSchmids.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 
@@ -165,20 +165,20 @@ void FindSchmids::readFilterParameters(AbstractFilterParametersReader* reader, i
 int FindSchmids::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(LambdasArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(PhisArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(PolesArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SlipSystemsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SchmidsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(LoadingDirection)
-  DREAM3D_FILTER_WRITE_PARAMETER(StoreAngleComponents)
-  DREAM3D_FILTER_WRITE_PARAMETER(OverrideSystem)
-  DREAM3D_FILTER_WRITE_PARAMETER(SlipPlane)
-  DREAM3D_FILTER_WRITE_PARAMETER(SlipDirection)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(LambdasArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(PhisArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(PolesArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(SlipSystemsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(SchmidsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(LoadingDirection)
+  SIMPL_FILTER_WRITE_PARAMETER(StoreAngleComponents)
+  SIMPL_FILTER_WRITE_PARAMETER(OverrideSystem)
+  SIMPL_FILTER_WRITE_PARAMETER(SlipPlane)
+  SIMPL_FILTER_WRITE_PARAMETER(SlipDirection)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

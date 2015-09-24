@@ -82,7 +82,7 @@ QString FileListInfoWidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(FileListInfo_t, " + getPropertyName() + ")\n";
+  ss << "    SIMPL_FILTER_PARAMETER(FileListInfo_t, " + getPropertyName() + ")\n";
   ss << "    Q_PROPERTY(FileListInfo_t " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
@@ -93,5 +93,5 @@ QString FileListInfoWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString FileListInfoWidgetCodeGenerator::generateHIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/FileListInfoFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/FileListInfoFilterParameter.h\"";
 }

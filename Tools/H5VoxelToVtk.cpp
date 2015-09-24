@@ -47,12 +47,12 @@
 #include <QtCore/QString>
 #include <vector>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/VTKUtils/VTKWriterMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/VTKUtils/VTKWriterMacros.h"
 
-#include "DREAM3DLib/IOFilters/DataContainerReader.h"
+#include "SIMPLib/IOFilters/DataContainerReader.h"
 
 
 typedef struct

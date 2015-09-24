@@ -90,7 +90,7 @@ QString ComparisonSelectionWidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(ComparisonInputs, " + getPropertyName() + ")\n";
+  ss << "    SIMPL_FILTER_PARAMETER(ComparisonInputs, " + getPropertyName() + ")\n";
   ss << "    Q_PROPERTY(ComparisonInputs " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
@@ -101,7 +101,7 @@ QString ComparisonSelectionWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString ComparisonSelectionWidgetCodeGenerator::generateHIncludes()
 {
-  return "#include \"DREAM3DLib/Common/ComparisonInputs.h\"";
+  return "#include \"SIMPLib/Common/ComparisonInputs.h\"";
 }
 
 // -----------------------------------------------------------------------------
@@ -109,5 +109,5 @@ QString ComparisonSelectionWidgetCodeGenerator::generateHIncludes()
 // -----------------------------------------------------------------------------
 QString ComparisonSelectionWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/ComparisonSelectionFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/ComparisonSelectionFilterParameter.h\"";
 }

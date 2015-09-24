@@ -41,14 +41,14 @@
 #include <iostream>
 #include <string>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Geometry/MeshStructs.h"
-#include "DREAM3DLib/DataArrays/StructArray.hpp"
-#include "DREAM3DLib/FilterParameters/FilterParameter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Geometry/MeshStructs.h"
+#include "SIMPLib/DataArrays/StructArray.hpp"
+#include "SIMPLib/FilterParameters/FilterParameter.h"
 
 
-#include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
+#include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
 #include "DREAM3DTestFileLocations.h"
 

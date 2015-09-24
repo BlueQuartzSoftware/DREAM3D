@@ -53,13 +53,16 @@
 #include <Eigen/Eigen>
 
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Math/QuaternionMath.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/Math/QuaternionMath.hpp"
 
 
 #include "OrientationLib/OrientationLib.h"
+#include "OrientationLib/OrientationLibConstants.h"
+#include "OrientationLib/Utilities/OrientationMathHelpers.hpp"
+#include "OrientationLib/Utilities/ModifiedLambertProjection3D.hpp"
 
 
 /* This comment block is commented as Markdown. if you paste this into a text
@@ -91,58 +94,14 @@
 |  a      |  X   |  X   |  #   |  X   |  X   |  X   |  -   |
 |  r      |  X   |  X   |  X   |  #   |  X   |  X   |  -   |
 |  q      |  X   |  X   |  X   |  X   |  #   |  X   |  -   |
-|  h      |  X   |  X   |  X   |  X   |  X   |  #   |  -   |
-|  c      |  -   |  -   |  -   |  -   |  -   |  -   |  #   |
+|  h      |  X   |  X   |  X   |  X   |  X   |  #   |  X   |
+|  c      |  -   |  -   |  -   |  -   |  -   |  X   |  #   |
 
 @: Will use LAPACK _sgeev routine On OS X, otherwise will use Eigen Library
 
 */
 
 
-
-
-namespace LambertParametersType
-{
-  static const double Pi = M_PI;   // pi
-  static const double iPi = 0.3183098861837910 ; // 1/pi
-  static const double sPi = 1.7724538509055160 ; // sqrt(pi)
-  static const double sPio2 = 1.2533141373155000; // sqrt(pi/2)
-  static const double sPi2 = 0.8862269254527580; // sqrt(pi)/2
-  static const double srt = 0.8660254037844390;  // sqrt(3)/2
-  static const double isrt = 0.5773502691896260; // 1/sqrt(3)
-  static const double alpha = 1.3467736870885980; // sqrt(pi)/3^(1/4)
-  static const double rtt = 1.7320508075688770;  // sqrt(3)
-  static const double prea = 0.5250375679043320; // 3^(1/4)/sqrt(2pi)
-  static const double preb = 1.0500751358086640; // 3^(1/4)sqrt(2/pi)
-  static const double prec = 0.9068996821171090; // pi/2sqrt(3)
-  static const double pred = 2.0943951023931950; // 2pi/3
-  static const double pree = 0.7598356856515930; // 3^(-1/4)
-  static const double pref = 1.3819765978853420; // sqrt(6/pi)
-  // ! the following constants are used for the cube to quaternion hemisphere mapping
-  static const double a = 1.9257490199582530;    //pi^(5/6)/6^(1/6)
-  static const double ap = 2.1450293971110250 ;  //pi^(2/3)
-  static const double sc = 0.8977727869612860 ;  //a/ap
-  static const double beta = 0.9628745099791260; //pi^(5/6)/6^(1/6)/2
-  static const double R1 = 1.3306700394914690 ;  //(3pi/4)^(1/3)
-  static const double r2 = 1.4142135623730950 ;  //sqrt(2)
-  static const double r22 = 0.7071067811865470;  //1/sqrt(2)
-  static const double pi12 = 0.2617993877991490; //pi/12
-  static const double pi8 = 0.3926990816987240;  //pi/8
-  static const double prek = 1.6434564029725040; //R1 2^(1/4)/beta
-  static const double r24 = 4.8989794855663560;  //sqrt(24)
-  static const double tfit[16] = {1.00000000000188520, -0.50000000021948470,
-                                  -0.0249999921275931260, - 0.0039287015447813740,
-                                  -0.00081527015354504380, - 0.00020095004261197120,
-                                  -0.000023979867760717560, - 0.000082028689266058410,
-                                  +0.000124487150420900920, - 0.00017491142148225770,
-                                  +0.00017034819341400540, - 0.000120620650041168280,
-                                  +0.0000597197058686608260, - 0.000019807567239656470,
-                                  +0.0000039537146842128740, - 0.000000365550014397195440
-                                 };
-  static const double BP[6] = { 0.0, 1.0, 0.5773502691896260, 0.4142135623730950, 0.0,
-                                0.2679491924311230
-                              };     //used for Fundamental Zone determination in so3 module
-}
 
 
 
@@ -159,7 +118,6 @@ namespace LambertParametersType
 **/
 #define DREAM3D_ACTIVE_ROTATION               -1.0
 #define DREAM3D_PASSIVE_ROTATION               1.0
-#define DREAM3D_DEFAULT_ROATATION              DREAM3D_ACTIVE_ROTATION
 
 #define DREAM3D_ROTATION_CONVENTION(value)\
   static const float epsijk = static_cast<float>(value);\
@@ -180,7 +138,7 @@ namespace LambertParametersType
 // Condense some of the namespaces to same some typing later on.
   namespace LPs = LambertParametersType;
   namespace RConst = Rotations::Constants;
-  namespace DConst = DREAM3D::Constants;
+  namespace DConst = SIMPLib::Constants;
 
 
   /**
@@ -197,7 +155,7 @@ namespace LambertParametersType
       typedef OrientationTransforms SelfType;
       virtual ~OrientationTransforms() {}
 
-
+      typedef OrientationMathHelpers<T, K> OMHelperType;
       typedef struct
       {
         int result;
@@ -388,17 +346,17 @@ namespace LambertParametersType
         ResultType res;
         res.result = 1;
 
-        if ((eu[0] < 0.0) || (eu[0] > (DREAM3D::Constants::k_2Pi)))
+        if ((eu[0] < 0.0) || (eu[0] > (SIMPLib::Constants::k_2Pi)))
         {
           res.msg = "rotations:eu_check:: phi1 Euler angle outside of valid range [0,2pi]";
           res.result = 0;
         }
-        if ((eu[1] < 0.0) || (eu[1] > DREAM3D::Constants::k_Pi))
+        if ((eu[1] < 0.0) || (eu[1] > SIMPLib::Constants::k_Pi))
         {
           res.msg = "rotations:eu_check:: phi Euler angle outside of valid range [0,pi]";
           res.result = 0;
         }
-        if ((eu[2] < 0.0) || (eu[2] > (DREAM3D::Constants::k_2Pi)))
+        if ((eu[2] < 0.0) || (eu[2] > (SIMPLib::Constants::k_2Pi)))
         {
           res.msg = "rotations:eu_check:: phi2 Euler angle outside of valid range [0,2pi]";
           res.result = 0;
@@ -430,8 +388,8 @@ namespace LambertParametersType
           res.result = 0;
           return res;
         }
-        T out = SelfType::multiply(ro, ro, 3);
-        K ttl =  SelfType::sum(out);
+        T out = OMHelperType::multiply(ro, ro, 3);
+        K ttl =  OMHelperType::sum(out);
         ttl = sqrt(ttl);
         if (std::abs(ttl - 1.0) > eps)
         {
@@ -457,8 +415,8 @@ namespace LambertParametersType
       {
         ResultType res;
         res.result = 1;
-        T out = SelfType::multiply(ro, ro);
-        K ttl = SelfType::sum(out);
+        T out = OMHelperType::multiply(ro, ro);
+        K ttl = OMHelperType::sum(out);
         K r = sqrt(ttl);
         if (r > static_cast<float>(LPs::R1))
         {
@@ -484,7 +442,7 @@ namespace LambertParametersType
         ResultType res;
         res.result = 1;
 
-        K r = SelfType::maxval(SelfType::absValue(cu));
+        K r = OMHelperType::maxval(OMHelperType::absValue(cu));
         if (r > static_cast<float>(LPs::ap / 2.0))
         {
           res.msg = "rotations:cu_check: cubochoric vector outside cube";
@@ -526,8 +484,8 @@ namespace LambertParametersType
         }
 
         K eps = std::numeric_limits<K>::epsilon();
-        T out = SelfType::multiply(qu, qu);
-        K r = sqrt(SelfType::sum(out));
+        T out = OMHelperType::multiply(qu, qu);
+        K r = sqrt(OMHelperType::sum(out));
         if (std::abs(r - 1.0) > eps)
         {
           res.msg = "rotations:qu_check: quaternion must have unit norm";
@@ -552,15 +510,15 @@ namespace LambertParametersType
       {
         ResultType res;
         res.result = 1;
-        if ((ax[3] < 0.0) || (ax[3] > DREAM3D::Constants::k_Pi))
+        if ((ax[3] < 0.0) || (ax[3] > SIMPLib::Constants::k_Pi))
         {
           res.msg = "rotations:ax_check: angle must be in range [0,pi]";
           res.result = 0;
           return res;
         }
         K eps = std::numeric_limits<K>::epsilon();
-        T out = SelfType::multiply(ax, ax, 3);
-        K r = sqrt(SelfType::sum(out));
+        T out = OMHelperType::multiply(ax, ax, 3);
+        K r = sqrt(OMHelperType::sum(out));
         K absv = std::abs(r - 1.0);
         if (absv > eps)
         {
@@ -603,11 +561,11 @@ namespace LambertParametersType
           return res;
         }
 
-        T tr = SelfType::transpose(om);
-        T mm = SelfType::matmul3x3(om, tr);
-        T abv = SelfType::absValue(mm);
+        T tr = OMHelperType::transpose(om);
+        T mm = OMHelperType::matmul3x3(om, tr);
+        T abv = OMHelperType::absValue(mm);
 
-        K r = SelfType::sum(abv);
+        K r = OMHelperType::sum(abv);
         r = std::abs(r - 3.0);
         if (r > eps)
         {
@@ -763,9 +721,9 @@ namespace LambertParametersType
         K sig = 0.5 * (e[0] + e[2]);
         K del = 0.5 * (e[0] - e[2]);
         K tau = sqrt(t * t + sin(sig) * sin(sig));
-        if (sig == DREAM3D::Constants::k_PiOver2)    //Infinity
+        if (sig == SIMPLib::Constants::k_PiOver2)    //Infinity
         {
-          alpha = DREAM3D::Constants::k_Pi;
+          alpha = SIMPLib::Constants::k_Pi;
         }
         else
         {
@@ -814,7 +772,7 @@ namespace LambertParametersType
 
         SelfType::eu2ax(e, res);
         K t = res[3];
-        if (std::abs(t - DREAM3D::Constants::k_Pi) < thr)
+        if (std::abs(t - SIMPLib::Constants::k_Pi) < thr)
         {
           res[3] = std::numeric_limits<K>::infinity();
           return;
@@ -909,7 +867,7 @@ namespace LambertParametersType
       static void om2eu(const T& o, T& res)
       {
         K zeta = 0.0;
-        bool close = closeEnough(std::fabs(o[8]), 1.0);
+        bool close = OMHelperType::closeEnough(std::fabs(o[8]), 1.0);
         if(!close)
         {
           res[1] = acos(o[8]);
@@ -919,7 +877,7 @@ namespace LambertParametersType
         }
         else
         {
-          close = closeEnough(o[8], 1.0);
+          close = OMHelperType::closeEnough(o[8], 1.0);
           if (close)
           {
             res[0] = atan2( o[1], o[0]);
@@ -929,7 +887,7 @@ namespace LambertParametersType
           else
           {
             res[0] = -atan2(-o[1], o[0]);
-            res[1] = DREAM3D::Constants::k_Pi;
+            res[1] = SIMPLib::Constants::k_Pi;
             res[2] = 0.0;
           }
         }
@@ -963,13 +921,13 @@ namespace LambertParametersType
       */
       static void ax2om(const T& a, T& res)
       {
-        K q = 0.0f;
-        K c = 0.0f;
-        K s = 0.0f;
-        K omc = 0.0f;
+        K q = 0.0;
+        K c = 0.0;
+        K s = 0.0;
+        K omc = 0.0;
 
-        c = cosf(a[3]);
-        s = sinf(a[3]);
+        c = cos(a[3]);
+        s = sin(a[3]);
         omc = 1.0 - c;
 
         res[0] = a[0] * a[0] * omc + c;
@@ -986,7 +944,7 @@ namespace LambertParametersType
         q = omc * a[2] * a[0];
         res[6] = q + s * a[1];
         res[2] = q - s * a[1];
-        if (Rotations::Constants::epsijk == 1.0) { res = transpose(res); }
+        if (Rotations::Constants::epsijk == 1.0) { res = OMHelperType::transpose(res); }
       }
 
 
@@ -1045,7 +1003,7 @@ namespace LambertParametersType
           }
           else
           {
-            Phi = DREAM3D::Constants::k_Pi;
+            Phi = SIMPLib::Constants::k_Pi;
             phi2 = 0.0;                //arbitrarily due to degeneracy
             phi1 = atan2(2.0 * qq[x] * qq[y], qq[x] * qq[x] - qq[y] * qq[y]);
           }
@@ -1113,7 +1071,7 @@ namespace LambertParametersType
       {
         K thr = 1.0E-8f;
 
-        K hmag = SelfType::sumofSquares(h);
+        K hmag = OMHelperType::sumofSquares(h);
         if (hmag == 0.0)
         {
           res[0] = 0.0;
@@ -1126,7 +1084,7 @@ namespace LambertParametersType
           K hm = hmag;
           T hn = h;
           K sqrRtHMag = 1.0 / sqrt(hmag);
-          SelfType::scalarMultiply(hn, sqrRtHMag); // In place scalar multiply
+          OMHelperType::scalarMultiply(hn, sqrRtHMag); // In place scalar multiply
           K s = LPs::tfit[0] + LPs::tfit[1] * hmag;
           for(int i = 2; i < 16; i++)
           {
@@ -1137,10 +1095,10 @@ namespace LambertParametersType
           res[0] = hn[0];
           res[1] = hn[1];
           res[2] = hn[2];
-          K delta = std::fabs(s - DREAM3D::Constants::k_Pi);
+          K delta = std::fabs(s - SIMPLib::Constants::k_Pi);
           if ( delta < thr)
           {
-            res[3] = DREAM3D::Constants::k_Pi;
+            res[3] = SIMPLib::Constants::k_Pi;
           }
           else
           {
@@ -1173,7 +1131,7 @@ namespace LambertParametersType
 #endif
         K thr = 1.0E-7f;
         // Transpose array to be Column Major Format for the BLAS/LAPACK routine
-        T om = transpose(in);
+        T om = OMHelperType::transpose(in);
         K t = 0.50 * (om[0] + om[4] + om[8] - 1.0);
         if (t > 1.0) { t = 1.0; }
         if (t < -1.0) {t = -1.0; }
@@ -1209,9 +1167,9 @@ namespace LambertParametersType
                 res[1] = VR(i, 1).real();
                 res[2] = VR(i, 2).real();
 
-                if ((om[5] - om[7]) != 0.0) { res[0] = SelfType::transfer_sign(res[0], -RConst::epsijk * (om[7] - om[5])); }
-                if ((om[6] - om[2]) != 0.0) { res[1] = SelfType::transfer_sign(res[1], -RConst::epsijk * (om[2] - om[6 ])); }
-                if ((om[1] - om[3]) != 0.0) { res[2] = SelfType::transfer_sign(res[2], -RConst::epsijk * (om[3] - om[1])); }
+                if ((om[5] - om[7]) != 0.0) { res[0] = OMHelperType::transfer_sign(res[0], -RConst::epsijk * (om[7] - om[5])); }
+                if ((om[6] - om[2]) != 0.0) { res[1] = OMHelperType::transfer_sign(res[1], -RConst::epsijk * (om[2] - om[6 ])); }
+                if ((om[1] - om[3]) != 0.0) { res[2] = OMHelperType::transfer_sign(res[2], -RConst::epsijk * (om[3] - om[1])); }
                 //  std::cout << "EIGEN =========================================" << std::endl;
                 //  std::cout << res[0] << "\t" << res[1] << "\t" << res[2] << "\t" << res[3] << std::endl;
                 return;
@@ -1254,9 +1212,9 @@ namespace LambertParametersType
                 res[1] = VR[3 * i + 1];
                 res[2] = VR[3 * i + 2];
 
-                if ((om[5] - om[7]) != 0.0) { res[0] = transfer_sign(res[0], -RConst::epsijk * (om[7] - om[5])); }
-                if ((om[6] - om[2]) != 0.0) { res[1] = transfer_sign(res[1], -RConst::epsijk * (om[2] - om[6 ])); }
-                if ((om[1] - om[3]) != 0.0) { res[2] = transfer_sign(res[2], -RConst::epsijk * (om[3] - om[1])); }
+                if ((om[5] - om[7]) != 0.0) { res[0] = OMHelperType::transfer_sign(res[0], -RConst::epsijk * (om[7] - om[5])); }
+                if ((om[6] - om[2]) != 0.0) { res[1] = OMHelperType::transfer_sign(res[1], -RConst::epsijk * (om[2] - om[6 ])); }
+                if ((om[1] - om[3]) != 0.0) { res[2] = OMHelperType::transfer_sign(res[2], -RConst::epsijk * (om[3] - om[1])); }
                 return;
               }
             }
@@ -1341,7 +1299,7 @@ namespace LambertParametersType
         res[0] = r[0];
         res[1] = r[1];
         res[2] = r[2];
-        if (std::abs(r[3] - DREAM3D::Constants::k_Pi) < thr)
+        if (std::abs(r[3] - SIMPLib::Constants::k_Pi) < thr)
         {
           res[3] = std::numeric_limits<K>::infinity();
         }
@@ -1410,15 +1368,15 @@ namespace LambertParametersType
       static void ro2ho(const T& r, T& res)
       {
         K f = 0.0;
-        K rv = SelfType::sumofSquares(r);
+        K rv = OMHelperType::sumofSquares(r);
         if (rv == 0.0)
         {
-          splat(res, 0.0);
+          OMHelperType::splat(res, 0.0);
           return;
         }
         if (r[3] == std::numeric_limits<K>::infinity())
         {
-          f = 0.75 * DREAM3D::Constants::k_Pi;
+          f = 0.75 * SIMPLib::Constants::k_Pi;
         }
         else
         {
@@ -1464,7 +1422,7 @@ namespace LambertParametersType
         res[3] = 2.0 * (r[y] * r[x] + r[w] * r[z]);
         res[7] = 2.0 * (r[z] * r[y] + r[w] * r[x]);
         res[2] = 2.0 * (r[x] * r[z] + r[w] * r[y]);
-        if (Rotations::Constants::epsijk != 1.0) { res = SelfType::transpose(res); }
+        if (Rotations::Constants::epsijk != 1.0) { res = OMHelperType::transpose(res); }
       }
 
 
@@ -1589,7 +1547,7 @@ namespace LambertParametersType
             res[0] = q[x];
             res[1] = q[y];
             res[2] = q[z];
-            res[3] = DREAM3D::Constants::k_Pi;
+            res[3] = SIMPLib::Constants::k_Pi;
           }
         }
       }
@@ -1675,18 +1633,18 @@ namespace LambertParametersType
         K omega = 2.0 * acos(q[w]);
         if (omega == 0.0)
         {
-          splat(res, 0.0);
+          OMHelperType::splat(res, 0.0);
         }
         else
         {
           res[0] = q[x];
           res[1] = q[y];
           res[2] = q[z];
-          s = 1.0 / sqrt(SelfType::sumofSquares(res));
-          SelfType::scalarMultiply(res, s);
+          s = 1.0 / sqrt(OMHelperType::sumofSquares(res));
+          OMHelperType::scalarMultiply(res, s);
           f = 0.75 * ( omega - sin(omega) );
           f = pow(f, 1.0 / 3.0);
-          SelfType::scalarMultiply(res, f);
+          OMHelperType::scalarMultiply(res, f);
         }
       }
 
@@ -1704,8 +1662,8 @@ namespace LambertParametersType
       */
       static void ho2cu(const T& q, T& res)
       {
-        //float ierr;
-        //res = LambertBallToCube(q,ierr);
+        int ierr = -1;
+        res = ModifiedLambertProjection3D<T,K>::LambertBallToCube(q,ierr);
       }
 
       //template<typename T, typename K>
@@ -1726,9 +1684,10 @@ namespace LambertParametersType
       *
       * @date 8/12/13   MDG 1.0 original
       */
-      static void cu2ho(const T& r, T& res)
+      static void cu2ho(const T& cu, T& res)
       {
-        assert(false);
+        int ierr = 0;
+        res = ModifiedLambertProjection3D<T, K>::LambertCubeToBall(cu,ierr);
       }
 
 
@@ -2102,7 +2061,12 @@ namespace LambertParametersType
       * @date 8/12/13   MDG 1.0 original
       */
 
-      void cu2ro(float* c, float* res);
+      static void cu2ro(const T& r, T& res)
+      {
+        T tmp(3);
+        SelfType::cu2ho(r, tmp);
+        SelfType::ho2ro(tmp, res);
+      }
 
 
       /**: cu2qu
@@ -2216,179 +2180,13 @@ namespace LambertParametersType
       print the entire record with all representations
       */
 
+
+
     protected:
       /**
       * @brief
       */
       OrientationTransforms() {}
-
-      static void splat(T& a, const K val)
-      {
-        size_t size = a.size();
-        for(size_t i = 0; i < size; i++)
-        {
-          a[i] = val;
-        }
-      }
-
-      static T multiply(const T& a, const T& b)
-      {
-        T c(a.size());
-        for(size_t i = 0; i < c.size(); i++)
-        {
-          c[i] = a[i] * b[i];
-        }
-        return c;
-      }
-
-      static T multiply(const T& a, const T& b, size_t max)
-      {
-        T c(max);
-        for(size_t i = 0; i < max; i++)
-        {
-          c[i] = a[i] * b[i];
-        }
-        return c;
-      }
-
-      static void scalarMultiply(T& a, K b)
-      {
-        size_t size = a.size();
-        for(size_t i = 0; i < size; i++)
-        {
-          a[i] = a[i] * b;
-        }
-      }
-
-      static K sum(const T& a)
-      {
-        K s = static_cast<K>(0);
-        for(size_t i = 0; i < a.size(); i++)
-        {
-          s += a[i];
-        }
-        return s;
-      }
-
-
-      static K sum(const T& a, size_t max)
-      {
-        K s = static_cast<K>(0);
-        for(size_t i = 0; i < max; i++)
-        {
-          s += a[i];
-        }
-        return s;
-      }
-
-      static K sumofSquares(const T& a)
-      {
-        K s = static_cast<K>(0);
-        for(size_t i = 0; i < a.size(); i++)
-        {
-          s += a[i] * a[i];
-        }
-        return s;
-      }
-
-      static K maxval(const T& a)
-      {
-        K s = a[0];
-        for(size_t i = 1; i < a.size(); i++)
-        {
-          if (a[i] > s) { s = a[i]; }
-        }
-        return s;
-      }
-
-      static T absValue(const T& a)
-      {
-        T c(a.size());
-        for(size_t i = 0; i < c.size(); i++)
-        {
-          c[i] = (a[i] < 0.0 ? -a[i] : a[i]);
-        }
-        return c;
-      }
-
-      static T transpose(const T& a)
-      {
-        T c(a.size());
-        c[0] = a[0];
-        c[1] = a[3];
-        c[2] = a[6];
-        c[3] = a[1];
-        c[4] = a[4];
-        c[5] = a[7];
-        c[6] = a[2];
-        c[7] = a[5];
-        c[8] = a[8];
-        return c;
-      }
-
-      static T matmul3x3(const T& a, const T& b)
-      {
-        T c(a.size());
-        c[0] = a[0] * b[0] + a[1] * b[3] + a[2] * b[6];
-        c[1] = a[0] * b[1] + a[1] * b[4] + a[2] * b[7];
-        c[2] = a[0] * b[2] + a[1] * b[5] + a[2] * b[8];
-        c[3] = a[3] * b[0] + a[4] * b[3] + a[5] * b[6];
-        c[4] = a[3] * b[1] + a[4] * b[4] + a[5] * b[7];
-        c[5] = a[3] * b[2] + a[4] * b[5] + a[5] * b[8];
-        c[6] = a[6] * b[0] + a[7] * b[3] + a[8] * b[6];
-        c[7] = a[6] * b[1] + a[7] * b[4] + a[8] * b[7];
-        c[8] = a[6] * b[2] + a[7] * b[5] + a[8] * b[8];
-        return c;
-      }
-
-      // -----------------------------------------------------------------------------
-      //
-      // -----------------------------------------------------------------------------
-      static bool closeEnough(const float& a, const float& b,
-                              const float& epsilon = std::numeric_limits<float>::epsilon())
-      {
-        return (epsilon > std::abs(a - b));
-      }
-
-      // -----------------------------------------------------------------------------
-      //
-      // -----------------------------------------------------------------------------
-      static K transfer_sign(K a, K b)
-      {
-        if( a > 0.0 && b > 0.0) { return a; }
-        if( a < 0.0 && b > 0.0) { return -1 * a; }
-
-        if( a < 0.0 && b < 0.0) { return a; }
-
-        return -1 * a;
-
-      }
-
-      /* Auxiliary routine: printing eigenvectors */
-      static void print_eigenvectors( const char* desc, int n, float* wi, float* v, int ldv )
-      {
-        int i, j;
-        printf( "\n %s\n", desc );
-        for( i = 0; i < n; i++ )
-        {
-          j = 0;
-          while( j < n )
-          {
-            if( wi[j] == (float)0.0 )
-            {
-              printf( " %6.2f", v[i + j * ldv] );
-              j++;
-            }
-            else
-            {
-              printf( " (%6.2f,%6.2f)", v[i + j * ldv], v[i + (j + 1)*ldv] );
-              printf( " (%6.2f,%6.2f)", v[i + j * ldv], -v[i + (j + 1)*ldv] );
-              j += 2;
-            }
-          }
-          printf( "\n" );
-        }
-      }
 
     private:
       OrientationTransforms(const OrientationTransforms&); // Copy Constructor Not Implemented

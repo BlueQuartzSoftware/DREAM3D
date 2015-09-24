@@ -46,14 +46,14 @@
 #include <QtCore/QDebug>
 
 // DREAM3DLib includes
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/DREAM3DLibVersion.h"
-#include "DREAM3DLib/Plugin/PluginManager.h"
-#include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/Common/FilterFactory.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/SIMPLibVersion.h"
+#include "SIMPLib/Plugin/PluginManager.h"
+#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/Common/FilterFactory.hpp"
 
-#include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
-#include "DREAM3DLib/Plugin/DREAM3DPluginLoader.h"
+#include "SIMPLib/Plugin/ISIMPLibPlugin.h"
+#include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 
 #include "Tools/ToolConfiguration.h"
 
@@ -784,7 +784,7 @@ QString findPath(const QString& groupName, const QString& filtName, const QStrin
   //  std::cout << groupName.toStdString() << "::" << filtName.toStdString() << std::endl;
   QString prefix = D3DTools::GetDREAM3DSourceDir() + "/";
   {
-    QString path = D3DTools::GetDREAM3DLibDir() + "/" + groupName + "Filters/" + filtName + ext;
+    QString path = D3DTools::GetSIMPLibDir() + "/" + groupName + "Filters/" + filtName + ext;
     QFileInfo fi(path);
     if(fi.exists() == true)
     {
@@ -795,7 +795,7 @@ QString findPath(const QString& groupName, const QString& filtName, const QStrin
   PluginManager* pm = PluginManager::Instance();
   QStringList libs = pm->getPluginNames();
 
-  prefix = D3DTools::GetDREAM3DPluginDir();
+  prefix = D3DTools::GetSIMPLibPluginDir();
 
   //  libs << "ProcessModeling" << "UCSB" << "ImageProcessing" << "DDDAnalysisToolbox" << "ImageIO" <<
   //          "OrientationAnalysis" << "Processing" <<  "Reconstruction" << "Sampling" << "Statistics"  <<
@@ -1195,12 +1195,12 @@ int main(int argc, char* argv[])
   QCoreApplication::setOrganizationDomain("bluequartz.net");
   QCoreApplication::setApplicationName("FilterParameterTool");
 
-  //std::cout << "FilterParameterTool Starting. Version " << DREAM3DLib::Version::PackageComplete().toStdString() << std::endl;
+  //std::cout << "FilterParameterTool Starting. Version " << SIMPLib::Version::PackageComplete().toStdString() << std::endl;
 
 #if 1
   // Register all the filters including trying to load those from Plugins
   FilterManager* fm = FilterManager::Instance();
-  DREAM3DPluginLoader::LoadPluginFilters(fm);
+  SIMPLibPluginLoader::LoadPluginFilters(fm);
 
 
   // Send progress messages from PipelineBuilder to this object for display

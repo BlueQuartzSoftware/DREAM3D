@@ -39,8 +39,8 @@
 #include <map>
 
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/StatsGen.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/StatsGen.hpp"
 
 
 #include "UnitTestSupport.hpp"

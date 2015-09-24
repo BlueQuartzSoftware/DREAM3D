@@ -82,7 +82,7 @@ QString Symmetric6x6WidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(FloatVec21_t, " + getPropertyName() + ")\n";
+  ss << "    SIMPL_FILTER_PARAMETER(FloatVec21_t, " + getPropertyName() + ")\n";
   ss << "    Q_PROPERTY(FloatVec21_t " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
@@ -93,5 +93,5 @@ QString Symmetric6x6WidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString Symmetric6x6WidgetCodeGenerator::generateHIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/Symmetric6x6FilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/Symmetric6x6FilterParameter.h\"";
 }

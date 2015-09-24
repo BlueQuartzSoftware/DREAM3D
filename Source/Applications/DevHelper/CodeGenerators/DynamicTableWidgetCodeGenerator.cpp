@@ -92,7 +92,7 @@ QString DynamicTableWidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(DynamicTableData, " + getPropertyName() + ")\n";
+  ss << "    SIMPL_FILTER_PARAMETER(DynamicTableData, " + getPropertyName() + ")\n";
   ss << "    Q_PROPERTY(DynamicTableData " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
@@ -103,7 +103,7 @@ QString DynamicTableWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString DynamicTableWidgetCodeGenerator::generateHIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/DynamicTableData.h\"";
+  return "#include \"SIMPLib/FilterParameters/DynamicTableData.h\"";
 }
 
 // -----------------------------------------------------------------------------
@@ -111,5 +111,5 @@ QString DynamicTableWidgetCodeGenerator::generateHIncludes()
 // -----------------------------------------------------------------------------
 QString DynamicTableWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/DynamicTableFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/DynamicTableFilterParameter.h\"";
 }

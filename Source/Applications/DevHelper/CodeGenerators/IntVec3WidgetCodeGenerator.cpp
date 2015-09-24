@@ -82,7 +82,7 @@ QString IntVec3WidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(IntVec3_t, " + getPropertyName() + ")\n";
+  ss << "    SIMPL_FILTER_PARAMETER(IntVec3_t, " + getPropertyName() + ")\n";
   ss << "    Q_PROPERTY(IntVec3_t " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
@@ -93,5 +93,5 @@ QString IntVec3WidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString IntVec3WidgetCodeGenerator::generateHIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/IntVec3FilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/IntVec3FilterParameter.h\"";
 }

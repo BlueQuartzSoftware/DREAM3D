@@ -37,10 +37,10 @@
 #ifndef _FindFeatureNeighborCAxisMisalignments_H_
 #define _FindFeatureNeighborCAxisMisalignments_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/NeighborList.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/NeighborList.hpp"
 
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
@@ -51,31 +51,31 @@ class FindFeatureNeighborCAxisMisalignments : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindFeatureNeighborCAxisMisalignments)
-    DREAM3D_STATIC_NEW_MACRO(FindFeatureNeighborCAxisMisalignments)
-    DREAM3D_TYPE_MACRO_SUPER(FindFeatureNeighborCAxisMisalignments, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FindFeatureNeighborCAxisMisalignments)
+    SIMPL_STATIC_NEW_MACRO(FindFeatureNeighborCAxisMisalignments)
+    SIMPL_TYPE_MACRO_SUPER(FindFeatureNeighborCAxisMisalignments, AbstractFilter)
 
     virtual ~FindFeatureNeighborCAxisMisalignments();
 
-    DREAM3D_FILTER_PARAMETER(bool, FindAvgMisals)
+    SIMPL_FILTER_PARAMETER(bool, FindAvgMisals)
     Q_PROPERTY(bool FindAvgMisals READ getFindAvgMisals WRITE setFindAvgMisals)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, NeighborListArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, NeighborListArrayPath)
     Q_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, CAxisMisalignmentListArrayName)
+    SIMPL_FILTER_PARAMETER(QString, CAxisMisalignmentListArrayName)
     Q_PROPERTY(QString CAxisMisalignmentListArrayName READ getCAxisMisalignmentListArrayName WRITE setCAxisMisalignmentListArrayName)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
     Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
     Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, AvgCAxisMisalignmentsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, AvgCAxisMisalignmentsArrayName)
     Q_PROPERTY(QString AvgCAxisMisalignmentsArrayName READ getAvgCAxisMisalignmentsArrayName WRITE setAvgCAxisMisalignmentsArrayName)
 
     /**

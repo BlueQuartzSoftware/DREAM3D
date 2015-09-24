@@ -47,8 +47,8 @@
 
 #include "QtSupportLib/FaderWidget.h"
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
@@ -71,8 +71,8 @@ class DREAM3DWidgetsLib_EXPORT FilterParameterWidget : public QFrame
 
     virtual ~FilterParameterWidget();
 
-    DREAM3D_VIRTUAL_INSTANCE_PROPERTY(AbstractFilter*, Filter)
-    DREAM3D_VIRTUAL_INSTANCE_PROPERTY(FilterParameter*, FilterParameter)
+    SIMPL_VIRTUAL_INSTANCE_PROPERTY(AbstractFilter*, Filter)
+    SIMPL_VIRTUAL_INSTANCE_PROPERTY(FilterParameter*, FilterParameter)
     void fadeInWidget(QWidget* widget);
 
     QPointer<FaderWidget> getFaderWidget() const;

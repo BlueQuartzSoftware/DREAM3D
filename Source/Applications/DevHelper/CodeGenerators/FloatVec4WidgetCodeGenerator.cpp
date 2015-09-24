@@ -82,7 +82,7 @@ QString FloatVec4WidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(FloatVec4_t, " + getPropertyName() + ")\n";
+  ss << "    SIMPL_FILTER_PARAMETER(FloatVec4_t, " + getPropertyName() + ")\n";
   ss << "    Q_PROPERTY(FloatVec4_t " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
@@ -93,5 +93,5 @@ QString FloatVec4WidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString FloatVec4WidgetCodeGenerator::generateHIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/FloatVec4FilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/FloatVec4FilterParameter.h\"";
 }

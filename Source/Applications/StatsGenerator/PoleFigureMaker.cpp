@@ -42,7 +42,7 @@
 #include <QtGui/QPainter>
 #include <QtGui/QFont>
 
-#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

@@ -4,16 +4,16 @@
 
 #include "FindDifferenceMap.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/TemplateHelpers.hpp"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArrayCreationFilterParameter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/TemplateHelpers.hpp"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "Statistics/StatisticsConstants.h"
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/partitioner.h>
@@ -56,7 +56,7 @@ class FindDifferenceMapImpl
       }
     }
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     void operator()(const tbb::blocked_range<size_t>& r) const
     {
       generate(r.begin(), r.end());
@@ -87,14 +87,14 @@ class ExecuteFindDifferenceMap
 
     void Execute(IDataArray::Pointer firstArrayPtr, IDataArray::Pointer secondArrayPtr, IDataArray::Pointer differenceMapPtr)
     {
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
       tbb::task_scheduler_init init;
       bool doParallel = true;
 #endif
 
       size_t numTuples = firstArrayPtr->getNumberOfTuples();
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 
       if (doParallel == true)
       {
@@ -170,9 +170,9 @@ void FindDifferenceMap::readFilterParameters(AbstractFilterParametersReader* rea
 int FindDifferenceMap::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FirstInputArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(SecondInputArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(DifferenceMapArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FirstInputArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(SecondInputArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(DifferenceMapArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

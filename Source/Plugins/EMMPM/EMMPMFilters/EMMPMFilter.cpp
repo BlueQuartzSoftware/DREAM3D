@@ -46,17 +46,17 @@
 #include "EMMPM/EMMPMLib/Core/InitializationFunctions.h"
 #include "EMMPM/EMMPMLib/Core/EMMPMUtilities.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/IntFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DoubleFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/BooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArrayCreationFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -146,20 +146,20 @@ void EMMPMFilter::readFilterParameters(AbstractFilterParametersReader* reader, i
 int EMMPMFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputDataArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(NumClasses)
-  DREAM3D_FILTER_WRITE_PARAMETER(ExchangeEnergy)
-  DREAM3D_FILTER_WRITE_PARAMETER(HistogramLoops)
-  DREAM3D_FILTER_WRITE_PARAMETER(SegmentationLoops)
-  DREAM3D_FILTER_WRITE_PARAMETER(UseSimulatedAnnealing)
-  DREAM3D_FILTER_WRITE_PARAMETER(UseGradientPenalty)
-  DREAM3D_FILTER_WRITE_PARAMETER(GradientPenalty)
-  DREAM3D_FILTER_WRITE_PARAMETER(UseCurvaturePenalty)
-  DREAM3D_FILTER_WRITE_PARAMETER(CurvaturePenalty)
-  DREAM3D_FILTER_WRITE_PARAMETER(RMax)
-  DREAM3D_FILTER_WRITE_PARAMETER(EMLoopDelay)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputDataArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(InputDataArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(NumClasses)
+  SIMPL_FILTER_WRITE_PARAMETER(ExchangeEnergy)
+  SIMPL_FILTER_WRITE_PARAMETER(HistogramLoops)
+  SIMPL_FILTER_WRITE_PARAMETER(SegmentationLoops)
+  SIMPL_FILTER_WRITE_PARAMETER(UseSimulatedAnnealing)
+  SIMPL_FILTER_WRITE_PARAMETER(UseGradientPenalty)
+  SIMPL_FILTER_WRITE_PARAMETER(GradientPenalty)
+  SIMPL_FILTER_WRITE_PARAMETER(UseCurvaturePenalty)
+  SIMPL_FILTER_WRITE_PARAMETER(CurvaturePenalty)
+  SIMPL_FILTER_WRITE_PARAMETER(RMax)
+  SIMPL_FILTER_WRITE_PARAMETER(EMLoopDelay)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputDataArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

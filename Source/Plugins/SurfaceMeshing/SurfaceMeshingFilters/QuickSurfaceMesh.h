@@ -37,9 +37,9 @@
 #ifndef _QuickSurfaceMesh_H_
 #define _QuickSurfaceMesh_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
@@ -50,37 +50,37 @@ class QuickSurfaceMesh : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(QuickSurfaceMesh)
-    DREAM3D_STATIC_NEW_MACRO(QuickSurfaceMesh)
-    DREAM3D_TYPE_MACRO_SUPER(QuickSurfaceMesh, AbstractFilter)
+    SIMPL_SHARED_POINTERS(QuickSurfaceMesh)
+    SIMPL_STATIC_NEW_MACRO(QuickSurfaceMesh)
+    SIMPL_TYPE_MACRO_SUPER(QuickSurfaceMesh, AbstractFilter)
 
     virtual ~QuickSurfaceMesh();
 
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceDataContainerName)
+    SIMPL_FILTER_PARAMETER(QString, SurfaceDataContainerName)
     Q_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
 
-    DREAM3D_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
     Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
     Q_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
 
-    DREAM3D_INSTANCE_PROPERTY(bool, TransferPhaseId)
+    SIMPL_INSTANCE_PROPERTY(bool, TransferPhaseId)
     Q_PROPERTY(bool TransferPhaseId READ getTransferPhaseId WRITE setTransferPhaseId)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
     Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, FaceLabelsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, FaceLabelsArrayName)
     Q_PROPERTY(QString FaceLabelsArrayName READ getFaceLabelsArrayName WRITE setFaceLabelsArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, NodeTypesArrayName)
+    SIMPL_FILTER_PARAMETER(QString, NodeTypesArrayName)
     Q_PROPERTY(QString NodeTypesArrayName READ getNodeTypesArrayName WRITE setNodeTypesArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, FacePhasesArrayName)
+    SIMPL_FILTER_PARAMETER(QString, FacePhasesArrayName)
     Q_PROPERTY(QString FacePhasesArrayName READ getFacePhasesArrayName WRITE setFacePhasesArrayName)
 
     /**

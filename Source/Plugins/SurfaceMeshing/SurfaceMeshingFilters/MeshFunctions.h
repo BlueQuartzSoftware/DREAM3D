@@ -37,10 +37,10 @@
 #ifndef _MeshFunctions_H_
 #define _MeshFunctions_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Geometry/MeshStructs.h"
-#include "DREAM3DLib/Geometry/VertexGeom.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Geometry/MeshStructs.h"
+#include "SIMPLib/Geometry/VertexGeom.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/MeshLinearAlgebra.h"
 

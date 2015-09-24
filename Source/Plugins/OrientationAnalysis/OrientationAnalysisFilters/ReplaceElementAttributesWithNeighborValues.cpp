@@ -34,15 +34,15 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "ReplaceElementAttributesWithNeighborValues.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/TemplateHelpers.hpp"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/DoubleFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/BooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/TemplateHelpers.hpp"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
@@ -56,9 +56,9 @@ namespace Detail
   class LessThanComparison
   {
     public:
-      DREAM3D_SHARED_POINTERS(LessThanComparison<T>)
-      DREAM3D_STATIC_NEW_MACRO(LessThanComparison<T>)
-      DREAM3D_TYPE_MACRO(LessThanComparison<T>)
+      SIMPL_SHARED_POINTERS(LessThanComparison<T>)
+      SIMPL_STATIC_NEW_MACRO(LessThanComparison<T>)
+      SIMPL_TYPE_MACRO(LessThanComparison<T>)
       virtual ~LessThanComparison() {}
 
       virtual bool compare(T a, T b) { return a < b; }
@@ -75,9 +75,9 @@ namespace Detail
   class GreaterThanComparison : public LessThanComparison<T>
   {
     public:
-      DREAM3D_SHARED_POINTERS(GreaterThanComparison<T>)
-      DREAM3D_STATIC_NEW_MACRO(GreaterThanComparison<T>)
-      DREAM3D_TYPE_MACRO_SUPER(GreaterThanComparison<T>, LessThanComparison<T>)
+      SIMPL_SHARED_POINTERS(GreaterThanComparison<T>)
+      SIMPL_STATIC_NEW_MACRO(GreaterThanComparison<T>)
+      SIMPL_TYPE_MACRO_SUPER(GreaterThanComparison<T>, LessThanComparison<T>)
       virtual ~GreaterThanComparison() {}
 
       virtual bool compare(T a, T b) { return a > b; }
@@ -290,10 +290,10 @@ void ReplaceElementAttributesWithNeighborValues::readFilterParameters(AbstractFi
 int ReplaceElementAttributesWithNeighborValues::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(ConfidenceIndexArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(MinConfidence)
-  DREAM3D_FILTER_WRITE_PARAMETER(Loop)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(ConfidenceIndexArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(MinConfidence)
+  SIMPL_FILTER_WRITE_PARAMETER(Loop)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

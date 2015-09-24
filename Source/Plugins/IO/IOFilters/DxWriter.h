@@ -37,10 +37,10 @@
 #ifndef _DxWriter_H_
 #define _DxWriter_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/CoreFilters/FileWriter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/CoreFilters/FileWriter.h"
 
 /**
  * @brief The DxWriter class. See [Filter documentation](@ref dxreader) for details.
@@ -49,16 +49,16 @@ class DxWriter : public FileWriter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(DxWriter)
-    DREAM3D_STATIC_NEW_MACRO(DxWriter)
-    DREAM3D_TYPE_MACRO_SUPER(DxWriter, FileWriter)
+    SIMPL_SHARED_POINTERS(DxWriter)
+    SIMPL_STATIC_NEW_MACRO(DxWriter)
+    SIMPL_TYPE_MACRO_SUPER(DxWriter, FileWriter)
 
     virtual ~DxWriter();
 
-    DREAM3D_FILTER_PARAMETER(bool, AddSurfaceLayer)
+    SIMPL_FILTER_PARAMETER(bool, AddSurfaceLayer)
     Q_PROPERTY(bool AddSurfaceLayer READ getAddSurfaceLayer WRITE setAddSurfaceLayer)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
     /**

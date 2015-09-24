@@ -35,9 +35,9 @@
 
 #include <limits>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Math/QuaternionMath.hpp"
-#include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Math/QuaternionMath.hpp"
+#include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"

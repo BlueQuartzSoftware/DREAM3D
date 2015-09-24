@@ -40,9 +40,9 @@
 #define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
 #endif
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The ConvertHexGridToSquareGrid class. See [Filter documentation](@ref converthexgridtosquaregrid) for details.
@@ -51,41 +51,41 @@ class ConvertHexGridToSquareGrid : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(ConvertHexGridToSquareGrid)
-    DREAM3D_STATIC_NEW_MACRO(ConvertHexGridToSquareGrid)
-    DREAM3D_TYPE_MACRO_SUPER(ConvertHexGridToSquareGrid, AbstractFilter)
+    SIMPL_SHARED_POINTERS(ConvertHexGridToSquareGrid)
+    SIMPL_STATIC_NEW_MACRO(ConvertHexGridToSquareGrid)
+    SIMPL_TYPE_MACRO_SUPER(ConvertHexGridToSquareGrid, AbstractFilter)
 
     virtual ~ConvertHexGridToSquareGrid();
 
-    DREAM3D_INSTANCE_PROPERTY(int64_t, ZStartIndex)
+    SIMPL_INSTANCE_PROPERTY(int64_t, ZStartIndex)
 
-    DREAM3D_INSTANCE_PROPERTY(int64_t, ZEndIndex)
+    SIMPL_INSTANCE_PROPERTY(int64_t, ZEndIndex)
 
-    DREAM3D_INSTANCE_PROPERTY(float, XResolution)
+    SIMPL_INSTANCE_PROPERTY(float, XResolution)
 
-    DREAM3D_INSTANCE_PROPERTY(float, YResolution)
+    SIMPL_INSTANCE_PROPERTY(float, YResolution)
 
-    DREAM3D_FILTER_PARAMETER(QString, InputPath)
+    SIMPL_FILTER_PARAMETER(QString, InputPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, OutputPath)
+    SIMPL_FILTER_PARAMETER(QString, OutputPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, OutputPrefix)
+    SIMPL_FILTER_PARAMETER(QString, OutputPrefix)
 
-    DREAM3D_FILTER_PARAMETER(QString, FilePrefix)
+    SIMPL_FILTER_PARAMETER(QString, FilePrefix)
 
-    DREAM3D_FILTER_PARAMETER(QString, FileSuffix)
+    SIMPL_FILTER_PARAMETER(QString, FileSuffix)
 
-    DREAM3D_FILTER_PARAMETER(QString, FileExtension)
+    SIMPL_FILTER_PARAMETER(QString, FileExtension)
 
-    DREAM3D_FILTER_PARAMETER(int, PaddingDigits)
+    SIMPL_FILTER_PARAMETER(int, PaddingDigits)
 
-    DREAM3D_INSTANCE_PROPERTY(int, NumCols)
+    SIMPL_INSTANCE_PROPERTY(int, NumCols)
 
-    DREAM3D_INSTANCE_PROPERTY(int, NumRows)
+    SIMPL_INSTANCE_PROPERTY(int, NumRows)
 
-    DREAM3D_INSTANCE_PROPERTY(bool, HeaderIsComplete)
+    SIMPL_INSTANCE_PROPERTY(bool, HeaderIsComplete)
 
-    DREAM3D_FILTER_PARAMETER(int, HexGridStack)
+    SIMPL_FILTER_PARAMETER(int, HexGridStack)
     Q_PROPERTY(int HexGridStack READ getHexGridStack WRITE setHexGridStack)
 
     /**

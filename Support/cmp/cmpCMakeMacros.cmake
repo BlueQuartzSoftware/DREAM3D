@@ -132,16 +132,7 @@ function(BuildQtAppBundle)
         ELSE(QT_MAC_USE_COCOA)
             set(qt_menu_nib_sources)
         endif(QT_MAC_USE_COCOA)
-
-#-- Write out a qt.conf file to place in our App bundle
-#        set(qt_conf_file ${${QAB_TARGET}_BINARY_DIR}/qt.conf)
-#        file(WRITE ${qt_conf_file})
-#        set_source_files_properties(${qt_conf_file}
-#                                PROPERTIES
-#                                MACOSX_PACKAGE_LOCATION Resources)
-#
-#        list(APPEND QAB_SOURCES ${qt_menu_nib_sources} ${qt_conf_file})
-         list(APPEND QAB_SOURCES ${qt_menu_nib_sources})
+        list(APPEND QAB_SOURCES ${qt_menu_nib_sources})
     elseif(WIN32)
         SET(GUI_TYPE WIN32)
         FILE (WRITE "${CMAKE_CURRENT_BINARY_DIR}/Icon.rc"

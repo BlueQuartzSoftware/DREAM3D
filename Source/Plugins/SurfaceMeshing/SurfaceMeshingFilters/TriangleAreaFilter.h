@@ -37,9 +37,9 @@
 #ifndef _TriangleAreaFilter_H_
 #define _TriangleAreaFilter_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
@@ -50,13 +50,13 @@ class TriangleAreaFilter : public SurfaceMeshFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(TriangleAreaFilter)
-    DREAM3D_STATIC_NEW_MACRO(TriangleAreaFilter)
-    DREAM3D_TYPE_MACRO_SUPER(TriangleAreaFilter, SurfaceMeshFilter)
+    SIMPL_SHARED_POINTERS(TriangleAreaFilter)
+    SIMPL_STATIC_NEW_MACRO(TriangleAreaFilter)
+    SIMPL_TYPE_MACRO_SUPER(TriangleAreaFilter, SurfaceMeshFilter)
 
     virtual ~TriangleAreaFilter();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTriangleAreasArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTriangleAreasArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshTriangleAreasArrayPath READ getSurfaceMeshTriangleAreasArrayPath WRITE setSurfaceMeshTriangleAreasArrayPath)
 
     /**

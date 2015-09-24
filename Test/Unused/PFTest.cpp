@@ -46,9 +46,9 @@
 #include "EbsdLib/EbsdConstants.h"
 
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/Texture.hpp"
-#include "DREAM3DLib/Common/StatsGen.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/Texture.hpp"
+#include "SIMPLib/Common/StatsGen.hpp"
 
 #define PFTEST_NO_QOBJECT 1
 

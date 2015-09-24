@@ -86,7 +86,7 @@ QString DataArraySelectionWidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(DataArrayPath, " + getPropertyName() + ")\n";
+  ss << "    SIMPL_FILTER_PARAMETER(DataArrayPath, " + getPropertyName() + ")\n";
   ss << "    Q_PROPERTY(DataArrayPath " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
@@ -97,5 +97,5 @@ QString DataArraySelectionWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString DataArraySelectionWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h\"";
 }

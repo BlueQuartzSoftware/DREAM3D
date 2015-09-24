@@ -37,9 +37,9 @@
 #ifndef _FindFeatureReferenceCAxisMisorientations_H_
 #define _FindFeatureReferenceCAxisMisorientations_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
@@ -50,31 +50,31 @@ class FindFeatureReferenceCAxisMisorientations : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindFeatureReferenceCAxisMisorientations)
-    DREAM3D_STATIC_NEW_MACRO(FindFeatureReferenceCAxisMisorientations)
-    DREAM3D_TYPE_MACRO_SUPER(FindFeatureReferenceCAxisMisorientations, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FindFeatureReferenceCAxisMisorientations)
+    SIMPL_STATIC_NEW_MACRO(FindFeatureReferenceCAxisMisorientations)
+    SIMPL_TYPE_MACRO_SUPER(FindFeatureReferenceCAxisMisorientations, AbstractFilter)
 
     virtual ~FindFeatureReferenceCAxisMisorientations();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
     Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, AvgCAxesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, AvgCAxesArrayPath)
     Q_PROPERTY(DataArrayPath AvgCAxesArrayPath READ getAvgCAxesArrayPath WRITE setAvgCAxesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
     Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, FeatureAvgCAxisMisorientationsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, FeatureAvgCAxisMisorientationsArrayName)
     Q_PROPERTY(QString FeatureAvgCAxisMisorientationsArrayName READ getFeatureAvgCAxisMisorientationsArrayName WRITE setFeatureAvgCAxisMisorientationsArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, FeatureStdevCAxisMisorientationsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, FeatureStdevCAxisMisorientationsArrayName)
     Q_PROPERTY(QString FeatureStdevCAxisMisorientationsArrayName READ getFeatureStdevCAxisMisorientationsArrayName WRITE setFeatureStdevCAxisMisorientationsArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, FeatureReferenceCAxisMisorientationsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, FeatureReferenceCAxisMisorientationsArrayName)
     Q_PROPERTY(QString FeatureReferenceCAxisMisorientationsArrayName READ getFeatureReferenceCAxisMisorientationsArrayName WRITE setFeatureReferenceCAxisMisorientationsArrayName)
 
     /**

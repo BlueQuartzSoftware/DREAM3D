@@ -37,9 +37,9 @@
 #ifndef _AddBadData_H_
 #define _AddBadData_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The AddBadData class. See [Filter documentation](@ref addbaddata) for details.
@@ -48,25 +48,25 @@ class AddBadData : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(AddBadData)
-    DREAM3D_STATIC_NEW_MACRO(AddBadData)
-    DREAM3D_TYPE_MACRO_SUPER(AddBadData, AbstractFilter)
+    SIMPL_SHARED_POINTERS(AddBadData)
+    SIMPL_STATIC_NEW_MACRO(AddBadData)
+    SIMPL_TYPE_MACRO_SUPER(AddBadData, AbstractFilter)
 
     virtual ~AddBadData();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, GBEuclideanDistancesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, GBEuclideanDistancesArrayPath)
     Q_PROPERTY(DataArrayPath GBEuclideanDistancesArrayPath READ getGBEuclideanDistancesArrayPath WRITE setGBEuclideanDistancesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(bool, PoissonNoise)
+    SIMPL_FILTER_PARAMETER(bool, PoissonNoise)
     Q_PROPERTY(bool PoissonNoise READ getPoissonNoise WRITE setPoissonNoise)
 
-    DREAM3D_FILTER_PARAMETER(float, PoissonVolFraction)
+    SIMPL_FILTER_PARAMETER(float, PoissonVolFraction)
     Q_PROPERTY(float PoissonVolFraction READ getPoissonVolFraction WRITE setPoissonVolFraction)
 
-    DREAM3D_FILTER_PARAMETER(bool, BoundaryNoise)
+    SIMPL_FILTER_PARAMETER(bool, BoundaryNoise)
     Q_PROPERTY(bool BoundaryNoise READ getBoundaryNoise WRITE setBoundaryNoise)
 
-    DREAM3D_FILTER_PARAMETER(float, BoundaryVolFraction)
+    SIMPL_FILTER_PARAMETER(float, BoundaryVolFraction)
     Q_PROPERTY(float BoundaryVolFraction READ getBoundaryVolFraction WRITE setBoundaryVolFraction)
 
     /**

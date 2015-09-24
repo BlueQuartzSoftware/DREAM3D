@@ -82,7 +82,7 @@ QString ThirdOrderPolynomialWidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(Float3rdOrderPoly_t, " + getPropertyName() + ")\n";
+  ss << "    SIMPL_FILTER_PARAMETER(Float3rdOrderPoly_t, " + getPropertyName() + ")\n";
   ss << "    Q_PROPERTY(Float3rdOrderPoly_t " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
@@ -93,5 +93,5 @@ QString ThirdOrderPolynomialWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString ThirdOrderPolynomialWidgetCodeGenerator::generateHIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/ThirdOrderPolynomialFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/ThirdOrderPolynomialFilterParameter.h\"";
 }

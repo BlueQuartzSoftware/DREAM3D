@@ -65,7 +65,7 @@ function writeInitialCache()
 	echo "BOOST_ROOT:PATH=/usr" >> $1
 	echo "TBB_INSTALL_DIR:PATH=${DREAM3D_SDK_ROOT}/tbb41_20130116oss" >> $1
 	echo "TBB_ARCH_PLATFORM:STRING=${TBB_ARCH_PLATFORM}" >> $1
-	echo "DREAM3D_USE_MULTITHREADED_ALGOS:BOOL=ON" >> $1
+	echo "SIMPL_USE_MULTITHREADED_ALGOS:BOOL=ON" >> $1
 	echo "ITK_DIR:PATH=${DREAM3D_SDK_ROOT}/ITK-4.5.1" >> $1
 	echo "DREAM3D_EXTRA_PLUGINS:STRING=ImageProcessing;TransformationPhase" >> $1
     echo "DREAM3D_LINUX_SYSTEM=RHEL" >> $1

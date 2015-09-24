@@ -37,15 +37,15 @@
 #ifndef _FloatVec4WidgetCodeGenerator_H_
 #define _FloatVec4WidgetCodeGenerator_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "DevHelper/CodeGenerators/FPCodeGenerator.h"
 
 class FloatVec4WidgetCodeGenerator : public FPCodeGenerator
 {
   public:
-    DREAM3D_SHARED_POINTERS(FloatVec4WidgetCodeGenerator)
+    SIMPL_SHARED_POINTERS(FloatVec4WidgetCodeGenerator)
 
     static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
     {

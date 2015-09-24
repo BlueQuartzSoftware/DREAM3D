@@ -45,12 +45,12 @@
 #include <QtGui/QImage>
 #include <QtGui/QImageReader>
 
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/Utilities/FilePathGenerator.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Utilities/FilePathGenerator.h"
 
 #include "ImageIO/ImageIOConstants.h"
 #include "ImageIO/FilterParameters/ImportVectorImageStackFilterParameter.h"
@@ -141,23 +141,23 @@ void ImportVectorImageStack::readFilterParameters(AbstractFilterParametersReader
 int ImportVectorImageStack::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(VectorDataArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(StartIndex)
-  DREAM3D_FILTER_WRITE_PARAMETER(EndIndex)
-  DREAM3D_FILTER_WRITE_PARAMETER(StartComp)
-  DREAM3D_FILTER_WRITE_PARAMETER(EndComp)
-  DREAM3D_FILTER_WRITE_PARAMETER(PaddingDigits)
-  DREAM3D_FILTER_WRITE_PARAMETER(RefFrameZDir)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FilePrefix)
-  DREAM3D_FILTER_WRITE_PARAMETER(Separator)
-  DREAM3D_FILTER_WRITE_PARAMETER(FileSuffix)
-  DREAM3D_FILTER_WRITE_PARAMETER(FileExtension)
-  DREAM3D_FILTER_WRITE_PARAMETER(Origin)
-  DREAM3D_FILTER_WRITE_PARAMETER(Resolution)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(DataContainerName)
+  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(VectorDataArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(StartIndex)
+  SIMPL_FILTER_WRITE_PARAMETER(EndIndex)
+  SIMPL_FILTER_WRITE_PARAMETER(StartComp)
+  SIMPL_FILTER_WRITE_PARAMETER(EndComp)
+  SIMPL_FILTER_WRITE_PARAMETER(PaddingDigits)
+  SIMPL_FILTER_WRITE_PARAMETER(RefFrameZDir)
+  SIMPL_FILTER_WRITE_PARAMETER(InputPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FilePrefix)
+  SIMPL_FILTER_WRITE_PARAMETER(Separator)
+  SIMPL_FILTER_WRITE_PARAMETER(FileSuffix)
+  SIMPL_FILTER_WRITE_PARAMETER(FileExtension)
+  SIMPL_FILTER_WRITE_PARAMETER(Origin)
+  SIMPL_FILTER_WRITE_PARAMETER(Resolution)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -427,23 +427,23 @@ AbstractFilter::Pointer ImportVectorImageStack::newFilterInstance(bool copyFilte
     filter->setFilterParameters(getFilterParameters() );
     // We are going to hand copy all of the parameters because the other way of copying the parameters are going to
     // miss some of them because we are not enumerating all of them.
-    DREAM3D_COPY_INSTANCEVAR(DataContainerName)
-    DREAM3D_COPY_INSTANCEVAR(CellAttributeMatrixName)
-    DREAM3D_COPY_INSTANCEVAR(StartIndex)
-    DREAM3D_COPY_INSTANCEVAR(EndIndex)
-    DREAM3D_COPY_INSTANCEVAR(StartComp)
-    DREAM3D_COPY_INSTANCEVAR(EndComp)
-    DREAM3D_COPY_INSTANCEVAR(Resolution)
-    DREAM3D_COPY_INSTANCEVAR(Origin)
-    DREAM3D_COPY_INSTANCEVAR(InputPath)
-    DREAM3D_COPY_INSTANCEVAR(FilePrefix)
-    DREAM3D_COPY_INSTANCEVAR(Separator)
-    DREAM3D_COPY_INSTANCEVAR(FileSuffix)
-    DREAM3D_COPY_INSTANCEVAR(FileExtension)
-    DREAM3D_COPY_INSTANCEVAR(PaddingDigits)
-    DREAM3D_COPY_INSTANCEVAR(RefFrameZDir)
-    DREAM3D_COPY_INSTANCEVAR(ImageVector)
-    DREAM3D_COPY_INSTANCEVAR(VectorDataArrayName)
+    SIMPL_COPY_INSTANCEVAR(DataContainerName)
+    SIMPL_COPY_INSTANCEVAR(CellAttributeMatrixName)
+    SIMPL_COPY_INSTANCEVAR(StartIndex)
+    SIMPL_COPY_INSTANCEVAR(EndIndex)
+    SIMPL_COPY_INSTANCEVAR(StartComp)
+    SIMPL_COPY_INSTANCEVAR(EndComp)
+    SIMPL_COPY_INSTANCEVAR(Resolution)
+    SIMPL_COPY_INSTANCEVAR(Origin)
+    SIMPL_COPY_INSTANCEVAR(InputPath)
+    SIMPL_COPY_INSTANCEVAR(FilePrefix)
+    SIMPL_COPY_INSTANCEVAR(Separator)
+    SIMPL_COPY_INSTANCEVAR(FileSuffix)
+    SIMPL_COPY_INSTANCEVAR(FileExtension)
+    SIMPL_COPY_INSTANCEVAR(PaddingDigits)
+    SIMPL_COPY_INSTANCEVAR(RefFrameZDir)
+    SIMPL_COPY_INSTANCEVAR(ImageVector)
+    SIMPL_COPY_INSTANCEVAR(VectorDataArrayName)
   }
   return filter;
 }

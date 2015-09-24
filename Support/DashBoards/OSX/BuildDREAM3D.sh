@@ -34,7 +34,7 @@ function writeInitialCache()
 	echo "HDF5_INSTALL:PATH=${DREAM3D_SDK_ROOT}/hdf5-1.8.13" >> $1
 	echo "BOOST_ROOT:PATH=${DREAM3D_SDK_ROOT}/boost-1.55.0" >> $1
 	echo "TBB_INSTALL_DIR:PATH=${DREAM3D_SDK_ROOT}/tbb42_20140601oss" >> $1
-	echo "DREAM3D_USE_MULTITHREADED_ALGOS:BOOL=ON" >> $1
+	echo "SIMPL_USE_MULTITHREADED_ALGOS:BOOL=ON" >> $1
 	echo "TBB_ARCH_TYPE:STRING=intel64" >> $1
 	echo "ITK_DIR:PATH=${DREAM3D_SDK_ROOT}/ITKBuild" >> $1
 	echo "DREAM3D_EXTRA_PLUGINS:STRING=ImageProcessing;TransformationPhase" >> $1

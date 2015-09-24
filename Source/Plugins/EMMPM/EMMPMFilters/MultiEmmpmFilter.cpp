@@ -46,12 +46,12 @@
 #include "EMMPM/EMMPMLib/Core/InitializationFunctions.h"
 #include "EMMPM/EMMPMLib/Core/EMMPMUtilities.h"
 
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/BooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -139,22 +139,22 @@ void MultiEmmpmFilter::readFilterParameters(AbstractFilterParametersReader* read
 int MultiEmmpmFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputDataArrayVector)
-  DREAM3D_FILTER_WRITE_PARAMETER(NumClasses)
-  DREAM3D_FILTER_WRITE_PARAMETER(ExchangeEnergy)
-  DREAM3D_FILTER_WRITE_PARAMETER(HistogramLoops)
-  DREAM3D_FILTER_WRITE_PARAMETER(SegmentationLoops)
-  DREAM3D_FILTER_WRITE_PARAMETER(UseSimulatedAnnealing)
-  DREAM3D_FILTER_WRITE_PARAMETER(UseGradientPenalty)
-  DREAM3D_FILTER_WRITE_PARAMETER(GradientPenalty)
-  DREAM3D_FILTER_WRITE_PARAMETER(UseCurvaturePenalty)
-  DREAM3D_FILTER_WRITE_PARAMETER(CurvaturePenalty)
-  DREAM3D_FILTER_WRITE_PARAMETER(RMax)
-  DREAM3D_FILTER_WRITE_PARAMETER(EMLoopDelay)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(UsePreviousMuSigma)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputArrayPrefix)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(InputDataArrayVector)
+  SIMPL_FILTER_WRITE_PARAMETER(NumClasses)
+  SIMPL_FILTER_WRITE_PARAMETER(ExchangeEnergy)
+  SIMPL_FILTER_WRITE_PARAMETER(HistogramLoops)
+  SIMPL_FILTER_WRITE_PARAMETER(SegmentationLoops)
+  SIMPL_FILTER_WRITE_PARAMETER(UseSimulatedAnnealing)
+  SIMPL_FILTER_WRITE_PARAMETER(UseGradientPenalty)
+  SIMPL_FILTER_WRITE_PARAMETER(GradientPenalty)
+  SIMPL_FILTER_WRITE_PARAMETER(UseCurvaturePenalty)
+  SIMPL_FILTER_WRITE_PARAMETER(CurvaturePenalty)
+  SIMPL_FILTER_WRITE_PARAMETER(RMax)
+  SIMPL_FILTER_WRITE_PARAMETER(EMLoopDelay)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(UsePreviousMuSigma)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputArrayPrefix)
 
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -336,19 +336,19 @@ AbstractFilter::Pointer MultiEmmpmFilter::newFilterInstance(bool copyFilterParam
   MultiEmmpmFilter::Pointer filter = MultiEmmpmFilter::New();
   if (true == copyFilterParameters)
   {
-    DREAM3D_COPY_INSTANCEVAR(InputDataArrayVector)
-    DREAM3D_COPY_INSTANCEVAR(NumClasses)
-    DREAM3D_COPY_INSTANCEVAR(ExchangeEnergy)
-    DREAM3D_COPY_INSTANCEVAR(HistogramLoops)
-    DREAM3D_COPY_INSTANCEVAR(SegmentationLoops)
-    DREAM3D_COPY_INSTANCEVAR(UseSimulatedAnnealing)
-    DREAM3D_COPY_INSTANCEVAR(UseGradientPenalty)
-    DREAM3D_COPY_INSTANCEVAR(GradientPenalty)
-    DREAM3D_COPY_INSTANCEVAR(UseCurvaturePenalty)
-    DREAM3D_COPY_INSTANCEVAR(CurvaturePenalty)
-    DREAM3D_COPY_INSTANCEVAR(RMax)
-    DREAM3D_COPY_INSTANCEVAR(EMLoopDelay)
-    DREAM3D_COPY_INSTANCEVAR(OutputAttributeMatrixName)
+    SIMPL_COPY_INSTANCEVAR(InputDataArrayVector)
+    SIMPL_COPY_INSTANCEVAR(NumClasses)
+    SIMPL_COPY_INSTANCEVAR(ExchangeEnergy)
+    SIMPL_COPY_INSTANCEVAR(HistogramLoops)
+    SIMPL_COPY_INSTANCEVAR(SegmentationLoops)
+    SIMPL_COPY_INSTANCEVAR(UseSimulatedAnnealing)
+    SIMPL_COPY_INSTANCEVAR(UseGradientPenalty)
+    SIMPL_COPY_INSTANCEVAR(GradientPenalty)
+    SIMPL_COPY_INSTANCEVAR(UseCurvaturePenalty)
+    SIMPL_COPY_INSTANCEVAR(CurvaturePenalty)
+    SIMPL_COPY_INSTANCEVAR(RMax)
+    SIMPL_COPY_INSTANCEVAR(EMLoopDelay)
+    SIMPL_COPY_INSTANCEVAR(OutputAttributeMatrixName)
   }
   return filter;
 }

@@ -38,9 +38,9 @@
 
 #include <QtCore/QString>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/IDataArray.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
 
@@ -57,21 +57,21 @@ class BinaryNodesTrianglesReader : public SurfaceMeshFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(BinaryNodesTrianglesReader)
-    DREAM3D_STATIC_NEW_MACRO(BinaryNodesTrianglesReader)
-    DREAM3D_TYPE_MACRO_SUPER(BinaryNodesTrianglesReader, SurfaceMeshFilter)
+    SIMPL_SHARED_POINTERS(BinaryNodesTrianglesReader)
+    SIMPL_STATIC_NEW_MACRO(BinaryNodesTrianglesReader)
+    SIMPL_TYPE_MACRO_SUPER(BinaryNodesTrianglesReader, SurfaceMeshFilter)
 
     virtual ~BinaryNodesTrianglesReader();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
+    SIMPL_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
+    SIMPL_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
+    SIMPL_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(FaceLabelsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeTypesArrayName)
+    SIMPL_INSTANCE_STRING_PROPERTY(FaceLabelsArrayName)
+    SIMPL_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeTypesArrayName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(BinaryNodesFile)
-    DREAM3D_INSTANCE_STRING_PROPERTY(BinaryTrianglesFile)
+    SIMPL_INSTANCE_STRING_PROPERTY(BinaryNodesFile)
+    SIMPL_INSTANCE_STRING_PROPERTY(BinaryTrianglesFile)
 
     /**
      * @brief setupFilterParameters Reimplemented from @see AbstractFilter class

@@ -14,14 +14,14 @@
 
 #include <QtCore/QVector>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Math/QuaternionMath.hpp"
-#include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Math/QuaternionMath.hpp"
+#include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
-using namespace DREAM3D::Constants;
+using namespace SIMPLib::Constants;
 
 #include "OrientationLib/OrientationLib.h"
 #include "OrientationLib/OrientationMath/OrientationMath.h"
@@ -35,7 +35,8 @@ using namespace DREAM3D::Constants;
 typedef OrientationArray<float> FOrientArrayType;
 typedef std::vector<float> FloatVectorType;
 typedef QVector<float> FloatQVectorType;
-
+typedef std::vector<double> DoubleVectorType;
+typedef QVector<double> DoubleQVectorType;
 
 // -----------------------------------------------------------------------------
 //
@@ -90,7 +91,7 @@ void Test_eu_check()
     eu_r[2] = 0.8661895f;
     result = OrientationTransformType::eu_check(eu_r);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
-    eu_r[1] = eu_r[1] - DREAM3D::Constants::k_Pi;
+    eu_r[1] = eu_r[1] - SIMPLib::Constants::k_Pi;
     result = OrientationTransformType::eu_check(eu_r);
     DREAM3D_REQUIRE_EQUAL(result.result, 1);
   }
@@ -384,7 +385,7 @@ void Test_ax_check()
     ax[0] = 0.0f;
     ax[1] = 0.0f;
     ax[2] = 1.0f;
-    ax[3] = DREAM3D::Constants::k_Pi - 0.00001f;
+    ax[3] = SIMPLib::Constants::k_Pi - 0.00001f;
     result = OrientationTransformType::ax_check(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 1);
 
@@ -392,7 +393,7 @@ void Test_ax_check()
     result = OrientationTransformType::ax_check(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
 
-    ax[3] = DREAM3D::Constants::k_Pi + 1.0f;
+    ax[3] = SIMPLib::Constants::k_Pi + 1.0f;
     result = OrientationTransformType::ax_check(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
   }
@@ -405,7 +406,7 @@ void Test_ax_check()
     ax[0] = 0.0f;
     ax[1] = 0.0f;
     ax[2] = 1.0f;
-    ax[3] = DREAM3D::Constants::k_Pi - 0.00001f;
+    ax[3] = SIMPLib::Constants::k_Pi - 0.00001f;
     result = OrientationTransformType::ax_check(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 1);
 
@@ -413,7 +414,7 @@ void Test_ax_check()
     result = OrientationTransformType::ax_check(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
 
-    ax[3] = DREAM3D::Constants::k_Pi + 1.0;
+    ax[3] = SIMPLib::Constants::k_Pi + 1.0;
     result = OrientationTransformType::ax_check(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
   }
@@ -426,7 +427,7 @@ void Test_ax_check()
     ax[0] = 0.0f;
     ax[1] = 0.0f;
     ax[2] = 1.0f;
-    ax[3] = DREAM3D::Constants::k_Pi - 0.00001f;
+    ax[3] = SIMPLib::Constants::k_Pi - 0.00001f;
     result = OrientationTransformType::ax_check(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 1);
 
@@ -434,7 +435,7 @@ void Test_ax_check()
     result = OrientationTransformType::ax_check(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
 
-    ax[3] = DREAM3D::Constants::k_Pi + 1.0f;
+    ax[3] = SIMPLib::Constants::k_Pi + 1.0f;
     result = OrientationTransformType::ax_check(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
   }
@@ -468,7 +469,7 @@ void Test_om_check()
     result = OrientationTransformType::om_check(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
 
-    ax[3] = DREAM3D::Constants::k_Pi + 1.0f;
+    ax[3] = SIMPLib::Constants::k_Pi + 1.0f;
     result = OrientationTransformType::om_check(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
   }
@@ -495,7 +496,7 @@ void Test_om_check()
     result = OrientationTransformType::om_check(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
 
-    ax[3] = DREAM3D::Constants::k_Pi + 1.0f;
+    ax[3] = SIMPLib::Constants::k_Pi + 1.0f;
     result = OrientationTransformType::om_check(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
   }
@@ -522,7 +523,7 @@ void Test_om_check()
     result = OrientationTransformType::om_check(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
 
-    ax[3] = DREAM3D::Constants::k_Pi + 1.0f;
+    ax[3] = SIMPLib::Constants::k_Pi + 1.0f;
     result = OrientationTransformType::om_check(ax);
     DREAM3D_REQUIRE_EQUAL(result.result, 0);
   }
@@ -551,7 +552,7 @@ void Test_GenRot()
 {
 
   float eu[3] = { 1.0f, 0.0f, 0.0f};
-  float omega = DREAM3D::Constants::k_PiOver2;
+  float omega = SIMPLib::Constants::k_PiOver2;
   GenRotTest<FOrientArrayType, float>(eu, omega);
   GenRotTest<FloatVectorType, float>(eu, omega);
   GenRotTest<FloatQVectorType, float>(eu, omega);
@@ -584,7 +585,7 @@ void Print_OM(const T& om)
 template<typename T>
 void Print_AX(const T& om)
 {
-  printf("Axis angle pair [n; angle (deg)] :   % 3.6f    % 3.6f    % 3.6f  :  % 3.6f\n", om[0], om[1], om[2], om[3]*DREAM3D::Constants::k_180OverPi);
+  printf("Axis angle pair [n; angle (deg)] :   % 3.6f    % 3.6f    % 3.6f  :  % 3.6f\n", om[0], om[1], om[2], om[3]*SIMPLib::Constants::k_180OverPi);
 }
 
 // -----------------------------------------------------------------------------
@@ -638,7 +639,7 @@ void Print_CU(const T& om)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void EU_2_XXX(float* in)
+void EU_2_XXX(double* in)
 {
   T eu(3);
   eu[0] = in[0];
@@ -681,11 +682,11 @@ void EU_2_XXX(float* in)
 void Test_eu2_XXX()
 {
   std::cout << "Test_eu2_XXX  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << std::endl;
-  float eu[3] = {k_PiOver2, 0.0f, 0.0f};
-  Print_EU<float*>(eu);
-  EU_2_XXX<FOrientArrayType>(eu);
-  EU_2_XXX<FloatVectorType>(eu);
-  EU_2_XXX<FloatQVectorType>(eu);
+  double eu[3] = {214.4487933 * SIMPLib::Constants::k_DegToRad, 58.8567729 * SIMPLib::Constants::k_DegToRad, 124.4487933 * SIMPLib::Constants::k_DegToRad};
+  Print_EU<double*>(eu);
+  EU_2_XXX<DOrientArrayType>(eu);
+  EU_2_XXX<DoubleVectorType>(eu);
+  EU_2_XXX<DoubleQVectorType>(eu);
 }
 
 // -----------------------------------------------------------------------------
@@ -920,7 +921,7 @@ void Test_qu2_XXX()
 {
   {
     std::cout << "Test_qu2_XXX  (SCALAR, <X, Y, Z>) ***************************************" << std::endl;
-    float qu[4] = {DREAM3D::Constants::k_1OverRoot2, 0.0f, 0.0f, -DREAM3D::Constants::k_1OverRoot2};
+    float qu[4] = {SIMPLib::Constants::k_1OverRoot2, 0.0f, 0.0f, -SIMPLib::Constants::k_1OverRoot2};
     Print_QU<float*>(qu, QuaternionMathF::QuaternionScalarVector);
     QU_2_XXX<FOrientArrayType>(qu, QuaternionMathF::QuaternionScalarVector);
     //  QU_2_XXX<std::vector<float> >(qu);
@@ -929,7 +930,7 @@ void Test_qu2_XXX()
 
   {
     std::cout << "Test_qu2_XXX  (<X, Y, Z>, SCALAR) ***************************************" << std::endl;
-    float qu[4] = {0.0f, 0.0f, -DREAM3D::Constants::k_1OverRoot2, DREAM3D::Constants::k_1OverRoot2};
+    float qu[4] = {0.0f, 0.0f, -SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2};
     Print_QU<float*>(qu);
     QU_2_XXX<FOrientArrayType>(qu);
     //  QU_2_XXX<std::vector<float> >(qu);
@@ -1015,19 +1016,19 @@ void TestInputs()
   FloatArrayType::Pointer data = FloatArrayType::CreateArray(2, cDims, "Eulers");
   data->initializeWithZeros();
   float* fPtr = data->getPointer(0);
-  fPtr[0] = 90.0 * DREAM3D::Constants::k_PiOver180;
+  fPtr[0] = 90.0 * SIMPLib::Constants::k_PiOver180;
   fPtr[1] = 0.0;
   fPtr[2] = 0.0;
-  fPtr[3] = 90.0 * DREAM3D::Constants::k_PiOver180;
+  fPtr[3] = 90.0 * SIMPLib::Constants::k_PiOver180;
   fPtr[4] = 0.0;
   fPtr[5] = 0.0;
 
   //& Notation
   {
     FOrientArrayType eu( &(fPtr[0]), 3); // Wrap the pointer with the &notation
-    eu[0] = 45.0f * DREAM3D::Constants::k_PiOver180;
-    eu[1] = 90.0f * DREAM3D::Constants::k_PiOver180;
-    eu[2] = 135.0f * DREAM3D::Constants::k_PiOver180;
+    eu[0] = 45.0f * SIMPLib::Constants::k_PiOver180;
+    eu[1] = 90.0f * SIMPLib::Constants::k_PiOver180;
+    eu[2] = 135.0f * SIMPLib::Constants::k_PiOver180;
 
     DREAM3D_REQUIRE_EQUAL(eu[0], fPtr[0]);
     DREAM3D_REQUIRE_EQUAL(eu[1], fPtr[1]);
@@ -1037,9 +1038,9 @@ void TestInputs()
   // Pointer Arithmetic (inputs)
   {
     FOrientArrayType eu( fPtr + 3, 3);
-    eu[0] = 135.0f * DREAM3D::Constants::k_PiOver180;
-    eu[1] = 45.0f * DREAM3D::Constants::k_PiOver180;
-    eu[2] = 90.0f * DREAM3D::Constants::k_PiOver180;
+    eu[0] = 135.0f * SIMPLib::Constants::k_PiOver180;
+    eu[1] = 45.0f * SIMPLib::Constants::k_PiOver180;
+    eu[2] = 90.0f * SIMPLib::Constants::k_PiOver180;
 
     DREAM3D_REQUIRE_EQUAL(eu[0], fPtr[3]);
     DREAM3D_REQUIRE_EQUAL(eu[1], fPtr[4]);
@@ -1048,7 +1049,7 @@ void TestInputs()
 
   // Pointer Arithmetic, placing results directly into an array
   {
-    FOrientArrayType ax(0.0f, 0.0f, -1.0f, DREAM3D::Constants::k_PiOver2);
+    FOrientArrayType ax(0.0f, 0.0f, -1.0f, SIMPLib::Constants::k_PiOver2);
     FOrientArrayType eu( fPtr + 3, 3);
     FOrientTransformsType::ax2eu(ax, eu);
 

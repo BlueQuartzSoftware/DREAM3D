@@ -37,9 +37,9 @@
 #ifndef _NearestPointFuseRegularGrids_H_
 #define _NearestPointFuseRegularGrids_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The NearestPointFuseRegularGrids class. See [Filter documentation](@ref nearestpointfuseregulargrids) for details.
@@ -48,16 +48,16 @@ class NearestPointFuseRegularGrids : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(NearestPointFuseRegularGrids)
-    DREAM3D_STATIC_NEW_MACRO(NearestPointFuseRegularGrids)
-    DREAM3D_TYPE_MACRO_SUPER(NearestPointFuseRegularGrids, AbstractFilter)
+    SIMPL_SHARED_POINTERS(NearestPointFuseRegularGrids)
+    SIMPL_STATIC_NEW_MACRO(NearestPointFuseRegularGrids)
+    SIMPL_TYPE_MACRO_SUPER(NearestPointFuseRegularGrids, AbstractFilter)
 
     virtual ~NearestPointFuseRegularGrids();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, ReferenceCellAttributeMatrixPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, ReferenceCellAttributeMatrixPath)
     Q_PROPERTY(DataArrayPath ReferenceCellAttributeMatrixPath READ getReferenceCellAttributeMatrixPath WRITE setReferenceCellAttributeMatrixPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SamplingCellAttributeMatrixPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SamplingCellAttributeMatrixPath)
     Q_PROPERTY(DataArrayPath SamplingCellAttributeMatrixPath READ getSamplingCellAttributeMatrixPath WRITE setSamplingCellAttributeMatrixPath)
 
     /**

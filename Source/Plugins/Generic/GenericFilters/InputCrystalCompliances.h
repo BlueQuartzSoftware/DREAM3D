@@ -37,10 +37,10 @@
 #ifndef _InputCrystalCompliances_H_
 #define _InputCrystalCompliances_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/FilterParameters/Symmetric6x6FilterParameter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/FilterParameters/Symmetric6x6FilterParameter.h"
 
 /**
  * @brief The InputCrystalCompliances class. See [Filter documentation](@ref inputcrystalcompliances) for details.
@@ -49,16 +49,16 @@ class InputCrystalCompliances : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(InputCrystalCompliances)
-    DREAM3D_STATIC_NEW_MACRO(InputCrystalCompliances)
-    DREAM3D_TYPE_MACRO_SUPER(InputCrystalCompliances, AbstractFilter)
+    SIMPL_SHARED_POINTERS(InputCrystalCompliances)
+    SIMPL_STATIC_NEW_MACRO(InputCrystalCompliances)
+    SIMPL_TYPE_MACRO_SUPER(InputCrystalCompliances, AbstractFilter)
 
     virtual ~InputCrystalCompliances();
 
-    DREAM3D_FILTER_PARAMETER(FloatVec21_t, Compliances)
+    SIMPL_FILTER_PARAMETER(FloatVec21_t, Compliances)
     Q_PROPERTY(FloatVec21_t Compliances READ getCompliances WRITE setCompliances)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalCompliancesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalCompliancesArrayPath)
     Q_PROPERTY(DataArrayPath CrystalCompliancesArrayPath READ getCrystalCompliancesArrayPath WRITE setCrystalCompliancesArrayPath)
 
     /**

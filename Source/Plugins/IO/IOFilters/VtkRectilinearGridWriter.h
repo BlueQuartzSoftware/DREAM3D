@@ -38,15 +38,15 @@
 #include <QtCore/QString>
 #include <QtCore/QVector>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataContainers/DataArrayPath.h"
-#include "DREAM3DLib/DREAM3DLibVersion.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataContainers/DataArrayPath.h"
+#include "SIMPLib/SIMPLibVersion.h"
 
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "DREAM3DLib/VTKUtils/VTKWriterMacros.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/VTKUtils/VTKWriterMacros.h"
 
 /**
  * @class VTKRectilinearGridFileWriter VTKRectilinearGridFileWriter.h DREAM3D/Common/VTKUtils/VTKRectilinearGridFileWriter.h
@@ -64,19 +64,19 @@ class VtkRectilinearGridWriter : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(VtkRectilinearGridWriter)
-    DREAM3D_STATIC_NEW_MACRO(VtkRectilinearGridWriter)
-    DREAM3D_TYPE_MACRO_SUPER(VtkRectilinearGridWriter, AbstractFilter)
+    SIMPL_SHARED_POINTERS(VtkRectilinearGridWriter)
+    SIMPL_STATIC_NEW_MACRO(VtkRectilinearGridWriter)
+    SIMPL_TYPE_MACRO_SUPER(VtkRectilinearGridWriter, AbstractFilter)
 
     virtual ~VtkRectilinearGridWriter();
 
-    DREAM3D_FILTER_PARAMETER(QString, OutputFile)
+    SIMPL_FILTER_PARAMETER(QString, OutputFile)
     Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
-    DREAM3D_FILTER_PARAMETER(bool, WriteBinaryFile)
+    SIMPL_FILTER_PARAMETER(bool, WriteBinaryFile)
     Q_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
 
-    DREAM3D_FILTER_PARAMETER(QVector<DataArrayPath>, SelectedDataArrayPaths)
+    SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, SelectedDataArrayPaths)
     Q_PROPERTY(QVector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
 
     /**

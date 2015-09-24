@@ -38,17 +38,17 @@
 
 #include <QtCore/QDir>
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/AxisAngleFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/OutputFileFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Utilities/SIMPLibEndian.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/AxisAngleFilterParameter.h"
+#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 
-#include "DREAM3DLib/FilterParameters/IntFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Utilities/SIMPLibEndian.h"
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 
@@ -124,12 +124,12 @@ void VisualizeGBCDPoleFigure::readFilterParameters(AbstractFilterParametersReade
 int VisualizeGBCDPoleFigure::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(GBCDArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(MisorientationRotation)
-  DREAM3D_FILTER_WRITE_PARAMETER(PhaseOfInterest)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(GBCDArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputFile)
+  SIMPL_FILTER_WRITE_PARAMETER(MisorientationRotation)
+  SIMPL_FILTER_WRITE_PARAMETER(PhaseOfInterest)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -265,17 +265,17 @@ void VisualizeGBCDPoleFigure::execute()
   gbcdLimits[2] = 0.0f;
   gbcdLimits[3] = 0.0f;
   gbcdLimits[4] = 0.0f;
-  gbcdLimits[5] = DREAM3D::Constants::k_PiOver2;
+  gbcdLimits[5] = SIMPLib::Constants::k_PiOver2;
   gbcdLimits[6] = 1.0f;
-  gbcdLimits[7] = DREAM3D::Constants::k_PiOver2;
+  gbcdLimits[7] = SIMPLib::Constants::k_PiOver2;
   gbcdLimits[8] = 1.0f;
-  gbcdLimits[9] = DREAM3D::Constants::k_2Pi;
+  gbcdLimits[9] = SIMPLib::Constants::k_2Pi;
 
   // reset the 3rd and 4th dimensions using the square grid approach
-  gbcdLimits[3] = -sqrtf(DREAM3D::Constants::k_PiOver2);
-  gbcdLimits[4] = -sqrtf(DREAM3D::Constants::k_PiOver2);
-  gbcdLimits[8] = sqrtf(DREAM3D::Constants::k_PiOver2);
-  gbcdLimits[9] = sqrtf(DREAM3D::Constants::k_PiOver2);
+  gbcdLimits[3] = -sqrtf(SIMPLib::Constants::k_PiOver2);
+  gbcdLimits[4] = -sqrtf(SIMPLib::Constants::k_PiOver2);
+  gbcdLimits[8] = sqrtf(SIMPLib::Constants::k_PiOver2);
+  gbcdLimits[9] = sqrtf(SIMPLib::Constants::k_PiOver2);
 
   // get num components of GBCD
   QVector<size_t> cDims = m_GBCDPtr.lock()->getComponentDimensions();
@@ -306,7 +306,7 @@ void VisualizeGBCDPoleFigure::execute()
   float sym2t[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
   float mis_euler1[3] = { 0.0f, 0.0f, 0.0f };
 
-  float misAngle = m_MisorientationRotation.angle * DREAM3D::Constants::k_PiOver180;
+  float misAngle = m_MisorientationRotation.angle * SIMPLib::Constants::k_PiOver180;
   // convert axis angle to matrix representation of misorientation
   FOrientArrayType om(9, 0.0f);
   FOrientTransformsType::ax2om(FOrientArrayType( m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l, misAngle), om);
@@ -380,7 +380,7 @@ void VisualizeGBCDPoleFigure::execute()
             // convert to euler angle
             FOrientArrayType eu(mis_euler1, 3);
             FOrientTransformsType::om2eu(FOrientArrayType(dg2), eu);
-            if (mis_euler1[0] < DREAM3D::Constants::k_PiOver2 && mis_euler1[1] < DREAM3D::Constants::k_PiOver2 && mis_euler1[2] < DREAM3D::Constants::k_PiOver2)
+            if (mis_euler1[0] < SIMPLib::Constants::k_PiOver2 && mis_euler1[1] < SIMPLib::Constants::k_PiOver2 && mis_euler1[2] < SIMPLib::Constants::k_PiOver2)
             {
               mis_euler1[1] = cosf(mis_euler1[1]);
               // find bins in GBCD
@@ -410,7 +410,7 @@ void VisualizeGBCDPoleFigure::execute()
             MatrixMath::Multiply3x3with3x3(sym1, dg1, dg2);
             // convert to euler angle
             FOrientTransformsType::om2eu(FOrientArrayType(dg2), eu);
-            if (mis_euler1[0] < DREAM3D::Constants::k_PiOver2 && mis_euler1[1] < DREAM3D::Constants::k_PiOver2 && mis_euler1[2] < DREAM3D::Constants::k_PiOver2)
+            if (mis_euler1[0] < SIMPLib::Constants::k_PiOver2 && mis_euler1[1] < SIMPLib::Constants::k_PiOver2 && mis_euler1[2] < SIMPLib::Constants::k_PiOver2)
             {
               mis_euler1[1] = cosf(mis_euler1[1]);
               // find bins in GBCD
@@ -480,7 +480,7 @@ void VisualizeGBCDPoleFigure::execute()
       for (int32_t i = 0; i < xpoints; i++)
       {
         t = float(poleFigure[(j * xpoints) + i]);
-        DREAM3D::Endian::FromSystemToBig::convert(t);
+        SIMPLib::Endian::FromSystemToBig::convert(t);
         gn[count] = t;
         count++;
       }
@@ -516,13 +516,13 @@ bool VisualizeGBCDPoleFigure::getSquareCoord(float* xstl1_norm1, float* sqCoord)
   }
   if (fabsf(xstl1_norm1[0]) >= fabsf(xstl1_norm1[1]))
   {
-    sqCoord[0] = (xstl1_norm1[0] / fabsf(xstl1_norm1[0])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * (DREAM3D::Constants::k_SqrtPi / 2.0f);
-    sqCoord[1] = (xstl1_norm1[0] / fabsf(xstl1_norm1[0])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * ((2.0f / DREAM3D::Constants::k_SqrtPi) * atanf(xstl1_norm1[1] / xstl1_norm1[0]));
+    sqCoord[0] = (xstl1_norm1[0] / fabsf(xstl1_norm1[0])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * (SIMPLib::Constants::k_SqrtPi / 2.0f);
+    sqCoord[1] = (xstl1_norm1[0] / fabsf(xstl1_norm1[0])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * ((2.0f / SIMPLib::Constants::k_SqrtPi) * atanf(xstl1_norm1[1] / xstl1_norm1[0]));
   }
   else
   {
-    sqCoord[0] = (xstl1_norm1[1] / fabsf(xstl1_norm1[1])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * ((2.0f / DREAM3D::Constants::k_SqrtPi) * atanf(xstl1_norm1[0] / xstl1_norm1[1]));
-    sqCoord[1] = (xstl1_norm1[1] / fabsf(xstl1_norm1[1])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * (DREAM3D::Constants::k_SqrtPi / 2.0f);
+    sqCoord[0] = (xstl1_norm1[1] / fabsf(xstl1_norm1[1])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * ((2.0f / SIMPLib::Constants::k_SqrtPi) * atanf(xstl1_norm1[0] / xstl1_norm1[1]));
+    sqCoord[1] = (xstl1_norm1[1] / fabsf(xstl1_norm1[1])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * (SIMPLib::Constants::k_SqrtPi / 2.0f);
   }
   return nhCheck;
 }
@@ -540,7 +540,7 @@ int32_t VisualizeGBCDPoleFigure::writeCoords(FILE* f, const char* axis, const ch
   for (int64_t idx = 0; idx < npoints; ++idx)
   {
     d = idx * step + min;
-    DREAM3D::Endian::FromSystemToBig::convert(d);
+    SIMPLib::Endian::FromSystemToBig::convert(d);
     data[idx] = d;
   }
   size_t totalWritten = fwrite(static_cast<void*>(data), sizeof(float), static_cast<size_t>(npoints), f);

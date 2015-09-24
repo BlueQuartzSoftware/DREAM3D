@@ -36,15 +36,15 @@
 
 #include "CorrelateValuesWithVectorDirection.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Math/GeometryMath.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Math/GeometryMath.h"
+#include "SIMPLib/Math/MatrixMath.h"
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 
 // -----------------------------------------------------------------------------
@@ -56,9 +56,9 @@ CorrelateValuesWithVectorDirection::CorrelateValuesWithVectorDirection() :
   m_VectorDataArrayPath("", "", ""),
   m_Logfile("CorrelateValuesWithVectorDirection.log"),
   m_VectorData(NULL),
-  m_MaxCoord(sqrt(DREAM3D::Constants::k_2Pi) / 2.0),
+  m_MaxCoord(sqrt(SIMPLib::Constants::k_2Pi) / 2.0),
   m_Dimension(72),
-  m_StepSize(sqrt(DREAM3D::Constants::k_2Pi) / 72.0)
+  m_StepSize(sqrt(SIMPLib::Constants::k_2Pi) / 72.0)
 {
 
   setupFilterParameters();
@@ -107,7 +107,7 @@ void CorrelateValuesWithVectorDirection::readFilterParameters(AbstractFilterPara
 int CorrelateValuesWithVectorDirection::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
   writer->writeValue("VectorDataArrayPath", getVectorDataArrayPath() );
   writer->writeValue("CorrelatedDataArrayPath", getCorrelatedDataArrayPath() );
   writer->closeFilterGroup();
@@ -302,13 +302,13 @@ int CorrelateValuesWithVectorDirection::determineSquareCoordsandBin(float xyz[3]
   }
   if(fabs(xyz[0]) >= fabs(xyz[1]))
   {
-    sqCoord[0] = (xyz[0] / fabs(xyz[0]) ) * sqrt(2.0 * 1.0 * (1.0 + (xyz[2] * adjust) ) ) * DREAM3D::Constants::k_HalfOfSqrtPi;
-    sqCoord[1] = (xyz[0] / fabs(xyz[0]) ) * sqrt(2.0 * 1.0 * (1.0 + (xyz[2] * adjust) ) ) * ((DREAM3D::Constants::k_2OverSqrtPi) * atan(xyz[1] / xyz[0]));
+    sqCoord[0] = (xyz[0] / fabs(xyz[0]) ) * sqrt(2.0 * 1.0 * (1.0 + (xyz[2] * adjust) ) ) * SIMPLib::Constants::k_HalfOfSqrtPi;
+    sqCoord[1] = (xyz[0] / fabs(xyz[0]) ) * sqrt(2.0 * 1.0 * (1.0 + (xyz[2] * adjust) ) ) * ((SIMPLib::Constants::k_2OverSqrtPi) * atan(xyz[1] / xyz[0]));
   }
   else
   {
-    sqCoord[0] = (xyz[1] / fabs(xyz[1])) * sqrt(2.0 * 1.0 * (1.0 + (xyz[2] * adjust))) * ((DREAM3D::Constants::k_2OverSqrtPi) * atan(xyz[0] / xyz[1]));
-    sqCoord[1] = (xyz[1] / fabs(xyz[1])) * sqrt(2.0 * 1.0 * (1.0 + (xyz[2] * adjust))) * (DREAM3D::Constants::k_HalfOfSqrtPi);
+    sqCoord[0] = (xyz[1] / fabs(xyz[1])) * sqrt(2.0 * 1.0 * (1.0 + (xyz[2] * adjust))) * ((SIMPLib::Constants::k_2OverSqrtPi) * atan(xyz[0] / xyz[1]));
+    sqCoord[1] = (xyz[1] / fabs(xyz[1])) * sqrt(2.0 * 1.0 * (1.0 + (xyz[2] * adjust))) * (SIMPLib::Constants::k_HalfOfSqrtPi);
   }
 
   if (sqCoord[0] >= m_MaxCoord)
@@ -343,15 +343,15 @@ void CorrelateValuesWithVectorDirection::determineXYZCoords(float sqCoords[2], f
 {
   if(fabs(sqCoords[0]) >= fabs(sqCoords[1]))
   {
-    xyz[0] = (2.0 * sqCoords[0] / DREAM3D::Constants::k_Pi) * sqrt((DREAM3D::Constants::k_Pi - ((sqCoords[0] * sqCoords[0]) / (1.0 * 1.0)))) * cosf((sqCoords[1] * DREAM3D::Constants::k_Pi) / (4.0 * sqCoords[0]));
-    xyz[1] = (2.0 * sqCoords[0] / DREAM3D::Constants::k_Pi) * sqrt((DREAM3D::Constants::k_Pi - ((sqCoords[0] * sqCoords[0]) / (1.0 * 1.0)))) * sinf((sqCoords[1] * DREAM3D::Constants::k_Pi) / (4.0 * sqCoords[0]));
-    xyz[2] = 1.0 - ((2.0 * sqCoords[0] * sqCoords[0]) / (DREAM3D::Constants::k_Pi * 1.0));
+    xyz[0] = (2.0 * sqCoords[0] / SIMPLib::Constants::k_Pi) * sqrt((SIMPLib::Constants::k_Pi - ((sqCoords[0] * sqCoords[0]) / (1.0 * 1.0)))) * cosf((sqCoords[1] * SIMPLib::Constants::k_Pi) / (4.0 * sqCoords[0]));
+    xyz[1] = (2.0 * sqCoords[0] / SIMPLib::Constants::k_Pi) * sqrt((SIMPLib::Constants::k_Pi - ((sqCoords[0] * sqCoords[0]) / (1.0 * 1.0)))) * sinf((sqCoords[1] * SIMPLib::Constants::k_Pi) / (4.0 * sqCoords[0]));
+    xyz[2] = 1.0 - ((2.0 * sqCoords[0] * sqCoords[0]) / (SIMPLib::Constants::k_Pi * 1.0));
   }
   else
   {
-    xyz[0] = (2.0 * sqCoords[1] / DREAM3D::Constants::k_Pi) * sqrt((DREAM3D::Constants::k_Pi - ((sqCoords[1] * sqCoords[1]) / (1.0 * 1.0)))) * sinf((sqCoords[0] * DREAM3D::Constants::k_Pi) / (4.0 * sqCoords[1]));
-    xyz[1] = (2.0 * sqCoords[1] / DREAM3D::Constants::k_Pi) * sqrt((DREAM3D::Constants::k_Pi - ((sqCoords[1] * sqCoords[1]) / (1.0 * 1.0)))) * cosf((sqCoords[0] * DREAM3D::Constants::k_Pi) / (4.0 * sqCoords[1]));
-    xyz[2] = 1.0 - ((2.0 * sqCoords[1] * sqCoords[1]) / (DREAM3D::Constants::k_Pi * 1.0));
+    xyz[0] = (2.0 * sqCoords[1] / SIMPLib::Constants::k_Pi) * sqrt((SIMPLib::Constants::k_Pi - ((sqCoords[1] * sqCoords[1]) / (1.0 * 1.0)))) * sinf((sqCoords[0] * SIMPLib::Constants::k_Pi) / (4.0 * sqCoords[1]));
+    xyz[1] = (2.0 * sqCoords[1] / SIMPLib::Constants::k_Pi) * sqrt((SIMPLib::Constants::k_Pi - ((sqCoords[1] * sqCoords[1]) / (1.0 * 1.0)))) * cosf((sqCoords[0] * SIMPLib::Constants::k_Pi) / (4.0 * sqCoords[1]));
+    xyz[2] = 1.0 - ((2.0 * sqCoords[1] * sqCoords[1]) / (SIMPLib::Constants::k_Pi * 1.0));
   }
 }
 
@@ -449,7 +449,7 @@ void CorrelateValuesWithVectorDirection::createSterographicProjections(size_t nu
       for (int64_t i = 0; i < (xpoints); i++)
       {
         t = float(intensity[(numComps * ((j * xpoints) + i)) + iter]);
-        DREAM3D::Endian::FromSystemToBig::convert(t);
+        SIMPLib::Endian::FromSystemToBig::convert(t);
         gn[count] = t;
         count++;
       }
@@ -543,7 +543,7 @@ void CorrelateValuesWithVectorDirection::writeLambertProjection(size_t numComps)
       for (int64_t i = 0; i < (xpoints); i++)
       {
         t = float(intensity[(numComps * ((j * xpoints) + i)) + iter]);
-        DREAM3D::Endian::FromSystemToBig::convert(t);
+        SIMPLib::Endian::FromSystemToBig::convert(t);
         gn[count] = t;
         count++;
       }
@@ -592,8 +592,8 @@ void CorrelateValuesWithVectorDirection::writePFStats(size_t numComps)
 
       determineXYZCoords(sqCoord, xyz);
 
-      zbin = int((asinf(xyz[2]) * 180.0 / DREAM3D::Constants::k_Pi) / 5.0);
-      ang = atan2(xyz[1], xyz[0]) * 180.0 / DREAM3D::Constants::k_Pi;
+      zbin = int((asinf(xyz[2]) * 180.0 / SIMPLib::Constants::k_Pi) / 5.0);
+      ang = atan2(xyz[1], xyz[0]) * 180.0 / SIMPLib::Constants::k_Pi;
       if(ang < 0) { ang += 360.0; }
       angbin = int(ang / 5.0);
 
@@ -656,7 +656,7 @@ int CorrelateValuesWithVectorDirection::writeCoords(FILE* f, const char* axis, c
   for (int idx = 0; idx < npoints; ++idx)
   {
     d = idx * step + min;
-    DREAM3D::Endian::FromSystemToBig::convert(d);
+    SIMPLib::Endian::FromSystemToBig::convert(d);
     data[idx] = d;
   }
   size_t totalWritten = fwrite(static_cast<void*>(data), sizeof(float), static_cast<size_t>(npoints), f);

@@ -183,9 +183,9 @@ int SGAxisODFWidget::getOrientationData(StatsData* statsData, unsigned int phase
 
   for(qint32 i = 0; i < e1s.size(); i++)
   {
-    e1Rad[i] = e1Rad[i] * DREAM3D::Constants::k_PiOver180;
-    e2Rad[i] = e2Rad[i] * DREAM3D::Constants::k_PiOver180;
-    e3Rad[i] = e3Rad[i] * DREAM3D::Constants::k_PiOver180;
+    e1Rad[i] = e1Rad[i] * SIMPLib::Constants::k_PiOver180;
+    e2Rad[i] = e2Rad[i] * SIMPLib::Constants::k_PiOver180;
+    e3Rad[i] = e3Rad[i] * SIMPLib::Constants::k_PiOver180;
   }
 
   size_t numEntries = e1s.size();

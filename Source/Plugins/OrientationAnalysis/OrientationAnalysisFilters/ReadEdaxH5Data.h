@@ -37,10 +37,10 @@
 #ifndef _ReadEdaxH5Data_H_
 #define _ReadEdaxH5Data_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/StringDataArray.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/StringDataArray.hpp"
 
 #include "EbsdLib/TSL/AngPhase.h"
 
@@ -60,36 +60,36 @@ class ReadEdaxH5Data : public AbstractFilter
     Q_DECLARE_PRIVATE(ReadEdaxH5Data)
 
   public:
-    DREAM3D_SHARED_POINTERS(ReadEdaxH5Data)
-    DREAM3D_STATIC_NEW_MACRO(ReadEdaxH5Data)
-    DREAM3D_TYPE_MACRO_SUPER(ReadEdaxH5Data, AbstractFilter)
+    SIMPL_SHARED_POINTERS(ReadEdaxH5Data)
+    SIMPL_STATIC_NEW_MACRO(ReadEdaxH5Data)
+    SIMPL_TYPE_MACRO_SUPER(ReadEdaxH5Data, AbstractFilter)
 
     virtual ~ReadEdaxH5Data();
 
-    DREAM3D_FILTER_PARAMETER(QString, InputFile)
+    SIMPL_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-    DREAM3D_FILTER_PARAMETER(QString, ScanName)
+    SIMPL_FILTER_PARAMETER(QString, ScanName)
     Q_PROPERTY(QString ScanName READ getScanName WRITE setScanName)
 
-    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
+    SIMPL_FILTER_PARAMETER(QString, DataContainerName)
     Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-    DREAM3D_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
     Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
     Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(bool, ReadPatternData)
+    SIMPL_FILTER_PARAMETER(bool, ReadPatternData)
     Q_PROPERTY(bool ReadPatternData READ getReadPatternData WRITE setReadPatternData)
 
-    DREAM3D_FILTER_PARAMETER(bool, FileWasRead)
+    SIMPL_FILTER_PARAMETER(bool, FileWasRead)
     Q_PROPERTY(bool FileWasRead READ getFileWasRead)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
+    SIMPL_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
+    SIMPL_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -142,22 +142,22 @@ class ReadEdaxH5Data : public AbstractFilter
     virtual void preflight();
 
     /* These are non-exposed to the user through the GUI. Manual Pipelines are OK to set them */
-    DREAM3D_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
+    SIMPL_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
 
-    DREAM3D_INSTANCE_PROPERTY(int, Manufacturer)
+    SIMPL_INSTANCE_PROPERTY(int, Manufacturer)
 
-    DREAM3D_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
+    SIMPL_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
 
-    DREAM3D_PIMPL_PROPERTY_DECL(QDateTime, TimeStamp_Cache)
+    SIMPL_PIMPL_PROPERTY_DECL(QDateTime, TimeStamp_Cache)
 
-    DREAM3D_PIMPL_PROPERTY_DECL(Ang_Private_Data, Data)
+    SIMPL_PIMPL_PROPERTY_DECL(Ang_Private_Data, Data)
 
     Q_PROPERTY(Ang_Private_Data Data READ getData WRITE setData)
 
-    DREAM3D_PIMPL_PROPERTY_DECL(QStringList, FileScanNames)
+    SIMPL_PIMPL_PROPERTY_DECL(QStringList, FileScanNames)
     Q_PROPERTY(QStringList FileScanNames READ getFileScanNames WRITE setFileScanNames)
 
-    DREAM3D_PIMPL_PROPERTY_DECL(QVector<int>, PatternDims)
+    SIMPL_PIMPL_PROPERTY_DECL(QVector<int>, PatternDims)
     Q_PROPERTY(QVector<int> PatternDims READ getPatternDims WRITE setPatternDims)
 
   signals:

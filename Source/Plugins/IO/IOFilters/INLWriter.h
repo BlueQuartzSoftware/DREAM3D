@@ -37,11 +37,11 @@
 #ifndef _INLWriter_H_
 #define _INLWriter_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/CoreFilters/FileWriter.h"
-#include "DREAM3DLib/DataArrays/StringDataArray.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/CoreFilters/FileWriter.h"
+#include "SIMPLib/DataArrays/StringDataArray.hpp"
 
 /**
  * @brief The INLWriter class. See [Filter documentation](@ref inlwriter) for details.
@@ -50,28 +50,28 @@ class  INLWriter : public FileWriter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(INLWriter)
-    DREAM3D_STATIC_NEW_MACRO(INLWriter)
-    DREAM3D_TYPE_MACRO_SUPER(INLWriter, FileWriter)
+    SIMPL_SHARED_POINTERS(INLWriter)
+    SIMPL_STATIC_NEW_MACRO(INLWriter)
+    SIMPL_TYPE_MACRO_SUPER(INLWriter, FileWriter)
 
     virtual ~INLWriter();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, MaterialNameArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, MaterialNameArrayPath)
     Q_PROPERTY(DataArrayPath MaterialNameArrayPath READ getMaterialNameArrayPath WRITE setMaterialNameArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
     Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, NumFeaturesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, NumFeaturesArrayPath)
     Q_PROPERTY(DataArrayPath NumFeaturesArrayPath READ getNumFeaturesArrayPath WRITE setNumFeaturesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
     Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
     /**
@@ -144,7 +144,7 @@ class  INLWriter : public FileWriter
     DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
     DEFINE_DATAARRAY_VARIABLE(int32_t, NumFeatures)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
+    SIMPL_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
     StringDataArray::WeakPointer m_MaterialNamePtr;
 
     INLWriter(const INLWriter&); // Copy Constructor Not Implemented

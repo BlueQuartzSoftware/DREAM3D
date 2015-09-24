@@ -37,9 +37,9 @@
 #ifndef _VtkStructuredPointsReader_H_
 #define _VtkStructuredPointsReader_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The VtkStructuredPointsReader class. See [Filter documentation](@ref vtkstructuredpointsreader) for details.
@@ -48,36 +48,36 @@ class VtkStructuredPointsReader : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(VtkStructuredPointsReader)
-    DREAM3D_STATIC_NEW_MACRO(VtkStructuredPointsReader)
-    DREAM3D_TYPE_MACRO_SUPER(VtkStructuredPointsReader, AbstractFilter)
+    SIMPL_SHARED_POINTERS(VtkStructuredPointsReader)
+    SIMPL_STATIC_NEW_MACRO(VtkStructuredPointsReader)
+    SIMPL_TYPE_MACRO_SUPER(VtkStructuredPointsReader, AbstractFilter)
 
     virtual ~VtkStructuredPointsReader();
 
-    DREAM3D_FILTER_PARAMETER(bool, ReadCellData)
+    SIMPL_FILTER_PARAMETER(bool, ReadCellData)
     Q_PROPERTY(bool ReadCellData READ getReadCellData WRITE setReadCellData)
 
-    DREAM3D_FILTER_PARAMETER(QString, VolumeDataContainerName)
+    SIMPL_FILTER_PARAMETER(QString, VolumeDataContainerName)
     Q_PROPERTY(QString VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
 
-    DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
     Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(bool, ReadPointData)
+    SIMPL_FILTER_PARAMETER(bool, ReadPointData)
     Q_PROPERTY(bool ReadPointData READ getReadPointData WRITE setReadPointData)
 
-    DREAM3D_FILTER_PARAMETER(QString, VertexDataContainerName)
+    SIMPL_FILTER_PARAMETER(QString, VertexDataContainerName)
     Q_PROPERTY(QString VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
 
-    DREAM3D_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
     Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(QString, InputFile)
+    SIMPL_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(Comment)
-    DREAM3D_INSTANCE_STRING_PROPERTY(DatasetType)
-    DREAM3D_INSTANCE_PROPERTY(bool, FileIsBinary)
+    SIMPL_INSTANCE_STRING_PROPERTY(Comment)
+    SIMPL_INSTANCE_STRING_PROPERTY(DatasetType)
+    SIMPL_INSTANCE_PROPERTY(bool, FileIsBinary)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class

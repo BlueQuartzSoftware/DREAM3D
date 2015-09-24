@@ -42,14 +42,13 @@
 
 #include <QtWidgets/QListWidgetItem>
 
-#include "DREAM3DLib/DataContainers/DataArrayPath.h"
+#include "SIMPLib/DataContainers/DataArrayPath.h"
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
+#include "FilterParameterWidgetUtils.hpp"
 
-#define DATA_CONTAINER_LEVEL 0
-#define ATTRIBUTE_MATRIX_LEVEL 1
-#define ATTRIBUTE_ARRAY_LEVEL 2
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -152,64 +151,8 @@ void DataContainerSelectionWidget::populateComboBoxes()
   // Cache the DataContainerArray Structure for our use during all the selections
   m_DcaProxy = DataContainerArrayProxy(dca.get());
 
-  // Populate the DataContainerArray Combo Box with all the DataContainers
-  QList<DataContainerProxy> dcList = m_DcaProxy.dataContainers.values();
-  QListIterator<DataContainerProxy> iter(dcList);
-  dataContainerCombo->clear();
-  QVector<unsigned int> defVec = m_FilterParameter->getDefaultGeometryTypes();
-  while(iter.hasNext() )
-  {
-    DataContainerProxy dcProxy = iter.next();
-    DataContainer::Pointer dc = dca->getDataContainer(dcProxy.name);
-    IGeometry::Pointer geom = IGeometry::NullPointer();
-    uint32_t geomType = 999;
-    if (NULL != dc.get()) { geom = dc->getGeometry(); }
-    if (NULL != geom.get()) { geomType = geom->getGeometryType(); }
-    dataContainerCombo->addItem(dcProxy.name);
-
-    if (defVec.isEmpty() == false)
-    {
-      if (defVec.contains(geomType) == false)
-      {
-        QStandardItemModel* model = qobject_cast<QStandardItemModel*>(dataContainerCombo->model());
-        if (NULL != model)
-        {
-          QStandardItem* item = model->item(dataContainerCombo->findText(dcProxy.name));
-          if (NULL != item)
-          {
-            item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
-          }
-        }
-      }
-    }
-//    if(dataContainerCombo->findText(dc.name) == -1 )
-//    {
-//      int index = dataContainerCombo->currentIndex();
-//      dataContainerCombo->addItem(dc.name);
-//      dataContainerCombo->setCurrentIndex(index);
-//    }
-  }
-
-  //remove items in the combo that are NOT in the Data Container Array
-//  int count = dataContainerCombo->count();
-//  for(int i = count - 1; i >= 0; i--)
-//  {
-//    QString str0 = dataContainerCombo->itemText(i);
-//    iter.toFront();
-//    bool boo = false;
-//    while(iter.hasNext() )
-//    {
-//      DataContainerProxy dc = iter.next();
-//      if(dc.name.compare(str0) == 0)
-//      {
-//        boo = true; // found in the list
-//      }
-//    }
-//    if(boo == false)
-//    {
-//      dataContainerCombo->removeItem(i);
-//    }
-//  }
+  // Populate the DataContainer ComboBox
+  FilterPararameterWidgetUtils::PopulateDataContainerComboBox<DataContainerSelectionFilterParameter>(getFilter(), getFilterParameter(), dataContainerCombo, m_DcaProxy);
 
   // Grab what is currently selected
   QString curDcName = dataContainerCombo->currentText();
@@ -226,17 +169,17 @@ void DataContainerSelectionWidget::populateComboBoxes()
   }
   else if( QString("DataArrayPath").compare(qvSelectedPath.typeName()) == 0 )
   {
+    // Now to figure out which one of these to use. If this is the first time through then what we picked up from the
+    // gui will be empty strings because nothing is there. If there is something in the filter then we should use that.
+    // If there is something in both of them and they are NOT equal then we have a problem. Use the flag m_DidCausePreflight
+    // to determine if the change from the GUI should over ride the filter or vice versa. there is a potential that in future
+    // versions that something else is driving DREAM3D and pushing the changes to the filter and we need to reflect those
+    // changes in the GUI, like a testing script?
     DataArrayPath selectedPath = qvSelectedPath.value<DataArrayPath>();
     filtDcName = selectedPath.getDataContainerName();
     filtAmName = selectedPath.getAttributeMatrixName();
   }
 
-  // Now to figure out which one of these to use. If this is the first time through then what we picked up from the
-  // gui will be empty strings because nothing is there. If there is something in the filter then we should use that.
-  // If there is something in both of them and they are NOT equal then we have a problem. Use the flag m_DidCausePreflight
-  // to determine if the change from the GUI should over ride the filter or vice versa. there is a potential that in future
-  // versions that something else is driving DREAM3D and pushing the changes to the filter and we need to reflect those
-  // changes in the GUI, like a testing script?
 
   QString dcName = checkStringValues(curDcName, filtDcName);
   if( !dca->doesDataContainerExist(dcName) ) { dcName = ""; }
@@ -245,7 +188,10 @@ void DataContainerSelectionWidget::populateComboBoxes()
 
   if (!dataContainerCombo->signalsBlocked()) { didBlock = true; }
   dataContainerCombo->blockSignals(true);
+
   int dcIndex = dataContainerCombo->findText(dcName);
+
+
   if(dcIndex < 0 && dcName.isEmpty() == false)
   {
     dataContainerCombo->addItem(dcName);
@@ -293,7 +239,7 @@ void DataContainerSelectionWidget::beforePreflight()
   if (NULL == getFilter()) { return; }
   if(m_DidCausePreflight == true)
   {
-    std::cout << "***  DataContainerSelectionWidget already caused a preflight, just returning" << std::endl;
+    //std::cout << "***  DataContainerSelectionWidget already caused a preflight, just returning" << std::endl;
     return;
   }
 

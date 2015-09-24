@@ -54,16 +54,26 @@
 #include <QtWidgets/QToolButton>
 #include <QtWidgets/QScrollBar>
 
+#ifdef DREAM3D_USE_QtWebEngine
+#include "Applications/Common/DREAM3DUserManualDialog.h"
+#else
+#include <QtWidgets/QMessageBox>
+#include <QtGui/QDesktopServices>
+#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
+#endif
+
+
 //-- DREAM3D Includes
-#include "DREAM3DLib/DREAM3DLibVersion.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
-#include "DREAM3DLib/Plugin/PluginManager.h"
+#include "SIMPLib/SIMPLibVersion.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/Common/DocRequestManager.h"
+#include "SIMPLib/FilterParameters/QFilterParametersWriter.h"
+#include "SIMPLib/Plugin/PluginManager.h"
 
 #include "QtSupportLib/QRecentFileList.h"
-#include "QtSupportLib/DREAM3DQtMacros.h"
-#include "QtSupportLib/DREAM3DPluginFrame.h"
+#include "QtSupportLib/SIMPLQtMacros.h"
+#include "QtSupportLib/SIMPLPluginFrame.h"
 
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
 #include "DREAM3DWidgetsLib/UpdateCheck.h"
@@ -90,7 +100,6 @@ DREAM3D_UI::DREAM3D_UI(QWidget* parent) :
   QMainWindow(parent),
   m_WorkerThread(NULL),
   m_ActivePlugin(NULL),
-  m_HelpDialog(NULL),
   m_UpdateCheckThread(NULL),
   m_FilterManager(NULL),
   m_FilterWidgetManager(NULL),
@@ -669,6 +678,14 @@ void DREAM3D_UI::connectSignalsSlots()
   connect(filterLibraryDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
           pipelineViewWidget, SLOT(addFilter(const QString&)) );
 
+  DocRequestManager* docRequester = DocRequestManager::Instance();
+
+  connect(docRequester, SIGNAL(showFilterDocs(const QString&)),
+          this, SLOT(showFilterHelp(const QString&)) );
+
+  connect(docRequester, SIGNAL(showFilterDocUrl(const QUrl &)),
+          this, SLOT(showFilterHelpUrl(const QUrl &)));
+
   connect(filterListDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
           pipelineViewWidget, SLOT(addFilter(const QString&)) );
 
@@ -692,6 +709,7 @@ void DREAM3D_UI::connectSignalsSlots()
 
   connect(bookmarksDockWidget, SIGNAL(updateStatusBar(const QString&)),
           this, SLOT(setStatusBarMessage(const QString&)));
+
 }
 
 // -----------------------------------------------------------------------------
@@ -715,7 +733,7 @@ void DREAM3D_UI::connectSignalsSlots(DREAM3D_UI* other)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::setLoadedPlugins(QVector<IDREAM3DPlugin*> plugins)
+void DREAM3D_UI::setLoadedPlugins(QVector<ISIMPLibPlugin*> plugins)
 {
   m_LoadedPlugins = plugins;
 }
@@ -1041,7 +1059,7 @@ void DREAM3D_UI::pipelineDidFinish()
 void DREAM3D_UI::versionCheckReply(UpdateCheckData* dataObj)
 {
   DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(this);
-  d->setCurrentVersion((DREAM3DLib::Version::Complete()));
+  d->setCurrentVersion((SIMPLib::Version::Complete()));
   d->setApplicationName("DREAM3D");
 
   if ( dataObj->hasUpdate() && !dataObj->hasError() )
@@ -1055,6 +1073,53 @@ void DREAM3D_UI::versionCheckReply(UpdateCheckData* dataObj)
     d->getLatestVersionLabel()->setText( dataObj->getServerString() );
     d->exec();
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::showFilterHelp(const QString& className)
+{
+  // Launch the dialog
+#ifdef DREAM3D_USE_QtWebEngine
+    DREAM3DUserManualDialog::LaunchHelpDialog(className);
+#else
+  QUrl helpURL = DREAM3DHelpUrlGenerator::generateHTMLUrl(className.toLower());
+
+  bool didOpen = QDesktopServices::openUrl(helpURL);
+  if(false == didOpen)
+  {
+    QMessageBox msgBox;
+    msgBox.setText(QString("Error Opening Help File"));
+    msgBox.setInformativeText(QString::fromLatin1("DREAM3D could not open the help file path ") + helpURL.path());
+    msgBox.setStandardButtons(QMessageBox::Ok);
+    msgBox.setDefaultButton(QMessageBox::Ok);
+    msgBox.setIcon(QMessageBox::Critical);
+    msgBox.exec();
+  }
+#endif
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::showFilterHelpUrl(const QUrl& helpURL)
+{
+#ifdef DREAM3D_USE_QtWebEngine
+  DREAM3DUserManualDialog::LaunchHelpDialog(helpURL);
+#else
+  bool didOpen = QDesktopServices::openUrl(helpURL);
+  if(false == didOpen)
+  {
+    QMessageBox msgBox;
+    msgBox.setText(QString("Error Opening Help File"));
+    msgBox.setInformativeText(QString::fromLatin1("DREAM3D could not open the help file path ") + helpURL.path());
+    msgBox.setStandardButtons(QMessageBox::Ok);
+    msgBox.setDefaultButton(QMessageBox::Ok);
+    msgBox.setIcon(QMessageBox::Critical);
+    msgBox.exec();
+  }
+#endif
 }
 
 // -----------------------------------------------------------------------------

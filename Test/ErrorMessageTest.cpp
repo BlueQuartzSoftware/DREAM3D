@@ -36,10 +36,10 @@
 
 #include <string>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/PipelineMessage.h"
-#include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/PipelineMessage.h"
+#include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
 #include "DREAM3DTestFileLocations.h"
 

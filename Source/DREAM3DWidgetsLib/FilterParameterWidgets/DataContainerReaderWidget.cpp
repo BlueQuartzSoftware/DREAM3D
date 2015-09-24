@@ -46,7 +46,7 @@
 #include <QtCore/QItemSelectionModel>
 #include <QtWidgets/QListWidget>
 
-#include "DREAM3DLib/CoreFilters/DataContainerReader.h"
+#include "SIMPLib/CoreFilters/DataContainerReader.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 

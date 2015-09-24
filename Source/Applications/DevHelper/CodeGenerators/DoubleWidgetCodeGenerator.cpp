@@ -74,7 +74,7 @@ QString DoubleWidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(double, " + getPropertyName() + ")\n";
+  ss << "    SIMPL_FILTER_PARAMETER(double, " + getPropertyName() + ")\n";
   ss << "    Q_PROPERTY(double " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
@@ -85,5 +85,5 @@ QString DoubleWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString DoubleWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/DoubleFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/DoubleFilterParameter.h\"";
 }

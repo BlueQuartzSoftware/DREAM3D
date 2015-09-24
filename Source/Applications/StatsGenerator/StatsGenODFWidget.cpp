@@ -758,9 +758,9 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
       {
         // Be sure to convert the ANG Radians into degrees because this part of
         // DREAM.3D stores the angles as Degrees.
-        e1s[count] = phi1[i] * DREAM3D::Constants::k_180OverPi;
-        e2s[count] = phi[i] * DREAM3D::Constants::k_180OverPi;
-        e3s[count] = phi2[i] * DREAM3D::Constants::k_180OverPi;
+        e1s[count] = phi1[i] * SIMPLib::Constants::k_180OverPi;
+        e2s[count] = phi[i] * SIMPLib::Constants::k_180OverPi;
+        e3s[count] = phi2[i] * SIMPLib::Constants::k_180OverPi;
         weights[count] = 1.0;
         sigmas[count] = 0.0;
         count++;

@@ -36,10 +36,10 @@
 #ifndef _RotateSampleRefFrame_H_
 #define _RotateSampleRefFrame_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 
 /**
  * @brief The RotateSampleRefFrame class. See [Filter documentation](@ref rotatesamplerefframe) for details.
@@ -48,23 +48,23 @@ class RotateSampleRefFrame : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(RotateSampleRefFrame)
-    DREAM3D_STATIC_NEW_MACRO(RotateSampleRefFrame)
-    DREAM3D_TYPE_MACRO_SUPER(RotateSampleRefFrame, AbstractFilter)
+    SIMPL_SHARED_POINTERS(RotateSampleRefFrame)
+    SIMPL_STATIC_NEW_MACRO(RotateSampleRefFrame)
+    SIMPL_TYPE_MACRO_SUPER(RotateSampleRefFrame, AbstractFilter)
 
     virtual ~RotateSampleRefFrame();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
     Q_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
 
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, RotationAxis)
+    SIMPL_FILTER_PARAMETER(FloatVec3_t, RotationAxis)
     Q_PROPERTY(FloatVec3_t RotationAxis READ getRotationAxis WRITE setRotationAxis)
 
-    DREAM3D_FILTER_PARAMETER(float, RotationAngle)
+    SIMPL_FILTER_PARAMETER(float, RotationAngle)
     Q_PROPERTY(float RotationAngle READ getRotationAngle WRITE setRotationAngle)
 
     // This is getting exposed because other filters that are calling this filter needs to set this value
-    DREAM3D_FILTER_PARAMETER(bool, SliceBySlice)
+    SIMPL_FILTER_PARAMETER(bool, SliceBySlice)
     Q_PROPERTY(bool SliceBySlice READ getSliceBySlice WRITE setSliceBySlice)
 
     /**

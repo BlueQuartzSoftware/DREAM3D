@@ -24,6 +24,7 @@ set(OrientationLib_SpaceGroupOps_HDRS
   ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/TetragonalLowOps.h
   ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/TriclinicOps.h
   ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/MonoclinicOps.h
+  ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/SO3Sampler.h
 )
 set(OrientationLib_SpaceGroupOps_SRCS
   ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/SpaceGroupOps.cpp
@@ -38,6 +39,7 @@ set(OrientationLib_SpaceGroupOps_SRCS
   ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/TetragonalLowOps.cpp
   ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/TriclinicOps.cpp
   ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/MonoclinicOps.cpp
+  ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/SO3Sampler.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "OrientationLib/SpaceGroupOps" "${OrientationLib_SpaceGroupOps_HDRS}" "${OrientationLib_SpaceGroupOps_SRCS}" "0")
 if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )

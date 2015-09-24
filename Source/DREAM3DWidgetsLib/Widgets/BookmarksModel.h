@@ -41,7 +41,7 @@
 #include <QtCore/QVariant>
 #include <QtCore/QFileSystemWatcher>
 
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/Widgets/FilterLibraryTreeWidget.h"
@@ -60,7 +60,7 @@ class DREAM3DWidgetsLib_EXPORT BookmarksModel : public QAbstractItemModel
     Q_OBJECT
 
   public:
-    DREAM3D_TYPE_MACRO(BookmarksModel)
+    SIMPL_TYPE_MACRO(BookmarksModel)
 
     ~BookmarksModel();
 

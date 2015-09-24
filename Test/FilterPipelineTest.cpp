@@ -41,19 +41,19 @@
 
 #include "Applications/DREAM3D/DREAM3DApplication.h"
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/Observer.h"
-#include "DREAM3DLib/Common/FilterPipeline.h"
-#include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/Observer.h"
+#include "SIMPLib/Common/FilterPipeline.h"
+#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #ifdef DREAM3D_BUILD_TEST_FILTERS
-#include "DREAM3DLib/TestFilters/GenericExample.h"
-#include "DREAM3DLib/TestFilters/ArraySelectionExample.h"
-#include "DREAM3DLib/TestFilters/MakeDataContainer.h"
-#include "DREAM3DLib/TestFilters/ThresholdExample.h"
-#include "DREAM3DLib/TestFilters/TestFilters.h"
+#include "SIMPLib/TestFilters/GenericExample.h"
+#include "SIMPLib/TestFilters/ArraySelectionExample.h"
+#include "SIMPLib/TestFilters/MakeDataContainer.h"
+#include "SIMPLib/TestFilters/ThresholdExample.h"
+#include "SIMPLib/TestFilters/TestFilters.h"
 #endif
-#include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
+#include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
 #include "DREAM3DTestFileLocations.h"
 
@@ -223,7 +223,7 @@ void loadPlugins(FilterManager* fm)
   }
 
   QStringList m_PluginFileNames;
-  QVector<IDREAM3DPlugin*> m_LoadedPlugins;
+  QVector<ISIMPLibPlugin*> m_LoadedPlugins;
 
   // Now that we have a sorted list of plugins, go ahead and load them all from the
   // file system and add each to the toolbar and menu
@@ -240,7 +240,7 @@ void loadPlugins(FilterManager* fm)
     if (plugin && m_PluginFileNames.contains(fileName, Qt::CaseSensitive) == false)
     {
       //populateMenus(plugin);
-      IDREAM3DPlugin* ipPlugin = qobject_cast<IDREAM3DPlugin* > (plugin);
+      ISIMPLibPlugin* ipPlugin = qobject_cast<ISIMPLibPlugin* > (plugin);
       if (ipPlugin)
       {
         m_LoadedPlugins.push_back(ipPlugin);

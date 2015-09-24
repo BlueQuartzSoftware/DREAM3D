@@ -846,6 +846,7 @@ void PluginMaker::on_addFilterBtn_clicked()
     cppgen->setNameChangeable(false);
     QString tempPluginName = cppgen->cleanName(m_PluginName->text());
     cppgen->setPluginName(tempPluginName);
+    cppgen->setInitListContents("  AbstractFilter()");
     filt2cpp->setFileGenPtr(cppgen);
 
     //m_itemMap[filt2cpp] = cppgen;

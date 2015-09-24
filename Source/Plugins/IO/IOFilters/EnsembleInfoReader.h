@@ -37,10 +37,10 @@
 #ifndef _EnsembleInfoReader_H_
 #define _EnsembleInfoReader_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/CoreFilters/FileReader.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/CoreFilters/FileReader.h"
 
 /**
  * @brief The EnsembleInfoReader class. See [Filter documentation](@ref dxreader) for details.
@@ -49,25 +49,25 @@ class EnsembleInfoReader : public FileReader
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(EnsembleInfoReader)
-    DREAM3D_STATIC_NEW_MACRO(EnsembleInfoReader)
-    DREAM3D_TYPE_MACRO_SUPER(EnsembleInfoReader, FileReader)
+    SIMPL_SHARED_POINTERS(EnsembleInfoReader)
+    SIMPL_STATIC_NEW_MACRO(EnsembleInfoReader)
+    SIMPL_TYPE_MACRO_SUPER(EnsembleInfoReader, FileReader)
 
     virtual ~EnsembleInfoReader();
 
-    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
+    SIMPL_FILTER_PARAMETER(QString, DataContainerName)
     Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-    DREAM3D_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
     Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(QString, InputFile)
+    SIMPL_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-    DREAM3D_FILTER_PARAMETER(QString, CrystalStructuresArrayName)
+    SIMPL_FILTER_PARAMETER(QString, CrystalStructuresArrayName)
     Q_PROPERTY(QString CrystalStructuresArrayName READ getCrystalStructuresArrayName WRITE setCrystalStructuresArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, PhaseTypesArrayName)
+    SIMPL_FILTER_PARAMETER(QString, PhaseTypesArrayName)
     Q_PROPERTY(QString PhaseTypesArrayName READ getPhaseTypesArrayName WRITE setPhaseTypesArrayName)
 
     /**

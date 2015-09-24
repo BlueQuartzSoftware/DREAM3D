@@ -39,11 +39,11 @@
 
 #include <QtCore/QFile>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
-#include "DREAM3DLib/FilterParameters/FileListInfoFilterParameter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/FilterParameters/FileListInfoFilterParameter.h"
 
 /**
  * @brief The ImportImageStack class. See [Filter documentation](@ref importimagestack) for details.
@@ -52,37 +52,37 @@ class ImportImageStack : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(ImportImageStack)
-    DREAM3D_STATIC_NEW_MACRO(ImportImageStack)
-    DREAM3D_TYPE_MACRO_SUPER(ImportImageStack, AbstractFilter)
+    SIMPL_SHARED_POINTERS(ImportImageStack)
+    SIMPL_STATIC_NEW_MACRO(ImportImageStack)
+    SIMPL_TYPE_MACRO_SUPER(ImportImageStack, AbstractFilter)
 
     virtual ~ImportImageStack();
 
-    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
+    SIMPL_FILTER_PARAMETER(QString, DataContainerName)
     Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-    DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
     Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, Origin)
+    SIMPL_FILTER_PARAMETER(FloatVec3_t, Origin)
     Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
 
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
+    SIMPL_FILTER_PARAMETER(FloatVec3_t, Resolution)
     Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
 
-    DREAM3D_FILTER_PARAMETER(QString, BoundsFile)
+    SIMPL_FILTER_PARAMETER(QString, BoundsFile)
     Q_PROPERTY(QString BoundsFile READ getBoundsFile WRITE setBoundsFile)
 
-    DREAM3D_FILTER_PARAMETER(int, GeometryType)
+    SIMPL_FILTER_PARAMETER(int, GeometryType)
     Q_PROPERTY(int GeometryType READ getGeometryType WRITE setGeometryType)
 
-    DREAM3D_FILTER_PARAMETER(FileListInfo_t, InputFileListInfo)
+    SIMPL_FILTER_PARAMETER(FileListInfo_t, InputFileListInfo)
     Q_PROPERTY(FileListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
 
-    DREAM3D_FILTER_PARAMETER(int, ImageStack)
+    SIMPL_FILTER_PARAMETER(int, ImageStack)
     Q_PROPERTY(int ImageStack READ getImageStack WRITE setImageStack)
 
-    DREAM3D_FILTER_PARAMETER(QString, ImageDataArrayName)
+    SIMPL_FILTER_PARAMETER(QString, ImageDataArrayName)
     Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
 
     /**

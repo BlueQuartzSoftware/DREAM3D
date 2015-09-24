@@ -38,16 +38,16 @@
 
 #include <QtCore/QDir>
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/TemplateHelpers.hpp"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/TemplateHelpers.hpp"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/OutputPathFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/IntFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/OutputPathFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 
 
 #include "IO/IOConstants.h"
@@ -191,11 +191,11 @@ void ExportData::readFilterParameters(AbstractFilterParametersReader* reader, in
 int ExportData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(SelectedDataArrayPaths)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(Delimeter)
-  DREAM3D_FILTER_WRITE_PARAMETER(FileExtension)
-  DREAM3D_FILTER_WRITE_PARAMETER(MaxValPerLine)
+  SIMPL_FILTER_WRITE_PARAMETER(SelectedDataArrayPaths)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputPath)
+  SIMPL_FILTER_WRITE_PARAMETER(Delimeter)
+  SIMPL_FILTER_WRITE_PARAMETER(FileExtension)
+  SIMPL_FILTER_WRITE_PARAMETER(MaxValPerLine)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

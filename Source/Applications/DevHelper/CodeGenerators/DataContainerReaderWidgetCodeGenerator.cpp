@@ -96,7 +96,7 @@ QString DataContainerReaderWidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(DataContainerArrayProxy, " + getPropertyName() + ")\n";
+  ss << "    SIMPL_FILTER_PARAMETER(DataContainerArrayProxy, " + getPropertyName() + ")\n";
   ss << "    Q_PROPERTY(DataContainerArrayProxy " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
@@ -107,7 +107,7 @@ QString DataContainerReaderWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString DataContainerReaderWidgetCodeGenerator::generateHIncludes()
 {
-  return "#include \"DREAM3DLib/DataContainers/DataContainerArrayProxy.h\"";
+  return "#include \"SIMPLib/DataContainers/DataContainerArrayProxy.h\"";
 }
 
 // -----------------------------------------------------------------------------
@@ -115,5 +115,5 @@ QString DataContainerReaderWidgetCodeGenerator::generateHIncludes()
 // -----------------------------------------------------------------------------
 QString DataContainerReaderWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/DataContainerReaderFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/DataContainerReaderFilterParameter.h\"";
 }

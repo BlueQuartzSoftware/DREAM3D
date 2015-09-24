@@ -37,10 +37,10 @@
 #ifndef _TetragonalOPS_H_
 #define _TetragonalOPS_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/Math/QuaternionMath.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Math/QuaternionMath.hpp"
 
 #include "OrientationLib/OrientationLib.h"
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
@@ -57,9 +57,9 @@
 class OrientationLib_EXPORT TetragonalOps : public SpaceGroupOps
 {
   public:
-    DREAM3D_SHARED_POINTERS(TetragonalOps)
-    DREAM3D_TYPE_MACRO_SUPER(TetragonalOps, SpaceGroupOps)
-    DREAM3D_STATIC_NEW_MACRO(TetragonalOps)
+    SIMPL_SHARED_POINTERS(TetragonalOps)
+    SIMPL_TYPE_MACRO_SUPER(TetragonalOps, SpaceGroupOps)
+    SIMPL_STATIC_NEW_MACRO(TetragonalOps)
 
 
     TetragonalOps();

@@ -37,9 +37,9 @@
 #ifndef _AbaqusSurfaceMeshWriter_H_
 #define _AbaqusSurfaceMeshWriter_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The AbaqusSurfaceMeshWriter class. See [Filter documentation](@ref abaqussurfacemeshwriter) for details.
@@ -48,16 +48,16 @@ class AbaqusSurfaceMeshWriter : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(AbaqusSurfaceMeshWriter)
-    DREAM3D_STATIC_NEW_MACRO(AbaqusSurfaceMeshWriter)
-    DREAM3D_TYPE_MACRO_SUPER(AbaqusSurfaceMeshWriter, AbstractFilter)
+    SIMPL_SHARED_POINTERS(AbaqusSurfaceMeshWriter)
+    SIMPL_STATIC_NEW_MACRO(AbaqusSurfaceMeshWriter)
+    SIMPL_TYPE_MACRO_SUPER(AbaqusSurfaceMeshWriter, AbstractFilter)
 
     virtual ~AbaqusSurfaceMeshWriter();
 
-    DREAM3D_FILTER_PARAMETER(QString, OutputFile)
+    SIMPL_FILTER_PARAMETER(QString, OutputFile)
     Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
     /**

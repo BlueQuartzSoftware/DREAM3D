@@ -88,7 +88,7 @@ QString ChoiceWidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(int, " + getPropertyName() + ")\n";
+  ss << "    SIMPL_FILTER_PARAMETER(int, " + getPropertyName() + ")\n";
   ss << "    Q_PROPERTY(int " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
@@ -99,5 +99,5 @@ QString ChoiceWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString ChoiceWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/ChoiceFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/ChoiceFilterParameter.h\"";
 }

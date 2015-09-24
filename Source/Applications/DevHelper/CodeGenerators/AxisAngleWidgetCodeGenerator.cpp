@@ -82,7 +82,7 @@ QString AxisAngleWidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(AxisAngleInput_t, " + getPropertyName() + ")\n";
+  ss << "    SIMPL_FILTER_PARAMETER(AxisAngleInput_t, " + getPropertyName() + ")\n";
   ss << "    Q_PROPERTY(AxisAngleInput_t " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
@@ -93,5 +93,5 @@ QString AxisAngleWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString AxisAngleWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/AxisAngleFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/AxisAngleFilterParameter.h\"";
 }

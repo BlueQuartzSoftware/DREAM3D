@@ -36,7 +36,7 @@ void buildInitializerList(QString hFile, QString cppFile)
 
     QString line = lines.next();
     // std::cout << line.toStdString() << std::endl;
-    if(line.contains(QString("DREAM3D_INSTANCE_STRING_PROPERTY")) )
+    if(line.contains(QString("SIMPL_INSTANCE_STRING_PROPERTY")) )
     {
       QStringList chunks = line.split(QRegExp("\\("));
       chunks = chunks.at(1).split(QRegExp("\\)"));
@@ -45,7 +45,7 @@ void buildInitializerList(QString hFile, QString cppFile)
       initializerList << s;
     }
 
-    if(line.contains(QString("DREAM3D_INSTANCE_PROPERTY")) )
+    if(line.contains(QString("SIMPL_INSTANCE_PROPERTY")) )
     {
       QStringList chunks = line.split(QRegExp(", "));
       chunks = chunks.at(1).split(QRegExp("\\)"));
@@ -195,7 +195,7 @@ void replaceText1(QString hFile, QString cppFile)
   int hIndex = -1;
   if(index > 0)
   {
-    hIndex = header.indexOf("DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)");
+    hIndex = header.indexOf("SIMPL_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)");
     if(hIndex < 0) // This class does not have a Feature Attribute Matrix Name
     {
       cpp.replace(searchStr, "size_t totalFeatures = 0;");
@@ -209,7 +209,7 @@ void replaceText1(QString hFile, QString cppFile)
   hIndex = -1;
   if(index > 0)
   {
-    hIndex = header.indexOf("DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)");
+    hIndex = header.indexOf("SIMPL_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)");
     if(hIndex < 0) // This class does not have a Ensemble Attribute Matrix Name
     {
       cpp.replace(searchStr, "size_t totalEnsembles = 0;");
@@ -278,12 +278,12 @@ void replaceText(QString hFile, QString cppFile)
   // Now open the header file and read that.
   for (int i = 0; i < varNames.size(); ++i)
   {
-    QString s("DREAM3D_INSTANCE_STRING_PROPERTY(" + varNames.at(i) + "AttributeMatrixName)");
+    QString s("SIMPL_INSTANCE_STRING_PROPERTY(" + varNames.at(i) + "AttributeMatrixName)");
     index = header.indexOf(s, 0);
     if (index < 0)   // Not found
     {
 
-      QString dc("DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)\n");
+      QString dc("SIMPL_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)\n");
       int idx = header.indexOf(dc, 0);
       if (idx > 0)
       {

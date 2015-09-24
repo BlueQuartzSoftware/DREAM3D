@@ -82,7 +82,7 @@ QString StringWidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(QString, " + getPropertyName() + ")\n";
+  ss << "    SIMPL_FILTER_PARAMETER(QString, " + getPropertyName() + ")\n";
   ss << "    Q_PROPERTY(QString " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
@@ -93,5 +93,5 @@ QString StringWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString StringWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/StringFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/StringFilterParameter.h\"";
 }

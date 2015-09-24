@@ -41,9 +41,9 @@
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/variate_generator.hpp>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
@@ -60,45 +60,45 @@ class GroupMicroTextureRegions : public GroupFeatures
     typedef boost::mt19937 RandomNumberGenerator;
     typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;
 
-    DREAM3D_SHARED_POINTERS(GroupMicroTextureRegions)
-    DREAM3D_STATIC_NEW_MACRO(GroupMicroTextureRegions)
-    DREAM3D_TYPE_MACRO_SUPER(GroupMicroTextureRegions, AbstractFilter)
+    SIMPL_SHARED_POINTERS(GroupMicroTextureRegions)
+    SIMPL_STATIC_NEW_MACRO(GroupMicroTextureRegions)
+    SIMPL_TYPE_MACRO_SUPER(GroupMicroTextureRegions, AbstractFilter)
 
     virtual ~GroupMicroTextureRegions();
 
-    DREAM3D_FILTER_PARAMETER(QString, NewCellFeatureAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, NewCellFeatureAttributeMatrixName)
     Q_PROPERTY(QString NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(float, CAxisTolerance)
+    SIMPL_FILTER_PARAMETER(float, CAxisTolerance)
     Q_PROPERTY(float CAxisTolerance READ getCAxisTolerance WRITE setCAxisTolerance)
 
-    DREAM3D_FILTER_PARAMETER(bool, UseRunningAverage)
+    SIMPL_FILTER_PARAMETER(bool, UseRunningAverage)
     Q_PROPERTY(float UseRunningAverage READ getUseRunningAverage WRITE setUseRunningAverage)
 
-    DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
+    SIMPL_INSTANCE_PROPERTY(bool, RandomizeParentIds)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
     Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, VolumesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, VolumesArrayPath)
     Q_PROPERTY(DataArrayPath VolumesArrayPath READ getVolumesArrayPath WRITE setVolumesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
     Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, CellParentIdsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, CellParentIdsArrayName)
     Q_PROPERTY(QString CellParentIdsArrayName READ getCellParentIdsArrayName WRITE setCellParentIdsArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, FeatureParentIdsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, FeatureParentIdsArrayName)
     Q_PROPERTY(QString FeatureParentIdsArrayName READ getFeatureParentIdsArrayName WRITE setFeatureParentIdsArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, ActiveArrayName)
+    SIMPL_FILTER_PARAMETER(QString, ActiveArrayName)
     Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
 
     /**

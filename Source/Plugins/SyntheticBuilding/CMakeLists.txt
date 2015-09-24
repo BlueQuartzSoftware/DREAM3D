@@ -14,7 +14,7 @@ endif()
 
 set(${PLUGIN_NAME}_Project_SRCS "")
 
-include(${DREAM3DProj_SOURCE_DIR}/Source/DREAM3DLib/DREAM3DLibMacros.cmake)
+include(${DREAM3DProj_SOURCE_DIR}/Source/SIMPLib/SIMPLibMacros.cmake)
 
 #-------
 # Start writing this header file
@@ -198,7 +198,7 @@ endif()
 add_library(${PLUGIN_NAME} MODULE ${${PLUGIN_NAME}_MODULE_SRCS})
 target_link_libraries(${PLUGIN_NAME}
                     Qt5::Core
-                    DREAM3DLib
+                    SIMPLib
                     OrientationLib
                     Qt5::Gui Qt5::Widgets
                     QtSupportLib

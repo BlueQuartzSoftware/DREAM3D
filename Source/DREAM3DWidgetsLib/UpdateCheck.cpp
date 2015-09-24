@@ -51,9 +51,9 @@
 #include <QtNetwork/QNetworkReply>
 
 
-#include "DREAM3DLib/DREAM3DLibVersion.h"
-#include "DREAM3DLib/Common/AppVersion.h"
-#include "DREAM3DLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
+#include "SIMPLib/Common/AppVersion.h"
+#include "SIMPLib/Common/Constants.h"
 
 #include "DREAM3DWidgetsLib/Widgets/DREAM3DUpdateCheckDialog.h"
 
@@ -102,7 +102,7 @@ void UpdateCheck::checkVersion(QUrl website)
 
   QString header;
   QTextStream out(&header);
-  out << "DREAM3D Version " << DREAM3DLib::Version::Complete() << " [" << DREAM3DProj_RELEASE_TYPE << "] ";
+  out << "DREAM3D Version " << SIMPLib::Version::Complete() << " [" << DREAM3DProj_RELEASE_TYPE << "] ";
   out << "(" << QSysInfo::prettyProductName() << ")";
   request.setRawHeader("User-Agent", header.toLatin1());
 
@@ -127,7 +127,7 @@ void UpdateCheck::networkReplied(QNetworkReply* reply)
   if (reply->error() == QNetworkReply::NoError)
   {
     DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(NULL);
-    d->setCurrentVersion((DREAM3DLib::Version::Complete()));
+    d->setCurrentVersion((SIMPLib::Version::Complete()));
     d->setApplicationName("DREAM3D");
     QString appName = d->getAppName();
 
@@ -154,9 +154,9 @@ void UpdateCheck::networkReplied(QNetworkReply* reply)
     QString serverMinor = d3dJson["Minor"].toString();
     QString serverPatch = d3dJson["Patch"].toString();
 
-    QString appMajor = DREAM3DLib::Version::Major();
-    QString appMinor = DREAM3DLib::Version::Minor();
-    QString appPatch = DREAM3DLib::Version::Patch();
+    QString appMajor = SIMPLib::Version::Major();
+    QString appMinor = SIMPLib::Version::Minor();
+    QString appPatch = SIMPLib::Version::Patch();
 
     bool ok = false;
     AppVersion appVersion;

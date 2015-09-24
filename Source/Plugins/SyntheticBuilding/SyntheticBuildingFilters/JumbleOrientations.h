@@ -37,9 +37,9 @@
 #ifndef _JumbleOrientations_H_
 #define _JumbleOrientations_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The JumbleOrientations class. See [Filter documentation](@ref jumbleorientations) for details.
@@ -48,25 +48,25 @@ class JumbleOrientations : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(JumbleOrientations)
-    DREAM3D_STATIC_NEW_MACRO(JumbleOrientations)
-    DREAM3D_TYPE_MACRO_SUPER(JumbleOrientations, AbstractFilter)
+    SIMPL_SHARED_POINTERS(JumbleOrientations)
+    SIMPL_STATIC_NEW_MACRO(JumbleOrientations)
+    SIMPL_TYPE_MACRO_SUPER(JumbleOrientations, AbstractFilter)
 
     virtual ~JumbleOrientations();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, CellEulerAnglesArrayName)
+    SIMPL_FILTER_PARAMETER(QString, CellEulerAnglesArrayName)
     Q_PROPERTY(QString CellEulerAnglesArrayName READ getCellEulerAnglesArrayName WRITE setCellEulerAnglesArrayName)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
     Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureEulerAnglesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureEulerAnglesArrayPath)
     Q_PROPERTY(DataArrayPath FeatureEulerAnglesArrayPath READ getFeatureEulerAnglesArrayPath WRITE setFeatureEulerAnglesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, AvgQuatsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, AvgQuatsArrayName)
     Q_PROPERTY(QString AvgQuatsArrayName READ getAvgQuatsArrayName WRITE setAvgQuatsArrayName)
 
     /**

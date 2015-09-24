@@ -82,7 +82,7 @@ QString BooleanWidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(bool, " + getPropertyName() + ")\n";
+  ss << "    SIMPL_FILTER_PARAMETER(bool, " + getPropertyName() + ")\n";
   ss << "    Q_PROPERTY(bool " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
@@ -93,5 +93,5 @@ QString BooleanWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString BooleanWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/BooleanFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/BooleanFilterParameter.h\"";
 }

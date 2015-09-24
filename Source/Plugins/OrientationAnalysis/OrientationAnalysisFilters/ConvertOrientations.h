@@ -36,10 +36,10 @@
 #ifndef _ConvertOrientations_H_
 #define _ConvertOrientations_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
@@ -50,22 +50,22 @@ class ConvertOrientations : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(ConvertOrientations)
-    DREAM3D_STATIC_NEW_MACRO(ConvertOrientations)
-    DREAM3D_TYPE_MACRO_SUPER(ConvertOrientations, AbstractFilter)
+    SIMPL_SHARED_POINTERS(ConvertOrientations)
+    SIMPL_STATIC_NEW_MACRO(ConvertOrientations)
+    SIMPL_TYPE_MACRO_SUPER(ConvertOrientations, AbstractFilter)
 
     virtual ~ConvertOrientations();
 
-    DREAM3D_FILTER_PARAMETER(int, InputType)
+    SIMPL_FILTER_PARAMETER(int, InputType)
     Q_PROPERTY(int InputType READ getInputType WRITE setInputType)
 
-    DREAM3D_FILTER_PARAMETER(int, OutputType)
+    SIMPL_FILTER_PARAMETER(int, OutputType)
     Q_PROPERTY(int OutputType READ getOutputType WRITE setOutputType)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, InputOrientationArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, InputOrientationArrayPath)
     Q_PROPERTY(DataArrayPath InputOrientationArrayPath READ getInputOrientationArrayPath WRITE setInputOrientationArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, OutputOrientationArrayName)
+    SIMPL_FILTER_PARAMETER(QString, OutputOrientationArrayName)
     Q_PROPERTY(QString OutputOrientationArrayName READ getOutputOrientationArrayName WRITE setOutputOrientationArrayName)
 
     /**

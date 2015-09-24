@@ -36,12 +36,12 @@
 
 #include "ConvertOrientations.h"
 
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/OrientationMath/OrientationConverter.hpp"
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
@@ -125,11 +125,11 @@ void ConvertOrientations::readFilterParameters(AbstractFilterParametersReader* r
 int ConvertOrientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputType)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputType)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputOrientationArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputOrientationArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(InputType)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputType)
+  SIMPL_FILTER_WRITE_PARAMETER(InputOrientationArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputOrientationArrayName)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -206,7 +206,7 @@ void ConvertOrientations::execute()
   if(getErrorCondition() < 0) { return; }
 
   typedef OrientationConverter<float> OCType;
-  QVector<OCType::Pointer> converters(6);
+  QVector<OCType::Pointer> converters(7);
 
   converters[0] = EulerConverter<float>::New();
   converters[1] = OrientationMatrixConverter<float>::New();
@@ -214,7 +214,7 @@ void ConvertOrientations::execute()
   converters[3] = AxisAngleConverter<float>::New();
   converters[4] = RodriguesConverter<float>::New();
   converters[5] = HomochoricConverter<float>::New();
-  //converters[6] = CubochoricConverter<float>::New();
+  converters[6] = CubochoricConverter<float>::New();
 
   QVector<OCType::OrientationType> ocTypes = OCType::GetOrientationTypes();
 

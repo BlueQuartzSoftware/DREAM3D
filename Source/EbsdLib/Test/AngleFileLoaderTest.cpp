@@ -44,8 +44,8 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Utilities/IO/AngleFileLoader.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Utilities/IO/AngleFileLoader.h"
 
 
 #include "UnitTestSupport.hpp"

@@ -17,14 +17,14 @@ namespace D3DTools
     return QString::fromLatin1("@DREAM3DProj_SOURCE_DIR_NORM@/Source");
   }
 
-  QString GetDREAM3DLibDir()
+  QString GetSIMPLibDir()
   {
-    return QString::fromLatin1("@DREAM3DLib_SOURCE_DIR_NORM@");
+    return QString::fromLatin1("@SIMPLib_SOURCE_DIR_NORM@");
   }
 
-  QString GetDREAM3DPluginDir()
+  QString GetSIMPLibPluginDir()
   {
-    return QString::fromLatin1("@DREAM3DLib_PLUGIN_DIR_NORM@");
+    return QString::fromLatin1("@SIMPLib_PLUGIN_DIR_NORM@");
   }
 
   QString GetDREAM3DProjParentDir()

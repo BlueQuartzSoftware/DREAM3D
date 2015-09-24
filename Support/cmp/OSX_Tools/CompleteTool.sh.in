@@ -147,8 +147,10 @@ function UpdateLibraryDependencies()
   local libOutFile
   local i
 
+  OUTDIR=$RANDOM
+
   libFile="${1}"
-  libOutFile="${TmpDir}/@osx_app_name@-library.out"
+  libOutFile="${TmpDir}/@osx_app_name@-library_$OUTDIR.out"
   otool -L "${1}" > "${libOutFile}"
   i=0
   exec 10<"${libOutFile}"
@@ -161,6 +163,8 @@ function UpdateLibraryDependencies()
     let i=i+1
   done
   exec 10<&-
+
+  rm -rf "${libOutFile}"
 }
 
 # -----------------------------------------------------------------------------

@@ -43,8 +43,8 @@
 
 #include <QtCore/QDateTime>
 
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-#include "DREAM3DLib/Utilities/ColorTable.h"
+#include "SIMPLib/Utilities/SIMPLibRandom.h"
+#include "SIMPLib/Utilities/ColorTable.h"
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/SpaceGroupOps/CubicOps.h"
@@ -65,10 +65,10 @@ namespace Detail
 
 //const static float m_OnePointThree = 1.33333333333f;
 
-  const float sin_wmin_neg_1_over_2 = static_cast<float>( sinf(DREAM3D::Constants::k_ACosNeg1 / 2.0f) );
-  const float sin_wmin_pos_1_over_2 = static_cast<float>( sinf(DREAM3D::Constants::k_ACos1 / 2.0f) );
-  const float sin_of_acos_neg_1 = sinf(DREAM3D::Constants::k_ACosNeg1);
-  const float sin_of_acos_pos_1 = sinf(DREAM3D::Constants::k_ACos1);
+  const float sin_wmin_neg_1_over_2 = static_cast<float>( sinf(SIMPLib::Constants::k_ACosNeg1 / 2.0f) );
+  const float sin_wmin_pos_1_over_2 = static_cast<float>( sinf(SIMPLib::Constants::k_ACos1 / 2.0f) );
+  const float sin_of_acos_neg_1 = sinf(SIMPLib::Constants::k_ACosNeg1);
+  const float sin_of_acos_pos_1 = sinf(SIMPLib::Constants::k_ACos1);
 
 //  const float recip_sin_of_acos_neg_1 = 1.0f / sin_of_acos_neg_1;
 //  const float recip_sin_of_acos_pos_1 = 1.0f / sin_of_acos_pos_1;
@@ -135,9 +135,9 @@ float SpaceGroupOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
     FOrientTransformsType::qu2ax(FOrientArrayType(qc.x, qc.y, qc.z, qc.w), ax);
     ax.toAxisAngle(n1, n2, n3, w);
 
-    if (w > DREAM3D::Constants::k_Pi)
+    if (w > SIMPLib::Constants::k_Pi)
     {
-      w = DREAM3D::Constants::k_2Pi - w;
+      w = SIMPLib::Constants::k_2Pi - w;
     }
     if (w < wmin)
     {
@@ -307,7 +307,7 @@ void SpaceGroupOps::_calcDetermineHomochoricValues(uint64_t seed, float init[3],
 {
   float random;
 
-  DREAM3D_RANDOMNG_NEW_SEEDED(seed)
+  SIMPL_RANDOMNG_NEW_SEEDED(seed)
   random = static_cast<float>( rg.genrand_res53() );
   r1 = (step[0] * phi[0]) + (step[0] * random) - (init[0]);
   random = static_cast<float>( rg.genrand_res53() );

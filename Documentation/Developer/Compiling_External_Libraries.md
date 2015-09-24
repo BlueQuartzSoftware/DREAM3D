@@ -267,7 +267,7 @@ The develop now needs to create a basic cmake file that describes the locations 
 	set(BOOST_ROOT "${DREAM3D_SDK_ROOT}/boost-1.58.0" CACHE PATH "")
 	#--------------------------------------------------------------------------------------------------
 	# Intel Threading Building Blocks Library
-	set(DREAM3D_USE_MULTITHREADED_ALGOS ON CACHE BOOL "")
+	set(SIMPL_USE_MULTITHREADED_ALGOS ON CACHE BOOL "")
 	set(TBB_INSTALL_DIR  "${DREAM3D_SDK_ROOT}/tbb43_20150424oss" CACHE PATH "")
 	set(TBB_ARCH_TYPE "intel64" CACHE STRING "")
 	#--------------------------------------------------------------------------------------------------

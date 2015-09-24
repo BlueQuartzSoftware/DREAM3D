@@ -5,9 +5,9 @@
 #ifndef _@ClassName@_H_
 #define _@ClassName@_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Common/AbstractFilter.h"
 @Filter_H_Includes@
 /**
  * @brief The @ClassName@ class. See [Filter documentation](@ref @ClassNameLowerCase@) for details.
@@ -17,9 +17,9 @@ class @ClassName@ : public AbstractFilter
   Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
 
   public:
-    DREAM3D_SHARED_POINTERS(@ClassName@)
-    DREAM3D_STATIC_NEW_MACRO(@ClassName@)
-    DREAM3D_TYPE_MACRO_SUPER(@ClassName@, AbstractFilter)
+    SIMPL_SHARED_POINTERS(@ClassName@)
+    SIMPL_STATIC_NEW_MACRO(@ClassName@)
+    SIMPL_TYPE_MACRO_SUPER(@ClassName@, AbstractFilter)
 
     virtual ~@ClassName@();
 

@@ -44,8 +44,8 @@
 #include "QtSupportLib/FileDragMessageBox.h"
 #include "QtSupportLib/DREAM3DSettings.h"
 
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/Constants.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Common/Constants.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 

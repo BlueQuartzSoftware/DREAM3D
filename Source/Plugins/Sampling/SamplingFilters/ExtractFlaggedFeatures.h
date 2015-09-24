@@ -37,9 +37,9 @@
 #ifndef _ExtractFlaggedFeatures_H_
 #define _ExtractFlaggedFeatures_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The ExtractFlaggedFeatures class. See [Filter documentation](@ref extractflaggedfeatures) for details.
@@ -48,16 +48,16 @@ class ExtractFlaggedFeatures : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(ExtractFlaggedFeatures)
-    DREAM3D_STATIC_NEW_MACRO(ExtractFlaggedFeatures)
-    DREAM3D_TYPE_MACRO_SUPER(ExtractFlaggedFeatures, AbstractFilter)
+    SIMPL_SHARED_POINTERS(ExtractFlaggedFeatures)
+    SIMPL_STATIC_NEW_MACRO(ExtractFlaggedFeatures)
+    SIMPL_TYPE_MACRO_SUPER(ExtractFlaggedFeatures, AbstractFilter)
 
     virtual ~ExtractFlaggedFeatures();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FlaggedFeaturesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FlaggedFeaturesArrayPath)
     Q_PROPERTY(DataArrayPath FlaggedFeaturesArrayPath READ getFlaggedFeaturesArrayPath WRITE setFlaggedFeaturesArrayPath)
 
     /**

@@ -42,10 +42,10 @@
 #endif
 
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Utilities/SIMPLibRandom.h"
 
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 #include "OrientationLib/Texture/Texture.hpp"
@@ -230,7 +230,7 @@ class StatsGen
     static int GenCubicODFPlotData(const T* odf, T* eulers, size_t npoints)
     {
       uint64_t m_Seed = QDateTime::currentMSecsSinceEpoch();
-      DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
+      SIMPL_RANDOMNG_NEW_SEEDED(m_Seed);
       int err = 0;
       int choose;
       T totaldensity;
@@ -275,7 +275,7 @@ class StatsGen
     static int GenHexODFPlotData(T* odf, T* eulers, int npoints)
     {
       uint64_t m_Seed = QDateTime::currentMSecsSinceEpoch();
-      DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
+      SIMPL_RANDOMNG_NEW_SEEDED(m_Seed);
       int err = 0;
       int choose;
       float totaldensity;
@@ -319,7 +319,7 @@ class StatsGen
     static int GenOrthoRhombicODFPlotData(T* odf, T* eulers, int npoints)
     {
       uint64_t m_Seed = QDateTime::currentMSecsSinceEpoch();
-      DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
+      SIMPL_RANDOMNG_NEW_SEEDED(m_Seed);
       int err = 0;
       int choose;
       float totaldensity;
@@ -376,7 +376,7 @@ class StatsGen
     static int GenAxisODFPlotData(T* odf, T* eulers, int npoints)
     {
       uint64_t m_Seed = QDateTime::currentMSecsSinceEpoch();
-      DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
+      SIMPL_RANDOMNG_NEW_SEEDED(m_Seed);
       int err = 0;
       int choose;
       float totaldensity;
@@ -424,7 +424,7 @@ class StatsGen
       float radtodeg = 180.0f / float(M_PI);
 
       uint64_t m_Seed = QDateTime::currentMSecsSinceEpoch();
-      DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
+      SIMPL_RANDOMNG_NEW_SEEDED(m_Seed);
 
       int err = 0;
       float density;
@@ -488,7 +488,7 @@ class StatsGen
       float radtodeg = 180.0f / float(M_PI);
 
       uint64_t m_Seed = QDateTime::currentMSecsSinceEpoch();
-      DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
+      SIMPL_RANDOMNG_NEW_SEEDED(m_Seed);
 
       int err = 0;
       int choose = 0;

@@ -37,14 +37,14 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QFileInfo>
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/InputFileFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "EbsdLib/TSL/AngFields.h"
 
@@ -109,9 +109,9 @@ ReadAngData::~ReadAngData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D_PIMPL_PROPERTY_DEF(ReadAngData, Ang_Private_Data, Data)
-DREAM3D_PIMPL_PROPERTY_DEF(ReadAngData, QString, InputFile_Cache)
-DREAM3D_PIMPL_PROPERTY_DEF(ReadAngData, QDateTime, TimeStamp_Cache)
+SIMPL_PIMPL_PROPERTY_DEF(ReadAngData, Ang_Private_Data, Data)
+SIMPL_PIMPL_PROPERTY_DEF(ReadAngData, QString, InputFile_Cache)
+SIMPL_PIMPL_PROPERTY_DEF(ReadAngData, QDateTime, TimeStamp_Cache)
 
 // -----------------------------------------------------------------------------
 //
@@ -147,10 +147,10 @@ void ReadAngData::readFilterParameters(AbstractFilterParametersReader* reader, i
 int ReadAngData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
+  SIMPL_FILTER_WRITE_PARAMETER(DataContainerName)
+  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(InputFile)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

@@ -37,9 +37,9 @@
 #ifndef _MinSize_H_
 #define _MinSize_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The MinSize class. See [Filter documentation](@ref minsize) for details.
@@ -48,28 +48,28 @@ class MinSize : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(MinSize)
-    DREAM3D_STATIC_NEW_MACRO(MinSize)
-    DREAM3D_TYPE_MACRO_SUPER(MinSize, AbstractFilter)
+    SIMPL_SHARED_POINTERS(MinSize)
+    SIMPL_STATIC_NEW_MACRO(MinSize)
+    SIMPL_TYPE_MACRO_SUPER(MinSize, AbstractFilter)
 
     virtual ~MinSize();
 
-    DREAM3D_FILTER_PARAMETER(int, MinAllowedFeatureSize)
+    SIMPL_FILTER_PARAMETER(int, MinAllowedFeatureSize)
     Q_PROPERTY(int MinAllowedFeatureSize READ getMinAllowedFeatureSize WRITE setMinAllowedFeatureSize)
 
-    DREAM3D_FILTER_PARAMETER(bool, ApplyToSinglePhase)
+    SIMPL_FILTER_PARAMETER(bool, ApplyToSinglePhase)
     Q_PROPERTY(bool ApplyToSinglePhase READ getApplyToSinglePhase WRITE setApplyToSinglePhase)
 
-    DREAM3D_FILTER_PARAMETER(int, PhaseNumber)
+    SIMPL_FILTER_PARAMETER(int, PhaseNumber)
     Q_PROPERTY(int PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
     Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, NumCellsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, NumCellsArrayPath)
     Q_PROPERTY(DataArrayPath NumCellsArrayPath READ getNumCellsArrayPath WRITE setNumCellsArrayPath)
 
     /**

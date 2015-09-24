@@ -38,19 +38,19 @@
 
 #include <QtCore/QDir>
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/BooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/InputFileFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/OutputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/StatsData/PrecipitateStatsData.h"
+#include "SIMPLib/Utilities/SIMPLibRandom.h"
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 
@@ -234,23 +234,23 @@ void InsertPrecipitatePhases::readFilterParameters(AbstractFilterParametersReade
 int InsertPrecipitatePhases::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(NumFeaturesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputStatsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputPhaseTypesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputShapeTypesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(BoundaryCellsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(MaskArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(PeriodicBoundaries)
-  DREAM3D_FILTER_WRITE_PARAMETER(UseMask)
-  DREAM3D_FILTER_WRITE_PARAMETER(MatchRDF)
-  DREAM3D_FILTER_WRITE_PARAMETER(HavePrecips)
-  DREAM3D_FILTER_WRITE_PARAMETER(WriteGoalAttributes)
-  DREAM3D_FILTER_WRITE_PARAMETER(PrecipInputFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(CsvOutputFile)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(NumFeaturesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(InputStatsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(InputPhaseTypesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(InputShapeTypesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(BoundaryCellsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(MaskArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(PeriodicBoundaries)
+  SIMPL_FILTER_WRITE_PARAMETER(UseMask)
+  SIMPL_FILTER_WRITE_PARAMETER(MatchRDF)
+  SIMPL_FILTER_WRITE_PARAMETER(HavePrecips)
+  SIMPL_FILTER_WRITE_PARAMETER(WriteGoalAttributes)
+  SIMPL_FILTER_WRITE_PARAMETER(PrecipInputFile)
+  SIMPL_FILTER_WRITE_PARAMETER(CsvOutputFile)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -545,8 +545,8 @@ void  InsertPrecipitatePhases::load_precipitates()
   for (int32_t i = 0; i < numPrecips; i++)
   {
     inFile >> phase >> xC >> yC >> zC >> axisA >> axisB >> axisC >> omega3 >> phi1 >> PHI >> phi2;
-    vol = fourThirds * DREAM3D::Constants::k_Pi * axisA * axisB * axisC;
-    eqDiam = 2.0f * powf((vol * (0.75f) * (DREAM3D::Constants::k_1OverPi)), (DREAM3D::Constants::k_1Over3));
+    vol = fourThirds * SIMPLib::Constants::k_Pi * axisA * axisB * axisC;
+    eqDiam = 2.0f * powf((vol * (0.75f) * (SIMPLib::Constants::k_1OverPi)), (SIMPLib::Constants::k_1Over3));
     m_Centroids[3 * currentFeature + 0] = xC;
     m_Centroids[3 * currentFeature + 1] = yC;
     m_Centroids[3 * currentFeature + 2] = zC;
@@ -581,7 +581,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
 
   setErrorCondition(0);
   m_Seed = QDateTime::currentMSecsSinceEpoch();
-  DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
+  SIMPL_RANDOMNG_NEW_SEEDED(m_Seed);
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
@@ -703,11 +703,11 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
       float logInput = logf(input);
       if (logInput <= avg)
       {
-        featuresizedist[i][j] = 0.5f - 0.5f * (DREAM3DMath::erf((avg - logInput) / denominatorConst)) - previoustotal;
+        featuresizedist[i][j] = 0.5f - 0.5f * (SIMPLibMath::erf((avg - logInput) / denominatorConst)) - previoustotal;
       }
       if (logInput > avg)
       {
-        featuresizedist[i][j] = 0.5f + 0.5f * (DREAM3DMath::erf((logInput - avg) / denominatorConst)) - previoustotal;
+        featuresizedist[i][j] = 0.5f + 0.5f * (SIMPLibMath::erf((logInput - avg) / denominatorConst)) - previoustotal;
       }
       previoustotal = previoustotal + featuresizedist[i][j];
     }
@@ -1189,7 +1189,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
 // -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::generate_precipitate(int32_t phase, Precip_t* precip, uint32_t shapeclass, SpaceGroupOps::Pointer OrthoOps)
 {
-  DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed)
+  SIMPL_RANDOMNG_NEW_SEEDED(m_Seed)
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
 
@@ -1199,7 +1199,7 @@ void InsertPrecipitatePhases::generate_precipitate(int32_t phase, Precip_t* prec
   float diam = 0.0f;
   float vol = 0.0f;
   bool volgood = false;
-  float fourThirdsPi =  static_cast<float>((4.0f / 3.0f) * (DREAM3D::Constants::k_Pi));
+  float fourThirdsPi =  static_cast<float>((4.0f / 3.0f) * (SIMPLib::Constants::k_Pi));
   PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
   VectorOfFloatArray GSdist = pp->getFeatureSizeDistribution();
   float avg = GSdist[0]->getValue(0);
@@ -1626,7 +1626,7 @@ std::vector<float> InsertPrecipitatePhases::normalizeRDF(std::vector<float> rdf,
 
   //  r1 = 0*finiteAdjFactor;
   //  r2 = rdfmin*finiteAdjFactor;
-  //  normfactor = 4.0f/3.0f*DREAM3D::Constants::k_Pi*((r2*r2*r2) - (r1*r1*r1))*numPPTfeatures*oneovervolume;
+  //  normfactor = 4.0f/3.0f*SIMPLib::Constants::k_Pi*((r2*r2*r2) - (r1*r1*r1))*numPPTfeatures*oneovervolume;
   //  rdf[0] = rdf[0];
 
   //  for (size_t i = 1; i < num_bins+2; i++)
@@ -1635,7 +1635,7 @@ std::vector<float> InsertPrecipitatePhases::normalizeRDF(std::vector<float> rdf,
   //    r2 = (r1 + m_StepSize);
   //    r1 = r1*finiteAdjFactor;
   //    r2 = r2*finiteAdjFactor;
-  //    normfactor = 4.0f/3.0f*DREAM3D::Constants::k_Pi*((r2*r2*r2) - (r1*r1*r1))*numPPTfeatures*oneovervolume;
+  //    normfactor = 4.0f/3.0f*SIMPLib::Constants::k_Pi*((r2*r2*r2) - (r1*r1*r1))*numPPTfeatures*oneovervolume;
   //    rdf[i] = rdf[i]/normfactor;
   //  }
 
@@ -1841,7 +1841,7 @@ float InsertPrecipitatePhases::check_sizedisterror(Precip_t* precip)
 // -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
 {
-  DREAM3D_RANDOMNG_NEW()
+  SIMPL_RANDOMNG_NEW()
 
   float inside = -1.0f;
   int64_t column = 0, row = 0, plane = 0;

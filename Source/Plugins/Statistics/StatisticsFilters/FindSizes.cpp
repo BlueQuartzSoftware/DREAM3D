@@ -36,15 +36,15 @@
 
 #include "FindSizes.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "Statistics/StatisticsConstants.h"
 
@@ -116,12 +116,12 @@ void FindSizes::readFilterParameters(AbstractFilterParametersReader* reader, int
 int FindSizes::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(NumCellsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(EquivalentDiametersArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(VolumesArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(NumCellsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(EquivalentDiametersArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(VolumesArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -192,7 +192,7 @@ void FindSizes::find_sizes()
     featurecounts[gnum]++;
   }
   float res_scalar = m->getGeometryAs<ImageGeom>()->getXRes() * m->getGeometryAs<ImageGeom>()->getYRes() * m->getGeometryAs<ImageGeom>()->getZRes();
-  float vol_term = (4.0f / 3.0f) * DREAM3D::Constants::k_Pi;
+  float vol_term = (4.0f / 3.0f) * SIMPLib::Constants::k_Pi;
   for (size_t i = 1; i < numfeatures; i++)
   {
     m_NumCells[i] = static_cast<int32_t>( featurecounts[i] );
@@ -232,7 +232,7 @@ void FindSizes::find_sizes2D()
   {
     m_NumCells[i] = static_cast<int32_t>( featurecounts[i] );
     m_Volumes[i] = (featurecounts[i] * res_scalar);
-    radsquared = m_Volumes[i] / DREAM3D::Constants::k_Pi;
+    radsquared = m_Volumes[i] / SIMPLib::Constants::k_Pi;
     diameter = (2 * sqrtf(radsquared));
     m_EquivalentDiameters[i] = diameter;
   }

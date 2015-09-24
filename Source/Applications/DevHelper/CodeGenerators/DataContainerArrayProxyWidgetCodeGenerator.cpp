@@ -82,7 +82,7 @@ QString DataContainerArrayProxyWidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  ss << "    DREAM3D_FILTER_PARAMETER(DataContainerArrayProxy, " + getPropertyName() + ")\n";
+  ss << "    SIMPL_FILTER_PARAMETER(DataContainerArrayProxy, " + getPropertyName() + ")\n";
   ss << "    Q_PROPERTY(DataContainerArrayProxy " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
@@ -93,5 +93,5 @@ QString DataContainerArrayProxyWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 QString DataContainerArrayProxyWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"DREAM3DLib/FilterParameters/DataContainerArrayProxyFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/DataContainerArrayProxyFilterParameter.h\"";
 }

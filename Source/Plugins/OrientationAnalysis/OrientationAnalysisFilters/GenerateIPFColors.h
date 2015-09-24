@@ -36,10 +36,10 @@
 #ifndef _GenerateIPFColors_H_
 #define _GenerateIPFColors_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 
 /**
  * @brief The GenerateIPFColors class. See [Filter documentation](@ref generateipfcolors) for details.
@@ -48,31 +48,31 @@ class GenerateIPFColors : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(GenerateIPFColors)
-    DREAM3D_STATIC_NEW_MACRO(GenerateIPFColors)
-    DREAM3D_TYPE_MACRO_SUPER(GenerateIPFColors, AbstractFilter)
+    SIMPL_SHARED_POINTERS(GenerateIPFColors)
+    SIMPL_STATIC_NEW_MACRO(GenerateIPFColors)
+    SIMPL_TYPE_MACRO_SUPER(GenerateIPFColors, AbstractFilter)
 
     virtual ~GenerateIPFColors();
 
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, ReferenceDir)
+    SIMPL_FILTER_PARAMETER(FloatVec3_t, ReferenceDir)
     Q_PROPERTY(FloatVec3_t ReferenceDir READ getReferenceDir WRITE setReferenceDir)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
     Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
     Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(bool, UseGoodVoxels)
+    SIMPL_FILTER_PARAMETER(bool, UseGoodVoxels)
     Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
     Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, CellIPFColorsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, CellIPFColorsArrayName)
     Q_PROPERTY(QString CellIPFColorsArrayName READ getCellIPFColorsArrayName WRITE setCellIPFColorsArrayName)
 
     /**

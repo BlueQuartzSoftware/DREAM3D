@@ -37,9 +37,9 @@
 #ifndef _ErodeDilateCoordinationNumber_H_
 #define _ErodeDilateCoordinationNumber_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The ErodeDilateCoordinationNumber class. See [Filter documentation](@ref erodedilatecoordinationnumber) for details.
@@ -48,19 +48,19 @@ class ErodeDilateCoordinationNumber : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(ErodeDilateCoordinationNumber)
-    DREAM3D_STATIC_NEW_MACRO(ErodeDilateCoordinationNumber)
-    DREAM3D_TYPE_MACRO_SUPER(ErodeDilateCoordinationNumber, AbstractFilter)
+    SIMPL_SHARED_POINTERS(ErodeDilateCoordinationNumber)
+    SIMPL_STATIC_NEW_MACRO(ErodeDilateCoordinationNumber)
+    SIMPL_TYPE_MACRO_SUPER(ErodeDilateCoordinationNumber, AbstractFilter)
 
     virtual ~ErodeDilateCoordinationNumber();
 
-    DREAM3D_FILTER_PARAMETER(bool, Loop)
+    SIMPL_FILTER_PARAMETER(bool, Loop)
     Q_PROPERTY(bool Loop READ getLoop WRITE setLoop)
 
-    DREAM3D_FILTER_PARAMETER(int, CoordinationNumber)
+    SIMPL_FILTER_PARAMETER(int, CoordinationNumber)
     Q_PROPERTY(int CoordinationNumber READ getCoordinationNumber WRITE setCoordinationNumber)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
     /**

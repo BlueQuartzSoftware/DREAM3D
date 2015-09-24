@@ -44,6 +44,7 @@ set(DOCUMENTATION_SOURCE_FILES
   \"${PROJECT_SOURCE_DIR}/ReleaseNotes/ReleaseNotes.dox\"
   \"${PROJECT_SOURCE_DIR}/ReleaseNotes/ReleaseNotes_6_0_0.md\"
   \"${PROJECT_SOURCE_DIR}/ReleaseNotes/ReleaseNotes_6_1_0.md\"
+  \"${PROJECT_SOURCE_DIR}/ReleaseNotes/ReleaseNotes_6_2_0.md\"
 )
 
 option(DREAM3D_INCLUDE_DEVELOPER_DOCS "Include the Developer Documentation in the DOxygen Generated output." ON)

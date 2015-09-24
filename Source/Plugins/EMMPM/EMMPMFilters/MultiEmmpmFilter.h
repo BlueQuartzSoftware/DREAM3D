@@ -37,9 +37,9 @@
 #ifndef _MultiEmmpmFilter_H_
 #define _MultiEmmpmFilter_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "EMMPMFilter.h"
 
@@ -51,22 +51,22 @@ class MultiEmmpmFilter : public EMMPMFilter
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
 
   public:
-    DREAM3D_SHARED_POINTERS(MultiEmmpmFilter)
-    DREAM3D_STATIC_NEW_MACRO(MultiEmmpmFilter)
-    DREAM3D_TYPE_MACRO_SUPER(MultiEmmpmFilter, AbstractFilter)
+    SIMPL_SHARED_POINTERS(MultiEmmpmFilter)
+    SIMPL_STATIC_NEW_MACRO(MultiEmmpmFilter)
+    SIMPL_TYPE_MACRO_SUPER(MultiEmmpmFilter, AbstractFilter)
 
     virtual ~MultiEmmpmFilter();
 
-    DREAM3D_FILTER_PARAMETER(QVector<DataArrayPath>, InputDataArrayVector)
+    SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, InputDataArrayVector)
     Q_PROPERTY(QVector<DataArrayPath> InputDataArrayVector READ getInputDataArrayVector WRITE setInputDataArrayVector)
 
-    DREAM3D_FILTER_PARAMETER(QString, OutputAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, OutputAttributeMatrixName)
     Q_PROPERTY(QString OutputAttributeMatrixName READ getOutputAttributeMatrixName WRITE setOutputAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(QString, OutputArrayPrefix)
+    SIMPL_FILTER_PARAMETER(QString, OutputArrayPrefix)
     Q_PROPERTY(QString OutputArrayPrefix READ getOutputArrayPrefix WRITE setOutputArrayPrefix)
 
-    DREAM3D_FILTER_PARAMETER(bool, UsePreviousMuSigma)
+    SIMPL_FILTER_PARAMETER(bool, UsePreviousMuSigma)
     Q_PROPERTY(bool UsePreviousMuSigma READ getUsePreviousMuSigma WRITE setUsePreviousMuSigma)
 
     /**

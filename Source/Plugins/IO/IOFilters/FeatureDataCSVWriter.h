@@ -37,9 +37,9 @@
 #ifndef _FeatureDataCSVWriter_H_
 #define _FeatureDataCSVWriter_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The FeatureDataCSVWriter class. See [Filter documentation](@ref featuredatacsvwriter) for details.
@@ -48,22 +48,22 @@ class FeatureDataCSVWriter : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FeatureDataCSVWriter)
-    DREAM3D_STATIC_NEW_MACRO(FeatureDataCSVWriter)
-    DREAM3D_TYPE_MACRO_SUPER(FeatureDataCSVWriter, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FeatureDataCSVWriter)
+    SIMPL_STATIC_NEW_MACRO(FeatureDataCSVWriter)
+    SIMPL_TYPE_MACRO_SUPER(FeatureDataCSVWriter, AbstractFilter)
 
     virtual ~FeatureDataCSVWriter();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixPath)
     Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, FeatureDataFile)
+    SIMPL_FILTER_PARAMETER(QString, FeatureDataFile)
     Q_PROPERTY(QString FeatureDataFile READ getFeatureDataFile WRITE setFeatureDataFile)
 
-    DREAM3D_FILTER_PARAMETER(bool, WriteNeighborListData)
+    SIMPL_FILTER_PARAMETER(bool, WriteNeighborListData)
     Q_PROPERTY(bool WriteNeighborListData READ getWriteNeighborListData WRITE setWriteNeighborListData)
 
-    DREAM3D_INSTANCE_PROPERTY(char, Delimiter)
+    SIMPL_INSTANCE_PROPERTY(char, Delimiter)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class

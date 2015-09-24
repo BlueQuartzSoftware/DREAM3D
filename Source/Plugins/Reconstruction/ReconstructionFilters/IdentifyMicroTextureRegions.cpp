@@ -38,7 +38,7 @@
 
 #include <QtCore/QDateTime>
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/atomic.h>
@@ -47,15 +47,15 @@
 #include <tbb/task_group.h>
 #endif
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/DoubleFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/Math/GeometryMath.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Math/GeometryMath.h"
 
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
@@ -142,7 +142,7 @@ class FindPatchMisalignmentsImpl
           for (int64_t j = i; j < count; j++)
           {
             angle = GeometryMath::AngleBetweenVectors(cAxisLocsPtr->getPointer(3 * i), cAxisLocsPtr->getPointer(3 * j));
-            if (angle <= m_CAxisTolerance || (DREAM3D::Constants::k_Pi - angle) <= m_CAxisTolerance)
+            if (angle <= m_CAxisTolerance || (SIMPLib::Constants::k_Pi - angle) <= m_CAxisTolerance)
             {
               goodCounts[i]++;
               goodCounts[j]++;
@@ -187,7 +187,7 @@ class FindPatchMisalignmentsImpl
       }
     }
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     void operator()(const tbb::blocked_range<size_t>& r) const
     {
       convert(r.begin(), r.end());
@@ -300,15 +300,15 @@ void IdentifyMicroTextureRegions::readFilterParameters(AbstractFilterParametersR
 int IdentifyMicroTextureRegions::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(ActiveArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(MTRIdsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CAxisLocationsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CAxisTolerance)
-  DREAM3D_FILTER_WRITE_PARAMETER(MinMTRSize)
-  DREAM3D_FILTER_WRITE_PARAMETER(MinVolFrac)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(ActiveArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(MTRIdsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(CAxisLocationsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CAxisTolerance)
+  SIMPL_FILTER_WRITE_PARAMETER(MinMTRSize)
+  SIMPL_FILTER_WRITE_PARAMETER(MinVolFrac)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -543,15 +543,15 @@ void IdentifyMicroTextureRegions::execute()
   { m_AvgCAxis = m_AvgCAxisPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Convert user defined tolerance to radians.
-  caxisTolerance = m_CAxisTolerance * DREAM3D::Constants::k_Pi / 180.0f;
+  caxisTolerance = m_CAxisTolerance * SIMPLib::Constants::k_Pi / 180.0f;
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
 #endif
 
 // first determine the misorientation vectors on all the voxel faces
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPatches),
