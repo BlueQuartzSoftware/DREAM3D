@@ -115,9 +115,7 @@ set(OrientationLib_Generated_CMP_SRCS
     ${OrientationLib_BINARY_DIR}/${PROJECT_NAME}/${CMP_CONFIGURATION_FILE_NAME}
     ${OrientationLib_BINARY_DIR}/${PROJECT_NAME}/${CMP_TYPES_FILE_NAME}
   )
-cmp_IDE_GENERATED_PROPERTIES("Generated"
-                             "${OrientationLib_Generated_CMP_SRCS}"
-                             "")
+cmp_IDE_GENERATED_PROPERTIES("Generated" "${OrientationLib_Generated_CMP_SRCS}" "")
 
 # Setup the Include Directories
 include_directories(${PROJECT_CODE_DIR})
