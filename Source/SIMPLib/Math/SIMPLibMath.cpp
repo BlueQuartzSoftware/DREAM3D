@@ -136,7 +136,7 @@ float SIMPLibMath::Gamma(float x)
       ga *= r;
       if (x < 0.0f)
       {
-        ga = -1 * SIMPLib::Constants::k_Pi / (x * ga * sinf(SIMPLib::Constants::k_Pi * x));
+        ga = -1 * SIMPLib::Constants::k_Pif / (x * ga * sinf(SIMPLib::Constants::k_Pif * x));
       }
     }
   }
@@ -211,7 +211,7 @@ float SIMPLibMath::LnGamma(float x, float& sgngam)
       p = p + 1;
       z = p - q;
     }
-    z = q * sinf(SIMPLib::Constants::k_Pi * z);
+    z = q * sinf(SIMPLib::Constants::k_Pif * z);
     result = logpi - log(z) - w;
     return result;
   }
