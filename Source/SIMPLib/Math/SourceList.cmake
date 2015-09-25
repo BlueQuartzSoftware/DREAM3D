@@ -24,7 +24,7 @@ set(SIMPLib_Math_SRCS
   ${SIMPLib_SOURCE_DIR}/Math/SIMPLibMath.cpp
   ${SIMPLib_SOURCE_DIR}/Math/RadialDistributionFunction.cpp
 )
-cmp_IDE_SOURCE_PROPERTIES( "SIMPLibLib/Math" "${SIMPLib_Math_HDRS}" "${SIMPLib_Math_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "SIMPLib/Math" "${SIMPLib_Math_HDRS}" "${SIMPLib_Math_SRCS}" "0")
 if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${SIMPLib_Math_HDRS}
             DESTINATION include/SIMPLib/Math
