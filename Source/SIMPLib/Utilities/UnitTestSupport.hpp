@@ -237,12 +237,12 @@ inline bool IsInfinite(float* A)
 #endif
 
 #ifdef NANCHECK
-inline bool IsNan(float A)
+inline bool IsNan(float* A)
 {
   // A NAN has an exponent of 255 (shifted left 23 positions) and
   // a non-zero mantissa.
-  int exp = *(int*)&A & 0x7F800000;
-  int mantissa = *(int*)&A & 0x007FFFFF;
+  int exp = *(int*)A & 0x7F800000;
+  int mantissa = *(int*)A & 0x007FFFFF;
   if (exp == 0x7F800000 && mantissa != 0)
   { return true; }
   return false;
