@@ -51,7 +51,7 @@ set(SIMPLib_Geometry_SRCS
   ${SIMPLib_SOURCE_DIR}/Geometry/ShapeOps/SuperEllipsoidOps.cpp
 )
 
-cmp_IDE_SOURCE_PROPERTIES( "SIMPLib/Geometry" "${SIMPLib_Geometry_HDRS}" "${SIMPLib_Geometry_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "Geometry" "${SIMPLib_Geometry_HDRS}" "${SIMPLib_Geometry_SRCS}" "0")
 
 set(SIMPLib_Geometry_HDRS
   ${SIMPLib_Geometry_HDRS}

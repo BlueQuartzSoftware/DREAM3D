@@ -23,7 +23,7 @@ set(OrientationLib_Utilities_SRCS
   ${OrientationLib_SOURCE_DIR}/Utilities/ModifiedLambertProjectionArray.cpp
 )
 
-cmp_IDE_SOURCE_PROPERTIES( "OrientationLib/Utilities" "${OrientationLib_Utilities_HDRS}" "${OrientationLib_Utilities_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "Utilities" "${OrientationLib_Utilities_HDRS}" "${OrientationLib_Utilities_SRCS}" "0")
 if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${OrientationLib_Utilities_HDRS}
             DESTINATION include/OrientationLib/Utilities

@@ -18,7 +18,7 @@ set(OrientationLib_IO_SRCS
   ${OrientationLib_SOURCE_DIR}/IO/AngleFileLoader.cpp
 )
 
-cmp_IDE_SOURCE_PROPERTIES( "OrientationLib/IO" "${OrientationLib_IO_HDRS}" "${OrientationLib_IO_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "IO" "${OrientationLib_IO_HDRS}" "${OrientationLib_IO_SRCS}" "0")
 if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${OrientationLib_IO_HDRS}
             DESTINATION include/OrientationLib/IO

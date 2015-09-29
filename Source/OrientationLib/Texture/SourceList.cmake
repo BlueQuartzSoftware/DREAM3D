@@ -19,7 +19,7 @@ set(OrientationLib_Texture_SRCS
   ${OrientationLib_SOURCE_DIR}/Texture/TexturePreset.cpp
 )
 
-cmp_IDE_SOURCE_PROPERTIES( "OrientationLib/Common" "${OrientationLib_Texture_HDRS}" "${OrientationLib_Texture_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "Common" "${OrientationLib_Texture_HDRS}" "${OrientationLib_Texture_SRCS}" "0")
 if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${OrientationLib_Texture_HDRS}
             DESTINATION include/OrientationLib/Texture

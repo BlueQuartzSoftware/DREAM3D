@@ -23,7 +23,7 @@ set(SIMPLib_DataArrays_SRCS
   ${SIMPLib_SOURCE_DIR}/DataArrays/IDataArray.cpp
   ${SIMPLib_SOURCE_DIR}/DataArrays/StatsDataArray.cpp
 )
-cmp_IDE_SOURCE_PROPERTIES( "SIMPLib/DataArrays" "${SIMPLib_DataArrays_HDRS}" "${SIMPLib_DataArrays_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "DataArrays" "${SIMPLib_DataArrays_HDRS}" "${SIMPLib_DataArrays_SRCS}" "0")
 if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${SIMPLib_DataArrays_HDRS}
             DESTINATION include/DREAM3D/DataArrays

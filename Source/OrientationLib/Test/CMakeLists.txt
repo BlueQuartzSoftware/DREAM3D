@@ -33,47 +33,47 @@ set(OrientationLib_Link_Libs Qt5::Core H5Support SIMPLib OrientationLib)
 
 AddDREAM3DUnitTest(TESTNAME QuaternionMathTest
                     SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/QuaternionMathTest.cpp
-                    FOLDER "OrientationLib/Test"
+                    FOLDER "OrientationLibProj/Test"
                     LINK_LIBRARIES ${OrientationLib_Link_Libs})
 
 AddDREAM3DUnitTest(TESTNAME OrientationMathTest
                     SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/OrientationMathTest.cpp
-                    FOLDER "OrientationLib/Test"
+                    FOLDER "OrientationLibProj/Test"
                     LINK_LIBRARIES ${OrientationLib_Link_Libs})
 
 AddDREAM3DUnitTest(TESTNAME TextureTest
                     SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/TextureTest.cpp
-                    FOLDER "OrientationLib/Test"
+                    FOLDER "OrientationLibProj/Test"
                     LINK_LIBRARIES ${OrientationLib_Link_Libs})
 
 AddDREAM3DUnitTest(TESTNAME ODFTest
                     SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/ODFTest.cpp
-                    FOLDER "OrientationLib/Test"
+                    FOLDER "OrientationLibProj/Test"
                     LINK_LIBRARIES ${OrientationLib_Link_Libs})
 
 AddDREAM3DUnitTest(TESTNAME OrientationArrayTest
-                    SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/OrientationArrayTest.cpp
-                    FOLDER "OrientationLib/Test"
+                    SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/OrientationArrayTest.cpp ${${PLUGIN_NAME}_SOURCE_DIR}/Test/TestPrintFunctions.h
+                    FOLDER "OrientationLibProj/Test"
                     LINK_LIBRARIES ${OrientationLib_Link_Libs})
 
 AddDREAM3DUnitTest(TESTNAME OrientationConverterTest
-                    SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/OrientationConverterTest.cpp
-                    FOLDER "OrientationLib/Test"
+                    SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/OrientationConverterTest.cpp ${${PLUGIN_NAME}_SOURCE_DIR}/Test/TestPrintFunctions.h
+                    FOLDER "OrientationLibProj/Test"
                     LINK_LIBRARIES ${OrientationLib_Link_Libs})
 
 AddDREAM3DUnitTest(TESTNAME IPFLegendTest
                     SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/IPFLegendTest.cpp
-                    FOLDER "OrientationLib/Test"
+                    FOLDER "OrientationLibProj/Test"
                     LINK_LIBRARIES ${OrientationLib_Link_Libs} Qt5::Gui )
 
 AddDREAM3DUnitTest(TESTNAME SO3SamplerTest
                     SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/SO3SamplerTest.cpp
-                    FOLDER "OrientationLib/Test"
+                    FOLDER "OrientationLibProj/Test"
                     LINK_LIBRARIES ${OrientationLib_Link_Libs})
 
 AddDREAM3DUnitTest(TESTNAME OrientationTransformsTest
-                    SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/OrientationTransformsTest.cpp 
+                    SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/OrientationTransformsTest.cpp ${${PLUGIN_NAME}_SOURCE_DIR}/Test/TestPrintFunctions.h
                             ${${PLUGIN_NAME}_SOURCE_DIR}/Test/GenerateFunctionList.h
-                    FOLDER "OrientationLib/Test"
+                    FOLDER "OrientationLibProj/Test"
                     LINK_LIBRARIES ${OrientationLib_Link_Libs})
 

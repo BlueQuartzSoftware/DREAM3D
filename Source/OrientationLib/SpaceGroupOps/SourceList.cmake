@@ -41,7 +41,7 @@ set(OrientationLib_SpaceGroupOps_SRCS
   ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/MonoclinicOps.cpp
   ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/SO3Sampler.cpp
 )
-cmp_IDE_SOURCE_PROPERTIES( "OrientationLib/SpaceGroupOps" "${OrientationLib_SpaceGroupOps_HDRS}" "${OrientationLib_SpaceGroupOps_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "SpaceGroupOps" "${OrientationLib_SpaceGroupOps_HDRS}" "${OrientationLib_SpaceGroupOps_SRCS}" "0")
 if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${OrientationLib_SpaceGroupOps_HDRS}
             DESTINATION include/OrientationLib/SpaceGroupOps

@@ -147,7 +147,7 @@ if(${OrientationLib_ENABLE_HDF5})
 endif()
 
 
-cmp_IDE_SOURCE_PROPERTIES( "OrientationLib/" "${OrientationLib_HDRS}" "${OrientationLib_SRCS}" ${PROJECT_INSTALL_HEADERS})
+cmp_IDE_SOURCE_PROPERTIES( "" "${OrientationLib_HDRS}" "${OrientationLib_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 set(OrientationLib_PROJECT_SRCS
     ${OrientationLib_SRCS}

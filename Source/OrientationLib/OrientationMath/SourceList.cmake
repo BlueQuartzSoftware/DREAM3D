@@ -21,7 +21,7 @@ set(OrientationLib_OrientationMath_HDRS
 set(OrientationLib_OrientationMath_SRCS
   ${OrientationLib_SOURCE_DIR}/OrientationMath/OrientationMath.cpp
 )
-cmp_IDE_SOURCE_PROPERTIES( "OrientationLib/OrientationMath" "${OrientationLib_OrientationMath_HDRS}" "${OrientationLib_OrientationMath_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "OrientationMath" "${OrientationLib_OrientationMath_HDRS}" "${OrientationLib_OrientationMath_SRCS}" "0")
 if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${OrientationLib_OrientationMath_HDRS}
             DESTINATION include/OrientationLib/OrientationMath

@@ -437,7 +437,7 @@ macro(LibraryProperties targetName DEBUG_EXTENSION)
         RELEASE_OUTPUT_NAME lib${targetName}  )
     endif()
 
-    set_target_properties( ${targetName} PROPERTIES FOLDER ${targetName})
+    set_target_properties( ${targetName} PROPERTIES FOLDER ${targetName}Proj)
 
 
     #-- Set the Debug and Release names for the libraries

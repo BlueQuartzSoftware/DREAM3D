@@ -26,7 +26,7 @@ set(SIMPLib_StatsData_SRCS
   ${SIMPLib_SOURCE_DIR}/StatsData/StatsData.cpp
   ${SIMPLib_SOURCE_DIR}/StatsData/TransformationStatsData.cpp
 )
-cmp_IDE_SOURCE_PROPERTIES( "SIMPLib/StatsData" "${SIMPLib_StatsData_HDRS}" "${SIMPLib_StatsData_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "StatsData" "${SIMPLib_StatsData_HDRS}" "${SIMPLib_StatsData_SRCS}" "0")
 if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${SIMPLib_StatsData_HDRS}
             DESTINATION include/DREAM3D/StatsData
