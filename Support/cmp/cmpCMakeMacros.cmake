@@ -437,6 +437,9 @@ macro(LibraryProperties targetName DEBUG_EXTENSION)
         RELEASE_OUTPUT_NAME lib${targetName}  )
     endif()
 
+    set_target_properties( ${targetName} PROPERTIES FOLDER ${targetName})
+
+
     #-- Set the Debug and Release names for the libraries
     SET_TARGET_PROPERTIES( ${targetName}
         PROPERTIES
@@ -465,8 +468,6 @@ macro(LibraryProperties targetName DEBUG_EXTENSION)
                 PROPERTIES
                 INSTALL_RPATH \$ORIGIN/../lib)
     endif()
-
-
 
    endif( BUILD_SHARED_LIBS)
 
