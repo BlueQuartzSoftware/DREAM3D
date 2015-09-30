@@ -61,6 +61,7 @@
 
 #include "OrientationLib/OrientationLib.h"
 #include "OrientationLib/OrientationLibConstants.h"
+#include "OrientationLib/OrientationMath/OrientationArray.hpp"
 #include "OrientationLib/Utilities/OrientationMathHelpers.hpp"
 #include "OrientationLib/Utilities/ModifiedLambertProjection3D.hpp"
 
@@ -102,9 +103,6 @@
 */
 
 
-
-
-
 /**
 * The Orientation codes are written in such a way that the value of -1 indicates
 * an Active Rotation and +1 indicates a passive rotation.
@@ -113,8 +111,7 @@
 * CONSEQUENCES IF THESE ARE CHANGED. EVERY PIECE OF CODE THAT RELIES ON THESE
 * FUNCTIONS WILL BREAK. YOU HAVE BEEN WARNED.
 *
-* Adam  Morawiec's book uses Passive rotations. DREAM3D was written from an Active
-* rotation assumption.
+* Adam  Morawiec's book uses Passive rotations.
 **/
 #define DREAM3D_ACTIVE_ROTATION               -1.0
 #define DREAM3D_PASSIVE_ROTATION               1.0
@@ -349,17 +346,17 @@
         if ((eu[0] < 0.0) || (eu[0] > (SIMPLib::Constants::k_2Pi)))
         {
           res.msg = "rotations:eu_check:: phi1 Euler angle outside of valid range [0,2pi]";
-          res.result = 0;
+          res.result = -1;
         }
         if ((eu[1] < 0.0) || (eu[1] > SIMPLib::Constants::k_Pi))
         {
           res.msg = "rotations:eu_check:: phi Euler angle outside of valid range [0,pi]";
-          res.result = 0;
+          res.result = -2;
         }
         if ((eu[2] < 0.0) || (eu[2] > (SIMPLib::Constants::k_2Pi)))
         {
           res.msg = "rotations:eu_check:: phi2 Euler angle outside of valid range [0,2pi]";
-          res.result = 0;
+          res.result = -3;
         }
         return res;
       }
@@ -379,22 +376,22 @@
       */
       static ResultType ro_check(const T& ro)
       {
-        K eps = std::numeric_limits<K>::epsilon();
+        K eps = static_cast<K>(1.0E-6L);
         ResultType res;
         res.result = 1;
-        if (ro[3] < 0.0)
+        if (ro[3] < 0.0L)
         {
           res.msg = "rotations:ro_check:: Rodrigues-Frank vector has negative length: ";
-          res.result = 0;
+          res.result = -1;
           return res;
         }
         T out = OMHelperType::multiply(ro, ro, 3);
-        K ttl =  OMHelperType::sum(out);
+        K ttl = OMHelperType::sum(out);
         ttl = sqrt(ttl);
-        if (std::abs(ttl - 1.0) > eps)
+        if (fabs(ttl - 1.0L) > eps)
         {
           res.msg = "rotations:ro_check:: Rodrigues-Frank axis vector not normalized";
-          res.result = 0;
+          res.result = -2;
         }
         return res;
       }
@@ -421,7 +418,7 @@
         if (r > static_cast<float>(LPs::R1))
         {
           res.msg = "rotations:ho_check: homochoric vector outside homochoric ball";
-          res.result = 0;
+          res.result = -1;
         }
         return res;
       }
@@ -446,7 +443,7 @@
         if (r > static_cast<float>(LPs::ap / 2.0))
         {
           res.msg = "rotations:cu_check: cubochoric vector outside cube";
-          res.result = 0;
+          res.result = -1;
         }
         return res;
       }
@@ -479,17 +476,17 @@
         if (qu[w] < 0.0)
         {
           res.msg = "rotations:qu_check: quaternion must have positive scalar part";
-          res.result = 0;
+          res.result = -1;
           return res;
         }
 
         K eps = std::numeric_limits<K>::epsilon();
         T out = OMHelperType::multiply(qu, qu);
         K r = sqrt(OMHelperType::sum(out));
-        if (std::abs(r - 1.0) > eps)
+        if (fabs(r - 1.0) > eps)
         {
           res.msg = "rotations:qu_check: quaternion must have unit norm";
-          res.result = 0;
+          res.result = -2;
         }
         return res;
       }
@@ -513,17 +510,17 @@
         if ((ax[3] < 0.0) || (ax[3] > SIMPLib::Constants::k_Pi))
         {
           res.msg = "rotations:ax_check: angle must be in range [0,pi]";
-          res.result = 0;
+          res.result = -1;
           return res;
         }
         K eps = std::numeric_limits<K>::epsilon();
         T out = OMHelperType::multiply(ax, ax, 3);
         K r = sqrt(OMHelperType::sum(out));
-        K absv = std::abs(r - 1.0);
+        K absv = fabs(r - 1.0);
         if (absv > eps)
         {
           res.msg = "rotations:ax_check: axis-angle axis vector must have unit norm";
-          res.result = 0;
+          res.result = -2;
         }
         return res;
       }
@@ -544,34 +541,67 @@
       {
         ResultType res;
         res.result = 1;
-        K eps = std::numeric_limits<K>::epsilon();
-        K det = om[4] * (om[0] * om[8] - om[6] * om[2]) + om[5] * (om[1] * om[6] - om[7] * om[0]) + om[3] * (om[2] * om[0] - om[8] * om[1]);
+        K threshold = static_cast<K>(1.0E-5L);
 
+//        typedef Eigen::Matrix<K, 3, 3, Eigen::RowMajor> OrientationMatrixType;
+//        OrientationMatrixType omE;
+//        int i = 0;
+//        for(int c = 0; c < 3; c++)
+//        {
+//          for(int r = 0; r < 3; r++)
+//          {
+//            omE(r, c) = om[i++];
+//          }
+//        }
+        
+        typedef Eigen::Matrix<K, 3, 3, Eigen::RowMajor> Matrix_t;
+        
+        Eigen::Map<Matrix_t> omE(const_cast<K*>(&(om[0])));
+        
+        
+        K det = omE.determinant();
+        
+        std::stringstream ss;
         if (det < 0.0)
         {
-          res.msg = "rotations:om_check: Determinant of rotation matrix must be positive";
-          res.result = 0;
+          ss << "rotations:om_check: Determinant of rotation matrix must be positive: " << det;
+          res.msg = ss.str();
+          res.result = -1;
           return res;
         }
-
-        if (std::abs(det - 1.0) > eps)
+        
+        K r = fabs(det - static_cast<K>(1.0L));
+        if (!OMHelperType::closeEnough(r, 0.0L, threshold))
         {
-          res.msg = "rotations:om_check: Determinant of rotation matrix must be unity";
-          res.result = 0;
+          ss <<"rotations:om_check: Determinant (" << det << ") of rotation matrix must be unity (1.0)";
+          res.msg = ss.str();
+          res.result = -2;
           return res;
         }
-
-        T tr = OMHelperType::transpose(om);
-        T mm = OMHelperType::matmul3x3(om, tr);
-        T abv = OMHelperType::absValue(mm);
-
-        K r = OMHelperType::sum(abv);
-        r = std::abs(r - 3.0);
-        if (r > eps)
+        
+        Matrix_t abv = (omE * omE.transpose()).cwiseAbs();
+        
+        Matrix_t identity;
+        identity.setIdentity();
+        
+        identity = identity-abv;
+        identity = identity.cwiseAbs();
+        
+        for(int c = 0; c < 3; c++)
         {
-          res.msg = "rotations:om_check: rotation matrix times transpose must be identity matrix";
-          res.result = 0;
+          for(int r = 0; r < 3; r++)
+          {
+            if(identity(r, c) > threshold)
+            {
+              std::stringstream ss;
+              ss << "rotations:om_check: rotation matrix times transpose must be identity matrix: (";
+              ss << r << ", " << c << ") = " << abv(r,c);
+              res.msg = ss.str();
+              res.result = -3;
+            }
+          }
         }
+
         return res;
       }
 
@@ -696,7 +726,7 @@
         res[8] = c;
         for(size_t i = 0; i < 9; i++)
         {
-          if(std::abs(res[i]) < eps) { res[i] = 0.0; }
+          if(fabs(res[i]) < eps) { res[i] = 0.0; }
         }
       }
 
@@ -715,7 +745,7 @@
       */
       static void eu2ax(const T& e, T& res)
       {
-        K thr = 1.0E-6f;
+        K thr = static_cast<K>(1.0E-6);
         K alpha = 0.0f;
         K t = tan(e[1] * 0.5);
         K sig = 0.5 * (e[0] + e[2]);
@@ -730,7 +760,7 @@
           alpha = 2.0 * atan(tau / cos(sig)); //! return a default identity axis-angle pair
         }
 
-        if (std::abs(alpha) < thr)
+        if (fabs(alpha) < thr)
         {
           res[0] = 0.0;
           res[1] = 0.0;
@@ -740,18 +770,18 @@
         else
         {
           //! passive axis-angle pair so a minus sign in front
-          res[0] = -RConst::epsijk * t * cos(del) / tau;
-          res[1] = -RConst::epsijk * t * sin(del) / tau;
-          res[2] = -RConst::epsijk * sin(sig) / tau;
+          res[0] = -RConst::epsijkd * t * cos(del) / tau;
+          res[1] = -RConst::epsijkd * t * sin(del) / tau;
+          res[2] = -RConst::epsijkd * sin(sig) / tau;
           res[3] = alpha;
-        }
 
-        if (alpha < 0.0)
-        {
-          res[0] = -res[0];
-          res[1] = -res[1];
-          res[2] = -res[2];
-          res[3] = -res[3];
+          if (alpha < 0.0)
+          {
+            res[0] = -res[0];
+            res[1] = -res[1];
+            res[2] = -res[2];
+            res[3] = -res[3];
+          }
         }
       }
 
@@ -772,7 +802,7 @@
 
         SelfType::eu2ax(e, res);
         K t = res[3];
-        if (std::abs(t - SIMPLib::Constants::k_Pi) < thr)
+        if (fabs(t - SIMPLib::Constants::k_Pi) < thr)
         {
           res[3] = std::numeric_limits<K>::infinity();
           return;
@@ -816,7 +846,6 @@
           y = 1;
           z = 2;
         }
-
         K ee[3] = { 0.0f, 0.0f, 0.0f};
         K cPhi = 0.0f;
         K cp = 0.0f;
@@ -839,7 +868,36 @@
         res[x] = -RConst::epsijk * sPhi * cm;
         res[y] = -RConst::epsijk * sPhi * sm;
         res[z] = -RConst::epsijk * cPhi * sp;
-        if (res[w] < 0.0)
+
+//        if(OMHelperType::closeEnough(res[w], 0.0, thr))
+//        {
+//          if(OMHelperType::closeEnough(fabs(res[x]), 1.0, thr) && OMHelperType::closeEnough(res[y], 0.0, thr) && OMHelperType::closeEnough(res[z], 0.0, thr) )
+//          {
+//          res[w] = 0.0;
+//          res[x] = 1.0;
+//          res[y] = 0.0;
+//          res[z] = 0.0;
+//          }
+//          if(OMHelperType::closeEnough(res[x], 0.0, thr) && OMHelperType::closeEnough(fabs(res[y]), 1.0, thr) && OMHelperType::closeEnough(res[z], 0.0, thr) )
+//          {
+//          res[w] = 0.0;
+//          res[x] = 0.0;
+//          res[y] = 1.0;
+//          res[z] = 0.0;
+//          }
+//          if(OMHelperType::closeEnough(res[x], 0.0, thr) && OMHelperType::closeEnough(res[y], 0.0, thr) && OMHelperType::closeEnough(fabs(res[z]), 1.0, thr) )
+//          {
+//          res[w] = 0.0;
+//          res[x] = 0.0;
+//          res[y] = 0.0;
+//          res[z] = 1.0;
+//          }
+//        }  
+
+        if (
+        //  !OMHelperType::closeEnough(res[w], 0.0, 1.0E-5) &&
+           res[w] < 0.0
+          )
         {
           res[w] = -res[w];
           res[x] = -res[x];
@@ -866,8 +924,9 @@
       */
       static void om2eu(const T& o, T& res)
       {
+
         K zeta = 0.0;
-        bool close = OMHelperType::closeEnough(std::fabs(o[8]), 1.0);
+        bool close = OMHelperType::closeEnough(std::fabs(o[8]), 1.0f, 1.0E-6f);
         if(!close)
         {
           res[1] = acos(o[8]);
@@ -877,7 +936,7 @@
         }
         else
         {
-          close = OMHelperType::closeEnough(o[8], 1.0);
+          close = OMHelperType::closeEnough(o[8], 1.0f, 1.0E-6f);
           if (close)
           {
             res[0] = atan2( o[1], o[0]);
@@ -921,30 +980,45 @@
       */
       static void ax2om(const T& a, T& res)
       {
-        K q = 0.0;
-        K c = 0.0;
-        K s = 0.0;
-        K omc = 0.0;
+        K q = 0.0L;
+        K c = 0.0L;
+        K s = 0.0L;
+        K omc = 0.0L;
 
         c = cos(a[3]);
         s = sin(a[3]);
+
         omc = 1.0 - c;
 
         res[0] = a[0] * a[0] * omc + c;
         res[4] = a[1] * a[1] * omc + c;
         res[8] = a[2] * a[2] * omc + c;
-
+        int _01 = 1;
+        int _10 = 3;
+        int _12 = 5;
+        int _21 = 7;
+        int _02 = 2;
+        int _20 = 6;
+        // Check to see if we need to transpose
+        if (Rotations::Constants::epsijk == 1.0L) {
+          _01 = 3;
+          _10 = 1;
+          _12 = 7;
+          _21 = 5;
+          _02 = 6;
+          _20 = 2;
+        }
 
         q = omc * a[0] * a[1];
-        res[1] = q + s * a[2];
-        res[3] = q - s * a[2];
+        res[_01] = q + s * a[2];
+        res[_10] = q - s * a[2];
         q = omc * a[1] * a[2];
-        res[5] = q + s * a[0];
-        res[7] = q - s * a[0];
+        res[_12] = q + s * a[0];
+        res[_21] = q - s * a[0];
         q = omc * a[2] * a[0];
-        res[6] = q + s * a[1];
-        res[2] = q - s * a[1];
-        if (Rotations::Constants::epsijk == 1.0) { res = OMHelperType::transpose(res); }
+        res[_02] = q - s * a[1];
+        res[_20] = q + s * a[1];
+
       }
 
 
@@ -1029,9 +1103,24 @@
             phi2 = atan2( y1, x1);
           }
         }
+
         res[0] = phi1;
         res[1] = Phi;
         res[2] = phi2;
+
+
+        if (res[0] < 0.0)
+        {
+          res[0] = fmod(res[0] + 100.0 * DConst::k_Pi, DConst::k_2Pi);
+        }
+        if (res[1] < 0.0)
+        {
+          res[1] = fmod(res[1] + 100.0 * DConst::k_Pi, DConst::k_Pi);
+        }
+        if (res[2] < 0.0)
+        {
+          res[2] = fmod(res[2] + 100.0 * DConst::k_Pi, DConst::k_2Pi);
+        }
       }
 
       /**: ax2ho
@@ -1107,7 +1196,6 @@
         }
       }
 
-
       /**: om2ax
       *
       * @author Marc De Graef, Carnegie Mellon University
@@ -1122,107 +1210,125 @@
       * @date 8/12/13  MDG 1.0 original
       * @date 07/08/14 MDG 2.0 replaced by direct solution
       */
-      static void om2ax(const T& in, T& res)
+    
+
+    static void om2ax(const T& in, T& res)
+    {
+      // Transpose array to be Column Major Format for the BLAS/LAPACK routine
+      T om = OMHelperType::transpose(in);
+      // Compute the Angle based on the "Trace" of the Rotation Matrix
+      K t = 0.50 * (om[0] + om[4] + om[8] - 1.0);
+      if (t > 1.0) { t = 1.0; }
+      if (t < -1.0) {t = -1.0; }
+      res[3] = acos(t);
+      // If the rotation is ZERO degrees, then return an (001) axis.
+      if (res[3] == 0.0)
       {
-#ifdef __APPLE__
-        bool useEigen = false;
-#else
-        bool useEigen = true;
-#endif
-        K thr = 1.0E-7f;
-        // Transpose array to be Column Major Format for the BLAS/LAPACK routine
-        T om = OMHelperType::transpose(in);
-        K t = 0.50 * (om[0] + om[4] + om[8] - 1.0);
-        if (t > 1.0) { t = 1.0; }
-        if (t < -1.0) {t = -1.0; }
-        res[3] = acos(t);
-        if (res[3] == 0.0)
+        res[0] = 0.0;
+        res[1] = 0.0;
+        res[2] = 1.0;
+        return;
+      }
+      else
+      {
+        typedef Eigen::Matrix<K, 3, 3, Eigen::ColMajor> Matrix_t;
+        
+        Eigen::Map<Matrix_t> m(const_cast<K*>(&(om[0])));
+        
+        K angle,x,y,z; // variables for result
+        K epsilon = 1.0E-4L; // margin to allow for rounding errors
+        K epsilon2 = 1.0E-4L; // margin to distinguish between 0 and 180 degrees
+        // optional check that input is pure rotation, 'isRotationMatrix' is defined at:
+        // http://www.euclideanspace.com/maths/algebra/matrix/orthogonal/rotation/
+        // assert isRotationMatrix(m) : "not valid rotation matrix" ;// for debugging
+        
+        if ((fabs(m(0,1)-m(1,0)) < epsilon)
+            && (fabs(m(0,2)-m(2,0)) < epsilon)
+            && (fabs(m(1,2)-m(2,1)) < epsilon))
         {
-          res[0] = 0.0;
-          res[1] = 0.0;
-          res[2] = 1.0;
+          // singularity found
+          // first check for identity matrix which must have +1 for all terms
+          //  in leading diagonal and zero in other terms
+          if ((fabs(m(0,1)+m(1,0)) < epsilon2)
+              && (fabs(m(0,2)+m(2,0)) < epsilon2)
+              && (fabs(m(1,2)+m(2,1)) < epsilon2)
+              && (fabs(m(0,0)+m(1,1)+m(2,2)-3) < epsilon2))
+          {
+            // this singularity is identity matrix so angle = 0
+            //return new axisAngle(0,1,0,0); // zero angle, arbitrary axis
+            res[0] = 0.0;
+            res[1] = 0.0;
+            res[2] = 1.0;
+            res[3] = 0.0;
+            //    printf("Singularity at 0 | 360 deg\n");
+            return;
+          }
+          // otherwise this singularity is angle = 180
+          angle = DConst::k_Pi;
+          K xx = (m(0,0)+1)/2;
+          K yy = (m(1,1)+1)/2;
+          K zz = (m(2,2)+1)/2;
+          K xy = (m(0,1)+m(1,0))/4;
+          K xz = (m(0,2)+m(2,0))/4;
+          K yz = (m(1,2)+m(2,1))/4;
+          if ((xx > yy) && (xx > zz)) { // m(0,0) is the largest diagonal term
+            if (xx< epsilon) {
+              x = 0;
+              y = 0.7071;
+              z = 0.7071;
+            } else {
+              x = sqrt(xx);
+              y = xy/x;
+              z = xz/x;
+            }
+          } else if (yy > zz) { // m(1,1) is the largest diagonal term
+            if (yy< epsilon) {
+              x = 0.7071;
+              y = 0;
+              z = 0.7071;
+            } else {
+              y = sqrt(yy);
+              x = xy/y;
+              z = yz/y;
+            }
+          } else { // m(2,2) is the largest diagonal term so base result on this
+            if (zz < epsilon) {
+              x = 0.7071;
+              y = 0.7071;
+              z = 0;
+            } else {
+              z = sqrt(zz);
+              x = xz/z;
+              y = yz/z;
+            }
+          }
+          //return new axisAngle(angle,x,y,z); // return 180 deg rotation
+          res[0] = x;
+          res[1] = y;
+          res[2] = z;
+          res[3] = angle;
+          //  printf("Singularity at 180 deg\n");
           return;
         }
-        else
-        {
-          if(useEigen)
-          {
-            typedef Eigen::Matrix<float, 3, 3, Eigen::ColMajor> Matrix_t;
-
-            Eigen::Map<Matrix_t> testMat(const_cast<float*>(&(om[0])));
-
-            Eigen::EigenSolver<Matrix_t> solver;
-            solver.compute(testMat);
-            Eigen::EigenSolver<Matrix_t>::EigenvalueType w = solver.eigenvalues();
-            Eigen::EigenSolver<Matrix_t>::EigenvectorsType VR = solver.eigenvectors();
-            //std::cout << "The matrix of eigenvectors, V2, is:" << std::endl << VR << std::endl;
-
-            for(int i = 0; i < 3; i++)
-            {
-              std::complex<float> cone(1.0, 0.0);
-              std::complex<float> ev = std::complex<float>( w(i).real(), w(i).imag() );
-              if (std::abs(ev - cone) < thr)
-              {
-                res[0] = VR(i, 0).real();
-                res[1] = VR(i, 1).real();
-                res[2] = VR(i, 2).real();
-
-                if ((om[5] - om[7]) != 0.0) { res[0] = OMHelperType::transfer_sign(res[0], -RConst::epsijk * (om[7] - om[5])); }
-                if ((om[6] - om[2]) != 0.0) { res[1] = OMHelperType::transfer_sign(res[1], -RConst::epsijk * (om[2] - om[6 ])); }
-                if ((om[1] - om[3]) != 0.0) { res[2] = OMHelperType::transfer_sign(res[2], -RConst::epsijk * (om[3] - om[1])); }
-                //  std::cout << "EIGEN =========================================" << std::endl;
-                //  std::cout << res[0] << "\t" << res[1] << "\t" << res[2] << "\t" << res[3] << std::endl;
-                return;
-              }
-            }
-          }
-          else
-          {
-#ifdef __APPLE__
-            K VL[9];
-            K VR[9];
-            K Wr[3];
-            K Wi[3];
-            K WORK[10];
-            char JOBVL = 'N';
-            char JOBVR = 'V';
-            int nn = 3;
-            int LDA = nn;
-            int LDVL = nn;
-            int LDVR = nn;
-            int INFO = 0;
-            JOBVL = 'N';   //do not compute the left eigenvectors
-            JOBVR = 'V';   //do compute the right eigenvectors
-            int LWORK = 20;
-            sgeev_(&JOBVL, &JOBVR, &nn, &(om[0]), &LDA, Wr, Wi, VL, &LDVL, VR, &LDVR, WORK, &LWORK, &INFO);
-            if (INFO != 0)
-            {
-              res[0] = std::numeric_limits<float>::signaling_NaN();
-              res[1] = std::numeric_limits<float>::signaling_NaN();
-              res[2] = std::numeric_limits<float>::signaling_NaN();
-              res[3] = std::numeric_limits<float>::signaling_NaN();
-            }
-            for(int i = 0; i < 3; i++)
-            {
-              std::complex<K> cone(1.0, 0.0);
-              std::complex<K> ev = std::complex<K>( Wr[i], Wi[i] );
-              if (std::abs(ev - cone) < thr)
-              {
-                res[0] = VR[3 * i + 0];
-                res[1] = VR[3 * i + 1];
-                res[2] = VR[3 * i + 2];
-
-                if ((om[5] - om[7]) != 0.0) { res[0] = OMHelperType::transfer_sign(res[0], -RConst::epsijk * (om[7] - om[5])); }
-                if ((om[6] - om[2]) != 0.0) { res[1] = OMHelperType::transfer_sign(res[1], -RConst::epsijk * (om[2] - om[6 ])); }
-                if ((om[1] - om[3]) != 0.0) { res[2] = OMHelperType::transfer_sign(res[2], -RConst::epsijk * (om[3] - om[1])); }
-                return;
-              }
-            }
-#endif
-          }
-
-        }
+        // as we have reached here there are no singularities so we can handle normally
+        K s = sqrt((m(2,1) - m(1,2))*(m(2,1) - m(1,2))
+                   +(m(0,2) - m(2,0))*(m(0,2) - m(2,0))
+                   +(m(1,0) - m(0,1))*(m(1,0) - m(0,1))); // used to normalise
+        if (fabs(s) < 0.001) s=1;
+        // prevent divide by zero, should not happen if matrix is orthogonal and should be
+        // caught by singularity test above, but I've left it in just in case
+        angle = acos(( m(0,0) + m(1,1) + m(2,2) - 1)/2);
+        x = (m(2,1) - m(1,2))/s;
+        y = (m(0,2) - m(2,0))/s;
+        z = (m(1,0) - m(0,1))/s;
+        //return new axisAngle(angle,x,y,z);
+        res[0] = x;
+        res[1] = y;
+        res[2] = z;
+        res[3] = angle;
+        return;
       }
+    }
 
 
       /**: ro2ax
@@ -1239,16 +1345,16 @@
       */
       static void ro2ax(const T& r, T& res)
       {
-        float  ta = 0.0f;
-        float angle = 0.0f;
+        K ta = 0.0L;
+        K angle = 0.0L;
 
         ta = r[3];
-        if (ta == 0.0)
+        if (ta == 0.0L)
         {
-          res[0] = 0.0;
-          res[1] = 0.0;
-          res[2] = 1.0;
-          res[3] = 0.0;
+          res[0] = 0.0L;
+          res[1] = 0.0L;
+          res[2] = 1.0L;
+          res[3] = 0.0L;
           return;
         }
         if (ta == std::numeric_limits<K>::infinity() )
@@ -1260,12 +1366,22 @@
         }
         else
         {
-          angle = 2.0 * atan(ta);
-          ta = 1.0 / sqrt(r[0] * r[0] + r[1] * r[1] + r[2] * r[2]);
-          res[0] = r[0] / ta;
-          res[1] = r[1] / ta;
-          res[2] = r[2] / ta;
+#if 1
+          angle = 2.0L * atan(ta);
+          ta = r[0] * r[0] + r[1] * r[1] + r[2] * r[2];
+          ta = sqrt(ta);
+          ta = 1.0L / ta;
+          res[0] = r[0] * ta;
+          res[1] = r[1] * ta;
+          res[2] = r[2] * ta;
           res[3] = angle;
+#else
+          res[3] = 2.0L * atan(r[3]);
+          ta = 0.0L;
+          for (int i=0;i<3;i++) {ta += r[i]*r[i];}
+          ta = 1.0 / sqrt(ta);
+          for (int i=0;i<3;i++) {res[i] = r[i]*ta;}
+#endif
         }
 
       }
@@ -1299,7 +1415,7 @@
         res[0] = r[0];
         res[1] = r[1];
         res[2] = r[2];
-        if (std::abs(r[3] - SIMPLib::Constants::k_Pi) < thr)
+        if (fabs(r[3] - SIMPLib::Constants::k_Pi) < thr)
         {
           res[3] = std::numeric_limits<K>::infinity();
         }
@@ -1449,8 +1565,9 @@
           y = 1;
           z = 2;
         }
-        double thr = 1.0E-10;
-        if(sizeof(K) == 4) { thr = 1.0E-7; }
+
+        K thr = static_cast<K>(1.0E-10);
+        if(sizeof(K) == 4) { thr = 1.0E-6; }
         K  s = 0.0;
         K s1 = 0.0;
         K s2 = 0.0;
@@ -1462,24 +1579,32 @@
         oax[3] = 0.0f;
 
         s = om[0] + om[4] + om[8] + 1.0;
-        if (std::abs(s) < thr) { s = 0.0; }
+        if(OMHelperType::closeEnough(fabs(s), 0.0, thr) ) // Are we close to Zero
+        { s = 0.0; }
         s = sqrt(s);
         s1 = om[0] - om[4] - om[8] + 1.0;
-        if (std::abs(s1) < thr) { s1 = 0.0; }
+        if(OMHelperType::closeEnough(fabs(s1), 0.0, thr) ) // Are we close to Zero
+        { s1 = 0.0; }
         s1 = sqrt(s1);
         s2 = -om[0] + om[4] - om[8] + 1.0;
-        if (std::abs(s2) < thr) { s2 = 0.0; }
+        if(OMHelperType::closeEnough(fabs(s2), 0.0, thr) ) // Are we close to Zero
+        { s2 = 0.0; }
         s2 = sqrt(s2);
         s3 = -om[0] - om[4] + om[8] + 1.0;
-        if (std::abs(s3) < thr) { s3 = 0.0; }
+        if(OMHelperType::closeEnough(fabs(s3), 0.0, thr) ) // Are we close to Zero
+        { s3 = 0.0; }
         s3 = sqrt(s3);
         res[w] = s * 0.5;
         res[x] = s1 * 0.5;
         res[y] = s2 * 0.5;
         res[z] = s3 * 0.5;
-        if (om[7] < om[5]) { res[1] = -Rotations::Constants::epsijk * res[x]; }
-        if (om[2] < om[6]) { res[2] = -Rotations::Constants::epsijk * res[y]; }
-        if (om[3] < om[1]) { res[3] = -Rotations::Constants::epsijk * res[z]; }
+       // printf("res[z]: % 3.16f \n", res[z]);
+
+        // verify the signs (q0 always positive)
+        if (om[7] < om[5]) { res[x] = -Rotations::Constants::epsijk * res[x]; }
+        if (om[2] < om[6]) { res[y] = -Rotations::Constants::epsijk * res[y]; }
+        if (om[3] < om[1]) { res[z] = -Rotations::Constants::epsijk * res[z]; }
+       // printf("res[z]: % 3.16f \n", res[z]);
 
         s = MatrixMath::Magnitude4x1(&(res[0]));
 
@@ -1502,15 +1627,13 @@
 
       /**: qu2ax
       *
-      * @author Marc De Graef, Carnegie Mellon University
+      * @author Dr. David Rowenhorst, NRL
       *
       * @brief convert quaternion to axis angle
       *
       * @param q quaternion
-      *
-      *
-      * @date 8/12/13   MDG 1.0 original
-      * @date 7/23/14   MDG 2.0 explicit transformation
+      * @param res Result Axis-Angle
+      * @param layout The ordering of the data: Vector-Scalar or Scalar-Vector
       */
       static void qu2ax(const T& q, T& res, typename QuaternionMath<K>::Order layout = QuaternionMath<K>::QuaternionVectorScalar)
       {
@@ -1522,34 +1645,30 @@
           y = 1;
           z = 2;
         }
-        double omega = 2.0 * acos(q[w]);
-        if (omega == 0.0)
-        {
+        
+        K epsijk = RConst::epsijkd;
+        T qo(q);
+        // make sure q[0] is >= 0.0
+        K sign = 1.0;
+        if(q[w] < 0.0) { sign = -1.0; }
+        for (int i=0;i<4;i++){qo[i] = sign*q[i];}
+        K eps = (K) 1.0e-12;
+        K omega = 2.0*acos(qo[w]);
+        if (omega < eps){
           res[0] = 0.0;
           res[1] = 0.0;
-          res[2] = 1.0;
+          res[2] = 1.0 * epsijk;
           res[3] = 0.0;
+        } else {
+          K mag = 0.0;
+          mag = 1.0 / sqrt(q[x] * q[x] + q[y] * q[y] + q[z] * q[z]);;
+          
+          res[0] = q[x] * mag;
+          res[1] = q[y] * mag;
+          res[2] = q[z] * mag;
+          res[3] = omega;
         }
-        else
-        {
-          if (q[w] != 0.0)
-          {
-            K t = q[w] / std::fabs(q[w]);
-            K b = sqrt(q[x] * q[x] + q[y] * q[y] + q[z] * q[z]);
-            double s = t / b;
-            res[0] = q[x] * s;
-            res[1] = q[y] * s;
-            res[2] = q[z] * s;
-            res[3] = omega;
-          }
-          else
-          {
-            res[0] = q[x];
-            res[1] = q[y];
-            res[2] = q[z];
-            res[3] = SIMPLib::Constants::k_Pi;
-          }
-        }
+
       }
 
       /**: qu2ro
@@ -2192,5 +2311,11 @@
       OrientationTransforms(const OrientationTransforms&); // Copy Constructor Not Implemented
       void operator=(const OrientationTransforms&); // Operator '=' Not Implemented
   };
+
+
+
+typedef OrientationTransforms<FOrientArrayType, float>     FOrientTransformsType;
+typedef OrientationTransforms<DOrientArrayType, double>     DOrientTransformsType;
+
 
 #endif /* _OrientationTransforms_H_ */

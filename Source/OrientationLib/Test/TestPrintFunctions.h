@@ -62,7 +62,7 @@ namespace OrientationPrinters
     //if(om[3] != std::numeric_limits<K>::infinity())
     //  printf("Rodrigues vector                 :   % 3.6f    % 3.6f    % 3.6f\n", om[0], om[1], om[2] );
     //else
-    printf("Ro:   % 3.6f    % 3.6f    % 3.6f    % 3.6f\n", om[0], om[1], om[2], om[3] );
+    printf("Ro:% 3.16f % 3.16f % 3.16f % 3.16f\n", om[0], om[1], om[2], om[3] );
   }
 
   // -----------------------------------------------------------------------------
@@ -88,7 +88,7 @@ namespace OrientationPrinters
   template<typename T>
   void Print_HO(const T& om)
   {
-    printf("Homochoric ()                    :   % 3.10f    % 3.10f    % 3.10f\n", om[0], om[1], om[2] );
+    printf("Ho:% 3.16f % 3.16f % 3.16f\n", om[0], om[1], om[2] );
   }
 
   // -----------------------------------------------------------------------------
@@ -97,7 +97,7 @@ namespace OrientationPrinters
   template<typename T>
   void Print_CU(const T& om)
   {
-    printf("Cubochoric ()                    :   % 3.10f    % 3.10f    % 3.10f\n", om[0], om[1], om[2] );
+    printf("Cu:% 3.16f % 3.16f % 3.16f\n", om[0], om[1], om[2] );
   }
 
 

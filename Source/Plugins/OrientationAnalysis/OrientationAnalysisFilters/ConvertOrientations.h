@@ -150,9 +150,6 @@ class ConvertOrientations : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_DATAARRAY_VARIABLE(float, InputOrientations)
-
-    DEFINE_DATAARRAY_VARIABLE(float, OutputOrientations)
 
     ConvertOrientations(const ConvertOrientations&); // Copy Constructor Not Implemented
     void operator=(const ConvertOrientations&); // Operator '=' Not Implemented

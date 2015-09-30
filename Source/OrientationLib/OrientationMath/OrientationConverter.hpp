@@ -107,7 +107,7 @@ class OrientationConverter
                                         const T& epsilon = std::numeric_limits<T>::epsilon()) = 0;
     virtual void sanityCheckInputData() = 0;
 
-    virtual void printRepresentation(T* a) = 0;
+    virtual void printRepresentation(T* a, const std::string &label = std::string("")) = 0;
 
     SIMPL_INSTANCE_PROPERTY(typename DataArray<T>::Pointer, InputData)
     SIMPL_INSTANCE_PROPERTY(typename DataArray<T>::Pointer, OutputData)
@@ -173,13 +173,13 @@ class OrientationConverter
   QVector<size_t> cDims(1, outStride); /* Create the n component (nx1) based array.*/ \
   typename DataArray<T>::Pointer output = DataArray<T>::CreateArray(nTuples, cDims, #OUT_ARRAY_NAME);\
   output->initializeWithZeros(); /* Intialize the array with Zeros */ \
-  T* quatPtr = output->getPointer(0);\
+  T* OUT_ARRAY_NAME##Ptr = output->getPointer(0);\
   for (size_t i = 0; i < nTuples; ++i) { \
     OrientationArray_t rot(inPtr, inStride); \
-    OrientationArray_t res(quatPtr, outStride); \
+    OrientationArray_t res(OUT_ARRAY_NAME##Ptr, outStride); \
     OrientationTransforms<OrientationArray_t, T>::CONVERSION_METHOD(rot, res); \
     inPtr = inPtr + inStride; /* Increment input pointer */ \
-    quatPtr = quatPtr + outStride; /* Increment output pointer*/ \
+    OUT_ARRAY_NAME##Ptr = OUT_ARRAY_NAME##Ptr + outStride; /* Increment output pointer*/ \
   }\
   this->setOutputData(output);
 
@@ -246,6 +246,7 @@ class EulerConverter : public OrientationConverter<T>
 
     virtual void sanityCheckInputData()
     {
+
       typename DataArray<T>::Pointer input = this->getInputData();
       T* inPtr = input->getPointer(0);
       size_t nTuples = input->getNumberOfTuples();
@@ -277,9 +278,9 @@ class EulerConverter : public OrientationConverter<T>
     }
 
 
-    virtual void printRepresentation(T* a)
+    virtual void printRepresentation(T* a, const std::string &b = std::string(""))
     {
-      printf("% 0.16f, % 0.16f, % 0.16f", a[0], a[1], a[2]);
+      printf("% 0.16f, % 0.16f, % 0.16f\n", a[0], a[1], a[2]);
     }
 
   protected:
@@ -317,6 +318,7 @@ class OrientationMatrixConverter : public OrientationConverter<T>
 
     virtual void toEulers()
     {
+      sanityCheckInputData();
       OC_CONVERT_BODY(3, Eulers, om2eu)
     }
 
@@ -330,31 +332,58 @@ class OrientationMatrixConverter : public OrientationConverter<T>
 
     virtual void toQuaternion()
     {
+      sanityCheckInputData();
       OC_CONVERT_BODY(4, Quaternion, om2qu)
     }
 
     virtual void toAxisAngle()
     {
+      sanityCheckInputData();
       OC_CONVERT_BODY(4, AxisAngle, om2ax)
     }
 
     virtual void toRodrigues()
     {
+      sanityCheckInputData();
       OC_CONVERT_BODY(4, Rodrigues, om2ro)
     }
 
     virtual void toHomochoric()
     {
+      sanityCheckInputData();
       OC_CONVERT_BODY(3, Homochoric, om2ho)
     }
 
     virtual void toCubochoric()
     {
+      sanityCheckInputData();
       OC_CONVERT_BODY(3, Cubochoric, om2cu)
     }
 
     virtual void sanityCheckInputData()
     {
+      typename DataArray<T>::Pointer input = this->getInputData();
+      T* inPtr = input->getPointer(0);
+      size_t nTuples = input->getNumberOfTuples();
+      int inStride = input->getNumberOfComponents();
+      for (size_t i = 0; i < nTuples; ++i)
+      {
+
+        typedef OrientationArray<T> OrientationArrayType;
+        typedef typename OrientationTransforms<OrientationArrayType, T>::ResultType ResultType;
+
+        OrientationArrayType oaType(inPtr, 9);
+
+        ResultType res = OrientationTransforms<OrientationArrayType, T>::om_check(oaType);
+        if(res.result <= 0)
+        {
+          std::cout << res.msg << std::endl;
+          printRepresentation(input->getPointer(i*inStride), std::string("Bad OM"));
+           //res = OrientationTransforms<OrientationArrayType, T>::om_check(oaType);
+        }
+
+        inPtr = inPtr + inStride; // This is Pointer arithmetic!!
+      }
     }
 
     virtual bool compareRepresentations(T* a, T* b, const T& epsilon = std::numeric_limits<T>::epsilon())
@@ -363,11 +392,11 @@ class OrientationMatrixConverter : public OrientationConverter<T>
       return close;
     }
 
-    virtual void printRepresentation(T* om)
+    virtual void printRepresentation(T* om, const std::string &a = std::string(""))
     {
-      printf("|    % 3.16f    % 3.16f    % 3.16f    |\n", om[0], om[1], om[2]);
-      printf("|    % 3.16f    % 3.16f    % 3.16f    |\n", om[3], om[4], om[5]);
-      printf("|    % 3.16f    % 3.16f    % 3.16f    |\n", om[6], om[7], om[8]);
+      printf("%s | % 3.16f    % 3.16f    % 3.16f |\n", a.c_str(), om[0], om[1], om[2]);
+      printf("%s | % 3.16f    % 3.16f    % 3.16f |\n", a.c_str(), om[3], om[4], om[5]);
+      printf("%s | % 3.16f    % 3.16f    % 3.16f |\n", a.c_str(), om[6], om[7], om[8]);
 
     }
 
@@ -444,7 +473,7 @@ class QuaternionConverter : public OrientationConverter<T>
     {
     }
 
-    virtual void printRepresentation(T* om)
+    virtual void printRepresentation(T* om, const std::string &b = std::string(""))
     {
       // if(layout == QuaternionMath<float>::QuaternionVectorScalar)
       {
@@ -541,8 +570,9 @@ class AxisAngleConverter : public OrientationConverter<T>
       return close;
     }
 
-    virtual void printRepresentation(T* om)
+    virtual void printRepresentation(T* ax, const std::string &b = std::string(""))
     {
+      printf("<% 3.16f\t% 3.16f\t% 3.16f> % 3.16f\n", ax[0], ax[1], ax[2], ax[3] );
 
     }
 
@@ -627,7 +657,7 @@ class RodriguesConverter : public OrientationConverter<T>
       return close;
     }
 
-    virtual void printRepresentation(T* om)
+    virtual void printRepresentation(T* om, const std::string &b = std::string(""))
     {
 
     }
@@ -713,7 +743,7 @@ class HomochoricConverter : public OrientationConverter<T>
       return close;
     }
 
-    virtual void printRepresentation(T* om)
+    virtual void printRepresentation(T* om, const std::string &b = std::string(""))
     {
 
     }
@@ -799,7 +829,7 @@ class CubochoricConverter : public OrientationConverter<T>
       return close;
     }
 
-    virtual void printRepresentation(T* om)
+    virtual void printRepresentation(T* om, const std::string &b = std::string(""))
     {
 
     }

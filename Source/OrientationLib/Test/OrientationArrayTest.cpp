@@ -8,9 +8,15 @@
 #include <algorithm>
 #include <complex>
 
+
+#if __APPLE__
+#include <Accelerate/Accelerate.h>
+#endif
+
 #include <Eigen/Core>
 #include <Eigen/Dense>
 #include <Eigen/Eigen>
+#include <Eigen/Geometry>
 
 #include <QtCore/QVector>
 
@@ -27,10 +33,12 @@ using namespace SIMPLib::Constants;
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
-
+#include "OrientationLib/OrientationMath/OrientationConverter.hpp"
+#include "OrientationLib/Utilities/OrientationMathHelpers.hpp"
 
 #include "OrientationLib/Test/OrientationLibTestFileLocations.h"
 
+#include "TestPrintFunctions.h"
 
 typedef OrientationArray<float> FOrientArrayType;
 typedef std::vector<float> FloatVectorType;
@@ -130,11 +138,6 @@ void Test_eu_check()
 // -----------------------------------------------------------------------------
 void Test_ro_check()
 {
-
-
-
-
-
   {
     typedef  OrientationTransforms<FOrientArrayType, float> OrientationTransformType;
     OrientationTransformType::ResultType result;
@@ -562,171 +565,133 @@ void Test_GenRot()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename T>
-void Print_EU(const T& om)
+template<typename T, typename FloatType>
+void EU_2_XXX(FloatType* in)
 {
-  printf("Euler angles [deg]               :   % 3.6f    % 3.6f    % 3.6f\n", om[0]*k_180OverPi, om[1]*k_180OverPi, om[2]*k_180OverPi );
+
+  T eu(3);
+  eu[0] = in[0];
+  eu[1] = in[1];
+  eu[2] = in[2];
+  
+  eu[0] = fmod(eu[0], SIMPLib::Constants::k_2Pi);
+  eu[1] = fmod(eu[1], SIMPLib::Constants::k_Pi);
+  eu[2] = fmod(eu[2], SIMPLib::Constants::k_2Pi);
+
+  T res(9);
+  typedef DataArray<FloatType> DataArrayType;
+  typedef OrientationTransforms<T, FloatType> OrientationTransformType;
+  typedef typename DataArray<FloatType>::Pointer DataArrayPtrType;
+  typedef OrientationConverter<FloatType> OCType;
+
+  typename OrientationTransformType::ResultType result;
+  result =OrientationTransformType::eu_check(eu);
+  if(result.result <= 0) { std::cout << result.msg << std::endl; }
+  
+  T qu(4);
+  OrientationTransformType::eu2qu(eu, qu);
+  OrientationPrinters::Print_QU<T, FloatType>(qu);
+  result =OrientationTransformType::qu_check(qu);
+  if(result.result <= 0) { std::cout << result.msg << std::endl; }
+  
+  T ro(4);
+  OrientationTransformType::qu2ro(qu, ro);
+  OrientationPrinters::Print_RO<T, FloatType>(ro);
+  result =OrientationTransformType::ro_check(ro);
+  if(result.result <= 0) { std::cout << result.msg << std::endl; }
+  
+  T ax(4);
+  OrientationTransformType::ro2ax(ro, ax);
+  OrientationPrinters::Print_AX<T>(ax);
+  result =OrientationTransformType::ax_check(ax);
+  if(result.result <= 0) { std::cout << result.msg << std::endl; }
+  
+  T om(9);
+  OrientationTransformType::ax2om(ax, om);
+  OrientationPrinters::Print_OM<T>(om);
+  result =OrientationTransformType::om_check(om);
+  if(result.result <= 0) { std::cout << result.msg << std::endl; }
+  
+  
+  OrientationTransformType::om2qu(om, qu);
+  OrientationPrinters::Print_QU<T, FloatType>(qu);
+  result =OrientationTransformType::qu_check(qu);
+  if(result.result <= 0) { std::cout << result.msg << std::endl; }
+  
+  
 }
+
+/*
+ Starting Test ax2eu	eu2ax	 -----------------------------------------------------
+ Total Tuples: 4913
+ Delta Failed: 1.99037 DataArray: 'ax Difference' Tuple[263] Comp[1] Value:-1.99037
+ eu
+ 0.0000000000000000   2.9452431201934814   3.1415927410125732
+ ax
+ -0.0000000435009078  -0.9951847195625305   0.0980171412229538   3.1415927410125732
+ 0_ax2eu
+ 6.2831850051879883   2.9452428817749023   3.1415922641754150
+ 1_eu2ax
+ -0.0000000435009078   0.9951847195625305  -0.0980172604322433   3.1415925025939941
+ ------------------------------------------
+ ax2eu	eu2ax	                                                    FAILED
+ */
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename T>
-void Print_OM(const T& om)
+template<typename K>
+void Test_eu2_XXX()
 {
-  printf("                                 : /    % 3.6f    % 3.6f    % 3.6f    \\\n", om[0], om[1], om[2]);
-  printf("Orientation Matrix               : |    % 3.6f    % 3.6f    % 3.6f    |\n", om[3], om[4], om[5]);
-  printf("                                 : \\    % 3.6f    % 3.6f    % 3.6f    /\n", om[6], om[7], om[8]);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-template<typename T>
-void Print_AX(const T& om)
-{
-  printf("Axis angle pair [n; angle (deg)] :   % 3.6f    % 3.6f    % 3.6f  :  % 3.6f\n", om[0], om[1], om[2], om[3]*SIMPLib::Constants::k_180OverPi);
+  typedef OrientationArray<K> OrientType;
+  std::cout << "Test_eu2_XXX  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << std::endl;
+  {
+    K eu[3] = {3.3415926535898066L,   0.0000000000000000L,   0.0000000000000000L,};
+    OrientationPrinters::Print_EU<K*>(eu);
+    EU_2_XXX<OrientType, K>(eu);
+    //EU_2_XXX<DoubleVectorType, float>(eu);
+    //EU_2_XXX<DoubleQVectorType, float>(eu);
+  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 template<typename T, typename K>
-void Print_RO(const T& om)
-{
-  //if(om[3] != std::numeric_limits<K>::infinity())
-  //  printf("Rodrigues vector                 :   % 3.6f    % 3.6f    % 3.6f\n", om[0], om[1], om[2] );
-  //else
-  printf("Rodrigues vector                 :   % 3.6f    % 3.6f    % 3.6f    % 3.6f\n", om[0], om[1], om[2], om[3] );
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-template<typename T>
-void Print_QU(const T& om, typename QuaternionMath<float>::Order layout = QuaternionMath<float>::QuaternionVectorScalar)
-{
-  if(layout == QuaternionMath<float>::QuaternionVectorScalar)
-  {
-    printf("Quaternion (<vector>scalar)      :   <% 3.6f   % 3.6f    % 3.6f>    % 3.6f\n", om[0], om[1], om[2], om[3] );
-  }
-
-  else if(layout == QuaternionMath<float>::QuaternionScalarVector)
-  {
-    printf("Quaternion (scalar<vector>)      :   % 3.6f   <% 3.6f    % 3.6f    % 3.6f>\n", om[0], om[1], om[2], om[3] );
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-template<typename T>
-void Print_HO(const T& om)
-{
-  printf("Homochoric ()                    :   % 3.10f    % 3.10f    % 3.10f\n", om[0], om[1], om[2] );
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-template<typename T>
-void Print_CU(const T& om)
-{
-  printf("Cubochoric ()                    :   % 3.10f    % 3.10f    % 3.10f\n", om[0], om[1], om[2] );
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-template<typename T>
-void EU_2_XXX(double* in)
-{
-  T eu(3);
-  eu[0] = in[0];
-  eu[1] = in[1];
-  eu[2] = in[2];
-
-  T res(9);
-  typedef  OrientationTransforms<T, float> OrientationTransformType;
-
-  // Convert to Orientation Matrix
-  OrientationTransformType::eu2om(eu, res);
-  Print_OM<T>(res);
-
-  //Convert to Axis Angle
-  OrientationTransformType::eu2ax(eu, res);
-  Print_AX<T>(res);
-
-  // Convert to Rodriques
-  OrientationTransformType::eu2ro(eu, res);
-  Print_RO<T, float>(res);
-
-  // Convert to Quaternion
-  OrientationTransformType::eu2qu(eu, res);
-  Print_QU<T>(res);
-  OrientationTransformType::eu2qu(eu, res, QuaternionMath<float>::QuaternionVectorScalar);
-  Print_QU<T>(res, QuaternionMath<float>::QuaternionVectorScalar);
-
-  // Convert to HomoChoric
-  OrientationTransformType::eu2ho(eu, res);
-  Print_HO<T>(res);
-
-  // Convert to HomoChoric
-  OrientationTransformType::eu2cu(eu, res);
-  Print_CU<T>(res);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void Test_eu2_XXX()
-{
-  std::cout << "Test_eu2_XXX  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << std::endl;
-  double eu[3] = {214.4487933 * SIMPLib::Constants::k_DegToRad, 58.8567729 * SIMPLib::Constants::k_DegToRad, 124.4487933 * SIMPLib::Constants::k_DegToRad};
-  Print_EU<double*>(eu);
-  EU_2_XXX<DOrientArrayType>(eu);
-  EU_2_XXX<DoubleVectorType>(eu);
-  EU_2_XXX<DoubleQVectorType>(eu);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-template<typename T>
-void OM_2_XXX(float* in)
+void OM_2_XXX(K* in)
 {
   std::cout << "   " << std::endl;
   T om(9);
   for(size_t i = 0; i < 9; i++) { om[i] = in[i]; }
   T res(3); // Just size to 9 as we are going to reuse the variable
-  typedef  OrientationTransforms<T, float> OrientationTransformType;
+  typedef  OrientationTransforms<T, K> OrientationTransformType;
   // Convert to Euler
   OrientationTransformType::om2eu(om, res);
-  Print_EU<T>(res);
+  OrientationPrinters::Print_EU<T>(res);
 
   // Convert to Rodriques
   res.resize(4);
   OrientationTransformType::om2ro(om, res);
-  Print_RO<T, float>(res);
+  OrientationPrinters::Print_RO<T, K>(res);
 
   // Convert to Quaternion
   res.resize(4);
   OrientationTransformType::om2qu(om, res);
-  Print_QU<T>(res, QuaternionMath<float>::QuaternionScalarVector);
+  OrientationPrinters::Print_QU<T, K>(res, QuaternionMath<K>::QuaternionScalarVector);
 
   //Convert to Axis Angle
   res.resize(4);
   OrientationTransformType::om2ax(om, res);
-  Print_AX<T>(res);
+  OrientationPrinters::Print_AX<T>(res);
 
   //Convert to Homochoric
   res.resize(3);
   OrientationTransformType::om2ho(om, res);
-  Print_HO<T>(res);
+  OrientationPrinters::Print_HO<T>(res);
 
   // Convert to HomoChoric
   OrientationTransformType::om2cu(om, res);
-  Print_CU<T>(res);
+  OrientationPrinters::Print_CU<T>(res);
 }
 
 // -----------------------------------------------------------------------------
@@ -751,7 +716,7 @@ void Test_om2_XXX()
                   -1.0000, 0.0000, 0.0000,
                   0.0000, 0.0000, 1.0000
                 };
-  Print_OM<float*>(om);
+  OrientationPrinters::Print_OM<float*>(om);
   OM_2_XXX<FOrientArrayType>(om);
   OM_2_XXX<FloatVectorType>(om);
   OM_2_XXX<FloatQVectorType>(om);
@@ -761,44 +726,44 @@ void Test_om2_XXX()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename T>
-void RO_2_XXX(float* in)
+template<typename T, typename K>
+void RO_2_XXX(K* in)
 {
   T ro(9);
   for(size_t i = 0; i < 4; i++) { ro[i] = in[i]; }
 
   T res(9); // Just size to 9 as we are going to reuse the variable
 
-  typedef  OrientationTransforms<T, float> OrientationTransformType;
+  typedef  OrientationTransforms<T, K> OrientationTransformType;
 
   // Convert to Euler
   res.resize(3);
   OrientationTransformType::ro2eu(ro, res);
-  Print_EU<T>(res);
+  OrientationPrinters::Print_EU<T>(res);
 
   // Convert to Orientation Matrix
   res.resize(9);
   OrientationTransformType::ro2om(ro, res);
-  Print_OM<T>(res);
+  OrientationPrinters::Print_OM<T>(res);
 
   //Convert to Axis Angle
   res.resize(4);
   OrientationTransformType::ro2ax(ro, res);
-  Print_AX<T>(res);
+  OrientationPrinters::Print_AX<T>(res);
 
   // Convert to Quaternion
   res.resize(4);
   OrientationTransformType::ro2qu(ro, res);
-  Print_QU<T>(res);
+  OrientationPrinters::Print_QU<T, K>(res);
 
   //Convert to Homochoric
   res.resize(3);
   OrientationTransformType::ro2ho(ro, res);
-  Print_HO<T>(res);
+  OrientationPrinters::Print_HO<T>(res);
 
   // Convert to HomoChoric
   OrientationTransformType::ro2cu(ro, res);
-  Print_CU<T>(res);
+  OrientationPrinters::Print_CU<T>(res);
 }
 
 
@@ -809,7 +774,7 @@ void Test_ro2_XXX()
 {
   std::cout << "Test_ro2_XXX  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" << std::endl;
   float ro[4] = {0.0f, 0.0f, -1.0f, 1.0f};
-  Print_RO<float*, float>(ro);
+  OrientationPrinters::Print_RO<float*, float>(ro);
   RO_2_XXX<FOrientArrayType>(ro);
   RO_2_XXX<FloatVectorType>(ro);
   RO_2_XXX<FloatQVectorType>(ro);
@@ -828,30 +793,30 @@ void AX_2_XXX(K* in)
   ax[3] = in[3];
 
   T res(9);
-  typedef  OrientationTransforms<T, float> OrientationTransformType;
+  typedef  OrientationTransforms<T, K> OrientationTransformType;
   // Convert to Orientation Matrix
   OrientationTransformType::ax2om(ax, res);
-  Print_OM<T>(res);
+  OrientationPrinters::Print_OM<T>(res);
 
   //Convert to Axis Angle
   OrientationTransformType::ax2eu(ax, res);
-  Print_EU<T>(res);
+  OrientationPrinters::Print_EU<T>(res);
 
   // Convert to Rodriques
   OrientationTransformType::ax2ro(ax, res);
-  Print_RO<T, K>(res);
+  OrientationPrinters::Print_RO<T, K>(res);
 
   // Convert to Quaternion
   OrientationTransformType::ax2qu(ax, res);
-  Print_QU<T>(res);
+  OrientationPrinters::Print_QU<T, K>(res);
 
   // Convert to homochoric
   OrientationTransformType::ax2ho(ax, res);
-  Print_HO<T>(res);
+  OrientationPrinters::Print_HO<T>(res);
 
   // Convert to HomoChoric
   OrientationTransformType::ax2cu(ax, res);
-  Print_CU<T>(res);
+  OrientationPrinters::Print_CU<T>(res);
 
 }
 
@@ -863,7 +828,7 @@ void Test_ax2_XXX()
 {
   std::cout << "Test_ax2_XXX  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl;
   float ax[4] = {0.0f, 0.0f, -1.0f, k_PiOver2};
-  Print_AX<float*>(ax);
+  OrientationPrinters::Print_AX<float*>(ax);
   AX_2_XXX<FOrientArrayType>(ax);
   AX_2_XXX<std::vector<float> >(ax);
   AX_2_XXX<FloatQVectorType>(ax);
@@ -882,35 +847,35 @@ void QU_2_XXX(K* in, typename QuaternionMath<K>::Order layout = QuaternionMath<K
   qu[3] = in[3];
 
   T res(9);
-  typedef  OrientationTransforms<T, float> OrientationTransformType;
+  typedef  OrientationTransforms<T, K> OrientationTransformType;
   // Convert to Orientation Matrix
   res.resize(9);
   OrientationTransformType::qu2om(qu, res, layout);
-  Print_OM<T>(res);
+  OrientationPrinters::Print_OM<T>(res);
 
   //Convert to Axis Angle
   res.resize(4);
   OrientationTransformType::qu2eu(qu, res, layout);
-  Print_EU<T>(res);
+  OrientationPrinters::Print_EU<T>(res);
 
   // Convert to Rodriques
   res.resize(4);
   OrientationTransformType::qu2ro(qu, res, layout);
-  Print_RO<T, K>(res);
+  OrientationPrinters::Print_RO<T, K>(res);
 
   // Convert to Quaternion
   res.resize(4);
   OrientationTransformType::qu2ax(qu, res, layout);
-  Print_AX<T>(res);
+  OrientationPrinters::Print_AX<T>(res);
 
   //Convert to Homochoric
   res.resize(3);
   OrientationTransformType::qu2ho(qu, res, layout);
-  Print_HO<T>(res);
+  OrientationPrinters::Print_HO<T>(res);
 
   // Convert to HomoChoric
   OrientationTransformType::qu2cu(qu, res, layout);
-  Print_CU<T>(res);
+  OrientationPrinters::Print_CU<T>(res);
 }
 
 
@@ -922,7 +887,7 @@ void Test_qu2_XXX()
   {
     std::cout << "Test_qu2_XXX  (SCALAR, <X, Y, Z>) ***************************************" << std::endl;
     float qu[4] = {SIMPLib::Constants::k_1OverRoot2, 0.0f, 0.0f, -SIMPLib::Constants::k_1OverRoot2};
-    Print_QU<float*>(qu, QuaternionMathF::QuaternionScalarVector);
+    OrientationPrinters::Print_QU<float*, float>(qu, QuaternionMathF::QuaternionScalarVector);
     QU_2_XXX<FOrientArrayType>(qu, QuaternionMathF::QuaternionScalarVector);
     //  QU_2_XXX<std::vector<float> >(qu);
     //  QU_2_XXX<FloatQVectorType>(qu);
@@ -931,7 +896,7 @@ void Test_qu2_XXX()
   {
     std::cout << "Test_qu2_XXX  (<X, Y, Z>, SCALAR) ***************************************" << std::endl;
     float qu[4] = {0.0f, 0.0f, -SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2};
-    Print_QU<float*>(qu);
+    OrientationPrinters::Print_QU<float*, float>(qu);
     QU_2_XXX<FOrientArrayType>(qu);
     //  QU_2_XXX<std::vector<float> >(qu);
     //  QU_2_XXX<FloatQVectorType>(qu);
@@ -951,36 +916,36 @@ void HO_2_XXX(K* in)
   ho[2] = in[2];
 
   T res(9);
-  typedef  OrientationTransforms<T, float> OrientationTransformType;
+  typedef  OrientationTransforms<T, K> OrientationTransformType;
 
   //Convert to Euler
   res.resize(3);
   OrientationTransformType::ho2eu(ho, res);
-  Print_EU<T>(res);
+  OrientationPrinters::Print_EU<T>(res);
 
   // Convert to Orientation Matrix
   res.resize(9);
   OrientationTransformType::ho2om(ho, res);
-  Print_OM<T>(res);
+  OrientationPrinters::Print_OM<T>(res);
 
   //Convert to Axis Angle
   res.resize(4);
   OrientationTransformType::ho2ax(ho, res);
-  Print_AX<T>(res);
+  OrientationPrinters::Print_AX<T>(res);
 
   // Convert to Rodriques
   res.resize(4);
   OrientationTransformType::ho2ro(ho, res);
-  Print_RO<T, K>(res);
+  OrientationPrinters::Print_RO<T, K>(res);
 
   // Convert to Quaternion
   res.resize(4);
   OrientationTransformType::ho2qu(ho, res);
-  Print_QU<T>(res);
+  OrientationPrinters::Print_QU<T, K>(res);
 
   // Convert to HomoChoric
   OrientationTransformType::ho2cu(ho, res);
-  Print_CU<T>(res);
+  OrientationPrinters::Print_CU<T>(res);
 }
 
 
@@ -991,7 +956,7 @@ void Test_ho2_XXX()
 {
   std::cout << "Test_ho2_XXX  &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&" << std::endl;
   float ho[3] = {0.000000f, 0.000000f, -0.7536693215f};
-  Print_HO<float*>(ho);
+  OrientationPrinters::Print_HO<float*>(ho);
   HO_2_XXX<FOrientArrayType>(ho);
   HO_2_XXX<std::vector<float> >(ho);
   HO_2_XXX<FloatQVectorType>(ho);
@@ -1069,6 +1034,7 @@ void TestInputs()
 
 }
 
+
 // -----------------------------------------------------------------------------
 //  Use test framework
 // -----------------------------------------------------------------------------
@@ -1077,23 +1043,24 @@ int main(int argc, char* argv[])
 
   int err = EXIT_SUCCESS;
 
-  DREAM3D_REGISTER_TEST( TestRotArray() );
-  DREAM3D_REGISTER_TEST( Test_eu_check() );
-  DREAM3D_REGISTER_TEST( Test_ro_check() );
-  DREAM3D_REGISTER_TEST( Test_ho_check() );
-  DREAM3D_REGISTER_TEST( Test_cu_check() );
-  DREAM3D_REGISTER_TEST( Test_qu_check() );
-  DREAM3D_REGISTER_TEST( Test_ax_check() );
-  DREAM3D_REGISTER_TEST( Test_om_check() );
-  DREAM3D_REGISTER_TEST( Test_GenRot() )
+//  DREAM3D_REGISTER_TEST( TestRotArray() );
+//  DREAM3D_REGISTER_TEST( Test_eu_check() );
+//  DREAM3D_REGISTER_TEST( Test_ro_check() );
+//  DREAM3D_REGISTER_TEST( Test_ho_check() );
+//  DREAM3D_REGISTER_TEST( Test_cu_check() );
+//  DREAM3D_REGISTER_TEST( Test_qu_check() );
+//  DREAM3D_REGISTER_TEST( Test_ax_check() );
+//  DREAM3D_REGISTER_TEST( Test_om_check() );
+//  DREAM3D_REGISTER_TEST( Test_GenRot() )
 
-
-  DREAM3D_REGISTER_TEST( Test_eu2_XXX() );
-  DREAM3D_REGISTER_TEST( Test_ax2_XXX() );
-  DREAM3D_REGISTER_TEST( Test_om2_XXX() );
-  DREAM3D_REGISTER_TEST( Test_ro2_XXX() );
-  DREAM3D_REGISTER_TEST( Test_qu2_XXX() );
-  DREAM3D_REGISTER_TEST( Test_ho2_XXX() );
+  
+   DREAM3D_REGISTER_TEST( Test_eu2_XXX<double>() );
+   DREAM3D_REGISTER_TEST( Test_eu2_XXX<float>() );
+//  DREAM3D_REGISTER_TEST( Test_ax2_XXX() );
+//  DREAM3D_REGISTER_TEST( Test_om2_XXX() );
+//  DREAM3D_REGISTER_TEST( Test_ro2_XXX() );
+//  DREAM3D_REGISTER_TEST( Test_qu2_XXX() );
+//  DREAM3D_REGISTER_TEST( Test_ho2_XXX() );
 
 
   DREAM3D_REGISTER_TEST( TestInputs() );

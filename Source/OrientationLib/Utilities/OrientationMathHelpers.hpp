@@ -131,6 +131,21 @@ class OrientationMathHelpers
       return c;
     }
 
+    static void transpose(const T& a, T& c)
+    {
+   //   T c(a.size());
+      c[0] = a[0];
+      c[1] = a[3];
+      c[2] = a[6];
+      c[3] = a[1];
+      c[4] = a[4];
+      c[5] = a[7];
+      c[6] = a[2];
+      c[7] = a[5];
+      c[8] = a[8];
+     // return c;
+    }
+
     static T matmul3x3(const T& a, const T& b)
     {
       T c(a.size());
@@ -149,11 +164,13 @@ class OrientationMathHelpers
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    static bool closeEnough(const float& a, const float& b,
-                            const float& epsilon = std::numeric_limits<float>::epsilon())
+
+    static bool closeEnough(const K& a, const K& b,
+                            const K& epsilon = std::numeric_limits<K>::epsilon())
     {
-      return (epsilon > fabsf(a - b));
+      return (epsilon > fabs(a - b));
     }
+
 
     // -----------------------------------------------------------------------------
     //

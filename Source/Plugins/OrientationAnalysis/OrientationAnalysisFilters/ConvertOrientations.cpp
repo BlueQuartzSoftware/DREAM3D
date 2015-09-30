@@ -102,7 +102,8 @@ void ConvertOrientations::setupFilterParameters()
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    req.daTypes = QVector<QString>(1, DREAM3D::TypeNames::Float);
+    req.daTypes = QVector<QString>(2, DREAM3D::TypeNames::Double);
+    req.daTypes[1] = DREAM3D::TypeNames::Float;
     parameters.push_back(DataArraySelectionFilterParameter::New("Input Orientations", "InputOrientationArrayPath", getInputOrientationArrayPath(), FilterParameter::RequiredArray, req, 0));
   }
 
@@ -171,21 +172,30 @@ void ConvertOrientations::dataCheck()
   // the valid bounds
   if(getErrorCondition() < 0) { return; }
 
-  // Get the input data
-  QVector<int32_t> componentCounts = OrientationConverter<float>::GetComponentCounts();
-  QVector<size_t> inputCDims(1, componentCounts[getInputType()]);
-  m_InputOrientationsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getInputOrientationArrayPath(), inputCDims);
-  if( NULL != m_InputOrientationsPtr.lock().get() )
-  { m_InputOrientations = m_InputOrientationsPtr.lock()->getPointer(0); }
+  // Figure out what kind of Array the user selected
+  // Get the input data and create the output Data appropriately
+  IDataArray::Pointer iDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getInputOrientationArrayPath());
 
-
-  // Create the output data
   DataArrayPath outputArrayPath = getInputOrientationArrayPath();
   outputArrayPath.setDataArrayName(getOutputOrientationArrayName());
-  QVector<size_t> outputCDims(1, componentCounts[getOutputType()]);
-  m_OutputOrientationsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, outputArrayPath, 0, outputCDims);
-  if( NULL != m_OutputOrientationsPtr.lock().get() )
-  { m_OutputOrientations = m_OutputOrientationsPtr.lock()->getPointer(0); }
+
+  FloatArrayType::Pointer fArray = boost::dynamic_pointer_cast<FloatArrayType>(iDataArrayPtr);
+  if(NULL != fArray.get())
+  {
+    QVector<int32_t> componentCounts = OrientationConverter<float>::GetComponentCounts();
+    QVector<size_t> outputCDims(1, componentCounts[getOutputType()]);
+    getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, outputArrayPath, 0, outputCDims);
+  }
+
+  DoubleArrayType::Pointer dArray = boost::dynamic_pointer_cast<DoubleArrayType>(iDataArrayPtr);
+  if(NULL != dArray.get())
+  {
+    QVector<int32_t> componentCounts = OrientationConverter<double>::GetComponentCounts();
+    QVector<size_t> outputCDims(1, componentCounts[getOutputType()]);
+    getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, outputArrayPath, 0, outputCDims);
+  }
+
+
 }
 
 // -----------------------------------------------------------------------------
@@ -201,6 +211,42 @@ void ConvertOrientations::preflight()
   setInPreflight(false);
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename T>
+void generateRepresentation(ConvertOrientations* filter, typename DataArray<T>::Pointer inputOrientations,
+                            typename DataArray<T>::Pointer outputOrientations)
+{
+  typedef typename DataArray<T>::Pointer ArrayType;
+  typedef OrientationConverter<T> OCType;
+  QVector<typename OCType::Pointer> converters(7);
+
+  converters[0] = EulerConverter<T>::New();
+  converters[1] = OrientationMatrixConverter<T>::New();
+  converters[2] = QuaternionConverter<T>::New();
+  converters[3] = AxisAngleConverter<T>::New();
+  converters[4] = RodriguesConverter<T>::New();
+  converters[5] = HomochoricConverter<T>::New();
+  converters[6] = CubochoricConverter<T>::New();
+
+  QVector<typename OCType::OrientationType> ocTypes = OCType::GetOrientationTypes();
+
+  converters[filter->getInputType()]->setInputData(inputOrientations);
+  converters[filter->getInputType()]->convertRepresentationTo(ocTypes[filter->getOutputType()]);
+
+  ArrayType output = converters[filter->getInputType()]->getOutputData();
+
+  if(!output->copyIntoArray(outputOrientations) )
+  {
+    QString ss = QObject::tr("There was an error copying the final results into the output array.");
+    filter->setErrorCondition(-1003);
+    filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+  }
+
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -210,30 +256,29 @@ void ConvertOrientations::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  typedef OrientationConverter<float> OCType;
-  QVector<OCType::Pointer> converters(7);
+  IDataArray::Pointer iDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getInputOrientationArrayPath());
 
-  converters[0] = EulerConverter<float>::New();
-  converters[1] = OrientationMatrixConverter<float>::New();
-  converters[2] = QuaternionConverter<float>::New();
-  converters[3] = AxisAngleConverter<float>::New();
-  converters[4] = RodriguesConverter<float>::New();
-  converters[5] = HomochoricConverter<float>::New();
-  converters[6] = CubochoricConverter<float>::New();
+  DataArrayPath outputArrayPath = getInputOrientationArrayPath();
+  outputArrayPath.setDataArrayName(getOutputOrientationArrayName());
 
-  QVector<OCType::OrientationType> ocTypes = OCType::GetOrientationTypes();
-
-  converters[getInputType()]->setInputData(m_InputOrientationsPtr.lock());
-  converters[getInputType()]->convertRepresentationTo(ocTypes[getOutputType()]);
-
-  DataArray<float>::Pointer output = converters[getInputType()]->getOutputData();
-
-  if(!output->copyIntoArray(m_OutputOrientationsPtr.lock()) )
+  FloatArrayType::Pointer fArray = boost::dynamic_pointer_cast<FloatArrayType>(iDataArrayPtr);
+  if(NULL != fArray.get())
   {
-    QString ss = QObject::tr("There was an error copying the final results into the output array.");
-    setErrorCondition(-1003);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    QVector<int32_t> componentCounts = OrientationConverter<float>::GetComponentCounts();
+    QVector<size_t> outputCDims(1, componentCounts[getOutputType()]);
+    FloatArrayType::Pointer outData = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, outputArrayPath, outputCDims);
+    generateRepresentation<float>(this, fArray, outData);
   }
+
+  DoubleArrayType::Pointer dArray = boost::dynamic_pointer_cast<DoubleArrayType>(iDataArrayPtr);
+  if(NULL != dArray.get())
+  {
+    QVector<int32_t> componentCounts = OrientationConverter<double>::GetComponentCounts();
+    QVector<size_t> outputCDims(1, componentCounts[getOutputType()]);
+    DoubleArrayType::Pointer outData = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, outputArrayPath, outputCDims);
+    generateRepresentation<double>(this, dArray, outData);
+  }
+
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
