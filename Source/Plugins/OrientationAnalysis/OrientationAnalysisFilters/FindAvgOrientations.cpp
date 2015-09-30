@@ -45,6 +45,7 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 

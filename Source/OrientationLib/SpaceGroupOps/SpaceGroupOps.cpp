@@ -47,6 +47,8 @@
 #include "SIMPLib/Utilities/ColorTable.h"
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+
 #include "OrientationLib/SpaceGroupOps/CubicOps.h"
 #include "OrientationLib/SpaceGroupOps/CubicLowOps.h"
 #include "OrientationLib/SpaceGroupOps/HexagonalOps.h"

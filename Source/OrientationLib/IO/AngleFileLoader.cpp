@@ -44,8 +44,12 @@
 #include <QtCore/QTextStream>
 #include <QtCore/QByteArray>
 
-#include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "SIMPLib/Math/QuaternionMath.hpp"
+
+#include "OrientationLib/OrientationMath/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+
+
 
 
 

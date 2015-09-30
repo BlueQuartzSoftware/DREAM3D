@@ -32,20 +32,19 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #include "FindShapes.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+
+#include "OrientationLib/OrientationMath/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 #include "Statistics/StatisticsConstants.h"
 

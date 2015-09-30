@@ -39,7 +39,6 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
@@ -47,6 +46,7 @@
 #include "SIMPLib/Math/GeometryMath.h"
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 

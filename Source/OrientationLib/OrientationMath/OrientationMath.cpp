@@ -40,6 +40,8 @@
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Math/MatrixMath.h"
 #include "SIMPLib/Math/GeometryMath.h"
+
+#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 #include "OrientationLib/SpaceGroupOps/CubicOps.h"
 #include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
 #include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"

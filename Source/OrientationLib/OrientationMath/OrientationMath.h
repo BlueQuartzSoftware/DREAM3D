@@ -41,13 +41,9 @@
 #include "SIMPLib/Math/QuaternionMath.hpp"
 
 #include "OrientationLib/OrientationLib.h"
-#include "OrientationLib/OrientationMath/OrientationArray.hpp"
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 
 #define OM_ORIENTATION_FUNCS 0
-
-typedef OrientationTransforms<FOrientArrayType, float> FOrientTransformsType;
 
 /**
  * @class OrientationMath OrientationMath.h DREAM3DLib/Common/OrientationMath.h
@@ -63,95 +59,6 @@ class OrientationLib_EXPORT OrientationMath
   public:
 
     virtual ~OrientationMath();
-
-#if OM_ORIENTATION_FUNCS
-    /**
-     * @brief AxisAngletoHomochoric
-     * @param w Angle (Radians)
-     * @param n1 Axis
-     * @param n2 Axis
-     * @param n3 Axis
-     * @param r1 Output
-     * @param r2 Output
-     * @param r3 Output
-     */
-    static void AxisAngletoHomochoric(float w, float n1, float n2, float n3, float& r1, float& r2, float& r3);
-
-    /**
-     * @brief AxisAngletoRod
-     * @param w Angle (Radians)
-     * @param n1 Axis
-     * @param n2 Axis
-     * @param n3 Axis
-     * @param r1 Output
-     * @param r2 Output
-     * @param r3 Output
-     */
-    static void AxisAngletoRod(float w, float n1, float n2, float n3, float& r1, float& r2, float& r3);
-
-    /**
-     * @brief AxisAngletoQuat
-     * @param w Angle (Radians)
-     * @param n1 Axis
-     * @param n2 Axis
-     * @param n3 Axis
-     * @param q Output
-     */
-    static void AxisAngletoQuat(float w, float n1, float n2, float n3, QuatF& q);
-
-
-    /**
-     * @brief AxisAngletoMat
-     * @param w Angle (Radians)
-     * @param n1 Axis
-     * @param n2 Axis
-     * @param n3 Axis
-     * @param g
-     */
-    static void AxisAngletoMat(float w, float n1, float n2, float n3, float g[3][3]);
-
-    static void HomochorictoRod(float& r1, float& r2, float& r3);
-
-    static void RodtoAxisAngle(float r1, float r2, float r3, float& w, float& n1, float& n2, float& n3);
-    static void RodtoQuat(QuatF& q, float r1, float r2, float r3);
-    static void RodtoHomochoric(float& r1, float& r2, float& r3);
-    static void RodtoEuler(float r1, float r2, float r3, float& ea1, float& ea2, float& ea3);
-
-
-    static void QuattoAxisAngle(QuatF& q, float& w, float& n1, float& n2, float& n3);
-    static void QuattoMat(QuatF& q, float g[3][3]);
-    static void QuattoRod(QuatF& q, float& r1, float& r2, float& r3);
-    static void QuattoEuler(QuatF& q, float& ea1, float& ea2, float& ea3);
-
-
-    /**
-     * @brief EulertoQuat Passive Quaternion
-     * @param ea1
-     * @param ea2
-     * @param ea3
-     * @param q
-     */
-    static void EulertoQuat(float ea1, float ea2, float ea3, QuatF& q);
-    static QuatF EulertoQuat(float ea1, float ea2, float ea3);
-    static void EulertoQuat(const float* euler, QuatF& q);
-    static QuatF EulertoQuat(const float* ea);
-
-    /**
-     * @brief EulertoMat This function converts an Euler Angle triplet (Bunge) into a <b>PASSIVE</b> Orientation Matrix. This
-     * is taking a Sample Coordinate system and transforming it to the Crystal Coordinate System (S->C)
-     * @param ea1
-     * @param ea2
-     * @param ea3
-     * @param g Output 3x3 Matrix where the values are ordered Row X Column
-     */
-    static void EulertoMat(float ea1, float ea2, float ea3, float g[3][3]);
-    static void EulertoRod(float ea1, float ea2, float ea3, float& r1, float& r2, float& r3);
-
-    static void EulerToAxisAngle(float ea1, float ea2, float ea3, float& w, float& n1, float& n2, float& n3);
-
-
-    static void MattoEuler(float g[3][3], float& ea1, float& ea2, float& ea3);
-#endif
 
 
     /**
@@ -174,6 +81,12 @@ class OrientationLib_EXPORT OrientationMath
      */
     static void ChangeAxisReferenceFrame(QuatF& q, float& n1, float& n2, float& n3);
 
+    /**
+     * @brief MatrixMisorientation
+     * @param g1
+     * @param g2
+     * @return
+     */
     static float MatrixMisorientation(float g1[3][3], float g2[3][3]);
 
     /**
