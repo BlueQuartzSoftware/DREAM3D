@@ -349,6 +349,7 @@ void FilterMaker::updateFilterFileGenerators()
           this, SLOT(generationError(const QString&)));
   cppGenerator->setDoesGenerateOutput(true);
   cppGenerator->setPluginName(fi.baseName());
+  cppGenerator->setFilterName(filterName);
 
   if (contentsMap.size() > 0)
   {
@@ -387,6 +388,7 @@ void FilterMaker::updateFilterFileGenerators()
           this, SLOT(generationError(const QString&)));
   hGenerator->setDoesGenerateOutput(true);
   hGenerator->setPluginName(fi.baseName());
+  hGenerator->setFilterName(filterName);
 
   if (contentsMap.size() > 0)
   {
@@ -420,6 +422,7 @@ void FilterMaker::updateFilterFileGenerators()
           this, SLOT(generationError(const QString&)));
   htmlGenerator->setDoesGenerateOutput(true);
   htmlGenerator->setPluginName(fi.baseName());
+  htmlGenerator->setFilterName(filterName);
 
   // FilterTest.cpp file
   pathTemplate = "Test";
@@ -441,6 +444,7 @@ void FilterMaker::updateFilterFileGenerators()
           this, SLOT(generationError(const QString&)));
   testGenerator->setDoesGenerateOutput(true);
   testGenerator->setPluginName(fi.baseName());
+  testGenerator->setFilterName(filterName);
 }
 
 // -----------------------------------------------------------------------------

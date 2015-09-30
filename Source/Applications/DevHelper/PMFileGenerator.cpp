@@ -96,8 +96,6 @@ QString PMFileGenerator::getFileName()
 // -----------------------------------------------------------------------------
 void PMFileGenerator::pluginNameChanged(const QString& pluginName)
 {
-//  qDebug() << "PMFileGenerator::pluginNameChanged" << "\n";
-
   QString pin = cleanName(pluginName);
 
   if (pin.isEmpty() == true)
@@ -109,6 +107,8 @@ void PMFileGenerator::pluginNameChanged(const QString& pluginName)
     setPluginName(pin);
   }
 
+  m_FilterName = pin + "Filter";
+
   if (isNameChangeable() == false)
   {
     return;
@@ -119,8 +119,6 @@ void PMFileGenerator::pluginNameChanged(const QString& pluginName)
   {
     getTreeWidgetItem()->setText(0, m_FileName );
   }
-
-
 }
 
 // -----------------------------------------------------------------------------
@@ -194,6 +192,9 @@ QString PMFileGenerator::getFileContents(QString replaceStr)
   //Get text feature values from widget
   QString pluginName = getPluginName();
   QString pluginDir = getOutputDir();
+  QString filterName = getFilterName();
+  QFileInfo fi(m_FileName);
+  QString className = fi.baseName();
   QString text = "";
 
   if (pluginName.isEmpty() == true)
@@ -208,10 +209,6 @@ QString PMFileGenerator::getFileContents(QString replaceStr)
     QTextStream in(&rfile);
     text = in.readAll();
     text.replace("@PluginName@", pluginName);
-    QFileInfo fi(m_FileName);
-    QString className = fi.baseName();
-    QString filterName = className;
-    //filterName = filterName.remove("Test");   // For the test files
     text.replace("@ClassName@", className);
     text.replace("@FilterName@", filterName);
     text.replace("@MD_FILE_NAME@", m_FileName);

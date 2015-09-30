@@ -82,6 +82,21 @@ QString PMDirGenerator::getPluginName()
   return m_PluginName;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString PMDirGenerator::getFilterName()
+{
+  return m_FilterName;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PMDirGenerator::setFilterName(const QString &filterName)
+{
+  m_FilterName = filterName;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -185,19 +200,17 @@ void PMDirGenerator::setPluginName(QString pluginName)
 // -----------------------------------------------------------------------------
 void PMDirGenerator::pluginNameChanged(const QString& pluginname)
 {
-//  qDebug() << "PMDirGenerator::pluginNameChanged" << "\n";
   if (isNameChangeable() == false)
   {
     return;
   }
+
   m_PluginName = cleanName(pluginname);
 
   if (NULL != m_TreeWidgetItem)
   {
     m_TreeWidgetItem->setText(0, m_PluginName + m_DisplaySuffix);
   }
-
-
 }
 
 // -----------------------------------------------------------------------------
