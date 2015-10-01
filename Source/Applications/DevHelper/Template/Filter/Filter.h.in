@@ -6,8 +6,8 @@
 #define _@ClassName@_H_
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 @Filter_H_Includes@
 /**
  * @brief The @ClassName@ class. See [Filter documentation](@ref @ClassNameLowerCase@) for details.
