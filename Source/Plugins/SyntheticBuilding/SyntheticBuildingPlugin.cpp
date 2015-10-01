@@ -238,5 +238,25 @@ void SyntheticBuildingPlugin::readSettings(QSettings& prefs)
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString SyntheticBuildingPlugin::getCitations()
+{
+  return "\
+@article{Groeber20081274,\n\
+  title = {A framework for automated analysis and simulation of 3D polycrystalline microstructures. Part 2: Synthetic structure generation},\n\
+  journal = {Acta Materialia },\n\
+  volume = {56},\n\
+  number = {6},\n\
+  pages = {1274 - 1287},\n\
+  year = {2008},\n\
+  issn = {1359-6454},\n\
+  doi = {http://dx.doi.org/10.1016/j.actamat.2007.11.040},\n\
+  url = {http://www.sciencedirect.com/science/article/pii/S1359645407007872},\n\
+  author = {Michael Groeber and Somnath Ghosh and Michael D. Uchic and Dennis M. Dimiduk},\n\
+}\n";
+}
+
 #include "SyntheticBuildingFilters/RegisterKnownFilters.cpp"
 #include "SyntheticBuilding/FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"

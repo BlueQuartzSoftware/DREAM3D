@@ -1,6 +1,7 @@
 /* ============================================================================
 * Copyright (c) 2014 Michael A. Jackson (BlueQuartz Software)
 * Copyright (c) 2014 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+* Copyright (c) 2015 William Lenthe
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without modification,
@@ -106,6 +107,11 @@ class SIMPLib_EXPORT SIMPLibPlugin : public QObject
     * @brief Sets the load status of the plugin
     */
     void setStatus(QString status);
+
+    /**
+     * @brief Returns pluging wide citations a BibTex format
+     */
+    virtual const QString getCitations();
 
   private:
     QString       m_PluginName;

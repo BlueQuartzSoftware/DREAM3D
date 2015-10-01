@@ -1,5 +1,6 @@
 /* ============================================================================
 * Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2015 William Lenthe
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -118,6 +119,12 @@ class SIMPLib_EXPORT AbstractFilter : public Observable
      * @return Compiled library name
      */
     virtual const QString getCompiledLibraryName();
+
+    /**
+     * @brief getCitations Returns citations the filter in a BibTex format
+     * @return BibTex citation (or empty string if the filter has no citations)
+     */
+    virtual const QString getCitations();
 
     /**
      * @brief generateHtmlSummary Generates a brief HTML summary of the filter

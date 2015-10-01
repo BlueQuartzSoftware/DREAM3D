@@ -157,6 +157,11 @@ class SyntheticBuildingPlugin : public QObject, public ISIMPLibPlugin
      */
     virtual void readSettings(QSettings& prefs);
 
+    /**
+     * @brief Returns pluging wide citations a BibTex format
+     */
+    virtual const QString getCitations();
+
   private:
     QString             m_Version;
     QString             m_CompatibilityVersion;

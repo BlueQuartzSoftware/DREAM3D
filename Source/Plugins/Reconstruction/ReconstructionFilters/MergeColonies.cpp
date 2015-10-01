@@ -694,6 +694,28 @@ const QString MergeColonies::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+const QString MergeColonies::getCitations()
+{
+  return "\
+  @article {JMI:JMI1812,\n\
+  author = {GERMAIN, L. and DEY, S. R. and HUMBERT, M. and GEY, N.},\n\
+  title = {Determination of parent orientation maps in advanced titanium-based alloys},\n\
+  journal = {Journal of Microscopy},\n\
+  volume = {227},\n\
+  number = {3},\n\
+  publisher = {Blackwell Publishing Ltd},\n\
+  issn = {1365-2818},\n\
+  url = {http://dx.doi.org/10.1111/j.1365-2818.2007.01812.x},\n\
+  doi = {10.1111/j.1365-2818.2007.01812.x},\n\
+  pages = {284--291},\n\
+  keywords = {EBSD, gamma aluminides, parent microstructure, phase transformation, titanium, Ti Al Nb alloys},\n\
+  year = {2007},\n\
+}\n";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 const QString MergeColonies::getGroupName()
 { return DREAM3D::FilterGroups::ReconstructionFilters; }
 

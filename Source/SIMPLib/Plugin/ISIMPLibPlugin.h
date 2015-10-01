@@ -1,5 +1,6 @@
 /* ============================================================================
 * Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2015 William Lenthe
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -238,7 +239,12 @@ class SIMPLib_EXPORT ISIMPLibPlugin
      * the input GUI widgets accordingly.
      * @param prefs
      */
-    virtual void readSettings(QSettings& prefs) = 0;
+    virtual void readSettings(QSettings& prefs) = 0;    
+
+    /**
+     * @brief Returns pluging wide citations a BibTex format
+     */
+    virtual const QString getCitations() {return "";}
 
 };
 

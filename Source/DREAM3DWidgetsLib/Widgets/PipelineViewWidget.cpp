@@ -1,5 +1,6 @@
 /* ============================================================================
 * Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2015 William Lenthe
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -405,6 +406,77 @@ int PipelineViewWidget::writePipeline(QString filePath)
   else
   {
     m_StatusBar->showMessage(tr("The pipeline has been saved successfully to '%1'.").arg(fi.fileName()));
+  }
+
+  return 0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int PipelineViewWidget::writeBibliography(QString filePath)
+{
+  QFileInfo fi(filePath);
+  QString ext = fi.completeSuffix();
+
+  //If the filePath already exists - delete it so that we get a clean write to the file
+  if (fi.exists() == true && ext == "bib")
+  {
+    QFile f(filePath);
+    if (f.remove() == false)
+    {
+      QMessageBox::warning(this, QString::fromLatin1("Pipeline Citation Write Error"),
+                           QString::fromLatin1("There was an error removing the existing BibTex file. The pipeline citation list was NOT saved."));
+      return -1;
+    }
+  }
+
+  // Create a Pipeline Object and fill it with the filters from this View
+  FilterPipeline::Pointer pipeline = getFilterPipeline();
+
+  int err = 0;
+  if (NULL == pipeline.get())
+  {
+    err = -1;
+  }
+
+  if (ext == "bib")
+  {
+    QFile outputFile(filePath);
+    QString parentPath = fi.absolutePath();
+    QDir parentDir(parentPath);
+
+    if(parentDir.exists() == false)
+    {
+      parentDir.mkpath(parentPath);
+    }
+
+    if(outputFile.exists() == true)
+    {
+      outputFile.remove();
+    }
+    if(outputFile.open(QIODevice::WriteOnly))
+    {
+      pipeline->printCitations(QTextStream(&outputFile));
+      // pipeline->printCitations(outputFile);
+      // outputFile.write(doc.toJson());
+      outputFile.close();
+    }
+  }
+  else
+  {
+    m_StatusBar->showMessage(tr("The pipeline citation list was not written to file '%1'. '%2' is an unsupported file extension.").arg(fi.fileName()).arg(ext));
+    return -1;
+  }
+
+  if (err < 0)
+  {
+    m_StatusBar->showMessage(tr("There was an error while saving the pipeline citation list to file '%1'.").arg(fi.fileName()));
+    return -1;
+  }
+  else
+  {
+    m_StatusBar->showMessage(tr("The pipeline citation list has been saved successfully to '%1'.").arg(fi.fileName()));
   }
 
   return 0;

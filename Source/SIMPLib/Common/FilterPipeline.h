@@ -1,5 +1,6 @@
 /* ============================================================================
 * Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2015 William Lenthe
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -115,6 +116,7 @@ class SIMPLib_EXPORT FilterPipeline : public QObject
 
 
     virtual void printFilterNames(QTextStream& out);
+    virtual void printCitations(QTextStream& out);
 
     /**
      * @brief This method adds a QObject based class that is capable of being connected with the following signals from

@@ -1,5 +1,6 @@
 /* ============================================================================
 * Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2015 William Lenthe
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -245,6 +246,11 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     * @brief Write pipeline to a file
     */
     int writePipeline(QString filePath);
+
+    /**
+    * @brief Write citation list to a file
+    */
+    int writeBibliography(QString filePath);
 
     /**
     * @brief Open pipeline to a file

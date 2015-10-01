@@ -2,6 +2,7 @@
 * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
 * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
 * Copyright (c) 2012 Joseph B. Kleingers (Student Research Assistant)
+* Copyright (c) 2015 William Lenthe
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without modification,
@@ -128,6 +129,7 @@ class DREAM3DApplication : public QApplication
     void on_actionShowPrebuiltInFileSystem_triggered();
     void on_actionLocateFile_triggered();
     void on_actionClearPipeline_triggered();
+    void on_actionGeneratePipelineBibliography_triggered();
     void on_actionClearCache_triggered();
 
     void on_pipelineViewContextMenuRequested(const QPoint&);

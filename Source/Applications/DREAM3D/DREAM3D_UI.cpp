@@ -1,5 +1,6 @@
 /* ============================================================================
 * Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2015 William Lenthe
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -1134,6 +1135,52 @@ void DREAM3D_UI::clearPipeline()
 
   pipelineViewWidget->clearWidgets();
   setWindowModified(true);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool DREAM3D_UI::generateBibliography()
+{
+  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.bib";
+  QString filePath = QFileDialog::getSaveFileName(this, tr("Save Pipeline Citations To File"),
+                                                  proposedFile,
+                                                  tr("BibTeX File (*.bib)"));
+  if (true == filePath.isEmpty()) { return false; }
+
+  filePath = QDir::toNativeSeparators(filePath);
+
+  //If the filePath already exists - delete it so that we get a clean write to the file
+  QFileInfo fi(filePath);
+  if (fi.suffix().isEmpty())
+  {
+    filePath.append(".json");
+    fi.setFile(filePath);
+  }
+
+  // Write the bibliography
+  int err = pipelineViewWidget->writeBibliography(filePath);
+
+  if (err >= 0)
+  {
+    // Set window title and save flag
+    setWindowTitle("[*]" + fi.baseName() + " - DREAM3D");
+    setWindowModified(false);
+
+    // Add file to the recent files list
+    QRecentFileList* list = QRecentFileList::instance();
+    list->addFile(filePath);
+
+    m_OpenedFilePath = filePath;
+  }
+  else
+  {
+    return false;
+  }
+
+  // Cache the last directory
+  m_OpenDialogLastDirectory = fi.path();
+  return true;
 }
 
 // -----------------------------------------------------------------------------

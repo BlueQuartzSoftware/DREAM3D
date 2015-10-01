@@ -1,6 +1,7 @@
 /* ============================================================================
 * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
 * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
+* Copyright (c) 2015 William Lenthe
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without modification,
@@ -78,6 +79,7 @@ class DREAM3DMenu : public QObject
     QAction* getSaveAs();
 
     QAction* getClearPipeline();
+    QAction* getGeneratePipelineBibliography();
     QAction* getShowBookmarkInFileSystem();
     QAction* getShowPrebuiltInFileSystem();
 
@@ -117,6 +119,7 @@ class DREAM3DMenu : public QObject
     // Pipeline Menu
     QMenu*                          m_MenuPipeline;
     QAction*                        m_ActionClearPipeline;
+    QAction*                        m_ActionGeneratePipelineBibliography;
 
     // Help Menu
     QMenu*                          m_MenuHelp;
