@@ -36,6 +36,8 @@
 #ifndef _OrientationConverter_H_
 #define _OrientationConverter_H_
 
+#include <iostream>     // std::cout, std::fixed, std::scientific
+
 
 #include <QtCore/QVector>
 #include <QtCore/QString>
@@ -95,23 +97,80 @@ class OrientationConverter
       else if(repType == Cubochoric) { toCubochoric(); }
     }
 
+    /**
+     * @brief toEulers Converts the input orientations to Euler Angles
+     */
     virtual void toEulers() = 0;
+
+    /**
+     * @brief toOrientationMatrix  Converts the input orientations to an Orientation Matrix (3x3)
+     */
     virtual void toOrientationMatrix() = 0;
+
+    /**
+     * @brief toQuaternion  Converts the input orientations to Quaternions
+     */
     virtual void toQuaternion() = 0;
+
+    /**
+     * @brief toAxisAngle  Converts the input orientations to Axis Angles
+     */
     virtual void toAxisAngle() = 0;
+
+    /**
+     * @brief toRodrigues  Converts the input orientations to Rodrigues
+     */
     virtual void toRodrigues() = 0;
+
+    /**
+     * @brief toHomochoric  Converts the input orientations to Homochoric
+     */
     virtual void toHomochoric() = 0;
+
+    /**
+     * @brief toCubochoric  Converts the input orientations to Cubochoric
+     */
     virtual void toCubochoric() = 0;
 
+    /**
+     * @brief compareRepresentations Compares 2 representations of the same type
+     * and returns if the values differ only by the tolerance value
+     * @param a
+     * @param b
+     * @param epsilon
+     * @return
+     */
     virtual bool compareRepresentations(T* a, T* b,
                                         const T& epsilon = std::numeric_limits<T>::epsilon()) = 0;
+
+    /**
+     * @brief sanityCheckInputData Runs basic checks on the input data to ensure
+     * the intput data falls within certain data ranges.
+     */
     virtual void sanityCheckInputData() = 0;
 
-    virtual void printRepresentation(T* a, const std::string &label = std::string("")) = 0;
+    /**
+     * @brief printRepresentation Prints the values of a single representation to
+     * an output stream;
+     * @param a
+     * @param label
+     */
+    virtual void printRepresentation(std::ostream& out, T* a, const std::string& label = std::string("")) = 0;
 
+    /**
+    * @brief
+    */
     SIMPL_INSTANCE_PROPERTY(typename DataArray<T>::Pointer, InputData)
+
+    /**
+    * @brief
+    */
     SIMPL_INSTANCE_PROPERTY(typename DataArray<T>::Pointer, OutputData)
 
+    /**
+     * @brief GetOrientationTypeStrings
+     * @return
+     */
     static QVector<QString> GetOrientationTypeStrings()
     {
       QVector<QString> otypes(7);
@@ -125,6 +184,10 @@ class OrientationConverter
       return otypes;
     }
 
+    /**
+     * @brief GetComponentCounts
+     * @return
+     */
     static QVector<int> GetComponentCounts()
     {
       QVector<int> counts(7);
@@ -138,6 +201,10 @@ class OrientationConverter
       return counts;
     }
 
+    /**
+     * @brief GetOrientationTypes
+     * @return
+     */
     static QVector<OrientationType> GetOrientationTypes()
     {
       QVector<OrientationType> ocTypes(7);
@@ -151,7 +218,16 @@ class OrientationConverter
       return ocTypes;
     }
 
+    /**
+     * @brief GetMinIndex
+     * @return
+     */
     static int GetMinIndex() { return 0; }
+
+    /**
+     * @brief GetMaxIndex
+     * @return
+     */
     static int GetMaxIndex() { return 6; }
 
   protected:
@@ -185,6 +261,9 @@ class OrientationConverter
 
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 template<typename T>
 class EulerConverter : public OrientationConverter<T>
 {
@@ -277,10 +356,10 @@ class EulerConverter : public OrientationConverter<T>
       return close;
     }
 
-
-    virtual void printRepresentation(T* a, const std::string &b = std::string(""))
+    virtual void printRepresentation(std::ostream& out, T* eu, const std::string& label = std::string("Eu"))
     {
-      printf("% 0.16f, % 0.16f, % 0.16f\n", a[0], a[1], a[2]);
+      out.precision(16);
+      out << label << eu[0] << '\t' << eu[1] << '\t' << eu[2] << std::endl;
     }
 
   protected:
@@ -378,8 +457,8 @@ class OrientationMatrixConverter : public OrientationConverter<T>
         if(res.result <= 0)
         {
           std::cout << res.msg << std::endl;
-          printRepresentation(input->getPointer(i*inStride), std::string("Bad OM"));
-           //res = OrientationTransforms<OrientationArrayType, T>::om_check(oaType);
+          printRepresentation(std::cout, input->getPointer(i * inStride), std::string("Bad OM"));
+          //res = OrientationTransforms<OrientationArrayType, T>::om_check(oaType);
         }
 
         inPtr = inPtr + inStride; // This is Pointer arithmetic!!
@@ -389,15 +468,20 @@ class OrientationMatrixConverter : public OrientationConverter<T>
     virtual bool compareRepresentations(T* a, T* b, const T& epsilon = std::numeric_limits<T>::epsilon())
     {
       bool close = false;
+      for(int i = 0; i < 9; i++)
+      {
+        close = (epsilon > std::fabs(a[i] - b[i]));
+        if(!close) { return close; }
+      }
       return close;
     }
 
-    virtual void printRepresentation(T* om, const std::string &a = std::string(""))
+    virtual void printRepresentation(std::ostream& out, T* om, const std::string& label = std::string("Om"))
     {
-      printf("%s | % 3.16f    % 3.16f    % 3.16f |\n", a.c_str(), om[0], om[1], om[2]);
-      printf("%s | % 3.16f    % 3.16f    % 3.16f |\n", a.c_str(), om[3], om[4], om[5]);
-      printf("%s | % 3.16f    % 3.16f    % 3.16f |\n", a.c_str(), om[6], om[7], om[8]);
-
+      out.precision(16);
+      out << label << om[0] << '\t' << om[1] << '\t' << om[2] << std::endl;
+      out << label << om[3] << '\t' << om[4] << '\t' << om[5] << std::endl;
+      out << label << om[6] << '\t' << om[7] << '\t' << om[8] << std::endl;
     }
 
   protected:
@@ -417,6 +501,9 @@ class OrientationMatrixConverter : public OrientationConverter<T>
 
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 template<typename T>
 class QuaternionConverter : public OrientationConverter<T>
 {
@@ -473,11 +560,12 @@ class QuaternionConverter : public OrientationConverter<T>
     {
     }
 
-    virtual void printRepresentation(T* om, const std::string &b = std::string(""))
+    virtual void printRepresentation(std::ostream& out, T* qu, const std::string& label = std::string("Qu"))
     {
       // if(layout == QuaternionMath<float>::QuaternionVectorScalar)
       {
-        printf("<% 3.16f\t% 3.16f\t% 3.16f> % 3.16f\n", om[0], om[1], om[2], om[3] );
+        out.precision(16);
+        out << label << qu[0] << '\t' << qu[1] << '\t' << qu[2] << '\t' << qu[3] << std::endl;
       }
 
 //      else if(layout == QuaternionMath<float>::QuaternionScalarVector)
@@ -489,6 +577,11 @@ class QuaternionConverter : public OrientationConverter<T>
     virtual bool compareRepresentations(T* a, T* b, const T& epsilon = std::numeric_limits<T>::epsilon())
     {
       bool close = false;
+      for(int i = 0; i < 4; i++)
+      {
+        close = (epsilon > std::fabs(a[i] - b[i]));
+        if(!close) { return close; }
+      }
       return close;
     }
 
@@ -508,6 +601,9 @@ class QuaternionConverter : public OrientationConverter<T>
 };
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 template<typename T>
 class AxisAngleConverter : public OrientationConverter<T>
 {
@@ -567,13 +663,18 @@ class AxisAngleConverter : public OrientationConverter<T>
     virtual bool compareRepresentations(T* a, T* b, const T& epsilon = std::numeric_limits<T>::epsilon())
     {
       bool close = false;
+      for(int i = 0; i < 4; i++)
+      {
+        close = (epsilon > std::fabs(a[i] - b[i]));
+        if(!close) { return close; }
+      }
       return close;
     }
 
-    virtual void printRepresentation(T* ax, const std::string &b = std::string(""))
+    virtual void printRepresentation(std::ostream& out, T* ax, const std::string& label = std::string("Ax"))
     {
-      printf("<% 3.16f\t% 3.16f\t% 3.16f> % 3.16f\n", ax[0], ax[1], ax[2], ax[3] );
-
+      out.precision(16);
+      out << label << "<" << ax[0] << '\t' << ax[1] << '\t' << ax[2] << ">\t" << ax[3] << std::endl;
     }
 
   protected:
@@ -594,6 +695,9 @@ class AxisAngleConverter : public OrientationConverter<T>
 };
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 template<typename T>
 class RodriguesConverter : public OrientationConverter<T>
 {
@@ -654,12 +758,18 @@ class RodriguesConverter : public OrientationConverter<T>
     virtual bool compareRepresentations(T* a, T* b, const T& epsilon = std::numeric_limits<T>::epsilon())
     {
       bool close = false;
+      for(int i = 0; i < 4; i++)
+      {
+        close = (epsilon > std::fabs(a[i] - b[i]));
+        if(!close) { return close; }
+      }
       return close;
     }
 
-    virtual void printRepresentation(T* om, const std::string &b = std::string(""))
+    virtual void printRepresentation(std::ostream& out, T* ro, const std::string& label = std::string("Ro"))
     {
-
+      out.precision(16);
+      out << label << ro[0] << '\t' << ro[1] << '\t' << ro[2] << "\t" << ro[3] << std::endl;
     }
   protected:
 
@@ -680,6 +790,9 @@ class RodriguesConverter : public OrientationConverter<T>
 };
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 template<typename T>
 class HomochoricConverter : public OrientationConverter<T>
 {
@@ -740,12 +853,18 @@ class HomochoricConverter : public OrientationConverter<T>
     virtual bool compareRepresentations(T* a, T* b, const T& epsilon = std::numeric_limits<T>::epsilon())
     {
       bool close = false;
+      for(int i = 0; i < 3; i++)
+      {
+        close = (epsilon > std::fabs(a[i] - b[i]));
+        if(!close) { return close; }
+      }
       return close;
     }
 
-    virtual void printRepresentation(T* om, const std::string &b = std::string(""))
+    virtual void printRepresentation(std::ostream& out, T* ho, const std::string& label = std::string("No"))
     {
-
+      out.precision(16);
+      out << label << ho[0] << '\t' << ho[1] << '\t' << ho[2] << std::endl;
     }
 
   protected:
@@ -766,6 +885,10 @@ class HomochoricConverter : public OrientationConverter<T>
     void operator=(const HomochoricConverter&); // Operator '=' Not Implemented
 };
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 template<typename T>
 class CubochoricConverter : public OrientationConverter<T>
 {
@@ -783,12 +906,12 @@ class CubochoricConverter : public OrientationConverter<T>
 
     virtual void toEulers()
     {
-      //  OC_CONVERT_BODY(3, Eulers, cu2eu)
+      OC_CONVERT_BODY(3, Eulers, cu2eu)
     }
 
     virtual void toOrientationMatrix()
     {
-      // OC_CONVERT_BODY(9, OrientationMatrix, cu2om)
+      OC_CONVERT_BODY(9, OrientationMatrix, cu2om)
     }
 
     virtual void toQuaternion()
@@ -798,7 +921,7 @@ class CubochoricConverter : public OrientationConverter<T>
 
     virtual void toAxisAngle()
     {
-      //OC_CONVERT_BODY(4, AxisAngle, cu2ax)
+      OC_CONVERT_BODY(4, AxisAngle, cu2ax)
     }
 
     virtual void toRodrigues()
@@ -826,12 +949,18 @@ class CubochoricConverter : public OrientationConverter<T>
     virtual bool compareRepresentations(T* a, T* b, const T& epsilon = std::numeric_limits<T>::epsilon())
     {
       bool close = false;
+      for(int i = 0; i < 3; i++)
+      {
+        close = (epsilon > std::fabs(a[i] - b[i]));
+        if(!close) { return close; }
+      }
       return close;
     }
 
-    virtual void printRepresentation(T* om, const std::string &b = std::string(""))
+    virtual void printRepresentation(std::ostream& out, T* cu, const std::string& label = std::string("Cu"))
     {
-
+      out.precision(16);
+      out << label << cu[0] << '\t' << cu[1] << '\t' << cu[2] << std::endl;
     }
 
   protected:

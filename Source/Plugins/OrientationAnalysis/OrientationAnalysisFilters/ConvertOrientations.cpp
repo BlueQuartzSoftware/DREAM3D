@@ -237,6 +237,13 @@ void generateRepresentation(ConvertOrientations* filter, typename DataArray<T>::
   converters[filter->getInputType()]->convertRepresentationTo(ocTypes[filter->getOutputType()]);
 
   ArrayType output = converters[filter->getInputType()]->getOutputData();
+  if(NULL == output.get())
+  {
+    QString ss = QObject::tr("There was an error converting the input data using convertor %1").arg(converters[filter->getInputType()]->getNameOfClass());
+    filter->setErrorCondition(-1004);
+    filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+    return;
+  }
 
   if(!output->copyIntoArray(outputOrientations) )
   {

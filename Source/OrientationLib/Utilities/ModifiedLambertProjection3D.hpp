@@ -224,7 +224,7 @@ class ModifiedLambertProjection3D
       T xyz3(3), xyz2(3), xyz1(3);
       K qxy, q2xy, sq2xy, q, ac, T1inv, T2inv, sx, sy, qx2y, sqx2y, tt;
       int p = 0;
-      T res(4);
+      T res(3);
 
       ierr = 0;
 

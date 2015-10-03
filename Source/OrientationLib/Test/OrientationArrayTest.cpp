@@ -573,7 +573,7 @@ void EU_2_XXX(FloatType* in)
   eu[0] = in[0];
   eu[1] = in[1];
   eu[2] = in[2];
-  
+
   eu[0] = fmod(eu[0], SIMPLib::Constants::k_2Pi);
   eu[1] = fmod(eu[1], SIMPLib::Constants::k_Pi);
   eu[2] = fmod(eu[2], SIMPLib::Constants::k_2Pi);
@@ -585,44 +585,62 @@ void EU_2_XXX(FloatType* in)
   typedef OrientationConverter<FloatType> OCType;
 
   typename OrientationTransformType::ResultType result;
-  result =OrientationTransformType::eu_check(eu);
+  result = OrientationTransformType::eu_check(eu);
   if(result.result <= 0) { std::cout << result.msg << std::endl; }
-  
+
+
+  T ax(4);
+  OrientationTransformType::eu2ax(eu, ax);
+  OrientationPrinters::Print_AX<T>(ax);
+  result = OrientationTransformType::ax_check(ax);
+  if(result.result <= 0) { std::cout << result.msg << std::endl; }
+
+  T ro(4);
+  OrientationTransformType::eu2ro(eu, ro);
+  OrientationPrinters::Print_RO<T, FloatType>(ro);
+  result = OrientationTransformType::ro_check(ro);
+  if(result.result <= 0) { std::cout << result.msg << std::endl; }
+
+  T ho(3);
+  OrientationTransformType::eu2ho(eu, ho);
+  OrientationPrinters::Print_HO<T, FloatType>(ho);
+  result = OrientationTransformType::ho_check(ho);
+  if(result.result <= 0) { std::cout << result.msg << std::endl; }
+
+
+
+
+  T cu(3);
+  OrientationTransformType::eu2cu(eu, cu);
+  OrientationPrinters::Print_CU<T>(cu);
+  result = OrientationTransformType::cu_check(cu);
+  if(result.result <= 0) { std::cout << result.msg << std::endl; }
+
+  std::cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
+  OrientationTransformType::ho2cu(ho, cu);
+  OrientationPrinters::Print_CU<T>(cu);
+  result = OrientationTransformType::cu_check(cu);
+  if(result.result <= 0) { std::cout << result.msg << std::endl; }
+
+
   T qu(4);
   OrientationTransformType::eu2qu(eu, qu);
   OrientationPrinters::Print_QU<T, FloatType>(qu);
-  result =OrientationTransformType::qu_check(qu);
+  result = OrientationTransformType::qu_check(qu);
   if(result.result <= 0) { std::cout << result.msg << std::endl; }
-  
-  T ro(4);
-  OrientationTransformType::qu2ro(qu, ro);
-  OrientationPrinters::Print_RO<T, FloatType>(ro);
-  result =OrientationTransformType::ro_check(ro);
-  if(result.result <= 0) { std::cout << result.msg << std::endl; }
-  
-  T ax(4);
-  OrientationTransformType::ro2ax(ro, ax);
-  OrientationPrinters::Print_AX<T>(ax);
-  result =OrientationTransformType::ax_check(ax);
-  if(result.result <= 0) { std::cout << result.msg << std::endl; }
-  
+
+
   T om(9);
-  OrientationTransformType::ax2om(ax, om);
+  OrientationTransformType::eu2om(eu, om);
   OrientationPrinters::Print_OM<T>(om);
-  result =OrientationTransformType::om_check(om);
+  result = OrientationTransformType::om_check(om);
   if(result.result <= 0) { std::cout << result.msg << std::endl; }
-  
-  
-  OrientationTransformType::om2qu(om, qu);
-  OrientationPrinters::Print_QU<T, FloatType>(qu);
-  result =OrientationTransformType::qu_check(qu);
-  if(result.result <= 0) { std::cout << result.msg << std::endl; }
-  
-  
+
+
 }
 
 /*
- Starting Test ax2eu	eu2ax	 -----------------------------------------------------
+ Starting Test ax2eu  eu2ax  -----------------------------------------------------
  Total Tuples: 4913
  Delta Failed: 1.99037 DataArray: 'ax Difference' Tuple[263] Comp[1] Value:-1.99037
  eu
@@ -634,7 +652,7 @@ void EU_2_XXX(FloatType* in)
  1_eu2ax
  -0.0000000435009078   0.9951847195625305  -0.0980172604322433   3.1415925025939941
  ------------------------------------------
- ax2eu	eu2ax	                                                    FAILED
+ ax2eu  eu2ax                                                     FAILED
  */
 
 // -----------------------------------------------------------------------------
@@ -646,7 +664,7 @@ void Test_eu2_XXX()
   typedef OrientationArray<K> OrientType;
   std::cout << "Test_eu2_XXX  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << std::endl;
   {
-    K eu[3] = {3.3415926535898066L,   0.0000000000000000L,   0.0000000000000000L,};
+    K eu[3] = {0.3926990816987242, 0.0, 0.0};
     OrientationPrinters::Print_EU<K*>(eu);
     EU_2_XXX<OrientType, K>(eu);
     //EU_2_XXX<DoubleVectorType, float>(eu);
@@ -1053,9 +1071,9 @@ int main(int argc, char* argv[])
 //  DREAM3D_REGISTER_TEST( Test_om_check() );
 //  DREAM3D_REGISTER_TEST( Test_GenRot() )
 
-  
-   DREAM3D_REGISTER_TEST( Test_eu2_XXX<double>() );
-   DREAM3D_REGISTER_TEST( Test_eu2_XXX<float>() );
+
+  DREAM3D_REGISTER_TEST( Test_eu2_XXX<double>() );
+  DREAM3D_REGISTER_TEST( Test_eu2_XXX<float>() );
 //  DREAM3D_REGISTER_TEST( Test_ax2_XXX() );
 //  DREAM3D_REGISTER_TEST( Test_om2_XXX() );
 //  DREAM3D_REGISTER_TEST( Test_ro2_XXX() );
