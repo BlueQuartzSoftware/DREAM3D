@@ -1546,7 +1546,7 @@ class OrientationTransforms
       }
 
       K thr = static_cast<K>(1.0E-10);
-      if(sizeof(K) == 4) { thr = 1.0E-6; }
+      if(sizeof(K) == 4) { thr = static_cast<K>(1.0E-6); }
       K  s = 0.0;
       K s1 = 0.0;
       K s2 = 0.0;
