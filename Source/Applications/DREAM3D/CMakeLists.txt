@@ -10,6 +10,13 @@
 # set project's name
 PROJECT( DREAM3D VERSION ${DREAM3DProj_VERSION_MAJOR}.${DREAM3DProj_VERSION_MINOR}.${DREAM3DProj_VERSION_PATCH})
 
+#------------------------------------------------------------------------------
+# If we have not defined a "BrandedDREAM3D_DIR" then define it to the default
+# generic set of ICONs
+if(NOT DEFINED BrandedDREAM3D_DIR)
+  set(BrandedDREAM3D_DIR ${DREAM3DProj_SOURCE_DIR}/Resources/OpenSourceEdition)
+endif()
+
 # ---------- Setup output Directories -------------------------
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY
   ${PROJECT_BINARY_DIR}/Bin
@@ -125,8 +132,10 @@ cmp_IDE_GENERATED_PROPERTIES("DREAM3D/UI_Files" "${DREAM3D_UIS}" "")
 
 # and finally any resource files
 SET(DREAM3D_RCS
-    ${PROJECT_RESOURCES_DIR}/icons/images/Icons.qrc
-    ${PROJECT_RESOURCES_DIR}/BrandedDREAM3D/branded_splash.qrc
+  # These are generic Icons for the Application
+  ${PROJECT_RESOURCES_DIR}/icons/images/Icons.qrc
+  # this is the DREAM.3D specific branding icons
+  ${BrandedDREAM3D_DIR}/splash/branded_splash.qrc
 )
 
 # -- Run MOC and UIC on the necessary files
@@ -167,11 +176,11 @@ set(DREAM3D_PROJECT_SRCS
 
 
 if(APPLE)
-    set(APPLICATION_ICON ${PROJECT_RESOURCES_DIR}/icons/icns/DREAM3D.icns)
+    set(APPLICATION_ICON ${BrandedDREAM3D_DIR}/icons/icns/DREAM3D.icns)
 endif(APPLE)
 
 if(WIN32)
-    set(APPLICATION_ICON ${PROJECT_RESOURCES_DIR}/icons/ico/DREAM3D.ico)
+    set(APPLICATION_ICON ${BrandedDREAM3D_DIR}/icons/ico/DREAM3D.ico)
 ENDif(WIN32)
 
 set(DEST_DIR ".")
