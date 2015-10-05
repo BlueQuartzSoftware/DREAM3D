@@ -32,6 +32,34 @@
 #ifndef _OrientationLibConstants_H_
 #define _OrientationLibConstants_H_
 
+/**
+* The Orientation codes are written in such a way that the value of -1 indicates
+* an Active Rotation and +1 indicates a passive rotation.
+*
+* DO NOT UNDER ANY CIRCUMSTANCE CHANGE THESE VARIABLES. THERE WILL BE BAD
+* CONSEQUENCES IF THESE ARE CHANGED. EVERY PIECE OF CODE THAT RELIES ON THESE
+* FUNCTIONS WILL BREAK. YOU HAVE BEEN WARNED.
+*
+* Adam  Morawiec's book uses Passive rotations.
+**/
+// #define DREAM3D_ACTIVE_ROTATION               -1.0
+#define DREAM3D_PASSIVE_ROTATION               1
+
+namespace Rotations
+{
+  namespace Constants
+  {
+#if DREAM3D_PASSIVE_ROTATION
+    static const float epsijk = 1.0f;
+    static const double epsijkd = 1.0;
+#elif DREAM3D_ACTIVE_ROTATION
+    static const float epsijk = -1.0f;
+    static const double epsijkd = -1.0;
+#endif
+  }
+}
+
+
 namespace LambertParametersType
 {
   static const double iPi = 0.3183098861837910 ; // 1/pi
