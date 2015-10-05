@@ -165,6 +165,11 @@ void FindVolFractions::execute()
   {
     m_VolFractions[m_CellPhases[i]]++;
   }
+  
+  for (size_t i = 1; i < totalEnsembles; i++)
+  {
+    m_VolFractions[i] /= totalPoints;
+  }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
