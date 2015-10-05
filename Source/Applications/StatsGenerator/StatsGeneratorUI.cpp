@@ -978,8 +978,7 @@ void StatsGeneratorUI::on_actionAbout_triggered()
   QString msg ("StatsGenerator Version ");
   msg.append(SIMPLib::Version::Complete().toLatin1().data());
   msg.append("\n\nThe Primary Developers are:\n");
-  msg.append("Dr. Michael Groeber\n  US Air Force Research Laboratory\n  michael.groeber@wpafb.af.mil\n");
-  msg.append("Mr. Michael Jackson\n  BlueQuartz Software\n  mike.jackson@bluequartz.net\n\n");
+  msg.append("BlueQuartz Software\n\n");
   msg.append("Please send any help, bug or feature requests dream3d@bluequartz.net\n\n");
   msg.append("The latest version can always be downloaded from http://dream3d.bluequartz.net\n");
   QMessageBox::information(this, QString("About DREAM.3D"), msg, QMessageBox::Ok | QMessageBox::Default);

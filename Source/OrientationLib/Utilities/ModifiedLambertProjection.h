@@ -48,7 +48,6 @@
  * @class ModifiedLambertProjection ModifiedLambertProjection.h DREAM3DLib/Common/ModifiedLambertProjection.h
  * @brief  This class holds a pair of Modified Lambert Projection images. Based off the paper
  * Rosca, D. (2010) New uniform grids on the sphere. Astron Astrophys A63, 520–525.
- *, Michael A. Groeber for AFRL
  * @date July 30, 2013
  * @version 1.0
  */
