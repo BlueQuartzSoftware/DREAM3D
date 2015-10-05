@@ -358,7 +358,7 @@ class OrientationTransforms
       T out = OMHelperType::multiply(ro, ro, 3);
       K ttl = OMHelperType::sum(out);
       ttl = sqrt(ttl);
-      if (fabs(ttl - 1.0L) > eps)
+      if (fabs(ttl - 1.0) > eps)
       {
         res.msg = "rotations:ro_check:: Rodrigues-Frank axis vector not normalized";
         res.result = -2;
