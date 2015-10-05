@@ -30,7 +30,7 @@ if(NOT DEFINED CMP_SOURCE_DIR)
 set(CMP_SOURCE_DIR ${DREAM3DWidgetsLib_SOURCE_DIR}/Support/cmp)
 endif()
 
-set(PROJECT_PREFIX "Ebsd" CACHE STRING "The Prefix to be used for Preprocessor definitions")
+set(PROJECT_PREFIX "DREAM3DWidgetsLib" CACHE STRING "The Prefix to be used for Preprocessor definitions")
 set(DREAM3DWidgetsLib_INSTALL_FILES 0)
 #-------------------------------------------------------------------------------
 # Include the cmp project to perform all the basic configuration tests for the

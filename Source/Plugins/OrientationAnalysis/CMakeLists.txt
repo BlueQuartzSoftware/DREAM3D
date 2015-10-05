@@ -244,6 +244,6 @@ endif()
 
 
 if(DREAM3D_BUILD_TESTING)
-  ADD_SUBDIRECTORY(${PROJECT_SOURCE_DIR}/Test ${PROJECT_BINARY_DIR}/Test)
+  include(${PROJECT_SOURCE_DIR}/Test/CMakeLists.txt)
 endif()
 

@@ -24,10 +24,10 @@ endif(BUILD_SHARED_LIBS)
 
 set(PROJECT_CODE_DIR ${PROJECT_SOURCE_DIR}/Source)
 if(NOT PROJECT_RESOURCES_DIR)
-set(PROJECT_RESOURCES_DIR ${H5Support_SOURCE_DIR}/Resources)
+  set(PROJECT_RESOURCES_DIR ${H5Support_SOURCE_DIR}/Resources)
 endif()
 if(NOT DEFINED CMP_SOURCE_DIR)
-set(CMP_SOURCE_DIR ${H5Support_SOURCE_DIR}/Support/cmp)
+  set(CMP_SOURCE_DIR ${H5Support_SOURCE_DIR}/Support/cmp)
 endif()
 
 set(PROJECT_PREFIX "H5Support" CACHE STRING "The Prefix to be used for Preprocessor definitions")

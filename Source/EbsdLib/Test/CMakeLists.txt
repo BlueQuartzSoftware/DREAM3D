@@ -36,17 +36,17 @@ file(MAKE_DIRECTORY ${TEST_TEMP_DIR})
 
 AddDREAM3DUnitTest(TESTNAME AngImportTest 
                     SOURCES ${EbsdLibTest_SOURCE_DIR}/AngImportTest.cpp
-                    FOLDER "Test/EbsdLib" 
+                    FOLDER "EbsdLibProj/Test" 
                     LINK_LIBRARIES Qt5::Core EbsdLib)
 
 AddDREAM3DUnitTest(TESTNAME CtfReaderTest 
                     SOURCES ${EbsdLibTest_SOURCE_DIR}/CtfReaderTest.cpp
-                    FOLDER "Test/EbsdLib" 
+                    FOLDER "EbsdLibProj/Test" 
                     LINK_LIBRARIES Qt5::Core EbsdLib)
 
 AddDREAM3DUnitTest(TESTNAME EdaxOIMReaderTest
                     SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/EdaxOIMReaderTest.cpp
-                    FOLDER "Test/EbsdLib" 
+                    FOLDER "EbsdLibProj/Test" 
                     LINK_LIBRARIES Qt5::Core H5Support EbsdLib)
 
 
