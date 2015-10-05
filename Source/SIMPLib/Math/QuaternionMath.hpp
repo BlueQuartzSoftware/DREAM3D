@@ -40,6 +40,8 @@
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Math/MatrixMath.h"
 
+#include "OrientationLib/OrientationLibConstants.h"
+
 /**
  * @brief This class performs calculations on a Quaternion or pair of Quaternions. The class is templated on the type
  * of primitive used and there are a few convenience typedefs for float and double Quaternions. Inside the class definition
@@ -493,13 +495,13 @@ class QuaternionMath
       T qyz = q.y * q.z;
       T qzx = q.z * q.x;
 
-      T qxw = q.x * q.w;
-      T qyw = q.y * q.w;
-      T qzw = q.z * q.w;
+      T qxw = static_cast<T>(Rotations::Constants::epsijkd) * q.x * q.w;
+      T qyw = static_cast<T>(Rotations::Constants::epsijkd) * q.y * q.w;
+      T qzw = static_cast<T>(Rotations::Constants::epsijkd) * q.z * q.w;
 
-      out[0] = v[0] * (qx2 - qy2 - qz2 + qw2) + 2 * ( v[1] * (qxy + qzw) + v[2] * (qzx - qyw) );
-      out[1] = v[1] * (qy2 - qx2 - qz2 + qw2) + 2 * ( v[2] * (qyz + qxw) + v[0] * (qxy - qzw) );
-      out[2] = v[2] * (qz2 - qx2 - qy2 + qw2) + 2 * ( v[0] * (qzx + qyw) + v[1] * (qyz - qxw) );
+      out[0] = v[0] * (qx2 - qy2 - qz2 + qw2) + 2 * ( v[1] * (qxy - qzw) + v[2] * (qzx + qyw) );
+      out[1] = v[1] * (qy2 - qx2 - qz2 + qw2) + 2 * ( v[2] * (qyz - qxw) + v[0] * (qxy + qzw) );
+      out[2] = v[2] * (qz2 - qx2 - qy2 + qw2) + 2 * ( v[0] * (qzx - qyw) + v[1] * (qyz + qxw) );
     }
 
     /**
