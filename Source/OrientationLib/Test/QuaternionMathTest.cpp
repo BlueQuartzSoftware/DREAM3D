@@ -233,7 +233,7 @@ void TestQuat_t()
   float ovec[3] = { 0.0f, 0.0f, 0.0f};
 
   QuaternionMathF::GetMisorientationVector(p, vec);
-  QuaternionMathF::MultiplyQuatVec(q, vec, ovec);
+  QuaternionMathF::MultiplyQuatVec(q, vec, ovec, Rotations::Constants::epsijk);
 }
 
 // -----------------------------------------------------------------------------
