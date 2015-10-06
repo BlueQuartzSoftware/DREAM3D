@@ -39,6 +39,7 @@ set(SIMPLib_Math_HDRS
   ${SIMPLib_SOURCE_DIR}/Math/GeometryMath.h
   ${SIMPLib_SOURCE_DIR}/Math/MatrixMath.h
   ${SIMPLib_SOURCE_DIR}/Math/QuaternionMath.hpp
+  ${SIMPLib_SOURCE_DIR}/Math/ArrayHelpers.hpp
   ${SIMPLib_SOURCE_DIR}/Math/SIMPLibMath.h
   ${SIMPLib_SOURCE_DIR}/Math/RadialDistributionFunction.h
 )

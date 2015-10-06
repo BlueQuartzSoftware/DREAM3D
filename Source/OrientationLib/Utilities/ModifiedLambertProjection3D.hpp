@@ -36,9 +36,9 @@
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Math/ArrayHelpers.hpp"
 
 #include "OrientationLib/OrientationLib.h"
-#include "OrientationLib/Utilities/OrientationMathHelpers.hpp"
 #include "OrientationLib/OrientationLibConstants.h"
 
 /**
@@ -55,7 +55,7 @@ class ModifiedLambertProjection3D
 
     virtual ~ModifiedLambertProjection3D();
 
-    typedef OrientationMathHelpers<T, K> OMHelperType;
+    typedef ArrayHelpers<T, K> OMHelperType;
 
     /**
      * @brief GetPyramid

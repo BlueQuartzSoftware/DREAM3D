@@ -94,15 +94,6 @@ void TestEulerConversion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool closeEnough(const float& a, const float& b,
-                 const float& epsilon = std::numeric_limits<float>::epsilon())
-{
-  return (epsilon > std::abs(a - b));
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void TestEulerAngle(float phi1, float phi, float phi2)
 {
   std::cout << "TESTING EULER ANGLE (Rad): " << phi1 << ", " << phi << ", " << phi2 << std::endl;

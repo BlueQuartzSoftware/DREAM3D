@@ -25,6 +25,7 @@
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Math/QuaternionMath.hpp"
 #include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/Math/ArrayHelpers.hpp"
 #include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
 using namespace SIMPLib::Constants;
@@ -34,7 +35,6 @@ using namespace SIMPLib::Constants;
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 #include "OrientationLib/OrientationMath/OrientationConverter.hpp"
-#include "OrientationLib/Utilities/OrientationMathHelpers.hpp"
 
 #include "OrientationLib/Test/OrientationLibTestFileLocations.h"
 
@@ -980,16 +980,6 @@ void Test_ho2_XXX()
   HO_2_XXX<FloatQVectorType>(ho);
 }
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool closeEnough(const float& a, const float& b,
-                 const float& epsilon = std::numeric_limits<float>::epsilon())
-{
-  return (epsilon > std::abs(a - b));
-}
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -1040,11 +1030,11 @@ void TestInputs()
     DREAM3D_REQUIRE_EQUAL(eu[1], fPtr[4]);
     DREAM3D_REQUIRE_EQUAL(eu[2], fPtr[5]);
 
-    bool b = closeEnough(eu[0], fPtr[3]);
+    bool b = SIMPLibMath::closeEnough(eu[0], fPtr[3]);
     DREAM3D_REQUIRE_EQUAL(b, true)
-    b = closeEnough(eu[1], fPtr[4]);
+    b = SIMPLibMath::closeEnough(eu[1], fPtr[4]);
     DREAM3D_REQUIRE_EQUAL(b, true)
-    b = closeEnough(eu[2], fPtr[5]);
+    b = SIMPLibMath::closeEnough(eu[2], fPtr[5]);
     DREAM3D_REQUIRE_EQUAL(b, true)
   }
 

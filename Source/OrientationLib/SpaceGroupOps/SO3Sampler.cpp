@@ -33,9 +33,9 @@
 
 
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Math/ArrayHelpers.hpp"
 
 #include "OrientationLib/OrientationLibConstants.h"
-#include "OrientationLib/Utilities/OrientationMathHelpers.hpp"
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 

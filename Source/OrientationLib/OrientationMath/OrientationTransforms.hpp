@@ -57,12 +57,12 @@
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Math/MatrixMath.h"
 #include "SIMPLib/Math/QuaternionMath.hpp"
+#include "SIMPLib/Math/ArrayHelpers.hpp"
 
 
 #include "OrientationLib/OrientationLib.h"
 #include "OrientationLib/OrientationLibConstants.h"
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
-#include "OrientationLib/Utilities/OrientationMathHelpers.hpp"
 #include "OrientationLib/Utilities/ModifiedLambertProjection3D.hpp"
 
 
@@ -150,7 +150,10 @@ class OrientationTransforms
     typedef OrientationTransforms SelfType;
     virtual ~OrientationTransforms() {}
 
-    typedef OrientationMathHelpers<T, K> OMHelperType;
+    typedef Eigen::Matrix<K, 3, 3, Eigen::RowMajor> RotationMatrixType;
+    typedef Eigen::Map<RotationMatrixType> RotationMatrixMapType;
+
+    typedef ArrayHelpers<T, K> OMHelperType;
     typedef struct
     {
       int result;
@@ -511,10 +514,7 @@ class OrientationTransforms
       res.result = 1;
       K threshold = static_cast<K>(1.0E-5L);
 
-      typedef Eigen::Matrix<K, 3, 3, Eigen::RowMajor> Matrix_t;
-      typedef Eigen::Map<Matrix_t> MatrixMap_t;
-
-      MatrixMap_t omE(const_cast<K*>(&(om[0])));
+      RotationMatrixMapType omE(const_cast<K*>(&(om[0])));
 
       K det = omE.determinant();
 
@@ -528,7 +528,7 @@ class OrientationTransforms
       }
 
       K r = fabs(det - static_cast<K>(1.0L));
-      if (!OMHelperType::closeEnough(r, 0.0L, threshold))
+      if (!SIMPLibMath::closeEnough(r, static_cast<K>(0.0L), threshold))
       {
         ss << "rotations:om_check: Determinant (" << det << ") of rotation matrix must be unity (1.0)";
         res.msg = ss.str();
@@ -536,9 +536,9 @@ class OrientationTransforms
         return res;
       }
 
-      Matrix_t abv = (omE * omE.transpose()).cwiseAbs();
+      RotationMatrixType abv = (omE * omE.transpose()).cwiseAbs();
 
-      Matrix_t identity;
+      RotationMatrixType identity;
       identity.setIdentity();
 
       identity = identity - abv;
@@ -708,7 +708,7 @@ class OrientationTransforms
       K sig = 0.5 * (e[0] + e[2]);
       K del = 0.5 * (e[0] - e[2]);
       K tau = sqrt(t * t + sin(sig) * sin(sig));
-      if ( OMHelperType::closeEnough(sig, SIMPLib::Constants::k_PiOver2, static_cast<K>(1.0E-6L) ))
+      if ( SIMPLibMath::closeEnough(sig, static_cast<K>(SIMPLib::Constants::k_PiOver2), static_cast<K>(1.0E-6L) ))
       {
         alpha = SIMPLib::Constants::k_Pi;
       }
@@ -826,35 +826,7 @@ class OrientationTransforms
       res[y] = -RConst::epsijk * sPhi * sm;
       res[z] = -RConst::epsijk * cPhi * sp;
 
-//        if(OMHelperType::closeEnough(res[w], 0.0, thr))
-//        {
-//          if(OMHelperType::closeEnough(fabs(res[x]), 1.0, thr) && OMHelperType::closeEnough(res[y], 0.0, thr) && OMHelperType::closeEnough(res[z], 0.0, thr) )
-//          {
-//          res[w] = 0.0;
-//          res[x] = 1.0;
-//          res[y] = 0.0;
-//          res[z] = 0.0;
-//          }
-//          if(OMHelperType::closeEnough(res[x], 0.0, thr) && OMHelperType::closeEnough(fabs(res[y]), 1.0, thr) && OMHelperType::closeEnough(res[z], 0.0, thr) )
-//          {
-//          res[w] = 0.0;
-//          res[x] = 0.0;
-//          res[y] = 1.0;
-//          res[z] = 0.0;
-//          }
-//          if(OMHelperType::closeEnough(res[x], 0.0, thr) && OMHelperType::closeEnough(res[y], 0.0, thr) && OMHelperType::closeEnough(fabs(res[z]), 1.0, thr) )
-//          {
-//          res[w] = 0.0;
-//          res[x] = 0.0;
-//          res[y] = 0.0;
-//          res[z] = 1.0;
-//          }
-//        }
-
-      if (
-        //  !OMHelperType::closeEnough(res[w], 0.0, 1.0E-5) &&
-        res[w] < 0.0
-      )
+      if (res[w] < 0.0)
       {
         res[w] = -res[w];
         res[x] = -res[x];
@@ -883,7 +855,7 @@ class OrientationTransforms
     {
 
       K zeta = 0.0;
-      bool close = OMHelperType::closeEnough(std::fabs(o[8]), 1.0f, 1.0E-6f);
+      bool close = SIMPLibMath::closeEnough(std::fabs(o[8]), static_cast<K>(1.0), static_cast<K>(1.0E-6));
       if(!close)
       {
         res[1] = acos(o[8]);
@@ -893,7 +865,7 @@ class OrientationTransforms
       }
       else
       {
-        close = OMHelperType::closeEnough(o[8], 1.0f, 1.0E-6f);
+        close = SIMPLibMath::closeEnough(o[8], static_cast<K>(1.0), static_cast<K>(1.0E-6));
         if (close)
         {
           res[0] = atan2( o[1], o[0]);
@@ -1376,7 +1348,14 @@ class OrientationTransforms
       res[3] = 2.0 * (r[y] * r[x] + r[w] * r[z]);
       res[7] = 2.0 * (r[z] * r[y] + r[w] * r[x]);
       res[2] = 2.0 * (r[x] * r[z] + r[w] * r[y]);
-      if (Rotations::Constants::epsijk != 1.0) { res = OMHelperType::transpose(res); }
+      if (Rotations::Constants::epsijk != 1.0)
+      {
+
+        RotationMatrixMapType resWrap(const_cast<K*>(&(res[0])));
+        resWrap.transpose();
+
+//        res = OMHelperType::transpose(res);
+      }
     }
 
 
@@ -1417,19 +1396,19 @@ class OrientationTransforms
       oax[3] = 0.0f;
 
       s = om[0] + om[4] + om[8] + 1.0;
-      if(OMHelperType::closeEnough(fabs(s), 0.0, thr) ) // Are we close to Zero
+      if(SIMPLibMath::closeEnough(std::fabs(s), static_cast<K>(0.0), thr) ) // Are we close to Zero
       { s = 0.0; }
       s = sqrt(s);
       s1 = om[0] - om[4] - om[8] + 1.0;
-      if(OMHelperType::closeEnough(fabs(s1), 0.0, thr) ) // Are we close to Zero
+      if(SIMPLibMath::closeEnough(std::fabs(s1), static_cast<K>(0.0), thr) ) // Are we close to Zero
       { s1 = 0.0; }
       s1 = sqrt(s1);
       s2 = -om[0] + om[4] - om[8] + 1.0;
-      if(OMHelperType::closeEnough(fabs(s2), 0.0, thr) ) // Are we close to Zero
+      if(SIMPLibMath::closeEnough(std::fabs(s2), static_cast<K>(0.0), thr) ) // Are we close to Zero
       { s2 = 0.0; }
       s2 = sqrt(s2);
       s3 = -om[0] - om[4] + om[8] + 1.0;
-      if(OMHelperType::closeEnough(fabs(s3), 0.0, thr) ) // Are we close to Zero
+      if(SIMPLibMath::closeEnough(std::fabs(s3), static_cast<K>(0.0), thr) ) // Are we close to Zero
       { s3 = 0.0; }
       s3 = sqrt(s3);
       res[w] = s * 0.5;

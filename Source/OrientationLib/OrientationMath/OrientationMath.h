@@ -43,8 +43,6 @@
 #include "OrientationLib/OrientationLib.h"
 
 
-#define OM_ORIENTATION_FUNCS 0
-
 /**
  * @class OrientationMath OrientationMath.h DREAM3DLib/Common/OrientationMath.h
  * @brief This class performs Crystallographic Misorientation Calculations

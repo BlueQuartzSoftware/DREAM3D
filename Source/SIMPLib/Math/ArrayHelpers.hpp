@@ -1,5 +1,5 @@
-#ifndef _OrientationMathHelpers_H_
-#define _OrientationMathHelpers_H_
+#ifndef _ArrayHelpers_H_
+#define _ArrayHelpers_H_
 
 #include <stdio.h>
 #include <iostream>
@@ -9,13 +9,19 @@
 
 #include <SIMPLib/Math/SIMPLibMath.h>
 
-
+/**
+ * @brief ArrayHelpers: Some quick methods that act on an "array" of POD values.
+ * The template parameters are:
+ * @param T The type such as std::vector, QVector or another type that implements
+ * the [] operators, size() functions.
+ * @param K The POD type such as float or double.
+ */
 template<typename T, typename K>
-class OrientationMathHelpers
+class ArrayHelpers
 {
   public:
 
-    virtual ~OrientationMathHelpers(){}
+    virtual ~ArrayHelpers(){}
 
     static void splat(T& a, const K val)
     {
@@ -116,76 +122,6 @@ class OrientationMathHelpers
       return c;
     }
 
-    static T transpose(const T& a)
-    {
-      T c(a.size());
-      c[0] = a[0];
-      c[1] = a[3];
-      c[2] = a[6];
-      c[3] = a[1];
-      c[4] = a[4];
-      c[5] = a[7];
-      c[6] = a[2];
-      c[7] = a[5];
-      c[8] = a[8];
-      return c;
-    }
-
-    static void transpose(const T& a, T& c)
-    {
-   //   T c(a.size());
-      c[0] = a[0];
-      c[1] = a[3];
-      c[2] = a[6];
-      c[3] = a[1];
-      c[4] = a[4];
-      c[5] = a[7];
-      c[6] = a[2];
-      c[7] = a[5];
-      c[8] = a[8];
-     // return c;
-    }
-
-    static T matmul3x3(const T& a, const T& b)
-    {
-      T c(a.size());
-      c[0] = a[0] * b[0] + a[1] * b[3] + a[2] * b[6];
-      c[1] = a[0] * b[1] + a[1] * b[4] + a[2] * b[7];
-      c[2] = a[0] * b[2] + a[1] * b[5] + a[2] * b[8];
-      c[3] = a[3] * b[0] + a[4] * b[3] + a[5] * b[6];
-      c[4] = a[3] * b[1] + a[4] * b[4] + a[5] * b[7];
-      c[5] = a[3] * b[2] + a[4] * b[5] + a[5] * b[8];
-      c[6] = a[6] * b[0] + a[7] * b[3] + a[8] * b[6];
-      c[7] = a[6] * b[1] + a[7] * b[4] + a[8] * b[7];
-      c[8] = a[6] * b[2] + a[7] * b[5] + a[8] * b[8];
-      return c;
-    }
-
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-
-    static bool closeEnough(const K& a, const K& b,
-                            const K& epsilon = std::numeric_limits<K>::epsilon())
-    {
-      return (epsilon > fabs(a - b));
-    }
-
-
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    static K transfer_sign(K a, K b)
-    {
-      if( a > 0.0 && b > 0.0) { return a; }
-      if( a < 0.0 && b > 0.0) { return -1 * a; }
-
-      if( a < 0.0 && b < 0.0) { return a; }
-
-      return -1 * a;
-
-    }
-
     /* Auxiliary routine: printing eigenvectors */
     static void print_eigenvectors( const char* desc, int n, float* wi, float* v, int ldv )
     {
@@ -230,11 +166,11 @@ class OrientationMathHelpers
 
 
   protected:
-    OrientationMathHelpers(){}
+    ArrayHelpers(){}
 
   private:
-    OrientationMathHelpers(const OrientationMathHelpers&); // Copy Constructor Not Implemented
-    void operator=(const OrientationMathHelpers&); // Operator '=' Not Implemented
+    ArrayHelpers(const ArrayHelpers&); // Copy Constructor Not Implemented
+    void operator=(const ArrayHelpers&); // Operator '=' Not Implemented
 };
 
-#endif /* _OrientationMathHelpers_H_ */
+#endif /* _ArrayHelpers_H_ */

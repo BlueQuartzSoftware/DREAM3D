@@ -113,7 +113,7 @@ AbstractFilter::Pointer InstantiateFilter(QString filtName)
 template<typename T>
 void GenerateEulers(size_t nSteps, AttributeMatrix::Pointer attrMat)
 {
-  typedef OrientationMathHelpers<OrientationArray<T>, T> OMHelperType;
+  typedef ArrayHelpers<OrientationArray<T>, T> OMHelperType;
 
   QVector<size_t> cDims(1, 3);
 
@@ -149,28 +149,25 @@ void GenerateEulers(size_t nSteps, AttributeMatrix::Pointer attrMat)
         eulers->setComponent(counter, 0, phi1_min + i * phi1_delta);
         eulers->setComponent(counter, 1, phi_min + j * phi_delta);
         eulers->setComponent(counter, 2, phi2_min + k * phi2_delta);
-#if 1
+
         T one80Check = phi1_min + i * phi1_delta + phi2_min + k * phi2_delta;
-        if( OMHelperType::closeEnough(SIMPLib::Constants::k_Pi, one80Check, 1.0E-6) )
+        if( SIMPLibMath::closeEnough(static_cast<T>(SIMPLib::Constants::k_Pi), one80Check, static_cast<T>(1.0E-6)) )
         {
           eulers->setComponent(counter, 0, phi1_min + i * phi1_delta + .1);
           eulers->setComponent(counter, 2, phi2_min + k * phi2_delta + .1);
         }
 
         one80Check = fmod(one80Check, SIMPLib::Constants::k_2Pi);
-        if( OMHelperType::closeEnough(SIMPLib::Constants::k_Pi, one80Check, 1.0E-6) )
+        if( SIMPLibMath::closeEnough(static_cast<T>(SIMPLib::Constants::k_Pi), one80Check, static_cast<T>(1.0E-6)) )
         {
           eulers->setComponent(counter, 0, phi1_min + i * phi1_delta + .1);
           eulers->setComponent(counter, 2, phi2_min + k * phi2_delta + .1);
         }
-#endif
+
         counter++;
       }
     }
   }
-
-
-
 
   typename EulerConverter<T>::Pointer euConv = EulerConverter<T>::New();
   euConv->setInputData(eulers);

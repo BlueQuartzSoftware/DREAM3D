@@ -55,11 +55,6 @@ configure_file(${${PLUGIN_NAME}_SOURCE_DIR}/Test/TestFileLocations.h.in
 
 set(OrientationLib_Link_Libs Qt5::Core H5Support SIMPLib OrientationLib)
 
-AddDREAM3DUnitTest(TESTNAME QuaternionMathTest
-                    SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/QuaternionMathTest.cpp
-                    FOLDER "OrientationLibProj/Test"
-                    LINK_LIBRARIES ${OrientationLib_Link_Libs})
-
 AddDREAM3DUnitTest(TESTNAME OrientationMathTest
                     SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/OrientationMathTest.cpp
                     FOLDER "OrientationLibProj/Test"

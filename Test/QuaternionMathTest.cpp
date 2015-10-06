@@ -39,14 +39,9 @@
 #include "SIMPLib/Math/QuaternionMath.hpp"
 #include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
-#include "OrientationLib/OrientationMath/OrientationMath.h"
-#include "OrientationLib/OrientationMath/OrientationArray.hpp"
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
-#include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
-#include "OrientationLib/SpaceGroupOps/CubicOps.h"
 
-
-#include "OrientationLibTestFileLocations.h"
+#define DREAM3D_PASSIVE 1.0
+#define DREAM3D_ACTIVE -1.0
 
 
 
@@ -229,11 +224,88 @@ void TestQuat_t()
   DREAM3D_REQUIRE_EQUAL(p.w, 0.5)
 
 
+  p.x = 1.0;
+  p.y = 2.0;
+  p.z = 3.0;
+  p.w = 0.0;
   float vec[3] = { 0.0f, 0.0f, 0.0f};
   float ovec[3] = { 0.0f, 0.0f, 0.0f};
 
   QuaternionMathF::GetMisorientationVector(p, vec);
-  QuaternionMathF::MultiplyQuatVec(q, vec, ovec, Rotations::Constants::epsijk);
+  bool pass = SIMPLibMath::closeEnough(vec[0], 3.14159274f, 1.0E-4f);
+  DREAM3D_REQUIRE_EQUAL(pass, true);
+
+  pass = SIMPLibMath::closeEnough(vec[1], 6.28318548f, 1.0E-4f);
+  DREAM3D_REQUIRE_EQUAL(pass, true)
+
+  pass = SIMPLibMath::closeEnough(vec[2], 9.42477798f, 1.0E-4f);
+  DREAM3D_REQUIRE_EQUAL(pass, true)
+
+ // Test point r=[100] rotated 120Deg @ [111] axis
+  vec[0] = 1.0;
+  vec[1] = 0.0;
+  vec[2] = 0.0;
+
+  // The quaternion Representation for 120@[111]
+  q.x = 0.5f;
+  q.y = 0.5f;
+  q.z = 0.5f;
+  q.w = 0.5f;
+
+  QuaternionMathF::MultiplyQuatVec(q, vec, ovec, DREAM3D_PASSIVE);
+
+  pass = SIMPLibMath::closeEnough(ovec[0], 0.0f, 1.0E-4f);
+  DREAM3D_REQUIRE_EQUAL(pass, true);
+
+  pass = SIMPLibMath::closeEnough(ovec[1], 0.0f, 1.0E-4f);
+  DREAM3D_REQUIRE_EQUAL(pass, true)
+
+  pass = SIMPLibMath::closeEnough(ovec[2], 1.0f, 1.0E-4f);
+  DREAM3D_REQUIRE_EQUAL(pass, true)
+
+  QuaternionMathF::MultiplyQuatVec(q, vec, ovec, DREAM3D_ACTIVE);
+
+  pass = SIMPLibMath::closeEnough(ovec[0], 0.0f, 1.0E-4f);
+  DREAM3D_REQUIRE_EQUAL(pass, true);
+
+  pass = SIMPLibMath::closeEnough(ovec[1], 1.0f, 1.0E-4f);
+  DREAM3D_REQUIRE_EQUAL(pass, true)
+
+  pass = SIMPLibMath::closeEnough(ovec[2], 0.0f, 1.0E-4f);
+  DREAM3D_REQUIRE_EQUAL(pass, true)
+
+  // 90@[100]
+  q.x = 0.7071067811865475f;
+  q.y = 0.0f;
+  q.z = 0.0f;
+  q.w = 0.7071067811865476f;
+
+  vec[0] = 0.0;
+  vec[1] = 1.0;
+  vec[2] = 0.0;
+  QuaternionMathF::MultiplyQuatVec(q, vec, ovec, DREAM3D_PASSIVE);
+
+  pass = SIMPLibMath::closeEnough(ovec[0], 0.0f, 1.0E-4f);
+  DREAM3D_REQUIRE_EQUAL(pass, true);
+
+  pass = SIMPLibMath::closeEnough(ovec[1], 0.0f, 1.0E-4f);
+  DREAM3D_REQUIRE_EQUAL(pass, true)
+
+  pass = SIMPLibMath::closeEnough(ovec[2], -1.0f, 1.0E-4f);
+  DREAM3D_REQUIRE_EQUAL(pass, true)
+
+  QuaternionMathF::MultiplyQuatVec(q, vec, ovec, DREAM3D_ACTIVE);
+
+  pass = SIMPLibMath::closeEnough(ovec[0], 0.0f, 1.0E-4f);
+  DREAM3D_REQUIRE_EQUAL(pass, true);
+
+  pass = SIMPLibMath::closeEnough(ovec[1], 0.0f, 1.0E-4f);
+  DREAM3D_REQUIRE_EQUAL(pass, true)
+
+  pass = SIMPLibMath::closeEnough(ovec[2], 1.0f, 1.0E-4f);
+  DREAM3D_REQUIRE_EQUAL(pass, true)
+
+
 }
 
 // -----------------------------------------------------------------------------

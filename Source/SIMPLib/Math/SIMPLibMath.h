@@ -67,7 +67,9 @@
 
 #include <stddef.h>
 #include <math.h>
+
 #include <vector>
+#include <limits>
 
 #include "SIMPLib/SIMPLib.h"
 
@@ -234,7 +236,41 @@ class SIMPLibMath
      * @param length of return array
      * @return
      */
-    static SIMPLib_EXPORT std::vector<double> linspace(double, double, int);
+    static SIMPLib_EXPORT std::vector<double> linspace(double first, double second, int length);
+
+    /**
+     * @brief closeEnough
+     * @param a
+     * @param b
+     * @param epsilon
+     * @return
+     */
+    template<typename K>
+    static bool closeEnough(const K& a, const K& b,
+                            const K& epsilon = std::numeric_limits<K>::epsilon())
+    {
+      return (epsilon > fabs(a - b));
+    }
+
+
+    /**
+     * @brief transfer_sign
+     * @param a
+     * @param b
+     * @return
+     */
+    template<typename K>
+    static K transfer_sign(K a, K b)
+    {
+      if( a > 0.0 && b > 0.0) { return a; }
+      if( a < 0.0 && b > 0.0) { return -1 * a; }
+
+      if( a < 0.0 && b < 0.0) { return a; }
+
+      return -1 * a;
+
+    }
+
 
   protected:
     SIMPLibMath();

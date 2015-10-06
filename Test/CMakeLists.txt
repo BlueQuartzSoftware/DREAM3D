@@ -29,61 +29,65 @@ configure_file(${DREAM3DTest_SOURCE_DIR}/TestFileLocations.h.in
 include_directories(${DREAM3DTest_BINARY_DIR})
 
 
-AddDREAM3DUnitTest(TESTNAME ConditionalSetValueTest 
-  SOURCES ${DREAM3DTest_SOURCE_DIR}/ConditionalSetValueTest.cpp 
+AddDREAM3DUnitTest(TESTNAME ConditionalSetValueTest
+  SOURCES ${DREAM3DTest_SOURCE_DIR}/ConditionalSetValueTest.cpp
   FOLDER "SIMPLibProj/Test"
   LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
 
-AddDREAM3DUnitTest(TESTNAME DataContainerTest 
-  SOURCES ${DREAM3DTest_SOURCE_DIR}/DataContainerTest.cpp 
+AddDREAM3DUnitTest(TESTNAME DataContainerTest
+  SOURCES ${DREAM3DTest_SOURCE_DIR}/DataContainerTest.cpp
   FOLDER "SIMPLibProj/Test"
   LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
 
-AddDREAM3DUnitTest(TESTNAME ReplaceValueTest 
-  SOURCES ${DREAM3DTest_SOURCE_DIR}/ReplaceValueTest.cpp 
+AddDREAM3DUnitTest(TESTNAME ReplaceValueTest
+  SOURCES ${DREAM3DTest_SOURCE_DIR}/ReplaceValueTest.cpp
   FOLDER "SIMPLibProj/Test"
   LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
 
-AddDREAM3DUnitTest(TESTNAME StructArrayTest 
-  SOURCES ${DREAM3DTest_SOURCE_DIR}/StructArrayTest.cpp 
+AddDREAM3DUnitTest(TESTNAME StructArrayTest
+  SOURCES ${DREAM3DTest_SOURCE_DIR}/StructArrayTest.cpp
   FOLDER "SIMPLibProj/Test"
   LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
 
-AddDREAM3DUnitTest(TESTNAME FilterPipelineTest 
-  SOURCES ${DREAM3DTest_SOURCE_DIR}/FilterPipelineTest.cpp 
+AddDREAM3DUnitTest(TESTNAME FilterPipelineTest
+  SOURCES ${DREAM3DTest_SOURCE_DIR}/FilterPipelineTest.cpp
   FOLDER "SIMPLibProj/Test"
   LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
 
-AddDREAM3DUnitTest(TESTNAME DataArrayTest 
-  SOURCES ${DREAM3DTest_SOURCE_DIR}/DataArrayTest.cpp 
+AddDREAM3DUnitTest(TESTNAME DataArrayTest
+  SOURCES ${DREAM3DTest_SOURCE_DIR}/DataArrayTest.cpp
   FOLDER "SIMPLibProj/Test"
   LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
 
-AddDREAM3DUnitTest(TESTNAME ErrorMessageTest 
-  SOURCES ${DREAM3DTest_SOURCE_DIR}/ErrorMessageTest.cpp 
+AddDREAM3DUnitTest(TESTNAME ErrorMessageTest
+  SOURCES ${DREAM3DTest_SOURCE_DIR}/ErrorMessageTest.cpp
   FOLDER "SIMPLibProj/Test"
   LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
 
-AddDREAM3DUnitTest(TESTNAME DataContainerBundleTest 
-  SOURCES ${DREAM3DTest_SOURCE_DIR}/DataContainerBundleTest.cpp 
+AddDREAM3DUnitTest(TESTNAME DataContainerBundleTest
+  SOURCES ${DREAM3DTest_SOURCE_DIR}/DataContainerBundleTest.cpp
   FOLDER "SIMPLibProj/Test"
   LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
 
-AddDREAM3DUnitTest(TESTNAME FilterParametersRWTest 
-  SOURCES ${DREAM3DTest_SOURCE_DIR}/FilterParametersRWTest.cpp 
+AddDREAM3DUnitTest(TESTNAME FilterParametersRWTest
+  SOURCES ${DREAM3DTest_SOURCE_DIR}/FilterParametersRWTest.cpp
   FOLDER "SIMPLibProj/Test"
   LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
 
-AddDREAM3DUnitTest(TESTNAME CreateDataArrayTest 
-  SOURCES ${DREAM3DTest_SOURCE_DIR}/CreateDataArrayTest.cpp 
+AddDREAM3DUnitTest(TESTNAME CreateDataArrayTest
+  SOURCES ${DREAM3DTest_SOURCE_DIR}/CreateDataArrayTest.cpp
    FOLDER "SIMPLibProj/Test"
  LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
 
-AddDREAM3DUnitTest(TESTNAME RemoveComponentFromArrayTest 
-  SOURCES ${DREAM3DTest_SOURCE_DIR}/RemoveComponentFromArrayTest.cpp 
+AddDREAM3DUnitTest(TESTNAME RemoveComponentFromArrayTest
+  SOURCES ${DREAM3DTest_SOURCE_DIR}/RemoveComponentFromArrayTest.cpp
   FOLDER "SIMPLibProj/Test"
   LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
 
+ AddDREAM3DUnitTest(TESTNAME QuaternionMathTest
+   SOURCES ${DREAM3DTest_SOURCE_DIR}/QuaternionMathTest.cpp
+   FOLDER "SIMPLibProj/Test"
+   LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
 
 QT5_WRAP_CPP( RemoveArraysObserver_MOC  "${DREAM3DTest_SOURCE_DIR}/RemoveArraysObserver.h")
 set_source_files_properties(${DREAM3DTest_SOURCE_DIR}/RemoveArraysObserver.h PROPERTIES HEADER_FILE_ONLY TRUE)
@@ -165,7 +169,7 @@ set(PREBUILT_PIPELINES_DIR "TestPipelines")
 set(TEST_PIPELINE_LIST_FILE ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.txt)
 set(TEST_DATA_DIR ${DREAM3D_DATA_DIR})
 set(PREBUILT_PIPELINE_NAMES
-  
+
 )
 
 foreach(f ${PREBUILT_PIPELINE_NAMES} )
