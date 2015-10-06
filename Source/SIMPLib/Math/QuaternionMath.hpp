@@ -438,9 +438,9 @@ class QuaternionMath
       T qyw = rotationType * q.y * q.w;
       T qzw = rotationType * q.z * q.w;
 
-      out[0] = v[0] * (qx2 - qy2 - qz2 + qw2) + 2 * ( v[1] * (qxy + qzw) + v[2] * (qzx - qyw) );
-      out[1] = v[1] * (qy2 - qx2 - qz2 + qw2) + 2 * ( v[2] * (qyz + qxw) + v[0] * (qxy - qzw) );
-      out[2] = v[2] * (qz2 - qx2 - qy2 + qw2) + 2 * ( v[0] * (qzx + qyw) + v[1] * (qyz - qxw) );
+      out[0] = v[0] * (qx2 - qy2 - qz2 + qw2) + 2 * ( v[1] * (qxy - qzw) + v[2] * (qzx + qyw) );
+      out[1] = v[1] * (qy2 - qx2 - qz2 + qw2) + 2 * ( v[2] * (qyz - qxw) + v[0] * (qxy + qzw) );
+      out[2] = v[2] * (qz2 - qx2 - qy2 + qw2) + 2 * ( v[0] * (qzx - qyw) + v[1] * (qyz + qxw) );
     }
 
     /**
