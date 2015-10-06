@@ -1172,141 +1172,9 @@ class OrientationTransforms
 
     static void om2ax(const T& in, T& res)
     {
-#if 1
       T qu(4);
       SelfType::om2qu(in, qu);
       SelfType::qu2ax(qu, res);
-#else
-      // Transpose array to be Column Major Format for the BLAS/LAPACK routine
-      T om = OMHelperType::transpose(in);
-      // Compute the Angle based on the "Trace" of the Rotation Matrix
-      K t = 0.50 * (om[0] + om[4] + om[8] - 1.0);
-      if (t > 1.0) { t = 1.0; }
-      if (t < -1.0) {t = -1.0; }
-      res[3] = acos(t);
-      // If the rotation is ZERO degrees, then return an (001) axis.
-      if (res[3] == 0.0)
-      {
-        res[0] = 0.0;
-        res[1] = 0.0;
-        res[2] = 1.0;
-        return;
-      }
-      else
-      {
-        typedef Eigen::Matrix<K, 3, 3, Eigen::ColMajor> Matrix_t;
-
-        Eigen::Map<Matrix_t> m(const_cast<K*>(&(om[0])));
-
-        K angle, x, y, z; // variables for result
-        K epsilon = 1.0E-4L; // margin to allow for rounding errors
-        K epsilon2 = 1.0E-4L; // margin to distinguish between 0 and 180 degrees
-        // optional check that input is pure rotation, 'isRotationMatrix' is defined at:
-        // http://www.euclideanspace.com/maths/algebra/matrix/orthogonal/rotation/
-        // assert isRotationMatrix(m) : "not valid rotation matrix" ;// for debugging
-
-        if ((fabs(m(0, 1) - m(1, 0)) < epsilon)
-            && (fabs(m(0, 2) - m(2, 0)) < epsilon)
-            && (fabs(m(1, 2) - m(2, 1)) < epsilon))
-        {
-          // singularity found
-          // first check for identity matrix which must have +1 for all terms
-          //  in leading diagonal and zero in other terms
-          if ((fabs(m(0, 1) + m(1, 0)) < epsilon2)
-              && (fabs(m(0, 2) + m(2, 0)) < epsilon2)
-              && (fabs(m(1, 2) + m(2, 1)) < epsilon2)
-              && (fabs(m(0, 0) + m(1, 1) + m(2, 2) - 3) < epsilon2))
-          {
-            // this singularity is identity matrix so angle = 0
-            //return new axisAngle(0,1,0,0); // zero angle, arbitrary axis
-            res[0] = 0.0;
-            res[1] = 0.0;
-            res[2] = 1.0;
-            res[3] = 0.0;
-            //    printf("Singularity at 0 | 360 deg\n");
-            return;
-          }
-          // otherwise this singularity is angle = 180
-          angle = DConst::k_Pi;
-          K xx = (m(0, 0) + 1) / 2;
-          K yy = (m(1, 1) + 1) / 2;
-          K zz = (m(2, 2) + 1) / 2;
-          K xy = (m(0, 1) + m(1, 0)) / 4;
-          K xz = (m(0, 2) + m(2, 0)) / 4;
-          K yz = (m(1, 2) + m(2, 1)) / 4;
-          if ((xx > yy) && (xx > zz))   // m(0,0) is the largest diagonal term
-          {
-            if (xx < epsilon)
-            {
-              x = 0;
-              y = 0.7071;
-              z = 0.7071;
-            }
-            else
-            {
-              x = sqrt(xx);
-              y = xy / x;
-              z = xz / x;
-            }
-          }
-          else if (yy > zz)     // m(1,1) is the largest diagonal term
-          {
-            if (yy < epsilon)
-            {
-              x = 0.7071;
-              y = 0;
-              z = 0.7071;
-            }
-            else
-            {
-              y = sqrt(yy);
-              x = xy / y;
-              z = yz / y;
-            }
-          }
-          else     // m(2,2) is the largest diagonal term so base result on this
-          {
-            if (zz < epsilon)
-            {
-              x = 0.7071;
-              y = 0.7071;
-              z = 0;
-            }
-            else
-            {
-              z = sqrt(zz);
-              x = xz / z;
-              y = yz / z;
-            }
-          }
-          //return new axisAngle(angle,x,y,z); // return 180 deg rotation
-          res[0] = x;
-          res[1] = y;
-          res[2] = z;
-          res[3] = angle;
-          //  printf("Singularity at 180 deg\n");
-          return;
-        }
-        // as we have reached here there are no singularities so we can handle normally
-        K s = sqrt((m(2, 1) - m(1, 2)) * (m(2, 1) - m(1, 2))
-                   + (m(0, 2) - m(2, 0)) * (m(0, 2) - m(2, 0))
-                   + (m(1, 0) - m(0, 1)) * (m(1, 0) - m(0, 1))); // used to normalise
-        if (fabs(s) < 0.001) { s = 1; }
-        // prevent divide by zero, should not happen if matrix is orthogonal and should be
-        // caught by singularity test above, but I've left it in just in case
-        angle = acos(( m(0, 0) + m(1, 1) + m(2, 2) - 1) / 2);
-        x = (m(2, 1) - m(1, 2)) / s;
-        y = (m(0, 2) - m(2, 0)) / s;
-        z = (m(1, 0) - m(0, 1)) / s;
-        //return new axisAngle(angle,x,y,z);
-        res[0] = x;
-        res[1] = y;
-        res[2] = z;
-        res[3] = angle;
-        return;
-      }
-
-#endif
     }
 
 
@@ -1345,7 +1213,6 @@ class OrientationTransforms
       }
       else
       {
-#if 1
         angle = 2.0L * atan(ta);
         ta = r[0] * r[0] + r[1] * r[1] + r[2] * r[2];
         ta = sqrt(ta);
@@ -1354,15 +1221,7 @@ class OrientationTransforms
         res[1] = r[1] * ta;
         res[2] = r[2] * ta;
         res[3] = angle;
-#else
-        res[3] = 2.0L * atan(r[3]);
-        ta = 0.0L;
-        for (int i = 0; i < 3; i++) {ta += r[i] * r[i];}
-        ta = 1.0 / sqrt(ta);
-        for (int i = 0; i < 3; i++) {res[i] = r[i] * ta;}
-#endif
       }
-
     }
 
 
@@ -1545,8 +1404,8 @@ class OrientationTransforms
         z = 2;
       }
 
-      K thr = static_cast<K>(1.0E-10);
-      if(sizeof(K) == 4) { thr = 1.0E-6; }
+      K thr = static_cast<K>(1.0E-10L);
+      if(sizeof(K) == 4) { thr = static_cast<K>(1.0E-6L); }
       K  s = 0.0;
       K s1 = 0.0;
       K s2 = 0.0;
@@ -1634,7 +1493,7 @@ class OrientationTransforms
       K sign = 1.0;
       if(q[w] < 0.0) { sign = -1.0; }
       for (int i = 0; i < 4; i++) {qo[i] = sign * q[i];}
-      K eps = (K) 1.0e-12;
+      K eps = static_cast<K>(1.0e-12L);
       K omega = 2.0 * acos(qo[w]);
       if (omega < eps)
       {
@@ -1678,7 +1537,7 @@ class OrientationTransforms
         y = 1;
         z = 2;
       }
-      float thr = 1.0E-8f;
+      K thr = static_cast<K>(1.0E-8L);
       res[0] = q[x];
       res[1] = q[y];
       res[2] = q[z];
@@ -1689,7 +1548,7 @@ class OrientationTransforms
         res[3] = std::numeric_limits<K>::infinity();
         return;
       }
-      float s = MatrixMath::Magnitude3x1( &(res[0]) );
+      K s = MatrixMath::Magnitude3x1( &(res[0]) );
       if (s < thr)
       {
         res[0] = 0.0;
