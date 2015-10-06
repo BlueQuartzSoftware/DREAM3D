@@ -132,6 +132,7 @@ DataArrayPath::DataArrayPath(const DataArrayPath& rhs) :
 // -----------------------------------------------------------------------------
 DataArrayPath::~DataArrayPath()
 {
+  delete d_ptr;
 }
 
 
