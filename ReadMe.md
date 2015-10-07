@@ -30,13 +30,13 @@ Parts of DREAM.3D were written under US Air Force (AFRL) Contract FA8650-07-D-58
 
 ## Major Contributing Institutions ##
 
-+ US Air Force Research Laboratory (Materials Directorate)
 + BlueQuartz Software (http://www.bluequartz.net)
-+ Carnegie Mellon University, College of Materials Science and Engineering
++ US Air Force Research Laboratory (Materials Directorate)
++ Carnegie Mellon University, Department of Materials Science and Engineering
 + US Naval Research Laboratory
 + The Ohio State University
 
-## List of Code Contributors (CC) and Vision Contributors (VC) ###
+## List of Code (CC) and Vision (VC) Contributors  ###
 
 ### Air Force Research Laboratory (AFRL) ###
 
