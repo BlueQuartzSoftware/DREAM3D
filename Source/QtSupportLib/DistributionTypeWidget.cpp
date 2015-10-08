@@ -36,7 +36,8 @@
 
 #include "DistributionTypeWidget.h"
 
-#include "DREAM3DLib/Common/Constants.h"
+#include "SIMPLib/Common/Constants.h"
+#include "moc_DistributionTypeWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //

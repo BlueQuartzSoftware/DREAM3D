@@ -39,8 +39,8 @@
 #include <QtCore/QPropertyAnimation>
 #include <QtWidgets/QGraphicsOpacityEffect>
 
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/FilterParameters/FilterParameter.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/FilterParameters/FilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
@@ -66,6 +66,9 @@ FilterParameterWidget::FilterParameterWidget(QWidget* parent) :
 {
   fadeIn = true;
 }
+
+// Include the MOC generated file for this class
+#include "moc_FilterParameterWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //

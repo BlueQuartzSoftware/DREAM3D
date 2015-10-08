@@ -1,15 +1,37 @@
-#--////////////////////////////////////////////////////////////////////////////
-#--
-#--  Copyright (c) 2009, 2010, 2011 Michael A. Jackson. BlueQuartz Software
-#--  Copyright (c) 2009, 2010, 2011 Michael Groeber, US Air Force Research Laboratory
-#--  All rights reserved.
-#--  BSD License: http://www.opensource.org/licenses/bsd-license.html
-#--
-#--////////////////////////////////////////////////////////////////////////////
-
-#///////////////////////////////////////////////////////////////////////////////
-#// This code was partly written under US Air Force Contract FA8650-07-D-5800
-#///////////////////////////////////////////////////////////////////////////////
+# ============================================================================
+# Copyright (c) 2009-2015 BlueQuartz Software, LLC
+#
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+#
+# Redistributions of source code must retain the above copyright notice, this
+# list of conditions and the following disclaimer.
+#
+# Redistributions in binary form must reproduce the above copyright notice, this
+# list of conditions and the following disclaimer in the documentation and/or
+# other materials provided with the distribution.
+#
+# Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+# contributors may be used to endorse or promote products derived from this software
+# without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+# USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# The code contained herein was partially funded by the followig contracts:
+#    United States Air Force Prime Contract FA8650-07-D-5800
+#    United States Air Force Prime Contract FA8650-10-D-5210
+#    United States Prime Contract Navy N00173-07-C-2068
+#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 # set project's name
 PROJECT( EbsdLib VERSION ${DREAM3DProj_VERSION_MAJOR}.${DREAM3DProj_VERSION_MINOR})
 
@@ -107,9 +129,9 @@ set(EbsdLib_INSTALL_FILES 0)
 # project.
 #-------------------------------------------------------------------------------
 if(NOT DEFINED DREAM3DProj_BINARY_DIR)
-	set(CMP_HEADER_DIR ${EbsdLib_BINARY_DIR}/EbsdLib)
+	set(CMP_HEADER_DIR ${EbsdLib_BINARY_DIR})
 else()
-	set(CMP_HEADER_DIR ${EbsdLib_BINARY_DIR}/EbsdLib)
+	set(CMP_HEADER_DIR ${EbsdLib_BINARY_DIR})
 endif()
 set(CMP_CONFIGURATION_FILE_NAME "EbsdLibConfiguration.h")
 set(CMP_TYPES_FILE_NAME "EbsdLibTypes.h")
@@ -126,13 +148,8 @@ set(CMP_GENERATE_VERSION_STRING ${GENERATE_GIT_VERSION})
 
 INCLUDE (${CMP_SOURCE_DIR}/cmpProject.cmake)
 
-if(NOT DEFINED DREAM3DProj_BINARY_DIR)
-	configure_file(${EbsdLib_SOURCE_DIR}/EbsdLibConfiguration.h.in
-               ${CMP_HEADER_DIR}/${CMP_TOP_HEADER_FILE})
-else()
-	configure_file(${EbsdLib_SOURCE_DIR}/EbsdLibConfiguration.h.in
+configure_file(${EbsdLib_SOURCE_DIR}/EbsdLibConfiguration.h.in
                ${EbsdLib_BINARY_DIR}/${CMP_TOP_HEADER_FILE})
-endif()
 
 # Setup the Include Directories
 include_directories(${PROJECT_CODE_DIR})
@@ -143,6 +160,16 @@ INCLUDE_DIRECTORIES(${EbsdLib_SOURCE_DIR}/..)
 include( ${EbsdLib_SOURCE_DIR}/TSL/SourceList.cmake)
 include( ${EbsdLib_SOURCE_DIR}/HKL/SourceList.cmake)
 
+set(EbsdLib_Generated_HDRS
+  ${${PROJECT_NAME}_BINARY_DIR}/${CMP_CONFIGURATION_FILE_NAME}
+  ${${PROJECT_NAME}_BINARY_DIR}/${CMP_TYPES_FILE_NAME}
+  ${${PROJECT_NAME}_BINARY_DIR}/${CMP_VERSION_HEADER_FILE_NAME}
+  ${${PROJECT_NAME}_BINARY_DIR}/${CMP_TOP_HEADER_FILE}
+  )
+set(EbsdLib_Generated_SRCS
+  ${${PROJECT_NAME}_BINARY_DIR}/${CMP_VERSION_SOURCE_FILE_NAME}
+  )
+cmp_IDE_GENERATED_PROPERTIES("Generated" "${EbsdLib_Generated_HDRS}" "${EbsdLib_Generated_SRCS}")
 
 set(EbsdLib_SRCS
     ${EbsdLib_SOURCE_DIR}/AbstractEbsdFields.cpp
@@ -175,7 +202,7 @@ if(${EbsdLib_ENABLE_HDF5})
 endif()
 
 
-cmp_IDE_SOURCE_PROPERTIES( "EbsdLib/" "${EbsdLib_HDRS}" "${EbsdLib_SRCS}" ${PROJECT_INSTALL_HEADERS})
+cmp_IDE_SOURCE_PROPERTIES( "" "${EbsdLib_HDRS}" "${EbsdLib_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 set(EbsdLib_PROJECT_SRCS
     ${EbsdLib_SRCS}
@@ -184,12 +211,10 @@ set(EbsdLib_PROJECT_SRCS
     ${TSL_HDRS}
     ${HKL_SRCS}
     ${HKL_HDRS}
-    ${HEDM_SRCS}
-    ${HEDM_HDRS}
     ${EbsdLib_Utilities_SRCS}
     ${EbsdLib_Utilities_HDRS}
-    "${EbsdLib_BINARY_DIR}/${CMP_VERSION_SOURCE_FILE_NAME}"
-    "${EbsdLib_BINARY_DIR}/${CMP_VERSION_HEADER_FILE_NAME}"
+    "${EbsdLib_Generated_SRCS}"
+    "${EbsdLib_Generated_HDRS}"
 )
 
 
@@ -204,7 +229,7 @@ if(${EbsdLib_ENABLE_HDF5})
 		)
 endif()
 
-if(QT4_FOUND)
+if(QT5_FOUND)
 	set(EBSDLib_LINK_LIBRARIES
 		${EBSDLib_LINK_LIBRARIES}
 		 Qt5::Core
@@ -233,5 +258,5 @@ if(BUILD_SHARED_LIBS AND NOT APPLE)
 	)
 endif()
 
-add_subdirectory(${EbsdLib_SOURCE_DIR}/Test ${EbsdLib_BINARY_DIR}/Test)
+include(${EbsdLib_SOURCE_DIR}/Test/CMakeLists.txt)
 

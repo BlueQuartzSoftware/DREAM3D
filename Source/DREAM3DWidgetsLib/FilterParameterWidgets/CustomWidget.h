@@ -43,7 +43,7 @@
 #include <QtWidgets/QWidget>
 
 
-#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/AbstractFilter.h"
 
 #include "FilterWidgetsLib/QFilterParameterWidget.h"
 #include "FilterWidgetsLib/FilterWidgetsLib.h"

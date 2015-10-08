@@ -36,16 +36,21 @@
 
 #include "NeighborOrientationCorrelation.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/DoubleFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/IntFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
+
+// Include the MOC generated file for this class
+#include "moc_NeighborOrientationCorrelation.cpp"
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -86,11 +91,24 @@ void NeighborOrientationCorrelation::setupFilterParameters()
   parameters.push_back(DoubleFilterParameter::New("Misorientation Tolerance (Degrees)", "MisorientationTolerance", getMisorientationTolerance(), FilterParameter::Parameter));
   parameters.push_back(IntFilterParameter::New("Cleanup Level", "Level", getLevel(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Confidence Index", "ConfidenceIndexArrayPath", getConfidenceIndexArrayPath(), FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Quaternions", "QuatsArrayPath", getQuatsArrayPath(), FilterParameter::RequiredArray));
+
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Float, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Confidence Index", "ConfidenceIndexArrayPath", getConfidenceIndexArrayPath(), FilterParameter::RequiredArray, req));
+  }
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req));
+  }
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Float, 4, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Quaternions", "QuatsArrayPath", getQuatsArrayPath(), FilterParameter::RequiredArray, req));
+  }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray));
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::UInt32, 1, DREAM3D::AttributeMatrixType::CellEnsemble, DREAM3D::GeometryType::ImageGeometry);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
+  }
   setFilterParameters(parameters);
 }
 
@@ -116,14 +134,14 @@ void NeighborOrientationCorrelation::readFilterParameters(AbstractFilterParamete
 int NeighborOrientationCorrelation::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(ConfidenceIndexArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(MisorientationTolerance)
-  DREAM3D_FILTER_WRITE_PARAMETER(MinConfidence)
-  DREAM3D_FILTER_WRITE_PARAMETER(Level)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(QuatsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(ConfidenceIndexArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(MisorientationTolerance)
+  SIMPL_FILTER_WRITE_PARAMETER(MinConfidence)
+  SIMPL_FILTER_WRITE_PARAMETER(Level)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -188,37 +206,33 @@ void NeighborOrientationCorrelation::execute()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_ConfidenceIndexArrayPath.getDataContainerName());
   size_t totalPoints = m_ConfidenceIndexPtr.lock()->getNumberOfTuples();
 
-  m_MisorientationTolerance = m_MisorientationTolerance * DREAM3D::Constants::k_Pi / 180.0f;
+  m_MisorientationTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_Pi / 180.0f;
 
   size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
+
+  int64_t dims[3] =
   {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
+    static_cast<int64_t>(udims[0]),
+    static_cast<int64_t>(udims[1]),
+    static_cast<int64_t>(udims[2]),
   };
 
   size_t count = 1;
   int32_t best = 0;
   bool good = true;
   bool good2 = true;
-  DimType neighbor = 0;
-  DimType neighbor2 = 0;
-  DimType column = 0, row = 0, plane = 0;
+  int64_t neighbor = 0;
+  int64_t neighbor2 = 0;
+  int64_t column = 0, row = 0, plane = 0;
 
-  DimType neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
-  neighpoints[0] = static_cast<DimType>(-dims[0] * dims[1]);
-  neighpoints[1] = static_cast<DimType>(-dims[0]);
-  neighpoints[2] = static_cast<DimType>(-1);
-  neighpoints[3] = static_cast<DimType>(1);
-  neighpoints[4] = static_cast<DimType>(dims[0]);
-  neighpoints[5] = static_cast<DimType>(dims[0] * dims[1]);
+  int64_t neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
+  neighpoints[0] = static_cast<int64_t>(-dims[0] * dims[1]);
+  neighpoints[1] = static_cast<int64_t>(-dims[0]);
+  neighpoints[2] = static_cast<int64_t>(-1);
+  neighpoints[3] = static_cast<int64_t>(1);
+  neighpoints[4] = static_cast<int64_t>(dims[0]);
+  neighpoints[5] = static_cast<int64_t>(dims[0] * dims[1]);
 
   float w = std::numeric_limits<float>::max();
   QuatF q1 = QuaternionMathF::New();
@@ -228,7 +242,7 @@ void NeighborOrientationCorrelation::execute()
 
   QVector<int32_t> neighborDiffCount(totalPoints, 0);
   QVector<int32_t> neighborSimCount(6, 0);
-  QVector<DimType> bestNeighbor(totalPoints, -1);
+  QVector<int64_t> bestNeighbor(totalPoints, -1);
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
   int32_t startLevel = 6;
@@ -236,12 +250,12 @@ void NeighborOrientationCorrelation::execute()
   {
     if (getCancel()) { break; }
 
-    DimType progIncrement = static_cast<DimType>(totalPoints / 100);
-    DimType prog = 1;
+    int64_t progIncrement = static_cast<int64_t>(totalPoints / 100);
+    int64_t prog = 1;
     int64_t progressInt = 0;
     for (size_t i = 0; i < totalPoints; i++)
     {
-      if (DimType(i) > prog)
+      if (int64_t(i) > prog)
       {
         progressInt = static_cast<int64_t>(((float)i / totalPoints) * 100.0f);
         QString ss = QObject::tr("Level %1 of %2 || Processing Data %3%").arg((startLevel - currentLevel) + 1).arg(startLevel - m_Level).arg(progressInt);
@@ -258,7 +272,7 @@ void NeighborOrientationCorrelation::execute()
         for (int32_t j = 0; j < 6; j++)
         {
           good = true;
-          neighbor = DimType(i) + neighpoints[j];
+          neighbor = int64_t(i) + neighpoints[j];
           if (j == 0 && plane == 0) { good = false; }
           if (j == 5 && plane == (dims[2] - 1)) { good = false; }
           if (j == 1 && row == 0) { good = false; }
@@ -281,7 +295,7 @@ void NeighborOrientationCorrelation::execute()
             for (int32_t k = j + 1; k < 6; k++)
             {
               good2 = true;
-              neighbor2 = DimType(i) + neighpoints[k];
+              neighbor2 = int64_t(i) + neighpoints[k];
               if (k == 0 && plane == 0) { good2 = false; }
               if (k == 5 && plane == (dims[2] - 1)) { good2 = false; }
               if (k == 1 && row == 0) { good2 = false; }
@@ -295,7 +309,10 @@ void NeighborOrientationCorrelation::execute()
 
                 phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
                 QuaternionMathF::Copy(quats[neighbor], q2);
-                if (m_CellPhases[neighbor2] == m_CellPhases[neighbor] && m_CellPhases[neighbor2] > 0) { w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3); }
+                if (m_CellPhases[neighbor2] == m_CellPhases[neighbor] && m_CellPhases[neighbor2] > 0)
+                {
+                  w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+                }
                 if (w < m_MisorientationTolerance)
                 {
                   neighborSimCount[j]++;
@@ -309,7 +326,7 @@ void NeighborOrientationCorrelation::execute()
         {
           best = 0;
           good = true;
-          neighbor = DimType(i) + neighpoints[j];
+          neighbor = int64_t(i) + neighpoints[j];
           if (j == 0 && plane == 0) { good = false; }
           if (j == 5 && plane == (dims[2] - 1)) { good = false; }
           if (j == 1 && row == 0) { good = false; }
@@ -333,12 +350,12 @@ void NeighborOrientationCorrelation::execute()
 
     if (getCancel()) { return; }
 
-    progIncrement = static_cast<DimType>(totalPoints / 100);
+    progIncrement = static_cast<int64_t>(totalPoints / 100);
     prog = 1;
     progressInt = 0;
     for (size_t i = 0; i < totalPoints; i++)
     {
-      if (DimType(i) > prog)
+      if (int64_t(i) > prog)
       {
         progressInt = static_cast<int64_t>(((float)i / totalPoints) * 100.0f);
         QString ss = QObject::tr("Level %1 of %2 || Copying Data %3%").arg((startLevel - currentLevel) + 2).arg(startLevel - m_Level).arg(progressInt);

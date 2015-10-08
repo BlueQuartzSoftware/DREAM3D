@@ -32,25 +32,21 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #ifndef _VtkRectilinearGridWriter_H_
 #define _VtkRectilinearGridWriter_H_
 
 #include <QtCore/QString>
+#include <QtCore/QVector>
 
-#include "EbsdLib/EbsdConstants.h"
-#include "EbsdLib/HKL/CtfConstants.h"
-#include "EbsdLib/TSL/AngConstants.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataContainers/DataArrayPath.h"
+#include "SIMPLib/SIMPLibVersion.h"
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DREAM3DLibVersion.h"
-
-#include "DREAM3DLib/DataContainers/DataContainer.h"
-#include "DREAM3DLib/VTKUtils/VTKWriterMacros.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/VTKUtils/VTKWriterMacros.h"
 
 /**
  * @class VTKRectilinearGridFileWriter VTKRectilinearGridFileWriter.h DREAM3D/Common/VTKUtils/VTKRectilinearGridFileWriter.h
@@ -68,20 +64,20 @@ class VtkRectilinearGridWriter : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(VtkRectilinearGridWriter)
-    DREAM3D_STATIC_NEW_MACRO(VtkRectilinearGridWriter)
-    DREAM3D_TYPE_MACRO_SUPER(VtkRectilinearGridWriter, AbstractFilter)
+    SIMPL_SHARED_POINTERS(VtkRectilinearGridWriter)
+    SIMPL_STATIC_NEW_MACRO(VtkRectilinearGridWriter)
+    SIMPL_TYPE_MACRO_SUPER(VtkRectilinearGridWriter, AbstractFilter)
 
     virtual ~VtkRectilinearGridWriter();
 
-    DREAM3D_FILTER_PARAMETER(QString, OutputFile)
+    SIMPL_FILTER_PARAMETER(QString, OutputFile)
     Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
-    DREAM3D_FILTER_PARAMETER(bool, WriteBinaryFile)
+    SIMPL_FILTER_PARAMETER(bool, WriteBinaryFile)
     Q_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedAttributeMatrixPath)
-    Q_PROPERTY(DataArrayPath SelectedAttributeMatrixPath READ getSelectedAttributeMatrixPath WRITE setSelectedAttributeMatrixPath)
+    SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, SelectedDataArrayPaths)
+    Q_PROPERTY(QVector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -132,61 +128,8 @@ class VtkRectilinearGridWriter : public AbstractFilter
     * @brief preflight Reimplemented from @see AbstractFilter class
     */
     virtual void preflight();
-    /**
-        * @brief This function writes a set of Axis coordinates to that are needed
-        * for a Rectilinear Grid based data set.
-        * @param f The "C" FILE* pointer to the file being written to.
-        * @param axis The name of the Axis that is being written
-        * @param type The type of primitive being written (float, int, ...)
-        * @param npoints The total number of points in the array
-        * @param min The minimum value of the axis
-        * @param max The maximum value of the axis
-        * @param step The step value between each point on the axis.
-        */
-    template<typename T>
-    static int WriteCoords(FILE* f, const char* axis, const char* type, int64_t npoints, T min, T max, T step, bool binary)
-    {
-      int err = 0;
-#if CMP_SIZEOF_LONG == 8 && !defined (__APPLE__)
-      fprintf(f, "%s %ld %s\n", axis, npoints, type);
-#else
-      fprintf(f, "%s %lld %s\n", axis, npoints, type);
-#endif
-      if (binary == true)
-      {
-        T* data = new T[npoints];
-        T d;
-        for (int idx = 0; idx < npoints; ++idx)
-        {
-          d = idx * step + min;
-          DREAM3D::Endian::FromSystemToBig::convert(d);
-          data[idx] = d;
-        }
-        size_t totalWritten = fwrite(static_cast<void*>(data), sizeof(T), static_cast<size_t>(npoints), f);
-        fprintf(f, "\n"); // Write a newline character at the end of the coordinates
-        delete[] data;
-        if (totalWritten != static_cast<size_t>(npoints) )
-        {
-          qDebug() << "Error Writing Binary VTK Data into file " ;
-          fclose(f);
-          return -1;
-        }
 
-      }
-      else
-      {
-        T d;
-        for (int idx = 0; idx < npoints; ++idx)
-        {
-          d = idx * step + min;
-          fprintf(f, "%f ", d);
-          if (idx % 20 == 0 && idx != 0) { fprintf(f, "\n"); }
-        }
-        fprintf(f, "\n");
-      }
-      return err;
-    }
-
+#if 0
     /**
      * @brief WriteDataArrayToFile
      * @param filename
@@ -249,6 +192,7 @@ class VtkRectilinearGridWriter : public AbstractFilter
       fclose(f);
       return err;
     }
+#endif
 
   signals:
     /**
@@ -282,12 +226,12 @@ class VtkRectilinearGridWriter : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    QVector<IDataArray::WeakPointer> m_SelectedWeakPtrVector;
 
     VtkRectilinearGridWriter(const VtkRectilinearGridWriter&); // Copy Constructor Not Implemented
     void operator=(const VtkRectilinearGridWriter&); // Operator '=' Not Implemented
 
-    int write(const QString& file);
+    void write(const QString& file);
 };
 
 #endif /* VtkRectilinearGridWriter_H_ */

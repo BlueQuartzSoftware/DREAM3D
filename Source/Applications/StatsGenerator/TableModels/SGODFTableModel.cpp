@@ -42,7 +42,8 @@
 #include "Applications/DREAM3D/DREAM3DApplication.h"
 
 #include "StatsGenerator/Delegates/SGODFItemDelegate.h"
-
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_SGODFTableModel.cpp"
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -377,6 +378,7 @@ void SGODFTableModel::setColumnData(int col, QVector<float>& data)
     default:
       Q_ASSERT(false);
   }
+  m_RowCount = data.size();
 }
 
 // -----------------------------------------------------------------------------

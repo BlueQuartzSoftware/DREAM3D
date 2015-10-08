@@ -36,22 +36,24 @@
 
 #include "RotateSampleRefFrame.h"
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range3d.h>
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 #endif
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DoubleFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/Math/GeometryMath.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Math/GeometryMath.h"
+
 #include "OrientationLib/OrientationMath/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 #include "Sampling/SamplingConstants.h"
 
@@ -146,7 +148,7 @@ class RotateSampleRefFrameImpl
       }
     }
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     void operator()(const tbb::blocked_range3d<int64_t, int64_t, int64_t>& r) const
     {
       convert(r.pages().begin(), r.pages().end(), r.rows().begin(), r.rows().end(), r.cols().begin(), r.cols().end());
@@ -157,6 +159,11 @@ class RotateSampleRefFrameImpl
 
 
 };
+
+// Include the MOC generated file for this class
+#include "moc_RotateSampleRefFrame.cpp"
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -193,7 +200,10 @@ void RotateSampleRefFrame::setupFilterParameters()
   parameters.push_back(DoubleFilterParameter::New("Rotation Angle (Degrees)", "RotationAngle", getRotationAngle(), FilterParameter::Parameter));
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
-  parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", getCellAttributeMatrixPath(), FilterParameter::RequiredArray));
+  {
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", getCellAttributeMatrixPath(), FilterParameter::RequiredArray, req));
+  }
   setFilterParameters(parameters);
 }
 
@@ -215,10 +225,10 @@ void RotateSampleRefFrame::readFilterParameters(AbstractFilterParametersReader* 
 int RotateSampleRefFrame::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(RotationAxis)
-  DREAM3D_FILTER_WRITE_PARAMETER(RotationAngle)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
+  SIMPL_FILTER_WRITE_PARAMETER(RotationAxis)
+  SIMPL_FILTER_WRITE_PARAMETER(RotationAngle)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -251,7 +261,7 @@ void RotateSampleRefFrame::preflight()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
 
-  float rotAngle = m_RotationAngle * DREAM3D::Constants::k_Pi / 180.0;
+  float rotAngle = m_RotationAngle * SIMPLib::Constants::k_Pi / 180.0;
 
   int64_t xp = 0, yp = 0, zp = 0;
   float xRes = 0.0f, yRes = 0.0f, zRes = 0.0f;
@@ -278,11 +288,11 @@ void RotateSampleRefFrame::preflight()
   float coords[3] = { 0.0f, 0.0f, 0.0f };
   float newcoords[3] = { 0.0f, 0.0f, 0.0f };
   float xMin = std::numeric_limits<float>::max();
-  float xMax = std::numeric_limits<float>::min();
+  float xMax = -xMin;
   float yMin = std::numeric_limits<float>::max();
-  float yMax = std::numeric_limits<float>::min();
+  float yMax = -yMin;
   float zMin = std::numeric_limits<float>::max();
-  float zMax = std::numeric_limits<float>::min();
+  float zMax = -zMin;
 
   FOrientArrayType om(9);
   FOrientTransformsType::ax2om(FOrientArrayType(m_RotationAxis.x, m_RotationAxis.y, m_RotationAxis.z, rotAngle), om);
@@ -361,7 +371,7 @@ void RotateSampleRefFrame::execute()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
 
-  float rotAngle = m_RotationAngle * DREAM3D::Constants::k_Pi / 180.0;
+  float rotAngle = m_RotationAngle * SIMPLib::Constants::k_Pi / 180.0;
 
   int64_t xp = 0, yp = 0, zp = 0;
   float xRes = 0.0f, yRes = 0.0f, zRes = 0.0f;
@@ -461,12 +471,12 @@ void RotateSampleRefFrame::execute()
   newIndiciesPtr->initializeWithValue(-1);
   int64_t* newindicies = newIndiciesPtr->getPointer(0);
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
 #endif
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range3d<int64_t, int64_t, int64_t>(0, params.zpNew, 0, params.ypNew, 0, params.xpNew),

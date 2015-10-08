@@ -40,6 +40,9 @@
 
 #include "QtSupportLib/DREAM3DSettings.h"
 
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_BookmarksModel.cpp"
+
 BookmarksModel* BookmarksModel::self = NULL;
 
 // -----------------------------------------------------------------------------

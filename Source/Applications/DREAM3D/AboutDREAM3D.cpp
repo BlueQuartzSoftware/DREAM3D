@@ -1,7 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
-* Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
-* All rights reserved.
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -13,10 +11,9 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
-* BlueQuartz Software nor the names of its contributors may be used to endorse
-* or promote products derived from this software without specific prior written
-* permission.
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -29,24 +26,26 @@
 * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
 * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *
-*  This code was written under United States Air Force Contract number
-*                           FA8650-07-D-5800
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "AboutDREAM3D.h"
 
-#include "DREAM3DLib/DREAM3DLib.h"
+#include "SIMPLib/SIMPLib.h"
 
 #include <boost/version.hpp>
 #include <H5public.h>
 #include <qwt_global.h>
 
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
+#if SIMPLib_USE_PARALLEL_ALGORITHMS
 #include <tbb/tbb_stddef.h>
 #endif
 
-#if DREAM3D_USE_EIGEN
+#if SIMPL_USE_EIGEN
 #include <Eigen/src/Core/util/Macros.h>
 #endif
 
@@ -56,11 +55,14 @@
 
 #include "QtSupportLib/DREAM3DStyles.h"
 
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/FilterManager.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/FilterManager.h"
 
 #include "Applications/DREAM3D/DREAM3D/License/DREAM3DLicenseFiles.h"
 #include "Applications/DREAM3D/DREAM3DVersion.h"
+
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_AboutDREAM3D.cpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -168,7 +170,7 @@ void AboutDREAM3D::readVersions()
   QTableWidgetItem* qtwi1 = new QTableWidgetItem(QString("Version"), QTableWidgetItem::Type);
   version->setHorizontalHeaderItem(1, qtwi1);
 
-  version->setItem(0, 1, new QTableWidgetItem(DREAM3DLib::Version::Package()));
+  version->setItem(0, 1, new QTableWidgetItem(SIMPLib::Version::Package()));
   version->setItem(1, 1, new QTableWidgetItem(BOOST_LIB_VERSION));
   version->setItem(2, 1, new QTableWidgetItem(QT_VERSION_STR));
 
@@ -180,7 +182,7 @@ void AboutDREAM3D::readVersions()
 
   version->setItem(4, 1, new QTableWidgetItem(strH5));
 
-#if DREAM3D_USE_EIGEN
+#if SIMPL_USE_EIGEN
   QString strEigen = QString::number(EIGEN_WORLD_VERSION);
   strEigen.append(".");
   strEigen.append(QString::number(EIGEN_MAJOR_VERSION));
@@ -189,7 +191,7 @@ void AboutDREAM3D::readVersions()
   version->setItem(5, 1, new QTableWidgetItem(strEigen));
 #endif
 
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
+#if SIMPLib_USE_PARALLEL_ALGORITHMS
   QString strTBB = QString::number(TBB_VERSION_MAJOR);
   strTBB.append(".");
   strTBB.append(QString::number(TBB_VERSION_MINOR));
@@ -198,7 +200,7 @@ void AboutDREAM3D::readVersions()
 
   version->setItem(3, 1, new QTableWidgetItem(QWT_VERSION_STR));
 
-  labelVersion->setText(DREAM3DLib::Version::PackageComplete().toLatin1().data());
+  labelVersion->setText(SIMPLib::Version::PackageComplete().toLatin1().data());
 #endif
 }
 

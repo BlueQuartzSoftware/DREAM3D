@@ -42,20 +42,20 @@
 #include <QtCore/QSettings>
 #include <QtCore/QSet>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/DREAM3DLibVersion.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DREAM3DLibVersion.h"
-#include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/Common/FilterFactory.hpp"
-#include "DREAM3DLib/Common/FilterPipeline.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/IOFilters/ReadH5Ebsd.h"
-#include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
-#include "DREAM3DLib/IOFilters/DataContainerReader.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/SIMPLibVersion.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
+#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/Common/FilterFactory.hpp"
+#include "SIMPLib/Common/FilterPipeline.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/IOFilters/ReadH5Ebsd.h"
+#include "SIMPLib/FilterParameters/QFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/QFilterParametersWriter.h"
+#include "SIMPLib/IOFilters/DataContainerReader.h"
 
-#include "DREAM3DLib/IOFilters/EbsdToH5Ebsd.h"
+#include "SIMPLib/IOFilters/EbsdToH5Ebsd.h"
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
@@ -85,7 +85,7 @@ void writePipeline(FilterPipeline::Pointer pipeline)
   QSettings* prefs = writer->getPrefs();
   prefs->beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
   prefs->setValue(DREAM3D::Settings::NumFilters, filterCount);
-  prefs->setValue(DREAM3D::Settings::Version, DREAM3DLib::Version::Complete());
+  prefs->setValue(DREAM3D::Settings::Version, SIMPLib::Version::Complete());
   prefs->endGroup();
 
   for (int i = 0; i < count; ++i)

@@ -40,9 +40,9 @@
 #include <QtCore/QDir>
 #include <QtWidgets/QFileDialog>
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Utilities/FilePathGenerator.h"
-#include "DREAM3DLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Utilities/FilePathGenerator.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 
 #include "QtSupportLib/QFileCompleter.h"
@@ -365,8 +365,9 @@ void ConvertHexGridToSquareGridWidget::on_m_OutputDirBtn_clicked()
   // Store the last used directory into the private instance variable
   QFileInfo fi(file);
   m_OpenDialogLastDirectory = fi.path();
+  m_OutputDir->setText(file);
 
-  on_m_OutputDir_textChanged(file);
+ // on_m_OutputDir_textChanged(file);
 }
 
 // -----------------------------------------------------------------------------

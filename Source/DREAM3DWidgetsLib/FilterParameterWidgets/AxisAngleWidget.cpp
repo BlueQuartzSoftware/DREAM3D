@@ -37,12 +37,15 @@
 
 #include <QtCore/QMetaProperty>
 
-#include "DREAM3DLib/FilterParameters/FilterParameter.h"
+#include "SIMPLib/FilterParameters/FilterParameter.h"
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 
 #include "FilterParameterWidgetsDialogs.h"
 
+
+// Include the MOC generated file for this class
+#include "moc_AxisAngleWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //

@@ -37,9 +37,9 @@
 #ifndef _FindBoundaryElementFractions_H_
 #define _FindBoundaryElementFractions_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The FindBoundaryElementFractions class. See [Filter documentation](@ref findboundaryelementfractions) for details.
@@ -48,19 +48,19 @@ class FindBoundaryElementFractions : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindBoundaryElementFractions)
-    DREAM3D_STATIC_NEW_MACRO(FindBoundaryElementFractions)
-    DREAM3D_TYPE_MACRO_SUPER(FindBoundaryElementFractions, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FindBoundaryElementFractions)
+    SIMPL_STATIC_NEW_MACRO(FindBoundaryElementFractions)
+    SIMPL_TYPE_MACRO_SUPER(FindBoundaryElementFractions, AbstractFilter)
 
     virtual ~FindBoundaryElementFractions();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, BoundaryCellsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, BoundaryCellsArrayPath)
     Q_PROPERTY(DataArrayPath BoundaryCellsArrayPath READ getBoundaryCellsArrayPath WRITE setBoundaryCellsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, BoundaryCellFractionsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, BoundaryCellFractionsArrayPath)
     Q_PROPERTY(DataArrayPath BoundaryCellFractionsArrayPath READ getBoundaryCellFractionsArrayPath WRITE setBoundaryCellFractionsArrayPath)
 
     /**

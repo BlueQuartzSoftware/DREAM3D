@@ -40,8 +40,8 @@
 #include <vector>
 #include <set>
 
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Geometry/TriangleGeom.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/util/Vector3.h"
 

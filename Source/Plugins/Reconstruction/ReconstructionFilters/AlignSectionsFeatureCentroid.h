@@ -37,9 +37,9 @@
 #ifndef _AlignSectionsFeatureCentroid_H_
 #define _AlignSectionsFeatureCentroid_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "Reconstruction/ReconstructionFilters/AlignSections.h"
 
@@ -50,19 +50,19 @@ class AlignSectionsFeatureCentroid : public AlignSections
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(AlignSectionsFeatureCentroid)
-    DREAM3D_STATIC_NEW_MACRO(AlignSectionsFeatureCentroid)
-    DREAM3D_TYPE_MACRO_SUPER(AlignSectionsFeatureCentroid, AlignSections)
+    SIMPL_SHARED_POINTERS(AlignSectionsFeatureCentroid)
+    SIMPL_STATIC_NEW_MACRO(AlignSectionsFeatureCentroid)
+    SIMPL_TYPE_MACRO_SUPER(AlignSectionsFeatureCentroid, AlignSections)
 
     virtual ~AlignSectionsFeatureCentroid();
 
-    DREAM3D_FILTER_PARAMETER(int, ReferenceSlice)
+    SIMPL_FILTER_PARAMETER(int, ReferenceSlice)
     Q_PROPERTY(int ReferenceSlice READ getReferenceSlice WRITE setReferenceSlice)
 
-    DREAM3D_FILTER_PARAMETER(bool, UseReferenceSlice)
+    SIMPL_FILTER_PARAMETER(bool, UseReferenceSlice)
     Q_PROPERTY(bool UseReferenceSlice READ getUseReferenceSlice WRITE setUseReferenceSlice)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
     Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
     /**

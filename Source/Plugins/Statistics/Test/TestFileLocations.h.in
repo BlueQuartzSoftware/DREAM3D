@@ -39,4 +39,13 @@ namespace UnitTest
   }
 }
 
+namespace UnitTest
+{
+  namespace FindDifferenceMapTest
+  {
+   const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
+   const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
+  }
+}
+
 #endif

@@ -36,14 +36,19 @@
 
 #include "AlignSections.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/BooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/OutputFileFilterParameter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
+
+// Include the MOC generated file for this class
+#include "moc_AlignSections.cpp"
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -97,10 +102,10 @@ void AlignSections::readFilterParameters(AbstractFilterParametersReader* reader,
 int AlignSections::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(AlignmentShiftFileName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SubtractBackground)
-  DREAM3D_FILTER_WRITE_PARAMETER(WriteAlignmentShifts)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(AlignmentShiftFileName)
+  SIMPL_FILTER_WRITE_PARAMETER(SubtractBackground)
+  SIMPL_FILTER_WRITE_PARAMETER(WriteAlignmentShifts)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -119,7 +124,7 @@ void AlignSections::dataCheck()
   if (image->getXPoints() <= 1 || image->getYPoints() <= 1 || image->getZPoints() <= 1)
   {
     QString ss = QObject::tr("The Image Geometry is not 3D and cannot be run through this filter. The dimensions are (%1,%2,%3)").arg(image->getXPoints()).arg(image->getYPoints()).arg(image->getZPoints());
-    setErrorCondition(-999);
+    setErrorCondition(-3010);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 

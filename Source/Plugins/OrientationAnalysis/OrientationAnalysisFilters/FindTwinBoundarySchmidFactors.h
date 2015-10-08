@@ -37,10 +37,10 @@
 #ifndef _FindTwinBoundarySchmidFactors_H_
 #define _FindTwinBoundarySchmidFactors_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
@@ -51,40 +51,40 @@ class FindTwinBoundarySchmidFactors : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindTwinBoundarySchmidFactors)
-    DREAM3D_STATIC_NEW_MACRO(FindTwinBoundarySchmidFactors)
-    DREAM3D_TYPE_MACRO_SUPER(FindTwinBoundarySchmidFactors, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FindTwinBoundarySchmidFactors)
+    SIMPL_STATIC_NEW_MACRO(FindTwinBoundarySchmidFactors)
+    SIMPL_TYPE_MACRO_SUPER(FindTwinBoundarySchmidFactors, AbstractFilter)
 
     virtual ~FindTwinBoundarySchmidFactors();
 
-    DREAM3D_FILTER_PARAMETER(bool, WriteFile)
+    SIMPL_FILTER_PARAMETER(bool, WriteFile)
     Q_PROPERTY(bool WriteFile READ getWriteFile WRITE setWriteFile)
 
-    DREAM3D_FILTER_PARAMETER(QString, TwinBoundarySchmidFactorsFile)
+    SIMPL_FILTER_PARAMETER(QString, TwinBoundarySchmidFactorsFile)
     Q_PROPERTY(QString TwinBoundarySchmidFactorsFile READ getTwinBoundarySchmidFactorsFile WRITE setTwinBoundarySchmidFactorsFile)
 
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, LoadingDir)
+    SIMPL_FILTER_PARAMETER(FloatVec3_t, LoadingDir)
     Q_PROPERTY(FloatVec3_t LoadingDir READ getLoadingDir WRITE setLoadingDir)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
     Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
     Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceNormalsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceNormalsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceNormalsArrayPath READ getSurfaceMeshFaceNormalsArrayPath WRITE setSurfaceMeshFaceNormalsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTwinBoundaryArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTwinBoundaryArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshTwinBoundaryArrayPath READ getSurfaceMeshTwinBoundaryArrayPath WRITE setSurfaceMeshTwinBoundaryArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshTwinBoundarySchmidFactorsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, SurfaceMeshTwinBoundarySchmidFactorsArrayName)
     Q_PROPERTY(QString SurfaceMeshTwinBoundarySchmidFactorsArrayName READ getSurfaceMeshTwinBoundarySchmidFactorsArrayName WRITE setSurfaceMeshTwinBoundarySchmidFactorsArrayName)
 
     /**

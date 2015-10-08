@@ -30,7 +30,7 @@ This filter does the following...
 
 ## Authors ##
 
-**Copyright** 2014 Michael A. Groeber (AFRL), 2014 Michael A. Jackson (BlueQuartz Software)
+**Copyright** $YEAR COMPANY
 
 **Contact Info** dream3d@bluequartz.net
 

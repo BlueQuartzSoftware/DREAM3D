@@ -38,11 +38,14 @@
 #include <QtCore/QMetaProperty>
 #include <QtCore/QSignalMapper>
 
-#include "DREAM3DLib/FilterParameters/FourthOrderPolynomialFilterParameter.h"
+#include "SIMPLib/FilterParameters/FourthOrderPolynomialFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
+
+// Include the MOC generated file for this class
+#include "moc_FourthOrderPolynomialWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //

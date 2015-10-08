@@ -41,8 +41,8 @@
 
 #include <QtCore/QString>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "OrientationLib/OrientationLib.h"
 #include "OrientationLib/Utilities/ModifiedLambertProjection.h"
@@ -54,10 +54,10 @@
 class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
 {
   public:
-    DREAM3D_SHARED_POINTERS(ModifiedLambertProjectionArray)
-    DREAM3D_STATIC_NEW_MACRO(ModifiedLambertProjectionArray)
-    DREAM3D_TYPE_MACRO_SUPER(ModifiedLambertProjectionArray, IDataArray)
-    DREAM3D_CLASS_VERSION(2)
+    SIMPL_SHARED_POINTERS(ModifiedLambertProjectionArray)
+    SIMPL_STATIC_NEW_MACRO(ModifiedLambertProjectionArray)
+    SIMPL_TYPE_MACRO_SUPER(ModifiedLambertProjectionArray, IDataArray)
+    SIMPL_CLASS_VERSION(2)
 
     virtual ~ModifiedLambertProjectionArray();
 
@@ -75,9 +75,9 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      */
     virtual QString getTypeAsString();
 
-    DREAM3D_INSTANCE_PROPERTY(int, Phase)
+    SIMPL_INSTANCE_PROPERTY(int, Phase)
 
-    DREAM3D_INSTANCE_PROPERTY(QVector<ModifiedLambertProjection::Pointer>, ModifiedLambertProjectionArray)
+    SIMPL_INSTANCE_PROPERTY(QVector<ModifiedLambertProjection::Pointer>, ModifiedLambertProjectionArray)
 
     /**
      * @brief createNewArray

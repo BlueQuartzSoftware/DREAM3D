@@ -9,11 +9,20 @@
     <dict>
         <key>CFBundleTypeExtensions</key>
         <array>
-              <string>json</string>
-              <string>dream3d</string>
-              <string>ini</string>
-              <string>txt</string>
+          <string>json</string>
+          <string>dream3d</string>
       </array>
+      <key>CFBundleTypeRole</key>
+      <string>Editor</string>
+    </dict>
+    <dict>
+        <key>CFBundleTypeExtensions</key>
+        <array>
+          <string>ini</string>
+          <string>txt</string>
+      </array>
+      <key>CFBundleTypeRole</key>
+      <string>Viewer</string>
     </dict>
   </array>
 	<key>CFBundleExecutable</key>

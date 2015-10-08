@@ -41,60 +41,60 @@
 #include <QtCore/QString>
 
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/CoreFilters/FileReader.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/CoreFilters/FileReader.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 
 class  YSChoiAbaqusReader : public FileReader
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(YSChoiAbaqusReader)
-    DREAM3D_STATIC_NEW_MACRO(YSChoiAbaqusReader)
-    DREAM3D_TYPE_MACRO_SUPER(YSChoiAbaqusReader, FileReader)
+    SIMPL_SHARED_POINTERS(YSChoiAbaqusReader)
+    SIMPL_STATIC_NEW_MACRO(YSChoiAbaqusReader)
+    SIMPL_TYPE_MACRO_SUPER(YSChoiAbaqusReader, FileReader)
 
     virtual ~YSChoiAbaqusReader();
 
-    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
+    SIMPL_FILTER_PARAMETER(QString, DataContainerName)
     Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-    DREAM3D_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
     Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(QString, CellFeatureAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, CellFeatureAttributeMatrixName)
     Q_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
     Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(QString, InputFile)
+    SIMPL_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-    DREAM3D_FILTER_PARAMETER(QString, InputFeatureInfoFile)
+    SIMPL_FILTER_PARAMETER(QString, InputFeatureInfoFile)
     Q_PROPERTY(QString InputFeatureInfoFile READ getInputFeatureInfoFile WRITE setInputFeatureInfoFile)
 
-    DREAM3D_FILTER_PARAMETER(QString, CellEulerAnglesArrayName)
+    SIMPL_FILTER_PARAMETER(QString, CellEulerAnglesArrayName)
     Q_PROPERTY(QString CellEulerAnglesArrayName READ getCellEulerAnglesArrayName WRITE setCellEulerAnglesArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, QuatsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, QuatsArrayName)
     Q_PROPERTY(QString QuatsArrayName READ getQuatsArrayName WRITE setQuatsArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, AvgQuatsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, AvgQuatsArrayName)
     Q_PROPERTY(QString AvgQuatsArrayName READ getAvgQuatsArrayName WRITE setAvgQuatsArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, CellPhasesArrayName)
+    SIMPL_FILTER_PARAMETER(QString, CellPhasesArrayName)
     Q_PROPERTY(QString CellPhasesArrayName READ getCellPhasesArrayName WRITE setCellPhasesArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceFeaturesArrayName)
+    SIMPL_FILTER_PARAMETER(QString, SurfaceFeaturesArrayName)
     Q_PROPERTY(QString SurfaceFeaturesArrayName READ getSurfaceFeaturesArrayName WRITE setSurfaceFeaturesArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, FeatureIdsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, FeatureIdsArrayName)
     Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, CrystalStructuresArrayName)
+    SIMPL_FILTER_PARAMETER(QString, CrystalStructuresArrayName)
     Q_PROPERTY(QString CrystalStructuresArrayName READ getCrystalStructuresArrayName WRITE setCrystalStructuresArrayName)
 
     /**

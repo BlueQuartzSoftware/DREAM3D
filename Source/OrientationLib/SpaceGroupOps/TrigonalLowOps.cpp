@@ -35,7 +35,7 @@
 
 #include "TrigonalLowOps.h"
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/partitioner.h>
@@ -46,8 +46,8 @@
 
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Utilities/ColorTable.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Utilities/ColorTable.h"
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
@@ -87,13 +87,13 @@ static const float TrigMatSym[3][3][3] =
     {0.0f, 0.0f, 1.0f}
   },
 
-  { { -0.5f, static_cast<float>(DREAM3D::Constants::k_Root3Over2),  0.0f},
-    { static_cast<float>(-DREAM3D::Constants::k_Root3Over2), -0.5f, 0.0f},
+  { { -0.5f, static_cast<float>(SIMPLib::Constants::k_Root3Over2),  0.0f},
+    { static_cast<float>(-SIMPLib::Constants::k_Root3Over2), -0.5f, 0.0f},
     {0.0f, 0.0f,  1.0f}
   },
 
-  { { -0.5f, static_cast<float>(-DREAM3D::Constants::k_Root3Over2),  0.0f},
-    { static_cast<float>(DREAM3D::Constants::k_Root3Over2), -0.5f, 0.0f},
+  { { -0.5f, static_cast<float>(-SIMPLib::Constants::k_Root3Over2),  0.0f},
+    { static_cast<float>(SIMPLib::Constants::k_Root3Over2), -0.5f, 0.0f},
     {0.0f, 0.0f,  1.0f}
   }
 };
@@ -156,9 +156,9 @@ float TrigonalLowOps::_calcMisoQuat(const QuatF quatsym[6], int numsym,
     FOrientTransformsType::qu2ax(FOrientArrayType(qc.x, qc.y, qc.z, qc.w), ax);
     ax.toAxisAngle(n1, n2, n3, w);
 
-    if (w > DREAM3D::Constants::k_Pi)
+    if (w > SIMPLib::Constants::k_Pi)
     {
-      w = DREAM3D::Constants::k_2Pi - w;
+      w = SIMPLib::Constants::k_2Pi - w;
     }
     if (w < wmin)
     {
@@ -245,7 +245,7 @@ FOrientArrayType TrigonalLowOps::getMDFFZRod(FOrientArrayType rod)
   {
     ax[0] = -ax[0], ax[1] = -ax[1], ax[2] = -ax[2];
   }
-  float angle = 180.0f * atan2(ax[1], ax[0]) * DREAM3D::Constants::k_1OverPi;
+  float angle = 180.0f * atan2(ax[1], ax[0]) * SIMPLib::Constants::k_1OverPi;
   if(angle < 0)
   {
     angle = angle + 360.0f;
@@ -259,7 +259,7 @@ FOrientArrayType TrigonalLowOps::getMDFFZRod(FOrientArrayType rod)
     if (int(angle / 60) % 2 == 0)
     {
       FZw = angle - (60.0f * int(angle / 60.0f));
-      FZw = FZw * DREAM3D::Constants::k_PiOver180;
+      FZw = FZw * SIMPLib::Constants::k_PiOver180;
       FZn1 = n1n2mag * cosf(FZw);
       FZn2 = n1n2mag * sinf(FZw);
     }
@@ -267,7 +267,7 @@ FOrientArrayType TrigonalLowOps::getMDFFZRod(FOrientArrayType rod)
     {
       FZw = angle - (60.0f * int(angle / 60.0f));
       FZw = 60.0f - FZw;
-      FZw = FZw * DREAM3D::Constants::k_PiOver180;
+      FZw = FZw * SIMPLib::Constants::k_PiOver180;
       FZn1 = n1n2mag * cosf(FZw);
       FZn2 = n1n2mag * sinf(FZw);
     }
@@ -316,11 +316,11 @@ int TrigonalLowOps::getMisoBin(FOrientArrayType rod)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FOrientArrayType TrigonalLowOps::determineEulerAngles(int choose)
+FOrientArrayType TrigonalLowOps::determineEulerAngles(uint64_t seed, int choose)
 {
   float init[3];
   float step[3];
-  float phi[3];
+  int32_t phi[3];
   float h1, h2, h3;
 
   init[0] = TrigDim1InitValue;
@@ -329,11 +329,11 @@ FOrientArrayType TrigonalLowOps::determineEulerAngles(int choose)
   step[0] = TrigDim1StepValue;
   step[1] = TrigDim2StepValue;
   step[2] = TrigDim3StepValue;
-  phi[0] = static_cast<float>(choose % 72);
-  phi[1] = static_cast<float>((choose / 72) % 72);
-  phi[2] = static_cast<float>(choose / (72 * 72));
+  phi[0] = static_cast<int32_t>(choose % 72);
+  phi[1] = static_cast<int32_t>((choose / 72) % 72);
+  phi[2] = static_cast<int32_t>(choose / (72 * 72));
 
-  _calcDetermineHomochoricValues(init, step, phi, choose, h1, h2, h3);
+  _calcDetermineHomochoricValues(seed, init, step, phi, choose, h1, h2, h3);
 
   FOrientArrayType ho(h1, h2, h3);
   FOrientArrayType ro(4);
@@ -367,11 +367,11 @@ FOrientArrayType TrigonalLowOps::randomizeEulerAngles(FOrientArrayType synea)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FOrientArrayType TrigonalLowOps::determineRodriguesVector( int choose)
+FOrientArrayType TrigonalLowOps::determineRodriguesVector(uint64_t seed, int choose)
 {
   float init[3];
   float step[3];
-  float phi[3];
+  int32_t phi[3];
   float h1, h2, h3;
 
   init[0] = TrigDim1InitValue;
@@ -380,11 +380,11 @@ FOrientArrayType TrigonalLowOps::determineRodriguesVector( int choose)
   step[0] = TrigDim1StepValue;
   step[1] = TrigDim2StepValue;
   step[2] = TrigDim3StepValue;
-  phi[0] = static_cast<float>(choose % 72);
-  phi[1] = static_cast<float>((choose / 72) % 72);
-  phi[2] = static_cast<float>(choose / (72 * 72));
+  phi[0] = static_cast<int32_t>(choose % 72);
+  phi[1] = static_cast<int32_t>((choose / 72) % 72);
+  phi[2] = static_cast<int32_t>(choose / (72 * 72));
 
-  _calcDetermineHomochoricValues(init, step, phi, choose, h1, h2, h3);
+  _calcDetermineHomochoricValues(seed, init, step, phi, choose, h1, h2, h3);
   FOrientArrayType ho(h1, h2, h3);
   FOrientArrayType ro(4);
   OrientationTransforms<FOrientArrayType, float>::ho2ro(ho, ro);
@@ -540,7 +540,7 @@ namespace Detail
             // -----------------------------------------------------------------------------
             // 011 Family
             direction[0] = -0.5;
-            direction[1] = DREAM3D::Constants::k_Root3Over2;
+            direction[1] = SIMPLib::Constants::k_Root3Over2;
             direction[2] = 0.0;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 6));
             MatrixMath::Copy3x1(m_xyz011->getPointer(i * 6), m_xyz011->getPointer(i * 6 + 3));
@@ -558,7 +558,7 @@ namespace Detail
           }
         }
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
         void operator()(const tbb::blocked_range<size_t>& r) const
         {
           generate(r.begin(), r.end());
@@ -589,12 +589,12 @@ void TrigonalLowOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, Floa
     xyz111->resize(nOrientations * Detail::TrigonalLow::symSize2 * 3);
   }
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
 #endif
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, nOrientations),
@@ -614,7 +614,7 @@ void TrigonalLowOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, Floa
 // -----------------------------------------------------------------------------
 bool TrigonalLowOps::inUnitTriangle(float eta, float chi)
 {
-  if( eta < (-120.0 * DREAM3D::Constants::k_PiOver180) || eta > 0.0 || chi < 0 || chi > (90.0 * DREAM3D::Constants::k_PiOver180) )
+  if( eta < (-120.0 * SIMPLib::Constants::k_PiOver180) || eta > 0.0 || chi < 0 || chi > (90.0 * SIMPLib::Constants::k_PiOver180) )
   {
     return false;
   }
@@ -636,9 +636,9 @@ DREAM3D::Rgb TrigonalLowOps::generateIPFColor(double phi1, double phi, double ph
 {
   if (degToRad == true)
   {
-    phi1 = phi1 * DREAM3D::Constants::k_DegToRad;
-    phi = phi * DREAM3D::Constants::k_DegToRad;
-    phi2 = phi2 * DREAM3D::Constants::k_DegToRad;
+    phi1 = phi1 * SIMPLib::Constants::k_DegToRad;
+    phi = phi * SIMPLib::Constants::k_DegToRad;
+    phi2 = phi2 * SIMPLib::Constants::k_DegToRad;
   }
   QuatF qc;
   QuatF q2;
@@ -693,8 +693,8 @@ DREAM3D::Rgb TrigonalLowOps::generateIPFColor(double phi1, double phi, double ph
   float etaMin = -120.0;
   float etaMax = 0.0;
   float chiMax = 90.0;
-  float etaDeg = eta * DREAM3D::Constants::k_180OverPi;
-  float chiDeg = chi * DREAM3D::Constants::k_180OverPi;
+  float etaDeg = eta * SIMPLib::Constants::k_180OverPi;
+  float chiDeg = chi * SIMPLib::Constants::k_180OverPi;
 
   _rgb[0] = 1.0 - chiDeg / chiMax;
   _rgb[2] = fabs(etaDeg - etaMin) / (etaMax - etaMin);
@@ -750,11 +750,12 @@ DREAM3D::Rgb TrigonalLowOps::generateRodriguesColor(float r1, float r2, float r3
 // -----------------------------------------------------------------------------
 QVector<UInt8ArrayType::Pointer> TrigonalLowOps::generatePoleFigure(PoleFigureConfiguration_t& config)
 {
-  QVector<UInt8ArrayType::Pointer> poleFigures;
   QString label0("Trigonal Low <0001>");
   QString label1("Trigonal Low <-1-120>");
   QString label2("Trigonal Low <2-1-10>");
-
+  if(config.labels.size() > 0) { label0 = config.labels.at(0); }
+  if(config.labels.size() > 1) { label1 = config.labels.at(1); }
+  if(config.labels.size() > 2) { label2 = config.labels.at(2); }
 
   int numOrientations = config.eulers->getNumberOfTuples();
 
@@ -778,7 +779,7 @@ QVector<UInt8ArrayType::Pointer> TrigonalLowOps::generatePoleFigure(PoleFigureCo
   DoubleArrayType::Pointer intensity001 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label0 + "_Intensity_Image");
   DoubleArrayType::Pointer intensity011 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label1 + "_Intensity_Image");
   DoubleArrayType::Pointer intensity111 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label2 + "_Intensity_Image");
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
   tbb::task_group* g = new tbb::task_group;
@@ -857,15 +858,26 @@ QVector<UInt8ArrayType::Pointer> TrigonalLowOps::generatePoleFigure(PoleFigureCo
   UInt8ArrayType::Pointer image001 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label0);
   UInt8ArrayType::Pointer image011 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label1);
   UInt8ArrayType::Pointer image111 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label2);
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-  poleFigures.push_back(image001);
-  poleFigures.push_back(image011);
-  poleFigures.push_back(image111);
 
-  g = new tbb::task_group;
+  QVector<UInt8ArrayType::Pointer> poleFigures(3);
+  if(config.order.size() == 3)
+  {
+    poleFigures[config.order[0]] = image001;
+    poleFigures[config.order[1]] = image011;
+    poleFigures[config.order[2]] = image111;
+  }
+  else
+  {
+    poleFigures[0] = image001;
+    poleFigures[1] = image011;
+    poleFigures[2] = image111;
+  }
+
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 
   if(doParallel == true)
   {
+    g = new tbb::task_group;
     g->run(GeneratePoleFigureRgbaImageImpl(intensity001.get(), &config, image001.get()));
     g->run(GeneratePoleFigureRgbaImageImpl(intensity011.get(), &config, image011.get()));
     g->run(GeneratePoleFigureRgbaImageImpl(intensity111.get(), &config, image111.get()));
@@ -885,6 +897,98 @@ QVector<UInt8ArrayType::Pointer> TrigonalLowOps::generatePoleFigure(PoleFigureCo
   }
 
   return poleFigures;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+UInt8ArrayType::Pointer TrigonalLowOps::generateIPFTriangleLegend(int imageDim)
+{
+
+  QVector<size_t> dims(1, 4);
+  UInt8ArrayType::Pointer image =  UInt8ArrayType::CreateArray( static_cast<size_t>(imageDim * imageDim), dims, "Orthorhombic Triangle Legend");
+  uint32_t* pixelPtr = reinterpret_cast<uint32_t*>(image->getPointer(0));
+
+  static const float xInc = 1.0 / (imageDim);
+  static const float yInc = 1.0 / (imageDim);
+  static const float rad = 1.0f;
+
+  float x = 0.0f;
+  float y = 0.0f;
+  float a = 0.0f;
+  float b = 0.0f;
+  float c = 0.0f;
+
+  float val = 0.0f;
+  float x1 = 0.0f;
+  float y1 = 0.0f;
+  float z1 = 0.0f;
+  float denom = 0.0f;
+
+  // Find the slope of the bounding line.
+  static const float m = sinf(60.0 * SIMPLib::Constants::k_PiOver180) / cosf(60.0 * SIMPLib::Constants::k_PiOver180);
+
+  DREAM3D::Rgb color;
+  size_t idx = 0;
+  size_t yScanLineIndex = 0; // We use this to control where the data is drawn. Otherwise the image will come out flipped vertically
+  // Loop over every pixel in the image and project up to the sphere to get the angle and then figure out the RGB from
+  // there.
+  for (int32_t yIndex = 0; yIndex < imageDim; ++yIndex)
+  {
+
+    for (int32_t xIndex = 0; xIndex < imageDim; ++xIndex)
+    {
+      idx = (imageDim * yScanLineIndex) + xIndex;
+
+      x = -1.0f + 2.0f * xIndex * xInc; // X Scales from ( -1 -> +1)
+      y = 1.0f - 2.0f * yIndex * yInc; // Y Scales from (+1 -> -1)
+
+      float sumSquares = (x * x) + (y * y);
+      if( sumSquares > 1.0f || y > 0.0f) // Outside unit circle
+      {
+        color = 0xFFFFFFFF;
+      }
+      else if (  fabs(y - yInc) <= yInc && x >= 0.0f) // Black Border line
+      {
+        color = 0xFF000000;
+      }
+      else if ( x <= 0.0f && y <= 0.0 && x < y/m)
+      {
+        color = 0xFFFFFFFF;
+      }
+      else if( x < 0.0f && y < 0.0 && fabs(x - y/m) < 0.005) // Black Diagonal Border line
+      {
+        color = 0xFF000000;
+      }
+      else if ( sumSquares > (rad-2*xInc) && sumSquares < (rad+2*xInc)) // Black Border line on circle
+      {
+        color = 0xFF000000;
+      }
+
+      else
+      {
+        a = (x * x + y * y + 1);
+        b = (2 * x * x + 2 * y * y);
+        c = (x * x + y * y - 1);
+
+        val = (-b + sqrtf(b * b - 4.0 * a * c)) / (2.0 * a);
+        x1 = (1 + val) * x;
+        y1 = (1 + val) * y;
+        z1 = val;
+        denom = (x1 * x1) + (y1 * y1) + (z1 * z1);
+        denom = sqrtf(denom);
+        x1 = x1 / denom;
+        y1 = y1 / denom;
+        z1 = z1 / denom;
+
+        color = generateIPFColor(0.0, 0.0, 0.0, x1, y1, z1, false);
+      }
+
+      pixelPtr[idx] = color;
+    }
+    yScanLineIndex++;
+  }
+  return image;
 }
 
 // -----------------------------------------------------------------------------

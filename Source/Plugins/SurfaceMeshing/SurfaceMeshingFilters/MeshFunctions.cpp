@@ -38,7 +38,7 @@
 
 #include "MeshFunctions.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "SIMPLib/Common/DREAM3DMath.h"
 
 
 // -----------------------------------------------------------------------------

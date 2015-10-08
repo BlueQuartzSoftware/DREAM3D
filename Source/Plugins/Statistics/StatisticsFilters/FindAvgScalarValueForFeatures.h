@@ -37,9 +37,9 @@
 #ifndef _FindAvgScalarValueForFeatures_H_
 #define _FindAvgScalarValueForFeatures_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The FindAvgScalarValueForFeatures class. See [Filter documentation](@ref findavgscalarvalueforfeatures) for details.
@@ -48,13 +48,13 @@ class FindAvgScalarValueForFeatures : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindAvgScalarValueForFeatures)
-    DREAM3D_STATIC_NEW_MACRO(FindAvgScalarValueForFeatures)
-    DREAM3D_TYPE_MACRO_SUPER(FindAvgScalarValueForFeatures, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FindAvgScalarValueForFeatures)
+    SIMPL_STATIC_NEW_MACRO(FindAvgScalarValueForFeatures)
+    SIMPL_TYPE_MACRO_SUPER(FindAvgScalarValueForFeatures, AbstractFilter)
 
     virtual ~FindAvgScalarValueForFeatures();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
     Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
 
     /**
@@ -62,10 +62,10 @@ class FindAvgScalarValueForFeatures : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, NewFeatureArrayArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, NewFeatureArrayArrayPath)
     Q_PROPERTY(DataArrayPath NewFeatureArrayArrayPath READ getNewFeatureArrayArrayPath WRITE setNewFeatureArrayArrayPath)
 
     /**

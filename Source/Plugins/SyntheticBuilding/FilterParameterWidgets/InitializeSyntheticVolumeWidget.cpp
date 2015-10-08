@@ -49,28 +49,21 @@
 #include "H5Support/HDF5ScopedFileSentinel.h"
 
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/ShapeType.h"
-#include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/Common/IFilterFactory.hpp"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/DataArrays/StatsDataArray.h"
-#include "DREAM3DLib/StatsData/StatsData.h"
-#include "DREAM3DLib/StatsData/PrimaryStatsData.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-#include "DREAM3DLib/CoreFilters/DataContainerReader.h"
-
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/ShapeType.h"
+#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/Common/IFilterFactory.hpp"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/DataArrays/StatsDataArray.h"
+#include "SIMPLib/StatsData/StatsData.h"
+#include "SIMPLib/StatsData/PrimaryStatsData.h"
+#include "SIMPLib/Utilities/SIMPLibRandom.h"
+#include "SIMPLib/CoreFilters/DataContainerReader.h"
 
 #include "QtSupportLib/QFileCompleter.h"
-//#include "QtSupportLib/DREAM3DQtMacros.h"
-//#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
 
 #include "SyntheticBuilding/SyntheticBuildingFilters/InitializeSyntheticVolume.h"
-
-
-// This file is auto generated into the build directory
-#include "SyntheticBuilding/moc_InitializeSyntheticVolumeWidget.cpp"
 
 // Initialize private static member variable
 QString InitializeSyntheticVolumeWidget::m_OpenDialogLastDirectory = "";
@@ -505,7 +498,7 @@ int InitializeSyntheticVolumeWidget::estimate_numFeatures(int xpoints, int ypoin
   StatsDataArray& statsDataArray = *statsDataArrayPtr;
 
 #if 1
-  DREAM3D_RANDOMNG_NEW();
+  SIMPL_RANDOMNG_NEW();
 
   QVector<int> primaryphases;
   QVector<double> primaryphasefractions;

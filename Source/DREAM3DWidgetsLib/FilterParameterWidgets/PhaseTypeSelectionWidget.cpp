@@ -41,14 +41,17 @@
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QLabel>
 
-#include "DREAM3DLib/Common/PhaseType.h"
-#include "DREAM3DLib/DataContainers/DataArrayPath.h"
-#include "DREAM3DLib/FilterParameters/PhaseTypeSelectionFilterParameter.h"
-#include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
+#include "SIMPLib/Common/PhaseType.h"
+#include "SIMPLib/DataContainers/DataArrayPath.h"
+#include "SIMPLib/FilterParameters/PhaseTypeSelectionFilterParameter.h"
+#include "SIMPLib/Utilities/QMetaObjectUtilities.h"
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
 
+
+// Include the MOC generated file for this class
+#include "moc_PhaseTypeSelectionWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -104,13 +107,7 @@ void PhaseTypeSelectionWidget::setupGui()
   connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)),
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
-  if (getFilterParameter() == NULL)
-  {
-    return;
-  }
-  label->setText(getFilterParameter()->getHumanLabel() );
-
-
+  label->setText(m_FilterParameter->getHumanLabel() );
 
   dataContainerCombo->blockSignals(true);
   attributeMatrixCombo->blockSignals(true);
@@ -123,7 +120,6 @@ void PhaseTypeSelectionWidget::setupGui()
   populateComboBoxes();
 
   updatePhaseComboBoxes();
-
 }
 
 
@@ -372,23 +368,20 @@ void PhaseTypeSelectionWidget::updatePhaseComboBoxes()
     phaseCount = dataFromFilter.size(); // So lets just use the count from the actual phase data
   }
 
-  // Get our list of predefined Phase Type Strings
-  QVector<QString> phaseTypestrings;
-  PhaseType::getPhaseTypeStrings(phaseTypestrings);
   // Get our list of predefined enumeration values
   QVector<unsigned int> phaseTypeEnums;
   PhaseType::getPhaseTypeEnums(phaseTypeEnums);
 
   phaseListWidget->clear();
+  // Get our list of Phase Type Strings
+  QStringList phaseListChoices = m_FilterParameter->getPhaseListChoices();
 
-  // We skip the first Ensemble as it is always a dummy
-  //for (int i = 0; i < size; i++)
   for (int i = 1; i < phaseCount; i++)
   {
     QComboBox* cb = new QComboBox(NULL);
-    for (qint32 s = 0; s < phaseTypestrings.size(); ++s)
+    for (int s = 0; s < phaseListChoices.size(); ++s)
     {
-      cb->addItem((phaseTypestrings[s]), phaseTypeEnums[s]);
+      cb->addItem((phaseListChoices[s]), phaseTypeEnums[s]);
       cb->setItemData(static_cast<int>(s), phaseTypeEnums[s], Qt::UserRole);
     }
 
@@ -399,7 +392,6 @@ void PhaseTypeSelectionWidget::updatePhaseComboBoxes()
     if (i < dataFromFilter.size())
     {
       cb->setCurrentIndex(dataFromFilter[i]);
-      //qDebug() << "  Phase Data[" << i << "] = " << dataFromFilter[i];
     }
     connect(cb, SIGNAL(currentIndexChanged(int)),
             this, SLOT(phaseTypeComboBoxChanged(int)) );

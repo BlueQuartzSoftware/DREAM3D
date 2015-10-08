@@ -39,7 +39,7 @@
 #include <QtCore/QList>
 #include <QtWidgets/QListWidgetItem>
 
-#include "DREAM3DLib/DataContainers/DataArrayPath.h"
+#include "SIMPLib/DataContainers/DataArrayPath.h"
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
@@ -47,6 +47,9 @@
 #define DATA_CONTAINER_LEVEL 0
 #define ATTRIBUTE_MATRIX_LEVEL 1
 #define ATTRIBUTE_ARRAY_LEVEL 2
+// Include the MOC generated file for this class
+#include "moc_DataBundleSelectionWidget.cpp"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -296,7 +299,7 @@ void DataBundleSelectionWidget::beforePreflight()
   if (NULL == getFilter()) { return; }
   if(m_DidCausePreflight == true)
   {
-    std::cout << "***  DataBundleSelectionWidget already caused a preflight, just returning" << std::endl;
+    //std::cout << "***  DataBundleSelectionWidget already caused a preflight, just returning" << std::endl;
     return;
   }
 

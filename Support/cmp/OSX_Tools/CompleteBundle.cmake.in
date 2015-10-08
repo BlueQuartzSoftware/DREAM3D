@@ -178,5 +178,21 @@ fixup_bundle("${CMAKE_INSTALL_PREFIX}/@osx_app_name@.app"
 # Create a qt.conf file in the app bundle
 file(WRITE "${CMAKE_INSTALL_PREFIX}/@osx_app_name@.app/Contents/Resources/qt.conf")
 file(APPEND "${CMAKE_INSTALL_PREFIX}/@osx_app_name@.app/Contents/Resources/qt.conf" "[Paths]\nPlugins = Plugins\n")
+FILE(APPEND "${CMAKE_INSTALL_PREFIX}/@osx_app_name@.app/Contents/Resources/qt.conf" "Prefix = .\n")
+FILE(APPEND "${CMAKE_INSTALL_PREFIX}/@osx_app_name@.app/Contents/Resources/qt.conf" "LibraryExecutables = bin\n")
+
+# ----------------------------------------------------
+# Copy the QtWebEngine parts of the QtWebEngineCore Framework
+if ("@DREAM3D_USE_QtWebEngine@" STREQUAL "ON")
+  # We need the location of QMake for later on in order to find the plugins directory
 
 
+  FILE(COPY "@QM_QT_INSTALL_PREFIX@/lib/QtWebEngineCore.framework/Versions/5/Helpers"
+        DESTINATION "${CMAKE_INSTALL_PREFIX}/Frameworks/QtWebEngineCore.framework/Versions/5/")
+  FILE(COPY "@QM_QT_INSTALL_PREFIX@/lib/QtWebEngineCore.framework/Helpers"
+        DESTINATION "${CMAKE_INSTALL_PREFIX}/Frameworks/QtWebEngineCore.framework/")
+  if(NOT EXISTS "${CMAKE_INSTALL_PREFIX}/Frameworks/QtWebEngineCore.framework/Helpers/QtWebEngineProcess.app/Contents/Frameworks")
+    execute_process( COMMAND ln -s "${CMAKE_INSTALL_PREFIX}/Frameworks" "${CMAKE_INSTALL_PREFIX}/Frameworks/QtWebEngineCore.framework/Helpers/QtWebEngineProcess.app/Contents/Frameworks"
+                                WORKING_DIRECTORY "${CMAKE_INSTALL_PREFIX}" )
+  endif()
+endif()

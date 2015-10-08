@@ -39,16 +39,20 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QDir>
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/OutputFileFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/Utilities/TimeUtilities.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Utilities/TimeUtilities.h"
 
 #include "IO/IOConstants.h"
+
+// Include the MOC generated file for this class
+#include "moc_SPParksWriter.cpp"
+
 
 // -----------------------------------------------------------------------------
 //
@@ -76,7 +80,10 @@ void SPParksWriter::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(OutputFileFilterParameter::New("Output File", "OutputFile", getOutputFile(), FilterParameter::Parameter, "*.spparks", "SPParks Sites File"));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray));
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
+  }
   setFilterParameters(parameters);
 }
 
@@ -97,9 +104,9 @@ void SPParksWriter::readFilterParameters(AbstractFilterParametersReader* reader,
 int SPParksWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputFile)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -198,10 +205,10 @@ int32_t SPParksWriter::writeFile()
     return getErrorCondition();
   }
 
-  uint64_t millis = QDateTime::currentMSecsSinceEpoch();
-  uint64_t currentMillis = millis;
-  uint64_t startMillis = millis;
-  uint64_t estimatedTime = 0;
+  qint64 millis = QDateTime::currentMSecsSinceEpoch();
+  qint64 currentMillis = millis;
+  qint64 startMillis = millis;
+  qint64 estimatedTime = 0;
   float timeDiff = 0.0f;
 
   int64_t increment = static_cast<int64_t>(totalpoints * 0.01f);
@@ -229,9 +236,11 @@ int32_t SPParksWriter::writeFile()
       }
     }
     count++;
-    double temp0 = 0.0;
-    double temp1 = 0.0;
-    outfile << k + 1 << " " << m_FeatureIds[k] << " " << temp0 << " " << temp1 << "\n";
+//    double temp0 = 0.0;
+//    double temp1 = 0.0;
+    outfile << k + 1 << " " << m_FeatureIds[k]
+            /* << " " << temp0 << " " << temp1 */
+            << "\n";
   }
   outfile.close();
 

@@ -37,10 +37,10 @@
 #ifndef _RotateEulerRefFrame_H_
 #define _RotateEulerRefFrame_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 
 /**
  * @brief The RotateEulerRefFrame class. See [Filter documentation](@ref rotateeulerrefframe) for details.
@@ -49,19 +49,19 @@ class RotateEulerRefFrame : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(RotateEulerRefFrame)
-    DREAM3D_STATIC_NEW_MACRO(RotateEulerRefFrame)
-    DREAM3D_TYPE_MACRO_SUPER(RotateEulerRefFrame, AbstractFilter)
+    SIMPL_SHARED_POINTERS(RotateEulerRefFrame)
+    SIMPL_STATIC_NEW_MACRO(RotateEulerRefFrame)
+    SIMPL_TYPE_MACRO_SUPER(RotateEulerRefFrame, AbstractFilter)
 
     virtual ~RotateEulerRefFrame();
 
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, RotationAxis)
+    SIMPL_FILTER_PARAMETER(FloatVec3_t, RotationAxis)
     Q_PROPERTY(FloatVec3_t RotationAxis READ getRotationAxis WRITE setRotationAxis)
 
-    DREAM3D_FILTER_PARAMETER(float, RotationAngle)
+    SIMPL_FILTER_PARAMETER(float, RotationAngle)
     Q_PROPERTY(float RotationAngle READ getRotationAngle WRITE setRotationAngle)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
     Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
     /**

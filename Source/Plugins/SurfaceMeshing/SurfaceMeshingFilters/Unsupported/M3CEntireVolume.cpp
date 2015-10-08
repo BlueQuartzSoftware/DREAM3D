@@ -50,6 +50,11 @@
 #define M_PI 3.14159265
 #endif
 
+// Include the MOC generated file for this class
+#include "moc_M3CEntireVolume.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -106,8 +111,8 @@ void M3CEntireVolume::readFilterParameters(AbstractFilterParametersReader* reade
 int M3CEntireVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(AddSurfaceLayer)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(AddSurfaceLayer)
 
   writer->closeFilterGroup();
   return index; // we want to return the next index that was just written to

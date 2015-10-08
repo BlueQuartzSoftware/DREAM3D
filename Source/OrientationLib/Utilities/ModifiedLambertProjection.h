@@ -37,9 +37,9 @@
 #ifndef _ModifiedLambertProjection_H_
 #define _ModifiedLambertProjection_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationLib/OrientationLib.h"
 #include "OrientationLib/Utilities/PoleFigureUtilities.h"
@@ -48,16 +48,15 @@
  * @class ModifiedLambertProjection ModifiedLambertProjection.h DREAM3DLib/Common/ModifiedLambertProjection.h
  * @brief  This class holds a pair of Modified Lambert Projection images. Based off the paper
  * Rosca, D. (2010) New uniform grids on the sphere. Astron Astrophys A63, 520–525.
- *, Michael A. Groeber for AFRL
  * @date July 30, 2013
  * @version 1.0
  */
 class OrientationLib_EXPORT ModifiedLambertProjection
 {
   public:
-    DREAM3D_SHARED_POINTERS(ModifiedLambertProjection)
-    DREAM3D_STATIC_NEW_MACRO(ModifiedLambertProjection)
-    DREAM3D_TYPE_MACRO(ModifiedLambertProjection)
+    SIMPL_SHARED_POINTERS(ModifiedLambertProjection)
+    SIMPL_STATIC_NEW_MACRO(ModifiedLambertProjection)
+    SIMPL_TYPE_MACRO(ModifiedLambertProjection)
 
     virtual ~ModifiedLambertProjection();
 
@@ -80,13 +79,13 @@ class OrientationLib_EXPORT ModifiedLambertProjection
     static Pointer CreateProjectionFromXYZCoords(FloatArrayType* coords, int dimension, float sphereRadius);
 
 
-    DREAM3D_GET_PROPERTY(int, Dimension)
-    DREAM3D_GET_PROPERTY(float, StepSize)
-    DREAM3D_GET_PROPERTY(float, SphereRadius)
+    SIMPL_GET_PROPERTY(int, Dimension)
+    SIMPL_GET_PROPERTY(float, StepSize)
+    SIMPL_GET_PROPERTY(float, SphereRadius)
 
 
-    DREAM3D_GET_PROPERTY(DoubleArrayType::Pointer, NorthSquare)
-    DREAM3D_GET_PROPERTY(DoubleArrayType::Pointer, SouthSquare)
+    SIMPL_GET_PROPERTY(DoubleArrayType::Pointer, NorthSquare)
+    SIMPL_GET_PROPERTY(DoubleArrayType::Pointer, SouthSquare)
 
     /**
      * @brief initializeSquares

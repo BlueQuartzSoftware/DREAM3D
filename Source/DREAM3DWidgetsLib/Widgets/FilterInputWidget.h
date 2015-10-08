@@ -42,10 +42,10 @@
 
 #include "QtSupportLib/FaderWidget.h"
 
-#include "DREAM3DLib/Common/AbstractFilter.h"
+
+#include "SIMPLib/Common/AbstractFilter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
-
 
 #include "DREAM3DWidgetsLib/ui_FilterInputWidget.h"
 
@@ -67,8 +67,6 @@ class DREAM3DWidgetsLib_EXPORT FilterInputWidget : public QWidget, private Ui::F
     bool eventFilter(QObject* o, QEvent* e);
 
     QWidget* getVariablesTabContentsWidget();
-
-  protected:
 
   public slots :
     void on_filterHelpBtn_pressed();

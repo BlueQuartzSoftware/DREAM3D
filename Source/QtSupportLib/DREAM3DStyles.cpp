@@ -39,6 +39,8 @@
 #include <QtCore/QTextStream>
 #include <QtWidgets/QLineEdit>
 
+#include "moc_DREAM3DStyles.cpp"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -64,8 +66,14 @@ QString DREAM3DStyles::GetUIFont()
 #elif defined (Q_OS_WIN)
   return QString::fromUtf8("Trebuchet MS");
 #else
-  QFont font;
-  return font.defaultFamily();
+  QFont font("DejaVu Sans");
+  if (font.fromString("DejaVu Sans") )
+  {
+    return font.toString();
+  } else {
+    QFont font;
+    return font.defaultFamily();
+  }
 #endif
 }
 
@@ -105,6 +113,8 @@ QFont DREAM3DStyles::GetBrandingLabelFont()
   brandingFont.setPointSize(11);
 #elif defined (Q_OS_WIN)
   brandingFont.setPointSize(8);
+#else
+  brandingFont.setPointSize(9);
 #endif
   return brandingFont;
 }
@@ -155,8 +165,6 @@ QFont DREAM3DStyles::GetTitleFont()
 // -----------------------------------------------------------------------------
 void DREAM3DStyles::LineEditErrorStyle(QLineEdit* lineEdit)
 {
-  //if (lineEdit->text().isEmpty())
-  {
     QString str;
     QTextStream ss(&str);
     ss << "QLineEdit#" << lineEdit->objectName() << "{";
@@ -164,11 +172,6 @@ void DREAM3DStyles::LineEditErrorStyle(QLineEdit* lineEdit)
     ss << "background-color: rgb(255, 246, 179);"; // Yellow background
     ss << "}";
     lineEdit->setStyleSheet(str);
-  }
-//  else
-//  {
-//    lineEdit->setStyleSheet("");
-//  }
 }
 
 // -----------------------------------------------------------------------------
@@ -177,4 +180,18 @@ void DREAM3DStyles::LineEditErrorStyle(QLineEdit* lineEdit)
 void DREAM3DStyles::LineEditClearStyle(QLineEdit* lineEdit)
 {
   lineEdit->setStyleSheet("");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DStyles::LineEditRedErrorStyle(QLineEdit* lineEdit)
+{
+  QString str;
+  QTextStream ss(&str);
+  ss << "QLineEdit#" << lineEdit->objectName() << "{";
+  //  ss << "border: 1px solid rgb(180, 0, 0);";
+  ss << "background-color: rgb(208, 128, 139);"; // Yellow background
+  ss << "}";
+  lineEdit->setStyleSheet(str);
 }

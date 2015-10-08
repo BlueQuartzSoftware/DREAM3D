@@ -37,9 +37,9 @@
 #ifndef _FlattenImage_H_
 #define _FlattenImage_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The FlattenImage class. See [Filter documentation](@ref flattenimage) for details.
@@ -48,19 +48,19 @@ class FlattenImage : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FlattenImage)
-    DREAM3D_STATIC_NEW_MACRO(FlattenImage)
-    DREAM3D_TYPE_MACRO_SUPER(FlattenImage, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FlattenImage)
+    SIMPL_STATIC_NEW_MACRO(FlattenImage)
+    SIMPL_TYPE_MACRO_SUPER(FlattenImage, AbstractFilter)
 
     virtual ~FlattenImage();
 
-    DREAM3D_FILTER_PARAMETER(unsigned int, FlattenMethod)
+    SIMPL_FILTER_PARAMETER(unsigned int, FlattenMethod)
     Q_PROPERTY(unsigned int FlattenMethod READ getFlattenMethod WRITE setFlattenMethod)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, ImageDataArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, ImageDataArrayPath)
     Q_PROPERTY(DataArrayPath ImageDataArrayPath READ getImageDataArrayPath WRITE setImageDataArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, FlatImageDataArrayName)
+    SIMPL_FILTER_PARAMETER(QString, FlatImageDataArrayName)
     Q_PROPERTY(QString FlatImageDataArrayName READ getFlatImageDataArrayName WRITE setFlatImageDataArrayName)
 
     /**

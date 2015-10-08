@@ -39,9 +39,9 @@
 
 #include <QtCore/QString>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/IDataArray.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
 
@@ -57,21 +57,21 @@ class FindBoundaryAreas : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindBoundaryAreas)
-    DREAM3D_STATIC_NEW_MACRO(FindBoundaryAreas)
-    DREAM3D_TYPE_MACRO_SUPER(FindBoundaryAreas, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FindBoundaryAreas)
+    SIMPL_STATIC_NEW_MACRO(FindBoundaryAreas)
+    SIMPL_TYPE_MACRO_SUPER(FindBoundaryAreas, AbstractFilter)
 
     virtual ~FindBoundaryAreas();
 
     //required arrays
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTriangleAreasArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTriangleAreasArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshTriangleAreasArrayPath READ getSurfaceMeshTriangleAreasArrayPath WRITE setSurfaceMeshTriangleAreasArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFeatureFaceIdsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFeatureFaceIdsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFeatureFaceIdsArrayPath READ getSurfaceMeshFeatureFaceIdsArrayPath WRITE setSurfaceMeshFeatureFaceIdsArrayPath)
 
     //created array path
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshBoundaryAreasArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshBoundaryAreasArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshBoundaryAreasArrayPath READ getSurfaceMeshBoundaryAreasArrayPath WRITE setSurfaceMeshBoundaryAreasArrayPath)
 
     /**

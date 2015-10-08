@@ -91,6 +91,26 @@ After all information is entered to the as desired in the _Size Distribution Tab
 + **Color**: Allows the user to change colors of the curves for image creation or easier identification during stats generation
 
 
+##Radial Distribution Function Tab## 
+
+This option is only available for the precipitate phase. 
+![Radial Distribution Function GUI]
+(Images/image010.png)
+
++ **Min Distance**: The minimum separation distance between precipitates in the box
++ **Max Distance** The maximum separation distance between precipitates in the box 
++ **Num Bins** The number of bins to create the RDF
++ **Box Size X** The size of the x-dimension of the box in microns.
++ **Box Size Y** The size of the y-dimension of the box in microns. 
++ **Box Size Z** The size of the z-dimension of the box in microns. 
+
+The list, **Normalized Frequencies** creates a random distribution based on the input parameters. If the user wants something else, the user may enter the values manually in the bins. 
+
+Also note, the number of created bins in the normalized frequency list may be MORE than the number of bins the user specified. This is because there are extra bins created for values that may fall outside the min and max distances the user sets. These extra bins will not be used, they are just there to help visualize the full distribution. 
+
+The user **MUST** click **Generate RDF** button for the values to get stored. 
+
+
 ## ODF Tab ##
 
 ![ODF (Crystallographic Orientation) GUI](Images/image006.png)

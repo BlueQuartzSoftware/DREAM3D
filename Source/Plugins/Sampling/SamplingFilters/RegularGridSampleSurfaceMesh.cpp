@@ -36,23 +36,26 @@
 
 #include "RegularGridSampleSurfaceMesh.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Math/GeometryMath.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Math/GeometryMath.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/IntFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Utilities/SIMPLibRandom.h"
 
 #include "Sampling/SamplingConstants.h"
+
+#include "moc_RegularGridSampleSurfaceMesh.cpp"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 RegularGridSampleSurfaceMesh::RegularGridSampleSurfaceMesh() :
+  SampleSurfaceMesh(),
   m_DataContainerName(DREAM3D::Defaults::ImageDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_XPoints(0),
@@ -64,6 +67,11 @@ RegularGridSampleSurfaceMesh::RegularGridSampleSurfaceMesh() :
   m_Resolution.x = 1.0f;
   m_Resolution.y = 1.0f;
   m_Resolution.z = 1.0f;
+
+  m_Origin.x = 0.0f;
+  m_Origin.y = 0.0f;
+  m_Origin.z = 0.0f;
+
   setupFilterParameters();
 }
 
@@ -80,10 +88,11 @@ RegularGridSampleSurfaceMesh::~RegularGridSampleSurfaceMesh()
 void RegularGridSampleSurfaceMesh::setupFilterParameters()
 {
   FilterParameterVector parameters = getFilterParameters();
-  parameters.push_back(IntFilterParameter::New("X Points (Column)", "XPoints", getXPoints(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("Y Points (Row)", "YPoints", getYPoints(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("Z Points (Plane)", "ZPoints", getZPoints(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("X Points", "XPoints", getXPoints(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Y Points", "YPoints", getYPoints(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Z Points", "ZPoints", getZPoints(), FilterParameter::Parameter));
   parameters.push_back(FloatVec3FilterParameter::New("Resolution", "Resolution", getResolution(), FilterParameter::Parameter));
+  parameters.push_back(FloatVec3FilterParameter::New("Origin", "Origin", getOrigin(), FilterParameter::Parameter));
   parameters.push_back(StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray));
@@ -102,6 +111,7 @@ void RegularGridSampleSurfaceMesh::readFilterParameters(AbstractFilterParameters
   setYPoints(reader->readValue("YPoints", getYPoints()));
   setZPoints(reader->readValue("ZPoints", getZPoints()));
   setResolution(reader->readFloatVec3("Resolution", getResolution()));
+  setOrigin(reader->readFloatVec3("Origin", getOrigin()));
   setDataContainerName(reader->readString("DataContainerName", getDataContainerName()));
   setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName() ) );
   setFeatureIdsArrayName(reader->readString("FeatureIdsArrayName", getFeatureIdsArrayName() ) );
@@ -115,13 +125,14 @@ int RegularGridSampleSurfaceMesh::writeFilterParameters(AbstractFilterParameters
 {
   SampleSurfaceMesh::writeFilterParameters(writer, index);
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(Resolution)
-  DREAM3D_FILTER_WRITE_PARAMETER(XPoints)
-  DREAM3D_FILTER_WRITE_PARAMETER(YPoints)
-  DREAM3D_FILTER_WRITE_PARAMETER(ZPoints)
-  DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(Resolution)
+  SIMPL_FILTER_WRITE_PARAMETER(Origin)
+  SIMPL_FILTER_WRITE_PARAMETER(XPoints)
+  SIMPL_FILTER_WRITE_PARAMETER(YPoints)
+  SIMPL_FILTER_WRITE_PARAMETER(ZPoints)
+  SIMPL_FILTER_WRITE_PARAMETER(DataContainerName)
+  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -135,7 +146,7 @@ void RegularGridSampleSurfaceMesh::dataCheck()
   DataArrayPath tempPath;
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
-  if(getErrorCondition() < 0) { return; }
+  if (getErrorCondition() < 0) { return; }
 
   ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
   m->setGeometry(image);
@@ -143,14 +154,14 @@ void RegularGridSampleSurfaceMesh::dataCheck()
   // Set the Dimensions, Resolution and Origin of the output data container
   m->getGeometryAs<ImageGeom>()->setDimensions(m_XPoints, m_YPoints, m_ZPoints);
   m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-  m->getGeometryAs<ImageGeom>()->setOrigin(0.0f, 0.0f, 0.0f);
+  m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
 
   QVector<size_t> tDims(3, 0);
   tDims[0] = m_XPoints;
   tDims[1] = m_YPoints;
   tDims[2] = m_ZPoints;
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
-  if(getErrorCondition() < 0 || NULL == cellAttrMat.get()) { return; }
+  if (getErrorCondition() < 0 || NULL == cellAttrMat.get()) { return; }
 
   QVector<size_t> cDims(1, 1);
   tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName() );
@@ -181,16 +192,16 @@ VertexGeom::Pointer RegularGridSampleSurfaceMesh::generate_points()
   VertexGeom::Pointer points = VertexGeom::CreateGeometry((m_XPoints * m_YPoints * m_ZPoints), "_INTERNAL_USE_ONLY_points");
 
   int64_t count = 0;
-  float coords[3] = {0.0f, 0.0f, 0.0f };
+  float coords[3] = { 0.0f, 0.0f, 0.0f };
   for (int64_t k = 0; k < m_ZPoints; k++)
   {
     for (int64_t j = 0; j < m_YPoints; j++)
     {
       for (int64_t i = 0; i < m_XPoints; i++)
       {
-        coords[0] = (float(i) + 0.5f) * m_Resolution.x;
-        coords[1] = (float(j) + 0.5f) * m_Resolution.y;
-        coords[2] = (float(k) + 0.5f) * m_Resolution.z;
+        coords[0] = (float(i) + 0.5f) * m_Resolution.x + m_Origin.x;
+        coords[1] = (float(j) + 0.5f) * m_Resolution.y + m_Origin.y;
+        coords[2] = (float(k) + 0.5f) * m_Resolution.z + m_Origin.z;
         points->setCoords(count, coords);
         count++;
       }
@@ -221,12 +232,12 @@ void RegularGridSampleSurfaceMesh::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  DREAM3D_RANDOMNG_NEW()
+  SIMPL_RANDOMNG_NEW()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   m->getGeometryAs<ImageGeom>()->setDimensions(m_XPoints, m_YPoints, m_ZPoints);
-  m->getGeometryAs<ImageGeom>()->setOrigin(0.0, 0.0, 0.0);
+  m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
   m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
 
   SampleSurfaceMesh::execute();

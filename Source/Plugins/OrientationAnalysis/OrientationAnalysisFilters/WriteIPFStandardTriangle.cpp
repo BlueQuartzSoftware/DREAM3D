@@ -40,17 +40,22 @@
 
 #include <QtGui/QPainter>
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/OutputFileFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/IntFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/ChoiceFilterParameter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 
 
 #include "OrientationLib/SpaceGroupOps/CubicOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
+
+// Include the MOC generated file for this class
+#include "moc_WriteIPFStandardTriangle.cpp"
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -98,9 +103,9 @@ void WriteIPFStandardTriangle::readFilterParameters(AbstractFilterParametersRead
 int WriteIPFStandardTriangle::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(ImageSize)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputFile)
+  SIMPL_FILTER_WRITE_PARAMETER(ImageSize)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

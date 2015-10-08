@@ -36,14 +36,18 @@
 
 #include "GenerateGeometryConnectivity.h"
 
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/BooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataContainerSelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
+
+// Include the MOC generated file for this class
+#include "moc_GenerateGeometryConnectivity.cpp"
+
 
 // -----------------------------------------------------------------------------
 //
@@ -72,7 +76,10 @@ void GenerateGeometryConnectivity::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(BooleanFilterParameter::New("Generate Per Vertex Element List", "GenerateVertexTriangleLists", getGenerateVertexTriangleLists(), FilterParameter::Parameter));
   parameters.push_back(BooleanFilterParameter::New("Generate Element Neighbors List", "GenerateTriangleNeighbors", getGenerateTriangleNeighbors(), FilterParameter::Parameter));
-  parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container", "SurfaceDataContainerName", getSurfaceDataContainerName(), FilterParameter::RequiredArray));
+  {
+    DataContainerSelectionFilterParameter::RequirementType req;
+    parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container", "SurfaceDataContainerName", getSurfaceDataContainerName(), FilterParameter::RequiredArray, req));
+  }
   setFilterParameters(parameters);
 }
 
@@ -94,10 +101,10 @@ void GenerateGeometryConnectivity::readFilterParameters(AbstractFilterParameters
 int GenerateGeometryConnectivity::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceDataContainerName)
-  DREAM3D_FILTER_WRITE_PARAMETER(GenerateVertexTriangleLists)
-  DREAM3D_FILTER_WRITE_PARAMETER(GenerateTriangleNeighbors)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceDataContainerName)
+  SIMPL_FILTER_WRITE_PARAMETER(GenerateVertexTriangleLists)
+  SIMPL_FILTER_WRITE_PARAMETER(GenerateTriangleNeighbors)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

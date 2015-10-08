@@ -37,9 +37,9 @@
 #ifndef _FindFeaturePhasesBinary_H_
 #define _FindFeaturePhasesBinary_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The FindFeaturePhasesBinary class. See [Filter documentation](@ref findfeaturephasesbinary) for details.
@@ -48,22 +48,22 @@ class FindFeaturePhasesBinary : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindFeaturePhasesBinary)
-    DREAM3D_STATIC_NEW_MACRO(FindFeaturePhasesBinary)
-    DREAM3D_TYPE_MACRO_SUPER(FindFeaturePhasesBinary, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FindFeaturePhasesBinary)
+    SIMPL_STATIC_NEW_MACRO(FindFeaturePhasesBinary)
+    SIMPL_TYPE_MACRO_SUPER(FindFeaturePhasesBinary, AbstractFilter)
 
     virtual ~FindFeaturePhasesBinary();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
     Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
     Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
     Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
     /**

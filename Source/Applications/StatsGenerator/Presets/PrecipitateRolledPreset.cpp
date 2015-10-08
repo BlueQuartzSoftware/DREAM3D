@@ -32,9 +32,9 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #include "PrecipitateRolledPreset.h"
+
+#include <QtWidgets/QMessageBox>
 
 #include "StatsGenerator/Presets/Dialogs/PrecipitateRolledPresetDialog.h"
 #include "StatsGenerator/StatsGenPlotWidget.h"
@@ -45,8 +45,8 @@
 #include "StatsGenerator/TableModels/SGPowerLawTableModel.h"
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
 
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "SIMPLib/Utilities/SIMPLibRandom.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -69,16 +69,31 @@ PrecipitateRolledPreset::~PrecipitateRolledPreset()
 void PrecipitateRolledPreset::displayUserInputDialog()
 {
   PrecipitateRolledPresetDialog d(NULL);
-  int ret = d.exec();
-  if (ret == QDialog::Accepted)
+  bool keepGoing = true;
+  while (keepGoing)
   {
-    // The user clicked the OK button so transfer the values from the dialog into this class
-    m_AspectRatio1 = d.getA() / d.getB();
-    m_AspectRatio2 = d.getA() / d.getC();
-  }
-  else
-  {
-    // Perform any cancellation actions if the user canceled the dialog box
+    int ret = d.exec();
+    if (ret == QDialog::Accepted)
+    {
+      float a = d.getA();
+      float b = d.getB();
+      float c = d.getC();
+      if (a >= b && b >= c)
+      {
+        // The user clicked the OK button so transfer the values from the dialog into this class
+        m_AspectRatio1 = d.getA() / d.getB();
+        m_AspectRatio2 = d.getA() / d.getC();
+        keepGoing = false;
+      }
+      else
+      {
+        QMessageBox::critical(&d, "Rolled Preset Error", "The ratios have been entenered incorrectly. The following MUST be true: A >= B >= C", QMessageBox::Default);
+      }
+    }
+    else
+    {
+      keepGoing = false; // user clicked the Cancel button
+    }
   }
 }
 
@@ -101,7 +116,7 @@ void PrecipitateRolledPreset::initializeOmega3TableModel(StatsGenPlotWidget* plo
   //  model->removeRows(0, model->rowCount());
 
   float alpha, beta;
-  DREAM3D_RANDOMNG_NEW()
+  SIMPL_RANDOMNG_NEW()
 
   QVector<float> alphas;
   QVector<float> betas;
@@ -146,7 +161,7 @@ void PrecipitateRolledPreset::initializeBOverATableModel(StatsGenPlotWidget* plo
   model->removeRows(0, model->rowCount());
 
   float alpha, beta;
-  DREAM3D_RANDOMNG_NEW()
+  SIMPL_RANDOMNG_NEW()
 
   QVector<float> alphas;
   QVector<float> betas;
@@ -191,7 +206,7 @@ void PrecipitateRolledPreset::initializeCOverATableModel(StatsGenPlotWidget* plo
   model->removeRows(0, model->rowCount());
 
   float alpha, beta;
-  DREAM3D_RANDOMNG_NEW()
+  SIMPL_RANDOMNG_NEW()
 
   QVector<float> alphas;
   QVector<float> betas;
@@ -237,7 +252,7 @@ void PrecipitateRolledPreset::initializeClusteringTableModel(StatsGenPlotWidget*
   model->removeRows(0, model->rowCount());
 
   float mu, sigma;
-  DREAM3D_RANDOMNG_NEW()
+  SIMPL_RANDOMNG_NEW()
 
   QVector<float> mus;
   QVector<float> sigmas;

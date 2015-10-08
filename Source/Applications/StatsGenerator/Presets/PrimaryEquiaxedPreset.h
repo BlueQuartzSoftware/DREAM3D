@@ -42,7 +42,7 @@
 #include <string>
 
 //-- MXA Includes
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 //-- StatsGen Includes
 #include "AbstractMicrostructurePresetFactory.h"
@@ -59,9 +59,9 @@
 class PrimaryEquiaxedPreset : public AbstractMicrostructurePreset
 {
   public:
-    DREAM3D_SHARED_POINTERS(PrimaryEquiaxedPreset)
-    DREAM3D_STATIC_NEW_MACRO(PrimaryEquiaxedPreset)
-    DREAM3D_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, PrimaryEquiaxedPreset)
+    SIMPL_SHARED_POINTERS(PrimaryEquiaxedPreset)
+    SIMPL_STATIC_NEW_MACRO(PrimaryEquiaxedPreset)
+    SIMPL_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, PrimaryEquiaxedPreset)
     virtual ~PrimaryEquiaxedPreset();
 
     void initializeOmega3TableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);

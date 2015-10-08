@@ -37,9 +37,9 @@
 #ifndef _FitFeatureData_H_
 #define _FitFeatureData_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The FitFeatureData class. See [Filter documentation](@ref minneighbors) for details.
@@ -48,19 +48,19 @@ class FitFeatureData : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FitFeatureData)
-    DREAM3D_STATIC_NEW_MACRO(FitFeatureData)
-    DREAM3D_TYPE_MACRO_SUPER(FitFeatureData, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FitFeatureData)
+    SIMPL_STATIC_NEW_MACRO(FitFeatureData)
+    SIMPL_TYPE_MACRO_SUPER(FitFeatureData, AbstractFilter)
 
     virtual ~FitFeatureData();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedFeatureArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedFeatureArrayPath)
     Q_PROPERTY(DataArrayPath SelectedFeatureArrayPath READ getSelectedFeatureArrayPath WRITE setSelectedFeatureArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(unsigned int, DistributionType)
+    SIMPL_FILTER_PARAMETER(unsigned int, DistributionType)
     Q_PROPERTY(unsigned int DistributionType READ getDistributionType WRITE setDistributionType)
 
-    DREAM3D_FILTER_PARAMETER(bool, RemoveBiasedFeatures)
+    SIMPL_FILTER_PARAMETER(bool, RemoveBiasedFeatures)
     Q_PROPERTY(bool RemoveBiasedFeatures READ getRemoveBiasedFeatures WRITE setRemoveBiasedFeatures)
 
     /**
@@ -68,13 +68,13 @@ class FitFeatureData : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
     Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, BiasedFeaturesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, BiasedFeaturesArrayPath)
     Q_PROPERTY(DataArrayPath BiasedFeaturesArrayPath READ getBiasedFeaturesArrayPath WRITE setBiasedFeaturesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, NewEnsembleArrayArray)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, NewEnsembleArrayArray)
     Q_PROPERTY(DataArrayPath NewEnsembleArrayArray READ getNewEnsembleArrayArray WRITE setNewEnsembleArrayArray)
 
     /**

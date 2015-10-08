@@ -37,9 +37,9 @@
 #ifndef _AlignSectionsFeature_H_
 #define _AlignSectionsFeature_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 
@@ -52,13 +52,13 @@ class AlignSectionsFeature : public AlignSections
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(AlignSectionsFeature)
-    DREAM3D_STATIC_NEW_MACRO(AlignSectionsFeature)
-    DREAM3D_TYPE_MACRO_SUPER(AlignSectionsFeature, AlignSections)
+    SIMPL_SHARED_POINTERS(AlignSectionsFeature)
+    SIMPL_STATIC_NEW_MACRO(AlignSectionsFeature)
+    SIMPL_TYPE_MACRO_SUPER(AlignSectionsFeature, AlignSections)
 
     virtual ~AlignSectionsFeature();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
     Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
     /**

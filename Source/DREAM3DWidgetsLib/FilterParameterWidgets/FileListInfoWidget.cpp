@@ -40,9 +40,9 @@
 #include <QtCore/QDir>
 #include <QtWidgets/QFileDialog>
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Utilities/FilePathGenerator.h"
-#include "DREAM3DLib/FilterParameters/FileListInfoFilterParameter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Utilities/FilePathGenerator.h"
+#include "SIMPLib/FilterParameters/FileListInfoFilterParameter.h"
 
 #include "QtSupportLib/QFileCompleter.h"
 
@@ -52,6 +52,9 @@
 
 // Initialize private static member variable
 QString FileListInfoWidget::m_OpenDialogLastDirectory = "";
+
+// Include the MOC generated file for this class
+#include "moc_FileListInfoWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //

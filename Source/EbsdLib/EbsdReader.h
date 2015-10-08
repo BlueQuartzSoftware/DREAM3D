@@ -173,7 +173,7 @@ class EbsdLib_EXPORT EbsdReader
     template<typename T>
     T* allocateArray(size_t numberOfElements)
     {
-#if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
+#if defined ( SIMPL_USE_SSE ) && defined ( __SSE2__ )
       T* m_buffer = static_cast<T*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
 #else
       //T*  m_buffer = new T[numberOfElements];
@@ -192,7 +192,7 @@ class EbsdLib_EXPORT EbsdReader
     {
       if (ptr != NULL && this->m_ManageMemory == true)
       {
-#if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
+#if defined ( SIMPL_USE_SSE ) && defined ( __SSE2__ )
         _mm_free(ptr );
 #else
         free(ptr);

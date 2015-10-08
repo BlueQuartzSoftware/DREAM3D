@@ -4,11 +4,14 @@
 
 #include "@ClassName@.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 @Filter_CPP_Includes@
 #include "@PluginName@/@PluginName@Constants.h"
+
+// Include the MOC generated file for this class
+#include "moc_@ClassName@.cpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -125,17 +128,17 @@ const QString @ClassName@::getCompiledLibraryName()
 //
 // -----------------------------------------------------------------------------
 const QString @ClassName@::getGroupName()
-{ return "DREAM3D::FilterGroups::Unsupported"; }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString @ClassName@::getHumanLabel()
-{ return "@ClassName@"; }
+{ return DREAM3D::FilterGroups::Unsupported; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString @ClassName@::getSubGroupName()
 { return "@PluginName@"; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString @ClassName@::getHumanLabel()
+{ return "@ClassName@"; }
 

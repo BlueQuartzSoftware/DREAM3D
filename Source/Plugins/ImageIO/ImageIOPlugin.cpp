@@ -39,20 +39,22 @@
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 
-#include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/Common/IFilterFactory.hpp"
-#include "DREAM3DLib/Common/FilterFactory.hpp"
-#include "DREAM3DLib/DREAM3DLibVersion.h"
+#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/Common/IFilterFactory.hpp"
+#include "SIMPLib/Common/FilterFactory.hpp"
+#include "SIMPLib/SIMPLibVersion.h"
 
 #include "ImageIO/ImageIOConstants.h"
-#include "ImageIO/moc_ImageIOPlugin.cpp"
+
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_ImageIOPlugin.cpp"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ImageIOPlugin::ImageIOPlugin() :
-  m_Version(DREAM3DLib::Version::Package()),
-  m_CompatibilityVersion(DREAM3DLib::Version::Package()),
+  m_Version(SIMPLib::Version::Package()),
+  m_CompatibilityVersion(SIMPLib::Version::Package()),
   m_Vendor(DREAM3D::BlueQuartz::VendorName),
   m_URL(DREAM3D::BlueQuartz::URL),
   m_Location(""),

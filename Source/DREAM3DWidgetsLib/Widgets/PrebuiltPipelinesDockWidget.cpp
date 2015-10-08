@@ -50,13 +50,15 @@
 
 #include "Applications/DREAM3D/DREAM3DApplication.h"
 
-#include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/Common/FilterFactory.hpp"
-#include "DREAM3DLib/FilterParameters/JsonFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
+#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/Common/FilterFactory.hpp"
+#include "SIMPLib/FilterParameters/JsonFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/QFilterParametersReader.h"
 
 #include "FilterListDockWidget.h"
 
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_PrebuiltPipelinesDockWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //

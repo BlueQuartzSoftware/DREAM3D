@@ -37,9 +37,9 @@
 #ifndef _ReverseTriangleWinding_H_
 #define _ReverseTriangleWinding_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
@@ -50,13 +50,13 @@ class ReverseTriangleWinding : public SurfaceMeshFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(ReverseTriangleWinding)
-    DREAM3D_STATIC_NEW_MACRO(ReverseTriangleWinding)
-    DREAM3D_TYPE_MACRO_SUPER(ReverseTriangleWinding, SurfaceMeshFilter)
+    SIMPL_SHARED_POINTERS(ReverseTriangleWinding)
+    SIMPL_STATIC_NEW_MACRO(ReverseTriangleWinding)
+    SIMPL_TYPE_MACRO_SUPER(ReverseTriangleWinding, SurfaceMeshFilter)
 
     virtual ~ReverseTriangleWinding();
 
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceDataContainerName)
+    SIMPL_FILTER_PARAMETER(QString, SurfaceDataContainerName)
     Q_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
 
     /**

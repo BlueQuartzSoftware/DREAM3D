@@ -36,19 +36,22 @@
 
 #include "SampleSurfaceMeshSpecifiedPoints.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "DREAM3DLib/FilterParameters/InputFileFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/OutputFileFilterParameter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 
 
 #include "Sampling/SamplingConstants.h"
+
+#include "moc_SampleSurfaceMeshSpecifiedPoints.cpp"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 SampleSurfaceMeshSpecifiedPoints::SampleSurfaceMeshSpecifiedPoints() :
+  SampleSurfaceMesh(),
   m_InputFilePath(""),
   m_OutputFilePath(""),
   m_FeatureIds(NULL),
@@ -94,8 +97,8 @@ int SampleSurfaceMeshSpecifiedPoints::writeFilterParameters(AbstractFilterParame
 {
   SampleSurfaceMesh::writeFilterParameters(writer, index);
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(InputFilePath)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputFilePath)
+  SIMPL_FILTER_WRITE_PARAMETER(InputFilePath)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputFilePath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

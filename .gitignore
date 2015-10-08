@@ -1,6 +1,8 @@
 /DREAM3DProj.includes
 CMakeLists.txt.user
 /Build/
+/Build-ninja/
+/Build-Xcode/
 /zRel/
 /CleanBuild/
 .cproject
@@ -23,4 +25,4 @@ Support/Scripts/GMT/gmt.history
 .floo
 /ninja/
 /linux/
-
+.idea

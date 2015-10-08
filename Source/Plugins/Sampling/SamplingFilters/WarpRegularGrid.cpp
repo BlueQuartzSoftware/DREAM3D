@@ -36,21 +36,26 @@
 
 #include "WarpRegularGrid.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/SecondOrderPolynomialFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/ThirdOrderPolynomialFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/FourthOrderPolynomialFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedChoicesFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/SecondOrderPolynomialFilterParameter.h"
+#include "SIMPLib/FilterParameters/ThirdOrderPolynomialFilterParameter.h"
+#include "SIMPLib/FilterParameters/FourthOrderPolynomialFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 
 #include "Sampling/SamplingConstants.h"
+
+// Include the MOC generated file for this class
+#include "moc_WarpRegularGrid.cpp"
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -131,7 +136,10 @@ void WarpRegularGrid::setupFilterParameters()
   parameters.push_back(LinkedBooleanFilterParameter::New("Save as New Data Container", "SaveAsNewDataContainer", getSaveAsNewDataContainer(), linkedProps, FilterParameter::Parameter));
   parameters.push_back(StringFilterParameter::New("Data Container", "NewDataContainerName", getNewDataContainerName(), FilterParameter::CreatedArray));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
-  parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", getCellAttributeMatrixPath(), FilterParameter::RequiredArray));
+  {
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", getCellAttributeMatrixPath(), FilterParameter::RequiredArray, req));
+  }
   setFilterParameters(parameters);
 }
 
@@ -159,16 +167,16 @@ void WarpRegularGrid::readFilterParameters(AbstractFilterParametersReader* reade
 int WarpRegularGrid::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(NewDataContainerName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(SecondOrderACoeff)
-  DREAM3D_FILTER_WRITE_PARAMETER(SecondOrderBCoeff)
-  DREAM3D_FILTER_WRITE_PARAMETER(ThirdOrderACoeff)
-  DREAM3D_FILTER_WRITE_PARAMETER(ThirdOrderBCoeff)
-  DREAM3D_FILTER_WRITE_PARAMETER(FourthOrderACoeff)
-  DREAM3D_FILTER_WRITE_PARAMETER(FourthOrderBCoeff)
-  DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewDataContainer)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(NewDataContainerName)
+  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
+  SIMPL_FILTER_WRITE_PARAMETER(SecondOrderACoeff)
+  SIMPL_FILTER_WRITE_PARAMETER(SecondOrderBCoeff)
+  SIMPL_FILTER_WRITE_PARAMETER(ThirdOrderACoeff)
+  SIMPL_FILTER_WRITE_PARAMETER(ThirdOrderBCoeff)
+  SIMPL_FILTER_WRITE_PARAMETER(FourthOrderACoeff)
+  SIMPL_FILTER_WRITE_PARAMETER(FourthOrderBCoeff)
+  SIMPL_FILTER_WRITE_PARAMETER(SaveAsNewDataContainer)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

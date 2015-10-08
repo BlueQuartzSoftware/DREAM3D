@@ -41,7 +41,7 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QFileDialog>
 
-#include "DREAM3DLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 
 #include "QtSupportLib/QFileCompleter.h"
 
@@ -51,6 +51,9 @@
 
 // Initialize private static member variable
 QString InputFileWidget::m_OpenDialogLastDirectory = "";
+
+// Include the MOC generated file for this class
+#include "moc_InputFileWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -63,10 +66,20 @@ InputFileWidget::InputFileWidget(FilterParameter* parameter, AbstractFilter* fil
 
   setupUi(this);
   setupGui();
-
-  if ( m_OpenDialogLastDirectory.isEmpty() )
+  if(filter)
   {
-    m_OpenDialogLastDirectory = QDir::homePath();
+    QString currentPath = filter->property(PROPERTY_NAME_AS_CHAR).toString();
+    if(currentPath.isEmpty() == false)
+    {
+      currentPath = QDir::toNativeSeparators(currentPath);
+      // Store the last used directory into the private instance variable
+      QFileInfo fi(currentPath);
+      m_OpenDialogLastDirectory = fi.path();
+    }
+    else
+    {
+      m_OpenDialogLastDirectory = QDir::homePath();
+    }
   }
 
 }
@@ -143,6 +156,7 @@ void InputFileWidget::setupGui()
     value->setText(currentPath);
   }
 
+
 }
 
 // -----------------------------------------------------------------------------
@@ -206,12 +220,12 @@ void InputFileWidget::on_value_fileDropped(const QString& text)
 void InputFileWidget::on_selectBtn_clicked()
 {
 
-  QString currentPath = getFilter()->property(PROPERTY_NAME_AS_CHAR).toString();
+  //QString currentPath = getFilter()->property(PROPERTY_NAME_AS_CHAR).toString();
   QString Ftype = m_FilterParameter->getFileType();
   QString ext = m_FilterParameter->getFileExtension();
   QString s = Ftype + QString(" Files (") + ext + QString(");;All Files(*.*)");
-  QString defaultName = m_OpenDialogLastDirectory + QDir::separator() + "Untitled";
-  QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"), defaultName, s);
+  //QString defaultName = m_OpenDialogLastDirectory + QDir::separator() + "Untitled";
+  QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"), m_OpenDialogLastDirectory, s);
 
   if(true == file.isEmpty())
   {

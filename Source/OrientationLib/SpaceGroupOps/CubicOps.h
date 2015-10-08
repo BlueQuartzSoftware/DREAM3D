@@ -38,10 +38,10 @@
 #define _CUBICOPS_H_
 
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/Math/QuaternionMath.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Math/QuaternionMath.hpp"
 
 #include "OrientationLib/OrientationLib.h"
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
@@ -57,9 +57,9 @@
 class OrientationLib_EXPORT CubicOps : public SpaceGroupOps
 {
   public:
-    DREAM3D_SHARED_POINTERS(CubicOps)
-    DREAM3D_TYPE_MACRO_SUPER(CubicOps, SpaceGroupOps)
-    DREAM3D_STATIC_NEW_MACRO(CubicOps)
+    SIMPL_SHARED_POINTERS(CubicOps)
+    SIMPL_TYPE_MACRO_SUPER(CubicOps, SpaceGroupOps)
+    SIMPL_STATIC_NEW_MACRO(CubicOps)
 
     CubicOps();
     virtual ~CubicOps();
@@ -84,9 +84,9 @@ class OrientationLib_EXPORT CubicOps : public SpaceGroupOps
     virtual void getFZQuat(QuatF& qr);
     virtual int getMisoBin(FOrientArrayType rod);
     virtual bool inUnitTriangle(float eta, float chi);
-    virtual FOrientArrayType determineEulerAngles(int choose);
+    virtual FOrientArrayType determineEulerAngles(uint64_t seed, int choose);
     virtual FOrientArrayType randomizeEulerAngles(FOrientArrayType euler);
-    virtual FOrientArrayType determineRodriguesVector(int choose);
+    virtual FOrientArrayType determineRodriguesVector(uint64_t seed, int choose);
     virtual int getOdfBin(FOrientArrayType rod);
     virtual void getSchmidFactorAndSS(float load[3], float& schmidfactor, float angleComps[2], int& slipsys);
     virtual void getSchmidFactorAndSS(float load[3], float plane[3], float direction[3], float& schmidfactor, float angleComps[2], int& slipsys);

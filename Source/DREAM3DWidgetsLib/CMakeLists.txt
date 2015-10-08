@@ -23,9 +23,6 @@ endif(BUILD_SHARED_LIBS)
 
 set(GENERATE_GIT_VERSION 1)
 
-
-
-
 if(NOT PROJECT_RESOURCES_DIR)
 set(PROJECT_RESOURCES_DIR ${DREAM3DWidgetsLib_SOURCE_DIR}/Resources)
 endif()
@@ -33,7 +30,7 @@ if(NOT DEFINED CMP_SOURCE_DIR)
 set(CMP_SOURCE_DIR ${DREAM3DWidgetsLib_SOURCE_DIR}/Support/cmp)
 endif()
 
-set(PROJECT_PREFIX "Ebsd" CACHE STRING "The Prefix to be used for Preprocessor definitions")
+set(PROJECT_PREFIX "DREAM3DWidgetsLib" CACHE STRING "The Prefix to be used for Preprocessor definitions")
 set(DREAM3DWidgetsLib_INSTALL_FILES 0)
 #-------------------------------------------------------------------------------
 # Include the cmp project to perform all the basic configuration tests for the
@@ -61,22 +58,20 @@ include(${CMP_SOURCE_DIR}/cmpProject.cmake)
 configure_file(${DREAM3DWidgetsLib_SOURCE_DIR}/DREAM3DWidgetsLibConfiguration.h.in
                ${DREAM3DWidgetsLib_BINARY_DIR}/${CMP_TOP_HEADER_FILE})
 
-
 set(Project_SRCS "")
 
-set(DREAM3DWidgetsLib_Generated_HDRS
-        ${DREAM3DWidgetsLib_BINARY_DIR}/DREAM3DWidgetsLibConfiguration.h
-        ${DREAM3DWidgetsLib_BINARY_DIR}/DREAM3DWidgetsLibTypes.h
-        ${DREAM3DWidgetsLib_BINARY_DIR}/DREAM3DWidgetsLibVersion.h
-        ${DREAM3DWidgetsLib_BINARY_DIR}/DREAM3DWidgetsLib.h
-        ${DREAM3DWidgetsLib_BINARY_DIR}/${CMP_TOP_HEADER_FILE}
+set(${PROJECT_NAME}_Generated_HDRS
+        ${CMP_HEADER_DIR}/${CMP_CONFIGURATION_FILE_NAME}
+        ${CMP_HEADER_DIR}/${CMP_TYPES_FILE_NAME}
+        ${CMP_HEADER_DIR}/${CMP_VERSION_HEADER_FILE_NAME}
+        ${CMP_HEADER_DIR}/${CMP_TOP_HEADER_FILE}
 )
 
-set(DREAM3DWidgetsLib_Generated_SRCS
-        ${DREAM3DWidgetsLib_BINARY_DIR}/DREAM3DWidgetsLibVersion.cpp
+set(${PROJECT_NAME}_Generated_SRCS
+        ${CMP_HEADER_DIR}/${CMP_VERSION_SOURCE_FILE_NAME}
 )
 
-cmp_IDE_GENERATED_PROPERTIES("Generated" "${DREAM3DWidgetsLib_Generated_HDRS}" "${DREAM3DWidgetsLib_Generated_SRCS}")
+cmp_IDE_GENERATED_PROPERTIES("Generated" "${${PROJECT_NAME}_Generated_HDRS}" "${${PROJECT_NAME}_Generated_SRCS}")
 
 set(DREAM3DWidgetsLib_HDRS
   ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterWidgetManager.h
@@ -102,10 +97,8 @@ cmp_IDE_SOURCE_PROPERTIES( "DREAM3DWidgetsLib" "${DREAM3DWidgetsLib_HDRS};${DREA
 
 # --------------------------------------------------------------------
 # and finally this will run moc:
-#QT5_WRAP_CPP( DREAM3DWidgetsLib_Generated_MOC_SRCS ${DREAM3DWidgetsLib_MOC_HDRS} )
-
-# These generated moc files will be #include in the FilterWidget source file that
-# are generated so we need to tell the build system to NOT compile these files
+QT5_WRAP_CPP( DREAM3DWidgetsLib_Generated_MOC_SRCS ${DREAM3DWidgetsLib_MOC_HDRS} )
+set_source_files_properties( ${DREAM3DWidgetsLib_Generated_MOC_SRCS} PROPERTIES GENERATED TRUE)
 set_source_files_properties( ${DREAM3DWidgetsLib_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 
@@ -133,26 +126,31 @@ include(${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/SourceList.cmake)
 
 
 set(Project_SRCS
-        ${DREAM3DWidgetsLib_HDRS}
-        ${DREAM3DWidgetsLib_MOC_HDRS}
-        ${DREAM3DWidgetsLib_SRCS}
-        ${DREAM3DWidgetsLib_Generated_HDRS}
-        ${DREAM3DWidgetsLib_Generated_SRCS}
-        ${DREAM3DWidgetsLib_Generated_MOC_SRCS}
-        ${DREAM3DWidgetsLib_Generated_UI_HDRS}
-        ${DREAM3DWidgetsLib_Generated_RC_SRCS}
-#---------------
-        ${DREAM3DWidgetsLib_Widgets_HDRS}
-        ${DREAM3DWidgetsLib_Widgets_SRCS}
-        ${DREAM3DWidgetsLib_Widgets_UIS}
-        ${DREAM3DWidgetsLib_Widgets_Generated_MOC_SRCS}
-        ${DREAM3DWidgetsLib_Widgets_Generated_UI_HDRS}
-#---------------
-        ${DREAM3DWidgetsLib_ParameterWidgets_HDRS}
-        ${DREAM3DWidgetsLib_ParameterWidgets_SRCS}
-        ${DREAM3DWidgetsLib_ParameterWidgets_UIS}
-        ${DREAM3DWidgetsLib_ParameterWidgets_Generated_MOC_SRCS}
-        ${DREAM3DWidgetsLib_ParameterWidgets_Generated_UI_HDRS}
+  ${DREAM3DWidgetsLib_HDRS}
+  ${DREAM3DWidgetsLib_MOC_HDRS}
+  ${DREAM3DWidgetsLib_SRCS}
+  ${${PROJECT_NAME}_Generated_HDRS}
+  ${${PROJECT_NAME}_Generated_SRCS}
+  ${DREAM3DWidgetsLib_Generated_MOC_SRCS}
+  ${DREAM3DWidgetsLib_Generated_UI_HDRS}
+  ${DREAM3DWidgetsLib_Generated_RC_SRCS}
+  #---------------
+  ${DREAM3DWidgetsLib_Widgets_HDRS}
+  ${DREAM3DWidgetsLib_Widgets_MOC_HDRS}
+  ${DREAM3DWidgetsLib_Widgets_SRCS}
+  ${DREAM3DWidgetsLib_Widgets_UIS}
+  ${DREAM3DWidgetsLib_Widgets_Generated_MOC_SRCS}
+  ${DREAM3DWidgetsLib_Widgets_Generated_UI_HDRS}
+  #---------------
+  ${DREAM3DWidgetsLib_ParameterWidgets_HDRS}
+  ${DREAM3DWidgetsLib_ParameterWidgets_MOC_HDRS}
+  ${DREAM3DWidgetsLib_ParameterWidgets_SRCS}
+  ${DREAM3DWidgetsLib_ParameterWidgets_UIS}
+  ${DREAM3DWidgetsLib_ParameterWidgets_Generated_MOC_SRCS}
+  ${DREAM3DWidgetsLib_ParameterWidgets_Generated_UI_HDRS}
+
+  # -- This file has all the MOC sources in it
+  ${DREAM3DWidgetsLib_Generated_MOC_SRCS}
 )
 
 
@@ -166,22 +164,22 @@ include_directories(${DREAM3DWidgetsLib_SOURCE_DIR}/..)
 include_directories(${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets)
 include_directories(${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets)
 include_directories(${DREAM3DWidgetsLib_BINARY_DIR})
-
+include_directories(${DREAM3DWidgetsLib_BINARY_DIR}/Widgets)
+include_directories(${DREAM3DWidgetsLib_BINARY_DIR}/FilterParameterWidgets)
 
 if(UNIX AND NOT APPLE)
     set_source_files_properties(${Project_SRCS} PROPERTIES COMPILE_FLAGS -fPIC)
 endif()
 
 add_library(DREAM3DWidgetsLib ${LIB_TYPE} ${Project_SRCS})
-target_link_libraries(DREAM3DWidgetsLib
-                    Qt5::Core
-                    Qt5::Gui 
-                    Qt5::Widgets
-                    Qt5::WebKit
-                    Qt5::WebKitWidgets
-                    QtSupportLib
-                    DREAM3DLib
-)
+
+set(D3D_LINK_LIBRARIES Qt5::Core
+                      Qt5::Gui
+                      Qt5::Widgets
+                      QtSupportLib
+                      SIMPLib)
+
+target_link_libraries(DREAM3DWidgetsLib ${D3D_LINK_LIBRARIES} )
 
 LibraryProperties( DREAM3DWidgetsLib ${EXE_DEBUG_EXTENSION})
 

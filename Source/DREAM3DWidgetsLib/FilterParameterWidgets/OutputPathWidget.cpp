@@ -40,7 +40,7 @@
 
 #include <QtWidgets/QFileDialog>
 
-#include "DREAM3DLib/FilterParameters/OutputPathFilterParameter.h"
+#include "SIMPLib/FilterParameters/OutputPathFilterParameter.h"
 
 #include "QtSupportLib/QFileCompleter.h"
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
@@ -49,6 +49,9 @@
 
 // Initialize private static member variable
 QString OutputPathWidget::m_OpenDialogLastDirectory = "";
+// Include the MOC generated file for this class
+#include "moc_OutputPathWidget.cpp"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -60,6 +63,21 @@ OutputPathWidget::OutputPathWidget(FilterParameter* parameter, AbstractFilter* f
 
   setupUi(this);
   setupGui();
+  if(filter)
+  {
+    QString currentPath = filter->property(PROPERTY_NAME_AS_CHAR).toString();
+    if(currentPath.isEmpty() == false)
+    {
+      currentPath = QDir::toNativeSeparators(currentPath);
+      // Store the last used directory into the private instance variable
+      QFileInfo fi(currentPath);
+      m_OpenDialogLastDirectory = fi.path();
+    }
+    else
+    {
+      m_OpenDialogLastDirectory = QDir::homePath();
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------

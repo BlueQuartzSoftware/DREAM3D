@@ -39,45 +39,17 @@
 #include <iostream>
 #include <iomanip>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
 #include "OrientationLib/OrientationLib.h"
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/OrientationMath/OrientationConverter.hpp"
 #include "OrientationLib/SpaceGroupOps/CubicOps.h"
 
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-template<typename T>
-void Print_QU(const T& om, typename QuaternionMath<float>::Order layout = QuaternionMath<float>::QuaternionVectorScalar)
-{
-  if(layout == QuaternionMath<float>::QuaternionVectorScalar)
-  {
-    printf("Quaternion (<vector>scalar)      :   <% 3.6f   % 3.6f    % 3.6f>    % 3.6f\n", om[0], om[1], om[2], om[3] );
-  }
-
-  else if(layout == QuaternionMath<float>::QuaternionScalarVector)
-  {
-    printf("Quaternion (scalar<vector>)      :   % 3.6f   <% 3.6f    % 3.6f    % 3.6f>\n", om[0], om[1], om[2], om[3] );
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-template<typename T>
-void Print_EU(const T& om)
-{
-  printf("Euler angles [rad]               :   % 3.6f    % 3.6f    % 3.6f\n", om[0], om[1], om[2] );
-}
-
-
+#include "TestPrintFunctions.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -89,20 +61,20 @@ void TestEulerConversion()
   QVector<size_t> cDims(1, 3);
   FloatArrayType::Pointer eulers = FloatArrayType::CreateArray(nTuples, cDims, "Eulers");
   // Initialize the Eulers with some values
-  eulers->setComponent(0, 0, 302.84f * DREAM3D::Constants::k_PiOver180);
-  eulers->setComponent(0, 1, 51.282f * DREAM3D::Constants::k_PiOver180);
-  eulers->setComponent(0, 2, 37.969f * DREAM3D::Constants::k_PiOver180);
-  eulers->setComponent(1, 0, 45.0f * DREAM3D::Constants::k_PiOver180);
-  eulers->setComponent(1, 1, 0.0f * DREAM3D::Constants::k_PiOver180);
-  eulers->setComponent(1, 2, 0.0f * DREAM3D::Constants::k_PiOver180);
+  eulers->setComponent(0, 0, 302.84f * SIMPLib::Constants::k_PiOver180);
+  eulers->setComponent(0, 1, 51.282f * SIMPLib::Constants::k_PiOver180);
+  eulers->setComponent(0, 2, 37.969f * SIMPLib::Constants::k_PiOver180);
+  eulers->setComponent(1, 0, 45.0f * SIMPLib::Constants::k_PiOver180);
+  eulers->setComponent(1, 1, 0.0f * SIMPLib::Constants::k_PiOver180);
+  eulers->setComponent(1, 2, 0.0f * SIMPLib::Constants::k_PiOver180);
 
-  float rad = 302.84 * DREAM3D::Constants::k_PiOver180;
+  float rad = 302.84 * SIMPLib::Constants::k_PiOver180;
   std::cout << "Rad: " << rad << std::endl;
-  std::cout << "2Pi: " << DREAM3D::Constants::k_2Pi << std::endl;
+  std::cout << "2Pi: " << SIMPLib::Constants::k_2Pi << std::endl;
 
 
-  //std::cout << "Remainer (302.84/360): " << remainder(rad, DREAM3D::Constants::k_2Pi) << std::endl;
-  std::cout << "fmod (5.28556 / 2Pi): " << fmod(rad, DREAM3D::Constants::k_2Pi) << std::endl;
+  //std::cout << "Remainer (302.84/360): " << remainder(rad, SIMPLib::Constants::k_2Pi) << std::endl;
+  std::cout << "fmod (5.28556 / 2Pi): " << fmod(rad, SIMPLib::Constants::k_2Pi) << std::endl;
 
 
   OrientationConverter<float>::Pointer ocEulers =  EulerConverter<float>::New();
@@ -114,18 +86,9 @@ void TestEulerConversion()
   for(size_t i = 0; i < nTuples; i++)
   {
     float* ptr = output->getPointer(i * qStride);
-    Print_QU(ptr);
+    OrientationPrinters::Print_QU<float*, float>(ptr);
   }
 
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool closeEnough(const float& a, const float& b,
-                 const float& epsilon = std::numeric_limits<float>::epsilon())
-{
-  return (epsilon > std::abs(a - b));
 }
 
 // -----------------------------------------------------------------------------
@@ -211,7 +174,7 @@ void TestFilterDesign()
       for(float p1 = 0.0; p1 < 361.0; p1 = p1 + phi1Inc)
       {
 //        std::cout << "TESTING EULER ANGLE (Degrees): " << p1 << ", " << p << ", " << p2 << std::endl;
-        TestEulerAngle(p1 * DREAM3D::Constants::k_PiOver180, p * DREAM3D::Constants::k_PiOver180, p2 * DREAM3D::Constants::k_PiOver180);
+        TestEulerAngle(p1 * SIMPLib::Constants::k_PiOver180, p * SIMPLib::Constants::k_PiOver180, p2 * SIMPLib::Constants::k_PiOver180);
       }
     }
   }

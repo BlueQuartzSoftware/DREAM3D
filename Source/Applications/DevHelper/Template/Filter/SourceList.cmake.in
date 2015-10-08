@@ -39,7 +39,7 @@ set(_PrivateFilters
 foreach(f ${_PrivateFilters} )
   ADD_DREAM3D_FILTER(  "@PluginName@" "@PluginName@"
                         ${_filterGroupName} ${f}
-                        ${DREAM3DLib_FILTER_DOC_DIR}/${_filterGroupName}/${f}.md FALSE)
+                        ${SIMPLib_FILTER_DOC_DIR}/${_filterGroupName}/${f}.md FALSE)
 endforeach()
 
 

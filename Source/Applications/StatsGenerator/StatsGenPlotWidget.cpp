@@ -59,8 +59,8 @@
 #include <qwt_point_3d.h>
 #include <qwt_compat.h>
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataArrays/StatsDataArray.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/DataArrays/StatsDataArray.h"
 
 #include "StatsGenerator/TableModels/SGBetaTableModel.h"
 #include "StatsGenerator/TableModels/SGLogNormalTableModel.h"
@@ -71,6 +71,9 @@
   qDebug() << "Error writing HDF5 data to " << name << "\n";\
   qDebug() << "  File: " << __FILE__ << "\n";\
   qDebug() << "  Line: " << __LINE__ << "\n";
+
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_StatsGenPlotWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //

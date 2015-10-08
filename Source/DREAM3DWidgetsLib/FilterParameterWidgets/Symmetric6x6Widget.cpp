@@ -38,11 +38,14 @@
 #include <QtCore/QMetaProperty>
 #include <QtCore/QSignalMapper>
 
-#include "DREAM3DLib/FilterParameters/Symmetric6x6FilterParameter.h"
+#include "SIMPLib/FilterParameters/Symmetric6x6FilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
+
+// Include the MOC generated file for this class
+#include "moc_Symmetric6x6Widget.cpp"
 
 // -----------------------------------------------------------------------------
 //

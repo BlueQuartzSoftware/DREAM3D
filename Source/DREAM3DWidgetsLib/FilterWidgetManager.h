@@ -41,7 +41,7 @@
 #include <QtCore/QMap>
 #include <QtCore/QSet>
 
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/IFilterWidgetFactory.h"
@@ -58,8 +58,8 @@
 class DREAM3DWidgetsLib_EXPORT FilterWidgetManager
 {
   public:
-    //DREAM3D_SHARED_POINTERS(FilterWidgetManager)
-    DREAM3D_TYPE_MACRO(FilterWidgetManager)
+    //SIMPL_SHARED_POINTERS(FilterWidgetManager)
+    SIMPL_TYPE_MACRO(FilterWidgetManager)
 
     virtual ~FilterWidgetManager();
 

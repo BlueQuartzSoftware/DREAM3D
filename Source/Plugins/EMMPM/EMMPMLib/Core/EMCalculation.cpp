@@ -41,7 +41,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdio.h>
 #include <string.h>
 
-#include "DREAM3DLib/DREAM3DLib.h"
+#include "SIMPLib/SIMPLib.h"
 
 #include "EMMPMLib/EMMPMLib.h"
 #include "EMMPMLib/Common/MSVCDefines.h"

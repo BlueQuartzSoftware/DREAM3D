@@ -206,7 +206,7 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
     * @param yCells Number of Y Data Points
     * @param col The current Column of Data
     */
-    void parseDataLine(QByteArray& line, size_t row, size_t col, size_t i, size_t xCells, size_t yCells );
+    int parseDataLine(QByteArray& line, size_t row, size_t col, size_t i, size_t xCells, size_t yCells );
 
     CtfReader(const CtfReader&); // Copy Constructor Not Implemented
     void operator=(const CtfReader&); // Operator '=' Not Implemented

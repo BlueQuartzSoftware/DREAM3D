@@ -14,7 +14,9 @@ set(_PublicFilters
   CalculateArrayHistogram
   FindAvgScalarValueForFeatures
   FindBoundaryElementFractions
+  FindDifferenceMap
   FindEuclideanDistMap
+  FindFeatureClustering
   FindLargestCrossSections
   FindNeighborhoods
   FindNeighbors
@@ -43,7 +45,6 @@ endforeach()
 set(_PrivateFilters
   CorrelateValuesWithVectorDirection
   FindEllipsoidError
-  FindFeatureClustering
   FindFeatureHistogram
   FindSaltykovSizes
   FitCorrelatedFeatureData

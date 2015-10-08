@@ -38,12 +38,12 @@
 
 #include <QtCore/QString>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/Constants.h"
 
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/IDataArray.h"
 
 /**
  * @class SurfaceMeshToVtk SurfaceMeshToVtk.h IOFilters/Code/IOFiltersFilters/SurfaceMeshToVtk.h
@@ -56,31 +56,31 @@ class SurfaceMeshToVtk : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(SurfaceMeshToVtk)
-    DREAM3D_STATIC_NEW_MACRO(SurfaceMeshToVtk)
-    DREAM3D_TYPE_MACRO_SUPER(SurfaceMeshToVtk, AbstractFilter)
+    SIMPL_SHARED_POINTERS(SurfaceMeshToVtk)
+    SIMPL_STATIC_NEW_MACRO(SurfaceMeshToVtk)
+    SIMPL_TYPE_MACRO_SUPER(SurfaceMeshToVtk, AbstractFilter)
 
     virtual ~SurfaceMeshToVtk();
 
-    DREAM3D_FILTER_PARAMETER(QString, OutputVtkFile)
+    SIMPL_FILTER_PARAMETER(QString, OutputVtkFile)
     Q_PROPERTY(QString OutputVtkFile READ getOutputVtkFile WRITE setOutputVtkFile)
 
-    DREAM3D_FILTER_PARAMETER(bool, WriteBinaryFile)
+    SIMPL_FILTER_PARAMETER(bool, WriteBinaryFile)
     Q_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
 
-    DREAM3D_FILTER_PARAMETER(bool, WriteConformalMesh)
+    SIMPL_FILTER_PARAMETER(bool, WriteConformalMesh)
     Q_PROPERTY(bool WriteConformalMesh READ getWriteConformalMesh WRITE setWriteConformalMesh)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshNodeTypeArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshNodeTypeArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshNodeTypeArrayPath READ getSurfaceMeshNodeTypeArrayPath WRITE setSurfaceMeshNodeTypeArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QVector<DataArrayPath>, SelectedFaceArrays)
+    SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, SelectedFaceArrays)
     Q_PROPERTY(QVector<DataArrayPath> SelectedFaceArrays READ getSelectedFaceArrays WRITE setSelectedFaceArrays)
 
-    DREAM3D_FILTER_PARAMETER(QVector<DataArrayPath>, SelectedVertexArrays)
+    SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, SelectedVertexArrays)
     Q_PROPERTY(QVector<DataArrayPath> SelectedVertexArrays READ getSelectedVertexArrays WRITE setSelectedVertexArrays)
 
 

@@ -26,12 +26,12 @@ endmacro (cmp_IDE_GENERATED_PROPERTIES SOURCE_PATH HEADERS SOURCES)
 macro (cmp_IDE_SOURCE_PROPERTIES SOURCE_PATH HEADERS SOURCES INSTALL_FILES)
     if(${INSTALL_FILES} EQUAL "1")
         INSTALL (FILES ${HEADERS}
-                 DESTINATION include/${SOURCE_PATH}
+                 DESTINATION "include/${SOURCE_PATH}"
                  COMPONENT Headers
         )
     endif()
-    STRING(REPLACE "/" "\\\\" source_group_path ${SOURCE_PATH}  )
-    source_group(${source_group_path} FILES ${HEADERS} ${SOURCES})
+    STRING(REPLACE "/" "\\\\" source_group_path "${SOURCE_PATH}"  )
+    source_group("${source_group_path}" FILES ${HEADERS} ${SOURCES})
 
   #-- The following is needed if we ever start to use OS X Frameworks but only
   #--  works on CMake 2.6 and greater
@@ -63,7 +63,7 @@ macro(ConfigureMacOSXBundlePlist TARGET_NAME DEBUG_EXTENSION ICON_FILE_PATH VERS
   set_target_properties(${TARGET_NAME} PROPERTIES
     MACOSX_BUNDLE_INFO_STRING "${PROJECT_NAME}${DBG_EXTENSION} Version ${VERSION_STRING}, Copyright 2015 BlueQuartz Software."
     MACOSX_BUNDLE_ICON_FILE ${ICON_FILE_NAME}
-    MACOSX_BUNDLE_GUI_IDENTIFIER "${PROJECT_NAME}${DBG_EXTENSION}"
+    MACOSX_BUNDLE_GUI_IDENTIFIER "${PROJECT_NAME}"
     MACOSX_BUNDLE_LONG_VERSION_STRING "${PROJECT_NAME}${DBG_EXTENSION} Version ${VERSION_STRING}"
     MACOSX_BUNDLE_BUNDLE_NAME ${PROJECT_NAME}${DBG_EXTENSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${VERSION_STRING}
@@ -132,16 +132,7 @@ function(BuildQtAppBundle)
         ELSE(QT_MAC_USE_COCOA)
             set(qt_menu_nib_sources)
         endif(QT_MAC_USE_COCOA)
-
-#-- Write out a qt.conf file to place in our App bundle
-#        set(qt_conf_file ${${QAB_TARGET}_BINARY_DIR}/qt.conf)
-#        file(WRITE ${qt_conf_file})
-#        set_source_files_properties(${qt_conf_file}
-#                                PROPERTIES
-#                                MACOSX_PACKAGE_LOCATION Resources)
-#
-#        list(APPEND QAB_SOURCES ${qt_menu_nib_sources} ${qt_conf_file})
-         list(APPEND QAB_SOURCES ${qt_menu_nib_sources})
+        list(APPEND QAB_SOURCES ${qt_menu_nib_sources})
     elseif(WIN32)
         SET(GUI_TYPE WIN32)
         FILE (WRITE "${CMAKE_CURRENT_BINARY_DIR}/Icon.rc"
@@ -446,6 +437,9 @@ macro(LibraryProperties targetName DEBUG_EXTENSION)
         RELEASE_OUTPUT_NAME lib${targetName}  )
     endif()
 
+    set_target_properties( ${targetName} PROPERTIES FOLDER ${targetName}Proj)
+
+
     #-- Set the Debug and Release names for the libraries
     SET_TARGET_PROPERTIES( ${targetName}
         PROPERTIES
@@ -474,8 +468,6 @@ macro(LibraryProperties targetName DEBUG_EXTENSION)
                 PROPERTIES
                 INSTALL_RPATH \$ORIGIN/../lib)
     endif()
-
-
 
    endif( BUILD_SHARED_LIBS)
 

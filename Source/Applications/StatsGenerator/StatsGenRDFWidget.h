@@ -40,12 +40,12 @@
 #include <QtWidgets/QWidget>
 
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/StatsData/StatsData.h"
-#include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
-#include "DREAM3DLib/Math/RadialDistributionFunction.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/StatsData/StatsData.h"
+#include "SIMPLib/StatsData/PrecipitateStatsData.h"
+#include "SIMPLib/Math/RadialDistributionFunction.h"
 
 
 #include "TableModels/SGRDFTableModel.h"

@@ -37,9 +37,9 @@
 #ifndef _ReadStlFile_H_
 #define _ReadStlFile_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
  * @brief The ReadStlFile class. See [Filter documentation](@ref readstlfile) for details.
@@ -48,22 +48,22 @@ class ReadStlFile : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(ReadStlFile)
-    DREAM3D_STATIC_NEW_MACRO(ReadStlFile)
-    DREAM3D_TYPE_MACRO_SUPER(ReadStlFile, AbstractFilter)
+    SIMPL_SHARED_POINTERS(ReadStlFile)
+    SIMPL_STATIC_NEW_MACRO(ReadStlFile)
+    SIMPL_TYPE_MACRO_SUPER(ReadStlFile, AbstractFilter)
 
     virtual ~ReadStlFile();
 
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshDataContainerName)
+    SIMPL_FILTER_PARAMETER(QString, SurfaceMeshDataContainerName)
     Q_PROPERTY(QString SurfaceMeshDataContainerName READ getSurfaceMeshDataContainerName WRITE setSurfaceMeshDataContainerName)
 
-    DREAM3D_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
     Q_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(QString, StlFilePath)
+    SIMPL_FILTER_PARAMETER(QString, StlFilePath)
     Q_PROPERTY(QString StlFilePath READ getStlFilePath WRITE setStlFilePath)
 
-    DREAM3D_FILTER_PARAMETER(QString, FaceNormalsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, FaceNormalsArrayName)
     Q_PROPERTY(QString FaceNormalsArrayName READ getFaceNormalsArrayName WRITE setFaceNormalsArrayName)
 
     /**

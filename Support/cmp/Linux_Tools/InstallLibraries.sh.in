@@ -14,17 +14,30 @@ InstallPrefix="${1}"
 # into the packaging/install location
 function copyLibraries()
 {
-	echo "@linux_app_name@: Copy ${2} Lib/Links into Deployment Lib Directory"  
-	cd $1
+	#echo "@linux_app_name@: Copy ${2} Lib/Links into Deployment Lib Directory"
+	#echo "copyLibraries 1: $1"
+  #echo "copyLibraries 2: $2"
+  cd $1
 	libs=`ls lib${2}@lib_suffix@.s*`
 	for l in ${libs}
 		do
 		name=`basename ${l}`
-		if [ ! -e "${InstallPrefix}/lib/${name}" ]; then
-			#echo "@linux_app_name@:  Copy ${l} into Deployment Lib Directory"  
-			cp --no-dereference ${l} ${InstallPrefix}/lib/.
-		fi
+    if [ ! -e "${InstallPrefix}/lib/${name}" ]; then
+    echo "@linux_app_name@: Copy ${name} Lib/Link into Deployment Lib Directory" 
+    cp --no-dereference ${l} ${InstallPrefix}/lib/.
+    fi
 	done
+}
+
+function copyQtWebEngineFile()
+{
+  name="$1"
+  instDir="$2"
+  srcDir="$3"
+  if [ ! -e "${InstallPrefix}/${instDir}/${name}" ]; then
+    #echo "@linux_app_name@:  Copy ${l} into Deployment Lib Directory"  
+    cp --no-dereference @QM_QT_INSTALL_PREFIX@/${srcDir}/${name} ${InstallPrefix}/${instDir}/.
+  fi
 }
 
 #------------------------------------------------------------------------------
@@ -33,7 +46,7 @@ HDF5_COMPONENTS="@HDF5_COMPONENTS@"
 arr=$(echo $HDF5_COMPONENTS | tr ";" "\n")
 for x in $arr
 do
-    copyLibraries "@HDF5_LIBRARY_DIRS@"  "$x"
+    copyLibraries "@HDF5_INSTALL@/lib"  "$x"
 done
 
 
@@ -67,6 +80,27 @@ for x in $arr
 do
     copyLibraries "@QM_QT_INSTALL_PREFIX@/lib"  "Qt5$x"
 done
+
+
+# ----------------------------------------------------
+# Copy the QtWebEngine parts of the QtWebEngineCore 
+if [ "@DREAM3D_USE_QtWebEngine@" = "ON" ];
+  then
+    copyQtWebEngineFile "QtWebEngineProcess" "bin" "libexec"
+    copyQtWebEngineFile "icudtl.dat" "bin" "."
+    copyQtWebEngineFile "qtwebengine_resources.pak" "bin" "."
+    if [ ! -e "${InstallPrefix}/bin/translations" ];
+      then
+        mkdir "${InstallPrefix}/bin/translations"
+    fi
+
+    if [ ! -e "${InstallPrefix}/bin/translations/qtwebengine_locales" ];
+      then
+        mkdir "${InstallPrefix}/bin/translations/qtwebengine_locales"
+    fi
+    cp -n -u @QM_QT_INSTALL_PREFIX@/translations/qtwebengine_locales/* ${InstallPrefix}/bin/translations/qtwebengine_locales/
+fi
+
 
 #------------------------------------------------------------------------------
 # The list of Qt ICU Dependent Libraries comes in as a semi-colon separated list of Components

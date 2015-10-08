@@ -39,12 +39,12 @@
 
 #include <QtCore/QString>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "SIMPLib/DataArrays/IDataArray.h"
 
 /**
  * @class CMUNodesTrianglesToStl CMUNodesTrianglesToStl.h MFESurfaceSmoothing/CMUNodesTrianglesToStl.h
@@ -58,22 +58,22 @@ class NodesTrianglesToStl : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(NodesTrianglesToStl)
-    DREAM3D_STATIC_NEW_MACRO(NodesTrianglesToStl)
-    DREAM3D_TYPE_MACRO_SUPER(NodesTrianglesToStl, AbstractFilter)
+    SIMPL_SHARED_POINTERS(NodesTrianglesToStl)
+    SIMPL_STATIC_NEW_MACRO(NodesTrianglesToStl)
+    SIMPL_TYPE_MACRO_SUPER(NodesTrianglesToStl, AbstractFilter)
 
     virtual ~NodesTrianglesToStl();
 
-    DREAM3D_FILTER_PARAMETER(QString, NodesFile)
+    SIMPL_FILTER_PARAMETER(QString, NodesFile)
     Q_PROPERTY(QString NodesFile READ getNodesFile WRITE setNodesFile)
 
-    DREAM3D_FILTER_PARAMETER(QString, TrianglesFile)
+    SIMPL_FILTER_PARAMETER(QString, TrianglesFile)
     Q_PROPERTY(QString TrianglesFile READ getTrianglesFile WRITE setTrianglesFile)
 
-    DREAM3D_FILTER_PARAMETER(QString, OutputStlDirectory)
+    SIMPL_FILTER_PARAMETER(QString, OutputStlDirectory)
     Q_PROPERTY(QString OutputStlDirectory READ getOutputStlDirectory WRITE setOutputStlDirectory)
 
-    DREAM3D_FILTER_PARAMETER(QString, OutputStlPrefix)
+    SIMPL_FILTER_PARAMETER(QString, OutputStlPrefix)
     Q_PROPERTY(QString OutputStlPrefix READ getOutputStlPrefix WRITE setOutputStlPrefix)
 
     /**

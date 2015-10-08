@@ -43,7 +43,7 @@
 #include <QtWidgets/QFileDialog>
 
 
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
@@ -101,6 +101,9 @@ class ReadH5EbsdWidget : public FilterParameterWidget, private Ui::ReadH5EbsdWid
     void on_m_InputFile_textChanged(const QString& text);
     void on_m_CellList_itemClicked(QListWidgetItem* item);
     void on_m_DataArraysCheckBox_stateChanged(int state);
+    void on_m_ZStartIndex_valueChanged(int value);
+    void on_m_ZEndIndex_valueChanged(int value);
+    void on_m_UseTransformations_stateChanged(int state);
 
 
   protected:

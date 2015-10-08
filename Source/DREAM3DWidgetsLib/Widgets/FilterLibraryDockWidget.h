@@ -42,7 +42,7 @@
 
 #include <QtCore/QSignalMapper>
 
-#include "DREAM3DLib/Common/FilterManager.h"
+#include "SIMPLib/Common/FilterManager.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
@@ -113,10 +113,17 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryDockWidget : public QDockWidget, pri
     void launchHelpForItem(QString name);
 
   signals:
-
+    /**
+     * @brief filterItemDoubleClicked
+     * @param filterName
+     */
     void filterItemDoubleClicked(const QString& filterName);
 
-
+    /**
+     * @brief filterListGenerated
+     * @param filterList
+     * @param sort
+     */
     void filterListGenerated(const QStringList& filterList, bool sort);
 
   private:

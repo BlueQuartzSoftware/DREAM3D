@@ -36,10 +36,10 @@
 #ifndef _GenerateMisorientationColors_H_
 #define _GenerateMisorientationColors_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 
 /**
  * @brief The GenerateMisorientationColors class. See [Filter documentation](@ref generateipfcolors) for details.
@@ -48,34 +48,34 @@ class GenerateMisorientationColors : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(GenerateMisorientationColors)
-    DREAM3D_STATIC_NEW_MACRO(GenerateMisorientationColors)
-    DREAM3D_TYPE_MACRO_SUPER(GenerateMisorientationColors, AbstractFilter)
+    SIMPL_SHARED_POINTERS(GenerateMisorientationColors)
+    SIMPL_STATIC_NEW_MACRO(GenerateMisorientationColors)
+    SIMPL_TYPE_MACRO_SUPER(GenerateMisorientationColors, AbstractFilter)
 
     virtual ~GenerateMisorientationColors();
 
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, ReferenceAxis)
+    SIMPL_FILTER_PARAMETER(FloatVec3_t, ReferenceAxis)
     Q_PROPERTY(FloatVec3_t ReferenceAxis READ getReferenceAxis WRITE setReferenceAxis)
 
-    DREAM3D_FILTER_PARAMETER(float, ReferenceAngle)
+    SIMPL_FILTER_PARAMETER(float, ReferenceAngle)
     Q_PROPERTY(float ReferenceAngle READ getReferenceAngle WRITE setReferenceAngle)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
     Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
     Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
     Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, MisorientationColorArrayName)
+    SIMPL_FILTER_PARAMETER(QString, MisorientationColorArrayName)
     Q_PROPERTY(QString MisorientationColorArrayName READ getMisorientationColorArrayName WRITE setMisorientationColorArrayName)
 
-    DREAM3D_FILTER_PARAMETER(bool, UseGoodVoxels)
+    SIMPL_FILTER_PARAMETER(bool, UseGoodVoxels)
     Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
 
     /**

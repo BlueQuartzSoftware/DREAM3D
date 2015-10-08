@@ -39,9 +39,9 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/Observable.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Common/Observable.h"
 
 #include "EMMPMLib/EMMPMLib.h"
 #include "EMMPMLib/Core/EMMPM_Constants.h"
@@ -53,16 +53,16 @@ class EMMPMLib_EXPORT MPMCalculation : public Observable
 {
     Q_OBJECT;
   public:
-    DREAM3D_SHARED_POINTERS(MPMCalculation)
-    DREAM3D_STATIC_NEW_MACRO(MPMCalculation)
-    DREAM3D_TYPE_MACRO(MPMCalculation)
+    SIMPL_SHARED_POINTERS(MPMCalculation)
+    SIMPL_STATIC_NEW_MACRO(MPMCalculation)
+    SIMPL_TYPE_MACRO(MPMCalculation)
 
     virtual ~MPMCalculation();
 
-    DREAM3D_INSTANCE_PROPERTY(EMMPM_Data::Pointer, Data)
-    DREAM3D_INSTANCE_PROPERTY(StatsDelegate*, StatsDelegate);
-    DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
-    DREAM3D_INSTANCE_PROPERTY(QString, MessagePrefix)
+    SIMPL_INSTANCE_PROPERTY(EMMPM_Data::Pointer, Data)
+    SIMPL_INSTANCE_PROPERTY(StatsDelegate*, StatsDelegate);
+    SIMPL_INSTANCE_PROPERTY(int, ErrorCondition)
+    SIMPL_INSTANCE_PROPERTY(QString, MessagePrefix)
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable

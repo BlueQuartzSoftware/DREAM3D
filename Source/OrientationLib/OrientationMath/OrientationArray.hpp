@@ -39,9 +39,9 @@
 #include <assert.h>
 #include <string.h>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Math/QuaternionMath.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Math/QuaternionMath.hpp"
 
 #include "OrientationLib/OrientationLib.h"
 
@@ -201,11 +201,18 @@ class OrientationArray
       if(m_Ptr != NULL && m_Owns == true)
       {
         free(m_Ptr);
+        m_Ptr = NULL;
+
+        m_Size = rhs.size();
+        allocate();
+        ::memcpy(m_Ptr, rhs.m_Ptr, sizeof(T) * m_Size); // Copy the bytes over to the new array
       }
-      m_Ptr = NULL;
-      m_Size = rhs.size();
-      allocate();
-      ::memcpy(m_Ptr, rhs.m_Ptr, sizeof(T) * m_Size); // Copy the bytes over to the new array
+      if(m_Owns == false)
+      {
+        assert(m_Size == rhs.size());
+        assert(m_Ptr != NULL);
+        ::memcpy(m_Ptr, rhs.m_Ptr, sizeof(T) * m_Size); // Copy the bytes over to the new array
+      }
     }
 
     /**

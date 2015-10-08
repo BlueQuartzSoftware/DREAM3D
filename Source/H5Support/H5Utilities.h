@@ -36,9 +36,6 @@ namespace H5Support_NAMESPACE
 
   /**
    * @brief General Utilities for working with the HDF5 data files and API
-   * @author Mike Jackson/Shawn Nicholson
-   * @date March 2007
-   * @version $Revision: 1.2 $
    */
   class H5Utilities
   {

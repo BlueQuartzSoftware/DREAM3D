@@ -32,9 +32,10 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #include "PluginDetails.h"
+
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_PluginDetails.cpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -70,7 +71,7 @@ void PluginDetails::setupGui()
 void PluginDetails::loadPluginDetails()
 {
   PluginManager* manager = PluginManager::Instance();
-  IDREAM3DPlugin* plugin = manager->findPlugin(m_PluginName);
+  ISIMPLibPlugin* plugin = manager->findPlugin(m_PluginName);
 
   // Add plugin details to PluginDetails dialog box
   nameLabel->setText(plugin->getPluginName());

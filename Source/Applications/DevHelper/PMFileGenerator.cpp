@@ -46,6 +46,9 @@
 
 #include "QtSupportLib/ApplicationFileInfo.h"
 
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_PMFileGenerator.cpp"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -93,8 +96,6 @@ QString PMFileGenerator::getFileName()
 // -----------------------------------------------------------------------------
 void PMFileGenerator::pluginNameChanged(const QString& pluginName)
 {
-//  qDebug() << "PMFileGenerator::pluginNameChanged" << "\n";
-
   QString pin = cleanName(pluginName);
 
   if (pin.isEmpty() == true)
@@ -106,6 +107,8 @@ void PMFileGenerator::pluginNameChanged(const QString& pluginName)
     setPluginName(pin);
   }
 
+  m_FilterName = pin + "Filter";
+
   if (isNameChangeable() == false)
   {
     return;
@@ -116,8 +119,6 @@ void PMFileGenerator::pluginNameChanged(const QString& pluginName)
   {
     getTreeWidgetItem()->setText(0, m_FileName );
   }
-
-
 }
 
 // -----------------------------------------------------------------------------
@@ -191,6 +192,9 @@ QString PMFileGenerator::getFileContents(QString replaceStr)
   //Get text feature values from widget
   QString pluginName = getPluginName();
   QString pluginDir = getOutputDir();
+  QString filterName = getFilterName();
+  QFileInfo fi(m_FileName);
+  QString className = fi.baseName();
   QString text = "";
 
   if (pluginName.isEmpty() == true)
@@ -205,10 +209,6 @@ QString PMFileGenerator::getFileContents(QString replaceStr)
     QTextStream in(&rfile);
     text = in.readAll();
     text.replace("@PluginName@", pluginName);
-    QFileInfo fi(m_FileName);
-    QString className = fi.baseName();
-    QString filterName = className;
-    //filterName = filterName.remove("Test");   // For the test files
     text.replace("@ClassName@", className);
     text.replace("@FilterName@", filterName);
     text.replace("@MD_FILE_NAME@", m_FileName);
@@ -332,7 +332,7 @@ QString PMFileGenerator::createReplacementString(FileType type, QSet<QString> na
         name.replace("@PluginName@", pluginName);
       }
 
-      replaceStr.append("AddDREAM3DUnitTest(TESTNAME " + name + "Test SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/" + name + "Test.cpp LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})");
+      replaceStr.append("AddDREAM3DUnitTest(TESTNAME " + name + "Test SOURCES ${${PROJECT_NAME}Test_SOURCE_DIR}/" + name + "Test.cpp FOLDER \"${PLUGIN_NAME}Plugin/Test\" LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})");
 
       if (++iter != names.end())
       {

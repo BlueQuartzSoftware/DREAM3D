@@ -44,10 +44,10 @@
 #include <QtCore/QString>
 
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/Math/QuaternionMath.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Math/QuaternionMath.hpp"
 
 #include "OrientationLib/OrientationLib.h"
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
@@ -57,16 +57,12 @@
 /*
  * @class SpaceGroupOps SpaceGroupOps.h DREAM3DLib/Common/SpaceGroupOps.h
  * @brief This class performs Crystallographic Misorientation Calculations
- * @author Michael A. Jackson (BlueQuartz Software)
- * @author Michael A. Groeber (US Air Force Research Laboratory)
- * @date Feb 19, 2011
- * @version 1.0
  */
 class OrientationLib_EXPORT SpaceGroupOps
 {
   public:
-    DREAM3D_SHARED_POINTERS(SpaceGroupOps)
-    DREAM3D_TYPE_MACRO(SpaceGroupOps)
+    SIMPL_SHARED_POINTERS(SpaceGroupOps)
+    SIMPL_TYPE_MACRO(SpaceGroupOps)
 
     virtual ~SpaceGroupOps();
 
@@ -140,10 +136,10 @@ class OrientationLib_EXPORT SpaceGroupOps
     virtual void getFZQuat(QuatF& qr);
     virtual int getMisoBin(FOrientArrayType rod) = 0;
     virtual bool inUnitTriangle(float eta, float chi) = 0;
-    virtual FOrientArrayType determineEulerAngles(int choose) = 0;
+    virtual FOrientArrayType determineEulerAngles(uint64_t seed, int choose) = 0;
     virtual FOrientArrayType randomizeEulerAngles(FOrientArrayType euler) = 0;
     virtual size_t getRandomSymmetryOperatorIndex(int numSymOps);
-    virtual FOrientArrayType determineRodriguesVector(int choose) = 0;
+    virtual FOrientArrayType determineRodriguesVector(uint64_t seed, int choose) = 0;
     virtual int getOdfBin(FOrientArrayType rod) = 0;
     virtual void getSchmidFactorAndSS(float load[3], float& schmidfactor, float angleComps[2], int& slipsys) = 0;
     virtual void getSchmidFactorAndSS(float load[3], float plane[3], float direction[3], float& schmidfactor, float angleComps[2], int& slipsys) = 0;
@@ -218,7 +214,7 @@ class OrientationLib_EXPORT SpaceGroupOps
     void _calcQuatNearestOrigin(const QuatF quatsym[24], int numsym, QuatF& qr);
 
     int _calcMisoBin(float dim[3], float bins[3], float step[3], const FOrientArrayType& homochoric);
-    void _calcDetermineHomochoricValues(float init[3], float step[3], float phi[3], int choose, float& r1, float& r2, float& r3);
+    void _calcDetermineHomochoricValues(uint64_t seed, float init[3], float step[3], int32_t phi[3], int choose, float& r1, float& r2, float& r3);
     int _calcODFBin(float dim[3], float bins[3], float step[3], FOrientArrayType homochoric);
 
   private:

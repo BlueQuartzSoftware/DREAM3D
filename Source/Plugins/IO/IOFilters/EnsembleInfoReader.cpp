@@ -39,17 +39,21 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QSettings>
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/InputFileFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataContainerSelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "IO/IOConstants.h"
+
+// Include the MOC generated file for this class
+#include "moc_EnsembleInfoReader.cpp"
+
 
 // -----------------------------------------------------------------------------
 //
@@ -84,7 +88,10 @@ void EnsembleInfoReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(InputFileFilterParameter::New("Input Ensemble Info File", "InputFile", getInputFile(), FilterParameter::Parameter, "*.ini *.txt"));
-  parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::RequiredArray));
+  {
+    DataContainerSelectionFilterParameter::RequirementType req;
+    parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::RequiredArray, req));
+  }
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName(), FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Crystal Structures", "CrystalStructuresArrayName", getCrystalStructuresArrayName(), FilterParameter::CreatedArray));
@@ -112,12 +119,12 @@ void EnsembleInfoReader::readFilterParameters(AbstractFilterParametersReader* re
 int EnsembleInfoReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(PhaseTypesArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(DataContainerName)
+  SIMPL_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(PhaseTypesArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(InputFile)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -183,7 +190,21 @@ void EnsembleInfoReader::dataCheck()
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
 
-  QVector<size_t> tDims(1, 0);
+  int32_t numphases = 0;
+
+  QSettings settings(getInputFile(), QSettings::IniFormat); // The .ini or .txt input file
+  settings.beginGroup("EnsembleInfo");
+  numphases = settings.value("Number_Phases").toInt(); // read number of phases from input file
+  settings.endGroup();
+
+  if (0 == numphases) // Either the group name "EnsembleInfo" is incorrect or 0 was entered as the Number_Phases
+  {
+    QString ss = QObject::tr("Check the group name EnsembleInfo and that Number_Phases > 0");
+    setErrorCondition(-10003);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+
+  QVector<size_t> tDims(1, numphases + 1);
   m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellEnsemble);
   if(getErrorCondition() < 0) { return; }
 

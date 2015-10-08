@@ -44,15 +44,15 @@
 #include <QtCore/QMetaProperty>
 
 // DREAM3DLib includes
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/DREAM3DLibVersion.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/SIMPLibVersion.h"
 
 
-#include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/Common/FilterFactory.hpp"
+#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/Common/FilterFactory.hpp"
 
-#include "DREAM3DLib/Plugin/IDREAM3DPlugin.h"
-#include "DREAM3DLib/Plugin/DREAM3DPluginLoader.h"
+#include "SIMPLib/Plugin/ISIMPLibPlugin.h"
+#include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -238,7 +238,7 @@ QString updateHeader(QStringList& outLines, QString name)
 {
   QString str;
   QTextStream out(&str);
-  out << "    DREAM3D_FILTER_PARAMETER(DataArrayPath, " << name << "ArrayPath)\n";
+  out << "    SIMPL_FILTER_PARAMETER(DataArrayPath, " << name << "ArrayPath)\n";
   out << "    Q_PROPERTY(DataArrayPath " << name << "ArrayPath READ get" << name << "ArrayPath WRITE set" << name << "ArrayPath)\n";
 
   outLines.push_back(str);
@@ -418,12 +418,12 @@ int main(int argc, char* argv[])
   QCoreApplication::setOrganizationDomain("bluequartz.net");
   QCoreApplication::setApplicationName("FilterParameterTool");
 
-  std::cout << "FilterParameterTool Starting. Version " << DREAM3DLib::Version::PackageComplete().toStdString() << std::endl;
+  std::cout << "FilterParameterTool Starting. Version " << SIMPLib::Version::PackageComplete().toStdString() << std::endl;
 
 
   // Register all the filters including trying to load those from Plugins
   FilterManager::Pointer fm = FilterManager::Instance();
-  DREAM3DPluginLoader::LoadPluginFilters(fm.get());
+  SIMPLibPluginLoader::LoadPluginFilters(fm.get());
 
 
   // Send progress messages from PipelineBuilder to this object for display

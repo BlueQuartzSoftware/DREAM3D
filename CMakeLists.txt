@@ -1,13 +1,37 @@
-#--////////////////////////////////////////////////////////////////////////////
-#--
-#--  Copyright (c) 2009, Michael A. Jackson. BlueQuartz Software
-#--  Copyright (c) 2009, Michael Groeber, US Air Force Research Laboratory
-#--  All rights reserved.
-#--  BSD License: http://www.opensource.org/licenses/bsd-license.html
-#--
-#-- This code was partly written under US Air Force Contract FA8650-07-D-5800
-#--
-#--////////////////////////////////////////////////////////////////////////////
+# ============================================================================
+# Copyright (c) 2009-2015 BlueQuartz Software, LLC
+#
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+#
+# Redistributions of source code must retain the above copyright notice, this
+# list of conditions and the following disclaimer.
+#
+# Redistributions in binary form must reproduce the above copyright notice, this
+# list of conditions and the following disclaimer in the documentation and/or
+# other materials provided with the distribution.
+#
+# Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+# contributors may be used to endorse or promote products derived from this software
+# without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+# USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# The code contained herein was partially funded by the followig contracts:
+#    United States Air Force Prime Contract FA8650-07-D-5800
+#    United States Air Force Prime Contract FA8650-10-D-5210
+#    United States Prime Contract Navy N00173-07-C-2068
+#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
 if(NOT "${DREAM3D_SDK}" STREQUAL "")
@@ -29,7 +53,7 @@ cmake_minimum_required(VERSION 3.1.0)
 #------------------------------------------------------------------------------
 # Create the Top level Project
 #
-project(DREAM3DProj VERSION 6.1.0.0)
+project(DREAM3DProj VERSION 6.2.0.0)
 #------------------------------------------------------------------------------
 # There are several different Release Types that we are going to use.
 # Official: This is an official release from BlueQuartz Software
@@ -76,7 +100,7 @@ set(CMP_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR}/Support/cmp)
 set(CMP_CONFIGURED_FILES_SOURCE_DIR ${CMP_SOURCE_DIR}/ConfiguredFiles)
 INCLUDE (${CMP_SOURCE_DIR}/cmpCMakeMacros.cmake )
 set(CMP_ENABLE_PLUGINS "1")
-set(CMP_PLUGIN_LIST_FILE ${PROJECT_BINARY_DIR}/DREAM3D_PluginList.txt)
+set(CMP_PLUGIN_LIST_FILE ${PROJECT_BINARY_DIR}/SIMPLib_PluginList.txt)
 file(WRITE ${CMP_PLUGIN_LIST_FILE} "")
 set(CMP_PLUGIN_SEARCHDIR_FILE ${PROJECT_BINARY_DIR}/libsearchdirs.txt)
 file(WRITE ${CMP_PLUGIN_SEARCHDIR_FILE} "${PROJECT_BINARY_DIR}/Bin/plugins;")
@@ -101,7 +125,7 @@ cmpRevisionString( GENERATED_HEADER_FILE_PATH "D3DFileNotUsed.h"
 # --------------------------------------------------------------------
 #
 if("${DREAM3D_DATA_DIR}" STREQUAL "")
-  set(DREAM3D_DATA_DIR "${DREAM3DProj_SOURCE_DIR}/../DREAM3D_Data/"  CACHE PATH "The directory where to find test data files")
+  set(DREAM3D_DATA_DIR "${DREAM3DProj_SOURCE_DIR}/../SIMPLib_Data/"  CACHE PATH "The directory where to find test data files")
 endif()
 
 if("${DREAM3D_DATA_DIR}" STREQUAL "")
@@ -159,9 +183,9 @@ LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
 # --------------------------------------------------------------------
 # Should we use Intel Threading Building Blocks
 # --------------------------------------------------------------------
-set(DREAM3D_USE_PARALLEL_ALGORITHMS "")
-option(DREAM3D_USE_MULTITHREADED_ALGOS "Use MultiThreaded Algorithms" ON)
-if(DREAM3D_USE_MULTITHREADED_ALGOS)
+set(SIMPLib_USE_PARALLEL_ALGORITHMS "")
+option(SIMPLib_USE_MULTITHREADED_ALGOS "Use MultiThreaded Algorithms" ON)
+if(SIMPLib_USE_MULTITHREADED_ALGOS)
     find_package(TBB)
     if(TBB_FOUND)
         include_directories(${TBB_INCLUDE_DIRS} )
@@ -173,18 +197,18 @@ if(DREAM3D_USE_MULTITHREADED_ALGOS)
     else()
         message(FATAL_ERROR "The Intel Threading Building Blocks library is needed to enable the multithreaded algorithms. Please make sure it is installed properly")
     endif()
-    set(DREAM3D_USE_PARALLEL_ALGORITHMS "1")
+    set(SIMPLib_USE_PARALLEL_ALGORITHMS "1")
 endif()
 
 # --------------------------------------------------------------------
 # DREAM3D needs the Eigen library for Least Squares fit and Eigen
 # value/vector calculations.
-set(DREAM3D_USE_EIGEN "")
+set(SIMPLib_USE_EIGEN "")
 Find_Package(Eigen REQUIRED)
 if(EIGEN_FOUND)
   message(STATUS "Found Eigen Library")
   include_directories( ${EIGEN_INCLUDE_DIRS} )
-  set(DREAM3D_USE_EIGEN "1")
+  set(SIMPLib_USE_EIGEN "1")
 else()
   message(WARNING "The Eigen Library is required for some algorithms to execute. These algorithms will be disabled.")
 endif()
@@ -256,7 +280,7 @@ ENDif(CMAKE_COMPILER_IS_GNUCXX)
 if(MSVC)
  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
  add_definitions(-D_SCL_SECURE_NO_WARNINGS)
- option(DREAM3D_DISABLE_MSVC_WARNINGS "Disable some MSVC Compiler warnings" OFF)
+ option(SIMPLib_DISABLE_MSVC_WARNINGS "Disable some MSVC Compiler warnings" OFF)
 endif()
 
 
@@ -296,7 +320,7 @@ set(FilterWidgetsLib_BINARY_DIR ${DREAM3DProj_BINARY_DIR}/FilterWidgetsLib)
 
 # -----------------------------------------------------------------------
 # -- Add in the DREAM3D Sources into a library
-add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/DREAM3DLib/ ${PROJECT_BINARY_DIR}/DREAM3DLib)
+add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/SIMPLib/ ${PROJECT_BINARY_DIR}/SIMPLib)
 
 # -----------------------------------------------------------------------
 # -- Add in the DREAM3D Sources into a library
@@ -316,13 +340,13 @@ add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/DREAM3DWidgetsLib ${PROJECT_B
 # Build the DREAM3D Application here so we can add dependencies between the plugin and
 # the main DREAM3D application target. This should ensure that everything is built and
 # up-to-date properly.
-option(DREAM3D_BUILD_DREAM3D "Compile the DREAM3D GUI Application" ON)
-if(DREAM3D_BUILD_DREAM3D)
+option(SIMPLib_BUILD_DREAM3D "Compile the DREAM3D GUI Application" ON)
+if(SIMPLib_BUILD_DREAM3D)
 
   #- Add in the Main DREAM.3D Application
   add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/DREAM3D ${PROJECT_BINARY_DIR}/Applications/DREAM3D)
 
-  set(DREAM3D_DOCS_ROOT_DIR "${DREAM3DProj_BINARY_DIR}/Bin/Help/DREAM3D")
+  set(SIMPLib_DOCS_ROOT_DIR "${DREAM3DProj_BINARY_DIR}/Bin/Help/DREAM3D")
 endif()
 
 
@@ -333,23 +357,23 @@ include(${PROJECT_CODE_DIR}/Plugins/Plugins.cmake)
 
 
 # Build the StatsGenerator Application
-OPTION(DREAM3D_BUILD_STATS_GENERATOR "Compile the Statistics Generator GUI Application" ON)
-if(DREAM3D_BUILD_STATS_GENERATOR)
+OPTION(SIMPLib_BUILD_STATS_GENERATOR "Compile the Statistics Generator GUI Application" ON)
+if(SIMPLib_BUILD_STATS_GENERATOR)
     add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/Applications/StatsGenerator ${PROJECT_BINARY_DIR}/Applications/StatsGenerator)
 endif()
 
 
 #- Add in the DevHelper application
-option(DREAM3D_BUILD_DEVHELPER "Compile the DevHelper Application" ON)
-if(DREAM3D_BUILD_DEVHELPER)
+option(SIMPLib_BUILD_DEVHELPER "Compile the DevHelper Application" ON)
+if(SIMPLib_BUILD_DEVHELPER)
     add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/DevHelper  ${PROJECT_BINARY_DIR}/Applications/DevHelper)
 endif()
 
 
 # add the Command line utilities
 # Figure out here if we are going to build the command line tools
-option(DREAM3D_BUILD_CLI_TOOLS "Build the command line versions of the applications" ON)
-if( DREAM3D_BUILD_CLI_TOOLS )
+option(SIMPLib_BUILD_CLI_TOOLS "Build the command line versions of the applications" ON)
+if( SIMPLib_BUILD_CLI_TOOLS )
     add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Tools ${PROJECT_BINARY_DIR}/Tools)
     add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Tools/astyle ${PROJECT_BINARY_DIR}/Tools/astyle)
 endif()
@@ -357,27 +381,27 @@ endif()
 
 #-------------------------------------------------------------------------------
 # Should we build the documentation using DOxygen
-option(DREAM3D_BUILD_DOCUMENTATION "Build the DREAM3D documentation" ON)
-if(DREAM3D_BUILD_DOCUMENTATION)
+option(SIMPLib_BUILD_DOCUMENTATION "Build the DREAM3D documentation" ON)
+if(SIMPLib_BUILD_DOCUMENTATION)
   set(DOCUMENTATION_RESOURCES_DIR ${PROJECT_RESOURCES_DIR}/DocConfigFiles)
 
   set(DOX_GENERATE_RTF "NO")
-  option(DREAM3D_GENERATE_RTF "Generate RTF Documentation" OFF)
-  if(DREAM3D_GENERATE_RTF STREQUAL "ON")
+  option(SIMPLib_GENERATE_RTF "Generate RTF Documentation" OFF)
+  if(SIMPLib_GENERATE_RTF STREQUAL "ON")
     set(DOX_GENERATE_RTF "YES")
   endif()
 
   # By default we generate the Documentation in HTML format
   set(DOX_GENERATE_HTML "NO")
-  option(DREAM3D_GENERATE_HTML "Generate HTML Documentation" ON)
-  if(DREAM3D_GENERATE_HTML STREQUAL "ON")
+  option(SIMPLib_GENERATE_HTML "Generate HTML Documentation" ON)
+  if(SIMPLib_GENERATE_HTML STREQUAL "ON")
     set(DOX_GENERATE_HTML "YES")
   endif()
 
   #most windows machines do NOT have LATEX built in so default this to OFF
   set(DOX_GENERATE_LATEX "NO")
-  option(DREAM3D_GENERATE_LATEX "Generate PDF Documentation" OFF)
-  if(DREAM3D_GENERATE_LATEX STREQUAL "ON")
+  option(SIMPLib_GENERATE_LATEX "Generate PDF Documentation" OFF)
+  if(SIMPLib_GENERATE_LATEX STREQUAL "ON")
     set(DOX_GENERATE_LATEX "YES")
     # Check for existence of LaTex executable files
     INCLUDE( ${DOCUMENTATION_RESOURCES_DIR}/CMake/UseLATEX.cmake)
@@ -388,7 +412,6 @@ if(DREAM3D_BUILD_DOCUMENTATION)
 
 
   # Now add each subdirectory that holds our documentation files
-  add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation/Developer ${PROJECT_BINARY_DIR}/Documentation/Developer)
   add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation/ReferenceManual ${PROJECT_BINARY_DIR}/Documentation/ReferenceManual)
   add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation/APIDocs ${PROJECT_BINARY_DIR}/Documentation/APIDocs)
 endif()
@@ -399,6 +422,6 @@ include(${PROJECT_RESOURCES_DIR}/CPack/PackageProject.cmake)
 
 # ------- Enable the CTest testing. Use make test to run all tests ---------------
 if(DREAM3D_BUILD_TESTING)
-    add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Test ${PROJECT_BINARY_DIR}/Test)
+    include(${DREAM3DProj_SOURCE_DIR}/Test/CMakeLists.txt)
 endif()
 

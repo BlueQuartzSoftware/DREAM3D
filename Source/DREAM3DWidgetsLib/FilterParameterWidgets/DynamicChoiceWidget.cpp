@@ -37,12 +37,15 @@
 
 #include <QtCore/QMetaProperty>
 
-#include "DREAM3DLib/FilterParameters/DynamicChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/DynamicChoiceFilterParameter.h"
 
 #include "FilterParameterWidgetsDialogs.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
+
+// Include the MOC generated file for this class
+#include "moc_DynamicChoiceWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //

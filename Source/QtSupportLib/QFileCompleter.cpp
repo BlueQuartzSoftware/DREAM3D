@@ -36,7 +36,7 @@
 
 #include "QFileCompleter.h"
 #include <QtWidgets/QDirModel>
-
+#include "moc_QFileCompleter.cpp"
 // -----------------------------------------------------------------------------
 // use same QDirModel for all completers
 // -----------------------------------------------------------------------------

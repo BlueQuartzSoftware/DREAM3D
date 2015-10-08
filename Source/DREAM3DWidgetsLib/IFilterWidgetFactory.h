@@ -38,8 +38,8 @@
 #define _IFILTERWIDGETFACTOR_H_
 
 
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Common/AbstractFilter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
@@ -54,8 +54,8 @@ class QWidget;
 class DREAM3DWidgetsLib_EXPORT IFilterWidgetFactory
 {
   public:
-    DREAM3D_SHARED_POINTERS(IFilterWidgetFactory)
-    DREAM3D_TYPE_MACRO(IFilterWidgetFactory)
+    SIMPL_SHARED_POINTERS(IFilterWidgetFactory)
+    SIMPL_TYPE_MACRO(IFilterWidgetFactory)
 
 
     virtual ~IFilterWidgetFactory();

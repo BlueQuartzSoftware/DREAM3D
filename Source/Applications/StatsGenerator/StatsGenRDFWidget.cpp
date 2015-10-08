@@ -66,10 +66,13 @@
 #include <qwt_compat.h>
 
 
-#include "DREAM3DLib/Math/RadialDistributionFunction.h"
+#include "SIMPLib/Math/RadialDistributionFunction.h"
 
 #include "Applications/StatsGenerator/TableModels/SGMDFTableModel.h"
 
+
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_StatsGenRDFWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //

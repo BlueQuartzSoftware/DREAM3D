@@ -36,7 +36,7 @@
 
 #include "OrthoRhombicOps.h"
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/partitioner.h>
@@ -47,8 +47,8 @@
 
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Utilities/ColorTable.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Utilities/ColorTable.h"
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
@@ -59,9 +59,9 @@
 namespace Detail
 {
 
-  static const float OrthoDim1InitValue = powf((0.75f * ((DREAM3D::Constants::k_Pi / 2.0f) - sinf((DREAM3D::Constants::k_Pi / 2.0f)))), (1.0f / 3.0f));
-  static const float OrthoDim2InitValue = powf((0.75f * ((DREAM3D::Constants::k_Pi / 2.0f) - sinf((DREAM3D::Constants::k_Pi / 2.0f)))), (1.0f / 3.0f));
-  static const float OrthoDim3InitValue = powf((0.75f * ((DREAM3D::Constants::k_Pi / 2.0f) - sinf((DREAM3D::Constants::k_Pi / 2.0f)))), (1.0f / 3.0f));
+  static const float OrthoDim1InitValue = powf((0.75f * ((SIMPLib::Constants::k_Pi / 2.0f) - sinf((SIMPLib::Constants::k_Pi / 2.0f)))), (1.0f / 3.0f));
+  static const float OrthoDim2InitValue = powf((0.75f * ((SIMPLib::Constants::k_Pi / 2.0f) - sinf((SIMPLib::Constants::k_Pi / 2.0f)))), (1.0f / 3.0f));
+  static const float OrthoDim3InitValue = powf((0.75f * ((SIMPLib::Constants::k_Pi / 2.0f) - sinf((SIMPLib::Constants::k_Pi / 2.0f)))), (1.0f / 3.0f));
   static const float OrthoDim1StepValue = OrthoDim1InitValue / 18.0f;
   static const float OrthoDim2StepValue = OrthoDim2InitValue / 18.0f;
   static const float OrthoDim3StepValue = OrthoDim3InitValue / 18.0f;
@@ -166,9 +166,9 @@ float OrthoRhombicOps::_calcMisoQuat(const QuatF quatsym[4], int numsym,
     FOrientTransformsType::qu2ax(FOrientArrayType(qc.x, qc.y, qc.z, qc.w), ax);
     ax.toAxisAngle(n1, n2, n3, w);
 
-    if (w > DREAM3D::Constants::k_Pi)
+    if (w > SIMPLib::Constants::k_Pi)
     {
-      w = DREAM3D::Constants::k_2Pi - w;
+      w = SIMPLib::Constants::k_2Pi - w;
     }
     if (w < wmin)
     {
@@ -303,11 +303,11 @@ int OrthoRhombicOps::getMisoBin(FOrientArrayType rod)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FOrientArrayType OrthoRhombicOps::determineEulerAngles(int choose)
+FOrientArrayType OrthoRhombicOps::determineEulerAngles(uint64_t seed, int choose)
 {
   float init[3];
   float step[3];
-  float phi[3];
+  int32_t phi[3];
   float h1, h2, h3;
 
   init[0] = OrthoDim1InitValue;
@@ -316,11 +316,11 @@ FOrientArrayType OrthoRhombicOps::determineEulerAngles(int choose)
   step[0] = OrthoDim1StepValue;
   step[1] = OrthoDim2StepValue;
   step[2] = OrthoDim3StepValue;
-  phi[0] = static_cast<float>(choose % 36);
-  phi[1] = static_cast<float>((choose / 36) % 36);
-  phi[2] = static_cast<float>(choose / (36 * 36));
+  phi[0] = static_cast<int32_t>(choose % 36);
+  phi[1] = static_cast<int32_t>((choose / 36) % 36);
+  phi[2] = static_cast<int32_t>(choose / (36 * 36));
 
-  _calcDetermineHomochoricValues(init, step, phi, choose, h1, h2, h3);
+  _calcDetermineHomochoricValues(seed, init, step, phi, choose, h1, h2, h3);
 
   FOrientArrayType ho(h1, h2, h3);
   FOrientArrayType ro(4);
@@ -354,11 +354,11 @@ FOrientArrayType OrthoRhombicOps::randomizeEulerAngles(FOrientArrayType synea)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FOrientArrayType OrthoRhombicOps::determineRodriguesVector( int choose)
+FOrientArrayType OrthoRhombicOps::determineRodriguesVector(uint64_t seed, int choose)
 {
   float init[3];
   float step[3];
-  float phi[3];
+  int32_t phi[3];
   float h1, h2, h3;
 
   init[0] = OrthoDim1InitValue;
@@ -367,11 +367,11 @@ FOrientArrayType OrthoRhombicOps::determineRodriguesVector( int choose)
   step[0] = OrthoDim1StepValue;
   step[1] = OrthoDim2StepValue;
   step[2] = OrthoDim3StepValue;
-  phi[0] = static_cast<float>(choose % 36);
-  phi[1] = static_cast<float>((choose / 36) % 36);
-  phi[2] = static_cast<float>(choose / (36 * 36));
+  phi[0] = static_cast<int32_t>(choose % 36);
+  phi[1] = static_cast<int32_t>((choose / 36) % 36);
+  phi[2] = static_cast<int32_t>(choose / (36 * 36));
 
-  _calcDetermineHomochoricValues(init, step, phi, choose, h1, h2, h3);
+  _calcDetermineHomochoricValues(seed, init, step, phi, choose, h1, h2, h3);
   FOrientArrayType ho(h1, h2, h3);
   FOrientArrayType ro(4);
   OrientationTransforms<FOrientArrayType, float>::ho2ro(ho, ro);
@@ -545,7 +545,7 @@ namespace Detail
           }
         }
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
         void operator()(const tbb::blocked_range<size_t>& r) const
         {
           generate(r.begin(), r.end());
@@ -577,12 +577,12 @@ void OrthoRhombicOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, Flo
   }
 
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
 #endif
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, nOrientations),
@@ -601,7 +601,7 @@ void OrthoRhombicOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, Flo
 // -----------------------------------------------------------------------------
 bool OrthoRhombicOps::inUnitTriangle(float eta, float chi)
 {
-  if( eta < 0 || eta > (90.0 * DREAM3D::Constants::k_PiOver180) || chi < 0 || chi > (90.0 * DREAM3D::Constants::k_PiOver180) )
+  if( eta < 0 || eta > (90.0 * SIMPLib::Constants::k_PiOver180) || chi < 0 || chi > (90.0 * SIMPLib::Constants::k_PiOver180) )
   {
     return false;
   }
@@ -623,9 +623,9 @@ DREAM3D::Rgb OrthoRhombicOps::generateIPFColor(double phi1, double phi, double p
 {
   if (degToRad == true)
   {
-    phi1 = phi1 * DREAM3D::Constants::k_DegToRad;
-    phi = phi * DREAM3D::Constants::k_DegToRad;
-    phi2 = phi2 * DREAM3D::Constants::k_DegToRad;
+    phi1 = phi1 * SIMPLib::Constants::k_DegToRad;
+    phi = phi * SIMPLib::Constants::k_DegToRad;
+    phi2 = phi2 * SIMPLib::Constants::k_DegToRad;
   }
   QuatF qc;
   QuatF q2;
@@ -681,8 +681,8 @@ DREAM3D::Rgb OrthoRhombicOps::generateIPFColor(double phi1, double phi, double p
   float etaMin = 0.0;
   float etaMax = 90.0;
   float chiMax = 90.0;
-  float etaDeg = eta * DREAM3D::Constants::k_180OverPi;
-  float chiDeg = chi * DREAM3D::Constants::k_180OverPi;
+  float etaDeg = eta * SIMPLib::Constants::k_180OverPi;
+  float chiDeg = chi * SIMPLib::Constants::k_180OverPi;
 
   _rgb[0] = 1.0 - chiDeg / chiMax;
   _rgb[2] = fabs(etaDeg - etaMin) / (etaMax - etaMin);
@@ -740,44 +740,44 @@ DREAM3D::Rgb OrthoRhombicOps::generateRodriguesColor(float r1, float r2, float r
 // -----------------------------------------------------------------------------
 QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureConfiguration_t& config)
 {
-  QVector<UInt8ArrayType::Pointer> poleFigures;
+
   QString label0("Orthorhombic <001>");
   QString label1("Orthorhombic <100>");
   QString label2("Orthorhombic <010>");
-
+  if(config.labels.size() > 0) { label0 = config.labels.at(0); }
+  if(config.labels.size() > 1) { label1 = config.labels.at(1); }
+  if(config.labels.size() > 2) { label2 = config.labels.at(2); }
 
   int numOrientations = config.eulers->getNumberOfTuples();
 
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
-  // this is size for CUBIC ONLY, <001> Family
   QVector<size_t> dims(1, 3);
-  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * Detail::Orthorhombic::symSize0, dims, label0 + QString("xyzCoords"));
-  // this is size for CUBIC ONLY, <011> Family
-  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * Detail::Orthorhombic::symSize1, dims, label1 + QString("xyzCoords"));
-  // this is size for CUBIC ONLY, <111> Family
-  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * Detail::Orthorhombic::symSize2, dims, label2 + QString("xyzCoords"));
+  std::vector<FloatArrayType::Pointer> coords(3);
+  coords[0] = FloatArrayType::CreateArray(numOrientations * Detail::Orthorhombic::symSize0, dims, label0 + QString("001_Coords"));
+  coords[1] = FloatArrayType::CreateArray(numOrientations * Detail::Orthorhombic::symSize1, dims, label1 + QString("100_Coords"));
+  coords[2] = FloatArrayType::CreateArray(numOrientations * Detail::Orthorhombic::symSize2, dims, label2 + QString("010_Coords"));
 
   config.sphereRadius = 1.0f;
 
   // Generate the coords on the sphere **** Parallelized
-  generateSphereCoordsFromEulers(config.eulers, xyz001.get(), xyz011.get(), xyz111.get());
+  generateSphereCoordsFromEulers(config.eulers, coords[0].get(), coords[1].get(), coords[2].get());
 
 
   // These arrays hold the "intensity" images which eventually get converted to an actual Color RGB image
   // Generate the modified Lambert projection images (Squares, 2 of them, 1 for northern hemisphere, 1 for southern hemisphere
   DoubleArrayType::Pointer intensity001 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label0 + "_Intensity_Image");
-  DoubleArrayType::Pointer intensity011 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label1 + "_Intensity_Image");
-  DoubleArrayType::Pointer intensity111 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label2 + "_Intensity_Image");
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  DoubleArrayType::Pointer intensity100 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label1 + "_Intensity_Image");
+  DoubleArrayType::Pointer intensity010 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label2 + "_Intensity_Image");
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
   tbb::task_group* g = new tbb::task_group;
 
   if(doParallel == true)
   {
-    g->run(GenerateIntensityMapImpl(xyz001.get(), &config, intensity001.get()));
-    g->run(GenerateIntensityMapImpl(xyz011.get(), &config, intensity011.get()));
-    g->run(GenerateIntensityMapImpl(xyz111.get(), &config, intensity111.get()));
+    g->run(GenerateIntensityMapImpl(coords[0].get(), &config, intensity001.get()));
+    g->run(GenerateIntensityMapImpl(coords[1].get(), &config, intensity100.get()));
+    g->run(GenerateIntensityMapImpl(coords[2].get(), &config, intensity010.get()));
     g->wait(); // Wait for all the threads to complete before moving on.
     delete g;
     g = NULL;
@@ -785,11 +785,11 @@ QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureC
   else
 #endif
   {
-    GenerateIntensityMapImpl m001(xyz001.get(), &config, intensity001.get());
+    GenerateIntensityMapImpl m001(coords[0].get(), &config, intensity001.get());
     m001();
-    GenerateIntensityMapImpl m011(xyz011.get(), &config, intensity011.get());
+    GenerateIntensityMapImpl m011(coords[1].get(), &config, intensity100.get());
     m011();
-    GenerateIntensityMapImpl m111(xyz111.get(), &config, intensity111.get());
+    GenerateIntensityMapImpl m111(coords[2].get(), &config, intensity010.get());
     m111();
   }
 
@@ -812,8 +812,8 @@ QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureC
   }
 
 
-  dPtr = intensity011->getPointer(0);
-  count = intensity011->getNumberOfTuples();
+  dPtr = intensity100->getPointer(0);
+  count = intensity100->getNumberOfTuples();
   for(size_t i = 0; i < count; ++i)
   {
     if (dPtr[i] > max)
@@ -826,8 +826,8 @@ QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureC
     }
   }
 
-  dPtr = intensity111->getPointer(0);
-  count = intensity111->getNumberOfTuples();
+  dPtr = intensity010->getPointer(0);
+  count = intensity010->getNumberOfTuples();
   for(size_t i = 0; i < count; ++i)
   {
     if (dPtr[i] > max)
@@ -845,21 +845,30 @@ QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureC
 
   dims[0] = 4;
   UInt8ArrayType::Pointer image001 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label0);
-  UInt8ArrayType::Pointer image011 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label1);
-  UInt8ArrayType::Pointer image111 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label2);
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  UInt8ArrayType::Pointer image100 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label1);
+  UInt8ArrayType::Pointer image010 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, dims, label2);
 
-  poleFigures.push_back(image001);
-  poleFigures.push_back(image011);
-  poleFigures.push_back(image111);
+  QVector<UInt8ArrayType::Pointer> poleFigures(3);
+  if(config.order.size() == 3)
+  {
+    poleFigures[config.order[0]] = image001;
+    poleFigures[config.order[1]] = image100;
+    poleFigures[config.order[2]] = image010;
+  }
+  else
+  {
+    poleFigures[0] = image001;
+    poleFigures[1] = image100;
+    poleFigures[2] = image010;
+  }
 
-  g = new tbb::task_group;
-
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   if(doParallel == true)
   {
+    g = new tbb::task_group;
     g->run(GeneratePoleFigureRgbaImageImpl(intensity001.get(), &config, image001.get()));
-    g->run(GeneratePoleFigureRgbaImageImpl(intensity011.get(), &config, image011.get()));
-    g->run(GeneratePoleFigureRgbaImageImpl(intensity111.get(), &config, image111.get()));
+    g->run(GeneratePoleFigureRgbaImageImpl(intensity100.get(), &config, image100.get()));
+    g->run(GeneratePoleFigureRgbaImageImpl(intensity010.get(), &config, image010.get()));
     g->wait(); // Wait for all the threads to complete before moving on.
     delete g;
     g = NULL;
@@ -869,13 +878,93 @@ QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureC
   {
     GeneratePoleFigureRgbaImageImpl m001(intensity001.get(), &config, image001.get());
     m001();
-    GeneratePoleFigureRgbaImageImpl m011(intensity011.get(), &config, image011.get());
+    GeneratePoleFigureRgbaImageImpl m011(intensity100.get(), &config, image100.get());
     m011();
-    GeneratePoleFigureRgbaImageImpl m111(intensity111.get(), &config, image111.get());
+    GeneratePoleFigureRgbaImageImpl m111(intensity010.get(), &config, image010.get());
     m111();
   }
 
   return poleFigures;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+UInt8ArrayType::Pointer OrthoRhombicOps::generateIPFTriangleLegend(int imageDim)
+{
+
+  QVector<size_t> dims(1, 4);
+  UInt8ArrayType::Pointer image =  UInt8ArrayType::CreateArray( static_cast<size_t>(imageDim * imageDim), dims, "Orthorhombic Triangle Legend");
+  uint32_t* pixelPtr = reinterpret_cast<uint32_t*>(image->getPointer(0));
+
+  static const float xInc = 1.0 / (imageDim);
+  static const float yInc = 1.0 / (imageDim);
+  static const float rad = 1.0f;
+
+  float x = 0.0f;
+  float y = 0.0f;
+  float a = 0.0f;
+  float b = 0.0f;
+  float c = 0.0f;
+
+  float val = 0.0f;
+  float x1 = 0.0f;
+  float y1 = 0.0f;
+  float z1 = 0.0f;
+  float denom = 0.0f;
+
+  DREAM3D::Rgb color;
+  size_t idx = 0;
+  size_t yScanLineIndex = 0; // We use this to control where the data is drawn. Otherwise the image will come out flipped vertically
+  // Loop over every pixel in the image and project up to the sphere to get the angle and then figure out the RGB from
+  // there.
+  for (int32_t yIndex = 0; yIndex < imageDim; ++yIndex)
+  {
+
+    for (int32_t xIndex = 0; xIndex < imageDim; ++xIndex)
+    {
+      idx = (imageDim * yScanLineIndex) + xIndex;
+
+      x = xIndex * xInc;
+      y = yIndex * yInc;
+
+      float sumSquares = (x * x) + (y * y);
+      if( sumSquares > 1.0f) // Outside unit circle
+      {
+        color = 0xFFFFFFFF;
+      }
+      else if ( sumSquares > (rad-2*xInc) && sumSquares < (rad+2*xInc))
+      {
+        color = 0xFF000000;
+      }
+      else if (xIndex == 0 || yIndex == 0)
+      {
+        color = 0xFF000000;
+      }
+      else
+      {
+        a = (x * x + y * y + 1);
+        b = (2 * x * x + 2 * y * y);
+        c = (x * x + y * y - 1);
+
+        val = (-b + sqrtf(b * b - 4.0 * a * c)) / (2.0 * a);
+        x1 = (1 + val) * x;
+        y1 = (1 + val) * y;
+        z1 = val;
+        denom = (x1 * x1) + (y1 * y1) + (z1 * z1);
+        denom = sqrtf(denom);
+        x1 = x1 / denom;
+        y1 = y1 / denom;
+        z1 = z1 / denom;
+
+        color = generateIPFColor(0.0, 0.0, 0.0, x1, y1, z1, false);
+      }
+
+      pixelPtr[idx] = color;
+    }
+    yScanLineIndex++;
+  }
+  return image;
 }
 
 // -----------------------------------------------------------------------------
@@ -903,15 +992,16 @@ DREAM3D::Rgb OrthoRhombicOps::generateMisorientationColor(const QuatF& q, const 
 
   //eq c1.1
   k = tan(w / 2.0f);
-  x = n1 * k;
-  y = n2 * k;
-  z = n3 * k;
+  x = n1;
+  y = n2;
+  z = n3;
 
-  FOrientArrayType rod(x, y, z);
+  FOrientArrayType rod(x, y, z, k);
   rod = getMDFFZRod(rod);
   x = rod[0];
   y = rod[1];
   z = rod[2];
+  k = rod[3];
 
   //eq c1.2
   k = std::max(x, y);
@@ -929,9 +1019,9 @@ DREAM3D::Rgb OrthoRhombicOps::generateMisorientationColor(const QuatF& q, const 
   z2 = (x1 + y1 + z1) / sqrt(3.0f);
 
   //eq c1.4
-  k = fmodf(atan2f(y2, x2) + 2.0f * DREAM3D::Constants::k_Pi, 2.0f * DREAM3D::Constants::k_Pi);
-  x3 = cos(k) * sqrt((x2 * x2 + y2 * y2) / 2.0) * sin(DREAM3D::Constants::k_Pi / 6.0 + fmodf(k, 2.0f * DREAM3D::Constants::k_Pi / 3.0f)) / 0.5f;
-  y3 = sin(k) * sqrt((x2 * x2 + y2 * y2) / 2.0) * sin(DREAM3D::Constants::k_Pi / 6.0 + fmodf(k, 2.0f * DREAM3D::Constants::k_Pi / 3.0f)) / 0.5f;
+  k = fmodf(atan2f(y2, x2) + 2.0f * SIMPLib::Constants::k_Pi, 2.0f * SIMPLib::Constants::k_Pi);
+  x3 = cos(k) * sqrt((x2 * x2 + y2 * y2) / 2.0) * sin(SIMPLib::Constants::k_Pi / 6.0 + fmodf(k, 2.0f * SIMPLib::Constants::k_Pi / 3.0f)) / 0.5f;
+  y3 = sin(k) * sqrt((x2 * x2 + y2 * y2) / 2.0) * sin(SIMPLib::Constants::k_Pi / 6.0 + fmodf(k, 2.0f * SIMPLib::Constants::k_Pi / 3.0f)) / 0.5f;
   z3 = z2 - 1.0f;
 
   //eq c1.5

@@ -51,39 +51,15 @@
 #include <QtGui/QImage>
 #include <QtGui/QColor>
 
-#include "EbsdLib/EbsdLib.h"
-#include "EbsdLib/HKL/CtfReader.h"
-#include "EbsdLib/TSL/AngReader.h"
-
-
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-
-#include "DREAM3DLib/FilterParameters/OutputFileFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/BooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Utilities/ColorTable.h"
-#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
-
-#include "OrientationLib/OrientationMath/OrientationMath.h"
-#include "OrientationLib/SpaceGroupOps/CubicLowOps.h"
-#include "OrientationLib/SpaceGroupOps/CubicOps.h"
-#include "OrientationLib/SpaceGroupOps/HexagonalLowOps.h"
-#include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
-#include "OrientationLib/SpaceGroupOps/MonoclinicOps.h"
-#include "OrientationLib/SpaceGroupOps/OrthoRhombicOps.h"
-#include "OrientationLib/SpaceGroupOps/TetragonalLowOps.h"
-#include "OrientationLib/SpaceGroupOps/TetragonalOps.h"
-#include "OrientationLib/SpaceGroupOps/TriclinicOps.h"
-#include "OrientationLib/SpaceGroupOps/TrigonalLowOps.h"
-#include "OrientationLib/SpaceGroupOps/TrigonalOps.h"
-#include "OrientationLib/Utilities/ModifiedLambertProjection.h"
-#include "OrientationLib/Utilities/PoleFigureUtilities.h"
-
-#include "QtSupportLib/PoleFigureImageUtilities.h"
+#include "SIMPLib/SIMPLibVersion.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
@@ -95,6 +71,11 @@
 
 #define WRITE_EULERS_TEXT_FILE 1
 
+// Include the MOC generated file for this class
+#include "moc_WriteStatsGenOdfAngleFile.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -103,7 +84,7 @@ WriteStatsGenOdfAngleFile::WriteStatsGenOdfAngleFile() :
   m_OutputFile(""),
   m_CellPhasesArrayPath("", "", ""),
   m_CellEulerAnglesArrayPath("", "", ""),
-  m_ConvertToDegrees(true),
+  m_ConvertToDegrees(false),
   m_UseGoodVoxels(false),
   m_GoodVoxelsArrayPath("", "", "")
 {
@@ -128,12 +109,21 @@ void WriteStatsGenOdfAngleFile::setupFilterParameters()
   parameters.push_back(OutputFileFilterParameter::New("Output File", "OutputFile", getOutputFile(), FilterParameter::Parameter));
   parameters.push_back(BooleanFilterParameter::New("Convert to Degrees", "ConvertToDegrees", getConvertToDegrees(), FilterParameter::Parameter));
   QStringList linkedProps("GoodVoxelsArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Good Voxels Only (Bad Voxels Will Be Black)", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Only Write Good Elements", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter));
 
-  parameters.push_back(DataArraySelectionFilterParameter::New("Cell Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Cell Euler Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray));
-
+  parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Float, 3, DREAM3D::AttributeMatrixObjectType::Element);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Euler Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, req));
+  }
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixObjectType::Element);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req));
+  }
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Bool, 1, DREAM3D::AttributeMatrixObjectType::Element);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req));
+  }
 
   setFilterParameters(parameters);
 }
@@ -159,13 +149,13 @@ void WriteStatsGenOdfAngleFile::readFilterParameters(AbstractFilterParametersRea
 int WriteStatsGenOdfAngleFile::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(ConvertToDegrees)
-  DREAM3D_FILTER_WRITE_PARAMETER(UseGoodVoxels)
-  DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(OutputFile)
+  SIMPL_FILTER_WRITE_PARAMETER(ConvertToDegrees)
+  SIMPL_FILTER_WRITE_PARAMETER(UseGoodVoxels)
+  SIMPL_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
 
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -181,7 +171,7 @@ void WriteStatsGenOdfAngleFile::dataCheck()
   QString ss;
   if (getOutputFile().isEmpty() == true)
   {
-    ss = QObject::tr( "The output file must be set before executing this filter.");
+    ss = QObject::tr( "The output file must be set");
     notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
   }
@@ -189,18 +179,18 @@ void WriteStatsGenOdfAngleFile::dataCheck()
   QDir parentPath = fi.path();
   if (parentPath.exists() == false)
   {
-    ss = QObject::tr( "The directory path for the output file does not exist.");
+    ss = QObject::tr( "The directory path for the output file does not exist");
     notifyWarningMessage(getHumanLabel(), ss, -1);
   }
 
 
-  QVector<size_t> dims(1, 1);
-  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  QVector<size_t> cDims(1, 1);
+  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  dims[0] = 3;
-  m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  cDims[0] = 3;
+  m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -208,8 +198,8 @@ void WriteStatsGenOdfAngleFile::dataCheck()
   if (getUseGoodVoxels() == true)
   {
     // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
-    dims[0] = 1;
-    m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    cDims[0] = 1;
+    m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -219,7 +209,6 @@ void WriteStatsGenOdfAngleFile::dataCheck()
   }
 
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -250,7 +239,7 @@ void WriteStatsGenOdfAngleFile::execute()
   // Figure out how many unique phase values we have by looping over all the phase values
   int64_t totalPoints = m_CellPhasesPtr.lock()->getNumberOfTuples();
   std::set<int32_t> uniquePhases;
-  for(int64_t i = 0; i < totalPoints; i++)
+  for (int64_t i = 0; i < totalPoints; i++)
   {
     uniquePhases.insert(m_CellPhases[i]);
   }
@@ -260,12 +249,10 @@ void WriteStatsGenOdfAngleFile::execute()
 
   QFileInfo fi(getOutputFile());
   QString absPath = fi.absolutePath();
-  QString fname = fi.fileName();
-  int pos = fname.lastIndexOf('.');
-  fname = fname.mid(0, pos - 1);
+  QString fname = fi.completeBaseName();
   QString suffix = fi.suffix();
 
-  for(std::set<int32_t>::iterator iter = uniquePhases.begin(); iter != uniquePhases.end(); iter++)
+  for (std::set<int32_t>::iterator iter = uniquePhases.begin(); iter != uniquePhases.end(); iter++)
   {
     /* Let the GUI know we are done with this filter */
     QString ss = QObject::tr("Writing file for phase '%1'").arg(*iter);
@@ -289,7 +276,7 @@ void WriteStatsGenOdfAngleFile::execute()
     int32_t lineCount = determineOutputLineCount(totalPoints, *iter);
 
     int err = writeOutputFile(out, lineCount, totalPoints, *iter);
-    if(err < 0)
+    if (err < 0)
     {
       setErrorCondition(-99001);
       QString ss = QObject::tr("Error writing output file '%1'").arg(absFilePath);
@@ -312,17 +299,12 @@ void WriteStatsGenOdfAngleFile::execute()
 int WriteStatsGenOdfAngleFile::determineOutputLineCount(int64_t totalPoints, int32_t phase)
 {
   int32_t lineCount = 0;
-  bool countLine = false;
   for(int64_t i = 0; i < totalPoints; i++)
   {
-    countLine = false;
-
-    if(m_UseGoodVoxels == true && m_GoodVoxels[i] == true) { countLine = true; }
-    if(m_CellPhases[i] == phase) { countLine = true; }
-
-    if(countLine == true)
+    if (m_CellPhases[i] == phase)
     {
-      lineCount++;
+      if(m_UseGoodVoxels == false) { lineCount++; }
+      else if(m_UseGoodVoxels == true && m_GoodVoxels[i] == true ) { lineCount++; }
     }
   }
 
@@ -335,8 +317,12 @@ int WriteStatsGenOdfAngleFile::determineOutputLineCount(int64_t totalPoints, int
 int WriteStatsGenOdfAngleFile::writeOutputFile(QTextStream& out, int32_t lineCount, int64_t totalPoints, int32_t phase)
 {
   bool writeLine = false;
-  // write out the total number of lines
-  out << lineCount << "\n";
+  out <<  "# All lines starting with '#' are comments and should come before the header.\n";
+  out <<  "# DREAM.3D StatsGenerator Angles Input File\n";
+  out <<  "# DREAM.3D Version " << SIMPLib::Version::Complete() << "\n";
+  out <<  "# Angle Data is space delimited.\n";
+  out <<  "# Euler0 Euler1 Euler2 Weight Sigma\n";
+  out <<  "Angle Count:" << lineCount << "\n";
 
   float weight = 1.0f;
   float sigma = 1.0f;
@@ -345,8 +331,11 @@ int WriteStatsGenOdfAngleFile::writeOutputFile(QTextStream& out, int32_t lineCou
   {
     writeLine = false;
 
-    if(m_UseGoodVoxels == true && m_GoodVoxels[i] == true) { writeLine = true; }
-    if(m_CellPhases[i] == phase) { writeLine = true; }
+    if (m_CellPhases[i] == phase)
+    {
+      if(m_UseGoodVoxels == false) { writeLine = true; }
+      else if(m_UseGoodVoxels == true && m_GoodVoxels[i] == true ) { writeLine = true; }
+    }
 
     if(writeLine == true)
     {
@@ -355,9 +344,9 @@ int WriteStatsGenOdfAngleFile::writeOutputFile(QTextStream& out, int32_t lineCou
       float e2 = m_CellEulerAngles[i * 3 + 2];
       if(m_ConvertToDegrees == true)
       {
-        e0 = e0 * DREAM3D::Constants::k_180OverPi;
-        e1 = e1 * DREAM3D::Constants::k_180OverPi;
-        e2 = e2 * DREAM3D::Constants::k_180OverPi;
+        e0 = e0 * SIMPLib::Constants::k_180OverPi;
+        e1 = e1 * SIMPLib::Constants::k_180OverPi;
+        e2 = e2 * SIMPLib::Constants::k_180OverPi;
       }
       out << e0 << " " << e1 << " " << e2 << " " << weight << " " << sigma << "\n";
     }

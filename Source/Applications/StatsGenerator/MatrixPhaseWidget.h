@@ -11,7 +11,7 @@
 #include "SGWidget.h"
 #include "ui_MatrixPhaseWidget.h"
 
-#include "DREAM3DLib/Common/Constants.h"
+#include "SIMPLib/Common/Constants.h"
 #include "StatsGenerator/Presets/AbstractMicrostructurePreset.h"
 
 class QwtPlotZoomer;
@@ -36,12 +36,12 @@ class MatrixPhaseWidget : public SGWidget, private Ui::MatrixPhaseWidget
     void updatePlots();
 
 
-    DREAM3D_INSTANCE_PROPERTY(unsigned int, PhaseType)
-    DREAM3D_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
-    DREAM3D_INSTANCE_PROPERTY(int, PhaseIndex)
-    DREAM3D_INSTANCE_PROPERTY(float, PhaseFraction)
-    DREAM3D_INSTANCE_PROPERTY(float, TotalPhaseFraction)
-    //    DREAM3D_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
+    SIMPL_INSTANCE_PROPERTY(unsigned int, PhaseType)
+    SIMPL_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
+    SIMPL_INSTANCE_PROPERTY(int, PhaseIndex)
+    SIMPL_INSTANCE_PROPERTY(float, PhaseFraction)
+    SIMPL_INSTANCE_PROPERTY(float, TotalPhaseFraction)
+    //    SIMPL_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
 
     void extractStatsData(AttributeMatrix::Pointer attrMat, int index);
 

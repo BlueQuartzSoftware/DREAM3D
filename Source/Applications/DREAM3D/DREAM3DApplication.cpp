@@ -1,8 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
-* Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
-* Copyright (c) 2012 Joseph B. Kleingers (Student Research Assistant)
-* All rights reserved.
+* Copyright (c) 2009-2015 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -14,10 +11,9 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of Michael A. Groeber, Michael A. Jackson, Joseph B. Kleingers,
-* the US Air Force, BlueQuartz Software nor the names of its contributors may be
-* used to endorse or promote products derived from this software without specific
-* prior written permission.
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
+* without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -30,12 +26,15 @@
 * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
 * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *
-*  This code was written under United States Air Force Contract number
-*                           FA8650-07-D-5800
+* The code contained herein was partially funded by the followig contracts:
+*    United States Air Force Prime Contract FA8650-07-D-5800
+*    United States Air Force Prime Contract FA8650-10-D-5210
+*    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
 #include "DREAM3DApplication.h"
+
+#include <iostream>
 
 #include <QtCore/QTime>
 #include <QtCore/QPluginLoader>
@@ -49,28 +48,32 @@
 #include <QtGui/QDesktopServices>
 #include <QtGui/QBitmap>
 #include <QtGui/QFileOpenEvent>
-#include <iostream>
+
+#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/SIMPLibVersion.h"
+#include "SIMPLib/Utilities/QMetaObjectUtilities.h"
+#include "SIMPLib/Plugin/PluginManager.h"
+#include "SIMPLib/Plugin/PluginProxy.h"
+
+#include "QtSupportLib/QRecentFileList.h"
+#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
+#include "QtSupportLib/ApplicationAboutBoxDialog.h"
+
+#include "DREAM3DWidgetsLib/FilterWidgetManager.h"
+#include "DREAM3DWidgetsLib/Widgets/DREAM3DUpdateCheckDialog.h"
+#ifdef DREAM3D_USE_QtWebEngine
+#include "Applications/Common/DREAM3DUserManualDialog.h"
+#endif
 
 #include "Applications/DREAM3D/DREAM3D_UI.h"
 #include "Applications/DREAM3D/AboutDREAM3D.h"
 #include "Applications/DREAM3D/AboutPlugins.h"
 #include "Applications/DREAM3D/DREAM3DConstants.h"
 
-#include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/DREAM3DLibVersion.h"
-#include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
-#include "DREAM3DLib/Plugin/PluginManager.h"
-#include "DREAM3DLib/Plugin/PluginProxy.h"
-
-#include "DREAM3DWidgetsLib/Widgets/DREAM3DUserManualDialog.h"
-#include "DREAM3DWidgetsLib/Widgets/DREAM3DUpdateCheckDialog.h"
-#include "DREAM3DWidgetsLib/FilterWidgetManager.h"
-
-#include "QtSupportLib/QRecentFileList.h"
-#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
-#include "QtSupportLib/ApplicationAboutBoxDialog.h"
-
 #include "DSplashScreen.h"
+
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_DREAM3DApplication.cpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -129,7 +132,7 @@ void delay(int seconds)
 // -----------------------------------------------------------------------------
 bool DREAM3DApplication::initialize(int argc, char* argv[])
 {
-  QApplication::setApplicationVersion(DREAM3DLib::Version::Complete());
+  QApplication::setApplicationVersion(SIMPLib::Version::Complete());
 
   // If Mac, initialize global menu
 #if defined (Q_OS_MAC)
@@ -163,7 +166,7 @@ bool DREAM3DApplication::initialize(int argc, char* argv[])
   QMetaObjectUtilities::RegisterMetaTypes();
 
   // Load application plugins.
-  QVector<IDREAM3DPlugin*> plugins = loadPlugins();
+  QVector<ISIMPLibPlugin*> plugins = loadPlugins();
 
   // give GUI components time to update before the mainwindow is shown
   QApplication::instance()->processEvents();
@@ -180,7 +183,7 @@ bool DREAM3DApplication::initialize(int argc, char* argv[])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<IDREAM3DPlugin*> DREAM3DApplication::loadPlugins()
+QVector<ISIMPLibPlugin*> DREAM3DApplication::loadPlugins()
 {
   QStringList pluginDirs;
   pluginDirs << applicationDirPath();
@@ -313,7 +316,7 @@ QVector<IDREAM3DPlugin*> DREAM3DApplication::loadPlugins()
     qDebug() << "    Pointer: " << plugin << "\n";
     if (plugin)
     {
-      IDREAM3DPlugin* ipPlugin = qobject_cast<IDREAM3DPlugin*>(plugin);
+      ISIMPLibPlugin* ipPlugin = qobject_cast<ISIMPLibPlugin*>(plugin);
       if (ipPlugin)
       {
         QString pluginName = ipPlugin->getPluginName();
@@ -321,7 +324,7 @@ QVector<IDREAM3DPlugin*> DREAM3DApplication::loadPlugins()
         {
           QString msg = QObject::tr("Loading Plugin %1").arg(fileName);
           this->Splash->showMessage(msg);
-          //IDREAM3DPlugin::Pointer ipPluginPtr(ipPlugin);
+          //ISIMPLibPlugin::Pointer ipPluginPtr(ipPlugin);
           ipPlugin->registerFilterWidgets(fwm);
           ipPlugin->registerFilters(fm);
           ipPlugin->setDidLoad(true);
@@ -658,7 +661,21 @@ void DREAM3DApplication::on_actionShowDREAM3DHelp_triggered()
 {
   // Generate help page
   QUrl helpURL = DREAM3DHelpUrlGenerator::generateHTMLUrl("index");
-  DREAM3DUserManualDialog::LaunchHelpDialog(helpURL);
+  #ifdef DREAM3D_USE_QtWebEngine
+    DREAM3DUserManualDialog::LaunchHelpDialog(helpURL);
+  #else
+    bool didOpen = QDesktopServices::openUrl(helpURL);
+    if(false == didOpen)
+    {
+      QMessageBox msgBox;
+      msgBox.setText(QString("Error Opening Help File"));
+      msgBox.setInformativeText(QString::fromLatin1("DREAM3D could not open the help file path ") + helpURL.path());
+      msgBox.setStandardButtons(QMessageBox::Ok);
+      msgBox.setDefaultButton(QMessageBox::Ok);
+      msgBox.setIcon(QMessageBox::Critical);
+      msgBox.exec();
+    }
+  #endif
 }
 
 // -----------------------------------------------------------------------------
@@ -677,7 +694,7 @@ void DREAM3DApplication::on_actionCheckForUpdates_triggered()
 {
   DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(NULL);
 
-  d->setCurrentVersion((DREAM3DLib::Version::Complete()));
+  d->setCurrentVersion((SIMPLib::Version::Complete()));
   d->setUpdateWebSite(DREAM3D::UpdateWebsite::UpdateWebSite);
   d->setApplicationName("DREAM3D");
 
@@ -1248,7 +1265,7 @@ void DREAM3DApplication::newInstanceFromFile(const QString& filePath, const bool
 DREAM3D_UI* DREAM3DApplication::getNewDREAM3DInstance()
 {
   PluginManager* pluginManager = PluginManager::Instance();
-  QVector<IDREAM3DPlugin*> plugins = pluginManager->getPluginsVector();
+  QVector<ISIMPLibPlugin*> plugins = pluginManager->getPluginsVector();
 
   // Create new DREAM3D instance
   DREAM3D_UI* newInstance = new DREAM3D_UI(NULL);

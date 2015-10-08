@@ -40,12 +40,12 @@
 #include <QtCore/QString>
 
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataArrays/StructArray.hpp"
-#include "DREAM3DLib/Geometry/MeshStructs.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/DataArrays/StructArray.hpp"
+#include "SIMPLib/Geometry/MeshStructs.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 
@@ -73,29 +73,29 @@ class M3CSliceBySlice : public AbstractFilter
 {
     Q_OBJECT
   public:
-    DREAM3D_SHARED_POINTERS(M3CSliceBySlice)
-    DREAM3D_STATIC_NEW_MACRO(M3CSliceBySlice)
-    DREAM3D_TYPE_MACRO_SUPER(M3CSliceBySlice, AbstractFilter)
+    SIMPL_SHARED_POINTERS(M3CSliceBySlice)
+    SIMPL_STATIC_NEW_MACRO(M3CSliceBySlice)
+    SIMPL_TYPE_MACRO_SUPER(M3CSliceBySlice, AbstractFilter)
 
     virtual ~M3CSliceBySlice();
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceDataContainerName)
+    SIMPL_FILTER_PARAMETER(QString, SurfaceDataContainerName)
     Q_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
-    DREAM3D_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
     Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
-    DREAM3D_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
     Q_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(QString, FaceLabelsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, FaceLabelsArrayName)
     Q_PROPERTY(QString FaceLabelsArrayName READ getFaceLabelsArrayName WRITE setFaceLabelsArrayName)
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshNodeTypesArrayName)
+    SIMPL_FILTER_PARAMETER(QString, SurfaceMeshNodeTypesArrayName)
     Q_PROPERTY(QString SurfaceMeshNodeTypesArrayName READ getSurfaceMeshNodeTypesArrayName WRITE setSurfaceMeshNodeTypesArrayName)
 
-    DREAM3D_FILTER_PARAMETER(bool, DeleteTempFiles)
+    SIMPL_FILTER_PARAMETER(bool, DeleteTempFiles)
     Q_PROPERTY(bool DeleteTempFiles READ getDeleteTempFiles WRITE setDeleteTempFiles)
 
     virtual void preflight();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
     virtual const QString getCompiledLibraryName();

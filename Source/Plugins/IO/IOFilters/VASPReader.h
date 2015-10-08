@@ -41,11 +41,11 @@
 #include <vector>
 #include <QtCore/QFile>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/CoreFilters/FileReader.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/CoreFilters/FileReader.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 /**
  * @class VASPReader VASPReader.h DREAM3DLib/IO/VASPReader.h
@@ -58,25 +58,25 @@ class VASPReader : public FileReader
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(VASPReader)
-    DREAM3D_STATIC_NEW_MACRO(VASPReader)
-    DREAM3D_TYPE_MACRO_SUPER(VASPReader, FileReader)
+    SIMPL_SHARED_POINTERS(VASPReader)
+    SIMPL_STATIC_NEW_MACRO(VASPReader)
+    SIMPL_TYPE_MACRO_SUPER(VASPReader, FileReader)
 
     virtual ~VASPReader();
 
-    DREAM3D_FILTER_PARAMETER(QString, VertexDataContainerName)
+    SIMPL_FILTER_PARAMETER(QString, VertexDataContainerName)
     Q_PROPERTY(QString VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
 
-    DREAM3D_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
     Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(QString, InputFile)
+    SIMPL_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-    DREAM3D_FILTER_PARAMETER(QString, AtomVelocitiesArrayName)
+    SIMPL_FILTER_PARAMETER(QString, AtomVelocitiesArrayName)
     Q_PROPERTY(QString AtomVelocitiesArrayName READ getAtomVelocitiesArrayName WRITE setAtomVelocitiesArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, AtomTypesArrayName)
+    SIMPL_FILTER_PARAMETER(QString, AtomTypesArrayName)
     Q_PROPERTY(QString AtomTypesArrayName READ getAtomTypesArrayName WRITE setAtomTypesArrayName)
 
     /**

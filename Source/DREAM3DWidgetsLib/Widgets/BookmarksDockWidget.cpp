@@ -52,15 +52,18 @@
 
 #include "Applications/DREAM3D/DREAM3DApplication.h"
 
-#include "DREAM3DLib/Common/FilterManager.h"
-#include "DREAM3DLib/Common/FilterFactory.hpp"
-#include "DREAM3DLib/FilterParameters/JsonFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
+#include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/Common/FilterFactory.hpp"
+#include "SIMPLib/FilterParameters/JsonFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/QFilterParametersReader.h"
 
 #include "QtSupportLib/BookmarkMissingDialog.h"
 
 #include "DREAM3DWidgetsLib/Widgets/FilterListDockWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/BookmarksModel.h"
+
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_BookmarksDockWidget.cpp"
 
 enum ErrorCodes
 {

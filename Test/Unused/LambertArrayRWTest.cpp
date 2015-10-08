@@ -41,8 +41,8 @@
 #include "H5Support/H5Lite.h"
 #include "H5Support/QH5Utilities.h"
 
-#include "DREAM3DLib/Common/ModifiedLambertProjection.h"
-#include "DREAM3DLib/Common/ModifiedLambertProjectionArray.h"
+#include "SIMPLib/Common/ModifiedLambertProjection.h"
+#include "SIMPLib/Common/ModifiedLambertProjectionArray.h"
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"

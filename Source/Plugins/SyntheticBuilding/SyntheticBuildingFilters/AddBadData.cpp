@@ -36,17 +36,22 @@
 
 #include "AddBadData.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/DoubleFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Utilities/SIMPLibRandom.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
+
+// Include the MOC generated file for this class
+#include "moc_AddBadData.cpp"
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -84,7 +89,10 @@ void AddBadData::setupFilterParameters()
   parameters.push_back(LinkedBooleanFilterParameter::New("Add Boundary Noise", "BoundaryNoise", getBoundaryNoise(), linkedProps, FilterParameter::Parameter));
   parameters.push_back(DoubleFilterParameter::New("Volume Fraction of Boundary Noise", "BoundaryVolFraction", getBoundaryVolFraction(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Boundary Euclidean Distances", "GBEuclideanDistancesArrayPath", getGBEuclideanDistancesArrayPath(), FilterParameter::RequiredArray));
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Float, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Boundary Euclidean Distances", "GBEuclideanDistancesArrayPath", getGBEuclideanDistancesArrayPath(), FilterParameter::RequiredArray, req));
+  }
   setFilterParameters(parameters);
 }
 
@@ -108,12 +116,12 @@ void AddBadData::readFilterParameters(AbstractFilterParametersReader* reader, in
 int AddBadData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(GBEuclideanDistancesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(PoissonNoise)
-  DREAM3D_FILTER_WRITE_PARAMETER(PoissonVolFraction)
-  DREAM3D_FILTER_WRITE_PARAMETER(BoundaryNoise)
-  DREAM3D_FILTER_WRITE_PARAMETER(BoundaryVolFraction)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(GBEuclideanDistancesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(PoissonNoise)
+  SIMPL_FILTER_WRITE_PARAMETER(PoissonVolFraction)
+  SIMPL_FILTER_WRITE_PARAMETER(BoundaryNoise)
+  SIMPL_FILTER_WRITE_PARAMETER(BoundaryVolFraction)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -174,7 +182,7 @@ void AddBadData::execute()
 void  AddBadData::add_noise()
 {
   notifyStatusMessage(getHumanLabel(), "Adding Noise");
-  DREAM3D_RANDOMNG_NEW()
+  SIMPL_RANDOMNG_NEW()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getGBEuclideanDistancesArrayPath().getDataContainerName());
 

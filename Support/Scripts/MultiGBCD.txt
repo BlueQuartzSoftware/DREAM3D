@@ -184,7 +184,7 @@ DataContainerArrayProxy\43\DAFlag=2
 
 [1]
 Filter_Name=CropVolume
-Filter_Human_Label=Crop Volume
+Filter_Human_Label=Crop Geometry (Image)
 NewDataContainerName=NewVolumeDataContainer
 CellAttributeMatrixPath=VolumeDataContainer|CellData|
 CellFeatureAttributeMatrixPath=VolumeDataContainer|CellFeatureData|

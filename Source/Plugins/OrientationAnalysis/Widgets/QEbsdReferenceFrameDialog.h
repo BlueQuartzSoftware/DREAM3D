@@ -47,7 +47,6 @@ class QGraphicsPixmapItem;
 #include "ui_QEbsdReferenceFrameDialog.h"
 
 #include "EbsdLib/EbsdConstants.h"
-#include "DREAM3DLib/FilterParameters/FilterParameter.h"
 
 /**
  * @class QEbsdReferenceFrameDialog QEbsdReferenceFrameDialog.h EbsdImport/UI/QEbsdReferenceFrameDialog.h

@@ -37,9 +37,9 @@
 #ifndef _EMMPMFilter_H_
 #define _EMMPMFilter_H_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "EMMPMLib/Core/EMMPM_Constants.h"
 
@@ -51,52 +51,52 @@ class EMMPMFilter : public AbstractFilter
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
 
   public:
-    DREAM3D_SHARED_POINTERS(EMMPMFilter)
-    DREAM3D_STATIC_NEW_MACRO(EMMPMFilter)
-    DREAM3D_TYPE_MACRO_SUPER(EMMPMFilter, AbstractFilter)
+    SIMPL_SHARED_POINTERS(EMMPMFilter)
+    SIMPL_STATIC_NEW_MACRO(EMMPMFilter)
+    SIMPL_TYPE_MACRO_SUPER(EMMPMFilter, AbstractFilter)
 
     virtual ~EMMPMFilter();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, InputDataArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, InputDataArrayPath)
     Q_PROPERTY(DataArrayPath InputDataArrayPath READ getInputDataArrayPath WRITE setInputDataArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(int, NumClasses)
+    SIMPL_FILTER_PARAMETER(int, NumClasses)
     Q_PROPERTY(int NumClasses READ getNumClasses WRITE setNumClasses)
 
-    DREAM3D_FILTER_PARAMETER(float, ExchangeEnergy)
+    SIMPL_FILTER_PARAMETER(float, ExchangeEnergy)
     Q_PROPERTY(float ExchangeEnergy READ getExchangeEnergy WRITE setExchangeEnergy)
 
-    DREAM3D_FILTER_PARAMETER(int, HistogramLoops)
+    SIMPL_FILTER_PARAMETER(int, HistogramLoops)
     Q_PROPERTY(int HistogramLoops READ getHistogramLoops WRITE setHistogramLoops)
 
-    DREAM3D_FILTER_PARAMETER(int, SegmentationLoops)
+    SIMPL_FILTER_PARAMETER(int, SegmentationLoops)
     Q_PROPERTY(int SegmentationLoops READ getSegmentationLoops WRITE setSegmentationLoops)
 
-    DREAM3D_FILTER_PARAMETER(bool, UseSimulatedAnnealing)
+    SIMPL_FILTER_PARAMETER(bool, UseSimulatedAnnealing)
     Q_PROPERTY(bool UseSimulatedAnnealing READ getUseSimulatedAnnealing WRITE setUseSimulatedAnnealing)
 
-    DREAM3D_FILTER_PARAMETER(bool, UseGradientPenalty)
+    SIMPL_FILTER_PARAMETER(bool, UseGradientPenalty)
     Q_PROPERTY(bool UseGradientPenalty READ getUseGradientPenalty WRITE setUseGradientPenalty)
 
-    DREAM3D_FILTER_PARAMETER(float, GradientPenalty)
+    SIMPL_FILTER_PARAMETER(float, GradientPenalty)
     Q_PROPERTY(float GradientPenalty READ getGradientPenalty WRITE setGradientPenalty)
 
-    DREAM3D_FILTER_PARAMETER(bool, UseCurvaturePenalty)
+    SIMPL_FILTER_PARAMETER(bool, UseCurvaturePenalty)
     Q_PROPERTY(bool UseCurvaturePenalty READ getUseCurvaturePenalty WRITE setUseCurvaturePenalty)
 
-    DREAM3D_FILTER_PARAMETER(float, CurvaturePenalty)
+    SIMPL_FILTER_PARAMETER(float, CurvaturePenalty)
     Q_PROPERTY(float CurvaturePenalty READ getCurvaturePenalty WRITE setCurvaturePenalty)
 
-    DREAM3D_FILTER_PARAMETER(float, RMax)
+    SIMPL_FILTER_PARAMETER(float, RMax)
     Q_PROPERTY(float RMax READ getRMax WRITE setRMax)
 
-    DREAM3D_FILTER_PARAMETER(int, EMLoopDelay)
+    SIMPL_FILTER_PARAMETER(int, EMLoopDelay)
     Q_PROPERTY(int EMLoopDelay READ getEMLoopDelay WRITE setEMLoopDelay)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, OutputDataArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, OutputDataArrayPath)
     Q_PROPERTY(DataArrayPath OutputDataArrayPath READ getOutputDataArrayPath WRITE setOutputDataArrayPath)
 
-    DREAM3D_INSTANCE_PROPERTY(EMMPM_InitializationType, EmmpmInitType)
+    SIMPL_INSTANCE_PROPERTY(EMMPM_InitializationType, EmmpmInitType)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class

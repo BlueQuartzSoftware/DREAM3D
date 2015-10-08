@@ -38,17 +38,24 @@
 
 #include <QtGui/QImageReader>
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/FileListInfoFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/Utilities/FilePathGenerator.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/FileListInfoFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
+#include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Utilities/FilePathGenerator.h"
 
 #include "ImageIO/ImageIOConstants.h"
+
+// Include the MOC generated file for this class
+#include "moc_ImportImageStack.cpp"
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -57,6 +64,8 @@ ImportImageStack::ImportImageStack() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::ImageDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_BoundsFile(""),
+  m_GeometryType(0),
   m_ImageDataArrayName(DREAM3D::CellData::ImageData)
 {
   m_Origin.x = 0.0f;
@@ -89,8 +98,25 @@ void ImportImageStack::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
   parameters.push_back(FileListInfoFilterParameter::New("Input File List", "InputFileListInfo", getInputFileListInfo(), FilterParameter::Parameter));
-  parameters.push_back(FloatVec3FilterParameter::New("Origin", "Origin", getOrigin(), FilterParameter::Parameter));
-  parameters.push_back(FloatVec3FilterParameter::New("Resolution", "Resolution", getResolution(), FilterParameter::Parameter));
+  {
+    LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
+    parameter->setHumanLabel("Geometry Type");
+    parameter->setPropertyName("GeometryType");
+
+    QVector<QString> choices;
+    choices.push_back("Image");
+    choices.push_back("Rectilinear Grid");
+    parameter->setChoices(choices);
+    QStringList linkedProps;
+    linkedProps << "Origin" << "Resolution" << "BoundsFile";
+    parameter->setLinkedProperties(linkedProps);
+    parameter->setEditable(false);
+    parameter->setCategory(FilterParameter::Parameter);
+    parameters.push_back(parameter);
+  }
+  parameters.push_back(FloatVec3FilterParameter::New("Origin", "Origin", getOrigin(), FilterParameter::Parameter, 0));
+  parameters.push_back(FloatVec3FilterParameter::New("Resolution", "Resolution", getResolution(), FilterParameter::Parameter, 0));
+  parameters.push_back(InputFileFilterParameter::New("Bounds File", "BoundsFile", getBoundsFile(), FilterParameter::Parameter, "*.txt", "", 1));
   parameters.push_back(StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray));
@@ -110,6 +136,8 @@ void ImportImageStack::readFilterParameters(AbstractFilterParametersReader* read
   setInputFileListInfo( reader->readFileListInfo("InputFileListInfo", getInputFileListInfo() ) );
   setOrigin( reader->readFloatVec3("Origin", getOrigin()) );
   setResolution( reader->readFloatVec3("Resolution", getResolution()) );
+  setGeometryType(reader->readValue("GeometryType", getGeometryType()));
+  setBoundsFile(reader->readString("BoundsFile", getBoundsFile()));
   reader->closeFilterGroup();
 }
 
@@ -119,13 +147,15 @@ void ImportImageStack::readFilterParameters(AbstractFilterParametersReader* read
 int ImportImageStack::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(ImageDataArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputFileListInfo)
-  DREAM3D_FILTER_WRITE_PARAMETER(Origin)
-  DREAM3D_FILTER_WRITE_PARAMETER(Resolution)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(DataContainerName)
+  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(ImageDataArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(InputFileListInfo)
+  SIMPL_FILTER_WRITE_PARAMETER(Origin)
+  SIMPL_FILTER_WRITE_PARAMETER(Resolution)
+  SIMPL_FILTER_WRITE_PARAMETER(GeometryType)
+  SIMPL_FILTER_WRITE_PARAMETER(BoundsFile)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -150,8 +180,23 @@ void ImportImageStack::dataCheck()
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
   if(getErrorCondition() < 0 || NULL == m.get()) { return; }
 
-  ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
-  m->setGeometry(image);
+  if (m_GeometryType == 0)
+  {
+    ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+    m->setGeometry(image);
+  }
+  else if (m_GeometryType == 1)
+  {
+    RectGridGeom::Pointer rectGrid = RectGridGeom::CreateGeometry(DREAM3D::Geometry::RectGridGeometry);
+    m->setGeometry(rectGrid);
+
+    if (m_BoundsFile.isEmpty() == true)
+    {
+      ss = QObject::tr("The Bounds file must be set");
+      notifyErrorMessage(getHumanLabel(), ss, -14);
+      setErrorCondition(-14);
+    }
+  }
 
   bool hasMissingFiles = false;
   bool orderAscending = false;
@@ -167,9 +212,19 @@ void ImportImageStack::dataCheck()
                               m_InputFileListInfo.PaddingDigits);
   if (fileList.size() == 0)
   {
-    QString ss = QObject::tr("No files have been selected for import");
+    ss.clear();
+    QTextStream out(&ss);
+    out <<" No files have been selected for import. Have you set the input directory and other values so that input files will be generated?\n";
+    out << "InputPath: " << m_InputFileListInfo.InputPath << "\n";
+    out << "FilePrefix: " << m_InputFileListInfo.FilePrefix << "\n";
+    out << "FileSuffix: " << m_InputFileListInfo.FileSuffix << "\n";
+    out << "FileExtension: " << m_InputFileListInfo.FileExtension << "\n";
+    out << "PaddingDigits: " << m_InputFileListInfo.PaddingDigits << "\n";
+    out << "StartIndex: " << m_InputFileListInfo.StartIndex << "\n";
+    out << "EndIndex: " << m_InputFileListInfo.EndIndex << "\n";
+
+    notifyErrorMessage(getHumanLabel(), ss, -11);
     setErrorCondition(-11);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else
   {
@@ -207,9 +262,18 @@ void ImportImageStack::dataCheck()
     }
     /* ************ End Sanity Check *************************** */
 
-    m->getGeometryAs<ImageGeom>()->setDimensions(static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2]));
-    m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-    m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+    if (m_GeometryType == 0)
+    {
+      m->getGeometryAs<ImageGeom>()->setDimensions(static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2]));
+      m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+      m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+    }
+    else if (m_GeometryType == 1)
+    {
+      m->getGeometryAs<RectGridGeom>()->setDimensions(static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2]));
+      if (!m_BoundsFile.isEmpty()) { err = readBounds(); }
+      if (err < 0) { setErrorCondition(err); }
+    }
 
     QVector<size_t> tDims(3, 0);
     for (int32_t i = 0; i < 3; i++)
@@ -269,9 +333,16 @@ void ImportImageStack::execute()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
-  m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-  m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
-
+  if (m_GeometryType == 0)
+  {
+    m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+    m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+  }
+  else if (m_GeometryType == 1)
+  {
+    int err = readBounds();
+    if (err < 0) return;
+  }
   UInt8ArrayType::Pointer data = UInt8ArrayType::NullPointer();
 
   uint8_t* imagePtr = NULL;
@@ -316,13 +387,20 @@ void ImportImageStack::execute()
       notifyErrorMessage(getHumanLabel(), "Failed to load image file", getErrorCondition());
       return;
     }
+#if defined (CMP_WORDS_BIGENDIAN)
+#error
+#else
+    // We need to convert from Little Endian based ARGB to a physical RGB layout
+    image = image.rgbSwapped();
+#endif
     height = image.height();
     width = image.width();
     totalPixels = width * height;
     // This is the first image so we need to create our block of data to store the data
     if (z == m_InputFileListInfo.StartIndex)
     {
-      m->getGeometryAs<ImageGeom>()->setDimensions(width, height, fileList.size());
+      if (m_GeometryType == 0) { m->getGeometryAs<ImageGeom>()->setDimensions(width, height, fileList.size()); }
+      else if (m_GeometryType == 1) { m->getGeometryAs<RectGridGeom>()->setDimensions(width, height, fileList.size()); }
       if (image.format() == QImage::Format_Indexed8)
       {
         pixelBytes = 1;
@@ -365,6 +443,207 @@ void ImportImageStack::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int ImportImageStack::readBounds()
+{
+  size_t dims[3];
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
+  m->getGeometryAs<RectGridGeom>()->getDimensions(dims);
+
+  FloatArrayType::Pointer xbounds = FloatArrayType::CreateArray(dims[0] + 1, DREAM3D::Geometry::xBoundsList);
+  FloatArrayType::Pointer ybounds = FloatArrayType::CreateArray(dims[1] + 1, DREAM3D::Geometry::yBoundsList);
+  FloatArrayType::Pointer zbounds = FloatArrayType::CreateArray(dims[2] + 1, DREAM3D::Geometry::zBoundsList);
+  float* xbnds = xbounds->getPointer(0);
+  float* ybnds = ybounds->getPointer(0);
+  float* zbnds = zbounds->getPointer(0);
+
+  QFile inFile;
+  inFile.setFileName(m_BoundsFile.toLatin1().data());
+  if (!inFile.open(QIODevice::ReadOnly | QIODevice::Text))
+  {
+    QString ss = QObject::tr("Bounds Input file could not be opened: %1").arg(getBoundsFile());
+    setErrorCondition(-100);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return -1;
+  }
+
+  size_t count = 0;
+
+  QByteArray buf;
+  QList<QByteArray> tokens; /* vector to store the split data */
+  bool ok = false;
+  QString word;
+
+  //Read header until we get to the line that should have the format: XPOINTS number
+  bool header = true;
+  while (header == true)
+  {
+    buf = inFile.readLine();
+    if (buf.startsWith("#") == false) { header = false; }
+  }
+  buf = buf.trimmed();
+  buf = buf.simplified();
+  tokens = buf.split(' ');
+  word = tokens.at(0);
+  if (word.compare("X_COORDINATES") != 0)
+  {
+    QString ss = QObject::tr("X_COORDINATES keyword not found in proper location in: %1.").arg(m_BoundsFile);
+    setErrorCondition(-100);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return -1;
+  }
+  if (tokens.size() != 2)
+  {
+    QString ss = QObject::tr("X_COORDINATES keyword line not properly formatted in: %1.").arg(m_BoundsFile);
+    setErrorCondition(-100);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return -1;
+  }
+  size_t numXBounds = tokens[1].toInt(&ok, 10);
+  if (numXBounds != xbounds->getNumberOfTuples())
+  {
+    QString ss = QObject::tr("The number of X bounds in %1 does not match the x dimension of the geometry.").arg(m_BoundsFile);
+    setErrorCondition(-100);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return -1;
+  }
+  count = 0;
+  while (count < numXBounds)
+  {
+    if (inFile.atEnd())
+    {
+      QString ss = QObject::tr(" %1..").arg(m_BoundsFile);
+      setErrorCondition(-100);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return -1;
+    }
+    buf = inFile.readLine();
+    buf = buf.trimmed();
+    buf = buf.simplified();
+    tokens = buf.split(' ');
+    for (size_t iter2 = 0; iter2 < tokens.size(); iter2++)
+    {
+      xbnds[count] = tokens[iter2].toFloat(&ok);
+      if (!ok)
+      {
+        QString ss = QObject::tr("Could not read X coordinte number %1. Could not interpret as float value.").arg(count+1);
+        setErrorCondition(-100);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return -1;
+      }
+      count++;
+    }
+  }
+
+  //Read the line that should have the format: YPOINTS number
+  buf = inFile.readLine();
+  buf = buf.trimmed();
+  buf = buf.simplified();
+  tokens = buf.split(' ');
+  word = tokens.at(0);
+  if (word.compare("Y_COORDINATES") != 0)
+  {
+    QString ss = QObject::tr("Y_COORDINATES keyword not found in proper location in: %1.").arg(m_BoundsFile);
+    setErrorCondition(-100);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return -1;
+  }
+  if (tokens.size() != 2)
+  {
+    QString ss = QObject::tr("Y_COORDINATES keyword line not properly formatted in: %1.").arg(m_BoundsFile);
+    setErrorCondition(-100);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return -1;
+  }
+  size_t numYBounds = tokens[1].toInt(&ok, 10);
+  if (numYBounds != ybounds->getNumberOfTuples())
+  {
+    QString ss = QObject::tr("The number of Y bounds in %1 does not match the y dimension of the geometry.").arg(m_BoundsFile);
+    setErrorCondition(-100);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return -1;
+  }
+  count = 0;
+  while (count < numYBounds)
+  {
+    buf = inFile.readLine();
+    buf = buf.trimmed();
+    buf = buf.simplified();
+    tokens = buf.split(' ');
+    for (size_t iter2 = 0; iter2 < tokens.size(); iter2++)
+    {
+      ybnds[count] = tokens[iter2].toFloat(&ok);
+      if (!ok)
+      {
+        QString ss = QObject::tr("Could not read Y coordinte number %1. Could not interpret as float value.").arg(count + 1);
+        setErrorCondition(-100);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return -1;
+      }
+      count++;
+    }
+  }
+
+  //Read the line that should have the format: ZPOINTS number
+  buf = inFile.readLine();
+  buf = buf.trimmed();
+  buf = buf.simplified();
+  tokens = buf.split(' ');
+  word = tokens.at(0);
+  if (word.compare("Z_COORDINATES") != 0)
+  {
+    QString ss = QObject::tr("Z_COORDINATES keyword not found in proper location in: %1.").arg(m_BoundsFile);
+    setErrorCondition(-100);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return -1;
+  }
+  if (tokens.size() != 2)
+  {
+    QString ss = QObject::tr("Z_COORDINATES keyword line not properly formatted in: %1.").arg(m_BoundsFile);
+    setErrorCondition(-100);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return -1;
+  }
+  size_t numZBounds = tokens[1].toInt(&ok, 10);
+  if (numZBounds != zbounds->getNumberOfTuples())
+  {
+    QString ss = QObject::tr("The number of Z bounds in %1 does not match the z dimension of the geometry.").arg(m_BoundsFile);
+    setErrorCondition(-100);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return -1;
+  }
+  count = 0;
+  while (count < numZBounds)
+  {
+    buf = inFile.readLine();
+    buf = buf.trimmed();
+    buf = buf.simplified();
+    tokens = buf.split(' ');
+    for (size_t iter2 = 0; iter2 < tokens.size(); iter2++)
+    {
+      zbnds[count] = tokens[iter2].toFloat(&ok);
+      if (!ok)
+      {
+        QString ss = QObject::tr("Could not read Z coordinte number %1. Could not interpret as float value.").arg(count + 1);
+        setErrorCondition(-100);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return -1;
+      }
+      count++;
+    }
+  }
+
+  inFile.close();
+
+  m->getGeometryAs<RectGridGeom>()->setXBounds(xbounds);
+  m->getGeometryAs<RectGridGeom>()->setYBounds(ybounds);
+  m->getGeometryAs<RectGridGeom>()->setZBounds(zbounds);
+
+  return 0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 AbstractFilter::Pointer ImportImageStack::newFilterInstance(bool copyFilterParameters)
 {
   ImportImageStack::Pointer filter = ImportImageStack::New();
@@ -373,23 +652,25 @@ AbstractFilter::Pointer ImportImageStack::newFilterInstance(bool copyFilterParam
     filter->setFilterParameters(getFilterParameters() );
     // We are going to hand copy all of the parameters because the other way of copying the parameters are going to
     // miss some of them because we are not enumerating all of them.
-    DREAM3D_COPY_INSTANCEVAR(DataContainerName)
-    DREAM3D_COPY_INSTANCEVAR(CellAttributeMatrixName)
-    DREAM3D_COPY_INSTANCEVAR(Resolution)
-    DREAM3D_COPY_INSTANCEVAR(Origin)
+    SIMPL_COPY_INSTANCEVAR(DataContainerName)
+    SIMPL_COPY_INSTANCEVAR(CellAttributeMatrixName)
+    SIMPL_COPY_INSTANCEVAR(GeometryType)
+    SIMPL_COPY_INSTANCEVAR(Resolution)
+    SIMPL_COPY_INSTANCEVAR(Origin)
+    SIMPL_COPY_INSTANCEVAR(BoundsFile)
 #if 0
-    DREAM3D_COPY_INSTANCEVAR(ZStartIndex)
-    DREAM3D_COPY_INSTANCEVAR(ZEndIndex)
-    DREAM3D_COPY_INSTANCEVAR(InputPath)
-    DREAM3D_COPY_INSTANCEVAR(FilePrefix)
-    DREAM3D_COPY_INSTANCEVAR(FileSuffix)
-    DREAM3D_COPY_INSTANCEVAR(FileExtension)
-    DREAM3D_COPY_INSTANCEVAR(PaddingDigits)
-    DREAM3D_COPY_INSTANCEVAR(RefFrameZDir)
+    SIMPL_COPY_INSTANCEVAR(ZStartIndex)
+    SIMPL_COPY_INSTANCEVAR(ZEndIndex)
+    SIMPL_COPY_INSTANCEVAR(InputPath)
+    SIMPL_COPY_INSTANCEVAR(FilePrefix)
+    SIMPL_COPY_INSTANCEVAR(FileSuffix)
+    SIMPL_COPY_INSTANCEVAR(FileExtension)
+    SIMPL_COPY_INSTANCEVAR(PaddingDigits)
+    SIMPL_COPY_INSTANCEVAR(RefFrameZDir)
 #endif
-    DREAM3D_COPY_INSTANCEVAR(InputFileListInfo)
-    DREAM3D_COPY_INSTANCEVAR(ImageStack)
-    DREAM3D_COPY_INSTANCEVAR(ImageDataArrayName)
+    SIMPL_COPY_INSTANCEVAR(InputFileListInfo)
+    SIMPL_COPY_INSTANCEVAR(ImageStack)
+    SIMPL_COPY_INSTANCEVAR(ImageDataArrayName)
   }
   return filter;
 }

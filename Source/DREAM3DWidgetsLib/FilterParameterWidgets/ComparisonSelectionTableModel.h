@@ -42,7 +42,7 @@
 #include <QtCore/QVariant>
 #include <QtCore/QStringList>
 
-#include "DREAM3DLib/Common/ComparisonInputs.h"
+#include "SIMPLib/Common/ComparisonInputs.h"
 
 
 class QAbstractItemDelegate;

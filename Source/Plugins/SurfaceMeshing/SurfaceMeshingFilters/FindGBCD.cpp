@@ -35,7 +35,7 @@
 
 #include "FindGBCD.h"
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/partitioner.h>
@@ -44,14 +44,14 @@
 
 #include <QtCore/QDateTime>
 
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/DoubleFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
-#include "DREAM3DLib/Utilities/TimeUtilities.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Utilities/TimeUtilities.h"
 
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
@@ -217,7 +217,7 @@ class CalculateGBCDImpl
                 FOrientArrayType eu(euler_mis, 3);
                 FOrientTransformsType::om2eu(om, eu);
 
-                if (euler_mis[0] < DREAM3D::Constants::k_PiOver2 && euler_mis[1] < DREAM3D::Constants::k_PiOver2 && euler_mis[2] < DREAM3D::Constants::k_PiOver2)
+                if (euler_mis[0] < SIMPLib::Constants::k_PiOver2 && euler_mis[1] < SIMPLib::Constants::k_PiOver2 && euler_mis[2] < SIMPLib::Constants::k_PiOver2)
                 {
                   // PHI euler angle is stored in GBCD as cos(PHI)
                   euler_mis[1] = cosf(euler_mis[1]);
@@ -249,7 +249,7 @@ class CalculateGBCDImpl
       }
     }
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     void operator()(const tbb::blocked_range<size_t>& r) const
     {
       generate(r.begin(), r.end());
@@ -311,17 +311,21 @@ class CalculateGBCDImpl
       }
       if (fabsf(xstl1_norm1[0]) >= fabsf(xstl1_norm1[1]))
       {
-        sqCoord[0] = (xstl1_norm1[0] / fabsf(xstl1_norm1[0])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * (DREAM3D::Constants::k_SqrtPi / 2.0f);
-        sqCoord[1] = (xstl1_norm1[0] / fabsf(xstl1_norm1[0])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * ((2.0f / DREAM3D::Constants::k_SqrtPi) * atanf(xstl1_norm1[1] / xstl1_norm1[0]));
+        sqCoord[0] = (xstl1_norm1[0] / fabsf(xstl1_norm1[0])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * (SIMPLib::Constants::k_SqrtPi / 2.0f);
+        sqCoord[1] = (xstl1_norm1[0] / fabsf(xstl1_norm1[0])) * sqrtf(2.0f * 1.0f * (1.0f + (xstl1_norm1[2] * adjust))) * ((2.0f / SIMPLib::Constants::k_SqrtPi) * atanf(xstl1_norm1[1] / xstl1_norm1[0]));
       }
       else
       {
-        sqCoord[0] = (xstl1_norm1[1] / fabsf(xstl1_norm1[1])) * sqrtf(2.0 * 1.0 * (1.0 + (xstl1_norm1[2] * adjust))) * ((2.0f / DREAM3D::Constants::k_SqrtPi) * atanf(xstl1_norm1[0] / xstl1_norm1[1]));
-        sqCoord[1] = (xstl1_norm1[1] / fabsf(xstl1_norm1[1])) * sqrtf(2.0 * 1.0 * (1.0 + (xstl1_norm1[2] * adjust))) * (DREAM3D::Constants::k_SqrtPi / 2.0f);
+        sqCoord[0] = (xstl1_norm1[1] / fabsf(xstl1_norm1[1])) * sqrtf(2.0 * 1.0 * (1.0 + (xstl1_norm1[2] * adjust))) * ((2.0f / SIMPLib::Constants::k_SqrtPi) * atanf(xstl1_norm1[0] / xstl1_norm1[1]));
+        sqCoord[1] = (xstl1_norm1[1] / fabsf(xstl1_norm1[1])) * sqrtf(2.0 * 1.0 * (1.0 + (xstl1_norm1[2] * adjust))) * (SIMPLib::Constants::k_SqrtPi / 2.0f);
       }
       return nhCheck;
     }
 };
+
+// Include the MOC generated file for this class
+#include "moc_FindGBCD.cpp"
+
 
 // -----------------------------------------------------------------------------
 //
@@ -374,14 +378,35 @@ void FindGBCD::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(DoubleFilterParameter::New("GBCD Resolution (Degrees)", "GBCDRes", getGBCDRes(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Face Normals", "SurfaceMeshFaceNormalsArrayPath", getSurfaceMeshFaceNormalsArrayPath(), FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Face Areas", "SurfaceMeshFaceAreasArrayPath", getSurfaceMeshFaceAreasArrayPath(), FilterParameter::RequiredArray));
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 2, DREAM3D::AttributeMatrixType::Face, DREAM3D::GeometryType::TriangleGeometry);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req));
+  }
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Double, 3, DREAM3D::AttributeMatrixType::Face, DREAM3D::GeometryType::TriangleGeometry);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Face Normals", "SurfaceMeshFaceNormalsArrayPath", getSurfaceMeshFaceNormalsArrayPath(), FilterParameter::RequiredArray, req));
+  }
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Double, 1, DREAM3D::AttributeMatrixType::Face, DREAM3D::GeometryType::TriangleGeometry);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Face Areas", "SurfaceMeshFaceAreasArrayPath", getSurfaceMeshFaceAreasArrayPath(), FilterParameter::RequiredArray, req));
+  }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Average Euler Angles", "FeatureEulerAnglesArrayPath", getFeatureEulerAnglesArrayPath(), FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray));
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Float, 3, DREAM3D::AttributeMatrixType::CellFeature, DREAM3D::GeometryType::ImageGeometry);
+
+    parameters.push_back(DataArraySelectionFilterParameter::New("Average Euler Angles", "FeatureEulerAnglesArrayPath", getFeatureEulerAnglesArrayPath(), FilterParameter::RequiredArray, req));
+  }
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::CellFeature, DREAM3D::GeometryType::ImageGeometry);
+
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req));
+  }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray));
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::UInt32, 1, DREAM3D::AttributeMatrixType::CellEnsemble, DREAM3D::GeometryType::ImageGeometry);
+
+    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
+  }
   parameters.push_back(SeparatorFilterParameter::New("Face Ensemble Data", FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("Face Ensemble Attribute Matrix", "FaceEnsembleAttributeMatrixName", getFaceEnsembleAttributeMatrixName(), FilterParameter::CreatedArray));
   parameters.push_back(StringFilterParameter::New("GBCD", "GBCDArrayName", getGBCDArrayName(), FilterParameter::CreatedArray));
@@ -412,16 +437,16 @@ void FindGBCD::readFilterParameters(AbstractFilterParametersReader* reader, int 
 int FindGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(FaceEnsembleAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(GBCDArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureEulerAnglesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceAreasArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceNormalsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(GBCDRes)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(FaceEnsembleAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(GBCDArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureEulerAnglesArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceAreasArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceNormalsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(GBCDRes)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -525,17 +550,19 @@ void FindGBCD::execute()
   dataCheckSurfaceMesh();
   if(getErrorCondition() < 0) { return; }
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
 #endif
 
+  size_t totalPhases = m_CrystalStructuresPtr.lock()->getNumberOfTuples();
   size_t totalFaces = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();
   size_t faceChunkSize = 50000;
   size_t numMisoReps = 576 * 4;
   if (totalFaces < faceChunkSize) { faceChunkSize = totalFaces; }
   // call the sizeGBCD function with proper chunkSize and numMisoReps to get Bins array set up properly
   sizeGBCD(faceChunkSize, numMisoReps);
+  int32_t totalGBCDBins = m_GbcdSizes[0] * m_GbcdSizes[1] * m_GbcdSizes[2] * m_GbcdSizes[3] * m_GbcdSizes[4] * 2;
 
   uint64_t millis = QDateTime::currentMSecsSinceEpoch();
   uint64_t currentMillis = millis;
@@ -545,7 +572,11 @@ void FindGBCD::execute()
   startMillis =  QDateTime::currentMSecsSinceEpoch();
   int32_t hemisphere = 0;
 
-  double totalFaceArea = 0.0;
+  //create an array to hold the total face area for each phase and initialize the array to 0.0
+  DoubleArrayType::Pointer totalFaceAreaPtr = DoubleArrayType::CreateArray(totalPhases, "totalFaceArea");
+  totalFaceAreaPtr->initializeWithValue(0.0);
+  double* totalFaceArea = totalFaceAreaPtr->getPointer(0);
+
   QString ss = QObject::tr("Calculating GBCD || 0/%1 Completed").arg(totalFaces);
   for (size_t i = 0; i < totalFaces; i = i + faceChunkSize)
   {
@@ -555,7 +586,7 @@ void FindGBCD::execute()
       faceChunkSize = totalFaces - i;
     }
     m_GbcdBinsArray->initializeWithValue(-1);
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(i, i + faceChunkSize),
@@ -582,16 +613,22 @@ void FindGBCD::execute()
 
     if(getCancel() == true) { return; }
 
+    int32_t phase = 0;
+    int32_t feature = 0;
+    double area = 0.0;
     for (size_t j = 0; j < faceChunkSize; j++)
     {
+      area = m_SurfaceMeshFaceAreas[i + j];
+      feature = m_SurfaceMeshFaceLabels[2 * (i + j)];
+      phase = m_FeaturePhases[feature];
       for (size_t k = 0; k < numMisoReps; k++)
       {
         if (m_GbcdBins[(j * numMisoReps) + (k)] >= 0)
         {
           hemisphere = 0;
           if (m_HemiCheck[(j * numMisoReps) + k] == false) { hemisphere = 1; }
-          m_GBCD[2 * m_GbcdBins[(j * numMisoReps) + (k)] + hemisphere] += (m_SurfaceMeshFaceAreas[i + j]);
-          totalFaceArea += (m_SurfaceMeshFaceAreas[i + j]);
+          m_GBCD[(phase * totalGBCDBins) + (2 * m_GbcdBins[(j * numMisoReps) + (k)] + hemisphere)] += area;
+          totalFaceArea[phase] += area;
         }
       }
     }
@@ -600,11 +637,14 @@ void FindGBCD::execute()
   ss = QObject::tr("Starting GBCD Normalization");
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
-  int32_t totalBins = m_GbcdSizes[0] * m_GbcdSizes[1] * m_GbcdSizes[2] * m_GbcdSizes[3] * m_GbcdSizes[4] * 2;
-  double MRDfactor = double(totalBins) / totalFaceArea;
-  for (int32_t i = 0; i < totalBins; i++)
+  for (int32_t i = 0; i < totalPhases; i++)
   {
-    m_GBCD[i] *= MRDfactor;
+    size_t phaseShift = i * totalGBCDBins;
+    double MRDfactor = double(totalGBCDBins) / totalFaceArea[i];
+    for (int32_t j = 0; j < totalGBCDBins; j++)
+    {
+      m_GBCD[phaseShift + j] *= MRDfactor;
+    }
   }
 
   /* Let the GUI know we are done with this filter */
@@ -652,14 +692,14 @@ void FindGBCD::sizeGBCD(size_t faceChunkSize, size_t numMisoReps)
   m_GbcdLimits[2] = 0.0f;
   m_GbcdLimits[3] = 0.0f;
   m_GbcdLimits[4] = 0.0f;
-  m_GbcdLimits[5] = DREAM3D::Constants::k_PiOver2;
+  m_GbcdLimits[5] = SIMPLib::Constants::k_PiOver2;
   m_GbcdLimits[6] = 1.0f;
-  m_GbcdLimits[7] = DREAM3D::Constants::k_PiOver2;
+  m_GbcdLimits[7] = SIMPLib::Constants::k_PiOver2;
   m_GbcdLimits[8] = 1.0f;
-  m_GbcdLimits[9] = DREAM3D::Constants::k_2Pi;
+  m_GbcdLimits[9] = SIMPLib::Constants::k_2Pi;
 
-  float binsize = m_GBCDRes * DREAM3D::Constants::k_PiOver180;
-  float binsize2 = binsize * (2.0 / DREAM3D::Constants::k_Pi);
+  float binsize = m_GBCDRes * SIMPLib::Constants::k_PiOver180;
+  float binsize2 = binsize * (2.0 / SIMPLib::Constants::k_Pi);
   m_GbcdDeltas[0] = binsize;
   m_GbcdDeltas[1] = binsize2;
   m_GbcdDeltas[2] = binsize;
@@ -676,10 +716,10 @@ void FindGBCD::sizeGBCD(size_t faceChunkSize, size_t numMisoReps)
   float totalNormalBins = m_GbcdSizes[3] * m_GbcdSizes[4];
   m_GbcdSizes[3] = int32_t(sqrtf(totalNormalBins) + 0.5f);
   m_GbcdSizes[4] = int32_t(sqrtf(totalNormalBins) + 0.5f);
-  m_GbcdLimits[3] = -sqrtf(DREAM3D::Constants::k_PiOver2);
-  m_GbcdLimits[4] = -sqrtf(DREAM3D::Constants::k_PiOver2);
-  m_GbcdLimits[8] = sqrtf(DREAM3D::Constants::k_PiOver2);
-  m_GbcdLimits[9] = sqrtf(DREAM3D::Constants::k_PiOver2);
+  m_GbcdLimits[3] = -sqrtf(SIMPLib::Constants::k_PiOver2);
+  m_GbcdLimits[4] = -sqrtf(SIMPLib::Constants::k_PiOver2);
+  m_GbcdLimits[8] = sqrtf(SIMPLib::Constants::k_PiOver2);
+  m_GbcdLimits[9] = sqrtf(SIMPLib::Constants::k_PiOver2);
   m_GbcdDeltas[3] = (m_GbcdLimits[8] - m_GbcdLimits[3]) / float(m_GbcdSizes[3]);
   m_GbcdDeltas[4] = (m_GbcdLimits[9] - m_GbcdLimits[4]) / float(m_GbcdSizes[4]);
 }

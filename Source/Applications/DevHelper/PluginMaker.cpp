@@ -61,6 +61,8 @@
 #include "PMFileGenerator.h"
 #include "PMGeneratorTreeItem.h"
 
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_PluginMaker.cpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -846,6 +848,7 @@ void PluginMaker::on_addFilterBtn_clicked()
     cppgen->setNameChangeable(false);
     QString tempPluginName = cppgen->cleanName(m_PluginName->text());
     cppgen->setPluginName(tempPluginName);
+    cppgen->setInitListContents("  AbstractFilter()");
     filt2cpp->setFileGenPtr(cppgen);
 
     //m_itemMap[filt2cpp] = cppgen;

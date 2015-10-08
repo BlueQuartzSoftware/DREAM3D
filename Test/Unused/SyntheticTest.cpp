@@ -42,10 +42,10 @@
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataArrays/StructArray.hpp"
-#include "DREAM3DLib/FilterParameters/FilterParameter.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/DataArrays/StructArray.hpp"
+#include "SIMPLib/FilterParameters/FilterParameter.h"
 
 
 #include "UnitTestSupport.hpp"

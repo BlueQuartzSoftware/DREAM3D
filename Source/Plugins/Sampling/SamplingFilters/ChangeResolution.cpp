@@ -35,18 +35,23 @@
 
 #include "ChangeResolution.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
-#include "DREAM3DLib/FilterParameters/FloatVec3FilterParameter.h"
-#include "DREAM3DLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/StringFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "DREAM3DLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "Sampling/SamplingConstants.h"
+
+// Include the MOC generated file for this class
+#include "moc_ChangeResolution.cpp"
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -89,10 +94,19 @@ void ChangeResolution::setupFilterParameters()
   linkedProps << "NewDataContainerName";
   parameters.push_back(LinkedBooleanFilterParameter::New("Save as New Data Container", "SaveAsNewDataContainer", getSaveAsNewDataContainer(), linkedProps, FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
-  parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", getCellAttributeMatrixPath(), FilterParameter::RequiredArray));
-  parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray));
+  {
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", getCellAttributeMatrixPath(), FilterParameter::RequiredArray, req));
+  }
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
+  }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
-  parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath(), FilterParameter::RequiredArray));
+  {
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(DREAM3D::AttributeMatrixType::CellFeature, DREAM3D::GeometryType::ImageGeometry);
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath(), FilterParameter::RequiredArray, req));
+  }
   parameters.push_back(StringFilterParameter::New("Data Container", "NewDataContainerName", getNewDataContainerName(), FilterParameter::CreatedArray));
   setFilterParameters(parameters);
 }
@@ -119,25 +133,16 @@ void ChangeResolution::readFilterParameters(AbstractFilterParametersReader* read
 int ChangeResolution::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FilterVersion)
-  DREAM3D_FILTER_WRITE_PARAMETER(NewDataContainerName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(Resolution)
-  DREAM3D_FILTER_WRITE_PARAMETER(RenumberFeatures)
-  DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewDataContainer)
+  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
+  SIMPL_FILTER_WRITE_PARAMETER(NewDataContainerName)
+  SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(Resolution)
+  SIMPL_FILTER_WRITE_PARAMETER(RenumberFeatures)
+  SIMPL_FILTER_WRITE_PARAMETER(SaveAsNewDataContainer)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ChangeResolution::updateCellInstancePointers()
-{
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -217,11 +222,13 @@ void ChangeResolution::preflight()
   }
 
   size_t dims[3] = { 0, 0, 0 };
-  m->getGeometryAs<ImageGeom>()->getDimensions(dims);
 
-  float sizex = (dims[0]) * m->getGeometryAs<ImageGeom>()->getXRes();
-  float sizey = (dims[1]) * m->getGeometryAs<ImageGeom>()->getYRes();
-  float sizez = (dims[2]) * m->getGeometryAs<ImageGeom>()->getZRes();
+  ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
+  image->getDimensions(dims);
+
+  float sizex = (dims[0]) * image->getXRes();
+  float sizey = (dims[1]) * image->getYRes();
+  float sizez = (dims[2]) * image->getZRes();
   size_t m_XP = size_t(sizex / m_Resolution.x);
   size_t m_YP = size_t(sizey / m_Resolution.y);
   size_t m_ZP = size_t(sizez / m_Resolution.z);
@@ -229,20 +236,44 @@ void ChangeResolution::preflight()
   if (m_YP == 0) { m_YP = 1; }
   if (m_ZP == 0) { m_ZP = 1; }
 
-  m->getGeometryAs<ImageGeom>()->setDimensions(m_XP, m_YP, m_ZP);
-  m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+  image->setDimensions(m_XP, m_YP, m_ZP);
+  image->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
 
   QVector<size_t> tDims(3, 0);
   tDims[0] = m_XP;
   tDims[1] = m_YP;
   tDims[2] = m_ZP;
-  m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName())->setTupleDimensions(tDims);
+  //m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName())->setTupleDimensions(tDims);
+
+  AttributeMatrix::Pointer  cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
+
+  size_t totalPoints = 1;
+  for(int i = 0; i < 3; i++) {
+    if(tDims[i] != 0) { totalPoints *= tDims[i]; }
+  }
+  AttributeMatrix::Pointer newCellAttrMat = AttributeMatrix::New(tDims, cellAttrMat->getName(), cellAttrMat->getType());
+
+  QList<QString> voxelArrayNames = cellAttrMat->getAttributeArrayNames();
+  for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+  {
+    IDataArray::Pointer p = cellAttrMat->getAttributeArray(*iter);
+    //
+    IDataArray::Pointer data = p->createNewArray(totalPoints, p->getComponentDimensions(), p->getName(), false);
+
+    cellAttrMat->removeAttributeArray(*iter);
+    newCellAttrMat->addAttributeArray(*iter, data);
+  }
+  m->removeAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
+  m->addAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName(), newCellAttrMat);
 
   if (m_RenumberFeatures == true)
   {
     AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
-    QVector<bool> activeObjects(cellFeatureAttrMat->getNumTuples(), true);
-    cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
+    if (NULL != cellFeatureAttrMat.get())
+    {
+      QVector<bool> activeObjects(cellFeatureAttrMat->getNumTuples(), true);
+      cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
+    }
   }
   emit preflightExecuted();
   setInPreflight(false);
@@ -258,7 +289,7 @@ void ChangeResolution::execute()
   if(getErrorCondition() < 0) { return; }
 
   DataContainer::Pointer m;
-  if(m_SaveAsNewDataContainer == false)
+  if (m_SaveAsNewDataContainer == false)
   {
     m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
   }
@@ -292,13 +323,15 @@ void ChangeResolution::execute()
 
   float x = 0.0f, y = 0.0f, z = 0.0f;
   size_t col = 0, row = 0, plane = 0;
-  size_t index;
-  size_t index_old;
+  size_t index = 0;
+  size_t index_old = 0 ;
+  size_t progressInt = 0;
   std::vector<size_t> newindicies(totalPoints);
 
   for (size_t i = 0; i < m_ZP; i++)
   {
-    QString ss = QObject::tr("Changing Resolution - %1 Percent Complete").arg(((float)i / m->getGeometryAs<ImageGeom>()->getZPoints()) * 100);
+    progressInt = static_cast<size_t>((static_cast<float>(i) / m_ZP) * 100.0f);
+    QString ss = QObject::tr("Changing Resolution - %1% Complete").arg(progressInt);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     for (size_t j = 0; j < m_YP; j++)
     {
@@ -316,6 +349,9 @@ void ChangeResolution::execute()
       }
     }
   }
+
+  QString ss = QObject::tr("Copying Data...");
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
   QVector<size_t> tDims(3, 0);
   tDims[0] = m_XP;
@@ -335,7 +371,7 @@ void ChangeResolution::execute()
     void* source = NULL;
     void* destination = NULL;
     size_t newIndicies_I = 0;
-    int nComp = data->getNumberOfComponents();
+    int32_t nComp = data->getNumberOfComponents();
     for (size_t i = 0; i < static_cast<size_t>(totalPoints); i++)
     {
       newIndicies_I = newindicies[i];
@@ -364,14 +400,17 @@ void ChangeResolution::execute()
       return;
     }
 
-    updateCellInstancePointers();
+    // We have blown away the old FeatureIds array during the above copy loop, so grab it again here
+    IDataArray::Pointer featureIdsPtr = m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName())->getAttributeArray(getFeatureIdsArrayPath().getDataArrayName());
+    Int32ArrayType::Pointer featureIds = boost::dynamic_pointer_cast<Int32ArrayType>(featureIdsPtr);
+    int32_t* fIds = featureIds->getPointer(0);
 
     // Find the unique set of feature ids
     for (size_t i = 0; i < totalPoints; ++i)
     {
-      activeObjects[m_FeatureIds[i]] = true;
+      activeObjects[fIds[i]] = true;
     }
-    cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
+    cellFeatureAttrMat->removeInactiveObjects(activeObjects, featureIds);
   }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
