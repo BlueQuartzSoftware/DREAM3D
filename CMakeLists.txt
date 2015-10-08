@@ -59,7 +59,7 @@ project(DREAM3DProj VERSION 6.2.0.0)
 # Official: This is an official release from BlueQuartz Software
 # Beta: This is a Beta release that has is getting ready to be officially released.
 # Development: This is currently in development and probably has bugs.
-set(DREAM3DProj_RELEASE_TYPE "Official")
+set(DREAM3DProj_RELEASE_TYPE "Development")
 
 include(CMakeParseArguments)
 
