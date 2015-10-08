@@ -252,7 +252,8 @@ void TestQuat_t()
   q.z = 0.5f;
   q.w = 0.5f;
 
-  QuaternionMathF::MultiplyQuatVec(q, vec, ovec, DREAM3D_PASSIVE);
+// Passive Rotation
+  QuaternionMathF::MultiplyQuatVec(q, vec, ovec);
 
   pass = SIMPLibMath::closeEnough(ovec[0], 0.0f, 1.0E-4f);
   DREAM3D_REQUIRE_EQUAL(pass, true);
@@ -263,7 +264,10 @@ void TestQuat_t()
   pass = SIMPLibMath::closeEnough(ovec[2], 1.0f, 1.0E-4f);
   DREAM3D_REQUIRE_EQUAL(pass, true)
 
-  QuaternionMathF::MultiplyQuatVec(q, vec, ovec, DREAM3D_ACTIVE);
+
+// Active Rotation
+  QuaternionMathF::Conjugate(q);
+  QuaternionMathF::MultiplyQuatVec(q, vec, ovec);
 
   pass = SIMPLibMath::closeEnough(ovec[0], 0.0f, 1.0E-4f);
   DREAM3D_REQUIRE_EQUAL(pass, true);
@@ -283,7 +287,8 @@ void TestQuat_t()
   vec[0] = 0.0;
   vec[1] = 1.0;
   vec[2] = 0.0;
-  QuaternionMathF::MultiplyQuatVec(q, vec, ovec, DREAM3D_PASSIVE);
+  // Passive Rotation
+  QuaternionMathF::MultiplyQuatVec(q, vec, ovec);
 
   pass = SIMPLibMath::closeEnough(ovec[0], 0.0f, 1.0E-4f);
   DREAM3D_REQUIRE_EQUAL(pass, true);
@@ -294,7 +299,10 @@ void TestQuat_t()
   pass = SIMPLibMath::closeEnough(ovec[2], -1.0f, 1.0E-4f);
   DREAM3D_REQUIRE_EQUAL(pass, true)
 
-  QuaternionMathF::MultiplyQuatVec(q, vec, ovec, DREAM3D_ACTIVE);
+
+// active Rotation
+  QuaternionMathF::Conjugate(q);
+  QuaternionMathF::MultiplyQuatVec(q, vec, ovec);
 
   pass = SIMPLibMath::closeEnough(ovec[0], 0.0f, 1.0E-4f);
   DREAM3D_REQUIRE_EQUAL(pass, true);

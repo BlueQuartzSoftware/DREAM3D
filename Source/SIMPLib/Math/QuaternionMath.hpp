@@ -421,10 +421,10 @@ class QuaternionMath
      * @param q Input Quaternion
      * @param v Input Vector
      * @param out Output Vector
-     * @param rotationType  The type of rotation to perform. ACTIVE = -1.0. PASSIVE = 1.0. DREAM.3D uses
+     * DREAM.3D uses
      * PASSIVE rotations by default.
      */
-    static void MultiplyQuatVec(const Quaternion q, T* v, T* out, T rotationType)
+    static void MultiplyQuatVec(const Quaternion q, T* v, T* out)
     {
       T qx2 = q.x * q.x;
       T qy2 = q.y * q.y;
@@ -435,9 +435,9 @@ class QuaternionMath
       T qyz = q.y * q.z;
       T qzx = q.z * q.x;
 
-      T qxw = rotationType * q.x * q.w;
-      T qyw = rotationType * q.y * q.w;
-      T qzw = rotationType * q.z * q.w;
+      T qxw = q.x * q.w;
+      T qyw = q.y * q.w;
+      T qzw = q.z * q.w;
 
       out[0] = v[0] * (qx2 - qy2 - qz2 + qw2) + 2 * ( v[1] * (qxy + qzw) + v[2] * (qzx - qyw) );
       out[1] = v[1] * (qy2 - qx2 - qz2 + qw2) + 2 * ( v[2] * (qyz + qxw) + v[0] * (qxy - qzw) );

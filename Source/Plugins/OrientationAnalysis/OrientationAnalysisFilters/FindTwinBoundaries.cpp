@@ -153,7 +153,7 @@ class CalculateTwinBoundaryImpl
               // calculate crystal direction parallel to normal
               QuaternionMathF::Multiply(misq, sym_q, s1_misq);
 
-              if (m_FindCoherence) { QuaternionMathF::MultiplyQuatVec(sym_q, xstl_norm, s_xstl_norm, Rotations::Constants::epsijk); }
+              if (m_FindCoherence) { QuaternionMathF::MultiplyQuatVec(sym_q, xstl_norm, s_xstl_norm); }
 
               for (int32_t k = 0; k < nsym; k++)
               {
