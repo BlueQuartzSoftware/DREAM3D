@@ -22,12 +22,12 @@ The DREAM.3D project utilizes the [fork and pull](https://help.github.com/articl
 
 ## Submitting Contributions ##
 
-+ Sign the Contributor License Agreement
++ Sign the [Contributor License Agreement](http://dream3d.bluequartz.net/?page_id=448)
 + Submit a pull requests from your remote branch to the DREAM.3D project
 	+ If your pull request contains several commits, please squash them into a single commit
 + Update the open issue with a link to the submitted pull request
 + Pull requests are reviewed bi-weekly by at least two core DREAM.3D developers.  The DREAM.3D development team will respond to the pull request with any questions or comments as required by the content of the pull request.  If no action is required, the pull request will be merged immediately.
-+ After giving any feedback, the DREAM.3D developers will allow two weeks for response from the contributor.  If no further action is taken by the contributor, the DREAM>3D development team may close the pull request as inactive.
++ After giving any feedback, the DREAM.3D developers will allow two weeks for response from the contributor.  If no further action is taken by the contributor, the DREAM.3D development team may close the pull request as inactive.
 
 
 ## Submission of Curated Plugins ##
