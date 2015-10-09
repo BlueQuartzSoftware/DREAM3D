@@ -192,7 +192,7 @@ if ("@DREAM3D_USE_QtWebEngine@" STREQUAL "ON")
   FILE(COPY "@QM_QT_INSTALL_PREFIX@/lib/QtWebEngineCore.framework/Helpers"
         DESTINATION "${CMAKE_INSTALL_PREFIX}/Frameworks/QtWebEngineCore.framework/")
   if(NOT EXISTS "${CMAKE_INSTALL_PREFIX}/Frameworks/QtWebEngineCore.framework/Helpers/QtWebEngineProcess.app/Contents/Frameworks")
-    execute_process( COMMAND ln -s "${CMAKE_INSTALL_PREFIX}/Frameworks" "${CMAKE_INSTALL_PREFIX}/Frameworks/QtWebEngineCore.framework/Helpers/QtWebEngineProcess.app/Contents/Frameworks"
-                                WORKING_DIRECTORY "${CMAKE_INSTALL_PREFIX}" )
+    execute_process( COMMAND ln -s "../../../../../../../Frameworks" "Frameworks"
+                                WORKING_DIRECTORY "${CMAKE_INSTALL_PREFIX}/Frameworks/QtWebEngineCore.framework/Helpers/QtWebEngineProcess.app/Contents" )
   endif()
 endif()
