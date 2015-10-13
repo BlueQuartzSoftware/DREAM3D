@@ -65,7 +65,7 @@ set(AllFilterParameterWidgetsHeaderFile ${${PLUGIN_NAME}_BINARY_DIR}/FilterParam
 set(RegisterKnownFilterParameterWidgetsFile ${${PLUGIN_NAME}_BINARY_DIR}/FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp)
 
 
-cmp_IDE_SOURCE_PROPERTIES( "${PLUGIN_NAME}/FilterParameterWidgets" "${${PLUGIN_NAME}_ParameterWidgets_HDRS}" "${${PLUGIN_NAME}_ParameterWidgets_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "${PLUGIN_NAME}/FilterParameterWidgets" "${${PLUGIN_NAME}_ParameterWidgets_MOC_HDRS}" "${${PLUGIN_NAME}_ParameterWidgets_SRCS}" "0")
 
 cmp_IDE_GENERATED_PROPERTIES("${PLUGIN_NAME}/FilterParameterWidgets/UI_Files" "${${PLUGIN_NAME}_ParameterWidgets_UIS}" "")
 
