@@ -63,9 +63,9 @@ set(AllFilterParameterWidgetsHeaderFile ${${PLUGIN_NAME}_BINARY_DIR}/FilterParam
 set(RegisterKnownFilterParameterWidgetsFile ${${PLUGIN_NAME}_BINARY_DIR}/FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp)
 
 
-cmp_IDE_SOURCE_PROPERTIES( "${PLUGIN_NAME}/FilterParameterWidgets" "${${PLUGIN_NAME}_ParameterWidgets_HDRS}" "${${PLUGIN_NAME}_ParameterWidgets_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "FilterParameterWidgets" "${${PLUGIN_NAME}_ParameterWidgets_MOC_HDRS}" "${${PLUGIN_NAME}_ParameterWidgets_SRCS}" "0")
 
-cmp_IDE_GENERATED_PROPERTIES("${PLUGIN_NAME}/FilterParameterWidgets/UI_Files" "${${PLUGIN_NAME}_ParameterWidgets_UIS}" "")
+cmp_IDE_GENERATED_PROPERTIES("FilterParameterWidgets/UI_Files" "${${PLUGIN_NAME}_ParameterWidgets_UIS}" "")
 
 # These generated moc files will be #include in the FilterWidget source file that
 # are generated so we need to tell the build system to NOT compile these files

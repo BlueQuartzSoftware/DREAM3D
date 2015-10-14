@@ -15,4 +15,4 @@ set (${PLUGIN_NAME}_FilterParameters_HDRS
     ${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameters/EbsdToH5EbsdFilterParameter.h
     ${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameters/ReadH5EbsdFilterParameter.h
 )
-cmp_IDE_SOURCE_PROPERTIES( "${PLUGIN_NAME}/FilterParameters" "${${PLUGIN_NAME}_FilterParameters_HDRS}" "${${PLUGIN_NAME}_FilterParameters_SRCS}" "${PROJECT_INSTALL_HEADERS}")
+cmp_IDE_SOURCE_PROPERTIES( "FilterParameters" "${${PLUGIN_NAME}_FilterParameters_HDRS}" "${${PLUGIN_NAME}_FilterParameters_SRCS}" "${PROJECT_INSTALL_HEADERS}")
