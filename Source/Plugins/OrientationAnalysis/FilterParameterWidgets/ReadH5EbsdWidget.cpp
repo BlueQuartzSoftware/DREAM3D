@@ -176,8 +176,13 @@ void ReadH5EbsdWidget::setupGui()
 
 
   m_InputFile->setText( m_Filter->getInputFile() );
+  // Set the initial range based on the z min & z max. This will get adjusted later
+  m_ZStartIndex->setRange(0, m_Filter->getZEndIndex());
   m_ZStartIndex->setValue( m_Filter->getZStartIndex() );
+  // Set the initial range based on the z min & z max. This will get adjusted later  
+  m_ZEndIndex->setRange(0, m_Filter->getZEndIndex());
   m_ZEndIndex->setValue( m_Filter->getZEndIndex() );
+  
   m_UseTransformations->setChecked( m_Filter->getUseTransformations() );
   m_RefFrameZDir->setText( Ebsd::StackingOrder::Utils::getStringForEnum( m_Filter->getRefFrameZDir() )  );
   updateFileInfoWidgets();
