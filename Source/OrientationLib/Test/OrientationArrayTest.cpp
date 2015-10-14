@@ -662,12 +662,14 @@ template<typename K>
 void Test_eu2_XXX()
 {
   typedef OrientationArray<K> OrientType;
+  typedef std::vector<K> VectorType;
+  typedef QVector<K> QVectorType;
   {
     K eu[3] = { static_cast<K>(0.3926990816987242L), static_cast<K>(0.0L), static_cast<K>(0.0L) };
     OrientationPrinters::Print_EU<K*>(eu);
     EU_2_XXX<OrientType, K>(eu);
-    EU_2_XXX<DoubleVectorType, K>(eu);
-    EU_2_XXX<DoubleQVectorType, K>(eu);
+    EU_2_XXX<VectorType, K>(eu);
+    EU_2_XXX<QVectorType, K>(eu);
   }
 }
 
