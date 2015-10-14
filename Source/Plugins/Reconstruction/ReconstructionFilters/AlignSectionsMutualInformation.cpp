@@ -63,12 +63,11 @@ AlignSectionsMutualInformation::AlignSectionsMutualInformation() :
   m_GoodVoxels(NULL),
   m_CrystalStructures(NULL)
 {
-  Seed = QDateTime::currentMSecsSinceEpoch();
+  m_Seed = QDateTime::currentMSecsSinceEpoch();
 
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
   featurecounts = NULL;
-  m_FeatureIds = NULL;
 
   // only setting up the child parameters because the parent constructor has already been called
   setupFilterParameters();
@@ -211,8 +210,9 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int64_t>& xshifts, 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-  Int32ArrayType::Pointer p = Int32ArrayType::CreateArray((totalPoints * 1), "_INTERNAL_USE_ONLY_MIFeatureIds");
-  m_FeatureIds = p->getPointer(0);
+  m_MIFeaturesPtr = Int32ArrayType::CreateArray((totalPoints * 1), "_INTERNAL_USE_ONLY_MIFeatureIds");
+  m_MIFeaturesPtr->initializeWithZeros();
+  int32_t* miFeatureIds = m_MIFeaturesPtr->getPointer(0);
 
   std::ofstream outFile;
   if (getWriteAlignmentShifts() == true)
@@ -262,7 +262,8 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int64_t>& xshifts, 
 
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
-    QString ss = QObject::tr("Aligning Sections || Determining Shifts || %1% Complete").arg(((float)iter / dims[2]) * 100);
+    float prog = ((float)iter / dims[2]) * 100;
+    QString ss = QObject::tr("Aligning Sections || Determining Shifts || %1% Complete").arg(QString::number(prog, 'f', 0));
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     mindisorientation = std::numeric_limits<float>::max();
     slice = (dims[2] - 1) - iter;
@@ -314,8 +315,8 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int64_t>& xshifts, 
                 {
                   refposition = ((slice + 1) * dims[0] * dims[1]) + (l * dims[0]) + n;
                   curposition = (slice * dims[0] * dims[1]) + ((l + j + oldyshift) * dims[0]) + (n + k + oldxshift);
-                  refgnum = m_FeatureIds[refposition];
-                  curgnum = m_FeatureIds[curposition];
+                  refgnum = miFeatureIds[refposition];
+                  curgnum = miFeatureIds[curposition];
                   if (curgnum >= 0 && refgnum >= 0)
                   {
                     mutualinfo12[curgnum][refgnum]++;
@@ -447,7 +448,9 @@ void AlignSectionsMutualInformation::form_features_sections()
 
   m_FeatureCounts->resize(dims[2]);
   featurecounts = m_FeatureCounts->getPointer(0);
-
+  
+  int32_t* miFeatureIds = m_MIFeaturesPtr->getPointer(0);
+  
   std::vector<DimType> voxelslist(initialVoxelsListSize, -1);
   DimType neighpoints[4] = { 0, 0, 0, 0 };
   neighpoints[0] = -dims[0];
@@ -459,7 +462,8 @@ void AlignSectionsMutualInformation::form_features_sections()
 
   for (DimType slice = 0; slice < dims[2]; slice++)
   {
-    QString ss = QObject::tr("Aligning Sections || Identifying Features on Sections || %1% Complete").arg(((float)slice / dims[2]) * 100);
+    float prog = ((float)slice / dims[2]) * 100;
+    QString ss = QObject::tr("Aligning Sections || Identifying Features on Sections || %1% Complete").arg(QString::number(prog, 'f', 0));
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     featurecount = 1;
     noseeds = false;
@@ -478,7 +482,7 @@ void AlignSectionsMutualInformation::form_features_sections()
           if (x > dims[0] - 1) { x = x - dims[0]; }
           if (y > dims[1] - 1) { y = y - dims[1]; }
           point = (z * dims[0] * dims[1]) + (y * dims[0]) + x;
-          if ((m_UseGoodVoxels == false || m_GoodVoxels[point] == true) && m_FeatureIds[point] == 0 && m_CellPhases[point] > 0)
+          if ((m_UseGoodVoxels == false || m_GoodVoxels[point] == true) && miFeatureIds[point] == 0 && m_CellPhases[point] > 0)
           {
             seed = point;
           }
@@ -490,7 +494,7 @@ void AlignSectionsMutualInformation::form_features_sections()
       if (seed >= 0)
       {
         size = 0;
-        m_FeatureIds[seed] = featurecount;
+        miFeatureIds[seed] = featurecount;
         voxelslist[size] = seed;
         size++;
         for (size_t j = 0; j < size; ++j)
@@ -508,7 +512,7 @@ void AlignSectionsMutualInformation::form_features_sections()
             if ((i == 3) && row == (dims[1] - 1)) { good = false; }
             if ((i == 1) && col == 0) { good = false; }
             if ((i == 2) && col == (dims[0] - 1)) { good = false; }
-            if (good == true && m_FeatureIds[neighbor] <= 0 && m_CellPhases[neighbor] > 0)
+            if (good == true && miFeatureIds[neighbor] <= 0 && m_CellPhases[neighbor] > 0)
             {
               w = std::numeric_limits<float>::max();
               QuaternionMathF::Copy(quats[neighbor], q2);
@@ -519,7 +523,7 @@ void AlignSectionsMutualInformation::form_features_sections()
               }
               if (w < m_MisorientationTolerance)
               {
-                m_FeatureIds[neighbor] = featurecount;
+                miFeatureIds[neighbor] = featurecount;
                 voxelslist[size] = neighbor;
                 size++;
                 if (std::vector<DimType>::size_type(size) >= voxelslist.size())
