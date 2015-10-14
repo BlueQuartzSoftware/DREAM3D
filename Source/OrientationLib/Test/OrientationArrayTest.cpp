@@ -662,13 +662,12 @@ template<typename K>
 void Test_eu2_XXX()
 {
   typedef OrientationArray<K> OrientType;
-  std::cout << "Test_eu2_XXX  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << std::endl;
   {
-    K eu[3] = {0.3926990816987242, 0.0, 0.0};
+    K eu[3] = { static_cast<K>(0.3926990816987242L), static_cast<K>(0.0L), static_cast<K>(0.0L) };
     OrientationPrinters::Print_EU<K*>(eu);
     EU_2_XXX<OrientType, K>(eu);
-    //EU_2_XXX<DoubleVectorType, float>(eu);
-    //EU_2_XXX<DoubleQVectorType, float>(eu);
+    EU_2_XXX<DoubleVectorType, K>(eu);
+    EU_2_XXX<DoubleQVectorType, K>(eu);
   }
 }
 
