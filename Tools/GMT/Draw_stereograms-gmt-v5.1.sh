@@ -523,7 +523,8 @@ while [  $COUNTER -le $1 ]; do
 #   grd2xyz Temp00.grd | blockmean $REGION -I2.5 | surface -G"${t}TempPDF.grd" -fg -T0 -I.5/.5 $REGION -H1 -f0x,1y
 
 #  for GMT5
-      gmt grd2xyz $REGION "${t}TempPDFnn.grd" | gmt blockmean $REGION -I15 | gmt surface -G"${t}TempPDF.grd" -fg -T0.8 -I.5 $REGION -h1
+      #gmt grd2xyz $REGION "${t}TempPDFnn.grd" | gmt blockmean $REGION -I15 | gmt surface -G"${t}TempPDF.grd" -fg -T0.8 -I.5 $REGION -h1
+      gmt grd2xyz $REGION "${t}TempPDFnn.grd" | gmt blockmean $REGION -I2.5 | gmt surface -G"${t}TempPDF.grd" -fg -T0.8 -I.5 $REGION -h1
 
 #    if [ $# -ge 8 ] && [ $8 = ortho ] ; then
 #       grd2xyz "${t}TempPDFnn.grd" | blockmedian -Rg -I5 | surface -G"${t}TempPDF.grd" -T0.9 -I.5/.5 -Rg -H1 -f0x,1y
