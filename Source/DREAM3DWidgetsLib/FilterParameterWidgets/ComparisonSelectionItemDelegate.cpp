@@ -98,6 +98,7 @@ QWidget* ComparisonSelectionItemDelegate::createEditor(QWidget* widgetParent, co
 {
   QLineEdit* featureValue = NULL;
   QDoubleValidator* featureValueValidator = NULL;
+  featureValueValidator->setLocale(QLocale::system());
   QComboBox* operatorCombo = NULL;
 
   ComparisonSelectionTableModel* tableModel = qobject_cast<ComparisonSelectionTableModel*>(parent());
