@@ -87,6 +87,7 @@ void DoubleWidget::setupGui()
 
   QDoubleValidator* xVal = new QDoubleValidator(value);
   value->setValidator(xVal);
+  xVal->setLocale(QLocale::system());
 
   if (getFilterParameter() != NULL)
   {
