@@ -25,14 +25,14 @@ fi
 
 export PATH=$PATH:$SDK_INSTALL/Qt5.4.2/5.4/clang_64/bin
 
-
+QWT_VERS="6.1.2"
 # Build the qwt libraries we need and set our Environment Variable.
-qwtArchiveName="qwt-6.1.2_src"
+qwtArchiveName="qwt-${QWT_VERS}_src"
 
 if [ ! -e "$SDK_INSTALL/${qwtArchiveName}.tar.gz" ];
 then
   echo "-------------------------------------------"
-  echo " You should have a Qwt 6.1.2 archive from DREAM3D."
+  echo " You should have a Qwt ${QWT_VERS}archive from DREAM3D."
   echo "-------------------------------------------"
   exit
 fi
@@ -49,5 +49,7 @@ cd ${qwtArchiveName}
 $SDK_INSTALL/Qt5.4.2/5.4/clang_64/bin/qmake qwt.pro
 make -j${PARALLEL_BUILD}
 make install
-export qwt_INSTALL=$SDK_INSTALL/qwt-1.8.15
 
+echo "#--------------------------------------------------------------------------------------------------" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "# Qwt ${QWT_VERS} Library" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "set(QWT_INSTALL \"\${DREAM3D_SDK_ROOT}/qwt-${QWT_VERS}\" CACHE PATH \"\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
