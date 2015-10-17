@@ -98,7 +98,7 @@ QWidget* ComparisonSelectionItemDelegate::createEditor(QWidget* widgetParent, co
 {
   QLineEdit* featureValue = NULL;
   QDoubleValidator* featureValueValidator = NULL;
-  featureValueValidator->setLocale(QLocale::system());
+ 
   QComboBox* operatorCombo = NULL;
 
   ComparisonSelectionTableModel* tableModel = qobject_cast<ComparisonSelectionTableModel*>(parent());
@@ -134,6 +134,7 @@ QWidget* ComparisonSelectionItemDelegate::createEditor(QWidget* widgetParent, co
       featureValue->setFrame(false);
       featureValueValidator = new QDoubleValidator(featureValue);
       featureValueValidator->setRange(-1.0f * std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), 6);
+      featureValueValidator->setLocale(QLocale::system());
       featureValue->setValidator(featureValueValidator);
       QVariant var = index.model()->data(index);
       featureValue->setText(QString::number(var.toDouble(&ok), 'g', 6));
