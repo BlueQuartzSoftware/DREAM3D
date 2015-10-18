@@ -317,9 +317,11 @@ void VisualizeGBCDGMT::execute()
   float mis_euler1[3] = { 0.0f, 0.0f, 0.0f };
 
   float misAngle = m_MisorientationRotation.angle * SIMPLib::Constants::k_PiOver180;
+  float normAxis[3] = { m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l };
+  MatrixMath::Normalize3x1(normAxis);
   // convert axis angle to matrix representation of misorientation
-  FOrientArrayType om(9);
-  FOrientTransformsType::ax2om(FOrientArrayType(m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l, misAngle), om);
+  FOrientArrayType om(9, 0.0f);
+  FOrientTransformsType::ax2om(FOrientArrayType(normAxis[0], normAxis[1], normAxis[2], misAngle), om);
   om.toGMatrix(dg);
 
   // take inverse of misorientation variable to use for switching symmetry
