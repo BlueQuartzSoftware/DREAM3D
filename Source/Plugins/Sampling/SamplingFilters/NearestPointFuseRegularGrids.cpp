@@ -135,6 +135,28 @@ void NearestPointFuseRegularGrids::dataCheck()
     IDataArray::Pointer data = p->createNewArray(refAttrMat->getNumTuples(), p->getComponentDimensions(), p->getName());
     refAttrMat->addAttributeArray(p->getName(), data);
   }
+
+  // Get the list of all attribute matrices in the sampling data container and add them to the reference data container if they are feature or ensemble type
+  DataContainer::Pointer mR = getDataContainerArray()->getDataContainer(getReferenceCellAttributeMatrixPath().getDataContainerName());
+  DataContainer::Pointer mS = getDataContainerArray()->getDataContainer(getSamplingCellAttributeMatrixPath().getDataContainerName());
+  QList<QString> m_AttrMatList = mS->getAttributeMatrixNames();
+  uint32_t tempAttrMatType = 0;
+
+  // Loop through all the attribute matrices in the sampling data container
+  // We are only copying feature/ensemble attribute matrices here with a deep copy.
+  for (QList<QString>::Iterator it = m_AttrMatList.begin(); it != m_AttrMatList.end(); ++it)
+  {
+	  AttributeMatrix::Pointer tmpAttrMat = mS->getPrereqAttributeMatrix<AbstractFilter>(this, *it, -301);
+	  if (getErrorCondition() >= 0)
+	  {
+		  tempAttrMatType = tmpAttrMat->getType();
+		  if (tempAttrMatType > DREAM3D::AttributeMatrixType::Cell)
+		  {
+			  AttributeMatrix::Pointer attrMat = tmpAttrMat->deepCopy();
+			  mR->addAttributeMatrix(*it, attrMat);
+		  }
+	  }
+  }
 }
 
 // -----------------------------------------------------------------------------
