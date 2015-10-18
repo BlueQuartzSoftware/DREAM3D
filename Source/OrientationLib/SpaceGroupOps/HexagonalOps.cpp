@@ -343,7 +343,7 @@ FOrientArrayType HexagonalOps::getMDFFZRod(FOrientArrayType rod)
     }
   }
 
-  ax.fromAxisAngle(FZn1, FZn2, FZn3, FZw);
+  ax.fromAxisAngle(FZn1, FZn2, FZn3, w);
   OrientationTransforms<FOrientArrayType, float>::ax2ro(ax, rod);
   return rod;
 }
