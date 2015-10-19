@@ -175,6 +175,11 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
     {
       buf = buf.simplified();
     }
+    QString delimiter = getDelimiter();
+    if(delimiter.compare("\t") == 0)
+    {
+      setDelimiter(" ");
+    }
     tokens = buf.split( *(getDelimiter().toLatin1().data()));
 
     FOrientArrayType euler(3);
