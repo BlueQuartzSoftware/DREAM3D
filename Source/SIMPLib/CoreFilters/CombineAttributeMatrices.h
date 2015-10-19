@@ -34,36 +34,43 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _LinkFeatureMapToElementArray_H_
-#define _LinkFeatureMapToElementArray_H_
+#ifndef _CombineAttributeMatrices_H_
+#define _CombineAttributeMatrices_H_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
- * @brief The LinkFeatureMapToElementArray class. See [Filter documentation](@ref linkfeaturemaptoelementarray) for details.
+ * @brief The CombineAttributeMatrices class. See [Filter documentation](@ref CombineAttributeMatrices) for details.
  */
-class SIMPLib_EXPORT LinkFeatureMapToElementArray : public AbstractFilter
+class SIMPLib_EXPORT CombineAttributeMatrices : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    SIMPL_SHARED_POINTERS(LinkFeatureMapToElementArray)
-    SIMPL_STATIC_NEW_MACRO(LinkFeatureMapToElementArray)
-    SIMPL_TYPE_MACRO_SUPER(LinkFeatureMapToElementArray, AbstractFilter)
+    SIMPL_SHARED_POINTERS(CombineAttributeMatrices)
+    SIMPL_STATIC_NEW_MACRO(CombineAttributeMatrices)
+    SIMPL_TYPE_MACRO_SUPER(CombineAttributeMatrices, AbstractFilter)
 
-    virtual ~LinkFeatureMapToElementArray();
+    virtual ~CombineAttributeMatrices();
 
-    SIMPL_FILTER_PARAMETER(QString, CellFeatureAttributeMatrixName)
-    Q_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
+	SIMPL_FILTER_PARAMETER(DataArrayPath, FirstAttributeMatrixPath)
+	Q_PROPERTY(DataArrayPath FirstAttributeMatrixPath READ getFirstAttributeMatrixPath WRITE setFirstAttributeMatrixPath)
+	SIMPL_FILTER_PARAMETER(DataArrayPath, SecondAttributeMatrixPath)
+	Q_PROPERTY(DataArrayPath SecondAttributeMatrixPath READ getSecondAttributeMatrixPath WRITE setSecondAttributeMatrixPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
-    Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
+	SIMPL_FILTER_PARAMETER(DataArrayPath, FirstIndexArrayPath)
+	Q_PROPERTY(DataArrayPath FirstIndexArrayPath READ getFirstIndexArrayPath WRITE setFirstIndexArrayPath)
+	SIMPL_FILTER_PARAMETER(DataArrayPath, SecondIndexArrayPath)
+	Q_PROPERTY(DataArrayPath SecondIndexArrayPath READ getSecondIndexArrayPath WRITE setSecondIndexArrayPath)
 
-    SIMPL_FILTER_PARAMETER(QString, ActiveArrayName)
-    Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
+	SIMPL_FILTER_PARAMETER(QString, CombinedAttributeMatrixName)
+	Q_PROPERTY(QString CombinedAttributeMatrixName READ getCombinedAttributeMatrixName WRITE setCombinedAttributeMatrixName)
+	SIMPL_FILTER_PARAMETER(QString, NewIndexArrayName)
+	Q_PROPERTY(QString NewIndexArrayName READ getNewIndexArrayName WRITE setNewIndexArrayName)
 
-    /**
+	
+	/**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */
     virtual const QString getCompiledLibraryName();
@@ -137,7 +144,7 @@ class SIMPLib_EXPORT LinkFeatureMapToElementArray : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    LinkFeatureMapToElementArray();
+    CombineAttributeMatrices();
 
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -150,12 +157,12 @@ class SIMPLib_EXPORT LinkFeatureMapToElementArray : public AbstractFilter
     void updateFeatureInstancePointers();
 
   private:
-    DEFINE_DATAARRAY_VARIABLE(int32_t, SelectedCellData)
+	DEFINE_DATAARRAY_VARIABLE(int32_t, FirstIndex)
+	DEFINE_DATAARRAY_VARIABLE(int32_t, SecondIndex)
+	DEFINE_DATAARRAY_VARIABLE(int32_t, NewIndex)
 
-    DEFINE_DATAARRAY_VARIABLE(bool, Active)
-
-    LinkFeatureMapToElementArray(const LinkFeatureMapToElementArray&); // Copy Constructor Not Implemented
-    void operator=(const LinkFeatureMapToElementArray&); // Operator '=' Not Implemented
+    CombineAttributeMatrices(const CombineAttributeMatrices&); // Copy Constructor Not Implemented
+    void operator=(const CombineAttributeMatrices&); // Operator '=' Not Implemented
 };
 
-#endif /* _LinkFeatureMapToElementArray_H_ */
+#endif /* _CombineAttributeMatrices_H_ */

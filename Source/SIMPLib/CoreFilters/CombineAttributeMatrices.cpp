@@ -34,31 +34,37 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#include "LinkFeatureMapToElementArray.h"
+#include "CombineAttributeMatrices.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/TemplateHelpers.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
+#include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 // Include the MOC generated file for this class
-#include "moc_LinkFeatureMapToElementArray.cpp"
+#include "moc_CombineAttributeMatrices.cpp"
 
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-LinkFeatureMapToElementArray::LinkFeatureMapToElementArray() :
+CombineAttributeMatrices::CombineAttributeMatrices() :
   AbstractFilter(),
-  m_CellFeatureAttributeMatrixName(""),
-  m_SelectedCellArrayPath("", "", ""),
-  m_ActiveArrayName(""),
-  m_SelectedCellData(NULL),
-  m_Active(NULL)
+  m_FirstAttributeMatrixPath("", "", ""),
+  m_SecondAttributeMatrixPath("", "", ""),
+  m_CombinedAttributeMatrixName(""),
+  m_FirstIndexArrayPath("", "", ""),
+  m_SecondIndexArrayPath("", "", ""),
+  m_NewIndexArrayName(""),
+  m_FirstIndex(NULL),
+  m_SecondIndex(NULL),
+  m_NewIndex(NULL)
 {
   setupFilterParameters();
 }
@@ -66,24 +72,66 @@ LinkFeatureMapToElementArray::LinkFeatureMapToElementArray() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-LinkFeatureMapToElementArray::~LinkFeatureMapToElementArray()
+CombineAttributeMatrices::~CombineAttributeMatrices()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LinkFeatureMapToElementArray::setupFilterParameters()
+void CombineAttributeMatrices::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
+  parameters.push_back(SeparatorFilterParameter::New("Feature/Ensemble Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixObjectType::Element);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Element Attribute Array to Link", "SelectedCellArrayPath", getSelectedCellArrayPath(), FilterParameter::RequiredArray, req));
+	  AttributeMatrixSelectionFilterParameter::RequirementType req;
+	  QVector<uint32_t> dcGeomTypes;
+	  req.dcGeometryTypes = dcGeomTypes;
+	  QVector<uint32_t> amTypes;
+	  amTypes.push_back(DREAM3D::AttributeMatrixType::CellEnsemble);
+	  amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
+	  amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeEnsemble);
+	  amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeFeature);
+	  amTypes.push_back(DREAM3D::AttributeMatrixType::FaceEnsemble);
+	  amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
+	  amTypes.push_back(DREAM3D::AttributeMatrixType::VertexEnsemble);
+	  amTypes.push_back(DREAM3D::AttributeMatrixType::VertexFeature);
+	  dcGeomTypes.push_back(DREAM3D::Defaults::AnyGeometry);
+	  req.amTypes = amTypes;
+	  parameters.push_back(AttributeMatrixSelectionFilterParameter::New("First Feature/Ensemble Attribute Matrix", "FirstAttributeMatrixPath", getFirstAttributeMatrixPath(), FilterParameter::RequiredArray, req));
+	  parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Second Feature/Ensemble Attribute Matrix", "SecondAttributeMatrixPath", getSecondAttributeMatrixPath(), FilterParameter::RequiredArray, req));
   }
-  parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Feature Attribute Matrix", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Active", "ActiveArrayName", getActiveArrayName(), FilterParameter::CreatedArray));
+  {
+	DataArraySelectionFilterParameter::RequirementType req;
+	QVector<uint32_t> dcGeomTypes;
+	req.dcGeometryTypes = dcGeomTypes;
+	QVector<uint32_t> amTypes;
+	amTypes.push_back(DREAM3D::AttributeMatrixType::Cell);
+	amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
+	amTypes.push_back(DREAM3D::AttributeMatrixType::Edge);
+	amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeFeature);
+	amTypes.push_back(DREAM3D::AttributeMatrixType::Face);
+	amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
+	amTypes.push_back(DREAM3D::AttributeMatrixType::Vertex);
+	amTypes.push_back(DREAM3D::AttributeMatrixType::VertexFeature);
+	QVector<QString> daTypes;
+	daTypes.push_back(DREAM3D::TypeNames::Int32);
+	QVector<QVector<size_t> > compDims;
+	compDims.resize(1);
+	compDims[0].resize(1);
+	compDims[0][0] = 1;
+	req.dcGeometryTypes = dcGeomTypes;
+	req.amTypes = amTypes;
+	req.daTypes = daTypes;
+ 	req.componentDimensions = compDims;
+	parameters.push_back(DataArraySelectionFilterParameter::New("First Index Array", "FirstIndexArrayPath", getFirstIndexArrayPath(), FilterParameter::RequiredArray, req));
+	parameters.push_back(DataArraySelectionFilterParameter::New("Second Index Array", "SecondIndexArrayPath", getSecondIndexArrayPath(), FilterParameter::RequiredArray, req));
+  }
+
+  parameters.push_back(SeparatorFilterParameter::New("Cell/Feature Data", FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("New Index Array", "NewIndexArrayName", getNewIndexArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(SeparatorFilterParameter::New("Feature/Ensemble Data", FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Combined Attribute Matrix", "CombinedAttributeMatrixName", getCombinedAttributeMatrixName(), FilterParameter::CreatedArray));
 
   setFilterParameters(parameters);
 }
@@ -91,25 +139,29 @@ void LinkFeatureMapToElementArray::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LinkFeatureMapToElementArray::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void CombineAttributeMatrices::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setCellFeatureAttributeMatrixName(reader->readString("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName()));
-  setActiveArrayName(reader->readString("ActiveArrayName", getActiveArrayName()));
-  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
+  setFirstAttributeMatrixPath(reader->readDataArrayPath("FirstAttributeMatrixPath", getFirstAttributeMatrixPath()));
+  setSecondAttributeMatrixPath(reader->readDataArrayPath("SecondAttributeMatrixPath", getSecondAttributeMatrixPath()));
+  setCombinedAttributeMatrixName(reader->readString("CombinedAttributeMatrixPath", getCombinedAttributeMatrixName()));
+  setFirstIndexArrayPath(reader->readDataArrayPath("FirstIndexArrayPath", getFirstIndexArrayPath()));
+  setSecondIndexArrayPath(reader->readDataArrayPath("SecondIndexArrayPath", getSecondIndexArrayPath()));
+  setNewIndexArrayName(reader->readString("SecondIndexArrayName", getNewIndexArrayName()));
   reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int LinkFeatureMapToElementArray::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int CombineAttributeMatrices::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(ActiveArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FirstAttributeMatrixPath)
+  SIMPL_FILTER_WRITE_PARAMETER(SecondAttributeMatrixPath)
+  SIMPL_FILTER_WRITE_PARAMETER(FirstIndexArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(SecondIndexArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -117,45 +169,100 @@ int LinkFeatureMapToElementArray::writeFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LinkFeatureMapToElementArray::updateFeatureInstancePointers()
-{
-  setErrorCondition(0);
-
-  if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void LinkFeatureMapToElementArray::dataCheck()
+void CombineAttributeMatrices::dataCheck()
 {
   setErrorCondition(0);
   DataArrayPath tempPath;
 
-  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getSelectedCellArrayPath().getDataContainerName(), false);
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getFirstAttributeMatrixPath().getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m.get()) { return; }
 
-  QVector<size_t> tDims(1, 0);
-  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
+  if (getFirstAttributeMatrixPath().getDataContainerName().compare(getSecondAttributeMatrixPath().getDataContainerName()) != 0)
+  {
+	  QString ss = QObject::tr("The selected attribute matrices must be in the same data container and currently are not");
+	  setErrorCondition(-5557);
+	  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+
+  if (getFirstAttributeMatrixPath().getAttributeMatrixName().compare(getSecondAttributeMatrixPath().getAttributeMatrixName()) == 0)
+  {
+	  QString ss = QObject::tr("The selected attribute matrices must be different and currently are the same");
+	  setErrorCondition(-5558);
+	  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+
+  AttributeMatrix::Pointer firstAttrMat = m->getPrereqAttributeMatrix(this, getFirstAttributeMatrixPath().getAttributeMatrixName(), -301);
+  AttributeMatrix::Pointer secondAttrMat = m->getPrereqAttributeMatrix(this, getSecondAttributeMatrixPath().getAttributeMatrixName(), -301);
+  if (getErrorCondition() < 0) { return; }
+
+  if (firstAttrMat->getType() != secondAttrMat->getType())
+  {
+	  QString ss = QObject::tr("The selected attribute matrices must be of the same type (ie Feature) and currently are not");
+	  setErrorCondition(-5559);
+	  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+
+  size_t totalTuples = firstAttrMat->getNumTuples() + secondAttrMat->getNumTuples();
+  QVector<size_t> tDims(1, totalTuples);
+  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCombinedAttributeMatrixName(), tDims, firstAttrMat->getType());
+  if (getErrorCondition() < 0) { return; }
+  AttributeMatrix::Pointer combinedAttrMat = m->getAttributeMatrix(getCombinedAttributeMatrixName());
 
   QVector<size_t> cDims(1, 1);
-  m_SelectedCellDataPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSelectedCellArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SelectedCellDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_SelectedCellData = m_SelectedCellDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_FirstIndexPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFirstIndexArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if (NULL != m_FirstIndexPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  {
+	  m_FirstIndex = m_FirstIndexPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if (getErrorCondition() < 0) { return; }
 
+  m_SecondIndexPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSecondIndexArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if (NULL != m_SecondIndexPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  {
+	  m_SecondIndex = m_SecondIndexPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(getErrorCondition() < 0) { return; }
 
-  tempPath.update(getSelectedCellArrayPath().getDataContainerName(), getCellFeatureAttributeMatrixName(), getActiveArrayName() );
-  m_ActivePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_Active = m_ActivePtr.lock()->getPointer(0); }    /* Now assign the raw pointer to data from the DataArray<T> object */
+  // Create arrays on the reference grid to hold data present on the sampling grid
+  QList<QString> fArrayNames = firstAttrMat->getAttributeArrayNames();
+  for (QList<QString>::iterator iter = fArrayNames.begin(); iter != fArrayNames.end(); ++iter)
+  {
+    tempPath.update(getFirstAttributeMatrixPath().getDataContainerName(), getCombinedAttributeMatrixName(), *iter);
+    IDataArray::Pointer tmpDataArray = firstAttrMat->getPrereqIDataArray<IDataArray, AbstractFilter>(this, *iter, -90001);
+    if (getErrorCondition() >= 0)
+    {
+      QVector<size_t> cDims = tmpDataArray->getComponentDimensions();
+      TemplateHelpers::CreateNonPrereqArrayFromArrayType()(this, tempPath, cDims, tmpDataArray);
+    }
+  }
+  QList<QString> sArrayNames = secondAttrMat->getAttributeArrayNames();
+  for (QList<QString>::iterator iter = sArrayNames.begin(); iter != sArrayNames.end(); ++iter)
+  {
+    tempPath.update(getSecondAttributeMatrixPath().getDataContainerName(), getCombinedAttributeMatrixName(), *iter);
+    IDataArray::Pointer tmpDataArray = secondAttrMat->getPrereqIDataArray<IDataArray, AbstractFilter>(this, *iter, -90001);
+    if (getErrorCondition() >= 0)
+    {
+      if (fArrayNames.contains(*iter) == false)
+      {
+        QVector<size_t> cDims = tmpDataArray->getComponentDimensions();
+        TemplateHelpers::CreateNonPrereqArrayFromArrayType()(this, tempPath, cDims, tmpDataArray);
+      }
+    }
+  }
+
+  tempPath.update(getFirstIndexArrayPath().getDataContainerName(), getFirstIndexArrayPath().getAttributeMatrixName(), getNewIndexArrayName());
+  m_NewIndexPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if (NULL != m_NewIndexPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  {
+	  m_NewIndex = m_NewIndexPtr.lock()->getPointer(0);
+  }    /* Now assign the raw pointer to data from the DataArray<T> object */
+  if (getErrorCondition() < 0) { return; }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LinkFeatureMapToElementArray::preflight()
+void CombineAttributeMatrices::preflight()
 {
   setInPreflight(true);
   emit preflightAboutToExecute();
@@ -165,38 +272,67 @@ void LinkFeatureMapToElementArray::preflight()
   setInPreflight(false);
 }
 
+template<typename T>
+void copyData(IDataArray::Pointer fromData, IDataArray::Pointer toData, size_t location)
+{
+	typename DataArray<T>::Pointer fData = boost::dynamic_pointer_cast<DataArray<T> >(fromData);
+	typename DataArray<T>::Pointer tData = boost::dynamic_pointer_cast<DataArray<T> >(toData);
+
+	T* src = fData->getPointer(0);
+	T* dest = tData->getPointer(location);
+	size_t bytes = sizeof(T) * fromData->getNumberOfTuples() * fromData->getNumberOfComponents();
+	::memcpy(dest, src, bytes);
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LinkFeatureMapToElementArray::execute()
+void CombineAttributeMatrices::execute()
 {
   setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getSelectedCellArrayPath().getDataContainerName());
-  size_t totalPoints = m_SelectedCellDataPtr.lock()->getNumberOfTuples();
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFirstAttributeMatrixPath().getDataContainerName());
+  AttributeMatrix::Pointer firstAttrMat = m->getAttributeMatrix(getFirstAttributeMatrixPath().getAttributeMatrixName());
+  AttributeMatrix::Pointer secondAttrMat = m->getAttributeMatrix(getSecondAttributeMatrixPath().getAttributeMatrixName());
+  AttributeMatrix::Pointer combinedAttrMat = m->getAttributeMatrix(getCombinedAttributeMatrixName());
+  size_t firstAttrMatNumTuples = firstAttrMat->getNumTuples();
+  size_t SecondAttrMatNumTuples = secondAttrMat->getNumTuples();
 
-  int32_t maxIndex = 0;
-  std::vector<bool> active;
-  for (size_t i = 0; i < totalPoints; i++)
+  size_t totalTuples1 = m_SecondIndexPtr.lock()->getNumberOfTuples();
+  size_t totalTuples2 = m_SecondIndexPtr.lock()->getNumberOfTuples();
+  for (size_t i = 0; i < totalTuples1; i++)
   {
-    int32_t index = m_SelectedCellData[i];
-    if ((index + 1) > maxIndex)
+    if (m_FirstIndex > 0) { m_NewIndex[i] = m_FirstIndex[i]; }
+  }
+  for (size_t i = 0; i < totalTuples2; i++)
+  {
+    if(m_SecondIndex[i] > 0 && m_NewIndex[i] == 0) m_NewIndex[i] = m_SecondIndex[i] + firstAttrMatNumTuples;
+    else if (m_SecondIndex[i] > 0 && m_NewIndex[i] != 0)
     {
-      active.resize(index + 1);
-      active[index] = true;
-      maxIndex = index + 1;
+      QString ss = QObject::tr("When copying the indices, the indices of the two attribute matrices overlapped.  The index of the first attribute matrix was kept.");
+      notifyWarningMessage(getHumanLabel(), ss, -111);
     }
   }
 
-  QVector<size_t> tDims(1, maxIndex);
-  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
-  updateFeatureInstancePointers();
-
-  for (int32_t i = 0; i < maxIndex; i++)
+  QList<QString> arrayNames = firstAttrMat->getAttributeArrayNames();
+  size_t location = 0;
+  for (QList<QString>::iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
   {
-    m_Active[i] = active[i];
+	  IDataArray::Pointer fromDataArray = firstAttrMat->getAttributeArray(*iter);
+	  IDataArray::Pointer toDataArray = combinedAttrMat->getAttributeArray(*iter);
+	  EXECUTE_FUNCTION_TEMPLATE(this, copyData, fromDataArray, fromDataArray, toDataArray, location);
+  }
+
+  arrayNames.clear();
+  arrayNames = secondAttrMat->getAttributeArrayNames();
+  location = firstAttrMatNumTuples;
+  for (QList<QString>::iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
+  {
+	  IDataArray::Pointer fromDataArray = secondAttrMat->getAttributeArray(*iter);
+	  IDataArray::Pointer toDataArray = combinedAttrMat->getAttributeArray(*iter);
+	  EXECUTE_FUNCTION_TEMPLATE(this, copyData, fromDataArray, fromDataArray, toDataArray, location);
   }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
@@ -205,9 +341,9 @@ void LinkFeatureMapToElementArray::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer LinkFeatureMapToElementArray::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer CombineAttributeMatrices::newFilterInstance(bool copyFilterParameters)
 {
-  LinkFeatureMapToElementArray::Pointer filter = LinkFeatureMapToElementArray::New();
+  CombineAttributeMatrices::Pointer filter = CombineAttributeMatrices::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -218,23 +354,23 @@ AbstractFilter::Pointer LinkFeatureMapToElementArray::newFilterInstance(bool cop
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LinkFeatureMapToElementArray::getCompiledLibraryName()
+const QString CombineAttributeMatrices::getCompiledLibraryName()
 { return Core::CoreBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LinkFeatureMapToElementArray::getGroupName()
+const QString CombineAttributeMatrices::getGroupName()
 { return DREAM3D::FilterGroups::CoreFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LinkFeatureMapToElementArray::getSubGroupName()
+const QString CombineAttributeMatrices::getSubGroupName()
 { return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LinkFeatureMapToElementArray::getHumanLabel()
-{ return "Link Feature Attribute Matrix to Element Attribute Array"; }
+const QString CombineAttributeMatrices::getHumanLabel()
+{ return "Combine Feature/Ensemble Attribute Matrices"; }
