@@ -346,9 +346,11 @@ void CropImageGeometry::execute()
 {
   setErrorCondition(0);
 
-  /* Normally, filters call dataCheck during the execute to reuse code.  Unfortunately, this cannot happen for this filter, because calling dataCheck
-       would destroy an Attribute Matrix that we need during the execute.  Do not uncomment the code, and be careful when reusing code from either of
-        these functions.  Make sure you understand how this works before you reuse any code. */
+  /* Normally, filters call dataCheck during the execute to reuse code.  Unfortunately,
+   * this cannot happen for this filter, because calling dataCheck would destroy
+   * an Attribute Matrix that we need during the execute.  Do not uncomment the code,
+   * and be careful when reusing code from either of these functions.  Make sure
+   * you understand how this works before you reuse any code. */
   //dataCheck();
   //if(getErrorCondition() < 0) { return; }
 

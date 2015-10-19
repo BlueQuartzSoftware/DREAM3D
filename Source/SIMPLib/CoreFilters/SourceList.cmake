@@ -42,7 +42,6 @@ START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}" "Core Fi
 # List your public filters here
 
 set(_PublicFilters
-  AppendZSlice
   ConditionalSetValue
   ConvertData
   CopyAttributeArray

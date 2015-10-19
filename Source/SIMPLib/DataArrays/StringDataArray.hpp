@@ -346,6 +346,39 @@ class StringDataArray : public IDataArray
       m_Array[newPos] = s;
       return 0;
     }
+  
+    /**
+     * @brief copyData This method copies all data from the <b>sourceArray</b> into
+     * the current array starting at the target destination tuple offset value.
+     *
+     * For example if the DataArray has 10 tuples and the destTupleOffset = 5 then
+     * then source data will be copied into the destination array starting at
+     * destination tuple 5. In psuedo code it would be the following:
+     * @code
+     *  destArray[5] = sourceArray[0];
+     *  destArray[6] = sourceArray[1];
+     *  .....
+     * @endcode
+     * @param destTupleOffset
+     * @param sourceArray
+     * @return
+     */
+    bool copyData(size_t destTupleOffset, IDataArray::Pointer sourceArray)
+    {
+
+      if(destTupleOffset >= m_Array.size()) { return false; }
+      if(!sourceArray->isAllocated()) { return false; }
+      if(sourceArray->getNumberOfComponents() != getNumberOfComponents()) { return false; }
+
+      Self* source = dynamic_cast<Self*>(sourceArray.get());
+      size_t sourceNTuples = source->getNumberOfTuples();
+      
+      for(size_t i = 0; i < sourceNTuples; i++)
+      {
+        m_Array[destTupleOffset + i] = source->getValue(i);
+      }
+      return true;
+    }
 
     /**
      * @brief reorderCopy
