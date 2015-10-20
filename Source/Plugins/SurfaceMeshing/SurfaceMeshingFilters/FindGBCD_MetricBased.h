@@ -11,6 +11,11 @@
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
+const int NUM_RESOL_CHOICES = 3;
+const int DEFAULT_RESOL_CHOICE = 0;
+const float RESOL_CHOICES[NUM_RESOL_CHOICES][2] = { { 3.0f, 7.0f }, { 5.0f, 5.0f }, { 5.0f, 8.0f } }; // { for misorient., for planes } 
+const double BALL_VOLS[NUM_RESOL_CHOICES] = { 0.0000641, 0.000139, 0.00038019 };
+
 /**
  * @brief The FindGBCD_MetricBased class. See [Filter documentation](@ref findgbcd_metricbased) for details.
  */
@@ -24,11 +29,6 @@ class FindGBCD_MetricBased : public SurfaceMeshFilter
     SIMPL_TYPE_MACRO_SUPER(FindGBCD_MetricBased, AbstractFilter)
 
     virtual ~FindGBCD_MetricBased();
-
-	
-//	SIMPL_FILTER_PARAMETER(QString, FaceEnsembleAttributeMatrixName)
-	//Q_PROPERTY(QString FaceEnsembleAttributeMatrixName READ getFaceEnsembleAttributeMatrixName WRITE setFaceEnsembleAttributeMatrixName)
-	
 
     SIMPL_FILTER_PARAMETER(int, PhaseOfInterest)
     Q_PROPERTY(int PhaseOfInterest READ getPhaseOfInterest WRITE setPhaseOfInterest)
@@ -56,8 +56,6 @@ class FindGBCD_MetricBased : public SurfaceMeshFilter
 
 
 
-
-
 	SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
 	Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
@@ -81,8 +79,7 @@ class FindGBCD_MetricBased : public SurfaceMeshFilter
 	
 	SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFeatureFaceNumTrianglesArrayPath)
 	Q_PROPERTY(DataArrayPath SurfaceMeshFeatureFaceNumTrianglesArrayPath READ getSurfaceMeshFeatureFaceNumTrianglesArrayPath WRITE setSurfaceMeshFeatureFaceNumTrianglesArrayPath)
-
-
+	
 
 
     /**
@@ -135,29 +132,7 @@ class FindGBCD_MetricBased : public SurfaceMeshFilter
     */
     virtual void preflight();
 
-  //signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer 
-     */
-    //void updateFilterParameters(AbstractFilter* filter);
-
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-    //void parametersChanged();
-
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-    //void preflightAboutToExecute();
-
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-    //void preflightExecuted();
-
+  
   protected:
     FindGBCD_MetricBased();
 
@@ -175,11 +150,7 @@ class FindGBCD_MetricBased : public SurfaceMeshFilter
 	  DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
 	  DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceId)
 	  DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceNumTriangles)
-
-
-	  QString resolutionChoiceString(double misorRes, double planeRes);
-
-	 
+	  	  	 
 
     FindGBCD_MetricBased(const FindGBCD_MetricBased&); // Copy Constructor Not Implemented
     void operator=(const FindGBCD_MetricBased&); // Operator '=' Not Implemented

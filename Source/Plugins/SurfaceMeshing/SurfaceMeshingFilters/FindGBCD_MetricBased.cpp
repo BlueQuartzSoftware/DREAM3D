@@ -33,7 +33,6 @@
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 #include <cmath>
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
-#include <cstdlib> 
 
 
 
@@ -43,11 +42,8 @@
 // -----------------------------------------------------------------------------
 FindGBCD_MetricBased::FindGBCD_MetricBased() :
   SurfaceMeshFilter(),
- // m_FaceEnsembleAttributeMatrixName(DREAM3D::Defaults::FaceEnsembleAttributeMatrixName),
-
   m_PhaseOfInterest(1),
-  //m_MisorientationRotation(),
-  m_ChosenLimitDists(1),
+  m_ChosenLimitDists(DEFAULT_RESOL_CHOICE),
   m_NumSamplPts(4000),
   m_AddMorePtsNearEquator(true),
   m_DistOutputFile(""), 
@@ -72,10 +68,10 @@ FindGBCD_MetricBased::FindGBCD_MetricBased() :
   m_SurfaceMeshFaceAreas(NULL),
   m_SurfaceMeshFeatureFaceNumTriangles(NULL)
 {
-	m_MisorientationRotation.angle = 38.21f;
+	m_MisorientationRotation.angle = 38.94f;
 	m_MisorientationRotation.h = 1.0f;
 	m_MisorientationRotation.k = 1.0f;
-	m_MisorientationRotation.l = 1.0f;
+	m_MisorientationRotation.l = 0.0f;
 
   setupFilterParameters();
 }
@@ -102,10 +98,17 @@ void FindGBCD_MetricBased::setupFilterParameters()
     
     QVector<QString> choices;          
 
-	choices.push_back(resolutionChoiceString(5, 5));
-	choices.push_back(resolutionChoiceString(3, 7));
-	choices.push_back(resolutionChoiceString(5, 8));
-	
+	for (int choiceIdx = 0; choiceIdx < NUM_RESOL_CHOICES; choiceIdx++)
+	{
+		QString misorResStr;
+		QString planeResStr;
+		QString degSymbol = QChar(0x00B0);
+
+		misorResStr.setNum(RESOL_CHOICES[choiceIdx][0], 'f', 0);
+		planeResStr.setNum(RESOL_CHOICES[choiceIdx][1], 'f', 0);
+
+		choices.push_back(misorResStr + degSymbol + " for Misorientations; " + planeResStr + degSymbol + " for Plane Inclinations");
+	}
 
     parameter->setChoices(choices);
     parameter->setCategory(FilterParameter::Parameter);
@@ -249,9 +252,9 @@ void FindGBCD_MetricBased::dataCheck()
 	  notifyErrorMessage(getHumanLabel(), ss, -1);
 	  setErrorCondition(-1);
   }
-  if (getNumSamplPts() > 10000) { // TODO set some reasonable value
+  if (getNumSamplPts() > 5000) { // set some reasonable value, but allow user to use more if he/she knows what he/she does
 
-	  QString ss = QObject::tr("Most likely, you do not want to use that many sampling points");
+	  QString ss = QObject::tr("Most likely, you do not need to use that many sampling points");
 	  notifyWarningMessage(getHumanLabel(), ss, -1);
   }
 
@@ -293,7 +296,6 @@ void FindGBCD_MetricBased::dataCheck()
   }
 
 
-
   // Crystal Structures (DREAM file)
   QVector<size_t> cDims(1, 1);
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -314,10 +316,6 @@ void FindGBCD_MetricBased::dataCheck()
   }
 
 
-  //?????
-  //getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureEulerAnglesArrayPath().getDataContainerName());
-
-
   // Euler Angels (DREAM file)
   cDims[0] = 3;
   m_FeatureEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getFeatureEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -334,24 +332,6 @@ void FindGBCD_MetricBased::dataCheck()
   {
 	  m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-
-
-
-
-  // from dataCheckSurfaceMesh()
-
-/*  DataArrayPath tempPath;
-
-  getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
-
-  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
-  if (getErrorCondition() < 0 || NULL == sm.get()) { return; }
-
-  QVector<size_t> tDims(1, m_CrystalStructuresPtr.lock()->getNumberOfTuples());
-  sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceEnsembleAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::FaceEnsemble);
-  */
-
-
 
 
   // Face Labels (DREAM file)
@@ -426,33 +406,21 @@ void FindGBCD_MetricBased::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  float oneDegInRad = 0.01745329;
 
-  float m_misorRes = 3.0;
-  float m_planeRes = 7.0;
+  // -------------------- set resolutions and 'ball volumes' based on user's selection --------------------
+  float m_misorResol = RESOL_CHOICES[getChosenLimitDists()][0];
+  float m_planeResol = RESOL_CHOICES[getChosenLimitDists()][1];
+  double ballVolume = BALL_VOLS[getChosenLimitDists()];
 
-  double ballVolume = 0.0000641;
+  m_misorResol *= SIMPLib::Constants::k_PiOver180;
+  m_planeResol *= SIMPLib::Constants::k_PiOver180;
 
-  switch (getChosenLimitDists()) //consider enmus
-  {
-  case 0: m_misorRes = 5.0; m_planeRes = 5.0; break;
-  case 1: m_misorRes = 3.0; m_planeRes = 7.0; break;
-  case 2: m_misorRes = 5.0; m_planeRes = 8.0; break;
-  default: m_misorRes = 3.0; m_planeRes = 7.0; 
-  }
-
-  m_misorRes *= oneDegInRad;
-  m_planeRes *= oneDegInRad;
-
-  float m_PlaneResSq = m_planeRes * m_planeRes;
-
-
-
+  float m_PlaneResolSq = m_planeResol * m_planeResol;
+  
   QVector<SpaceGroupOps::Pointer> m_OrientationOps;
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
-
-
   double totalFaceArea = 0.0; // for the Phase of Interest
+
   // We want to work with the raw pointers for speed so get those pointers.
   uint32_t* m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
   float* m_Eulers = m_FeatureEulerAnglesPtr.lock()->getPointer(0);
@@ -570,7 +538,7 @@ void FindGBCD_MetricBased::execute()
   // and - if needed - from lower hemisphere from the neighborhood of equator
   
   float howFarBelowEquator = 0.0f;
-  if (getAddMorePtsNearEquator() == true) howFarBelowEquator = -1.5001f * m_planeRes; 
+  if (getAddMorePtsNearEquator() == true) howFarBelowEquator = -1.5001f * m_planeResol; 
 	
   for (int ptIdx_WholeSph = 0; ptIdx_WholeSph < numSamplPts_WholeSph; ptIdx_WholeSph++)
   {
@@ -716,7 +684,7 @@ void FindGBCD_MetricBased::execute()
 
 				  float diffAngle = acosf((diffFromFixed[0][0] + diffFromFixed[1][1] + diffFromFixed[2][2] - 1.0f) * 0.5f);
 
-				  if (diffAngle < m_misorRes) 
+				  if (diffAngle < m_misorResol) 
 				  {
 					  MatrixMath::Multiply3x3with3x1(dgT, normal_grain1, normal_grain2); // minus sign before normal_grain2 will be added later
 
@@ -785,7 +753,7 @@ void FindGBCD_MetricBased::execute()
 
 			  float distSq = 0.5f * (theta1 * theta1 + theta2 * theta2);
 
-			  if (distSq < m_PlaneResSq)
+			  if (distSq < m_PlaneResolSq)
 			  {
 				  distribValues[ptIdx] += accTrisAreas.at(triRepresIdx);
 			  }
@@ -809,8 +777,8 @@ void FindGBCD_MetricBased::execute()
 	  float xStereoProj = rStereoProj * cos(azimuth);
 	  float yStereoProj = rStereoProj * sin(azimuth);
 
-	  float zenithDeg = 57.295779f * zenith;
-	  float azimuthDeg = 57.295779f * azimuth;
+	  float zenithDeg = SIMPLib::Constants::k_180OverPi * zenith;
+	  float azimuthDeg = SIMPLib::Constants::k_180OverPi * azimuth;
 
 	  fprintf(fDist, "%.4f %.4f %.2f %.2f %.4f\n", xStereoProj, yStereoProj, zenithDeg, azimuthDeg, distribValues[ptIdx]);
 
@@ -870,7 +838,7 @@ const QString FindGBCD_MetricBased::getGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString FindGBCD_MetricBased::getSubGroupName()
-{ return "SurfaceMeshing"; }
+{ return "Surface Meshing"; }
 
 // -----------------------------------------------------------------------------
 //
@@ -879,15 +847,4 @@ const QString FindGBCD_MetricBased::getHumanLabel()
 { return "Find GBCD (Metric-based Approach)"; }
 
 
-QString FindGBCD_MetricBased::resolutionChoiceString(double misorRes, double planeRes)
-{
-	QString misorResStr;
-	QString planeResStr;
-	QString degSymbol = QChar(0x00B0);
-
-	misorResStr.setNum(misorRes, 'f', 0);
-	planeResStr.setNum(planeRes, 'f', 0);
-
-	return misorResStr + degSymbol + " for Misorientations; " + planeResStr + degSymbol + " for Plane Inclinations";
-}
 
