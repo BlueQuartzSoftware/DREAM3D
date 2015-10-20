@@ -318,8 +318,8 @@ class StringDataArray : public IDataArray
 
 
       // Create a new Array to copy into
-      QVector<QString> newArray;
-      QVector<size_t>::size_type start = 0;
+      std::vector<QString> newArray;
+      std::vector<size_t>::size_type start = 0;
       for(QVector<QString>::size_type i = 0; i < m_Array.size(); ++i)
       {
         bool keep = true;
@@ -332,6 +332,7 @@ class StringDataArray : public IDataArray
           newArray.push_back(m_Array[i]);
         }
       }
+      m_Array = newArray;
       return err;
     }
 
@@ -343,8 +344,10 @@ class StringDataArray : public IDataArray
      */
     virtual int copyTuple(size_t currentPos, size_t newPos)
     {
-      QString s = m_Array[currentPos];
-      m_Array[newPos] = s;
+      if(currentPos >= m_Array.size()) { return -1; }
+      if(newPos >= m_Array.size()) { return -1; }
+     // QString s = m_Array[currentPos];
+      m_Array[newPos] = m_Array[currentPos];
       return 0;
     }
 
