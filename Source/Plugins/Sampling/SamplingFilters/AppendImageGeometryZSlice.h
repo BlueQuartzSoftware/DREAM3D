@@ -44,7 +44,7 @@
 /**
  * @brief The AppendImageGeometryZSlice class. See [Filter documentation](@ref appendzslice) for details.
  */
-class SIMPLib_EXPORT AppendImageGeometryZSlice : public AbstractFilter
+class AppendImageGeometryZSlice : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
@@ -59,7 +59,7 @@ class SIMPLib_EXPORT AppendImageGeometryZSlice : public AbstractFilter
 
     SIMPL_FILTER_PARAMETER(DataArrayPath, DestinationAttributeMatrix)
     Q_PROPERTY(DataArrayPath DestinationAttributeMatrix READ getDestinationAttributeMatrix WRITE setDestinationAttributeMatrix)
-    
+
     SIMPL_FILTER_PARAMETER(bool, CheckResolution)
     Q_PROPERTY(bool CheckResolution READ getCheckResolution WRITE setCheckResolution)
 
