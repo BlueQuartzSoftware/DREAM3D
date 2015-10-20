@@ -23,6 +23,7 @@ set(_PublicFilters
   TriangleCentroidFilter
   TriangleDihedralAngleFilter
   TriangleNormalFilter
+  FindGBCD_MetricBased
 )
 
 if(EIGEN_FOUND)
