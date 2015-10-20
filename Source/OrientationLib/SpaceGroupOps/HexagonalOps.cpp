@@ -49,7 +49,6 @@
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Utilities/ColorUtilities.h"
 
-#include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 #include "OrientationLib/Utilities/ModifiedLambertProjection.h"

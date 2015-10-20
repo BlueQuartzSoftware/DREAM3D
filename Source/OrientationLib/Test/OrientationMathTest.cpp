@@ -36,12 +36,12 @@
 
 
 
-
+#include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Math/QuaternionMath.hpp"
+#include "SIMPLib/Utilities/UnitTestSupport.hpp"
+
 #include "OrientationLib/OrientationMath/OrientationMath.h"
 
-
-#include "SIMPLib/Utilities/UnitTestSupport.hpp"
 #include "OrientationLibTestFileLocations.h"
 
 
@@ -156,13 +156,29 @@ void TestFMod()
 }
 
 // -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestEulertoMatActive()
+{
+
+  float ea1 = SIMPLib::Constants::k_Pi;
+  float ea2 = 0.0f;
+  float ea3 = SIMPLib::Constants::k_Pi;
+  float g[3][3];
+  OrientationMath::EulertoMatActive(ea1, ea2, ea3, g);
+
+
+}
+
+
+// -----------------------------------------------------------------------------
 //  Use test framework
 // -----------------------------------------------------------------------------
 int main(int argc, char** argv)
 {
   int err = EXIT_SUCCESS;
   DREAM3D_REGISTER_TEST( TestFMod() )
-
+DREAM3D_REGISTER_TEST(TestEulertoMatActive())
   PRINT_TEST_SUMMARY();
   return err;
 }

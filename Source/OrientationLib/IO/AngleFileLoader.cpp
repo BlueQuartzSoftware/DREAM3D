@@ -46,7 +46,6 @@
 
 #include "SIMPLib/Math/QuaternionMath.hpp"
 
-#include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 

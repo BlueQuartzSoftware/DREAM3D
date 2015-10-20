@@ -52,7 +52,6 @@
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"
 #include "SIMPLib/Utilities/SIMPLibRandom.h"
 
-#include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"

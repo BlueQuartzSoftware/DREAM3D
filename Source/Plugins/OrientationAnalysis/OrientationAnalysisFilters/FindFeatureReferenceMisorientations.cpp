@@ -45,7 +45,6 @@
 #include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
-#include "OrientationLib/OrientationMath/OrientationMath.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 

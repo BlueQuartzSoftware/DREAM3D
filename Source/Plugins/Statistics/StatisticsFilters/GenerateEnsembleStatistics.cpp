@@ -55,7 +55,6 @@
 #include "SIMPLib/StatsData/BoundaryStatsData.h"
 #include "SIMPLib/StatsData/MatrixStatsData.h"
 
-#include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 

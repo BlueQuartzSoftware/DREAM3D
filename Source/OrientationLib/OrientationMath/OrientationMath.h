@@ -60,8 +60,9 @@ class OrientationLib_EXPORT OrientationMath
 
 
     /**
-     * @brief EulertoMatActive This function converts an Euler Angle triplet (Bunge) into a <b>ACTIVE</b> Orientation Matrix. This
-     * is taking a Crystal Coordinate system and transforming it to the Sample Coordinate System (C->S). Note that to convert
+     * @brief EulertoMatActive This function converts an Euler Angle triplet (Bunge)
+     * into a <b>ACTIVE</b> Orientation Matrix. This is taking a Crystal Coordinate
+     * system and transforming it to the Sample Coordinate System (C->S). Note that to convert
      * from an ACTIVE to PASSIVE or PASSIVE to ACTIVE is just the transpose of the Orientation Maxtrix
      * @param ea1
      * @param ea2
