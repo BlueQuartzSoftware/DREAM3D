@@ -108,7 +108,7 @@
 * CONSEQUENCES IF THESE ARE CHANGED. EVERY PIECE OF CODE THAT RELIES ON THESE
 * FUNCTIONS WILL BREAK. IN ADDITION, THE QUATERNION ARITHMETIC WILL NO LONGER
 * BE CONSISTENT WITH ROTATION ARITHMETIC.
-* 
+*
 * YOU HAVE BEEN WARNED.
 *
 * Adam  Morawiec's book uses Passive rotations.
@@ -456,7 +456,7 @@ class OrientationTransforms
       }
 
       K eps = std::numeric_limits<K>::epsilon();
-      K r = sqrt(qu[x] * qu[x] + qu[y] * qu[y] + qu[z] * qu[z]);// Only multiply the vector part of the Quaternion
+      K r = sqrt(qu[x] * qu[x] + qu[y] * qu[y] + qu[z] * qu[z] + qu[w]*qu[w]);
       if (fabs(r - 1.0) > eps)
       {
         res.msg = "rotations:qu_check: quaternion must have unit norm";
