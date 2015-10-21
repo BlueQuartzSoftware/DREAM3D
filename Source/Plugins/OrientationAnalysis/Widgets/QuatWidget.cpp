@@ -35,6 +35,8 @@
 
 #include "QuatWidget.h"
 
+#include "SIMPLib/Math/QuaternionMath.hpp"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -93,6 +95,14 @@ void QuatWidget::updateData(OrientationUtilityCalculator* calculator)
 void QuatWidget::on_q1_textEdited(const QString &text)
 {
   QVector<double> values = getValues();
+
+  QuatD quat = QuaternionMathD::New(values[0], values[1], values[2], values[3]);
+  QuaternionMathD::UnitQuaternion(quat);
+  values[0] = quat.x;
+  values[1] = quat.y;
+  values[2] = quat.z;
+  values[3] = quat.w;
+
   OrientationTransforms<QVector<double>, double>::ResultType result = OrientationTransforms<QVector<double>, double>::qu_check(values);
   int errorCode = result.result;
   QString errorMsg = QString::fromStdString(result.msg);
@@ -181,10 +191,12 @@ void QuatWidget::on_q4_textEdited(const QString &text)
 QVector<double> QuatWidget::getValues()
 {
   QVector<double> values;
+
   values.push_back(q1->text().toDouble());
   values.push_back(q2->text().toDouble());
   values.push_back(q3->text().toDouble());
   values.push_back(q4->text().toDouble());
+
   return values;
 }
 

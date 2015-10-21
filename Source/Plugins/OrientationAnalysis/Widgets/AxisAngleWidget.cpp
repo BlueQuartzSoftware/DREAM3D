@@ -66,8 +66,17 @@ void AxisAngleWidget::setupGui()
   aa3->setValidator(new QDoubleValidator(aa3));
   aa4->setValidator(new QDoubleValidator(aa4));
 
+  connect(aa1, SIGNAL(textEdited(const QString&)),
+          this, SLOT(valuesUpdated(const QString&)));
+  connect(aa2, SIGNAL(textEdited(const QString&)),
+          this, SLOT(valuesUpdated(const QString&)));
+  connect(aa3, SIGNAL(textEdited(const QString&)),
+          this, SLOT(valuesUpdated(const QString&)));
+  connect(aa4, SIGNAL(textEdited(const QString&)),
+          this, SLOT(valuesUpdated(const QString&)));
+
   // This runs the "preflight" once for the entire utility
-  on_aa1_textEdited("");
+  valuesUpdated("");
 }
 
 // -----------------------------------------------------------------------------
@@ -85,9 +94,9 @@ void AxisAngleWidget::updateData(OrientationUtilityCalculator* calculator)
 
   if (m_AngleMeasurement == Degrees)
   {
-    double radVal = aaValues[aaValues.size() - 1];
+    double radVal = aaValues[3];
     double degVal = radVal * SIMPLib::Constants::k_RadToDeg;
-    aaValues.push_back(degVal);
+    aaValues[3] = degVal;
   }
 
   if (aaValues.size() == 4)
@@ -102,105 +111,15 @@ void AxisAngleWidget::updateData(OrientationUtilityCalculator* calculator)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AxisAngleWidget::on_aa1_textEdited(const QString &text)
+void AxisAngleWidget::valuesUpdated(const QString &text)
 {
   QVector<double> values = getValues();
 
   if (m_AngleMeasurement == Degrees)
   {
-    double degVal = values[values.size() - 1];
+    double degVal = values[3];
     double radVal = degVal * SIMPLib::Constants::k_DegToRad;
-    values.push_back(radVal);
-  }
-
-  OrientationTransforms<QVector<double>, double>::ResultType result = OrientationTransforms<QVector<double>, double>::ax_check(values);
-  int errorCode = result.result;
-  QString errorMsg = QString::fromStdString(result.msg);
-
-  emit clearErrorTable();
-
-  if (errorCode >= 0)
-  {
-    emit valuesChanged(values, OrientationConverter<double>::AxisAngle);
-  }
-  else
-  {
-    emit invalidValues(errorCode, errorMsg);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AxisAngleWidget::on_aa2_textEdited(const QString &text)
-{
-  QVector<double> values = getValues();
-
-  if (m_AngleMeasurement == Degrees)
-  {
-    double degVal = values[values.size() - 1];
-    double radVal = degVal * SIMPLib::Constants::k_DegToRad;
-    values.push_back(radVal);
-  }
-
-  OrientationTransforms<QVector<double>, double>::ResultType result = OrientationTransforms<QVector<double>, double>::ax_check(values);
-  int errorCode = result.result;
-  QString errorMsg = QString::fromStdString(result.msg);
-
-  emit clearErrorTable();
-
-  if (errorCode >= 0)
-  {
-    emit valuesChanged(values, OrientationConverter<double>::AxisAngle);
-  }
-  else
-  {
-    emit invalidValues(errorCode, errorMsg);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AxisAngleWidget::on_aa3_textEdited(const QString &text)
-{
-  QVector<double> values = getValues();
-
-  if (m_AngleMeasurement == Degrees)
-  {
-    double degVal = values[values.size() - 1];
-    double radVal = degVal * SIMPLib::Constants::k_DegToRad;
-    values.push_back(radVal);
-  }
-
-  OrientationTransforms<QVector<double>, double>::ResultType result = OrientationTransforms<QVector<double>, double>::ax_check(values);
-  int errorCode = result.result;
-  QString errorMsg = QString::fromStdString(result.msg);
-
-  emit clearErrorTable();
-
-  if (errorCode >= 0)
-  {
-    emit valuesChanged(values, OrientationConverter<double>::AxisAngle);
-  }
-  else
-  {
-    emit invalidValues(errorCode, errorMsg);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AxisAngleWidget::on_aa4_textEdited(const QString &text)
-{
-  QVector<double> values = getValues();
-
-  if (m_AngleMeasurement == Degrees)
-  {
-    double degVal = values[values.size() - 1];
-    double radVal = degVal * SIMPLib::Constants::k_DegToRad;
-    values.push_back(radVal);
+    values[3] = radVal;
   }
 
   OrientationTransforms<QVector<double>, double>::ResultType result = OrientationTransforms<QVector<double>, double>::ax_check(values);

@@ -32,7 +32,6 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
 #include "OrientationUtilityCalculator.h"
 
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
@@ -88,7 +87,7 @@ OrientationConverter<double>::OrientationType OrientationUtilityCalculator::getI
 QVector<double> OrientationUtilityCalculator::getValues(OrientationConverter<double>::OrientationType outputType)
 {
   typedef OrientationConverter<double> OCType;
-  QVector<typename OCType::Pointer> converters(7);
+  QVector<OCType::Pointer> converters(7);
 
   converters[0] = EulerConverter<double>::New();
   converters[1] = OrientationMatrixConverter<double>::New();
@@ -98,7 +97,7 @@ QVector<double> OrientationUtilityCalculator::getValues(OrientationConverter<dou
   converters[5] = HomochoricConverter<double>::New();
   converters[6] = CubochoricConverter<double>::New();
 
-  QVector<typename OCType::OrientationType> ocTypes = OCType::GetOrientationTypes();
+  QVector<OCType::OrientationType> ocTypes = OCType::GetOrientationTypes();
 
   QVector<size_t> cDims(1, m_InputData.size());
   DataArray<double>::Pointer inputDataArray = DataArray<double>::CreateArray(1, cDims, "Input Data");
