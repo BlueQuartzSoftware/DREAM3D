@@ -64,7 +64,7 @@ void AxisAngleWidget::setupGui()
   aa1->setValidator(new QDoubleValidator(aa1));
   aa2->setValidator(new QDoubleValidator(aa2));
   aa3->setValidator(new QDoubleValidator(aa3));
-  aa4->setValidator(new QDoubleValidator(aa4));
+  aa4->setValidator(new QRegExpValidator(QRegExp("([-+]?[0-9]*\\.?[0-9]+)|pi"), aa4));
 
   connect(aa1, SIGNAL(textEdited(const QString&)),
           this, SLOT(valuesUpdated(const QString&)));
@@ -86,6 +86,14 @@ void AxisAngleWidget::updateData(OrientationUtilityCalculator* calculator)
     // The input type is the same as this widget, so don't update
     return;
   }
+  else if (calculator->getHasErrors() == true)
+  {
+    aa1->setText("nan");
+    aa2->setText("nan");
+    aa3->setText("nan");
+    aa4->setText("nan");
+    return;
+  }
 
   QVector<double> aaValues = calculator->getValues(OrientationConverter<double>::AxisAngle);
 
@@ -96,13 +104,10 @@ void AxisAngleWidget::updateData(OrientationUtilityCalculator* calculator)
     aaValues[3] = degVal;
   }
 
-  if (aaValues.size() == 4)
-  {
-    aa1->setText(QString::number(aaValues[0]));
-    aa2->setText(QString::number(aaValues[1]));
-    aa3->setText(QString::number(aaValues[2]));
-    aa4->setText(QString::number(aaValues[3]));
-  }
+  aa1->setText(QString::number(aaValues[0]));
+  aa2->setText(QString::number(aaValues[1]));
+  aa3->setText(QString::number(aaValues[2]));
+  aa4->setText(QString::number(aaValues[3]));
 }
 
 // -----------------------------------------------------------------------------
@@ -127,10 +132,11 @@ void AxisAngleWidget::valuesUpdated(const QString &text)
 
   if (errorCode >= 0)
   {
-    emit valuesChanged(values, OrientationConverter<double>::AxisAngle);
+    emit valuesChanged(values, OrientationConverter<double>::AxisAngle, false);
   }
   else
   {
+    emit valuesChanged(QVector<double>(), OrientationConverter<double>::AxisAngle, true);
     emit invalidValues(errorCode, errorMsg);
   }
 }
@@ -161,10 +167,41 @@ void AxisAngleWidget::convertData(bool isDegrees)
 QVector<double> AxisAngleWidget::getValues()
 {
   QVector<double> values;
+
+  if (aa1->text() == "nan")
+  {
+    aa1->setText("0");
+  }
+  if (aa2->text() == "nan")
+  {
+    aa2->setText("0");
+  }
+  if (aa3->text() == "nan")
+  {
+    aa3->setText("0");
+  }
+
+  if (aa4->text() == "p" || aa4->text() == "pi")
+  {
+    if (m_AngleMeasurement == Degrees)
+    {
+      aa4->setText("180");
+    }
+    else
+    {
+      aa4->setText("3.14159265359");
+    }
+  }
+  else if (aa4->text() == "nan")
+  {
+    aa4->setText("0");
+  }
+
   values.push_back(aa1->text().toDouble());
   values.push_back(aa2->text().toDouble());
   values.push_back(aa3->text().toDouble());
   values.push_back(aa4->text().toDouble());
+
   return values;
 }
 

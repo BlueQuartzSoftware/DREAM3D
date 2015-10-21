@@ -52,7 +52,7 @@ class OrientationWidget : public QWidget
     virtual ~OrientationWidget();
 
   signals:
-    void valuesChanged(QVector<double> values, OrientationConverter<double>::OrientationType type);
+    void valuesChanged(QVector<double> values, OrientationConverter<double>::OrientationType type, bool hasErrors);
     void invalidValues(int errorCode, QString errorMsg);
     void clearErrorTable();
 

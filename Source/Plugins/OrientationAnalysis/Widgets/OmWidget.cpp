@@ -99,6 +99,19 @@ void OmWidget::updateData(OrientationUtilityCalculator* calculator)
     // The input type is the same as this widget, so don't update
     return;
   }
+  else if (calculator->getHasErrors() == true)
+  {
+    om1->setText("nan");
+    om2->setText("nan");
+    om3->setText("nan");
+    om4->setText("nan");
+    om5->setText("nan");
+    om6->setText("nan");
+    om7->setText("nan");
+    om8->setText("nan");
+    om9->setText("nan");
+    return;
+  }
 
   QVector<double> omValues = calculator->getValues(OrientationConverter<double>::OrientationMatrix);
 
@@ -130,10 +143,11 @@ void OmWidget::valuesUpdated(const QString &text)
 
   if (errorCode >= 0)
   {
-    emit valuesChanged(values, OrientationConverter<double>::OrientationMatrix);
+    emit valuesChanged(values, OrientationConverter<double>::OrientationMatrix, false);
   }
   else
   {
+    emit valuesChanged(QVector<double>(), OrientationConverter<double>::OrientationMatrix, true);
     emit invalidValues(errorCode, errorMsg);
   }
 }
@@ -144,6 +158,44 @@ void OmWidget::valuesUpdated(const QString &text)
 QVector<double> OmWidget::getValues()
 {
   QVector<double> values;
+
+  if (om1->text() == "nan")
+  {
+    om1->setText("0");
+  }
+  if (om2->text() == "nan")
+  {
+    om2->setText("0");
+  }
+  if (om3->text() == "nan")
+  {
+    om3->setText("0");
+  }
+  if (om4->text() == "nan")
+  {
+    om4->setText("0");
+  }
+  if (om5->text() == "nan")
+  {
+    om5->setText("0");
+  }
+  if (om6->text() == "nan")
+  {
+    om6->setText("0");
+  }
+  if (om7->text() == "nan")
+  {
+    om7->setText("0");
+  }
+  if (om8->text() == "nan")
+  {
+    om8->setText("0");
+  }
+  if (om9->text() == "nan")
+  {
+    om9->setText("0");
+  }
+
   values.push_back(om1->text().toDouble());
   values.push_back(om2->text().toDouble());
   values.push_back(om3->text().toDouble());
@@ -153,6 +205,7 @@ QVector<double> OmWidget::getValues()
   values.push_back(om7->text().toDouble());
   values.push_back(om8->text().toDouble());
   values.push_back(om9->text().toDouble());
+
   return values;
 }
 

@@ -50,7 +50,8 @@
 OrientationUtilityCalculator::OrientationUtilityCalculator(QWidget* parent) :
   QWidget(parent),
   m_InputData(QVector<double>()),
-  m_InputType(OrientationConverter<double>::UnknownOrientationType)
+  m_InputType(OrientationConverter<double>::UnknownOrientationType),
+  m_HasErrors(false)
 {
 
 }
@@ -66,10 +67,11 @@ OrientationUtilityCalculator::~OrientationUtilityCalculator()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OrientationUtilityCalculator::setDataAndInputType(QVector<double> values, OrientationConverter<double>::OrientationType inputType)
+void OrientationUtilityCalculator::setDataAndInputType(QVector<double> values, OrientationConverter<double>::OrientationType inputType, bool hasErrors)
 {
   m_InputData = values;
   m_InputType = inputType;
+  m_HasErrors = hasErrors;
   emit calculatorReady(this);
 }
 
@@ -79,6 +81,14 @@ void OrientationUtilityCalculator::setDataAndInputType(QVector<double> values, O
 OrientationConverter<double>::OrientationType OrientationUtilityCalculator::getInputType()
 {
   return m_InputType;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool OrientationUtilityCalculator::getHasErrors()
+{
+  return m_HasErrors;
 }
 
 // -----------------------------------------------------------------------------

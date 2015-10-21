@@ -51,10 +51,12 @@ class OrientationUtilityCalculator : public QWidget
 
     OrientationConverter<double>::OrientationType getInputType();
 
+    bool getHasErrors();
+
     QVector<double> getValues(OrientationConverter<double>::OrientationType outputType);
 
   protected slots:
-    void setDataAndInputType(QVector<double> values, OrientationConverter<double>::OrientationType inputType);
+    void setDataAndInputType(QVector<double> values, OrientationConverter<double>::OrientationType inputType, bool hasErrors);
 
   signals:
     void calculatorReady(OrientationUtilityCalculator* calculator);
@@ -62,6 +64,7 @@ class OrientationUtilityCalculator : public QWidget
   private:
     QVector<double>                                             m_InputData;
     OrientationConverter<double>::OrientationType               m_InputType;
+    bool                                                        m_HasErrors;
 
     OrientationUtilityCalculator(const OrientationUtilityCalculator&); // Copy Constructor Not Implemented
     void operator=(const OrientationUtilityCalculator&); // Operator '=' Not Implemented

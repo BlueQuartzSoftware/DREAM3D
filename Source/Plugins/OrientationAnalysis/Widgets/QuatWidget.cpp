@@ -86,6 +86,14 @@ void QuatWidget::updateData(OrientationUtilityCalculator* calculator)
     // The input type is the same as this widget, so don't update
     return;
   }
+  else if (calculator->getHasErrors() == true)
+  {
+    q1->setText("nan");
+    q2->setText("nan");
+    q3->setText("nan");
+    q4->setText("nan");
+    return;
+  }
 
   QVector<double> qValues = calculator->getValues(OrientationConverter<double>::Quaternion);
 
@@ -120,10 +128,11 @@ void QuatWidget::valuesUpdated(const QString &text)
 
   if (errorCode >= 0)
   {
-    emit valuesChanged(values, OrientationConverter<double>::Quaternion);
+    emit valuesChanged(values, OrientationConverter<double>::Quaternion, false);
   }
   else
   {
+    emit valuesChanged(QVector<double>(), OrientationConverter<double>::Quaternion, true);
     emit invalidValues(errorCode, errorMsg);
   }
 }
@@ -134,6 +143,23 @@ void QuatWidget::valuesUpdated(const QString &text)
 QVector<double> QuatWidget::getValues()
 {
   QVector<double> values;
+
+  if (q1->text() == "nan")
+  {
+    q1->setText("0");
+  }
+  if (q2->text() == "nan")
+  {
+    q2->setText("0");
+  }
+  if (q3->text() == "nan")
+  {
+    q3->setText("0");
+  }
+  if (q4->text() == "nan")
+  {
+    q4->setText("0");
+  }
 
   values.push_back(q1->text().toDouble());
   values.push_back(q2->text().toDouble());

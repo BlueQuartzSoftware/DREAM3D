@@ -84,6 +84,14 @@ void RodriguesWidget::updateData(OrientationUtilityCalculator* calculator)
     // The input type is the same as this widget, so don't update
     return;
   }
+  else if (calculator->getHasErrors() == true)
+  {
+    r1->setText("nan");
+    r2->setText("nan");
+    r3->setText("nan");
+    r4->setText("nan");
+    return;
+  }
 
   QVector<double> rValues = calculator->getValues(OrientationConverter<double>::Rodrigues);
 
@@ -110,10 +118,11 @@ void RodriguesWidget::valuesUpdated(const QString &text)
 
   if (errorCode >= 0)
   {
-    emit valuesChanged(values, OrientationConverter<double>::Rodrigues);
+    emit valuesChanged(values, OrientationConverter<double>::Rodrigues, false);
   }
   else
   {
+    emit valuesChanged(QVector<double>(), OrientationConverter<double>::Rodrigues, true);
     emit invalidValues(errorCode, errorMsg);
   }
 }
@@ -124,10 +133,29 @@ void RodriguesWidget::valuesUpdated(const QString &text)
 QVector<double> RodriguesWidget::getValues()
 {
   QVector<double> values;
+
+  if (r1->text() == "nan")
+  {
+    r1->setText("0");
+  }
+  if (r2->text() == "nan")
+  {
+    r2->setText("0");
+  }
+  if (r3->text() == "nan")
+  {
+    r3->setText("0");
+  }
+  if (r4->text() == "nan")
+  {
+    r4->setText("0");
+  }
+
   values.push_back(r1->text().toDouble());
   values.push_back(r2->text().toDouble());
   values.push_back(r3->text().toDouble());
   values.push_back(r4->text().toDouble());
+
   return values;
 }
 

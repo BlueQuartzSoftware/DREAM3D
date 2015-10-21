@@ -81,6 +81,13 @@ void HomochoricWidget::updateData(OrientationUtilityCalculator* calculator)
     // The input type is the same as this widget, so don't update
     return;
   }
+  else if (calculator->getHasErrors() == true)
+  {
+    h1->setText("nan");
+    h2->setText("nan");
+    h3->setText("nan");
+    return;
+  }
 
   QVector<double> hValues = calculator->getValues(OrientationConverter<double>::Homochoric);
 
@@ -106,10 +113,11 @@ void HomochoricWidget::valuesUpdated(const QString &text)
 
   if (errorCode >= 0)
   {
-    emit valuesChanged(values, OrientationConverter<double>::Homochoric);
+    emit valuesChanged(values, OrientationConverter<double>::Homochoric, false);
   }
   else
   {
+    emit valuesChanged(QVector<double>(), OrientationConverter<double>::Homochoric, true);
     emit invalidValues(errorCode, errorMsg);
   }
 }
@@ -120,9 +128,24 @@ void HomochoricWidget::valuesUpdated(const QString &text)
 QVector<double> HomochoricWidget::getValues()
 {
   QVector<double> values;
+
+  if (h1->text() == "nan")
+  {
+    h1->setText("0");
+  }
+  if (h2->text() == "nan")
+  {
+    h2->setText("0");
+  }
+  if (h3->text() == "nan")
+  {
+    h3->setText("0");
+  }
+
   values.push_back(h1->text().toDouble());
   values.push_back(h2->text().toDouble());
   values.push_back(h3->text().toDouble());
+
   return values;
 }
 

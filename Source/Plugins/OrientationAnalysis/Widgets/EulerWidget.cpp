@@ -61,9 +61,9 @@ EulerWidget::~EulerWidget()
 // -----------------------------------------------------------------------------
 void EulerWidget::setupGui()
 {
-  e1->setValidator(new QDoubleValidator(e1));
-  e2->setValidator(new QDoubleValidator(e2));
-  e3->setValidator(new QDoubleValidator(e3));
+  e1->setValidator(new QRegExpValidator(QRegExp("([-+]?[0-9]*\\.?[0-9]+)|pi"), e1));
+  e2->setValidator(new QRegExpValidator(QRegExp("([-+]?[0-9]*\\.?[0-9]+)|pi"), e2));
+  e3->setValidator(new QRegExpValidator(QRegExp("([-+]?[0-9]*\\.?[0-9]+)|pi"), e3));
 
   connect(e1, SIGNAL(textEdited(const QString&)),
     this, SLOT(valuesUpdated(const QString&)));
@@ -81,6 +81,13 @@ void EulerWidget::updateData(OrientationUtilityCalculator* calculator)
   if (calculator->getInputType() == OrientationConverter<double>::Euler)
   {
     // The input type is the same as this widget, so don't update
+    return;
+  }
+  else if (calculator->getHasErrors() == true)
+  {
+    e1->setText("nan");
+    e2->setText("nan");
+    e3->setText("nan");
     return;
   }
 
@@ -119,10 +126,11 @@ void EulerWidget::valuesUpdated(const QString &text)
 
   if (errorCode >= 0)
   {
-    emit valuesChanged(values, OrientationConverter<double>::Euler);
+    emit valuesChanged(values, OrientationConverter<double>::Euler, false);
   }
   else
   {
+    emit valuesChanged(QVector<double>(), OrientationConverter<double>::Euler, true);
     emit invalidValues(errorCode, errorMsg);
   }
 }
@@ -154,9 +162,59 @@ void EulerWidget::convertData(bool isDegrees)
 QVector<double> EulerWidget::getValues()
 {
   QVector<double> values;
+
+  if (e1->text() == "p" || e1->text() == "pi")
+  {
+    if (m_AngleMeasurement == Degrees)
+    {
+      e1->setText("180");
+    }
+    else
+    {
+      e1->setText("3.14159265359");
+    }
+  }
+  else if (e1->text() == "nan")
+  {
+    e1->setText("0");
+  }
+
+  if (e2->text() == "p" || e2->text() == "pi")
+  {
+    if (m_AngleMeasurement == Degrees)
+    {
+      e2->setText("180");
+    }
+    else
+    {
+      e2->setText("3.14159265359");
+    }
+  }
+  else if (e2->text() == "nan")
+  {
+    e2->setText("0");
+  }
+
+  if (e3->text() == "p" || e3->text() == "pi")
+  {
+    if (m_AngleMeasurement == Degrees)
+    {
+      e3->setText("180");
+    }
+    else
+    {
+      e3->setText("3.14159265359");
+    }
+  }
+  else if (e3->text() == "nan")
+  {
+    e3->setText("0");
+  }
+
   values.push_back(e1->text().toDouble());
   values.push_back(e2->text().toDouble());
   values.push_back(e3->text().toDouble());
+
   return values;
 }
 
