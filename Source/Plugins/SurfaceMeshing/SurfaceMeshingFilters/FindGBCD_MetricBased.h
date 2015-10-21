@@ -74,12 +74,8 @@ public:
   SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceAreasArrayPath)
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceAreasArrayPath READ getSurfaceMeshFaceAreasArrayPath WRITE setSurfaceMeshFaceAreasArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFeatureFaceIdArrayPath)
-  Q_PROPERTY(DataArrayPath SurfaceMeshFeatureFaceIdArrayPath READ getSurfaceMeshFeatureFaceIdArrayPath WRITE setSurfaceMeshFeatureFaceIdArrayPath)
-
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFeatureFaceNumTrianglesArrayPath)
-  Q_PROPERTY(DataArrayPath SurfaceMeshFeatureFaceNumTrianglesArrayPath READ getSurfaceMeshFeatureFaceNumTrianglesArrayPath WRITE setSurfaceMeshFeatureFaceNumTrianglesArrayPath)
-
+  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFeatureFaceLabelsArrayPath)
+  Q_PROPERTY(DataArrayPath SurfaceMeshFeatureFaceLabelsArrayPath READ getSurfaceMeshFeatureFaceLabelsArrayPath WRITE setSurfaceMeshFeatureFaceLabelsArrayPath)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -147,9 +143,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceAreas)
   DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
   DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceId)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceNumTriangles)
-
+  DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceLabels)
 
   FindGBCD_MetricBased(const FindGBCD_MetricBased&); // Copy Constructor Not Implemented
   void operator=(const FindGBCD_MetricBased&); // Operator '=' Not Implemented

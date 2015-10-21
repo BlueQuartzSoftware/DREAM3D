@@ -188,17 +188,15 @@ FindGBCD_MetricBased::FindGBCD_MetricBased() :
   m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::TriangleDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceNormalsArrayPath(DREAM3D::Defaults::TriangleDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceNormals),
   m_SurfaceMeshFaceAreasArrayPath(DREAM3D::Defaults::TriangleDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceAreas),
-  m_SurfaceMeshFeatureFaceIdArrayPath(DREAM3D::Defaults::TriangleDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFeatureFaceId),
-  m_SurfaceMeshFeatureFaceNumTrianglesArrayPath(DREAM3D::Defaults::TriangleDataContainerName, DREAM3D::Defaults::FaceFeatureAttributeMatrixName, "NumTriangles"),
+  m_SurfaceMeshFeatureFaceLabelsArrayPath(DREAM3D::Defaults::TriangleDataContainerName, DREAM3D::Defaults::FaceFeatureAttributeMatrixName, "FaceLabels"),
 
   m_CrystalStructures(NULL),
   m_FeatureEulerAngles(NULL),
   m_FeaturePhases(NULL),
   m_SurfaceMeshFaceLabels(NULL),
   m_SurfaceMeshFaceNormals(NULL),
-  m_SurfaceMeshFeatureFaceId(NULL),
-  m_SurfaceMeshFaceAreas(NULL),
-  m_SurfaceMeshFeatureFaceNumTriangles(NULL)
+  m_SurfaceMeshFeatureFaceLabels(NULL),
+  m_SurfaceMeshFaceAreas(NULL)
 {
 	m_MisorientationRotation.angle = 38.94f;
 	m_MisorientationRotation.h = 1.0f;
@@ -286,15 +284,12 @@ void FindGBCD_MetricBased::setupFilterParameters()
 	  DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Double, 1, DREAM3D::AttributeMatrixType::Face, DREAM3D::GeometryType::TriangleGeometry);
 	  parameters.push_back(DataArraySelectionFilterParameter::New("Face Areas", "SurfaceMeshFaceAreasArrayPath", getSurfaceMeshFaceAreasArrayPath(), FilterParameter::RequiredArray, req));
   }
-  {
-	  DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::Face, DREAM3D::GeometryType::TriangleGeometry);
-	  parameters.push_back(DataArraySelectionFilterParameter::New("Feature Face Ids", "SurfaceMeshFeatureFaceIdArrayPath", getSurfaceMeshFeatureFaceIdArrayPath(), FilterParameter::RequiredArray, req));
-  }
   parameters.push_back(SeparatorFilterParameter::New("Face Feature Data", FilterParameter::RequiredArray));
   {
-	  DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::Face, DREAM3D::GeometryType::TriangleGeometry);
-	  parameters.push_back(DataArraySelectionFilterParameter::New("Numbers of Triangles", "SurfaceMeshFeatureFaceNumTrianglesArrayPath", getSurfaceMeshFeatureFaceNumTrianglesArrayPath(), FilterParameter::RequiredArray, req));
+	  DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 2, DREAM3D::AttributeMatrixType::Face, DREAM3D::GeometryType::TriangleGeometry);
+	  parameters.push_back(DataArraySelectionFilterParameter::New("Feature Face Labels", "SurfaceMeshFeatureFaceLabelsArrayPath", getSurfaceMeshFeatureFaceLabelsArrayPath(), FilterParameter::RequiredArray, req));
   }
+ 
   setFilterParameters(parameters);
 }
 
@@ -318,9 +313,8 @@ void FindGBCD_MetricBased::readFilterParameters(AbstractFilterParametersReader* 
 	setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhases", getFeaturePhasesArrayPath()));
 	setSurfaceMeshFaceLabelsArrayPath(reader->readDataArrayPath("SurfaceMeshFaceLabels", getSurfaceMeshFaceLabelsArrayPath()));
 	setSurfaceMeshFaceNormalsArrayPath(reader->readDataArrayPath("SurfaceMeshFaceNormals", getSurfaceMeshFaceNormalsArrayPath()));
-	setSurfaceMeshFeatureFaceIdArrayPath(reader->readDataArrayPath("SurfaceMeshFeatureFaceId", getSurfaceMeshFeatureFaceIdArrayPath()));
+	setSurfaceMeshFeatureFaceLabelsArrayPath(reader->readDataArrayPath("SurfaceMeshFeatureFaceLabels", getSurfaceMeshFeatureFaceLabelsArrayPath()));
 	setSurfaceMeshFaceAreasArrayPath(reader->readDataArrayPath("SurfaceMeshFaceAreas", getSurfaceMeshFaceAreasArrayPath()));
-	setSurfaceMeshFeatureFaceNumTrianglesArrayPath(reader->readDataArrayPath("SurfaceMeshFeatureFaceNumTriangles", getSurfaceMeshFeatureFaceNumTrianglesArrayPath()));
 	reader->closeFilterGroup();
 }
 
@@ -344,9 +338,8 @@ int FindGBCD_MetricBased::writeFilterParameters(AbstractFilterParametersWriter* 
 	SIMPL_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
 	SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
 	SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceNormalsArrayPath)
-	SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFeatureFaceIdArrayPath)
+	SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFeatureFaceLabelsArrayPath)
 	SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceAreasArrayPath)
-	SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFeatureFaceNumTrianglesArrayPath)
 	writer->closeFilterGroup();
 	return ++index; // we want to return the next index that was just written to
 }
@@ -491,22 +484,14 @@ void FindGBCD_MetricBased::dataCheck()
 	} /* Now assign the raw pointer to data from the DataArray<T> object */
 
 
-	// Feature Face Ids (DREAM file)
-	cDims[0] = 1;
-	m_SurfaceMeshFeatureFaceIdPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFeatureFaceIdArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-	if (NULL != m_SurfaceMeshFeatureFaceIdPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+	// Feature Face Labels (DREAM file)
+	cDims[0] = 2;
+	m_SurfaceMeshFeatureFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFeatureFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+	if (NULL != m_SurfaceMeshFeatureFaceLabelsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
 	{
-		m_SurfaceMeshFeatureFaceId = m_SurfaceMeshFeatureFaceIdPtr.lock()->getPointer(0);
+		m_SurfaceMeshFeatureFaceLabels = m_SurfaceMeshFeatureFaceLabelsPtr.lock()->getPointer(0);
 	} /* Now assign the raw pointer to data from the DataArray<T> object */
 
-
-	// NumTriangles (DREAM file)
-	cDims[0] = 1;
-	m_SurfaceMeshFeatureFaceNumTrianglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFeatureFaceNumTrianglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-	if (NULL != m_SurfaceMeshFeatureFaceNumTrianglesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-	{
-		m_SurfaceMeshFeatureFaceNumTriangles = m_SurfaceMeshFeatureFaceNumTrianglesPtr.lock()->getPointer(0);
-	} /* Now assign the raw pointer to data from the DataArray<T> object */
 
 }
 
@@ -555,8 +540,7 @@ void FindGBCD_MetricBased::execute()
 	int32_t* m_FaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0);
 	double* m_FaceNormals = m_SurfaceMeshFaceNormalsPtr.lock()->getPointer(0);
 	double* m_FaceAreas = m_SurfaceMeshFaceAreasPtr.lock()->getPointer(0);
-	int32_t* m_FeatureFaceId = m_SurfaceMeshFeatureFaceIdPtr.lock()->getPointer(0);
-	int32_t* m_NumTriangles = m_SurfaceMeshFeatureFaceNumTrianglesPtr.lock()->getPointer(0);
+	int32_t* m_FeatureFaceLabels = m_SurfaceMeshFeatureFaceLabelsPtr.lock()->getPointer(0);
 
 
 
@@ -727,8 +711,6 @@ void FindGBCD_MetricBased::execute()
 	uint32_t cryst = m_CrystalStructures[m_PhaseOfInterest];
 	int32_t nsym = m_OrientationOps[cryst]->getNumSymOps();
 	int32_t numMeshTris = m_SurfaceMeshFaceAreasPtr.lock()->getNumberOfTuples();
-	int32_t numDistinctGBs = m_SurfaceMeshFeatureFaceNumTrianglesPtr.lock()->getNumberOfTuples();
-	int32_t numGoodTris = 0;
 
 	QVector<double> accTrisAreas(0);
 	QVector<float> normals_grain1_x(0);
@@ -756,7 +738,7 @@ void FindGBCD_MetricBased::execute()
 		if (m_FeaturePhases[feature1] != m_PhaseOfInterest || m_FeaturePhases[feature2] != m_PhaseOfInterest) { continue; }
 
 		totalFaceArea += m_FaceAreas[triIdx];
-		numGoodTris++;
+		
 
 		normal_lab[0] = m_FaceNormals[3 * triIdx];
 		normal_lab[1] = m_FaceNormals[3 * triIdx + 1];
@@ -844,6 +826,21 @@ void FindGBCD_MetricBased::execute()
 	}
 
 
+  // ------------------------  find the number of distinct boundaries --------------------------
+  int32_t numDistinctGBs = 0;
+  int32_t numFaceFeatures = m_SurfaceMeshFeatureFaceLabelsPtr.lock()->getNumberOfTuples();
+  
+  for (int featureFaceIdx = 0; featureFaceIdx < numFaceFeatures; featureFaceIdx++)
+  {
+    int32_t feature1 = m_FeatureFaceLabels[2 * featureFaceIdx];
+    int32_t feature2 = m_FeatureFaceLabels[2 * featureFaceIdx + 1];
+
+    if (feature1 < 1 || feature2 < 1) { continue; }
+    if (m_FeaturePhases[feature1] != m_FeaturePhases[feature2])  { continue; }
+    if (m_FeaturePhases[feature1] != m_PhaseOfInterest || m_FeaturePhases[feature2] != m_PhaseOfInterest) { continue; }
+
+    numDistinctGBs++;
+  }
 
 
 	// ----------------- determining distribution values at the sampling points (and their errors) -------------------
@@ -871,7 +868,6 @@ void FindGBCD_MetricBased::execute()
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 		if (doParallel == true)
 		{
-			fprintf(fDist, "# I'm using parallel for");
 			tbb::parallel_for(tbb::blocked_range<size_t>(i, i + pointsChunkSize),
 				ProbeDistrib(
 				&distribValues,
@@ -921,14 +917,13 @@ void FindGBCD_MetricBased::execute()
 	}
 
 
-
 	// ------------------------------------------- writing the output --------------------------------------------
 	for (int ptIdx = 0; ptIdx < samplPtsX.size(); ptIdx++) {
 
 		float zenith = acosf(samplPtsZ.at(ptIdx));
 		float azimuth = atan2f(samplPtsY.at(ptIdx), samplPtsX.at(ptIdx));
 
-		float rStereoProj = tanf(0.5 * zenith);
+		float rStereoProj = tanf(0.5f * zenith);
 		float xStereoProj = rStereoProj * cos(azimuth);
 		float yStereoProj = rStereoProj * sin(azimuth);
 
@@ -943,9 +938,9 @@ void FindGBCD_MetricBased::execute()
 		}
 		else
 		{
-			float saneErr = 100.0;
-			if (distribValues[ptIdx] > 1e-12) {
-				saneErr = fmin(100.0, errorValues[ptIdx] / distribValues[ptIdx]);
+			double saneErr = 100.0;
+			if (distribValues[ptIdx] > 1e-10) {
+				saneErr = fmin(100.0, 100.0 * errorValues[ptIdx] / distribValues[ptIdx]);
 			}
 			fprintf(fErr, "%.4f %.4f %.2f %.2f %.1f\n", xStereoProj, yStereoProj, zenithDeg, azimuthDeg, saneErr);
 		}
