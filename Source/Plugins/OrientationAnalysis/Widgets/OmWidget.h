@@ -50,15 +50,7 @@ class OmWidget : public OrientationWidget, private Ui::OmWidget
     virtual ~OmWidget();
 
   protected slots:
-    void on_om1_textEdited(const QString &text);
-    void on_om2_textEdited(const QString &text);
-    void on_om3_textEdited(const QString &text);
-    void on_om4_textEdited(const QString &text);
-    void on_om5_textEdited(const QString &text);
-    void on_om6_textEdited(const QString &text);
-    void on_om7_textEdited(const QString &text);
-    void on_om8_textEdited(const QString &text);
-    void on_om9_textEdited(const QString &text);
+    void valuesUpdated(const QString &text);
 
     virtual void updateData(OrientationUtilityCalculator* calculator);
 

@@ -52,9 +52,7 @@ class CubochoricWidget : public OrientationWidget, private Ui::CubochoricWidget
     virtual ~CubochoricWidget();
 
   protected slots:
-    void on_c1_textEdited(const QString &text);
-    void on_c2_textEdited(const QString &text);
-    void on_c3_textEdited(const QString &text);
+    void valuesUpdated(const QString &text);
 
     virtual void updateData(OrientationUtilityCalculator* calculator);
 

@@ -62,6 +62,13 @@ void CubochoricWidget::setupGui()
   c1->setValidator(new QDoubleValidator(c1));
   c2->setValidator(new QDoubleValidator(c2));
   c3->setValidator(new QDoubleValidator(c3));
+
+  connect(c1, SIGNAL(textEdited(const QString&)),
+    this, SLOT(valuesUpdated(const QString&)));
+  connect(c2, SIGNAL(textEdited(const QString&)),
+    this, SLOT(valuesUpdated(const QString&)));
+  connect(c3, SIGNAL(textEdited(const QString&)),
+    this, SLOT(valuesUpdated(const QString&)));
 }
 
 // -----------------------------------------------------------------------------
@@ -88,57 +95,13 @@ void CubochoricWidget::updateData(OrientationUtilityCalculator* calculator)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CubochoricWidget::on_c1_textEdited(const QString &text)
+void CubochoricWidget::valuesUpdated(const QString &text)
 {
   QVector<double> values = getValues();
   OrientationTransforms<QVector<double>, double>::ResultType result = OrientationTransforms<QVector<double>, double>::cu_check(values);
   int errorCode = result.result;
   QString errorMsg = QString::fromStdString(result.msg);
 
-  emit clearErrorTable();
-
-  if (errorCode >= 0)
-  {
-    emit valuesChanged(values, OrientationConverter<double>::Cubochoric);
-  }
-  else
-  {
-    emit invalidValues(errorCode, errorMsg);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void CubochoricWidget::on_c2_textEdited(const QString &text)
-{
-  QVector<double> values = getValues();
-  OrientationTransforms<QVector<double>, double>::ResultType result = OrientationTransforms<QVector<double>, double>::cu_check(values);
-  int errorCode = result.result;
-  QString errorMsg = QString::fromStdString(result.msg);
-
-  emit clearErrorTable();
-
-  if (errorCode >= 0)
-  {
-    emit valuesChanged(values, OrientationConverter<double>::Cubochoric);
-  }
-  else
-  {
-    emit invalidValues(errorCode, errorMsg);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void CubochoricWidget::on_c3_textEdited(const QString &text)
-{
-  QVector<double> values = getValues();
-  OrientationTransforms<QVector<double>, double>::ResultType result = OrientationTransforms<QVector<double>, double>::cu_check(values);
-  int errorCode = result.result;
-  QString errorMsg = QString::fromStdString(result.msg);
-  
   emit clearErrorTable();
 
   if (errorCode >= 0)

@@ -50,9 +50,7 @@ class EulerWidget : public OrientationWidget, private Ui::EulerWidget
     virtual ~EulerWidget();
 
   protected slots:
-    void on_e1_textEdited(const QString &text);
-    void on_e2_textEdited(const QString &text);
-    void on_e3_textEdited(const QString &text);
+    void valuesUpdated(const QString &text);
 
     virtual void updateData(OrientationUtilityCalculator* calculator);
 

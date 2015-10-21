@@ -63,6 +63,15 @@ void RodriguesWidget::setupGui()
   r2->setValidator(new QDoubleValidator(r2));
   r3->setValidator(new QDoubleValidator(r3));
   r4->setValidator(new QDoubleValidator(r4));
+
+  connect(r1, SIGNAL(textEdited(const QString&)),
+    this, SLOT(valuesUpdated(const QString&)));
+  connect(r2, SIGNAL(textEdited(const QString&)),
+    this, SLOT(valuesUpdated(const QString&)));
+  connect(r3, SIGNAL(textEdited(const QString&)),
+    this, SLOT(valuesUpdated(const QString&)));
+  connect(r4, SIGNAL(textEdited(const QString&)),
+    this, SLOT(valuesUpdated(const QString&)));
 }
 
 // -----------------------------------------------------------------------------
@@ -90,73 +99,7 @@ void RodriguesWidget::updateData(OrientationUtilityCalculator* calculator)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RodriguesWidget::on_r1_textEdited(const QString &text)
-{
-  QVector<double> values = getValues();
-  OrientationTransforms<QVector<double>, double>::ResultType result = OrientationTransforms<QVector<double>, double>::ro_check(values);
-  int errorCode = result.result;
-  QString errorMsg = QString::fromStdString(result.msg);
-
-  emit clearErrorTable();
-
-  if (errorCode >= 0)
-  {
-    emit valuesChanged(values, OrientationConverter<double>::Rodrigues);
-  }
-  else
-  {
-    emit invalidValues(errorCode, errorMsg);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RodriguesWidget::on_r2_textEdited(const QString &text)
-{
-  QVector<double> values = getValues();
-  OrientationTransforms<QVector<double>, double>::ResultType result = OrientationTransforms<QVector<double>, double>::ro_check(values);
-  int errorCode = result.result;
-  QString errorMsg = QString::fromStdString(result.msg);
-
-  emit clearErrorTable();
-
-  if (errorCode >= 0)
-  {
-    emit valuesChanged(values, OrientationConverter<double>::Rodrigues);
-  }
-  else
-  {
-    emit invalidValues(errorCode, errorMsg);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RodriguesWidget::on_r3_textEdited(const QString &text)
-{
-  QVector<double> values = getValues();
-  OrientationTransforms<QVector<double>, double>::ResultType result = OrientationTransforms<QVector<double>, double>::ro_check(values);
-  int errorCode = result.result;
-  QString errorMsg = QString::fromStdString(result.msg);
-
-  emit clearErrorTable();
-
-  if (errorCode >= 0)
-  {
-    emit valuesChanged(values, OrientationConverter<double>::Rodrigues);
-  }
-  else
-  {
-    emit invalidValues(errorCode, errorMsg);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RodriguesWidget::on_r4_textEdited(const QString &text)
+void RodriguesWidget::valuesUpdated(const QString &text)
 {
   QVector<double> values = getValues();
   OrientationTransforms<QVector<double>, double>::ResultType result = OrientationTransforms<QVector<double>, double>::ro_check(values);

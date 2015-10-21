@@ -62,6 +62,13 @@ void HomochoricWidget::setupGui()
   h1->setValidator(new QDoubleValidator(h1));
   h2->setValidator(new QDoubleValidator(h2));
   h3->setValidator(new QDoubleValidator(h3));
+
+  connect(h1, SIGNAL(textEdited(const QString&)),
+    this, SLOT(valuesUpdated(const QString&)));
+  connect(h2, SIGNAL(textEdited(const QString&)),
+    this, SLOT(valuesUpdated(const QString&)));
+  connect(h3, SIGNAL(textEdited(const QString&)),
+    this, SLOT(valuesUpdated(const QString&)));
 }
 
 // -----------------------------------------------------------------------------
@@ -88,57 +95,13 @@ void HomochoricWidget::updateData(OrientationUtilityCalculator* calculator)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void HomochoricWidget::on_h1_textEdited(const QString &text)
+void HomochoricWidget::valuesUpdated(const QString &text)
 {
   QVector<double> values = getValues();
   OrientationTransforms<QVector<double>, double>::ResultType result = OrientationTransforms<QVector<double>, double>::ho_check(values);
   int errorCode = result.result;
   QString errorMsg = QString::fromStdString(result.msg);
   
-  emit clearErrorTable();
-
-  if (errorCode >= 0)
-  {
-    emit valuesChanged(values, OrientationConverter<double>::Homochoric);
-  }
-  else
-  {
-    emit invalidValues(errorCode, errorMsg);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void HomochoricWidget::on_h2_textEdited(const QString &text)
-{
-  QVector<double> values = getValues();
-  OrientationTransforms<QVector<double>, double>::ResultType result = OrientationTransforms<QVector<double>, double>::ho_check(values);
-  int errorCode = result.result;
-  QString errorMsg = QString::fromStdString(result.msg);
-
-  emit clearErrorTable();
-
-  if (errorCode >= 0)
-  {
-    emit valuesChanged(values, OrientationConverter<double>::Homochoric);
-  }
-  else
-  {
-    emit invalidValues(errorCode, errorMsg);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void HomochoricWidget::on_h3_textEdited(const QString &text)
-{
-  QVector<double> values = getValues();
-  OrientationTransforms<QVector<double>, double>::ResultType result = OrientationTransforms<QVector<double>, double>::ho_check(values);
-  int errorCode = result.result;
-  QString errorMsg = QString::fromStdString(result.msg);
-
   emit clearErrorTable();
 
   if (errorCode >= 0)

@@ -51,9 +51,6 @@ class AxisAngleWidget : public OrientationWidget, private Ui::AxisAngleWidget
 
   protected slots:
     void valuesUpdated(const QString &text);
-//    void on_aa2_textEdited(const QString &text);
-//    void on_aa3_textEdited(const QString &text);
-//    void on_aa4_textEdited(const QString &text);
 
     virtual void updateData(OrientationUtilityCalculator* calculator);
 

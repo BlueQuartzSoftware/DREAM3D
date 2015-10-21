@@ -64,6 +64,13 @@ void EulerWidget::setupGui()
   e1->setValidator(new QDoubleValidator(e1));
   e2->setValidator(new QDoubleValidator(e2));
   e3->setValidator(new QDoubleValidator(e3));
+
+  connect(e1, SIGNAL(textEdited(const QString&)),
+    this, SLOT(valuesUpdated(const QString&)));
+  connect(e2, SIGNAL(textEdited(const QString&)),
+    this, SLOT(valuesUpdated(const QString&)));
+  connect(e3, SIGNAL(textEdited(const QString&)),
+    this, SLOT(valuesUpdated(const QString&)));
 }
 
 // -----------------------------------------------------------------------------
@@ -95,63 +102,7 @@ void EulerWidget::updateData(OrientationUtilityCalculator* calculator)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EulerWidget::on_e1_textEdited(const QString &text)
-{
-  QVector<double> values = getValues();
-
-  if (m_AngleMeasurement == Degrees)
-  {
-    values = toRadians(values);
-  }
-
-  OrientationTransforms<QVector<double>, double>::ResultType result = OrientationTransforms<QVector<double>, double>::eu_check(values);
-  int errorCode = result.result;
-  QString errorMsg = QString::fromStdString(result.msg);
-
-  emit clearErrorTable();
-
-  if (errorCode >= 0)
-  {
-    emit valuesChanged(values, OrientationConverter<double>::Euler);
-  }
-  else
-  {
-    emit invalidValues(errorCode, errorMsg);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void EulerWidget::on_e2_textEdited(const QString &text)
-{
-  QVector<double> values = getValues();
-
-  if (m_AngleMeasurement == Degrees)
-  {
-    values = toRadians(values);
-  }
-
-  OrientationTransforms<QVector<double>, double>::ResultType result = OrientationTransforms<QVector<double>, double>::eu_check(values);
-  int errorCode = result.result;
-  QString errorMsg = QString::fromStdString(result.msg);
-
-  emit clearErrorTable();
-
-  if (errorCode >= 0)
-  {
-    emit valuesChanged(values, OrientationConverter<double>::Euler);
-  }
-  else
-  {
-    emit invalidValues(errorCode, errorMsg);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void EulerWidget::on_e3_textEdited(const QString &text)
+void EulerWidget::valuesUpdated(const QString &text)
 {
   QVector<double> values = getValues();
 

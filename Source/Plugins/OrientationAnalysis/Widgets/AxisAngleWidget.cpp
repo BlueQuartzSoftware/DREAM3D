@@ -74,9 +74,6 @@ void AxisAngleWidget::setupGui()
           this, SLOT(valuesUpdated(const QString&)));
   connect(aa4, SIGNAL(textEdited(const QString&)),
           this, SLOT(valuesUpdated(const QString&)));
-
-  // This runs the "preflight" once for the entire utility
-  valuesUpdated("");
 }
 
 // -----------------------------------------------------------------------------

@@ -50,10 +50,7 @@ class RodriguesWidget : public OrientationWidget, private Ui::RodriguesWidget
     virtual ~RodriguesWidget();
 
   protected slots:
-    void on_r1_textEdited(const QString &text);
-    void on_r2_textEdited(const QString &text);
-    void on_r3_textEdited(const QString &text);
-    void on_r4_textEdited(const QString &text);
+    void valuesUpdated(const QString &text);
 
     virtual void updateData(OrientationUtilityCalculator* calculator);
 

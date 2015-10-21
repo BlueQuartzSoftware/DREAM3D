@@ -6,14 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>441</width>
-    <height>353</height>
+    <width>562</width>
+    <height>479</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,0">
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="1">
+    <widget class="QRadioButton" name="radiansBtn">
+     <property name="text">
+      <string>Radians</string>
+     </property>
+    </widget>
+   </item>
    <item row="0" column="0">
     <widget class="QRadioButton" name="degreesBtn">
      <property name="text">
@@ -24,59 +31,59 @@
      </property>
     </widget>
    </item>
-   <item row="9" column="0" colspan="3">
-    <widget class="QTableWidget" name="errorTable">
-     <attribute name="verticalHeaderVisible">
-      <bool>false</bool>
-     </attribute>
-     <column>
-      <property name="text">
-       <string>Error Message</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
-       <string>Error Code</string>
-      </property>
-     </column>
-    </widget>
-   </item>
-   <item row="4" column="0" colspan="3">
-    <widget class="AxisAngleWidget" name="axisAngleWidget" native="true"/>
-   </item>
-   <item row="2" column="0" colspan="3">
-    <widget class="QuatWidget" name="quatWidget" native="true"/>
-   </item>
-   <item row="10" column="0">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;THIS IS A UTILITY, AND DOES NOT AFFECT THE PIPELINE.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   <item row="6" column="3">
+    <spacer name="horizontalSpacer_7">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
      </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QRadioButton" name="radiansBtn">
-     <property name="text">
-      <string>Radians</string>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>185</width>
+       <height>20</height>
+      </size>
      </property>
-    </widget>
+    </spacer>
    </item>
-   <item row="3" column="0" colspan="3">
-    <widget class="OmWidget" name="omWidget" native="true"/>
+   <item row="3" column="3">
+    <spacer name="horizontalSpacer_4">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>185</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
    </item>
-   <item row="1" column="0" colspan="3">
-    <widget class="EulerWidget" name="eulerWidget" native="true"/>
+   <item row="7" column="3">
+    <spacer name="horizontalSpacer_8">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>185</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
    </item>
-   <item row="7" column="0" colspan="3">
-    <widget class="CubochoricWidget" name="cubochoricWidget" native="true"/>
+   <item row="4" column="3">
+    <spacer name="horizontalSpacer_5">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>185</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
    </item>
-   <item row="5" column="0" colspan="3">
-    <widget class="RodriguesWidget" name="rodriguesWidget" native="true"/>
-   </item>
-   <item row="6" column="0" colspan="3">
-    <widget class="HomochoricWidget" name="homochoricWidget" native="true"/>
-   </item>
-   <item row="0" column="2">
+   <item row="0" column="2" colspan="2">
     <spacer name="horizontalSpacer">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -88,6 +95,116 @@
       </size>
      </property>
     </spacer>
+   </item>
+   <item row="5" column="3">
+    <spacer name="horizontalSpacer_6">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>185</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="3">
+    <spacer name="horizontalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>185</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="2" column="3">
+    <spacer name="horizontalSpacer_3">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>185</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="2" column="0" colspan="3">
+    <widget class="CubochoricWidget" name="cubochoricWidget" native="true"/>
+   </item>
+   <item row="5" column="0" colspan="3">
+    <widget class="OmWidget" name="omWidget" native="true"/>
+   </item>
+   <item row="4" column="0" colspan="3">
+    <widget class="HomochoricWidget" name="homochoricWidget" native="true"/>
+   </item>
+   <item row="6" column="0" colspan="3">
+    <widget class="QuatWidget" name="quatWidget" native="true"/>
+   </item>
+   <item row="3" column="0" colspan="3">
+    <widget class="EulerWidget" name="eulerWidget" native="true"/>
+   </item>
+   <item row="7" column="0" colspan="3">
+    <widget class="RodriguesWidget" name="rodriguesWidget" native="true"/>
+   </item>
+   <item row="1" column="0" colspan="3">
+    <widget class="AxisAngleWidget" name="axisAngleWidget" native="true"/>
+   </item>
+   <item row="9" column="0" colspan="3">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;THIS IS A UTILITY, AND DOES NOT AFFECT THE PIPELINE.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="3">
+    <spacer name="horizontalSpacer_9">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>185</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="9" column="3">
+    <spacer name="horizontalSpacer_10">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>185</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="8" column="0" colspan="3">
+    <widget class="QTableWidget" name="errorTable">
+     <attribute name="verticalHeaderVisible">
+      <bool>false</bool>
+     </attribute>
+     <column>
+      <property name="text">
+       <string>Error Code</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Error Message</string>
+      </property>
+     </column>
+    </widget>
    </item>
   </layout>
  </widget>
@@ -135,6 +252,11 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>degreesBtn</tabstop>
+  <tabstop>radiansBtn</tabstop>
+  <tabstop>errorTable</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

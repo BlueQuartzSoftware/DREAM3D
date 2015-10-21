@@ -50,9 +50,7 @@ class HomochoricWidget : public OrientationWidget, private Ui::HomochoricWidget
     virtual ~HomochoricWidget();
 
   protected slots:
-    void on_h1_textEdited(const QString &text);
-    void on_h2_textEdited(const QString &text);
-    void on_h3_textEdited(const QString &text);
+    void valuesUpdated(const QString &text);
 
     virtual void updateData(OrientationUtilityCalculator* calculator);
 

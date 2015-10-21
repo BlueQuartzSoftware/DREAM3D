@@ -50,10 +50,7 @@ class QuatWidget : public OrientationWidget, private Ui::QuatWidget
     virtual ~QuatWidget();
 
   protected slots:
-    void on_q1_textEdited(const QString &text);
-    void on_q2_textEdited(const QString &text);
-    void on_q3_textEdited(const QString &text);
-    void on_q4_textEdited(const QString &text);
+    void valuesUpdated(const QString &text);
 
     virtual void updateData(OrientationUtilityCalculator* calculator);
 

@@ -76,6 +76,11 @@ font-size: 11px;
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>e1</tabstop>
+  <tabstop>e2</tabstop>
+  <tabstop>e3</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

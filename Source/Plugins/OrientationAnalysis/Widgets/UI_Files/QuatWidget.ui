@@ -112,6 +112,12 @@ font-size: 11px;
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>q1</tabstop>
+  <tabstop>q2</tabstop>
+  <tabstop>q3</tabstop>
+  <tabstop>q4</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
