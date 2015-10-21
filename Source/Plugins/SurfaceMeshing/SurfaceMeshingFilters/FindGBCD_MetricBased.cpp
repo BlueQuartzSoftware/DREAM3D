@@ -43,6 +43,33 @@
 #endif
 
 
+class SelectedTri {
+
+public:
+  double area;
+  float normal_grain1_x;
+  float normal_grain1_y;
+  float normal_grain1_z;
+  float normal_grain2_x;
+  float normal_grain2_y;
+  float normal_grain2_z;
+
+  SelectedTri(double __area, float n1x, float n1y, float n1z, float n2x, float n2y, float n2z) :
+    area(__area),
+    normal_grain1_x(n1x),
+    normal_grain1_y(n1y),
+    normal_grain1_z(n1z),
+    normal_grain2_x(n2x),
+    normal_grain2_y(n2y),
+    normal_grain2_z(n2z)
+  {
+  }
+
+  SelectedTri() {
+    SelectedTri(0.0, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+  }
+};
+
 class ProbeDistrib
 {
 	QVector<double>* distribValues;
@@ -52,19 +79,13 @@ class ProbeDistrib
 	QVector<float> samplPtsY;
 	QVector<float> samplPtsZ;
 
-	QVector<double> accTrisAreas;
-	QVector<float> normals_grain1_x;
-	QVector<float> normals_grain1_y;
-	QVector<float> normals_grain1_z;
-	QVector<float> normals_grain2_x;
-	QVector<float> normals_grain2_y;
-	QVector<float> normals_grain2_z;
+	QVector<SelectedTri> selectedTris;
 
 	float planeResolSq;
 	double totalFaceArea;
 	int numDistinctGBs;
 	double ballVolume;
-	float gFixedT[3][3];
+	float (&gFixedT)[3][3];
 
 public:
 	ProbeDistrib(
@@ -73,46 +94,25 @@ public:
 		QVector<float> __samplPtsX,
 		QVector<float> __samplPtsY,
 		QVector<float> __samplPtsZ,
-
-		QVector<double> __accTrisAreas,
-		QVector<float> __normals_grain1_x,
-		QVector<float> __normals_grain1_y,
-		QVector<float> __normals_grain1_z,
-		QVector<float> __normals_grain2_x,
-		QVector<float> __normals_grain2_y,
-		QVector<float> __normals_grain2_z,
+		QVector<SelectedTri> __selectedTris,
 		float __planeResolSq,
 		double __totalFaceArea,
 		int __numDistinctGBs,
 		double __ballVolume,
-		float __gFixedT[3][3]
+		float (&__gFixedT)[3][3]
 		) :
 		distribValues(__distribValues),
 		errorValues(__errorValues),
 		samplPtsX(__samplPtsX),
 		samplPtsY(__samplPtsY),
 		samplPtsZ(__samplPtsZ),
-		accTrisAreas(__accTrisAreas),
-		normals_grain1_x(__normals_grain1_x),
-		normals_grain1_y(__normals_grain1_y),
-		normals_grain1_z(__normals_grain1_z),
-		normals_grain2_x(__normals_grain2_x),
-		normals_grain2_y(__normals_grain2_y),
-		normals_grain2_z(__normals_grain2_z),
+		selectedTris(__selectedTris),
 		planeResolSq(__planeResolSq),
 		totalFaceArea(__totalFaceArea),
 		numDistinctGBs(__numDistinctGBs),
-		ballVolume(__ballVolume)
+		ballVolume(__ballVolume),
+    gFixedT(__gFixedT)
 	{
-		gFixedT[0][0] = __gFixedT[0][0];
-		gFixedT[0][1] = __gFixedT[0][1];
-		gFixedT[0][2] = __gFixedT[0][2];
-		gFixedT[1][0] = __gFixedT[1][0];
-		gFixedT[1][1] = __gFixedT[1][1];
-		gFixedT[1][2] = __gFixedT[1][2];
-		gFixedT[2][0] = __gFixedT[2][0];
-		gFixedT[2][1] = __gFixedT[2][1];
-		gFixedT[2][2] = __gFixedT[2][2];
 	}
 
 	virtual ~ProbeDistrib()
@@ -128,28 +128,28 @@ public:
 			float fixedNormal2[3] = { 0.0f, 0.0f, 0.0f };
 			MatrixMath::Multiply3x3with3x1(gFixedT, fixedNormal1, fixedNormal2);
 
-			for (int triRepresIdx = 0; triRepresIdx < accTrisAreas.size(); triRepresIdx++)
+			for (int triRepresIdx = 0; triRepresIdx < selectedTris.size(); triRepresIdx++)
 			{
 				for (int inversion = 0; inversion <= 1; inversion++)
 				{
 					float sign = 1.0f;
 					if (inversion == 1) sign = -1.0f;
 
-					float theta1 = acosf(sign * (
-						normals_grain1_x[triRepresIdx] * fixedNormal1[0] +
-						normals_grain1_y[triRepresIdx] * fixedNormal1[1] +
-						normals_grain1_z[triRepresIdx] * fixedNormal1[2]));
+          float theta1 = acosf(sign * (
+            selectedTris[triRepresIdx].normal_grain1_x * fixedNormal1[0] +
+            selectedTris[triRepresIdx].normal_grain1_y * fixedNormal1[1] +
+            selectedTris[triRepresIdx].normal_grain1_z * fixedNormal1[2]));
 
-					float theta2 = acosf(-sign * (
-						normals_grain2_x[triRepresIdx] * fixedNormal2[0] +
-						normals_grain2_y[triRepresIdx] * fixedNormal2[1] +
-						normals_grain2_z[triRepresIdx] * fixedNormal2[2]));
+          float theta2 = acosf(-sign * (
+            selectedTris[triRepresIdx].normal_grain2_x * fixedNormal2[0] +
+            selectedTris[triRepresIdx].normal_grain2_y * fixedNormal2[1] +
+            selectedTris[triRepresIdx].normal_grain2_z * fixedNormal2[2]));
 
 					float distSq = 0.5f * (theta1 * theta1 + theta2 * theta2);
 
 					if (distSq < planeResolSq)
 					{
-						(*distribValues)[ptIdx] += accTrisAreas[triRepresIdx];
+						(*distribValues)[ptIdx] += selectedTris[triRepresIdx].area;
 					}
 				}
 			}
@@ -712,13 +712,8 @@ void FindGBCD_MetricBased::execute()
 	int32_t nsym = m_OrientationOps[cryst]->getNumSymOps();
 	int32_t numMeshTris = m_SurfaceMeshFaceAreasPtr.lock()->getNumberOfTuples();
 
-	QVector<double> accTrisAreas(0);
-	QVector<float> normals_grain1_x(0);
-	QVector<float> normals_grain1_y(0);
-	QVector<float> normals_grain1_z(0);
-	QVector<float> normals_grain2_x(0);
-	QVector<float> normals_grain2_y(0);
-	QVector<float> normals_grain2_z(0);
+	QVector<SelectedTri> selectedTris(0);
+
 
 	// ---------  find triangles (and equivalent crystallographic parameters) with +- the fixed misorientation ---------
 	for (int triIdx = 0; triIdx < numMeshTris; triIdx++) {
@@ -797,28 +792,30 @@ void FindGBCD_MetricBased::execute()
 					{
 						MatrixMath::Multiply3x3with3x1(dgT, normal_grain1, normal_grain2); // minus sign before normal_grain2 will be added later
 
-						accTrisAreas.push_back(m_FaceAreas[triIdx]);
-
-						if (transpose == 0)
-						{
-							normals_grain1_x.push_back(normal_grain1[0]);
-							normals_grain1_y.push_back(normal_grain1[1]);
-							normals_grain1_z.push_back(normal_grain1[2]);
-
-							normals_grain2_x.push_back(-normal_grain2[0]);
-							normals_grain2_y.push_back(-normal_grain2[1]);
-							normals_grain2_z.push_back(-normal_grain2[2]);
-						}
-						else
-						{
-							normals_grain1_x.push_back(-normal_grain2[0]);
-							normals_grain1_y.push_back(-normal_grain2[1]);
-							normals_grain1_z.push_back(-normal_grain2[2]);
-
-							normals_grain2_x.push_back(normal_grain1[0]);
-							normals_grain2_y.push_back(normal_grain1[1]);
-							normals_grain2_z.push_back(normal_grain1[2]);
-						}
+            if (transpose == 0)
+            {
+              selectedTris.push_back(SelectedTri(
+                m_FaceAreas[triIdx],
+                normal_grain1[0],
+                normal_grain1[1],
+                normal_grain1[2],
+                -normal_grain2[0],
+                -normal_grain2[1],
+                -normal_grain2[2]
+                ));
+            }
+            else
+            {
+              selectedTris.push_back(SelectedTri(
+                m_FaceAreas[triIdx],
+                -normal_grain2[0],
+                -normal_grain2[1],
+                -normal_grain2[2],
+                normal_grain1[0],
+                normal_grain1[1],
+                normal_grain1[2]
+                ));
+            }
 					}
 				}
 			}
@@ -875,13 +872,7 @@ void FindGBCD_MetricBased::execute()
 				samplPtsX,
 				samplPtsY,
 				samplPtsZ,
-				accTrisAreas,
-			  normals_grain1_x,
-			  normals_grain1_y,
-			  normals_grain1_z,
-			  normals_grain2_x,
-			  normals_grain2_y,
-			  normals_grain2_z,
+				selectedTris,
 				m_PlaneResolSq,
 				totalFaceArea,
 				numDistinctGBs,
@@ -899,13 +890,7 @@ void FindGBCD_MetricBased::execute()
 				samplPtsX,
 				samplPtsY,
 				samplPtsZ,
-				accTrisAreas,
-				normals_grain1_x,
-				normals_grain1_y,
-				normals_grain1_z,
-				normals_grain2_x,
-				normals_grain2_y,
-				normals_grain2_z,
+				selectedTris,
 				m_PlaneResolSq,
 				totalFaceArea,
 				numDistinctGBs,
