@@ -52,6 +52,7 @@ class EulerWidget : public OrientationWidget, private Ui::EulerWidget
   protected slots:
     void valuesUpdated(const QString &text);
 
+    void convertData(bool isDegrees);
     virtual void updateData(OrientationUtilityCalculator* calculator);
 
   private:

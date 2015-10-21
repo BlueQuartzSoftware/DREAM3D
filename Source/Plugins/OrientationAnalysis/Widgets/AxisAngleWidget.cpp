@@ -138,6 +138,26 @@ void AxisAngleWidget::valuesUpdated(const QString &text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void AxisAngleWidget::convertData(bool isDegrees)
+{
+  QVector<double> values = getValues();
+  int value = values[3];
+
+  if (isDegrees == true)
+  {
+    value = value * SIMPLib::Constants::k_RadToDeg;
+  }
+  else
+  {
+    value = value * SIMPLib::Constants::k_DegToRad;
+  }
+
+  aa4->setText(QString::number(value));
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QVector<double> AxisAngleWidget::getValues()
 {
   QVector<double> values;

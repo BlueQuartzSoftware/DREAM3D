@@ -50,6 +50,7 @@ class AxisAngleWidget : public OrientationWidget, private Ui::AxisAngleWidget
     virtual ~AxisAngleWidget();
 
   protected slots:
+    void convertData(bool isDegrees);
     void valuesUpdated(const QString &text);
 
     virtual void updateData(OrientationUtilityCalculator* calculator);

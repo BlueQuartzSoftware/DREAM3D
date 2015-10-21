@@ -130,6 +130,27 @@ void EulerWidget::valuesUpdated(const QString &text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void EulerWidget::convertData(bool isDegrees)
+{
+  QVector<double> values = getValues();
+
+  if (isDegrees == true)
+  {
+    values = toDegrees(values);
+  }
+  else
+  {
+    values = toRadians(values);
+  }
+
+  e1->setText(QString::number(values[0]));
+  e2->setText(QString::number(values[1]));
+  e3->setText(QString::number(values[2]));
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QVector<double> EulerWidget::getValues()
 {
   QVector<double> values;

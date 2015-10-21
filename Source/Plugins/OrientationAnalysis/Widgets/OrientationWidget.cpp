@@ -39,7 +39,8 @@
 //
 // -----------------------------------------------------------------------------
 OrientationWidget::OrientationWidget(QWidget* parent) :
-QWidget(parent)
+QWidget(parent),
+m_AngleMeasurement(Degrees)
 {
 
 }
