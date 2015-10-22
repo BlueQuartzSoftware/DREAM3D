@@ -116,7 +116,7 @@ const QString OrientationUtility::getCompiledLibraryName()
 //
 // -----------------------------------------------------------------------------
 const QString OrientationUtility::getGroupName()
-{ return DREAM3D::FilterGroups::Unsupported; }
+{ return DREAM3D::FilterGroups::Utilities; }
 
 // -----------------------------------------------------------------------------
 //
