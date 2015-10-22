@@ -36,12 +36,11 @@
 #include "SIMPLibPluginLoader.h"
 
 // Qt Includes
+#include <QtCore/QCoreApplication>
 #include <QtCore/QtDebug>
 #include <QtCore/QPluginLoader>
 #include <QtCore/QStringList>
 #include <QtCore/QDir>
-
-#include "Applications/DREAM3D/DREAM3DApplication.h"
 
 #include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
@@ -71,9 +70,9 @@ void SIMPLibPluginLoader::LoadPluginFilters(FilterManager* filterManager)
   filterManager->RegisterKnownFilters(filterManager);
 
   QStringList m_PluginDirs;
-  m_PluginDirs << dream3dApp->applicationDirPath();
+  m_PluginDirs << qApp->applicationDirPath();
 
-  QDir aPluginDir = QDir(dream3dApp->applicationDirPath());
+  QDir aPluginDir = QDir(qApp->applicationDirPath());
   qDebug() << "Loading DREAM3D Plugins....";
   //qDebug() << "aPluginDir: " << aPluginDir.absolutePath() << "\n";
   QString thePath;
