@@ -39,11 +39,11 @@
 #include <tbb/blocked_range.h>
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
-//#include "tbb/concurrent_vector.h"
+#include "tbb/concurrent_vector.h"
 #endif
 
 
-class SelectedTri {
+class TriAreaAndNormals {
 
 public:
   double area;
@@ -54,7 +54,7 @@ public:
   float normal_grain2_y;
   float normal_grain2_z;
 
-  SelectedTri(double __area, float n1x, float n1y, float n1z, float n2x, float n2y, float n2z) :
+  TriAreaAndNormals(double __area, float n1x, float n1y, float n1z, float n2x, float n2y, float n2z) :
     area(__area),
     normal_grain1_x(n1x),
     normal_grain1_y(n1y),
@@ -65,22 +65,234 @@ public:
   {
   }
 
-  SelectedTri() {
-    SelectedTri(0.0, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+  TriAreaAndNormals() {
+    TriAreaAndNormals(0.0, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
   }
 };
+
+
+
+class TrisSelector {
+
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+  tbb::concurrent_vector<TriAreaAndNormals>* selectedTris;
+#else
+  QVector<TriAreaAndNormals>* selectedTris;
+#endif
+
+  QVector<float> samplPtsX;
+  QVector<float> samplPtsY;
+  QVector<float> samplPtsZ;
+
+  float m_misorResol; 
+  int32_t m_PhaseOfInterest;
+  float (&gFixedT)[3][3];
+
+  QVector<SpaceGroupOps::Pointer> m_OrientationOps;
+  uint32_t cryst;
+  int32_t nsym;
+
+  uint32_t* m_CrystalStructures;
+  float* m_Eulers;
+  int32_t* m_Phases;
+  int32_t* m_FaceLabels;
+  double* m_FaceNormals;
+  double* m_FaceAreas;
+  int32_t* m_FeatureFaceLabels;
+
+  double &totalFaceArea;
+
+public: 
+  TrisSelector(
+
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+    tbb::concurrent_vector<TriAreaAndNormals>* __selectedTris,
+#else
+    QVector<TriAreaAndNormals>* __selectedTris,
+#endif
+    QVector<float> __samplPtsX,
+    QVector<float> __samplPtsY,
+    QVector<float> __samplPtsZ,
+    float __m_misorResol,
+    int32_t __m_PhaseOfInterest,
+    float(&__gFixedT)[3][3],
+    uint32_t* __m_CrystalStructures,
+    float* __m_Eulers,
+    int32_t* __m_Phases,
+    int32_t* __m_FaceLabels,
+    double* __m_FaceNormals,
+    double* __m_FaceAreas,
+    int32_t* __m_FeatureFaceLabels,
+    double &__totalFaceArea
+  ) :
+    selectedTris(__selectedTris),
+    samplPtsX(__samplPtsX),
+    samplPtsY(__samplPtsY),
+    samplPtsZ(__samplPtsZ),
+    m_misorResol(__m_misorResol),
+    m_PhaseOfInterest(__m_PhaseOfInterest),
+    gFixedT(__gFixedT),
+    m_CrystalStructures(__m_CrystalStructures),
+    m_Eulers(__m_Eulers),
+    m_Phases(__m_Phases),
+    m_FaceLabels(__m_FaceLabels),
+    m_FaceNormals(__m_FaceNormals),
+    m_FaceAreas(__m_FaceAreas),
+    m_FeatureFaceLabels(__m_FeatureFaceLabels),
+    totalFaceArea(__totalFaceArea)
+  {  
+    m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+    cryst = __m_CrystalStructures[__m_PhaseOfInterest]; 
+    nsym = m_OrientationOps[cryst]->getNumSymOps();
+  }
+
+  virtual ~TrisSelector()
+  {    
+  }
+
+  void select(size_t start, size_t end) const
+  {
+    float g1ea[3] = { 0.0f, 0.0f, 0.0f };
+    float g2ea[3] = { 0.0f, 0.0f, 0.0f };
+
+    float g1[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+    float g2[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+
+    float g1s[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+    float g2s[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+
+    float sym1[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+    float sym2[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+
+    float g2sT[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+
+    float dg[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+    float dgT[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+
+    float diffFromFixed[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+
+    float normal_lab[3] = { 0.0f, 0.0f, 0.0f };
+    float normal_grain1[3] = { 0.0f, 0.0f, 0.0f };
+    float normal_grain2[3] = { 0.0f, 0.0f, 0.0f };
+
+    for (size_t triIdx = start; triIdx < end; triIdx++) {
+
+      int32_t feature1 = m_FaceLabels[2 * triIdx];
+      int32_t feature2 = m_FaceLabels[2 * triIdx + 1];
+
+      if (feature1 < 1 || feature2 < 1) { continue; }
+      if (m_Phases[feature1] != m_Phases[feature2])  { continue; }
+      if (m_Phases[feature1] != m_PhaseOfInterest || m_Phases[feature2] != m_PhaseOfInterest) { continue; }
+
+      totalFaceArea += m_FaceAreas[triIdx];
+
+      normal_lab[0] = m_FaceNormals[3 * triIdx];
+      normal_lab[1] = m_FaceNormals[3 * triIdx + 1];
+      normal_lab[2] = m_FaceNormals[3 * triIdx + 2];
+
+      for (int whichEa = 0; whichEa < 3; whichEa++)
+      {
+        g1ea[whichEa] = m_Eulers[3 * feature1 + whichEa];
+        g2ea[whichEa] = m_Eulers[3 * feature2 + whichEa];
+      }
+
+      FOrientArrayType om(9, 0.0f);
+      FOrientTransformsType::eu2om(FOrientArrayType(g1ea, 3), om);
+      om.toGMatrix(g1);
+      FOrientTransformsType::eu2om(FOrientArrayType(g2ea, 3), om);
+      om.toGMatrix(g2);
+
+
+      for (int j = 0; j < nsym; j++)
+      {
+        // rotate g1 by symOp
+        m_OrientationOps[cryst]->getMatSymOp(j, sym1);
+        MatrixMath::Multiply3x3with3x3(sym1, g1, g1s);
+        // get the crystal directions along the triangle normals
+        MatrixMath::Multiply3x3with3x1(g1s, normal_lab, normal_grain1);
+
+        for (int k = 0; k < nsym; k++)
+        {
+          // calculate the symmetric misorienation
+          m_OrientationOps[cryst]->getMatSymOp(k, sym2);
+          // rotate g2 by symOp
+          MatrixMath::Multiply3x3with3x3(sym2, g2, g2s);
+          // transpose rotated g2
+          MatrixMath::Transpose3x3(g2s, g2sT);
+          // calculate delta g
+          MatrixMath::Multiply3x3with3x3(g1s, g2sT, dg); //dg -- the misorientation between adjacent grains
+          MatrixMath::Transpose3x3(dg, dgT);
+
+          for (int transpose = 0; transpose <= 1; transpose++)
+          {
+            // check if dg is close to gFix
+            if (transpose == 0)
+            {
+              MatrixMath::Multiply3x3with3x3(dg, gFixedT, diffFromFixed);
+            }
+            else
+            {
+              MatrixMath::Multiply3x3with3x3(dgT, gFixedT, diffFromFixed);
+            }
+
+            float diffAngle = acosf((diffFromFixed[0][0] + diffFromFixed[1][1] + diffFromFixed[2][2] - 1.0f) * 0.5f);
+
+            if (diffAngle < m_misorResol)
+            {
+              MatrixMath::Multiply3x3with3x1(dgT, normal_grain1, normal_grain2); // minus sign before normal_grain2 will be added later
+
+              if (transpose == 0)
+              {
+                (*selectedTris).push_back(TriAreaAndNormals(
+                  m_FaceAreas[triIdx],
+                  normal_grain1[0],
+                  normal_grain1[1],
+                  normal_grain1[2],
+                  -normal_grain2[0],
+                  -normal_grain2[1],
+                  -normal_grain2[2]
+                  ));
+              }
+              else
+              {
+                (*selectedTris).push_back(TriAreaAndNormals(
+                  m_FaceAreas[triIdx],
+                  -normal_grain2[0],
+                  -normal_grain2[1],
+                  -normal_grain2[2],
+                  normal_grain1[0],
+                  normal_grain1[1],
+                  normal_grain1[2]
+                  ));
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+  void operator()(const tbb::blocked_range<size_t>& r) const
+  {
+    select(r.begin(), r.end());
+  }
+#endif
+};
+
 
 class ProbeDistrib
 {
 	QVector<double>* distribValues;
 	QVector<double>* errorValues;
-
 	QVector<float> samplPtsX;
 	QVector<float> samplPtsY;
 	QVector<float> samplPtsZ;
-
-	QVector<SelectedTri> selectedTris;
-
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+  tbb::concurrent_vector<TriAreaAndNormals> selectedTris;
+#else
+  QVector<TriAreaAndNormals> selectedTris;
+#endif
 	float planeResolSq;
 	double totalFaceArea;
 	int numDistinctGBs;
@@ -94,13 +306,17 @@ public:
 		QVector<float> __samplPtsX,
 		QVector<float> __samplPtsY,
 		QVector<float> __samplPtsZ,
-		QVector<SelectedTri> __selectedTris,
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+    tbb::concurrent_vector<TriAreaAndNormals> __selectedTris,
+#else
+    QVector<TriAreaAndNormals> __selectedTris,
+#endif
 		float __planeResolSq,
 		double __totalFaceArea,
 		int __numDistinctGBs,
 		double __ballVolume,
 		float (&__gFixedT)[3][3]
-		) :
+	) :
 		distribValues(__distribValues),
 		errorValues(__errorValues),
 		samplPtsX(__samplPtsX),
@@ -118,7 +334,6 @@ public:
 	virtual ~ProbeDistrib()
 	{
 	}
-
 
 	void probe(size_t start, size_t end) const {
 
@@ -176,7 +391,7 @@ FindGBCD_MetricBased::FindGBCD_MetricBased() :
   SurfaceMeshFilter(),
   m_PhaseOfInterest(1),
   m_ChosenLimitDists(DEFAULT_RESOL_CHOICE),
-  m_NumSamplPts(4000),
+  m_NumSamplPts(3000),
   m_AddMorePtsNearEquator(true),
   m_DistOutputFile(""),
   m_ErrOutputFile(""),
@@ -529,10 +744,6 @@ void FindGBCD_MetricBased::execute()
 
 	float m_PlaneResolSq = m_planeResol * m_planeResol;
 
-	QVector<SpaceGroupOps::Pointer> m_OrientationOps;
-	m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
-	double totalFaceArea = 0.0; // for the Phase of Interest
-
 	// We want to work with the raw pointers for speed so get those pointers.
 	uint32_t* m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
 	float* m_Eulers = m_FeatureEulerAnglesPtr.lock()->getPointer(0);
@@ -541,8 +752,6 @@ void FindGBCD_MetricBased::execute()
 	double* m_FaceNormals = m_SurfaceMeshFaceNormalsPtr.lock()->getPointer(0);
 	double* m_FaceAreas = m_SurfaceMeshFaceAreasPtr.lock()->getPointer(0);
 	int32_t* m_FeatureFaceLabels = m_SurfaceMeshFeatureFaceLabelsPtr.lock()->getPointer(0);
-
-
 
 	// -------------------- check if directiories are ok and if output files can be opened --------------------
 
@@ -649,7 +858,7 @@ void FindGBCD_MetricBased::execute()
 	// and - if needed - from lower hemisphere from the neighborhood of equator
 
 	float howFarBelowEquator = 0.0f;
-	if (getAddMorePtsNearEquator() == true) howFarBelowEquator = -1.5001f * m_planeResol;
+  if (getAddMorePtsNearEquator() == true) howFarBelowEquator = -3.0001f / sqrtf(float(numSamplPts_WholeSph));
 
 	for (int ptIdx_WholeSph = 0; ptIdx_WholeSph < numSamplPts_WholeSph; ptIdx_WholeSph++)
 	{
@@ -664,39 +873,10 @@ void FindGBCD_MetricBased::execute()
 	}
 
 
-
-	int32_t feature1 = 0;
-	int32_t feature2 = 0;
-
-	float g1ea[3] = { 0.0f, 0.0f, 0.0f };
-	float g2ea[3] = { 0.0f, 0.0f, 0.0f };
-
-	float g1[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-	float g2[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-
-	float g1s[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-	float g2s[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-
-	float sym1[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-	float sym2[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-
-	float g2sT[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-
-	float dg[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-	float dgT[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-
+	// convert axis angle to matrix representation of misorientation
 	float gFixed[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
 	float gFixedT[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
 
-	float diffFromFixed[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-
-	float normal_lab[3] = { 0.0f, 0.0f, 0.0f };
-	float normal_grain1[3] = { 0.0f, 0.0f, 0.0f };
-	float normal_grain2[3] = { 0.0f, 0.0f, 0.0f };
-
-
-
-	// convert axis angle to matrix representation of misorientation
 	{
 		float gFixedAngle = m_MisorientationRotation.angle * SIMPLib::Constants::k_PiOver180;
 		float gFixedAxis[3] = { m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l };
@@ -708,120 +888,85 @@ void FindGBCD_MetricBased::execute()
 
 	MatrixMath::Transpose3x3(gFixed, gFixedT);
 
-	uint32_t cryst = m_CrystalStructures[m_PhaseOfInterest];
-	int32_t nsym = m_OrientationOps[cryst]->getNumSymOps();
 	int32_t numMeshTris = m_SurfaceMeshFaceAreasPtr.lock()->getNumberOfTuples();
-
-	QVector<SelectedTri> selectedTris(0);
-
+	
 
 	// ---------  find triangles (and equivalent crystallographic parameters) with +- the fixed misorientation ---------
-	for (int triIdx = 0; triIdx < numMeshTris; triIdx++) {
+  double totalFaceArea = 0.0;
 
-		if (getCancel() == true) { return; }
-
-		if (triIdx % 1000 == 0) {
-			ss = QObject::tr("--> Step 1/2: selecting boundaries with the specified misorientation (%1\% completed)").arg(int(100.0 * float(triIdx) / float(numMeshTris)));
-			notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-		}
-
-		feature1 = m_FaceLabels[2 * triIdx];
-		feature2 = m_FaceLabels[2 * triIdx + 1];
-
-		if (feature1 < 1 || feature2 < 1) { continue; }
-		if (m_FeaturePhases[feature1] != m_FeaturePhases[feature2])  { continue; }
-		if (m_FeaturePhases[feature1] != m_PhaseOfInterest || m_FeaturePhases[feature2] != m_PhaseOfInterest) { continue; }
-
-		totalFaceArea += m_FaceAreas[triIdx];
-		
-
-		normal_lab[0] = m_FaceNormals[3 * triIdx];
-		normal_lab[1] = m_FaceNormals[3 * triIdx + 1];
-		normal_lab[2] = m_FaceNormals[3 * triIdx + 2];
-
-		for (int whichEa = 0; whichEa < 3; whichEa++)
-		{
-			g1ea[whichEa] = m_Eulers[3 * feature1 + whichEa];
-			g2ea[whichEa] = m_Eulers[3 * feature2 + whichEa];
-		}
-
-		FOrientArrayType om(9, 0.0f);
-		FOrientTransformsType::eu2om(FOrientArrayType(g1ea, 3), om);
-		om.toGMatrix(g1);
-		FOrientTransformsType::eu2om(FOrientArrayType(g2ea, 3), om);
-		om.toGMatrix(g2);
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+  tbb::task_scheduler_init init;
+  bool doParallel = true;
+  tbb::concurrent_vector<TriAreaAndNormals> selectedTris(0);
+#else
+  QVector<TriAreaAndNormals> selectedTris(0);
+#endif
 
 
-		for (int j = 0; j < nsym; j++)
-		{
-			// rotate g1 by symOp
-			m_OrientationOps[cryst]->getMatSymOp(j, sym1);
-			MatrixMath::Multiply3x3with3x3(sym1, g1, g1s);
-			// get the crystal directions along the triangle normals
-			MatrixMath::Multiply3x3with3x1(g1s, normal_lab, normal_grain1);
+  size_t trisChunkSize = 50000; 
+  if (numMeshTris < trisChunkSize) { trisChunkSize = numMeshTris; }
 
-			for (int k = 0; k < nsym; k++)
-			{
-				// calculate the symmetric misorienation
-				m_OrientationOps[cryst]->getMatSymOp(k, sym2);
-				// rotate g2 by symOp
-				MatrixMath::Multiply3x3with3x3(sym2, g2, g2s);
-				// transpose rotated g2
-				MatrixMath::Transpose3x3(g2s, g2sT);
-				// calculate delta g
-				MatrixMath::Multiply3x3with3x3(g1s, g2sT, dg); //dg -- the misorientation between adjacent grains
-				MatrixMath::Transpose3x3(dg, dgT);
+  for (size_t i = 0; i < numMeshTris; i = i + trisChunkSize)
+  {
+    if (getCancel() == true) { return; }
+    ss = QObject::tr("--> step 1/2: selecting triangles with the specified misorientation (%1\% completed)").arg(int(100.0 * float(i) / float(numMeshTris)));
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    if (i + trisChunkSize >= numMeshTris)
+    {
+      trisChunkSize = numMeshTris - i;
+    }
 
-				for (int transpose = 0; transpose <= 1; transpose++)
-				{
-					if (getCancel() == true) { return; }
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+    if (doParallel == true)
+    {
+      tbb::parallel_for(tbb::blocked_range<size_t>(i, i + trisChunkSize),
+        TrisSelector(
+        &selectedTris,
 
-					// check if dg is close to gFix
-					if (transpose == 0)
-					{
-						MatrixMath::Multiply3x3with3x3(dg, gFixedT, diffFromFixed);
-					}
-					else
-					{
-						MatrixMath::Multiply3x3with3x3(dgT, gFixedT, diffFromFixed);
-					}
+        samplPtsX,
+        samplPtsY,
+        samplPtsZ,
 
-					float diffAngle = acosf((diffFromFixed[0][0] + diffFromFixed[1][1] + diffFromFixed[2][2] - 1.0f) * 0.5f);
+        m_misorResol,
+        m_PhaseOfInterest,
+        gFixedT,
 
-					if (diffAngle < m_misorResol)
-					{
-						MatrixMath::Multiply3x3with3x1(dgT, normal_grain1, normal_grain2); // minus sign before normal_grain2 will be added later
+        m_CrystalStructures,
+        m_Eulers,
+        m_Phases,
+        m_FaceLabels,
+        m_FaceNormals,
+        m_FaceAreas,
+        m_FeatureFaceLabels,
+        totalFaceArea
+        ), tbb::auto_partitioner());
+    }
+    else
+#endif
+    {
+      TrisSelector serial(
+        &selectedTris,
 
-            if (transpose == 0)
-            {
-              selectedTris.push_back(SelectedTri(
-                m_FaceAreas[triIdx],
-                normal_grain1[0],
-                normal_grain1[1],
-                normal_grain1[2],
-                -normal_grain2[0],
-                -normal_grain2[1],
-                -normal_grain2[2]
-                ));
-            }
-            else
-            {
-              selectedTris.push_back(SelectedTri(
-                m_FaceAreas[triIdx],
-                -normal_grain2[0],
-                -normal_grain2[1],
-                -normal_grain2[2],
-                normal_grain1[0],
-                normal_grain1[1],
-                normal_grain1[2]
-                ));
-            }
-					}
-				}
-			}
-		}
-	}
+        samplPtsX,
+        samplPtsY,
+        samplPtsZ,
 
+        m_misorResol,
+        m_PhaseOfInterest,
+        gFixedT,
+
+        m_CrystalStructures,
+        m_Eulers,
+        m_Phases,
+        m_FaceLabels,
+        m_FaceNormals,
+        m_FaceAreas,
+        m_FeatureFaceLabels,
+        totalFaceArea
+        );
+      serial.select(i, i + trisChunkSize);
+    }
+  }
 
   // ------------------------  find the number of distinct boundaries --------------------------
   int32_t numDistinctGBs = 0;
@@ -841,15 +986,11 @@ void FindGBCD_MetricBased::execute()
 
 
 	// ----------------- determining distribution values at the sampling points (and their errors) -------------------
-#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-	tbb::task_scheduler_init init;
-	bool doParallel = true;
-#endif
 
 	QVector<double> distribValues(samplPtsX.size(), 0.0);
 	QVector<double> errorValues(samplPtsX.size(), 0.0);
 
-	size_t pointsChunkSize = 500; // to be determined
+	size_t pointsChunkSize = 100; 
 	if (samplPtsX.size() < pointsChunkSize) { pointsChunkSize = samplPtsX.size(); }
 
 	for (size_t i = 0; i < samplPtsX.size(); i = i + pointsChunkSize)
@@ -874,7 +1015,7 @@ void FindGBCD_MetricBased::execute()
 				samplPtsZ,
 				selectedTris,
 				m_PlaneResolSq,
-				totalFaceArea,
+        totalFaceArea,
 				numDistinctGBs,
 				ballVolume,
 				gFixedT
@@ -892,7 +1033,7 @@ void FindGBCD_MetricBased::execute()
 				samplPtsZ,
 				selectedTris,
 				m_PlaneResolSq,
-				totalFaceArea,
+        totalFaceArea,
 				numDistinctGBs,
 				ballVolume,
 				gFixedT
