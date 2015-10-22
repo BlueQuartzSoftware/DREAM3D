@@ -77,7 +77,12 @@ void OrientationUtility::dataCheck()
 // -----------------------------------------------------------------------------
 void OrientationUtility::preflight()
 {
-
+  setInPreflight(true);
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
+  dataCheck();
+  emit preflightExecuted();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -85,7 +90,7 @@ void OrientationUtility::preflight()
 // -----------------------------------------------------------------------------
 void OrientationUtility::execute()
 {
-
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
