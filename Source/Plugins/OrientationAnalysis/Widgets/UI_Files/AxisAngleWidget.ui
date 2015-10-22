@@ -32,6 +32,12 @@ font-size: 11px;
    </item>
    <item row="0" column="2">
     <widget class="QLineEdit" name="aa1">
+     <property name="minimumSize">
+      <size>
+       <width>118</width>
+       <height>20</height>
+      </size>
+     </property>
      <property name="toolTip">
       <string/>
      </property>
@@ -45,6 +51,12 @@ font-size: 11px;
    </item>
    <item row="0" column="6">
     <widget class="QLineEdit" name="aa3">
+     <property name="minimumSize">
+      <size>
+       <width>118</width>
+       <height>20</height>
+      </size>
+     </property>
      <property name="toolTip">
       <string/>
      </property>
@@ -58,6 +70,12 @@ font-size: 11px;
    </item>
    <item row="0" column="4">
     <widget class="QLineEdit" name="aa2">
+     <property name="minimumSize">
+      <size>
+       <width>118</width>
+       <height>20</height>
+      </size>
+     </property>
      <property name="toolTip">
       <string/>
      </property>
@@ -71,6 +89,12 @@ font-size: 11px;
    </item>
    <item row="0" column="8">
     <widget class="QLineEdit" name="aa4">
+     <property name="minimumSize">
+      <size>
+       <width>118</width>
+       <height>20</height>
+      </size>
+     </property>
      <property name="toolTip">
       <string/>
      </property>

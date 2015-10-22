@@ -192,7 +192,7 @@ QVector<double> AxisAngleWidget::getValues()
     }
     else
     {
-      aa4->setText("3.14159265359");
+      aa4->setText(QString::number(SIMPLib::Constants::k_Pi));
     }
   }
   else if (aa4->text() == "nan")

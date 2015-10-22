@@ -174,7 +174,7 @@ QVector<double> EulerWidget::getValues()
     }
     else
     {
-      e1->setText("3.14159265359");
+      e1->setText(QString::number(SIMPLib::Constants::k_Pi));
     }
   }
   else if (e1->text() == "nan")
@@ -190,7 +190,7 @@ QVector<double> EulerWidget::getValues()
     }
     else
     {
-      e2->setText("3.14159265359");
+      e2->setText(QString::number(SIMPLib::Constants::k_Pi));
     }
   }
   else if (e2->text() == "nan")
@@ -206,7 +206,7 @@ QVector<double> EulerWidget::getValues()
     }
     else
     {
-      e3->setText("3.14159265359");
+      e3->setText(QString::number(SIMPLib::Constants::k_Pi));
     }
   }
   else if (e3->text() == "nan")

@@ -16,6 +16,12 @@
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="4">
     <widget class="QLineEdit" name="q2">
+     <property name="minimumSize">
+      <size>
+       <width>118</width>
+       <height>20</height>
+      </size>
+     </property>
      <property name="toolTip">
       <string/>
      </property>
@@ -29,6 +35,12 @@
    </item>
    <item row="0" column="6">
     <widget class="QLineEdit" name="q3">
+     <property name="minimumSize">
+      <size>
+       <width>118</width>
+       <height>20</height>
+      </size>
+     </property>
      <property name="toolTip">
       <string/>
      </property>
@@ -49,7 +61,7 @@ font-size: 11px;
 }</string>
      </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;Quat:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;Quaternion:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -58,6 +70,12 @@ font-size: 11px;
    </item>
    <item row="0" column="2">
     <widget class="QLineEdit" name="q1">
+     <property name="minimumSize">
+      <size>
+       <width>118</width>
+       <height>20</height>
+      </size>
+     </property>
      <property name="toolTip">
       <string/>
      </property>
@@ -71,6 +89,12 @@ font-size: 11px;
    </item>
    <item row="0" column="8">
     <widget class="QLineEdit" name="q4">
+     <property name="minimumSize">
+      <size>
+       <width>118</width>
+       <height>20</height>
+      </size>
+     </property>
      <property name="toolTip">
       <string/>
      </property>

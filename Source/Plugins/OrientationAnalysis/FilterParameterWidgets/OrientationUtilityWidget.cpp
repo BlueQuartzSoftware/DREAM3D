@@ -62,9 +62,6 @@ OrientationUtilityWidget::~OrientationUtilityWidget()
 // -----------------------------------------------------------------------------
 void OrientationUtilityWidget::setupGui()
 {
-  errorTable->horizontalHeader()->setSectionResizeMode(ErrorCode, QHeaderView::ResizeToContents);
-  errorTable->horizontalHeader()->setSectionResizeMode(ErrorMessage, QHeaderView::ResizeToContents);
-
   m_OrientationWidgets.push_back(axisAngleWidget);
   m_OrientationWidgets.push_back(cubochoricWidget);
   m_OrientationWidgets.push_back(eulerWidget);
@@ -94,14 +91,9 @@ void OrientationUtilityWidget::setupGui()
 // -----------------------------------------------------------------------------
 void OrientationUtilityWidget::setErrorEntry(int errorCode, QString errorMsg)
 {
-  int rowToInsert = errorTable->rowCount();
-  errorTable->insertRow(rowToInsert);
-  
-  QTableWidgetItem* errorCodeItem = new QTableWidgetItem(QString::number(errorCode));
-  errorTable->setItem(rowToInsert, ErrorCode, errorCodeItem);
+  errorTextEdit->clear();
 
-  QTableWidgetItem* errorMessageItem = new QTableWidgetItem(errorMsg);
-  errorTable->setItem(rowToInsert, ErrorMessage, errorMessageItem);
+  errorTextEdit->setText("<b>Error Message:  </b>" + errorMsg);
 }
 
 // -----------------------------------------------------------------------------
@@ -109,7 +101,6 @@ void OrientationUtilityWidget::setErrorEntry(int errorCode, QString errorMsg)
 // -----------------------------------------------------------------------------
 void OrientationUtilityWidget::clearErrorTable()
 {
-  errorTable->clearContents();
-  errorTable->setRowCount(0);
+  errorTextEdit->clear();
 }
 
