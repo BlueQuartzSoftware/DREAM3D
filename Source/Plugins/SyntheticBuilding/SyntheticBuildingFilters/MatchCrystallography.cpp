@@ -401,8 +401,8 @@ void MatchCrystallography::initializeArrays(size_t ensem)
                                "pointer but this resulted in a NULL pointer. The value at m_PhaseTypes[%2] = %3 does not match up "
                                "with the type of pointer stored in the StatsDataArray (PrecipitateStatsData)\n")
                    .arg(ensem).arg(ensem).arg(m_PhaseTypes[ensem]);
-      notifyErrorMessage(getHumanLabel(), ss, -666);
       setErrorCondition(-666);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
     actualodf = pp->getODF();
@@ -417,8 +417,8 @@ void MatchCrystallography::initializeArrays(size_t ensem)
                                "pointer but this resulted in a NULL pointer. The value at m_PhaseTypes[%2] = %3 does not match up "
                                "with the type of pointer stored in the StatsDataArray (PrimaryStatsData)\n")
                    .arg(ensem).arg(ensem).arg(m_PhaseTypes[ensem]);
-      notifyErrorMessage(getHumanLabel(), ss, -666);
       setErrorCondition(-666);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
     actualodf = pp->getODF();
@@ -546,8 +546,8 @@ void MatchCrystallography::assign_eulers(size_t ensem)
       if (numbins == 0)
       {
         QString ss = QObject::tr("Unkown crystal structure (%1) for phase %2").arg(m_CrystalStructures[phase]).arg(phase);
-        notifyErrorMessage(getHumanLabel(), ss, -666);
         setErrorCondition(-666);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
       }
 

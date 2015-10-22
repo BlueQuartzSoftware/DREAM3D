@@ -149,8 +149,8 @@ void VisualizeGBCDGMT::dataCheck()
   if (getOutputFile().isEmpty() == true)
   {
     QString ss = QObject::tr( "The output file must be set");
-    notifyErrorMessage(getHumanLabel(), ss, -1000);
-    setErrorCondition(-1);
+    setErrorCondition(-1000);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   QFileInfo fi(getOutputFile());
@@ -196,8 +196,8 @@ void VisualizeGBCDGMT::dataCheck()
   if (NULL != m_GBCDPtr.lock().get() && getPhaseOfInterest() >= m_GBCDPtr.lock()->getNumberOfTuples())
   {
     QString ss = QObject::tr("The phase index is larger than the number of Ensembles").arg(ClassName());
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-    setErrorCondition(-381);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
 }
@@ -235,8 +235,8 @@ void VisualizeGBCDGMT::execute()
   {
     QString ss;
     ss = QObject::tr("Error creating parent path '%1'").arg(dir.path());
-    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 

@@ -222,59 +222,59 @@ void CropImageGeometry::dataCheck()
   if (getXMax() < getXMin())
   {
     QString ss = QObject::tr("X Max (%1) less than X Min (%2)").arg(getXMax()).arg(getXMin());
-    notifyErrorMessage(getHumanLabel(), ss, -5550);
     setErrorCondition(-5550);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   if (getYMax() < getYMin())
   {
     QString ss = QObject::tr("Y Max (%1) less than Y Min (%2)").arg(getYMax()).arg(getYMin());
-    notifyErrorMessage(getHumanLabel(), ss, -5550);
     setErrorCondition(-5550);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   if (getZMax() < getZMin())
   {
     QString ss = QObject::tr("Z Max (%1) less than Z Min (%2)").arg(getZMax()).arg(getZMin());
-    notifyErrorMessage(getHumanLabel(), ss, -5550);
     setErrorCondition(-5550);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   if (getXMin() < 0)
   {
     QString ss = QObject::tr("X Min (%1) less than 0").arg(getXMin());
-    notifyErrorMessage(getHumanLabel(), ss, -5550);
     setErrorCondition(-5550);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   if (getYMin() < 0)
   {
     QString ss = QObject::tr("Y Min (%1) less than 0").arg(getYMin());
-    notifyErrorMessage(getHumanLabel(), ss, -5550);
     setErrorCondition(-5550);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   if (getZMin() < 0)
   {
     QString ss = QObject::tr("Z Min (%1) less than 0").arg(getZMin());
-    notifyErrorMessage(getHumanLabel(), ss, -5550);
     setErrorCondition(-5550);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if (getXMax() > (static_cast<int64_t>(destCellDataContainer->getGeometryAs<ImageGeom>()->getXPoints()) - 1))
   {
     QString ss = QObject::tr("The X Max (%1) is greater than the Image Geometry X extent (%2)").arg(getXMax()).arg(static_cast<int64_t>(destCellDataContainer->getGeometryAs<ImageGeom>()->getXPoints()) - 1);
-    notifyErrorMessage(getHumanLabel(), ss, -5550);
     setErrorCondition(-5550);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if (getYMax() > (static_cast<int64_t>(destCellDataContainer->getGeometryAs<ImageGeom>()->getYPoints()) - 1))
   {
     QString ss = QObject::tr("The Y Max (%1) is greater than the Image Geometry Y extent (%2)").arg(getYMax()).arg(static_cast<int64_t>(destCellDataContainer->getGeometryAs<ImageGeom>()->getYPoints()) - 1);
-    notifyErrorMessage(getHumanLabel(), ss, -5550);
     setErrorCondition(-5550);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if (getZMax() > (static_cast<int64_t>(destCellDataContainer->getGeometryAs<ImageGeom>()->getZPoints()) - 1))
   {
     QString ss = QObject::tr("The Z Max (%1) is greater than the Image Geometry Z extent (%2)").arg(getZMax()).arg(static_cast<int64_t>(destCellDataContainer->getGeometryAs<ImageGeom>()->getZPoints()) - 1);
-    notifyErrorMessage(getHumanLabel(), ss, -5550);
     setErrorCondition(-5550);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   QVector<size_t> tDims(3, 0);

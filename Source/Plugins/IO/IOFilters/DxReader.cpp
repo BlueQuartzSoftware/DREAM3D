@@ -403,8 +403,8 @@ int32_t DxReader::readHeader()
       if (tokens.size() == 20)
       {
         ss = QObject::tr("Unable to locate the last header line");
-        notifyErrorMessage(getHumanLabel(), ss, -8);
-        setErrorCondition(-496);
+        setErrorCondition(-8);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         m_InStream.close();
         return getErrorCondition();
       }

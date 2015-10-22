@@ -555,8 +555,8 @@ void M3CSliceBySlice::execute()
     {
 
       ss = QObject::tr("Cancelling filter");
-      notifyErrorMessage(getHumanLabel(), ss, -1);
       setErrorCondition(-1);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       break;
     }
 
@@ -617,8 +617,8 @@ void M3CSliceBySlice::execute()
     {
 
       ss = QObject::tr("Error writing Nodes file '%1'").arg(nodesFile);
-      notifyErrorMessage(getHumanLabel(), ss, -1);
       setErrorCondition(-1);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
 
@@ -627,8 +627,8 @@ void M3CSliceBySlice::execute()
     {
 
       ss = QObject::tr("Error writing triangles file '%1'").arg(trianglesFile);
-      notifyErrorMessage(getHumanLabel(), ss, -1);
       setErrorCondition(-1);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
     cNodeID = nNodes;

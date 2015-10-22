@@ -573,15 +573,15 @@ void PackPrimaryPhases::dataCheck()
   if (m_WriteGoalAttributes == true && getCsvOutputFile().isEmpty() == true)
   {
     QString ss = QObject::tr("The Csv output file must be set").arg(ClassName());
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-    setErrorCondition(-387);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if (m_HaveFeatures == true && getFeatureInputFile().isEmpty() == true)
   {
     QString ss = QObject::tr("The Feature file must be set");
-    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 }
 
@@ -876,8 +876,8 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
                                  "pointer but this resulted in a NULL pointer. The value at m_PhaseTypes[%2] = %3 does not match up "
                                  "with the type of pointer stored in the StatsDataArray (PrimaryStatsData)\n")
                      .arg(i).arg(i).arg(m_PhaseTypes[i]);
-        notifyErrorMessage(getHumanLabel(), ss, -666);
         setErrorCondition(-666);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
       }
       primaryphases.push_back(static_cast<int32_t>(i) );
@@ -1373,8 +1373,8 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
     if (err < 0)
     {
       QString ss = QObject::tr("Error writing Vtk file");
-      notifyErrorMessage(getHumanLabel(), ss, -1);
       setErrorCondition(-1);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
   }
@@ -2060,8 +2060,8 @@ void PackPrimaryPhases::insert_feature(size_t gnum)
   if (shapeclass >= DREAM3D::ShapeType::ShapeTypeEnd)
   {
     QString ss = QObject::tr("Undefined shape class in shape types array with path %1").arg(m_InputShapeTypesArrayPath.serialize());
-    notifyErrorMessage(getHumanLabel(), ss, -666);
     setErrorCondition(-666);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -2222,8 +2222,8 @@ void PackPrimaryPhases::assign_voxels()
     if (shapeclass != 0 && shapeclass != 1 && shapeclass != 2 && shapeclass != 3)
     {
       QString ss = QObject::tr("Undefined shape class in shape types array with path %1").arg(m_InputShapeTypesArrayPath.serialize());
-      notifyErrorMessage(getHumanLabel(), ss, -666);
       setErrorCondition(-666);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
 
@@ -2762,8 +2762,8 @@ void PackPrimaryPhases::write_goal_attributes()
   if (!parentPath.mkpath("."))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
-    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
