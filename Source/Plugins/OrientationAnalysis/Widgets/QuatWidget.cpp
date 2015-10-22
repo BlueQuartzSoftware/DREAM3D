@@ -81,6 +81,8 @@ void QuatWidget::setupGui()
 // -----------------------------------------------------------------------------
 void QuatWidget::updateData(OrientationUtilityCalculator* calculator)
 {
+  setStyleSheet("");
+
   if (calculator->getInputType() == OrientationConverter<double>::Quaternion)
   {
     // The input type is the same as this widget, so don't update
@@ -92,6 +94,7 @@ void QuatWidget::updateData(OrientationUtilityCalculator* calculator)
     q2->setText("nan");
     q3->setText("nan");
     q4->setText("nan");
+    setStyleSheet("QLineEdit{border: 2px solid FireBrick}");
     return;
   }
 

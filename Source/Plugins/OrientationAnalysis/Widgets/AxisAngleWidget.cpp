@@ -81,6 +81,8 @@ void AxisAngleWidget::setupGui()
 // -----------------------------------------------------------------------------
 void AxisAngleWidget::updateData(OrientationUtilityCalculator* calculator)
 {
+  setStyleSheet("");
+
   if (calculator->getInputType() == OrientationConverter<double>::AxisAngle)
   {
     // The input type is the same as this widget, so don't update
@@ -92,6 +94,7 @@ void AxisAngleWidget::updateData(OrientationUtilityCalculator* calculator)
     aa2->setText("nan");
     aa3->setText("nan");
     aa4->setText("nan");
+    setStyleSheet("QLineEdit{border: 2px solid FireBrick}");
     return;
   }
 

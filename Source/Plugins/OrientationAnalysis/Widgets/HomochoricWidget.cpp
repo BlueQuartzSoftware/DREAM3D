@@ -76,6 +76,8 @@ void HomochoricWidget::setupGui()
 // -----------------------------------------------------------------------------
 void HomochoricWidget::updateData(OrientationUtilityCalculator* calculator)
 {
+  setStyleSheet("");
+
   if (calculator->getInputType() == OrientationConverter<double>::Homochoric)
   {
     // The input type is the same as this widget, so don't update
@@ -86,6 +88,7 @@ void HomochoricWidget::updateData(OrientationUtilityCalculator* calculator)
     h1->setText("nan");
     h2->setText("nan");
     h3->setText("nan");
+    setStyleSheet("QLineEdit{border: 2px solid FireBrick}");
     return;
   }
 

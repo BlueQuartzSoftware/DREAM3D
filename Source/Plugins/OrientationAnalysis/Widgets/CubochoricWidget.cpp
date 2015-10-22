@@ -76,6 +76,8 @@ void CubochoricWidget::setupGui()
 // -----------------------------------------------------------------------------
 void CubochoricWidget::updateData(OrientationUtilityCalculator* calculator)
 {
+  setStyleSheet("");
+
   if (calculator->getInputType() == OrientationConverter<double>::Cubochoric)
   {
     // The input type is the same as this widget, so don't update
@@ -86,6 +88,7 @@ void CubochoricWidget::updateData(OrientationUtilityCalculator* calculator)
     c1->setText("nan");
     c2->setText("nan");
     c3->setText("nan");
+    setStyleSheet("QLineEdit{border: 2px solid FireBrick}");
     return;
   }
 

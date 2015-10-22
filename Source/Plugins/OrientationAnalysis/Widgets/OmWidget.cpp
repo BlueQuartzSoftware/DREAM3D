@@ -94,6 +94,8 @@ void OmWidget::setupGui()
 // -----------------------------------------------------------------------------
 void OmWidget::updateData(OrientationUtilityCalculator* calculator)
 {
+  setStyleSheet("");
+
   if (calculator->getInputType() == OrientationConverter<double>::OrientationMatrix)
   {
     // The input type is the same as this widget, so don't update
@@ -110,6 +112,7 @@ void OmWidget::updateData(OrientationUtilityCalculator* calculator)
     om7->setText("nan");
     om8->setText("nan");
     om9->setText("nan");
+    setStyleSheet("QLineEdit{border: 2px solid FireBrick}");
     return;
   }
 

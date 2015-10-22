@@ -78,6 +78,8 @@ void EulerWidget::setupGui()
 // -----------------------------------------------------------------------------
 void EulerWidget::updateData(OrientationUtilityCalculator* calculator)
 {
+  setStyleSheet("");
+
   if (calculator->getInputType() == OrientationConverter<double>::Euler)
   {
     // The input type is the same as this widget, so don't update
@@ -88,6 +90,7 @@ void EulerWidget::updateData(OrientationUtilityCalculator* calculator)
     e1->setText("nan");
     e2->setText("nan");
     e3->setText("nan");
+    setStyleSheet("QLineEdit{border: 2px solid FireBrick}");
     return;
   }
 

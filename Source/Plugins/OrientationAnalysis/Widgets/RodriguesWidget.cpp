@@ -79,6 +79,8 @@ void RodriguesWidget::setupGui()
 // -----------------------------------------------------------------------------
 void RodriguesWidget::updateData(OrientationUtilityCalculator* calculator)
 {
+  setStyleSheet("");
+
   if (calculator->getInputType() == OrientationConverter<double>::Rodrigues)
   {
     // The input type is the same as this widget, so don't update
@@ -90,6 +92,7 @@ void RodriguesWidget::updateData(OrientationUtilityCalculator* calculator)
     r2->setText("nan");
     r3->setText("nan");
     r4->setText("nan");
+    setStyleSheet("QLineEdit{border: 2px solid FireBrick}");
     return;
   }
 
