@@ -11,10 +11,10 @@
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
-const int NUM_RESOL_CHOICES = 3;
-const int DEFAULT_RESOL_CHOICE = 0;
-const float RESOL_CHOICES[NUM_RESOL_CHOICES][2] = { { 3.0f, 7.0f }, { 5.0f, 5.0f }, { 5.0f, 8.0f } }; // { for misorient., for planes } 
-const double BALL_VOLS[NUM_RESOL_CHOICES] = { 0.0000641, 0.000139, 0.00038019 };
+const int NUM_MISOR_RESOL = 7;
+const int NUM_PLANE_RESOL = 4;
+const float MISOR_RESOL_CHOICES[NUM_MISOR_RESOL] = { 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f }; 
+const float PLANE_RESOL_CHOICES[NUM_MISOR_RESOL] = { 5.0f, 7.0f, 8.0f, 10.0f };
 
 /**
  * @brief The FindGBCD_MetricBased class. See [Filter documentation](@ref findgbcd_metricbased) for details.
@@ -36,8 +36,16 @@ public:
   SIMPL_FILTER_PARAMETER(AxisAngleInput_t, MisorientationRotation)
   Q_PROPERTY(AxisAngleInput_t MisorientationRotation READ getMisorientationRotation WRITE setMisorientationRotation)
 
-  SIMPL_FILTER_PARAMETER(int, ChosenLimitDists)
-  Q_PROPERTY(int ChosenLimitDists READ getChosenLimitDists WRITE setChosenLimitDists)
+  /*SIMPL_FILTER_PARAMETER(int, ChosenLimitDists)
+  Q_PROPERTY(int ChosenLimitDists READ getChosenLimitDists WRITE setChosenLimitDists)*/
+
+  
+  SIMPL_FILTER_PARAMETER(int, MisorLimitDist)
+  Q_PROPERTY(int MisorLimitDist READ getMisorLimitDist WRITE setMisorLimitDist)
+
+  SIMPL_FILTER_PARAMETER(int, PlaneLimitDist)
+  Q_PROPERTY(int PlaneLimitDist READ getPlaneLimitDist WRITE setPlaneLimitDist)
+  
 
   SIMPL_FILTER_PARAMETER(int, NumSamplPts)
   Q_PROPERTY(int NumSamplPts READ getNumSamplPts WRITE setNumSamplPts)
@@ -144,6 +152,8 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
   DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
   DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceLabels)
+
+  bool doublesEqual(double x, double y);
 
   FindGBCD_MetricBased(const FindGBCD_MetricBased&); // Copy Constructor Not Implemented
   void operator=(const FindGBCD_MetricBased&); // Operator '=' Not Implemented
