@@ -610,12 +610,7 @@ void FindGBCD_MetricBased::dataCheck()
 		notifyErrorMessage(getHumanLabel(), ss, -1000);
 		setErrorCondition(-1);
 	}
-	if (getDistOutputFile().isEmpty() == false && getDistOutputFile() == getErrOutputFile())
-	{
-		QString ss = QObject::tr("The output files must be different");
-		notifyErrorMessage(getHumanLabel(), ss, -1);
-		setErrorCondition(-1);
-	}
+
 
 	QFileInfo distOutFileInfo(getDistOutputFile());
 	QDir distParentPath = distOutFileInfo.path();
@@ -625,6 +620,7 @@ void FindGBCD_MetricBased::dataCheck()
 		notifyWarningMessage(getHumanLabel(), ss, -1);
 	}
 
+
 	QFileInfo errOutFileInfo(getErrOutputFile());
 	QDir errParentPath = errOutFileInfo.path();
 	if (errParentPath.exists() == false)
@@ -632,6 +628,42 @@ void FindGBCD_MetricBased::dataCheck()
 		QString ss = QObject::tr("The directory path for the distribution errors output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
 		notifyWarningMessage(getHumanLabel(), ss, -1);
 	}
+
+
+  if (distOutFileInfo.suffix().compare("") == 0)
+  {
+    setDistOutputFile(getDistOutputFile().append(".dat"));
+  }
+  if (errOutFileInfo.suffix().compare("") == 0)
+  {
+    setErrOutputFile(getErrOutputFile().append(".dat"));
+  }
+
+
+  // Make sure the file name ends with _1 so the GMT scripts work correctly
+  QString distFName = distOutFileInfo.baseName();
+  if (distFName.endsWith("_1") == false)
+  {
+    distFName = distFName + "_1";
+    QString absPath = distOutFileInfo.absolutePath() + "/" + distFName + ".dat";
+    setDistOutputFile(absPath);
+  }
+
+  QString errFName = errOutFileInfo.baseName();
+  if (errFName.endsWith("_1") == false)
+  {
+    errFName = errFName + "_1";
+    QString absPath = distOutFileInfo.absolutePath() + "/" + errFName + ".dat";
+    setDistOutputFile(absPath);
+  }
+
+
+  if (getDistOutputFile().isEmpty() == false && getDistOutputFile() == getErrOutputFile())
+  {
+    QString ss = QObject::tr("The output files must be different");
+    notifyErrorMessage(getHumanLabel(), ss, -1);
+    setErrorCondition(-1);
+  }
 
 
 	// Crystal Structures (DREAM file)
@@ -1044,23 +1076,23 @@ void FindGBCD_MetricBased::execute()
 
 
 	// ------------------------------------------- writing the output --------------------------------------------
+
+	fprintf(fDist, "%.1f %.1f %.1f %.1f\n", m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l, m_MisorientationRotation.angle);
+	fprintf(fErr, "%.1f %.1f %.1f %.1f\n", m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l, m_MisorientationRotation.angle);
+
 	for (int ptIdx = 0; ptIdx < samplPtsX.size(); ptIdx++) {
 
 		float zenith = acosf(samplPtsZ.at(ptIdx));
 		float azimuth = atan2f(samplPtsY.at(ptIdx), samplPtsX.at(ptIdx));
 
-		float rStereoProj = tanf(0.5f * zenith);
-		float xStereoProj = rStereoProj * cos(azimuth);
-		float yStereoProj = rStereoProj * sin(azimuth);
-
 		float zenithDeg = SIMPLib::Constants::k_180OverPi * zenith;
 		float azimuthDeg = SIMPLib::Constants::k_180OverPi * azimuth;
 
-		fprintf(fDist, "%.4f %.4f %.2f %.2f %.4f\n", xStereoProj, yStereoProj, zenithDeg, azimuthDeg, distribValues[ptIdx]);
+		fprintf(fDist, "%.2f %.2f %.4f\n", azimuthDeg, 90.0f - zenithDeg,  distribValues[ptIdx]);
 
 		if (m_SaveRelativeErr == false)
 		{
-			fprintf(fErr, "%.4f %.4f %.2f %.2f %.4f\n", xStereoProj, yStereoProj, zenithDeg, azimuthDeg, errorValues[ptIdx]);
+      fprintf(fErr, "%.2f %.2f %.4f\n", azimuthDeg, 90.0f - zenithDeg, errorValues[ptIdx]);
 		}
 		else
 		{
@@ -1068,7 +1100,7 @@ void FindGBCD_MetricBased::execute()
 			if (distribValues[ptIdx] > 1e-10) {
 				saneErr = fmin(100.0, 100.0 * errorValues[ptIdx] / distribValues[ptIdx]);
 			}
-			fprintf(fErr, "%.4f %.4f %.2f %.2f %.1f\n", xStereoProj, yStereoProj, zenithDeg, azimuthDeg, saneErr);
+      fprintf(fErr, "%.4f %.4f %.2f %.2f %.1f\n", azimuthDeg, 90.0f - zenithDeg,  saneErr);
 		}
 	}
 	fclose(fDist);
