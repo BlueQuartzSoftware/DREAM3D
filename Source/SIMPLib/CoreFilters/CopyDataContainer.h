@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2014 William Lenthe
+* Copyright (c) 2014 The Regents of the University of California, Author: William Lenthe
 * Copyright (c) 2014-2015 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
