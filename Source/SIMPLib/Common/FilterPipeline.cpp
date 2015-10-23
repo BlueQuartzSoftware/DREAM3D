@@ -37,6 +37,7 @@
 #include "FilterPipeline.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 
+#include "moc_FilterPipeline.cpp"
 
 // -----------------------------------------------------------------------------
 //

@@ -44,8 +44,10 @@
 #include "SIMPLib/SIMPLibVersion.h"
 
 #include "Generic/GenericConstants.h"
-#include "Generic/moc_GenericPlugin.cpp"
 
+
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_GenericPlugin.cpp"
 
 // -----------------------------------------------------------------------------
 //

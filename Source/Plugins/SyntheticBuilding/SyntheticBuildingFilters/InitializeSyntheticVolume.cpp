@@ -63,6 +63,11 @@
 #define INIT_SYNTH_VOLUME_CHECK(var, errCond) \
   if (m_##var <= 0) { QString ss = QObject::tr("%1 must be positive").arg( #var); notifyErrorMessage(getHumanLabel(), ss, errCond);}
 
+// Include the MOC generated file for this class
+#include "moc_InitializeSyntheticVolume.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -286,7 +291,7 @@ QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3
   if (phaseType.get() == NULL)
   {
     QString ss = QObject::tr("Phase types array could not be downcast using boost::dynamic_pointer_cast<T> when estimating the number of grains. The path is %1").arg(getInputPhaseTypesArrayPath().serialize());
-    setErrorCondition(-80000);
+    setErrorCondition(-11002);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return "0";
   }
@@ -297,7 +302,7 @@ QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3
   if (statsPtr.get() == NULL)
   {
     QString ss = QObject::tr("Statistics array could not be downcast using boost::dynamic_pointer_cast<T> when estimating the number of grains. The path is %1").arg(getInputStatsArrayPath().serialize());
-    notifyErrorMessage(getHumanLabel(), ss, -80001);
+    notifyErrorMessage(getHumanLabel(), ss, -11001);
     return "0";
   }
 
@@ -397,8 +402,8 @@ QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3
         QString ss = QObject::tr("Tried to cast a statsDataArray[%1].get() to a PrimaryStatsData* "
                                  "pointer but this resulted in a NULL pointer.\n")
                      .arg(phase).arg(phase);
-        notifyErrorMessage(getHumanLabel(), ss, -666);
         setErrorCondition(-666);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return "-1";
       }
       while (volgood == false)

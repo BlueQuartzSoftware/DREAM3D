@@ -51,6 +51,9 @@
 #include "FilterParameterWidgetsDialogs.h"
 #include "FilterParameterWidgetUtils.hpp"
 
+// Include the MOC generated file for this class
+#include "moc_DataArraySelectionWidget.cpp"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

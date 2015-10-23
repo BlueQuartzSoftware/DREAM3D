@@ -7,6 +7,8 @@ Surface Meshing (Generation)
 ## Description ##
 This **Filter** generates a **Triangle Geometry** from an **Image Geometry** that represents a surface mesh of the present **Features**. The algorithm proceeds by creating a pair of **Triangles** for each face of the **Cell** where the neighboring **Cell** have a different **Feature** Id value. The meshing operation is extremely quick but can result in a surface mesh that is very "stair stepped". The user is encouraged to use a [smoothing operation](@ref laplaciansmoothing) to reduce this "blockiness".
 
+The user may choose any number of **Cell Attribute Arrays** to transfer to the created **Triangle Geometry**. The **Faces** will gain the values of the **Cells** from which they were created.  Currently, the **Filter** disallows the transferring of data that has a *multi-dimensional* component dimensions vector.  For example, scalar values and vector values are allowed to be transferred, but N x M matrices cannot currently be transferred. 
+
 For more information on surface meshing, visit the [tutorial](@ref tutorialsurfacemeshingtutorial).
 
 ---------------
@@ -17,9 +19,7 @@ For more information on surface meshing, visit the [tutorial](@ref tutorialsurfa
 ---------------
 
 ## Parameters ##
-| Name | Type | Description |
-|------|------|-------------|
-| Transfer Phase Id | bool | Whether to transfer the **Ensemble** Ids from the **Image Geometry** into the new **Triangle Geometry** |
+None
 
 ## Required Geometry ##
 Image
@@ -28,7 +28,7 @@ Image
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
 | **Cell Attribute Array** | FeatureIds | int32_t | (1) | Specifies to which **Feature** each **Cell** belongs |
-| **Cell Attribute Array** | Phases | int32_t | (1) | Specifies to which **Ensemble** each **Cell** belongs. Only needed if _Transfer Phase Id_ is checked |
+| Any **Cell Attribute Array** |  None | Any | Any | Specifies which **Cell Attribute Arrays** to transfer to the created **Triangle Geometry** |
 
 ## Created Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
@@ -38,7 +38,7 @@ Image
 | **Vertex Attribute Array** | NodeTypes | int8_t | (1) | Specifies the type of node in the **Geometry** |
 | **Attribute Matrix** | FaceData | Face | N/A | Created **Face Attribute Matrix** name  |
 | **Face Attribute Array** | FaceLabels | int32_t | (2) | Specifies which **Features** are on either side of each **Face** |
-| **Face Attribute Array** | Phases | int32_t | (1) | Specifies to which **Ensemble** each **Face** belongs. Only needed if _Transfer Phase Id_ is checked |
+| Any **Face Attribute Array** | None | Any | Any | The set of transferred **Cell Attribute Arrays** |
 
 ## License & Copyright ##
 

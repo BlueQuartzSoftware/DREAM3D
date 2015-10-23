@@ -52,11 +52,10 @@
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
-
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Math/GeometryMath.h"
 
-#include "OrientationLib/OrientationMath/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
@@ -210,10 +209,15 @@ class CalculateTwinBoundarySchmidFactorsImpl
 #endif
 };
 
+// Include the MOC generated file for this class
+#include "moc_FindTwinBoundarySchmidFactors.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindTwinBoundarySchmidFactors::FindTwinBoundarySchmidFactors()  :
+FindTwinBoundarySchmidFactors::FindTwinBoundarySchmidFactors() :
   AbstractFilter(),
   m_WriteFile(false),
   m_TwinBoundarySchmidFactorsFile(""),

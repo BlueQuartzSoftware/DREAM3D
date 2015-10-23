@@ -45,39 +45,10 @@
 #include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
 #include "OrientationLib/OrientationLib.h"
-#include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/OrientationMath/OrientationConverter.hpp"
 #include "OrientationLib/SpaceGroupOps/CubicOps.h"
 
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-template<typename T>
-void Print_QU(const T& om, typename QuaternionMath<float>::Order layout = QuaternionMath<float>::QuaternionVectorScalar)
-{
-  if(layout == QuaternionMath<float>::QuaternionVectorScalar)
-  {
-    printf("Quaternion (<vector>scalar)      :   <% 3.6f   % 3.6f    % 3.6f>    % 3.6f\n", om[0], om[1], om[2], om[3] );
-  }
-
-  else if(layout == QuaternionMath<float>::QuaternionScalarVector)
-  {
-    printf("Quaternion (scalar<vector>)      :   % 3.6f   <% 3.6f    % 3.6f    % 3.6f>\n", om[0], om[1], om[2], om[3] );
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-template<typename T>
-void Print_EU(const T& om)
-{
-  printf("Euler angles [rad]               :   % 3.6f    % 3.6f    % 3.6f\n", om[0], om[1], om[2] );
-}
-
-
+#include "TestPrintFunctions.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -114,18 +85,9 @@ void TestEulerConversion()
   for(size_t i = 0; i < nTuples; i++)
   {
     float* ptr = output->getPointer(i * qStride);
-    Print_QU(ptr);
+    OrientationPrinters::Print_QU<float*, float>(ptr);
   }
 
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool closeEnough(const float& a, const float& b,
-                 const float& epsilon = std::numeric_limits<float>::epsilon())
-{
-  return (epsilon > std::abs(a - b));
 }
 
 // -----------------------------------------------------------------------------

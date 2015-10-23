@@ -1,15 +1,37 @@
-#--////////////////////////////////////////////////////////////////////////////
-#--
-#--  Copyright (c) 2009, Michael A. Jackson. BlueQuartz Software
-#--  Copyright (c) 2009, Michael Groeber, US Air Force Research Laboratory
-#--  All rights reserved.
-#--  BSD License: http://www.opensource.org/licenses/bsd-license.html
-#--
-#--////////////////////////////////////////////////////////////////////////////
-
-#///////////////////////////////////////////////////////////////////////////////
-#// This code was partly written under US Air Force Contract FA8650-07-D-5800
-#///////////////////////////////////////////////////////////////////////////////
+# ============================================================================
+# Copyright (c) 2009-2015 BlueQuartz Software, LLC
+#
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+#
+# Redistributions of source code must retain the above copyright notice, this
+# list of conditions and the following disclaimer.
+#
+# Redistributions in binary form must reproduce the above copyright notice, this
+# list of conditions and the following disclaimer in the documentation and/or
+# other materials provided with the distribution.
+#
+# Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+# contributors may be used to endorse or promote products derived from this software
+# without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+# USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# The code contained herein was partially funded by the followig contracts:
+#    United States Air Force Prime Contract FA8650-07-D-5800
+#    United States Air Force Prime Contract FA8650-10-D-5210
+#    United States Prime Contract Navy N00173-07-C-2068
+#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 # set project's name
 PROJECT( SIMPLib VERSION ${DREAM3DProj_VERSION_MAJOR}.${DREAM3DProj_VERSION_MINOR})
@@ -67,11 +89,15 @@ include(${SIMPLib_SOURCE_DIR}/SIMPLibMacros.cmake)
 
 #-------------------------------------------------------------------------------
 macro(D3DCompileDir DirName)
+    set(SIMPLib_${DirName}_Generated_MOC_SRCS "")
     include(${SIMPLib_SOURCE_DIR}/${DirName}/SourceList.cmake)
-    set(Project_SRCS ${Project_SRCS} ${SIMPLib_${DirName}_SRCS} ${SIMPLib_${DirName}_HDRS})
+
+    foreach(f ${SIMPLib_${DirName}_Generated_MOC_SRCS})
+        set_source_files_properties( ${f} PROPERTIES GENERATED TRUE)
+        set_source_files_properties( ${f} PROPERTIES HEADER_FILE_ONLY TRUE)
+    endforeach()
+    set(Project_SRCS ${Project_SRCS} ${SIMPLib_${DirName}_SRCS} ${SIMPLib_${DirName}_HDRS} ${SIMPLib_${SUBDIR_NAME}_Generated_MOC_SRCS})
 endMacro()
-
-
 
 # Add in our NON-Filter classes
 D3DCompileDir(Common)
@@ -85,7 +111,6 @@ D3DCompileDir(Plugin)
 D3DCompileDir(StatsData)
 D3DCompileDir(Utilities)
 D3DCompileDir(VTKUtils)
-
 
 
 #-------
@@ -106,16 +131,22 @@ file(APPEND ${RegisterKnownFiltersFile} "#include \"SIMPLibFilters.h\"\n")
 file(APPEND ${RegisterKnownFiltersFile} "\nvoid FilterManager::RegisterKnownFilters(FilterManager* fm)\n{\n")
 
 
-
-
 # Add in our Filter classes
+# set(PluginAutoMocSourceFile ${${PROJECT_NAME}_BINARY_DIR}/CoreFilters_automoc_cmake.cpp)
+# set_source_files_properties( ${PluginAutoMocSourceFile} PROPERTIES GENERATED TRUE)
+# Add the generated moc file to the project sources
+# set(Project_SRCS ${Project_SRCS} ${PluginAutoMocSourceFile} )
 include(${SIMPLib_SOURCE_DIR}/CoreFilters/SourceList.cmake)
 
 #-----------------------------------------------------
 # conditionally compile our example codes- These should be turned off for a release
 option(SIMPLib_BUILD_TEST_FILTERS "Build the Test filters: These should be OFF when doing a release" ON)
 if(SIMPLib_BUILD_TEST_FILTERS)
-  include(${SIMPLib_SOURCE_DIR}/TestFilters/SourceList.cmake)
+    # set(PluginAutoMocSourceFile ${${PROJECT_NAME}_BINARY_DIR}/TestFilters_automoc_cmake.cpp)
+    # set_source_files_properties( ${PluginAutoMocSourceFile} PROPERTIES GENERATED TRUE)  
+    # Add the generated moc file to the project sources
+    set(Project_SRCS ${Project_SRCS} ${PluginAutoMocSourceFile} )
+    include(${SIMPLib_SOURCE_DIR}/TestFilters/SourceList.cmake)
 endif()
 
 #-----------------------------------------------------
@@ -133,6 +164,7 @@ cmpReplaceFileIfDifferent(OLD_FILE_PATH  ${SIMPLib_BINARY_DIR}/RegisterKnownFilt
 include_directories( ${HDF5_INCLUDE_DIR} )
 include_directories( ${PROJECT_CODE_DIR} )
 include_directories( ${SIMPLib_BINARY_DIR} )
+
 
 #-- Add a library for the SIMPLib Code
 add_library(${PROJECT_NAME} ${LIB_TYPE} ${Project_SRCS} )

@@ -43,6 +43,9 @@
 
 #include "FilterParameterWidgetsDialogs.h"
 
+// Include the MOC generated file for this class
+#include "moc_DoubleWidget.cpp"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -84,6 +87,7 @@ void DoubleWidget::setupGui()
 
   QDoubleValidator* xVal = new QDoubleValidator(value);
   value->setValidator(xVal);
+  xVal->setLocale(QLocale::system());
 
   if (getFilterParameter() != NULL)
   {

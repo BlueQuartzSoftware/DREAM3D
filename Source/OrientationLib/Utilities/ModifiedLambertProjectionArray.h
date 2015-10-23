@@ -252,6 +252,24 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      */
     virtual int copyTuple(size_t currentPos, size_t newPos);
 
+  /**
+   * @brief copyData This method copies all data from the <b>sourceArray</b> into
+   * the current array starting at the target destination tuple offset value.
+   *
+   * For example if the DataArray has 10 tuples and the destTupleOffset = 5 then
+   * then source data will be copied into the destination array starting at
+   * destination tuple 5. In psuedo code it would be the following:
+   * @code
+   *  destArray[5] = sourceArray[0];
+   *  destArray[6] = sourceArray[1];
+   *  .....
+   * @endcode
+   * @param destTupleOffset
+   * @param sourceArray
+   * @return
+   */
+  virtual bool copyData(size_t destTupleOffset, IDataArray::Pointer sourceArray);
+  
     /**
      * @brief reorderCopy
      * @param newOrderMap

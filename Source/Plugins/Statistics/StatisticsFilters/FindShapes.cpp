@@ -32,28 +32,30 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #include "FindShapes.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 
+#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+
 #include "Statistics/StatisticsConstants.h"
+
+// Include the MOC generated file for this class
+#include "moc_FindShapes.cpp"
+
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-
-FindShapes::FindShapes()  :
+FindShapes::FindShapes() :
   AbstractFilter(),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),

@@ -39,21 +39,25 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Math/GeometryMath.h"
 
-#include "OrientationLib/OrientationMath/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
+
+// Include the MOC generated file for this class
+#include "moc_FindFeatureNeighborCAxisMisalignments.cpp"
+
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindFeatureNeighborCAxisMisalignments::FindFeatureNeighborCAxisMisalignments()  :
+FindFeatureNeighborCAxisMisalignments::FindFeatureNeighborCAxisMisalignments() :
   AbstractFilter(),
   m_FindAvgMisals(false),
   m_NeighborListArrayPath("", "", ""),

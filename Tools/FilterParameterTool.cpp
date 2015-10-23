@@ -34,6 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
+
 #include <iostream>
 
 
@@ -861,7 +862,10 @@ void ReplaceLicenseText(QString absPath)
 
 
   QString searchString = "/* ============================================================================";
-  QString searchString2 = " * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */";
+  QString searchString2 = "* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */";
+  QString searchString4 = " * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */";
+
+  QString searchStrin3 = "Groeber";
   QVector<QString> outLines;
   QStringList list = contents.split(QRegExp("\\n"));
   QStringListIterator sourceLines(list);
@@ -871,14 +875,16 @@ void ReplaceLicenseText(QString absPath)
   if(list.at(0).startsWith(searchString) == true)
   {
     hasLicense = true;
-    QString line = sourceLines.next();
   }
+
+  bool hasOldLicense = false;
 
   while (sourceLines.hasNext())
   {
     QString line = sourceLines.next();
 
-    if(hasLicense == true && line.startsWith(searchString2))
+
+    if(hasLicense == true && (line.startsWith(searchString2) || line.startsWith(searchString4)) )
     {
       hasLicense = false;
 
@@ -925,8 +931,12 @@ void ReplaceLicenseText(QString absPath)
       continue;
     }
 
+
     if (hasLicense == true && line.startsWith(" *"))
     {
+      if(line.contains(searchStrin3)) {
+        hasOldLicense = true;
+      }
       continue;
     }
 
@@ -935,8 +945,8 @@ void ReplaceLicenseText(QString absPath)
     index++;
   }
 
-
-  writeOutput(didReplace, outLines, absPath);
+  qDebug() << "Updating License: " << absPath;
+  if (hasOldLicense) { writeOutput(didReplace, outLines, absPath); }
 }
 
 
@@ -951,6 +961,8 @@ void ReplaceLicenseCodeRecursively(QDir currentDir)
   filters.append("*.cpp");
   filters.append("*.hpp");
   filters.append("*.in");
+
+  qDebug() << currentDir;
 
   if(currentDir.dirName().compare("zRel") == 0 || currentDir.dirName().compare("Build") == 0)
   {
@@ -1209,8 +1221,8 @@ int main(int argc, char* argv[])
 //  GenerateMarkDownDocs();
 //  GenerateFilterParametersCode();
 #else
-  ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() ) );
-  ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins" ) );
+  //ReplaceLicenseCodeRecursively( QDir ( D3DTools::GetDREAM3DProjDir() ) );
+  //ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins" ) );
 #endif
   return 0;
 }

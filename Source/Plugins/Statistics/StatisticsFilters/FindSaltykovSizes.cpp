@@ -47,6 +47,11 @@
 #include "Statistics/StatisticsConstants.h"
 #include "SIMPLib/Utilities/SIMPLibRandom.h"
 
+// Include the MOC generated file for this class
+#include "moc_FindSaltykovSizes.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

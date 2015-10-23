@@ -109,6 +109,11 @@ class ExecuteFindDifferenceMap
     }
 };
 
+// Include the MOC generated file for this class
+#include "moc_FindDifferenceMap.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -216,17 +221,17 @@ void warnOnUnsignedTypes(AbstractFilter* filter, IDataArray::Pointer ptr)
   if (TemplateHelpers::CanDynamicCast<DataArray<uint16_t> >()(ptr))
   {
     QString ss = QObject::tr("Selected Attribute Arrays are of type uint16_t. Using unsigned integer types may result in underflow leading to extremely large values!");
-    filter->notifyWarningMessage(filter->getHumanLabel(), ss, -90004);
+    filter->notifyWarningMessage(filter->getHumanLabel(), ss, -90005);
   }
   if (TemplateHelpers::CanDynamicCast<DataArray<uint32_t> >()(ptr))
   {
     QString ss = QObject::tr("Selected Attribute Arrays are of type uint32_t. Using unsigned integer types may result in underflow leading to extremely large values!");
-    filter->notifyWarningMessage(filter->getHumanLabel(), ss, -90004);
+    filter->notifyWarningMessage(filter->getHumanLabel(), ss, -90006);
   }
   if (TemplateHelpers::CanDynamicCast<DataArray<uint64_t> >()(ptr))
   {
     QString ss = QObject::tr("Selected Attribute Arrays are of type uint64_t. Using unsigned integer types may result in underflow leading to extremely large values!");
-    filter->notifyWarningMessage(filter->getHumanLabel(), ss, -90004);
+    filter->notifyWarningMessage(filter->getHumanLabel(), ss, -90007);
   }
 }
 

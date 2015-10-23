@@ -227,7 +227,7 @@ class SIMPLib_EXPORT DataArrayPath : public QObject
 
 
   private:
-    QScopedPointer<DataArrayPathPrivate> const d_ptr;
+    DataArrayPathPrivate* const d_ptr;
 
 
 };

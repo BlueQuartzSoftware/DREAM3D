@@ -48,6 +48,10 @@
 
 #include "IO/IOConstants.h"
 
+// Include the MOC generated file for this class
+#include "moc_DxWriter.cpp"
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -121,8 +125,8 @@ void DxWriter::dataCheck()
   if (getOutputFile().isEmpty() == true)
   {
     QString ss = QObject::tr("The output file must be set");
-    notifyErrorMessage(getHumanLabel(), ss, -1000);
-    setErrorCondition(-1);
+    setErrorCondition(-1000);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   QFileInfo fi(getOutputFile());
@@ -209,8 +213,8 @@ int32_t DxWriter::writeFile()
   {
     QString ss;
     ss = QObject::tr("Error creating parent path '%1'").arg(dir.path());
-    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -1;
   }
 

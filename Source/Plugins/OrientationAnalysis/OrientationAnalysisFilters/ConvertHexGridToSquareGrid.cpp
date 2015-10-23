@@ -50,10 +50,16 @@
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/FilterParameters/ConvertHexGridToSquareGridFilterParameter.h"
 
+// Include the MOC generated file for this class
+#include "moc_ConvertHexGridToSquareGrid.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ConvertHexGridToSquareGrid::ConvertHexGridToSquareGrid() :
+  AbstractFilter(),
   m_ZStartIndex(0),
   m_ZEndIndex(0),
   m_XResolution(1.0f),
@@ -161,8 +167,8 @@ void ConvertHexGridToSquareGrid::dataCheck()
   if(m_InputPath.isEmpty() == true)
   {
     ss = QObject::tr("The input directory must be set");
-    notifyErrorMessage(getHumanLabel(), ss, -13);
     setErrorCondition(-13);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   bool hasMissingFiles = false;

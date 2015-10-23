@@ -44,8 +44,11 @@
 #include <QtCore/QTextStream>
 #include <QtCore/QByteArray>
 
-#include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "SIMPLib/Math/QuaternionMath.hpp"
+
+#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+
+
 
 
 
@@ -170,6 +173,11 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
     if (m_IgnoreMultipleDelimiters == true)
     {
       buf = buf.simplified();
+    }
+    QString delimiter = getDelimiter();
+    if(delimiter.compare("\t") == 0)
+    {
+      setDelimiter(" ");
     }
     tokens = buf.split( *(getDelimiter().toLatin1().data()));
 

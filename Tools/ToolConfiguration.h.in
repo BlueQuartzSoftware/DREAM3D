@@ -32,6 +32,11 @@ namespace D3DTools
     return QString::fromLatin1("@DREAM3DProj_PARENT_DIR_NORM@");
   }
 
+  QString GetDREAM3DBinaryDir()
+  {
+    return QString::fromLatin1("@DREAM3DProj_BINARY_DIR@");
+  }
+
 
 }
 

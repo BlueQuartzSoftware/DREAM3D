@@ -61,16 +61,9 @@
 #include "SIMPLib/Utilities/SIMPLibRandom.h"
 #include "SIMPLib/CoreFilters/DataContainerReader.h"
 
-
 #include "QtSupportLib/QFileCompleter.h"
-//#include "QtSupportLib/SIMPLQtMacros.h"
-//#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
 
 #include "SyntheticBuilding/SyntheticBuildingFilters/InitializeSyntheticVolume.h"
-
-
-// This file is auto generated into the build directory
-#include "SyntheticBuilding/moc_InitializeSyntheticVolumeWidget.cpp"
 
 // Initialize private static member variable
 QString InitializeSyntheticVolumeWidget::m_OpenDialogLastDirectory = "";

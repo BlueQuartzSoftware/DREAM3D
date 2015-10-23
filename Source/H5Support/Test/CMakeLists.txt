@@ -8,30 +8,33 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-project(H5SupportTest)
-
-include_directories(${H5SupportTest_SOURCE_DIR})
+# project(H5SupportTest)
+set(PLUGIN_NAME "H5Support")
+set(${PLUGIN_NAME}Test_SOURCE_DIR ${${PLUGIN_NAME}_SOURCE_DIR}/Test/Test)
+set(${PLUGIN_NAME}Test_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test)
 
 include(${DREAM3DProj_SOURCE_DIR}/Test/DREAM3DTestFunctions.cmake)
 
+include_directories(${${PLUGIN_NAME}_SOURCE_DIR}/Test)
+include_directories(${${PLUGIN_NAME}_BINARY_DIR}/Test)
 
-set(TEST_TEMP_DIR ${H5SupportTest_BINARY_DIR}/Temp)
+
+set(TEST_TEMP_DIR ${${PLUGIN_NAME}Test_BINARY_DIR}/Test/Temp)
 # Make sure the directory is created during CMake time
 file(MAKE_DIRECTORY ${TEST_TEMP_DIR})
 
-
-configure_file(${H5SupportTest_SOURCE_DIR}/TestFileLocations.h.in
-               ${H5SupportTest_BINARY_DIR}/H5SupportTestFileLocations.h @ONLY IMMEDIATE)
-
-include_directories(${H5SupportTest_BINARY_DIR})
+configure_file(${${PLUGIN_NAME}_SOURCE_DIR}/Test/TestFileLocations.h.in
+               ${${PLUGIN_NAME}_BINARY_DIR}/Test/${PLUGIN_NAME}TestFileLocations.h @ONLY IMMEDIATE)
 
 
-AddDREAM3DUnitTest(TESTNAME H5LiteTest SOURCES ${H5SupportTest_SOURCE_DIR}/H5LiteTest.cpp
+AddDREAM3DUnitTest(TESTNAME H5LiteTest 
+                    SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/H5LiteTest.cpp
                     FOLDER "Test/H5Support" 
-                     LINK_LIBRARIES Qt5::Core H5Support )
-AddDREAM3DUnitTest(TESTNAME H5UtilitiesTest SOURCES ${H5SupportTest_SOURCE_DIR}/H5UtilitiesTest.cpp 
-                      FOLDER "Test/H5Support" 
-                      LINK_LIBRARIES Qt5::Core H5Support )
+                    LINK_LIBRARIES Qt5::Core H5Support )
+AddDREAM3DUnitTest(TESTNAME H5UtilitiesTest 
+                    SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/H5UtilitiesTest.cpp 
+                    FOLDER "Test/H5Support" 
+                    LINK_LIBRARIES Qt5::Core H5Support )
 
 
 if(0)

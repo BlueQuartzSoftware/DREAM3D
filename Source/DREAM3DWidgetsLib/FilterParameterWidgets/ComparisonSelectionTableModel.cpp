@@ -44,7 +44,8 @@
 
 #include "ComparisonSelectionItemDelegate.h"
 
-#include "DREAM3DWidgetsLib/moc_ComparisonSelectionTableModel.cpp"
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_ComparisonSelectionTableModel.cpp"
 
 // -----------------------------------------------------------------------------
 //

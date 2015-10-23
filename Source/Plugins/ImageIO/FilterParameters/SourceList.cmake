@@ -11,4 +11,4 @@ set (${PLUGIN_NAME}_FilterParameters_SRCS
 set (${PLUGIN_NAME}_FilterParameters_HDRS
     ${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameters/ImportVectorImageStackFilterParameter.h
 )
-cmp_IDE_SOURCE_PROPERTIES( "${PLUGIN_NAME}/FilterParameters" "${${PLUGIN_NAME}_FilterParameters_HDRS}" "${${PLUGIN_NAME}_FilterParameters_SRCS}" "${PROJECT_INSTALL_HEADERS}")
+cmp_IDE_SOURCE_PROPERTIES( "FilterParameters" "${${PLUGIN_NAME}_FilterParameters_HDRS}" "${${PLUGIN_NAME}_FilterParameters_SRCS}" "${PROJECT_INSTALL_HEADERS}")

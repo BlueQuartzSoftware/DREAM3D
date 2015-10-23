@@ -45,6 +45,11 @@
 
 #include "Statistics/StatisticsConstants.h"
 
+// Include the MOC generated file for this class
+#include "moc_FindVolFractions.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -159,6 +164,11 @@ void FindVolFractions::execute()
   for (size_t i = 0; i < totalPoints; i++)
   {
     m_VolFractions[m_CellPhases[i]]++;
+  }
+  
+  for (size_t i = 1; i < totalEnsembles; i++)
+  {
+    m_VolFractions[i] /= totalPoints;
   }
 
   notifyStatusMessage(getHumanLabel(), "Complete");

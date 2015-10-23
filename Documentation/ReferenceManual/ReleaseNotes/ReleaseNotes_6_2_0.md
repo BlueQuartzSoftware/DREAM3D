@@ -1,4 +1,4 @@
-Version 6.12.0 Release Notes {#releasenotes_6_2_0}
+Version 6.2.0 Release Notes {#releasenotes_6_2_0}
 ===========
 
 
@@ -11,6 +11,8 @@ Users:[https://groups.google.com/forum/?/dream3d-users#!forum/dream3d-users](htt
 Developers:[https://groups.google.com/forum/?hl=en#!forum/dream3d-developers](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
 ## Version 6.2.0 ##
++ Completed migration of all internal rotation transformations to those documented in the paper "Tutorial: Consistent Representations of and Conversions Between 3D Rotations", D. Rowenhorst, A.D. Rollett, G.S. Rohrer, M. Groeber, M. Jackson, P.J. Konijnenberg, and M. De Graef.
++ The rotation transformation codes are tested to be internally consistent using 64 bit floating point precision. 32 bit floating point precision may result in symmetrically equivalent angles but not numerically equivalent angles for certain rotations. See the "Convert Orientations" **Filter** for more details.
 + Added feature where **Data Container**, **Attribute Matrix** and **Attribute Array** combo boxes can be filtered out by the type of object that is required. This helps the user make more informed decisions.
 + Fixed crash when using QImage to save an image whose total byte count would exceed the 32 bit signed integer limit.
 + Fixed issue where user adjusted start and end slices would be ignored or reset in the "Read H5Ebsd" **Filter** GUI.

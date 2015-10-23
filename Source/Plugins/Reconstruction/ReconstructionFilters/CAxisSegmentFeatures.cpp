@@ -43,7 +43,6 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -52,10 +51,15 @@
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Math/MatrixMath.h"
 #include "SIMPLib/Utilities/SIMPLibRandom.h"
-#include "OrientationLib/OrientationMath/OrientationMath.h"
+
+#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
+
+// Include the MOC generated file for this class
+#include "moc_CAxisSegmentFeatures.cpp"
+
 
 // -----------------------------------------------------------------------------
 //

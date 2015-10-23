@@ -60,6 +60,9 @@ AttributeMatrixSelectionWidget::AttributeMatrixSelectionWidget(QWidget* parent) 
 }
 
 
+// Include the MOC generated file for this class
+#include "moc_AttributeMatrixSelectionWidget.cpp"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

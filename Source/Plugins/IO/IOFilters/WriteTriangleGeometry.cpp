@@ -53,6 +53,11 @@
 
 
 #define WRITE_EDGES_FILE 0
+// Include the MOC generated file for this class
+#include "moc_WriteTriangleGeometry.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -203,8 +208,8 @@ void WriteTriangleGeometry::execute()
   {
 
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
-    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
   FILE* nodesFile = NULL;
@@ -234,8 +239,8 @@ void WriteTriangleGeometry::execute()
   {
 
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
-    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
   FILE* triFile = fopen(getOutputTrianglesFile().toLatin1().data(), "wb");

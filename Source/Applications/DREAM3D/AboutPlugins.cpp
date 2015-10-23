@@ -32,7 +32,7 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
+#include "AboutPlugins.h"
 
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QFileDialog>
@@ -46,7 +46,9 @@
 #include "QtSupportLib/DREAM3DSettings.h"
 
 #include "PluginDetails.h"
-#include "AboutPlugins.h"
+
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_AboutPlugins.cpp"
 
 enum ColumnIndex
 {

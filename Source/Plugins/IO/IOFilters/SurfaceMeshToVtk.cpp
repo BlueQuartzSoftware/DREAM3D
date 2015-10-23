@@ -55,6 +55,11 @@
 #include "IO/IOConstants.h"
 
 
+// Include the MOC generated file for this class
+#include "moc_SurfaceMeshToVtk.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -274,8 +279,8 @@ void SurfaceMeshToVtk::execute()
   {
 
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
-    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -286,8 +291,8 @@ void SurfaceMeshToVtk::execute()
   {
 
     QString ss = QObject::tr("Error creating file '%1'").arg(getOutputVtkFile());
-    notifyErrorMessage(getHumanLabel(), ss, -18542);
     setErrorCondition(-18542);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
   ScopedFileMonitor vtkFileMonitor(vtkFile);

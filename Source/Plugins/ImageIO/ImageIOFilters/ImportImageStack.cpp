@@ -52,6 +52,11 @@
 
 #include "ImageIO/ImageIOConstants.h"
 
+// Include the MOC generated file for this class
+#include "moc_ImportImageStack.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -168,8 +173,8 @@ void ImportImageStack::dataCheck()
   if (m_InputFileListInfo.InputPath.isEmpty() == true)
   {
     ss = QObject::tr("The input directory must be set");
-    notifyErrorMessage(getHumanLabel(), ss, -13);
     setErrorCondition(-13);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
@@ -188,8 +193,8 @@ void ImportImageStack::dataCheck()
     if (m_BoundsFile.isEmpty() == true)
     {
       ss = QObject::tr("The Bounds file must be set");
-      notifyErrorMessage(getHumanLabel(), ss, -14);
       setErrorCondition(-14);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
   }
 
@@ -218,8 +223,8 @@ void ImportImageStack::dataCheck()
     out << "StartIndex: " << m_InputFileListInfo.StartIndex << "\n";
     out << "EndIndex: " << m_InputFileListInfo.EndIndex << "\n";
 
-    notifyErrorMessage(getHumanLabel(), ss, -11);
     setErrorCondition(-11);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else
   {

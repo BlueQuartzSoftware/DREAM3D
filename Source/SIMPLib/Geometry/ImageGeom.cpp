@@ -142,6 +142,20 @@ void ImageGeom::getCoords(size_t& x, size_t& y, size_t& z, float coords[3])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ImageGeom::getCoords(size_t& idx, float coords[3])
+{
+  size_t column = idx % m_Dimensions[0];
+  size_t row = (idx / m_Dimensions[0]) % m_Dimensions[1];
+  size_t plane = idx / (m_Dimensions[0] * m_Dimensions[1]);
+
+  coords[0] = column * getXRes() + m_Origin[0];
+  coords[1] = row * getYRes() + m_Origin[1];
+  coords[2] = plane * getZRes() + m_Origin[2];
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ImageGeom::getCoords(size_t idx[3], double coords[3])
 {
   coords[0] = static_cast<double>(idx[0] * getXRes() + m_Origin[0]);
@@ -157,6 +171,20 @@ void ImageGeom::getCoords(size_t& x, size_t& y, size_t& z, double coords[3])
   coords[0] = static_cast<double>(x * getXRes() + m_Origin[0]);
   coords[1] = static_cast<double>(y * getYRes() + m_Origin[1]);
   coords[2] = static_cast<double>(z * getZRes() + m_Origin[2]);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ImageGeom::getCoords(size_t& idx, double coords[3])
+{
+  size_t column = idx % m_Dimensions[0];
+  size_t row = (idx / m_Dimensions[0]) % m_Dimensions[1];
+  size_t plane = idx / (m_Dimensions[0] * m_Dimensions[1]);
+
+  coords[0] = static_cast<double>(column * getXRes() + m_Origin[0]);
+  coords[1] = static_cast<double>(row * getYRes() + m_Origin[1]);
+  coords[2] = static_cast<double>(plane * getZRes() + m_Origin[2]);
 }
 
 // -----------------------------------------------------------------------------

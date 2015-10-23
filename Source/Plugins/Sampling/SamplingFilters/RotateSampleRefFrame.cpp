@@ -51,7 +51,8 @@
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Math/GeometryMath.h"
-#include "OrientationLib/OrientationMath/OrientationMath.h"
+
+#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 #include "Sampling/SamplingConstants.h"
 
@@ -157,6 +158,11 @@ class RotateSampleRefFrameImpl
 
 
 };
+
+// Include the MOC generated file for this class
+#include "moc_RotateSampleRefFrame.cpp"
+
+
 
 // -----------------------------------------------------------------------------
 //

@@ -52,6 +52,11 @@
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
+// Include the MOC generated file for this class
+#include "moc_WriteIPFStandardTriangle.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -116,8 +121,8 @@ void WriteIPFStandardTriangle::dataCheck()
   if (getOutputFile().isEmpty() == true)
   {
     ss = QObject::tr( "The output file must be set");
-    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -134,15 +139,15 @@ void WriteIPFStandardTriangle::dataCheck()
   if (ext.isEmpty())
   {
     ss = QObject::tr("The output file does not have an extension");
-    notifyErrorMessage(getHumanLabel(), ss, -1003);
-    setErrorCondition(-1004);
+    setErrorCondition(-1003);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
   else if (ext != "tif" && ext != "bmp" && ext != "png")
   {
     ss = QObject::tr("The output file has an unsupported extension.  Please select a TIF, BMP, or PNG file");
-    notifyErrorMessage(getHumanLabel(), ss, -1004);
     setErrorCondition(-1004);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 

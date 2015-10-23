@@ -50,7 +50,7 @@
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QGraphicsPixmapItem>
 
-
+#include "moc_AIMImageGraphicsDelegate.cpp"
 
 #define ZOOM_INDEX_MAX 9
 #define ZOOM_INDEX_MIN 0

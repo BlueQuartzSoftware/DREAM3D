@@ -66,6 +66,11 @@
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
+// Include the MOC generated file for this class
+#include "moc_WritePoleFigure.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -349,8 +354,8 @@ void WritePoleFigure::execute()
   if (!path.mkpath(".") )
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(path.absolutePath());
-    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 

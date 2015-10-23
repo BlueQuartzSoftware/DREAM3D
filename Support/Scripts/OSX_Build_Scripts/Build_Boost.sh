@@ -66,6 +66,9 @@ mkdir -p $SDK_INSTALL/boost-1.58.0/lib/Debug
 mkdir -p $SDK_INSTALL/boost-1.58.0/lib/Release
 
 
-
 # http://hivelocity.dl.sourceforge.net/project/boost/boost/1.56.0/boost_1_56_0.tar.gz
 
+
+echo "#--------------------------------------------------------------------------------------------------" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "# Boost Library" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "set(BOOST_ROOT \"\${DREAM3D_SDK_ROOT}/boost-1.58.0\" CACHE PATH \"\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"

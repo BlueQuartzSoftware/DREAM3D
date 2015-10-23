@@ -46,8 +46,8 @@
 
 #include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
 
-#include "DREAM3DWidgetsLib/moc_IssuesDockWidget.cpp"
-
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_IssuesDockWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //

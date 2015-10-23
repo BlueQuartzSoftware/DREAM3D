@@ -50,6 +50,11 @@
 #include "Statistics/DistributionAnalysisOps/PowerLawOps.h"
 #include "Statistics/DistributionAnalysisOps/LogNormalOps.h"
 
+// Include the MOC generated file for this class
+#include "moc_FindFeatureHistogram.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

@@ -54,6 +54,11 @@
 
 #include "IO/IOConstants.h"
 
+// Include the MOC generated file for this class
+#include "moc_AbaqusHexahedronWriter.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -193,8 +198,8 @@ void AbaqusHexahedronWriter::execute()
   if (!dir.mkpath(m_OutputPath))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(m_OutputPath);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 

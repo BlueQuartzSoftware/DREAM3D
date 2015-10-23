@@ -8,10 +8,22 @@ set(${PLUGIN_NAME}_Widgets_UIS "")
 # List the Classes here that are QWidget Derived Classes
 set(DREAM3D_WIDGETS
     QEbsdReferenceFrameDialog
+    EulerWidget
+    QuatWidget
+    OmWidget
+    AxisAngleWidget
+    RodriguesWidget
+    HomochoricWidget
+    CubochoricWidget
+)
+
+set(DREAM3D_WIDGETS_NO_UI
+    OrientationUtilityCalculator
+    OrientationWidget
 )
 
 foreach(FPW ${DREAM3D_WIDGETS})
-  set(${PLUGIN_NAME}_Widgets_HDRS ${${PLUGIN_NAME}_Widgets_HDRS}
+  set(${PLUGIN_NAME}_Widgets_MOC_HDRS ${${PLUGIN_NAME}_Widgets_MOC_HDRS}
     ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/${FPW}.h
     )
   set(${PLUGIN_NAME}_Widgets_SRCS ${${PLUGIN_NAME}_Widgets_SRCS}
@@ -22,10 +34,19 @@ foreach(FPW ${DREAM3D_WIDGETS})
     )
 endforeach()
 
+foreach(FPW ${DREAM3D_WIDGETS_NO_UI})
+  set(${PLUGIN_NAME}_Widgets_MOC_HDRS ${${PLUGIN_NAME}_Widgets_MOC_HDRS}
+    ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/${FPW}.h
+    )
+  set(${PLUGIN_NAME}_Widgets_SRCS ${${PLUGIN_NAME}_Widgets_SRCS}
+    ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/${FPW}.cpp
+    )
+endforeach()
+
 # Add in the remaining sources that are actually widgets but are completely Custom and do NOT use private
 # inheritance through a .ui file
 set(${PLUGIN_NAME}_Widgets_HDRS
-  ${${PLUGIN_NAME}_Widgets_HDRS}
+  ${${PLUGIN_NAME}_Widgets_MOC_HDRS}
 
   )
 set(${PLUGIN_NAME}_Widgets_SRCS
@@ -33,19 +54,19 @@ set(${PLUGIN_NAME}_Widgets_SRCS
 
   )
 
+include_directories( ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets )
 
+cmp_IDE_SOURCE_PROPERTIES( "Widgets" "${${PLUGIN_NAME}_Widgets_MOC_HDRS};${${PLUGIN_NAME}_Widgets_HDRS}" "${${PLUGIN_NAME}_Widgets_SRCS}" "0")
 
-cmp_IDE_SOURCE_PROPERTIES( "${PLUGIN_NAME}/Widgets" "${${PLUGIN_NAME}_Widgets_HDRS}" "${${PLUGIN_NAME}_Widgets_SRCS}" "0")
-
-cmp_IDE_GENERATED_PROPERTIES("${PLUGIN_NAME}/Widgets/UI_Files" "${${PLUGIN_NAME}_Widgets_UIS}" "")
+cmp_IDE_GENERATED_PROPERTIES("Widgets/UI_Files" "${${PLUGIN_NAME}_Widgets_UIS}" "")
 
 # --------------------------------------------------------------------
 # and finally this will run moc:
-#QT5_WRAP_CPP( ${PLUGIN_NAME}_Widgets_Generated_MOC_SRCS ${${PLUGIN_NAME}_Widgets_HDRS} )
+QT5_WRAP_CPP( ${PLUGIN_NAME}_Widgets_Generated_MOC_SRCS ${${PLUGIN_NAME}_Widgets_MOC_HDRS} )
 
 # These generated moc files will be #include in the FilterWidget source file that
 # are generated so we need to tell the build system to NOT compile these files
-set_source_files_properties( ${${PLUGIN_NAME}_Widgets_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
+# set_source_files_properties( ${${PLUGIN_NAME}_Widgets_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 # -- Run MOC and UIC on the necessary files
 # QT5_ADD_RESOURCES( ${PLUGIN_NAME}_Generated_RC_SRCS "${DREAM3DProj_SOURCE_DIR}/Documentation/Filters/Generated_FilterDocs.qrc"  )

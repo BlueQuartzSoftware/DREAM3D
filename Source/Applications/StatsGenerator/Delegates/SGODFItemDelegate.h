@@ -48,7 +48,6 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
-#include "OrientationLib/Texture/StatsGen.hpp"
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
 
 /**

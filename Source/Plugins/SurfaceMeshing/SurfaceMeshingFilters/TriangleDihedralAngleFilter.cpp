@@ -119,6 +119,10 @@ class CalculateDihedralAnglesImpl
 #endif
 };
 
+// Include the MOC generated file for this class
+#include "moc_TriangleDihedralAngleFilter.cpp"
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

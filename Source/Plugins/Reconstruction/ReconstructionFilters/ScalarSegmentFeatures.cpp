@@ -152,6 +152,10 @@ class TSpecificCompareFunctor : public CompareFunctor
     int32_t* m_FeatureIds; // The Feature Ids
 };
 
+// Include the MOC generated file for this class
+#include "moc_ScalarSegmentFeatures.cpp"
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

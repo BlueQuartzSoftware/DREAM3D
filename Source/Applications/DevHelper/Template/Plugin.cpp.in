@@ -12,7 +12,9 @@
 #include "SIMPLib/Common/FilterFactory.hpp"
 
 #include "@PluginName@/@PluginName@Constants.h"
-#include "@PluginName@/moc_@PluginName@Plugin.cpp"
+
+// Include the MOC generated file for this class
+#include "moc_@PluginName@Plugin.cpp"
 
 // -----------------------------------------------------------------------------
 //

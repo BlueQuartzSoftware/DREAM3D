@@ -77,6 +77,11 @@ ReadAngDataPrivate::ReadAngDataPrivate(ReadAngData* ptr) :
 
 }
 
+// Include the MOC generated file for this class
+#include "moc_ReadAngData.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

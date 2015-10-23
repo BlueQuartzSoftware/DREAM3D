@@ -48,7 +48,7 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
-
+#include "moc_AlignSectionsMisorientation.cpp"
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

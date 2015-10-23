@@ -19,7 +19,11 @@ For information on building DREAM.3D and all its necessary dependencies, see the
 Please consider signing up for the <a href="https://groups.google.com/forum/?hl=en#!forum/dream3d-users">DREAM.3D Users Google group</a>! It's the fastest way to ask your DREAM.3D questions, get help with using DREAM.3D, and connect with both developers and the community at large.  If you are interested in contributing to the DREAM.3D project, also sign up to the <a href="https://groups.google.com/forum/?hl=en#!forum/dream3d-developers">DREAM.3D Developers Google group</a> to get help with compiling and adding to DREAM.3D. If you find an error with DREAM.3D or want to request a new feature, please [open up an issue](https://github.com/dream3d/DREAM3D/issues).
 
 ## Contributing to DREAM.3D ##
+<<<<<<< HEAD
 The DREAM.3D project utilizes the [fork and pull](https://help.github.com/articles/using-pull-requests/) model for development, and we welcome pull requests! If you have a **Plugin** you would like to see distributed with the DREAM.3D binary, but do not want it merged into the main DREAM.3D repository, you can request to have that **Plugin** become _curated_. The DREAM.3D development team will then store that **Plugin's** source at our parent [GitHub page](https://github.com/dream3d/). This allows developers to maintain control over their source code while still having their work distributed with the main DREAM.3D application to the public. Please contact the DREAM.3D development team if you are interested in curated **Plugins**.
+=======
+Please reference the Contributing file for more information on contributing to the DREAM.3D project.
+>>>>>>> 96ad7cb2c9c155b161bff6620fbdfabf7d22ace4
 
 ## Nightly Builds ##
 Nightly snapshot builds are available for download [here](http://dream3d.bluequartz.net/binaries/experimental/). These binaries are built every night from the head of the develop branch, and may have bugs or other instabilities.
@@ -30,13 +34,13 @@ Parts of DREAM.3D were written under US Air Force (AFRL) Contract FA8650-07-D-58
 
 ## Major Contributing Institutions ##
 
-+ US Air Force Research Laboratory (Materials Directorate)
 + BlueQuartz Software (http://www.bluequartz.net)
-+ Carnegie Mellon University, College of Materials Science and Engineering
++ US Air Force Research Laboratory (Materials Directorate)
++ Carnegie Mellon University, Department of Materials Science and Engineering
 + US Naval Research Laboratory
 + The Ohio State University
 
-## List of Code Contributors (CC) and Vision Contributors (VC) ###
+## List of Code (CC) and Vision (VC) Contributors  ###
 
 ### Air Force Research Laboratory (AFRL) ###
 
@@ -86,7 +90,7 @@ Parts of DREAM.3D were written under US Air Force (AFRL) Contract FA8650-07-D-58
 
 ### Other Institutions ###
 
-
++ Mr. William Lenthe (VC, CC) (University of California, Santa Barbara)
 + Mr. Matthew Priddy (CC) (Georgia Tech University)
 + Mr. Jarrell Waggoner (CC) (Univ. South Carolina)
 + Mr. William Lenthe (VC, CC) (University of California, Santa Barbara)

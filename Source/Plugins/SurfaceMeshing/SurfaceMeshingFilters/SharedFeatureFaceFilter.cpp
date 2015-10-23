@@ -45,6 +45,10 @@
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 
+// Include the MOC generated file for this class
+#include "moc_SharedFeatureFaceFilter.cpp"
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -134,7 +138,7 @@ void SharedFeatureFaceFilter::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer facefeatureAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::FaceEnsemble);
+  AttributeMatrix::Pointer facefeatureAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::FaceFeature);
   if(getErrorCondition() < 0 || NULL == facefeatureAttrMat.get()) { return; }
 
   QVector<size_t> cDims(1, 2);

@@ -75,6 +75,8 @@ class PMDirGenerator : public QObject
     QTreeWidgetItem* getTreeWidgetItem();
 
     QString getPluginName();
+    QString getFilterName();
+    void setFilterName(const QString &filterName);
     void setDisplaySuffix(QString v);
     QString getDisplaySuffix();
     void setPluginName(QString pluginName);
@@ -82,6 +84,9 @@ class PMDirGenerator : public QObject
     QString cleanName(QString name);
 
     virtual QString generateFileContents(QString replaceStr = "");
+
+  protected:
+    QString                                                   m_FilterName;
 
   protected slots:
     virtual void pluginNameChanged (const QString& plugname);
@@ -94,15 +99,16 @@ class PMDirGenerator : public QObject
 
 
   private:
-    QString m_OutputDir;
-    QString m_PathTemplate;
-    QString m_DirName;
-    QString m_CodeTemplateResourcePath;
-    bool m_NameChangeable;
-    bool m_DoesGenerateOutput;
-    QTreeWidgetItem* m_TreeWidgetItem;
-    QString     m_PluginName;
-    QString     m_DisplaySuffix;
+    QString                                                   m_OutputDir;
+    QString                                                   m_PathTemplate;
+    QString                                                   m_DirName;
+    QString                                                   m_CodeTemplateResourcePath;
+    bool                                                      m_NameChangeable;
+    bool                                                      m_DoesGenerateOutput;
+    QTreeWidgetItem*                                          m_TreeWidgetItem;
+    QString                                                   m_PluginName;
+    QString                                                   m_DisplaySuffix;
+
 };
 
 #endif /* PMDIRTWI_H_ */

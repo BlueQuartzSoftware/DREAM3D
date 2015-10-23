@@ -35,9 +35,7 @@
 
 #include "PoleFigureData.h"
 
-
-
-
+#include "moc_PoleFigureData.cpp"
 
 // -----------------------------------------------------------------------------
 //

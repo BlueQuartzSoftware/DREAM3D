@@ -53,7 +53,6 @@
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Math/GeometryMath.h"
-#include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 #include "SIMPLib/DataArrays/DynamicListArray.hpp"
@@ -226,6 +225,11 @@ class InsertAtomsImpl
       }
     }
 };
+
+// Include the MOC generated file for this class
+#include "moc_InsertAtoms.cpp"
+
+
 
 // -----------------------------------------------------------------------------
 //

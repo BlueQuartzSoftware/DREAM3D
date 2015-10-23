@@ -48,9 +48,14 @@
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
-#include "OrientationLib/OrientationMath/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 #include "IO/IOConstants.h"
+
+// Include the MOC generated file for this class
+#include "moc_VisualizeGBCDGMT.cpp"
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -144,8 +149,8 @@ void VisualizeGBCDGMT::dataCheck()
   if (getOutputFile().isEmpty() == true)
   {
     QString ss = QObject::tr( "The output file must be set");
-    notifyErrorMessage(getHumanLabel(), ss, -1000);
-    setErrorCondition(-1);
+    setErrorCondition(-1000);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   QFileInfo fi(getOutputFile());
@@ -191,8 +196,8 @@ void VisualizeGBCDGMT::dataCheck()
   if (NULL != m_GBCDPtr.lock().get() && getPhaseOfInterest() >= m_GBCDPtr.lock()->getNumberOfTuples())
   {
     QString ss = QObject::tr("The phase index is larger than the number of Ensembles").arg(ClassName());
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-    setErrorCondition(-381);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
 }
@@ -230,8 +235,8 @@ void VisualizeGBCDGMT::execute()
   {
     QString ss;
     ss = QObject::tr("Error creating parent path '%1'").arg(dir.path());
-    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -311,9 +316,11 @@ void VisualizeGBCDGMT::execute()
   float mis_euler1[3] = { 0.0f, 0.0f, 0.0f };
 
   float misAngle = m_MisorientationRotation.angle * SIMPLib::Constants::k_PiOver180;
+  float normAxis[3] = { m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l };
+  MatrixMath::Normalize3x1(normAxis);
   // convert axis angle to matrix representation of misorientation
-  FOrientArrayType om(9);
-  FOrientTransformsType::ax2om(FOrientArrayType(m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l, misAngle), om);
+  FOrientArrayType om(9, 0.0f);
+  FOrientTransformsType::ax2om(FOrientArrayType(normAxis[0], normAxis[1], normAxis[2], misAngle), om);
   om.toGMatrix(dg);
 
   // take inverse of misorientation variable to use for switching symmetry

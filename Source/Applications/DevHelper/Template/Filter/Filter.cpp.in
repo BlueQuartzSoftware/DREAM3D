@@ -10,6 +10,9 @@
 @Filter_CPP_Includes@
 #include "@PluginName@/@PluginName@Constants.h"
 
+// Include the MOC generated file for this class
+#include "moc_@ClassName@.cpp"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -130,12 +133,12 @@ const QString @ClassName@::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString @ClassName@::getHumanLabel()
-{ return "@ClassName@"; }
+const QString @ClassName@::getSubGroupName()
+{ return "@PluginName@"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString @ClassName@::getSubGroupName()
-{ return "@PluginName@"; }
+const QString @ClassName@::getHumanLabel()
+{ return "@ClassName@"; }
 

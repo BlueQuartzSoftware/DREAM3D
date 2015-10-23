@@ -50,10 +50,14 @@
 
 #include "Sampling/SamplingConstants.h"
 
+#include "moc_UncertainRegularGridSampleSurfaceMesh.cpp"
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 UncertainRegularGridSampleSurfaceMesh::UncertainRegularGridSampleSurfaceMesh() :
+  SampleSurfaceMesh(),
   m_DataContainerName(DREAM3D::Defaults::ImageDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_XPoints(0),

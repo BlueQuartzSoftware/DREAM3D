@@ -52,7 +52,7 @@
 #include "SIMPLib/Math/GeometryMath.h"
 #include "SIMPLib/Utilities/SIMPLibRandom.h"
 
-#include "OrientationLib/OrientationMath/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 #include "Reconstruction/ReconstructionConstants.h"
 
@@ -125,6 +125,10 @@ namespace
     }
   };
 }
+
+// Include the MOC generated file for this class
+#include "moc_MergeColonies.cpp"
+
 
 // -----------------------------------------------------------------------------
 //

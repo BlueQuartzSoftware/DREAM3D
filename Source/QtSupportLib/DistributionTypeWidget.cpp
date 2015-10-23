@@ -37,6 +37,7 @@
 #include "DistributionTypeWidget.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "moc_DistributionTypeWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //

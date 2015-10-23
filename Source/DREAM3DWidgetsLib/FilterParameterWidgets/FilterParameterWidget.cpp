@@ -67,6 +67,9 @@ FilterParameterWidget::FilterParameterWidget(QWidget* parent) :
   fadeIn = true;
 }
 
+// Include the MOC generated file for this class
+#include "moc_FilterParameterWidget.cpp"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

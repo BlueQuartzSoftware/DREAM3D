@@ -41,7 +41,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 
-
+#include "moc_ApplicationAboutBoxDialog.cpp"
 
 // -----------------------------------------------------------------------------
 //

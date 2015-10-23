@@ -78,9 +78,13 @@ class SIMPLib_EXPORT ImageGeom : public IGeometry
 
     void getCoords(size_t& x, size_t& y, size_t& z, float coords[3]);
 
+    void getCoords(size_t& idx, float coords[3]);
+
     void getCoords(size_t idx[3], double coords[3]);
 
     void getCoords(size_t& x, size_t& y, size_t& z, double coords[3]);
+
+    void getCoords(size_t& idx, double coords[3]);
 
 // -----------------------------------------------------------------------------
 // Inherited from IGeometry

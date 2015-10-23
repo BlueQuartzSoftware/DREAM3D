@@ -245,6 +245,11 @@ class FindEuclideanMap
     }
 };
 
+// Include the MOC generated file for this class
+#include "moc_FindEuclideanDistMap.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

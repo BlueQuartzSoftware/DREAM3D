@@ -62,6 +62,9 @@
 #include "DREAM3DWidgetsLib/Widgets/FilterListDockWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/BookmarksModel.h"
 
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_BookmarksDockWidget.cpp"
+
 enum ErrorCodes
 {
   UNRECOGNIZED_EXT = -1

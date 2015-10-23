@@ -75,9 +75,10 @@
 
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
 
-
-
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidgetsDialogs.h"
+
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_PipelineViewWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //

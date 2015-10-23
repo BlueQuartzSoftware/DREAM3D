@@ -132,3 +132,8 @@ ConfigureITK hdf5-${HDFVERSION} Debug
 ConfigureITK hdf5-${HDFVERSION} Release
 ./FixITK.sh $SDK_INSTALL/ITK-${version}-Release 
 
+
+
+echo "#--------------------------------------------------------------------------------------------------" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "# ITK (www.itk.org) For Image Processing Plugin" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "set(ITK_DIR \"\${DREAM3D_SDK_ROOT}/ITK-${version}-\${BUILD_TYPE}\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"

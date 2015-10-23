@@ -44,6 +44,8 @@
 #include "SIMPLib/SIMPLibVersion.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
+
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
 #include "moc_ReconstructionPlugin.cpp"
 
 // -----------------------------------------------------------------------------

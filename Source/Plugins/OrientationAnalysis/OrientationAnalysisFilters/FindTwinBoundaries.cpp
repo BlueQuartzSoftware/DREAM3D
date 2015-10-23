@@ -46,7 +46,6 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -54,7 +53,7 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Math/GeometryMath.h"
 
-#include "OrientationLib/OrientationMath/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
@@ -197,10 +196,15 @@ class CalculateTwinBoundaryImpl
 #endif
 };
 
+// Include the MOC generated file for this class
+#include "moc_FindTwinBoundaries.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindTwinBoundaries::FindTwinBoundaries()  :
+FindTwinBoundaries::FindTwinBoundaries() :
   AbstractFilter(),
   m_AxisTolerance(0.0f),
   m_AngleTolerance(0.0f),

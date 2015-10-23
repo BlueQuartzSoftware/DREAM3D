@@ -50,7 +50,6 @@
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Utilities/ColorUtilities.h"
 
-#include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 #include "OrientationLib/Utilities/ModifiedLambertProjection.h"
@@ -344,7 +343,7 @@ FOrientArrayType HexagonalOps::getMDFFZRod(FOrientArrayType rod)
     }
   }
 
-  ax.fromAxisAngle(FZn1, FZn2, FZn3, FZw);
+  ax.fromAxisAngle(FZn1, FZn2, FZn3, w);
   OrientationTransforms<FOrientArrayType, float>::ax2ro(ax, rod);
   return rod;
 }

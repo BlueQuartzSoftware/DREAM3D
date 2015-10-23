@@ -10,6 +10,13 @@
 # set project's name
 PROJECT( DREAM3D VERSION ${DREAM3DProj_VERSION_MAJOR}.${DREAM3DProj_VERSION_MINOR}.${DREAM3DProj_VERSION_PATCH})
 
+#------------------------------------------------------------------------------
+# If we have not defined a "BrandedDREAM3D_DIR" then define it to the default
+# generic set of ICONs
+if(NOT DEFINED BrandedDREAM3D_DIR)
+  set(BrandedDREAM3D_DIR ${DREAM3DProj_SOURCE_DIR}/Resources/OpenSourceEdition)
+endif()
+
 # ---------- Setup output Directories -------------------------
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY
   ${PROJECT_BINARY_DIR}/Bin
@@ -76,7 +83,9 @@ cmp_IDE_GENERATED_PROPERTIES("DREAM3D" "${DREAM3D_CMP_FILES}" ${PROJECT_INSTALL_
 
 include(${DREAM3DProj_SOURCE_DIR}/License/License.cmake)
 
+#-- Include the Common Code and set an include directory for the MOC generated files
 include(${DREAM3DProj_SOURCE_DIR}/Source/Applications/Common/SourceList.cmake)
+include_directories(${DREAM3D_BINARY_DIR}/__/Common)
 
 # List the source files here
 set(DREAM3D_SRCS
@@ -123,8 +132,10 @@ cmp_IDE_GENERATED_PROPERTIES("DREAM3D/UI_Files" "${DREAM3D_UIS}" "")
 
 # and finally any resource files
 SET(DREAM3D_RCS
-    ${PROJECT_RESOURCES_DIR}/icons/images/Icons.qrc
-    ${PROJECT_RESOURCES_DIR}/BrandedDREAM3D/branded_splash.qrc
+  # These are generic Icons for the Application
+  ${PROJECT_RESOURCES_DIR}/icons/images/Icons.qrc
+  # this is the DREAM.3D specific branding icons
+  ${BrandedDREAM3D_DIR}/splash/branded_splash.qrc
 )
 
 # -- Run MOC and UIC on the necessary files
@@ -134,7 +145,12 @@ QT5_ADD_RESOURCES( DREAM3D_Generated_RC_SRCS ${DREAM3D_RCS} ${QRC_LICENSE_FILES}
 QT5_WRAP_UI( DREAM3D_Generated_UI_HDRS ${DREAM3D_UIS} ${AppsCommon_Widgets_UIS})
 
 # and finally this will run moc:
-#QT5_WRAP_CPP( DREAM3D_Generated_MOC_SRCS ${DREAM3D_MOC_HDRS} )
+QT5_WRAP_CPP( DREAM3D_Generated_MOC_SRCS ${DREAM3D_MOC_HDRS} )
+# These generated moc files will be #include in the FilterWidget source file that
+# are generated so we need to tell the build system to NOT compile these files
+set_source_files_properties( ${DREAM3D_Generated_MOC_SRCS} PROPERTIES GENERATED TRUE)
+set_source_files_properties( ${DREAM3D_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
+
 
 #-- Put the generated files into their own group for IDEs
 cmp_IDE_GENERATED_PROPERTIES("Generated/ui" "${DREAM3D_Generated_UI_HDRS}" "")
@@ -143,26 +159,28 @@ cmp_IDE_GENERATED_PROPERTIES("Generated/qrc" "${QRC_LICENSE_FILES}" "${DREAM3D_G
 
 # -- Finally set the Project Sources to include all the sources
 set(DREAM3D_PROJECT_SRCS
-    ${DREAM3D_SRCS}
-    ${DREAM3D_HDRS}
-    ${DREAM3D_MOC_HDRS}
-    ${DREAM3D_Generated_RC_SRCS}
-    ${DREAM3D_Generated_UI_HDRS}
-    ${DREAM3D_Generated_MOC_SRCS}
-    ${DREAM3D_CMP_FILES}
-    ${AppsCommon_Widgets_HDRS}
-    ${AppsCommon_Widgets_SRCS}
-    ${AppsCommon_Widgets_Generated_MOC_SRCS}
-    ${AppsCommon_Widgets_Generated_UI_HDRS}
+  ${DREAM3D_SRCS}
+  ${DREAM3D_HDRS}
+  ${DREAM3D_MOC_HDRS}
+  ${DREAM3D_Generated_RC_SRCS}
+  ${DREAM3D_Generated_UI_HDRS}
+  ${DREAM3D_CMP_FILES}
+  ${AppsCommon_Widgets_HDRS}
+  ${AppsCommon_Widgets_SRCS}
+  ${AppsCommon_Widgets_Generated_MOC_SRCS}
+  ${AppsCommon_Widgets_Generated_UI_HDRS}
+
+  # -- This file has all the MOC sources in it
+  ${DREAM3D_Generated_MOC_SRCS}
 )
 
 
 if(APPLE)
-    set(APPLICATION_ICON ${PROJECT_RESOURCES_DIR}/icons/icns/DREAM3D.icns)
+    set(APPLICATION_ICON ${BrandedDREAM3D_DIR}/icons/icns/DREAM3D.icns)
 endif(APPLE)
 
 if(WIN32)
-    set(APPLICATION_ICON ${PROJECT_RESOURCES_DIR}/icons/ico/DREAM3D.ico)
+    set(APPLICATION_ICON ${BrandedDREAM3D_DIR}/icons/ico/DREAM3D.ico)
 ENDif(WIN32)
 
 set(DEST_DIR ".")

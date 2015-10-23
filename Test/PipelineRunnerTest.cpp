@@ -257,9 +257,6 @@ QString AdjustOutputDirectory(const QString& pipelineFile)
 // -----------------------------------------------------------------------------
 int main (int argc, char*  argv[])
 {
-
-  QString pipelineFile("@DREAM3D_PIPELINE_FILE@");
-
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");

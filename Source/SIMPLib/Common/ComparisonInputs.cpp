@@ -36,7 +36,7 @@
 #include "ComparisonInputs.h"
 
 
-
+#include "moc_ComparisonInputs.cpp"
 
 // -----------------------------------------------------------------------------
 //

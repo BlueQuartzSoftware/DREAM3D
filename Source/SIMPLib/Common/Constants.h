@@ -193,6 +193,7 @@ namespace DREAM3D
     const QString SolidMeshingFilters("Solid Meshing");
     const QString TestFilters("Test");
     const QString CoreFilters("Core");
+    const QString Utilities("Utilities");
     const QString Unsupported("Unsupported");
   }
 

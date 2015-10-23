@@ -2,9 +2,9 @@
 #include "SearchLineEdit.h"
 
 
-#include <QEvent>
-#include <QDebug>
-#include <QString>
+#include <QtCore/QEvent>
+#include <QtCore/QDebug>
+#include <QtCore/QString>
 #include <QPropertyAnimation>
 #include <QApplication>
 #include <QMenu>
@@ -17,6 +17,8 @@
 #include <QDesktopWidget>
 
 #include "Applications/DREAM3D/DREAM3DApplication.h"
+
+#include "moc_SearchLineEdit.cpp"
 
 /**
  * @brief execMenuAtWidget

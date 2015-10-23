@@ -43,10 +43,14 @@
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Utilities/SIMPLibRandom.h"
-#include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
+
+// Include the MOC generated file for this class
+#include "moc_AddOrientationNoise.cpp"
+
+
 
 // -----------------------------------------------------------------------------
 //

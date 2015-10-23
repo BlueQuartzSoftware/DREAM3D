@@ -44,7 +44,9 @@
 
 #include "FilterListDockWidget.h"
 
-#include "DREAM3DWidgetsLib/moc_FilterLibraryDockWidget.cpp"
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_FilterLibraryDockWidget.cpp"
+
 
 #define LIBRARY_NODE_TYPE 0
 #define PLUGIN_NODE_TYPE 1

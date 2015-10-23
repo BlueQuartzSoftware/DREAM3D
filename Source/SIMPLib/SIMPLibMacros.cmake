@@ -11,12 +11,7 @@ macro(START_FILTER_GROUP WidgetsBinaryDir filterGroup humanGroup)
 
    file(APPEND "${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList" "${filterGroup}\n")
    file(WRITE "${DREAM3DProj_BINARY_DIR}/DREAM3DDoc_${filterGroup}" "")
-   #string(TOLOWER ${filterGroup} filterGroup_Lower)
-   #file(APPEND ${DOX_FILTER_INDEX_FILE} "#--- Filter Group ${filterGroup} \n")
-   #file(APPEND ${DOX_FILTER_INDEX_FILE} "  \${PROJECT_SOURCE_DIR}/Filters/${filterGroup}/${filterGroup}.dox\n")
-   #file(APPEND ${DOX_FILTER_INDEX_FILE} "${filterGroup_Lower} ${filterGroup}\n\n")
-
-   # message(STATUS "Adding Filters for Group ${filterGroup}")
+#   FILE(WRITE ${PluginAutoMocSourceFile} "/* This file is Auto Generated. Do Not Edit */\n")
 endmacro()
 
 #-------------------------------------------------------------------------------
@@ -44,26 +39,28 @@ endmacro()
 macro(ADD_DREAM3D_SUPPORT_HEADER SourceDir filterGroup headerFileName)
     set(Project_SRCS ${Project_SRCS}
                     ${SourceDir}/${filterGroup}/${headerFileName})
-    cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/${filterGroup}" "${DREAM3DLib_SOURCE_DIR}/${filterGroup}/${headerFileName}" "" "0")
+    cmp_IDE_SOURCE_PROPERTIES( "${filterGroup}" "${SourceDir}/${filterGroup}/${headerFileName}" "" "0")
 endmacro()
 
 #-------------------------------------------------------------------------------
-# Macro ADD_DREAM3D_SUPPORT_HEADER
+# Macro ADD_DREAM3D_SUPPORT_MOC_HEADER
 macro(ADD_DREAM3D_SUPPORT_MOC_HEADER SourceDir filterGroup headerFileName)
-  #QT5_WRAP_CPP( _moc_filter_source  ${SourceDir}/${filterGroup}/${headerFileName})
+  QT5_WRAP_CPP( _moc_filter_source  ${SourceDir}/${filterGroup}/${headerFileName})
+  set_source_files_properties( ${_moc_filter_source} PROPERTIES GENERATED TRUE)
+  set_source_files_properties( ${_moc_filter_source} PROPERTIES HEADER_FILE_ONLY TRUE)
 
   set(Project_SRCS ${Project_SRCS}
                     ${SourceDir}/${filterGroup}/${headerFileName}
                     ${_moc_filter_source})
-  cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/${filterGroup}" "${DREAM3DLib_SOURCE_DIR}/${filterGroup}/${headerFileName}" "" "0")
+  cmp_IDE_SOURCE_PROPERTIES( "${filterGroup}" "${SourceDir}/${filterGroup}/${headerFileName}" "" "0")
 endmacro()
 
 #-------------------------------------------------------------------------------
-# Macro ADD_DREAM3D_SUPPORT_HEADER
+# Macro ADD_DREAM3D_SUPPORT_HEADER_SUBDIR
 macro(ADD_DREAM3D_SUPPORT_HEADER_SUBDIR SourceDir filterGroup headerFileName subdir)
     set(Project_SRCS ${Project_SRCS}
-                    ${SourceDir}/${filterGroup}/${headerFileName})
-    cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/${filterGroup}/${subdir}" "${DREAM3DLib_SOURCE_DIR}/${filterGroup}/${headerFileName}" "" "0")
+                    ${SourceDir}/${filterGroup}/${subdir}/${headerFileName})
+    cmp_IDE_SOURCE_PROPERTIES( "${filterGroup}/${subdir}" "${SourceDir}/${filterGroup}/${subdir}/${headerFileName}" "" "0")
 endmacro()
 
 #-------------------------------------------------------------------------------
@@ -71,7 +68,7 @@ endmacro()
 macro(ADD_DREAM3D_SUPPORT_SOURCE SourceDir filterGroup sourceFileName)
     set(Project_SRCS ${Project_SRCS}
                     ${SourceDir}/${filterGroup}/${sourceFileName})
-    cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/${filterGroup}" "" "${DREAM3DLib_SOURCE_DIR}/${filterGroup}/${sourceFileName}" "0")
+    cmp_IDE_SOURCE_PROPERTIES( "${filterGroup}" "" "${SourceDir}/${filterGroup}/${sourceFileName}" "0")
 endmacro()
 #-------------------------------------------------------------------------------
 # Macro ADD_DREAM3D_SUPPORT_CLASS
@@ -79,28 +76,30 @@ macro(ADD_DREAM3D_SUPPORT_CLASS SourceDir filterGroup className)
     set(Project_SRCS ${Project_SRCS}
                     ${SourceDir}/${filterGroup}/${className}.h
                     ${SourceDir}/${filterGroup}/${className}.cpp)
-    cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/${filterGroup}" "${DREAM3DLib_SOURCE_DIR}/${filterGroup}/${className}.h" "${DREAM3DLib_SOURCE_DIR}/${filterGroup}/${className}.cpp" "0")
+    cmp_IDE_SOURCE_PROPERTIES( "${filterGroup}" "${SourceDir}/${filterGroup}/${className}.h" "${SourceDir}/${filterGroup}/${className}.cpp" "0")
 endmacro()
 
 
 #-------------------------------------------------------------------------------
 # Macro ADD_DREAM3D_FILTER
 macro(ADD_DREAM3D_FILTER FilterLib WidgetLib filterGroup filterName filterDocPath publicFilter)
-    #QT5_WRAP_CPP( _moc_filter_source  ${${FilterLib}_SOURCE_DIR}/${filterGroup}/${filterName}.h)
+    QT5_WRAP_CPP( _moc_filter_source  ${${FilterLib}_SOURCE_DIR}/${filterGroup}/${filterName}.h)
+    set_source_files_properties( ${_moc_filter_source} PROPERTIES GENERATED TRUE)
+    set_source_files_properties( ${_moc_filter_source} PROPERTIES HEADER_FILE_ONLY TRUE)
 
     set(Project_SRCS ${Project_SRCS}
                     ${${FilterLib}_SOURCE_DIR}/${filterGroup}/${filterName}.h
                     ${${FilterLib}_SOURCE_DIR}/${filterGroup}/${filterName}.cpp
- #                   ${_moc_filter_source}
+                    ${_moc_filter_source}
                     )
     #--- Organize inside the Visual Studio/Xcode Projects
-    cmp_IDE_SOURCE_PROPERTIES( "${FilterLib}/${filterGroup}" "${${FilterLib}_SOURCE_DIR}/${filterGroup}/${filterName}.h" "${${FilterLib}_SOURCE_DIR}/${filterGroup}/${filterName}.cpp" "0")
+    cmp_IDE_SOURCE_PROPERTIES( "${filterGroup}" "${${FilterLib}_SOURCE_DIR}/${filterGroup}/${filterName}.h" "${${FilterLib}_SOURCE_DIR}/${filterGroup}/${filterName}.cpp" "0")
     cmp_IDE_GENERATED_PROPERTIES ( "Generated/${FilterLib}/${filterGroup}" "" "${_moc_filter_source}" "0")
 
     #-- Create an Install Rule for the headers
     if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
-        INSTALL (FILES ${DREAM3DLib_SOURCE_DIR}/${filterGroup}/${filterName}.h
-            DESTINATION include/DREAM3DLib/${filterGroup}
+        INSTALL (FILES ${${FilterLib}_SOURCE_DIR}/${filterGroup}/${filterName}.h
+            DESTINATION include/${filterGroup}
             COMPONENT Headers   )
     endif()
 

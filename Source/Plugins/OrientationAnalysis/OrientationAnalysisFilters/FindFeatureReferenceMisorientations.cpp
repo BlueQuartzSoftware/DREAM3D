@@ -45,9 +45,13 @@
 #include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
-#include "OrientationLib/OrientationMath/OrientationMath.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
+
+// Include the MOC generated file for this class
+#include "moc_FindFeatureReferenceMisorientations.cpp"
+
+
 
 // -----------------------------------------------------------------------------
 //

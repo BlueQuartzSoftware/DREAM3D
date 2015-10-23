@@ -52,14 +52,12 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
-
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Math/MatrixMath.h"
 
-#include "OrientationLib/OrientationMath/OrientationMath.h"
+#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 #include "IO/IOConstants.h"
 
@@ -67,6 +65,10 @@
 #define DIMS "DIMENSIONS"
 #define RES "SPACING"
 #define LOOKUP "LOOKUP_TABLE"
+
+// Include the MOC generated file for this class
+#include "moc_YSChoiAbaqusReader.cpp"
+
 
 // -----------------------------------------------------------------------------
 //

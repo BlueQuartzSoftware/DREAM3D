@@ -9,6 +9,8 @@
 #--////////////////////////////////////////////////////////////////////////////
 PROJECT( StatsGenerator VERSION ${DREAM3DProj_VERSION_MAJOR}.${DREAM3DProj_VERSION_MINOR}.${DREAM3DProj_VERSION_PATCH})
 
+set(APPLICATION_NAME "StatsGenerator")
+
 # Set the GUI type for different platforms
 SET(GUI_TYPE )
 
@@ -65,8 +67,15 @@ SET(StatsGenerator_MOC_HDRS
 )
 cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator" "${StatsGenerator_HDRS};${StatsGenerator_MOC_HDRS}" "${StatsGenerator_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
-set(StatsGenerator_DELEGATE_SRCS   "" )
-set(StatsGenerator_DELEGATE_HDRS
+set(StatsGenerator_DELEGATE_SRCS 
+    ${StatsGenerator_SOURCE_DIR}/Delegates/SGBetaItemDelegate.cpp
+    ${StatsGenerator_SOURCE_DIR}/Delegates/SGLogNormalItemDelegate.cpp
+    ${StatsGenerator_SOURCE_DIR}/Delegates/SGPowerLawItemDelegate.cpp
+    ${StatsGenerator_SOURCE_DIR}/Delegates/SGODFItemDelegate.cpp
+    ${StatsGenerator_SOURCE_DIR}/Delegates/SGMDFItemDelegate.cpp
+    ${StatsGenerator_SOURCE_DIR}/Delegates/SGRDFItemDelegate.cpp
+    )
+set(StatsGenerator_DELEGATE_MOC_HDRS
     ${StatsGenerator_SOURCE_DIR}/Delegates/SGBetaItemDelegate.h
     ${StatsGenerator_SOURCE_DIR}/Delegates/SGLogNormalItemDelegate.h
     ${StatsGenerator_SOURCE_DIR}/Delegates/SGPowerLawItemDelegate.h
@@ -74,7 +83,7 @@ set(StatsGenerator_DELEGATE_HDRS
     ${StatsGenerator_SOURCE_DIR}/Delegates/SGMDFItemDelegate.h
     ${StatsGenerator_SOURCE_DIR}/Delegates/SGRDFItemDelegate.h
     )
-cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator/Delegates" "${StatsGenerator_DELEGATE_HDRS}" "${StatsGenerator_DELEGATE_SRCS}" ${PROJECT_INSTALL_HEADERS})
+cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator/Delegates" "${StatsGenerator_DELEGATE_MOC_HDRS}" "${StatsGenerator_DELEGATE_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 set(StatsGenerator_TABLEMODEL_SRCS
     ${StatsGenerator_SOURCE_DIR}/TableModels/SGAbstractTableModel.cpp
@@ -86,7 +95,7 @@ set(StatsGenerator_TABLEMODEL_SRCS
     ${StatsGenerator_SOURCE_DIR}/TableModels/SGRDFTableModel.cpp
     )
 
-set(StatsGenerator_TABLEMODEL_HDRS
+set(StatsGenerator_TABLEMODEL_MOC_HDRS
     ${StatsGenerator_SOURCE_DIR}/TableModels/SGAbstractTableModel.h
     ${StatsGenerator_SOURCE_DIR}/TableModels/SGBetaTableModel.h
     ${StatsGenerator_SOURCE_DIR}/TableModels/SGPowerLawTableModel.h
@@ -107,6 +116,7 @@ set(StatsGenerator_PRESETS_SRCS
     ${StatsGenerator_SOURCE_DIR}/Presets/PrimaryRolledPreset.cpp
     ${StatsGenerator_SOURCE_DIR}/Presets/PrecipitateRolledPreset.cpp
 )
+set(StatsGenerator_PRESETS_MOC_HDRS "")
 set(StatsGenerator_PRESETS_HDRS
     ${StatsGenerator_SOURCE_DIR}/Presets/AbstractMicrostructurePresetFactory.h
     ${StatsGenerator_SOURCE_DIR}/Presets/AbstractMicrostructurePreset.h
@@ -117,14 +127,14 @@ set(StatsGenerator_PRESETS_HDRS
     ${StatsGenerator_SOURCE_DIR}/Presets/PrimaryRolledPreset.h
     ${StatsGenerator_SOURCE_DIR}/Presets/PrecipitateRolledPreset.h
 )
-cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator/Presets" "${StatsGenerator_PRESETS_HDRS}" "${StatsGenerator_PRESETS_SRCS}" ${PROJECT_INSTALL_HEADERS})
+cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator/Presets" "${StatsGenerator_PRESETS_HDRS};${StatsGenerator_PRESETS_MOC_HDRS}" "${StatsGenerator_PRESETS_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 set(StatsGenerator_DIALOGS_SRCS
   ${StatsGenerator_SOURCE_DIR}/Presets/Dialogs/PrimaryRolledPresetDialog.cpp
   ${StatsGenerator_SOURCE_DIR}/Presets/Dialogs/PrecipitateRolledPresetDialog.cpp
   ${StatsGenerator_SOURCE_DIR}/Presets/Dialogs/PrimaryRecrystallizedPresetDialog.cpp
 )
-set(StatsGenerator_DIALOGS_HDRS
+set(StatsGenerator_DIALOGS_MOC_HDRS
   ${StatsGenerator_SOURCE_DIR}/Presets/Dialogs/PrimaryRolledPresetDialog.h
   ${StatsGenerator_SOURCE_DIR}/Presets/Dialogs/PrecipitateRolledPresetDialog.h
   ${StatsGenerator_SOURCE_DIR}/Presets/Dialogs/PrimaryRecrystallizedPresetDialog.h
@@ -156,9 +166,22 @@ QT5_ADD_RESOURCES( Generated_RC_SRCS ${StatsGenerator_RCS} ${QRC_LICENSE_FILES})
 # this will run uic on .ui files:
 QT5_WRAP_UI( Generated_UI_HDRS ${StatsGenerator_UIS} )
 
+# --------------------------------------------------------------------
+# and finally this will run moc:
+QT5_WRAP_CPP( StatsGenerator_Generated_MOC_SRCS 
+        ${StatsGenerator_MOC_HDRS} 
+        ${StatsGenerator_TABLEMODEL_MOC_HDRS}
+        ${StatsGenerator_PRESETS_MOC_HDRS}
+        ${StatsGenerator_DIALOGS_MOC_HDRS}
+        ${StatsGenerator_DELEGATE_MOC_HDRS}
+)
+set_source_files_properties( ${StatsGenerator_Generated_MOC_SRCS} PROPERTIES GENERATED TRUE)
+set_source_files_properties( ${StatsGenerator_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
+
+
 #-- Put the generated files into their own group for IDEs
 cmp_IDE_GENERATED_PROPERTIES("Generated/ui" "${Generated_UI_HDRS}" "")
-cmp_IDE_GENERATED_PROPERTIES("Generated/moc" "${Generated_MOC_SRCS}" "")
+cmp_IDE_GENERATED_PROPERTIES("Generated/moc" "${Generated_MOC_SRCS};${StatsGenerator_Generated_MOC_SRCS}" "")
 cmp_IDE_GENERATED_PROPERTIES("Generated/qrc" "${QRC_LICENSE_FILES}" "${Generated_RC_SRCS}")
 
 # -- Finally set the Project Sources to include all the sources
@@ -166,37 +189,49 @@ set(StatsGenerator_PROJECT_SRCS
     ${StatsGenerator_SRCS}
     ${StatsGenerator_HDRS}
     ${StatsGenerator_MOC_HDRS}
-    ${StatsGenerator_DELEGATE_HDRS}
+
+    ${StatsGenerator_DELEGATE_MOC_HDRS}
     ${StatsGenerator_DELEGATE_SRCS}
-    ${StatsGenerator_TABLEMODEL_HDRS}
+
+    ${StatsGenerator_TABLEMODEL_MOC_HDRS}
     ${StatsGenerator_TABLEMODEL_SRCS}
+
     ${StatsGenerator_PRESETS_HDRS}
+    ${StatsGenerator_PRESETS_MOC_HDRS}
     ${StatsGenerator_PRESETS_SRCS}
+
+    ${StatsGenerator_DIALOGS_MOC_HDRS}
     ${StatsGenerator_DIALOGS_SRCS}
-    ${StatsGenerator_DIALOGS_HDRS}
+
     ${Generated_RC_SRCS}
     ${Generated_UI_HDRS}
     ${Generated_MOC_SRCS}
+
+    ${StatsGenerator_Generated_MOC_SRCS}
 )
 
 include_directories(${HDF5_INCLUDE_DIR})
 include_directories(${PROJECT_CODE_DIR})
 include_directories(${PROJECT_CODE_DIR}/Applications)
 include_directories(${PROJECT_CODE_DIR}/QtSupportLib)
+include_directories(${DREAM3DProj_BINARY_DIR}/QtSupportLib)
 include_directories(${StatsGenerator_SOURCE_DIR})
 include_directories(${StatsGenerator_BINARY_DIR})
 include_directories(${DREAM3DProj_BINARY_DIR})
 include_directories(${DREAM3DProj_BINARY_DIR}/Applications)
-include_directories(${DREAM3DProj_BINARY_DIR}/Applications/${PROJECT_NAME})
-include_directories(${DREAM3DProj_BINARY_DIR}/QtSupportLib)
+include_directories(${DREAM3DProj_BINARY_DIR}/Applications/${APPLICATION_NAME})
+include_directories(${DREAM3DProj_BINARY_DIR}/Applications/${APPLICATION_NAME}/Presets)
+include_directories(${DREAM3DProj_BINARY_DIR}/Applications/${APPLICATION_NAME}/Presets/Dialogs)
+include_directories(${DREAM3DProj_BINARY_DIR}/Applications/${APPLICATION_NAME}/Delegates)
+include_directories(${DREAM3DProj_BINARY_DIR}/Applications/${APPLICATION_NAME}/TableModels)
 
 
 if(APPLE)
-    set(APPLICATION_ICON ${PROJECT_RESOURCES_DIR}/icons/icns/${PROJECT_NAME}.icns)
+    set(APPLICATION_ICON ${PROJECT_RESOURCES_DIR}/icons/icns/${APPLICATION_NAME}.icns)
 endif(APPLE)
 
 if(WIN32)
-    set(APPLICATION_ICON ${PROJECT_RESOURCES_DIR}/icons/ico/${PROJECT_NAME}.ico)
+    set(APPLICATION_ICON ${PROJECT_RESOURCES_DIR}/icons/ico/${APPLICATION_NAME}.ico)
 ENDif(WIN32)
 
 set(DEST_DIR ".")
@@ -205,14 +240,14 @@ if(UNIX AND NOT APPLE)
 endif()
 
 BuildQtAppBundle(
-    TARGET ${PROJECT_NAME}
-    SOURCES ${${PROJECT_NAME}_PROJECT_SRCS}
+    TARGET ${APPLICATION_NAME}
+    SOURCES ${${APPLICATION_NAME}_PROJECT_SRCS}
     DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
     ICON_FILE  ${APPLICATION_ICON}
     VERSION_MAJOR ${DREAM3D_VER_MAJOR}
     VERSION_MINOR ${DREAM3D_VER_MINOR}
     VERSION_PATCH ${DREAM3D_VER_PATCH}
-    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
+    BINARY_DIR    ${${APPLICATION_NAME}_BINARY_DIR}
     LINK_LIBRARIES  H5Support EbsdLib SIMPLib OrientationLib QtSupportLib ${QWT_LIBRARY}
     LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
     QT5_MODULES   ${Qt5_COMPONENTS}

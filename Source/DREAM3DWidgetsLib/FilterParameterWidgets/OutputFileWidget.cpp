@@ -51,6 +51,9 @@
 // Initialize private static member variable
 QString OutputFileWidget::m_OpenDialogLastDirectory = "";
 
+// Include the MOC generated file for this class
+#include "moc_OutputFileWidget.cpp"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

@@ -37,6 +37,7 @@
 #define _QuaternionMath_H_
 
 #include <stdlib.h>
+
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Math/MatrixMath.h"
 
@@ -403,12 +404,13 @@ class QuaternionMath
     * @param qr
     * @param misoVec
     */
-    static void GetMisorientationVector(Quaternion& qr, float misoVec[3])
+    static void GetMisorientationVector(Quaternion& qr, T misoVec[3])
     {
-      float qw = qr.w;
-      SIMPLibMath::boundF(qw, -1, 1);
-      double constVal = 2 * acos(qw) / (sqrt(1 - (qw * qw)));
+      T qw = qr.w;
+      SIMPLibMath::boundF(qw, -1.0, 1.0);
+      T constVal = 0.0;
       if(qw == 1.0 || qw == -1.0) { constVal = 0.0; }
+      else { constVal = 2 * acos(qw) / (sqrt(1.0 - (qw * qw))); }
       misoVec[0] = float( qr.x * constVal );
       misoVec[1] = float( qr.y * constVal );
       misoVec[2] = float( qr.z * constVal );
@@ -419,71 +421,11 @@ class QuaternionMath
      * @param q Input Quaternion
      * @param v Input Vector
      * @param out Output Vector
+     * DREAM.3D uses
+     * PASSIVE rotations by default.
      */
     static void MultiplyQuatVec(const Quaternion q, T* v, T* out)
     {
-      /*
-      //    t = 2 * cross(q.xyz, v)
-      //    v' = v +  (q.w * t) + cross(q.xyz, t)
-      T w    = q.w;
-      T r[3] = { q.x, q.y, q.z};
-      T temp2[3] = { 0.0, 0.0, 0.0 };
-      T temp[3] = { 0.0, 0.0, 0.0};
-      // Cross r into vtemp resulting in temp
-      MatrixMath::CrossProduct( r, v, temp );
-
-      for (int j = 0; j < 3; j++)
-      {
-        temp[j] += w * v[j];
-      }
-
-      MatrixMath::CrossProduct( r, temp, temp2 );
-
-      for (int j = 0; j < 3; j++)
-      {
-        out[j] = v[j] + (2.0 * temp2[j]);
-      }
-      */
-
-      /*
-       * qv = {v[0], v[1], v[2], 0}
-       * qv' = q^-1 * qv * q
-       * out[0] = qv'.x; out[1] = qv'.y; out[2] = qv.z;
-       *
-       * q^-1 * qv =
-       *  x: v[0] * q.w - v[2] * q.y + v[1] * q.z;
-       *  y: v[1] * q.w - v[0] * q.z + v[2] * q.x;
-       *  z: v[2] * q.w - v[1] * q.x + v[0] * q.y;
-       *  w: v[0] * q.x + v[1] * q.y + v[2] * q.z;
-       *
-       * q^-1 * qv * q =
-       *  x: q.x * (v[0] * q.x + v[1] * q.y + v[2] * q.z) + q.w * (v[0] * q.w - v[2] * q.y + v[1] * q.z) + q.z * (v[1] * q.w - v[0] * q.z + v[2] * q.x) - q.y * (v[2] * q.w - v[1] * q.x + v[0] * q.y);
-       *  y: q.y * (v[0] * q.x + v[1] * q.y + v[2] * q.z) + q.w * (v[1] * q.w - v[0] * q.z + v[2] * q.x) + q.x * (v[2] * q.w - v[1] * q.x + v[0] * q.y) - q.z * (v[0] * q.w - v[2] * q.y + v[1] * q.z);
-       *  z: q.z * (v[0] * q.x + v[1] * q.y + v[2] * q.z) + q.w * (v[2] * q.w - v[1] * q.x + v[0] * q.y) + q.y * (v[0] * q.w - v[2] * q.y + v[1] * q.z) - q.x * (v[1] * q.w - v[0] * q.z + v[2] * q.x);
-       *  w: not needed
-       *
-       * =
-       *  x: (v[0] * q.x * q.x + v[1] * q.y * q.x + v[2] * q.z * q.x) + (v[0] * q.w * q.w - v[2] * q.y * q.w + v[1] * q.z * q.w) + (v[1] * q.w * q.z - v[0] * q.z * q.z + v[2] * q.x * q.z) - (v[2] * q.w * q.y - v[1] * q.x * q.y + v[0] * q.y * q.y);
-       *  y: (v[0] * q.x * q.y + v[1] * q.y * q.y + v[2] * q.z * q.y) + (v[1] * q.w * q.w - v[0] * q.z * q.w + v[2] * q.x * q.w) + (v[2] * q.w * q.x - v[1] * q.x * q.x + v[0] * q.y * q.x) - (v[0] * q.w * q.z - v[2] * q.y * q.z + v[1] * q.z * q.z);
-       *  z: (v[0] * q.x * q.z + v[1] * q.y * q.z + v[2] * q.z * q.z) + (v[2] * q.w * q.w - v[1] * q.x * q.w + v[0] * q.y * q.w) + (v[0] * q.w * q.y - v[2] * q.y * q.y + v[1] * q.z * q.y) - (v[1] * q.w * q.x - v[0] * q.z * q.x + v[2] * q.x * q.x);
-       *
-       * =
-       *  x: v[0] * q.x * q.x + v[1] * q.y * q.x + v[2] * q.z * q.x + v[0] * q.w * q.w - v[2] * q.y * q.w + v[1] * q.z * q.w + v[1] * q.w * q.z - v[0] * q.z * q.z + v[2] * q.x * q.z - v[2] * q.w * q.y + v[1] * q.x * q.y - v[0] * q.y * q.y;
-       *  y: v[0] * q.x * q.y + v[1] * q.y * q.y + v[2] * q.z * q.y + v[1] * q.w * q.w - v[0] * q.z * q.w + v[2] * q.x * q.w + v[2] * q.w * q.x - v[1] * q.x * q.x + v[0] * q.y * q.x - v[0] * q.w * q.z + v[2] * q.y * q.z - v[1] * q.z * q.z;
-       *  z: v[0] * q.x * q.z + v[1] * q.y * q.z + v[2] * q.z * q.z + v[2] * q.w * q.w - v[1] * q.x * q.w + v[0] * q.y * q.w + v[0] * q.w * q.y - v[2] * q.y * q.y + v[1] * q.z * q.y - v[1] * q.w * q.x + v[0] * q.z * q.x - v[2] * q.x * q.x;
-       *
-       * =
-       *  x: v[0] * (+ q.x * q.x - q.y * q.y - q.z * q.z + q.w * q.w) + 2 * ( v[1] * (q.x * q.y + q.z * q.w) + v[2] * (q.x * q.z - q.y * q.w) );
-       *  y: v[1] * (- q.x * q.x + q.y * q.y - q.z * q.z + q.w * q.w) + 2 * ( v[2] * (q.x * q.w + q.y * q.z) + v[0] * (q.x * q.y - q.z * q.w) );
-       *  z: v[2] * (- q.x * q.x - q.y * q.y + q.z * q.z + q.w * q.w) + 2 * ( v[0] * (q.x * q.z + q.y * q.w) + v[1] * (q.y * q.z - q.x * q.w) );
-       *
-       * =
-       *  x: v[0] * (q.x * q.x - q.y * q.y - q.z * q.z + q.w * q.w) + 2 * ( v[1] * (q.x * q.y + q.z * q.w) + v[2] * (q.x * q.z - q.y * q.w) );
-       *  y: v[1] * (q.y * q.y - q.x * q.x - q.z * q.z + q.w * q.w) + 2 * ( v[2] * (q.y * q.z + q.x * q.w) + v[0] * (q.y * q.x - q.z * q.w) );
-       *  z: v[2] * (q.z * q.z - q.x * q.x - q.y * q.y + q.w * q.w) + 2 * ( v[0] * (q.z * q.x + q.y * q.w) + v[1] * (q.z * q.y - q.x * q.w) );
-       *
-       */
-
       T qx2 = q.x * q.x;
       T qy2 = q.y * q.y;
       T qz2 = q.z * q.z;
@@ -500,6 +442,7 @@ class QuaternionMath
       out[0] = v[0] * (qx2 - qy2 - qz2 + qw2) + 2 * ( v[1] * (qxy + qzw) + v[2] * (qzx - qyw) );
       out[1] = v[1] * (qy2 - qx2 - qz2 + qw2) + 2 * ( v[2] * (qyz + qxw) + v[0] * (qxy - qzw) );
       out[2] = v[2] * (qz2 - qx2 - qy2 + qw2) + 2 * ( v[0] * (qzx + qyw) + v[1] * (qyz - qxw) );
+
     }
 
     /**

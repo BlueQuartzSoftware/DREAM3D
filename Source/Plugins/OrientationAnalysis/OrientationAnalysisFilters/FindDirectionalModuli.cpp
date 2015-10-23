@@ -47,12 +47,16 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Math/MatrixMath.h"
-#include "OrientationLib/OrientationMath/OrientationMath.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
 #include <Eigen/Dense>
 #include <Eigen/StdVector>
+
+
+
+// Include the MOC generated file for this class
+#include "moc_FindDirectionalModuli.cpp"
 
 
 

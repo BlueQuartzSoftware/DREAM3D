@@ -57,9 +57,6 @@
 
 #include "ImageIO/ImageIOFilters/ImportVectorImageStack.h"
 
-
-#include "ImageIO/moc_ImportVectorImageStackWidget.cpp"
-
 // Initialize private static member variable
 QString ImportVectorImageStackWidget::m_OpenDialogLastDirectory = "";
 

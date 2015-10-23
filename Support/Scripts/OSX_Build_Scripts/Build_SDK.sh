@@ -103,6 +103,45 @@ tar -xvzf ${SDK_INSTALL}/cmake-3.3.1-Darwin-x86_64.tar.gz
 # Get CMake on our path
 export PATH=$PATH:${SDK_INSTALL}/cmake-3.3.1-Darwin-x86_64/CMake.app/Contents/bin
 
+
+#-------------------------------------------------
+# Create the DREAM3D_SKD.cmake file, but back up any existing one first
+if [ -e "$SDK_INSTALL/DREAM3D_SDK.cmake" ]
+  then
+  mv "$SDK_INSTALL/DREAM3D_SDK.cmake" "$SDK_INSTALL/DREAM3D_SDK.cmake.bak"
+fi
+echo "# This is the DREAM3D_SDK File. This file contains all the paths to the dependent libraries." > "$SDK_INSTALL/DREAM3D_SDK.cmake"
+
+echo "if(NOT DEFINED DREAM3D_FIRST_CONFIGURE)" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "  message(STATUS \"*******************************************************\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "  message(STATUS \"* DREAM.3D First Configuration Run                    *\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "  message(STATUS \"* DREAM3D_SDK Loading from \${CMAKE_CURRENT_LIST_DIR}  *\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "  message(STATUS \"*******************************************************\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "endif()" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "set(CMAKE_CXX_FLAGS \"-Wmost -Wno-four-char-constants -Wno-unknown-pragmas -mfpmath=sse\" CACHE STRING \"\" FORCE)" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "#--------------------------------------------------------------------------------------------------" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "# These settings are specific to DREAM3D. DREAM3D needs these variables to" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "# configure properly." >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "set(BUILD_TYPE \${CMAKE_BUILD_TYPE})" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "if(\"\${BUILD_TYPE}\" STREQUAL \"\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "    set(BUILD_TYPE \"Release\" CACHE STRING \"\" FORCE)" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "endif()" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "message(STATUS \"The Current Build type being used is \${BUILD_TYPE}\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "set(BUILD_SHARED_LIBS ON CACHE BOOL \"\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "set(DREAM3D_SDK_ROOT \"$SDK_INSTALL\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "set(DREAM3D_DATA_DIR \${DREAM3D_SDK_ROOT}/DREAM3D_Data CACHE PATH \"\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+
+# Write out the Qt5 directory/installation
+echo "#--------------------------------------------------------------------------------------------------" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "# Qt 5.4.x Library" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "set(Qt5_DIR \"\${DREAM3D_SDK_ROOT}/Qt5.4.2/5.4/clang_64/lib/cmake/Qt5\" CACHE PATH \"\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+
 #-------------------------------------------------
 # Start building all the packages
 ${SDK_INSTALL}/Build_Qwt.sh "${SDK_INSTALL}" ${PARALLEL_BUILD}
@@ -122,12 +161,49 @@ rm ${SDK_INSTALL}/Build_Boost.sh
 
 
 #-------------------------------------------------
-# We are NOT going to build ITK at this time since it is so difficult
-# to get correct with our HDF5. This knocks out the ImageProcessing plugin
+# We are going to build ITK.
 # The third argument is the Version of HDF5 that we are using
 ${SDK_INSTALL}/Build_ITK.sh "${SDK_INSTALL}" ${PARALLEL_BUILD} "1.8.15"
-#echo "------------------------------------------------------------"
-#echo "- NOT building ITK. ImageProcessing Plugin will NOT compile."
-#echo "------------------------------------------------------------"
 rm ${SDK_INSTALL}/Build_ITK.sh
 rm ${SDK_INSTALL}/FixITK.sh
+
+
+
+# Continue writing the DREAM3D_SDK.cmake file after all those libraries were compiled
+echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "#--------------------------------------------------------------------------------------------------" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "# Update CMake Module Path with additional paths in order to better find the libraries." >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "set(CMAKE_MODULE_PATH \${CMAKE_MODULE_PATH} \${ITK_DIR} \${Qt5_DIR} \${HDF5_DIR})" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "#--------------------------------------------------------------------------------------------------" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "# Only Run this the first time when configuring DREAM.3D. After that the values" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "# are cached properly and the user can add additional plugins through the normal" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "# CMake GUI or CCMake programs." >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "if(NOT DEFINED DREAM3D_FIRST_CONFIGURE)" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "  set (MyPlugins" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "    DDDAnalysisToolbox" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "    HEDMAnalysis" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "    ImageProcessing" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "    TransformationPhase" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "  )" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "  # Loop on each plugin and generate a semi-colon separated list of values" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "  foreach(plugin \${MyPlugins})" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "    list(APPEND MyPluginList \"\${plugin}\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "  endforeach()" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "  list(LENGTH MyPluginList LIST_LENGTH)" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "  if(LIST_LENGTH GREATER 1)" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "    list(SORT MyPluginList)" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "  endif()" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "  set(DREAM3D_EXTRA_PLUGINS \"\${MyPluginList}\" CACHE STRING \"\" FORCE)" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "  set(DREAM3D_FIRST_CONFIGURE \"ON\" CACHE STRING \"Determines if DREAM3D has already been configured\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "endif()" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+
+

@@ -52,7 +52,8 @@
 
 #include "DREAM3DWidgetsLib/UpdateCheckData.h"
 
-#include "DREAM3DWidgetsLib/moc_DREAM3DUpdateCheckDialog.cpp"
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_DREAM3DUpdateCheckDialog.cpp"
 
 namespace Detail
 {

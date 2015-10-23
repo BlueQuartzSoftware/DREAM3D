@@ -55,6 +55,9 @@ class QuickSurfaceMesh : public AbstractFilter
     SIMPL_TYPE_MACRO_SUPER(QuickSurfaceMesh, AbstractFilter)
 
     virtual ~QuickSurfaceMesh();
+  
+    SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, SelectedDataArrayPaths)
+    Q_PROPERTY(QVector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
 
     SIMPL_FILTER_PARAMETER(QString, SurfaceDataContainerName)
     Q_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
@@ -65,23 +68,14 @@ class QuickSurfaceMesh : public AbstractFilter
     SIMPL_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
     Q_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
 
-    SIMPL_INSTANCE_PROPERTY(bool, TransferPhaseId)
-    Q_PROPERTY(bool TransferPhaseId READ getTransferPhaseId WRITE setTransferPhaseId)
-
     SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
-
-    SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
-    Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
     SIMPL_FILTER_PARAMETER(QString, FaceLabelsArrayName)
     Q_PROPERTY(QString FaceLabelsArrayName READ getFaceLabelsArrayName WRITE setFaceLabelsArrayName)
 
     SIMPL_FILTER_PARAMETER(QString, NodeTypesArrayName)
     Q_PROPERTY(QString NodeTypesArrayName READ getNodeTypesArrayName WRITE setNodeTypesArrayName)
-
-    SIMPL_FILTER_PARAMETER(QString, FacePhasesArrayName)
-    Q_PROPERTY(QString FacePhasesArrayName READ getFacePhasesArrayName WRITE setFacePhasesArrayName)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -166,11 +160,11 @@ class QuickSurfaceMesh : public AbstractFilter
 
   private:
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
-
     DEFINE_DATAARRAY_VARIABLE(int32_t, FaceLabels)
     DEFINE_DATAARRAY_VARIABLE(int8_t, NodeTypes)
-    DEFINE_DATAARRAY_VARIABLE(int32_t, FacePhases)
+  
+    QVector<IDataArray::WeakPointer> m_SelectedWeakPtrVector;
+    QVector<IDataArray::WeakPointer> m_CreatedWeakPtrVector;
 
     /**
      * @brief updateFaceInstancePointers Updates raw Face pointers

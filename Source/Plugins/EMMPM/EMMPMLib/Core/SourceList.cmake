@@ -15,13 +15,21 @@ set (EMMPMLib_Core_SRCS
 )
 
 set (EMMPMLib_Core_HDRS
-    ${EMMPMLib_SOURCE_DIR}/Core/EMCalculation.h
     ${EMMPMLib_SOURCE_DIR}/Core/EMMPM_Constants.h
     ${EMMPMLib_SOURCE_DIR}/Core/EMMPM_Data.h
-    ${EMMPMLib_SOURCE_DIR}/Core/EMMPM.h
     ${EMMPMLib_SOURCE_DIR}/Core/EMMPMUtilities.h
     ${EMMPMLib_SOURCE_DIR}/Core/InitializationFunctions.h
+)
+
+set(EMMPMLib_Core_Moc_HDRS
     ${EMMPMLib_SOURCE_DIR}/Core/MorphFilt.h
     ${EMMPMLib_SOURCE_DIR}/Core/MPMCalculation.h
+    ${EMMPMLib_SOURCE_DIR}/Core/EMMPM.h
+    ${EMMPMLib_SOURCE_DIR}/Core/EMCalculation.h
 )
-cmp_IDE_SOURCE_PROPERTIES( "EMMPMLib/Core" "${EMMPMLib_Core_HDRS}" "${EMMPMLib_Core_SRCS}" "${PROJECT_INSTALL_HEADERS}")
+cmp_IDE_SOURCE_PROPERTIES( "EMMPMLib/Core" "${EMMPMLib_Core_Moc_HDRS};${EMMPMLib_Core_HDRS}" "${EMMPMLib_Core_SRCS}" "${PROJECT_INSTALL_HEADERS}")
+
+
+# --------------------------------------------------------------------
+# Run Qts automoc program to generate some source files that get compiled
+QT5_WRAP_CPP( EMMPMLib_Core_Generated_MOC_SRCS ${EMMPMLib_Core_Moc_HDRS})

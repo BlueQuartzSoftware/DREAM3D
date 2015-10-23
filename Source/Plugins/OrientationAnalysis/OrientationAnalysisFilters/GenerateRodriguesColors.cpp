@@ -46,9 +46,9 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Math/MatrixMath.h"
 #include "SIMPLib/Utilities/ColorTable.h"
-#include "OrientationLib/OrientationMath/OrientationMath.h"
-#include "OrientationLib/SpaceGroupOps/CubicLowOps.h"
 
+#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+#include "OrientationLib/SpaceGroupOps/CubicLowOps.h"
 #include "OrientationLib/SpaceGroupOps/CubicOps.h"
 #include "OrientationLib/SpaceGroupOps/HexagonalLowOps.h"
 #include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
@@ -62,6 +62,11 @@
 #include "OrientationLib/SpaceGroupOps/TriclinicOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
+
+
+// Include the MOC generated file for this class
+#include "moc_GenerateRodriguesColors.cpp"
+
 
 
 // -----------------------------------------------------------------------------

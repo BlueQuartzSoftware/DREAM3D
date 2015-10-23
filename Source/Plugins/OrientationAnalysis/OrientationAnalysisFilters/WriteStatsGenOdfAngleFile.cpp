@@ -71,6 +71,11 @@
 
 #define WRITE_EULERS_TEXT_FILE 1
 
+// Include the MOC generated file for this class
+#include "moc_WriteStatsGenOdfAngleFile.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -167,8 +172,8 @@ void WriteStatsGenOdfAngleFile::dataCheck()
   if (getOutputFile().isEmpty() == true)
   {
     ss = QObject::tr( "The output file must be set");
-    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   QFileInfo fi(getOutputFile());
   QDir parentPath = fi.path();

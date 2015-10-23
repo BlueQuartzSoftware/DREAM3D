@@ -9,6 +9,11 @@
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 
 
+// Include the MOC generated file for this class
+#include "moc_TestFilters.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

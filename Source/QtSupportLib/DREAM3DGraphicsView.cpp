@@ -50,6 +50,7 @@
 #include <QtWidgets/QGraphicsPolygonItem>
 #include <QtGui/QImageReader>
 
+#include "moc_DREAM3DGraphicsView.cpp"
 
 // -----------------------------------------------------------------------------
 //

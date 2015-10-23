@@ -26,12 +26,12 @@ endmacro (cmp_IDE_GENERATED_PROPERTIES SOURCE_PATH HEADERS SOURCES)
 macro (cmp_IDE_SOURCE_PROPERTIES SOURCE_PATH HEADERS SOURCES INSTALL_FILES)
     if(${INSTALL_FILES} EQUAL "1")
         INSTALL (FILES ${HEADERS}
-                 DESTINATION include/${SOURCE_PATH}
+                 DESTINATION "include/${SOURCE_PATH}"
                  COMPONENT Headers
         )
     endif()
-    STRING(REPLACE "/" "\\\\" source_group_path ${SOURCE_PATH}  )
-    source_group(${source_group_path} FILES ${HEADERS} ${SOURCES})
+    STRING(REPLACE "/" "\\\\" source_group_path "${SOURCE_PATH}"  )
+    source_group("${source_group_path}" FILES ${HEADERS} ${SOURCES})
 
   #-- The following is needed if we ever start to use OS X Frameworks but only
   #--  works on CMake 2.6 and greater
@@ -63,7 +63,7 @@ macro(ConfigureMacOSXBundlePlist TARGET_NAME DEBUG_EXTENSION ICON_FILE_PATH VERS
   set_target_properties(${TARGET_NAME} PROPERTIES
     MACOSX_BUNDLE_INFO_STRING "${PROJECT_NAME}${DBG_EXTENSION} Version ${VERSION_STRING}, Copyright 2015 BlueQuartz Software."
     MACOSX_BUNDLE_ICON_FILE ${ICON_FILE_NAME}
-    MACOSX_BUNDLE_GUI_IDENTIFIER "${PROJECT_NAME}${DBG_EXTENSION}"
+    MACOSX_BUNDLE_GUI_IDENTIFIER "${PROJECT_NAME}"
     MACOSX_BUNDLE_LONG_VERSION_STRING "${PROJECT_NAME}${DBG_EXTENSION} Version ${VERSION_STRING}"
     MACOSX_BUNDLE_BUNDLE_NAME ${PROJECT_NAME}${DBG_EXTENSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${VERSION_STRING}
@@ -437,6 +437,9 @@ macro(LibraryProperties targetName DEBUG_EXTENSION)
         RELEASE_OUTPUT_NAME lib${targetName}  )
     endif()
 
+    set_target_properties( ${targetName} PROPERTIES FOLDER ${targetName}Proj)
+
+
     #-- Set the Debug and Release names for the libraries
     SET_TARGET_PROPERTIES( ${targetName}
         PROPERTIES
@@ -465,8 +468,6 @@ macro(LibraryProperties targetName DEBUG_EXTENSION)
                 PROPERTIES
                 INSTALL_RPATH \$ORIGIN/../lib)
     endif()
-
-
 
    endif( BUILD_SHARED_LIBS)
 
@@ -826,22 +827,32 @@ function(cmpGenerateBuildDate)
       string(REPLACE  " " ";" RESULT ${RESULT})
       list(GET RESULT 1 RESULT)
       string(REPLACE "/" ";" RESULT ${RESULT})
-      list(GET RESULT 2 YEAR)
-      list(GET RESULT 0 MONTH)
-      list(GET RESULT 1 DAY)
-      set(${GVS_PROJECT_NAME}_BUILD_DATE "${YEAR}/${MONTH}/${DAY}" PARENT_SCOPE)
+      list(LENGTH RESULT LIST_LENGTH)
+      if(LIST_LENGTH GREATER 2)
+        list(GET RESULT 2 YEAR)
+        list(GET RESULT 0 MONTH)
+        list(GET RESULT 1 DAY)
+        set(${GVS_PROJECT_NAME}_BUILD_DATE "${YEAR}/${MONTH}/${DAY}" PARENT_SCOPE)
+      else()
+        set(${GVS_PROJECT_NAME}_BUILD_DATE "0000/00/00" PARENT_SCOPE)
+      endif()
       #message(STATUS "${GVS_PROJECT_NAME}_BUILD_DATE: ${${GVS_PROJECT_NAME}_BUILD_DATE}")
   ELSEIF(UNIX)
       EXECUTE_PROCESS(COMMAND "date" "+%Y/%m/%d/" OUTPUT_VARIABLE RESULT)
       string(REPLACE "/" ";" RESULT ${RESULT})
-      list(GET RESULT 0 YEAR)
-      list(GET RESULT 1 MONTH)
-      list(GET RESULT 2 DAY)
-      set(${GVS_PROJECT_NAME}_BUILD_DATE "${YEAR}/${MONTH}/${DAY}" PARENT_SCOPE)
+      list(LENGTH RESULT LIST_LENGTH)
+      if(LIST_LENGTH GREATER 2)
+        list(GET RESULT 0 YEAR)
+        list(GET RESULT 1 MONTH)
+        list(GET RESULT 2 DAY)
+        set(${GVS_PROJECT_NAME}_BUILD_DATE "${YEAR}/${MONTH}/${DAY}" PARENT_SCOPE)
+      else()
+          set(${GVS_PROJECT_NAME}_BUILD_DATE "0000/00/00" PARENT_SCOPE)
+      endif()
       #message(STATUS "${GVS_PROJECT_NAME}_BUILD_DATE: ${${GVS_PROJECT_NAME}_BUILD_DATE}")
   ELSE (WIN32)
       MESSAGE(SEND_ERROR "date for this operating system not implemented")
-      set(${GVS_PROJECT_NAME}_BUILD_DATE "NO_DATE" PARENT_SCOPE)
+      set(${GVS_PROJECT_NAME}_BUILD_DATE "0000/00/00" PARENT_SCOPE)
   ENDIF (WIN32)
 
 endfunction()
@@ -900,9 +911,14 @@ function(cmpGitRevisionString)
     string(REPLACE  "-" ";" VERSION_LIST ${DVERS})
     list(LENGTH VERSION_LIST VERSION_LIST_LENGTH)
 
-    list(GET VERSION_LIST 1 VERSION_GEN_VER_PATCH)
-    list(GET VERSION_LIST 2 VERSION_GEN_VER_REVISION)
-
+    set(VERSION_GEN_VER_PATCH "0")
+    set(VERSION_GEN_VER_REVISION "0")
+    
+    list(LENGTH VERSION_LIST LIST_LENGTH)
+    if(LIST_LENGTH GREATER 1)
+      list(GET VERSION_LIST 1 VERSION_GEN_VER_PATCH)
+      list(GET VERSION_LIST 2 VERSION_GEN_VER_REVISION)
+    endif()
 
     string(SUBSTRING ${VERSION_GEN_VER_REVISION} 1 -1 VERSION_GEN_VER_REVISION)
 

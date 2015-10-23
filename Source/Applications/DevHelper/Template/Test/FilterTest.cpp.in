@@ -56,8 +56,8 @@
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  QFile::remove(UnitTest::@FilterName@::TestFile1);
-  QFile::remove(UnitTest::@FilterName@::TestFile2);
+  QFile::remove(UnitTest::@FilterName@Test::TestFile1);
+  QFile::remove(UnitTest::@FilterName@Test::TestFile2);
 #endif
 }
 

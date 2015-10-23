@@ -54,6 +54,11 @@
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 
+// Include the MOC generated file for this class
+#include "moc_EstablishMatrixPhase.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -345,8 +350,8 @@ void  EstablishMatrixPhase::establish_matrix()
                                  "pointer but this resulted in a NULL pointer. The value at m_PhaseTypes[%2] = %3 does not match up "
                                  "with the type of pointer stored in the StatsDataArray (MatrixStatsData)\n")
                      .arg(i).arg(i).arg(m_PhaseTypes[i]);
-        notifyErrorMessage(getHumanLabel(), ss, -666);
         setErrorCondition(-666);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
       }
       matrixphases.push_back(i);

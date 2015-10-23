@@ -50,6 +50,10 @@
 
 #include "IO/IOConstants.h"
 
+// Include the MOC generated file for this class
+#include "moc_LosAlamosFFTWriter.cpp"
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -135,8 +139,8 @@ void LosAlamosFFTWriter::dataCheck()
   if (getOutputFile().isEmpty() == true)
   {
     QString ss = QObject::tr("The output file must be set");
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-    setErrorCondition(-387);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   QFileInfo fi(getOutputFile());
@@ -216,8 +220,8 @@ int32_t LosAlamosFFTWriter::writeFile()
   if (!parentPath.mkpath("."))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
-    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -1;
   }
 
@@ -225,8 +229,8 @@ int32_t LosAlamosFFTWriter::writeFile()
   if (NULL == f)
   {
     QString ss = QObject::tr("Error opening output file '%1'").arg(getOutputFile());
-    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -1;
   }
 

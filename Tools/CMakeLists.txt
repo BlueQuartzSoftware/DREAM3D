@@ -1,13 +1,37 @@
-#--////////////////////////////////////////////////////////////////////////////
-#--
-#--  Copyright (c) 2009, Michael A. Jackson. BlueQuartz Software
-#--  Copyright (c) 2009, Michael Groeber, US Air Force Research Laboratory
-#--  All rights reserved.
-#--  BSD License: http://www.opensource.org/licenses/bsd-license.html
-#--
-#-- This code was partly written under US Air Force Contract FA8650-07-D-5800
-#--
-#--////////////////////////////////////////////////////////////////////////////
+# ============================================================================
+# Copyright (c) 2009-2015 BlueQuartz Software, LLC
+#
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+#
+# Redistributions of source code must retain the above copyright notice, this
+# list of conditions and the following disclaimer.
+#
+# Redistributions in binary form must reproduce the above copyright notice, this
+# list of conditions and the following disclaimer in the documentation and/or
+# other materials provided with the distribution.
+#
+# Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+# contributors may be used to endorse or promote products derived from this software
+# without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+# USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# The code contained herein was partially funded by the followig contracts:
+#    United States Air Force Prime Contract FA8650-07-D-5800
+#    United States Air Force Prime Contract FA8650-10-D-5210
+#    United States Prime Contract Navy N00173-07-C-2068
+#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 # set project's name
 PROJECT( DREAM3DTools )
 cmake_minimum_required(VERSION 3.1.0)
@@ -66,7 +90,7 @@ function(COMPILE_TOOL)
         BINARY_DIR    ${D3DTOOL_BINARY_DIR}
         LINK_LIBRARIES Qt5::Core "${D3DTOOL_LINK_LIBRARIES}"
         LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-        COMPONENT     Applications
+        COMPONENT     ${D3DTOOL_COMPONENT}
         INSTALL_DEST  "${D3DTOOL_INSTALL_DEST}"
         SOLUTION_FOLDER "Applications"
     )
@@ -82,7 +106,7 @@ COMPILE_TOOL(
     VERSION_MINOR ${DREAM3D_VER_MINOR}
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    COMPONENT     Applications
+    COMPONENT     Tools
     INSTALL_DEST  "${install_dir}"
     LINK_LIBRARIES EbsdLib SIMPLib
 )
@@ -97,7 +121,7 @@ COMPILE_TOOL(
     VERSION_MINOR ${DREAM3D_VER_MINOR}
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    COMPONENT     Applications
+    COMPONENT     Tools
     LINK_LIBRARIES hdf5 Qt5::Core H5Support SIMPLib
 )
 
@@ -110,23 +134,8 @@ COMPILE_TOOL(
     VERSION_MINOR ${DREAM3D_VER_MINOR}
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    COMPONENT     Applications
+    COMPONENT     Tools
     LINK_LIBRARIES EbsdLib SIMPLib
-)
-
-# --------------------------------------------------------------------
-COMPILE_TOOL(
-    TARGET DREAM3DFileStructure
-    SOURCES ${DREAM3DTools_SOURCE_DIR}/DREAM3DFileStructure.cpp
-            ${DREAM3DTools_SOURCE_DIR}/DREAM3DFileStructure_Main.cpp
-            ${DREAM3DFileStructure_Generated_MOC_SRCS}
-    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-    VERSION_MINOR ${DREAM3D_VER_MINOR}
-    VERSION_PATCH ${DREAM3D_VER_PATCH}
-    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    COMPONENT     Applications
-    LINK_LIBRARIES EbsdLib SIMPLib Qt5::Gui Qt5::Widgets
 )
 
 # --------------------------------------------------------------------

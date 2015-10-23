@@ -35,9 +35,7 @@
 
 #include "BookmarksTreeView.h"
 
-#include "Applications/DREAM3D/DREAM3DApplication.h"
-
-#include "DREAM3DWidgetsLib/Widgets/BookmarksItemDelegate.h"
+#include <iostream>
 
 #include <QtGui/QMouseEvent>
 #include <QtWidgets/QApplication>
@@ -46,8 +44,13 @@
 #include <QtCore/QDir>
 #include <QtGui/QDrag>
 
-#include <iostream>
 
+#include "Applications/DREAM3D/DREAM3DApplication.h"
+
+#include "DREAM3DWidgetsLib/Widgets/BookmarksItemDelegate.h"
+
+// Include the MOC generated CPP file which has all the QMetaObject methods/data
+#include "moc_BookmarksTreeView.cpp"
 
 // -----------------------------------------------------------------------------
 //

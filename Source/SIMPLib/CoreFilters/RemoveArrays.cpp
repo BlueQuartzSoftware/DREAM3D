@@ -41,6 +41,11 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataContainerArrayProxyFilterParameter.h"
 
+// Include the MOC generated file for this class
+#include "moc_RemoveArrays.cpp"
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
