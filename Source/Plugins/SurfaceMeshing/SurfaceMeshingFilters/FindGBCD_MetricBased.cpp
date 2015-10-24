@@ -390,8 +390,7 @@ public:
 FindGBCD_MetricBased::FindGBCD_MetricBased() :
   SurfaceMeshFilter(),
   m_PhaseOfInterest(1),
-  m_MisorLimitDist(0),
-  m_PlaneLimitDist(1),
+  m_ChosenLimitDists(DEFAULT_RESOL_CHOICE),
   m_NumSamplPts(3000),
   m_AddMorePtsNearEquator(true),
   m_DistOutputFile(""),
@@ -439,44 +438,29 @@ void FindGBCD_MetricBased::setupFilterParameters()
 	parameters.push_back(AxisAngleFilterParameter::New("Fixed Misorientation", "MisorientationRotation", getMisorientationRotation(), FilterParameter::Parameter));
 	{
 		ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
-		parameter->setHumanLabel("Limiting Distance for Grain Misorientations");
-		parameter->setPropertyName("MisorLimitDist");
+		parameter->setHumanLabel("Limiting Distances");
+		parameter->setPropertyName("ChosenLimitDists");
 
 		QVector<QString> choices;
 
-		for (int choiceIdx = 0; choiceIdx < NUM_MISOR_RESOL; choiceIdx++)
+		for (int choiceIdx = 0; choiceIdx < NUM_RESOL_CHOICES; choiceIdx++)
 		{
 			QString misorResStr;
+			QString planeResStr;
 			QString degSymbol = QChar(0x00B0);
 
-			misorResStr.setNum(MISOR_RESOL_CHOICES[choiceIdx], 'f', 0);
+			misorResStr.setNum(RESOL_CHOICES[choiceIdx][0], 'f', 0);
+			planeResStr.setNum(RESOL_CHOICES[choiceIdx][1], 'f', 0);
 
-			choices.push_back(misorResStr + degSymbol);
+			choices.push_back(misorResStr + degSymbol + " for Misorientations; " + planeResStr + degSymbol + " for Plane Inclinations");
 		}
+
 		parameter->setChoices(choices);
 		parameter->setCategory(FilterParameter::Parameter);
 		parameters.push_back(parameter);
+
+
 	}
-  {
-    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
-    parameter->setHumanLabel("Limiting Distance for Boundary Planes");
-    parameter->setPropertyName("PlaneLimitDist");
-
-    QVector<QString> choices;
-
-    for (int choiceIdx = 0; choiceIdx < NUM_PLANE_RESOL; choiceIdx++)
-    {
-      QString planeResStr;
-      QString degSymbol = QChar(0x00B0);
-
-      planeResStr.setNum(PLANE_RESOL_CHOICES[choiceIdx], 'f', 0);
-
-      choices.push_back(planeResStr + degSymbol);
-    }
-    parameter->setChoices(choices);
-    parameter->setCategory(FilterParameter::Parameter);
-    parameters.push_back(parameter);
-  }
 	parameters.push_back(IntFilterParameter::New("Number of Sampling Points (on a Hemisphere)", "NumSamplPts", getNumSamplPts(), FilterParameter::Parameter));
 	parameters.push_back(BooleanFilterParameter::New("Include Points from the Southern Hemisphere from the Equator's Vicinity", "AddMorePtsNearEquator", getAddMorePtsNearEquator(), FilterParameter::Parameter));
 	parameters.push_back(OutputFileFilterParameter::New("Save Distribution to", "DistOutputFile", getDistOutputFile(), FilterParameter::Parameter, ""));
@@ -532,8 +516,7 @@ void FindGBCD_MetricBased::readFilterParameters(AbstractFilterParametersReader* 
 	reader->openFilterGroup(this, index);
 	setPhaseOfInterest(reader->readValue("PhaseOfInterest", getPhaseOfInterest()));
 	setMisorientationRotation(reader->readAxisAngle("MisorientationRotation", getMisorientationRotation(), -1));
-  setMisorLimitDist(reader->readValue("MisorLimitDist", getMisorLimitDist()));
-  setPlaneLimitDist(reader->readValue("PlaneLimitDist", getPlaneLimitDist()));
+	setChosenLimitDists(reader->readValue("ChosenLimitDists", getChosenLimitDists()));
 	setNumSamplPts(reader->readValue("NumSamplPts", getNumSamplPts()));
 	setAddMorePtsNearEquator(reader->readValue("AddMorePtsNearEquator", getAddMorePtsNearEquator()));
 	setDistOutputFile(reader->readString("DistOutputFile", getDistOutputFile()));
@@ -558,8 +541,7 @@ int FindGBCD_MetricBased::writeFilterParameters(AbstractFilterParametersWriter* 
 	writer->openFilterGroup(this, index);
 	SIMPL_FILTER_WRITE_PARAMETER(PhaseOfInterest)
 	SIMPL_FILTER_WRITE_PARAMETER(MisorientationRotation)
-	SIMPL_FILTER_WRITE_PARAMETER(MisorLimitDist)
-  SIMPL_FILTER_WRITE_PARAMETER(PlaneLimitDist)
+	SIMPL_FILTER_WRITE_PARAMETER(ChosenLimitDists)
 	SIMPL_FILTER_WRITE_PARAMETER(NumSamplPts)
 	SIMPL_FILTER_WRITE_PARAMETER(AddMorePtsNearEquator)
 	SIMPL_FILTER_WRITE_PARAMETER(DistOutputFile)
@@ -608,7 +590,7 @@ void FindGBCD_MetricBased::dataCheck()
 		notifyErrorMessage(getHumanLabel(), ss, -1);
 		setErrorCondition(-1);
 	}
-	if (getNumSamplPts() > 10000) { // set some reasonable value, but allow user to use more if he/she knows what he/she does
+	if (getNumSamplPts() > 5000) { // set some reasonable value, but allow user to use more if he/she knows what he/she does
 
 		QString ss = QObject::tr("Most likely, you do not need to use that many sampling points");
 		notifyWarningMessage(getHumanLabel(), ss, -1);
@@ -785,14 +767,13 @@ void FindGBCD_MetricBased::execute()
 
 
 	// -------------------- set resolutions and 'ball volumes' based on user's selection --------------------
-	float m_misorResol = MISOR_RESOL_CHOICES[getMisorLimitDist()];
-	float m_planeResol = PLANE_RESOL_CHOICES[getPlaneLimitDist()];
+	float m_misorResol = RESOL_CHOICES[getChosenLimitDists()][0];
+	float m_planeResol = RESOL_CHOICES[getChosenLimitDists()][1];
 
 	m_misorResol *= SIMPLib::Constants::k_PiOver180;
 	m_planeResol *= SIMPLib::Constants::k_PiOver180;
 	float m_PlaneResolSq = m_planeResol * m_planeResol;
 
-  //double ballVolume = BALL_VOLS[getChosenLimitDists()];
 
 	// We want to work with the raw pointers for speed so get those pointers.
 	uint32_t* m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
@@ -872,35 +853,18 @@ void FindGBCD_MetricBased::execute()
 
 
   // ------------------- before computing the distribution, we must find normalization factors ----------------------
-  QVector<SpaceGroupOps::Pointer> m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
-  int32_t cryst = m_CrystalStructures[m_PhaseOfInterest];
-  int32_t nsym = m_OrientationOps[cryst]->getNumSymOps();
-
-  //default approximate value
-  double ballVolume = 2.0 * double(nsym) * double(nsym) * m_misorResol * m_misorResol * m_misorResol / 6.0 / SIMPLib::Constants::k_Pi *
-    2.0 * m_planeResol * m_planeResol / 4.0;
-  bool isVolumeNumerical = false;
-
-  if (cryst == 0) // hexagonal 6/mmm
+  double ballVolume = BALL_VOLS_M3M[getChosenLimitDists()];
   {
+    QVector<SpaceGroupOps::Pointer> m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+    int32_t cryst = m_CrystalStructures[m_PhaseOfInterest];
+    int32_t nsym = m_OrientationOps[cryst]->getNumSymOps();
 
-
-
+    if (cryst != 1) {
+      double symFactor = double(nsym) / 24.0;
+      symFactor *= symFactor;
+      ballVolume *= symFactor;
+    }
   }
-  else if (cryst == 1) // cubic m3m
-  {
-    if (doublesEqual(m_misorResol, 3.0 * SIMPLib::Constants::k_PiOver180) && doublesEqual(m_planeResol, 7.0 * SIMPLib::Constants::k_PiOver180)) { ballVolume = 0.0000641; isVolumeNumerical = true; }
-    if (doublesEqual(m_misorResol, 5.0 * SIMPLib::Constants::k_PiOver180) && doublesEqual(m_planeResol, 5.0 * SIMPLib::Constants::k_PiOver180)) { ballVolume = 0.000139; isVolumeNumerical = true; }
-    if (doublesEqual(m_misorResol, 5.0 * SIMPLib::Constants::k_PiOver180) && doublesEqual(m_planeResol, 7.0 * SIMPLib::Constants::k_PiOver180)) { ballVolume = 0.000287439; isVolumeNumerical = true; }
-    if (doublesEqual(m_misorResol, 5.0 * SIMPLib::Constants::k_PiOver180) && doublesEqual(m_planeResol, 8.0 * SIMPLib::Constants::k_PiOver180)) { ballVolume = 0.00038019; isVolumeNumerical = true; }
-  }
-
-  if (isVolumeNumerical == false)
-  {
-    QString ss = QObject::tr("For this combination of Crystal Structure and Limiting Distances, normalization factors are calculated using approximate formulas. Thus, computed intensities may differ up to 10\% from the true values");
-    notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
-  }
-
 
 
 	// ------------------------------ generation of sampling points ------------------------------
