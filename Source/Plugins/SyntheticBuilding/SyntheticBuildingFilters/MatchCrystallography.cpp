@@ -752,6 +752,9 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
     {
       counter = 0;
       selectedfeature1 = int32_t(rg.genrand_res53() * totalFeatures);
+      // If the selected Feature equals the total Features, we have to subtract 1 or else be out of range of our arrays
+      // This situation shouldn't even be possible, but it was observed to happen, so fixing it anyways
+      if (selectedfeature1 == totalFeatures) { selectedfeature1--; }
       while ((m_SurfaceFeatures[selectedfeature1] == true || m_FeaturePhases[selectedfeature1] != static_cast<int32_t>(ensem)) && counter < totalFeatures)
       {
         if (selectedfeature1 >= totalFeatures) { selectedfeature1 = selectedfeature1 - totalFeatures; }
@@ -831,6 +834,9 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
     {
       counter = 0;
       selectedfeature1 = int32_t(rg.genrand_res53() * totalFeatures);
+      // If the selected Feature equals the total Features, we have to subtract 1 or else be out of range of our arrays
+      // This situation shouldn't even be possible, but it was observed to happen, so fixing it anyways
+      if (selectedfeature1 == totalFeatures) { selectedfeature1--; }
       while ((m_SurfaceFeatures[selectedfeature1] == true || m_FeaturePhases[selectedfeature1] != static_cast<int32_t>(ensem)) && counter < totalFeatures)
       {
         if (selectedfeature1 >= totalFeatures) { selectedfeature1 = selectedfeature1 - totalFeatures; }
@@ -845,6 +851,9 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
       {
         counter = 0;
         selectedfeature2 = int32_t(rg.genrand_res53() * totalFeatures);
+        // If the selected Feature equals the total Features, we have to subtract 1 or else be out of range of our arrays
+        // This situation shouldn't even be possible, but it was observed to happen, so fixing it anyways
+        if (selectedfeature2 == totalFeatures) { selectedfeature2--; }
         while ((m_SurfaceFeatures[selectedfeature2] == true || m_FeaturePhases[selectedfeature2] != static_cast<int32_t>(ensem) || selectedfeature2 == selectedfeature1) && counter < totalFeatures)
         {
           if (selectedfeature2 >= totalFeatures) { selectedfeature2 = selectedfeature2 - totalFeatures; }
