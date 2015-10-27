@@ -86,7 +86,6 @@ void CombineAttributeMatrices::setupFilterParameters()
   {
 	  AttributeMatrixSelectionFilterParameter::RequirementType req;
 	  QVector<uint32_t> dcGeomTypes;
-	  req.dcGeometryTypes = dcGeomTypes;
 	  QVector<uint32_t> amTypes;
 	  amTypes.push_back(DREAM3D::AttributeMatrixType::CellEnsemble);
 	  amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
@@ -98,7 +97,8 @@ void CombineAttributeMatrices::setupFilterParameters()
 	  amTypes.push_back(DREAM3D::AttributeMatrixType::VertexFeature);
 	  dcGeomTypes.push_back(DREAM3D::Defaults::AnyGeometry);
 	  req.amTypes = amTypes;
-	  parameters.push_back(AttributeMatrixSelectionFilterParameter::New("First Feature/Ensemble Attribute Matrix", "FirstAttributeMatrixPath", getFirstAttributeMatrixPath(), FilterParameter::RequiredArray, req));
+    req.dcGeometryTypes = dcGeomTypes;
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("First Feature/Ensemble Attribute Matrix", "FirstAttributeMatrixPath", getFirstAttributeMatrixPath(), FilterParameter::RequiredArray, req));
 	  parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Second Feature/Ensemble Attribute Matrix", "SecondAttributeMatrixPath", getSecondAttributeMatrixPath(), FilterParameter::RequiredArray, req));
   }
   {
