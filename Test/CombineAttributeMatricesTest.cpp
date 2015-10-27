@@ -139,10 +139,19 @@ DataContainerArray::Pointer initializeDataContainerArray()
   m->setName("CombineAttributeMatricesTest");
 
   // Create Attribute Matrices with different tDims to test validation of tuple compatibility
-  QVector<size_t> tDims(1, 10);
-  AttributeMatrix::Pointer attrMat = AttributeMatrix::New(tDims, "ConditionalSetValueAttrMat", 3);
+  QVector<size_t> tDims(3, 0);
+  tDims[0] = 2;
+  tDims[1] = 2;
+  tDims[2] = 1;
+  AttributeMatrix::Pointer cellAttrMat = AttributeMatrix::New(tDims, "CellAttrMat", DREAM3D::AttributeMatrixType::Cell);
+  m->addAttributeMatrix("CellAttrMat", cellAttrMat);
 
-  m->addAttributeMatrix("ConditionalSetValueAttrMat", attrMat);
+  tDims.resize(1);
+  tDims[0] = 3;
+  AttributeMatrix::Pointer featureAttrMat1 = AttributeMatrix::New(tDims, "featureAttrMat1", DREAM3D::AttributeMatrixType::CellFeature);
+  m->addAttributeMatrix("featureAttrMat1", featureAttrMat1);
+  AttributeMatrix::Pointer featureAttrMat2 = AttributeMatrix::New(tDims, "featureAttrMat2", DREAM3D::AttributeMatrixType::CellFeature);
+  m->addAttributeMatrix("featureAttrMat2", featureAttrMat2);
 
   dca->addDataContainer(m);
 

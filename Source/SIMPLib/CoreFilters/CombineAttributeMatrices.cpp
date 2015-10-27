@@ -202,7 +202,9 @@ void CombineAttributeMatrices::dataCheck()
 	  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  size_t totalTuples = firstAttrMat->getNumTuples() + secondAttrMat->getNumTuples();
+  //Note that the minus 1 in the totalTuples calculation is to account for the fact that the zeroth tuple in the two attribute matrices should only be counted once, not twice.  
+  //All Feature or Ensemble AMs should start from 1 and the zeroth tuple can be combined in the two AMs
+  size_t totalTuples = firstAttrMat->getNumTuples() + secondAttrMat->getNumTuples() - 1;
   QVector<size_t> tDims(1, totalTuples);
   m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCombinedAttributeMatrixName(), tDims, firstAttrMat->getType());
   if (getErrorCondition() < 0) { return; }
@@ -278,9 +280,10 @@ void copyData(IDataArray::Pointer fromData, IDataArray::Pointer toData, size_t l
 	typename DataArray<T>::Pointer fData = boost::dynamic_pointer_cast<DataArray<T> >(fromData);
 	typename DataArray<T>::Pointer tData = boost::dynamic_pointer_cast<DataArray<T> >(toData);
 
-	T* src = fData->getPointer(0);
-	T* dest = tData->getPointer(location);
-	size_t bytes = sizeof(T) * fromData->getNumberOfTuples() * fromData->getNumberOfComponents();
+  //only wanting to grab data from tuple 1 to numTuples of the fromData array,s ince the zeroth slot is a placeholder the first AM should already have
+  T* src = fData->getPointer(1 * fromData->getNumberOfComponents());
+  T* dest = tData->getPointer(location * toData->getNumberOfComponents());
+	size_t bytes = sizeof(T) * (fromData->getNumberOfTuples() - 1) * fromData->getNumberOfComponents();
 	::memcpy(dest, src, bytes);
 }
 
