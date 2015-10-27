@@ -364,6 +364,33 @@ void TestTupleCopy()
 
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestDataCopy()
+{
+  // Create an Array of 10 Structs
+  Vec3IntListPointer_t nodes = initializeStructArray();
+  Vec3IntListPointer_t copy = initializeStructArray();
+
+  nodes->resize(ARRAY_SIZE * 2);
+  bool didCopy = nodes->copyData(ARRAY_SIZE, copy);
+  DREAM3D_REQUIRE_EQUAL(didCopy, true)
+  DREAM3D_REQUIRE_EQUAL(nodes->getNumberOfTuples(), ARRAY_SIZE * 2);
+
+  for(size_t i = 0; i < ARRAY_SIZE; i++)
+  {
+    Vec3Int_t* ptr0 = nodes->getPointer(i);
+    Vec3Int_t* ptr1 = nodes->getPointer(ARRAY_SIZE + i);
+
+    DREAM3D_REQUIRE_EQUAL(ptr0->pos[0], ptr1->pos[0])
+    DREAM3D_REQUIRE_EQUAL(ptr0->pos[1], ptr1->pos[1])
+    DREAM3D_REQUIRE_EQUAL(ptr0->pos[2], ptr1->pos[2])
+  }
+
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -494,7 +521,7 @@ int main(int argc, char** argv)
 #if !REMOVE_TEST_FILES
   DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 #endif
-
+  DREAM3D_REGISTER_TEST(TestDataCopy())
   DREAM3D_REGISTER_TEST( TestInitialization() )
   DREAM3D_REGISTER_TEST( TestResizeArray() )
   DREAM3D_REGISTER_TEST( TestInitialization() )

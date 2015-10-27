@@ -80,4 +80,7 @@ cmake -Wno-dev -DQT_QMAKE_EXECUTABLE="" -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTING=
 make -j$PARALLEL_BUILD
 make install
 
+echo "#--------------------------------------------------------------------------------------------------" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "# Eigen Library" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "set(EIGEN_INSTALL \"\${DREAM3D_SDK_ROOT}/Eigen-${EIGEN_VERSION}\" CACHE PATH \"\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 

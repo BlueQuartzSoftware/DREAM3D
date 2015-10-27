@@ -42,7 +42,6 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
-#include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/OrientationMath/OrientationConverter.hpp"
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 

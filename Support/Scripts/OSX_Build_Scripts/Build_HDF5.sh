@@ -48,13 +48,14 @@ if [[ $CMAKE == "" ]];
   exit 1
 fi
 
+version="1.8.15"
 # Build the HDF5 libraries we need and set our Environment Variable.
-hdf5ArchiveName="hdf5-1.8.15-patch1"
+hdf5ArchiveName="hdf5-${version}-patch1"
 
 if [ ! -e "$SDK_INSTALL/${hdf5ArchiveName}.tar.gz" ];
 then
   echo "-------------------------------------------"
-  echo " Downloading HDF5 Version 1.8.15 "
+  echo " Downloading HDF5 Version ${version}"
   echo "-------------------------------------------"
   $DOWNLOAD_PROG  "http://www.hdfgroup.org/ftp/HDF5/current/src/${hdf5ArchiveName}.tar.gz" -o ${hdf5ArchiveName}.tar.gz
 fi
@@ -69,16 +70,20 @@ fi
 cd ${hdf5ArchiveName}
 mkdir Build
 cd Build
-cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Debug -DHDF5_BUILD_WITH_INSTALL_NAME=ON -DHDF5_BUILD_CPP_LIB=ON -DHDF5_BUILD_HL_LIB=ON -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/hdf5-1.8.15-Debug ../
+cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Debug -DHDF5_BUILD_WITH_INSTALL_NAME=ON -DHDF5_BUILD_CPP_LIB=ON -DHDF5_BUILD_HL_LIB=ON -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/hdf5-${version}-Debug ../
 make -j${PARALLEL_BUILD}
 make install
 cd ../
 mkdir zRel
 cd zRel
-cmake  -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DHDF5_BUILD_WITH_INSTALL_NAME=ON -DHDF5_BUILD_CPP_LIB=ON -DHDF5_BUILD_HL_LIB=ON -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/hdf5-1.8.15-Release ../
+cmake  -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DHDF5_BUILD_WITH_INSTALL_NAME=ON -DHDF5_BUILD_CPP_LIB=ON -DHDF5_BUILD_HL_LIB=ON -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/hdf5-${version}-Release ../
 make -j${PARALLEL_BUILD}
 make install
-export HDF5_INSTALL=$SDK_INSTALL/hdf5-1.8.15
 
+
+echo "#--------------------------------------------------------------------------------------------------" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "# HDF5 Library" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "set(HDF5_INSTALL \"\${DREAM3D_SDK_ROOT}/hdf5-${version}-\${BUILD_TYPE}\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "set(HDF5_DIR \"\${DREAM3D_SDK_ROOT}/hdf5-${version}-\${BUILD_TYPE}/share/cmake\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 
 

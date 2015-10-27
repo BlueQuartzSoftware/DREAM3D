@@ -445,9 +445,9 @@ QString TypeToString(T v)
   {\
     DataArray<type>::Pointer p_##type = DataArray<type>::CreateArray(1, "Test", false);\
     QString s_##type = p_##type->getTypeAsString();\
-    qDebug() << #type << s_##type;\
-    type value = (type)(1);\
-    qDebug() << TypeToString<type>(value);\
+    /* qDebug() << #type << s_##type; */\
+    type value = (type)(1); value = value;\
+    /* qDebug() << TypeToString<type>(value); */\
   }\
 
 
@@ -476,10 +476,10 @@ QString TypeToString(T v)
     TEST_TYPE_STRING(uint64_t)
     TEST_TYPE_STRING(float)
     TEST_TYPE_STRING(double)
-    long long int myint = 50;
-    std::cout << "myint has type: " << typeid(myint).name() << '\n';
+ //   long long int myint = 50;
+ //   std::cout << "myint has type: " << typeid(myint).name() << '\n';
 
-    qDebug() << typeid(int64_t).name() << " " << typeid(qint64).name() << " " << typeid(signed long long int).name() << " " << typeid(long long int).name() << " " << typeid(long long).name();
+ //   qDebug() << typeid(int64_t).name() << " " << typeid(qint64).name() << " " << typeid(signed long long int).name() << " " << typeid(long long int).name() << " " << typeid(long long).name();
   }
 
 // -----------------------------------------------------------------------------
@@ -966,20 +966,89 @@ QString TypeToString(T v)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-  void TestDeepCopyArray()
-  {
-    _TestDeepCopyDataArray<uint8_t>();
-    _TestDeepCopyDataArray<int8_t>();
-    _TestDeepCopyDataArray<uint16_t>();
-    _TestDeepCopyDataArray<int16_t>();
-    _TestDeepCopyDataArray<uint32_t>();
-    _TestDeepCopyDataArray<int32_t>();
-    _TestDeepCopyDataArray<uint64_t>();
-    _TestDeepCopyDataArray<int64_t>();
-    _TestDeepCopyDataArray<float>();
-    _TestDeepCopyDataArray<double>();
+void TestDeepCopyArray()
+{
+  _TestDeepCopyDataArray<uint8_t>();
+  _TestDeepCopyDataArray<int8_t>();
+  _TestDeepCopyDataArray<uint16_t>();
+  _TestDeepCopyDataArray<int16_t>();
+  _TestDeepCopyDataArray<uint32_t>();
+  _TestDeepCopyDataArray<int32_t>();
+  _TestDeepCopyDataArray<uint64_t>();
+  _TestDeepCopyDataArray<int64_t>();
+  _TestDeepCopyDataArray<float>();
+  _TestDeepCopyDataArray<double>();
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename T>
+void _TestCopyData()
+{
+  size_t numTuples = 10;
+  QVector<size_t> cDims(1, 5);
+  QString name("Source Array");
+
+  // First lets try it without allocating any memory
+  typename DataArray<T>::Pointer src = DataArray<T>::CreateArray(numTuples, cDims, name, false);
+
+  typename DataArray<T>::Pointer copy = DataArray<T>::CreateArray(numTuples, cDims, name, false);
+
+  DREAM3D_REQUIRED(copy->getNumberOfTuples(), ==, src->getNumberOfTuples() );
+  DREAM3D_REQUIRED(copy->isAllocated(), ==, src->isAllocated() );
+
+  // Create the array again, this time allocating the data and putting in some known data
+  src = DataArray<T>::CreateArray(numTuples, cDims, name, true);
+  copy = DataArray<T>::CreateArray(numTuples, cDims, name, true);
+
+  for(size_t i = 0; i < numTuples; i++)
+  {
+    for(size_t j = 0; j < cDims[0]; j++)
+    {
+      src->setComponent(i, j, static_cast<T>(i + j) );
+      copy->setComponent(i, j, static_cast<T>(i + j) );
+    }
   }
+
+  bool didCopy = src->copyData(numTuples, copy);
+  DREAM3D_REQUIRE_EQUAL(didCopy, false);
+
+  src->resize(numTuples * 2);
+  didCopy = src->copyData(numTuples, copy);
+  DREAM3D_REQUIRE_EQUAL(didCopy, true);
+
+  copy = boost::dynamic_pointer_cast<DataArray<T> >(src->deepCopy());
+  for(size_t i = 0; i < numTuples; i++)
+  {
+    for(size_t j = 0; j < cDims[0]; j++)
+    {
+      src->setComponent(i, j, static_cast<T>(i + j) );
+      T cpy = src->getComponent(i+numTuples, j);
+      T val = src->getComponent(i, j);
+      DREAM3D_REQUIRE_EQUAL(cpy, val)
+    }
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestCopyData()
+{
+  _TestCopyData<uint8_t>();
+  _TestCopyData<int8_t>();
+  _TestCopyData<uint16_t>();
+  _TestCopyData<int16_t>();
+  _TestCopyData<uint32_t>();
+  _TestCopyData<int32_t>();
+  _TestCopyData<uint64_t>();
+  _TestCopyData<int64_t>();
+  _TestCopyData<float>();
+  _TestCopyData<double>();
+}
 
 // -----------------------------------------------------------------------------
 //  Use unit test framework
@@ -994,7 +1063,7 @@ QString TypeToString(T v)
 #if !REMOVE_TEST_FILES
     DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 #endif
-
+    DREAM3D_REGISTER_TEST( TestCopyData() )
     DREAM3D_REGISTER_TEST( TestTypeStrings() )
     DREAM3D_REGISTER_TEST( TestArrayCreation() )
     DREAM3D_REGISTER_TEST( TestDataArray() )

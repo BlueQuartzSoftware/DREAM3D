@@ -114,7 +114,7 @@ void INLWriter::setupFilterParameters()
     parameters.push_back(DataArraySelectionFilterParameter::New("Material Names", "MaterialNameArrayPath", getMaterialNameArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::UInt32, 1, DREAM3D::AttributeMatrixType::CellEnsemble, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::CellEnsemble, DREAM3D::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Number of Features", "NumFeaturesArrayPath", getNumFeaturesArrayPath(), FilterParameter::RequiredArray, req));
   }
   setFilterParameters(parameters);
@@ -166,8 +166,8 @@ void INLWriter::dataCheck()
   if (getOutputFile().isEmpty() == true)
   {
     QString ss = QObject::tr("The output file must be set");
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-    setErrorCondition(-387);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   QFileInfo fi(getOutputFile());
@@ -300,8 +300,8 @@ int32_t INLWriter::writeFile()
   if (!dir.mkpath("."))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(fi.path());
-    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -1;
   }
 
@@ -309,8 +309,8 @@ int32_t INLWriter::writeFile()
   if (NULL == f)
   {
     QString ss = QObject::tr("Error opening output file '%1'").arg(getOutputFile());
-    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -1;
   }
 

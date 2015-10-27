@@ -46,7 +46,6 @@
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
-#include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
@@ -253,8 +252,8 @@ void FindSchmids::dataCheck()
     if ( 0 != cosVec )
     {
       QString ss = QObject::tr("Slip Plane and Slip Direction must be normal");
-      notifyErrorMessage(getHumanLabel(), ss, -1001);
       setErrorCondition(-1001);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
   }

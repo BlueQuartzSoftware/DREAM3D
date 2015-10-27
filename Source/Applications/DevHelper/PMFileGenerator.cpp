@@ -318,7 +318,9 @@ void PMFileGenerator::generateOutputWithFilterNames(QSet<QString> names)
 QString PMFileGenerator::createReplacementString(FileType type, QSet<QString> names)
 {
   QString pluginName = getPluginName();
+
   QString replaceStr = "";
+  QTextStream rsOut(&replaceStr);
   if (type == CMAKELISTS)
   {
     // Build up the huge string full of namespaces using names
@@ -332,7 +334,10 @@ QString PMFileGenerator::createReplacementString(FileType type, QSet<QString> na
         name.replace("@PluginName@", pluginName);
       }
 
-      replaceStr.append("AddDREAM3DUnitTest(TESTNAME " + name + "Test SOURCES ${${PROJECT_NAME}Test_SOURCE_DIR}/" + name + "Test.cpp FOLDER \"${PLUGIN_NAME}Plugin/Test\" LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})");
+      rsOut << "AddDREAM3DUnitTest(TESTNAME " << name << "Test\n";
+      rsOut << "                   SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/" + name + "Test.cpp\n";
+      rsOut << "                   FOLDER \"${PLUGIN_NAME}Plugin/Test\"\n";
+      rsOut << "                   LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})\n";
 
       if (++iter != names.end())
       {

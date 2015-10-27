@@ -15,8 +15,8 @@
 
 #define TYPE_UNSIGNED___INT64 unsigned __int64_t
 
-typedef VTK_TEST_CONVERT_TYPE_TO TypeTo;
-typedef VTK_TEST_CONVERT_TYPE_FROM TypeFrom;
+typedef CMP_TEST_CONVERT_TYPE_TO TypeTo;
+typedef CMP_TEST_CONVERT_TYPE_FROM TypeFrom;
 
 void function(TypeTo& l, TypeFrom const& r)
 {

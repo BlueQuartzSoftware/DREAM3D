@@ -43,6 +43,7 @@ set(_PublicFilters
   WriteIPFStandardTriangle
   WritePoleFigure
   WriteStatsGenOdfAngleFile
+  OrientationUtility
 )
 
 

@@ -44,3 +44,6 @@ AddDREAM3DUnitTest(TESTNAME AngleFileIOTest
           SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/AngleFileIOTest.cpp
           FOLDER "${PLUGIN_NAME}Plugin/Test"
           LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})
+
+AddDREAM3DUnitTest(TESTNAME OrientationUtilityTest SOURCES ${${PROJECT_NAME}Test_SOURCE_DIR}/OrientationUtilityTest.cpp FOLDER "${PLUGIN_NAME}Plugin/Test" LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})
+

@@ -385,6 +385,40 @@ class DataArray : public IDataArray
       return p;
     }
 
+    /**
+     * @brief copyData This method copies all data from the <b>sourceArray</b> into
+     * the current array starting at the target destination tuple offset value.
+     *
+     * For example if the DataArray has 10 tuples and the destTupleOffset = 5 then
+     * then source data will be copied into the destination array starting at
+     * destination tuple 5. In psuedo code it would be the following:
+     * @code
+     *  destArray[5] = sourceArray[0];
+     *  destArray[6] = sourceArray[1];
+     *  .....
+     * @endcode
+     * @param destTupleOffset
+     * @param sourceArray
+     * @return
+     */
+    bool copyData(size_t destTupleOffset, IDataArray::Pointer sourceArray)
+    {
+      if(!m_IsAllocated) { return false; }
+      if(NULL == m_Array) { return false; }
+      if(destTupleOffset >= m_MaxId) { return false; }
+      if(!sourceArray->isAllocated()) { return false; }
+      Self* source = dynamic_cast<Self*>(sourceArray.get());
+      if(NULL == source->getPointer(0)) { return false; }
+
+      if(sourceArray->getNumberOfComponents() != getNumberOfComponents()) { return false; }
+
+      if( sourceArray->getNumberOfTuples()*sourceArray->getNumberOfComponents() + destTupleOffset*getNumberOfComponents() > m_Size) { return false; }
+
+      size_t elementStart = destTupleOffset*getNumberOfComponents();
+      size_t totalBytes = sourceArray->getSize() * sizeof(T);
+      ::memcpy(m_Array + elementStart, source->getPointer(0), totalBytes);
+      return true;
+    }
 
     /**
      * @brief copyIntoArray
@@ -719,6 +753,11 @@ class DataArray : public IDataArray
       return 0;
     }
 
+    /**
+     * @brief reorderCopy
+     * @param newOrderMap
+     * @return
+     */
     virtual IDataArray::Pointer reorderCopy(QVector<size_t> newOrderMap)
     {
       if(newOrderMap.size() != static_cast<QVector<size_t>::size_type>(getNumberOfTuples()))
