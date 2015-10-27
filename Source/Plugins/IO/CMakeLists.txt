@@ -44,9 +44,13 @@ set(Project_SRCS "")
 include(${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/SourceList.cmake)
 # Add in our Plugin Specific FilterParameterWidgets
 include(${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameterWidgets/SourceList.cmake)
+# Add in our Plugin Specific FilterParameter
+include(${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameters/SourceList.cmake)
+
 #-----------------------------------------------------
 # Include any extra Widgets that this plugin needs
 include(${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/SourceList.cmake)
+include(${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/SourceList.cmake)
 # -- Include all the resources
 include(${${PLUGIN_NAME}_SOURCE_DIR}/Resources/SourceList.cmake)
 
@@ -180,12 +184,16 @@ set(${PLUGIN_NAME}_MODULE_SRCS
   ${${PLUGIN_NAME}_Generated_MOC_SRCS}
   # -- Add in the Filter Parameter Widgets
   ${${PLUGIN_NAME}_ParameterWidgets_HDRS}
+  ${${PLUGIN_NAME}_ParameterWidgets_MOC_HDRS}
   ${${PLUGIN_NAME}_ParameterWidgets_SRCS}
   ${${PLUGIN_NAME}_ParameterWidgets_UIS}
   ${${PLUGIN_NAME}_ParameterWidgets_Generated_MOC_SRCS}
   ${${PLUGIN_NAME}_ParameterWidgets_Generated_UI_HDRS}
+  ${${PLUGIN_NAME}_FilterParameters_SRCS}
+  ${${PLUGIN_NAME}_FilterParameters_HDRS}
   # -- Add in the plain Widgets
   ${${PLUGIN_NAME}_Widgets_HDRS}
+  ${${PLUGIN_NAME}_Widgets_HDRS_MOC}
   ${${PLUGIN_NAME}_Widgets_SRCS}
   ${${PLUGIN_NAME}_Widgets_UIS}
   ${${PLUGIN_NAME}_Widgets_Generated_MOC_SRCS}
@@ -193,6 +201,7 @@ set(${PLUGIN_NAME}_MODULE_SRCS
   ${${PLUGIN_NAME}_GEN_HDRS}
   # -- Add in the miscellaneous resources (license, plugin info, ...)
   ${${PLUGIN_NAME}_Generated_RC_SRCS}
+
   # -- Add in our Generated Version Files
   ${${PLUGIN_NAME}_BINARY_DIR}/${VERSION_HEADER_FILE_NAME}
   ${${PLUGIN_NAME}_BINARY_DIR}/${VERSION_SOURCE_FILE_NAME}

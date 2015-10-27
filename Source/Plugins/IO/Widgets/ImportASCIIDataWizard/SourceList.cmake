@@ -7,31 +7,33 @@ set(${PLUGIN_NAME}_Widgets_UIS "")
 # --------------------------------------------------------------------
 # List the Classes here that are QWidget Derived Classes
 set(DREAM3D_WIDGETS
-  
+  DelimitedOrFixedWidthPage
+  DelimitedPage
+  DataFormatPage
 )
 
 set(DREAM3D_WIDGETS_NO_UI
-    
+  ImportASCIIDataWizard
 )
 
 foreach(FPW ${DREAM3D_WIDGETS})
   set(${PLUGIN_NAME}_Widgets_HDRS ${${PLUGIN_NAME}_Widgets_HDRS}
-    ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/${FPW}.h
+    ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/${FPW}.h
     )
   set(${PLUGIN_NAME}_Widgets_SRCS ${${PLUGIN_NAME}_Widgets_SRCS}
-    ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/${FPW}.cpp
+    ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/${FPW}.cpp
     )
   set(${PLUGIN_NAME}_Widgets_UIS ${${PLUGIN_NAME}_Widgets_UIS}
-    ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/UI_Files/${FPW}.ui
+    ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/UI_Files/${FPW}.ui
     )
 endforeach()
 
 foreach(FPW ${DREAM3D_WIDGETS_NO_UI})
   set(${PLUGIN_NAME}_Widgets_HDRS ${${PLUGIN_NAME}_Widgets_HDRS}
-    ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/${FPW}.h
+    ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/${FPW}.h
     )
   set(${PLUGIN_NAME}_Widgets_SRCS ${${PLUGIN_NAME}_Widgets_SRCS}
-    ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/${FPW}.cpp
+    ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/${FPW}.cpp
     )
 endforeach()
 
@@ -44,13 +46,13 @@ set(${PLUGIN_NAME}_Widgets_SRCS
   ${${PLUGIN_NAME}_Widgets_SRCS}
 )
 
-include_directories( ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets )
+include_directories( ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard )
 
 # Organize the Source files for things like Visual Studio and Xcode
-cmp_IDE_SOURCE_PROPERTIES( "Widgets" "${${PLUGIN_NAME}_Widgets_HDRS}" "${${PLUGIN_NAME}_Widgets_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "Widgets/ImportASCIIDataWizard" "${${PLUGIN_NAME}_Widgets_HDRS}" "${${PLUGIN_NAME}_Widgets_SRCS}" "0")
 
 # Organize the Source files for things like Visual Studio and Xcode
-cmp_IDE_GENERATED_PROPERTIES("Widgets/UI_Files" "${${PLUGIN_NAME}_Widgets_UIS}" "")
+cmp_IDE_GENERATED_PROPERTIES("Widgets/ImportASCIIDataWizard/UI_Files" "${${PLUGIN_NAME}_Widgets_UIS}" "")
 
 QT5_WRAP_CPP( ${PLUGIN_NAME}_Widgets_Generated_MOC_SRCS ${${PLUGIN_NAME}_Widgets_HDRS} )
 
