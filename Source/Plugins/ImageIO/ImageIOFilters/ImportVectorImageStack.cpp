@@ -179,8 +179,8 @@ void ImportVectorImageStack::dataCheck()
   if(m_InputPath.isEmpty() == true)
   {
     ss = QObject::tr("The Input Directory must be set before executing this filter.");
-    notifyErrorMessage(getHumanLabel(), ss, -13);
     setErrorCondition(-13);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());

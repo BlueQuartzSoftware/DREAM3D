@@ -269,8 +269,8 @@ void VtkRectilinearGridWriter::dataCheck()
   if(m_OutputFile.isEmpty() == true)
   {
     QString ss = QObject::tr("The output file must be set before executing this filter.");
-    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   // Make sure what we are checking is an actual file name and not a directory
@@ -287,8 +287,8 @@ void VtkRectilinearGridWriter::dataCheck()
   else
   {
     QString ss = QObject::tr("The output file path is a path to an existing directory. Please change the path to point to a file");
-    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if (m_SelectedDataArrayPaths.isEmpty() == true)

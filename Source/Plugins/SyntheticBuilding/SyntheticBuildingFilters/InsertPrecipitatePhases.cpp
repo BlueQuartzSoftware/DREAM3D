@@ -391,15 +391,15 @@ void InsertPrecipitatePhases::dataCheck()
   if (m_WriteGoalAttributes == true && getCsvOutputFile().isEmpty() == true)
   {
     QString ss = QObject::tr("The Csv output file must be set").arg(ClassName());
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-    setErrorCondition(-387);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if (m_HavePrecips == true && getPrecipInputFile().isEmpty() == true)
   {
     QString ss = QObject::tr("The precipitate file must be set");
-    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, cellDataArrayPaths);
@@ -659,8 +659,8 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
                                  "pointer but this resulted in a NULL pointer. The value at m_PhaseTypes[%2] = %3 does not match up "
                                  "with the type of pointer stored in the StatsDataArray (PrecipitateStatsData)\n")
                      .arg(i).arg(i).arg(m_PhaseTypes[i]);
-        notifyErrorMessage(getHumanLabel(), ss, -666);
         setErrorCondition(-666);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
       }
       m_NumFeatures[i] = 0;
@@ -1866,8 +1866,8 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
   if (shapeclass >= DREAM3D::ShapeType::ShapeTypeEnd)
   {
     QString ss = QObject::tr("Undefined shape class in shape types array with path %1").arg(m_InputShapeTypesArrayPath.serialize());
-    notifyErrorMessage(getHumanLabel(), ss, -666);
     setErrorCondition(-666);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -2285,8 +2285,8 @@ void InsertPrecipitatePhases::write_goal_attributes()
   if(!dir.mkpath(parentPath))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 

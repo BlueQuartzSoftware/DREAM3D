@@ -150,7 +150,7 @@ void AxisAngleWidget::valuesUpdated(const QString &text)
 void AxisAngleWidget::convertData(bool isDegrees)
 {
   QVector<double> values = getValues();
-  int value = values[3];
+  double value = values[3];
 
   if (isDegrees == true)
   {

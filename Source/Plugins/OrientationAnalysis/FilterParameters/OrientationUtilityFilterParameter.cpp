@@ -60,6 +60,7 @@ OrientationUtilityFilterParameter::Pointer OrientationUtilityFilterParameter::Ne
   ptr->setDefaultValue(defaultValue);
   ptr->setCategory(category);
   ptr->setGroupIndex(groupIndex);
+  ptr->setReadOnly(true);
 
   return ptr;
 }

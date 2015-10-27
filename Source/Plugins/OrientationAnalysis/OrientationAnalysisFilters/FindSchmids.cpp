@@ -252,8 +252,8 @@ void FindSchmids::dataCheck()
     if ( 0 != cosVec )
     {
       QString ss = QObject::tr("Slip Plane and Slip Direction must be normal");
-      notifyErrorMessage(getHumanLabel(), ss, -1001);
       setErrorCondition(-1001);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
   }
