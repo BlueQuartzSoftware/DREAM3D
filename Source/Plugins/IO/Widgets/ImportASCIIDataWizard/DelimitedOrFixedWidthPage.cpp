@@ -35,13 +35,18 @@
 
 #include "DelimitedOrFixedWidthPage.h"
 
+#include <QtCore/QFile>
+
 #include "ImportASCIIDataWizard.h"
+#include "ASCIIDataModel.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DelimitedOrFixedWidthPage::DelimitedOrFixedWidthPage(QWidget* parent) :
-  QWizardPage(parent)
+DelimitedOrFixedWidthPage::DelimitedOrFixedWidthPage(const QString &inputFilePath, QWidget* parent) :
+  QWizardPage(parent),
+  m_InputFilePath(inputFilePath),
+  m_DataModel(new ASCIIDataModel())
 {
   setupUi(this);
 
@@ -61,7 +66,29 @@ DelimitedOrFixedWidthPage::~DelimitedOrFixedWidthPage()
 // -----------------------------------------------------------------------------
 void DelimitedOrFixedWidthPage::setupGui()
 {
+  QVector<QString> lines = ImportASCIIDataWizard::ReadLines(m_InputFilePath, 1, ImportASCIIDataWizard::TotalPreviewLines);
 
+  for (int i = 0; i < lines.size(); i++)
+  {
+    QString line = lines[i];
+
+    int row = m_DataModel->rowCount();
+    int column = m_DataModel->columnCount();
+    m_DataModel->insertRow(row);
+    m_DataModel->insertColumn(column);
+    
+    // This is the first screen, so everything automatically goes into one column for now
+    QModelIndex index = m_DataModel->index(row, column);
+
+    m_DataModel->setData(index, line, Qt::DisplayRole);
+    m_DataModel->setHeaderData(row, Qt::Vertical, QString::number(i + 1), Qt::DisplayRole);
+  }
+
+  dataView->setModel(m_DataModel);
+  dataView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+  registerField("isDelimited", isDelimitedRadio);
+  registerField("isFixedWidth", isFixedWidthRadio);
 }
 
 // -----------------------------------------------------------------------------

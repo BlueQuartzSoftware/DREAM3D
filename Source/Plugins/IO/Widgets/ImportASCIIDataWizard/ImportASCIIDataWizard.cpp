@@ -35,28 +35,31 @@
 
 #include "ImportASCIIDataWizard.h"
 
+#include <QtCore/QFile>
+
 #include "DelimitedOrFixedWidthPage.h"
 #include "DelimitedPage.h"
 #include "DataFormatPage.h"
+#include "ASCIIDataModel.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ImportASCIIDataWizard::ImportASCIIDataWizard(QWidget* parent) :
-  QWizard(parent)
+ImportASCIIDataWizard::ImportASCIIDataWizard(const QString &inputFilePath, QWidget* parent) :
+  QWizard(parent),
+  m_InputFilePath(inputFilePath)
 {
   setWindowTitle("ASCII Data Import Wizard");
+  setOptions(QWizard::IndependentPages | QWizard::NoBackButtonOnStartPage);
+  resize(721, 683);
 
-  DelimitedOrFixedWidthPage* dOrFPage = new DelimitedOrFixedWidthPage(this);
-  connect(dOrFPage, SIGNAL(titleNeedsUpdate(const QString &)), this, SLOT(updateWindowTitle(const QString &)));
+  DelimitedOrFixedWidthPage* dOrFPage = new DelimitedOrFixedWidthPage(inputFilePath, this);
   setPage(DelimitedOrFixedWidth, dOrFPage);
 
-  DelimitedPage* dPage = new DelimitedPage(this);
-  connect(dPage, SIGNAL(titleNeedsUpdate(const QString &)), this, SLOT(updateWindowTitle(const QString &)));
+  DelimitedPage* dPage = new DelimitedPage(inputFilePath, this);
   setPage(Delimited, dPage);
 
-  DataFormatPage* dfPage = new DataFormatPage(this);
-  connect(dfPage, SIGNAL(titleNeedsUpdate(const QString &)), this, SLOT(updateWindowTitle(const QString &)));
+  DataFormatPage* dfPage = new DataFormatPage(inputFilePath, this);
   setPage(DataFormat, dfPage);
 
 #ifndef Q_OS_MAC
@@ -77,7 +80,37 @@ ImportASCIIDataWizard::~ImportASCIIDataWizard()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportASCIIDataWizard::updateWindowTitle(const QString &title)
+QVector<QString> ImportASCIIDataWizard::ReadLines(const QString &inputFilePath, int beginLine, int numOfLines)
 {
-  setWindowTitle(title);
+  QVector<QString> result;
+
+  QFile inputFile(inputFilePath);
+  if (inputFile.open(QIODevice::ReadOnly))
+  {
+    QTextStream in(&inputFile);
+
+    for (int i = 0; i < beginLine + numOfLines - 1; i++)
+    {
+      while (i < beginLine - 1)
+      {
+        // Skip all lines before "value"
+        QString line = in.readLine();
+        i++;
+      }
+
+      QString line = in.readLine();
+      result.push_back(line);
+    }
+    inputFile.close();
+  }
+
+  return result;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ImportASCIIDataWizard::setInputFilePath(const QString &inputFilePath)
+{
+  m_InputFilePath = inputFilePath;
 }

@@ -33,64 +33,56 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#ifndef ASCIIDataModel_H
+#define ASCIIDataModel_H
 
-#ifndef _ImportASCIIDataWizard_H_
-#define _ImportASCIIDataWizard_H_
+#include <QtCore/QAbstractTableModel>
 
-#include <QtWidgets/QWizard>
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
-struct ImportASCIIDataBundle
-{
-  QVector<QString>                            m_ColumnTypes;
-  QVector<QString>                            m_ColumnNames;
-  int                                         m_StartLine;
-  char                                        m_Delimiter;
-  int                                         m_DataSize;
-};
+class ASCIIDataItem;
 
-Q_DECLARE_METATYPE(ImportASCIIDataBundle)
-
-class ASCIIDataModel;
-
-class ImportASCIIDataWizard : public QWizard
+class ASCIIDataModel : public QAbstractTableModel
 {
   Q_OBJECT
 
-  public:
-    enum WizardPages
-    {
-      DelimitedOrFixedWidth,
-      Delimited,
-      DataFormat
-    };
+public:
+  SIMPL_TYPE_MACRO(ASCIIDataModel)
 
-    static const int TotalPreviewLines = 50;
+    ASCIIDataModel(QObject* parent = 0);
+    ~ASCIIDataModel();
 
-    /**
-    * @brief Static function that will read 'numOfLines' lines from the file at 'inputFilePath', starting at line 'beginIndex'
-    * @param inputFilePath The path to the file to preview
-    * @param beginLine The line to begin reading at in the file
-    * @param numOfLines The number of lines to read from the file
-    */
-    static QVector<QString> ReadLines(const QString &inputFilePath, int beginLine, int numOfLines);
+  void clear();
+  void clearContents();
 
-    /**
-    * @brief Constructor
-    * @param parameter The FilterParameter object that this widget represents
-    * @param filter The instance of the filter that this parameter is a part of
-    * @param parent The parent QWidget for this Widget
-    */
-    ImportASCIIDataWizard(const QString &inputFilePath, QWidget* parent = NULL);
+  QVariant data(const QModelIndex& index, int role) const;
+  QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
-    virtual ~ImportASCIIDataWizard();
+  bool setHeaderData(int section, Qt::Orientation orientation, const QVariant & value, int role = Qt::DisplayRole);
 
-    void setInputFilePath(const QString &inputFilePath);
+  int rowCount(const QModelIndex& parent = QModelIndex()) const;
+  int columnCount(const QModelIndex& parent = QModelIndex()) const;
 
-  private:
-    QString                                             m_InputFilePath;
+  bool insertRows(int position, int rows, const QModelIndex& parent = QModelIndex());
+  bool removeRows(int position, int rows, const QModelIndex& parent = QModelIndex());
 
-    ImportASCIIDataWizard(const ImportASCIIDataWizard&); // Copy Constructor Not Implemented
-    void operator=(const ImportASCIIDataWizard&); // Operator '=' Not Implemented
+  bool insertColumns(int position, int rows, const QModelIndex& parent = QModelIndex());
+  bool removeColumns(int position, int rows, const QModelIndex& parent = QModelIndex());
+
+  Qt::ItemFlags flags(const QModelIndex& index) const;
+
+  bool setData(const QModelIndex& index, const QVariant& value, int role);
+
+private:
+  QVector<ASCIIDataItem*>                           m_TableItems;
+
+  QVector<QString>                                  m_HorizontalHeaders;
+  QVector<QString>                                  m_VerticalHeaders;
+
+  ASCIIDataItem* getItem(const QModelIndex& index) const;
+
+  ASCIIDataModel(const ASCIIDataModel&);    // Copy Constructor Not Implemented
+  void operator=(const ASCIIDataModel&);  // Operator '=' Not Implemented
 };
 
-#endif /* ImportASCIIDataWizard_H_ */
+#endif // ASCIIDataModel_H

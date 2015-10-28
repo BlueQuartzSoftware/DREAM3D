@@ -14,6 +14,8 @@ set(DREAM3D_WIDGETS
 
 set(DREAM3D_WIDGETS_NO_UI
   ImportASCIIDataWizard
+  ASCIIDataModel
+  ASCIIDataItem
 )
 
 foreach(FPW ${DREAM3D_WIDGETS})

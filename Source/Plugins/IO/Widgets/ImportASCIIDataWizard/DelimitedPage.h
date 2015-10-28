@@ -41,6 +41,8 @@
 
 #include "ui_DelimitedPage.h"
 
+class ASCIIDataModel;
+
 class DelimitedPage : public QWizardPage, private Ui::DelimitedPage
 {
   Q_OBJECT
@@ -52,7 +54,7 @@ class DelimitedPage : public QWizardPage, private Ui::DelimitedPage
     * @param filter The instance of the filter that this parameter is a part of
     * @param parent The parent QWidget for this Widget
     */
-    DelimitedPage(QWidget* parent = NULL);
+    DelimitedPage(const QString &inputFilePath, QWidget* parent = NULL);
 
     virtual ~DelimitedPage();
 
@@ -66,10 +68,10 @@ class DelimitedPage : public QWizardPage, private Ui::DelimitedPage
     */
     int nextId() const;
 
-  signals:
-    void titleNeedsUpdate(const QString &title);
-
   private:
+    QString                                       m_InputFilePath;
+
+    ASCIIDataModel*                               m_DataModel;
 
     DelimitedPage(const DelimitedPage&); // Copy Constructor Not Implemented
     void operator=(const DelimitedPage&); // Operator '=' Not Implemented

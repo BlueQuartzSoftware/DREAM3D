@@ -36,12 +36,15 @@
 #include "DelimitedPage.h"
 
 #include "ImportASCIIDataWizard.h"
+#include "ASCIIDataModel.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DelimitedPage::DelimitedPage(QWidget* parent) :
-  QWizardPage(parent)
+DelimitedPage::DelimitedPage(const QString &inputFilePath, QWidget* parent) :
+  QWizardPage(parent),
+  m_InputFilePath(inputFilePath),
+  m_DataModel(new ASCIIDataModel())
 {
   setupUi(this);
 
@@ -61,6 +64,14 @@ DelimitedPage::~DelimitedPage()
 // -----------------------------------------------------------------------------
 void DelimitedPage::setupGui()
 {
+  dataView->setModel(m_DataModel);
+  dataView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+  registerField("tabAsDelimiter", tabCheckBox);
+  registerField("semicolonAsDelimiter", semicolonCheckBox);
+  registerField("commaAsDelimiter", commaCheckBox);
+  registerField("spaceAsDelimiter", spaceCheckBox);
+  registerField("consecutiveDelimiters", consecutiveDCheckBox);
 
 }
 

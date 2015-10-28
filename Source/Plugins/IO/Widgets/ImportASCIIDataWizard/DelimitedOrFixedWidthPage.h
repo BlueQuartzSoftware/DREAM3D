@@ -41,6 +41,8 @@
 
 #include "ui_DelimitedOrFixedWidthPage.h"
 
+class ASCIIDataModel;
+
 class DelimitedOrFixedWidthPage : public QWizardPage, private Ui::DelimitedOrFixedWidthPage
 {
   Q_OBJECT
@@ -52,7 +54,7 @@ class DelimitedOrFixedWidthPage : public QWizardPage, private Ui::DelimitedOrFix
     * @param filter The instance of the filter that this parameter is a part of
     * @param parent The parent QWidget for this Widget
     */
-    DelimitedOrFixedWidthPage(QWidget* parent = NULL);
+    DelimitedOrFixedWidthPage(const QString &inputFilePath, QWidget* parent = NULL);
 
     virtual ~DelimitedOrFixedWidthPage();
 
@@ -66,10 +68,10 @@ class DelimitedOrFixedWidthPage : public QWizardPage, private Ui::DelimitedOrFix
     */
     int nextId() const;
 
-  signals:
-    void titleNeedsUpdate(const QString &title);
-
   private:
+    QString                                         m_InputFilePath;
+
+    ASCIIDataModel*                                 m_DataModel;
 
     DelimitedOrFixedWidthPage(const DelimitedOrFixedWidthPage&); // Copy Constructor Not Implemented
     void operator=(const DelimitedOrFixedWidthPage&); // Operator '=' Not Implemented

@@ -41,6 +41,8 @@
 
 #include "ui_DataFormatPage.h"
 
+class ASCIIDataModel;
+
 class DataFormatPage : public QWizardPage, private Ui::DataFormatPage
 {
   Q_OBJECT
@@ -52,7 +54,7 @@ class DataFormatPage : public QWizardPage, private Ui::DataFormatPage
     * @param filter The instance of the filter that this parameter is a part of
     * @param parent The parent QWidget for this Widget
     */
-    DataFormatPage(QWidget* parent = NULL);
+    DataFormatPage(const QString &inputFilePath, QWidget* parent = NULL);
 
     virtual ~DataFormatPage();
 
@@ -66,10 +68,16 @@ class DataFormatPage : public QWizardPage, private Ui::DataFormatPage
     */
     int nextId() const;
 
-  signals:
-    void titleNeedsUpdate(const QString &title);
+  protected:
+    void showEvent(QShowEvent* event);
+
+  protected slots:
+    void on_startRowSpin_valueChanged(int i);
 
   private:
+    QString                                     m_InputFilePath;
+
+    ASCIIDataModel*                             m_DataModel;
 
     DataFormatPage(const DataFormatPage&); // Copy Constructor Not Implemented
     void operator=(const DataFormatPage&); // Operator '=' Not Implemented

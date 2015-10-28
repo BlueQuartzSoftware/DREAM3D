@@ -33,64 +33,43 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include "ASCIIDataItem.h"
 
-#ifndef _ImportASCIIDataWizard_H_
-#define _ImportASCIIDataWizard_H_
-
-#include <QtWidgets/QWizard>
-
-struct ImportASCIIDataBundle
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+ASCIIDataItem::ASCIIDataItem(const QVector<QVariant>& data) :
+m_ItemData(data)
 {
-  QVector<QString>                            m_ColumnTypes;
-  QVector<QString>                            m_ColumnNames;
-  int                                         m_StartLine;
-  char                                        m_Delimiter;
-  int                                         m_DataSize;
-};
 
-Q_DECLARE_METATYPE(ImportASCIIDataBundle)
+}
 
-class ASCIIDataModel;
-
-class ImportASCIIDataWizard : public QWizard
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+ASCIIDataItem::~ASCIIDataItem()
 {
-  Q_OBJECT
 
-  public:
-    enum WizardPages
-    {
-      DelimitedOrFixedWidth,
-      Delimited,
-      DataFormat
-    };
+}
 
-    static const int TotalPreviewLines = 50;
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QVariant ASCIIDataItem::data(int column) const
+{
+  return m_ItemData.value(column);
+}
 
-    /**
-    * @brief Static function that will read 'numOfLines' lines from the file at 'inputFilePath', starting at line 'beginIndex'
-    * @param inputFilePath The path to the file to preview
-    * @param beginLine The line to begin reading at in the file
-    * @param numOfLines The number of lines to read from the file
-    */
-    static QVector<QString> ReadLines(const QString &inputFilePath, int beginLine, int numOfLines);
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool ASCIIDataItem::setData(int column, const QVariant& value)
+{
+  if (column < 0)
+  {
+    return false;
+  }
 
-    /**
-    * @brief Constructor
-    * @param parameter The FilterParameter object that this widget represents
-    * @param filter The instance of the filter that this parameter is a part of
-    * @param parent The parent QWidget for this Widget
-    */
-    ImportASCIIDataWizard(const QString &inputFilePath, QWidget* parent = NULL);
-
-    virtual ~ImportASCIIDataWizard();
-
-    void setInputFilePath(const QString &inputFilePath);
-
-  private:
-    QString                                             m_InputFilePath;
-
-    ImportASCIIDataWizard(const ImportASCIIDataWizard&); // Copy Constructor Not Implemented
-    void operator=(const ImportASCIIDataWizard&); // Operator '=' Not Implemented
-};
-
-#endif /* ImportASCIIDataWizard_H_ */
+  m_ItemData[column] = value;
+  return true;
+}
