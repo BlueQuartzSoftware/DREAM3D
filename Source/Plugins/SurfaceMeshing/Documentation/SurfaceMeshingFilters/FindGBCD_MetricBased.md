@@ -55,7 +55,7 @@ The latter are computed in a way that if the relative error exceeds 100%, it is 
 
 
 
-![Fig. 2: Sampling points used for probing distribution values (the number of points here is 2000). Points below equator are marked with red color.](FindGBCD_MetricBased_samplpts.png)
+![Fig. 2: End-points (drawn in stereographic projection) of sampling directions used for probing distribution values; the number of points here is 2000. Points below equator are marked with red color.](FindGBCD_MetricBased_samplpts.png)
 
 
 
