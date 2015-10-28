@@ -123,8 +123,7 @@ class TrisSelector {
   int32_t* m_FaceLabels;
   double* m_FaceNormals;
   double* m_FaceAreas;
-  int32_t* m_FeatureFaceLabels;
-
+ 
   double &totalFaceArea;
 
 public: 
@@ -157,7 +156,6 @@ public:
     m_FaceLabels(__m_FaceLabels),
     m_FaceNormals(__m_FaceNormals),
     m_FaceAreas(__m_FaceAreas),
-    m_FeatureFaceLabels(__m_FeatureFaceLabels),
     totalFaceArea(__totalFaceArea)
   {  
     m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
