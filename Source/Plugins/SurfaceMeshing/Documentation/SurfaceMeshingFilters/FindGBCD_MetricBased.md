@@ -49,7 +49,7 @@ The latter are computed in a way that if the relative error exceeds 100%, it is 
 
 
 
-![Fig. 1: Section for the 17.8 deg./[111] misorientation through the grain boundary distribution obtained using this filter for Small IN100 data set. Units are multiples of random distribution (MRDs).](FindGBCD_MetricBased_dist.png)
+![Fig. 1: Section for the 17.9 deg./[111] misorientation through the grain boundary distribution obtained using this filter for Small IN100 data set. Units are multiples of random distribution (MRDs).](FindGBCD_MetricBased_dist.png)
 
 
 

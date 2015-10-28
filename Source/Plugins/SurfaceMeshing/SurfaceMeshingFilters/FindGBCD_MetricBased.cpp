@@ -109,10 +109,6 @@ class TrisSelector {
   QVector<TriAreaAndNormals>* selectedTris;
 #endif
 
-  QVector<float> samplPtsX;
-  QVector<float> samplPtsY;
-  QVector<float> samplPtsZ;
-
   float m_misorResol; 
   int32_t m_PhaseOfInterest;
   float (&gFixedT)[3][3];
@@ -139,9 +135,6 @@ public:
 #else
     QVector<TriAreaAndNormals>* __selectedTris,
 #endif
-    QVector<float> __samplPtsX,
-    QVector<float> __samplPtsY,
-    QVector<float> __samplPtsZ,
     float __m_misorResol,
     int32_t __m_PhaseOfInterest,
     float(&__gFixedT)[3][3],
@@ -155,9 +148,6 @@ public:
     double &__totalFaceArea
   ) :
     selectedTris(__selectedTris),
-    samplPtsX(__samplPtsX),
-    samplPtsY(__samplPtsY),
-    samplPtsZ(__samplPtsZ),
     m_misorResol(__m_misorResol),
     m_PhaseOfInterest(__m_PhaseOfInterest),
     gFixedT(__gFixedT),
@@ -997,10 +987,6 @@ void FindGBCD_MetricBased::execute()
         TrisSelector(
         &selectedTris,
 
-        samplPtsX,
-        samplPtsY,
-        samplPtsZ,
-
         m_misorResol,
         m_PhaseOfInterest,
         gFixedT,
@@ -1020,10 +1006,6 @@ void FindGBCD_MetricBased::execute()
     {
       TrisSelector serial(
         &selectedTris,
-
-        samplPtsX,
-        samplPtsY,
-        samplPtsZ,
 
         m_misorResol,
         m_PhaseOfInterest,
