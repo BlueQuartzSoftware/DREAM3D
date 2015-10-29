@@ -55,7 +55,7 @@ The latter are computed in a way that if the relative error exceeds 100%, it is 
 
 
 
-![Fig. 2: End-points (drawn in stereographic projection) of sampling directions used for probing distribution values; the number of points here is 2000. Points below equator are marked with red color.](FindGBCD_MetricBased_samplpts.png)
+![Fig. 2: End-points (drawn in stereographic projection) of sampling directions used for probing distribution values; the number of points here is about 1500. Additionally, distributions are probed at points lying at the equator (marked with red); this is helpful for some plotting software.](FindGBCD_MetricBased_samplpts.png)
 
 
 
@@ -73,8 +73,7 @@ The latter are computed in a way that if the relative error exceeds 100%, it is 
 | Phase of Interest | int32_t | Index of the **Ensemble** for which to compute the distribution |
 | Fixed Misorientation | float (4x) | Axis-angle representation of the misorientation of interest |
 | Limiting Distances (&rho;<sub>m</sub> and &rho;<sub>p</sub>) | Enumeration | Control parameters reflecting experimental resolutions |
-| Number of Sampling Points | int32_t | The number of normal directions for which the distribution is probed (Fig. 2) |
-| Include Some Points Below Equator | bool | These additional points may be critical for some plotting software to interpolate the function properly |
+| (Approximate) Number of Sampling Points | int32_t | The number of normal directions for which the distribution is probed (Fig. 2) |
 | Output File for Distribution | File Path | The output .dat file path (GMT format) |
 | Output File for Distribution Errors  | File Path | The output .dat file path (GMT format) |
 | Save Relative Errors | bool | If selected relative errors are computed instead of their absoulte values |

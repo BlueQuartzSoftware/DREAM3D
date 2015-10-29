@@ -82,9 +82,6 @@ public:
   SIMPL_FILTER_PARAMETER(int, NumSamplPts)
   Q_PROPERTY(int NumSamplPts READ getNumSamplPts WRITE setNumSamplPts)
 
-  SIMPL_FILTER_PARAMETER(bool, AddMorePtsNearEquator)
-  Q_PROPERTY(bool AddMorePtsNearEquator READ getAddMorePtsNearEquator WRITE setAddMorePtsNearEquator)
-
   SIMPL_FILTER_PARAMETER(QString, DistOutputFile)
   Q_PROPERTY(QString DistOutputFile READ getDistOutputFile WRITE setDistOutputFile)
 

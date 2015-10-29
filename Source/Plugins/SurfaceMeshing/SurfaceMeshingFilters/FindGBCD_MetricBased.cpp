@@ -409,7 +409,6 @@ FindGBCD_MetricBased::FindGBCD_MetricBased() :
   m_PhaseOfInterest(1),
   m_ChosenLimitDists(DEFAULT_RESOL_CHOICE),
   m_NumSamplPts(3000),
-  m_AddMorePtsNearEquator(true),
   m_DistOutputFile(""),
   m_ErrOutputFile(""),
   m_SaveRelativeErr(false),
@@ -430,10 +429,10 @@ FindGBCD_MetricBased::FindGBCD_MetricBased() :
   m_SurfaceMeshFeatureFaceLabels(NULL),
   m_SurfaceMeshFaceAreas(NULL)
 {
-	m_MisorientationRotation.angle = 38.94f;
+	m_MisorientationRotation.angle = 17.9f;
 	m_MisorientationRotation.h = 1.0f;
 	m_MisorientationRotation.k = 1.0f;
-	m_MisorientationRotation.l = 0.0f;
+	m_MisorientationRotation.l = 1.0f;
 
 	setupFilterParameters();
 }
@@ -479,7 +478,6 @@ void FindGBCD_MetricBased::setupFilterParameters()
 
 	}
 	parameters.push_back(IntFilterParameter::New("Number of Sampling Points (on a Hemisphere)", "NumSamplPts", getNumSamplPts(), FilterParameter::Parameter));
-	parameters.push_back(BooleanFilterParameter::New("Include Points from the Southern Hemisphere from the Equator's Vicinity", "AddMorePtsNearEquator", getAddMorePtsNearEquator(), FilterParameter::Parameter));
 	parameters.push_back(OutputFileFilterParameter::New("Save Distribution to", "DistOutputFile", getDistOutputFile(), FilterParameter::Parameter, ""));
 	parameters.push_back(OutputFileFilterParameter::New("Save Distribution Errors to", "ErrOutputFile", getErrOutputFile(), FilterParameter::Parameter, ""));
 	parameters.push_back(BooleanFilterParameter::New("Save Relative Errors Instead of Their Absolute Values", "SaveRelativeErr", getSaveRelativeErr(), FilterParameter::Parameter));
@@ -535,7 +533,6 @@ void FindGBCD_MetricBased::readFilterParameters(AbstractFilterParametersReader* 
 	setMisorientationRotation(reader->readAxisAngle("MisorientationRotation", getMisorientationRotation(), -1));
 	setChosenLimitDists(reader->readValue("ChosenLimitDists", getChosenLimitDists()));
 	setNumSamplPts(reader->readValue("NumSamplPts", getNumSamplPts()));
-	setAddMorePtsNearEquator(reader->readValue("AddMorePtsNearEquator", getAddMorePtsNearEquator()));
 	setDistOutputFile(reader->readString("DistOutputFile", getDistOutputFile()));
 	setErrOutputFile(reader->readString("ErrOutputFile", getErrOutputFile()));
 	setSaveRelativeErr(reader->readValue("SaveRelativeErr", getSaveRelativeErr()));
@@ -560,7 +557,6 @@ int FindGBCD_MetricBased::writeFilterParameters(AbstractFilterParametersWriter* 
 	SIMPL_FILTER_WRITE_PARAMETER(MisorientationRotation)
 	SIMPL_FILTER_WRITE_PARAMETER(ChosenLimitDists)
 	SIMPL_FILTER_WRITE_PARAMETER(NumSamplPts)
-	SIMPL_FILTER_WRITE_PARAMETER(AddMorePtsNearEquator)
 	SIMPL_FILTER_WRITE_PARAMETER(DistOutputFile)
 	SIMPL_FILTER_WRITE_PARAMETER(ErrOutputFile)
 	SIMPL_FILTER_WRITE_PARAMETER(SaveRelativeErr)
@@ -892,10 +888,6 @@ void FindGBCD_MetricBased::execute()
 	// generate "Golden Section Spiral", see http://www.softimageblog.com/archives/115
 
 	int numSamplPts_WholeSph = 2 * m_NumSamplPts; // here we generate points on the whole sphere
-	QVector<float> samplPtsX_WholeSph(0);
-	QVector<float> samplPtsY_WholeSph(0);
-	QVector<float> samplPtsZ_WholeSph(0);
-
 	QVector<float> samplPtsX(0);
 	QVector<float> samplPtsY(0);
 	QVector<float> samplPtsZ(0);
@@ -911,29 +903,23 @@ void FindGBCD_MetricBased::execute()
 		float _r = sqrtf(fmaxf(1.0f - _y*_y, 0.0f));
 		float _phi = float(ptIdx_WholeSph) * _inc;
 
-		samplPtsX_WholeSph.push_back(cosf(_phi) * _r);
-		samplPtsY_WholeSph.push_back(_y);
-		samplPtsZ_WholeSph.push_back(sinf(_phi) * _r);
+    float z = sinf(_phi) * _r;
+
+    if (z > 0.0f)
+    {
+      samplPtsX.push_back(cosf(_phi) * _r);
+      samplPtsY.push_back(_y);
+      samplPtsZ.push_back(z);
+    }
 	}
 
-	// now, select the points from the upper hemisphere,
-	// and - if needed - from lower hemisphere from the neighborhood of equator
-
-	float howFarBelowEquator = 0.0f;
-  if (getAddMorePtsNearEquator() == true) howFarBelowEquator = -3.0001f / sqrtf(float(numSamplPts_WholeSph));
-
-	for (int ptIdx_WholeSph = 0; ptIdx_WholeSph < numSamplPts_WholeSph; ptIdx_WholeSph++)
-	{
-		if (getCancel() == true) { return; }
-
-		if (samplPtsZ_WholeSph[ptIdx_WholeSph] > howFarBelowEquator)
-		{
-			samplPtsX.push_back(samplPtsX_WholeSph[ptIdx_WholeSph]);
-			samplPtsY.push_back(samplPtsY_WholeSph[ptIdx_WholeSph]);
-			samplPtsZ.push_back(samplPtsZ_WholeSph[ptIdx_WholeSph]);
-		}
-	}
-
+  // Add points at the equator for better performance of some plotting tools
+  for (double phi = 0.0; phi <= SIMPLib::Constants::k_2Pi; phi += m_planeResol)
+  {
+    samplPtsX.push_back(cosf(phi));
+    samplPtsY.push_back(sinf(phi));
+    samplPtsZ.push_back(0.0f);
+  }
 
 	// convert axis angle to matrix representation of misorientation
 	float gFixed[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
