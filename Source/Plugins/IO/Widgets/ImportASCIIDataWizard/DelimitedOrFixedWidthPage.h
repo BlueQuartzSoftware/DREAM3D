@@ -71,8 +71,6 @@ class DelimitedOrFixedWidthPage : public QWizardPage, private Ui::DelimitedOrFix
   private:
     QString                                         m_InputFilePath;
 
-    ASCIIDataModel*                                 m_DataModel;
-
     DelimitedOrFixedWidthPage(const DelimitedOrFixedWidthPage&); // Copy Constructor Not Implemented
     void operator=(const DelimitedOrFixedWidthPage&); // Operator '=' Not Implemented
 };

@@ -55,6 +55,38 @@ ASCIIDataItem::~ASCIIDataItem()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+bool ASCIIDataItem::insertColumns(int position, int columns)
+{
+  if (position < 0 || position > m_ItemData.size())
+    return false;
+
+  for (int column = 0; column < columns; ++column)
+  {
+    m_ItemData.insert(position, QVariant());
+  }
+
+  return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool ASCIIDataItem::removeColumns(int position, int columns)
+{
+  if (position < 0 || position + columns > m_ItemData.size())
+    return false;
+
+  for (int column = 0; column < columns; ++column)
+  {
+    m_ItemData.remove(position);
+  }
+
+  return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QVariant ASCIIDataItem::data(int column) const
 {
   return m_ItemData.value(column);

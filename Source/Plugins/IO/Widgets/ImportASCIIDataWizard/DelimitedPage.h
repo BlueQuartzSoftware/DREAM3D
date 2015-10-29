@@ -71,8 +71,6 @@ class DelimitedPage : public QWizardPage, private Ui::DelimitedPage
   private:
     QString                                       m_InputFilePath;
 
-    ASCIIDataModel*                               m_DataModel;
-
     DelimitedPage(const DelimitedPage&); // Copy Constructor Not Implemented
     void operator=(const DelimitedPage&); // Operator '=' Not Implemented
 };

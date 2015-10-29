@@ -77,8 +77,6 @@ class DataFormatPage : public QWizardPage, private Ui::DataFormatPage
   private:
     QString                                     m_InputFilePath;
 
-    ASCIIDataModel*                             m_DataModel;
-
     DataFormatPage(const DataFormatPage&); // Copy Constructor Not Implemented
     void operator=(const DataFormatPage&); // Operator '=' Not Implemented
 };

@@ -51,6 +51,9 @@ public:
     Path
   };
 
+  bool insertColumns(int position, int columns);
+  bool removeColumns(int position, int columns);
+
   QVariant data(int column) const;
   bool setData(int column, const QVariant& value);
 

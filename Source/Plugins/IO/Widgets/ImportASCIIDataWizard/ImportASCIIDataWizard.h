@@ -64,6 +64,16 @@ class ImportASCIIDataWizard : public QWizard
       DataFormat
     };
 
+    /**
+    * @brief Constructor
+    * @param parameter The FilterParameter object that this widget represents
+    * @param filter The instance of the filter that this parameter is a part of
+    * @param parent The parent QWidget for this Widget
+    */
+    ImportASCIIDataWizard(const QString &inputFilePath, QWidget* parent = NULL);
+
+    virtual ~ImportASCIIDataWizard();
+
     static const int TotalPreviewLines = 50;
 
     /**
@@ -75,14 +85,12 @@ class ImportASCIIDataWizard : public QWizard
     static QVector<QString> ReadLines(const QString &inputFilePath, int beginLine, int numOfLines);
 
     /**
-    * @brief Constructor
-    * @param parameter The FilterParameter object that this widget represents
-    * @param filter The instance of the filter that this parameter is a part of
-    * @param parent The parent QWidget for this Widget
+    * @brief Static function that will split the model into columns based on fixed width
+    * @param firstRowHeaderIndex The name of the first row's header (an index, such as '2' or '5')
     */
-    ImportASCIIDataWizard(const QString &inputFilePath, QWidget* parent = NULL);
+    static void ToFixedWidth(int firstRowHeaderIndex);
 
-    virtual ~ImportASCIIDataWizard();
+    static void ReloadToOneColumn(const QString &inputFilePath, int beginLine);
 
     void setInputFilePath(const QString &inputFilePath);
 

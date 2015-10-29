@@ -49,11 +49,11 @@ class ASCIIDataModel : public QAbstractTableModel
 public:
   SIMPL_TYPE_MACRO(ASCIIDataModel)
 
-    ASCIIDataModel(QObject* parent = 0);
     ~ASCIIDataModel();
 
+  static ASCIIDataModel* Instance();
+
   void clear();
-  void clearContents();
 
   QVariant data(const QModelIndex& index, int role) const;
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
@@ -73,7 +73,12 @@ public:
 
   bool setData(const QModelIndex& index, const QVariant& value, int role);
 
+protected:
+  ASCIIDataModel(QObject* parent = 0);
+
 private:
+  static ASCIIDataModel*                            self;
+
   QVector<ASCIIDataItem*>                           m_TableItems;
 
   QVector<QString>                                  m_HorizontalHeaders;

@@ -36,6 +36,8 @@
 #include "ASCIIDataModel.h"
 #include "ASCIIDataItem.h"
 
+ASCIIDataModel* ASCIIDataModel::self = NULL;
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -51,6 +53,19 @@ QAbstractTableModel(parent)
 ASCIIDataModel::~ASCIIDataModel()
 {
   
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+ASCIIDataModel* ASCIIDataModel::Instance()
+{
+  if (self == NULL)
+  {
+    self = new ASCIIDataModel();
+  }
+
+  return self;
 }
 
 // -----------------------------------------------------------------------------
@@ -119,11 +134,16 @@ ASCIIDataItem* ASCIIDataModel::getItem(const QModelIndex& index) const
 QVariant ASCIIDataModel::headerData(int section, Qt::Orientation orientation,
   int role) const
 {
-  if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
+  if (section < 0)
+  {
+    return QVariant();
+  }
+
+  if (section < m_HorizontalHeaders.size() && orientation == Qt::Horizontal && role == Qt::DisplayRole)
   {
     return m_HorizontalHeaders[section];
   }
-  else if (orientation == Qt::Vertical && role == Qt::DisplayRole)
+  else if (section < m_VerticalHeaders.size() && orientation == Qt::Vertical && role == Qt::DisplayRole)
   {
     return m_VerticalHeaders[section];
   }
@@ -179,11 +199,15 @@ bool ASCIIDataModel::removeRows(int position, int rows, const QModelIndex& paren
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool ASCIIDataModel::insertColumns(int position, int rows, const QModelIndex& parent)
+bool ASCIIDataModel::insertColumns(int position, int columns, const QModelIndex& parent)
 {
   Q_UNUSED(parent)
-  beginInsertColumns(QModelIndex(), position, position + rows - 1);
-  m_HorizontalHeaders.insert(position, rows, "");
+  beginInsertColumns(QModelIndex(), position, position + columns - 1);
+  m_HorizontalHeaders.insert(position, columns, "");
+  for (int i = 0; i < m_TableItems.size(); i++)
+  {
+    m_TableItems[i]->insertColumns(position, columns);
+  }
   endInsertColumns();
   return true;
 }
@@ -191,14 +215,14 @@ bool ASCIIDataModel::insertColumns(int position, int rows, const QModelIndex& pa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool ASCIIDataModel::removeColumns(int position, int rows, const QModelIndex& parent)
+bool ASCIIDataModel::removeColumns(int position, int columns, const QModelIndex& parent)
 {
   Q_UNUSED(parent)
-  beginRemoveColumns(QModelIndex(), position, position + rows - 1);
-  m_HorizontalHeaders.remove(position, rows);
+  beginRemoveColumns(QModelIndex(), position, position + columns - 1);
+  m_HorizontalHeaders.remove(position, columns);
   for (int i = 0; i < m_TableItems.size(); i++)
   {
-    m_TableItems.resize(m_HorizontalHeaders.size());
+    m_TableItems[i]->removeColumns(position, columns);
   }
   endRemoveColumns();
   return true;
@@ -234,26 +258,23 @@ bool ASCIIDataModel::setData(const QModelIndex& index, const QVariant& value, in
 
   return result;
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void ASCIIDataModel::clear()
 {
-  clearContents();
-  m_HorizontalHeaders.clear();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ASCIIDataModel::clearContents()
-{
-  if (rowCount() <= 0)
+  if (rowCount() > 0)
   {
-    return;
+    removeRows(0, rowCount());
+    m_VerticalHeaders.clear();
   }
 
-  removeRows(0, rowCount());
+  if (columnCount() > 0)
+  {
+    removeColumns(0, columnCount());
+    m_HorizontalHeaders.clear();
+  }
 }
 
 

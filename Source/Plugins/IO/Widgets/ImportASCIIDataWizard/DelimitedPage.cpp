@@ -43,8 +43,7 @@
 // -----------------------------------------------------------------------------
 DelimitedPage::DelimitedPage(const QString &inputFilePath, QWidget* parent) :
   QWizardPage(parent),
-  m_InputFilePath(inputFilePath),
-  m_DataModel(new ASCIIDataModel())
+  m_InputFilePath(inputFilePath)
 {
   setupUi(this);
 
@@ -64,7 +63,11 @@ DelimitedPage::~DelimitedPage()
 // -----------------------------------------------------------------------------
 void DelimitedPage::setupGui()
 {
-  dataView->setModel(m_DataModel);
+  setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+
+  ASCIIDataModel* model = ASCIIDataModel::Instance();
+
+  dataView->setModel(model);
   dataView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
   registerField("tabAsDelimiter", tabCheckBox);

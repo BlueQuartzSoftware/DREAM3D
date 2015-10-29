@@ -45,8 +45,7 @@
 // -----------------------------------------------------------------------------
 DataFormatPage::DataFormatPage(const QString &inputFilePath, QWidget* parent) :
   QWizardPage(parent),
-  m_InputFilePath(inputFilePath),
-  m_DataModel(new ASCIIDataModel())
+  m_InputFilePath(inputFilePath)
 {
   setupUi(this);
 
@@ -66,7 +65,11 @@ DataFormatPage::~DataFormatPage()
 // -----------------------------------------------------------------------------
 void DataFormatPage::setupGui()
 {
-  dataView->setModel(m_DataModel);
+  setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+
+  ASCIIDataModel* model = ASCIIDataModel::Instance();
+
+  dataView->setModel(model);
   dataView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
   registerField("startRow", startRowSpin);
@@ -78,56 +81,10 @@ void DataFormatPage::setupGui()
 // -----------------------------------------------------------------------------
 void DataFormatPage::showEvent(QShowEvent* event)
 {
-  m_DataModel->clearContents();
-
-  QVector<QString> lines = ImportASCIIDataWizard::ReadLines(m_InputFilePath, startRowSpin->value(), ImportASCIIDataWizard::TotalPreviewLines);
-
-  int vHeaderIndex = startRowSpin->value();
-  bool isDelimited = field("isDelimited").toBool();
-  if (isDelimited == true)
+  bool isFixedWidth = field("isFixedWidth").toBool();
+  if (isFixedWidth == true)
   {
-    for (int i = 0; i < lines.size(); i++)
-    {
-      QString line = lines[i];
-
-      int row = m_DataModel->rowCount();
-      m_DataModel->insertRow(row);
-
-      QModelIndex index = m_DataModel->index(row, 0);
-      m_DataModel->setData(index, line, Qt::DisplayRole);
-
-      m_DataModel->setHeaderData(row, Qt::Vertical, QString::number(vHeaderIndex), Qt::DisplayRole);
-      vHeaderIndex++;
-    }
-  }
-  else
-  {
-    for (int i = 0; i < lines.size(); i++)
-    {
-      QString line = lines[i];
-
-      int row = m_DataModel->rowCount();
-      m_DataModel->insertRow(row);
-
-      line = line.replace('\t', ' ');
-      QStringList columnDataList = line.split(' ', QString::SkipEmptyParts);
-      int column = m_DataModel->columnCount();
-
-      if (column != columnDataList.size())
-      {
-        m_DataModel->insertColumn(column);
-      }
-
-      for (int j = 0; j < columnDataList.size(); j++)
-      {
-        QString columnData = columnDataList[j];
-        QModelIndex index = m_DataModel->index(row, column);
-        m_DataModel->setData(index, columnData, Qt::DisplayRole);
-      }
-
-      m_DataModel->setHeaderData(row, Qt::Vertical, QString::number(vHeaderIndex), Qt::DisplayRole);
-      vHeaderIndex++;
-    }
+    ImportASCIIDataWizard::ToFixedWidth(startRowSpin->value());
   }
 }
 
@@ -136,23 +93,9 @@ void DataFormatPage::showEvent(QShowEvent* event)
 // -----------------------------------------------------------------------------
 void DataFormatPage::on_startRowSpin_valueChanged(int value)
 {
-  m_DataModel->clearContents();
+  ImportASCIIDataWizard::ReloadToOneColumn(m_InputFilePath, value);
 
-  QVector<QString> lines = ImportASCIIDataWizard::ReadLines(m_InputFilePath, value, ImportASCIIDataWizard::TotalPreviewLines);
-
-  for (int i = 0; i < lines.size(); i++)
-  {
-    QString line = lines[i];
-
-    int row = m_DataModel->rowCount();
-    m_DataModel->insertRow(row);
-
-    // This is the first screen, so everything automatically goes into one column for now
-    QModelIndex index = m_DataModel->index(row, 0);
-
-    m_DataModel->setData(index, line, Qt::DisplayRole);
-    m_DataModel->setHeaderData(row, Qt::Vertical, QString::number(i + 1), Qt::DisplayRole);
-  }
+  ImportASCIIDataWizard::ToFixedWidth(value);
 }
 
 // -----------------------------------------------------------------------------
