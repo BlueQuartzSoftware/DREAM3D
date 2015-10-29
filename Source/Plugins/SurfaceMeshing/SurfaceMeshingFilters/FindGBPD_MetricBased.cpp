@@ -776,8 +776,6 @@ void FindGBPD_MetricBased::execute()
     }
   }
 
-  fprintf(fDist, "%d\n", samplPtsX_HemiSph.size());
-
 
   // now, select the points from the SST
   
@@ -791,22 +789,19 @@ void FindGBPD_MetricBased::execute()
 
     if (cryst == 0) // 6/mmm
     {
-      if (x < 0.0f || y > x * SIMPLib::Constants::k_1OverRoot3) { continue; }
+      if (x < 0.0f || y < 0.0f || y > x * SIMPLib::Constants::k_1OverRoot3) { continue; }
     }
     if (cryst == 1) // m-3m
     {
-        if (y > x || z > y) { continue; }
+        if (y < 0.0f || x < y || z < x) { continue; }
     }
-
-    // !!! cryst = 2 to 10 has not been really tested !!!
-
-    if (cryst == 2) // 6/m
+    if (cryst == 2 || cryst == 10) // 6/m || -3m
     {
-      if (x < 0.0f || y > x * SIMPLib::Constants::k_Sqrt3) { continue; }
+      if (x < 0.0f || y < 0.0f || y > x * SIMPLib::Constants::k_Sqrt3) { continue; }
     }
     if (cryst == 3) // m-3
     {
-      if (y < 0.0f || z > y) { continue; }
+      if (x < 0.0f || y < 0.0f || z < x || z < y) { continue; }
     }
     // cryst = 4  =>  -1
     if (cryst == 5) // 2/m
@@ -819,23 +814,104 @@ void FindGBPD_MetricBased::execute()
     }
     if (cryst == 8) // 4/mmm
     {
-      if (x < 0.0f || y > x ) { continue; }
+      if (x < 0.0f || y < 0.0f || y > x) { continue; }
     }
-    if (cryst == 9) // -3
+    if (cryst == 9) // -3 
     {
       if (y < 0.0f || x < -y * SIMPLib::Constants::k_1OverRoot3) { continue; }
     }
-    if (cryst == 10) // -3m
-    {
-      if (x < 0.0f || y > x * SIMPLib::Constants::k_1OverRoot3 || y < -x * SIMPLib::Constants::k_1OverRoot3) { continue; }
-    }
+
 
     samplPtsX.push_back(x);
     samplPtsY.push_back(y);
     samplPtsZ.push_back(z);
   }
 
-  // TODO add points at the edges/vertices???
+  // Add points at the edges and vertices of a fundamental region
+  const double deg = SIMPLib::Constants::k_PiOver180;
+  const double density = m_LimitDist;
+
+  if (cryst == 0) // 6/mmm
+  {
+    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, 0.0, 90.0 * deg, density);
+    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 30.0 * deg, 0.0, 90.0 * deg, density);
+    appendSamplPtsFixedZenith(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 30.0 * deg, density);
+  }
+  if (cryst == 1) // m-3m
+  {
+    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, 0.0, 45.0 * deg, density);
+    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 45.0 * deg, 0.0, acos(SIMPLib::Constants::k_1OverRoot3), density);
+
+    for (double phi = 0; phi <= 45.0f * deg; phi += density)
+    {
+      double cosPhi = cos(phi);
+      double sinPhi = sin(phi);
+      double atan1OverCosPhi = atan(1.0 / cosPhi);
+      double sinAtan1OverCosPhi = sin(atan1OverCosPhi);
+      double cosAtan1OverCosPhi = cos(atan1OverCosPhi);
+
+      samplPtsX.push_back(sinAtan1OverCosPhi * cosPhi);
+      samplPtsY.push_back(sinAtan1OverCosPhi * sinPhi);
+      samplPtsZ.push_back(cosAtan1OverCosPhi);
+    }
+  }
+  if (cryst == 2 || cryst == 10) // 6/m ||  -3m
+  {
+    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, 0.0, 90.0 * deg, density);
+    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 60.0 * deg, 0.0, 90.0 * deg, density);
+    appendSamplPtsFixedZenith(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 60.0 * deg, density);
+  }
+  if (cryst == 3) // m-3
+  {
+    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, 0.0, 45.0 * deg, density);
+    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 45.0 * deg, density);
+    for (double phi = 0; phi <= 45.0f * deg; phi += density)
+    {
+      double cosPhi = cos(phi);
+      double sinPhi = sin(phi);
+      double atan1OverCosPhi = atan(1.0 / cosPhi);
+      double sinAtan1OverCosPhi = sin(atan1OverCosPhi);
+      double cosAtan1OverCosPhi = cos(atan1OverCosPhi);
+
+      samplPtsX.push_back(sinAtan1OverCosPhi * cosPhi);
+      samplPtsY.push_back(sinAtan1OverCosPhi * sinPhi);
+      samplPtsZ.push_back(cosAtan1OverCosPhi);
+
+      samplPtsX.push_back(sinAtan1OverCosPhi * sinPhi);
+      samplPtsY.push_back(sinAtan1OverCosPhi * cosPhi);
+      samplPtsZ.push_back(cosAtan1OverCosPhi);
+    }
+  }
+  if (cryst == 4) // -1
+  {
+    appendSamplPtsFixedZenith(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 360.0 * deg, density);
+  }
+  if (cryst == 5) // 2/m
+  {
+    appendSamplPtsFixedZenith(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 180.0 * deg, density);
+    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, -90.0 * deg, 90.0 * deg, density);
+  }
+  if (cryst == 6 || cryst == 7) // mmm || 4/m
+  {
+    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, 0.0, 90.0 * deg, density);
+    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 90.0 * deg, density);
+    appendSamplPtsFixedZenith(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 90.0 * deg, density);
+  }
+  if (cryst == 8) // 4/mmm
+  {
+    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, 0.0, 90.0 * deg, density);
+    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 45.0 * deg, 0.0, 90.0 * deg, density);
+    appendSamplPtsFixedZenith(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 45.0 * deg, density);
+  }
+  if (cryst == 9) // -3 
+  {
+    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, 0.0, 90.0 * deg, density);
+    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 120.0 * deg, 0.0, 90.0 * deg, density);
+    appendSamplPtsFixedZenith(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 120.0 * deg, density);
+  }
+
+
+
 
 
   // ---------  find triangles corresponding to Phase of Interests, and their normals in crystal reference frames ---------
@@ -857,7 +933,7 @@ void FindGBPD_MetricBased::execute()
   for (size_t i = 0; i < numMeshTris; i = i + trisChunkSize)
   {
     if (getCancel() == true) { return; }
-    ss = QObject::tr("--> step 1/2: selecting triangles corresponding to Phase Of Interest (%1\% completed)").arg(int(100.0 * float(i) / float(numMeshTris)));
+    ss = QObject::tr("--> Selecting triangles corresponding to Phase Of Interest");
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     if (i + trisChunkSize >= numMeshTris)
     {
@@ -914,7 +990,7 @@ void FindGBPD_MetricBased::execute()
     numDistinctGBs++;
   }
 
-
+  
   // ----------------- determining distribution values at the sampling points (and their errors) -------------------
   QVector<double> distribValues(samplPtsX.size(), 0.0);
   QVector<double> errorValues(samplPtsX.size(), 0.0);
@@ -925,7 +1001,7 @@ void FindGBPD_MetricBased::execute()
   for (size_t i = 0; i < samplPtsX.size(); i = i + pointsChunkSize)
   {
     if (getCancel() == true) { return; }
-    ss = QObject::tr("--> step2/2: computing distribution values (%1\% completed)").arg(int(100.0 * float(i) / float(samplPtsX.size())));
+    ss = QObject::tr("--> Determining GBPD values (%1\%)").arg(int(100.0 * float(i) / float(samplPtsX.size())));
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     if (i + pointsChunkSize >= samplPtsX.size())
     {
@@ -970,12 +1046,10 @@ void FindGBPD_MetricBased::execute()
       serial.probe(i, i + pointsChunkSize);
     }
   }
-
+  
 
   // ------------------------------------------- writing the output --------------------------------------------
 
-  fprintf(fDist, "%d\n", samplPtsX.size());
- // fprintf(fErr, "%.1f %.1f %.1f %.1f\n", m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l, m_MisorientationRotation.angle);
 
   for (int ptIdx = 0; ptIdx < samplPtsX.size(); ptIdx++) {
 
@@ -986,9 +1060,7 @@ void FindGBPD_MetricBased::execute()
     for (int j = 0; j < nsym; j++)
     {
       m_OrientationOps[cryst]->getMatSymOp(j, sym);
-
       float sym_point[3] = { 0.0f, 0.0f, 0.0f };
-
       MatrixMath::Multiply3x3with3x1(sym, point, sym_point);
 
       if (sym_point[2] < 0.0f) {
@@ -1070,3 +1142,30 @@ const QString FindGBPD_MetricBased::getSubGroupName()
 const QString FindGBPD_MetricBased::getHumanLabel()
 { return "Find GBPD (Metric-based Approach)"; }
 
+const void FindGBPD_MetricBased::appendSamplPtsFixedZenith(QVector<float> *xVec, QVector<float> *yVec, QVector<float> *zVec,
+                                                           double theta, double minPhi, double maxPhi, double step) 
+{
+  for (double phi = minPhi; phi <= maxPhi; phi += step)
+  {
+    (*xVec).push_back( sinf(theta) * cosf(phi) );
+    (*yVec).push_back( sinf(theta) * sinf(phi) );
+    (*zVec).push_back( cosf(theta) );
+  }
+  (*xVec).push_back(sinf(theta) * cosf(maxPhi));
+  (*yVec).push_back(sinf(theta) * sinf(maxPhi));
+  (*zVec).push_back(cosf(theta));
+}
+
+const void FindGBPD_MetricBased::appendSamplPtsFixedAzimuth(QVector<float> *xVec, QVector<float> *yVec, QVector<float> *zVec,
+                                                            double phi, double minTheta, double maxTheta, double step)
+{
+  for (double theta = minTheta; theta <= maxTheta; theta += step)
+  {
+    (*xVec).push_back(sinf(theta) * cosf(phi));
+    (*yVec).push_back(sinf(theta) * sinf(phi));
+    (*zVec).push_back(cosf(theta));
+  }
+  (*xVec).push_back(sinf(maxTheta) * cosf(phi));
+  (*yVec).push_back(sinf(maxTheta) * sinf(phi));
+  (*zVec).push_back(cosf(maxTheta));
+}

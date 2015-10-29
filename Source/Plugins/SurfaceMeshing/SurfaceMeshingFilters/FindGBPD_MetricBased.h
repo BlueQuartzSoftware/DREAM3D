@@ -158,6 +158,12 @@ class FindGBPD_MetricBased : public SurfaceMeshFilter
     DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
     DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceLabels)
 
+    const void appendSamplPtsFixedZenith(QVector<float> *xVec, QVector<float> *yVec, QVector<float> *zVec,
+                                         double theta, double minPhi, double maxPhi, double step);
+
+    const void appendSamplPtsFixedAzimuth(QVector<float> *xVec, QVector<float> *yVec, QVector<float> *zVec,
+                                          double phi, double minTheta, double maxTheta, double step);
+
     FindGBPD_MetricBased(const FindGBPD_MetricBased&); // Copy Constructor Not Implemented
     void operator=(const FindGBPD_MetricBased&); // Operator '=' Not Implemented
 };
