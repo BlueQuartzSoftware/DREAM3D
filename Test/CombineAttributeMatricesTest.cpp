@@ -51,62 +51,124 @@
 
 #include "DREAM3DTestFileLocations.h"
 
-#define CREATE_DATA_ARRAY(type, attrMat, tDims, cDims, initVal, comps, err)\
-  DataArray<type>::Pointer _##type##_##comps##_##attrMat##Array = DataArray<type>::CreateArray(tDims, cDims, #type#comps, true);\
-  err = attrMat->addAttributeArray(#type#comps, _##type##_##comps##_##attrMat##Array);\
-  _##type##_##comps##_##attrMat##Array->initializeWithValue(initVal);\
+#define CREATE_DATA_ARRAY(type, attrMat, tDims, cDims, initVal, name, err)\
+  DataArray<type>::Pointer name##Array = DataArray<type>::CreateArray(tDims, cDims, name, true);\
+  err = attrMat->addAttributeArray(name, name##Array);\
+  name##Array->initializeWithValue(initVal);\
   DREAM3D_REQUIRE(err >= 0);
 
-#define SET_PROPERTIES_AND_CHECK_NE(filter, replaceValue, selectedArray, conditionalArray, errVal)\
-  var.setValue(selectedArray);\
-  propWasSet = filter->setProperty("SelectedArrayPath", var);\
-  if(false == propWasSet)\
-    {\
-    qDebug() << "Unable to set property SelectedArrayPath";\
-    }\
-  var.setValue(conditionalArray);\
-  propWasSet = filter->setProperty("ConditionalArrayPath", var);\
-  if(false == propWasSet)\
-    {\
-    qDebug() << "Unable to set property ConditionalArrayPath";\
-    }\
-  var.setValue(replaceValue);\
-  propWasSet = filter->setProperty("ReplaceValue", var);\
+#define CHECK_FOR_FAIL(filter, featureIds1, featureIds2, attrMat1, attrMat2, errVal)\
+  var.setValue(featureIds1);\
+  propWasSet = filter->setProperty("FirstIndexArrayPath", var);\
   if(false == propWasSet)\
   {\
-    qDebug() << "Unable to set property ReplaceValue";\
+    qDebug() << "Unable to set property FirstIndexArrayPath";\
+  }\
+  var.setValue(featureIds2);\
+  propWasSet = filter->setProperty("SecondIndexArrayPath", var);\
+  if(false == propWasSet)\
+  {\
+    qDebug() << "Unable to set property SecondIndexArrayPath";\
+  }\
+  var.setValue(attrMat1);\
+  propWasSet = filter->setProperty("FirstAttributeMatrixPath", var);\
+  if(false == propWasSet)\
+  {\
+    qDebug() << "Unable to set property FirstAttributeMatrixPath";\
+  }\
+  var.setValue(attrMat2);\
+  propWasSet = filter->setProperty("SecondAttributeMatrixPath", var);\
+  if(false == propWasSet)\
+  {\
+    qDebug() << "Unable to set property SecondAttributeMatrixPath";\
   }\
   filter->execute();\
   err = filter->getErrorCondition();\
   DREAM3D_REQUIRE_EQUAL(err, errVal);
 
-#define SET_PROPERTIES_AND_CHECK_EQ(filter, replaceValue, selectedArray, conditionalArray, dataArray, condArray, type)\
-  var.setValue(selectedArray);\
-  propWasSet = filter->setProperty("SelectedArrayPath", var);\
+#define CHECK_FOR_PASS1(filter, featureIds1, featureIds2, attrMat1, attrMat2, newIndex, newAttrMat)\
+  var.setValue(featureIds1);\
+  propWasSet = filter->setProperty("FirstIndexArrayPath", var);\
   if(false == propWasSet)\
   {\
-    qDebug() << "Unable to set property SelectedArrayPath";\
+    qDebug() << "Unable to set property FirstIndexArrayPath";\
   }\
-  var.setValue(conditionalArray);\
-  propWasSet = filter->setProperty("ConditionalArrayPath", var);\
+  var.setValue(featureIds2);\
+  propWasSet = filter->setProperty("SecondIndexArrayPath", var);\
   if(false == propWasSet)\
   {\
-    qDebug() << "Unable to set property ConditionalArrayPath";\
+    qDebug() << "Unable to set property SecondIndexArrayPath";\
   }\
-  var.setValue(replaceValue);\
-  propWasSet = filter->setProperty("ReplaceValue", var);\
+  var.setValue(attrMat1);\
+  propWasSet = filter->setProperty("FirstAttributeMatrixPath", var);\
   if(false == propWasSet)\
   {\
-    qDebug() << "Unable to set property ReplaceValue";\
+    qDebug() << "Unable to set property FirstAttributeMatrixPath";\
+  }\
+  var.setValue(attrMat2);\
+  propWasSet = filter->setProperty("SecondAttributeMatrixPath", var);\
+  if(false == propWasSet)\
+  {\
+    qDebug() << "Unable to set property SecondAttributeMatrixPath";\
+  }\
+  var.setValue(newIndex);\
+  propWasSet = filter->setProperty("NewIndexArrayName", var);\
+  if(false == propWasSet)\
+  {\
+    qDebug() << "Unable to set property NewIndexArrayName";\
+  }\
+  var.setValue(newAttrMat);\
+  propWasSet = filter->setProperty("CombinedAttributeMatrixName", var);\
+  if(false == propWasSet)\
+  {\
+    qDebug() << "Unable to set property CombinedAttributeMatrixName";\
   }\
   filter->execute();\
   err = filter->getErrorCondition();\
   DREAM3D_REQUIRE_EQUAL(err, 0);\
-  dataArray = dc->getAttributeMatrix(selectedArray.getAttributeMatrixName())->getAttributeArray(selectedArray.getDataArrayName());\
+  validateCombinedEnsembleAMs(filter, featureIds1, featureIds2, attrMat1, attrMat2, newIndex, newAttrMat);
+
+#define CHECK_FOR_PASS2(filter, featureIds1, featureIds2, attrMat1, attrMat2, newIndex, newAttrMat)\
+  var.setValue(featureIds1);\
+  propWasSet = filter->setProperty("FirstIndexArrayPath", var);\
+  if(false == propWasSet)\
+    {\
+    qDebug() << "Unable to set property FirstIndexArrayPath";\
+    }\
+  var.setValue(featureIds2);\
+  propWasSet = filter->setProperty("SecondIndexArrayPath", var);\
+  if(false == propWasSet)\
+    {\
+    qDebug() << "Unable to set property SecondIndexArrayPath";\
+    }\
+  var.setValue(attrMat1);\
+  propWasSet = filter->setProperty("FirstAttributeMatrixPath", var);\
+  if(false == propWasSet)\
+    {\
+    qDebug() << "Unable to set property FirstAttributeMatrixPath";\
+    }\
+  var.setValue(attrMat2);\
+  propWasSet = filter->setProperty("SecondAttributeMatrixPath", var);\
+  if(false == propWasSet)\
+    {\
+    qDebug() << "Unable to set property SecondAttributeMatrixPath";\
+    }\
+  var.setValue(newIndex);\
+  propWasSet = filter->setProperty("NewIndexArrayName", var);\
+  if(false == propWasSet)\
+    {\
+    qDebug() << "Unable to set property NewIndexArrayName";\
+    }\
+  var.setValue(newAttrMat);\
+  propWasSet = filter->setProperty("CombinedAttributeMatrixName", var);\
+  if(false == propWasSet)\
+    {\
+    qDebug() << "Unable to set property CombinedAttributeMatrixName";\
+    }\
+  filter->execute();\
+  err = filter->getErrorCondition();\
   DREAM3D_REQUIRE_EQUAL(err, 0);\
-  condArray = dc->getAttributeMatrix(conditionalArray.getAttributeMatrixName())->getAttributeArray(conditionalArray.getDataArrayName());\
-  DREAM3D_REQUIRE_EQUAL(err, 0);\
-  validateReplacedValues<type>(dataArray, condArray);
+  validateCombinedFeatureAMs(filter, featureIds1, featureIds2, attrMat1, attrMat2, newIndex, newAttrMat);
 
 // -----------------------------------------------------------------------------
 //
@@ -135,66 +197,113 @@ DataContainerArray::Pointer initializeDataContainerArray()
 
   DataContainerArray::Pointer dca = DataContainerArray::New();
 
+  //make two data containers to check AMs are from same DC
   DataContainer::Pointer m = DataContainer::New();
   m->setName("CombineAttributeMatricesTest");
+  DataContainer::Pointer m2 = DataContainer::New();
+  m2->setName("CombineAttributeMatricesTest2");
 
   // Create Attribute Matrices with different tDims to test validation of tuple compatibility
   QVector<size_t> tDims(3, 0);
   tDims[0] = 2;
   tDims[1] = 2;
   tDims[2] = 1;
-  AttributeMatrix::Pointer cellAttrMat = AttributeMatrix::New(tDims, "CellAttrMat", DREAM3D::AttributeMatrixType::Cell);
-  m->addAttributeMatrix("CellAttrMat", cellAttrMat);
+  QVector<size_t> cDims(1, 1);
+  int32_t initVal = 10;
 
+  //Make Cell AM
+  AttributeMatrix::Pointer cellAttrMat = AttributeMatrix::New(tDims, "cellAttrMat", DREAM3D::AttributeMatrixType::Cell);
+  m->addAttributeMatrix("cellAttrMat", cellAttrMat);
+
+  //Create 2 featureIds arrays in the Cell AM
+  QString featureIds1 = "featureIds1";
+  QString featureIds2 = "featureIds2";
+  CREATE_DATA_ARRAY(int32_t, cellAttrMat, tDims, cDims, initVal, featureIds1, err);
+  CREATE_DATA_ARRAY(int32_t, cellAttrMat, tDims, cDims, initVal, featureIds2, err);
+
+  //pull down featureIds arrays and initialize them as:
+  //1: | 1 | 2 |   2: | 0 | 0 |
+  //   | 0 | 0 |      | 1 | 2 |
+  Int32ArrayType::Pointer featureIds1Ptr = cellAttrMat->getAttributeArrayAs<Int32ArrayType>(featureIds1);
+  int32_t* fIds1 = featureIds1Ptr->getPointer(0);
+  fIds1[0] = 1;
+  fIds1[1] = 2;
+  fIds1[2] = 0;
+  fIds1[3] = 0;
+  Int32ArrayType::Pointer featureIds2Ptr = cellAttrMat->getAttributeArrayAs<Int32ArrayType>(featureIds2);
+  int32_t* fIds2 = featureIds2Ptr->getPointer(0);
+  fIds2[0] = 0;
+  fIds2[1] = 0;
+  fIds2[2] = 1;
+  fIds2[3] = 2;
+
+  //Make a feature and ensemble AM for the first featureIds array and add some arrays
   tDims.resize(1);
   tDims[0] = 3;
   AttributeMatrix::Pointer featureAttrMat1 = AttributeMatrix::New(tDims, "featureAttrMat1", DREAM3D::AttributeMatrixType::CellFeature);
   m->addAttributeMatrix("featureAttrMat1", featureAttrMat1);
+  tDims[0] = 2;
+  AttributeMatrix::Pointer ensembleAttrMat1 = AttributeMatrix::New(tDims, "ensembleAttrMat1", DREAM3D::AttributeMatrixType::CellEnsemble);
+  m->addAttributeMatrix("ensembleAttrMat1", ensembleAttrMat1);
+  QString fAM1AA1 = "ensembleIds";
+  QString fAM1AA2 = "sizes";
+  CREATE_DATA_ARRAY(int32_t, featureAttrMat1, tDims, cDims, initVal, fAM1AA1, err);
+  CREATE_DATA_ARRAY(float, featureAttrMat1, tDims, cDims, initVal, fAM1AA2, err);
+  QString eAM1AA1 = "crystalStructures";
+  CREATE_DATA_ARRAY(int32_t, ensembleAttrMat1, tDims, cDims, initVal, eAM1AA1, err);
+
+  //pull down and initialize arrays just created for feature and ensemble AM 1
+  Int32ArrayType::Pointer ensembleIds1Ptr = featureAttrMat1->getAttributeArrayAs<Int32ArrayType>(fAM1AA1);
+  int32_t* eIds1 = ensembleIds1Ptr->getPointer(0);
+  FloatArrayType::Pointer sizesPtr = featureAttrMat1->getAttributeArrayAs<FloatArrayType>(fAM1AA2);
+  float* sizes = sizesPtr->getPointer(0);
+  Int32ArrayType::Pointer crystStructs1Ptr = ensembleAttrMat1->getAttributeArrayAs<Int32ArrayType>(eAM1AA1);
+  int32_t* crystStructs1 = crystStructs1Ptr->getPointer(0);
+  eIds1[0] = 0;
+  eIds1[1] = 1;
+  eIds1[2] = 2;
+  sizes[0] = 0;
+  sizes[1] = 10.5;
+  sizes[2] = 4.7;
+  crystStructs1[0] = 0;
+  crystStructs1[1] = 1;
+
+
+  //Make a feature and ensemble AM for the second featureIds array and add some arrays
+  tDims[0] = 3;
   AttributeMatrix::Pointer featureAttrMat2 = AttributeMatrix::New(tDims, "featureAttrMat2", DREAM3D::AttributeMatrixType::CellFeature);
   m->addAttributeMatrix("featureAttrMat2", featureAttrMat2);
+  tDims[0] = 2;
+  AttributeMatrix::Pointer ensembleAttrMat2 = AttributeMatrix::New(tDims, "ensembleAttrMat2", DREAM3D::AttributeMatrixType::CellEnsemble);
+  m->addAttributeMatrix("ensembleAttrMat2", ensembleAttrMat2);
+  QString fAM2AA1 = "ensembleIds";
+  QString fAM2AA2 = "shapes";
+  CREATE_DATA_ARRAY(float, featureAttrMat2, tDims, cDims, initVal, fAM2AA1, err);
+  CREATE_DATA_ARRAY(bool, featureAttrMat2, tDims, cDims, initVal, fAM2AA2, err);
+  QString eAM2AA1 = "crystalStructures";
+  CREATE_DATA_ARRAY(int32_t, ensembleAttrMat2, tDims, cDims, initVal, eAM2AA1, err);
+
+  //pull down and initialize arrays just created for feature and ensemble AM 1
+  Int32ArrayType::Pointer ensembleIds2Ptr = featureAttrMat1->getAttributeArrayAs<Int32ArrayType>(fAM2AA1);
+  int32_t* eIds2 = ensembleIds2Ptr->getPointer(0);
+  FloatArrayType::Pointer shapesPtr = featureAttrMat1->getAttributeArrayAs<FloatArrayType>(fAM2AA2);
+  float* shapes = shapesPtr->getPointer(0);
+  Int32ArrayType::Pointer crystStructs2Ptr = ensembleAttrMat1->getAttributeArrayAs<Int32ArrayType>(eAM2AA1);
+  int32_t* crystStructs2 = crystStructs2Ptr->getPointer(0);
+  eIds2[0] = 0;
+  eIds2[1] = 1;
+  eIds2[2] = 2;
+  shapes[0] = 0;
+  shapes[1] = 3.1;
+  shapes[2] = 2.2;
+  crystStructs2[0] = 0;
+  crystStructs2[1] = 1;
 
   dca->addDataContainer(m);
 
-  QVector<size_t> cDims(1, 3);
-  int32_t initVal = 10;
-
-  CREATE_DATA_ARRAY(uint8_t, attrMat, tDims, cDims, initVal, 3, err);
-  CREATE_DATA_ARRAY(int8_t, attrMat, tDims, cDims, initVal, 3, err);
-  CREATE_DATA_ARRAY(uint16_t, attrMat, tDims, cDims, initVal, 3, err);
-  CREATE_DATA_ARRAY(int16_t, attrMat, tDims, cDims, initVal, 3, err);
-  CREATE_DATA_ARRAY(uint32_t, attrMat, tDims, cDims, initVal, 3, err);
-  CREATE_DATA_ARRAY(int32_t, attrMat, tDims, cDims, initVal, 3, err);
-  CREATE_DATA_ARRAY(uint64_t, attrMat, tDims, cDims, initVal, 3, err);
-  CREATE_DATA_ARRAY(int64_t, attrMat, tDims, cDims, initVal, 3, err);
-  CREATE_DATA_ARRAY(double, attrMat, tDims, cDims, initVal, 3, err);
-  CREATE_DATA_ARRAY(float, attrMat, tDims, cDims, initVal, 3, err);
-  CREATE_DATA_ARRAY(bool, attrMat, tDims, cDims, true, 3, err);
-
-  cDims[0] = 1;
-
-  CREATE_DATA_ARRAY(uint8_t, attrMat, tDims, cDims, initVal, 1, err);
-  CREATE_DATA_ARRAY(int8_t, attrMat, tDims, cDims, initVal, 1, err);
-  CREATE_DATA_ARRAY(uint16_t, attrMat, tDims, cDims, initVal, 1, err);
-  CREATE_DATA_ARRAY(int16_t, attrMat, tDims, cDims, initVal, 1, err);
-  CREATE_DATA_ARRAY(uint32_t, attrMat, tDims, cDims, initVal, 1, err);
-  CREATE_DATA_ARRAY(int32_t, attrMat, tDims, cDims, initVal, 1, err);
-  CREATE_DATA_ARRAY(uint64_t, attrMat, tDims, cDims, initVal, 1, err);
-  CREATE_DATA_ARRAY(int64_t, attrMat, tDims, cDims, initVal, 1, err);
-  CREATE_DATA_ARRAY(double, attrMat, tDims, cDims, initVal, 1, err);
-  CREATE_DATA_ARRAY(float, attrMat, tDims, cDims, initVal, 1, err);
-  CREATE_DATA_ARRAY(bool, attrMat, tDims, cDims, true, 1, err);
-
-  //this is the conditional array
-  QString name = "ConditionalArray";
-  BoolArrayType::Pointer condArrayPtr = BoolArrayType::CreateArray(tDims, cDims, name);
-  attrMat->addAttributeArray(name, condArrayPtr);
-  condArrayPtr->initializeWithValue(true);
-  //Set some of the values to false int he conditional array
-  bool* condArray = condArrayPtr->getPointer(0);
-  for (size_t iter = 0; iter < tDims[0]; iter++)
-  {
-    if (iter % 2 == 0) condArray[iter] = false;
-  }
+  //add a feature AM to the second DC to allow for check that AMs are in same DC
+  m2->addAttributeMatrix("featureAttrMat2", featureAttrMat2);
+  dca->addDataContainer(m2);
 
   return dca;
 }
@@ -202,28 +311,57 @@ DataContainerArray::Pointer initializeDataContainerArray()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename T>
-void validateReplacedValues(IDataArray::Pointer iArray, IDataArray::Pointer cArray)
+void removeDataArraysAfterFirstCombination(DataContainer::Pointer dc, DataArrayPath path1, DataArrayPath path2)
 {
-  typename DataArray<T>::Pointer dataArrayPtr = boost::dynamic_pointer_cast<DataArray<T> >(iArray);
-  typename DataArray<bool>::Pointer condArrayPtr = boost::dynamic_pointer_cast<DataArray<bool> >(cArray);
-  T* dataArray = dataArrayPtr->getPointer(0);
-  bool* condArray = condArrayPtr->getPointer(0);
-  size_t numTuples = dataArrayPtr->getNumberOfTuples();
-
-  for (size_t i = 0; i < numTuples; i++)
-  {
-    if (condArray[i] == true) { DREAM3D_REQUIRE_EQUAL(dataArray[i], 5.0); }
-    else if (condArray[i] == false) { DREAM3D_REQUIRE_EQUAL(dataArray[i], 10.0); }
-  }
+  AttributeMatrix::Pointer am1 = dc->getAttributeMatrix(path1.getAttributeMatrixName());
+  am1->removeAttributeArray(path1.getDataArrayName());
+  AttributeMatrix::Pointer am2 = dc->getAttributeMatrix(path2.getAttributeMatrixName());
+  am2->removeAttributeArray(path2.getDataArrayName());
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void removeArrayFromDataContainerArray(DataContainerArray::Pointer dca, DataArrayPath path)
+void validateCombinedFeatureAMs(AbstractFilter::Pointer filter, DataArrayPath featureIds1, DataArrayPath featureIds2, DataArrayPath attrMat1, DataArrayPath attrMat2, QString newIndex, QString newAttrMat)
 {
-  dca->getDataContainer(path.getDataContainerName())->getAttributeMatrix(path.getAttributeMatrixName())->removeAttributeArray(path.getDataArrayName());
+  DataContainerArray::Pointer dca = filter->getDataContainerArray();
+  AttributeMatrix::Pointer attrMat1Ptr = dca->getAttributeMatrix(attrMat1);
+  DataArrayPath temp;
+  temp.update(attrMat1.getDataContainerName(), newAttrMat, "");
+  AttributeMatrix::Pointer newAttrMatPtr = dca->getAttributeMatrix(temp);
+  //new combined feature AM should have 5 tuples (3 + 3 - 1)
+  DREAM3D_REQUIRE_EQUAL(newAttrMatPtr->getNumTuples(), 5)
+  // combined feature AM should have ensembleIds, sizes, shapes arrays
+  DREAM3D_REQUIRE_EQUAL(newAttrMatPtr->getNumAttributeArrays(), 3)
+  Int32ArrayType::Pointer newFeatureIdsPtr = attrMat1Ptr->getAttributeArrayAs<Int32ArrayType>(newIndex);
+  int32_t* newFIds = newFeatureIdsPtr->getPointer(0);
+  //ensemble ids should be updated so that featureIds1 still equal 1 and 2, but featureIds2 should be changed from 1 and 2 to 3 and 4
+  DREAM3D_REQUIRE_EQUAL(newFIds[0], 1)
+  DREAM3D_REQUIRE_EQUAL(newFIds[1], 2)
+  DREAM3D_REQUIRE_EQUAL(newFIds[2], 3)
+  DREAM3D_REQUIRE_EQUAL(newFIds[3], 4)
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void validateCombinedEnsembleAMs(AbstractFilter::Pointer filter, DataArrayPath ensembleIds1, DataArrayPath ensembleIds2, DataArrayPath attrMat1, DataArrayPath attrMat2, QString newIndex, QString newAttrMat)
+{
+  DataContainerArray::Pointer dca = filter->getDataContainerArray();
+  AttributeMatrix::Pointer attrMat1Ptr = dca->getAttributeMatrix(attrMat1);
+  DataArrayPath temp;
+  temp.update(attrMat1.getDataContainerName(), newAttrMat, "");
+  AttributeMatrix::Pointer newAttrMatPtr = dca->getAttributeMatrix(temp);
+  //new combined ensemble AM should have 3 tuples (2 + 2 - 1)
+  DREAM3D_REQUIRE_EQUAL(newAttrMatPtr->getNumTuples(), 3)
+  // combined ensemble AM should only have crystal structures array
+  DREAM3D_REQUIRE_EQUAL(newAttrMatPtr->getNumAttributeArrays(), 1)
+  Int32ArrayType::Pointer newEnsembleIdsPtr = attrMat1Ptr->getAttributeArrayAs<Int32ArrayType>(newIndex);
+  int32_t* newEIds = newEnsembleIdsPtr->getPointer(0);
+  //ensemble ids should be updated so that ensembleIds1 still equal 1, but ensembleIds2 should be changed from 1 to 2
+  DREAM3D_REQUIRE_EQUAL(newEIds[0], 0)
+  DREAM3D_REQUIRE_EQUAL(newEIds[1], 1)
+  DREAM3D_REQUIRE_EQUAL(newEIds[2], 2)
 }
 
 // -----------------------------------------------------------------------------
@@ -235,62 +373,39 @@ void validateCombineAM(AbstractFilter::Pointer filter, DataContainerArray::Point
   bool propWasSet;
   int err = 0;
 
-  DataContainer::Pointer dc = dca->getDataContainer("ConditionalSetValueTest");
-  IDataArray::Pointer dataArray;
-  IDataArray::Pointer condArray;
+  DataContainer::Pointer dc = dca->getDataContainer("CombineAttributeMatricesTest");
 
-  DataArrayPath attrMat_uint8_3("ConditionalSetValueTest", "ConditionalSetValueAttrMat", "uint8_t3");
-  DataArrayPath attrMat_int8_3("ConditionalSetValueTest", "ConditionalSetValueAttrMat", "int8_t3");
-  DataArrayPath attrMat_uint16_3("ConditionalSetValueTest", "ConditionalSetValueAttrMat", "uint16_t3");
-  DataArrayPath attrMat_int16_3("ConditionalSetValueTest", "ConditionalSetValueAttrMat", "int16_t3");
-  DataArrayPath attrMat_uint32_3("ConditionalSetValueTest", "ConditionalSetValueAttrMat", "uint32_t3");
-  DataArrayPath attrMat_int32_3("ConditionalSetValueTest", "ConditionalSetValueAttrMat", "int32_t3");
-  DataArrayPath attrMat_uint64_3("ConditionalSetValueTest", "ConditionalSetValueAttrMat", "uint64t3");
-  DataArrayPath attrMat_int64_3("ConditionalSetValueTest", "ConditionalSetValueAttrMat", "int64_t3");
-  DataArrayPath attrMat_float_3("ConditionalSetValueTest", "ConditionalSetValueAttrMat", "float3");
-  DataArrayPath attrMat_double_3("ConditionalSetValueTest", "ConditionalSetValueAttrMat", "double3");
-  DataArrayPath attrMat_bool_3("ConditionalSetValueTest", "ConditionalSetValueAttrMat", "bool3");
+  DataArrayPath fiap("CombineAttributeMatricesTest", "featureAttrMat1", "ensembleIds");
+  DataArrayPath fiap2("CombineAttributeMatricesTest", "cellAttrMat", "featureIds1");
+  DataArrayPath siap("CombineAttributeMatricesTest", "featureAttrMat2", "ensembleIds");
+  DataArrayPath siap2("CombineAttributeMatricesTest", "cellAttrMat", "featureIds2");
+  QString nian("newEnsembleIds");
+  QString nian2("newFeatureIds");
 
-  DataArrayPath attrMat_uint8_1("ConditionalSetValueTest", "ConditionalSetValueAttrMat", "uint8_t1");
-  DataArrayPath attrMat_int8_1("ConditionalSetValueTest", "ConditionalSetValueAttrMat", "int8_t1");
-  DataArrayPath attrMat_uint16_1("ConditionalSetValueTest", "ConditionalSetValueAttrMat", "uint16_t1");
-  DataArrayPath attrMat_int16_1("ConditionalSetValueTest", "ConditionalSetValueAttrMat", "int16_t1");
-  DataArrayPath attrMat_uint32_1("ConditionalSetValueTest", "ConditionalSetValueAttrMat", "uint32_t1");
-  DataArrayPath attrMat_int32_1("ConditionalSetValueTest", "ConditionalSetValueAttrMat", "int32_t1");
-  DataArrayPath attrMat_uint64_1("ConditionalSetValueTest", "ConditionalSetValueAttrMat", "uint64_t1");
-  DataArrayPath attrMat_int64_1("ConditionalSetValueTest", "ConditionalSetValueAttrMat", "int64_t1");
-  DataArrayPath attrMat_float_1("ConditionalSetValueTest", "ConditionalSetValueAttrMat", "float1");
-  DataArrayPath attrMat_double_1("ConditionalSetValueTest", "ConditionalSetValueAttrMat", "double1");
-  DataArrayPath attrMat_bool_1("ConditionalSetValueTest", "ConditionalSetValueAttrMat", "bool");
+  DataArrayPath famp("CombineAttributeMatricesTest", "ensembleAttrMat1", "");
+  DataArrayPath samp("CombineAttributeMatricesTest", "ensembleAttrMat2", "");
+  DataArrayPath famp2("CombineAttributeMatricesTest", "featureAttrMat1", "");
+  DataArrayPath samp2("CombineAttributeMatricesTest", "featureAttrMat2", "");
+  DataArrayPath samp3("CombineAttributeMatricesTest2", "featureAttrMat2", "");
+  QString namn("CombinedEnsembleAttrMat");
+  QString namn2("CombinedFeatureAttrMat");
 
-  DataArrayPath conditionalArray("ConditionalSetValueTest", "ConditionalSetValueAttrMat", "ConditionalArray");
 
-  // Fail if an input array is not scalar
-  SET_PROPERTIES_AND_CHECK_NE(filter, 5.0, attrMat_uint8_3, conditionalArray, -11002)
+  // Fail if an AMs are not in the same DC
+  CHECK_FOR_FAIL(filter, fiap2, siap2, famp2, samp3, -5557)
+  // Fail if the AMs are the same AM
+  CHECK_FOR_FAIL(filter, fiap2, siap2, famp2, famp2, -5558)
+  // Fail if the AMs are not the same type (ie feature or ensemble)
+  CHECK_FOR_FAIL(filter, fiap2, siap2, famp2, samp, -5559)
 
-  // Fail if the replace value is out of range
-  SET_PROPERTIES_AND_CHECK_NE(filter, 256.0, attrMat_uint8_1, conditionalArray, -100)
-  SET_PROPERTIES_AND_CHECK_NE(filter, 128.0, attrMat_int8_1, conditionalArray, -100)
-  SET_PROPERTIES_AND_CHECK_NE(filter, 65536.0, attrMat_uint16_1, conditionalArray, -100)
-  SET_PROPERTIES_AND_CHECK_NE(filter, 32768.0, attrMat_int16_1, conditionalArray, -100)
-  SET_PROPERTIES_AND_CHECK_NE(filter, 4294967296.0, attrMat_uint32_1, conditionalArray, -100)
-  SET_PROPERTIES_AND_CHECK_NE(filter, 2147483648.0, attrMat_int32_1, conditionalArray, -100)
-  SET_PROPERTIES_AND_CHECK_NE(filter, 20000000000000000000.0, attrMat_uint64_1, conditionalArray, -100)
-  SET_PROPERTIES_AND_CHECK_NE(filter, 10000000000000000000.0, attrMat_int64_1, conditionalArray, -100)
-  SET_PROPERTIES_AND_CHECK_NE(filter, 3.41e38, attrMat_float_1, conditionalArray, -101)
-  //not checking double, because cannot make a value outside of the range
+  // combine ensemble AMs sucessfully
+  CHECK_FOR_PASS1(filter, fiap, siap, famp, samp, nian, namn)
 
-  // Succeed for all possible test combinations
-  SET_PROPERTIES_AND_CHECK_EQ(filter, 5.0, attrMat_uint8_1, conditionalArray, dataArray, condArray, uint8_t)
-  SET_PROPERTIES_AND_CHECK_EQ(filter, 5.0, attrMat_int8_1, conditionalArray, dataArray, condArray, int8_t)
-  SET_PROPERTIES_AND_CHECK_EQ(filter, 5.0, attrMat_uint16_1, conditionalArray, dataArray, condArray, uint16_t)
-  SET_PROPERTIES_AND_CHECK_EQ(filter, 5.0, attrMat_int16_1, conditionalArray, dataArray, condArray, int16_t)
-  SET_PROPERTIES_AND_CHECK_EQ(filter, 5.0, attrMat_uint32_1, conditionalArray, dataArray, condArray, uint32_t)
-  SET_PROPERTIES_AND_CHECK_EQ(filter, 5.0, attrMat_int32_1, conditionalArray, dataArray, condArray, int32_t)
-  SET_PROPERTIES_AND_CHECK_EQ(filter, 5.0, attrMat_uint64_1, conditionalArray, dataArray, condArray, uint64_t)
-  SET_PROPERTIES_AND_CHECK_EQ(filter, 5.0, attrMat_int64_1, conditionalArray, dataArray, condArray, int64_t)
-  SET_PROPERTIES_AND_CHECK_EQ(filter, 5.0, attrMat_float_1, conditionalArray, dataArray, condArray, float)
-  SET_PROPERTIES_AND_CHECK_EQ(filter, 5.0, attrMat_double_1, conditionalArray, dataArray, condArray, double)
+  removeDataArraysAfterFirstCombination(dc, fiap, siap);
+
+  // combine feature AMs sucessfully
+  CHECK_FOR_PASS1(filter, fiap2, siap2, famp2, samp2, nian2, namn2)
+
 }
 
 // -----------------------------------------------------------------------------

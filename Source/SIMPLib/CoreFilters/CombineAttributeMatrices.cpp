@@ -144,10 +144,10 @@ void CombineAttributeMatrices::readFilterParameters(AbstractFilterParametersRead
   reader->openFilterGroup(this, index);
   setFirstAttributeMatrixPath(reader->readDataArrayPath("FirstAttributeMatrixPath", getFirstAttributeMatrixPath()));
   setSecondAttributeMatrixPath(reader->readDataArrayPath("SecondAttributeMatrixPath", getSecondAttributeMatrixPath()));
-  setCombinedAttributeMatrixName(reader->readString("CombinedAttributeMatrixPath", getCombinedAttributeMatrixName()));
+  setCombinedAttributeMatrixName(reader->readString("CombinedAttributeMatrixName", getCombinedAttributeMatrixName()));
   setFirstIndexArrayPath(reader->readDataArrayPath("FirstIndexArrayPath", getFirstIndexArrayPath()));
   setSecondIndexArrayPath(reader->readDataArrayPath("SecondIndexArrayPath", getSecondIndexArrayPath()));
-  setNewIndexArrayName(reader->readString("SecondIndexArrayName", getNewIndexArrayName()));
+  setNewIndexArrayName(reader->readString("NewIndexArrayName", getNewIndexArrayName()));
   reader->closeFilterGroup();
 }
 
@@ -160,8 +160,10 @@ int CombineAttributeMatrices::writeFilterParameters(AbstractFilterParametersWrit
   SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
   SIMPL_FILTER_WRITE_PARAMETER(FirstAttributeMatrixPath)
   SIMPL_FILTER_WRITE_PARAMETER(SecondAttributeMatrixPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CombinedAttributeMatrixName)
   SIMPL_FILTER_WRITE_PARAMETER(FirstIndexArrayPath)
   SIMPL_FILTER_WRITE_PARAMETER(SecondIndexArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(NewIndexArrayName)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
