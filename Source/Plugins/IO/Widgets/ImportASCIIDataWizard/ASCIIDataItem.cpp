@@ -39,7 +39,8 @@
 //
 // -----------------------------------------------------------------------------
 ASCIIDataItem::ASCIIDataItem(const QVector<QVariant>& data) :
-m_ItemData(data)
+m_ItemData(data),
+m_OriginalString("")
 {
 
 }
@@ -104,4 +105,20 @@ bool ASCIIDataItem::setData(int column, const QVariant& value)
 
   m_ItemData[column] = value;
   return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ASCIIDataItem::originalString() const
+{
+  return m_OriginalString;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ASCIIDataItem::setOriginalString(const QString& value)
+{
+  m_OriginalString = value;
 }

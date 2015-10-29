@@ -110,40 +110,103 @@ QVector<QString> ImportASCIIDataWizard::ReadLines(const QString &inputFilePath, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportASCIIDataWizard::ToFixedWidth(int firstRowHeaderIndex)
+void ImportASCIIDataWizard::TokenizeAndInsertLines(bool isFixedWidth, bool tabAsDelimiter, bool semicolonAsDelimiter, bool commaAsDelimiter, bool spaceAsDelimiter, bool consecutiveDelimiters, int firstRowHeaderIndex)
 {
   ASCIIDataModel* model = ASCIIDataModel::Instance();
+  model->clearContents();
+
+  if (model->columnCount() > 0)
+  {
+    model->removeColumns(0, model->columnCount());
+  }
+
+  QString expStr = "";
+  if (isFixedWidth == true)
+  {
+    expStr.append(" |\\t|");
+  }
+  if (tabAsDelimiter == true)
+  {
+    expStr.append("\\t|");
+  }
+  if (semicolonAsDelimiter == true)
+  {
+    expStr.append(";|");
+  }
+  if (commaAsDelimiter == true)
+  {
+    expStr.append(",|");
+  }
+  if (spaceAsDelimiter == true)
+  {
+    expStr.append(" |");
+  }
+
+  expStr.chop(1);
+
+  QRegularExpression exp(expStr);
+
   int vHeaderIndex = firstRowHeaderIndex;
 
-  // Format the data into columns based on fixed width
-  for (int row = 0; row < model->rowCount(); row++)
+  // Format the data into columns
+  if (expStr.isEmpty() == true)
   {
-    QString line = model->index(row, 0).data().toString();
-
-    line = line.replace('\t', ' ');
-    QStringList columnDataList = line.split(' ', QString::SkipEmptyParts);
-
-    while (model->columnCount() < columnDataList.size())
+    ImportASCIIDataWizard::InsertLines();
+  }
+  else
+  {
+    for (int row = 0; row < model->rowCount(); row++)
     {
-      model->insertColumn(model->columnCount());
-    }
+      QString line = model->originalString(row);
 
-    for (int column = 0; column < columnDataList.size(); column++)
-    {
-      QString columnData = columnDataList[column];
-      QModelIndex index = model->index(row, column);
-      model->setData(index, columnData, Qt::DisplayRole);
-    }
+      QStringList columnDataList;
+      if (consecutiveDelimiters == true || isFixedWidth == true)
+      {
+        columnDataList = line.split(exp, QString::SkipEmptyParts);
+      }
+      else
+      {
+        columnDataList = line.split(exp, QString::KeepEmptyParts);
+      }
 
-    model->setHeaderData(row, Qt::Vertical, QString::number(vHeaderIndex), Qt::DisplayRole);
-    vHeaderIndex++;
+      while (model->columnCount() < columnDataList.size())
+      {
+        model->insertColumn(model->columnCount());
+      }
+
+      for (int column = 0; column < columnDataList.size(); column++)
+      {
+        QString columnData = columnDataList[column];
+        QModelIndex index = model->index(row, column);
+        model->setData(index, columnData, Qt::DisplayRole);
+      }
+
+      model->setHeaderData(row, Qt::Vertical, QString::number(vHeaderIndex), Qt::DisplayRole);
+      vHeaderIndex++;
+    }
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportASCIIDataWizard::ReloadToOneColumn(const QString &inputFilePath, int beginLine)
+void ImportASCIIDataWizard::InsertLines()
+{
+  ASCIIDataModel* model = ASCIIDataModel::Instance();
+
+  model->insertColumn(0);
+  for (int row = 0; row < model->rowCount(); row++)
+  {
+    QString line = model->originalString(row);
+    QModelIndex index = model->index(row, 0);
+    model->setData(index, line, Qt::DisplayRole);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ImportASCIIDataWizard::LoadLines(const QString &inputFilePath, int beginLine)
 {
   ASCIIDataModel* model = ASCIIDataModel::Instance();
 
@@ -151,20 +214,13 @@ void ImportASCIIDataWizard::ReloadToOneColumn(const QString &inputFilePath, int 
 
   QVector<QString> lines = ImportASCIIDataWizard::ReadLines(inputFilePath, beginLine, ImportASCIIDataWizard::TotalPreviewLines);
 
-  // We only need one column for this page
-  model->insertColumn(0);
-
   for (int i = 0; i < lines.size(); i++)
   {
     QString line = lines[i];
 
     int row = model->rowCount();
     model->insertRow(row);
-
-    // This is the first screen, so everything automatically goes into one column for now
-    QModelIndex index = model->index(row, 0);
-
-    model->setData(index, line, Qt::DisplayRole);
+    model->setOriginalString(row, line);
     model->setHeaderData(row, Qt::Vertical, QString::number(i + 1), Qt::DisplayRole);
   }
 }

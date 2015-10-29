@@ -82,10 +82,13 @@ void DataFormatPage::setupGui()
 void DataFormatPage::showEvent(QShowEvent* event)
 {
   bool isFixedWidth = field("isFixedWidth").toBool();
-  if (isFixedWidth == true)
-  {
-    ImportASCIIDataWizard::ToFixedWidth(startRowSpin->value());
-  }
+  bool tabAsDelimiter = field("tabAsDelimiter").toBool();
+  bool semicolonAsDelimiter = field("semicolonAsDelimiter").toBool();
+  bool commaAsDelimiter = field("commaAsDelimiter").toBool();
+  bool spaceAsDelimiter = field("spaceAsDelimiter").toBool();
+  bool consecutiveDelimiters = field("consecutiveDelimiters").toBool();
+
+  ImportASCIIDataWizard::TokenizeAndInsertLines(isFixedWidth, tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter, consecutiveDelimiters, startRowSpin->value());
 }
 
 // -----------------------------------------------------------------------------
@@ -93,9 +96,16 @@ void DataFormatPage::showEvent(QShowEvent* event)
 // -----------------------------------------------------------------------------
 void DataFormatPage::on_startRowSpin_valueChanged(int value)
 {
-  ImportASCIIDataWizard::ReloadToOneColumn(m_InputFilePath, value);
+  bool isFixedWidth = field("isFixedWidth").toBool();
+  bool tabAsDelimiter = field("tabAsDelimiter").toBool();
+  bool semicolonAsDelimiter = field("semicolonAsDelimiter").toBool();
+  bool commaAsDelimiter = field("commaAsDelimiter").toBool();
+  bool spaceAsDelimiter = field("spaceAsDelimiter").toBool();
+  bool consecutiveDelimiters = field("consecutiveDelimiters").toBool();
 
-  ImportASCIIDataWizard::ToFixedWidth(value);
+  ImportASCIIDataWizard::LoadLines(m_InputFilePath, value);
+
+  ImportASCIIDataWizard::TokenizeAndInsertLines(isFixedWidth, tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter, consecutiveDelimiters, startRowSpin->value());
 }
 
 // -----------------------------------------------------------------------------

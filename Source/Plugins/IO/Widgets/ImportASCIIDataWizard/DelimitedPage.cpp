@@ -76,6 +76,25 @@ void DelimitedPage::setupGui()
   registerField("spaceAsDelimiter", spaceCheckBox);
   registerField("consecutiveDelimiters", consecutiveDCheckBox);
 
+  connect(tabCheckBox, SIGNAL(stateChanged(int)), this, SLOT(checkBox_Toggled(int)));
+  connect(semicolonCheckBox, SIGNAL(stateChanged(int)), this, SLOT(checkBox_Toggled(int)));
+  connect(commaCheckBox, SIGNAL(stateChanged(int)), this, SLOT(checkBox_Toggled(int)));
+  connect(spaceCheckBox, SIGNAL(stateChanged(int)), this, SLOT(checkBox_Toggled(int)));
+  connect(consecutiveDCheckBox, SIGNAL(stateChanged(int)), this, SLOT(checkBox_Toggled(int)));
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DelimitedPage::checkBox_Toggled(int state)
+{
+  bool tabAsDelimiter = tabCheckBox->isChecked();
+  bool semicolonAsDelimiter = semicolonCheckBox->isChecked();
+  bool commaAsDelimiter = commaCheckBox->isChecked();
+  bool spaceAsDelimiter = spaceCheckBox->isChecked();
+  bool consecutiveDelimiters = consecutiveDCheckBox->isChecked();
+
+  ImportASCIIDataWizard::TokenizeAndInsertLines(false, tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter, consecutiveDelimiters, 1);
 }
 
 // -----------------------------------------------------------------------------

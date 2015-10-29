@@ -68,6 +68,9 @@ class DelimitedPage : public QWizardPage, private Ui::DelimitedPage
     */
     int nextId() const;
 
+  protected slots:
+    void checkBox_Toggled(int state);
+
   private:
     QString                                       m_InputFilePath;
 

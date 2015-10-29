@@ -57,8 +57,13 @@ public:
   QVariant data(int column) const;
   bool setData(int column, const QVariant& value);
 
+  QString originalString() const;
+  void setOriginalString(const QString& value);
+
 private:
-  QVector<QVariant>                   m_ItemData;
+  QVector<QVariant>                                             m_ItemData;
+
+  QString                                                       m_OriginalString;
 
   ASCIIDataItem(const ASCIIDataItem&);    // Copy Constructor Not Implemented
   void operator=(const ASCIIDataItem&);  // Operator '=' Not Implemented

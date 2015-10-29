@@ -69,13 +69,41 @@ void DelimitedOrFixedWidthPage::setupGui()
 
   ASCIIDataModel* model = ASCIIDataModel::Instance();
 
-  ImportASCIIDataWizard::ReloadToOneColumn(m_InputFilePath, 1);
+  ImportASCIIDataWizard::LoadLines(m_InputFilePath, 1);
+
+  ImportASCIIDataWizard::InsertLines();
 
   dataView->setModel(model);
   dataView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
   registerField("isDelimited", isDelimitedRadio);
   registerField("isFixedWidth", isFixedWidthRadio);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DelimitedOrFixedWidthPage::showEvent(QShowEvent* event)
+{
+  ASCIIDataModel* model = ASCIIDataModel::Instance();
+  model->clearContents();
+
+  if (model->columnCount() > 0)
+  {
+    model->removeColumns(0, model->columnCount());
+  }
+
+  // This is the first screen, so everything automatically goes into one column for now
+  model->insertColumn(0);
+
+  for (int row = 0; row < model->rowCount(); row++)
+  {
+    QString line = model->originalString(row);
+
+    QModelIndex index = model->index(row, 0);
+
+    model->setData(index, line, Qt::DisplayRole);
+  }
 }
 
 // -----------------------------------------------------------------------------

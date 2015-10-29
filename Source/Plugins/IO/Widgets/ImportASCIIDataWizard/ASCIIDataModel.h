@@ -54,6 +54,7 @@ public:
   static ASCIIDataModel* Instance();
 
   void clear();
+  void clearContents();
 
   QVariant data(const QModelIndex& index, int role) const;
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
@@ -66,12 +67,15 @@ public:
   bool insertRows(int position, int rows, const QModelIndex& parent = QModelIndex());
   bool removeRows(int position, int rows, const QModelIndex& parent = QModelIndex());
 
-  bool insertColumns(int position, int rows, const QModelIndex& parent = QModelIndex());
-  bool removeColumns(int position, int rows, const QModelIndex& parent = QModelIndex());
+  bool insertColumns(int position, int columns, const QModelIndex& parent = QModelIndex());
+  bool removeColumns(int position, int columns, const QModelIndex& parent = QModelIndex());
 
   Qt::ItemFlags flags(const QModelIndex& index) const;
 
   bool setData(const QModelIndex& index, const QVariant& value, int role);
+
+  QString originalString(const int row) const;
+  void setOriginalString(const int row, const QString& value);
 
 protected:
   ASCIIDataModel(QObject* parent = 0);

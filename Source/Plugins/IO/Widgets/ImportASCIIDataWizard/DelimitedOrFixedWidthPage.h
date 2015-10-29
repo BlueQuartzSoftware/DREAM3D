@@ -68,6 +68,9 @@ class DelimitedOrFixedWidthPage : public QWizardPage, private Ui::DelimitedOrFix
     */
     int nextId() const;
 
+  protected:
+    void showEvent(QShowEvent* event);
+
   private:
     QString                                         m_InputFilePath;
 

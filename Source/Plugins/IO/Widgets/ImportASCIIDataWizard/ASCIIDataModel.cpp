@@ -262,6 +262,22 @@ bool ASCIIDataModel::setData(const QModelIndex& index, const QVariant& value, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QString ASCIIDataModel::originalString(const int row) const
+{
+  return m_TableItems[row]->originalString();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ASCIIDataModel::setOriginalString(const int row, const QString& value)
+{
+  m_TableItems[row]->setOriginalString(value);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ASCIIDataModel::clear()
 {
   if (rowCount() > 0)
@@ -274,6 +290,24 @@ void ASCIIDataModel::clear()
   {
     removeColumns(0, columnCount());
     m_HorizontalHeaders.clear();
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ASCIIDataModel::clearContents()
+{
+  if (rowCount() > 0 && columnCount() > 0)
+  {
+    for (int row = 0; row < rowCount(); row++)
+    {
+      for (int col = 0; col < columnCount(); col++)
+      {
+        QModelIndex index = this->index(row, col);
+        setData(index, "", Qt::DisplayRole);
+      }
+    }
   }
 }
 

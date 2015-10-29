@@ -85,12 +85,30 @@ class ImportASCIIDataWizard : public QWizard
     static QVector<QString> ReadLines(const QString &inputFilePath, int beginLine, int numOfLines);
 
     /**
-    * @brief Static function that will split the model into columns based on fixed width
+    * @brief Static function that loads lines from a file into the table.
+      The full lines are stored in the ASCIIDataItem object that backs up each table item, and are not actually displayed in the table yet.
+    * @param inputFilePath The path to the file to load
+    * @param beginLine The line to begin loading at in the file
+    */
+    static void LoadLines(const QString &inputFilePath, int beginLine);
+
+    /**
+    * @brief Static function that will split each row's full string (stored in the item) into columns based on delimiter and fixed width settings from the wizard,
+    and will insert the tokenized strings into the preview table.
+    * @param isFixedWidth Boolean that identifies if the fixed width radio button is checked or not.
+    * @param tabAsDelimiter Boolean that identifies if the tab checkbox is checked or not.
+    * @param semicolonAsDelimiter Boolean that identifies if the semicolon checkbox is checked or not.
+    * @param commaAsDelimiter Boolean that identifies if the comma checkbox is checked or not.
+    * @param spaceAsDelimiter Boolean that identifies if the space checkbox is checked or not.
+    * @param consecutiveDelimiters Boolean that identifies if the consecutive delimiters checkbox is checked or not.
     * @param firstRowHeaderIndex The name of the first row's header (an index, such as '2' or '5')
     */
-    static void ToFixedWidth(int firstRowHeaderIndex);
+    static void TokenizeAndInsertLines(bool isFixedWidth, bool tabAsDelimiter, bool semicolonAsDelimiter, bool commaAsDelimiter, bool spaceAsDelimiter, bool consecutiveDelimiters, int firstRowHeaderIndex);
 
-    static void ReloadToOneColumn(const QString &inputFilePath, int beginLine);
+    /**
+    * @brief Static function that inserts the full strings stored in each row item into one column in the preview table.
+    */
+    static void InsertLines();
 
     void setInputFilePath(const QString &inputFilePath);
 
