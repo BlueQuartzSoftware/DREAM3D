@@ -34,8 +34,8 @@ class FindGBPD_MetricBased : public SurfaceMeshFilter
     SIMPL_FILTER_PARAMETER(int, NumSamplPts)
     Q_PROPERTY(int NumSamplPts READ getNumSamplPts WRITE setNumSamplPts)
 
-   /* SIMPL_FILTER_PARAMETER(bool, AddMorePtsNearEquator)
-    Q_PROPERTY(bool AddMorePtsNearEquator READ getAddMorePtsNearEquator WRITE setAddMorePtsNearEquator)*/
+    SIMPL_FILTER_PARAMETER(bool, ExcludeTripleLines)
+    Q_PROPERTY(bool ExcludeTripleLines READ getExcludeTripleLines WRITE setExcludeTripleLines)
 
     SIMPL_FILTER_PARAMETER(QString, DistOutputFile)
     Q_PROPERTY(QString DistOutputFile READ getDistOutputFile WRITE setDistOutputFile)
@@ -67,6 +67,10 @@ class FindGBPD_MetricBased : public SurfaceMeshFilter
 
     SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFeatureFaceLabelsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFeatureFaceLabelsArrayPath READ getSurfaceMeshFeatureFaceLabelsArrayPath WRITE setSurfaceMeshFeatureFaceLabelsArrayPath)
+
+    SIMPL_FILTER_PARAMETER(DataArrayPath, NodeTypesArrayPath)
+    Q_PROPERTY(DataArrayPath NodeTypesArrayPath READ getNodeTypesArrayPath WRITE setNodeTypesArrayPath)
+
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -157,6 +161,9 @@ class FindGBPD_MetricBased : public SurfaceMeshFilter
     DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
     DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
     DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceLabels)
+
+    DEFINE_DATAARRAY_VARIABLE(int8_t, NodeTypes)
+
 
     const void appendSamplPtsFixedZenith(QVector<float> *xVec, QVector<float> *yVec, QVector<float> *zVec,
                                          double theta, double minPhi, double maxPhi, double step);

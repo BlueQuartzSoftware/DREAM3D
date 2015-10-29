@@ -63,6 +63,10 @@ public:
 
 class TrisSelector { // corresponding to Phase of Interest
 
+  bool m_ExcludeTripleLines;
+  int64_t *m_Triangles;
+  int8_t *m_NodeTypes;
+
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::concurrent_vector<TriAreaAndNormals>* selectedTris;
 #else
@@ -86,6 +90,9 @@ class TrisSelector { // corresponding to Phase of Interest
 
 public:
   TrisSelector(
+    bool __m_ExcludeTripleLines,
+    int64_t *__m_Triangles,
+    int8_t *__m_NodeTypes,
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     tbb::concurrent_vector<TriAreaAndNormals>* __selectedTris,
@@ -101,7 +108,10 @@ public:
     double* __m_FaceAreas,
     double &__totalFaceArea
     ) :
-  selectedTris(__selectedTris),
+    m_ExcludeTripleLines(__m_ExcludeTripleLines),
+    m_Triangles(__m_Triangles),
+    m_NodeTypes(__m_NodeTypes),
+    selectedTris(__selectedTris),
 
     m_PhaseOfInterest(__m_PhaseOfInterest),
     m_CrystalStructures(__m_CrystalStructures),
@@ -145,6 +155,15 @@ public:
     float normal_grain2[3] = { 0.0f, 0.0f, 0.0f };
 
     for (size_t triIdx = start; triIdx < end; triIdx++) {
+
+      int64_t node1 = m_Triangles[triIdx * 3];
+      int64_t node2 = m_Triangles[triIdx * 3 + 1];
+      int64_t node3 = m_Triangles[triIdx * 3 + 2];
+
+      if (m_ExcludeTripleLines == true)
+      {
+        if (m_NodeTypes[node1] != 2 || m_NodeTypes[node2] != 2 || m_NodeTypes[node3] != 2) { continue; }
+      }
 
       int32_t feature1 = m_FaceLabels[2 * triIdx];
       int32_t feature2 = m_FaceLabels[2 * triIdx + 1];
@@ -328,7 +347,7 @@ FindGBPD_MetricBased::FindGBPD_MetricBased() :
   m_PhaseOfInterest(1),
   m_LimitDist(7.0f),
   m_NumSamplPts(3000),
-  //m_AddMorePtsNearEquator(true),
+  m_ExcludeTripleLines(true),
   m_DistOutputFile(""),
   m_ErrOutputFile(""),
   m_SaveRelativeErr(false),
@@ -340,6 +359,7 @@ FindGBPD_MetricBased::FindGBPD_MetricBased() :
   m_SurfaceMeshFaceNormalsArrayPath(DREAM3D::Defaults::TriangleDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceNormals),
   m_SurfaceMeshFaceAreasArrayPath(DREAM3D::Defaults::TriangleDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceAreas),
   m_SurfaceMeshFeatureFaceLabelsArrayPath(DREAM3D::Defaults::TriangleDataContainerName, DREAM3D::Defaults::FaceFeatureAttributeMatrixName, "FaceLabels"),
+  m_NodeTypesArrayPath(DREAM3D::Defaults::TriangleDataContainerName, DREAM3D::Defaults::VertexAttributeMatrixName, DREAM3D::VertexData::SurfaceMeshNodeType),
 
   m_CrystalStructures(NULL),
   m_FeatureEulerAngles(NULL),
@@ -347,7 +367,9 @@ FindGBPD_MetricBased::FindGBPD_MetricBased() :
   m_SurfaceMeshFaceLabels(NULL),
   m_SurfaceMeshFaceNormals(NULL),
   m_SurfaceMeshFeatureFaceLabels(NULL),
-  m_SurfaceMeshFaceAreas(NULL)
+  m_SurfaceMeshFaceAreas(NULL),
+  m_NodeTypes(NULL)
+
 {
   setupFilterParameters();
 }
@@ -371,9 +393,9 @@ void FindGBPD_MetricBased::setupFilterParameters()
   parameters.push_back(DoubleFilterParameter::New("Limiting Distance [deg.]", "LimitDist", getLimitDist(), FilterParameter::Parameter));
 
   parameters.push_back(IntFilterParameter::New("Number of Sampling Points (on a Hemisphere)", "NumSamplPts", getNumSamplPts(), FilterParameter::Parameter));
- // parameters.push_back(BooleanFilterParameter::New("Include Points from the Southern Hemisphere from the Equator's Vicinity", "AddMorePtsNearEquator", getAddMorePtsNearEquator(), FilterParameter::Parameter));
-  parameters.push_back(OutputFileFilterParameter::New("Save Distribution to", "DistOutputFile", getDistOutputFile(), FilterParameter::Parameter, ""));
-  parameters.push_back(OutputFileFilterParameter::New("Save Distribution Errors to", "ErrOutputFile", getErrOutputFile(), FilterParameter::Parameter, ""));
+  parameters.push_back(BooleanFilterParameter::New("Exclude Triangles Directly Neighboring Triple Lines", "ExcludeTripleLines", getExcludeTripleLines(), FilterParameter::Parameter));
+  parameters.push_back(OutputFileFilterParameter::New("Save GBPD to", "DistOutputFile", getDistOutputFile(), FilterParameter::Parameter, ""));
+  parameters.push_back(OutputFileFilterParameter::New("Save GBPD Errors to", "ErrOutputFile", getErrOutputFile(), FilterParameter::Parameter, ""));
   parameters.push_back(BooleanFilterParameter::New("Save Relative Errors Instead of Their Absolute Values", "SaveRelativeErr", getSaveRelativeErr(), FilterParameter::Parameter));
 
 
@@ -413,6 +435,15 @@ void FindGBPD_MetricBased::setupFilterParameters()
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 2, DREAM3D::AttributeMatrixType::Face, DREAM3D::GeometryType::TriangleGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Face Labels", "SurfaceMeshFeatureFaceLabelsArrayPath", getSurfaceMeshFeatureFaceLabelsArrayPath(), FilterParameter::RequiredArray, req));
   }
+
+
+
+  parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::RequiredArray));
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int8, 1, DREAM3D::AttributeMatrixType::Face, DREAM3D::GeometryType::TriangleGeometry);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Node Types", "NodeTypesArrayPath", getNodeTypesArrayPath(), FilterParameter::RequiredArray, req));
+  }
+
   
   setFilterParameters(parameters);
 }
@@ -426,7 +457,7 @@ void FindGBPD_MetricBased::readFilterParameters(AbstractFilterParametersReader* 
   setPhaseOfInterest(reader->readValue("PhaseOfInterest", getPhaseOfInterest()));
   setLimitDist(reader->readValue("LimitDist", getLimitDist()));
   setNumSamplPts(reader->readValue("NumSamplPts", getNumSamplPts()));
- // setAddMorePtsNearEquator(reader->readValue("AddMorePtsNearEquator", getAddMorePtsNearEquator()));
+  setExcludeTripleLines(reader->readValue("ExcludeTripleLines", getExcludeTripleLines()));
   setDistOutputFile(reader->readString("DistOutputFile", getDistOutputFile()));
   setErrOutputFile(reader->readString("ErrOutputFile", getErrOutputFile()));
   setSaveRelativeErr(reader->readValue("SaveRelativeErr", getSaveRelativeErr()));
@@ -438,6 +469,8 @@ void FindGBPD_MetricBased::readFilterParameters(AbstractFilterParametersReader* 
   setSurfaceMeshFaceNormalsArrayPath(reader->readDataArrayPath("SurfaceMeshFaceNormals", getSurfaceMeshFaceNormalsArrayPath()));
   setSurfaceMeshFeatureFaceLabelsArrayPath(reader->readDataArrayPath("SurfaceMeshFeatureFaceLabels", getSurfaceMeshFeatureFaceLabelsArrayPath()));
   setSurfaceMeshFaceAreasArrayPath(reader->readDataArrayPath("SurfaceMeshFaceAreas", getSurfaceMeshFaceAreasArrayPath()));
+  setNodeTypesArrayPath(reader->readDataArrayPath("NodeTypes", getNodeTypesArrayPath()));
+
   reader->closeFilterGroup();
 }
 
@@ -450,7 +483,7 @@ int FindGBPD_MetricBased::writeFilterParameters(AbstractFilterParametersWriter* 
   SIMPL_FILTER_WRITE_PARAMETER(PhaseOfInterest)
   SIMPL_FILTER_WRITE_PARAMETER(LimitDist)
   SIMPL_FILTER_WRITE_PARAMETER(NumSamplPts)
- // SIMPL_FILTER_WRITE_PARAMETER(AddMorePtsNearEquator)
+  SIMPL_FILTER_WRITE_PARAMETER(ExcludeTripleLines)
   SIMPL_FILTER_WRITE_PARAMETER(DistOutputFile)
   SIMPL_FILTER_WRITE_PARAMETER(ErrOutputFile)
   SIMPL_FILTER_WRITE_PARAMETER(SaveRelativeErr)
@@ -462,6 +495,8 @@ int FindGBPD_MetricBased::writeFilterParameters(AbstractFilterParametersWriter* 
   SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceNormalsArrayPath)
   SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFeatureFaceLabelsArrayPath)
   SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceAreasArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(NodeTypesArrayPath)
+
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -630,6 +665,15 @@ void FindGBPD_MetricBased::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
 
+  // Node Types (DREAM file)
+  cDims[0] = 1;
+  m_NodeTypesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getNodeTypesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if (NULL != m_NodeTypesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  {
+    m_NodeTypes = m_NodeTypesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+
 }
 
 // -----------------------------------------------------------------------------
@@ -664,6 +708,13 @@ void FindGBPD_MetricBased::execute()
   double* m_FaceNormals = m_SurfaceMeshFaceNormalsPtr.lock()->getPointer(0);
   double* m_FaceAreas = m_SurfaceMeshFaceAreasPtr.lock()->getPointer(0);
   int32_t* m_FeatureFaceLabels = m_SurfaceMeshFeatureFaceLabelsPtr.lock()->getPointer(0);
+  int8_t* m_NodeTypes = m_NodeTypesPtr.lock()->getPointer(0);
+
+
+  DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceAreasArrayPath().getDataContainerName());
+  TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
+  SharedTriList::Pointer m_TrianglesPtr = triangleGeom->getTriangles();
+  int64_t* m_Triangles = m_TrianglesPtr->getPointer(0);
 
 
   // -------------------- check if directiories are ok and if output files can be opened --------------------
@@ -945,6 +996,9 @@ void FindGBPD_MetricBased::execute()
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(i, i + trisChunkSize),
         TrisSelector(
+          m_ExcludeTripleLines,
+          m_Triangles,
+          m_NodeTypes,
           &selectedTris,
           m_PhaseOfInterest,
           m_CrystalStructures,
@@ -960,6 +1014,9 @@ void FindGBPD_MetricBased::execute()
 #endif
     {
       TrisSelector serial(
+        m_ExcludeTripleLines,
+        m_Triangles,
+        m_NodeTypes,
         &selectedTris,
         m_PhaseOfInterest,
         m_CrystalStructures,
