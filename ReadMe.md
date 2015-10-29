@@ -36,58 +36,59 @@ Parts of DREAM.3D were written under US Air Force (AFRL) Contract FA8650-07-D-58
 + US Naval Research Laboratory
 + The Ohio State University
 
-## List of Code (CC) and Vision (VC) Contributors  ###
+## List of Code (C) and Vision (V) Contributors  ###
 
 ### Air Force Research Laboratory (AFRL) ###
 
 
-+ Dr. Michael A. Groeber (VC, CC)
-+ Dr. Adam Pilchak (VC, CC)
-+ Dr. Megna Shah (VC, CC)
-+ Dr. Michael Uchic (VC)
-+ Dr. Chris Woodward (VC)
++ Dr. Michael A. Groeber (V, C)
++ Dr. Adam Pilchak (V, C)
++ Dr. Megna Shah (V, C)
++ Dr. Michael Uchic (V)
++ Dr. Chris Woodward (V)
 
 ### BlueQuartz Software ###
 
 
-+ Mr. Michael A. Jackson (VC, CC)
-+ Dr. Sean P. Donegan (VC, CC)
-+ Dr. Dennis Dimiduk (VC)
-+ Mr. Joseph B. Kleingers (CC)
-+ Ms. Sally Connell
-+ Dr. Megna Shah (VC, CC)
++ Ms. Sally Connell (C)
++ Dr. Dennis Dimiduk (V)
++ Dr. Sean P. Donegan (V, C)
++ Mr. Michael A. Jackson (V, C)
++ Mr. Joseph B. Kleingers (C)
++ Dr. Megna Shah (V, C)
 
 
 ### Ohio State University/Johns Hopkins University ###
 
 
-+ Dr. Somnath Ghosh (VC)
++ Dr. Somnath Ghosh (V)
 
 ### Carnegie Mellon University ###
 
 
-+ Dr. Tony Rollett (VC, CC)
-+ Dr. Greg Rohrer (CC)
-+ Dr. Marc De Graef (CC)
-+ Dr. Sukbin Lee (CC)
-+ Dr. Joseph C. Tucker (VC, CC)
-+ Dr. Lisa Chan (CC)
-+ Dr. Stephen Sintay (CC)
-+ Dr. Abhijeet Brahme (CC)
-+ Dr. David Saylor (CC)
-+ Dr. Joe Fridy (CC)
-+ Dr. Patrick Callahan (CC)
-+ Dr. Shlomo Taasan (CC)
++ Dr. Abhijeet Brahme (C)
++ Dr. Patrick Callahan (C)
++ Dr. Lisa Chan (C)
++ Dr. Marc De Graef (C)
++ Dr. Joe Fridy (C)
++ Dr. Sukbin Lee (C)
++ Dr. Greg Rohrer (C)
++ Dr. Tony Rollett (V, C)
++ Dr. David Saylor (C)
++ Dr. Stephen Sintay (C)
++ Dr. Shlomo Ta'asan (C)
++ Dr. Joseph C. Tucker (V, C)
+
 
 ### Naval Research Laboratory (NRL) ###
 
 
-+ Dr. Dave Rowenhorst (VC, CC)
++ Dr. Dave Rowenhorst (V, C)
 
 ### Other Institutions ###
 
-+ Mr. William Lenthe (VC, CC) (University of California, Santa Barbara)
-+ Mr. Matthew Priddy (CC) (Georgia Tech University)
-+ Mr. Jarrell Waggoner (CC) (Univ. South Carolina)
++ Mr. William Lenthe (V, C) (University of California, Santa Barbara)
++ Mr. Matthew Priddy (C) (Georgia Tech University)
++ Mr. Jarrell Waggoner (C) (Univ. South Carolina)
 
 
