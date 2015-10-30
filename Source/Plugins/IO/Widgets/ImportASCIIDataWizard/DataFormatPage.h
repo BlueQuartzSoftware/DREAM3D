@@ -68,11 +68,19 @@ class DataFormatPage : public QWizardPage, private Ui::DataFormatPage
     */
     int nextId() const;
 
+    /**
+    * @brief Resets the page when the user hits the "Back" button
+    */
+    void cleanupPage();
+
   protected:
     void showEvent(QShowEvent* event);
 
   protected slots:
     void on_startRowSpin_valueChanged(int i);
+    void on_hasHeadersRadio_toggled(bool checked);
+    void on_headersIndexLineEdit_textChanged(const QString &text);
+    void on_addHeadersBtn_clicked();
 
   private:
     QString                                     m_InputFilePath;

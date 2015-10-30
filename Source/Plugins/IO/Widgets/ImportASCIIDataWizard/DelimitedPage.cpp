@@ -63,8 +63,6 @@ DelimitedPage::~DelimitedPage()
 // -----------------------------------------------------------------------------
 void DelimitedPage::setupGui()
 {
-  setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
-
   ASCIIDataModel* model = ASCIIDataModel::Instance();
 
   dataView->setModel(model);
@@ -94,7 +92,11 @@ void DelimitedPage::checkBox_Toggled(int state)
   bool spaceAsDelimiter = spaceCheckBox->isChecked();
   bool consecutiveDelimiters = consecutiveDCheckBox->isChecked();
 
-  ImportASCIIDataWizard::TokenizeAndInsertLines(false, tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter, consecutiveDelimiters, 1);
+  ASCIIDataModel* model = ASCIIDataModel::Instance();
+  QStringList lines = model->originalStrings();
+
+  QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, false, tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter, consecutiveDelimiters);
+  ImportASCIIDataWizard::InsertTokenizedLines(tokenizedLines, 1);
 }
 
 // -----------------------------------------------------------------------------

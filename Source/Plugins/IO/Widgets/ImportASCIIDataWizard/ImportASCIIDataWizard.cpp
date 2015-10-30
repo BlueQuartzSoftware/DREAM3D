@@ -51,6 +51,7 @@ ImportASCIIDataWizard::ImportASCIIDataWizard(const QString &inputFilePath, QWidg
 {
   setWindowTitle("ASCII Data Import Wizard");
   setOptions(QWizard::NoBackButtonOnStartPage);
+  setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
   resize(721, 683);
 
   DelimitedOrFixedWidthPage* dOrFPage = new DelimitedOrFixedWidthPage(inputFilePath, this);
@@ -80,9 +81,24 @@ ImportASCIIDataWizard::~ImportASCIIDataWizard()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<QString> ImportASCIIDataWizard::ReadLines(const QString &inputFilePath, int beginLine, int numOfLines)
+QString ImportASCIIDataWizard::ReadLine(const QString &inputFilePath, int line)
 {
-  QVector<QString> result;
+  QStringList lines = ReadLines(inputFilePath, line, 1);
+
+  if (lines.size() != 1)
+  {
+    return QString();
+  }
+  
+  return lines[0];
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QStringList ImportASCIIDataWizard::ReadLines(const QString &inputFilePath, int beginLine, int numOfLines)
+{
+  QStringList result;
 
   QFile inputFile(inputFilePath);
   if (inputFile.open(QIODevice::ReadOnly))
@@ -110,16 +126,8 @@ QVector<QString> ImportASCIIDataWizard::ReadLines(const QString &inputFilePath, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportASCIIDataWizard::TokenizeAndInsertLines(bool isFixedWidth, bool tabAsDelimiter, bool semicolonAsDelimiter, bool commaAsDelimiter, bool spaceAsDelimiter, bool consecutiveDelimiters, int firstRowHeaderIndex)
+QList<QStringList> ImportASCIIDataWizard::TokenizeLines(QStringList lines, bool isFixedWidth, bool tabAsDelimiter, bool semicolonAsDelimiter, bool commaAsDelimiter, bool spaceAsDelimiter, bool consecutiveDelimiters)
 {
-  ASCIIDataModel* model = ASCIIDataModel::Instance();
-  model->clearContents();
-
-  if (model->columnCount() > 0)
-  {
-    model->removeColumns(0, model->columnCount());
-  }
-
   QString expStr = "";
   if (isFixedWidth == true)
   {
@@ -146,58 +154,78 @@ void ImportASCIIDataWizard::TokenizeAndInsertLines(bool isFixedWidth, bool tabAs
 
   QRegularExpression exp(expStr);
 
+  QList<QStringList> tokenizedLines;
+  for (int row = 0; row < lines.size(); row++)
+  {
+    QString line = lines[row];
+
+    QStringList tokenizedLine;
+    if (expStr.isEmpty() == true)
+    {
+      tokenizedLine.push_back(line);
+    }
+    else if (consecutiveDelimiters == true || isFixedWidth == true)
+    {
+      tokenizedLine = line.split(exp, QString::SkipEmptyParts);
+    }
+    else
+    {
+      tokenizedLine = line.split(exp, QString::KeepEmptyParts);
+    }
+
+    tokenizedLines.push_back(tokenizedLine);
+  }
+
+  return tokenizedLines;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ImportASCIIDataWizard::InsertTokenizedLines(QList<QStringList> tokenizedLines, int firstRowHeaderIndex)
+{
+  ASCIIDataModel* model = ASCIIDataModel::Instance();
+  model->clearContents();
+
+  if (model->columnCount() > 0)
+  {
+    model->removeColumns(0, model->columnCount());
+  }
+
   int vHeaderIndex = firstRowHeaderIndex;
 
-  // Format the data into columns
-  if (expStr.isEmpty() == true)
+  for (int row = 0; row < tokenizedLines.size(); row++)
   {
-    ImportASCIIDataWizard::InsertLines();
-  }
-  else
-  {
-    for (int row = 0; row < model->rowCount(); row++)
+    QStringList tokenizedLine = tokenizedLines[row];
+
+    while (model->columnCount() < tokenizedLine.size())
     {
-      QString line = model->originalString(row);
-
-      QStringList columnDataList;
-      if (consecutiveDelimiters == true || isFixedWidth == true)
-      {
-        columnDataList = line.split(exp, QString::SkipEmptyParts);
-      }
-      else
-      {
-        columnDataList = line.split(exp, QString::KeepEmptyParts);
-      }
-
-      while (model->columnCount() < columnDataList.size())
-      {
-        model->insertColumn(model->columnCount());
-      }
-
-      for (int column = 0; column < columnDataList.size(); column++)
-      {
-        QString columnData = columnDataList[column];
-        QModelIndex index = model->index(row, column);
-        model->setData(index, columnData, Qt::DisplayRole);
-      }
-
-      model->setHeaderData(row, Qt::Vertical, QString::number(vHeaderIndex), Qt::DisplayRole);
-      vHeaderIndex++;
+      model->insertColumn(model->columnCount());
     }
+
+    for (int column = 0; column < tokenizedLine.size(); column++)
+    {
+      QString token = tokenizedLine[column];
+      QModelIndex index = model->index(row, column);
+      model->setData(index, token, Qt::DisplayRole);
+    }
+
+    model->setHeaderData(row, Qt::Vertical, QString::number(vHeaderIndex), Qt::DisplayRole);
+    vHeaderIndex++;
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportASCIIDataWizard::InsertLines()
+void ImportASCIIDataWizard::InsertLines(QStringList lines, int firstRowHeaderIndex)
 {
   ASCIIDataModel* model = ASCIIDataModel::Instance();
 
   model->insertColumn(0);
-  for (int row = 0; row < model->rowCount(); row++)
+  for (int row = 0; row < lines.size(); row++)
   {
-    QString line = model->originalString(row);
+    QString line = lines[row];
     QModelIndex index = model->index(row, 0);
     model->setData(index, line, Qt::DisplayRole);
   }
@@ -206,13 +234,10 @@ void ImportASCIIDataWizard::InsertLines()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportASCIIDataWizard::LoadLines(const QString &inputFilePath, int beginLine)
+void ImportASCIIDataWizard::LoadOriginalLines(QStringList lines)
 {
   ASCIIDataModel* model = ASCIIDataModel::Instance();
-
   model->clear();
-
-  QVector<QString> lines = ImportASCIIDataWizard::ReadLines(inputFilePath, beginLine, ImportASCIIDataWizard::TotalPreviewLines);
 
   for (int i = 0; i < lines.size(); i++)
   {

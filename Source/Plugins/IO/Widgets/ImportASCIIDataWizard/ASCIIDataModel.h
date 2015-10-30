@@ -74,6 +74,8 @@ public:
 
   bool setData(const QModelIndex& index, const QVariant& value, int role);
 
+  QStringList originalStrings();
+
   QString originalString(const int row) const;
   void setOriginalString(const int row, const QString& value);
 

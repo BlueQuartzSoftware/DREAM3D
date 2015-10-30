@@ -65,13 +65,13 @@ DelimitedOrFixedWidthPage::~DelimitedOrFixedWidthPage()
 // -----------------------------------------------------------------------------
 void DelimitedOrFixedWidthPage::setupGui()
 {
-  setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
-
   ASCIIDataModel* model = ASCIIDataModel::Instance();
 
-  ImportASCIIDataWizard::LoadLines(m_InputFilePath, 1);
+  QStringList lines = ImportASCIIDataWizard::ReadLines(m_InputFilePath, 1, ImportASCIIDataWizard::TotalPreviewLines);
 
-  ImportASCIIDataWizard::InsertLines();
+  ImportASCIIDataWizard::LoadOriginalLines(lines);
+
+  ImportASCIIDataWizard::InsertLines(lines, 1);
 
   dataView->setModel(model);
   dataView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);

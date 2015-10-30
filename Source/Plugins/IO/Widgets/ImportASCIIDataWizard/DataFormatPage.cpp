@@ -65,15 +65,14 @@ DataFormatPage::~DataFormatPage()
 // -----------------------------------------------------------------------------
 void DataFormatPage::setupGui()
 {
-  setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
-
   ASCIIDataModel* model = ASCIIDataModel::Instance();
 
   dataView->setModel(model);
   dataView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
-  registerField("startRow", startRowSpin);
-  registerField("hasHeaders", hasHeadersCheckBox);
+  headersIndexLineEdit->setValidator(new QRegularExpressionValidator(QRegularExpression("[1-9]|1[0-9]|20"), headersIndexLineEdit));
+
+  addHeadersBtn->setDisabled(true);
 }
 
 // -----------------------------------------------------------------------------
@@ -88,7 +87,11 @@ void DataFormatPage::showEvent(QShowEvent* event)
   bool spaceAsDelimiter = field("spaceAsDelimiter").toBool();
   bool consecutiveDelimiters = field("consecutiveDelimiters").toBool();
 
-  ImportASCIIDataWizard::TokenizeAndInsertLines(isFixedWidth, tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter, consecutiveDelimiters, startRowSpin->value());
+  ASCIIDataModel* model = ASCIIDataModel::Instance();
+  QStringList lines = model->originalStrings();
+
+  QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, isFixedWidth, tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter, consecutiveDelimiters);
+  ImportASCIIDataWizard::InsertTokenizedLines(tokenizedLines, startRowSpin->value());
 }
 
 // -----------------------------------------------------------------------------
@@ -103,9 +106,61 @@ void DataFormatPage::on_startRowSpin_valueChanged(int value)
   bool spaceAsDelimiter = field("spaceAsDelimiter").toBool();
   bool consecutiveDelimiters = field("consecutiveDelimiters").toBool();
 
-  ImportASCIIDataWizard::LoadLines(m_InputFilePath, value);
+  QStringList lines = ImportASCIIDataWizard::ReadLines(m_InputFilePath, value, ImportASCIIDataWizard::TotalPreviewLines);
+  ImportASCIIDataWizard::LoadOriginalLines(lines);
 
-  ImportASCIIDataWizard::TokenizeAndInsertLines(isFixedWidth, tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter, consecutiveDelimiters, startRowSpin->value());
+  QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, isFixedWidth, tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter, consecutiveDelimiters);
+  ImportASCIIDataWizard::InsertTokenizedLines(tokenizedLines, startRowSpin->value());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataFormatPage::on_hasHeadersRadio_toggled(bool checked)
+{
+  if (checked == true)
+  {
+    addHeadersBtn->setDisabled(true);
+    lineNumberLabel->setEnabled(true);
+    headersIndexLineEdit->setEnabled(true);
+  }
+  else
+  {
+    addHeadersBtn->setEnabled(true);
+    lineNumberLabel->setDisabled(true);
+    headersIndexLineEdit->setDisabled(true);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataFormatPage::on_headersIndexLineEdit_textChanged(const QString &text)
+{
+  int lineNum = text.toInt();
+
+  QString line = ImportASCIIDataWizard::ReadLine(m_InputFilePath, lineNum);
+
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataFormatPage::on_addHeadersBtn_clicked()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataFormatPage::cleanupPage()
+{
+  startRowSpin->setValue(1);
+  headersIndexLineEdit->clear();
+  hasHeadersRadio->setChecked(true);
+  doesNotHaveHeadersRadio->setChecked(false);
 }
 
 // -----------------------------------------------------------------------------

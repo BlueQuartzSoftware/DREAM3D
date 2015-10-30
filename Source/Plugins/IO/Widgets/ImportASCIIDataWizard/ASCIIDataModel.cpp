@@ -262,6 +262,19 @@ bool ASCIIDataModel::setData(const QModelIndex& index, const QVariant& value, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QStringList ASCIIDataModel::originalStrings()
+{
+  QStringList lines;
+  for (int i = 0; i < m_TableItems.size(); i++)
+  {
+    lines.push_back(m_TableItems[i]->originalString());
+  }
+  return lines;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QString ASCIIDataModel::originalString(const int row) const
 {
   return m_TableItems[row]->originalString();
