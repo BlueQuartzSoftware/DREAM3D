@@ -42,23 +42,27 @@
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
- * @brief The AppendZSlice class. See [Filter documentation](@ref appendzslice) for details.
+ * @brief The AppendImageGeometryZSlice class. See [Filter documentation](@ref appendzslice) for details.
  */
-class SIMPLib_EXPORT AppendZSlice : public AbstractFilter
+class AppendImageGeometryZSlice : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    SIMPL_SHARED_POINTERS(AppendZSlice)
-    SIMPL_STATIC_NEW_MACRO(AppendZSlice)
-    SIMPL_TYPE_MACRO_SUPER(AppendZSlice, AbstractFilter)
+    SIMPL_SHARED_POINTERS(AppendImageGeometryZSlice)
+    SIMPL_STATIC_NEW_MACRO(AppendImageGeometryZSlice)
+    SIMPL_TYPE_MACRO_SUPER(AppendImageGeometryZSlice, AbstractFilter)
 
-    virtual ~AppendZSlice();
+    virtual ~AppendImageGeometryZSlice();
 
     SIMPL_FILTER_PARAMETER(DataArrayPath, InputAttributeMatrix)
     Q_PROPERTY(DataArrayPath InputAttributeMatrix READ getInputAttributeMatrix WRITE setInputAttributeMatrix)
 
     SIMPL_FILTER_PARAMETER(DataArrayPath, DestinationAttributeMatrix)
     Q_PROPERTY(DataArrayPath DestinationAttributeMatrix READ getDestinationAttributeMatrix WRITE setDestinationAttributeMatrix)
+
+    SIMPL_FILTER_PARAMETER(bool, CheckResolution)
+    Q_PROPERTY(bool CheckResolution READ getCheckResolution WRITE setCheckResolution)
+
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -134,7 +138,7 @@ class SIMPLib_EXPORT AppendZSlice : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    AppendZSlice();
+    AppendImageGeometryZSlice();
 
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -143,8 +147,8 @@ class SIMPLib_EXPORT AppendZSlice : public AbstractFilter
 
   private:
 
-    AppendZSlice(const AppendZSlice&); // Copy Constructor Not Implemented
-    void operator=(const AppendZSlice&); // Operator '=' Not Implemented
+    AppendImageGeometryZSlice(const AppendImageGeometryZSlice&); // Copy Constructor Not Implemented
+    void operator=(const AppendImageGeometryZSlice&); // Operator '=' Not Implemented
 };
 
 #endif /* _AppendZSlice_H_ */

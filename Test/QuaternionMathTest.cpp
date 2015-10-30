@@ -35,8 +35,14 @@
 
 #include <limits>
 
+
+#include <Eigen/Core>
+#include <Eigen/Dense>
+#include <Eigen/Eigen>
+
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Math/QuaternionMath.hpp"
+#include "SIMPLib/Math/MatrixMath.h"
 #include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
 
@@ -58,6 +64,34 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void TestMatrixMath()
+{
+  typedef Eigen::Map<Eigen::Vector3f> VectorMapType;
+
+  {
+    float dir[3] = { 1.0f, 2.0f, 3.0f };
+
+    VectorMapType array(const_cast<float*>(dir));
+    array.normalize();
+
+    array = array * -1.0f;
+    printf("");
+  }
+
+  {
+    float dir[3] = { 1.0f, 2.0f, 3.0f };
+    MatrixMath::Normalize3x1(dir);
+    MatrixMath::Multiply3x1withConstant(dir, -1);
+    printf("");
+
+  }
+
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void TestQuat_t()
 {
   QuatF p = QuaternionMathF::New(1.0f, 0.0f, 0.0f, 1.0f);
@@ -67,51 +101,51 @@ void TestQuat_t()
 
   QuaternionMathF::Negate(out2);
   DREAM3D_REQUIRE_EQUAL(out2.x, -10.0)
-  DREAM3D_REQUIRE_EQUAL(out2.y, -20.0)
-  DREAM3D_REQUIRE_EQUAL(out2.z, -30.0)
-  DREAM3D_REQUIRE_EQUAL(out2.w, -40.0)
+      DREAM3D_REQUIRE_EQUAL(out2.y, -20.0)
+      DREAM3D_REQUIRE_EQUAL(out2.z, -30.0)
+      DREAM3D_REQUIRE_EQUAL(out2.w, -40.0)
 
-  QuaternionMathF::Copy(p, out);
+      QuaternionMathF::Copy(p, out);
   DREAM3D_REQUIRE_EQUAL(p.x, out.x)
-  DREAM3D_REQUIRE_EQUAL(p.y, out.y)
-  DREAM3D_REQUIRE_EQUAL(p.z, out.z)
-  DREAM3D_REQUIRE_EQUAL(p.w, out.w)
+      DREAM3D_REQUIRE_EQUAL(p.y, out.y)
+      DREAM3D_REQUIRE_EQUAL(p.z, out.z)
+      DREAM3D_REQUIRE_EQUAL(p.w, out.w)
 
-  QuaternionMathF::Identity(out);
+      QuaternionMathF::Identity(out);
   DREAM3D_REQUIRE_EQUAL(out.x, 0.0)
-  DREAM3D_REQUIRE_EQUAL(out.y, 0.0)
-  DREAM3D_REQUIRE_EQUAL(out.z, 0.0)
-  DREAM3D_REQUIRE_EQUAL(out.w, 1.0)
+      DREAM3D_REQUIRE_EQUAL(out.y, 0.0)
+      DREAM3D_REQUIRE_EQUAL(out.z, 0.0)
+      DREAM3D_REQUIRE_EQUAL(out.w, 1.0)
 
-  out = QuaternionMathF::New(-10.5f, -1.5f, -30.66f, -40.987f);
+      out = QuaternionMathF::New(-10.5f, -1.5f, -30.66f, -40.987f);
   QuaternionMathF::ElementWiseAbs(out);
   DREAM3D_REQUIRE_EQUAL(out.x, 10.5f)
-  DREAM3D_REQUIRE_EQUAL(out.y, 1.5f)
-  DREAM3D_REQUIRE_EQUAL(out.z, 30.66f)
-  DREAM3D_REQUIRE_EQUAL(out.w, 40.987f)
+      DREAM3D_REQUIRE_EQUAL(out.y, 1.5f)
+      DREAM3D_REQUIRE_EQUAL(out.z, 30.66f)
+      DREAM3D_REQUIRE_EQUAL(out.w, 40.987f)
 
-  out = QuaternionMathF::New(10.0f, 20.0f, 30.0f, 40.0f);
+      out = QuaternionMathF::New(10.0f, 20.0f, 30.0f, 40.0f);
   QuaternionMathF::ScalarMultiply(out, -1.0f);
   DREAM3D_REQUIRE_EQUAL(out.x, -10.0)
-  DREAM3D_REQUIRE_EQUAL(out.y, -20.0)
-  DREAM3D_REQUIRE_EQUAL(out.z, -30.0)
-  DREAM3D_REQUIRE_EQUAL(out.w, -40.0)
+      DREAM3D_REQUIRE_EQUAL(out.y, -20.0)
+      DREAM3D_REQUIRE_EQUAL(out.z, -30.0)
+      DREAM3D_REQUIRE_EQUAL(out.w, -40.0)
 
-  QuaternionMathF::ScalarDivide(out, -1.0f);
+      QuaternionMathF::ScalarDivide(out, -1.0f);
 
   QuaternionMathF::ScalarAdd(out, 50.0f);
   DREAM3D_REQUIRE_EQUAL(out.x, 60.0)
-  DREAM3D_REQUIRE_EQUAL(out.y, 70.0)
-  DREAM3D_REQUIRE_EQUAL(out.z, 80.0)
-  DREAM3D_REQUIRE_EQUAL(out.w, 90.0)
+      DREAM3D_REQUIRE_EQUAL(out.y, 70.0)
+      DREAM3D_REQUIRE_EQUAL(out.z, 80.0)
+      DREAM3D_REQUIRE_EQUAL(out.w, 90.0)
 
-  QuaternionMathF::ElementWiseAssign(out, 5.0f);
+      QuaternionMathF::ElementWiseAssign(out, 5.0f);
   DREAM3D_REQUIRE_EQUAL(out.x, 5.0)
-  DREAM3D_REQUIRE_EQUAL(out.y, 5.0)
-  DREAM3D_REQUIRE_EQUAL(out.z, 5.0)
-  DREAM3D_REQUIRE_EQUAL(out.w, 5.0)
+      DREAM3D_REQUIRE_EQUAL(out.y, 5.0)
+      DREAM3D_REQUIRE_EQUAL(out.z, 5.0)
+      DREAM3D_REQUIRE_EQUAL(out.w, 5.0)
 
-  QuaternionMathF::Negate(out);
+      QuaternionMathF::Negate(out);
 
 
   QuaternionMathF::Add(p, q, out);
@@ -128,17 +162,17 @@ void TestQuat_t()
   p.w = 1.0f;
   QuaternionMathF::Conjugate(p);
   DREAM3D_REQUIRE_EQUAL(p.x, -1.0)
-  DREAM3D_REQUIRE_EQUAL(p.y, -2.0)
-  DREAM3D_REQUIRE_EQUAL(p.z, -3.0)
-  DREAM3D_REQUIRE_EQUAL(p.w, 1.0)
-  QuaternionMathF::Conjugate(p);
+      DREAM3D_REQUIRE_EQUAL(p.y, -2.0)
+      DREAM3D_REQUIRE_EQUAL(p.z, -3.0)
+      DREAM3D_REQUIRE_EQUAL(p.w, 1.0)
+      QuaternionMathF::Conjugate(p);
   DREAM3D_REQUIRE_EQUAL(p.x, 1.0)
-  DREAM3D_REQUIRE_EQUAL(p.y, 2.0)
-  DREAM3D_REQUIRE_EQUAL(p.z, 3.0)
-  DREAM3D_REQUIRE_EQUAL(p.w, 1.0)
+      DREAM3D_REQUIRE_EQUAL(p.y, 2.0)
+      DREAM3D_REQUIRE_EQUAL(p.z, 3.0)
+      DREAM3D_REQUIRE_EQUAL(p.w, 1.0)
 
-  // (pq)* = q*p*
-  q.x = 1.0f;
+      // (pq)* = q*p*
+      q.x = 1.0f;
   q.y = 0.0f;
   q.z = 1.0f;
   q.w = 1.0f;
@@ -148,12 +182,12 @@ void TestQuat_t()
   QuaternionMathF::Conjugate(q);
   QuaternionMathF::Multiply(q, p, out2);
   DREAM3D_REQUIRE_EQUAL(out.x, out2.x)
-  DREAM3D_REQUIRE_EQUAL(out.y, out2.y)
-  DREAM3D_REQUIRE_EQUAL(out.z, out2.z)
-  DREAM3D_REQUIRE_EQUAL(out.w, out2.w)
+      DREAM3D_REQUIRE_EQUAL(out.y, out2.y)
+      DREAM3D_REQUIRE_EQUAL(out.z, out2.z)
+      DREAM3D_REQUIRE_EQUAL(out.w, out2.w)
 
-  //(p+q)* = p*+q*
-  p.x = 1.0f;
+      //(p+q)* = p*+q*
+      p.x = 1.0f;
   p.y = 2.0f;
   p.z = 3.0f;
   p.w = 1.0f;
@@ -167,13 +201,13 @@ void TestQuat_t()
   QuaternionMathF::Conjugate(q);
   QuaternionMathF::Add(p, q, out2);
   DREAM3D_REQUIRE_EQUAL(out.x, out2.x)
-  DREAM3D_REQUIRE_EQUAL(out.y, out2.y)
-  DREAM3D_REQUIRE_EQUAL(out.z, out2.z)
-  DREAM3D_REQUIRE_EQUAL(out.w, out2.w)
+      DREAM3D_REQUIRE_EQUAL(out.y, out2.y)
+      DREAM3D_REQUIRE_EQUAL(out.z, out2.z)
+      DREAM3D_REQUIRE_EQUAL(out.w, out2.w)
 
-  // Multiplication Test
-  // pq != qp
-  p.x = 1.0f;
+      // Multiplication Test
+      // pq != qp
+      p.x = 1.0f;
   p.y = 0.0f;
   p.z = 0.0f;
   p.w = 1.0f;
@@ -185,19 +219,19 @@ void TestQuat_t()
 
   QuaternionMathF::Multiply(p, q, out);
   DREAM3D_REQUIRE_EQUAL(out.x, 2.0)
-  DREAM3D_REQUIRE_EQUAL(out.y, 1.0)
-  DREAM3D_REQUIRE_EQUAL(out.z, 1.0)
-  DREAM3D_REQUIRE_EQUAL(out.w, 2.0)
+      DREAM3D_REQUIRE_EQUAL(out.y, 1.0)
+      DREAM3D_REQUIRE_EQUAL(out.z, 1.0)
+      DREAM3D_REQUIRE_EQUAL(out.w, 2.0)
 
-  QuaternionMathF::Multiply(q, p, out);
+      QuaternionMathF::Multiply(q, p, out);
   DREAM3D_REQUIRE_EQUAL(out.x, 2.0)
-  DREAM3D_REQUIRE_EQUAL(out.y, 1.0)
-  DREAM3D_REQUIRE_EQUAL(out.z, -1.0)
-  DREAM3D_REQUIRE_EQUAL(out.w, 2.0)
+      DREAM3D_REQUIRE_EQUAL(out.y, 1.0)
+      DREAM3D_REQUIRE_EQUAL(out.z, -1.0)
+      DREAM3D_REQUIRE_EQUAL(out.w, 2.0)
 
-  // Norm Test
-  // N(q*) = N(q)
-  p.x = 1.0f;
+      // Norm Test
+      // N(q*) = N(q)
+      p.x = 1.0f;
   p.y = 0.0f;
   p.z = 0.0f;
   p.w = 1.0f;
@@ -210,8 +244,8 @@ void TestQuat_t()
   float cnorm =  QuaternionMathF::Norm(p);
   DREAM3D_REQUIRE_EQUAL(norm, cnorm)
 
-  // Length and Unit Quaternion Tests
-  p.x = 2.0f;
+      // Length and Unit Quaternion Tests
+      p.x = 2.0f;
   p.y = 2.0f;
   p.z = 2.0f;
   p.w = 2.0f;
@@ -219,12 +253,12 @@ void TestQuat_t()
   DREAM3D_REQUIRE_EQUAL(length, 4.0);
   QuaternionMathF::UnitQuaternion(p);
   DREAM3D_REQUIRE_EQUAL(p.x, 0.5)
-  DREAM3D_REQUIRE_EQUAL(p.y, 0.5)
-  DREAM3D_REQUIRE_EQUAL(p.z, 0.5)
-  DREAM3D_REQUIRE_EQUAL(p.w, 0.5)
+      DREAM3D_REQUIRE_EQUAL(p.y, 0.5)
+      DREAM3D_REQUIRE_EQUAL(p.z, 0.5)
+      DREAM3D_REQUIRE_EQUAL(p.w, 0.5)
 
 
-  p.x = 1.0;
+      p.x = 1.0;
   p.y = 2.0;
   p.z = 3.0;
   p.w = 0.0;
@@ -238,11 +272,11 @@ void TestQuat_t()
   pass = SIMPLibMath::closeEnough(vec[1], 6.28318548f, 1.0E-4f);
   DREAM3D_REQUIRE_EQUAL(pass, true)
 
-  pass = SIMPLibMath::closeEnough(vec[2], 9.42477798f, 1.0E-4f);
+      pass = SIMPLibMath::closeEnough(vec[2], 9.42477798f, 1.0E-4f);
   DREAM3D_REQUIRE_EQUAL(pass, true)
 
- // Test point r=[100] rotated 120Deg @ [111] axis
-  vec[0] = 1.0;
+      // Test point r=[100] rotated 120Deg @ [111] axis
+      vec[0] = 1.0;
   vec[1] = 0.0;
   vec[2] = 0.0;
 
@@ -252,7 +286,7 @@ void TestQuat_t()
   q.z = 0.5f;
   q.w = 0.5f;
 
-// Passive Rotation
+  // Passive Rotation
   QuaternionMathF::MultiplyQuatVec(q, vec, ovec);
 
   pass = SIMPLibMath::closeEnough(ovec[0], 0.0f, 1.0E-4f);
@@ -261,12 +295,12 @@ void TestQuat_t()
   pass = SIMPLibMath::closeEnough(ovec[1], 0.0f, 1.0E-4f);
   DREAM3D_REQUIRE_EQUAL(pass, true)
 
-  pass = SIMPLibMath::closeEnough(ovec[2], 1.0f, 1.0E-4f);
+      pass = SIMPLibMath::closeEnough(ovec[2], 1.0f, 1.0E-4f);
   DREAM3D_REQUIRE_EQUAL(pass, true)
 
 
-// Active Rotation
-  QuaternionMathF::Conjugate(q);
+      // Active Rotation
+      QuaternionMathF::Conjugate(q);
   QuaternionMathF::MultiplyQuatVec(q, vec, ovec);
 
   pass = SIMPLibMath::closeEnough(ovec[0], 0.0f, 1.0E-4f);
@@ -275,11 +309,11 @@ void TestQuat_t()
   pass = SIMPLibMath::closeEnough(ovec[1], 1.0f, 1.0E-4f);
   DREAM3D_REQUIRE_EQUAL(pass, true)
 
-  pass = SIMPLibMath::closeEnough(ovec[2], 0.0f, 1.0E-4f);
+      pass = SIMPLibMath::closeEnough(ovec[2], 0.0f, 1.0E-4f);
   DREAM3D_REQUIRE_EQUAL(pass, true)
 
-  // 90@[100]
-  q.x = 0.7071067811865475f;
+      // 90@[100]
+      q.x = 0.7071067811865475f;
   q.y = 0.0f;
   q.z = 0.0f;
   q.w = 0.7071067811865476f;
@@ -296,12 +330,12 @@ void TestQuat_t()
   pass = SIMPLibMath::closeEnough(ovec[1], 0.0f, 1.0E-4f);
   DREAM3D_REQUIRE_EQUAL(pass, true)
 
-  pass = SIMPLibMath::closeEnough(ovec[2], -1.0f, 1.0E-4f);
+      pass = SIMPLibMath::closeEnough(ovec[2], -1.0f, 1.0E-4f);
   DREAM3D_REQUIRE_EQUAL(pass, true)
 
 
-// active Rotation
-  QuaternionMathF::Conjugate(q);
+      // active Rotation
+      QuaternionMathF::Conjugate(q);
   QuaternionMathF::MultiplyQuatVec(q, vec, ovec);
 
   pass = SIMPLibMath::closeEnough(ovec[0], 0.0f, 1.0E-4f);
@@ -310,7 +344,7 @@ void TestQuat_t()
   pass = SIMPLibMath::closeEnough(ovec[1], 0.0f, 1.0E-4f);
   DREAM3D_REQUIRE_EQUAL(pass, true)
 
-  pass = SIMPLibMath::closeEnough(ovec[2], 1.0f, 1.0E-4f);
+      pass = SIMPLibMath::closeEnough(ovec[2], 1.0f, 1.0E-4f);
   DREAM3D_REQUIRE_EQUAL(pass, true)
 
 
@@ -322,9 +356,10 @@ void TestQuat_t()
 int main(int argc, char* argv[])
 {
   int err = EXIT_SUCCESS;
+  DREAM3D_REGISTER_TEST( TestMatrixMath() )
   DREAM3D_REGISTER_TEST( TestQuat_t() )
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-  PRINT_TEST_SUMMARY();
+      DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+      PRINT_TEST_SUMMARY();
 
   return err;
 }

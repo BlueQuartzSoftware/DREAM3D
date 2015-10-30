@@ -46,7 +46,6 @@
 #include "Applications/DREAM3D/DREAM3DMenu.h"
 
 #include "SIMPLib/SIMPLib.h"
-//#include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 
 #define dream3dApp (static_cast<DREAM3DApplication *>(qApp))
 

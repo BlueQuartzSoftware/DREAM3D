@@ -58,10 +58,11 @@ class OrientationLib_EXPORT OrientationMath
 
     virtual ~OrientationMath();
 
-
+#if 0
     /**
-     * @brief EulertoMatActive This function converts an Euler Angle triplet (Bunge) into a <b>ACTIVE</b> Orientation Matrix. This
-     * is taking a Crystal Coordinate system and transforming it to the Sample Coordinate System (C->S). Note that to convert
+     * @brief EulertoMatActive This function converts an Euler Angle triplet (Bunge)
+     * into a <b>ACTIVE</b> Orientation Matrix. This is taking a Crystal Coordinate
+     * system and transforming it to the Sample Coordinate System (C->S). Note that to convert
      * from an ACTIVE to PASSIVE or PASSIVE to ACTIVE is just the transpose of the Orientation Maxtrix
      * @param ea1
      * @param ea2
@@ -123,7 +124,7 @@ class OrientationLib_EXPORT OrientationMath
     */
     static QuatF ActiveRotation(float angle, float xAxis, float yAxis, float zAxis, float x, float y, float z);
 
-
+#endif
     /**
     * @brief Converts lattice parameters to metric tensor
     * @param lattive parameters as a, b, c, alpha, beta, gamma

@@ -8,6 +8,18 @@ set(${PLUGIN_NAME}_Widgets_UIS "")
 # List the Classes here that are QWidget Derived Classes
 set(DREAM3D_WIDGETS
     QEbsdReferenceFrameDialog
+    EulerWidget
+    QuatWidget
+    OmWidget
+    AxisAngleWidget
+    RodriguesWidget
+    HomochoricWidget
+    CubochoricWidget
+)
+
+set(DREAM3D_WIDGETS_NO_UI
+    OrientationUtilityCalculator
+    OrientationWidget
 )
 
 foreach(FPW ${DREAM3D_WIDGETS})
@@ -22,6 +34,15 @@ foreach(FPW ${DREAM3D_WIDGETS})
     )
 endforeach()
 
+foreach(FPW ${DREAM3D_WIDGETS_NO_UI})
+  set(${PLUGIN_NAME}_Widgets_MOC_HDRS ${${PLUGIN_NAME}_Widgets_MOC_HDRS}
+    ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/${FPW}.h
+    )
+  set(${PLUGIN_NAME}_Widgets_SRCS ${${PLUGIN_NAME}_Widgets_SRCS}
+    ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/${FPW}.cpp
+    )
+endforeach()
+
 # Add in the remaining sources that are actually widgets but are completely Custom and do NOT use private
 # inheritance through a .ui file
 set(${PLUGIN_NAME}_Widgets_HDRS
@@ -33,7 +54,7 @@ set(${PLUGIN_NAME}_Widgets_SRCS
 
   )
 
-
+include_directories( ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets )
 
 cmp_IDE_SOURCE_PROPERTIES( "Widgets" "${${PLUGIN_NAME}_Widgets_MOC_HDRS};${${PLUGIN_NAME}_Widgets_HDRS}" "${${PLUGIN_NAME}_Widgets_SRCS}" "0")
 

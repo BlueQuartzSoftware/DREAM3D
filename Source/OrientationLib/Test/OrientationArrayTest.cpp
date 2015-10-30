@@ -31,7 +31,6 @@
 using namespace SIMPLib::Constants;
 
 #include "OrientationLib/OrientationLib.h"
-#include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 #include "OrientationLib/OrientationMath/OrientationConverter.hpp"

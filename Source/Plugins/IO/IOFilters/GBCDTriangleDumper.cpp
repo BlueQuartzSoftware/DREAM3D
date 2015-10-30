@@ -146,8 +146,8 @@ void GBCDTriangleDumper::dataCheckSurfaceMesh()
   if(getOutputFile().isEmpty() == true)
   {
     QString ss = QObject::tr("The output file must be set").arg(ClassName());
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-    setErrorCondition(-387);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   QVector<IDataArray::Pointer> dataArrays;

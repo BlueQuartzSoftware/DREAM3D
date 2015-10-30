@@ -187,7 +187,14 @@ IDataArray::Pointer H5DataArrayReader::ReadStringDataArray(hid_t gid, const QStr
   // dimensions does not make sense.
   StringDataArray::Pointer strTemp = StringDataArray::CreateArray(dims[0], name);
 
-  err = QH5Lite::readVectorOfStringDataset(gid, name, strTemp->getStringArray());
+
+  std::vector<std::string> strings;
+  err = H5Lite::readVectorOfStringDataset(gid, name.toStdString(), strings);
+  // Copy the data into
+  for(std::vector<std::string>::size_type i = 0; i < strings.size(); i++)
+  {
+    strTemp->setValue(i, QString::fromStdString(strings[i]));
+  }
   if(err < 0)
   {
     err = H5Tclose(typeId);

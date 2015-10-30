@@ -43,6 +43,8 @@
 
 #include <QtCore/QString>
 
+#include "H5Support/H5Lite.h"
+
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
@@ -219,17 +221,17 @@ class StringDataArray : public IDataArray
      * @brief getStringArray
      * @return
      */
-    virtual QVector<QString>& getStringArray()
-    {
-      return m_Array;
-    }
+    //    virtual QVector<QString>& getStringArray()
+    //    {
+    //      return m_Array;
+    //    }
 
     /**
     * @brief Returns the number of Tuples in the array.
     */
     virtual size_t getNumberOfTuples ()
     {
-      return m_NumTuples;
+      return m_Array.size();
     }
 
 
@@ -316,8 +318,8 @@ class StringDataArray : public IDataArray
 
 
       // Create a new Array to copy into
-      QVector<QString> newArray;
-      QVector<size_t>::size_type start = 0;
+      std::vector<QString> newArray;
+      std::vector<size_t>::size_type start = 0;
       for(QVector<QString>::size_type i = 0; i < m_Array.size(); ++i)
       {
         bool keep = true;
@@ -330,7 +332,7 @@ class StringDataArray : public IDataArray
           newArray.push_back(m_Array[i]);
         }
       }
-      m_NumTuples = m_Array.size();
+      m_Array = newArray;
       return err;
     }
 
@@ -342,9 +344,44 @@ class StringDataArray : public IDataArray
      */
     virtual int copyTuple(size_t currentPos, size_t newPos)
     {
-      QString s = m_Array[currentPos];
-      m_Array[newPos] = s;
+      if(currentPos >= m_Array.size()) { return -1; }
+      if(newPos >= m_Array.size()) { return -1; }
+     // QString s = m_Array[currentPos];
+      m_Array[newPos] = m_Array[currentPos];
       return 0;
+    }
+
+    /**
+     * @brief copyData This method copies all data from the <b>sourceArray</b> into
+     * the current array starting at the target destination tuple offset value.
+     *
+     * For example if the DataArray has 10 tuples and the destTupleOffset = 5 then
+     * then source data will be copied into the destination array starting at
+     * destination tuple 5. In psuedo code it would be the following:
+     * @code
+     *  destArray[5] = sourceArray[0];
+     *  destArray[6] = sourceArray[1];
+     *  .....
+     * @endcode
+     * @param destTupleOffset
+     * @param sourceArray
+     * @return
+     */
+    bool copyData(size_t destTupleOffset, IDataArray::Pointer sourceArray)
+    {
+
+      if(destTupleOffset >= m_Array.size()) { return false; }
+      if(!sourceArray->isAllocated()) { return false; }
+      if(sourceArray->getNumberOfComponents() != getNumberOfComponents()) { return false; }
+
+      Self* source = dynamic_cast<Self*>(sourceArray.get());
+      size_t sourceNTuples = source->getNumberOfTuples();
+
+      for(size_t i = 0; i < sourceNTuples; i++)
+      {
+        m_Array[destTupleOffset + i] = source->getValue(i);
+      }
+      return true;
     }
 
     /**
@@ -382,7 +419,7 @@ class StringDataArray : public IDataArray
      */
     virtual void initializeWithZeros()
     {
-      m_Array.fill(QString(""), m_Array.size());
+      m_Array.assign(m_Array.size(), QString(""));
     }
 
     /**
@@ -391,7 +428,7 @@ class StringDataArray : public IDataArray
      */
     virtual void initializeWithValue(QString value)
     {
-      m_Array.fill(value, m_Array.size());
+      m_Array.assign(m_Array.size(), value);
     }
 
     /**
@@ -400,7 +437,7 @@ class StringDataArray : public IDataArray
      */
     virtual void initializeWithValue(const std::string& value)
     {
-      m_Array.fill(QString::fromStdString(value), m_Array.size());
+      m_Array.assign(m_Array.size(), QString::fromStdString(value));
     }
 
     /**
@@ -413,7 +450,7 @@ class StringDataArray : public IDataArray
       StringDataArray::Pointer daCopy = StringDataArray::CreateArray(getNumberOfTuples(), getName());
       if(forceNoAllocate == false)
       {
-        for(QVector<QString>::size_type i = 0; i < m_Array.size(); ++i)
+        for(std::vector<QString>::size_type i = 0; i < m_Array.size(); ++i)
         {
           daCopy->setValue(i, m_Array[i]);
         }
@@ -430,7 +467,6 @@ class StringDataArray : public IDataArray
     virtual int32_t resizeTotalElements(size_t size)
     {
       m_Array.resize(size);
-      m_NumTuples = size;
       return 1;
     }
 
@@ -442,8 +478,19 @@ class StringDataArray : public IDataArray
     virtual int32_t resize(size_t numTuples)
     {
       m_Array.resize(numTuples);
-      m_NumTuples = numTuples;
       return 1;
+    }
+
+    /**
+     * @brief Initializes this class to zero bytes freeing any data that it currently owns
+     */
+    virtual void initialize()
+    {
+      if (m_Array.size() > 0)
+      {
+        m_Array.clear();
+        this->_ownsData = true;
+      }
     }
 
     /**
@@ -522,17 +569,17 @@ class StringDataArray : public IDataArray
         ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Type:</th><td>" << getTypeAsString() << "</td></tr>";
         ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Number of Tuples:</th><td>" << getNumberOfTuples() << "</td></tr>";
 
-//        QString compDimStr = "(";
-//        for(int i = 0; i < m_CompDims.size(); i++)
-//        {
-//          compDimStr = compDimStr + QString::number(m_CompDims[i]);
-//          if(i < m_CompDims.size() - 1) {
-//             compDimStr = compDimStr + QString(", ");
-//          }
-//        }
-//        compDimStr = compDimStr + ")";
-//        ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Component Dimensions:</th><td>" << compDimStr << "</td></tr>";
-//        ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Total Elements:</th><td>" << m_Size << "</td></tr>";
+        //        QString compDimStr = "(";
+        //        for(int i = 0; i < m_CompDims.size(); i++)
+        //        {
+        //          compDimStr = compDimStr + QString::number(m_CompDims[i]);
+        //          if(i < m_CompDims.size() - 1) {
+        //             compDimStr = compDimStr + QString(", ");
+        //          }
+        //        }
+        //        compDimStr = compDimStr + ")";
+        //        ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Component Dimensions:</th><td>" << compDimStr << "</td></tr>";
+        //        ss << "<tr bgcolor=\"#C3C8D0\"><th align=\"right\">Total Elements:</th><td>" << m_Size << "</td></tr>";
 
         ss << "</tbody></table>\n";
         ss << "<br/>";
@@ -555,8 +602,14 @@ class StringDataArray : public IDataArray
     {
       int err = 0;
       this->resize(0);
+      std::vector<std::string> strings;
+      err = H5Lite::readVectorOfStringDataset(parentId, getName().toStdString(), strings);
 
-      err = QH5Lite::readVectorOfStringDataset(parentId, getName(), m_Array);
+      m_Array.resize(strings.size());
+      for(std::vector<QString>::size_type i = 0; i < strings.size(); i++)
+      {
+        m_Array[i] = QString::fromStdString(strings[i]);
+      }
 #if 0
       IDataArray::Pointer p = H5DataArrayReader::ReadStringDataArray(parentId, getName());
       if (p.get() == NULL)
@@ -601,7 +654,6 @@ class StringDataArray : public IDataArray
     */
     StringDataArray(size_t numTuples, const QString name, bool allocate = true) :
       m_Name(name),
-      m_NumTuples(numTuples),
       _ownsData(true)
     {
       if (allocate == true)
@@ -611,11 +663,10 @@ class StringDataArray : public IDataArray
     }
 
   private:
-    QVector<QString> m_Array;
     QString m_Name;
-    size_t m_NumTuples;
-    bool _ownsData;
     QString m_InitValue;
+    std::vector<QString> m_Array;
+    bool _ownsData;
 
     StringDataArray(const StringDataArray&); //Not Implemented
     void operator=(const StringDataArray&); //Not Implemented

@@ -11,6 +11,7 @@ START_FILTER_GROUP(${Sampling_BINARY_DIR} "${_filterGroupName}" "SamplingFilters
 # List your public filters here
 
 set(_PublicFilters
+  AppendImageGeometryZSlice
   ChangeResolution
   CropImageGeometry
   ExtractFlaggedFeatures
