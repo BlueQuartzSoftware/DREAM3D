@@ -103,6 +103,10 @@ public:
 
 class TrisSelector {
 
+  bool m_ExcludeTripleLines;
+  int64_t *m_Triangles;
+  int8_t *m_NodeTypes;
+
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::concurrent_vector<TriAreaAndNormals>* selectedTris;
 #else
@@ -128,6 +132,9 @@ class TrisSelector {
 
 public: 
   TrisSelector(
+    bool __m_ExcludeTripleLines,
+    int64_t *__m_Triangles,
+    int8_t *__m_NodeTypes,
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     tbb::concurrent_vector<TriAreaAndNormals>* __selectedTris,
@@ -146,6 +153,10 @@ public:
     int32_t* __m_FeatureFaceLabels,
     double &__totalFaceArea
   ) :
+    m_ExcludeTripleLines(__m_ExcludeTripleLines),
+    m_Triangles(__m_Triangles),
+    m_NodeTypes(__m_NodeTypes),
+
     selectedTris(__selectedTris),
     m_misorResol(__m_misorResol),
     m_PhaseOfInterest(__m_PhaseOfInterest),
@@ -200,6 +211,15 @@ public:
       if (feature1 < 1 || feature2 < 1) { continue; }
       if (m_Phases[feature1] != m_Phases[feature2])  { continue; }
       if (m_Phases[feature1] != m_PhaseOfInterest || m_Phases[feature2] != m_PhaseOfInterest) { continue; }
+
+      if (m_ExcludeTripleLines == true)
+      {
+        int64_t node1 = m_Triangles[triIdx * 3];
+        int64_t node2 = m_Triangles[triIdx * 3 + 1];
+        int64_t node3 = m_Triangles[triIdx * 3 + 2];
+
+        if (m_NodeTypes[node1] != 2 || m_NodeTypes[node2] != 2 || m_NodeTypes[node3] != 2) { continue; }
+      }
 
       totalFaceArea += m_FaceAreas[triIdx];
 
@@ -409,6 +429,7 @@ FindGBCDMetricBased::FindGBCDMetricBased() :
   m_PhaseOfInterest(1),
   m_ChosenLimitDists(DEFAULT_RESOL_CHOICE),
   m_NumSamplPts(3000),
+  m_ExcludeTripleLines(false),
   m_DistOutputFile(""),
   m_ErrOutputFile(""),
   m_SaveRelativeErr(false),
@@ -420,6 +441,7 @@ FindGBCDMetricBased::FindGBCDMetricBased() :
   m_SurfaceMeshFaceNormalsArrayPath(DREAM3D::Defaults::TriangleDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceNormals),
   m_SurfaceMeshFaceAreasArrayPath(DREAM3D::Defaults::TriangleDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceAreas),
   m_SurfaceMeshFeatureFaceLabelsArrayPath(DREAM3D::Defaults::TriangleDataContainerName, DREAM3D::Defaults::FaceFeatureAttributeMatrixName, "FaceLabels"),
+  m_NodeTypesArrayPath(DREAM3D::Defaults::TriangleDataContainerName, DREAM3D::Defaults::VertexAttributeMatrixName, DREAM3D::VertexData::SurfaceMeshNodeType),
 
   m_CrystalStructures(NULL),
   m_FeatureEulerAngles(NULL),
@@ -427,7 +449,9 @@ FindGBCDMetricBased::FindGBCDMetricBased() :
   m_SurfaceMeshFaceLabels(NULL),
   m_SurfaceMeshFaceNormals(NULL),
   m_SurfaceMeshFeatureFaceLabels(NULL),
-  m_SurfaceMeshFaceAreas(NULL)
+  m_SurfaceMeshFaceAreas(NULL),
+  m_NodeTypes(NULL)
+
 {
 	m_MisorientationRotation.angle = 17.9f;
 	m_MisorientationRotation.h = 1.0f;
@@ -478,6 +502,8 @@ void FindGBCDMetricBased::setupFilterParameters()
 
 	}
 	parameters.push_back(IntFilterParameter::New("Number of Sampling Points (on a Hemisphere)", "NumSamplPts", getNumSamplPts(), FilterParameter::Parameter));
+  parameters.push_back(BooleanFilterParameter::New("Exclude Triangles Directly Neighboring Triple Lines", "ExcludeTripleLines", getExcludeTripleLines(), FilterParameter::Parameter));
+
 	parameters.push_back(OutputFileFilterParameter::New("Save Distribution to", "DistOutputFile", getDistOutputFile(), FilterParameter::Parameter, ""));
 	parameters.push_back(OutputFileFilterParameter::New("Save Distribution Errors to", "ErrOutputFile", getErrOutputFile(), FilterParameter::Parameter, ""));
 	parameters.push_back(BooleanFilterParameter::New("Save Relative Errors Instead of Their Absolute Values", "SaveRelativeErr", getSaveRelativeErr(), FilterParameter::Parameter));
@@ -520,6 +546,12 @@ void FindGBCDMetricBased::setupFilterParameters()
 	  parameters.push_back(DataArraySelectionFilterParameter::New("Feature Face Labels", "SurfaceMeshFeatureFaceLabelsArrayPath", getSurfaceMeshFeatureFaceLabelsArrayPath(), FilterParameter::RequiredArray, req));
   }
  
+  parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::RequiredArray));
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int8, 1, DREAM3D::AttributeMatrixType::Face, DREAM3D::GeometryType::TriangleGeometry);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Node Types", "NodeTypesArrayPath", getNodeTypesArrayPath(), FilterParameter::RequiredArray, req));
+  }
+
   setFilterParameters(parameters);
 }
 
@@ -533,6 +565,7 @@ void FindGBCDMetricBased::readFilterParameters(AbstractFilterParametersReader* r
 	setMisorientationRotation(reader->readAxisAngle("MisorientationRotation", getMisorientationRotation(), -1));
 	setChosenLimitDists(reader->readValue("ChosenLimitDists", getChosenLimitDists()));
 	setNumSamplPts(reader->readValue("NumSamplPts", getNumSamplPts()));
+  setExcludeTripleLines(reader->readValue("ExcludeTripleLines", getExcludeTripleLines()));
 	setDistOutputFile(reader->readString("DistOutputFile", getDistOutputFile()));
 	setErrOutputFile(reader->readString("ErrOutputFile", getErrOutputFile()));
 	setSaveRelativeErr(reader->readValue("SaveRelativeErr", getSaveRelativeErr()));
@@ -544,6 +577,8 @@ void FindGBCDMetricBased::readFilterParameters(AbstractFilterParametersReader* r
 	setSurfaceMeshFaceNormalsArrayPath(reader->readDataArrayPath("SurfaceMeshFaceNormals", getSurfaceMeshFaceNormalsArrayPath()));
 	setSurfaceMeshFeatureFaceLabelsArrayPath(reader->readDataArrayPath("SurfaceMeshFeatureFaceLabels", getSurfaceMeshFeatureFaceLabelsArrayPath()));
 	setSurfaceMeshFaceAreasArrayPath(reader->readDataArrayPath("SurfaceMeshFaceAreas", getSurfaceMeshFaceAreasArrayPath()));
+  setNodeTypesArrayPath(reader->readDataArrayPath("NodeTypes", getNodeTypesArrayPath()));
+
 	reader->closeFilterGroup();
 }
 
@@ -557,6 +592,7 @@ int FindGBCDMetricBased::writeFilterParameters(AbstractFilterParametersWriter* w
 	SIMPL_FILTER_WRITE_PARAMETER(MisorientationRotation)
 	SIMPL_FILTER_WRITE_PARAMETER(ChosenLimitDists)
 	SIMPL_FILTER_WRITE_PARAMETER(NumSamplPts)
+  SIMPL_FILTER_WRITE_PARAMETER(ExcludeTripleLines)
 	SIMPL_FILTER_WRITE_PARAMETER(DistOutputFile)
 	SIMPL_FILTER_WRITE_PARAMETER(ErrOutputFile)
 	SIMPL_FILTER_WRITE_PARAMETER(SaveRelativeErr)
@@ -568,6 +604,8 @@ int FindGBCDMetricBased::writeFilterParameters(AbstractFilterParametersWriter* w
 	SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceNormalsArrayPath)
 	SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFeatureFaceLabelsArrayPath)
 	SIMPL_FILTER_WRITE_PARAMETER(SurfaceMeshFaceAreasArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(NodeTypesArrayPath)
+
 	writer->closeFilterGroup();
 	return ++index; // we want to return the next index that was just written to
 }
@@ -752,6 +790,13 @@ void FindGBCDMetricBased::dataCheck()
 		m_SurfaceMeshFeatureFaceLabels = m_SurfaceMeshFeatureFaceLabelsPtr.lock()->getPointer(0);
 	} /* Now assign the raw pointer to data from the DataArray<T> object */
 
+  // Node Types (DREAM file)
+  cDims[0] = 1;
+  m_NodeTypesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getNodeTypesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if (NULL != m_NodeTypesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  {
+    m_NodeTypes = m_NodeTypesPtr.lock()->getPointer(0);
+  } /* Now assign the raw pointer to data from the DataArray<T> object */
 
 }
 
@@ -796,6 +841,13 @@ void FindGBCDMetricBased::execute()
 	double* m_FaceNormals = m_SurfaceMeshFaceNormalsPtr.lock()->getPointer(0);
 	double* m_FaceAreas = m_SurfaceMeshFaceAreasPtr.lock()->getPointer(0);
 	int32_t* m_FeatureFaceLabels = m_SurfaceMeshFeatureFaceLabelsPtr.lock()->getPointer(0);
+  int8_t* m_NodeTypes = m_NodeTypesPtr.lock()->getPointer(0);
+
+
+  DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceAreasArrayPath().getDataContainerName());
+  TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
+  SharedTriList::Pointer m_TrianglesPtr = triangleGeom->getTriangles();
+  int64_t* m_Triangles = m_TrianglesPtr->getPointer(0);
 
 	// -------------------- check if directiories are ok and if output files can be opened --------------------
 
@@ -969,6 +1021,9 @@ void FindGBCDMetricBased::execute()
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(i, i + trisChunkSize),
         TrisSelector(
+        m_ExcludeTripleLines,
+        m_Triangles,
+        m_NodeTypes,
         &selectedTris,
 
         m_misorResol,
@@ -989,6 +1044,9 @@ void FindGBCDMetricBased::execute()
 #endif
     {
       TrisSelector serial(
+        m_ExcludeTripleLines,
+        m_Triangles,
+        m_NodeTypes,
         &selectedTris,
 
         m_misorResol,
