@@ -2,7 +2,7 @@
  * Your License or Copyright can go here
  */
 
-#include "FindGBPD_MetricBased.h"
+#include "FindGBPDMetricBased.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -21,7 +21,7 @@
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 // Include the MOC generated file for this class
-#include "moc_FindGBPD_MetricBased.cpp"
+#include "moc_FindGBPDMetricBased.cpp"
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
@@ -156,21 +156,23 @@ public:
 
     for (size_t triIdx = start; triIdx < end; triIdx++) {
 
-      int64_t node1 = m_Triangles[triIdx * 3];
-      int64_t node2 = m_Triangles[triIdx * 3 + 1];
-      int64_t node3 = m_Triangles[triIdx * 3 + 2];
-
-      if (m_ExcludeTripleLines == true)
-      {
-        if (m_NodeTypes[node1] != 2 || m_NodeTypes[node2] != 2 || m_NodeTypes[node3] != 2) { continue; }
-      }
-
       int32_t feature1 = m_FaceLabels[2 * triIdx];
       int32_t feature2 = m_FaceLabels[2 * triIdx + 1];
 
       if (feature1 < 1 || feature2 < 1) { continue; }
       if (m_Phases[feature1] != m_Phases[feature2])  { continue; }
       if (m_Phases[feature1] != m_PhaseOfInterest || m_Phases[feature2] != m_PhaseOfInterest) { continue; }
+
+
+      if (m_ExcludeTripleLines == true)
+      {
+        int64_t node1 = m_Triangles[triIdx * 3];
+        int64_t node2 = m_Triangles[triIdx * 3 + 1];
+        int64_t node3 = m_Triangles[triIdx * 3 + 2];
+
+        if (m_NodeTypes[node1] != 2 || m_NodeTypes[node2] != 2 || m_NodeTypes[node3] != 2) { continue; }
+      }
+
 
       totalFaceArea += m_FaceAreas[triIdx];
 
@@ -342,7 +344,7 @@ public:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindGBPD_MetricBased::FindGBPD_MetricBased() :
+FindGBPDMetricBased::FindGBPDMetricBased() :
   SurfaceMeshFilter(),
   m_PhaseOfInterest(1),
   m_LimitDist(7.0f),
@@ -377,14 +379,14 @@ FindGBPD_MetricBased::FindGBPD_MetricBased() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindGBPD_MetricBased::~FindGBPD_MetricBased()
+FindGBPDMetricBased::~FindGBPDMetricBased()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGBPD_MetricBased::setupFilterParameters()
+void FindGBPDMetricBased::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
@@ -451,7 +453,7 @@ void FindGBPD_MetricBased::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGBPD_MetricBased::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void FindGBPDMetricBased::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   setPhaseOfInterest(reader->readValue("PhaseOfInterest", getPhaseOfInterest()));
@@ -477,7 +479,7 @@ void FindGBPD_MetricBased::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindGBPD_MetricBased::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int FindGBPDMetricBased::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   SIMPL_FILTER_WRITE_PARAMETER(PhaseOfInterest)
@@ -504,7 +506,7 @@ int FindGBPD_MetricBased::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGBPD_MetricBased::dataCheck()
+void FindGBPDMetricBased::dataCheck()
 {
   setErrorCondition(0);
 
@@ -679,7 +681,7 @@ void FindGBPD_MetricBased::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGBPD_MetricBased::preflight()
+void FindGBPDMetricBased::preflight()
 {
   // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
   setInPreflight(true); // Set the fact that we are preflighting.
@@ -693,7 +695,7 @@ void FindGBPD_MetricBased::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGBPD_MetricBased::execute()
+void FindGBPDMetricBased::execute()
 {
   setErrorCondition(0);
   dataCheck();
@@ -715,7 +717,6 @@ void FindGBPD_MetricBased::execute()
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
   SharedTriList::Pointer m_TrianglesPtr = triangleGeom->getTriangles();
   int64_t* m_Triangles = m_TrianglesPtr->getPointer(0);
-
 
   // -------------------- check if directiories are ok and if output files can be opened --------------------
 
@@ -774,6 +775,7 @@ void FindGBPD_MetricBased::execute()
     return;
   }
 
+
   FILE* fErr = NULL;
   fErr = fopen(m_ErrOutputFile.toLatin1().data(), "wb");
   if (NULL == fErr)
@@ -784,11 +786,13 @@ void FindGBPD_MetricBased::execute()
     return;
   }
 
+ 
+
   // ------------------- before computing the distribution, we must find normalization factors ----------------------
   QVector<SpaceGroupOps::Pointer> m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
   int32_t cryst = m_CrystalStructures[m_PhaseOfInterest];
   int32_t nsym = m_OrientationOps[cryst]->getNumSymOps();
-  double ballVolume = nsym * 2.0 * (1.0 - cos(m_LimitDist));
+  double ballVolume = double(nsym) * 2.0 * (1.0 - cos(m_LimitDist));
 
 
   // ------------------------------ generation of sampling points ------------------------------
@@ -1031,6 +1035,8 @@ void FindGBPD_MetricBased::execute()
     }
   }
 
+
+
   // ------------------------  find the number of distinct boundaries --------------------------
   int32_t numDistinctGBs = 0;
   int32_t numFaceFeatures = m_SurfaceMeshFeatureFaceLabelsPtr.lock()->getNumberOfTuples();
@@ -1165,9 +1171,9 @@ void FindGBPD_MetricBased::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindGBPD_MetricBased::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindGBPDMetricBased::newFilterInstance(bool copyFilterParameters)
 {
-  FindGBPD_MetricBased::Pointer filter = FindGBPD_MetricBased::New();
+  FindGBPDMetricBased::Pointer filter = FindGBPDMetricBased::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -1178,28 +1184,28 @@ AbstractFilter::Pointer FindGBPD_MetricBased::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBPD_MetricBased::getCompiledLibraryName()
+const QString FindGBPDMetricBased::getCompiledLibraryName()
 { return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBPD_MetricBased::getGroupName()
+const QString FindGBPDMetricBased::getGroupName()
 { return DREAM3D::FilterGroups::Unsupported; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBPD_MetricBased::getSubGroupName()
+const QString FindGBPDMetricBased::getSubGroupName()
 { return "Surface Meshing"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBPD_MetricBased::getHumanLabel()
+const QString FindGBPDMetricBased::getHumanLabel()
 { return "Find GBPD (Metric-based Approach)"; }
 
-const void FindGBPD_MetricBased::appendSamplPtsFixedZenith(QVector<float> *xVec, QVector<float> *yVec, QVector<float> *zVec,
+const void FindGBPDMetricBased::appendSamplPtsFixedZenith(QVector<float> *xVec, QVector<float> *yVec, QVector<float> *zVec,
                                                            double theta, double minPhi, double maxPhi, double step) 
 {
   for (double phi = minPhi; phi <= maxPhi; phi += step)
@@ -1213,7 +1219,7 @@ const void FindGBPD_MetricBased::appendSamplPtsFixedZenith(QVector<float> *xVec,
   (*zVec).push_back(cosf(theta));
 }
 
-const void FindGBPD_MetricBased::appendSamplPtsFixedAzimuth(QVector<float> *xVec, QVector<float> *yVec, QVector<float> *zVec,
+const void FindGBPDMetricBased::appendSamplPtsFixedAzimuth(QVector<float> *xVec, QVector<float> *yVec, QVector<float> *zVec,
                                                             double phi, double minTheta, double maxTheta, double step)
 {
   for (double theta = minTheta; theta <= maxTheta; theta += step)

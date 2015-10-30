@@ -2,8 +2,8 @@
  * Your License or Copyright can go here
  */
 
-#ifndef _FindGBPD_MetricBased_H_
-#define _FindGBPD_MetricBased_H_
+#ifndef _FindGBPDMetricBased_H_
+#define _FindGBPDMetricBased_H_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
@@ -12,18 +12,18 @@
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
 /**
- * @brief The FindGBPD_MetricBased class. See [Filter documentation](@ref findgbpd_metricbased) for details.
+ * @brief The FindGBPDMetricBased class. See [Filter documentation](@ref findgbpdmetricbased) for details.
  */
-class FindGBPD_MetricBased : public SurfaceMeshFilter
+class FindGBPDMetricBased : public SurfaceMeshFilter
 {
   Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
 
   public:
-    SIMPL_SHARED_POINTERS(FindGBPD_MetricBased)
-    SIMPL_STATIC_NEW_MACRO(FindGBPD_MetricBased)
-    SIMPL_TYPE_MACRO_SUPER(FindGBPD_MetricBased, SurfaceMeshFilter)
+    SIMPL_SHARED_POINTERS(FindGBPDMetricBased)
+    SIMPL_STATIC_NEW_MACRO(FindGBPDMetricBased)
+    SIMPL_TYPE_MACRO_SUPER(FindGBPDMetricBased, SurfaceMeshFilter)
 
-    virtual ~FindGBPD_MetricBased();
+    virtual ~FindGBPDMetricBased();
 
     SIMPL_FILTER_PARAMETER(int, PhaseOfInterest)
     Q_PROPERTY(int PhaseOfInterest READ getPhaseOfInterest WRITE setPhaseOfInterest)
@@ -146,7 +146,7 @@ class FindGBPD_MetricBased : public SurfaceMeshFilter
   //  void preflightExecuted();
 
   protected:
-    FindGBPD_MetricBased();
+    FindGBPDMetricBased();
 
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -171,8 +171,8 @@ class FindGBPD_MetricBased : public SurfaceMeshFilter
     const void appendSamplPtsFixedAzimuth(QVector<float> *xVec, QVector<float> *yVec, QVector<float> *zVec,
                                           double phi, double minTheta, double maxTheta, double step);
 
-    FindGBPD_MetricBased(const FindGBPD_MetricBased&); // Copy Constructor Not Implemented
-    void operator=(const FindGBPD_MetricBased&); // Operator '=' Not Implemented
+    FindGBPDMetricBased(const FindGBPDMetricBased&); // Copy Constructor Not Implemented
+    void operator=(const FindGBPDMetricBased&); // Operator '=' Not Implemented
 };
 
-#endif /* _FindGBPD_MetricBased_H_ */
+#endif /* _FindGBPDMetricBased_H_ */
