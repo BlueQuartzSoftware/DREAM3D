@@ -70,9 +70,12 @@ void DataFormatPage::setupGui()
   dataView->setModel(model);
   dataView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
+  connect(dataView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)), this, SLOT(updateSelection(const QItemSelection&, const QItemSelection&)));
+
   headersIndexLineEdit->setValidator(new QRegularExpressionValidator(QRegularExpression("[1-9]|1[0-9]|20"), headersIndexLineEdit));
 
   addHeadersBtn->setDisabled(true);
+  columnDataGroupBox->setDisabled(true);
 }
 
 // -----------------------------------------------------------------------------
@@ -123,12 +126,21 @@ void DataFormatPage::on_hasHeadersRadio_toggled(bool checked)
     addHeadersBtn->setDisabled(true);
     lineNumberLabel->setEnabled(true);
     headersIndexLineEdit->setEnabled(true);
+
+    // Reload the headers
+    on_headersIndexLineEdit_textChanged(headersIndexLineEdit->text());
   }
   else
   {
     addHeadersBtn->setEnabled(true);
     lineNumberLabel->setDisabled(true);
     headersIndexLineEdit->setDisabled(true);
+
+    ASCIIDataModel* model = ASCIIDataModel::Instance();
+    for (int i = 0; i < model->columnCount(); i++)
+    {
+      model->setHeaderData(i, Qt::Horizontal, "", Qt::DisplayRole);
+    }
   }
 }
 
@@ -137,11 +149,36 @@ void DataFormatPage::on_hasHeadersRadio_toggled(bool checked)
 // -----------------------------------------------------------------------------
 void DataFormatPage::on_headersIndexLineEdit_textChanged(const QString &text)
 {
+  ASCIIDataModel* model = ASCIIDataModel::Instance();
   int lineNum = text.toInt();
 
   QString line = ImportASCIIDataWizard::ReadLine(m_InputFilePath, lineNum);
+  
+  QStringList list;
+  list.push_back(line);
 
+  bool isFixedWidth = field("isFixedWidth").toBool();
+  bool tabAsDelimiter = field("tabAsDelimiter").toBool();
+  bool semicolonAsDelimiter = field("semicolonAsDelimiter").toBool();
+  bool commaAsDelimiter = field("commaAsDelimiter").toBool();
+  bool spaceAsDelimiter = field("spaceAsDelimiter").toBool();
+  bool consecutiveDelimiters = field("consecutiveDelimiters").toBool();
 
+  QList<QStringList> result = ImportASCIIDataWizard::TokenizeLines(list, isFixedWidth, tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter, consecutiveDelimiters);
+
+  QStringList tokenizedLine = result[0];
+
+  for (int i = 0; i < model->columnCount(); i++)
+  {
+    QString header = "";
+
+    if (i < tokenizedLine.size())
+    {
+      header = tokenizedLine[i];
+    }
+
+    model->setHeaderData(i, Qt::Horizontal, header, Qt::DisplayRole);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -155,6 +192,112 @@ void DataFormatPage::on_addHeadersBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void DataFormatPage::updateSelection(const QItemSelection &selected, const QItemSelection &deselected)
+{
+  ASCIIDataModel* model = ASCIIDataModel::Instance();
+  QModelIndexList selectedIndexList = selected.indexes();
+
+  if (selectedIndexList.size() <= 0)
+  {
+    columnDataGroupBox->setDisabled(true);
+  }
+  else
+  {
+    columnDataGroupBox->setEnabled(true);
+
+    int selectedColumn = selectedIndexList[0].column();
+    QString selectedType = model->columnDataType(selectedColumn);
+
+    if (selectedType == "Integer")
+    {
+      integerRadio->setChecked(true);
+    }
+    else if (selectedType == "Double")
+    {
+      doubleRadio->setChecked(true);
+    }
+    else if (selectedType == "String")
+    {
+      stringRadio->setChecked(true);
+    }
+    else if (selectedType == "Skip")
+    {
+      skipRadio->setChecked(true);
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataFormatPage::on_integerRadio_clicked()
+{
+  ASCIIDataModel* model = ASCIIDataModel::Instance();
+  QModelIndexList indexList = dataView->selectionModel()->selectedColumns();
+
+  if (indexList.size() > 0)
+  {
+    QModelIndex index = indexList[0];
+    int column = index.column();
+
+    model->setColumnDataType(column, "Integer");
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataFormatPage::on_doubleRadio_clicked()
+{
+  ASCIIDataModel* model = ASCIIDataModel::Instance();
+  QModelIndexList indexList = dataView->selectionModel()->selectedColumns();
+
+  if (indexList.size() > 0)
+  {
+    QModelIndex index = indexList[0];
+    int column = index.column();
+
+    model->setColumnDataType(column, "Double");
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataFormatPage::on_stringRadio_clicked()
+{
+  ASCIIDataModel* model = ASCIIDataModel::Instance();
+  QModelIndexList indexList = dataView->selectionModel()->selectedColumns();
+
+  if (indexList.size() > 0)
+  {
+    QModelIndex index = indexList[0];
+    int column = index.column();
+
+    model->setColumnDataType(column, "String");
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataFormatPage::on_skipRadio_clicked()
+{
+  ASCIIDataModel* model = ASCIIDataModel::Instance();
+  QModelIndexList indexList = dataView->selectionModel()->selectedColumns();
+
+  if (indexList.size() > 0)
+  {
+    QModelIndex index = indexList[0];
+    int column = index.column();
+
+    model->setColumnDataType(column, "Skip");
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void DataFormatPage::cleanupPage()
 {
   startRowSpin->setValue(1);
@@ -162,6 +305,7 @@ void DataFormatPage::cleanupPage()
   hasHeadersRadio->setChecked(true);
   doesNotHaveHeadersRadio->setChecked(false);
 }
+
 
 // -----------------------------------------------------------------------------
 //

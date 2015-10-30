@@ -139,7 +139,7 @@
     </spacer>
    </item>
    <item row="3" column="0">
-    <widget class="QGroupBox" name="groupBox">
+    <widget class="QGroupBox" name="columnDataGroupBox">
      <property name="title">
       <string>Column Data Format</string>
      </property>
@@ -160,7 +160,7 @@
        <number>2</number>
       </property>
       <item row="3" column="0">
-       <widget class="QRadioButton" name="doNotImportRadio">
+       <widget class="QRadioButton" name="skipRadio">
         <property name="text">
          <string>Do not import column (skip)</string>
         </property>
@@ -213,6 +213,12 @@
       </property>
       <item row="0" column="0">
        <widget class="QTableView" name="dataView">
+        <property name="styleSheet">
+         <string notr="true">QHeaderView
+{
+	font-weight: bold;
+}</string>
+        </property>
         <property name="selectionMode">
          <enum>QAbstractItemView::SingleSelection</enum>
         </property>

@@ -187,11 +187,6 @@ void ImportASCIIDataWizard::InsertTokenizedLines(QList<QStringList> tokenizedLin
   ASCIIDataModel* model = ASCIIDataModel::Instance();
   model->clearContents();
 
-  if (model->columnCount() > 0)
-  {
-    model->removeColumns(0, model->columnCount());
-  }
-
   int vHeaderIndex = firstRowHeaderIndex;
 
   for (int row = 0; row < tokenizedLines.size(); row++)
@@ -237,7 +232,11 @@ void ImportASCIIDataWizard::InsertLines(QStringList lines, int firstRowHeaderInd
 void ImportASCIIDataWizard::LoadOriginalLines(QStringList lines)
 {
   ASCIIDataModel* model = ASCIIDataModel::Instance();
-  model->clear();
+  
+  if (model->rowCount() > 0)
+  {
+    model->removeRows(0, model->rowCount());
+  }
 
   for (int i = 0; i < lines.size(); i++)
   {

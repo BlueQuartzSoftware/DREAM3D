@@ -159,11 +159,13 @@ bool ASCIIDataModel::setHeaderData(int section, Qt::Orientation orientation, con
   if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
   {
     m_HorizontalHeaders[section] = value.toString();
+    headerDataChanged(Qt::Horizontal, section, section);
     return true;
   }
   else if (orientation == Qt::Vertical && role == Qt::DisplayRole)
   {
     m_VerticalHeaders[section] = value.toString();
+    headerDataChanged(Qt::Vertical, section, section);
     return true;
   }
 
@@ -204,6 +206,7 @@ bool ASCIIDataModel::insertColumns(int position, int columns, const QModelIndex&
   Q_UNUSED(parent)
   beginInsertColumns(QModelIndex(), position, position + columns - 1);
   m_HorizontalHeaders.insert(position, columns, "");
+  m_ColumnDataType.insert(position, columns, "Integer");
   for (int i = 0; i < m_TableItems.size(); i++)
   {
     m_TableItems[i]->insertColumns(position, columns);
@@ -220,6 +223,7 @@ bool ASCIIDataModel::removeColumns(int position, int columns, const QModelIndex&
   Q_UNUSED(parent)
   beginRemoveColumns(QModelIndex(), position, position + columns - 1);
   m_HorizontalHeaders.remove(position, columns);
+  m_ColumnDataType.remove(position, columns);
   for (int i = 0; i < m_TableItems.size(); i++)
   {
     m_TableItems[i]->removeColumns(position, columns);
@@ -286,6 +290,22 @@ QString ASCIIDataModel::originalString(const int row) const
 void ASCIIDataModel::setOriginalString(const int row, const QString& value)
 {
   m_TableItems[row]->setOriginalString(value);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ASCIIDataModel::columnDataType(const int column) const
+{
+  return m_ColumnDataType[column];
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ASCIIDataModel::setColumnDataType(const int column, const QString &type)
+{
+  m_ColumnDataType[column] = type;
 }
 
 // -----------------------------------------------------------------------------

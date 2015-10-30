@@ -81,6 +81,12 @@ class DataFormatPage : public QWizardPage, private Ui::DataFormatPage
     void on_hasHeadersRadio_toggled(bool checked);
     void on_headersIndexLineEdit_textChanged(const QString &text);
     void on_addHeadersBtn_clicked();
+    void on_integerRadio_clicked();
+    void on_doubleRadio_clicked();
+    void on_stringRadio_clicked();
+    void on_skipRadio_clicked();
+
+    void updateSelection(const QItemSelection &selected, const QItemSelection &deselected);
 
   private:
     QString                                     m_InputFilePath;
