@@ -3,7 +3,7 @@
  * K.Glowinski, A.Morawiec, "Analysis of experimental grain boundary distributions
  * based on boundary-space metrics", Metall. Mater. Trans. A 45, 3189-3194 (2014).
  * Besides the algorithm itself, many parts of the code come from
- * the sources of "Find GBCD" and "Write GBCD Pole Figure (GMT5)" filters. 
+ * the sources of other filters, mainly "Find GBCD" and "Write GBCD Pole Figure (GMT5)". 
  * Therefore, the below copyright notice applies.
  * 
  * ============================================================================
@@ -41,7 +41,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "FindGBCD_MetricBased.h"
+#include "FindGBCDMetricBased.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -55,7 +55,7 @@
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 
 // Include the MOC generated file for this class
-#include "moc_FindGBCD_MetricBased.cpp"
+#include "moc_FindGBCDMetricBased.cpp"
 
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include <QtCore/QDir>
@@ -404,7 +404,7 @@ public:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindGBCD_MetricBased::FindGBCD_MetricBased() :
+FindGBCDMetricBased::FindGBCDMetricBased() :
   SurfaceMeshFilter(),
   m_PhaseOfInterest(1),
   m_ChosenLimitDists(DEFAULT_RESOL_CHOICE),
@@ -440,14 +440,14 @@ FindGBCD_MetricBased::FindGBCD_MetricBased() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindGBCD_MetricBased::~FindGBCD_MetricBased()
+FindGBCDMetricBased::~FindGBCDMetricBased()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGBCD_MetricBased::setupFilterParameters()
+void FindGBCDMetricBased::setupFilterParameters()
 {
 	FilterParameterVector parameters;
 	parameters.push_back(IntFilterParameter::New("Phase of Interest", "PhaseOfInterest", getPhaseOfInterest(), FilterParameter::Parameter));
@@ -526,7 +526,7 @@ void FindGBCD_MetricBased::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGBCD_MetricBased::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void FindGBCDMetricBased::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
 	reader->openFilterGroup(this, index);
 	setPhaseOfInterest(reader->readValue("PhaseOfInterest", getPhaseOfInterest()));
@@ -550,7 +550,7 @@ void FindGBCD_MetricBased::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindGBCD_MetricBased::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int FindGBCDMetricBased::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
 	writer->openFilterGroup(this, index);
 	SIMPL_FILTER_WRITE_PARAMETER(PhaseOfInterest)
@@ -575,7 +575,7 @@ int FindGBCD_MetricBased::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGBCD_MetricBased::dataCheck()
+void FindGBCDMetricBased::dataCheck()
 {
 	setErrorCondition(0);
 
@@ -758,7 +758,7 @@ void FindGBCD_MetricBased::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGBCD_MetricBased::preflight()
+void FindGBCDMetricBased::preflight()
 {
 	// These are the REQUIRED lines of CODE to make sure the filter behaves correctly
 	setInPreflight(true); // Set the fact that we are preflighting.
@@ -772,7 +772,7 @@ void FindGBCD_MetricBased::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGBCD_MetricBased::execute()
+void FindGBCDMetricBased::execute()
 {
 	setErrorCondition(0);
 	dataCheck();
@@ -1128,9 +1128,9 @@ void FindGBCD_MetricBased::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindGBCD_MetricBased::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindGBCDMetricBased::newFilterInstance(bool copyFilterParameters)
 {
-	FindGBCD_MetricBased::Pointer filter = FindGBCD_MetricBased::New();
+	FindGBCDMetricBased::Pointer filter = FindGBCDMetricBased::New();
 	if (true == copyFilterParameters)
 	{
 		copyFilterParameterInstanceVariables(filter.get());
@@ -1141,7 +1141,7 @@ AbstractFilter::Pointer FindGBCD_MetricBased::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCD_MetricBased::getCompiledLibraryName()
+const QString FindGBCDMetricBased::getCompiledLibraryName()
 {
 	return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -1149,7 +1149,7 @@ const QString FindGBCD_MetricBased::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCD_MetricBased::getGroupName()
+const QString FindGBCDMetricBased::getGroupName()
 {
 	return DREAM3D::FilterGroups::Unsupported;
 }
@@ -1157,7 +1157,7 @@ const QString FindGBCD_MetricBased::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCD_MetricBased::getSubGroupName()
+const QString FindGBCDMetricBased::getSubGroupName()
 {
 	return "Surface Meshing";
 }
@@ -1165,12 +1165,9 @@ const QString FindGBCD_MetricBased::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCD_MetricBased::getHumanLabel()
+const QString FindGBCDMetricBased::getHumanLabel()
 {
 	return "Find GBCD (Metric-based Approach)";
 }
 
-bool FindGBCD_MetricBased::doublesEqual(double x, double y)
-{
-  return fabsf(x - y) < 1e-8;
-}
+

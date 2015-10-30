@@ -1,4 +1,4 @@
-Find GBCD (Metric-based Approach) {#findgbcd_metricbased}
+Find GBCD (Metric-based Approach) {#findgbcdmetricbased}
 =============
 
 ## Group (Subgroup) ##
@@ -49,19 +49,19 @@ The latter are computed in a way that if the relative error exceeds 100%, it is 
 
 
 
-![Fig. 1: Section for the 17.9 deg./[111] misorientation through the grain boundary distribution obtained using this filter for Small IN100 data set. Units are multiples of random distribution (MRDs).](FindGBCD_MetricBased_dist.png)
+![Fig. 1: Section for the 17.9 deg./[111] misorientation through the grain boundary distribution obtained using this filter for Small IN100 data set. Units are multiples of random distribution (MRDs).](FindGBCDMetricBased_dist.png)
 
 
 
 
 
-![Fig. 2: End-points (drawn in stereographic projection) of sampling directions used for probing distribution values; the number of points here is about 1500. Additionally, distributions are probed at points lying at the equator (marked with red); this is helpful for some plotting software.](FindGBCD_MetricBased_samplpts.png)
+![Fig. 2: End-points (drawn in stereographic projection) of sampling directions used for probing distribution values; the number of points here is about 1500. Additionally, distributions are probed at points lying at the equator (marked with red); this is helpful for some plotting software.](FindGBCDMetricBased_samplpts.png)
 
 
 
 
 
-![Fig. 3: (a) Errors (absolute values of one standard deviation) corresponding to the distribution shown in Fig. 1. Levels are given in MRDs. (b) Relative errors (given in %) of the distribution from Fig. 1.](FindGBCD_MetricBased_err2.png)
+![Fig. 3: (a) Errors (absolute values of one standard deviation) corresponding to the distribution shown in Fig. 1. Levels are given in MRDs. (b) Relative errors (given in %) of the distribution from Fig. 1.](FindGBCDMetricBased_err2.png)
 
 
 

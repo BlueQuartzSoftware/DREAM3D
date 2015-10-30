@@ -3,7 +3,7 @@
  * K.Glowinski, A.Morawiec, "Analysis of experimental grain boundary distributions
  * based on boundary-space metrics", Metall. Mater. Trans. A 45, 3189-3194 (2014).
  * Besides the algorithm itself, many parts of the code come from
- * the sources of "Find GBCD" and "Write GBCD Pole Figure (GMT5)" filters.
+ * the sources of other filters, mainly "Find GBCD" and "Write GBCD Pole Figure (GMT5)".
  * Therefore, the below copyright notice applies.
  *
  * ============================================================================
@@ -41,8 +41,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _FindGBCD_MetricBased_H_
-#define _FindGBCD_MetricBased_H_
+#ifndef _FindGBCDMetricBased_H_
+#define _FindGBCDMetricBased_H_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
@@ -57,18 +57,18 @@ const float RESOL_CHOICES[NUM_RESOL_CHOICES][2] = { { 3.0f, 7.0f }, { 5.0f, 5.0f
 const double BALL_VOLS_M3M[NUM_RESOL_CHOICES] = { 0.0000641361, 0.000139158, 0.000287439, 0.00038019, 0.000484151, 0.000747069, 0.00145491 };
 
 /**
- * @brief The FindGBCD_MetricBased class. See [Filter documentation](@ref findgbcd_metricbased) for details.
+ * @brief The FindGBCDMetricBased class. See [Filter documentation](@ref findgbcdmetricbased) for details.
  */
-class FindGBCD_MetricBased : public SurfaceMeshFilter
+class FindGBCDMetricBased : public SurfaceMeshFilter
 {
   Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
 
 public:
-  SIMPL_SHARED_POINTERS(FindGBCD_MetricBased)
-  SIMPL_STATIC_NEW_MACRO(FindGBCD_MetricBased)
-  SIMPL_TYPE_MACRO_SUPER(FindGBCD_MetricBased, AbstractFilter)
+  SIMPL_SHARED_POINTERS(FindGBCDMetricBased)
+  SIMPL_STATIC_NEW_MACRO(FindGBCDMetricBased)
+  SIMPL_TYPE_MACRO_SUPER(FindGBCDMetricBased, AbstractFilter)
 
-  virtual ~FindGBCD_MetricBased();
+  virtual ~FindGBCDMetricBased();
 
   SIMPL_FILTER_PARAMETER(int, PhaseOfInterest)
   Q_PROPERTY(int PhaseOfInterest READ getPhaseOfInterest WRITE setPhaseOfInterest)
@@ -166,7 +166,7 @@ public:
 
 
 protected:
-  FindGBCD_MetricBased();
+  FindGBCDMetricBased();
 
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -182,10 +182,9 @@ private:
   DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
   DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceLabels)
 
-  bool doublesEqual(double x, double y);
 
-  FindGBCD_MetricBased(const FindGBCD_MetricBased&); // Copy Constructor Not Implemented
-  void operator=(const FindGBCD_MetricBased&); // Operator '=' Not Implemented
+  FindGBCDMetricBased(const FindGBCDMetricBased&); // Copy Constructor Not Implemented
+  void operator=(const FindGBCDMetricBased&); // Operator '=' Not Implemented
 };
 
 #endif /* _FindGBCD_MetricBased_H_ */
