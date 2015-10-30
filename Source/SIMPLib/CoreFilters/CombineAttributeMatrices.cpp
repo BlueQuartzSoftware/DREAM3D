@@ -204,6 +204,8 @@ void CombineAttributeMatrices::dataCheck()
 	  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
+  if (getErrorCondition() < 0) { return; }
+
   //Note that the minus 1 in the totalTuples calculation is to account for the fact that the zeroth tuple in the two attribute matrices should only be counted once, not twice.  
   //All Feature or Ensemble AMs should start from 1 and the zeroth tuple can be combined in the two AMs
   size_t totalTuples = firstAttrMat->getNumTuples() + secondAttrMat->getNumTuples() - 1;
@@ -313,7 +315,8 @@ void CombineAttributeMatrices::execute()
   }
   for (size_t i = 0; i < totalTuples2; i++)
   {
-    if(m_SecondIndex[i] > 0 && m_NewIndex[i] == 0) m_NewIndex[i] = m_SecondIndex[i] + firstAttrMatNumTuples;
+    //subtract 1 from the index plus numTuples because the second index should be shifted to account for the zeroth tuple (all AMs above element start at tuple 1)
+    if(m_SecondIndex[i] > 0 && m_NewIndex[i] == 0) m_NewIndex[i] = m_SecondIndex[i] + firstAttrMatNumTuples - 1;
     else if (m_SecondIndex[i] > 0 && m_NewIndex[i] != 0)
     {
       QString ss = QObject::tr("When copying the indices, the indices of the two attribute matrices overlapped.  The index of the first attribute matrix was kept.");

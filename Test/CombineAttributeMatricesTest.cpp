@@ -57,7 +57,7 @@
   name##Array->initializeWithValue(initVal);\
   DREAM3D_REQUIRE(err >= 0);
 
-#define CHECK_FOR_FAIL(filter, featureIds1, featureIds2, attrMat1, attrMat2, errVal)\
+#define CHECK_FOR_FAIL(filter, featureIds1, featureIds2, attrMat1, attrMat2, newIndex, newAttrMat, errVal)\
   var.setValue(featureIds1);\
   propWasSet = filter->setProperty("FirstIndexArrayPath", var);\
   if(false == propWasSet)\
@@ -81,6 +81,18 @@
   if(false == propWasSet)\
   {\
     qDebug() << "Unable to set property SecondAttributeMatrixPath";\
+  }\
+  var.setValue(newIndex);\
+  propWasSet = filter->setProperty("NewIndexArrayName", var);\
+  if(false == propWasSet)\
+  {\
+    qDebug() << "Unable to set property NewIndexArrayName";\
+  }\
+  var.setValue(newAttrMat);\
+  propWasSet = filter->setProperty("CombinedAttributeMatrixName", var);\
+  if(false == propWasSet)\
+  {\
+    qDebug() << "Unable to set property CombinedAttributeMatrixName";\
   }\
   filter->execute();\
   err = filter->getErrorCondition();\
@@ -176,7 +188,7 @@
 int TestFilterAvailability()
 {
   // Now instantiate the FindDifferenceMapTest Filter from the FilterManager
-  QString filtName = "CombineAttribtueMatrices";
+  QString filtName = "CombineAttributeMatrices";
   FilterManager* fm = FilterManager::Instance();
   IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
   if (NULL == filterFactory.get())
@@ -242,13 +254,13 @@ DataContainerArray::Pointer initializeDataContainerArray()
   tDims[0] = 3;
   AttributeMatrix::Pointer featureAttrMat1 = AttributeMatrix::New(tDims, "featureAttrMat1", DREAM3D::AttributeMatrixType::CellFeature);
   m->addAttributeMatrix("featureAttrMat1", featureAttrMat1);
-  tDims[0] = 2;
-  AttributeMatrix::Pointer ensembleAttrMat1 = AttributeMatrix::New(tDims, "ensembleAttrMat1", DREAM3D::AttributeMatrixType::CellEnsemble);
-  m->addAttributeMatrix("ensembleAttrMat1", ensembleAttrMat1);
   QString fAM1AA1 = "ensembleIds";
   QString fAM1AA2 = "sizes";
   CREATE_DATA_ARRAY(int32_t, featureAttrMat1, tDims, cDims, initVal, fAM1AA1, err);
   CREATE_DATA_ARRAY(float, featureAttrMat1, tDims, cDims, initVal, fAM1AA2, err);
+  tDims[0] = 2;
+  AttributeMatrix::Pointer ensembleAttrMat1 = AttributeMatrix::New(tDims, "ensembleAttrMat1", DREAM3D::AttributeMatrixType::CellEnsemble);
+  m->addAttributeMatrix("ensembleAttrMat1", ensembleAttrMat1);
   QString eAM1AA1 = "crystalStructures";
   CREATE_DATA_ARRAY(int32_t, ensembleAttrMat1, tDims, cDims, initVal, eAM1AA1, err);
 
@@ -273,29 +285,29 @@ DataContainerArray::Pointer initializeDataContainerArray()
   tDims[0] = 3;
   AttributeMatrix::Pointer featureAttrMat2 = AttributeMatrix::New(tDims, "featureAttrMat2", DREAM3D::AttributeMatrixType::CellFeature);
   m->addAttributeMatrix("featureAttrMat2", featureAttrMat2);
+  QString fAM2AA1 = "ensembleIds";
+  QString fAM2AA2 = "surfaceFeatures";
+  CREATE_DATA_ARRAY(int32_t, featureAttrMat2, tDims, cDims, initVal, fAM2AA1, err);
+  CREATE_DATA_ARRAY(bool, featureAttrMat2, tDims, cDims, initVal, fAM2AA2, err);
   tDims[0] = 2;
   AttributeMatrix::Pointer ensembleAttrMat2 = AttributeMatrix::New(tDims, "ensembleAttrMat2", DREAM3D::AttributeMatrixType::CellEnsemble);
   m->addAttributeMatrix("ensembleAttrMat2", ensembleAttrMat2);
-  QString fAM2AA1 = "ensembleIds";
-  QString fAM2AA2 = "shapes";
-  CREATE_DATA_ARRAY(float, featureAttrMat2, tDims, cDims, initVal, fAM2AA1, err);
-  CREATE_DATA_ARRAY(bool, featureAttrMat2, tDims, cDims, initVal, fAM2AA2, err);
   QString eAM2AA1 = "crystalStructures";
   CREATE_DATA_ARRAY(int32_t, ensembleAttrMat2, tDims, cDims, initVal, eAM2AA1, err);
 
   //pull down and initialize arrays just created for feature and ensemble AM 1
-  Int32ArrayType::Pointer ensembleIds2Ptr = featureAttrMat1->getAttributeArrayAs<Int32ArrayType>(fAM2AA1);
+  Int32ArrayType::Pointer ensembleIds2Ptr = featureAttrMat2->getAttributeArrayAs<Int32ArrayType>(fAM2AA1);
   int32_t* eIds2 = ensembleIds2Ptr->getPointer(0);
-  FloatArrayType::Pointer shapesPtr = featureAttrMat1->getAttributeArrayAs<FloatArrayType>(fAM2AA2);
-  float* shapes = shapesPtr->getPointer(0);
+  BoolArrayType::Pointer surfFeatPtr = featureAttrMat2->getAttributeArrayAs<BoolArrayType>(fAM2AA2);
+  bool* surfFeat= surfFeatPtr->getPointer(0);
   Int32ArrayType::Pointer crystStructs2Ptr = ensembleAttrMat1->getAttributeArrayAs<Int32ArrayType>(eAM2AA1);
   int32_t* crystStructs2 = crystStructs2Ptr->getPointer(0);
   eIds2[0] = 0;
   eIds2[1] = 1;
   eIds2[2] = 2;
-  shapes[0] = 0;
-  shapes[1] = 3.1;
-  shapes[2] = 2.2;
+  surfFeat[0] = false;
+  surfFeat[1] = false;
+  surfFeat[2] = true;
   crystStructs2[0] = 0;
   crystStructs2[1] = 1;
 
@@ -325,6 +337,8 @@ void removeDataArraysAfterFirstCombination(DataContainer::Pointer dc, DataArrayP
 void validateCombinedFeatureAMs(AbstractFilter::Pointer filter, DataArrayPath featureIds1, DataArrayPath featureIds2, DataArrayPath attrMat1, DataArrayPath attrMat2, QString newIndex, QString newAttrMat)
 {
   DataContainerArray::Pointer dca = filter->getDataContainerArray();
+
+  //make path to get new AM for checking its size and contents
   AttributeMatrix::Pointer attrMat1Ptr = dca->getAttributeMatrix(attrMat1);
   DataArrayPath temp;
   temp.update(attrMat1.getDataContainerName(), newAttrMat, "");
@@ -333,7 +347,9 @@ void validateCombinedFeatureAMs(AbstractFilter::Pointer filter, DataArrayPath fe
   DREAM3D_REQUIRE_EQUAL(newAttrMatPtr->getNumTuples(), 5)
   // combined feature AM should have ensembleIds, sizes, shapes arrays
   DREAM3D_REQUIRE_EQUAL(newAttrMatPtr->getNumAttributeArrays(), 3)
-  Int32ArrayType::Pointer newFeatureIdsPtr = attrMat1Ptr->getAttributeArrayAs<Int32ArrayType>(newIndex);
+  //use the featureIds1 path from cAM to get the cAM and ask for the newFeatureIds out of that matrix
+  AttributeMatrix::Pointer cellAttrMatPtr = dca->getAttributeMatrix(featureIds1);
+  Int32ArrayType::Pointer newFeatureIdsPtr = cellAttrMatPtr->getAttributeArrayAs<Int32ArrayType>(newIndex);
   int32_t* newFIds = newFeatureIdsPtr->getPointer(0);
   //ensemble ids should be updated so that featureIds1 still equal 1 and 2, but featureIds2 should be changed from 1 and 2 to 3 and 4
   DREAM3D_REQUIRE_EQUAL(newFIds[0], 1)
@@ -348,7 +364,8 @@ void validateCombinedFeatureAMs(AbstractFilter::Pointer filter, DataArrayPath fe
 void validateCombinedEnsembleAMs(AbstractFilter::Pointer filter, DataArrayPath ensembleIds1, DataArrayPath ensembleIds2, DataArrayPath attrMat1, DataArrayPath attrMat2, QString newIndex, QString newAttrMat)
 {
   DataContainerArray::Pointer dca = filter->getDataContainerArray();
-  AttributeMatrix::Pointer attrMat1Ptr = dca->getAttributeMatrix(attrMat1);
+
+  //make path to get new AM for checking its size and contents
   DataArrayPath temp;
   temp.update(attrMat1.getDataContainerName(), newAttrMat, "");
   AttributeMatrix::Pointer newAttrMatPtr = dca->getAttributeMatrix(temp);
@@ -356,7 +373,9 @@ void validateCombinedEnsembleAMs(AbstractFilter::Pointer filter, DataArrayPath e
   DREAM3D_REQUIRE_EQUAL(newAttrMatPtr->getNumTuples(), 3)
   // combined ensemble AM should only have crystal structures array
   DREAM3D_REQUIRE_EQUAL(newAttrMatPtr->getNumAttributeArrays(), 1)
-  Int32ArrayType::Pointer newEnsembleIdsPtr = attrMat1Ptr->getAttributeArrayAs<Int32ArrayType>(newIndex);
+  //use the ensembleIds path from fAM1 to get the fAM1 and ask for the newEnsembleIds out of that matrix
+  AttributeMatrix::Pointer indexAttrMat1Ptr = dca->getAttributeMatrix(ensembleIds1);
+  Int32ArrayType::Pointer newEnsembleIdsPtr = indexAttrMat1Ptr->getAttributeArrayAs<Int32ArrayType>(newIndex);
   int32_t* newEIds = newEnsembleIdsPtr->getPointer(0);
   //ensemble ids should be updated so that ensembleIds1 still equal 1, but ensembleIds2 should be changed from 1 to 2
   DREAM3D_REQUIRE_EQUAL(newEIds[0], 0)
@@ -392,11 +411,11 @@ void validateCombineAM(AbstractFilter::Pointer filter, DataContainerArray::Point
 
 
   // Fail if an AMs are not in the same DC
-  CHECK_FOR_FAIL(filter, fiap2, siap2, famp2, samp3, -5557)
+  CHECK_FOR_FAIL(filter, fiap2, siap2, famp2, samp3, nian2, namn2, -5557)
   // Fail if the AMs are the same AM
-  CHECK_FOR_FAIL(filter, fiap2, siap2, famp2, famp2, -5558)
+  CHECK_FOR_FAIL(filter, fiap2, siap2, famp2, famp2, nian2, namn2, -5558)
   // Fail if the AMs are not the same type (ie feature or ensemble)
-  CHECK_FOR_FAIL(filter, fiap2, siap2, famp2, samp, -5559)
+  CHECK_FOR_FAIL(filter, fiap2, siap2, famp2, samp, nian2, namn2, -5559)
 
   // combine ensemble AMs sucessfully
   CHECK_FOR_PASS1(filter, fiap, siap, famp, samp, nian, namn)
@@ -404,7 +423,7 @@ void validateCombineAM(AbstractFilter::Pointer filter, DataContainerArray::Point
   removeDataArraysAfterFirstCombination(dc, fiap, siap);
 
   // combine feature AMs sucessfully
-  CHECK_FOR_PASS1(filter, fiap2, siap2, famp2, samp2, nian2, namn2)
+  CHECK_FOR_PASS2(filter, fiap2, siap2, famp2, samp2, nian2, namn2)
 
 }
 
