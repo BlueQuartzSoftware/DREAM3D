@@ -126,8 +126,13 @@ class ImportASCIIDataWizard : public QWizard
 
     void setInputFilePath(const QString &inputFilePath);
 
+  protected slots:
+    void refreshModel();
+
   private:
     QString                                             m_InputFilePath;
+
+    QPushButton*                                        m_RefreshBtn;
 
     ImportASCIIDataWizard(const ImportASCIIDataWizard&); // Copy Constructor Not Implemented
     void operator=(const ImportASCIIDataWizard&); // Operator '=' Not Implemented

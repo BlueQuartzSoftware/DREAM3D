@@ -14,6 +14,7 @@ set(DREAM3D_WIDGETS
 
 set(DREAM3D_WIDGETS_NO_UI
   ImportASCIIDataWizard
+  AbstractWizardPage
   ASCIIDataModel
   ASCIIDataItem
 )

@@ -39,11 +39,13 @@
 
 #include <QtWidgets/QWizardPage>
 
+#include "AbstractWizardPage.h"
+
 #include "ui_DelimitedOrFixedWidthPage.h"
 
 class ASCIIDataModel;
 
-class DelimitedOrFixedWidthPage : public QWizardPage, private Ui::DelimitedOrFixedWidthPage
+class DelimitedOrFixedWidthPage : public AbstractWizardPage, private Ui::DelimitedOrFixedWidthPage
 {
   Q_OBJECT
 
@@ -64,6 +66,11 @@ class DelimitedOrFixedWidthPage : public QWizardPage, private Ui::DelimitedOrFix
     virtual void setupGui();
 
     /**
+    * @brief Refreshes the model
+    */
+    virtual void refreshModel();
+
+    /**
     * @brief Controls which page to navigate to after the user clicks "Next" button
     */
     int nextId() const;
@@ -72,7 +79,6 @@ class DelimitedOrFixedWidthPage : public QWizardPage, private Ui::DelimitedOrFix
     void showEvent(QShowEvent* event);
 
   private:
-    QString                                         m_InputFilePath;
 
     DelimitedOrFixedWidthPage(const DelimitedOrFixedWidthPage&); // Copy Constructor Not Implemented
     void operator=(const DelimitedOrFixedWidthPage&); // Operator '=' Not Implemented

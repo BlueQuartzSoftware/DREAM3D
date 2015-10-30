@@ -44,8 +44,7 @@
 //
 // -----------------------------------------------------------------------------
 DelimitedOrFixedWidthPage::DelimitedOrFixedWidthPage(const QString &inputFilePath, QWidget* parent) :
-  QWizardPage(parent),
-  m_InputFilePath(inputFilePath)
+  AbstractWizardPage(inputFilePath, parent)
 {
   setupUi(this);
 
@@ -67,11 +66,7 @@ void DelimitedOrFixedWidthPage::setupGui()
 {
   ASCIIDataModel* model = ASCIIDataModel::Instance();
 
-  QStringList lines = ImportASCIIDataWizard::ReadLines(m_InputFilePath, 1, ImportASCIIDataWizard::TotalPreviewLines);
-
-  ImportASCIIDataWizard::LoadOriginalLines(lines);
-
-  ImportASCIIDataWizard::InsertLines(lines, 1);
+  refreshModel();
 
   dataView->setModel(model);
   dataView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -104,6 +99,21 @@ void DelimitedOrFixedWidthPage::showEvent(QShowEvent* event)
 
     model->setData(index, line, Qt::DisplayRole);
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DelimitedOrFixedWidthPage::refreshModel()
+{
+  ASCIIDataModel* model = ASCIIDataModel::Instance();
+  model->clear();
+
+  QStringList lines = ImportASCIIDataWizard::ReadLines(m_InputFilePath, 1, ImportASCIIDataWizard::TotalPreviewLines);
+
+  ImportASCIIDataWizard::LoadOriginalLines(lines);
+
+  ImportASCIIDataWizard::InsertLines(lines, 1);
 }
 
 // -----------------------------------------------------------------------------

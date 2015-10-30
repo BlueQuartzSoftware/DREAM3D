@@ -34,54 +34,37 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _DelimitedPage_H_
-#define _DelimitedPage_H_
+#ifndef _AbstractWizardPage_H_
+#define _AbstractWizardPage_H_
 
 #include <QtWidgets/QWizardPage>
 
-#include "AbstractWizardPage.h"
-
-#include "ui_DelimitedPage.h"
-
-class ASCIIDataModel;
-
-class DelimitedPage : public AbstractWizardPage, private Ui::DelimitedPage
+class AbstractWizardPage : public QWizardPage
 {
   Q_OBJECT
 
   public:
-    /**
-    * @brief Constructor
-    * @param parameter The FilterParameter object that this widget represents
-    * @param filter The instance of the filter that this parameter is a part of
-    * @param parent The parent QWidget for this Widget
-    */
-    DelimitedPage(const QString &inputFilePath, QWidget* parent = NULL);
-
-    virtual ~DelimitedPage();
+    virtual ~AbstractWizardPage();
 
     /**
-     * @brief Initializes some of the GUI elements with selections or other GUI related items
-     */
-    virtual void setupGui();
-
-    /**
-    * @brief Refreshes the model
+    * @brief Polymorphic function that refreshes the model based on what page we are currently on
     */
     virtual void refreshModel();
 
     /**
     * @brief Controls which page to navigate to after the user clicks "Next" button
     */
-    int nextId() const;
+    virtual int nextId() const;
 
-  protected slots:
-    void checkBox_Toggled(int state);
+  protected:
+    AbstractWizardPage(const QString &inputFilePath, QWidget* parent = NULL);
+
+    QString                                         m_InputFilePath;
 
   private:
 
-    DelimitedPage(const DelimitedPage&); // Copy Constructor Not Implemented
-    void operator=(const DelimitedPage&); // Operator '=' Not Implemented
+    AbstractWizardPage(const AbstractWizardPage&); // Copy Constructor Not Implemented
+    void operator=(const AbstractWizardPage&); // Operator '=' Not Implemented
 };
 
-#endif /* DelimitedPage_H_ */
+#endif /* AbstractWizardPage_H_ */

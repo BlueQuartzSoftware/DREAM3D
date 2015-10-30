@@ -42,8 +42,7 @@
 //
 // -----------------------------------------------------------------------------
 DelimitedPage::DelimitedPage(const QString &inputFilePath, QWidget* parent) :
-  QWizardPage(parent),
-  m_InputFilePath(inputFilePath)
+  AbstractWizardPage(inputFilePath, parent)
 {
   setupUi(this);
 
@@ -94,6 +93,32 @@ void DelimitedPage::checkBox_Toggled(int state)
 
   ASCIIDataModel* model = ASCIIDataModel::Instance();
   QStringList lines = model->originalStrings();
+
+  model->clear();
+
+  ImportASCIIDataWizard::LoadOriginalLines(lines);
+
+  QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, false, tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter, consecutiveDelimiters);
+  ImportASCIIDataWizard::InsertTokenizedLines(tokenizedLines, 1);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DelimitedPage::refreshModel()
+{
+  ASCIIDataModel* model = ASCIIDataModel::Instance();
+  model->clear();
+
+  bool tabAsDelimiter = tabCheckBox->isChecked();
+  bool semicolonAsDelimiter = semicolonCheckBox->isChecked();
+  bool commaAsDelimiter = commaCheckBox->isChecked();
+  bool spaceAsDelimiter = spaceCheckBox->isChecked();
+  bool consecutiveDelimiters = consecutiveDCheckBox->isChecked();
+
+  QStringList lines = ImportASCIIDataWizard::ReadLines(m_InputFilePath, 1, ImportASCIIDataWizard::TotalPreviewLines);
+
+  ImportASCIIDataWizard::LoadOriginalLines(lines);
 
   QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, false, tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter, consecutiveDelimiters);
   ImportASCIIDataWizard::InsertTokenizedLines(tokenizedLines, 1);

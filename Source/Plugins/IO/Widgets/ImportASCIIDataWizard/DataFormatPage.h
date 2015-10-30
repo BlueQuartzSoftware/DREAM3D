@@ -39,11 +39,13 @@
 
 #include <QtWidgets/QWizardPage>
 
+#include "AbstractWizardPage.h"
+
 #include "ui_DataFormatPage.h"
 
 class ASCIIDataModel;
 
-class DataFormatPage : public QWizardPage, private Ui::DataFormatPage
+class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
 {
   Q_OBJECT
 
@@ -64,14 +66,19 @@ class DataFormatPage : public QWizardPage, private Ui::DataFormatPage
     virtual void setupGui();
 
     /**
+    * @brief Refreshes the model
+    */
+    virtual void refreshModel();
+
+    /**
     * @brief Controls which page to navigate to after the user clicks "Next" button
     */
-    int nextId() const;
+    virtual int nextId() const;
 
     /**
     * @brief Resets the page when the user hits the "Back" button
     */
-    void cleanupPage();
+    virtual void cleanupPage();
 
   protected:
     void showEvent(QShowEvent* event);
@@ -89,7 +96,6 @@ class DataFormatPage : public QWizardPage, private Ui::DataFormatPage
     void updateSelection(const QItemSelection &selected, const QItemSelection &deselected);
 
   private:
-    QString                                     m_InputFilePath;
 
     DataFormatPage(const DataFormatPage&); // Copy Constructor Not Implemented
     void operator=(const DataFormatPage&); // Operator '=' Not Implemented

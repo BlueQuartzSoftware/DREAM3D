@@ -44,7 +44,7 @@ ASCIIDataModel* ASCIIDataModel::self = NULL;
 ASCIIDataModel::ASCIIDataModel(QObject* parent) :
 QAbstractTableModel(parent)
 {
-  connect(this, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), this, SLOT(updateModel(const QModelIndex&, const QModelIndex&)));
+
 }
 
 // -----------------------------------------------------------------------------

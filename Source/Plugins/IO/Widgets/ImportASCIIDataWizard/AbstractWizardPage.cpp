@@ -33,55 +33,45 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
-#ifndef _DelimitedPage_H_
-#define _DelimitedPage_H_
-
-#include <QtWidgets/QWizardPage>
-
 #include "AbstractWizardPage.h"
 
-#include "ui_DelimitedPage.h"
+#include <QtCore/QFile>
 
-class ASCIIDataModel;
+#include "ImportASCIIDataWizard.h"
+#include "ASCIIDataModel.h"
 
-class DelimitedPage : public AbstractWizardPage, private Ui::DelimitedPage
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractWizardPage::AbstractWizardPage(const QString &inputFilePath, QWidget* parent) :
+  QWizardPage(parent),
+  m_InputFilePath(inputFilePath)
 {
-  Q_OBJECT
 
-  public:
-    /**
-    * @brief Constructor
-    * @param parameter The FilterParameter object that this widget represents
-    * @param filter The instance of the filter that this parameter is a part of
-    * @param parent The parent QWidget for this Widget
-    */
-    DelimitedPage(const QString &inputFilePath, QWidget* parent = NULL);
+}
 
-    virtual ~DelimitedPage();
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractWizardPage::~AbstractWizardPage()
+{
 
-    /**
-     * @brief Initializes some of the GUI elements with selections or other GUI related items
-     */
-    virtual void setupGui();
+}
 
-    /**
-    * @brief Refreshes the model
-    */
-    virtual void refreshModel();
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractWizardPage::refreshModel()
+{
+  // This should never be called
+  return;
+}
 
-    /**
-    * @brief Controls which page to navigate to after the user clicks "Next" button
-    */
-    int nextId() const;
-
-  protected slots:
-    void checkBox_Toggled(int state);
-
-  private:
-
-    DelimitedPage(const DelimitedPage&); // Copy Constructor Not Implemented
-    void operator=(const DelimitedPage&); // Operator '=' Not Implemented
-};
-
-#endif /* DelimitedPage_H_ */
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int AbstractWizardPage::nextId() const
+{
+  // This should never be called
+  return -1;
+}

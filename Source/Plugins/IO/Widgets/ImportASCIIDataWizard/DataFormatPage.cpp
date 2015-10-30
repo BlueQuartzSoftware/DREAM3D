@@ -44,8 +44,7 @@
 //
 // -----------------------------------------------------------------------------
 DataFormatPage::DataFormatPage(const QString &inputFilePath, QWidget* parent) :
-  QWizardPage(parent),
-  m_InputFilePath(inputFilePath)
+  AbstractWizardPage(inputFilePath, parent)
 {
   setupUi(this);
 
@@ -73,6 +72,8 @@ void DataFormatPage::setupGui()
   connect(dataView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)), this, SLOT(updateSelection(const QItemSelection&, const QItemSelection&)));
 
   headersIndexLineEdit->setValidator(new QRegularExpressionValidator(QRegularExpression("[1-9]|1[0-9]|20"), headersIndexLineEdit));
+
+  registerField("startRow", startRowSpin);
 
   addHeadersBtn->setDisabled(true);
   columnDataGroupBox->setDisabled(true);
@@ -306,6 +307,38 @@ void DataFormatPage::cleanupPage()
   doesNotHaveHeadersRadio->setChecked(false);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataFormatPage::refreshModel()
+{
+  ASCIIDataModel* model = ASCIIDataModel::Instance();
+  model->clear();
+
+  bool isFixedWidth = field("isFixedWidth").toBool();
+  bool tabAsDelimiter = field("tabAsDelimiter").toBool();
+  bool semicolonAsDelimiter = field("semicolonAsDelimiter").toBool();
+  bool commaAsDelimiter = field("commaAsDelimiter").toBool();
+  bool spaceAsDelimiter = field("spaceAsDelimiter").toBool();
+  bool consecutiveDelimiters = field("consecutiveDelimiters").toBool();
+
+  QStringList lines = ImportASCIIDataWizard::ReadLines(m_InputFilePath, startRowSpin->value(), ImportASCIIDataWizard::TotalPreviewLines);
+
+  ImportASCIIDataWizard::LoadOriginalLines(lines);
+
+  QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, isFixedWidth, tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter, consecutiveDelimiters);
+  ImportASCIIDataWizard::InsertTokenizedLines(tokenizedLines, startRowSpin->value());
+
+  // Refresh the headers
+  if (hasHeadersRadio->isChecked())
+  {
+    on_headersIndexLineEdit_textChanged(headersIndexLineEdit->text());
+  }
+  else
+  {
+
+  }
+}
 
 // -----------------------------------------------------------------------------
 //

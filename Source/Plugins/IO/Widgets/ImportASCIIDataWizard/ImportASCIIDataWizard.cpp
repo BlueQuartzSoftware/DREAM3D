@@ -50,9 +50,13 @@ ImportASCIIDataWizard::ImportASCIIDataWizard(const QString &inputFilePath, QWidg
   m_InputFilePath(inputFilePath)
 {
   setWindowTitle("ASCII Data Import Wizard");
-  setOptions(QWizard::NoBackButtonOnStartPage);
+  setOptions(QWizard::NoBackButtonOnStartPage | QWizard::HaveHelpButton);
   setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
   resize(721, 683);
+
+  m_RefreshBtn = new QPushButton("Refresh", this);
+  connect(m_RefreshBtn, SIGNAL(pressed()), this, SLOT(refreshModel()));
+  setButton(QWizard::HelpButton, m_RefreshBtn);
 
   DelimitedOrFixedWidthPage* dOrFPage = new DelimitedOrFixedWidthPage(inputFilePath, this);
   setPage(DelimitedOrFixedWidth, dOrFPage);
@@ -247,6 +251,15 @@ void ImportASCIIDataWizard::LoadOriginalLines(QStringList lines)
     model->setOriginalString(row, line);
     model->setHeaderData(row, Qt::Vertical, QString::number(i + 1), Qt::DisplayRole);
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ImportASCIIDataWizard::refreshModel()
+{
+  AbstractWizardPage* page = dynamic_cast<AbstractWizardPage*>(currentPage());
+  page->refreshModel();
 }
 
 // -----------------------------------------------------------------------------
