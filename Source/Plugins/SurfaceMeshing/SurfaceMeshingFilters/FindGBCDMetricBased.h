@@ -50,11 +50,8 @@
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
-const int NUM_RESOL_CHOICES = 7;
-const int DEFAULT_RESOL_CHOICE = 2;
-const float RESOL_CHOICES[NUM_RESOL_CHOICES][2] = { { 3.0f, 7.0f }, { 5.0f, 5.0f }, { 5.0f, 7.0f }, { 5.0f, 8.0f },
-                                                    { 6.0f, 7.0f }, { 7.0f, 7.0f }, { 8.0f, 8.0f } }; // { for misorient., for planes } 
-const double BALL_VOLS_M3M[NUM_RESOL_CHOICES] = { 0.0000641361, 0.000139158, 0.000287439, 0.00038019, 0.000484151, 0.000747069, 0.00145491 };
+
+
 
 /**
  * @brief The FindGBCDMetricBased class. See [Filter documentation](@ref findgbcdmetricbased) for details.
@@ -192,6 +189,13 @@ private:
 
   FindGBCDMetricBased(const FindGBCDMetricBased&); // Copy Constructor Not Implemented
   void operator=(const FindGBCDMetricBased&); // Operator '=' Not Implemented
+
+
+  static const int NUM_RESOL_CHOICES = 7;
+  static const int DEFAULT_RESOL_CHOICE = 2;
+  static const float RESOL_CHOICES[][2]; 
+  static const double BALL_VOLS_M3M[];
+  
 };
 
 #endif /* _FindGBCD_MetricBased_H_ */

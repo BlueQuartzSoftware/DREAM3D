@@ -71,6 +71,13 @@
 #include "tbb/concurrent_vector.h"
 #endif
 
+const float FindGBCDMetricBased::RESOL_CHOICES[FindGBCDMetricBased::NUM_RESOL_CHOICES][2] = {
+  { 3.0f, 7.0f }, { 5.0f, 5.0f }, { 5.0f, 7.0f }, { 5.0f, 8.0f }, { 6.0f, 7.0f }, { 7.0f, 7.0f }, { 8.0f, 8.0f }
+}; // { for misorient., for planes } 
+
+const double FindGBCDMetricBased::BALL_VOLS_M3M[FindGBCDMetricBased::NUM_RESOL_CHOICES] = {
+  0.0000641361, 0.000139158, 0.000287439, 0.00038019, 0.000484151, 0.000747069, 0.00145491 
+};
 
 class TriAreaAndNormals {
 
@@ -112,7 +119,7 @@ class TrisSelector {
 #else
   QVector<TriAreaAndNormals>* selectedTris;
 #endif
-
+  QVector<int8_t> *triIncluded;
   float m_misorResol; 
   int32_t m_PhaseOfInterest;
   float (&gFixedT)[3][3];
@@ -128,8 +135,6 @@ class TrisSelector {
   double* m_FaceNormals;
   double* m_FaceAreas;
  
-  double &totalFaceArea;
-
 public: 
   TrisSelector(
     bool __m_ExcludeTripleLines,
@@ -141,6 +146,7 @@ public:
 #else
     QVector<TriAreaAndNormals>* __selectedTris,
 #endif
+    QVector<int8_t> *__triIncluded,
     float __m_misorResol,
     int32_t __m_PhaseOfInterest,
     float(&__gFixedT)[3][3],
@@ -150,14 +156,13 @@ public:
     int32_t* __m_FaceLabels,
     double* __m_FaceNormals,
     double* __m_FaceAreas,
-    int32_t* __m_FeatureFaceLabels,
-    double &__totalFaceArea
+    int32_t* __m_FeatureFaceLabels
   ) :
     m_ExcludeTripleLines(__m_ExcludeTripleLines),
     m_Triangles(__m_Triangles),
     m_NodeTypes(__m_NodeTypes),
-
     selectedTris(__selectedTris),
+    triIncluded(__triIncluded),
     m_misorResol(__m_misorResol),
     m_PhaseOfInterest(__m_PhaseOfInterest),
     gFixedT(__gFixedT),
@@ -166,8 +171,7 @@ public:
     m_Phases(__m_Phases),
     m_FaceLabels(__m_FaceLabels),
     m_FaceNormals(__m_FaceNormals),
-    m_FaceAreas(__m_FaceAreas),
-    totalFaceArea(__totalFaceArea)
+    m_FaceAreas(__m_FaceAreas)
   {  
     m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
     cryst = __m_CrystalStructures[__m_PhaseOfInterest]; 
@@ -221,7 +225,7 @@ public:
         if (m_NodeTypes[node1] != 2 || m_NodeTypes[node2] != 2 || m_NodeTypes[node3] != 2) { continue; }
       }
 
-      totalFaceArea += m_FaceAreas[triIdx];
+      (*triIncluded)[triIdx] = 1; 
 
       normal_lab[0] = m_FaceNormals[3 * triIdx];
       normal_lab[1] = m_FaceNormals[3 * triIdx + 1];
@@ -427,7 +431,7 @@ public:
 FindGBCDMetricBased::FindGBCDMetricBased() :
   SurfaceMeshFilter(),
   m_PhaseOfInterest(1),
-  m_ChosenLimitDists(DEFAULT_RESOL_CHOICE),
+  m_ChosenLimitDists(FindGBCDMetricBased::DEFAULT_RESOL_CHOICE),
   m_NumSamplPts(3000),
   m_ExcludeTripleLines(false),
   m_DistOutputFile(""),
@@ -483,14 +487,14 @@ void FindGBCDMetricBased::setupFilterParameters()
 
 		QVector<QString> choices;
 
-		for (int choiceIdx = 0; choiceIdx < NUM_RESOL_CHOICES; choiceIdx++)
+    for (int choiceIdx = 0; choiceIdx < FindGBCDMetricBased::NUM_RESOL_CHOICES; choiceIdx++)
 		{
 			QString misorResStr;
 			QString planeResStr;
 			QString degSymbol = QChar(0x00B0);
 
-			misorResStr.setNum(RESOL_CHOICES[choiceIdx][0], 'f', 0);
-			planeResStr.setNum(RESOL_CHOICES[choiceIdx][1], 'f', 0);
+      misorResStr.setNum(FindGBCDMetricBased::RESOL_CHOICES[choiceIdx][0], 'f', 0);
+      planeResStr.setNum(FindGBCDMetricBased::RESOL_CHOICES[choiceIdx][1], 'f', 0);
 
 			choices.push_back(misorResStr + degSymbol + " for Misorientations; " + planeResStr + degSymbol + " for Plane Inclinations");
 		}
@@ -825,8 +829,8 @@ void FindGBCDMetricBased::execute()
 
 
 	// -------------------- set resolutions and 'ball volumes' based on user's selection --------------------
-	float m_misorResol = RESOL_CHOICES[getChosenLimitDists()][0];
-	float m_planeResol = RESOL_CHOICES[getChosenLimitDists()][1];
+  float m_misorResol = FindGBCDMetricBased::RESOL_CHOICES[getChosenLimitDists()][0];
+  float m_planeResol = FindGBCDMetricBased::RESOL_CHOICES[getChosenLimitDists()][1];
 
 	m_misorResol *= SIMPLib::Constants::k_PiOver180;
 	m_planeResol *= SIMPLib::Constants::k_PiOver180;
@@ -918,7 +922,7 @@ void FindGBCDMetricBased::execute()
 
 
   // ------------------- before computing the distribution, we must find normalization factors ----------------------
-  double ballVolume = BALL_VOLS_M3M[getChosenLimitDists()];
+  double ballVolume = FindGBCDMetricBased::BALL_VOLS_M3M[getChosenLimitDists()];
   {
     QVector<SpaceGroupOps::Pointer> m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
     int32_t cryst = m_CrystalStructures[m_PhaseOfInterest];
@@ -992,7 +996,6 @@ void FindGBCDMetricBased::execute()
 	
 
 	// ---------  find triangles (and equivalent crystallographic parameters) with +- the fixed misorientation ---------
-  double totalFaceArea = 0.0;
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
@@ -1002,6 +1005,7 @@ void FindGBCDMetricBased::execute()
   QVector<TriAreaAndNormals> selectedTris(0);
 #endif
 
+  QVector<int8_t> triIncluded(numMeshTris, 0);
 
   size_t trisChunkSize = 50000; 
   if (numMeshTris < trisChunkSize) { trisChunkSize = numMeshTris; }
@@ -1025,7 +1029,7 @@ void FindGBCDMetricBased::execute()
         m_Triangles,
         m_NodeTypes,
         &selectedTris,
-
+        &triIncluded,
         m_misorResol,
         m_PhaseOfInterest,
         gFixedT,
@@ -1036,8 +1040,7 @@ void FindGBCDMetricBased::execute()
         m_FaceLabels,
         m_FaceNormals,
         m_FaceAreas,
-        m_FeatureFaceLabels,
-        totalFaceArea
+        m_FeatureFaceLabels
         ), tbb::auto_partitioner());
     }
     else
@@ -1048,7 +1051,7 @@ void FindGBCDMetricBased::execute()
         m_Triangles,
         m_NodeTypes,
         &selectedTris,
-
+        &triIncluded,
         m_misorResol,
         m_PhaseOfInterest,
         gFixedT,
@@ -1059,9 +1062,8 @@ void FindGBCDMetricBased::execute()
         m_FaceLabels,
         m_FaceNormals,
         m_FaceAreas,
-        m_FeatureFaceLabels,
-        totalFaceArea
-        );
+        m_FeatureFaceLabels
+      );
       serial.select(i, i + trisChunkSize);
     }
   }
@@ -1084,6 +1086,11 @@ void FindGBCDMetricBased::execute()
 
 
 	// ----------------- determining distribution values at the sampling points (and their errors) -------------------
+
+  double totalFaceArea = 0.0;
+  for (int triIdx = 0; triIdx < numMeshTris; triIdx++) { 
+    totalFaceArea += m_FaceAreas[triIdx] * double(triIncluded.at(triIdx));
+  }
 
 	QVector<double> distribValues(samplPtsX.size(), 0.0);
 	QVector<double> errorValues(samplPtsX.size(), 0.0);
