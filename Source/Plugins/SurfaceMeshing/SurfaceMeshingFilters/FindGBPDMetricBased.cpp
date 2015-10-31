@@ -1,6 +1,45 @@
-/*
- * Your License or Copyright can go here
- */
+/* This filter has been created by Krzysztof Glowinski (kglowinski@ymail.com).
+ * It apadts the algorithm described in K.Glowinski, A.Morawiec, "Analysis of 
+ * experimental grain boundary distributions based on boundary-space metrics",
+ * Metall. Mater. Trans. A 45, 3189-3194 (2014).
+ * Besides the algorithm itself, many parts of the code come from
+ * the sources of other filters, mainly "Find GBCD" and "Write GBCD Pole Figure (GMT5)".
+ * Therefore, the below copyright notice applies.
+ *
+ * ============================================================================
+ * Copyright (c) 2009-2015 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-07-D-5800
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *    United States Prime Contract Navy N00173-07-C-2068
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "FindGBPDMetricBased.h"
 
@@ -54,6 +93,11 @@ public:
   {
   }
 
+  bool operator <(const TriAreaAndNormals& other)
+  {
+    return area < other.area;
+  }
+
   TriAreaAndNormals() {
     TriAreaAndNormals(0.0, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
   }
@@ -66,27 +110,21 @@ class TrisSelector { // corresponding to Phase of Interest
   bool m_ExcludeTripleLines;
   int64_t *m_Triangles;
   int8_t *m_NodeTypes;
-
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::concurrent_vector<TriAreaAndNormals>* selectedTris;
 #else
   QVector<TriAreaAndNormals>* selectedTris;
 #endif
-
   int32_t m_PhaseOfInterest;
-
   QVector<SpaceGroupOps::Pointer> m_OrientationOps;
   uint32_t cryst;
   int32_t nsym;
-
   uint32_t* m_CrystalStructures;
   float* m_Eulers;
   int32_t* m_Phases;
   int32_t* m_FaceLabels;
   double* m_FaceNormals;
   double* m_FaceAreas;
-
-  double &totalFaceArea;
 
 public:
   TrisSelector(
@@ -105,22 +143,19 @@ public:
     int32_t* __m_Phases,
     int32_t* __m_FaceLabels,
     double* __m_FaceNormals,
-    double* __m_FaceAreas,
-    double &__totalFaceArea
-    ) :
+    double* __m_FaceAreas
+  ) :
     m_ExcludeTripleLines(__m_ExcludeTripleLines),
     m_Triangles(__m_Triangles),
     m_NodeTypes(__m_NodeTypes),
     selectedTris(__selectedTris),
-
     m_PhaseOfInterest(__m_PhaseOfInterest),
     m_CrystalStructures(__m_CrystalStructures),
     m_Eulers(__m_Eulers),
     m_Phases(__m_Phases),
     m_FaceLabels(__m_FaceLabels),
     m_FaceNormals(__m_FaceNormals),
-    m_FaceAreas(__m_FaceAreas),
-    totalFaceArea(__totalFaceArea)
+    m_FaceAreas(__m_FaceAreas)
   {
     m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
     cryst = __m_CrystalStructures[__m_PhaseOfInterest];
@@ -173,9 +208,6 @@ public:
         if (m_NodeTypes[node1] != 2 || m_NodeTypes[node2] != 2 || m_NodeTypes[node3] != 2) { continue; }
       }
 
-
-      totalFaceArea += m_FaceAreas[triIdx];
-
       normal_lab[0] = m_FaceNormals[3 * triIdx];
       normal_lab[1] = m_FaceNormals[3 * triIdx + 1];
       normal_lab[2] = m_FaceNormals[3 * triIdx + 2];
@@ -193,7 +225,7 @@ public:
       om.toGMatrix(g2);
 
       MatrixMath::Multiply3x3with3x1(g1, normal_lab, normal_grain1);
-      MatrixMath::Multiply3x3with3x1(g2, normal_lab, normal_grain2); //dg -- the misorientation between adjacent grains
+      MatrixMath::Multiply3x3with3x1(g2, normal_lab, normal_grain2); 
 
       (*selectedTris).push_back(TriAreaAndNormals(
          m_FaceAreas[triIdx],
@@ -216,14 +248,13 @@ public:
 };
 
 
-
 class ProbeDistrib
 {
   QVector<double>* distribValues;
   QVector<double>* errorValues;
-  QVector<float> samplPtsX;
-  QVector<float> samplPtsY;
-  QVector<float> samplPtsZ;
+  QVector<float>* samplPtsX;
+  QVector<float>* samplPtsY;
+  QVector<float>* samplPtsZ;
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::concurrent_vector<TriAreaAndNormals> selectedTris;
 #else
@@ -242,9 +273,9 @@ public:
   ProbeDistrib(
     QVector<double>* __distribValues,
     QVector<double>* __errorValues,
-    QVector<float> __samplPtsX,
-    QVector<float> __samplPtsY,
-    QVector<float> __samplPtsZ,
+    QVector<float> *__samplPtsX,
+    QVector<float> *__samplPtsY,
+    QVector<float> *__samplPtsZ,
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     tbb::concurrent_vector<TriAreaAndNormals> __selectedTris,
 #else
@@ -255,7 +286,7 @@ public:
     int __numDistinctGBs,
     double __ballVolume,
     int32_t __cryst
-    ) :
+  ) :
     distribValues(__distribValues),
     errorValues(__errorValues),
     samplPtsX(__samplPtsX),
@@ -280,7 +311,9 @@ public:
 
     for (size_t ptIdx = start; ptIdx < end; ptIdx++)
     {
-      float probeNormal[3] = { samplPtsX[ptIdx], samplPtsY[ptIdx], samplPtsZ[ptIdx] };
+      double __c = 0.0;
+
+      float probeNormal[3] = { (*samplPtsX).at(ptIdx), (*samplPtsY).at(ptIdx), (*samplPtsZ).at(ptIdx) };
 
       for (int triRepresIdx = 0; triRepresIdx < selectedTris.size(); triRepresIdx++)
       {
@@ -322,8 +355,23 @@ public:
               probeNormal[1] * sym_normal2[1] +
               probeNormal[2] * sym_normal2[2]));
 
-            if (gamma1 < limitDist) { (*distribValues)[ptIdx] += selectedTris[triRepresIdx].area; }
-            if (gamma2 < limitDist) { (*distribValues)[ptIdx] += selectedTris[triRepresIdx].area; }
+            if (gamma1 < limitDist) 
+            { 
+              // Kahan summation algorithm
+              double __y = selectedTris[triRepresIdx].area - __c;
+              double __t = (*distribValues)[ptIdx] + __y;
+              __c = (__t - (*distribValues)[ptIdx]);
+              __c -=__y;
+              (*distribValues)[ptIdx] = __t;
+            }
+            if (gamma2 < limitDist)
+            { 
+              double __y = selectedTris[triRepresIdx].area - __c;
+              double __t = (*distribValues)[ptIdx] + __y;
+              __c = (__t - (*distribValues)[ptIdx]);
+              __c -= __y;
+              (*distribValues)[ptIdx] = __t;
+            }
           }   
         }
       }
@@ -371,7 +419,6 @@ FindGBPDMetricBased::FindGBPDMetricBased() :
   m_SurfaceMeshFeatureFaceLabels(NULL),
   m_SurfaceMeshFaceAreas(NULL),
   m_NodeTypes(NULL)
-
 {
   setupFilterParameters();
 }
@@ -400,13 +447,11 @@ void FindGBPDMetricBased::setupFilterParameters()
   parameters.push_back(OutputFileFilterParameter::New("Save GBPD Errors to", "ErrOutputFile", getErrOutputFile(), FilterParameter::Parameter, ""));
   parameters.push_back(BooleanFilterParameter::New("Save Relative Errors Instead of Their Absolute Values", "SaveRelativeErr", getSaveRelativeErr(), FilterParameter::Parameter));
 
-
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::UInt32, 1, DREAM3D::AttributeMatrixType::CellEnsemble, DREAM3D::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
   }
-
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
@@ -417,7 +462,6 @@ void FindGBPDMetricBased::setupFilterParameters()
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::CellFeature, DREAM3D::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req));
   }
-
 
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
@@ -438,15 +482,12 @@ void FindGBPDMetricBased::setupFilterParameters()
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Face Labels", "SurfaceMeshFeatureFaceLabelsArrayPath", getSurfaceMeshFeatureFaceLabelsArrayPath(), FilterParameter::RequiredArray, req));
   }
 
-
-
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int8, 1, DREAM3D::AttributeMatrixType::Face, DREAM3D::GeometryType::TriangleGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Node Types", "NodeTypesArrayPath", getNodeTypesArrayPath(), FilterParameter::RequiredArray, req));
   }
 
-  
   setFilterParameters(parameters);
 }
 
@@ -811,6 +852,7 @@ void FindGBPDMetricBased::execute()
   QVector<float> samplPtsY(0);
   QVector<float> samplPtsZ(0);
 
+
   float _inc = 2.3999632f; // = pi * (3 - sqrt(5))
   float _off = 2.0f / float(numSamplPts_WholeSph);
 
@@ -967,11 +1009,8 @@ void FindGBPDMetricBased::execute()
 
 
 
-
-
   // ---------  find triangles corresponding to Phase of Interests, and their normals in crystal reference frames ---------
   int32_t numMeshTris = m_SurfaceMeshFaceAreasPtr.lock()->getNumberOfTuples();
-  double totalFaceArea = 0.0;
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
@@ -980,7 +1019,6 @@ void FindGBPDMetricBased::execute()
 #else
   QVector<TriAreaAndNormals> selectedTris(0);
 #endif
-
 
   size_t trisChunkSize = 50000;
   if (numMeshTris < trisChunkSize) { trisChunkSize = numMeshTris; }
@@ -1010,8 +1048,7 @@ void FindGBPDMetricBased::execute()
           m_Phases,
           m_FaceLabels,
           m_FaceNormals,
-          m_FaceAreas,
-          totalFaceArea
+          m_FaceAreas
         ), tbb::auto_partitioner());
     }
     else
@@ -1028,8 +1065,7 @@ void FindGBPDMetricBased::execute()
         m_Phases,
         m_FaceLabels,
         m_FaceNormals,
-        m_FaceAreas,
-        totalFaceArea
+        m_FaceAreas
         );
       serial.select(i, i + trisChunkSize);
     }
@@ -1053,8 +1089,12 @@ void FindGBPDMetricBased::execute()
     numDistinctGBs++;
   }
 
-  
+
+
   // ----------------- determining distribution values at the sampling points (and their errors) -------------------
+  double totalFaceArea = 0.0;
+  for (int i = 0; i < selectedTris.size(); i++) { totalFaceArea += selectedTris.at(i).area; }
+
   QVector<double> distribValues(samplPtsX.size(), 0.0);
   QVector<double> errorValues(samplPtsX.size(), 0.0);
 
@@ -1078,9 +1118,9 @@ void FindGBPDMetricBased::execute()
         ProbeDistrib(
         &distribValues,
         &errorValues,
-        samplPtsX,
-        samplPtsY,
-        samplPtsZ,
+        &samplPtsX,
+        &samplPtsY,
+        &samplPtsZ,
         selectedTris,
         m_LimitDist,
         totalFaceArea,
@@ -1088,7 +1128,6 @@ void FindGBPDMetricBased::execute()
         ballVolume,
         cryst
         ), tbb::auto_partitioner());
-
     }
     else
 #endif
@@ -1096,9 +1135,9 @@ void FindGBPDMetricBased::execute()
       ProbeDistrib serial(
         &distribValues,
         &errorValues,
-        samplPtsX,
-        samplPtsY,
-        samplPtsZ,
+        &samplPtsX,
+        &samplPtsY,
+        &samplPtsZ,
         selectedTris,
         m_LimitDist,
         totalFaceArea,
