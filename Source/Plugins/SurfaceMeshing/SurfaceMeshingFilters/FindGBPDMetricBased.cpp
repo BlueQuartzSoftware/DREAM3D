@@ -651,6 +651,7 @@ void FindGBPDMetricBased::dataCheck()
       notifyErrorMessage(getHumanLabel(), ss, -1);
       setErrorCondition(-381);
     }
+
   }
 
 
@@ -753,6 +754,13 @@ void FindGBPDMetricBased::execute()
   int32_t* m_FeatureFaceLabels = m_SurfaceMeshFeatureFaceLabelsPtr.lock()->getPointer(0);
   int8_t* m_NodeTypes = m_NodeTypesPtr.lock()->getPointer(0);
 
+
+  if (m_CrystalStructures[m_PhaseOfInterest] > 10)
+  {
+    QString ss = QObject::tr("Unsupported CrystalStructure");
+    notifyErrorMessage(getHumanLabel(), ss, -1);
+    return;
+  }
 
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceAreasArrayPath().getDataContainerName());
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
@@ -1152,6 +1160,8 @@ void FindGBPDMetricBased::execute()
 
   // ------------------------------------------- writing the output --------------------------------------------
 
+  fprintf(fDist, "%.1f %.1f %.1f %.1f\n", 0.0f, 0.0f, 0.0f, 0.0f);
+  fprintf(fErr, "%.1f %.1f %.1f %.1f\n", 0.0f, 0.0f, 0.0f, 0.0f);
 
   for (int ptIdx = 0; ptIdx < samplPtsX.size(); ptIdx++) {
 
