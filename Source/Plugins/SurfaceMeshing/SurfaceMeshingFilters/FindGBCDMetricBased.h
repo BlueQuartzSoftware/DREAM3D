@@ -1,4 +1,4 @@
-/* This filter has been created by Krzysztof Glowinski (kglowinski@ymail.com).
+/* This filter has been created by Krzysztof Glowinski (kglowinski at ymail.com).
  * It includes an implementation of the algorithm described in:
  * K.Glowinski, A.Morawiec, "Analysis of experimental grain boundary distributions
  * based on boundary-space metrics", Metall. Mater. Trans. A 45, 3189-3194 (2014).
