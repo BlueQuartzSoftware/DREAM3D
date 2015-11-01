@@ -36,6 +36,15 @@ In the above formulas, &alpha; = | **u** * **n**<sub>1</sub> | with **u** and **
 unit vectors representing the misorientation axis and boundary normal given in *first* of the crystallites, respectively;
 &omega; stands for the misorientation angle, and minimization is over symmetrically equivalent boundary representations.
 
+
+![GB network reconstructed from the pure Ni 3D data set presented by J. Li, S.J. Dillon and G.S. Rohrer in 'Relative Grain Boundary Area and Energy Distributions in Nickel', Acta Mater. 57, 4304-4311 (2009). GBs are colored according to their distances to the nearest symmetric(-tilt) boundaries; Boundaries with that distance smaller than 8 deg. are marked with blue color.](FindDistsToCharactGBs_example.png)
+
+### Why are some distances equal to 999.0? ###
+If phases of **Features** separated by a **Face** are the same, i.e., if the **Face** is a grain boundary, then the distances are
+computed as defined above; the number of equivalent boundary representations processed is determined by crystal symmetry of the given phase.
+However, if the phases of **Features** separated by a **Face** are different, then that **Face** is not a grain boundary, but
+an interphase boundary, and all distances are therefore set to 999.0&deg; (a value which is out of the ranges for the distances).
+
 ## Parameters ##
 None
 
@@ -53,11 +62,11 @@ Image + Triangle
 
 ## Created Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
-|------|--------------|-------------|---------|-----|
-| **Face Attribute Array** | DistanceToTilt | float | (1) | &alpha;<sub>L</sub> |
-| **Face Attribute Array** | DistanceToTwist | float | (1) | &alpha;<sub>N</sub> |
-| **Face Attribute Array** | DistanceToSymmetric | float | (1) | &alpha;<sub>S</sub> |
-| **Face Attribute Array** | DistanceTo180Tilt | float | (1) | &alpha;<sub>I</sub> |
+|--------|--------------|-------------|-------|-----|
+| **Face Attribute Array** | DistanceToTilt | float | (1) | &alpha;<sub>L</sub>, given in degrees |
+| **Face Attribute Array** | DistanceToTwist | float | (1) | &alpha;<sub>N</sub>, given in degrees |
+| **Face Attribute Array** | DistanceToSymmetric | float | (1) | &alpha;<sub>S</sub>, given in degrees |
+| **Face Attribute Array** | DistanceTo180tilt | float | (1) | &alpha;<sub>I</sub>, given in degrees |
 
 
 
