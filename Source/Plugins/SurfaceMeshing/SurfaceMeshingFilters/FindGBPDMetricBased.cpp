@@ -1,4 +1,4 @@
-/* This filter has been created by Krzysztof Glowinski (kglowinski@ymail.com).
+/* This filter has been created by Krzysztof Glowinski (kglowinski at ymail.com).
  * It apadts the algorithm described in K.Glowinski, A.Morawiec, "Analysis of 
  * experimental grain boundary distributions based on boundary-space metrics",
  * Metall. Mater. Trans. A 45, 3189-3194 (2014).
@@ -397,7 +397,7 @@ FindGBPDMetricBased::FindGBPDMetricBased() :
   m_PhaseOfInterest(1),
   m_LimitDist(7.0f),
   m_NumSamplPts(3000),
-  m_ExcludeTripleLines(true),
+  m_ExcludeTripleLines(false),
   m_DistOutputFile(""),
   m_ErrOutputFile(""),
   m_SaveRelativeErr(false),
