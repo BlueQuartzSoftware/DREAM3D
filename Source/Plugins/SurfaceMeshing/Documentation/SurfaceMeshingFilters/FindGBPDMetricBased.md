@@ -51,7 +51,7 @@ See also the documentation for *Find GBCD (Metric-based Approach)* filter.
 | Name | Type | Description |
 |------|------|-------------|
 | Phase of Interest | int32_t | Index of the **Ensemble** for which to compute GBPD; boundaries having grains of this phase on both its sides will only be taken into account |
-| Limiting Distances | float | &rho;<sub>p</sub> |
+| Limiting Distance | float | &rho;<sub>p</sub> as defined above |
 | Number of Sampling Points | int32_t | The **approximate** number of sampling directions |
 | Exclude Triangles Directly Neighboring Triple Lines | bool | Only interiors of **Faces** are included in GBPD |
 | Save GBPD to | File Path | The output file path (extension .dat, GMT format) |
