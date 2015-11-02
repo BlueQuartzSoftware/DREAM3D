@@ -198,13 +198,21 @@ public:
           // calculate delta g
           MatrixMath::Multiply3x3with3x3(g1s, g2sT, dg); //dg -- the misorientation between adjacent grains
 
-          // compute the params and replace min if...
           FOrientArrayType omAxisAngle(4, 0.0f);
           FOrientTransformsType::om2ax(FOrientArrayType(dg), omAxisAngle);
 
 
           double misorAngle = omAxisAngle[3];
-          double alpha = acos(fabs(omAxisAngle[0] * normal_grain1[0] + omAxisAngle[1] * normal_grain1[1] + omAxisAngle[2] * normal_grain1[2]));
+
+          double dotProd = fabs(omAxisAngle[0] * normal_grain1[0] + omAxisAngle[1] * normal_grain1[1] + omAxisAngle[2] * normal_grain1[2]);
+          double alpha;
+          if (dotProd < -1.0 ) {
+            alpha = SIMPLib::Constants::k_Pi;
+          } else if (dotProd > 1.0) {
+            alpha = 0.0;
+          } else {
+            alpha = acos(dotProd);
+          }
 
           double dist2tilt = SIMPLib::Constants::k_PiOver2 - alpha;
 
@@ -224,9 +232,10 @@ public:
       }
 
       m_DistToTilt[triIdx] = minDistToTilt * SIMPLib::Constants::k_180OverPi;
-      m_DistToTwist[triIdx] = minDistToTwist * SIMPLib::Constants::k_180OverPi;
-      m_DistToSymmetric[triIdx] = sqrt(minDistToSymmetric) * SIMPLib::Constants::k_180OverPi;
-      m_DistTo180Tilt[triIdx] = sqrt(minDistTo180Tilt) * SIMPLib::Constants::k_180OverPi;
+      m_DistToTwist[triIdx] =  minDistToTwist * SIMPLib::Constants::k_180OverPi;
+      m_DistToSymmetric[triIdx] =  sqrt(minDistToSymmetric) * SIMPLib::Constants::k_180OverPi;
+      m_DistTo180Tilt[triIdx] =  sqrt(minDistTo180Tilt) * SIMPLib::Constants::k_180OverPi;
+
     }
   }
 

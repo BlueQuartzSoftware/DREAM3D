@@ -44,6 +44,7 @@ If phases of **Features** separated by a **Face** are the same, i.e., if the **F
 computed as defined above; the number of equivalent boundary representations processed is determined by crystal symmetry of the given phase.
 However, if the phases of **Features** separated by a **Face** are different, then that **Face** is not a grain boundary, but
 an interphase boundary, and all distances are therefore set to 999.0&deg; (a value which is out of the ranges for the distances).
+999.0 is also ascribed to triangles lying at the outer surface of the volume.
 
 ## Parameters ##
 None
