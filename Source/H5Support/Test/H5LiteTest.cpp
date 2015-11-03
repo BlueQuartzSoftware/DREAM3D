@@ -1378,7 +1378,7 @@ class WriteString
     {
       // Select the file position, 1 record at position 'pos'
       hsize_t count[] = { 1 };
-      hsize_t offset[] = { m_pos++ };
+      hsize_t offset[] = { static_cast<hsize_t>(m_pos++) };
       H5Sselect_hyperslab(m_dataspace, H5S_SELECT_SET, offset, NULL, count, NULL);
 
       const char* s = v.c_str();
