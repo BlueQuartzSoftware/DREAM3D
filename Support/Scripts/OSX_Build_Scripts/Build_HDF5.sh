@@ -18,7 +18,6 @@ done < $configfile.unix
 rm $configfile.unix
 #------------------------------------------------------------------------------
 
-
 cd $SDK_INSTALL
 
 HOST_SYSTEM=`uname`
