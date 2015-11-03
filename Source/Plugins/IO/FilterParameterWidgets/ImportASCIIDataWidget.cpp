@@ -48,6 +48,7 @@
 #include "FilterParameters/ImportASCIIDataFilterParameter.h"
 
 #include "Widgets/ImportASCIIDataWizard/ImportASCIIDataWizard.h"
+#include "Widgets/ImportASCIIDataWizard/AbstractDataParser.hpp"
 
 // Initialize private static member variable
 QString ImportASCIIDataWidget::m_OpenDialogLastDirectory = "";
@@ -56,7 +57,8 @@ QString ImportASCIIDataWidget::m_OpenDialogLastDirectory = "";
 //
 // -----------------------------------------------------------------------------
 ImportASCIIDataWidget::ImportASCIIDataWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  FilterParameterWidget(parameter, filter, parent)
+  FilterParameterWidget(parameter, filter, parent),
+  m_NumLines(0)
 {
   m_FilterParameter = dynamic_cast<ImportASCIIDataFilterParameter*>(parameter);
   Q_ASSERT_X(m_FilterParameter != NULL, "NULL Pointer", "ImportASCIIDataWidget can ONLY be used with an ImportASCIIDataFilterParameter object");
@@ -205,6 +207,20 @@ void ImportASCIIDataWidget::on_importFileBtn_pressed()
       free(buffer);
     }
 
+    // Run through the file, to get the total number of lines
+    QFile inputFile(filePath);
+    if (inputFile.open(QIODevice::ReadOnly))
+    {
+      QTextStream in(&inputFile);
+
+      while (in.atEnd() == false)
+      {
+        in.readLine();
+        m_NumLines++;
+      }
+      inputFile.close();
+    }
+
     ImportASCIIDataWizard* wizard = new ImportASCIIDataWizard(filePath, this);
     int result = wizard->exec();
 
@@ -213,6 +229,61 @@ void ImportASCIIDataWidget::on_importFileBtn_pressed()
       fileImportedLabel->setText(filePath);
       fileImportedLabel->show();
       emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
+    }
+
+    // Create the arrays
+    QStringList headers = wizard->getHeaders();
+    int beginLineNum = wizard->getBeginningLineNum();
+    QStringList dataTypes = wizard->getDataTypes();
+
+    QList<IO::AbstractDataParser::Pointer> dataParsers;
+    for (int i = 0; i < dataTypes.size(); i++)
+    {
+      QString dataType = dataTypes[i];
+      QString name = headers[i];
+
+      if (dataType == "Double")
+      {
+
+      }
+      else if (dataType == "Integer")
+      {
+        int index = 0;
+        Int32ArrayType::Pointer data = Int32ArrayType::CreateArray(0, name, false);
+        IO::Int32Parser::Pointer dparser = IO::Int32Parser::New(data, name, index);
+        dataParsers.push_back(dparser);
+      }
+      else if (dataType == "String")
+      {
+
+      }
+      else if (dataType == "Skip")
+      {
+        dataParsers.push_back(IO::AbstractDataParser::NullPointer());
+      }
+    }
+
+    QStringList lines = ImportASCIIDataWizard::ReadLines(filePath, beginLineNum, m_NumLines - beginLineNum);
+    QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, wizard->getHasFixedWidth(), wizard->getTabAsDelimiter(), wizard->getSemicolonAsDelimiter(), wizard->getCommaAsDelimiter(), wizard->getSpaceAsDelimiter(), wizard->getConsecutiveDelimiters());
+
+    for (int row = 0; row < tokenizedLines.size(); row++)
+    {
+      QStringList tokens = tokenizedLines[row];
+      if (dataTypes.size() != tokens.size())
+      {
+        // Throw an error
+      }
+
+      for (int column = 0; column < tokens.size(); column++)
+      {
+        QString dataType = dataTypes[column];
+        QString token = tokens[column];
+
+        if (dataParsers[column] == IO::AbstractDataParser::NullPointer())
+        {
+          continue;
+        }
+      }
     }
 
     delete wizard;

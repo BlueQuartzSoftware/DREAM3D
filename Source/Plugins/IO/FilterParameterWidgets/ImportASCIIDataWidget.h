@@ -86,6 +86,8 @@ class ImportASCIIDataWidget : public FilterParameterWidget, private Ui::ImportAS
 
     static QString                                    m_OpenDialogLastDirectory;
 
+    int                                               m_NumLines;
+
     ImportASCIIDataWidget(const ImportASCIIDataWidget&); // Copy Constructor Not Implemented
     void operator=(const ImportASCIIDataWidget&); // Operator '=' Not Implemented
 };

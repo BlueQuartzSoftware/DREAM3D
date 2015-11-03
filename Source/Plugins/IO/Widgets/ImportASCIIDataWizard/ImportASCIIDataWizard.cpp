@@ -269,3 +269,93 @@ void ImportASCIIDataWizard::setInputFilePath(const QString &inputFilePath)
 {
   m_InputFilePath = inputFilePath;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool ImportASCIIDataWizard::getTabAsDelimiter()
+{
+  return field("tabAsDelimiter").toBool();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool ImportASCIIDataWizard::getSemicolonAsDelimiter()
+{
+  return field("semicolonAsDelimiter").toBool();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool ImportASCIIDataWizard::getCommaAsDelimiter()
+{
+  return field("commaAsDelimiter").toBool();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool ImportASCIIDataWizard::getSpaceAsDelimiter()
+{
+  return field("spaceAsDelimiter").toBool();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool ImportASCIIDataWizard::getConsecutiveDelimiters()
+{
+  return field("consecutiveDelimiters").toBool();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool ImportASCIIDataWizard::getHasFixedWidth()
+{
+  return field("isFixedWidth").toBool();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QStringList ImportASCIIDataWizard::getHeaders()
+{
+  QStringList headers;
+  ASCIIDataModel* model = ASCIIDataModel::Instance();
+
+  for (int i = 0; i < model->columnCount(); i++)
+  {
+    QString header = model->headerData(i, Qt::Horizontal, Qt::DisplayRole).toString();
+    headers.push_back(header);
+  }
+
+  return headers;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QStringList ImportASCIIDataWizard::getDataTypes()
+{
+  QStringList dataTypes;
+  ASCIIDataModel* model = ASCIIDataModel::Instance();
+
+  for (int i = 0; i < model->columnCount(); i++)
+  {
+    QString dataType = model->columnDataType(i);
+    dataTypes.push_back(dataType);
+  }
+
+  return dataTypes;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int ImportASCIIDataWizard::getBeginningLineNum()
+{
+  return field("startRow").toInt();
+}

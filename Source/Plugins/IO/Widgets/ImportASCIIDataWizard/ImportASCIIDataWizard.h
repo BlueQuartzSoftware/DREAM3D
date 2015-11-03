@@ -124,6 +124,16 @@ class ImportASCIIDataWizard : public QWizard
     */
     static void InsertLines(QStringList lines, int firstRowHeaderIndex);
 
+    bool getTabAsDelimiter();
+    bool getSemicolonAsDelimiter();
+    bool getCommaAsDelimiter();
+    bool getSpaceAsDelimiter();
+    bool getConsecutiveDelimiters();
+    bool getHasFixedWidth();
+    QStringList getHeaders();
+    QStringList getDataTypes();
+    int getBeginningLineNum();
+
     void setInputFilePath(const QString &inputFilePath);
 
   protected slots:

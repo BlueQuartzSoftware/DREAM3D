@@ -19,6 +19,10 @@ set(DREAM3D_WIDGETS_NO_UI
   ASCIIDataItem
 )
 
+set(DREAM3D_WIDGETS_HPP
+  AbstractDataParser
+)
+
 foreach(FPW ${DREAM3D_WIDGETS})
   set(${PLUGIN_NAME}_Widgets_HDRS ${${PLUGIN_NAME}_Widgets_HDRS}
     ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/${FPW}.h
@@ -37,6 +41,12 @@ foreach(FPW ${DREAM3D_WIDGETS_NO_UI})
     )
   set(${PLUGIN_NAME}_Widgets_SRCS ${${PLUGIN_NAME}_Widgets_SRCS}
     ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/${FPW}.cpp
+    )
+endforeach()
+
+foreach(FPW ${DREAM3D_WIDGETS_HPP})
+  set(${PLUGIN_NAME}_Widgets_HDRS ${${PLUGIN_NAME}_Widgets_HDRS}
+    ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/${FPW}.hpp
     )
 endforeach()
 
