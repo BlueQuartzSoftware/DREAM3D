@@ -87,7 +87,7 @@ function ConfigureITK()
   # Write an initial Cache File
   mkdir ITK-${ITK_VERSION}-$2
   cd ITK-${ITK_VERSION}-$2
-  rm -rf *
+
   lower=`echo $2 | tr '[:upper:]' '[:lower:]'`
   upper=`echo $2 | tr '[:lower:]' '[:upper:]'`
   cacheFile=CMakeCache.txt
@@ -133,6 +133,8 @@ function ConfigureITK()
   fi
 
   if [ "$2" = "Release" ]; then
+    echo "HDF5_CXX_LIBRARY:PATH=$SDK_INSTALL/$1-$2/lib/libhdf5_cpp.1.8.15.dylib" >> $cacheFile
+    echo "HDF5_C_LIBRARY:PATH=$SDK_INSTALL/$1-$2/lib/libhdf5.1.8.15.dylib" >> $cacheFile
     echo "HDF5_hdf5_LIBRARY_${upper}:FILEPATH=$SDK_INSTALL/$1-$2/lib/libhdf5.dylib" >> $cacheFile
     echo "HDF5_hdf5_cpp_LIBRARY_${upper}:FILEPATH=$SDK_INSTALL/$1-$2/lib/libhdf5_cpp.dylib" >> $cacheFile
   fi
