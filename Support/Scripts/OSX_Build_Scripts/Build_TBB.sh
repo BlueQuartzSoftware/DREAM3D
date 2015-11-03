@@ -105,9 +105,10 @@ chmod ugo+rwx $SDK_INSTALL/${TBB_VERS}oss/build/generate_tbbvars.sh
 
 
 
+echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "#--------------------------------------------------------------------------------------------------" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "# Intel Threading Building Blocks Library" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
-echo "set(DREAM3D_USE_MULTITHREADED_ALGOS ON CACHE BOOL \"\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "set(SIMPLib_USE_MULTITHREADED_ALGOS ON CACHE BOOL \"\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "set(TBB_INSTALL_DIR  \"\${DREAM3D_SDK_ROOT}/${TBB_VERS}oss\" CACHE PATH \"\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "set(TBB_ARCH_TYPE \"intel64\" CACHE STRING \"\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 
