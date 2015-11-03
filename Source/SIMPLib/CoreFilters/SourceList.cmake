@@ -43,7 +43,6 @@ START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}" "Core Fi
 
 set(_PublicFilters
   CombineAttributeMatrices
-  AppendZSlice
   ConditionalSetValue
   ConvertData
   CopyAttributeArray
