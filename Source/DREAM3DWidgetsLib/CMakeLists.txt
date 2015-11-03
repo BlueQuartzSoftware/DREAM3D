@@ -173,11 +173,14 @@ endif()
 
 add_library(DREAM3DWidgetsLib ${LIB_TYPE} ${Project_SRCS})
 
-set(D3D_LINK_LIBRARIES Qt5::Core
-                      Qt5::Gui
-                      Qt5::Widgets
+set(D3D_LINK_LIBRARIES 
+                      # Qt5::Core
                       QtSupportLib
-                      SIMPLib)
+                      #Qt5::Gui
+                      #Qt5::Widgets
+                      
+                      #SIMPLib
+                      )
 
 target_link_libraries(DREAM3DWidgetsLib ${D3D_LINK_LIBRARIES} )
 

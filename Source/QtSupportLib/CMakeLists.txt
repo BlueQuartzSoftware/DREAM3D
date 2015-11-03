@@ -221,17 +221,17 @@ add_library(${PROJECT_NAME} ${LIB_TYPE} ${Project_SRCS})
 
 set(QtSupportLib_LINK_LIBRARIES SIMPLib)
 #if we are compiling HDF5 support, include those libraries
-if(${QtSupportLib_ENABLE_HDF5})
-  set(QtSupportLib_LINK_LIBRARIES
-    ${QtSupportLib_LINK_LIBRARIES}
-    hdf5 H5Support
-    )
-endif()
+# if(${QtSupportLib_ENABLE_HDF5})
+#   set(QtSupportLib_LINK_LIBRARIES
+#     ${QtSupportLib_LINK_LIBRARIES}
+#      hdf5 H5Support
+#     )
+# endif()
 
 # Add in the Qt5 Libraries to the Link Library List
 set(QtSupportLib_LINK_LIBRARIES
   ${QtSupportLib_LINK_LIBRARIES}
-  Qt5::Core
+  # Qt5::Core
   Qt5::Gui
   Qt5::Widgets
   Qt5::Network
