@@ -1,3 +1,51 @@
+if(true)
+
+
+## YOU MUST INCLUDE THIS FILE TO USE ITK !!!
+## Then do not forget to add "${ITK_LIBRARIES}" to the target_link_libraries below
+include( ${DREAM3D_SUPPORT_DIR}/ITKSupport/IncludeITK.cmake)
+include_directories(${ITK_INCLUDE_DIRS})
+
+
+
+
+function(sitk_install_exported_target tgt)
+  # Remove the build tree's SimpleITKTargets file if this is the first call:
+  get_property(first_time GLOBAL PROPERTY SimpleITK_FIRST_EXPORTED_TARGET)
+  if(NOT first_time)
+    file(REMOVE ${CMAKE_BINARY_DIR}/SimpleITKTargets.cmake)
+    set_property(GLOBAL PROPERTY SimpleITK_FIRST_EXPORTED_TARGET 1)
+  endif()
+
+  set_property(TARGET ${tgt} PROPERTY VERSION 1)
+  set_property(TARGET ${tgt} PROPERTY SOVERSION 1)
+  set_property(TARGET ${tgt} PROPERTY
+    OUTPUT_NAME ${tgt}-${SimpleITK_VERSION_MAJOR}.${SimpleITK_VERSION_MINOR})
+
+  export(TARGETS ${tgt}
+    APPEND FILE "${CMAKE_BINARY_DIR}/SimpleITKTargets.cmake"
+    )
+
+  install(TARGETS ${tgt}
+    EXPORT SimpleITKTargets
+    RUNTIME DESTINATION ${SimpleITK_INSTALL_RUNTIME_DIR}
+    LIBRARY DESTINATION ${SimpleITK_INSTALL_LIBRARY_DIR}
+    ARCHIVE DESTINATION ${SimpleITK_INSTALL_ARCHIVE_DIR}
+    )
+endfunction()
+
+set(SimpleITK_INSTALL_RUNTIME_DIR "Bin")
+set(SimpleITK_INSTALL_LIBRARY_DIR "Bin")
+set(SimpleITK_INSTALL_ARCHIVE_DIR "Bin")
+
+PROJECT( SimpleITKExplicit VERSION ${DREAM3DProj_VERSION_MAJOR}.${DREAM3DProj_VERSION_MINOR})
+
+
+include_directories( ${SimpleITKExplicit_SOURCE_DIR}/Explicit/include)
+include( Explicit/src/CMakeLists.txt)
+
+
+else()
 PROJECT( ITKSupport VERSION ${DREAM3DProj_VERSION_MAJOR}.${DREAM3DProj_VERSION_MINOR})
 
 if(NOT DEFINED DREAM3DProj_BINARY_DIR)
@@ -201,3 +249,4 @@ if(BUILD_SHARED_LIBS AND NOT APPLE)
   )
 endif()
 
+endif()
