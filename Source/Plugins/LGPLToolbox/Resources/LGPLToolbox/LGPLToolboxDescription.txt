@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+  <title>LGPLToolbox Description</title>
+</head>
+<body>
+<h3>LGPLToolbox Plugin</h3>
+
+<p>This plugin holds miscellaneous filters released under the LGPLv2 license</p>
+
+<h4>Citations</h4>
+<p>
+none
+</p>
+</body>
+</html>
