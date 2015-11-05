@@ -359,3 +359,11 @@ int ImportASCIIDataWizard::getBeginningLineNum()
 {
   return field("startRow").toInt();
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ImportASCIIDataWizard::getInputFilePath()
+{
+  return m_InputFilePath;
+}

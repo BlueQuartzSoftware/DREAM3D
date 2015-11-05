@@ -33,45 +33,22 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "ImportASCIIDataFilterParameter.h"
 
-#include "Widgets/ImportASCIIDataWizard/ASCIIWizardData.hpp"
+#ifndef _ASCIIWizardData_H_
+#define _ASCIIWizardData_H_
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-ImportASCIIDataFilterParameter::ImportASCIIDataFilterParameter() :
-FilterParameter()
-{}
+#include <QtCore/QStringList>
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-ImportASCIIDataFilterParameter::~ImportASCIIDataFilterParameter()
-{}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-ImportASCIIDataFilterParameter::Pointer ImportASCIIDataFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QVariant& defaultValue, Category category, int groupIndex)
+class ASCIIWizardData
 {
-  ImportASCIIDataFilterParameter::Pointer ptr = ImportASCIIDataFilterParameter::New();
-  ptr->setHumanLabel(humanLabel);
-  ptr->setPropertyName(propertyName);
-  ptr->setDefaultValue(defaultValue);
-  ptr->setCategory(category);
-  ptr->setGroupIndex(groupIndex);
+public:
+  QString inputFilePath;
+  QStringList dataHeaders;
+  int beginIndex;
+  int numberOfLines;
+  QStringList dataTypes;
+};
 
-  return ptr;
-}
+Q_DECLARE_METATYPE(ASCIIWizardData)
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString ImportASCIIDataFilterParameter::getWidgetType()
-{
-  return QString("ImportASCIIDataWidget");
-}
-
+#endif /* ASCIIWizardData_H_ */

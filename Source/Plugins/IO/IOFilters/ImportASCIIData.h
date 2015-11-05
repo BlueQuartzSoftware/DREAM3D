@@ -9,6 +9,8 @@
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
+#include "Widgets/ImportASCIIDataWizard/ASCIIWizardData.hpp"
+
 /**
  * @brief The ImportASCIIData class. See [Filter documentation](@ref importasciidata) for details.
  */
@@ -23,8 +25,8 @@ class ImportASCIIData : public AbstractFilter
 
     virtual ~ImportASCIIData();
 
-    SIMPL_FILTER_PARAMETER(QString, ASCIIDataHeader)
-      Q_PROPERTY(QString ASCIIDataHeader READ getASCIIDataHeader WRITE setASCIIDataHeader)
+    SIMPL_FILTER_PARAMETER(ASCIIWizardData, WizardData)
+      Q_PROPERTY(ASCIIWizardData WizardData READ getWizardData WRITE setWizardData)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -108,6 +110,8 @@ class ImportASCIIData : public AbstractFilter
     void dataCheck();
 
   private:
+    QVector<IDataArray::Pointer>                                      m_ASCIIArrays;
+
     ImportASCIIData(const ImportASCIIData&); // Copy Constructor Not Implemented
     void operator=(const ImportASCIIData&); // Operator '=' Not Implemented
 };

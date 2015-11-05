@@ -43,12 +43,11 @@
 
 #include "SIMPLib/Common/AbstractFilter.h"
 
-#include "QtSupportLib/QFSDropLabel.h"
-
 #include "FilterParameters/ImportASCIIDataFilterParameter.h"
 
 #include "Widgets/ImportASCIIDataWizard/ImportASCIIDataWizard.h"
 #include "Widgets/ImportASCIIDataWizard/AbstractDataParser.hpp"
+#include "Widgets/ImportASCIIDataWizard/ASCIIWizardData.hpp"
 
 // Initialize private static member variable
 QString ImportASCIIDataWidget::m_OpenDialogLastDirectory = "";
@@ -58,6 +57,7 @@ QString ImportASCIIDataWidget::m_OpenDialogLastDirectory = "";
 // -----------------------------------------------------------------------------
 ImportASCIIDataWidget::ImportASCIIDataWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   FilterParameterWidget(parameter, filter, parent),
+  m_ImportWizard(NULL),
   m_NumLines(0)
 {
   m_FilterParameter = dynamic_cast<ImportASCIIDataFilterParameter*>(parameter);
@@ -81,7 +81,21 @@ ImportASCIIDataWidget::~ImportASCIIDataWidget()
 // -----------------------------------------------------------------------------
 void ImportASCIIDataWidget::setupGui()
 {
+  // Catch when the filter is about to execute the preflight
+  connect(getFilter(), SIGNAL(preflightAboutToExecute()),
+    this, SLOT(beforePreflight()));
+
+  // Catch when the filter is finished running the preflight
+  connect(getFilter(), SIGNAL(preflightExecuted()),
+    this, SLOT(afterPreflight()));
+
+  // Catch when the filter wants its values updated
+  connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)),
+    this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
+
   fileImportedLabel->hide();
+  warningLabel->hide();
+  removeFileBtn->hide();
 }
 
 // -----------------------------------------------------------------------------
@@ -89,6 +103,14 @@ void ImportASCIIDataWidget::setupGui()
 // -----------------------------------------------------------------------------
 void ImportASCIIDataWidget::on_importFileBtn_pressed()
 {
+  // Clean up previous wizard and settings
+  m_NumLines = 0;
+  if (NULL != m_ImportWizard)
+  {
+    delete m_ImportWizard;
+    m_ImportWizard = NULL;
+  }
+
   QStringList filterList;
   filterList.push_back("All Files(*.*)");
   QFileDialog* dialog = new QFileDialog(this);
@@ -221,91 +243,33 @@ void ImportASCIIDataWidget::on_importFileBtn_pressed()
       inputFile.close();
     }
 
-    ImportASCIIDataWizard* wizard = new ImportASCIIDataWizard(filePath, this);
-    int result = wizard->exec();
+    m_ImportWizard = new ImportASCIIDataWizard(filePath, this);
+    int result = m_ImportWizard->exec();
 
     if (result == QDialog::Accepted)
     {
       fileImportedLabel->setText(filePath);
       fileImportedLabel->show();
+      warningLabel->show();
+      removeFileBtn->show();
       emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
     }
-
-    // Create the arrays
-    QStringList headers = wizard->getHeaders();
-    int beginLineNum = wizard->getBeginningLineNum();
-    QStringList dataTypes = wizard->getDataTypes();
-
-    QList<IO::AbstractDataParser::Pointer> dataParsers;
-    for (int i = 0; i < dataTypes.size(); i++)
-    {
-      QString dataType = dataTypes[i];
-      QString name = headers[i];
-
-      if (dataType == "Double")
-      {
-
-      }
-      else if (dataType == "Integer")
-      {
-        int index = 0;
-        Int32ArrayType::Pointer data = Int32ArrayType::CreateArray(0, name, false);
-        IO::Int32Parser::Pointer dparser = IO::Int32Parser::New(data, name, index);
-        dataParsers.push_back(dparser);
-      }
-      else if (dataType == "String")
-      {
-
-      }
-      else if (dataType == "Skip")
-      {
-        dataParsers.push_back(IO::AbstractDataParser::NullPointer());
-      }
-    }
-
-    QStringList lines = ImportASCIIDataWizard::ReadLines(filePath, beginLineNum, m_NumLines - beginLineNum);
-    QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, wizard->getHasFixedWidth(), wizard->getTabAsDelimiter(), wizard->getSemicolonAsDelimiter(), wizard->getCommaAsDelimiter(), wizard->getSpaceAsDelimiter(), wizard->getConsecutiveDelimiters());
-
-    for (int row = 0; row < tokenizedLines.size(); row++)
-    {
-      QStringList tokens = tokenizedLines[row];
-      if (dataTypes.size() != tokens.size())
-      {
-        // Throw an error
-      }
-
-      for (int column = 0; column < tokens.size(); column++)
-      {
-        QString dataType = dataTypes[column];
-        QString token = tokens[column];
-
-        if (dataParsers[column] == IO::AbstractDataParser::NullPointer())
-        {
-          continue;
-        }
-      }
-    }
-
-    delete wizard;
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool ImportASCIIDataWidget::verifyPathExists(QString filePath, QFSDropLabel* lineEdit)
+void ImportASCIIDataWidget::on_removeFileBtn_pressed()
 {
-  QFileInfo fileinfo(filePath);
-  if (false == fileinfo.exists())
-  {
-    //lineEdit->setStyleSheet("border: 1px solid red;");
-    lineEdit->changeStyleSheet(QFSDropLabel::FS_DOESNOTEXIST_STYLE);
-  }
-  else
-  {
-    lineEdit->changeStyleSheet(QFSDropLabel::FS_STANDARD_STYLE);
-  }
-  return fileinfo.exists();
+  delete m_ImportWizard;
+  m_ImportWizard = NULL;
+
+  fileImportedLabel->hide();
+  warningLabel->hide();
+  removeFileBtn->hide();
+
+  emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
 }
 
 // -----------------------------------------------------------------------------
@@ -313,14 +277,31 @@ bool ImportASCIIDataWidget::verifyPathExists(QString filePath, QFSDropLabel* lin
 // -----------------------------------------------------------------------------
 void ImportASCIIDataWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
-  //QString text = value->text();
-  //if (verifyPathExists(text, value) == true) {}
+  if (NULL == m_ImportWizard)
+  {
+    return;
+  }
 
-  //bool ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, text);
-  //if (false == ok)
-  //{
-  //  FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
-  //}
+  QString inputFilePath = m_ImportWizard->getInputFilePath();
+  QStringList headers = m_ImportWizard->getHeaders();
+  int beginIndex = m_ImportWizard->getBeginningLineNum();
+  int numOfLines = m_NumLines - beginIndex;
+  QStringList dataTypes = m_ImportWizard->getDataTypes();
+
+  ASCIIWizardData data;
+  data.inputFilePath = inputFilePath;
+  data.dataHeaders = headers;
+  data.beginIndex = beginIndex;
+  data.numberOfLines = numOfLines;
+  data.dataTypes = dataTypes;
+
+  QVariant v;
+  v.setValue(data);
+  bool ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
+  if (false == ok)
+  {
+    //FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
+  }
 }
 
 // -----------------------------------------------------------------------------

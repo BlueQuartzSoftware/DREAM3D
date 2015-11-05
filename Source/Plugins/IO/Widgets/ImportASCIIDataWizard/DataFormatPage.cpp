@@ -209,21 +209,22 @@ void DataFormatPage::updateSelection(const QItemSelection &selected, const QItem
     int selectedColumn = selectedIndexList[0].column();
     QString selectedType = model->columnDataType(selectedColumn);
 
-    if (selectedType == "Integer")
+    if (selectedType.isEmpty())
     {
-      integerRadio->setChecked(true);
-    }
-    else if (selectedType == "Double")
-    {
-      doubleRadio->setChecked(true);
-    }
-    else if (selectedType == "String")
-    {
-      stringRadio->setChecked(true);
+      dataTypeRadio->setChecked(true);
+      dataTypeCB->setEnabled(true);
+      dataTypeCB->setCurrentIndex(0);
     }
     else if (selectedType == "Skip")
     {
       skipRadio->setChecked(true);
+      dataTypeCB->setDisabled(true);
+    }
+    else
+    {
+      dataTypeRadio->setChecked(true);
+      dataTypeCB->setEnabled(true);
+      dataTypeCB->setCurrentText(selectedType);
     }
   }
 }
@@ -231,7 +232,7 @@ void DataFormatPage::updateSelection(const QItemSelection &selected, const QItem
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataFormatPage::on_integerRadio_clicked()
+void DataFormatPage::on_dataTypeRadio_clicked()
 {
   ASCIIDataModel* model = ASCIIDataModel::Instance();
   QModelIndexList indexList = dataView->selectionModel()->selectedColumns();
@@ -241,42 +242,18 @@ void DataFormatPage::on_integerRadio_clicked()
     QModelIndex index = indexList[0];
     int column = index.column();
 
-    model->setColumnDataType(column, "Integer");
+    model->setColumnDataType(column, dataTypeCB->currentText());
   }
+
+  dataTypeCB->setEnabled(true);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataFormatPage::on_doubleRadio_clicked()
+void DataFormatPage::on_dataTypeCB_currentTextChanged(const QString &text)
 {
-  ASCIIDataModel* model = ASCIIDataModel::Instance();
-  QModelIndexList indexList = dataView->selectionModel()->selectedColumns();
-
-  if (indexList.size() > 0)
-  {
-    QModelIndex index = indexList[0];
-    int column = index.column();
-
-    model->setColumnDataType(column, "Double");
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataFormatPage::on_stringRadio_clicked()
-{
-  ASCIIDataModel* model = ASCIIDataModel::Instance();
-  QModelIndexList indexList = dataView->selectionModel()->selectedColumns();
-
-  if (indexList.size() > 0)
-  {
-    QModelIndex index = indexList[0];
-    int column = index.column();
-
-    model->setColumnDataType(column, "String");
-  }
+  on_dataTypeRadio_clicked();
 }
 
 // -----------------------------------------------------------------------------
@@ -294,6 +271,8 @@ void DataFormatPage::on_skipRadio_clicked()
 
     model->setColumnDataType(column, "Skip");
   }
+
+  dataTypeCB->setDisabled(true);
 }
 
 // -----------------------------------------------------------------------------

@@ -88,10 +88,9 @@ class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
     void on_hasHeadersRadio_toggled(bool checked);
     void on_headersIndexLineEdit_textChanged(const QString &text);
     void on_addHeadersBtn_clicked();
-    void on_integerRadio_clicked();
-    void on_doubleRadio_clicked();
-    void on_stringRadio_clicked();
+    void on_dataTypeRadio_clicked();
     void on_skipRadio_clicked();
+    void on_dataTypeCB_currentTextChanged(const QString &text);
 
     void updateSelection(const QItemSelection &selected, const QItemSelection &deselected);
 

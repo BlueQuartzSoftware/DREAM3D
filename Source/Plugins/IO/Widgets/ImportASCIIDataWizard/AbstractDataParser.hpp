@@ -36,8 +36,7 @@
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
-namespace IO
-{
+#include "ParserFunctors.hpp"
 
 class AbstractDataParser
 {
@@ -66,110 +65,76 @@ class AbstractDataParser
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class Int32Parser : public AbstractDataParser
+template <typename T, class F>
+class Parser : public AbstractDataParser
 {
-  public:
-    SIMPL_SHARED_POINTERS(Int32Parser)
-    SIMPL_TYPE_MACRO(Int32Parser)
-    static Pointer New(Int32ArrayType::Pointer ptr, const QString& name, int colIndex)
-    {
-      Pointer sharedPtr (new Int32Parser(ptr, name, colIndex));
-      return sharedPtr;
-    }
+public:
+  typedef Parser<T, F> SelfType;
 
-    virtual ~Int32Parser()
-    {
-    }
+  SIMPL_SHARED_POINTERS(SelfType)
+  SIMPL_TYPE_MACRO(SelfType)
 
-    void setDataArray(IDataArray::Pointer value)
-    {
-      AbstractDataParser::setDataArray(value);
-      m_Ptr = boost::dynamic_pointer_cast<Int32ArrayType>(value);
-    }
+  static Pointer New(typename DataArray<T>::Pointer ptr, const QString& name, int colIndex)
+  {
+    Pointer sharedPtr(new Parser(ptr, name, colIndex));
+    return sharedPtr;
+  }
 
-    IDataArray::Pointer initializeNewDataArray(size_t numTuples, const QString &name, bool allocate)
-    {
-      Int32ArrayType::Pointer array = Int32ArrayType::CreateArray(numTuples, name, allocate);
-      if (allocate) { array->initializeWithZeros(); }
-      return array;
-    }
+  virtual ~Parser()
+  {
+  }
 
-    virtual void parse(const QByteArray& token, size_t index)
-    {
-      bool ok = false;
-      (*m_Ptr)[index] = token.toInt(&ok, 10);
-    }
+  static IDataArray::Pointer InitializeNewDataArray(size_t numTuples, const QString &name, bool allocate)
+  {
+    typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(numTuples, name, allocate);
+    if (allocate) { array->initializeWithZeros(); }
+    return array;
+  }
 
-  protected:
-    Int32Parser(Int32ArrayType::Pointer ptr, const QString& name, int index)
-    {
-      setColumnName(name);
-      setColumnIndex(index);
-      setDataArray(ptr);
-      m_Ptr = ptr;
-    }
+  void setDataArray(IDataArray::Pointer value)
+  {
+    AbstractDataParser::setDataArray(value);
+    m_Ptr = boost::dynamic_pointer_cast<DataArray<T> >(value);
+  }
 
-  private:
-    Int32ArrayType::Pointer m_Ptr;
+  virtual void parse(const QByteArray& token, size_t index)
+  {
+    bool ok = false;
+    (*m_Ptr)[index] = F()(token, ok);
 
-    Int32Parser(const Int32Parser&); // Copy Constructor Not Implemented
-    void operator=(const Int32Parser&); // Operator '=' Not Implemented
+    // Do error checking
+  }
+
+protected:
+  Parser(typename DataArray<T>::Pointer ptr, const QString& name, int index)
+  {
+    setColumnName(name);
+    setColumnIndex(index);
+    setDataArray(ptr);
+    m_Ptr = ptr;
+  }
+
+private:
+  typename DataArray<T>::Pointer m_Ptr;
+
+  Parser(const Parser&); // Copy Constructor Not Implemented
+  void operator=(const Parser&); // Operator '=' Not Implemented
 };
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-class FloatParser : public AbstractDataParser
-{
-  public:
-    SIMPL_SHARED_POINTERS(FloatParser)
-    SIMPL_TYPE_MACRO(FloatParser)
-    static Pointer New(FloatArrayType::Pointer ptr, const QString& name, int colIndex)
-    {
-      Pointer sharedPtr (new FloatParser(ptr, name, colIndex));
-      return sharedPtr;
-    }
+typedef Parser<int8_t, Int8Functor>  Int8ParserType;
+typedef Parser<uint8_t, UInt8Functor>  UInt8ParserType;
 
-    virtual ~FloatParser()
-    {
-    }
+typedef Parser<int16_t, Int16Functor>  Int16ParserType;
+typedef Parser<uint16_t, UInt16Functor>  UInt16ParserType;
 
-    void setDataArray(IDataArray::Pointer value)
-    {
-      AbstractDataParser::setDataArray(value);
-      m_Ptr = boost::dynamic_pointer_cast<FloatArrayType>(value);
-    }
+typedef Parser<int32_t, Int32Functor>  Int32ParserType;
+typedef Parser<uint32_t, UInt32Functor>  UInt32ParserType;
 
-    IDataArray::Pointer initializeNewDataArray(size_t numTuples, const QString &name, bool allocate)
-    {
-      FloatArrayType::Pointer array = FloatArrayType::CreateArray(numTuples, name, allocate);
-      if (allocate) { array->initializeWithZeros(); }
-      return array;
-    }
+typedef Parser<int64_t, Int64Functor>  Int64ParserType;
+typedef Parser<uint64_t, UInt64Functor>  UInt64ParserType;
 
-    virtual void parse(const QByteArray& token, size_t index)
-    {
-      bool ok = false;
-      (*m_Ptr)[index] = token.toFloat(&ok);
-    }
-
-  protected:
-    FloatParser(FloatArrayType::Pointer ptr, const QString& name, int index)
-    {
-      setColumnName(name);
-      setColumnIndex(index);
-      setDataArray(ptr);
-      m_Ptr = ptr;
-    }
-
-  private:
-    FloatArrayType::Pointer m_Ptr;
-
-    FloatParser(const FloatParser&); // Copy Constructor Not Implemented
-    void operator=(const FloatParser&); // Operator '=' Not ImplementedOperator '=' Not Implemented
-};
-
-}
+typedef Parser<float, FloatFunctor>  FloatParserType;
+typedef Parser<double, DoubleFunctor>  DoubleParserType;
 
 #endif /* DATAPARSER_HPP_ */
 

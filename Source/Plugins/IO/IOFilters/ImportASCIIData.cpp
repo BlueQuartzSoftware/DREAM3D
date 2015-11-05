@@ -12,6 +12,9 @@
 
 #include "IO/IOConstants.h"
 
+#include "Widgets/ImportASCIIDataWizard/AbstractDataParser.hpp"
+#include "Widgets/ImportASCIIDataWizard/ImportASCIIDataWizard.h"
+
 // Include the MOC generated file for this class
 #include "moc_ImportASCIIData.cpp"
 
@@ -38,7 +41,7 @@ void ImportASCIIData::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(ImportASCIIDataFilterParameter::New("ASCII Data Header", "ASCIIDataHeader", getASCIIDataHeader(), FilterParameter::Parameter));
+  parameters.push_back(ImportASCIIDataFilterParameter::New("ASCII Wizard Data", "WizardData", "", FilterParameter::Parameter));
 
   setFilterParameters(parameters);
 }
@@ -70,7 +73,71 @@ int ImportASCIIData::writeFilterParameters(AbstractFilterParametersWriter* write
 void ImportASCIIData::dataCheck()
 {
   setErrorCondition(0);
+  m_ASCIIArrays.clear();
 
+  ASCIIWizardData wizardData = getWizardData();
+
+  // Create the arrays
+  QStringList headers = wizardData.dataHeaders;
+  QStringList dataTypes = wizardData.dataTypes;
+
+  QList<AbstractDataParser::Pointer> dataParsers;
+  for (int i = 0; i < dataTypes.size(); i++)
+  {
+    QString dataType = dataTypes[i];
+    QString name = headers[i];
+
+    /*if (dataType == "Double")
+    {
+      DoubleArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter>(this, pathval, 0, cDims);
+      m_ASCIIArrays.push_back(ptr);
+    }
+    if (dataType == "Float")
+    {
+      FloatArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<FloatArrayType, AbstractFilter>(this, pathval, 0, cDims);
+      m_ASCIIArrays.push_back(ptr);
+    }
+    else if (dataType == "Int8")
+    {
+      Int8ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<Int8ArrayType, AbstractFilter>(this, pathval, 0, cDims);
+      m_ASCIIArrays.push_back(ptr);
+    }
+    else if (dataType == "Int16")
+    {
+      Int16ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<Int16ArrayType, AbstractFilter>(this, pathval, 0, cDims);
+      m_ASCIIArrays.push_back(ptr);
+    }
+    else if (dataType == "Int32")
+    {
+      Int32ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<Int32ArrayType, AbstractFilter>(this, pathval, 0, cDims);
+      m_ASCIIArrays.push_back(ptr);
+    }
+    else if (dataType == "Int64")
+    {
+      Int64ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<Int64ArrayType, AbstractFilter>(this, pathval, 0, cDims);
+      m_ASCIIArrays.push_back(ptr);
+    }
+    else if (dataType == "UInt8")
+    {
+      UInt8ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt8ArrayType, AbstractFilter>(this, pathval, 0, cDims);
+      m_ASCIIArrays.push_back(ptr);
+    }
+    else if (dataType == "UInt16")
+    {
+      UInt16ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt16ArrayType, AbstractFilter>(this, pathval, 0, cDims);
+      m_ASCIIArrays.push_back(ptr);
+    }
+    else if (dataType == "UInt32")
+    {
+      UInt32ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt32ArrayType, AbstractFilter>(this, pathval, 0, cDims);
+      m_ASCIIArrays.push_back(ptr);
+    }
+    else if (dataType == "UInt64")
+    {
+      UInt64ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt64ArrayType, AbstractFilter>(this, pathval, 0, cDims);
+      m_ASCIIArrays.push_back(ptr);
+    }*/
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -96,7 +163,30 @@ void ImportASCIIData::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  if (getCancel() == true) { return; }
+  //Int32ArrayType::Pointer data = Int32ArrayType::CreateArray(0, name, false);
+  //Int32ParserType::Pointer parser = Int32ParserType::New(data, name, i);
+  //dataParsers.push_back(parser);
+
+  //QStringList lines = ImportASCIIDataWizard::ReadLines(inputFilePath, beginLineNum, numOfDataLines);
+  //QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, m_ImportWizard->getHasFixedWidth(), m_ImportWizard->getTabAsDelimiter(), m_ImportWizard->getSemicolonAsDelimiter(), m_ImportWizard->getCommaAsDelimiter(), m_ImportWizard->getSpaceAsDelimiter(), m_ImportWizard->getConsecutiveDelimiters());
+
+  //for (int row = 0; row < tokenizedLines.size(); row++)
+  //{
+  //  QStringList tokens = tokenizedLines[row];
+  //  if (dataTypes.size() != tokens.size())
+  //  {
+  //    // Throw an error
+  //  }
+
+  //  for (int i = 0; i < dataParsers.size(); i++)
+  //  {
+  //    IO::AbstractDataParser::Pointer parser = dataParsers[i];
+  //    int index = parser->getColumnIndex();
+  //    QString name = parser->getColumnName();
+
+  //    parser->parse(tokens[index], row);
+  //  }
+  //}
 
   if (getErrorCondition() < 0)
   {

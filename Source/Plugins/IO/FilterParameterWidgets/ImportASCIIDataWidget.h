@@ -43,6 +43,7 @@
 
 class QFSDropLabel;
 class ImportASCIIDataFilterParameter;
+class ImportASCIIDataWizard;
 
 class ImportASCIIDataWidget : public FilterParameterWidget, private Ui::ImportASCIIDataWidget
 {
@@ -64,11 +65,6 @@ class ImportASCIIDataWidget : public FilterParameterWidget, private Ui::ImportAS
      */
     virtual void setupGui();
 
-    /**
-    * @brief
-    */
-    bool verifyPathExists(QString filePath, QFSDropLabel* lineEdit);
-
   public slots:
     void beforePreflight();
     void afterPreflight();
@@ -76,6 +72,7 @@ class ImportASCIIDataWidget : public FilterParameterWidget, private Ui::ImportAS
 
   protected slots:
     void on_importFileBtn_pressed();
+    void on_removeFileBtn_pressed();
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
@@ -83,6 +80,8 @@ class ImportASCIIDataWidget : public FilterParameterWidget, private Ui::ImportAS
 
   private:
     ImportASCIIDataFilterParameter*                   m_FilterParameter;
+
+    ImportASCIIDataWizard*                            m_ImportWizard;
 
     static QString                                    m_OpenDialogLastDirectory;
 

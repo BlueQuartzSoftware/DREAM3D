@@ -21,6 +21,8 @@ set(DREAM3D_WIDGETS_NO_UI
 
 set(DREAM3D_WIDGETS_HPP
   AbstractDataParser
+  ParserFunctors
+  ASCIIWizardData
 )
 
 foreach(FPW ${DREAM3D_WIDGETS})

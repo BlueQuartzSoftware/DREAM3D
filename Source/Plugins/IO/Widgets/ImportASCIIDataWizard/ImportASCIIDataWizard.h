@@ -133,6 +133,7 @@ class ImportASCIIDataWizard : public QWizard
     QStringList getHeaders();
     QStringList getDataTypes();
     int getBeginningLineNum();
+    QString getInputFilePath();
 
     void setInputFilePath(const QString &inputFilePath);
 

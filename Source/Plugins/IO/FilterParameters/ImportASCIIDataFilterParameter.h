@@ -38,6 +38,8 @@
 
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 
+class ASCIIWizardData;
+
 class ImportASCIIDataFilterParameter : public FilterParameter
 {
 public:
