@@ -76,67 +76,81 @@ void ImportASCIIData::dataCheck()
   m_ASCIIArrays.clear();
 
   ASCIIWizardData wizardData = getWizardData();
+  if (wizardData.isEmpty() == true)
+  {
+    return;
+  }
 
-  // Create the arrays
   QStringList headers = wizardData.dataHeaders;
   QStringList dataTypes = wizardData.dataTypes;
+  int numLines = wizardData.numberOfLines;
 
+
+  QVector<size_t> tDims(1, numLines);
+  QVector<size_t> cDims(1, 1);
+  DataContainer::Pointer dc = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, "ImportDataContainer");
+  AttributeMatrix::Pointer am = dc->createNonPrereqAttributeMatrix<AbstractFilter>(this, "ImportAttributeMatrix", tDims, DREAM3D::AttributeMatrixType::Cell);
+
+  // Create the arrays
   QList<AbstractDataParser::Pointer> dataParsers;
+  DataArrayPath arrayPath(dc->getName(), am->getName(), "");
   for (int i = 0; i < dataTypes.size(); i++)
   {
     QString dataType = dataTypes[i];
     QString name = headers[i];
 
-    /*if (dataType == "Double")
+    arrayPath.setDataArrayName(name);
+
+    if (dataType == "Double")
     {
-      DoubleArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter>(this, pathval, 0, cDims);
+      DoubleArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
       m_ASCIIArrays.push_back(ptr);
     }
     if (dataType == "Float")
     {
-      FloatArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<FloatArrayType, AbstractFilter>(this, pathval, 0, cDims);
+      FloatArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<FloatArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
       m_ASCIIArrays.push_back(ptr);
     }
     else if (dataType == "Int8")
     {
-      Int8ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<Int8ArrayType, AbstractFilter>(this, pathval, 0, cDims);
+      Int8ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<Int8ArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
       m_ASCIIArrays.push_back(ptr);
     }
     else if (dataType == "Int16")
     {
-      Int16ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<Int16ArrayType, AbstractFilter>(this, pathval, 0, cDims);
+      Int16ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<Int16ArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
       m_ASCIIArrays.push_back(ptr);
     }
     else if (dataType == "Int32")
     {
-      Int32ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<Int32ArrayType, AbstractFilter>(this, pathval, 0, cDims);
+      Int32ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<Int32ArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
       m_ASCIIArrays.push_back(ptr);
     }
     else if (dataType == "Int64")
     {
-      Int64ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<Int64ArrayType, AbstractFilter>(this, pathval, 0, cDims);
+      Int64ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<Int64ArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
       m_ASCIIArrays.push_back(ptr);
     }
     else if (dataType == "UInt8")
     {
-      UInt8ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt8ArrayType, AbstractFilter>(this, pathval, 0, cDims);
+      UInt8ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt8ArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
       m_ASCIIArrays.push_back(ptr);
     }
     else if (dataType == "UInt16")
     {
-      UInt16ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt16ArrayType, AbstractFilter>(this, pathval, 0, cDims);
+      UInt16ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt16ArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
       m_ASCIIArrays.push_back(ptr);
     }
     else if (dataType == "UInt32")
     {
-      UInt32ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt32ArrayType, AbstractFilter>(this, pathval, 0, cDims);
+      UInt32ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt32ArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
       m_ASCIIArrays.push_back(ptr);
     }
     else if (dataType == "UInt64")
     {
-      UInt64ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt64ArrayType, AbstractFilter>(this, pathval, 0, cDims);
+      UInt64ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt64ArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
       m_ASCIIArrays.push_back(ptr);
-    }*/
+    }
   }
 }
 

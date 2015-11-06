@@ -277,23 +277,16 @@ void ImportASCIIDataWidget::on_removeFileBtn_pressed()
 // -----------------------------------------------------------------------------
 void ImportASCIIDataWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
-  if (NULL == m_ImportWizard)
-  {
-    return;
-  }
-
-  QString inputFilePath = m_ImportWizard->getInputFilePath();
-  QStringList headers = m_ImportWizard->getHeaders();
-  int beginIndex = m_ImportWizard->getBeginningLineNum();
-  int numOfLines = m_NumLines - beginIndex;
-  QStringList dataTypes = m_ImportWizard->getDataTypes();
-
   ASCIIWizardData data;
-  data.inputFilePath = inputFilePath;
-  data.dataHeaders = headers;
-  data.beginIndex = beginIndex;
-  data.numberOfLines = numOfLines;
-  data.dataTypes = dataTypes;
+
+  if (NULL != m_ImportWizard)
+  {
+    data.inputFilePath = m_ImportWizard->getInputFilePath();
+    data.dataHeaders = m_ImportWizard->getHeaders();
+    data.beginIndex = m_ImportWizard->getBeginningLineNum();
+    data.numberOfLines = m_NumLines - m_ImportWizard->getBeginningLineNum();
+    data.dataTypes = m_ImportWizard->getDataTypes();
+  }
 
   QVariant v;
   v.setValue(data);

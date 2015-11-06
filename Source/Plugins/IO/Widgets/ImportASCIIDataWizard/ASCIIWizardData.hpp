@@ -42,11 +42,28 @@
 class ASCIIWizardData
 {
 public:
+  ASCIIWizardData() :
+    inputFilePath(""), 
+    beginIndex(-1),
+    numberOfLines(-1)
+  {
+
+  }
+
   QString inputFilePath;
   QStringList dataHeaders;
   int beginIndex;
   int numberOfLines;
   QStringList dataTypes;
+
+  bool isEmpty()
+  {
+    if (inputFilePath.isEmpty() && dataHeaders.isEmpty() && dataTypes.isEmpty() && beginIndex < 0 && numberOfLines < 0)
+    {
+      return true;
+    }
+    return false;
+  }
 };
 
 Q_DECLARE_METATYPE(ASCIIWizardData)

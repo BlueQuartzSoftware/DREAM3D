@@ -206,7 +206,7 @@ bool ASCIIDataModel::insertColumns(int position, int columns, const QModelIndex&
   Q_UNUSED(parent)
   beginInsertColumns(QModelIndex(), position, position + columns - 1);
   m_HorizontalHeaders.insert(position, columns, "");
-  m_ColumnDataType.insert(position, columns, "");
+  m_ColumnDataType.insert(position, columns, "Double");
   for (int i = 0; i < m_TableItems.size(); i++)
   {
     m_TableItems[i]->insertColumns(position, columns);
