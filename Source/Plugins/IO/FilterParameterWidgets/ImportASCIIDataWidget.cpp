@@ -281,6 +281,9 @@ void ImportASCIIDataWidget::filterNeedsInputParameters(AbstractFilter* filter)
 
   if (NULL != m_ImportWizard)
   {
+    data.consecutiveDelimiters = m_ImportWizard->getConsecutiveDelimiters();
+    data.isFixedWidth = m_ImportWizard->getHasFixedWidth();
+    data.delimiters = m_ImportWizard->getDelimiters();
     data.inputFilePath = m_ImportWizard->getInputFilePath();
     data.dataHeaders = m_ImportWizard->getHeaders();
     data.beginIndex = m_ImportWizard->getBeginningLineNum();

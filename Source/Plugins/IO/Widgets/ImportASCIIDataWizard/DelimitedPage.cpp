@@ -98,7 +98,9 @@ void DelimitedPage::checkBox_Toggled(int state)
 
   ImportASCIIDataWizard::LoadOriginalLines(lines);
 
-  QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, false, tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter, consecutiveDelimiters);
+  QList<char> delimiters = ImportASCIIDataWizard::ConvertToDelimiters(tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter);
+
+  QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, delimiters, false, consecutiveDelimiters);
   ImportASCIIDataWizard::InsertTokenizedLines(tokenizedLines, 1);
 }
 
@@ -120,7 +122,9 @@ void DelimitedPage::refreshModel()
 
   ImportASCIIDataWizard::LoadOriginalLines(lines);
 
-  QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, false, tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter, consecutiveDelimiters);
+  QList<char> delimiters = ImportASCIIDataWizard::ConvertToDelimiters(tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter);
+
+  QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, delimiters, false, consecutiveDelimiters);
   ImportASCIIDataWizard::InsertTokenizedLines(tokenizedLines, 1);
 }
 

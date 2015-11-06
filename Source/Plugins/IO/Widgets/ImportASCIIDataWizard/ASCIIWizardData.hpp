@@ -55,6 +55,9 @@ public:
   int beginIndex;
   int numberOfLines;
   QStringList dataTypes;
+  QList<char> delimiters;
+  bool isFixedWidth;
+  bool consecutiveDelimiters;
 
   bool isEmpty()
   {

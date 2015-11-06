@@ -94,7 +94,9 @@ void DataFormatPage::showEvent(QShowEvent* event)
   ASCIIDataModel* model = ASCIIDataModel::Instance();
   QStringList lines = model->originalStrings();
 
-  QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, isFixedWidth, tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter, consecutiveDelimiters);
+  QList<char> delimiters = ImportASCIIDataWizard::ConvertToDelimiters(tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter);
+
+  QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, delimiters, isFixedWidth, consecutiveDelimiters);
   ImportASCIIDataWizard::InsertTokenizedLines(tokenizedLines, startRowSpin->value());
 }
 
@@ -113,7 +115,9 @@ void DataFormatPage::on_startRowSpin_valueChanged(int value)
   QStringList lines = ImportASCIIDataWizard::ReadLines(m_InputFilePath, value, ImportASCIIDataWizard::TotalPreviewLines);
   ImportASCIIDataWizard::LoadOriginalLines(lines);
 
-  QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, isFixedWidth, tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter, consecutiveDelimiters);
+  QList<char> delimiters = ImportASCIIDataWizard::ConvertToDelimiters(tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter);
+
+  QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, delimiters, isFixedWidth, consecutiveDelimiters);
   ImportASCIIDataWizard::InsertTokenizedLines(tokenizedLines, startRowSpin->value());
 }
 
@@ -165,7 +169,9 @@ void DataFormatPage::on_headersIndexLineEdit_textChanged(const QString &text)
   bool spaceAsDelimiter = field("spaceAsDelimiter").toBool();
   bool consecutiveDelimiters = field("consecutiveDelimiters").toBool();
 
-  QList<QStringList> result = ImportASCIIDataWizard::TokenizeLines(list, isFixedWidth, tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter, consecutiveDelimiters);
+  QList<char> delimiters = ImportASCIIDataWizard::ConvertToDelimiters(tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter);
+
+  QList<QStringList> result = ImportASCIIDataWizard::TokenizeLines(list, delimiters, isFixedWidth, consecutiveDelimiters);
 
   QStringList tokenizedLine = result[0];
 
@@ -305,7 +311,9 @@ void DataFormatPage::refreshModel()
 
   ImportASCIIDataWizard::LoadOriginalLines(lines);
 
-  QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, isFixedWidth, tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter, consecutiveDelimiters);
+  QList<char> delimiters = ImportASCIIDataWizard::ConvertToDelimiters(tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter);
+
+  QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, delimiters, isFixedWidth, consecutiveDelimiters);
   ImportASCIIDataWizard::InsertTokenizedLines(tokenizedLines, startRowSpin->value());
 
   // Refresh the headers

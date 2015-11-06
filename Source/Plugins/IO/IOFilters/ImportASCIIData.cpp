@@ -4,6 +4,8 @@
 
 #include "ImportASCIIData.h"
 
+#include <QtCore/QFileInfo>
+
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
@@ -73,7 +75,7 @@ int ImportASCIIData::writeFilterParameters(AbstractFilterParametersWriter* write
 void ImportASCIIData::dataCheck()
 {
   setErrorCondition(0);
-  m_ASCIIArrays.clear();
+  m_ASCIIArrayMap.clear();
 
   ASCIIWizardData wizardData = getWizardData();
   if (wizardData.isEmpty() == true)
@@ -84,7 +86,6 @@ void ImportASCIIData::dataCheck()
   QStringList headers = wizardData.dataHeaders;
   QStringList dataTypes = wizardData.dataTypes;
   int numLines = wizardData.numberOfLines;
-
 
   QVector<size_t> tDims(1, numLines);
   QVector<size_t> cDims(1, 1);
@@ -104,52 +105,52 @@ void ImportASCIIData::dataCheck()
     if (dataType == "Double")
     {
       DoubleArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
-      m_ASCIIArrays.push_back(ptr);
+      m_ASCIIArrayMap.insert(i, ptr);
     }
-    if (dataType == "Float")
+    else if (dataType == "Float")
     {
       FloatArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<FloatArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
-      m_ASCIIArrays.push_back(ptr);
+      m_ASCIIArrayMap.insert(i, ptr);
     }
     else if (dataType == "Int8")
     {
       Int8ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<Int8ArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
-      m_ASCIIArrays.push_back(ptr);
+      m_ASCIIArrayMap.insert(i, ptr);
     }
     else if (dataType == "Int16")
     {
       Int16ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<Int16ArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
-      m_ASCIIArrays.push_back(ptr);
+      m_ASCIIArrayMap.insert(i, ptr);
     }
     else if (dataType == "Int32")
     {
       Int32ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<Int32ArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
-      m_ASCIIArrays.push_back(ptr);
+      m_ASCIIArrayMap.insert(i, ptr);
     }
     else if (dataType == "Int64")
     {
       Int64ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<Int64ArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
-      m_ASCIIArrays.push_back(ptr);
+      m_ASCIIArrayMap.insert(i, ptr);
     }
     else if (dataType == "UInt8")
     {
       UInt8ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt8ArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
-      m_ASCIIArrays.push_back(ptr);
+      m_ASCIIArrayMap.insert(i, ptr);
     }
     else if (dataType == "UInt16")
     {
       UInt16ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt16ArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
-      m_ASCIIArrays.push_back(ptr);
+      m_ASCIIArrayMap.insert(i, ptr);
     }
     else if (dataType == "UInt32")
     {
       UInt32ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt32ArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
-      m_ASCIIArrays.push_back(ptr);
+      m_ASCIIArrayMap.insert(i, ptr);
     }
     else if (dataType == "UInt64")
     {
       UInt64ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt64ArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
-      m_ASCIIArrays.push_back(ptr);
+      m_ASCIIArrayMap.insert(i, ptr);
     }
   }
 }
@@ -177,37 +178,135 @@ void ImportASCIIData::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  //Int32ArrayType::Pointer data = Int32ArrayType::CreateArray(0, name, false);
-  //Int32ParserType::Pointer parser = Int32ParserType::New(data, name, i);
-  //dataParsers.push_back(parser);
+  ASCIIWizardData wizardData = getWizardData();
+  QString inputFilePath = wizardData.inputFilePath;
+  QStringList headers = wizardData.dataHeaders;
+  QStringList dataTypes = wizardData.dataTypes;
+  QList<char> delimiters = wizardData.delimiters;
+  bool isFixedWidth = wizardData.isFixedWidth;
+  bool consecutiveDelimiters = wizardData.consecutiveDelimiters;
+  int numLines = wizardData.numberOfLines;
+  int beginIndex = wizardData.beginIndex;
 
-  //QStringList lines = ImportASCIIDataWizard::ReadLines(inputFilePath, beginLineNum, numOfDataLines);
-  //QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, m_ImportWizard->getHasFixedWidth(), m_ImportWizard->getTabAsDelimiter(), m_ImportWizard->getSemicolonAsDelimiter(), m_ImportWizard->getCommaAsDelimiter(), m_ImportWizard->getSpaceAsDelimiter(), m_ImportWizard->getConsecutiveDelimiters());
+  QFileInfo fi(inputFilePath);
+  QString fileName = fi.fileName();
 
-  //for (int row = 0; row < tokenizedLines.size(); row++)
-  //{
-  //  QStringList tokens = tokenizedLines[row];
-  //  if (dataTypes.size() != tokens.size())
-  //  {
-  //    // Throw an error
-  //  }
-
-  //  for (int i = 0; i < dataParsers.size(); i++)
-  //  {
-  //    IO::AbstractDataParser::Pointer parser = dataParsers[i];
-  //    int index = parser->getColumnIndex();
-  //    QString name = parser->getColumnName();
-
-  //    parser->parse(tokens[index], row);
-  //  }
-  //}
-
-  if (getErrorCondition() < 0)
+  int numOfDataItems = numLines - beginIndex;
+  QList<AbstractDataParser::Pointer> dataParsers;
+  for (int i = 0; i < headers.size(); i++)
   {
-    QString ss = QObject::tr("Some error message");
-    setErrorCondition(-99999999);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
+    QString dataType = dataTypes[i];
+    QString name = headers[i];
+
+    if (dataType == "Double")
+    {
+      DoubleArrayType::Pointer data = boost::dynamic_pointer_cast<DoubleArrayType>(m_ASCIIArrayMap.value(i));
+      DoubleParserType::Pointer parser = DoubleParserType::New(data, name, i);
+      dataParsers.push_back(parser);
+    }
+    else if (dataType == "Float")
+    {
+      FloatArrayType::Pointer data = boost::dynamic_pointer_cast<FloatArrayType>(m_ASCIIArrayMap.value(i));
+      FloatParserType::Pointer parser = FloatParserType::New(data, name, i);
+      dataParsers.push_back(parser);
+    }
+    else if (dataType == "Int8")
+    {
+      Int8ArrayType::Pointer data = boost::dynamic_pointer_cast<Int8ArrayType>(m_ASCIIArrayMap.value(i));
+      Int8ParserType::Pointer parser = Int8ParserType::New(data, name, i);
+      dataParsers.push_back(parser);
+    }
+    else if (dataType == "Int16")
+    {
+      Int16ArrayType::Pointer data = boost::dynamic_pointer_cast<Int16ArrayType>(m_ASCIIArrayMap.value(i));
+      Int16ParserType::Pointer parser = Int16ParserType::New(data, name, i);
+      dataParsers.push_back(parser);
+    }
+    else if (dataType == "Int32")
+    {
+      Int32ArrayType::Pointer data = boost::dynamic_pointer_cast<Int32ArrayType>(m_ASCIIArrayMap.value(i));
+      Int32ParserType::Pointer parser = Int32ParserType::New(data, name, i);
+      dataParsers.push_back(parser);
+    }
+    else if (dataType == "Int64")
+    {
+      Int64ArrayType::Pointer data = boost::dynamic_pointer_cast<Int64ArrayType>(m_ASCIIArrayMap.value(i));
+      Int64ParserType::Pointer parser = Int64ParserType::New(data, name, i);
+      dataParsers.push_back(parser);
+    }
+    else if (dataType == "UInt8")
+    {
+      UInt8ArrayType::Pointer data = boost::dynamic_pointer_cast<UInt8ArrayType>(m_ASCIIArrayMap.value(i));
+      UInt8ParserType::Pointer parser = UInt8ParserType::New(data, name, i);
+      dataParsers.push_back(parser);
+    }
+    else if (dataType == "UInt16")
+    {
+      UInt16ArrayType::Pointer data = boost::dynamic_pointer_cast<UInt16ArrayType>(m_ASCIIArrayMap.value(i));
+      UInt16ParserType::Pointer parser = UInt16ParserType::New(data, name, i);
+      dataParsers.push_back(parser);
+    }
+    else if (dataType == "UInt32")
+    {
+      UInt32ArrayType::Pointer data = boost::dynamic_pointer_cast<UInt32ArrayType>(m_ASCIIArrayMap.value(i));
+      UInt32ParserType::Pointer parser = UInt32ParserType::New(data, name, i);
+      dataParsers.push_back(parser);
+    }
+    else if (dataType == "UInt64")
+    {
+      UInt64ArrayType::Pointer data = boost::dynamic_pointer_cast<UInt64ArrayType>(m_ASCIIArrayMap.value(i));
+      UInt64ParserType::Pointer parser = UInt64ParserType::New(data, name, i);
+      dataParsers.push_back(parser);
+    }
+  }
+
+  int insertIndex = 0;
+
+  QFile inputFile(inputFilePath);
+  if (inputFile.open(QIODevice::ReadOnly))
+  {
+    QTextStream in(&inputFile);
+
+    for (int lineNum = 0; lineNum < beginIndex + numLines - 1; lineNum++)
+    {
+      while (lineNum < beginIndex - 1)
+      {
+        // Skip to the first data line
+        QString line = in.readLine();
+        lineNum++;
+      }
+
+      QString line = in.readLine();
+      QStringList tokens = ImportASCIIDataWizard::TokenizeLine(line, delimiters, isFixedWidth, consecutiveDelimiters);
+
+      if (dataTypes.size() != tokens.size())
+      {
+        QString ss = "Line " + QString::number(lineNum+1) + " has an inconsistent number of columns.";
+        setErrorCondition(-100);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return;
+      }
+
+      for (int i = 0; i < dataParsers.size(); i++)
+      {
+        AbstractDataParser::Pointer parser = dataParsers[i];
+        int index = parser->getColumnIndex();
+        QString name = parser->getColumnName();
+        QString token = tokens[index];
+        QByteArray tokenByteArray = QByteArray::fromStdString(token.toStdString());
+
+        parser->parse(tokenByteArray, insertIndex);
+      }
+
+      QString statusMessage = fileName + ": " + QString::number(lineNum+1) + "/" + QString::number(numLines);
+      notifyStatusMessage(getHumanLabel(), statusMessage);
+
+      if (getCancel() == true) { return; }
+
+      insertIndex++;
+
+    }
+    inputFile.close();
   }
 
   notifyStatusMessage(getHumanLabel(), "Complete");

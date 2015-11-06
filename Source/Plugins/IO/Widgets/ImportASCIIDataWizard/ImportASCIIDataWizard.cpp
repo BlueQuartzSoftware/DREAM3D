@@ -85,6 +85,32 @@ ImportASCIIDataWizard::~ImportASCIIDataWizard()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QList<char> ImportASCIIDataWizard::ConvertToDelimiters(bool tabAsDelimiter, bool semicolonAsDelimiter, bool commaAsDelimiter, bool spaceAsDelimiter)
+{
+  QList<char> delimiters;
+  if (tabAsDelimiter == true)
+  {
+    delimiters.push_back('\t');
+  }
+  if (semicolonAsDelimiter == true)
+  {
+    delimiters.push_back(';');
+  }
+  if (commaAsDelimiter == true)
+  {
+    delimiters.push_back(',');
+  }
+  if (spaceAsDelimiter == true)
+  {
+    delimiters.push_back(' ');
+  }
+
+  return delimiters;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QString ImportASCIIDataWizard::ReadLine(const QString &inputFilePath, int line)
 {
   QStringList lines = ReadLines(inputFilePath, line, 1);
@@ -130,52 +156,44 @@ QStringList ImportASCIIDataWizard::ReadLines(const QString &inputFilePath, int b
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QStringList> ImportASCIIDataWizard::TokenizeLines(QStringList lines, bool isFixedWidth, bool tabAsDelimiter, bool semicolonAsDelimiter, bool commaAsDelimiter, bool spaceAsDelimiter, bool consecutiveDelimiters)
+QStringList ImportASCIIDataWizard::TokenizeLine(QString line, QList<char> delimiters, bool isFixedWidth, bool consecutiveDelimiters)
 {
   QString expStr = "";
-  if (isFixedWidth == true)
+  for (int i = 0; i < delimiters.size(); i++)
   {
-    expStr.append(" |\\t|");
+    expStr.append(delimiters[i]);
+    expStr.append('|');
   }
-  if (tabAsDelimiter == true)
-  {
-    expStr.append("\\t|");
-  }
-  if (semicolonAsDelimiter == true)
-  {
-    expStr.append(";|");
-  }
-  if (commaAsDelimiter == true)
-  {
-    expStr.append(",|");
-  }
-  if (spaceAsDelimiter == true)
-  {
-    expStr.append(" |");
-  }
-
   expStr.chop(1);
-
   QRegularExpression exp(expStr);
 
+  QStringList tokenizedLine;
+  if (expStr.isEmpty() == true)
+  {
+    tokenizedLine.push_back(line);
+  }
+  else if (consecutiveDelimiters == true || isFixedWidth == true)
+  {
+    tokenizedLine = line.split(exp, QString::SkipEmptyParts);
+  }
+  else
+  {
+    tokenizedLine = line.split(exp, QString::KeepEmptyParts);
+  }
+
+  return tokenizedLine;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QList<QStringList> ImportASCIIDataWizard::TokenizeLines(QStringList lines, QList<char> delimiters, bool isFixedWidth, bool consecutiveDelimiters)
+{
   QList<QStringList> tokenizedLines;
   for (int row = 0; row < lines.size(); row++)
   {
     QString line = lines[row];
-
-    QStringList tokenizedLine;
-    if (expStr.isEmpty() == true)
-    {
-      tokenizedLine.push_back(line);
-    }
-    else if (consecutiveDelimiters == true || isFixedWidth == true)
-    {
-      tokenizedLine = line.split(exp, QString::SkipEmptyParts);
-    }
-    else
-    {
-      tokenizedLine = line.split(exp, QString::KeepEmptyParts);
-    }
+    QStringList tokenizedLine = TokenizeLine(line, delimiters, isFixedWidth, consecutiveDelimiters);
 
     tokenizedLines.push_back(tokenizedLine);
   }
@@ -273,33 +291,14 @@ void ImportASCIIDataWizard::setInputFilePath(const QString &inputFilePath)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool ImportASCIIDataWizard::getTabAsDelimiter()
+QList<char> ImportASCIIDataWizard::getDelimiters()
 {
-  return field("tabAsDelimiter").toBool();
-}
+  bool tabAsDelimiter = field("tabAsDelimiter").toBool();
+  bool semicolonAsDelimiter = field("semicolonAsDelimiter").toBool();
+  bool commaAsDelimiter = field("commaAsDelimiter").toBool();
+  bool spaceAsDelimiter = field("spaceAsDelimiter").toBool();
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool ImportASCIIDataWizard::getSemicolonAsDelimiter()
-{
-  return field("semicolonAsDelimiter").toBool();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool ImportASCIIDataWizard::getCommaAsDelimiter()
-{
-  return field("commaAsDelimiter").toBool();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool ImportASCIIDataWizard::getSpaceAsDelimiter()
-{
-  return field("spaceAsDelimiter").toBool();
+  return ConvertToDelimiters(tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter);
 }
 
 // -----------------------------------------------------------------------------

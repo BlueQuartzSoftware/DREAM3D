@@ -110,7 +110,7 @@ class ImportASCIIData : public AbstractFilter
     void dataCheck();
 
   private:
-    QVector<IDataArray::Pointer>                                      m_ASCIIArrays;
+    QMap<int, IDataArray::Pointer>                                      m_ASCIIArrayMap;
 
     ImportASCIIData(const ImportASCIIData&); // Copy Constructor Not Implemented
     void operator=(const ImportASCIIData&); // Operator '=' Not Implemented

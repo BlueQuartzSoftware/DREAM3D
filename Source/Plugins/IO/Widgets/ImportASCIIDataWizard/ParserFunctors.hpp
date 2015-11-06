@@ -48,10 +48,6 @@ class Int8Functor
       int8_t value = token.toInt(&ok);
       return value;
     }
-
-  private:
-    Int8Functor(const Int8Functor&); // Copy Constructor Not Implemented
-    void operator=(const Int8Functor&); // Operator '=' Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -67,10 +63,6 @@ public:
     uint8_t value = token.toUInt(&ok);
     return value;
   }
-
-private:
-  UInt8Functor(const UInt8Functor&); // Copy Constructor Not Implemented
-  void operator=(const UInt8Functor&); // Operator '=' Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -86,10 +78,6 @@ public:
     int16_t value = token.toInt(&ok);
     return value;
   }
-
-private:
-  Int16Functor(const Int16Functor&); // Copy Constructor Not Implemented
-  void operator=(const Int16Functor&); // Operator '=' Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -135,10 +123,6 @@ public:
     uint32_t value = token.toUInt(&ok);
     return value;
   }
-
-private:
-  UInt32Functor(const UInt32Functor&); // Copy Constructor Not Implemented
-  void operator=(const UInt32Functor&); // Operator '=' Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -154,10 +138,6 @@ public:
     int64_t value = token.toLongLong(&ok);
     return value;
   }
-
-private:
-  Int64Functor(const Int64Functor&); // Copy Constructor Not Implemented
-  void operator=(const Int64Functor&); // Operator '=' Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -173,10 +153,6 @@ public:
     uint64_t value = token.toULongLong(&ok);
     return value;
   }
-
-private:
-  UInt64Functor(const UInt64Functor&); // Copy Constructor Not Implemented
-  void operator=(const UInt64Functor&); // Operator '=' Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -192,10 +168,6 @@ public:
     float value = token.toFloat(&ok);
     return value;
   }
-
-private:
-  FloatFunctor(const FloatFunctor&); // Copy Constructor Not Implemented
-  void operator=(const FloatFunctor&); // Operator '=' Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -211,10 +183,6 @@ public:
     double value = token.toDouble(&ok);
     return value;
   }
-
-private:
-  DoubleFunctor(const DoubleFunctor&); // Copy Constructor Not Implemented
-  void operator=(const DoubleFunctor&); // Operator '=' Not Implemented
 };
 
 #endif /* PARSERFUNCTORS_HPP_ */
