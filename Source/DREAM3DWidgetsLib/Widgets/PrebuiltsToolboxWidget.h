@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _PrebuiltPipelinesDockWidget_H_
-#define _PrebuiltPipelinesDockWidget_H_
+#ifndef _PrebuiltsToolboxWidget_H_
+#define _PrebuiltsToolboxWidget_H_
 
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
@@ -49,31 +49,31 @@
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
-#include "ui_PrebuiltPipelinesDockWidget.h"
+#include "ui_PrebuiltsToolboxWidget.h"
 
 
 class QListWidget;
 class QTreeWidgetItem;
-class FilterListDockWidget;
+class FilterListToolboxWidget;
 class FilterLibraryTreeWidget;
 class QSettings;
 
 
 /**
- * @brief The PrebuiltPipelinesDockWidget class
+ * @brief The PrebuiltsToolboxWidget class
  */
-class DREAM3DWidgetsLib_EXPORT  PrebuiltPipelinesDockWidget : public QDockWidget, private Ui::PrebuiltPipelinesDockWidget
+class DREAM3DWidgetsLib_EXPORT  PrebuiltsToolboxWidget : public QWidget, private Ui::PrebuiltsToolboxWidget
 {
 
     Q_OBJECT
 
   public:
     /**
-     * @brief PrebuiltPipelinesDockWidget
+     * @brief PrebuiltsToolboxWidget
      * @param parent
      */
-    PrebuiltPipelinesDockWidget(QWidget* parent = NULL);
-    virtual ~PrebuiltPipelinesDockWidget();
+    PrebuiltsToolboxWidget(QWidget* parent = NULL);
+    virtual ~PrebuiltsToolboxWidget();
 
     /**
      * @brief setupGui
@@ -84,7 +84,7 @@ class DREAM3DWidgetsLib_EXPORT  PrebuiltPipelinesDockWidget : public QDockWidget
      * @brief connectFilterList
      * @param filterListWidget
      */
-    void connectFilterList(FilterListDockWidget* filterListWidget);
+    void connectFilterList(FilterListToolboxWidget* filterListWidget);
 
     /**
      * @brief getFilterLibraryTreeWidget
@@ -95,7 +95,7 @@ class DREAM3DWidgetsLib_EXPORT  PrebuiltPipelinesDockWidget : public QDockWidget
     /**
     * @brief Reads the preferences from the users pref file
     */
-    void readSettings(QMainWindow* main, DREAM3DSettings& prefs);
+    void readSettings(DREAM3DSettings& prefs);
 
     /**
     * @brief Writes the preferences to the users pref file
@@ -136,8 +136,8 @@ class DREAM3DWidgetsLib_EXPORT  PrebuiltPipelinesDockWidget : public QDockWidget
 
   private:
 
-    PrebuiltPipelinesDockWidget(const PrebuiltPipelinesDockWidget&); // Copy Constructor Not Implemented
-    void operator=(const PrebuiltPipelinesDockWidget&); // Operator '=' Not Implemented
+    PrebuiltsToolboxWidget(const PrebuiltsToolboxWidget&); // Copy Constructor Not Implemented
+    void operator=(const PrebuiltsToolboxWidget&); // Operator '=' Not Implemented
 
 
 };

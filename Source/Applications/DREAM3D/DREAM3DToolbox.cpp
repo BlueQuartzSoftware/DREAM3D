@@ -35,7 +35,7 @@
 #include "DREAM3DToolbox.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
-//#include "moc_DREAM3DToolbox.cpp"
+#include "moc_DREAM3DToolbox.cpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -45,7 +45,7 @@ QWidget(parent)
 {
   setupUi(this);
 
-  setupGui();
+  readSettings();
 }
 
 // -----------------------------------------------------------------------------
@@ -53,15 +53,136 @@ QWidget(parent)
 // -----------------------------------------------------------------------------
 DREAM3DToolbox::~DREAM3DToolbox()
 {
-
+  writeSettings();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DToolbox::setupGui()
+void DREAM3DToolbox::readSettings()
 {
+  DREAM3DSettings prefs;
 
+  prefs.beginGroup("ToolboxSettings");
+
+  // Have the toolbox write its settings to the prefs file
+  readWindowSettings(prefs);
+
+  // Read dock widget settings
+  prefs.beginGroup("Bookmarks Dock Widget");
+  bookmarksWidget->readSettings(prefs);
+  prefs.endGroup();
+
+  prefs.beginGroup("Prebuilts Dock Widget");
+  prebuiltsWidget->readSettings(prefs);
+  prefs.endGroup();
+
+  prefs.beginGroup("Filter List Dock Widget");
+  filterListWidget->readSettings(prefs);
+  prefs.endGroup();
+
+  prefs.beginGroup("Filter Library Dock Widget");
+  filterLibraryWidget->readSettings(prefs);
+  prefs.endGroup();
+
+  prefs.endGroup();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DToolbox::readWindowSettings(DREAM3DSettings& prefs)
+{
+  bool ok = false;
+  prefs.beginGroup("WindowSettings");
+  if (prefs.contains(QString("MainWindowGeometry")))
+  {
+    QByteArray geo_data = prefs.value("MainWindowGeometry", "").toByteArray();
+    ok = restoreGeometry(geo_data);
+    if (!ok)
+    {
+      qDebug() << "Error Restoring the Window Geometry" << "\n";
+    }
+  }
+
+  prefs.endGroup();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DToolbox::writeSettings()
+{
+  DREAM3DSettings prefs;
+
+  prefs.beginGroup("ToolboxSettings");
+
+  // Have the toolbox write its settings to the prefs file
+  writeWindowSettings(prefs);
+
+  // Write dock widget settings
+  prefs.beginGroup("Bookmarks Widget");
+  bookmarksWidget->writeSettings(prefs);
+  prefs.endGroup();
+
+  prefs.beginGroup("Prebuilts Widget");
+  prebuiltsWidget->writeSettings(prefs);
+  prefs.endGroup();
+
+  prefs.beginGroup("Filter List Widget");
+  filterListWidget->writeSettings(prefs);
+  prefs.endGroup();
+
+  prefs.beginGroup("Filter Library Widget");
+  filterLibraryWidget->writeSettings(prefs);
+  prefs.endGroup();
+
+  prefs.endGroup();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DToolbox::writeWindowSettings(DREAM3DSettings& prefs)
+{
+  prefs.beginGroup("WindowSettings");
+
+  QByteArray geo_data = saveGeometry();
+  prefs.setValue(QString("MainWindowGeometry"), geo_data);
+
+  prefs.endGroup();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+BookmarksToolboxWidget* DREAM3DToolbox::getBookmarksWidget()
+{
+  return bookmarksWidget;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+PrebuiltsToolboxWidget* DREAM3DToolbox::getPrebuiltsWidget()
+{
+  return prebuiltsWidget;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilterListToolboxWidget* DREAM3DToolbox::getFilterListWidget()
+{
+  return filterListWidget;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilterLibraryToolboxWidget* DREAM3DToolbox::getFilterLibraryWidget()
+{
+  return filterLibraryWidget;
 }
 
 

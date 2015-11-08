@@ -147,8 +147,8 @@ sss</string>
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>1032</width>
-             <height>578</height>
+             <width>1095</width>
+             <height>520</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -255,44 +255,12 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgb
    </layout>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <widget class="BookmarksDockWidget" name="bookmarksDockWidget">
-   <property name="windowTitle">
-    <string>[*]Bookmarks</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>8</number>
-   </attribute>
-  </widget>
   <widget class="IssuesDockWidget" name="issuesDockWidget">
    <property name="windowTitle">
     <string>[*]Pipeline Issues</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>8</number>
-   </attribute>
-  </widget>
-  <widget class="PrebuiltPipelinesDockWidget" name="prebuiltPipelinesDockWidget">
-   <property name="windowTitle">
-    <string>[*]Prebuilt Pipelines</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>8</number>
-   </attribute>
-  </widget>
-  <widget class="FilterLibraryDockWidget" name="filterLibraryDockWidget">
-   <property name="windowTitle">
-    <string>[*]Filter Library</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>1</number>
-   </attribute>
-  </widget>
-  <widget class="FilterListDockWidget" name="filterListDockWidget">
-   <property name="windowTitle">
-    <string>[*]Filter List</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>1</number>
    </attribute>
   </widget>
   <action name="actionShow_Filter_Library">
@@ -490,24 +458,6 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgb
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>PrebuiltPipelinesDockWidget</class>
-   <extends>QDockWidget</extends>
-   <header location="global">PrebuiltPipelinesDockWidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>FilterLibraryDockWidget</class>
-   <extends>QDockWidget</extends>
-   <header location="global">FilterLibraryDockWidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>FilterListDockWidget</class>
-   <extends>QDockWidget</extends>
-   <header location="global">FilterListDockWidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>IssuesDockWidget</class>
    <extends>QDockWidget</extends>
    <header location="global">IssuesDockWidget.h</header>
@@ -517,12 +467,6 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgb
    <class>DREAM3DSplitter</class>
    <extends>QSplitter</extends>
    <header location="global">QtSupportLib/DREAM3DSplitter.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>BookmarksDockWidget</class>
-   <extends>QDockWidget</extends>
-   <header location="global">BookmarksDockWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

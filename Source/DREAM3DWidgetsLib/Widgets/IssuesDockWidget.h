@@ -49,7 +49,7 @@
 
 #include "ui_IssuesDockWidget.h"
 
-class FilterListDockWidget;
+class FilterListToolboxWidget;
 class QLabel;
 class QTableWidgetItem;
 

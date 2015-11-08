@@ -64,9 +64,9 @@
 
 
 class ISIMPLibPlugin;
-class FilterLibraryDockWidget;
-class BookmarksDockWidget;
-class PrebuiltPipelinesDockWidget;
+class FilterLibraryToolboxWidget;
+class BookmarksToolboxWidget;
+class PrebuiltsToolboxWidget;
 class FilterListWidget;
 class DREAM3DUpdateCheckDialog;
 class UpdateCheckData;
@@ -110,28 +110,28 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     * @brief getPrebuiltsDockWidget
     * @param
     */
-    PrebuiltPipelinesDockWidget* getPrebuiltsDockWidget();
+    PrebuiltsToolboxWidget* getPrebuiltsToolboxWidget();
 
     /**
-    * @brief getBookmarksDockWidget
+    * @brief getBookmarksToolboxWidget
     * @param
     */
-    BookmarksDockWidget* getBookmarksDockWidget();
+    BookmarksToolboxWidget* getBookmarksToolboxWidget();
 
     /**
-    * @brief getFilterListDockWidget
+    * @brief getFilterListToolboxWidget
     * @param
     */
-    FilterListDockWidget* getFilterListDockWidget();
+    FilterListToolboxWidget* getFilterListToolboxWidget();
 
     /**
-    * @brief getFilterLibraryDockWidget
+    * @brief getFilterLibraryToolboxWidget
     * @param
     */
-    FilterLibraryDockWidget* getFilterLibraryDockWidget();
+    FilterLibraryToolboxWidget* getFilterLibraryToolboxWidget();
 
     /**
-    * @brief getFilterListDockWidget
+    * @brief getFilterListToolboxWidget
     * @param
     */
     IssuesDockWidget* getIssuesDockWidget();
@@ -142,10 +142,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     */
     void setOpenDialogLastDirectory(const QString& path);
 
-    /**
-    * @brief
-    */
-    void connectSignalsSlots(DREAM3D_UI* other);
 #if !defined(Q_OS_MAC)
     /**
     * @brief setDREAM3DMenu

@@ -32,8 +32,8 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _QDREAM3D_DOCUMENTS_DOCKWIDGET_H_
-#define _QDREAM3D_DOCUMENTS_DOCKWIDGET_H_
+#ifndef _BookmarksToolboxWidget_H_
+#define _BookmarksToolboxWidget_H_
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QSettings>
@@ -49,29 +49,29 @@
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
-#include "ui_BookmarksDockWidget.h"
+#include "ui_BookmarksToolboxWidget.h"
 
 class QListWidget;
 class QTreeWidgetItem;
-class FilterListDockWidget;
+class FilterListToolboxWidget;
 class FilterLibraryTreeWidget;
 class QSettings;
 class QAction;
 
 /**
- * @brief The BookmarksDockWidget class
+ * @brief The BookmarksToolboxWidget class
  */
-class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private Ui::BookmarksDockWidget
+class DREAM3DWidgetsLib_EXPORT BookmarksToolboxWidget : public QWidget, private Ui::BookmarksToolboxWidget
 {
 
     Q_OBJECT
   public:
     /**
-     * @brief BookmarksDockWidget
+     * @brief BookmarksToolboxWidget
      * @param parent
      */
-    BookmarksDockWidget(QWidget* parent = NULL);
-    virtual ~BookmarksDockWidget();
+    BookmarksToolboxWidget(QWidget* parent = NULL);
+    virtual ~BookmarksToolboxWidget();
 
     /**
      * @brief setupGui
@@ -82,7 +82,7 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
      * @brief connectFilterList
      * @param filterListWidget
      */
-    void connectFilterList(FilterListDockWidget* filterListWidget);
+    void connectFilterList(FilterListToolboxWidget* filterListWidget);
 
     /**
        @brief Delete a directory along with all of its contents.
@@ -102,7 +102,7 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
     /**
     * @brief Reads the preferences from the users pref file
     */
-    void readSettings(QMainWindow* main, DREAM3DSettings& prefs);
+    void readSettings(DREAM3DSettings& prefs);
 
     /**
     * @brief Writes the preferences to the users pref file
@@ -114,14 +114,14 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
   public slots:
 
     /**
-    * @brief BookmarksDockWidget::addBookmark
+    * @brief BookmarksToolboxWidget::addBookmark
     * @param filePath
     * @param parent
     */
     void addBookmark(const QString& filePath, const QModelIndex& parent);
 
     /**
-    * @brief BookmarksDockWidget::addFavoriteTreeItem
+    * @brief BookmarksToolboxWidget::addFavoriteTreeItem
     * @param parent
     * @param favoriteTitle
     * @param icon
@@ -191,8 +191,8 @@ class DREAM3DWidgetsLib_EXPORT BookmarksDockWidget : public QDockWidget, private
     */
     void writeSettings();
 
-    BookmarksDockWidget(const BookmarksDockWidget&); // Copy Constructor Not Implemented
-    void operator=(const BookmarksDockWidget&); // Operator '=' Not Implemented
+    BookmarksToolboxWidget(const BookmarksToolboxWidget&); // Copy Constructor Not Implemented
+    void operator=(const BookmarksToolboxWidget&); // Operator '=' Not Implemented
 
 
 };
