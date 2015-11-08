@@ -69,6 +69,7 @@
 #include "Applications/DREAM3D/AboutDREAM3D.h"
 #include "Applications/DREAM3D/AboutPlugins.h"
 #include "Applications/DREAM3D/DREAM3DConstants.h"
+#include "Applications/DREAM3D/DREAM3DToolbox.h"
 
 #include "DSplashScreen.h"
 
@@ -84,10 +85,14 @@ DREAM3DApplication::DREAM3DApplication(int& argc, char** argv) :
 #if defined(Q_OS_MAC)
   m_GlobalMenu(NULL),
 #endif
+  m_Toolbox(NULL),
   m_OpenDialogLastDirectory(""),
   show_splash(true),
   Splash(NULL)
 {
+  // Create the toolbox
+  m_Toolbox = new DREAM3DToolbox();
+
   // Connection to update the recent files list on all windows when it changes
   QRecentFileList* recentsList = QRecentFileList::instance();
   connect(recentsList, SIGNAL(fileListChanged(const QString&)),
@@ -104,6 +109,9 @@ DREAM3DApplication::~DREAM3DApplication()
 {
   delete this->Splash;
   this->Splash = NULL;
+
+  delete m_Toolbox;
+  m_Toolbox = NULL;
 
   DREAM3DSettings prefs;
   if (prefs.value("Program Mode", "") == "Clear Cache")

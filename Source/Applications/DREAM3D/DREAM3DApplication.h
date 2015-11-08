@@ -53,6 +53,7 @@ class DSplashScreen;
 class DREAM3D_UI;
 class QPluginLoader;
 class ISIMPLibPlugin;
+class DREAM3DToolbox;
 
 class DREAM3DApplication : public QApplication
 {
@@ -158,6 +159,8 @@ class DREAM3DApplication : public QApplication
 #if defined(Q_OS_MAC)
     DREAM3DMenu*                            m_GlobalMenu;
 #endif
+
+    DREAM3DToolbox*                         m_Toolbox;
 
     /* Used on Mac OS X when there are no DREAM3D instances instantiated,
     * but the application is still running. */
