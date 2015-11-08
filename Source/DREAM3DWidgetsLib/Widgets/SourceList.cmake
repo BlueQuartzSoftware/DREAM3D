@@ -7,16 +7,16 @@ set(DREAM3DWidgetsLib_Widgets_UIS "")
 # --------------------------------------------------------------------
 # List the Classes here that are QWidget Derived Classes
 set(DREAM3D_WIDGETS
-    BookmarksDockWidget
+    BookmarksToolboxWidget
     DataContainerArrayWidget
     DREAM3DUpdateCheckDialog
     DropBoxWidget
     FilterInputWidget
-    FilterLibraryDockWidget
-    FilterListDockWidget
+    FilterLibraryToolboxWidget
+    FilterListToolboxWidget
     IssuesDockWidget
     PipelineFilterWidget
-    PrebuiltPipelinesDockWidget
+    PrebuiltsToolboxWidget
 )
 
 foreach(FPW ${DREAM3D_WIDGETS})
