@@ -86,8 +86,9 @@ void ImportASCIIData::dataCheck()
   QStringList headers = wizardData.dataHeaders;
   QStringList dataTypes = wizardData.dataTypes;
   int numLines = wizardData.numberOfLines;
+  int beginIndex = wizardData.beginIndex;
 
-  QVector<size_t> tDims(1, numLines);
+  QVector<size_t> tDims(1, numLines - beginIndex + 1);
   QVector<size_t> cDims(1, 1);
   DataContainer::Pointer dc = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, "ImportDataContainer");
   AttributeMatrix::Pointer am = dc->createNonPrereqAttributeMatrix<AbstractFilter>(this, "ImportAttributeMatrix", tDims, DREAM3D::AttributeMatrixType::Cell);
@@ -191,7 +192,6 @@ void ImportASCIIData::execute()
   QFileInfo fi(inputFilePath);
   QString fileName = fi.fileName();
 
-  int numOfDataItems = numLines - beginIndex;
   QList<AbstractDataParser::Pointer> dataParsers;
   for (int i = 0; i < headers.size(); i++)
   {
@@ -266,25 +266,24 @@ void ImportASCIIData::execute()
   if (inputFile.open(QIODevice::ReadOnly))
   {
     QTextStream in(&inputFile);
+
+    for (int i = 1; i < beginIndex; i++)
+    {
+      // Skip to the first data line
+      in.readLine();
+    }
     
     float threshold = 0.0f;
     size_t numTuples = numLines - beginIndex + 1;
 
-    for (int lineNum = 0; lineNum < beginIndex + numLines - 1; lineNum++)
+    for (int lineNum = beginIndex; lineNum <= numLines; lineNum++)
     {
-      while (lineNum < beginIndex - 1)
-      {
-        // Skip to the first data line
-        QString line = in.readLine();
-        lineNum++;
-      }
-
       QString line = in.readLine();
       QStringList tokens = ImportASCIIDataWizard::TokenizeLine(line, delimiters, isFixedWidth, consecutiveDelimiters);
 
       if (dataTypes.size() != tokens.size())
       {
-        QString ss = "Line " + QString::number(lineNum+1) + " has an inconsistent number of columns.";
+        QString ss = "Line " + QString::number(lineNum) + " has an inconsistent number of columns.";
         setErrorCondition(-100);
         notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;

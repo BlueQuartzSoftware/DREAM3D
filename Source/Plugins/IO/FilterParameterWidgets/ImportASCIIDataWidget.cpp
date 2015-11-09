@@ -287,7 +287,7 @@ void ImportASCIIDataWidget::filterNeedsInputParameters(AbstractFilter* filter)
     data.inputFilePath = m_ImportWizard->getInputFilePath();
     data.dataHeaders = m_ImportWizard->getHeaders();
     data.beginIndex = m_ImportWizard->getBeginningLineNum();
-    data.numberOfLines = m_NumLines - m_ImportWizard->getBeginningLineNum();
+    data.numberOfLines = m_NumLines;
     data.dataTypes = m_ImportWizard->getDataTypes();
   }
 
