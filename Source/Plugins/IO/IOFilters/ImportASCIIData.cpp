@@ -266,6 +266,9 @@ void ImportASCIIData::execute()
   if (inputFile.open(QIODevice::ReadOnly))
   {
     QTextStream in(&inputFile);
+    
+    float threshold = 0.0f;
+    size_t numTuples = numLines - beginIndex + 1;
 
     for (int lineNum = 0; lineNum < beginIndex + numLines - 1; lineNum++)
     {
@@ -297,9 +300,18 @@ void ImportASCIIData::execute()
 
         parser->parse(tokenByteArray, insertIndex);
       }
-
-      QString statusMessage = fileName + ": " + QString::number(lineNum+1) + "/" + QString::number(numLines);
-      notifyStatusMessage(getHumanLabel(), statusMessage);
+      
+      if (((float)lineNum / numTuples) * 100.0f > threshold)
+      {
+        // Print the status of the import
+        QString ss = QObject::tr("Importing ASCII Data || %1% Complete").arg(((float)lineNum / numTuples) * 100.0f);
+        notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+        threshold = threshold + 5.0f;
+        if (threshold < ((float)lineNum / numTuples) * 100.0f)
+        {
+          threshold = ((float)lineNum / numTuples) * 100.0f;
+        }
+      }
 
       if (getCancel() == true) { return; }
 
