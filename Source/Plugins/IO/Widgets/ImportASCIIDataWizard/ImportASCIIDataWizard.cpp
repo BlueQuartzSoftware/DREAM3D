@@ -164,6 +164,11 @@ QStringList ImportASCIIDataWizard::TokenizeLine(QString line, QList<char> delimi
     expStr.append(delimiters[i]);
     expStr.append('|');
   }
+  if (isFixedWidth == true)
+  {
+    expStr.append("\t|");
+    expStr.append(" |");
+  }
   expStr.chop(1);
   QRegularExpression exp(expStr);
 

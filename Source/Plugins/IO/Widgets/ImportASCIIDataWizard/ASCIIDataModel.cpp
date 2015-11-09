@@ -34,6 +34,9 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "ASCIIDataModel.h"
+
+#include <QtGui/QFont>
+
 #include "ASCIIDataItem.h"
 
 ASCIIDataModel* ASCIIDataModel::self = NULL;
@@ -86,16 +89,35 @@ QVariant ASCIIDataModel::data(const QModelIndex& index, int role) const
     return QVariant();
   }
 
-  ASCIIDataItem* item = getItem(index);
-
   if (role == Qt::DisplayRole)
   {
-    return item->data(index.column());
+    if (index.row() == 0)
+    {
+      QString dataType = m_ColumnDataType[index.column()];
+      return dataType;
+    }
+    else
+    {
+      QModelIndex actualIndex = this->index(index.row() - 1, index.column());
+      ASCIIDataItem* item = getItem(actualIndex);
+      return item->data(index.column());
+    }
   }
-  else
+  else if (role == Qt::FontRole)
   {
-    return QVariant();
+    if (index.row() == 0)
+    {
+      QFont font;
+      font.setItalic(true);
+      return font;
+    }
   }
+  else if (role == Qt::TextAlignmentRole)
+  {
+    return Qt::AlignCenter;
+  }
+
+  return QVariant();
 }
 
 // -----------------------------------------------------------------------------
@@ -145,7 +167,14 @@ QVariant ASCIIDataModel::headerData(int section, Qt::Orientation orientation,
   }
   else if (section < m_VerticalHeaders.size() && orientation == Qt::Vertical && role == Qt::DisplayRole)
   {
-    return m_VerticalHeaders[section];
+    if (section == 0)
+    {
+      return "Data Type";
+    }
+    else
+    {
+      return m_VerticalHeaders[section-1];
+    }
   }
 
   return QVariant();
@@ -306,6 +335,9 @@ QString ASCIIDataModel::columnDataType(const int column) const
 void ASCIIDataModel::setColumnDataType(const int column, const QString &type)
 {
   m_ColumnDataType[column] = type;
+
+  QModelIndex index = this->index(0, column);
+  emit dataChanged(index, index);
 }
 
 // -----------------------------------------------------------------------------
