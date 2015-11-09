@@ -10,8 +10,8 @@ Users:[https://groups.google.com/forum/?/dream3d-users#!forum/dream3d-users](htt
 
 Developers:[https://groups.google.com/forum/?hl=en#!forum/dream3d-developers](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
-## Version 6.2.62 ##
-+ Version 6.2.62 will be the last version to support OS X 10.8. The minimum version of OS X for all future DREAM.3D updates will be 10.9.
+## Version 6.2.63 ##
++ Version 6.2.63 will be the last version to support OS X 10.8. The minimum version of OS X for all future DREAM.3D updates will be 10.9.
 + Fixed incorrect symbolic link creation for OS X builds that prevented documentation windows from properly appearing.
 + Fixed incorrect **Filter** input requirement in the "Write INL File" **Filter** (issue #471).
 + Fixed "Read H5EBSD File" not properly loading zMax value from a **Pipeline** file (issue #474).
