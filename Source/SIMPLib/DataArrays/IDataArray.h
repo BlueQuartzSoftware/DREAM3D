@@ -1,6 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
 //  Copyright (c) 2008, mjackson
+//  Copyright (c) 2014, The Regents of the University of California, Author: William Lenthe
 //  All rights reserved.
 //  BSD License: http://www.opensource.org/licenses/bsd-license.html
 //
