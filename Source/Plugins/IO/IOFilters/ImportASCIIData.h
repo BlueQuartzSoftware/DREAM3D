@@ -28,6 +28,9 @@ class ImportASCIIData : public AbstractFilter
     SIMPL_FILTER_PARAMETER(ASCIIWizardData, WizardData)
       Q_PROPERTY(ASCIIWizardData WizardData READ getWizardData WRITE setWizardData)
 
+      SIMPL_FILTER_PARAMETER(DataArrayPath, AttributeMatrixPath)
+      Q_PROPERTY(DataArrayPath AttributeMatrixPath READ getAttributeMatrixPath WRITE setAttributeMatrixPath)
+
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */

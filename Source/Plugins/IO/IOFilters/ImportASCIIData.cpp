@@ -9,6 +9,7 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 
 #include "FilterParameters/ImportASCIIDataFilterParameter.h"
 
@@ -44,6 +45,11 @@ void ImportASCIIData::setupFilterParameters()
   FilterParameterVector parameters;
 
   parameters.push_back(ImportASCIIDataFilterParameter::New("ASCII Wizard Data", "WizardData", "", FilterParameter::Parameter));
+
+  {
+    AttributeMatrixSelectionFilterParameter::RequirementType req;
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Attribute Matrix", "AttributeMatrixPath", getAttributeMatrixPath(), FilterParameter::Parameter, req));
+  }
 
   setFilterParameters(parameters);
 }
@@ -83,24 +89,41 @@ void ImportASCIIData::dataCheck()
     return;
   }
 
+  QString inputFilePath = wizardData.inputFilePath;
   QStringList headers = wizardData.dataHeaders;
   QStringList dataTypes = wizardData.dataTypes;
   int numLines = wizardData.numberOfLines;
   int beginIndex = wizardData.beginIndex;
 
+  QFileInfo fi(inputFilePath);
+
   QVector<size_t> tDims(1, numLines - beginIndex + 1);
   QVector<size_t> cDims(1, 1);
-  DataContainer::Pointer dc = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, "ImportDataContainer");
-  AttributeMatrix::Pointer am = dc->createNonPrereqAttributeMatrix<AbstractFilter>(this, "ImportAttributeMatrix", tDims, DREAM3D::AttributeMatrixType::Cell);
+
+  AttributeMatrix::Pointer am = getDataContainerArray()->getAttributeMatrix(m_AttributeMatrixPath);
+  if (NULL == am.get())
+  {
+    QString ss = "The attribute matrix input is empty.  Please select an attribute matrix.";
+    setErrorCondition(-101);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+  else if (am->getTupleDimensions() != tDims)
+  {
+    QString ss = "The attribute matrix '" + m_AttributeMatrixPath.getAttributeMatrixName() + "' does not have the same tuple dimensions as the data in the file '" + fi.fileName() + "'.";
+    setErrorCondition(-102);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
 
   // Create the arrays
   QList<AbstractDataParser::Pointer> dataParsers;
-  DataArrayPath arrayPath(dc->getName(), am->getName(), "");
   for (int i = 0; i < dataTypes.size(); i++)
   {
     QString dataType = dataTypes[i];
     QString name = headers[i];
 
+    DataArrayPath arrayPath = m_AttributeMatrixPath;
     arrayPath.setDataArrayName(name);
 
     if (dataType == "Double")

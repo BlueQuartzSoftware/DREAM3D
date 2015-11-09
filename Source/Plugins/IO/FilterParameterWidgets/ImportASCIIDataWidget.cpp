@@ -96,6 +96,8 @@ void ImportASCIIDataWidget::setupGui()
   fileImportedLabel->hide();
   warningLabel->hide();
   removeFileBtn->hide();
+  tupleLabel->hide();
+  tupleCountLabel->hide();
 }
 
 // -----------------------------------------------------------------------------
@@ -248,10 +250,16 @@ void ImportASCIIDataWidget::on_importFileBtn_pressed()
 
     if (result == QDialog::Accepted)
     {
+      int beginIndex = m_ImportWizard->getBeginningLineNum();
+      int numOfDataLines = m_NumLines - beginIndex + 1;
+      tupleCountLabel->setText(QString::number(numOfDataLines));
+
       fileImportedLabel->setText(filePath);
       fileImportedLabel->show();
       warningLabel->show();
       removeFileBtn->show();
+      tupleLabel->show();
+      tupleCountLabel->show();
       emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
     }
   }
