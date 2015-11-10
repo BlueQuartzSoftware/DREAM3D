@@ -459,7 +459,7 @@ void InsertAtoms::execute()
   // be notified of unanticipated behavior ; this cannot be done in the dataCheck since
   // we don't have acces to the data yet
   int32_t numFeaturesIn = static_cast<int32_t>(m_AvgQuatsPtr.lock()->getNumberOfTuples());
-  bool mismatchedFeatures = true;
+  bool mismatchedFeatures = false;
   int32_t largestFeature = 0;
   size_t numTuples = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();
   for (size_t i = 0; i < numTuples; i++)
