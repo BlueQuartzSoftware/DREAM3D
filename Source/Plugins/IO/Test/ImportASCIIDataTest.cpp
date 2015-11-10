@@ -82,29 +82,47 @@ int TestFilterAvailability()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+template<typename I, typename O>
+void ConvertTypes()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template <typename T>
+void TestConversion()
+{
+  ConvertTypes<T, int8_t>();
+  ConvertTypes<T, int16_t>();
+  ConvertTypes<T, int32_t>();
+  ConvertTypes<T, int64_t>();
+  ConvertTypes<T, uint8_t>();
+  ConvertTypes<T, uint16_t>();
+  ConvertTypes<T, uint32_t>();
+  ConvertTypes<T, uint64_t>();
+  ConvertTypes<T, float>();
+  ConvertTypes<T, double>();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int ImportASCIIDataTest()
 {
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- /* Please write ImportASCIIData test code here.
-  *
-  * Your IO test files are:
-  * UnitTest::ImportASCIIDataTest::TestFile1
-  * UnitTest::ImportASCIIDataTest::TestFile2
-  *
-  * SIMPLib provides some macros that will throw exceptions when a test fails
-  * and thus report that during testing. These macros are located in the
-  * SIMPLib/Utilities/UnitTestSupport.hpp file. Some examples are:
-  *
-  * SIMPLib_REQUIRE_EQUAL(foo, 0)
-  * This means that if the variable foo is NOT equal to Zero then test will fail
-  * and the current test will exit immediately. If there are more tests registered
-  * with the SIMPLib_REGISTER_TEST() macro, the next test will execute. There are
-  * lots of examples in the SIMPLib/Test folder to look at.
-  */
-  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  //DREAM3D_REQUIRE_EQUAL(foo, 0)
 
-  int foo = 0;
-  DREAM3D_REQUIRE_EQUAL(foo, 0)
+  TestConversion<int8_t>();
+  TestConversion<int16_t>();
+  TestConversion<int32_t>();
+  TestConversion<int64_t>();
+  TestConversion<uint8_t>();
+  TestConversion<uint16_t>();
+  TestConversion<uint32_t>();
+  TestConversion<uint64_t>();
+  TestConversion<float>();
+  TestConversion<double>();
 
   return EXIT_SUCCESS;
 }
@@ -121,7 +139,6 @@ void loadFilterPlugins()
   // Send progress messages from PipelineBuilder to this object for display
   QMetaObjectUtilities::RegisterMetaTypes();
 }
-
 
 // -----------------------------------------------------------------------------
 //  Use test framework
