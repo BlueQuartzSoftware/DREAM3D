@@ -135,15 +135,14 @@ QStringList ImportASCIIDataWizard::ReadLines(const QString &inputFilePath, int b
   {
     QTextStream in(&inputFile);
 
-    for (int i = 0; i < beginLine + numOfLines - 1; i++)
+    for (int i = 1; i < beginLine; i++)
     {
-      while (i < beginLine - 1)
-      {
-        // Skip all lines before "value"
-        QString line = in.readLine();
-        i++;
-      }
+      // Skip all lines before "value"
+      in.readLine();
+    }
 
+    for (int i = beginLine; i < beginLine + numOfLines; i++)
+    {
       QString line = in.readLine();
       result.push_back(line);
     }

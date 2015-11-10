@@ -276,6 +276,8 @@ void ImportASCIIDataWidget::on_removeFileBtn_pressed()
   fileImportedLabel->hide();
   warningLabel->hide();
   removeFileBtn->hide();
+  tupleLabel->hide();
+  tupleCountLabel->hide();
 
   emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
 }
