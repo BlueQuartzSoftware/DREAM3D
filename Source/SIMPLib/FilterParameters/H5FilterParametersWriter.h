@@ -81,6 +81,7 @@ class SIMPLib_EXPORT H5FilterParametersWriter : public AbstractFilterParametersW
 
     virtual int writeValue(const QString name, const QString value);
     virtual int writeValue(const QString name, const QVector<QString> value);
+    virtual int writeValue(const QString name, const QStringList value);
 
     virtual int writeValue(const QString name, int8_t value);
     virtual int writeValue(const QString name, int16_t value);

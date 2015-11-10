@@ -49,6 +49,8 @@
 #include "Widgets/ImportASCIIDataWizard/AbstractDataParser.hpp"
 #include "Widgets/ImportASCIIDataWizard/ASCIIWizardData.hpp"
 
+#include "IOFilters/ImportASCIIData.h"
+
 // Initialize private static member variable
 QString ImportASCIIDataWidget::m_OpenDialogLastDirectory = "";
 
@@ -62,6 +64,9 @@ ImportASCIIDataWidget::ImportASCIIDataWidget(FilterParameter* parameter, Abstrac
 {
   m_FilterParameter = dynamic_cast<ImportASCIIDataFilterParameter*>(parameter);
   Q_ASSERT_X(m_FilterParameter != NULL, "NULL Pointer", "ImportASCIIDataWidget can ONLY be used with an ImportASCIIDataFilterParameter object");
+
+  m_Filter = dynamic_cast<ImportASCIIData*>(filter);
+  Q_ASSERT_X(m_Filter != NULL, "NULL Pointer", "ImportASCIIDataWidget can ONLY be used with an ImportASCIIData filter");
 
   setupUi(this);
 
@@ -92,12 +97,24 @@ void ImportASCIIDataWidget::setupGui()
   // Catch when the filter wants its values updated
   connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)),
     this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
-
-  fileImportedLabel->hide();
-  warningLabel->hide();
-  removeFileBtn->hide();
-  tupleLabel->hide();
-  tupleCountLabel->hide();
+  
+  // If the filter was loaded from a pipeline file, fill in the information in the widget
+  if (m_Filter->getWizardData().isEmpty() == false)
+  {
+    int beginIndex = m_Filter->getWizardData().beginIndex;
+    int numOfDataLines = m_Filter->getWizardData().numberOfLines - beginIndex + 1;
+    
+    tupleCountLabel->setText(QString::number(numOfDataLines));
+    fileImportedLabel->setText(m_Filter->getWizardData().inputFilePath);
+  }
+  else
+  {
+    fileImportedLabel->hide();
+    warningLabel->hide();
+    removeFileBtn->hide();
+    tupleLabel->hide();
+    tupleCountLabel->hide();
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -287,10 +304,9 @@ void ImportASCIIDataWidget::on_removeFileBtn_pressed()
 // -----------------------------------------------------------------------------
 void ImportASCIIDataWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
-  ASCIIWizardData data;
-
   if (NULL != m_ImportWizard)
   {
+    ASCIIWizardData data;
     data.consecutiveDelimiters = m_ImportWizard->getConsecutiveDelimiters();
     data.isFixedWidth = m_ImportWizard->getHasFixedWidth();
     data.delimiters = m_ImportWizard->getDelimiters();
@@ -299,14 +315,14 @@ void ImportASCIIDataWidget::filterNeedsInputParameters(AbstractFilter* filter)
     data.beginIndex = m_ImportWizard->getBeginningLineNum();
     data.numberOfLines = m_NumLines;
     data.dataTypes = m_ImportWizard->getDataTypes();
-  }
 
-  QVariant v;
-  v.setValue(data);
-  bool ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
-  if (false == ok)
-  {
-    //FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
+    QVariant v;
+    v.setValue(data);
+    bool ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
+    if (false == ok)
+    {
+      //FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
+    }
   }
 }
 

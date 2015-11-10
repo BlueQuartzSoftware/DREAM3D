@@ -44,6 +44,7 @@
 class QFSDropLabel;
 class ImportASCIIDataFilterParameter;
 class ImportASCIIDataWizard;
+class ImportASCIIData;
 
 class ImportASCIIDataWidget : public FilterParameterWidget, private Ui::ImportASCIIDataWidget
 {
@@ -80,6 +81,7 @@ class ImportASCIIDataWidget : public FilterParameterWidget, private Ui::ImportAS
 
   private:
     ImportASCIIDataFilterParameter*                   m_FilterParameter;
+    ImportASCIIData*                                  m_Filter;
 
     ImportASCIIDataWizard*                            m_ImportWizard;
 
