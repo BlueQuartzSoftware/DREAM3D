@@ -402,8 +402,8 @@ QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3
         QString ss = QObject::tr("Tried to cast a statsDataArray[%1].get() to a PrimaryStatsData* "
                                  "pointer but this resulted in a NULL pointer.\n")
                      .arg(phase).arg(phase);
-        notifyErrorMessage(getHumanLabel(), ss, -666);
         setErrorCondition(-666);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return "-1";
       }
       while (volgood == false)

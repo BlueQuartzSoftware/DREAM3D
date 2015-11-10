@@ -54,15 +54,15 @@ None
 
 ## References ##
 
-www.scholarpedia.org/article/Mutual_information
+[Scholar Pedia](http://www.scholarpedia.org/article/Mutual_information)
 
 Journal articles on _Mutual Information_ that are useful:
-__Cover, T.M. and Thomas, J.A. (1991). 
-_Elements of information theory_. John Wiley & Sons, New York, NY.Gray, R.M. (1990). 
-_Entropy and Information Theory_. Springer-Verlag, New York, NY. Nirenberg, S. and Latham, P.E. (2003). 
-_Decoding neuronal spike trains: how important are correlations?_ Proc. Natl. Acad. Sci. 100:7348-7353. Shannon, C.E. and Weaver, W. (1949). 
-_The mathematical theory of communication_. University of Illinois Press, Urbana, Illinois. Mézard, M. and Monatanari, A. (2009). 
-_Information, Physics, and Computation_. Oxford University Press, Oxford.
+
++ _Elements of information theory_. John Wiley & Sons, New York, NY.Gray, R.M. (1990). 
++ _Entropy and Information Theory_. Springer-Verlag, New York, NY. Nirenberg, S. and Latham, P.E. (2003). 
++ _Decoding neuronal spike trains: how important are correlations?_ Proc. Natl. Acad. Sci. 100:7348-7353. Shannon, C.E. and Weaver, W. (1949). 
++ _The mathematical theory of communication_. University of Illinois Press, Urbana, Illinois. Mézard, M. and Monatanari, A. (2009). 
++ _Information, Physics, and Computation_. Oxford University Press, Oxford.
 
 ## License & Copyright ##
 

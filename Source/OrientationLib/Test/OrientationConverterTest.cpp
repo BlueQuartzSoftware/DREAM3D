@@ -45,7 +45,6 @@
 #include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
 #include "OrientationLib/OrientationLib.h"
-#include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/OrientationMath/OrientationConverter.hpp"
 #include "OrientationLib/SpaceGroupOps/CubicOps.h"
 

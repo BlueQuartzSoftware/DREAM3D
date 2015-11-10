@@ -14,9 +14,9 @@
 =========================================================================*/
 
 #define TYPE_LONG_LONG long long
-
-typedef VTK_TEST_COMPARE_TYPE_1 Type1;
-typedef VTK_TEST_COMPARE_TYPE_2 Type2;
+#error
+typedef CMP_TEST_COMPARE_TYPE_1 Type1;
+typedef CMP_TEST_COMPARE_TYPE_2 Type2;
 
 void function(Type1**) {}
 

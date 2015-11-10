@@ -768,6 +768,14 @@ void DREAM3D_UI::on_pipelineViewWidget_pipelineOpened(QString& file, const bool&
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_pipelineViewWidget_pipelineChanged()
 {
+  QString fiBase = "Untitled";
+  QFileInfo fi(fiBase);
+  if ( !windowFilePath().isEmpty() )
+  {
+    fi = QFileInfo(windowFilePath());
+  }
+
+  setWindowTitle(QString("[*]") + fi.baseName() + " - DREAM3D");
   setWindowModified(true);
 }
 

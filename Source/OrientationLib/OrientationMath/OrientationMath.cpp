@@ -152,6 +152,8 @@ OrientationMath::~OrientationMath()
 {
 }
 
+#if 0
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -262,6 +264,7 @@ QuatF OrientationMath::ActiveRotation(float angle, float xAxis, float yAxis, flo
   QuatF active = QuaternionMathF::Multiply(temp, qStar);
   return active;
 }
+#endif
 
 // -----------------------------------------------------------------------------
 //

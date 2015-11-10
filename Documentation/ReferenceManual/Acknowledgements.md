@@ -95,6 +95,6 @@ Parts of DREAM.3D were written under US Air Force (AFRL) Contract FA8650-07-D-58
 
 ### Other Institutions ###
 
-
++ Mr. William Lenthe (VC, CC) (University of California, Santa Barbara)
 + Mr. Matthew Priddy (CC) (Georgia Tech University)
 + Mr. Jarrell Waggoner (CC) (Univ. South Carolina)

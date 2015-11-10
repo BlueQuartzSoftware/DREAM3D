@@ -204,8 +204,8 @@ void NodesTrianglesToStl::execute()
   {
 
     QString ss = QObject::tr("Error creating parent path '%1'").arg(getOutputStlDirectory());
-    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 

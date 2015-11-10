@@ -167,8 +167,8 @@ void ConvertHexGridToSquareGrid::dataCheck()
   if(m_InputPath.isEmpty() == true)
   {
     ss = QObject::tr("The input directory must be set");
-    notifyErrorMessage(getHumanLabel(), ss, -13);
     setErrorCondition(-13);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   bool hasMissingFiles = false;

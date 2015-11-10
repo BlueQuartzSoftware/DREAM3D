@@ -149,6 +149,35 @@ class SIMPLib_EXPORT IDataArray
      */
     virtual int copyTuple(size_t currentPos, size_t newPos) = 0;
 
+    /**
+     * @brief copyData This method copies all data from the <b>sourceArray</b> into
+     * the current array starting at the target destination tuple offset value.
+     *
+     * The method will check to ensure that various conditions are properly met
+     * before attempting to copy the data into the array at the give offset to avoid
+     * the possibility of walking off the end of the array into application memory
+     * or causing a General protection fault by the OS.
+     *
+     * For example if the DataArray has 10 tuples and the destTupleOffset = 5 then
+     * then source data will be copied into the destination array starting at
+     * destination tuple 5. In psuedo code it would be the following:
+     * @code
+     *  destArray[5] = sourceArray[0];
+     *  destArray[6] = sourceArray[1];
+     *  .....
+     * @endcode
+     * @param destTupleOffset
+     * @param sourceArray
+     * @return
+     */
+    virtual bool copyData(size_t destTupleOffset, IDataArray::Pointer sourceArray) = 0;
+
+    /**
+     * @brief copyIntoArray Copies all the values this array INTO the target array
+     * @param dest
+     * @return
+     */
+    //virtual bool copyIntoArray(Pointer targetArray) = 0;
 
     /**
      * @brief Creates a copy with the given reordering.

@@ -247,7 +247,7 @@ void NearestPointFuseRegularGrids::execute()
         else { row = int64_t((y - sampleOrigin[1]) / sampleRes[1]); }
         if ((z - sampleOrigin[2]) < 0) { outside = true; }
         else { plane = int64_t((z - sampleOrigin[2]) / sampleRes[2]); }
-        if (col > sampleDims[0] ||  row > sampleDims[1] ||  plane > sampleDims[2]) { outside = true; }
+        if (col >= sampleDims[0] || row >= sampleDims[1] || plane >= sampleDims[2]) { outside = true; }
         if (outside == false)
         {
           sampleIndex = (plane * sampleDims[0] * sampleDims[1]) + (row * sampleDims[0]) + col;

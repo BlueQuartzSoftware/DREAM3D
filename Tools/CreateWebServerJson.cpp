@@ -18,6 +18,8 @@
 #include "SIMPLib/Plugin/PluginManager.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 
+#include "ToolConfiguration.h"
+
 
 // -----------------------------------------------------------------------------
 //
@@ -87,7 +89,7 @@ int main(int argc, char** argv)
   QCoreApplication::setOrganizationDomain("bluequartz.net");
   QCoreApplication::setApplicationName("CreateWebServerJson");
 
-  QString filePath = "/tmp/dream3d_version.json";
+  QString filePath = D3DTools::GetDREAM3DBinaryDir() + QString("/dream3d_version.json");
   if(argc == 2)
   {
     filePath = QString::fromLatin1(argv[1]);

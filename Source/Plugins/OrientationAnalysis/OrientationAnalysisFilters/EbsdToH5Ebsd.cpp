@@ -159,15 +159,15 @@ void EbsdToH5Ebsd::dataCheck()
   if (m_OutputFile.isEmpty() == true)
   {
     ss = QObject::tr("The output file must be set");
-    notifyErrorMessage(getHumanLabel(), ss, -12);
     setErrorCondition(-12);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if (m_InputPath.isEmpty() == true)
   {
     ss = QObject::tr("The Input Directory must be set");
-    notifyErrorMessage(getHumanLabel(), ss, -13);
     setErrorCondition(-13);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   bool hasMissingFiles = false;
@@ -192,8 +192,8 @@ void EbsdToH5Ebsd::dataCheck()
     out << "StartIndex: " << m_ZStartIndex << "\n";
     out << "EndIndex: " << m_ZEndIndex << "\n";
     
-    notifyErrorMessage(getHumanLabel(), ss, -11);
     setErrorCondition(-11);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else
   {
@@ -211,8 +211,8 @@ void EbsdToH5Ebsd::dataCheck()
     else
     {
       ss = QObject::tr("The file extension '%1' was not recognized. Currently .ang or .ctf are the only recognized file extensions").arg(ext);
-      notifyErrorMessage(getHumanLabel(), ss, -997);
       setErrorCondition(-997);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
   }
@@ -259,8 +259,8 @@ void EbsdToH5Ebsd::execute()
   if (!dir.mkpath(parentPath))
   {
     QString ss;
-    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 

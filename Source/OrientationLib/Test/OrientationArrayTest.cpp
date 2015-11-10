@@ -31,7 +31,6 @@
 using namespace SIMPLib::Constants;
 
 #include "OrientationLib/OrientationLib.h"
-#include "OrientationLib/OrientationMath/OrientationMath.h"
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 #include "OrientationLib/OrientationMath/OrientationConverter.hpp"
@@ -662,13 +661,14 @@ template<typename K>
 void Test_eu2_XXX()
 {
   typedef OrientationArray<K> OrientType;
-  std::cout << "Test_eu2_XXX  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << std::endl;
+  typedef std::vector<K> VectorType;
+  typedef QVector<K> QVectorType;
   {
-    K eu[3] = {0.3926990816987242, 0.0, 0.0};
+    K eu[3] = { static_cast<K>(0.3926990816987242L), static_cast<K>(0.0L), static_cast<K>(0.0L) };
     OrientationPrinters::Print_EU<K*>(eu);
     EU_2_XXX<OrientType, K>(eu);
-    //EU_2_XXX<DoubleVectorType, float>(eu);
-    //EU_2_XXX<DoubleQVectorType, float>(eu);
+    EU_2_XXX<VectorType, K>(eu);
+    EU_2_XXX<QVectorType, K>(eu);
   }
 }
 
@@ -845,7 +845,7 @@ void AX_2_XXX(K* in)
 void Test_ax2_XXX()
 {
   std::cout << "Test_ax2_XXX  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl;
-  float ax[4] = {0.0f, 0.0f, -1.0f, k_PiOver2};
+  float ax[4] = {0.0f, 0.0f, -1.0f, static_cast<float>(k_PiOver2) };
   OrientationPrinters::Print_AX<float*>(ax);
   AX_2_XXX<FOrientArrayType>(ax);
   AX_2_XXX<std::vector<float> >(ax);
@@ -904,7 +904,7 @@ void Test_qu2_XXX()
 {
   {
     std::cout << "Test_qu2_XXX  (SCALAR, <X, Y, Z>) ***************************************" << std::endl;
-    float qu[4] = {SIMPLib::Constants::k_1OverRoot2, 0.0f, 0.0f, -SIMPLib::Constants::k_1OverRoot2};
+    float qu[4] = { static_cast<float>(SIMPLib::Constants::k_1OverRoot2), 0.0f, 0.0f, static_cast<float>(-SIMPLib::Constants::k_1OverRoot2) };
     OrientationPrinters::Print_QU<float*, float>(qu, QuaternionMathF::QuaternionScalarVector);
     QU_2_XXX<FOrientArrayType>(qu, QuaternionMathF::QuaternionScalarVector);
     //  QU_2_XXX<std::vector<float> >(qu);
@@ -913,7 +913,7 @@ void Test_qu2_XXX()
 
   {
     std::cout << "Test_qu2_XXX  (<X, Y, Z>, SCALAR) ***************************************" << std::endl;
-    float qu[4] = {0.0f, 0.0f, -SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2};
+    float qu[4] = {0.0f, 0.0f, static_cast<float>(-SIMPLib::Constants::k_1OverRoot2), static_cast<float>(SIMPLib::Constants::k_1OverRoot2) };
     OrientationPrinters::Print_QU<float*, float>(qu);
     QU_2_XXX<FOrientArrayType>(qu);
     //  QU_2_XXX<std::vector<float> >(qu);

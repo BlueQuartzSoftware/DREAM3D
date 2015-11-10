@@ -49,7 +49,7 @@ Data is organized in DREAM.3D using **Attribute Matrix** objects. These objects 
 	- **Vertex**: Attribute data associated with vertices
 	- **Edge**: Attribute data associated with edges
 	- **Face**: Attribute data associated with polygons
-	- **Cell**: Attribute data assocaites with polyhedra
+	- **Cell**: Attribute data associated with polyhedra
 + **Feature**: Attribute data associated with _collections_ of **Elements**
 + **Ensemble**: Attribute data associated with _collections_ of **Features**
 

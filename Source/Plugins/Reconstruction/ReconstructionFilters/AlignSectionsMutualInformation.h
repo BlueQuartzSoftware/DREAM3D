@@ -152,10 +152,12 @@ class AlignSectionsMutualInformation : public AlignSections
     DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
     DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
     DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-
+  
+  
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
-    int32_t* m_FeatureIds;
-    uint64_t Seed;
+  
+    Int32ArrayType::Pointer m_MIFeaturesPtr;
+    uint64_t m_Seed;
 
     AlignSectionsMutualInformation(const AlignSectionsMutualInformation&); // Copy Constructor Not Implemented
     void operator=(const AlignSectionsMutualInformation&); // Operator '=' Not Implemented

@@ -32,21 +32,22 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #include "GenerateVectorColors.h"
+
+#include <Eigen/Core>
+#include <Eigen/Dense>
+#include <Eigen/Eigen>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
+#include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Utilities/ColorTable.h"
-#include "OrientationLib/OrientationMath/OrientationMath.h"
 
 #include "Generic/GenericConstants.h"
 
@@ -191,6 +192,9 @@ void GenerateVectorColors::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
+  //typedef Eigen::Array<float, 3, 1> ArrayType;
+  typedef Eigen::Map<Eigen::Vector3f> VectorMapType;
+
   size_t totalPoints = m_VectorsPtr.lock()->getNumberOfTuples();
 
   bool missingGoodVoxels = true;
@@ -219,8 +223,13 @@ void GenerateVectorColors::execute()
       dir[0] = m_Vectors[index + 0];
       dir[1] = m_Vectors[index + 1];
       dir[2] = m_Vectors[index + 2];
-      MatrixMath::Normalize3x1(dir);
-      if (dir[2] < 0) { MatrixMath::Multiply3x1withConstant(dir, -1); }
+
+      VectorMapType array(const_cast<float*>(dir));
+      array.normalize();
+
+      if (dir[2] < 0) {
+        array = array * -1.0f;
+      }
       float trend = atan2f(dir[1], dir[0]) * (180.0 / SIMPLib::Constants::k_Pi);
       float plunge = acosf(dir[2]) * (180.0 / SIMPLib::Constants::k_Pi);
       if (trend < 0.0) { trend += 360.0; }

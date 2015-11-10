@@ -228,8 +228,8 @@ void SurfaceMeshToNonconformalVtk::execute()
   if(!parentPath.mkpath("."))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
-    notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -239,8 +239,8 @@ void SurfaceMeshToNonconformalVtk::execute()
   if (NULL == vtkFile)
   {
     QString ss = QObject::tr("Error creating file '%1'").arg(getOutputVtkFile());
-    notifyErrorMessage(getHumanLabel(), ss, -18542);
     setErrorCondition(-18542);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
   ScopedFileMonitor vtkFileMonitor(vtkFile);

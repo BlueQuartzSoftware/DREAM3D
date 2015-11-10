@@ -44,6 +44,11 @@ AddDREAM3DUnitTest(TESTNAME ReplaceValueTest
   FOLDER "SIMPLibProj/Test"
   LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
 
+AddDREAM3DUnitTest(TESTNAME StringDataArrayTest
+  SOURCES ${DREAM3DTest_SOURCE_DIR}/StringDataArrayTest.cpp
+  FOLDER "SIMPLibProj/Test"
+  LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
+
 AddDREAM3DUnitTest(TESTNAME StructArrayTest
   SOURCES ${DREAM3DTest_SOURCE_DIR}/StructArrayTest.cpp
   FOLDER "SIMPLibProj/Test"
