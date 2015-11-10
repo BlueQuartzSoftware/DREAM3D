@@ -43,9 +43,17 @@ class Int8Functor
   public:
     virtual ~Int8Functor() {}
 
-    int8_t operator() (QByteArray token, bool &ok)
+    int8_t operator() (const QString &token, bool &ok)
     {
       int8_t value = token.toInt(&ok);
+      if (!ok)
+      {
+        double dValue = token.toDouble(&ok);
+        if (ok)
+        {
+          value = static_cast<int8_t>(dValue);
+        }
+      }
       return value;
     }
 };
@@ -58,9 +66,17 @@ class UInt8Functor
 public:
   virtual ~UInt8Functor() {}
 
-  uint8_t operator() (QByteArray token, bool &ok)
+  uint8_t operator() (const QString &token, bool &ok)
   {
     uint8_t value = token.toUInt(&ok);
+    if (!ok)
+    {
+      double dValue = token.toDouble(&ok);
+      if (ok)
+      {
+        value = static_cast<uint8_t>(dValue);
+      }
+    }
     return value;
   }
 };
@@ -73,9 +89,17 @@ class Int16Functor
 public:
   virtual ~Int16Functor() {}
 
-  int16_t operator() (QByteArray token, bool &ok)
+  int16_t operator() (const QString &token, bool &ok)
   {
-    int16_t value = token.toInt(&ok);
+    int16_t value = token.toShort(&ok);
+    if (!ok)
+    {
+      double dValue = token.toDouble(&ok);
+      if (ok)
+      {
+        value = static_cast<int16_t>(dValue);
+      }
+    }
     return value;
   }
 };
@@ -88,9 +112,17 @@ class UInt16Functor
 public:
   virtual ~UInt16Functor() {}
 
-  uint16_t operator() (QByteArray token, bool &ok)
+  uint16_t operator() (const QString &token, bool &ok)
   {
-    uint16_t value = token.toUInt(&ok);
+    uint16_t value = token.toUShort(&ok);
+    if (!ok)
+    {
+      double dValue = token.toDouble(&ok);
+      if (ok)
+      {
+        value = static_cast<uint16_t>(dValue);
+      }
+    }
     return value;
   }
 };
@@ -103,9 +135,17 @@ class Int32Functor
 public:
   virtual ~Int32Functor() {}
 
-  int32_t operator()(QByteArray token, bool &ok)
+  int32_t operator()(const QString &token, bool &ok)
   {
     int32_t value = token.toInt(&ok);
+    if (!ok)
+    {
+      double dValue = token.toDouble(&ok);
+      if (ok)
+      {
+        value = static_cast<int32_t>(dValue);
+      }
+    }
     return value;
   }
 };
@@ -118,9 +158,17 @@ class UInt32Functor
 public:
   virtual ~UInt32Functor() {}
 
-  uint32_t operator() (QByteArray token, bool &ok)
+  uint32_t operator() (const QString &token, bool &ok)
   {
     uint32_t value = token.toUInt(&ok);
+    if (!ok)
+    {
+      double dValue = token.toDouble(&ok);
+      if (ok)
+      {
+        value = static_cast<uint32_t>(dValue);
+      }
+    }
     return value;
   }
 };
@@ -133,9 +181,17 @@ class Int64Functor
 public:
   virtual ~Int64Functor() {}
 
-  int64_t operator() (QByteArray token, bool &ok)
+  int64_t operator() (const QString &token, bool &ok)
   {
     int64_t value = token.toLongLong(&ok);
+    if (!ok)
+    {
+      double dValue = token.toDouble(&ok);
+      if (ok)
+      {
+        value = static_cast<int64_t>(dValue);
+      }
+    }
     return value;
   }
 };
@@ -148,9 +204,17 @@ class UInt64Functor
 public:
   virtual ~UInt64Functor() {}
 
-  uint64_t operator() (QByteArray token, bool &ok)
+  uint64_t operator() (const QString &token, bool &ok)
   {
     uint64_t value = token.toULongLong(&ok);
+    if (!ok)
+    {
+      double dValue = token.toDouble(&ok);
+      if (ok)
+      {
+        value = static_cast<uint64_t>(dValue);
+      }
+    }
     return value;
   }
 };
@@ -163,7 +227,7 @@ class FloatFunctor
 public:
   virtual ~FloatFunctor() {}
 
-  float operator() (QByteArray token, bool &ok)
+  float operator() (const QString &token, bool &ok)
   {
     float value = token.toFloat(&ok);
     return value;
@@ -178,7 +242,7 @@ class DoubleFunctor
 public:
   virtual ~DoubleFunctor() {}
 
-  double operator() (QByteArray token, bool &ok)
+  double operator() (const QString &token, bool &ok)
   {
     double value = token.toDouble(&ok);
     return value;

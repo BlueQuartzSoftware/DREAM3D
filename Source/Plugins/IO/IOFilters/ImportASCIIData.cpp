@@ -362,16 +362,22 @@ void ImportASCIIData::execute()
         AbstractDataParser::Pointer parser = dataParsers[i];
         int index = parser->getColumnIndex();
         QString name = parser->getColumnName();
-        QString token = tokens[index];
-        QByteArray tokenByteArray = QByteArray::fromStdString(token.toStdString());
 
-        parser->parse(tokenByteArray, insertIndex);
+        bool ok = parser->parse(tokens[index], insertIndex);
+        if (!ok)
+        {
+          QString dataType = parser->getDataArray()->getTypeAsString();
+          QString ss = "Could not convert value to " + dataType + " (line " + QString::number(lineNum) + ", column " + QString::number(index) + ").";
+          setErrorCondition(-102);
+          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+          return;
+        }
       }
       
       if (((float)lineNum / numTuples) * 100.0f > threshold)
       {
         // Print the status of the import
-        QString ss = QObject::tr("Importing ASCII Data || %1% Complete").arg(((float)lineNum / numTuples) * 100.0f);
+        QString ss = QObject::tr("Importing ASCII Data || %1% Complete").arg(((float)lineNum / numTuples) * 100.0f, 0, 'f', 0);
         notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
         threshold = threshold + 5.0f;
         if (threshold < ((float)lineNum / numTuples) * 100.0f)
