@@ -845,7 +845,7 @@ void AX_2_XXX(K* in)
 void Test_ax2_XXX()
 {
   std::cout << "Test_ax2_XXX  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" << std::endl;
-  float ax[4] = {0.0f, 0.0f, -1.0f, k_PiOver2};
+  float ax[4] = {0.0f, 0.0f, -1.0f, static_cast<float>(k_PiOver2) };
   OrientationPrinters::Print_AX<float*>(ax);
   AX_2_XXX<FOrientArrayType>(ax);
   AX_2_XXX<std::vector<float> >(ax);
@@ -904,7 +904,7 @@ void Test_qu2_XXX()
 {
   {
     std::cout << "Test_qu2_XXX  (SCALAR, <X, Y, Z>) ***************************************" << std::endl;
-    float qu[4] = {SIMPLib::Constants::k_1OverRoot2, 0.0f, 0.0f, -SIMPLib::Constants::k_1OverRoot2};
+    float qu[4] = { static_cast<float>(SIMPLib::Constants::k_1OverRoot2), 0.0f, 0.0f, static_cast<float>(-SIMPLib::Constants::k_1OverRoot2) };
     OrientationPrinters::Print_QU<float*, float>(qu, QuaternionMathF::QuaternionScalarVector);
     QU_2_XXX<FOrientArrayType>(qu, QuaternionMathF::QuaternionScalarVector);
     //  QU_2_XXX<std::vector<float> >(qu);
@@ -913,7 +913,7 @@ void Test_qu2_XXX()
 
   {
     std::cout << "Test_qu2_XXX  (<X, Y, Z>, SCALAR) ***************************************" << std::endl;
-    float qu[4] = {0.0f, 0.0f, -SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2};
+    float qu[4] = {0.0f, 0.0f, static_cast<float>(-SIMPLib::Constants::k_1OverRoot2), static_cast<float>(SIMPLib::Constants::k_1OverRoot2) };
     OrientationPrinters::Print_QU<float*, float>(qu);
     QU_2_XXX<FOrientArrayType>(qu);
     //  QU_2_XXX<std::vector<float> >(qu);

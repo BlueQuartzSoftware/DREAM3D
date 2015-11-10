@@ -221,7 +221,8 @@ add_library(${PLUGIN_NAME} MODULE ${${PLUGIN_NAME}_MODULE_SRCS})
 target_link_libraries(${PLUGIN_NAME}
                     Qt5::Core
                     SIMPLib
-                    Qt5::Gui Qt5::Widgets
+                    Qt5::Gui 
+                    Qt5::Widgets
                     QtSupportLib
                     DREAM3DWidgetsLib
                     )
@@ -240,7 +241,7 @@ if(NOT MSVC)
 endif()
 
 if(DREAM3D_BUILD_TESTING)
-  ADD_SUBDIRECTORY(${PROJECT_SOURCE_DIR}/Test ${PROJECT_BINARY_DIR}/Test)
+  include(${PROJECT_SOURCE_DIR}/Test/CMakeLists.txt)
 endif()
 
 

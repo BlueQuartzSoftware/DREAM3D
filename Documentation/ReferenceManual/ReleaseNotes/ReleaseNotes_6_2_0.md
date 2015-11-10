@@ -10,6 +10,23 @@ Users:[https://groups.google.com/forum/?/dream3d-users#!forum/dream3d-users](htt
 
 Developers:[https://groups.google.com/forum/?hl=en#!forum/dream3d-developers](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
+## Version 6.2.63 ##
++ Version 6.2.63 will be the last version to support OS X 10.8. The minimum version of OS X for all future DREAM.3D updates will be 10.9.
++ Fixed incorrect symbolic link creation for OS X builds that prevented documentation windows from properly appearing.
++ Fixed incorrect **Filter** input requirement in the "Write INL File" **Filter** (issue #471).
++ Fixed "Read H5EBSD File" not properly loading zMax value from a **Pipeline** file (issue #474).
++ Fixed potential array out of bounds error in "Align Sections (Mutual Information)" **Filter** (issue #472).
++ Fixed incorrect bounds check in "Fuse Regular Grids (Nearest Point)" **Filter**.
++ Added internationalization to a few DREAM.3D widgets.
++ Fixed issue when calculating the fundamental zone Rodrigues vector for hexagonal systems.
++ Fixed missing axis normalization in GBCD export **Filters** (issue #477).
++ Added ability in the "Quick Surface Mesh" **Filter** to carry forward any voxel information onto the generated surface mesh.
++ Added "Orientation Utility" **Filter** that will compute all 7 supported representations for a supplied orientation.
++ Fixed potential out of bounds crash in "Match Crystallography" **Filter**.
+
+### Developer Notes ###
++ **Plugin** CMake code has been updated to better organize projects in Visual Studio and Xcode.
+
 ## Version 6.2.0 ##
 + Completed migration of all internal rotation transformations to those documented in the paper "Tutorial: Consistent Representations of and Conversions Between 3D Rotations", D. Rowenhorst, A.D. Rollett, G.S. Rohrer, M. Groeber, M. Jackson, P.J. Konijnenberg, and M. De Graef.
 + The rotation transformation codes are tested to be internally consistent using 64 bit floating point precision. 32 bit floating point precision may result in symmetrically equivalent angles but not numerically equivalent angles for certain rotations. See the "Convert Orientations" **Filter** for more details.

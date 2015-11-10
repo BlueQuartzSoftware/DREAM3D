@@ -130,7 +130,7 @@ herr_t QH5Lite::writeVectorOfStringsDataset(hid_t loc_id,
   herr_t err = -1;
   herr_t retErr = 0;
 
-  hsize_t  dims[1] = { data.size() };
+  hsize_t  dims[1] = { static_cast<hsize_t>(data.size()) };
   if ( (sid = H5Screate_simple(sizeof(dims) / sizeof(*dims), dims, NULL)) >= 0)
   {
     dims[0] = 1;
