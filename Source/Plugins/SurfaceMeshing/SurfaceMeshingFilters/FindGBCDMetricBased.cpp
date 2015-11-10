@@ -1173,7 +1173,7 @@ void FindGBCDMetricBased::execute()
 			if (distribValues[ptIdx] > 1e-10) {
 				saneErr = fmin(100.0, 100.0 * errorValues[ptIdx] / distribValues[ptIdx]);
 			}
-      fprintf(fErr, "%.2f %.2f %.4f\n", azimuthDeg, 90.0f - zenithDeg,  saneErr);
+      fprintf(fErr, "%.2f %.2f %.2f\n", azimuthDeg, 90.0f - zenithDeg,  saneErr);
 		}
 	}
 	fclose(fDist);
