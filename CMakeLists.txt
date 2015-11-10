@@ -354,6 +354,10 @@ if(SIMPLib_BUILD_DREAM3D)
   set(SIMPLib_DOCS_ROOT_DIR "${DREAM3DProj_BINARY_DIR}/Bin/Help/DREAM3D")
 endif()
 
+# --------------------------------------------------------------------
+# Build the SimpleITKExplicit Library.
+add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/SimpleITKExplicit ${PROJECT_BINARY_DIR}/SimpleITKExplicit)
+
 
 #-------------------------------------------------------------------------------
 # Compile the Core Plugins that come with DREAM3D and any other Plugins that the

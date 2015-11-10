@@ -118,7 +118,7 @@ if [ -e "$SDK_INSTALL/DREAM3D_SDK.cmake" ]
   mv "$SDK_INSTALL/DREAM3D_SDK.cmake" "$SDK_INSTALL/DREAM3D_SDK.cmake.bak"
 fi
 echo "# This is the DREAM3D_SDK File. This file contains all the paths to the dependent libraries." > "$SDK_INSTALL/DREAM3D_SDK.cmake"
-
+echo "# This was generated for Version 6.3 Development of DREAM.3D. This SDK has C++11 Support ENABLED" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "if(NOT DEFINED DREAM3D_FIRST_CONFIGURE)" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "  message(STATUS \"*******************************************************\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "  message(STATUS \"* DREAM.3D First Configuration Run                    *\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
