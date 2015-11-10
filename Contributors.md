@@ -4,7 +4,9 @@ This file contains quick details of contributions to the DREAM.3D project made b
 + Dr. Patrick Callahan 
 	+ Computation of shape descriptors in "Find Feature Shapes" **Filter**
 + Dr. Lisa Chan
-	+ Twin insertion code used in the "Insert Transformation Phase" **Filter** 
+	+ Twin insertion code used in the "Insert Transformation Phase" **Filter**
++ Mr. Krzysztof Glowinski
+	+ Implementation of the "Find GBCD (Metric-based Approach)" **Filter**
 + Dr. Marc De Graef 
 	+ Underlying framework for "Convert Orientation Representation" **Filter**, which allows for self-consistent transformations between 7 orientation representations
 	+ Computation of shape descriptors in "Find Feature Shapes" **Filter**
