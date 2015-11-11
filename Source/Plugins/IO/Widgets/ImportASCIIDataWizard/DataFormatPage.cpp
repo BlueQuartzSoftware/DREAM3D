@@ -37,6 +37,8 @@
 
 #include <QtCore/QFile>
 
+#include "SIMPLib/Common/Constants.h"
+
 #include "ImportASCIIDataWizard.h"
 #include "ASCIIDataModel.h"
 
@@ -74,6 +76,20 @@ void DataFormatPage::setupGui()
   headersIndexLineEdit->setValidator(new QRegularExpressionValidator(QRegularExpression("[1-9]|1[0-9]|20"), headersIndexLineEdit));
 
   registerField("startRow", startRowSpin);
+
+  QStringList dataTypes;
+  dataTypes.push_back(DREAM3D::TypeNames::Double);
+  dataTypes.push_back(DREAM3D::TypeNames::Float);
+  dataTypes.push_back(DREAM3D::TypeNames::Int8);
+  dataTypes.push_back(DREAM3D::TypeNames::Int16);
+  dataTypes.push_back(DREAM3D::TypeNames::Int32);
+  dataTypes.push_back(DREAM3D::TypeNames::Int64);
+  dataTypes.push_back(DREAM3D::TypeNames::UInt8);
+  dataTypes.push_back(DREAM3D::TypeNames::UInt16);
+  dataTypes.push_back(DREAM3D::TypeNames::UInt32);
+  dataTypes.push_back(DREAM3D::TypeNames::UInt64);
+  dataTypeCB->addItems(dataTypes);
+  dataTypeCB->setCurrentIndex(0);
 
   addHeadersBtn->setDisabled(true);
   columnDataGroupBox->setDisabled(true);

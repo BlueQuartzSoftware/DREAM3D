@@ -31,6 +31,15 @@ class ImportASCIIData : public AbstractFilter
       SIMPL_FILTER_PARAMETER(DataArrayPath, AttributeMatrixPath)
       Q_PROPERTY(DataArrayPath AttributeMatrixPath READ getAttributeMatrixPath WRITE setAttributeMatrixPath)
 
+    enum ErrorCodes
+    {
+      EMPTY_FILE = -100,
+      EMPTY_ATTR_MATRIX = -101,
+      INCONSISTENT_TUPLES = -102,
+      INCONSISTENT_COLS = -103,
+      CONVERSION_FAILURE = -104
+    };
+
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */

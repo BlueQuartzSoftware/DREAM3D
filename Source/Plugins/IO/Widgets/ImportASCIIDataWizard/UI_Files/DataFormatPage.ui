@@ -236,58 +236,7 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QComboBox" name="dataTypeCB">
-        <item>
-         <property name="text">
-          <string>Double</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Float</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Int8</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Int16</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Int32</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Int64</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>UInt8</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>UInt16</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>UInt32</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>UInt64</string>
-         </property>
-        </item>
-       </widget>
+       <widget class="QComboBox" name="dataTypeCB"/>
       </item>
      </layout>
     </widget>
