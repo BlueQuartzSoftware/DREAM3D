@@ -1,5 +1,5 @@
 /* This filter has been created by Krzysztof Glowinski (kglowinski at ymail.com).
- * It apadts the algorithm described in K.Glowinski, A.Morawiec, "Analysis of 
+ * It adapts the algorithm described in K.Glowinski, A.Morawiec, "Analysis of 
  * experimental grain boundary distributions based on boundary-space metrics",
  * Metall. Mater. Trans. A 45, 3189-3194 (2014).
  * Besides the algorithm itself, many parts of the code come from
@@ -414,10 +414,10 @@ FindGBPDMetricBased::FindGBPDMetricBased() :
   m_CrystalStructures(NULL),
   m_FeatureEulerAngles(NULL),
   m_FeaturePhases(NULL),
+  m_SurfaceMeshFaceAreas(NULL),
   m_SurfaceMeshFaceLabels(NULL),
   m_SurfaceMeshFaceNormals(NULL),
   m_SurfaceMeshFeatureFaceLabels(NULL),
-  m_SurfaceMeshFaceAreas(NULL),
   m_NodeTypes(NULL)
 {
   setupFilterParameters();
@@ -478,7 +478,7 @@ void FindGBPDMetricBased::setupFilterParameters()
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Feature Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 2, DREAM3D::AttributeMatrixType::Face, DREAM3D::GeometryType::TriangleGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 2, DREAM3D::AttributeMatrixType::FaceFeature, DREAM3D::GeometryType::TriangleGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Face Labels", "SurfaceMeshFeatureFaceLabelsArrayPath", getSurfaceMeshFeatureFaceLabelsArrayPath(), FilterParameter::RequiredArray, req));
   }
 
@@ -1199,7 +1199,7 @@ void FindGBPDMetricBased::execute()
         if (distribValues[ptIdx] > 1e-10) {
           saneErr = fmin(100.0, 100.0 * errorValues[ptIdx] / distribValues[ptIdx]);
         }
-        fprintf(fErr, "%.4f %.4f %.2f %.2f %.1f\n", azimuthDeg, 90.0f - zenithDeg, saneErr);
+        fprintf(fErr, "%.2f %.2f %.2f\n", azimuthDeg, 90.0f - zenithDeg, saneErr);
       }
     }
   }
