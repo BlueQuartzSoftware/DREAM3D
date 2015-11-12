@@ -1,12 +1,14 @@
-/* This filter has been created by Krzysztof Glowinski (kglowinski at ymail.com).
+/* ============================================================================
+ * This filter has been created by Krzysztof Glowinski (kglowinski at ymail.com).
  * It includes an implementation of the algorithm described in:
  * K.Glowinski, A.Morawiec, "Analysis of experimental grain boundary distributions
  * based on boundary-space metrics", Metall. Mater. Trans. A 45, 3189-3194 (2014).
  * Besides the algorithm itself, many parts of the code come from
- * the sources of other filters, mainly "Find GBCD" and "Write GBCD Pole Figure (GMT5)". 
+ * the sources of other filters, mainly "Find GBCD" and "Write GBCD Pole Figure (GMT5)".
  * Therefore, the below copyright notice applies.
- * 
- * ============================================================================
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ 
+/* ============================================================================
  * Copyright (c) 2009-2015 BlueQuartz Software, LLC
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -508,53 +510,47 @@ void FindGBCDMetricBased::setupFilterParameters()
 	parameters.push_back(IntFilterParameter::New("Number of Sampling Points (on a Hemisphere)", "NumSamplPts", getNumSamplPts(), FilterParameter::Parameter));
   parameters.push_back(BooleanFilterParameter::New("Exclude Triangles Directly Neighboring Triple Lines", "ExcludeTripleLines", getExcludeTripleLines(), FilterParameter::Parameter));
 
-	parameters.push_back(OutputFileFilterParameter::New("Save Distribution to", "DistOutputFile", getDistOutputFile(), FilterParameter::Parameter, ""));
-	parameters.push_back(OutputFileFilterParameter::New("Save Distribution Errors to", "ErrOutputFile", getErrOutputFile(), FilterParameter::Parameter, ""));
+	parameters.push_back(OutputFileFilterParameter::New("Output Distribution File", "DistOutputFile", getDistOutputFile(), FilterParameter::Parameter, "*.dat", "DAT File"));
+	parameters.push_back(OutputFileFilterParameter::New("Output Distribution Errors File", "ErrOutputFile", getErrOutputFile(), FilterParameter::Parameter, "*.dat", "DAT File"));
 	parameters.push_back(BooleanFilterParameter::New("Save Relative Errors Instead of Their Absolute Values", "SaveRelativeErr", getSaveRelativeErr(), FilterParameter::Parameter));
 
-
-	parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
-	{
-		DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::UInt32, 1, DREAM3D::AttributeMatrixType::CellEnsemble, DREAM3D::GeometryType::ImageGeometry);
-		parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
-	}
-
-
-	parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
-	{
-		DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Float, 3, DREAM3D::AttributeMatrixType::CellFeature, DREAM3D::GeometryType::ImageGeometry);
-		parameters.push_back(DataArraySelectionFilterParameter::New("Average Euler Angles", "FeatureEulerAnglesArrayPath", getFeatureEulerAnglesArrayPath(), FilterParameter::RequiredArray, req));
-	}
-  {
-	  DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::CellFeature, DREAM3D::GeometryType::ImageGeometry);
-	  parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req));
-  }
-
-
-  parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
-  {
-	  DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 2, DREAM3D::AttributeMatrixType::Face, DREAM3D::GeometryType::TriangleGeometry);
-	  parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req));
-  }
-  {
-	  DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Double, 3, DREAM3D::AttributeMatrixType::Face, DREAM3D::GeometryType::TriangleGeometry);
-	  parameters.push_back(DataArraySelectionFilterParameter::New("Face Normals", "SurfaceMeshFaceNormalsArrayPath", getSurfaceMeshFaceNormalsArrayPath(), FilterParameter::RequiredArray, req));
-  }
-  {
-	  DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Double, 1, DREAM3D::AttributeMatrixType::Face, DREAM3D::GeometryType::TriangleGeometry);
-	  parameters.push_back(DataArraySelectionFilterParameter::New("Face Areas", "SurfaceMeshFaceAreasArrayPath", getSurfaceMeshFaceAreasArrayPath(), FilterParameter::RequiredArray, req));
-  }
-  parameters.push_back(SeparatorFilterParameter::New("Face Feature Data", FilterParameter::RequiredArray));
-  {
-	  DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 2, DREAM3D::AttributeMatrixType::FaceFeature, DREAM3D::GeometryType::TriangleGeometry);
-	  parameters.push_back(DataArraySelectionFilterParameter::New("Feature Face Labels", "SurfaceMeshFeatureFaceLabelsArrayPath", getSurfaceMeshFeatureFaceLabelsArrayPath(), FilterParameter::RequiredArray, req));
-  }
- 
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int8, 1, DREAM3D::AttributeMatrixType::Face, DREAM3D::GeometryType::TriangleGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Node Types", "NodeTypesArrayPath", getNodeTypesArrayPath(), FilterParameter::RequiredArray, req));
   }
+  parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 2, DREAM3D::AttributeMatrixType::Face, DREAM3D::GeometryType::TriangleGeometry);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req));
+  }
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Double, 3, DREAM3D::AttributeMatrixType::Face, DREAM3D::GeometryType::TriangleGeometry);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Face Normals", "SurfaceMeshFaceNormalsArrayPath", getSurfaceMeshFaceNormalsArrayPath(), FilterParameter::RequiredArray, req));
+  }
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Double, 1, DREAM3D::AttributeMatrixType::Face, DREAM3D::GeometryType::TriangleGeometry);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Face Areas", "SurfaceMeshFaceAreasArrayPath", getSurfaceMeshFaceAreasArrayPath(), FilterParameter::RequiredArray, req));
+  }
+  parameters.push_back(SeparatorFilterParameter::New("Face Feature Data", FilterParameter::RequiredArray));
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 2, DREAM3D::AttributeMatrixType::FaceFeature, DREAM3D::GeometryType::TriangleGeometry);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Face Labels", "SurfaceMeshFeatureFaceLabelsArrayPath", getSurfaceMeshFeatureFaceLabelsArrayPath(), FilterParameter::RequiredArray, req));
+  }
+  parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Float, 3, DREAM3D::AttributeMatrixType::CellFeature, DREAM3D::GeometryType::ImageGeometry);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Average Euler Angles", "FeatureEulerAnglesArrayPath", getFeatureEulerAnglesArrayPath(), FilterParameter::RequiredArray, req));
+  }
+  {
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::CellFeature, DREAM3D::GeometryType::ImageGeometry);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req));
+  }
+	parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
+	{
+		DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::UInt32, 1, DREAM3D::AttributeMatrixType::CellEnsemble, DREAM3D::GeometryType::ImageGeometry);
+		parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
+	}
 
   setFilterParameters(parameters);
 }
@@ -621,7 +617,6 @@ void FindGBCDMetricBased::dataCheck()
 {
 	setErrorCondition(0);
 
-
 	// Fixed Misorientation (filter params.)
 	if (getMisorientationRotation().angle <= 0.0 || getMisorientationRotation().angle > 180.0) {
 
@@ -637,7 +632,6 @@ void FindGBCDMetricBased::dataCheck()
 		setErrorCondition(-1);
 	}
 
-
 	// Number of Sampling Points (filter params.)
 	if (getNumSamplPts() < 1) {
 
@@ -647,10 +641,9 @@ void FindGBCDMetricBased::dataCheck()
 	}
 	if (getNumSamplPts() > 5000) { // set some reasonable value, but allow user to use more if he/she knows what he/she does
 
-		QString ss = QObject::tr("Most likely, you do not need to use that many sampling points");
+		QString ss = QObject::tr("The number of sampling points is greater than 5000, but it is unlikely that many are needed");
 		notifyWarningMessage(getHumanLabel(), ss, -1);
 	}
-
 
 	// Output files (filter params.)
 	if (getDistOutputFile().isEmpty() == true)
@@ -666,7 +659,6 @@ void FindGBCDMetricBased::dataCheck()
 		setErrorCondition(-1);
 	}
 
-
 	QFileInfo distOutFileInfo(getDistOutputFile());
 	QDir distParentPath = distOutFileInfo.path();
 	if (distParentPath.exists() == false)
@@ -675,7 +667,6 @@ void FindGBCDMetricBased::dataCheck()
 		notifyWarningMessage(getHumanLabel(), ss, -1);
 	}
 
-
 	QFileInfo errOutFileInfo(getErrOutputFile());
 	QDir errParentPath = errOutFileInfo.path();
 	if (errParentPath.exists() == false)
@@ -683,7 +674,6 @@ void FindGBCDMetricBased::dataCheck()
 		QString ss = QObject::tr("The directory path for the distribution errors output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
 		notifyWarningMessage(getHumanLabel(), ss, -1);
 	}
-
 
   if (distOutFileInfo.suffix().compare("") == 0)
   {
@@ -694,10 +684,9 @@ void FindGBCDMetricBased::dataCheck()
     setErrOutputFile(getErrOutputFile().append(".dat"));
   }
 
-
   // Make sure the file name ends with _1 so the GMT scripts work correctly
   QString distFName = distOutFileInfo.baseName();
-  if (distFName.endsWith("_1") == false)
+  if (!distFName.isEmpty() && distFName.endsWith("_1") == false)
   {
     distFName = distFName + "_1";
     QString absPath = distOutFileInfo.absolutePath() + "/" + distFName + ".dat";
@@ -705,13 +694,12 @@ void FindGBCDMetricBased::dataCheck()
   }
 
   QString errFName = errOutFileInfo.baseName();
-  if (errFName.endsWith("_1") == false)
+  if (!errFName.isEmpty() && errFName.endsWith("_1") == false)
   {
     errFName = errFName + "_1";
     QString absPath = errOutFileInfo.absolutePath() + "/" + errFName + ".dat";
     setErrOutputFile(absPath);
   }
-
 
   if (getDistOutputFile().isEmpty() == false && getDistOutputFile() == getErrOutputFile())
   {
@@ -719,7 +707,6 @@ void FindGBCDMetricBased::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
   }
-
 
 	// Crystal Structures (DREAM file)
 	QVector<size_t> cDims(1, 1);
@@ -938,7 +925,7 @@ void FindGBCDMetricBased::execute()
 
 	// ------------------------------ generation of sampling points ------------------------------
 
-	QString ss = QObject::tr("--> Generating sampling points");
+	QString ss = QObject::tr("|| Generating sampling points");
 	notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
 	// generate "Golden Section Spiral", see http://www.softimageblog.com/archives/115
@@ -1013,7 +1000,7 @@ void FindGBCDMetricBased::execute()
   for (size_t i = 0; i < numMeshTris; i = i + trisChunkSize)
   {
     if (getCancel() == true) { return; }
-    ss = QObject::tr("--> step 1/2: selecting triangles with the specified misorientation (%1\% completed)").arg(int(100.0 * float(i) / float(numMeshTris)));
+    ss = QObject::tr("|| Step 1/2: Selecting Triangles with the Specified Misorientation (%1\% completed)").arg(int(100.0 * float(i) / float(numMeshTris)));
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     if (i + trisChunkSize >= numMeshTris)
     {
@@ -1101,7 +1088,7 @@ void FindGBCDMetricBased::execute()
 	for (size_t i = 0; i < samplPtsX.size(); i = i + pointsChunkSize)
 	{
 		if (getCancel() == true) { return; }
-		ss = QObject::tr("--> step2/2: computing distribution values at the section of interest (%1\% completed)").arg(int(100.0 * float(i) / float(samplPtsX.size())));
+		ss = QObject::tr("|| Step 2/2: Computing Distribution Values at the Section of Interest (%1\% completed)").arg(int(100.0 * float(i) / float(samplPtsX.size())));
 		notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 		if (i + pointsChunkSize >= samplPtsX.size())
 		{
@@ -1179,14 +1166,6 @@ void FindGBCDMetricBased::execute()
 	fclose(fDist);
 	fclose(fErr);
 
-	if (getErrorCondition() < 0)
-	{
-		QString ss = QObject::tr("Something went wrong");
-		setErrorCondition(-1);
-		notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-		return;
-	}
-
 	notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
@@ -1207,32 +1186,24 @@ AbstractFilter::Pointer FindGBCDMetricBased::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString FindGBCDMetricBased::getCompiledLibraryName()
-{
-	return SurfaceMeshingConstants::SurfaceMeshingBaseName;
-}
+{ return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindGBCDMetricBased::getGroupName()
-{
-	return DREAM3D::FilterGroups::Unsupported;
-}
+{ return DREAM3D::FilterGroups::StatisticsFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindGBCDMetricBased::getSubGroupName()
-{
-	return "Surface Meshing";
-}
+{ return DREAM3D::FilterSubGroups::CrystallographicFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindGBCDMetricBased::getHumanLabel()
-{
-	return "Find GBCD (Metric-based Approach)";
-}
+{ return "Find GBCD (Metric-Based Approach)"; }
 
 

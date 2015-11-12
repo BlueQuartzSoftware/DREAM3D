@@ -1,12 +1,14 @@
-/* This filter has been created by Krzysztof Glowinski (kglowinski at ymail.com).
+/* ============================================================================
+ * This filter has been created by Krzysztof Glowinski (kglowinski at ymail.com).
  * It includes an implementation of the algorithm described in:
  * K.Glowinski, A.Morawiec, "Analysis of experimental grain boundary distributions
  * based on boundary-space metrics", Metall. Mater. Trans. A 45, 3189-3194 (2014).
  * Besides the algorithm itself, many parts of the code come from
  * the sources of other filters, mainly "Find GBCD" and "Write GBCD Pole Figure (GMT5)".
  * Therefore, the below copyright notice applies.
- *
- * ============================================================================
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+/* ============================================================================
  * Copyright (c) 2009-2015 BlueQuartz Software, LLC
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -50,9 +52,6 @@
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
-
-
-
 /**
  * @brief The FindGBCDMetricBased class. See [Filter documentation](@ref findgbcdmetricbased) for details.
  */
@@ -90,8 +89,6 @@ public:
 
   SIMPL_FILTER_PARAMETER(bool, SaveRelativeErr)
   Q_PROPERTY(bool SaveRelativeErr READ getSaveRelativeErr WRITE setSaveRelativeErr)
-
-
 
   SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
@@ -185,17 +182,14 @@ private:
   DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
   DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceLabels)
   DEFINE_DATAARRAY_VARIABLE(int8_t, NodeTypes)
-
+  
+  static const int NUM_RESOL_CHOICES = 7;
+  static const int DEFAULT_RESOL_CHOICE = 2;
+  static const float RESOL_CHOICES[][2];
+  static const double BALL_VOLS_M3M[];
 
   FindGBCDMetricBased(const FindGBCDMetricBased&); // Copy Constructor Not Implemented
   void operator=(const FindGBCDMetricBased&); // Operator '=' Not Implemented
-
-
-  static const int NUM_RESOL_CHOICES = 7;
-  static const int DEFAULT_RESOL_CHOICE = 2;
-  static const float RESOL_CHOICES[][2]; 
-  static const double BALL_VOLS_M3M[];
-  
 };
 
 #endif /* _FindGBCD_MetricBased_H_ */
