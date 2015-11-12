@@ -52,7 +52,7 @@ class AbstractDataParser
 
     virtual IDataArray::Pointer initializeNewDataArray(size_t numTuples, const QString &name, bool allocate){ return IDataArray::NullPointer(); }
 
-    virtual bool parse(const QString& token, size_t index) = 0;
+    virtual ParserFunctor::ErrorObject parse(const QString& token, size_t index) = 0;
 
   protected:
     AbstractDataParser() {}
@@ -97,11 +97,11 @@ public:
     m_Ptr = boost::dynamic_pointer_cast<DataArray<T> >(value);
   }
 
-  virtual bool parse(const QString& token, size_t index)
+  virtual ParserFunctor::ErrorObject parse(const QString& token, size_t index)
   {
-    bool ok = false;
-    (*m_Ptr)[index] = F()(token, ok);
-    return ok;
+    ParserFunctor::ErrorObject obj;
+    (*m_Ptr)[index] = F()(token, obj);
+    return obj;
   }
 
 protected:

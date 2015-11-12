@@ -35,36 +35,62 @@
 
 #include "SIMPLib/SIMPLib.h"
 
+namespace ParserErrorMessages
+{
+  const QString ValueOutOfRange = "Value is out of range for the specified data type.";
+  const QString CouldNotConvert = "Value could not be converted to the specified data type.";
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class Int8Functor
+class ParserFunctor
+{
+public:
+  virtual ~ParserFunctor() {}
+
+  struct ErrorObject
+  {
+    bool ok;
+    QString errorMessage;
+  };
+};
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+class Int8Functor : public ParserFunctor
 {
   public:
     virtual ~Int8Functor() {}
 
-    int8_t operator() (const QString &token, bool &ok)
+    int8_t operator() (const QString &token, ErrorObject &obj)
     {
-      int8_t value = token.toInt(&ok, 10);
-      if (!ok)
+      int16_t value = token.toInt(&obj.ok, 0);
+      if (!obj.ok)
       {
-        // Try hexadecimal
-        value = token.toInt(&ok, 16);
-        if (!ok)
+        // Try double
+        double dValue = token.toDouble(&obj.ok);
+        if (obj.ok)
         {
-          // Try octal
-          value = token.toInt(&ok, 8);
-          if (!ok)
-          {
-            // Try double
-            double dValue = token.toDouble(&ok);
-            if (ok)
-            {
-              // If it converts to a double, cast it to the correct type
-              value = static_cast<int8_t>(dValue);
-            }
-          }
+          // If it converts to a double, cast it to the correct type
+          value = static_cast<int8_t>(dValue);
         }
+        else
+        {
+          obj.errorMessage = ParserErrorMessages::CouldNotConvert;
+        }
+      }
+      else if(value > std::numeric_limits<int8_t>().max() || value < std::numeric_limits<int8_t>().min())
+      {
+          // This value is out of range, so return a conversion error
+          obj.ok = false;
+          obj.errorMessage = ParserErrorMessages::ValueOutOfRange;
+      }
+      else
+      {
+        int8_t realValue = static_cast<int8_t>(value);
+        return realValue;
       }
       return value;
     }
@@ -73,33 +99,40 @@ class Int8Functor
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class UInt8Functor
+class UInt8Functor : public ParserFunctor
 {
 public:
   virtual ~UInt8Functor() {}
 
-  uint8_t operator() (const QString &token, bool &ok)
+  uint8_t operator() (const QString &token, ErrorObject &obj)
   {
-    uint8_t value = token.toUInt(&ok);
-    if (!ok)
+    uint16_t value = token.toUInt(&obj.ok);
+    if (!obj.ok)
     {
-      // Try hexadecimal
-      value = token.toInt(&ok, 16);
-      if (!ok)
+      if (token.isEmpty() == false && token[0] == '-')
       {
-        // Try octal
-        value = token.toInt(&ok, 8);
-        if (!ok)
+        // This is a negative value, so fail
+        obj.errorMessage = ParserErrorMessages::ValueOutOfRange;
+      }
+      else
+      {
+        // Try double
+        double dValue = token.toDouble(&obj.ok);
+        if (obj.ok)
         {
-          // Try double
-          double dValue = token.toDouble(&ok);
-          if (ok)
-          {
-            // If it converts to a double, cast it to the correct type
-            value = static_cast<uint8_t>(dValue);
-          }
+          // If it converts to a double, cast it to the correct type
+          value = static_cast<uint8_t>(dValue);
+        }
+        else
+        {
+          obj.errorMessage = ParserErrorMessages::CouldNotConvert;
         }
       }
+    }
+    else
+    {
+      uint8_t realValue = static_cast<uint8_t>(value);
+      return realValue;
     }
     return value;
   }
@@ -108,33 +141,38 @@ public:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class Int16Functor
+class Int16Functor : public ParserFunctor
 {
 public:
   virtual ~Int16Functor() {}
 
-  int16_t operator() (const QString &token, bool &ok)
+  int16_t operator() (const QString &token, ErrorObject &obj)
   {
-    int16_t value = token.toShort(&ok);
-    if (!ok)
+    int32_t value = token.toInt(&obj.ok);
+    if (!obj.ok)
     {
-      // Try hexadecimal
-      value = token.toInt(&ok, 16);
-      if (!ok)
+      // Try double
+      double dValue = token.toDouble(&obj.ok);
+      if (obj.ok)
       {
-        // Try octal
-        value = token.toInt(&ok, 8);
-        if (!ok)
-        {
-          // Try double
-          double dValue = token.toDouble(&ok);
-          if (ok)
-          {
-            // If it converts to a double, cast it to the correct type
-            value = static_cast<int16_t>(dValue);
-          }
-        }
+        // If it converts to a double, cast it to the correct type
+        value = static_cast<int16_t>(dValue);
       }
+      else
+      {
+        obj.errorMessage = ParserErrorMessages::CouldNotConvert;
+      }
+    }
+    else if (value > std::numeric_limits<int16_t>().max() || value < std::numeric_limits<int16_t>().min())
+    {
+      // This value is out of range, so return a conversion error
+      obj.ok = false;
+      obj.errorMessage = ParserErrorMessages::ValueOutOfRange;
+    }
+    else
+    {
+      int16_t realValue = static_cast<int16_t>(value);
+      return realValue;
     }
     return value;
   }
@@ -143,33 +181,40 @@ public:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class UInt16Functor
+class UInt16Functor : public ParserFunctor
 {
 public:
   virtual ~UInt16Functor() {}
 
-  uint16_t operator() (const QString &token, bool &ok)
+  uint16_t operator() (const QString &token, ErrorObject &obj)
   {
-    uint16_t value = token.toUShort(&ok);
-    if (!ok)
+    uint32_t value = token.toUInt(&obj.ok);
+    if (!obj.ok)
     {
-      // Try hexadecimal
-      value = token.toInt(&ok, 16);
-      if (!ok)
+      if (token.isEmpty() == false && token[0] == '-')
       {
-        // Try octal
-        value = token.toInt(&ok, 8);
-        if (!ok)
+        // This is a negative value, so fail
+        obj.errorMessage = ParserErrorMessages::ValueOutOfRange;
+      }
+      else
+      {
+        // Try double
+        double dValue = token.toDouble(&obj.ok);
+        if (obj.ok)
         {
-          // Try double
-          double dValue = token.toDouble(&ok);
-          if (ok)
-          {
-            // If it converts to a double, cast it to the correct type
-            value = static_cast<uint16_t>(dValue);
-          }
+          // If it converts to a double, cast it to the correct type
+          value = static_cast<uint16_t>(dValue);
+        }
+        else
+        {
+          obj.errorMessage = ParserErrorMessages::CouldNotConvert;
         }
       }
+    }
+    else
+    {
+      uint16_t realValue = static_cast<uint16_t>(value);
+      return realValue;
     }
     return value;
   }
@@ -178,33 +223,38 @@ public:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class Int32Functor
+class Int32Functor : public ParserFunctor
 {
 public:
   virtual ~Int32Functor() {}
 
-  int32_t operator()(const QString &token, bool &ok)
+  int32_t operator()(const QString &token, ErrorObject &obj)
   {
-    int32_t value = token.toInt(&ok);
-    if (!ok)
+    int64_t value = token.toLongLong(&obj.ok);
+    if (!obj.ok)
     {
-      // Try hexadecimal
-      value = token.toInt(&ok, 16);
-      if (!ok)
+      // Try double
+      double dValue = token.toDouble(&obj.ok);
+      if (obj.ok)
       {
-        // Try octal
-        value = token.toInt(&ok, 8);
-        if (!ok)
-        {
-          // Try double
-          double dValue = token.toDouble(&ok);
-          if (ok)
-          {
-            // If it converts to a double, cast it to the correct type
-            value = static_cast<int32_t>(dValue);
-          }
-        }
+        // If it converts to a double, cast it to the correct type
+        value = static_cast<int32_t>(dValue);
       }
+      else
+      {
+        obj.errorMessage = ParserErrorMessages::CouldNotConvert;
+      }
+    }
+    else if (value > std::numeric_limits<int32_t>().max() || value < std::numeric_limits<int32_t>().min())
+    {
+      // This value is out of range, so return a conversion error
+      obj.ok = false;
+      obj.errorMessage = ParserErrorMessages::ValueOutOfRange;
+    }
+    else
+    {
+      int32_t realValue = static_cast<int32_t>(value);
+      return realValue;
     }
     return value;
   }
@@ -213,33 +263,40 @@ public:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class UInt32Functor
+class UInt32Functor : public ParserFunctor
 {
 public:
   virtual ~UInt32Functor() {}
 
-  uint32_t operator() (const QString &token, bool &ok)
+  uint32_t operator() (const QString &token, ErrorObject &obj)
   {
-    uint32_t value = token.toUInt(&ok);
-    if (!ok)
+    uint64_t value = token.toULongLong(&obj.ok);
+    if (!obj.ok)
     {
-      // Try hexadecimal
-      value = token.toInt(&ok, 16);
-      if (!ok)
+      if (token.isEmpty() == false && token[0] == '-')
       {
-        // Try octal
-        value = token.toInt(&ok, 8);
-        if (!ok)
+        // This is a negative value, so fail
+        obj.errorMessage = ParserErrorMessages::ValueOutOfRange;
+      }
+      else
+      {
+        // Try double
+        double dValue = token.toDouble(&obj.ok);
+        if (obj.ok)
         {
-          // Try double
-          double dValue = token.toDouble(&ok);
-          if (ok)
-          {
-            // If it converts to a double, cast it to the correct type
-            value = static_cast<uint32_t>(dValue);
-          }
+          // If it converts to a double, cast it to the correct type
+          value = static_cast<uint32_t>(dValue);
+        }
+        else
+        {
+          obj.errorMessage = ParserErrorMessages::CouldNotConvert;
         }
       }
+    }
+    else
+    {
+      uint32_t realValue = static_cast<uint32_t>(value);
+      return realValue;
     }
     return value;
   }
@@ -248,34 +305,15 @@ public:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class Int64Functor
+class Int64Functor : public ParserFunctor
 {
 public:
   virtual ~Int64Functor() {}
 
-  int64_t operator() (const QString &token, bool &ok)
+  int64_t operator() (const QString &token, ErrorObject &obj)
   {
-    int64_t value = token.toLongLong(&ok);
-    if (!ok)
-    {
-      // Try hexadecimal
-      value = token.toInt(&ok, 16);
-      if (!ok)
-      {
-        // Try octal
-        value = token.toInt(&ok, 8);
-        if (!ok)
-        {
-          // Try double
-          double dValue = token.toDouble(&ok);
-          if (ok)
-          {
-            // If it converts to a double, cast it to the correct type
-            value = static_cast<int64_t>(dValue);
-          }
-        }
-      }
-    }
+    int64_t value = token.toLongLong(&obj.ok);
+    obj.errorMessage = ParserErrorMessages::CouldNotConvert;
     return value;
   }
 };
@@ -283,33 +321,21 @@ public:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class UInt64Functor
+class UInt64Functor : public ParserFunctor
 {
 public:
   virtual ~UInt64Functor() {}
 
-  uint64_t operator() (const QString &token, bool &ok)
+  uint64_t operator() (const QString &token, ErrorObject &obj)
   {
-    uint64_t value = token.toULongLong(&ok);
-    if (!ok)
+    uint64_t value = token.toULongLong(&obj.ok);
+    if (token.isEmpty() == false && token[0] == '-')
     {
-      // Try hexadecimal
-      value = token.toInt(&ok, 16);
-      if (!ok)
-      {
-        // Try octal
-        value = token.toInt(&ok, 8);
-        if (!ok)
-        {
-          // Try double
-          double dValue = token.toDouble(&ok);
-          if (ok)
-          {
-            // If it converts to a double, cast it to the correct type
-            value = static_cast<uint64_t>(dValue);
-          }
-        }
-      }
+      obj.errorMessage = ParserErrorMessages::ValueOutOfRange;
+    }
+    else
+    {
+      obj.errorMessage = ParserErrorMessages::CouldNotConvert;
     }
     return value;
   }
@@ -318,14 +344,14 @@ public:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class FloatFunctor
+class FloatFunctor : public ParserFunctor
 {
 public:
   virtual ~FloatFunctor() {}
 
-  float operator() (const QString &token, bool &ok)
+  float operator() (const QString &token, ErrorObject &obj)
   {
-    float value = token.toFloat(&ok);
+    float value = token.toFloat(&obj.ok);
     return value;
   }
 };
@@ -333,14 +359,14 @@ public:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class DoubleFunctor
+class DoubleFunctor : public ParserFunctor
 {
 public:
   virtual ~DoubleFunctor() {}
 
-  double operator() (const QString &token, bool &ok)
+  double operator() (const QString &token, ErrorObject &obj)
   {
-    double value = token.toDouble(&ok);
+    double value = token.toDouble(&obj.ok);
     return value;
   }
 };

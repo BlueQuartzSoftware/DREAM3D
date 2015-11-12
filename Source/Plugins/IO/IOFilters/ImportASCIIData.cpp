@@ -363,11 +363,12 @@ void ImportASCIIData::execute()
         int index = parser->getColumnIndex();
         QString name = parser->getColumnName();
 
-        bool ok = parser->parse(tokens[index], insertIndex);
-        if (!ok)
+        ParserFunctor::ErrorObject obj = parser->parse(tokens[index], insertIndex);
+        if (!obj.ok)
         {
           QString dataType = parser->getDataArray()->getTypeAsString();
-          QString ss = "Could not convert value to " + dataType + " (line " + QString::number(lineNum) + ", column " + QString::number(index) + ").";
+          QString errorMessage = obj.errorMessage;
+          QString ss = errorMessage + "(line " + QString::number(lineNum) + ", column " + QString::number(index) + ").";
           setErrorCondition(CONVERSION_FAILURE);
           notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
           return;
