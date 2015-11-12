@@ -25,20 +25,23 @@ function(sitkCXX11Test VARIABLE)
     message(STATUS "Performing Test ${VARIABLE}")
     set(requred_definitions "${CMAKE_REQUIRED_DEFINITIONS} -D${VARIABLE}")
     try_compile(${VARIABLE}
-      ${SimpleITKExplicit_BINARY_DIR}/CMakeTmp
-      ${SimpleITKExplicit_SOURCE_DIR}/CMake/sitk_check_cxx11.cxx
+      ${DREAM3DProj_BINARY_DIR}/CMakeTmp
+      ${DREAM3DProj_SOURCE_DIR}/Source/SimpleITKExplicit/CMake/sitk_check_cxx11.cxx
       CMAKE_FLAGS
       -DCOMPILE_DEFINITIONS:STRING=${requred_definitions}
       OUTPUT_VARIABLE output)
     if(${VARIABLE})
       set(${cache_var} 1 CACHE INTERNAL "SimpleITK test ${FUNCTION}")
       message(STATUS "Performing Test ${VARIABLE} - Success")
+      file(APPEND ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeError.log
+           "################################################################\nPerforming Test ${VARIABLE} SUCCEEDED with the following output:\n"
+           "${output}\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n")
     else()
       message(STATUS "Performing Test ${VARIABLE} - Failed")
       set(${cache_var} 0 CACHE INTERNAL "SimpleITKTest ${FUNCTION}")
       file(APPEND ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/CMakeError.log
-                 "Performing Test ${VARIABLE} failed with the following output:\n"
-                 "${OUTPUT}\n")
+                 "################################################################\nPerforming Test ${VARIABLE} FAILED with the following output:\n"
+                 "${output}\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n")
     endif()
    endif()
 endfunction()

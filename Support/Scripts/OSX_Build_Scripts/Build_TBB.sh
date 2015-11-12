@@ -23,33 +23,6 @@ cd $SDK_INSTALL
 HOST_SYSTEM=`uname`
 echo "Host System: $HOST_SYSTEM"
 
-WGET=`type -P wget`
-CURL=`type -P curl`
-
-if [[ "$WGET" == "" ]];
-   then
-  if [[ "$CURL" == "" ]];
-     then
-    echo "wget and curl are NOT present on your machine. One of them is needed to download sources from the internet."
-    exit 1
-  fi
-fi
-
-
-DOWNLOAD_PROG=""
-DOWNLOAD_ARGS=""
-
-if [[ "$WGET" != "" ]];
-then
-  DOWNLOAD_PROG=$WGET
-fi
-
-if [[ "$CURL" != "" ]];
-then
-  DOWNLOAD_PROG=$CURL
-fi
-
-
 #https://www.threadingbuildingblocks.org/sites/default/files/software_releases/mac/tbb${TBB_VERSION}oss_src.tgz
 # First check to see if we have already downloaded the archive file
 cd $SDK_INSTALL

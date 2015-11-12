@@ -15,8 +15,8 @@ set(${PLUGIN_NAME}Test_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test)
 include(${DREAM3DProj_SOURCE_DIR}/Test/DREAM3DTestFunctions.cmake)
 
 
-include_directories(${${PROJECT_NAME}_SOURCE_DIR})
-include_directories(${${PROJECT_NAME}_BINARY_DIR})
+include_directories(${${PLUGIN_NAME}_SOURCE_DIR})
+include_directories(${${PLUGIN_NAME}_BINARY_DIR})
 
 
 set(TEST_TEMP_DIR ${${PLUGIN_NAME}Test_BINARY_DIR}/Temp)
@@ -29,12 +29,12 @@ configure_file(${${PLUGIN_NAME}_SOURCE_DIR}/Test/TestFileLocations.h.in
 
 
 AddDREAM3DUnitTest(TESTNAME CalculateArrayHistogramTest
-                  SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/Test/CalculateArrayHistogramTest.cpp
+                  SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/CalculateArrayHistogramTest.cpp
                   FOLDER "${PLUGIN_NAME}Plugin/Test"
                   LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
 
 
 
 
-AddDREAM3DUnitTest(TESTNAME FindDifferenceMapTest SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/Test/FindDifferenceMapTest.cpp FOLDER "${PLUGIN_NAME}Plugin/Test" LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
+AddDREAM3DUnitTest(TESTNAME FindDifferenceMapTest SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/FindDifferenceMapTest.cpp FOLDER "${PLUGIN_NAME}Plugin/Test" LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
 

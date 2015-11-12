@@ -25,33 +25,6 @@ cd $SDK_INSTALL
 HOST_SYSTEM=`uname`
 echo "Host System: $HOST_SYSTEM"
 
-WGET=`type -P wget`
-CURL=`type -P curl`
-
-if [[ "$WGET" == "" ]];
-   then
-  if [[ "$CURL" == "" ]];
-     then
-    echo "wget and curl are NOT present on your machine. One of them is needed to download sources from the internet."
-    exit 1
-  fi
-fi
-
-
-DOWNLOAD_PROG=""
-DOWNLOAD_ARGS=""
-
-if [[ "$WGET" != "" ]];
-then
-  DOWNLOAD_PROG=$WGET
-fi
-
-if [[ "$CURL" != "" ]];
-then
-  DOWNLOAD_PROG=$CURL
-fi
-
-
 
 CMAKE=`type -P cmake`
 if [[ $CMAKE == "" ]];
@@ -69,7 +42,7 @@ then
   echo " Downloading ITK version ${ITK_VERSION}"
   echo "-------------------------------------------"
   
-  $DOWNLOAD_PROG  "http://superb-dca2.dl.sourceforge.net/project/itk/itk/4.8/${ITK_FOLDER_NAME}.tar.gz" -o ${ITK_FOLDER_NAME}.tar.gz
+  $DOWNLOAD_PROG  "${ITK_DOWNLOAD_SITE}/${ITK_FOLDER_NAME}.tar.gz" -o ${ITK_FOLDER_NAME}.tar.gz
 fi
 
 if [ ! -e "$SDK_INSTALL/${ITK_FOLDER_NAME}" ];
@@ -126,15 +99,15 @@ function ConfigureITK()
   echo "HDF5_Fortran_COMPILER_EXECUTABLE:FILEPATH=HDF5_Fortran_COMPILER_EXECUTABLE-NOTFOUND" >> $cacheFile
   echo "HDF5_IS_PARALLEL:BOOL=OFF" >> $cacheFile
   if [ "$2" = "Debug" ]; then
-    echo "HDF5_CXX_LIBRARY:PATH=$SDK_INSTALL/$1-$2/lib/libhdf5_cpp_${lower}.1.8.15.dylib" >> $cacheFile
-    echo "HDF5_C_LIBRARY:PATH=$SDK_INSTALL/$1-$2/lib/libhdf5_${lower}.1.8.15.dylib" >> $cacheFile
+    echo "HDF5_CXX_LIBRARY:PATH=$SDK_INSTALL/$1-$2/lib/libhdf5_cpp_${lower}.${HDF5_VERSION}.dylib" >> $cacheFile
+    echo "HDF5_C_LIBRARY:PATH=$SDK_INSTALL/$1-$2/lib/libhdf5_${lower}.${HDF5_VERSION}.dylib" >> $cacheFile
     echo "HDF5_hdf5_LIBRARY_${upper}:FILEPATH=$SDK_INSTALL/$1-$2/lib/libhdf5_${lower}.dylib" >> $cacheFile
     echo "HDF5_hdf5_cpp_LIBRARY_${upper}:FILEPATH=$SDK_INSTALL/$1-$2/lib/libhdf5_cpp_${lower}.dylib" >> $cacheFile
   fi
 
   if [ "$2" = "Release" ]; then
-    echo "HDF5_CXX_LIBRARY:PATH=$SDK_INSTALL/$1-$2/lib/libhdf5_cpp.1.8.15.dylib" >> $cacheFile
-    echo "HDF5_C_LIBRARY:PATH=$SDK_INSTALL/$1-$2/lib/libhdf5.1.8.15.dylib" >> $cacheFile
+    echo "HDF5_CXX_LIBRARY:PATH=$SDK_INSTALL/$1-$2/lib/libhdf5_cpp.${HDF5_VERSION}.dylib" >> $cacheFile
+    echo "HDF5_C_LIBRARY:PATH=$SDK_INSTALL/$1-$2/lib/libhdf5.${HDF5_VERSION}.dylib" >> $cacheFile
     echo "HDF5_hdf5_LIBRARY_${upper}:FILEPATH=$SDK_INSTALL/$1-$2/lib/libhdf5.dylib" >> $cacheFile
     echo "HDF5_hdf5_cpp_LIBRARY_${upper}:FILEPATH=$SDK_INSTALL/$1-$2/lib/libhdf5_cpp.dylib" >> $cacheFile
   fi
@@ -144,15 +117,14 @@ function ConfigureITK()
   cd ../
 }
 
+# Configure and Build ITK in Debug and Release configurations
 ConfigureITK ${HDF5_INSTALL} Debug
-$SCRIPT_DIR/FixITK.sh $SDK_INSTALL/${ITK_INSTALL}-Debug 
 
 ConfigureITK ${HDF5_INSTALL} Release
-$SCRIPT_DIR/FixITK.sh $SDK_INSTALL/${ITK_INSTALL}-Release 
-
 
 
 echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "#--------------------------------------------------------------------------------------------------" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "# ITK (www.itk.org) For Image Processing Plugin" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "set(ITK_DIR \"\${DREAM3D_SDK_ROOT}/${ITK_INSTALL}-\${BUILD_TYPE}\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "set(SIMPLib_USE_ITK \"ON\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"

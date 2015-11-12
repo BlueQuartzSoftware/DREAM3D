@@ -23,75 +23,34 @@ rm $configfile.unix
 echo "SDK_INSTALL=$SDK_INSTALL"
 echo "PARALLEL_BUILD=$PARALLEL_BUILD"
 
-if [ ! -e "$SDK_INSTALL" ];
-then
-  sudo mkdir -p ${SDK_INSTALL}
-  chmod ugo+rwx ${SDK_INSTALL}
-fi
-
 HOST_SYSTEM=`uname`
 echo "Host System: $HOST_SYSTEM"
 
-WGET=`type -P wget`
-CURL=`type -P curl`
-
-if [[ "$WGET" == "" ]];
-   then
-  if [[ "$CURL" == "" ]];
-     then
-    echo "wget and curl are NOT present on your machine. One of them is needed to download sources from the internet."
-    exit 1
-  fi
-fi
-
-DOWNLOAD_PROG=""
-DOWNLOAD_ARGS=""
-
-if [[ "$WGET" != "" ]];
-then
-  DOWNLOAD_PROG=$WGET
-fi
-
-if [[ "$CURL" != "" ]];
-then
-  DOWNLOAD_PROG=$CURL
-  DOWNLOAD_ARGS=""
-fi
-
-if [ ! -e "$SDK_INSTALL/Qt5.4.2" ];
-then
-  echo "-------------------------------------------"
-  echo " An installation of Qt 5.4.2 was not found."
-  echo " Downloading Qt5.4.2 into ${DREAM3D_SDK}"
-  echo " Please mount and run the installer when prompted."
-  echo " Please set the Installation Folder to ${DREAM3D_SDK}/Qt5.4.2"
-  echo " When completed, rerun this script. If you need to download Qt 5.4.2"
-  echo " then the proper web link is http://download.qt.io/archive/qt/5.4/5.4.2/qt-opensource-mac-x64-clang-5.4.2.dmg"
-  echo "-------------------------------------------"
-  #$DOWNLOAD_PROG  "http://anychimirror101.mirrors.tds.net/pub/Qt/archive/qt/5.4/5.4.2/qt-opensource-mac-x64-clang-5.4.2.dmg" -o ${DREAM3D_SDK}/qt-opensource-mac-x64-clang-5.4.2.dmg
-  #open "${DREAM3D_SDK}/qt-opensource-mac-x64-clang-5.4.2.dmg"
-  exit
-fi
-
-if [ ! -e "/Applications/Doxygen.app" ];
-then
-  echo "--------------------------------------------"
-  echo "Doxygen is missing from your system."
-  echo "Downloading Doxygen 1.8.10 for you."
-  $DOWNLOAD_PROG  "$DOXYGEN_DOWNLOAD_SITE/$DOXYGEN_ARCHIVE_NAME" -o "${DREAM3D_SDK}/$DOXYGEN_ARCHIVE_NAME"
-  open "${DREAM3D_SDK}/$DOXYGEN_ARCHIVE_NAME"
-  echo "Please Copy the Doxygen.app from the mounted disk image into the /Applications directory. CMake can most"
-  echo "easily find it in this location."
-fi
 
 SCRIPT_DIR=`pwd`
 
+if [ ! -e "$SDK_PARENT/$SDK_ARCHIVE_FILENAME" ];
+  then
+  echo "-------------------------------------------"
+  echo " Downloading DREAM.3D SDK Source Archive "
+  echo "-------------------------------------------"
+  $DOWNLOAD_PROG  "$SDK_DOWNLOAD_SITE/$SDK_ARCHIVE_FILENAME" -o $SDK_PARENT/$SDK_ARCHIVE_FILENAME
+fi
+
+
+
 #-------------------------------------------------
 # Move one Directory Above the SDK Folder and untar the
-if [ -e "$SDK_INSTALL/../$SDK_ARCHIVE_FILENAME" ];
+if [ -e "$SDK_PARENT/$SDK_ARCHIVE_FILENAME" ];
   then
+  echo "Decompressing Archive $SDK_PARENT/$SDK_ARCHIVE_FILENAME"
+  sudo mkdir -p ${SDK_INSTALL}
+  sudo chmod ugo+rwx ${SDK_INSTALL}
   cd "$SDK_INSTALL/../"
-  tar -xvzf $SDK_ARCHIVE_FILENAME
+  sudo tar -xvzf $SDK_ARCHIVE_FILENAME
+  sudo chmod ugo+rwx $SDK_INSTALL
+  USER=`whoami`
+  sudo chown -R ${USER} "$SDK_INSTALL"
 fi
 
 #-------------------------------------------------
@@ -125,15 +84,14 @@ echo "  message(STATUS \"* DREAM.3D First Configuration Run                    *
 echo "  message(STATUS \"* DREAM3D_SDK Loading from \${CMAKE_CURRENT_LIST_DIR}  *\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "  message(STATUS \"*******************************************************\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "  set(CMAKE_CXX_FLAGS \"-stdlib=libc++ -std=c++11 -Wmost -Wno-four-char-constants -Wno-unknown-pragmas -mfpmath=sse\" CACHE STRING \"\" FORCE)" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "  set(CMAKE_CXX_STANDARD 11 CACHE STRING \"\" FORCE)" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "  set(CMAKE_CXX_STANDARD_REQUIRED ON CACHE STRING \"\" FORCE)" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "  set(CMAKE_OSX_ARCHITECTURES \"x86_64\" CACHE STRING \"\" FORCE)" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "  # Set our Deployment Target to match Qt" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "  set(CMAKE_OSX_DEPLOYMENT_TARGET \"$OSX_DEPLOYMENT_TARGET\" CACHE STRING \"\" FORCE)" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "  set(CMAKE_OSX_SYSROOT \"$OSX_SDK\" CACHE STRING \"\" FORCE)" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "endif()" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
-echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
-echo "set(CMAKE_CXX_STANDARD 11 CACHE STRING \"\" FORCE)" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
-echo "set(CMAKE_CXX_STANDARD_REQUIRED ON CACHE STRING \"\" FORCE)" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
-echo "set(CMAKE_OSX_ARCHITECTURES \"x86_64\" CACHE STRING \"\" FORCE)" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
-echo "# Set our Deployment Target to match Qt" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
-echo "set(CMAKE_OSX_DEPLOYMENT_TARGET \"$OSX_DEPLOYMENT_TARGET\" CACHE STRING \"\" FORCE)" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
-echo "set(CMAKE_OSX_SYSROOT \"$OSX_SDK\" CACHE STRING \"\" FORCE)" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "#--------------------------------------------------------------------------------------------------" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "# These settings are specific to DREAM3D. DREAM3D needs these variables to" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
@@ -150,55 +108,45 @@ echo "set(BUILD_SHARED_LIBS ON CACHE BOOL \"\")" >> "$SDK_INSTALL/DREAM3D_SDK.cm
 echo "set(DREAM3D_SDK_ROOT \"$SDK_INSTALL\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "set(DREAM3D_DATA_DIR \${DREAM3D_SDK_ROOT}/DREAM3D_Data CACHE PATH \"\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 
-# Write out the Qt5 directory/installation
-echo "#--------------------------------------------------------------------------------------------------" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
-#echo "# Qt 5.4.x Library" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
-#echo "set(Qt5_DIR \"\${DREAM3D_SDK_ROOT}/Qt5.4.2/5.4/clang_64/lib/cmake/Qt5\" CACHE PATH \"\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
-
-echo "# Qt 5.5.x Library" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
-echo "set(Qt5_DIR \"\${DREAM3D_SDK_ROOT}/Qt-5.5.1/lib/cmake/Qt5\" CACHE PATH \"\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
-
-
-#-------------------------------------------------
-# Copy our scripts over to the SDK directory
-#cp Build_Boost.sh ${SDK_INSTALL}/.
-# cp Build_Eigen.sh ${SDK_INSTALL}/.
-# cp Build_HDF5.sh ${SDK_INSTALL}/.
-# cp Build_TBB.sh ${SDK_INSTALL}/.
-# cp Build_Qwt.sh ${SDK_INSTALL}/.
-# cp Build_ITK.sh ${SDK_INSTALL}/.
-# cp FixITK.sh ${SDK_INSTALL}/.
 
 # Change Directory back to our original Script Directory
 cd $SCRIPT_DIR
 
-
 #-------------------------------------------------
 # Start building all the packages
+# Build Protocol Buffers
+${SCRIPT_DIR}/Build_ProtoBuf.sh 
+
+# Build Boost
 ${SCRIPT_DIR}/Build_Boost.sh 
 
+# Build HDF5
 ${SCRIPT_DIR}/Build_HDF5.sh
 
+# Builds Eigen
 ${SCRIPT_DIR}/Build_Eigen.sh
 
-#-------------------------------------------------
-# We are going to build ITK.
-# The third argument is the Version of HDF5 that we are using
+# Build TBB
+${SCRIPT_DIR}/Build_TBB.sh
+
+# Build ITK.
 ${SCRIPT_DIR}/Build_ITK.sh
+# Update the "install_name" on all the ITK libraries.
+$SCRIPT_DIR/FixITK.sh $SDK_INSTALL/${ITK_INSTALL}-Debug 
+$SCRIPT_DIR/FixITK.sh $SDK_INSTALL/${ITK_INSTALL}-Release 
 
+# Build Qt 5.5 :: THIS WILL TAKE A FEW HOURS TO COMPLETE!!!!
+#${SCRIPT_DIR}/Build_Qt.sh
 
-
-#${SCRIPT_DIR}/Build_TBB.sh "${SDK_INSTALL}" ${PARALLEL_BUILD}
-
-
-#${SCRIPT_DIR}/Build_Qwt.sh "${SDK_INSTALL}" ${PARALLEL_BUILD}
+# Build Qwt
+${SCRIPT_DIR}/Build_Qwt.sh
 
 
 # Continue writing the DREAM3D_SDK.cmake file after all those libraries were compiled
 echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "#--------------------------------------------------------------------------------------------------" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "# Update CMake Module Path with additional paths in order to better find the libraries." >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
-echo "set(CMAKE_MODULE_PATH \${CMAKE_MODULE_PATH} \${ITK_DIR} \${Qt5_DIR} \${HDF5_DIR})" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "set(CMAKE_MODULE_PATH \${CMAKE_MODULE_PATH} \${ITK_DIR} \${Qt5_DIR} \${HDF5_DIR} \${Protobuf_DIR})" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "#--------------------------------------------------------------------------------------------------" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
@@ -208,10 +156,10 @@ echo "# CMake GUI or CCMake programs." >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "if(NOT DEFINED DREAM3D_FIRST_CONFIGURE)" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "  set (MyPlugins" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
-echo "    DDDAnalysisToolbox" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
-echo "    HEDMAnalysis" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
-echo "    ImageProcessing" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
-echo "    TransformationPhase" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "    # DDDAnalysisToolbox" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "    # HEDMAnalysis" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "    # ImageProcessing" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "    # TransformationPhase" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "  )" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "  # Loop on each plugin and generate a semi-colon separated list of values" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
@@ -232,3 +180,13 @@ echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 
 
+if [ ! -e "/Applications/Doxygen.app" ];
+then
+  echo "--------------------------------------------"
+  echo "Doxygen is missing from your system."
+  echo "Downloading Doxygen 1.8.10 for you."
+  $DOWNLOAD_PROG  "$DOXYGEN_DOWNLOAD_SITE/$DOXYGEN_ARCHIVE_NAME" -o "${DREAM3D_SDK}/$DOXYGEN_ARCHIVE_NAME"
+  open "${DREAM3D_SDK}/$DOXYGEN_ARCHIVE_NAME"
+  echo "Please Copy the Doxygen.app from the mounted disk image into the /Applications directory. CMake can most"
+  echo "easily find it in this location."
+fi

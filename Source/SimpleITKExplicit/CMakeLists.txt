@@ -2,12 +2,31 @@
 
 PROJECT( SimpleITKExplicit VERSION 0.9.0)
 
+
+#-----------------------------------------------------------
+# Check and set required flags for compilation
+# This must be done before any other try compiles based tests are
+# done.
+include(${PROJECT_CODE_DIR}/SimpleITKExplicit/CMake/sitkCheckRequiredFlags.cmake)
+
+
+# set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${SimpleITK_REQUIRED_C_FLAGS}")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${SimpleITK_REQUIRED_CXX_FLAGS}")
+# set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${SimpleITK_REQUIRED_LINK_FLAGS}")
+# set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${SimpleITK_REQUIRED_LINK_FLAGS}")
+# set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${SimpleITK_REQUIRED_LINK_FLAGS}")
+
+message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
+message(STATUS "CMAKE_EXE_LINKER_FLAGS: ${CMAKE_EXE_LINKER_FLAGS}")
+message(STATUS "CMAKE_SHARED_LINKER_FLAGS: ${CMAKE_SHARED_LINKER_FLAGS}")
+message(STATUS "CMAKE_MODULE_LINKER_FLAGS: ${CMAKE_MODULE_LINKER_FLAGS}")
+
+include(${PROJECT_CODE_DIR}/SimpleITKExplicit/CMake/sitkCheckCXX11.cmake)
+
 ## YOU MUST INCLUDE THIS FILE TO USE ITK !!!
 ## Then do not forget to add "${ITK_LIBRARIES}" to the target_link_libraries below
 include( ${DREAM3D_SUPPORT_DIR}/ITKSupport/IncludeITK.cmake)
 include_directories(${ITK_INCLUDE_DIRS})
-
-
 
 #----------------------------------------------------------
 # Place all options to go into sitkConfigure.h here
@@ -36,8 +55,6 @@ option( SITK_INT64_PIXELIDS "Instantiate 64-bit integer pixels, including unsign
 # NB: this option should _NOT_ be used for releases!
 option ( SITK_EXPRESS_INSTANTIATEDPIXELS "Instantiate very few pixel types ( for use for development only )" OFF )
 mark_as_advanced ( SITK_EXPRESS_INSTANTIATEDPIXELS )
-
-include( ${SimpleITKExplicit_SOURCE_DIR}/CMake/sitkCheckCXX11.cmake)
 
 
 
@@ -74,10 +91,8 @@ set(SimpleITK_INSTALL_ARCHIVE_DIR "Bin")
 
 include_directories( ${SimpleITKExplicit_SOURCE_DIR}/Explicit/include)
 include_directories( ${SimpleITKExplicit_BINARY_DIR}/Common/include)
-include( Explicit/src/CMakeLists.txt)
-
 
 configure_file( "${SimpleITKExplicit_SOURCE_DIR}/Common/src/sitkConfigure.h.in"
                 "${SimpleITKExplicit_BINARY_DIR}/Common/include/sitkConfigure.h" )
 
-
+include( Explicit/src/CMakeLists.txt)

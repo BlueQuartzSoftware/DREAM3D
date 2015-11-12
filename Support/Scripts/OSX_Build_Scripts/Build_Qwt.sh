@@ -29,16 +29,15 @@ then
   echo " Please install $QT_INSTALL_DIR first before running this script."
   echo " Your SDK is incomplete and you will not be able to build DREAM3D"
   echo "--------------------------------"
-  exit
+# exit
 
 fi
 
 export PATH=$PATH:$SDK_INSTALL/$QT_INSTALL_DIR/$QT_BIN_DIR
 
 # Build the qwt libraries we need and set our Environment Variable.
-QWT_FOLDER_NAME="qwt-${QWT_VERSION}_src"
 
-if [ ! -e "$SDK_INSTALL/${QWT_FOLDER_NAME}.tar.gz" ];
+if [ ! -e "$SDK_INSTALL/${QWT_ARCHIVE_NAME}" ];
 then
   echo "-------------------------------------------"
   echo " You should have a Qwt ${QWT_VERSION} archive from DREAM3D."
@@ -48,12 +47,25 @@ fi
 
 if [ ! -e "$SDK_INSTALL/${QWT_FOLDER_NAME}" ];
 then
-  tar -xvzf ${QWT_FOLDER_NAME}.tar.gz
+  tar -xvzf ${QWT_ARCHIVE_NAME}
+  mv "$SDK_INSTALL/${QWT_INSTALL}" "$SDK_INSTALL/${QWT_FOLDER_NAME}"
 fi
 
 # We assume we already have downloaded the source for qwt Version 6.1.2 and have it in a folder
 # called qwt-6.1.2
 cd ${QWT_FOLDER_NAME}
+
+# We need to make some adjustments to the qmake configurations
+echo "" >> "$SDK_INSTALL/${QWT_FOLDER_NAME}/qwtbuild.pri"
+echo "CONFIG           += c++11" >> "$SDK_INSTALL/${QWT_FOLDER_NAME}/qwtbuild.pri"
+
+sed -i -e "s@QWT_INSTALL_PREFIX    = /usr/local/qwt-\$\$QWT_VERSION@QWT_INSTALL_PREFIX    = $SDK_INSTALL/qwt-$QWT_VERSION@g" "$SDK_INSTALL/${QWT_FOLDER_NAME}/qwtconfig.pri"
+
+
+
+echo "" >> "$SDK_INSTALL/${QWT_FOLDER_NAME}/src/src.pro"
+echo "    QMAKE_LFLAGS_SONAME  *= -install_name $SDK_INSTALL/${QWT_INSTALL}/lib/qwt.framework/Versions/6/qwt" >> "$SDK_INSTALL/${QWT_FOLDER_NAME}/src/src.pro"
+
 $SDK_INSTALL/$QT_INSTALL_DIR/$QT_BIN_DIR/qmake qwt.pro
 make -j${PARALLEL_BUILD}
 make install

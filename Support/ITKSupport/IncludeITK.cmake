@@ -128,8 +128,7 @@ set(DREAM3D_ITK_MODULES
 # --------------------------------------------------------------------
 # find ITK libararies
 find_package(ITK COMPONENTS ${DREAM3D_ITK_MODULES} REQUIRED)
-message(STATUS "${PROJECT_NAME}: ITK Location ${ITK_DIR}")
-message(STATUS "ITK Version: ${ITK_VERSION_MAJOR}.${ITK_VERSION_MINOR}.${ITK_VERSION_PATCH}")
+message(STATUS "${PROJECT_NAME}: ITK Location ${ITK_DIR} ITK Version: ${ITK_VERSION_MAJOR}.${ITK_VERSION_MINOR}.${ITK_VERSION_PATCH}")
 
 # Include the ITK file
 include(${ITK_USE_FILE})
@@ -164,3 +163,8 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
   configure_file("${SELF_DIR}/Deploy_ITK_Libs.sh.in"
                  "${DREAM3DProj_BINARY_DIR}/AdditionalInstallScripts/Deploy_ITK_Libs.sh" @ONLY IMMEDIATE)
 endif()
+
+include_directories(${ITK_INCLUDE_DIRS})
+
+
+

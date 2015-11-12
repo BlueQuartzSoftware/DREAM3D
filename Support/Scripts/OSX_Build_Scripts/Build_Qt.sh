@@ -23,32 +23,6 @@ rm $configfile.unix
 HOST_SYSTEM=`uname`
 echo "Host System: $HOST_SYSTEM"
 
-WGET=`type -P wget`
-CURL=`type -P curl`
-
-if [[ "$WGET" == "" ]];
-   then
-  if [[ "$CURL" == "" ]];
-     then
-    echo "wget and curl are NOT present on your machine. One of them is needed to download sources from the internet."
-    exit 1
-  fi
-fi
-
-cd $SDK_INSTALL
-
-DOWNLOAD_PROG=""
-DOWNLOAD_ARGS=""
-
-if [[ "$WGET" != "" ]];
-then
-  DOWNLOAD_PROG=$WGET
-fi
-
-if [[ "$CURL" != "" ]];
-then
-  DOWNLOAD_PROG=$CURL
-fi
 
 if [ ! -e "$SDK_INSTALL/${QT_ARCHIVE_NAME}" ];
   then
@@ -95,14 +69,14 @@ case $CURRENTPATH in
 esac         
 
 
-cd $SDK_INSTALL/${QT_FOLDER_NAME}/qtbase/mkspecs
+#cd $SDK_INSTALL/${QT_FOLDER_NAME}/qtbase/mkspecs
 # Find all the files to update the Deployment version
-updateFiles=`grep -R -l "QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7" *`
+#updateFiles=`grep -R -l "QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7" *`
 # Loop over each file and update it with 10.9 as the deployment target
-for f in $updateFiles; do
+#for f in $updateFiles; do
  # echo "Updating $f with new QMAKE_MACOSX_DEPLOYMENT_TARGET Target: 10.9"
  # sed -i -e "s@QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.7@QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9@g" $f
-done
+#done
 
 
 cd $SDK_INSTALL/${QT_FOLDER_NAME}
@@ -117,13 +91,26 @@ QT_DOC_DIR=$QT_PREFIX/Docs
 QT_SYSCONF_DIR=/Library/Preferences/Qt
 QT_EXAMPLES_DIR=$QT_PREFIX/Examples
 
-./configure -opensource -confirm-license -debug-and-release -release -nomake tests -nomake examples -no-compile-examples \
--qt-zlib -qt-libjpeg -qt-libpng -platform macx-clang -openssl -c++11 -sdk macosx10.9 -no-use-gold-linker \
--dbus -prefix $QT_PREFIX -skip qtwebkit
+./configure -opensource -confirm-license -debug-and-release -release -nomake tests -nomake examples -no-compile-examples -qt-zlib -qt-libjpeg -qt-libpng -platform macx-clang -openssl -c++11 -sdk macosx10.9 -no-use-gold-linker -dbus -prefix $QT_PREFIX -skip qtwebkit
 
 make -j$PARALLEL_BUILD
-make install_docs
-make install
+make -j$PARALLEL_BUILD install
+make -j$PARALLEL_BUILD docs
+make -j$PARALLEL_BUILD install_docs
+make -j$PARALLEL_BUILD install
+
+#--
+cd qtbase
+make install_global_docs
+
+
+# Write out the Qt5 directory/installation
+echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "#--------------------------------------------------------------------------------------------------" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "# Qt 5.5.x Library" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "set(Qt5_DIR \"\${DREAM3D_SDK_ROOT}/Qt-${QT_VERSION}/lib/cmake/Qt5\" CACHE PATH \"\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+
+
 
 #-bindir $QT_BIN_DIR -headerdir $QT_HDR_DIR -libdir $QT_LIB_DIR -archdatadir \
 #QT_ARCH_DIR -translationdir $QT_TRANS_DIR -docdir $QT_DOC_DIR -sysconfdir $QT_SYSCONF_DIR -examplesdir $QT_EXAMPLES_DIR\
