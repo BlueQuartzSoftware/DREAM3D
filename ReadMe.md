@@ -87,8 +87,9 @@ Parts of DREAM.3D were written under US Air Force (AFRL) Contract FA8650-07-D-58
 
 ### Other Institutions ###
 
-+ Mr. Krzysztof Glowinski (C)
++ Dr. Krzysztof Glowinski (C) (Institute of Metallurgy and Materials Science PAS, Krakow, Poland)
 + Mr. William Lenthe (V, C) (University of California, Santa Barbara)
++ Dr. Adam Morawiec (V) (Institute of Metallurgy and Materials Science PAS, Krakow, Poland)
 + Mr. Matthew Priddy (C) (Georgia Tech University)
 + Mr. Jarrell Waggoner (C) (Univ. South Carolina)
 
