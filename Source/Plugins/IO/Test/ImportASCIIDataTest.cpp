@@ -59,6 +59,8 @@ const QString AttributeMatrixName = "AttributeMatrix";
 const QString DataArrayName = "Array1";
 
 const QVector<QString> inputIntVector({ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" });
+const QVector<QString> inputHexVector({ "0x01", "0x02", "0x03", "0x04", "0x05", "0x06", "0x07", "0x08", "0x09", "0x0A" });
+const QVector<QString> inputOctVector({ "001", "002", "003", "004", "005", "006", "007", "008", "009", "010" });
 const QVector<QString> inputDoubleVector({ "1.5", "2.2", "3.65", "4.34", "5.76", "6.534", "7.0", "8.342", "9.8723", "10.89" });
 const QVector<QString> inputCharErrorVector({ "sdstrg", "2.2", "3.65", "&(^$#", "5.76", "sjtyr", "7.0", "8.342", "&*^#F", "youikjhgf" });
 const QVector<QString> inputScientificNotation({ "0.15e1", "2.2e0", "3.65", "43.4e-1", "0.576e1", "653.4e-2", "7.0", "8.342", "9.8723", "10.89" });
@@ -295,7 +297,7 @@ void ConvertTypes()
   RemoveTestFiles();
 
   // Scientific Notation Test - Only if the input is a double or float
-  if (inputType == DREAM3D::TypeNames::Double || inputType == DREAM3D::TypeNames::Float)
+  if (outputType == DREAM3D::TypeNames::Double || outputType == DREAM3D::TypeNames::Float)
   {
     CreateFile(UnitTest::ImportASCIIDataTest::TestFile1, inputScientificNotation, delimiter);
 
@@ -334,6 +336,44 @@ void ConvertTypes()
       }
     }
   }
+
+  RemoveTestFiles();
+
+  //// Hexadecimal Test - Only if the input is an integer
+  //if (inputType != DREAM3D::TypeNames::Double && inputType != DREAM3D::TypeNames::Float)
+  //{
+  //  CreateFile(UnitTest::ImportASCIIDataTest::TestFile1, inputHexVector, delimiter);
+
+  //  ASCIIWizardData data;
+  //  data.beginIndex = 1;
+  //  data.consecutiveDelimiters = false;
+  //  data.dataHeaders.push_back(DataArrayName);
+  //  data.dataTypes.push_back(outputType);
+  //  data.delimiters.push_back(delimiter);
+  //  data.inputFilePath = UnitTest::ImportASCIIDataTest::TestFile1;
+  //  data.isFixedWidth = false;
+  //  data.numberOfLines = 10;
+  //  AbstractFilter::Pointer importASCIIData = PrepFilter(data);
+  //  DREAM3D_REQUIRE_NE(importASCIIData.get(), NULL)
+
+  //    importASCIIData->execute();
+  //  int err = importASCIIData->getErrorCondition();
+  //  DREAM3D_REQUIRE_EQUAL(err, 0)
+
+  //    AttributeMatrix::Pointer am = importASCIIData->getDataContainerArray()->getAttributeMatrix(DataArrayPath(DataContainerName, AttributeMatrixName, ""));
+  //  DataArray<O>::Pointer results = boost::dynamic_pointer_cast<DataArray<O> >(am->getAttributeArray(DataArrayName));
+
+  //  DREAM3D_REQUIRE_EQUAL(results->getSize(), inputHexVector.size())
+
+  //    O* resultsRaw = results->getPointer(0);
+  //  for (int i = 0; i < results->getSize(); i++)
+  //  {
+  //    if (outputType != DREAM3D::TypeNames::Double && outputType != DREAM3D::TypeNames::Float)
+  //    {
+  //      DREAM3D_REQUIRE_EQUAL(resultsRaw[i], outputIntVector[i])
+  //    }
+  //  }
+  //}
 }
 
 // -----------------------------------------------------------------------------

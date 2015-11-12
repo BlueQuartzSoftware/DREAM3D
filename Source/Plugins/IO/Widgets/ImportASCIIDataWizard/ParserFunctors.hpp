@@ -45,13 +45,25 @@ class Int8Functor
 
     int8_t operator() (const QString &token, bool &ok)
     {
-      int8_t value = token.toInt(&ok);
+      int8_t value = token.toInt(&ok, 10);
       if (!ok)
       {
-        double dValue = token.toDouble(&ok);
-        if (ok)
+        // Try hexadecimal
+        value = token.toInt(&ok, 16);
+        if (!ok)
         {
-          value = static_cast<int8_t>(dValue);
+          // Try octal
+          value = token.toInt(&ok, 8);
+          if (!ok)
+          {
+            // Try double
+            double dValue = token.toDouble(&ok);
+            if (ok)
+            {
+              // If it converts to a double, cast it to the correct type
+              value = static_cast<int8_t>(dValue);
+            }
+          }
         }
       }
       return value;
@@ -71,10 +83,22 @@ public:
     uint8_t value = token.toUInt(&ok);
     if (!ok)
     {
-      double dValue = token.toDouble(&ok);
-      if (ok)
+      // Try hexadecimal
+      value = token.toInt(&ok, 16);
+      if (!ok)
       {
-        value = static_cast<uint8_t>(dValue);
+        // Try octal
+        value = token.toInt(&ok, 8);
+        if (!ok)
+        {
+          // Try double
+          double dValue = token.toDouble(&ok);
+          if (ok)
+          {
+            // If it converts to a double, cast it to the correct type
+            value = static_cast<uint8_t>(dValue);
+          }
+        }
       }
     }
     return value;
@@ -94,10 +118,22 @@ public:
     int16_t value = token.toShort(&ok);
     if (!ok)
     {
-      double dValue = token.toDouble(&ok);
-      if (ok)
+      // Try hexadecimal
+      value = token.toInt(&ok, 16);
+      if (!ok)
       {
-        value = static_cast<int16_t>(dValue);
+        // Try octal
+        value = token.toInt(&ok, 8);
+        if (!ok)
+        {
+          // Try double
+          double dValue = token.toDouble(&ok);
+          if (ok)
+          {
+            // If it converts to a double, cast it to the correct type
+            value = static_cast<int16_t>(dValue);
+          }
+        }
       }
     }
     return value;
@@ -117,10 +153,22 @@ public:
     uint16_t value = token.toUShort(&ok);
     if (!ok)
     {
-      double dValue = token.toDouble(&ok);
-      if (ok)
+      // Try hexadecimal
+      value = token.toInt(&ok, 16);
+      if (!ok)
       {
-        value = static_cast<uint16_t>(dValue);
+        // Try octal
+        value = token.toInt(&ok, 8);
+        if (!ok)
+        {
+          // Try double
+          double dValue = token.toDouble(&ok);
+          if (ok)
+          {
+            // If it converts to a double, cast it to the correct type
+            value = static_cast<uint16_t>(dValue);
+          }
+        }
       }
     }
     return value;
@@ -140,10 +188,22 @@ public:
     int32_t value = token.toInt(&ok);
     if (!ok)
     {
-      double dValue = token.toDouble(&ok);
-      if (ok)
+      // Try hexadecimal
+      value = token.toInt(&ok, 16);
+      if (!ok)
       {
-        value = static_cast<int32_t>(dValue);
+        // Try octal
+        value = token.toInt(&ok, 8);
+        if (!ok)
+        {
+          // Try double
+          double dValue = token.toDouble(&ok);
+          if (ok)
+          {
+            // If it converts to a double, cast it to the correct type
+            value = static_cast<int32_t>(dValue);
+          }
+        }
       }
     }
     return value;
@@ -163,10 +223,22 @@ public:
     uint32_t value = token.toUInt(&ok);
     if (!ok)
     {
-      double dValue = token.toDouble(&ok);
-      if (ok)
+      // Try hexadecimal
+      value = token.toInt(&ok, 16);
+      if (!ok)
       {
-        value = static_cast<uint32_t>(dValue);
+        // Try octal
+        value = token.toInt(&ok, 8);
+        if (!ok)
+        {
+          // Try double
+          double dValue = token.toDouble(&ok);
+          if (ok)
+          {
+            // If it converts to a double, cast it to the correct type
+            value = static_cast<uint32_t>(dValue);
+          }
+        }
       }
     }
     return value;
@@ -186,10 +258,22 @@ public:
     int64_t value = token.toLongLong(&ok);
     if (!ok)
     {
-      double dValue = token.toDouble(&ok);
-      if (ok)
+      // Try hexadecimal
+      value = token.toInt(&ok, 16);
+      if (!ok)
       {
-        value = static_cast<int64_t>(dValue);
+        // Try octal
+        value = token.toInt(&ok, 8);
+        if (!ok)
+        {
+          // Try double
+          double dValue = token.toDouble(&ok);
+          if (ok)
+          {
+            // If it converts to a double, cast it to the correct type
+            value = static_cast<int64_t>(dValue);
+          }
+        }
       }
     }
     return value;
@@ -209,10 +293,22 @@ public:
     uint64_t value = token.toULongLong(&ok);
     if (!ok)
     {
-      double dValue = token.toDouble(&ok);
-      if (ok)
+      // Try hexadecimal
+      value = token.toInt(&ok, 16);
+      if (!ok)
       {
-        value = static_cast<uint64_t>(dValue);
+        // Try octal
+        value = token.toInt(&ok, 8);
+        if (!ok)
+        {
+          // Try double
+          double dValue = token.toDouble(&ok);
+          if (ok)
+          {
+            // If it converts to a double, cast it to the correct type
+            value = static_cast<uint64_t>(dValue);
+          }
+        }
       }
     }
     return value;
