@@ -250,6 +250,8 @@ void ConvertType()
     }
   }
 
+  RemoveTestFiles();
+
   // Test Using Unexpected Input - Alphabetical Characters, Special Characters, etc.
   {
     CreateFile(UnitTest::ImportASCIIDataTest::TestFile1, inputCharErrorVector, delimiter);
