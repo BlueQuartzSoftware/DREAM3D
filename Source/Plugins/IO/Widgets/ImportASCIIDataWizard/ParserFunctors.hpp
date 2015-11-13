@@ -129,10 +129,10 @@ public:
         }
       }
     }
-    else
+    else if (value > std::numeric_limits<uint8_t>().max())
     {
-      uint8_t realValue = static_cast<uint8_t>(value);
-      return realValue;
+      obj.ok = false;
+      obj.errorMessage = ParserErrorMessages::ValueOutOfRange;
     }
     return value;
   }
@@ -210,6 +210,12 @@ public:
           obj.errorMessage = ParserErrorMessages::CouldNotConvert;
         }
       }
+    }
+    else if (value > std::numeric_limits<uint16_t>().max())
+    {
+      // This value is out of range, so return a conversion error
+      obj.ok = false;
+      obj.errorMessage = ParserErrorMessages::ValueOutOfRange;
     }
     else
     {
@@ -293,6 +299,12 @@ public:
         }
       }
     }
+    else if (value > std::numeric_limits<uint32_t>().max())
+    {
+      // This value is out of range, so return a conversion error
+      obj.ok = false;
+      obj.errorMessage = ParserErrorMessages::ValueOutOfRange;
+    }
     else
     {
       uint32_t realValue = static_cast<uint32_t>(value);
@@ -313,7 +325,25 @@ public:
   int64_t operator() (const QString &token, ErrorObject &obj)
   {
     int64_t value = token.toLongLong(&obj.ok);
-    obj.errorMessage = ParserErrorMessages::CouldNotConvert;
+    if (!obj.ok)
+    {
+      if (token.contains('.'))
+      {
+        double doubleValue = token.toDouble(&obj.ok);
+        if (!obj.ok)
+        {
+          obj.errorMessage = ParserErrorMessages::CouldNotConvert;
+        }
+        else
+        {
+          value = static_cast<int64_t>(doubleValue);
+        }
+      }
+      else
+      {
+        obj.errorMessage = ParserErrorMessages::CouldNotConvert;
+      }
+    }
     return value;
   }
 };
@@ -329,13 +359,28 @@ public:
   uint64_t operator() (const QString &token, ErrorObject &obj)
   {
     uint64_t value = token.toULongLong(&obj.ok);
-    if (token.isEmpty() == false && token[0] == '-')
+    if (!obj.ok)
     {
-      obj.errorMessage = ParserErrorMessages::ValueOutOfRange;
-    }
-    else
-    {
-      obj.errorMessage = ParserErrorMessages::CouldNotConvert;
+      if (token.contains('.'))
+      {
+        double doubleValue = token.toDouble(&obj.ok);
+        if (!obj.ok)
+        {
+          obj.errorMessage = ParserErrorMessages::CouldNotConvert;
+        }
+        else
+        {
+          value = static_cast<uint64_t>(doubleValue);
+        }
+      }
+      else if (token.isEmpty() == false && token[0] == '-')
+      {
+        obj.errorMessage = ParserErrorMessages::ValueOutOfRange;
+      }
+      else
+      {
+        obj.errorMessage = ParserErrorMessages::CouldNotConvert;
+      }
     }
     return value;
   }

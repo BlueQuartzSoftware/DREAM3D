@@ -169,13 +169,10 @@ AbstractFilter::Pointer PrepFilter(ASCIIWizardData data)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename I, typename O>
-void ConvertTypes()
+template<typename O>
+void ConvertType()
 {
   char delimiter = '\t';
-
-  DataArray<I>::Pointer input = DataArray<I>::CreateArray(1, "InputArray", false);
-  QString inputType = input->getTypeAsString();
 
   DataArray<O>::Pointer output = DataArray<O>::CreateArray(1, "OutputArray", false);
   QString outputType = output->getTypeAsString();
@@ -190,16 +187,9 @@ void ConvertTypes()
   data.isFixedWidth = false;
   data.numberOfLines = 10;
 
-  // Test Using Expected Input
+  // Test Using Expected Input - Double/Float
   {
-    if (inputType == DREAM3D::TypeNames::Double || inputType == DREAM3D::TypeNames::Float)
-    {
-      CreateFile(UnitTest::ImportASCIIDataTest::TestFile1, inputDoubleVector, delimiter);
-    }
-    else
-    {
-      CreateFile(UnitTest::ImportASCIIDataTest::TestFile1, inputIntVector, delimiter);
-    }
+    CreateFile(UnitTest::ImportASCIIDataTest::TestFile1, inputDoubleVector, delimiter);
 
     AbstractFilter::Pointer importASCIIData = PrepFilter(data);
     DREAM3D_REQUIRE_NE(importASCIIData.get(), NULL)
@@ -216,33 +206,49 @@ void ConvertTypes()
       O* resultsRaw = results->getPointer(0);
     for (int i = 0; i < results->getSize(); i++)
     {
-      if (inputType == DREAM3D::TypeNames::Double || inputType == DREAM3D::TypeNames::Float)
+      if (outputType == DREAM3D::TypeNames::Double || outputType == DREAM3D::TypeNames::Float)
       {
-        if (outputType == DREAM3D::TypeNames::Double || outputType == DREAM3D::TypeNames::Float)
-        {
-          long absValue = abs(outputDoubleVector[i] - resultsRaw[i]);
-          DREAM3D_REQUIRED(absValue, <, 0.01)
-        }
-        else
-        {
-          DREAM3D_REQUIRE_EQUAL(resultsRaw[i], inputIntVector[i])
-        }
+        long absValue = abs(outputDoubleVector[i] - resultsRaw[i]);
+        DREAM3D_REQUIRED(absValue, < , 0.01)
       }
       else
       {
-        if (outputType == DREAM3D::TypeNames::Double || outputType == DREAM3D::TypeNames::Float)
-        {
-          DREAM3D_REQUIRE_EQUAL(resultsRaw[i], outputIntAsDoubleVector[i])
-        }
-        else
-        {
-          DREAM3D_REQUIRE_EQUAL(resultsRaw[i], inputIntVector[i])
-        }
+        DREAM3D_REQUIRE_EQUAL(resultsRaw[i], inputIntVector[i])
       }
     }
   }
 
   RemoveTestFiles();
+
+  // Test Using Expected Input - Integers
+  {
+    CreateFile(UnitTest::ImportASCIIDataTest::TestFile1, inputIntVector, delimiter);
+
+    AbstractFilter::Pointer importASCIIData = PrepFilter(data);
+    DREAM3D_REQUIRE_NE(importASCIIData.get(), NULL)
+
+      importASCIIData->execute();
+    int err = importASCIIData->getErrorCondition();
+    DREAM3D_REQUIRE_EQUAL(err, 0)
+
+      AttributeMatrix::Pointer am = importASCIIData->getDataContainerArray()->getAttributeMatrix(DataArrayPath(DataContainerName, AttributeMatrixName, ""));
+    DataArray<O>::Pointer results = boost::dynamic_pointer_cast<DataArray<O> >(am->getAttributeArray(DataArrayName));
+
+    DREAM3D_REQUIRE_EQUAL(results->getSize(), data.numberOfLines)
+
+      O* resultsRaw = results->getPointer(0);
+    for (int i = 0; i < results->getSize(); i++)
+    {
+      if (outputType == DREAM3D::TypeNames::Double || outputType == DREAM3D::TypeNames::Float)
+      {
+        DREAM3D_REQUIRE_EQUAL(resultsRaw[i], outputIntAsDoubleVector[i])
+      }
+      else
+      {
+        DREAM3D_REQUIRE_EQUAL(resultsRaw[i], inputIntVector[i])
+      }
+    }
+  }
 
   // Test Using Unexpected Input - Alphabetical Characters, Special Characters, etc.
   {
@@ -361,13 +367,27 @@ void ConvertTypes()
 
   // Min Overflow Test
   {
-    int64_t min = std::numeric_limits<O>().min();
-    if (min >= 0)
+    // We must hard-code these three types because there is no way to store them otherwise...
+    QString minValue;
+    if (outputType == DREAM3D::TypeNames::Float)
     {
-      min = min - 1;
+      minValue = "-3.4e39";
     }
-    QString minValue = QString::number(min);
-    minValue = minValue.append('0');
+    else if (outputType == DREAM3D::TypeNames::Double)
+    {
+      minValue = "-1.7e309";
+    }
+    else if (outputType == DREAM3D::TypeNames::Int64)
+    {
+      minValue = "-2e32";
+    }
+    else
+    {
+      int64_t store = std::numeric_limits<O>().min();
+      store = store - 1;
+      minValue = QString::number(store);
+    }
+
     QVector<QString> inputMinVector({ minValue });
     CreateFile(UnitTest::ImportASCIIDataTest::TestFile1, inputMinVector, delimiter);
 
@@ -384,36 +404,18 @@ void ConvertTypes()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename T>
-void TestConversion()
-{
-  ConvertTypes<T, int8_t>();
-  ConvertTypes<T, int16_t>();
-  ConvertTypes<T, int32_t>();
-  ConvertTypes<T, int64_t>();
-  ConvertTypes<T, uint8_t>();
-  ConvertTypes<T, uint16_t>();
-  ConvertTypes<T, uint32_t>();
-  ConvertTypes<T, uint64_t>();
-  ConvertTypes<T, float>();
-  ConvertTypes<T, double>();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int ImportASCIIDataTest()
 {
-  TestConversion<int8_t>();
-  TestConversion<int16_t>();
-  TestConversion<int32_t>();
-  TestConversion<int64_t>();
-  TestConversion<uint8_t>();
-  TestConversion<uint16_t>();
-  TestConversion<uint32_t>();
-  TestConversion<uint64_t>();
-  TestConversion<float>();
-  TestConversion<double>();
+  ConvertType<int8_t>();
+  ConvertType<int16_t>();
+  ConvertType<int32_t>();
+  ConvertType<int64_t>();
+  ConvertType<uint8_t>();
+  ConvertType<uint16_t>();
+  ConvertType<uint32_t>();
+  ConvertType<uint64_t>();
+  ConvertType<float>();
+  ConvertType<double>();
 
   return EXIT_SUCCESS;
 }
