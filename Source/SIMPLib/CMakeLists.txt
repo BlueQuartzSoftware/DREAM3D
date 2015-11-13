@@ -165,10 +165,13 @@ include_directories( ${HDF5_INCLUDE_DIR} )
 include_directories( ${PROJECT_CODE_DIR} )
 include_directories( ${SIMPLib_BINARY_DIR} )
 
+# include( ${DREAM3D_SUPPORT_DIR}/ITKSupport/IncludeITK.cmake)
+# include_directories(${ITK_INCLUDE_DIRS})
+
 
 #-- Add a library for the SIMPLib Code
 add_library(${PROJECT_NAME} ${LIB_TYPE} ${Project_SRCS} )
-target_link_libraries(${PROJECT_NAME} H5Support Qt5::Core ${TBB_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} Qt5::Core H5Support ${TBB_LIBRARIES})
 LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} )
 
 set(install_dir "tools")
