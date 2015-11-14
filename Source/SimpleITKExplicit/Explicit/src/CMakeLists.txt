@@ -31,5 +31,5 @@ endif()
 
 add_library ( SimpleITKExplicit ${SimpleITKExplicit_FORCE_LIBRARY_TYPE} ${SimpleITKExplicitSource} )
 target_link_libraries ( SimpleITKExplicit ${ITK_LIBRARIES} )
-set_target_properties( SimpleITKExplicit PROPERTIES SKIP_BUILD_RPATH TRUE )
+#set_target_properties( SimpleITKExplicit PROPERTIES SKIP_BUILD_RPATH TRUE )
 sitk_install_exported_target( SimpleITKExplicit )
