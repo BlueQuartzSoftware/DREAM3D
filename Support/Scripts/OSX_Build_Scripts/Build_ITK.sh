@@ -112,8 +112,8 @@ function ConfigureITK()
     echo "HDF5_hdf5_cpp_LIBRARY_${upper}:FILEPATH=$SDK_INSTALL/$1-$2/lib/libhdf5_cpp.dylib" >> $cacheFile
   fi
 
-  cmake -G Ninja -DCMAKE_CXX_FLAGS="-stdlib=libc++ -std=c++11" ../$ITK_FOLDER_NAME
-  ninja
+  ${SDK_INSTALL}/$CMAKE_FOLDER_NAME/CMake.app/Contents/bin/cmake -DCMAKE_CXX_FLAGS="-stdlib=libc++ -std=c++11" ../$ITK_FOLDER_NAME
+  make -j$PARALLEL_BUILD
   cd ../
 }
 

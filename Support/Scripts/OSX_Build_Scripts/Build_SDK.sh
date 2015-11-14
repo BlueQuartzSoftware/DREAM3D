@@ -136,7 +136,7 @@ $SCRIPT_DIR/FixITK.sh $SDK_INSTALL/${ITK_INSTALL}-Debug
 $SCRIPT_DIR/FixITK.sh $SDK_INSTALL/${ITK_INSTALL}-Release 
 
 # Build Qt 5.5 :: THIS WILL TAKE A FEW HOURS TO COMPLETE!!!!
-#${SCRIPT_DIR}/Build_Qt.sh
+${SCRIPT_DIR}/Build_Qt.sh
 
 # Build Qwt
 ${SCRIPT_DIR}/Build_Qwt.sh
