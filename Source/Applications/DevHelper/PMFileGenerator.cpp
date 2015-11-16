@@ -337,7 +337,7 @@ QString PMFileGenerator::createReplacementString(FileType type, QSet<QString> na
       rsOut << "AddDREAM3DUnitTest(TESTNAME " << name << "Test\n";
       rsOut << "                   SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/" + name + "Test.cpp\n";
       rsOut << "                   FOLDER \"${PLUGIN_NAME}Plugin/Test\"\n";
-      rsOut << "                   LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})\n";
+      rsOut << "                   LINK_LIBRARIES ${${PLUGIN_NAME}_Link_Libs})\n";
 
       if (++iter != names.end())
       {

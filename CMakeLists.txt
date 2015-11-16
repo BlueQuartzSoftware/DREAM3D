@@ -53,7 +53,7 @@ cmake_minimum_required(VERSION 3.1.0)
 #------------------------------------------------------------------------------
 # Create the Top level Project
 #
-project(DREAM3DProj VERSION 6.2.0.0)
+project(DREAM3DProj VERSION 6.3.0.0)
 #------------------------------------------------------------------------------
 # There are several different Release Types that we are going to use.
 # Official: This is an official release from BlueQuartz Software
@@ -111,6 +111,7 @@ set(CMP_MODULES_SOURCE_DIR ${CMP_SOURCE_DIR}/Modules CACHE INTERNAL "")
 if(UNIX AND NOT APPLE)
     set(DREAM3D_LINUX_SYSTEM ${CMAKE_SYSTEM_NAME} CACHE STRING "The Name of the linux distrubution for packaging")
 endif()
+
 
 #------------------------------------------------------------------------------
 # Find the Git Package for Versioning. It should be ok if Git is NOT found
@@ -349,6 +350,12 @@ if(SIMPLib_BUILD_DREAM3D)
   set(SIMPLib_DOCS_ROOT_DIR "${DREAM3DProj_BINARY_DIR}/Bin/Help/DREAM3D")
 endif()
 
+# --------------------------------------------------------------------
+# Build the SimpleITKExplicit Library.
+option(SIMPLib_USE_ITK "Use ITK For Image Processing" ON)
+if(SIMPLib_USE_ITK)
+  add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/SimpleITKExplicit ${PROJECT_BINARY_DIR}/SimpleITKExplicit)
+endif()
 
 #-------------------------------------------------------------------------------
 # Compile the Core Plugins that come with DREAM3D and any other Plugins that the

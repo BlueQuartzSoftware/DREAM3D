@@ -2,9 +2,10 @@
 #-- Your License or copyright can go here
 #--////////////////////////////////////////////////////////////////////////////
 
-project(Processing)
-
 set(PLUGIN_NAME Processing)
+set(${PLUGIN_NAME}_VERSION "1.0")
+get_filename_component(${PLUGIN_NAME}_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}" ABSOLUTE)
+set(Processing_BINARY_DIR "${DREAM3DProj_BINARY_DIR}/Plugins/${PLUGIN_NAME}")
 
 # --------------------------------------------------------------------
 # Look for Qt 5 as we need it for the plugin GUI to be generated
@@ -112,19 +113,19 @@ endif()
 # These headers will be MOC'ed by the build system. They should all inherit from QObject
 # --------------------------------------------------------------------
 set(${PLUGIN_NAME}_HDRS
-  ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}Constants.h
+  ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Constants.h
 )
 
 set(${PLUGIN_NAME}_MOC_HDRS
-  ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}Plugin.h
+  ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Plugin.h
 )
 
 set(${PLUGIN_NAME}_SRCS
- ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}Plugin.cpp
+ ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Plugin.cpp
 )
 
 set(${PLUGIN_NAME}_MISC_HDRS
-    ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}Constants.h
+
 )
 cmp_IDE_SOURCE_PROPERTIES( "" "${${PLUGIN_NAME}_MOC_HDRS};${${PLUGIN_NAME}_HDRS};${${PLUGIN_NAME}_MISC_HDRS}" "${${PLUGIN_NAME}_SRCS}" "0")
 
@@ -224,7 +225,7 @@ endif()
 
 
 if(DREAM3D_BUILD_TESTING)
-  include(${PROJECT_SOURCE_DIR}/Test/CMakeLists.txt)
+  include(${${PLUGIN_NAME}_SOURCE_DIR}/Test/CMakeLists.txt)
 endif()
 
 

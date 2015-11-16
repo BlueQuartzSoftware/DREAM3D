@@ -30,7 +30,7 @@ Triangle
 |------|--------------|-------------|---------|-----|
 | **Face Attribute Array** | FeatureFaceId | int32_t | (1) | Specifies to which **Feature** each **Face** belongs |
 | **Attribute Matrix** | FaceFeatureData | Face Feature | N/A | Created **Feature Attribute Matrix** name  |
-| **Feature Attribute Array** | FaceLabels | int32_t | (1) | Specifies which _original_ **Features** are on either side of each _new_ **Feature** |
+| **Feature Attribute Array** | FaceLabels | int32_t | (2) | Specifies which _original_ **Features** are on either side of each _new_ **Feature** |
 | **Feature Attribute Array** | NumTriangles | int32_t | (1) | Number of **Triangles** in each **Feature** |
 
 

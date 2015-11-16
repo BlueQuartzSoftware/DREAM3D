@@ -11,7 +11,6 @@ START_FILTER_GROUP(${Sampling_BINARY_DIR} "${_filterGroupName}" "SamplingFilters
 # List your public filters here
 
 set(_PublicFilters
-  AppendImageGeometryZSlice
   ChangeResolution
   CropImageGeometry
   ExtractFlaggedFeatures
@@ -38,6 +37,7 @@ endforeach()
 # This is the list of Private Filters. These filters are available from other filters but the user will not
 # be able to use them from the DREAM3D user interface.
 set(_PrivateFilters
+  AppendImageGeometryZSlice
   SampleSurfaceMesh
 )
 
