@@ -45,7 +45,7 @@ namespace GenericConstants
 {
   const QString GenericPluginFile("GenericPlugin");
   const QString GenericPluginDisplayName("Generic");
-  const QString GenericBaseName("GenericPlugin");
+  const QString GenericBaseName("Generic");
 }
 
 /**

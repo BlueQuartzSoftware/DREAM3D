@@ -52,6 +52,7 @@
 #include "SIMPLib/Math/GeometryMath.h"
 
 #include "SIMPLib/Utilities/SIMPLibRandom.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1

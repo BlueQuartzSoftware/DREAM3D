@@ -51,6 +51,7 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "ImageIO/ImageIOConstants.h"
 #include "ImageIO/FilterParameters/ImportVectorImageStackFilterParameter.h"

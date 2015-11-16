@@ -49,6 +49,7 @@
 
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Utilities/SIMPLibEndian.h"
+#include "SIMPLib/Geometry/TriangleGeom.h"
 
 #include "IO/IOConstants.h"
 

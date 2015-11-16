@@ -40,6 +40,7 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Geometry/TriangleGeom.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/util/TriangleOps.h"
 

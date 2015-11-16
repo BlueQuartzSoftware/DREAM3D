@@ -46,6 +46,7 @@
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 // Include the MOC generated file for this class
 #include "moc_FindEllipsoidError.cpp"

@@ -38,6 +38,7 @@
 
 
 #include "SIMPLib/DataArrays/StringDataArray.hpp"
+#include "SIMPLib/DataContainers/DataArrayPath.h"
 
 #include "moc_DataContainerBundle.cpp"
 

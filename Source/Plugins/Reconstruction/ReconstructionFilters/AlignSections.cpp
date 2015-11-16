@@ -42,6 +42,7 @@
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 

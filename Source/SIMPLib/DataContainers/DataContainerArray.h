@@ -40,18 +40,17 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtCore/QList>
-#include <QtCore/QTextStream>
 
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Common/Observer.h"
-#include "SIMPLib/Common/Observable.h"
+
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/DataContainers/DataArrayPath.h"
 #include "SIMPLib/DataContainers/IDataContainerBundle.h"
-#include "SIMPLib/DataContainers/DataContainerBundle.h"
 
+
+class DataArrayPath;
 /**
  * @class DataContainerArray DataContainerArray.h DREAM3DLib/Common/DataContainerArray.h
  * @brief  This class holds the list of filters that will be run. This should be
@@ -329,7 +328,7 @@ class SIMPLib_EXPORT DataContainerArray : public QObject
      * @return
      */
     template<typename Filter>
-    AttributeMatrix::Pointer getPrereqAttributeMatrixFromPath(Filter* filter, DataArrayPath path, int err)
+    AttributeMatrix::Pointer getPrereqAttributeMatrixFromPath(Filter* filter, const DataArrayPath& path, int err)
     {
       // First try to get the Parent DataContainer. If an error occurs the error message will have been set
       // so just return a NULL shared pointer

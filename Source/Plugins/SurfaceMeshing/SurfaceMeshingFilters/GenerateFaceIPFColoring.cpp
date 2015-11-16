@@ -49,6 +49,8 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Utilities/ColorTable.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Geometry/TriangleGeom.h"
 
 #include "OrientationLib/SpaceGroupOps/CubicLowOps.h"
 #include "OrientationLib/SpaceGroupOps/CubicOps.h"

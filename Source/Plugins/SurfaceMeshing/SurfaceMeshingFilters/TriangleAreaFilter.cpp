@@ -49,6 +49,7 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/Geometry/TriangleGeom.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 

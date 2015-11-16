@@ -10,7 +10,7 @@ namespace OrientationAnalysisConstants
 {
   const QString OrientationAnalysisPluginFile("OrientationAnalysisPlugin");
   const QString OrientationAnalysisPluginDisplayName("OrientationAnalysis");
-  const QString OrientationAnalysisBaseName("OrientationAnalysisPlugin");
+  const QString OrientationAnalysisBaseName("OrientationAnalysis");
 }
 
 /**

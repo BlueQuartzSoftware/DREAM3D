@@ -7,7 +7,7 @@ namespace SyntheticBuildingConstants
 {
   const QString SyntheticBuildingPluginFile("SyntheticBuildingPlugin");
   const QString SyntheticBuildingPluginDisplayName("SyntheticBuilding");
-  const QString SyntheticBuildingBaseName("SyntheticBuildingPlugin");
+  const QString SyntheticBuildingBaseName("SyntheticBuilding");
 }
 
 /**

@@ -46,6 +46,7 @@
 #include <QtCore/QByteArray>
 
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 #define kBufferSize 1024
 

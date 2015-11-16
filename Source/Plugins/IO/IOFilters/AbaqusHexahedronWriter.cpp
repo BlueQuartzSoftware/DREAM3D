@@ -51,6 +51,7 @@
 
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Utilities/TimeUtilities.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "IO/IOConstants.h"
 

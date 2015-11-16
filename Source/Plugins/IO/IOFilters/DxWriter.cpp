@@ -45,6 +45,7 @@
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "IO/IOConstants.h"
 
