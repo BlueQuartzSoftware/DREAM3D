@@ -41,6 +41,7 @@
 
 #include "ImportASCIIDataWizard.h"
 #include "ASCIIDataModel.h"
+#include "AddHeadersDialog.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -209,7 +210,23 @@ void DataFormatPage::on_headersIndexLineEdit_textChanged(const QString &text)
 // -----------------------------------------------------------------------------
 void DataFormatPage::on_addHeadersBtn_clicked()
 {
+  AddHeadersDialog* addHeadersDialog = new AddHeadersDialog();
+  int result = addHeadersDialog->exec();
 
+  if (result == QDialog::Accepted)
+  {
+    QStringList headers = addHeadersDialog->getHeaders();
+    ASCIIDataModel* model = ASCIIDataModel::Instance();
+
+    for (int i = 0; i < headers.size(); i++)
+    {
+      QString header = headers[i];
+
+      model->setHeaderData(i, Qt::Horizontal, header, Qt::DisplayRole);
+    }
+  }
+
+  delete addHeadersDialog;
 }
 
 // -----------------------------------------------------------------------------

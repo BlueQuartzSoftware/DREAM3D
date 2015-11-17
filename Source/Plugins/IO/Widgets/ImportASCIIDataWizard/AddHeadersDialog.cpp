@@ -33,18 +33,18 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "DelimitedOrFixedWidthPage.h"
+#include "AddHeadersDialog.h"
 
-#include <QtCore/QFile>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
 
-#include "ImportASCIIDataWizard.h"
 #include "ASCIIDataModel.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DelimitedOrFixedWidthPage::DelimitedOrFixedWidthPage(const QString &inputFilePath, QWidget* parent) :
-  AbstractWizardPage(inputFilePath, parent)
+AddHeadersDialog::AddHeadersDialog(QWidget* parent) :
+QDialog(parent)
 {
   setupUi(this);
 
@@ -54,7 +54,7 @@ DelimitedOrFixedWidthPage::DelimitedOrFixedWidthPage(const QString &inputFilePat
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DelimitedOrFixedWidthPage::~DelimitedOrFixedWidthPage()
+AddHeadersDialog::~AddHeadersDialog()
 {
 
 }
@@ -62,95 +62,67 @@ DelimitedOrFixedWidthPage::~DelimitedOrFixedWidthPage()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DelimitedOrFixedWidthPage::setupGui()
+void AddHeadersDialog::setupGui()
 {
+  setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+
   ASCIIDataModel* model = ASCIIDataModel::Instance();
 
-  refreshModel();
-
-  dataView->setModel(model);
-  dataView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-
-  registerField("isDelimited", isDelimitedRadio);
-  registerField("isFixedWidth", isFixedWidthRadio);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DelimitedOrFixedWidthPage::showEvent(QShowEvent* event)
-{
-  ASCIIDataModel* model = ASCIIDataModel::Instance();
-  model->clearContents();
-
-  if (model->columnCount() > 0)
+  for (int i = 0; i < model->columnCount(); i++)
   {
-    model->removeColumns(0, model->columnCount());
+    QLabel* label = new QLabel(this);
+    QString columnName = "Column " + QString::number(i + 1) + ":";
+    label->setText(QApplication::translate("AddHeadersDialog", columnName.toStdString().c_str(), 0));
+    gridLayout->addWidget(label, i, 0, 1, 1);
+
+    QLineEdit* lineEdit = new QLineEdit(this);
+    gridLayout->addWidget(lineEdit, i, 1, 1, 1);
   }
 
-  // This is the first screen, so everything automatically goes into one column for now
-  model->insertColumn(0);
+  m_ButtonBox = new QDialogButtonBox(this);
+  m_ButtonBox->setOrientation(Qt::Horizontal);
+  m_ButtonBox->setStandardButtons(QDialogButtonBox::Cancel | QDialogButtonBox::Ok);
+  gridLayout->addWidget(m_ButtonBox, model->columnCount(), 0, 1, 2);
 
-  for (int row = 0; row < model->rowCount(); row++)
-  {
-    QString line = model->originalString(row);
-
-    QModelIndex index = model->index(row, 0);
-
-    model->setData(index, line, Qt::DisplayRole);
-  }
+  connect(m_ButtonBox, SIGNAL(accepted()), this, SLOT(m_ButtonBox_accepted()));
+  connect(m_ButtonBox, SIGNAL(rejected()), this, SLOT(m_ButtonBox_rejected()));
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DelimitedOrFixedWidthPage::refreshModel()
+void AddHeadersDialog::m_ButtonBox_accepted()
 {
   ASCIIDataModel* model = ASCIIDataModel::Instance();
-  model->clear();
 
-  QStringList lines = ImportASCIIDataWizard::ReadLines(m_InputFilePath, 1, ImportASCIIDataWizard::TotalPreviewLines);
-
-  bool hasTabs = false;
-  for (int i = 0; i < lines.size(); i++)
+  for (int i = 0; i < model->columnCount(); i++)
   {
-    if (lines.contains("\\t"))
+    QLayoutItem* item = gridLayout->itemAtPosition(i, 1);
+    if (NULL != item)
     {
-      hasTabs = true;
+      QLineEdit* lineEdit = dynamic_cast<QLineEdit*>(item->widget());
+      if (NULL != lineEdit)
+      {
+        m_Headers.push_back(lineEdit->text());
+      }
     }
   }
 
-  QString guesserText = dataTypeGuesserLabel->text();
-
-  if (hasTabs == true)
-  {
-    guesserText.replace("[dataType]", "<b>Fixed Width</b>");
-    isFixedWidthRadio->setChecked(true);
-  }
-  else
-  {
-    guesserText.replace("[dataType]", "<b>Delimited</b>");
-    isDelimitedRadio->setChecked(true);
-  }
-
-  dataTypeGuesserLabel->setText(guesserText);
-
-  ImportASCIIDataWizard::LoadOriginalLines(lines);
-
-  ImportASCIIDataWizard::InsertLines(lines, 1);
+  accept();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int DelimitedOrFixedWidthPage::nextId() const
+void AddHeadersDialog::m_ButtonBox_rejected()
 {
-  if (isDelimitedRadio->isChecked())
-  {
-    return ImportASCIIDataWizard::Delimited;
-  }
-  else
-  {
-    return ImportASCIIDataWizard::DataFormat;
-  }
+  reject();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QStringList AddHeadersDialog::getHeaders()
+{
+  return m_Headers;
 }

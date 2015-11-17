@@ -11,6 +11,7 @@ set(${PLUGIN_NAME}_Widgets_MOC_HDRS ${${PLUGIN_NAME}_Widgets_MOC_HDRS}
     ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/ImportASCIIDataWizard.h
     ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/AbstractWizardPage.h
     ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/ASCIIDataModel.h
+    ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/AddHeadersDialog.h
   )
 
 set(${PLUGIN_NAME}_Widgets_SRCS ${${PLUGIN_NAME}_Widgets_SRCS}
@@ -21,12 +22,14 @@ set(${PLUGIN_NAME}_Widgets_SRCS ${${PLUGIN_NAME}_Widgets_SRCS}
     ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/AbstractWizardPage.cpp
     ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/ASCIIDataModel.cpp
     ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/ASCIIDataItem.cpp
+    ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/AddHeadersDialog.cpp
     )
 
 set(${PLUGIN_NAME}_Widgets_UIS ${${PLUGIN_NAME}_Widgets_UIS}
     ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/UI_Files/DelimitedOrFixedWidthPage.ui
     ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/UI_Files/DelimitedPage.ui
     ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/UI_Files/DataFormatPage.ui
+    ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/UI_Files/AddHeadersDialog.ui
     )
 
 # Add in the remaining sources that are actually widgets but are completely Custom and do NOT use private
