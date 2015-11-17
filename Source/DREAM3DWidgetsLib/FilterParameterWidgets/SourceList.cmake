@@ -22,7 +22,6 @@ set(DREAM3D_PARAMETER_WIDGETS
     DynamicTableWidget
     FileListInfoWidget
     FloatVec3Widget
-    FloatVec4Widget
     FourthOrderPolynomialWidget
     InputFileWidget
     InputPathWidget
@@ -36,7 +35,6 @@ set(DREAM3D_PARAMETER_WIDGETS
     SecondOrderPolynomialWidget
     SeparatorWidget
     StringWidget
-    Symmetric6x6Widget
     ThirdOrderPolynomialWidget
 )
 

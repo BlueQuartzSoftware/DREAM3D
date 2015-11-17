@@ -45,6 +45,7 @@
 #include <Eigen/Dense>
 
 #include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/FindNRingNeighbors.h"
 
 // -----------------------------------------------------------------------------

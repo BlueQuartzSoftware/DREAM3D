@@ -52,6 +52,7 @@
 
 #include "SIMPLib/FilterParameters/DynamicChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 /**
  * @brief The ReadEdaxH5DataPrivate class is a private implementation of the ReadEdaxH5Data class

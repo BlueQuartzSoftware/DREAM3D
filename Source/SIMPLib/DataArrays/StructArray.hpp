@@ -408,7 +408,7 @@ class StructArray : public IDataArray
       ::memcpy(dest, src, bytes);
       return 0;
     }
-  
+
   /**
    * @brief copyData This method copies all data from the <b>sourceArray</b> into
    * the current array starting at the target destination tuple offset value.
@@ -433,42 +433,17 @@ class StructArray : public IDataArray
     if(!sourceArray->isAllocated()) { return false; }
     Self* source = dynamic_cast<Self*>(sourceArray.get());
     if(NULL == source->getPointer(0)) { return false; }
-    
+
     size_t sourceNTuples = source->getNumberOfTuples();
-    
+
     T* src = source->getPointer(0);
     T* dest = m_Array + destTupleOffset;
     size_t bytes = sourceNTuples * sizeof(T);
     ::memcpy(dest, src, bytes);
-    
+
     return true;
   }
-  
-  /**
-   * @brief reorderCopy
-   * @param newOrderMap
-   * @return
-   */
-    virtual IDataArray::Pointer reorderCopy(QVector<size_t> newOrderMap)
-    {
-      if(newOrderMap.size() != static_cast<QVector<size_t>::size_type>(getNumberOfTuples()))
-      {
-        return IDataArray::NullPointer();
-      }
-      IDataArray::Pointer daCopy = createNewArray(getNumberOfTuples(), getComponentDimensions(), getName(), m_IsAllocated);
-      if(m_IsAllocated == true)
-      {
-        daCopy->initializeWithZeros();
-        size_t chunkSize = getNumberOfComponents() * sizeof(T);
-        for(size_t i = 0; i < getNumberOfTuples(); i++)
-        {
-          T* src = getPointer(i * getNumberOfComponents());
-          void* dest = daCopy->getVoidPointer(newOrderMap[i] * getNumberOfComponents());
-          ::memcpy(dest, src, chunkSize);
-        }
-      }
-      return daCopy;
-    }
+
 
     /**
      * @brief Returns the number of bytes that make up the data type.

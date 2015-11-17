@@ -2,25 +2,16 @@
 #-- Your License or Copyright can go here
 #--////////////////////////////////////////////////////////////////////////////
 
-project(@PluginName@ VERSION 1.0)
-
 set(PLUGIN_NAME @PluginName@)
+set(${PLUGIN_NAME}_VERSION "1.0")
+get_filename_component(${PLUGIN_NAME}_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}" ABSOLUTE)
+set(@PluginName@_BINARY_DIR "${DREAM3DProj_BINARY_DIR}/Plugins/${PLUGIN_NAME}")
 
 # --------------------------------------------------------------------
 # Look for Qt 5 as we need it for the plugin GUI to be generated
 if(NOT Qt5Core_FOUND)
     message(FATAL_ERROR "Qt 5 is Needed for plugin ${PLUGIN_NAME}Plugin.")
 endif()
-
-set(CMP_TOP_HEADER_FILE "${PLUGIN_NAME}Plugin.h")
-set(VERSION_HEADER_FILE_NAME "${PLUGIN_NAME}Version.h")
-set(VERSION_SOURCE_FILE_NAME "${PLUGIN_NAME}Version.cpp")
-
-cmpRevisionString( GENERATED_HEADER_FILE_PATH "${VERSION_HEADER_FILE_NAME}"
-                    GENERATED_SOURCE_FILE_PATH "${VERSION_SOURCE_FILE_NAME}"
-                    NAMESPACE "${PLUGIN_NAME}"
-                    PROJECT_NAME "${PROJECT_NAME}"
-                    EXPORT_MACRO "")
 
 # -----
 set(${PLUGIN_NAME}_Project_SRCS "")
@@ -131,21 +122,21 @@ endif()
 # These headers will be MOC'ed by the build system. They should all inherit from QObject
 # --------------------------------------------------------------------
 set(${PLUGIN_NAME}_HDRS
-  ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}Constants.h
+  ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Constants.h
 )
 
 set(${PLUGIN_NAME}_MOC_HDRS
-  ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}Plugin.h
+  ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Plugin.h
 )
 
 set(${PLUGIN_NAME}_SRCS
- ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}Plugin.cpp
+ ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Plugin.cpp
 )
 
 set(${PLUGIN_NAME}_MISC_HDRS
-    ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}Constants.h
+
 )
-cmp_IDE_SOURCE_PROPERTIES( "${PLUGIN_NAME}/" "${${PLUGIN_NAME}_HDRS};${${PLUGIN_NAME}_MISC_HDRS}" "${${PLUGIN_NAME}_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "" "${${PLUGIN_NAME}_MOC_HDRS};${${PLUGIN_NAME}_HDRS};${${PLUGIN_NAME}_MISC_HDRS}" "${${PLUGIN_NAME}_SRCS}" "0")
 
 # -----------------------------------------------------------------------------
 # Collect all of our Generated header and source files so that they show up in the various projects
@@ -154,8 +145,6 @@ set(${PLUGIN_NAME}_GEN_HDRS
    ${RegisterKnownFiltersFile}
    ${AllFilterParameterWidgetsHeaderFile}
    ${RegisterKnownFilterParameterWidgetsFile}
-  "${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Version.h"
-  "${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Version.cpp"
 )
 
 # --------------------------------------------------------------------
@@ -227,6 +216,7 @@ target_link_libraries(${PLUGIN_NAME}
                     DREAM3DWidgetsLib
                     )
 SET_TARGET_PROPERTIES(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)
+qt5_use_modules(${PLUGIN_NAME} Core Gui Widgets)
 
 # --------------------------------------------------------------------
 # Set some additional properties of the plugin like its output name
@@ -241,7 +231,7 @@ if(NOT MSVC)
 endif()
 
 if(DREAM3D_BUILD_TESTING)
-  include(${PROJECT_SOURCE_DIR}/Test/CMakeLists.txt)
+  include(${${PLUGIN_NAME}_SOURCE_DIR}/Test/CMakeLists.txt)
 endif()
 
 

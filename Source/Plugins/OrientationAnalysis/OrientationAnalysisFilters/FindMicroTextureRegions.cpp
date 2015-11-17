@@ -45,6 +45,7 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
@@ -60,8 +61,8 @@ FindMicroTextureRegions::FindMicroTextureRegions() :
   AbstractFilter(),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_MicroTextureRegionNumCellsArrayName(DREAM3D::FeatureData::MicroTextureRegionNumCells),
-  m_MicroTextureRegionFractionOccupiedArrayName(DREAM3D::FeatureData::MicroTextureRegionFractionOccupied),
+  m_MicroTextureRegionNumCellsArrayName("MicroTextureRegionNumCells"),
+  m_MicroTextureRegionFractionOccupiedArrayName("MicroTextureRegionFractionOccupied"),
   m_MicroTextureRegionNumCells(NULL),
   m_MicroTextureRegionFractionOccupied(NULL),
   m_FeatureIds(NULL)

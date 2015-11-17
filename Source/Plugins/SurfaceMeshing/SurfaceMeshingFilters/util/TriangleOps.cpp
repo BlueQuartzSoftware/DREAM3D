@@ -37,6 +37,7 @@
 
 #include "SIMPLib/Math/MatrixMath.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/Geometry/TriangleGeom.h"
 
 
 namespace SM = DREAM3D::SurfaceMesh;

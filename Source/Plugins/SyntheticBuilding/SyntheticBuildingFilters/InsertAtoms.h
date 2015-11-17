@@ -41,7 +41,7 @@
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
-
+#include "SIMPLib/Geometry/VertexGeom.h"
 /**
  * @brief The InsertAtoms class. See [Filter documentation](@ref insertatoms) for details.
  */

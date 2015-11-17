@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>[*]ActiveDocument.txt</string>
+   <string>ActiveDocument.txt</string>
   </property>
   <property name="styleSheet">
    <string notr="true"> QStatusBar {

@@ -682,7 +682,13 @@ int H5OIMReader::readData(hid_t parId)
     setErrorMessage("The Grid Type was not set in the file.");
     return -300;
   }
-
+  
+  if(totalDataRows == 0)
+  {
+    setErrorCode(-90301);
+    setErrorMessage("There is no data to read. NumRows or NumColumns is Zero (0)");
+    return -301;
+  }
 
   hid_t gid = H5Gopen(parId, Ebsd::H5::Data.toLatin1().data(), H5P_DEFAULT);
   if (gid < 0)

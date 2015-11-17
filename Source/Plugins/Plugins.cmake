@@ -81,6 +81,9 @@ function(DREAM3D_ADD_PLUGINS)
             endif()
           endif()
       endif()
+      
+      # Mark these variables as advanced
+      mark_as_advanced(${d3dPlugin}_SOURCE_DIR)
 
 
     # Now that we have defined where the user's plugin directory is at we

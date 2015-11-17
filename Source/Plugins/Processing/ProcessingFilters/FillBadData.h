@@ -57,9 +57,6 @@ class FillBadData : public AbstractFilter
     SIMPL_FILTER_PARAMETER(bool, StoreAsNewPhase)
     Q_PROPERTY(bool StoreAsNewPhase READ getStoreAsNewPhase WRITE setStoreAsNewPhase)
 
-    SIMPL_FILTER_PARAMETER(bool, ReplaceBadData)
-    Q_PROPERTY(bool ReplaceBadData READ getReplaceBadData WRITE setReplaceBadData)
-
     SIMPL_FILTER_PARAMETER(int, MinAllowedDefectSize)
     Q_PROPERTY(int MinAllowedDefectSize READ getMinAllowedDefectSize WRITE setMinAllowedDefectSize)
 

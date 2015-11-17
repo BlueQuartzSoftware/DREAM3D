@@ -7,7 +7,7 @@ namespace ImageIOConstants
 {
   const QString ImageIOPluginFile("ImageIOPlugin");
   const QString ImageIOPluginDisplayName("ImageIO");
-  const QString ImageIOBaseName("ImageIOPlugin");
+  const QString ImageIOBaseName("ImageIO");
 }
 
 namespace FilterParameterWidgetType

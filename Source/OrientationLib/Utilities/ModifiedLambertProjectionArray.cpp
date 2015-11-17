@@ -360,41 +360,19 @@ bool ModifiedLambertProjectionArray::copyData(size_t destTupleOffset, IDataArray
   if(destTupleOffset >= m_ModifiedLambertProjectionArray.size()) { return false; }
   if(!sourceArray->isAllocated()) { return false; }
   Self* source = dynamic_cast<Self*>(sourceArray.get());
-  
+
   if(sourceArray->getNumberOfComponents() != getNumberOfComponents()) { return false; }
-  
+
   if( sourceArray->getNumberOfTuples()*sourceArray->getNumberOfComponents() + destTupleOffset*getNumberOfComponents() > m_ModifiedLambertProjectionArray.size() ) { return false; }
-  
+
   size_t sourceNTuples = source->getNumberOfTuples();
-  
+
   for(size_t i = 0; i < sourceNTuples; i++)
   {
     m_ModifiedLambertProjectionArray[destTupleOffset + i] = (*source)[i];
   }
-  
+
   return true;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-IDataArray::Pointer ModifiedLambertProjectionArray::reorderCopy(QVector<size_t> newOrderMap)
-{
-  if( static_cast<size_t>(newOrderMap.size()) != getNumberOfTuples())
-  {
-    return IDataArray::NullPointer();
-  }
-  ModifiedLambertProjectionArray::Pointer daCopyPtr = ModifiedLambertProjectionArray::New();
-  daCopyPtr->resize(getNumberOfTuples());
-  daCopyPtr->initializeWithZeros();
-  ModifiedLambertProjectionArray& daCopy = *daCopyPtr;
-  for(size_t i = 0; i < getNumberOfTuples(); i++)
-  {
-    daCopy[newOrderMap[i]] = m_ModifiedLambertProjectionArray[i];
-  }
-
-  return daCopyPtr;
 }
 
 // -----------------------------------------------------------------------------

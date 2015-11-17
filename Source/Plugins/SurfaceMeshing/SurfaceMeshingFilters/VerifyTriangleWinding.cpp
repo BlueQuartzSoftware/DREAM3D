@@ -54,6 +54,7 @@
 
 
 #include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/util/Vector3.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/util/Plane.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/util/TriangleOps.h"

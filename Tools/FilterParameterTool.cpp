@@ -780,6 +780,96 @@ bool GroupIncludes( AbstractFilter::Pointer filter, const QString& file)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+bool AddIGeometryIncludes(const QString& cppFile)
+{
+  QString contents;
+  {
+    // Read the Source File
+    QFileInfo fi(cppFile);
+//    if (fi.baseName().compare("EddyCurrentDataReader") != 0)
+//    {
+//      return false;
+//    }
+
+    QFile source(cppFile);
+    bool isOpen = source.open(QFile::ReadOnly);
+    if(!isOpen)
+    {
+      qDebug() << "FILE OPEN ERROR: " << cppFile;
+      return false;
+    }
+    contents = source.readAll();
+    source.close();
+  }
+
+ // qDebug() << cppFile;
+
+  QStringList names;
+  bool didReplace = false;
+  QString outString;
+  QTextStream out(&outString);
+  QString imageGeomInc = "#include \"SIMPLib/Geometry/VertexGeom.h\"";
+  bool hasImageGeomInc = false;
+  QString imageGeomCode = "VertexGeom::Pointer";
+  QString prereqCode = "<VertexGeom>";
+  bool hasImageGeomCode = false;
+
+  QString simplibInc = "#include \"SIMPLib";
+  int simplibLineIndex = 0;
+
+  QVector<QString> outLines;
+  QStringList list = contents.split(QRegExp("\\n"));
+  QStringListIterator sourceLines(list);
+  QString body;
+
+  out << cppFile << "\n";
+
+  int index = 0;
+
+  while (sourceLines.hasNext())
+  {
+    QString line = sourceLines.next();
+    outLines.push_back(line); // Always add the line to the output
+
+    if(line.contains(imageGeomInc) )
+    {
+      hasImageGeomInc = true;
+      out << "    (" << index << ")" << imageGeomInc << "\n";
+    }
+
+    if(line.contains(simplibInc))
+    {
+      if(index > simplibLineIndex) { simplibLineIndex = index; } // This is the last #include "SIMPLib" header.
+    }
+
+    if(line.contains(imageGeomCode) )
+    {
+      hasImageGeomCode = true;
+      out << "    (" << index << ")" << imageGeomCode << "\n";
+    }
+    if(line.contains(prereqCode))
+    {
+      hasImageGeomCode = true;
+      out << "    (" << index << ")" << prereqCode << "\n";
+    }
+
+    index++;
+  }
+
+  if(hasImageGeomCode && !hasImageGeomInc)
+  {
+    qDebug() << outString;
+    outLines.insert(simplibLineIndex + 1, imageGeomInc);
+    didReplace = true;
+  }
+
+  writeOutput(didReplace, outLines, cppFile);
+  return didReplace;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QString findPath(const QString& groupName, const QString& filtName, const QString ext)
 {
   //  std::cout << groupName.toStdString() << "::" << filtName.toStdString() << std::endl;
@@ -798,10 +888,6 @@ QString findPath(const QString& groupName, const QString& filtName, const QStrin
 
   prefix = D3DTools::GetSIMPLibPluginDir();
 
-  //  libs << "ProcessModeling" << "UCSB" << "ImageProcessing" << "DDDAnalysisToolbox" << "ImageIO" <<
-  //          "OrientationAnalysis" << "Processing" <<  "Reconstruction" << "Sampling" << "Statistics"  <<
-  //          "SurfaceMeshing" << "SyntheticBuilding" << "ImageProcessing" << "BrukerIntegration" <<
-  //          "ProcessModeling" << "TransformationPhase" << "IO" << "Generic" << "ZeissImport";
 
   for (int i = 0; i < libs.size(); ++i)
   {
@@ -829,6 +915,7 @@ QString findPath(const QString& groupName, const QString& filtName, const QStrin
     }
   }
 
+  qDebug() << "Error Finding File for " << groupName << "/" << filtName << "/" << ext;
   return "NOT FOUND";
 }
 
@@ -1119,7 +1206,8 @@ void ReplaceGrepSearchesRecursively(QDir currentDir)
   foreach(QFileInfo itemInfo, itemList)
   {
     QString itemFilePath = itemInfo.absoluteFilePath();
-    ReplaceText(itemFilePath);
+   // ReplaceText(itemFilePath);
+    AddIGeometryIncludes(itemFilePath);
   }
 }
 
@@ -1140,17 +1228,20 @@ void GenerateFilterParametersCode()
     IFilterFactory::Pointer factory = iter.value();
     AbstractFilter::Pointer filter = factory->create();
 
-    QString cpp = findPath(filter->getGroupName(), filter->getNameOfClass(), ".cpp");
-    //qDebug() << "CPP File: " << cpp;
-    QString h = findPath(filter->getGroupName(), filter->getNameOfClass(), ".h");
+    if(filter->getCompiledLibraryName() != "TestPlugin")
+    {
+      QString cpp = findPath(filter->getCompiledLibraryName(), filter->getNameOfClass(), ".cpp");
+      //qDebug() << "CPP File: " << cpp;
+      QString h = findPath(filter->getCompiledLibraryName(), filter->getNameOfClass(), ".h");
 
-    CorrectInitializerList(filter, h, cpp);
-    //SplitFilterHeaderCodes(filter, h, cpp);
-    //FixIncludeGuard(filter, h, cpp);
-    //ValidateParameterReader(filter, h, cpp);
-    //FindFiltersWithMultipleDataArrayPaths(filter);
-    //GroupIncludes(filter, cpp);
-    //GroupIncludes(filter, h);
+      //CorrectInitializerList(filter, h, cpp);
+      //SplitFilterHeaderCodes(filter, h, cpp);
+      //FixIncludeGuard(filter, h, cpp);
+      //ValidateParameterReader(filter, h, cpp);
+      //FindFiltersWithMultipleDataArrayPaths(filter);
+      //GroupIncludes(filter, cpp);
+      //GroupIncludes(filter, h);
+    }
   }
 }
 
@@ -1209,7 +1300,7 @@ int main(int argc, char* argv[])
 
   //std::cout << "FilterParameterTool Starting. Version " << SIMPLib::Version::PackageComplete().toStdString() << std::endl;
 
-#if 1
+#if 0
   // Register all the filters including trying to load those from Plugins
   FilterManager* fm = FilterManager::Instance();
   SIMPLibPluginLoader::LoadPluginFilters(fm);
@@ -1219,10 +1310,11 @@ int main(int argc, char* argv[])
   qRegisterMetaType<PipelineMessage>();
   GenerateFilterParametersCode();
 //  GenerateMarkDownDocs();
-//  GenerateFilterParametersCode();
+  GenerateFilterParametersCode();
 #else
-  //ReplaceLicenseCodeRecursively( QDir ( D3DTools::GetDREAM3DProjDir() ) );
-  //ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins" ) );
+  ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() ) );
+  ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins" ) );
+
 #endif
   return 0;
 }

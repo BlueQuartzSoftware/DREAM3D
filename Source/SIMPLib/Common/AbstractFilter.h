@@ -171,6 +171,11 @@ class SIMPLib_EXPORT AbstractFilter : public Observable
     // ------------------------------
     // Standard methods for this class the are commonly used by subclasses.
     // ------------------------------
+    /**
+     * @brief getFilterVersion Returns a version string for this filter. Default
+     * value is an empty string.
+     * @return
+     */
     virtual const QString getFilterVersion();
 
     SIMPL_INSTANCE_PROPERTY(DataContainerArray::Pointer, DataContainerArray)

@@ -754,32 +754,6 @@ class DataArray : public IDataArray
     }
 
     /**
-     * @brief reorderCopy
-     * @param newOrderMap
-     * @return
-     */
-    virtual IDataArray::Pointer reorderCopy(QVector<size_t> newOrderMap)
-    {
-      if(newOrderMap.size() != static_cast<QVector<size_t>::size_type>(getNumberOfTuples()))
-      {
-        return IDataArray::NullPointer();
-      }
-      IDataArray::Pointer daCopy = createNewArray(getNumberOfTuples(), getComponentDimensions(), getName(), m_IsAllocated);
-      if(m_IsAllocated == true)
-      {
-        daCopy->initializeWithZeros();
-        size_t chunkSize = getNumberOfComponents() * sizeof(T);
-        for(size_t i = 0; i < getNumberOfTuples(); i++)
-        {
-          T* src = getPointer(i * getNumberOfComponents());
-          void* dest = daCopy->getVoidPointer(newOrderMap[i] * getNumberOfComponents());
-          ::memcpy(dest, src, chunkSize);
-        }
-      }
-      return daCopy;
-    }
-
-    /**
      * @brief Returns the number of bytes that make up the data type.
      * 1 = char
      * 2 = 16 bit integer

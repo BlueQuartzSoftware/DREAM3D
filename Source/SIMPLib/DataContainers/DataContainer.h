@@ -36,35 +36,23 @@
 #ifndef _DataContainer_H_
 #define _DataContainer_H_
 
-//-- C++ includes
-#include <vector>
-#include <map>
-#include <sstream>
-#include <list>
+#include <stddef.h>
 
-#include <QtCore/QSet>
+
 #include <QtCore/QString>
 #include <QtCore/QVector>
 #include <QtCore/QMap>
 
-#include "H5Support/QH5Utilities.h"
-#include "H5Support/QH5Lite.h"
-#include "H5Support/HDF5ScopedFileSentinel.h"
-
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Common/Observable.h"
-#include "SIMPLib/Geometry/IGeometry.h"
-#include "SIMPLib/Geometry/ImageGeom.h"
-#include "SIMPLib/Geometry/RectGridGeom.h"
-#include "SIMPLib/Geometry/VertexGeom.h"
-#include "SIMPLib/Geometry/EdgeGeom.h"
-#include "SIMPLib/Geometry/TriangleGeom.h"
-#include "SIMPLib/Geometry/QuadGeom.h"
 #include "SIMPLib/DataContainers/AttributeMatrix.h"
-#include "SIMPLib/DataContainers/DataContainerArrayProxy.h"
-#include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Geometry/IGeometry.h"
 
+class DataArrayPath;
+class DataContainerArrayProxy;
+class DataContainerProxy;
+class QTextStream;
 
 /**
  * @brief The DataContainer class

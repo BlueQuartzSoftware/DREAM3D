@@ -538,7 +538,7 @@ uint64_t JsonFilterParametersReader::readValue(const QString name, uint64_t valu
   else if (m_CurrentFilterIndex.value(name).isString())
   {
     quint64 val = m_CurrentFilterIndex.value(name).toString().toULongLong();
-    if (val >= std::numeric_limits<quint64>().min() && val <= std::numeric_limits<quint64>().max())
+    if (val <= std::numeric_limits<quint64>().max())
     {
       return static_cast<quint64>(val);
     }
@@ -870,7 +870,7 @@ QVector<uint64_t> JsonFilterParametersReader::readArray(const QString name, QVec
       else if ((*iter).isString())
       {
         quint64 val = (*iter).toString().toULongLong();
-        if (val >= std::numeric_limits<quint64>().min() && val <= std::numeric_limits<quint64>().max())
+        if (val <= std::numeric_limits<quint64>().max())
         {
           vector.push_back(static_cast<uint64_t>(val));
         }
@@ -993,54 +993,6 @@ FloatVec3_t JsonFilterParametersReader::readFloatVec3(const QString name, FloatV
     if (vec3.readJson(jsonObject) == true)
     {
       return vec3;
-    }
-  }
-
-  return defaultValue;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-FloatVec4_t JsonFilterParametersReader::readFloatVec4(const QString name, FloatVec4_t defaultValue)
-{
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
-  if (m_CurrentFilterIndex.contains(name) == false)
-  {
-    return defaultValue;
-  }
-
-  if (m_CurrentFilterIndex.value(name).isObject())
-  {
-    QJsonObject jsonObject = m_CurrentFilterIndex.value(name).toObject();
-    FloatVec4_t vec4;
-    if (vec4.readJson(jsonObject) == true)
-    {
-      return vec4;
-    }
-  }
-
-  return defaultValue;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-FloatVec21_t JsonFilterParametersReader::readFloatVec21(const QString name, FloatVec21_t defaultValue)
-{
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
-  if (m_CurrentFilterIndex.contains(name) == false)
-  {
-    return defaultValue;
-  }
-
-  if (m_CurrentFilterIndex.value(name).isObject())
-  {
-    QJsonObject jsonObject = m_CurrentFilterIndex.value(name).toObject();
-    FloatVec21_t vec21;
-    if (vec21.readJson(jsonObject) == true)
-    {
-      return vec21;
     }
   }
 

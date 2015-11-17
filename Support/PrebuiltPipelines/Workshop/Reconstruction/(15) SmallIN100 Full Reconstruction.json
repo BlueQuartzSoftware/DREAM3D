@@ -325,39 +325,6 @@
         "UseGoodVoxels": 1
     },
     "21": {
-        "CellPhasesArrayPath": {
-            "Attribute Matrix Name": "CellData",
-            "Data Array Name": "Phases",
-            "Data Container Name": "ImageDataContainer"
-        },
-        "CrystalStructuresArrayPath": {
-            "Attribute Matrix Name": "CellEnsembleData",
-            "Data Array Name": "CrystalStructures",
-            "Data Container Name": "ImageDataContainer"
-        },
-        "FilterVersion": "6.0.1877",
-        "Filter_Human_Label": "Generate Misorientation Colors",
-        "Filter_Name": "GenerateMisorientationColors",
-        "GoodVoxelsArrayPath": {
-            "Attribute Matrix Name": "CellData",
-            "Data Array Name": "",
-            "Data Container Name": "ImageDataContainer"
-        },
-        "MisorientationColorArrayName": "MisorientationColor",
-        "QuatsArrayPath": {
-            "Attribute Matrix Name": "CellData",
-            "Data Array Name": "Quats",
-            "Data Container Name": "ImageDataContainer"
-        },
-        "ReferenceAngle": 0,
-        "ReferenceAxis": {
-            "x": 0,
-            "y": 0,
-            "z": 1
-        },
-        "UseGoodVoxels": 0
-    },
-    "22": {
         "FilterVersion": "6.0.1877",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
@@ -527,7 +494,7 @@
     },
     "PipelineBuilder": {
         "Name": "(15) SmallIN100 Full Reconstruction",
-        "Number_Filters": 23,
+        "Number_Filters": 22,
         "Version": "6.0"
     }
 }
