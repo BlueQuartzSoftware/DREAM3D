@@ -11,7 +11,7 @@ START_FILTER_GROUP(${Processing_BINARY_DIR} "${_filterGroupName}" "Processing")
 # List your public filters here
 
 set(_PublicFilters
-  ClearDataMask
+  
   ErodeDilateBadData
   ErodeDilateCoordinationNumber
   ErodeDilateMask

@@ -193,41 +193,7 @@ class SIMPLibMath
     static SIMPLib_EXPORT float incompletebetafe2(float, float, float, float, float);
     static SIMPLib_EXPORT float incompletebetaps(float, float, float, float);
 
-    /**
-     * @brief computes linear regression
-     * @param fit slope
-     * @param fit intercept
-     * @param x values to fit
-     * @param y values to fit
-     * @return true if no errors encounterd in regression, false otherwise
-     */
-    template<typename T>
-    static bool linearRegression(double& slope, double& intercept, typename std::vector<T>& x, typename std::vector<T>& y)
-    {
-      //make sure x and y are same length
-      size_t count = x.size();
-      if(count != y.size())
-      {
-        slope = 0;
-        intercept = 0;
-        return false;
-      }
 
-      //compute sums
-      double sumX = 0, sumY = 0, sumX2 = 0, sumXY = 0;
-      for(size_t i = 0; i < count; i++)
-      {
-        sumX += static_cast<double> (x[i]);
-        sumY += static_cast<double> (y[i]);
-        sumX2 += static_cast<double> (x[i] * x[i]);
-        sumXY += static_cast<double> (x[i] * y[i]);
-      }
-
-      //fit line
-      slope = (static_cast<double>(count) * sumXY - sumX * sumY) / (static_cast<double>(count) * sumX2 - sumX * sumX);
-      intercept = (sumY - slope * sumX) / static_cast<double>(count);
-      return true;
-    }
 
     /**
      * @brief generates a linearly space array between 2 numbers (inclusive, assumes first number <= second number) [as matlabs linspace]

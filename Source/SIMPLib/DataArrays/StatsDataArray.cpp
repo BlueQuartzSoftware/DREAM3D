@@ -344,13 +344,13 @@ bool StatsDataArray::copyData(size_t destTupleOffset, IDataArray::Pointer source
   if(destTupleOffset >= m_StatsDataArray.size()) { return false; }
   if(!sourceArray->isAllocated()) { return false; }
   Self* source = dynamic_cast<Self*>(sourceArray.get());
-  
+
   if(sourceArray->getNumberOfComponents() != getNumberOfComponents()) { return false; }
-  
+
   if( sourceArray->getNumberOfTuples()*sourceArray->getNumberOfComponents() + destTupleOffset*getNumberOfComponents() > m_StatsDataArray.size() ) { return false; }
-  
+
   size_t sourceNTuples = source->getNumberOfTuples();
-  
+
   for(size_t i = 0; i < sourceNTuples; i++)
   {
     m_StatsDataArray[destTupleOffset + i] = (*source)[i];
@@ -359,26 +359,6 @@ bool StatsDataArray::copyData(size_t destTupleOffset, IDataArray::Pointer source
   return true;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-IDataArray::Pointer StatsDataArray::reorderCopy(QVector<size_t> newOrderMap)
-{
-  if( static_cast<size_t>(newOrderMap.size()) != getNumberOfTuples())
-  {
-    return IDataArray::Pointer();
-  }
-  StatsDataArray::Pointer daCopyPtr = StatsDataArray::New();
-  daCopyPtr->resize(getNumberOfTuples());
-  daCopyPtr->initializeWithZeros();
-  StatsDataArray& daCopy = *daCopyPtr;
-  for(size_t i = 0; i < getNumberOfTuples(); i++)
-  {
-    daCopy[newOrderMap[i]] = m_StatsDataArray[i];
-  }
-
-  return daCopyPtr;
-}
 
 // -----------------------------------------------------------------------------
 //

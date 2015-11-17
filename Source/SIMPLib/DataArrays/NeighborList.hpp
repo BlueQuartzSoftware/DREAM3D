@@ -423,7 +423,7 @@ class NeighborList : public IDataArray
       Self* source = dynamic_cast<Self*>(sourceArray.get());
 
       size_t sourceNTuples = source->getNumberOfTuples();
-      
+
       for(size_t i = 0; i < sourceNTuples; i++)
       {
         m_Array[destTupleOffset + i] = source->getList(i);
@@ -431,31 +431,6 @@ class NeighborList : public IDataArray
       return true;
     }
 
-    /**
-     * @brief reorderCopy
-     * @param newOrderMap
-     * @return
-     */
-    virtual IDataArray::Pointer reorderCopy(QVector<size_t> newOrderMap)
-    {
-      size_t newOrderMapSize = static_cast<size_t>(newOrderMap.size());
-      if( newOrderMapSize != getNumberOfTuples())
-      {
-        return IDataArray::NullPointer();
-      }
-
-      typename NeighborList<T>::Pointer daCopyPtr = NeighborList<T>::CreateArray(getNumberOfTuples(), "Copy of NeighborList", true);
-      daCopyPtr->initializeWithZeros();
-      size_t numTuples = getNumberOfTuples();
-      for(size_t i = 0; i < numTuples; i++)
-      {
-        typename NeighborList<T>::SharedVectorType sharedNeiLst; //(new std::vector<T>);
-        sharedNeiLst = m_Array[i];
-        daCopyPtr->setList(newOrderMap[i], sharedNeiLst);
-      }
-
-      return daCopyPtr;
-    }
 
     /**
      * @brief Splats the same value c across all values in the Tuple

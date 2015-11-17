@@ -44,9 +44,6 @@ START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}" "Core Fi
 set(_PublicFilters
   ConditionalSetValue
   ConvertData
-  CopyAttributeArray
-  CopyAttributeMatrix
-  CopyDataContainer
   CopyFeatureArrayToElementArray
   CreateAttributeMatrix
   CreateDataContainer

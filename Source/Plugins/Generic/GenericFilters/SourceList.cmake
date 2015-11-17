@@ -20,7 +20,6 @@ FindFeaturePhases
 FindFeaturePhasesBinary
 FindSurfaceFeatures
 GenerateVectorColors
-InputCrystalCompliances
 )
 
 

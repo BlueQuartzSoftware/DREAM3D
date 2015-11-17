@@ -45,8 +45,6 @@
 #include "SIMPLib/Common/ComparisonInputs.h"
 #include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
-#include "SIMPLib/FilterParameters/FloatVec4FilterParameter.h"
-#include "SIMPLib/FilterParameters/Symmetric6x6FilterParameter.h"
 #include "SIMPLib/FilterParameters/SecondOrderPolynomialFilterParameter.h"
 #include "SIMPLib/FilterParameters/ThirdOrderPolynomialFilterParameter.h"
 #include "SIMPLib/FilterParameters/FourthOrderPolynomialFilterParameter.h"
@@ -110,8 +108,6 @@ class SIMPLib_EXPORT AbstractFilterParametersReader
 
     virtual IntVec3_t readIntVec3(const QString name, IntVec3_t v) = 0;
     virtual FloatVec3_t readFloatVec3(const QString name, FloatVec3_t v) = 0;
-    virtual FloatVec4_t readFloatVec4(const QString name, FloatVec4_t v) = 0;
-    virtual FloatVec21_t readFloatVec21(const QString name, FloatVec21_t v) = 0;
     virtual Float2ndOrderPoly_t readFloat2ndOrderPoly(const QString name, Float2ndOrderPoly_t v) = 0;
     virtual Float3rdOrderPoly_t readFloat3rdOrderPoly(const QString name, Float3rdOrderPoly_t v) = 0;
     virtual Float4thOrderPoly_t readFloat4thOrderPoly(const QString name, Float4thOrderPoly_t v) = 0;

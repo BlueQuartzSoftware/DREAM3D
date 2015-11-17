@@ -978,54 +978,6 @@ FloatVec3_t JsonFilterParametersReader::readFloatVec3(const QString name, FloatV
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FloatVec4_t JsonFilterParametersReader::readFloatVec4(const QString name, FloatVec4_t defaultValue)
-{
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
-  if (m_CurrentFilterIndex.contains(name) == false)
-  {
-    return defaultValue;
-  }
-
-  if (m_CurrentFilterIndex.value(name).isObject())
-  {
-    QJsonObject jsonObject = m_CurrentFilterIndex.value(name).toObject();
-    FloatVec4_t vec4;
-    if (vec4.readJson(jsonObject) == true)
-    {
-      return vec4;
-    }
-  }
-
-  return defaultValue;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-FloatVec21_t JsonFilterParametersReader::readFloatVec21(const QString name, FloatVec21_t defaultValue)
-{
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
-  if (m_CurrentFilterIndex.contains(name) == false)
-  {
-    return defaultValue;
-  }
-
-  if (m_CurrentFilterIndex.value(name).isObject())
-  {
-    QJsonObject jsonObject = m_CurrentFilterIndex.value(name).toObject();
-    FloatVec21_t vec21;
-    if (vec21.readJson(jsonObject) == true)
-    {
-      return vec21;
-    }
-  }
-
-  return defaultValue;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 Float2ndOrderPoly_t JsonFilterParametersReader::readFloat2ndOrderPoly(const QString name, Float2ndOrderPoly_t defaultValue)
 {
   BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
