@@ -19,6 +19,7 @@ FindFeatureCentroids
 FindFeaturePhases
 FindFeaturePhasesBinary
 FindSurfaceFeatures
+FindSurfaceFeaturesMask
 GenerateVectorColors
 )
 
