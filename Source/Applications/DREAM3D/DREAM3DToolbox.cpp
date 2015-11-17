@@ -34,6 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "DREAM3DToolbox.h"
 
+#include "DREAM3DApplication.h"
+
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
 #include "moc_DREAM3DToolbox.cpp"
 
@@ -41,11 +43,11 @@
 //
 // -----------------------------------------------------------------------------
 DREAM3DToolbox::DREAM3DToolbox(QWidget* parent) :
-QWidget(parent)
+QDockWidget(parent)
 {
   setupUi(this);
 
-  readSettings();
+  setupGui();
 }
 
 // -----------------------------------------------------------------------------
@@ -53,7 +55,15 @@ QWidget(parent)
 // -----------------------------------------------------------------------------
 DREAM3DToolbox::~DREAM3DToolbox()
 {
-  writeSettings();
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DToolbox::setupGui()
+{
+  readSettings();
 }
 
 // -----------------------------------------------------------------------------
@@ -64,6 +74,8 @@ void DREAM3DToolbox::readSettings()
   DREAM3DSettings prefs;
 
   prefs.beginGroup("ToolboxSettings");
+
+  setVisible(prefs.value(objectName(), true).toBool());
 
   // Have the toolbox write its settings to the prefs file
   readWindowSettings(prefs);
@@ -117,6 +129,8 @@ void DREAM3DToolbox::writeSettings()
 
   prefs.beginGroup("ToolboxSettings");
 
+  prefs.setValue(objectName(), isVisible());
+
   // Have the toolbox write its settings to the prefs file
   writeWindowSettings(prefs);
 
@@ -138,6 +152,14 @@ void DREAM3DToolbox::writeSettings()
   prefs.endGroup();
 
   prefs.endGroup();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DToolbox::closeEvent(QCloseEvent* event)
+{
+  //qDebug() << "closeEvent";
 }
 
 // -----------------------------------------------------------------------------

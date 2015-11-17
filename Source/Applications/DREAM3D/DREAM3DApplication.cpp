@@ -107,6 +107,8 @@ DREAM3DApplication::~DREAM3DApplication()
   delete this->Splash;
   this->Splash = NULL;
 
+  m_Toolbox->writeSettings();
+
   delete m_Toolbox;
   m_Toolbox = NULL;
 
@@ -176,7 +178,10 @@ bool DREAM3DApplication::initialize(int argc, char* argv[])
   // Create the toolbox
   m_Toolbox = new DREAM3DToolbox();
   m_Toolbox->getFilterListWidget()->updateFilterList(true);
-  m_Toolbox->show();
+
+  m_ActionShowToolbox = m_Toolbox->toggleViewAction();
+  m_ActionShowToolbox->setText("Show Toolbox");
+  connect(m_ActionShowToolbox, SIGNAL(triggered(bool)), this, SLOT(on_actionShowToolbox_triggered(bool)));
 
   // give GUI components time to update before the mainwindow is shown
   QApplication::instance()->processEvents();
@@ -1144,69 +1149,16 @@ void DREAM3DApplication::on_prebuiltsDockContextMenuRequested(const QPoint& pos)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DApplication::on_actionShowFilterList_triggered(bool visible)
+void DREAM3DApplication::on_actionShowToolbox_triggered(bool visible)
 {
-  //if (NULL != m_ActiveWindow)
-  //{
-  //  QAction* actionShowFilterList = qobject_cast<QAction*>(sender());
-  //  FilterListToolboxWidget* FilterListToolboxWidget = m_ActiveWindow->getFilterListToolboxWidget();
+  m_ActionShowToolbox->blockSignals(true);
+  m_Toolbox->blockSignals(true);
 
-  //  if (NULL != actionShowFilterList && NULL != FilterListToolboxWidget)
-  //  {
-  //    m_ActiveWindow->updateAndSyncDockWidget(actionShowFilterList, m_Toolbox->getFilterListWidget(), visible);
-  //  }
-  //}
-}
+  m_ActionShowToolbox->setChecked(visible);
+  m_Toolbox->setVisible(visible);
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3DApplication::on_actionShowFilterLibrary_triggered(bool visible)
-{
-  //if (NULL != m_ActiveWindow)
-  //{
-  //  QAction* actionShowFilterLibrary = qobject_cast<QAction*>(sender());
-  //  FilterLibraryToolboxWidget* FilterLibraryToolboxWidget = m_ActiveWindow->getFilterLibraryToolboxWidget();
-
-  //  if (NULL != actionShowFilterLibrary && NULL != FilterLibraryToolboxWidget)
-  //  {
-  //    m_ActiveWindow->updateAndSyncDockWidget(actionShowFilterLibrary, FilterLibraryToolboxWidget, visible);
-  //  }
-  //}
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3DApplication::on_actionShowBookmarks_triggered(bool visible)
-{
-  //if (NULL != m_ActiveWindow)
-  //{
-  //  QAction* actionShowBookmarks = qobject_cast<QAction*>(sender());
-  //  BookmarksToolboxWidget* BookmarksToolboxWidget = m_ActiveWindow->getBookmarksToolboxWidget();
-
-  //  if (NULL != actionShowBookmarks && NULL != BookmarksToolboxWidget)
-  //  {
-  //    m_ActiveWindow->updateAndSyncDockWidget(actionShowBookmarks, BookmarksToolboxWidget, visible);
-  //  }
-  //}
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3DApplication::on_actionShowPrebuiltPipelines_triggered(bool visible)
-{
-  //if (NULL != m_ActiveWindow)
-  //{
-  //  QAction* actionShowPrebuilts = qobject_cast<QAction*>(sender());
-  //  PrebuiltsToolboxWidget* prebuiltsDockWidget = m_ActiveWindow->getPrebuiltsDockWidget();
-
-  //  if (NULL != actionShowPrebuilts && NULL != prebuiltsDockWidget)
-  //  {
-  //    m_ActiveWindow->updateAndSyncDockWidget(actionShowPrebuilts, prebuiltsDockWidget, visible);
-  //  }
-  //}
+  m_ActionShowToolbox->blockSignals(false);
+  m_Toolbox->blockSignals(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -1471,6 +1423,14 @@ QMenu* DREAM3DApplication::createPlaceholderViewMenu()
 DREAM3DToolbox* DREAM3DApplication::getDREAM3DToolbox()
 {
   return m_Toolbox;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QAction* DREAM3DApplication::getShowToolboxAction()
+{
+  return m_ActionShowToolbox;
 }
 
 

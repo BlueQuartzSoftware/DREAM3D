@@ -42,13 +42,15 @@
 //-- UIC generated Header
 #include "ui_DREAM3DToolbox.h"
 
-class DREAM3DToolbox : public QWidget, private Ui::DREAM3DToolbox
+class DREAM3DToolbox : public QDockWidget, private Ui::DREAM3DToolbox
 {
     Q_OBJECT
 
   public:
     DREAM3DToolbox(QWidget* parent = 0);
     virtual ~DREAM3DToolbox();
+
+    void setupGui();
 
     BookmarksToolboxWidget* getBookmarksWidget();
     PrebuiltsToolboxWidget* getPrebuiltsWidget();
@@ -60,6 +62,9 @@ class DREAM3DToolbox : public QWidget, private Ui::DREAM3DToolbox
 
     void writeSettings();
     void writeWindowSettings(DREAM3DSettings& prefs);
+
+  protected:
+    void closeEvent(QCloseEvent* event);
 
   private:
 

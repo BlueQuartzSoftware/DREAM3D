@@ -343,27 +343,6 @@ void DREAM3D_UI::closeEvent(QCloseEvent* event)
 {
   if (dream3dApp->isCurrentlyRunning(this) == true)
   {
-//    QMessageBox* runningPipelineBox = new QMessageBox();
-//    runningPipelineBox->setWindowTitle("Pipeline Is Running");
-//    runningPipelineBox->setText("There is a pipeline currently running.\nWould you like to stop the pipeline?");
-//    QPushButton* stopPipelineBtn = new QPushButton("Stop Pipeline", runningPipelineBox);
-//    runningPipelineBox->addButton(stopPipelineBtn, QMessageBox::YesRole);
-//    runningPipelineBox->setStandardButtons(QMessageBox::Cancel);
-//    runningPipelineBox->setIcon(QMessageBox::Warning);
-//    runningPipelineBox->exec();
-//    if (runningPipelineBox->clickedButton() == stopPipelineBtn)
-//    {
-//      // Cancel the pipeline
-//      on_startPipelineBtn_clicked();
-//      delete runningPipelineBox;
-//    }
-//    else
-//    {
-//      event->ignore();
-//      delete runningPipelineBox;
-//      return;
-//    }
-
     QMessageBox* runningPipelineBox = new QMessageBox();
     runningPipelineBox->setWindowTitle("Pipeline Is Running");
     runningPipelineBox->setText("There is a pipeline currently running.\nPlease cancel the running pipeline and try again.");
@@ -1257,33 +1236,13 @@ QMenu* DREAM3D_UI::createViewMenu()
   menuView->setTitle(QApplication::translate("DREAM3D_UI", "View", 0));
   menuView->setObjectName(QStringLiteral("menuView"));
 
-  /*QAction* actionShowFilterList = getFilterListToolboxWidget()->toggleViewAction();
-  actionShowFilterList->setText("Filter List");
-  menuView->addAction(actionShowFilterList);
-  connect(actionShowFilterList, SIGNAL(triggered(bool)), dream3dApp, SLOT(on_actionShowFilterList_triggered(bool)) );
-
-
-  QAction* actionShowFilterLibrary = getFilterLibraryToolboxWidget()->toggleViewAction();
-  actionShowFilterLibrary->setText("Filter Library");
-  menuView->addAction(actionShowFilterLibrary);
-  connect(actionShowFilterLibrary, SIGNAL(triggered(bool)), dream3dApp, SLOT(on_actionShowFilterLibrary_triggered(bool)) );
-
-
-  QAction* actionShowBookmarks = getBookmarksToolboxWidget()->toggleViewAction();
-  actionShowBookmarks->setText("Bookmarks");
-  menuView->addAction(actionShowBookmarks);
-  connect(actionShowBookmarks, SIGNAL(triggered(bool)), dream3dApp, SLOT(on_actionShowBookmarks_triggered(bool)) );
-
-
-  QAction* actionShowPrebuiltPipelines = getPrebuiltsToolboxWidget()->toggleViewAction();
-  actionShowPrebuiltPipelines->setText("Prebuilt Pipelines");
-  menuView->addAction(actionShowPrebuiltPipelines);
-  connect(actionShowPrebuiltPipelines, SIGNAL(triggered(bool)), dream3dApp, SLOT(on_actionShowPrebuiltPipelines_triggered(bool)) );*/
-
   QAction* actionShowIssues = issuesDockWidget->toggleViewAction();
   actionShowIssues->setText("Show Warnings/Errors");
   menuView->addAction(actionShowIssues);
   connect(actionShowIssues, SIGNAL(triggered(bool)), dream3dApp, SLOT(on_actionShowIssues_triggered(bool)) );
+
+  QAction* actionShowToolbox = dream3dApp->getShowToolboxAction();
+  menuView->addAction(actionShowToolbox);
 
   return menuView;
 }
