@@ -174,7 +174,7 @@ void ConvertType()
 {
   char delimiter = '\t';
 
-  DataArray<O>::Pointer output = DataArray<O>::CreateArray(1, "OutputArray", false);
+  typename DataArray<O>::Pointer output = DataArray<O>::CreateArray(1, "OutputArray", false);
   QString outputType = output->getTypeAsString();
 
   ASCIIWizardData data;
@@ -186,24 +186,24 @@ void ConvertType()
   data.inputFilePath = UnitTest::ImportASCIIDataTest::TestFile1;
   data.isFixedWidth = false;
   data.numberOfLines = 10;
-
+  
   // Test Using Expected Input - Double/Float
   {
     CreateFile(UnitTest::ImportASCIIDataTest::TestFile1, inputDoubleVector, delimiter);
-
+    
     AbstractFilter::Pointer importASCIIData = PrepFilter(data);
     DREAM3D_REQUIRE_NE(importASCIIData.get(), NULL)
-
-      importASCIIData->execute();
+    
+    importASCIIData->execute();
     int err = importASCIIData->getErrorCondition();
     DREAM3D_REQUIRE_EQUAL(err, 0)
-
-      AttributeMatrix::Pointer am = importASCIIData->getDataContainerArray()->getAttributeMatrix(DataArrayPath(DataContainerName, AttributeMatrixName, ""));
-    DataArray<O>::Pointer results = boost::dynamic_pointer_cast<DataArray<O> >(am->getAttributeArray(DataArrayName));
-
+    
+    AttributeMatrix::Pointer am = importASCIIData->getDataContainerArray()->getAttributeMatrix(DataArrayPath(DataContainerName, AttributeMatrixName, ""));
+    typename DataArray<O>::Pointer results = boost::dynamic_pointer_cast<DataArray<O> >(am->getAttributeArray(DataArrayName));
+    
     DREAM3D_REQUIRE_EQUAL(results->getSize(), data.numberOfLines)
-
-      O* resultsRaw = results->getPointer(0);
+    
+    O* resultsRaw = results->getPointer(0);
     for (int i = 0; i < results->getSize(); i++)
     {
       if (outputType == DREAM3D::TypeNames::Double || outputType == DREAM3D::TypeNames::Float)
@@ -217,26 +217,26 @@ void ConvertType()
       }
     }
   }
-
+  
   RemoveTestFiles();
-
+  
   // Test Using Expected Input - Integers
   {
     CreateFile(UnitTest::ImportASCIIDataTest::TestFile1, inputIntVector, delimiter);
-
+    
     AbstractFilter::Pointer importASCIIData = PrepFilter(data);
     DREAM3D_REQUIRE_NE(importASCIIData.get(), NULL)
-
-      importASCIIData->execute();
+    
+    importASCIIData->execute();
     int err = importASCIIData->getErrorCondition();
     DREAM3D_REQUIRE_EQUAL(err, 0)
-
-      AttributeMatrix::Pointer am = importASCIIData->getDataContainerArray()->getAttributeMatrix(DataArrayPath(DataContainerName, AttributeMatrixName, ""));
-    DataArray<O>::Pointer results = boost::dynamic_pointer_cast<DataArray<O> >(am->getAttributeArray(DataArrayName));
-
+    
+    AttributeMatrix::Pointer am = importASCIIData->getDataContainerArray()->getAttributeMatrix(DataArrayPath(DataContainerName, AttributeMatrixName, ""));
+    typename DataArray<O>::Pointer results = boost::dynamic_pointer_cast<DataArray<O> >(am->getAttributeArray(DataArrayName));
+    
     DREAM3D_REQUIRE_EQUAL(results->getSize(), data.numberOfLines)
-
-      O* resultsRaw = results->getPointer(0);
+    
+    O* resultsRaw = results->getPointer(0);
     for (int i = 0; i < results->getSize(); i++)
     {
       if (outputType == DREAM3D::TypeNames::Double || outputType == DREAM3D::TypeNames::Float)
@@ -255,35 +255,35 @@ void ConvertType()
   // Test Using Unexpected Input - Alphabetical Characters, Special Characters, etc.
   {
     CreateFile(UnitTest::ImportASCIIDataTest::TestFile1, inputCharErrorVector, delimiter);
-
+    
     AbstractFilter::Pointer importASCIIData = PrepFilter(data);
     DREAM3D_REQUIRE_NE(importASCIIData.get(), NULL)
-
-      importASCIIData->execute();
+    
+    importASCIIData->execute();
     int err = importASCIIData->getErrorCondition();
     DREAM3D_REQUIRE_EQUAL(err, ImportASCIIData::CONVERSION_FAILURE)
   }
-
+  
   RemoveTestFiles();
-
+  
   // Scientific Notation Test - Only if the output is a double or float
   if (outputType == DREAM3D::TypeNames::Double || outputType == DREAM3D::TypeNames::Float)
   {
     CreateFile(UnitTest::ImportASCIIDataTest::TestFile1, inputScientificNotation, delimiter);
-
+    
     AbstractFilter::Pointer importASCIIData = PrepFilter(data);
     DREAM3D_REQUIRE_NE(importASCIIData.get(), NULL)
-
-      importASCIIData->execute();
+    
+    importASCIIData->execute();
     int err = importASCIIData->getErrorCondition();
     DREAM3D_REQUIRE_EQUAL(err, 0)
-
-      AttributeMatrix::Pointer am = importASCIIData->getDataContainerArray()->getAttributeMatrix(DataArrayPath(DataContainerName, AttributeMatrixName, ""));
-    DataArray<O>::Pointer results = boost::dynamic_pointer_cast<DataArray<O> >(am->getAttributeArray(DataArrayName));
-
+    
+    AttributeMatrix::Pointer am = importASCIIData->getDataContainerArray()->getAttributeMatrix(DataArrayPath(DataContainerName, AttributeMatrixName, ""));
+    typename DataArray<O>::Pointer results = boost::dynamic_pointer_cast<DataArray<O> >(am->getAttributeArray(DataArrayName));
+    
     DREAM3D_REQUIRE_EQUAL(results->getSize(), inputScientificNotation.size())
-
-      O* resultsRaw = results->getPointer(0);
+    
+    O* resultsRaw = results->getPointer(0);
     for (int i = 0; i < results->getSize(); i++)
     {
       if (outputType == DREAM3D::TypeNames::Double || outputType == DREAM3D::TypeNames::Float)
@@ -297,76 +297,76 @@ void ConvertType()
       }
     }
   }
-
+  
   RemoveTestFiles();
-
+  
   // Hexadecimal Test - Only if the output is an integer
   if (outputType != DREAM3D::TypeNames::Double && outputType != DREAM3D::TypeNames::Float)
   {
     CreateFile(UnitTest::ImportASCIIDataTest::TestFile1, inputHexVector, delimiter);
-
+    
     AbstractFilter::Pointer importASCIIData = PrepFilter(data);
     DREAM3D_REQUIRE_NE(importASCIIData.get(), NULL)
-
-      importASCIIData->execute();
+    
+    importASCIIData->execute();
     int err = importASCIIData->getErrorCondition();
     DREAM3D_REQUIRE_EQUAL(err, 0)
-
-      AttributeMatrix::Pointer am = importASCIIData->getDataContainerArray()->getAttributeMatrix(DataArrayPath(DataContainerName, AttributeMatrixName, ""));
-    DataArray<O>::Pointer results = boost::dynamic_pointer_cast<DataArray<O> >(am->getAttributeArray(DataArrayName));
-
+    
+    AttributeMatrix::Pointer am = importASCIIData->getDataContainerArray()->getAttributeMatrix(DataArrayPath(DataContainerName, AttributeMatrixName, ""));
+    typename DataArray<O>::Pointer results = boost::dynamic_pointer_cast<DataArray<O> >(am->getAttributeArray(DataArrayName));
+    
     DREAM3D_REQUIRE_EQUAL(results->getSize(), inputHexVector.size())
-
-      O* resultsRaw = results->getPointer(0);
+    
+    O* resultsRaw = results->getPointer(0);
     for (int i = 0; i < results->getSize(); i++)
     {
       DREAM3D_REQUIRE_EQUAL(resultsRaw[i], inputIntVector[i])
     }
   }
-
+  
   RemoveTestFiles();
-
+  
   // Octal Test - Only if the output is an integer
   if (outputType != DREAM3D::TypeNames::Double && outputType != DREAM3D::TypeNames::Float)
   {
     CreateFile(UnitTest::ImportASCIIDataTest::TestFile1, inputOctVector, delimiter);
-
+    
     data.numberOfLines = 7;
     AbstractFilter::Pointer importASCIIData = PrepFilter(data);
     DREAM3D_REQUIRE_NE(importASCIIData.get(), NULL)
-
-      importASCIIData->execute();
+    
+    importASCIIData->execute();
     int err = importASCIIData->getErrorCondition();
     DREAM3D_REQUIRE_EQUAL(err, 0)
-
-      AttributeMatrix::Pointer am = importASCIIData->getDataContainerArray()->getAttributeMatrix(DataArrayPath(DataContainerName, AttributeMatrixName, ""));
-    DataArray<O>::Pointer results = boost::dynamic_pointer_cast<DataArray<O> >(am->getAttributeArray(DataArrayName));
-
+    
+    AttributeMatrix::Pointer am = importASCIIData->getDataContainerArray()->getAttributeMatrix(DataArrayPath(DataContainerName, AttributeMatrixName, ""));
+    typename DataArray<O>::Pointer results = boost::dynamic_pointer_cast<DataArray<O> >(am->getAttributeArray(DataArrayName));
+    
     DREAM3D_REQUIRE_EQUAL(results->getSize(), inputOctVector.size())
-
-      O* resultsRaw = results->getPointer(0);
+    
+    O* resultsRaw = results->getPointer(0);
     for (int i = 0; i < results->getSize(); i++)
     {
       DREAM3D_REQUIRE_EQUAL(resultsRaw[i], inputIntVector[i])
     }
   }
-
+  
   // Max Overflow Test
   {
     QString maxValue = QString::number(std::numeric_limits<O>().max());
     maxValue = maxValue.append('0');
     QVector<QString> inputMaxVector({ maxValue });
     CreateFile(UnitTest::ImportASCIIDataTest::TestFile1, inputMaxVector, delimiter);
-
+    
     data.numberOfLines = 1;
     AbstractFilter::Pointer importASCIIData = PrepFilter(data);
     DREAM3D_REQUIRE_NE(importASCIIData.get(), NULL)
-
-      importASCIIData->execute();
+    
+    importASCIIData->execute();
     int err = importASCIIData->getErrorCondition();
     DREAM3D_REQUIRE_EQUAL(err, ImportASCIIData::CONVERSION_FAILURE)
   }
-
+  
   // Min Overflow Test
   {
     // We must hard-code these three types because there is no way to store them otherwise...
