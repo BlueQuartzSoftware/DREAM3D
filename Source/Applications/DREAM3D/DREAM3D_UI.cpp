@@ -844,11 +844,12 @@ QMessageBox::StandardButton DREAM3D_UI::checkDirtyDocument()
 
   if (this->isWindowModified() == true)
   {
-    int r = QMessageBox::warning(this, tr("DREAM.3D"),
-                                 tr("The Pipeline has been modified.\nDo you want to save your changes?"),
-                                 QMessageBox::Save | QMessageBox::Default,
-                                 QMessageBox::Discard,
-                                 QMessageBox::Cancel | QMessageBox::Escape);
+    QMessageBox wrn(QMessageBox::Warning, tr("DREAM.3D"), tr("The Pipeline has been modified.\nDo you want to save your changes?"),
+                    QMessageBox::Save | QMessageBox::Default | QMessageBox::Discard | QMessageBox::Cancel | QMessageBox::Escape,
+                    this);
+    wrn.setWindowFlags(wrn.windowFlags() | Qt::WindowStaysOnTopHint);
+    int r = wrn.exec();
+
     if (r == QMessageBox::Save)
     {
       if (savePipeline() == true)
