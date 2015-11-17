@@ -1,5 +1,6 @@
 /* ============================================================================
 * Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2015 William Lenthe
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -219,6 +220,7 @@ void TestFailed(const std::string& test)
 //
 // -----------------------------------------------------------------------------
 #define INFINITYCHECK 1
+#define ZEROCHECK 1
 #define SIGNCHECK 1
 #ifdef INFINITYCHECK
 inline bool IsInfinite(float* A)
@@ -235,12 +237,12 @@ inline bool IsInfinite(float* A)
 #endif
 
 #ifdef NANCHECK
-inline bool IsNan(float A)
+inline bool IsNan(float* A)
 {
   // A NAN has an exponent of 255 (shifted left 23 positions) and
   // a non-zero mantissa.
-  int exp = *(int*)&A & 0x7F800000;
-  int mantissa = *(int*)&A & 0x007FFFFF;
+  int exp = *(int*)A & 0x7F800000;
+  int mantissa = *(int*)A & 0x007FFFFF;
   if (exp == 0x7F800000 && mantissa != 0)
   { return true; }
   return false;
@@ -257,12 +259,13 @@ inline int Sign(float* A)
 }
 #endif
 
-bool AlmostEqualUlpsFinal(float* A, float* B, int maxUlps)
+bool AlmostEqualUlpsFinal(float a, float b, int maxUlps)
 {
   // There are several optional checks that you can do, depending
   // on what behavior you want from your floating point comparisons.
   // These checks should not be necessary and they are included
   // mainly for completeness.
+  float *A = &a, *B = &b;
 
 #ifdef  INFINITYCHECK
   // If A or B are infinity (positive or negative) then
@@ -283,6 +286,23 @@ bool AlmostEqualUlpsFinal(float* A, float* B, int maxUlps)
   // ensure that a NAN does not equal itself.
   if (IsNan(A) || IsNan(B))
   { return false; }
+#endif
+
+  // If A or B are exactly zero, other small numbers will be very far aways in ULPS
+  // This check will allow number smaller than maxUlps * machine epsilon to compare equivilent to +/- zero
+  // potential desireable/undesirable behavoir: +0.0f == -0.0f, +0.0f == -small float, -0.0f == +small float
+  // if moved to after the sign check: +0.0f != -0.0f, +0.0f != -small float, -0.0f != +small float
+#ifdef ZEROCHECK
+  if(0.0f == *A || -0.0f == *A)
+  {
+    if(fabs(*B) <= maxUlps * FLT_EPSILON)
+    { return true; }
+  }
+  if(0.0f == *B || -0.0f == *B)
+  {
+    if(fabs(*A) <= maxUlps * FLT_EPSILON)
+    { return true; }
+  }
 #endif
 
 #ifdef  SIGNCHECK
