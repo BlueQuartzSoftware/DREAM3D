@@ -73,6 +73,8 @@ void DelimitedOrFixedWidthPage::setupGui()
 
   registerField("isDelimited", isDelimitedRadio);
   registerField("isFixedWidth", isFixedWidthRadio);
+
+
 }
 
 // -----------------------------------------------------------------------------
@@ -110,6 +112,30 @@ void DelimitedOrFixedWidthPage::refreshModel()
   model->clear();
 
   QStringList lines = ImportASCIIDataWizard::ReadLines(m_InputFilePath, 1, ImportASCIIDataWizard::TotalPreviewLines);
+
+  bool hasTabs = false;
+  for (int i = 0; i < lines.size(); i++)
+  {
+    if (lines.contains("\\t"))
+    {
+      hasTabs = true;
+    }
+  }
+
+  QString guesserText = dataTypeGuesserLabel->text();
+
+  if (hasTabs == true)
+  {
+    guesserText.replace("[dataType]", "<b>Fixed Width</b>");
+    isFixedWidthRadio->setChecked(true);
+  }
+  else
+  {
+    guesserText.replace("[dataType]", "<b>Delimited</b>");
+    isDelimitedRadio->setChecked(true);
+  }
+
+  dataTypeGuesserLabel->setText(guesserText);
 
   ImportASCIIDataWizard::LoadOriginalLines(lines);
 

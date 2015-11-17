@@ -97,7 +97,7 @@
    <item row="1" column="0" colspan="2">
     <widget class="QLabel" name="label_2">
      <property name="text">
-      <string>If this is correct, choose Next, or choose the data type that best describes your data.</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If this is not correct, choose the data type that best describes your data.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
    </item>
