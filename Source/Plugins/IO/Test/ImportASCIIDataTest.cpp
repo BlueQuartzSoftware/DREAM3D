@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -84,17 +84,17 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 int TestFilterAvailability()
 {
-	// Now instantiate the ImportASCIIData Filter from the FilterManager
-	QString filtName = "ImportASCIIData";
-	FilterManager* fm = FilterManager::Instance();
-	IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-	if (NULL == filterFactory.get())
-	{
-		std::stringstream ss;
-		ss << "The ImportASCIIDataTest Requires the use of the " << filtName.toStdString() << " filter which is found in the IO Plugin";
-		DREAM3D_TEST_THROW_EXCEPTION(ss.str())
-	}
-	return 0;
+  // Now instantiate the ImportASCIIData Filter from the FilterManager
+  QString filtName = "ImportASCIIData";
+  FilterManager* fm = FilterManager::Instance();
+  IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+  if (NULL == filterFactory.get())
+  {
+    std::stringstream ss;
+    ss << "The ImportASCIIDataTest Requires the use of the " << filtName.toStdString() << " filter which is found in the IO Plugin";
+    DREAM3D_TEST_THROW_EXCEPTION(ss.str())
+  }
+  return 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -186,23 +186,23 @@ void ConvertType()
   data.inputFilePath = UnitTest::ImportASCIIDataTest::TestFile1;
   data.isFixedWidth = false;
   data.numberOfLines = 10;
-  
+
   // Test Using Expected Input - Double/Float
   {
     CreateFile(UnitTest::ImportASCIIDataTest::TestFile1, inputDoubleVector, delimiter);
-    
+
     AbstractFilter::Pointer importASCIIData = PrepFilter(data);
     DREAM3D_REQUIRE_NE(importASCIIData.get(), NULL)
-    
+
     importASCIIData->execute();
     int err = importASCIIData->getErrorCondition();
     DREAM3D_REQUIRE_EQUAL(err, 0)
-    
+
     AttributeMatrix::Pointer am = importASCIIData->getDataContainerArray()->getAttributeMatrix(DataArrayPath(DataContainerName, AttributeMatrixName, ""));
     typename DataArray<O>::Pointer results = boost::dynamic_pointer_cast<DataArray<O> >(am->getAttributeArray(DataArrayName));
-    
+
     DREAM3D_REQUIRE_EQUAL(results->getSize(), data.numberOfLines)
-    
+
     O* resultsRaw = results->getPointer(0);
     for (int i = 0; i < results->getSize(); i++)
     {
@@ -217,25 +217,25 @@ void ConvertType()
       }
     }
   }
-  
+
   RemoveTestFiles();
-  
+
   // Test Using Expected Input - Integers
   {
     CreateFile(UnitTest::ImportASCIIDataTest::TestFile1, inputIntVector, delimiter);
-    
+
     AbstractFilter::Pointer importASCIIData = PrepFilter(data);
     DREAM3D_REQUIRE_NE(importASCIIData.get(), NULL)
-    
+
     importASCIIData->execute();
     int err = importASCIIData->getErrorCondition();
     DREAM3D_REQUIRE_EQUAL(err, 0)
-    
+
     AttributeMatrix::Pointer am = importASCIIData->getDataContainerArray()->getAttributeMatrix(DataArrayPath(DataContainerName, AttributeMatrixName, ""));
     typename DataArray<O>::Pointer results = boost::dynamic_pointer_cast<DataArray<O> >(am->getAttributeArray(DataArrayName));
-    
+
     DREAM3D_REQUIRE_EQUAL(results->getSize(), data.numberOfLines)
-    
+
     O* resultsRaw = results->getPointer(0);
     for (int i = 0; i < results->getSize(); i++)
     {
@@ -255,34 +255,34 @@ void ConvertType()
   // Test Using Unexpected Input - Alphabetical Characters, Special Characters, etc.
   {
     CreateFile(UnitTest::ImportASCIIDataTest::TestFile1, inputCharErrorVector, delimiter);
-    
+
     AbstractFilter::Pointer importASCIIData = PrepFilter(data);
     DREAM3D_REQUIRE_NE(importASCIIData.get(), NULL)
-    
+
     importASCIIData->execute();
     int err = importASCIIData->getErrorCondition();
     DREAM3D_REQUIRE_EQUAL(err, ImportASCIIData::CONVERSION_FAILURE)
   }
-  
+
   RemoveTestFiles();
-  
+
   // Scientific Notation Test - Only if the output is a double or float
   if (outputType == DREAM3D::TypeNames::Double || outputType == DREAM3D::TypeNames::Float)
   {
     CreateFile(UnitTest::ImportASCIIDataTest::TestFile1, inputScientificNotation, delimiter);
-    
+
     AbstractFilter::Pointer importASCIIData = PrepFilter(data);
     DREAM3D_REQUIRE_NE(importASCIIData.get(), NULL)
-    
+
     importASCIIData->execute();
     int err = importASCIIData->getErrorCondition();
     DREAM3D_REQUIRE_EQUAL(err, 0)
-    
+
     AttributeMatrix::Pointer am = importASCIIData->getDataContainerArray()->getAttributeMatrix(DataArrayPath(DataContainerName, AttributeMatrixName, ""));
     typename DataArray<O>::Pointer results = boost::dynamic_pointer_cast<DataArray<O> >(am->getAttributeArray(DataArrayName));
-    
+
     DREAM3D_REQUIRE_EQUAL(results->getSize(), inputScientificNotation.size())
-    
+
     O* resultsRaw = results->getPointer(0);
     for (int i = 0; i < results->getSize(); i++)
     {
@@ -297,76 +297,76 @@ void ConvertType()
       }
     }
   }
-  
+
   RemoveTestFiles();
-  
+
   // Hexadecimal Test - Only if the output is an integer
   if (outputType != DREAM3D::TypeNames::Double && outputType != DREAM3D::TypeNames::Float)
   {
     CreateFile(UnitTest::ImportASCIIDataTest::TestFile1, inputHexVector, delimiter);
-    
+
     AbstractFilter::Pointer importASCIIData = PrepFilter(data);
     DREAM3D_REQUIRE_NE(importASCIIData.get(), NULL)
-    
+
     importASCIIData->execute();
     int err = importASCIIData->getErrorCondition();
     DREAM3D_REQUIRE_EQUAL(err, 0)
-    
+
     AttributeMatrix::Pointer am = importASCIIData->getDataContainerArray()->getAttributeMatrix(DataArrayPath(DataContainerName, AttributeMatrixName, ""));
     typename DataArray<O>::Pointer results = boost::dynamic_pointer_cast<DataArray<O> >(am->getAttributeArray(DataArrayName));
-    
+
     DREAM3D_REQUIRE_EQUAL(results->getSize(), inputHexVector.size())
-    
+
     O* resultsRaw = results->getPointer(0);
     for (int i = 0; i < results->getSize(); i++)
     {
       DREAM3D_REQUIRE_EQUAL(resultsRaw[i], inputIntVector[i])
     }
   }
-  
+
   RemoveTestFiles();
-  
+
   // Octal Test - Only if the output is an integer
   if (outputType != DREAM3D::TypeNames::Double && outputType != DREAM3D::TypeNames::Float)
   {
     CreateFile(UnitTest::ImportASCIIDataTest::TestFile1, inputOctVector, delimiter);
-    
+
     data.numberOfLines = 7;
     AbstractFilter::Pointer importASCIIData = PrepFilter(data);
     DREAM3D_REQUIRE_NE(importASCIIData.get(), NULL)
-    
+
     importASCIIData->execute();
     int err = importASCIIData->getErrorCondition();
     DREAM3D_REQUIRE_EQUAL(err, 0)
-    
+
     AttributeMatrix::Pointer am = importASCIIData->getDataContainerArray()->getAttributeMatrix(DataArrayPath(DataContainerName, AttributeMatrixName, ""));
     typename DataArray<O>::Pointer results = boost::dynamic_pointer_cast<DataArray<O> >(am->getAttributeArray(DataArrayName));
-    
+
     DREAM3D_REQUIRE_EQUAL(results->getSize(), inputOctVector.size())
-    
+
     O* resultsRaw = results->getPointer(0);
     for (int i = 0; i < results->getSize(); i++)
     {
       DREAM3D_REQUIRE_EQUAL(resultsRaw[i], inputIntVector[i])
     }
   }
-  
+
   // Max Overflow Test
   {
     QString maxValue = QString::number(std::numeric_limits<O>().max());
     maxValue = maxValue.append('0');
     QVector<QString> inputMaxVector({ maxValue });
     CreateFile(UnitTest::ImportASCIIDataTest::TestFile1, inputMaxVector, delimiter);
-    
+
     data.numberOfLines = 1;
     AbstractFilter::Pointer importASCIIData = PrepFilter(data);
     DREAM3D_REQUIRE_NE(importASCIIData.get(), NULL)
-    
+
     importASCIIData->execute();
     int err = importASCIIData->getErrorCondition();
     DREAM3D_REQUIRE_EQUAL(err, ImportASCIIData::CONVERSION_FAILURE)
   }
-  
+
   // Min Overflow Test
   {
     // We must hard-code these three types because there is no way to store them otherwise...
