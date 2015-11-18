@@ -283,7 +283,7 @@ class EulerConverter : public OrientationConverter<T>
     {
       typedef typename DataArray<T>::Pointer PointerType;
       PointerType input = this->getInputData();
-      PointerType output = boost::dynamic_pointer_cast<DataArray<T> >(input->deepCopy());
+      PointerType output = std::dynamic_pointer_cast<DataArray<T> >(input->deepCopy());
       this->setOutputData(output);
     }
 
@@ -405,7 +405,7 @@ class OrientationMatrixConverter : public OrientationConverter<T>
     {
       typedef typename DataArray<T>::Pointer PointerType;
       PointerType input = this->getInputData();
-      PointerType output = boost::dynamic_pointer_cast<DataArray<T> >(input->deepCopy());
+      PointerType output = std::dynamic_pointer_cast<DataArray<T> >(input->deepCopy());
       this->setOutputData(output);
     }
 
@@ -532,7 +532,7 @@ class QuaternionConverter : public OrientationConverter<T>
     {
       typedef typename DataArray<T>::Pointer PointerType;
       PointerType input = this->getInputData();
-      PointerType output = boost::dynamic_pointer_cast<DataArray<T> >(input->deepCopy());
+      PointerType output = std::dynamic_pointer_cast<DataArray<T> >(input->deepCopy());
       this->setOutputData(output);
     }
 
@@ -637,7 +637,7 @@ class AxisAngleConverter : public OrientationConverter<T>
     {
       typedef typename DataArray<T>::Pointer PointerType;
       PointerType input = this->getInputData();
-      PointerType output = boost::dynamic_pointer_cast<DataArray<T> >(input->deepCopy());
+      PointerType output = std::dynamic_pointer_cast<DataArray<T> >(input->deepCopy());
       this->setOutputData(output);
     }
 
@@ -737,7 +737,7 @@ class RodriguesConverter : public OrientationConverter<T>
     {
       typedef typename DataArray<T>::Pointer PointerType;
       PointerType input = this->getInputData();
-      PointerType output = boost::dynamic_pointer_cast<DataArray<T> >(input->deepCopy());
+      PointerType output = std::dynamic_pointer_cast<DataArray<T> >(input->deepCopy());
       this->setOutputData(output);
     }
 
@@ -837,7 +837,7 @@ class HomochoricConverter : public OrientationConverter<T>
     {
       typedef typename DataArray<T>::Pointer PointerType;
       PointerType input = this->getInputData();
-      PointerType output = boost::dynamic_pointer_cast<DataArray<T> >(input->deepCopy());
+      PointerType output = std::dynamic_pointer_cast<DataArray<T> >(input->deepCopy());
       this->setOutputData(output);
     }
 
@@ -938,7 +938,7 @@ class CubochoricConverter : public OrientationConverter<T>
     {
       typedef typename DataArray<T>::Pointer PointerType;
       PointerType input = this->getInputData();
-      PointerType output = boost::dynamic_pointer_cast<DataArray<T> >(input->deepCopy());
+      PointerType output = std::dynamic_pointer_cast<DataArray<T> >(input->deepCopy());
       this->setOutputData(output);
     }
 

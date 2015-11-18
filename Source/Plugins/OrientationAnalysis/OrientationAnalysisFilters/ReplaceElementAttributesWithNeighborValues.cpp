@@ -134,7 +134,7 @@ namespace Detail
       comp = Detail::GreaterThanComparison<T>::New();
     }
 
-    DataArrayPointerType inData = boost::dynamic_pointer_cast<DataArrayType>(inArrayPtr);
+    DataArrayPointerType inData = std::dynamic_pointer_cast<DataArrayType>(inArrayPtr);
     DataArrayType& data = *inData;
 
     float thresholdValue = filter->getMinConfidence();

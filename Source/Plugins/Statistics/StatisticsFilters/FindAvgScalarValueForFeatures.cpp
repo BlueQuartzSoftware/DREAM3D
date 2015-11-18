@@ -174,7 +174,7 @@ void FindAvgScalarValueForFeatures::preflight()
 template<typename T>
 void findAverage(IDataArray::Pointer inDataPtr, FloatArrayType::Pointer averageArray, int32_t* fIds)
 {
-  typename DataArray<T>::Pointer inputDataPtr = boost::dynamic_pointer_cast<DataArray<T> >(inDataPtr);
+  typename DataArray<T>::Pointer inputDataPtr = std::dynamic_pointer_cast<DataArray<T> >(inDataPtr);
 
   T* cPtr = inputDataPtr->getPointer(0);
   float* aPtr = averageArray->getPointer(0);

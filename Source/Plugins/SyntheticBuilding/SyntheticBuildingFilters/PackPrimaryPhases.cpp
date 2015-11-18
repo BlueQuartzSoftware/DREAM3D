@@ -2659,7 +2659,7 @@ int32_t PackPrimaryPhases::estimate_numfeatures(size_t xpoints, size_t ypoints, 
   DataArray<uint32_t>* phaseType = m_PhaseTypesPtr.lock().get();
 
   StatsDataArray::Pointer statsPtr = dca->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), cDims);
-  m_StatsDataArray = boost::dynamic_pointer_cast<StatsDataArray>(statsPtr);
+  m_StatsDataArray = std::dynamic_pointer_cast<StatsDataArray>(statsPtr);
   if(m_StatsDataArray.lock().get() == NULL)
   {
     QString ss = QObject::tr("Stats Array Not Initialized correctly");

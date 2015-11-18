@@ -39,9 +39,6 @@
 #include <limits>
 #include <sstream>
 
-#include <boost/shared_ptr.hpp>
-
-
 #include <QtCore/QFile>
 #include <QtCore/QByteArray>
 

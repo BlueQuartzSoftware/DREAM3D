@@ -60,7 +60,7 @@ SGWidget::~SGWidget()
 // -----------------------------------------------------------------------------
 void SGWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int index)
 {
-  BOOST_ASSERT(false);
+  Q_ASSERT(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -84,7 +84,7 @@ int SGWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
 // -----------------------------------------------------------------------------
 void SGWidget::on_m_GenerateDefaultData_clicked()
 {
-// BOOST_ASSERT(false);
+// Q_ASSERT(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -92,7 +92,7 @@ void SGWidget::on_m_GenerateDefaultData_clicked()
 // -----------------------------------------------------------------------------
 void SGWidget::dataWasEdited()
 {
-  BOOST_ASSERT(false);
+  Q_ASSERT(false);
 }
 
 // -----------------------------------------------------------------------------

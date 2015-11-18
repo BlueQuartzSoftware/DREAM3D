@@ -248,7 +248,7 @@ DataContainerArray::Pointer initializeDataContainerArray()
 template<typename T>
 void validateDiffMapValues(IDataArray::Pointer iArray)
 {
-  typename DataArray<T>::Pointer diffMapPtr = boost::dynamic_pointer_cast<DataArray<T> >(iArray);
+  typename DataArray<T>::Pointer diffMapPtr = std::dynamic_pointer_cast<DataArray<T> >(iArray);
   T* diffMap = diffMapPtr->getPointer(0);
   size_t numTuples = diffMapPtr->getNumberOfTuples();
   int32_t numComps = diffMapPtr->getNumberOfComponents();

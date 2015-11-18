@@ -37,13 +37,12 @@
 #ifndef _NEIGHBORLIST_H_
 #define _NEIGHBORLIST_H_
 
+#include <vector>
+
 #include <QtCore/QString>
 #include <QtCore/QMap>
 #include <QtCore/QTextStream>
 
-#include <vector>
-
-#include <boost/shared_ptr.hpp>
 
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
@@ -239,7 +238,7 @@ class NeighborList : public IDataArray
 
 
     typedef std::vector<T> VectorType;
-    typedef boost::shared_ptr<VectorType> SharedVectorType;
+    typedef std::shared_ptr<VectorType> SharedVectorType;
 
     virtual ~NeighborList()
     {
@@ -439,7 +438,7 @@ class NeighborList : public IDataArray
      */
     void initializeTuple(size_t i, double p)
     {
-      BOOST_ASSERT(false);
+      Q_ASSERT(false);
     }
 
     /**
@@ -583,7 +582,7 @@ class NeighborList : public IDataArray
      */
     virtual void printComponent(QTextStream& out, size_t i, int j)
     {
-      BOOST_ASSERT(false);
+      Q_ASSERT(false);
     }
 
     /**
@@ -905,7 +904,7 @@ class NeighborList : public IDataArray
     T getValue(int grainId, int index, bool& ok)
     {
 #ifndef NDEBUG
-      if (m_Array.size() > 0u) { BOOST_ASSERT(grainId < static_cast<int>(m_Array.size()));}
+      if (m_Array.size() > 0u) { Q_ASSERT(grainId < static_cast<int>(m_Array.size()));}
 #endif
       SharedVectorType vec = m_Array[grainId];
       if(index < 0 || static_cast<size_t>(index) >= vec->size())
@@ -933,7 +932,7 @@ class NeighborList : public IDataArray
     int getListSize(int grainId)
     {
 #ifndef NDEBUG
-      if (m_Array.size() > 0u) { BOOST_ASSERT(grainId < static_cast<int>(m_Array.size()));}
+      if (m_Array.size() > 0u) { Q_ASSERT(grainId < static_cast<int>(m_Array.size()));}
 #endif
       return static_cast<int>(m_Array[grainId]->size());
     }
@@ -941,7 +940,7 @@ class NeighborList : public IDataArray
     VectorType& getListReference(int grainId)
     {
 #ifndef NDEBUG
-      if (m_Array.size() > 0u) { BOOST_ASSERT(grainId < static_cast<int>(m_Array.size()));}
+      if (m_Array.size() > 0u) { Q_ASSERT(grainId < static_cast<int>(m_Array.size()));}
 #endif
       return *(m_Array[grainId]);
     }
@@ -954,7 +953,7 @@ class NeighborList : public IDataArray
     SharedVectorType getList(int grainId)
     {
 #ifndef NDEBUG
-      if (m_Array.size() > 0u) { BOOST_ASSERT(grainId < static_cast<int>(m_Array.size()));}
+      if (m_Array.size() > 0u) { Q_ASSERT(grainId < static_cast<int>(m_Array.size()));}
 #endif
       return m_Array[grainId];
     }
@@ -967,7 +966,7 @@ class NeighborList : public IDataArray
     VectorType copyOfList(int grainId)
     {
 #ifndef NDEBUG
-      if (m_Array.size() > 0u) { BOOST_ASSERT(grainId < static_cast<int>(m_Array.size()));}
+      if (m_Array.size() > 0u) { Q_ASSERT(grainId < static_cast<int>(m_Array.size()));}
 #endif
 
       VectorType copy(*(m_Array[grainId]));
@@ -982,7 +981,7 @@ class NeighborList : public IDataArray
     VectorType& operator[](int grainId)
     {
 #ifndef NDEBUG
-      if (m_Array.size() > 0u) { BOOST_ASSERT(grainId < static_cast<int>(m_Array.size()));}
+      if (m_Array.size() > 0u) { Q_ASSERT(grainId < static_cast<int>(m_Array.size()));}
 #endif
       return *(m_Array[grainId]);
     }
@@ -995,7 +994,7 @@ class NeighborList : public IDataArray
     VectorType& operator[](size_t grainId)
     {
 #ifndef NDEBUG
-      if (m_Array.size() > 0ul) { BOOST_ASSERT(grainId < m_Array.size());}
+      if (m_Array.size() > 0ul) { Q_ASSERT(grainId < m_Array.size());}
 #endif
       return *(m_Array[grainId]);
 

@@ -433,9 +433,9 @@ bool ScalarSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t ne
 // -----------------------------------------------------------------------------
 void ScalarSegmentFeatures::initializeVoxelSeedGenerator(const int64_t rangeMin, const int64_t rangeMax)
 {
-  m_Distribution = boost::shared_ptr<NumberDistribution>(new NumberDistribution(rangeMin, rangeMax));
-  m_RandomNumberGenerator = boost::shared_ptr<RandomNumberGenerator>(new RandomNumberGenerator);
-  m_NumberGenerator = boost::shared_ptr<Generator>(new Generator(*m_RandomNumberGenerator, *m_Distribution));
+  m_Distribution = std::shared_ptr<NumberDistribution>(new NumberDistribution(rangeMin, rangeMax));
+  m_RandomNumberGenerator = std::shared_ptr<RandomNumberGenerator>(new RandomNumberGenerator);
+  m_NumberGenerator = std::shared_ptr<Generator>(new Generator(*m_RandomNumberGenerator, *m_Distribution));
   m_RandomNumberGenerator->seed(static_cast<size_t>( QDateTime::currentMSecsSinceEpoch() )); // seed with the current time
   m_TotalRandomNumbersGenerated = 0;
 }
@@ -465,51 +465,51 @@ void ScalarSegmentFeatures::execute()
   QString dType = m_InputDataPtr.lock()->getTypeAsString();
   if (m_InputDataPtr.lock()->getNumberOfComponents() != 1)
   {
-    m_Compare = boost::shared_ptr<CompareFunctor>(new CompareFunctor()); // The default CompareFunctor which ALWAYS returns false for the comparison
+    m_Compare = std::shared_ptr<CompareFunctor>(new CompareFunctor()); // The default CompareFunctor which ALWAYS returns false for the comparison
   }
   else if (dType.compare("int8_t") == 0)
   {
-    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<int8_t> >(new TSpecificCompareFunctor<int8_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<int8_t> >(new TSpecificCompareFunctor<int8_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
   else if (dType.compare("uint8_t") == 0)
   {
-    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<uint8_t> >(new TSpecificCompareFunctor<uint8_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<uint8_t> >(new TSpecificCompareFunctor<uint8_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
   else if (dType.compare("bool") == 0)
   {
-    m_Compare = boost::shared_ptr<TSpecificCompareFunctorBool>(new TSpecificCompareFunctorBool(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctorBool>(new TSpecificCompareFunctorBool(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
   else if (dType.compare("int16_t") == 0)
   {
-    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<int16_t> >(new TSpecificCompareFunctor<int16_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<int16_t> >(new TSpecificCompareFunctor<int16_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
   else if (dType.compare("uint16_t") == 0)
   {
-    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<uint16_t> >(new TSpecificCompareFunctor<uint16_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<uint16_t> >(new TSpecificCompareFunctor<uint16_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
   else if (dType.compare("int32_t") == 0)
   {
-    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<int32_t> >(new TSpecificCompareFunctor<int32_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<int32_t> >(new TSpecificCompareFunctor<int32_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
   else if (dType.compare("uint32_t") == 0)
   {
-    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<uint32_t> >(new TSpecificCompareFunctor<uint32_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<uint32_t> >(new TSpecificCompareFunctor<uint32_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
   else if (dType.compare("int64_t") == 0)
   {
-    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<int64_t> >(new TSpecificCompareFunctor<int64_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<int64_t> >(new TSpecificCompareFunctor<int64_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
   else if (dType.compare("uint64_t") == 0)
   {
-    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<uint64_t> >(new TSpecificCompareFunctor<uint64_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<uint64_t> >(new TSpecificCompareFunctor<uint64_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
   else if (dType.compare("float") == 0)
   {
-    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<float> >(new TSpecificCompareFunctor<float>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<float> >(new TSpecificCompareFunctor<float>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
   else if (dType.compare("double") == 0)
   {
-    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<double> >(new TSpecificCompareFunctor<double>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<double> >(new TSpecificCompareFunctor<double>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
 
   // Generate the random voxel indices that will be used for the seed points to start a new grain growth/agglomeration

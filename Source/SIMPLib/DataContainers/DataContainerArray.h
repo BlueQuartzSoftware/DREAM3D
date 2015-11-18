@@ -205,7 +205,7 @@ class SIMPLib_EXPORT DataContainerArray : public QObject
     template<typename BundleType>
     typename BundleType::Pointer getDataContainerBundleAs(const QString& name)
     {
-      typename BundleType::Pointer dcb = boost::dynamic_pointer_cast<BundleType>(getDataContainerBundle(name));
+      typename BundleType::Pointer dcb = std::dynamic_pointer_cast<BundleType>(getDataContainerBundle(name));
       return dcb;
     }
 

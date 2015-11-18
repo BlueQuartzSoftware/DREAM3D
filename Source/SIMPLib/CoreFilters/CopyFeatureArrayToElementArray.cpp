@@ -173,7 +173,7 @@ IDataArray::Pointer copyData(IDataArray::Pointer inputData, size_t totalPoints, 
 {
   QString cellArrayName = inputData->getName();
 
-  typename DataArray<T>::Pointer feature = boost::dynamic_pointer_cast<DataArray<T> >(inputData);
+  typename DataArray<T>::Pointer feature = std::dynamic_pointer_cast<DataArray<T> >(inputData);
   if (NULL == feature) { return IDataArray::NullPointer();  }
 
   QVector<size_t> cDims = inputData->getComponentDimensions();

@@ -48,7 +48,7 @@ class SIMPLib_EXPORT IDataArray
      * @code
      *    typedef DataArray<int32_t>  Int32ArrayType;
      *    int32_t* iPtr = IDataArray::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t*>(ptr.get());
-    *     BOOST_ASSERT(NULL != iPtr);
+    *     Q_ASSERT(NULL != iPtr);
      * @endcode
      * @param x The Pointer to IDataArray
      * @return
@@ -282,7 +282,7 @@ class CheckDataArrayType
     virtual ~CheckDataArrayType() {}
     bool operator()(IDataArray::Pointer p)
     {
-      return (boost::dynamic_pointer_cast<T>(p).get() != NULL);
+      return (std::dynamic_pointer_cast<T>(p).get() != NULL);
     }
 };
 

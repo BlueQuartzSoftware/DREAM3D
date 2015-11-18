@@ -163,7 +163,7 @@ void checkValuesFloatDouble(AbstractFilter* filter, double removeValue, double r
 template<typename T>
 void replaceValue(AbstractFilter* filter, IDataArray::Pointer inDataPtr, double removeValue, double replaceValue)
 {
-  typename DataArray<T>::Pointer inputArrayPtr = boost::dynamic_pointer_cast<DataArray<T> >(inDataPtr);
+  typename DataArray<T>::Pointer inputArrayPtr = std::dynamic_pointer_cast<DataArray<T> >(inDataPtr);
 
   T removeVal = static_cast<T>(removeValue);
   T replaceVal = static_cast<T>(replaceValue);

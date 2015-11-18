@@ -400,7 +400,7 @@ void FindProjectedImageStatistics::execute()
 
   if (TemplateHelpers::CanDynamicCast<Int8ArrayType>()(m_InDataPtr.lock()))
   {
-    Int8ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<Int8ArrayType>(m_InDataPtr.lock());
+    Int8ArrayType::Pointer cellArray = std::dynamic_pointer_cast<Int8ArrayType>(m_InDataPtr.lock());
     int8_t* cPtr = cellArray->getPointer(0);
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -416,7 +416,7 @@ void FindProjectedImageStatistics::execute()
   }
   else if (TemplateHelpers::CanDynamicCast<UInt8ArrayType>()(m_InDataPtr.lock()))
   {
-    UInt8ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<UInt8ArrayType>(m_InDataPtr.lock());
+    UInt8ArrayType::Pointer cellArray = std::dynamic_pointer_cast<UInt8ArrayType>(m_InDataPtr.lock());
     uint8_t* cPtr = cellArray->getPointer(0);
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -432,7 +432,7 @@ void FindProjectedImageStatistics::execute()
   }
   else if (TemplateHelpers::CanDynamicCast<Int16ArrayType>()(m_InDataPtr.lock()))
   {
-    Int16ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<Int16ArrayType>(m_InDataPtr.lock());
+    Int16ArrayType::Pointer cellArray = std::dynamic_pointer_cast<Int16ArrayType>(m_InDataPtr.lock());
     int16_t* cPtr = cellArray->getPointer(0);
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -448,7 +448,7 @@ void FindProjectedImageStatistics::execute()
   }
   else if (TemplateHelpers::CanDynamicCast<UInt16ArrayType>()(m_InDataPtr.lock()))
   {
-    UInt16ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<UInt16ArrayType>(m_InDataPtr.lock());
+    UInt16ArrayType::Pointer cellArray = std::dynamic_pointer_cast<UInt16ArrayType>(m_InDataPtr.lock());
     uint16_t* cPtr = cellArray->getPointer(0);
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -464,7 +464,7 @@ void FindProjectedImageStatistics::execute()
   }
   else if (TemplateHelpers::CanDynamicCast<Int32ArrayType>()(m_InDataPtr.lock()))
   {
-    Int32ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<Int32ArrayType>(m_InDataPtr.lock());
+    Int32ArrayType::Pointer cellArray = std::dynamic_pointer_cast<Int32ArrayType>(m_InDataPtr.lock());
     int32_t* cPtr = cellArray->getPointer(0);
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -480,7 +480,7 @@ void FindProjectedImageStatistics::execute()
   }
   else if (TemplateHelpers::CanDynamicCast<UInt32ArrayType>()(m_InDataPtr.lock()))
   {
-    UInt32ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<UInt32ArrayType>(m_InDataPtr.lock());
+    UInt32ArrayType::Pointer cellArray = std::dynamic_pointer_cast<UInt32ArrayType>(m_InDataPtr.lock());
     uint32_t* cPtr = cellArray->getPointer(0);
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -496,7 +496,7 @@ void FindProjectedImageStatistics::execute()
   }
   else if (TemplateHelpers::CanDynamicCast<Int64ArrayType>()(m_InDataPtr.lock()))
   {
-    Int64ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<Int64ArrayType>(m_InDataPtr.lock());
+    Int64ArrayType::Pointer cellArray = std::dynamic_pointer_cast<Int64ArrayType>(m_InDataPtr.lock());
     int64_t* cPtr = cellArray->getPointer(0);
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -512,7 +512,7 @@ void FindProjectedImageStatistics::execute()
   }
   else if (TemplateHelpers::CanDynamicCast<UInt64ArrayType>()(m_InDataPtr.lock()))
   {
-    UInt64ArrayType::Pointer cellArray = boost::dynamic_pointer_cast<UInt64ArrayType>(m_InDataPtr.lock());
+    UInt64ArrayType::Pointer cellArray = std::dynamic_pointer_cast<UInt64ArrayType>(m_InDataPtr.lock());
     uint64_t* cPtr = cellArray->getPointer(0);
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -528,7 +528,7 @@ void FindProjectedImageStatistics::execute()
   }
   else if (TemplateHelpers::CanDynamicCast<FloatArrayType>()(m_InDataPtr.lock()))
   {
-    FloatArrayType::Pointer cellArray = boost::dynamic_pointer_cast<FloatArrayType>(m_InDataPtr.lock());
+    FloatArrayType::Pointer cellArray = std::dynamic_pointer_cast<FloatArrayType>(m_InDataPtr.lock());
     float* cPtr = cellArray->getPointer(0);
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -544,7 +544,7 @@ void FindProjectedImageStatistics::execute()
   }
   else if (TemplateHelpers::CanDynamicCast<DoubleArrayType>()(m_InDataPtr.lock()))
   {
-    DoubleArrayType::Pointer cellArray = boost::dynamic_pointer_cast<DoubleArrayType>(m_InDataPtr.lock());
+    DoubleArrayType::Pointer cellArray = std::dynamic_pointer_cast<DoubleArrayType>(m_InDataPtr.lock());
     double* cPtr = cellArray->getPointer(0);
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)

@@ -57,10 +57,10 @@ class IFilterFactory
     /** @brief This function should NEVER get called. The subclass should ALWAYS implement
      * this method so we are going to crash the program.
      */
-    virtual AbstractFilter::Pointer create() { BOOST_ASSERT(false); return AbstractFilter::NullPointer();}
-    virtual QString getFilterGroup() { BOOST_ASSERT(false); return ""; }
-    virtual QString getFilterSubGroup() { BOOST_ASSERT(false); return ""; }
-    virtual QString getFilterHumanLabel() { BOOST_ASSERT(false); return ""; }
+    virtual AbstractFilter::Pointer create() { Q_ASSERT(false); return AbstractFilter::NullPointer();}
+    virtual QString getFilterGroup() { Q_ASSERT(false); return ""; }
+    virtual QString getFilterSubGroup() { Q_ASSERT(false); return ""; }
+    virtual QString getFilterHumanLabel() { Q_ASSERT(false); return ""; }
 
 
   protected:

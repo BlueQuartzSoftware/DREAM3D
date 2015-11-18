@@ -285,7 +285,7 @@ void PrecipitateRolledPreset::initializeClusteringTableModel(StatsGenPlotWidget*
 // -----------------------------------------------------------------------------
 void PrecipitateRolledPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
-  BOOST_ASSERT(false);
+  Q_ASSERT(false);
 }
 
 // -----------------------------------------------------------------------------

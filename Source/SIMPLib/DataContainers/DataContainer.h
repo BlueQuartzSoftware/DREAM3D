@@ -309,7 +309,7 @@ class SIMPLib_EXPORT DataContainer : public Observable
     template<typename GeometryType>
     typename GeometryType::Pointer getGeometryAs()
     {
-      typename GeometryType::Pointer geom = boost::dynamic_pointer_cast<GeometryType>(getGeometry());
+      typename GeometryType::Pointer geom = std::dynamic_pointer_cast<GeometryType>(getGeometry());
       return geom;
     }
 

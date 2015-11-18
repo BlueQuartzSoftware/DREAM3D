@@ -227,7 +227,7 @@ void CalculateArrayHistogram::preflight()
 template<typename T>
 void findHistogram(IDataArray::Pointer inDataPtr, int32_t numberOfBins, bool userRange, double minRange, double maxRange, DoubleArrayType::Pointer newDataArray)
 {
-  typename DataArray<T>::Pointer inputDataPtr = boost::dynamic_pointer_cast<DataArray<T> >(inDataPtr);
+  typename DataArray<T>::Pointer inputDataPtr = std::dynamic_pointer_cast<DataArray<T> >(inDataPtr);
 
   newDataArray->initializeWithZeros(); // we must initialize the histogram array to prepare for incrementing the array elements
   double* newDataArrayPtr = newDataArray->getPointer(0);

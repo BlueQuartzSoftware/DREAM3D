@@ -52,7 +52,7 @@ namespace GeometryHelpers
           err = -1;
           return ListType::NullPointer();
         }
-        return boost::dynamic_pointer_cast<ListType>(mesh);
+        return std::dynamic_pointer_cast<ListType>(mesh);
       }
 
       /**
@@ -526,8 +526,8 @@ namespace GeometryHelpers
       template<typename T, typename K>
       static void AverageVertexArrayValues(typename DataArray<T>::Pointer elemList, typename DataArray<K>::Pointer inVertexArray, DataArray<float>::Pointer outElemArray)
       {
-        BOOST_ASSERT(outElemArray->getComponentDimensions() == inVertexArray->getComponentDimensions());
-        BOOST_ASSERT(elemList->getNumberOfTuples() == outElemArray->getNumberOfTuples());
+        Q_ASSERT(outElemArray->getComponentDimensions() == inVertexArray->getComponentDimensions());
+        Q_ASSERT(elemList->getNumberOfTuples() == outElemArray->getNumberOfTuples());
 
         K* vertArray = inVertexArray->getPointer(0);
         float* elemArray = outElemArray->getPointer(0);
@@ -565,8 +565,8 @@ namespace GeometryHelpers
                                                    DataArray<float>::Pointer centroids, typename DataArray<K>::Pointer inVertexArray,
                                                    DataArray<float>::Pointer outElemArray)
       {
-        BOOST_ASSERT(outElemArray->getNumberOfTuples() == elemList->getNumberOfTuples());
-        BOOST_ASSERT(outElemArray->getComponentDimensions() == inVertexArray->getComponentDimensions());
+        Q_ASSERT(outElemArray->getNumberOfTuples() == elemList->getNumberOfTuples());
+        Q_ASSERT(outElemArray->getComponentDimensions() == inVertexArray->getComponentDimensions());
 
         K* vertArray = inVertexArray->getPointer(0);
         float* elemArray = outElemArray->getPointer(0);
@@ -617,8 +617,8 @@ namespace GeometryHelpers
                                          DataArray<float>::Pointer vertices, typename DataArray<K>::Pointer inElemArray,
                                          typename DataArray<M>::Pointer outVertexArray)
       {
-        BOOST_ASSERT(outVertexArray->getNumberOfTuples() == vertices->getNumberOfTuples());
-        BOOST_ASSERT(outVertexArray->getComponentDimensions() == inElemArray->getComponentDimensions());
+        Q_ASSERT(outVertexArray->getNumberOfTuples() == vertices->getNumberOfTuples());
+        Q_ASSERT(outVertexArray->getComponentDimensions() == inElemArray->getComponentDimensions());
 
         K* elemArray = inElemArray->getPointer(0);
         M* vertArray = outVertexArray->getPointer(0);

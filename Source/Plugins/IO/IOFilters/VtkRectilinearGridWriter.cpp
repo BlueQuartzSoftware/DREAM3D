@@ -152,7 +152,7 @@ namespace Detail
 
     typedef DataArray<T> ArrayType;
 
-    typename ArrayType::Pointer array = boost::dynamic_pointer_cast<ArrayType>(iDataPtr);
+    typename ArrayType::Pointer array = std::dynamic_pointer_cast<ArrayType>(iDataPtr);
 
     if(NULL != array.get())
     {

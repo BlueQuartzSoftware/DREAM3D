@@ -403,7 +403,7 @@ void ChangeResolution::execute()
 
     // We have blown away the old FeatureIds array during the above copy loop, so grab it again here
     IDataArray::Pointer featureIdsPtr = m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName())->getAttributeArray(getFeatureIdsArrayPath().getDataArrayName());
-    Int32ArrayType::Pointer featureIds = boost::dynamic_pointer_cast<Int32ArrayType>(featureIdsPtr);
+    Int32ArrayType::Pointer featureIds = std::dynamic_pointer_cast<Int32ArrayType>(featureIdsPtr);
     int32_t* fIds = featureIds->getPointer(0);
 
     // Find the unique set of feature ids

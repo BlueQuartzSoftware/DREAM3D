@@ -246,7 +246,7 @@ void JsonFilterParametersReader::closeFile()
 // -----------------------------------------------------------------------------
 int JsonFilterParametersReader::openFilterGroup(AbstractFilter* unused, int index)
 {
-  BOOST_ASSERT(m_Root.isEmpty() == false);
+  Q_ASSERT(m_Root.isEmpty() == false);
   int err = 0;
   QString numStr = QString::number(index);
   m_CurrentFilterIndex = m_Root[numStr].toObject();
@@ -258,7 +258,7 @@ int JsonFilterParametersReader::openFilterGroup(AbstractFilter* unused, int inde
 // -----------------------------------------------------------------------------
 int JsonFilterParametersReader::closeFilterGroup()
 {
-  BOOST_ASSERT(m_Root.isEmpty() == false);
+  Q_ASSERT(m_Root.isEmpty() == false);
   m_CurrentFilterIndex = QJsonObject();
   return 0;
 }
@@ -268,7 +268,7 @@ int JsonFilterParametersReader::closeFilterGroup()
 // -----------------------------------------------------------------------------
 int JsonFilterParametersReader::openGroup(QString key)
 {
-  BOOST_ASSERT(m_Root.isEmpty() == false);
+  Q_ASSERT(m_Root.isEmpty() == false);
   int err = 0;
   m_CurrentFilterIndex = m_Root[key].toObject();
   return err;
@@ -279,7 +279,7 @@ int JsonFilterParametersReader::openGroup(QString key)
 // -----------------------------------------------------------------------------
 int JsonFilterParametersReader::closeGroup()
 {
-  BOOST_ASSERT(m_Root.isEmpty() == false);
+  Q_ASSERT(m_Root.isEmpty() == false);
   m_CurrentFilterIndex = QJsonObject();
   return 0;
 }
@@ -289,7 +289,7 @@ int JsonFilterParametersReader::closeGroup()
 // -----------------------------------------------------------------------------
 QString JsonFilterParametersReader::readString(const QString name, QString value)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return value;
@@ -302,7 +302,7 @@ QString JsonFilterParametersReader::readString(const QString name, QString value
 // -----------------------------------------------------------------------------
 QVector<QString> JsonFilterParametersReader::readStrings(const QString name, QVector<QString> value)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return value;
@@ -328,7 +328,7 @@ QVector<QString> JsonFilterParametersReader::readStrings(const QString name, QVe
 // -----------------------------------------------------------------------------
 int8_t JsonFilterParametersReader::readValue(const QString name, int8_t value)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return value;
@@ -351,7 +351,7 @@ int8_t JsonFilterParametersReader::readValue(const QString name, int8_t value)
 // -----------------------------------------------------------------------------
 int16_t JsonFilterParametersReader::readValue(const QString name, int16_t value)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return value;
@@ -374,7 +374,7 @@ int16_t JsonFilterParametersReader::readValue(const QString name, int16_t value)
 // -----------------------------------------------------------------------------
 int32_t JsonFilterParametersReader::readValue(const QString name, int32_t value)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return value;
@@ -397,7 +397,7 @@ int32_t JsonFilterParametersReader::readValue(const QString name, int32_t value)
 // -----------------------------------------------------------------------------
 int64_t JsonFilterParametersReader::readValue(const QString name, int64_t value)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return value;
@@ -428,7 +428,7 @@ int64_t JsonFilterParametersReader::readValue(const QString name, int64_t value)
 // -----------------------------------------------------------------------------
 uint8_t JsonFilterParametersReader::readValue(const QString name, uint8_t value)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return value;
@@ -451,7 +451,7 @@ uint8_t JsonFilterParametersReader::readValue(const QString name, uint8_t value)
 // -----------------------------------------------------------------------------
 uint16_t JsonFilterParametersReader::readValue(const QString name, uint16_t value)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return value;
@@ -474,7 +474,7 @@ uint16_t JsonFilterParametersReader::readValue(const QString name, uint16_t valu
 // -----------------------------------------------------------------------------
 uint32_t JsonFilterParametersReader::readValue(const QString name, uint32_t value)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return value;
@@ -497,7 +497,7 @@ uint32_t JsonFilterParametersReader::readValue(const QString name, uint32_t valu
 // -----------------------------------------------------------------------------
 uint64_t JsonFilterParametersReader::readValue(const QString name, uint64_t value)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return value;
@@ -527,7 +527,7 @@ uint64_t JsonFilterParametersReader::readValue(const QString name, uint64_t valu
 // -----------------------------------------------------------------------------
 float JsonFilterParametersReader::readValue(const QString name, float value)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return value;
@@ -558,7 +558,7 @@ float JsonFilterParametersReader::readValue(const QString name, float value)
 // -----------------------------------------------------------------------------
 double JsonFilterParametersReader::readValue(const QString name, double value)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return value;
@@ -577,7 +577,7 @@ double JsonFilterParametersReader::readValue(const QString name, double value)
 // -----------------------------------------------------------------------------
 bool JsonFilterParametersReader::readValue(const QString name, bool value)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return value;
@@ -591,7 +591,7 @@ bool JsonFilterParametersReader::readValue(const QString name, bool value)
 // -----------------------------------------------------------------------------
 QVector<int8_t> JsonFilterParametersReader::readArray(const QString name, QVector<int8_t> value)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return value;
@@ -623,7 +623,7 @@ QVector<int8_t> JsonFilterParametersReader::readArray(const QString name, QVecto
 // -----------------------------------------------------------------------------
 QVector<int16_t> JsonFilterParametersReader::readArray(const QString name, QVector<int16_t> value)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return value;
@@ -655,7 +655,7 @@ QVector<int16_t> JsonFilterParametersReader::readArray(const QString name, QVect
 // -----------------------------------------------------------------------------
 QVector<int32_t> JsonFilterParametersReader::readArray(const QString name, QVector<int32_t> value)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return value;
@@ -687,7 +687,7 @@ QVector<int32_t> JsonFilterParametersReader::readArray(const QString name, QVect
 // -----------------------------------------------------------------------------
 QVector<int64_t> JsonFilterParametersReader::readArray(const QString name, QVector<int64_t> value)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return value;
@@ -727,7 +727,7 @@ QVector<int64_t> JsonFilterParametersReader::readArray(const QString name, QVect
 // -----------------------------------------------------------------------------
 QVector<uint8_t> JsonFilterParametersReader::readArray(const QString name, QVector<uint8_t> value)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return value;
@@ -759,7 +759,7 @@ QVector<uint8_t> JsonFilterParametersReader::readArray(const QString name, QVect
 // -----------------------------------------------------------------------------
 QVector<uint16_t> JsonFilterParametersReader::readArray(const QString name, QVector<uint16_t> value)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return value;
@@ -791,7 +791,7 @@ QVector<uint16_t> JsonFilterParametersReader::readArray(const QString name, QVec
 // -----------------------------------------------------------------------------
 QVector<uint32_t> JsonFilterParametersReader::readArray(const QString name, QVector<uint32_t> value)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return value;
@@ -823,7 +823,7 @@ QVector<uint32_t> JsonFilterParametersReader::readArray(const QString name, QVec
 // -----------------------------------------------------------------------------
 QVector<uint64_t> JsonFilterParametersReader::readArray(const QString name, QVector<uint64_t> value)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return value;
@@ -863,7 +863,7 @@ QVector<uint64_t> JsonFilterParametersReader::readArray(const QString name, QVec
 // -----------------------------------------------------------------------------
 QVector<float> JsonFilterParametersReader::readArray(const QString name, QVector<float> value)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return value;
@@ -904,7 +904,7 @@ QVector<float> JsonFilterParametersReader::readArray(const QString name, QVector
 // -----------------------------------------------------------------------------
 QVector<double> JsonFilterParametersReader::readArray(const QString name, QVector<double> value)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return value;
@@ -932,7 +932,7 @@ QVector<double> JsonFilterParametersReader::readArray(const QString name, QVecto
 // -----------------------------------------------------------------------------
 IntVec3_t JsonFilterParametersReader::readIntVec3(const QString name, IntVec3_t defaultValue)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return defaultValue;
@@ -956,7 +956,7 @@ IntVec3_t JsonFilterParametersReader::readIntVec3(const QString name, IntVec3_t 
 // -----------------------------------------------------------------------------
 FloatVec3_t JsonFilterParametersReader::readFloatVec3(const QString name, FloatVec3_t defaultValue)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return defaultValue;
@@ -980,7 +980,7 @@ FloatVec3_t JsonFilterParametersReader::readFloatVec3(const QString name, FloatV
 // -----------------------------------------------------------------------------
 Float2ndOrderPoly_t JsonFilterParametersReader::readFloat2ndOrderPoly(const QString name, Float2ndOrderPoly_t defaultValue)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return defaultValue;
@@ -1004,7 +1004,7 @@ Float2ndOrderPoly_t JsonFilterParametersReader::readFloat2ndOrderPoly(const QStr
 // -----------------------------------------------------------------------------
 Float3rdOrderPoly_t JsonFilterParametersReader::readFloat3rdOrderPoly(const QString name, Float3rdOrderPoly_t defaultValue)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return defaultValue;
@@ -1028,7 +1028,7 @@ Float3rdOrderPoly_t JsonFilterParametersReader::readFloat3rdOrderPoly(const QStr
 // -----------------------------------------------------------------------------
 Float4thOrderPoly_t JsonFilterParametersReader::readFloat4thOrderPoly(const QString name, Float4thOrderPoly_t defaultValue)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return defaultValue;
@@ -1052,7 +1052,7 @@ Float4thOrderPoly_t JsonFilterParametersReader::readFloat4thOrderPoly(const QStr
 // -----------------------------------------------------------------------------
 FileListInfo_t JsonFilterParametersReader::readFileListInfo(const QString name, FileListInfo_t defaultValue)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return defaultValue;
@@ -1076,7 +1076,7 @@ FileListInfo_t JsonFilterParametersReader::readFileListInfo(const QString name, 
 // -----------------------------------------------------------------------------
 ComparisonInput_t JsonFilterParametersReader::readComparisonInput(const QString name, ComparisonInput_t defaultValue, int arrayIndex)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return defaultValue;
@@ -1104,7 +1104,7 @@ ComparisonInput_t JsonFilterParametersReader::readComparisonInput(const QString 
 // -----------------------------------------------------------------------------
 ComparisonInputs JsonFilterParametersReader::readComparisonInputs(const QString name, ComparisonInputs defValues)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return defValues;
@@ -1142,7 +1142,7 @@ ComparisonInputs JsonFilterParametersReader::readComparisonInputs(const QString 
 // -----------------------------------------------------------------------------
 AxisAngleInput_t JsonFilterParametersReader::readAxisAngle(const QString name, AxisAngleInput_t v, int vectorPos)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return v;
@@ -1163,7 +1163,7 @@ AxisAngleInput_t JsonFilterParametersReader::readAxisAngle(const QString name, A
 // -----------------------------------------------------------------------------
 QVector<AxisAngleInput_t> JsonFilterParametersReader::readAxisAngles(const QString name, QVector<AxisAngleInput_t> v)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return v;
@@ -1201,7 +1201,7 @@ QVector<AxisAngleInput_t> JsonFilterParametersReader::readAxisAngles(const QStri
 // -----------------------------------------------------------------------------
 QSet<QString> JsonFilterParametersReader::readArraySelections(const QString name, QSet<QString> v)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return v;
@@ -1232,7 +1232,7 @@ QSet<QString> JsonFilterParametersReader::readArraySelections(const QString name
 // -----------------------------------------------------------------------------
 DataContainerArrayProxy JsonFilterParametersReader::readDataContainerArrayProxy(const QString& name, DataContainerArrayProxy v)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return v;
@@ -1254,7 +1254,7 @@ DataContainerArrayProxy JsonFilterParametersReader::readDataContainerArrayProxy(
 // -----------------------------------------------------------------------------
 DataArrayPath JsonFilterParametersReader::readDataArrayPath(const QString& name, DataArrayPath def)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return def;
@@ -1276,7 +1276,7 @@ DataArrayPath JsonFilterParametersReader::readDataArrayPath(const QString& name,
 // -----------------------------------------------------------------------------
 QVector<DataArrayPath> JsonFilterParametersReader::readDataArrayPathVector(const QString& name, QVector<DataArrayPath> def)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return def;
@@ -1307,7 +1307,7 @@ QVector<DataArrayPath> JsonFilterParametersReader::readDataArrayPathVector(const
 // -----------------------------------------------------------------------------
 DynamicTableData JsonFilterParametersReader::readDynamicTableData(const QString& name, DynamicTableData def)
 {
-  BOOST_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
   if (m_CurrentFilterIndex.contains(name) == false)
   {
     return def;

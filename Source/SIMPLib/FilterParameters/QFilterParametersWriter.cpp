@@ -175,7 +175,7 @@ void QFilterParametersWriter::setPipelineName(const QString& pipelineName)
 // -----------------------------------------------------------------------------
 int QFilterParametersWriter::openFilterGroup(AbstractFilter* unused, int index)
 {
-  BOOST_ASSERT(m_Prefs != NULL);
+  Q_ASSERT(m_Prefs != NULL);
   int err = 0;
   QString gName = QString::number(index);
   m_Prefs->beginGroup(gName);
@@ -189,7 +189,7 @@ int QFilterParametersWriter::openFilterGroup(AbstractFilter* unused, int index)
 // -----------------------------------------------------------------------------
 int QFilterParametersWriter::closeFilterGroup()
 {
-  BOOST_ASSERT(m_Prefs != NULL);
+  Q_ASSERT(m_Prefs != NULL);
   m_Prefs->endGroup();
   return 0;
 }
@@ -447,7 +447,7 @@ int QFilterParametersWriter::writeValue(const QString name, QVector<double> valu
 // -----------------------------------------------------------------------------
 int QFilterParametersWriter::writeValue(const QString name, IntVec3_t v)
 {
-  BOOST_ASSERT(m_Prefs != NULL);
+  Q_ASSERT(m_Prefs != NULL);
   int err = 0;
   m_Prefs->beginWriteArray(name, 3);
   m_Prefs->setArrayIndex(0);
@@ -468,7 +468,7 @@ int QFilterParametersWriter::writeValue(const QString name, IntVec3_t v)
 // -----------------------------------------------------------------------------
 int QFilterParametersWriter::writeValue(const QString name, FloatVec3_t v)
 {
-  BOOST_ASSERT(m_Prefs != NULL);
+  Q_ASSERT(m_Prefs != NULL);
   int err = 0;
   m_Prefs->beginWriteArray(name, 3);
   m_Prefs->setArrayIndex(0);
@@ -489,7 +489,7 @@ int QFilterParametersWriter::writeValue(const QString name, FloatVec3_t v)
 // -----------------------------------------------------------------------------
 int QFilterParametersWriter::writeValue(const QString name, Float2ndOrderPoly_t v)
 {
-  BOOST_ASSERT(m_Prefs != NULL);
+  Q_ASSERT(m_Prefs != NULL);
   int err = 0;
   m_Prefs->beginWriteArray(name, 3);
 
@@ -516,7 +516,7 @@ int QFilterParametersWriter::writeValue(const QString name, Float2ndOrderPoly_t 
 // -----------------------------------------------------------------------------
 int QFilterParametersWriter::writeValue(const QString name, Float3rdOrderPoly_t v)
 {
-  BOOST_ASSERT(m_Prefs != NULL);
+  Q_ASSERT(m_Prefs != NULL);
   int err = 0;
   m_Prefs->beginWriteArray(name, 3);
 
@@ -550,7 +550,7 @@ int QFilterParametersWriter::writeValue(const QString name, Float3rdOrderPoly_t 
 // -----------------------------------------------------------------------------
 int QFilterParametersWriter::writeValue(const QString name, Float4thOrderPoly_t v)
 {
-  BOOST_ASSERT(m_Prefs != NULL);
+  Q_ASSERT(m_Prefs != NULL);
   int err = 0;
   m_Prefs->beginWriteArray(name, 3);
 
@@ -594,7 +594,7 @@ int QFilterParametersWriter::writeValue(const QString name, Float4thOrderPoly_t 
 // -----------------------------------------------------------------------------
 int QFilterParametersWriter::writeValue(const QString name, FileListInfo_t v)
 {
-  BOOST_ASSERT(m_Prefs != NULL);
+  Q_ASSERT(m_Prefs != NULL);
   int err = 0;
   m_Prefs->beginWriteArray(name, 8);
   m_Prefs->setArrayIndex(0);

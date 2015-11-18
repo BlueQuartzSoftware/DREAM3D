@@ -65,6 +65,6 @@ QWidget* IFilterWidgetFactory::createWidget(FilterParameter* parameter,
                                             AbstractFilter* filter,
                                             QWidget* parent)
 {
-  BOOST_ASSERT(false);
+  Q_ASSERT(false);
   return NULL;
 }

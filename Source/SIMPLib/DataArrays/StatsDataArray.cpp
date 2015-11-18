@@ -220,7 +220,7 @@ void* StatsDataArray::getVoidPointer(size_t i)
 #ifndef NDEBUG
   if(m_StatsDataArray.size() > 0)
   {
-    BOOST_ASSERT(i < static_cast<size_t>(m_StatsDataArray.size()));
+    Q_ASSERT(i < static_cast<size_t>(m_StatsDataArray.size()));
   }
 #endif
   if(i >= this->getNumberOfTuples())
@@ -365,7 +365,7 @@ bool StatsDataArray::copyData(size_t destTupleOffset, IDataArray::Pointer source
 // -----------------------------------------------------------------------------
 void StatsDataArray::initializeTuple(size_t i, double p)
 {
-  BOOST_ASSERT(false);
+  Q_ASSERT(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -421,14 +421,14 @@ int32_t StatsDataArray::resize(size_t numTuples)
 // -----------------------------------------------------------------------------
 void StatsDataArray::printTuple(QTextStream& out, size_t i, char delimiter)
 {
-  BOOST_ASSERT(false);
+  Q_ASSERT(false);
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void StatsDataArray::printComponent(QTextStream& out, size_t i, int j)
 {
-  BOOST_ASSERT(false);
+  Q_ASSERT(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -674,7 +674,7 @@ StatsData::Pointer StatsDataArray::getStatsData(int idx)
 #ifndef NDEBUG
   if(m_StatsDataArray.size() > 0)
   {
-    BOOST_ASSERT(idx < static_cast<int>(m_StatsDataArray.size()));
+    Q_ASSERT(idx < static_cast<int>(m_StatsDataArray.size()));
   }
 #endif
   return m_StatsDataArray[idx];
@@ -688,7 +688,7 @@ StatsData::Pointer StatsDataArray::operator[](int idx)
 #ifndef NDEBUG
   if(m_StatsDataArray.size() > 0)
   {
-    BOOST_ASSERT(idx < static_cast<int>(m_StatsDataArray.size()));
+    Q_ASSERT(idx < static_cast<int>(m_StatsDataArray.size()));
   }
 #endif
   return m_StatsDataArray[idx];

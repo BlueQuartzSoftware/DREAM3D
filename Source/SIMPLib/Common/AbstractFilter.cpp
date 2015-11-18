@@ -152,7 +152,7 @@ bool AbstractFilter::doesPipelineContainFilterAfterThis(const QString& name)
 // -----------------------------------------------------------------------------
 void AbstractFilter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
-  BOOST_ASSERT(reader != NULL);
+  Q_ASSERT(reader != NULL);
   qDebug() << "AbstractFilter::readFilterParameters() -> Writing Filter Options" << "\n";
   return;
 }
@@ -162,7 +162,7 @@ void AbstractFilter::readFilterParameters(AbstractFilterParametersReader* reader
 // -----------------------------------------------------------------------------
 int AbstractFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  BOOST_ASSERT(writer != NULL);
+  Q_ASSERT(writer != NULL);
   qDebug() << "AbstractFilter::writeFilterParameters() -> Writing Filter Options" << "\n";
   return -1;
 }

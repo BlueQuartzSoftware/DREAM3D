@@ -51,8 +51,8 @@
 FeatureCountDecision::FeatureCountDecision() :
   AbstractDecisionFilter(),
   m_FeatureIdsArrayPath(" "," "," "),
-  m_FeatureIds(NULL),
-  m_MaxGrains(0)
+  m_MaxGrains(0),
+  m_FeatureIds(NULL)
 {
   setupFilterParameters();
 }
@@ -143,7 +143,6 @@ void FeatureCountDecision::execute()
   if(getErrorCondition() < 0) { return; }
 
   // Assumes a SINGLE Phase. This WILL BREAK if there is more than 1 phase.
-  int feature = m_FeatureIds[1];
   bool dm = false;
   if (m_MaxGrains < m_FeatureIds[1])
   {

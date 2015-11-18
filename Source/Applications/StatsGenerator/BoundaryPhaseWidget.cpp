@@ -164,9 +164,9 @@ int BoundaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
 
   // Get pointers
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::CrystalStructures);
-  unsigned int* crystalStructures = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  unsigned int* crystalStructures = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
   iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::PhaseTypes);
-  unsigned int* phaseTypes = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  unsigned int* phaseTypes = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
 
   crystalStructures[m_PhaseIndex] = m_CrystalStructure;
   phaseTypes[m_PhaseIndex] = m_PhaseType;
@@ -191,11 +191,11 @@ void BoundaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int
   setPhaseIndex(index);
 
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::CrystalStructures);
-  unsigned int* attributeArray = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  unsigned int* attributeArray = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
   m_CrystalStructure = attributeArray[index];
 
   iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::PhaseTypes);
-  attributeArray = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  attributeArray = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
   m_PhaseType = attributeArray[index];
 
   iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::Statistics);

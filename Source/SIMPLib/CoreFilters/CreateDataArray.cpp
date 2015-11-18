@@ -161,7 +161,7 @@ void checkInitializationInt(AbstractFilter* filter, IDataArray::Pointer iDataArr
   }
 
   // Now set the initial Value into the array
-  typename DataArray<T>::Pointer array = boost::dynamic_pointer_cast<DataArray<T> >(iDataArray);
+  typename DataArray<T>::Pointer array = std::dynamic_pointer_cast<DataArray<T> >(iDataArray);
   if(NULL != array.get())
   {
     array->initializeWithValue(initValue, 0);
@@ -197,7 +197,7 @@ void checkInitializationFloatDouble(AbstractFilter* filter, IDataArray::Pointer 
 
   }
 
-  typename DataArray<T>::Pointer array = boost::dynamic_pointer_cast<DataArray<T> >(iDataArray);
+  typename DataArray<T>::Pointer array = std::dynamic_pointer_cast<DataArray<T> >(iDataArray);
   if(NULL != array.get())
   {
     array->initializeWithValue(initValue, 0);
