@@ -34,18 +34,18 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _DelimitedPage_H_
-#define _DelimitedPage_H_
+#ifndef _TupleSelectionPage_H_
+#define _TupleSelectionPage_H_
 
 #include <QtWidgets/QWizardPage>
 
 #include "AbstractWizardPage.h"
 
-#include "ui_DelimitedPage.h"
+#include "ui_TupleSelectionPage.h"
 
 class ASCIIDataModel;
 
-class DelimitedPage : public AbstractWizardPage, private Ui::DelimitedPage
+class TupleSelectionPage : public AbstractWizardPage, private Ui::TupleSelectionPage
 {
   Q_OBJECT
 
@@ -56,9 +56,9 @@ class DelimitedPage : public AbstractWizardPage, private Ui::DelimitedPage
     * @param filter The instance of the filter that this parameter is a part of
     * @param parent The parent QWidget for this Widget
     */
-    DelimitedPage(const QString &inputFilePath, int numLines, QWidget* parent = NULL);
+    TupleSelectionPage(const QString &inputFilePath, QWidget* parent = NULL);
 
-    virtual ~DelimitedPage();
+    virtual ~TupleSelectionPage();
 
     /**
      * @brief Initializes some of the GUI elements with selections or other GUI related items
@@ -73,16 +73,12 @@ class DelimitedPage : public AbstractWizardPage, private Ui::DelimitedPage
     /**
     * @brief Controls which page to navigate to after the user clicks "Next" button
     */
-    int nextId() const;
-
-  protected slots:
-    void checkBox_Toggled(int state);
+    virtual int nextId() const;
 
   private:
-    int                                             m_NumLines;
 
-    DelimitedPage(const DelimitedPage&); // Copy Constructor Not Implemented
-    void operator=(const DelimitedPage&); // Operator '=' Not Implemented
+    TupleSelectionPage(const TupleSelectionPage&); // Copy Constructor Not Implemented
+    void operator=(const TupleSelectionPage&); // Operator '=' Not Implemented
 };
 
-#endif /* DelimitedPage_H_ */
+#endif /* TupleSelectionPage_H_ */

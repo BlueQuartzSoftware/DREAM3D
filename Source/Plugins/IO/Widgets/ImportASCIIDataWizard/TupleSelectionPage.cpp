@@ -33,17 +33,21 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "DelimitedPage.h"
+#include "TupleSelectionPage.h"
+
+#include <QtCore/QFile>
+
+#include "SIMPLib/Common/Constants.h"
 
 #include "ImportASCIIDataWizard.h"
 #include "ASCIIDataModel.h"
+#include "AddHeadersDialog.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DelimitedPage::DelimitedPage(const QString &inputFilePath, int numLines, QWidget* parent) :
-  AbstractWizardPage(inputFilePath, parent),
-  m_NumLines(numLines)
+TupleSelectionPage::TupleSelectionPage(const QString &inputFilePath, QWidget* parent) :
+  AbstractWizardPage(inputFilePath, parent)
 {
   setupUi(this);
 
@@ -53,7 +57,7 @@ DelimitedPage::DelimitedPage(const QString &inputFilePath, int numLines, QWidget
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DelimitedPage::~DelimitedPage()
+TupleSelectionPage::~TupleSelectionPage()
 {
 
 }
@@ -61,78 +65,55 @@ DelimitedPage::~DelimitedPage()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DelimitedPage::setupGui()
+void TupleSelectionPage::setupGui()
 {
   ASCIIDataModel* model = ASCIIDataModel::Instance();
 
   dataView->setModel(model);
   dataView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-
-  registerField("tabAsDelimiter", tabCheckBox);
-  registerField("semicolonAsDelimiter", semicolonCheckBox);
-  registerField("commaAsDelimiter", commaCheckBox);
-  registerField("spaceAsDelimiter", spaceCheckBox);
-  registerField("consecutiveDelimiters", consecutiveDCheckBox);
-
-  connect(tabCheckBox, SIGNAL(stateChanged(int)), this, SLOT(checkBox_Toggled(int)));
-  connect(semicolonCheckBox, SIGNAL(stateChanged(int)), this, SLOT(checkBox_Toggled(int)));
-  connect(commaCheckBox, SIGNAL(stateChanged(int)), this, SLOT(checkBox_Toggled(int)));
-  connect(spaceCheckBox, SIGNAL(stateChanged(int)), this, SLOT(checkBox_Toggled(int)));
-  connect(consecutiveDCheckBox, SIGNAL(stateChanged(int)), this, SLOT(checkBox_Toggled(int)));
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DelimitedPage::checkBox_Toggled(int state)
+void TupleSelectionPage::refreshModel()
 {
-  bool tabAsDelimiter = tabCheckBox->isChecked();
-  bool semicolonAsDelimiter = semicolonCheckBox->isChecked();
-  bool commaAsDelimiter = commaCheckBox->isChecked();
-  bool spaceAsDelimiter = spaceCheckBox->isChecked();
-  bool consecutiveDelimiters = consecutiveDCheckBox->isChecked();
-
   ASCIIDataModel* model = ASCIIDataModel::Instance();
-  QStringList lines = model->originalStrings();
-
   model->clear();
+
+  bool isFixedWidth = field("isFixedWidth").toBool();
+  bool tabAsDelimiter = field("tabAsDelimiter").toBool();
+  bool semicolonAsDelimiter = field("semicolonAsDelimiter").toBool();
+  bool commaAsDelimiter = field("commaAsDelimiter").toBool();
+  bool spaceAsDelimiter = field("spaceAsDelimiter").toBool();
+  bool consecutiveDelimiters = field("consecutiveDelimiters").toBool();
+  int beginIndex = field("startRow").toInt();
+
+  QStringList lines = ImportASCIIDataWizard::ReadLines(m_InputFilePath, beginIndex, ImportASCIIDataWizard::TotalPreviewLines);
 
   ImportASCIIDataWizard::LoadOriginalLines(lines);
 
   QList<char> delimiters = ImportASCIIDataWizard::ConvertToDelimiters(tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter);
 
-  QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, delimiters, false, consecutiveDelimiters);
-  ImportASCIIDataWizard::InsertTokenizedLines(tokenizedLines, 1);
+  QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, delimiters, isFixedWidth, consecutiveDelimiters);
+  ImportASCIIDataWizard::InsertTokenizedLines(tokenizedLines, beginIndex);
+
+  // Refresh the headers
+  if (hasHeadersRadio->isChecked())
+  {
+    on_headersIndexLineEdit_textChanged(headersIndexLineEdit->text());
+  }
+  else
+  {
+
+  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DelimitedPage::refreshModel()
+int TupleSelectionPage::nextId() const
 {
-  ASCIIDataModel* model = ASCIIDataModel::Instance();
-  model->clear();
-
-  bool tabAsDelimiter = tabCheckBox->isChecked();
-  bool semicolonAsDelimiter = semicolonCheckBox->isChecked();
-  bool commaAsDelimiter = commaCheckBox->isChecked();
-  bool spaceAsDelimiter = spaceCheckBox->isChecked();
-  bool consecutiveDelimiters = consecutiveDCheckBox->isChecked();
-
-  QStringList lines = ImportASCIIDataWizard::ReadLines(m_InputFilePath, 1, ImportASCIIDataWizard::TotalPreviewLines);
-
-  ImportASCIIDataWizard::LoadOriginalLines(lines);
-
-  QList<char> delimiters = ImportASCIIDataWizard::ConvertToDelimiters(tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter);
-
-  QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, delimiters, false, consecutiveDelimiters);
-  ImportASCIIDataWizard::InsertTokenizedLines(tokenizedLines, 1);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int DelimitedPage::nextId() const
-{
-  return ImportASCIIDataWizard::DataFormat;
+  // There is no "Next" page
+  return -1;
 }

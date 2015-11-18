@@ -45,9 +45,10 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ImportASCIIDataWizard::ImportASCIIDataWizard(const QString &inputFilePath, QWidget* parent) :
+ImportASCIIDataWizard::ImportASCIIDataWizard(const QString &inputFilePath, int numLines, QWidget* parent) :
   QWizard(parent),
-  m_InputFilePath(inputFilePath)
+  m_InputFilePath(inputFilePath),
+  m_NumLines(numLines)
 {
   setWindowTitle("ASCII Data Import Wizard");
   setOptions(QWizard::NoBackButtonOnStartPage | QWizard::HaveHelpButton);
@@ -58,13 +59,13 @@ ImportASCIIDataWizard::ImportASCIIDataWizard(const QString &inputFilePath, QWidg
   connect(m_RefreshBtn, SIGNAL(pressed()), this, SLOT(refreshModel()));
   setButton(QWizard::HelpButton, m_RefreshBtn);
 
-  DelimitedOrFixedWidthPage* dOrFPage = new DelimitedOrFixedWidthPage(inputFilePath, this);
+  DelimitedOrFixedWidthPage* dOrFPage = new DelimitedOrFixedWidthPage(inputFilePath, numLines, this);
   setPage(DelimitedOrFixedWidth, dOrFPage);
 
-  DelimitedPage* dPage = new DelimitedPage(inputFilePath, this);
+  DelimitedPage* dPage = new DelimitedPage(inputFilePath, numLines, this);
   setPage(Delimited, dPage);
 
-  DataFormatPage* dfPage = new DataFormatPage(inputFilePath, this);
+  DataFormatPage* dfPage = new DataFormatPage(inputFilePath, numLines, this);
   setPage(DataFormat, dfPage);
 
 #ifndef Q_OS_MAC
@@ -369,4 +370,18 @@ int ImportASCIIDataWizard::getBeginningLineNum()
 QString ImportASCIIDataWizard::getInputFilePath()
 {
   return m_InputFilePath;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QVector<size_t> ImportASCIIDataWizard::getTupleDims()
+{
+  DataFormatPage* dfPage = dynamic_cast<DataFormatPage*>(page(DataFormat));
+  if (NULL != dfPage)
+  {
+    return dfPage->getTupleTable()->getData();
+  }
+  
+  return QVector<size_t>();
 }

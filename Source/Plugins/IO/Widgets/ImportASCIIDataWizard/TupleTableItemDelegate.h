@@ -33,56 +33,35 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#ifndef _TupleTableItemDelegate_H
+#define _TupleTableItemDelegate_H
 
-#ifndef _DelimitedPage_H_
-#define _DelimitedPage_H_
+#include <QtCore/QModelIndex>
 
-#include <QtWidgets/QWizardPage>
+#include <QStyledItemDelegate>
 
-#include "AbstractWizardPage.h"
+#include "SIMPLib/Common/Constants.h"
 
-#include "ui_DelimitedPage.h"
-
-class ASCIIDataModel;
-
-class DelimitedPage : public AbstractWizardPage, private Ui::DelimitedPage
+class TupleTableItemDelegate : public QStyledItemDelegate
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
-    /**
-    * @brief Constructor
-    * @param parameter The FilterParameter object that this widget represents
-    * @param filter The instance of the filter that this parameter is a part of
-    * @param parent The parent QWidget for this Widget
-    */
-    DelimitedPage(const QString &inputFilePath, int numLines, QWidget* parent = NULL);
+    explicit TupleTableItemDelegate(QObject* parent = 0);
 
-    virtual ~DelimitedPage();
+    virtual ~TupleTableItemDelegate();
 
-    /**
-     * @brief Initializes some of the GUI elements with selections or other GUI related items
-     */
-    virtual void setupGui();
-
-    /**
-    * @brief Refreshes the model
-    */
-    virtual void refreshModel();
-
-    /**
-    * @brief Controls which page to navigate to after the user clicks "Next" button
-    */
-    int nextId() const;
-
-  protected slots:
-    void checkBox_Toggled(int state);
+  protected:
+    QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const;
+    void setEditorData(QWidget* editor, const QModelIndex& index) const;
+    void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const;
+    void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const;
 
   private:
-    int                                             m_NumLines;
 
-    DelimitedPage(const DelimitedPage&); // Copy Constructor Not Implemented
-    void operator=(const DelimitedPage&); // Operator '=' Not Implemented
+    TupleTableItemDelegate(const TupleTableItemDelegate&); // Copy Constructor Not Implemented
+    void operator=(const TupleTableItemDelegate&); // Operator '=' Not Implemented
+
 };
 
-#endif /* DelimitedPage_H_ */
+#endif // _TupleTableItemDelegate_H

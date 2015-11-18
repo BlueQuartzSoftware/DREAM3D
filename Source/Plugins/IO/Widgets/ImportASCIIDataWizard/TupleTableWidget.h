@@ -32,22 +32,25 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#ifndef _TupleTableWidget_H_
+#define _TupleTableWidget_H_
 
+#include <QtCore/QObject>
+#include <QtCore/QPointer>
+#include <QtWidgets/QWidget>
 
-#ifndef _DelimitedPage_H_
-#define _DelimitedPage_H_
+#include "ui_TupleTableWidget.h"
 
-#include <QtWidgets/QWizardPage>
+class DynamicTableFilterParameter;
 
-#include "AbstractWizardPage.h"
-
-#include "ui_DelimitedPage.h"
-
-class ASCIIDataModel;
-
-class DelimitedPage : public AbstractWizardPage, private Ui::DelimitedPage
+/**
+* @brief
+* @author
+* @version
+*/
+class TupleTableWidget : public QWidget, private Ui::TupleTableWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
     /**
@@ -56,33 +59,38 @@ class DelimitedPage : public AbstractWizardPage, private Ui::DelimitedPage
     * @param filter The instance of the filter that this parameter is a part of
     * @param parent The parent QWidget for this Widget
     */
-    DelimitedPage(const QString &inputFilePath, int numLines, QWidget* parent = NULL);
+    TupleTableWidget(QWidget* parent = NULL);
 
-    virtual ~DelimitedPage();
-
-    /**
-     * @brief Initializes some of the GUI elements with selections or other GUI related items
-     */
-    virtual void setupGui();
+    virtual ~TupleTableWidget();
 
     /**
-    * @brief Refreshes the model
+    * @brief This method does additional GUI widget connections
     */
-    virtual void refreshModel();
+    void setupGui();
 
-    /**
-    * @brief Controls which page to navigate to after the user clicks "Next" button
-    */
-    int nextId() const;
+    QVector<size_t> getData();
+
+    void addTupleDimensions(QVector<size_t> tupleDims);
+
+  public slots:
+    void on_addTupleBtn_pressed();
+    void on_deleteTupleBtn_pressed();
+
+  protected:
+    void addColumn(int value);
 
   protected slots:
-    void checkBox_Toggled(int state);
+    void on_tupleTable_itemChanged(QTableWidgetItem* item);
+
+  signals:
+    void tupleDimsChanged(QVector<size_t> tupleDims);
 
   private:
-    int                                             m_NumLines;
+    void updateDynamicButtons();
 
-    DelimitedPage(const DelimitedPage&); // Copy Constructor Not Implemented
-    void operator=(const DelimitedPage&); // Operator '=' Not Implemented
+    TupleTableWidget(const TupleTableWidget&); // Copy Constructor Not Implemented
+    void operator=(const TupleTableWidget&); // Operator '=' Not Implemented
+
 };
 
-#endif /* DelimitedPage_H_ */
+#endif /* _TupleTableWidget_H_ */

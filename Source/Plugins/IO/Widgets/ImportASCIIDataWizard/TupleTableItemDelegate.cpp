@@ -33,29 +33,15 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "DelimitedOrFixedWidthPage.h"
-
-#include <QtCore/QFile>
-
-#include "ImportASCIIDataWizard.h"
-#include "ASCIIDataModel.h"
+#include "TupleTableItemDelegate.h"
+#include <QLineEdit>
+#include <QIntValidator>
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DelimitedOrFixedWidthPage::DelimitedOrFixedWidthPage(const QString &inputFilePath, int numLines, QWidget* parent) :
-  AbstractWizardPage(inputFilePath, parent),
-  m_NumLines(numLines)
-{
-  setupUi(this);
-
-  setupGui();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DelimitedOrFixedWidthPage::~DelimitedOrFixedWidthPage()
+TupleTableItemDelegate::TupleTableItemDelegate(QObject* parent) :
+  QStyledItemDelegate(parent)
 {
 
 }
@@ -63,95 +49,46 @@ DelimitedOrFixedWidthPage::~DelimitedOrFixedWidthPage()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DelimitedOrFixedWidthPage::setupGui()
+TupleTableItemDelegate::~TupleTableItemDelegate()
 {
-  ASCIIDataModel* model = ASCIIDataModel::Instance();
 
-  refreshModel();
-
-  dataView->setModel(model);
-  dataView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-
-  registerField("isDelimited", isDelimitedRadio);
-  registerField("isFixedWidth", isFixedWidthRadio);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DelimitedOrFixedWidthPage::showEvent(QShowEvent* event)
+QWidget* TupleTableItemDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-  ASCIIDataModel* model = ASCIIDataModel::Instance();
-  model->clearContents();
-
-  if (model->columnCount() > 0)
-  {
-    model->removeColumns(0, model->columnCount());
-  }
-
-  // This is the first screen, so everything automatically goes into one column for now
-  model->insertColumn(0);
-
-  for (int row = 0; row < model->rowCount(); row++)
-  {
-    QString line = model->originalString(row);
-
-    QModelIndex index = model->index(row, 0);
-
-    model->setData(index, line, Qt::DisplayRole);
-  }
+  QLineEdit* editor = new QLineEdit(parent);
+  QRegularExpressionValidator* validator = new QRegularExpressionValidator(QRegularExpression("[1-9]+([0-9]*)"), editor);
+  editor->setValidator(validator);
+  return editor;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DelimitedOrFixedWidthPage::refreshModel()
+void TupleTableItemDelegate::setEditorData(QWidget* editor, const QModelIndex& index) const
 {
-  ASCIIDataModel* model = ASCIIDataModel::Instance();
-  model->clear();
-
-  QStringList lines = ImportASCIIDataWizard::ReadLines(m_InputFilePath, 1, ImportASCIIDataWizard::TotalPreviewLines);
-
-  bool hasTabs = false;
-  for (int i = 0; i < lines.size(); i++)
-  {
-    if (lines.contains("\\t"))
-    {
-      hasTabs = true;
-    }
-  }
-
-  QString guesserText = dataTypeGuesserLabel->text();
-
-  if (hasTabs == true)
-  {
-    guesserText.replace("[dataType]", "<b>Fixed Width</b>");
-    isFixedWidthRadio->setChecked(true);
-  }
-  else
-  {
-    guesserText.replace("[dataType]", "<b>Delimited</b>");
-    isDelimitedRadio->setChecked(true);
-  }
-
-  dataTypeGuesserLabel->setText(guesserText);
-
-  ImportASCIIDataWizard::LoadOriginalLines(lines);
-
-  ImportASCIIDataWizard::InsertLines(lines, 1);
+  QString value = index.model()->data(index, Qt::EditRole).toString();
+  QLineEdit* line = static_cast<QLineEdit*>(editor);
+  line->setText(value);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int DelimitedOrFixedWidthPage::nextId() const
+void TupleTableItemDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
 {
-  if (isDelimitedRadio->isChecked())
-  {
-    return ImportASCIIDataWizard::Delimited;
-  }
-  else
-  {
-    return ImportASCIIDataWizard::DataFormat;
-  }
+  QLineEdit* line = static_cast<QLineEdit*>(editor);
+  QString value = line->text();
+  model->setData(index, value);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TupleTableItemDelegate::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
+{
+  editor->setGeometry(option.rect);
 }

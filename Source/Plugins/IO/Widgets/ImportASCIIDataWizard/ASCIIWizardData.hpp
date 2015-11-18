@@ -58,10 +58,11 @@ public:
   QList<char> delimiters;
   bool isFixedWidth;
   bool consecutiveDelimiters;
+  QVector<size_t> tupleDims;
 
   bool isEmpty()
   {
-    if (inputFilePath.isEmpty() && dataHeaders.isEmpty() && dataTypes.isEmpty() && beginIndex < 0 && numberOfLines < 0)
+    if (inputFilePath.isEmpty() && dataHeaders.isEmpty() && dataTypes.isEmpty() && tupleDims.isEmpty() && beginIndex < 0 && numberOfLines < 0)
     {
       return true;
     }

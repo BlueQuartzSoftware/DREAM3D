@@ -70,7 +70,7 @@ class ImportASCIIDataWizard : public QWizard
     * @param filter The instance of the filter that this parameter is a part of
     * @param parent The parent QWidget for this Widget
     */
-    ImportASCIIDataWizard(const QString &inputFilePath, QWidget* parent = NULL);
+    ImportASCIIDataWizard(const QString &inputFilePath, int numLines, QWidget* parent = NULL);
 
     virtual ~ImportASCIIDataWizard();
 
@@ -142,6 +142,7 @@ class ImportASCIIDataWizard : public QWizard
     QStringList getDataTypes();
     int getBeginningLineNum();
     QString getInputFilePath();
+    QVector<size_t> getTupleDims();
 
     void setInputFilePath(const QString &inputFilePath);
 
@@ -150,6 +151,7 @@ class ImportASCIIDataWizard : public QWizard
 
   private:
     QString                                             m_InputFilePath;
+    int                                                 m_NumLines;
 
     QPushButton*                                        m_RefreshBtn;
 

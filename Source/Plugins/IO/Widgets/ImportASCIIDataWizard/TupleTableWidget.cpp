@@ -32,20 +32,25 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#include "TupleTableWidget.h"
 
-#include "DelimitedOrFixedWidthPage.h"
+#include <QtCore/QMetaProperty>
 
-#include <QtCore/QFile>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QTableWidgetItem>
 
-#include "ImportASCIIDataWizard.h"
-#include "ASCIIDataModel.h"
+#include "TupleTableItemDelegate.h"
+
+const QString addRowTT = "Adds a row to the table.";
+const QString addColTT = "Adds a column to the table.";
+const QString deleteRowTT = "Removes the currently selected row from the table.";
+const QString deleteColTT = "Removes the currently selected column from the table.";
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DelimitedOrFixedWidthPage::DelimitedOrFixedWidthPage(const QString &inputFilePath, int numLines, QWidget* parent) :
-  AbstractWizardPage(inputFilePath, parent),
-  m_NumLines(numLines)
+TupleTableWidget::TupleTableWidget(QWidget* parent) :
+  QWidget(parent)
 {
   setupUi(this);
 
@@ -55,103 +60,115 @@ DelimitedOrFixedWidthPage::DelimitedOrFixedWidthPage(const QString &inputFilePat
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DelimitedOrFixedWidthPage::~DelimitedOrFixedWidthPage()
-{
+TupleTableWidget::~TupleTableWidget()
+{}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TupleTableWidget::setupGui()
+{
+  // Set the item delegate so that we can only enter 'double' values into the table
+  TupleTableItemDelegate* dlg = new TupleTableItemDelegate(tupleTable);
+  tupleTable->setItemDelegate(dlg);
+
+  tupleTable->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+
+  // Set button tooltips
+  addTupleBtn->setToolTip(addColTT);
+  deleteTupleBtn->setToolTip(deleteColTT);
+
+  // Set Icons
+  QIcon addIcon = QIcon(QString(":/add2.png"));
+  QIcon deleteIcon = QIcon(QString(":/delete2.png"));
+  addTupleBtn->setIcon(addIcon);
+  deleteTupleBtn->setIcon(deleteIcon);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DelimitedOrFixedWidthPage::setupGui()
+QVector<size_t> TupleTableWidget::getData()
 {
-  ASCIIDataModel* model = ASCIIDataModel::Instance();
+  int cCount = tupleTable->columnCount();
+  QVector<size_t> data(cCount, 0);
 
-  refreshModel();
-
-  dataView->setModel(model);
-  dataView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-
-  registerField("isDelimited", isDelimitedRadio);
-  registerField("isFixedWidth", isFixedWidthRadio);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DelimitedOrFixedWidthPage::showEvent(QShowEvent* event)
-{
-  ASCIIDataModel* model = ASCIIDataModel::Instance();
-  model->clearContents();
-
-  if (model->columnCount() > 0)
+  for (int col = 0; col < cCount; col++)
   {
-    model->removeColumns(0, model->columnCount());
-  }
-
-  // This is the first screen, so everything automatically goes into one column for now
-  model->insertColumn(0);
-
-  for (int row = 0; row < model->rowCount(); row++)
-  {
-    QString line = model->originalString(row);
-
-    QModelIndex index = model->index(row, 0);
-
-    model->setData(index, line, Qt::DisplayRole);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DelimitedOrFixedWidthPage::refreshModel()
-{
-  ASCIIDataModel* model = ASCIIDataModel::Instance();
-  model->clear();
-
-  QStringList lines = ImportASCIIDataWizard::ReadLines(m_InputFilePath, 1, ImportASCIIDataWizard::TotalPreviewLines);
-
-  bool hasTabs = false;
-  for (int i = 0; i < lines.size(); i++)
-  {
-    if (lines.contains("\\t"))
+    bool ok = false;
+    QTableWidgetItem* item = tupleTable->item(0, col);
+    if (NULL == item)
     {
-      hasTabs = true;
+      return QVector<size_t>();
     }
+    data[col] = item->data(Qt::DisplayRole).toInt();
   }
 
-  QString guesserText = dataTypeGuesserLabel->text();
-
-  if (hasTabs == true)
-  {
-    guesserText.replace("[dataType]", "<b>Fixed Width</b>");
-    isFixedWidthRadio->setChecked(true);
-  }
-  else
-  {
-    guesserText.replace("[dataType]", "<b>Delimited</b>");
-    isDelimitedRadio->setChecked(true);
-  }
-
-  dataTypeGuesserLabel->setText(guesserText);
-
-  ImportASCIIDataWizard::LoadOriginalLines(lines);
-
-  ImportASCIIDataWizard::InsertLines(lines, 1);
+  return data;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int DelimitedOrFixedWidthPage::nextId() const
+void TupleTableWidget::addTupleDimensions(QVector<size_t> tupleDims)
 {
-  if (isDelimitedRadio->isChecked())
+  for (int i = 0; i < tupleDims.size(); i++)
   {
-    return ImportASCIIDataWizard::Delimited;
-  }
-  else
-  {
-    return ImportASCIIDataWizard::DataFormat;
+    addColumn(tupleDims[i]);
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TupleTableWidget::addColumn(int value)
+{
+  int col = tupleTable->columnCount();
+
+  // If we are adding the first column, add the first row too.
+  if (col <= 0)
+  {
+    tupleTable->insertRow(0);
+  }
+
+  tupleTable->insertColumn(col);
+
+  QTableWidgetItem* item = new QTableWidgetItem(QString::number(value));
+  tupleTable->setItem(0, col, item);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TupleTableWidget::on_addTupleBtn_pressed()
+{
+  addColumn(1);
+
+  emit tupleDimsChanged(getData());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TupleTableWidget::on_deleteTupleBtn_pressed()
+{
+  int currentColumn = tupleTable->currentColumn();
+
+  if (currentColumn >= 0)
+  {
+    tupleTable->removeColumn(tupleTable->currentColumn());
+  }
+
+  emit tupleDimsChanged(getData());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TupleTableWidget::on_tupleTable_itemChanged(QTableWidgetItem* item)
+{
+  emit tupleDimsChanged(getData());
+}
+
+
+

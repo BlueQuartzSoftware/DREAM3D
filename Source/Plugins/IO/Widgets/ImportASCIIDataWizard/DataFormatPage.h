@@ -56,7 +56,7 @@ class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
     * @param filter The instance of the filter that this parameter is a part of
     * @param parent The parent QWidget for this Widget
     */
-    DataFormatPage(const QString &inputFilePath, QWidget* parent = NULL);
+    DataFormatPage(const QString &inputFilePath, int numLines, QWidget* parent = NULL);
 
     virtual ~DataFormatPage();
 
@@ -80,6 +80,8 @@ class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
     */
     virtual void cleanupPage();
 
+    TupleTableWidget* getTupleTable();
+
   protected:
     void showEvent(QShowEvent* event);
 
@@ -93,8 +95,10 @@ class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
     void on_dataTypeCB_currentTextChanged(const QString &text);
 
     void updateSelection(const QItemSelection &selected, const QItemSelection &deselected);
+    void checkTupleDimensions(QVector<size_t> tupleDims);
 
   private:
+    int                                             m_NumLines;
 
     DataFormatPage(const DataFormatPage&); // Copy Constructor Not Implemented
     void operator=(const DataFormatPage&); // Operator '=' Not Implemented

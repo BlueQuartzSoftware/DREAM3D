@@ -139,11 +139,10 @@ void ImportASCIIData::dataCheck()
   QStringList dataTypes = wizardData.dataTypes;
   int numLines = wizardData.numberOfLines;
   int beginIndex = wizardData.beginIndex;
+  QVector<size_t> tDims = wizardData.tupleDims;
+  QVector<size_t> cDims(1, 1);
 
   QFileInfo fi(inputFilePath);
-
-  QVector<size_t> tDims(1, numLines - beginIndex + 1);
-  QVector<size_t> cDims(1, 1);
 
   AttributeMatrix::Pointer am = getDataContainerArray()->getAttributeMatrix(m_AttributeMatrixPath);
   if (NULL == am.get())

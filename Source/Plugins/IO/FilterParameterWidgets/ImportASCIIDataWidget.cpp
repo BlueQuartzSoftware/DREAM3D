@@ -262,7 +262,7 @@ void ImportASCIIDataWidget::on_importFileBtn_pressed()
       inputFile.close();
     }
 
-    m_ImportWizard = new ImportASCIIDataWizard(filePath, this);
+    m_ImportWizard = new ImportASCIIDataWizard(filePath, m_NumLines, this);
     int result = m_ImportWizard->exec();
 
     if (result == QDialog::Accepted)
@@ -315,6 +315,7 @@ void ImportASCIIDataWidget::filterNeedsInputParameters(AbstractFilter* filter)
     data.beginIndex = m_ImportWizard->getBeginningLineNum();
     data.numberOfLines = m_NumLines;
     data.dataTypes = m_ImportWizard->getDataTypes();
+    data.tupleDims = m_ImportWizard->getTupleDims();
 
     QVariant v;
     v.setValue(data);

@@ -46,8 +46,9 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataFormatPage::DataFormatPage(const QString &inputFilePath, QWidget* parent) :
-  AbstractWizardPage(inputFilePath, parent)
+DataFormatPage::DataFormatPage(const QString &inputFilePath, int numLines, QWidget* parent) :
+  AbstractWizardPage(inputFilePath, parent),
+  m_NumLines(numLines)
 {
   setupUi(this);
 
@@ -73,6 +74,7 @@ void DataFormatPage::setupGui()
   dataView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
   connect(dataView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)), this, SLOT(updateSelection(const QItemSelection&, const QItemSelection&)));
+  connect(tupleDimsTable, SIGNAL(tupleDimsChanged(QVector<size_t>)), this, SLOT(checkTupleDimensions(QVector<size_t>)));
 
   headersIndexLineEdit->setValidator(new QRegularExpressionValidator(QRegularExpression("[1-9]|1[0-9]|20"), headersIndexLineEdit));
 
@@ -92,8 +94,15 @@ void DataFormatPage::setupGui()
   dataTypeCB->addItems(dataTypes);
   dataTypeCB->setCurrentIndex(0);
 
+  int beginIndex = startRowSpin->value();
+  tupleDimsTable->blockSignals(true);
+  tupleDimsTable->addTupleDimensions(QVector<size_t>(1, m_NumLines - beginIndex + 1));
+  tupleDimsTable->blockSignals(false);
+
   addHeadersBtn->setDisabled(true);
   columnDataGroupBox->setDisabled(true);
+  
+  tupleTableErrLabel->hide();
 }
 
 // -----------------------------------------------------------------------------
@@ -271,6 +280,34 @@ void DataFormatPage::updateSelection(const QItemSelection &selected, const QItem
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void DataFormatPage::checkTupleDimensions(QVector<size_t> tupleDims)
+{
+  int tupleTotal = 1;
+
+  for (int i = 0; i < tupleDims.size(); i++)
+  {
+    tupleTotal = tupleTotal * tupleDims[i];
+  }
+
+  int beginIndex = startRowSpin->value();
+  int numOfDataLines = m_NumLines - beginIndex + 1;
+  if (tupleTotal != numOfDataLines)
+  {
+    tupleTableErrLabel->setText("The current tuple dimensions do not match the total number of lines to be read.");
+    tupleTableErrLabel->show();
+    wizard()->button(QWizard::FinishButton)->setDisabled(true);
+  }
+  else
+  {
+    tupleTableErrLabel->setText("");
+    tupleTableErrLabel->hide();
+    wizard()->button(QWizard::FinishButton)->setEnabled(true);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void DataFormatPage::on_dataTypeRadio_clicked()
 {
   ASCIIDataModel* model = ASCIIDataModel::Instance();
@@ -358,6 +395,14 @@ void DataFormatPage::refreshModel()
   {
 
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+TupleTableWidget* DataFormatPage::getTupleTable()
+{
+  return tupleDimsTable;
 }
 
 // -----------------------------------------------------------------------------

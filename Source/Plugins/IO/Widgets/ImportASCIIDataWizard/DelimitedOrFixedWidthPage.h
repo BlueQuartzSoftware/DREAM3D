@@ -56,7 +56,7 @@ class DelimitedOrFixedWidthPage : public AbstractWizardPage, private Ui::Delimit
     * @param filter The instance of the filter that this parameter is a part of
     * @param parent The parent QWidget for this Widget
     */
-    DelimitedOrFixedWidthPage(const QString &inputFilePath, QWidget* parent = NULL);
+    DelimitedOrFixedWidthPage(const QString &inputFilePath, int numLines, QWidget* parent = NULL);
 
     virtual ~DelimitedOrFixedWidthPage();
 
@@ -79,6 +79,7 @@ class DelimitedOrFixedWidthPage : public AbstractWizardPage, private Ui::Delimit
     void showEvent(QShowEvent* event);
 
   private:
+    int                                             m_NumLines;
 
     DelimitedOrFixedWidthPage(const DelimitedOrFixedWidthPage&); // Copy Constructor Not Implemented
     void operator=(const DelimitedOrFixedWidthPage&); // Operator '=' Not Implemented
