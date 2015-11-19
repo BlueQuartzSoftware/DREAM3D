@@ -76,7 +76,7 @@ void DataFormatPage::setupGui()
   connect(dataView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)), this, SLOT(updateSelection(const QItemSelection&, const QItemSelection&)));
   connect(tupleDimsTable, SIGNAL(tupleDimsChanged(QVector<size_t>)), this, SLOT(checkTupleDimensions(QVector<size_t>)));
 
-  headersIndexLineEdit->setValidator(new QRegularExpressionValidator(QRegularExpression("1[0-9]*"), headersIndexLineEdit));
+  headersIndexLineEdit->setValidator(new QRegularExpressionValidator(QRegularExpression("[1-9][0-9]*"), headersIndexLineEdit));
 
   registerField("startRow", startRowSpin);
 
