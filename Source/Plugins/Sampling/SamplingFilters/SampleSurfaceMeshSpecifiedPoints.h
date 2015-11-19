@@ -40,6 +40,7 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Geometry/VertexGeom.h"
 
 #include "Sampling/SamplingFilters/SampleSurfaceMesh.h"
 

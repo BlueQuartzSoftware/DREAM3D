@@ -331,8 +331,7 @@ namespace DREAM3D
     const QString Mask("Mask");
     const QString MTRdensity("MTRdensity");
     const QString MTRgKAM("MTRgKAM");
-    const QString MicroTextureRegionFractionOccupied("MicroTextureRegionFractionOccupied");
-    const QString MicroTextureRegionNumCells("MicroTextureRegionNumCells");
+
     const QString MisorientationList("MisorientationList");
     const QString NeighborList("NeighborList");
     const QString NeighborhoodList("NeighborhoodList");

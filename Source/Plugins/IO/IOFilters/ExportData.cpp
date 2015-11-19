@@ -70,7 +70,7 @@ class ExportDataPrivate
     // -----------------------------------------------------------------------------
     bool operator()(IDataArray::Pointer p)
     {
-      return (boost::dynamic_pointer_cast<DataArrayType>(p).get() != NULL);
+      return (std::dynamic_pointer_cast<DataArrayType>(p).get() != NULL);
     }
 
     // -----------------------------------------------------------------------------
@@ -78,7 +78,7 @@ class ExportDataPrivate
     // -----------------------------------------------------------------------------
     void static Execute(ExportData* filter, IDataArray::Pointer inputData, char delimeter, QString outputFile, int32_t MaxValPerLine)
     {
-      typename DataArrayType::Pointer inputArray = boost::dynamic_pointer_cast<DataArrayType>(inputData);
+      typename DataArrayType::Pointer inputArray = std::dynamic_pointer_cast<DataArrayType>(inputData);
 
       QFile file(outputFile);
       if (!file.open(QIODevice::WriteOnly | QIODevice::Text))

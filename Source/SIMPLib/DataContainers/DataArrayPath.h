@@ -164,28 +164,28 @@ class SIMPLib_EXPORT DataArrayPath : public QObject
      * @param other The other path
      * @return true if the two paths share the same data container, false otherwise
      */
-    bool sameDataContainer(const DataArrayPath& other) const;
+    bool hasSameDataContainer(const DataArrayPath& other) const;
 
     /**
     * @brief checks that two paths share the same attribute matrix
     * @param other The other path
     * @return true if the two paths share the same attribute matrix, false otherwise
     */
-    bool sameAttributeMatrix(const DataArrayPath& other) const;
+    bool hasSameAttributeMatrix(const DataArrayPath& other) const;
 
     /**
      * @brief checks that two paths share the same data container and attribute matrix
      * @param other The other path
      * @return true if the two paths share the same data container and attribute matrix, false otherwise
      */
-    bool sameAttributeMatrixPath(const DataArrayPath& other) const;
+    bool hasSameAttributeMatrixPath(const DataArrayPath& other) const;
 
     /**
      * @brief checks that two paths share the same data array
      * @param other The other path
      * @return true if the two paths share the same data array, false otherwise
      */
-    bool sameDataArray(const DataArrayPath& other) const;
+    bool hasSameDataArray(const DataArrayPath& other) const;
 
     /**
     * @brief checks that a vector of paths have the same data container and attribute matrix

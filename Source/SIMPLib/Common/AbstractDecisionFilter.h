@@ -34,31 +34,26 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _CopyAttributeArray_H_
-#define _CopyAttributeArray_H_
+#ifndef _ABSTRACTDECISIONFILTER_H_
+#define _ABSTRACTDECISIONFILTER_H_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 /**
- * @brief The CopyAttributeArray class. See [Filter documentation](@ref copyattributearray) for details.
+ * @brief The AbstractDecisionFilter class. This class serves as a superclass for other classes
+ * in the SIMPLibProj plugin.
  */
-class SIMPLib_EXPORT CopyAttributeArray : public AbstractFilter
+class AbstractDecisionFilter : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    SIMPL_SHARED_POINTERS(CopyAttributeArray)
-    SIMPL_STATIC_NEW_MACRO(CopyAttributeArray)
-    SIMPL_TYPE_MACRO_SUPER(CopyAttributeArray, AbstractFilter)
+    SIMPL_SHARED_POINTERS(AbstractDecisionFilter)
+    SIMPL_STATIC_NEW_MACRO(AbstractDecisionFilter)
+    SIMPL_TYPE_MACRO_SUPER(AbstractDecisionFilter, AbstractFilter)
 
-    virtual ~CopyAttributeArray();
-
-    SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
-    Q_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
-
-    SIMPL_FILTER_PARAMETER(QString, NewArrayName)
-    Q_PROPERTY(QString NewArrayName READ getNewArrayName WRITE setNewArrayName)
+    virtual ~AbstractDecisionFilter();
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -134,7 +129,7 @@ class SIMPLib_EXPORT CopyAttributeArray : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    CopyAttributeArray();
+    AbstractDecisionFilter();
 
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -142,9 +137,8 @@ class SIMPLib_EXPORT CopyAttributeArray : public AbstractFilter
     void dataCheck();
 
   private:
-
-    CopyAttributeArray(const CopyAttributeArray&); // Copy Constructor Not Implemented
-    void operator=(const CopyAttributeArray&); // Operator '=' Not Implemented
+    AbstractDecisionFilter(const AbstractDecisionFilter&); // Copy Constructor Not Implemented
+    void operator=(const AbstractDecisionFilter&); // Operator '=' Not Implemented
 };
 
-#endif /* _CopyAttributeArray_H_ */
+#endif /* _ABSTRACTDECISIONFILTER_H_ */

@@ -34,31 +34,33 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _CopyDataContainer_H_
-#define _CopyDataContainer_H_
+#ifndef _FeatureCountDecision_H_
+#define _FeatureCountDecision_H_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
+#include "SIMPLib/Common/AbstractDecisionFilter.h"
+
 /**
- * @brief The CopyDataContainer class. See [Filter documentation](@ref copydatacontainer) for details.
+ * @brief The FeatureCountDecision class. See [Filter documentation](@ref featurecountdecision) for details.
  */
-class SIMPLib_EXPORT CopyDataContainer : public AbstractFilter
+class FeatureCountDecision : public AbstractDecisionFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    SIMPL_SHARED_POINTERS(CopyDataContainer)
-    SIMPL_STATIC_NEW_MACRO(CopyDataContainer)
-    SIMPL_TYPE_MACRO_SUPER(CopyDataContainer, AbstractFilter)
+    SIMPL_SHARED_POINTERS(FeatureCountDecision)
+    SIMPL_STATIC_NEW_MACRO(FeatureCountDecision)
+    SIMPL_TYPE_MACRO_SUPER(FeatureCountDecision, AbstractDecisionFilter)
 
-    virtual ~CopyDataContainer();
+    virtual ~FeatureCountDecision();
 
-    SIMPL_FILTER_PARAMETER(QString, SelectedDataContainerName)
-    Q_PROPERTY(QString SelectedDataContainerName READ getSelectedDataContainerName WRITE setSelectedDataContainerName)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+      Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    SIMPL_FILTER_PARAMETER(QString, NewDataContainerName)
-    Q_PROPERTY(QString NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
+    SIMPL_FILTER_PARAMETER(int, MaxGrains)
+    Q_PROPERTY(int MaxGrains READ getMaxGrains WRITE setMaxGrains)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -111,40 +113,26 @@ class SIMPLib_EXPORT CopyDataContainer : public AbstractFilter
     virtual void preflight();
 
   signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer
-     */
-    void updateFilterParameters(AbstractFilter* filter);
-
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-    void parametersChanged();
-
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-    void preflightAboutToExecute();
-
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-    void preflightExecuted();
+    void decisionMade(bool& dm);
 
   protected:
-    CopyDataContainer();
+    FeatureCountDecision();
 
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
 
-  private:
+    /**
+     * @brief find_shifts Reimplemented from @see AlignSections class
+     */
+//    virtual void find_shifts(std::vector<int64_t>& xshifts, std::vector<int64_t>& yshifts);
 
-    CopyDataContainer(const CopyDataContainer&); // Copy Constructor Not Implemented
-    void operator=(const CopyDataContainer&); // Operator '=' Not Implemented
+  private:
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+
+    FeatureCountDecision(const FeatureCountDecision&); // Copy Constructor Not Implemented
+    void operator=(const FeatureCountDecision&); // Operator '=' Not Implemented
 };
 
-#endif /* _CopyDataContainer_H_ */
+#endif /* _FeatureCountDecision_H_ */

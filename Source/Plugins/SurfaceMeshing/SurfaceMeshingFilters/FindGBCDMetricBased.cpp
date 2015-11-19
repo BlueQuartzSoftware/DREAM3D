@@ -60,6 +60,7 @@
 #include "moc_FindGBCDMetricBased.cpp"
 
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Geometry/TriangleGeom.h"
 #include <QtCore/QDir>
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 #include <cmath>

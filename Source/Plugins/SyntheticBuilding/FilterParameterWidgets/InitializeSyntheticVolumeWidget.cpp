@@ -60,6 +60,7 @@
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
 #include "SIMPLib/Utilities/SIMPLibRandom.h"
 #include "SIMPLib/CoreFilters/DataContainerReader.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "QtSupportLib/QFileCompleter.h"
 

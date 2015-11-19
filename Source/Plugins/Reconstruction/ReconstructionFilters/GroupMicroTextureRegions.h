@@ -204,9 +204,9 @@ class GroupMicroTextureRegions : public GroupFeatures
      */
     void updateFeatureInstancePointers();
 
-    boost::shared_ptr<NumberDistribution> m_Distribution;
-    boost::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;
-    boost::shared_ptr<Generator> m_NumberGenerator;
+    std::shared_ptr<NumberDistribution> m_Distribution;
+    std::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;
+    std::shared_ptr<Generator> m_NumberGenerator;
     size_t                       m_TotalRandomNumbersGenerated;
 
     GroupMicroTextureRegions(const GroupMicroTextureRegions&); // Copy Constructor Not Implemented

@@ -40,7 +40,7 @@
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 /*
  * @class MatrixMath MatrixMath.h DREAM3DLib/Common/MatrixMath.h

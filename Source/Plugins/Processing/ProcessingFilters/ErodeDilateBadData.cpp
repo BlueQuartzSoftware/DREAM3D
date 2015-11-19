@@ -45,6 +45,7 @@
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "Processing/ProcessingConstants.h"
 
@@ -63,7 +64,6 @@ ErodeDilateBadData::ErodeDilateBadData() :
   m_XDirOn(true),
   m_YDirOn(true),
   m_ZDirOn(true),
-  m_ReplaceBadData(true),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_Neighbors(NULL),
   m_FeatureIds(NULL)
@@ -100,7 +100,6 @@ void ErodeDilateBadData::setupFilterParameters()
   parameters.push_back(BooleanFilterParameter::New("X Direction", "XDirOn", getXDirOn(), FilterParameter::Parameter));
   parameters.push_back(BooleanFilterParameter::New("Y Direction", "YDirOn", getYDirOn(), FilterParameter::Parameter));
   parameters.push_back(BooleanFilterParameter::New("Z Direction", "ZDirOn", getZDirOn(), FilterParameter::Parameter));
-  parameters.push_back(BooleanFilterParameter::New("Replace Bad Data", "ReplaceBadData", getReplaceBadData(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
@@ -121,7 +120,6 @@ void ErodeDilateBadData::readFilterParameters(AbstractFilterParametersReader* re
   setXDirOn(reader->readValue("XDirOn", getXDirOn()) );
   setYDirOn(reader->readValue("YDirOn", getYDirOn()) );
   setZDirOn(reader->readValue("ZDirOn", getZDirOn()) );
-  setReplaceBadData(reader->readValue("ReplaceBadData", getReplaceBadData()) );
   reader->closeFilterGroup();
 }
 
@@ -138,7 +136,6 @@ int ErodeDilateBadData::writeFilterParameters(AbstractFilterParametersWriter* wr
   SIMPL_FILTER_WRITE_PARAMETER(XDirOn)
   SIMPL_FILTER_WRITE_PARAMETER(YDirOn)
   SIMPL_FILTER_WRITE_PARAMETER(ZDirOn)
-  SIMPL_FILTER_WRITE_PARAMETER(ReplaceBadData)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -315,17 +312,10 @@ void ErodeDilateBadData::execute()
         if ( (featurename == 0 && m_FeatureIds[neighbor] > 0 && m_Direction == 1)
              || (featurename > 0 && m_FeatureIds[neighbor] == 0 && m_Direction == 0))
         {
-          if (getReplaceBadData())
+          for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
-            for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
-            {
-              IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
-              p->copyTuple(neighbor, j);
-            }
-          }
-          else
-          {
-            m_FeatureIds[j] = m_FeatureIds[neighbor];
+            IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
+            p->copyTuple(neighbor, j);
           }
         }
       }

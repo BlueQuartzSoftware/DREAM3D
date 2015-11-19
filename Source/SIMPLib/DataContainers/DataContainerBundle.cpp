@@ -38,6 +38,7 @@
 
 
 #include "SIMPLib/DataArrays/StringDataArray.hpp"
+#include "SIMPLib/DataContainers/DataArrayPath.h"
 
 #include "moc_DataContainerBundle.cpp"
 
@@ -223,7 +224,7 @@ QVector<DataArrayPath> DataContainerBundle::findCommonDataArrayPaths(bool filter
       foreach(DataArrayPath path, paths)
       {
         //qDebug() << "Comparing " << dc0Path.serialize() << " TO " << path.serialize();
-        if(path.sameAttributeMatrix(dc0Path) &&  path.sameDataArray(dc0Path) )
+        if(path.hasSameAttributeMatrix(dc0Path) &&  path.hasSameDataArray(dc0Path) )
         {
           match = true;
         }

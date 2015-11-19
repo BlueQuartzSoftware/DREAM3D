@@ -32,7 +32,6 @@ set(_PublicFilters
   FindTwinBoundaries
   FindTwinBoundarySchmidFactors
   GenerateIPFColors
-  GenerateMisorientationColors
   NeighborOrientationCorrelation
   ReadAngData
   ReadCtfData
@@ -63,10 +62,9 @@ endforeach()
 set(_PrivateFilters
 
   FindBasalLoadingFactor
-  FindDirectionalModuli
+  
   FindLocalAverageCAxisMisalignments
   FindMicroTextureRegions
-  FindModulusMismatch
   FindOrientationFieldCurl
   GenerateEulerColors
   GenerateRodriguesColors

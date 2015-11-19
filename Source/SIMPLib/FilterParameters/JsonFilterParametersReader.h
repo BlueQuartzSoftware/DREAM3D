@@ -140,8 +140,7 @@ class SIMPLib_EXPORT JsonFilterParametersReader : public AbstractFilterParameter
 
     virtual IntVec3_t readIntVec3(const QString name, IntVec3_t v);
     virtual FloatVec3_t readFloatVec3(const QString name, FloatVec3_t v);
-    virtual FloatVec4_t readFloatVec4(const QString name, FloatVec4_t v);
-    virtual FloatVec21_t readFloatVec21(const QString name, FloatVec21_t v);
+
     virtual Float2ndOrderPoly_t readFloat2ndOrderPoly(const QString name, Float2ndOrderPoly_t v);
     virtual Float3rdOrderPoly_t readFloat3rdOrderPoly(const QString name, Float3rdOrderPoly_t v);
     virtual Float4thOrderPoly_t readFloat4thOrderPoly(const QString name, Float4thOrderPoly_t v);

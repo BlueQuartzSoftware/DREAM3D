@@ -314,39 +314,33 @@ void DataArrayPath::update(const QString& dcName, const QString& amName, const Q
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool DataArrayPath::sameDataContainer(const DataArrayPath& other) const
+bool DataArrayPath::hasSameDataContainer(const DataArrayPath& other) const
 {
-  if(0 == d_ptr->m_DataContainerName.compare(other.d_ptr->m_DataContainerName))
-  { return true; }
-  return false;
+  return (d_ptr->m_DataContainerName == other.d_ptr->m_DataContainerName);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool DataArrayPath::sameAttributeMatrix(const DataArrayPath& other) const
+bool DataArrayPath::hasSameAttributeMatrix(const DataArrayPath& other) const
 {
-  if(0 == d_ptr->m_AttributeMatrixName.compare(other.d_ptr->m_AttributeMatrixName))
-  { return true; }
-  return false;
+  return (d_ptr->m_AttributeMatrixName == other.d_ptr->m_AttributeMatrixName);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool DataArrayPath::sameDataArray(const DataArrayPath& other) const
+bool DataArrayPath::hasSameDataArray(const DataArrayPath& other) const
 {
-  if(0 == d_ptr->m_DataArrayName.compare(other.d_ptr->m_DataArrayName))
-  { return true; }
-  return false;
+  return (d_ptr->m_DataArrayName == other.d_ptr->m_DataArrayName);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool DataArrayPath::sameAttributeMatrixPath(const DataArrayPath& other) const
+bool DataArrayPath::hasSameAttributeMatrixPath(const DataArrayPath& other) const
 {
-  return(sameDataContainer(other) && sameAttributeMatrix(other));
+  return(hasSameDataContainer(other) && hasSameAttributeMatrix(other));
 }
 
 // -----------------------------------------------------------------------------

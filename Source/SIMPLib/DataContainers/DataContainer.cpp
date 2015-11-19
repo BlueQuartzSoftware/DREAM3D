@@ -35,6 +35,19 @@
 
 #include "DataContainer.h"
 
+
+#include "SIMPLib/DataContainers/DataContainerProxy.h"
+#include "SIMPLib/DataContainers/DataContainerArrayProxy.h"
+#include "SIMPLib/DataContainers/DataArrayPath.h"
+
+
+#include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Geometry/RectGridGeom.h"
+#include "SIMPLib/Geometry/VertexGeom.h"
+#include "SIMPLib/Geometry/EdgeGeom.h"
+#include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/Geometry/QuadGeom.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

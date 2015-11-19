@@ -49,6 +49,8 @@
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Geometry/RectGridGeom.h"
 
 #include "ImageIO/ImageIOConstants.h"
 
@@ -282,21 +284,31 @@ void ImportImageStack::dataCheck()
     }
     m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
 
-    int32_t pixelBytes = 0;
+    size_t pixelBytes = 0;
 
-    if (reader.imageFormat() == QImage::Format_Indexed8)
+    QImage::Format format = reader.imageFormat();
+    switch(format)
     {
-      pixelBytes = 1;
+       case QImage::Format_Indexed8:
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
+      case QImage::Format_Grayscale8:
+#endif
+        pixelBytes = 1;
+        break;
+      case QImage::Format_RGB32:
+      case QImage::Format_ARGB32:
+        pixelBytes = 4;
+        break;
+      default:
+         pixelBytes = 0;
     }
-    else if (reader.imageFormat() == QImage::Format_RGB32 || reader.imageFormat() == QImage::Format_ARGB32)
+
+    if(pixelBytes == 0)
     {
-      pixelBytes = 4;
-    }
-    else
-    {
-      ss = QObject::tr("Image format is of unsupported type. Imported images must be either grayscale, RGB, or ARGB");
-      setErrorCondition(-1);
+      ss = QObject::tr("Image format is of unsupported type (QImage::Format=%1). Imported images must be either grayscale, RGB, or ARGB").arg(format);
+      setErrorCondition(-4400);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
     }
 
     QVector<size_t> cDims(1, pixelBytes);
@@ -347,14 +359,9 @@ void ImportImageStack::execute()
 
   uint8_t* imagePtr = NULL;
 
-  int32_t pixelBytes = 0;
-  int32_t totalPixels = 0;
-  int32_t height = 0;
-  int32_t width = 0;
-
   int64_t z = m_InputFileListInfo.StartIndex;
-  int64_t zSpot;
-
+  int64_t zSpot = 0;
+  size_t pixelBytes = 0; // MUST BE Defined & Initialized out here.
   bool hasMissingFiles = false;
   bool orderAscending = false;
 
@@ -379,7 +386,7 @@ void ImportImageStack::execute()
     QString imageFName = *filepath;
     QString ss = QObject::tr("Importing file %1").arg(imageFName);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-
+    QImageReader reader(imageFName);
     QImage image(imageFName);
     if (image.isNull() == true)
     {
@@ -393,37 +400,52 @@ void ImportImageStack::execute()
     // We need to convert from Little Endian based ARGB to a physical RGB layout
     image = image.rgbSwapped();
 #endif
-    height = image.height();
-    width = image.width();
-    totalPixels = width * height;
+    size_t height = static_cast<size_t>(image.height());
+    size_t width = static_cast<size_t>(image.width());
+    size_t totalPixels = width * height;
+
+
+
     // This is the first image so we need to create our block of data to store the data
     if (z == m_InputFileListInfo.StartIndex)
     {
       if (m_GeometryType == 0) { m->getGeometryAs<ImageGeom>()->setDimensions(width, height, fileList.size()); }
       else if (m_GeometryType == 1) { m->getGeometryAs<RectGridGeom>()->setDimensions(width, height, fileList.size()); }
-      if (image.format() == QImage::Format_Indexed8)
+
+      const QImage::Format format = reader.imageFormat();
+      switch(format)
       {
-        pixelBytes = 1;
+        case QImage::Format_Indexed8:
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
+      case QImage::Format_Grayscale8:
+#endif
+          pixelBytes = 1;
+          break;
+        case QImage::Format_RGB32:
+        case QImage::Format_ARGB32:
+          pixelBytes = 4;
+          break;
+        default:
+           pixelBytes = 0;
       }
-      else if (image.format() == QImage::Format_RGB32 || image.format() == QImage::Format_ARGB32)
+
+      if(pixelBytes == 0)
       {
-        pixelBytes = 4;
-      }
-      else
-      {
-        ss = QObject::tr("Image format is of unsupported type. Imported images must be either grayscale, RGB, or ARGB");
-        setErrorCondition(-1);
+        ss = QObject::tr("Image format is of unsupported type (QImage::Format=%1). Imported images must be either grayscale, RGB, or ARGB").arg(format);
+        setErrorCondition(-4400);
         notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
       }
-      QVector<size_t> compDims(1, pixelBytes);
 
-      data = UInt8ArrayType::CreateArray(size_t(fileList.size()) * height * width, compDims, m_ImageDataArrayName);
+      QVector<size_t> cDims(1, pixelBytes);
+
+      data = UInt8ArrayType::CreateArray(size_t(fileList.size()) * height * width, cDims, m_ImageDataArrayName);
+      data->initializeWithValue(128);
     }
 
     // Get the current position in the array to copy the image into
-    zSpot = (z -  m_InputFileListInfo.StartIndex);
-    for (int32_t i = 0; i < height; ++i)
+    zSpot = (z - m_InputFileListInfo.StartIndex);
+    for (size_t i = 0; i < height; ++i)
     {
       imagePtr = data->getPointer( (zSpot) * totalPixels * pixelBytes + i * (width * pixelBytes));
       uint8_t* source = image.scanLine(i);

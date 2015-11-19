@@ -49,6 +49,7 @@
 
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Utilities/SIMPLibEndian.h"
+#include "SIMPLib/Geometry/TriangleGeom.h"
 
 #include "IO/IOConstants.h"
 
@@ -334,7 +335,7 @@ void SurfaceMeshToNonconformalVtk::execute()
   {
     totalCells += featureIter.value();
   }
-  BOOST_ASSERT(totalCells == (size_t)(numTriangles * 2) );
+  Q_ASSERT(totalCells == (size_t)(numTriangles * 2) );
 
 
   // Loop over all the features

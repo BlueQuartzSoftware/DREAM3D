@@ -44,12 +44,14 @@
 #endif
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
 #include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 /**
  * @brief The UpdateVerticesImpl class implements a threaded algorithm that adjusts the
@@ -240,6 +242,27 @@ AbstractFilter::Pointer SetOriginResolutionImageGeom::newFilterInstance(bool cop
 // -----------------------------------------------------------------------------
 const QString SetOriginResolutionImageGeom::getCompiledLibraryName()
 { return Core::CoreBaseName; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString SetOriginResolutionImageGeom::getBrandingString()
+{
+  return "SIMPLib Core Filter";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString SetOriginResolutionImageGeom::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
+
+
 
 // -----------------------------------------------------------------------------
 //

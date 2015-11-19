@@ -41,6 +41,7 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
+#include "SIMPLib/Geometry/VertexGeom.h"
 
 
 #include "Sampling/SamplingConstants.h"

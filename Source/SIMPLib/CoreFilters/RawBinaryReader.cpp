@@ -39,6 +39,7 @@
 #include <QtCore/QFileInfo>
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Common/ScopedFileMonitor.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
@@ -553,6 +554,27 @@ AbstractFilter::Pointer RawBinaryReader::newFilterInstance(bool copyFilterParame
 // -----------------------------------------------------------------------------
 const QString RawBinaryReader::getCompiledLibraryName()
 { return Core::CoreBaseName; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RawBinaryReader::getBrandingString()
+{
+  return "SIMPLib Core Filter";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RawBinaryReader::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
+
+
 
 // -----------------------------------------------------------------------------
 //

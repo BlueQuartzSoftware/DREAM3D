@@ -34,26 +34,25 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#include "CopyDataContainer.h"
+#include "FeatureCountDecision.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
-// Include the MOC generated file for this class
-#include "moc_CopyDataContainer.cpp"
-
-
-
+#include "moc_FeatureCountDecision.cpp"
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CopyDataContainer::CopyDataContainer() :
-  AbstractFilter(),
-  m_SelectedDataContainerName(""),
-  m_NewDataContainerName("")
+FeatureCountDecision::FeatureCountDecision() :
+  AbstractDecisionFilter(),
+  m_FeatureIdsArrayPath(" "," "," "),
+  m_MaxGrains(0),
+  m_FeatureIds(NULL)
 {
   setupFilterParameters();
 }
@@ -61,47 +60,46 @@ CopyDataContainer::CopyDataContainer() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CopyDataContainer::~CopyDataContainer()
+FeatureCountDecision::~FeatureCountDecision()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CopyDataContainer::setupFilterParameters()
+void FeatureCountDecision::setupFilterParameters()
 {
-  FilterParameterVector parameters;
-
+  FilterParameterVector parameters = getFilterParameters();
+  parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
-    DataContainerSelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container to Copy", "SelectedDataContainerName", getSelectedDataContainerName(), FilterParameter::RequiredArray, req));
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::CellEnsemble, DREAM3D::Defaults::AnyGeometry);
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
   }
-
-  parameters.push_back(StringFilterParameter::New("Copied Data Container", "NewDataContainerName", getNewDataContainerName(), FilterParameter::CreatedArray));
-
+  parameters.push_back(IntFilterParameter::New("Max Grains", "MaxGrains", getMaxGrains(), FilterParameter::Parameter, 0));
   setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CopyDataContainer::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void FeatureCountDecision::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  AbstractDecisionFilter::readFilterParameters(reader, index);
   reader->openFilterGroup(this, index);
-  setSelectedDataContainerName( reader->readString("SelectedDataContainerName", getSelectedDataContainerName()) );
-  setNewDataContainerName( reader->readString( "NewDataContainerName", getNewDataContainerName() ) );
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
+  setMaxGrains(reader->readValue("MaxGrains", getMaxGrains()));
   reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int CopyDataContainer::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int FeatureCountDecision::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  AbstractDecisionFilter::writeFilterParameters(writer, index);
   writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(SelectedDataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(NewDataContainerName)
+  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(MaxGrains)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -109,29 +107,23 @@ int CopyDataContainer::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CopyDataContainer::dataCheck()
+void FeatureCountDecision::dataCheck()
 {
   setErrorCondition(0);
-
-  if (getNewDataContainerName().isEmpty() == true)
-  {
-    setErrorCondition(-11001);
-    QString ss = QObject::tr("The new Data Container name must be set");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
-
-  DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getSelectedDataContainerName());
   if(getErrorCondition() < 0) { return; }
 
-  DataContainer::Pointer dcNew = dc->deepCopy();
-  dcNew->setName(getNewDataContainerName());
-  getDataContainerArray()->addDataContainer(dcNew);
+  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
+
+  QVector<size_t> cDims(1, 1);
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if (NULL != m_FeatureIdsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  {  m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CopyDataContainer::preflight()
+void FeatureCountDecision::preflight()
 {
   setInPreflight(true);
   emit preflightAboutToExecute();
@@ -144,20 +136,29 @@ void CopyDataContainer::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CopyDataContainer::execute()
+void FeatureCountDecision::execute()
 {
   setErrorCondition(0);
-  dataCheck(); // calling the dataCheck will copy the array, so nothing is required here
+  dataCheck();
   if(getErrorCondition() < 0) { return; }
+
+  // Assumes a SINGLE Phase. This WILL BREAK if there is more than 1 phase.
+  bool dm = false;
+  if (m_MaxGrains < m_FeatureIds[1])
+  {
+    dm = true;
+  }
+  emit decisionMade(dm);
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer CopyDataContainer::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FeatureCountDecision::newFilterInstance(bool copyFilterParameters)
 {
-  CopyDataContainer::Pointer filter = CopyDataContainer::New();
+  FeatureCountDecision::Pointer filter = FeatureCountDecision::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -168,23 +169,27 @@ AbstractFilter::Pointer CopyDataContainer::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CopyDataContainer::getCompiledLibraryName()
-{ return Core::CoreBaseName; }
+const QString FeatureCountDecision::getCompiledLibraryName()
+{ return "FeatureCountDecision"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CopyDataContainer::getGroupName()
-{ return DREAM3D::FilterGroups::CoreFilters; }
+const QString FeatureCountDecision::getGroupName()
+{
+  return DREAM3D::FilterGroups::CoreFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CopyDataContainer::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
+const QString FeatureCountDecision::getSubGroupName()
+{
+  return DREAM3D::FilterSubGroups::MiscFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CopyDataContainer::getHumanLabel()
-{ return "Copy Data Container"; }
+const QString FeatureCountDecision::getHumanLabel()
+{ return "Feature Count Decision"; }

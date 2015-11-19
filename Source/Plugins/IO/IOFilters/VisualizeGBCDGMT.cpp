@@ -47,6 +47,7 @@
 
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Geometry/TriangleGeom.h"
 
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 

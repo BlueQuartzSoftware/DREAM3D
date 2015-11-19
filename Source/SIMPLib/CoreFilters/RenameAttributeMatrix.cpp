@@ -37,6 +37,7 @@
 #include "RenameAttributeMatrix.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
@@ -179,6 +180,27 @@ AbstractFilter::Pointer RenameAttributeMatrix::newFilterInstance(bool copyFilter
 // -----------------------------------------------------------------------------
 const QString RenameAttributeMatrix::getCompiledLibraryName()
 { return Core::CoreBaseName; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RenameAttributeMatrix::getBrandingString()
+{
+  return "SIMPLib Core Filter";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RenameAttributeMatrix::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
+
+
 
 // -----------------------------------------------------------------------------
 //

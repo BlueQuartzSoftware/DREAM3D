@@ -62,9 +62,6 @@ class AlignSections : public AbstractFilter
     SIMPL_INSTANCE_PROPERTY(bool, WriteAlignmentShifts)
     Q_PROPERTY(bool WriteAlignmentShifts READ getWriteAlignmentShifts WRITE setWriteAlignmentShifts)
 
-    SIMPL_INSTANCE_PROPERTY(bool, SubtractBackground)
-    Q_PROPERTY(bool SubtractBackground READ getSubtractBackground WRITE setSubtractBackground)
-
     SIMPL_INSTANCE_STRING_PROPERTY(AlignmentShiftFileName)
     Q_PROPERTY(QString AlignmentShiftFileName READ getAlignmentShiftFileName WRITE setAlignmentShiftFileName)
 

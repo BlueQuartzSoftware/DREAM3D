@@ -51,6 +51,7 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Geometry/TriangleGeom.h"
 
 #include "IO/IOConstants.h"
 

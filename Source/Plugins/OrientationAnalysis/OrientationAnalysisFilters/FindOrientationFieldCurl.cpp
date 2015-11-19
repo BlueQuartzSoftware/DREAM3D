@@ -54,6 +54,7 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 

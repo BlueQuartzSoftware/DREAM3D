@@ -42,6 +42,7 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 
 #include "Reconstruction/ReconstructionConstants.h"

@@ -50,6 +50,7 @@
 #include "SIMPLib/FilterParameters/VolumeDataContainerInfoFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Utilities/SIMPLibRandom.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "Sampling/SamplingConstants.h"
 

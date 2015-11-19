@@ -45,8 +45,6 @@
 #include "SIMPLib/Common/ComparisonInputs.h"
 #include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
-#include "SIMPLib/FilterParameters/FloatVec4FilterParameter.h"
-#include "SIMPLib/FilterParameters/Symmetric6x6FilterParameter.h"
 #include "SIMPLib/FilterParameters/SecondOrderPolynomialFilterParameter.h"
 #include "SIMPLib/FilterParameters/ThirdOrderPolynomialFilterParameter.h"
 #include "SIMPLib/FilterParameters/FourthOrderPolynomialFilterParameter.h"
@@ -110,8 +108,6 @@ class SIMPLib_EXPORT AbstractFilterParametersWriter
 
     virtual int writeValue(const QString name, IntVec3_t v) = 0;
     virtual int writeValue(const QString name, FloatVec3_t v) = 0;
-    virtual int writeValue(const QString name, FloatVec4_t v) = 0;
-    virtual int writeValue(const QString name, FloatVec21_t v) = 0;
     virtual int writeValue(const QString name, Float2ndOrderPoly_t v) = 0;
     virtual int writeValue(const QString name, Float3rdOrderPoly_t v) = 0;
     virtual int writeValue(const QString name, Float4thOrderPoly_t v) = 0;
