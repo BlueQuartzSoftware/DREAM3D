@@ -6,7 +6,7 @@
         "FilterVersion": "6.1.351",
         "Filter_Human_Label": "Read H5EBSD File",
         "Filter_Name": "ReadH5Ebsd",
-        "InputFile": "Data\\Output\\SmallIN100.h5ebsd",
+        "InputFile": ""Data/Output/SmallIN100.h5ebsd",
         "RefFrameZDir": 1,
         "SelectedArrayNames": [
         ],

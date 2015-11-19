@@ -2,7 +2,7 @@
     "0": {
         "Filter_Human_Label": "Read DREAM.3D Data File",
         "Filter_Name": "DataContainerReader",
-        "InputFile": "C:\\Users\\groebema\\Desktop\\Groeber\\DREAM3D\\x64\\Bin\\Release\\Data\\Output\\SmallIN100.dream3d",
+        "InputFile": ""Data/Output/SmallIN100.dream3d",
         "InputFileDataContainerArrayProxy": {
             "Data Containers": [
             ]
