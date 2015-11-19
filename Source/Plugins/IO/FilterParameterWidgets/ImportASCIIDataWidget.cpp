@@ -112,8 +112,10 @@ void ImportASCIIDataWidget::setupGui()
     fileImportedLabel->hide();
     warningLabel->hide();
     removeFileBtn->hide();
-    tupleLabel->hide();
     tupleCountLabel->hide();
+    tupleCount->hide();
+    tupleDimsLabel->hide();
+    tupleDims->hide();
   }
 }
 
@@ -269,14 +271,25 @@ void ImportASCIIDataWidget::on_importFileBtn_pressed()
     {
       int beginIndex = m_ImportWizard->getBeginningLineNum();
       int numOfDataLines = m_NumLines - beginIndex + 1;
-      tupleCountLabel->setText(QString::number(numOfDataLines));
+      tupleCount->setText(QString::number(numOfDataLines));
+      QVector<size_t> dims = m_ImportWizard->getTupleDims();
+
+      QString tupleDimsStr = "";
+      for (int i = 0; i < dims.size(); i++)
+      {
+        tupleDimsStr.append("[" + QString::number(dims[i]) + "]");
+      }
+
+      tupleDims->setText(tupleDimsStr);
 
       fileImportedLabel->setText(filePath);
       fileImportedLabel->show();
       warningLabel->show();
       removeFileBtn->show();
-      tupleLabel->show();
       tupleCountLabel->show();
+      tupleCount->show();
+      tupleDimsLabel->show();
+      tupleDims->show();
       emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
     }
   }
@@ -293,8 +306,10 @@ void ImportASCIIDataWidget::on_removeFileBtn_pressed()
   fileImportedLabel->hide();
   warningLabel->hide();
   removeFileBtn->hide();
-  tupleLabel->hide();
+  tupleCount->hide();
   tupleCountLabel->hide();
+  tupleDims->hide();
+  tupleDimsLabel->hide();
 
   emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
 }
