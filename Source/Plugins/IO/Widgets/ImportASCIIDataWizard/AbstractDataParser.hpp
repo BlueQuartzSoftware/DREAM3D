@@ -94,7 +94,7 @@ public:
   void setDataArray(IDataArray::Pointer value)
   {
     AbstractDataParser::setDataArray(value);
-    m_Ptr = boost::dynamic_pointer_cast<DataArray<T> >(value);
+    m_Ptr = std::dynamic_pointer_cast<DataArray<T> >(value);
   }
 
   virtual ParserFunctor::ErrorObject parse(const QString& token, size_t index)

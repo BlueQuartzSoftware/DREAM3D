@@ -199,7 +199,7 @@ void ConvertType()
     DREAM3D_REQUIRE_EQUAL(err, 0)
 
     AttributeMatrix::Pointer am = importASCIIData->getDataContainerArray()->getAttributeMatrix(DataArrayPath(DataContainerName, AttributeMatrixName, ""));
-    typename DataArray<O>::Pointer results = boost::dynamic_pointer_cast<DataArray<O> >(am->getAttributeArray(DataArrayName));
+    typename DataArray<O>::Pointer results = std::dynamic_pointer_cast<DataArray<O> >(am->getAttributeArray(DataArrayName));
 
     DREAM3D_REQUIRE_EQUAL(results->getSize(), data.numberOfLines)
 
@@ -232,7 +232,7 @@ void ConvertType()
     DREAM3D_REQUIRE_EQUAL(err, 0)
 
     AttributeMatrix::Pointer am = importASCIIData->getDataContainerArray()->getAttributeMatrix(DataArrayPath(DataContainerName, AttributeMatrixName, ""));
-    typename DataArray<O>::Pointer results = boost::dynamic_pointer_cast<DataArray<O> >(am->getAttributeArray(DataArrayName));
+    typename DataArray<O>::Pointer results = std::dynamic_pointer_cast<DataArray<O> >(am->getAttributeArray(DataArrayName));
 
     DREAM3D_REQUIRE_EQUAL(results->getSize(), data.numberOfLines)
 
@@ -279,7 +279,7 @@ void ConvertType()
     DREAM3D_REQUIRE_EQUAL(err, 0)
 
     AttributeMatrix::Pointer am = importASCIIData->getDataContainerArray()->getAttributeMatrix(DataArrayPath(DataContainerName, AttributeMatrixName, ""));
-    typename DataArray<O>::Pointer results = boost::dynamic_pointer_cast<DataArray<O> >(am->getAttributeArray(DataArrayName));
+    typename DataArray<O>::Pointer results = std::dynamic_pointer_cast<DataArray<O> >(am->getAttributeArray(DataArrayName));
 
     DREAM3D_REQUIRE_EQUAL(results->getSize(), inputScientificNotation.size())
 
@@ -313,7 +313,7 @@ void ConvertType()
     DREAM3D_REQUIRE_EQUAL(err, 0)
 
     AttributeMatrix::Pointer am = importASCIIData->getDataContainerArray()->getAttributeMatrix(DataArrayPath(DataContainerName, AttributeMatrixName, ""));
-    typename DataArray<O>::Pointer results = boost::dynamic_pointer_cast<DataArray<O> >(am->getAttributeArray(DataArrayName));
+    typename DataArray<O>::Pointer results = std::dynamic_pointer_cast<DataArray<O> >(am->getAttributeArray(DataArrayName));
 
     DREAM3D_REQUIRE_EQUAL(results->getSize(), inputHexVector.size())
 
@@ -340,7 +340,7 @@ void ConvertType()
     DREAM3D_REQUIRE_EQUAL(err, 0)
 
     AttributeMatrix::Pointer am = importASCIIData->getDataContainerArray()->getAttributeMatrix(DataArrayPath(DataContainerName, AttributeMatrixName, ""));
-    typename DataArray<O>::Pointer results = boost::dynamic_pointer_cast<DataArray<O> >(am->getAttributeArray(DataArrayName));
+    typename DataArray<O>::Pointer results = std::dynamic_pointer_cast<DataArray<O> >(am->getAttributeArray(DataArrayName));
 
     DREAM3D_REQUIRE_EQUAL(results->getSize(), inputOctVector.size())
 
