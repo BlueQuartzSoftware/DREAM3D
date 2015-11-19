@@ -48,6 +48,7 @@
 
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/Geometry/VertexGeom.h"
 
 #include "IO/IOConstants.h"
 

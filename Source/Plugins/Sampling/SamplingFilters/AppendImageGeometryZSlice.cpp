@@ -39,6 +39,9 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
+
+#include "Sampling/SamplingConstants.h"
 
 // Include the MOC generated file for this class
 #include "moc_AppendImageGeometryZSlice.cpp"
@@ -303,7 +306,7 @@ AbstractFilter::Pointer AppendImageGeometryZSlice::newFilterInstance(bool copyFi
 //
 // -----------------------------------------------------------------------------
 const QString AppendImageGeometryZSlice::getCompiledLibraryName()
-{ return Core::CoreBaseName; }
+{ return SamplingConstants::SamplingBaseName; }
 
 // -----------------------------------------------------------------------------
 //

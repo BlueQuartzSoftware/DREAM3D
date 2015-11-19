@@ -809,7 +809,7 @@ void HexagonalLowOps::getSchmidFactorAndSS(float load[3], float plane[3], float 
 
 void HexagonalLowOps::getmPrime(QuatF& q1, QuatF& q2, float LD[3], float& mPrime)
 {
-  BOOST_ASSERT(false);
+  Q_ASSERT(false);
 #if 0
   /* I am asserting here because this code will simply give junk results and if someone uses it
    * they could unknowningly get really bad results
@@ -848,7 +848,7 @@ void HexagonalLowOps::getmPrime(QuatF& q1, QuatF& q2, float LD[3], float& mPrime
 
 void HexagonalLowOps::getF1(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1)
 {
-  BOOST_ASSERT(false);
+  Q_ASSERT(false);
 #if 0
   /* I am asserting here because this code will simply give junk results and if someone uses it
    * they could unknowningly get really bad results
@@ -923,7 +923,7 @@ void HexagonalLowOps::getF1(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float
 }
 void HexagonalLowOps::getF1spt(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1spt)
 {
-  BOOST_ASSERT(false);
+  Q_ASSERT(false);
 #if 0
   float g1[3][3];
   float g2[3][3];
@@ -1000,7 +1000,7 @@ void HexagonalLowOps::getF1spt(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, fl
 
 void HexagonalLowOps::getF7(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F7)
 {
-  BOOST_ASSERT(false);
+  Q_ASSERT(false);
 #if 0
   float g1[3][3];
   float g2[3][3];
@@ -1569,7 +1569,7 @@ DREAM3D::Rgb HexagonalLowOps::generateMisorientationColor(const QuatF& q, const 
 {
   DREAM3D::Rgb rgb = RgbColor::dRgb(0, 0, 0, 0);
 
-  BOOST_ASSERT(false);
+  Q_ASSERT(false);
 
   return rgb;
 }

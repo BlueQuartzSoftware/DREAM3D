@@ -1,4 +1,4 @@
-/* ============================================================================
+       /* ============================================================================
 * Copyright (c) 2009-2015 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
@@ -35,7 +35,8 @@
 #ifndef _TemplateHelpers_H_
 #define _TemplateHelpers_H_
 
-#include <boost/shared_ptr.hpp>
+//-- C++11 Includes
+#include <memory>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
@@ -186,7 +187,7 @@ namespace TemplateHelpers
       virtual ~CanDynamicCast() {}
       bool operator()(IDataArray::Pointer p)
       {
-        return (boost::dynamic_pointer_cast<T>(p).get() != NULL);
+        return (std::dynamic_pointer_cast<T>(p).get() != NULL);
       }
   };
 

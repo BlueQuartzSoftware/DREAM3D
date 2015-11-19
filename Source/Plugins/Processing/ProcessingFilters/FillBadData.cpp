@@ -45,6 +45,7 @@
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "Processing/ProcessingConstants.h"
 
@@ -59,7 +60,6 @@
 FillBadData::FillBadData() :
   AbstractFilter(),
   m_StoreAsNewPhase(false),
-  m_ReplaceBadData(true),
   m_MinAllowedDefectSize(1),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_CellPhasesArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
@@ -85,7 +85,6 @@ void FillBadData::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(IntFilterParameter::New("Minimum Allowed Defect Size", "MinAllowedDefectSize", getMinAllowedDefectSize(), FilterParameter::Parameter));
-  parameters.push_back(BooleanFilterParameter::New("Replace Bad Data", "ReplaceBadData", getReplaceBadData(), FilterParameter::Parameter));
   QStringList linkedProps;
   linkedProps << "CellPhasesArrayPath";
   parameters.push_back(LinkedBooleanFilterParameter::New("Store Defects as New Phase", "StoreAsNewPhase", getStoreAsNewPhase(), linkedProps, FilterParameter::Parameter));
@@ -111,7 +110,6 @@ void FillBadData::readFilterParameters(AbstractFilterParametersReader* reader, i
   setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath() ) );
   setMinAllowedDefectSize( reader->readValue("MinAllowedDefectSize", getMinAllowedDefectSize()) );
   setStoreAsNewPhase( reader->readValue("StoreAsNewPhase", getStoreAsNewPhase()) );
-  setReplaceBadData( reader->readValue("ReplaceBadData", getReplaceBadData()) );
   reader->closeFilterGroup();
 }
 
@@ -126,7 +124,6 @@ int FillBadData::writeFilterParameters(AbstractFilterParametersWriter* writer, i
   SIMPL_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
   SIMPL_FILTER_WRITE_PARAMETER(MinAllowedDefectSize)
   SIMPL_FILTER_WRITE_PARAMETER(StoreAsNewPhase)
-  SIMPL_FILTER_WRITE_PARAMETER(ReplaceBadData)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -367,17 +364,10 @@ void FillBadData::execute()
       neighbor = m_Neighbors[j];
       if (featurename < 0 && neighbor != -1 && m_FeatureIds[neighbor] > 0)
       {
-        if (getReplaceBadData())
+        for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
-          for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
-          {
-            IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
-            p->copyTuple(neighbor, j);
-          }
-        }
-        else
-        {
-          m_FeatureIds[j] = m_FeatureIds[neighbor];
+          IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
+          p->copyTuple(neighbor, j);
         }
       }
     }

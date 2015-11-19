@@ -42,6 +42,7 @@
 
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingFilters/CropImageGeometry.h"

@@ -39,7 +39,7 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QTextStream>
 
-#include "SIMPLib/Utilities/ColorUtilities.h"
+#include "SIMPLib/Utilities/ColorTable.h"
 
 
 #include "OrientationLib/Utilities/ModifiedLambertProjection.h"

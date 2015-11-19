@@ -51,6 +51,7 @@
 #include "SIMPLib/StatsData/BoundaryStatsData.h"
 #include "SIMPLib/StatsData/MatrixStatsData.h"
 #include "SIMPLib/Utilities/SIMPLibRandom.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 

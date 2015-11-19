@@ -1,44 +1,27 @@
 #!/bin/bash
-# This script requires 2 arguments. The root of the DREAM3D_SDK (/Users/Shared/DREAM3D_SDK
-# or /opt/DREAM3D_SDK) and the number of parallel processes to use to compile. This
-# is typically 2x the number of physical cores in the machine.
 
-SDK_INSTALL=$1
+#------------------------------------------------------------------------------
+# Read the configuration file for the SDK Build
+shopt -s extglob
+configfile="SDK_Configuration.conf" # set the actual path name of your (DOS or Unix) config file
+tr -d '\r' < $configfile > $configfile.unix
+while IFS='= ' read lhs rhs
+do
+    if [[ ! $lhs =~ ^\ *# && -n $lhs ]]; then
+        rhs="${rhs%%\#*}"    # Del in line right comments
+        rhs="${rhs%%*( )}"   # Del trailing spaces
+        rhs="${rhs%\"*}"     # Del opening string quotes 
+        rhs="${rhs#\"*}"     # Del closing string quotes 
+        declare $lhs="$rhs"
+    fi
+done < $configfile.unix
+rm $configfile.unix
+#------------------------------------------------------------------------------
 
 cd $SDK_INSTALL
 
-PARALLEL_BUILD=$2
-
-
 HOST_SYSTEM=`uname`
 echo "Host System: $HOST_SYSTEM"
-
-WGET=`type -P wget`
-CURL=`type -P curl`
-
-if [[ "$WGET" == "" ]];
-   then
-  if [[ "$CURL" == "" ]];
-     then
-    echo "wget and curl are NOT present on your machine. One of them is needed to download sources from the internet."
-    exit 1
-  fi
-fi
-
-
-DOWNLOAD_PROG=""
-DOWNLOAD_ARGS=""
-
-if [[ "$WGET" != "" ]];
-then
-  DOWNLOAD_PROG=$WGET
-fi
-
-if [[ "$CURL" != "" ]];
-then
-  DOWNLOAD_PROG=$CURL
-  DOWNLOAD_ARGS=""
-fi
 
 
 CMAKE=`type -P cmake`
@@ -48,42 +31,43 @@ if [[ $CMAKE == "" ]];
   exit 1
 fi
 
-version="1.8.15"
 # Build the HDF5 libraries we need and set our Environment Variable.
-hdf5ArchiveName="hdf5-${version}-patch1"
 
-if [ ! -e "$SDK_INSTALL/${hdf5ArchiveName}.tar.gz" ];
+if [ ! -e "$SDK_INSTALL/${HDF5_ARCHIVE_NAME}" ];
 then
   echo "-------------------------------------------"
-  echo " Downloading HDF5 Version ${version}"
+  echo " Downloading HDF5 version ${HDF5_VERSION}"
   echo "-------------------------------------------"
-  $DOWNLOAD_PROG  "http://www.hdfgroup.org/ftp/HDF5/current/src/${hdf5ArchiveName}.tar.gz" -o ${hdf5ArchiveName}.tar.gz
+  $DOWNLOAD_PROG  "http://www.hdfgroup.org/ftp/HDF5/current/src/${HDF5_ARCHIVE_NAME}" -o ${HDF5_ARCHIVE_NAME}
 fi
 
-if [ ! -e "$SDK_INSTALL/${hdf5ArchiveName}" ];
+if [ ! -e "$SDK_INSTALL/${HDF5_FOLDER_NAME}" ];
 then
-  tar -xvzf ${hdf5ArchiveName}.tar.gz
+  tar -xvzf ${HDF5_ARCHIVE_NAME}
 # mv hdf5-1.8.15 hdf5-1.8.15_source
 fi
-# We assume we already have downloaded the source for HDF5 Version 1.8.7 and have it in a folder
+
+
+# We assume we already have downloaded the source for HDF5 HDF5_VERSION 1.8.7 and have it in a folder
 # called hdf5-188
-cd ${hdf5ArchiveName}
+cd ${HDF5_FOLDER_NAME}
 mkdir Build
 cd Build
-cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Debug -DHDF5_BUILD_WITH_INSTALL_NAME=ON -DHDF5_BUILD_CPP_LIB=ON -DHDF5_BUILD_HL_LIB=ON -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/hdf5-${version}-Debug ../
+cmake -DCMAKE_CXX_FLAGS="-stdlib=libc++ -std=c++11" -DCMAKE_OSX_DEPLOYMENT_TARGET=$OSX_DEPLOYMENT_TARGET -DCMAKE_OSX_SYSROOT=$OSX_SDK -DCMAKE_CXX_STANDARD=11 -DCMAKE_CXX_STANDARD_REQUIRED=ON -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Debug -DHDF5_BUILD_WITH_INSTALL_NAME=ON -DHDF5_BUILD_CPP_LIB=ON -DHDF5_BUILD_HL_LIB=ON -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/${HDF5_INSTALL}-Debug ../
 make -j${PARALLEL_BUILD}
 make install
 cd ../
 mkdir zRel
 cd zRel
-cmake  -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DHDF5_BUILD_WITH_INSTALL_NAME=ON -DHDF5_BUILD_CPP_LIB=ON -DHDF5_BUILD_HL_LIB=ON -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/hdf5-${version}-Release ../
+cmake -DCMAKE_CXX_FLAGS="-stdlib=libc++ -std=c++11" -DCMAKE_OSX_DEPLOYMENT_TARGET=$OSX_DEPLOYMENT_TARGET -DCMAKE_OSX_SYSROOT=$OSX_SDK -DCMAKE_CXX_STANDARD=11 -DCMAKE_CXX_STANDARD_REQUIRED=ON -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DHDF5_BUILD_WITH_INSTALL_NAME=ON -DHDF5_BUILD_CPP_LIB=ON -DHDF5_BUILD_HL_LIB=ON -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/${HDF5_INSTALL}-Release ../
 make -j${PARALLEL_BUILD}
 make install
 
 
+echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "#--------------------------------------------------------------------------------------------------" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "# HDF5 Library" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
-echo "set(HDF5_INSTALL \"\${DREAM3D_SDK_ROOT}/hdf5-${version}-\${BUILD_TYPE}\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
-echo "set(HDF5_DIR \"\${DREAM3D_SDK_ROOT}/hdf5-${version}-\${BUILD_TYPE}/share/cmake\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "set(HDF5_INSTALL \"\${DREAM3D_SDK_ROOT}/hdf5-${HDF5_VERSION}-\${BUILD_TYPE}\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "set(HDF5_DIR \"\${DREAM3D_SDK_ROOT}/hdf5-${HDF5_VERSION}-\${BUILD_TYPE}/share/cmake\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 
 

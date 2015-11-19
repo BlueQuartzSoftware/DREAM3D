@@ -60,6 +60,7 @@
 
 #include "SIMPLib/Common/PipelineMessage.h"
 #include "SIMPLib/Common/ScopedFileMonitor.hpp"
+#include "SIMPLib/Geometry/ImageGeom.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/BinaryNodesTrianglesReader.h"
 
 

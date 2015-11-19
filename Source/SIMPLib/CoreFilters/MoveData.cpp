@@ -37,6 +37,7 @@
 #include "MoveData.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
@@ -258,6 +259,27 @@ AbstractFilter::Pointer MoveData::newFilterInstance(bool copyFilterParameters)
 // -----------------------------------------------------------------------------
 const QString MoveData::getCompiledLibraryName()
 { return Core::CoreBaseName; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MoveData::getBrandingString()
+{
+  return "SIMPLib Core Filter";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MoveData::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
+
+
 
 // -----------------------------------------------------------------------------
 //

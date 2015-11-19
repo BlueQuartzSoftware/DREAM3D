@@ -1072,7 +1072,7 @@ QVector<UInt8ArrayType::Pointer> CubicLowOps::generatePoleFigure(PoleFigureConfi
 // -----------------------------------------------------------------------------
 DREAM3D::Rgb CubicLowOps::generateMisorientationColor(const QuatF& q, const QuatF& refFrame)
 {
-  BOOST_ASSERT(false);
+  Q_ASSERT(false);
 
   float n1, n2, n3, w;
   float x, x1, x2, x3, x4;

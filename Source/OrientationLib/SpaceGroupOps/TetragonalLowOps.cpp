@@ -554,7 +554,7 @@ namespace Detail
 // -----------------------------------------------------------------------------
 void TetragonalLowOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatArrayType* xyz001, FloatArrayType* xyz011, FloatArrayType* xyz111)
 {
-  BOOST_ASSERT(false);
+  Q_ASSERT(false);
   size_t nOrientations = eulers->getNumberOfTuples();
 
   // Sanity Check the size of the arrays
@@ -972,7 +972,7 @@ UInt8ArrayType::Pointer TetragonalLowOps::generateIPFTriangleLegend(int imageDim
 // -----------------------------------------------------------------------------
 DREAM3D::Rgb TetragonalLowOps::generateMisorientationColor(const QuatF& q, const QuatF& refFrame)
 {
-  BOOST_ASSERT(false);
+  Q_ASSERT(false);
 
   return RgbColor::dRgb(0, 0, 0, 0);
 }

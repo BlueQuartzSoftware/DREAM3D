@@ -47,6 +47,7 @@
 
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "IO/IOConstants.h"
 

@@ -47,6 +47,7 @@
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Geometry/TriangleGeom.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 
@@ -314,8 +315,8 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
 
       for (int32_t j = 0; j < 3; j++)
       {
-        BOOST_ASSERT( static_cast<size_t>(3 * in1 + j) < static_cast<size_t>(nvert * 3) );
-        BOOST_ASSERT( static_cast<size_t>(3 * in2 + j) < static_cast<size_t>(nvert * 3) );
+        Q_ASSERT( static_cast<size_t>(3 * in1 + j) < static_cast<size_t>(nvert * 3) );
+        Q_ASSERT( static_cast<size_t>(3 * in2 + j) < static_cast<size_t>(nvert * 3) );
         dlta = verts[3 * in2 + j] - verts[3 * in1 + j];
         delta[3 * in1 + j] += dlta;
         delta[3 * in2 + j] += -1.0 * dlta;

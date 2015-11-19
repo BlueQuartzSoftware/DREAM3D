@@ -87,7 +87,7 @@ class GenericInt32Parser : public GenericDataParser
     void setDataArray(IDataArray::Pointer value)
     {
       GenericDataParser::setDataArray(value);
-      m_Ptr = boost::dynamic_pointer_cast<Int32ArrayType>(value);
+      m_Ptr = std::dynamic_pointer_cast<Int32ArrayType>(value);
     }
 
     IDataArray::Pointer initializeNewDataArray(size_t numTuples, const QString& name, bool allocate)
@@ -140,7 +140,7 @@ class GenericFloatParser : public GenericDataParser
     void setDataArray(IDataArray::Pointer value)
     {
       GenericDataParser::setDataArray(value);
-      m_Ptr = boost::dynamic_pointer_cast<FloatArrayType>(value);
+      m_Ptr = std::dynamic_pointer_cast<FloatArrayType>(value);
 
 
     }

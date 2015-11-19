@@ -59,7 +59,7 @@ class SIMPLib_EXPORT StatsDataArray : public IDataArray
      * @brief Static constructor
      * @param numElements The number of elements in the internal array.
      * @param name The name of the array
-     * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
+     * @return Std::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
     static Pointer CreateArray(size_t numElements, const QString& name, bool allocate = true);
 
@@ -262,13 +262,6 @@ class SIMPLib_EXPORT StatsDataArray : public IDataArray
     bool copyData(size_t destTupleOffset, IDataArray::Pointer sourceArray);
 
     /**
-     * @brief reorderCopy
-     * @param newOrderMap
-     * @return
-     */
-    virtual IDataArray::Pointer reorderCopy(QVector<size_t> newOrderMap);
-
-    /**
      * @brief Splats the same value c across all values in the Tuple
      * @param i The index of the Tuple
      * @param c The value to splat across all components in the tuple
@@ -280,7 +273,11 @@ class SIMPLib_EXPORT StatsDataArray : public IDataArray
      */
     virtual void initializeWithZeros();
 
-
+    /**
+     * @brief deepCopy
+     * @param forceNoAllocate
+     * @return
+     */
     virtual IDataArray::Pointer deepCopy(bool forceNoAllocate = false);
 
     /**

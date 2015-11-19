@@ -152,7 +152,7 @@ bool AbstractFilter::doesPipelineContainFilterAfterThis(const QString& name)
 // -----------------------------------------------------------------------------
 void AbstractFilter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
-  BOOST_ASSERT(reader != NULL);
+  Q_ASSERT(reader != NULL);
   qDebug() << "AbstractFilter::readFilterParameters() -> Writing Filter Options" << "\n";
   return;
 }
@@ -162,7 +162,7 @@ void AbstractFilter::readFilterParameters(AbstractFilterParametersReader* reader
 // -----------------------------------------------------------------------------
 int AbstractFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  BOOST_ASSERT(writer != NULL);
+  Q_ASSERT(writer != NULL);
   qDebug() << "AbstractFilter::writeFilterParameters() -> Writing Filter Options" << "\n";
   return -1;
 }
@@ -255,7 +255,7 @@ const QString AbstractFilter::getHumanLabel()
 // -----------------------------------------------------------------------------
 const QString AbstractFilter::getBrandingString()
 {
-  return "DREAM3D Core Filter";
+  return "";
 }
 
 // -----------------------------------------------------------------------------
@@ -263,7 +263,7 @@ const QString AbstractFilter::getBrandingString()
 // -----------------------------------------------------------------------------
 const QString AbstractFilter::getCompiledLibraryName()
 {
-  return "DREAM3DLib";
+  return "";
 }
 
 // -----------------------------------------------------------------------------
@@ -271,10 +271,7 @@ const QString AbstractFilter::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 const QString AbstractFilter::getFilterVersion()
 {
-  QString version;
-  QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
-  return version;
+  return QString("0.0.0");
 }
 
 // -----------------------------------------------------------------------------
@@ -294,6 +291,7 @@ const QString AbstractFilter::generateHtmlSummary()
   ss << "	<tr><th align=\"right\">Filter Class Name:</th><td>" << getNameOfClass() << "</td></tr>\n";
   ss << "	<tr><th align=\"right\">Filter Group Name:</th><td>" << getGroupName() << "</td></tr>\n";
   ss << "	<tr><th align=\"right\">Filter Subroup Name:</th><td>" << getSubGroupName() << "</td></tr>\n";
+  ss << "	<tr><th align=\"right\">Filter Version:</th><td>" << getFilterVersion() << "</td></tr>\n";
   ss << "	<tr><th align=\"right\">Branding String:</th><td>" << getBrandingString() << "</td></tr>\n";
   ss << "	<tr><th align=\"right\">Compiled Plugin Name:</th><td>" << getCompiledLibraryName() << "</td></tr>\n";
   ss << "</tbody></table>\n";

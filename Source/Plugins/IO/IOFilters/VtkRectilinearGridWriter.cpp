@@ -50,6 +50,7 @@
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 #include "SIMPLib/VTKUtils/VTKUtil.hpp"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "IO/IOConstants.h"
 
@@ -151,7 +152,7 @@ namespace Detail
 
     typedef DataArray<T> ArrayType;
 
-    typename ArrayType::Pointer array = boost::dynamic_pointer_cast<ArrayType>(iDataPtr);
+    typename ArrayType::Pointer array = std::dynamic_pointer_cast<ArrayType>(iDataPtr);
 
     if(NULL != array.get())
     {

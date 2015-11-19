@@ -96,7 +96,7 @@ SpaceGroupOps::~SpaceGroupOps()
 
 void SpaceGroupOps::getFZQuat(QuatF& qr)
 {
-  BOOST_ASSERT(false);
+  Q_ASSERT(false);
 }
 
 // -----------------------------------------------------------------------------

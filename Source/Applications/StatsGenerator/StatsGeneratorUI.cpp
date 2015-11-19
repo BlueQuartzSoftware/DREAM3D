@@ -880,7 +880,7 @@ int StatsGeneratorUI::openFile(QString h5file)
 
 
   IDataArray::Pointer iDataArray = cellEnsembleAttrMat->getAttributeArray(DREAM3D::EnsembleData::PhaseTypes);
-  unsigned int* phaseTypes = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  unsigned int* phaseTypes = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
 
   // We should iterate on all the phases here to start setting data and creating
   // all of the StatsGenPhase Objects

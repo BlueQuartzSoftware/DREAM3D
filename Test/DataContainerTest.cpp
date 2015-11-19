@@ -821,10 +821,10 @@ void TestDataContainer()
   bool ok = true;
 
   int value = neighborList->getValue(5, 4, ok);
-  BOOST_ASSERT(ok);
+  Q_ASSERT(ok);
 
   value = neighborList->getValue(12, 4, ok);
-  BOOST_ASSERT(!ok);
+  Q_ASSERT(!ok);
 
   std::cout << "Number of Lists: " << neighborList->getNumberOfLists() << std::endl;
   std::cout << "Number of Entries for Feature Id[5]: " << neighborList->getListSize(5) << std::endl;
@@ -851,10 +851,10 @@ void TestDataContainer()
 
 
     double* dPtr = IDataArray::SafeReinterpretCast<IDataArray*, DoubleArrayType*, double*>(ptr.get());
-    BOOST_ASSERT(NULL == dPtr);
+    Q_ASSERT(NULL == dPtr);
 
     int32_t* iPtr = IDataArray::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t*>(ptr.get());
-    BOOST_ASSERT(NULL != iPtr);
+    Q_ASSERT(NULL != iPtr);
 
     // Or we can downcast to the type we know it is (in line)
     Int32ArrayType* intPtr = Int32ArrayType::SafeObjectDownCast<IDataArray*, Int32ArrayType* >(dataContainer->getCellData("int32_t_Array").get());

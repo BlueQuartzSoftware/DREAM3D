@@ -36,6 +36,7 @@
 #include "ConditionalSetValue.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Common/TemplateHelpers.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
@@ -153,7 +154,7 @@ void checkValuesFloatDouble(AbstractFilter* filter, double replaceValue, QString
 template<typename T>
 void replaceValue(AbstractFilter* filter, IDataArray::Pointer inDataPtr, BoolArrayType::Pointer condDataPtr, double replaceValue)
 {
-  typename DataArray<T>::Pointer inputArrayPtr = boost::dynamic_pointer_cast<DataArray<T> >(inDataPtr);
+  typename DataArray<T>::Pointer inputArrayPtr = std::dynamic_pointer_cast<DataArray<T> >(inDataPtr);
 
   T replaceVal = static_cast<T>(replaceValue);
 
@@ -271,6 +272,27 @@ AbstractFilter::Pointer ConditionalSetValue::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 const QString ConditionalSetValue::getCompiledLibraryName()
 { return Core::CoreBaseName; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ConditionalSetValue::getBrandingString()
+{
+  return "SIMPLib Core Filter";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ConditionalSetValue::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
+
+
 
 // -----------------------------------------------------------------------------
 //

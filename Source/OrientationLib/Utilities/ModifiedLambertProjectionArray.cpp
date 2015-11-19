@@ -152,7 +152,7 @@ ModifiedLambertProjection::Pointer ModifiedLambertProjectionArray::getModifiedLa
 #ifndef NDEBUG
   if(m_ModifiedLambertProjectionArray.size() > 0)
   {
-    BOOST_ASSERT(idx < static_cast<int>(m_ModifiedLambertProjectionArray.size()));
+    Q_ASSERT(idx < static_cast<int>(m_ModifiedLambertProjectionArray.size()));
   }
 #endif
   return m_ModifiedLambertProjectionArray[idx];
@@ -166,7 +166,7 @@ ModifiedLambertProjection::Pointer ModifiedLambertProjectionArray::operator[](in
 #ifndef NDEBUG
   if(m_ModifiedLambertProjectionArray.size() > 0)
   {
-    BOOST_ASSERT(idx < static_cast<int>(m_ModifiedLambertProjectionArray.size()));
+    Q_ASSERT(idx < static_cast<int>(m_ModifiedLambertProjectionArray.size()));
   }
 #endif
   return m_ModifiedLambertProjectionArray[idx];
@@ -209,7 +209,7 @@ void* ModifiedLambertProjectionArray::getVoidPointer(size_t i)
 #ifndef NDEBUG
   if(m_ModifiedLambertProjectionArray.size() > 0)
   {
-    BOOST_ASSERT(i < static_cast<size_t>(m_ModifiedLambertProjectionArray.size()));
+    Q_ASSERT(i < static_cast<size_t>(m_ModifiedLambertProjectionArray.size()));
   }
 #endif
   if(i >= this->getNumberOfTuples())
@@ -242,7 +242,7 @@ void ModifiedLambertProjectionArray::SetNumberOfComponents(int nc)
 {
   if (nc != 1)
   {
-    BOOST_ASSERT(false);
+    Q_ASSERT(false);
   }
 }
 
@@ -360,41 +360,19 @@ bool ModifiedLambertProjectionArray::copyData(size_t destTupleOffset, IDataArray
   if(destTupleOffset >= m_ModifiedLambertProjectionArray.size()) { return false; }
   if(!sourceArray->isAllocated()) { return false; }
   Self* source = dynamic_cast<Self*>(sourceArray.get());
-  
+
   if(sourceArray->getNumberOfComponents() != getNumberOfComponents()) { return false; }
-  
+
   if( sourceArray->getNumberOfTuples()*sourceArray->getNumberOfComponents() + destTupleOffset*getNumberOfComponents() > m_ModifiedLambertProjectionArray.size() ) { return false; }
-  
+
   size_t sourceNTuples = source->getNumberOfTuples();
-  
+
   for(size_t i = 0; i < sourceNTuples; i++)
   {
     m_ModifiedLambertProjectionArray[destTupleOffset + i] = (*source)[i];
   }
-  
+
   return true;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-IDataArray::Pointer ModifiedLambertProjectionArray::reorderCopy(QVector<size_t> newOrderMap)
-{
-  if( static_cast<size_t>(newOrderMap.size()) != getNumberOfTuples())
-  {
-    return IDataArray::NullPointer();
-  }
-  ModifiedLambertProjectionArray::Pointer daCopyPtr = ModifiedLambertProjectionArray::New();
-  daCopyPtr->resize(getNumberOfTuples());
-  daCopyPtr->initializeWithZeros();
-  ModifiedLambertProjectionArray& daCopy = *daCopyPtr;
-  for(size_t i = 0; i < getNumberOfTuples(); i++)
-  {
-    daCopy[newOrderMap[i]] = m_ModifiedLambertProjectionArray[i];
-  }
-
-  return daCopyPtr;
 }
 
 // -----------------------------------------------------------------------------
@@ -402,7 +380,7 @@ IDataArray::Pointer ModifiedLambertProjectionArray::reorderCopy(QVector<size_t> 
 // -----------------------------------------------------------------------------
 void ModifiedLambertProjectionArray::initializeTuple(size_t i, double p)
 {
-  BOOST_ASSERT(false);
+  Q_ASSERT(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -458,14 +436,14 @@ int32_t ModifiedLambertProjectionArray::resize(size_t numTuples)
 // -----------------------------------------------------------------------------
 void ModifiedLambertProjectionArray::printTuple(QTextStream& out, size_t i, char delimiter)
 {
-  BOOST_ASSERT(false);
+  Q_ASSERT(false);
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void ModifiedLambertProjectionArray::printComponent(QTextStream& out, size_t i, int j)
 {
-  BOOST_ASSERT(false);
+  Q_ASSERT(false);
 }
 
 // -------------------------------------------------------------------------- */
@@ -496,7 +474,7 @@ void AppendRowToH5Dataset(hid_t gid, const QString& dsetName, int lambertSize, d
   if (status < 0)
   {
     qDebug() << "Error Extending Data set" ;
-    BOOST_ASSERT(false);
+    Q_ASSERT(false);
   }
   /*// Select a hyperslab.*/
   filespace = H5Dget_space(dataset);

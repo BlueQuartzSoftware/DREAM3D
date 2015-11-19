@@ -572,34 +572,6 @@ int JsonFilterParametersWriter::writeValue(const QString name, FloatVec3_t v)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int JsonFilterParametersWriter::writeValue(const QString name, FloatVec4_t v)
-{
-  int err = 0;
-
-  QJsonObject obj;
-  v.writeJson(obj);
-  m_CurrentFilterIndex[name] = obj;
-
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int JsonFilterParametersWriter::writeValue(const QString name, FloatVec21_t v)
-{
-  int err = 0;
-
-  QJsonObject obj;
-  v.writeJson(obj);
-  m_CurrentFilterIndex[name] = obj;
-
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int JsonFilterParametersWriter::writeValue(const QString name, Float2ndOrderPoly_t v)
 {
   int err = 0;

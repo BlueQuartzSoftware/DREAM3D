@@ -54,11 +54,21 @@ class QtSupportLib_EXPORT QFSDropLineEdit : public QLineEdit
     Q_OBJECT
 
   public:
+
+    enum Styles
+    {
+      FS_STANDARD_STYLE,
+      FS_DRAGGING_STYLE,
+      FS_DOESNOTEXIST_STYLE,
+      FS_WARNING_STYLE
+    };
+
     QFSDropLineEdit(QWidget* parent = NULL);
 
     void dragEnterEvent(QDragEnterEvent* event);
     void dropEvent(QDropEvent* event);
 
+    void changeStyleSheet(int style);
 
   signals:
     void fileDropped(const QString& file);

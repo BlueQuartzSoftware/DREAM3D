@@ -63,6 +63,7 @@
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/FilterParameters/FilterParameter.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 
 #include "QtSupportLib/DREAM3DHelpUrlGenerator.h"

@@ -213,7 +213,7 @@ void FitFeatureData::preflight()
 template<typename T>
 void fitData(IDataArray::Pointer inDataPtr, float* ensembleArray, int32_t* eIds, size_t numEnsembles, uint32_t dType, bool removeBiasedFeatures, bool* biasedFeatures)
 {
-  typename DataArray<T>::Pointer inputDataPtr = boost::dynamic_pointer_cast<DataArray<T> >(inDataPtr);
+  typename DataArray<T>::Pointer inputDataPtr = std::dynamic_pointer_cast<DataArray<T> >(inDataPtr);
 
   StatsData::Pointer sData = StatsData::New();
 

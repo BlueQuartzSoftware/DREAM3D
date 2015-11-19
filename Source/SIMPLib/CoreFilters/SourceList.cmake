@@ -45,9 +45,6 @@ set(_PublicFilters
   CombineAttributeMatrices
   ConditionalSetValue
   ConvertData
-  CopyAttributeArray
-  CopyAttributeMatrix
-  CopyDataContainer
   CopyFeatureArrayToElementArray
   CreateAttributeMatrix
   CreateDataContainer
@@ -57,6 +54,7 @@ set(_PublicFilters
   DataContainerReader
   DataContainerWriter
   ExtractComponentAsArray
+  FeatureCountDecision
   LinkFeatureMapToElementArray
   MoveData
   RawBinaryReader

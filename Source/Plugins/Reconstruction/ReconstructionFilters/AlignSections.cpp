@@ -42,6 +42,7 @@
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 
@@ -58,7 +59,6 @@ AlignSections::AlignSections() :
   m_DataContainerName(DREAM3D::Defaults::ImageDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_WriteAlignmentShifts(false),
-  m_SubtractBackground(false),
   m_AlignmentShiftFileName("")
 {
   setupFilterParameters();
@@ -80,7 +80,6 @@ void AlignSections::setupFilterParameters()
   QStringList linkedProps("AlignmentShiftFileName");
   parameters.push_back(LinkedBooleanFilterParameter::New("Write Alignment Shift File", "WriteAlignmentShifts", getWriteAlignmentShifts(), linkedProps, FilterParameter::Parameter));
   parameters.push_back(OutputFileFilterParameter::New("Alignment File", "AlignmentShiftFileName", getAlignmentShiftFileName(), FilterParameter::Parameter, "", "*.txt"));
-  parameters.push_back(BooleanFilterParameter::New("Linear Background Subtraction", "SubtractBackground", getSubtractBackground(), FilterParameter::Parameter));
   setFilterParameters(parameters);
 }
 
@@ -91,7 +90,6 @@ void AlignSections::readFilterParameters(AbstractFilterParametersReader* reader,
 {
   reader->openFilterGroup(this, index);
   setAlignmentShiftFileName( reader->readString("AlignmentShiftFileName", getAlignmentShiftFileName()));
-  setSubtractBackground( reader->readValue("SubtractBackground", getSubtractBackground()));
   setWriteAlignmentShifts( reader->readValue("WriteAlignmentShifts", getWriteAlignmentShifts()));
   reader->closeFilterGroup();
 }
@@ -104,7 +102,6 @@ int AlignSections::writeFilterParameters(AbstractFilterParametersWriter* writer,
   writer->openFilterGroup(this, index);
   SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
   SIMPL_FILTER_WRITE_PARAMETER(AlignmentShiftFileName)
-  SIMPL_FILTER_WRITE_PARAMETER(SubtractBackground)
   SIMPL_FILTER_WRITE_PARAMETER(WriteAlignmentShifts)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -186,7 +183,7 @@ void AlignSections::execute()
     static_cast<DimType>(udims[2]),
   };
 
-  DimType slice = 0;
+
   DimType xspot = 0, yspot = 0;
   DimType newPosition = 0;
   DimType currentPosition = 0;
@@ -196,57 +193,12 @@ void AlignSections::execute()
 
   find_shifts(xshifts, yshifts);
 
-  if (getSubtractBackground())
-  {
-    /**fit x and y shifts to lines
-     *
-     * y = mx + b
-     *
-     * m = (n*sum(x_i * y_i) - sum(x_i) * sum(y_i)) / (n*sum(x_i^2)-sum(x_i)^2
-     *
-     * b = (sum(y_i)-m*sum(x_i))/n
-     *
-     */
-
-    // same for both
-    double sumX = 0.0; // sum(x_i)
-    double sumX_2 = 0.0; // sum(x_i^2)
-
-    // x shift line
-    double x_sumY = 0.0; // sum(y_i)
-    double x_sumXY = 0.0; // sum(x_i * y_i)
-
-    // y shift line
-    double y_sumY = 0.0; // sum(y_i)
-    double y_sumXY = 0.0; // sum(x_i * y_i)
-
-    for (DimType iter = 0; iter < dims[2]; iter++)
-    {
-      slice = static_cast<DimType>( (dims[2] - 1) - iter );
-      sumX = static_cast<double>(sumX + iter);
-      sumX_2 = static_cast<double>(sumX_2 + iter * iter);
-      x_sumY = static_cast<double>(x_sumY + xshifts[iter]);
-      x_sumXY = static_cast<double>(x_sumXY + iter * xshifts[iter]);
-      y_sumY = static_cast<double>(y_sumY + yshifts[iter]);
-      y_sumXY = static_cast<double>(y_sumXY + iter * yshifts[iter]);
-    }
-
-    double mx = static_cast<double>((dims[2] * x_sumXY - x_sumXY) / (dims[2] * sumX_2 - sumX));
-    double my = static_cast<double>((dims[2] * y_sumXY - y_sumXY) / (dims[2] * sumX_2 - sumX));
-
-    // adjust shifts so that fit line has 0 slope (~ends of the sample are fixed)
-    for (DimType iter = 1; iter < dims[2]; iter++)
-    {
-      slice = (dims[2] - 1) - iter;
-      xshifts[iter] = static_cast<int64_t>(xshifts[iter] - iter * mx);
-      yshifts[iter] = static_cast<int64_t>(yshifts[iter] - iter * my);
-    }
-  }
 
   QList<QString> voxelArrayNames = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNames();
-  DimType progIncrement = dims[2] / 100;
-  DimType prog = 1;
-  DimType progressInt = 0;
+  int64_t progIncrement = dims[2] / 100;
+  int64_t prog = 1;
+  int64_t progressInt = 0;
+  DimType slice = 0;
 
   for (DimType i = 1; i < dims[2]; i++)
   {

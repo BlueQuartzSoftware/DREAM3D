@@ -9,6 +9,7 @@
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "IOTestFileLocations.h"
 

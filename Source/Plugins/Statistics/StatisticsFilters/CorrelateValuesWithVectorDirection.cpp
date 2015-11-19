@@ -336,7 +336,7 @@ int CorrelateValuesWithVectorDirection::determineSquareCoordsandBin(float xyz[3]
   }
   if (y < 0) { y = 0; }
   int index = y * m_Dimension + x;
-  BOOST_ASSERT(index < m_Dimension * m_Dimension);
+  Q_ASSERT(index < m_Dimension * m_Dimension);
   return index;
 }
 

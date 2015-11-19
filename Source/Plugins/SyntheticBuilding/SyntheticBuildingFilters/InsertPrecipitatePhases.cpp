@@ -51,6 +51,7 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"
 #include "SIMPLib/Utilities/SIMPLibRandom.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
