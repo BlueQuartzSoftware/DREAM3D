@@ -42,7 +42,7 @@
 //-- UIC generated Header
 #include "ui_DREAM3DToolbox.h"
 
-class DREAM3DToolbox : public QDockWidget, private Ui::DREAM3DToolbox
+class DREAM3DToolbox : public QWidget, private Ui::DREAM3DToolbox
 {
     Q_OBJECT
 

@@ -43,7 +43,7 @@
 //
 // -----------------------------------------------------------------------------
 DREAM3DToolbox::DREAM3DToolbox(QWidget* parent) :
-QDockWidget(parent)
+QWidget(parent)
 {
   setupUi(this);
 
@@ -159,7 +159,8 @@ void DREAM3DToolbox::writeSettings()
 // -----------------------------------------------------------------------------
 void DREAM3DToolbox::closeEvent(QCloseEvent* event)
 {
-  //qDebug() << "closeEvent";
+  QAction* action = dream3dApp->getShowToolboxAction();
+  action->setChecked(false);
 }
 
 // -----------------------------------------------------------------------------

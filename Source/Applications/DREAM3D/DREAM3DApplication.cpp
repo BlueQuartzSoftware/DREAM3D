@@ -179,8 +179,10 @@ bool DREAM3DApplication::initialize(int argc, char* argv[])
   m_Toolbox = new DREAM3DToolbox();
   m_Toolbox->getFilterListWidget()->updateFilterList(true);
 
-  m_ActionShowToolbox = m_Toolbox->toggleViewAction();
-  m_ActionShowToolbox->setText("Show Toolbox");
+  // Create the toolbox action
+  m_ActionShowToolbox = new QAction("Show Toolbox", this);
+  m_ActionShowToolbox->setCheckable(true);
+  m_ActionShowToolbox->setChecked(m_Toolbox->isVisible());
   connect(m_ActionShowToolbox, SIGNAL(triggered(bool)), this, SLOT(on_actionShowToolbox_triggered(bool)));
 
   // give GUI components time to update before the mainwindow is shown
@@ -548,9 +550,13 @@ void DREAM3DApplication::unregisterDREAM3DWindow(DREAM3D_UI* window)
 {
   m_DREAM3DInstanceMap.remove(window);
 
-//#if defined (Q_OS_MAC)
-//    m_GlobalMenu->setViewMenu(NULL);
-//#endif
+#if defined (Q_OS_MAC)
+#else
+  if (m_DREAM3DInstanceMap.size() <= 0)
+  {
+    quit();
+  }
+#endif
 
 }
 
