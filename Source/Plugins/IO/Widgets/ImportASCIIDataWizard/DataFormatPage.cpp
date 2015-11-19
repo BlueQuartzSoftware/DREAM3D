@@ -76,7 +76,7 @@ void DataFormatPage::setupGui()
   connect(dataView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)), this, SLOT(updateSelection(const QItemSelection&, const QItemSelection&)));
   connect(tupleDimsTable, SIGNAL(tupleDimsChanged(QVector<size_t>)), this, SLOT(checkTupleDimensions(QVector<size_t>)));
 
-  headersIndexLineEdit->setValidator(new QRegularExpressionValidator(QRegularExpression("[1-9]|1[0-9]|20"), headersIndexLineEdit));
+  headersIndexLineEdit->setValidator(new QRegularExpressionValidator(QRegularExpression("1[0-9]*"), headersIndexLineEdit));
 
   registerField("startRow", startRowSpin);
 
@@ -95,13 +95,17 @@ void DataFormatPage::setupGui()
   dataTypeCB->setCurrentIndex(0);
 
   int beginIndex = startRowSpin->value();
+  int numOfDataLines = m_NumLines - beginIndex + 1;
+
   tupleDimsTable->blockSignals(true);
-  tupleDimsTable->addTupleDimensions(QVector<size_t>(1, m_NumLines - beginIndex + 1));
+  tupleDimsTable->addTupleDimensions(QVector<size_t>(1, numOfDataLines));
   tupleDimsTable->blockSignals(false);
+  tupleCountLabel->setText(QString::number(numOfDataLines));
 
   addHeadersBtn->setDisabled(true);
   columnDataGroupBox->setDisabled(true);
   
+  lineNumErrLabel->hide();
   tupleTableErrLabel->hide();
 }
 
@@ -131,12 +135,26 @@ void DataFormatPage::showEvent(QShowEvent* event)
 // -----------------------------------------------------------------------------
 void DataFormatPage::on_startRowSpin_valueChanged(int value)
 {
+  if (value > m_NumLines)
+  {
+    wizard()->button(QWizard::FinishButton)->setDisabled(true);
+    tupleCountLabel->setText("ERR");
+    return;
+  }
+
+  wizard()->button(QWizard::FinishButton)->setEnabled(true);
+
+  tupleCountLabel->setText(QString::number(m_NumLines - value + 1));
+
   bool isFixedWidth = field("isFixedWidth").toBool();
   bool tabAsDelimiter = field("tabAsDelimiter").toBool();
   bool semicolonAsDelimiter = field("semicolonAsDelimiter").toBool();
   bool commaAsDelimiter = field("commaAsDelimiter").toBool();
   bool spaceAsDelimiter = field("spaceAsDelimiter").toBool();
   bool consecutiveDelimiters = field("consecutiveDelimiters").toBool();
+
+  ASCIIDataModel* model = ASCIIDataModel::Instance();
+  model->clear();
 
   QStringList lines = ImportASCIIDataWizard::ReadLines(m_InputFilePath, value, ImportASCIIDataWizard::TotalPreviewLines);
   ImportASCIIDataWizard::LoadOriginalLines(lines);
@@ -145,6 +163,9 @@ void DataFormatPage::on_startRowSpin_valueChanged(int value)
 
   QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, delimiters, isFixedWidth, consecutiveDelimiters);
   ImportASCIIDataWizard::InsertTokenizedLines(tokenizedLines, startRowSpin->value());
+
+  // Re-check the tuple dimensions
+  checkTupleDimensions(tupleDimsTable->getData());
 }
 
 // -----------------------------------------------------------------------------
@@ -181,7 +202,27 @@ void DataFormatPage::on_hasHeadersRadio_toggled(bool checked)
 void DataFormatPage::on_headersIndexLineEdit_textChanged(const QString &text)
 {
   ASCIIDataModel* model = ASCIIDataModel::Instance();
-  int lineNum = text.toInt();
+  bool ok = false;
+  int lineNum = text.toInt(&ok);
+
+  if ( text.isEmpty() == false && (lineNum > m_NumLines || ok == false) )
+  {
+    model->clearHeaders(Qt::Horizontal);
+    headersIndexLineEdit->setStyleSheet("QLineEdit {border: 2px solid FireBrick}");
+    lineNumErrLabel->show();
+    wizard()->button(QWizard::FinishButton)->setDisabled(true);
+    return;
+  }
+
+  headersIndexLineEdit->setStyleSheet("");
+  lineNumErrLabel->hide();
+  wizard()->button(QWizard::FinishButton)->setEnabled(true);
+
+  if (text.isEmpty() == true)
+  {
+    model->clearHeaders(Qt::Horizontal);
+    return;
+  }
 
   QString line = ImportASCIIDataWizard::ReadLine(m_InputFilePath, lineNum);
   
@@ -293,7 +334,7 @@ void DataFormatPage::checkTupleDimensions(QVector<size_t> tupleDims)
   int numOfDataLines = m_NumLines - beginIndex + 1;
   if (tupleTotal != numOfDataLines)
   {
-    tupleTableErrLabel->setText("The current tuple dimensions do not match the total number of lines to be read.");
+    tupleTableErrLabel->setText("The current tuple dimensions do not match the total number of tuples.");
     tupleTableErrLabel->show();
     wizard()->button(QWizard::FinishButton)->setDisabled(true);
   }

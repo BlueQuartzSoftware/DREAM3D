@@ -41,11 +41,6 @@
 
 #include "TupleTableItemDelegate.h"
 
-const QString addRowTT = "Adds a row to the table.";
-const QString addColTT = "Adds a column to the table.";
-const QString deleteRowTT = "Removes the currently selected row from the table.";
-const QString deleteColTT = "Removes the currently selected column from the table.";
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -73,10 +68,6 @@ void TupleTableWidget::setupGui()
   tupleTable->setItemDelegate(dlg);
 
   tupleTable->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-
-  // Set button tooltips
-  addTupleBtn->setToolTip(addColTT);
-  deleteTupleBtn->setToolTip(deleteColTT);
 
   // Set Icons
   QIcon addIcon = QIcon(QString(":/add2.png"));
@@ -157,6 +148,11 @@ void TupleTableWidget::on_deleteTupleBtn_pressed()
   if (currentColumn >= 0)
   {
     tupleTable->removeColumn(tupleTable->currentColumn());
+  }
+
+  if (tupleTable->columnCount() == 0)
+  {
+    tupleTable->removeRow(0);
   }
 
   emit tupleDimsChanged(getData());
