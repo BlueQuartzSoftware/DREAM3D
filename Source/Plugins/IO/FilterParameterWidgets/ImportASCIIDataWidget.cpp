@@ -103,8 +103,19 @@ void ImportASCIIDataWidget::setupGui()
   {
     int beginIndex = m_Filter->getWizardData().beginIndex;
     int numOfDataLines = m_Filter->getWizardData().numberOfLines - beginIndex + 1;
+    QVector<size_t> tupleDimsArray = m_Filter->getWizardData().tupleDims;
+
+    if (tupleDimsArray.size() > 0)
+    {
+      QString tupleDimsStr = "";
+      for (int i = 0; i < tupleDimsArray.size(); i++)
+      {
+        tupleDimsStr.append("[" + QString::number(tupleDimsArray[i]) + "]");
+      }
+      tupleDims->setText(tupleDimsStr);
+    }
     
-    tupleCountLabel->setText(QString::number(numOfDataLines));
+    tupleCount->setText(QString::number(numOfDataLines));
     fileImportedLabel->setText(m_Filter->getWizardData().inputFilePath);
   }
   else
