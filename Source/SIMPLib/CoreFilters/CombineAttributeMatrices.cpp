@@ -55,16 +55,16 @@
 //
 // -----------------------------------------------------------------------------
 CombineAttributeMatrices::CombineAttributeMatrices() :
-  AbstractFilter(),
-  m_FirstAttributeMatrixPath("", "", ""),
-  m_SecondAttributeMatrixPath("", "", ""),
-  m_CombinedAttributeMatrixName(""),
-  m_FirstIndexArrayPath("", "", ""),
-  m_SecondIndexArrayPath("", "", ""),
-  m_NewIndexArrayName(""),
-  m_FirstIndex(NULL),
-  m_SecondIndex(NULL),
-  m_NewIndex(NULL)
+AbstractFilter(),
+m_FirstAttributeMatrixPath("", "", ""),
+m_SecondAttributeMatrixPath("", "", ""),
+m_CombinedAttributeMatrixName(""),
+m_FirstIndexArrayPath("", "", ""),
+m_SecondIndexArrayPath("", "", ""),
+m_NewIndexArrayName(""),
+m_FirstIndex(NULL),
+m_SecondIndex(NULL),
+m_NewIndex(NULL)
 {
   setupFilterParameters();
 }
@@ -84,48 +84,48 @@ void CombineAttributeMatrices::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Feature/Ensemble Data", FilterParameter::RequiredArray));
   {
-	  AttributeMatrixSelectionFilterParameter::RequirementType req;
-	  QVector<uint32_t> dcGeomTypes;
-	  QVector<uint32_t> amTypes;
-	  amTypes.push_back(DREAM3D::AttributeMatrixType::CellEnsemble);
-	  amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
-	  amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeEnsemble);
-	  amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeFeature);
-	  amTypes.push_back(DREAM3D::AttributeMatrixType::FaceEnsemble);
-	  amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
-	  amTypes.push_back(DREAM3D::AttributeMatrixType::VertexEnsemble);
-	  amTypes.push_back(DREAM3D::AttributeMatrixType::VertexFeature);
-	  dcGeomTypes.push_back(DREAM3D::Defaults::AnyGeometry);
-	  req.amTypes = amTypes;
+    AttributeMatrixSelectionFilterParameter::RequirementType req;
+    QVector<uint32_t> dcGeomTypes;
+    QVector<uint32_t> amTypes;
+    amTypes.push_back(DREAM3D::AttributeMatrixType::CellEnsemble);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeEnsemble);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeFeature);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::FaceEnsemble);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::VertexEnsemble);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::VertexFeature);
+    dcGeomTypes.push_back(DREAM3D::Defaults::AnyGeometry);
+    req.amTypes = amTypes;
     req.dcGeometryTypes = dcGeomTypes;
     parameters.push_back(AttributeMatrixSelectionFilterParameter::New("First Feature/Ensemble Attribute Matrix", "FirstAttributeMatrixPath", getFirstAttributeMatrixPath(), FilterParameter::RequiredArray, req));
-	  parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Second Feature/Ensemble Attribute Matrix", "SecondAttributeMatrixPath", getSecondAttributeMatrixPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Second Feature/Ensemble Attribute Matrix", "SecondAttributeMatrixPath", getSecondAttributeMatrixPath(), FilterParameter::RequiredArray, req));
   }
   {
-	DataArraySelectionFilterParameter::RequirementType req;
-	QVector<uint32_t> dcGeomTypes;
-	req.dcGeometryTypes = dcGeomTypes;
-	QVector<uint32_t> amTypes;
-	amTypes.push_back(DREAM3D::AttributeMatrixType::Cell);
-	amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
-	amTypes.push_back(DREAM3D::AttributeMatrixType::Edge);
-	amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeFeature);
-	amTypes.push_back(DREAM3D::AttributeMatrixType::Face);
-	amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
-	amTypes.push_back(DREAM3D::AttributeMatrixType::Vertex);
-	amTypes.push_back(DREAM3D::AttributeMatrixType::VertexFeature);
-	QVector<QString> daTypes;
-	daTypes.push_back(DREAM3D::TypeNames::Int32);
-	QVector<QVector<size_t> > compDims;
-	compDims.resize(1);
-	compDims[0].resize(1);
-	compDims[0][0] = 1;
-	req.dcGeometryTypes = dcGeomTypes;
-	req.amTypes = amTypes;
-	req.daTypes = daTypes;
- 	req.componentDimensions = compDims;
-	parameters.push_back(DataArraySelectionFilterParameter::New("First Index Array", "FirstIndexArrayPath", getFirstIndexArrayPath(), FilterParameter::RequiredArray, req));
-	parameters.push_back(DataArraySelectionFilterParameter::New("Second Index Array", "SecondIndexArrayPath", getSecondIndexArrayPath(), FilterParameter::RequiredArray, req));
+    DataArraySelectionFilterParameter::RequirementType req;
+    QVector<uint32_t> dcGeomTypes;
+    req.dcGeometryTypes = dcGeomTypes;
+    QVector<uint32_t> amTypes;
+    amTypes.push_back(DREAM3D::AttributeMatrixType::Cell);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::CellFeature);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::Edge);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::EdgeFeature);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::Face);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::FaceFeature);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::Vertex);
+    amTypes.push_back(DREAM3D::AttributeMatrixType::VertexFeature);
+    QVector<QString> daTypes;
+    daTypes.push_back(DREAM3D::TypeNames::Int32);
+    QVector<QVector<size_t> > compDims;
+    compDims.resize(1);
+    compDims[0].resize(1);
+    compDims[0][0] = 1;
+    req.dcGeometryTypes = dcGeomTypes;
+    req.amTypes = amTypes;
+    req.daTypes = daTypes;
+    req.componentDimensions = compDims;
+    parameters.push_back(DataArraySelectionFilterParameter::New("First Index Array", "FirstIndexArrayPath", getFirstIndexArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Second Index Array", "SecondIndexArrayPath", getSecondIndexArrayPath(), FilterParameter::RequiredArray, req));
   }
 
   parameters.push_back(SeparatorFilterParameter::New("Cell/Feature Data", FilterParameter::CreatedArray));
@@ -158,13 +158,13 @@ int CombineAttributeMatrices::writeFilterParameters(AbstractFilterParametersWrit
 {
   writer->openFilterGroup(this, index);
   SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(FirstAttributeMatrixPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SecondAttributeMatrixPath)
-  SIMPL_FILTER_WRITE_PARAMETER(CombinedAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(FirstIndexArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SecondIndexArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(NewIndexArrayName)
-  writer->closeFilterGroup();
+    SIMPL_FILTER_WRITE_PARAMETER(FirstAttributeMatrixPath)
+    SIMPL_FILTER_WRITE_PARAMETER(SecondAttributeMatrixPath)
+    SIMPL_FILTER_WRITE_PARAMETER(CombinedAttributeMatrixName)
+    SIMPL_FILTER_WRITE_PARAMETER(FirstIndexArrayPath)
+    SIMPL_FILTER_WRITE_PARAMETER(SecondIndexArrayPath)
+    SIMPL_FILTER_WRITE_PARAMETER(NewIndexArrayName)
+    writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -177,20 +177,20 @@ void CombineAttributeMatrices::dataCheck()
   DataArrayPath tempPath;
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getFirstAttributeMatrixPath().getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m.get()) { return; }
+  if (getErrorCondition() < 0 || NULL == m.get()) { return; }
 
   if (getFirstAttributeMatrixPath().getDataContainerName().compare(getSecondAttributeMatrixPath().getDataContainerName()) != 0)
   {
-	  QString ss = QObject::tr("The selected attribute matrices must be in the same data container and currently are not");
-	  setErrorCondition(-5557);
-	  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    QString ss = QObject::tr("The selected attribute matrices must be in the same data container and currently are not");
+    setErrorCondition(-5557);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if (getFirstAttributeMatrixPath().getAttributeMatrixName().compare(getSecondAttributeMatrixPath().getAttributeMatrixName()) == 0)
   {
-	  QString ss = QObject::tr("The selected attribute matrices must be different and currently are the same");
-	  setErrorCondition(-5558);
-	  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    QString ss = QObject::tr("The selected attribute matrices must be different and currently are the same");
+    setErrorCondition(-5558);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   AttributeMatrix::Pointer firstAttrMat = m->getPrereqAttributeMatrix(this, getFirstAttributeMatrixPath().getAttributeMatrixName(), -301);
@@ -199,9 +199,9 @@ void CombineAttributeMatrices::dataCheck()
 
   if (firstAttrMat->getType() != secondAttrMat->getType())
   {
-	  QString ss = QObject::tr("The selected attribute matrices must be of the same type (ie Feature) and currently are not");
-	  setErrorCondition(-5559);
-	  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    QString ss = QObject::tr("The selected attribute matrices must be of the same type (ie Feature) and currently are not");
+    setErrorCondition(-5559);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if (getErrorCondition() < 0) { return; }
@@ -218,16 +218,16 @@ void CombineAttributeMatrices::dataCheck()
   m_FirstIndexPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFirstIndexArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if (NULL != m_FirstIndexPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   {
-	  m_FirstIndex = m_FirstIndexPtr.lock()->getPointer(0);
+    m_FirstIndex = m_FirstIndexPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
   if (getErrorCondition() < 0) { return; }
 
   m_SecondIndexPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSecondIndexArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if (NULL != m_SecondIndexPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   {
-	  m_SecondIndex = m_SecondIndexPtr.lock()->getPointer(0);
+    m_SecondIndex = m_SecondIndexPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() < 0) { return; }
+  if (getErrorCondition() < 0) { return; }
 
   // Create arrays on the reference grid to hold data present on the sampling grid
   QList<QString> fArrayNames = firstAttrMat->getAttributeArrayNames();
@@ -260,7 +260,7 @@ void CombineAttributeMatrices::dataCheck()
   m_NewIndexPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if (NULL != m_NewIndexPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   {
-	  m_NewIndex = m_NewIndexPtr.lock()->getPointer(0);
+    m_NewIndex = m_NewIndexPtr.lock()->getPointer(0);
   }    /* Now assign the raw pointer to data from the DataArray<T> object */
   if (getErrorCondition() < 0) { return; }
 }
@@ -281,14 +281,14 @@ void CombineAttributeMatrices::preflight()
 template<typename T>
 void copyData(IDataArray::Pointer fromData, IDataArray::Pointer toData, size_t location)
 {
-	typename DataArray<T>::Pointer fData = boost::dynamic_pointer_cast<DataArray<T> >(fromData);
-	typename DataArray<T>::Pointer tData = boost::dynamic_pointer_cast<DataArray<T> >(toData);
+  typename DataArray<T>::Pointer fData = boost::dynamic_pointer_cast<DataArray<T>>(fromData);
+  typename DataArray<T>::Pointer tData = boost::dynamic_pointer_cast<DataArray<T>>(toData);
 
   //only wanting to grab data from tuple 1 to numTuples of the fromData array,s ince the zeroth slot is a placeholder the first AM should already have
   T* src = fData->getPointer(1 * fromData->getNumberOfComponents());
   T* dest = tData->getPointer(location * toData->getNumberOfComponents());
-	size_t bytes = sizeof(T) * (fromData->getNumberOfTuples() - 1) * fromData->getNumberOfComponents();
-	::memcpy(dest, src, bytes);
+  size_t bytes = sizeof(T) * (fromData->getNumberOfTuples() - 1) * fromData->getNumberOfComponents();
+  ::memcpy(dest, src, bytes);
 }
 
 // -----------------------------------------------------------------------------
@@ -298,7 +298,7 @@ void CombineAttributeMatrices::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if (getErrorCondition() < 0) { return; }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFirstAttributeMatrixPath().getDataContainerName());
   AttributeMatrix::Pointer firstAttrMat = m->getAttributeMatrix(getFirstAttributeMatrixPath().getAttributeMatrixName());
@@ -316,7 +316,7 @@ void CombineAttributeMatrices::execute()
   for (size_t i = 0; i < totalTuples2; i++)
   {
     //subtract 1 from the index plus numTuples because the second index should be shifted to account for the zeroth tuple (all AMs above element start at tuple 1)
-    if(m_SecondIndex[i] > 0 && m_NewIndex[i] == 0) m_NewIndex[i] = m_SecondIndex[i] + firstAttrMatNumTuples - 1;
+    if (m_SecondIndex[i] > 0 && m_NewIndex[i] == 0) m_NewIndex[i] = m_SecondIndex[i] + firstAttrMatNumTuples - 1;
     else if (m_SecondIndex[i] > 0 && m_NewIndex[i] != 0)
     {
       QString ss = QObject::tr("When copying the indices, the indices of the two attribute matrices overlapped.  The index of the first attribute matrix was kept.");
@@ -328,9 +328,9 @@ void CombineAttributeMatrices::execute()
   size_t location = 0;
   for (QList<QString>::iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
   {
-	  IDataArray::Pointer fromDataArray = firstAttrMat->getAttributeArray(*iter);
-	  IDataArray::Pointer toDataArray = combinedAttrMat->getAttributeArray(*iter);
-	  EXECUTE_FUNCTION_TEMPLATE(this, copyData, fromDataArray, fromDataArray, toDataArray, location);
+    IDataArray::Pointer fromDataArray = firstAttrMat->getAttributeArray(*iter);
+    IDataArray::Pointer toDataArray = combinedAttrMat->getAttributeArray(*iter);
+    EXECUTE_FUNCTION_TEMPLATE(this, copyData, fromDataArray, fromDataArray, toDataArray, location);
   }
 
   arrayNames.clear();
@@ -338,9 +338,9 @@ void CombineAttributeMatrices::execute()
   location = firstAttrMatNumTuples;
   for (QList<QString>::iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
   {
-	  IDataArray::Pointer fromDataArray = secondAttrMat->getAttributeArray(*iter);
-	  IDataArray::Pointer toDataArray = combinedAttrMat->getAttributeArray(*iter);
-	  EXECUTE_FUNCTION_TEMPLATE(this, copyData, fromDataArray, fromDataArray, toDataArray, location);
+    IDataArray::Pointer fromDataArray = secondAttrMat->getAttributeArray(*iter);
+    IDataArray::Pointer toDataArray = combinedAttrMat->getAttributeArray(*iter);
+    EXECUTE_FUNCTION_TEMPLATE(this, copyData, fromDataArray, fromDataArray, toDataArray, location);
   }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
@@ -352,7 +352,7 @@ void CombineAttributeMatrices::execute()
 AbstractFilter::Pointer CombineAttributeMatrices::newFilterInstance(bool copyFilterParameters)
 {
   CombineAttributeMatrices::Pointer filter = CombineAttributeMatrices::New();
-  if(true == copyFilterParameters)
+  if (true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }
@@ -363,22 +363,30 @@ AbstractFilter::Pointer CombineAttributeMatrices::newFilterInstance(bool copyFil
 //
 // -----------------------------------------------------------------------------
 const QString CombineAttributeMatrices::getCompiledLibraryName()
-{ return Core::CoreBaseName; }
+{
+  return Core::CoreBaseName;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CombineAttributeMatrices::getGroupName()
-{ return DREAM3D::FilterGroups::CoreFilters; }
+{
+  return DREAM3D::FilterGroups::CoreFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CombineAttributeMatrices::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
+{
+  return DREAM3D::FilterSubGroups::MemoryManagementFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CombineAttributeMatrices::getHumanLabel()
-{ return "Combine Feature/Ensemble Attribute Matrices"; }
+{
+  return "Combine Feature/Ensemble Attribute Matrices";
+}
