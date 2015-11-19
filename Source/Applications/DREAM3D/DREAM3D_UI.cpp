@@ -581,10 +581,10 @@ void DREAM3D_UI::setupGui()
 void DREAM3D_UI::disconnectSignalsSlots()
 {
   disconnect(getFilterLibraryToolboxWidget(), SIGNAL(filterItemDoubleClicked(const QString&)),
-             pipelineViewWidget, SLOT(addFilter(const QString&)));
+             dream3dApp, SLOT(addFilter(const QString&)));
 
   disconnect(getFilterListToolboxWidget(), SIGNAL(filterItemDoubleClicked(const QString&)),
-             pipelineViewWidget, SLOT(addFilter(const QString&)));
+             dream3dApp, SLOT(addFilter(const QString&)));
 
   disconnect(getPrebuiltsToolboxWidget(), SIGNAL(pipelineFileActivated(const QString&, const bool&, const bool&)),
              dream3dApp, SLOT(newInstanceFromFile(const QString&, const bool&, const bool&)));
@@ -624,9 +624,6 @@ void DREAM3D_UI::connectSignalsSlots()
   addAction(m_ActionCloseWindow);
 #endif
 
-  connect(getFilterLibraryToolboxWidget(), SIGNAL(filterItemDoubleClicked(const QString&)),
-          pipelineViewWidget, SLOT(addFilter(const QString&)) );
-
   DocRequestManager* docRequester = DocRequestManager::Instance();
 
   connect(docRequester, SIGNAL(showFilterDocs(const QString&)),
@@ -634,9 +631,6 @@ void DREAM3D_UI::connectSignalsSlots()
 
   connect(docRequester, SIGNAL(showFilterDocUrl(const QUrl &)),
           this, SLOT(showFilterHelpUrl(const QUrl &)));
-
-  connect(getFilterListToolboxWidget(), SIGNAL(filterItemDoubleClicked(const QString&)),
-          pipelineViewWidget, SLOT(addFilter(const QString&)) );
 
   connect(getPrebuiltsToolboxWidget(), SIGNAL(pipelineFileActivated(const QString&, const bool&, const bool&)),
           dream3dApp, SLOT(newInstanceFromFile(const QString&, const bool&, const bool&)));

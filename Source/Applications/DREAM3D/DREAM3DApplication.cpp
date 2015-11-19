@@ -530,6 +530,17 @@ void DREAM3DApplication::openRecentFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void DREAM3DApplication::addFilter(const QString &text)
+{
+  if (NULL != m_ActiveWindow)
+  {
+    m_ActiveWindow->getPipelineViewWidget()->addFilter(text);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QMap<DREAM3D_UI*, QMenu*> DREAM3DApplication::getDREAM3DInstanceMap()
 {
   return m_DREAM3DInstanceMap;

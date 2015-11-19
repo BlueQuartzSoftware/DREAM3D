@@ -64,6 +64,13 @@ DREAM3DToolbox::~DREAM3DToolbox()
 void DREAM3DToolbox::setupGui()
 {
   readSettings();
+
+  // Connect the library and list widgets so that the "double-click to add" feature works
+  connect(filterLibraryWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
+    dream3dApp, SLOT(addFilter(const QString&)));
+
+  connect(filterListWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
+    dream3dApp, SLOT(addFilter(const QString&)));
 }
 
 // -----------------------------------------------------------------------------

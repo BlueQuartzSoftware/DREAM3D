@@ -110,6 +110,8 @@ class DREAM3DApplication : public QApplication
     // DREAM3D_UI slots
     void openRecentFile();
 
+    void addFilter(const QString &text);
+
     void on_actionShowToolbox_triggered(bool visible);
     void on_actionShowIssues_triggered(bool visible);
 
