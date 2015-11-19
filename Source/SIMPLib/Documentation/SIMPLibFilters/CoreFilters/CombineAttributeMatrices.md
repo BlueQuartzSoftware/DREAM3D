@@ -8,9 +8,9 @@ Core (Memory/Management)
 This **Filter** allows the user to specify two **Feature or Ensemble Attribute Matrices**, within the same **Data Container**, to combine.  The **Filter** appends the **Features or Ensembles** from the *second attribute matrix* onto the **Features or Ensembles** of the *first attribute matrix*, renumbering the **Features or Ensembles** of the *second attribute matrix* starting from one plus the number of **Features or Ensembles** in the *first attribute matrix*.  The **Filter** will create a new **Feature or Ensemble Attribute Matrix** with a number of tuples equal to the combined size of the two **Attribute Matrices**.  The unique set of **Attribute Arrays** from the combination of the two **Feature or Ensemble Attribute Matrices** will be added to the new **Attribute Matrix**.  The values of each **Attribute Arrays** for each **Feature or Ensemble Attribute Matrix** are then copied into the appropriate tuple in the appropriate **Attribute Array** in the new **Attribute Matrix**.
 
 
-***Note the original **Feature or Ensemble Attribute Matrices** are retained
+****Note* the original **Feature or Ensemble Attribute Matrices** are retained
 
-***Note the default values of each **Attribute Array** in the new **Attribute Matrix** are retained in any tuple that was did not contain a value in one of the **Feature or Ensemble Attribute Matrices**. 
+****Note* the default values of each **Attribute Array** in the new **Attribute Matrix** are retained in any tuple that was did not contain a value in one of the **Feature or Ensemble Attribute Matrices**. 
 
 ## Parameters ##
 None
