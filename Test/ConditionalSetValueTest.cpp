@@ -196,8 +196,8 @@ DataContainerArray::Pointer initializeDataContainerArray()
 template<typename T>
 void validateReplacedValues(IDataArray::Pointer iArray, IDataArray::Pointer cArray)
 {
-  typename DataArray<T>::Pointer dataArrayPtr = boost::dynamic_pointer_cast<DataArray<T> >(iArray);
-  typename DataArray<bool>::Pointer condArrayPtr = boost::dynamic_pointer_cast<DataArray<bool> >(cArray);
+  typename DataArray<T>::Pointer dataArrayPtr = std::dynamic_pointer_cast<DataArray<T> >(iArray);
+  typename DataArray<bool>::Pointer condArrayPtr = std::dynamic_pointer_cast<DataArray<bool> >(cArray);
   T* dataArray = dataArrayPtr->getPointer(0);
   bool* condArray = condArrayPtr->getPointer(0);
   size_t numTuples = dataArrayPtr->getNumberOfTuples();

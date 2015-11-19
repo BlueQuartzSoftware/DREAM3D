@@ -53,6 +53,7 @@ set(_PublicFilters
   DataContainerReader
   DataContainerWriter
   ExtractComponentAsArray
+  FeatureCountDecision
   LinkFeatureMapToElementArray
   MoveData
   RawBinaryReader

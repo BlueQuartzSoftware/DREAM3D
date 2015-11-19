@@ -39,11 +39,16 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtCore/QUrl>
+#include <QtCore/QTextStream>
 #include <QtCore/QMimeData>
 #include <QtWidgets/QWidget>
 #include <QtGui/QDragEnterEvent>
 
+#include "QtSupportLib/DREAM3DStyles.h"
+
 #include "moc_QFSDropLineEdit.cpp"
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -52,6 +57,50 @@ QFSDropLineEdit::QFSDropLineEdit(QWidget* parent)
 {
 
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFSDropLineEdit::changeStyleSheet(int style)
+{
+  QString styleSheet;
+  QTextStream ss(&styleSheet);
+
+  ss << "QLabel {";
+#if defined(Q_OS_WIN)
+  ss << "font: italic 9 pt \"" << DREAM3DStyles::GetUIFont() << "\";";
+#elif defined(Q_OS_MAC)
+  ss << "font: italic 12 pt \"" << DREAM3DStyles::GetUIFont() << "\";";
+#else
+  ss << "font: italic 10 pt \"" << DREAM3DStyles::GetUIFont() << "\";";
+#endif
+
+  if(style == FS_STANDARD_STYLE)
+  {
+
+  }
+  else if(style == FS_DRAGGING_STYLE)
+  {
+    ss << "border: 2px solid rgb(34, 170, 46);";
+    ss << "border-radius: 5px;";
+  }
+  else if(style == FS_DOESNOTEXIST_STYLE)
+  {
+    ss << "color: rgb(200, 50, 50); font: bold;";
+  }
+  else if(style == FS_WARNING_STYLE)
+  {
+    ss << "color: rgb(255, 140, 0); font: bold;";
+  }
+
+
+  ss << "}";
+
+  setStyleSheet(styleSheet);
+}
+
+
 
 // -----------------------------------------------------------------------------
 //

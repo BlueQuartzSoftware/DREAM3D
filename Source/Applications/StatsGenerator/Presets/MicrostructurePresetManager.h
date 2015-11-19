@@ -89,7 +89,7 @@ class MicrostructurePresetManager
     * @brief Creates a new ImportDelegate based on a class name
     * @param className The name of the class to create
     * @return Returns an instance of MicrostructurePreset::Pointer. This method can return
-    * a null ImportDelegate so check the return value with the boost::shared_ptr.get()
+    * a null ImportDelegate so check the return value with the std::shared_ptr.get()
     * method to check the value of the wrapped pointer.
     */
     static AbstractMicrostructurePreset::Pointer createNewPreset (const QString& className);
@@ -103,7 +103,7 @@ class MicrostructurePresetManager
     * there should not be a problem if you do use this method.
     * @param className The name of the class to create or the display name of the class
     * @return Returns an instance of MicrostructurePreset::Pointer. This method can return
-    * a null ImportDelegate so check the return value with the boost::shared_ptr.get()
+    * a null ImportDelegate so check the return value with the std::shared_ptr.get()
     * method to check the value of the wrapped pointer.
     */
     virtual AbstractMicrostructurePreset::Pointer createPreset (const QString& className);

@@ -37,9 +37,9 @@ class FindDifferenceMapImpl
 
     void generate(size_t start, size_t end) const
     {
-      typename DataArray<DataType>::Pointer firstArrayPtr = boost::dynamic_pointer_cast<DataArray<DataType> >(m_FirstArray);
-      typename DataArray<DataType>::Pointer secondArrayPtr = boost::dynamic_pointer_cast<DataArray<DataType> >(m_SecondArray);
-      typename DataArray<DataType>::Pointer differenceMapPtr = boost::dynamic_pointer_cast<DataArray<DataType> >(m_DifferenceMap);
+      typename DataArray<DataType>::Pointer firstArrayPtr = std::dynamic_pointer_cast<DataArray<DataType> >(m_FirstArray);
+      typename DataArray<DataType>::Pointer secondArrayPtr = std::dynamic_pointer_cast<DataArray<DataType> >(m_SecondArray);
+      typename DataArray<DataType>::Pointer differenceMapPtr = std::dynamic_pointer_cast<DataArray<DataType> >(m_DifferenceMap);
 
       DataType* firstArray = firstArrayPtr->getPointer(0);
       DataType* secondArray = secondArrayPtr->getPointer(0);

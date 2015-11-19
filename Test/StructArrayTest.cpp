@@ -475,7 +475,7 @@ void _TestDeepCopyStructArray()
   QVector<size_t> cDims(1, 1);
   QString name("Source Array");
   typename StructArray<T>::Pointer src = StructArray<T>::CreateArray(numTuples, name, false);
-  typename StructArray<T>::Pointer copy = boost::dynamic_pointer_cast<StructArray<T> >(src->deepCopy());
+  typename StructArray<T>::Pointer copy = std::dynamic_pointer_cast<StructArray<T> >(src->deepCopy());
 
   DREAM3D_REQUIRED(copy->getNumberOfTuples(), ==, src->getNumberOfTuples() );
   DREAM3D_REQUIRED(copy->isAllocated(), ==, src->isAllocated() );
@@ -489,7 +489,7 @@ void _TestDeepCopyStructArray()
     value->pos[1] = 2;
     value->pos[2] = 3;
   }
-  copy = boost::dynamic_pointer_cast<StructArray<T> >(src->deepCopy());
+  copy = std::dynamic_pointer_cast<StructArray<T> >(src->deepCopy());
   Vec3Int_t* cPtr = copy->getPointer(0);
   for(size_t i = 0; i < numTuples; i++)
   {

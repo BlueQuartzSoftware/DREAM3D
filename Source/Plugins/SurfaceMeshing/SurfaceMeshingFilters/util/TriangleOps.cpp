@@ -79,7 +79,7 @@ QVector<int64_t> TriangleOps::findAdjacentTriangles(TriangleGeom::Pointer triang
   if (count < 3)
   {
     qDebug() << "Triangle Neighbor List had only " << count << " neighbors. Must be at least 3." << "\n";
-    BOOST_ASSERT(false);
+    Q_ASSERT(false);
   }
   else if (count == 3) // This triangle only has 3 neighbors so we are assuming all three have the same label set.
   {

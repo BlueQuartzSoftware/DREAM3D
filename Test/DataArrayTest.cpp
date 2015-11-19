@@ -600,7 +600,7 @@ QString TypeToString(T v)
       }
     }
 
-    typename NeighborList<T>::Pointer copy = boost::dynamic_pointer_cast<NeighborList<T> >(neiList->deepCopy());
+    typename NeighborList<T>::Pointer copy = std::dynamic_pointer_cast<NeighborList<T> >(neiList->deepCopy());
     for(int i = 0; i < 10; ++i)
     {
 
@@ -857,7 +857,7 @@ QString TypeToString(T v)
     // First lets try it without allocating any memory
     typename DataArray<T>::Pointer src = DataArray<T>::CreateArray(numTuples, cDims, name, false);
 
-    typename DataArray<T>::Pointer copy = boost::dynamic_pointer_cast<DataArray<T> >(src->deepCopy());
+    typename DataArray<T>::Pointer copy = std::dynamic_pointer_cast<DataArray<T> >(src->deepCopy());
 
     DREAM3D_REQUIRED(copy->getNumberOfTuples(), ==, src->getNumberOfTuples() );
     DREAM3D_REQUIRED(copy->isAllocated(), ==, src->isAllocated() );
@@ -871,7 +871,7 @@ QString TypeToString(T v)
         src->setComponent(i, j, static_cast<T>(i + j) );
       }
     }
-    copy = boost::dynamic_pointer_cast<DataArray<T> >(src->deepCopy());
+    copy = std::dynamic_pointer_cast<DataArray<T> >(src->deepCopy());
     for(size_t i = 0; i < numTuples; i++)
     {
       for(size_t j = 0; j < cDims[0]; j++)
@@ -940,7 +940,7 @@ void _TestCopyData()
   didCopy = src->copyData(numTuples, copy);
   DREAM3D_REQUIRE_EQUAL(didCopy, true);
 
-  copy = boost::dynamic_pointer_cast<DataArray<T> >(src->deepCopy());
+  copy = std::dynamic_pointer_cast<DataArray<T> >(src->deepCopy());
   for(size_t i = 0; i < numTuples; i++)
   {
     for(size_t j = 0; j < cDims[0]; j++)

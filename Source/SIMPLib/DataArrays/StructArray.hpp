@@ -62,7 +62,7 @@ class StructArray : public IDataArray
      * @brief Static constructor
      * @param numElements The number of elements in the internal array.
      * @param name The name of the array
-     * @return Boost::Shared_Ptr wrapping an instance of StructArrayTemplate<T>
+     * @return Std::Shared_Ptr wrapping an instance of StructArrayTemplate<T>
      */
     static Pointer CreateArray(size_t numElements, const QString& name, bool allocate = true)
     {
@@ -90,7 +90,7 @@ class StructArray : public IDataArray
      * contained in the vector. The number of components will be set to 1.
      * @param vec The vector to copy the data from
      * @param name The name of the array
-     * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
+     * @return Std::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
     virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name, bool allocate = true)
     {
@@ -537,7 +537,7 @@ class StructArray : public IDataArray
     virtual T* getPointer(size_t i)
     {
 #ifndef NDEBUG
-      if (m_Size > 0) { BOOST_ASSERT(i < m_Size);}
+      if (m_Size > 0) { Q_ASSERT(i < m_Size);}
 #endif
       return (T*)(&(m_Array[i]));
     }
@@ -550,9 +550,9 @@ class StructArray : public IDataArray
     void initializeTuple(size_t i, double p)
     {
 #ifndef NDEBUG
-      if (m_Size > 0) { BOOST_ASSERT(i < m_Size);}
+      if (m_Size > 0) { Q_ASSERT(i < m_Size);}
 #endif
-      BOOST_ASSERT(false);
+      Q_ASSERT(false);
       //T c = static_cast<T>(p);
       //for (int j = 0; j < this->NumberOfComponents; ++j)
       {
@@ -608,7 +608,7 @@ class StructArray : public IDataArray
      */
     virtual void printTuple(QTextStream& out, size_t i, char delimiter = ',')
     {
-      BOOST_ASSERT(false);
+      Q_ASSERT(false);
       //        for(int j = 0; j < NumberOfComponents; ++j)
       //        {
       //          if (j != 0) { out << delimiter; }
@@ -624,7 +624,7 @@ class StructArray : public IDataArray
      */
     virtual void printComponent(QTextStream& out, size_t i, int j)
     {
-      BOOST_ASSERT(false);
+      Q_ASSERT(false);
       //        out << Array[i + j];
     }
 
@@ -636,7 +636,7 @@ class StructArray : public IDataArray
      */
     virtual int writeH5Data(hid_t parentId, QVector<size_t> tDims)
     {
-      BOOST_ASSERT(false);
+      Q_ASSERT(false);
       return -1;
     }
 
@@ -706,7 +706,7 @@ class StructArray : public IDataArray
      */
     virtual int readH5Data(hid_t parentId)
     {
-      BOOST_ASSERT(false);
+      Q_ASSERT(false);
       int err = -1;
 
       return err;
@@ -719,7 +719,7 @@ class StructArray : public IDataArray
      */
     inline T& operator[](size_t i)
     {
-      BOOST_ASSERT(i < m_Size);
+      Q_ASSERT(i < m_Size);
       return m_Array[i];
     }
 
@@ -765,7 +765,7 @@ class StructArray : public IDataArray
           || MUD_FLAP_4 != 0xABABABABABABABABul
           || MUD_FLAP_5 != 0xABABABABABABABABul)
       {
-        BOOST_ASSERT(false);
+        Q_ASSERT(false);
       }
 #endif
 

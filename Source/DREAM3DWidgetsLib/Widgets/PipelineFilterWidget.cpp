@@ -470,7 +470,7 @@ void PipelineFilterWidget::linkConditionalWidgets(QVector<FilterParameter::Point
   for (QVector<FilterParameter::Pointer>::iterator iter = filterParameters.begin(); iter != filterParameters.end(); ++iter )
   {
     FilterParameter::Pointer filterParameter = (*iter);
-    LinkedBooleanFilterParameter::Pointer filterParameterPtr = boost::dynamic_pointer_cast<LinkedBooleanFilterParameter>(filterParameter);
+    LinkedBooleanFilterParameter::Pointer filterParameterPtr = std::dynamic_pointer_cast<LinkedBooleanFilterParameter>(filterParameter);
 
     if(NULL != filterParameterPtr.get() )
     {
@@ -502,7 +502,7 @@ void PipelineFilterWidget::linkConditionalWidgets(QVector<FilterParameter::Point
 
 
     // Figure out if we have any Linked ComboBox Widgets to hook up to other widgets
-    LinkedChoicesFilterParameter::Pointer optionPtr2 = boost::dynamic_pointer_cast<LinkedChoicesFilterParameter>(filterParameter);
+    LinkedChoicesFilterParameter::Pointer optionPtr2 = std::dynamic_pointer_cast<LinkedChoicesFilterParameter>(filterParameter);
 
     if(NULL != optionPtr2.get())
     {
@@ -887,7 +887,7 @@ void PipelineFilterWidget::mouseMoveEvent(QMouseEvent* event)
 // -----------------------------------------------------------------------------
 void PipelineFilterWidget::getGuiParametersFromFilter(AbstractFilter* filt)
 {
-  BOOST_ASSERT("PipelineFilterWidget::getGuiParametersFromFilter executed");    // Code should never enter this function
+  Q_ASSERT("PipelineFilterWidget::getGuiParametersFromFilter executed");    // Code should never enter this function
 }
 
 // -----------------------------------------------------------------------------

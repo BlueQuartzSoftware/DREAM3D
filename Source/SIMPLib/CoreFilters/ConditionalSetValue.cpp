@@ -154,7 +154,7 @@ void checkValuesFloatDouble(AbstractFilter* filter, double replaceValue, QString
 template<typename T>
 void replaceValue(AbstractFilter* filter, IDataArray::Pointer inDataPtr, BoolArrayType::Pointer condDataPtr, double replaceValue)
 {
-  typename DataArray<T>::Pointer inputArrayPtr = boost::dynamic_pointer_cast<DataArray<T> >(inDataPtr);
+  typename DataArray<T>::Pointer inputArrayPtr = std::dynamic_pointer_cast<DataArray<T> >(inDataPtr);
 
   T replaceVal = static_cast<T>(replaceValue);
 

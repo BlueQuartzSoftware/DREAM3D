@@ -380,7 +380,7 @@ int ReadEbsdHeaderData(ClassType* c, const QString& key, hid_t gid, const QMap<Q
   else
   {
     EbsdHeaderEntry::Pointer p = headerMap[key];
-    typename HeaderEntryClass::Pointer c = boost::dynamic_pointer_cast<HeaderEntryClass>(p);
+    typename HeaderEntryClass::Pointer c = std::dynamic_pointer_cast<HeaderEntryClass>(p);
     c->setValue(t);
   }
   return 0;
@@ -406,7 +406,7 @@ int ReadEbsdHeaderStringData(ClassType* c, const QString& key, hid_t gid, const 
   else
   {
     EbsdHeaderEntry::Pointer p = headerMap[key];
-    typename HeaderEntryClass::Pointer c = boost::dynamic_pointer_cast<HeaderEntryClass>(p);
+    typename HeaderEntryClass::Pointer c = std::dynamic_pointer_cast<HeaderEntryClass>(p);
     c->setValue(t);
   }
   return 0;
@@ -457,7 +457,7 @@ int H5OIMReader::readHeader(hid_t parId)
     // Read the Pattern Width - This may not exist
     err = QH5Lite::readScalarDataset(gid, Ebsd::Ang::PatternWidth, value);
     EbsdHeaderEntry::Pointer p = m_HeaderMap[Ebsd::Ang::PatternWidth];
-    AngHeaderIntType::Pointer c = boost::dynamic_pointer_cast<AngHeaderIntType>(p);
+    AngHeaderIntType::Pointer c = std::dynamic_pointer_cast<AngHeaderIntType>(p);
     c->setValue(value);
     m_PatternDims[1] = value;
   }
@@ -468,7 +468,7 @@ int H5OIMReader::readHeader(hid_t parId)
   {
     err = QH5Lite::readScalarDataset(gid, Ebsd::Ang::PatternHeight, value);
     EbsdHeaderEntry::Pointer p = m_HeaderMap[Ebsd::Ang::PatternHeight];
-    AngHeaderIntType::Pointer c = boost::dynamic_pointer_cast<AngHeaderIntType>(p);
+    AngHeaderIntType::Pointer c = std::dynamic_pointer_cast<AngHeaderIntType>(p);
     c->setValue(value);
     m_PatternDims[0] = value;
   }

@@ -389,7 +389,7 @@ void TestTupleErase()
 void TestDeepCopyArray()
 {
   StringDataArray::Pointer nodes = initializeStringDataArray();
-  StringDataArray::Pointer copy = boost::dynamic_pointer_cast<StringDataArray>(nodes->deepCopy());
+  StringDataArray::Pointer copy = std::dynamic_pointer_cast<StringDataArray>(nodes->deepCopy());
 
   DREAM3D_REQUIRE_EQUAL(nodes->getSize(), copy->getSize());
   for(size_t i = 0; i < ARRAY_SIZE; i++)

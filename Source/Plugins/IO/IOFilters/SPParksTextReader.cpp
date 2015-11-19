@@ -457,7 +457,7 @@ void SPParksTextReader::parseDataLine(QByteArray& line, QVector<size_t> dims, in
 
   // Calculate the offset into the actual array based on the x, y & z values from the data line we just read
   size_t offset = static_cast<size_t>((dims[1] * dims[0] * zIdx) + (dims[0] * yIdx) + xIdx);
-  // BOOST_ASSERT(tokens.size() == m_NamePointerMap.size());
+  // Q_ASSERT(tokens.size() == m_NamePointerMap.size());
 
   QMapIterator<QString, DataParser::Pointer> iter(m_NamePointerMap);
   while (iter.hasNext())

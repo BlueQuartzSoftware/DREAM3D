@@ -59,7 +59,7 @@ class SIMPLib_EXPORT StatsDataArray : public IDataArray
      * @brief Static constructor
      * @param numElements The number of elements in the internal array.
      * @param name The name of the array
-     * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
+     * @return Std::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
     static Pointer CreateArray(size_t numElements, const QString& name, bool allocate = true);
 

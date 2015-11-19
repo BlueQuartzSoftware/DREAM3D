@@ -176,7 +176,7 @@ IDataArray::Pointer copyCellData(IDataArray::Pointer inputData, int32_t features
 {
   QString featureArrayName = inputData->getName();
 
-  typename DataArray<T>::Pointer cell = boost::dynamic_pointer_cast<DataArray<T> >(inputData);
+  typename DataArray<T>::Pointer cell = std::dynamic_pointer_cast<DataArray<T> >(inputData);
   if (NULL == cell) { return IDataArray::NullPointer(); }
 
   QVector<size_t> dims = inputData->getComponentDimensions();

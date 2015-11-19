@@ -168,11 +168,11 @@ class SineParamsSegmentFeatures : public SegmentFeatures
     BoolArrayType::Pointer m_BeenPickedPtr;
     bool* m_BeenPicked;
 
-    ///Boost Random Number generator stuff. We use the boost::shared_ptr to ensure the pointers are cleaned up when the
+    ///Boost Random Number generator stuff. We use the std::shared_ptr to ensure the pointers are cleaned up when the
     ///filter is deleted
-    boost::shared_ptr<NumberDistribution> m_Distribution;
-    boost::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;
-    boost::shared_ptr<Generator> m_NumberGenerator;
+    std::shared_ptr<NumberDistribution> m_Distribution;
+    std::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;
+    std::shared_ptr<Generator> m_NumberGenerator;
     size_t                       m_TotalRandomNumbersGenerated;
 
     float angleTolerance;

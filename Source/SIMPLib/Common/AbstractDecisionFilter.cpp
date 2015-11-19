@@ -33,74 +33,128 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "SGWidget.h"
 
+#include "AbstractDecisionFilter.h"
 
-// Include the MOC generated CPP file which has all the QMetaObject methods/data
-#include "moc_SGWidget.cpp"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+
+// Include the MOC generated file for this class
+#include "moc_AbstractDecisionFilter.cpp"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SGWidget::SGWidget(QWidget* parent) :
-  QWidget(parent)
+AbstractDecisionFilter::AbstractDecisionFilter() :
+  AbstractFilter()
 {
-
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SGWidget::~SGWidget()
+AbstractDecisionFilter::~AbstractDecisionFilter()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int index)
+void AbstractDecisionFilter::setupFilterParameters()
 {
-  Q_ASSERT(false);
+  //FilterParameterVector parameters;
+
+  //setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString SGWidget::getComboString()
+void AbstractDecisionFilter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
-  return QString("SGWidget - THIS IS BAD. YOU SHOULD NOT BE SEEING THIS.");
+  //reader->openFilterGroup(this, index);
+
+  //reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
+int AbstractDecisionFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  return -1;
+  //writer->openFilterGroup(this, index);
+
+  //writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGWidget::on_m_GenerateDefaultData_clicked()
+void AbstractDecisionFilter::dataCheck()
 {
-// Q_ASSERT(false);
+  setErrorCondition(0);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGWidget::dataWasEdited()
+void AbstractDecisionFilter::preflight()
 {
-  Q_ASSERT(false);
+  setInPreflight(true);
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
+  dataCheck();
+  emit preflightExecuted();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString SGWidget::getTabTitle()
+void AbstractDecisionFilter::execute()
 {
-  return QString("Unknown Phase Type");
+  setErrorCondition(0);
+  dataCheck();
+  if(getErrorCondition() < 0) { return; }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer AbstractDecisionFilter::newFilterInstance(bool copyFilterParameters)
+{
+  AbstractDecisionFilter::Pointer filter = AbstractDecisionFilter::New();
+  if(true == copyFilterParameters)
+  {
+    copyFilterParameterInstanceVariables(filter.get());
+  }
+  return filter;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AbstractDecisionFilter::getCompiledLibraryName()
+{
+  return "";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AbstractDecisionFilter::getGroupName()
+{ return ""; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AbstractDecisionFilter::getSubGroupName()
+{ return ""; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AbstractDecisionFilter::getHumanLabel()
+{ return ""; }

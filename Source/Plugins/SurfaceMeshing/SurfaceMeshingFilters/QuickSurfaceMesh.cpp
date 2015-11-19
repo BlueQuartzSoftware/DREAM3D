@@ -169,8 +169,8 @@ void copyCellArraysToFaceArrays(size_t faceIndex, size_t firstCellIndex, size_t 
                                 IDataArray::Pointer cellArray, IDataArray::Pointer faceArray,
                                 bool forceSecondToZero = false)
 {
-  typename DataArray<T>::Pointer cellPtr = boost::dynamic_pointer_cast<DataArray<T> >(cellArray);
-  typename DataArray<T>::Pointer facePtr = boost::dynamic_pointer_cast<DataArray<T> >(faceArray);
+  typename DataArray<T>::Pointer cellPtr = std::dynamic_pointer_cast<DataArray<T> >(cellArray);
+  typename DataArray<T>::Pointer facePtr = std::dynamic_pointer_cast<DataArray<T> >(faceArray);
 
   int32_t numComps = cellPtr->getNumberOfComponents();
   QVector<size_t> cDims = facePtr->getComponentDimensions();

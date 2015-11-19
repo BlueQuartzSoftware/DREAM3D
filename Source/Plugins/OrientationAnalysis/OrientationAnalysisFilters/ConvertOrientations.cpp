@@ -178,7 +178,7 @@ void ConvertOrientations::dataCheck()
   DataArrayPath outputArrayPath = getInputOrientationArrayPath();
   outputArrayPath.setDataArrayName(getOutputOrientationArrayName());
 
-  FloatArrayType::Pointer fArray = boost::dynamic_pointer_cast<FloatArrayType>(iDataArrayPtr);
+  FloatArrayType::Pointer fArray = std::dynamic_pointer_cast<FloatArrayType>(iDataArrayPtr);
   if(NULL != fArray.get())
   {
     QVector<int32_t> componentCounts = OrientationConverter<float>::GetComponentCounts();
@@ -186,7 +186,7 @@ void ConvertOrientations::dataCheck()
     getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, outputArrayPath, 0, outputCDims);
   }
 
-  DoubleArrayType::Pointer dArray = boost::dynamic_pointer_cast<DoubleArrayType>(iDataArrayPtr);
+  DoubleArrayType::Pointer dArray = std::dynamic_pointer_cast<DoubleArrayType>(iDataArrayPtr);
   if(NULL != dArray.get())
   {
     QVector<int32_t> componentCounts = OrientationConverter<double>::GetComponentCounts();
@@ -267,7 +267,7 @@ void ConvertOrientations::execute()
   DataArrayPath outputArrayPath = getInputOrientationArrayPath();
   outputArrayPath.setDataArrayName(getOutputOrientationArrayName());
 
-  FloatArrayType::Pointer fArray = boost::dynamic_pointer_cast<FloatArrayType>(iDataArrayPtr);
+  FloatArrayType::Pointer fArray = std::dynamic_pointer_cast<FloatArrayType>(iDataArrayPtr);
   if(NULL != fArray.get())
   {
     QVector<int32_t> componentCounts = OrientationConverter<float>::GetComponentCounts();
@@ -276,7 +276,7 @@ void ConvertOrientations::execute()
     generateRepresentation<float>(this, fArray, outData);
   }
 
-  DoubleArrayType::Pointer dArray = boost::dynamic_pointer_cast<DoubleArrayType>(iDataArrayPtr);
+  DoubleArrayType::Pointer dArray = std::dynamic_pointer_cast<DoubleArrayType>(iDataArrayPtr);
   if(NULL != dArray.get())
   {
     QVector<int32_t> componentCounts = OrientationConverter<double>::GetComponentCounts();

@@ -34,60 +34,33 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _ScalarSegmentFeatures_H_
-#define _ScalarSegmentFeatures_H_
-
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int.hpp>
-#include <boost/random/variate_generator.hpp>
+#ifndef _FeatureCountDecision_H_
+#define _FeatureCountDecision_H_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
-#include "Reconstruction/ReconstructionFilters/SegmentFeatures.h"
-
-class CompareFunctor;
+#include "SIMPLib/Common/AbstractDecisionFilter.h"
 
 /**
- * @brief The ScalarSegmentFeatures class. See [Filter documentation](@ref scalarsegmentfeatures) for details.
+ * @brief The FeatureCountDecision class. See [Filter documentation](@ref featurecountdecision) for details.
  */
-class ScalarSegmentFeatures : public SegmentFeatures
+class FeatureCountDecision : public AbstractDecisionFilter
 {
-    Q_OBJECT
+    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    typedef boost::uniform_int<int64_t> NumberDistribution;
-    typedef boost::mt19937 RandomNumberGenerator;
-    typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;
+    SIMPL_SHARED_POINTERS(FeatureCountDecision)
+    SIMPL_STATIC_NEW_MACRO(FeatureCountDecision)
+    SIMPL_TYPE_MACRO_SUPER(FeatureCountDecision, AbstractDecisionFilter)
 
-    SIMPL_SHARED_POINTERS(ScalarSegmentFeatures)
-    SIMPL_STATIC_NEW_MACRO(ScalarSegmentFeatures)
-    SIMPL_TYPE_MACRO_SUPER(ScalarSegmentFeatures, AbstractFilter)
+    virtual ~FeatureCountDecision();
 
-    virtual ~ScalarSegmentFeatures();
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+      Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    SIMPL_FILTER_PARAMETER(QString, CellFeatureAttributeMatrixName)
-    Q_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
-
-    SIMPL_FILTER_PARAMETER(DataArrayPath, ScalarArrayPath)
-    Q_PROPERTY(DataArrayPath ScalarArrayPath READ getScalarArrayPath WRITE setScalarArrayPath)
-
-    SIMPL_FILTER_PARAMETER(float, ScalarTolerance)
-    Q_PROPERTY(float ScalarTolerance READ getScalarTolerance WRITE setScalarTolerance)
-
-    SIMPL_INSTANCE_PROPERTY(bool, RandomizeFeatureIds)
-
-    SIMPL_FILTER_PARAMETER(bool, UseGoodVoxels)
-    Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
-
-    SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
-    Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
-
-    SIMPL_FILTER_PARAMETER(QString, FeatureIdsArrayName)
-    Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
-
-    SIMPL_FILTER_PARAMETER(QString, ActiveArrayName)
-    Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
+    SIMPL_FILTER_PARAMETER(int, MaxGrains)
+    Q_PROPERTY(int MaxGrains READ getMaxGrains WRITE setMaxGrains)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -138,8 +111,12 @@ class ScalarSegmentFeatures : public SegmentFeatures
     * @brief preflight Reimplemented from @see AbstractFilter class
     */
     virtual void preflight();
+
+  signals:
+    void decisionMade(bool& dm);
+
   protected:
-    ScalarSegmentFeatures();
+    FeatureCountDecision();
 
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -147,53 +124,15 @@ class ScalarSegmentFeatures : public SegmentFeatures
     void dataCheck();
 
     /**
-     * @brief getSeed Reimplemented from @see SegmentFeatures class
+     * @brief find_shifts Reimplemented from @see AlignSections class
      */
-    virtual int64_t getSeed(int32_t gnum);
-
-    /**
-     * @brief determineGrouping Reimplemented from @see SegmentFeatures class
-     */
-    virtual bool determineGrouping(int64_t referencepoint, int64_t neighborpoint, int32_t gnum);
+//    virtual void find_shifts(std::vector<int64_t>& xshifts, std::vector<int64_t>& yshifts);
 
   private:
-    DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
-    DEFINE_IDATAARRAY_VARIABLE(InputData)
-
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_DATAARRAY_VARIABLE(bool, Active)
 
-    BoolArrayType::Pointer m_BeenPickedPtr;
-    bool* m_BeenPicked;
-
-    std::shared_ptr<CompareFunctor> m_Compare;
-
-    std::shared_ptr<NumberDistribution> m_Distribution;
-    std::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;
-    std::shared_ptr<Generator> m_NumberGenerator;
-    size_t                       m_TotalRandomNumbersGenerated;
-
-    /**
-     * @brief randomizeGrainIds Randomizes Feature Ids
-     * @param totalPoints Size of Feature Ids array to randomize
-     * @param totalFeatures Number of Features
-     */
-    void randomizeFeatureIds(int64_t totalPoints, int64_t totalFeatures);
-
-    /**
-     * @brief initializeVoxelSeedGenerator Initializes the boost random number generators
-     * @param rangeMin Minimum range for random number selection
-     * @param rangeMax Maximum range for random number selection
-     */
-    void initializeVoxelSeedGenerator(const int64_t rangeMin, const int64_t rangeMax);
-
-    /**
-     * @brief updateFeatureInstancePointers Updates raw Feature pointers
-     */
-    void updateFeatureInstancePointers();
-
-    ScalarSegmentFeatures(const ScalarSegmentFeatures&); // Copy Constructor Not Implemented
-    void operator=(const ScalarSegmentFeatures&); // Operator '=' Not Implemented
+    FeatureCountDecision(const FeatureCountDecision&); // Copy Constructor Not Implemented
+    void operator=(const FeatureCountDecision&); // Operator '=' Not Implemented
 };
 
-#endif /* ScalarSegmentFeatures_H_ */
+#endif /* _FeatureCountDecision_H_ */

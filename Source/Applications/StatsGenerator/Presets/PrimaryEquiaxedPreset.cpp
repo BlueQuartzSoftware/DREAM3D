@@ -256,5 +256,5 @@ void PrimaryEquiaxedPreset::initializeNeighborTableModel(StatsGenPlotWidget* plo
 // -----------------------------------------------------------------------------
 void PrimaryEquiaxedPreset::initializeClusteringTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
-  BOOST_ASSERT(false);
+  Q_ASSERT(false);
 }

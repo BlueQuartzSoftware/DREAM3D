@@ -165,7 +165,7 @@ class DataArray : public IDataArray
      * @brief Static constructor
      * @param numElements The number of elements in the internal array.
      * @param name The name of the array
-     * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
+     * @return Std::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
     static Pointer CreateArray(size_t numElements, const QString& name, bool allocate = true)
     {
@@ -194,7 +194,7 @@ class DataArray : public IDataArray
      * @param rank The number of dimensions of the attribute on each Tuple
      * @param dims The actual dimensions of the attribute on each Tuple
      * @param name The name of the array
-     * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
+     * @return Std::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
     static Pointer CreateArray(size_t numTuples, int rank, size_t* dims, const QString& name, bool allocate = true)
     {
@@ -226,7 +226,7 @@ class DataArray : public IDataArray
      * @param numTuples The number of tuples in the array.
      * @param dims The actual dimensions of the attribute on each Tuple
      * @param name The name of the array
-     * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
+     * @return Std::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
     static Pointer CreateArray(size_t numTuples, std::vector<size_t> cDims, const QString& name, bool allocate = true)
     {
@@ -253,7 +253,7 @@ class DataArray : public IDataArray
      * @param numTuples The number of tuples in the array.
      * @param dims The actual dimensions of the attribute on each Tuple
      * @param name The name of the array
-     * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
+     * @return Std::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
     static Pointer CreateArray(size_t numTuples, QVector<size_t> cDims, const QString& name, bool allocate = true)
     {
@@ -281,7 +281,7 @@ class DataArray : public IDataArray
     * @param tDims The actual dimensions of the Tuples
     * @param cDims The actual dimensions of the attribute on each Tuple
     * @param name The name of the array
-    * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
+    * @return Std::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
     */
     static Pointer CreateArray(QVector<size_t> tDims, QVector<size_t> cDims, const QString& name, bool allocate = true)
     {
@@ -313,7 +313,7 @@ class DataArray : public IDataArray
      * contained in the vector. The number of components will be set to 1.
      * @param vec The vector to copy the data from
      * @param name The name of the array
-     * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
+     * @return Std::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
     static Pointer FromQVector(QVector<T>& vec, const QString& name, bool allocate = true)
     {
@@ -331,7 +331,7 @@ class DataArray : public IDataArray
      * contained in the vector. The number of components will be set to 1.
      * @param vec The vector to copy the data from
      * @param name The name of the array
-     * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
+     * @return Std::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
     static Pointer FromStdVector(std::vector<T>& vec, const QString& name, bool allocate = true)
     {
@@ -828,7 +828,7 @@ class DataArray : public IDataArray
     virtual T* getPointer(size_t i)
     {
 #ifndef NDEBUG
-      if (m_Size > 0) { BOOST_ASSERT(i < m_Size);}
+      if (m_Size > 0) { Q_ASSERT(i < m_Size);}
 #endif
       return (T*)(&(m_Array[i]));
     }
@@ -841,7 +841,7 @@ class DataArray : public IDataArray
     virtual T getValue(size_t i)
     {
 #ifndef NDEBUG
-      if (m_Size > 0) { BOOST_ASSERT(i < m_Size);}
+      if (m_Size > 0) { Q_ASSERT(i < m_Size);}
 #endif
       return m_Array[i];
     }
@@ -855,7 +855,7 @@ class DataArray : public IDataArray
     {
 #ifndef NDEBUG
       if (m_Size > 0)
-      { BOOST_ASSERT(i < m_Size);}
+      { Q_ASSERT(i < m_Size);}
 #endif
       m_Array[i] = value;
     }
@@ -865,7 +865,7 @@ class DataArray : public IDataArray
     T getComponent(size_t i, int j)
     {
 #ifndef NDEBUG
-      if (m_Size > 0) { BOOST_ASSERT(i * m_NumComponents + j < m_Size);}
+      if (m_Size > 0) { Q_ASSERT(i * m_NumComponents + j < m_Size);}
 #endif
       return m_Array[i * m_NumComponents + j];
     }
@@ -879,7 +879,7 @@ class DataArray : public IDataArray
     void setComponent(size_t i, int j, T c)
     {
 #ifndef NDEBUG
-      if (m_Size > 0) { BOOST_ASSERT(i * m_NumComponents + j < m_Size);}
+      if (m_Size > 0) { Q_ASSERT(i * m_NumComponents + j < m_Size);}
 #endif
       m_Array[i * m_NumComponents + j] = c;
     }
@@ -893,7 +893,7 @@ class DataArray : public IDataArray
     {
       if(!m_IsAllocated) { return; }
 #ifndef NDEBUG
-      if (m_Size > 0) { BOOST_ASSERT(i * m_NumComponents < m_Size);}
+      if (m_Size > 0) { Q_ASSERT(i * m_NumComponents < m_Size);}
 #endif
       T c = static_cast<T>(p);
       for (size_t j = 0; j < m_NumComponents; ++j)
@@ -909,7 +909,7 @@ class DataArray : public IDataArray
     T* getTuplePointer(size_t tupleIndex)
     {
 #ifndef NDEBUG
-      if (m_Size > 0) { BOOST_ASSERT(tupleIndex * m_NumComponents < m_Size);}
+      if (m_Size > 0) { Q_ASSERT(tupleIndex * m_NumComponents < m_Size);}
 #endif
       return m_Array + (tupleIndex * m_NumComponents);
     }
@@ -1245,7 +1245,7 @@ class DataArray : public IDataArray
       */
     inline T& operator[](size_t i)
     {
-      BOOST_ASSERT(i < m_Size);
+      Q_ASSERT(i < m_Size);
       return m_Array[i];
     }
 
@@ -1304,7 +1304,7 @@ class DataArray : public IDataArray
           || MUD_FLAP_4 != 0xABABABABABABABABul
           || MUD_FLAP_5 != 0xABABABABABABABABul)
       {
-        BOOST_ASSERT(false);
+        Q_ASSERT(false);
       }
 #endif
 

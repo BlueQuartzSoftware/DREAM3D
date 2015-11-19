@@ -149,10 +149,10 @@ void CalculateTriangleGroupCurvatures::operator()() const
     nRingNeighborAlg->setRegionId1(feature1);
     nRingNeighborAlg->setRing(m_NRing);
     err = nRingNeighborAlg->generate(m_TrianglesPtr, faceLabels);
-    BOOST_ASSERT(err >= 0);
+    Q_ASSERT(err >= 0);
 
     UniqueFaceIds_t triPatch = nRingNeighborAlg->getNRingTriangles();
-    BOOST_ASSERT(triPatch.size() > 1);
+    Q_ASSERT(triPatch.size() > 1);
 
     DataArray<double>::Pointer patchCentroids = extractPatchData(triId, triPatch, m_SurfaceMeshTriangleCentroids->getPointer(0), QString("_INTERNAL_USE_ONLY_Patch_Centroids"));
     DataArray<double>::Pointer patchNormals = extractPatchData(triId, triPatch, m_SurfaceMeshFaceNormals->getPointer(0), QString("_INTERNAL_USE_ONLY_Patch_Normals"));
@@ -254,7 +254,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
       // Kappa1 >= Kappa2
       double kappa1 = eValues(0) * -1;// Kappa 1
       double kappa2 = eValues(1) * -1; //kappa 2
-      BOOST_ASSERT(kappa1 >= kappa2);
+      Q_ASSERT(kappa1 >= kappa2);
       m_PrincipleCurvature1->setValue(triId, kappa1);
       m_PrincipleCurvature2->setValue(triId, kappa2);
 

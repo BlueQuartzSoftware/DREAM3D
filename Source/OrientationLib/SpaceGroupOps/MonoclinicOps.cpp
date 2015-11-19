@@ -954,7 +954,7 @@ UInt8ArrayType::Pointer MonoclinicOps::generateIPFTriangleLegend(int imageDim)
 // -----------------------------------------------------------------------------
 DREAM3D::Rgb MonoclinicOps::generateMisorientationColor(const QuatF& q, const QuatF& refFrame)
 {
-  BOOST_ASSERT(false);
+  Q_ASSERT(false);
   return RgbColor::dRgb(0, 0, 0, 0);
 }
 

@@ -353,7 +353,7 @@ int VertexGeom::writeXdmf(QTextStream& out, QString dcName, QString hdfFileName)
   if(dap.isValid())
   {
     IDataArray::Pointer timeValues = getAttributeMatrix(dap.getAttributeMatrixName())->getAttributeArray(dap.getDataArrayName());
-    Int32ArrayType::Pointer timeValuePtr = boost::dynamic_pointer_cast<Int32ArrayType>(timeValues);
+    Int32ArrayType::Pointer timeValuePtr = std::dynamic_pointer_cast<Int32ArrayType>(timeValues);
     out << "    <Time TimeType=\"Single\" Value=\"" << timeValuePtr->getValue(0) << "\"/>\n";
   }
 #endif
