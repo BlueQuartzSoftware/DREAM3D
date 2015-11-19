@@ -51,13 +51,14 @@ ImportASCIIDataWizard::ImportASCIIDataWizard(const QString &inputFilePath, int n
   m_NumLines(numLines)
 {
   setWindowTitle("ASCII Data Import Wizard");
-  setOptions(QWizard::NoBackButtonOnStartPage | QWizard::HaveHelpButton);
+  setOptions(QWizard::NoBackButtonOnStartPage /*| QWizard::HaveHelpButton */);
   setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
   resize(721, 683);
 
-  m_RefreshBtn = new QPushButton("Refresh", this);
-  connect(m_RefreshBtn, SIGNAL(pressed()), this, SLOT(refreshModel()));
-  setButton(QWizard::HelpButton, m_RefreshBtn);
+  // This adds the refresh button that refreshes the preview table.  We may use this on a future release.
+  //m_RefreshBtn = new QPushButton("Refresh", this);
+  //connect(m_RefreshBtn, SIGNAL(pressed()), this, SLOT(refreshModel()));
+  //setButton(QWizard::HelpButton, m_RefreshBtn);
 
   DelimitedOrFixedWidthPage* dOrFPage = new DelimitedOrFixedWidthPage(inputFilePath, numLines, this);
   setPage(DelimitedOrFixedWidth, dOrFPage);
