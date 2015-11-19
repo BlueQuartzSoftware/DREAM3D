@@ -290,7 +290,9 @@ void ImportImageStack::dataCheck()
     switch(format)
     {
        case QImage::Format_Indexed8:
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
       case QImage::Format_Grayscale8:
+#endif
         pixelBytes = 1;
         break;
       case QImage::Format_RGB32:
@@ -414,7 +416,9 @@ void ImportImageStack::execute()
       switch(format)
       {
         case QImage::Format_Indexed8:
-        case QImage::Format_Grayscale8:
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
+      case QImage::Format_Grayscale8:
+#endif
           pixelBytes = 1;
           break;
         case QImage::Format_RGB32:
