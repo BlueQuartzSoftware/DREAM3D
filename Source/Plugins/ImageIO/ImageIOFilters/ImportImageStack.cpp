@@ -412,7 +412,7 @@ void ImportImageStack::execute()
       if (m_GeometryType == 0) { m->getGeometryAs<ImageGeom>()->setDimensions(width, height, fileList.size()); }
       else if (m_GeometryType == 1) { m->getGeometryAs<RectGridGeom>()->setDimensions(width, height, fileList.size()); }
 
-      QImage::Format format = reader.imageFormat();
+      const QImage::Format format = reader.imageFormat();
       switch(format)
       {
         case QImage::Format_Indexed8:
