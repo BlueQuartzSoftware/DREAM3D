@@ -281,8 +281,8 @@ void CombineAttributeMatrices::preflight()
 template<typename T>
 void copyData(IDataArray::Pointer fromData, IDataArray::Pointer toData, size_t location)
 {
-  typename DataArray<T>::Pointer fData = boost::dynamic_pointer_cast<DataArray<T>>(fromData);
-  typename DataArray<T>::Pointer tData = boost::dynamic_pointer_cast<DataArray<T>>(toData);
+  typename DataArray<T>::Pointer fData = std::dynamic_pointer_cast<DataArray<T>>(fromData);
+  typename DataArray<T>::Pointer tData = std::dynamic_pointer_cast<DataArray<T>>(toData);
 
   //only wanting to grab data from tuple 1 to numTuples of the fromData array,s ince the zeroth slot is a placeholder the first AM should already have
   T* src = fData->getPointer(1 * fromData->getNumberOfComponents());
