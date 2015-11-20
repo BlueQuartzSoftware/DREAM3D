@@ -88,7 +88,7 @@ void DREAM3DToolbox::readSettings()
   readWindowSettings(prefs);
 
   // Read dock widget settings
-  prefs.beginGroup("Bookmarks Dock Widget");
+  prefs.beginGroup("Bookmarks Widget");
   bookmarksWidget->readSettings(prefs);
   if (prefs.value("PrebuiltsRead", false).toBool() == false)
   {
@@ -97,15 +97,11 @@ void DREAM3DToolbox::readSettings()
   }
   prefs.endGroup();
 
-  prefs.beginGroup("Prebuilts Dock Widget");
-  prebuiltsWidget->readSettings(prefs);
-  prefs.endGroup();
-
-  prefs.beginGroup("Filter List Dock Widget");
+  prefs.beginGroup("Filter List Widget");
   filterListWidget->readSettings(prefs);
   prefs.endGroup();
 
-  prefs.beginGroup("Filter Library Dock Widget");
+  prefs.beginGroup("Filter Library Widget");
   filterLibraryWidget->readSettings(prefs);
   prefs.endGroup();
 
@@ -151,10 +147,6 @@ void DREAM3DToolbox::writeSettings()
   bookmarksWidget->writeSettings(prefs);
   prefs.endGroup();
 
-  prefs.beginGroup("Prebuilts Widget");
-  prebuiltsWidget->writeSettings(prefs);
-  prefs.endGroup();
-
   prefs.beginGroup("Filter List Widget");
   filterListWidget->writeSettings(prefs);
   prefs.endGroup();
@@ -194,14 +186,6 @@ void DREAM3DToolbox::writeWindowSettings(DREAM3DSettings& prefs)
 BookmarksToolboxWidget* DREAM3DToolbox::getBookmarksWidget()
 {
   return bookmarksWidget;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-PrebuiltsToolboxWidget* DREAM3DToolbox::getPrebuiltsWidget()
-{
-  return prebuiltsWidget;
 }
 
 // -----------------------------------------------------------------------------

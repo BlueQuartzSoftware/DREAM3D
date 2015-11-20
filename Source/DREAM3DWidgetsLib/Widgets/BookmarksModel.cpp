@@ -98,8 +98,8 @@ BookmarksModel* BookmarksModel::NewInstanceFromFile(QString filePath)
 
     DREAM3DSettings prefs(filePath);
 
-    prefs.beginGroup("DockWidgetSettings");
-    prefs.beginGroup("Bookmarks Dock Widget");
+    prefs.beginGroup("ToolboxSettings");
+    prefs.beginGroup("Bookmarks Widget");
     QJsonObject modelObj = prefs.value("Bookmarks Model", QJsonObject());
     prefs.endGroup();
     prefs.endGroup();

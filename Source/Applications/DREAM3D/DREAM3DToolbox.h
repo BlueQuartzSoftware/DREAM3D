@@ -53,7 +53,6 @@ class DREAM3DToolbox : public QWidget, private Ui::DREAM3DToolbox
     void setupGui();
 
     BookmarksToolboxWidget* getBookmarksWidget();
-    PrebuiltsToolboxWidget* getPrebuiltsWidget();
     FilterListToolboxWidget* getFilterListWidget();
     FilterLibraryToolboxWidget* getFilterLibraryWidget();
 

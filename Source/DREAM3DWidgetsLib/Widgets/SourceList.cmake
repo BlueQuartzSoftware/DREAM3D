@@ -16,7 +16,6 @@ set(DREAM3D_WIDGETS
     FilterListToolboxWidget
     IssuesDockWidget
     PipelineFilterWidget
-    PrebuiltsToolboxWidget
 )
 
 foreach(FPW ${DREAM3D_WIDGETS})

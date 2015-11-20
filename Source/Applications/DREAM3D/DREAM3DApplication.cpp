@@ -924,36 +924,6 @@ void DREAM3DApplication::on_actionShowBookmarkInFileSystem_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DApplication::on_actionShowPrebuiltInFileSystem_triggered()
-{
-  if (NULL != m_ActiveWindow)
-  {
-    PrebuiltsToolboxWidget* prebuiltsDockWidget = m_ActiveWindow->getPrebuiltsToolboxWidget();
-    FilterLibraryTreeWidget* prebuiltsLibraryTree = prebuiltsDockWidget->getFilterLibraryTreeWidget();
-
-    QTreeWidgetItem* item = prebuiltsLibraryTree->currentItem();
-    QString pipelinePath = item->data(1, Qt::UserRole).toString();
-
-    QFileInfo pipelinePathInfo(pipelinePath);
-    QString pipelinePathDir = pipelinePathInfo.path();
-
-    QString s("file://");
-#if defined(Q_OS_WIN)
-    s = s + "/"; // Need the third slash on windows because file paths start with a drive letter
-#elif defined(Q_OS_MAC)
-
-#else
-    // We are on Linux - I think
-
-#endif
-    s = s + pipelinePathDir;
-    QDesktopServices::openUrl(s);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void DREAM3DApplication::on_actionCloseWindow_triggered()
 {
   m_ActiveWindow->close();
@@ -1138,29 +1108,6 @@ void DREAM3DApplication::on_bookmarksDockContextMenuRequested(const QPoint& pos)
   }
 
   menu.exec(mapped);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3DApplication::on_prebuiltsDockContextMenuRequested(const QPoint& pos)
-{
-  PrebuiltsToolboxWidget* prebuiltsDockWidget = m_ActiveWindow->getPrebuiltsToolboxWidget();
-  QMenu menu;
-
-#if defined(Q_OS_MAC)
-  menu.addAction(m_GlobalMenu->getShowPrebuiltInFileSystem());
-#else
-  if (NULL != m_ActiveWindow)
-  {
-    menu.addAction(m_ActiveWindow->getDREAM3DMenu()->getShowPrebuiltInFileSystem());
-  }
-#endif
-
-  if (NULL != m_ActiveWindow)
-  {
-    menu.exec(prebuiltsDockWidget->mapToGlobal(pos));
-  }
 }
 
 // -----------------------------------------------------------------------------

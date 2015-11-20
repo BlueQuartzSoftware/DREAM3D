@@ -125,14 +125,12 @@ class DREAM3DApplication : public QApplication
     void on_actionRenamePipeline_triggered();
     void on_actionRemovePipeline_triggered();
     void on_actionShowBookmarkInFileSystem_triggered();
-    void on_actionShowPrebuiltInFileSystem_triggered();
     void on_actionLocateFile_triggered();
     void on_actionClearPipeline_triggered();
     void on_actionClearCache_triggered();
 
     void on_pipelineViewContextMenuRequested(const QPoint&);
     void on_bookmarksDockContextMenuRequested(const QPoint&);
-    void on_prebuiltsDockContextMenuRequested(const QPoint&);
 
     void on_actionClearRecentFiles_triggered();
     void on_actionCloseWindow_triggered();

@@ -81,7 +81,6 @@
 #include "DREAM3DWidgetsLib/Widgets/DREAM3DUpdateCheckDialog.h"
 #include "DREAM3DWidgetsLib/Widgets/PipelineViewWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/FilterLibraryToolboxWidget.h"
-#include "DREAM3DWidgetsLib/Widgets/PrebuiltsToolboxWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/BookmarksModel.h"
 
 
@@ -586,9 +585,6 @@ void DREAM3D_UI::disconnectSignalsSlots()
   disconnect(getFilterListToolboxWidget(), SIGNAL(filterItemDoubleClicked(const QString&)),
              dream3dApp, SLOT(addFilter(const QString&)));
 
-  disconnect(getPrebuiltsToolboxWidget(), SIGNAL(pipelineFileActivated(const QString&, const bool&, const bool&)),
-             dream3dApp, SLOT(newInstanceFromFile(const QString&, const bool&, const bool&)));
-
   disconnect(getBookmarksToolboxWidget(), SIGNAL(pipelineFileActivated(const QString&, const bool&, const bool&)),
              dream3dApp, SLOT(newInstanceFromFile(const QString&, const bool&, const bool&)));
 
@@ -631,9 +627,6 @@ void DREAM3D_UI::connectSignalsSlots()
 
   connect(docRequester, SIGNAL(showFilterDocUrl(const QUrl &)),
           this, SLOT(showFilterHelpUrl(const QUrl &)));
-
-  connect(getPrebuiltsToolboxWidget(), SIGNAL(pipelineFileActivated(const QString&, const bool&, const bool&)),
-          dream3dApp, SLOT(newInstanceFromFile(const QString&, const bool&, const bool&)));
 
   connect(getBookmarksToolboxWidget(), SIGNAL(pipelineFileActivated(const QString&, const bool&, const bool&)),
           dream3dApp, SLOT(newInstanceFromFile(const QString&, const bool&, const bool&)));
@@ -1096,14 +1089,6 @@ PipelineViewWidget* DREAM3D_UI::getPipelineViewWidget()
 BookmarksToolboxWidget* DREAM3D_UI::getBookmarksToolboxWidget()
 {
   return dream3dApp->getDREAM3DToolbox()->getBookmarksWidget();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-PrebuiltsToolboxWidget* DREAM3D_UI::getPrebuiltsToolboxWidget()
-{
-  return dream3dApp->getDREAM3DToolbox()->getPrebuiltsWidget();
 }
 
 // -----------------------------------------------------------------------------
