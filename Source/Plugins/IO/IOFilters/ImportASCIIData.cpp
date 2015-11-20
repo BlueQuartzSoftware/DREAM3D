@@ -80,7 +80,7 @@ void ImportASCIIData::readFilterParameters(AbstractFilterParametersReader* reade
   data.inputFilePath = reader->readString(prefix + "InputFilePath", "");
   data.isFixedWidth = reader->readValue(prefix + "IsFixedWidth", false);
   data.numberOfLines = reader->readValue(prefix + "NumberOfLines", -1);
-  
+
   QVector<uint64_t> tmpVec;
   QVector<size_t> tDims;
   tmpVec = reader->readArray(prefix + "TupleDims", QVector<uint64_t>());
@@ -438,13 +438,13 @@ const QString ImportASCIIData::getCompiledLibraryName()
 //
 // -----------------------------------------------------------------------------
 const QString ImportASCIIData::getGroupName()
-{ return DREAM3D::FilterGroups::Unsupported; }
+{ return DREAM3D::FilterGroups::IOFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ImportASCIIData::getSubGroupName()
-{ return "IO"; }
+{ return DREAM3D::FilterSubGroups::InputFilters; }
 
 // -----------------------------------------------------------------------------
 //
