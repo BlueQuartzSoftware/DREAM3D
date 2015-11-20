@@ -80,7 +80,14 @@ void ImportASCIIData::readFilterParameters(AbstractFilterParametersReader* reade
   data.inputFilePath = reader->readString(prefix + "InputFilePath", "");
   data.isFixedWidth = reader->readValue(prefix + "IsFixedWidth", false);
   data.numberOfLines = reader->readValue(prefix + "NumberOfLines", -1);
-  data.tupleDims = reader->readArray(prefix + "TupleDims", QVector<size_t>());
+  QVector<int64_t> tmpVec;
+  QVector<size_t> tDims;
+  tmpVec = reader->readArray(prefix + "TupleDims", QVector<int64_t>());
+  for (int32_t i = 0; i < tmpVec.size(); i++)
+  {
+    tDims.push_back(static_cast<size_t>(tmpVec[i]));
+  }
+  data.tupleDims = tDims;
 
   setWizardData(data);
   setAttributeMatrixPath(reader->readDataArrayPath("AttributeMatrixPath", getAttributeMatrixPath()));
@@ -111,7 +118,15 @@ int ImportASCIIData::writeFilterParameters(AbstractFilterParametersWriter* write
   writer->writeValue(prefix + "InputFilePath", m_WizardData.inputFilePath);
   writer->writeValue(prefix + "IsFixedWidth", m_WizardData.isFixedWidth);
   writer->writeValue(prefix + "NumberOfLines", m_WizardData.numberOfLines);
-  writer->writeValue(prefix + "TupleDims", m_WizardData.tupleDims);
+  QVector<int64_t> tDims;
+  QVector<size_t> tmpVec = m_WizardData.tupleDims;
+
+  for (int32_t i = 0; i < tmpVec.size(); i++)
+  {
+    tDims.push_back(static_cast<int64_t>(tmpVec[i]));
+  }
+
+  writer->writeValue(prefix + "TupleDims", tDims);
 
   SIMPL_FILTER_WRITE_PARAMETER(AttributeMatrixPath)
 
@@ -341,7 +356,7 @@ void ImportASCIIData::execute()
       // Skip to the first data line
       in.readLine();
     }
-    
+
     float threshold = 0.0f;
     size_t numTuples = numLines - beginIndex + 1;
 
@@ -375,7 +390,7 @@ void ImportASCIIData::execute()
           return;
         }
       }
-      
+
       if (((float)lineNum / numTuples) * 100.0f > threshold)
       {
         // Print the status of the import
