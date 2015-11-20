@@ -44,6 +44,7 @@
 #include "ui_DataFormatPage.h"
 
 class ASCIIDataModel;
+class EditHeadersDialog;
 
 class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
 {
@@ -89,7 +90,7 @@ class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
     void on_startRowSpin_valueChanged(int i);
     void on_hasHeadersRadio_toggled(bool checked);
     void on_headersIndexLineEdit_textChanged(const QString &text);
-    void on_addHeadersBtn_clicked();
+    void on_editHeadersBtn_clicked();
     void on_dataTypeRadio_clicked();
     void on_skipRadio_clicked();
     void on_dataTypeCB_currentTextChanged(const QString &text);
@@ -99,6 +100,7 @@ class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
 
   private:
     int                                             m_NumLines;
+    EditHeadersDialog*                              m_EditHeadersDialog;
 
     DataFormatPage(const DataFormatPage&); // Copy Constructor Not Implemented
     void operator=(const DataFormatPage&); // Operator '=' Not Implemented

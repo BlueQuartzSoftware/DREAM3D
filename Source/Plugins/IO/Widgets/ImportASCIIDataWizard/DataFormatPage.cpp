@@ -41,14 +41,15 @@
 
 #include "ImportASCIIDataWizard.h"
 #include "ASCIIDataModel.h"
-#include "AddHeadersDialog.h"
+#include "EditHeadersDialog.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 DataFormatPage::DataFormatPage(const QString &inputFilePath, int numLines, QWidget* parent) :
   AbstractWizardPage(inputFilePath, parent),
-  m_NumLines(numLines)
+  m_NumLines(numLines),
+  m_EditHeadersDialog(NULL)
 {
   setupUi(this);
 
@@ -102,7 +103,7 @@ void DataFormatPage::setupGui()
   tupleDimsTable->blockSignals(false);
   tupleCountLabel->setText(QString::number(numOfDataLines));
 
-  addHeadersBtn->setDisabled(true);
+  editHeadersBtn->setDisabled(true);
   columnDataGroupBox->setDisabled(true);
   
   lineNumErrLabel->hide();
@@ -175,7 +176,7 @@ void DataFormatPage::on_hasHeadersRadio_toggled(bool checked)
 {
   if (checked == true)
   {
-    addHeadersBtn->setDisabled(true);
+    editHeadersBtn->setDisabled(true);
     lineNumberLabel->setEnabled(true);
     headersIndexLineEdit->setEnabled(true);
 
@@ -184,7 +185,7 @@ void DataFormatPage::on_hasHeadersRadio_toggled(bool checked)
   }
   else
   {
-    addHeadersBtn->setEnabled(true);
+    editHeadersBtn->setEnabled(true);
     lineNumberLabel->setDisabled(true);
     headersIndexLineEdit->setDisabled(true);
 
@@ -258,22 +259,26 @@ void DataFormatPage::on_headersIndexLineEdit_textChanged(const QString &text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataFormatPage::on_addHeadersBtn_clicked()
+void DataFormatPage::on_editHeadersBtn_clicked()
 {
   ASCIIDataModel* model = ASCIIDataModel::Instance();
-  QStringList currentHeaders;
+  QVector<QString> currentHeaders;
   for (int i = 0; i < model->columnCount(); i++)
   {
     currentHeaders.push_back(model->headerData(i, Qt::Horizontal, Qt::DisplayRole).toString());
     model->setHeaderData(i, Qt::Horizontal, QString::number(i + 1), Qt::DisplayRole);
   }
 
-  AddHeadersDialog* addHeadersDialog = new AddHeadersDialog();
-  int result = addHeadersDialog->exec();
+  if (NULL == m_EditHeadersDialog)
+  {
+    m_EditHeadersDialog = new EditHeadersDialog(this);
+  }
+
+  int result = m_EditHeadersDialog->exec();
 
   if (result == QDialog::Accepted)
   {
-    QStringList headers = addHeadersDialog->getHeaders();
+    QVector<QString> headers = m_EditHeadersDialog->getHeaders();
 
     for (int i = 0; i < headers.size(); i++)
     {
@@ -288,9 +293,9 @@ void DataFormatPage::on_addHeadersBtn_clicked()
     {
       model->setHeaderData(i, Qt::Horizontal, currentHeaders[i], Qt::DisplayRole);
     }
-  }
 
-  delete addHeadersDialog;
+    m_EditHeadersDialog->setHeaders(currentHeaders);
+  }
 }
 
 // -----------------------------------------------------------------------------

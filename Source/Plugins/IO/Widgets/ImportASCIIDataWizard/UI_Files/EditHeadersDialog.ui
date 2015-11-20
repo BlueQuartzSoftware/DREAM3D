@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>AddHeadersDialog</class>
- <widget class="QDialog" name="AddHeadersDialog">
+ <class>EditHeadersDialog</class>
+ <widget class="QDialog" name="EditHeadersDialog">
   <property name="geometry">
    <rect>
     <x>0</x>

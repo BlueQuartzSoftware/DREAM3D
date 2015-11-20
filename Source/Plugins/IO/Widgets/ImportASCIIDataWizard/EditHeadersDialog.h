@@ -34,29 +34,30 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _AddHeadersDialog_H_
-#define _AddHeadersDialog_H_
+#ifndef _EditHeadersDialog_H_
+#define _EditHeadersDialog_H_
 
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QDialogButtonBox>
 
-#include "ui_AddHeadersDialog.h"
+#include "ui_EditHeadersDialog.h"
 
-class AddHeadersDialog : public QDialog, private Ui::AddHeadersDialog
+class EditHeadersDialog : public QDialog, private Ui::EditHeadersDialog
 {
   Q_OBJECT
 
 public:
-  AddHeadersDialog(QWidget* parent = NULL);
+  EditHeadersDialog(QWidget* parent = NULL);
 
-  virtual ~AddHeadersDialog();
+  virtual ~EditHeadersDialog();
 
   /**
   * @brief Initializes some of the GUI elements with selections or other GUI related items
   */
   virtual void setupGui();
 
-  QStringList getHeaders();
+  QVector<QString> getHeaders();
+  void setHeaders(QVector<QString> headers);
 
 protected slots:
   void m_ButtonBox_accepted();
@@ -64,10 +65,10 @@ protected slots:
 
 private:
   QDialogButtonBox*                                         m_ButtonBox;
-  QStringList                                               m_Headers;
+  QVector<QString>                                          m_Headers;
 
-  AddHeadersDialog(const AddHeadersDialog&); // Copy Constructor Not Implemented
-  void operator=(const AddHeadersDialog&); // Operator '=' Not Implemented
+  EditHeadersDialog(const EditHeadersDialog&); // Copy Constructor Not Implemented
+  void operator=(const EditHeadersDialog&); // Operator '=' Not Implemented
 };
 
-#endif /* AddHeadersDialog_H_ */
+#endif /* EditHeadersDialog_H_ */
