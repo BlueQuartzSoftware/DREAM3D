@@ -172,6 +172,19 @@
         </property>
        </widget>
       </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="arrayErrLabel">
+        <property name="styleSheet">
+         <string notr="true">QLabel { color: FireBrick }</string>
+        </property>
+        <property name="text">
+         <string>Error Message</string>
+        </property>
+        <property name="wordWrap">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>

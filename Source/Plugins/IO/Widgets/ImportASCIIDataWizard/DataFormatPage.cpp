@@ -108,6 +108,7 @@ void DataFormatPage::setupGui()
   
   lineNumErrLabel->hide();
   tupleTableErrLabel->hide();
+  arrayErrLabel->hide();
 }
 
 // -----------------------------------------------------------------------------
@@ -283,6 +284,22 @@ void DataFormatPage::on_editHeadersBtn_clicked()
     for (int i = 0; i < headers.size(); i++)
     {
       QString header = headers[i];
+
+      if (header.contains("/") || header.contains("\\"))
+      {
+        arrayErrLabel->setText("Column headers cannot contain slashes.");
+        arrayErrLabel->show();
+        wizard()->button(QWizard::FinishButton)->setDisabled(true);
+      }
+      else
+      {
+        arrayErrLabel->setText("");
+        arrayErrLabel->hide();
+        wizard()->button(QWizard::FinishButton)->setEnabled(true);
+      }
+
+      // Check if array name is a duplicate (drawing a red border around columns would be AWESOME)
+      @START_HERE@
 
       model->setHeaderData(i, Qt::Horizontal, header, Qt::DisplayRole);
     }
