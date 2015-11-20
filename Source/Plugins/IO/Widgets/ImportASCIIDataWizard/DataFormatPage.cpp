@@ -260,19 +260,33 @@ void DataFormatPage::on_headersIndexLineEdit_textChanged(const QString &text)
 // -----------------------------------------------------------------------------
 void DataFormatPage::on_addHeadersBtn_clicked()
 {
+  ASCIIDataModel* model = ASCIIDataModel::Instance();
+  QStringList currentHeaders;
+  for (int i = 0; i < model->columnCount(); i++)
+  {
+    currentHeaders.push_back(model->headerData(i, Qt::Horizontal, Qt::DisplayRole).toString());
+    model->setHeaderData(i, Qt::Horizontal, QString::number(i + 1), Qt::DisplayRole);
+  }
+
   AddHeadersDialog* addHeadersDialog = new AddHeadersDialog();
   int result = addHeadersDialog->exec();
 
   if (result == QDialog::Accepted)
   {
     QStringList headers = addHeadersDialog->getHeaders();
-    ASCIIDataModel* model = ASCIIDataModel::Instance();
 
     for (int i = 0; i < headers.size(); i++)
     {
       QString header = headers[i];
 
       model->setHeaderData(i, Qt::Horizontal, header, Qt::DisplayRole);
+    }
+  }
+  else
+  {
+    for (int i = 0; i < model->columnCount(); i++)
+    {
+      model->setHeaderData(i, Qt::Horizontal, currentHeaders[i], Qt::DisplayRole);
     }
   }
 
