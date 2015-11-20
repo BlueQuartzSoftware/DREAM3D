@@ -143,6 +143,11 @@ class DREAM3DWidgetsLib_EXPORT BookmarksToolboxWidget : public QWidget, private 
     void populateFilterList(QStringList filterNames);
     QString writeNewFavoriteFilePath(QString newFavoriteTitle, QString favoritePath, QTreeWidgetItem* item);
 
+    virtual QDir findPipelinesDirectory();
+    virtual void readPrebuiltPipelines();
+    void addPipelinesRecursively(QDir currentDir, QModelIndex parent, QString iconFileName,
+      bool allowEditing, QStringList filters, FilterLibraryTreeWidget::ItemType itemType);
+
   protected slots:
 
     //// Slots to catch signals from the QTreeWidget

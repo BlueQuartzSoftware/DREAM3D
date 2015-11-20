@@ -220,7 +220,7 @@ QVariant BookmarksModel::data(const QModelIndex& index, int role) const
     }
     else
     {
-      return "";
+      return item->getItemTooltip();
     }
   }
   else if (role == Qt::DecorationRole)
@@ -381,6 +381,10 @@ bool BookmarksModel::setData(const QModelIndex& index, const QVariant& value, in
   else if (role == Qt::DecorationRole)
   {
     result = item->setIcon(value.value<QIcon>());
+  }
+  else if (role == Qt::ToolTipRole)
+  {
+    result = item->setItemTooltip(value.toString());
   }
   else
   {

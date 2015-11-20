@@ -270,6 +270,128 @@ QStringList BookmarksToolboxWidget::generateFilterListFromPipelineFile(QString p
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void BookmarksToolboxWidget::readPrebuiltPipelines()
+{
+  QDir pipelinesDir = findPipelinesDirectory();
+  QString pPath = pipelinesDir.absolutePath();
+  BookmarksModel* model = BookmarksModel::Instance();
+
+  FilterLibraryTreeWidget::ItemType itemType = FilterLibraryTreeWidget::Leaf_Item_Type;
+  QString iconFileName(":/text.png");
+  bool allowEditing = false;
+  QStringList fileExtension;
+  fileExtension.append("*.txt");
+  fileExtension.append("*.ini");
+  fileExtension.append("*.json");
+
+  // Need to add the path to the prebuilts directory to the root item since we may use this later on.
+  //prebuiltsLibraryTree->invisibleRootItem()->setData(0, Qt::UserRole, QVariant(pipelinesDir.absolutePath()));
+
+  // Now block signals and load up all the pipelines in the folder
+  addPipelinesRecursively(pipelinesDir, QModelIndex(), iconFileName, allowEditing, fileExtension, itemType);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BookmarksToolboxWidget::addPipelinesRecursively(QDir currentDir, QModelIndex parent, QString iconFileName,
+  bool allowEditing, QStringList filters, FilterLibraryTreeWidget::ItemType itemType)
+{
+  BookmarksModel* model = BookmarksModel::Instance();
+
+  QModelIndex nextIndex;
+
+  // Get a list of all the directories
+  QFileInfoList dirList = currentDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
+  if (dirList.size() > 0)
+  {
+    foreach(QFileInfo fi, dirList)
+    {
+      // At this point we have the first level of directories and we want to do 2 things:
+      // 1.Create an entry in the tree widget with this name
+      // 2.drop into the directory and look for all the .txt files and add entries for those items.
+      //qDebug() << fi.absoluteFilePath() << "\n";
+      // Add a tree widget item for this  Group
+      //qDebug() << fi.absoluteFilePath();
+      int row = model->rowCount(parent);
+      addTreeItem(parent, fi.baseName(), QIcon(":/folder_blue.png"), fi.absoluteFilePath(), true, false, true);
+      nextIndex = model->index(row, BookmarksItem::Name, parent);
+      addPipelinesRecursively(QDir(fi.absoluteFilePath()), nextIndex, iconFileName, allowEditing, filters, itemType);   // Recursive call
+    }
+  }
+
+
+  QFileInfoList itemList = currentDir.entryInfoList(filters);
+  foreach(QFileInfo itemInfo, itemList)
+  {
+    QString itemFilePath = itemInfo.absoluteFilePath();
+    QString itemName;
+    if (itemInfo.suffix().compare("ini") == 0 || itemInfo.suffix().compare("txt") == 0)
+    {
+      QSettings itemPref(itemFilePath, QSettings::IniFormat);
+      itemPref.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
+      itemName = itemPref.value(DREAM3D::Settings::PipelineName).toString();
+      itemPref.endGroup();
+    }
+    else if (itemInfo.suffix().compare("json") == 0)
+    {
+      QString dVers;
+      JsonFilterParametersReader::ReadNameOfPipelineFromFile(itemFilePath, itemName, dVers, NULL);
+    }
+    // Add tree widget for this Prebuilt Pipeline
+    int row = model->rowCount(parent);
+    addTreeItem(parent, itemName, QIcon(iconFileName), itemInfo.absoluteFilePath(), true, false, false);
+    nextIndex = model->index(row, BookmarksItem::Name, parent);
+
+    QString htmlFormattedString = generateHtmlFilterListFromPipelineFile(itemInfo.absoluteFilePath());
+    model->setData(nextIndex, htmlFormattedString, Qt::ToolTipRole);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QDir BookmarksToolboxWidget::findPipelinesDirectory()
+{
+  QString dirName("PrebuiltPipelines");
+
+  QString appPath = dream3dApp->applicationDirPath();
+  QDir pipelinesDir = QDir(appPath);
+#if defined(Q_OS_WIN)
+  QFileInfo fi(pipelinesDir.absolutePath() + QDir::separator() + dirName);
+  if (fi.exists() == false)
+  {
+    // The help file does not exist at the default location because we are probably running from visual studio.
+    // Try up one more directory
+    pipelinesDir.cdUp();
+  }
+#elif defined(Q_OS_MAC)
+  if (pipelinesDir.dirName() == "MacOS")
+  {
+    pipelinesDir.cdUp();
+    pipelinesDir.cdUp();
+    pipelinesDir.cdUp();
+  }
+#else
+  // We are on Linux - I think
+  QFileInfo fi(pipelinesDir.absolutePath() + QDir::separator() + dirName);
+  // qDebug() << fi.absolutePath();
+  // Look for the "PrebuiltPipelines" directory in the current app directory
+  if (fi.exists() == false)
+  {
+    // Try up one more directory
+    pipelinesDir.cdUp();
+  }
+
+#endif
+
+  pipelinesDir = pipelinesDir.absolutePath() + QDir::separator() + dirName;
+  return pipelinesDir;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void BookmarksToolboxWidget::on_bookmarksTreeView_clicked(const QModelIndex& index)
 {
 

@@ -168,6 +168,7 @@ QDir PrebuiltsToolboxWidget::findPipelinesDirectory()
 void PrebuiltsToolboxWidget::readPipelines()
 {
   QDir pipelinesDir = findPipelinesDirectory();
+  QString pPath = pipelinesDir.absolutePath();
 
   FilterLibraryTreeWidget::ItemType itemType = FilterLibraryTreeWidget::Leaf_Item_Type;
   QString iconFileName(":/text.png");
