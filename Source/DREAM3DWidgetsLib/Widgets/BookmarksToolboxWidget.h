@@ -111,6 +111,8 @@ class DREAM3DWidgetsLib_EXPORT BookmarksToolboxWidget : public QWidget, private 
 
     virtual QDir findV4FavoritesDirectory();
 
+    void readPrebuiltPipelines();
+
   public slots:
 
     /**
@@ -132,6 +134,7 @@ class DREAM3DWidgetsLib_EXPORT BookmarksToolboxWidget : public QWidget, private 
                     QString& favoriteTitle,
                     QIcon icon,
                     QString favoritePath,
+                    int insertIndex,
                     bool allowEditing,
                     bool editState,
                     bool isExpanded);
@@ -143,8 +146,7 @@ class DREAM3DWidgetsLib_EXPORT BookmarksToolboxWidget : public QWidget, private 
     void populateFilterList(QStringList filterNames);
     QString writeNewFavoriteFilePath(QString newFavoriteTitle, QString favoritePath, QTreeWidgetItem* item);
 
-    virtual QDir findPipelinesDirectory();
-    virtual void readPrebuiltPipelines();
+    QDir findPipelinesDirectory();
     void addPipelinesRecursively(QDir currentDir, QModelIndex parent, QString iconFileName,
       bool allowEditing, QStringList filters, FilterLibraryTreeWidget::ItemType itemType);
 

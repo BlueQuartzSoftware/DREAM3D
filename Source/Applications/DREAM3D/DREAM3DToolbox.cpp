@@ -90,6 +90,11 @@ void DREAM3DToolbox::readSettings()
   // Read dock widget settings
   prefs.beginGroup("Bookmarks Dock Widget");
   bookmarksWidget->readSettings(prefs);
+  if (prefs.value("PrebuiltsRead", false).toBool() == false)
+  {
+    bookmarksWidget->readPrebuiltPipelines();
+    prefs.setValue("PrebuiltsRead", true);
+  }
   prefs.endGroup();
 
   prefs.beginGroup("Prebuilts Dock Widget");

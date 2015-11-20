@@ -114,6 +114,8 @@ opacity: 255;\
   bookmarksTreeView->setStyleSheet(css);
 
   connect(bookmarksTreeView, SIGNAL(itemWasDropped(QModelIndex, QString&, QIcon, QString, bool, bool, bool)), this, SLOT(addTreeItem(QModelIndex, QString&, QIcon, QString, bool, bool, bool)));
+
+  bookmarksTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 }
 
 // -----------------------------------------------------------------------------
@@ -287,8 +289,10 @@ void BookmarksToolboxWidget::readPrebuiltPipelines()
   // Need to add the path to the prebuilts directory to the root item since we may use this later on.
   //prebuiltsLibraryTree->invisibleRootItem()->setData(0, Qt::UserRole, QVariant(pipelinesDir.absolutePath()));
 
-  // Now block signals and load up all the pipelines in the folder
-  addPipelinesRecursively(pipelinesDir, QModelIndex(), iconFileName, allowEditing, fileExtension, itemType);
+  // Add top-level folder and then load up all the pipelines into the folder
+  addTreeItem(QModelIndex(), pipelinesDir.dirName(), QIcon(":/folder_blue.png"), QString(), 0, true, false, false);
+  QModelIndex index = model->index(0, BookmarksItem::Name, QModelIndex());
+  addPipelinesRecursively(pipelinesDir, index, iconFileName, allowEditing, fileExtension, itemType);
 }
 
 // -----------------------------------------------------------------------------
@@ -314,7 +318,7 @@ void BookmarksToolboxWidget::addPipelinesRecursively(QDir currentDir, QModelInde
       // Add a tree widget item for this  Group
       //qDebug() << fi.absoluteFilePath();
       int row = model->rowCount(parent);
-      addTreeItem(parent, fi.baseName(), QIcon(":/folder_blue.png"), fi.absoluteFilePath(), true, false, true);
+      addTreeItem(parent, fi.baseName(), QIcon(":/folder_blue.png"), QString(), row, true, false, false);
       nextIndex = model->index(row, BookmarksItem::Name, parent);
       addPipelinesRecursively(QDir(fi.absoluteFilePath()), nextIndex, iconFileName, allowEditing, filters, itemType);   // Recursive call
     }
@@ -340,7 +344,7 @@ void BookmarksToolboxWidget::addPipelinesRecursively(QDir currentDir, QModelInde
     }
     // Add tree widget for this Prebuilt Pipeline
     int row = model->rowCount(parent);
-    addTreeItem(parent, itemName, QIcon(iconFileName), itemInfo.absoluteFilePath(), true, false, false);
+    addTreeItem(parent, itemName, QIcon(iconFileName), itemInfo.absoluteFilePath(), row, true, false, false);
     nextIndex = model->index(row, BookmarksItem::Name, parent);
 
     QString htmlFormattedString = generateHtmlFilterListFromPipelineFile(itemInfo.absoluteFilePath());
@@ -476,9 +480,10 @@ QString BookmarksToolboxWidget::writeNewFavoriteFilePath(QString newFavoriteTitl
 // -----------------------------------------------------------------------------
 void BookmarksToolboxWidget::addBookmark(const QString& filePath, const QModelIndex& parent)
 {
+  BookmarksModel* model = BookmarksModel::Instance();
   QFileInfo fi(filePath);
   QString fileTitle = fi.baseName();
-  int err = addTreeItem(parent, fileTitle, QIcon(":/text.png"), filePath, true, false, false);
+  int err = addTreeItem(parent, fileTitle, QIcon(":/text.png"), filePath, model->rowCount(parent), true, false, false);
   if (err >= 0)
   {
     emit updateStatusBar("The pipeline '" + fileTitle + "' has been added successfully.");
@@ -525,6 +530,7 @@ int BookmarksToolboxWidget::addTreeItem(QModelIndex parent,
                                      QString& favoriteTitle,
                                      QIcon icon,
                                      QString favoritePath,
+                                     int insertIndex,
                                      bool allowEditing,
                                      bool editState,
                                      bool isExpanded)
@@ -543,11 +549,10 @@ int BookmarksToolboxWidget::addTreeItem(QModelIndex parent,
 
   bookmarksTreeView->blockSignals(true);
   // Add a new Item to the Tree
-  int rowPos = model->rowCount(parent);
-  model->insertRow(rowPos, parent);
-  QModelIndex nameIndex = model->index(rowPos, BookmarksItem::Name, parent);
+  model->insertRow(insertIndex, parent);
+  QModelIndex nameIndex = model->index(insertIndex, BookmarksItem::Name, parent);
   model->setData(nameIndex, favoriteTitle, Qt::DisplayRole);
-  QModelIndex pathIndex = model->index(rowPos, BookmarksItem::Path, parent);
+  QModelIndex pathIndex = model->index(insertIndex, BookmarksItem::Path, parent);
   model->setData(pathIndex, favoritePath, Qt::DisplayRole);
   model->setData(nameIndex, icon, Qt::DecorationRole);
 

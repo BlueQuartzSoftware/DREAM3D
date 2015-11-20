@@ -664,14 +664,14 @@ void DREAM3DApplication::on_actionNewFolder_triggered()
   if (NULL != m_ActiveWindow)
   {
     BookmarksModel* model = BookmarksModel::Instance();
-    BookmarksToolboxWidget* BookmarksToolboxWidget = m_ActiveWindow->getBookmarksToolboxWidget();
+    BookmarksToolboxWidget* bookmarksToolboxWidget = m_ActiveWindow->getBookmarksToolboxWidget();
 
-    QModelIndex parent = BookmarksToolboxWidget->getSelectedParentTreeItem();
+    QModelIndex parent = bookmarksToolboxWidget->getSelectedParentTreeItem();
     QString parentName = model->index(parent.row(), BookmarksItem::Name, parent.parent()).data().toString();
 
     QString name = "New Folder";
 
-    BookmarksToolboxWidget->addTreeItem(parent, name, QIcon(":/folder_blue.png"), "", true, true, false);
+    bookmarksToolboxWidget->addTreeItem(parent, name, QIcon(":/folder_blue.png"), "", model->rowCount(parent), true, true, false);
   }
 }
 
