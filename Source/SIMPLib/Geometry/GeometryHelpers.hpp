@@ -208,16 +208,15 @@ namespace GeometryHelpers
         // Allocate the basic structures
         QVector<T> linkCount(numVerts, 0);
         size_t elemId = 0;
-        int64_t* linkLoc;
 
         // Fill out lists with number of references to cells
-        typedef boost::shared_array<K> SharedArray_t;
-        SharedArray_t linkLocPtr(new K[numVerts]);
-        linkLoc = linkLocPtr.get();
 
-        ::memset(linkLoc, 0, numVerts * sizeof(K));
 
-        K* verts;
+        typename DataArray<K>::Pointer linkLocPtr = DataArray<K>::CreateArray(numVerts, "Vertices");
+        linkLocPtr->initializeWithValue(0);
+        K* linkLoc = linkLocPtr->getPointer(0);
+
+        K* verts = NULL;
 
         //vtkPolyData *pdata = static_cast<vtkPolyData *>(data);
         // Traverse data to determine number of uses of each point
@@ -286,9 +285,10 @@ namespace GeometryHelpers
         dynamicList->allocateLists(linkCount);
 
         // Allocate an array of bools that we use each iteration so that we don't put duplicates into the array
-        boost::shared_array<bool> visitedPtr(new bool[numElems]);
-        bool* visited = visitedPtr.get();
-        ::memset(visitedPtr.get(), 0, numElems);
+        typename DataArray<bool>::Pointer visitedPtr = DataArray<bool>::CreateArray(numElems, "visited");
+        visitedPtr->initializeWithValue(false);
+        bool* visited = visitedPtr->getPointer(0);
+
 
         // Reuse this vector for each loop. Avoids re-allocating the memory each time through the loop
         QVector<K> loop_neighbors(32, 0);

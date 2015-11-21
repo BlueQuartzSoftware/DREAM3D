@@ -36,13 +36,10 @@
 #ifndef _QuadGeom_H_
 #define _QuadGeom_H_
 
-#include "SIMPLib/SIMPLib.h"
+
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Geometry/IGeometry.h"
 #include "SIMPLib/Geometry/IGeometry2D.h"
-#include "SIMPLib/Geometry/GeometryHelpers.hpp"
-#include "SIMPLib/Geometry/DerivativeHelpers.h"
+
 
 /**
  * @brief The QuadGeom class represents a collection of quadrilaterals
