@@ -35,7 +35,9 @@
 
 #include "SIMPLibPluginLoader.h"
 
+#if ! defined(_MSC_VER)
 #include <unistd.h>
+#endif
 
 // Qt Includes
 #include <QtCore/QCoreApplication>
