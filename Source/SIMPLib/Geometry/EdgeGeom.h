@@ -36,12 +36,11 @@
 #ifndef _EdgeGeom_H_
 #define _EdgeGeom_H_
 
-#include "SIMPLib/SIMPLib.h"
+//#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Common/Constants.h"
+//#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Geometry/IGeometry.h"
-#include "SIMPLib/Geometry/GeometryHelpers.hpp"
-#include "SIMPLib/Geometry/DerivativeHelpers.h"
+
 
 /**
  * @brief The EdgeGeom class represents a collection of line segments

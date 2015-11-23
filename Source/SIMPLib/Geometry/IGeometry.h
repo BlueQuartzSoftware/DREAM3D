@@ -42,9 +42,7 @@
 #include <sstream>
 #include <list>
 
-#include <QtCore/QSet>
 #include <QtCore/QString>
-#include <QtCore/QVector>
 #include <QtCore/QMap>
 
 #include "H5Support/QH5Utilities.h"

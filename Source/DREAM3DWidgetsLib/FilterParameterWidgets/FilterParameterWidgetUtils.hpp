@@ -1,6 +1,8 @@
 #ifndef _FilterParameterWidgetUtils_H_
 #define _FilterParameterWidgetUtils_H_
 
+#include <assert.h>
+
 #include <QtCore/QString>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QListWidgetItem>
