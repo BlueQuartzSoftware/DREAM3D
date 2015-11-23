@@ -54,70 +54,86 @@ class SIMPLib_EXPORT CombineAttributeMatrices : public AbstractFilter
 
     virtual ~CombineAttributeMatrices();
 
-	SIMPL_FILTER_PARAMETER(DataArrayPath, FirstAttributeMatrixPath)
-	Q_PROPERTY(DataArrayPath FirstAttributeMatrixPath READ getFirstAttributeMatrixPath WRITE setFirstAttributeMatrixPath)
-	SIMPL_FILTER_PARAMETER(DataArrayPath, SecondAttributeMatrixPath)
-	Q_PROPERTY(DataArrayPath SecondAttributeMatrixPath READ getSecondAttributeMatrixPath WRITE setSecondAttributeMatrixPath)
-
-	SIMPL_FILTER_PARAMETER(DataArrayPath, FirstIndexArrayPath)
-	Q_PROPERTY(DataArrayPath FirstIndexArrayPath READ getFirstIndexArrayPath WRITE setFirstIndexArrayPath)
-	SIMPL_FILTER_PARAMETER(DataArrayPath, SecondIndexArrayPath)
-	Q_PROPERTY(DataArrayPath SecondIndexArrayPath READ getSecondIndexArrayPath WRITE setSecondIndexArrayPath)
-
-	SIMPL_FILTER_PARAMETER(QString, CombinedAttributeMatrixName)
-	Q_PROPERTY(QString CombinedAttributeMatrixName READ getCombinedAttributeMatrixName WRITE setCombinedAttributeMatrixName)
-	SIMPL_FILTER_PARAMETER(QString, NewIndexArrayName)
-	Q_PROPERTY(QString NewIndexArrayName READ getNewIndexArrayName WRITE setNewIndexArrayName)
-
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FirstAttributeMatrixPath)
+    Q_PROPERTY(DataArrayPath FirstAttributeMatrixPath READ getFirstAttributeMatrixPath WRITE setFirstAttributeMatrixPath)
 	
-	/**
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SecondAttributeMatrixPath)
+    Q_PROPERTY(DataArrayPath SecondAttributeMatrixPath READ getSecondAttributeMatrixPath WRITE setSecondAttributeMatrixPath)
+
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FirstIndexArrayPath)
+    Q_PROPERTY(DataArrayPath FirstIndexArrayPath READ getFirstIndexArrayPath WRITE setFirstIndexArrayPath)
+	
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SecondIndexArrayPath)
+    Q_PROPERTY(DataArrayPath SecondIndexArrayPath READ getSecondIndexArrayPath WRITE setSecondIndexArrayPath)
+
+    SIMPL_FILTER_PARAMETER(QString, CombinedAttributeMatrixName)
+    Q_PROPERTY(QString CombinedAttributeMatrixName READ getCombinedAttributeMatrixName WRITE setCombinedAttributeMatrixName)
+	
+    SIMPL_FILTER_PARAMETER(QString, NewIndexArrayName)
+    Q_PROPERTY(QString NewIndexArrayName READ getNewIndexArrayName WRITE setNewIndexArrayName)
+
+    /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */
     virtual const QString getCompiledLibraryName();
-
+  
+    /**
+     * @brief getBrandingString Returns the branding string for the filter, which is a tag
+     * used to denote the filter's association with specific plugins
+     * @return Branding string
+    */
+    virtual const QString getBrandingString();
+  
+    /**
+     * @brief getFilterVersion Returns a version string for this filter. Default
+     * value is an empty string.
+     * @return
+     */
+    virtual const QString getFilterVersion();
+  
     /**
      * @brief newFilterInstance Reimplemented from @see AbstractFilter class
      */
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-
+  
     /**
      * @brief getGroupName Reimplemented from @see AbstractFilter class
      */
     virtual const QString getGroupName();
-
+  
     /**
      * @brief getSubGroupName Reimplemented from @see AbstractFilter class
      */
     virtual const QString getSubGroupName();
-
+  
     /**
      * @brief getHumanLabel Reimplemented from @see AbstractFilter class
      */
     virtual const QString getHumanLabel();
-
+  
     /**
      * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
+    */
     virtual void setupFilterParameters();
-
+  
     /**
      * @brief writeFilterParameters Reimplemented from @see AbstractFilter class
      */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-
+  
     /**
      * @brief readFilterParameters Reimplemented from @see AbstractFilter class
      */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
-
+  
     /**
      * @brief execute Reimplemented from @see AbstractFilter class
      */
     virtual void execute();
-
+  
     /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
+     * @brief preflight Reimplemented from @see AbstractFilter class
+     */
     virtual void preflight();
 
   signals:
@@ -157,9 +173,9 @@ class SIMPLib_EXPORT CombineAttributeMatrices : public AbstractFilter
     void updateFeatureInstancePointers();
 
   private:
-	DEFINE_DATAARRAY_VARIABLE(int32_t, FirstIndex)
-	DEFINE_DATAARRAY_VARIABLE(int32_t, SecondIndex)
-	DEFINE_DATAARRAY_VARIABLE(int32_t, NewIndex)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FirstIndex)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, SecondIndex)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, NewIndex)
 
     CombineAttributeMatrices(const CombineAttributeMatrices&); // Copy Constructor Not Implemented
     void operator=(const CombineAttributeMatrices&); // Operator '=' Not Implemented

@@ -37,6 +37,7 @@
 #include "CombineAttributeMatrices.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Common/TemplateHelpers.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
@@ -49,22 +50,20 @@
 // Include the MOC generated file for this class
 #include "moc_CombineAttributeMatrices.cpp"
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 CombineAttributeMatrices::CombineAttributeMatrices() :
-AbstractFilter(),
-m_FirstAttributeMatrixPath("", "", ""),
-m_SecondAttributeMatrixPath("", "", ""),
-m_CombinedAttributeMatrixName(""),
-m_FirstIndexArrayPath("", "", ""),
-m_SecondIndexArrayPath("", "", ""),
-m_NewIndexArrayName(""),
-m_FirstIndex(NULL),
-m_SecondIndex(NULL),
-m_NewIndex(NULL)
+  AbstractFilter(),
+  m_FirstAttributeMatrixPath("", "", ""),
+  m_SecondAttributeMatrixPath("", "", ""),
+  m_FirstIndexArrayPath("", "", ""),
+  m_SecondIndexArrayPath("", "", ""),
+  m_CombinedAttributeMatrixName(""),
+  m_NewIndexArrayName(""),
+  m_FirstIndex(NULL),
+  m_SecondIndex(NULL),
+  m_NewIndex(NULL)
 {
   setupFilterParameters();
 }
@@ -158,13 +157,13 @@ int CombineAttributeMatrices::writeFilterParameters(AbstractFilterParametersWrit
 {
   writer->openFilterGroup(this, index);
   SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-    SIMPL_FILTER_WRITE_PARAMETER(FirstAttributeMatrixPath)
-    SIMPL_FILTER_WRITE_PARAMETER(SecondAttributeMatrixPath)
-    SIMPL_FILTER_WRITE_PARAMETER(CombinedAttributeMatrixName)
-    SIMPL_FILTER_WRITE_PARAMETER(FirstIndexArrayPath)
-    SIMPL_FILTER_WRITE_PARAMETER(SecondIndexArrayPath)
-    SIMPL_FILTER_WRITE_PARAMETER(NewIndexArrayName)
-    writer->closeFilterGroup();
+  SIMPL_FILTER_WRITE_PARAMETER(FirstAttributeMatrixPath)
+  SIMPL_FILTER_WRITE_PARAMETER(SecondAttributeMatrixPath)
+  SIMPL_FILTER_WRITE_PARAMETER(CombinedAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(FirstIndexArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(SecondIndexArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(NewIndexArrayName)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -305,7 +304,6 @@ void CombineAttributeMatrices::execute()
   AttributeMatrix::Pointer secondAttrMat = m->getAttributeMatrix(getSecondAttributeMatrixPath().getAttributeMatrixName());
   AttributeMatrix::Pointer combinedAttrMat = m->getAttributeMatrix(getCombinedAttributeMatrixName());
   size_t firstAttrMatNumTuples = firstAttrMat->getNumTuples();
-  size_t SecondAttrMatNumTuples = secondAttrMat->getNumTuples();
 
   size_t totalTuples1 = m_SecondIndexPtr.lock()->getNumberOfTuples();
   size_t totalTuples2 = m_SecondIndexPtr.lock()->getNumberOfTuples();
@@ -365,6 +363,25 @@ AbstractFilter::Pointer CombineAttributeMatrices::newFilterInstance(bool copyFil
 const QString CombineAttributeMatrices::getCompiledLibraryName()
 {
   return Core::CoreBaseName;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString CombineAttributeMatrices::getBrandingString()
+{
+  return "SIMPLib Core Filter";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString CombineAttributeMatrices::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
 }
 
 // -----------------------------------------------------------------------------
