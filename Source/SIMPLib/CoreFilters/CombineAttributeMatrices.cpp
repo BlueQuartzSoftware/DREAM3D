@@ -306,10 +306,6 @@ void CombineAttributeMatrices::execute()
   AttributeMatrix::Pointer secondAttrMat = m->getAttributeMatrix(getSecondAttributeMatrixPath().getAttributeMatrixName());
   AttributeMatrix::Pointer combinedAttrMat = m->getAttributeMatrix(getCombinedAttributeMatrixName());
   size_t firstAttrMatNumTuples = firstAttrMat->getNumTuples();
-<<<<<<< HEAD
-=======
-  //size_t SecondAttrMatNumTuples = secondAttrMat->getNumTuples();
->>>>>>> Remove include directives that are not used in that source file. Other effected
 
   size_t totalTuples1 = m_SecondIndexPtr.lock()->getNumberOfTuples();
   size_t totalTuples2 = m_SecondIndexPtr.lock()->getNumberOfTuples();
