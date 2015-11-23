@@ -6,7 +6,7 @@
         "FilterVersion": "6.1.351",
         "Filter_Human_Label": "Read H5EBSD File",
         "Filter_Name": "ReadH5Ebsd",
-        "InputFile": ""Data/SmallIN100/SmallIN100.h5ebsd",
+        "InputFile": "Data/SmallIN100/SmallIN100.h5ebsd",
         "RefFrameZDir": 1,
         "SelectedArrayNames": [
             "Phases",
@@ -19,7 +19,7 @@
             "EulerAngles"
         ],
         "UseTransformations": 1,
-        "ZEndIndex": 99,
+        "ZEndIndex": 117,
         "ZStartIndex": 1
     },
     "1": {
