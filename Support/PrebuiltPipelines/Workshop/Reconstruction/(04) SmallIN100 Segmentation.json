@@ -1,0 +1,54 @@
+{
+    "0": {
+        "Filter_Human_Label": "Read DREAM.3D Data File",
+        "Filter_Name": "DataContainerReader",
+        "InputFile": "Data/Output/SmallIN100Cleaned.dream3d",
+        "InputFileDataContainerArrayProxy": {
+            "Data Containers": [
+            ]
+        },
+        "OverwriteExistingDataContainers": 0
+    },
+    "1": {
+        "ActiveArrayName": "Active",
+        "CellFeatureAttributeMatrixName": "CellFeatureData",
+        "CellPhasesArrayPath": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": ""
+        },
+        "CrystalStructuresArrayPath": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": ""
+        },
+        "FeatureIdsArrayName": "FeatureIds",
+        "FilterVersion": "6.1.351",
+        "Filter_Human_Label": "Segment Features (Misorientation)",
+        "Filter_Name": "EBSDSegmentFeatures",
+        "GoodVoxelsArrayPath": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": ""
+        },
+        "MisorientationTolerance": 5,
+        "QuatsArrayPath": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": ""
+        },
+        "UseGoodVoxels": 1
+    },
+    "2": {
+        "FilterVersion": "6.1.351",
+        "Filter_Human_Label": "Write DREAM.3D Data File",
+        "Filter_Name": "DataContainerWriter",
+        "OutputFile": "Data/Output/SmallIN100Cleaned.dream3d",
+        "WriteXdmfFile": 1
+    },
+    "PipelineBuilder": {
+        "Name": "(04) SmallIN100 Segmentation",
+        "Number_Filters": 3,
+        "Version": "6.1"
+    }
+}

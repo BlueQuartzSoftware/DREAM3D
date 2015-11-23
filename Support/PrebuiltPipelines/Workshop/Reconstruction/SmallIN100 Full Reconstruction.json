@@ -3,20 +3,20 @@
         "CellAttributeMatrixName": "CellData",
         "CellEnsembleAttributeMatrixName": "CellEnsembleData",
         "DataContainerName": "ImageDataContainer",
-        "FilterVersion": "6.0.1877",
+        "FilterVersion": "6.1.351",
         "Filter_Human_Label": "Read H5EBSD File",
         "Filter_Name": "ReadH5Ebsd",
-        "InputFile": "Data/Output/SmallIN100.h5ebsd",
+        "InputFile": "Data/SmallIN100/SmallIN100.h5ebsd",
         "RefFrameZDir": 1,
         "SelectedArrayNames": [
-            "Image Quality",
-            "Fit",
             "Phases",
-            "SEM Signal",
             "Confidence Index",
             "X Position",
-            "EulerAngles",
-            "Y Position"
+            "Y Position",
+            "Fit",
+            "Image Quality",
+            "SEM Signal",
+            "EulerAngles"
         ],
         "UseTransformations": 1,
         "ZEndIndex": 117,
@@ -24,7 +24,7 @@
     },
     "1": {
         "DestinationArrayName": "Mask",
-        "FilterVersion": "6.0.1877",
+        "FilterVersion": "6.1.351",
         "Filter_Human_Label": "Threshold Objects",
         "Filter_Name": "MultiThresholdObjects",
         "SelectedThresholds": [
@@ -70,7 +70,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.0.1877",
+        "FilterVersion": "6.1.351",
         "Filter_Human_Label": "Find Feature Average Orientations",
         "Filter_Name": "FindAvgOrientations",
         "QuatsArrayPath": {
@@ -91,7 +91,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.0.1877",
+        "FilterVersion": "6.1.351",
         "Filter_Human_Label": "Find Feature Neighbors",
         "Filter_Name": "FindNeighbors",
         "NeighborListArrayName": "NeighborList2",
@@ -132,7 +132,7 @@
             "Data Array Name": "Phases",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.0.1877",
+        "FilterVersion": "6.1.351",
         "Filter_Human_Label": "Merge Twins",
         "Filter_Name": "MergeTwins",
         "NewCellFeatureAttributeMatrixName": "NewCellFeatureData",
@@ -155,7 +155,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.0.1877",
+        "FilterVersion": "6.1.351",
         "Filter_Human_Label": "Find Feature Sizes",
         "Filter_Name": "FindSizes",
         "NumCellsArrayName": "NumCells",
@@ -173,8 +173,8 @@
             "Data Array Name": "Phases",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.0.1877",
-        "Filter_Human_Label": "Minimum Size Filter",
+        "FilterVersion": "6.1.351",
+        "Filter_Human_Label": "Minimum Size",
         "Filter_Name": "MinSize",
         "MinAllowedFeatureSize": 16,
         "NumCellsArrayPath": {
@@ -196,7 +196,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.0.1877",
+        "FilterVersion": "6.1.351",
         "Filter_Human_Label": "Find Feature Neighbors",
         "Filter_Name": "FindNeighbors",
         "NeighborListArrayName": "NeighborList",
@@ -218,8 +218,8 @@
             "Data Array Name": "Phases",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.0.1877",
-        "Filter_Human_Label": "Minimum Number of Neighbors Filter",
+        "FilterVersion": "6.1.351",
+        "Filter_Human_Label": "Minimum Number of Neighbors",
         "Filter_Name": "MinNeighbors",
         "MinNumNeighbors": 2,
         "NumNeighborsArrayPath": {
@@ -240,7 +240,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.0.1877",
+        "FilterVersion": "6.1.351",
         "Filter_Human_Label": "Fill Bad Data",
         "Filter_Name": "FillBadData",
         "MinAllowedDefectSize": 1000,
@@ -254,7 +254,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.0.1877",
+        "FilterVersion": "6.1.351",
         "Filter_Human_Label": "Erode/Dilate Bad Data",
         "Filter_Name": "ErodeDilateBadData",
         "NumIterations": 2,
@@ -270,7 +270,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.0.1877",
+        "FilterVersion": "6.1.351",
         "Filter_Human_Label": "Erode/Dilate Bad Data",
         "Filter_Name": "ErodeDilateBadData",
         "NumIterations": 2,
@@ -280,7 +280,7 @@
         "ZDirOn": 1
     },
     "2": {
-        "FilterVersion": "6.0.1877",
+        "FilterVersion": "6.1.351",
         "Filter_Human_Label": "Convert Orientation Representation",
         "Filter_Name": "ConvertOrientations",
         "InputOrientationArrayPath": {
@@ -309,7 +309,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.0.1877",
+        "FilterVersion": "6.1.351",
         "Filter_Human_Label": "Generate IPF Colors",
         "Filter_Name": "GenerateIPFColors",
         "GoodVoxelsArrayPath": {
@@ -343,7 +343,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.0.1877",
+        "FilterVersion": "6.1.351",
         "Filter_Human_Label": "Align Sections (Misorientation)",
         "Filter_Name": "AlignSectionsMisorientation",
         "GoodVoxelsArrayPath": {
@@ -363,7 +363,7 @@
     },
     "4": {
         "FillHoles": 0,
-        "FilterVersion": "6.0.1877",
+        "FilterVersion": "6.1.351",
         "Filter_Human_Label": "Isolate Largest Feature (Identify Sample)",
         "Filter_Name": "IdentifySample",
         "GoodVoxelsArrayPath": {
@@ -374,7 +374,7 @@
     },
     "5": {
         "AlignmentShiftFileName": "",
-        "FilterVersion": "6.0.1877",
+        "FilterVersion": "6.1.351",
         "Filter_Human_Label": "Align Sections (Feature Centroid)",
         "Filter_Name": "AlignSectionsFeatureCentroid",
         "GoodVoxelsArrayPath": {
@@ -398,7 +398,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.0.1877",
+        "FilterVersion": "6.1.351",
         "Filter_Human_Label": "Neighbor Orientation Comparison (Bad Data)",
         "Filter_Name": "BadDataNeighborOrientationCheck",
         "GoodVoxelsArrayPath": {
@@ -430,7 +430,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.0.1877",
+        "FilterVersion": "6.1.351",
         "Filter_Human_Label": "Neighbor Orientation Correlation",
         "Filter_Name": "NeighborOrientationCorrelation",
         "Level": 2,
@@ -456,7 +456,7 @@
             "Data Container Name": "ImageDataContainer"
         },
         "FeatureIdsArrayName": "FeatureIds",
-        "FilterVersion": "6.0.1877",
+        "FilterVersion": "6.1.351",
         "Filter_Human_Label": "Segment Features (Misorientation)",
         "Filter_Name": "EBSDSegmentFeatures",
         "GoodVoxelsArrayPath": {
@@ -488,7 +488,7 @@
             "Data Array Name": "Phases",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.0.1877",
+        "FilterVersion": "6.1.351",
         "Filter_Human_Label": "Find Feature Phases",
         "Filter_Name": "FindFeaturePhases"
     },

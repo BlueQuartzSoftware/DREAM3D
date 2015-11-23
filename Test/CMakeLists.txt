@@ -34,6 +34,11 @@ AddDREAM3DUnitTest(TESTNAME ConditionalSetValueTest
   FOLDER "SIMPLibProj/Test"
   LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
 
+AddDREAM3DUnitTest(TESTNAME CombineAttributeMatricesTest
+  SOURCES ${DREAM3DTest_SOURCE_DIR}/CombineAttributeMatricesTest.cpp
+  FOLDER "SIMPLibProj/Test"
+  LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
+
 AddDREAM3DUnitTest(TESTNAME DataContainerTest
   SOURCES ${DREAM3DTest_SOURCE_DIR}/DataContainerTest.cpp
   FOLDER "SIMPLibProj/Test"
