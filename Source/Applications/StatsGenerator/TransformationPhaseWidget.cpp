@@ -65,6 +65,9 @@
 #include <qwt_compat.h>
 #include <qwt_plot_grid.h>
 
+// Needed for AxisAngle_t
+#include "EbsdLib/EbsdConstants.h"
+
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Common/AbstractFilter.h"

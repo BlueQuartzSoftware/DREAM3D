@@ -39,6 +39,8 @@
 
 #include <QtCore/QFile>
 
+// Needed for AxisAngle_t
+#include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/HKL/DataParser.hpp"
 
 #include "SIMPLib/SIMPLib.h"

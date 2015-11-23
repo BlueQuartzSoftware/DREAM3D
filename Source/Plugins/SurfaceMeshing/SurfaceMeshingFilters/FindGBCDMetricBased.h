@@ -46,6 +46,9 @@
 #ifndef _FindGBCDMetricBased_H_
 #define _FindGBCDMetricBased_H_
 
+// Needed for AxisAngle_t
+#include "EbsdLib/EbsdConstants.h"
+
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -68,12 +71,12 @@ public:
 
   SIMPL_FILTER_PARAMETER(int, PhaseOfInterest)
   Q_PROPERTY(int PhaseOfInterest READ getPhaseOfInterest WRITE setPhaseOfInterest)
-    
+
   SIMPL_FILTER_PARAMETER(AxisAngleInput_t, MisorientationRotation)
   Q_PROPERTY(AxisAngleInput_t MisorientationRotation READ getMisorientationRotation WRITE setMisorientationRotation)
 
   SIMPL_FILTER_PARAMETER(int, ChosenLimitDists)
-  Q_PROPERTY(int ChosenLimitDists READ getChosenLimitDists WRITE setChosenLimitDists)  
+  Q_PROPERTY(int ChosenLimitDists READ getChosenLimitDists WRITE setChosenLimitDists)
 
   SIMPL_FILTER_PARAMETER(int, NumSamplPts)
   Q_PROPERTY(int NumSamplPts READ getNumSamplPts WRITE setNumSamplPts)
@@ -182,7 +185,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
   DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceLabels)
   DEFINE_DATAARRAY_VARIABLE(int8_t, NodeTypes)
-  
+
   static const int NUM_RESOL_CHOICES = 7;
   static const int DEFAULT_RESOL_CHOICE = 2;
   static const float RESOL_CHOICES[][2];

@@ -13,12 +13,15 @@
 
 
 //-- C++
-#include <QtCore/QString>
-#include <QtCore/QtDebug>
 #include <vector>
 
 #include <hdf5.h>
 
+//--Qt Includes
+#include <QtCore/QString>
+#include <QtCore/QtDebug>
+
+//SIMPLib Includes
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Common/Constants.h"

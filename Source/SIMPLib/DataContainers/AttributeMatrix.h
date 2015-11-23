@@ -44,21 +44,24 @@
 //-- C++ includes
 #include <memory>
 
-//-- EBSD Lib Includes
-#include "EbsdLib/EbsdConstants.h"
+#include <hdf5.h>
 
-
-#include "H5Support/QH5Utilities.h"
-#include "H5Support/HDF5ScopedFileSentinel.h"
-
+#include <QtCore/QObject>
+#include <QtCore/QList>
+#include <QtCore/QString>
+#include <QtCore/QMap>
+#include <QtCore/QVector>
 
 //-- DREAM3D Includes
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/Observable.h"
-#include "SIMPLib/DataContainers/DataContainerProxy.h"
+#include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
+
+class AttributeMatrixProxy;
+class DataContainerProxy;
 
 enum RenameErrorCodes
 {

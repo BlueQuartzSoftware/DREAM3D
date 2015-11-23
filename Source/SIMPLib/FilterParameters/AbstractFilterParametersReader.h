@@ -32,13 +32,16 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #ifndef _AbstractFilterParametersReader_H_
 #define _AbstractFilterParametersReader_H_
 
-#include <QtCore/QString>
 #include <set>
+
+#include <QtCore/QString>
+
+// Needed for AxisAngle_t
+#include "EbsdLib/EbsdConstants.h"
+
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"

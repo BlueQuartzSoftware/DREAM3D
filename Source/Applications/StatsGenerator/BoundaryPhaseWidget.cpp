@@ -48,6 +48,9 @@
 #include <QtWidgets/QMessageBox>
 
 
+// Needed for AxisAngle_t
+#include "EbsdLib/EbsdConstants.h"
+
 //-- Qwt Includes
 #include <qwt.h>
 #include <qwt_plot.h>

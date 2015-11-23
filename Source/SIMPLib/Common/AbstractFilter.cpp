@@ -38,6 +38,7 @@
 
 #include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Plugin/PluginManager.h"
+#include "SIMPLib/Common/PipelineMessage.h"
 
 #include "moc_AbstractFilter.cpp"
 // -----------------------------------------------------------------------------
