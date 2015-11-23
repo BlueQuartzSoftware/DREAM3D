@@ -36,6 +36,8 @@
 
 #include "FeatureInfoReader.h"
 
+#include <fstream>
+
 #include <QtCore/QFileInfo>
 
 #include "SIMPLib/Common/Constants.h"

@@ -34,6 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "AlignSectionsMutualInformation.h"
 
+#include <fstream>
+
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
@@ -449,9 +451,9 @@ void AlignSectionsMutualInformation::form_features_sections()
 
   m_FeatureCounts->resize(dims[2]);
   featurecounts = m_FeatureCounts->getPointer(0);
-  
+
   int32_t* miFeatureIds = m_MIFeaturesPtr->getPointer(0);
-  
+
   std::vector<DimType> voxelslist(initialVoxelsListSize, -1);
   DimType neighpoints[4] = { 0, 0, 0, 0 };
   neighpoints[0] = -dims[0];

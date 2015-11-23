@@ -35,6 +35,7 @@
 
 
 #include "VtkStructuredPointsReader.h"
+#include <fstream>
 
 #include <QtCore/QFileInfo>
 

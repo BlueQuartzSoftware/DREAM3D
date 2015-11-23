@@ -45,6 +45,7 @@
 #include "SIMPLib/Common/FilterPipeline.h"
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/DataContainers/DataContainerArrayProxy.h"
 
 
 /**

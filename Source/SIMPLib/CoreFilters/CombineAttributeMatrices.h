@@ -173,9 +173,15 @@ class SIMPLib_EXPORT CombineAttributeMatrices : public AbstractFilter
     void updateFeatureInstancePointers();
 
   private:
+<<<<<<< HEAD
     DEFINE_DATAARRAY_VARIABLE(int32_t, FirstIndex)
     DEFINE_DATAARRAY_VARIABLE(int32_t, SecondIndex)
     DEFINE_DATAARRAY_VARIABLE(int32_t, NewIndex)
+=======
+  DEFINE_DATAARRAY_VARIABLE(int32_t, FirstIndex)
+  DEFINE_DATAARRAY_VARIABLE(int32_t, SecondIndex)
+  DEFINE_DATAARRAY_VARIABLE(int32_t, NewIndex)
+>>>>>>> Remove include directives that are not used in that source file. Other effected
 
     CombineAttributeMatrices(const CombineAttributeMatrices&); // Copy Constructor Not Implemented
     void operator=(const CombineAttributeMatrices&); // Operator '=' Not Implemented

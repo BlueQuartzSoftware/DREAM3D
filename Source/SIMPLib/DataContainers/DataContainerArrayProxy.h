@@ -48,6 +48,7 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataContainers/DataContainerProxy.h"
 #include "SIMPLib/DataContainers/DataArrayPath.h"
+#include "SIMPLib/DataContainers/DataContainerArrayProxy.h"
 
 class DataContainerArray;
 

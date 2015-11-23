@@ -42,10 +42,7 @@
 
 
 //-- C++ includes
-#include <vector>
-#include <map>
-#include <sstream>
-#include <list>
+#include <memory>
 
 //-- EBSD Lib Includes
 #include "EbsdLib/EbsdConstants.h"

@@ -37,6 +37,8 @@
 #ifndef _CalculateTriangleGroupCurvatures_H_
 #define _CalculateTriangleGroupCurvatures_H_
 
+#include <set>
+
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/Common/AbstractFilter.h"

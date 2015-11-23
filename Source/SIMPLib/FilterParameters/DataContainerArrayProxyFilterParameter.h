@@ -37,6 +37,8 @@
 #define _DataContainerArrayProxyFilterParameter_H_
 
 #include "SIMPLib/FilterParameters/FilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArrayProxy.h"
+
 
 class SIMPLib_EXPORT DataContainerArrayProxyFilterParameter : public FilterParameter
 {

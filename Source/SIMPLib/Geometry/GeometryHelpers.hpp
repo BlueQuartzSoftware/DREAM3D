@@ -3,8 +3,9 @@
 
 #include <math.h>
 
-#include "H5Support/QH5Utilities.h"
-#include "H5Support/HDF5ScopedFileSentinel.h"
+#include <map>
+#include <set>
+
 #include "H5Support/QH5Lite.h"
 
 #include "SIMPLib/Common/Constants.h"

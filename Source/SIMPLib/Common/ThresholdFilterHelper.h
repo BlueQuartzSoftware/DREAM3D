@@ -39,7 +39,6 @@
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/IDataArrayFilter.h"
-#include "SIMPLib/FilterParameters/FilterParameter.h"
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"

@@ -36,32 +36,22 @@
 #ifndef _IGeometry_H_
 #define _IGeometry_H_
 
-#include <vector>
-#include <map>
-#include <set>
-#include <sstream>
-#include <list>
-
 #include <QtCore/QString>
 #include <QtCore/QMap>
 
-#include "H5Support/QH5Utilities.h"
-#include "H5Support/HDF5ScopedFileSentinel.h"
-#include "H5Support/QH5Lite.h"
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/Observable.h"
 #include "SIMPLib/DataArrays/DynamicListArray.hpp"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataContainers/AttributeMatrix.h"
-#include "SIMPLib/HDF5/VTKH5Constants.h"
+
+class QTextStream;
 
 // -----------------------------------------------------------------------------
 // Typedefs
 // -----------------------------------------------------------------------------
-
 typedef FloatArrayType SharedVertexList;
 typedef Int64ArrayType SharedEdgeList;
 typedef Int64ArrayType SharedTriList;

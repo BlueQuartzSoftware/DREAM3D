@@ -43,6 +43,7 @@
 #include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/Common/FilterFactory.hpp"
 #include "SIMPLib/CoreFilters/EmptyFilter.h"
+#include "SIMPLib/Common/Constants.h"
 
 
 // -----------------------------------------------------------------------------

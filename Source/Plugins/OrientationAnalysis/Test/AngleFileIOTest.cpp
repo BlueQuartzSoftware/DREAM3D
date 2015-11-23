@@ -45,6 +45,7 @@
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/Utilities/UnitTestSupport.hpp"
 #include "SIMPLib/Utilities/TestObserver.h"
+#include "SIMPLib/Utilities/QMetaObjectUtilities.h"
 
 #include "OrientationLib/IO/AngleFileLoader.h"
 

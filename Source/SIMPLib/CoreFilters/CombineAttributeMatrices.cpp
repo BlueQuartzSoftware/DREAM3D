@@ -34,6 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
+
+
 #include "CombineAttributeMatrices.h"
 
 #include "SIMPLib/Common/Constants.h"
@@ -54,16 +56,16 @@
 //
 // -----------------------------------------------------------------------------
 CombineAttributeMatrices::CombineAttributeMatrices() :
-  AbstractFilter(),
-  m_FirstAttributeMatrixPath("", "", ""),
-  m_SecondAttributeMatrixPath("", "", ""),
-  m_FirstIndexArrayPath("", "", ""),
-  m_SecondIndexArrayPath("", "", ""),
-  m_CombinedAttributeMatrixName(""),
-  m_NewIndexArrayName(""),
-  m_FirstIndex(NULL),
-  m_SecondIndex(NULL),
-  m_NewIndex(NULL)
+AbstractFilter(),
+m_FirstAttributeMatrixPath("", "", ""),
+m_SecondAttributeMatrixPath("", "", ""),
+m_FirstIndexArrayPath("", "", ""),
+m_SecondIndexArrayPath("", "", ""),
+m_CombinedAttributeMatrixName(""),
+m_NewIndexArrayName(""),
+m_FirstIndex(NULL),
+m_SecondIndex(NULL),
+m_NewIndex(NULL)
 {
   setupFilterParameters();
 }
@@ -205,7 +207,7 @@ void CombineAttributeMatrices::dataCheck()
 
   if (getErrorCondition() < 0) { return; }
 
-  //Note that the minus 1 in the totalTuples calculation is to account for the fact that the zeroth tuple in the two attribute matrices should only be counted once, not twice.  
+  //Note that the minus 1 in the totalTuples calculation is to account for the fact that the zeroth tuple in the two attribute matrices should only be counted once, not twice.
   //All Feature or Ensemble AMs should start from 1 and the zeroth tuple can be combined in the two AMs
   size_t totalTuples = firstAttrMat->getNumTuples() + secondAttrMat->getNumTuples() - 1;
   QVector<size_t> tDims(1, totalTuples);
@@ -304,6 +306,10 @@ void CombineAttributeMatrices::execute()
   AttributeMatrix::Pointer secondAttrMat = m->getAttributeMatrix(getSecondAttributeMatrixPath().getAttributeMatrixName());
   AttributeMatrix::Pointer combinedAttrMat = m->getAttributeMatrix(getCombinedAttributeMatrixName());
   size_t firstAttrMatNumTuples = firstAttrMat->getNumTuples();
+<<<<<<< HEAD
+=======
+  //size_t SecondAttrMatNumTuples = secondAttrMat->getNumTuples();
+>>>>>>> Remove include directives that are not used in that source file. Other effected
 
   size_t totalTuples1 = m_SecondIndexPtr.lock()->getNumberOfTuples();
   size_t totalTuples2 = m_SecondIndexPtr.lock()->getNumberOfTuples();

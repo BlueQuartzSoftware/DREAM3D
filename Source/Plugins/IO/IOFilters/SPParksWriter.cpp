@@ -35,6 +35,7 @@
 
 
 #include "SPParksWriter.h"
+#include <fstream>
 
 #include <QtCore/QDateTime>
 #include <QtCore/QDir>

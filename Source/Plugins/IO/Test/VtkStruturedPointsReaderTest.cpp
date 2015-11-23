@@ -45,6 +45,7 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/Utilities/UnitTestSupport.hpp"
+#include "SIMPLib/Utilities/QMetaObjectUtilities.h"
 
 #include "IOTestFileLocations.h"
 
