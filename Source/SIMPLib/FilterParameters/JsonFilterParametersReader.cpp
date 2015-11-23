@@ -87,7 +87,7 @@ FilterPipeline::Pointer JsonFilterParametersReader::ReadPipelineFromFile(QString
   JsonFilterParametersReader::Pointer reader = JsonFilterParametersReader::New();
   int err = reader->openFile(filePath);
 
-  if (err < 0)
+  if (err != QJsonParseError::NoError)
   {
     if (NULL != obs)
     {
@@ -186,7 +186,7 @@ void JsonFilterParametersReader::ReadNameOfPipelineFromFile(QString filePath, QS
   JsonFilterParametersReader::Pointer reader = JsonFilterParametersReader::New();
   int err = reader->openFile(filePath);
 
-  if (err < 0)
+  if (err != QJsonParseError::NoError)
   {
     if (NULL != obs)
     {
@@ -226,7 +226,7 @@ int JsonFilterParametersReader::openFile(QString filePath)
     }
     m_Root = doc.object();
 
-    return 0;
+    return QJsonParseError::NoError;
   }
 
   return -100;
