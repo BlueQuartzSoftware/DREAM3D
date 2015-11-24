@@ -1,36 +1,9 @@
 {
     "0": {
-        "EulerTransformation": {
-            "angle": 90,
-            "h": 0,
-            "k": 0,
-            "l": 1
-        },
-        "FileExtension": "ang",
-        "FilePrefix": "Slice_",
-        "FileSuffix": "",
-        "FilterVersion": "6.1.351",
-        "Filter_Human_Label": "Import Orientation File(s) to H5EBSD",
-        "Filter_Name": "EbsdToH5Ebsd",
-        "InputPath": "Data/SmallIN100",
-        "OutputFile": "Data/Output/SmallIN100.h5ebsd",
-        "PaddingDigits": 1,
-        "RefFrameZDir": 1,
-        "SampleTransformation": {
-            "angle": 180,
-            "h": 0,
-            "k": 1,
-            "l": 0
-        },
-        "ZEndIndex": "117",
-        "ZResolution": 0.25,
-        "ZStartIndex": "1"
-    },
-    "1": {
         "CellAttributeMatrixName": "CellData",
         "CellEnsembleAttributeMatrixName": "CellEnsembleData",
         "DataContainerName": "ImageDataContainer",
-        "FilterVersion": "6.1.351",
+        "FilterVersion": "6.3.0",
         "Filter_Human_Label": "Read H5EBSD File",
         "Filter_Name": "ReadH5Ebsd",
         "InputFile": "Data/Output/SmallIN100.h5ebsd",
@@ -38,11 +11,11 @@
         "SelectedArrayNames": [
         ],
         "UseTransformations": 1,
-        "ZEndIndex": 99,
+        "ZEndIndex": 117,
         "ZStartIndex": 1
     },
-    "2": {
-        "FilterVersion": "6.1.351",
+    "0": {
+        "FilterVersion": "6.3.0",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100.dream3d",
@@ -50,7 +23,7 @@
     },
     "PipelineBuilder": {
         "Name": "(01) SmallIN100 Archive and Initial Visualization",
-        "Number_Filters": 3,
-        "Version": "6.1"
+        "Number_Filters": 2,
+        "Version": "6.3"
     }
 }
