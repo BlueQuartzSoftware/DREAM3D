@@ -69,24 +69,30 @@ function(sitk_install_exported_target tgt)
   set_property(TARGET ${tgt} PROPERTY VERSION 1)
   set_property(TARGET ${tgt} PROPERTY SOVERSION 1)
   set_property(TARGET ${tgt} PROPERTY
-    OUTPUT_NAME ${tgt}-${SimpleITK_VERSION_MAJOR}.${SimpleITK_VERSION_MINOR})
+    OUTPUT_NAME ${tgt}-${SimpleITKExplicit_VERSION_MAJOR}.${SimpleITKExplicit_VERSION_MINOR})
 
   export(TARGETS ${tgt}
     APPEND FILE "${CMAKE_BINARY_DIR}/SimpleITKTargets.cmake"
     )
 
   install(TARGETS ${tgt}
-    EXPORT SimpleITKTargets
+    EXPORT SimpleITKExplicit
     RUNTIME DESTINATION ${SimpleITK_INSTALL_RUNTIME_DIR}
     LIBRARY DESTINATION ${SimpleITK_INSTALL_LIBRARY_DIR}
     ARCHIVE DESTINATION ${SimpleITK_INSTALL_ARCHIVE_DIR}
     )
 endfunction()
 
-set(SimpleITK_INSTALL_RUNTIME_DIR "Bin")
-set(SimpleITK_INSTALL_LIBRARY_DIR "Bin")
-set(SimpleITK_INSTALL_ARCHIVE_DIR "Bin")
+set(install_dir "bin")
+set(lib_install_dir "lib")
+if(WIN32)
+    set(install_dir ".")
+    set(lib_install_dir "")
+endif()
 
+set(SimpleITK_INSTALL_RUNTIME_DIR "${install_dir}")
+set(SimpleITK_INSTALL_LIBRARY_DIR "${lib_install_dir}")
+set(SimpleITK_INSTALL_ARCHIVE_DIR "${lib_install_dir}")
 
 
 include_directories( ${SimpleITKExplicit_SOURCE_DIR}/Explicit/include)
