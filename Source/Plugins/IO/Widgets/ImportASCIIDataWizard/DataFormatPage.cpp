@@ -281,27 +281,32 @@ void DataFormatPage::on_editHeadersBtn_clicked()
   {
     QVector<QString> headers = m_EditHeadersDialog->getHeaders();
 
+    bool hasSlashes = false;
     for (int i = 0; i < headers.size(); i++)
     {
       QString header = headers[i];
 
-      if (header.contains("/") || header.contains("\\"))
+      if (header.contains('/') || header.contains('\\'))
       {
-        arrayErrLabel->setText("Column headers cannot contain slashes.");
-        arrayErrLabel->show();
-        wizard()->button(QWizard::FinishButton)->setDisabled(true);
-      }
-      else
-      {
-        arrayErrLabel->setText("");
-        arrayErrLabel->hide();
-        wizard()->button(QWizard::FinishButton)->setEnabled(true);
+        hasSlashes = true;
       }
 
       // Check if array name is a duplicate (drawing a red border around columns would be AWESOME)
-      @START_HERE@
 
       model->setHeaderData(i, Qt::Horizontal, header, Qt::DisplayRole);
+    }
+
+    if (hasSlashes == true)
+    {
+      arrayErrLabel->setText("Column headers cannot contain slashes.");
+      arrayErrLabel->show();
+      wizard()->button(QWizard::FinishButton)->setDisabled(true);
+    }
+    else
+    {
+      arrayErrLabel->setText("");
+      arrayErrLabel->hide();
+      wizard()->button(QWizard::FinishButton)->setEnabled(true);
     }
   }
   else
