@@ -129,36 +129,31 @@ set(TEST_PIPELINE_LIST_FILE ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.txt)
 set(TEST_DATA_DIR ${DREAM3D_DATA_DIR})
 
 set(PREBUILT_PIPELINE_NAMES
- "Reconstruction/(01) SmallIN100 Import"
- "Reconstruction/(02) SmallIN100 Initial Visualization"
- "Reconstruction/(03) SmallIN100 Threshold"
- "Reconstruction/(04) SmallIN100 Alignment"
- "Reconstruction/(05) SmallIN100 Alignment 2"
- "Reconstruction/(06) SmallIN100 CleanUp"
- "Reconstruction/(07) SmallIN100 Segmentation"
- "Reconstruction/(08) SmallIN100 Merge Twins"
- "Reconstruction/(09) SmallIN100 Minimum Size"
- "Reconstruction/(10) SmallIN100 Minimum Neighbors"
- "Reconstruction/(11) SmallIN100 Fill Bad Data"
- "Reconstruction/(12) SmallIN100 Close Bad Data"
- "Reconstruction/(13) Image Initial Visualization"
- "Reconstruction/(14) Image Segmentation"
- "Reconstruction/(15) SmallIN100 Full Reconstruction"
- "Statistics/(01) SmallIN100 Morphological Statistics"
- "Statistics/(02) SmallIN100 Export Statistics"
- "Statistics/(03) SmallIN100 Transfer Field Data"
- "Statistics/(04) SmallIN100 Field Threshold"
- "Statistics/(05) SmallIN100 Crystallographic Statistics"
- "SurfaceMeshing/(01) SmallIN100 Quick Mesh"
- "SurfaceMeshing/(02) SmallIN100 Smooth Mesh"
- "SurfaceMeshing/(03) SmallIN100 Mesh Statistics"
- "SurfaceMeshing/(04) SmallIN100 GBCD"
- "Synthetic/(01) Single Cubic Phase Equiaxed"
- "Synthetic/(02) Single Hexagonal Phase Equiaxed"
- "Synthetic/(03) Single Cubic Phase Rolled"
- "Synthetic/(04) Two Phase Cubic Hexagonal Particles Equiaxed"
- "Synthetic/(05) Composite"
- "Synthetic/(06) SmallIN100 Synthetic"
+"Reconstruction/(00) SmallIN100 Archive"
+"Reconstruction/(01) SmallIN100 Initial Visualization"
+"Reconstruction/(02) SmallIN100 Alignment"
+"Reconstruction/(03) SmallIN100 Presegmentation Processing"
+"Reconstruction/(04) SmallIN100 Segmentation"
+"Reconstruction/(05) SmallIN100 Postsegmentation Processing"
+"Reconstruction/(06) SmallIN100 Final Processing"
+"Reconstruction/(13) Image Initial Visualization"
+"Reconstruction/(14) Image Segmentation"
+"Reconstruction/SmallIN100 Full Reconstruction"
+"Statistics/(01) SmallIN100 Morphological Statistics"
+"Statistics/(02) SmallIN100 Export Statistics"
+"Statistics/(03) SmallIN100 Transfer Field Data"
+"Statistics/(04) SmallIN100 Field Threshold"
+"Statistics/(05) SmallIN100 Crystallographic Statistics"
+"SurfaceMeshing/(01) SmallIN100 Quick Mesh"
+"SurfaceMeshing/(02) SmallIN100 Smooth Mesh"
+"SurfaceMeshing/(03) SmallIN100 Mesh Statistics"
+"SurfaceMeshing/(04) SmallIN100 GBCD"
+"Synthetic/(01) Single Cubic Phase Equiaxed"
+"Synthetic/(02) Single Hexagonal Phase Equiaxed"
+"Synthetic/(03) Single Cubic Phase Rolled"
+"Synthetic/(04) Two Phase Cubic Hexagonal Particles Equiaxed"
+"Synthetic/(05) Composite"
+"Synthetic/(06) SmallIN100 Synthetic"
 )
 
 configure_file(${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.h.in
@@ -185,7 +180,7 @@ set(PREBUILT_PIPELINE_NAMES
 )
 
 foreach(f ${PREBUILT_PIPELINE_NAMES} )
-  set(DREAM3D_PIPELINE_FILE "${DREAM3D_SUPPORT_DIR}/${PREBUILT_PIPELINES_DIR}/${f}.json")
+  set(DREAM3D_PIPELINE_FILE "${DREAM3D_SUPPORT_DIR}/${PREBUILT_PIPELINES_DIR}/${f}")
   FILE(APPEND ${TEST_PIPELINE_LIST_FILE} "${DREAM3D_PIPELINE_FILE}\n")
 endforeach()
 
