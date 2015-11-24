@@ -59,9 +59,8 @@
 #include "SIMPLib/Common/Observable.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
-
-class AttributeMatrixProxy;
-class DataContainerProxy;
+#include "SIMPLib/DataContainers/AttributeMatrixProxy.h"
+#include "SIMPLib/DataContainers/DataContainerProxy.h"
 
 enum RenameErrorCodes
 {

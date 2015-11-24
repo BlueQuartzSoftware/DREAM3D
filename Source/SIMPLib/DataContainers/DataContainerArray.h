@@ -43,7 +43,6 @@
 #include <QtCore/QString>
 #include <QtCore/QList>
 
-
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
@@ -51,7 +50,6 @@
 #include "SIMPLib/DataContainers/DataArrayPath.h"
 
 
-class DataArrayPath;
 
 /**
  * @class DataContainerArray DataContainerArray.h DREAM3DLib/Common/DataContainerArray.h
