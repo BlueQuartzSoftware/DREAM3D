@@ -163,6 +163,13 @@ foreach(imagePlugin ${imagePlugins})
   endif()
 endforeach()
 
+# ----------------------------------------------------
+# Query QMake to find the location of the frameworks.
+execute_process(
+  COMMAND "@QtQMake_location@" -query QT_INSTALL_LIBS
+  OUTPUT_VARIABLE qtLibDir
+  OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_STRIP_TRAILING_WHITESPACE
+)
 
 # ----------------------------------------------------
 # This is where the actual patching of the install_names is going to take place.
@@ -171,7 +178,7 @@ fixup_bundle("${CMAKE_INSTALL_PREFIX}/@osx_app_name@.app"
              # Plugins to Install
              "${d3d_Plugins};${d3d_qt_Plugins}"
              # Directories to Search for Libraries
-             "@lib_search_dirs@")
+             "@lib_search_dirs@;${qtLibDir}")
 
 
 # ----------------------------------------------------
@@ -184,12 +191,10 @@ FILE(APPEND "${CMAKE_INSTALL_PREFIX}/@osx_app_name@.app/Contents/Resources/qt.co
 # ----------------------------------------------------
 # Copy the QtWebEngine parts of the QtWebEngineCore Framework
 if ("@DREAM3D_USE_QtWebEngine@" STREQUAL "ON")
-  # We need the location of QMake for later on in order to find the plugins directory
 
-
-  FILE(COPY "@QM_QT_INSTALL_PREFIX@/lib/QtWebEngineCore.framework/Versions/5/Helpers"
+  FILE(COPY "${qtLibDir}/QtWebEngineCore.framework/Versions/5/Helpers"
         DESTINATION "${CMAKE_INSTALL_PREFIX}/Frameworks/QtWebEngineCore.framework/Versions/5/")
-  FILE(COPY "@QM_QT_INSTALL_PREFIX@/lib/QtWebEngineCore.framework/Helpers"
+  FILE(COPY "${qtLibDir}/QtWebEngineCore.framework/Helpers"
         DESTINATION "${CMAKE_INSTALL_PREFIX}/Frameworks/QtWebEngineCore.framework/")
   if(NOT EXISTS "${CMAKE_INSTALL_PREFIX}/Frameworks/QtWebEngineCore.framework/Helpers/QtWebEngineProcess.app/Contents/Frameworks")
     execute_process( COMMAND ln -s "../../../../../../../Frameworks" "Frameworks"
