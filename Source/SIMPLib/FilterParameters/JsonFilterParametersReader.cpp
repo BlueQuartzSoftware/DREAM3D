@@ -107,8 +107,12 @@ FilterPipeline::Pointer JsonFilterParametersReader::ReadPipelineFromFile(QString
   for (int i = 0; i < filterCount; ++i)
   {
     // Open the group to get the name of the filter then close again.
-    reader->openFilterGroup(NULL, i);
-    QString filterName = reader->readString(DREAM3D::Settings::FilterName, "");
+    QString filterName;
+    err = reader->openFilterGroup(NULL, i);
+    if(err == 0)
+    {
+      filterName = reader->readString(DREAM3D::Settings::FilterName, "");
+    }
     reader->closeFilterGroup();
     //qDebug() << "Group: " << gName << " FilterName: " << filterName;
     if (filterName.isEmpty() == false)
@@ -214,7 +218,7 @@ int JsonFilterParametersReader::openFile(QString filePath)
   {
     closeFile();
   }
-
+  int err = -100;
   QFile inputFile(filePath);
   if (inputFile.open(QIODevice::ReadOnly))
   {
@@ -227,10 +231,10 @@ int JsonFilterParametersReader::openFile(QString filePath)
     }
     m_Root = doc.object();
 
-    return QJsonParseError::NoError;
+    err = QJsonParseError::NoError;
   }
 
-  return -100;
+  return err;
 }
 
 // -----------------------------------------------------------------------------
@@ -251,6 +255,10 @@ int JsonFilterParametersReader::openFilterGroup(AbstractFilter* unused, int inde
   int err = 0;
   QString numStr = QString::number(index);
   m_CurrentFilterIndex = m_Root[numStr].toObject();
+  if(m_CurrentFilterIndex.isEmpty())
+  {
+    err = -1;
+  }
   return err;
 }
 
@@ -272,6 +280,10 @@ int JsonFilterParametersReader::openGroup(QString key)
   Q_ASSERT(m_Root.isEmpty() == false);
   int err = 0;
   m_CurrentFilterIndex = m_Root[key].toObject();
+  if(m_CurrentFilterIndex.isEmpty())
+  {
+    err = -1;
+  }
   return err;
 }
 
