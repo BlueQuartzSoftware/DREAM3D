@@ -78,6 +78,9 @@ public:
   QString columnDataType(const int column) const;
   void setColumnDataType(const int column, const QString &type);
 
+  bool columnHasErrors(const int column) const;
+  void setColumnHasErrors(const int column, const bool &value);
+
   QStringList originalStrings();
 
   QString originalString(const int row) const;
@@ -95,6 +98,7 @@ private:
   QVector<QString>                                  m_VerticalHeaders;
 
   QVector<QString>                                  m_ColumnDataType;
+  QVector<bool>                                     m_ColumnHasErrors;
 
   ASCIIDataItem* getItem(const QModelIndex& index) const;
 

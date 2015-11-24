@@ -289,9 +289,12 @@ void DataFormatPage::on_editHeadersBtn_clicked()
       if (header.contains('/') || header.contains('\\'))
       {
         hasSlashes = true;
+        model->setColumnHasErrors(i, true);
       }
-
-      // Check if array name is a duplicate (drawing a red border around columns would be AWESOME)
+      else
+      {
+        model->setColumnHasErrors(i, false);
+      }
 
       model->setHeaderData(i, Qt::Horizontal, header, Qt::DisplayRole);
     }
@@ -442,6 +445,12 @@ void DataFormatPage::cleanupPage()
   headersIndexLineEdit->clear();
   hasHeadersRadio->setChecked(true);
   doesNotHaveHeadersRadio->setChecked(false);
+
+  ASCIIDataModel* model = ASCIIDataModel::Instance();
+  for (int i = 0; i < model->columnCount(); i++)
+  {
+    model->setColumnHasErrors(i, false);
+  }
 }
 
 // -----------------------------------------------------------------------------

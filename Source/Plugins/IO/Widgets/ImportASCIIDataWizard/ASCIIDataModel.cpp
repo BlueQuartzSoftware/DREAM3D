@@ -36,6 +36,7 @@
 #include "ASCIIDataModel.h"
 
 #include <QtGui/QFont>
+#include <QtGui/QColor>
 
 #include "SIMPLib/Common/Constants.h"
 
@@ -117,6 +118,18 @@ QVariant ASCIIDataModel::data(const QModelIndex& index, int role) const
   else if (role == Qt::TextAlignmentRole)
   {
     return Qt::AlignCenter;
+  }
+  else if (role == Qt::BackgroundRole)
+  {
+
+    if (columnHasErrors(index.column()) == true)
+    {
+      return QColor(255, 191, 193);
+    }
+    else
+    {
+      return QVariant();
+    }
   }
 
   return QVariant();
@@ -238,6 +251,7 @@ bool ASCIIDataModel::insertColumns(int position, int columns, const QModelIndex&
   beginInsertColumns(QModelIndex(), position, position + columns - 1);
   m_HorizontalHeaders.insert(position, columns, "");
   m_ColumnDataType.insert(position, columns, DREAM3D::TypeNames::Double);
+  m_ColumnHasErrors.insert(position, columns, false);
   for (int i = 0; i < m_TableItems.size(); i++)
   {
     m_TableItems[i]->insertColumns(position, columns);
@@ -255,6 +269,7 @@ bool ASCIIDataModel::removeColumns(int position, int columns, const QModelIndex&
   beginRemoveColumns(QModelIndex(), position, position + columns - 1);
   m_HorizontalHeaders.remove(position, columns);
   m_ColumnDataType.remove(position, columns);
+  m_ColumnHasErrors.remove(position, columns);
   for (int i = 0; i < m_TableItems.size(); i++)
   {
     m_TableItems[i]->removeColumns(position, columns);
@@ -340,6 +355,22 @@ void ASCIIDataModel::setColumnDataType(const int column, const QString &type)
 
   QModelIndex index = this->index(0, column);
   emit dataChanged(index, index);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool ASCIIDataModel::columnHasErrors(const int column) const
+{
+  return m_ColumnHasErrors[column];
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ASCIIDataModel::setColumnHasErrors(const int column, const bool &value)
+{
+  m_ColumnHasErrors[column] = value;
 }
 
 // -----------------------------------------------------------------------------
