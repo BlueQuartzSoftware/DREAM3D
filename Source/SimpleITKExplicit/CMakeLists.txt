@@ -10,11 +10,11 @@ PROJECT( SimpleITKExplicit VERSION 0.9.0)
 include(${PROJECT_CODE_DIR}/SimpleITKExplicit/CMake/sitkCheckRequiredFlags.cmake)
 
 
-# set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${SimpleITK_REQUIRED_C_FLAGS}")
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${SimpleITK_REQUIRED_CXX_FLAGS}")
-# set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${SimpleITK_REQUIRED_LINK_FLAGS}")
-# set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${SimpleITK_REQUIRED_LINK_FLAGS}")
-# set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${SimpleITK_REQUIRED_LINK_FLAGS}")
+# set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${SimpleITKExplicit_REQUIRED_C_FLAGS}")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${SimpleITKExplicit_REQUIRED_CXX_FLAGS}")
+# set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${SimpleITKExplicit_REQUIRED_LINK_FLAGS}")
+# set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${SimpleITKExplicit_REQUIRED_LINK_FLAGS}")
+# set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${SimpleITKExplicit_REQUIRED_LINK_FLAGS}")
 
 # message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
 # message(STATUS "CMAKE_EXE_LINKER_FLAGS: ${CMAKE_EXE_LINKER_FLAGS}")
@@ -60,10 +60,10 @@ mark_as_advanced ( SITK_EXPRESS_INSTANTIATEDPIXELS )
 
 function(sitk_install_exported_target tgt)
   # Remove the build tree's SimpleITKTargets file if this is the first call:
-  get_property(first_time GLOBAL PROPERTY SimpleITK_FIRST_EXPORTED_TARGET)
+  get_property(first_time GLOBAL PROPERTY SimpleITKExplicit_FIRST_EXPORTED_TARGET)
   if(NOT first_time)
     file(REMOVE ${CMAKE_BINARY_DIR}/SimpleITKTargets.cmake)
-    set_property(GLOBAL PROPERTY SimpleITK_FIRST_EXPORTED_TARGET 1)
+    set_property(GLOBAL PROPERTY SimpleITKExplicit_FIRST_EXPORTED_TARGET 1)
   endif()
 
   set_property(TARGET ${tgt} PROPERTY VERSION 1)
@@ -77,9 +77,9 @@ function(sitk_install_exported_target tgt)
 
   install(TARGETS ${tgt}
     EXPORT SimpleITKExplicit
-    RUNTIME DESTINATION ${SimpleITK_INSTALL_RUNTIME_DIR}
-    LIBRARY DESTINATION ${SimpleITK_INSTALL_LIBRARY_DIR}
-    ARCHIVE DESTINATION ${SimpleITK_INSTALL_ARCHIVE_DIR}
+    RUNTIME DESTINATION ${SimpleITKExplicit_INSTALL_RUNTIME_DIR}
+    LIBRARY DESTINATION ${SimpleITKExplicit_INSTALL_LIBRARY_DIR}
+    ARCHIVE DESTINATION ${SimpleITKExplicit_INSTALL_ARCHIVE_DIR}
     )
 endfunction()
 
@@ -87,12 +87,12 @@ set(install_dir "bin")
 set(lib_install_dir "lib")
 if(WIN32)
     set(install_dir ".")
-    set(lib_install_dir "")
+    set(lib_install_dir ".")
 endif()
 
-set(SimpleITK_INSTALL_RUNTIME_DIR "${install_dir}")
-set(SimpleITK_INSTALL_LIBRARY_DIR "${lib_install_dir}")
-set(SimpleITK_INSTALL_ARCHIVE_DIR "${lib_install_dir}")
+set(SimpleITKExplicit_INSTALL_RUNTIME_DIR "${install_dir}")
+set(SimpleITKExplicit_INSTALL_LIBRARY_DIR "${lib_install_dir}")
+set(SimpleITKExplicit_INSTALL_ARCHIVE_DIR "${lib_install_dir}")
 
 
 include_directories( ${SimpleITKExplicit_SOURCE_DIR}/Explicit/include)
