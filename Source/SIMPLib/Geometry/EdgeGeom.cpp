@@ -78,8 +78,66 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "SIMPLib/Geometry/EdgeGeom.h"
 
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#include <tbb/parallel_for.h>
+#include <tbb/blocked_range.h>
+#include <tbb/partitioner.h>
+#include <tbb/task_scheduler_init.h>
+#endif
+
 #include "SIMPLib/Geometry/GeometryHelpers.hpp"
 #include "SIMPLib/Geometry/DerivativeHelpers.h"
+
+/**
+ * @brief The FindEdgeDerivativesImpl class implements a threaded algorithm that computes the
+ * derivative of an arbitrary dimensional field on the underlying edges
+ */
+class FindEdgeDerivativesImpl
+{
+  public:
+    FindEdgeDerivativesImpl(EdgeGeom* edges, DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivs) :
+      m_Edges(edges),
+      m_Field(field),
+      m_Derivatives(derivs)
+    {}
+    virtual ~FindEdgeDerivativesImpl() {}
+
+    void compute(int64_t start, int64_t end) const
+    {
+      int32_t cDims = m_Field->getNumberOfComponents();
+      double* fieldPtr = m_Field->getPointer(0);
+      double* derivsPtr = m_Derivatives->getPointer(0);
+      double values[2] = { 0.0, 0.0 };
+      double derivs[3] = { 0.0, 0.0, 0.0 };
+      int64_t verts[2] = { 0, 0 };
+      for (int64_t i = start; i < end; i++)
+      {
+        m_Edges->getVertsAtEdge(i, verts);
+        for (int32_t j = 0; j < cDims; j++)
+        {
+          for (size_t k = 0; k < 2; k++)
+          {
+            values[k] = fieldPtr[cDims * verts[k] + j];
+          }
+          DerivativeHelpers::EdgeDeriv()(m_Edges, i, values, derivs);
+          derivsPtr[i * 3 * cDims + j * 3] = derivs[0];
+          derivsPtr[i * 3 * cDims + j * 3 + 1] = derivs[1];
+          derivsPtr[i * 3 * cDims + j * 3 + 2] = derivs[2];
+        }
+      }
+    }
+
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+    void operator()(const tbb::blocked_range<int64_t>& r) const
+    {
+      compute(r.begin(), r.end());
+    }
+#endif
+  private:
+    EdgeGeom* m_Edges;
+    DoubleArrayType::Pointer m_Field;
+    DoubleArrayType::Pointer m_Derivatives;
+};
 
 // -----------------------------------------------------------------------------
 //
@@ -325,8 +383,9 @@ void EdgeGeom::getParametricCenter(double pCoords[3])
 void EdgeGeom::getShapeFunctions(double pCoords[3], double* shape)
 {
   (void)pCoords;
+
   shape[0] = -1.0;
-  shape[1] = 1;
+  shape[1] = 1.0;
 }
 
 // -----------------------------------------------------------------------------
@@ -335,26 +394,23 @@ void EdgeGeom::getShapeFunctions(double pCoords[3], double* shape)
 void EdgeGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives)
 {
   int64_t numEdges = getNumberOfEdges();
-  int cDims = field->getNumberOfComponents();
-  double* fieldPtr = field->getPointer(0);
-  double* derivsPtr = derivatives->getPointer(0);
-  double values[2];
-  double derivs[3];
-  int64_t verts[2];
-  for (int64_t i = 0; i < numEdges; i++)
+
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+  tbb::task_scheduler_init init;
+  bool doParallel = true;
+#endif
+
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+  if (doParallel == true)
   {
-    getVertsAtEdge(i, verts);
-    for (int j = 0; j < cDims; j++)
-    {
-      for (size_t k = 0; k < 2; k++)
-      {
-        values[k] = fieldPtr[cDims * verts[k] + j];
-      }
-      DerivativeHelpers::EdgeDeriv()(this, i, values, derivs);
-      derivsPtr[i * 3 * cDims + j * 3] = derivs[0];
-      derivsPtr[i * 3 * cDims + j * 3 + 1] = derivs[1];
-      derivsPtr[i * 3 * cDims + j * 3 + 2] = derivs[2];
-    }
+    tbb::parallel_for(tbb::blocked_range<int64_t>(0, numEdges),
+                      FindEdgeDerivativesImpl(this, field, derivatives), tbb::auto_partitioner());
+  }
+  else
+#endif
+  {
+    FindEdgeDerivativesImpl serial(this, field, derivatives);
+    serial.compute(0, numEdges);
   }
 }
 
