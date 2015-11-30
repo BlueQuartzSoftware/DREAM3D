@@ -197,8 +197,9 @@ int JsonFilterParametersWriter::closeFilterGroup()
 int JsonFilterParametersWriter::writeValue(const QString name, const QString value)
 {
   int err = 0;
-
-  m_CurrentFilterIndex[name] = value;
+  QString repl = value;
+  repl.replace("\\", QString("/"));
+  m_CurrentFilterIndex[name] = repl;
 
   return err;
 }
@@ -214,6 +215,8 @@ int JsonFilterParametersWriter::writeValue(const QString name, const QVector<QSt
 
   foreach(QString str, value)
   {
+    QString repl = str;
+    repl.replace("\\", QString("/"));
     jsonArray << QJsonValue(str);
   }
 
