@@ -172,7 +172,7 @@ QString BookmarksToolboxWidget::generateHtmlFilterListFromPipelineFile(QString p
     pipeline = QFilterParametersReader::ReadPipelineFromFile(path, QSettings::IniFormat, NULL);
     filterCount = pipeline->getFilterContainer().size();
   }
-  else if (fi.suffix().compare(".json") == 0)
+  else if (fi.suffix().compare("json") == 0)
   {
     pipeline = JsonFilterParametersReader::ReadPipelineFromFile(path, NULL);
     JsonFilterParametersReader::ReadNameOfPipelineFromFile(path, name, dVers, NULL);
