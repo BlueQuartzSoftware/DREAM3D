@@ -46,6 +46,7 @@
 #include "FilterParameters/ImportASCIIDataFilterParameter.h"
 
 #include "Widgets/ImportASCIIDataWizard/ImportASCIIDataWizard.h"
+#include "Widgets/ImportASCIIDataWizard/DataFormatPage.h"
 #include "Widgets/ImportASCIIDataWizard/AbstractDataParser.hpp"
 #include "Widgets/ImportASCIIDataWizard/ASCIIWizardData.hpp"
 
@@ -123,6 +124,7 @@ void ImportASCIIDataWidget::setupGui()
     fileImportedLabel->hide();
     warningLabel->hide();
     removeFileBtn->hide();
+    editHeadersBtn->hide();
     tupleCountLabel->hide();
     tupleCount->hide();
     tupleDimsLabel->hide();
@@ -297,10 +299,27 @@ void ImportASCIIDataWidget::on_importFileBtn_pressed()
       fileImportedLabel->show();
       warningLabel->show();
       removeFileBtn->show();
+      editHeadersBtn->show();
       tupleCountLabel->show();
       tupleCount->show();
       tupleDimsLabel->show();
       tupleDims->show();
+      emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ImportASCIIDataWidget::on_editHeadersBtn_pressed()
+{
+  if (NULL != m_ImportWizard)
+  {
+    DataFormatPage* dataFrmtPg = dynamic_cast<DataFormatPage*>(m_ImportWizard->page(ImportASCIIDataWizard::DataFormat));
+    if (NULL != dataFrmtPg)
+    {
+      dataFrmtPg->launchEditHeadersDialog();
       emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
     }
   }
@@ -317,6 +336,7 @@ void ImportASCIIDataWidget::on_removeFileBtn_pressed()
   fileImportedLabel->hide();
   warningLabel->hide();
   removeFileBtn->hide();
+  editHeadersBtn->hide();
   tupleCount->hide();
   tupleCountLabel->hide();
   tupleDims->hide();

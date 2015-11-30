@@ -178,6 +178,23 @@ void ImportASCIIData::dataCheck()
     return;
   }
 
+  QStringList amArrays = am->getAttributeArrayNames();
+  for (int i = 0; i < amArrays.size(); i++)
+  {
+    QString amArrayName = amArrays[i];
+    for (int j = 0; j < headers.size(); j++)
+    {
+      QString headerName = headers[j];
+      if (amArrayName == headerName)
+      {
+        QString ss = "The header name \"" + headerName + "\" matches an array name that already exists in the selected attribute matrix.";
+        setErrorCondition(DUPLICATE_NAMES);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return;
+      }
+    }
+  }
+
   // Create the arrays
   QList<AbstractDataParser::Pointer> dataParsers;
   for (int i = 0; i < dataTypes.size(); i++)

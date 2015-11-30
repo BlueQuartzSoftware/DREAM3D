@@ -73,6 +73,7 @@ class ImportASCIIDataWidget : public FilterParameterWidget, private Ui::ImportAS
 
   protected slots:
     void on_importFileBtn_pressed();
+    void on_editHeadersBtn_pressed();
     void on_removeFileBtn_pressed();
 
   signals:

@@ -37,7 +37,8 @@ class ImportASCIIData : public AbstractFilter
       EMPTY_ATTR_MATRIX = -101,
       INCONSISTENT_TUPLES = -102,
       INCONSISTENT_COLS = -103,
-      CONVERSION_FAILURE = -104
+      CONVERSION_FAILURE = -104,
+      DUPLICATE_NAMES = -105
     };
 
     /**

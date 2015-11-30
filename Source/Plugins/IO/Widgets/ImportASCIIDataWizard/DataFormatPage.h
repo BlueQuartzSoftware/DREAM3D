@@ -72,6 +72,11 @@ class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
     virtual void refreshModel();
 
     /**
+    * @brief Launches the "Edit Headers" dialog
+    */
+    void launchEditHeadersDialog();
+
+    /**
     * @brief Controls which page to navigate to after the user clicks "Next" button
     */
     virtual int nextId() const;
