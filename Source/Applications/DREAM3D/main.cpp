@@ -76,16 +76,17 @@ int main(int argc, char* argv[])
   qDebug() << "        cwd: " << cwd;
 #endif
 
-  QCoreApplication::setApplicationName("DREAM3D_V6");
+  DREAM3DApplication qtapp(argc, argv);
+
   QCoreApplication::setOrganizationDomain("bluequartz.net");
   QCoreApplication::setOrganizationName("BlueQuartz Software");
-  QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
-
-  DREAM3DApplication qtapp(argc, argv);
+  QCoreApplication::setApplicationName("DREAM3D");
 
 #if defined (Q_OS_MAC)
   dream3dApp->setQuitOnLastWindowClosed(false);
 #endif
+
+  QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 
   setlocale(LC_NUMERIC, "C");
 

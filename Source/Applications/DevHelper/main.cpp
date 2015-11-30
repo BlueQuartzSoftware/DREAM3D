@@ -40,12 +40,18 @@
 
 int main(int argc, char* argv[])
 {
-  QCoreApplication::setApplicationName("DREAM3D_V5");
-  QCoreApplication::setOrganizationDomain("bluequartz.net");
-  QCoreApplication::setOrganizationName("BlueQuartz Software");
-  QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 
   QApplication app(argc, argv);
+
+  QCoreApplication::setOrganizationDomain("bluequartz.net");
+  QCoreApplication::setOrganizationName("BlueQuartz Software");
+  QCoreApplication::setApplicationName("DevHelper");
+
+#if defined (Q_OS_MAC)
+  app.setQuitOnLastWindowClosed( true );
+#endif
+
+  QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 
   DevHelper* helper = new DevHelper;
   helper->show();
