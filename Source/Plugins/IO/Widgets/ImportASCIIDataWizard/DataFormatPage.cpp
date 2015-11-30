@@ -108,7 +108,6 @@ void DataFormatPage::setupGui()
   
   lineNumErrLabel->hide();
   tupleTableErrLabel->hide();
-  arrayErrLabel->hide();
 }
 
 // -----------------------------------------------------------------------------
@@ -130,6 +129,17 @@ void DataFormatPage::showEvent(QShowEvent* event)
 
   QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, delimiters, isFixedWidth, consecutiveDelimiters);
   ImportASCIIDataWizard::InsertTokenizedLines(tokenizedLines, startRowSpin->value());
+
+  for (int i = 0; i < model->columnCount(); i++)
+  {
+    if (model->headerData(i, Qt::Horizontal, Qt::DisplayRole).toString().isEmpty() == true)
+    {
+      model->setColumnHasErrors(i, true);
+      arrayErrLabel->setText("Column headers cannot be empty.");
+      arrayErrLabel->show();
+      wizard()->button(QWizard::FinishButton)->setDisabled(true);
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -282,11 +292,18 @@ void DataFormatPage::on_editHeadersBtn_clicked()
     QVector<QString> headers = m_EditHeadersDialog->getHeaders();
 
     bool hasSlashes = false;
+    bool hasDuplicates = false;
+    bool isEmpty = false;
     for (int i = 0; i < headers.size(); i++)
     {
       QString header = headers[i];
 
-      if (header.contains('/') || header.contains('\\'))
+      if (header.isEmpty() == true)
+      {
+        isEmpty = true;
+        model->setColumnHasErrors(i, true);
+      }
+      else if (header.contains('/') || header.contains('\\'))
       {
         hasSlashes = true;
         model->setColumnHasErrors(i, true);
@@ -296,12 +313,41 @@ void DataFormatPage::on_editHeadersBtn_clicked()
         model->setColumnHasErrors(i, false);
       }
 
+      for (int j = 0; j < headers.size(); j++)
+      {
+        QString otherHeader = headers[j];
+
+        if (i != j && header.isEmpty() == false && otherHeader.isEmpty() == false && header == otherHeader)
+        {
+          hasDuplicates = true;
+          model->setColumnHasErrors(i, true);
+          model->setColumnHasErrors(j, true);
+        }
+        else if (hasDuplicates == false && isEmpty == false && hasSlashes == false)
+        {
+          model->setColumnHasErrors(i, false);
+          model->setColumnHasErrors(j, false);
+        }
+      }
+
       model->setHeaderData(i, Qt::Horizontal, header, Qt::DisplayRole);
     }
 
-    if (hasSlashes == true)
+    if (isEmpty == true)
+    {
+      arrayErrLabel->setText("Column headers cannot be empty.");
+      arrayErrLabel->show();
+      wizard()->button(QWizard::FinishButton)->setDisabled(true);
+    }
+    else if (hasSlashes == true)
     {
       arrayErrLabel->setText("Column headers cannot contain slashes.");
+      arrayErrLabel->show();
+      wizard()->button(QWizard::FinishButton)->setDisabled(true);
+    }
+    else if (hasDuplicates == true)
+    {
+      arrayErrLabel->setText("Column headers cannot have the same name.");
       arrayErrLabel->show();
       wizard()->button(QWizard::FinishButton)->setDisabled(true);
     }
