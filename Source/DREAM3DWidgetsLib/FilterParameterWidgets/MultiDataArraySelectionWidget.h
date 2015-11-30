@@ -42,10 +42,9 @@
 
 #include "QtSupportLib/FaderWidget.h"
 
-
-#include "SIMPLib/DataContainers/DataArrayPath.h"
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataContainers/DataContainerArrayProxy.h"
-#include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
+
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
@@ -53,8 +52,9 @@
 
 #include "DREAM3DWidgetsLib/ui_MultiDataArraySelectionWidget.h"
 
-class AbstractFilter;
 class FilterParameter;
+class AbstractFilter;
+class MultiDataArraySelectionFilterParameter;
 
 /**
 * @brief

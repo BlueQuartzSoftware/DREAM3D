@@ -77,6 +77,9 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "SIMPLib/Geometry/ImageGeom.h"
 
+#include "H5Support/H5Lite.h"
+#include "SIMPLib/HDF5/VTKH5Constants.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -707,7 +710,7 @@ int ImageGeom::writeGeometryToHDF5(hid_t parentId, bool SIMPL_NOT_USED(writeXdmf
     return err;
   }
 
-  err |= H5Gclose(parentId);
+  err = H5Gclose(parentId);
 
   return err;
 }

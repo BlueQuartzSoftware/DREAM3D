@@ -35,6 +35,9 @@
 
 #include "DataContainerReaderWidget.h"
 
+#include <assert.h>
+
+
 #include <QtCore/QMetaProperty>
 #include <QtCore/QDir>
 #include <QtCore/QFile>

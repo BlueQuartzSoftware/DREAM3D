@@ -37,6 +37,8 @@
 #define _GenericExample_H_
 
 #include <QtCore/QString>
+// Needed for AxisAngle_t
+#include "EbsdLib/EbsdConstants.h"
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

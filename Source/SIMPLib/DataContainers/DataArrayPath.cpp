@@ -35,6 +35,8 @@
 
 #include "DataArrayPath.h"
 
+#include <QtCore/QJsonObject>
+
 #include "SIMPLib/Common/Constants.h"
 
 #include "moc_DataArrayPath.cpp"

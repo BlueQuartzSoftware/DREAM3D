@@ -33,3 +33,16 @@ add_library ( SimpleITKExplicit ${SimpleITKExplicit_FORCE_LIBRARY_TYPE} ${Simple
 target_link_libraries ( SimpleITKExplicit ${ITK_LIBRARIES} )
 #set_target_properties( SimpleITKExplicit PROPERTIES SKIP_BUILD_RPATH TRUE )
 sitk_install_exported_target( SimpleITKExplicit )
+
+LibraryProperties( SimpleITKExplicit  ${EXE_DEBUG_EXTENSION} )
+
+
+if(BUILD_SHARED_LIBS AND NOT APPLE)
+    INSTALL(TARGETS SimpleITKExplicit
+        COMPONENT Applications
+        RUNTIME DESTINATION ${install_dir}
+        LIBRARY DESTINATION ${lib_install_dir}
+        ARCHIVE DESTINATION ${lib_install_dir}
+        BUNDLE DESTINATION "."
+    )
+endif()

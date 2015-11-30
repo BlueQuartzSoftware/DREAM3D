@@ -34,6 +34,10 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "DREAM3DApplication.h"
 
+#if ! defined(_MSC_VER)
+#include <unistd.h>
+#endif
+
 #include <iostream>
 
 #include <QtCore/QTime>

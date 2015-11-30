@@ -38,11 +38,16 @@
 #include <QtCore/QVector>
 #include <QtCore/QDataStream>
 
+// Need EbsdConstants for AxisAngleInput_t
+#include "EbsdLib/EbsdConstants.h"
+
 #include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/FilterParameters/PhaseTypeSelectionFilterParameter.h"
 #include "SIMPLib/Common/PipelineMessage.h"
 #include "SIMPLib/Common/ComparisonInputs.h"
 #include "SIMPLib/DataContainers/DataArrayPath.h"
+#include "SIMPLib/DataContainers/DataContainerArrayProxy.h"
 
 // These Streams need to be implemented so that our 3 Element Vectors can be read/write to disk/prefs files
 QDataStream& operator<<( QDataStream& out, const IntVec3_t& v)

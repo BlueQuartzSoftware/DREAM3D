@@ -36,13 +36,10 @@
 #ifndef _TriangleGeom_H_
 #define _TriangleGeom_H_
 
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Geometry/IGeometry.h"
 #include "SIMPLib/Geometry/IGeometry2D.h"
-#include "SIMPLib/Geometry/GeometryHelpers.hpp"
-#include "SIMPLib/Geometry/DerivativeHelpers.h"
+
+
 
 /**
  * @brief The TriangleGeom class represents a collection of triangles

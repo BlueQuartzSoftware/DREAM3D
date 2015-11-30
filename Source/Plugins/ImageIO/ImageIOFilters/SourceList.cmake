@@ -13,6 +13,7 @@ START_FILTER_GROUP(${ImageIO_BINARY_DIR} "${_filterGroupName}" "Image Import Fil
 
 set(_PublicFilters
   ImportImageStack
+  ImportVectorImageStack
   WriteImages
 )
 
@@ -31,7 +32,7 @@ endforeach()
 # This is the list of Private Filters. These filters are available from other filters but the user will not
 # be able to use them from the DREAM3D user interface.
 set(_PrivateFilters
-  ImportVectorImageStack
+
 )
 
 #-----------------

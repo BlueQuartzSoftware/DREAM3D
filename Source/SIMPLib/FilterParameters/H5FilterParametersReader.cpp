@@ -48,6 +48,7 @@
 #include "SIMPLib/Common/FilterFactory.hpp"
 
 #include "SIMPLib/FilterParameters/H5FilterParametersConstants.h"
+#include "SIMPLib/Common/Constants.h"
 
 
 // -----------------------------------------------------------------------------

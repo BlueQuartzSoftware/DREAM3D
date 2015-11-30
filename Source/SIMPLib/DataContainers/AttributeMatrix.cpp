@@ -45,6 +45,7 @@
 //HDF5 Includes
 #include "H5Support/QH5Utilities.h"
 #include "H5Support/QH5Lite.h"
+#include "H5Support/HDF5ScopedFileSentinel.h"
 
 // EbsdLib Includes
 #include "EbsdLib/EbsdConstants.h"
@@ -52,10 +53,11 @@
 // DREAM3D Includes
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Utilities/SIMPLibRandom.h"
-
 #include "SIMPLib/HDF5/VTKH5Constants.h"
 #include "SIMPLib/HDF5/H5DataArrayReader.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
+#include "SIMPLib/DataContainers/AttributeMatrixProxy.h"
+#include "SIMPLib/DataContainers/DataContainerProxy.h"
 
 // -----------------------------------------------------------------------------
 //

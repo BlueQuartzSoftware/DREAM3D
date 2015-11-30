@@ -38,6 +38,7 @@
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataContainers/DataContainerArrayProxy.h"
 
 #include "DevHelper/CodeGenerators/FPCodeGenerator.h"
 

@@ -3,16 +3,18 @@
         "CellAttributeMatrixName": "CellData",
         "CellEnsembleAttributeMatrixName": "CellEnsembleData",
         "DataContainerName": "ImageDataContainer",
-        "FilterVersion": "6.0.1880",
+        "FilterVersion": "0.0.0",
         "Filter_Human_Label": "Read H5EBSD File",
         "Filter_Name": "ReadH5Ebsd",
         "InputFile": "Data/Output/SmallIN100.h5ebsd",
         "RefFrameZDir": 1,
         "SelectedArrayNames": [
             "EulerAngles",
+            "Fit",
+            "SEM Signal",
             "Confidence Index",
-            "Phases",
-            "Image Quality"
+            "Image Quality",
+            "Phases"
         ],
         "UseTransformations": 1,
         "ZEndIndex": 117,
@@ -20,7 +22,7 @@
     },
     "1": {
         "DestinationArrayName": "Mask",
-        "FilterVersion": "6.0.1880",
+        "FilterVersion": "0.0.0",
         "Filter_Human_Label": "Threshold Objects",
         "Filter_Name": "MultiThresholdObjects",
         "SelectedThresholds": [
@@ -41,7 +43,7 @@
         ]
     },
     "2": {
-        "FilterVersion": "6.0.1880",
+        "FilterVersion": "0.0.0",
         "Filter_Human_Label": "Convert Orientation Representation",
         "Filter_Name": "ConvertOrientations",
         "InputOrientationArrayPath": {
@@ -65,7 +67,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.0.1880",
+        "FilterVersion": "0.0.0",
         "Filter_Human_Label": "Align Sections (Misorientation)",
         "Filter_Name": "AlignSectionsMisorientation",
         "GoodVoxelsArrayPath": {
@@ -79,11 +81,35 @@
             "Data Array Name": "Quats",
             "Data Container Name": "ImageDataContainer"
         },
-        "SubtractBackground": 0,
         "UseGoodVoxels": 1,
         "WriteAlignmentShifts": 0
     },
     "4": {
+        "FillHoles": 0,
+        "FilterVersion": "0.0.0",
+        "Filter_Human_Label": "Isolate Largest Feature (Identify Sample)",
+        "Filter_Name": "IdentifySample",
+        "GoodVoxelsArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Mask",
+            "Data Container Name": "ImageDataContainer"
+        }
+    },
+    "5": {
+        "AlignmentShiftFileName": "",
+        "FilterVersion": "0.0.0",
+        "Filter_Human_Label": "Align Sections (Feature Centroid)",
+        "Filter_Name": "AlignSectionsFeatureCentroid",
+        "GoodVoxelsArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Mask",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "ReferenceSlice": 0,
+        "UseReferenceSlice": 1,
+        "WriteAlignmentShifts": 0
+    },
+    "6": {
         "CellEulerAnglesArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "EulerAngles",
@@ -100,7 +126,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.0.1880",
+        "FilterVersion": "0.0.0",
         "Filter_Human_Label": "Generate IPF Colors",
         "Filter_Name": "GenerateIPFColors",
         "GoodVoxelsArrayPath": {
@@ -115,16 +141,16 @@
         },
         "UseGoodVoxels": 1
     },
-    "5": {
-        "FilterVersion": "6.0.1880",
+    "7": {
+        "FilterVersion": "6.3.90",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "OutputFile": "Data/Output/SmallIN100.dream3d",
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {
-        "Name": "(04) SmallIN100 Alignment",
-        "Number_Filters": 6,
-        "Version": "6.0"
+        "Name": "(02) SmallIN100 Alignment",
+        "Number_Filters": 8,
+        "Version": "6.3"
     }
 }

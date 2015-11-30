@@ -32,11 +32,10 @@
 #ifndef _MESHSTRUCTS_H_
 #define _MESHSTRUCTS_H_
 
-#include <vector>
+//Qt Includes
 #include <QtCore/QString>
-#include <set>
-#include <map>
 
+//SIMPLib Includes
 #include "SIMPLib/SIMPLib.h"
 
 

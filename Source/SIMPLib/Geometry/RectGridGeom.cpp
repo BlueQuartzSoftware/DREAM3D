@@ -77,6 +77,11 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "SIMPLib/Geometry/RectGridGeom.h"
 
+#include "H5Support/H5Lite.h"
+
+#include "SIMPLib/HDF5/VTKH5Constants.h"
+#include "SIMPLib/Geometry/GeometryHelpers.hpp"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -100,6 +105,21 @@ RectGridGeom::RectGridGeom()
 // -----------------------------------------------------------------------------
 RectGridGeom::~RectGridGeom()
 {}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+size_t RectGridGeom::getXPoints() {return m_Dimensions[0];}
+size_t RectGridGeom::getYPoints() {return m_Dimensions[1];}
+size_t RectGridGeom::getZPoints() {return m_Dimensions[2];}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FloatArrayType::Pointer RectGridGeom::getXBounds() { return m_xBounds; }
+FloatArrayType::Pointer RectGridGeom::getYBounds() { return m_yBounds; }
+FloatArrayType::Pointer RectGridGeom::getZBounds() { return m_zBounds; }
 
 // -----------------------------------------------------------------------------
 //

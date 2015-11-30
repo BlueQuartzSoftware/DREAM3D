@@ -37,15 +37,15 @@
 
 #include <QtCore/QMetaProperty>
 #include <QtCore/QList>
-
 #include <QtGui/QStandardItemModel>
-
 #include <QtWidgets/QListWidgetItem>
 
 
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 #include "SIMPLib/DataContainers/DataArrayPath.h"
+
+
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"

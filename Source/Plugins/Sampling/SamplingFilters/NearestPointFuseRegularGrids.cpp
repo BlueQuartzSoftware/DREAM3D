@@ -37,6 +37,7 @@
 #include "NearestPointFuseRegularGrids.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/TemplateHelpers.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
@@ -55,9 +56,9 @@
 //
 // -----------------------------------------------------------------------------
 NearestPointFuseRegularGrids::NearestPointFuseRegularGrids() :
-  AbstractFilter(),
-  m_ReferenceCellAttributeMatrixPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
-  m_SamplingCellAttributeMatrixPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, "")
+AbstractFilter(),
+m_ReferenceCellAttributeMatrixPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
+m_SamplingCellAttributeMatrixPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, "")
 {
   setupFilterParameters();
 }
@@ -93,8 +94,8 @@ void NearestPointFuseRegularGrids::setupFilterParameters()
 void NearestPointFuseRegularGrids::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setReferenceCellAttributeMatrixPath( reader->readDataArrayPath("ReferenceCellAttributeMatrixPath", getReferenceCellAttributeMatrixPath() ) );
-  setSamplingCellAttributeMatrixPath( reader->readDataArrayPath("SamplingCellAttributeMatrixPath", getSamplingCellAttributeMatrixPath() ) );
+  setReferenceCellAttributeMatrixPath(reader->readDataArrayPath("ReferenceCellAttributeMatrixPath", getReferenceCellAttributeMatrixPath()));
+  setSamplingCellAttributeMatrixPath(reader->readDataArrayPath("SamplingCellAttributeMatrixPath", getSamplingCellAttributeMatrixPath()));
   reader->closeFilterGroup();
 }
 
@@ -105,9 +106,9 @@ int NearestPointFuseRegularGrids::writeFilterParameters(AbstractFilterParameters
 {
   writer->openFilterGroup(this, index);
   SIMPL_FILTER_WRITE_PARAMETER(FilterVersion)
-  SIMPL_FILTER_WRITE_PARAMETER(ReferenceCellAttributeMatrixPath)
-  SIMPL_FILTER_WRITE_PARAMETER(SamplingCellAttributeMatrixPath)
-  writer->closeFilterGroup();
+    SIMPL_FILTER_WRITE_PARAMETER(ReferenceCellAttributeMatrixPath)
+    SIMPL_FILTER_WRITE_PARAMETER(SamplingCellAttributeMatrixPath)
+    writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -117,24 +118,69 @@ int NearestPointFuseRegularGrids::writeFilterParameters(AbstractFilterParameters
 void NearestPointFuseRegularGrids::dataCheck()
 {
   setErrorCondition(0);
+  DataArrayPath tempPath;
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getReferenceCellAttributeMatrixPath().getDataContainerName());
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getSamplingCellAttributeMatrixPath().getDataContainerName());
 
   AttributeMatrix::Pointer refAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getReferenceCellAttributeMatrixPath(), -301);
   AttributeMatrix::Pointer sampleAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getSamplingCellAttributeMatrixPath(), -301);
-  if(getErrorCondition() < 0) { return; }
+  if (getErrorCondition() < 0) { return; }
 
   // Create arrays on the reference grid to hold data present on the sampling grid
-  QList<QString> voxelArrayNames = sampleAttrMat->getAttributeArrayNames();
-  for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+  QList<QString> sampleArrayNames = sampleAttrMat->getAttributeArrayNames();
+  QList<QString> refArrayNames = refAttrMat->getAttributeArrayNames();
+  for (QList<QString>::iterator iter = sampleArrayNames.begin(); iter != sampleArrayNames.end(); ++iter)
   {
-    IDataArray::Pointer p = sampleAttrMat->getAttributeArray(*iter);
-    // Make a copy of the 'p' array that has the same name. When placed into
-    // the data container this will over write the current array with
-    // the same name. At least in theory
-    IDataArray::Pointer data = p->createNewArray(refAttrMat->getNumTuples(), p->getComponentDimensions(), p->getName());
-    refAttrMat->addAttributeArray(p->getName(), data);
+    tempPath.update(getReferenceCellAttributeMatrixPath().getDataContainerName(), getReferenceCellAttributeMatrixPath().getAttributeMatrixName(), *iter);
+    IDataArray::Pointer tmpDataArray = sampleAttrMat->getPrereqIDataArray<IDataArray, AbstractFilter>(this, *iter, -90001);
+    if (getErrorCondition() >= 0)
+    {
+      if (refArrayNames.contains(*iter) == true)
+      {
+        QString ss = QObject::tr("There is already an attribute array with the name %1 in the reference attribute matrix").arg(*iter);
+        setErrorCondition(-5559);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      }
+      else
+      {
+        QVector<size_t> cDims = tmpDataArray->getComponentDimensions();
+        TemplateHelpers::CreateNonPrereqArrayFromArrayType()(this, tempPath, cDims, tmpDataArray);
+      }
+    }
+  }
+
+  // Get the list of all attribute matrices in the sampling data container and add them to the reference data container if they are feature or ensemble type
+  DataContainer::Pointer mR = getDataContainerArray()->getDataContainer(getReferenceCellAttributeMatrixPath().getDataContainerName());
+  DataContainer::Pointer mS = getDataContainerArray()->getDataContainer(getSamplingCellAttributeMatrixPath().getDataContainerName());
+  QList<QString> m_AttrMatList = mS->getAttributeMatrixNames();
+  uint32_t tempAttrMatType = 0;
+
+  QList<QString> refAttrMatNames = mR->getAttributeMatrixNames();
+
+  // Loop through all the attribute matrices in the sampling data container
+  // We are only copying feature/ensemble attribute matrices here with a deep copy.
+  for (QList<QString>::Iterator it = m_AttrMatList.begin(); it != m_AttrMatList.end(); ++it)
+  {
+    AttributeMatrix::Pointer tmpAttrMat = mS->getPrereqAttributeMatrix<AbstractFilter>(this, *it, -301);
+    if (getErrorCondition() >= 0)
+    {
+      tempAttrMatType = tmpAttrMat->getType();
+      if (tempAttrMatType > DREAM3D::AttributeMatrixType::Cell)
+      {
+        if (refAttrMatNames.contains(tmpAttrMat->getName()) == true)
+        {
+          QString ss = QObject::tr("There is already an attribute matrix with the name %1 in the reference data container").arg(tmpAttrMat->getName());
+          setErrorCondition(-5559);
+          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        }
+        else
+        {
+          AttributeMatrix::Pointer attrMat = tmpAttrMat->deepCopy();
+          mR->addAttributeMatrix(*it, attrMat);
+        }
+      }
+    }
   }
 }
 
@@ -158,7 +204,7 @@ void NearestPointFuseRegularGrids::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if (getErrorCondition() < 0) { return; }
 
   DataContainer::Pointer refDC = getDataContainerArray()->getDataContainer(m_ReferenceCellAttributeMatrixPath.getDataContainerName());
   DataContainer::Pointer sampleDC = getDataContainerArray()->getDataContainer(m_SamplingCellAttributeMatrixPath.getDataContainerName());
@@ -229,7 +275,7 @@ void NearestPointFuseRegularGrids::execute()
     refAttrMat->addAttributeArray(p->getName(), data);
   }
 
-  bool outside  = false;
+  bool outside = false;
   for (int64_t i = 0; i < refDims[2]; i++)
   {
     planeComp = i * refDims[0] * refDims[1];
@@ -282,7 +328,7 @@ void NearestPointFuseRegularGrids::execute()
 AbstractFilter::Pointer NearestPointFuseRegularGrids::newFilterInstance(bool copyFilterParameters)
 {
   NearestPointFuseRegularGrids::Pointer filter = NearestPointFuseRegularGrids::New();
-  if(true == copyFilterParameters)
+  if (true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }
@@ -293,22 +339,30 @@ AbstractFilter::Pointer NearestPointFuseRegularGrids::newFilterInstance(bool cop
 //
 // -----------------------------------------------------------------------------
 const QString NearestPointFuseRegularGrids::getCompiledLibraryName()
-{ return SamplingConstants::SamplingBaseName; }
+{
+  return SamplingConstants::SamplingBaseName;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString NearestPointFuseRegularGrids::getGroupName()
-{ return DREAM3D::FilterGroups::SamplingFilters; }
+{
+  return DREAM3D::FilterGroups::SamplingFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString NearestPointFuseRegularGrids::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::ResolutionFilters; }
+{
+  return DREAM3D::FilterSubGroups::ResolutionFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString NearestPointFuseRegularGrids::getHumanLabel()
-{ return "Fuse Regular Grids (Nearest Point)"; }
+{
+  return "Fuse Regular Grids (Nearest Point)";
+}

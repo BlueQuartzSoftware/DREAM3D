@@ -43,6 +43,7 @@
 #include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/Common/FilterFactory.hpp"
 #include "SIMPLib/CoreFilters/EmptyFilter.h"
+#include "SIMPLib/Common/Constants.h"
 
 
 // -----------------------------------------------------------------------------
@@ -262,7 +263,7 @@ QVector<QString> QFilterParametersReader::readStrings(const QString name, QVecto
 // -----------------------------------------------------------------------------
 QStringList QFilterParametersReader::readStringList(const QString name, QStringList value)
 {
-  BOOST_ASSERT(m_Prefs != NULL);
+  Q_ASSERT(m_Prefs != NULL);
   if (m_Prefs->contains(name) == false)
   {
     return value;

@@ -284,7 +284,7 @@ void DSplashScreen::drawContents(QPainter* painter)
   Q_D(DSplashScreen);
   painter->setPen(d->currColor);
   QRect r = rect();
-  r = rect().adjusted(50, r.height() / 1.5, 0, 0);
+  r = rect().adjusted(r.width() * .4054, r.height() * .6765, 0, 0);
 
 //  if (Qt::mightBeRichText(d->currStatus))
 //  {
@@ -307,6 +307,9 @@ void DSplashScreen::drawContents(QPainter* painter)
 //  }
 //  else
   {
+    painter->setBrush(QBrush(QColor(255, 255, 255, 255)));
+    QPen penHText(QColor("#FFFFFF"));
+    painter->setPen(penHText);
     painter->drawText(r, d->currAlign, d->currStatus);
   }
 }

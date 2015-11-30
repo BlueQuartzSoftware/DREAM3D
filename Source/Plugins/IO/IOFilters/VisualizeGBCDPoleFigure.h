@@ -37,6 +37,9 @@
 #ifndef _VisualizeGBCDPoleFigure_H_
 #define _VisualizeGBCDPoleFigure_H_
 
+// Needed for AxisAngle_t
+#include "EbsdLib/EbsdConstants.h"
+
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"

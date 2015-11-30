@@ -34,60 +34,62 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _SPParksTextReader_H_
-#define _SPParksTextReader_H_
-
-#include <QtCore/QFile>
-
-// Needed for AxisAngle_t
-#include "EbsdLib/EbsdConstants.h"
-#include "EbsdLib/HKL/DataParser.hpp"
+#ifndef _CombineAttributeMatrices_H_
+#define _CombineAttributeMatrices_H_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/CoreFilters/FileReader.h"
-#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 
 /**
- * @brief The SPParksTextReader class. See [Filter documentation](@ref spparkstextreader) for details.
+ * @brief The CombineAttributeMatrices class. See [Filter documentation](@ref CombineAttributeMatrices) for details.
  */
-class SPParksTextReader : public FileReader
+class SIMPLib_EXPORT CombineAttributeMatrices : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
-
   public:
-    SIMPL_SHARED_POINTERS(SPParksTextReader)
-    SIMPL_STATIC_NEW_MACRO(SPParksTextReader)
-    SIMPL_TYPE_MACRO_SUPER(SPParksTextReader, FileReader)
+    SIMPL_SHARED_POINTERS(CombineAttributeMatrices)
+    SIMPL_STATIC_NEW_MACRO(CombineAttributeMatrices)
+    SIMPL_TYPE_MACRO_SUPER(CombineAttributeMatrices, AbstractFilter)
 
-    virtual ~SPParksTextReader();
+    virtual ~CombineAttributeMatrices();
 
-    SIMPL_FILTER_PARAMETER(QString, VolumeDataContainerName)
-    Q_PROPERTY(QString VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FirstAttributeMatrixPath)
+    Q_PROPERTY(DataArrayPath FirstAttributeMatrixPath READ getFirstAttributeMatrixPath WRITE setFirstAttributeMatrixPath)
 
-    SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-    Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SecondAttributeMatrixPath)
+    Q_PROPERTY(DataArrayPath SecondAttributeMatrixPath READ getSecondAttributeMatrixPath WRITE setSecondAttributeMatrixPath)
 
-    SIMPL_FILTER_PARAMETER(QString, InputFile)
-    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, FirstIndexArrayPath)
+    Q_PROPERTY(DataArrayPath FirstIndexArrayPath READ getFirstIndexArrayPath WRITE setFirstIndexArrayPath)
 
-    SIMPL_FILTER_PARAMETER(FloatVec3_t, Origin)
-    Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SecondIndexArrayPath)
+    Q_PROPERTY(DataArrayPath SecondIndexArrayPath READ getSecondIndexArrayPath WRITE setSecondIndexArrayPath)
 
-    SIMPL_FILTER_PARAMETER(FloatVec3_t, Resolution)
-    Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
+    SIMPL_FILTER_PARAMETER(QString, CombinedAttributeMatrixName)
+    Q_PROPERTY(QString CombinedAttributeMatrixName READ getCombinedAttributeMatrixName WRITE setCombinedAttributeMatrixName)
 
-    SIMPL_FILTER_PARAMETER(bool, OneBasedArrays)
-    Q_PROPERTY(bool OneBasedArrays READ getOneBasedArrays WRITE setOneBasedArrays)
-
-    SIMPL_FILTER_PARAMETER(QString, FeatureIdsArrayName)
-    Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
+    SIMPL_FILTER_PARAMETER(QString, NewIndexArrayName)
+    Q_PROPERTY(QString NewIndexArrayName READ getNewIndexArrayName WRITE setNewIndexArrayName)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */
     virtual const QString getCompiledLibraryName();
+
+    /**
+     * @brief getBrandingString Returns the branding string for the filter, which is a tag
+     * used to denote the filter's association with specific plugins
+     * @return Branding string
+    */
+    virtual const QString getBrandingString();
+
+    /**
+     * @brief getFilterVersion Returns a version string for this filter. Default
+     * value is an empty string.
+     * @return
+     */
+    virtual const QString getFilterVersion();
 
     /**
      * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -111,7 +113,7 @@ class SPParksTextReader : public FileReader
 
     /**
      * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
+    */
     virtual void setupFilterParameters();
 
     /**
@@ -130,64 +132,54 @@ class SPParksTextReader : public FileReader
     virtual void execute();
 
     /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
+     * @brief preflight Reimplemented from @see AbstractFilter class
+     */
     virtual void preflight();
 
+  signals:
+    /**
+     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+     * be pushed from a user-facing control (such as a widget)
+     * @param filter Filter instance pointer
+     */
+    void updateFilterParameters(AbstractFilter* filter);
+
+    /**
+     * @brief parametersChanged Emitted when any Filter parameter is changed internally
+     */
+    void parametersChanged();
+
+    /**
+     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+     */
+    void preflightAboutToExecute();
+
+    /**
+     * @brief preflightExecuted Emitted just after calling dataCheck()
+     */
+    void preflightExecuted();
+
   protected:
-    SPParksTextReader();
+    CombineAttributeMatrices();
 
     /**
-     * @brief readHeader Reimplemented from @see FileReader class
-     */
-    virtual int32_t readHeader();
-
-    /**
-     * @brief readFile Reimplemented from @see FileReader class
-     */
-    virtual int32_t readFile();
-
-    /**
-     * @brief readFile Reimplemented from @see FileReader class
+     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
 
     /**
-     * @brief updateCellInstancePointers Updates raw cell pointers
+     * @brief updateFeatureInstancePointers Updates raw feature pointers
      */
-    void updateCellInstancePointers();
-
-    /**
-     * @brief getPointerType Returns the enumeration type of the incoming data
-     * @param featureName Name of incoming data
-     * @return Enumeration type
-     */
-    Ebsd::NumType getPointerType(const QString& featureName);
-
-    /**
-     * @brief getTypeSize Returns the size in bytes of the incoming data
-     * @param featureName Name of incoming data
-     * @return Integer number of bytes
-     */
-    int32_t getTypeSize(const QString& featureName);
-
-    /**
-     * @brief parseDataLine Reads a line of data from the .dump file
-     * @param line Line of data to read
-     * @param dims Dimensional offset
-     * @param xCol X coordinate
-     * @param yCol Y coordinate
-     * @param zCol Z coordinate
-     */
-    void parseDataLine(QByteArray& line, QVector<size_t> dims, int64_t xCol, int64_t yCol, int64_t zCol);
+    void updateFeatureInstancePointers();
 
   private:
-    size_t m_Dims[3];
-    QFile m_InStream;
-    QMap<QString, DataParser::Pointer> m_NamePointerMap;
+    DEFINE_DATAARRAY_VARIABLE(int32_t, FirstIndex)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, SecondIndex)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, NewIndex)
 
-    SPParksTextReader(const SPParksTextReader&); // Copy Constructor Not Implemented
-    void operator=(const SPParksTextReader&); // Operator '=' Not Implemented
+
+    CombineAttributeMatrices(const CombineAttributeMatrices&); // Copy Constructor Not Implemented
+    void operator=(const CombineAttributeMatrices&); // Operator '=' Not Implemented
 };
 
-#endif /* _SPParksTextReader_H_ */
+#endif /* _CombineAttributeMatrices_H_ */

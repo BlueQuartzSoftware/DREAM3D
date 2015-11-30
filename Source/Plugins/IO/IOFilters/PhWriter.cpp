@@ -35,6 +35,7 @@
 
 
 #include "PhWriter.h"
+#include <fstream>
 
 #include <QtCore/QDir>
 

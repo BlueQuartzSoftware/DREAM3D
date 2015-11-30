@@ -35,6 +35,9 @@
 
 #include "DataContainerArrayProxyWidget.h"
 
+#include <assert.h>
+
+
 #include <QtCore/QMetaProperty>
 #include <QtCore/QItemSelectionModel>
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"

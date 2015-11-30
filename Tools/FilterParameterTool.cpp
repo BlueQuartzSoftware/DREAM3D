@@ -47,14 +47,14 @@
 #include <QtCore/QDebug>
 
 // DREAM3DLib includes
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/SIMPLibVersion.h"
-#include "SIMPLib/Plugin/PluginManager.h"
-#include "SIMPLib/Common/FilterManager.h"
-#include "SIMPLib/Common/FilterFactory.hpp"
+//#include "SIMPLib/SIMPLib.h"
+//#include "SIMPLib/SIMPLibVersion.h"
+//#include "SIMPLib/Plugin/PluginManager.h"
+//#include "SIMPLib/Common/FilterManager.h"
+//#include "SIMPLib/Common/FilterFactory.hpp"
 
-#include "SIMPLib/Plugin/ISIMPLibPlugin.h"
-#include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
+//#include "SIMPLib/Plugin/ISIMPLibPlugin.h"
+//#include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 
 #include "Tools/ToolConfiguration.h"
 
@@ -346,7 +346,7 @@ void fixInitializerList(QStringListIterator& sourceLines, QStringList& outLines,
   outLines.push_back("{");
 }
 
-#if 1
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -777,96 +777,9 @@ bool GroupIncludes( AbstractFilter::Pointer filter, const QString& file)
 }
 #endif
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool AddIGeometryIncludes(const QString& cppFile)
-{
-  QString contents;
-  {
-    // Read the Source File
-    QFileInfo fi(cppFile);
-//    if (fi.baseName().compare("EddyCurrentDataReader") != 0)
-//    {
-//      return false;
-//    }
 
-    QFile source(cppFile);
-    bool isOpen = source.open(QFile::ReadOnly);
-    if(!isOpen)
-    {
-      qDebug() << "FILE OPEN ERROR: " << cppFile;
-      return false;
-    }
-    contents = source.readAll();
-    source.close();
-  }
 
- // qDebug() << cppFile;
-
-  QStringList names;
-  bool didReplace = false;
-  QString outString;
-  QTextStream out(&outString);
-  QString imageGeomInc = "#include \"SIMPLib/Geometry/VertexGeom.h\"";
-  bool hasImageGeomInc = false;
-  QString imageGeomCode = "VertexGeom::Pointer";
-  QString prereqCode = "<VertexGeom>";
-  bool hasImageGeomCode = false;
-
-  QString simplibInc = "#include \"SIMPLib";
-  int simplibLineIndex = 0;
-
-  QVector<QString> outLines;
-  QStringList list = contents.split(QRegExp("\\n"));
-  QStringListIterator sourceLines(list);
-  QString body;
-
-  out << cppFile << "\n";
-
-  int index = 0;
-
-  while (sourceLines.hasNext())
-  {
-    QString line = sourceLines.next();
-    outLines.push_back(line); // Always add the line to the output
-
-    if(line.contains(imageGeomInc) )
-    {
-      hasImageGeomInc = true;
-      out << "    (" << index << ")" << imageGeomInc << "\n";
-    }
-
-    if(line.contains(simplibInc))
-    {
-      if(index > simplibLineIndex) { simplibLineIndex = index; } // This is the last #include "SIMPLib" header.
-    }
-
-    if(line.contains(imageGeomCode) )
-    {
-      hasImageGeomCode = true;
-      out << "    (" << index << ")" << imageGeomCode << "\n";
-    }
-    if(line.contains(prereqCode))
-    {
-      hasImageGeomCode = true;
-      out << "    (" << index << ")" << prereqCode << "\n";
-    }
-
-    index++;
-  }
-
-  if(hasImageGeomCode && !hasImageGeomInc)
-  {
-    qDebug() << outString;
-    outLines.insert(simplibLineIndex + 1, imageGeomInc);
-    didReplace = true;
-  }
-
-  writeOutput(didReplace, outLines, cppFile);
-  return didReplace;
-}
-
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -919,6 +832,7 @@ QString findPath(const QString& groupName, const QString& filtName, const QStrin
   return "NOT FOUND";
 }
 
+#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -1178,7 +1092,95 @@ void ReplaceText(QString absPath)
 
   writeOutput(didReplace, outVec, absPath);
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool AddIGeometryIncludes(const QString& cppFile)
+{
+  QString contents;
+  {
+    // Read the Source File
+    QFileInfo fi(cppFile);
+//    if (fi.baseName().compare("DataArrayCreationFilterParameter") != 0)
+//    {
+//      return false;
+//    }
 
+    QFile source(cppFile);
+    bool isOpen = source.open(QFile::ReadOnly);
+    if(!isOpen)
+    {
+      qDebug() << "FILE OPEN ERROR: " << cppFile;
+      return false;
+    }
+    contents = source.readAll();
+    source.close();
+  }
+
+ // qDebug() << cppFile;
+
+  QStringList names;
+  bool didReplace = false;
+  QString outString;
+  QTextStream out(&outString);
+  QString imageGeomInc = "#include \"SIMPLib/DataContainers/DataContainerArrayProxy.h\"";
+  bool hasImageGeomInc = false;
+  QString imageGeomCode = "DataContainerArrayProxy";
+  //QString prereqCode = "<VertexGeom>";
+  bool hasImageGeomCode = false;
+
+  QString simplibInc = "#include \"SIMPLib";
+  int simplibLineIndex = 0;
+
+  QVector<QString> outLines;
+  QStringList list = contents.split(QRegExp("\\n"));
+  QStringListIterator sourceLines(list);
+  QString body;
+
+  out << cppFile << "\n";
+
+  int index = 0;
+
+  while (sourceLines.hasNext())
+  {
+    QString line = sourceLines.next();
+    outLines.push_back(line); // Always add the line to the output
+
+    if(line.contains(imageGeomInc) )
+    {
+      hasImageGeomInc = true;
+      out << "    (" << index << ")" << imageGeomInc << "\n";
+    }
+
+    if(line.contains(simplibInc))
+    {
+      if(index+1 > simplibLineIndex) { simplibLineIndex = index; } // This is the last #include "SIMPLib" header.
+    }
+
+    if(line.contains(imageGeomCode) )
+    {
+      hasImageGeomCode = true;
+      out << "    (" << index+1 << ")" << imageGeomCode << "\n";
+    }
+//    if(line.contains(prereqCode))
+//    {
+//      hasImageGeomCode = true;
+//      out << "    (" << index << ")" << prereqCode << "\n";
+//    }
+
+    index++;
+  }
+
+  if(hasImageGeomCode && !hasImageGeomInc)
+  {
+    qDebug() << outString;
+    outLines.insert(simplibLineIndex + 1, imageGeomInc);
+    didReplace = true;
+  }
+
+  writeOutput(didReplace, outLines, cppFile);
+  return didReplace;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -1186,7 +1188,7 @@ void ReplaceGrepSearchesRecursively(QDir currentDir)
 {
 
   QStringList filters;
-  filters.append("*.cpp");
+  filters.append("*.h");
 
   if(currentDir.dirName().compare("zRel") == 0 || currentDir.dirName().compare("Build") == 0)
   {
@@ -1207,11 +1209,13 @@ void ReplaceGrepSearchesRecursively(QDir currentDir)
   {
     QString itemFilePath = itemInfo.absoluteFilePath();
    // ReplaceText(itemFilePath);
+    std::cout << "-------------------------------------" << std::endl;
+    std::cout << itemFilePath.toStdString() << std::endl;
     AddIGeometryIncludes(itemFilePath);
   }
 }
 
-
+#if 0
 
 // -----------------------------------------------------------------------------
 //
@@ -1246,7 +1250,7 @@ void GenerateFilterParametersCode()
 }
 
 
-#if 0
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -1291,7 +1295,7 @@ void GenerateMarkDownDocs()
 // -----------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
-  Q_ASSERT(false); // We don't want anyone to run this program.
+  Q_ASSERT(true); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");
@@ -1312,8 +1316,8 @@ int main(int argc, char* argv[])
 //  GenerateMarkDownDocs();
   GenerateFilterParametersCode();
 #else
-  ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() ) );
-  ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins" ) );
+  ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/Source" ) );
+//  ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins" ) );
 
 #endif
   return 0;

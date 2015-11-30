@@ -36,6 +36,8 @@
 
 #include "FindFeatureClustering.h"
 
+#include <fstream>
+
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"

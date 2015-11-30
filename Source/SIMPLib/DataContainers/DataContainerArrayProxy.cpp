@@ -37,12 +37,13 @@
 
 #include <iostream>
 
+#include "SIMPLib/DataArrays/IDataArray.h"
+#include "SIMPLib/DataContainers/DataArrayPath.h"
 #include "SIMPLib/DataContainers/DataContainerProxy.h"
-
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/DataContainers/AttributeMatrix.h"
-#include "SIMPLib/DataArrays/IDataArray.h"
+
 
 // -----------------------------------------------------------------------------
 //

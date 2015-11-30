@@ -37,8 +37,12 @@
 #ifndef _AbstractFilterParametersWriter_H_
 #define _AbstractFilterParametersWriter_H_
 
-#include <QtCore/QString>
 #include <set>
+
+#include <QtCore/QString>
+
+// Needed for AxisAngle_t
+#include "EbsdLib/EbsdConstants.h"
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"

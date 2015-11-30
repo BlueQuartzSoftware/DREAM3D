@@ -143,7 +143,7 @@ include(${SIMPLib_SOURCE_DIR}/CoreFilters/SourceList.cmake)
 option(SIMPLib_BUILD_TEST_FILTERS "Build the Test filters: These should be OFF when doing a release" ON)
 if(SIMPLib_BUILD_TEST_FILTERS)
     # set(PluginAutoMocSourceFile ${${PROJECT_NAME}_BINARY_DIR}/TestFilters_automoc_cmake.cpp)
-    # set_source_files_properties( ${PluginAutoMocSourceFile} PROPERTIES GENERATED TRUE)  
+    # set_source_files_properties( ${PluginAutoMocSourceFile} PROPERTIES GENERATED TRUE)
     # Add the generated moc file to the project sources
     set(Project_SRCS ${Project_SRCS} ${PluginAutoMocSourceFile} )
     include(${SIMPLib_SOURCE_DIR}/TestFilters/SourceList.cmake)
@@ -164,9 +164,6 @@ cmpReplaceFileIfDifferent(OLD_FILE_PATH  ${SIMPLib_BINARY_DIR}/RegisterKnownFilt
 include_directories( ${HDF5_INCLUDE_DIR} )
 include_directories( ${PROJECT_CODE_DIR} )
 include_directories( ${SIMPLib_BINARY_DIR} )
-
-# include( ${DREAM3D_SUPPORT_DIR}/ITKSupport/IncludeITK.cmake)
-# include_directories(${ITK_INCLUDE_DIRS})
 
 
 #-- Add a library for the SIMPLib Code

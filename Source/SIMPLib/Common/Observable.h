@@ -38,7 +38,6 @@
 #define _OBSERVABLE_H_
 
 #include <QtCore/QString>
-#include <QtCore/QVector>
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -99,9 +98,6 @@ class SIMPLib_EXPORT Observable : public QObject
     Observable(const Observable&); // Copy Constructor Not Implemented
     void operator=(const Observable&); // Operator '=' Not Implemented
 };
-
-//EXPIMP_TEMPLATE template class SIMPLib_EXPORT QVector<Observer*>;
-
 
 #endif /* OBSERVABLE_H_ */
 

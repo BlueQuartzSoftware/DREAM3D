@@ -36,6 +36,8 @@
 
 #include "SampleSurfaceMeshSpecifiedPoints.h"
 
+#include <fstream>
+
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
