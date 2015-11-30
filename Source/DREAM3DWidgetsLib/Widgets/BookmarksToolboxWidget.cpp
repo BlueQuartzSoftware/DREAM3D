@@ -113,7 +113,7 @@ opacity: 255;\
 }");
   bookmarksTreeView->setStyleSheet(css);
 
-  connect(bookmarksTreeView, SIGNAL(itemWasDropped(QModelIndex, QString&, QIcon, QString, bool, bool, bool)), this, SLOT(addTreeItem(QModelIndex, QString&, QIcon, QString, bool, bool, bool)));
+  connect(bookmarksTreeView, SIGNAL(itemWasDropped(QModelIndex, QString&, QIcon, QString, int, bool, bool, bool)), this, SLOT(addTreeItem(QModelIndex, QString&, QIcon, QString, int, bool, bool, bool)));
 
   bookmarksTreeView->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 }
