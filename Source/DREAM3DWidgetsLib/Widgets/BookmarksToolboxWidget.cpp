@@ -286,11 +286,9 @@ void BookmarksToolboxWidget::readPrebuiltPipelines()
   fileExtension.append("*.ini");
   fileExtension.append("*.json");
 
-  // Need to add the path to the prebuilts directory to the root item since we may use this later on.
-  //prebuiltsLibraryTree->invisibleRootItem()->setData(0, Qt::UserRole, QVariant(pipelinesDir.absolutePath()));
-
   // Add top-level folder and then load up all the pipelines into the folder
-  addTreeItem(QModelIndex(), pipelinesDir.dirName(), QIcon(":/folder_blue.png"), QString(), 0, true, false, false);
+  QString dirName = "Prebuilt Pipelines";
+  addTreeItem(QModelIndex(), dirName, QIcon(":/folder_blue.png"), QString(), 0, true, false, false);
   QModelIndex index = model->index(0, BookmarksItem::Name, QModelIndex());
   addPipelinesRecursively(pipelinesDir, index, iconFileName, allowEditing, fileExtension, itemType);
 }
@@ -318,7 +316,8 @@ void BookmarksToolboxWidget::addPipelinesRecursively(QDir currentDir, QModelInde
       // Add a tree widget item for this  Group
       //qDebug() << fi.absoluteFilePath();
       int row = model->rowCount(parent);
-      addTreeItem(parent, fi.baseName(), QIcon(":/folder_blue.png"), QString(), row, true, false, false);
+      QString baseName = fi.baseName();
+      addTreeItem(parent, baseName, QIcon(":/folder_blue.png"), QString(), row, true, false, false);
       nextIndex = model->index(row, BookmarksItem::Name, parent);
       addPipelinesRecursively(QDir(fi.absoluteFilePath()), nextIndex, iconFileName, allowEditing, filters, itemType);   // Recursive call
     }
@@ -342,6 +341,7 @@ void BookmarksToolboxWidget::addPipelinesRecursively(QDir currentDir, QModelInde
       QString dVers;
       JsonFilterParametersReader::ReadNameOfPipelineFromFile(itemFilePath, itemName, dVers, NULL);
     }
+    
     // Add tree widget for this Prebuilt Pipeline
     int row = model->rowCount(parent);
     addTreeItem(parent, itemName, QIcon(iconFileName), itemInfo.absoluteFilePath(), row, true, false, false);
