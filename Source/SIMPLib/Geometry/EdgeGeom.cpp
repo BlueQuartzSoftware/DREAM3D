@@ -383,7 +383,7 @@ void EdgeGeom::getParametricCenter(double pCoords[3])
 void EdgeGeom::getShapeFunctions(double pCoords[3], double* shape)
 {
   (void)pCoords;
-
+  
   shape[0] = -1.0;
   shape[1] = 1.0;
 }

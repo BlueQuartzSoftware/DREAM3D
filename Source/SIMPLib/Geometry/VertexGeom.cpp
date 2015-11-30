@@ -281,6 +281,7 @@ void VertexGeom::getParametricCenter(double pCoords[3])
 void VertexGeom::getShapeFunctions(double pCoords[3], double* shape)
 {
   (void)pCoords;
+  
   shape[0] = 0.0;
   shape[1] = 0.0;
   shape[2] = 0.0;
@@ -291,18 +292,9 @@ void VertexGeom::getShapeFunctions(double pCoords[3], double* shape)
 // -----------------------------------------------------------------------------
 void VertexGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives)
 {
-  int64_t numVerts = getNumberOfVertices();
-  int cDims = field->getNumberOfComponents();
-  double* derivsPtr = derivatives->getPointer(0);
-  for (int64_t i = 0; i < numVerts; i++)
-  {
-    for (int j = 0; j < cDims; j++)
-    {
-      derivsPtr[i * 3 * cDims + j * 3] = 0.0;
-      derivsPtr[i * 3 * cDims + j * 3 + 1] = 0.0;
-      derivsPtr[i * 3 * cDims + j * 3 + 2] = 0.0;
-    }
-  }
+  // The exterior derivative of a point source is zero,
+  // so simply splat 0 over the derivatives array
+  derivatives->initializeWithZeros();
 }
 
 // -----------------------------------------------------------------------------
