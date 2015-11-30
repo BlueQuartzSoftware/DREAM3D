@@ -649,7 +649,7 @@ void FilterListDockWidget::readSettings(QMainWindow* main, DREAM3DSettings& pref
 {
   main->restoreDockWidget(this);
 
-  QString objectName = prefs.value("ActiveSearchAction", "").toString();
+  QString objectName = prefs.value("ActiveSearchAction", QString("")).toString();
   QList<QAction*> list = getSearchActionList();
 
   bool didCheck = false;
