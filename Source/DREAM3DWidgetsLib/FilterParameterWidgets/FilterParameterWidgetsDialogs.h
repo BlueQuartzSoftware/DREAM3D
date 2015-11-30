@@ -35,12 +35,18 @@
 
 #ifndef _FilterParameterWidgetsDialogs_H_
 #define _FilterParameterWidgetsDialogs_H_
+
 #include <QtCore/QString>
+
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
 class AbstractFilter;
 class FilterParameter;
 
-class FilterParameterWidgetsDialogs
+/**
+ * @brief The FilterParameterWidgetsDialogs class
+ */
+class DREAM3DWidgetsLib_EXPORT FilterParameterWidgetsDialogs
 {
   public:
 

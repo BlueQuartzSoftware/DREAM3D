@@ -36,16 +36,15 @@
 #ifndef _DataArrayPath_H_
 #define _DataArrayPath_H_
 
-
-#include <QtCore/QObject>
-#include <QtCore/QScopedPointer>
+#include <QtCore/QtGlobal>                     // for Q_DECLARE_PRIVATE
+#include <QtCore/QMetaType>                   // for Q_DECLARE_METATYPE
+#include <QtCore/QObject>                 // for Q_OBJECT
 #include <QtCore/QString>
 #include <QtCore/QVector>
-#include <QtCore/QStringList>
-#include <QtCore/QJsonObject>
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/Common/SIMPLibDLLExport.h"     // for SIMPLib_EXPORT
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"  // for SIMPL_PIMPL_PROPERTY_DECL
+
 
 // our PIMPL private class
 class DataArrayPathPrivate;

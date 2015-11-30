@@ -41,6 +41,7 @@
 #include "SIMPLib/SIMPLibVersion.h"
 
 #include <QtCore/QStringListIterator>
+#include "SIMPLib/Common/Constants.h"
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

@@ -43,6 +43,7 @@
 
 #include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/H5FilterParametersConstants.h"
+#include "SIMPLib/Common/Constants.h"
 
 
 // -----------------------------------------------------------------------------

@@ -43,7 +43,8 @@
 
 #include "QtSupportLib/FaderWidget.h"
 
-
+#include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/FilterParameters/FilterParameter.h"
 #include "SIMPLib/DataContainers/DataArrayPath.h"
 #include "SIMPLib/DataContainers/DataContainerArrayProxy.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -53,9 +54,6 @@
 
 
 #include "DREAM3DWidgetsLib/ui_DataArraySelectionWidget.h"
-
-class AbstractFilter;
-class FilterParameter;
 
 /**
 * @brief

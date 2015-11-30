@@ -545,11 +545,9 @@ void InsertAtoms::execute()
   QVector<int32_t> linkCount(numFeatures, 0);
 
   // fill out lists with number of references to cells
-  typedef boost::shared_array<int32_t> SharedInt32Array_t;
-  SharedInt32Array_t linkLocPtr(new int32_t[numFaces]);
-  int32_t* linkLoc = linkLocPtr.get();
-
-  ::memset(linkLoc, 0, numFaces * sizeof(int32_t));
+  Int32ArrayType::Pointer linkLocPtr = Int32ArrayType::CreateArray(numFaces, "_INTERNAL_USE_ONLY_cell refs");
+  linkLocPtr->initializeWithZeros();
+  int32_t* linkLoc = linkLocPtr->getPointer(0);
 
   // traverse data to determine number of faces belonging to each feature
   for (int64_t i = 0; i < numFaces; i++)

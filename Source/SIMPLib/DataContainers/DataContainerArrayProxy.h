@@ -42,12 +42,10 @@
 #include <QtCore/QString>
 #include <QtCore/QList>
 #include <QtCore/QStringList>
-#include <QtCore/QTextStream>
-#include <QtCore/QJsonObject>
+
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataContainers/DataContainerProxy.h"
-#include "SIMPLib/DataContainers/DataArrayPath.h"
 
 class DataContainerArray;
 

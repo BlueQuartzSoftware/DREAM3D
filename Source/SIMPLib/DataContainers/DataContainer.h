@@ -48,6 +48,7 @@
 #include "SIMPLib/Common/Observable.h"
 #include "SIMPLib/DataContainers/AttributeMatrix.h"
 #include "SIMPLib/Geometry/IGeometry.h"
+#include "SIMPLib/DataContainers/DataContainerArrayProxy.h"
 
 class DataArrayPath;
 class DataContainerArrayProxy;

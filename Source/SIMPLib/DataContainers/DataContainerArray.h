@@ -37,20 +37,20 @@
 #ifndef _DATACONTAINERARRAY_H_
 #define _DATACONTAINERARRAY_H_
 
-#include <QtCore/QObject>
+#include <stddef.h>       // for NULL
+
+#include <QtCore/QObject> // for Q_OBJECT
 #include <QtCore/QString>
 #include <QtCore/QList>
 
-
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-
 #include "SIMPLib/DataContainers/DataContainer.h"
-#include "SIMPLib/DataContainers/DataArrayPath.h"
 #include "SIMPLib/DataContainers/IDataContainerBundle.h"
+#include "SIMPLib/DataContainers/DataArrayPath.h"
 
 
-class DataArrayPath;
+
 /**
  * @class DataContainerArray DataContainerArray.h DREAM3DLib/Common/DataContainerArray.h
  * @brief  This class holds the list of filters that will be run. This should be

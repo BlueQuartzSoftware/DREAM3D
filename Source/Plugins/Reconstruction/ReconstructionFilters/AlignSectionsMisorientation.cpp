@@ -36,6 +36,8 @@
 
 #include "AlignSectionsMisorientation.h"
 
+#include <fstream>
+
 #include <QtCore/QDateTime>
 
 #include "SIMPLib/Common/Constants.h"

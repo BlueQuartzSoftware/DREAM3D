@@ -36,6 +36,8 @@
 
 #include "PackPrimaryPhases.h"
 
+#include <fstream>
+
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range3d.h>

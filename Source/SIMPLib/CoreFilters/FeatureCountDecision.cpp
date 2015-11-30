@@ -143,10 +143,12 @@ void FeatureCountDecision::execute()
   if(getErrorCondition() < 0) { return; }
 
   // Assumes a SINGLE Phase. This WILL BREAK if there is more than 1 phase.
-  bool dm = false;
+  qDebug() << "MaxGrains: " << m_MaxGrains;
+  qDebug() << "FeatureIds: " << m_FeatureIds[1];
+  bool dm = true;
   if (m_MaxGrains < m_FeatureIds[1])
   {
-    dm = true;
+    dm = false;
   }
   emit decisionMade(dm);
 

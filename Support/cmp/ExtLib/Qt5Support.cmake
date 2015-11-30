@@ -261,7 +261,7 @@ function(AddQt5Plugins)
               COMPONENT Applications)
   endif()
 
- 
+
   #file(APPEND ${P_LIBRARY_SEARCH_FILE} "${QT_PLUGINS_DIR}/${plugintype};")
 endfunction()
 
@@ -306,16 +306,16 @@ endfunction()
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Find the QtWidgets library
-set(Qt5_COMPONENTS 
-    Core 
-    Widgets 
-    Network 
-    Gui 
-    Concurrent 
-    Script 
-    Svg 
-    Xml 
-    OpenGL 
+set(Qt5_COMPONENTS
+    Core
+    Widgets
+    Network
+    Gui
+    Concurrent
+    Script
+    Svg
+    Xml
+    OpenGL
     PrintSupport
   )
 
@@ -358,8 +358,17 @@ CopyQt5RunTimeLibraries(LIBRARIES ${Qt5_COMPONENTS} PREFIX Qt5)
 # This is pretty much needed on all the platforms.
 AddQt5LibraryInstallRule(LIBRARIES ${Qt5_COMPONENTS})
 
+if (QM_QT_VERSION VERSION_GREATER 5.4.0 OR QM_QT_VERSION VERSION_EQUAL 5.4.0)
+  set(Qt5_ICU_COMPONENTS icudt53 icuin53 icuuc53)
+endif()
+if (QM_QT_VERSION VERSION_GREATER 5.5.0 OR QM_QT_VERSION VERSION_EQUAL 5.5.0)
+  set(Qt5_ICU_COMPONENTS icudt54 icuin54 icuuc54)
+endif()
+if (QM_QT_VERSION VERSION_GREATER 5.6.0 OR QM_QT_VERSION VERSION_EQUAL 5.6.0)
+  set(Qt5_ICU_COMPONENTS "ICU Libraries NOT Defined for Qt 5.6")
+  message(FATAL_ERROR "ICU Libraries NOT Defined for Qt 5.6. Please update teh Qt5Support.cmake file")
+endif()
 
-set(Qt5_ICU_COMPONENTS icudt53 icuin53 icuuc53)
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
   set(Qt5_ICU_COMPONENTS icui18n icuuc icudata)
 endif()

@@ -36,6 +36,8 @@
 
 #include "InsertPrecipitatePhases.h"
 
+#include <fstream>
+
 #include <QtCore/QDir>
 
 #include "SIMPLib/Common/Constants.h"

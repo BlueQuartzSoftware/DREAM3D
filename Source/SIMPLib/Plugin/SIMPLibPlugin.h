@@ -36,8 +36,10 @@
 #define _SIMPLibPlugin_H_
 
 #include <QtCore/QObject>
+#include <QtCore/QString>
+
 #include "SIMPLib/SIMPLib.h"
-#include "ISIMPLibPlugin.h"
+//#include "ISIMPLibPlugin.h"
 
 
 /**

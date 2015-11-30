@@ -36,6 +36,9 @@
 
 #include "ImportVectorImageStackWidget.h"
 
+// Needed for AxisAngle_t
+#include "EbsdLib/EbsdConstants.h"
+
 //-- Qt Includes
 #include <QtCore/QFileInfo>
 #include <QtCore/QFile>

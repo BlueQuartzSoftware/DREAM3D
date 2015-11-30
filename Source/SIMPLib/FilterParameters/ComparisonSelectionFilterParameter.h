@@ -40,33 +40,33 @@
 
 class SIMPLib_EXPORT ComparisonSelectionFilterParameter : public FilterParameter
 {
-public:
-  SIMPL_SHARED_POINTERS(ComparisonSelectionFilterParameter)
+  public:
+    SIMPL_SHARED_POINTERS(ComparisonSelectionFilterParameter)
     SIMPL_STATIC_NEW_MACRO(ComparisonSelectionFilterParameter)
     SIMPL_TYPE_MACRO_SUPER(ComparisonSelectionFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-    const QString& defaultValue, QVector<QString> choices,
-    bool showOperators, Category category, int groupIndex = -1);
+                       const QString& defaultValue, QVector<QString> choices,
+                       bool showOperators, Category category, int groupIndex = -1);
 
 
-  virtual ~ComparisonSelectionFilterParameter();
+    virtual ~ComparisonSelectionFilterParameter();
 
-  SIMPL_INSTANCE_PROPERTY(QVector<QString>, Choices)
+    SIMPL_INSTANCE_PROPERTY(QVector<QString>, Choices)
     SIMPL_INSTANCE_PROPERTY(bool, ShowOperators)
 
-  /**
+    /**
    * @brief getWidgetType Returns the type of widget that displays and controls
    * this FilterParameter subclass
    * @return
    */
-  QString getWidgetType();
-protected:
-  ComparisonSelectionFilterParameter();
+    QString getWidgetType();
+  protected:
+    ComparisonSelectionFilterParameter();
 
-private:
-  ComparisonSelectionFilterParameter(const ComparisonSelectionFilterParameter&); // Copy Constructor Not Implemented
-  void operator=(const ComparisonSelectionFilterParameter&); // Operator '=' Not Implemented
+  private:
+    ComparisonSelectionFilterParameter(const ComparisonSelectionFilterParameter&); // Copy Constructor Not Implemented
+    void operator=(const ComparisonSelectionFilterParameter&); // Operator '=' Not Implemented
 };
 
 #endif /* _ComparisonSelectionFilterParameter_H_ */

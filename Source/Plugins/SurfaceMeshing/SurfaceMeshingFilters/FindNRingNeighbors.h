@@ -37,6 +37,8 @@
 #ifndef _FindNRingNeighbors_H_
 #define _FindNRingNeighbors_H_
 
+#include <set>
+
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"

@@ -35,6 +35,7 @@
 
 #include "DataContainer.h"
 
+#include <QtCore/QTextStream>
 
 #include "SIMPLib/DataContainers/DataContainerProxy.h"
 #include "SIMPLib/DataContainers/DataContainerArrayProxy.h"

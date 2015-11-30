@@ -44,6 +44,7 @@
 
 
 #include "JsonFilterParametersWriter.h"
+#include "SIMPLib/Common/Constants.h"
 
 // -----------------------------------------------------------------------------
 //

@@ -61,7 +61,9 @@ class QPropertyAnimation;
 class QGraphicsOpacityEffect;
 class QTimer;
 
-
+/**
+ * @brief The FilterParameterWidget class
+ */
 class DREAM3DWidgetsLib_EXPORT FilterParameterWidget : public QFrame
 {
     Q_OBJECT

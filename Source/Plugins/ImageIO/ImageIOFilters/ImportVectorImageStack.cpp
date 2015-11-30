@@ -185,7 +185,10 @@ void ImportVectorImageStack::dataCheck()
   }
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
-  if(getErrorCondition() < 0) { return; }
+  if (getErrorCondition() < 0 || NULL == m.get()) { return; }
+
+  ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+  m->setGeometry(image);
 
   bool hasMissingFiles = false;
   bool stackLowToHigh = false;
