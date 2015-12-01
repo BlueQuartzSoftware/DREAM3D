@@ -99,23 +99,26 @@ void DREAM3DToolbox::readSettings()
   prefs.beginGroup("ToolboxSettings");
 
   setVisible(prefs.value(objectName(), true).toBool());
-  m_ToolboxMenu->getShowBookmarks()->setChecked(prefs.value(bookmarksWidget->objectName(), true).toBool());
-  m_ToolboxMenu->getShowFilterList()->setChecked(prefs.value(filterListWidget->objectName(), true).toBool());
-  m_ToolboxMenu->getShowFilterLibrary()->setChecked(prefs.value(filterLibraryWidget->objectName(), true).toBool());
 
-  if (prefs.value(bookmarksWidget->objectName(), true).toBool() == false)
+  bool showBookmarks = prefs.value(objectName(), true).toBool();
+  m_ToolboxMenu->getShowBookmarks()->setChecked(showBookmarks);
+  if (showBookmarks == false)
   {
     tabWidget->removeTab(tabWidget->indexOf(bookmarksTab));
   }
 
-  if (prefs.value(filterListWidget->objectName(), true).toBool() == false)
+  bool showFilterList = prefs.value(filterListWidget->objectName(), true).toBool();
+  m_ToolboxMenu->getShowFilterList()->setChecked(showFilterList);
+  if (showFilterList == false)
   {
-    tabWidget->removeTab(tabWidget->indexOf(filterListWidget));
+    tabWidget->removeTab(tabWidget->indexOf(filterListTab));
   }
 
-  if (prefs.value(filterLibraryWidget->objectName(), true).toBool() == false)
+  bool showFilterLibrary = prefs.value(filterLibraryWidget->objectName(), true).toBool();
+  m_ToolboxMenu->getShowFilterLibrary()->setChecked(showFilterLibrary);
+  if (showFilterLibrary == false)
   {
-    tabWidget->removeTab(tabWidget->indexOf(filterLibraryWidget));
+    tabWidget->removeTab(tabWidget->indexOf(filterLibraryTab));
   }
 
   // Have the toolbox write its settings to the prefs file
@@ -222,7 +225,14 @@ void DREAM3DToolbox::writeWindowSettings(DREAM3DSettings& prefs)
 // -----------------------------------------------------------------------------
 void DREAM3DToolbox::actionShowFilterLibrary_toggled(bool enabled)
 {
-
+  if (enabled == true)
+  {
+    tabWidget->addTab(filterLibraryTab, "Filter Library");
+  }
+  else
+  {
+    tabWidget->removeTab(tabWidget->indexOf(filterLibraryTab));
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -230,7 +240,14 @@ void DREAM3DToolbox::actionShowFilterLibrary_toggled(bool enabled)
 // -----------------------------------------------------------------------------
 void DREAM3DToolbox::actionShowFilterList_toggled(bool enabled)
 {
-
+  if (enabled == true)
+  {
+    tabWidget->addTab(filterListTab, "Filter List");
+  }
+  else
+  {
+    tabWidget->removeTab(tabWidget->indexOf(filterListTab));
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -238,7 +255,14 @@ void DREAM3DToolbox::actionShowFilterList_toggled(bool enabled)
 // -----------------------------------------------------------------------------
 void DREAM3DToolbox::actionShowBookmarks_toggled(bool enabled)
 {
-
+  if (enabled == true)
+  {
+    tabWidget->addTab(bookmarksTab, "Bookmarks");
+  }
+  else
+  {
+    tabWidget->removeTab(tabWidget->indexOf(bookmarksTab));
+  }
 }
 
 // -----------------------------------------------------------------------------
