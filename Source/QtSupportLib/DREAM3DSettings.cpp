@@ -63,10 +63,33 @@ DREAM3DSettings::DREAM3DSettings(QObject* parent)
   QString oldFilePath = prefs.fileName();
 
   QFileInfo fi(oldFilePath);
+
+  QString appName = QCoreApplication::applicationName();
+  if(appName.isEmpty())
+  {
+    appName = QString("Application");
+  }
+
 #if defined (Q_OS_MAC)
-  QString newFilePath = fi.path() + "/net.bluequartz.DREAM3D.json";
+
+  QString domain = QCoreApplication::organizationDomain();
+  if(domain.isEmpty())
+  {
+    domain = QString("Domain");
+  }
+  QStringList tokens = domain.split(".");
+  QStringListIterator iter(tokens);
+  iter.toBack();
+  domain = QString("");
+  while(iter.hasPrevious())
+  {
+    domain = domain + iter.previous() + QString(".");
+  }
+
+
+  QString newFilePath = fi.path() + "/" + domain + appName + ".json";
 #else
-  QString newFilePath = fi.path() + "/DREAM3D.json";
+  QString newFilePath = fi.path() + "/" + appName + ".json";
 #endif
 
   m_FilePath = QDir::toNativeSeparators(newFilePath);
@@ -198,23 +221,6 @@ QVariant DREAM3DSettings::value(const QString& key, const QVariant& defaultValue
     return defaultValue;
   }
 
-  if (m_Stack.top()->group[key].isArray())
-  {
-    QJsonArray jsonArray = m_Stack.top()->group[key].toArray();
-    QString value = jsonArray.at(Value).toString();
-    QString typeName = jsonArray.at(Type).toString();
-    if (typeName == "QByteArray")
-    {
-      QByteArray byteArray8Bit = value.toLocal8Bit();
-      QByteArray byteArray = QByteArray::fromBase64(byteArray8Bit);
-      return byteArray;
-    }
-    else
-    {
-      return value;
-    }
-  }
-
   return m_Stack.top()->group.value(key).toVariant();
 }
 
@@ -223,6 +229,11 @@ QVariant DREAM3DSettings::value(const QString& key, const QVariant& defaultValue
 // -----------------------------------------------------------------------------
 QJsonObject DREAM3DSettings::value(const QString& key, const QJsonObject& defaultObject)
 {
+  if (m_Stack.top()->group.contains(key) == false)
+  {
+    return defaultObject;
+  }
+
   if (m_Stack.top()->group[key].isObject())
   {
     return m_Stack.top()->group[key].toObject();
@@ -255,33 +266,43 @@ QStringList DREAM3DSettings::value(const QString& key, const QStringList& defaul
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QByteArray DREAM3DSettings::value(const QString& key, const QByteArray& defaultValue)
+{
+  QString value = m_Stack.top()->group[key].toString();
+  QByteArray byteArray8Bit = value.toLocal8Bit();
+  QByteArray byteArray = QByteArray::fromBase64(byteArray8Bit);
+  return byteArray;
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DSettings::setValue(const QString& key, const QByteArray& value)
+{
+  QString str = QString::fromLocal8Bit(value.toBase64());
+  m_Stack.top()->group.insert(key, str);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void DREAM3DSettings::setValue(const QString& key, const QVariant& value)
 {
-  if (QString::fromStdString(std::string(value.typeName())) == "QByteArray")
+
+  QJsonValue val = QJsonValue::fromVariant(value);
+
+  if (QString::fromStdString(std::string(value.typeName())) == "QString")
   {
-    QByteArray byteArray = value.toByteArray().toBase64();
-    QString str = QString::fromLocal8Bit(byteArray);
     QJsonArray jsonArray;
-    jsonArray.insert(Value, str);
-    jsonArray.insert(Type, value.typeName());
-    m_Stack.top()->group.insert(key, jsonArray);
+    jsonArray.insert(Value, val);
+    m_Stack.top()->group.insert(key, val);
   }
   else
   {
-    QJsonValue val = QJsonValue::fromVariant(value);
-
-    if (QString::fromStdString(std::string(value.typeName())) == "QString")
-    {
-      QJsonArray jsonArray;
-      jsonArray.insert(Value, val);
-      jsonArray.insert(Type, value.typeName());
-      m_Stack.top()->group.insert(key, jsonArray);
-    }
-    else
-    {
-      m_Stack.top()->group.insert(key, val);
-    }
+    m_Stack.top()->group.insert(key, val);
   }
+
 
   // If this is the root, write to the file
   if (m_Stack.top()->groupName.isEmpty())

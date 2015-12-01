@@ -42,6 +42,8 @@
 #include <QtWidgets/QTableWidgetItem>
 #include <QtWidgets/QMainWindow>
 
+#include "QtSupportLib/DREAM3DSettings.h"
+
 #include "SIMPLib/Common/DocRequestManager.h"
 
 #include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
@@ -283,9 +285,9 @@ void IssuesDockWidget::readSettings(QMainWindow* main, DREAM3DSettings& prefs)
 {
   main->restoreDockWidget(this);
 
-  bool b = prefs.value(objectName(), false).toBool();
+  bool b = prefs.value(objectName(), QVariant(false)).toBool();
   setHidden(b);
 
-  QByteArray headerState = prefs.value("Horizontal Header State", QByteArray()).toByteArray();
+  QByteArray headerState = prefs.value("Horizontal Header State", QByteArray());
   errorTableWidget->horizontalHeader()->restoreState(headerState);
 }

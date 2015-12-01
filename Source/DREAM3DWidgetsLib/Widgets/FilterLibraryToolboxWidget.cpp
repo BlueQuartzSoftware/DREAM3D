@@ -327,5 +327,5 @@ void FilterLibraryToolboxWidget::writeSettings(DREAM3DSettings& prefs)
 // -----------------------------------------------------------------------------
 void FilterLibraryToolboxWidget::readSettings(DREAM3DSettings& prefs)
 {
-
+  
 }

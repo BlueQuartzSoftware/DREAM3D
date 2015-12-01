@@ -644,7 +644,7 @@ void FilterListToolboxWidget::writeSettings(DREAM3DSettings& prefs)
 // -----------------------------------------------------------------------------
 void FilterListToolboxWidget::readSettings(DREAM3DSettings& prefs)
 {
-  QString objectName = prefs.value("ActiveSearchAction", "").toString();
+  QString objectName = prefs.value("ActiveSearchAction", QString("")).toString();
   QList<QAction*> list = getSearchActionList();
 
   bool didCheck = false;

@@ -113,7 +113,7 @@ void DREAM3DToolbox::readSettings()
   // Read dock widget settings
   prefs.beginGroup("Bookmarks Widget");
   bookmarksWidget->readSettings(prefs);
-  if (prefs.value("PrebuiltsRead", false).toBool() == false)
+  if (prefs.value("PrebuiltsRead", QVariant(false)).toBool() == false)
   {
     bookmarksWidget->readPrebuiltPipelines();
     prefs.setValue("PrebuiltsRead", true);
@@ -140,7 +140,7 @@ void DREAM3DToolbox::readWindowSettings(DREAM3DSettings& prefs)
   prefs.beginGroup("WindowSettings");
   if (prefs.contains(QString("MainWindowGeometry")))
   {
-    QByteArray geo_data = prefs.value("MainWindowGeometry", "").toByteArray();
+    QByteArray geo_data = prefs.value("MainWindowGeometry", QByteArray(""));
     ok = restoreGeometry(geo_data);
     if (!ok)
     {

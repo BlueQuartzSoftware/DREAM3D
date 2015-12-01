@@ -160,11 +160,11 @@ QString BookmarksToolboxWidget::generateHtmlFilterListFromPipelineFile(QString p
     DREAM3DSettings prefs(path);
     prefs.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
     bool ok = false;
-    name = prefs.value("Name", "").toString();
-    dVers = prefs.value("DREAM3D_Version", "").toString();
+    name = prefs.value("Name", QString("")).toString();
+    dVers = prefs.value("DREAM3D_Version", QString("")).toString();
     if(dVers.isEmpty() == true)
     {
-      dVers = prefs.value("Version", "").toString();
+      dVers = prefs.value("Version", QString("")).toString();
     }
     prefs.endGroup();
     if (false == ok) {filterCount = 0;}
@@ -625,7 +625,7 @@ bool BookmarksToolboxWidget::removeDir(const QString& dirName)
 // -----------------------------------------------------------------------------
 void BookmarksToolboxWidget::readSettings(DREAM3DSettings& prefs)
 {
-  QByteArray headerState = prefs.value("Horizontal Header State", QByteArray()).toByteArray();
+  QByteArray headerState = prefs.value("Horizontal Header State", QByteArray());
   bookmarksTreeView->header()->restoreState(headerState);
 
   QString path = prefs.fileName();
