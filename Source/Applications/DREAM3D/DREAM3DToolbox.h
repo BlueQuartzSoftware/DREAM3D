@@ -49,8 +49,9 @@ class DREAM3DToolbox : public QMainWindow, private Ui::DREAM3DToolbox
     Q_OBJECT
 
   public:
-    DREAM3DToolbox(QWidget* parent = 0, Qt::WindowFlags flags = 0);
     virtual ~DREAM3DToolbox();
+
+    static DREAM3DToolbox* Instance(QWidget* parent = 0, Qt::WindowFlags flags = 0);
 
     enum ToolboxTabs
     {
@@ -77,9 +78,17 @@ class DREAM3DToolbox : public QMainWindow, private Ui::DREAM3DToolbox
     void setCurrentTab(ToolboxTabs tab);
 
   protected:
+    DREAM3DToolbox(QWidget* parent = 0, Qt::WindowFlags flags = 0);
     void closeEvent(QCloseEvent* event);
 
+  protected slots:
+    void actionShowFilterLibrary_toggled(bool enabled);
+    void actionShowFilterList_toggled(bool enabled);
+    void actionShowBookmarks_toggled(bool enabled);
+
   private:
+    static DREAM3DToolbox*                              self;
+
     DREAM3DToolboxMenu*                                 m_ToolboxMenu;
 
     DREAM3DToolbox(const DREAM3DToolbox&); // Copy Constructor Not Implemented

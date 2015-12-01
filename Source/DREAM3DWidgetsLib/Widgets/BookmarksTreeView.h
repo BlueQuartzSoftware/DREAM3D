@@ -114,7 +114,7 @@ class DREAM3DWidgetsLib_EXPORT BookmarksTreeView : public QTreeView
     void addActionList(QList<QAction*> actionList);
 
   signals:
-    void itemWasDropped(QModelIndex parent, QString& title, QIcon icon, QString path, bool allowEditing, bool editState, bool isExpanding);
+    void itemWasDropped(QModelIndex parent, QString& title, QIcon icon, QString path, int index, bool allowEditing, bool editState, bool isExpanding);
     void currentIndexChanged(const QModelIndex& current, const QModelIndex& previous);
     void folderChangedState(const QModelIndex& index, bool expand);
 

@@ -40,6 +40,7 @@
 #include <QtCore/QDebug>
 
 #include "Applications/DREAM3D/DREAM3DApplication.h"
+#include "Applications/DREAM3D/DREAM3DToolbox.h"
 
  // Include the MOC generated CPP file which has all the QMetaObject methods/data
  #include "moc_DREAM3DToolboxMenu.cpp"
@@ -124,11 +125,13 @@ void DREAM3DToolboxMenu::initialize()
   m_MenuView->setTitle(QApplication::translate("DREAM3D_UI", "View", 0));
   m_MenuBookmarks->setTitle(QApplication::translate("DREAM3D_UI", "Bookmarks", 0));
 
+  DREAM3DToolbox* toolbox = DREAM3DToolbox::Instance();
+
   // Connections
   connect(m_ActionCloseToolbox, SIGNAL(triggered()), dream3dApp, SLOT(on_actionCloseToolbox_triggered()));
-  connect(m_ActionShowFilterLibrary, SIGNAL(triggered()), dream3dApp, SLOT(on_actionShowFilterLibrary_triggered()));
-  connect(m_ActionShowFilterList, SIGNAL(triggered()), dream3dApp, SLOT(on_actionShowFilterList_triggered()));
-  connect(m_ActionShowBookmarks, SIGNAL(triggered()), dream3dApp, SLOT(on_actionShowBookmarks_triggered()));
+  connect(m_ActionShowFilterLibrary, SIGNAL(toggled(bool)), toolbox, SLOT(actionShowFilterLibrary_toggled(bool)));
+  connect(m_ActionShowFilterList, SIGNAL(toggled(bool)), toolbox, SLOT(actionShowFilterList_toggled(bool)));
+  connect(m_ActionShowBookmarks, SIGNAL(toggled(bool)), toolbox, SLOT(actionShowBookmarks_toggled(bool)));
   connect(m_ActionAddBookmark, SIGNAL(triggered()), dream3dApp, SLOT(on_actionAddBookmark_triggered()));
   connect(m_ActionNewFolder, SIGNAL(triggered()), dream3dApp, SLOT(on_actionNewFolder_triggered()));
 

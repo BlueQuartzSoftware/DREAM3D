@@ -90,7 +90,6 @@ DREAM3DApplication::DREAM3DApplication(int& argc, char** argv) :
 #if defined(Q_OS_MAC)
   m_GlobalMenu(NULL),
 #endif
-  m_Toolbox(NULL),
   m_OpenDialogLastDirectory(""),
   show_splash(true),
   Splash(NULL)
@@ -112,10 +111,11 @@ DREAM3DApplication::~DREAM3DApplication()
   delete this->Splash;
   this->Splash = NULL;
 
-  m_Toolbox->writeSettings();
+  DREAM3DToolbox* toolbox = DREAM3DToolbox::Instance();
+  toolbox->writeSettings();
 
-  delete m_Toolbox;
-  m_Toolbox = NULL;
+  delete toolbox;
+  toolbox = NULL;
 
   DREAM3DSettings prefs;
   if (prefs.value("Program Mode", QString("")) == "Clear Cache")
@@ -181,17 +181,20 @@ bool DREAM3DApplication::initialize(int argc, char* argv[])
   QVector<ISIMPLibPlugin*> plugins = loadPlugins();
 
   // Create the toolbox
-  m_Toolbox = new DREAM3DToolbox();
+  DREAM3DToolbox* toolbox = DREAM3DToolbox::Instance();
 #if !defined(Q_OS_MAC)
   // Create the menu
+  DREAM3DToolboxMenu* toolboxMenu = new DREAM3DToolboxMenu();
+  toolbox->setToolboxMenu(toolboxMenu);
   //toolboxMenu->setViewMenu(viewMenu);
 #endif
-  m_Toolbox->getFilterListWidget()->updateFilterList(true);
+  toolbox->readSettings();
+  toolbox->getFilterListWidget()->updateFilterList(true);
 
   // Create the toolbox action
   m_ActionShowToolbox = new QAction("Show Toolbox", this);
   m_ActionShowToolbox->setCheckable(true);
-  m_ActionShowToolbox->setChecked(m_Toolbox->isVisible());
+  m_ActionShowToolbox->setChecked(toolbox->isVisible());
   connect(m_ActionShowToolbox, SIGNAL(triggered(bool)), this, SLOT(on_actionShowToolbox_triggered(bool)));
 
   // give GUI components time to update before the mainwindow is shown
@@ -585,7 +588,8 @@ void DREAM3DApplication::unregisterDREAM3DWindow(DREAM3D_UI* window)
 // -----------------------------------------------------------------------------
 void DREAM3DApplication::on_actionCloseToolbox_triggered()
 {
-  m_Toolbox->close();
+  DREAM3DToolbox* toolbox = DREAM3DToolbox::Instance();
+  toolbox->close();
 }
 
 // -----------------------------------------------------------------------------
@@ -643,16 +647,18 @@ void DREAM3DApplication::on_actionSaveAs_triggered()
 // -----------------------------------------------------------------------------
 void DREAM3DApplication::on_actionAddBookmark_triggered()
 {
-  m_Toolbox->setCurrentTab(DREAM3DToolbox::Bookmarks);
+  DREAM3DToolbox* toolbox = DREAM3DToolbox::Instance();
 
-  BookmarksToolboxWidget* bookmarksToolboxWidget = m_Toolbox->getBookmarksWidget();
+  toolbox->setCurrentTab(DREAM3DToolbox::Bookmarks);
+
+  BookmarksToolboxWidget* bookmarksToolboxWidget = toolbox->getBookmarksWidget();
 
   if (NULL != bookmarksToolboxWidget)
   {
     QString proposedDir = m_OpenDialogLastDirectory;
     QList<QString> newPrefPaths;
 
-    newPrefPaths = QFileDialog::getOpenFileNames(m_Toolbox, tr("Choose Pipeline File(s)"),
+    newPrefPaths = QFileDialog::getOpenFileNames(toolbox, tr("Choose Pipeline File(s)"),
       proposedDir, tr("Json File (*.json);;DREAM.3D File (*.dream3d);;Text File (*.txt);;Ini File (*.ini);;All Files (*.*)"));
     if (true == newPrefPaths.isEmpty()) { return; }
 
@@ -678,10 +684,12 @@ void DREAM3DApplication::on_actionAddBookmark_triggered()
 // -----------------------------------------------------------------------------
 void DREAM3DApplication::on_actionNewFolder_triggered()
 {
-  m_Toolbox->setCurrentTab(DREAM3DToolbox::Bookmarks);
+  DREAM3DToolbox* toolbox = DREAM3DToolbox::Instance();
+
+  toolbox->setCurrentTab(DREAM3DToolbox::Bookmarks);
 
   BookmarksModel* model = BookmarksModel::Instance();
-  BookmarksToolboxWidget* bookmarksToolboxWidget = m_Toolbox->getBookmarksWidget();
+  BookmarksToolboxWidget* bookmarksToolboxWidget = toolbox->getBookmarksWidget();
 
   QModelIndex parent = bookmarksToolboxWidget->getSelectedParentTreeItem();
   QString parentName = model->index(parent.row(), BookmarksItem::Name, parent.parent()).data().toString();
@@ -1000,6 +1008,7 @@ void DREAM3DApplication::on_pipelineViewContextMenuRequested(const QPoint& pos)
 // -----------------------------------------------------------------------------
 void DREAM3DApplication::on_bookmarksDockContextMenuRequested(const QPoint& pos)
 {
+  DREAM3DToolbox* toolbox = DREAM3DToolbox::Instance();
   BookmarksTreeView* bookmarksTreeView = m_ActiveWindow->getBookmarksToolboxWidget()->getBookmarksTreeView();
 
   QModelIndex index = bookmarksTreeView->indexAt(pos);
@@ -1033,8 +1042,8 @@ void DREAM3DApplication::on_bookmarksDockContextMenuRequested(const QPoint& pos)
   m_ActionLocateFile = m_GlobalMenu->getLocateFile();
   m_ActionShowBookmarkInFileSystem = m_GlobalMenu->getShowBookmarkInFileSystem();
 #else
-  m_ActionAddPipeline = m_Toolbox->getToolboxMenu()->getAddBookmark();
-  m_ActionNewFolder = m_Toolbox->getToolboxMenu()->getNewFolder();
+  m_ActionAddPipeline = toolbox->getToolboxMenu()->getAddBookmark();
+  m_ActionNewFolder = toolbox->getToolboxMenu()->getNewFolder();
   m_ActionRenamePipeline = m_ActiveWindow->getDREAM3DMenu()->getRenamePipeline();
   m_ActionRemovePipeline = m_ActiveWindow->getDREAM3DMenu()->getRemovePipeline();
   m_ActionLocateFile = m_ActiveWindow->getDREAM3DMenu()->getLocateFile();
@@ -1131,14 +1140,16 @@ void DREAM3DApplication::on_bookmarksDockContextMenuRequested(const QPoint& pos)
 // -----------------------------------------------------------------------------
 void DREAM3DApplication::on_actionShowToolbox_triggered(bool visible)
 {
+  DREAM3DToolbox* toolbox = DREAM3DToolbox::Instance();
+
   m_ActionShowToolbox->blockSignals(true);
-  m_Toolbox->blockSignals(true);
+  toolbox->blockSignals(true);
 
   m_ActionShowToolbox->setChecked(visible);
-  m_Toolbox->setVisible(visible);
+  toolbox->setVisible(visible);
 
   m_ActionShowToolbox->blockSignals(false);
-  m_Toolbox->blockSignals(false);
+  toolbox->blockSignals(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -1156,30 +1167,6 @@ void DREAM3DApplication::on_actionShowIssues_triggered(bool visible)
       m_ActiveWindow->updateAndSyncDockWidget(actionShowIssues, issuesDockWidget, visible);
     }
   }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3DApplication::on_actionShowFilterLibrary_triggered()
-{
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3DApplication::on_actionShowFilterList_triggered()
-{
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3DApplication::on_actionShowBookmarks_triggered()
-{
-
 }
 
 // -----------------------------------------------------------------------------
@@ -1419,14 +1406,6 @@ QMenu* DREAM3DApplication::createPlaceholderViewMenu()
   menuView->addAction(actionShowIssues);
 
   return menuView;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DREAM3DToolbox* DREAM3DApplication::getDREAM3DToolbox()
-{
-  return m_Toolbox;
 }
 
 // -----------------------------------------------------------------------------

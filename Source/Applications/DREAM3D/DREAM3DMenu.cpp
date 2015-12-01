@@ -216,7 +216,6 @@ void DREAM3DMenu::initialize()
   connect(m_ActionPluginInformation, SIGNAL(triggered()), dream3dApp, SLOT(on_actionPluginInformation_triggered()));
   connect(m_ActionClearPipeline, SIGNAL(triggered()), dream3dApp, SLOT(on_actionClearPipeline_triggered()));
   connect(m_ActionShowBookmarkInFileSystem, SIGNAL(triggered()), dream3dApp, SLOT(on_actionShowBookmarkInFileSystem_triggered()));
-  connect(m_ActionShowPrebuiltInFileSystem, SIGNAL(triggered()), dream3dApp, SLOT(on_actionShowPrebuiltInFileSystem_triggered()));
   connect(m_ActionRenamePipeline, SIGNAL(triggered()), dream3dApp, SLOT(on_actionRenamePipeline_triggered()));
   connect(m_ActionRemovePipeline, SIGNAL(triggered()), dream3dApp, SLOT(on_actionRemovePipeline_triggered()));
   connect(m_ActionLocateFile, SIGNAL(triggered()), dream3dApp, SLOT(on_actionLocateFile_triggered()));

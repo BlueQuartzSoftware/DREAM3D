@@ -1088,7 +1088,8 @@ PipelineViewWidget* DREAM3D_UI::getPipelineViewWidget()
 // -----------------------------------------------------------------------------
 BookmarksToolboxWidget* DREAM3D_UI::getBookmarksToolboxWidget()
 {
-  return dream3dApp->getDREAM3DToolbox()->getBookmarksWidget();
+  DREAM3DToolbox* toolbox = DREAM3DToolbox::Instance();
+  return toolbox->getBookmarksWidget();
 }
 
 // -----------------------------------------------------------------------------
@@ -1096,7 +1097,8 @@ BookmarksToolboxWidget* DREAM3D_UI::getBookmarksToolboxWidget()
 // -----------------------------------------------------------------------------
 FilterListToolboxWidget* DREAM3D_UI::getFilterListToolboxWidget()
 {
-  return dream3dApp->getDREAM3DToolbox()->getFilterListWidget();
+  DREAM3DToolbox* toolbox = DREAM3DToolbox::Instance();
+  return toolbox->getFilterListWidget();
 }
 
 // -----------------------------------------------------------------------------
@@ -1104,7 +1106,8 @@ FilterListToolboxWidget* DREAM3D_UI::getFilterListToolboxWidget()
 // -----------------------------------------------------------------------------
 FilterLibraryToolboxWidget* DREAM3D_UI::getFilterLibraryToolboxWidget()
 {
-  return dream3dApp->getDREAM3DToolbox()->getFilterLibraryWidget();
+  DREAM3DToolbox* toolbox = DREAM3DToolbox::Instance();
+  return toolbox->getFilterLibraryWidget();
 }
 
 // -----------------------------------------------------------------------------

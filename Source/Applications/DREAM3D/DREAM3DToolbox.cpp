@@ -40,6 +40,8 @@
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
 #include "moc_DREAM3DToolbox.cpp"
 
+DREAM3DToolbox* DREAM3DToolbox::self = NULL;
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -62,13 +64,22 @@ DREAM3DToolbox::~DREAM3DToolbox()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+DREAM3DToolbox* DREAM3DToolbox::Instance(QWidget* parent, Qt::WindowFlags flags)
+{
+  if (self == NULL)
+  {
+    self = new DREAM3DToolbox(parent, flags);
+  }
+
+  return self;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void DREAM3DToolbox::setupGui()
 {
   setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
-
-  m_ToolboxMenu = new DREAM3DToolboxMenu();
-
-  readSettings();
 
   // Connect the library and list widgets so that the "double-click to add" feature works
   connect(filterLibraryWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
@@ -204,6 +215,30 @@ void DREAM3DToolbox::writeWindowSettings(DREAM3DSettings& prefs)
   prefs.setValue(QString("MainWindowGeometry"), geo_data);
 
   prefs.endGroup();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DToolbox::actionShowFilterLibrary_toggled(bool enabled)
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DToolbox::actionShowFilterList_toggled(bool enabled)
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DToolbox::actionShowBookmarks_toggled(bool enabled)
+{
+
 }
 
 // -----------------------------------------------------------------------------

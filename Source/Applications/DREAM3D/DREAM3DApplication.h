@@ -81,7 +81,6 @@ class DREAM3DApplication : public QApplication
      */
     bool event(QEvent* event);
 
-    DREAM3DToolbox* getDREAM3DToolbox();
     QAction* getShowToolboxAction();
 
   public slots:
@@ -114,9 +113,6 @@ class DREAM3DApplication : public QApplication
 
     void on_actionShowToolbox_triggered(bool visible);
     void on_actionShowIssues_triggered(bool visible);
-    void on_actionShowFilterLibrary_triggered();
-    void on_actionShowFilterList_triggered();
-    void on_actionShowBookmarks_triggered();
 
     void on_actionCloseToolbox_triggered();
     void on_actionNew_triggered();
@@ -164,7 +160,6 @@ class DREAM3DApplication : public QApplication
     DREAM3DMenu*                            m_GlobalMenu;
 #endif
 
-    DREAM3DToolbox*                         m_Toolbox;
     QAction*                                m_ActionShowToolbox;
 
     /* Used on Mac OS X when there are no DREAM3D instances instantiated,
