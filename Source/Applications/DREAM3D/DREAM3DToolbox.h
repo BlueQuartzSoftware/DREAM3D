@@ -37,18 +37,27 @@
 #ifndef DREAM3DToolbox_H
 #define DREAM3DToolbox_H
 
-#include <QtWidgets/QWidget>
+#include <QtWidgets/QMainWindow>
 
 //-- UIC generated Header
 #include "ui_DREAM3DToolbox.h"
 
-class DREAM3DToolbox : public QWidget, private Ui::DREAM3DToolbox
+class DREAM3DToolboxMenu;
+
+class DREAM3DToolbox : public QMainWindow, private Ui::DREAM3DToolbox
 {
     Q_OBJECT
 
   public:
-    DREAM3DToolbox(QWidget* parent = 0);
+    DREAM3DToolbox(QWidget* parent = 0, Qt::WindowFlags flags = 0);
     virtual ~DREAM3DToolbox();
+
+    enum ToolboxTabs
+    {
+      FilterLibrary,
+      FilterList,
+      Bookmarks
+    };
 
     void setupGui();
 
@@ -62,10 +71,16 @@ class DREAM3DToolbox : public QWidget, private Ui::DREAM3DToolbox
     void writeSettings();
     void writeWindowSettings(DREAM3DSettings& prefs);
 
+    DREAM3DToolboxMenu* getToolboxMenu();
+    void setToolboxMenu(DREAM3DToolboxMenu* menu);
+
+    void setCurrentTab(ToolboxTabs tab);
+
   protected:
     void closeEvent(QCloseEvent* event);
 
   private:
+    DREAM3DToolboxMenu*                                 m_ToolboxMenu;
 
     DREAM3DToolbox(const DREAM3DToolbox&); // Copy Constructor Not Implemented
     void operator=(const DREAM3DToolbox&); // Operator '=' Not Implemented

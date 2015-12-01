@@ -114,7 +114,11 @@ class DREAM3DApplication : public QApplication
 
     void on_actionShowToolbox_triggered(bool visible);
     void on_actionShowIssues_triggered(bool visible);
+    void on_actionShowFilterLibrary_triggered();
+    void on_actionShowFilterList_triggered();
+    void on_actionShowBookmarks_triggered();
 
+    void on_actionCloseToolbox_triggered();
     void on_actionNew_triggered();
     void on_actionOpen_triggered();
     void on_actionSave_triggered();

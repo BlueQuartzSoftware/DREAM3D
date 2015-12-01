@@ -625,9 +625,6 @@ bool BookmarksToolboxWidget::removeDir(const QString& dirName)
 // -----------------------------------------------------------------------------
 void BookmarksToolboxWidget::readSettings(DREAM3DSettings& prefs)
 {
-  bool b = prefs.value(objectName(), false).toBool();
-  setHidden(b);
-
   QByteArray headerState = prefs.value("Horizontal Header State", QByteArray()).toByteArray();
   bookmarksTreeView->header()->restoreState(headerState);
 
@@ -659,8 +656,6 @@ void BookmarksToolboxWidget::writeSettings()
 // -----------------------------------------------------------------------------
 void BookmarksToolboxWidget::writeSettings(DREAM3DSettings& prefs)
 {
-  prefs.setValue(objectName(), isHidden());
-
   prefs.setValue("Horizontal Header State", bookmarksTreeView->header()->saveState());
 
   QJsonObject modelObj = bookmarksTreeView->toJsonObject();

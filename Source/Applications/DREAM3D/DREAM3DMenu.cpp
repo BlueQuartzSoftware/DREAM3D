@@ -62,16 +62,7 @@ DREAM3DMenu::DREAM3DMenu() :
 
   // View Menu
   m_MenuView(NULL),
-  m_ActionShowFilterLibrary(NULL),
-  m_ActionShowFilterList(NULL),
-  m_ActionShowPrebuiltPipelines(NULL),
-  m_ActionShowBookmarks(NULL),
   m_ActionShowIssues(NULL),
-
-  // Bookmarks Menu
-  m_MenuBookmarks(NULL),
-  m_ActionAddBookmark(NULL),
-  m_ActionNewFolder(NULL),
 
   // Pipeline Menu
   m_MenuPipeline(NULL),
@@ -117,8 +108,6 @@ void DREAM3DMenu::initialize()
   m_MenuFile->setObjectName(QStringLiteral("menuFile"));
   m_MenuRecentFiles = new QMenu(m_MenuFile);
   m_MenuRecentFiles->setObjectName(QStringLiteral("menu_RecentFiles"));
-  m_MenuBookmarks = new QMenu(m_MenuBar);
-  m_MenuBookmarks->setObjectName(QStringLiteral("menuBookmarks"));
   m_MenuHelp = new QMenu(m_MenuBar);
   m_MenuHelp->setObjectName(QStringLiteral("menuHelp"));
   m_MenuAdvanced = new QMenu(m_MenuHelp);
@@ -128,8 +117,6 @@ void DREAM3DMenu::initialize()
 
 
 
-  m_ActionAddBookmark = new QAction(m_MenuBookmarks);
-  m_ActionAddBookmark->setObjectName(QString::fromUtf8("m_ActionAddPipeline"));
   m_ActionRenamePipeline = new QAction(this);
   m_ActionRenamePipeline->setObjectName(QString::fromUtf8("m_ActionRenamePipeline"));
   m_ActionRemovePipeline = new QAction(this);
@@ -144,8 +131,6 @@ void DREAM3DMenu::initialize()
   m_ActionShowPrebuiltInFileSystem->setObjectName(QString::fromUtf8("m_ActionShowPrebuiltInFileSystem"));
   m_ActionExit = new QAction(this);
   m_ActionExit->setObjectName(QString::fromUtf8("m_ActionExit"));
-  m_ActionNewFolder = new QAction(m_MenuBookmarks);
-  m_ActionNewFolder->setObjectName(QString::fromUtf8("m_ActionNewFolder"));
   m_ActionOpen = new QAction(this);
   m_ActionOpen->setObjectName(QStringLiteral("actionOpen"));
   m_ActionNew = new QAction(this);
@@ -171,12 +156,8 @@ void DREAM3DMenu::initialize()
 
 
   m_ActionLocateFile->setText(QApplication::translate("DREAM3D_UI", "Locate Bookmark...", 0));
-  m_ActionAddBookmark->setText(QApplication::translate("DREAM3D_UI", "Add Bookmark", 0));
-  m_ActionAddBookmark->setShortcut(QApplication::translate("DREAM3D_UI", "Ctrl+B", 0));
   m_ActionRenamePipeline->setText(QApplication::translate("DREAM3D_UI", "Rename Pipeline", 0));
   m_ActionRemovePipeline->setText(QApplication::translate("DREAM3D_UI", "Remove Bookmark", 0));
-  m_ActionNewFolder->setText(QApplication::translate("DREAM3D_UI", "New Folder", 0));
-  m_ActionNewFolder->setShortcut(QApplication::translate("DREAM3D_UI", "Ctrl+F", 0));
   m_ActionClearPipeline->setText(QApplication::translate("DREAM3D_UI", "Clear Pipeline", 0));
   m_ActionClearPipeline->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Backspace));
   m_ActionOpen->setText(QApplication::translate("DREAM3D_UI", "Open...", 0));
@@ -218,7 +199,6 @@ void DREAM3DMenu::initialize()
   m_ActionClearCache->setText(QApplication::translate("DREAM3D_UI", "Clear Cache", 0));
   m_MenuFile->setTitle(QApplication::translate("DREAM3D_UI", "File", 0));
   m_MenuRecentFiles->setTitle(QApplication::translate("DREAM3D_UI", "Recent Files", 0));
-  m_MenuBookmarks->setTitle(QApplication::translate("DREAM3D_UI", "Bookmarks", 0));
   m_MenuHelp->setTitle(QApplication::translate("DREAM3D_UI", "Help", 0));
   m_MenuAdvanced->setTitle(QApplication::translate("DREAM3D_UI", "Advanced", 0));
   m_MenuPipeline->setTitle(QApplication::translate("DREAM3D_UI", "Pipeline", 0));
@@ -234,8 +214,6 @@ void DREAM3DMenu::initialize()
   connect(m_ActionCheckForUpdates, SIGNAL(triggered()), dream3dApp, SLOT(on_actionCheckForUpdates_triggered()));
   connect(m_ActionShowDREAM3DHelp, SIGNAL(triggered()), dream3dApp, SLOT(on_actionShowDREAM3DHelp_triggered()));
   connect(m_ActionPluginInformation, SIGNAL(triggered()), dream3dApp, SLOT(on_actionPluginInformation_triggered()));
-  connect(m_ActionAddBookmark, SIGNAL(triggered()), dream3dApp, SLOT(on_actionAddBookmark_triggered()));
-  connect(m_ActionNewFolder, SIGNAL(triggered()), dream3dApp, SLOT(on_actionNewFolder_triggered()));
   connect(m_ActionClearPipeline, SIGNAL(triggered()), dream3dApp, SLOT(on_actionClearPipeline_triggered()));
   connect(m_ActionShowBookmarkInFileSystem, SIGNAL(triggered()), dream3dApp, SLOT(on_actionShowBookmarkInFileSystem_triggered()));
   connect(m_ActionShowPrebuiltInFileSystem, SIGNAL(triggered()), dream3dApp, SLOT(on_actionShowPrebuiltInFileSystem_triggered()));
@@ -247,7 +225,6 @@ void DREAM3DMenu::initialize()
 
   // Add the actions to their respective menus
   m_MenuBar->addAction(m_MenuFile->menuAction());
-  m_MenuBar->addAction(m_MenuBookmarks->menuAction());
   m_MenuBar->addAction(m_MenuPipeline->menuAction());
   m_MenuBar->addAction(m_MenuHelp->menuAction());
   m_MenuFile->addAction(m_ActionNew);
@@ -261,11 +238,6 @@ void DREAM3DMenu::initialize()
   m_MenuFile->addAction(m_ActionExit);
   m_MenuRecentFiles->addSeparator();
   m_MenuRecentFiles->addAction(m_ActionClearRecentFiles);
-  m_MenuBookmarks->addAction(m_ActionAddBookmark);
-  {
-    m_MenuBookmarks->addSeparator();
-  }
-  m_MenuBookmarks->addAction(m_ActionNewFolder);
   m_MenuPipeline->addAction(m_ActionClearPipeline);
   m_MenuHelp->addAction(m_ActionShowDREAM3DHelp);
   m_MenuHelp->addSeparator();
@@ -335,17 +307,9 @@ void DREAM3DMenu::setViewMenu(QMenu* viewMenu)
   {
     m_MenuView = viewMenu;
 
-    QAction* bookmarksMenuAction = m_MenuBookmarks->menuAction();
-    m_MenuBar->insertMenu(bookmarksMenuAction, viewMenu);
+    QAction* pipelineMenuAction = m_MenuPipeline->menuAction();
+    m_MenuBar->insertMenu(pipelineMenuAction, viewMenu);
   }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QMenu* DREAM3DMenu::getBookmarksMenu()
-{
-  return m_MenuBookmarks;
 }
 
 // -----------------------------------------------------------------------------
@@ -378,38 +342,6 @@ QMenu* DREAM3DMenu::getRecentFilesMenu()
 QAction* DREAM3DMenu::getClearRecentFiles()
 {
   return m_ActionClearRecentFiles;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QAction* DREAM3DMenu::getShowFilterLibrary()
-{
-  return m_ActionShowFilterLibrary;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QAction* DREAM3DMenu::getShowFilterList()
-{
-  return m_ActionShowFilterList;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QAction* DREAM3DMenu::getShowPrebuiltPipelines()
-{
-  return m_ActionShowPrebuiltPipelines;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QAction* DREAM3DMenu::getShowBookmarks()
-{
-  return m_ActionShowBookmarks;
 }
 
 // -----------------------------------------------------------------------------
@@ -463,33 +395,9 @@ QAction* DREAM3DMenu::getClearPipeline()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QAction* DREAM3DMenu::getShowPrebuiltInFileSystem()
-{
-  return m_ActionShowPrebuiltInFileSystem;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QAction* DREAM3DMenu::getShowBookmarkInFileSystem()
 {
   return m_ActionShowBookmarkInFileSystem;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QAction* DREAM3DMenu::getAddBookmark()
-{
-  return m_ActionAddBookmark;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QAction* DREAM3DMenu::getNewFolder()
-{
-  return m_ActionNewFolder;
 }
 
 // -----------------------------------------------------------------------------

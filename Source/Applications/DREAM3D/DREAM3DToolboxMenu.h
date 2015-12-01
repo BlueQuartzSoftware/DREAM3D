@@ -33,50 +33,39 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _DREAM3DMenu_H_
-#define _DREAM3DMenu_H_
+#ifndef _DREAM3DToolboxMenu_H_
+#define _DREAM3DToolboxMenu_H_
 
 #include <QtCore/QObject>
 
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QMenu>
 
-class DREAM3DMenu : public QObject
+class DREAM3DToolboxMenu : public QObject
 {
     Q_OBJECT
 
   public:
-    DREAM3DMenu();
-    virtual ~DREAM3DMenu();
+    DREAM3DToolboxMenu();
+    virtual ~DREAM3DToolboxMenu();
 
     void initialize();
 
     void toggleMenuChildren(QMenu* menu, bool value);
 
-
     QMenuBar* getMenuBar();
 
     QMenu* getFileMenu();
     QMenu* getViewMenu();
-    void setViewMenu(QMenu* viewMenu);
-    QMenu* getPipelineMenu();
-    QMenu* getHelpMenu();
-    QMenu* getRecentFilesMenu();
+    QMenu* getBookmarksMenu();
 
-    QAction* getShowIssues();
+    QAction* getShowFilterLibrary();
+    QAction* getShowFilterList();
+    QAction* getShowBookmarks();
 
-    QAction* getClearRecentFiles();
-    QAction* getNew();
-    QAction* getOpen();
-    QAction* getSave();
-    QAction* getSaveAs();
-
-    QAction* getClearPipeline();
-    QAction* getShowBookmarkInFileSystem();
-
-    QAction* getRenamePipeline();
-    QAction* getRemovePipeline();
-    QAction* getLocateFile();
+    QAction* getCloseToolbox();
+    QAction* getAddBookmark();
+    QAction* getNewFolder();
 
   private:
 
@@ -84,40 +73,21 @@ class DREAM3DMenu : public QObject
 
     // File Menu
     QMenu*                          m_MenuFile;
-    QAction*                        m_ActionNew;
-    QAction*                        m_ActionOpen;
-    QAction*                        m_ActionSave;
-    QAction*                        m_ActionSaveAs;
-    QMenu*                          m_MenuRecentFiles;
-    QAction*                        m_ActionClearRecentFiles;
-    QAction*                        m_ActionExit;
+    QAction*                        m_ActionCloseToolbox;
 
     // View Menu
     QMenu*                          m_MenuView;
-    QAction*                        m_ActionShowIssues;
+    QAction*                        m_ActionShowFilterLibrary;
+    QAction*                        m_ActionShowFilterList;
+    QAction*                        m_ActionShowBookmarks;
 
-    // Pipeline Menu
-    QMenu*                          m_MenuPipeline;
-    QAction*                        m_ActionClearPipeline;
+    // Bookmarks Menu
+    QMenu*                          m_MenuBookmarks;
+    QAction*                        m_ActionAddBookmark;
+    QAction*                        m_ActionNewFolder;
 
-    // Help Menu
-    QMenu*                          m_MenuHelp;
-    QMenu*                          m_MenuAdvanced;
-    QAction*                        m_ActionClearCache;
-    QAction*                        m_ActionShowDREAM3DHelp;
-    QAction*                        m_ActionCheckForUpdates;
-    QAction*                        m_ActionAboutDREAM3D;
-    QAction*                        m_ActionPluginInformation;
-
-    // Contextual Menus
-    QAction*                        m_ActionRenamePipeline;
-    QAction*                        m_ActionRemovePipeline;
-    QAction*                        m_ActionLocateFile;
-    QAction*                        m_ActionShowBookmarkInFileSystem;
-    QAction*                        m_ActionShowPrebuiltInFileSystem;
-
-    DREAM3DMenu(const DREAM3DMenu&); // Copy Constructor Not Implemented
-    void operator=(const DREAM3DMenu&); // Operator '=' Not Implemented
+    DREAM3DToolboxMenu(const DREAM3DToolboxMenu&); // Copy Constructor Not Implemented
+    void operator=(const DREAM3DToolboxMenu&); // Operator '=' Not Implemented
 };
 
-#endif /* DREAM3DMenu_H_ */
+#endif /* DREAM3DToolboxMenu_H_ */

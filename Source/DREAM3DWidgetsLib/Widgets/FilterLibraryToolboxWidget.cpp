@@ -319,7 +319,7 @@ void FilterLibraryToolboxWidget::updateFilterGroupList(FilterManager::Collection
 // -----------------------------------------------------------------------------
 void FilterLibraryToolboxWidget::writeSettings(DREAM3DSettings& prefs)
 {
-  prefs.setValue(objectName(), isHidden());
+
 }
 
 // -----------------------------------------------------------------------------
@@ -327,6 +327,5 @@ void FilterLibraryToolboxWidget::writeSettings(DREAM3DSettings& prefs)
 // -----------------------------------------------------------------------------
 void FilterLibraryToolboxWidget::readSettings(DREAM3DSettings& prefs)
 {
-  bool b = prefs.value(objectName(), false).toBool();
-  setHidden(b);
+
 }

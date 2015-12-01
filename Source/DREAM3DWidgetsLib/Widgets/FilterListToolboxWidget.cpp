@@ -636,7 +636,6 @@ QMap<QString, AbstractFilter::Pointer> FilterListToolboxWidget::getHumanNameMap(
 // -----------------------------------------------------------------------------
 void FilterListToolboxWidget::writeSettings(DREAM3DSettings& prefs)
 {
-  prefs.setValue(objectName(), isHidden());
   prefs.setValue("ActiveSearchAction", getActiveSearchAction()->objectName());
 }
 

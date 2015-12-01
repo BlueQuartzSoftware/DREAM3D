@@ -35,6 +35,7 @@
 #include "DREAM3DToolbox.h"
 
 #include "DREAM3DApplication.h"
+#include "DREAM3DToolboxMenu.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
 #include "moc_DREAM3DToolbox.cpp"
@@ -42,8 +43,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3DToolbox::DREAM3DToolbox(QWidget* parent) :
-QWidget(parent)
+DREAM3DToolbox::DREAM3DToolbox(QWidget* parent, Qt::WindowFlags flags) :
+QMainWindow(parent, flags)
 {
   setupUi(this);
 
@@ -63,6 +64,10 @@ DREAM3DToolbox::~DREAM3DToolbox()
 // -----------------------------------------------------------------------------
 void DREAM3DToolbox::setupGui()
 {
+  setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+
+  m_ToolboxMenu = new DREAM3DToolboxMenu();
+
   readSettings();
 
   // Connect the library and list widgets so that the "double-click to add" feature works
@@ -83,6 +88,24 @@ void DREAM3DToolbox::readSettings()
   prefs.beginGroup("ToolboxSettings");
 
   setVisible(prefs.value(objectName(), true).toBool());
+  m_ToolboxMenu->getShowBookmarks()->setChecked(prefs.value(bookmarksWidget->objectName(), true).toBool());
+  m_ToolboxMenu->getShowFilterList()->setChecked(prefs.value(filterListWidget->objectName(), true).toBool());
+  m_ToolboxMenu->getShowFilterLibrary()->setChecked(prefs.value(filterLibraryWidget->objectName(), true).toBool());
+
+  if (prefs.value(bookmarksWidget->objectName(), true).toBool() == false)
+  {
+    tabWidget->removeTab(tabWidget->indexOf(bookmarksTab));
+  }
+
+  if (prefs.value(filterListWidget->objectName(), true).toBool() == false)
+  {
+    tabWidget->removeTab(tabWidget->indexOf(filterListWidget));
+  }
+
+  if (prefs.value(filterLibraryWidget->objectName(), true).toBool() == false)
+  {
+    tabWidget->removeTab(tabWidget->indexOf(filterLibraryWidget));
+  }
 
   // Have the toolbox write its settings to the prefs file
   readWindowSettings(prefs);
@@ -138,6 +161,9 @@ void DREAM3DToolbox::writeSettings()
   prefs.beginGroup("ToolboxSettings");
 
   prefs.setValue(objectName(), isVisible());
+  prefs.setValue(bookmarksWidget->objectName(), m_ToolboxMenu->getShowBookmarks()->isChecked());
+  prefs.setValue(filterListWidget->objectName(), m_ToolboxMenu->getShowFilterList()->isChecked());
+  prefs.setValue(filterLibraryWidget->objectName(), m_ToolboxMenu->getShowFilterLibrary()->isChecked());
 
   // Have the toolbox write its settings to the prefs file
   writeWindowSettings(prefs);
@@ -202,6 +228,46 @@ FilterListToolboxWidget* DREAM3DToolbox::getFilterListWidget()
 FilterLibraryToolboxWidget* DREAM3DToolbox::getFilterLibraryWidget()
 {
   return filterLibraryWidget;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DREAM3DToolboxMenu* DREAM3DToolbox::getToolboxMenu()
+{
+  return m_ToolboxMenu;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DToolbox::setToolboxMenu(DREAM3DToolboxMenu* menu)
+{
+  setMenuBar(menu->getMenuBar());
+  m_ToolboxMenu = menu;
+
+  m_ToolboxMenu->getShowFilterList()->setChecked(filterListTab->isVisible());
+  m_ToolboxMenu->getShowFilterLibrary()->setChecked(filterLibraryTab->isVisible());
+  m_ToolboxMenu->getShowBookmarks()->setChecked(bookmarksTab->isVisible());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DToolbox::setCurrentTab(ToolboxTabs tab)
+{
+  if (tab == DREAM3DToolbox::FilterList)
+  {
+    tabWidget->setCurrentWidget(filterListTab);
+  }
+  else if (tab == DREAM3DToolbox::FilterLibrary)
+  {
+    tabWidget->setCurrentWidget(filterLibraryTab);
+  }
+  else if (tab == DREAM3DToolbox::Bookmarks)
+  {
+    tabWidget->setCurrentWidget(bookmarksTab);
+  }
 }
 
 
