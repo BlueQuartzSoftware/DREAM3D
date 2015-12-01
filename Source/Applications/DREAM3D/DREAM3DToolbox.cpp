@@ -100,7 +100,7 @@ void DREAM3DToolbox::readSettings()
 
   setVisible(prefs.value(objectName(), true).toBool());
 
-  bool showBookmarks = prefs.value(objectName(), true).toBool();
+  bool showBookmarks = prefs.value(bookmarksWidget->objectName(), true).toBool();
   m_ToolboxMenu->getShowBookmarks()->setChecked(showBookmarks);
   if (showBookmarks == false)
   {
