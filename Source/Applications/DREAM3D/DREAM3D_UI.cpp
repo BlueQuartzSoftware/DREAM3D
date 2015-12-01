@@ -174,7 +174,7 @@ void DREAM3D_UI::updateFirstRun()
   }
   else
   {
-    prefs.setValue("First Run", false);
+    prefs.setValue("First Run", QVariant(false));
   }
 }
 
@@ -466,7 +466,7 @@ void DREAM3D_UI::readDockWidgetSettings(DREAM3DSettings& prefs, QDockWidget* dw)
   restoreDockWidget(dw);
 
   QString name = dw->objectName();
-  bool b = prefs.value(dw->objectName(), false).toBool();
+  bool b = prefs.value(dw->objectName(), QVariant(false)).toBool();
   dw->setHidden(b);
 }
 

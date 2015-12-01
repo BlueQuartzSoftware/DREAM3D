@@ -113,7 +113,7 @@ DREAM3DApplication::~DREAM3DApplication()
   if (prefs.value("Program Mode", QString("")) == "Clear Cache")
   {
     prefs.clear();
-    prefs.setValue("First Run", false);
+    prefs.setValue("First Run", QVariant(false));
 
     prefs.setValue("Program Mode", QString("Standard"));
   }

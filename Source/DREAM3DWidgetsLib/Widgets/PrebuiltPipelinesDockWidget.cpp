@@ -429,7 +429,7 @@ void PrebuiltPipelinesDockWidget::readSettings(QMainWindow* main, DREAM3DSetting
 {
   main->restoreDockWidget(this);
 
-  bool b = prefs.value(objectName(), false).toBool();
+  bool b = prefs.value(objectName(), QVariant(false)).toBool();
   setHidden(b);
 
   QByteArray headerState = prefs.value("PrebuiltsHeaderState", QByteArray());
@@ -443,7 +443,7 @@ void PrebuiltPipelinesDockWidget::readSettings(QMainWindow* main, DREAM3DSetting
     QTreeWidgetItem* item = *iter;
     if (item->type() == FilterLibraryTreeWidget::Node_Item_Type)
     {
-      item->setExpanded(prefs.value(item->text(0), false).toBool());
+      item->setExpanded(prefs.value(item->text(0), QVariant(false)).toBool());
     }
 
     ++iter;
