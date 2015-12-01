@@ -162,6 +162,33 @@ void DREAM3DToolbox::readWindowSettings(DREAM3DSettings& prefs)
     }
   }
 
+  // Remove the tabs from the interface
+  tabWidget->removeTab(tabWidget->indexOf(filterListTab));
+  tabWidget->removeTab(tabWidget->indexOf(filterLibraryTab));
+  tabWidget->removeTab(tabWidget->indexOf(bookmarksTab));
+
+  // Get the new tab indices (if there is no data, put them in [1]List, [2]Library, [3]Bookmarks order)
+  int filterListIndex = prefs.value("Filter List Index", QVariant(0)).toInt();
+  int filterLibraryIndex = prefs.value("Filter Library Index", QVariant(1)).toInt();
+  int bookmarksIndex = prefs.value("Bookmarks Index", QVariant(2)).toInt();
+  int currentIndex = prefs.value("Current Index", QVariant(0)).toInt();
+
+  // Re-add the tabs in the order that they were in from last launch (if index is less than 0, it was hidden during last launch)
+  if (filterListIndex >= 0)
+  {
+    tabWidget->insertTab(filterListIndex, filterListTab, "Filter List");
+  }
+  if (filterLibraryIndex >= 0)
+  {
+    tabWidget->insertTab(filterLibraryIndex, filterLibraryTab, "Filter Library");
+  }
+  if (bookmarksIndex >= 0)
+  {
+    tabWidget->insertTab(bookmarksIndex, bookmarksTab, "Bookmarks");
+  }
+
+  tabWidget->setCurrentIndex(currentIndex);
+
   prefs.endGroup();
 }
 
@@ -217,13 +244,18 @@ void DREAM3DToolbox::writeWindowSettings(DREAM3DSettings& prefs)
   QByteArray geo_data = saveGeometry();
   prefs.setValue(QString("MainWindowGeometry"), geo_data);
 
+  prefs.setValue("Current Index", QVariant(tabWidget->currentIndex()));
+  prefs.setValue("Filter List Index", QVariant(tabWidget->indexOf(filterListTab)));
+  prefs.setValue("Filter Library Index", QVariant(tabWidget->indexOf(filterLibraryTab)));
+  prefs.setValue("Bookmarks Index", QVariant(tabWidget->indexOf(bookmarksTab)));
+
   prefs.endGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DToolbox::actionShowFilterLibrary_toggled(bool enabled)
+void DREAM3DToolbox::actionShowFilterLibrary_triggered(bool enabled)
 {
   if (enabled == true)
   {
@@ -238,7 +270,7 @@ void DREAM3DToolbox::actionShowFilterLibrary_toggled(bool enabled)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DToolbox::actionShowFilterList_toggled(bool enabled)
+void DREAM3DToolbox::actionShowFilterList_triggered(bool enabled)
 {
   if (enabled == true)
   {
@@ -253,7 +285,7 @@ void DREAM3DToolbox::actionShowFilterList_toggled(bool enabled)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DToolbox::actionShowBookmarks_toggled(bool enabled)
+void DREAM3DToolbox::actionShowBookmarks_triggered(bool enabled)
 {
   if (enabled == true)
   {

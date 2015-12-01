@@ -129,9 +129,9 @@ void DREAM3DToolboxMenu::initialize()
 
   // Connections
   connect(m_ActionCloseToolbox, SIGNAL(triggered()), dream3dApp, SLOT(on_actionCloseToolbox_triggered()));
-  connect(m_ActionShowFilterLibrary, SIGNAL(toggled(bool)), toolbox, SLOT(actionShowFilterLibrary_toggled(bool)));
-  connect(m_ActionShowFilterList, SIGNAL(toggled(bool)), toolbox, SLOT(actionShowFilterList_toggled(bool)));
-  connect(m_ActionShowBookmarks, SIGNAL(toggled(bool)), toolbox, SLOT(actionShowBookmarks_toggled(bool)));
+  connect(m_ActionShowFilterLibrary, SIGNAL(triggered(bool)), toolbox, SLOT(actionShowFilterLibrary_triggered(bool)));
+  connect(m_ActionShowFilterList, SIGNAL(triggered(bool)), toolbox, SLOT(actionShowFilterList_triggered(bool)));
+  connect(m_ActionShowBookmarks, SIGNAL(triggered(bool)), toolbox, SLOT(actionShowBookmarks_triggered(bool)));
   connect(m_ActionAddBookmark, SIGNAL(triggered()), dream3dApp, SLOT(on_actionAddBookmark_triggered()));
   connect(m_ActionNewFolder, SIGNAL(triggered()), dream3dApp, SLOT(on_actionNewFolder_triggered()));
 

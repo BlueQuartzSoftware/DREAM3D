@@ -82,9 +82,9 @@ class DREAM3DToolbox : public QMainWindow, private Ui::DREAM3DToolbox
     void closeEvent(QCloseEvent* event);
 
   protected slots:
-    void actionShowFilterLibrary_toggled(bool enabled);
-    void actionShowFilterList_toggled(bool enabled);
-    void actionShowBookmarks_toggled(bool enabled);
+    void actionShowFilterLibrary_triggered(bool enabled);
+    void actionShowFilterList_triggered(bool enabled);
+    void actionShowBookmarks_triggered(bool enabled);
 
   private:
     static DREAM3DToolbox*                              self;
