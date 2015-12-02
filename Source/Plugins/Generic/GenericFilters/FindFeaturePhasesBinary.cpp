@@ -37,6 +37,7 @@
 #include "FindFeaturePhasesBinary.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 
@@ -222,8 +223,28 @@ AbstractFilter::Pointer FindFeaturePhasesBinary::newFilterInstance(bool copyFilt
 //
 // -----------------------------------------------------------------------------
 const QString FindFeaturePhasesBinary::getCompiledLibraryName()
-{ return GenericConstants::GenericBaseName; }
+{
+  return GenericConstants::GenericBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindFeaturePhasesBinary::getBrandingString()
+{
+  return "Generic";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindFeaturePhasesBinary::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

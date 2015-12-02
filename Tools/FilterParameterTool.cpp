@@ -1101,7 +1101,7 @@ bool AddIGeometryIncludes(const QString& cppFile)
   {
     // Read the Source File
     QFileInfo fi(cppFile);
-//    if (fi.baseName().compare("DataArrayCreationFilterParameter") != 0)
+//    if (fi.baseName().compare("LaplacianSmoothing") != 0)
 //    {
 //      return false;
 //    }
@@ -1123,11 +1123,10 @@ bool AddIGeometryIncludes(const QString& cppFile)
   bool didReplace = false;
   QString outString;
   QTextStream out(&outString);
-  QString imageGeomInc = "#include \"SIMPLib/DataContainers/DataContainerArrayProxy.h\"";
-  bool hasImageGeomInc = false;
-  QString imageGeomCode = "DataContainerArrayProxy";
-  //QString prereqCode = "<VertexGeom>";
-  bool hasImageGeomCode = false;
+  QString targetInclude = "#include \"SIMPLib/SIMPLibVersion.h\"";
+  bool hasTargetInclude = false;
+  QString targetCode = "SIMPLib::Version::";
+  bool hasTargetCode = false;
 
   QString simplibInc = "#include \"SIMPLib";
   int simplibLineIndex = 0;
@@ -1146,10 +1145,10 @@ bool AddIGeometryIncludes(const QString& cppFile)
     QString line = sourceLines.next();
     outLines.push_back(line); // Always add the line to the output
 
-    if(line.contains(imageGeomInc) )
+    if(line.contains(targetInclude) )
     {
-      hasImageGeomInc = true;
-      out << "    (" << index << ")" << imageGeomInc << "\n";
+      hasTargetInclude = true;
+      out << "    (" << index << ")" << targetInclude << "\n";
     }
 
     if(line.contains(simplibInc))
@@ -1157,10 +1156,10 @@ bool AddIGeometryIncludes(const QString& cppFile)
       if(index+1 > simplibLineIndex) { simplibLineIndex = index; } // This is the last #include "SIMPLib" header.
     }
 
-    if(line.contains(imageGeomCode) )
+    if(line.contains(targetCode) )
     {
-      hasImageGeomCode = true;
-      out << "    (" << index+1 << ")" << imageGeomCode << "\n";
+      hasTargetCode = true;
+      out << "    (" << index+1 << ")" << targetCode << "\n";
     }
 //    if(line.contains(prereqCode))
 //    {
@@ -1171,10 +1170,10 @@ bool AddIGeometryIncludes(const QString& cppFile)
     index++;
   }
 
-  if(hasImageGeomCode && !hasImageGeomInc)
+  if(hasTargetCode && !hasTargetInclude)
   {
-    qDebug() << outString;
-    outLines.insert(simplibLineIndex + 1, imageGeomInc);
+    //qDebug() << outString;
+    outLines.insert(simplibLineIndex + 1, targetInclude);
     didReplace = true;
   }
 
@@ -1188,7 +1187,7 @@ void ReplaceGrepSearchesRecursively(QDir currentDir)
 {
 
   QStringList filters;
-  filters.append("*.h");
+  filters.append("*.cpp");
 
   if(currentDir.dirName().compare("zRel") == 0 || currentDir.dirName().compare("Build") == 0)
   {
@@ -1209,8 +1208,8 @@ void ReplaceGrepSearchesRecursively(QDir currentDir)
   {
     QString itemFilePath = itemInfo.absoluteFilePath();
    // ReplaceText(itemFilePath);
-    std::cout << "-------------------------------------" << std::endl;
-    std::cout << itemFilePath.toStdString() << std::endl;
+//    std::cout << "-------------------------------------" << std::endl;
+//    std::cout << itemFilePath.toStdString() << std::endl;
     AddIGeometryIncludes(itemFilePath);
   }
 }

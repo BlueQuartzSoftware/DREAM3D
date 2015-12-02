@@ -59,6 +59,7 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Geometry/MeshStructs.h"
 #include "SIMPLib/DataArrays/StructArray.hpp"
+#include "SIMPLib/SIMPLibVersion.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/MeshFunctions.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/MeshLinearAlgebra.h"
@@ -1033,8 +1034,28 @@ AbstractFilter::Pointer MovingFiniteElementSmoothing::newFilterInstance(bool cop
 //
 // -----------------------------------------------------------------------------
 const QString MovingFiniteElementSmoothing::getCompiledLibraryName()
-{ return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
+{
+  return SurfaceMeshingConstants::SurfaceMeshingBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MovingFiniteElementSmoothing::getBrandingString()
+{
+  return "SurfaceMeshing";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MovingFiniteElementSmoothing::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 
 // -----------------------------------------------------------------------------
 //
