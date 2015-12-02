@@ -1080,14 +1080,14 @@ bool GroupIncludes( const QString& cppFile)
     //int l = iter.value();
     str = str.split('\t').at(1);
 
-    //  qDebug() << lines[lineIndex]  << " (" << l << ") " << str;
+      qDebug() << lines[lineIndex]  << " (" << lineIndex << ") " << str;
 
     outLines[lines[lineIndex]] = str;
 
     lineIndex++;
   }
 
-  writeOutput(didReplace, outLines, cppFile);
+ // writeOutput(didReplace, outLines, cppFile);
 
   return didReplace;
 }

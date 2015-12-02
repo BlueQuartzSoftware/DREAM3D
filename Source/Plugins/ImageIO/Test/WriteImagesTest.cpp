@@ -46,7 +46,6 @@
 #include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/Common/FilterFactory.hpp"
 #include "SIMPLib/SIMPLibVersion.h"
-
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/Utilities/UnitTestSupport.hpp"

@@ -44,7 +44,6 @@
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataContainers/DataArrayPath.h"
 #include "SIMPLib/SIMPLibVersion.h"
-
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/VTKUtils/VTKWriterMacros.h"
 

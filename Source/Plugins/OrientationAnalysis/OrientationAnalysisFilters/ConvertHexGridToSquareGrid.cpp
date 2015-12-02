@@ -41,7 +41,6 @@
 #include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/Utilities/FilePathGenerator.h"
 
 #include "EbsdLib/HKL/CtfReader.h"

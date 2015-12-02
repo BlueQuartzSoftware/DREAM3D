@@ -43,7 +43,6 @@
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-
 #include "SIMPLib/DataArrays/IDataArray.h"
 
 /**
