@@ -41,6 +41,7 @@
 
 #include "DREAM3DApplication.h"
 #include "DREAM3D_UI.h"
+#include "BrandedStrings.h"
 
 #ifdef Q_WS_X11
 #include <QPlastiqueStyle>
@@ -78,8 +79,8 @@ int main(int argc, char* argv[])
 
   DREAM3DApplication qtapp(argc, argv);
 
-  QCoreApplication::setOrganizationDomain("bluequartz.net");
-  QCoreApplication::setOrganizationName("BlueQuartz Software");
+  QCoreApplication::setOrganizationDomain(BrandedStrings::OrganizationDomain);
+  QCoreApplication::setOrganizationName(BrandedStrings::OrganizationName);
   QCoreApplication::setApplicationName("DREAM3D");
 
 #if defined (Q_OS_MAC)

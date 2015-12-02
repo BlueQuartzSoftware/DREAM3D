@@ -37,14 +37,16 @@
 #include <QApplication>
 
 #include "DevHelper.h"
+#include "BrandedStrings.h"
+
 
 int main(int argc, char* argv[])
 {
 
   QApplication app(argc, argv);
 
-  QCoreApplication::setOrganizationDomain("bluequartz.net");
-  QCoreApplication::setOrganizationName("BlueQuartz Software");
+  QCoreApplication::setOrganizationDomain(BrandedStrings::OrganizationDomain);
+  QCoreApplication::setOrganizationName(BrandedStrings::OrganizationName);
   QCoreApplication::setApplicationName("DevHelper");
 
 #if defined (Q_OS_MAC)
