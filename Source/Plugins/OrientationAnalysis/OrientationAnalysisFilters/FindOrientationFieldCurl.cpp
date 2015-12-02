@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "FindOrientationFieldCurl.h"
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS

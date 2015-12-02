@@ -33,9 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
-
-
 #include "MeshFunctions.h"
 
 #include "SIMPLib/Common/DREAM3DMath.h"

@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "UncertainRegularGridSampleSurfaceMesh.h"
 
 #include "SIMPLib/Common/Constants.h"

@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "TriangleNormalFilter.h"
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"

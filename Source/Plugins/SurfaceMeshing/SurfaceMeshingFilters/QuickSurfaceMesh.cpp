@@ -33,7 +33,6 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "QuickSurfaceMesh.h"
 
 #include "SIMPLib/Common/Constants.h"

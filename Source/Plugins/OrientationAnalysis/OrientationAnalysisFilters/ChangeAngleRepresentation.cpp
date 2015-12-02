@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "ChangeAngleRepresentation.h"
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS

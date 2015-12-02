@@ -696,87 +696,7 @@ void FindFiltersWithMultipleDataArrayPaths(AbstractFilter::Pointer filter)
     std::cout << "| " << filter->getCompiledLibraryName().toStdString() << " | " << filter->getNameOfClass().toStdString() << " | " << count  << " | " << std::endl;
   }
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool GroupIncludes( AbstractFilter::Pointer filter, const QString& file)
-{
-  QString contents;
-  {
-    // Read the Source File
-    //    QFileInfo fi(cppFile);
-    //    if (fi.baseName().compare("AddOrientationNoise") != 0)
-    //    {
-    //      return false;
-    //    }
-
-    QFile source(file);
-    source.open(QFile::ReadOnly);
-    contents = source.readAll();
-    source.close();
-  }
-
-  qDebug() << file;
-
-  QStringList names;
-  bool didReplace = false;
-
-  QVector<int> lines(0);
-
-
-  QString searchString = "#include";
-  QVector<QString> outLines;
-  QStringList list = contents.split(QRegExp("\\n"));
-  QStringListIterator sourceLines(list);
-  QString body;
-  QMap<QString, int> lineToInclude;
-  int index = 0;
-  while (sourceLines.hasNext())
-  {
-    QString line = sourceLines.next();
-    outLines.push_back(line);
-    if(line.contains(searchString) )
-    {
-      if(line.contains("H5Support/H5Support.h")) { didReplace = true; lineToInclude["[0]\t" + line] = index; lines.push_back(index); }
-      else if(line.contains("H5Support")) { didReplace = true; lineToInclude["[1]\t" + line] = index; lines.push_back(index); }
-
-      else if(line.contains("EbsdLib/EbsdLib.h")) { didReplace = true; lineToInclude["[2]\t" + line] = index; lines.push_back(index); }
-      else if(line.contains("EbsdLib")) { didReplace = true; lineToInclude["[3]\t" + line] = index; lines.push_back(index); }
-
-      else if(line.contains("DREAM3DLib/DREAM3DLib.h")) { didReplace = true; lineToInclude["[4]\t" + line] = index; lines.push_back(index); }
-      else if(line.contains("DREAM3DLib")) { didReplace = true; lineToInclude["[5]\t" + line] = index; lines.push_back(index); }
-
-      else if(line.contains("OrientationLib/OrientationLib.h")) { didReplace = true; lineToInclude["[6]\t" + line] = index; lines.push_back(index); }
-      else if(line.contains("OrientationLib")) { didReplace = true; lineToInclude["[7]\t" + line] = index; lines.push_back(index); }
-    }
-    index++;
-  }
-
-  // qDebug() << bins[0] << "\t" << bins[1] << "\t" << bins[2] << "\t" << bins[3];
-
-  int lineIndex = 0;
-  QMapIterator<QString, int> iter(lineToInclude);
-  while (iter.hasNext())
-  {
-    iter.next();
-    QString str = iter.key();
-    //int l = iter.value();
-    str = str.split('\t').at(1);
-
-    //  qDebug() << lines[lineIndex]  << " (" << l << ") " << str;
-
-    outLines[lines[lineIndex]] = str;
-
-    lineIndex++;
-  }
-
-  writeOutput(didReplace, outLines, file);
-
-  return didReplace;
-}
 #endif
-
 
 
 #if 0
@@ -1092,6 +1012,89 @@ void ReplaceText(QString absPath)
 
   writeOutput(didReplace, outVec, absPath);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool GroupIncludes( const QString& cppFile)
+{
+  QString contents;
+  {
+    // Read the Source File
+        QFileInfo fi(cppFile);
+        if (fi.baseName().compare("EMMPMFilter") != 0)
+        {
+          return false;
+        }
+
+    QFile source(cppFile);
+    source.open(QFile::ReadOnly);
+    contents = source.readAll();
+    source.close();
+  }
+
+  //qDebug() << cppFile;
+
+  QStringList names;
+  bool didReplace = false;
+
+  QVector<int> lines(0);
+
+
+  QString searchString = "#include";
+  QVector<QString> outLines;
+  QStringList list = contents.split(QRegExp("\\n"));
+  QStringListIterator sourceLines(list);
+  QString body;
+  QMap<QString, int> lineToInclude;
+  int index = 0;
+  while (sourceLines.hasNext())
+  {
+    QString line = sourceLines.next();
+    outLines.push_back(line);
+    if(line.contains(searchString) )
+    {
+      if(line.contains("H5Support/H5Support.h")) { didReplace = true; lineToInclude["[0]\t" + line] = index; lines.push_back(index); }
+      else if(line.contains("H5Support")) { didReplace = true; lineToInclude["[1]\t" + line] = index; lines.push_back(index); }
+
+      else if(line.contains("EbsdLib/EbsdLib.h")) { didReplace = true; lineToInclude["[2]\t" + line] = index; lines.push_back(index); }
+      else if(line.contains("EbsdLib")) { didReplace = true; lineToInclude["[3]\t" + line] = index; lines.push_back(index); }
+
+      else if(line.contains("SIMPLib/SIMPLib.h")) { didReplace = true; lineToInclude["[4]\t" + line] = index; lines.push_back(index); }
+      else if(line.contains("SIMPLib")) { didReplace = true; lineToInclude["[5]\t" + line] = index; lines.push_back(index); }
+
+      else if(line.contains("OrientationLib/OrientationLib.h")) { didReplace = true; lineToInclude["[6]\t" + line] = index; lines.push_back(index); }
+      else if(line.contains("OrientationLib")) { didReplace = true; lineToInclude["[7]\t" + line] = index; lines.push_back(index); }
+    }
+    index++;
+  }
+
+  // qDebug() << bins[0] << "\t" << bins[1] << "\t" << bins[2] << "\t" << bins[3];
+
+  int lineIndex = 0;
+  QMapIterator<QString, int> iter(lineToInclude);
+  while (iter.hasNext())
+  {
+    iter.next();
+    QString str = iter.key();
+    //int l = iter.value();
+    str = str.split('\t').at(1);
+
+    //  qDebug() << lines[lineIndex]  << " (" << l << ") " << str;
+
+    outLines[lines[lineIndex]] = str;
+
+    lineIndex++;
+  }
+
+  writeOutput(didReplace, outLines, cppFile);
+
+  return didReplace;
+}
+
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -1188,6 +1191,7 @@ void ReplaceGrepSearchesRecursively(QDir currentDir)
 
   QStringList filters;
   filters.append("*.cpp");
+  filters.append("*.h");
 
   if(currentDir.dirName().compare("zRel") == 0 || currentDir.dirName().compare("Build") == 0)
   {
@@ -1210,7 +1214,8 @@ void ReplaceGrepSearchesRecursively(QDir currentDir)
    // ReplaceText(itemFilePath);
 //    std::cout << "-------------------------------------" << std::endl;
 //    std::cout << itemFilePath.toStdString() << std::endl;
-    AddIGeometryIncludes(itemFilePath);
+//    AddIGeometryIncludes(itemFilePath);
+    GroupIncludes(itemFilePath);
   }
 }
 
