@@ -134,6 +134,9 @@ class DREAM3DApplication : public QApplication
     void on_actionPluginInformation_triggered();
     void on_actionAboutDREAM3D_triggered();
 
+    void on_pipelineViewContextMenuRequested(const QPoint&);
+    void on_bookmarksDockContextMenuRequested(const QPoint&);
+
     void toPipelineRunningState();
     void toPipelineIdleState();
 
@@ -148,9 +151,6 @@ class DREAM3DApplication : public QApplication
     virtual void toolboxWindowChanged();
 
     virtual void on_actionClearRecentFiles_triggered();
-
-    virtual void on_pipelineViewContextMenuRequested(const QPoint&);
-    virtual void on_bookmarksDockContextMenuRequested(const QPoint&);
 
     // DREAM3D_UI slots
     void openRecentFile();

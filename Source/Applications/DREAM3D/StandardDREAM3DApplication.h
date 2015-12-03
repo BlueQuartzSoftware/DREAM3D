@@ -72,9 +72,6 @@ class StandardDREAM3DApplication : public DREAM3DApplication
     // DREAM3D_UI slots
     virtual void on_actionClearRecentFiles_triggered();
 
-    virtual void on_pipelineViewContextMenuRequested(const QPoint&);
-    virtual void on_bookmarksDockContextMenuRequested(const QPoint&);
-
   private:
 
     StandardDREAM3DApplication(const StandardDREAM3DApplication&); // Copy Constructor Not Implemented

@@ -427,24 +427,6 @@ void DREAM3DApplication::on_actionClearRecentFiles_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DApplication::on_pipelineViewContextMenuRequested(const QPoint&)
-{
-  // This should never be executed
-  return;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3DApplication::on_bookmarksDockContextMenuRequested(const QPoint&)
-{
-  // This should never be executed
-  return;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void DREAM3DApplication::addFilter(const QString &text)
 {
   if (NULL != m_ActiveWindow)
@@ -845,6 +827,139 @@ void DREAM3DApplication::on_actionShowBookmarkInFileSystem_triggered()
       QDesktopServices::openUrl(s);
     }
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DApplication::on_pipelineViewContextMenuRequested(const QPoint& pos)
+{
+  if (NULL != m_ActiveWindow)
+  {
+    PipelineViewWidget* pipelineView = m_ActiveWindow->getPipelineViewWidget();
+    DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();
+    QMenu menu;
+
+    menu.addAction(menuItems->getActionClearPipeline());
+    menu.exec(pipelineView->mapToGlobal(pos));
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DApplication::on_bookmarksDockContextMenuRequested(const QPoint& pos)
+{
+  DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();
+  BookmarksTreeView* bookmarksTreeView = m_ActiveWindow->getBookmarksToolboxWidget()->getBookmarksTreeView();
+
+  QModelIndex index = bookmarksTreeView->indexAt(pos);
+
+  QPoint mapped;
+  if (index.isValid())
+  {
+    // Note: We must map the point to global from the viewport to
+    // account for the header.
+    mapped = bookmarksTreeView->viewport()->mapToGlobal(pos);
+  }
+  else
+  {
+    index = QModelIndex();
+    mapped = bookmarksTreeView->mapToGlobal(pos);
+  }
+
+  BookmarksModel* model = BookmarksModel::Instance();
+
+  QAction* actionAddBookmark = menuItems->getActionAddBookmark();
+  QAction* actionNewFolder = menuItems->getActionNewFolder();
+  QAction* actionRenameBookmark = menuItems->getActionRenamePipeline();
+  QAction* actionRemoveBookmark = menuItems->getActionRemovePipeline();
+  QAction* actionLocateFile = menuItems->getActionLocateFile();
+  QAction* actionShowBookmarkInFileSystem = menuItems->getActionShowBookmarkInFileSystem();
+
+  QMenu menu;
+  if (index.isValid() == false)
+  {
+    menu.addAction(actionAddBookmark);
+    {
+      QAction* separator = new QAction(this);
+      separator->setSeparator(true);
+      menu.addAction(separator);
+    }
+    menu.addAction(actionNewFolder);
+  }
+  else
+  {
+    QModelIndex actualIndex = model->index(index.row(), BookmarksItem::Path, index.parent());
+    QString path = actualIndex.data().toString();
+    if (path.isEmpty() == false)
+    {
+      bool itemHasErrors = model->data(actualIndex, Qt::UserRole).value<bool>();
+      if (itemHasErrors == true)
+      {
+        menu.addAction(actionLocateFile);
+
+        {
+          QAction* separator = new QAction(this);
+          separator->setSeparator(true);
+          menu.addAction(separator);
+        }
+
+        actionRemoveBookmark->setText("Remove Bookmark");
+        menu.addAction(actionRemoveBookmark);
+      }
+      else
+      {
+        menu.addAction(actionAddBookmark);
+
+        actionRenameBookmark->setText("Rename Bookmark");
+        menu.addAction(actionRenameBookmark);
+
+        {
+          QAction* separator = new QAction(this);
+          separator->setSeparator(true);
+          menu.addAction(separator);
+        }
+
+        actionRemoveBookmark->setText("Remove Bookmark");
+        menu.addAction(actionRemoveBookmark);
+
+        {
+          QAction* separator = new QAction(this);
+          separator->setSeparator(true);
+          menu.addAction(separator);
+        }
+
+        menu.addAction(actionShowBookmarkInFileSystem);
+      }
+    }
+    else if (path.isEmpty())
+    {
+      menu.addAction(actionAddBookmark);
+
+      actionRenameBookmark->setText("Rename Folder");
+      menu.addAction(actionRenameBookmark);
+
+      {
+        QAction* separator = new QAction(this);
+        separator->setSeparator(true);
+        menu.addAction(separator);
+      }
+
+      actionRemoveBookmark->setText("Remove Folder");
+      menu.addAction(actionRemoveBookmark);
+
+      {
+        QAction* separator = new QAction(this);
+        separator->setSeparator(true);
+        menu.addAction(separator);
+      }
+
+      menu.addAction(actionNewFolder);
+    }
+  }
+
+  menu.exec(mapped);
 }
 
 // -----------------------------------------------------------------------------
