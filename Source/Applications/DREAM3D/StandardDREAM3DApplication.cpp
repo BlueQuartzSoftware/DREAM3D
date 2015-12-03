@@ -192,7 +192,6 @@ void StandardDREAM3DApplication::on_pipelineViewContextMenuRequested(const QPoin
 void StandardDREAM3DApplication::on_bookmarksDockContextMenuRequested(const QPoint& pos)
 {
   DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();
-  DREAM3DToolbox* toolbox = DREAM3DToolbox::Instance();
   BookmarksTreeView* bookmarksTreeView = m_ActiveWindow->getBookmarksToolboxWidget()->getBookmarksTreeView();
 
   QModelIndex index = bookmarksTreeView->indexAt(pos);
@@ -465,9 +464,7 @@ QMenuBar* StandardDREAM3DApplication::getToolboxMenuBar()
   menuView->addAction(actionShowBookmarks);
 
   menuBookmarks->addAction(actionAddBookmark);
-  {
-    menuBookmarks->addSeparator();
-  }
+  menuBookmarks->addSeparator();
   menuBookmarks->addAction(actionNewFolder);
 
   return menuBar;

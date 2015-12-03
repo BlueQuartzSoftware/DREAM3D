@@ -75,6 +75,7 @@
 #include "Applications/DREAM3D/DREAM3DConstants.h"
 #include "Applications/DREAM3D/DREAM3DToolbox.h"
 #include "Applications/DREAM3D/DREAM3DToolboxMenu.h"
+#include "Applications/DREAM3D/DREAM3DMenuItems.h"
 
 #include "DSplashScreen.h"
 
@@ -94,10 +95,7 @@ m_GlobalMenu(NULL)
     this, SLOT(updateRecentFileList(const QString&)));
 
   // Initialize the global menu
-  m_GlobalMenu = new DREAM3DMenu();
-
-  // Create the placeholder View Menu
-  m_PlaceholderViewMenu = createPlaceholderViewMenu();
+  createGlobalMenu();
 }
 
 // -----------------------------------------------------------------------------
@@ -105,35 +103,7 @@ m_GlobalMenu(NULL)
 // -----------------------------------------------------------------------------
 MacDREAM3DApplication::~MacDREAM3DApplication()
 {
-  delete this->Splash;
-  this->Splash = NULL;
 
-  DREAM3DToolbox* toolbox = DREAM3DToolbox::Instance();
-  toolbox->writeSettings();
-
-  delete toolbox;
-  toolbox = NULL;
-
-  DREAM3DSettings prefs;
-  if (prefs.value("Program Mode", QString("")) == "Clear Cache")
-  {
-    prefs.clear();
-    prefs.setValue("First Run", QVariant(false));
-
-    prefs.setValue("Program Mode", QString("Standard"));
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void delay(int seconds)
-{
-  QTime dieTime = QTime::currentTime().addSecs(seconds);
-  while (QTime::currentTime() < dieTime)
-  {
-    QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -141,8 +111,9 @@ void delay(int seconds)
 // -----------------------------------------------------------------------------
 void MacDREAM3DApplication::updateRecentFileList(const QString& file)
 {
-  QMenu* recentFilesMenu = m_GlobalMenu->getRecentFilesMenu();
-  QAction* clearRecentFilesAction = m_GlobalMenu->getClearRecentFiles();
+  DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();
+  QMenu* recentFilesMenu = menuItems->getMenuRecentFiles();
+  QAction* clearRecentFilesAction = menuItems->getActionClearRecentFiles();
 
   // Clear the Recent Items Menu
   recentFilesMenu->clear();
@@ -168,8 +139,10 @@ void MacDREAM3DApplication::updateRecentFileList(const QString& file)
 // -----------------------------------------------------------------------------
 void MacDREAM3DApplication::on_actionClearRecentFiles_triggered()
 {
-  QMenu* recentFilesMenu = m_GlobalMenu->getRecentFilesMenu();
-  QAction* clearRecentFilesAction = m_GlobalMenu->getClearRecentFiles();
+  DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();
+
+  QMenu* recentFilesMenu = menuItems->getMenuRecentFiles();
+  QAction* clearRecentFilesAction = menuItems->getActionClearRecentFiles();
 
   // Clear the Recent Items Menu
   recentFilesMenu->clear();
@@ -188,445 +161,9 @@ void MacDREAM3DApplication::on_actionClearRecentFiles_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MacDREAM3DApplication::openRecentFile()
-{
-  QAction* action = qobject_cast<QAction*>(sender());
-
-  if (action)
-  {
-    QString filePath = action->data().toString();
-
-    newInstanceFromFile(filePath, true, true);
-
-    // Add file path to the recent files list for both instances
-    QRecentFileList* list = QRecentFileList::instance();
-    list->addFile(filePath);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MacDREAM3DApplication::addFilter(const QString &text)
-{
-  if (NULL != m_ActiveWindow)
-  {
-    m_ActiveWindow->getPipelineViewWidget()->addFilter(text);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QMap<DREAM3D_UI*, QMenu*> MacDREAM3DApplication::getDREAM3DInstanceMap()
-{
-  return m_DREAM3DInstanceMap;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MacDREAM3DApplication::registerDREAM3DWindow(DREAM3D_UI* window, QMenu* viewMenu)
-{
-  m_DREAM3DInstanceMap.insert(window, viewMenu);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void MacDREAM3DApplication::unregisterDREAM3DWindow(DREAM3D_UI* window)
 {
-  m_DREAM3DInstanceMap.remove(window);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MacDREAM3DApplication::on_actionCloseToolbox_triggered()
-{
-  DREAM3DToolbox* toolbox = DREAM3DToolbox::Instance();
-  toolbox->close();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MacDREAM3DApplication::on_actionNew_triggered()
-{
-  DREAM3D_UI* newInstance = getNewDREAM3DInstance();
-  newInstance->show();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MacDREAM3DApplication::on_actionOpen_triggered()
-{
-  QString proposedDir = m_OpenDialogLastDirectory;
-  QString filePath = QFileDialog::getOpenFileName(NULL, tr("Open Pipeline"),
-    proposedDir, tr("Json File (*.json);;DREAM.3D File (*.dream3d);;Text File (*.txt);;Ini File (*.ini);;All Files (*.*)"));
-  if (filePath.isEmpty())
-  {
-    return;
-  }
-
-  newInstanceFromFile(filePath, true, true);
-
-  // Cache the last directory on old instance
-  m_OpenDialogLastDirectory = filePath;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MacDREAM3DApplication::on_actionSave_triggered()
-{
-  if (NULL != m_ActiveWindow)
-  {
-    m_ActiveWindow->savePipeline();
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MacDREAM3DApplication::on_actionSaveAs_triggered()
-{
-  if (NULL != m_ActiveWindow)
-  {
-    m_ActiveWindow->savePipelineAs();
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MacDREAM3DApplication::on_actionAddBookmark_triggered()
-{
-  DREAM3DToolbox* toolbox = DREAM3DToolbox::Instance();
-
-  toolbox->setCurrentTab(DREAM3DToolbox::Bookmarks);
-
-  BookmarksToolboxWidget* bookmarksToolboxWidget = toolbox->getBookmarksWidget();
-
-  if (NULL != bookmarksToolboxWidget)
-  {
-    QString proposedDir = m_OpenDialogLastDirectory;
-    QList<QString> newPrefPaths;
-
-    newPrefPaths = QFileDialog::getOpenFileNames(toolbox, tr("Choose Pipeline File(s)"),
-      proposedDir, tr("Json File (*.json);;DREAM.3D File (*.dream3d);;Text File (*.txt);;Ini File (*.ini);;All Files (*.*)"));
-    if (true == newPrefPaths.isEmpty()) { return; }
-
-    QModelIndex parent = bookmarksToolboxWidget->getSelectedParentTreeItem();
-
-    for (int i = 0; i < newPrefPaths.size(); i++)
-    {
-      QString newPrefPath = newPrefPaths[i];
-      newPrefPath = QDir::toNativeSeparators(newPrefPath);
-      bookmarksToolboxWidget->addBookmark(newPrefPath, parent);
-    }
-
-    if (newPrefPaths.size() > 0)
-    {
-      // Cache the directory from the last path added
-      m_OpenDialogLastDirectory = newPrefPaths[newPrefPaths.size() - 1];
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MacDREAM3DApplication::on_actionNewFolder_triggered()
-{
-  DREAM3DToolbox* toolbox = DREAM3DToolbox::Instance();
-
-  toolbox->setCurrentTab(DREAM3DToolbox::Bookmarks);
-
-  BookmarksModel* model = BookmarksModel::Instance();
-  BookmarksToolboxWidget* bookmarksToolboxWidget = toolbox->getBookmarksWidget();
-
-  QModelIndex parent = bookmarksToolboxWidget->getSelectedParentTreeItem();
-  QString parentName = model->index(parent.row(), BookmarksItem::Name, parent.parent()).data().toString();
-
-  QString name = "New Folder";
-
-  bookmarksToolboxWidget->addTreeItem(parent, name, QIcon(":/folder_blue.png"), "", model->rowCount(parent), true, true, false);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MacDREAM3DApplication::on_actionClearPipeline_triggered()
-{
-  if (NULL != m_ActiveWindow)
-  {
-    m_ActiveWindow->clearPipeline();
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MacDREAM3DApplication::on_actionShowDREAM3DHelp_triggered()
-{
-  // Generate help page
-  QUrl helpURL = DREAM3DHelpUrlGenerator::generateHTMLUrl("index");
-#ifdef DREAM3D_USE_QtWebEngine
-  DREAM3DUserManualDialog::LaunchHelpDialog(helpURL);
-#else
-  bool didOpen = QDesktopServices::openUrl(helpURL);
-  if(false == didOpen)
-  {
-    QMessageBox msgBox;
-    msgBox.setText(QString("Error Opening Help File"));
-    msgBox.setInformativeText(QString::fromLatin1("DREAM3D could not open the help file path ") + helpURL.path());
-    msgBox.setStandardButtons(QMessageBox::Ok);
-    msgBox.setDefaultButton(QMessageBox::Ok);
-    msgBox.setIcon(QMessageBox::Critical);
-    msgBox.exec();
-  }
-#endif
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MacDREAM3DApplication::on_actionAboutDREAM3D_triggered()
-{
-  AboutDREAM3D d(NULL);
-  d.exec();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MacDREAM3DApplication::on_actionCheckForUpdates_triggered()
-{
-  DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(NULL);
-
-  d->setCurrentVersion((SIMPLib::Version::Complete()));
-  d->setUpdateWebSite(DREAM3D::UpdateWebsite::UpdateWebSite);
-  d->setApplicationName("DREAM3D");
-
-  // Read from the DREAM3DSettings Pref file the information that we need
-  DREAM3DSettings prefs;
-  prefs.beginGroup(DREAM3D::UpdateWebsite::VersionCheckGroupName);
-  QDateTime dateTime = prefs.value(DREAM3D::UpdateWebsite::LastVersionCheck, QDateTime::currentDateTime()).toDateTime();
-  d->setLastCheckDateTime(dateTime);
-  prefs.endGroup();
-
-  // Now display the dialog box
-  d->exec();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MacDREAM3DApplication::on_actionPluginInformation_triggered()
-{
-  AboutPlugins dialog(NULL);
-  dialog.exec();
-
-  // Write cache on exit
-  dialog.writePluginCache();
-
-  /* If any of the load checkboxes were changed, display a dialog warning
-   * the user that they must restart DREAM3D to see the changes.
-   */
-  if (dialog.getLoadPreferencesDidChange() == true)
-  {
-    QMessageBox msgBox;
-    msgBox.setText("DREAM3D must be restarted to allow these changes to take effect.");
-    msgBox.setInformativeText("Restart?");
-    msgBox.setWindowTitle("Restart Needed");
-    msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-    msgBox.setDefaultButton(QMessageBox::Yes);
-    int choice = msgBox.exec();
-
-    if (choice == QMessageBox::Yes)
-    {
-      QMutableMapIterator<DREAM3D_UI*, QMenu*> iter(m_DREAM3DInstanceMap);
-      while (iter.hasNext())
-      {
-        iter.next();
-
-        DREAM3D_UI* dream3d = iter.key();
-        dream3d->close();
-      }
-
-      // Restart DREAM3D
-      QProcess::startDetached(QApplication::applicationFilePath());
-      dream3dApp->quit();
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MacDREAM3DApplication::on_actionRenamePipeline_triggered()
-{
-  if (NULL != m_ActiveWindow)
-  {
-    BookmarksTreeView* bookmarksTreeView = m_ActiveWindow->getBookmarksToolboxWidget()->getBookmarksTreeView();
-    QModelIndex index = bookmarksTreeView->currentIndex();
-    bookmarksTreeView->edit(index);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MacDREAM3DApplication::on_actionRemovePipeline_triggered()
-{
-  if (NULL != m_ActiveWindow)
-  {
-    BookmarksToolboxWidget* BookmarksToolboxWidget = m_ActiveWindow->getBookmarksToolboxWidget();
-    BookmarksTreeView* bookmarksTreeView = BookmarksToolboxWidget->getBookmarksTreeView();
-
-    BookmarksModel* model = BookmarksModel::Instance();
-
-    QModelIndex index = bookmarksTreeView->currentIndex();
-    QModelIndex nameIndex = model->index(index.row(), BookmarksItem::Name, index.parent());
-    QString name = nameIndex.data().toString();
-
-    QMessageBox msgBox;
-    if (model->flags(nameIndex).testFlag(Qt::ItemIsDropEnabled) == false)
-    {
-      msgBox.setWindowTitle("Remove Bookmark");
-      msgBox.setText("Are you sure that you want to remove the bookmark \"" + name + "\"? The original file will not be removed.");
-    }
-    else
-    {
-      msgBox.setWindowTitle("Remove Folder");
-      msgBox.setText("Are you sure that you want to remove the folder \"" + name + "\"? The folder's contents will also be removed.");
-    }
-    msgBox.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
-    msgBox.setDefaultButton(QMessageBox::Yes);
-    int ret = msgBox.exec();
-
-    if (ret == QMessageBox::Yes)
-    {
-      //Remove favorite, graphically, from the DREAM3D interface
-      model->removeRow(index.row(), index.parent());
-
-      // Write these changes out to the preferences file
-      emit BookmarksToolboxWidget->fireWriteSettings();
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MacDREAM3DApplication::on_actionLocateFile_triggered()
-{
-  if (NULL != m_ActiveWindow)
-  {
-    BookmarksModel* model = BookmarksModel::Instance();
-    BookmarksToolboxWidget* BookmarksToolboxWidget = m_ActiveWindow->getBookmarksToolboxWidget();
-    BookmarksTreeView* bookmarksTreeView = BookmarksToolboxWidget->getBookmarksTreeView();
-
-    QModelIndex current = bookmarksTreeView->currentIndex();
-
-    QModelIndex nameIndex = model->index(current.row(), BookmarksItem::Name, current.parent());
-    QModelIndex pathIndex = model->index(current.row(), BookmarksItem::Path, current.parent());
-
-    QFileInfo fi(pathIndex.data().toString());
-    QString restrictions;
-    if (fi.completeSuffix() == "json")
-    {
-      restrictions = "Json File (*.json)";
-    }
-    else if (fi.completeSuffix() == "dream3d")
-    {
-      restrictions = "Dream3d File(*.dream3d)";
-    }
-    else if (fi.completeSuffix() == "txt")
-    {
-      restrictions = "Text File (*.txt)";
-    }
-    else
-    {
-      restrictions = "Ini File (*.ini)";
-    }
-
-    QString filePath = QFileDialog::getOpenFileName(bookmarksTreeView, tr("Locate Pipeline File"),
-      pathIndex.data().toString(), tr(restrictions.toStdString().c_str()));
-    if (true == filePath.isEmpty()) { return; }
-
-    filePath = QDir::toNativeSeparators(filePath);
-
-    // Set the new path into the item
-    model->setData(pathIndex, filePath, Qt::DisplayRole);
-
-    // Change item back to default look and functionality
-    model->setData(nameIndex, false, Qt::UserRole);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MacDREAM3DApplication::on_actionShowBookmarkInFileSystem_triggered()
-{
-  if (NULL != m_ActiveWindow)
-  {
-    BookmarksModel* model = BookmarksModel::Instance();
-    BookmarksToolboxWidget* BookmarksToolboxWidget = m_ActiveWindow->getBookmarksToolboxWidget();
-    BookmarksTreeView* bookmarksTreeView = BookmarksToolboxWidget->getBookmarksTreeView();
-
-    QModelIndex index = bookmarksTreeView->currentIndex();
-    if (index.isValid())
-    {
-      QString pipelinePath = model->index(index.row(), BookmarksItem::Path, index.parent()).data().toString();
-
-      QFileInfo pipelinePathInfo(pipelinePath);
-      QString pipelinePathDir = pipelinePathInfo.path();
-
-      QString s("file://");
-
-      s = s + pipelinePathDir;
-      QDesktopServices::openUrl(s);
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MacDREAM3DApplication::on_actionCloseWindow_triggered()
-{
-  m_ActiveWindow->close();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MacDREAM3DApplication::on_actionExit_triggered()
-{
-  bool shouldReallyClose = true;
-  QMutableMapIterator<DREAM3D_UI*, QMenu*> iter(m_DREAM3DInstanceMap);
-  while (iter.hasNext())
-  {
-    iter.next();
-
-    DREAM3D_UI* dream3dWindow = iter.key();
-    if (NULL != dream3dWindow)
-    {
-      if (dream3dWindow->close() == false)
-      {
-        shouldReallyClose = false;
-      }
-    }
-  }
-
-  if (shouldReallyClose == true)
-  {
-    quit();
-  }
+  m_DREAM3DInstances.removeAll(window);
 }
 
 // -----------------------------------------------------------------------------
@@ -635,9 +172,10 @@ void MacDREAM3DApplication::on_actionExit_triggered()
 void MacDREAM3DApplication::on_pipelineViewContextMenuRequested(const QPoint& pos)
 {
   PipelineViewWidget* pipelineView = m_ActiveWindow->getPipelineViewWidget();
+  DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();
   QMenu menu;
 
-  menu.addAction(m_GlobalMenu->getClearPipeline());
+  menu.addAction(menuItems->getActionClearPipeline());
 
   if (NULL != m_ActiveWindow)
   {
@@ -650,7 +188,6 @@ void MacDREAM3DApplication::on_pipelineViewContextMenuRequested(const QPoint& po
 // -----------------------------------------------------------------------------
 void MacDREAM3DApplication::on_bookmarksDockContextMenuRequested(const QPoint& pos)
 {
-  DREAM3DToolbox* toolbox = DREAM3DToolbox::Instance();
   BookmarksTreeView* bookmarksTreeView = m_ActiveWindow->getBookmarksToolboxWidget()->getBookmarksTreeView();
 
   QModelIndex index = bookmarksTreeView->indexAt(pos);
@@ -669,6 +206,7 @@ void MacDREAM3DApplication::on_bookmarksDockContextMenuRequested(const QPoint& p
   }
 
   BookmarksModel* model = BookmarksModel::Instance();
+  DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();
 
   QAction* m_ActionAddPipeline;
   QAction* m_ActionNewFolder;
@@ -677,12 +215,12 @@ void MacDREAM3DApplication::on_bookmarksDockContextMenuRequested(const QPoint& p
   QAction* m_ActionLocateFile;
   QAction* m_ActionShowBookmarkInFileSystem;
 
-  m_ActionAddPipeline = m_GlobalMenu->getAddBookmark();
-  m_ActionNewFolder = m_GlobalMenu->getNewFolder();
-  m_ActionRenamePipeline = m_GlobalMenu->getRenamePipeline();
-  m_ActionRemovePipeline = m_GlobalMenu->getRemovePipeline();
-  m_ActionLocateFile = m_GlobalMenu->getLocateFile();
-  m_ActionShowBookmarkInFileSystem = m_GlobalMenu->getShowBookmarkInFileSystem();
+  m_ActionAddPipeline = menuItems->getActionAddBookmark();
+  m_ActionNewFolder = menuItems->getActionNewFolder();
+  m_ActionRenamePipeline = menuItems->getActionRenamePipeline();
+  m_ActionRemovePipeline = menuItems->getActionRemovePipeline();
+  m_ActionLocateFile = menuItems->getActionLocateFile();
+  m_ActionShowBookmarkInFileSystem = menuItems->getActionShowBookmarkInFileSystem();
 
   QMenu menu;
   if (index.isValid() == false)
@@ -772,136 +310,17 @@ void MacDREAM3DApplication::on_bookmarksDockContextMenuRequested(const QPoint& p
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MacDREAM3DApplication::on_actionShowToolbox_triggered(bool visible)
-{
-  DREAM3DToolbox* toolbox = DREAM3DToolbox::Instance();
-
-  m_ActionShowToolbox->blockSignals(true);
-  toolbox->blockSignals(true);
-
-  m_ActionShowToolbox->setChecked(visible);
-  toolbox->setVisible(visible);
-
-  m_ActionShowToolbox->blockSignals(false);
-  toolbox->blockSignals(false);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MacDREAM3DApplication::on_actionShowIssues_triggered(bool visible)
-{
-  if (NULL != m_ActiveWindow)
-  {
-    QAction* actionShowIssues = qobject_cast<QAction*>(sender());
-    IssuesDockWidget* issuesDockWidget = m_ActiveWindow->getIssuesDockWidget();
-
-    if (NULL != actionShowIssues && NULL != issuesDockWidget)
-    {
-      m_ActiveWindow->updateAndSyncDockWidget(actionShowIssues, issuesDockWidget, visible);
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MacDREAM3DApplication::on_actionClearCache_triggered()
-{
-  QMessageBox msgBox;
-  msgBox.setWindowTitle("Clear DREAM3D Cache");
-  msgBox.setText("Clearing the DREAM3D cache will clear the bookmarks dock and DREAM3D window settings, and will restore DREAM3D back to its default settings on the program's next run.");
-  msgBox.setInformativeText("Would you like to clear the DREAM3D cache?");
-  msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-  msgBox.setDefaultButton(QMessageBox::Yes);
-  int response = msgBox.exec();
-
-  if (response == QMessageBox::Yes)
-  {
-    DREAM3DSettings prefs;
-
-    // Set a flag in the preferences file, so that we know that we are in "Clear Cache" mode
-    prefs.setValue("Program Mode", QString("Clear Cache"));
-
-    m_ActiveWindow->getPipelineViewWidget()->getStatusBar()->showMessage("The cache has been cleared successfully.  Please restart DREAM3D.");
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MacDREAM3DApplication::newInstanceFromFile(const QString& filePath, const bool& setOpenedFilePath, const bool& addToRecentFiles)
-{
-  DREAM3D_UI* ui = getNewDREAM3DInstance();
-  QString nativeFilePath = QDir::toNativeSeparators(filePath);
-
-  ui->getPipelineViewWidget()->openPipeline(nativeFilePath, 0, setOpenedFilePath, true);
-
-  QRecentFileList* list = QRecentFileList::instance();
-  if (addToRecentFiles == true)
-  {
-    // Add file to the recent files list
-    list->addFile(filePath);
-  }
-  ui->show();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DREAM3D_UI* MacDREAM3DApplication::getNewDREAM3DInstance()
-{
-  PluginManager* pluginManager = PluginManager::Instance();
-  QVector<ISIMPLibPlugin*> plugins = pluginManager->getPluginsVector();
-
-  // Create new DREAM3D instance
-  DREAM3D_UI* newInstance = new DREAM3D_UI(NULL);
-  newInstance->setLoadedPlugins(plugins);
-  newInstance->setAttribute(Qt::WA_DeleteOnClose);
-  newInstance->setWindowTitle("[*]Untitled Pipeline - DREAM3D");
-
-  if (NULL != m_ActiveWindow)
-  {
-    newInstance->move(m_ActiveWindow->x() + 45, m_ActiveWindow->y() + 45);
-  }
-
-  m_ActiveWindow = newInstance;
-
-  connect(newInstance, SIGNAL(dream3dWindowChangedState(DREAM3D_UI*)), this, SLOT(activeWindowChanged(DREAM3D_UI*)));
-
-  // Check if this is the first run of DREAM3D
-  newInstance->checkFirstRun();
-
-  return newInstance;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void MacDREAM3DApplication::activeWindowChanged(DREAM3D_UI* instance)
 {
   if (instance->isActiveWindow())
   {
     m_ActiveWindow = instance;
 
-    // Set this instance's view menu to the global menu
-    QMenuBar* menuBar = m_GlobalMenu->getMenuBar();
-    QMenu* viewMenuToAdd = m_DREAM3DInstanceMap.value(instance, NULL);
-    if (NULL != viewMenuToAdd)
-    {
-      m_GlobalMenu->setViewMenu(viewMenuToAdd);
-    }
-
     /* If the active signal got fired and there is now only one window,
      * this means that the first window has been opened.
      * Enable menu items. */
-    if (m_DREAM3DInstanceMap.size() == 1)
+    if (m_DREAM3DInstances.size() == 1)
     {
-      // We are launching the first window, so remove the placeholder view menu
-      if (NULL != m_PlaceholderViewMenu)
-      {
-        menuBar->removeAction(m_PlaceholderViewMenu->menuAction());
-      }
       toggleGlobalMenuItems(true);
     }
 
@@ -913,28 +332,15 @@ void MacDREAM3DApplication::activeWindowChanged(DREAM3D_UI* instance)
     else
     {
       toPipelineIdleState();
-  }
-}
-  else
-  {
-    // Remove the inactive window's view menu from the menu bar
-    QMenuBar* menuBar = m_GlobalMenu->getMenuBar();
-    QMenu* viewMenuToRemove = m_DREAM3DInstanceMap.value(instance, NULL);
-    if(NULL != viewMenuToRemove)
-    {
-      menuBar->removeAction(viewMenuToRemove->menuAction());
     }
-
+  }
+  else if (m_DREAM3DInstances.size() <= 0)
+  {
     /* If the inactive signal got fired and there are no more windows,
      * this means that the last window has been closed.
      * Disable menu items. */
-    if (m_DREAM3DInstanceMap.size() <= 0)
-    {
-      m_ActiveWindow = NULL;
-
-      m_GlobalMenu->setViewMenu(m_PlaceholderViewMenu);
-      toggleGlobalMenuItems(false);
-    }
+    m_ActiveWindow = NULL;
+    toggleGlobalMenuItems(false);
   }
 }
 
@@ -944,12 +350,12 @@ void MacDREAM3DApplication::activeWindowChanged(DREAM3D_UI* instance)
 // -----------------------------------------------------------------------------
 void MacDREAM3DApplication::toggleGlobalMenuItems(bool value)
 {
-  m_GlobalMenu->toggleMenuChildren(m_GlobalMenu->getViewMenu(), value);
-  m_GlobalMenu->toggleMenuChildren(m_GlobalMenu->getBookmarksMenu(), value);
-  m_GlobalMenu->toggleMenuChildren(m_GlobalMenu->getPipelineMenu(), value);
+//  m_GlobalMenu->toggleMenuChildren(m_GlobalMenu->getViewMenu(), value);
+//  m_GlobalMenu->toggleMenuChildren(m_GlobalMenu->getBookmarksMenu(), value);
+//  m_GlobalMenu->toggleMenuChildren(m_GlobalMenu->getPipelineMenu(), value);
 
-  m_GlobalMenu->getSave()->setEnabled(value);
-  m_GlobalMenu->getSaveAs()->setEnabled(value);
+//  m_GlobalMenu->getSave()->setEnabled(value);
+//  m_GlobalMenu->getSaveAs()->setEnabled(value);
 }
 
 // -----------------------------------------------------------------------------
@@ -957,7 +363,8 @@ void MacDREAM3DApplication::toggleGlobalMenuItems(bool value)
 // -----------------------------------------------------------------------------
 void MacDREAM3DApplication::toPipelineRunningState()
 {
-  m_GlobalMenu->getClearPipeline()->setDisabled(true);
+  DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();
+  menuItems->getActionClearPipeline()->setDisabled(true);
 
   DREAM3D_UI* runningInstance = qobject_cast<DREAM3D_UI*>(sender());
   if (NULL != runningInstance)
@@ -971,7 +378,8 @@ void MacDREAM3DApplication::toPipelineRunningState()
 // -----------------------------------------------------------------------------
 void MacDREAM3DApplication::toPipelineIdleState()
 {
-  m_GlobalMenu->getClearPipeline()->setEnabled(true);
+  DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();
+  menuItems->getActionClearPipeline()->setEnabled(true);
 
   DREAM3D_UI* runningInstance = qobject_cast<DREAM3D_UI*>(sender());
   if (NULL != runningInstance)
@@ -983,61 +391,80 @@ void MacDREAM3DApplication::toPipelineIdleState()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool MacDREAM3DApplication::isCurrentlyRunning(DREAM3D_UI* instance)
+void MacDREAM3DApplication::createGlobalMenu()
 {
-  return m_CurrentlyRunningInstances.contains(instance);
-}
+  DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();
 
-// -----------------------------------------------------------------------------
-// This function is used if the last DREAM3D window gets closed.  Since the View
-// menu relies on a DREAM3D instance, we usually create each instance's View menu
-// inside of the DREAM3D_UI constructor.  However in this case, since there is no
-// DREAM3D instance to use, we have to create a placeholder View menu here to use.
-// -----------------------------------------------------------------------------
-QMenu* MacDREAM3DApplication::createPlaceholderViewMenu()
-{
-  QMenu* menuView = new QMenu(NULL);
-  menuView->setTitle(QApplication::translate("DREAM3D_UI", "View", 0));
-  menuView->setObjectName(QStringLiteral("menuView"));
+  QMenu* menuFile = menuItems->getMenuFile();
+  QMenu* menuView = menuItems->getMenuView();
+  QMenu* menuToolbox = menuItems->getMenuToolbox();
+  QMenu* menuBookmarks = menuItems->getMenuBookmarks();
+  QMenu* menuPipeline = menuItems->getMenuPipeline();
+  QMenu* menuHelp = menuItems->getMenuHelp();
+  QMenu* menuAdvanced = menuItems->getMenuAdvanced();
+  QAction* actionNew = menuItems->getActionNew();
+  QAction* actionOpen = menuItems->getActionOpen();
+  QAction* actionSave = menuItems->getActionSave();
+  QAction* actionSaveAs = menuItems->getActionSaveAs();
+  QMenu* menuRecentFiles = menuItems->getMenuRecentFiles();
+  QAction* actionClearRecentFiles = menuItems->getActionClearRecentFiles();
+  QAction* actionClearPipeline = menuItems->getActionClearPipeline();
+  QAction* actionShowDREAM3DHelp = menuItems->getActionShowDREAM3DHelp();
+  QAction* actionCheckForUpdates = menuItems->getActionCheckForUpdates();
+  QAction* actionClearCache = menuItems->getActionClearCache();
+  QAction* actionAboutDREAM3D = menuItems->getActionAboutDREAM3D();
+  QAction* actionPluginInformation = menuItems->getActionPluginInformation();
+  QAction* actionShowIssues = menuItems->getActionShowIssues();
+  QAction* actionShowToolbox = menuItems->getActionShowToolbox();
+  QAction* actionShowFilterLibrary = menuItems->getActionShowFilterLibrary();
+  QAction* actionShowFilterList = menuItems->getActionShowFilterList();
+  QAction* actionShowBookmarks = menuItems->getActionShowBookmarks();
+  QAction* actionAddBookmark = menuItems->getActionAddBookmark();
+  QAction* actionNewFolder = menuItems->getActionNewFolder();
 
-  QAction* actionShowFilterList = new QAction(menuView);
-  actionShowFilterList->setText("Filter List");
-  menuView->addAction(actionShowFilterList);
+  m_GlobalMenu = new QMenuBar(NULL);
 
+  // Create File Menu
+  m_GlobalMenu->addMenu(menuFile);
+  menuFile->addAction(actionNew);
+  menuFile->addAction(actionOpen);
+  menuFile->addSeparator();
+  menuFile->addAction(actionSave);
+  menuFile->addAction(actionSaveAs);
+  menuFile->addSeparator();
+  menuFile->addAction(menuRecentFiles->menuAction());
+  menuRecentFiles->addSeparator();
+  menuRecentFiles->addAction(actionClearRecentFiles);
 
-  QAction* actionShowFilterLibrary = new QAction(menuView);
-  actionShowFilterLibrary->setText("Filter Library");
-  menuView->addAction(actionShowFilterLibrary);
-
-
-  QAction* actionShowBookmarks = new QAction(menuView);
-  actionShowBookmarks->setText("Bookmarks");
-  menuView->addAction(actionShowBookmarks);
-
-
-  QAction* actionShowPrebuiltPipelines = new QAction(menuView);
-  actionShowPrebuiltPipelines->setText("Prebuilt Pipelines");
-  menuView->addAction(actionShowPrebuiltPipelines);
-
-  QAction* actionShowIssues = new QAction(menuView);
-  actionShowIssues->setText("Show Warnings/Errors");
+  // Create View Menu
+  m_GlobalMenu->addMenu(menuView);
+  menuView->addAction(actionShowToolbox);
+  menuView->addMenu(menuToolbox);
+  menuToolbox->addAction(actionShowFilterList);
+  menuToolbox->addAction(actionShowFilterLibrary);
+  menuToolbox->addAction(actionShowBookmarks);
+  menuView->addSeparator();
   menuView->addAction(actionShowIssues);
 
-  return menuView;
-}
+  // Create Bookmarks Menu
+  m_GlobalMenu->addMenu(menuBookmarks);
+  menuBookmarks->addAction(actionAddBookmark);
+  menuBookmarks->addSeparator();
+  menuBookmarks->addAction(actionNewFolder);
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QAction* MacDREAM3DApplication::getShowToolboxAction()
-{
-  return m_ActionShowToolbox;
-}
+  // Create Pipeline Menu
+  m_GlobalMenu->addMenu(menuPipeline);
+  menuPipeline->addAction(actionClearPipeline);
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QMenu* MacDREAM3DApplication::getDREAM3DMenu()
-{
-
+  // Create Help Menu
+  m_GlobalMenu->addMenu(menuHelp);
+  menuHelp->addAction(actionShowDREAM3DHelp);
+  menuHelp->addSeparator();
+  menuHelp->addAction(actionCheckForUpdates);
+  menuHelp->addSeparator();
+  menuHelp->addMenu(menuAdvanced);
+  menuAdvanced->addAction(actionClearCache);
+  menuHelp->addSeparator();
+  menuHelp->addAction(actionAboutDREAM3D);
+  menuHelp->addAction(actionPluginInformation);
 }

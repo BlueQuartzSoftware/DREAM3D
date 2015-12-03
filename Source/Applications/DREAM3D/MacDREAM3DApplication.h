@@ -46,15 +46,11 @@ public:
   MacDREAM3DApplication(int& argc, char** argv);
   virtual ~MacDREAM3DApplication();
 
-  void unregisterDREAM3DWindow(DREAM3D_UI* window);
+  virtual void unregisterDREAM3DWindow(DREAM3D_UI* window);
 
-  QAction* getShowToolboxAction();
+  protected:
 
-  QMenu* getDREAM3DMenu();
-
-protected:
-
-  void toggleGlobalMenuItems(bool value);
+    void toggleGlobalMenuItems(bool value);
 
   protected slots:
 
@@ -63,62 +59,28 @@ protected:
   * should be connected to the Signal QRecentFileList->fileListChanged
   * @param file The newly added file.
   */
-  void updateRecentFileList(const QString& file);
+  virtual void updateRecentFileList(const QString& file);
 
   /**
   * @brief activeWindowChanged
   */
-  void activeWindowChanged(DREAM3D_UI* instance);
+  virtual void activeWindowChanged(DREAM3D_UI* instance);
 
   // DREAM3D_UI slots
-  void openRecentFile();
+  virtual void on_actionClearRecentFiles_triggered();
 
-  void addFilter(const QString &text);
+  virtual void on_pipelineViewContextMenuRequested(const QPoint&);
+  virtual void on_bookmarksDockContextMenuRequested(const QPoint&);
 
-  void on_actionShowToolbox_triggered(bool visible);
-  void on_actionShowIssues_triggered(bool visible);
+  virtual void toPipelineRunningState();
 
-  void on_actionCloseToolbox_triggered();
-  void on_actionNew_triggered();
-  void on_actionOpen_triggered();
-  void on_actionSave_triggered();
-  void on_actionSaveAs_triggered();
-
-  void on_actionAddBookmark_triggered();
-  void on_actionNewFolder_triggered();
-  void on_actionRenamePipeline_triggered();
-  void on_actionRemovePipeline_triggered();
-  void on_actionShowBookmarkInFileSystem_triggered();
-  void on_actionLocateFile_triggered();
-  void on_actionClearPipeline_triggered();
-  void on_actionClearCache_triggered();
-
-  void on_pipelineViewContextMenuRequested(const QPoint&);
-  void on_bookmarksDockContextMenuRequested(const QPoint&);
-
-  void on_actionClearRecentFiles_triggered();
-  void on_actionCloseWindow_triggered();
-  void on_actionExit_triggered();
-  void on_actionShowDREAM3DHelp_triggered();
-  void on_actionCheckForUpdates_triggered();
-  void on_actionPluginInformation_triggered();
-  void on_actionAboutDREAM3D_triggered();
-
-  void toPipelineRunningState();
-
-  void toPipelineIdleState();
+  virtual void toPipelineIdleState();
 
 private:
   // The global menu
-  DREAM3DMenu*                            m_GlobalMenu;
+  QMenuBar*                            m_GlobalMenu;
 
-  QAction*                                m_ActionShowToolbox;
-
-  /* Used on Mac OS X when there are no DREAM3D instances instantiated,
-  * but the application is still running. */
-  QMenu*                                  m_PlaceholderViewMenu;
-
-  QMenu* createPlaceholderViewMenu();
+  void createGlobalMenu();
 
   MacDREAM3DApplication(const MacDREAM3DApplication&); // Copy Constructor Not Implemented
   void operator=(const MacDREAM3DApplication&); // Operator '=' Not Implemented

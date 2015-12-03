@@ -70,6 +70,7 @@ class DREAM3DMenuItems : public QObject
 
       // View Menu
       SIMPL_INSTANCE_PROPERTY(QMenu*, MenuView)
+      SIMPL_INSTANCE_PROPERTY(QMenu*, MenuToolbox)
       SIMPL_INSTANCE_PROPERTY(QAction*, ActionShowFilterLibrary)
       SIMPL_INSTANCE_PROPERTY(QAction*, ActionShowFilterList)
       SIMPL_INSTANCE_PROPERTY(QAction*, ActionShowBookmarks)

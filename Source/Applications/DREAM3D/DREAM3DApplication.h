@@ -89,23 +89,23 @@ class DREAM3DApplication : public QApplication
 
 
   protected:
-    DREAM3DToolbox*                         m_Toolbox;
+    DREAM3DToolbox*                           m_Toolbox;
 
     // This is a set of all DREAM3D instances currently available
-    QList<DREAM3D_UI*>                       m_DREAM3DInstances;
+    QList<DREAM3D_UI*>                        m_DREAM3DInstances;
 
     // This is the set of DREAM3D instances that are currently running a pipeline
-    QSet<DREAM3D_UI*>                       m_CurrentlyRunningInstances;
+    QSet<DREAM3D_UI*>                         m_CurrentlyRunningInstances;
 
     // The currently active DREAM3D instance
-    DREAM3D_UI*                             m_ActiveWindow;
+    DREAM3D_UI*                               m_ActiveWindow;
 
-    QString                                 m_OpenDialogLastDirectory;
+    QString                                   m_OpenDialogLastDirectory;
 
-    bool                                    show_splash;
-    DSplashScreen*                          Splash;
+    bool                                      show_splash;
+    DSplashScreen*                            Splash;
 
-    QVector<QPluginLoader*>                 m_PluginLoaders;
+    QVector<QPluginLoader*>                   m_PluginLoaders;
 
     QVector<ISIMPLibPlugin*> loadPlugins();
 
