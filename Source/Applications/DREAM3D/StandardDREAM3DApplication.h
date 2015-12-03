@@ -33,28 +33,57 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _DREAM3DMenu_H_
-#define _DREAM3DMenu_H_
+#ifndef _StandardDREAM3DApplication_H_
+#define _StandardDREAM3DApplication_H_
 
-#include <QtCore/QObject>
+#include "Applications/DREAM3D/DREAM3DApplication.h"
 
-#include <QtWidgets/QMenuBar>
-#include <QtWidgets/QMenu>
+#define standardApp (static_cast<StandardDREAM3DApplication *>(dream3dApp))
 
-class DREAM3DMenu : public QObject
+class DREAM3DToolboxMenu;
+
+class StandardDREAM3DApplication : public DREAM3DApplication
 {
     Q_OBJECT
 
   public:
-    DREAM3DMenu();
-    virtual ~DREAM3DMenu();
+    StandardDREAM3DApplication(int& argc, char** argv);
+    virtual ~StandardDREAM3DApplication();
 
-    void toggleMenuChildren(QMenu* menu, bool value);
+    virtual void unregisterDREAM3DWindow(DREAM3D_UI* window);
+
+    QMenuBar* getDREAM3DMenuBar();
+    QMenuBar* getToolboxMenuBar();
+
+  protected slots:
+
+    /**
+    * @brief Updates the QMenu 'Recent Files' with the latest list of files. This
+    * should be connected to the Signal QRecentFileList->fileListChanged
+    * @param file The newly added file.
+    */
+    virtual void updateRecentFileList(const QString& file);
+
+    /**
+    * @brief activeWindowChanged
+    */
+    virtual void activeWindowChanged(DREAM3D_UI* instance);
+
+    // DREAM3D_UI slots
+    virtual void on_actionClearRecentFiles_triggered();
+
+    virtual void on_pipelineViewContextMenuRequested(const QPoint&);
+    virtual void on_bookmarksDockContextMenuRequested(const QPoint&);
+
+    virtual void toPipelineRunningState();
+
+    virtual void toPipelineIdleState();
 
   private:
 
-    DREAM3DMenu(const DREAM3DMenu&); // Copy Constructor Not Implemented
-    void operator=(const DREAM3DMenu&); // Operator '=' Not Implemented
+    StandardDREAM3DApplication(const StandardDREAM3DApplication&); // Copy Constructor Not Implemented
+    void operator=(const StandardDREAM3DApplication&); // Operator '=' Not Implemented
 };
 
-#endif /* DREAM3DMenu_H_ */
+#endif /* _StandardDREAM3DApplication_H */
+

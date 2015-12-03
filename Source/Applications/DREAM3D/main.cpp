@@ -39,7 +39,8 @@
 #include <QtCore/QDir>
 #include <QtCore/QDebug>
 
-#include "DREAM3DApplication.h"
+#include "MacDREAM3DApplication.h"
+#include "StandardDREAM3DApplication.h"
 #include "DREAM3D_UI.h"
 
 #ifdef Q_WS_X11
@@ -76,7 +77,11 @@ int main(int argc, char* argv[])
   qDebug() << "        cwd: " << cwd;
 #endif
 
-  DREAM3DApplication qtapp(argc, argv);
+#if defined (Q_OS_MAC)
+  MacDREAM3DApplication qtapp(argc, argv);
+#else
+  StandardDREAM3DApplication qtapp(argc, argv);
+#endif
 
   QCoreApplication::setOrganizationDomain("bluequartz.net");
   QCoreApplication::setOrganizationName("BlueQuartz Software");

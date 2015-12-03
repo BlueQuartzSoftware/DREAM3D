@@ -49,42 +49,7 @@ class DREAM3DToolboxMenu : public QObject
     DREAM3DToolboxMenu();
     virtual ~DREAM3DToolboxMenu();
 
-    void initialize();
-
-    void toggleMenuChildren(QMenu* menu, bool value);
-
-    QMenuBar* getMenuBar();
-
-    QMenu* getFileMenu();
-    QMenu* getViewMenu();
-    QMenu* getBookmarksMenu();
-
-    QAction* getShowFilterLibrary();
-    QAction* getShowFilterList();
-    QAction* getShowBookmarks();
-
-    QAction* getCloseToolbox();
-    QAction* getAddBookmark();
-    QAction* getNewFolder();
-
   private:
-
-    QMenuBar*                       m_MenuBar;
-
-    // File Menu
-    QMenu*                          m_MenuFile;
-    QAction*                        m_ActionCloseToolbox;
-
-    // View Menu
-    QMenu*                          m_MenuView;
-    QAction*                        m_ActionShowFilterLibrary;
-    QAction*                        m_ActionShowFilterList;
-    QAction*                        m_ActionShowBookmarks;
-
-    // Bookmarks Menu
-    QMenu*                          m_MenuBookmarks;
-    QAction*                        m_ActionAddBookmark;
-    QAction*                        m_ActionNewFolder;
 
     DREAM3DToolboxMenu(const DREAM3DToolboxMenu&); // Copy Constructor Not Implemented
     void operator=(const DREAM3DToolboxMenu&); // Operator '=' Not Implemented

@@ -86,9 +86,10 @@
 
 #include "Applications/DREAM3D/DREAM3DConstants.h"
 #include "Applications/DREAM3D/DREAM3Dv6Wizard.h"
-#include "Applications/DREAM3D/DREAM3DApplication.h"
+#include "Applications/DREAM3D/StandardDREAM3DApplication.h"
 #include "Applications/DREAM3D/DREAM3DMenu.h"
 #include "Applications/DREAM3D/DREAM3DToolbox.h"
+#include "Applications/DREAM3D/DREAM3DMenuItems.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
 #include "moc_DREAM3D_UI.cpp"
@@ -107,7 +108,7 @@ DREAM3D_UI::DREAM3D_UI(QWidget* parent) :
   m_FilterManager(NULL),
   m_FilterWidgetManager(NULL),
 #if !defined(Q_OS_MAC)
-  m_InstanceMenu(NULL),
+  m_InstanceMenuBar(NULL),
 #endif
   m_ShouldRestart(false),
   m_OpenedFilePath("")
@@ -131,14 +132,12 @@ DREAM3D_UI::DREAM3D_UI(QWidget* parent) :
   setupUi(this);
 
   // Set up the menu
-  QMenu* viewMenu = createViewMenu();
 #if !defined(Q_OS_MAC)
   // Create the menu
-  m_InstanceMenu = new DREAM3DMenu();
-  m_InstanceMenu->setViewMenu(viewMenu);
-  setMenuBar(m_InstanceMenu->getMenuBar());
+  m_InstanceMenuBar = dream3dApp->getDREAM3DMenuBar();
+  setMenuBar(m_InstanceMenuBar);
 #endif
-  dream3dApp->registerDREAM3DWindow(this, viewMenu);
+  dream3dApp->registerDREAM3DWindow(this);
 
   // Do our own widget initializations
   setupGui();
@@ -1189,44 +1188,6 @@ void DREAM3D_UI::changeEvent(QEvent* event)
   {
     emit dream3dWindowChangedState(this);
   }
-}
-
-#if !defined(Q_OS_MAC)
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::setDREAM3DMenu(DREAM3DMenu* menu)
-{
-  m_InstanceMenu = menu;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DREAM3DMenu* DREAM3D_UI::getDREAM3DMenu()
-{
-  return m_InstanceMenu;
-}
-#endif
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QMenu* DREAM3D_UI::createViewMenu()
-{
-  QMenu* menuView = new QMenu(this);
-  menuView->setTitle(QApplication::translate("DREAM3D_UI", "View", 0));
-  menuView->setObjectName(QStringLiteral("menuView"));
-
-  QAction* actionShowIssues = issuesDockWidget->toggleViewAction();
-  actionShowIssues->setText("Show Warnings/Errors");
-  menuView->addAction(actionShowIssues);
-  connect(actionShowIssues, SIGNAL(triggered(bool)), dream3dApp, SLOT(on_actionShowIssues_triggered(bool)) );
-
-  QAction* actionShowToolbox = dream3dApp->getShowToolboxAction();
-  menuView->addAction(actionShowToolbox);
-
-  return menuView;
 }
 
 

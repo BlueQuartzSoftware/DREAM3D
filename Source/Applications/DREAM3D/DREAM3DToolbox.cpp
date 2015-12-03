@@ -34,8 +34,9 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "DREAM3DToolbox.h"
 
-#include "DREAM3DApplication.h"
+#include "StandardDREAM3DApplication.h"
 #include "DREAM3DToolboxMenu.h"
+#include "DREAM3DMenuItems.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
 #include "moc_DREAM3DToolbox.cpp"
@@ -95,27 +96,28 @@ void DREAM3DToolbox::setupGui()
 void DREAM3DToolbox::readSettings()
 {
   DREAM3DSettings prefs;
+  DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();
 
   prefs.beginGroup("ToolboxSettings");
 
   setVisible(prefs.value(objectName(), true).toBool());
 
   bool showBookmarks = prefs.value(bookmarksWidget->objectName(), true).toBool();
-  m_ToolboxMenu->getShowBookmarks()->setChecked(showBookmarks);
+  menuItems->getActionShowBookmarks()->setChecked(showBookmarks);
   if (showBookmarks == false)
   {
     tabWidget->removeTab(tabWidget->indexOf(bookmarksTab));
   }
 
   bool showFilterList = prefs.value(filterListWidget->objectName(), true).toBool();
-  m_ToolboxMenu->getShowFilterList()->setChecked(showFilterList);
+  menuItems->getActionShowFilterList()->setChecked(showFilterList);
   if (showFilterList == false)
   {
     tabWidget->removeTab(tabWidget->indexOf(filterListTab));
   }
 
   bool showFilterLibrary = prefs.value(filterLibraryWidget->objectName(), true).toBool();
-  m_ToolboxMenu->getShowFilterLibrary()->setChecked(showFilterLibrary);
+  menuItems->getActionShowFilterLibrary()->setChecked(showFilterLibrary);
   if (showFilterLibrary == false)
   {
     tabWidget->removeTab(tabWidget->indexOf(filterLibraryTab));
@@ -152,6 +154,7 @@ void DREAM3DToolbox::readWindowSettings(DREAM3DSettings& prefs)
 {
   bool ok = false;
   prefs.beginGroup("WindowSettings");
+  QStringList childGroups = prefs.childGroups();
   if (prefs.contains(QString("MainWindowGeometry")))
   {
     QByteArray geo_data = prefs.value("MainWindowGeometry", QByteArray(""));
@@ -198,13 +201,14 @@ void DREAM3DToolbox::readWindowSettings(DREAM3DSettings& prefs)
 void DREAM3DToolbox::writeSettings()
 {
   DREAM3DSettings prefs;
+  DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();
 
   prefs.beginGroup("ToolboxSettings");
 
   prefs.setValue(objectName(), isVisible());
-  prefs.setValue(bookmarksWidget->objectName(), m_ToolboxMenu->getShowBookmarks()->isChecked());
-  prefs.setValue(filterListWidget->objectName(), m_ToolboxMenu->getShowFilterList()->isChecked());
-  prefs.setValue(filterLibraryWidget->objectName(), m_ToolboxMenu->getShowFilterLibrary()->isChecked());
+  prefs.setValue(bookmarksWidget->objectName(), menuItems->getActionShowBookmarks()->isChecked());
+  prefs.setValue(filterListWidget->objectName(), menuItems->getActionShowFilterList()->isChecked());
+  prefs.setValue(filterLibraryWidget->objectName(), menuItems->getActionShowFilterLibrary()->isChecked());
 
   // Have the toolbox write its settings to the prefs file
   writeWindowSettings(prefs);
@@ -230,7 +234,8 @@ void DREAM3DToolbox::writeSettings()
 // -----------------------------------------------------------------------------
 void DREAM3DToolbox::closeEvent(QCloseEvent* event)
 {
-  QAction* action = dream3dApp->getShowToolboxAction();
+  DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();
+  QAction* action = menuItems->getActionShowToolbox();
   action->setChecked(false);
 }
 
@@ -334,12 +339,14 @@ DREAM3DToolboxMenu* DREAM3DToolbox::getToolboxMenu()
 // -----------------------------------------------------------------------------
 void DREAM3DToolbox::setToolboxMenu(DREAM3DToolboxMenu* menu)
 {
-  setMenuBar(menu->getMenuBar());
+  DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();
+
+  setMenuBar(standardApp->getToolboxMenuBar());
   m_ToolboxMenu = menu;
 
-  m_ToolboxMenu->getShowFilterList()->setChecked(filterListTab->isVisible());
-  m_ToolboxMenu->getShowFilterLibrary()->setChecked(filterLibraryTab->isVisible());
-  m_ToolboxMenu->getShowBookmarks()->setChecked(bookmarksTab->isVisible());
+  menuItems->getActionShowFilterList()->setChecked(filterListTab->isVisible());
+  menuItems->getActionShowFilterLibrary()->setChecked(filterLibraryTab->isVisible());
+  menuItems->getActionShowBookmarks()->setChecked(bookmarksTab->isVisible());
 }
 
 // -----------------------------------------------------------------------------

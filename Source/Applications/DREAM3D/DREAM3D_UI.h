@@ -136,18 +136,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     */
     void setOpenDialogLastDirectory(const QString& path);
 
-#if !defined(Q_OS_MAC)
-    /**
-    * @brief setDREAM3DMenu
-    * @param menu
-    */
-    void setDREAM3DMenu(DREAM3DMenu* menu);
-
-    /**
-    * @brief getDREAM3DMenu
-    */
-    DREAM3DMenu* getDREAM3DMenu();
-#endif
     /**
      * @brief updateAndSyncDockWidget
      * @param action
@@ -377,19 +365,12 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
     FilterPipeline::Pointer               m_PipelineInFlight;
 #if !defined(Q_OS_MAC)
-    DREAM3DMenu*                          m_InstanceMenu;
+    QMenuBar*                             m_InstanceMenuBar;
 #endif
     bool                                  m_ShouldRestart;
 
     QString                               m_OpenedFilePath;
     static QString                        m_OpenDialogLastDirectory;
-
-    /**
-    * @brief Creates a view menu for the DREAM3D instance.  We need to
-    * do this separately because there is a different View menu for each
-    * DREAM3D instance on all OSes.
-    */
-    QMenu* createViewMenu();
 
     /**
     * @brief Updates the "first run" variable in the preferences file

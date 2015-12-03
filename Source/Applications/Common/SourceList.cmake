@@ -7,7 +7,7 @@ set(AppsCommon_Widgets_UIS "")
 # --------------------------------------------------------------------
 # List the Classes here that are QWidget Derived Classes
 set(APPS_WIDGETS
-
+	
 )
 
 set(DREAM3D_AppsCommon_DIR ${CMAKE_CURRENT_LIST_DIR})
