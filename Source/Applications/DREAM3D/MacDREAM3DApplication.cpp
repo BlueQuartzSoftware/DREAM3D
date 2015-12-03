@@ -1,4 +1,3 @@
-#if 0
 /* ============================================================================
 * Copyright (c) 2009-2015 BlueQuartz Software, LLC
 *
@@ -1042,5 +1041,3 @@ QMenu* MacDREAM3DApplication::getDREAM3DMenu()
 {
 
 }
-
-#endif // 0

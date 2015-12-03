@@ -1,4 +1,3 @@
-#if 0
 /* ============================================================================
 * Copyright (c) 2009-2015 BlueQuartz Software, LLC
 *
@@ -126,6 +125,3 @@ private:
 };
 
 #endif /* _MacDREAM3DApplication_H */
-
-
-#endif // 0
