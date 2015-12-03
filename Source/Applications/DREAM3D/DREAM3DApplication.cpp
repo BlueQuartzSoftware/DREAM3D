@@ -867,7 +867,10 @@ void DREAM3DApplication::on_actionClearCache_triggered()
     // Set a flag in the preferences file, so that we know that we are in "Clear Cache" mode
     prefs.setValue("Program Mode", QString("Clear Cache"));
 
-    m_ActiveWindow->getPipelineViewWidget()->getStatusBar()->showMessage("The cache has been cleared successfully.  Please restart DREAM3D.");
+    if (NULL != m_ActiveWindow)
+    {
+      m_ActiveWindow->getPipelineViewWidget()->getStatusBar()->showMessage("The cache has been cleared successfully.  Please restart DREAM3D.");
+    }
   }
 }
 
