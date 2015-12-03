@@ -72,6 +72,7 @@ class MacDREAM3DApplication : public DREAM3DApplication
 
   void toToolboxMenuState();
   void toDREAM3DMenuState(DREAM3D_UI *instance);
+  void toEmptyMenuState();
 
 private:
   // The global menu

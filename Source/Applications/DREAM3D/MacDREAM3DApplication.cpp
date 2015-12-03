@@ -328,6 +328,7 @@ void MacDREAM3DApplication::dream3dWindowChanged(DREAM3D_UI* instance)
     /* If the inactive signal got fired and there are no more windows,
      * this means that the last window has been closed. */
     m_ActiveWindow = NULL;
+    toEmptyMenuState();
   }
 }
 
@@ -339,6 +340,10 @@ void MacDREAM3DApplication::toolboxWindowChanged()
   if (m_Toolbox->isActiveWindow())
   {
     toToolboxMenuState();
+  }
+  else if (m_DREAM3DInstances.size() <= 0)
+  {
+    toEmptyMenuState();
   }
 }
 
@@ -386,6 +391,24 @@ void MacDREAM3DApplication::toDREAM3DMenuState(DREAM3D_UI* instance)
   menuItems->getActionSave()->setEnabled(true);
   menuItems->getActionSaveAs()->setEnabled(true);
   menuItems->getActionShowIssues()->setEnabled(true);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MacDREAM3DApplication::toEmptyMenuState()
+{
+  DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();
+
+  menuItems->getActionShowFilterList()->setDisabled(true);
+  menuItems->getActionShowFilterLibrary()->setDisabled(true);
+  menuItems->getActionShowBookmarks()->setDisabled(true);
+  menuItems->getActionAddBookmark()->setDisabled(true);
+  menuItems->getActionNewFolder()->setDisabled(true);
+  menuItems->getActionSave()->setDisabled(true);
+  menuItems->getActionSaveAs()->setDisabled(true);
+  menuItems->getActionShowIssues()->setDisabled(true);
+  menuItems->getActionClearPipeline()->setDisabled(true);
 }
 
 // -----------------------------------------------------------------------------
