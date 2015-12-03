@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "GenerateFaceMisorientationColoring.h"
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
@@ -42,9 +41,9 @@
 #include <tbb/partitioner.h>
 #endif
 
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -365,8 +364,28 @@ AbstractFilter::Pointer GenerateFaceMisorientationColoring::newFilterInstance(bo
 //
 // -----------------------------------------------------------------------------
 const QString GenerateFaceMisorientationColoring::getCompiledLibraryName()
-{ return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
+{
+  return SurfaceMeshingConstants::SurfaceMeshingBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GenerateFaceMisorientationColoring::getBrandingString()
+{
+  return "SurfaceMeshing";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GenerateFaceMisorientationColoring::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

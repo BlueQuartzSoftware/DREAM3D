@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "MultiThresholdObjects.h"
 
 #include "SIMPLib/Common/Constants.h"
@@ -43,6 +42,7 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/ComparisonSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/SIMPLibVersion.h"
 
 #include "Processing/ProcessingConstants.h"
 
@@ -290,8 +290,28 @@ AbstractFilter::Pointer MultiThresholdObjects::newFilterInstance(bool copyFilter
 //
 // -----------------------------------------------------------------------------
 const QString MultiThresholdObjects::getCompiledLibraryName()
-{ return ProcessingConstants::ProcessingBaseName; }
+{
+  return ProcessingConstants::ProcessingBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MultiThresholdObjects::getBrandingString()
+{
+  return "Processing";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MultiThresholdObjects::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

@@ -45,13 +45,12 @@
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
-#include "QtSupportLib/DREAM3DSettings.h"
-
 #include "ui_IssuesDockWidget.h"
 
 class FilterListDockWidget;
 class QLabel;
 class QTableWidgetItem;
+class DREAM3DSettings;
 
 class DREAM3DWidgetsLib_EXPORT IssuesDockWidget : public QDockWidget, public IObserver, private Ui::IssuesDockWidget
 {

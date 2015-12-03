@@ -33,20 +33,18 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "EnsembleInfoReader.h"
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QSettings>
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
-
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
 #include "IO/IOConstants.h"
@@ -456,7 +454,29 @@ AbstractFilter::Pointer EnsembleInfoReader::newFilterInstance(bool copyFilterPar
 //
 // -----------------------------------------------------------------------------
 const QString EnsembleInfoReader::getCompiledLibraryName()
-{ return IOConstants::IOBaseName;}
+{
+  return IOConstants::IOBaseName;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EnsembleInfoReader::getBrandingString()
+{
+  return "IO";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EnsembleInfoReader::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
+
 
 // -----------------------------------------------------------------------------
 //

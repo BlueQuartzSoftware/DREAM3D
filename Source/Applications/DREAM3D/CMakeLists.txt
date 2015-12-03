@@ -10,13 +10,6 @@
 # set project's name
 PROJECT( DREAM3D VERSION ${DREAM3DProj_VERSION_MAJOR}.${DREAM3DProj_VERSION_MINOR}.${DREAM3DProj_VERSION_PATCH})
 
-#------------------------------------------------------------------------------
-# If we have not defined a "BrandedDREAM3D_DIR" then define it to the default
-# generic set of ICONs
-if(NOT DEFINED BrandedDREAM3D_DIR)
-  set(BrandedDREAM3D_DIR ${DREAM3DProj_SOURCE_DIR}/Resources/OpenSourceEdition)
-endif()
-
 # ---------- Setup output Directories -------------------------
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY
   ${PROJECT_BINARY_DIR}/Bin
@@ -104,6 +97,7 @@ set(DREAM3D_SRCS
 # Headers that do NOT need to have moc run on them, i.e., non-QObject based headers
 set(DREAM3D_HDRS
   ${DREAM3D_SOURCE_DIR}/DREAM3DConstants.h
+  ${BrandedDREAM3D_DIR}/BrandedStrings.h
 )
 
 #------------------------------------------------------------------

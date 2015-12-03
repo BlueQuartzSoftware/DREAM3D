@@ -193,27 +193,27 @@ void DevHelper::readSettings()
 
   prefs.beginGroup("PluginMaker");
   // Have PluginMaker read its settings
-  pluginMaker->m_PluginName->setText(prefs.value("Plugin Name", "").toString());
-  pluginMaker->m_OutputDir->setText(prefs.value("Output Directory", "").toString());
+  pluginMaker->m_PluginName->setText(prefs.value("Plugin Name", QString("")).toString());
+  pluginMaker->m_OutputDir->setText(prefs.value("Output Directory", QString("")).toString());
   readWindowSettings(prefs);
   prefs.endGroup();
 
   prefs.beginGroup("FilterMaker");
   // Have FilterMaker read its settings
-  filterMaker->pluginDir->setText(prefs.value("Plugin Directory", "").toString());
-  filterMaker->filterName->setText(prefs.value("Filter Name", "").toString());
+  filterMaker->pluginDir->setText(prefs.value("Plugin Directory", QString("")).toString());
+  filterMaker->filterName->setText(prefs.value("Filter Name", QString("")).toString());
 
   prefs.beginGroup("FilterParameters");
-  int count = prefs.value("Count", 0).toInt();
+  int count = prefs.value("Count", QVariant(0)).toInt();
   for (int i = 0; i < count; i++)
   {
     prefs.beginGroup(QString::number(i));
     AddFilterParameter addFilterParameter;
-    addFilterParameter.setVariableName(prefs.value("Variable Name", "").toString());
-    addFilterParameter.setHumanName(prefs.value("Human Label", "").toString());
-    addFilterParameter.setType(prefs.value("Type", "").toString());
-    addFilterParameter.setCategory(prefs.value("Category", "").toString());
-    addFilterParameter.setInitValue(prefs.value("Initial Value", "").toString());
+    addFilterParameter.setVariableName(prefs.value("Variable Name", QString("")).toString());
+    addFilterParameter.setHumanName(prefs.value("Human Label", QString("")).toString());
+    addFilterParameter.setType(prefs.value("Type", QString("")).toString());
+    addFilterParameter.setCategory(prefs.value("Category", QString("")).toString());
+    addFilterParameter.setInitValue(prefs.value("Initial Value", QString("")).toString());
 
     filterMaker->addFilterParameterToTable(&addFilterParameter);
     prefs.endGroup();
@@ -233,7 +233,7 @@ void DevHelper::readWindowSettings(DREAM3DSettings& prefs)
   prefs.beginGroup("WindowSettings");
   if (prefs.contains(QString("Geometry")))
   {
-    QByteArray geo_data = prefs.value(QString("Geometry"), QByteArray()).toByteArray();
+    QByteArray geo_data = prefs.value(QString("Geometry"), QByteArray());
     ok = restoreGeometry(geo_data);
     if (!ok)
     {
@@ -243,7 +243,7 @@ void DevHelper::readWindowSettings(DREAM3DSettings& prefs)
 
   if (prefs.contains(QString("Layout")))
   {
-    QByteArray layout_data = prefs.value(QString("Layout"), QByteArray()).toByteArray();
+    QByteArray layout_data = prefs.value(QString("Layout"), QByteArray());
     restoreState(layout_data);
   }
   prefs.endGroup();

@@ -40,14 +40,13 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Common/ScopedFileMonitor.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputPathFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
-
 #include "SIMPLib/Geometry/MeshStructs.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 
@@ -486,8 +485,28 @@ AbstractFilter::Pointer NodesTrianglesToStl::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString NodesTrianglesToStl::getCompiledLibraryName()
-{ return IOConstants::IOBaseName; }
+{
+  return IOConstants::IOBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString NodesTrianglesToStl::getBrandingString()
+{
+  return "IO";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString NodesTrianglesToStl::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 
 // -----------------------------------------------------------------------------
 //

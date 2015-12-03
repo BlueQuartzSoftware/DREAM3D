@@ -201,7 +201,9 @@ int QFilterParametersWriter::closeFilterGroup()
 int QFilterParametersWriter::writeValue(const QString name, const QString value)
 {
   int err = 0;
-  m_Prefs->setValue(name, value );
+  QString repl = value;
+  repl.replace("\\", QString("/"));
+  m_Prefs->setValue(name, repl );
   return err;
 }
 
@@ -216,7 +218,10 @@ int QFilterParametersWriter::writeValue(const QString name, const QVector<QStrin
   int size = value.size();
   for(qint32 i = 0; i < size; ++i)
   {
-    out << value.at(i);
+    QString repl = value.at(i);
+    repl.replace("\\", QString("/"));
+
+    out << repl;
     if (i < size - 1)
     {
       out << " | ";

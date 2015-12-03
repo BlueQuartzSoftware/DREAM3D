@@ -7,8 +7,11 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+
 @Filter_CPP_Includes@
+
 #include "@PluginName@/@PluginName@Constants.h"
+#include "@PluginName@/@PluginName@Version.h"
 
 // Include the MOC generated file for this class
 #include "moc_@ClassName@.cpp"
@@ -123,6 +126,25 @@ AbstractFilter::Pointer @ClassName@::newFilterInstance(bool copyFilterParameters
 // -----------------------------------------------------------------------------
 const QString @ClassName@::getCompiledLibraryName()
 { return @PluginName@Constants::@PluginName@BaseName; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString @ClassName@::getBrandingString()
+{
+  return "@PluginName@";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString @ClassName@::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  @PluginName@::Version::Major() << "." << @PluginName@::Version::Minor() << "." << @PluginName@::Version::Patch();
+  return version;
+}
 
 // -----------------------------------------------------------------------------
 //

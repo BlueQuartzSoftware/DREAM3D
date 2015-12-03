@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "MergeColonies.h"
 
 #include <boost/random/mersenne_twister.hpp>
@@ -41,9 +40,9 @@
 #include <boost/random/variate_generator.hpp>
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -686,8 +685,28 @@ AbstractFilter::Pointer MergeColonies::newFilterInstance(bool copyFilterParamete
 //
 // -----------------------------------------------------------------------------
 const QString MergeColonies::getCompiledLibraryName()
-{ return ReconstructionConstants::ReconstructionBaseName; }
+{
+  return ReconstructionConstants::ReconstructionBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MergeColonies::getBrandingString()
+{
+  return "Reconstruction";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MergeColonies::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

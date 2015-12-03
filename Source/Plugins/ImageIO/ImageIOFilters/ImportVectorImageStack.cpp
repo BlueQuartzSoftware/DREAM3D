@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "ImportVectorImageStack.h"
 
 #include <string.h>
@@ -45,9 +44,9 @@
 #include <QtGui/QImage>
 #include <QtGui/QImageReader>
 
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
@@ -475,8 +474,28 @@ AbstractFilter::Pointer ImportVectorImageStack::newFilterInstance(bool copyFilte
 //
 // -----------------------------------------------------------------------------
 const QString ImportVectorImageStack::getCompiledLibraryName()
-{ return ImageIOConstants::ImageIOBaseName; }
+{
+  return ImageIOConstants::ImageIOBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ImportVectorImageStack::getBrandingString()
+{
+  return "ImageIO";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ImportVectorImageStack::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 
 // -----------------------------------------------------------------------------
 //
