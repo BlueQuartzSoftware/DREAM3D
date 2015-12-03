@@ -314,8 +314,14 @@ void MacDREAM3DApplication::dream3dWindowChanged(DREAM3D_UI* instance)
 {
   if (instance->isActiveWindow())
   {
+    DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();
+
     m_ActiveWindow = instance;
     toDREAM3DMenuState(instance);
+
+    // Update the issues menu item with the correct value
+    QAction* issuesToggle = m_ActiveWindow->getIssuesDockWidget()->toggleViewAction();
+    menuItems->getActionShowIssues()->setChecked(issuesToggle->isChecked());
   }
   else if (m_DREAM3DInstances.size() <= 0)
   {
