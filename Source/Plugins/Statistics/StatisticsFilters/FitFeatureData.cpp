@@ -33,24 +33,23 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "FitFeatureData.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Common/TemplateHelpers.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
+
 #include "Statistics/DistributionAnalysisOps/BetaOps.h"
 #include "Statistics/DistributionAnalysisOps/PowerLawOps.h"
 #include "Statistics/DistributionAnalysisOps/LogNormalOps.h"
-
 #include "Statistics/StatisticsConstants.h"
 
 // Include the MOC generated file for this class
@@ -298,8 +297,28 @@ AbstractFilter::Pointer FitFeatureData::newFilterInstance(bool copyFilterParamet
 //
 // -----------------------------------------------------------------------------
 const QString FitFeatureData::getCompiledLibraryName()
-{ return StatisticsConstants::StatisticsBaseName; }
+{
+  return StatisticsConstants::StatisticsBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FitFeatureData::getBrandingString()
+{
+  return "Statistics";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FitFeatureData::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

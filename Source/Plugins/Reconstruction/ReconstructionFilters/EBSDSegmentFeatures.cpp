@@ -33,15 +33,14 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "EBSDSegmentFeatures.h"
 
 #include <QtCore/QDateTime>
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -454,8 +453,28 @@ AbstractFilter::Pointer EBSDSegmentFeatures::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString EBSDSegmentFeatures::getCompiledLibraryName()
-{ return ReconstructionConstants::ReconstructionBaseName; }
+{
+  return ReconstructionConstants::ReconstructionBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EBSDSegmentFeatures::getBrandingString()
+{
+  return "Reconstruction";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EBSDSegmentFeatures::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

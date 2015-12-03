@@ -48,9 +48,9 @@
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/SIMPLibVersion.h"
 
 // Include the MOC generated file for this class
 #include "moc_AvizoUniformCoordinateWriter.cpp"
@@ -305,8 +305,28 @@ AbstractFilter::Pointer AvizoUniformCoordinateWriter::newFilterInstance(bool cop
 //
 // -----------------------------------------------------------------------------
 const QString AvizoUniformCoordinateWriter::getCompiledLibraryName()
-{ return IOConstants::IOBaseName; }
+{
+  return IOConstants::IOBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AvizoUniformCoordinateWriter::getBrandingString()
+{
+  return "IO";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AvizoUniformCoordinateWriter::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 
 // -----------------------------------------------------------------------------
 //

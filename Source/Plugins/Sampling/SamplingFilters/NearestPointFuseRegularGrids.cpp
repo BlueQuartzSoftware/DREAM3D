@@ -33,14 +33,13 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "NearestPointFuseRegularGrids.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Common/TemplateHelpers.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -341,6 +340,25 @@ AbstractFilter::Pointer NearestPointFuseRegularGrids::newFilterInstance(bool cop
 const QString NearestPointFuseRegularGrids::getCompiledLibraryName()
 {
   return SamplingConstants::SamplingBaseName;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString NearestPointFuseRegularGrids::getBrandingString()
+{
+  return "Sampling";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString NearestPointFuseRegularGrids::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
 }
 
 // -----------------------------------------------------------------------------

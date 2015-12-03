@@ -48,6 +48,7 @@ set(DevHelper_SRCS
 SET(DevHelper_HDRS
   ${DevHelper_SOURCE_DIR}/FilterBundler.h
   ${DevHelper_SOURCE_DIR}/PMGeneratorTreeItem.h
+  ${BrandedDREAM3D_DIR}/BrandedStrings.h
 )
 
 SET(DevHelper_MOC_HDRS

@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "ConvertHexGridToSquareGridWidget.h"
 
 //-- Qt Includes

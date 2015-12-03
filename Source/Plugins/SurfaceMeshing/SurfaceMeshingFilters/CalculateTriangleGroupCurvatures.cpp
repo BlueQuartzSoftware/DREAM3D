@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "CalculateTriangleGroupCurvatures.h"
 
 #include <QtCore/QtGlobal>

@@ -57,6 +57,7 @@
 
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/SIMPLibVersion.h"
 
 #include "Applications/DREAM3D/DREAM3D/License/DREAM3DLicenseFiles.h"
 #include "Applications/DREAM3D/DREAM3DVersion.h"

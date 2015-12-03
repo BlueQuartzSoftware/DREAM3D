@@ -35,6 +35,7 @@
 #include "IdentifySample.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
@@ -305,8 +306,28 @@ AbstractFilter::Pointer IdentifySample::newFilterInstance(bool copyFilterParamet
 //
 // -----------------------------------------------------------------------------
 const QString IdentifySample::getCompiledLibraryName()
-{ return ProcessingConstants::ProcessingBaseName; }
+{
+  return ProcessingConstants::ProcessingBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString IdentifySample::getBrandingString()
+{
+  return "Processing";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString IdentifySample::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 
 // -----------------------------------------------------------------------------
 //

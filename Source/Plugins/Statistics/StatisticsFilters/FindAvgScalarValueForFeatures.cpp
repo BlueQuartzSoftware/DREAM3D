@@ -33,14 +33,13 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "FindAvgScalarValueForFeatures.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/TemplateHelpers.hpp"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -230,7 +229,28 @@ AbstractFilter::Pointer FindAvgScalarValueForFeatures::newFilterInstance(bool co
 //
 // -----------------------------------------------------------------------------
 const QString FindAvgScalarValueForFeatures::getCompiledLibraryName()
-{ return StatisticsConstants::StatisticsBaseName; }
+{
+  return StatisticsConstants::StatisticsBaseName;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindAvgScalarValueForFeatures::getBrandingString()
+{
+  return "Statistics";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindAvgScalarValueForFeatures::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 
 // -----------------------------------------------------------------------------
 //

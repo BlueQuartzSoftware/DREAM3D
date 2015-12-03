@@ -33,18 +33,16 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "LosAlamosFFTWriter.h"
 
 #include <QtCore/QDir>
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -280,8 +278,28 @@ AbstractFilter::Pointer LosAlamosFFTWriter::newFilterInstance(bool copyFilterPar
 //
 // -----------------------------------------------------------------------------
 const QString LosAlamosFFTWriter::getCompiledLibraryName()
-{ return IOConstants::IOBaseName; }
+{
+  return IOConstants::IOBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString LosAlamosFFTWriter::getBrandingString()
+{
+  return "IO";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString LosAlamosFFTWriter::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

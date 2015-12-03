@@ -33,10 +33,10 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "SegmentFeatures.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -231,8 +231,28 @@ AbstractFilter::Pointer SegmentFeatures::newFilterInstance(bool copyFilterParame
 //
 // -----------------------------------------------------------------------------
 const QString SegmentFeatures::getCompiledLibraryName()
-{ return ReconstructionConstants::ReconstructionBaseName; }
+{
+  return ReconstructionConstants::ReconstructionBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString SegmentFeatures::getBrandingString()
+{
+  return "Reconstruction";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString SegmentFeatures::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

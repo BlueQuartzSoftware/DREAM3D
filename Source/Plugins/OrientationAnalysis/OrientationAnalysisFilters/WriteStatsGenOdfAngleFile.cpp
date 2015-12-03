@@ -372,8 +372,28 @@ AbstractFilter::Pointer WriteStatsGenOdfAngleFile::newFilterInstance(bool copyFi
 //
 // -----------------------------------------------------------------------------
 const QString WriteStatsGenOdfAngleFile::getCompiledLibraryName()
-{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
+{
+  return OrientationAnalysisConstants::OrientationAnalysisBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString WriteStatsGenOdfAngleFile::getBrandingString()
+{
+  return "OrientationAnalysis";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString WriteStatsGenOdfAngleFile::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 
 // -----------------------------------------------------------------------------
 //

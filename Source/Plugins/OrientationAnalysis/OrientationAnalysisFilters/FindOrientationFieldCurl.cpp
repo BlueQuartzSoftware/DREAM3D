@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "FindOrientationFieldCurl.h"
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
@@ -46,9 +45,9 @@
 #endif
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -475,8 +474,28 @@ AbstractFilter::Pointer FindOrientationFieldCurl::newFilterInstance(bool copyFil
 //
 // -----------------------------------------------------------------------------
 const QString FindOrientationFieldCurl::getCompiledLibraryName()
-{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
+{
+  return OrientationAnalysisConstants::OrientationAnalysisBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindOrientationFieldCurl::getBrandingString()
+{
+  return "OrientationAnalysis";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindOrientationFieldCurl::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 
 // -----------------------------------------------------------------------------
 //

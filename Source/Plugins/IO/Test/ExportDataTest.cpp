@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 

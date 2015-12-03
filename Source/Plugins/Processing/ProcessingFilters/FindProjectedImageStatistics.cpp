@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "FindProjectedImageStatistics.h"
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
@@ -46,9 +45,9 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Common/TemplateHelpers.hpp"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
@@ -586,8 +585,28 @@ AbstractFilter::Pointer FindProjectedImageStatistics::newFilterInstance(bool cop
 //
 // -----------------------------------------------------------------------------
 const QString FindProjectedImageStatistics::getCompiledLibraryName()
-{ return ProcessingConstants::ProcessingBaseName; }
+{
+  return ProcessingConstants::ProcessingBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindProjectedImageStatistics::getBrandingString()
+{
+  return "Processing";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindProjectedImageStatistics::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 
 // -----------------------------------------------------------------------------
 //

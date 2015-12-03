@@ -33,12 +33,12 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "AlignSectionsFeature.h"
 
 #include <fstream>
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -282,8 +282,28 @@ AbstractFilter::Pointer AlignSectionsFeature::newFilterInstance(bool copyFilterP
 //
 // -----------------------------------------------------------------------------
 const QString AlignSectionsFeature::getCompiledLibraryName()
-{ return ReconstructionConstants::ReconstructionBaseName; }
+{
+  return ReconstructionConstants::ReconstructionBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AlignSectionsFeature::getBrandingString()
+{
+  return "Reconstruction";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AlignSectionsFeature::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

@@ -33,13 +33,12 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "FindKernelAvgMisorientations.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -315,8 +314,28 @@ AbstractFilter::Pointer FindKernelAvgMisorientations::newFilterInstance(bool cop
 //
 // -----------------------------------------------------------------------------
 const QString FindKernelAvgMisorientations::getCompiledLibraryName()
-{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
+{
+  return OrientationAnalysisConstants::OrientationAnalysisBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindKernelAvgMisorientations::getBrandingString()
+{
+  return "OrientationAnalysis";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindKernelAvgMisorientations::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

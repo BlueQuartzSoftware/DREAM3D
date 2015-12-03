@@ -303,6 +303,14 @@ if(DREAM3D_BUILD_TESTING)
 endif()
 
 
+#------------------------------------------------------------------------------
+# If we have not defined a "BrandedDREAM3D_DIR" then define it to the default
+# generic set of ICONs
+if(NOT DEFINED BrandedDREAM3D_DIR)
+  set(BrandedDREAM3D_DIR ${DREAM3DProj_SOURCE_DIR}/Resources/OpenSourceEdition)
+endif()
+
+include_directories(${BrandedDREAM3D_DIR})
 
 # -----------------------------------------------------------------------
 # Add in the Necessary HDF5 Support Sources into a library

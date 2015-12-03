@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "AbaqusHexahedronWriter.h"
 
 #include <QtCore/QDir>
@@ -41,14 +40,13 @@
 
 #include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputPathFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Utilities/TimeUtilities.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -684,8 +682,28 @@ AbstractFilter::Pointer AbaqusHexahedronWriter::newFilterInstance(bool copyFilte
 //
 // -----------------------------------------------------------------------------
 const QString AbaqusHexahedronWriter::getCompiledLibraryName()
-{ return IOConstants::IOBaseName; }
+{
+  return IOConstants::IOBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AbaqusHexahedronWriter::getBrandingString()
+{
+  return "IO";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AbaqusHexahedronWriter::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

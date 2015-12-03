@@ -33,18 +33,16 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "ReadH5Ebsd.h"
 
 #include <QtCore/QFileInfo>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
-
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
@@ -1008,8 +1006,28 @@ AbstractFilter::Pointer ReadH5Ebsd::newFilterInstance(bool copyFilterParameters)
 //
 // -----------------------------------------------------------------------------
 const QString ReadH5Ebsd::getCompiledLibraryName()
-{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
+{
+  return OrientationAnalysisConstants::OrientationAnalysisBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ReadH5Ebsd::getBrandingString()
+{
+  return "OrientationAnalysis";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ReadH5Ebsd::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

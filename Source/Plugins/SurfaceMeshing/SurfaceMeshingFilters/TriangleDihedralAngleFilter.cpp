@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "TriangleDihedralAngleFilter.h"
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
@@ -49,6 +48,7 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/SIMPLibVersion.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 
@@ -264,8 +264,28 @@ AbstractFilter::Pointer TriangleDihedralAngleFilter::newFilterInstance(bool copy
 //
 // -----------------------------------------------------------------------------
 const QString TriangleDihedralAngleFilter::getCompiledLibraryName()
-{ return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
+{
+  return SurfaceMeshingConstants::SurfaceMeshingBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString TriangleDihedralAngleFilter::getBrandingString()
+{
+  return "SurfaceMeshing";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString TriangleDihedralAngleFilter::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

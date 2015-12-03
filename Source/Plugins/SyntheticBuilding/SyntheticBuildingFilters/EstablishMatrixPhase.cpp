@@ -33,13 +33,12 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "EstablishMatrixPhase.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -412,8 +411,28 @@ AbstractFilter::Pointer EstablishMatrixPhase::newFilterInstance(bool copyFilterP
 //
 // -----------------------------------------------------------------------------
 const QString EstablishMatrixPhase::getCompiledLibraryName()
-{ return SyntheticBuildingConstants::SyntheticBuildingBaseName; }
+{
+  return SyntheticBuildingConstants::SyntheticBuildingBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EstablishMatrixPhase::getBrandingString()
+{
+  return "SyntheticBuilding";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EstablishMatrixPhase::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

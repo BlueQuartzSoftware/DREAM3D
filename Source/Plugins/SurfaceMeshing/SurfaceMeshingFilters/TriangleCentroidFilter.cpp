@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "TriangleCentroidFilter.h"
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
@@ -48,6 +47,7 @@
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/SIMPLibVersion.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 
@@ -237,8 +237,28 @@ AbstractFilter::Pointer TriangleCentroidFilter::newFilterInstance(bool copyFilte
 //
 // -----------------------------------------------------------------------------
 const QString TriangleCentroidFilter::getCompiledLibraryName()
-{ return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
+{
+  return SurfaceMeshingConstants::SurfaceMeshingBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString TriangleCentroidFilter::getBrandingString()
+{
+  return "SurfaceMeshing";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString TriangleCentroidFilter::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

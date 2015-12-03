@@ -39,6 +39,7 @@
 #include <QtSupportLib/QRecentFileList.h>
 #include <QtSupportLib/DREAM3DSettings.h>
 #include "SGApplication.h"
+#include "BrandedStrings.h"
 
 //-- Qt Headers
 #include <QtWidgets/QApplication>
@@ -50,8 +51,8 @@ int main (int argc, char* argv[])
 {
   SGApplication app(argc, argv);
 
-  QCoreApplication::setOrganizationDomain("bluequartz.net");
-  QCoreApplication::setOrganizationName("BlueQuartz Software");
+  QCoreApplication::setOrganizationDomain(BrandedStrings::OrganizationDomain);
+  QCoreApplication::setOrganizationName(BrandedStrings::OrganizationName);
   QCoreApplication::setApplicationName("StatsGeneratorUI");
 
 #if defined( Q_OS_MAC )

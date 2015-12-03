@@ -33,13 +33,12 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "FindSlipTransmissionMetrics.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -321,8 +320,28 @@ AbstractFilter::Pointer FindSlipTransmissionMetrics::newFilterInstance(bool copy
 //
 // -----------------------------------------------------------------------------
 const QString FindSlipTransmissionMetrics::getCompiledLibraryName()
-{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
+{
+  return OrientationAnalysisConstants::OrientationAnalysisBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindSlipTransmissionMetrics::getBrandingString()
+{
+  return "OrientationAnalysis";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindSlipTransmissionMetrics::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

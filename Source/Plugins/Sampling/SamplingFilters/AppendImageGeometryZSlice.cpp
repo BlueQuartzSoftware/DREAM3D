@@ -35,6 +35,7 @@
 #include "AppendImageGeometryZSlice.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
@@ -306,8 +307,28 @@ AbstractFilter::Pointer AppendImageGeometryZSlice::newFilterInstance(bool copyFi
 //
 // -----------------------------------------------------------------------------
 const QString AppendImageGeometryZSlice::getCompiledLibraryName()
-{ return SamplingConstants::SamplingBaseName; }
+{
+  return SamplingConstants::SamplingBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AppendImageGeometryZSlice::getBrandingString()
+{
+  return "Sampling";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AppendImageGeometryZSlice::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
