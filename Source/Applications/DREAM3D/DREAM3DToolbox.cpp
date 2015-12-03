@@ -205,7 +205,7 @@ void DREAM3DToolbox::writeSettings()
 
   prefs.beginGroup("ToolboxSettings");
 
-  prefs.setValue(objectName(), isVisible());
+  prefs.setValue(objectName(), menuItems->getActionShowToolbox()->isChecked());
   prefs.setValue(bookmarksWidget->objectName(), menuItems->getActionShowBookmarks()->isChecked());
   prefs.setValue(filterListWidget->objectName(), menuItems->getActionShowFilterList()->isChecked());
   prefs.setValue(filterLibraryWidget->objectName(), menuItems->getActionShowFilterLibrary()->isChecked());

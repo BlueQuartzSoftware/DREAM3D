@@ -156,6 +156,10 @@ DREAM3D_UI::DREAM3D_UI(QWidget* parent) :
 // -----------------------------------------------------------------------------
 DREAM3D_UI::~DREAM3D_UI()
 {
+  disconnectSignalsSlots();
+
+  writeSettings();
+  clearPipeline();
   dream3dApp->unregisterDREAM3DWindow(this);
 }
 
@@ -357,12 +361,6 @@ void DREAM3D_UI::closeEvent(QCloseEvent* event)
     event->ignore();
     return;
   }
-
-  disconnectSignalsSlots();
-
-  writeSettings();
-  clearPipeline();
-  dream3dApp->unregisterDREAM3DWindow(this);
 
   event->accept();
 }

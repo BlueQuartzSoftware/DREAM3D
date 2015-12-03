@@ -408,6 +408,7 @@ void MacDREAM3DApplication::createGlobalMenu()
   QAction* actionSaveAs = menuItems->getActionSaveAs();
   QMenu* menuRecentFiles = menuItems->getMenuRecentFiles();
   QAction* actionClearRecentFiles = menuItems->getActionClearRecentFiles();
+  QAction* actionExit = menuItems->getActionExit();
   QAction* actionClearPipeline = menuItems->getActionClearPipeline();
   QAction* actionShowDREAM3DHelp = menuItems->getActionShowDREAM3DHelp();
   QAction* actionCheckForUpdates = menuItems->getActionCheckForUpdates();
@@ -435,6 +436,8 @@ void MacDREAM3DApplication::createGlobalMenu()
   menuFile->addAction(menuRecentFiles->menuAction());
   menuRecentFiles->addSeparator();
   menuRecentFiles->addAction(actionClearRecentFiles);
+  menuFile->addSeparator();
+  menuFile->addAction(actionExit);
 
   // Create View Menu
   m_GlobalMenu->addMenu(menuView);

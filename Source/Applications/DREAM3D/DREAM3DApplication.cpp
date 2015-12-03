@@ -112,9 +112,6 @@ DREAM3DApplication::~DREAM3DApplication()
   DREAM3DToolbox* toolbox = DREAM3DToolbox::Instance();
   toolbox->writeSettings();
 
-  delete toolbox;
-  toolbox = NULL;
-
   DREAM3DSettings prefs;
   if (prefs.value("Program Mode", QString("")) == "Clear Cache")
   {
@@ -563,7 +560,6 @@ void DREAM3DApplication::on_actionNewFolder_triggered()
   BookmarksToolboxWidget* bookmarksToolboxWidget = toolbox->getBookmarksWidget();
 
   QModelIndex parent = bookmarksToolboxWidget->getSelectedParentTreeItem();
-  QString parentName = model->index(parent.row(), BookmarksItem::Name, parent.parent()).data().toString();
 
   QString name = "New Folder";
 
