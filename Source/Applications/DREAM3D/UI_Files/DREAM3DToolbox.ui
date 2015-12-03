@@ -129,16 +129,6 @@
     </item>
    </layout>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>481</width>
-     <height>21</height>
-    </rect>
-   </property>
-  </widget>
   <action name="actionClose_Toolbox">
    <property name="text">
     <string>Close Toolbox</string>
