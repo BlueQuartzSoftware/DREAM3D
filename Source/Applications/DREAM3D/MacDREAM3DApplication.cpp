@@ -310,82 +310,76 @@ void MacDREAM3DApplication::on_bookmarksDockContextMenuRequested(const QPoint& p
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MacDREAM3DApplication::activeWindowChanged(DREAM3D_UI* instance)
+void MacDREAM3DApplication::dream3dWindowChanged(DREAM3D_UI* instance)
 {
   if (instance->isActiveWindow())
   {
     m_ActiveWindow = instance;
-
-    /* If the active signal got fired and there is now only one window,
-     * this means that the first window has been opened.
-     * Enable menu items. */
-    if (m_DREAM3DInstances.size() == 1)
-    {
-      toggleGlobalMenuItems(true);
-    }
-
-    // Set the active window's menu state
-    if (isCurrentlyRunning(m_ActiveWindow) == true)
-    {
-      toPipelineRunningState();
-    }
-    else
-    {
-      toPipelineIdleState();
-    }
+    toDREAM3DMenuState(instance);
   }
   else if (m_DREAM3DInstances.size() <= 0)
   {
     /* If the inactive signal got fired and there are no more windows,
-     * this means that the last window has been closed.
-     * Disable menu items. */
+     * this means that the last window has been closed. */
     m_ActiveWindow = NULL;
-    toggleGlobalMenuItems(false);
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MacDREAM3DApplication::toggleGlobalMenuItems(bool value)
+void MacDREAM3DApplication::toolboxWindowChanged()
 {
-//  m_GlobalMenu->toggleMenuChildren(m_GlobalMenu->getViewMenu(), value);
-//  m_GlobalMenu->toggleMenuChildren(m_GlobalMenu->getBookmarksMenu(), value);
-//  m_GlobalMenu->toggleMenuChildren(m_GlobalMenu->getPipelineMenu(), value);
-
-//  m_GlobalMenu->getSave()->setEnabled(value);
-//  m_GlobalMenu->getSaveAs()->setEnabled(value);
+  if (m_Toolbox->isActiveWindow())
+  {
+    toToolboxMenuState();
+  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MacDREAM3DApplication::toPipelineRunningState()
+void MacDREAM3DApplication::toToolboxMenuState()
 {
   DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();
+
+  menuItems->getActionSave()->setDisabled(true);
+  menuItems->getActionSaveAs()->setDisabled(true);
+  menuItems->getActionShowIssues()->setDisabled(true);
   menuItems->getActionClearPipeline()->setDisabled(true);
 
-  DREAM3D_UI* runningInstance = qobject_cast<DREAM3D_UI*>(sender());
-  if (NULL != runningInstance)
-  {
-    m_CurrentlyRunningInstances.insert(runningInstance);
-  }
+  menuItems->getActionShowFilterList()->setEnabled(true);
+  menuItems->getActionShowFilterLibrary()->setEnabled(true);
+  menuItems->getActionShowBookmarks()->setEnabled(true);
+  menuItems->getActionAddBookmark()->setEnabled(true);
+  menuItems->getActionNewFolder()->setEnabled(true);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MacDREAM3DApplication::toPipelineIdleState()
+void MacDREAM3DApplication::toDREAM3DMenuState(DREAM3D_UI* instance)
 {
   DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();
-  menuItems->getActionClearPipeline()->setEnabled(true);
 
-  DREAM3D_UI* runningInstance = qobject_cast<DREAM3D_UI*>(sender());
-  if (NULL != runningInstance)
+  if (isCurrentlyRunning(instance) == true)
   {
-    m_CurrentlyRunningInstances.remove(runningInstance);
+    menuItems->getActionClearPipeline()->setDisabled(true);
   }
+  else
+  {
+    menuItems->getActionClearPipeline()->setEnabled(true);
+  }
+
+  menuItems->getActionShowFilterList()->setDisabled(true);
+  menuItems->getActionShowFilterLibrary()->setDisabled(true);
+  menuItems->getActionShowBookmarks()->setDisabled(true);
+  menuItems->getActionAddBookmark()->setDisabled(true);
+  menuItems->getActionNewFolder()->setDisabled(true);
+
+  menuItems->getActionSave()->setEnabled(true);
+  menuItems->getActionSaveAs()->setEnabled(true);
+  menuItems->getActionShowIssues()->setEnabled(true);
 }
 
 // -----------------------------------------------------------------------------

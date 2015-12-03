@@ -42,15 +42,11 @@ class MacDREAM3DApplication : public DREAM3DApplication
 {
   Q_OBJECT
 
-public:
-  MacDREAM3DApplication(int& argc, char** argv);
-  virtual ~MacDREAM3DApplication();
+  public:
+    MacDREAM3DApplication(int& argc, char** argv);
+    virtual ~MacDREAM3DApplication();
 
-  virtual void unregisterDREAM3DWindow(DREAM3D_UI* window);
-
-  protected:
-
-    void toggleGlobalMenuItems(bool value);
+    virtual void unregisterDREAM3DWindow(DREAM3D_UI* window);
 
   protected slots:
 
@@ -64,7 +60,9 @@ public:
   /**
   * @brief activeWindowChanged
   */
-  virtual void activeWindowChanged(DREAM3D_UI* instance);
+  virtual void dream3dWindowChanged(DREAM3D_UI* instance);
+
+  virtual void toolboxWindowChanged();
 
   // DREAM3D_UI slots
   virtual void on_actionClearRecentFiles_triggered();
@@ -72,9 +70,8 @@ public:
   virtual void on_pipelineViewContextMenuRequested(const QPoint&);
   virtual void on_bookmarksDockContextMenuRequested(const QPoint&);
 
-  virtual void toPipelineRunningState();
-
-  virtual void toPipelineIdleState();
+  void toToolboxMenuState();
+  void toDREAM3DMenuState(DREAM3D_UI *instance);
 
 private:
   // The global menu

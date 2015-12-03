@@ -79,12 +79,16 @@ class DREAM3DToolbox : public QMainWindow, private Ui::DREAM3DToolbox
 
   protected:
     DREAM3DToolbox(QWidget* parent = 0, Qt::WindowFlags flags = 0);
+    void changeEvent(QEvent* event);
     void closeEvent(QCloseEvent* event);
 
   protected slots:
     void actionShowFilterLibrary_triggered(bool enabled);
     void actionShowFilterList_triggered(bool enabled);
     void actionShowBookmarks_triggered(bool enabled);
+
+  signals:
+    void toolboxChangedState();
 
   private:
     static DREAM3DToolbox*                              self;

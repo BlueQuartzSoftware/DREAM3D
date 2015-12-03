@@ -95,6 +95,8 @@ DREAM3DApplication::DREAM3DApplication(int& argc, char** argv) :
   // Create the toolbox
   m_Toolbox = DREAM3DToolbox::Instance();
 
+  connect(m_Toolbox, SIGNAL(toolboxChangedState()), this, SLOT(toolboxWindowChanged()));
+
   // Connection to update the recent files list on all windows when it changes
   QRecentFileList* recentsList = QRecentFileList::instance();
   connect(recentsList, SIGNAL(fileListChanged(const QString&)),
@@ -904,6 +906,24 @@ void DREAM3DApplication::on_actionExit_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void DREAM3DApplication::dream3dWindowChanged(DREAM3D_UI *instance)
+{
+  // This should never be executed
+  return;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DApplication::toolboxWindowChanged()
+{
+  // This should never be executed
+  return;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QList<DREAM3D_UI*> DREAM3DApplication::getDREAM3DInstances()
 {
   return m_DREAM3DInstances;
@@ -924,6 +944,36 @@ void DREAM3DApplication::unregisterDREAM3DWindow(DREAM3D_UI* window)
 {
   // This should never be executed
   return;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DApplication::toPipelineRunningState()
+{
+  DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();
+  menuItems->getActionClearPipeline()->setDisabled(true);
+
+  DREAM3D_UI* runningInstance = qobject_cast<DREAM3D_UI*>(sender());
+  if (NULL != runningInstance)
+  {
+    m_CurrentlyRunningInstances.insert(runningInstance);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DApplication::toPipelineIdleState()
+{
+  DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();
+  menuItems->getActionClearPipeline()->setEnabled(true);
+
+  DREAM3D_UI* runningInstance = qobject_cast<DREAM3D_UI*>(sender());
+  if (NULL != runningInstance)
+  {
+    m_CurrentlyRunningInstances.remove(runningInstance);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -966,7 +1016,7 @@ DREAM3D_UI* DREAM3DApplication::getNewDREAM3DInstance()
 
   m_ActiveWindow = newInstance;
 
-  connect(newInstance, SIGNAL(dream3dWindowChangedState(DREAM3D_UI*)), this, SLOT(activeWindowChanged(DREAM3D_UI*)));
+  connect(newInstance, SIGNAL(dream3dWindowChangedState(DREAM3D_UI*)), this, SLOT(dream3dWindowChanged(DREAM3D_UI*)));
 
   // Check if this is the first run of DREAM3D
   newInstance->checkFirstRun();

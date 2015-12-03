@@ -306,7 +306,7 @@ void StandardDREAM3DApplication::on_bookmarksDockContextMenuRequested(const QPoi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StandardDREAM3DApplication::activeWindowChanged(DREAM3D_UI* instance)
+void StandardDREAM3DApplication::dream3dWindowChanged(DREAM3D_UI* instance)
 {
   if (instance->isActiveWindow())
   {
@@ -317,45 +317,6 @@ void StandardDREAM3DApplication::activeWindowChanged(DREAM3D_UI* instance)
     // Update the issues menu item with the correct value
     QAction* issuesToggle = m_ActiveWindow->getIssuesDockWidget()->toggleViewAction();
     menuItems->getActionShowIssues()->setChecked(issuesToggle->isChecked());
-  }
-  else if (m_DREAM3DInstances.size() <= 0)
-  {
-    /* If the inactive signal got fired and there are no more windows,
-     * this means that the last window has been closed.
-     * Disable menu items. */
-    m_ActiveWindow = NULL;
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void StandardDREAM3DApplication::toPipelineRunningState()
-{
-  DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();
-
-  menuItems->getActionClearPipeline()->setDisabled(true);
-
-  DREAM3D_UI* runningInstance = qobject_cast<DREAM3D_UI*>(sender());
-  if (NULL != runningInstance)
-  {
-    m_CurrentlyRunningInstances.insert(runningInstance);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void StandardDREAM3DApplication::toPipelineIdleState()
-{
-  DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();
-
-  menuItems->getActionClearPipeline()->setEnabled(true);
-
-  DREAM3D_UI* runningInstance = qobject_cast<DREAM3D_UI*>(sender());
-  if (NULL != runningInstance)
-  {
-    m_CurrentlyRunningInstances.remove(runningInstance);
   }
 }
 

@@ -232,6 +232,17 @@ void DREAM3DToolbox::writeSettings()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void DREAM3DToolbox::changeEvent(QEvent* event)
+{
+  if (event->type() == QEvent::ActivationChange)
+  {
+    emit toolboxChangedState();
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void DREAM3DToolbox::closeEvent(QCloseEvent* event)
 {
   DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();

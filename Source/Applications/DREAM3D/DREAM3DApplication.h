@@ -110,14 +110,6 @@ class DREAM3DApplication : public QApplication
     QVector<ISIMPLibPlugin*> loadPlugins();
 
   protected slots:
-
-    /**
-    * @brief Updates the QMenu 'Recent Files' with the latest list of files. This
-    * should be connected to the Signal QRecentFileList->fileListChanged
-    * @param file The newly added file.
-    */
-    virtual void updateRecentFileList(const QString& file);
-
     void on_actionCloseToolbox_triggered();
     void on_actionNew_triggered();
     void on_actionOpen_triggered();
@@ -141,6 +133,19 @@ class DREAM3DApplication : public QApplication
     void on_actionCheckForUpdates_triggered();
     void on_actionPluginInformation_triggered();
     void on_actionAboutDREAM3D_triggered();
+
+    void toPipelineRunningState();
+    void toPipelineIdleState();
+
+    /**
+    * @brief Updates the QMenu 'Recent Files' with the latest list of files. This
+    * should be connected to the Signal QRecentFileList->fileListChanged
+    * @param file The newly added file.
+    */
+    virtual void updateRecentFileList(const QString& file);
+
+    virtual void dream3dWindowChanged(DREAM3D_UI* instance);
+    virtual void toolboxWindowChanged();
 
     virtual void on_actionClearRecentFiles_triggered();
 

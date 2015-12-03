@@ -67,17 +67,13 @@ class StandardDREAM3DApplication : public DREAM3DApplication
     /**
     * @brief activeWindowChanged
     */
-    virtual void activeWindowChanged(DREAM3D_UI* instance);
+    virtual void dream3dWindowChanged(DREAM3D_UI* instance);
 
     // DREAM3D_UI slots
     virtual void on_actionClearRecentFiles_triggered();
 
     virtual void on_pipelineViewContextMenuRequested(const QPoint&);
     virtual void on_bookmarksDockContextMenuRequested(const QPoint&);
-
-    virtual void toPipelineRunningState();
-
-    virtual void toPipelineIdleState();
 
   private:
 
