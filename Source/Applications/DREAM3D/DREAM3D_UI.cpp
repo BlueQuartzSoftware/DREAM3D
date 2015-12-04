@@ -87,6 +87,7 @@
 #include "Applications/DREAM3D/DREAM3DConstants.h"
 #include "Applications/DREAM3D/DREAM3Dv6Wizard.h"
 #include "Applications/DREAM3D/StandardDREAM3DApplication.h"
+#include "Applications/DREAM3D/MacDREAM3DApplication.h"
 #include "Applications/DREAM3D/DREAM3DMenu.h"
 #include "Applications/DREAM3D/DREAM3DToolbox.h"
 #include "Applications/DREAM3D/DREAM3DMenuItems.h"
@@ -161,6 +162,15 @@ DREAM3D_UI::~DREAM3D_UI()
   writeSettings();
   clearPipeline();
   dream3dApp->unregisterDREAM3DWindow(this);
+
+  if (dream3dApp->getDREAM3DInstances().size() <= 0)
+  {
+    dream3dApp->setActiveWindow(NULL);
+    if (NULL != macApp)
+    {
+      macApp->toEmptyMenuState();
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------

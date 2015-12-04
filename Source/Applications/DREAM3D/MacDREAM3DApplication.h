@@ -38,6 +38,8 @@
 
 #include "Applications/DREAM3D/DREAM3DApplication.h"
 
+#define macApp (static_cast<MacDREAM3DApplication*>(qApp))
+
 class MacDREAM3DApplication : public DREAM3DApplication
 {
   Q_OBJECT
@@ -47,6 +49,8 @@ class MacDREAM3DApplication : public DREAM3DApplication
     virtual ~MacDREAM3DApplication();
 
     virtual void unregisterDREAM3DWindow(DREAM3D_UI* window);
+
+    void toEmptyMenuState();
 
   protected slots:
 
@@ -69,7 +73,6 @@ class MacDREAM3DApplication : public DREAM3DApplication
 
   void toToolboxMenuState();
   void toDREAM3DMenuState(DREAM3D_UI *instance);
-  void toEmptyMenuState();
 
 private:
   // The global menu

@@ -72,6 +72,8 @@ class DREAM3DApplication : public QApplication
 
     DREAM3D_UI* getNewDREAM3DInstance();
 
+    void setActiveWindow(DREAM3D_UI* instance);
+
     bool isCurrentlyRunning(DREAM3D_UI* instance);
 
     virtual QMenuBar* getDREAM3DMenuBar();

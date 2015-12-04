@@ -38,7 +38,7 @@
 
 #include "Applications/DREAM3D/DREAM3DApplication.h"
 
-#define standardApp (static_cast<StandardDREAM3DApplication *>(dream3dApp))
+#define standardApp (static_cast<StandardDREAM3DApplication *>(qApp))
 
 class DREAM3DToolboxMenu;
 
