@@ -342,29 +342,6 @@ FilterLibraryToolboxWidget* DREAM3DToolbox::getFilterLibraryWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3DToolboxMenu* DREAM3DToolbox::getToolboxMenu()
-{
-  return m_ToolboxMenu;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3DToolbox::setToolboxMenu(DREAM3DToolboxMenu* menu)
-{
-  DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();
-
-  setMenuBar(standardApp->getToolboxMenuBar());
-  m_ToolboxMenu = menu;
-
-  menuItems->getActionShowFilterList()->setChecked(filterListTab->isVisible());
-  menuItems->getActionShowFilterLibrary()->setChecked(filterLibraryTab->isVisible());
-  menuItems->getActionShowBookmarks()->setChecked(bookmarksTab->isVisible());
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void DREAM3DToolbox::setCurrentTab(ToolboxTabs tab)
 {
   if (tab == DREAM3DToolbox::FilterList)

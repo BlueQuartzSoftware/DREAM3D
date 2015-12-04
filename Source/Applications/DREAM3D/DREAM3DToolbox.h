@@ -42,8 +42,6 @@
 //-- UIC generated Header
 #include "ui_DREAM3DToolbox.h"
 
-class DREAM3DToolboxMenu;
-
 class DREAM3DToolbox : public QMainWindow, private Ui::DREAM3DToolbox
 {
     Q_OBJECT
@@ -72,9 +70,6 @@ class DREAM3DToolbox : public QMainWindow, private Ui::DREAM3DToolbox
     void writeSettings();
     void writeWindowSettings(DREAM3DSettings& prefs);
 
-    DREAM3DToolboxMenu* getToolboxMenu();
-    void setToolboxMenu(DREAM3DToolboxMenu* menu);
-
     void setCurrentTab(ToolboxTabs tab);
 
   protected:
@@ -92,8 +87,6 @@ class DREAM3DToolbox : public QMainWindow, private Ui::DREAM3DToolbox
 
   private:
     static DREAM3DToolbox*                              self;
-
-    DREAM3DToolboxMenu*                                 m_ToolboxMenu;
 
     DREAM3DToolbox(const DREAM3DToolbox&); // Copy Constructor Not Implemented
     void operator=(const DREAM3DToolbox&); // Operator '=' Not Implemented
