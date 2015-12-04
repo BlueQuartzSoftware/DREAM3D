@@ -50,8 +50,6 @@
 #include <QtGui/QResizeEvent>
 #include <QtWidgets/QToolBar>
 
-#include "Applications/DREAM3D/DREAM3DMenu.h"
-
 #include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"

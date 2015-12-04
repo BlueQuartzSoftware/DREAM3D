@@ -35,7 +35,6 @@
 #include "DREAM3DToolbox.h"
 
 #include "StandardDREAM3DApplication.h"
-#include "DREAM3DToolboxMenu.h"
 #include "DREAM3DMenuItems.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data

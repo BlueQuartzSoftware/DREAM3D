@@ -88,7 +88,6 @@
 #include "Applications/DREAM3D/DREAM3Dv6Wizard.h"
 #include "Applications/DREAM3D/StandardDREAM3DApplication.h"
 #include "Applications/DREAM3D/MacDREAM3DApplication.h"
-#include "Applications/DREAM3D/DREAM3DMenu.h"
 #include "Applications/DREAM3D/DREAM3DToolbox.h"
 #include "Applications/DREAM3D/DREAM3DMenuItems.h"
 
