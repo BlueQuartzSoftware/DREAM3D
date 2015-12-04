@@ -40,30 +40,21 @@
 
 #include <iostream>
 
-#include <QtCore/QTime>
 #include <QtCore/QPluginLoader>
-#include <QtCore/QFileInfo>
 #include <QtCore/QProcess>
-#include <QtCore/QDir>
 
 #include <QtWidgets/QFileDialog>
-#include <QtWidgets/QMessageBox>
 
 #include <QtGui/QDesktopServices>
 #include <QtGui/QBitmap>
-#include <QtGui/QFileOpenEvent>
 
-#include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Utilities/QMetaObjectUtilities.h"
-#include "SIMPLib/Plugin/PluginManager.h"
-#include "SIMPLib/Plugin/PluginProxy.h"
 
 #include "QtSupportLib/QRecentFileList.h"
 #include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
 #include "QtSupportLib/ApplicationAboutBoxDialog.h"
 
-#include "DREAM3DWidgetsLib/FilterWidgetManager.h"
 #include "DREAM3DWidgetsLib/Widgets/DREAM3DUpdateCheckDialog.h"
 #ifdef DREAM3D_USE_QtWebEngine
 #include "Applications/Common/DREAM3DUserManualDialog.h"
@@ -74,7 +65,6 @@
 #include "Applications/DREAM3D/AboutPlugins.h"
 #include "Applications/DREAM3D/DREAM3DConstants.h"
 #include "Applications/DREAM3D/DREAM3DToolbox.h"
-#include "Applications/DREAM3D/DREAM3DToolboxMenu.h"
 #include "Applications/DREAM3D/DREAM3DMenuItems.h"
 
 #include "DSplashScreen.h"

@@ -36,14 +36,10 @@
 #ifndef _DREAM3DApplication_H_
 #define _DREAM3DApplication_H_
 
-#include <QtCore/QObject>
-#include <QtCore/QVector>
 #include <QtCore/QSet>
 
 #include <QtWidgets/QApplication>
-#include <QtWidgets/QWidget>
-
-#include "Applications/DREAM3D/DREAM3DMenu.h"
+#include <QtWidgets/QMenuBar>
 
 #include "SIMPLib/SIMPLib.h"
 
