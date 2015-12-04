@@ -59,7 +59,6 @@ class DREAM3DMenuItems : public QObject
     static DREAM3DMenuItems* self;
 
     // File Menu
-    SIMPL_INSTANCE_PROPERTY(QMenu*, MenuFile)
       SIMPL_INSTANCE_PROPERTY(QMenu*, MenuRecentFiles)
       SIMPL_INSTANCE_PROPERTY(QAction*, ActionNew)
       SIMPL_INSTANCE_PROPERTY(QAction*, ActionOpen)
@@ -69,8 +68,6 @@ class DREAM3DMenuItems : public QObject
       SIMPL_INSTANCE_PROPERTY(QAction*, ActionExit)
 
       // View Menu
-      SIMPL_INSTANCE_PROPERTY(QMenu*, MenuView)
-      SIMPL_INSTANCE_PROPERTY(QMenu*, MenuToolbox)
       SIMPL_INSTANCE_PROPERTY(QAction*, ActionShowFilterLibrary)
       SIMPL_INSTANCE_PROPERTY(QAction*, ActionShowFilterList)
       SIMPL_INSTANCE_PROPERTY(QAction*, ActionShowBookmarks)
@@ -78,17 +75,13 @@ class DREAM3DMenuItems : public QObject
       SIMPL_INSTANCE_PROPERTY(QAction*, ActionShowToolbox)
 
       // Bookmarks Menu
-      SIMPL_INSTANCE_PROPERTY(QMenu*, MenuBookmarks)
       SIMPL_INSTANCE_PROPERTY(QAction*, ActionAddBookmark)
       SIMPL_INSTANCE_PROPERTY(QAction*, ActionNewFolder)
 
       // Pipeline Menu
-      SIMPL_INSTANCE_PROPERTY(QMenu*, MenuPipeline)
       SIMPL_INSTANCE_PROPERTY(QAction*, ActionClearPipeline)
 
       // Help Menu
-      SIMPL_INSTANCE_PROPERTY(QMenu*, MenuHelp)
-      SIMPL_INSTANCE_PROPERTY(QMenu*, MenuAdvanced)
       SIMPL_INSTANCE_PROPERTY(QAction*, ActionClearCache)
       SIMPL_INSTANCE_PROPERTY(QAction*, ActionShowDREAM3DHelp)
       SIMPL_INSTANCE_PROPERTY(QAction*, ActionCheckForUpdates)

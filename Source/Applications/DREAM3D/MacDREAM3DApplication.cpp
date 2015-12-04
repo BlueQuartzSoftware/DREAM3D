@@ -277,13 +277,13 @@ void MacDREAM3DApplication::createGlobalMenu()
 {
   DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();
 
-  QMenu* menuFile = menuItems->getMenuFile();
-  QMenu* menuView = menuItems->getMenuView();
-  QMenu* menuToolbox = menuItems->getMenuToolbox();
-  QMenu* menuBookmarks = menuItems->getMenuBookmarks();
-  QMenu* menuPipeline = menuItems->getMenuPipeline();
-  QMenu* menuHelp = menuItems->getMenuHelp();
-  QMenu* menuAdvanced = menuItems->getMenuAdvanced();
+  QMenu* menuFile = new QMenu("File", m_GlobalMenu);
+  QMenu* menuView = new QMenu("View", m_GlobalMenu);
+  QMenu* menuToolbox = new QMenu("Toolbox", m_GlobalMenu);
+  QMenu* menuBookmarks = new QMenu("Bookmarks", m_GlobalMenu);
+  QMenu* menuPipeline = new QMenu("Pipeline", m_GlobalMenu);
+  QMenu* menuHelp = new QMenu("Help", m_GlobalMenu);
+  QMenu* menuAdvanced = new QMenu("Advanced", m_GlobalMenu);
   QAction* actionNew = menuItems->getActionNew();
   QAction* actionOpen = menuItems->getActionOpen();
   QAction* actionSave = menuItems->getActionSave();

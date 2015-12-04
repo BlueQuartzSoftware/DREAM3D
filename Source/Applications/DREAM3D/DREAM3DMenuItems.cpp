@@ -81,14 +81,7 @@ DREAM3DMenuItems* DREAM3DMenuItems::Instance()
 // -----------------------------------------------------------------------------
 void DREAM3DMenuItems::createMenus()
 {
-  m_MenuFile = new QMenu("File");
-  m_MenuView = new QMenu("View");
-  m_MenuToolbox = new QMenu("Toolbox");
   m_MenuRecentFiles = new QMenu("Recent Files");
-  m_MenuHelp = new QMenu("Help");
-  m_MenuAdvanced = new QMenu("Advanced");
-  m_MenuPipeline = new QMenu("Pipeline");
-  m_MenuBookmarks = new QMenu("Bookmarks");
 }
 
 // -----------------------------------------------------------------------------

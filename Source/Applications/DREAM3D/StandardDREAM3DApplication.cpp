@@ -207,11 +207,11 @@ QMenuBar* StandardDREAM3DApplication::getDREAM3DMenuBar()
   DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();
 
   QMenuBar* menuBar = new QMenuBar();
-  QMenu* menuFile = menuItems->getMenuFile();
-  QMenu* menuView = menuItems->getMenuView();
-  QMenu* menuPipeline = menuItems->getMenuPipeline();
-  QMenu* menuHelp = menuItems->getMenuHelp();
-  QMenu* menuAdvanced = menuItems->getMenuAdvanced();
+  QMenu* menuFile = new QMenu("File", menuBar);
+  QMenu* menuView = new QMenu("View", menuBar);
+  QMenu* menuPipeline = new QMenu("Pipeline", menuBar);
+  QMenu* menuHelp = new QMenu("Help", menuBar);
+  QMenu* menuAdvanced = new QMenu("Advanced", menuBar);
   QAction* actionNew = menuItems->getActionNew();
   QAction* actionOpen = menuItems->getActionOpen();
   QAction* actionSave = menuItems->getActionSave();
@@ -275,8 +275,8 @@ QMenuBar* StandardDREAM3DApplication::getToolboxMenuBar()
   DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();
 
   QMenuBar* menuBar = new QMenuBar();
-  QMenu* menuView = new QMenu("View");
-  QMenu* menuBookmarks = menuItems->getMenuBookmarks();
+  QMenu* menuView = new QMenu("View", menuBar);
+  QMenu* menuBookmarks = new QMenu("Bookmarks", menuBar);
   QAction* actionShowFilterLibrary = menuItems->getActionShowFilterLibrary();
   QAction* actionShowFilterList = menuItems->getActionShowFilterList();
   QAction* actionShowBookmarks = menuItems->getActionShowBookmarks();
