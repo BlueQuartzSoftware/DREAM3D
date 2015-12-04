@@ -44,7 +44,7 @@
 #include <QtCore/QDir>
 #include <QtGui/QDrag>
 
-
+#include "Applications/DREAM3D/DREAM3DMenuItems.h"
 #include "Applications/DREAM3D/DREAM3DApplication.h"
 
 #include "DREAM3DWidgetsLib/Widgets/BookmarksItemDelegate.h"
@@ -61,6 +61,8 @@ BookmarksTreeView::BookmarksTreeView(QWidget* parent) :
   m_TopLevelItemPlaceholder(QModelIndex())
 {
   setContextMenuPolicy(Qt::CustomContextMenu);
+
+  connect(this, SIGNAL(currentIndexChanged(const QModelIndex&, const QModelIndex&)), dream3dApp, SLOT(bookmarkSelectionChanged(const QModelIndex&, const QModelIndex&)));
 
   connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), dream3dApp, SLOT(on_bookmarksDockContextMenuRequested(const QPoint&)));
 

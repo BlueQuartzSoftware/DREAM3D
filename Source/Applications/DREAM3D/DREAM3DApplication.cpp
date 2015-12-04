@@ -504,7 +504,12 @@ void DREAM3DApplication::on_actionAddBookmark_triggered()
       proposedDir, tr("Json File (*.json);;DREAM.3D File (*.dream3d);;Text File (*.txt);;Ini File (*.ini);;All Files (*.*)"));
     if (true == newPrefPaths.isEmpty()) { return; }
 
-    QModelIndex parent = bookmarksToolboxWidget->getSelectedParentTreeItem();
+    QModelIndex parent = m_Toolbox->getBookmarksWidget()->getBookmarksTreeView()->currentIndex();
+
+    if (parent.isValid() == false)
+    {
+      parent = QModelIndex();
+    }
 
     for (int i = 0; i < newPrefPaths.size(); i++)
     {
@@ -533,7 +538,12 @@ void DREAM3DApplication::on_actionNewFolder_triggered()
   BookmarksModel* model = BookmarksModel::Instance();
   BookmarksToolboxWidget* bookmarksToolboxWidget = toolbox->getBookmarksWidget();
 
-  QModelIndex parent = bookmarksToolboxWidget->getSelectedParentTreeItem();
+  QModelIndex parent = m_Toolbox->getBookmarksWidget()->getBookmarksTreeView()->currentIndex();
+
+  if (parent.isValid() == false)
+  {
+    parent = QModelIndex();
+  }
 
   QString name = "New Folder";
 
@@ -888,8 +898,6 @@ void DREAM3DApplication::on_bookmarksDockContextMenuRequested(const QPoint& pos)
       }
       else
       {
-        menu.addAction(actionAddBookmark);
-
         actionRenameBookmark->setText("Rename Bookmark");
         menu.addAction(actionRenameBookmark);
 
@@ -996,6 +1004,28 @@ void DREAM3DApplication::on_actionExit_triggered()
   if (shouldReallyClose == true)
   {
     quit();
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DApplication::bookmarkSelectionChanged(const QModelIndex &current, const QModelIndex &previous)
+{
+  BookmarksModel* model = BookmarksModel::Instance();
+  DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();
+  QAction* actionAddBookmark = menuItems->getActionAddBookmark();
+  QAction* actionNewFolder = menuItems->getActionNewFolder();
+
+  if (model->index(current.row(), BookmarksItem::Path, current.parent()).data().toString().isEmpty() == true)
+  {
+    actionAddBookmark->setEnabled(true);
+    actionNewFolder->setEnabled(true);
+  }
+  else
+  {
+    actionAddBookmark->setDisabled(true);
+    actionNewFolder->setDisabled(true);
   }
 }
 

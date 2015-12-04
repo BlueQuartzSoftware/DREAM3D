@@ -135,6 +135,8 @@ class DREAM3DApplication : public QApplication
     void on_pipelineViewContextMenuRequested(const QPoint&);
     void on_bookmarksDockContextMenuRequested(const QPoint&);
 
+    void bookmarkSelectionChanged(const QModelIndex &current, const QModelIndex &previous);
+
     void toPipelineRunningState();
     void toPipelineIdleState();
 

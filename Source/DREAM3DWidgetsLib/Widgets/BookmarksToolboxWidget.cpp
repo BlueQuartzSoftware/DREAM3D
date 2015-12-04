@@ -341,7 +341,7 @@ void BookmarksToolboxWidget::addPipelinesRecursively(QDir currentDir, QModelInde
       QString dVers;
       JsonFilterParametersReader::ReadNameOfPipelineFromFile(itemFilePath, itemName, dVers, NULL);
     }
-    
+
     // Add tree widget for this Prebuilt Pipeline
     int row = model->rowCount(parent);
     addTreeItem(parent, itemName, QIcon(iconFileName), itemInfo.absoluteFilePath(), row, true, false, false);
@@ -497,30 +497,6 @@ void BookmarksToolboxWidget::addBookmark(const QString& filePath, const QModelIn
   {
     emit updateStatusBar("The pipeline '" + fileTitle + "' could not be added.  An unknown error has occurred.  Please contact the DREAM3D developers.");
   }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QModelIndex BookmarksToolboxWidget::getSelectedParentTreeItem()
-{
-  BookmarksModel* model = BookmarksModel::Instance();
-  QModelIndex index = bookmarksTreeView->currentIndex();
-
-  // Sanity check to make sure we actually have selected a folder to add a favorite into the tree. If the user has
-  // selected an actual favorite item, get it's parent which MUST be a folder
-  if(index.isValid() && model->index(index.row(), BookmarksItem::Path, index.parent()).data().toString().isEmpty() == false)
-  {
-    index = model->index(index.row(), BookmarksItem::Path, index.parent());
-  }
-
-  // Make sure we have a valid selection otherwise select the root item
-  if (index.isValid() == false)
-  {
-    index = QModelIndex();
-  }
-
-  return index;
 }
 
 // -----------------------------------------------------------------------------

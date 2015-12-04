@@ -172,6 +172,9 @@ void MacDREAM3DApplication::toolboxWindowChanged()
 void MacDREAM3DApplication::toToolboxMenuState()
 {
   DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();
+  BookmarksModel* model = BookmarksModel::Instance();
+
+  QModelIndex currentBookmark = m_Toolbox->getBookmarksWidget()->getBookmarksTreeView()->currentIndex();
 
   menuItems->getActionSave()->setDisabled(true);
   menuItems->getActionSaveAs()->setDisabled(true);
@@ -181,8 +184,17 @@ void MacDREAM3DApplication::toToolboxMenuState()
   menuItems->getActionShowFilterList()->setEnabled(true);
   menuItems->getActionShowFilterLibrary()->setEnabled(true);
   menuItems->getActionShowBookmarks()->setEnabled(true);
-  menuItems->getActionAddBookmark()->setEnabled(true);
-  menuItems->getActionNewFolder()->setEnabled(true);
+
+  if (currentBookmark.isValid() == false || model->index(currentBookmark.row(), BookmarksItem::Path, currentBookmark.parent()).data().toString().isEmpty() == true)
+  {
+    menuItems->getActionAddBookmark()->setEnabled(true);
+    menuItems->getActionNewFolder()->setEnabled(true);
+  }
+  else
+  {
+    menuItems->getActionAddBookmark()->setDisabled(true);
+    menuItems->getActionNewFolder()->setDisabled(true);
+  }
 }
 
 // -----------------------------------------------------------------------------

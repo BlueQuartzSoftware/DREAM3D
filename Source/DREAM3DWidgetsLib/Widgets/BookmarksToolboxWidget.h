@@ -97,8 +97,6 @@ class DREAM3DWidgetsLib_EXPORT BookmarksToolboxWidget : public QWidget, private 
      */
     BookmarksTreeView* getBookmarksTreeView();
 
-    QModelIndex getSelectedParentTreeItem();
-
     /**
     * @brief Reads the preferences from the users pref file
     */
