@@ -162,13 +162,11 @@ DREAM3D_UI::~DREAM3D_UI()
   clearPipeline();
   dream3dApp->unregisterDREAM3DWindow(this);
 
-  if (dream3dApp->getDREAM3DInstances().size() <= 0)
+  dream3dApp->setActiveWindow(NULL);
+
+  if (NULL != macApp)
   {
-    dream3dApp->setActiveWindow(NULL);
-    if (NULL != macApp)
-    {
-      macApp->toEmptyMenuState();
-    }
+    macApp->toEmptyMenuState();
   }
 }
 
@@ -585,29 +583,28 @@ void DREAM3D_UI::setupGui()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::disconnectSignalsSlots()
 {
-  disconnect(getFilterLibraryToolboxWidget(), SIGNAL(filterItemDoubleClicked(const QString&)),
-             dream3dApp, SLOT(addFilter(const QString&)));
+  DocRequestManager* docRequester = DocRequestManager::Instance();
 
-  disconnect(getFilterListToolboxWidget(), SIGNAL(filterItemDoubleClicked(const QString&)),
-             dream3dApp, SLOT(addFilter(const QString&)));
+  disconnect(docRequester, SIGNAL(showFilterDocs(const QString&)),
+          this, SLOT(showFilterHelp(const QString&)) );
 
-  disconnect(getBookmarksToolboxWidget(), SIGNAL(pipelineFileActivated(const QString&, const bool&, const bool&)),
-             dream3dApp, SLOT(newInstanceFromFile(const QString&, const bool&, const bool&)));
+  disconnect(docRequester, SIGNAL(showFilterDocUrl(const QUrl &)),
+          this, SLOT(showFilterHelpUrl(const QUrl &)));
 
   disconnect(this, SIGNAL(bookmarkNeedsToBeAdded(const QString&, const QModelIndex&)),
-             getBookmarksToolboxWidget(), SLOT(addBookmark(const QString&, const QModelIndex&)));
+          getBookmarksToolboxWidget(), SLOT(addBookmark(const QString&, const QModelIndex&)));
 
   disconnect(pipelineViewWidget, SIGNAL(filterInputWidgetChanged(FilterInputWidget*)),
-             this, SLOT(setFilterInputWidget(FilterInputWidget*)));
+          this, SLOT(setFilterInputWidget(FilterInputWidget*)));
 
   disconnect(pipelineViewWidget, SIGNAL(noFilterWidgetsInPipeline()),
-             this, SLOT(clearFilterInputWidget()));
+          this, SLOT(clearFilterInputWidget()));
 
   disconnect(pipelineViewWidget, SIGNAL(filterInputWidgetEdited()),
-             this, SLOT(markDocumentAsDirty()));
+          this, SLOT(markDocumentAsDirty()));
 
   disconnect(getBookmarksToolboxWidget(), SIGNAL(updateStatusBar(const QString&)),
-             this, SLOT(setStatusBarMessage(const QString&)));
+          this, SLOT(setStatusBarMessage(const QString&)));
 }
 
 
@@ -617,15 +614,6 @@ void DREAM3D_UI::disconnectSignalsSlots()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::connectSignalsSlots()
 {
-  // If we are running Mac OS X, implement Close Window shortcut.
-#if defined(Q_OS_MAC)
-  QAction* m_ActionCloseWindow = new QAction(this);
-  m_ActionCloseWindow->setObjectName(QString::fromUtf8("m_ActionCloseWindow"));
-  m_ActionCloseWindow->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_W));
-  connect(m_ActionCloseWindow, SIGNAL(triggered()), dream3dApp, SLOT(on_actionCloseWindow_triggered()));
-  addAction(m_ActionCloseWindow);
-#endif
-
   DocRequestManager* docRequester = DocRequestManager::Instance();
 
   connect(docRequester, SIGNAL(showFilterDocs(const QString&)),
@@ -633,9 +621,6 @@ void DREAM3D_UI::connectSignalsSlots()
 
   connect(docRequester, SIGNAL(showFilterDocUrl(const QUrl &)),
           this, SLOT(showFilterHelpUrl(const QUrl &)));
-
-  connect(getBookmarksToolboxWidget(), SIGNAL(pipelineFileActivated(const QString&, const bool&, const bool&)),
-          dream3dApp, SLOT(newInstanceFromFile(const QString&, const bool&, const bool&)));
 
   connect(this, SIGNAL(bookmarkNeedsToBeAdded(const QString&, const QModelIndex&)),
           getBookmarksToolboxWidget(), SLOT(addBookmark(const QString&, const QModelIndex&)));

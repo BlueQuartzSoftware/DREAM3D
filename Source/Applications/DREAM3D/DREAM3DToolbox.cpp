@@ -87,6 +87,9 @@ void DREAM3DToolbox::setupGui()
 
   connect(filterListWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
     dream3dApp, SLOT(addFilter(const QString&)));
+
+  connect(bookmarksWidget, SIGNAL(pipelineFileActivated(const QString&, const bool&, const bool&)),
+    dream3dApp, SLOT(newInstanceFromFile(const QString&, const bool&, const bool&)));
 }
 
 // -----------------------------------------------------------------------------
