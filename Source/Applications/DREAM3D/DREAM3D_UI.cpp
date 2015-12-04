@@ -164,10 +164,9 @@ DREAM3D_UI::~DREAM3D_UI()
 
   dream3dApp->setActiveWindow(NULL);
 
-  if (NULL != macApp)
-  {
+#if defined (Q_OS_MAC)
     macApp->toEmptyMenuState();
-  }
+#endif
 }
 
 // -----------------------------------------------------------------------------
