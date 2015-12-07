@@ -84,12 +84,12 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryDockWidget : public QDockWidget, pri
     /**
     * @brief Reads the preferences from the users pref file
     */
-    void readSettings(QMainWindow* main, DREAM3DSettings& prefs);
+    void readSettings(QMainWindow* main, DREAM3DSettings* prefs);
 
     /**
     * @brief Writes the preferences to the users pref file
     */
-    void writeSettings(DREAM3DSettings& prefs);
+    void writeSettings(DREAM3DSettings* prefs);
 
   protected:
     void updateFilterGroupList(FilterManager::Collection& factories);

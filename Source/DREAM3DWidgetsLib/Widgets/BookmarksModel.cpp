@@ -49,13 +49,14 @@ BookmarksModel* BookmarksModel::self = NULL;
 //
 // -----------------------------------------------------------------------------
 BookmarksModel::BookmarksModel(QObject* parent) :
-  QAbstractItemModel(parent),
-  m_Watcher(NULL)
+  QAbstractItemModel(parent)
 {
   QVector<QVariant> vector;
   vector.push_back("Name");
   vector.push_back("Path");
   rootItem = new BookmarksItem(vector);
+
+  m_Watcher = new QFileSystemWatcher(this);
 
   connect(this, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), this, SLOT(updateModel(const QModelIndex&, const QModelIndex&)));
 }
@@ -84,28 +85,18 @@ BookmarksModel* BookmarksModel::Instance()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-BookmarksModel* BookmarksModel::NewInstanceFromFile(QString filePath)
+BookmarksModel* BookmarksModel::NewInstance(DREAM3DSettings* prefs)
 {
-  QFileInfo fi(filePath);
-  if (fi.exists() & fi.isFile())
+  // Erase the old content
+  if (self)
   {
-    // Erase the old content
-    if (self)
-    {
-      delete self;
-      self = NULL;
-    }
-
-    DREAM3DSettings prefs(filePath);
-
-    prefs.beginGroup("DockWidgetSettings");
-    prefs.beginGroup("Bookmarks Dock Widget");
-    QJsonObject modelObj = prefs.value("Bookmarks Model", QJsonObject());
-    prefs.endGroup();
-    prefs.endGroup();
-
-    self = BookmarksTreeView::FromJsonObject(modelObj);
+    delete self;
+    self = NULL;
   }
+
+  QJsonObject modelObj = prefs->value("Bookmarks Model", QJsonObject());
+
+  self = BookmarksTreeView::FromJsonObject(modelObj);
 
   return self;
 }

@@ -53,6 +53,7 @@ enum IndexState
   Default
 };
 
+class DREAM3DSettings;
 class BookmarksItem;
 
 class DREAM3DWidgetsLib_EXPORT BookmarksModel : public QAbstractItemModel
@@ -66,7 +67,7 @@ class DREAM3DWidgetsLib_EXPORT BookmarksModel : public QAbstractItemModel
 
     static BookmarksModel* Instance();
 
-    static BookmarksModel* NewInstanceFromFile(QString filePath);
+    static BookmarksModel* NewInstance(DREAM3DSettings* prefs);
 
     QVariant data(const QModelIndex& index, int role) const Q_DECL_OVERRIDE;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;

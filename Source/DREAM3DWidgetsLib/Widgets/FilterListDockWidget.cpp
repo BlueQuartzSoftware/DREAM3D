@@ -636,20 +636,29 @@ QMap<QString, AbstractFilter::Pointer> FilterListDockWidget::getHumanNameMap(QLi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterListDockWidget::writeSettings(DREAM3DSettings& prefs)
+void FilterListDockWidget::writeSettings(DREAM3DSettings* prefs)
 {
-  prefs.setValue(objectName(), isHidden());
-  prefs.setValue("ActiveSearchAction", getActiveSearchAction()->objectName());
+  prefs->beginGroup("DockWidgetSettings");
+  prefs->beginGroup("Filter List Dock Widget");
+
+  prefs->setValue(objectName(), isHidden());
+  prefs->setValue("ActiveSearchAction", getActiveSearchAction()->objectName());
+
+  prefs->endGroup();
+  prefs->endGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterListDockWidget::readSettings(QMainWindow* main, DREAM3DSettings& prefs)
+void FilterListDockWidget::readSettings(QMainWindow* main, DREAM3DSettings* prefs)
 {
+  prefs->beginGroup("DockWidgetSettings");
+  prefs->beginGroup("Filter List Dock Widget");
+
   main->restoreDockWidget(this);
 
-  QString objectName = prefs.value("ActiveSearchAction", QString("")).toString();
+  QString objectName = prefs->value("ActiveSearchAction", QString("")).toString();
   QList<QAction*> list = getSearchActionList();
 
   bool didCheck = false;
@@ -671,6 +680,9 @@ void FilterListDockWidget::readSettings(QMainWindow* main, DREAM3DSettings& pref
     // Set "All Words" as checked by default
     list[0]->setChecked(true);
   }
+
+  prefs->endGroup();
+  prefs->endGroup();
 }
 
 // -----------------------------------------------------------------------------

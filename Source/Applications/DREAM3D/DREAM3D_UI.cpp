@@ -229,8 +229,8 @@ void DREAM3D_UI::resizeEvent ( QResizeEvent* event )
   emit parentResized();
 
   // We need to write the window settings so that any new windows will open with these window settings
-  DREAM3DSettings prefs;
-  writeWindowSettings(prefs);
+  QSharedPointer<DREAM3DSettings> prefs = QSharedPointer<DREAM3DSettings>(new DREAM3DSettings());
+  writeWindowSettings(prefs.data());
 }
 
 // -----------------------------------------------------------------------------
@@ -393,50 +393,36 @@ void DREAM3D_UI::closeEvent(QCloseEvent* event)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::readSettings()
 {
-  DREAM3DSettings prefs;
+  QSharedPointer<DREAM3DSettings> prefs = QSharedPointer<DREAM3DSettings>(new DREAM3DSettings());
 
   // Have the pipeline builder read its settings from the prefs file
-  readWindowSettings(prefs);
-  readVersionSettings(prefs);
-
-  prefs.beginGroup("DockWidgetSettings");
+  readWindowSettings(prefs.data());
+  readVersionSettings(prefs.data());
 
   // Read dock widget settings
-  prefs.beginGroup("Bookmarks Dock Widget");
-  bookmarksDockWidget->readSettings(this, prefs);
-  prefs.endGroup();
+  bookmarksDockWidget->readSettings(this, prefs.data());
+  
+  prebuiltPipelinesDockWidget->readSettings(this, prefs.data());
 
-  prefs.beginGroup("Prebuilts Dock Widget");
-  prebuiltPipelinesDockWidget->readSettings(this, prefs);
-  prefs.endGroup();
+  filterListDockWidget->readSettings(this, prefs.data());
 
-  prefs.beginGroup("Filter List Dock Widget");
-  filterListDockWidget->readSettings(this, prefs);
-  prefs.endGroup();
+  filterLibraryDockWidget->readSettings(this, prefs.data());
 
-  prefs.beginGroup("Filter Library Dock Widget");
-  filterLibraryDockWidget->readSettings(this, prefs);
-  prefs.endGroup();
+  issuesDockWidget->readSettings(this, prefs.data());
 
-  prefs.beginGroup("Issues Dock Widget");
-  issuesDockWidget->readSettings(this, prefs);
-  prefs.endGroup();
-
-  prefs.endGroup();
-
-  QRecentFileList::instance()->readList(prefs);
+  QRecentFileList::instance()->readList(prefs.data());
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::readWindowSettings(DREAM3DSettings& prefs)
+void DREAM3D_UI::readWindowSettings(DREAM3DSettings* prefs)
 {
   bool ok = false;
-  prefs.beginGroup("WindowSettings");
-  if (prefs.contains(QString("MainWindowGeometry")))
+  prefs->beginGroup("WindowSettings");
+  if (prefs->contains(QString("MainWindowGeometry")))
   {
-    QByteArray geo_data = prefs.value("MainWindowGeometry", QByteArray());
+    QByteArray geo_data = prefs->value("MainWindowGeometry", QByteArray());
     ok = restoreGeometry(geo_data);
     if (!ok)
     {
@@ -444,36 +430,36 @@ void DREAM3D_UI::readWindowSettings(DREAM3DSettings& prefs)
     }
   }
 
-  if (prefs.contains(QString("MainWindowState")))
+  if (prefs->contains(QString("MainWindowState")))
   {
-    QByteArray layout_data = prefs.value("MainWindowState", QByteArray());
+    QByteArray layout_data = prefs->value("MainWindowState", QByteArray());
     restoreState(layout_data);
   }
 
-  QByteArray splitterGeometry = prefs.value("Splitter_Geometry", QByteArray());
+  QByteArray splitterGeometry = prefs->value("Splitter_Geometry", QByteArray());
   splitter->restoreGeometry(splitterGeometry);
-  QByteArray splitterSizes = prefs.value("Splitter_Sizes", QByteArray());
+  QByteArray splitterSizes = prefs->value("Splitter_Sizes", QByteArray());
   splitter->restoreState(splitterSizes);
 
-  prefs.endGroup();
+  prefs->endGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::readDockWidgetSettings(DREAM3DSettings& prefs, QDockWidget* dw)
+void DREAM3D_UI::readDockWidgetSettings(DREAM3DSettings* prefs, QDockWidget* dw)
 {
   restoreDockWidget(dw);
 
   QString name = dw->objectName();
-  bool b = prefs.value(dw->objectName(), QVariant(false)).toBool();
+  bool b = prefs->value(dw->objectName(), QVariant(false)).toBool();
   dw->setHidden(b);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::readVersionSettings(DREAM3DSettings& prefs)
+void DREAM3D_UI::readVersionSettings(DREAM3DSettings* prefs)
 {
 
 }
@@ -483,45 +469,45 @@ void DREAM3D_UI::readVersionSettings(DREAM3DSettings& prefs)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::writeSettings()
 {
-  DREAM3DSettings prefs;
+  QSharedPointer<DREAM3DSettings> prefs = QSharedPointer<DREAM3DSettings>(new DREAM3DSettings());
 
   // Have the pipeline builder write its settings to the prefs file
-  writeWindowSettings(prefs);
+  writeWindowSettings(prefs.data());
   // Have the version check widet write its preferences.
-  writeVersionCheckSettings(prefs);
+  writeVersionCheckSettings(prefs.data());
 
-  prefs.beginGroup("DockWidgetSettings");
+  prefs->beginGroup("DockWidgetSettings");
 
   // Write dock widget settings
-  prefs.beginGroup("Bookmarks Dock Widget");
-  bookmarksDockWidget->writeSettings(prefs);
-  prefs.endGroup();
+  prefs->beginGroup("Bookmarks Dock Widget");
+  bookmarksDockWidget->writeSettings(prefs.data());
+  prefs->endGroup();
 
-  prefs.beginGroup("Prebuilts Dock Widget");
-  prebuiltPipelinesDockWidget->writeSettings(prefs);
-  prefs.endGroup();
+  prefs->beginGroup("Prebuilts Dock Widget");
+  prebuiltPipelinesDockWidget->writeSettings(prefs.data());
+  prefs->endGroup();
 
-  prefs.beginGroup("Filter List Dock Widget");
-  filterListDockWidget->writeSettings(prefs);
-  prefs.endGroup();
+  prefs->beginGroup("Filter List Dock Widget");
+  filterListDockWidget->writeSettings(prefs.data());
+  prefs->endGroup();
 
-  prefs.beginGroup("Filter Library Dock Widget");
-  filterLibraryDockWidget->writeSettings(prefs);
-  prefs.endGroup();
+  prefs->beginGroup("Filter Library Dock Widget");
+  filterLibraryDockWidget->writeSettings(prefs.data());
+  prefs->endGroup();
 
-  prefs.beginGroup("Issues Dock Widget");
-  issuesDockWidget->writeSettings(prefs);
-  prefs.endGroup();
+  prefs->beginGroup("Issues Dock Widget");
+  issuesDockWidget->writeSettings(prefs.data());
+  prefs->endGroup();
 
-  prefs.endGroup();
+  prefs->endGroup();
 
-  QRecentFileList::instance()->writeList(prefs);
+  QRecentFileList::instance()->writeList(prefs.data());
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::writeVersionCheckSettings(DREAM3DSettings& prefs)
+void DREAM3D_UI::writeVersionCheckSettings(DREAM3DSettings* prefs)
 {
 
 }
@@ -529,28 +515,28 @@ void DREAM3D_UI::writeVersionCheckSettings(DREAM3DSettings& prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::writeWindowSettings(DREAM3DSettings& prefs)
+void DREAM3D_UI::writeWindowSettings(DREAM3DSettings* prefs)
 {
-  prefs.beginGroup("WindowSettings");
+  prefs->beginGroup("WindowSettings");
   QByteArray geo_data = saveGeometry();
   QByteArray layout_data = saveState();
-  prefs.setValue(QString("MainWindowGeometry"), geo_data);
-  prefs.setValue(QString("MainWindowState"), layout_data);
+  prefs->setValue(QString("MainWindowGeometry"), geo_data);
+  prefs->setValue(QString("MainWindowState"), layout_data);
 
   QByteArray splitterGeometry = splitter->saveGeometry();
   QByteArray splitterSizes = splitter->saveState();
-  prefs.setValue(QString("Splitter_Geometry"), splitterGeometry);
-  prefs.setValue(QString("Splitter_Sizes"), splitterSizes);
+  prefs->setValue(QString("Splitter_Geometry"), splitterGeometry);
+  prefs->setValue(QString("Splitter_Sizes"), splitterSizes);
 
-  prefs.endGroup();
+  prefs->endGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::writeDockWidgetSettings(DREAM3DSettings& prefs, QDockWidget* dw)
+void DREAM3D_UI::writeDockWidgetSettings(DREAM3DSettings* prefs, QDockWidget* dw)
 {
-  prefs.setValue(dw->objectName(), dw->isHidden() );
+  prefs->setValue(dw->objectName(), dw->isHidden() );
 }
 
 // -----------------------------------------------------------------------------

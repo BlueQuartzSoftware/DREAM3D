@@ -317,18 +317,30 @@ void FilterLibraryDockWidget::updateFilterGroupList(FilterManager::Collection& f
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterLibraryDockWidget::writeSettings(DREAM3DSettings& prefs)
+void FilterLibraryDockWidget::writeSettings(DREAM3DSettings* prefs)
 {
-  prefs.setValue(objectName(), isHidden());
+  prefs->beginGroup("DockWidgetSettings");
+  prefs->beginGroup("Filter Library Dock Widget");
+
+  prefs->setValue(objectName(), isHidden());
+
+  prefs->endGroup();
+  prefs->endGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterLibraryDockWidget::readSettings(QMainWindow* main, DREAM3DSettings& prefs)
+void FilterLibraryDockWidget::readSettings(QMainWindow* main, DREAM3DSettings* prefs)
 {
+  prefs->beginGroup("DockWidgetSettings");
+  prefs->beginGroup("Filter Library Dock Widget");
+
   main->restoreDockWidget(this);
 
-  bool b = prefs.value(objectName(), QVariant(false)).toBool();
+  bool b = prefs->value(objectName(), QVariant(false)).toBool();
   setHidden(b);
+
+  prefs->endGroup();
+  prefs->endGroup();
 }

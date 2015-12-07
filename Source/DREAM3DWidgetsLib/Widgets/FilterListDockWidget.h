@@ -68,12 +68,12 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
     /**
     * @brief Reads the preferences from the users pref file
     */
-    void readSettings(QMainWindow* main, DREAM3DSettings& prefs);
+    void readSettings(QMainWindow* main, DREAM3DSettings* prefs);
 
     /**
     * @brief Writes the preferences to the users pref file
     */
-    void writeSettings(DREAM3DSettings& prefs);
+    void writeSettings(DREAM3DSettings* prefs);
 
     /**
     * @brief Returns true if a search is in progress, else returns false

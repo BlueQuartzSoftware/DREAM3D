@@ -425,17 +425,20 @@ QStringList PrebuiltPipelinesDockWidget::generateFilterListFromPipelineFile(QStr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrebuiltPipelinesDockWidget::readSettings(QMainWindow* main, DREAM3DSettings& prefs)
+void PrebuiltPipelinesDockWidget::readSettings(QMainWindow* main, DREAM3DSettings* prefs)
 {
+  prefs->beginGroup("DockWidgetSettings");
+  prefs->beginGroup("Prebuilts Dock Widget");
+
   main->restoreDockWidget(this);
 
-  bool b = prefs.value(objectName(), QVariant(false)).toBool();
+  bool b = prefs->value(objectName(), QVariant(false)).toBool();
   setHidden(b);
 
-  QByteArray headerState = prefs.value("PrebuiltsHeaderState", QByteArray());
+  QByteArray headerState = prefs->value("PrebuiltsHeaderState", QByteArray());
   prebuiltsLibraryTree->header()->restoreState(headerState);
 
-  prefs.beginGroup("Prebuilts Expansion Metadata");
+  prefs->beginGroup("Prebuilts Expansion Metadata");
   QTreeWidgetItemIterator iter(prebuiltsLibraryTree);
 
   while (*iter)
@@ -443,24 +446,30 @@ void PrebuiltPipelinesDockWidget::readSettings(QMainWindow* main, DREAM3DSetting
     QTreeWidgetItem* item = *iter;
     if (item->type() == FilterLibraryTreeWidget::Node_Item_Type)
     {
-      item->setExpanded(prefs.value(item->text(0), QVariant(false)).toBool());
+      item->setExpanded(prefs->value(item->text(0), QVariant(false)).toBool());
     }
 
     ++iter;
   }
-  prefs.endGroup();
+  prefs->endGroup();
+
+  prefs->endGroup();
+  prefs->endGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrebuiltPipelinesDockWidget::writeSettings(DREAM3DSettings& prefs)
+void PrebuiltPipelinesDockWidget::writeSettings(DREAM3DSettings* prefs)
 {
-  prefs.setValue(objectName(), isHidden());
+  prefs->beginGroup("DockWidgetSettings");
+  prefs->beginGroup("Prebuilts Dock Widget");
 
-  prefs.setValue("PrebuiltsHeaderState", prebuiltsLibraryTree->header()->saveState());
+  prefs->setValue(objectName(), isHidden());
 
-  prefs.beginGroup("Prebuilts Expansion Metadata");
+  prefs->setValue("PrebuiltsHeaderState", prebuiltsLibraryTree->header()->saveState());
+
+  prefs->beginGroup("Prebuilts Expansion Metadata");
   QTreeWidgetItemIterator iter(prebuiltsLibraryTree);
 
   while (*iter)
@@ -468,12 +477,15 @@ void PrebuiltPipelinesDockWidget::writeSettings(DREAM3DSettings& prefs)
     QTreeWidgetItem* item = *iter;
     if (item->type() == FilterLibraryTreeWidget::Node_Item_Type)
     {
-      prefs.setValue(item->text(0), item->isExpanded());
+      prefs->setValue(item->text(0), item->isExpanded());
     }
 
     ++iter;
   }
-  prefs.endGroup();
+  prefs->endGroup();
+
+  prefs->endGroup();
+  prefs->endGroup();
 }
 
 

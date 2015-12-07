@@ -67,16 +67,16 @@ int main (int argc, char* argv[])
 //#if defined (Q_OS_MAC)
 //  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 //#else
-  DREAM3DSettings prefs;
+  QSharedPointer<DREAM3DSettings> prefs = QSharedPointer<DREAM3DSettings>(new DREAM3DSettings());
 //#endif
-  QRecentFileList::instance()->readList(prefs);
+  QRecentFileList::instance()->readList(prefs.data());
 
 
   StatsGeneratorUI* viewer = app.createNewStatsGenerator();
   viewer->show();
   int app_return = app.exec();
 
-  QRecentFileList::instance()->writeList(prefs);
+  QRecentFileList::instance()->writeList(prefs.data());
 
   return app_return;
 }
