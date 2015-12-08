@@ -651,7 +651,6 @@ void BookmarksToolboxWidget::writeSettings(DREAM3DSettings* prefs)
 
   prefs->setValue("Horizontal Header State", bookmarksTreeView->header()->saveState());
 
-  QString bookmarksPrefsPath = getBookmarksPrefsPath();
   QSharedPointer<DREAM3DSettings> bookmarksPrefs = QSharedPointer<DREAM3DSettings>(new DREAM3DSettings(getBookmarksPrefsPath()));
 
   bookmarksPrefs->beginGroup("Bookmarks");

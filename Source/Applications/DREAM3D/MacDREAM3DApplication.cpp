@@ -267,6 +267,7 @@ void MacDREAM3DApplication::createGlobalMenu()
   QAction* actionShowDREAM3DHelp = menuItems->getActionShowDREAM3DHelp();
   QAction* actionCheckForUpdates = menuItems->getActionCheckForUpdates();
   QAction* actionClearCache = menuItems->getActionClearCache();
+  QAction* actionClearBookmarks = menuItems->getActionClearBookmarks();
   QAction* actionAboutDREAM3D = menuItems->getActionAboutDREAM3D();
   QAction* actionPluginInformation = menuItems->getActionPluginInformation();
   QAction* actionShowIssues = menuItems->getActionShowIssues();
@@ -321,6 +322,8 @@ void MacDREAM3DApplication::createGlobalMenu()
   menuHelp->addSeparator();
   menuHelp->addMenu(menuAdvanced);
   menuAdvanced->addAction(actionClearCache);
+  menuAdvanced->addSeparator();
+  menuAdvanced->addAction(actionClearBookmarks);
   menuHelp->addSeparator();
   menuHelp->addAction(actionAboutDREAM3D);
   menuHelp->addAction(actionPluginInformation);

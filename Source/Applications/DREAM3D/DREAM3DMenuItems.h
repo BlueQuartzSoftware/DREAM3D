@@ -83,6 +83,7 @@ class DREAM3DMenuItems : public QObject
 
       // Help Menu
       SIMPL_INSTANCE_PROPERTY(QAction*, ActionClearCache)
+      SIMPL_INSTANCE_PROPERTY(QAction*, ActionClearBookmarks)
       SIMPL_INSTANCE_PROPERTY(QAction*, ActionShowDREAM3DHelp)
       SIMPL_INSTANCE_PROPERTY(QAction*, ActionCheckForUpdates)
       SIMPL_INSTANCE_PROPERTY(QAction*, ActionAboutDREAM3D)

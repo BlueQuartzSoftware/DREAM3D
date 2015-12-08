@@ -951,22 +951,47 @@ void DREAM3DApplication::on_bookmarksDockContextMenuRequested(const QPoint& pos)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DApplication::on_actionClearCache_triggered()
+void DREAM3DApplication::on_actionClearBookmarks_triggered()
 {
   QMessageBox msgBox;
-  msgBox.setWindowTitle("Clear DREAM3D Cache");
-  msgBox.setText("Clearing the DREAM3D cache will clear the bookmarks dock and DREAM3D window settings, and will restore DREAM3D back to its default settings on the program's next run.");
-  msgBox.setInformativeText("Would you like to clear the DREAM3D cache?");
+  msgBox.setWindowTitle("Clear DREAM3D Bookmarks");
+  msgBox.setText("Are you sure that you want to clear all DREAM3D bookmarks?");
   msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
   msgBox.setDefaultButton(QMessageBox::Yes);
   int response = msgBox.exec();
 
   if (response == QMessageBox::Yes)
   {
-    DREAM3DSettings prefs;
+    QFile file(m_Toolbox->getBookmarksWidget()->getBookmarksPrefsPath());
+    bool removed = file.remove();
+
+    BookmarksModel* model = BookmarksModel::Instance();
+    if (model->isEmpty() == false)
+    {
+      model->removeRows(0, model->rowCount(QModelIndex()));
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DApplication::on_actionClearCache_triggered()
+{
+  QMessageBox msgBox;
+  msgBox.setWindowTitle("Clear DREAM3D Cache");
+  msgBox.setText("Clearing the DREAM3D cache will clear the DREAM3D window settings, and will restore DREAM3D back to its default settings on the program's next run.");
+  msgBox.setInformativeText("Clear the DREAM3D cache?");
+  msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+  msgBox.setDefaultButton(QMessageBox::Yes);
+  int response = msgBox.exec();
+
+  if (response == QMessageBox::Yes)
+  {
+    QSharedPointer<DREAM3DSettings> prefs = QSharedPointer<DREAM3DSettings>(new DREAM3DSettings());
 
     // Set a flag in the preferences file, so that we know that we are in "Clear Cache" mode
-    prefs.setValue("Program Mode", QString("Clear Cache"));
+    prefs->setValue("Program Mode", QString("Clear Cache"));
 
     if (NULL != m_ActiveWindow)
     {

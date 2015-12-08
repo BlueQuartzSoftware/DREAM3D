@@ -105,6 +105,7 @@ void DREAM3DMenuItems::createActions()
   m_ActionSave = new QAction("Save", this);
   m_ActionSaveAs = new QAction("Save As...", this);
   m_ActionClearCache = new QAction("Clear Cache", this);
+  m_ActionClearBookmarks = new QAction("Clear Bookmarks", this);
   m_ActionShowFilterLibrary = new QAction("Show Filter Library", this);
   m_ActionShowFilterLibrary->setCheckable(true);
   m_ActionShowFilterList = new QAction("Show Filter List", this);
@@ -163,6 +164,7 @@ void DREAM3DMenuItems::createActions()
   connect(m_ActionRemovePipeline, SIGNAL(triggered()), dream3dApp, SLOT(on_actionRemovePipeline_triggered()));
   connect(m_ActionLocateFile, SIGNAL(triggered()), dream3dApp, SLOT(on_actionLocateFile_triggered()));
   connect(m_ActionClearCache, SIGNAL(triggered()), dream3dApp, SLOT(on_actionClearCache_triggered()));
+  connect(m_ActionClearBookmarks, SIGNAL(triggered()), dream3dApp, SLOT(on_actionClearBookmarks_triggered()));
   connect(m_ActionShowFilterLibrary, SIGNAL(triggered(bool)), toolbox, SLOT(actionShowFilterLibrary_triggered(bool)));
   connect(m_ActionShowFilterList, SIGNAL(triggered(bool)), toolbox, SLOT(actionShowFilterList_triggered(bool)));
   connect(m_ActionShowBookmarks, SIGNAL(triggered(bool)), toolbox, SLOT(actionShowBookmarks_triggered(bool)));

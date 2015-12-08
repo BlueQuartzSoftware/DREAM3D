@@ -124,6 +124,7 @@ class DREAM3DApplication : public QApplication
     void on_actionLocateFile_triggered();
     void on_actionClearPipeline_triggered();
     void on_actionClearCache_triggered();
+    void on_actionClearBookmarks_triggered();
 
     void on_actionCloseWindow_triggered();
     void on_actionExit_triggered();
