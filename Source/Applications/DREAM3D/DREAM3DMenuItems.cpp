@@ -89,8 +89,8 @@ void DREAM3DMenuItems::createMenus()
 // -----------------------------------------------------------------------------
 void DREAM3DMenuItems::createActions()
 {
-  m_ActionRenamePipeline = new QAction("Rename Pipeline", this);
-  m_ActionRemovePipeline = new QAction("Remove Bookmark", this);
+  m_ActionRenameBookmark = new QAction("Rename Pipeline", this);
+  m_ActionRemoveBookmark = new QAction("Remove Bookmark", this);
   m_ActionClearPipeline = new QAction("Clear Pipeline", this);
   m_ActionLocateFile = new QAction("Locate Bookmark...", this);
   m_ActionShowBookmarkInFileSystem = new QAction(this);
@@ -160,8 +160,8 @@ void DREAM3DMenuItems::createActions()
   connect(m_ActionPluginInformation, SIGNAL(triggered()), dream3dApp, SLOT(on_actionPluginInformation_triggered()));
   connect(m_ActionClearPipeline, SIGNAL(triggered()), dream3dApp, SLOT(on_actionClearPipeline_triggered()));
   connect(m_ActionShowBookmarkInFileSystem, SIGNAL(triggered()), dream3dApp, SLOT(on_actionShowBookmarkInFileSystem_triggered()));
-  connect(m_ActionRenamePipeline, SIGNAL(triggered()), dream3dApp, SLOT(on_actionRenamePipeline_triggered()));
-  connect(m_ActionRemovePipeline, SIGNAL(triggered()), dream3dApp, SLOT(on_actionRemovePipeline_triggered()));
+  connect(m_ActionRenameBookmark, SIGNAL(triggered()), dream3dApp, SLOT(on_actionRenameBookmark_triggered()));
+  connect(m_ActionRemoveBookmark, SIGNAL(triggered()), dream3dApp, SLOT(on_actionRemoveBookmark_triggered()));
   connect(m_ActionLocateFile, SIGNAL(triggered()), dream3dApp, SLOT(on_actionLocateFile_triggered()));
   connect(m_ActionClearCache, SIGNAL(triggered()), dream3dApp, SLOT(on_actionClearCache_triggered()));
   connect(m_ActionClearBookmarks, SIGNAL(triggered()), dream3dApp, SLOT(on_actionClearBookmarks_triggered()));

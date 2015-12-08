@@ -694,7 +694,7 @@ void DREAM3DApplication::on_actionPluginInformation_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DApplication::on_actionRenamePipeline_triggered()
+void DREAM3DApplication::on_actionRenameBookmark_triggered()
 {
     BookmarksTreeView* bookmarksTreeView = m_Toolbox->getBookmarksWidget()->getBookmarksTreeView();
     QModelIndex index = bookmarksTreeView->currentIndex();
@@ -704,27 +704,37 @@ void DREAM3DApplication::on_actionRenamePipeline_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DApplication::on_actionRemovePipeline_triggered()
+void DREAM3DApplication::on_actionRemoveBookmark_triggered()
 {
   BookmarksToolboxWidget* bookmarksToolboxWidget = m_Toolbox->getBookmarksWidget();
   BookmarksTreeView* bookmarksTreeView = bookmarksToolboxWidget->getBookmarksTreeView();
 
   BookmarksModel* model = BookmarksModel::Instance();
 
-  QModelIndex index = bookmarksTreeView->currentIndex();
-  QModelIndex nameIndex = model->index(index.row(), BookmarksItem::Name, index.parent());
-  QString name = nameIndex.data().toString();
+  QModelIndexList indexList = m_Toolbox->getBookmarksWidget()->getBookmarksTreeView()->selectionModel()->selectedRows(BookmarksItem::Name);
+
+  if (indexList.size() <= 0)
+  {
+    return;
+  }
+
+  QModelIndex singleIndex = model->index(indexList[0].row(), BookmarksItem::Name, indexList[0].parent());
 
   QMessageBox msgBox;
-  if (model->flags(nameIndex).testFlag(Qt::ItemIsDropEnabled) == false)
+  if (indexList.size() > 1)
+  {
+    msgBox.setWindowTitle("Remove Bookmark Items");
+    msgBox.setText("Are you sure that you want to remove these bookmark items? The original bookmark files will not be removed.");
+  }
+  else if (model->flags(singleIndex).testFlag(Qt::ItemIsDropEnabled) == false)
   {
     msgBox.setWindowTitle("Remove Bookmark");
-    msgBox.setText("Are you sure that you want to remove the bookmark \"" + name + "\"? The original file will not be removed.");
+    msgBox.setText("Are you sure that you want to remove the bookmark \"" + singleIndex.data().toString() + "\"? The original file will not be removed.");
   }
   else
   {
     msgBox.setWindowTitle("Remove Folder");
-    msgBox.setText("Are you sure that you want to remove the folder \"" + name + "\"? The folder's contents will also be removed.");
+    msgBox.setText("Are you sure that you want to remove the folder \"" + singleIndex.data().toString() + "\"? The folder's contents will also be removed.");
   }
   msgBox.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
   msgBox.setDefaultButton(QMessageBox::Yes);
@@ -732,8 +742,14 @@ void DREAM3DApplication::on_actionRemovePipeline_triggered()
 
   if (ret == QMessageBox::Yes)
   {
-    //Remove favorite, graphically, from the DREAM3D interface
-    model->removeRow(index.row(), index.parent());
+    for (int i = indexList.size() - 1; i >= 0; i--)
+    {
+      QModelIndex nameIndex = model->index(indexList[i].row(), BookmarksItem::Name, indexList[i].parent());
+      QString name = nameIndex.data().toString();
+
+      //Remove favorite, graphically, from the DREAM3D interface
+      model->removeRow(indexList[i].row(), indexList[i].parent());
+    }
 
     // Write these changes out to the preferences file
     emit bookmarksToolboxWidget->fireWriteSettings();
@@ -860,10 +876,12 @@ void DREAM3DApplication::on_bookmarksDockContextMenuRequested(const QPoint& pos)
 
   QAction* actionAddBookmark = menuItems->getActionAddBookmark();
   QAction* actionNewFolder = menuItems->getActionNewFolder();
-  QAction* actionRenameBookmark = menuItems->getActionRenamePipeline();
-  QAction* actionRemoveBookmark = menuItems->getActionRemovePipeline();
+  QAction* actionRenameBookmark = menuItems->getActionRenameBookmark();
+  QAction* actionRemoveBookmark = menuItems->getActionRemoveBookmark();
   QAction* actionLocateFile = menuItems->getActionLocateFile();
   QAction* actionShowBookmarkInFileSystem = menuItems->getActionShowBookmarkInFileSystem();
+
+  QModelIndexList indexList = m_Toolbox->getBookmarksWidget()->getBookmarksTreeView()->selectionModel()->selectedRows(BookmarksItem::Name);
 
   QMenu menu;
   if (index.isValid() == false)
@@ -880,7 +898,12 @@ void DREAM3DApplication::on_bookmarksDockContextMenuRequested(const QPoint& pos)
   {
     QModelIndex actualIndex = model->index(index.row(), BookmarksItem::Path, index.parent());
     QString path = actualIndex.data().toString();
-    if (path.isEmpty() == false)
+    if (indexList.size() > 1)
+    {
+      actionRemoveBookmark->setText("Remove Items");
+      menu.addAction(actionRemoveBookmark);
+    }
+    else if (path.isEmpty() == false)
     {
       bool itemHasErrors = model->data(actualIndex, Qt::UserRole).value<bool>();
       if (itemHasErrors == true)

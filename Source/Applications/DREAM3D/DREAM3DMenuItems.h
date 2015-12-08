@@ -90,8 +90,8 @@ class DREAM3DMenuItems : public QObject
       SIMPL_INSTANCE_PROPERTY(QAction*, ActionPluginInformation)
 
       // Contextual Menus
-      SIMPL_INSTANCE_PROPERTY(QAction*, ActionRenamePipeline)
-      SIMPL_INSTANCE_PROPERTY(QAction*, ActionRemovePipeline)
+      SIMPL_INSTANCE_PROPERTY(QAction*, ActionRenameBookmark)
+      SIMPL_INSTANCE_PROPERTY(QAction*, ActionRemoveBookmark)
       SIMPL_INSTANCE_PROPERTY(QAction*, ActionLocateFile)
       SIMPL_INSTANCE_PROPERTY(QAction*, ActionShowBookmarkInFileSystem)
 

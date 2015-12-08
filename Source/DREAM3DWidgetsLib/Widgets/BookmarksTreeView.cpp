@@ -100,17 +100,18 @@ void BookmarksTreeView::mousePressEvent(QMouseEvent* event)
   if (event->button() == Qt::LeftButton)
   {
     m_StartPos = event->pos();
-
-    QModelIndex index = indexAt(event->pos());
-
-    if (index.isValid() == false)
-    {
-      // Deselect the current item
-      clearSelection();
-      clearFocus();
-      setCurrentIndex(QModelIndex());
-    }
   }
+
+  QModelIndex index = indexAt(event->pos());
+
+  if (index.isValid() == false)
+  {
+    // Deselect the current item
+    clearSelection();
+    clearFocus();
+    setCurrentIndex(QModelIndex());
+  }
+
   QTreeView::mousePressEvent(event);
 }
 

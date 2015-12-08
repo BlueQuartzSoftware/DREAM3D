@@ -118,8 +118,8 @@ class DREAM3DApplication : public QApplication
 
     void on_actionAddBookmark_triggered();
     void on_actionNewFolder_triggered();
-    void on_actionRenamePipeline_triggered();
-    void on_actionRemovePipeline_triggered();
+    void on_actionRenameBookmark_triggered();
+    void on_actionRemoveBookmark_triggered();
     void on_actionShowBookmarkInFileSystem_triggered();
     void on_actionLocateFile_triggered();
     void on_actionClearPipeline_triggered();
