@@ -114,8 +114,8 @@ void MacDREAM3DApplication::on_actionClearRecentFiles_triggered()
   recents->clear();
 
   // Write out the empty list
-  DREAM3DSettings prefs;
-  recents->writeList(prefs);
+  QSharedPointer<DREAM3DSettings> prefs = QSharedPointer<DREAM3DSettings>(new DREAM3DSettings());
+  recents->writeList(prefs.data());
 }
 
 // -----------------------------------------------------------------------------

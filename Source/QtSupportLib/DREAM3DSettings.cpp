@@ -167,7 +167,8 @@ void DREAM3DSettings::endGroup()
 
   if (m_Stack.size() > 1)
   {
-    m_Stack.pop();
+    DREAM3DSettingsGroup* group = m_Stack.pop();
+    delete group;
   }
 }
 

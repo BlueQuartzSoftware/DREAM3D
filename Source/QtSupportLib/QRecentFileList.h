@@ -107,13 +107,13 @@ class QtSupportLib_EXPORT QRecentFileList: public QObject
      * @brief Writes the list of files to a preference file.
      * @param prefs The QSettings object to use.
      */
-    void writeList(DREAM3DSettings& prefs);
+    void writeList(DREAM3DSettings* prefs);
 
     /**
      * @brief Reads the list of Recent Files from the preferences file
      * @param prefs The QSettins object to use
      */
-    void readList(DREAM3DSettings& prefs);
+    void readList(DREAM3DSettings* prefs);
 
     /**
     * @brief Clears the list of recent files

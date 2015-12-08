@@ -270,24 +270,36 @@ void IssuesDockWidget::showFilterHelp(const QString &urlString)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void IssuesDockWidget::writeSettings(DREAM3DSettings& prefs)
+void IssuesDockWidget::writeSettings(DREAM3DSettings* prefs)
 {
-  prefs.setValue(objectName(), isHidden());
+  prefs->beginGroup("DockWidgetSettings");
+  prefs->beginGroup("Issues Dock Widget");
+
+  prefs->setValue(objectName(), isHidden());
 
   QByteArray headerState = errorTableWidget->horizontalHeader()->saveState();
-  prefs.setValue("Horizontal Header State", headerState);
+  prefs->setValue("Horizontal Header State", headerState);
+
+  prefs->endGroup();
+  prefs->endGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void IssuesDockWidget::readSettings(QMainWindow* main, DREAM3DSettings& prefs)
+void IssuesDockWidget::readSettings(QMainWindow* main, DREAM3DSettings* prefs)
 {
+  prefs->beginGroup("DockWidgetSettings");
+  prefs->beginGroup("Issues Dock Widget");
+
   main->restoreDockWidget(this);
 
-  bool b = prefs.value(objectName(), QVariant(false)).toBool();
+  bool b = prefs->value(objectName(), QVariant(false)).toBool();
   setHidden(b);
 
-  QByteArray headerState = prefs.value("Horizontal Header State", QByteArray());
+  QByteArray headerState = prefs->value("Horizontal Header State", QByteArray());
   errorTableWidget->horizontalHeader()->restoreState(headerState);
+
+  prefs->endGroup();
+  prefs->endGroup();
 }

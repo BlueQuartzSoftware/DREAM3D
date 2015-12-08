@@ -599,17 +599,35 @@ bool BookmarksToolboxWidget::removeDir(const QString& dirName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksToolboxWidget::readSettings(DREAM3DSettings& prefs)
+void BookmarksToolboxWidget::readSettings(DREAM3DSettings* prefs)
 {
-  QByteArray headerState = prefs.value("Horizontal Header State", QByteArray());
-  bookmarksTreeView->header()->restoreState(headerState);
+  bool b = prefs->value(objectName(), QVariant(false)).toBool();
+  setHidden(b);
 
-  QString path = prefs.fileName();
+  QByteArray headerState = prefs->value("Horizontal Header State", QByteArray());
+  bookmarksTreeView->header()->restoreState(headerState);
 
   BookmarksModel* model = BookmarksModel::Instance();
   if (model->isEmpty())
   {
-    model = BookmarksModel::NewInstanceFromFile(path);
+    // Check the new bookmarks settings file first
+    QSharedPointer<DREAM3DSettings> bookmarksPrefs = QSharedPointer<DREAM3DSettings>(new DREAM3DSettings(getBookmarksPrefsPath()));
+
+    if (bookmarksPrefs->contains("Bookmarks"))
+    {
+      bookmarksPrefs->beginGroup("Bookmarks");
+      model = BookmarksModel::NewInstance(bookmarksPrefs.data());
+      bookmarksPrefs->endGroup();
+    }
+    else
+    {
+      // If no bookmarks were found in the new location, check the old location
+      prefs->beginGroup("DockWidgetSettings");
+      prefs->beginGroup("Bookmarks Dock Widget");
+      model = BookmarksModel::NewInstance(prefs);
+      prefs->endGroup();
+      prefs->endGroup();
+    }
   }
 
   bookmarksTreeView->setModel(model);
@@ -620,23 +638,28 @@ void BookmarksToolboxWidget::readSettings(DREAM3DSettings& prefs)
 // -----------------------------------------------------------------------------
 void BookmarksToolboxWidget::writeSettings()
 {
-  DREAM3DSettings prefs;
-
-  QString fileName = prefs.fileName();
-
+  DREAM3DSettings* prefs = new DREAM3DSettings();
   writeSettings(prefs);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksToolboxWidget::writeSettings(DREAM3DSettings& prefs)
+void BookmarksToolboxWidget::writeSettings(DREAM3DSettings* prefs)
 {
-  prefs.setValue("Horizontal Header State", bookmarksTreeView->header()->saveState());
+  prefs->setValue(objectName(), isHidden());
+
+  prefs->setValue("Horizontal Header State", bookmarksTreeView->header()->saveState());
+
+  QString bookmarksPrefsPath = getBookmarksPrefsPath();
+  QSharedPointer<DREAM3DSettings> bookmarksPrefs = QSharedPointer<DREAM3DSettings>(new DREAM3DSettings(getBookmarksPrefsPath()));
+
+  bookmarksPrefs->beginGroup("Bookmarks");
 
   QJsonObject modelObj = bookmarksTreeView->toJsonObject();
+  bookmarksPrefs->setValue("Bookmarks Model", modelObj);
 
-  prefs.setValue("Bookmarks Model", modelObj);
+  bookmarksPrefs->endGroup();
 }
 
 // -----------------------------------------------------------------------------
@@ -662,6 +685,46 @@ QList<QString> BookmarksToolboxWidget::deserializeTreePath(QString treePath)
   }
 
   return list;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString BookmarksToolboxWidget::getBookmarksPrefsPath()
+{
+  DREAM3DSettings prefs;
+  QFileInfo fi(prefs.fileName());
+  QString parentPath = fi.absolutePath();
+
+  QString appName = QCoreApplication::applicationName();
+  if (appName.isEmpty())
+  {
+    appName = QString("Application");
+  }
+
+#if defined (Q_OS_MAC)
+
+  QString domain = QCoreApplication::organizationDomain();
+  if (domain.isEmpty())
+  {
+    domain = QString("Domain");
+  }
+  QStringList tokens = domain.split(".");
+  QStringListIterator iter(tokens);
+  iter.toBack();
+  domain = QString("");
+  while (iter.hasPrevious())
+  {
+    domain = domain + iter.previous() + QString(".");
+  }
+
+
+  QString bookmarksPrefsPath = parentPath + "/" + domain + appName + "_BookmarksModel.json";
+#else
+  QString bookmarksPrefsPath = QDir::toNativeSeparators(parentPath + "/" + appName + "_BookmarksModel.json");
+#endif
+
+  return bookmarksPrefsPath;
 }
 
 

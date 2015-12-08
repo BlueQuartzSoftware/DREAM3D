@@ -478,12 +478,10 @@ BookmarksModel* BookmarksTreeView::FromJsonObject(QJsonObject treeObject)
   }
 
   QStringList paths = model->getFilePaths();
-  QFileSystemWatcher* fsWatcher = new QFileSystemWatcher(model);
   if( !paths.isEmpty() )
   {
-    fsWatcher->addPaths(paths);
+    model->getFileSystemWatcher()->addPaths(paths);
   }
-  model->setFileSystemWatcher(fsWatcher);
   connect(model->getFileSystemWatcher(), SIGNAL(fileChanged(const QString&)),
           model, SLOT(updateRowState(const QString&)));
 

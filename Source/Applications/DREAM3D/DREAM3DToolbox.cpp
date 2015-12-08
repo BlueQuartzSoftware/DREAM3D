@@ -97,28 +97,28 @@ void DREAM3DToolbox::setupGui()
 // -----------------------------------------------------------------------------
 void DREAM3DToolbox::readSettings()
 {
-  DREAM3DSettings prefs;
+  QSharedPointer<DREAM3DSettings> prefs = QSharedPointer<DREAM3DSettings>(new DREAM3DSettings());
   DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();
 
-  prefs.beginGroup("ToolboxSettings");
+  prefs->beginGroup("ToolboxSettings");
 
-  setVisible(prefs.value(objectName(), true).toBool());
+  setVisible(prefs->value(objectName(), true).toBool());
 
-  bool showBookmarks = prefs.value(bookmarksWidget->objectName(), true).toBool();
+  bool showBookmarks = prefs->value(bookmarksWidget->objectName(), true).toBool();
   menuItems->getActionShowBookmarks()->setChecked(showBookmarks);
   if (showBookmarks == false)
   {
     tabWidget->removeTab(tabWidget->indexOf(bookmarksTab));
   }
 
-  bool showFilterList = prefs.value(filterListWidget->objectName(), true).toBool();
+  bool showFilterList = prefs->value(filterListWidget->objectName(), true).toBool();
   menuItems->getActionShowFilterList()->setChecked(showFilterList);
   if (showFilterList == false)
   {
     tabWidget->removeTab(tabWidget->indexOf(filterListTab));
   }
 
-  bool showFilterLibrary = prefs.value(filterLibraryWidget->objectName(), true).toBool();
+  bool showFilterLibrary = prefs->value(filterLibraryWidget->objectName(), true).toBool();
   menuItems->getActionShowFilterLibrary()->setChecked(showFilterLibrary);
   if (showFilterLibrary == false)
   {
@@ -126,40 +126,40 @@ void DREAM3DToolbox::readSettings()
   }
 
   // Have the toolbox write its settings to the prefs file
-  readWindowSettings(prefs);
+  readWindowSettings(prefs.data());
 
   // Read dock widget settings
-  prefs.beginGroup("Bookmarks Widget");
-  bookmarksWidget->readSettings(prefs);
-  if (prefs.value("PrebuiltsRead", QVariant(false)).toBool() == false)
+  prefs->beginGroup("Bookmarks Widget");
+  bookmarksWidget->readSettings(prefs.data());
+  if (prefs->value("PrebuiltsRead", QVariant(false)).toBool() == false)
   {
     bookmarksWidget->readPrebuiltPipelines();
-    prefs.setValue("PrebuiltsRead", true);
+    prefs->setValue("PrebuiltsRead", true);
   }
-  prefs.endGroup();
+  prefs->endGroup();
 
-  prefs.beginGroup("Filter List Widget");
-  filterListWidget->readSettings(prefs);
-  prefs.endGroup();
+  prefs->beginGroup("Filter List Widget");
+  filterListWidget->readSettings(prefs.data());
+  prefs->endGroup();
 
-  prefs.beginGroup("Filter Library Widget");
-  filterLibraryWidget->readSettings(prefs);
-  prefs.endGroup();
+  prefs->beginGroup("Filter Library Widget");
+  filterLibraryWidget->readSettings(prefs.data());
+  prefs->endGroup();
 
-  prefs.endGroup();
+  prefs->endGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DToolbox::readWindowSettings(DREAM3DSettings& prefs)
+void DREAM3DToolbox::readWindowSettings(DREAM3DSettings* prefs)
 {
   bool ok = false;
-  prefs.beginGroup("WindowSettings");
-  QStringList childGroups = prefs.childGroups();
-  if (prefs.contains(QString("MainWindowGeometry")))
+  prefs->beginGroup("WindowSettings");
+  QStringList childGroups = prefs->childGroups();
+  if (prefs->contains(QString("MainWindowGeometry")))
   {
-    QByteArray geo_data = prefs.value("MainWindowGeometry", QByteArray(""));
+    QByteArray geo_data = prefs->value("MainWindowGeometry", QByteArray(""));
     ok = restoreGeometry(geo_data);
     if (!ok)
     {
@@ -173,10 +173,10 @@ void DREAM3DToolbox::readWindowSettings(DREAM3DSettings& prefs)
   tabWidget->removeTab(tabWidget->indexOf(bookmarksTab));
 
   // Get the new tab indices (if there is no data, put them in [1]List, [2]Library, [3]Bookmarks order)
-  int filterListIndex = prefs.value("Filter List Index", QVariant(0)).toInt();
-  int filterLibraryIndex = prefs.value("Filter Library Index", QVariant(1)).toInt();
-  int bookmarksIndex = prefs.value("Bookmarks Index", QVariant(2)).toInt();
-  int currentIndex = prefs.value("Current Index", QVariant(0)).toInt();
+  int filterListIndex = prefs->value("Filter List Index", QVariant(0)).toInt();
+  int filterLibraryIndex = prefs->value("Filter Library Index", QVariant(1)).toInt();
+  int bookmarksIndex = prefs->value("Bookmarks Index", QVariant(2)).toInt();
+  int currentIndex = prefs->value("Current Index", QVariant(0)).toInt();
 
   // Re-add the tabs in the order that they were in from last launch (if index is less than 0, it was hidden during last launch)
   if (filterListIndex >= 0)
@@ -194,7 +194,7 @@ void DREAM3DToolbox::readWindowSettings(DREAM3DSettings& prefs)
 
   tabWidget->setCurrentIndex(currentIndex);
 
-  prefs.endGroup();
+  prefs->endGroup();
 }
 
 // -----------------------------------------------------------------------------
@@ -202,33 +202,33 @@ void DREAM3DToolbox::readWindowSettings(DREAM3DSettings& prefs)
 // -----------------------------------------------------------------------------
 void DREAM3DToolbox::writeSettings()
 {
-  DREAM3DSettings prefs;
+  QSharedPointer<DREAM3DSettings> prefs = QSharedPointer<DREAM3DSettings>(new DREAM3DSettings());
   DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();
 
-  prefs.beginGroup("ToolboxSettings");
+  prefs->beginGroup("ToolboxSettings");
 
-  prefs.setValue(objectName(), menuItems->getActionShowToolbox()->isChecked());
-  prefs.setValue(bookmarksWidget->objectName(), menuItems->getActionShowBookmarks()->isChecked());
-  prefs.setValue(filterListWidget->objectName(), menuItems->getActionShowFilterList()->isChecked());
-  prefs.setValue(filterLibraryWidget->objectName(), menuItems->getActionShowFilterLibrary()->isChecked());
+  prefs->setValue(objectName(), menuItems->getActionShowToolbox()->isChecked());
+  prefs->setValue(bookmarksWidget->objectName(), menuItems->getActionShowBookmarks()->isChecked());
+  prefs->setValue(filterListWidget->objectName(), menuItems->getActionShowFilterList()->isChecked());
+  prefs->setValue(filterLibraryWidget->objectName(), menuItems->getActionShowFilterLibrary()->isChecked());
 
   // Have the toolbox write its settings to the prefs file
-  writeWindowSettings(prefs);
+  writeWindowSettings(prefs.data());
 
   // Write dock widget settings
-  prefs.beginGroup("Bookmarks Widget");
-  bookmarksWidget->writeSettings(prefs);
-  prefs.endGroup();
+  prefs->beginGroup("Bookmarks Widget");
+  bookmarksWidget->writeSettings(prefs.data());
+  prefs->endGroup();
 
-  prefs.beginGroup("Filter List Widget");
-  filterListWidget->writeSettings(prefs);
-  prefs.endGroup();
+  prefs->beginGroup("Filter List Widget");
+  filterListWidget->writeSettings(prefs.data());
+  prefs->endGroup();
 
-  prefs.beginGroup("Filter Library Widget");
-  filterLibraryWidget->writeSettings(prefs);
-  prefs.endGroup();
+  prefs->beginGroup("Filter Library Widget");
+  filterLibraryWidget->writeSettings(prefs.data());
+  prefs->endGroup();
 
-  prefs.endGroup();
+  prefs->endGroup();
 }
 
 // -----------------------------------------------------------------------------
@@ -255,19 +255,19 @@ void DREAM3DToolbox::closeEvent(QCloseEvent* event)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DToolbox::writeWindowSettings(DREAM3DSettings& prefs)
+void DREAM3DToolbox::writeWindowSettings(DREAM3DSettings* prefs)
 {
-  prefs.beginGroup("WindowSettings");
+  prefs->beginGroup("WindowSettings");
 
   QByteArray geo_data = saveGeometry();
-  prefs.setValue(QString("MainWindowGeometry"), geo_data);
+  prefs->setValue(QString("MainWindowGeometry"), geo_data);
 
-  prefs.setValue("Current Index", QVariant(tabWidget->currentIndex()));
-  prefs.setValue("Filter List Index", QVariant(tabWidget->indexOf(filterListTab)));
-  prefs.setValue("Filter Library Index", QVariant(tabWidget->indexOf(filterLibraryTab)));
-  prefs.setValue("Bookmarks Index", QVariant(tabWidget->indexOf(bookmarksTab)));
+  prefs->setValue("Current Index", QVariant(tabWidget->currentIndex()));
+  prefs->setValue("Filter List Index", QVariant(tabWidget->indexOf(filterListTab)));
+  prefs->setValue("Filter Library Index", QVariant(tabWidget->indexOf(filterLibraryTab)));
+  prefs->setValue("Bookmarks Index", QVariant(tabWidget->indexOf(bookmarksTab)));
 
-  prefs.endGroup();
+  prefs->endGroup();
 }
 
 // -----------------------------------------------------------------------------

@@ -65,10 +65,10 @@ class DREAM3DToolbox : public QMainWindow, private Ui::DREAM3DToolbox
     FilterLibraryToolboxWidget* getFilterLibraryWidget();
 
     void readSettings();
-    void readWindowSettings(DREAM3DSettings& prefs);
+    void readWindowSettings(DREAM3DSettings* prefs);
 
     void writeSettings();
-    void writeWindowSettings(DREAM3DSettings& prefs);
+    void writeWindowSettings(DREAM3DSettings* prefs);
 
     void setCurrentTab(ToolboxTabs tab);
 

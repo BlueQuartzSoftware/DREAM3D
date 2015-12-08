@@ -100,12 +100,12 @@ class DREAM3DWidgetsLib_EXPORT BookmarksToolboxWidget : public QWidget, private 
     /**
     * @brief Reads the preferences from the users pref file
     */
-    void readSettings(DREAM3DSettings& prefs);
+    void readSettings(DREAM3DSettings* prefs);
 
     /**
     * @brief Writes the preferences to the users pref file
     */
-    void writeSettings(DREAM3DSettings& prefs);
+    void writeSettings(DREAM3DSettings* prefs);
 
     virtual QDir findV4FavoritesDirectory();
 
@@ -196,10 +196,13 @@ class DREAM3DWidgetsLib_EXPORT BookmarksToolboxWidget : public QWidget, private 
     */
     void writeSettings();
 
+    /**
+    * @brief getBookmarksPrefsPath
+    */
+    QString getBookmarksPrefsPath();
+
     BookmarksToolboxWidget(const BookmarksToolboxWidget&); // Copy Constructor Not Implemented
     void operator=(const BookmarksToolboxWidget&); // Operator '=' Not Implemented
-
-
 };
 
 #endif

@@ -311,11 +311,11 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      *
      * @param prefs
      */
-    void writeWindowSettings(DREAM3DSettings& prefs);
-    void writeVersionCheckSettings(DREAM3DSettings& prefs);
+    void writeWindowSettings(DREAM3DSettings* prefs);
+    void writeVersionCheckSettings(DREAM3DSettings* prefs);
 
-    void readWindowSettings(DREAM3DSettings& prefs);
-    void readVersionSettings(DREAM3DSettings& prefs);
+    void readWindowSettings(DREAM3DSettings* prefs);
+    void readVersionSettings(DREAM3DSettings* prefs);
 
     void checkForUpdatesAtStartup();
 
@@ -329,14 +329,14 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      * @param prefs
      * @param dw
      */
-    void readDockWidgetSettings(DREAM3DSettings& prefs, QDockWidget* dw);
+    void readDockWidgetSettings(DREAM3DSettings* prefs, QDockWidget* dw);
 
     /**
      * @brief writeDockWidgetSettings
      * @param prefs
      * @param dw
      */
-    void writeDockWidgetSettings(DREAM3DSettings& prefs, QDockWidget* dw);
+    void writeDockWidgetSettings(DREAM3DSettings* prefs, QDockWidget* dw);
 
     /**
      * @brief Checks the currently open file for changes that need to be saved

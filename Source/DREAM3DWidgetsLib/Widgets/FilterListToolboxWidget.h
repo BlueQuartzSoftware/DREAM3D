@@ -68,12 +68,12 @@ class DREAM3DWidgetsLib_EXPORT FilterListToolboxWidget : public QWidget, private
     /**
     * @brief Reads the preferences from the users pref file
     */
-    void readSettings(DREAM3DSettings& prefs);
+    void readSettings(DREAM3DSettings* prefs);
 
     /**
     * @brief Writes the preferences to the users pref file
     */
-    void writeSettings(DREAM3DSettings& prefs);
+    void writeSettings(DREAM3DSettings* prefs);
 
     /**
     * @brief Returns true if a search is in progress, else returns false

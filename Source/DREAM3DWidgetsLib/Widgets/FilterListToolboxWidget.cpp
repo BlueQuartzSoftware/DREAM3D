@@ -634,17 +634,27 @@ QMap<QString, AbstractFilter::Pointer> FilterListToolboxWidget::getHumanNameMap(
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterListToolboxWidget::writeSettings(DREAM3DSettings& prefs)
+void FilterListToolboxWidget::writeSettings(DREAM3DSettings* prefs)
 {
-  prefs.setValue("ActiveSearchAction", getActiveSearchAction()->objectName());
+  prefs->beginGroup("DockWidgetSettings");
+  prefs->beginGroup("Filter List Dock Widget");
+
+  prefs->setValue(objectName(), isHidden());
+  prefs->setValue("ActiveSearchAction", getActiveSearchAction()->objectName());
+
+  prefs->endGroup();
+  prefs->endGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterListToolboxWidget::readSettings(DREAM3DSettings& prefs)
+void FilterListToolboxWidget::readSettings(DREAM3DSettings* prefs)
 {
-  QString objectName = prefs.value("ActiveSearchAction", QString("")).toString();
+  prefs->beginGroup("DockWidgetSettings");
+  prefs->beginGroup("Filter List Dock Widget");
+
+  QString objectName = prefs->value("ActiveSearchAction", QString("")).toString();
   QList<QAction*> list = getSearchActionList();
 
   bool didCheck = false;
@@ -666,6 +676,9 @@ void FilterListToolboxWidget::readSettings(DREAM3DSettings& prefs)
     // Set "All Words" as checked by default
     list[0]->setChecked(true);
   }
+
+  prefs->endGroup();
+  prefs->endGroup();
 }
 
 // -----------------------------------------------------------------------------
