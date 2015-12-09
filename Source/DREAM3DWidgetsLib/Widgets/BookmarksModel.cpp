@@ -332,6 +332,31 @@ bool BookmarksModel::removeRows(int position, int rows, const QModelIndex& paren
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+bool BookmarksModel::moveRows(const QModelIndex & sourceParent, int sourceRow, int count, const QModelIndex & destinationParent, int destinationChild)
+{
+  beginMoveRows(sourceParent, sourceRow, sourceRow + count - 1, destinationParent, destinationChild);
+
+  BookmarksItem* srcParentItem = getItem(sourceParent);
+  BookmarksItem* destParentItem = getItem(destinationParent);
+
+  for (int i = sourceRow; i < sourceRow + count; i++)
+  {
+    QModelIndex srcIndex = index(i, BookmarksItem::Name, sourceParent);
+    BookmarksItem* srcItem = getItem(srcIndex);
+
+    destParentItem->insertChild(destinationChild, srcItem);
+    srcItem->setParent(destParentItem);
+    srcParentItem->removeChild(i);
+  }
+
+  endMoveRows();
+
+  return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QModelIndex BookmarksModel::parent(const QModelIndex& index) const
 {
   if (!index.isValid())

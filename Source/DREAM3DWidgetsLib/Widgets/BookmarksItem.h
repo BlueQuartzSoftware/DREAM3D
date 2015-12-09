@@ -81,13 +81,17 @@ class DREAM3DWidgetsLib_EXPORT BookmarksItem
     bool needsToBeExpanded();
     void setNeedsToBeExpanded(bool value);
 
+    bool insertChild(int position, BookmarksItem* child);
     bool insertChildren(int position, int count, int columns);
     bool insertColumns(int position, int columns);
 
+    bool removeChild(int position);
     bool removeChildren(int position, int count);
     bool removeColumns(int position, int columns);
 
     int childNumber() const;
+
+    void setParent(BookmarksItem* parent);
 
     static QString TopLevelString();
 

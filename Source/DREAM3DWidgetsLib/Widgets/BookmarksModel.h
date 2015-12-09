@@ -85,6 +85,8 @@ class DREAM3DWidgetsLib_EXPORT BookmarksModel : public QAbstractItemModel
     bool insertRows(int position, int rows, const QModelIndex& parent = QModelIndex()) Q_DECL_OVERRIDE;
     bool removeRows(int position, int rows, const QModelIndex& parent = QModelIndex()) Q_DECL_OVERRIDE;
 
+    bool moveRows(const QModelIndex & sourceParent, int sourceRow, int count, const QModelIndex & destinationParent, int destinationChild) Q_DECL_OVERRIDE;
+
     Qt::ItemFlags flags(const QModelIndex& index) const Q_DECL_OVERRIDE;
 
     bool setData(const QModelIndex& index, const QVariant& value, int role) Q_DECL_OVERRIDE;
