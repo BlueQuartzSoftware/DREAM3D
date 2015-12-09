@@ -839,124 +839,216 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   float boundaryFraction = (float)boundaryVoxels / (float)m_TotalPoints;
 
   //boolean used to determine if current placement is acceptable if the precipitates are being treated as "hard"
-  bool good = false;
+//  bool good = false;
 
-  int32_t progFeature = 0;
-  int32_t progPrecipInc = static_cast<int32_t>(numfeatures * 0.01f);
+//  int32_t progFeature = 0;
+//  int32_t progPrecipInc = static_cast<int32_t>(numfeatures * 0.01f);
+//  for (size_t i = size_t(m_FirstPrecipitateFeature); i < numfeatures; i++)
+//  {
+//    if (int32_t(i) > progFeature + progPrecipInc)
+//    {
+//      QString ss = QObject::tr("Packing Precipitates || Placing Precipitate #%1").arg(i);
+//      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+//      progFeature = i;
+//    }
+
+//    m_Centroids[3 * i] = m_SizeX * 0.5;
+//    m_Centroids[3 * i + 1] = m_SizeY * 0.5;
+//    m_Centroids[3 * i + 2] = m_SizeZ * 0.5;
+//    insert_precipitate(i);
+
+//    good = false;
+//    int32_t iterCount = 0;
+//    while (good == false && iterCount < 100000 )
+//    {
+//      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FeaturePhases[i]].get());
+//      precipboundaryfraction = pp->getPrecipBoundaryFraction();
+//      random = static_cast<float>(rg.genrand_res53());
+
+//      if (boundaryFraction != 0)
+//      {
+//        if (random <= precipboundaryfraction)
+//        {
+//          // figure out if we want this to be a boundary centroid voxel or not for the proposed precipitate
+//          if (availablePointsCount > 0)
+//          {
+//            key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
+//            featureOwnersIdx = availablePointsInv[key];
+//            while (m_BoundaryCells[featureOwnersIdx] == 0)
+//            {
+//              key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
+//              featureOwnersIdx = availablePointsInv[key];
+//            }
+//          }
+//          else
+//          {
+//            featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+//            while (m_BoundaryCells[featureOwnersIdx] == 0)
+//            {
+//              featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+//            }
+//          }
+
+//        }
+//        else if (random > precipboundaryfraction)
+//        {
+//          if (availablePointsCount > 0)
+//          {
+//            key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
+//            featureOwnersIdx = availablePointsInv[key];
+//            while (m_BoundaryCells[featureOwnersIdx] != 0)
+//            {
+//              key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
+//              featureOwnersIdx = availablePointsInv[key];
+//            }
+//          }
+//          else
+//          {
+//            featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+//            while (m_BoundaryCells[featureOwnersIdx] != 0)
+//            {
+//              featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+//            }
+//          }
+//        }
+//      }
+//      else
+//      {
+//        if (precipboundaryfraction > 0)
+//        {
+//          QString msg("There are no Feature boundaries on which to place precipitates and the target statistics precipitate fraction is greater than 0. This Filter will run without trying to match the precipitate fraction");
+//          notifyWarningMessage(getHumanLabel(), msg, -5010);
+//        }
+
+//        if (availablePointsCount > 0)
+//        {
+//          key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
+//          featureOwnersIdx = availablePointsInv[key];
+//        }
+//        else
+//        {
+//          featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+//        }
+//      }
+
+//      column = static_cast<int64_t>(featureOwnersIdx % m_XPoints);
+//      row = static_cast<int64_t>(featureOwnersIdx / m_XPoints) % m_YPoints;
+//      plane = static_cast<int64_t>(featureOwnersIdx / (m_XPoints * m_YPoints));
+//      xc = static_cast<float>((column * m_XRes) + (m_XRes * 0.5));
+//      yc = static_cast<float>((row * m_YRes) + (m_YRes * 0.5));
+//      zc = static_cast<float>((plane * m_ZRes) + (m_ZRes * 0.5));
+//      //m_Centroids[3 * i] = xc;
+//      //m_Centroids[3 * i + 1] = yc;
+//      //m_Centroids[3 * i + 2] = zc;
+//      move_precipitate(i, xc, yc, zc);
+//      //    insert_precipitate(i);
+//      good = check_for_overlap(i, exclusionZonesPtr);
+//      iterCount++;
+//      if(getCancel() == true) { return; }
+//    }
+//    if (getCancel() == true) { return; }
+//    update_exclusionZones(i, -1000, exclusionZonesPtr);
+//    update_availablepoints(availablePoints, availablePointsInv);
+//    if (iterCount >= 100000)
+//    {
+//      tDims[0] = i + 1;
+//      m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->resizeAttributeArrays(tDims);
+//      updateFeatureInstancePointers();
+//      numfeatures = m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->getNumTuples();
+//    }
+//  }
+
   for (size_t i = size_t(m_FirstPrecipitateFeature); i < numfeatures; i++)
   {
-    if (int32_t(i) > progFeature + progPrecipInc)
+    QString ss = QObject::tr("Packing Precipitates - Placing Precipitate #%1").arg(i);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+
+    PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FeaturePhases[i]].get());
+    precipboundaryfraction = pp->getPrecipBoundaryFraction();
+    random = static_cast<float>(rg.genrand_res53());
+
+    if (boundaryFraction != 0)
     {
-      QString ss = QObject::tr("Packing Precipitates || Placing Precipitate #%1").arg(i);
-      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-      progFeature = i;
-    }
-
-    m_Centroids[3 * i] = m_SizeX * 0.5;
-    m_Centroids[3 * i + 1] = m_SizeY * 0.5;
-    m_Centroids[3 * i + 2] = m_SizeZ * 0.5;
-    insert_precipitate(i);
-
-    good = false;
-    int32_t iterCount = 0;
-    while (good == false && iterCount < 100000 )
-    {
-      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FeaturePhases[i]].get());
-      precipboundaryfraction = pp->getPrecipBoundaryFraction();
-      random = static_cast<float>(rg.genrand_res53());
-
-      if (boundaryFraction != 0)
+      if (random <= precipboundaryfraction)
       {
-        if (random <= precipboundaryfraction)
-        {
-          // figure out if we want this to be a boundary centroid voxel or not for the proposed precipitate
-          if (availablePointsCount > 0)
-          {
-            key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
-            featureOwnersIdx = availablePointsInv[key];
-            while (m_BoundaryCells[featureOwnersIdx] == 0)
-            {
-              key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
-              featureOwnersIdx = availablePointsInv[key];
-            }
-          }
-          else
-          {
-            featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-            while (m_BoundaryCells[featureOwnersIdx] == 0)
-            {
-              featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-            }
-          }
-
-        }
-        else if (random > precipboundaryfraction)
-        {
-          if (availablePointsCount > 0)
-          {
-            key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
-            featureOwnersIdx = availablePointsInv[key];
-            while (m_BoundaryCells[featureOwnersIdx] != 0)
-            {
-              key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
-              featureOwnersIdx = availablePointsInv[key];
-            }
-          }
-          else
-          {
-            featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-            while (m_BoundaryCells[featureOwnersIdx] != 0)
-            {
-              featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-            }
-          }
-        }
-      }
-      else
-      {
-        if (precipboundaryfraction > 0)
-        {
-          QString msg("There are no Feature boundaries on which to place precipitates and the target statistics precipitate fraction is greater than 0. This Filter will run without trying to match the precipitate fraction");
-          notifyWarningMessage(getHumanLabel(), msg, -5010);
-        }
-
+        // figure out if we want this to be a boundary centroid voxel or not for the proposed precipitate
         if (availablePointsCount > 0)
         {
           key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
           featureOwnersIdx = availablePointsInv[key];
+          while (m_BoundaryCells[featureOwnersIdx] == 0)
+          {
+            key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
+            featureOwnersIdx = availablePointsInv[key];
+          }
         }
         else
         {
           featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+          while (m_BoundaryCells[featureOwnersIdx] == 0)
+          {
+            featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+          }
         }
       }
-
-      column = static_cast<int64_t>(featureOwnersIdx % m_XPoints);
-      row = static_cast<int64_t>(featureOwnersIdx / m_XPoints) % m_YPoints;
-      plane = static_cast<int64_t>(featureOwnersIdx / (m_XPoints * m_YPoints));
-      xc = static_cast<float>((column * m_XRes) + (m_XRes * 0.5));
-      yc = static_cast<float>((row * m_YRes) + (m_YRes * 0.5));
-      zc = static_cast<float>((plane * m_ZRes) + (m_ZRes * 0.5));
-      //m_Centroids[3 * i] = xc;
-      //m_Centroids[3 * i + 1] = yc;
-      //m_Centroids[3 * i + 2] = zc;
-      move_precipitate(i, xc, yc, zc);
-      //    insert_precipitate(i);
-      good = check_for_overlap(i, exclusionZonesPtr);
-      iterCount++;
-      if(getCancel() == true) { return; }
+      else if (random > precipboundaryfraction)
+      {
+        if (availablePointsCount > 0)
+        {
+          key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
+          featureOwnersIdx = availablePointsInv[key];
+          while (m_BoundaryCells[featureOwnersIdx] != 0)
+          {
+            key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
+            featureOwnersIdx = availablePointsInv[key];
+          }
+        }
+        else
+        {
+          featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+          while (m_BoundaryCells[featureOwnersIdx] != 0)
+          {
+            featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+          }
+        }
+      }
     }
-    if (getCancel() == true) { return; }
+    else
+    {
+
+      if (precipboundaryfraction > 0)
+      {
+        QString msg("There are no Feature boundaries on which to place precipitates and the target statistics precipitate fraction is greater than 0. This Filter will run without trying to match the precipitate fraction");
+        notifyWarningMessage(getHumanLabel(), msg, -5010);
+      }
+
+      if (availablePointsCount > 0)
+      {
+        key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount - 1));
+        featureOwnersIdx = availablePointsInv[key];
+      }
+      else
+      {
+        featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+      }
+    }
+
+    column = static_cast<int64_t>(featureOwnersIdx % m_XPoints);
+    row = static_cast<int64_t>(featureOwnersIdx / m_XPoints) % m_YPoints;
+    plane = static_cast<int64_t>(featureOwnersIdx / (m_XPoints * m_YPoints));
+    xc = static_cast<float>((column * m_XRes) + (m_XRes * 0.5));
+    yc = static_cast<float>((row * m_YRes) + (m_YRes * 0.5));
+    zc = static_cast<float>((plane * m_ZRes) + (m_ZRes * 0.5));
+    m_Centroids[3 * i] = xc;
+    m_Centroids[3 * i + 1] = yc;
+    m_Centroids[3 * i + 2] = zc;
+    insert_precipitate(i);
     update_exclusionZones(i, -1000, exclusionZonesPtr);
     update_availablepoints(availablePoints, availablePointsInv);
-    if (iterCount >= 100000)
-    {
-      tDims[0] = i + 1;
-      m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->resizeAttributeArrays(tDims);
-      updateFeatureInstancePointers();
-      numfeatures = m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->getNumTuples();
-    }
   }
+
+  notifyStatusMessage(getHumanLabel(), "Packing Features - Initial Feature Placement Complete");
+
 
   if (m_MatchRDF == true)
   {
@@ -1439,48 +1531,48 @@ void InsertPrecipitatePhases::update_exclusionZones(int32_t gadd, int32_t gremov
   }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool InsertPrecipitatePhases::check_for_overlap(size_t gNum, Int32ArrayType::Pointer exclusionZonesPtr)
-{
-  size_t featureOwnersIdx = 0;
-  int32_t* exclusionZones = exclusionZonesPtr->getPointer(0);
-  int64_t col = 0, row = 0, plane = 0;
-  int64_t overlapCount = 0;
+//// -----------------------------------------------------------------------------
+////
+//// -----------------------------------------------------------------------------
+//bool InsertPrecipitatePhases::check_for_overlap(size_t gNum, Int32ArrayType::Pointer exclusionZonesPtr)
+//{
+//  size_t featureOwnersIdx = 0;
+//  int32_t* exclusionZones = exclusionZonesPtr->getPointer(0);
+//  int64_t col = 0, row = 0, plane = 0;
+//  int64_t overlapCount = 0;
 
-  size_t size = columnlist[gNum].size();
-  std::vector<int64_t>& cl = columnlist[gNum];
-  std::vector<int64_t>& rl = rowlist[gNum];
-  std::vector<int64_t>& pl = planelist[gNum];
-  for (size_t i = 0; i < size; i++)
-  {
-    col = cl[i];
-    row = rl[i];
-    plane = pl[i];
-    if (m_PeriodicBoundaries == true)
-    {
-      if (col < 0) { col = col + m_XPoints; }
-      if (col > m_XPoints - 1) { col = col - m_XPoints; }
-      if (row < 0) { row = row + m_YPoints; }
-      if (row > m_YPoints - 1) { row = row - m_YPoints; }
-      if (plane < 0) { plane = plane + m_ZPoints; }
-      if (plane > m_ZPoints - 1) { plane = plane - m_ZPoints; }
-      featureOwnersIdx = (m_XPoints * m_YPoints * plane) + (m_XPoints * row) + col;
-      if (exclusionZones[featureOwnersIdx] > 0) { overlapCount++; }
-    }
-    else
-    {
-      if (col >= 0 && col < m_XPoints && row >= 0 && row < m_YPoints && plane >= 0 && plane < m_ZPoints)
-      {
-        featureOwnersIdx = (m_XPoints * m_YPoints * plane) + (m_XPoints * row) + col;
-        if (exclusionZones[featureOwnersIdx] > 0) { overlapCount++; }
-      }
-    }
-  }
-  if ((static_cast<float>(overlapCount) / static_cast<float>(size)) > 0.1) { return false; }
-  return true;
-}
+//  size_t size = columnlist[gNum].size();
+//  std::vector<int64_t>& cl = columnlist[gNum];
+//  std::vector<int64_t>& rl = rowlist[gNum];
+//  std::vector<int64_t>& pl = planelist[gNum];
+//  for (size_t i = 0; i < size; i++)
+//  {
+//    col = cl[i];
+//    row = rl[i];
+//    plane = pl[i];
+//    if (m_PeriodicBoundaries == true)
+//    {
+//      if (col < 0) { col = col + m_XPoints; }
+//      if (col > m_XPoints - 1) { col = col - m_XPoints; }
+//      if (row < 0) { row = row + m_YPoints; }
+//      if (row > m_YPoints - 1) { row = row - m_YPoints; }
+//      if (plane < 0) { plane = plane + m_ZPoints; }
+//      if (plane > m_ZPoints - 1) { plane = plane - m_ZPoints; }
+//      featureOwnersIdx = (m_XPoints * m_YPoints * plane) + (m_XPoints * row) + col;
+//      if (exclusionZones[featureOwnersIdx] > 0) { overlapCount++; }
+//    }
+//    else
+//    {
+//      if (col >= 0 && col < m_XPoints && row >= 0 && row < m_YPoints && plane >= 0 && plane < m_ZPoints)
+//      {
+//        featureOwnersIdx = (m_XPoints * m_YPoints * plane) + (m_XPoints * row) + col;
+//        if (exclusionZones[featureOwnersIdx] > 0) { overlapCount++; }
+//      }
+//    }
+//  }
+//  if ((static_cast<float>(overlapCount) / static_cast<float>(size)) > 0.1) { return false; }
+//  return true;
+//}
 
 // -----------------------------------------------------------------------------
 //
