@@ -30,13 +30,13 @@ The user can also choose to read in a list of precipitate **Features** with thei
 
 
 	Number of Features
-	Phase, X, Y, Z, A, B, C, O3, Phi1, PHI, Phi2
-	Phase, X, Y, Z, A, B, C, O3, Phi1, PHI, Phi2
-	Phase, X, Y, Z, A, B, C, O3, Phi1, PHI, Phi2
+	Phase X Y Z A B C O3 Phi1 PHI Phi2
+	Phase X Y Z A B C O3 Phi1 PHI Phi2
+	Phase X Y Z A B C O3 Phi1 PHI Phi2
 	.
 	.
 	.
-	Phase, X, Y, Z, A, B, C, O3, Phi1, PHI, Phi2
+	Phase X Y Z A B C O3 Phi1 PHI Phi2
 
 
 where (X, Y, Z) are the coordinates of the **Feature's** centroid, (A, B, C) are the major, mid and minor principal semiaxis lengths of the **Feature**, O3 is the Omega 3 value of the **Feature** and (Phi1, PHI, Phi2) are the *Euler angles* that describe the **Features**'s orientation in the sample reference frame.
