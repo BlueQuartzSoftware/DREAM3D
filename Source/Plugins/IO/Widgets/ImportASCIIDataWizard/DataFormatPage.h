@@ -107,6 +107,8 @@ class DataFormatPage : public AbstractWizardPage, private Ui::DataFormatPage
     int                                             m_NumLines;
     EditHeadersDialog*                              m_EditHeadersDialog;
 
+    void validateHeaders(QVector<QString> headers);
+
     DataFormatPage(const DataFormatPage&); // Copy Constructor Not Implemented
     void operator=(const DataFormatPage&); // Operator '=' Not Implemented
 };
