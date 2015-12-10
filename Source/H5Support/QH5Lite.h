@@ -414,6 +414,19 @@ namespace H5Support_NAMESPACE
       static H5Support_EXPORT herr_t writeStringAttributes(hid_t loc_id,
                                                            const QString& objName,
                                                            const QMap<QString, QString>& attributes);
+
+      /**
+       * @brief Returns the total number of elements in the supplied dataset
+       * @param loc_id The parent location that contains the dataset to read
+       * @param dsetName The name of the dataset to read
+       * @param data A std::vector<T>. Note the vector WILL be resized to fit the data.
+       * The best idea is to just allocate the vector but not to size it. The method
+       * will size it for you.
+       * @return Number of elements in dataset
+       */
+      static H5Support_EXPORT hsize_t getNumberOfElements(hid_t loc_id,
+                                      const QString& dsetName);
+
       /**
        * @brief Writes an attribute to the given object. This method is designed with
        * a Template parameter that represents a primitive value. If you need to write
@@ -447,7 +460,6 @@ namespace H5Support_NAMESPACE
       {
         return H5Lite::readPointerDataset(loc_id, dsetName.toStdString(), data);
       }
-
 
 
       /**
