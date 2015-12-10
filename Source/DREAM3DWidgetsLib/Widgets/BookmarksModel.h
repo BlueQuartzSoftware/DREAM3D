@@ -96,8 +96,6 @@ class DREAM3DWidgetsLib_EXPORT BookmarksModel : public QAbstractItemModel
 
     BookmarksItem* getRootItem();
 
-    void moveIndexInternally(const QModelIndex& index, QModelIndex& oldParent, QModelIndex& newParent);
-
     void addFileToTree(QString& path, QModelIndex& specifiedParent);
 
     QStringList getFilePaths();
@@ -121,9 +119,6 @@ class DREAM3DWidgetsLib_EXPORT BookmarksModel : public QAbstractItemModel
     static BookmarksModel* self;
 
     BookmarksItem* getItem(const QModelIndex& index) const;
-    void copyIndexToTemp(const QModelIndex& index, const QModelIndex& oldParent, const QModelIndex& tempParent, BookmarksModel* tempModel);
-
-    void copyTempToIndex(QModelIndex& index, QModelIndex& newParent, const QModelIndex& tempParent, BookmarksModel* tempModel);
 
     QStringList getFilePaths(BookmarksItem* item);
 
