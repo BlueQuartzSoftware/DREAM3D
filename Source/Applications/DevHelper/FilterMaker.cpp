@@ -715,7 +715,7 @@ void FilterMaker::updateTestList()
     return;
   }
 
-  out << " SOURCES ${${PROJECT_NAME}Test_SOURCE_DIR}/" << filterName << "Test.cpp FOLDER \"${PLUGIN_NAME}Plugin/Test\" LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})\n\n";
+  out << " SOURCES ${${PLUGIN_NAME}Test_SOURCE_DIR}/" << filterName << "Test.cpp FOLDER \"${PLUGIN_NAME}Plugin/Test\" LINK_LIBRARIES ${${PLUGIN_NAME}_Link_Libs})\n\n";
 
   QStringList list = contents.split(QRegExp("\\n"));
   list.push_back(testCMakeCode);

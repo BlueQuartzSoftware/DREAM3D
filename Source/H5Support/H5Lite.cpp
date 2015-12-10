@@ -428,6 +428,61 @@ herr_t H5Lite::writeStringAttributes(hid_t loc_id,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+hsize_t H5Lite::getNumberOfElements(hid_t loc_id, const std::string& dsetName)
+{
+  hid_t   did;
+  herr_t  err = 0;
+  herr_t retErr = 0;
+  hid_t spaceId;
+  hsize_t numElements = 0;
+  did = H5Dopen( loc_id, dsetName.c_str(), H5P_DEFAULT);
+  if ( did < 0 )
+  {
+    std::cout << "H5Lite.h::readStringDataset(" << __LINE__ << ") Error opening Dataset at loc_id (" << loc_id << ") with object name (" << dsetName << ")" << std::endl;
+    return -1;
+  }
+  if ( did >= 0 )
+  {
+    spaceId = H5Dget_space(did);
+    if ( spaceId > 0 )
+    {
+      int32_t rank = H5Sget_simple_extent_ndims(spaceId);
+      if (rank > 0)
+      {
+        std::vector<hsize_t> dims;
+        dims.resize(rank);// Allocate enough room for the dims
+        err = H5Sget_simple_extent_dims(spaceId, &(dims.front()), NULL);
+        numElements = 1;
+        for (std::vector<hsize_t>::iterator iter = dims.begin(); iter < dims.end(); ++iter )
+        {
+          numElements = numElements * (*iter);
+        }
+      }
+      err = H5Sclose(spaceId);
+      if (err < 0 )
+      {
+        std::cout << "Error Closing Data Space" << std::endl;
+        retErr = err;
+      }
+    }
+    else
+    {
+      std::cout << "Error Opening SpaceID" << std::endl;
+      retErr = spaceId;
+    }
+    err = H5Dclose( did );
+    if (err < 0 )
+    {
+      std::cout << "Error Closing Dataset" << std::endl;
+      retErr = err;
+    }
+  }
+  return numElements;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 herr_t  H5Lite::writeStringAttribute(hid_t loc_id,
                                      const std::string& objName,
                                      const std::string& attrName,

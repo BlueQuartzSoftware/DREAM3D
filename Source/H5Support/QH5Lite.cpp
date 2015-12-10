@@ -199,6 +199,14 @@ herr_t QH5Lite::writeStringAttributes(hid_t loc_id,
 }
 
 // -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+hsize_t QH5Lite::getNumberOfElements(hid_t loc_id, const QString& dsetName)
+{
+  return H5Lite::getNumberOfElements(loc_id, dsetName.toStdString());
+}
+
+// -----------------------------------------------------------------------------
 //  Writes a string to an HDF5 Attribute
 // -----------------------------------------------------------------------------
 herr_t  QH5Lite::writeStringAttribute(hid_t loc_id,

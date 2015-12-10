@@ -299,12 +299,12 @@ class InsertPrecipitatePhases : public AbstractFilter
      */
     void update_exclusionZones(int32_t gadd, int32_t gremove, Int32ArrayType::Pointer exlusionZonesPtr);
 
-    /**
-     * @brief check_for_overlap Checks if the current placement will result in overlap for precipitate gNum
-     * @param gNum Index used to determine which precipitate to add
-     * @param exlusionZonesPtr Array of exclusion zone Feature Ids for each packing point
-     */
-    bool check_for_overlap(size_t gNum, Int32ArrayType::Pointer exlusionZonesPtr);
+//    /**
+//     * @brief check_for_overlap Checks if the current placement will result in overlap for precipitate gNum
+//     * @param gNum Index used to determine which precipitate to add
+//     * @param exlusionZonesPtr Array of exclusion zone Feature Ids for each packing point
+//     */
+//    bool check_for_overlap(size_t gNum, Int32ArrayType::Pointer exlusionZonesPtr);
 
     /**
      * @brief update_availablepoints Updates the maps used to associate packing points with an "available" state
