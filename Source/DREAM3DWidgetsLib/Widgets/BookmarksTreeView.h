@@ -128,18 +128,20 @@ class DREAM3DWidgetsLib_EXPORT BookmarksTreeView : public QTreeView
 
   private:
     void performDrag();
+    void filterOutDescendants();
     void expandChildren(const QModelIndex& parent, BookmarksModel* model);
     QJsonObject wrapModel(QModelIndex index);
     static void UnwrapModel(QString objectName, QJsonObject object, BookmarksModel* model, QModelIndex parentIndex);
 
-    QPoint                    m_StartPos;
-    QMenu                     m_Menu;
-    QList<QAction*>           m_NodeActions;
-    QList<QAction*>           m_LeafActions;
-    QList<QAction*>           m_LeafErrorActions;
-    QList<QAction*>           m_DefaultActions;
-    QModelIndex               m_IndexBeingDragged;
-    QModelIndex               m_TopLevelItemPlaceholder;
+    QPoint                                        m_StartPos;
+    QMenu                                         m_Menu;
+    QList<QAction*>                               m_NodeActions;
+    QList<QAction*>                               m_LeafActions;
+    QList<QAction*>                               m_LeafErrorActions;
+    QList<QAction*>                               m_DefaultActions;
+    QList<QPersistentModelIndex>                  m_IndexesBeingDragged;
+    QPersistentModelIndex                         m_ActiveIndexBeingDragged;
+    QModelIndex                                   m_TopLevelItemPlaceholder;
 };
 
 #endif /* _BookmarksTreeView_H_ */
