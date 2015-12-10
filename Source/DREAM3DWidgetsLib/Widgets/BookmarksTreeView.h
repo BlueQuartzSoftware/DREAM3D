@@ -95,6 +95,12 @@ class DREAM3DWidgetsLib_EXPORT BookmarksTreeView : public QTreeView
     */
     void setModel(QAbstractItemModel* model) Q_DECL_OVERRIDE;
 
+    /**
+    * @brief filterOutDescendants
+    * @param indexList
+    */
+    QModelIndexList filterOutDescendants(QModelIndexList indexList);
+
   public slots:
     void collapseIndex(const QModelIndex& index);
     void expandIndex(const QModelIndex& index);
@@ -128,7 +134,6 @@ class DREAM3DWidgetsLib_EXPORT BookmarksTreeView : public QTreeView
 
   private:
     void performDrag();
-    void filterOutDescendants();
     void expandChildren(const QModelIndex& parent, BookmarksModel* model);
     QJsonObject wrapModel(QModelIndex index);
     static void UnwrapModel(QString objectName, QJsonObject object, BookmarksModel* model, QModelIndex parentIndex);

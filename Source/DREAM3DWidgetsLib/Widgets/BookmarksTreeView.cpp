@@ -140,27 +140,29 @@ void BookmarksTreeView::mouseMoveEvent(QMouseEvent* event)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksTreeView::filterOutDescendants()
+QModelIndexList BookmarksTreeView::filterOutDescendants(QModelIndexList indexList)
 {
   BookmarksModel* model = BookmarksModel::Instance();
 
-  for (int i = m_IndexesBeingDragged.size() - 1; i >= 0; i--)
+  for (int i = indexList.size() - 1; i >= 0; i--)
   {
-    QPersistentModelIndex index = m_IndexesBeingDragged[i];
+    QPersistentModelIndex index = indexList[i];
     QString name = model->index(index.row(), BookmarksItem::Name, index.parent()).data().toString();
     // Walk up the tree from the index...if an ancestor is selected, remove the index
     while (index.isValid() == true)
     {
       QPersistentModelIndex parent = index.parent();
       QString parentName = model->index(parent.row(), BookmarksItem::Name, parent.parent()).data().toString();
-      if (m_IndexesBeingDragged.contains(index.parent()) == true)
+      if (indexList.contains(index.parent()) == true)
       {
-        m_IndexesBeingDragged.removeAt(i);
+        indexList.removeAt(i);
         break;
       }
       index = index.parent();
     }
   }
+
+  return indexList;
 }
 
 // -----------------------------------------------------------------------------
@@ -173,14 +175,16 @@ void BookmarksTreeView::performDrag()
   m_ActiveIndexBeingDragged = QPersistentModelIndex(currentIndex());
 
   m_IndexesBeingDragged.clear();
+
   QModelIndexList list = selectionModel()->selectedRows();
-  for (int i = 0; i < list.size(); i++)
-  {
-    m_IndexesBeingDragged.push_back(QPersistentModelIndex(list[i]));
-  }
 
   // We need to filter out all indexes that already have parents/ancestors selected
-  filterOutDescendants();
+  list = filterOutDescendants(list);
+
+  for (int i = 0; i < list.size(); i++)
+  {
+    m_IndexesBeingDragged.push_back(list[i]);
+  }
 
   QMimeData* mimeData = new QMimeData;
   QString source = "Bookmarks";

@@ -713,9 +713,17 @@ void DREAM3DApplication::on_actionRemoveBookmark_triggered()
 
   QModelIndexList indexList = m_Toolbox->getBookmarksWidget()->getBookmarksTreeView()->selectionModel()->selectedRows(BookmarksItem::Name);
 
+  indexList = m_Toolbox->getBookmarksWidget()->getBookmarksTreeView()->filterOutDescendants(indexList);
+
   if (indexList.size() <= 0)
   {
     return;
+  }
+
+  QList<QPersistentModelIndex> persistentList;
+  for (int i = 0; i < indexList.size(); i++)
+  {
+    persistentList.push_back(indexList[i]);
   }
 
   QModelIndex singleIndex = model->index(indexList[0].row(), BookmarksItem::Name, indexList[0].parent());
@@ -742,13 +750,13 @@ void DREAM3DApplication::on_actionRemoveBookmark_triggered()
 
   if (ret == QMessageBox::Yes)
   {
-    for (int i = indexList.size() - 1; i >= 0; i--)
+    for (int i = 0; i < persistentList.size(); i++)
     {
-      QModelIndex nameIndex = model->index(indexList[i].row(), BookmarksItem::Name, indexList[i].parent());
+      QModelIndex nameIndex = model->index(persistentList[i].row(), BookmarksItem::Name, persistentList[i].parent());
       QString name = nameIndex.data().toString();
 
-      //Remove favorite, graphically, from the DREAM3D interface
-      model->removeRow(indexList[i].row(), indexList[i].parent());
+      //Remove bookmark from the DREAM3D interface
+      model->removeRow(persistentList[i].row(), persistentList[i].parent());
     }
 
     // Write these changes out to the preferences file
