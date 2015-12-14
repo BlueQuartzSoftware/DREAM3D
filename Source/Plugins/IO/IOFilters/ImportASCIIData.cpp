@@ -155,8 +155,8 @@ void ImportASCIIData::dataCheck()
   QString inputFilePath = wizardData.inputFilePath;
   QStringList headers = wizardData.dataHeaders;
   QStringList dataTypes = wizardData.dataTypes;
-  int numLines = wizardData.numberOfLines;
-  int beginIndex = wizardData.beginIndex;
+//  int numLines = wizardData.numberOfLines;
+//  int beginIndex = wizardData.beginIndex;
   QVector<size_t> tDims = wizardData.tupleDims;
   QVector<size_t> cDims(1, 1);
 

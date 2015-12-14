@@ -32,13 +32,14 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
+#include <cmath>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/Common/FilterPipeline.h"
@@ -208,7 +209,7 @@ void ConvertType()
     {
       if (outputType == DREAM3D::TypeNames::Double || outputType == DREAM3D::TypeNames::Float)
       {
-        long absValue = abs(outputDoubleVector[i] - resultsRaw[i]);
+        double absValue = std::fabs(outputDoubleVector[i] - static_cast<double>(resultsRaw[i]) );
         DREAM3D_REQUIRED(absValue, < , 0.01)
       }
       else
@@ -284,11 +285,11 @@ void ConvertType()
     DREAM3D_REQUIRE_EQUAL(results->getSize(), inputScientificNotation.size())
 
     O* resultsRaw = results->getPointer(0);
-    for (int i = 0; i < results->getSize(); i++)
+    for (size_t i = 0; i < results->getSize(); i++)
     {
       if (outputType == DREAM3D::TypeNames::Double || outputType == DREAM3D::TypeNames::Float)
       {
-        long absValue = abs(outputDoubleVector[i] - resultsRaw[i]);
+        double absValue = fabs(outputDoubleVector[i] - static_cast<double>(resultsRaw[i]));
         DREAM3D_REQUIRED(absValue, < , 0.01)
       }
       else
