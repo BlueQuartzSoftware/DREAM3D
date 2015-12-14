@@ -99,7 +99,6 @@ namespace TemplateHelpers
   else\
   {\
     observableObj->notifyErrorMessage(#templateName, "The input array was of unsupported type", TemplateHelpers::Errors::UnsupportedType);\
-    return;\
   }
 
 #define EXECUTE_TEMPLATE(observableObj, templateName, inputData, ...)\
@@ -161,7 +160,6 @@ namespace TemplateHelpers
   else\
   {\
     observableObj->notifyErrorMessage(#templateName, "The input array was of unsupported type", TemplateHelpers::Errors::UnsupportedType);\
-    return;\
   }
 
   /**
