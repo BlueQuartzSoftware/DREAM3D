@@ -7,7 +7,11 @@ set(${PLUGIN_NAME}_Widgets_UIS "")
 # --------------------------------------------------------------------
 # List the Classes here that are QWidget Derived Classes
 set(DREAM3D_WIDGETS
- #    SomeGeneralReusableWidget
+  
+)
+
+set(DREAM3D_WIDGETS_NO_UI
+    
 )
 
 foreach(FPW ${DREAM3D_WIDGETS})
@@ -22,6 +26,15 @@ foreach(FPW ${DREAM3D_WIDGETS})
     )
 endforeach()
 
+foreach(FPW ${DREAM3D_WIDGETS_NO_UI})
+  set(${PLUGIN_NAME}_Widgets_HDRS ${${PLUGIN_NAME}_Widgets_HDRS}
+    ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/${FPW}.h
+    )
+  set(${PLUGIN_NAME}_Widgets_SRCS ${${PLUGIN_NAME}_Widgets_SRCS}
+    ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/${FPW}.cpp
+    )
+endforeach()
+
 # Add in the remaining sources that are actually widgets but are completely Custom and do NOT use private
 # inheritance through a .ui file
 set(${PLUGIN_NAME}_Widgets_HDRS
@@ -31,19 +44,22 @@ set(${PLUGIN_NAME}_Widgets_SRCS
   ${${PLUGIN_NAME}_Widgets_SRCS}
 )
 
+include_directories( ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets )
 
 # Organize the Source files for things like Visual Studio and Xcode
-cmp_IDE_SOURCE_PROPERTIES( "${PLUGIN_NAME}/Widgets" "${${PLUGIN_NAME}_Widgets_HDRS}" "${${PLUGIN_NAME}_Widgets_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "Widgets" "${${PLUGIN_NAME}_Widgets_HDRS}" "${${PLUGIN_NAME}_Widgets_SRCS}" "0")
 
 # Organize the Source files for things like Visual Studio and Xcode
-cmp_IDE_GENERATED_PROPERTIES("${PLUGIN_NAME}/Widgets/UI_Files" "${${PLUGIN_NAME}_Widgets_UIS}" "")
+cmp_IDE_GENERATED_PROPERTIES("Widgets/UI_Files" "${${PLUGIN_NAME}_Widgets_UIS}" "")
+
+QT5_WRAP_CPP( ${PLUGIN_NAME}_Widgets_Generated_MOC_SRCS ${${PLUGIN_NAME}_Widgets_HDRS} )
 
 # --------------------------------------------------------------------
 # We are using CMake's AuotMoc feature so we do not need to wrap our .cpp files with a specific call to 'moc'
 
 # These generated moc files will be #include in the FilterWidget source file that
 # are generated so we need to tell the build system to NOT compile these files
-set_source_files_properties( ${${PLUGIN_NAME}_Widgets_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
+# set_source_files_properties( ${${PLUGIN_NAME}_Widgets_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 # --------------------------------------------------------------------
 # -- Run UIC on the necessary files

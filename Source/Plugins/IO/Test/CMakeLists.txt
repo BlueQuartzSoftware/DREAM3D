@@ -55,3 +55,9 @@ AddDREAM3DUnitTest(TESTNAME ExportDataTest
                   FOLDER "${PLUGIN_NAME}Plugin/Test"
                   LINK_LIBRARIES ${${PLUGIN_NAME}_Link_Libs})
 
+
+AddDREAM3DUnitTest(TESTNAME ImportASCIIDataTest 
+				  SOURCES ${${PLUGIN_NAME}Test_SOURCE_DIR}/ImportASCIIDataTest.cpp
+				  FOLDER "${PLUGIN_NAME}Plugin/Test" 
+				  LINK_LIBRARIES ${${PLUGIN_NAME}_Link_Libs})
+

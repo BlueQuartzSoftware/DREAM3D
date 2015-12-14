@@ -192,6 +192,23 @@ int H5FilterParametersWriter::writeValue(const QString name, const QVector<QStri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int H5FilterParametersWriter::writeValue(const QString name, const QStringList value)
+{
+  int vectorSize = value.size();
+  int err = QH5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
+  for (int i = 0; i < vectorSize; i++)
+  {
+    QString ss = QString::number(i, 10);
+    err = QH5Lite::writeStringAttribute(m_CurrentGroupId, name, ss, value[i]);
+    ss.clear();
+  }
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int H5FilterParametersWriter::writeValue(const QString name, int8_t value)
 {
   int err = 0;

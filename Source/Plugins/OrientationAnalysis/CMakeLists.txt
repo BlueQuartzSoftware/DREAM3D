@@ -122,7 +122,6 @@ if(UNIX AND NOT APPLE)
   set_source_files_properties(${${PLUGIN_NAME}_Project_SRCS} PROPERTIES COMPILE_FLAGS -fPIC)
 endif()
 
-
 # --------------------------------------------------------------------
 # These headers will be MOC'ed by the build system. They should all inherit from QObject
 # --------------------------------------------------------------------

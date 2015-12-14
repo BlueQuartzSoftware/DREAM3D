@@ -85,6 +85,7 @@ class SIMPLib_EXPORT AbstractFilterParametersReader
 
     virtual QString readString(const QString name, QString value) = 0;
     virtual QVector<QString> readStrings(const QString name, QVector<QString> value) = 0;
+    virtual QStringList readStringList(const QString name, QStringList value) = 0;
 
     virtual int8_t readValue(const QString name, int8_t value) = 0;
     virtual int16_t readValue(const QString name, int16_t value) = 0;
