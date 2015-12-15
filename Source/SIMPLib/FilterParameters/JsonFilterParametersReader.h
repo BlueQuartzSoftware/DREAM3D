@@ -113,6 +113,7 @@ class SIMPLib_EXPORT JsonFilterParametersReader : public AbstractFilterParameter
 
     virtual QString readString(const QString name, QString value);
     virtual QVector<QString> readStrings(const QString name, QVector<QString> value);
+    virtual QStringList readStringList(const QString name, QStringList value);
 
     virtual int8_t readValue(const QString name, int8_t value);
     virtual int16_t readValue(const QString name, int16_t value);

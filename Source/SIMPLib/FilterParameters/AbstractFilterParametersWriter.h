@@ -87,6 +87,7 @@ class SIMPLib_EXPORT AbstractFilterParametersWriter
 
     virtual int writeValue(const QString name, const QString value) = 0;
     virtual int writeValue(const QString name, const QVector<QString> value) = 0;
+    virtual int writeValue(const QString name, const QStringList value) = 0;
 
     virtual int writeValue(const QString name, int8_t value) = 0;
     virtual int writeValue(const QString name, int16_t value) = 0;

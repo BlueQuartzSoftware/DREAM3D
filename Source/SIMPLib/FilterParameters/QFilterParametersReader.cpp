@@ -258,6 +258,32 @@ QVector<QString> QFilterParametersReader::readStrings(const QString name, QVecto
   return values;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QStringList QFilterParametersReader::readStringList(const QString name, QStringList value)
+{
+  Q_ASSERT(m_Prefs != NULL);
+  if (m_Prefs->contains(name) == false)
+  {
+    return value;
+  }
+
+  QString data = m_Prefs->value(name).toByteArray();
+  if (data.size() == 0)
+  {
+    return value;
+  }
+
+  QStringList values;
+  // Parse the space delimited values
+  QList<QString> tokens = data.split('|');
+  for (qint32 i = 0; i < tokens.size(); ++i)
+  {
+    values.push_back(tokens.at(i).trimmed());
+  }
+  return values;
+}
 
 // -----------------------------------------------------------------------------
 //

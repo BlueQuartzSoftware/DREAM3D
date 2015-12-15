@@ -230,6 +230,27 @@ QVector<QString> H5FilterParametersReader::readStrings(const QString name, QVect
   return value;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QStringList H5FilterParametersReader::readStringList(const QString name, QStringList value)
+{
+  int vectorSize = 0;
+  QString str = "";
+  int err = QH5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
+  if (err < 0)
+  {
+
+  }
+  for (int i = 0; i < vectorSize; i++)
+  {
+    QString ss = QString::number(i, 10);
+    err = QH5Lite::readStringAttribute(m_CurrentGroupId, name, ss, str);
+    value.push_back(str);
+  }
+
+  return value;
+}
 
 // -----------------------------------------------------------------------------
 //

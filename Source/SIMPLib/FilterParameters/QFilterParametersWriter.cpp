@@ -234,6 +234,27 @@ int QFilterParametersWriter::writeValue(const QString name, const QVector<QStrin
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int QFilterParametersWriter::writeValue(const QString name, const QStringList value)
+{
+  int err = 0;
+  QString buf;
+  QTextStream out(&buf);
+  int size = value.size();
+  for (qint32 i = 0; i < size; ++i)
+  {
+    out << value.at(i);
+    if (i < size - 1)
+    {
+      out << " | ";
+    }
+  }
+  m_Prefs->setValue(name, buf);
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int QFilterParametersWriter::writeValue(const QString name, int8_t value)
 {
   int err = 0;
