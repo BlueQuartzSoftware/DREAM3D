@@ -161,7 +161,7 @@
         <property name="styleSheet">
          <string notr="true">QHeaderView
 {
-	font-weight: bold;
+  font-weight: bold;
 }</string>
         </property>
         <property name="selectionMode">
@@ -425,7 +425,7 @@
   <customwidget>
    <class>TupleTableWidget</class>
    <extends>QWidget</extends>
-   <header location="global">tupletablewidget.h</header>
+   <header location="global">TupleTableWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
