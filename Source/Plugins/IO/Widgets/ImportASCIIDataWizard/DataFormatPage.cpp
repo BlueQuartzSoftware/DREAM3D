@@ -165,8 +165,6 @@ void DataFormatPage::on_startRowSpin_valueChanged(int value)
   bool spaceAsDelimiter = field("spaceAsDelimiter").toBool();
   bool consecutiveDelimiters = field("consecutiveDelimiters").toBool();
 
-  ASCIIDataModel* model = ASCIIDataModel::Instance();
-
   QStringList lines = ImportASCIIDataWizard::ReadLines(m_InputFilePath, value, ImportASCIIDataWizard::TotalPreviewLines);
   ImportASCIIDataWizard::LoadOriginalLines(lines);
 
