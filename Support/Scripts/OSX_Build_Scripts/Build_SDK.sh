@@ -69,7 +69,6 @@ tar -xvzf ${SDK_INSTALL}/$CMAKE_FOLDER_NAME.tar.gz
 # Get CMake on our path
 export PATH=$PATH:${SDK_INSTALL}/$CMAKE_FOLDER_NAME/CMake.app/Contents/bin
 
-
 #-------------------------------------------------
 # Create the DREAM3D_SKD.cmake file, but back up any existing one first
 if [ -e "$SDK_INSTALL/DREAM3D_SDK.cmake" ]
@@ -109,6 +108,29 @@ echo "set(DREAM3D_SDK_ROOT \"$SDK_INSTALL\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake
 echo "set(DREAM3D_DATA_DIR \${DREAM3D_SDK_ROOT}/DREAM3D_Data CACHE PATH \"\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 
 
+
+
+#------------------------------------------------------------------------------
+# Ensure the user has a valid Qt 5.5.1 installation
+if [ ! -e "$SDK_PARENT/$SDK_FOLDER_NAME/$QT_INSTALL_DIR/$QT_BIN_DIR/qmake" ];
+  then
+  echo "qmake was NOT found in $SDK_PARENT/$QT_INSTALL_DIR/$QT_BIN_DIR/ directory."
+  echo "This indicates a potentially broken DREAM3D_SDK installation. Have you installed"
+  echo "Qt 5.5.1 from the following location:"
+  echo "$QT_PREBUILT_BINARY_DOWNLOAD"
+  echo "During installation please set the installation directory to:"
+  echo "/Users/Shared/DREAM3D_SDK/Qt5.5.1"
+  exit 1
+fi
+
+# Write out the Qt5 directory/installation
+echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "#--------------------------------------------------------------------------------------------------" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "# Qt $QT_VERSION Library" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "set(Qt5_DIR \"\${DREAM3D_SDK_ROOT}/$QT_INSTALL_DIR/lib/cmake/Qt5\" CACHE PATH \"\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+
+
+
 # Change Directory back to our original Script Directory
 cd $SCRIPT_DIR
 
@@ -135,8 +157,7 @@ ${SCRIPT_DIR}/Build_ITK.sh
 $SCRIPT_DIR/FixITK.sh $SDK_INSTALL/${ITK_INSTALL}-Debug 
 $SCRIPT_DIR/FixITK.sh $SDK_INSTALL/${ITK_INSTALL}-Release 
 
-# Build Qt 5.5 :: THIS WILL TAKE A FEW HOURS TO COMPLETE!!!!
-${SCRIPT_DIR}/Build_Qt.sh
+
 
 # Build Qwt
 ${SCRIPT_DIR}/Build_Qwt.sh
