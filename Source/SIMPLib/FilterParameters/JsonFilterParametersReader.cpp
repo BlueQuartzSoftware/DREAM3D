@@ -335,6 +335,30 @@ QVector<QString> JsonFilterParametersReader::readStrings(const QString name, QVe
   return vector;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QStringList JsonFilterParametersReader::readStringList(const QString name, QStringList value)
+{
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  if (m_CurrentFilterIndex.contains(name) == false)
+  {
+    return value;
+  }
+
+  QJsonArray jsonArray = m_CurrentFilterIndex.value(name).toArray();
+  QStringList vector;
+  for (QJsonArray::iterator iter = jsonArray.begin(); iter != jsonArray.end(); ++iter)
+  {
+    if ((*iter).isString())
+    {
+      QString str = (*iter).toString();
+      vector.push_back(str);
+    }
+  }
+
+  return vector;
+}
 
 // -----------------------------------------------------------------------------
 //

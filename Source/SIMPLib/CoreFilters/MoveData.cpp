@@ -196,7 +196,7 @@ void MoveData::dataCheck()
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
-    else if (daSrcAttributeMatrix->getName() == daDestAttributeMatrix->getName())
+    else if (amSrcPath == amDestPath)
     {
       QString ss = QObject::tr("The source and destination Attribute Matrix are the same.  Is this what you meant to do?");
       notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());

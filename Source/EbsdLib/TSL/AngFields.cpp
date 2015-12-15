@@ -60,11 +60,11 @@ QVector<QString> AngFields::getFieldNames()
   features.push_back(Ebsd::Ang::Phi1);
   features.push_back(Ebsd::Ang::Phi);
   features.push_back(Ebsd::Ang::Phi2);
+  features.push_back(Ebsd::Ang::XPosition);
+  features.push_back(Ebsd::Ang::YPosition);
   features.push_back(Ebsd::Ang::ImageQuality);
   features.push_back(Ebsd::Ang::ConfidenceIndex);
   features.push_back(Ebsd::Ang::PhaseData);
-  features.push_back(Ebsd::Ang::XPosition);
-  features.push_back(Ebsd::Ang::YPosition);
   features.push_back(Ebsd::Ang::SEMSignal);
   features.push_back(Ebsd::Ang::Fit);
 

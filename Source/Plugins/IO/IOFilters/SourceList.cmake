@@ -36,6 +36,7 @@ set(_PublicFilters
   WriteTriangleGeometry
 
   VtkRectilinearGridWriter
+  ImportASCIIData
 )
 
 #--------------

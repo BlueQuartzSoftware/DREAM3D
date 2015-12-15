@@ -225,6 +225,25 @@ int JsonFilterParametersWriter::writeValue(const QString name, const QVector<QSt
   return err;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int JsonFilterParametersWriter::writeValue(const QString name, const QStringList value)
+{
+  int err = 0;
+
+  QJsonArray jsonArray;
+
+  foreach(QString str, value)
+  {
+    jsonArray << QJsonValue(str);
+  }
+
+  m_CurrentFilterIndex[name] = jsonArray;
+
+  return err;
+}
+
 
 // -----------------------------------------------------------------------------
 //
