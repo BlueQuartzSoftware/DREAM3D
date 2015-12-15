@@ -36,6 +36,11 @@
   <file>cube_blue_add.png</file>
   <file>cube_blue_add@2x.png</file>
 
+  <file>arrow_down_green.png</file>
+  <file>arrow_down_green@2x.png</file>
+  <file>arrow_up_green.png</file>
+  <file>arrow_up_green@2x.png</file>
+
 <!-- These are low res icons -->
   <file>Groups/cubes.png</file>
   <file>Groups/cubes@2x.png</file>

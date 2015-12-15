@@ -125,12 +125,25 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>3457</width>
-         <height>3457</height>
+         <width>24</width>
+         <height>24</height>
         </size>
        </property>
        <property name="text">
-        <string>Up</string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../Resources/icons/images/Icons.qrc">
+         <normaloff>:/arrow_up_green.png</normaloff>:/arrow_up_green.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>24</width>
+         <height>24</height>
+        </size>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -144,12 +157,25 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>3547</width>
-         <height>3457</height>
+         <width>24</width>
+         <height>24</height>
         </size>
        </property>
        <property name="text">
-        <string>Down</string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../Resources/icons/images/Icons.qrc">
+         <normaloff>:/arrow_down_green.png</normaloff>:/arrow_down_green.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>24</width>
+         <height>24</height>
+        </size>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -170,6 +196,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
+ </resources>
  <connections/>
 </ui>
