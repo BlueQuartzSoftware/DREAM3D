@@ -187,6 +187,7 @@ void ConvertType()
   data.inputFilePath = UnitTest::ImportASCIIDataTest::TestFile1;
   data.isFixedWidth = false;
   data.numberOfLines = 10;
+  data.tupleDims = QVector<size_t>(1, 10);
 
   // Test Using Expected Input - Double/Float
   {
@@ -333,6 +334,7 @@ void ConvertType()
     CreateFile(UnitTest::ImportASCIIDataTest::TestFile1, inputOctVector, delimiter);
 
     data.numberOfLines = 7;
+    data.tupleDims = QVector<size_t>(1, 7);
     AbstractFilter::Pointer importASCIIData = PrepFilter(data);
     DREAM3D_REQUIRE_NE(importASCIIData.get(), NULL)
 
@@ -360,6 +362,7 @@ void ConvertType()
     CreateFile(UnitTest::ImportASCIIDataTest::TestFile1, inputMaxVector, delimiter);
 
     data.numberOfLines = 1;
+    data.tupleDims = QVector<size_t>(1, 1);
     AbstractFilter::Pointer importASCIIData = PrepFilter(data);
     DREAM3D_REQUIRE_NE(importASCIIData.get(), NULL)
 
@@ -395,6 +398,7 @@ void ConvertType()
     CreateFile(UnitTest::ImportASCIIDataTest::TestFile1, inputMinVector, delimiter);
 
     data.numberOfLines = 1;
+    data.tupleDims = QVector<size_t>(1, 1);
     AbstractFilter::Pointer importASCIIData = PrepFilter(data);
     DREAM3D_REQUIRE_NE(importASCIIData.get(), NULL)
 
