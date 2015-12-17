@@ -53,8 +53,8 @@
 DataContainerCreationWidget::DataContainerCreationWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   FilterParameterWidget(parameter, filter, parent)
 {
-  m_FilterParameter = dynamic_cast<StringFilterParameter*>(parameter);
-  Q_ASSERT_X(m_FilterParameter != NULL, "NULL Pointer", "DataContainerCreationWidget can ONLY be used with a StringFilterParameter object");
+  m_FilterParameter = dynamic_cast<DataContainerCreationFilterParameter*>(parameter);
+  Q_ASSERT_X(m_FilterParameter != NULL, "NULL Pointer", "DataContainerCreationWidget can ONLY be used with a DataContainerCreationFilterParameter object");
 
   setupUi(this);
   setupGui();
@@ -82,6 +82,9 @@ void DataContainerCreationWidget::setupGui()
   blockSignals(false);
 
   applyChangesBtn->setVisible(false);
+
+  // Do not allow the user to put a forward slash into the dataContainerName line edit
+  dataContainerName->setValidator(new QRegularExpressionValidator(QRegularExpression("[^/]*"), this));
 
   // Catch when the filter is about to execute the preflight
   connect(getFilter(), SIGNAL(preflightAboutToExecute()),

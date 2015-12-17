@@ -46,7 +46,7 @@
 #include "QtSupportLib/FaderWidget.h"
 
 #include "SIMPLib/Common/AbstractFilter.h"
-#include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
@@ -100,7 +100,7 @@ class DREAM3DWidgetsLib_EXPORT DataContainerCreationWidget : public FilterParame
 
     bool m_DidCausePreflight;
 
-    StringFilterParameter* m_FilterParameter;
+    DataContainerCreationFilterParameter*                 m_FilterParameter;
 
     DataContainerCreationWidget(const DataContainerCreationWidget&); // Copy Constructor Not Implemented
     void operator=(const DataContainerCreationWidget&); // Operator '=' Not Implemented
