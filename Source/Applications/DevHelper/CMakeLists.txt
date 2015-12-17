@@ -76,6 +76,7 @@ set(DevHelper_CodeGenerator_HDRS
   ${DevHelper_SOURCE_DIR}/CodeGenerators/DataArraySelectionWidgetCodeGenerator.h
   ${DevHelper_SOURCE_DIR}/CodeGenerators/DataBundleSelectionWidgetCodeGenerator.h
   ${DevHelper_SOURCE_DIR}/CodeGenerators/DataContainerArrayProxyWidgetCodeGenerator.h
+  ${DevHelper_SOURCE_DIR}/CodeGenerators/DataContainerCreationWidgetCodeGenerator.h
   ${DevHelper_SOURCE_DIR}/CodeGenerators/DataContainerReaderWidgetCodeGenerator.h
   ${DevHelper_SOURCE_DIR}/CodeGenerators/DataContainerSelectionWidgetCodeGenerator.h
   ${DevHelper_SOURCE_DIR}/CodeGenerators/DoubleWidgetCodeGenerator.h
@@ -114,6 +115,7 @@ set(DevHelper_CodeGenerator_SRCS
   ${DevHelper_SOURCE_DIR}/CodeGenerators/DataArraySelectionWidgetCodeGenerator.cpp
   ${DevHelper_SOURCE_DIR}/CodeGenerators/DataBundleSelectionWidgetCodeGenerator.cpp
   ${DevHelper_SOURCE_DIR}/CodeGenerators/DataContainerArrayProxyWidgetCodeGenerator.cpp
+  ${DevHelper_SOURCE_DIR}/CodeGenerators/DataContainerCreationWidgetCodeGenerator.cpp
   ${DevHelper_SOURCE_DIR}/CodeGenerators/DataContainerReaderWidgetCodeGenerator.cpp
   ${DevHelper_SOURCE_DIR}/CodeGenerators/DataContainerSelectionWidgetCodeGenerator.cpp
   ${DevHelper_SOURCE_DIR}/CodeGenerators/DoubleWidgetCodeGenerator.cpp
