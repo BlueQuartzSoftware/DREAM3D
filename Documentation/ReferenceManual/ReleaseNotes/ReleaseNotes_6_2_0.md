@@ -10,6 +10,21 @@ Users:[https://groups.google.com/forum/?/dream3d-users#!forum/dream3d-users](htt
 
 Developers:[https://groups.google.com/forum/?hl=en#!forum/dream3d-developers](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
+## Version 6.2.XXX ##
++ Added **Filter** "Import ASCII Data", which implements a generic text reader to import data into DREAM.3D.  The **Filter** utilizes a wizard to guide the user through importing their column-oriented ASCII data.
++ Added **Filter** "Find GBCD (Metric-Based Approach)" from contributor K. Glowinski.
++ Added **Filter** "Combine Attribute Matrices" from contributor M. Groeber.
++ The "Import Images (3D Stack)" **Filter** should now correctly recognize the number of pixel bytes in the incoming images.
++ **Pipeline** files written on Windows should no longer use escaped forward slashes in paths.  This allows for better sharing of **Pipelines** across operating systems.
++ Fix incorrect documentation on file formats for the "Pack Primary Phases" and "Insert Precipitate Phases" **Filters**.
++ Revert change to packing routine in "Insert Precipitate Phases" **Filter** that made particles unable to overlap, which prevented reaching large volume fractions of precipitates.  The **Filter** now functions the same as in version 4 of DREAM.3D.
+
+### Developer Notes ###
++ The DREAM.3D SDK has been update to support C++11.  Developers are now free to use C++11 compliant code.
++ Shared pointers now use C++11 shared pointers instead of boost shared pointers.
++ **Plugins** that link agains the ITK library now link agains the SimpleITKExplicit library instead.  This fixes potential address space issues when using multiple dynamically loaded libraries that may link agains ITK.
++ **Filters** should now implement their own versions for compiled library names, branding strings, and version numbers, instead of using the defaults from AbstractFilter.
+
 ## Version 6.2.63 ##
 + Version 6.2.63 will be the last version to support OS X 10.8. The minimum version of OS X for all future DREAM.3D updates will be 10.9.
 + Fixed incorrect symbolic link creation for OS X builds that prevented documentation windows from properly appearing.
