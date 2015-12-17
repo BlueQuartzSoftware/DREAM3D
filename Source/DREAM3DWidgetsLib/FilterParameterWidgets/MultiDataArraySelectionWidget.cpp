@@ -243,14 +243,11 @@ void MultiDataArraySelectionWidget::populateComboBoxes()
     attributeMatrixCombo->setCurrentIndex(amIndex);
     FilterPararameterWidgetUtils::PopulateAttributeArrayList<MultiDataArraySelectionFilterParameter, QListWidget>
             (getFilter(), getFilterParameter(), dataContainerCombo, attributeMatrixCombo, attributeArraysSelectWidget, m_DcaProxy, selectedPaths);
-    for (int i = 0; i < attributeArraysSelectWidget->count(); i++)
+    for (int i = 0; i < selectedPaths.size(); i++)
     {
-      QListWidgetItem* item = attributeArraysSelectWidget->item(i);
-      if (item->checkState() == Qt::Checked)
-      {
-        QListWidgetItem* itemCopy = new QListWidgetItem(item->text());
-        attributeArraysOrderWidget->addItem(itemCopy);
-      }
+      DataArrayPath dap = selectedPaths[i];
+      QListWidgetItem* item = new QListWidgetItem(dap.getDataArrayName());
+      attributeArraysOrderWidget->addItem(item);
     }
 
   }
@@ -356,6 +353,10 @@ void MultiDataArraySelectionWidget::on_upBtn_pressed()
     QListWidgetItem* item = attributeArraysOrderWidget->takeItem(currentIndex);
     attributeArraysOrderWidget->insertItem(currentIndex - 1, item);
     attributeArraysOrderWidget->setCurrentRow(currentIndex - 1);
+
+    m_DidCausePreflight = true;
+    emit parametersChanged();
+    m_DidCausePreflight = false;
   }
 }
 
@@ -371,6 +372,10 @@ void MultiDataArraySelectionWidget::on_downBtn_pressed()
     QListWidgetItem* item = attributeArraysOrderWidget->takeItem(currentIndex);
     attributeArraysOrderWidget->insertItem(currentIndex + 1, item);
     attributeArraysOrderWidget->setCurrentRow(currentIndex + 1);
+
+    m_DidCausePreflight = true;
+    emit parametersChanged();
+    m_DidCausePreflight = false;
   }
 }
 
