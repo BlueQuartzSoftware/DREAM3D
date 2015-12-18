@@ -162,6 +162,8 @@ void MultiDataArraySelectionWidget::populateComboBoxes()
     return;
   }
 
+  attributeArraysOrderWidget->clear();
+
   // Grab what is currently selected
   QString curDcName = dataContainerCombo->currentText();
   QString curAmName = attributeMatrixCombo->currentText();
