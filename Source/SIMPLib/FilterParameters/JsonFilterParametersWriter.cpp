@@ -157,6 +157,14 @@ int JsonFilterParametersWriter::WritePipelineToFile(FilterPipeline::Pointer pipe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QString JsonFilterParametersWriter::WritePipelineToString(FilterPipeline::Pointer pipeline, QString name, IObserver* obs)
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int JsonFilterParametersWriter::openFilterGroup(AbstractFilter* filter, int index)
 {
   m_CurrentIndex = index;
