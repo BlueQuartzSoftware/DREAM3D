@@ -70,48 +70,60 @@ JsonFilterParametersWriter::JsonFilterParametersWriter(QString& fileName, QStrin
 // -----------------------------------------------------------------------------
 JsonFilterParametersWriter::~JsonFilterParametersWriter()
 {
-  QFile outputFile(getFileName());
-  QFileInfo info(outputFile);
-  QString parentPath = info.absolutePath();
-  QDir parentDir(parentPath);
-
-  if (parentDir.exists() == false)
+  if (m_FileName.isEmpty() == false)
   {
-    parentDir.mkpath(parentPath);
-  }
+    QFile outputFile(m_FileName);
+    QFileInfo info(outputFile);
+    QString parentPath = info.absolutePath();
+    QDir parentDir(parentPath);
 
-  // Write our File Version and DREAM3D Version strings
-  QJsonObject meta;
-  meta[DREAM3D::Settings::PipelineName] = m_PipelineName;
-  meta[DREAM3D::Settings::Version] = SIMPLib::Version::Package();
+    if (parentDir.exists() == false)
+    {
+      parentDir.mkpath(parentPath);
+    }
 
-  if (m_Root.size() > 0)
-  {
-    meta[DREAM3D::Settings::NumFilters] = m_CurrentIndex + 1;
-  }
-  else
-  {
-    meta[DREAM3D::Settings::NumFilters] = 0;
-  }
+    QJsonDocument doc = toDocument();
 
-  m_Root[DREAM3D::Settings::PipelineBuilderGroup] = meta;
-  QJsonDocument doc(m_Root);
-
-  if (outputFile.exists() == true)
-  {
-    outputFile.remove();
-  }
-  if (outputFile.open(QIODevice::WriteOnly))
-  {
-    outputFile.write(doc.toJson());
-    outputFile.close();
+    if (outputFile.exists() == true)
+    {
+      outputFile.remove();
+    }
+    if (outputFile.open(QIODevice::WriteOnly))
+    {
+      outputFile.write(doc.toJson());
+      outputFile.close();
+    }
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int JsonFilterParametersWriter::WritePipelineToFile(FilterPipeline::Pointer pipeline, QString filePath, QString name, IObserver* obs)
+int JsonFilterParametersWriter::WritePipelineToFile(FilterPipeline::Pointer pipeline, QString filePath, QString pipelineName, IObserver* obs)
+{
+  JsonFilterParametersWriter::Pointer writer = CreateAndPopulateWriter(pipeline, pipelineName, obs);
+  writer->setFileName(filePath);
+
+  return 0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString JsonFilterParametersWriter::WritePipelineToString(FilterPipeline::Pointer pipeline, QString pipelineName, IObserver* obs)
+{
+  JsonFilterParametersWriter::Pointer writer = CreateAndPopulateWriter(pipeline, pipelineName, obs);
+
+  QJsonDocument doc = writer->toDocument();
+  QString contents = QString::fromStdString(doc.toJson().toStdString());
+
+  return contents;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+JsonFilterParametersWriter::Pointer JsonFilterParametersWriter::CreateAndPopulateWriter(FilterPipeline::Pointer pipeline, QString pipelineName, IObserver* obs)
 {
   if (NULL == pipeline.get())
   {
@@ -120,15 +132,14 @@ int JsonFilterParametersWriter::WritePipelineToFile(FilterPipeline::Pointer pipe
       PipelineMessage pm(JsonFilterParametersWriter::ClassName(), "FilterPipeline Object was NULL for writing", -1, PipelineMessage::Error);
       obs->processPipelineMessage(pm);
     }
-    return -1;
+    return JsonFilterParametersWriter::NullPointer();
   }
 
-  QFileInfo fileInfo(filePath);
+  QFileInfo info(pipelineName);
 
   // WRITE THE PIPELINE TO THE JSON FILE
   JsonFilterParametersWriter::Pointer writer = JsonFilterParametersWriter::New();
-  writer->setFileName(filePath);
-  writer->setPipelineName(fileInfo.completeBaseName());
+  writer->setPipelineName(info.completeBaseName());
 
   FilterPipeline::FilterContainerType& filters = pipeline->getFilterContainer();
 
@@ -151,7 +162,34 @@ int JsonFilterParametersWriter::WritePipelineToFile(FilterPipeline::Pointer pipe
     }
   }
 
-  return 0;
+  return writer;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QJsonDocument JsonFilterParametersWriter::toDocument()
+{
+  // Write our File Version and DREAM3D Version strings
+  QJsonObject meta;
+  meta[DREAM3D::Settings::PipelineName] = m_PipelineName;
+  meta[DREAM3D::Settings::Version] = SIMPLib::Version::Package();
+
+  if (m_Root.size() > 0)
+  {
+    meta[DREAM3D::Settings::NumFilters] = m_CurrentIndex + 1;
+  }
+  else
+  {
+    meta[DREAM3D::Settings::NumFilters] = 0;
+  }
+
+  m_Root[DREAM3D::Settings::PipelineBuilderGroup] = meta;
+  QJsonDocument doc(m_Root);
+
+  m_Root.remove(DREAM3D::Settings::PipelineBuilderGroup);
+
+  return doc;
 }
 
 // -----------------------------------------------------------------------------
