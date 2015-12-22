@@ -85,16 +85,22 @@ void DoubleWidget::setupGui()
   connect(value, SIGNAL(textChanged(const QString&)),
           this, SLOT(widgetChanged(const QString&)));
 
+  QLocale loc = QLocale::system();
+
   QDoubleValidator* xVal = new QDoubleValidator(value);
   value->setValidator(xVal);
-  xVal->setLocale(QLocale::system());
+  xVal->setLocale(loc);
+
 
   if (getFilterParameter() != NULL)
   {
     label->setText(getFilterParameter()->getHumanLabel() );
+      bool ok = false;
 
+    double d =  getFilter()->property(PROPERTY_NAME_AS_CHAR).toDouble(&ok);
+    QString str = loc.toString(d);
 
-    QString str = getFilter()->property(PROPERTY_NAME_AS_CHAR).toString();
+  //  QString str = getFilter()->property(PROPERTY_NAME_AS_CHAR).toString();
     value->setText(str);
   }
 
@@ -116,18 +122,19 @@ void DoubleWidget::filterNeedsInputParameters(AbstractFilter* filter)
   bool ok = true;
   double defValue = getFilterParameter()->getDefaultValue().toDouble();
   double i = defValue;
-
+  QLocale loc;
   // Next make sure there is something in the
   if (!value->text().isEmpty())
   {
-    i = value->text().toDouble(&ok);
+    i = loc.toDouble(value->text(), &ok);
+    //i = value->text().toDouble(&ok);
     //  make sure we can convert the entered value to a 32 bit signed int
     if (!ok)
     {
-//      errorLabel->setStyleSheet(QString::fromLatin1("color: rgb(255, 0, 0);"));
-//      errorLabel->setText("Value entered is beyond the representable range for a double. The filter will use the default value of " + getFilterParameter()->getDefaultValue().toString());
-//      errorLabel->show();
-//      DREAM3DStyles::LineEditErrorStyle(value);
+      errorLabel->setStyleSheet(QString::fromLatin1("color: rgb(255, 0, 0);"));
+      errorLabel->setText("Value entered is beyond the representable range for a double.\nThe filter will use the default value of " + getFilterParameter()->getDefaultValue().toString());
+      errorLabel->show();
+      DREAM3DStyles::LineEditErrorStyle(value);
       i = defValue;
     }
     else
