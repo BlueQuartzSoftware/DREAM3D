@@ -103,7 +103,7 @@ FilterPipeline::Pointer JsonFilterParametersReader::ReadPipelineFromFile(QString
 FilterPipeline::Pointer JsonFilterParametersReader::ReadPipelineFromString(QString contents, IObserver* obs)
 {
   JsonFilterParametersReader::Pointer reader = JsonFilterParametersReader::New();
-  int err = reader->setPipelineContents(contents);
+  reader->setPipelineContents(contents);
 
   return ReadPipeline(reader, obs);
 }
