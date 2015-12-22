@@ -2,10 +2,12 @@ ImportASCIIData {#importasciidata}
 =============
 
 ## Group (Subgroup) ##
-IO (IO)
+IO (Input)
 
 ## Description ##
-This **Filter** reads ASCII data from any text-based file, and imports the data into DREAM3D-style arrays.  The user uses the filter's wizard to specify which file to import, how the data is formatted, what to call each array, and what type each array should be.
+This **Filter** reads ASCII data from any text-based file and imports the data into DREAM.3D-style arrays.  The user uses the **Filter's** wizard to specify which file to import, how the data is formatted, what to call each array, and what type each array should be.
+
+*Note:* This **Filter** is intended to read data that is column-oriented, such that each created DREAM.3D array corresponds to a column of data in the ASCII file. 
 
 ### Separating the Data ###
 
@@ -26,13 +28,13 @@ On the last page, the user can set the following information:
 + Row index to start the import
 + Header names, either from a line number in the file or manually
 + Tuple dimensions
-+ Column Data Format (choosing the data type or deciding to skip the column)
++ Column data format (choosing the data type or deciding to skip the column)
 
 
 ![Setting Numerical Representations, Column Headers and other information](Import_ASCII_3.png)
 
 
-If the data does not have any headers then the user can set a string value for each column. These values will be used as the name of the **Attribute Array** in DREAM.3D.
+If the data does not have any headers, the user can set a string value for each column. These values will be used as the name of the **Attribute Array** in DREAM.3D.
 
 ![Setting Names of each Column which will be used as the name of each **Attribute Array** ](Import_ASCII_4.png)
 
@@ -47,12 +49,12 @@ Not Applicable
 ## Required Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| **Attribute Matrix** | Attribute Matrix | Any | 1 | The path to the attribute matrix to store the arrays that will be imported |
+| **Attribute Matrix** | None | Any | 1 | The path to the attribute matrix to store the arrays that will be imported |
 
 ## Created Objects ##
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| One or more **Element/Feature/Ensemble/etc. Attribute Array** | N/A (named by user in wizard) | N/A (chosen by user in wizard) | 1 | One or more arrays that are created due to importing ASCII data via the wizard |
+| One or more **Element/Feature/Ensemble/etc. Attribute Array** | None | Any | 1 | One or more arrays that are created due to importing ASCII data via the wizard |
 
 ## License & Copyright ##
 

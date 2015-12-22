@@ -846,7 +846,7 @@ class NeighborList : public IDataArray
      * @param grainId
      * @param value
      */
-    void addEntry(int grainId, int value)
+    void addEntry(int grainId, T value)
     {
       if(grainId >= static_cast<int>(m_Array.size()) )
       {
