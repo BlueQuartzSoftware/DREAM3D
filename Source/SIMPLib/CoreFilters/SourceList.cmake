@@ -64,6 +64,7 @@ set(_PublicFilters
   RenameAttributeMatrix
   RenameDataContainer
   ReplaceValueInArray
+  RequiredZThickness
   ScaleVolume
   SetOriginResolutionImageGeom
 )

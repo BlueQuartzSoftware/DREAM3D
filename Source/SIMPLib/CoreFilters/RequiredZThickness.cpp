@@ -34,25 +34,27 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#include "FeatureCountDecision.h"
+#include "RequiredZThickness.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-#include "moc_FeatureCountDecision.cpp"
+#include "moc_RequiredZThickness.cpp"
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FeatureCountDecision::FeatureCountDecision() :
+RequiredZThickness::RequiredZThickness() :
   AbstractDecisionFilter(),
-  m_FeatureIdsArrayPath(" "," "," "),
-  m_MaxGrains(0),
-  m_FeatureIds(NULL)
+  m_DataContainerSelection(""),
+  m_NumVoxels(0),
+  m_PreflightCheck(false)
 {
   setupFilterParameters();
 }
@@ -60,46 +62,49 @@ FeatureCountDecision::FeatureCountDecision() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FeatureCountDecision::~FeatureCountDecision()
+RequiredZThickness::~RequiredZThickness()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FeatureCountDecision::setupFilterParameters()
+void RequiredZThickness::setupFilterParameters()
 {
   FilterParameterVector parameters = getFilterParameters();
-  parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
+
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::CellEnsemble, DREAM3D::Defaults::AnyGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
+    DataContainerSelectionFilterParameter::RequirementType req;
+    parameters.push_back(DataContainerSelectionFilterParameter::New("DataContainer", "DataContainerSelection", getDataContainerSelection(), FilterParameter::RequiredArray, req));
   }
-  parameters.push_back(IntFilterParameter::New("Max Grains", "MaxGrains", getMaxGrains(), FilterParameter::Parameter, 0));
+  parameters.push_back(IntFilterParameter::New("Minimum Z Dimension", "NumVoxels", getNumVoxels(), FilterParameter::Parameter, 0));
+  parameters.push_back(BooleanFilterParameter::New("Preflight Check", "PreflightCheck", getPreflightCheck(), FilterParameter::Parameter));
   setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FeatureCountDecision::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void RequiredZThickness::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   AbstractDecisionFilter::readFilterParameters(reader, index);
   reader->openFilterGroup(this, index);
-  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
-  setMaxGrains(reader->readValue("MaxGrains", getMaxGrains()));
+  setDataContainerSelection(reader->readString("DataContainerSelection", getDataContainerSelection()));
+  setNumVoxels(reader->readValue("MaxGrains", getNumVoxels()));
+  setPreflightCheck(reader->readValue("PreflightCheck", getPreflightCheck()));
   reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FeatureCountDecision::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int RequiredZThickness::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   AbstractDecisionFilter::writeFilterParameters(writer, index);
   writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(MaxGrains)
+  SIMPL_FILTER_WRITE_PARAMETER(NumVoxels)
+  SIMPL_FILTER_WRITE_PARAMETER(PreflightCheck)
+  SIMPL_FILTER_WRITE_PARAMETER(DataContainerSelection)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -107,23 +112,42 @@ int FeatureCountDecision::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FeatureCountDecision::dataCheck()
+void RequiredZThickness::dataCheck()
 {
   setErrorCondition(0);
   if(getErrorCondition() < 0) { return; }
 
-  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
+  DataContainer::Pointer dataContainer = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerSelection());
+  if (getErrorCondition() < 0) { return; }
 
-  QVector<size_t> cDims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (NULL != m_FeatureIdsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  {  m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  ImageGeom::Pointer image = dataContainer->getGeometryAs<ImageGeom>();
+  if( NULL == image.get() )
+  {
+    setErrorCondition(-7789);
+    notifyErrorMessage(getHumanLabel(), "Missing Image Geometry in the selected DataContainer", getErrorCondition());
+    return;
+  }
+
+  size_t dims[3] = { 0, 0, 0 };
+  image->getDimensions(dims);
+
+
+  if (dims[2] < m_NumVoxels && m_PreflightCheck)
+  {
+    setErrorCondition(-7787);
+    notifyErrorMessage(getHumanLabel(), "Number of Z Voxels does not meet required value. ", getErrorCondition());
+  } 
+  else  if (dims[2] < m_NumVoxels && !m_PreflightCheck)
+  {
+    notifyWarningMessage(getHumanLabel(), "Number of Z Voxels does not meet required value during preflight but will be checked during pipeline execution.", getErrorCondition());
+  }
+
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FeatureCountDecision::preflight()
+void RequiredZThickness::preflight()
 {
   setInPreflight(true);
   emit preflightAboutToExecute();
@@ -136,21 +160,28 @@ void FeatureCountDecision::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FeatureCountDecision::execute()
+void RequiredZThickness::execute()
 {
   setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  // Assumes a SINGLE Phase. This WILL BREAK if there is more than 1 phase.
-  qDebug() << "MaxGrains: " << m_MaxGrains;
-  qDebug() << "FeatureIds: " << m_FeatureIds[1];
-  bool dm = true;
-  if (m_MaxGrains < m_FeatureIds[1])
+  DataContainer::Pointer dataContainer = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerSelection());
+  if (getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer image = dataContainer->getGeometryAs<ImageGeom>();
+
+  size_t dims[3] = { 0, 0, 0 };
+  image->getDimensions(dims);
+
+
+  if (dims[2] < m_NumVoxels)
   {
-    dm = false;
+    setErrorCondition(-7788);
+    notifyErrorMessage(getHumanLabel(), "Number of Z Voxels does not meet required value during execution of the filter. ", getErrorCondition());
+    bool needMoreData = true;
+    emit decisionMade(needMoreData);
   }
-  emit decisionMade(dm);
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
@@ -158,9 +189,9 @@ void FeatureCountDecision::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FeatureCountDecision::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer RequiredZThickness::newFilterInstance(bool copyFilterParameters)
 {
-  FeatureCountDecision::Pointer filter = FeatureCountDecision::New();
+  RequiredZThickness::Pointer filter = RequiredZThickness::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -171,7 +202,7 @@ AbstractFilter::Pointer FeatureCountDecision::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureCountDecision::getCompiledLibraryName()
+const QString RequiredZThickness::getCompiledLibraryName()
 {
   return Core::CoreBaseName;
 }
@@ -179,7 +210,7 @@ const QString FeatureCountDecision::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureCountDecision::getGroupName()
+const QString RequiredZThickness::getGroupName()
 {
   return DREAM3D::FilterGroups::CoreFilters;
 }
@@ -187,7 +218,7 @@ const QString FeatureCountDecision::getGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureCountDecision::getSubGroupName()
+const QString RequiredZThickness::getSubGroupName()
 {
   return DREAM3D::FilterSubGroups::MiscFilters;
 }
@@ -195,5 +226,5 @@ const QString FeatureCountDecision::getSubGroupName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureCountDecision::getHumanLabel()
-{ return "Feature Count Decision"; }
+const QString RequiredZThickness::getHumanLabel()
+{ return "Required Z Dimension (Image Geometry)"; }
