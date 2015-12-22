@@ -278,11 +278,23 @@ class SIMPLib_EXPORT DataContainer : public Observable
         }
         return attributeMatrix;
       }
+
+      if (attributeMatrixName.contains('/'))
+      {
+        if (filter)
+        {
+          filter->setErrorCondition(-10002);
+          ss = QObject::tr("The AttributeMatrix '%1' has forward slashes in its name").arg(attributeMatrixName);
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+        }
+        return attributeMatrix;
+      }
+
       if (attributeMatrixName.compare(DREAM3D::Geometry::Geometry) == 0)
       {
         if(filter)
         {
-          filter->setErrorCondition(-10001);
+          filter->setErrorCondition(-10003);
           ss = QObject::tr("%1 is a protected name.  Please provide a different name for this Attribute Matrix.").arg(DREAM3D::Geometry::Geometry);
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
@@ -296,7 +308,7 @@ class SIMPLib_EXPORT DataContainer : public Observable
       }
       else if(filter) // If the filter object is NOT null (is valid) then set the error condition and send an error message
       {
-        filter->setErrorCondition(-10002);
+        filter->setErrorCondition(-10004);
         ss = QObject::tr("An Attribute Matrix already exists with the name %1.").arg(attributeMatrixName);
         filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
       }
