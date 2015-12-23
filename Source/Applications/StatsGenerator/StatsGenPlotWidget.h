@@ -80,7 +80,7 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 
     void setStatisticsType(unsigned int statsType);
     void setDistributionType(unsigned int distributionType, bool updatePlots = true);
-    int getDistributionType() { return m_DistributionType; }
+    uint32_t getDistributionType() { return m_DistributionType; }
     void blockDistributionTypeChanges(bool block);
 
     void setXAxisName(QString name);
