@@ -161,7 +161,7 @@ class VectorSegmentFeatures : public SegmentFeatures
     /**
      * @brief getSeed Reimplemented from @see SegmentFeatures class
      */
-    virtual int64_t getSeed(int32_t gnum);
+    virtual int64_t getSeed(int32_t gnum, int64_t nextSeed);
 
     /**
      * @brief determineGrouping Reimplemented from @see SegmentFeatures class
@@ -174,13 +174,9 @@ class VectorSegmentFeatures : public SegmentFeatures
     DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
     DEFINE_DATAARRAY_VARIABLE(bool, Active)
 
-    BoolArrayType::Pointer m_BeenPickedPtr;
-    bool* m_BeenPicked;
-
     std::shared_ptr<NumberDistribution> m_Distribution;
     std::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;
     std::shared_ptr<Generator> m_NumberGenerator;
-    size_t                       m_TotalRandomNumbersGenerated;
 
     float angleTolerance;
 

@@ -74,8 +74,6 @@ VectorSegmentFeatures::VectorSegmentFeatures() :
   m_GoodVoxels(NULL),
   m_Active(NULL)
 {
-  m_BeenPicked = NULL;
-
   angleTolerance = 0.0f;
 
   setupFilterParameters();
@@ -273,28 +271,26 @@ void VectorSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, int64_t tot
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int64_t VectorSegmentFeatures::getSeed(int32_t gnum)
+int64_t VectorSegmentFeatures::getSeed(int32_t gnum, int64_t nextSeed)
 {
   setErrorCondition(0);
-
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   int64_t seed = -1;
-  Generator& numberGenerator = *m_NumberGenerator;
-  while (seed == -1 && m_TotalRandomNumbersGenerated < totalPoints)
+  // start with the next voxel after the last seed
+  int64_t randpoint = nextSeed + 1;
+  while (seed == -1 && randpoint < totalPoints)
   {
-    // Get the next voxel index in the precomputed list of voxel seeds
-    int64_t randpoint = numberGenerator();
-    if (m_BeenPicked[randpoint] == false) { m_TotalRandomNumbersGenerated++; } // Increment this counter
-    m_BeenPicked[randpoint] = true;
-    if (m_FeatureIds[randpoint] == 0) // If the FeatureId of the voxel is ZERO then we can use this as a seed point
+    if (m_FeatureIds[randpoint] == 0) // If the GrainId of the voxel is ZERO then we can use this as a seed point
     {
       if (m_UseGoodVoxels == false || m_GoodVoxels[randpoint] == true)
       {
         seed = randpoint;
       }
+      else { randpoint += 1; }
     }
+    else { randpoint += 1; }
   }
   if (seed >= 0)
   {
@@ -349,7 +345,6 @@ void VectorSegmentFeatures::initializeVoxelSeedGenerator(const int64_t rangeMin,
   m_RandomNumberGenerator = std::shared_ptr<RandomNumberGenerator>(new RandomNumberGenerator);
   m_NumberGenerator = std::shared_ptr<Generator>(new Generator(*m_RandomNumberGenerator, *m_Distribution));
   m_RandomNumberGenerator->seed(static_cast<size_t>( QDateTime::currentMSecsSinceEpoch() )); // seed with the current time
-  m_TotalRandomNumbersGenerated = 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -368,10 +363,6 @@ void VectorSegmentFeatures::execute()
   updateFeatureInstancePointers();
 
   int64_t totalPoints = static_cast<int64_t>(m_FeatureIdsPtr.lock()->getNumberOfTuples());
-
-  m_BeenPickedPtr = BoolArrayType::CreateArray(totalPoints, "BeenPicked INTERNAL ARRAY ONLY");
-  m_BeenPickedPtr->initializeWithValue(0);
-  m_BeenPicked = m_BeenPickedPtr->getPointer(0);
 
   // Convert user defined tolerance to radians.
   angleTolerance = m_AngleTolerance * SIMPLib::Constants::k_Pi / 180.0f;
