@@ -309,7 +309,7 @@ int64_t EBSDSegmentFeatures::getSeed(int32_t gnum, int64_t nextSeed)
   {
     if (m_FeatureIds[randpoint] == 0) // If the GrainId of the voxel is ZERO then we can use this as a seed point
     {
-      if (m_UseGoodVoxels == false || m_GoodVoxels[randpoint] == true)
+      if ((m_UseGoodVoxels == false || m_GoodVoxels[randpoint] == true) && m_CellPhases[randpoint] > 0)
       {
         seed = randpoint;
       }
