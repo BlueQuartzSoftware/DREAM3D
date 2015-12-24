@@ -110,7 +110,7 @@ void SegmentFeatures::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int64_t SegmentFeatures::getSeed(int32_t gnum)
+int64_t SegmentFeatures::getSeed(int32_t gnum, int64_t nextSeed)
 {
   return -1;
 }
