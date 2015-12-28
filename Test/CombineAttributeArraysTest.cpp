@@ -119,16 +119,16 @@ DataContainerArray::Pointer initializeDataContainerArray()
   QVector<size_t> cDimsScalar(1, 1);
 
   CREATE_DATA_ARRAY(uint8_t, attrMat, tDims, cDimsVec, cDimsScalar, uint8_tVectorArray, uint8_tScalarArray, err);
-  CREATE_DATA_ARRAY(int8_t, attrMat, tDims, cDimsVec, cDimsScalar, int8_tVectorArray, uint8_tScalarArray, err);
-  CREATE_DATA_ARRAY(uint16_t, attrMat, tDims, cDimsVec, cDimsScalar, uint16_tVectorArray, uint8_tScalarArray, err);
-  CREATE_DATA_ARRAY(int16_t, attrMat, tDims, cDimsVec, cDimsScalar, int16_tVectorArray, uint8_tScalarArray, err);
-  CREATE_DATA_ARRAY(uint32_t, attrMat, tDims, cDimsVec, cDimsScalar, uint32_tVectorArray, uint8_tScalarArray, err);
-  CREATE_DATA_ARRAY(int32_t, attrMat, tDims, cDimsVec, cDimsScalar, int32_tVectorArray, uint8_tScalarArray, err);
-  CREATE_DATA_ARRAY(uint64_t, attrMat, tDims, cDimsVec, cDimsScalar, uint64_tVectorArray, uint8_tScalarArray, err);
-  CREATE_DATA_ARRAY(int64_t, attrMat, tDims, cDimsVec, cDimsScalar, int64_tVectorArray, uint8_tScalarArray, err);
-  CREATE_DATA_ARRAY(double, attrMat, tDims, cDimsVec, cDimsScalar, doubleVectorArray, uint8_tScalarArray, err);
-  CREATE_DATA_ARRAY(float, attrMat, tDims, cDimsVec, cDimsScalar, floatVectorArray, uint8_tScalarArray, err);
-  CREATE_DATA_ARRAY(bool, attrMat, tDims, cDimsVec, cDimsScalar, boolVectorArray, uint8_tScalarArray, err);
+  CREATE_DATA_ARRAY(int8_t, attrMat, tDims, cDimsVec, cDimsScalar, int8_tVectorArray, int8_tScalarArray, err);
+  CREATE_DATA_ARRAY(uint16_t, attrMat, tDims, cDimsVec, cDimsScalar, uint16_tVectorArray, uint16_tScalarArray, err);
+  CREATE_DATA_ARRAY(int16_t, attrMat, tDims, cDimsVec, cDimsScalar, int16_tVectorArray, int16_tScalarArray, err);
+  CREATE_DATA_ARRAY(uint32_t, attrMat, tDims, cDimsVec, cDimsScalar, uint32_tVectorArray, uint32_tScalarArray, err);
+  CREATE_DATA_ARRAY(int32_t, attrMat, tDims, cDimsVec, cDimsScalar, int32_tVectorArray, int32_tScalarArray, err);
+  CREATE_DATA_ARRAY(uint64_t, attrMat, tDims, cDimsVec, cDimsScalar, uint64_tVectorArray, uint64_tScalarArray, err);
+  CREATE_DATA_ARRAY(int64_t, attrMat, tDims, cDimsVec, cDimsScalar, int64_tVectorArray, int64_tScalarArray, err);
+  CREATE_DATA_ARRAY(double, attrMat, tDims, cDimsVec, cDimsScalar, doubleVectorArray, doubleScalarArray, err);
+  CREATE_DATA_ARRAY(float, attrMat, tDims, cDimsVec, cDimsScalar, floatVectorArray, floatScalarArray, err);
+  CREATE_DATA_ARRAY(bool, attrMat, tDims, cDimsVec, cDimsScalar, boolVectorArray, boolScalarArray, err);
 
   QStringList attrArrayNames = attrMat->getAttributeArrayNames();
 
@@ -187,6 +187,15 @@ void checkCombineAttributeArraysFilter(AbstractFilter::Pointer filter, DataArray
   QVariant var;
   bool propWasSet = false;
 
+  bool standardize = false;
+
+  var.setValue(standardize);
+  propWasSet = filter->setProperty("StandardizeData", var);
+  if(false == propWasSet)
+  {
+    qDebug() << "Unable to set property StandardizeData";
+  }
+
   var.setValue(dataArrayPathsVecFirst);
   propWasSet = filter->setProperty("SelectedDataArrayPaths", var);
   if(false == propWasSet)
@@ -242,6 +251,41 @@ void checkCombineAttributeArraysFilter(AbstractFilter::Pointer filter, DataArray
   }
 
   filter->getDataContainerArray()->getDataContainer("CombineAttributeArraysTest")->getAttributeMatrix("CombineAttributeArraysTest")->removeAttributeArray("CombinedData");
+
+  standardize = true;
+
+  var.setValue(standardize);
+  propWasSet = filter->setProperty("StandardizeData", var);
+  if(false == propWasSet)
+  {
+    qDebug() << "Unable to set property StandardizeData";
+  }
+
+  filter->execute();
+  err = filter->getErrorCondition();
+  DREAM3D_REQUIRE_EQUAL(err, 0);
+
+  outputArrayPtr = filter->getDataContainerArray()->getDataContainer("CombineAttributeArraysTest")->getAttributeMatrix("CombineAttributeArraysTest")->getAttributeArray("CombinedData");
+  outputArray = std::dynamic_pointer_cast<DataArray<T>>(outputArrayPtr);
+  outputData = static_cast<T*>(outputArray->getPointer(0));
+
+  numTuples = outputArrayPtr->getNumberOfTuples();
+  numComps = outputArrayPtr->getNumberOfComponents();
+
+  for (size_t i = 0; i < numTuples; i++)
+  {
+    for (int32_t j = 0; j < numComps; j++)
+    {
+      if (outputData[numComps * i + j] < 0 ||
+          outputData[numComps * i + j] > 1)
+      {
+        err = -1;
+      }
+      DREAM3D_REQUIRE_EQUAL(err, 0);
+    }
+  }
+
+  filter->getDataContainerArray()->getDataContainer("CombineAttributeArraysTest")->getAttributeMatrix("CombineAttributeArraysTest")->removeAttributeArray("CombinedData");
 }
 
 // -----------------------------------------------------------------------------
@@ -277,43 +321,43 @@ void TestCombineAttributeArraysFilter()
   checkCombineAttributeArraysFilter<uint8_t>(filter, path1, path2);
 
   path1.update("CombineAttributeArraysTest", "CombineAttributeArraysTest", "int8_tVectorArray");
-  path1.update("CombineAttributeArraysTest", "CombineAttributeArraysTest", "int8_tScalarArray");
+  path2.update("CombineAttributeArraysTest", "CombineAttributeArraysTest", "int8_tScalarArray");
   checkCombineAttributeArraysFilter<int8_t>(filter, path1, path2);
 
   path1.update("CombineAttributeArraysTest", "CombineAttributeArraysTest", "uint16_tVectorArray");
-  path1.update("CombineAttributeArraysTest", "CombineAttributeArraysTest", "uint16_tScalarArray");
+  path2.update("CombineAttributeArraysTest", "CombineAttributeArraysTest", "uint16_tScalarArray");
   checkCombineAttributeArraysFilter<uint16_t>(filter, path1, path2);
 
   path1.update("CombineAttributeArraysTest", "CombineAttributeArraysTest", "int16_tVectorArray");
-  path1.update("CombineAttributeArraysTest", "CombineAttributeArraysTest", "int16_tScalarArray");
+  path2.update("CombineAttributeArraysTest", "CombineAttributeArraysTest", "int16_tScalarArray");
   checkCombineAttributeArraysFilter<int16_t>(filter, path1, path2);
 
   path1.update("CombineAttributeArraysTest", "CombineAttributeArraysTest", "uint32_tVectorArray");
-  path1.update("CombineAttributeArraysTest", "CombineAttributeArraysTest", "uint32_tScalarArray");
+  path2.update("CombineAttributeArraysTest", "CombineAttributeArraysTest", "uint32_tScalarArray");
   checkCombineAttributeArraysFilter<uint32_t>(filter, path1, path2);
 
   path1.update("CombineAttributeArraysTest", "CombineAttributeArraysTest", "int32_tVectorArray");
-  path1.update("CombineAttributeArraysTest", "CombineAttributeArraysTest", "int32_tScalarArray");
+  path2.update("CombineAttributeArraysTest", "CombineAttributeArraysTest", "int32_tScalarArray");
   checkCombineAttributeArraysFilter<int32_t>(filter, path1, path2);
 
   path1.update("CombineAttributeArraysTest", "CombineAttributeArraysTest", "uint64_tVectorArray");
-  path1.update("CombineAttributeArraysTest", "CombineAttributeArraysTest", "uint64_tScalarArray");
+  path2.update("CombineAttributeArraysTest", "CombineAttributeArraysTest", "uint64_tScalarArray");
   checkCombineAttributeArraysFilter<uint64_t>(filter, path1, path2);
 
   path1.update("CombineAttributeArraysTest", "CombineAttributeArraysTest", "int64_tVectorArray");
-  path1.update("CombineAttributeArraysTest", "CombineAttributeArraysTest", "int64_tScalarArray");
+  path2.update("CombineAttributeArraysTest", "CombineAttributeArraysTest", "int64_tScalarArray");
   checkCombineAttributeArraysFilter<int64_t>(filter, path1, path2);
 
   path1.update("CombineAttributeArraysTest", "CombineAttributeArraysTest", "floatVectorArray");
-  path1.update("CombineAttributeArraysTest", "CombineAttributeArraysTest", "floatScalarArray");
+  path2.update("CombineAttributeArraysTest", "CombineAttributeArraysTest", "floatScalarArray");
   checkCombineAttributeArraysFilter<float>(filter, path1, path2);
 
   path1.update("CombineAttributeArraysTest", "CombineAttributeArraysTest", "doubleVectorArray");
-  path1.update("CombineAttributeArraysTest", "CombineAttributeArraysTest", "doubleScalarArray");
+  path2.update("CombineAttributeArraysTest", "CombineAttributeArraysTest", "doubleScalarArray");
   checkCombineAttributeArraysFilter<double>(filter, path1, path2);
 
   path1.update("CombineAttributeArraysTest", "CombineAttributeArraysTest", "boolVectorArray");
-  path1.update("CombineAttributeArraysTest", "CombineAttributeArraysTest", "boolScalarArray");
+  path2.update("CombineAttributeArraysTest", "CombineAttributeArraysTest", "boolScalarArray");
   checkCombineAttributeArraysFilter<bool>(filter, path1, path2);
 
 }
