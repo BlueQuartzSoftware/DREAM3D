@@ -7,7 +7,7 @@ IO (Input)
 ## Description ##
 This **Filter** reads ASCII data from any text-based file and imports the data into DREAM.3D-style arrays.  The user uses the **Filter's** wizard to specify which file to import, how the data is formatted, what to call each array, and what type each array should be.
 
-*Note:* This **Filter** is intended to read data that is column-oriented, such that each created DREAM.3D array corresponds to a column of data in the ASCII file. 
+*Note:* This **Filter** is intended to read data that is column-oriented, such that each created DREAM.3D array corresponds to a column of data in the ASCII file. Therefore, this **Filter** will only import scalar arrays. If multiple columns are in fact different components of the same array, then the columns may be imported as separate arrays and then combined in the correct order using the [Combine Attribute Arrays](@ref combineattributearrays) **Filter**.
 
 ### Separating the Data ###
 
