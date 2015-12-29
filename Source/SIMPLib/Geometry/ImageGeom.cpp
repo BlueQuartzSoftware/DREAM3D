@@ -106,170 +106,148 @@ class FindImageDerivativesImpl
       double xp[3] = { 0.0, 0.0, 0.0 };
       double xm[3] = { 0.0, 0.0, 0.0 };
       double factor = 0.0;
-
       double xxi, yxi, zxi, xeta, yeta, zeta, xzeta, yzeta, zzeta;
       xxi = yxi = zxi = xeta = yeta = zeta = xzeta = yzeta = zzeta = 0;
       double aj, xix, xiy, xiz, etax, etay, etaz, zetax, zetay, zetaz;
       aj = xix = xiy = xiz = etax = etay = etaz = zetax = zetay = zetaz = 0;
-      size_t idx = 0;
+      size_t index = 0;
       int32_t numComps = m_Field->getNumberOfComponents();
       double* fieldPtr = m_Field->getPointer(0);
       double* derivsPtr = m_Derivatives->getPointer(0);
-      // for finite differencing -- the values on the "plus" side and
-      // "minus" side of the point to be computed at
-      std::vector<double> plusvalues(numComps);
-      std::vector<double> minusvalues(numComps);
-
+      std::vector<double> plusValues(numComps);
+      std::vector<double> minusValues(numComps);
       std::vector<double> dValuesdXi(numComps);
       std::vector<double> dValuesdEta(numComps);
       std::vector<double> dValuesdZeta(numComps);
 
-      size_t dims[3];
+      size_t dims[3] = { 0, 0, 0 };
       m_Image->getDimensions(dims);
 
-      size_t xysize = dims[0] * dims[1];
-
-      for (size_t z = 0; z < dims[2]; z++)
+      for (size_t z = zStart; z < zEnd; z++)
       {
-        for (size_t y = 0; y < dims[1]; y++)
+        for (size_t y = yStart; y < yEnd; y++)
         {
-          for (size_t x = 0; x < dims[0]; x++)
+          for (size_t x = zStart; x < xEnd; x++)
           {
-            //  Xi derivatives.
-            if ( dims[0] == 1 ) // 2D in this direction
+            //  Xi derivatives (X)
+            if (dims[0] == 1)
             {
               findValuesForFiniteDifference(TwoDimensional, XDirection, x, y, z, dims,
-                                            xp, xm, factor, numComps, plusvalues, minusvalues, fieldPtr);
+                                            xp, xm, factor, numComps, plusValues, minusValues, fieldPtr);
             }
-            else if ( x == 0 )
+            else if (x == 0)
             {
               findValuesForFiniteDifference(LeftSide, XDirection, x, y, z, dims,
-                                            xp, xm, factor, numComps, plusvalues, minusvalues, fieldPtr);
+                                            xp, xm, factor, numComps, plusValues, minusValues, fieldPtr);
             }
-            else if ( x == (dims[0] - 1) )
+            else if (x == (dims[0] - 1))
             {
               findValuesForFiniteDifference(RightSide, XDirection, x, y, z, dims,
-                                            xp, xm, factor, numComps, plusvalues, minusvalues, fieldPtr);
+                                            xp, xm, factor, numComps, plusValues, minusValues, fieldPtr);
             }
             else
             {
               findValuesForFiniteDifference(Centered, XDirection, x, y, z, dims,
-                                            xp, xm, factor, numComps, plusvalues, minusvalues, fieldPtr);
+                                            xp, xm, factor, numComps, plusValues, minusValues, fieldPtr);
             }
 
             xxi = factor * (xp[0] - xm[0]);
             yxi = factor * (xp[1] - xm[1]);
             zxi = factor * (xp[2] - xm[2]);
-            for(int32_t inputComponent = 0; inputComponent < numComps; inputComponent++)
-            {
-              dValuesdXi[inputComponent] = factor *
-                                           (plusvalues[inputComponent] - minusvalues[inputComponent]);
-            }
+            for (int32_t i = 0; i < numComps; i++) { dValuesdXi[i] = factor * (plusValues[i] - minusValues[i]); }
 
-            //  Eta derivatives.
-            if ( dims[1] == 1 ) // 2D in this direction
+            //  Eta derivatives (Y)
+            if (dims[1] == 1)
             {
               findValuesForFiniteDifference(TwoDimensional, YDirection, x, y, z, dims,
-                                            xp, xm, factor, numComps, plusvalues, minusvalues, fieldPtr);
+                                            xp, xm, factor, numComps, plusValues, minusValues, fieldPtr);
             }
-            else if ( y == 0 )
+            else if (y == 0)
             {
               findValuesForFiniteDifference(LeftSide, YDirection, x, y, z, dims,
-                                            xp, xm, factor, numComps, plusvalues, minusvalues, fieldPtr);
+                                            xp, xm, factor, numComps, plusValues, minusValues, fieldPtr);
             }
-            else if ( y == (dims[1] - 1) )
+            else if (y == (dims[1] - 1))
             {
               findValuesForFiniteDifference(RightSide, YDirection, x, y, z, dims,
-                                            xp, xm, factor, numComps, plusvalues, minusvalues, fieldPtr);
+                                            xp, xm, factor, numComps, plusValues, minusValues, fieldPtr);
             }
             else
             {
               findValuesForFiniteDifference(Centered, YDirection, x, y, z, dims,
-                                            xp, xm, factor, numComps, plusvalues, minusvalues, fieldPtr);
+                                            xp, xm, factor, numComps, plusValues, minusValues, fieldPtr);
             }
 
             xeta = factor * (xp[0] - xm[0]);
             yeta = factor * (xp[1] - xm[1]);
             zeta = factor * (xp[2] - xm[2]);
-            for(int32_t inputComponent = 0; inputComponent < numComps; inputComponent++)
-            {
-              dValuesdEta[inputComponent] = factor *
-                                            (plusvalues[inputComponent] - minusvalues[inputComponent]);
-            }
+            for (int32_t i = 0; i < numComps; i++) {dValuesdEta[i] = factor * (plusValues[i] - minusValues[i]); }
 
-            //  Zeta derivatives.
-            if ( dims[2] == 1 ) // 2D in this direction
+            //  Zeta derivatives (Z)
+            if (dims[2] == 1)
             {
               findValuesForFiniteDifference(TwoDimensional, ZDirection, x, y, z, dims,
-                                            xp, xm, factor, numComps, plusvalues, minusvalues, fieldPtr);
+                                            xp, xm, factor, numComps, plusValues, minusValues, fieldPtr);
             }
-            else if ( z == 0 )
+            else if (z == 0)
             {
               findValuesForFiniteDifference(LeftSide, ZDirection, x, y, z, dims,
-                                            xp, xm, factor, numComps, plusvalues, minusvalues, fieldPtr);
+                                            xp, xm, factor, numComps, plusValues, minusValues, fieldPtr);
             }
-            else if ( z == (dims[2] - 1) )
+            else if (z == (dims[2] - 1))
             {
               findValuesForFiniteDifference(RightSide, ZDirection, x, y, z, dims,
-                                            xp, xm, factor, numComps, plusvalues, minusvalues, fieldPtr);
+                                            xp, xm, factor, numComps, plusValues, minusValues, fieldPtr);
             }
             else
             {
               findValuesForFiniteDifference(Centered, ZDirection, x, y, z, dims,
-                                            xp, xm, factor, numComps, plusvalues, minusvalues, fieldPtr);
+                                            xp, xm, factor, numComps, plusValues, minusValues, fieldPtr);
             }
 
             xzeta = factor * (xp[0] - xm[0]);
             yzeta = factor * (xp[1] - xm[1]);
             zzeta = factor * (xp[2] - xm[2]);
-            for(int32_t inputComponent = 0; inputComponent < numComps; inputComponent++)
-            {
-              dValuesdZeta[inputComponent] = factor *
-                                             (plusvalues[inputComponent] - minusvalues[inputComponent]);
-            }
+            for (int32_t i = 0; i < numComps; i++) { dValuesdZeta[i] = factor * (plusValues[i] - minusValues[i]); }
 
             // Now calculate the Jacobian.  Grids occasionally have
             // singularities, or points where the Jacobian is infinite (the
             // inverse is zero).  For these cases, we'll set the Jacobian to
             // zero, which will result in a zero derivative.
-            //
             aj =  xxi * yeta * zzeta + yxi * zeta * xzeta + zxi * xeta * yzeta
                   - zxi * yeta * xzeta - yxi * xeta * zzeta - xxi * zeta * yzeta;
             if (aj != 0.0)
             {
-              aj = 1. / aj;
+              aj = 1.0 / aj;
             }
 
-            //  Xi metrics.
+            //  Xi metrics
             xix  =  aj * (yeta * zzeta - zeta * yzeta);
             xiy  = -aj * (xeta * zzeta - zeta * xzeta);
             xiz  =  aj * (xeta * yzeta - yeta * xzeta);
 
-            //  Eta metrics.
+            //  Eta metrics
             etax = -aj * (yxi * zzeta - zxi * yzeta);
             etay =  aj * (xxi * zzeta - zxi * xzeta);
             etaz = -aj * (xxi * yzeta - yxi * xzeta);
 
-            //  Zeta metrics.
+            //  Zeta metrics
             zetax =  aj * (yxi * zeta - zxi * yeta);
             zetay = -aj * (xxi * zeta - zxi * xeta);
             zetaz =  aj * (xxi * yeta - yxi * xeta);
 
-            // Finally compute the actual derivatives
-            idx = x + y * dims[0] + z * xysize;
-            for(int32_t inputComponent = 0; inputComponent < numComps; inputComponent++)
+            // Compute the actual derivatives
+            index = (z * dims[1] * dims[0]) + (y * dims[0]) + x;
+            for (int32_t i = 0; i < numComps; i++)
             {
-              derivsPtr[idx * numComps * 3 + inputComponent * 3] =
-                xix * dValuesdXi[inputComponent] + etax * dValuesdEta[inputComponent] +
-                zetax * dValuesdZeta[inputComponent];
+              derivsPtr[index * numComps * 3 + i * 3] =
+                xix * dValuesdXi[i] + etax * dValuesdEta[i] + zetax * dValuesdZeta[i];
 
-              derivsPtr[idx * numComps * 3 + inputComponent * 3 + 1] =
-                xiy * dValuesdXi[inputComponent] + etay * dValuesdEta[inputComponent] +
-                zetay * dValuesdZeta[inputComponent];
+              derivsPtr[index * numComps * 3 + i * 3 + 1] =
+                xiy * dValuesdXi[i] + etay * dValuesdEta[i] + zetay * dValuesdZeta[i];
 
-              derivsPtr[idx * numComps * 3 + inputComponent * 3 + 2] =
-                xiz * dValuesdXi[inputComponent] + etaz * dValuesdEta[inputComponent] +
-                zetaz * dValuesdZeta[inputComponent];
+              derivsPtr[index * numComps * 3 + i * 3 + 2] =
+                xiz * dValuesdXi[i] + etaz * dValuesdEta[i] + zetaz * dValuesdZeta[i];
             }
           }
         }
@@ -285,7 +263,7 @@ class FindImageDerivativesImpl
 
     void computeIndices(int32_t differenceType, int32_t directionType,
                         size_t& index1, size_t& index2, size_t dims[3],
-                         size_t x, size_t y, size_t z, double xp[3], double xm[3]) const
+                        size_t x, size_t y, size_t z, double xp[3], double xm[3]) const
 
     {
       size_t tmpIndex1 = 0;
@@ -293,9 +271,9 @@ class FindImageDerivativesImpl
 
       switch (directionType)
       {
-        case 0:
+        case XDirection:
         {
-          if (differenceType == 1)
+          if (differenceType == LeftSide)
           {
             index1 = (z * dims[1] * dims[0]) + (y * dims[0]) + (x + 1);
             index2 = (z * dims[1] * dims[0]) + (y * dims[0]) + x;
@@ -303,7 +281,7 @@ class FindImageDerivativesImpl
             m_Image->getCoords(tmpIndex1, y, z, xp);
             m_Image->getCoords(x, y, z, xm);
           }
-          else if (differenceType == 2)
+          else if (differenceType == RightSide)
           {
             index1 = (z * dims[1] * dims[0]) + (y * dims[0]) + x;
             index2 = (z * dims[1] * dims[0]) + (y * dims[0]) + (x - 1);
@@ -311,7 +289,7 @@ class FindImageDerivativesImpl
             m_Image->getCoords(x, y, z, xp);
             m_Image->getCoords(tmpIndex1, y, z, xm);
           }
-          else if (differenceType == 3)
+          else if (differenceType == Centered)
           {
             index1 = (z * dims[1] * dims[0]) + (y * dims[0]) + (x + 1);
             index2 = (z * dims[1] * dims[0]) + (y * dims[0]) + (x - 1);
@@ -322,9 +300,9 @@ class FindImageDerivativesImpl
           }
           break;
         }
-        case 1:
+        case YDirection:
         {
-          if (differenceType == 1)
+          if (differenceType == LeftSide)
           {
             index1 = (z * dims[1] * dims[0]) + ((y + 1) * dims[0]) + x;
             index2 = (z * dims[1] * dims[0]) + (y * dims[0]) + x;
@@ -332,7 +310,7 @@ class FindImageDerivativesImpl
             m_Image->getCoords(x, tmpIndex1, z, xp);
             m_Image->getCoords(x, y, z, xm);
           }
-          else if (differenceType == 2)
+          else if (differenceType == RightSide)
           {
             index1 = (z * dims[1] * dims[0]) + (y * dims[0]) + x;
             index2 = (z * dims[1] * dims[0]) + ((y - 1) * dims[0]) + x;
@@ -340,7 +318,7 @@ class FindImageDerivativesImpl
             m_Image->getCoords(x, y, z, xp);
             m_Image->getCoords(x, tmpIndex1, z, xm);
           }
-          else if (differenceType == 3)
+          else if (differenceType == Centered)
           {
             index1 = (z * dims[1] * dims[0]) + ((y + 1) * dims[0]) + x;
             index2 = (z * dims[1] * dims[0]) + ((y - 1) * dims[0]) + x;
@@ -351,9 +329,9 @@ class FindImageDerivativesImpl
           }
           break;
         }
-        case 2:
+        case ZDirection:
         {
-          if (differenceType == 1)
+          if (differenceType == LeftSide)
           {
             index1 = ((z + 1) * dims[1] * dims[0]) + (y * dims[0]) + x;
             index2 = (z * dims[1] * dims[0]) + (y * dims[0]) + x;
@@ -361,7 +339,7 @@ class FindImageDerivativesImpl
             m_Image->getCoords(x, y, tmpIndex1, xp);
             m_Image->getCoords(x, y, z, xm);
           }
-          else if (differenceType == 2)
+          else if (differenceType == RightSide)
           {
             index1 = (z * dims[1] * dims[0]) + (y * dims[0]) + x;
             index2 = ((z - 1) * dims[1] * dims[0]) + (y * dims[0]) + x;
@@ -369,7 +347,7 @@ class FindImageDerivativesImpl
             m_Image->getCoords(x, y, z, xp);
             m_Image->getCoords(x, y, tmpIndex1, xm);
           }
-          else if (differenceType == 3)
+          else if (differenceType == Centered)
           {
             index1 = ((z + 1) * dims[1] * dims[0]) + (y * dims[0]) + x;
             index2 = ((z - 1) * dims[1] * dims[0]) + (y * dims[0]) + x;
@@ -397,7 +375,7 @@ class FindImageDerivativesImpl
 
       factor = 1.0;
 
-      if (differenceType == 0)
+      if (differenceType == TwoDimensional)
       {
         for (size_t i = 0; i < 3; i++) { xp[i] = xm[i] = 0.0; }
         xp[directionType] = 1.0;
@@ -413,7 +391,7 @@ class FindImageDerivativesImpl
         }
       }
 
-      if (differenceType == 3) { factor = 0.5; }
+      if (differenceType == Centered) { factor = 0.5; }
     }
 
   private:
@@ -421,7 +399,7 @@ class FindImageDerivativesImpl
     DoubleArrayType::Pointer m_Field;
     DoubleArrayType::Pointer m_Derivatives;
 
-    enum FiniteDifferenceType
+    enum FiniteDifferenceType_t
     {
       TwoDimensional = 0,
       LeftSide,
@@ -429,14 +407,12 @@ class FindImageDerivativesImpl
       Centered
     };
 
-    enum DirectionType
+    enum DirectionType_t
     {
       XDirection = 0,
       YDirection,
       ZDirection
     };
-
-
 };
 
 // -----------------------------------------------------------------------------
