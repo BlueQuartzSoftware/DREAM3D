@@ -62,15 +62,15 @@ class SIMPLib_EXPORT ImageGeom : public IGeometry
 
     SIMPL_INSTANCE_VEC3_PROPERTY(size_t, Dimensions)
 
-    size_t getXPoints() {return m_Dimensions[0];}
-    size_t getYPoints() {return m_Dimensions[1];}
-    size_t getZPoints() {return m_Dimensions[2];}
+    inline size_t getXPoints() { return m_Dimensions[0]; }
+    inline size_t getYPoints() { return m_Dimensions[1]; }
+    inline size_t getZPoints() { return m_Dimensions[2]; }
 
     SIMPL_INSTANCE_VEC3_PROPERTY(float, Resolution)
 
-    float getXRes() {return m_Resolution[0];}
-    float getYRes() {return m_Resolution[1];}
-    float getZRes() {return m_Resolution[2];}
+    inline float getXRes() { return m_Resolution[0]; }
+    inline float getYRes() { return m_Resolution[1]; }
+    inline float getZRes() { return m_Resolution[2]; }
 
     SIMPL_INSTANCE_VEC3_PROPERTY(float, Origin)
 

@@ -87,6 +87,9 @@
 #include "H5Support/H5Lite.h"
 #include "SIMPLib/HDF5/VTKH5Constants.h"
 
+#include <QtCore/QDateTime>
+#include <assert.h>
+
 /**
  * @brief The FindImageDerivativesImpl class implements a threaded algorithm that computes the
  * derivative of an arbitrary dimensional field on the underlying image
@@ -103,6 +106,9 @@ class FindImageDerivativesImpl
 
     void compute(size_t zStart, size_t zEnd, size_t yStart, size_t yEnd, size_t xStart, size_t xEnd) const
     {
+      std::cout << "starts: " << " " << xStart << " " << yStart << " " << zStart << std::endl;
+      std::cout << "ends: " << " " << xEnd << " " << yEnd << " " << zEnd << std::endl;
+
       double xp[3] = { 0.0, 0.0, 0.0 };
       double xm[3] = { 0.0, 0.0, 0.0 };
       double factor = 0.0;
@@ -122,6 +128,12 @@ class FindImageDerivativesImpl
 
       size_t dims[3] = { 0, 0, 0 };
       m_Image->getDimensions(dims);
+
+      float res[3];
+      m_Image->getResolution(res);
+
+      float origin[3];
+      m_Image->getOrigin(origin);
 
       for (size_t z = zStart; z < zEnd; z++)
       {
@@ -181,7 +193,7 @@ class FindImageDerivativesImpl
             xeta = factor * (xp[0] - xm[0]);
             yeta = factor * (xp[1] - xm[1]);
             zeta = factor * (xp[2] - xm[2]);
-            for (int32_t i = 0; i < numComps; i++) {dValuesdEta[i] = factor * (plusValues[i] - minusValues[i]); }
+            for (int32_t i = 0; i < numComps; i++) { dValuesdEta[i] = factor * (plusValues[i] - minusValues[i]); }
 
             //  Zeta derivatives (Z)
             if (dims[2] == 1)
@@ -269,6 +281,14 @@ class FindImageDerivativesImpl
       size_t tmpIndex1 = 0;
       size_t tmpIndex2 = 0;
 
+
+
+      float res[3];
+      m_Image->getResolution(res);
+
+      float origin[3];
+      m_Image->getOrigin(origin);
+
       switch (directionType)
       {
         case XDirection:
@@ -278,6 +298,14 @@ class FindImageDerivativesImpl
             index1 = (z * dims[1] * dims[0]) + (y * dims[0]) + (x + 1);
             index2 = (z * dims[1] * dims[0]) + (y * dims[0]) + x;
             tmpIndex1 = x + 1;
+//            xp[0] = static_cast<double>(tmpIndex1 * res[0] + origin[0]);
+//            xp[1] = static_cast<double>(y * res[1]  + origin[1]);
+//            xp[2] = static_cast<double>(z * res[2]  + origin[2]);
+
+//            xm[0] = static_cast<double>(x * res[0] + origin[0]);
+//            xm[1] = static_cast<double>(y * res[1]  + origin[1]);
+//            xm[2] = static_cast<double>(z * res[2]  + origin[2]);
+
             m_Image->getCoords(tmpIndex1, y, z, xp);
             m_Image->getCoords(x, y, z, xm);
           }
@@ -286,6 +314,15 @@ class FindImageDerivativesImpl
             index1 = (z * dims[1] * dims[0]) + (y * dims[0]) + x;
             index2 = (z * dims[1] * dims[0]) + (y * dims[0]) + (x - 1);
             tmpIndex1 = x - 1;
+
+//            xp[0] = static_cast<double>(x * res[0] + origin[0]);
+//            xp[1] = static_cast<double>(y * res[1]  + origin[1]);
+//            xp[2] = static_cast<double>(z * res[2]  + origin[2]);
+
+//            xm[0] = static_cast<double>(tmpIndex1 * res[0] + origin[0]);
+//            xm[1] = static_cast<double>(y * res[1]  + origin[1]);
+//            xm[2] = static_cast<double>(z * res[2]  + origin[2]);
+
             m_Image->getCoords(x, y, z, xp);
             m_Image->getCoords(tmpIndex1, y, z, xm);
           }
@@ -295,6 +332,15 @@ class FindImageDerivativesImpl
             index2 = (z * dims[1] * dims[0]) + (y * dims[0]) + (x - 1);
             tmpIndex1 = x + 1;
             tmpIndex2 = x - 1;
+
+//            xp[0] = static_cast<double>(tmpIndex1 * res[0] + origin[0]);
+//            xp[1] = static_cast<double>(y * res[1]  + origin[1]);
+//            xp[2] = static_cast<double>(z * res[2]  + origin[2]);
+
+//            xm[0] = static_cast<double>(tmpIndex2 * res[0] + origin[0]);
+//            xm[1] = static_cast<double>(y * res[1]  + origin[1]);
+//            xm[2] = static_cast<double>(z * res[2]  + origin[2]);
+
             m_Image->getCoords(tmpIndex1, y, z, xp);
             m_Image->getCoords(tmpIndex2, y, z, xm);
           }
@@ -307,6 +353,15 @@ class FindImageDerivativesImpl
             index1 = (z * dims[1] * dims[0]) + ((y + 1) * dims[0]) + x;
             index2 = (z * dims[1] * dims[0]) + (y * dims[0]) + x;
             tmpIndex1 = y + 1;
+
+//            xp[0] = static_cast<double>(x * res[0] + origin[0]);
+//            xp[1] = static_cast<double>(tmpIndex1 * res[1]  + origin[1]);
+//            xp[2] = static_cast<double>(z * res[2]  + origin[2]);
+
+//            xm[0] = static_cast<double>(x * res[0] + origin[0]);
+//            xm[1] = static_cast<double>(y * res[1]  + origin[1]);
+//            xm[2] = static_cast<double>(z * res[2]  + origin[2]);
+
             m_Image->getCoords(x, tmpIndex1, z, xp);
             m_Image->getCoords(x, y, z, xm);
           }
@@ -315,6 +370,15 @@ class FindImageDerivativesImpl
             index1 = (z * dims[1] * dims[0]) + (y * dims[0]) + x;
             index2 = (z * dims[1] * dims[0]) + ((y - 1) * dims[0]) + x;
             tmpIndex1 = y - 1;
+
+//            xp[0] = static_cast<double>(x * res[0] + origin[0]);
+//            xp[1] = static_cast<double>(y * res[1]  + origin[1]);
+//            xp[2] = static_cast<double>(z * res[2]  + origin[2]);
+
+//            xm[0] = static_cast<double>(x * res[0] + origin[0]);
+//            xm[1] = static_cast<double>(tmpIndex1 * res[1]  + origin[1]);
+//            xm[2] = static_cast<double>(z * res[2]  + origin[2]);
+
             m_Image->getCoords(x, y, z, xp);
             m_Image->getCoords(x, tmpIndex1, z, xm);
           }
@@ -324,6 +388,15 @@ class FindImageDerivativesImpl
             index2 = (z * dims[1] * dims[0]) + ((y - 1) * dims[0]) + x;
             tmpIndex1 = y + 1;
             tmpIndex2 = y - 1;
+
+//            xp[0] = static_cast<double>(x * res[0] + origin[0]);
+//            xp[1] = static_cast<double>(tmpIndex1 * res[1]  + origin[1]);
+//            xp[2] = static_cast<double>(z * res[2]  + origin[2]);
+
+//            xm[0] = static_cast<double>(x * res[0] + origin[0]);
+//            xm[1] = static_cast<double>(tmpIndex2 * res[1]  + origin[1]);
+//            xm[2] = static_cast<double>(z * res[2]  + origin[2]);
+
             m_Image->getCoords(x, tmpIndex1, z, xp);
             m_Image->getCoords(x, tmpIndex2, z, xm);
           }
@@ -336,6 +409,15 @@ class FindImageDerivativesImpl
             index1 = ((z + 1) * dims[1] * dims[0]) + (y * dims[0]) + x;
             index2 = (z * dims[1] * dims[0]) + (y * dims[0]) + x;
             tmpIndex1 = z + 1;
+
+//            xp[0] = static_cast<double>(x * res[0] + origin[0]);
+//            xp[1] = static_cast<double>(y * res[1]  + origin[1]);
+//            xp[2] = static_cast<double>(tmpIndex1 * res[2]  + origin[2]);
+
+//            xm[0] = static_cast<double>(x * res[0] + origin[0]);
+//            xm[1] = static_cast<double>(y * res[1]  + origin[1]);
+//            xm[2] = static_cast<double>(z * res[2]  + origin[2]);
+
             m_Image->getCoords(x, y, tmpIndex1, xp);
             m_Image->getCoords(x, y, z, xm);
           }
@@ -344,6 +426,15 @@ class FindImageDerivativesImpl
             index1 = (z * dims[1] * dims[0]) + (y * dims[0]) + x;
             index2 = ((z - 1) * dims[1] * dims[0]) + (y * dims[0]) + x;
             tmpIndex1 = z - 1;
+
+//            xp[0] = static_cast<double>(x * res[0] + origin[0]);
+//            xp[1] = static_cast<double>(y * res[1]  + origin[1]);
+//            xp[2] = static_cast<double>(z * res[2]  + origin[2]);
+
+//            xm[0] = static_cast<double>(x * res[0] + origin[0]);
+//            xm[1] = static_cast<double>(y * res[1]  + origin[1]);
+//            xm[2] = static_cast<double>(tmpIndex1 * res[2]  + origin[2]);
+
             m_Image->getCoords(x, y, z, xp);
             m_Image->getCoords(x, y, tmpIndex1, xm);
           }
@@ -353,6 +444,15 @@ class FindImageDerivativesImpl
             index2 = ((z - 1) * dims[1] * dims[0]) + (y * dims[0]) + x;
             tmpIndex1 = z + 1;
             tmpIndex2 = z - 1;
+
+//            xp[0] = static_cast<double>(x * res[0] + origin[0]);
+//            xp[1] = static_cast<double>(y * res[1]  + origin[1]);
+//            xp[2] = static_cast<double>(tmpIndex1 * res[2]  + origin[2]);
+
+//            xm[0] = static_cast<double>(x * res[0] + origin[0]);
+//            xm[1] = static_cast<double>(y * res[1]  + origin[1]);
+//            xm[2] = static_cast<double>(tmpIndex2 * res[2]  + origin[2]);
+
             m_Image->getCoords(x, y, tmpIndex1, xp);
             m_Image->getCoords(x, y, tmpIndex2, xm);
           }
@@ -506,9 +606,9 @@ void ImageGeom::getCoords(size_t idx[3], double coords[3])
 // -----------------------------------------------------------------------------
 void ImageGeom::getCoords(size_t& x, size_t& y, size_t& z, double coords[3])
 {
-  coords[0] = static_cast<double>(x * getXRes() + m_Origin[0]);
-  coords[1] = static_cast<double>(y * getYRes() + m_Origin[1]);
-  coords[2] = static_cast<double>(z * getZRes() + m_Origin[2]);
+  coords[0] = static_cast<double>(x * m_Resolution[0] + m_Origin[0]);
+  coords[1] = static_cast<double>(y * m_Resolution[1] + m_Origin[1]);
+  coords[2] = static_cast<double>(z * m_Resolution[2] + m_Origin[2]);
 }
 
 // -----------------------------------------------------------------------------
@@ -730,18 +830,24 @@ void ImageGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType:
   bool doParallel = true;
 #endif
 
+quint64 millis = QDateTime::currentMSecsSinceEpoch();
+
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
-    tbb::parallel_for(tbb::blocked_range3d<size_t, size_t, size_t>(0, dims[2], 0, dims[1], 0, dims[0]),
-                      FindImageDerivativesImpl(this, field, derivatives), tbb::auto_partitioner());
+    tbb::parallel_for(tbb::blocked_range3d<size_t, size_t, size_t>(0, dims[2], dims[2] / init.default_num_threads(), 0, dims[1], dims[1], 0, dims[0], dims[0]),
+                      FindImageDerivativesImpl(this, field, derivatives), tbb::simple_partitioner());
   }
   else
+//  std::cout << "Time for parallel: " << QDateTime::currentMSecsSinceEpoch() - millis << std::endl;
+//  millis = QDateTime::currentMSecsSinceEpoch();
 #endif
   {
     FindImageDerivativesImpl serial(this, field, derivatives);
     serial.compute(0, dims[2], 0, dims[1], 0, dims[0]);
   }
+
+  std::cout << "Time for serial: " << QDateTime::currentMSecsSinceEpoch() - millis << std::endl;
 }
 
 // -----------------------------------------------------------------------------
