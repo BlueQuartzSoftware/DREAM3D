@@ -33,12 +33,11 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "SharedFeatureFaceFilter.h"
 
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -275,8 +274,28 @@ AbstractFilter::Pointer SharedFeatureFaceFilter::newFilterInstance(bool copyFilt
 //
 // -----------------------------------------------------------------------------
 const QString SharedFeatureFaceFilter::getCompiledLibraryName()
-{ return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
+{
+  return SurfaceMeshingConstants::SurfaceMeshingBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString SharedFeatureFaceFilter::getBrandingString()
+{
+  return "SurfaceMeshing";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString SharedFeatureFaceFilter::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

@@ -164,7 +164,9 @@ int H5FilterParametersWriter::closeFilterGroup()
 int H5FilterParametersWriter::writeValue(const QString name, const QString value)
 {
   int err = 0;
-  err = QH5Lite::writeStringDataset(m_CurrentGroupId, name, value);
+  QString repl = value;
+  repl.replace("\\", QString("/"));
+  err = QH5Lite::writeStringDataset(m_CurrentGroupId, name, repl);
   return err;
 }
 
@@ -172,6 +174,25 @@ int H5FilterParametersWriter::writeValue(const QString name, const QString value
 //
 // -----------------------------------------------------------------------------
 int H5FilterParametersWriter::writeValue(const QString name, const QVector<QString> value)
+{
+  int vectorSize = value.size();
+  int err = QH5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
+  for (int i = 0; i < vectorSize; i++)
+  {
+    QString ss = QString::number(i, 10);
+    QString repl = value[i];
+    repl.replace("\\", QString("/"));
+    err = QH5Lite::writeStringAttribute(m_CurrentGroupId, name, ss, repl);
+    ss.clear();
+  }
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5FilterParametersWriter::writeValue(const QString name, const QStringList value)
 {
   int vectorSize = value.size();
   int err = QH5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);

@@ -86,10 +86,13 @@ class QtSupportLib_EXPORT DREAM3DSettings : public QObject
     QVariant value(const QString& key, const QVariant& defaultValue = QVariant());
     QJsonObject value(const QString& key, const QJsonObject& defaultObject = QJsonObject());
     QStringList value(const QString& key, const QStringList& defaultList = QStringList());
+    QByteArray value(const QString& key, const QByteArray& defaultValue);
+
 
     void setValue(const QString& key, const QVariant& value);
     void setValue(const QString& key, const QJsonObject& object);
     void setValue(const QString& key, const QStringList& list);
+    void setValue(const QString& key, const QByteArray& value);
 
   private:
     QString m_FilePath;

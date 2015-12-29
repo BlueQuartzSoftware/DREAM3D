@@ -5,6 +5,7 @@
 #include "FindDifferenceMap.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Common/TemplateHelpers.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
@@ -320,8 +321,28 @@ AbstractFilter::Pointer FindDifferenceMap::newFilterInstance(bool copyFilterPara
 //
 // -----------------------------------------------------------------------------
 const QString FindDifferenceMap::getCompiledLibraryName()
-{ return StatisticsConstants::StatisticsBaseName; }
+{
+  return StatisticsConstants::StatisticsBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindDifferenceMap::getBrandingString()
+{
+  return "Statistics";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindDifferenceMap::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

@@ -39,6 +39,7 @@
 #include <QtSupportLib/QRecentFileList.h>
 #include <QtSupportLib/DREAM3DSettings.h>
 #include "SGApplication.h"
+#include "BrandedStrings.h"
 
 //-- Qt Headers
 #include <QtWidgets/QApplication>
@@ -49,9 +50,11 @@
 int main (int argc, char* argv[])
 {
   SGApplication app(argc, argv);
-  QCoreApplication::setOrganizationName("BlueQuartz Software");
-  QCoreApplication::setOrganizationDomain("bluequartz.net");
+
+  QCoreApplication::setOrganizationDomain(BrandedStrings::OrganizationDomain);
+  QCoreApplication::setOrganizationName(BrandedStrings::OrganizationName);
   QCoreApplication::setApplicationName("StatsGeneratorUI");
+
 #if defined( Q_OS_MAC )
   //Needed for typical Mac program behavior.
   app.setQuitOnLastWindowClosed( true );
@@ -59,6 +62,7 @@ int main (int argc, char* argv[])
 
   QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 
+  setlocale(LC_NUMERIC, "C");
 
 //#if defined (Q_OS_MAC)
 //  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());

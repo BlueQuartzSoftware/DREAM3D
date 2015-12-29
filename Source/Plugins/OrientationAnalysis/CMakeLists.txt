@@ -4,6 +4,8 @@
 
 set(PLUGIN_NAME OrientationAnalysis)
 set(${PLUGIN_NAME}_VERSION "1.0")
+set(${PLUGIN_NAME}_VERSION_MAJOR "1")
+set(${PLUGIN_NAME}_VERSION_MINOR "0")
 get_filename_component(${PLUGIN_NAME}_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}" ABSOLUTE)
 set(OrientationAnalysis_BINARY_DIR "${DREAM3DProj_BINARY_DIR}/Plugins/${PLUGIN_NAME}")
 
@@ -119,7 +121,6 @@ set(FILTER_INCLUDE_PREFIX "${PLUGIN_NAME}")
 if(UNIX AND NOT APPLE)
   set_source_files_properties(${${PLUGIN_NAME}_Project_SRCS} PROPERTIES COMPILE_FLAGS -fPIC)
 endif()
-
 
 # --------------------------------------------------------------------
 # These headers will be MOC'ed by the build system. They should all inherit from QObject

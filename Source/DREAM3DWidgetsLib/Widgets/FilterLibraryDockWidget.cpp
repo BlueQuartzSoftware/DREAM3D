@@ -329,6 +329,6 @@ void FilterLibraryDockWidget::readSettings(QMainWindow* main, DREAM3DSettings& p
 {
   main->restoreDockWidget(this);
 
-  bool b = prefs.value(objectName(), false).toBool();
+  bool b = prefs.value(objectName(), QVariant(false)).toBool();
   setHidden(b);
 }

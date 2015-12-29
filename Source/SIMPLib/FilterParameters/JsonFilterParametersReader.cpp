@@ -81,10 +81,6 @@ FilterPipeline::Pointer JsonFilterParametersReader::ReadPipelineFromFile(QString
     return FilterPipeline::NullPointer();
   }
 
-  FilterManager* filtManager = FilterManager::Instance();
-  FilterFactory<EmptyFilter>::Pointer emptyFilterFactory = FilterFactory<EmptyFilter>::New();
-  filtManager->addFilterFactory("EmptyFilter", emptyFilterFactory);
-
   JsonFilterParametersReader::Pointer reader = JsonFilterParametersReader::New();
   int err = reader->openFile(filePath);
 
@@ -98,6 +94,29 @@ FilterPipeline::Pointer JsonFilterParametersReader::ReadPipelineFromFile(QString
     return FilterPipeline::NullPointer();
   }
 
+  return ReadPipeline(reader, obs);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilterPipeline::Pointer JsonFilterParametersReader::ReadPipelineFromString(QString contents, IObserver* obs)
+{
+  JsonFilterParametersReader::Pointer reader = JsonFilterParametersReader::New();
+  reader->setPipelineContents(contents);
+
+  return ReadPipeline(reader, obs);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilterPipeline::Pointer JsonFilterParametersReader::ReadPipeline(JsonFilterParametersReader::Pointer reader, IObserver* obs)
+{
+  FilterManager* filtManager = FilterManager::Instance();
+  FilterFactory<EmptyFilter>::Pointer emptyFilterFactory = FilterFactory<EmptyFilter>::New();
+  filtManager->addFilterFactory("EmptyFilter", emptyFilterFactory);
+
   reader->openGroup(DREAM3D::Settings::PipelineBuilderGroup);
   int filterCount = reader->readValue(DREAM3D::Settings::NumFilters, 0);
   reader->closeGroup();
@@ -108,8 +127,8 @@ FilterPipeline::Pointer JsonFilterParametersReader::ReadPipelineFromFile(QString
   {
     // Open the group to get the name of the filter then close again.
     QString filterName;
-    err = reader->openFilterGroup(NULL, i);
-    if(err == 0)
+    int err = reader->openFilterGroup(NULL, i);
+    if (err == 0)
     {
       filterName = reader->readString(DREAM3D::Settings::FilterName, "");
     }
@@ -240,6 +259,32 @@ int JsonFilterParametersReader::openFile(QString filePath)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int JsonFilterParametersReader::setPipelineContents(QString contents)
+{
+  if (m_Root.isEmpty() == false || m_CurrentFilterIndex.isEmpty() == false)
+  {
+    closeFile();
+  }
+
+  int err = -100;
+
+  QJsonParseError parseError;
+  QByteArray byteArray = QByteArray::fromStdString(contents.toStdString());
+  QJsonDocument doc = QJsonDocument::fromJson(byteArray, &parseError);
+  if (parseError.error != QJsonParseError::NoError)
+  {
+    return parseError.error;
+  }
+  m_Root = doc.object();
+
+  err = QJsonParseError::NoError;
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void JsonFilterParametersReader::closeFile()
 {
   m_Root = QJsonObject();
@@ -335,6 +380,30 @@ QVector<QString> JsonFilterParametersReader::readStrings(const QString name, QVe
   return vector;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QStringList JsonFilterParametersReader::readStringList(const QString name, QStringList value)
+{
+  Q_ASSERT(m_CurrentFilterIndex.isEmpty() == false);
+  if (m_CurrentFilterIndex.contains(name) == false)
+  {
+    return value;
+  }
+
+  QJsonArray jsonArray = m_CurrentFilterIndex.value(name).toArray();
+  QStringList vector;
+  for (QJsonArray::iterator iter = jsonArray.begin(); iter != jsonArray.end(); ++iter)
+  {
+    if ((*iter).isString())
+    {
+      QString str = (*iter).toString();
+      vector.push_back(str);
+    }
+  }
+
+  return vector;
+}
 
 // -----------------------------------------------------------------------------
 //

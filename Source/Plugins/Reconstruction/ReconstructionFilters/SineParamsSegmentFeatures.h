@@ -51,7 +51,6 @@ typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Gen
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 
@@ -101,6 +100,20 @@ class SineParamsSegmentFeatures : public SegmentFeatures
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */
     virtual const QString getCompiledLibraryName();
+
+    /**
+     * @brief getBrandingString Returns the branding string for the filter, which is a tag
+     * used to denote the filter's association with specific plugins
+     * @return Branding string
+    */
+    virtual const QString getBrandingString();
+
+    /**
+     * @brief getFilterVersion Returns a version string for this filter. Default
+     * value is an empty string.
+     * @return
+     */
+    virtual const QString getFilterVersion();
 
     /**
      * @brief newFilterInstance Reimplemented from @see AbstractFilter class

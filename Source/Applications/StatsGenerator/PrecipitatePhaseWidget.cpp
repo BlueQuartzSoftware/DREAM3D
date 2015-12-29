@@ -359,30 +359,30 @@ QString PrecipitatePhaseWidget::getComboString()
 // -----------------------------------------------------------------------------
 int PrecipitatePhaseWidget::gatherSizeDistributionFromGui(float& mu, float& sigma, float& minCutOff, float& maxCutOff, float& stepSize)
 {
+  QLocale loc = QLocale::system();
+
   bool ok = false;
-  mu = m_Mu_SizeDistribution->text().toFloat(&ok);
+  mu = loc.toFloat(m_Mu_SizeDistribution->text(), &ok);
   if (ok == false)
   {
     return 0;
   }
-  sigma = m_Sigma_SizeDistribution->text().toFloat(&ok);
+  sigma = loc.toFloat(m_Sigma_SizeDistribution->text(), &ok);
   if (ok == false)
   {
     return 0;
   }
-  minCutOff = m_MinSigmaCutOff->text().toFloat(&ok);
+  minCutOff = loc.toFloat(m_MinSigmaCutOff->text(), &ok);
   if (ok == false)
   {
     return 0;
   }
-
-  maxCutOff = m_MaxSigmaCutOff->text().toFloat(&ok);
+  maxCutOff = loc.toFloat(m_MaxSigmaCutOff->text(), &ok);
   if (ok == false)
   {
     return 0;
   }
-
-  stepSize = m_BinStepSize->text().toFloat(&ok);
+  stepSize = loc.toFloat(m_BinStepSize->text(), &ok);
   if (ok == false)
   {
     return 0;
@@ -466,6 +466,7 @@ void PrecipitatePhaseWidget::on_m_GenerateDefaultData_clicked()
 // -----------------------------------------------------------------------------
 void PrecipitatePhaseWidget::on_m_Mu_SizeDistribution_textChanged(const QString& text)
 {
+  Q_UNUSED(text);
   updateSizeDistributionPlot();
   m_Mu_SizeDistribution->setFocus();
   calculateNumberOfBins();
@@ -475,6 +476,7 @@ void PrecipitatePhaseWidget::on_m_Mu_SizeDistribution_textChanged(const QString&
 // -----------------------------------------------------------------------------
 void PrecipitatePhaseWidget::on_m_Sigma_SizeDistribution_textChanged(const QString& text)
 {
+  Q_UNUSED(text);
   updateSizeDistributionPlot();
   m_Sigma_SizeDistribution->setFocus();
   calculateNumberOfBins();
@@ -485,6 +487,7 @@ void PrecipitatePhaseWidget::on_m_Sigma_SizeDistribution_textChanged(const QStri
 // -----------------------------------------------------------------------------
 void PrecipitatePhaseWidget::on_m_MinSigmaCutOff_textChanged(const QString& text)
 {
+  Q_UNUSED(text);
   updateSizeDistributionPlot();
   m_MinSigmaCutOff->setFocus();
   calculateNumberOfBins();
@@ -495,6 +498,7 @@ void PrecipitatePhaseWidget::on_m_MinSigmaCutOff_textChanged(const QString& text
 // -----------------------------------------------------------------------------
 void PrecipitatePhaseWidget::on_m_MaxSigmaCutOff_textChanged(const QString& text)
 {
+  Q_UNUSED(text);
   updateSizeDistributionPlot();
   m_MaxSigmaCutOff->setFocus();
   calculateNumberOfBins();
@@ -505,6 +509,7 @@ void PrecipitatePhaseWidget::on_m_MaxSigmaCutOff_textChanged(const QString& text
 // -----------------------------------------------------------------------------
 void PrecipitatePhaseWidget::on_m_BinStepSize_valueChanged(double v)
 {
+  Q_UNUSED(v);
   calculateNumberOfBins();
 }
 

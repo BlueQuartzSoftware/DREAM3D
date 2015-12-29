@@ -46,7 +46,7 @@
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
-
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Utilities/SIMPLibEndian.h"
 
 #include "IO/IOConstants.h"
@@ -263,8 +263,28 @@ AbstractFilter::Pointer LammpsFileWriter::newFilterInstance(bool copyFilterParam
 //
 // -----------------------------------------------------------------------------
 const QString LammpsFileWriter::getCompiledLibraryName()
-{ return IOConstants::IOBaseName; }
+{
+  return IOConstants::IOBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString LammpsFileWriter::getBrandingString()
+{
+  return "IO";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString LammpsFileWriter::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 
 // -----------------------------------------------------------------------------
 //

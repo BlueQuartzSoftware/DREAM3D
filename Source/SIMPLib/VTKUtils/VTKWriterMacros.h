@@ -39,6 +39,7 @@
 #include <QtCore/QtEndian>
 
 #include "SIMPLib/Utilities/SIMPLibEndian.h"
+#include "SIMPLib/SIMPLibVersion.h"
 
 /**@file VTKWriterMacros.h
  * @brief This file contains various macros to write out consistent VTK legacy

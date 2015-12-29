@@ -44,7 +44,6 @@
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/Common/PipelineMessage.h"
 

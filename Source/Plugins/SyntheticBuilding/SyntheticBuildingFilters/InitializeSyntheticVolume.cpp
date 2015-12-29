@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "InitializeSyntheticVolume.h"
 
 #include <QtCore/QFileInfo>
@@ -43,7 +42,6 @@
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -59,6 +57,7 @@
 #include "SIMPLib/StatsData/MatrixStatsData.h"
 #include "SIMPLib/Utilities/SIMPLibRandom.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/SIMPLibVersion.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 
@@ -454,8 +453,28 @@ AbstractFilter::Pointer InitializeSyntheticVolume::newFilterInstance(bool copyFi
 //
 // -----------------------------------------------------------------------------
 const QString InitializeSyntheticVolume::getCompiledLibraryName()
-{ return SyntheticBuildingConstants::SyntheticBuildingBaseName; }
+{
+  return SyntheticBuildingConstants::SyntheticBuildingBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString InitializeSyntheticVolume::getBrandingString()
+{
+  return "SyntheticBuilding";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString InitializeSyntheticVolume::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

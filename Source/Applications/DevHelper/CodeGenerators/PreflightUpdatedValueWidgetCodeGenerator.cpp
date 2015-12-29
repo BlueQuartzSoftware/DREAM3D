@@ -61,6 +61,14 @@ QString PreflightUpdatedValueWidgetCodeGenerator::generateSetupFilterParameters(
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QString PreflightUpdatedValueWidgetCodeGenerator::generateReadFilterParameters()
+{
+  return "  set" + getPropertyName() + "(reader->readString(\"" + getPropertyName() + "\", get" + getPropertyName() + "()));";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QString PreflightUpdatedValueWidgetCodeGenerator::generateDataCheck()
 {
   return "";
@@ -73,8 +81,8 @@ QString PreflightUpdatedValueWidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  ss << "    SIMPL_FILTER_PARAMETER(int, " + getPropertyName() + ")\n";
-  ss << "    Q_PROPERTY(int " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
+  ss << "    SIMPL_FILTER_PARAMETER(QString, " + getPropertyName() + ")\n";
+  ss << "    Q_PROPERTY(QString " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
 }

@@ -276,7 +276,7 @@ DataContainerArray::Pointer initializeDataContainerArray()
   eIds1[2] = 2;
   sizes[0] = 0;
   sizes[1] = 10.5;
-  sizes[2] = 4.7;
+  sizes[2] = static_cast<float>(4.7);
   crystStructs1[0] = 0;
   crystStructs1[1] = 1;
 

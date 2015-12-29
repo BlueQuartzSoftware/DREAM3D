@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "GenerateNodeTriangleConnectivity.h"
 
 #include "SIMPLib/Common/ManagedPointerArray.hpp"

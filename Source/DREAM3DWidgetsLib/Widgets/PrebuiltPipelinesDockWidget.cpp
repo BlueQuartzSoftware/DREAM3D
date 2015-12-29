@@ -299,7 +299,7 @@ QString PrebuiltPipelinesDockWidget::generateHtmlFilterListFromPipelineFile(QStr
   QString name;
   QString dVers;
   FilterPipeline::Pointer pipeline;
-  
+
   QString html;
   QTextStream ss(&html);
   ss << "<html><head></head>\n";
@@ -429,10 +429,10 @@ void PrebuiltPipelinesDockWidget::readSettings(QMainWindow* main, DREAM3DSetting
 {
   main->restoreDockWidget(this);
 
-  bool b = prefs.value(objectName(), false).toBool();
+  bool b = prefs.value(objectName(), QVariant(false)).toBool();
   setHidden(b);
 
-  QByteArray headerState = prefs.value("PrebuiltsHeaderState", QByteArray()).toByteArray();
+  QByteArray headerState = prefs.value("PrebuiltsHeaderState", QByteArray());
   prebuiltsLibraryTree->header()->restoreState(headerState);
 
   prefs.beginGroup("Prebuilts Expansion Metadata");
@@ -443,7 +443,7 @@ void PrebuiltPipelinesDockWidget::readSettings(QMainWindow* main, DREAM3DSetting
     QTreeWidgetItem* item = *iter;
     if (item->type() == FilterLibraryTreeWidget::Node_Item_Type)
     {
-      item->setExpanded(prefs.value(item->text(0), false).toBool());
+      item->setExpanded(prefs.value(item->text(0), QVariant(false)).toBool());
     }
 
     ++iter;

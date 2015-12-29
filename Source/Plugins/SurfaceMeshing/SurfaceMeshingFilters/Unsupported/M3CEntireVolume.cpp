@@ -39,7 +39,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "M3CEntireVolume.h"
 
 #include "MXA/Common/MXAMath.h"

@@ -45,7 +45,7 @@ set(StatsGenerator_SRCS
     ${StatsGenerator_SOURCE_DIR}/TransformationPhaseWidget.cpp
     )
 set(StatsGenerator_HDRS
-#    ${StatsGenerator_SOURCE_DIR}/StatsGen.h
+  ${BrandedDREAM3D_DIR}/BrandedStrings.h
 )
 
 SET(StatsGenerator_MOC_HDRS

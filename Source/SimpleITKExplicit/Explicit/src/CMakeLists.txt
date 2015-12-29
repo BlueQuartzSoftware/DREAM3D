@@ -36,13 +36,6 @@ sitk_install_exported_target( SimpleITKExplicit )
 
 LibraryProperties( SimpleITKExplicit  ${EXE_DEBUG_EXTENSION} )
 
-set(install_dir "bin")
-set(lib_install_dir "lib")
-if(WIN32)
-    set(install_dir ".")
-    set(lib_install_dir "")
-endif()
-
 
 if(BUILD_SHARED_LIBS AND NOT APPLE)
     INSTALL(TARGETS SimpleITKExplicit

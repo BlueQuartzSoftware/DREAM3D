@@ -68,9 +68,10 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
+#include "SIMPLib/Math/SIMPLibMath.h"
+
 #include "OrientationLib/Texture/Texture.hpp"
 #include "OrientationLib/Texture/StatsGen.hpp"
-
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 #include "OrientationLib/SpaceGroupOps/CubicOps.h"
 #include "OrientationLib/SpaceGroupOps/HexagonalOps.h"
@@ -175,9 +176,9 @@ void StatsGenMDFWidget::updateMDFPlot(QVector<float>& odf)
     // Allocate a new vector to hold the mdf data
     QVector<float> mdf(CubicOps::k_MdfSize);
     // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
-    Texture::CalculateMDFData<float, CubicOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), angles.size());
+    Texture::CalculateMDFData<float, CubicOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), static_cast<size_t>(angles.size()));
     // Now generate the actual XY point data that gets plotted.
-    size_t npoints = 13;
+    int npoints = 13;
     x.resize(npoints);
     y.resize(npoints);
     err = StatsGen::GenCubicMDFPlotData(mdf.data(), x.data(), y.data(), npoints, size);
@@ -191,9 +192,9 @@ void StatsGenMDFWidget::updateMDFPlot(QVector<float>& odf)
     // Allocate a new vector to hold the mdf data
     QVector<float> mdf(HexagonalOps::k_MdfSize);
     // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
-    Texture::CalculateMDFData<float, HexagonalOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), angles.size());
+    Texture::CalculateMDFData<float, HexagonalOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), static_cast<size_t>(angles.size()));
     // Now generate the actual XY point data that gets plotted.
-    size_t npoints = 20;
+    int npoints = 20;
     x.resize(npoints);
     y.resize(npoints);
     err = StatsGen::GenHexMDFPlotData(mdf.data(), x.data(), y.data(), npoints, size);
@@ -246,11 +247,11 @@ QVector<float> StatsGenMDFWidget::generateODFData()
 
   for(qint32 i = 0; i < e1s.size(); i++)
   {
-    e1s[i] = e1s[i] * M_PI / 180.0;
-    e2s[i] = e2s[i] * M_PI / 180.0;
-    e3s[i] = e3s[i] * M_PI / 180.0;
+    e1s[i] = e1s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
+    e2s[i] = e2s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
+    e3s[i] = e3s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
   }
-  size_t numEntries = e1s.size();
+  size_t numEntries = static_cast<size_t>(e1s.size());
 
   if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
   {
@@ -305,7 +306,7 @@ void StatsGenMDFWidget::on_deleteMDFRowBtn_clicked()
 void StatsGenMDFWidget::on_loadMDFBtn_clicked()
 {
   QString proposedFile = m_OpenDialogLastDirectory;
-  QString file = QFileDialog::getOpenFileName(this, tr("Open Axis ODF File"), proposedFile, tr("Text Document (*.txt)"));
+  QString file = QFileDialog::getOpenFileName(this, tr("Open MDF File"), proposedFile, tr("Text Document (*.txt)"));
   if(true == file.isEmpty())
   {
     return;
@@ -345,6 +346,7 @@ void StatsGenMDFWidget::on_loadMDFBtn_clicked()
 // -----------------------------------------------------------------------------
 void StatsGenMDFWidget::extractStatsData(int index, StatsData* statsData, unsigned int phaseType)
 {
+  Q_UNUSED(index)
   VectorOfFloatArray arrays;
   if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
   {

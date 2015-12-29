@@ -114,7 +114,7 @@ class DREAM3DWidgetsLib_EXPORT MultiDataArraySelectionWidget : public FilterPara
 
     void on_attributeMatrixCombo_currentIndexChanged(int index);
 
-    void on_attributeArraysWidget_itemChanged(QListWidgetItem* item);
+    void on_attributeArraysSelectWidget_itemChanged(QListWidgetItem* item);
 
 
   protected:
@@ -128,6 +128,8 @@ class DREAM3DWidgetsLib_EXPORT MultiDataArraySelectionWidget : public FilterPara
 
   protected slots:
     void on_selectCheckBox_stateChanged(int state);
+    void on_upBtn_pressed();
+    void on_downBtn_pressed();
 
 
   signals:

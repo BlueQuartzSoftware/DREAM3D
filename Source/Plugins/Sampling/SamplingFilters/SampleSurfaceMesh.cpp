@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "SampleSurfaceMesh.h"
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
@@ -44,13 +43,13 @@
 #endif
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Math/GeometryMath.h"
 #include "SIMPLib/DataArrays/DynamicListArray.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-
 #include "SIMPLib/Utilities/SIMPLibRandom.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
@@ -350,8 +349,28 @@ AbstractFilter::Pointer SampleSurfaceMesh::newFilterInstance(bool copyFilterPara
 //
 // -----------------------------------------------------------------------------
 const QString SampleSurfaceMesh::getCompiledLibraryName()
-{ return SamplingConstants::SamplingBaseName; }
+{
+  return SamplingConstants::SamplingBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString SampleSurfaceMesh::getBrandingString()
+{
+  return "Sampling";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString SampleSurfaceMesh::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

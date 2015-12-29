@@ -33,10 +33,10 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "ErodeDilateCoordinationNumber.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
@@ -325,8 +325,28 @@ AbstractFilter::Pointer ErodeDilateCoordinationNumber::newFilterInstance(bool co
 //
 // -----------------------------------------------------------------------------
 const QString ErodeDilateCoordinationNumber::getCompiledLibraryName()
-{ return ProcessingConstants::ProcessingBaseName; }
+{
+  return ProcessingConstants::ProcessingBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ErodeDilateCoordinationNumber::getBrandingString()
+{
+  return "Processing";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ErodeDilateCoordinationNumber::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

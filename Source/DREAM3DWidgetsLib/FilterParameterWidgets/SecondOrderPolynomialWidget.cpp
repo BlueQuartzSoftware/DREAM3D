@@ -39,6 +39,7 @@
 #include <QtCore/QSignalMapper>
 
 #include "SIMPLib/FilterParameters/SecondOrderPolynomialFilterParameter.h"
+#include "QtSupportLib/DREAM3DStyles.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
@@ -66,7 +67,6 @@ SecondOrderPolynomialWidget::SecondOrderPolynomialWidget(FilterParameter* parame
 SecondOrderPolynomialWidget::~SecondOrderPolynomialWidget()
 {
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -127,6 +127,7 @@ void SecondOrderPolynomialWidget::setupGui()
     c01->setText( QString::number(data.c01) );
     c00->setText( QString::number(data.c00) );
   }
+  errorLabel->hide();
 
 }
 
@@ -135,6 +136,16 @@ void SecondOrderPolynomialWidget::setupGui()
 // -----------------------------------------------------------------------------
 void SecondOrderPolynomialWidget::widgetChanged(const QString& text)
 {
+  Q_UNUSED(text)
+  errorLabel->hide();
+
+  FOPW_CHECK_LINEEDIT(c20)
+  FOPW_CHECK_LINEEDIT(c02)
+  FOPW_CHECK_LINEEDIT(c11)
+  FOPW_CHECK_LINEEDIT(c10)
+  FOPW_CHECK_LINEEDIT(c01)
+  FOPW_CHECK_LINEEDIT(c00)
+
   emit parametersChanged();
 }
 
@@ -145,13 +156,16 @@ void SecondOrderPolynomialWidget::filterNeedsInputParameters(AbstractFilter* fil
 {
   bool ok = false;
   Float2ndOrderPoly_t data;
-  data.c20 = c20->text().toDouble(&ok);
-  data.c02 = c02->text().toDouble(&ok);
-  data.c11 = c11->text().toDouble(&ok);
+  Float2ndOrderPoly_t defValue = m_FilterParameter->getDefaultValue().value<Float2ndOrderPoly_t>();
 
-  data.c10 = c10->text().toDouble(&ok);
-  data.c01 = c01->text().toDouble(&ok);
-  data.c00 = c00->text().toDouble(&ok);
+  QLocale loc;
+
+  FOPW_EXTRACT_VALUE(c20)
+  FOPW_EXTRACT_VALUE(c02)
+  FOPW_EXTRACT_VALUE(c11)
+  FOPW_EXTRACT_VALUE(c10)
+  FOPW_EXTRACT_VALUE(c01)
+  FOPW_EXTRACT_VALUE(c00)
 
   QVariant v;
   v.setValue(data);
