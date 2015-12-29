@@ -319,6 +319,16 @@ class SIMPLib_EXPORT ImageGeom : public IGeometry
     unsigned int m_SpatialDimensionality;
     AttributeMatrixMap_t m_AttributeMatrices;
 
+    void computeIndices(int32_t differenceType, int32_t directionType,
+                        size_t& index1, size_t& index2, size_t dims[3], size_t x, size_t y, size_t z,
+                        double xp[3], double xm[3]);
+
+    void findValuesForFiniteDifference(int32_t differenceType, int32_t directionType,
+                                       size_t x, size_t y, size_t z, size_t dims[3],
+                                       double xp[3], double xm[3], double& factor, int32_t numComps,
+                                       std::vector<double>& plusValues, std::vector<double>& minusValues,
+                                        double* field);
+
     ImageGeom(const ImageGeom&); // Copy Constructor Not Implemented
     void operator=(const ImageGeom&); // Operator '=' Not Implemented
 };

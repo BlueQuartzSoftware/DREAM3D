@@ -343,7 +343,9 @@ void ImageGeom::getParametricCenter(double pCoords[3])
 // -----------------------------------------------------------------------------
 void ImageGeom::getShapeFunctions(double pCoords[3], double* shape)
 {
-  double rm, sm, tm;
+  double rm = 0.0;
+  double sm = 0.0;
+  double tm = 0.0;
 
   rm = 1.0 - pCoords[0];
   sm = 1.0 - pCoords[1];
@@ -383,27 +385,205 @@ void ImageGeom::getShapeFunctions(double pCoords[3], double* shape)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ImageGeom::computeIndices(int32_t differenceType, int32_t directionType,
+                    size_t& index1, size_t& index2, size_t dims[3],
+                     size_t x, size_t y, size_t z, double xp[3], double xm[3])
+
+{
+  size_t tmpIndex1 = 0;
+  size_t tmpIndex2 = 0;
+
+  switch (directionType)
+  {
+    case 0:
+    {
+      if (differenceType == 1)
+      {
+        index1 = (z * dims[1] * dims[0]) + (y * dims[0]) + (x + 1);
+        index2 = (z * dims[1] * dims[0]) + (y * dims[0]) + x;
+        tmpIndex1 = x + 1;
+        getCoords(tmpIndex1, y, z, xp);
+        getCoords(x, y, z, xm);
+      }
+      else if (differenceType == 2)
+      {
+        index1 = (z * dims[1] * dims[0]) + (y * dims[0]) + x;
+        index2 = (z * dims[1] * dims[0]) + (y * dims[0]) + (x - 1);
+        tmpIndex1 = x - 1;
+        getCoords(x, y, z, xp);
+        getCoords(tmpIndex1, y, z, xm);
+      }
+      else if (differenceType == 3)
+      {
+        index1 = (z * dims[1] * dims[0]) + (y * dims[0]) + (x + 1);
+        index2 = (z * dims[1] * dims[0]) + (y * dims[0]) + (x - 1);
+        tmpIndex1 = x + 1;
+        tmpIndex2 = x - 1;
+        getCoords(tmpIndex1, y, z, xp);
+        getCoords(tmpIndex2, y, z, xm);
+      }
+      break;
+    }
+    case 1:
+    {
+      if (differenceType == 1)
+      {
+        index1 = (z * dims[1] * dims[0]) + ((y + 1) * dims[0]) + x;
+        index2 = (z * dims[1] * dims[0]) + (y * dims[0]) + x;
+        tmpIndex1 = y + 1;
+        getCoords(x, tmpIndex1, z, xp);
+        getCoords(x, y, z, xm);
+      }
+      else if (differenceType == 2)
+      {
+        index1 = (z * dims[1] * dims[0]) + (y * dims[0]) + x;
+        index2 = (z * dims[1] * dims[0]) + ((y - 1) * dims[0]) + x;
+        tmpIndex1 = y - 1;
+        getCoords(x, y, z, xp);
+        getCoords(x, tmpIndex1, z, xm);
+      }
+      else if (differenceType == 3)
+      {
+        index1 = (z * dims[1] * dims[0]) + ((y + 1) * dims[0]) + x;
+        index2 = (z * dims[1] * dims[0]) + ((y - 1) * dims[0]) + x;
+        tmpIndex1 = y + 1;
+        tmpIndex2 = y - 1;
+        getCoords(x, tmpIndex1, z, xp);
+        getCoords(x, tmpIndex2, z, xm);
+      }
+      break;
+    }
+    case 2:
+    {
+      if (differenceType == 1)
+      {
+        index1 = ((z + 1) * dims[1] * dims[0]) + (y * dims[0]) + x;
+        index2 = (z * dims[1] * dims[0]) + (y * dims[0]) + x;
+        tmpIndex1 = z + 1;
+        getCoords(x, y, tmpIndex1, xp);
+        getCoords(x, y, z, xm);
+      }
+      else if (differenceType == 2)
+      {
+        index1 = (z * dims[1] * dims[0]) + (y * dims[0]) + x;
+        index2 = ((z - 1) * dims[1] * dims[0]) + (y * dims[0]) + x;
+        tmpIndex1 = z - 1;
+        getCoords(x, y, z, xp);
+        getCoords(x, y, tmpIndex1, xm);
+      }
+      else if (differenceType == 3)
+      {
+        index1 = ((z + 1) * dims[1] * dims[0]) + (y * dims[0]) + x;
+        index2 = ((z - 1) * dims[1] * dims[0]) + (y * dims[0]) + x;
+        tmpIndex1 = z + 1;
+        tmpIndex2 = z - 1;
+        getCoords(x, y, tmpIndex1, xp);
+        getCoords(x, y, tmpIndex2, xm);
+      }
+      break;
+    }
+    default:
+    {
+      break;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ImageGeom::findValuesForFiniteDifference(int32_t differenceType, int32_t directionType,
+                                   size_t x, size_t y, size_t z, size_t dims[3],
+                                   double xp[3], double xm[3], double& factor, int32_t numComps,
+                                   std::vector<double>& plusValues, std::vector<double>& minusValues, double* field)
+{
+  size_t index1 = 0;
+  size_t index2 = 0;
+
+  switch (differenceType)
+  {
+    case 0:
+    {
+      factor = 1.0;
+      for (size_t i = 0; i < 3; i++) { xp[i] = xm[i] = 0.0; }
+      xp[directionType] = 1.0;
+      for (int32_t i = 0; i < numComps; i++) { plusValues[i] = minusValues[i] = 0.0; }
+      break;
+    }
+    case 1:
+    {
+      factor = 1.0;
+      computeIndices(differenceType, directionType, index1, index2, dims, x, y, z, xp, xm);
+      break;
+    }
+    case 2:
+    {
+      factor = 1.0;
+      computeIndices(differenceType, directionType, index1, index2, dims, x, y, z, xp, xm);
+      break;
+    }
+    case 3:
+    {
+      factor = 0.5;
+      computeIndices(differenceType, directionType, index1, index2, dims, x, y, z, xp, xm);
+      break;
+    }
+    default:
+    {
+      break;
+    }
+  }
+
+  if (differenceType != 0)
+  {
+    for (int32_t i = 0; i < numComps; i++)
+    {
+      plusValues[i] = field[index1 * numComps + i];
+      minusValues[i] = field[index2 * numComps + i];
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ImageGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives)
 {
-  int inputComponent;
-  double xp[3], xm[3], factor;
-  xp[0] = xp[1] = xp[2] = xm[0] = xm[1] = xm[2] = factor = 0;
+  double xp[3] = { 0.0, 0.0, 0.0 };
+  double xm[3] = { 0.0, 0.0, 0.0 };
+  double factor = 0.0;
+
+  enum FiniteDifferenceType
+  {
+    TwoDimensional = 0,
+    LeftSide,
+    RightSide,
+    Centered
+  };
+
+  enum DirectionType
+  {
+    XDirection = 0,
+    YDirection,
+    ZDirection
+  };
+
   double xxi, yxi, zxi, xeta, yeta, zeta, xzeta, yzeta, zzeta;
   xxi = yxi = zxi = xeta = yeta = zeta = xzeta = yzeta = zzeta = 0;
   double aj, xix, xiy, xiz, etax, etay, etaz, zetax, zetay, zetaz;
   aj = xix = xiy = xiz = etax = etay = etaz = zetax = zetay = zetaz = 0;
-  size_t idx, idx2, tmpIdx, tmpIdx2;
-  int numberOfInputComponents = field->getNumberOfComponents();
+  size_t idx = 0;
+  int32_t numComps = field->getNumberOfComponents();
   double* fieldPtr = field->getPointer(0);
   double* derivsPtr = derivatives->getPointer(0);
   // for finite differencing -- the values on the "plus" side and
   // "minus" side of the point to be computed at
-  std::vector<double> plusvalues(numberOfInputComponents);
-  std::vector<double> minusvalues(numberOfInputComponents);
+  std::vector<double> plusvalues(numComps);
+  std::vector<double> minusvalues(numComps);
 
-  std::vector<double> dValuesdXi(numberOfInputComponents);
-  std::vector<double> dValuesdEta(numberOfInputComponents);
-  std::vector<double> dValuesdZeta(numberOfInputComponents);
+  std::vector<double> dValuesdXi(numComps);
+  std::vector<double> dValuesdEta(numComps);
+  std::vector<double> dValuesdZeta(numComps);
 
   size_t dims[3];
   getDimensions(dims);
@@ -419,69 +599,29 @@ void ImageGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType:
         //  Xi derivatives.
         if ( dims[0] == 1 ) // 2D in this direction
         {
-          factor = 1.0;
-          for (size_t ii = 0; ii < 3; ii++)
-          {
-            xp[ii] = xm[ii] = 0.0;
-          }
-          xp[0] = 1.0;
-          for(inputComponent = 0; inputComponent < numberOfInputComponents;
-              inputComponent++)
-          {
-            plusvalues[inputComponent] = minusvalues[inputComponent] = 0;
-          }
+          findValuesForFiniteDifference(TwoDimensional, XDirection, x, y, z, dims,
+                                        xp, xm, factor, numComps, plusvalues, minusvalues, fieldPtr);
         }
         else if ( x == 0 )
         {
-          factor = 1.0;
-          idx = (x + 1) + y * dims[0] + z * xysize;
-          idx2 = x + y * dims[0] + z * xysize;
-          tmpIdx = x + 1;
-          getCoords(tmpIdx, y, z, xp);
-          getCoords(x, y, z, xm);
-          for(inputComponent = 0; inputComponent < numberOfInputComponents;
-              inputComponent++)
-          {
-            plusvalues[inputComponent] = fieldPtr[idx * numberOfInputComponents + inputComponent];
-            minusvalues[inputComponent] = fieldPtr[idx2 * numberOfInputComponents + inputComponent];
-          }
+          findValuesForFiniteDifference(LeftSide, XDirection, x, y, z, dims,
+                                        xp, xm, factor, numComps, plusvalues, minusvalues, fieldPtr);
         }
         else if ( x == (dims[0] - 1) )
         {
-          factor = 1.0;
-          idx = x + y * dims[0] + z * xysize;
-          idx2 = x - 1 + y * dims[0] + z * xysize;
-          tmpIdx = x - 1;
-          getCoords(x, y, z, xp);
-          getCoords(tmpIdx, y, z, xm);
-          for(inputComponent = 0; inputComponent < numberOfInputComponents;
-              inputComponent++)
-          {
-            plusvalues[inputComponent] = fieldPtr[idx * numberOfInputComponents + inputComponent];
-            minusvalues[inputComponent] = fieldPtr[idx2 * numberOfInputComponents + inputComponent];
-          }
+          findValuesForFiniteDifference(RightSide, XDirection, x, y, z, dims,
+                                        xp, xm, factor, numComps, plusvalues, minusvalues, fieldPtr);
         }
         else
         {
-          factor = 0.5;
-          idx = (x + 1) + y * dims[0] + z * xysize;
-          idx2 = (x - 1) + y * dims[0] + z * xysize;
-          tmpIdx = x + 1;
-          tmpIdx2 = x - 1;
-          getCoords(tmpIdx, y, z, xp);
-          getCoords(tmpIdx2, y, z, xm);
-          for(inputComponent = 0; inputComponent < numberOfInputComponents;
-              inputComponent++)
-          {
-            plusvalues[inputComponent] = fieldPtr[idx * numberOfInputComponents + inputComponent];
-            minusvalues[inputComponent] = fieldPtr[idx2 * numberOfInputComponents + inputComponent];
-          }
+          findValuesForFiniteDifference(Centered, XDirection, x, y, z, dims,
+                                        xp, xm, factor, numComps, plusvalues, minusvalues, fieldPtr);
         }
 
         xxi = factor * (xp[0] - xm[0]);
         yxi = factor * (xp[1] - xm[1]);
         zxi = factor * (xp[2] - xm[2]);
-        for(inputComponent = 0; inputComponent < numberOfInputComponents; inputComponent++)
+        for(int32_t inputComponent = 0; inputComponent < numComps; inputComponent++)
         {
           dValuesdXi[inputComponent] = factor *
                                        (plusvalues[inputComponent] - minusvalues[inputComponent]);
@@ -490,69 +630,29 @@ void ImageGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType:
         //  Eta derivatives.
         if ( dims[1] == 1 ) // 2D in this direction
         {
-          factor = 1.0;
-          for (size_t ii = 0; ii < 3; ii++)
-          {
-            xp[ii] = xm[ii] = 0.0;
-          }
-          xp[1] = 1.0;
-          for(inputComponent = 0; inputComponent < numberOfInputComponents;
-              inputComponent++)
-          {
-            plusvalues[inputComponent] = minusvalues[inputComponent] = 0;
-          }
+          findValuesForFiniteDifference(TwoDimensional, YDirection, x, y, z, dims,
+                                        xp, xm, factor, numComps, plusvalues, minusvalues, fieldPtr);
         }
         else if ( y == 0 )
         {
-          factor = 1.0;
-          idx = x + (y + 1) * dims[0] + z * xysize;
-          idx2 = x + y * dims[0] + z * xysize;
-          tmpIdx = y + 1;
-          getCoords(x, tmpIdx, z, xp);
-          getCoords(x, y, z, xm);
-          for(inputComponent = 0; inputComponent < numberOfInputComponents;
-              inputComponent++)
-          {
-            plusvalues[inputComponent] = fieldPtr[idx * numberOfInputComponents + inputComponent];
-            minusvalues[inputComponent] = fieldPtr[idx2 * numberOfInputComponents + inputComponent];
-          }
+          findValuesForFiniteDifference(LeftSide, YDirection, x, y, z, dims,
+                                        xp, xm, factor, numComps, plusvalues, minusvalues, fieldPtr);
         }
         else if ( y == (dims[1] - 1) )
         {
-          factor = 1.0;
-          idx = x + y * dims[0] + z * xysize;
-          idx2 = x + (y - 1) * dims[0] + z * xysize;
-          tmpIdx = y - 1;
-          getCoords(x, y, z, xp);
-          getCoords(x, tmpIdx, z, xm);
-          for(inputComponent = 0; inputComponent < numberOfInputComponents;
-              inputComponent++)
-          {
-            plusvalues[inputComponent] = fieldPtr[idx * numberOfInputComponents + inputComponent];
-            minusvalues[inputComponent] = fieldPtr[idx2 * numberOfInputComponents + inputComponent];
-          }
+          findValuesForFiniteDifference(RightSide, YDirection, x, y, z, dims,
+                                        xp, xm, factor, numComps, plusvalues, minusvalues, fieldPtr);
         }
         else
         {
-          factor = 0.5;
-          idx = x + (y + 1) * dims[0] + z * xysize;
-          idx2 = x + (y - 1) * dims[0] + z * xysize;
-          tmpIdx = y + 1;
-          tmpIdx2 = y - 1;
-          getCoords(x, tmpIdx, z, xp);
-          getCoords(x, tmpIdx2, z, xm);
-          for(inputComponent = 0; inputComponent < numberOfInputComponents;
-              inputComponent++)
-          {
-            plusvalues[inputComponent] = fieldPtr[idx * numberOfInputComponents + inputComponent];
-            minusvalues[inputComponent] = fieldPtr[idx2 * numberOfInputComponents + inputComponent];
-          }
+          findValuesForFiniteDifference(Centered, YDirection, x, y, z, dims,
+                                        xp, xm, factor, numComps, plusvalues, minusvalues, fieldPtr);
         }
 
         xeta = factor * (xp[0] - xm[0]);
         yeta = factor * (xp[1] - xm[1]);
         zeta = factor * (xp[2] - xm[2]);
-        for(inputComponent = 0; inputComponent < numberOfInputComponents; inputComponent++)
+        for(int32_t inputComponent = 0; inputComponent < numComps; inputComponent++)
         {
           dValuesdEta[inputComponent] = factor *
                                         (plusvalues[inputComponent] - minusvalues[inputComponent]);
@@ -561,69 +661,29 @@ void ImageGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType:
         //  Zeta derivatives.
         if ( dims[2] == 1 ) // 2D in this direction
         {
-          factor = 1.0;
-          for (size_t ii = 0; ii < 3; ii++)
-          {
-            xp[ii] = xm[ii] = 0.0;
-          }
-          for(inputComponent = 0; inputComponent < numberOfInputComponents;
-              inputComponent++)
-          {
-            plusvalues[inputComponent] = minusvalues[inputComponent] = 0;
-          }
-          xp[2] = 1.0;
+          findValuesForFiniteDifference(TwoDimensional, ZDirection, x, y, z, dims,
+                                        xp, xm, factor, numComps, plusvalues, minusvalues, fieldPtr);
         }
         else if ( z == 0 )
         {
-          factor = 1.0;
-          idx = x + y * dims[0] + (z + 1) * xysize;
-          idx2 = x + y * dims[0] + z * xysize;
-          tmpIdx = z + 1;
-          getCoords(x, y, tmpIdx, xp);
-          getCoords(x, y, z, xm);
-          for(inputComponent = 0; inputComponent < numberOfInputComponents;
-              inputComponent++)
-          {
-            plusvalues[inputComponent] = fieldPtr[idx * numberOfInputComponents + inputComponent];
-            minusvalues[inputComponent] = fieldPtr[idx2 * numberOfInputComponents + inputComponent];
-          }
+          findValuesForFiniteDifference(LeftSide, ZDirection, x, y, z, dims,
+                                        xp, xm, factor, numComps, plusvalues, minusvalues, fieldPtr);
         }
         else if ( z == (dims[2] - 1) )
         {
-          factor = 1.0;
-          idx = x + y * dims[0] + z * xysize;
-          idx2 = x + y * dims[0] + (z - 1) * xysize;
-          tmpIdx = z - 1;
-          getCoords(x, y, z, xp);
-          getCoords(x, y, tmpIdx, xm);
-          for(inputComponent = 0; inputComponent < numberOfInputComponents;
-              inputComponent++)
-          {
-            plusvalues[inputComponent] = fieldPtr[idx * numberOfInputComponents + inputComponent];
-            minusvalues[inputComponent] = fieldPtr[idx2 * numberOfInputComponents + inputComponent];
-          }
+          findValuesForFiniteDifference(RightSide, ZDirection, x, y, z, dims,
+                                        xp, xm, factor, numComps, plusvalues, minusvalues, fieldPtr);
         }
         else
         {
-          factor = 0.5;
-          idx = x + y * dims[0] + (z + 1) * xysize;
-          idx2 = x + y * dims[0] + (z - 1) * xysize;
-          tmpIdx = z + 1;
-          tmpIdx2 = z - 1;
-          getCoords(x, y, tmpIdx, xp);
-          getCoords(x, y, tmpIdx2, xm);
-          for(inputComponent = 0; inputComponent < numberOfInputComponents;
-              inputComponent++)
-          {
-            plusvalues[inputComponent] = fieldPtr[idx * numberOfInputComponents + inputComponent];
-            minusvalues[inputComponent] = fieldPtr[idx2 * numberOfInputComponents + inputComponent];
-          }
+          findValuesForFiniteDifference(Centered, ZDirection, x, y, z, dims,
+                                        xp, xm, factor, numComps, plusvalues, minusvalues, fieldPtr);
         }
 
         xzeta = factor * (xp[0] - xm[0]);
         yzeta = factor * (xp[1] - xm[1]);
         zzeta = factor * (xp[2] - xm[2]);
-        for(inputComponent = 0; inputComponent < numberOfInputComponents; inputComponent++)
+        for(int32_t inputComponent = 0; inputComponent < numComps; inputComponent++)
         {
           dValuesdZeta[inputComponent] = factor *
                                          (plusvalues[inputComponent] - minusvalues[inputComponent]);
@@ -658,17 +718,17 @@ void ImageGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType:
 
         // Finally compute the actual derivatives
         idx = x + y * dims[0] + z * xysize;
-        for(inputComponent = 0; inputComponent < numberOfInputComponents; inputComponent++)
+        for(int32_t inputComponent = 0; inputComponent < numComps; inputComponent++)
         {
-          derivsPtr[idx * numberOfInputComponents * 3 + inputComponent * 3] =
+          derivsPtr[idx * numComps * 3 + inputComponent * 3] =
             xix * dValuesdXi[inputComponent] + etax * dValuesdEta[inputComponent] +
             zetax * dValuesdZeta[inputComponent];
 
-          derivsPtr[idx * numberOfInputComponents * 3 + inputComponent * 3 + 1] =
+          derivsPtr[idx * numComps * 3 + inputComponent * 3 + 1] =
             xiy * dValuesdXi[inputComponent] + etay * dValuesdEta[inputComponent] +
             zetay * dValuesdZeta[inputComponent];
 
-          derivsPtr[idx * numberOfInputComponents * 3 + inputComponent * 3 + 2] =
+          derivsPtr[idx * numComps * 3 + inputComponent * 3 + 2] =
             xiz * dValuesdXi[inputComponent] + etaz * dValuesdEta[inputComponent] +
             zetaz * dValuesdZeta[inputComponent];
         }

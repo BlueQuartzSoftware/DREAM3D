@@ -391,7 +391,9 @@ void RectGridGeom::getParametricCenter(double pCoords[3])
 // -----------------------------------------------------------------------------
 void RectGridGeom::getShapeFunctions(double pCoords[3], double* shape)
 {
-  double rm, sm, tm;
+  double rm = 0.0;
+  double sm = 0.0;
+  double tm = 0.0;
 
   rm = 1.0 - pCoords[0];
   sm = 1.0 - pCoords[1];
