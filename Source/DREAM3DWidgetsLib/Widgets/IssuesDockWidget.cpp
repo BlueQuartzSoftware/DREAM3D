@@ -87,7 +87,7 @@ void IssuesDockWidget::setupGui()
 // -----------------------------------------------------------------------------
 void IssuesDockWidget::on_errorTableWidget_itemClicked( QTableWidgetItem* item )
 {
-  qDebug() << item->text().toLatin1().data() << "\n";
+
 }
 
 

@@ -94,3 +94,11 @@ QString AxisAngleWidgetCodeGenerator::generateCPPIncludes()
 {
   return "#include \"SIMPLib/FilterParameters/AxisAngleFilterParameter.h\"";
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString AxisAngleWidgetCodeGenerator::generateHIncludes()
+{
+  return "#include \"EbsdLib/EbsdConstants.h\"";
+}

@@ -33,26 +33,26 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _PreflightUpdatedValueWidgetCodeGenerator_H_
-#define _PreflightUpdatedValueWidgetCodeGenerator_H_
+#ifndef _DataContainerCreationWidgetCodeGenerator_H_
+#define _DataContainerCreationWidgetCodeGenerator_H_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "DevHelper/CodeGenerators/FPCodeGenerator.h"
 
-class PreflightUpdatedValueWidgetCodeGenerator : public FPCodeGenerator
+class DataContainerCreationWidgetCodeGenerator : public FPCodeGenerator
 {
   public:
-    SIMPL_SHARED_POINTERS(PreflightUpdatedValueWidgetCodeGenerator)
+    SIMPL_SHARED_POINTERS(DataContainerCreationWidgetCodeGenerator)
 
     static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
     {
-      Pointer sharedPtr(new PreflightUpdatedValueWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
+      Pointer sharedPtr(new DataContainerCreationWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
       return sharedPtr;
     }
 
-    virtual ~PreflightUpdatedValueWidgetCodeGenerator();
+    virtual ~DataContainerCreationWidgetCodeGenerator();
 
     virtual QString generateSetupFilterParameters();
 
@@ -65,12 +65,12 @@ class PreflightUpdatedValueWidgetCodeGenerator : public FPCodeGenerator
     virtual QString generateCPPIncludes();
 
   protected:
-    PreflightUpdatedValueWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
+    DataContainerCreationWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
 
   private:
 
-    PreflightUpdatedValueWidgetCodeGenerator(const PreflightUpdatedValueWidgetCodeGenerator&); // Copy Constructor Not Implemented
-    void operator=(const PreflightUpdatedValueWidgetCodeGenerator&); // Operator '=' Not Implemented
+    DataContainerCreationWidgetCodeGenerator(const DataContainerCreationWidgetCodeGenerator&); // Copy Constructor Not Implemented
+    void operator=(const DataContainerCreationWidgetCodeGenerator&); // Operator '=' Not Implemented
 };
 
-#endif /* PreflightUpdatedValueWidgetCodeGenerator_H_ */
+#endif /* DataContainerCreationWidgetCodeGenerator_H_ */

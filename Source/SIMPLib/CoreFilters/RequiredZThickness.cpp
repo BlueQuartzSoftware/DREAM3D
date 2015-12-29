@@ -34,28 +34,27 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-
-#include "CreateDataContainer.h"
+#include "RequiredZThickness.h"
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
-
-
-// Include the MOC generated file for this class
-#include "moc_CreateDataContainer.cpp"
-
-
-
+#include "moc_RequiredZThickness.cpp"
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CreateDataContainer::CreateDataContainer() :
-  AbstractFilter(),
-  m_CreatedDataContainer("DataContainer")
+RequiredZThickness::RequiredZThickness() :
+  AbstractDecisionFilter(),
+  m_DataContainerSelection(""),
+  m_NumVoxels(0),
+  m_PreflightCheck(false)
 {
   setupFilterParameters();
 }
@@ -63,37 +62,49 @@ CreateDataContainer::CreateDataContainer() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CreateDataContainer::~CreateDataContainer()
+RequiredZThickness::~RequiredZThickness()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CreateDataContainer::setupFilterParameters()
+void RequiredZThickness::setupFilterParameters()
 {
-  FilterParameterVector parameters;
-  parameters.push_back(DataContainerCreationFilterParameter::New("Created Data Container", "CreatedDataContainer", getCreatedDataContainer(), FilterParameter::CreatedArray));
+  FilterParameterVector parameters = getFilterParameters();
+
+  {
+    DataContainerSelectionFilterParameter::RequirementType req;
+    parameters.push_back(DataContainerSelectionFilterParameter::New("DataContainer", "DataContainerSelection", getDataContainerSelection(), FilterParameter::RequiredArray, req));
+  }
+  parameters.push_back(IntFilterParameter::New("Minimum Z Dimension", "NumVoxels", getNumVoxels(), FilterParameter::Parameter, 0));
+  parameters.push_back(BooleanFilterParameter::New("Preflight Check", "PreflightCheck", getPreflightCheck(), FilterParameter::Parameter));
   setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CreateDataContainer::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void RequiredZThickness::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  AbstractDecisionFilter::readFilterParameters(reader, index);
   reader->openFilterGroup(this, index);
-  setCreatedDataContainer(reader->readString("CreatedDataContainer", getCreatedDataContainer()));
+  setDataContainerSelection(reader->readString("DataContainerSelection", getDataContainerSelection()));
+  setNumVoxels(reader->readValue("MaxGrains", getNumVoxels()));
+  setPreflightCheck(reader->readValue("PreflightCheck", getPreflightCheck()));
   reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int CreateDataContainer::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int RequiredZThickness::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  AbstractDecisionFilter::writeFilterParameters(writer, index);
   writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(CreatedDataContainer)
+  SIMPL_FILTER_WRITE_PARAMETER(NumVoxels)
+  SIMPL_FILTER_WRITE_PARAMETER(PreflightCheck)
+  SIMPL_FILTER_WRITE_PARAMETER(DataContainerSelection)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -101,44 +112,75 @@ int CreateDataContainer::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CreateDataContainer::dataCheck()
+void RequiredZThickness::dataCheck()
 {
   setErrorCondition(0);
+  if(getErrorCondition() < 0) { return; }
 
-  getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getCreatedDataContainer());
+  DataContainer::Pointer dataContainer = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerSelection());
+  if (getErrorCondition() < 0) { return; }
+
+  ImageGeom::Pointer image = dataContainer->getGeometryAs<ImageGeom>();
+  if( NULL == image.get() )
+  {
+    setErrorCondition(-7789);
+    notifyErrorMessage(getHumanLabel(), "Missing Image Geometry in the selected DataContainer", getErrorCondition());
+    return;
+  }
+
+  size_t dims[3] = { 0, 0, 0 };
+  image->getDimensions(dims);
+
+
+  if (dims[2] < m_NumVoxels && m_PreflightCheck)
+  {
+    setErrorCondition(-7787);
+    notifyErrorMessage(getHumanLabel(), "Number of Z Voxels does not meet required value. ", getErrorCondition());
+  } 
+  else  if (dims[2] < m_NumVoxels && !m_PreflightCheck)
+  {
+    notifyWarningMessage(getHumanLabel(), "Number of Z Voxels does not meet required value during preflight but will be checked during pipeline execution.", getErrorCondition());
+  }
+
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CreateDataContainer::preflight()
+void RequiredZThickness::preflight()
 {
-  // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
-  setInPreflight(true); // Set the fact that we are preflighting.
-  emit preflightAboutToExecute(); // Emit this signal so that other widgets can do one file update
-  emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
-  dataCheck(); // Run our DataCheck to make sure everthing is setup correctly
-  emit preflightExecuted(); // We are done preflighting this filter
-  setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
+  setInPreflight(true);
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
+  dataCheck();
+  emit preflightExecuted();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CreateDataContainer::execute()
+void RequiredZThickness::execute()
 {
   setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  if (getCancel() == true) { return; }
+  DataContainer::Pointer dataContainer = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerSelection());
+  if (getErrorCondition() < 0) { return; }
 
-  if (getErrorCondition() < 0)
+  ImageGeom::Pointer image = dataContainer->getGeometryAs<ImageGeom>();
+
+  size_t dims[3] = { 0, 0, 0 };
+  image->getDimensions(dims);
+
+
+  if (dims[2] < m_NumVoxels)
   {
-    QString ss = QObject::tr("Some error message");
-    setErrorCondition(-99999999);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
+    setErrorCondition(-7788);
+    notifyErrorMessage(getHumanLabel(), "Number of Z Voxels does not meet required value during execution of the filter. ", getErrorCondition());
+    bool needMoreData = true;
+    emit decisionMade(needMoreData);
   }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
@@ -147,9 +189,9 @@ void CreateDataContainer::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer CreateDataContainer::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer RequiredZThickness::newFilterInstance(bool copyFilterParameters)
 {
-  CreateDataContainer::Pointer filter = CreateDataContainer::New();
+  RequiredZThickness::Pointer filter = RequiredZThickness::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -160,43 +202,29 @@ AbstractFilter::Pointer CreateDataContainer::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CreateDataContainer::getCompiledLibraryName()
-{ return Core::CoreBaseName; }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString CreateDataContainer::getBrandingString()
+const QString RequiredZThickness::getCompiledLibraryName()
 {
-  return "SIMPLib Core Filter";
+  return Core::CoreBaseName;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CreateDataContainer::getFilterVersion()
+const QString RequiredZThickness::getGroupName()
 {
-  QString version;
-  QTextStream vStream(&version);
-  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
-  return version;
+  return DREAM3D::FilterGroups::CoreFilters;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CreateDataContainer::getGroupName()
-{ return DREAM3D::FilterGroups::CoreFilters; }
+const QString RequiredZThickness::getSubGroupName()
+{
+  return DREAM3D::FilterSubGroups::MiscFilters;
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CreateDataContainer::getHumanLabel()
-{ return "Create Data Container"; }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString CreateDataContainer::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::GenerationFilters; }
-
+const QString RequiredZThickness::getHumanLabel()
+{ return "Required Z Dimension (Image Geometry)"; }

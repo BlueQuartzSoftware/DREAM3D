@@ -12,6 +12,7 @@ Developers:[https://groups.google.com/forum/?hl=en#!forum/dream3d-developers](ht
 
 ## Version 6.2.XXX ##
 + Added **Filter** "Import ASCII Data", which implements a generic text reader to import data into DREAM.3D.  The **Filter** utilizes a wizard to guide the user through importing their column-oriented ASCII data.
++ Added **Filter** "Combine Attribute Arrays", which allows the user to stack any number of **Attribute Arrays** to form a new combined array.
 + Added **Filter** "Find GBCD (Metric-Based Approach)" from contributor K. Glowinski.
 + Added **Filter** "Combine Attribute Matrices" from contributor M. Groeber.
 + The "Import Images (3D Stack)" **Filter** should now correctly recognize the number of pixel bytes in the incoming images.

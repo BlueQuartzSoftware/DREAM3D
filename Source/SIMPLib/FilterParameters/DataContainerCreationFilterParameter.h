@@ -33,44 +33,38 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _PreflightUpdatedValueWidgetCodeGenerator_H_
-#define _PreflightUpdatedValueWidgetCodeGenerator_H_
+#ifndef _DataContainerCreationFilterParameter_H_
+#define _DataContainerCreationFilterParameter_H_
 
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/FilterParameters/FilterParameter.h"
 
-#include "DevHelper/CodeGenerators/FPCodeGenerator.h"
-
-class PreflightUpdatedValueWidgetCodeGenerator : public FPCodeGenerator
+class SIMPLib_EXPORT DataContainerCreationFilterParameter : public FilterParameter
 {
-  public:
-    SIMPL_SHARED_POINTERS(PreflightUpdatedValueWidgetCodeGenerator)
+public:
+  SIMPL_SHARED_POINTERS(DataContainerCreationFilterParameter)
+    SIMPL_STATIC_NEW_MACRO(DataContainerCreationFilterParameter)
+    SIMPL_TYPE_MACRO(DataContainerCreationFilterParameter)
 
-    static Pointer New(QString humanLabel, QString propertyName, QString category, QString initValue)
-    {
-      Pointer sharedPtr(new PreflightUpdatedValueWidgetCodeGenerator(humanLabel, propertyName, category, initValue));
-      return sharedPtr;
-    }
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+    const QString& defaultValue, Category category,
+     int groupIndex = -1);
 
-    virtual ~PreflightUpdatedValueWidgetCodeGenerator();
+    virtual ~DataContainerCreationFilterParameter();
 
-    virtual QString generateSetupFilterParameters();
+  /**
+   * @brief getWidgetType Returns the type of widget that displays and controls
+   * this FilterParameter subclass
+   * @return
+   */
+  QString getWidgetType();
 
-    virtual QString generateReadFilterParameters();
 
-    virtual QString generateDataCheck();
+protected:
+  DataContainerCreationFilterParameter();
 
-    virtual QString generateFilterParameters();
-
-    virtual QString generateCPPIncludes();
-
-  protected:
-    PreflightUpdatedValueWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue);
-
-  private:
-
-    PreflightUpdatedValueWidgetCodeGenerator(const PreflightUpdatedValueWidgetCodeGenerator&); // Copy Constructor Not Implemented
-    void operator=(const PreflightUpdatedValueWidgetCodeGenerator&); // Operator '=' Not Implemented
+private:
+  DataContainerCreationFilterParameter(const DataContainerCreationFilterParameter&); // Copy Constructor Not Implemented
+  void operator=(const DataContainerCreationFilterParameter&); // Operator '=' Not Implemented
 };
 
-#endif /* PreflightUpdatedValueWidgetCodeGenerator_H_ */
+#endif /* _DataContainerCreationFilterParameter_H_ */

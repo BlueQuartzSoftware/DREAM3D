@@ -172,7 +172,9 @@ AbstractFilter::Pointer FeatureCountDecision::newFilterInstance(bool copyFilterP
 //
 // -----------------------------------------------------------------------------
 const QString FeatureCountDecision::getCompiledLibraryName()
-{ return "FeatureCountDecision"; }
+{
+  return Core::CoreBaseName;
+}
 
 // -----------------------------------------------------------------------------
 //

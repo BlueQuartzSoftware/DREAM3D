@@ -6,28 +6,51 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1349</width>
-    <height>307</height>
+    <width>688</width>
+    <height>59</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
-   <property name="margin">
+   <property name="leftMargin">
     <number>2</number>
    </property>
-   <item row="1" column="12">
-    <widget class="QLabel" name="label_6">
-     <property name="text">
-      <string>*y + </string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="2">
-    <widget class="QLineEdit" name="c20"/>
-   </item>
-   <item row="1" column="7">
+   <property name="topMargin">
+    <number>2</number>
+   </property>
+   <property name="rightMargin">
+    <number>2</number>
+   </property>
+   <property name="bottomMargin">
+    <number>2</number>
+   </property>
+   <item row="1" column="6">
     <widget class="QLineEdit" name="c11">
      <property name="text">
       <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="11">
+    <widget class="QLineEdit" name="c01"/>
+   </item>
+   <item row="1" column="5">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;*y&lt;/span&gt;&lt;span style=&quot; font-size:24pt; vertical-align:super;&quot;&gt;2&lt;/span&gt; + &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="3">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;*x&lt;/span&gt;&lt;span style=&quot; font-size:24pt; vertical-align:super;&quot;&gt;2&lt;/span&gt; + &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="10">
+    <widget class="QLabel" name="label_5">
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;*x&lt;/span&gt; + &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
    </item>
@@ -38,55 +61,24 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="4">
-    <widget class="QLineEdit" name="c02"/>
-   </item>
-   <item row="1" column="10">
-    <widget class="QLabel" name="label_5">
-     <property name="text">
-      <string>*x + </string>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="13">
     <widget class="QLineEdit" name="c00"/>
    </item>
-   <item row="1" column="11">
-    <widget class="QLineEdit" name="c01"/>
+   <item row="1" column="2">
+    <widget class="QLineEdit" name="c20"/>
    </item>
-   <item row="1" column="5">
-    <widget class="QLabel" name="label_3">
+   <item row="1" column="12">
+    <widget class="QLabel" name="label_6">
      <property name="text">
-      <string>*y^2 + </string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;*y&lt;/span&gt; + &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="8">
-    <widget class="QLabel" name="label_7">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="3">
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>*x^2 + </string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="8">
-    <widget class="QLabel" name="label_4">
-     <property name="text">
-      <string>*xy + </string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="9">
-    <widget class="QLineEdit" name="c10"/>
+   <item row="1" column="4">
+    <widget class="QLineEdit" name="c02"/>
    </item>
    <item row="1" column="14">
-    <spacer name="horizontalSpacer">
+    <spacer name="horizontalSpacer_2">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -98,12 +90,31 @@
      </property>
     </spacer>
    </item>
+   <item row="1" column="7">
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;*xy&lt;/span&gt; + &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="8">
+    <widget class="QLineEdit" name="c10"/>
+   </item>
+   <item row="2" column="1" colspan="13">
+    <widget class="QLabel" name="errorLabel">
+     <property name="text">
+      <string>TextLabel</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <tabstops>
   <tabstop>c20</tabstop>
   <tabstop>c02</tabstop>
-  <tabstop>c11</tabstop>
  </tabstops>
  <resources>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>

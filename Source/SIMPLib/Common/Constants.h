@@ -232,6 +232,7 @@ namespace DREAM3D
 
   namespace GeneralData
   {
+    const QString CombinedData("CombinedData");
     const QString ThresholdArray("ThresholdArray");
     const QString Mask("Mask");
   }

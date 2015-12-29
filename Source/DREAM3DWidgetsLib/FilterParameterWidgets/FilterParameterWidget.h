@@ -109,6 +109,47 @@ class DREAM3DWidgetsLib_EXPORT FilterParameterWidget : public QFrame
     void operator=(const FilterParameterWidget&); // Operator '=' Not Implemented
 };
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+/* These macros are mainly used by the 2nd, 3rd and 4rth Order Polynomial Widgets
+ * We put them here so all three can use these macros and we do not duplicate
+ * the code into 3 different locations
+ */
+
+#define FOPW_SETUP_WIDGET(cell)\
+  connect(cell, SIGNAL(textChanged(const QString&)),\
+          this, SLOT(widgetChanged(const QString&) ) );\
+  QDoubleValidator* cell##Val = new QDoubleValidator(cell);\
+  cell##Val->setLocale(loc);\
+  cell->setValidator(cell##Val);
+
+
+#define FOPW_CHECK_LINEEDIT(cell)\
+{\
+  if(cell->text().isEmpty())\
+  {\
+    DREAM3DStyles::LineEditErrorStyle(cell);\
+    errorLabel->setStyleSheet(QString::fromLatin1("color: rgb(255, 0, 0);"));\
+    errorLabel->setText("No value entered. Filter will use default value of " + getFilterParameter()->getDefaultValue().toString());\
+    errorLabel->show();\
+  }\
+}\
+
+
+
+#define FOPW_EXTRACT_VALUE(cell)\
+  data.cell = loc.toFloat(cell->text(), &ok);\
+  if(!ok)\
+  {\
+    errorLabel->setStyleSheet(QString::fromLatin1("color: rgb(255, 0, 0);"));\
+    errorLabel->setText("c40 Value entered is beyond the representable range for a double.\nThe filter will use the default value of " + getFilterParameter()->getDefaultValue().toString());\
+    errorLabel->show();\
+    DREAM3DStyles::LineEditErrorStyle(cell);\
+    data.cell = defValue.cell;\
+  }\
+
+
 
 
 #endif /* _FilterParameterWidget_H_ */

@@ -15,6 +15,7 @@ set(DREAM3D_PARAMETER_WIDGETS
     DataArraySelectionWidget
     DataBundleSelectionWidget
     DataContainerArrayProxyWidget
+    DataContainerCreationWidget
     DataContainerReaderWidget
     DataContainerSelectionWidget
     DoubleWidget

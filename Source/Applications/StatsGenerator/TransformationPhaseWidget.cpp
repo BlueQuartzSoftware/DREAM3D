@@ -341,30 +341,30 @@ QString TransformationPhaseWidget::getComboString()
 // -----------------------------------------------------------------------------
 int TransformationPhaseWidget::gatherSizeDistributionFromGui(float& mu, float& sigma, float& minCutOff, float& maxCutOff, float& stepSize)
 {
+  QLocale loc = QLocale::system();
+
   bool ok = false;
-  mu = m_Mu_SizeDistribution->text().toFloat(&ok);
+  mu = loc.toFloat(m_Mu_SizeDistribution->text(), &ok);
   if (ok == false)
   {
     return 0;
   }
-  sigma = m_Sigma_SizeDistribution->text().toFloat(&ok);
+  sigma = loc.toFloat(m_Sigma_SizeDistribution->text(), &ok);
   if (ok == false)
   {
     return 0;
   }
-  minCutOff = m_MinSigmaCutOff->text().toFloat(&ok);
+  minCutOff = loc.toFloat(m_MinSigmaCutOff->text(), &ok);
   if (ok == false)
   {
     return 0;
   }
-
-  maxCutOff = m_MaxSigmaCutOff->text().toFloat(&ok);
+  maxCutOff = loc.toFloat(m_MaxSigmaCutOff->text(), &ok);
   if (ok == false)
   {
     return 0;
   }
-
-  stepSize = m_BinStepSize->text().toFloat(&ok);
+  stepSize = loc.toFloat(m_BinStepSize->text(), &ok);
   if (ok == false)
   {
     return 0;

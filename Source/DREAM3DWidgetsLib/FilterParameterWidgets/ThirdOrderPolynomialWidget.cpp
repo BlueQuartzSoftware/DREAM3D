@@ -39,6 +39,7 @@
 #include <QtCore/QSignalMapper>
 
 #include "SIMPLib/FilterParameters/ThirdOrderPolynomialFilterParameter.h"
+#include "QtSupportLib/DREAM3DStyles.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
@@ -67,7 +68,6 @@ ThirdOrderPolynomialWidget::~ThirdOrderPolynomialWidget()
 {
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -85,49 +85,18 @@ void ThirdOrderPolynomialWidget::setupGui()
   connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)),
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
+  QLocale loc = QLocale::system();
 
-  connect(c30, SIGNAL(textChanged(const QString&)),
-          this, SLOT(widgetChanged(const QString&) ) );
-  connect(c03, SIGNAL(textChanged(const QString&)),
-          this, SLOT(widgetChanged(const QString&) ) );
-  connect(c21, SIGNAL(textChanged(const QString&)),
-          this, SLOT(widgetChanged(const QString&) ) );
-  connect(c12, SIGNAL(textChanged(const QString&)),
-          this, SLOT(widgetChanged(const QString&) ) );
-  connect(c20, SIGNAL(textChanged(const QString&)),
-          this, SLOT(widgetChanged(const QString&) ) );
-  connect(c02, SIGNAL(textChanged(const QString&)),
-          this, SLOT(widgetChanged(const QString&) ) );
-  connect(c11, SIGNAL(textChanged(const QString&)),
-          this, SLOT(widgetChanged(const QString&) ) );
-  connect(c10, SIGNAL(textChanged(const QString&)),
-          this, SLOT(widgetChanged(const QString&) ) );
-  connect(c01, SIGNAL(textChanged(const QString&)),
-          this, SLOT(widgetChanged(const QString&) ) );
-  connect(c00, SIGNAL(textChanged(const QString&)),
-          this, SLOT(widgetChanged(const QString&) ) );
-
-
-  QDoubleValidator* c30Val = new QDoubleValidator(c30);
-  c30->setValidator(c30Val);
-  QDoubleValidator* c03Val = new QDoubleValidator(c03);
-  c03->setValidator(c03Val);
-  QDoubleValidator* c21Val = new QDoubleValidator(c21);
-  c21->setValidator(c21Val);
-  QDoubleValidator* c12Val = new QDoubleValidator(c12);
-  c12->setValidator(c12Val);
-  QDoubleValidator* c20Val = new QDoubleValidator(c20);
-  c20->setValidator(c20Val);
-  QDoubleValidator* c02Val = new QDoubleValidator(c02);
-  c02->setValidator(c02Val);
-  QDoubleValidator* c11Val = new QDoubleValidator(c11);
-  c11->setValidator(c11Val);
-  QDoubleValidator* c10Val = new QDoubleValidator(c10);
-  c10->setValidator(c10Val);
-  QDoubleValidator* c01Val = new QDoubleValidator(c01);
-  c01->setValidator(c01Val);
-  QDoubleValidator* c00Val = new QDoubleValidator(c00);
-  c00->setValidator(c00Val);
+  FOPW_SETUP_WIDGET(c30)
+  FOPW_SETUP_WIDGET(c03)
+  FOPW_SETUP_WIDGET(c21)
+  FOPW_SETUP_WIDGET(c12)
+  FOPW_SETUP_WIDGET(c20)
+  FOPW_SETUP_WIDGET(c02)
+  FOPW_SETUP_WIDGET(c11)
+  FOPW_SETUP_WIDGET(c10)
+  FOPW_SETUP_WIDGET(c01)
+  FOPW_SETUP_WIDGET(c00)
 
   if (getFilterParameter() != NULL)
   {
@@ -145,6 +114,7 @@ void ThirdOrderPolynomialWidget::setupGui()
     c01->setText( QString::number(data.c01) );
     c00->setText( QString::number(data.c00) );
   }
+  errorLabel->hide();
 
 }
 
@@ -153,6 +123,20 @@ void ThirdOrderPolynomialWidget::setupGui()
 // -----------------------------------------------------------------------------
 void ThirdOrderPolynomialWidget::widgetChanged(const QString& text)
 {
+  Q_UNUSED(text)
+  errorLabel->hide();
+
+  FOPW_CHECK_LINEEDIT(c30)
+  FOPW_CHECK_LINEEDIT(c03)
+  FOPW_CHECK_LINEEDIT(c21)
+  FOPW_CHECK_LINEEDIT(c12)
+  FOPW_CHECK_LINEEDIT(c20)
+  FOPW_CHECK_LINEEDIT(c02)
+  FOPW_CHECK_LINEEDIT(c11)
+  FOPW_CHECK_LINEEDIT(c10)
+  FOPW_CHECK_LINEEDIT(c01)
+  FOPW_CHECK_LINEEDIT(c00)
+
   emit parametersChanged();
 }
 
@@ -163,16 +147,20 @@ void ThirdOrderPolynomialWidget::filterNeedsInputParameters(AbstractFilter* filt
 {
   bool ok = false;
   Float3rdOrderPoly_t data;
-  data.c30 = c30->text().toDouble(&ok);
-  data.c03 = c03->text().toDouble(&ok);
-  data.c21 = c21->text().toDouble(&ok);
-  data.c12 = c12->text().toDouble(&ok);
-  data.c20 = c20->text().toDouble(&ok);
-  data.c02 = c02->text().toDouble(&ok);
-  data.c11 = c11->text().toDouble(&ok);
-  data.c10 = c10->text().toDouble(&ok);
-  data.c01 = c01->text().toDouble(&ok);
-  data.c00 = c00->text().toDouble(&ok);
+  Float3rdOrderPoly_t defValue = m_FilterParameter->getDefaultValue().value<Float3rdOrderPoly_t>();
+
+  QLocale loc;
+
+  FOPW_EXTRACT_VALUE(c30)
+  FOPW_EXTRACT_VALUE(c03)
+  FOPW_EXTRACT_VALUE(c21)
+  FOPW_EXTRACT_VALUE(c12)
+  FOPW_EXTRACT_VALUE(c20)
+  FOPW_EXTRACT_VALUE(c02)
+  FOPW_EXTRACT_VALUE(c11)
+  FOPW_EXTRACT_VALUE(c10)
+  FOPW_EXTRACT_VALUE(c01)
+  FOPW_EXTRACT_VALUE(c00)
 
   QVariant v;
   v.setValue(data);

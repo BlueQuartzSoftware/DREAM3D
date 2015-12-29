@@ -33,12 +33,12 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "MultiDataArraySelectionWidgetCodeGenerator.h"
+#include "DataContainerCreationWidgetCodeGenerator.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MultiDataArraySelectionWidgetCodeGenerator::MultiDataArraySelectionWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue) :
+DataContainerCreationWidgetCodeGenerator::DataContainerCreationWidgetCodeGenerator(QString humanLabel, QString propertyName, QString category, QString initValue) :
   FPCodeGenerator(humanLabel, propertyName, category, initValue)
 {
 
@@ -47,29 +47,29 @@ MultiDataArraySelectionWidgetCodeGenerator::MultiDataArraySelectionWidgetCodeGen
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MultiDataArraySelectionWidgetCodeGenerator::~MultiDataArraySelectionWidgetCodeGenerator()
+DataContainerCreationWidgetCodeGenerator::~DataContainerCreationWidgetCodeGenerator()
 {}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString MultiDataArraySelectionWidgetCodeGenerator::generateSetupFilterParameters()
+QString DataContainerCreationWidgetCodeGenerator::generateSetupFilterParameters()
 {
-  return "  // MultiDataArraySelectionFilterParameter - Please pass in a default vector of DataArrayPaths\n  MultiDataArraySelectionFilterParameter::RequirementType mdaReq;  parameters.push_back(MultiDataArraySelectionFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", QVector<DataArrayPath>(), " + getCategory() + ", mdaReq, 0));";
+  return "  parameters.push_back(DataContainerCreationFilterParameter::New(\"" + getHumanLabel() + "\", \"" + getPropertyName() + "\", get" + getPropertyName() + "(), " + getCategory() + "));";
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString MultiDataArraySelectionWidgetCodeGenerator::generateReadFilterParameters()
+QString DataContainerCreationWidgetCodeGenerator::generateReadFilterParameters()
 {
-  return "  set" + getPropertyName() + "(reader->readDataArrayPathVector(\"" + getPropertyName() + "\", get" + getPropertyName() + "()));";
+  return "  set" + getPropertyName() + "(reader->readString(\"" + getPropertyName() + "\", get" + getPropertyName() + "()));";
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString MultiDataArraySelectionWidgetCodeGenerator::generateDataCheck()
+QString DataContainerCreationWidgetCodeGenerator::generateDataCheck()
 {
   return "";
 }
@@ -77,12 +77,12 @@ QString MultiDataArraySelectionWidgetCodeGenerator::generateDataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString MultiDataArraySelectionWidgetCodeGenerator::generateFilterParameters()
+QString DataContainerCreationWidgetCodeGenerator::generateFilterParameters()
 {
   QString contents;
   QTextStream ss(&contents);
-  ss << "    SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, " + getPropertyName() + ")\n";
-  ss << "    Q_PROPERTY(QVector<DataArrayPath> " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
+  ss << "    SIMPL_FILTER_PARAMETER(QString, " + getPropertyName() + ")\n";
+  ss << "    Q_PROPERTY(QString " + getPropertyName() + " READ get" + getPropertyName() + " WRITE set" + getPropertyName() + ")";
 
   return contents;
 }
@@ -90,7 +90,7 @@ QString MultiDataArraySelectionWidgetCodeGenerator::generateFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString MultiDataArraySelectionWidgetCodeGenerator::generateCPPIncludes()
+QString DataContainerCreationWidgetCodeGenerator::generateCPPIncludes()
 {
-  return "#include \"SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h\"";
+  return "#include \"SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h\"";
 }

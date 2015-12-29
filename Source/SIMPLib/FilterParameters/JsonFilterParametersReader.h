@@ -73,6 +73,17 @@ class SIMPLib_EXPORT JsonFilterParametersReader : public AbstractFilterParameter
     static FilterPipeline::Pointer ReadPipelineFromFile(QString filePath, IObserver* obs = NULL);
 
     /**
+    * @brief ReadPipelineFromString Reads the Json formatted file and returns a FilterPipeline object
+    * that contains all the filters that could be found. If a filter can not be found then that filter is simply skipped.
+    * If the IObserver is NON-Null then an error message will be passed to it with an error message
+    * @param filePath The path to the INI formatted file
+    * @param format The format of the file which is anything that QSettings understands
+    * @param obs An IObserver object to report errors.
+    * @return Shared Pointer to a FilterPipeline Instance
+    */
+    static FilterPipeline::Pointer ReadPipelineFromString(QString contents, IObserver* obs = NULL);
+
+    /**
      * @brief ReadNameOfPipelineFromFile
      * @param filePath
      * @param name Sets the name of the pipeline into this variable
@@ -88,6 +99,13 @@ class SIMPLib_EXPORT JsonFilterParametersReader : public AbstractFilterParameter
      * @return
      */
     int openFile(QString filePath);
+
+    /**
+    * @brief setPipelineContents
+    * @param contents
+    * @return
+    */
+    int setPipelineContents(QString contents);
 
     /**
      * @brief closeFile
@@ -163,6 +181,8 @@ class SIMPLib_EXPORT JsonFilterParametersReader : public AbstractFilterParameter
   private:
     QJsonObject m_Root;
     QJsonObject m_CurrentFilterIndex;
+
+    static FilterPipeline::Pointer ReadPipeline(JsonFilterParametersReader::Pointer reader, IObserver* obs);
 
     JsonFilterParametersReader(const JsonFilterParametersReader&); // Copy Constructor Not Implemented
     void operator=(const JsonFilterParametersReader&); // Operator '=' Not Implemented

@@ -1,4 +1,4 @@
-  /* ============================================================================
+/* ============================================================================
 * Copyright (c) 2009-2015 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
@@ -33,29 +33,28 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "FourthOrderPolynomialWidget.h"
+#include "DataContainerCreationWidget.h"
 
 #include <QtCore/QMetaProperty>
-#include <QtCore/QSignalMapper>
 
-#include "SIMPLib/FilterParameters/FourthOrderPolynomialFilterParameter.h"
-#include "QtSupportLib/DREAM3DStyles.h"
-
+#include <QtCore/QPropertyAnimation>
+#include <QtCore/QSequentialAnimationGroup>
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
 
+
 // Include the MOC generated file for this class
-#include "moc_FourthOrderPolynomialWidget.cpp"
+#include "moc_DataContainerCreationWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FourthOrderPolynomialWidget::FourthOrderPolynomialWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
+DataContainerCreationWidget::DataContainerCreationWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   FilterParameterWidget(parameter, filter, parent)
 {
-  m_FilterParameter = dynamic_cast<FourthOrderPolynomialFilterParameter*>(parameter);
-  Q_ASSERT_X(m_FilterParameter != NULL, "NULL Pointer", "FourthOrderPolynomialWidget can ONLY be used with a FourthOrderPolynomialFilterParameter object");
+  m_FilterParameter = dynamic_cast<DataContainerCreationFilterParameter*>(parameter);
+  Q_ASSERT_X(m_FilterParameter != NULL, "NULL Pointer", "DataContainerCreationWidget can ONLY be used with a DataContainerCreationFilterParameter object");
 
   setupUi(this);
   setupGui();
@@ -64,17 +63,29 @@ FourthOrderPolynomialWidget::FourthOrderPolynomialWidget(FilterParameter* parame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FourthOrderPolynomialWidget::~FourthOrderPolynomialWidget()
-{
-}
-
-
+DataContainerCreationWidget::~DataContainerCreationWidget()
+{}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FourthOrderPolynomialWidget::setupGui()
+void DataContainerCreationWidget::setupGui()
 {
+  blockSignals(true);
+  if (getFilterParameter() != NULL)
+  {
+    label->setText(getFilterParameter()->getHumanLabel() );
+
+    QString str = getFilter()->property(PROPERTY_NAME_AS_CHAR).toString();
+    dataContainerName->setText(str);
+  }
+  blockSignals(false);
+
+  applyChangesBtn->setVisible(false);
+
+  // Do not allow the user to put a forward slash into the dataContainerName line edit
+  dataContainerName->setValidator(new QRegularExpressionValidator(QRegularExpression("[^/]*"), this));
+
   // Catch when the filter is about to execute the preflight
   connect(getFilter(), SIGNAL(preflightAboutToExecute()),
           this, SLOT(beforePreflight()));
@@ -83,114 +94,92 @@ void FourthOrderPolynomialWidget::setupGui()
   connect(getFilter(), SIGNAL(preflightExecuted()),
           this, SLOT(afterPreflight()));
 
-  // Catch when the filter wants its values updated
+  // Catch when the filter wants its dataContainerNames updated
   connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)),
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
-  QLocale loc = QLocale::system();
 
-  FOPW_SETUP_WIDGET(c40)
-  FOPW_SETUP_WIDGET(c04)
-  FOPW_SETUP_WIDGET(c31)
-  FOPW_SETUP_WIDGET(c13)
-  FOPW_SETUP_WIDGET(c22)
-  FOPW_SETUP_WIDGET(c30)
-  FOPW_SETUP_WIDGET(c03)
-  FOPW_SETUP_WIDGET(c21)
-  FOPW_SETUP_WIDGET(c12)
-  FOPW_SETUP_WIDGET(c20)
-  FOPW_SETUP_WIDGET(c02)
-  FOPW_SETUP_WIDGET(c11)
-  FOPW_SETUP_WIDGET(c10)
-  FOPW_SETUP_WIDGET(c01)
-  FOPW_SETUP_WIDGET(c00)
+  connect(dataContainerName, SIGNAL(textChanged(const QString&)),
+          this, SLOT(widgetChanged(const QString&)));
 
-
-  if (getFilterParameter() != NULL)
-  {
-    label->setText(getFilterParameter()->getHumanLabel() );
-
-    Float4thOrderPoly_t data = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<Float4thOrderPoly_t>();
-    c40->setText( QString::number(data.c40)  );
-    c04->setText( QString::number(data.c04)  );
-    c31->setText( QString::number(data.c31)  );
-    c13->setText( QString::number(data.c13) );
-    c22->setText( QString::number(data.c22)  );
-    c30->setText( QString::number(data.c30)  );
-    c03->setText( QString::number(data.c03)  );
-    c21->setText( QString::number(data.c21)  );
-    c12->setText( QString::number(data.c12) );
-    c20->setText( QString::number(data.c20)  );
-    c02->setText( QString::number(data.c02)  );
-    c11->setText( QString::number(data.c11)  );
-    c10->setText( QString::number(data.c10) );
-    c01->setText( QString::number(data.c01) );
-    c00->setText( QString::number(data.c00) );
-  }
-
-  errorLabel->hide();
 }
-
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FourthOrderPolynomialWidget::widgetChanged(const QString& text)
+void DataContainerCreationWidget::on_dataContainerName_returnPressed()
 {
-  Q_UNUSED(text)
-  errorLabel->hide();
+  on_applyChangesBtn_clicked();
+}
 
-  FOPW_CHECK_LINEEDIT(c40)
-  FOPW_CHECK_LINEEDIT(c04)
-  FOPW_CHECK_LINEEDIT(c31)
-  FOPW_CHECK_LINEEDIT(c13)
-  FOPW_CHECK_LINEEDIT(c22)
-  FOPW_CHECK_LINEEDIT(c30)
-  FOPW_CHECK_LINEEDIT(c03)
-  FOPW_CHECK_LINEEDIT(c21)
-  FOPW_CHECK_LINEEDIT(c12)
-  FOPW_CHECK_LINEEDIT(c20)
-  FOPW_CHECK_LINEEDIT(c02)
-  FOPW_CHECK_LINEEDIT(c11)
-  FOPW_CHECK_LINEEDIT(c10)
-  FOPW_CHECK_LINEEDIT(c01)
-  FOPW_CHECK_LINEEDIT(c00)
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerCreationWidget::on_applyChangesBtn_clicked()
+{
+  dataContainerName->setStyleSheet(QString(""));
   emit parametersChanged();
+
+  if (getFaderWidget())
+  {
+    getFaderWidget()->close();
+  }
+  QPointer<FaderWidget> faderWidget = new FaderWidget(applyChangesBtn);
+  faderWidget->setFadeOut();
+  connect(faderWidget, SIGNAL(animationComplete() ),
+          this, SLOT(hideButton()));
+  faderWidget->start();
+  setFaderWidget(faderWidget);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerCreationWidget::hideButton()
+{
+  dataContainerName->setToolTip("");
+  applyChangesBtn->setVisible(false);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerCreationWidget::widgetChanged(const QString& text)
+{
+  dataContainerName->setStyleSheet(QString::fromLatin1("color: rgb(255, 0, 0);"));
+  dataContainerName->setToolTip("Press the 'Return' key to apply your changes");
+  if(applyChangesBtn->isVisible() == false)
+  {
+    applyChangesBtn->setVisible(true);
+    fadeInWidget(applyChangesBtn);
+  }
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FourthOrderPolynomialWidget::filterNeedsInputParameters(AbstractFilter* filter)
+void DataContainerCreationWidget::beforePreflight()
 {
-  bool ok = false;
-  Float4thOrderPoly_t data;
-  Float4thOrderPoly_t defValue = m_FilterParameter->getDefaultValue().value<Float4thOrderPoly_t>();
 
-  QLocale loc;
+}
 
-  FOPW_EXTRACT_VALUE(c40)
-  FOPW_EXTRACT_VALUE(c04)
-  FOPW_EXTRACT_VALUE(c31)
-  FOPW_EXTRACT_VALUE(c13)
-  FOPW_EXTRACT_VALUE(c22)
-  FOPW_EXTRACT_VALUE(c30)
-  FOPW_EXTRACT_VALUE(c03)
-  FOPW_EXTRACT_VALUE(c21)
-  FOPW_EXTRACT_VALUE(c12)
-  FOPW_EXTRACT_VALUE(c20)
-  FOPW_EXTRACT_VALUE(c02)
-  FOPW_EXTRACT_VALUE(c11)
-  FOPW_EXTRACT_VALUE(c10)
-  FOPW_EXTRACT_VALUE(c01)
-  FOPW_EXTRACT_VALUE(c00)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerCreationWidget::afterPreflight()
+{
 
-  QVariant v;
-  v.setValue(data);
-  ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerCreationWidget::filterNeedsInputParameters(AbstractFilter* filter)
+{
+  bool ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, dataContainerName->text());
   if(false == ok)
   {
     FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
@@ -198,18 +187,3 @@ void FourthOrderPolynomialWidget::filterNeedsInputParameters(AbstractFilter* fil
 
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FourthOrderPolynomialWidget::beforePreflight()
-{
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FourthOrderPolynomialWidget::afterPreflight()
-{
-
-}
