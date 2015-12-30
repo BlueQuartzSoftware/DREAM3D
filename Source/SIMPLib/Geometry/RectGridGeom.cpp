@@ -197,6 +197,24 @@ void RectGridGeom::getCoords(size_t x, size_t y, size_t z, float coords[3])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void RectGridGeom::getCoords(size_t idx, float coords[3])
+{
+  size_t column = idx % m_Dimensions[0];
+  size_t row = (idx / m_Dimensions[0]) % m_Dimensions[1];
+  size_t plane = idx / (m_Dimensions[0] * m_Dimensions[1]);
+
+  float* xBnds = m_xBounds->getPointer(0);
+  float* yBnds = m_yBounds->getPointer(0);
+  float* zBnds = m_zBounds->getPointer(0);
+
+  coords[0] = 0.5f * (xBnds[column] + xBnds[column + 1]);
+  coords[1] = 0.5f * (yBnds[row] + yBnds[row + 1]);
+  coords[2] = 0.5f * (zBnds[plane] + zBnds[plane + 1]);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void RectGridGeom::getCoords(size_t idx[3], double coords[3])
 {
   float* xBnds = m_xBounds->getPointer(0);
@@ -220,6 +238,24 @@ void RectGridGeom::getCoords(size_t x, size_t y, size_t z, double coords[3])
   coords[0] = static_cast<double>(0.5 * (xBnds[x] + xBnds[x + 1]));
   coords[1] = static_cast<double>(0.5 * (yBnds[y] + yBnds[y + 1]));
   coords[2] = static_cast<double>(0.5 * (zBnds[z] + zBnds[z + 1]));
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RectGridGeom::getCoords(size_t idx, double coords[3])
+{
+  size_t column = idx % m_Dimensions[0];
+  size_t row = (idx / m_Dimensions[0]) % m_Dimensions[1];
+  size_t plane = idx / (m_Dimensions[0] * m_Dimensions[1]);
+
+  float* xBnds = m_xBounds->getPointer(0);
+  float* yBnds = m_yBounds->getPointer(0);
+  float* zBnds = m_zBounds->getPointer(0);
+
+  coords[0] = static_cast<double>(0.5f * (xBnds[column] + xBnds[column + 1]));
+  coords[1] = static_cast<double>(0.5f * (yBnds[row] + yBnds[row + 1]));
+  coords[2] = static_cast<double>(0.5f * (zBnds[plane] + zBnds[plane + 1]));
 }
 
 // -----------------------------------------------------------------------------
