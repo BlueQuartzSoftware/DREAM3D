@@ -63,25 +63,25 @@ class SIMPLib_EXPORT RectGridGeom : public IGeometry
 
     SIMPL_INSTANCE_VEC3_PROPERTY(size_t, Dimensions)
 
-    size_t getXPoints();
-    size_t getYPoints();
-    size_t getZPoints();
+    inline size_t getXPoints() { return m_Dimensions[0]; }
+    inline size_t getYPoints() { return m_Dimensions[1]; }
+    inline size_t getZPoints() { return m_Dimensions[2]; }
 
     void setXBounds(FloatArrayType::Pointer xBounds);
     void setYBounds(FloatArrayType::Pointer yBounds);
     void setZBounds(FloatArrayType::Pointer zBounds);
 
-    FloatArrayType::Pointer getXBounds();
-    FloatArrayType::Pointer getYBounds();
-    FloatArrayType::Pointer getZBounds();
+    inline FloatArrayType::Pointer getXBounds() { return m_xBounds; }
+    inline FloatArrayType::Pointer getYBounds() { return m_yBounds; }
+    inline FloatArrayType::Pointer getZBounds() { return m_zBounds; }
 
     void getCoords(size_t idx[3], float coords[3]);
 
-    void getCoords(size_t& x, size_t& y, size_t& z, float coords[3]);
+    void getCoords(size_t x, size_t y, size_t z, float coords[3]);
 
     void getCoords(size_t idx[3], double coords[3]);
 
-    void getCoords(size_t& x, size_t& y, size_t& z, double coords[3]);
+    void getCoords(size_t x, size_t y, size_t z, double coords[3]);
 
 // -----------------------------------------------------------------------------
 // Inherited from IGeometry

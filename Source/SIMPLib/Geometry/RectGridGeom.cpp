@@ -106,21 +106,6 @@ RectGridGeom::RectGridGeom()
 RectGridGeom::~RectGridGeom()
 {}
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-size_t RectGridGeom::getXPoints() {return m_Dimensions[0];}
-size_t RectGridGeom::getYPoints() {return m_Dimensions[1];}
-size_t RectGridGeom::getZPoints() {return m_Dimensions[2];}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-FloatArrayType::Pointer RectGridGeom::getXBounds() { return m_xBounds; }
-FloatArrayType::Pointer RectGridGeom::getYBounds() { return m_yBounds; }
-FloatArrayType::Pointer RectGridGeom::getZBounds() { return m_zBounds; }
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -198,7 +183,7 @@ void RectGridGeom::getCoords(size_t idx[3], float coords[3])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RectGridGeom::getCoords(size_t& x, size_t& y, size_t& z, float coords[3])
+void RectGridGeom::getCoords(size_t x, size_t y, size_t z, float coords[3])
 {
   float* xBnds = m_xBounds->getPointer(0);
   float* yBnds = m_yBounds->getPointer(0);
@@ -226,7 +211,7 @@ void RectGridGeom::getCoords(size_t idx[3], double coords[3])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RectGridGeom::getCoords(size_t& x, size_t& y, size_t& z, double coords[3])
+void RectGridGeom::getCoords(size_t x, size_t y, size_t z, double coords[3])
 {
   float* xBnds = m_xBounds->getPointer(0);
   float* yBnds = m_yBounds->getPointer(0);
