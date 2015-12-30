@@ -36,6 +36,8 @@
 
 #include "FeatureCountDecision.h"
 
+#include <QtCore/QJsonDocument>
+
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
@@ -153,6 +155,36 @@ void FeatureCountDecision::execute()
   emit decisionMade(dm);
 
   notifyStatusMessage(getHumanLabel(), "Complete");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FeatureCountDecision::extractProperties(const QJsonDocument &jsonDoc)
+{
+  QJsonObject json = jsonDoc.object();
+  QJsonValue jvalue = json.value(this->getNameOfClass());
+  if (jvalue.isUndefined()) {
+    return;
+  }
+
+  {
+    QJsonValue propValue = jvalue.toObject()["MaxGrains"];
+    if (!propValue.isUndefined())
+    {
+      setMaxGrains(propValue.toInt());
+    }
+  }
+
+  {
+    QJsonValue propValue = jvalue.toObject()["FeatureIdsArrayPath"];
+    if (!propValue.isUndefined())
+    {
+      QJsonObject jObj = propValue.toObject();
+      m_FeatureIdsArrayPath.readJson(jObj);
+    }
+  }
+
 }
 
 // -----------------------------------------------------------------------------

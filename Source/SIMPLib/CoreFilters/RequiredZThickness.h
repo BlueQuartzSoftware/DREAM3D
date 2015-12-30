@@ -57,10 +57,10 @@ class RequiredZThickness : public AbstractDecisionFilter
     virtual ~RequiredZThickness();
 
     SIMPL_FILTER_PARAMETER(QString, DataContainerSelection)
-      Q_PROPERTY(QString DataContainerSelection READ getDataContainerSelection WRITE setDataContainerSelection)
+    Q_PROPERTY(QString DataContainerSelection READ getDataContainerSelection WRITE setDataContainerSelection)
 
-    SIMPL_FILTER_PARAMETER(int, NumVoxels)
-    Q_PROPERTY(int NumVoxels READ getNumVoxels WRITE setNumVoxels)
+    SIMPL_FILTER_PARAMETER(int, NumZVoxels)
+    Q_PROPERTY(int NumZVoxels READ getNumZVoxels WRITE setNumZVoxels)
 
     SIMPL_FILTER_PARAMETER(bool, PreflightCheck)
     Q_PROPERTY(bool PreflightCheck READ getPreflightCheck WRITE setPreflightCheck)

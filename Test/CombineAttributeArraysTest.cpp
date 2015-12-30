@@ -174,14 +174,14 @@ void checkCombineAttributeArraysFilter(AbstractFilter::Pointer filter, DataArray
   }
   else
   {
-    checkVecFirst[0] = 0;
-    checkVecFirst[1] = 1;
-    checkVecFirst[2] = 2;
-    checkVecFirst[3] = 0;
-    checkScalarFirst[0] = 0;
-    checkScalarFirst[1] = 0;
-    checkScalarFirst[2] = 1;
-    checkScalarFirst[3] = 2;
+    checkVecFirst[0] = static_cast<T>(0);
+    checkVecFirst[1] = static_cast<T>(1);
+    checkVecFirst[2] = static_cast<T>(2);
+    checkVecFirst[3] = static_cast<T>(0);
+    checkScalarFirst[0] = static_cast<T>(0);
+    checkScalarFirst[1] = static_cast<T>(0);
+    checkScalarFirst[2] = static_cast<T>(1);
+    checkScalarFirst[3] = static_cast<T>(2);
   }
 
   QVariant var;
@@ -276,8 +276,8 @@ void checkCombineAttributeArraysFilter(AbstractFilter::Pointer filter, DataArray
   {
     for (int32_t j = 0; j < numComps; j++)
     {
-      if (outputData[numComps * i + j] < 0 ||
-          outputData[numComps * i + j] > 1)
+      if (outputData[numComps * i + j] < static_cast<T>(0) ||
+        outputData[numComps * i + j] > static_cast<T>(1))
       {
         err = -1;
       }

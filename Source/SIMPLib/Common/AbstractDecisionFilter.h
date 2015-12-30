@@ -56,6 +56,12 @@ class AbstractDecisionFilter : public AbstractFilter
     virtual ~AbstractDecisionFilter();
 
     /**
+    * @brief
+    * @param jsonDoc
+    */
+    virtual void extractProperties(const QJsonDocument &jsonDoc);
+
+    /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */
     virtual const QString getCompiledLibraryName();
@@ -127,6 +133,9 @@ class AbstractDecisionFilter : public AbstractFilter
      * @brief preflightExecuted Emitted just after calling dataCheck()
      */
     void preflightExecuted();
+
+
+    void decisionMade(bool& dm);
 
   protected:
     AbstractDecisionFilter();
