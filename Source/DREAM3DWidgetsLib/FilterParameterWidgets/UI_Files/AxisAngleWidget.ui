@@ -14,7 +14,16 @@
    <property name="spacing">
     <number>5</number>
    </property>
-   <property name="margin">
+   <property name="leftMargin">
+    <number>2</number>
+   </property>
+   <property name="topMargin">
+    <number>2</number>
+   </property>
+   <property name="rightMargin">
+    <number>2</number>
+   </property>
+   <property name="bottomMargin">
     <number>2</number>
    </property>
    <item>
@@ -58,18 +67,16 @@
     </widget>
    </item>
    <item>
-    <widget class="QLineEdit" name="axis_i"/>
+    <widget class="QLineEdit" name="h"/>
    </item>
    <item>
-    <widget class="QLineEdit" name="axis_j"/>
+    <widget class="QLineEdit" name="k"/>
    </item>
    <item>
-    <widget class="QLineEdit" name="axis_k"/>
+    <widget class="QLineEdit" name="l"/>
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
