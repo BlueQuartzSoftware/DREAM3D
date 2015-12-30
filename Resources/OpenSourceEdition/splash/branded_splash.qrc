@@ -1,9 +1,0 @@
- <!DOCTYPE RCC>
- <RCC version="1.0">
- <qresource>
-  <file>branded_splash.png</file>
-  <file>branded_splash@2x.png</file>
-  <file>DREAM3D.png</file>
-  <file>DREAM3D@2x.png</file>
- </qresource>
- </RCC>
