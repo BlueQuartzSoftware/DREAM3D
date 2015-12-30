@@ -280,12 +280,6 @@ class FindImageDerivativesImpl
       size_t tmpIndex1 = 0;
       size_t tmpIndex2 = 0;
 
-      float res[3];
-      m_Image->getResolution(res);
-
-      float origin[3];
-      m_Image->getOrigin(origin);
-
       switch (directionType)
       {
         case XDirection:

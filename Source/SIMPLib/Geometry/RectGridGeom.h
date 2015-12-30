@@ -36,6 +36,8 @@
 #ifndef _RectGridGeom_H_
 #define _RectGridGeom_H_
 
+#include <QMutex>
+
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Common/Constants.h"
@@ -86,6 +88,8 @@ class SIMPLib_EXPORT RectGridGeom : public IGeometry
     void getCoords(size_t x, size_t y, size_t z, double coords[3]);
 
     void getCoords(size_t idx, double coords[3]);
+
+    void sendProgressNotification(int64_t counter, int64_t max, QString messagePrefix, QString messageTitle, QString humanLabel);
 
 // -----------------------------------------------------------------------------
 // Inherited from IGeometry
@@ -322,6 +326,8 @@ class SIMPLib_EXPORT RectGridGeom : public IGeometry
     FloatArrayType::Pointer m_xBounds;
     FloatArrayType::Pointer m_yBounds;
     FloatArrayType::Pointer m_zBounds;
+    QMutex m_Mutex;
+    int64_t m_ProgressCounter;
 
     RectGridGeom(const RectGridGeom&); // Copy Constructor Not Implemented
     void operator=(const RectGridGeom&); // Operator '=' Not Implemented
