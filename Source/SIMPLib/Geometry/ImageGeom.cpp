@@ -123,11 +123,15 @@ class FindImageDerivativesImpl
       size_t dims[3] = { 0, 0, 0 };
       m_Image->getDimensions(dims);
 
+      size_t counter = 0;
+      size_t totalElements = m_Image->getNumberOfElements();
+      int64_t progIncrement = static_cast<int64_t>(totalElements / 200);
+
       for (size_t z = zStart; z < zEnd; z++)
       {
         for (size_t y = yStart; y < yEnd; y++)
         {
-          for (size_t x = zStart; x < xEnd; x++)
+          for (size_t x = xStart; x < xEnd; x++)
           {
             //  Xi derivatives (X)
             if (dims[0] == 1)
@@ -249,6 +253,13 @@ class FindImageDerivativesImpl
               derivsPtr[index * numComps * 3 + i * 3 + 2] =
                 xiz * dValuesdXi[i] + etaz * dValuesdEta[i] + zetaz * dValuesdZeta[i];
             }
+
+            if (counter > progIncrement)
+            {
+              m_Image->sendProgressNotification(counter, totalElements, "test", "Finding Derivatives", "test label");
+              counter = 0;
+            }
+            counter++;
           }
         }
       }
@@ -268,8 +279,6 @@ class FindImageDerivativesImpl
     {
       size_t tmpIndex1 = 0;
       size_t tmpIndex2 = 0;
-
-
 
       float res[3];
       m_Image->getResolution(res);
@@ -442,6 +451,7 @@ ImageGeom::ImageGeom()
   m_Origin[0] = 0.0f;
   m_Origin[1] = 0.0f;
   m_Origin[2] = 0.0f;
+  m_ProgressCounter = 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -531,6 +541,30 @@ void ImageGeom::getCoords(size_t idx, double coords[3])
   coords[0] = static_cast<double>(column * m_Resolution[0] + m_Origin[0]);
   coords[1] = static_cast<double>(row * m_Resolution[1] + m_Origin[1]);
   coords[2] = static_cast<double>(plane * m_Resolution[2] + m_Origin[2]);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ImageGeom::sendProgressNotification(int64_t counter, int64_t max,
+                                         QString messagePrefix, QString messageTitle, QString humanLabel)
+{
+  m_Mutex.lock();
+
+  m_ProgressCounter += counter;
+
+  int64_t progIncrement = max / 100;
+  int64_t prog = 1;
+
+  if (m_ProgressCounter > prog)
+  {
+    int64_t progressInt = static_cast<int64_t>((static_cast<float>(m_ProgressCounter) / max) * 100.0f);
+    QString ss = messageTitle + QObject::tr(" || %1% Completed").arg(progressInt);
+    notifyStatusMessage(messagePrefix, humanLabel, ss);
+    prog += progIncrement;
+  }
+
+  m_Mutex.unlock();
 }
 
 // -----------------------------------------------------------------------------
@@ -728,10 +762,17 @@ void ImageGeom::getShapeFunctions(double pCoords[3], double* shape)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImageGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives)
+void ImageGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives, Observable* observable)
 {
+  m_ProgressCounter = 0;
   size_t dims[3] = { 0, 0, 0 };
   getDimensions(dims);
+
+  if (observable)
+  {
+    connect(this, SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+            observable, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
+  }
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
@@ -742,7 +783,7 @@ void ImageGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType:
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range3d<size_t, size_t, size_t>(0, dims[2], dims[2] / init.default_num_threads(), 0, dims[1], dims[1], 0, dims[0], dims[0]),
-                      FindImageDerivativesImpl(this, field, derivatives), tbb::simple_partitioner());
+                      FindImageDerivativesImpl(this, field, derivatives), tbb::auto_partitioner());
   }
   else
 #endif

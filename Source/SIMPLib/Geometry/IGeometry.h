@@ -158,7 +158,7 @@ class SIMPLib_EXPORT IGeometry : public Observable
      * @param field
      * @param derivatives
      */
-    virtual void findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives) = 0;
+    virtual void findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives, Observable* observable) = 0;
 
 // -----------------------------------------------------------------------------
 // Generic

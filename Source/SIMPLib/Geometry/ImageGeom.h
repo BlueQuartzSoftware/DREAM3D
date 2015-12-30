@@ -36,6 +36,8 @@
 #ifndef _ImageGeom_H_
 #define _ImageGeom_H_
 
+#include <QMutex>
+
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Common/Constants.h"
@@ -85,6 +87,8 @@ class SIMPLib_EXPORT ImageGeom : public IGeometry
     void getCoords(size_t x, size_t y, size_t z, double coords[3]);
 
     void getCoords(size_t idx, double coords[3]);
+
+    void sendProgressNotification(int64_t counter, int64_t max, QString messagePrefix, QString messageTitle, QString humanLabel);
 
 // -----------------------------------------------------------------------------
 // Inherited from IGeometry
@@ -170,7 +174,7 @@ class SIMPLib_EXPORT ImageGeom : public IGeometry
      * @param field
      * @param derivatives
      */
-    virtual void findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives);
+    virtual void findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives, Observable* observable = NULL);
 
     /**
      * @brief setName
@@ -318,6 +322,8 @@ class SIMPLib_EXPORT ImageGeom : public IGeometry
     unsigned int m_UnitDimensionality;
     unsigned int m_SpatialDimensionality;
     AttributeMatrixMap_t m_AttributeMatrices;
+    QMutex m_Mutex;
+    int64_t m_ProgressCounter;
 
     ImageGeom(const ImageGeom&); // Copy Constructor Not Implemented
     void operator=(const ImageGeom&); // Operator '=' Not Implemented
