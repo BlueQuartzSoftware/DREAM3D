@@ -147,6 +147,9 @@ QuadGeom::QuadGeom()
   m_GeometryTypeName = DREAM3D::Geometry::QuadGeometry;
   m_GeometryType = DREAM3D::GeometryType::QuadGeometry;
   m_XdmfGridType = DREAM3D::XdmfGridType::PolyData;
+  m_MessagePrefix = "";
+  m_MessageTitle = "";
+  m_MessageLabel = "";
   m_UnitDimensionality = 2;
   m_SpatialDimensionality = 3;
   m_VertexList = QuadGeom::CreateSharedVertexList(0);
@@ -156,6 +159,7 @@ QuadGeom::QuadGeom()
   m_QuadsContainingVert = ElementDynamicList::NullPointer();
   m_QuadNeighbors = ElementDynamicList::NullPointer();
   m_QuadCentroids = FloatArrayType::NullPointer();
+  m_ProgressCounter = 0;
 }
 
 // -----------------------------------------------------------------------------

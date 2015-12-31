@@ -147,6 +147,9 @@ EdgeGeom::EdgeGeom()
   m_GeometryTypeName = DREAM3D::Geometry::EdgeGeometry;
   m_GeometryType = DREAM3D::GeometryType::EdgeGeometry;
   m_XdmfGridType = DREAM3D::XdmfGridType::PolyData;
+  m_MessagePrefix = "";
+  m_MessageTitle = "";
+  m_MessageLabel = "";
   m_UnitDimensionality = 1;
   m_SpatialDimensionality = 3;
   m_VertexList = EdgeGeom::CreateSharedVertexList(0);
@@ -154,6 +157,7 @@ EdgeGeom::EdgeGeom()
   m_EdgesContainingVert = ElementDynamicList::NullPointer();
   m_EdgeNeighbors = ElementDynamicList::NullPointer();
   m_EdgeCentroids = FloatArrayType::NullPointer();
+  m_ProgressCounter = 0;
 }
 
 // -----------------------------------------------------------------------------

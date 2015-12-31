@@ -256,7 +256,7 @@ class FindImageDerivativesImpl
 
             if (counter > progIncrement)
             {
-              m_Image->sendProgressNotification(counter, totalElements, "test", "Finding Derivatives", "test label");
+              m_Image->sendThreadSafeProgressMessage(counter, totalElements);
               counter = 0;
             }
             counter++;
@@ -434,6 +434,9 @@ ImageGeom::ImageGeom()
   m_GeometryTypeName = DREAM3D::Geometry::ImageGeometry;
   m_GeometryType = DREAM3D::GeometryType::ImageGeometry;
   m_XdmfGridType = DREAM3D::XdmfGridType::RectilinearGrid;
+  m_MessagePrefix = "";
+  m_MessageTitle = "";
+  m_MessageLabel = "";
   m_UnitDimensionality = 3;
   m_SpatialDimensionality = 3;
   m_Dimensions[0] = 0;
@@ -535,30 +538,6 @@ void ImageGeom::getCoords(size_t idx, double coords[3])
   coords[0] = static_cast<double>(column * m_Resolution[0] + m_Origin[0]);
   coords[1] = static_cast<double>(row * m_Resolution[1] + m_Origin[1]);
   coords[2] = static_cast<double>(plane * m_Resolution[2] + m_Origin[2]);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ImageGeom::sendProgressNotification(int64_t counter, int64_t max,
-                                         QString messagePrefix, QString messageTitle, QString humanLabel)
-{
-  m_Mutex.lock();
-
-  m_ProgressCounter += counter;
-
-  int64_t progIncrement = max / 100;
-  int64_t prog = 1;
-
-  if (m_ProgressCounter > prog)
-  {
-    int64_t progressInt = static_cast<int64_t>((static_cast<float>(m_ProgressCounter) / max) * 100.0f);
-    QString ss = messageTitle + QObject::tr(" || %1% Completed").arg(progressInt);
-    notifyStatusMessage(messagePrefix, humanLabel, ss);
-    prog += progIncrement;
-  }
-
-  m_Mutex.unlock();
 }
 
 // -----------------------------------------------------------------------------

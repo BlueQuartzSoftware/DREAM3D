@@ -84,9 +84,13 @@ VertexGeom::VertexGeom()
   m_GeometryTypeName = DREAM3D::Geometry::VertexGeometry;
   m_GeometryType = DREAM3D::GeometryType::VertexGeometry;
   m_XdmfGridType = DREAM3D::XdmfGridType::PolyData;
+  m_MessagePrefix = "";
+  m_MessageTitle = "";
+  m_MessageLabel = "";
   m_UnitDimensionality = 0;
   m_SpatialDimensionality = 3;
   m_VertexList = VertexGeom::CreateSharedVertexList(0);
+  m_ProgressCounter = 0;
 }
 
 // -----------------------------------------------------------------------------

@@ -147,6 +147,9 @@ TriangleGeom::TriangleGeom()
   m_GeometryTypeName = DREAM3D::Geometry::TriangleGeometry;
   m_GeometryType = DREAM3D::GeometryType::TriangleGeometry;
   m_XdmfGridType = DREAM3D::XdmfGridType::PolyData;
+  m_MessagePrefix = "";
+  m_MessageTitle = "";
+  m_MessageLabel = "";
   m_UnitDimensionality = 2;
   m_SpatialDimensionality = 3;
   m_VertexList = TriangleGeom::CreateSharedVertexList(0);
@@ -156,6 +159,7 @@ TriangleGeom::TriangleGeom()
   m_TrianglesContainingVert = ElementDynamicList::NullPointer();
   m_TriangleNeighbors = ElementDynamicList::NullPointer();
   m_TriangleCentroids = FloatArrayType::NullPointer();
+  m_ProgressCounter = 0;
 }
 
 // -----------------------------------------------------------------------------
