@@ -40,6 +40,7 @@
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
+#include "QtSupportLib/DREAM3DStyles.h"
 
 #include "FilterParameterWidgetsDialogs.h"
 
@@ -89,32 +90,28 @@ void AxisAngleWidget::setupGui()
 
   connect(angle, SIGNAL(textChanged(const QString&)),
           this, SLOT(widgetChanged(const QString&) ) );
-  connect(axis_i, SIGNAL(textChanged(const QString&)),
+  connect(h, SIGNAL(textChanged(const QString&)),
           this, SLOT(widgetChanged(const QString&) ) );
-  connect(axis_j, SIGNAL(textChanged(const QString&)),
+  connect(k, SIGNAL(textChanged(const QString&)),
           this, SLOT(widgetChanged(const QString&) ) );
-  connect(axis_k, SIGNAL(textChanged(const QString&)),
+  connect(l, SIGNAL(textChanged(const QString&)),
           this, SLOT(widgetChanged(const QString&) ) );
 
-  QDoubleValidator* xVal = new QDoubleValidator(axis_i);
-  axis_i->setValidator(xVal);
-  QDoubleValidator* yVal = new QDoubleValidator(axis_j);
-  axis_j->setValidator(yVal);
-  QDoubleValidator* zVal = new QDoubleValidator(axis_k);
-  axis_k->setValidator(zVal);
-  QDoubleValidator* aVal = new QDoubleValidator(angle);
-  angle->setValidator(aVal);
+  QLocale loc = QLocale::system();
+
+  FOPW_SETUP_WIDGET(h)
+  FOPW_SETUP_WIDGET(k)
+  FOPW_SETUP_WIDGET(l)
+  FOPW_SETUP_WIDGET(angle)
 
   if (getFilterParameter() != NULL)
   {
     label->setText(getFilterParameter()->getHumanLabel() );
-
-
     AxisAngleInput_t data = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<AxisAngleInput_t>();
-    axis_i->setText(QString::number(data.h) );
-    axis_j->setText(QString::number(data.k) );
-    axis_k->setText(QString::number(data.l) );
-    angle->setText(QString::number(data.angle) );
+    h->setText(loc.toString(data.h) );
+    k->setText(loc.toString(data.k) );
+    l->setText(loc.toString(data.l) );
+    angle->setText(loc.toString(data.angle) );
   }
 
 }
@@ -124,6 +121,7 @@ void AxisAngleWidget::setupGui()
 // -----------------------------------------------------------------------------
 void AxisAngleWidget::widgetChanged(const QString& text)
 {
+  Q_UNUSED(text)
   emit parametersChanged();
 }
 
@@ -134,10 +132,15 @@ void AxisAngleWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
   bool ok = false;
   AxisAngleInput_t data;
-  data.angle = angle->text().toDouble(&ok);
-  data.h = axis_i->text().toDouble(&ok);
-  data.k = axis_j->text().toDouble(&ok);
-  data.l = axis_k->text().toDouble(&ok);
+  AxisAngleInput_t defValue = m_FilterParameter->getDefaultValue().value<AxisAngleInput_t>();
+
+  QLabel* errorLabel = NULL;
+  QLocale loc;
+
+  FOPW_EXTRACT_VALUE(angle);
+  FOPW_EXTRACT_VALUE(h);
+  FOPW_EXTRACT_VALUE(k);
+  FOPW_EXTRACT_VALUE(l);
 
   QVariant v;
   v.setValue(data);

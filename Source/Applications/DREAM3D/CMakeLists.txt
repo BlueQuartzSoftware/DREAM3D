@@ -129,7 +129,7 @@ SET(DREAM3D_RCS
   # These are generic Icons for the Application
   ${PROJECT_RESOURCES_DIR}/icons/images/Icons.qrc
   # this is the DREAM.3D specific branding icons
-  ${BrandedDREAM3D_DIR}/splash/branded_splash.qrc
+  ${BrandedDREAM3D_DIR}/branded_files.qrc
 )
 
 # -- Run MOC and UIC on the necessary files

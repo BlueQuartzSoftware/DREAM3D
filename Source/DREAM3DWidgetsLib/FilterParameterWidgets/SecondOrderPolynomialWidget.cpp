@@ -99,33 +99,29 @@ void SecondOrderPolynomialWidget::setupGui()
   connect(c00, SIGNAL(textChanged(const QString&)),
           this, SLOT(widgetChanged(const QString&) ) );
 
+  QLocale loc = QLocale::system();
 
-  QDoubleValidator* c20Val = new QDoubleValidator(c20);
-  c20->setValidator(c20Val);
-  QDoubleValidator* c02Val = new QDoubleValidator(c02);
-  c02->setValidator(c02Val);
-  QDoubleValidator* c11Val = new QDoubleValidator(c11);
-  c11->setValidator(c11Val);
+  FOPW_SETUP_WIDGET(c20);
+  FOPW_SETUP_WIDGET(c02);
+  FOPW_SETUP_WIDGET(c11);
+  FOPW_SETUP_WIDGET(c10);
+  FOPW_SETUP_WIDGET(c01);
+  FOPW_SETUP_WIDGET(c00);
 
-  QDoubleValidator* c10Val = new QDoubleValidator(c10);
-  c10->setValidator(c10Val);
-  QDoubleValidator* c01Val = new QDoubleValidator(c01);
-  c01->setValidator(c01Val);
-  QDoubleValidator* c00Val = new QDoubleValidator(c00);
-  c00->setValidator(c00Val);
+
 
   if (getFilterParameter() != NULL)
   {
     label->setText(getFilterParameter()->getHumanLabel() );
 
     Float2ndOrderPoly_t data = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<Float2ndOrderPoly_t>();
-    c20->setText( QString::number(data.c20)  );
-    c02->setText( QString::number(data.c02)  );
-    c11->setText( QString::number(data.c11)  );
+    c20->setText( loc.toString(data.c20)  );
+    c02->setText( loc.toString(data.c02)  );
+    c11->setText( loc.toString(data.c11)  );
 
-    c10->setText( QString::number(data.c10) );
-    c01->setText( QString::number(data.c01) );
-    c00->setText( QString::number(data.c00) );
+    c10->setText( loc.toString(data.c10) );
+    c01->setText( loc.toString(data.c01) );
+    c00->setText( loc.toString(data.c00) );
   }
   errorLabel->hide();
 

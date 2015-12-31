@@ -103,16 +103,16 @@ void ThirdOrderPolynomialWidget::setupGui()
     label->setText(getFilterParameter()->getHumanLabel() );
 
     Float3rdOrderPoly_t data = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<Float3rdOrderPoly_t>();
-    c30->setText( QString::number(data.c30)  );
-    c03->setText( QString::number(data.c03)  );
-    c21->setText( QString::number(data.c21)  );
-    c12->setText( QString::number(data.c12) );
-    c20->setText( QString::number(data.c20)  );
-    c02->setText( QString::number(data.c02)  );
-    c11->setText( QString::number(data.c11)  );
-    c10->setText( QString::number(data.c10) );
-    c01->setText( QString::number(data.c01) );
-    c00->setText( QString::number(data.c00) );
+    c30->setText( loc.toString(data.c30)  );
+    c03->setText( loc.toString(data.c03)  );
+    c21->setText( loc.toString(data.c21)  );
+    c12->setText( loc.toString(data.c12) );
+    c20->setText( loc.toString(data.c20)  );
+    c02->setText( loc.toString(data.c02)  );
+    c11->setText( loc.toString(data.c11)  );
+    c10->setText( loc.toString(data.c10) );
+    c01->setText( loc.toString(data.c01) );
+    c00->setText( loc.toString(data.c00) );
   }
   errorLabel->hide();
 
