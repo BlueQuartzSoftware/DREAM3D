@@ -36,11 +36,8 @@
 #ifndef _RectGridGeom_H_
 #define _RectGridGeom_H_
 
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Geometry/IGeometry.h"
-#include "SIMPLib/Geometry/GeometryHelpers.hpp"
 
 /**
  * @brief The RectGridGeom class represents a structured rectlinear grid
@@ -63,25 +60,29 @@ class SIMPLib_EXPORT RectGridGeom : public IGeometry
 
     SIMPL_INSTANCE_VEC3_PROPERTY(size_t, Dimensions)
 
-    size_t getXPoints();
-    size_t getYPoints();
-    size_t getZPoints();
+    inline size_t getXPoints() { return m_Dimensions[0]; }
+    inline size_t getYPoints() { return m_Dimensions[1]; }
+    inline size_t getZPoints() { return m_Dimensions[2]; }
 
     void setXBounds(FloatArrayType::Pointer xBounds);
     void setYBounds(FloatArrayType::Pointer yBounds);
     void setZBounds(FloatArrayType::Pointer zBounds);
 
-    FloatArrayType::Pointer getXBounds();
-    FloatArrayType::Pointer getYBounds();
-    FloatArrayType::Pointer getZBounds();
+    inline FloatArrayType::Pointer getXBounds() { return m_xBounds; }
+    inline FloatArrayType::Pointer getYBounds() { return m_yBounds; }
+    inline FloatArrayType::Pointer getZBounds() { return m_zBounds; }
 
     void getCoords(size_t idx[3], float coords[3]);
 
-    void getCoords(size_t& x, size_t& y, size_t& z, float coords[3]);
+    void getCoords(size_t x, size_t y, size_t z, float coords[3]);
+
+    void getCoords(size_t idx, float coords[3]);
 
     void getCoords(size_t idx[3], double coords[3]);
 
-    void getCoords(size_t& x, size_t& y, size_t& z, double coords[3]);
+    void getCoords(size_t x, size_t y, size_t z, double coords[3]);
+
+    void getCoords(size_t idx, double coords[3]);
 
 // -----------------------------------------------------------------------------
 // Inherited from IGeometry
@@ -167,7 +168,7 @@ class SIMPLib_EXPORT RectGridGeom : public IGeometry
      * @param field
      * @param derivatives
      */
-    virtual void findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives);
+    virtual void findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives, Observable* observable = NULL);
 
     /**
      * @brief setName
@@ -199,6 +200,42 @@ class SIMPLib_EXPORT RectGridGeom : public IGeometry
      * the instance of the object.
      */
     virtual QString getInfoString(DREAM3D::InfoStringFormat format);
+
+    /**
+     * @brief setMessagePrefix
+     * @param prefix
+     */
+    virtual void setMessagePrefix(const QString& prefix);
+
+    /**
+     * @brief getMessagePrefix
+     * @return
+     */
+    virtual QString getMessagePrefix();
+
+    /**
+     * @brief setMessageTitle
+     * @param title
+     */
+    virtual void setMessageTitle(const QString& title);
+
+    /**
+     * @brief getMessageTitle
+     * @return
+     */
+    virtual QString getMessageTitle();
+
+    /**
+     * @brief setMessageLabel
+     * @param label
+     */
+    virtual void setMessageLabel(const QString& label);
+
+    /**
+     * @brief getMessageLabel
+     * @return
+     */
+    virtual QString getMessageLabel();
 
     /**
      * @brief getXdmfGridType
@@ -289,6 +326,13 @@ class SIMPLib_EXPORT RectGridGeom : public IGeometry
     virtual int gatherMetaData(hid_t parentid, size_t volDims[3], bool preflight);
 
     /**
+     * @brief sendThreadSafeProgressMessage
+     * @param counter
+     * @param max
+     */
+    virtual void sendThreadSafeProgressMessage(int64_t counter, int64_t max);
+
+    /**
      * @brief setElementsContaingVert
      * @param elementsContaingVert
      */
@@ -310,6 +354,9 @@ class SIMPLib_EXPORT RectGridGeom : public IGeometry
 
     QString m_Name;
     QString m_GeometryTypeName;
+    QString m_MessagePrefix;
+    QString m_MessageTitle;
+    QString m_MessageLabel;
     unsigned int m_GeometryType;
     unsigned int m_XdmfGridType;
     unsigned int m_UnitDimensionality;
@@ -318,6 +365,10 @@ class SIMPLib_EXPORT RectGridGeom : public IGeometry
     FloatArrayType::Pointer m_xBounds;
     FloatArrayType::Pointer m_yBounds;
     FloatArrayType::Pointer m_zBounds;
+    QMutex m_Mutex;
+    int64_t m_ProgressCounter;
+
+    friend class FindRectGridDerivativesImpl;
 
     RectGridGeom(const RectGridGeom&); // Copy Constructor Not Implemented
     void operator=(const RectGridGeom&); // Operator '=' Not Implemented

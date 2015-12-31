@@ -335,7 +335,7 @@ void ChangeResolution::execute()
   {
     if (getCancel() == true) { break; }
     progressInt = static_cast<size_t>((static_cast<float>(i) / m_ZP) * 100.0f);
-    QString ss = QObject::tr("Changing Resolution || %1% Completed").arg(progressInt);
+    QString ss = QObject::tr("Changing Resolution || %1% Complete").arg(progressInt);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     for (size_t j = 0; j < m_YP; j++)
     {
