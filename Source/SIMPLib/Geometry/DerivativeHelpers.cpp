@@ -35,47 +35,17 @@
 
 
 /* ============================================================================
- * DerivativeHelpers uses code adapated from the following vtk modules:
+ * DerivativeHelpers re-implements the exterior derivative calculations
+ * from the following vtk modules:
  *
  * * vtkLine.cxx
- *   - adapted vtkLine::Derivatives to EdgeDeriv::operator()
+ *   - re-implemented vtkLine::Derivatives to EdgeDeriv::operator()
  * * vtkTriangle.cxx
- *   - adapted vtkTriangle::Derivatives to TriangleDeriv::operator()
+ *   - re-implemented vtkTriangle::Derivatives to TriangleDeriv::operator()
  * * vtkQuad.cxx
- *   - adapted vtkQuad::Derivatives to QuadDeriv::operator()
- *
- * The vtk license is reproduced below.
+ *   - re-implemented vtkQuad::Derivatives to QuadDeriv::operator()
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-/* ============================================================================
- * Copyright (c) 1993-2008 Ken Martin, Will Schroeder, Bill Lorensen
- * All rights reserved.
-
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * * Redistributions in binary form must reproduce the above copyright notice,
- * this list of conditions and the following disclaimer in the documentation
- * and/or other materials provided with the distribution.
- *
- * * Neither name of Ken Martin, Will Schroeder, or Bill Lorensen nor the names of
- * any contributors may be used to endorse or promote products derived from this
- * software without specific prior written permission.
-
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "DerivativeHelpers.h"
 
 #include "SIMPLib/Math/GeometryMath.h"
@@ -100,7 +70,7 @@ void DerivativeHelpers::EdgeDeriv::operator()(EdgeGeom* edges, int64_t edgeId, d
   edges->getVertsAtEdge(edgeId, verts);
   edges->getCoords(verts[0], vert0_f);
   edges->getCoords(verts[1], vert1_f);
-  
+
   std::copy(vert0_f, vert0_f + 3, vert0);
   std::copy(vert1_f, vert1_f + 3, vert1);
 
