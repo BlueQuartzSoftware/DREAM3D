@@ -81,7 +81,7 @@ void GEOM_CLASS_NAME::sendThreadSafeProgressMessage(int64_t counter, int64_t max
   if (m_ProgressCounter > prog)
   {
     int64_t progressInt = static_cast<int64_t>((static_cast<float>(m_ProgressCounter) / max) * 100.0f);
-    QString ss = m_MessageTitle + QObject::tr(" || %1% Completed").arg(progressInt);
+    QString ss = m_MessageTitle + QObject::tr(" || %1% Complete").arg(progressInt);
     notifyStatusMessage(m_MessagePrefix, m_MessageLabel, ss);
     prog += progIncrement;
   }
