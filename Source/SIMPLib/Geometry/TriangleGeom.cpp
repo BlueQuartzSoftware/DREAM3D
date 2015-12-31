@@ -472,7 +472,14 @@ void TriangleGeom::getShapeFunctions(double pCoords[3], double* shape)
 // -----------------------------------------------------------------------------
 void TriangleGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives, Observable* observable)
 {
+  m_ProgressCounter = 0;
   int64_t numTris = getNumberOfTris();
+
+  if (observable)
+  {
+    connect(this, SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+            observable, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
+  }
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
