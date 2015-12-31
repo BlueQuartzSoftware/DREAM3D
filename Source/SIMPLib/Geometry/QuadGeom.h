@@ -571,6 +571,8 @@ class SIMPLib_EXPORT QuadGeom : public IGeometry2D
     QMutex m_Mutex;
     int64_t m_ProgressCounter;
 
+    friend class FindQuadDerivativesImpl;
+
     QuadGeom(const QuadGeom&); // Copy Constructor Not Implemented
     void operator=(const QuadGeom&); // Operator '=' Not Implemented
 };

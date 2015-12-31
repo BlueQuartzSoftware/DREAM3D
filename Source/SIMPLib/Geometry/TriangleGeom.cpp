@@ -110,6 +110,11 @@ class FindTriangleDerivativesImpl
       double values[3] = { 0.0, 0.0, 0.0 };
       double derivs[3] = { 0.0, 0.0, 0.0 };
       int64_t verts[3] { 0, 0, 0 };
+
+      size_t counter = 0;
+      int64_t totalElements = m_Tris->getNumberOfTris();
+      int64_t progIncrement = static_cast<int64_t>(totalElements / 100);
+
       for (int64_t i = start; i < end; i++)
       {
         m_Tris->getVertsAtTri(i, verts);
@@ -124,6 +129,13 @@ class FindTriangleDerivativesImpl
           derivsPtr[i * 3 * cDims + j * 3 + 1] = derivs[1];
           derivsPtr[i * 3 * cDims + j * 3 + 2] = derivs[2];
         }
+
+        if (counter > progIncrement)
+        {
+          m_Tris->sendThreadSafeProgressMessage(counter, totalElements);
+          counter = 0;
+        }
+        counter++;
       }
     }
 

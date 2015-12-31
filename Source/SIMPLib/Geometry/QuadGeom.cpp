@@ -110,6 +110,11 @@ class FindQuadDerivativesImpl
       double values[4] = { 0.0, 0.0, 0.0, 0.0 };
       double derivs[3] = { 0.0, 0.0, 0.0 };
       int64_t verts[4] = { 0, 0, 0, 0 };
+
+      size_t counter = 0;
+      int64_t totalElements = m_Quads->getNumberOfQuads();
+      int64_t progIncrement = static_cast<int64_t>(totalElements / 100);
+
       for (int64_t i = start; i < end; i++)
       {
         m_Quads->getVertsAtQuad(i, verts);
@@ -124,6 +129,13 @@ class FindQuadDerivativesImpl
           derivsPtr[i * 3 * cDims + j * 3 + 1] = derivs[1];
           derivsPtr[i * 3 * cDims + j * 3 + 2] = derivs[2];
         }
+
+        if (counter > progIncrement)
+        {
+          m_Quads->sendThreadSafeProgressMessage(counter, totalElements);
+          counter = 0;
+        }
+        counter++;
       }
     }
 

@@ -126,7 +126,7 @@ class FindRectGridDerivativesImpl
 
       size_t counter = 0;
       size_t totalElements = m_RectGrid->getNumberOfElements();
-      int64_t progIncrement = static_cast<int64_t>(totalElements / 200);
+      int64_t progIncrement = static_cast<int64_t>(totalElements / 100);
 
       for (size_t z = zStart; z < zEnd; z++)
       {

@@ -466,6 +466,8 @@ class SIMPLib_EXPORT EdgeGeom : public IGeometry
     QMutex m_Mutex;
     int64_t m_ProgressCounter;
 
+    friend class FindEdgeDerivativesImpl;
+
     EdgeGeom(const EdgeGeom&); // Copy Constructor Not Implemented
     void operator=(const EdgeGeom&); // Operator '=' Not Implemented
 };

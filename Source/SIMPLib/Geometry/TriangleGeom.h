@@ -571,6 +571,8 @@ class SIMPLib_EXPORT TriangleGeom : public IGeometry2D
     QMutex m_Mutex;
     int64_t m_ProgressCounter;
 
+    friend class FindTriangleDerivativesImpl;
+
     TriangleGeom(const TriangleGeom&); // Copy Constructor Not Implemented
     void operator=(const TriangleGeom&); // Operator '=' Not Implemented
 };
