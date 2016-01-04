@@ -345,6 +345,14 @@ add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/QtSupportLib ${PROJECT_BINARY_
 # The plugins are also going to depend on these being built
 add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/DREAM3DWidgetsLib ${PROJECT_BINARY_DIR}/DREAM3DWidgetsLib)
 
+# --------------------------------------------------------------------
+# Build the SimpleITKExplicit Library.
+option(SIMPLib_USE_ITK "Use ITK For Image Processing" ON)
+if(SIMPLib_USE_ITK)
+  add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/SimpleITKExplicit ${PROJECT_BINARY_DIR}/SimpleITKExplicit)
+  get_property(SimpleITKExplicit_LIB_NAME TARGET SimpleITKExplicit PROPERTY OUTPUT_NAME)
+endif()
+
 #-------------------------------------------------------------------------------
 # Build the DREAM3D Application here so we can add dependencies between the plugin and
 # the main DREAM3D application target. This should ensure that everything is built and
@@ -358,12 +366,6 @@ if(SIMPLib_BUILD_DREAM3D)
   set(SIMPLib_DOCS_ROOT_DIR "${DREAM3DProj_BINARY_DIR}/Bin/Help/DREAM3D")
 endif()
 
-# --------------------------------------------------------------------
-# Build the SimpleITKExplicit Library.
-option(SIMPLib_USE_ITK "Use ITK For Image Processing" ON)
-if(SIMPLib_USE_ITK)
-  add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/SimpleITKExplicit ${PROJECT_BINARY_DIR}/SimpleITKExplicit)
-endif()
 
 #-------------------------------------------------------------------------------
 # Compile the Core Plugins that come with DREAM3D and any other Plugins that the
