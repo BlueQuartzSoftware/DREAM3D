@@ -1125,11 +1125,19 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
   int32_t progFeatureInc = static_cast<int32_t>(totalFeatures * 0.01f);
   for (size_t i = firstPrimaryFeature; i < totalFeatures; i++)
   {
+    if (getCancel() == true) { return; }
+
     if ((int32_t)i > progFeature + progFeatureInc)
     {
       QString ss = QObject::tr("Placing Feature #%1/%2").arg(i).arg(totalFeatures);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       progFeature = i;
+    }
+
+    if (i == (totalFeatures - 1))
+    {
+      QString ss = QObject::tr("Placing Feature #%1/%2").arg(i + 1).arg(totalFeatures);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     }
 
     // we always put the feature in the center of the box to make sure the feature has the optimal chance to not touch the edge of the box
@@ -1166,8 +1174,6 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
     zc = static_cast<float>((plane * m_PackingRes[2]) + (m_PackingRes[2] * 0.5));
     move_feature(i, xc, yc, zc);
     fillingerror = check_fillingerror(i, -1000, featureOwnersPtr, exclusionOwnersPtr);
-
-    if (getCancel() == true) { return; }
   }
 
   progFeature = 0;

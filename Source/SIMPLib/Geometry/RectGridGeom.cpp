@@ -35,52 +35,366 @@
 
 
 /* ============================================================================
- * RectGridGeom uses code adapated from the following vtk modules:
+ * RectGridGeom re-implements code from the following vtk modules:
  *
  * * vtkLine.cxx
- *   - adapted vtkVoxel::InterpolationDerivs to RectGridGeom::getShapeFunctions
+ *   - re-implemented vtkVoxel::InterpolationDerivs to RectGridGeom::getShapeFunctions
  * * vtkGradientFilter.cxx
- *   - adapted vtkGradientFilter template function ComputeGradientsSG to
+ *   - re-implemented vtkGradientFilter template function ComputeGradientsSG to
  *     RectGridGeom::findDerivatives
- *
- * The vtk license is reproduced below.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-/* ============================================================================
- * Copyright (c) 1993-2008 Ken Martin, Will Schroeder, Bill Lorensen
- * All rights reserved.
-
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * * Redistributions in binary form must reproduce the above copyright notice,
- * this list of conditions and the following disclaimer in the documentation
- * and/or other materials provided with the distribution.
- *
- * * Neither name of Ken Martin, Will Schroeder, or Bill Lorensen nor the names of
- * any contributors may be used to endorse or promote products derived from this
- * software without specific prior written permission.
-
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "SIMPLib/Geometry/RectGridGeom.h"
 
-#include "H5Support/H5Lite.h"
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#include <tbb/parallel_for.h>
+#include <tbb/blocked_range3d.h>
+#include <tbb/partitioner.h>
+#include <tbb/task_scheduler_init.h>
+#endif
 
+#include "H5Support/H5Lite.h"
 #include "SIMPLib/HDF5/VTKH5Constants.h"
 #include "SIMPLib/Geometry/GeometryHelpers.hpp"
+
+/**
+ * @brief The FindImageDerivativesImpl class implements a threaded algorithm that computes the
+ * derivative of an arbitrary dimensional field on the underlying rectilinear grid
+ */
+class FindRectGridDerivativesImpl
+{
+  public:
+    FindRectGridDerivativesImpl(RectGridGeom* image, DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivs) :
+      m_RectGrid(image),
+      m_Field(field),
+      m_Derivatives(derivs)
+    {}
+    virtual ~FindRectGridDerivativesImpl() {}
+
+    void compute(size_t zStart, size_t zEnd, size_t yStart, size_t yEnd, size_t xStart, size_t xEnd) const
+    {
+      double xp[3] = { 0.0, 0.0, 0.0 };
+      double xm[3] = { 0.0, 0.0, 0.0 };
+      double factor = 0.0;
+      double xxi, yxi, zxi, xeta, yeta, zeta, xzeta, yzeta, zzeta;
+      xxi = yxi = zxi = xeta = yeta = zeta = xzeta = yzeta = zzeta = 0;
+      double aj, xix, xiy, xiz, etax, etay, etaz, zetax, zetay, zetaz;
+      aj = xix = xiy = xiz = etax = etay = etaz = zetax = zetay = zetaz = 0;
+      size_t index = 0;
+      int32_t numComps = m_Field->getNumberOfComponents();
+      double* fieldPtr = m_Field->getPointer(0);
+      double* derivsPtr = m_Derivatives->getPointer(0);
+      std::vector<double> plusValues(numComps);
+      std::vector<double> minusValues(numComps);
+      std::vector<double> dValuesdXi(numComps);
+      std::vector<double> dValuesdEta(numComps);
+      std::vector<double> dValuesdZeta(numComps);
+
+      size_t dims[3] = { 0, 0, 0 };
+      m_RectGrid->getDimensions(dims);
+
+      int64_t counter = 0;
+      size_t totalElements = m_RectGrid->getNumberOfElements();
+      int64_t progIncrement = static_cast<int64_t>(totalElements / 100);
+
+      for (size_t z = zStart; z < zEnd; z++)
+      {
+        for (size_t y = yStart; y < yEnd; y++)
+        {
+          for (size_t x = xStart; x < xEnd; x++)
+          {
+            //  Xi derivatives (X)
+            if (dims[0] == 1)
+            {
+              findValuesForFiniteDifference(TwoDimensional, XDirection, x, y, z, dims,
+                                            xp, xm, factor, numComps, plusValues, minusValues, fieldPtr);
+            }
+            else if (x == 0)
+            {
+              findValuesForFiniteDifference(LeftSide, XDirection, x, y, z, dims,
+                                            xp, xm, factor, numComps, plusValues, minusValues, fieldPtr);
+            }
+            else if (x == (dims[0] - 1))
+            {
+              findValuesForFiniteDifference(RightSide, XDirection, x, y, z, dims,
+                                            xp, xm, factor, numComps, plusValues, minusValues, fieldPtr);
+            }
+            else
+            {
+              findValuesForFiniteDifference(Centered, XDirection, x, y, z, dims,
+                                            xp, xm, factor, numComps, plusValues, minusValues, fieldPtr);
+            }
+
+            xxi = factor * (xp[0] - xm[0]);
+            yxi = factor * (xp[1] - xm[1]);
+            zxi = factor * (xp[2] - xm[2]);
+            for (int32_t i = 0; i < numComps; i++) { dValuesdXi[i] = factor * (plusValues[i] - minusValues[i]); }
+
+            //  Eta derivatives (Y)
+            if (dims[1] == 1)
+            {
+              findValuesForFiniteDifference(TwoDimensional, YDirection, x, y, z, dims,
+                                            xp, xm, factor, numComps, plusValues, minusValues, fieldPtr);
+            }
+            else if (y == 0)
+            {
+              findValuesForFiniteDifference(LeftSide, YDirection, x, y, z, dims,
+                                            xp, xm, factor, numComps, plusValues, minusValues, fieldPtr);
+            }
+            else if (y == (dims[1] - 1))
+            {
+              findValuesForFiniteDifference(RightSide, YDirection, x, y, z, dims,
+                                            xp, xm, factor, numComps, plusValues, minusValues, fieldPtr);
+            }
+            else
+            {
+              findValuesForFiniteDifference(Centered, YDirection, x, y, z, dims,
+                                            xp, xm, factor, numComps, plusValues, minusValues, fieldPtr);
+            }
+
+            xeta = factor * (xp[0] - xm[0]);
+            yeta = factor * (xp[1] - xm[1]);
+            zeta = factor * (xp[2] - xm[2]);
+            for (int32_t i = 0; i < numComps; i++) { dValuesdEta[i] = factor * (plusValues[i] - minusValues[i]); }
+
+            //  Zeta derivatives (Z)
+            if (dims[2] == 1)
+            {
+              findValuesForFiniteDifference(TwoDimensional, ZDirection, x, y, z, dims,
+                                            xp, xm, factor, numComps, plusValues, minusValues, fieldPtr);
+            }
+            else if (z == 0)
+            {
+              findValuesForFiniteDifference(LeftSide, ZDirection, x, y, z, dims,
+                                            xp, xm, factor, numComps, plusValues, minusValues, fieldPtr);
+            }
+            else if (z == (dims[2] - 1))
+            {
+              findValuesForFiniteDifference(RightSide, ZDirection, x, y, z, dims,
+                                            xp, xm, factor, numComps, plusValues, minusValues, fieldPtr);
+            }
+            else
+            {
+              findValuesForFiniteDifference(Centered, ZDirection, x, y, z, dims,
+                                            xp, xm, factor, numComps, plusValues, minusValues, fieldPtr);
+            }
+
+            xzeta = factor * (xp[0] - xm[0]);
+            yzeta = factor * (xp[1] - xm[1]);
+            zzeta = factor * (xp[2] - xm[2]);
+            for (int32_t i = 0; i < numComps; i++) { dValuesdZeta[i] = factor * (plusValues[i] - minusValues[i]); }
+
+            // Now calculate the Jacobian.  Grids occasionally have
+            // singularities, or points where the Jacobian is infinite (the
+            // inverse is zero).  For these cases, we'll set the Jacobian to
+            // zero, which will result in a zero derivative.
+            aj =  xxi * yeta * zzeta + yxi * zeta * xzeta + zxi * xeta * yzeta
+                  - zxi * yeta * xzeta - yxi * xeta * zzeta - xxi * zeta * yzeta;
+            if (aj != 0.0)
+            {
+              aj = 1.0 / aj;
+            }
+
+            //  Xi metrics
+            xix  =  aj * (yeta * zzeta - zeta * yzeta);
+            xiy  = -aj * (xeta * zzeta - zeta * xzeta);
+            xiz  =  aj * (xeta * yzeta - yeta * xzeta);
+
+            //  Eta metrics
+            etax = -aj * (yxi * zzeta - zxi * yzeta);
+            etay =  aj * (xxi * zzeta - zxi * xzeta);
+            etaz = -aj * (xxi * yzeta - yxi * xzeta);
+
+            //  Zeta metrics
+            zetax =  aj * (yxi * zeta - zxi * yeta);
+            zetay = -aj * (xxi * zeta - zxi * xeta);
+            zetaz =  aj * (xxi * yeta - yxi * xeta);
+
+            // Compute the actual derivatives
+            index = (z * dims[1] * dims[0]) + (y * dims[0]) + x;
+            for (int32_t i = 0; i < numComps; i++)
+            {
+              derivsPtr[index * numComps * 3 + i * 3] =
+                xix * dValuesdXi[i] + etax * dValuesdEta[i] + zetax * dValuesdZeta[i];
+
+              derivsPtr[index * numComps * 3 + i * 3 + 1] =
+                xiy * dValuesdXi[i] + etay * dValuesdEta[i] + zetay * dValuesdZeta[i];
+
+              derivsPtr[index * numComps * 3 + i * 3 + 2] =
+                xiz * dValuesdXi[i] + etaz * dValuesdEta[i] + zetaz * dValuesdZeta[i];
+            }
+
+            if (counter > progIncrement)
+            {
+              m_RectGrid->sendThreadSafeProgressMessage(counter, totalElements);
+              counter = 0;
+            }
+            counter++;
+          }
+        }
+      }
+    }
+
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+    void operator()(const tbb::blocked_range3d<size_t, size_t, size_t>& r) const
+    {
+      compute(r.pages().begin(), r.pages().end(), r.rows().begin(), r.rows().end(), r.cols().begin(), r.cols().end());
+    }
+#endif
+
+    void computeIndices(int32_t differenceType, int32_t directionType,
+                        size_t& index1, size_t& index2, size_t dims[3],
+                        size_t x, size_t y, size_t z, double xp[3], double xm[3]) const
+
+    {
+      size_t tmpIndex1 = 0;
+      size_t tmpIndex2 = 0;
+
+      switch (directionType)
+      {
+        case XDirection:
+        {
+          if (differenceType == LeftSide)
+          {
+            index1 = (z * dims[1] * dims[0]) + (y * dims[0]) + (x + 1);
+            index2 = (z * dims[1] * dims[0]) + (y * dims[0]) + x;
+            tmpIndex1 = x + 1;
+            m_RectGrid->getCoords(tmpIndex1, y, z, xp);
+            m_RectGrid->getCoords(x, y, z, xm);
+          }
+          else if (differenceType == RightSide)
+          {
+            index1 = (z * dims[1] * dims[0]) + (y * dims[0]) + x;
+            index2 = (z * dims[1] * dims[0]) + (y * dims[0]) + (x - 1);
+            tmpIndex1 = x - 1;
+            m_RectGrid->getCoords(x, y, z, xp);
+            m_RectGrid->getCoords(tmpIndex1, y, z, xm);
+          }
+          else if (differenceType == Centered)
+          {
+            index1 = (z * dims[1] * dims[0]) + (y * dims[0]) + (x + 1);
+            index2 = (z * dims[1] * dims[0]) + (y * dims[0]) + (x - 1);
+            tmpIndex1 = x + 1;
+            tmpIndex2 = x - 1;
+            m_RectGrid->getCoords(tmpIndex1, y, z, xp);
+            m_RectGrid->getCoords(tmpIndex2, y, z, xm);
+          }
+          break;
+        }
+        case YDirection:
+        {
+          if (differenceType == LeftSide)
+          {
+            index1 = (z * dims[1] * dims[0]) + ((y + 1) * dims[0]) + x;
+            index2 = (z * dims[1] * dims[0]) + (y * dims[0]) + x;
+            tmpIndex1 = y + 1;
+            m_RectGrid->getCoords(x, tmpIndex1, z, xp);
+            m_RectGrid->getCoords(x, y, z, xm);
+          }
+          else if (differenceType == RightSide)
+          {
+            index1 = (z * dims[1] * dims[0]) + (y * dims[0]) + x;
+            index2 = (z * dims[1] * dims[0]) + ((y - 1) * dims[0]) + x;
+            tmpIndex1 = y - 1;
+            m_RectGrid->getCoords(x, y, z, xp);
+            m_RectGrid->getCoords(x, tmpIndex1, z, xm);
+          }
+          else if (differenceType == Centered)
+          {
+            index1 = (z * dims[1] * dims[0]) + ((y + 1) * dims[0]) + x;
+            index2 = (z * dims[1] * dims[0]) + ((y - 1) * dims[0]) + x;
+            tmpIndex1 = y + 1;
+            tmpIndex2 = y - 1;
+            m_RectGrid->getCoords(x, tmpIndex1, z, xp);
+            m_RectGrid->getCoords(x, tmpIndex2, z, xm);
+          }
+          break;
+        }
+        case ZDirection:
+        {
+          if (differenceType == LeftSide)
+          {
+            index1 = ((z + 1) * dims[1] * dims[0]) + (y * dims[0]) + x;
+            index2 = (z * dims[1] * dims[0]) + (y * dims[0]) + x;
+            tmpIndex1 = z + 1;
+            m_RectGrid->getCoords(x, y, tmpIndex1, xp);
+            m_RectGrid->getCoords(x, y, z, xm);
+          }
+          else if (differenceType == RightSide)
+          {
+            index1 = (z * dims[1] * dims[0]) + (y * dims[0]) + x;
+            index2 = ((z - 1) * dims[1] * dims[0]) + (y * dims[0]) + x;
+            tmpIndex1 = z - 1;
+            m_RectGrid->getCoords(x, y, z, xp);
+            m_RectGrid->getCoords(x, y, tmpIndex1, xm);
+          }
+          else if (differenceType == Centered)
+          {
+            index1 = ((z + 1) * dims[1] * dims[0]) + (y * dims[0]) + x;
+            index2 = ((z - 1) * dims[1] * dims[0]) + (y * dims[0]) + x;
+            tmpIndex1 = z + 1;
+            tmpIndex2 = z - 1;
+            m_RectGrid->getCoords(x, y, tmpIndex1, xp);
+            m_RectGrid->getCoords(x, y, tmpIndex2, xm);
+          }
+          break;
+        }
+        default:
+        {
+          break;
+        }
+      }
+    }
+
+    void findValuesForFiniteDifference(int32_t differenceType, int32_t directionType,
+                                       size_t x, size_t y, size_t z, size_t dims[3],
+                                       double xp[3], double xm[3], double& factor, int32_t numComps,
+                                       std::vector<double>& plusValues, std::vector<double>& minusValues, double* field) const
+    {
+      size_t index1 = 0;
+      size_t index2 = 0;
+
+      factor = 1.0;
+
+      if (differenceType == TwoDimensional)
+      {
+        for (size_t i = 0; i < 3; i++) { xp[i] = xm[i] = 0.0; }
+        xp[directionType] = 1.0;
+        for (int32_t i = 0; i < numComps; i++) { plusValues[i] = minusValues[i] = 0.0; }
+      }
+      else
+      {
+        computeIndices(differenceType, directionType, index1, index2, dims, x, y, z, xp, xm);
+        for (int32_t i = 0; i < numComps; i++)
+        {
+          plusValues[i] = field[index1 * numComps + i];
+          minusValues[i] = field[index2 * numComps + i];
+        }
+      }
+
+      if (differenceType == Centered) { factor = 0.5; }
+    }
+
+  private:
+    RectGridGeom* m_RectGrid;
+    DoubleArrayType::Pointer m_Field;
+    DoubleArrayType::Pointer m_Derivatives;
+
+    enum FiniteDifferenceType_t
+    {
+      TwoDimensional = 0,
+      LeftSide,
+      RightSide,
+      Centered
+    };
+
+    enum DirectionType_t
+    {
+      XDirection = 0,
+      YDirection,
+      ZDirection
+    };
+};
 
 // -----------------------------------------------------------------------------
 //
@@ -90,6 +404,9 @@ RectGridGeom::RectGridGeom()
   m_GeometryTypeName = DREAM3D::Geometry::RectGridGeometry;
   m_GeometryType = DREAM3D::GeometryType::RectGridGeometry;
   m_XdmfGridType = DREAM3D::XdmfGridType::RectilinearGrid;
+  m_MessagePrefix = "";
+  m_MessageTitle = "";
+  m_MessageLabel = "";
   m_UnitDimensionality = 3;
   m_SpatialDimensionality = 3;
   m_Dimensions[0] = 0;
@@ -98,6 +415,7 @@ RectGridGeom::RectGridGeom()
   m_xBounds = FloatArrayType::NullPointer();
   m_yBounds = FloatArrayType::NullPointer();
   m_zBounds = FloatArrayType::NullPointer();
+  m_ProgressCounter = 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -105,21 +423,6 @@ RectGridGeom::RectGridGeom()
 // -----------------------------------------------------------------------------
 RectGridGeom::~RectGridGeom()
 {}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-size_t RectGridGeom::getXPoints() {return m_Dimensions[0];}
-size_t RectGridGeom::getYPoints() {return m_Dimensions[1];}
-size_t RectGridGeom::getZPoints() {return m_Dimensions[2];}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-FloatArrayType::Pointer RectGridGeom::getXBounds() { return m_xBounds; }
-FloatArrayType::Pointer RectGridGeom::getYBounds() { return m_yBounds; }
-FloatArrayType::Pointer RectGridGeom::getZBounds() { return m_zBounds; }
 
 // -----------------------------------------------------------------------------
 //
@@ -198,7 +501,7 @@ void RectGridGeom::getCoords(size_t idx[3], float coords[3])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RectGridGeom::getCoords(size_t& x, size_t& y, size_t& z, float coords[3])
+void RectGridGeom::getCoords(size_t x, size_t y, size_t z, float coords[3])
 {
   float* xBnds = m_xBounds->getPointer(0);
   float* yBnds = m_yBounds->getPointer(0);
@@ -207,6 +510,24 @@ void RectGridGeom::getCoords(size_t& x, size_t& y, size_t& z, float coords[3])
   coords[0] = 0.5f * (xBnds[x] + xBnds[x + 1]);
   coords[1] = 0.5f * (yBnds[y] + yBnds[y + 1]);
   coords[2] = 0.5f * (zBnds[z] + zBnds[z + 1]);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RectGridGeom::getCoords(size_t idx, float coords[3])
+{
+  size_t column = idx % m_Dimensions[0];
+  size_t row = (idx / m_Dimensions[0]) % m_Dimensions[1];
+  size_t plane = idx / (m_Dimensions[0] * m_Dimensions[1]);
+
+  float* xBnds = m_xBounds->getPointer(0);
+  float* yBnds = m_yBounds->getPointer(0);
+  float* zBnds = m_zBounds->getPointer(0);
+
+  coords[0] = 0.5f * (xBnds[column] + xBnds[column + 1]);
+  coords[1] = 0.5f * (yBnds[row] + yBnds[row + 1]);
+  coords[2] = 0.5f * (zBnds[plane] + zBnds[plane + 1]);
 }
 
 // -----------------------------------------------------------------------------
@@ -226,7 +547,7 @@ void RectGridGeom::getCoords(size_t idx[3], double coords[3])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RectGridGeom::getCoords(size_t& x, size_t& y, size_t& z, double coords[3])
+void RectGridGeom::getCoords(size_t x, size_t y, size_t z, double coords[3])
 {
   float* xBnds = m_xBounds->getPointer(0);
   float* yBnds = m_yBounds->getPointer(0);
@@ -235,6 +556,24 @@ void RectGridGeom::getCoords(size_t& x, size_t& y, size_t& z, double coords[3])
   coords[0] = static_cast<double>(0.5 * (xBnds[x] + xBnds[x + 1]));
   coords[1] = static_cast<double>(0.5 * (yBnds[y] + yBnds[y + 1]));
   coords[2] = static_cast<double>(0.5 * (zBnds[z] + zBnds[z + 1]));
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RectGridGeom::getCoords(size_t idx, double coords[3])
+{
+  size_t column = idx % m_Dimensions[0];
+  size_t row = (idx / m_Dimensions[0]) % m_Dimensions[1];
+  size_t plane = idx / (m_Dimensions[0] * m_Dimensions[1]);
+
+  float* xBnds = m_xBounds->getPointer(0);
+  float* yBnds = m_yBounds->getPointer(0);
+  float* zBnds = m_zBounds->getPointer(0);
+
+  coords[0] = static_cast<double>(0.5f * (xBnds[column] + xBnds[column + 1]));
+  coords[1] = static_cast<double>(0.5f * (yBnds[row] + yBnds[row + 1]));
+  coords[2] = static_cast<double>(0.5f * (zBnds[plane] + zBnds[plane + 1]));
 }
 
 // -----------------------------------------------------------------------------
@@ -391,7 +730,9 @@ void RectGridGeom::getParametricCenter(double pCoords[3])
 // -----------------------------------------------------------------------------
 void RectGridGeom::getShapeFunctions(double pCoords[3], double* shape)
 {
-  double rm, sm, tm;
+  double rm = 0.0;
+  double sm = 0.0;
+  double tm = 0.0;
 
   rm = 1.0 - pCoords[0];
   sm = 1.0 - pCoords[1];
@@ -431,297 +772,34 @@ void RectGridGeom::getShapeFunctions(double pCoords[3], double* shape)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RectGridGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives)
+void RectGridGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives, Observable* observable)
 {
-  int inputComponent;
-  double xp[3], xm[3], factor;
-  xp[0] = xp[1] = xp[2] = xm[0] = xm[1] = xm[2] = factor = 0;
-  double xxi, yxi, zxi, xeta, yeta, zeta, xzeta, yzeta, zzeta;
-  xxi = yxi = zxi = xeta = yeta = zeta = xzeta = yzeta = zzeta = 0;
-  double aj, xix, xiy, xiz, etax, etay, etaz, zetax, zetay, zetaz;
-  aj = xix = xiy = xiz = etax = etay = etaz = zetax = zetay = zetaz = 0;
-  size_t idx, idx2, tmpIdx, tmpIdx2;
-  int numberOfInputComponents = field->getNumberOfComponents();
-  double* fieldPtr = field->getPointer(0);
-  double* derivsPtr = derivatives->getPointer(0);
-  // for finite differencing -- the values on the "plus" side and
-  // "minus" side of the point to be computed at
-  std::vector<double> plusvalues(numberOfInputComponents);
-  std::vector<double> minusvalues(numberOfInputComponents);
-
-  std::vector<double> dValuesdXi(numberOfInputComponents);
-  std::vector<double> dValuesdEta(numberOfInputComponents);
-  std::vector<double> dValuesdZeta(numberOfInputComponents);
-
-  size_t dims[3];
+  m_ProgressCounter = 0;
+  size_t dims[3] = { 0, 0, 0 };
   getDimensions(dims);
 
-  size_t xysize = dims[0] * dims[1];
-
-  for (size_t z = 0; z < dims[2]; z++)
+  if (observable)
   {
-    for (size_t y = 0; y < dims[1]; y++)
-    {
-      for (size_t x = 0; x < dims[0]; x++)
-      {
-        //  Xi derivatives.
-        if ( dims[0] == 1 ) // 2D in this direction
-        {
-          factor = 1.0;
-          for (size_t ii = 0; ii < 3; ii++)
-          {
-            xp[ii] = xm[ii] = 0.0;
-          }
-          xp[0] = 1.0;
-          for(inputComponent = 0; inputComponent < numberOfInputComponents;
-              inputComponent++)
-          {
-            plusvalues[inputComponent] = minusvalues[inputComponent] = 0;
-          }
-        }
-        else if ( x == 0 )
-        {
-          factor = 1.0;
-          idx = (x + 1) + y * dims[0] + z * xysize;
-          idx2 = x + y * dims[0] + z * xysize;
-          tmpIdx = x + 1;
-          getCoords(tmpIdx, y, z, xp);
-          getCoords(x, y, z, xm);
-          for(inputComponent = 0; inputComponent < numberOfInputComponents;
-              inputComponent++)
-          {
-            plusvalues[inputComponent] = fieldPtr[idx * numberOfInputComponents + inputComponent];
-            minusvalues[inputComponent] = fieldPtr[idx2 * numberOfInputComponents + inputComponent];
-          }
-        }
-        else if ( x == (dims[0] - 1) )
-        {
-          factor = 1.0;
-          idx = x + y * dims[0] + z * xysize;
-          idx2 = x - 1 + y * dims[0] + z * xysize;
-          tmpIdx = x - 1;
-          getCoords(x, y, z, xp);
-          getCoords(tmpIdx, y, z, xm);
-          for(inputComponent = 0; inputComponent < numberOfInputComponents;
-              inputComponent++)
-          {
-            plusvalues[inputComponent] = fieldPtr[idx * numberOfInputComponents + inputComponent];
-            minusvalues[inputComponent] = fieldPtr[idx2 * numberOfInputComponents + inputComponent];
-          }
-        }
-        else
-        {
-          factor = 0.5;
-          idx = (x + 1) + y * dims[0] + z * xysize;
-          idx2 = (x - 1) + y * dims[0] + z * xysize;
-          tmpIdx = x + 1;
-          tmpIdx2 = x - 1;
-          getCoords(tmpIdx, y, z, xp);
-          getCoords(tmpIdx2, y, z, xm);
-          for(inputComponent = 0; inputComponent < numberOfInputComponents;
-              inputComponent++)
-          {
-            plusvalues[inputComponent] = fieldPtr[idx * numberOfInputComponents + inputComponent];
-            minusvalues[inputComponent] = fieldPtr[idx2 * numberOfInputComponents + inputComponent];
-          }
-        }
+    connect(this, SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+            observable, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
+  }
 
-        xxi = factor * (xp[0] - xm[0]);
-        yxi = factor * (xp[1] - xm[1]);
-        zxi = factor * (xp[2] - xm[2]);
-        for(inputComponent = 0; inputComponent < numberOfInputComponents; inputComponent++)
-        {
-          dValuesdXi[inputComponent] = factor *
-                                       (plusvalues[inputComponent] - minusvalues[inputComponent]);
-        }
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+  tbb::task_scheduler_init init;
+  bool doParallel = true;
+#endif
 
-        //  Eta derivatives.
-        if ( dims[1] == 1 ) // 2D in this direction
-        {
-          factor = 1.0;
-          for (size_t ii = 0; ii < 3; ii++)
-          {
-            xp[ii] = xm[ii] = 0.0;
-          }
-          xp[1] = 1.0;
-          for(inputComponent = 0; inputComponent < numberOfInputComponents;
-              inputComponent++)
-          {
-            plusvalues[inputComponent] = minusvalues[inputComponent] = 0;
-          }
-        }
-        else if ( y == 0 )
-        {
-          factor = 1.0;
-          idx = x + (y + 1) * dims[0] + z * xysize;
-          idx2 = x + y * dims[0] + z * xysize;
-          tmpIdx = y + 1;
-          getCoords(x, tmpIdx, z, xp);
-          getCoords(x, y, z, xm);
-          for(inputComponent = 0; inputComponent < numberOfInputComponents;
-              inputComponent++)
-          {
-            plusvalues[inputComponent] = fieldPtr[idx * numberOfInputComponents + inputComponent];
-            minusvalues[inputComponent] = fieldPtr[idx2 * numberOfInputComponents + inputComponent];
-          }
-        }
-        else if ( y == (dims[1] - 1) )
-        {
-          factor = 1.0;
-          idx = x + y * dims[0] + z * xysize;
-          idx2 = x + (y - 1) * dims[0] + z * xysize;
-          tmpIdx = y - 1;
-          getCoords(x, y, z, xp);
-          getCoords(x, tmpIdx, z, xm);
-          for(inputComponent = 0; inputComponent < numberOfInputComponents;
-              inputComponent++)
-          {
-            plusvalues[inputComponent] = fieldPtr[idx * numberOfInputComponents + inputComponent];
-            minusvalues[inputComponent] = fieldPtr[idx2 * numberOfInputComponents + inputComponent];
-          }
-        }
-        else
-        {
-          factor = 0.5;
-          idx = x + (y + 1) * dims[0] + z * xysize;
-          idx2 = x + (y - 1) * dims[0] + z * xysize;
-          tmpIdx = y + 1;
-          tmpIdx2 = y - 1;
-          getCoords(x, tmpIdx, z, xp);
-          getCoords(x, tmpIdx2, z, xm);
-          for(inputComponent = 0; inputComponent < numberOfInputComponents;
-              inputComponent++)
-          {
-            plusvalues[inputComponent] = fieldPtr[idx * numberOfInputComponents + inputComponent];
-            minusvalues[inputComponent] = fieldPtr[idx2 * numberOfInputComponents + inputComponent];
-          }
-        }
-
-        xeta = factor * (xp[0] - xm[0]);
-        yeta = factor * (xp[1] - xm[1]);
-        zeta = factor * (xp[2] - xm[2]);
-        for(inputComponent = 0; inputComponent < numberOfInputComponents; inputComponent++)
-        {
-          dValuesdEta[inputComponent] = factor *
-                                        (plusvalues[inputComponent] - minusvalues[inputComponent]);
-        }
-
-        //  Zeta derivatives.
-        if ( dims[2] == 1 ) // 2D in this direction
-        {
-          factor = 1.0;
-          for (size_t ii = 0; ii < 3; ii++)
-          {
-            xp[ii] = xm[ii] = 0.0;
-          }
-          for(inputComponent = 0; inputComponent < numberOfInputComponents;
-              inputComponent++)
-          {
-            plusvalues[inputComponent] = minusvalues[inputComponent] = 0;
-          }
-          xp[2] = 1.0;
-        }
-        else if ( z == 0 )
-        {
-          factor = 1.0;
-          idx = x + y * dims[0] + (z + 1) * xysize;
-          idx2 = x + y * dims[0] + z * xysize;
-          tmpIdx = z + 1;
-          getCoords(x, y, tmpIdx, xp);
-          getCoords(x, y, z, xm);
-          for(inputComponent = 0; inputComponent < numberOfInputComponents;
-              inputComponent++)
-          {
-            plusvalues[inputComponent] = fieldPtr[idx * numberOfInputComponents + inputComponent];
-            minusvalues[inputComponent] = fieldPtr[idx2 * numberOfInputComponents + inputComponent];
-          }
-        }
-        else if ( z == (dims[2] - 1) )
-        {
-          factor = 1.0;
-          idx = x + y * dims[0] + z * xysize;
-          idx2 = x + y * dims[0] + (z - 1) * xysize;
-          tmpIdx = z - 1;
-          getCoords(x, y, z, xp);
-          getCoords(x, y, tmpIdx, xm);
-          for(inputComponent = 0; inputComponent < numberOfInputComponents;
-              inputComponent++)
-          {
-            plusvalues[inputComponent] = fieldPtr[idx * numberOfInputComponents + inputComponent];
-            minusvalues[inputComponent] = fieldPtr[idx2 * numberOfInputComponents + inputComponent];
-          }
-        }
-        else
-        {
-          factor = 0.5;
-          idx = x + y * dims[0] + (z + 1) * xysize;
-          idx2 = x + y * dims[0] + (z - 1) * xysize;
-          tmpIdx = z + 1;
-          tmpIdx2 = z - 1;
-          getCoords(x, y, tmpIdx, xp);
-          getCoords(x, y, tmpIdx2, xm);
-          for(inputComponent = 0; inputComponent < numberOfInputComponents;
-              inputComponent++)
-          {
-            plusvalues[inputComponent] = fieldPtr[idx * numberOfInputComponents + inputComponent];
-            minusvalues[inputComponent] = fieldPtr[idx2 * numberOfInputComponents + inputComponent];
-          }
-        }
-
-        xzeta = factor * (xp[0] - xm[0]);
-        yzeta = factor * (xp[1] - xm[1]);
-        zzeta = factor * (xp[2] - xm[2]);
-        for(inputComponent = 0; inputComponent < numberOfInputComponents; inputComponent++)
-        {
-          dValuesdZeta[inputComponent] = factor *
-                                         (plusvalues[inputComponent] - minusvalues[inputComponent]);
-        }
-
-        // Now calculate the Jacobian.  Grids occasionally have
-        // singularities, or points where the Jacobian is infinite (the
-        // inverse is zero).  For these cases, we'll set the Jacobian to
-        // zero, which will result in a zero derivative.
-        //
-        aj =  xxi * yeta * zzeta + yxi * zeta * xzeta + zxi * xeta * yzeta
-              - zxi * yeta * xzeta - yxi * xeta * zzeta - xxi * zeta * yzeta;
-        if (aj != 0.0)
-        {
-          aj = 1. / aj;
-        }
-
-        //  Xi metrics.
-        xix  =  aj * (yeta * zzeta - zeta * yzeta);
-        xiy  = -aj * (xeta * zzeta - zeta * xzeta);
-        xiz  =  aj * (xeta * yzeta - yeta * xzeta);
-
-        //  Eta metrics.
-        etax = -aj * (yxi * zzeta - zxi * yzeta);
-        etay =  aj * (xxi * zzeta - zxi * xzeta);
-        etaz = -aj * (xxi * yzeta - yxi * xzeta);
-
-        //  Zeta metrics.
-        zetax =  aj * (yxi * zeta - zxi * yeta);
-        zetay = -aj * (xxi * zeta - zxi * xeta);
-        zetaz =  aj * (xxi * yeta - yxi * xeta);
-
-        // Finally compute the actual derivatives
-        idx = x + y * dims[0] + z * xysize;
-        for(inputComponent = 0; inputComponent < numberOfInputComponents; inputComponent++)
-        {
-          derivsPtr[idx * numberOfInputComponents * 3 + inputComponent * 3] =
-            xix * dValuesdXi[inputComponent] + etax * dValuesdEta[inputComponent] +
-            zetax * dValuesdZeta[inputComponent];
-
-          derivsPtr[idx * numberOfInputComponents * 3 + inputComponent * 3 + 1] =
-            xiy * dValuesdXi[inputComponent] + etay * dValuesdEta[inputComponent] +
-            zetay * dValuesdZeta[inputComponent];
-
-          derivsPtr[idx * numberOfInputComponents * 3 + inputComponent * 3 + 2] =
-            xiz * dValuesdXi[inputComponent] + etaz * dValuesdEta[inputComponent] +
-            zetaz * dValuesdZeta[inputComponent];
-        }
-      }
-    }
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+  if (doParallel == true)
+  {
+    tbb::parallel_for(tbb::blocked_range3d<size_t, size_t, size_t>(0, dims[2], dims[2] / init.default_num_threads(), 0, dims[1], dims[1], 0, dims[0], dims[0]),
+                      FindRectGridDerivativesImpl(this, field, derivatives), tbb::auto_partitioner());
+  }
+  else
+#endif
+  {
+    FindRectGridDerivativesImpl serial(this, field, derivatives);
+    serial.compute(0, dims[2], 0, dims[1], 0, dims[0]);
   }
 }
 

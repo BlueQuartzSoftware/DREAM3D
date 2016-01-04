@@ -1,0 +1,14 @@
+ <!DOCTYPE RCC>
+ <RCC version="1.0">
+ <qresource>
+  <file>splash/branded_splash.png</file>
+  <file>splash/branded_splash@2x.png</file>
+  <file>splash/DREAM3D.png</file>
+  <file>splash/DREAM3D@2x.png</file>
+  <file>icons/DREAM3D (PNG)/256x256.png</file>
+  <file>icons/DREAM3D (PNG)/128x128.png</file>
+  <file>icons/DREAM3D (PNG)/48x48.png</file>
+  <file>icons/DREAM3D (PNG)/32x32.png</file>
+  <file>icons/DREAM3D (PNG)/16x16.png</file>
+ </qresource>
+ </RCC>

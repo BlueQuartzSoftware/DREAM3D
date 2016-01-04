@@ -328,11 +328,14 @@ void ChangeResolution::execute()
   size_t index_old = 0 ;
   size_t progressInt = 0;
   std::vector<size_t> newindicies(totalPoints);
+  float res[3] = { 0.0f, 0.0f, 0.0f };
+  m->getGeometryAs<ImageGeom>()->getResolution(res);
 
   for (size_t i = 0; i < m_ZP; i++)
   {
+    if (getCancel() == true) { break; }
     progressInt = static_cast<size_t>((static_cast<float>(i) / m_ZP) * 100.0f);
-    QString ss = QObject::tr("Changing Resolution - %1% Complete").arg(progressInt);
+    QString ss = QObject::tr("Changing Resolution || %1% Complete").arg(progressInt);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     for (size_t j = 0; j < m_YP; j++)
     {
@@ -341,10 +344,10 @@ void ChangeResolution::execute()
         x = (k * m_Resolution.x);
         y = (j * m_Resolution.y);
         z = (i * m_Resolution.z);
-        col = size_t(x / m->getGeometryAs<ImageGeom>()->getXRes());
-        row = size_t(y / m->getGeometryAs<ImageGeom>()->getYRes());
-        plane = size_t(z / m->getGeometryAs<ImageGeom>()->getZRes());
-        index_old = (plane * m->getGeometryAs<ImageGeom>()->getXPoints() * m->getGeometryAs<ImageGeom>()->getYPoints()) + (row * m->getGeometryAs<ImageGeom>()->getXPoints()) + col;
+        col = size_t(x / res[0]);
+        row = size_t(y / res[1]);
+        plane = size_t(z / res[2]);
+        index_old = (plane * dims[1] * dims[0]) + (row * dims[0]) + col;
         index = (i * m_XP * m_YP) + (j * m_XP) + k;
         newindicies[index] = index_old;
       }

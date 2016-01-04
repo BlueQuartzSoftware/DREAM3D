@@ -33,42 +33,54 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
-#ifndef _RequiredZThickness_H_
-#define _RequiredZThickness_H_
+#ifndef _CombineAttributeArrays_H_
+#define _CombineAttributeArrays_H_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
-#include "SIMPLib/Common/AbstractDecisionFilter.h"
-
 /**
- * @brief The RequiredZThickness class. See [Filter documentation](@ref requiredzthickness) for details.
+ * @brief The CombineAttributeArrays class. See [Filter documentation](@ref combineattributearrays) for details.
  */
-class RequiredZThickness : public AbstractDecisionFilter
+class CombineAttributeArrays : public AbstractFilter
 {
-    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+
   public:
-    SIMPL_SHARED_POINTERS(RequiredZThickness)
-    SIMPL_STATIC_NEW_MACRO(RequiredZThickness)
-    SIMPL_TYPE_MACRO_SUPER(RequiredZThickness, AbstractDecisionFilter)
+    SIMPL_SHARED_POINTERS(CombineAttributeArrays)
+    SIMPL_STATIC_NEW_MACRO(CombineAttributeArrays)
+    SIMPL_TYPE_MACRO_SUPER(CombineAttributeArrays, AbstractFilter)
 
-    virtual ~RequiredZThickness();
+    virtual ~CombineAttributeArrays();
 
-    SIMPL_FILTER_PARAMETER(QString, DataContainerSelection)
-    Q_PROPERTY(QString DataContainerSelection READ getDataContainerSelection WRITE setDataContainerSelection)
+    SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, SelectedDataArrayPaths)
+    Q_PROPERTY(QVector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
 
-    SIMPL_FILTER_PARAMETER(int, NumZVoxels)
-    Q_PROPERTY(int NumZVoxels READ getNumZVoxels WRITE setNumZVoxels)
+    SIMPL_FILTER_PARAMETER(QString, StackedDataArrayName)
+    Q_PROPERTY(QString StackedDataArrayName READ getStackedDataArrayName WRITE setStackedDataArrayName)
 
-    SIMPL_FILTER_PARAMETER(bool, PreflightCheck)
-    Q_PROPERTY(bool PreflightCheck READ getPreflightCheck WRITE setPreflightCheck)
+    SIMPL_FILTER_PARAMETER(bool, StandardizeData)
+    Q_PROPERTY(bool StandardizeData READ getStandardizeData WRITE setStandardizeData)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */
     virtual const QString getCompiledLibraryName();
+
+    /**
+     * @brief getBrandingString Returns the branding string for the filter, which is a tag
+     * used to denote the filter's association with specific plugins
+     * @return Branding string
+    */
+    virtual const QString getBrandingString();
+
+    /**
+     * @brief getFilterVersion Returns a version string for this filter. Default
+     * value is an empty string.
+     * @return
+     */
+    virtual const QString getFilterVersion();
 
     /**
      * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -116,10 +128,30 @@ class RequiredZThickness : public AbstractDecisionFilter
     virtual void preflight();
 
   signals:
-    void decisionMade(bool& dm);
+    /**
+      * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+     * be pushed from a user-facing control (such as a widget)
+     * @param filter Filter instance pointer
+     */
+    void updateFilterParameters(AbstractFilter* filter);
+
+    /**
+     * @brief parametersChanged Emitted when any Filter parameter is changed internally
+     */
+    void parametersChanged();
+
+    /**
+     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+     */
+    void preflightAboutToExecute();
+
+    /**
+     * @brief preflightExecuted Emitted just after calling dataCheck()
+     */
+    void preflightExecuted();
 
   protected:
-    RequiredZThickness();
+    CombineAttributeArrays();
 
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -127,10 +159,12 @@ class RequiredZThickness : public AbstractDecisionFilter
     void dataCheck();
 
   private:
-    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_IDATAARRAY_VARIABLE(StackedData)
 
-    RequiredZThickness(const RequiredZThickness&); // Copy Constructor Not Implemented
-    void operator=(const RequiredZThickness&); // Operator '=' Not Implemented
+    QVector<IDataArray::WeakPointer> m_SelectedWeakPtrVector;
+
+    CombineAttributeArrays(const CombineAttributeArrays&); // Copy Constructor Not Implemented
+    void operator=(const CombineAttributeArrays&); // Operator '=' Not Implemented
 };
 
-#endif /* _RequiredZThickness_H_ */
+#endif /* _CombineAttributeArrays_H_ */
