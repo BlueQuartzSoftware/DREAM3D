@@ -144,7 +144,7 @@ bool DREAM3DApplication::initialize(int argc, char* argv[])
 #endif
 
   // Create and show the splash screen as the main window is being created.
-  QPixmap pixmap(QLatin1String(":/branded_splash.png"));
+  QPixmap pixmap(QLatin1String(":/splash/branded_splash.png"));
   this->Splash = new DSplashScreen(pixmap);
   this->Splash->setMask(pixmap.createMaskFromColor(QColor(Qt::transparent)));
   this->Splash->show();
