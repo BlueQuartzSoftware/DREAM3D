@@ -22,6 +22,7 @@ Developers:[https://groups.google.com/forum/?hl=en#!forum/dream3d-developers](ht
 + Significantly sped up "Change Resolution" **Filter**.
 + Updated internationalization settings on input widgets that allow the use of decimal numbers. These widgets should now correctly key off the local standards for use of commas and periods in decimal notation. 
 + Refactored and parallelized the derivative calculations of all IGeometry classes.
++ Several prebuilt **Pipelines** have been consolidated and renamed for clarity.
 
 ### Developer Notes ###
 + The DREAM.3D SDK has been update to support C++11.  Developers are now free to use C++11 compliant code.

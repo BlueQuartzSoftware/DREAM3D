@@ -305,7 +305,7 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
   for (int32_t q = 0; q < m_IterationSteps; q++)
   {
     if (getCancel() == true) { return -1; }
-    QString ss = QObject::tr("Iteration %1").arg(q);
+    QString ss = QObject::tr("Iteration %1 of %2").arg(q).arg(m_IterationSteps);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     for (int64_t i = 0; i < nedges; i++)
     {
