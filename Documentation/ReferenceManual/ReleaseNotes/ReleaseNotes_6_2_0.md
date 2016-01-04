@@ -11,6 +11,7 @@ Users:[https://groups.google.com/forum/?/dream3d-users#!forum/dream3d-users](htt
 Developers:[https://groups.google.com/forum/?hl=en#!forum/dream3d-developers](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
 ## Version 6.2.XXX ##
++ DREAM.3D has new logo and splash screen!
 + Added **Filter** "Import ASCII Data", which implements a generic text reader to import data into DREAM.3D.  The **Filter** utilizes a wizard to guide the user through importing their column-oriented ASCII data.
 + Added **Filter** "Combine Attribute Arrays", which allows the user to stack any number of **Attribute Arrays** to form a new combined array.
 + Added **Filter** "Find GBCD (Metric-Based Approach)" from contributor K. Glowinski.
@@ -29,6 +30,9 @@ Developers:[https://groups.google.com/forum/?hl=en#!forum/dream3d-developers](ht
 + Shared pointers now use C++11 shared pointers instead of boost shared pointers.
 + **Plugins** that link agains the ITK library now link agains the SimpleITKExplicit library instead.  This fixes potential address space issues when using multiple dynamically loaded libraries that may link agains ITK.
 + **Filters** should now implement their own versions for compiled library names, branding strings, and version numbers, instead of using the defaults from AbstractFilter.
+
+### Known Issues ###
++ When navigating the help window, the back and forward buttons may not function.
 
 ## Version 6.2.63 ##
 + Version 6.2.63 will be the last version to support OS X 10.8. The minimum version of OS X for all future DREAM.3D updates will be 10.9.
