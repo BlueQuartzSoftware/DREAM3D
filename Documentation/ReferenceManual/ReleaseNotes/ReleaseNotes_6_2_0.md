@@ -17,8 +17,11 @@ Developers:[https://groups.google.com/forum/?hl=en#!forum/dream3d-developers](ht
 + Added **Filter** "Combine Attribute Matrices" from contributor M. Groeber.
 + The "Import Images (3D Stack)" **Filter** should now correctly recognize the number of pixel bytes in the incoming images.
 + **Pipeline** files written on Windows should no longer use escaped forward slashes in paths.  This allows for better sharing of **Pipelines** across operating systems.
-+ Fix incorrect documentation on file formats for the "Pack Primary Phases" and "Insert Precipitate Phases" **Filters**.
-+ Revert change to packing routine in "Insert Precipitate Phases" **Filter** that made particles unable to overlap, which prevented reaching large volume fractions of precipitates.  The **Filter** now functions the same as in version 4 of DREAM.3D.
++ Fixed incorrect documentation on file formats for the "Pack Primary Phases" and "Insert Precipitate Phases" **Filters**.
++ Reverted change to packing routine in "Insert Precipitate Phases" **Filter** that made particles unable to overlap, which prevented reaching large volume fractions of precipitates.  The **Filter** now functions the same as in version 4 of DREAM.3D.
++ Significantly sped up "Change Resolution" **Filter**.
++ Updated internationalization settings on input widgets that allow the use of decimal numbers. These widgets should now correctly key off the local standards for use of commas and periods in decimal notation. 
++ Refactored and parallelized the derivative calculations of all IGeometry classes.
 
 ### Developer Notes ###
 + The DREAM.3D SDK has been update to support C++11.  Developers are now free to use C++11 compliant code.
