@@ -450,7 +450,7 @@
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {
-        "Name": "(06) SmallIN100 Final Processing",
+        "Name": "(07) SmallIN100 Final Processing",
         "Number_Filters": 5,
         "Version": "6.3"
     }

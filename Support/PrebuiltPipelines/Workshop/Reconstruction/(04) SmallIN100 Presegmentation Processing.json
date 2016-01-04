@@ -443,7 +443,7 @@
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {
-        "Name": "(03) SmallIN100 Presegmentation Processing",
+        "Name": "(04) SmallIN100 Presegmentation Processing",
         "Number_Filters": 6,
         "Version": "6.3"
     }

@@ -432,7 +432,7 @@
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {
-        "Name": "(05) SmallIN100 Postsegmentation Processing",
+        "Name": "(06) SmallIN100 Postsegmentation Processing",
         "Number_Filters": 10,
         "Version": "6.3"
     }

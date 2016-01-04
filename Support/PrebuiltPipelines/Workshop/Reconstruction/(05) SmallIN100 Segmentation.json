@@ -433,7 +433,7 @@
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {
-        "Name": "(04) SmallIN100 Segmentation",
+        "Name": "(05) SmallIN100 Segmentation",
         "Number_Filters": 3,
         "Version": "6.3"
     }

@@ -116,7 +116,7 @@
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {
-        "Name": "(14) Image Segmentation",
+        "Name": "(09) Image Segmentation",
         "Number_Filters": 7,
         "Version": "6.0"
     }
