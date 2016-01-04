@@ -327,6 +327,7 @@ if(DREAM3D_USE_QtWebEngine)
     WebEngine
     WebEngineWidgets
     WebEngineCore
+    WebChannel
     Quick
     QuickWidgets
     Qml
