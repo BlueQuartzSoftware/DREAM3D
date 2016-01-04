@@ -14,13 +14,14 @@ Developers:[https://groups.google.com/forum/?hl=en#!forum/dream3d-developers](ht
 + DREAM.3D has new logo and splash screen!
 + Added **Filter** "Import ASCII Data", which implements a generic text reader to import data into DREAM.3D.  The **Filter** utilizes a wizard to guide the user through importing their column-oriented ASCII data.
 + Added **Filter** "Combine Attribute Arrays", which allows the user to stack any number of **Attribute Arrays** to form a new combined array.
-+ Added **Filter** "Find GBCD (Metric-Based Approach)" from contributor K. Glowinski.
-+ Added **Filter** "Combine Attribute Matrices" from contributor M. Groeber.
++ Added **Filter** "Find GBCD (Metric-Based Approach)" (contribution from K. Glowinski).
++ Added **Filter** "Combine Attribute Matrices" (contribution from M. Groeber).
 + The "Import Images (3D Stack)" **Filter** should now correctly recognize the number of pixel bytes in the incoming images.
 + **Pipeline** files written on Windows should no longer use escaped forward slashes in paths.  This allows for better sharing of **Pipelines** across operating systems.
 + Fixed incorrect documentation on file formats for the "Pack Primary Phases" and "Insert Precipitate Phases" **Filters**.
 + Reverted change to packing routine in "Insert Precipitate Phases" **Filter** that made particles unable to overlap, which prevented reaching large volume fractions of precipitates.  The **Filter** now functions the same as in version 4 of DREAM.3D.
 + Significantly sped up "Change Resolution" **Filter**.
++ Significantly sped up filters that perform segmentations (contribution from M. Groeber).
 + Updated internationalization settings on input widgets that allow the use of decimal numbers. These widgets should now correctly key off the local standards for use of commas and periods in decimal notation. 
 + Refactored and parallelized the derivative calculations of all IGeometry classes.
 + Several prebuilt **Pipelines** have been consolidated and renamed for clarity.
