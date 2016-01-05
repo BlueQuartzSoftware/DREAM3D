@@ -188,16 +188,18 @@ void StatsGenRDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
 // -----------------------------------------------------------------------------
 void StatsGenRDFWidget::on_generateRDFBtn_clicked()
 {
+  QLocale loc = QLocale::system();
   // Generate the ODF Data from the current values in the ODFTableModel
   bool ok = false;
-  float minDist = minDistLE->text().toFloat(&ok);
-  float maxDist = maxDistLE->text().toFloat(&ok);
+
+  float minDist = loc.toFloat(minDistLE->text(), &ok);
+  float maxDist = loc.toFloat(maxDistLE->text(), &ok);
   int numBins = numBinsLE->text().toInt(&ok);
 
   std::vector<float> boxDims(3);
-  boxDims[0] = BoxSizeXLE->text().toFloat(&ok);
-  boxDims[1] = BoxSizeYLE->text().toFloat(&ok);
-  boxDims[2] = BoxSizeZLE->text().toFloat(&ok);
+  boxDims[0] = loc.toFloat(BoxSizeXLE->text(), &ok);
+  boxDims[1] = loc.toFloat(BoxSizeYLE->text(), &ok);
+  boxDims[2] = loc.toFloat(BoxSizeZLE->text(), &ok);
   std::vector<float> boxRes(3);
   boxRes[0] = 0.1f;
   boxRes[1] = 0.1f;
@@ -224,10 +226,11 @@ void StatsGenRDFWidget::updateRDFPlot(QVector<float>& freqs)
   QwtArray<double> xD(static_cast<int>(freqs.size()));
   QwtArray<double> yD(static_cast<int>(freqs.size()));
 
+  QLocale loc = QLocale::system();
 
   bool ok = false;
-  float minDist = minDistLE->text().toFloat(&ok);
-  float maxDist = maxDistLE->text().toFloat(&ok);
+  float minDist = loc.toFloat(minDistLE->text(), &ok);
+  float maxDist = loc.toFloat(maxDistLE->text(), &ok);
 
   const int numValues = freqs.size();
   float increment = (maxDist - minDist) / numValues;
@@ -271,6 +274,7 @@ void StatsGenRDFWidget::updatePlots()
 // -----------------------------------------------------------------------------
 void StatsGenRDFWidget::extractStatsData(int index, StatsData* statsData, unsigned int phaseType)
 {
+  Q_UNUSED(index)
   VectorOfFloatArray arrays;
 
   if(phaseType == DREAM3D::PhaseType::PrecipitatePhase)
@@ -303,17 +307,21 @@ RdfData::Pointer StatsGenRDFWidget::getStatisticsData()
   RdfData::Pointer rdf = RdfData::New();
   QVector<float> qRdfDataFinal(numBinsLE->text().toInt(&ok));
 
+  QLocale loc = QLocale::system();
   std::vector<float> boxDims(3);
-  boxDims[0] = BoxSizeXLE->text().toFloat(&ok);
-  boxDims[1] = BoxSizeYLE->text().toFloat(&ok);
-  boxDims[2] = BoxSizeZLE->text().toFloat(&ok);
+  boxDims[0] = loc.toFloat(BoxSizeXLE->text(), &ok);
+  boxDims[1] = loc.toFloat(BoxSizeYLE->text(), &ok);
+  boxDims[2] = loc.toFloat(BoxSizeZLE->text(), &ok);
   std::vector<float> boxRes(3);
   boxRes[0] = 0.1f;
   boxRes[1] = 0.1f;
   boxRes[2] = 0.1f;
 
-  rdf->setMinDistance(minDistLE->text().toFloat(&ok));
-  rdf->setMaxDistance(maxDistLE->text().toFloat(&ok));
+  float minDist = loc.toFloat(minDistLE->text(), &ok);
+  float maxDist = loc.toFloat(maxDistLE->text(), &ok);
+
+  rdf->setMinDistance(minDist);
+  rdf->setMaxDistance(maxDist);
 
   //Here we want to take whatever the user entered in and normalize
   //it by what it would look like if a large number of particles were
@@ -327,12 +335,10 @@ RdfData::Pointer StatsGenRDFWidget::getStatisticsData()
   QVector<float> qRdfData = m_RDFTableModel->getData(SGRDFTableModel::Frequency);
   std::vector<float> randomFreq = RadialDistributionFunction::GenerateRandomDistribution(minDistLE->text().toFloat(&ok), maxDistLE->text().toFloat(&ok), numBinsLE->text().toInt(&ok), boxDims, boxRes);
 
-  for (size_t i = 0; i < qRdfDataFinal.size(); i++)
+  for (int i = 0; i < qRdfDataFinal.size(); i++)
   {
     qRdfDataFinal[i] = qRdfData[i + 1] / randomFreq[i + 1];
   }
-
-
 
   rdf->setFrequencies(qRdfDataFinal.toStdVector());
 

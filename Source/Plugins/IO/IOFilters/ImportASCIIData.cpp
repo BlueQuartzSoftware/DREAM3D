@@ -84,7 +84,7 @@ void ImportASCIIData::readFilterParameters(AbstractFilterParametersReader* reade
   QVector<uint64_t> tmpVec;
   QVector<size_t> tDims;
   tmpVec = reader->readArray(prefix + "TupleDims", QVector<uint64_t>());
-  for (uint32_t i = 0; i < tmpVec.size(); i++)
+  for (int i = 0; i < tmpVec.size(); i++) 
   {
     tDims.push_back(static_cast<size_t>(tmpVec[i]));
   }
@@ -122,7 +122,7 @@ int ImportASCIIData::writeFilterParameters(AbstractFilterParametersWriter* write
   QVector<uint64_t> tDims;
   QVector<size_t> tmpVec = m_WizardData.tupleDims;
 
-  for (uint32_t i = 0; i < tmpVec.size(); i++)
+  for (int i = 0; i < tmpVec.size(); i++)
   {
     tDims.push_back(static_cast<uint64_t>(tmpVec[i]));
   }

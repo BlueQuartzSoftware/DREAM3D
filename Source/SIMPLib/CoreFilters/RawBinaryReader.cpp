@@ -112,7 +112,7 @@ int32_t readBinaryFile(typename DataArray<T>::Pointer p, const QString& filename
 {
   int32_t err = 0;
   QFileInfo fi(filename);
-  uint64_t fileSize = fi.size();
+  uint64_t fileSize = static_cast<size_t>(fi.size());
   size_t allocatedBytes = p->getSize() * sizeof(T);
   err = SanityCheckFileSizeVersusAllocatedSize(allocatedBytes, fileSize, skipHeaderBytes);
 
@@ -131,7 +131,7 @@ int32_t readBinaryFile(typename DataArray<T>::Pointer p, const QString& filename
   // thing we are going to do it over write those bytes with the real data that we are after.
   if (skipHeaderBytes > 0)
   {
-    numRead = fread(chunkptr, 1, skipHeaderBytes, f);
+    numRead = fread(chunkptr, 1, static_cast<size_t>(skipHeaderBytes), f);
   }
   numRead = 0;
   // Now start reading the data in chunks if needed.

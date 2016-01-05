@@ -35,51 +35,90 @@
 
 
 /* ============================================================================
- * TriangleGeom uses code adapated from the following vtk modules:
+ * TriangleGeom re-implements code from the following vtk modules:
  *
  * * vtkTriangle.cxx
- *   - adapted vtkTriangle::GetParametricCenter to TriangleGeom::getParametricCenter
- *   - adapted vtkTriangle::InterpolationDerivs to TriangleGeom::getShapeFunctions
+ *   - re-implemented vtkTriangle::GetParametricCenter to TriangleGeom::getParametricCenter
+ *   - re-implemented vtkTriangle::InterpolationDerivs to TriangleGeom::getShapeFunctions
  * * vtkGradientFilter.cxx
- *   - adapted vtkGradientFilter template function ComputeCellGradientsUG to
+ *   - re-implemented vtkGradientFilter template function ComputeCellGradientsUG to
  *     TriangleGeom::findDerivatives
- *
- * The vtk license is reproduced below.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-/* ============================================================================
- * Copyright (c) 1993-2008 Ken Martin, Will Schroeder, Bill Lorensen
- * All rights reserved.
-
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * * Redistributions in binary form must reproduce the above copyright notice,
- * this list of conditions and the following disclaimer in the documentation
- * and/or other materials provided with the distribution.
- *
- * * Neither name of Ken Martin, Will Schroeder, or Bill Lorensen nor the names of
- * any contributors may be used to endorse or promote products derived from this
- * software without specific prior written permission.
-
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS ``AS IS''
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "SIMPLib/Geometry/TriangleGeom.h"
+
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+#include <tbb/parallel_for.h>
+#include <tbb/blocked_range.h>
+#include <tbb/partitioner.h>
+#include <tbb/task_scheduler_init.h>
+#endif
 
 #include "SIMPLib/Geometry/DerivativeHelpers.h"
 #include "SIMPLib/Geometry/GeometryHelpers.hpp"
+
+/**
+ * @brief The FindTriangleDerivativesImpl class implements a threaded algorithm that computes the
+ * derivative of an arbitrary dimensional field on the underlying triangles
+ */
+class FindTriangleDerivativesImpl
+{
+  public:
+    FindTriangleDerivativesImpl(TriangleGeom* tris, DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivs) :
+      m_Tris(tris),
+      m_Field(field),
+      m_Derivatives(derivs)
+    {}
+    virtual ~FindTriangleDerivativesImpl() {}
+
+    void compute(int64_t start, int64_t end) const
+    {
+      int32_t cDims = m_Field->getNumberOfComponents();
+      double* fieldPtr = m_Field->getPointer(0);
+      double* derivsPtr = m_Derivatives->getPointer(0);
+      double values[3] = { 0.0, 0.0, 0.0 };
+      double derivs[3] = { 0.0, 0.0, 0.0 };
+      int64_t verts[3] { 0, 0, 0 };
+
+      int64_t counter = 0;
+      int64_t totalElements = m_Tris->getNumberOfTris();
+      int64_t progIncrement = static_cast<int64_t>(totalElements / 100);
+
+      for (int64_t i = start; i < end; i++)
+      {
+        m_Tris->getVertsAtTri(i, verts);
+        for (int32_t j = 0; j < cDims; j++)
+        {
+          for (size_t k = 0; k < 3; k++)
+          {
+            values[k] = fieldPtr[cDims * verts[k] + j];
+          }
+          DerivativeHelpers::TriangleDeriv()(m_Tris, i, values, derivs);
+          derivsPtr[i * 3 * cDims + j * 3] = derivs[0];
+          derivsPtr[i * 3 * cDims + j * 3 + 1] = derivs[1];
+          derivsPtr[i * 3 * cDims + j * 3 + 2] = derivs[2];
+        }
+
+        if (counter > progIncrement)
+        {
+          m_Tris->sendThreadSafeProgressMessage(counter, totalElements);
+          counter = 0;
+        }
+        counter++;
+      }
+    }
+
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+    void operator()(const tbb::blocked_range<int64_t>& r) const
+    {
+      compute(r.begin(), r.end());
+    }
+#endif
+  private:
+    TriangleGeom* m_Tris;
+    DoubleArrayType::Pointer m_Field;
+    DoubleArrayType::Pointer m_Derivatives;
+};
 
 // -----------------------------------------------------------------------------
 //
@@ -89,6 +128,9 @@ TriangleGeom::TriangleGeom()
   m_GeometryTypeName = DREAM3D::Geometry::TriangleGeometry;
   m_GeometryType = DREAM3D::GeometryType::TriangleGeometry;
   m_XdmfGridType = DREAM3D::XdmfGridType::PolyData;
+  m_MessagePrefix = "";
+  m_MessageTitle = "";
+  m_MessageLabel = "";
   m_UnitDimensionality = 2;
   m_SpatialDimensionality = 3;
   m_VertexList = TriangleGeom::CreateSharedVertexList(0);
@@ -98,6 +140,7 @@ TriangleGeom::TriangleGeom()
   m_TrianglesContainingVert = ElementDynamicList::NullPointer();
   m_TriangleNeighbors = ElementDynamicList::NullPointer();
   m_TriangleCentroids = FloatArrayType::NullPointer();
+  m_ProgressCounter = 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -382,8 +425,8 @@ void TriangleGeom::deleteUnsharedEdges()
 // -----------------------------------------------------------------------------
 void TriangleGeom::getParametricCenter(double pCoords[3])
 {
-  pCoords[0] = 1. / 3;
-  pCoords[1] = 1. / 3;
+  pCoords[0] = 1.0 / 3.0;
+  pCoords[1] = 1.0 / 3.0;
   pCoords[2] = 0.0;
 }
 
@@ -408,29 +451,33 @@ void TriangleGeom::getShapeFunctions(double pCoords[3], double* shape)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TriangleGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives)
+void TriangleGeom::findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives, Observable* observable)
 {
+  m_ProgressCounter = 0;
   int64_t numTris = getNumberOfTris();
-  int cDims = field->getNumberOfComponents();
-  double* fieldPtr = field->getPointer(0);
-  double* derivsPtr = derivatives->getPointer(0);
-  double values[3];
-  double derivs[3];
-  int64_t verts[3];
-  for (int64_t i = 0; i < numTris; i++)
+
+  if (observable)
   {
-    getVertsAtTri(i, verts);
-    for (int j = 0; j < cDims; j++)
-    {
-      for (size_t k = 0; k < 3; k++)
-      {
-        values[k] = fieldPtr[cDims * verts[k] + j];
-      }
-      DerivativeHelpers::TriangleDeriv()(this, i, values, derivs);
-      derivsPtr[i * 3 * cDims + j * 3] = derivs[0];
-      derivsPtr[i * 3 * cDims + j * 3 + 1] = derivs[1];
-      derivsPtr[i * 3 * cDims + j * 3 + 2] = derivs[2];
-    }
+    connect(this, SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+            observable, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
+  }
+
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+  tbb::task_scheduler_init init;
+  bool doParallel = true;
+#endif
+
+#ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
+  if (doParallel == true)
+  {
+    tbb::parallel_for(tbb::blocked_range<int64_t>(0, numTris),
+                      FindTriangleDerivativesImpl(this, field, derivatives), tbb::auto_partitioner());
+  }
+  else
+#endif
+  {
+    FindTriangleDerivativesImpl serial(this, field, derivatives);
+    serial.compute(0, numTris);
   }
 }
 

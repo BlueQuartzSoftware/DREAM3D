@@ -1,4 +1,4 @@
-       /* ============================================================================
+/* ============================================================================
 * Copyright (c) 2009-2015 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
@@ -553,9 +553,13 @@ namespace TemplateHelpers
         {
           retPtr = f->getDataContainerArray()->template getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(f, arrayPath, compDims);
         }
+        else if(CanDynamicCast<BoolArrayType>()(i_data_array) )
+        {
+          retPtr = f->getDataContainerArray()->template getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(f, arrayPath, compDims);
+        }
         else
         {
-          QString ss = QObject::tr("The input array %1 is of unsupported type '%2'. The following types are supported: %3").arg(arrayPath.getDataArrayName()).arg(  retPtr->getTypeAsString()).arg(DREAM3D::TypeNames::SupportedTypeList);
+          QString ss = QObject::tr("The input array %1 is of unsupported type '%2'. The following types are supported: %3").arg(arrayPath.getDataArrayName()).arg(i_data_array->getTypeAsString()).arg(DREAM3D::TypeNames::SupportedTypeList);
           f->setErrorCondition(Errors::UnsupportedType);
           f->notifyErrorMessage(f->getHumanLabel(), ss, f->getErrorCondition());
         }

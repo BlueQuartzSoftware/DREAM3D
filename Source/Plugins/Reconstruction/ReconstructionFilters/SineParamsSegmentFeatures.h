@@ -167,7 +167,7 @@ class SineParamsSegmentFeatures : public SegmentFeatures
      */
     void dataCheck();
 
-    virtual int64_t getSeed(int32_t gnum);
+    virtual int64_t getSeed(int32_t gnum, int64_t nextSeed);
     virtual bool determineGrouping(int64_t referencepoint, int64_t neighborpoint, int32_t gnum);
 
   private:
@@ -178,15 +178,11 @@ class SineParamsSegmentFeatures : public SegmentFeatures
     DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
     DEFINE_DATAARRAY_VARIABLE(bool, Active)
 
-    BoolArrayType::Pointer m_BeenPickedPtr;
-    bool* m_BeenPicked;
-
     ///Boost Random Number generator stuff. We use the std::shared_ptr to ensure the pointers are cleaned up when the
     ///filter is deleted
     std::shared_ptr<NumberDistribution> m_Distribution;
     std::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;
     std::shared_ptr<Generator> m_NumberGenerator;
-    size_t                       m_TotalRandomNumbersGenerated;
 
     float angleTolerance;
 

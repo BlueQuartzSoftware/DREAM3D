@@ -36,10 +36,8 @@
 #ifndef _QuadGeom_H_
 #define _QuadGeom_H_
 
-
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Geometry/IGeometry2D.h"
-
 
 /**
  * @brief The QuadGeom class represents a collection of quadrilaterals
@@ -244,7 +242,7 @@ class SIMPLib_EXPORT QuadGeom : public IGeometry2D
      * @param field
      * @param derivatives
      */
-    virtual void findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives);
+    virtual void findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives, Observable* observable = NULL);
 
     /**
      * @brief setName
@@ -269,6 +267,49 @@ class SIMPLib_EXPORT QuadGeom : public IGeometry2D
      * @return
      */
     virtual QString getGeometryTypeAsString();
+
+    /**
+     * @brief getInfoString
+     * @return Returns a formatted string that contains general infomation about
+     * the instance of the object.
+     */
+    virtual QString getInfoString(DREAM3D::InfoStringFormat format);
+
+    /**
+     * @brief setMessagePrefix
+     * @param prefix
+     */
+    virtual void setMessagePrefix(const QString& prefix);
+
+    /**
+     * @brief getMessagePrefix
+     * @return
+     */
+    virtual QString getMessagePrefix();
+
+    /**
+     * @brief setMessageTitle
+     * @param title
+     */
+    virtual void setMessageTitle(const QString& title);
+
+    /**
+     * @brief getMessageTitle
+     * @return
+     */
+    virtual QString getMessageTitle();
+
+    /**
+     * @brief setMessageLabel
+     * @param label
+     */
+    virtual void setMessageLabel(const QString& label);
+
+    /**
+     * @brief getMessageLabel
+     * @return
+     */
+    virtual QString getMessageLabel();
 
     /**
      * @brief getXdmfGridType
@@ -310,13 +351,6 @@ class SIMPLib_EXPORT QuadGeom : public IGeometry2D
      * @return
      */
     virtual int writeXdmf(QTextStream& out, QString dcName, QString hdfFileName);
-
-    /**
-     * @brief getInfoString
-     * @return Returns a formatted string that contains general infomation about
-     * the instance of the object.
-     */
-    virtual QString getInfoString(DREAM3D::InfoStringFormat format);
 
     /**
      * @brief readGeometryFromHDF5
@@ -479,6 +513,13 @@ class SIMPLib_EXPORT QuadGeom : public IGeometry2D
     QuadGeom();
 
     /**
+     * @brief sendThreadSafeProgressMessage
+     * @param counter
+     * @param max
+     */
+    virtual void sendThreadSafeProgressMessage(int64_t counter, int64_t max);
+
+    /**
      * @brief setElementsContainingVert
      * @param elementsContainingVert
      */
@@ -512,6 +553,9 @@ class SIMPLib_EXPORT QuadGeom : public IGeometry2D
 
     QString m_Name;
     QString m_GeometryTypeName;
+    QString m_MessagePrefix;
+    QString m_MessageTitle;
+    QString m_MessageLabel;
     unsigned int m_GeometryType;
     unsigned int m_XdmfGridType;
     unsigned int m_UnitDimensionality;
@@ -524,6 +568,10 @@ class SIMPLib_EXPORT QuadGeom : public IGeometry2D
     ElementDynamicList::Pointer m_QuadsContainingVert;
     ElementDynamicList::Pointer m_QuadNeighbors;
     FloatArrayType::Pointer m_QuadCentroids;
+    QMutex m_Mutex;
+    int64_t m_ProgressCounter;
+
+    friend class FindQuadDerivativesImpl;
 
     QuadGeom(const QuadGeom&); // Copy Constructor Not Implemented
     void operator=(const QuadGeom&); // Operator '=' Not Implemented

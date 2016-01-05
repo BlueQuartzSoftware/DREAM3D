@@ -33,6 +33,11 @@ AddDREAM3DUnitTest(TESTNAME ConditionalSetValueTest
   SOURCES ${DREAM3DTest_SOURCE_DIR}/ConditionalSetValueTest.cpp
   FOLDER "SIMPLibProj/Test"
   LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
+  
+AddDREAM3DUnitTest(TESTNAME CombineAttributeArraysTest
+  SOURCES ${DREAM3DTest_SOURCE_DIR}/CombineAttributeArraysTest.cpp
+  FOLDER "SIMPLibProj/Test"
+  LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
 
 AddDREAM3DUnitTest(TESTNAME CombineAttributeMatricesTest
   SOURCES ${DREAM3DTest_SOURCE_DIR}/CombineAttributeMatricesTest.cpp
@@ -134,16 +139,16 @@ set(TEST_PIPELINE_LIST_FILE ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.txt)
 set(TEST_DATA_DIR ${DREAM3D_DATA_DIR})
 
 set(PREBUILT_PIPELINE_NAMES
-"Reconstruction/(00) SmallIN100 Archive"
-"Reconstruction/(01) SmallIN100 Initial Visualization"
-"Reconstruction/(02) SmallIN100 Alignment"
-"Reconstruction/(03) SmallIN100 Presegmentation Processing"
-"Reconstruction/(04) SmallIN100 Segmentation"
-"Reconstruction/(05) SmallIN100 Postsegmentation Processing"
-"Reconstruction/(06) SmallIN100 Final Processing"
-"Reconstruction/(13) Image Initial Visualization"
-"Reconstruction/(14) Image Segmentation"
-"Reconstruction/SmallIN100 Full Reconstruction"
+"Reconstruction/(01) SmallIN100 Archive"
+"Reconstruction/(02) SmallIN100 Initial Visualization"
+"Reconstruction/(03) SmallIN100 Alignment"
+"Reconstruction/(04) SmallIN100 Presegmentation Processing"
+"Reconstruction/(05) SmallIN100 Segmentation"
+"Reconstruction/(06) SmallIN100 Postsegmentation Processing"
+"Reconstruction/(07) SmallIN100 Final Processing"
+"Reconstruction/(08) Image Initial Visualization"
+"Reconstruction/(09) Image Segmentation"
+"Reconstruction/(10) SmallIN100 Full Reconstruction"
 "Statistics/(01) SmallIN100 Morphological Statistics"
 "Statistics/(02) SmallIN100 Export Statistics"
 "Statistics/(03) SmallIN100 Transfer Field Data"

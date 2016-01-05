@@ -960,7 +960,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
 
   for (size_t i = size_t(m_FirstPrecipitateFeature); i < numfeatures; i++)
   {
-    QString ss = QObject::tr("Packing Precipitates - Placing Precipitate #%1").arg(i);
+    QString ss = QObject::tr("Packing Precipitates || Placing Precipitate #%1").arg(i);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
     PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FeaturePhases[i]].get());

@@ -32,6 +32,7 @@ set(${PLUGIN_NAME}_Link_Libs Qt5::Core H5Support SIMPLib)
 
 AddDREAM3DUnitTest(TESTNAME SampleSurfaceMeshSpecifiedPointsTest
                     SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/SampleSurfaceMeshSpecifiedPointsTest.cpp
+                    FOLDER "${PLUGIN_NAME}Plugin/Test"
                     LINK_LIBRARIES ${${PLUGIN_NAME}_Link_Libs})
 
 AddDREAM3DUnitTest(TESTNAME CropVolumeTest

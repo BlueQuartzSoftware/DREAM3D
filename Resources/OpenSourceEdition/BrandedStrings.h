@@ -8,7 +8,7 @@ namespace BrandedStrings
 
   static const QString OrganizationDomain("dream3d.io");
   static const QString OrganizationName("BlueQuartz Software");
-
+  static const QString DistributionName("OpenSource Edition");
 }
 
 

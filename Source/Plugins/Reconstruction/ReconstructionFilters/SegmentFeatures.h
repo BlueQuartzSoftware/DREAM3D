@@ -155,7 +155,7 @@ class SegmentFeatures : public AbstractFilter
      * @param gnum Feature Id to initialize seed
      * @return Integer Seed index
      */
-    virtual int64_t getSeed(int32_t gnum);
+    virtual int64_t getSeed(int32_t gnum, int64_t nextSeed);
 
     /**
      * @brief determineGrouping Determines if a neighbor should be added to the growing seed

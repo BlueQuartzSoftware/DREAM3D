@@ -39,6 +39,8 @@
 
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 
+#include "QtSupportLib/DREAM3DStyles.h"
+
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
@@ -91,21 +93,31 @@ void FloatVec3Widget::setupGui()
   connect(zData, SIGNAL(textChanged(const QString&)),
           this, SLOT(widgetChanged(const QString&) ) );
 
+  QLocale loc = QLocale::system();
+
   QDoubleValidator* xVal = new QDoubleValidator(xData);
   xData->setValidator(xVal);
+  xVal->setLocale(loc);
+
   QDoubleValidator* yVal = new QDoubleValidator(yData);
   yData->setValidator(yVal);
+  yVal->setLocale(loc);
+
   QDoubleValidator* zVal = new QDoubleValidator(zData);
   zData->setValidator(zVal);
+  zVal->setLocale(loc);
   if (getFilterParameter() != NULL)
   {
     label->setText(getFilterParameter()->getHumanLabel() );
 
     FloatVec3_t data = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<FloatVec3_t>();
-    xData->setText(QString::number(data.x) );
-    yData->setText(QString::number(data.y) );
-    zData->setText(QString::number(data.z) );
+
+    xData->setText(loc.toString(data.x));
+    yData->setText(loc.toString(data.y));
+    zData->setText(loc.toString(data.z));
   }
+
+  errorLabel->hide();
 
 }
 
@@ -114,6 +126,27 @@ void FloatVec3Widget::setupGui()
 // -----------------------------------------------------------------------------
 void FloatVec3Widget::widgetChanged(const QString& text)
 {
+  Q_UNUSED(text);
+
+  QLineEdit* le = NULL;
+  (sender() == xData) ? le = xData: le = NULL;
+  (sender() == yData) ? le = yData: le = NULL;
+  (sender() == zData) ? le = zData: le = NULL;
+
+  errorLabel->hide();
+
+  if(le)
+  {
+    if(le->text().isEmpty())
+    {
+      QString objName = le->objectName();
+      DREAM3DStyles::LineEditErrorStyle(le);
+      errorLabel->setStyleSheet(QString::fromLatin1("color: rgb(255, 0, 0);"));
+      errorLabel->setText("No value entered. Filter will use default value of " + getFilterParameter()->getDefaultValue().toString());
+      errorLabel->show();
+    }
+  }
+
   emit parametersChanged();
 }
 
@@ -123,10 +156,42 @@ void FloatVec3Widget::widgetChanged(const QString& text)
 void FloatVec3Widget::filterNeedsInputParameters(AbstractFilter* filter)
 {
   bool ok = false;
+  FloatVec3_t defValue = m_FilterParameter->getDefaultValue().value<FloatVec3_t>();
   FloatVec3_t data;
-  data.x = xData->text().toDouble(&ok);
-  data.y = yData->text().toDouble(&ok);
-  data.z = zData->text().toDouble(&ok);
+
+  QLocale loc;
+
+
+  data.x = loc.toFloat(xData->text(), &ok);
+  if(!ok)
+  {
+    errorLabel->setStyleSheet(QString::fromLatin1("color: rgb(255, 0, 0);"));
+    errorLabel->setText("X Value entered is beyond the representable range for a double.\nThe filter will use the default value of " + getFilterParameter()->getDefaultValue().toString());
+    errorLabel->show();
+    DREAM3DStyles::LineEditErrorStyle(xData);
+    data.x = defValue.x;
+  }
+
+  data.y = loc.toFloat(yData->text(), &ok);
+  if(!ok)
+  {
+    errorLabel->setStyleSheet(QString::fromLatin1("color: rgb(255, 0, 0);"));
+    errorLabel->setText("Y Value entered is beyond the representable range for a double.\nThe filter will use the default value of " + getFilterParameter()->getDefaultValue().toString());
+    errorLabel->show();
+    DREAM3DStyles::LineEditErrorStyle(xData);
+    data.y = defValue.y;
+  }
+
+  data.z = loc.toFloat(zData->text(), &ok);
+  if(!ok)
+  {
+    errorLabel->setStyleSheet(QString::fromLatin1("color: rgb(255, 0, 0);"));
+    errorLabel->setText("Z Value entered is beyond the representable range for a double.\nThe filter will use the default value of " + getFilterParameter()->getDefaultValue().toString());
+    errorLabel->show();
+    DREAM3DStyles::LineEditErrorStyle(zData);
+    data.z = defValue.z;
+  }
+
 
   QVariant v;
   v.setValue(data);

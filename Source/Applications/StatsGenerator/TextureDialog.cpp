@@ -74,6 +74,7 @@ void TextureDialog::setupGui()
     m_Presets = HexTexturePresets::getTextures();
   }
 
+  QLocale loc = QLocale::system();
   // Clear the list view;
   presetListWidget->clear();
 
@@ -86,21 +87,25 @@ void TextureDialog::setupGui()
   {
     QDoubleValidator* validator = new QDoubleValidator(euler1);
     validator->setDecimals(4);
+    validator->setLocale(loc);
     euler1->setValidator(validator);
   }
   {
     QDoubleValidator* validator = new QDoubleValidator(euler2);
     validator->setDecimals(4);
+    validator->setLocale(loc);
     euler2->setValidator(validator);
   }
   {
     QDoubleValidator* validator = new QDoubleValidator(euler3);
     validator->setDecimals(4);
+    validator->setLocale(loc);
     euler3->setValidator(validator);
   }
   {
     QDoubleValidator* validator = new QDoubleValidator(weight);
     validator->setDecimals(4);
+    validator->setLocale(loc);
     weight->setValidator(validator);
   }
   {
@@ -154,10 +159,11 @@ void TextureDialog::on_presetListWidget_itemSelectionChanged()
 void TextureDialog::getODFEntry(float& e1, float& e2, float& e3, float& w, float& s)
 {
   bool ok = false;
-  e1 = euler1->text().toFloat(&ok);
-  e2 = euler2->text().toFloat(&ok);
-  e3 = euler3->text().toFloat(&ok);
-  w = weight->text().toFloat(&ok);
+  QLocale loc = QLocale::system();
+  e1 = loc.toFloat(euler1->text(), &ok);
+  e2 = loc.toFloat(euler2->text(), &ok);
+  e3 = loc.toFloat(euler3->text(), &ok);
+  w = loc.toFloat(weight->text(), &ok);
   s = sigma->value();
 }
 

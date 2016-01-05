@@ -211,7 +211,7 @@ class SIMPLib_EXPORT VertexGeom : public IGeometry
      * @param field
      * @param derivatives
      */
-    virtual void findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives);
+    virtual void findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives, Observable* observable = NULL);
 
     /**
      * @brief setName
@@ -236,6 +236,49 @@ class SIMPLib_EXPORT VertexGeom : public IGeometry
      * @return
      */
     virtual QString getGeometryTypeAsString();
+
+    /**
+     * @brief getInfoString
+     * @return Returns a formatted string that contains general infomation about
+     * the instance of the object.
+     */
+    virtual QString getInfoString(DREAM3D::InfoStringFormat format);
+
+    /**
+     * @brief setMessagePrefix
+     * @param prefix
+     */
+    virtual void setMessagePrefix(const QString& prefix);
+
+    /**
+     * @brief getMessagePrefix
+     * @return
+     */
+    virtual QString getMessagePrefix();
+
+    /**
+     * @brief setMessageTitle
+     * @param title
+     */
+    virtual void setMessageTitle(const QString& title);
+
+    /**
+     * @brief getMessageTitle
+     * @return
+     */
+    virtual QString getMessageTitle();
+
+    /**
+     * @brief setMessageLabel
+     * @param label
+     */
+    virtual void setMessageLabel(const QString& label);
+
+    /**
+     * @brief getMessageLabel
+     * @return
+     */
+    virtual QString getMessageLabel();
 
     /**
      * @brief getXdmfGridType
@@ -279,14 +322,6 @@ class SIMPLib_EXPORT VertexGeom : public IGeometry
     virtual int writeXdmf(QTextStream& out, QString dcName, QString hdfFileName);
 
     /**
-     * @brief getInfoString
-     * @return Returns a formatted string that contains general infomation about
-     * the instance of the object.
-     */
-    virtual QString getInfoString(DREAM3D::InfoStringFormat format);
-
-
-    /**
      * @brief readGeometryFromHDF5
      * @param parentId
      * @param preflight
@@ -324,6 +359,13 @@ class SIMPLib_EXPORT VertexGeom : public IGeometry
     VertexGeom();
 
     /**
+     * @brief sendThreadSafeProgressMessage
+     * @param counter
+     * @param max
+     */
+    virtual void sendThreadSafeProgressMessage(int64_t counter, int64_t max);
+
+    /**
      * @brief setElementsContainingVert
      * @param elementsContainingVert
      */
@@ -345,12 +387,17 @@ class SIMPLib_EXPORT VertexGeom : public IGeometry
 
     QString m_Name;
     QString m_GeometryTypeName;
+    QString m_MessagePrefix;
+    QString m_MessageTitle;
+    QString m_MessageLabel;
     unsigned int m_GeometryType;
     unsigned int m_XdmfGridType;
     unsigned int m_UnitDimensionality;
     unsigned int m_SpatialDimensionality;
     AttributeMatrixMap_t m_AttributeMatrices;
     SharedVertexList::Pointer m_VertexList;
+    QMutex m_Mutex;
+    int64_t m_ProgressCounter;
 
     VertexGeom(const VertexGeom&); // Copy Constructor Not Implemented
     void operator=(const VertexGeom&); // Operator '=' Not Implemented
