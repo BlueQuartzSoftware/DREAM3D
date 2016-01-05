@@ -324,6 +324,7 @@ option(DREAM3D_USE_QtWebEngine "DREAM.3D Uses QtWebEngine to show help" ON)
 if(DREAM3D_USE_QtWebEngine)
   set(Qt5_COMPONENTS
     ${Qt5_COMPONENTS}
+    Positioning
     WebEngine
     WebEngineWidgets
     WebEngineCore
