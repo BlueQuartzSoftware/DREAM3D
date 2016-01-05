@@ -39,12 +39,7 @@
 #include <iostream>
 #include <limits>
 
-#include <QtCore/QString>
 #include <QtCore/QSettings>
-#include <QtCore/QVector>
-#include <QtCore/QRunnable>
-#include <QtCore/QThreadPool>
-#include <QtConcurrent/QtConcurrentRun>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
 #include <QtWidgets/QLineEdit>
@@ -52,25 +47,11 @@
 #include <QtGui/QDoubleValidator>
 
 
-//-- Qwt Includes
-#include <qwt.h>
-#include <qwt_plot.h>
-#include <qwt_plot_grid.h>
-#include <qwt_series_data.h>
-#include <qwt_interval.h>
-#include <qwt_point_3d.h>
-#include <qwt_compat.h>
-#include <qwt_painter.h>
-#include <qwt_scale_map.h>
-#include <qwt_plot_zoomer.h>
-#include <qwt_plot_panner.h>
-#include <qwt_plot_curve.h>
-#include <qwt_plot_marker.h>
-
-// Needed for AxisAngle_t
+// Needed for AxisAngle_t and Crystal Symmetry constants
 #include "EbsdLib/EbsdConstants.h"
 
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
@@ -79,12 +60,17 @@
 
 #include "OrientationLib/Texture/StatsGen.hpp"
 
-
 #include "StatsGenerator/Presets/MicrostructurePresetManager.h"
 #include "StatsGenerator/Presets/PrimaryEquiaxedPreset.h"
 #include "StatsGenerator/Presets/PrimaryRolledPreset.h"
 #include "StatsGenerator/Presets/PrimaryRecrystallizedPreset.h"
 
+
+
+//-- Qwt Includes AFTER SIMPLib Math due to improper defines in qwt_plot_curve.h
+#include <qwt_plot_grid.h>
+#include <qwt_plot_curve.h>
+#include <qwt_plot_marker.h>
 
 #define CHECK_ERROR_ON_WRITE(var, msg)\
   if (err < 0) {\
