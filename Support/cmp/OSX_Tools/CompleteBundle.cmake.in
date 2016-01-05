@@ -172,7 +172,11 @@ execute_process(
 )
 
 if("@SIMPLib_USE_ITK@" STREQUAL "ON")
+    if("@CMAKE_BUILD_TYPE" STREQUAL "Debug")
     set(d3d_Plugins "${d3d_Plugins};${CMAKE_INSTALL_PREFIX}/@osx_app_name@.app/Contents/lib/lib@SimpleITKExplicit_LIB_NAME@@EXE_DEBUG_EXTENSION@.dylib")
+  else()
+    set(d3d_Plugins "${d3d_Plugins};${CMAKE_INSTALL_PREFIX}/@osx_app_name@.app/Contents/lib/lib@SimpleITKExplicit_LIB_NAME@.dylib")
+  endif()
 endif()
 
 # ----------------------------------------------------
