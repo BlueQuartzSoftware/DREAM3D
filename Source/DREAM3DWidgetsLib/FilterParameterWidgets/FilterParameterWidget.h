@@ -127,7 +127,7 @@ class DREAM3DWidgetsLib_EXPORT FilterParameterWidget : public QFrame
 
 #define FOPW_CHECK_LINEEDIT(cell)\
 {\
-  if(cell->text().isEmpty())\
+  if(sender() == cell && cell->text().isEmpty())\
   {\
     DREAM3DStyles::LineEditErrorStyle(cell);\
     errorLabel->setStyleSheet(QString::fromLatin1("color: rgb(255, 0, 0);"));\
@@ -142,9 +142,11 @@ class DREAM3DWidgetsLib_EXPORT FilterParameterWidget : public QFrame
   data.cell = loc.toFloat(cell->text(), &ok);\
   if(!ok)\
   {\
+    if(errorLabel) {\
     errorLabel->setStyleSheet(QString::fromLatin1("color: rgb(255, 0, 0);"));\
     errorLabel->setText("c40 Value entered is beyond the representable range for a double.\nThe filter will use the default value of " + getFilterParameter()->getDefaultValue().toString());\
     errorLabel->show();\
+    }\
     DREAM3DStyles::LineEditErrorStyle(cell);\
     data.cell = defValue.cell;\
   }\

@@ -53,7 +53,7 @@
 RequiredZThickness::RequiredZThickness() :
   AbstractDecisionFilter(),
   m_DataContainerSelection(""),
-  m_NumVoxels(0),
+  m_NumZVoxels(-1),
   m_PreflightCheck(false)
 {
   setupFilterParameters();
@@ -77,7 +77,7 @@ void RequiredZThickness::setupFilterParameters()
     DataContainerSelectionFilterParameter::RequirementType req;
     parameters.push_back(DataContainerSelectionFilterParameter::New("DataContainer", "DataContainerSelection", getDataContainerSelection(), FilterParameter::RequiredArray, req));
   }
-  parameters.push_back(IntFilterParameter::New("Minimum Z Dimension", "NumVoxels", getNumVoxels(), FilterParameter::Parameter, 0));
+  parameters.push_back(IntFilterParameter::New("Minimum Z Dimension", "NumZVoxels", getNumZVoxels(), FilterParameter::Parameter, 0));
   parameters.push_back(BooleanFilterParameter::New("Preflight Check", "PreflightCheck", getPreflightCheck(), FilterParameter::Parameter));
   setFilterParameters(parameters);
 }
@@ -90,7 +90,7 @@ void RequiredZThickness::readFilterParameters(AbstractFilterParametersReader* re
   AbstractDecisionFilter::readFilterParameters(reader, index);
   reader->openFilterGroup(this, index);
   setDataContainerSelection(reader->readString("DataContainerSelection", getDataContainerSelection()));
-  setNumVoxels(reader->readValue("MaxGrains", getNumVoxels()));
+  setNumZVoxels(reader->readValue("NumZVoxels", getNumZVoxels()));
   setPreflightCheck(reader->readValue("PreflightCheck", getPreflightCheck()));
   reader->closeFilterGroup();
 }
@@ -102,7 +102,7 @@ int RequiredZThickness::writeFilterParameters(AbstractFilterParametersWriter* wr
 {
   AbstractDecisionFilter::writeFilterParameters(writer, index);
   writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(NumVoxels)
+  SIMPL_FILTER_WRITE_PARAMETER(NumZVoxels)
   SIMPL_FILTER_WRITE_PARAMETER(PreflightCheck)
   SIMPL_FILTER_WRITE_PARAMETER(DataContainerSelection)
   writer->closeFilterGroup();
@@ -132,14 +132,26 @@ void RequiredZThickness::dataCheck()
   image->getDimensions(dims);
 
 
-  if (dims[2] < m_NumVoxels && m_PreflightCheck)
+  if (dims[2] < getNumZVoxels() && m_PreflightCheck)
   {
     setErrorCondition(-7787);
-    notifyErrorMessage(getHumanLabel(), "Number of Z Voxels does not meet required value. ", getErrorCondition());
+    QString str;
+    QTextStream ss(&str);
+    ss << "Number of Z Voxels does not meet required value during preflight of the filter. \n";
+    ss << "  Required Z Voxels: " << m_NumZVoxels << "\n";
+    ss << "  Current Z Voxels: " << dims[2];
+
+    notifyErrorMessage(getHumanLabel(), str, getErrorCondition());
   } 
-  else  if (dims[2] < m_NumVoxels && !m_PreflightCheck)
+  else if (dims[2] < getNumZVoxels() && !m_PreflightCheck)
   {
-    notifyWarningMessage(getHumanLabel(), "Number of Z Voxels does not meet required value during preflight but will be checked during pipeline execution.", getErrorCondition());
+    QString str;
+    QTextStream ss(&str);
+    ss << "Number of Z Voxels does not meet required value during preflight but will be checked during pipeline execution.\n";
+    ss << "  Required Z Voxels: " << m_NumZVoxels << "\n";
+    ss << "  Current Z Voxels: " << dims[2];
+
+    notifyWarningMessage(getHumanLabel(), str, getErrorCondition());
   }
 
 }
@@ -175,10 +187,16 @@ void RequiredZThickness::execute()
   image->getDimensions(dims);
 
 
-  if (dims[2] < m_NumVoxels)
+  if (dims[2] < getNumZVoxels())
   {
+    QString str;
+    QTextStream ss(&str);
+    ss << "Number of Z Voxels does not meet required value during execution of the filter. \n";
+    ss << "  Required Z Voxels: " << m_NumZVoxels << "\n";
+    ss << "  Current Z Voxels: " << dims[2];
+
     setErrorCondition(-7788);
-    notifyErrorMessage(getHumanLabel(), "Number of Z Voxels does not meet required value during execution of the filter. ", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), str, getErrorCondition());
     bool needMoreData = true;
     emit decisionMade(needMoreData);
   }

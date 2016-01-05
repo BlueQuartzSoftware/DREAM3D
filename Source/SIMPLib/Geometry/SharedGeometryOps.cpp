@@ -69,6 +69,77 @@ QString GEOM_CLASS_NAME::getGeometryTypeAsString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void GEOM_CLASS_NAME::sendThreadSafeProgressMessage(int64_t counter, int64_t max)
+{
+  m_Mutex.lock();
+
+  m_ProgressCounter += counter;
+
+  int64_t progIncrement = max / 100;
+  int64_t prog = 1;
+
+  if (m_ProgressCounter > prog)
+  {
+    int64_t progressInt = static_cast<int64_t>((static_cast<float>(m_ProgressCounter) / max) * 100.0f);
+    QString ss = m_MessageTitle + QObject::tr(" || %1% Complete").arg(progressInt);
+    notifyStatusMessage(m_MessagePrefix, m_MessageLabel, ss);
+    prog += progIncrement;
+  }
+
+  m_Mutex.unlock();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GEOM_CLASS_NAME::setMessagePrefix(const QString& name)
+{
+  m_MessagePrefix = name;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString GEOM_CLASS_NAME::getMessagePrefix()
+{
+  return m_MessagePrefix;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GEOM_CLASS_NAME::setMessageTitle(const QString& title)
+{
+  m_MessageTitle = title;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString GEOM_CLASS_NAME::getMessageTitle()
+{
+  return m_MessageTitle;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GEOM_CLASS_NAME::setMessageLabel(const QString& label)
+{
+  m_MessageLabel = label;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString GEOM_CLASS_NAME::getMessageLabel()
+{
+  return m_MessageLabel;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 unsigned int GEOM_CLASS_NAME::getXdmfGridType()
 {
   return m_XdmfGridType;

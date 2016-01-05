@@ -149,7 +149,7 @@
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {
-        "Name": "(02) SmallIN100 Alignment",
+        "Name": "(03) SmallIN100 Alignment",
         "Number_Filters": 8,
         "Version": "6.3"
     }

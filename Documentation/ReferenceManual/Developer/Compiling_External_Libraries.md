@@ -3,28 +3,27 @@ Compiling External Libraries {#compilingexternallibraries}
 
 # Online SDK Installation Tutorial #
 
-A tutorial is available for [Windows 7/8](http://dream3d.bluequartz.net/?p=954) and [OS X](http://dream3d.bluequartz.net/?p=930) that covers the installation of a DREAM3D_SDK using either prebuilt binaries (Windows) or a shell script (OS X). Please use those web sites. The instructions below are for special cases where using the precompiled binaries is not a viable option for the developers environment.
+A tutorial is available for [Windows 7/8](http://dream3d.bluequartz.net/?p=954) and [OS X](http://dream3d.bluequartz.net/?p=930) that covers the installation of a DREAM.3D software development kit (SDK) using either prebuilt binaries (Windows) or a shell script (OS X). Please use these web sites for reference. The instructions below are for special cases where using the precompiled binaries is not a viable option for the developers environment.
 
 # Preliminaries #
 
-A Compiler suite for your Operating System (Visual Studio, Xcode, GCC). The following table lists the compilers that DREAM3D is commonly compiled against.
+A compiler suite (Visual Studio, Xcode, GCC, etc.) for your operating system is necessary. The following table lists the compilers that DREAM.3D is commonly compiled against.
 
 | Compiler Version | Notes |  
 |  ------	| ------	|  
-| Visual Studio 2013 Pro, Express or Community SP4 | 64 Bit builds |  
-| Xcode 5.1.1 (OS X Version 10.8 & 10.9) | 64 bit Intel Only |  
-| GCC 4.7.x or Clang (Ubuntu 14.04) | 64 Bit Intel Only |  
+| Visual Studio 2013 Pro & Express/Community SP4 | 64 bit builds |  
+| Xcode 5.1.1 (or Greater) (OS X Version 10.8, 10.9, 10.10) | 64 bit Intel Only |  
+| GCC 4.7.x or Clang (Ubuntu 14.04) | 64 bit Intel Only |  
 
 ## Note for MinGW/MSys/Cygwin ##
 
-Due to incompatibilities of HDF5 and these environments we can not support compiling DREAM3D using these environments. Visual Studio Community 2013 is Free for anyone to use and has no restrictions on the software produced and its distribution.
+Due to incompatibilities of HDF5, compiling DREAM.3D using these environments is not supported. Visual Studio Community Edition 2013 is a freely available alternative with no restrictions on use.
 
+# DREAM.3D SDK Availability - PLEASE USE this Option #
 
-# DREAM3D SDK Availability - PLEASE USE this option. #
+The DREAM.3D developers keep a downloadable _DREAM3D\_SDK_ for Visual Studio 2013 that contains 64 bit builds of **ALL** the dependent libraries and applications except for Qt 5 and ITK. The _DREAM3D\_SDK_ can be downloaded [here](http://dream3d.bluequartz.net/binaries/SDK/).
 
-The DREAM3D developers keep a downloadable _DREAM3D\_SDK_ for Visual Studio 2013 that contains 64 bit builds of **ALL** the dependent libraries and applications except for Qt 5 and ITK. The _DREAM3D\_SDK_ can be downloaded [here](http://dream3d.bluequartz.net/binaries/SDK/).
-
-**The developer is strongly urged to utilize the available SDK as everything is included except a Git install**. Unless the developer has a special need to compile everything, it is best to use the precompiled SDK. 
+**The developer is strongly urged to utilize the available SDK as everything is included except a git install**. Unless the developer has a special need to compile everything, it is best to use the precompiled SDK. 
 
 # External Dependencies (Recommended Order of Installation) #
 
@@ -43,7 +42,7 @@ The DREAM3D developers keep a downloadable _DREAM3D\_SDK_ for Visual Studio 2013
 
 # Setting Up the Environment #
 
-The developer is urged to keep two distinct folder hierarchies on their computer. The first is a folder that contains all the source codes to all the various libraries and DREAM3D itself, lets call this **Workspace**. The second is a folder where the developer will _INSTALL_ all the libraries that they will compile, let's call this the **DREAM3D_SDK**.  The general flow is to download the source into the **Workspace** directory, configure it, build it and then install the libraries into the **DREAM3D_SDK** folder. The single exception to this is Qt on Windows. For this very specific case build Qt in its final _installation_ location because once Qt is built on Windows platforms it **CAN NOT** be moved to another location. Let's look at an example on Windows:
+The developer is urged to keep two distinct folder hierarchies on their computer. The first is a folder that contains all the source codes to all the various libraries and DREAM.3D itself.  Let's call this **Workspace**. The second is a folder where the developer will _INSTALL_ all the libraries that they will compile. Let's call this the **DREAM3D_SDK**.  The general flow is to download the source into the **Workspace** directory, configure it using CMake, build it and then install the libraries into the **DREAM3D_SDK** folder. The single exception to this is Qt on Windows. For this very specific case, build Qt in its final _installation_ location; once Qt is built on the Windows platforms it **CAN NOT** be moved to another location. Let's look at an example on Windows:
 
 Our **Workspace** is location at 
 
@@ -53,7 +52,7 @@ Our **DREAM3D\_SDK** is located at
 
 	C:\DREAM3D_SDK
 
-With this environment setup proceed to download and install Git, CMake and Doxygen into the **DREAM3D\_SDK** directory. Then proceed to download, build and install the rest of the dependent libraries.
+With this environment setup, proceed to download and install git, CMake and Doxygen into the **DREAM3D\_SDK** directory. Then proceed to download, build and install the rest of the dependent libraries.
 
 # CMake 3.2.3 #
 
@@ -78,9 +77,7 @@ On OS X systems the Doxygen.app should be placed into /Applications instead of t
 
 ## Linux Notes ##
 
-Use distributions package manager (apt-get on Ubuntu or yum on Red Hat systems) to install Oxygen.
-
-
+Use distributions package manager (apt-get on Ubuntu or yum on Red Hat systems) to install DOxygen.
 
 # Building HDF5 #
 
@@ -94,7 +91,7 @@ Use CMake to configure HDF5 for building with Visual Studio. The developer shoul
 
 ## OS X & Linux Notes ##
 
-Use the following sequence of Terminal commands to configure and build both a Debug and Release version of HDF5 1.8.15
+Use the following sequence of terminal commands to configure and build both a Debug and Release version of HDF5 1.8.15
 
 
 	[user] $ tar -xvzf hdf5-1.8.15-patch1.tar.gz
@@ -110,7 +107,7 @@ Use the following sequence of Terminal commands to configure and build both a De
 
 With the introduction of proper CMakeConfig support into HDF5 1.8.14 there now exists the need to build and install Debug and Release libraries into separate installation locations. The **recommended** way to now build HDF5 on OS X is to add a "-Debug" or "-Release" to the CMAKE_INSTALL_PREFIX for each build (depending on the CMAKE_BUILD_TYPE variable).
 
-**This setup becomes critically important when the "ImageProcessing" plugin or ITK in general is used in DREAM3D. This ensures that a consistent HDF5 library is linked into the plugin and DREAM3D.**
+**This setup becomes critically important when the using the ITK library in DREAM.3D. This procedure ensures that a consistent HDF5 library is linked into the Plugin and DREAM.3D.**
 
 # Building Boost 1.58.0 #
 
@@ -137,12 +134,12 @@ Windows developers should select the *.zip file and OS X users should select the
 
 ## Linux Notes ##
 
-The distribution of boost with most modern Linux distributions is usually good enough for our needs. Just use what ever version your distribution has.
+The distribution of boost with most modern Linux distributions is usually good enough for the needs of DREAM.3D.
 
 # Building Eigen #
 
 + [http://eigen.tuxfamily.org/index.php?title=Main_Page](http://eigen.tuxfamily.org/index.php?title=Main_Page)
-+ The project is configured with CMake and there is actually no compiling to do for Eigen. Just configure and then execute the "install" target for your IDE or makefiles.
++ The project is configured with CMake and no compiling is necessary. Just configure and then execute the "install" target for your IDE or makefiles.
 + Export the "EIGEN_INSTALL" environment variable.
 
 ## Notes ##
@@ -155,15 +152,14 @@ The distribution of boost with most modern Linux distributions is usually good e
 
 ## Windows with Visual Studio and Ninja ##
 
- If you use Ninja to configure and build Eigen there are a few steps. this is what worked for me.
+ If you use Ninja to configure and build Eigen there are a few additional steps. this is what worked for me.
 
-+ C:\\Users\\mjackson\\Workspace\\eigen-3.2.4\\zRel>cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=C:/DREAM3D_SDK/Eigen-3.2.4 -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTING=OFF ../
++ path\\to\\eigen-3.2.4\\zRel> cmake -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=C:/DREAM3D_SDK/Eigen-3.2.4 -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTING=OFF ../
 + Then create an empty file called "DartConfiguration.tcl" in the build directory.
 + Run the CMake command again
 + ninja install
 
 Repeat the process for a Debug build.
-
 
 # Threading Building Blocks #
 
@@ -207,7 +203,7 @@ with this:
 	CONFIG += lib_bundle
 	QMAKE_LFLAGS_SONAME  *= -install_name $${QWT_INSTALL_PREFIX}/lib/qwt.framework/Versions/6/qwt
 
-This will set correctly the full path to the framework that is built. If this is **NOT** performed then the final DREAM3D Packaging will not work correctly.
+This will set correctly the full path to the framework that is built. If this is **NOT** performed then the final DREAM.3D packaging will not work correctly.
 
 ## Edit qwt-6.1.2/qwtconfig.pri ##
 
@@ -244,7 +240,7 @@ For Windows it is (From a Visual Studio X64 command prompt)
 
 # Create DREAM3D_SDK.cmake Configuration File #
 
-The develop now needs to create a basic cmake file that describes the locations of all the various libraries that are needed by DREAM.3D that the developer either just installed or compiled. The contents of the file should be as follows with the appropriately adjusted paths for your operating system. Note the file can technically go any where you want. DREAM.3D developers typically keep the file in the DREAM3D_SDK folder.
+The developer now needs to create a basic cmake file that describes the locations of all the various libraries that are needed by DREAM.3D. The contents of the file should be as follows, with the paths adjusted appropriately for your operating system. Note the file can technically go any where on the file system. DREAM.3D developers typically keep the file in the DREAM3D_SDK folder.
 
 
 	#--------------------------------------------------------------------------------------------------
@@ -278,6 +274,4 @@ The develop now needs to create a basic cmake file that describes the locations 
 	# Update CMake Module Path with additional paths in order to better find the libraries.
 	set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ITK_DIR} ${Qt5_DIR} ${HDF5_INSTALL})
 
-
-
-At this point the developer should be ready to compile DREAM3D. Please see the next document for those instructions.
+At this point the developer should be ready to compile DREAM.3D.

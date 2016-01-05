@@ -57,10 +57,16 @@ class FeatureCountDecision : public AbstractDecisionFilter
     virtual ~FeatureCountDecision();
 
     SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-      Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
     SIMPL_FILTER_PARAMETER(int, MaxGrains)
     Q_PROPERTY(int MaxGrains READ getMaxGrains WRITE setMaxGrains)
+
+    /**
+    * @brief
+    * @param jsonDoc
+    */
+    virtual void extractProperties(const QJsonDocument &jsonDoc);
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -111,9 +117,6 @@ class FeatureCountDecision : public AbstractDecisionFilter
     * @brief preflight Reimplemented from @see AbstractFilter class
     */
     virtual void preflight();
-
-  signals:
-    void decisionMade(bool& dm);
 
   protected:
     FeatureCountDecision();

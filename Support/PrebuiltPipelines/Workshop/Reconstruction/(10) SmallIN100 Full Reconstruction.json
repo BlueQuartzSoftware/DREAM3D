@@ -486,7 +486,7 @@
         "Filter_Name": "FindFeaturePhases"
     },
     "PipelineBuilder": {
-        "Name": "SmallIN100 Full Reconstruction",
+        "Name": "(10) SmallIN100 Full Reconstruction",
         "Number_Filters": 22,
         "Version": "6.3"
     }

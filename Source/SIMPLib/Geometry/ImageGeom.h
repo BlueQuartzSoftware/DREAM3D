@@ -36,9 +36,7 @@
 #ifndef _ImageGeom_H_
 #define _ImageGeom_H_
 
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Geometry/IGeometry.h"
 
 /**
@@ -62,29 +60,29 @@ class SIMPLib_EXPORT ImageGeom : public IGeometry
 
     SIMPL_INSTANCE_VEC3_PROPERTY(size_t, Dimensions)
 
-    size_t getXPoints() {return m_Dimensions[0];}
-    size_t getYPoints() {return m_Dimensions[1];}
-    size_t getZPoints() {return m_Dimensions[2];}
+    inline size_t getXPoints() { return m_Dimensions[0]; }
+    inline size_t getYPoints() { return m_Dimensions[1]; }
+    inline size_t getZPoints() { return m_Dimensions[2]; }
 
     SIMPL_INSTANCE_VEC3_PROPERTY(float, Resolution)
 
-    float getXRes() {return m_Resolution[0];}
-    float getYRes() {return m_Resolution[1];}
-    float getZRes() {return m_Resolution[2];}
+    inline float getXRes() { return m_Resolution[0]; }
+    inline float getYRes() { return m_Resolution[1]; }
+    inline float getZRes() { return m_Resolution[2]; }
 
     SIMPL_INSTANCE_VEC3_PROPERTY(float, Origin)
 
     void getCoords(size_t idx[3], float coords[3]);
 
-    void getCoords(size_t& x, size_t& y, size_t& z, float coords[3]);
+    void getCoords(size_t x, size_t y, size_t z, float coords[3]);
 
-    void getCoords(size_t& idx, float coords[3]);
+    void getCoords(size_t idx, float coords[3]);
 
     void getCoords(size_t idx[3], double coords[3]);
 
-    void getCoords(size_t& x, size_t& y, size_t& z, double coords[3]);
+    void getCoords(size_t x, size_t y, size_t z, double coords[3]);
 
-    void getCoords(size_t& idx, double coords[3]);
+    void getCoords(size_t idx, double coords[3]);
 
 // -----------------------------------------------------------------------------
 // Inherited from IGeometry
@@ -170,7 +168,7 @@ class SIMPLib_EXPORT ImageGeom : public IGeometry
      * @param field
      * @param derivatives
      */
-    virtual void findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives);
+    virtual void findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives, Observable* observable = NULL);
 
     /**
      * @brief setName
@@ -202,6 +200,42 @@ class SIMPLib_EXPORT ImageGeom : public IGeometry
      * the instance of the object.
      */
     virtual QString getInfoString(DREAM3D::InfoStringFormat format);
+
+    /**
+     * @brief setMessagePrefix
+     * @param prefix
+     */
+    virtual void setMessagePrefix(const QString& prefix);
+
+    /**
+     * @brief getMessagePrefix
+     * @return
+     */
+    virtual QString getMessagePrefix();
+
+    /**
+     * @brief setMessageTitle
+     * @param title
+     */
+    virtual void setMessageTitle(const QString& title);
+
+    /**
+     * @brief getMessageTitle
+     * @return
+     */
+    virtual QString getMessageTitle();
+
+    /**
+     * @brief setMessageLabel
+     * @param label
+     */
+    virtual void setMessageLabel(const QString& label);
+
+    /**
+     * @brief getMessageLabel
+     * @return
+     */
+    virtual QString getMessageLabel();
 
     /**
      * @brief getXdmfGridType
@@ -292,6 +326,13 @@ class SIMPLib_EXPORT ImageGeom : public IGeometry
     virtual int gatherMetaData(hid_t parentid, size_t volDims[3], float spacing[3], float origin[3], unsigned int spatialDims, QString geomName);
 
     /**
+     * @brief sendThreadSafeProgressMessage
+     * @param counter
+     * @param max
+     */
+    virtual void sendThreadSafeProgressMessage(int64_t counter, int64_t max);
+
+    /**
      * @brief setElementsContaingVert
      * @param elementsContaingVert
      */
@@ -313,11 +354,18 @@ class SIMPLib_EXPORT ImageGeom : public IGeometry
 
     QString m_Name;
     QString m_GeometryTypeName;
+    QString m_MessagePrefix;
+    QString m_MessageTitle;
+    QString m_MessageLabel;
     unsigned int m_GeometryType;
     unsigned int m_XdmfGridType;
     unsigned int m_UnitDimensionality;
     unsigned int m_SpatialDimensionality;
     AttributeMatrixMap_t m_AttributeMatrices;
+    QMutex m_Mutex;
+    int64_t m_ProgressCounter;
+
+    friend class FindImageDerivativesImpl;
 
     ImageGeom(const ImageGeom&); // Copy Constructor Not Implemented
     void operator=(const ImageGeom&); // Operator '=' Not Implemented

@@ -1,14 +1,13 @@
 Version 6.0.0 Release Notes {#releasenotes_6_0_0}
 ===========
 
-These release notes summarize the major changes for each officially released version of DREAM.3D. The official bug report is located at [https://github.com/DREAM3D/DREAM3D/issues](https://github.com/DREAM3D/DREAM3D/issues).
+These release notes summarize the major changes for each officially released version of DREAM.3D. The official bug report is located at the [DREAM.3D GitHub issues page](https://github.com/DREAM3D/DREAM3D/issues).
 
 ## Getting Help ##
 
-Users:[https://groups.google.com/forum/?/dream3d-users#!forum/dream3d-users](https://groups.google.com/forum/?/dream3d-users#!forum/dream3d-users)
+[Users](https://groups.google.com/forum/?/dream3d-users#!forum/dream3d-users)
 
-Developers:[https://groups.google.com/forum/?hl=en#!forum/dream3d-developers](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
-
+[Developers](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
 # Major Changes #
 

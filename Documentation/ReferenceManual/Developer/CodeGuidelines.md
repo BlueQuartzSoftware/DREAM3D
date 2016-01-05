@@ -1,16 +1,14 @@
 Best Practices for Portable Code {#codeguidelines}
-=========
+========
 
-## Source Code Line Endings ##
-  All source code line endings will be in "Unix" style "\n". Every text editor understands these line endings on every platform **except** the "Notepad" application on Windows which probably should never be used to write code in the first place.
+# Source Code Line Endings #
+ All source code line endings should be in "Unix" style "\n". Every text editor understands these line endings on every platform **except** the "Notepad" application on Windows.
 
-## Use of Tabs ##
-  Spaces should be used instead of hard tabs. This helps file portability across different editors.
+# Use of Tabs #
+Spaces should be used instead of hard tabs. This helps file portability across different editors. DREAM.3D uses a standard whereby all indents  use two spaces.
 
-
-
-##   Always use an Include Guard ##
-Always use an "include guard" in your headers.
+#  Always Use an Include Guard #
+Always use an "include guard" in your headers:
 
     #ifndef _MY_HEADER_H_
     #define _MY_HEADER_H_
@@ -19,28 +17,22 @@ Always use an "include guard" in your headers.
 
     #endif
 
-
-### Discussion ###
-  Include guards are _#define_ preprocessor used in header files that ensures
+Include guards are _#define_ preprocessor directives used in header files that ensure
 the header is only ever included **once** during the compiling process for a
-given source file. If these guards are NOT included then it is up to the programmer to make sure that headers are only included a single time which can become time-consuming and impossible in some situations with larger projects.
+given source file. If these guards are not included, it is up to the programmer to make sure that headers are only included a single time, which can become tedious or impossible in some situations with larger projects.
 
-
-
-## Use Only ANSI-C99 Integer Types ##
+# Use Only ANSI-C99 Integer Types #
 The ANSI-C99 standard defines typedefs for 8, 16, 32 and 64 bit integer types. These should be used if possible. Platform specific types such as **int64** and ambiguous types such as
 
     long int
     signed long int
     unsigned long int
-should be avoided at all costs.
 
-### Discussion ###
-This is because  the number of bytes that a  "long" variable occupies will change depending  on CPU type and compiler being  used. This can have  an impact on pointer  arithmetic and binary file  IO just to name  a few instances. All Unix  systems have a *stdint.h*  file included with the compiler.  The Microsoft Visual Studio Compiler does NOT have this file included. There are lots of examples of creating one on the internet. An exemplar file is  also included with the Electronic Imaging software distribution  that is generated using CMake.
+should be avoided at all costs. This usage is important since the number of bytes that a "long" variable occupies will change depending on CPU type and compiler used. This can have an impact on many important operations, such as pointer arithmetic and binary file IO. All Unix  systems have a *stdint.h*  file included with the compiler that defines the proper types. The Microsoft Visual Studio Compiler does not have this file included. There are lots of examples of creating one on the internet. An exemplar file is  also included with the Electronic Imaging software distribution that is generated using CMake.
 
-#### C99 Integer Types ####
-    int8_t    8 Bit Singed Integer
-    uint8_t   8 Bit UnSinged Integer
+## C99 Integer Types ##
+    int8_t    8  Bit Singed Integer
+    uint8_t   8  Bit UnSinged Integer
     int16_t   16 Bit Singed Integer
     uint16_t  16 Bit UnSinged Integer
     int32_t   32 Bit Singed Integer
@@ -48,63 +40,52 @@ This is because  the number of bytes that a  "long" variable occupies will chang
     int64_t   64 Bit Singed Integer
     uint64_t  64 Bit UnSinged Integer
 
-## Special Constants ##
-NULL should be used in conjunction with a Pointer ONLY.
+# Special Constants #
+NULL should be used in conjunction with only raw pointers and 0 (zero) should be used in conjunction with numeric values:
 
-0 (Zero) should be used in conjunction with numeric values.
+    int* value = NULL; // Good
+    int* value = 0; // Bad
 
+    int i = 0; // Good
+    int i = NULL; // Bad 
 
-    int* value = NULL;//Good
-    int* value = 0;//Bad
-
-    int i = 0;//Good
-    int i = NULL;//Bad \endcode
-
-
-## Variable Initialization ##
-*Never* rely on the compiler to initialize variables or pointers for you. Always initialize your variables before first use.
+# Variable Initialization #
+*Never* rely on the compiler to initialize variables or pointers for you. Always initialize your variables before first use:
 
     int i; // Bad, unless this is pure "C" then you have NO choice
     i = 0; // Good. The variable has a known starting value
-    float* f = NULL; // Good (If the compiler will let you do this)
+    float* f = NULL; // Good (if the compiler will let you do this)
     char buffer[512]; // Allocation of char buffer but will be filled with junk
-    memset(buffer, 0, 512); // Good. Splat Zeros across the array.
+    memset(buffer, 0, 512); // Good. Splat Zeros across the array
 
-#### Rationale ####
+## Rationale ##
 Initializing your own variables ensures that you are starting from a known state when execution of the code reaches that point. Subtle bugs can occur if you do not initialize your variables and then perform checks on them to see if they are valid. A classic example is the following:
 
     int* ptr;
     if (!ptr) { initializePointer(ptr); }
 
-When compiled in Debug on *some* compilers this will execute as you would expect. The problems come when the code is compiled in *Release* mode. The _ptr_ variable will **NOT** be set to _NULL_ but instead some random memory address. As you can see this would cause problems because the initialization code that should have been running will be skipped because the conditional _if (!ptr) _ will be true. Do not get caught with this bug. Initialize your variables.
+When compiled in Debug on *some* compilers this will execute as you would expect. The problems come when the code is compiled in *Release* mode. The _ptr_ variable will **NOT** be set to _NULL_ but instead some random memory address, which can cause problems because the initialization code that should have been running will be skipped due to the conditional _if (!ptr) _ will be true. Remembering to always initialize variables avoids these issues.
 
-## Array Initialization ##
+# Array Initialization #
 
     define MY_ARRAY_SIZE  10;
     int array[10];              // Good - Will compile on all platforms
-    int array[MY_ARRAY_SIZE];   // Good - Will compile on all Platforms
+    int array[MY_ARRAY_SIZE];   // Good - Will compile on all platforms
     const int size = 10;
-    int array[size];            // Bad - Will NOT compile on all platforms.
+    int array[size];            // Bad - Will NOT compile on all platforms
 
-### Discussion ###
-An array is declared as *datatype name[constant-size]* and groups one or more instances of a datatype into  one addressable  place. Constant-size  may be  an expression,  but the  expression must  evaluate to  a constant.
+An array is declared as *datatype name[constant-size]* and groups one or more instances of a data type into  one addressable place. Constant-size may be an expression,  but the expression must evaluate to a constant.
 
-
-## The dereference operator `*` and the address-of operator `&` will be directly connected with the type-specifier. ##
+# The Dereference operator `*` and the Address-Of Operator `&` Should Be Directly Connected with the Type-Specifier #
 
     int32*   p; // Correct
     int32   *p; // Incorrect
-    int32*   p, q; // Probably error.
+    int32*   p, q; // Probably error
 
-
-### Discussion ###
 The _int32*  p;_ form emphasizes type over syntax while the _int32 *p;_ form emphasizes syntax over type. Although both forms are equally valid C++, the heavy emphasis on types in C++ suggests that _int32* p;_ is the preferable form.
 
-
-
-
-## Never Assume CPU Capabilities ##
-When writing code never assume that a CPU has a specific capability such as SSE. Use a _#define_ block to either test for the capability at runtime or write a generic version of your code will work on any machine and then write the specific implementation of the code that is bracketed by a _#ifdef_ block.
+# Never Assume CPU Capabilities #
+When writing code, never assume that a CPU has a specific capability such as SSE. Use a _#define_ block to either test for the capability at runtime or write a generic version of your code will work on any machine and then write the specific implementation of the code that is bracketed by a _#ifdef_ block.
 
     #ifdef HAS_SSE_3
       SSE3 specific code
@@ -113,9 +94,8 @@ When writing code never assume that a CPU has a specific capability such as SSE.
     #endif
 
 
-## Copyright & License Information ##
-Always include a Copyright and/or license block at the start of **every** source file. It is good practice to document in the source code any copyright or licensing restrictions in every file that you write. An example license block is shown below.
-
+# Copyright & License Information #
+Always include a copyright and/or license block at the start of **every** source file. It is good practice to document in the source code any copyright or licensing restrictions in every file that you write. An example license block is shown below.
 
     ///////////////////////////////////////////////////////////////////////////////
     //
@@ -168,7 +148,7 @@ Always include a Copyright and/or license block at the start of **every** source
     ***************************************************************************/
 
 
-## Always Implement the "Big Three" in C++ Classes ##
+# Always Implement the "Big Three" in C++ Classes #
 When writing C++ classes the programmer will always define the "Big Three" which are defined as:
 
 - copy constructor
@@ -176,7 +156,6 @@ When writing C++ classes the programmer will always define the "Big Three" which
 - destructor
 
 The programmer should **never** allow the compiler to implement these methods. This will happen if they are not explicitly defined in the class declaration. Further more if the destructor is declared _public_ then it **will** have the **virtual** modifier applied to the declaration.
-
 
     class A
     {
@@ -188,28 +167,22 @@ The programmer should **never** allow the compiler to implement these methods. T
        void operator=(const A&);  //Copy Assignment Not Implemented
     };
 
+Note that with C++11, programmers now have the ability to inform the compiler which of these operations can be constructed by default and which can be ignored using the `default` and `delete` keywords. 
 
-## String Constants ##
-  String constants in C++ should be declared as
+# String Constants #
+String constants in C++ should be declared as:
 
     const std::string MyFile("SomeFile.dat");
 
-and it is a good idea to group like-constants into a namespace.
+Like constants should be grouped into a namespace.
 
     namespace MyConstants {
         const std::string MyFile("SoimeFile");
     }
 
-
-When using ANSI "C" one should use a char* for constant strings:
+When using ANSI C one should use a char* for constant strings:
 
     const char* MyFile "SomeFile.dat";
     const char MyFile[5] = { 'a', '.', 'd', 'a', 't'};
 
-### Rationale ###
-  Using this type of approach allows for quicker code updates when constant values need to be changed.
-
-
-
-
-
+Using this type of approach allows for quicker code updates when constant values need to be changed.

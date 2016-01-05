@@ -1,4 +1,4 @@
-ImportASCIIData {#importasciidata}
+Import ASCII Data {#importasciidata}
 =============
 
 ## Group (Subgroup) ##

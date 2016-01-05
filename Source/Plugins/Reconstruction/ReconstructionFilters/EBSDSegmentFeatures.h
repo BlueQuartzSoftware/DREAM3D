@@ -169,7 +169,7 @@ class EBSDSegmentFeatures : public SegmentFeatures
     /**
      * @brief getSeed Reimplemented from @see SegmentFeatures class
      */
-    virtual int64_t getSeed(int32_t gnum);
+    virtual int64_t getSeed(int32_t gnum, int64_t nextSeed);
 
     /**
      * @brief determineGrouping Reimplemented from @see SegmentFeatures class
@@ -185,15 +185,11 @@ class EBSDSegmentFeatures : public SegmentFeatures
     DEFINE_DATAARRAY_VARIABLE(bool, Active)
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
-    BoolArrayType::Pointer m_BeenPickedPtr;
-    bool* m_BeenPicked;
-
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
     std::shared_ptr<NumberDistribution> m_Distribution;
     std::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;
     std::shared_ptr<Generator> m_NumberGenerator;
-    size_t                       m_TotalRandomNumbersGenerated;
 
     float misoTolerance;
 

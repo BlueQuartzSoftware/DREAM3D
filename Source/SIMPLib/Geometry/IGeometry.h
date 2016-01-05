@@ -38,7 +38,7 @@
 
 #include <QtCore/QString>
 #include <QtCore/QMap>
-
+#include <QMutex>
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -158,7 +158,7 @@ class SIMPLib_EXPORT IGeometry : public Observable
      * @param field
      * @param derivatives
      */
-    virtual void findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives) = 0;
+    virtual void findDerivatives(DoubleArrayType::Pointer field, DoubleArrayType::Pointer derivatives, Observable* observable) = 0;
 
 // -----------------------------------------------------------------------------
 // Generic
@@ -194,6 +194,42 @@ class SIMPLib_EXPORT IGeometry : public Observable
      * the instance of the object.
      */
     virtual QString getInfoString(DREAM3D::InfoStringFormat) = 0;
+
+    /**
+     * @brief setMessagePrefix
+     * @param prefix
+     */
+    virtual void setMessagePrefix(const QString& prefix) = 0;
+
+    /**
+     * @brief getMessagePrefix
+     * @return
+     */
+    virtual QString getMessagePrefix() = 0;
+
+    /**
+     * @brief setMessageTitle
+     * @param title
+     */
+    virtual void setMessageTitle(const QString& title) = 0;
+
+    /**
+     * @brief getMessageTitle
+     * @return
+     */
+    virtual QString getMessageTitle() = 0;
+
+    /**
+     * @brief setMessageLabel
+     * @param label
+     */
+    virtual void setMessageLabel(const QString& label) = 0;
+
+    /**
+     * @brief getMessageLabel
+     * @return
+     */
+    virtual QString getMessageLabel() = 0;
 
     /**
      * @brief getXdmfGridType
@@ -275,6 +311,13 @@ class SIMPLib_EXPORT IGeometry : public Observable
     virtual AttributeMatrix::Pointer removeAttributeMatrix(const QString& name) = 0;
 
   protected:
+
+    /**
+     * @brief sendThreadSafeProgressMessage
+     * @param counter
+     * @param max
+     */
+    virtual void sendThreadSafeProgressMessage(int64_t counter, int64_t max) = 0;
 
     /**
      * @brief setElementsContaingVert

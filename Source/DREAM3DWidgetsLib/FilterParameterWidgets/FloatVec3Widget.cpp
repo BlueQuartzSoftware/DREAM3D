@@ -111,9 +111,10 @@ void FloatVec3Widget::setupGui()
     label->setText(getFilterParameter()->getHumanLabel() );
 
     FloatVec3_t data = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<FloatVec3_t>();
-    xData->setText(QString::number(data.x) );
-    yData->setText(QString::number(data.y) );
-    zData->setText(QString::number(data.z) );
+
+    xData->setText(loc.toString(data.x));
+    yData->setText(loc.toString(data.y));
+    zData->setText(loc.toString(data.z));
   }
 
   errorLabel->hide();
@@ -125,14 +126,20 @@ void FloatVec3Widget::setupGui()
 // -----------------------------------------------------------------------------
 void FloatVec3Widget::widgetChanged(const QString& text)
 {
+  Q_UNUSED(text);
+
+  QLineEdit* le = NULL;
+  (sender() == xData) ? le = xData: le = NULL;
+  (sender() == yData) ? le = yData: le = NULL;
+  (sender() == zData) ? le = zData: le = NULL;
+
   errorLabel->hide();
 
-  QVector<QLineEdit*> lEdits = { xData, yData, zData };
-
-  foreach(QLineEdit* le, lEdits)
+  if(le)
   {
     if(le->text().isEmpty())
     {
+      QString objName = le->objectName();
       DREAM3DStyles::LineEditErrorStyle(le);
       errorLabel->setStyleSheet(QString::fromLatin1("color: rgb(255, 0, 0);"));
       errorLabel->setText("No value entered. Filter will use default value of " + getFilterParameter()->getDefaultValue().toString());

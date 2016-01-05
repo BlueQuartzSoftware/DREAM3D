@@ -171,6 +171,10 @@ execute_process(
   OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_STRIP_TRAILING_WHITESPACE
 )
 
+if("@SIMPLib_USE_ITK@" STREQUAL "ON")
+    set(d3d_Plugins "${d3d_Plugins};${CMAKE_INSTALL_PREFIX}/@osx_app_name@.app/Contents/lib/lib@SimpleITKExplicit_LIB_NAME@@EXE_DEBUG_EXTENSION@.dylib")
+endif()
+
 # ----------------------------------------------------
 # This is where the actual patching of the install_names is going to take place.
 include(BundleUtilities)
