@@ -92,7 +92,6 @@ set(SIMPLib_${SUBDIR_NAME}_HDRS
   ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/StringFilterParameter.h
   ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/ThirdOrderPolynomialFilterParameter.h
   ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/UnknownFilterParameter.h
-  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/VolumeDataContainerInfoFilterParameter.h
 )
 
 set(SIMPLib_${SUBDIR_NAME}_SRCS
@@ -142,7 +141,6 @@ set(SIMPLib_${SUBDIR_NAME}_SRCS
   ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/StringFilterParameter.cpp
   ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/ThirdOrderPolynomialFilterParameter.cpp
   ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/UnknownFilterParameter.cpp
-  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/VolumeDataContainerInfoFilterParameter.cpp
 )
 
 cmp_IDE_SOURCE_PROPERTIES( "${SUBDIR_NAME}" "${SIMPLib_${SUBDIR_NAME}_HDRS};${SIMPLib_${SUBDIR_NAME}_Moc_HDRS}" "${SIMPLib_${SUBDIR_NAME}_SRCS}" "0")
