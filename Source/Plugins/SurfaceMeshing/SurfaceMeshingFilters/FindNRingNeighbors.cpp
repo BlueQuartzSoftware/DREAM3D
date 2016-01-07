@@ -1,4 +1,5 @@
 /* ============================================================================
+#include "SIMPLib/Geometry/TriangleGeom.h"
 * Copyright (c) 2009-2015 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
@@ -32,7 +33,6 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
 
 #include "FindNRingNeighbors.h"
 

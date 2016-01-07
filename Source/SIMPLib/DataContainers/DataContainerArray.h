@@ -37,20 +37,19 @@
 #ifndef _DATACONTAINERARRAY_H_
 #define _DATACONTAINERARRAY_H_
 
-#include <QtCore/QObject>
+#include <stddef.h>       // for NULL
+
+#include <QtCore/QObject> // for Q_OBJECT
 #include <QtCore/QString>
 #include <QtCore/QList>
-#include <QtCore/QTextStream>
-
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Common/Observer.h"
-#include "SIMPLib/Common/Observable.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
-#include "SIMPLib/DataContainers/DataArrayPath.h"
 #include "SIMPLib/DataContainers/IDataContainerBundle.h"
-#include "SIMPLib/DataContainers/DataContainerBundle.h"
+#include "SIMPLib/DataContainers/DataArrayPath.h"
+
+
 
 /**
  * @class DataContainerArray DataContainerArray.h DREAM3DLib/Common/DataContainerArray.h
@@ -206,7 +205,7 @@ class SIMPLib_EXPORT DataContainerArray : public QObject
     template<typename BundleType>
     typename BundleType::Pointer getDataContainerBundleAs(const QString& name)
     {
-      typename BundleType::Pointer dcb = boost::dynamic_pointer_cast<BundleType>(getDataContainerBundle(name));
+      typename BundleType::Pointer dcb = std::dynamic_pointer_cast<BundleType>(getDataContainerBundle(name));
       return dcb;
     }
 
@@ -286,11 +285,22 @@ class SIMPLib_EXPORT DataContainerArray : public QObject
         }
       }
 
-      if(doesDataContainerExist(dataContainerName) == true)
+      if (dataContainerName.contains('/'))
       {
         if (filter)
         {
           filter->setErrorCondition(-888);
+          QString ss = QObject::tr("The DataContainer Object has forward slashes in its name.");
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+          return DataContainer::NullPointer();
+        }
+      }
+
+      if(doesDataContainerExist(dataContainerName) == true)
+      {
+        if (filter)
+        {
+          filter->setErrorCondition(-889);
           QString ss = QObject::tr("The DataContainer Object with the specific name '%1' already exists.").arg(dataContainerName);
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
           return DataContainer::NullPointer();
@@ -329,7 +339,7 @@ class SIMPLib_EXPORT DataContainerArray : public QObject
      * @return
      */
     template<typename Filter>
-    AttributeMatrix::Pointer getPrereqAttributeMatrixFromPath(Filter* filter, DataArrayPath path, int err)
+    AttributeMatrix::Pointer getPrereqAttributeMatrixFromPath(Filter* filter, const DataArrayPath& path, int err)
     {
       // First try to get the Parent DataContainer. If an error occurs the error message will have been set
       // so just return a NULL shared pointer
@@ -504,6 +514,50 @@ class SIMPLib_EXPORT DataContainerArray : public QObject
         {
           filter->setErrorCondition(-80010);
           ss = QObject::tr("Property '%1': The DataArrayPath is invalid because one of the elements was empty.\n  DataContainer: %2\n  AttributeMatrix: %3\n  DataArray: %4").arg(property).arg(path.getDataContainerName()).arg(path.getAttributeMatrixName()).arg(path.getDataArrayName());
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+        }
+        return dataArray;
+      }
+
+      if (path.getDataContainerName().contains('/'))
+      {
+        if (filter)
+        {
+          filter->setErrorCondition(-80005);
+          ss = QObject::tr("The DataContainer '%1' has forward slashes in its name").arg(path.getDataContainerName());
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+        }
+        return dataArray;
+      }
+
+      if (path.getAttributeMatrixName().contains('/'))
+      {
+        if (filter)
+        {
+          filter->setErrorCondition(-80006);
+          ss = QObject::tr("The AttributeMatrix '%1' has forward slashes in its name").arg(path.getAttributeMatrixName());
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+        }
+        return dataArray;
+      }
+
+      if (path.getDataArrayName().contains('/'))
+      {
+        if (filter)
+        {
+          filter->setErrorCondition(-80007);
+          ss = QObject::tr("The DataArray '%1' has forward slashes in its name").arg(path.getDataArrayName());
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+        }
+        return dataArray;
+      }
+
+      if (path.getDataContainerName().contains('/'))
+      {
+        if (filter)
+        {
+          filter->setErrorCondition(-80004);
+          ss = QObject::tr("The DataContainer '%1' has forward slashes in its name").arg(path.getDataContainerName());
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
         return dataArray;

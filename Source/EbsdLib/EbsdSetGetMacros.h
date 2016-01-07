@@ -61,9 +61,8 @@
 //#define RAW_PTR  data
 #endif
 
-//-- Boost Includes
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
+//-- C++11 Includes
+#include <memory>
 
 
 #define SHARED_IS_NULL(ptr)\
@@ -71,7 +70,7 @@
 
 /**
  * @brief Creates a static method that returns a NULL pointer wrapped in a
- * boost::shared_ptr<>
+ * std::shared_ptr<>
  * @param thisClass The name of the class.
  */
 #define EBSD_NULL_SHARED_POINTER(thisClass)\
@@ -99,10 +98,10 @@
  */
 #define EBSD_SHARED_POINTERS(thisClass)\
   typedef thisClass                      Self;\
-  typedef boost::shared_ptr<Self >        Pointer;\
-  typedef boost::shared_ptr<const Self >  ConstPointer;\
-  typedef boost::weak_ptr<thisClass > WeakPointer;\
-  typedef boost::weak_ptr<thisClass > ConstWeakPointer;\
+  typedef std::shared_ptr<Self >        Pointer;\
+  typedef std::shared_ptr<const Self >  ConstPointer;\
+  typedef std::weak_ptr<thisClass > WeakPointer;\
+  typedef std::weak_ptr<thisClass > ConstWeakPointer;\
   EBSD_NULL_SHARED_POINTER(thisClass)
 
 

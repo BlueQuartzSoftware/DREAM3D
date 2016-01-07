@@ -37,7 +37,6 @@
 #define _AbstractFilter_H_
 
 #include <QtCore/QObject>
-#include <QtCore/QSet>
 #include <QtCore/QString>
 #include <QtCore/QVector>
 
@@ -46,7 +45,6 @@
 #include "SIMPLib/Common/Observable.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/FilterParameter.h"
-#include "SIMPLib/Common/PipelineMessage.h"
 
 
 class AbstractFilterParametersReader;
@@ -171,6 +169,11 @@ class SIMPLib_EXPORT AbstractFilter : public Observable
     // ------------------------------
     // Standard methods for this class the are commonly used by subclasses.
     // ------------------------------
+    /**
+     * @brief getFilterVersion Returns a version string for this filter. Default
+     * value is an empty string.
+     * @return
+     */
     virtual const QString getFilterVersion();
 
     SIMPL_INSTANCE_PROPERTY(DataContainerArray::Pointer, DataContainerArray)

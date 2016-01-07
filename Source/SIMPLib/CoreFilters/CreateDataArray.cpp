@@ -36,6 +36,7 @@
 #include "CreateDataArray.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Common/TemplateHelpers.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
@@ -160,7 +161,7 @@ void checkInitializationInt(AbstractFilter* filter, IDataArray::Pointer iDataArr
   }
 
   // Now set the initial Value into the array
-  typename DataArray<T>::Pointer array = boost::dynamic_pointer_cast<DataArray<T> >(iDataArray);
+  typename DataArray<T>::Pointer array = std::dynamic_pointer_cast<DataArray<T> >(iDataArray);
   if(NULL != array.get())
   {
     array->initializeWithValue(initValue, 0);
@@ -196,7 +197,7 @@ void checkInitializationFloatDouble(AbstractFilter* filter, IDataArray::Pointer 
 
   }
 
-  typename DataArray<T>::Pointer array = boost::dynamic_pointer_cast<DataArray<T> >(iDataArray);
+  typename DataArray<T>::Pointer array = std::dynamic_pointer_cast<DataArray<T> >(iDataArray);
   if(NULL != array.get())
   {
     array->initializeWithValue(initValue, 0);
@@ -369,6 +370,27 @@ AbstractFilter::Pointer CreateDataArray::newFilterInstance(bool copyFilterParame
 // -----------------------------------------------------------------------------
 const QString CreateDataArray::getCompiledLibraryName()
 { return Core::CoreBaseName; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString CreateDataArray::getBrandingString()
+{
+  return "SIMPLib Core Filter";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString CreateDataArray::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
+
+
 
 // -----------------------------------------------------------------------------
 //

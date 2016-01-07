@@ -36,9 +36,8 @@
 #ifndef _IGeometry2D_H_
 #define _IGeometry2D_H_
 
-#include "SIMPLib/SIMPLib.h"
+
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Geometry/IGeometry.h"
 
 /**

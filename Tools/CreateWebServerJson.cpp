@@ -17,6 +17,7 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/PluginManager.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
+#include "SIMPLib/Utilities/QMetaObjectUtilities.h"
 
 #include "ToolConfiguration.h"
 

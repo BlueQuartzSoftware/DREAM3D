@@ -567,8 +567,8 @@ QList<PluginProxy::Pointer> AboutPlugins::readPluginCache()
 
     prefs.beginGroup(pluginName);
     proxy->setPluginName(pluginName);
-    proxy->setFilePath(prefs.value("Plugin Path", "").toString());
-    proxy->setEnabled(prefs.value("Enabled", true).toBool());
+    proxy->setFilePath(prefs.value("Plugin Path", QString("")).toString());
+    proxy->setEnabled(prefs.value("Enabled", QVariant(true)).toBool());
     prefs.endGroup();
 
     proxyList.push_back(proxy);

@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "ReadCtfData.h"
 
 #include <QtCore/QDateTime>
@@ -42,13 +41,13 @@
 #include "EbsdLib/HKL/CtfFields.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
-
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "EbsdLib/HKL/CtfFields.h"
 
@@ -212,7 +211,7 @@ void ReadCtfData::dataCheck()
     QVector<QString> names;
     if (ext.compare(Ebsd::Ctf::FileExt) == 0)
     {
-      boost::shared_ptr<CtfReader> reader(new CtfReader());
+      std::shared_ptr<CtfReader> reader(new CtfReader());
       readDataFile(reader.get(), m, tDims, CTF_HEADER_ONLY);
 
       // Update the size of the Cell Attribute Matrix now that the dimensions of the volume are known
@@ -572,7 +571,7 @@ void ReadCtfData::execute()
   dataCheck();
   if (getErrorCondition() < 0) { return; }
 
-  boost::shared_ptr<CtfReader> reader(new CtfReader());
+  std::shared_ptr<CtfReader> reader(new CtfReader());
   QVector<size_t> tDims(3, 0);
   QVector<size_t> cDims(1, 1);
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
@@ -621,8 +620,28 @@ AbstractFilter::Pointer ReadCtfData::newFilterInstance(bool copyFilterParameters
 //
 // -----------------------------------------------------------------------------
 const QString ReadCtfData::getCompiledLibraryName()
-{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
+{
+  return OrientationAnalysisConstants::OrientationAnalysisBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ReadCtfData::getBrandingString()
+{
+  return "OrientationAnalysis";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ReadCtfData::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

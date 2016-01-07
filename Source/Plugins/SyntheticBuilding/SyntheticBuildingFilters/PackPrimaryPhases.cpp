@@ -33,8 +33,9 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "PackPrimaryPhases.h"
+
+#include <fstream>
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
@@ -51,19 +52,19 @@
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
-
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
 #include "SIMPLib/Utilities/SIMPLibRandom.h"
 #include "SIMPLib/Utilities/TimeUtilities.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/SIMPLibVersion.h"
 
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
@@ -1124,11 +1125,19 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
   int32_t progFeatureInc = static_cast<int32_t>(totalFeatures * 0.01f);
   for (size_t i = firstPrimaryFeature; i < totalFeatures; i++)
   {
+    if (getCancel() == true) { return; }
+
     if ((int32_t)i > progFeature + progFeatureInc)
     {
       QString ss = QObject::tr("Placing Feature #%1/%2").arg(i).arg(totalFeatures);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       progFeature = i;
+    }
+
+    if (i == (totalFeatures - 1))
+    {
+      QString ss = QObject::tr("Placing Feature #%1/%2").arg(i + 1).arg(totalFeatures);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     }
 
     // we always put the feature in the center of the box to make sure the feature has the optimal chance to not touch the edge of the box
@@ -1165,8 +1174,6 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
     zc = static_cast<float>((plane * m_PackingRes[2]) + (m_PackingRes[2] * 0.5));
     move_feature(i, xc, yc, zc);
     fillingerror = check_fillingerror(i, -1000, featureOwnersPtr, exclusionOwnersPtr);
-
-    if (getCancel() == true) { return; }
   }
 
   progFeature = 0;
@@ -2658,7 +2665,7 @@ int32_t PackPrimaryPhases::estimate_numfeatures(size_t xpoints, size_t ypoints, 
   DataArray<uint32_t>* phaseType = m_PhaseTypesPtr.lock().get();
 
   StatsDataArray::Pointer statsPtr = dca->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), cDims);
-  m_StatsDataArray = boost::dynamic_pointer_cast<StatsDataArray>(statsPtr);
+  m_StatsDataArray = std::dynamic_pointer_cast<StatsDataArray>(statsPtr);
   if(m_StatsDataArray.lock().get() == NULL)
   {
     QString ss = QObject::tr("Stats Array Not Initialized correctly");
@@ -2865,8 +2872,28 @@ AbstractFilter::Pointer PackPrimaryPhases::newFilterInstance(bool copyFilterPara
 //
 // -----------------------------------------------------------------------------
 const QString PackPrimaryPhases::getCompiledLibraryName()
-{ return SyntheticBuildingConstants::SyntheticBuildingBaseName; }
+{
+  return SyntheticBuildingConstants::SyntheticBuildingBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString PackPrimaryPhases::getBrandingString()
+{
+  return "SyntheticBuilding";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString PackPrimaryPhases::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

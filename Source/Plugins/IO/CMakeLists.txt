@@ -2,9 +2,12 @@
 #-- Your License or copyright can go here
 #--////////////////////////////////////////////////////////////////////////////
 
-project(IO)
-
 set(PLUGIN_NAME IO)
+set(${PLUGIN_NAME}_VERSION "1.0")
+set(${PLUGIN_NAME}_VERSION_MAJOR "1")
+set(${PLUGIN_NAME}_VERSION_MINOR "0")
+get_filename_component(${PLUGIN_NAME}_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}" ABSOLUTE)
+set(IO_BINARY_DIR "${DREAM3DProj_BINARY_DIR}/Plugins/${PLUGIN_NAME}")
 
 # --------------------------------------------------------------------
 # Look for Qt 5 as we need it for the plugin GUI to be generated
@@ -44,9 +47,13 @@ set(Project_SRCS "")
 include(${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/SourceList.cmake)
 # Add in our Plugin Specific FilterParameterWidgets
 include(${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameterWidgets/SourceList.cmake)
+# Add in our Plugin Specific FilterParameter
+include(${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameters/SourceList.cmake)
+
 #-----------------------------------------------------
 # Include any extra Widgets that this plugin needs
 include(${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/SourceList.cmake)
+include(${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/SourceList.cmake)
 # -- Include all the resources
 include(${${PLUGIN_NAME}_SOURCE_DIR}/Resources/SourceList.cmake)
 
@@ -120,15 +127,15 @@ endif()
 # These headers will be MOC'ed by the build system. They should all inherit from QObject
 # --------------------------------------------------------------------
 set(${PLUGIN_NAME}_HDRS
-  ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}Constants.h
+  ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Constants.h
 )
 
 set(${PLUGIN_NAME}_MOC_HDRS
-  ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}Plugin.h
+  ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Plugin.h
 )
 
 set(${PLUGIN_NAME}_SRCS
- ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}Plugin.cpp
+ ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Plugin.cpp
 )
 
 set(${PLUGIN_NAME}_MISC_HDRS
@@ -180,12 +187,16 @@ set(${PLUGIN_NAME}_MODULE_SRCS
   ${${PLUGIN_NAME}_Generated_MOC_SRCS}
   # -- Add in the Filter Parameter Widgets
   ${${PLUGIN_NAME}_ParameterWidgets_HDRS}
+  ${${PLUGIN_NAME}_ParameterWidgets_MOC_HDRS}
   ${${PLUGIN_NAME}_ParameterWidgets_SRCS}
   ${${PLUGIN_NAME}_ParameterWidgets_UIS}
   ${${PLUGIN_NAME}_ParameterWidgets_Generated_MOC_SRCS}
   ${${PLUGIN_NAME}_ParameterWidgets_Generated_UI_HDRS}
+  ${${PLUGIN_NAME}_FilterParameters_SRCS}
+  ${${PLUGIN_NAME}_FilterParameters_HDRS}
   # -- Add in the plain Widgets
   ${${PLUGIN_NAME}_Widgets_HDRS}
+  ${${PLUGIN_NAME}_Widgets_HDRS_MOC}
   ${${PLUGIN_NAME}_Widgets_SRCS}
   ${${PLUGIN_NAME}_Widgets_UIS}
   ${${PLUGIN_NAME}_Widgets_Generated_MOC_SRCS}
@@ -193,6 +204,7 @@ set(${PLUGIN_NAME}_MODULE_SRCS
   ${${PLUGIN_NAME}_GEN_HDRS}
   # -- Add in the miscellaneous resources (license, plugin info, ...)
   ${${PLUGIN_NAME}_Generated_RC_SRCS}
+
   # -- Add in our Generated Version Files
   ${${PLUGIN_NAME}_BINARY_DIR}/${VERSION_HEADER_FILE_NAME}
   ${${PLUGIN_NAME}_BINARY_DIR}/${VERSION_SOURCE_FILE_NAME}
@@ -236,5 +248,5 @@ if( DREAM3D_BUILD_CLI_TOOLS )
 endif()
 
 if(DREAM3D_BUILD_TESTING)
-  include(${PROJECT_SOURCE_DIR}/Test/CMakeLists.txt)
+  include(${${PLUGIN_NAME}_SOURCE_DIR}/Test/CMakeLists.txt)
 endif()

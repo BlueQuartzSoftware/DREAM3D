@@ -42,26 +42,25 @@
 
 
 //-- C++ includes
-#include <vector>
-#include <map>
-#include <sstream>
-#include <list>
+#include <memory>
 
-//-- EBSD Lib Includes
-#include "EbsdLib/EbsdConstants.h"
+#include <hdf5.h>
 
-
-#include "H5Support/QH5Utilities.h"
-#include "H5Support/HDF5ScopedFileSentinel.h"
-
+#include <QtCore/QObject>
+#include <QtCore/QList>
+#include <QtCore/QString>
+#include <QtCore/QMap>
+#include <QtCore/QVector>
 
 //-- DREAM3D Includes
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/Observable.h"
-#include "SIMPLib/DataContainers/DataContainerProxy.h"
+#include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/DataContainers/AttributeMatrixProxy.h"
+#include "SIMPLib/DataContainers/DataContainerProxy.h"
 
 enum RenameErrorCodes
 {
@@ -168,7 +167,7 @@ class SIMPLib_EXPORT AttributeMatrix : public Observable
     typename ArrayType::Pointer getAttributeArrayAs(const QString& name)
     {
       IDataArray::Pointer iDataArray = getAttributeArray(name);
-      return boost::dynamic_pointer_cast< ArrayType >(iDataArray);
+      return std::dynamic_pointer_cast< ArrayType >(iDataArray);
     }
 
 
@@ -276,11 +275,11 @@ class SIMPLib_EXPORT AttributeMatrix : public Observable
         return attributeArray;
       }
       IDataArray::Pointer iDataArray = getAttributeArray(attributeArrayName);
-      attributeArray = boost::dynamic_pointer_cast< ArrayType >(iDataArray);
+      attributeArray = std::dynamic_pointer_cast< ArrayType >(iDataArray);
       if(NULL == attributeArray.get() && filter)
       {
         filter->setErrorCondition(err);
-        ss = QObject::tr("The AttributeMatrix named '%1' contains an array with name '%2' but the DataArray could not be downcast using boost::dynamic_pointer_cast<T>.").arg(getName()).arg(attributeArrayName);
+        ss = QObject::tr("The AttributeMatrix named '%1' contains an array with name '%2' but the DataArray could not be downcast using std::dynamic_pointer_cast<T>.").arg(getName()).arg(attributeArrayName);
         filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
       }
       return attributeArray;
@@ -326,9 +325,9 @@ class SIMPLib_EXPORT AttributeMatrix : public Observable
       else
       {
         IDataArray::Pointer ptr = getAttributeArray(attributeArrayName);
-        if (boost::dynamic_pointer_cast<ArrayType>(ptr) != NULL)
+        if (std::dynamic_pointer_cast<ArrayType>(ptr) != NULL)
         {
-          return boost::dynamic_pointer_cast<ArrayType>(ptr);
+          return std::dynamic_pointer_cast<ArrayType>(ptr);
         }
         else
         {
@@ -388,11 +387,11 @@ class SIMPLib_EXPORT AttributeMatrix : public Observable
         ss = QObject::tr("AttributeMatrix:'%1' An array with name '%2' could not be created.").arg(getName()).arg(attributeArrayName);
         filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
       }
-      attributeArray = boost::dynamic_pointer_cast< ArrayType >(iDataArray);
+      attributeArray = std::dynamic_pointer_cast< ArrayType >(iDataArray);
       if(NULL == attributeArray.get() && filter)
       {
         filter->setErrorCondition(-10003);
-        ss = QObject::tr("AttributeMatrix:'%1' An array with name '%2' could not be downcast using boost::dynamic_pointer_cast<T>.").arg(getName()).arg(attributeArrayName);
+        ss = QObject::tr("AttributeMatrix:'%1' An array with name '%2' could not be downcast using std::dynamic_pointer_cast<T>.").arg(getName()).arg(attributeArrayName);
         filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
       }
       return attributeArray;
@@ -433,7 +432,7 @@ class SIMPLib_EXPORT AttributeMatrix : public Observable
     {
       // First try checking by name
       // IDataArray::Pointer iDataArray = ;
-      typename ArrayType::Pointer targetDestArray = boost::dynamic_pointer_cast< ArrayType >(getAttributeArray(arrayName));
+      typename ArrayType::Pointer targetDestArray = std::dynamic_pointer_cast< ArrayType >(getAttributeArray(arrayName));
       typename ArrayType::Pointer validTargetArray = ArrayType::CreateArray(1, "JUNK_INTERNAL_ARRAY", false);
 
       if (targetDestArray.get() == 0)

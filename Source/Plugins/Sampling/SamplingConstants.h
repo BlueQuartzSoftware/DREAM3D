@@ -7,6 +7,6 @@ namespace SamplingConstants
 {
   const QString SamplingPluginFile("SamplingPlugin");
   const QString SamplingPluginDisplayName("Sampling");
-  const QString SamplingBaseName("SamplingPlugin");
+  const QString SamplingBaseName("Sampling");
 }
 #endif

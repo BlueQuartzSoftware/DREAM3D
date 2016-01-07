@@ -110,7 +110,7 @@ class AbstractMicrostructurePresetFactory
      * @brief Creates a new AbstractMicrostructurePreset based on a class name
      * @param className The name of the class to create
      * @return Returns an instance of AbstractMicrostructurePreset::Pointer. This method can return
-     * a null AbstractMicrostructurePreset so check the return value with the boost::shared_ptr.get()
+     * a null AbstractMicrostructurePreset so check the return value with the std::shared_ptr.get()
      * method to check the value of the wrapped pointer.
      */
     virtual AbstractMicrostructurePreset::Pointer newMicrostructurePreset () = 0;

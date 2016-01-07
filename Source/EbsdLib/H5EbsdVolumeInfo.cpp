@@ -59,7 +59,7 @@
     std::vector<type> data;\
     err = H5Lite::readVectorDataset(fileId, path.toStdString(), data);\
     if (err < 0) {\
-      qDebug() << "H5EbsdVolumeInfo Error: Could not load header value for " << path ;\
+      qDebug() << "H5EbsdVolumeInfo Error: Could not load header (as vector) for " << path ;\
       err = H5Utilities::closeFile(fileId);\
       return err;\
     } else {\
@@ -73,7 +73,7 @@
   { cast t;\
     err = H5Lite::readScalarDataset(fileId, path.toStdString(), t);\
     if (err < 0) {\
-      qDebug() << "H5EbsdVolumeInfo Error: Could not load header value for " << path ;\
+      qDebug() << "H5EbsdVolumeInfo Error: Could not load header value (with cast) for " << path ;\
       err = H5Utilities::closeFile(fileId);\
       return err;\
     }\

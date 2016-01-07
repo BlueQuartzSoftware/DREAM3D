@@ -94,6 +94,20 @@ class EstablishMatrixPhase : public AbstractFilter
     virtual const QString getCompiledLibraryName();
 
     /**
+     * @brief getBrandingString Returns the branding string for the filter, which is a tag
+     * used to denote the filter's association with specific plugins
+     * @return Branding string
+    */
+    virtual const QString getBrandingString();
+
+    /**
+     * @brief getFilterVersion Returns a version string for this filter. Default
+     * value is an empty string.
+     * @return
+     */
+    virtual const QString getFilterVersion();
+
+    /**
      * @brief newFilterInstance Reimplemented from @see AbstractFilter class
      */
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);

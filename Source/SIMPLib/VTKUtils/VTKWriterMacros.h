@@ -39,6 +39,7 @@
 #include <QtCore/QtEndian>
 
 #include "SIMPLib/Utilities/SIMPLibEndian.h"
+#include "SIMPLib/SIMPLibVersion.h"
 
 /**@file VTKWriterMacros.h
  * @brief This file contains various macros to write out consistent VTK legacy
@@ -202,7 +203,7 @@
     */
 #define VTK_WRITE_RECTILINEAR_DATA(ArrayType, iDataPtr, VtkType, Type, Format)\
   {\
-    ArrayType::Pointer array = boost::dynamic_pointer_cast<ArrayType>(iDataPtr);\
+    ArrayType::Pointer array = std::dynamic_pointer_cast<ArrayType>(iDataPtr);\
     if(NULL != array.get()) {\
       size_t totalElements = array->getSize();\
       Type* val = array->getPointer(0);\

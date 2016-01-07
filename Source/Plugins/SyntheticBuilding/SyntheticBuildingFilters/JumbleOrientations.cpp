@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "JumbleOrientations.h"
 
 #include <boost/random/mersenne_twister.hpp>
@@ -43,9 +42,9 @@
 #include <QtCore/QDateTime>
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -279,8 +278,28 @@ AbstractFilter::Pointer JumbleOrientations::newFilterInstance(bool copyFilterPar
 //
 // -----------------------------------------------------------------------------
 const QString JumbleOrientations::getCompiledLibraryName()
-{ return SyntheticBuildingConstants::SyntheticBuildingBaseName; }
+{
+  return SyntheticBuildingConstants::SyntheticBuildingBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString JumbleOrientations::getBrandingString()
+{
+  return "SyntheticBuilding";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString JumbleOrientations::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

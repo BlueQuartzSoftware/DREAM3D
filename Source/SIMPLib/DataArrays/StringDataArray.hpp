@@ -384,25 +384,6 @@ class StringDataArray : public IDataArray
       return true;
     }
 
-    /**
-     * @brief reorderCopy
-     * @param newOrderMap
-     * @return
-     */
-    virtual IDataArray::Pointer reorderCopy(QVector<size_t> newOrderMap)
-    {
-      if(static_cast<size_t>(newOrderMap.size()) != getNumberOfTuples())
-      {
-        return IDataArray::NullPointer();
-      }
-      StringDataArray::Pointer daCopy = StringDataArray::CreateArray(getNumberOfTuples(), getName());
-      daCopy->initializeWithZeros();
-      for(QVector<QString>::size_type i = 0; i < m_Array.size(); ++i)
-      {
-        daCopy->setValue(newOrderMap[i], m_Array[i]);
-      }
-      return daCopy;
-    }
 
     /**
      * @brief Does Nothing

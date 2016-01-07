@@ -36,15 +36,17 @@
 #ifndef _TransformationPhaseWidget_H_
 #define _TransformationPhaseWidget_H_
 
-#include "SGWidget.h"
+#include <QtCore/QList>
+#include <QtCore/QVector>
+
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataContainers/AttributeMatrix.h"
+
+#include "StatsGenerator/SGWidget.h"
+#include "StatsGenerator/Presets/AbstractMicrostructurePreset.h"
 #include "ui_TransformationPhaseWidget.h"
 
-#include "SIMPLib/Common/Constants.h"
-#include "StatsGenerator/Presets/AbstractMicrostructurePreset.h"
 
-class QwtPlotZoomer;
-class QwtPlotPicker;
-class QwtPlotPanner;
 class QwtPlotGrid;
 class QwtPlotCurve;
 class QwtPlotMarker;

@@ -62,9 +62,6 @@ class AlignSections : public AbstractFilter
     SIMPL_INSTANCE_PROPERTY(bool, WriteAlignmentShifts)
     Q_PROPERTY(bool WriteAlignmentShifts READ getWriteAlignmentShifts WRITE setWriteAlignmentShifts)
 
-    SIMPL_INSTANCE_PROPERTY(bool, SubtractBackground)
-    Q_PROPERTY(bool SubtractBackground READ getSubtractBackground WRITE setSubtractBackground)
-
     SIMPL_INSTANCE_STRING_PROPERTY(AlignmentShiftFileName)
     Q_PROPERTY(QString AlignmentShiftFileName READ getAlignmentShiftFileName WRITE setAlignmentShiftFileName)
 
@@ -72,6 +69,20 @@ class AlignSections : public AbstractFilter
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */
     virtual const QString getCompiledLibraryName();
+
+    /**
+     * @brief getBrandingString Returns the branding string for the filter, which is a tag
+     * used to denote the filter's association with specific plugins
+     * @return Branding string
+    */
+    virtual const QString getBrandingString();
+
+    /**
+     * @brief getFilterVersion Returns a version string for this filter. Default
+     * value is an empty string.
+     * @return
+     */
+    virtual const QString getFilterVersion();
 
     /**
      * @brief newFilterInstance Reimplemented from @see AbstractFilter class

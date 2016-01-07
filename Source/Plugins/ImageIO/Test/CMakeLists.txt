@@ -26,10 +26,10 @@ file(MAKE_DIRECTORY ${TEST_TEMP_DIR})
 configure_file(${${PLUGIN_NAME}_SOURCE_DIR}/Test/TestFileLocations.h.in
                ${${PLUGIN_NAME}_BINARY_DIR}/Test/${PLUGIN_NAME}TestFileLocations.h @ONLY IMMEDIATE)
 
-set(${PROJECT_NAME}_Link_Libs Qt5::Core Qt5::Gui H5Support SIMPLib)
+set(${PLUGIN_NAME}_Link_Libs Qt5::Core Qt5::Gui H5Support SIMPLib)
 
 AddDREAM3DUnitTest(TESTNAME WriteImagesTest 
-                    SOURCES ${${PROJECT_NAME}Test_SOURCE_DIR}/WriteImagesTest.cpp
+                    SOURCES ${${PLUGIN_NAME}Test_SOURCE_DIR}/WriteImagesTest.cpp
                     FOLDER "${PLUGIN_NAME}Plugin/Test"
-                    LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})
+                    LINK_LIBRARIES ${${PLUGIN_NAME}_Link_Libs})
 

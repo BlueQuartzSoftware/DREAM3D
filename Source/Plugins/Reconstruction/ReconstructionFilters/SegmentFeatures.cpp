@@ -33,12 +33,13 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "SegmentFeatures.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 
@@ -109,7 +110,7 @@ void SegmentFeatures::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int64_t SegmentFeatures::getSeed(int32_t gnum)
+int64_t SegmentFeatures::getSeed(int32_t gnum, int64_t nextSeed)
 {
   return -1;
 }
@@ -158,10 +159,12 @@ void SegmentFeatures::execute()
   neighpoints[3] = 1;
   neighpoints[4] = dims[0];
   neighpoints[5] = (dims[0] * dims[1]);
+  int64_t nextSeed = -1;
 
   while (seed >= 0)
   {
-    seed = getSeed(gnum);
+    seed = getSeed(gnum, nextSeed);
+    nextSeed = seed + 1;
     if (seed >= 0)
     {
       size = 0;
@@ -190,6 +193,7 @@ void SegmentFeatures::execute()
             {
               voxelslist[size] = neighbor;
               size++;
+              if (neighbor == nextSeed) { nextSeed = neighbor + 1; }
               if (size >= voxelslist.size())
               {
                 size = voxelslist.size();
@@ -230,8 +234,28 @@ AbstractFilter::Pointer SegmentFeatures::newFilterInstance(bool copyFilterParame
 //
 // -----------------------------------------------------------------------------
 const QString SegmentFeatures::getCompiledLibraryName()
-{ return ReconstructionConstants::ReconstructionBaseName; }
+{
+  return ReconstructionConstants::ReconstructionBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString SegmentFeatures::getBrandingString()
+{
+  return "Reconstruction";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString SegmentFeatures::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

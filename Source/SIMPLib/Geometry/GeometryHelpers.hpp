@@ -3,8 +3,9 @@
 
 #include <math.h>
 
-#include "H5Support/QH5Utilities.h"
-#include "H5Support/HDF5ScopedFileSentinel.h"
+#include <map>
+#include <set>
+
 #include "H5Support/QH5Lite.h"
 
 #include "SIMPLib/Common/Constants.h"
@@ -52,7 +53,7 @@ namespace GeometryHelpers
           err = -1;
           return ListType::NullPointer();
         }
-        return boost::dynamic_pointer_cast<ListType>(mesh);
+        return std::dynamic_pointer_cast<ListType>(mesh);
       }
 
       /**
@@ -208,16 +209,15 @@ namespace GeometryHelpers
         // Allocate the basic structures
         QVector<T> linkCount(numVerts, 0);
         size_t elemId = 0;
-        int64_t* linkLoc;
 
         // Fill out lists with number of references to cells
-        typedef boost::shared_array<K> SharedArray_t;
-        SharedArray_t linkLocPtr(new K[numVerts]);
-        linkLoc = linkLocPtr.get();
 
-        ::memset(linkLoc, 0, numVerts * sizeof(K));
 
-        K* verts;
+        typename DataArray<K>::Pointer linkLocPtr = DataArray<K>::CreateArray(numVerts, "Vertices");
+        linkLocPtr->initializeWithValue(0);
+        K* linkLoc = linkLocPtr->getPointer(0);
+
+        K* verts = NULL;
 
         //vtkPolyData *pdata = static_cast<vtkPolyData *>(data);
         // Traverse data to determine number of uses of each point
@@ -286,9 +286,10 @@ namespace GeometryHelpers
         dynamicList->allocateLists(linkCount);
 
         // Allocate an array of bools that we use each iteration so that we don't put duplicates into the array
-        boost::shared_array<bool> visitedPtr(new bool[numElems]);
-        bool* visited = visitedPtr.get();
-        ::memset(visitedPtr.get(), 0, numElems);
+        typename DataArray<bool>::Pointer visitedPtr = DataArray<bool>::CreateArray(numElems, "visited");
+        visitedPtr->initializeWithValue(false);
+        bool* visited = visitedPtr->getPointer(0);
+
 
         // Reuse this vector for each loop. Avoids re-allocating the memory each time through the loop
         QVector<K> loop_neighbors(32, 0);
@@ -526,8 +527,8 @@ namespace GeometryHelpers
       template<typename T, typename K>
       static void AverageVertexArrayValues(typename DataArray<T>::Pointer elemList, typename DataArray<K>::Pointer inVertexArray, DataArray<float>::Pointer outElemArray)
       {
-        BOOST_ASSERT(outElemArray->getComponentDimensions() == inVertexArray->getComponentDimensions());
-        BOOST_ASSERT(elemList->getNumberOfTuples() == outElemArray->getNumberOfTuples());
+        Q_ASSERT(outElemArray->getComponentDimensions() == inVertexArray->getComponentDimensions());
+        Q_ASSERT(elemList->getNumberOfTuples() == outElemArray->getNumberOfTuples());
 
         K* vertArray = inVertexArray->getPointer(0);
         float* elemArray = outElemArray->getPointer(0);
@@ -565,8 +566,8 @@ namespace GeometryHelpers
                                                    DataArray<float>::Pointer centroids, typename DataArray<K>::Pointer inVertexArray,
                                                    DataArray<float>::Pointer outElemArray)
       {
-        BOOST_ASSERT(outElemArray->getNumberOfTuples() == elemList->getNumberOfTuples());
-        BOOST_ASSERT(outElemArray->getComponentDimensions() == inVertexArray->getComponentDimensions());
+        Q_ASSERT(outElemArray->getNumberOfTuples() == elemList->getNumberOfTuples());
+        Q_ASSERT(outElemArray->getComponentDimensions() == inVertexArray->getComponentDimensions());
 
         K* vertArray = inVertexArray->getPointer(0);
         float* elemArray = outElemArray->getPointer(0);
@@ -617,8 +618,8 @@ namespace GeometryHelpers
                                          DataArray<float>::Pointer vertices, typename DataArray<K>::Pointer inElemArray,
                                          typename DataArray<M>::Pointer outVertexArray)
       {
-        BOOST_ASSERT(outVertexArray->getNumberOfTuples() == vertices->getNumberOfTuples());
-        BOOST_ASSERT(outVertexArray->getComponentDimensions() == inElemArray->getComponentDimensions());
+        Q_ASSERT(outVertexArray->getNumberOfTuples() == vertices->getNumberOfTuples());
+        Q_ASSERT(outVertexArray->getComponentDimensions() == inElemArray->getComponentDimensions());
 
         K* elemArray = inElemArray->getPointer(0);
         M* vertArray = outVertexArray->getPointer(0);

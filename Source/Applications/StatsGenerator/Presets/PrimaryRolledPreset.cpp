@@ -285,7 +285,7 @@ void PrimaryRolledPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot,
 // -----------------------------------------------------------------------------
 void PrimaryRolledPreset::initializeClusteringTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
-  BOOST_ASSERT(false);
+  Q_ASSERT(false);
 }
 
 // -----------------------------------------------------------------------------

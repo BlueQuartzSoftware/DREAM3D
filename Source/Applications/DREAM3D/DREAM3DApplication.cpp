@@ -34,6 +34,10 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "DREAM3DApplication.h"
 
+#if ! defined(_MSC_VER)
+#include <unistd.h>
+#endif
+
 #include <iostream>
 
 #include <QtCore/QTime>
@@ -106,12 +110,12 @@ DREAM3DApplication::~DREAM3DApplication()
   this->Splash = NULL;
 
   DREAM3DSettings prefs;
-  if (prefs.value("Program Mode", "") == "Clear Cache")
+  if (prefs.value("Program Mode", QString("")) == "Clear Cache")
   {
     prefs.clear();
-    prefs.setValue("First Run", false);
+    prefs.setValue("First Run", QVariant(false));
 
-    prefs.setValue("Program Mode", "Standard");
+    prefs.setValue("Program Mode", QString("Standard"));
   }
 }
 
@@ -140,7 +144,7 @@ bool DREAM3DApplication::initialize(int argc, char* argv[])
 #endif
 
   // Create and show the splash screen as the main window is being created.
-  QPixmap pixmap(QLatin1String(":/branded_splash.png"));
+  QPixmap pixmap(QLatin1String(":/splash/branded_splash.png"));
   this->Splash = new DSplashScreen(pixmap);
   this->Splash->setMask(pixmap.createMaskFromColor(QColor(Qt::transparent)));
   this->Splash->show();
@@ -1234,7 +1238,7 @@ void DREAM3DApplication::on_actionClearCache_triggered()
     DREAM3DSettings prefs;
 
     // Set a flag in the preferences file, so that we know that we are in "Clear Cache" mode
-    prefs.setValue("Program Mode", "Clear Cache");
+    prefs.setValue("Program Mode", QString("Clear Cache"));
 
     m_ActiveWindow->getPipelineViewWidget()->getStatusBar()->showMessage("The cache has been cleared successfully.  Please restart DREAM3D.");
   }

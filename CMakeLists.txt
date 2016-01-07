@@ -112,6 +112,7 @@ if(UNIX AND NOT APPLE)
     set(DREAM3D_LINUX_SYSTEM ${CMAKE_SYSTEM_NAME} CACHE STRING "The Name of the linux distrubution for packaging")
 endif()
 
+
 #------------------------------------------------------------------------------
 # Find the Git Package for Versioning. It should be ok if Git is NOT found
 Find_package(Git)
@@ -302,6 +303,14 @@ if(DREAM3D_BUILD_TESTING)
 endif()
 
 
+#------------------------------------------------------------------------------
+# If we have not defined a "BrandedDREAM3D_DIR" then define it to the default
+# generic set of ICONs
+if(NOT DEFINED BrandedDREAM3D_DIR)
+  set(BrandedDREAM3D_DIR ${DREAM3DProj_SOURCE_DIR}/Resources/OpenSourceEdition)
+endif()
+
+include_directories(${BrandedDREAM3D_DIR})
 
 # -----------------------------------------------------------------------
 # Add in the Necessary HDF5 Support Sources into a library
@@ -335,6 +344,14 @@ add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/QtSupportLib ${PROJECT_BINARY_
 # as the Filter Parameter Widgets and various building block widgets for the DREAM3D app
 # The plugins are also going to depend on these being built
 add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/DREAM3DWidgetsLib ${PROJECT_BINARY_DIR}/DREAM3DWidgetsLib)
+
+# --------------------------------------------------------------------
+# Build the SimpleITKExplicit Library.
+option(SIMPLib_USE_ITK "Use ITK For Image Processing" ON)
+if(SIMPLib_USE_ITK)
+  add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/SimpleITKExplicit ${PROJECT_BINARY_DIR}/SimpleITKExplicit)
+  get_property(SimpleITKExplicit_LIB_NAME TARGET SimpleITKExplicit PROPERTY OUTPUT_NAME)
+endif()
 
 #-------------------------------------------------------------------------------
 # Build the DREAM3D Application here so we can add dependencies between the plugin and

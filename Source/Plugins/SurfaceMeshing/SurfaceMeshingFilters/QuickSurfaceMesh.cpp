@@ -33,19 +33,20 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "QuickSurfaceMesh.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/TemplateHelpers.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/SIMPLibVersion.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 
@@ -167,8 +168,8 @@ void copyCellArraysToFaceArrays(size_t faceIndex, size_t firstCellIndex, size_t 
                                 IDataArray::Pointer cellArray, IDataArray::Pointer faceArray,
                                 bool forceSecondToZero = false)
 {
-  typename DataArray<T>::Pointer cellPtr = boost::dynamic_pointer_cast<DataArray<T> >(cellArray);
-  typename DataArray<T>::Pointer facePtr = boost::dynamic_pointer_cast<DataArray<T> >(faceArray);
+  typename DataArray<T>::Pointer cellPtr = std::dynamic_pointer_cast<DataArray<T> >(cellArray);
+  typename DataArray<T>::Pointer facePtr = std::dynamic_pointer_cast<DataArray<T> >(faceArray);
 
   int32_t numComps = cellPtr->getNumberOfComponents();
   QVector<size_t> cDims = facePtr->getComponentDimensions();
@@ -1197,8 +1198,28 @@ AbstractFilter::Pointer QuickSurfaceMesh::newFilterInstance(bool copyFilterParam
 //
 // -----------------------------------------------------------------------------
 const QString QuickSurfaceMesh::getCompiledLibraryName()
-{ return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
+{
+  return SurfaceMeshingConstants::SurfaceMeshingBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString QuickSurfaceMesh::getBrandingString()
+{
+  return "SurfaceMeshing";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString QuickSurfaceMesh::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

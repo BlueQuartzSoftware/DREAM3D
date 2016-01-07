@@ -45,9 +45,8 @@
 #include <tbb/tbb_stddef.h>
 #endif
 
-#if SIMPL_USE_EIGEN
 #include <Eigen/src/Core/util/Macros.h>
-#endif
+
 
 
 #include <QtCore/QFile>
@@ -57,9 +56,12 @@
 
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/FilterManager.h"
+#include "SIMPLib/SIMPLibVersion.h"
 
 #include "Applications/DREAM3D/DREAM3D/License/DREAM3DLicenseFiles.h"
 #include "Applications/DREAM3D/DREAM3DVersion.h"
+
+#include "BrandedStrings.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
 #include "moc_AboutDREAM3D.cpp"
@@ -91,7 +93,9 @@ void AboutDREAM3D::setupGui()
   QString str;
   QTextStream out(&str);
 
-  out << "DREAM.3D Version " << DREAM3D::Version::Package();
+  out << "DREAM.3D Version " << DREAM3D::Version::Major() << "." << DREAM3D::Version::Minor() << "." << DREAM3D::Version::Patch();
+  out << "\n" << BrandedStrings::DistributionName;
+  
   versionLabel->setText(str);
   versionLabel->setFont(DREAM3DStyles::GetTitleFont());
 
@@ -164,43 +168,6 @@ void AboutDREAM3D::loadResourceFile(const QString qresourceFile)
 // -----------------------------------------------------------------------------
 void AboutDREAM3D::readVersions()
 {
-#if 0
-  QTableWidgetItem* qtwi = new QTableWidgetItem(QString("Item"), QTableWidgetItem::Type);
-  version->setHorizontalHeaderItem(0, qtwi);
-  QTableWidgetItem* qtwi1 = new QTableWidgetItem(QString("Version"), QTableWidgetItem::Type);
-  version->setHorizontalHeaderItem(1, qtwi1);
 
-  version->setItem(0, 1, new QTableWidgetItem(SIMPLib::Version::Package()));
-  version->setItem(1, 1, new QTableWidgetItem(BOOST_LIB_VERSION));
-  version->setItem(2, 1, new QTableWidgetItem(QT_VERSION_STR));
-
-  QString strH5 = QString::number(H5_VERS_MAJOR);
-  strH5.append(".");
-  strH5.append(QString::number(H5_VERS_MINOR));
-  strH5.append(".");
-  strH5.append(QString::number(H5_VERS_RELEASE));
-
-  version->setItem(4, 1, new QTableWidgetItem(strH5));
-
-#if SIMPL_USE_EIGEN
-  QString strEigen = QString::number(EIGEN_WORLD_VERSION);
-  strEigen.append(".");
-  strEigen.append(QString::number(EIGEN_MAJOR_VERSION));
-  strEigen.append(".");
-  strEigen.append(QString::number(EIGEN_MINOR_VERSION));
-  version->setItem(5, 1, new QTableWidgetItem(strEigen));
-#endif
-
-#if SIMPLib_USE_PARALLEL_ALGORITHMS
-  QString strTBB = QString::number(TBB_VERSION_MAJOR);
-  strTBB.append(".");
-  strTBB.append(QString::number(TBB_VERSION_MINOR));
-  version->setItem(6, 1, new QTableWidgetItem(strTBB));
-#endif
-
-  version->setItem(3, 1, new QTableWidgetItem(QWT_VERSION_STR));
-
-  labelVersion->setText(SIMPLib::Version::PackageComplete().toLatin1().data());
-#endif
 }
 

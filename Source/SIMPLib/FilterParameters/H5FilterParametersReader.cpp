@@ -48,6 +48,7 @@
 #include "SIMPLib/Common/FilterFactory.hpp"
 
 #include "SIMPLib/FilterParameters/H5FilterParametersConstants.h"
+#include "SIMPLib/Common/Constants.h"
 
 
 // -----------------------------------------------------------------------------
@@ -229,6 +230,27 @@ QVector<QString> H5FilterParametersReader::readStrings(const QString name, QVect
   return value;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QStringList H5FilterParametersReader::readStringList(const QString name, QStringList value)
+{
+  int vectorSize = 0;
+  QString str = "";
+  int err = QH5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
+  if (err < 0)
+  {
+
+  }
+  for (int i = 0; i < vectorSize; i++)
+  {
+    QString ss = QString::number(i, 10);
+    err = QH5Lite::readStringAttribute(m_CurrentGroupId, name, ss, str);
+    value.push_back(str);
+  }
+
+  return value;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -622,35 +644,6 @@ FloatVec3_t H5FilterParametersReader::readFloatVec3(const QString name, FloatVec
   return v;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-FloatVec4_t H5FilterParametersReader::readFloatVec4(const QString name, FloatVec4_t defaultValue)
-{
-  int err = 0;
-  FloatVec4_t v;
-  err = QH5Lite::readPointerDataset<float>(m_CurrentGroupId, name, reinterpret_cast<float*>(&v) );
-  if (err < 0)
-  {
-    return defaultValue;
-  }
-  return v;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-FloatVec21_t H5FilterParametersReader::readFloatVec21(const QString name, FloatVec21_t defaultValue)
-{
-  int err = 0;
-  FloatVec21_t v;
-  err = QH5Lite::readPointerDataset<float>(m_CurrentGroupId, name, reinterpret_cast<float*>(&v) );
-  if (err < 0)
-  {
-    return defaultValue;
-  }
-  return v;
-}
 
 // -----------------------------------------------------------------------------
 //

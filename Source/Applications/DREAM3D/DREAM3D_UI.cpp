@@ -174,7 +174,7 @@ void DREAM3D_UI::updateFirstRun()
   }
   else
   {
-    prefs.setValue("First Run", false);
+    prefs.setValue("First Run", QVariant(false));
   }
 }
 
@@ -436,7 +436,7 @@ void DREAM3D_UI::readWindowSettings(DREAM3DSettings& prefs)
   prefs.beginGroup("WindowSettings");
   if (prefs.contains(QString("MainWindowGeometry")))
   {
-    QByteArray geo_data = prefs.value("MainWindowGeometry", "").toByteArray();
+    QByteArray geo_data = prefs.value("MainWindowGeometry", QByteArray());
     ok = restoreGeometry(geo_data);
     if (!ok)
     {
@@ -446,13 +446,13 @@ void DREAM3D_UI::readWindowSettings(DREAM3DSettings& prefs)
 
   if (prefs.contains(QString("MainWindowState")))
   {
-    QByteArray layout_data = prefs.value("MainWindowState", "").toByteArray();
+    QByteArray layout_data = prefs.value("MainWindowState", QByteArray());
     restoreState(layout_data);
   }
 
-  QByteArray splitterGeometry = prefs.value("Splitter_Geometry", "").toByteArray();
+  QByteArray splitterGeometry = prefs.value("Splitter_Geometry", QByteArray());
   splitter->restoreGeometry(splitterGeometry);
-  QByteArray splitterSizes = prefs.value("Splitter_Sizes", "").toByteArray();
+  QByteArray splitterSizes = prefs.value("Splitter_Sizes", QByteArray());
   splitter->restoreState(splitterSizes);
 
   prefs.endGroup();
@@ -466,7 +466,7 @@ void DREAM3D_UI::readDockWidgetSettings(DREAM3DSettings& prefs, QDockWidget* dw)
   restoreDockWidget(dw);
 
   QString name = dw->objectName();
-  bool b = prefs.value(dw->objectName(), false).toBool();
+  bool b = prefs.value(dw->objectName(), QVariant(false)).toBool();
   dw->setHidden(b);
 }
 
@@ -564,7 +564,7 @@ void DREAM3D_UI::checkForUpdatesAtStartup()
     DREAM3DSettings updatePrefs;
 
     updatePrefs.beginGroup( DREAM3DUpdateCheckDialog::getUpdatePreferencesGroup() );
-    QDate lastUpdateCheckDate = updatePrefs.value(DREAM3DUpdateCheckDialog::getUpdateCheckKey(), "").toDate();
+    QDate lastUpdateCheckDate = updatePrefs.value(DREAM3DUpdateCheckDialog::getUpdateCheckKey(), QString("")).toDate();
     updatePrefs.endGroup();
 
     QDate systemDate;

@@ -14,8 +14,8 @@ set(${PLUGIN_NAME}Test_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test)
 include(${DREAM3DProj_SOURCE_DIR}/Test/DREAM3DTestFunctions.cmake)
 
 
-include_directories(${${PROJECT_NAME}_SOURCE_DIR})
-include_directories(${${PROJECT_NAME}_BINARY_DIR})
+include_directories(${${PLUGIN_NAME}_SOURCE_DIR})
+include_directories(${${PLUGIN_NAME}_BINARY_DIR})
 
 
 set(TEST_TEMP_DIR ${${PLUGIN_NAME}Test_BINARY_DIR}/Temp)
@@ -27,10 +27,10 @@ configure_file(${${PLUGIN_NAME}_SOURCE_DIR}/Test/TestFileLocations.h.in
                ${${PLUGIN_NAME}_BINARY_DIR}/Test/${PLUGIN_NAME}TestFileLocations.h @ONLY IMMEDIATE)
 
 
-set(${PROJECT_NAME}_Link_Libs Qt5::Core H5Support SIMPLib)
+set(${PLUGIN_NAME}_Link_Libs Qt5::Core H5Support SIMPLib)
 
 
 AddDREAM3DUnitTest(TESTNAME MultiThresholdObjectsTest
-                    SOURCES ${${PROJECT_NAME}_SOURCE_DIR}/Test/MultiThresholdObjectsTest.cpp
+                    SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/MultiThresholdObjectsTest.cpp
                     FOLDER "${PLUGIN_NAME}Plugin/Test"
-                    LINK_LIBRARIES ${${PROJECT_NAME}_Link_Libs})
+                    LINK_LIBRARIES ${${PLUGIN_NAME}_Link_Libs})

@@ -143,7 +143,7 @@ include(${SIMPLib_SOURCE_DIR}/CoreFilters/SourceList.cmake)
 option(SIMPLib_BUILD_TEST_FILTERS "Build the Test filters: These should be OFF when doing a release" ON)
 if(SIMPLib_BUILD_TEST_FILTERS)
     # set(PluginAutoMocSourceFile ${${PROJECT_NAME}_BINARY_DIR}/TestFilters_automoc_cmake.cpp)
-    # set_source_files_properties( ${PluginAutoMocSourceFile} PROPERTIES GENERATED TRUE)  
+    # set_source_files_properties( ${PluginAutoMocSourceFile} PROPERTIES GENERATED TRUE)
     # Add the generated moc file to the project sources
     set(Project_SRCS ${Project_SRCS} ${PluginAutoMocSourceFile} )
     include(${SIMPLib_SOURCE_DIR}/TestFilters/SourceList.cmake)
@@ -168,7 +168,7 @@ include_directories( ${SIMPLib_BINARY_DIR} )
 
 #-- Add a library for the SIMPLib Code
 add_library(${PROJECT_NAME} ${LIB_TYPE} ${Project_SRCS} )
-target_link_libraries(${PROJECT_NAME} H5Support Qt5::Core ${TBB_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} Qt5::Core H5Support ${TBB_LIBRARIES})
 LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} )
 
 set(install_dir "tools")

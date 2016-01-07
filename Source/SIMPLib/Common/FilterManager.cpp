@@ -192,11 +192,11 @@ QSet<QString> FilterManager::getSubGroupNames(const QString& groupName)
 // -----------------------------------------------------------------------------
 IFilterFactory::Pointer FilterManager::getFactoryForFilter(const QString& filterName)
 {
-  FilterManager::Collection::const_iterator item = m_Factories.find(filterName);
-  if(item != m_Factories.end())
-  { return item.value(); }
-  else
-  { return IFilterFactory::NullPointer(); }
+  if(m_Factories.contains(filterName))
+  {
+    return m_Factories[filterName];
+  }
+  return IFilterFactory::NullPointer();
 }
 
 // -----------------------------------------------------------------------------

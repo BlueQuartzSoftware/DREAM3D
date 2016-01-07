@@ -51,7 +51,6 @@ typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Gen
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 
@@ -101,6 +100,20 @@ class SineParamsSegmentFeatures : public SegmentFeatures
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */
     virtual const QString getCompiledLibraryName();
+
+    /**
+     * @brief getBrandingString Returns the branding string for the filter, which is a tag
+     * used to denote the filter's association with specific plugins
+     * @return Branding string
+    */
+    virtual const QString getBrandingString();
+
+    /**
+     * @brief getFilterVersion Returns a version string for this filter. Default
+     * value is an empty string.
+     * @return
+     */
+    virtual const QString getFilterVersion();
 
     /**
      * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -154,7 +167,7 @@ class SineParamsSegmentFeatures : public SegmentFeatures
      */
     void dataCheck();
 
-    virtual int64_t getSeed(int32_t gnum);
+    virtual int64_t getSeed(int32_t gnum, int64_t nextSeed);
     virtual bool determineGrouping(int64_t referencepoint, int64_t neighborpoint, int32_t gnum);
 
   private:
@@ -165,15 +178,11 @@ class SineParamsSegmentFeatures : public SegmentFeatures
     DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
     DEFINE_DATAARRAY_VARIABLE(bool, Active)
 
-    BoolArrayType::Pointer m_BeenPickedPtr;
-    bool* m_BeenPicked;
-
-    ///Boost Random Number generator stuff. We use the boost::shared_ptr to ensure the pointers are cleaned up when the
+    ///Boost Random Number generator stuff. We use the std::shared_ptr to ensure the pointers are cleaned up when the
     ///filter is deleted
-    boost::shared_ptr<NumberDistribution> m_Distribution;
-    boost::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;
-    boost::shared_ptr<Generator> m_NumberGenerator;
-    size_t                       m_TotalRandomNumbersGenerated;
+    std::shared_ptr<NumberDistribution> m_Distribution;
+    std::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;
+    std::shared_ptr<Generator> m_NumberGenerator;
 
     float angleTolerance;
 

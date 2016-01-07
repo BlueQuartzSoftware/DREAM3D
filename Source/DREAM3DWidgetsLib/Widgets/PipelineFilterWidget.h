@@ -58,6 +58,7 @@ class AbstractFilter;
 class QFormLayout;
 class QLabel;
 class QComboBox;
+class IObserver;
 
 /**
  * @class PipelineFilterWidget PipelineFilterWidget.h FilterWidgets/PipelineFilterWidget.h

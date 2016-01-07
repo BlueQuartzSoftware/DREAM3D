@@ -7,6 +7,6 @@ namespace StatisticsConstants
 {
   const QString StatisticsPluginFile("StatisticsPlugin");
   const QString StatisticsPluginDisplayName("Statistics");
-  const QString StatisticsBaseName("StatisticsPlugin");
+  const QString StatisticsBaseName("Statistics");
 }
 #endif

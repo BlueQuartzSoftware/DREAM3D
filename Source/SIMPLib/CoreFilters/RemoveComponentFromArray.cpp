@@ -37,6 +37,7 @@
 #include "RemoveComponentFromArray.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Common/TemplateHelpers.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
@@ -206,9 +207,9 @@ void RemoveComponentFromArray::preflight()
 template<typename T>
 void extractComponent(IDataArray::Pointer inputData, IDataArray::Pointer newData, IDataArray::Pointer reducedData, int compNumber)
 {
-  typename DataArray<T>::Pointer inputArrayPtr = boost::dynamic_pointer_cast<DataArray<T> >(inputData);
-  typename DataArray<T>::Pointer newArrayPtr = boost::dynamic_pointer_cast<DataArray<T> >(newData);
-  typename DataArray<T>::Pointer reducedArrayPtr = boost::dynamic_pointer_cast<DataArray<T> >(reducedData);
+  typename DataArray<T>::Pointer inputArrayPtr = std::dynamic_pointer_cast<DataArray<T> >(inputData);
+  typename DataArray<T>::Pointer newArrayPtr = std::dynamic_pointer_cast<DataArray<T> >(newData);
+  typename DataArray<T>::Pointer reducedArrayPtr = std::dynamic_pointer_cast<DataArray<T> >(reducedData);
 
   if (NULL == inputArrayPtr || NULL == newArrayPtr) { return; }
 
@@ -245,8 +246,8 @@ void extractComponent(IDataArray::Pointer inputData, IDataArray::Pointer newData
 template<typename T>
 void reduceArrayOnly(IDataArray::Pointer inputData, IDataArray::Pointer reducedData, int compNumber)
 {
-  typename DataArray<T>::Pointer inputArrayPtr = boost::dynamic_pointer_cast<DataArray<T> >(inputData);
-  typename DataArray<T>::Pointer reducedArrayPtr = boost::dynamic_pointer_cast<DataArray<T> >(reducedData);
+  typename DataArray<T>::Pointer inputArrayPtr = std::dynamic_pointer_cast<DataArray<T> >(inputData);
+  typename DataArray<T>::Pointer reducedArrayPtr = std::dynamic_pointer_cast<DataArray<T> >(reducedData);
 
   if (NULL == inputArrayPtr) { return; }
 
@@ -314,6 +315,27 @@ AbstractFilter::Pointer RemoveComponentFromArray::newFilterInstance(bool copyFil
 // -----------------------------------------------------------------------------
 const QString RemoveComponentFromArray::getCompiledLibraryName()
 { return Core::CoreBaseName; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RemoveComponentFromArray::getBrandingString()
+{
+  return "SIMPLib Core Filter";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RemoveComponentFromArray::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
+
+
 
 // -----------------------------------------------------------------------------
 //

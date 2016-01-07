@@ -47,6 +47,8 @@
 #include "SIMPLib/Utilities/UnitTestSupport.hpp"
 #include "SIMPLib/Math/QuaternionMath.hpp"
 #include "SIMPLib/Common/AbstractFilter.h"
+#include "SIMPLib/Common/Observer.h"
+#include "SIMPLib/Utilities/QMetaObjectUtilities.h"
 
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"

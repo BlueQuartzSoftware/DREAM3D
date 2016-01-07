@@ -33,13 +33,12 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "CorrelateValuesWithVectorDirection.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
@@ -336,7 +335,7 @@ int CorrelateValuesWithVectorDirection::determineSquareCoordsandBin(float xyz[3]
   }
   if (y < 0) { y = 0; }
   int index = y * m_Dimension + x;
-  BOOST_ASSERT(index < m_Dimension * m_Dimension);
+  Q_ASSERT(index < m_Dimension * m_Dimension);
   return index;
 }
 
@@ -682,6 +681,24 @@ const QString CorrelateValuesWithVectorDirection::getCompiledLibraryName()
   return StatisticsConstants::StatisticsBaseName;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString CorrelateValuesWithVectorDirection::getBrandingString()
+{
+  return "Statistics";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString CorrelateValuesWithVectorDirection::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 
 // -----------------------------------------------------------------------------
 //

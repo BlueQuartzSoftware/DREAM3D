@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "ImportVectorImageStack.h"
 
 #include <string.h>
@@ -45,12 +44,13 @@
 #include <QtGui/QImage>
 #include <QtGui/QImageReader>
 
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "ImageIO/ImageIOConstants.h"
 #include "ImageIO/FilterParameters/ImportVectorImageStackFilterParameter.h"
@@ -184,7 +184,10 @@ void ImportVectorImageStack::dataCheck()
   }
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
-  if(getErrorCondition() < 0) { return; }
+  if (getErrorCondition() < 0 || NULL == m.get()) { return; }
+
+  ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+  m->setGeometry(image);
 
   bool hasMissingFiles = false;
   bool stackLowToHigh = false;
@@ -212,25 +215,39 @@ void ImportVectorImageStack::dataCheck()
     int err = 0;
     QImage image(fileList[0]);
     int64_t dims[3] = {image.width(), image.height(), ((m_EndIndex - m_StartIndex) + 1)};
-    int pixelBytes = 0;
-    //int test = image.format();
-    if (image.format() == QImage::Format_Indexed8)
+    size_t pixelBytes = 0;
+    QImageReader reader((fileList[0]));
+    QImage::Format format = reader.imageFormat();
+    switch(format)
     {
-      pixelBytes = 1;
+      case QImage::Format_Indexed8:
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
+      case QImage::Format_Grayscale8:
+#endif
+        pixelBytes = 1;
+        break;
+      case QImage::Format_RGB32:
+      case QImage::Format_ARGB32:
+        pixelBytes = 4;
+        break;
+      default:
+         pixelBytes = 0;
     }
-    else if (image.format() == QImage::Format_RGB32 || image.format() == QImage::Format_ARGB32)
+
+    if(pixelBytes == 0)
     {
-      pixelBytes = 4;
+      ss = QObject::tr("Image format is of unsupported type (QImage::Format=%1). Imported images must be either grayscale, RGB, or ARGB").arg(format);
+      setErrorCondition(-4400);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
     }
+
     /* Sanity check what we are trying to load to make sure it can fit in our address space.
       * Note that this does not guarantee the user has enough left, just that the
       * size of the volume can fit in the address space of the program
       */
-#if   (CMP_SIZEOF_SSIZE_T==4)
-    int64_t max = std::numeric_limits<size_t>::max();
-#else
     int64_t max = std::numeric_limits<int64_t>::max();
-#endif
+
     if(dims[0] * dims[1] * dims[2] > max)
     {
       err = -1;
@@ -457,8 +474,28 @@ AbstractFilter::Pointer ImportVectorImageStack::newFilterInstance(bool copyFilte
 //
 // -----------------------------------------------------------------------------
 const QString ImportVectorImageStack::getCompiledLibraryName()
-{ return ImageIOConstants::ImageIOBaseName; }
+{
+  return ImageIOConstants::ImageIOBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ImportVectorImageStack::getBrandingString()
+{
+  return "ImageIO";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ImportVectorImageStack::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 
 // -----------------------------------------------------------------------------
 //

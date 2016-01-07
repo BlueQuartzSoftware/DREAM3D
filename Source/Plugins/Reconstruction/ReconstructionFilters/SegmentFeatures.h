@@ -65,6 +65,20 @@ class SegmentFeatures : public AbstractFilter
     virtual const QString getCompiledLibraryName();
 
     /**
+     * @brief getBrandingString Returns the branding string for the filter, which is a tag
+     * used to denote the filter's association with specific plugins
+     * @return Branding string
+    */
+    virtual const QString getBrandingString();
+
+    /**
+     * @brief getFilterVersion Returns a version string for this filter. Default
+     * value is an empty string.
+     * @return
+     */
+    virtual const QString getFilterVersion();
+
+    /**
      * @brief newFilterInstance Reimplemented from @see AbstractFilter class
      */
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
@@ -141,7 +155,7 @@ class SegmentFeatures : public AbstractFilter
      * @param gnum Feature Id to initialize seed
      * @return Integer Seed index
      */
-    virtual int64_t getSeed(int32_t gnum);
+    virtual int64_t getSeed(int32_t gnum, int64_t nextSeed);
 
     /**
      * @brief determineGrouping Determines if a neighbor should be added to the growing seed

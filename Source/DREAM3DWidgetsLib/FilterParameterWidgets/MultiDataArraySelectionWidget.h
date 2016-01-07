@@ -42,10 +42,9 @@
 
 #include "QtSupportLib/FaderWidget.h"
 
-
-#include "SIMPLib/DataContainers/DataArrayPath.h"
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataContainers/DataContainerArrayProxy.h"
-#include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
+
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
@@ -53,8 +52,9 @@
 
 #include "DREAM3DWidgetsLib/ui_MultiDataArraySelectionWidget.h"
 
-class AbstractFilter;
 class FilterParameter;
+class AbstractFilter;
+class MultiDataArraySelectionFilterParameter;
 
 /**
 * @brief
@@ -114,7 +114,7 @@ class DREAM3DWidgetsLib_EXPORT MultiDataArraySelectionWidget : public FilterPara
 
     void on_attributeMatrixCombo_currentIndexChanged(int index);
 
-    void on_attributeArraysWidget_itemChanged(QListWidgetItem* item);
+    void on_attributeArraysSelectWidget_itemChanged(QListWidgetItem* item);
 
 
   protected:
@@ -128,6 +128,8 @@ class DREAM3DWidgetsLib_EXPORT MultiDataArraySelectionWidget : public FilterPara
 
   protected slots:
     void on_selectCheckBox_stateChanged(int state);
+    void on_upBtn_pressed();
+    void on_downBtn_pressed();
 
 
   signals:

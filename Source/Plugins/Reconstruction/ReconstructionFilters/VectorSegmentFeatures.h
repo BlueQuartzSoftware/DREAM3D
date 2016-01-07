@@ -93,6 +93,20 @@ class VectorSegmentFeatures : public SegmentFeatures
     virtual const QString getCompiledLibraryName();
 
     /**
+     * @brief getBrandingString Returns the branding string for the filter, which is a tag
+     * used to denote the filter's association with specific plugins
+     * @return Branding string
+    */
+    virtual const QString getBrandingString();
+
+    /**
+     * @brief getFilterVersion Returns a version string for this filter. Default
+     * value is an empty string.
+     * @return
+     */
+    virtual const QString getFilterVersion();
+
+    /**
      * @brief newFilterInstance Reimplemented from @see AbstractFilter class
      */
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
@@ -147,7 +161,7 @@ class VectorSegmentFeatures : public SegmentFeatures
     /**
      * @brief getSeed Reimplemented from @see SegmentFeatures class
      */
-    virtual int64_t getSeed(int32_t gnum);
+    virtual int64_t getSeed(int32_t gnum, int64_t nextSeed);
 
     /**
      * @brief determineGrouping Reimplemented from @see SegmentFeatures class
@@ -160,13 +174,9 @@ class VectorSegmentFeatures : public SegmentFeatures
     DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
     DEFINE_DATAARRAY_VARIABLE(bool, Active)
 
-    BoolArrayType::Pointer m_BeenPickedPtr;
-    bool* m_BeenPicked;
-
-    boost::shared_ptr<NumberDistribution> m_Distribution;
-    boost::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;
-    boost::shared_ptr<Generator> m_NumberGenerator;
-    size_t                       m_TotalRandomNumbersGenerated;
+    std::shared_ptr<NumberDistribution> m_Distribution;
+    std::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;
+    std::shared_ptr<Generator> m_NumberGenerator;
 
     float angleTolerance;
 

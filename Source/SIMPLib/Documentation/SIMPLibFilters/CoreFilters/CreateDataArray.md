@@ -6,7 +6,7 @@ Core (Generation)
 
 
 ## Description ##
-This **Filter** creates am **Attribute Array** of any primitive type with any number of components along a _single component dimension_. For example, a scalar as (1) or a 3-vector as (3), but _not_ a matrix as (3, 3). The array is initialized to a user define value. The primitive type of the array to create is set using an integer constant. Code listing 1 shows the values:
+This **Filter** creates an **Attribute Array** of any primitive type with any number of components along a _single component dimension_. For example, a scalar as (1) or a 3-vector as (3), but _not_ a matrix as (3, 3). The array is initialized to a user define value. The primitive type of the array to create is set using an integer constant. Code listing 1 shows the values:
 
 ### Primitive Type Enumeration ###
 

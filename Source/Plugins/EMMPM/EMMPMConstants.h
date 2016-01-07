@@ -13,7 +13,7 @@ namespace EMMPMConstants
 {
   const QString EMMPMPluginFile("EMMPMPlugin");
   const QString EMMPMPluginDisplayName("EMMPM");
-  const QString EMMPMBaseName("EMMPMPlugin");
+  const QString EMMPMBaseName("EMMPM");
 }
 
 /**

@@ -1,74 +1,66 @@
 #!/bin/bash
-# This script requires 2 arguments. The root of the DREAM3D_SDK (/Users/Shared/DREAM3D_SDK
-# or /opt/DREAM3D_SDK) and the number of parallel processes to use to compile. This
-# is typically 2x the number of physical cores in the machine.
 
-SDK_INSTALL=$1
+#------------------------------------------------------------------------------
+# Read the configuration file for the SDK Build
+shopt -s extglob
+configfile="SDK_Configuration.conf" # set the actual path name of your (DOS or Unix) config file
+tr -d '\r' < $configfile > $configfile.unix
+while IFS='= ' read lhs rhs
+do
+    if [[ ! $lhs =~ ^\ *# && -n $lhs ]]; then
+        rhs="${rhs%%\#*}"    # Del in line right comments
+        rhs="${rhs%%*( )}"   # Del trailing spaces
+        rhs="${rhs%\"*}"     # Del opening string quotes 
+        rhs="${rhs#\"*}"     # Del closing string quotes 
+        declare $lhs="$rhs"
+    fi
+done < $configfile.unix
+rm $configfile.unix
+#------------------------------------------------------------------------------
+
 
 cd $SDK_INSTALL
-
-PARALLEL_BUILD=$2
-
 
 HOST_SYSTEM=`uname`
 echo "Host System: $HOST_SYSTEM"
 
-WGET=`type -P wget`
-CURL=`type -P curl`
 
-if [[ "$WGET" == "" ]];
-   then
-  if [[ "$CURL" == "" ]];
-     then
-    echo "wget and curl are NOT present on your machine. One of them is needed to download sources from the internet."
-    exit 1
-  fi
-fi
-
-
-DOWNLOAD_PROG=""
-DOWNLOAD_ARGS=""
-
-if [[ "$WGET" != "" ]];
-then
-  DOWNLOAD_PROG=$WGET
-fi
-
-if [[ "$CURL" != "" ]];
-then
-  DOWNLOAD_PROG=$CURL
-  DOWNLOAD_ARGS=""
-fi
-
-
-if [ ! -e "$SDK_INSTALL/boost_1_58_0.tar.gz" ];
+if [ ! -e "$SDK_INSTALL/$BOOST_ARCHIVE_NAME" ];
   then
   echo "-------------------------------------------"
-  echo " Downloading Boost Version boost_1_58_0.tar.gz "
+  echo " Downloading Boost Version $BOOST_VERSION "
   echo "-------------------------------------------"
-  $DOWNLOAD_PROG  "http://iweb.dl.sourceforge.net/project/boost/boost/1.58.0/boost_1_58_0.tar.gz" -o boost_1_58_0.tar.gz
+  $DOWNLOAD_PROG  "$BOOST_DOWNLOAD_SITE/$BOOST_ARCHIVE_NAME" -o $BOOST_ARCHIVE_NAME
 fi
 
 cd $SDK_INSTALL
 
 # Next decompress the archive
-if [ -e "$SDK_INSTALL/boost_1_58_0.tar.gz" ];
+if [ -e "$SDK_INSTALL/$BOOST_ARCHIVE_NAME" ];
 then
-  tar -xvzf boost_1_58_0.tar.gz
-  mv "$SDK_INSTALL/boost_1_58_0" "$SDK_INSTALL/boost_1_58_0_source"
+  tar -xvzf $BOOST_ARCHIVE_NAME
+  mv "$SDK_INSTALL/$BOOST_FOLDER_NAME" "$SDK_INSTALL/${BOOST_FOLDER_NAME}_source"
 fi
 
-cd "$SDK_INSTALL/boost_1_58_0_source"
+CPPSTD=c++11    #c++89, c++99, c++14
+STDLIB=libc++   # libstdc++
+COMPILER=clang++
+PARALLEL_MAKE=$PARALLEL_BUILD   # how many threads to make boost with
+
+
+CXX_FLAGS="-isysroot $OSX_SDK -mmacosx-version-min=$OSX_DEPLOYMENT_TARGET -std=$CPPSTD -stdlib=$STDLIB "
+
+cd "$SDK_INSTALL/${BOOST_FOLDER_NAME}_source"
 ./bootstrap.sh
 ./b2 headers
-./b2 -j$PARALLEL_BUILD --prefix=$SDK_INSTALL/boost-1.58.0  --layout=system --build-dir=x64 --architecture=x86 address-model=64 variant=release link=shared threading=multi runtime-link=shared install
-mkdir -p $SDK_INSTALL/boost-1.58.0/lib/Debug
-mkdir -p $SDK_INSTALL/boost-1.58.0/lib/Release
+./b2 -j$PARALLEL_BUILD --prefix=$SDK_INSTALL/boost-$BOOST_VERSION --layout=system --build-dir=x64 --architecture=x86 address-model=64 variant=release link=shared threading=multi runtime-link=shared cxxflags="$CXX_FLAGS" linkflags="-stdlib=$STDLIB" install
+mkdir -p $SDK_INSTALL/boost-$BOOST_VERSION/lib/Debug
+mkdir -p $SDK_INSTALL/boost-$BOOST_VERSION/lib/Release
 
 
-# http://hivelocity.dl.sourceforge.net/project/boost/boost/1.56.0/boost_1_56_0.tar.gz
+# http://hivelocity.dl.sourceforge.net/project/boost/boost/1.58.0/boost_1_58_0.tar.gz
 
-
+echo "" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "#--------------------------------------------------------------------------------------------------" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "# Boost Library" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
-echo "set(BOOST_ROOT \"\${DREAM3D_SDK_ROOT}/boost-1.58.0\" CACHE PATH \"\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "set(BOOST_ROOT \"\${DREAM3D_SDK_ROOT}/boost-$BOOST_VERSION\" CACHE PATH \"\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"

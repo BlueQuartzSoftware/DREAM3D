@@ -44,13 +44,15 @@
 
 #include "SIMPLib/Common/ComparisonInputs.h"
 
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+
 
 class QAbstractItemDelegate;
 
 /*
  *
  */
-class ComparisonSelectionTableModel : public QAbstractTableModel
+class DREAM3DWidgetsLib_EXPORT ComparisonSelectionTableModel : public QAbstractTableModel
 {
     Q_OBJECT
 

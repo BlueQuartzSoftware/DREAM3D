@@ -36,35 +36,24 @@
 #ifndef _DataContainer_H_
 #define _DataContainer_H_
 
-//-- C++ includes
-#include <vector>
-#include <map>
-#include <sstream>
-#include <list>
+#include <stddef.h>
 
-#include <QtCore/QSet>
+
 #include <QtCore/QString>
 #include <QtCore/QVector>
 #include <QtCore/QMap>
 
-#include "H5Support/QH5Utilities.h"
-#include "H5Support/QH5Lite.h"
-#include "H5Support/HDF5ScopedFileSentinel.h"
-
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Common/Observable.h"
-#include "SIMPLib/Geometry/IGeometry.h"
-#include "SIMPLib/Geometry/ImageGeom.h"
-#include "SIMPLib/Geometry/RectGridGeom.h"
-#include "SIMPLib/Geometry/VertexGeom.h"
-#include "SIMPLib/Geometry/EdgeGeom.h"
-#include "SIMPLib/Geometry/TriangleGeom.h"
-#include "SIMPLib/Geometry/QuadGeom.h"
 #include "SIMPLib/DataContainers/AttributeMatrix.h"
+#include "SIMPLib/Geometry/IGeometry.h"
 #include "SIMPLib/DataContainers/DataContainerArrayProxy.h"
-#include "SIMPLib/DataArrays/DataArray.hpp"
 
+class DataArrayPath;
+class DataContainerArrayProxy;
+class DataContainerProxy;
+class QTextStream;
 
 /**
  * @brief The DataContainer class
@@ -289,11 +278,23 @@ class SIMPLib_EXPORT DataContainer : public Observable
         }
         return attributeMatrix;
       }
+
+      if (attributeMatrixName.contains('/'))
+      {
+        if (filter)
+        {
+          filter->setErrorCondition(-10002);
+          ss = QObject::tr("The AttributeMatrix '%1' has forward slashes in its name").arg(attributeMatrixName);
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+        }
+        return attributeMatrix;
+      }
+
       if (attributeMatrixName.compare(DREAM3D::Geometry::Geometry) == 0)
       {
         if(filter)
         {
-          filter->setErrorCondition(-10001);
+          filter->setErrorCondition(-10003);
           ss = QObject::tr("%1 is a protected name.  Please provide a different name for this Attribute Matrix.").arg(DREAM3D::Geometry::Geometry);
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
@@ -307,7 +308,7 @@ class SIMPLib_EXPORT DataContainer : public Observable
       }
       else if(filter) // If the filter object is NOT null (is valid) then set the error condition and send an error message
       {
-        filter->setErrorCondition(-10002);
+        filter->setErrorCondition(-10004);
         ss = QObject::tr("An Attribute Matrix already exists with the name %1.").arg(attributeMatrixName);
         filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
       }
@@ -321,7 +322,7 @@ class SIMPLib_EXPORT DataContainer : public Observable
     template<typename GeometryType>
     typename GeometryType::Pointer getGeometryAs()
     {
-      typename GeometryType::Pointer geom = boost::dynamic_pointer_cast<GeometryType>(getGeometry());
+      typename GeometryType::Pointer geom = std::dynamic_pointer_cast<GeometryType>(getGeometry());
       return geom;
     }
 

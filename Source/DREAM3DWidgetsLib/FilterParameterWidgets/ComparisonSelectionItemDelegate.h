@@ -46,12 +46,15 @@
 
 
 #include "SIMPLib/Common/Constants.h"
+
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+
 #include "ComparisonSelectionTableModel.h"
 
 class QPainter;
 class QAbstractItemModel;
 
-class ComparisonSelectionItemDelegate : public QStyledItemDelegate
+class DREAM3DWidgetsLib_EXPORT ComparisonSelectionItemDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 

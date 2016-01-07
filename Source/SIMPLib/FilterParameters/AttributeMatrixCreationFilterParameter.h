@@ -36,7 +36,10 @@
 #ifndef _AttributeMatrixCreationFilterParameter_H_
 #define _AttributeMatrixCreationFilterParameter_H_
 
+#include <QtCore/QVector>
+
 #include "SIMPLib/FilterParameters/FilterParameter.h"
+#include "SIMPLib/DataContainers/DataArrayPath.h"
 
 class SIMPLib_EXPORT AttributeMatrixCreationFilterParameter : public FilterParameter
 {

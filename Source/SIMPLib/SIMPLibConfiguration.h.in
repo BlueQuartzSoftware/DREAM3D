@@ -20,6 +20,9 @@
 /* define to 1 if we are building the Test Filters */
 #cmakedefine SIMPLib_BUILD_TEST_FILTERS
 
+/* define to 1 if we are supporting ITK Filters */
+#cmakedefine SIMPLib_USE_ITK
+
 /* Is DREAM.3D going to use QtWebEngine or Send help requests to the users Web Browser */
 #cmakedefine DREAM3D_USE_QtWebEngine
 
@@ -44,14 +47,14 @@
 
 #if (_MSC_VER >= 1)
 
-#pragma warning (error: 4715) /* Not all control points return a value */
-#pragma warning (error: 4258) /* Nested Variable Definitions are ignored */
+  #pragma warning (error: 4715) /* Not all control points return a value */
+  #pragma warning (error: 4258) /* Nested Variable Definitions are ignored */
     #ifdef SIMPLib_DISABLE_MSVC_WARNINGS
-    #pragma warning(disable:4244)
-    #pragma warning(disable:4267)
-    #pragma warning(disable:4305)
-  #endif
+      #pragma warning(disable:4244)
+      #pragma warning(disable:4267)
+      #pragma warning(disable:4305)
+    #endif
 
 #endif
 
-#endif
+#endif /* _SIMPLib_H_ */

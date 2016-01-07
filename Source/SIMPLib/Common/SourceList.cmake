@@ -38,6 +38,7 @@ set(SUBDIR_NAME Common)
 # --------------------------------------------------------------------
 # Any Class that inherits from QObject, either directly or through the heirarchy needs to have its header listed here
 set(SIMPLib_${SUBDIR_NAME}_Moc_HDRS
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/AbstractDecisionFilter.h
   ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/AbstractFilter.h
   ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/ComparisonInputs.h
   ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/DocRequestManager.h
@@ -73,6 +74,7 @@ set(SIMPLib_${SUBDIR_NAME}_HDRS
 
 
 set(SIMPLib_${SUBDIR_NAME}_SRCS
+  ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/AbstractDecisionFilter.cpp
   ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/AbstractFilter.cpp
   ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/AppVersion.cpp
   ${SIMPLib_SOURCE_DIR}/${SUBDIR_NAME}/DocRequestManager.cpp

@@ -595,7 +595,7 @@ namespace Detail
 // -----------------------------------------------------------------------------
 void TrigonalOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatArrayType* xyz001, FloatArrayType* xyz011, FloatArrayType* xyz111)
 {
-  BOOST_ASSERT(false);
+  Q_ASSERT(false);
   size_t nOrientations = eulers->getNumberOfTuples();
 
   // Sanity Check the size of the arrays
@@ -1011,7 +1011,7 @@ DREAM3D::Rgb TrigonalOps::generateMisorientationColor(const QuatF& q, const Quat
 {
   DREAM3D::Rgb rgb = RgbColor::dRgb(0, 0, 0, 0);
 
-  BOOST_ASSERT(false);
+  Q_ASSERT(false);
 
   return rgb;
 }

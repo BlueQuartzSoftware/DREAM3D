@@ -1,4 +1,5 @@
 
+#include "SIMPLib/Geometry/ImageGeom.h"
 //
 //  This code was written under United States Air Force Contract number
 //                           FA8650-07-D-5800
@@ -37,7 +38,6 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
 
 #include "M3CEntireVolume.h"
 

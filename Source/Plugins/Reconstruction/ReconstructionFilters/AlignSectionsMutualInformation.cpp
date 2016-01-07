@@ -34,15 +34,18 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "AlignSectionsMutualInformation.h"
 
+#include <fstream>
+
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/Utilities/SIMPLibRandom.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 
@@ -448,9 +451,9 @@ void AlignSectionsMutualInformation::form_features_sections()
 
   m_FeatureCounts->resize(dims[2]);
   featurecounts = m_FeatureCounts->getPointer(0);
-  
+
   int32_t* miFeatureIds = m_MIFeaturesPtr->getPointer(0);
-  
+
   std::vector<DimType> voxelslist(initialVoxelsListSize, -1);
   DimType neighpoints[4] = { 0, 0, 0, 0 };
   neighpoints[0] = -dims[0];
@@ -580,8 +583,28 @@ AbstractFilter::Pointer AlignSectionsMutualInformation::newFilterInstance(bool c
 //
 // -----------------------------------------------------------------------------
 const QString AlignSectionsMutualInformation::getCompiledLibraryName()
-{ return ReconstructionConstants::ReconstructionBaseName; }
+{
+  return ReconstructionConstants::ReconstructionBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AlignSectionsMutualInformation::getBrandingString()
+{
+  return "Reconstruction";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AlignSectionsMutualInformation::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

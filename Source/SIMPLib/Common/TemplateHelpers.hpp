@@ -35,7 +35,8 @@
 #ifndef _TemplateHelpers_H_
 #define _TemplateHelpers_H_
 
-#include <boost/shared_ptr.hpp>
+//-- C++11 Includes
+#include <memory>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
@@ -98,7 +99,6 @@ namespace TemplateHelpers
   else\
   {\
     observableObj->notifyErrorMessage(#templateName, "The input array was of unsupported type", TemplateHelpers::Errors::UnsupportedType);\
-    return;\
   }
 
 #define EXECUTE_TEMPLATE(observableObj, templateName, inputData, ...)\
@@ -160,7 +160,6 @@ namespace TemplateHelpers
   else\
   {\
     observableObj->notifyErrorMessage(#templateName, "The input array was of unsupported type", TemplateHelpers::Errors::UnsupportedType);\
-    return;\
   }
 
   /**
@@ -186,7 +185,7 @@ namespace TemplateHelpers
       virtual ~CanDynamicCast() {}
       bool operator()(IDataArray::Pointer p)
       {
-        return (boost::dynamic_pointer_cast<T>(p).get() != NULL);
+        return (std::dynamic_pointer_cast<T>(p).get() != NULL);
       }
   };
 
@@ -554,9 +553,13 @@ namespace TemplateHelpers
         {
           retPtr = f->getDataContainerArray()->template getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(f, arrayPath, compDims);
         }
+        else if(CanDynamicCast<BoolArrayType>()(i_data_array) )
+        {
+          retPtr = f->getDataContainerArray()->template getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(f, arrayPath, compDims);
+        }
         else
         {
-          QString ss = QObject::tr("The input array %1 is of unsupported type '%2'. The following types are supported: %3").arg(arrayPath.getDataArrayName()).arg(  retPtr->getTypeAsString()).arg(DREAM3D::TypeNames::SupportedTypeList);
+          QString ss = QObject::tr("The input array %1 is of unsupported type '%2'. The following types are supported: %3").arg(arrayPath.getDataArrayName()).arg(i_data_array->getTypeAsString()).arg(DREAM3D::TypeNames::SupportedTypeList);
           f->setErrorCondition(Errors::UnsupportedType);
           f->notifyErrorMessage(f->getHumanLabel(), ss, f->getErrorCondition());
         }

@@ -34,6 +34,9 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "DataContainerArray.h"
 
+#include "SIMPLib/DataContainers/DataContainerProxy.h"
+#include "SIMPLib/DataContainers/DataContainerArrayProxy.h"
+
 #include "moc_DataContainerArray.cpp"
 
 

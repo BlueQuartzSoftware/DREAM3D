@@ -13,12 +13,15 @@
 
 
 //-- C++
-#include <QtCore/QString>
-#include <QtCore/QtDebug>
 #include <vector>
 
 #include <hdf5.h>
 
+//--Qt Includes
+#include <QtCore/QString>
+#include <QtCore/QtDebug>
+
+//SIMPLib Includes
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Common/Constants.h"
@@ -48,7 +51,7 @@ class SIMPLib_EXPORT IDataArray
      * @code
      *    typedef DataArray<int32_t>  Int32ArrayType;
      *    int32_t* iPtr = IDataArray::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t*>(ptr.get());
-    *     BOOST_ASSERT(NULL != iPtr);
+    *     Q_ASSERT(NULL != iPtr);
      * @endcode
      * @param x The Pointer to IDataArray
      * @return
@@ -172,19 +175,6 @@ class SIMPLib_EXPORT IDataArray
      */
     virtual bool copyData(size_t destTupleOffset, IDataArray::Pointer sourceArray) = 0;
 
-    /**
-     * @brief copyIntoArray Copies all the values this array INTO the target array
-     * @param dest
-     * @return
-     */
-    //virtual bool copyIntoArray(Pointer targetArray) = 0;
-
-    /**
-     * @brief Creates a copy with the given reordering.
-     * @param newOrderMap the vector containing the new position for each index
-     * @return pointer to new data array
-     */
-    virtual IDataArray::Pointer reorderCopy(QVector<size_t> newOrderMap) = 0;
 
     /**
      * @brief Splats the same value c across all values in the Tuple
@@ -295,7 +285,7 @@ class CheckDataArrayType
     virtual ~CheckDataArrayType() {}
     bool operator()(IDataArray::Pointer p)
     {
-      return (boost::dynamic_pointer_cast<T>(p).get() != NULL);
+      return (std::dynamic_pointer_cast<T>(p).get() != NULL);
     }
 };
 

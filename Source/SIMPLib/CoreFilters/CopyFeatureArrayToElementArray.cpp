@@ -37,6 +37,7 @@
 #include "CopyFeatureArrayToElementArray.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Common/TemplateHelpers.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
@@ -172,7 +173,7 @@ IDataArray::Pointer copyData(IDataArray::Pointer inputData, size_t totalPoints, 
 {
   QString cellArrayName = inputData->getName();
 
-  typename DataArray<T>::Pointer feature = boost::dynamic_pointer_cast<DataArray<T> >(inputData);
+  typename DataArray<T>::Pointer feature = std::dynamic_pointer_cast<DataArray<T> >(inputData);
   if (NULL == feature) { return IDataArray::NullPointer();  }
 
   QVector<size_t> cDims = inputData->getComponentDimensions();
@@ -326,6 +327,27 @@ AbstractFilter::Pointer CopyFeatureArrayToElementArray::newFilterInstance(bool c
 // -----------------------------------------------------------------------------
 const QString CopyFeatureArrayToElementArray::getCompiledLibraryName()
 { return Core::CoreBaseName; }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString CopyFeatureArrayToElementArray::getBrandingString()
+{
+  return "SIMPLib Core Filter";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString CopyFeatureArrayToElementArray::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
+
+
 
 // -----------------------------------------------------------------------------
 //

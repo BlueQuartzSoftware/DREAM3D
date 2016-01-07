@@ -111,6 +111,8 @@ void AttributeMatrixCreationWidget::setupGui()
 
   applyChangesBtn->setVisible(false);
 
+  // Do not allow the user to put a forward slash into the attributeMatrixName line edit
+  attributeMatrixName->setValidator(new QRegularExpressionValidator(QRegularExpression("[^/]*"), this));
 
   // Catch when the filter is about to execute the preflight
   connect(getFilter(), SIGNAL(preflightAboutToExecute()),

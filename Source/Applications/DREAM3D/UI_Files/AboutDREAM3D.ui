@@ -126,7 +126,7 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap resource="../../../../Resources/BrandedDREAM3D/branded_splash.qrc">:/DREAM3D@2x.png</pixmap>
+          <pixmap>:/icons/DREAM3D (PNG)/128x128.png</pixmap>
          </property>
          <property name="scaledContents">
           <bool>false</bool>

@@ -50,6 +50,7 @@
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 #include "SIMPLib/VTKUtils/VTKUtil.hpp"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "IO/IOConstants.h"
 
@@ -151,7 +152,7 @@ namespace Detail
 
     typedef DataArray<T> ArrayType;
 
-    typename ArrayType::Pointer array = boost::dynamic_pointer_cast<ArrayType>(iDataPtr);
+    typename ArrayType::Pointer array = std::dynamic_pointer_cast<ArrayType>(iDataPtr);
 
     if(NULL != array.get())
     {
@@ -473,8 +474,28 @@ AbstractFilter::Pointer VtkRectilinearGridWriter::newFilterInstance(bool copyFil
 //
 // -----------------------------------------------------------------------------
 const QString VtkRectilinearGridWriter::getCompiledLibraryName()
-{ return IOConstants::IOBaseName; }
+{
+  return IOConstants::IOBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString VtkRectilinearGridWriter::getBrandingString()
+{
+  return "IO";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString VtkRectilinearGridWriter::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 
 // -----------------------------------------------------------------------------
 //

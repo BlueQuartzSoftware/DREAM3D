@@ -32,21 +32,22 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #ifndef _AbstractFilterParametersReader_H_
 #define _AbstractFilterParametersReader_H_
 
-#include <QtCore/QString>
 #include <set>
+
+#include <QtCore/QString>
+
+// Needed for AxisAngle_t
+#include "EbsdLib/EbsdConstants.h"
+
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Common/ComparisonInputs.h"
 #include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
-#include "SIMPLib/FilterParameters/FloatVec4FilterParameter.h"
-#include "SIMPLib/FilterParameters/Symmetric6x6FilterParameter.h"
 #include "SIMPLib/FilterParameters/SecondOrderPolynomialFilterParameter.h"
 #include "SIMPLib/FilterParameters/ThirdOrderPolynomialFilterParameter.h"
 #include "SIMPLib/FilterParameters/FourthOrderPolynomialFilterParameter.h"
@@ -84,6 +85,7 @@ class SIMPLib_EXPORT AbstractFilterParametersReader
 
     virtual QString readString(const QString name, QString value) = 0;
     virtual QVector<QString> readStrings(const QString name, QVector<QString> value) = 0;
+    virtual QStringList readStringList(const QString name, QStringList value) = 0;
 
     virtual int8_t readValue(const QString name, int8_t value) = 0;
     virtual int16_t readValue(const QString name, int16_t value) = 0;
@@ -110,8 +112,6 @@ class SIMPLib_EXPORT AbstractFilterParametersReader
 
     virtual IntVec3_t readIntVec3(const QString name, IntVec3_t v) = 0;
     virtual FloatVec3_t readFloatVec3(const QString name, FloatVec3_t v) = 0;
-    virtual FloatVec4_t readFloatVec4(const QString name, FloatVec4_t v) = 0;
-    virtual FloatVec21_t readFloatVec21(const QString name, FloatVec21_t v) = 0;
     virtual Float2ndOrderPoly_t readFloat2ndOrderPoly(const QString name, Float2ndOrderPoly_t v) = 0;
     virtual Float3rdOrderPoly_t readFloat3rdOrderPoly(const QString name, Float3rdOrderPoly_t v) = 0;
     virtual Float4thOrderPoly_t readFloat4thOrderPoly(const QString name, Float4thOrderPoly_t v) = 0;

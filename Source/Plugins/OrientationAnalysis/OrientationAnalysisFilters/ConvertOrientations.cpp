@@ -33,18 +33,19 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "ConvertOrientations.h"
 
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
+
+
 #include "OrientationLib/OrientationMath/OrientationConverter.hpp"
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
-
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
 // Include the MOC generated file for this class
@@ -178,7 +179,7 @@ void ConvertOrientations::dataCheck()
   DataArrayPath outputArrayPath = getInputOrientationArrayPath();
   outputArrayPath.setDataArrayName(getOutputOrientationArrayName());
 
-  FloatArrayType::Pointer fArray = boost::dynamic_pointer_cast<FloatArrayType>(iDataArrayPtr);
+  FloatArrayType::Pointer fArray = std::dynamic_pointer_cast<FloatArrayType>(iDataArrayPtr);
   if(NULL != fArray.get())
   {
     QVector<int32_t> componentCounts = OrientationConverter<float>::GetComponentCounts();
@@ -186,7 +187,7 @@ void ConvertOrientations::dataCheck()
     getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, outputArrayPath, 0, outputCDims);
   }
 
-  DoubleArrayType::Pointer dArray = boost::dynamic_pointer_cast<DoubleArrayType>(iDataArrayPtr);
+  DoubleArrayType::Pointer dArray = std::dynamic_pointer_cast<DoubleArrayType>(iDataArrayPtr);
   if(NULL != dArray.get())
   {
     QVector<int32_t> componentCounts = OrientationConverter<double>::GetComponentCounts();
@@ -267,7 +268,7 @@ void ConvertOrientations::execute()
   DataArrayPath outputArrayPath = getInputOrientationArrayPath();
   outputArrayPath.setDataArrayName(getOutputOrientationArrayName());
 
-  FloatArrayType::Pointer fArray = boost::dynamic_pointer_cast<FloatArrayType>(iDataArrayPtr);
+  FloatArrayType::Pointer fArray = std::dynamic_pointer_cast<FloatArrayType>(iDataArrayPtr);
   if(NULL != fArray.get())
   {
     QVector<int32_t> componentCounts = OrientationConverter<float>::GetComponentCounts();
@@ -276,7 +277,7 @@ void ConvertOrientations::execute()
     generateRepresentation<float>(this, fArray, outData);
   }
 
-  DoubleArrayType::Pointer dArray = boost::dynamic_pointer_cast<DoubleArrayType>(iDataArrayPtr);
+  DoubleArrayType::Pointer dArray = std::dynamic_pointer_cast<DoubleArrayType>(iDataArrayPtr);
   if(NULL != dArray.get())
   {
     QVector<int32_t> componentCounts = OrientationConverter<double>::GetComponentCounts();
@@ -306,8 +307,28 @@ AbstractFilter::Pointer ConvertOrientations::newFilterInstance(bool copyFilterPa
 //
 // -----------------------------------------------------------------------------
 const QString ConvertOrientations::getCompiledLibraryName()
-{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
+{
+  return OrientationAnalysisConstants::OrientationAnalysisBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ConvertOrientations::getBrandingString()
+{
+  return "OrientationAnalysis";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ConvertOrientations::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

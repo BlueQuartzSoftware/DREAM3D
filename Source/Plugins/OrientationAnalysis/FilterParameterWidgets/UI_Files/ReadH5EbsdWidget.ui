@@ -10,7 +10,6 @@
     <height>335</height>
    </rect>
   </property>
-
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
     <number>5</number>
@@ -462,7 +461,7 @@ font-size: 10px;
 }</string>
          </property>
          <property name="text">
-          <string>Sample Transformation(Recommended):</string>
+          <string>Sample Transformation (Recommended):</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignJustify|Qt::AlignVCenter</set>

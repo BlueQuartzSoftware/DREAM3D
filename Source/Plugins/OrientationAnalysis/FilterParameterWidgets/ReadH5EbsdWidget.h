@@ -42,6 +42,8 @@
 
 #include <QtWidgets/QFileDialog>
 
+// Needed for AxisAngle_t
+#include "EbsdLib/EbsdConstants.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 

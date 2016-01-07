@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "InsertAtoms.h"
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
@@ -44,9 +43,9 @@
 #endif
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -58,6 +57,8 @@
 #include "SIMPLib/DataArrays/DynamicListArray.hpp"
 
 #include "SIMPLib/Utilities/SIMPLibRandom.h"
+#include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/Geometry/VertexGeom.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 
@@ -459,7 +460,7 @@ void InsertAtoms::execute()
   // be notified of unanticipated behavior ; this cannot be done in the dataCheck since
   // we don't have acces to the data yet
   int32_t numFeaturesIn = static_cast<int32_t>(m_AvgQuatsPtr.lock()->getNumberOfTuples());
-  bool mismatchedFeatures = true;
+  bool mismatchedFeatures = false;
   int32_t largestFeature = 0;
   size_t numTuples = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();
   for (size_t i = 0; i < numTuples; i++)
@@ -543,11 +544,9 @@ void InsertAtoms::execute()
   QVector<int32_t> linkCount(numFeatures, 0);
 
   // fill out lists with number of references to cells
-  typedef boost::shared_array<int32_t> SharedInt32Array_t;
-  SharedInt32Array_t linkLocPtr(new int32_t[numFaces]);
-  int32_t* linkLoc = linkLocPtr.get();
-
-  ::memset(linkLoc, 0, numFaces * sizeof(int32_t));
+  Int32ArrayType::Pointer linkLocPtr = Int32ArrayType::CreateArray(numFaces, "_INTERNAL_USE_ONLY_cell refs");
+  linkLocPtr->initializeWithZeros();
+  int32_t* linkLoc = linkLocPtr->getPointer(0);
 
   // traverse data to determine number of faces belonging to each feature
   for (int64_t i = 0; i < numFaces; i++)
@@ -622,8 +621,28 @@ AbstractFilter::Pointer InsertAtoms::newFilterInstance(bool copyFilterParameters
 //
 // -----------------------------------------------------------------------------
 const QString InsertAtoms::getCompiledLibraryName()
-{ return SyntheticBuildingConstants::SyntheticBuildingBaseName; }
+{
+  return SyntheticBuildingConstants::SyntheticBuildingBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString InsertAtoms::getBrandingString()
+{
+  return "SyntheticBuilding";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString InsertAtoms::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

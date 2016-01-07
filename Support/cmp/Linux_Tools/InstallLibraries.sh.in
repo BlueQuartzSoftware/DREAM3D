@@ -113,6 +113,16 @@ do
     copyLibraries "@QM_QT_INSTALL_PREFIX@/lib"  "$x"
 done
 
+
+#------------------------------------------------------------------------------
+# Qt 5.5 now requires Linux to copy over the  "XcbQpa" shared library that the
+# platform plugin for X-Windows requires (libqxcb.so). This library is NOT defined
+# anywhere in the CMake configuration files that ship with Qt 5.5.1. Therefore
+# we need to manually find the library file and copy it over. Maybe Qt 5.6 will
+# fix that issue.
+XCB_QPA_LIBS="Qt5XcbQpa"
+copyLibraries "@QM_QT_INSTALL_PREFIX@/lib"  "$XCB_QPA_LIBS"
+
 #------------------------------------------------------------------------------
 # Now look for additional Install Scripts that need to be run. This is currently done because
 # adding install rules for a non-target does not seem to work.

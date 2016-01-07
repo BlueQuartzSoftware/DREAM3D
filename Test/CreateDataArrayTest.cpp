@@ -224,7 +224,7 @@ void TestScalarType(AbstractFilter::Pointer filter, DataArrayPath path, int scal
   {
     IDataArray::Pointer testArrayPtr = dca->getDataContainer(DREAM3D::Defaults::DataContainerName)->getAttributeMatrix(path.getAttributeMatrixName())->getAttributeArray(path.getDataArrayName());
     typedef DataArray<T> DataArrayType;
-    typename DataArrayType::Pointer inputArray = boost::dynamic_pointer_cast<DataArrayType>(testArrayPtr);
+    typename DataArrayType::Pointer inputArray = std::dynamic_pointer_cast<DataArrayType>(testArrayPtr);
     DREAM3D_REQUIRE_VALID_POINTER(inputArray.get());
     T* inputArrayPtr = inputArray->getPointer(0); // pointer to the int array created from the filter
     DREAM3D_REQUIRE_EQUAL(inputArrayPtr[0], max)
@@ -253,7 +253,7 @@ void TestScalarType(AbstractFilter::Pointer filter, DataArrayPath path, int scal
   {
     IDataArray::Pointer testArrayPtr = dca->getDataContainer(DREAM3D::Defaults::DataContainerName)->getAttributeMatrix(path.getAttributeMatrixName())->getAttributeArray(path.getDataArrayName());
     typedef DataArray<T> DataArrayType;
-    typename DataArrayType::Pointer inputArray = boost::dynamic_pointer_cast<DataArrayType>(testArrayPtr);
+    typename DataArrayType::Pointer inputArray = std::dynamic_pointer_cast<DataArrayType>(testArrayPtr);
     DREAM3D_REQUIRE_VALID_POINTER(inputArray.get());
     T* inputArrayPtr = inputArray->getPointer(0); // pointer to the int array created from the filter
     DREAM3D_REQUIRE_EQUAL(inputArrayPtr[0], min)

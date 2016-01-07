@@ -42,7 +42,6 @@
 
 #include <QtCore/QString>
 #include <QtCore/QSettings>
-#include <QtCore/QVector>
 #include <QtCore/QRunnable>
 #include <QtCore/QThreadPool>
 #include <QtConcurrent/QtConcurrentRun>
@@ -50,20 +49,8 @@
 #include <QtWidgets/QProgressDialog>
 
 
-//-- Qwt Includes
-#include <qwt.h>
-#include <qwt_plot.h>
-#include <qwt_plot_curve.h>
-#include <qwt_abstract_scale_draw.h>
-#include <qwt_scale_draw.h>
-#include <qwt_plot_canvas.h>
-#include <qwt_plot_marker.h>
-#include <qwt_symbol.h>
-#include <qwt_series_data.h>
-#include <qwt_interval.h>
-#include <qwt_point_3d.h>
-#include <qwt_compat.h>
-#include <qwt_plot_grid.h>
+// Needed for AxisAngle_t and Crystal Symmetry constants
+#include "EbsdLib/EbsdConstants.h"
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
@@ -78,6 +65,11 @@
 #include "StatsGenerator/Presets/PrimaryRolledPreset.h"
 #include "StatsGenerator/Presets/PrimaryRecrystallizedPreset.h"
 
+
+//-- Qwt Includes AFTER SIMPLib Math due to improper defines in qwt_plot_curve.h
+#include <qwt_plot_grid.h>
+#include <qwt_plot_curve.h>
+#include <qwt_plot_marker.h>
 
 #define CHECK_ERROR_ON_WRITE(var, msg)\
   if (err < 0) {\
@@ -338,30 +330,30 @@ QString TransformationPhaseWidget::getComboString()
 // -----------------------------------------------------------------------------
 int TransformationPhaseWidget::gatherSizeDistributionFromGui(float& mu, float& sigma, float& minCutOff, float& maxCutOff, float& stepSize)
 {
+  QLocale loc = QLocale::system();
+
   bool ok = false;
-  mu = m_Mu_SizeDistribution->text().toFloat(&ok);
+  mu = loc.toFloat(m_Mu_SizeDistribution->text(), &ok);
   if (ok == false)
   {
     return 0;
   }
-  sigma = m_Sigma_SizeDistribution->text().toFloat(&ok);
+  sigma = loc.toFloat(m_Sigma_SizeDistribution->text(), &ok);
   if (ok == false)
   {
     return 0;
   }
-  minCutOff = m_MinSigmaCutOff->text().toFloat(&ok);
+  minCutOff = loc.toFloat(m_MinSigmaCutOff->text(), &ok);
   if (ok == false)
   {
     return 0;
   }
-
-  maxCutOff = m_MaxSigmaCutOff->text().toFloat(&ok);
+  maxCutOff = loc.toFloat(m_MaxSigmaCutOff->text(), &ok);
   if (ok == false)
   {
     return 0;
   }
-
-  stepSize = m_BinStepSize->text().toFloat(&ok);
+  stepSize = loc.toFloat(m_BinStepSize->text(), &ok);
   if (ok == false)
   {
     return 0;
@@ -753,9 +745,9 @@ int TransformationPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
 
   // Get pointers
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::CrystalStructures);
-  unsigned int* crystalStructures = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  unsigned int* crystalStructures = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
   iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::PhaseTypes);
-  unsigned int* phaseTypes = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  unsigned int* phaseTypes = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
 
   crystalStructures[m_PhaseIndex] = m_CrystalStructure;
   phaseTypes[m_PhaseIndex] = m_PhaseType;
@@ -823,11 +815,11 @@ void TransformationPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMa
   setPhaseIndex(index);
 
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::CrystalStructures);
-  unsigned int* attributeArray = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  unsigned int* attributeArray = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
   m_CrystalStructure = attributeArray[index];
 
   iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::PhaseTypes);
-  attributeArray = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  attributeArray = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
   m_PhaseType = attributeArray[index];
 
   iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::Statistics);

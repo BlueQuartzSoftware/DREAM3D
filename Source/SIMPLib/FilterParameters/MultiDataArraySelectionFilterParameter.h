@@ -37,6 +37,7 @@
 #define _MultiDataArraySelectionFilterParameter_H_
 
 #include "SIMPLib/FilterParameters/FilterParameter.h"
+#include "SIMPLib/DataContainers/DataArrayPath.h"
 
 class SIMPLib_EXPORT MultiDataArraySelectionFilterParameter : public FilterParameter
 {

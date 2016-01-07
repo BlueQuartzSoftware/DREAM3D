@@ -42,11 +42,10 @@ START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}" "Core Fi
 # List your public filters here
 
 set(_PublicFilters
+	CombineAttributeArrays
+  CombineAttributeMatrices
   ConditionalSetValue
   ConvertData
-  CopyAttributeArray
-  CopyAttributeMatrix
-  CopyDataContainer
   CopyFeatureArrayToElementArray
   CreateAttributeMatrix
   CreateDataContainer
@@ -56,6 +55,7 @@ set(_PublicFilters
   DataContainerReader
   DataContainerWriter
   ExtractComponentAsArray
+  FeatureCountDecision
   LinkFeatureMapToElementArray
   MoveData
   RawBinaryReader
@@ -65,6 +65,7 @@ set(_PublicFilters
   RenameAttributeMatrix
   RenameDataContainer
   ReplaceValueInArray
+  RequiredZThickness
   ScaleVolume
   SetOriginResolutionImageGeom
 )

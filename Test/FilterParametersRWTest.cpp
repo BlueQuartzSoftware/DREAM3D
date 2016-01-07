@@ -373,46 +373,6 @@ int TestJsonWriter()
     DREAM3D_REQUIRE_EQUAL(err, 0)
   }
 
-  // FloatVec4_t write test
-  {
-    FloatVec4_t vec4;
-    vec4.a = FloatVec4Test::A;
-    vec4.b = FloatVec4Test::B;
-    vec4.c = FloatVec4Test::C;
-    vec4.d = FloatVec4Test::D;
-    err = writer->writeValue(FloatVec4Test::Key, vec4);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-  }
-
-  // FloatVec21_t write test
-  {
-    FloatVec21_t vec21;
-    vec21.v11 = FloatVec21Test::Val1;
-    vec21.v12 = FloatVec21Test::Val2;
-    vec21.v13 = FloatVec21Test::Val3;
-    vec21.v14 = FloatVec21Test::Val4;
-    vec21.v15 = FloatVec21Test::Val5;
-    vec21.v16 = FloatVec21Test::Val6;
-    vec21.v22 = FloatVec21Test::Val7;
-    vec21.v23 = FloatVec21Test::Val8;
-    vec21.v24 = FloatVec21Test::Val9;
-    vec21.v25 = FloatVec21Test::Val10;
-    vec21.v26 = FloatVec21Test::Val11;
-    vec21.v33 = FloatVec21Test::Val12;
-    vec21.v34 = FloatVec21Test::Val13;
-    vec21.v35 = FloatVec21Test::Val14;
-    vec21.v36 = FloatVec21Test::Val15;
-    vec21.v44 = FloatVec21Test::Val16;
-    vec21.v45 = FloatVec21Test::Val17;
-    vec21.v46 = FloatVec21Test::Val18;
-    vec21.v55 = FloatVec21Test::Val19;
-    vec21.v56 = FloatVec21Test::Val20;
-    vec21.v66 = FloatVec21Test::Val21;
-
-    err = writer->writeValue(FloatVec21Test::Key, vec21);
-    DREAM3D_REQUIRE_EQUAL(err, 0)
-  }
-
   // Float2ndOrderPoly_t write test
   {
     Float2ndOrderPoly_t poly;
@@ -664,41 +624,6 @@ int TestJsonReader()
     DREAM3D_REQUIRE_EQUAL(floatvec3.x, FloatVec3Test::X)
     DREAM3D_REQUIRE_EQUAL(floatvec3.y, FloatVec3Test::Y)
     DREAM3D_REQUIRE_EQUAL(floatvec3.z, FloatVec3Test::Z)
-  }
-
-  // FloatVec4_t read test
-  {
-    FloatVec4_t floatvec4 = reader->readFloatVec4(FloatVec4Test::Key, FloatVec4_t());
-    DREAM3D_REQUIRE_EQUAL(floatvec4.a, FloatVec4Test::A)
-    DREAM3D_REQUIRE_EQUAL(floatvec4.b, FloatVec4Test::B)
-    DREAM3D_REQUIRE_EQUAL(floatvec4.c, FloatVec4Test::C)
-    DREAM3D_REQUIRE_EQUAL(floatvec4.d, FloatVec4Test::D)
-  }
-
-  // FloatVec21_t read test
-  {
-    FloatVec21_t floatvec21 = reader->readFloatVec21(FloatVec21Test::Key, FloatVec21_t());
-    DREAM3D_REQUIRE_EQUAL(floatvec21.v11, FloatVec21Test::Val1)
-    DREAM3D_REQUIRE_EQUAL(floatvec21.v12, FloatVec21Test::Val2)
-    DREAM3D_REQUIRE_EQUAL(floatvec21.v13, FloatVec21Test::Val3)
-    DREAM3D_REQUIRE_EQUAL(floatvec21.v14, FloatVec21Test::Val4)
-    DREAM3D_REQUIRE_EQUAL(floatvec21.v15, FloatVec21Test::Val5)
-    DREAM3D_REQUIRE_EQUAL(floatvec21.v16, FloatVec21Test::Val6)
-    DREAM3D_REQUIRE_EQUAL(floatvec21.v22, FloatVec21Test::Val7)
-    DREAM3D_REQUIRE_EQUAL(floatvec21.v23, FloatVec21Test::Val8)
-    DREAM3D_REQUIRE_EQUAL(floatvec21.v24, FloatVec21Test::Val9)
-    DREAM3D_REQUIRE_EQUAL(floatvec21.v25, FloatVec21Test::Val10)
-    DREAM3D_REQUIRE_EQUAL(floatvec21.v26, FloatVec21Test::Val11)
-    DREAM3D_REQUIRE_EQUAL(floatvec21.v33, FloatVec21Test::Val12)
-    DREAM3D_REQUIRE_EQUAL(floatvec21.v34, FloatVec21Test::Val13)
-    DREAM3D_REQUIRE_EQUAL(floatvec21.v35, FloatVec21Test::Val14)
-    DREAM3D_REQUIRE_EQUAL(floatvec21.v36, FloatVec21Test::Val15)
-    DREAM3D_REQUIRE_EQUAL(floatvec21.v44, FloatVec21Test::Val16)
-    DREAM3D_REQUIRE_EQUAL(floatvec21.v45, FloatVec21Test::Val17)
-    DREAM3D_REQUIRE_EQUAL(floatvec21.v46, FloatVec21Test::Val18)
-    DREAM3D_REQUIRE_EQUAL(floatvec21.v55, FloatVec21Test::Val19)
-    DREAM3D_REQUIRE_EQUAL(floatvec21.v56, FloatVec21Test::Val20)
-    DREAM3D_REQUIRE_EQUAL(floatvec21.v66, FloatVec21Test::Val21)
   }
 
   // Float2ndOrderPoly_t read test

@@ -97,6 +97,20 @@ class IdentifyMicroTextureRegions : public AbstractFilter
     virtual const QString getCompiledLibraryName();
 
     /**
+     * @brief getBrandingString Returns the branding string for the filter, which is a tag
+     * used to denote the filter's association with specific plugins
+     * @return Branding string
+    */
+    virtual const QString getBrandingString();
+
+    /**
+     * @brief getFilterVersion Returns a version string for this filter. Default
+     * value is an empty string.
+     * @return
+     */
+    virtual const QString getFilterVersion();
+
+    /**
      * @brief newFilterInstance Reimplemented from @see AbstractFilter class
      */
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
@@ -185,9 +199,9 @@ class IdentifyMicroTextureRegions : public AbstractFilter
     DEFINE_DATAARRAY_VARIABLE(int32_t, PatchIds)
     DEFINE_DATAARRAY_VARIABLE(bool, PatchActive)
 
-    boost::shared_ptr<NumberDistribution> m_Distribution;
-    boost::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;
-    boost::shared_ptr<Generator> m_NumberGenerator;
+    std::shared_ptr<NumberDistribution> m_Distribution;
+    std::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;
+    std::shared_ptr<Generator> m_NumberGenerator;
     size_t                       m_TotalRandomNumbersGenerated;
 
     float caxisTolerance;

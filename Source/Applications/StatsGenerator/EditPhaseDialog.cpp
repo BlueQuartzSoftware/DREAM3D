@@ -86,7 +86,8 @@ unsigned int EditPhaseDialog::getCrystalStructure()
 float EditPhaseDialog::getPhaseFraction()
 {
   bool ok = false;
-  float d = phaseFraction->text().toFloat(&ok);
+  QLocale loc = QLocale::system();
+  float d = loc.toFloat(phaseFraction->text(), &ok);
   if (ok) { return d; }
   return -1.0;
 }
@@ -105,7 +106,8 @@ void EditPhaseDialog::setPhaseFraction(float d)
 float EditPhaseDialog::getPptFraction()
 {
   bool ok = false;
-  float d = pptFraction->text().toFloat(&ok);
+  QLocale loc = QLocale::system();
+  float d = loc.toFloat(pptFraction->text(), &ok);
   if (ok) { return d; }
   return -1.0;
 }
@@ -124,7 +126,7 @@ void EditPhaseDialog::setPptFraction(float d)
 unsigned int EditPhaseDialog::getParentPhase()
 {
   bool ok = false;
-  unsigned int d = ParentPhase->text().toInt(&ok);
+  unsigned int d = ParentPhase->text().toUInt(&ok);
   if (ok) { return d; }
   return 0;
 }
@@ -165,9 +167,14 @@ unsigned int EditPhaseDialog::getPhaseType()
 // -----------------------------------------------------------------------------
 void EditPhaseDialog::setupGui()
 {
+  QLocale loc = QLocale::system();
+
   m_PhaseFractionValidator = new QDoubleValidator(phaseFraction);
+  m_PhaseFractionValidator->setLocale(loc);
   m_ParentPhaseValidator = new QDoubleValidator(ParentPhase);
+  m_ParentPhaseValidator->setLocale(loc);
   m_PptFractionValidator = new QDoubleValidator(pptFraction);
+  m_PptFractionValidator->setLocale(loc);
   m_PptFractionValidator->setBottom(0.0);
   m_PptFractionValidator->setTop(1.0);
   m_PptFractionValidator->setDecimals(6);
@@ -188,7 +195,8 @@ void EditPhaseDialog::setupGui()
 void EditPhaseDialog::on_phaseFraction_textChanged(const QString& string)
 {
   bool ok = false;
-  float d = phaseFraction->text().toFloat(&ok);
+  QLocale loc = QLocale::system();
+  float d = loc.toFloat(phaseFraction->text(), &ok);
   if (ok)
   {
     float total = d + m_OtherPhaseFractions;

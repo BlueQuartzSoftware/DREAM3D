@@ -45,6 +45,7 @@
 #include "SIMPLib/Common/FilterPipeline.h"
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "SIMPLib/DataContainers/DataContainerArrayProxy.h"
 
 
 /**
@@ -74,17 +75,27 @@ class SIMPLib_EXPORT JsonFilterParametersWriter : public AbstractFilterParameter
     * function <b>WITHOUT WARNING</b>
     * @param pipeline The pipeline to be written
     * @param filePath The file path to write
-    * @param name The name of the pipeline (Typically the name of the file)
+    * @param pipelineName The name of the pipeline (Typically the name of the file)
     * @param obs Any observer that we can pass error/warning messages back to in case something goes wrong.
     * @return
     */
-    static int WritePipelineToFile(FilterPipeline::Pointer pipeline, QString filePath, QString name, IObserver* obs = NULL);
+    static int WritePipelineToFile(FilterPipeline::Pointer pipeline, QString filePath, QString pipelineName, IObserver* obs = NULL);
+
+    /**
+    * @brief WritePipelineToString This function will write a pipeline to a QString.
+    * @param pipeline The pipeline to be written
+    * @param pipelineName The name of the pipeline (Typically the name of the file)
+    * @param obs Any observer that we can pass error/warning messages back to in case something goes wrong.
+    * @return The pipeline as a QString
+    */
+    static QString WritePipelineToString(FilterPipeline::Pointer pipeline, QString pipelineName, IObserver* obs = NULL);
 
     virtual int openFilterGroup(AbstractFilter* filter, int index);
     virtual int closeFilterGroup();
 
     virtual int writeValue(const QString name, const QString value);
     virtual int writeValue(const QString name, const QVector<QString> value);
+    virtual int writeValue(const QString name, const QStringList value);
 
     virtual int writeValue(const QString name, int8_t value);
     virtual int writeValue(const QString name, int16_t value);
@@ -110,8 +121,7 @@ class SIMPLib_EXPORT JsonFilterParametersWriter : public AbstractFilterParameter
 
     virtual int writeValue(const QString name, IntVec3_t v);
     virtual int writeValue(const QString name, FloatVec3_t v);
-    virtual int writeValue(const QString name, FloatVec4_t v);
-    virtual int writeValue(const QString name, FloatVec21_t v);
+
     virtual int writeValue(const QString name, Float2ndOrderPoly_t v);
     virtual int writeValue(const QString name, Float3rdOrderPoly_t v);
     virtual int writeValue(const QString name, Float4thOrderPoly_t v);
@@ -139,6 +149,9 @@ class SIMPLib_EXPORT JsonFilterParametersWriter : public AbstractFilterParameter
     QJsonObject m_Root;
     QJsonObject m_CurrentFilterIndex;
     int         m_CurrentIndex;
+
+    static JsonFilterParametersWriter::Pointer CreateAndPopulateWriter(FilterPipeline::Pointer pipeline, QString pipelineName, IObserver* obs);
+    QJsonDocument toDocument();
 
     JsonFilterParametersWriter(const JsonFilterParametersWriter&); // Copy Constructor Not Implemented
     void operator=(const JsonFilterParametersWriter&); // Operator '=' Not Implemented

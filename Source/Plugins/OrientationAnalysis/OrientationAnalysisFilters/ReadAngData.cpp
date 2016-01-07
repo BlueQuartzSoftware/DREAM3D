@@ -38,13 +38,13 @@
 #include <QtCore/QFileInfo>
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
-
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "EbsdLib/TSL/AngFields.h"
 
@@ -208,7 +208,7 @@ void ReadAngData::dataCheck()
     QVector<QString> names;
     if (ext.compare(Ebsd::Ang::FileExt) == 0)
     {
-      boost::shared_ptr<AngReader> reader(new AngReader());
+      std::shared_ptr<AngReader> reader(new AngReader());
       readDataFile(reader.get(), m, tDims, ANG_HEADER_ONLY);
       if (getErrorCondition() < 0)
       {
@@ -557,7 +557,7 @@ void ReadAngData::execute()
   dataCheck();
   if (getErrorCondition() < 0) { return; }
 
-  boost::shared_ptr<AngReader> reader(new AngReader());
+  std::shared_ptr<AngReader> reader(new AngReader());
   QVector<size_t> tDims(3, 0);
   QVector<size_t> cDims(1, 1);
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
@@ -605,8 +605,28 @@ AbstractFilter::Pointer ReadAngData::newFilterInstance(bool copyFilterParameters
 //
 // -----------------------------------------------------------------------------
 const QString ReadAngData::getCompiledLibraryName()
-{ return OrientationAnalysisConstants::OrientationAnalysisBaseName; }
+{
+  return OrientationAnalysisConstants::OrientationAnalysisBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ReadAngData::getBrandingString()
+{
+  return "OrientationAnalysis";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ReadAngData::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

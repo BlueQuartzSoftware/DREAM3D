@@ -36,6 +36,7 @@
 #include "EmptyFilter.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/UnknownFilterParameter.h"
@@ -157,6 +158,25 @@ AbstractFilter::Pointer EmptyFilter::newFilterInstance(bool copyFilterParameters
 const QString EmptyFilter::getCompiledLibraryName()
 {
   return Core::CoreBaseName;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EmptyFilter::getBrandingString()
+{
+  return "SIMPLib Core Filter";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EmptyFilter::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
 }
 
 // -----------------------------------------------------------------------------

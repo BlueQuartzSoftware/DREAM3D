@@ -36,10 +36,8 @@
 #ifndef _DynamicListArray_H_
 #define _DynamicListArray_H_
 
-#include <QtCore/QString>
-#include <vector>
 
-#include <boost/shared_array.hpp>
+#include <vector>
 
 //-- DREAM3D Includes
 #include "SIMPLib/SIMPLib.h"

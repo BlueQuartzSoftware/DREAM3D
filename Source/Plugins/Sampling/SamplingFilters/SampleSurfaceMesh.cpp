@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "SampleSurfaceMesh.h"
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
@@ -44,14 +43,16 @@
 #endif
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Math/GeometryMath.h"
 #include "SIMPLib/DataArrays/DynamicListArray.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-
 #include "SIMPLib/Utilities/SIMPLibRandom.h"
+#include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/Geometry/VertexGeom.h"
 
 #include "Sampling/SamplingConstants.h"
 
@@ -273,11 +274,9 @@ void SampleSurfaceMesh::execute()
   std::vector<int32_t> linkCount(numFeatures, 0);
 
   // fill out lists with number of references to cells
-  typedef boost::shared_array<int32_t> SharedInt32Array_t;
-  SharedInt32Array_t linkLocPtr(new int32_t[numFaces]);
-  int32_t* linkLoc = linkLocPtr.get();
-
-  ::memset(linkLoc, 0, numFaces * sizeof(int32_t));
+  Int32ArrayType::Pointer linkLocPtr = Int32ArrayType::CreateArray(numFaces, "_INTERNAL_USE_ONLY_cell refs");
+  linkLocPtr->initializeWithZeros();
+  int32_t* linkLoc = linkLocPtr->getPointer(0);
 
   // traverse data to determine number of faces belonging to each feature
   for (int64_t i = 0; i < numFaces; i++)
@@ -350,8 +349,28 @@ AbstractFilter::Pointer SampleSurfaceMesh::newFilterInstance(bool copyFilterPara
 //
 // -----------------------------------------------------------------------------
 const QString SampleSurfaceMesh::getCompiledLibraryName()
-{ return SamplingConstants::SamplingBaseName; }
+{
+  return SamplingConstants::SamplingBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString SampleSurfaceMesh::getBrandingString()
+{
+  return "Sampling";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString SampleSurfaceMesh::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

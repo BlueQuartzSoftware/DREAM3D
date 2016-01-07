@@ -45,7 +45,7 @@ namespace IOConstants
 {
   const QString IOPluginFile("IOPlugin");
   const QString IOPluginDisplayName("IO");
-  const QString IOBaseName("IOPlugin");
+  const QString IOBaseName("IO");
 }
 
 /**

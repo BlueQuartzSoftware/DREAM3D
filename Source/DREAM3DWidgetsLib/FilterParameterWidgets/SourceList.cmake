@@ -15,6 +15,7 @@ set(DREAM3D_PARAMETER_WIDGETS
     DataArraySelectionWidget
     DataBundleSelectionWidget
     DataContainerArrayProxyWidget
+    DataContainerCreationWidget
     DataContainerReaderWidget
     DataContainerSelectionWidget
     DoubleWidget
@@ -22,7 +23,6 @@ set(DREAM3D_PARAMETER_WIDGETS
     DynamicTableWidget
     FileListInfoWidget
     FloatVec3Widget
-    FloatVec4Widget
     FourthOrderPolynomialWidget
     InputFileWidget
     InputPathWidget
@@ -36,7 +36,6 @@ set(DREAM3D_PARAMETER_WIDGETS
     SecondOrderPolynomialWidget
     SeparatorWidget
     StringWidget
-    Symmetric6x6Widget
     ThirdOrderPolynomialWidget
 )
 
@@ -44,7 +43,6 @@ set(DREAM3D_PARAMETER_WIDGETS_NO_CODEGEN
       PhaseTypeSelectionWidget
       ShapeTypeSelectionWidget
       UnknownWidget
-      VolumeDataContainerInfoWidget
 )
 
 set(REGISTER_KNOWN_WIDGETS ${DREAM3DWidgetsLib_BINARY_DIR}/FilterWidgetManager_RegisterWidgets_tmp.cpp)

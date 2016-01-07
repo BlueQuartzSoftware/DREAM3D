@@ -33,20 +33,20 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include "ScalarSegmentFeatures.h"
 
 #include <QtCore/QDateTime>
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 
@@ -174,8 +174,6 @@ ScalarSegmentFeatures::ScalarSegmentFeatures() :
   m_FeatureIds(NULL),
   m_Active(NULL)
 {
-  m_BeenPicked = NULL;
-
   setupFilterParameters();
 }
 
@@ -377,28 +375,26 @@ void ScalarSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, int64_t tot
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int64_t ScalarSegmentFeatures::getSeed(int32_t gnum)
+int64_t ScalarSegmentFeatures::getSeed(int32_t gnum, int64_t nextSeed)
 {
   setErrorCondition(0);
-
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   int64_t seed = -1;
-  Generator& numberGenerator = *m_NumberGenerator;
-  while (seed == -1 && m_TotalRandomNumbersGenerated < totalPoints)
+  // start with the next voxel after the last seed
+  size_t randpoint = static_cast<size_t>(nextSeed)+1;
+  while (seed == -1 && randpoint < totalPoints)
   {
-    // Get the next voxel index in the precomputed list of voxel seeds
-    int64_t randpoint = numberGenerator();
-    if (m_BeenPicked[randpoint] == false) { m_TotalRandomNumbersGenerated++; } // Increment this counter
-    m_BeenPicked[randpoint] = true;
     if (m_FeatureIds[randpoint] == 0) // If the GrainId of the voxel is ZERO then we can use this as a seed point
     {
       if (m_UseGoodVoxels == false || m_GoodVoxels[randpoint] == true)
       {
         seed = randpoint;
       }
+      else { randpoint += 1; }
     }
+    else { randpoint += 1; }
   }
   if (seed >= 0)
   {
@@ -432,11 +428,10 @@ bool ScalarSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t ne
 // -----------------------------------------------------------------------------
 void ScalarSegmentFeatures::initializeVoxelSeedGenerator(const int64_t rangeMin, const int64_t rangeMax)
 {
-  m_Distribution = boost::shared_ptr<NumberDistribution>(new NumberDistribution(rangeMin, rangeMax));
-  m_RandomNumberGenerator = boost::shared_ptr<RandomNumberGenerator>(new RandomNumberGenerator);
-  m_NumberGenerator = boost::shared_ptr<Generator>(new Generator(*m_RandomNumberGenerator, *m_Distribution));
+  m_Distribution = std::shared_ptr<NumberDistribution>(new NumberDistribution(rangeMin, rangeMax));
+  m_RandomNumberGenerator = std::shared_ptr<RandomNumberGenerator>(new RandomNumberGenerator);
+  m_NumberGenerator = std::shared_ptr<Generator>(new Generator(*m_RandomNumberGenerator, *m_Distribution));
   m_RandomNumberGenerator->seed(static_cast<size_t>( QDateTime::currentMSecsSinceEpoch() )); // seed with the current time
-  m_TotalRandomNumbersGenerated = 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -457,58 +452,54 @@ void ScalarSegmentFeatures::execute()
   int64_t totalPoints = static_cast<int64_t>(m_FeatureIdsPtr.lock()->getNumberOfTuples());
   int64_t inDataPoints = static_cast<int64_t>(m_InputDataPtr.lock()->getNumberOfTuples());
 
-  m_BeenPickedPtr = BoolArrayType::CreateArray(totalPoints, "BeenPicked INTERNAL ARRAY ONLY");
-  m_BeenPickedPtr->initializeWithValue(0);
-  m_BeenPicked = m_BeenPickedPtr->getPointer(0);
-
   QString dType = m_InputDataPtr.lock()->getTypeAsString();
   if (m_InputDataPtr.lock()->getNumberOfComponents() != 1)
   {
-    m_Compare = boost::shared_ptr<CompareFunctor>(new CompareFunctor()); // The default CompareFunctor which ALWAYS returns false for the comparison
+    m_Compare = std::shared_ptr<CompareFunctor>(new CompareFunctor()); // The default CompareFunctor which ALWAYS returns false for the comparison
   }
   else if (dType.compare("int8_t") == 0)
   {
-    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<int8_t> >(new TSpecificCompareFunctor<int8_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<int8_t> >(new TSpecificCompareFunctor<int8_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
   else if (dType.compare("uint8_t") == 0)
   {
-    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<uint8_t> >(new TSpecificCompareFunctor<uint8_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<uint8_t> >(new TSpecificCompareFunctor<uint8_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
   else if (dType.compare("bool") == 0)
   {
-    m_Compare = boost::shared_ptr<TSpecificCompareFunctorBool>(new TSpecificCompareFunctorBool(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctorBool>(new TSpecificCompareFunctorBool(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
   else if (dType.compare("int16_t") == 0)
   {
-    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<int16_t> >(new TSpecificCompareFunctor<int16_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<int16_t> >(new TSpecificCompareFunctor<int16_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
   else if (dType.compare("uint16_t") == 0)
   {
-    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<uint16_t> >(new TSpecificCompareFunctor<uint16_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<uint16_t> >(new TSpecificCompareFunctor<uint16_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
   else if (dType.compare("int32_t") == 0)
   {
-    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<int32_t> >(new TSpecificCompareFunctor<int32_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<int32_t> >(new TSpecificCompareFunctor<int32_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
   else if (dType.compare("uint32_t") == 0)
   {
-    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<uint32_t> >(new TSpecificCompareFunctor<uint32_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<uint32_t> >(new TSpecificCompareFunctor<uint32_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
   else if (dType.compare("int64_t") == 0)
   {
-    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<int64_t> >(new TSpecificCompareFunctor<int64_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<int64_t> >(new TSpecificCompareFunctor<int64_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
   else if (dType.compare("uint64_t") == 0)
   {
-    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<uint64_t> >(new TSpecificCompareFunctor<uint64_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<uint64_t> >(new TSpecificCompareFunctor<uint64_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
   else if (dType.compare("float") == 0)
   {
-    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<float> >(new TSpecificCompareFunctor<float>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<float> >(new TSpecificCompareFunctor<float>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
   else if (dType.compare("double") == 0)
   {
-    m_Compare = boost::shared_ptr<TSpecificCompareFunctor<double> >(new TSpecificCompareFunctor<double>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<double> >(new TSpecificCompareFunctor<double>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
   }
 
   // Generate the random voxel indices that will be used for the seed points to start a new grain growth/agglomeration
@@ -554,8 +545,28 @@ AbstractFilter::Pointer ScalarSegmentFeatures::newFilterInstance(bool copyFilter
 //
 // -----------------------------------------------------------------------------
 const QString ScalarSegmentFeatures::getCompiledLibraryName()
-{ return ReconstructionConstants::ReconstructionBaseName; }
+{
+  return ReconstructionConstants::ReconstructionBaseName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ScalarSegmentFeatures::getBrandingString()
+{
+  return "Reconstruction";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ScalarSegmentFeatures::getFilterVersion()
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  SIMPLib::Version::Major() << "." << SIMPLib::Version::Minor() << "." << SIMPLib::Version::Patch();
+  return version;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

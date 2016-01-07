@@ -39,7 +39,6 @@
 
 
 #include <QtCore/QObject>
-#include <QtCore/QVector>
 #include <QtCore/QString>
 
 #include "SIMPLib/SIMPLib.h"

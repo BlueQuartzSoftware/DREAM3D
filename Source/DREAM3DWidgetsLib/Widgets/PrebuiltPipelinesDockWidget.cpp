@@ -300,6 +300,11 @@ QString PrebuiltPipelinesDockWidget::generateHtmlFilterListFromPipelineFile(QStr
   QString dVers;
   FilterPipeline::Pointer pipeline;
 
+  QString html;
+  QTextStream ss(&html);
+  ss << "<html><head></head>\n";
+  ss << "<body>\n";
+
   QFileInfo fi(path);
   if(fi.suffix().compare("ini") == 0)
   {
@@ -321,14 +326,16 @@ QString PrebuiltPipelinesDockWidget::generateHtmlFilterListFromPipelineFile(QStr
   else if (fi.suffix().compare("json") == 0)
   {
     pipeline = JsonFilterParametersReader::ReadPipelineFromFile(path, NULL);
+    if (pipeline.get() == NULL)
+    {
+      ss << "<b>Unkonwn Pipeline File format for file " << path << "</b>";
+      ss << "</tbody></table>\n";
+      ss << "</body></html>";
+      return html;
+    }
     JsonFilterParametersReader::ReadNameOfPipelineFromFile(path, name, dVers, NULL);
     filterCount = pipeline->getFilterContainer().size();
   }
-
-  QString html;
-  QTextStream ss(&html);
-  ss << "<html><head></head>\n";
-  ss << "<body>\n";
 
   // A table for the summary items
   ss << "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n";
@@ -422,10 +429,10 @@ void PrebuiltPipelinesDockWidget::readSettings(QMainWindow* main, DREAM3DSetting
 {
   main->restoreDockWidget(this);
 
-  bool b = prefs.value(objectName(), false).toBool();
+  bool b = prefs.value(objectName(), QVariant(false)).toBool();
   setHidden(b);
 
-  QByteArray headerState = prefs.value("PrebuiltsHeaderState", QByteArray()).toByteArray();
+  QByteArray headerState = prefs.value("PrebuiltsHeaderState", QByteArray());
   prebuiltsLibraryTree->header()->restoreState(headerState);
 
   prefs.beginGroup("Prebuilts Expansion Metadata");
@@ -436,7 +443,7 @@ void PrebuiltPipelinesDockWidget::readSettings(QMainWindow* main, DREAM3DSetting
     QTreeWidgetItem* item = *iter;
     if (item->type() == FilterLibraryTreeWidget::Node_Item_Type)
     {
-      item->setExpanded(prefs.value(item->text(0), false).toBool());
+      item->setExpanded(prefs.value(item->text(0), QVariant(false)).toBool());
     }
 
     ++iter;

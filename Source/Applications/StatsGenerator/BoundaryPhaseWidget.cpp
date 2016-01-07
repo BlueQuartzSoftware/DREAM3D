@@ -41,36 +41,22 @@
 
 #include <QtCore/QString>
 #include <QtCore/QSettings>
-#include <QtCore/QVector>
-#include <QtCore/QRunnable>
-#include <QtCore/QThreadPool>
-#include <QtConcurrent/QtConcurrentRun>
 #include <QtWidgets/QMessageBox>
 
+// Needed for AxisAngle_t and Crystal Symmetry constants
+#include "EbsdLib/EbsdConstants.h"
 
-//-- Qwt Includes
-#include <qwt.h>
-#include <qwt_plot.h>
-#include <qwt_plot_grid.h>
-#include <qwt_series_data.h>
-#include <qwt_interval.h>
-#include <qwt_point_3d.h>
-#include <qwt_compat.h>
-#include <qwt_painter.h>
-#include <qwt_scale_map.h>
-#include <qwt_plot_zoomer.h>
-#include <qwt_plot_panner.h>
-#include <qwt_plot_curve.h>
-#include <qwt_plot_marker.h>
-
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/StatsData/StatsData.h"
 #include "SIMPLib/StatsData/BoundaryStatsData.h"
 
-#include "OrientationLib/Texture/StatsGen.hpp"
+//-- Qwt Includes AFTER SIMPLib Math due to improper defines in qwt_plot_curve.h
+#include <qwt_plot_grid.h>
+#include <qwt_plot_curve.h>
+#include <qwt_plot_marker.h>
 
 
 #define CHECK_ERROR_ON_WRITE(var, msg)\
@@ -164,9 +150,9 @@ int BoundaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
 
   // Get pointers
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::CrystalStructures);
-  unsigned int* crystalStructures = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  unsigned int* crystalStructures = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
   iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::PhaseTypes);
-  unsigned int* phaseTypes = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  unsigned int* phaseTypes = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
 
   crystalStructures[m_PhaseIndex] = m_CrystalStructure;
   phaseTypes[m_PhaseIndex] = m_PhaseType;
@@ -191,11 +177,11 @@ void BoundaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int
   setPhaseIndex(index);
 
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::CrystalStructures);
-  unsigned int* attributeArray = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  unsigned int* attributeArray = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
   m_CrystalStructure = attributeArray[index];
 
   iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::PhaseTypes);
-  attributeArray = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  attributeArray = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
   m_PhaseType = attributeArray[index];
 
   iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::Statistics);

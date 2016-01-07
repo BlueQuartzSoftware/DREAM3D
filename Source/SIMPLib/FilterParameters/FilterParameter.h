@@ -37,18 +37,12 @@
 #ifndef _FilterParameter_H_
 #define _FilterParameter_H_
 
-#include <QtCore/QMetaType>
 #include <QtCore/QVector>
-#include <QtCore/QJsonObject>
-
-#include "EbsdLib/EbsdConstants.h"
+#include <QtCore/QVariant>
+#include <QtCore/QString>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/DataContainers/DataContainerArrayProxy.h"
-#include "SIMPLib/DataContainers/DataArrayPath.h"
-#include "SIMPLib/Utilities/QMetaObjectUtilities.h"
 
 /**
  * @class FilterParameter FilterParameter.h DREAM3DLib/FilterParameters/FilterParameter.h
@@ -100,6 +94,9 @@ class SIMPLib_EXPORT FilterParameter
 };
 
 typedef QVector<FilterParameter::Pointer> FilterParameterVector;
+
+typedef struct { QVector<unsigned int> d; } UInt32Vector_t;
+Q_DECLARE_METATYPE(UInt32Vector_t)
 
 #endif /* _FilterParameter_H_ */
 

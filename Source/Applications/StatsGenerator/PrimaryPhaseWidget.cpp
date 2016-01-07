@@ -39,12 +39,7 @@
 #include <iostream>
 #include <limits>
 
-#include <QtCore/QString>
 #include <QtCore/QSettings>
-#include <QtCore/QVector>
-#include <QtCore/QRunnable>
-#include <QtCore/QThreadPool>
-#include <QtConcurrent/QtConcurrentRun>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
 #include <QtWidgets/QLineEdit>
@@ -52,22 +47,11 @@
 #include <QtGui/QDoubleValidator>
 
 
-//-- Qwt Includes
-#include <qwt.h>
-#include <qwt_plot.h>
-#include <qwt_plot_grid.h>
-#include <qwt_series_data.h>
-#include <qwt_interval.h>
-#include <qwt_point_3d.h>
-#include <qwt_compat.h>
-#include <qwt_painter.h>
-#include <qwt_scale_map.h>
-#include <qwt_plot_zoomer.h>
-#include <qwt_plot_panner.h>
-#include <qwt_plot_curve.h>
-#include <qwt_plot_marker.h>
+// Needed for AxisAngle_t and Crystal Symmetry constants
+#include "EbsdLib/EbsdConstants.h"
 
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
@@ -76,12 +60,17 @@
 
 #include "OrientationLib/Texture/StatsGen.hpp"
 
-
 #include "StatsGenerator/Presets/MicrostructurePresetManager.h"
 #include "StatsGenerator/Presets/PrimaryEquiaxedPreset.h"
 #include "StatsGenerator/Presets/PrimaryRolledPreset.h"
 #include "StatsGenerator/Presets/PrimaryRecrystallizedPreset.h"
 
+
+
+//-- Qwt Includes AFTER SIMPLib Math due to improper defines in qwt_plot_curve.h
+#include <qwt_plot_grid.h>
+#include <qwt_plot_curve.h>
+#include <qwt_plot_marker.h>
 
 #define CHECK_ERROR_ON_WRITE(var, msg)\
   if (err < 0) {\
@@ -174,6 +163,8 @@ void PrimaryPhaseWidget::setupGui()
   // Turn off all the plot widgets
   setTabsPlotTabsEnabled(false);
 
+  QLocale loc = QLocale::system();
+
   microstructurePresetCombo->blockSignals(true);
   // Register all of our Microstructure Preset Factories
   AbstractMicrostructurePresetFactory::Pointer presetFactory = AbstractMicrostructurePresetFactory::NullPointer();
@@ -188,15 +179,24 @@ void PrimaryPhaseWidget::setupGui()
   presetFactory = RegisterPresetFactory<PrimaryRolledPresetFactory>(microstructurePresetCombo);
 
   m_MuValidator = new QDoubleValidator(m_Mu_SizeDistribution);
+  m_MuValidator->setLocale(loc);
   m_MuValidator->setRange(0.0001, 10.0, 4);
+
   m_Mu_SizeDistribution->setValidator(m_MuValidator);
 
+
   m_SigmaValidator = new QDoubleValidator(m_Sigma_SizeDistribution);
+  m_SigmaValidator->setLocale(loc);
   m_SigmaValidator->setRange(0.0000, 1.0, 4);
   m_Sigma_SizeDistribution->setValidator(m_SigmaValidator);
 
-  m_MinSigmaCutOff->setValidator(new QDoubleValidator(0.000, std::numeric_limits<double>::infinity(), 4, m_MinSigmaCutOff));
-  m_MaxSigmaCutOff->setValidator(new QDoubleValidator(0.000, std::numeric_limits<double>::infinity(), 4, m_MinSigmaCutOff));
+  QDoubleValidator* minVal = new QDoubleValidator(0.000, std::numeric_limits<double>::infinity(), 4, m_MinSigmaCutOff);
+  minVal->setLocale(loc);
+  m_MinSigmaCutOff->setValidator(minVal);
+
+  QDoubleValidator* maxVal = new QDoubleValidator(0.000, std::numeric_limits<double>::infinity(), 4, m_MinSigmaCutOff);
+  maxVal->setLocale(loc);
+  m_MaxSigmaCutOff->setValidator(maxVal);
 
 
   // Select the first Preset in the list
@@ -374,30 +374,30 @@ QString PrimaryPhaseWidget::getComboString()
 // -----------------------------------------------------------------------------
 int PrimaryPhaseWidget::gatherSizeDistributionFromGui(float& mu, float& sigma, float& minCutOff, float& maxCutOff, float& stepSize)
 {
+  QLocale loc = QLocale::system();
+
   bool ok = false;
-  mu = m_Mu_SizeDistribution->text().toFloat(&ok);
+  mu = loc.toFloat(m_Mu_SizeDistribution->text(), &ok);
   if (ok == false)
   {
     return 0;
   }
-  sigma = m_Sigma_SizeDistribution->text().toFloat(&ok);
+  sigma = loc.toFloat(m_Sigma_SizeDistribution->text(), &ok);
   if (ok == false)
   {
     return 0;
   }
-  minCutOff = m_MinSigmaCutOff->text().toFloat(&ok);
+  minCutOff = loc.toFloat(m_MinSigmaCutOff->text(), &ok);
   if (ok == false)
   {
     return 0;
   }
-
-  maxCutOff = m_MaxSigmaCutOff->text().toFloat(&ok);
+  maxCutOff = loc.toFloat(m_MaxSigmaCutOff->text(), &ok);
   if (ok == false)
   {
     return 0;
   }
-
-  stepSize = m_BinStepSize->text().toFloat(&ok);
+  stepSize = loc.toFloat(m_BinStepSize->text(), &ok);
   if (ok == false)
   {
     return 0;
@@ -519,6 +519,7 @@ bool PrimaryPhaseWidget::validateMuSigma()
 // -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::on_m_Mu_SizeDistribution_textChanged(const QString& text)
 {
+  Q_UNUSED(text)
   if (!validateMuSigma())
   {
     return;
@@ -532,6 +533,7 @@ void PrimaryPhaseWidget::on_m_Mu_SizeDistribution_textChanged(const QString& tex
 // -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::on_m_Sigma_SizeDistribution_textChanged(const QString& text)
 {
+  Q_UNUSED(text)
   if (!validateMuSigma())
   {
     return;
@@ -546,6 +548,7 @@ void PrimaryPhaseWidget::on_m_Sigma_SizeDistribution_textChanged(const QString& 
 // -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::on_m_MinSigmaCutOff_textChanged(const QString& text)
 {
+  Q_UNUSED(text)
   updateSizeDistributionPlot();
   m_MinSigmaCutOff->setFocus();
   calculateNumberOfBins();
@@ -556,6 +559,7 @@ void PrimaryPhaseWidget::on_m_MinSigmaCutOff_textChanged(const QString& text)
 // -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::on_m_MaxSigmaCutOff_textChanged(const QString& text)
 {
+  Q_UNUSED(text)
   updateSizeDistributionPlot();
   m_MaxSigmaCutOff->setFocus();
   calculateNumberOfBins();
@@ -566,6 +570,7 @@ void PrimaryPhaseWidget::on_m_MaxSigmaCutOff_textChanged(const QString& text)
 // -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::on_m_BinStepSize_valueChanged(double v)
 {
+  Q_UNUSED(v)
   calculateNumberOfBins();
 }
 
@@ -847,9 +852,9 @@ int PrimaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
 
   // Get pointers
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::CrystalStructures);
-  unsigned int* crystalStructures = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  unsigned int* crystalStructures = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
   iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::PhaseTypes);
-  unsigned int* phaseTypes = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  unsigned int* phaseTypes = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
 
   crystalStructures[m_PhaseIndex] = m_CrystalStructure;
   phaseTypes[m_PhaseIndex] = m_PhaseType;
@@ -922,11 +927,11 @@ void PrimaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int 
   setPhaseIndex(index);
 
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::CrystalStructures);
-  unsigned int* attributeArray = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  unsigned int* attributeArray = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
   m_CrystalStructure = attributeArray[index];
 
   iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::PhaseTypes);
-  attributeArray = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
+  attributeArray = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
   m_PhaseType = attributeArray[index];
 
   iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::Statistics);

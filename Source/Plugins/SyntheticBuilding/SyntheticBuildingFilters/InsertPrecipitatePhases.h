@@ -151,6 +151,20 @@ class InsertPrecipitatePhases : public AbstractFilter
     virtual const QString getCompiledLibraryName();
 
     /**
+     * @brief getBrandingString Returns the branding string for the filter, which is a tag
+     * used to denote the filter's association with specific plugins
+     * @return Branding string
+    */
+    virtual const QString getBrandingString();
+
+    /**
+     * @brief getFilterVersion Returns a version string for this filter. Default
+     * value is an empty string.
+     * @return
+     */
+    virtual const QString getFilterVersion();
+
+    /**
      * @brief newFilterInstance Reimplemented from @see AbstractFilter class
      */
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
@@ -285,12 +299,12 @@ class InsertPrecipitatePhases : public AbstractFilter
      */
     void update_exclusionZones(int32_t gadd, int32_t gremove, Int32ArrayType::Pointer exlusionZonesPtr);
 
-    /**
-     * @brief check_for_overlap Checks if the current placement will result in overlap for precipitate gNum
-     * @param gNum Index used to determine which precipitate to add
-     * @param exlusionZonesPtr Array of exclusion zone Feature Ids for each packing point
-     */
-    bool check_for_overlap(size_t gNum, Int32ArrayType::Pointer exlusionZonesPtr);
+//    /**
+//     * @brief check_for_overlap Checks if the current placement will result in overlap for precipitate gNum
+//     * @param gNum Index used to determine which precipitate to add
+//     * @param exlusionZonesPtr Array of exclusion zone Feature Ids for each packing point
+//     */
+//    bool check_for_overlap(size_t gNum, Int32ArrayType::Pointer exlusionZonesPtr);
 
     /**
      * @brief update_availablepoints Updates the maps used to associate packing points with an "available" state

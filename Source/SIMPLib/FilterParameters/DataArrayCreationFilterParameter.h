@@ -37,6 +37,7 @@
 #define _DataArrayCreationFilterParameter_H_
 
 #include "SIMPLib/FilterParameters/FilterParameter.h"
+#include "SIMPLib/DataContainers/DataArrayPath.h"
 
 /**
  * @brief The DataArrayCreationFilterParameter class

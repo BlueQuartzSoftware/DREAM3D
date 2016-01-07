@@ -1,14 +1,38 @@
 Version 6.2.0 Release Notes {#releasenotes_6_2_0}
 ===========
 
-
-These release notes summarize the major changes for each officially released version of DREAM.3D. The official bug report is located at [https://github.com/DREAM3D/DREAM3D/issues](https://github.com/DREAM3D/DREAM3D/issues).
+These release notes summarize the major changes for each officially released version of DREAM.3D. The official bug report is located at the [DREAM.3D GitHub issues page](https://github.com/DREAM3D/DREAM3D/issues).
 
 ## Getting Help ##
 
-Users:[https://groups.google.com/forum/?/dream3d-users#!forum/dream3d-users](https://groups.google.com/forum/?/dream3d-users#!forum/dream3d-users)
+[Users](https://groups.google.com/forum/?/dream3d-users#!forum/dream3d-users)
 
-Developers:[https://groups.google.com/forum/?hl=en#!forum/dream3d-developers](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
+[Developers](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
+
+## Version 6.2.327 ##
++ DREAM.3D has new logo and splash screen!
++ Added **Filter** "Import ASCII Data", which implements a generic text reader to import data into DREAM.3D.  The **Filter** utilizes a wizard to guide the user through importing their column-oriented ASCII data.
++ Added **Filter** "Combine Attribute Arrays", which allows the user to stack any number of **Attribute Arrays** to form a new combined array.
++ Added **Filter** "Find GBCD (Metric-Based Approach)" (contribution from K. Glowinski).
++ Added **Filter** "Combine Attribute Matrices" (contribution from M. Groeber).
++ The "Import Images (3D Stack)" **Filter** should now correctly recognize the number of pixel bytes in the incoming images.
++ **Pipeline** files written on Windows should no longer use escaped forward slashes in paths.  This allows for better sharing of **Pipelines** across operating systems.
++ Fixed incorrect documentation on file formats for the "Pack Primary Phases" and "Insert Precipitate Phases" **Filters**.
++ Reverted change to packing routine in "Insert Precipitate Phases" **Filter** that made particles unable to overlap, which prevented reaching large volume fractions of precipitates.  The **Filter** now functions the same as in version 4 of DREAM.3D.
++ Significantly sped up "Change Resolution" **Filter**.
++ Significantly sped up filters that perform segmentations (contribution from M. Groeber).
++ Updated internationalization settings on input widgets that allow the use of decimal numbers. These widgets should now correctly key off the local standards for use of commas and periods in decimal notation. 
++ Refactored and parallelized the derivative calculations of all IGeometry classes.
++ Several prebuilt **Pipelines** have been consolidated and renamed for clarity.
+
+### Developer Notes ###
++ The DREAM.3D SDK has been update to support C++11.  Developers are now free to use C++11 compliant code.
++ Shared pointers now use C++11 shared pointers instead of boost shared pointers.
++ **Plugins** that link against the ITK library now link against the SimpleITKExplicit library instead.  This fixes potential address space issues when using multiple dynamically loaded libraries that may link agains ITK.
++ **Filters** should now implement their own versions for compiled library names, branding strings, and version numbers, instead of using the defaults from AbstractFilter.
+
+### Known Issues ###
++ When navigating the help window, the back and forward buttons may not function.
 
 ## Version 6.2.63 ##
 + Version 6.2.63 will be the last version to support OS X 10.8. The minimum version of OS X for all future DREAM.3D updates will be 10.9.
