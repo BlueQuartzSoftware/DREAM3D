@@ -83,7 +83,6 @@ QString AttributeMatrixSelectionFilterParameter::getWidgetType()
 // -----------------------------------------------------------------------------
 AttributeMatrixSelectionFilterParameter::RequirementType AttributeMatrixSelectionFilterParameter::CreateRequirement(uint32_t attributeMatrixObjectType)
 {
-  typedef QVector<size_t> QVectorOfSizeType;
   AttributeMatrixSelectionFilterParameter::RequirementType req;
   QVector<unsigned int> amTypes;
   if(attributeMatrixObjectType == DREAM3D::AttributeMatrixObjectType::Element)
@@ -118,7 +117,6 @@ AttributeMatrixSelectionFilterParameter::RequirementType AttributeMatrixSelectio
 AttributeMatrixSelectionFilterParameter::RequirementType AttributeMatrixSelectionFilterParameter::CreateRequirement(uint32_t attributeMatrixType,
     uint32_t geometryType)
 {
-  typedef QVector<size_t> QVectorOfSizeType;
   AttributeMatrixSelectionFilterParameter::RequirementType req;
   if(DREAM3D::Defaults::AnyAttributeMatrix != attributeMatrixType)
   {

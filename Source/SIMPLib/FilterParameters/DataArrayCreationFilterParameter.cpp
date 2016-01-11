@@ -84,7 +84,6 @@ QString DataArrayCreationFilterParameter::getWidgetType()
 // -----------------------------------------------------------------------------
 DataArrayCreationFilterParameter::RequirementType DataArrayCreationFilterParameter::CreateRequirement(uint32_t attributeMatrixObjectType)
 {
-  typedef QVector<size_t> QVectorOfSizeType;
   DataArrayCreationFilterParameter::RequirementType req;
   QVector<unsigned int> amTypes;
   if(attributeMatrixObjectType == DREAM3D::AttributeMatrixObjectType::Element)
@@ -119,7 +118,6 @@ DataArrayCreationFilterParameter::RequirementType DataArrayCreationFilterParamet
 DataArrayCreationFilterParameter::RequirementType DataArrayCreationFilterParameter::CreateRequirement(uint32_t attributeMatrixType,
     uint32_t geometryType)
 {
-  typedef QVector<size_t> QVectorOfSizeType;
   DataArrayCreationFilterParameter::RequirementType req;
   if(DREAM3D::Defaults::AnyAttributeMatrix != attributeMatrixType)
   {
