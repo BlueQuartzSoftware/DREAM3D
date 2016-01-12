@@ -35,6 +35,8 @@
 
 #include "StatsGenMDFWidget.h"
 
+#include "SIMPLib/Math/SIMPLibMath.h"
+
 //-- C++ Includes
 #include <iostream>
 

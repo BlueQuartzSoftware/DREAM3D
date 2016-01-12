@@ -37,27 +37,20 @@
 #ifndef _SG_AXIS_ODFWIDGET_H_
 #define _SG_AXIS_ODFWIDGET_H_
 
-#include <QtCore/QFutureWatcher>
-#include <QtGui/QImage>
+#include <QtCore/QString>
+#include <QtCore/QVector>
 #include <QtWidgets/QWidget>
 
+#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+
 #include "ui_SGAxisODFWidget.h"
-
-#include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/StatsData/StatsData.h"
-#include "SIMPLib/StatsData/PrimaryStatsData.h"
-#include "SIMPLib/StatsData/PrecipitateStatsData.h"
-#include "SIMPLib/StatsData/TransformationStatsData.h"
-
-
-#include "QtSupportLib/PoleFigureImageUtilities.h"
 
 class SGODFTableModel;
 class StatsGenMDFWidget;
 class QwtPlot;
 class QwtPlotCurve;
 class QwtPlotMarker;
-
+class StatsData;
 
 /**
  * @class SGAxisODFWidget SGAxisODFWidget.h StatsGenerator/SGAxisODFWidget.h

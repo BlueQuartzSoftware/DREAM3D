@@ -52,7 +52,7 @@ At this point the reconstructed volume will be mostly black. This is because the
 
 ------------
 
-In order to visually reveal more of the inner structure of the reconstructed volume, the user should perform a *Threshold* filter within ParaView.  Click on the *Threshold* icon in the toolbar (circled in red). The user should select the _ThresholdArray_ to threshold on and set the range from **1** to **1**. Once ready, click the _Apply_ button. When the filter completes, the reconstruction volume will be shown without the black voxels in view. If you select to color by *IPFColor* again, don't forget to uncheck the *Map Scalars* checkbox to have ParaView use the DREAM.3D generated colors.
+In order to visually reveal more of the inner structure of the reconstructed volume, the user should perform a *Threshold* filter within ParaView.  Click on the *Threshold* icon in the toolbar (circled in red). The user should select the _Mask_ to threshold on and set the range from **1** to **1**. Once ready, click the _Apply_ button. When the filter completes, the reconstruction volume will be shown without the black voxels in view. If you select to color by *IPFColor* again, don't forget to uncheck the *Map Scalars* checkbox to have ParaView use the DREAM.3D generated colors.
 
 ------------
 

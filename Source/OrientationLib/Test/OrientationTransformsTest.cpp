@@ -114,8 +114,6 @@ AbstractFilter::Pointer InstantiateFilter(QString filtName)
 template<typename T>
 void GenerateEulers(size_t nSteps, AttributeMatrix::Pointer attrMat)
 {
-  typedef ArrayHelpers<OrientationArray<T>, T> OMHelperType;
-
   QVector<size_t> cDims(1, 3);
 
   T phi1_min = static_cast<T>(0.0);

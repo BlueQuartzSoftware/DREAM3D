@@ -42,7 +42,6 @@
 
 #include <QtCore/QString>
 #include <QtCore/QSettings>
-#include <QtCore/QVector>
 #include <QtCore/QRunnable>
 #include <QtCore/QThreadPool>
 #include <QtConcurrent/QtConcurrentRun>
@@ -50,22 +49,7 @@
 #include <QtWidgets/QProgressDialog>
 
 
-//-- Qwt Includes
-#include <qwt.h>
-#include <qwt_plot.h>
-#include <qwt_plot_curve.h>
-#include <qwt_abstract_scale_draw.h>
-#include <qwt_scale_draw.h>
-#include <qwt_plot_canvas.h>
-#include <qwt_plot_marker.h>
-#include <qwt_symbol.h>
-#include <qwt_series_data.h>
-#include <qwt_interval.h>
-#include <qwt_point_3d.h>
-#include <qwt_compat.h>
-#include <qwt_plot_grid.h>
-
-// Needed for AxisAngle_t
+// Needed for AxisAngle_t and Crystal Symmetry constants
 #include "EbsdLib/EbsdConstants.h"
 
 #include "SIMPLib/SIMPLib.h"
@@ -81,6 +65,11 @@
 #include "StatsGenerator/Presets/PrimaryRolledPreset.h"
 #include "StatsGenerator/Presets/PrimaryRecrystallizedPreset.h"
 
+
+//-- Qwt Includes AFTER SIMPLib Math due to improper defines in qwt_plot_curve.h
+#include <qwt_plot_grid.h>
+#include <qwt_plot_curve.h>
+#include <qwt_plot_marker.h>
 
 #define CHECK_ERROR_ON_WRITE(var, msg)\
   if (err < 0) {\

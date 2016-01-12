@@ -543,8 +543,6 @@ void GenRotTest(K* in, K omega)
   eu[2] = in[2];
 
   T res(4);
-  typedef  OrientationTransforms<FloatVectorType, float> OrientationTransformType;
-
 }
 
 // -----------------------------------------------------------------------------
@@ -578,10 +576,7 @@ void EU_2_XXX(FloatType* in)
   eu[2] = fmod(eu[2], SIMPLib::Constants::k_2Pi);
 
   T res(9);
-  typedef DataArray<FloatType> DataArrayType;
   typedef OrientationTransforms<T, FloatType> OrientationTransformType;
-  typedef typename DataArray<FloatType>::Pointer DataArrayPtrType;
-  typedef OrientationConverter<FloatType> OCType;
 
   typename OrientationTransformType::ResultType result;
   result = OrientationTransformType::eu_check(eu);

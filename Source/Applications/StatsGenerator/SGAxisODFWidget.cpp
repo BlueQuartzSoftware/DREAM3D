@@ -32,50 +32,51 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #include "SGAxisODFWidget.h"
 
 //-- C++ Includes
 #include <iostream>
 
 //-- Qt Includes
-#include <QtWidgets/QAbstractItemDelegate>
 #include <QtConcurrent/QtConcurrentMap>
 #include <QtCore/QFileInfo>
 #include <QtCore/QFile>
 #include <QtCore/QDir>
 #include <QtCore/QString>
 #include <QtCore/QSettings>
-#include <QtCore/QVector>
+
 #include <QtGui/QCloseEvent>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QFileDialog>
-
-#include <qwt.h>
-#include <qwt_plot.h>
-#include <qwt_plot_curve.h>
-#include <qwt_abstract_scale_draw.h>
-#include <qwt_scale_draw.h>
-#include <qwt_plot_canvas.h>
-#include <qwt_plot_marker.h>
-#include <qwt_symbol.h>
-#include <qwt_series_data.h>
-#include <qwt_interval.h>
-#include <qwt_point_3d.h>
-#include <qwt_compat.h>
+#include <QtWidgets/QAbstractItemDelegate>
 
 #include "EbsdLib/EbsdConstants.h"
 
+#include "SIMPLib/StatsData/StatsData.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
+
 #include "OrientationLib/Texture/Texture.hpp"
 #include "OrientationLib/Texture/StatsGen.hpp"
+#include "OrientationLib/Utilities/PoleFigureUtilities.h"
 
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
 #include "StatsGenerator/StatsGenMDFWidget.h"
 #include "StatsGenerator/TextureDialog.h"
 
-#include "OrientationLib/Utilities/PoleFigureUtilities.h"
 #include "QtSupportLib/PoleFigureImageUtilities.h"
+
+
+//-- Qwt Includes AFTER SIMPLib Math due to improper defines in qwt_plot_curve.h
+#include <qwt_plot.h>
+#include <qwt_plot_grid.h>
+#include <qwt_plot_curve.h>
+#include <qwt_plot_marker.h>
+#include <qwt_scale_draw.h>
+
+#ifndef QwtArray
+#define QwtArray QVector
+#endif
+
 
 #define SHOW_POLE_FIGURES 1
 #define COLOR_POLE_FIGURES 1

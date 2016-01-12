@@ -45,9 +45,8 @@
 #include <tbb/tbb_stddef.h>
 #endif
 
-#if SIMPL_USE_EIGEN
 #include <Eigen/src/Core/util/Macros.h>
-#endif
+
 
 
 #include <QtCore/QFile>
@@ -94,7 +93,7 @@ void AboutDREAM3D::setupGui()
   QString str;
   QTextStream out(&str);
 
-  out << "DREAM.3D Version " << DREAM3D::Version::Package();
+  out << "DREAM.3D Version " << DREAM3D::Version::Major() << "." << DREAM3D::Version::Minor() << "." << DREAM3D::Version::Patch();
   out << "\n" << BrandedStrings::DistributionName;
   
   versionLabel->setText(str);

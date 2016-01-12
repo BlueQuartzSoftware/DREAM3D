@@ -53,7 +53,7 @@ cmake_minimum_required(VERSION 3.1.0)
 #------------------------------------------------------------------------------
 # Create the Top level Project
 #
-project(DREAM3DProj VERSION 6.3.0.0)
+project(DREAM3DProj VERSION 6.2.0.0)
 #------------------------------------------------------------------------------
 # There are several different Release Types that we are going to use.
 # Official: This is an official release from BlueQuartz Software

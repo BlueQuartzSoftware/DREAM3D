@@ -39,14 +39,12 @@
 #include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "SIMPLib/FilterParameters/VolumeDataContainerInfoFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "SIMPLib/FilterParameters/VolumeDataContainerInfoFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Utilities/SIMPLibRandom.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -94,7 +92,6 @@ CropImageGeometry::~CropImageGeometry()
 void CropImageGeometry::setupFilterParameters()
 {
   FilterParameterVector parameters;
-// parameters.push_back(VolumeDataContainerInfoFilterParameter::New("Geometry Information", "CurrentVolumeDataContainerDimensions", getCurrentVolumeDataContainerDimensions(), FilterParameter::Parameter));
   parameters.push_back(IntFilterParameter::New("X Min (Column)", "XMin", getXMin(), FilterParameter::Parameter));
   parameters.push_back(IntFilterParameter::New("Y Min (Row)", "YMin", getYMin(), FilterParameter::Parameter));
   parameters.push_back(IntFilterParameter::New("Z Min (Plane)", "ZMin", getZMin(), FilterParameter::Parameter));

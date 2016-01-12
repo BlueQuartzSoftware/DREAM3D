@@ -8,25 +8,28 @@
 #ifndef _PRIMARYPHASEWIDGET_H_
 #define _PRIMARYPHASEWIDGET_H_
 
-#include "SGWidget.h"
+#include <QtCore/QObject>
+#include <QtCore/QVector>
+#include <QtCore/QString>
 
-#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataContainers/AttributeMatrix.h"
 
+#include "StatsGenerator/SGWidget.h"
 #include "StatsGenerator/Presets/AbstractMicrostructurePreset.h"
-#include "Applications/StatsGenerator/ui_PrimaryPhaseWidget.h"
+#include "StatsGenerator/ui_PrimaryPhaseWidget.h"
+
 
 #ifndef QwtArray
 #define QwtArray QVector
 #endif
 
 
-class QwtPlotZoomer;
-class QwtPlotPicker;
-class QwtPlotPanner;
 class QwtPlotGrid;
 class QwtPlotCurve;
 class QwtPlotMarker;
 class QDoubleValidator;
+
 
 /*
  * LaTeX to generate the equations
