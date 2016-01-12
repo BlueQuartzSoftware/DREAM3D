@@ -36,6 +36,8 @@
 
 #include "StatsGenPlotWidget.h"
 
+#include "SIMPLib/Math/SIMPLibMath.h"
+
 //-- C++ Includes
 #include <iostream>
 #include <limits>

@@ -9,7 +9,7 @@ These release notes summarize the major changes for each officially released ver
 
 [Developers](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
-## Version 6.2.XXX ##
+## Version 6.2.327 ##
 + DREAM.3D has new logo and splash screen!
 + Added **Filter** "Import ASCII Data", which implements a generic text reader to import data into DREAM.3D.  The **Filter** utilizes a wizard to guide the user through importing their column-oriented ASCII data.
 + Added **Filter** "Combine Attribute Arrays", which allows the user to stack any number of **Attribute Arrays** to form a new combined array.
@@ -28,7 +28,7 @@ These release notes summarize the major changes for each officially released ver
 ### Developer Notes ###
 + The DREAM.3D SDK has been update to support C++11.  Developers are now free to use C++11 compliant code.
 + Shared pointers now use C++11 shared pointers instead of boost shared pointers.
-+ **Plugins** that link agains the ITK library now link agains the SimpleITKExplicit library instead.  This fixes potential address space issues when using multiple dynamically loaded libraries that may link agains ITK.
++ **Plugins** that link against the ITK library now link against the SimpleITKExplicit library instead.  This fixes potential address space issues when using multiple dynamically loaded libraries that may link agains ITK.
 + **Filters** should now implement their own versions for compiled library names, branding strings, and version numbers, instead of using the defaults from AbstractFilter.
 
 ### Known Issues ###

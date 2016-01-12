@@ -43,7 +43,6 @@ set(DREAM3D_PARAMETER_WIDGETS_NO_CODEGEN
       PhaseTypeSelectionWidget
       ShapeTypeSelectionWidget
       UnknownWidget
-      VolumeDataContainerInfoWidget
 )
 
 set(REGISTER_KNOWN_WIDGETS ${DREAM3DWidgetsLib_BINARY_DIR}/FilterWidgetManager_RegisterWidgets_tmp.cpp)
