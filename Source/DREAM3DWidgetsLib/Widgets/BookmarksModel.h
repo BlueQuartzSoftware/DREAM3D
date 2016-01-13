@@ -71,7 +71,7 @@ class DREAM3DWidgetsLib_EXPORT BookmarksModel : public QAbstractItemModel
     QVariant data(const QModelIndex& index, int role) const Q_DECL_OVERRIDE;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
 
-    virtual QModelIndex sibling(int row, int column, const QModelIndex& idx) const;
+    virtual QModelIndex sibling(int row, int column, const QModelIndex& idx) const Q_DECL_OVERRIDE;
 
     bool isEmpty();
 

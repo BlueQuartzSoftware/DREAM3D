@@ -100,11 +100,11 @@ class DREAM3DWidgetsLib_EXPORT BookmarksTreeView : public QTreeView
     void expandIndex(const QModelIndex& index);
 
   protected:
-    void mouseMoveEvent(QMouseEvent* event);
-    void dragEnterEvent(QDragEnterEvent* event);
-    void dragLeaveEvent(QDragLeaveEvent* event);
-    void dragMoveEvent(QDragMoveEvent* event);
-    void dropEvent(QDropEvent* event);
+    void mouseMoveEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
+    void dragEnterEvent(QDragEnterEvent* event) Q_DECL_OVERRIDE;
+    void dragLeaveEvent(QDragLeaveEvent* event) Q_DECL_OVERRIDE;
+    void dragMoveEvent(QDragMoveEvent* event) Q_DECL_OVERRIDE;
+    void dropEvent(QDropEvent* event) Q_DECL_OVERRIDE;
 
     void currentChanged(const QModelIndex& current, const QModelIndex& previous) Q_DECL_OVERRIDE;
 
@@ -124,7 +124,7 @@ class DREAM3DWidgetsLib_EXPORT BookmarksTreeView : public QTreeView
     * @brief mousePressEvent
     * @param event
     */
-    void mousePressEvent(QMouseEvent* event);
+    void mousePressEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
 
   private:
     void performDrag();
