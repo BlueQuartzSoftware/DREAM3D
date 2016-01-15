@@ -51,7 +51,7 @@ export LDFLAGS=-stdlib=$STDLIB
 #CFLAGS="-isysroot $OSX_SDK -mmacosx-version-min=$OSX_DEPLOYMENT_TARGET -std=$CPPSTD -stdlib=$STDLIB"
 #export CXXFLAGS="-isysroot $OSX_SDK -mmacosx-version-min=$OSX_DEPLOYMENT_TARGET -std=$CPPSTD -stdlib=$STDLIB"
 #export CXXFLAGS="-isysroot $OSX_SDK -mmacosx-version-min=$OSX_DEPLOYMENT_TARGET -std=$CPPSTD"
-#CPPFLAGS="-isysroot $OSX_SDK -mmacosx-version-min=$OSX_DEPLOYMENT_TARGET -std=$CPPSTD -stdlib=$STDLIB"
+CPPFLAGS="-isysroot $OSX_SDK -mmacosx-version-min=$OSX_DEPLOYMENT_TARGET -std=$CPPSTD -stdlib=$STDLIB"
 
 ./configure --prefix=$SDK_INSTALL/${PB_INSTALL} --enable-static --disable-shared
 make -j$PARALLEL_BUILD

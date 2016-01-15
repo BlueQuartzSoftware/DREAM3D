@@ -163,6 +163,7 @@ void DREAM3DGraphicsView::dragEnterEvent(QDragEnterEvent* event)
 // -----------------------------------------------------------------------------
 void DREAM3DGraphicsView::dragLeaveEvent(QDragLeaveEvent* event)
 {
+  Q_UNUSED(event);
 //  qWarning("QFSDroppableGraphicsView::dragLeaveEvent(QDragLeaveEvent *event)");
   this->setStyleSheet("");
 }
@@ -245,11 +246,11 @@ QImage& DREAM3DGraphicsView::blend(QImage& src, QImage& dst, float opacity)
     register unsigned char* data1 = (unsigned char*)dst.bits() + 1;
     register unsigned char* data2 = (unsigned char*)src.bits() + 1;
 #else                    // BGRA
-    register unsigned char* data1 = (unsigned char*)dst.bits();
-    register unsigned char* data2 = (unsigned char*)src.bits();
+    unsigned char* data1 = static_cast<unsigned char*>(dst.bits());
+    unsigned char* data2 = static_cast<unsigned char*>(src.bits());
 #endif
 
-    for (register int i = 0; i < pixels; i++)
+    for (int i = 0; i < pixels; i++)
     {
 #ifdef WORDS_BIGENDIAN
       *data1 += (unsigned char)((*(data2++) - *data1) * opacity);
@@ -259,11 +260,11 @@ QImage& DREAM3DGraphicsView::blend(QImage& src, QImage& dst, float opacity)
       *data1 += (unsigned char)((*(data2++) - *data1) * opacity);
       data1++;
 #else
-      *data1 += (unsigned char)((*(data2++) - *data1) * opacity);
+      *data1 += static_cast<unsigned char>((*(data2++) - *data1) * opacity);
       data1++;
-      *data1 += (unsigned char)((*(data2++) - *data1) * opacity);
+      *data1 += static_cast<unsigned char>((*(data2++) - *data1) * opacity);
       data1++;
-      *data1 += (unsigned char)((*(data2++) - *data1) * opacity);
+      *data1 += static_cast<unsigned char>((*(data2++) - *data1) * opacity);
       data1++;
 #endif
       data1++; // skip alpha

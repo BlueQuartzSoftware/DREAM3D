@@ -205,7 +205,7 @@ if [ ! -e "/Applications/Doxygen.app" ];
 then
   echo "--------------------------------------------"
   echo "Doxygen is missing from your system."
-  echo "Downloading Doxygen 1.8.10 for you."
+  echo "Downloading $DOXYGEN_ARCHIVE_NAME for you."
   $DOWNLOAD_PROG  "$DOXYGEN_DOWNLOAD_SITE/$DOXYGEN_ARCHIVE_NAME" -o "${DREAM3D_SDK}/$DOXYGEN_ARCHIVE_NAME"
   open "${DREAM3D_SDK}/$DOXYGEN_ARCHIVE_NAME"
   echo "Please Copy the Doxygen.app from the mounted disk image into the /Applications directory. CMake can most"

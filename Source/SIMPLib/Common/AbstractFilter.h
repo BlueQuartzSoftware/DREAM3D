@@ -225,7 +225,7 @@ class SIMPLib_EXPORT AbstractFilter : public Observable
      * @brief getCancel Returns if the filter has been cancelled.
      * @return
      */
-    bool getCancel();
+    virtual bool getCancel();
 
     /**
      * @brief copyFilterParameterInstanceVariables
@@ -238,7 +238,7 @@ class SIMPLib_EXPORT AbstractFilter : public Observable
     /**
       * @brief Cancel the operation
       */
-    void setCancel(bool value);
+    virtual void setCancel(bool value);
 
 
 #if 0
