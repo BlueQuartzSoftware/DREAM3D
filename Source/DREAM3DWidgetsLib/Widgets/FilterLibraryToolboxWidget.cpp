@@ -261,6 +261,11 @@ void FilterLibraryToolboxWidget::launchHelpForItem(QString humanLabel)
 // -----------------------------------------------------------------------------
 void FilterLibraryToolboxWidget::on_bookmarksTreeView_currentItemChanged(QTreeWidgetItem* item, QTreeWidgetItem* previous )
 {
+  if (NULL == item)
+  {
+    return;
+  }
+
   // Get the PipelineFilterWidget Manager Instance
   FilterManager* fm = FilterManager::Instance();
   FilterManager::Collection factories;
