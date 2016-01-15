@@ -170,8 +170,6 @@ QModelIndexList BookmarksTreeView::filterOutDescendants(QModelIndexList indexLis
 // -----------------------------------------------------------------------------
 void BookmarksTreeView::performDrag()
 {
-  BookmarksModel* model = BookmarksModel::Instance();
-
   m_ActiveIndexBeingDragged = QPersistentModelIndex(currentIndex());
 
   m_IndexesBeingDragged.clear();

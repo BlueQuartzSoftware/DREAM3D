@@ -707,7 +707,6 @@ void DREAM3DApplication::on_actionRenameBookmark_triggered()
 void DREAM3DApplication::on_actionRemoveBookmark_triggered()
 {
   BookmarksToolboxWidget* bookmarksToolboxWidget = m_Toolbox->getBookmarksWidget();
-  BookmarksTreeView* bookmarksTreeView = bookmarksToolboxWidget->getBookmarksTreeView();
 
   BookmarksModel* model = BookmarksModel::Instance();
 
@@ -993,9 +992,6 @@ void DREAM3DApplication::on_actionClearBookmarks_triggered()
 
   if (response == QMessageBox::Yes)
   {
-    QFile file(m_Toolbox->getBookmarksWidget()->getBookmarksPrefsPath());
-    bool removed = file.remove();
-
     BookmarksModel* model = BookmarksModel::Instance();
     if (model->isEmpty() == false)
     {

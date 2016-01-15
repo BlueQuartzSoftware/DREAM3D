@@ -53,7 +53,6 @@
 StandardDREAM3DApplication::StandardDREAM3DApplication(int& argc, char** argv) :
   DREAM3DApplication(argc, argv)
 {
-  DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();
   m_Toolbox->setMenuBar(getToolboxMenuBar());
 }
 
