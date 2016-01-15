@@ -270,7 +270,7 @@ bool DREAM3D_UI::savePipeline()
 
     // Set window title and save flag
     QFileInfo prefFileInfo = QFileInfo(filePath);
-    setWindowTitle("[*]" + prefFileInfo.baseName() + " - DREAM3D");
+    setWindowTitle("[*]" + prefFileInfo.baseName() + " - DREAM.3D");
     setWindowModified(false);
 
     // Add file to the recent files list
@@ -308,7 +308,7 @@ bool DREAM3D_UI::savePipelineAs()
   if (err >= 0)
   {
     // Set window title and save flag
-    setWindowTitle("[*]" + fi.baseName() + " - DREAM3D");
+    setWindowTitle("[*]" + fi.baseName() + " - DREAM.3D");
     setWindowModified(false);
 
     // Add file to the recent files list
@@ -659,7 +659,7 @@ void DREAM3D_UI::on_pipelineViewWidget_pipelineOpened(QString& file, const bool&
   if (changeTitle == true)
   {
     QFileInfo fi(file);
-    setWindowTitle(QString("[*]") + fi.baseName() + " - DREAM3D");
+    setWindowTitle(QString("[*]") + fi.baseName() + " - DREAM.3D");
     setWindowModified(false);
   }
   else
@@ -680,7 +680,7 @@ void DREAM3D_UI::on_pipelineViewWidget_pipelineChanged()
     fi = QFileInfo(windowFilePath());
   }
 
-  setWindowTitle(QString("[*]") + fi.baseName() + " - DREAM3D");
+  setWindowTitle(QString("[*]") + fi.baseName() + " - DREAM.3D");
   setWindowModified(true);
 }
 

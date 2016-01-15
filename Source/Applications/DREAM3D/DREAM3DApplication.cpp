@@ -1189,7 +1189,7 @@ DREAM3D_UI* DREAM3DApplication::getNewDREAM3DInstance()
   DREAM3D_UI* newInstance = new DREAM3D_UI(NULL);
   newInstance->setLoadedPlugins(plugins);
   newInstance->setAttribute(Qt::WA_DeleteOnClose);
-  newInstance->setWindowTitle("[*]Untitled Pipeline - DREAM3D");
+  newInstance->setWindowTitle("[*]Untitled Pipeline - DREAM.3D");
 
   if (NULL != m_ActiveWindow)
   {
