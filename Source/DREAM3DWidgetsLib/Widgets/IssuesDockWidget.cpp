@@ -75,8 +75,7 @@ IssuesDockWidget::~IssuesDockWidget()
 void IssuesDockWidget::setupGui()
 {
   errorTableWidget->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
-  errorTableWidget->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Interactive);
-  errorTableWidget->horizontalHeader()->resizeSection(1, 250);
+  errorTableWidget->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
   errorTableWidget->horizontalHeader()->setSectionResizeMode(2, QHeaderView::ResizeToContents);
   errorTableWidget->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
   errorTableWidget->setVisible(true);
@@ -277,9 +276,6 @@ void IssuesDockWidget::writeSettings(DREAM3DSettings* prefs)
 
   prefs->setValue(objectName(), isHidden());
 
-  QByteArray headerState = errorTableWidget->horizontalHeader()->saveState();
-  prefs->setValue("Horizontal Header State", headerState);
-
   prefs->endGroup();
   prefs->endGroup();
 }
@@ -296,9 +292,6 @@ void IssuesDockWidget::readSettings(QMainWindow* main, DREAM3DSettings* prefs)
 
   bool b = prefs->value(objectName(), QVariant(false)).toBool();
   setHidden(b);
-
-  QByteArray headerState = prefs->value("Horizontal Header State", QByteArray());
-  errorTableWidget->horizontalHeader()->restoreState(headerState);
 
   prefs->endGroup();
   prefs->endGroup();
