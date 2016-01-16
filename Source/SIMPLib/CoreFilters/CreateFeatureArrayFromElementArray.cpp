@@ -172,7 +172,7 @@ void CreateFeatureArrayFromElementArray::preflight()
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-IDataArray::Pointer copyCellData(IDataArray::Pointer inputData, int32_t features, int32_t* featureIds)
+IDataArray::Pointer copyCellData(AbstractFilter* filter, IDataArray::Pointer inputData, int32_t features, int32_t* featureIds, const QString &createdArrayName)
 {
   QString featureArrayName = inputData->getName();
 
@@ -180,7 +180,7 @@ IDataArray::Pointer copyCellData(IDataArray::Pointer inputData, int32_t features
   if (NULL == cell) { return IDataArray::NullPointer(); }
 
   QVector<size_t> dims = inputData->getComponentDimensions();
-  typename DataArray<T>::Pointer feature = DataArray<T>::CreateArray(features, dims, featureArrayName);
+  typename DataArray<T>::Pointer feature = DataArray<T>::CreateArray(features, dims, createdArrayName);
 
   T* fPtr = feature->getPointer(0);
   T* cPtr = cell->getPointer(0);
@@ -189,12 +189,37 @@ IDataArray::Pointer copyCellData(IDataArray::Pointer inputData, int32_t features
   int32_t featureIdx = 0;
 
   size_t cells = inputData->getNumberOfTuples();
+
+  QMap<int32_t, T*> featureMap;
   for (size_t i = 0; i < cells; ++i)
   {
     // Get the feature id (or what ever the user has selected as their "Feature" identifier
     featureIdx = featureIds[i];
+
     // Now get the pointer to the start of the tuple for the Cell Array at the given Feature Id Index value
     T* cSourcePtr = cPtr + (numComp * i);
+
+    // Store the first value(s) with this feature id in the map
+    if (featureMap.contains(featureIdx) == false)
+    {
+      featureMap.insert(featureIdx, cSourcePtr);
+    }
+
+    // Check that the values that are currently being pointed to by the source pointer match the first values
+    bool warningThrown = false;
+    T* currentDataPtr = featureMap.value(featureIdx);
+    for (int j = 0; j < numComp; j++)
+    {
+      if (currentDataPtr[j] != cSourcePtr[j] && warningThrown == false)
+      {
+        // The values are inconsistent with the first values for this feature id, so throw a warning
+        QString ss = QObject::tr("Elements from Feature %1 do not all have the same value. The last value copied into Feature %1 will be used").arg(featureIdx);
+        filter->setErrorCondition(-5557);
+        filter->notifyWarningMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+        warningThrown = true;
+      }
+    }
+
     // Now get the pointer to the start of the tuple for the Feature Array at the proper index
     T* fDestPtr = fPtr + (numComp * featureIdx);
 
@@ -245,7 +270,7 @@ void CreateFeatureArrayFromElementArray::execute()
   if (largestFeature != (totalFeatures - 1))
   {
     QString ss = QObject::tr("The number of Features in the InArray array (%1) does not match the largest Feature Id in the FeatureIds array").arg(totalFeatures);
-    setErrorCondition(-5555);
+    setErrorCondition(-5556);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
@@ -254,47 +279,47 @@ void CreateFeatureArrayFromElementArray::execute()
 
   if (TemplateHelpers::CanDynamicCast<Int8ArrayType>()(m_InArrayPtr.lock()))
   {
-    p = copyCellData<int8_t>(m_InArrayPtr.lock(), totalFeatures, m_FeatureIds);
+    p = copyCellData<int8_t>(this, m_InArrayPtr.lock(), totalFeatures, m_FeatureIds, getCreatedArrayName());
   }
   else if (TemplateHelpers::CanDynamicCast<UInt8ArrayType>()(m_InArrayPtr.lock()))
   {
-    p = copyCellData<uint8_t>(m_InArrayPtr.lock(), totalFeatures, m_FeatureIds);
+    p = copyCellData<uint8_t>(this, m_InArrayPtr.lock(), totalFeatures, m_FeatureIds, getCreatedArrayName());
   }
   else if (TemplateHelpers::CanDynamicCast<Int16ArrayType>()(m_InArrayPtr.lock()))
   {
-    p = copyCellData<int16_t>(m_InArrayPtr.lock(), totalFeatures, m_FeatureIds);
+    p = copyCellData<int16_t>(this, m_InArrayPtr.lock(), totalFeatures, m_FeatureIds, getCreatedArrayName());
   }
   else if (TemplateHelpers::CanDynamicCast<UInt16ArrayType>()(m_InArrayPtr.lock()))
   {
-    p = copyCellData<uint16_t>(m_InArrayPtr.lock(), totalFeatures, m_FeatureIds);
+    p = copyCellData<uint16_t>(this, m_InArrayPtr.lock(), totalFeatures, m_FeatureIds, getCreatedArrayName());
   }
   else if (TemplateHelpers::CanDynamicCast<Int32ArrayType>()(m_InArrayPtr.lock()))
   {
-    p = copyCellData<int32_t>(m_InArrayPtr.lock(), totalFeatures, m_FeatureIds);
+    p = copyCellData<int32_t>(this, m_InArrayPtr.lock(), totalFeatures, m_FeatureIds, getCreatedArrayName());
   }
   else if (TemplateHelpers::CanDynamicCast<UInt32ArrayType>()(m_InArrayPtr.lock()))
   {
-    p = copyCellData<uint32_t>(m_InArrayPtr.lock(), totalFeatures, m_FeatureIds);
+    p = copyCellData<uint32_t>(this, m_InArrayPtr.lock(), totalFeatures, m_FeatureIds, getCreatedArrayName());
   }
   else if (TemplateHelpers::CanDynamicCast<Int64ArrayType>()(m_InArrayPtr.lock()))
   {
-    p = copyCellData<int64_t>(m_InArrayPtr.lock(), totalFeatures, m_FeatureIds);
+    p = copyCellData<int64_t>(this, m_InArrayPtr.lock(), totalFeatures, m_FeatureIds, getCreatedArrayName());
   }
   else if (TemplateHelpers::CanDynamicCast<UInt64ArrayType>()(m_InArrayPtr.lock()))
   {
-    p = copyCellData<uint64_t>(m_InArrayPtr.lock(), totalFeatures, m_FeatureIds);
+    p = copyCellData<uint64_t>(this, m_InArrayPtr.lock(), totalFeatures, m_FeatureIds, getCreatedArrayName());
   }
   else if (TemplateHelpers::CanDynamicCast<FloatArrayType>()(m_InArrayPtr.lock()))
   {
-    p = copyCellData<float>(m_InArrayPtr.lock(), totalFeatures, m_FeatureIds);
+    p = copyCellData<float>(this, m_InArrayPtr.lock(), totalFeatures, m_FeatureIds, getCreatedArrayName());
   }
   else if (TemplateHelpers::CanDynamicCast<DoubleArrayType>()(m_InArrayPtr.lock()))
   {
-    p = copyCellData<double>(m_InArrayPtr.lock(), totalFeatures, m_FeatureIds);
+    p = copyCellData<double>(this, m_InArrayPtr.lock(), totalFeatures, m_FeatureIds, getCreatedArrayName());
   }
   else if (TemplateHelpers::CanDynamicCast<BoolArrayType>()(m_InArrayPtr.lock()))
   {
-    p = copyCellData<bool>(m_InArrayPtr.lock(), totalFeatures, m_FeatureIds);
+    p = copyCellData<bool>(this, m_InArrayPtr.lock(), totalFeatures, m_FeatureIds, getCreatedArrayName());
   }
   else
   {

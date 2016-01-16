@@ -104,6 +104,11 @@ AddDREAM3DUnitTest(TESTNAME RemoveComponentFromArrayTest
    FOLDER "SIMPLibProj/Test"
    LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
 
+ AddDREAM3DUnitTest(TESTNAME CreateFeatureArrayFromElementArrayTest
+   SOURCES ${DREAM3DTest_SOURCE_DIR}/CreateFeatureArrayFromElementArrayTest.cpp
+   FOLDER "SIMPLibProj/Test"
+   LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
+
 if(0)
 QT5_WRAP_CPP( RemoveArraysObserver_MOC  "${DREAM3DTest_SOURCE_DIR}/RemoveArraysObserver.h")
 set_source_files_properties(${DREAM3DTest_SOURCE_DIR}/RemoveArraysObserver.h PROPERTIES HEADER_FILE_ONLY TRUE)

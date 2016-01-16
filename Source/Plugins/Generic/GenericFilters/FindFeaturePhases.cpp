@@ -129,11 +129,10 @@ void FindFeaturePhases::dataCheck()
 {
   setErrorCondition(0);
 
-  DataArrayPath tempPath;
-
   QVector<DataArrayPath> dataArrayPaths;
 
   QVector<size_t> cDims(1, 1);
+
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -176,9 +175,24 @@ void FindFeaturePhases::execute()
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
 
   int32_t gnum = 0;
+  QMap<int32_t, int32_t> featureMap;
+
   for (size_t i = 0; i < totalPoints; i++)
   {
     gnum = m_FeatureIds[i];
+    if (!featureMap.contains(gnum)) { featureMap.insert(gnum, m_CellPhases[i]); }
+    bool warningThrown = false;
+    int32_t curPhaseVal = featureMap.value(gnum);
+
+    if (curPhaseVal != m_CellPhases[i])
+    {
+      // The values are inconsistent with the first values for this feature id, so throw a warning
+      QString ss = QObject::tr("Elements from Feature %1 do not all have the same phase Id. The last phase Id copied into Feature %1 will be used").arg(gnum);
+      setErrorCondition(-5557);
+      notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
+      warningThrown = true;
+    }
+
     m_FeaturePhases[gnum] = m_CellPhases[i];
   }
 
