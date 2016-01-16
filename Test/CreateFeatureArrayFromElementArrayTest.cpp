@@ -11,8 +11,8 @@
 * list of conditions and the following disclaimer in the documentation and/or
 * other materials provided with the distribution.
 *
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its 
-* contributors may be used to endorse or promote products derived from this software 
+* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+* contributors may be used to endorse or promote products derived from this software
 * without specific prior written permission.
 *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -55,17 +55,17 @@
 // -----------------------------------------------------------------------------
 int TestFilterAvailability()
 {
-	// Now instantiate the CreateFeatureArrayFromElementArray Filter from the FilterManager
-	QString filtName = "CreateFeatureArrayFromElementArray";
-	FilterManager* fm = FilterManager::Instance();
-	IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-	if (NULL == filterFactory.get())
-	{
-		std::stringstream ss;
-		ss << "The CreateFeatureArrayFromElementArrayTest Requires the use of the " << filtName.toStdString() << " filter which is found in the AMProcessMonitoring Plugin";
-		DREAM3D_TEST_THROW_EXCEPTION(ss.str())
-	}
-	return 0;
+  // Now instantiate the CreateFeatureArrayFromElementArray Filter from the FilterManager
+  QString filtName = "CreateFeatureArrayFromElementArray";
+  FilterManager* fm = FilterManager::Instance();
+  IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+  if (NULL == filterFactory.get())
+  {
+    std::stringstream ss;
+    ss << "The CreateFeatureArrayFromElementArrayTest Requires the use of the " << filtName.toStdString() << " filter which is found in the AMProcessMonitoring Plugin";
+    DREAM3D_TEST_THROW_EXCEPTION(ss.str())
+  }
+  return 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -94,7 +94,6 @@ int CreateFeatureArrayFromElementArrayTest()
       AttributeMatrix::Pointer featureAttr = AttributeMatrix::New(QVector<size_t>(1, 5), "Feature Attribute Matrix", DREAM3D::AttributeMatrixType::Cell);
 
       DataArray<int32_t>::Pointer featureIds = DataArray<int32_t>::CreateArray(16, "FeatureIds");
-      int32_t* featureIdsPtr = featureIds->getPointer(0);
       size_t numTuples = featureIds->getNumberOfTuples();
       featureIds->initializeTuple(0, 1);
       featureIds->initializeTuple(1, 1);
@@ -114,7 +113,6 @@ int CreateFeatureArrayFromElementArrayTest()
       featureIds->initializeTuple(15, 4);
 
       DataArray<float>::Pointer cellDataArray = DataArray<float>::CreateArray(16, "CellData");
-      float* cellDataArrayPtr = cellDataArray->getPointer(0);
       numTuples = cellDataArray->getNumberOfTuples();
       for (size_t i = 0; i < numTuples; i++)
       {
@@ -146,7 +144,7 @@ int CreateFeatureArrayFromElementArrayTest()
       QString createdName = "CreatedArray";
       propWasSet = createFeatureArrayFromElementArrayFilter->setProperty("CreatedArrayName", createdName);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-        
+
       createFeatureArrayFromElementArrayFilter->execute();
       int err = createFeatureArrayFromElementArrayFilter->getErrorCondition();
       DREAM3D_REQUIRE_EQUAL(err, -5557);
@@ -179,7 +177,6 @@ int CreateFeatureArrayFromElementArrayTest()
       AttributeMatrix::Pointer featureAttr = AttributeMatrix::New(QVector<size_t>(1, 5), "Feature Attribute Matrix", DREAM3D::AttributeMatrixType::Cell);
 
       DataArray<int32_t>::Pointer featureIds = DataArray<int32_t>::CreateArray(16, "FeatureIds");
-      int32_t* featureIdsPtr = featureIds->getPointer(0);
       size_t numTuples = featureIds->getNumberOfTuples();
       featureIds->initializeTuple(0, 1);
       featureIds->initializeTuple(1, 1);
@@ -200,7 +197,6 @@ int CreateFeatureArrayFromElementArrayTest()
 
       QVector<size_t> cDims = QVector<size_t>(1, 3);
       DataArray<float>::Pointer cellDataArray = DataArray<float>::CreateArray(16, cDims, "CellData");
-      float* cellDataArrayPtr = cellDataArray->getPointer(0);
       numTuples = cellDataArray->getNumberOfTuples();
       for (size_t i = 0; i < numTuples; i++)
       {
@@ -265,8 +261,6 @@ int CreateFeatureArrayFromElementArrayTest()
       AttributeMatrix::Pointer featureAttr = AttributeMatrix::New(QVector<size_t>(1, 5), "Feature Attribute Matrix", DREAM3D::AttributeMatrixType::Cell);
 
       DataArray<int32_t>::Pointer featureIds = DataArray<int32_t>::CreateArray(16, "FeatureIds");
-      int32_t* featureIdsPtr = featureIds->getPointer(0);
-      size_t numTuples = featureIds->getNumberOfTuples();
       featureIds->initializeTuple(0, 1);
       featureIds->initializeTuple(1, 1);
       featureIds->initializeTuple(2, 2);
