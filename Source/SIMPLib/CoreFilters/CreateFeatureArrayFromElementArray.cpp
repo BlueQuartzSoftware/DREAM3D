@@ -210,12 +210,10 @@ IDataArray::Pointer copyCellData(AbstractFilter* filter, IDataArray::Pointer inp
     T* currentDataPtr = featureMap.value(featureIdx);
     for (int j = 0; j < numComp; j++)
     {
-      T value1 = currentDataPtr[j];
-      T value2 = cSourcePtr[j];
       if (currentDataPtr[j] != cSourcePtr[j] && warningThrown == false)
       {
         // The values are inconsistent with the first values for this feature id, so throw a warning
-        QString ss = QObject::tr("Elements from feature (%1) do not all have the same value. Note: the last value copied from element to feature will be used.").arg(featureIdx);
+        QString ss = QObject::tr("Elements from Feature %1 do not all have the same value. The last value copied into Feature %1 will be used").arg(featureIdx);
         filter->setErrorCondition(-5557);
         filter->notifyWarningMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         warningThrown = true;
