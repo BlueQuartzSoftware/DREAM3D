@@ -32,7 +32,7 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "FilterLibraryDockWidget.h"
+#include "FilterLibraryToolboxWidget.h"
 
 #include <QtCore/QFileInfo>
 
@@ -42,10 +42,10 @@
 #include "SIMPLib/Common/FilterFactory.hpp"
 #include "SIMPLib/Common/DocRequestManager.h"
 
-#include "FilterListDockWidget.h"
+#include "FilterListToolboxWidget.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
-#include "moc_FilterLibraryDockWidget.cpp"
+#include "moc_FilterLibraryToolboxWidget.cpp"
 
 
 #define LIBRARY_NODE_TYPE 0
@@ -56,8 +56,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FilterLibraryDockWidget::FilterLibraryDockWidget(QWidget* parent) :
-  QDockWidget(parent),
+FilterLibraryToolboxWidget::FilterLibraryToolboxWidget(QWidget* parent) :
+  QWidget(parent),
   m_ContextMenu(new QMenu(this)),
   m_Mapper(NULL)
 {
@@ -69,14 +69,14 @@ FilterLibraryDockWidget::FilterLibraryDockWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FilterLibraryDockWidget::~FilterLibraryDockWidget()
+FilterLibraryToolboxWidget::~FilterLibraryToolboxWidget()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterLibraryDockWidget::connectFilterList(FilterListDockWidget* filterListWidget)
+void FilterLibraryToolboxWidget::connectFilterList(FilterListToolboxWidget* filterListWidget)
 {
   connect(this, SIGNAL(filterListGenerated(const QStringList&, bool)),
           filterListWidget, SLOT(updateFilterList(const QStringList&, bool) ) );
@@ -86,7 +86,7 @@ void FilterLibraryDockWidget::connectFilterList(FilterListDockWidget* filterList
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterLibraryDockWidget::refreshFilterGroups()
+void FilterLibraryToolboxWidget::refreshFilterGroups()
 {
   FilterManager* fm = FilterManager::Instance();
   QSet<QString> grpNames = fm->getGroupNames();
@@ -165,7 +165,7 @@ void FilterLibraryDockWidget::refreshFilterGroups()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterLibraryDockWidget::setupGui()
+void FilterLibraryToolboxWidget::setupGui()
 {
   refreshFilterGroups();
   QString css(" QToolTip {\
@@ -186,7 +186,7 @@ void FilterLibraryDockWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterLibraryDockWidget::on_bookmarksTreeView_itemClicked( QTreeWidgetItem* item, int column )
+void FilterLibraryToolboxWidget::on_bookmarksTreeView_itemClicked( QTreeWidgetItem* item, int column )
 {
 
 }
@@ -194,7 +194,7 @@ void FilterLibraryDockWidget::on_bookmarksTreeView_itemClicked( QTreeWidgetItem*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterLibraryDockWidget::on_bookmarksTreeView_itemChanged( QTreeWidgetItem* item, int column )
+void FilterLibraryToolboxWidget::on_bookmarksTreeView_itemChanged( QTreeWidgetItem* item, int column )
 {
 
 }
@@ -202,7 +202,7 @@ void FilterLibraryDockWidget::on_bookmarksTreeView_itemChanged( QTreeWidgetItem*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterLibraryDockWidget::showContextMenuForWidget(const QPoint& pos)
+void FilterLibraryToolboxWidget::showContextMenuForWidget(const QPoint& pos)
 {
   QTreeWidgetItem* item = bookmarksTreeView->itemAt(pos);
 
@@ -232,7 +232,7 @@ void FilterLibraryDockWidget::showContextMenuForWidget(const QPoint& pos)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterLibraryDockWidget::launchHelpForItem(QString humanLabel)
+void FilterLibraryToolboxWidget::launchHelpForItem(QString humanLabel)
 {
   FilterManager* fm = FilterManager::Instance();
   if (NULL == fm)
@@ -259,8 +259,13 @@ void FilterLibraryDockWidget::launchHelpForItem(QString humanLabel)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterLibraryDockWidget::on_bookmarksTreeView_currentItemChanged(QTreeWidgetItem* item, QTreeWidgetItem* previous )
+void FilterLibraryToolboxWidget::on_bookmarksTreeView_currentItemChanged(QTreeWidgetItem* item, QTreeWidgetItem* previous )
 {
+  if (NULL == item)
+  {
+    return;
+  }
+
   // Get the PipelineFilterWidget Manager Instance
   FilterManager* fm = FilterManager::Instance();
   FilterManager::Collection factories;
@@ -291,7 +296,7 @@ void FilterLibraryDockWidget::on_bookmarksTreeView_currentItemChanged(QTreeWidge
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterLibraryDockWidget::on_bookmarksTreeView_itemDoubleClicked( QTreeWidgetItem* item, int column )
+void FilterLibraryToolboxWidget::on_bookmarksTreeView_itemDoubleClicked( QTreeWidgetItem* item, int column )
 {
   QVariant nodeType = item->data(0, Qt::UserRole);
   if(nodeType.toInt() == FILTER_NODE_TYPE)
@@ -304,7 +309,7 @@ void FilterLibraryDockWidget::on_bookmarksTreeView_itemDoubleClicked( QTreeWidge
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterLibraryDockWidget::updateFilterGroupList(FilterManager::Collection& factories)
+void FilterLibraryToolboxWidget::updateFilterGroupList(FilterManager::Collection& factories)
 {
   QStringList filterNames;
   for (FilterManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
@@ -317,18 +322,28 @@ void FilterLibraryDockWidget::updateFilterGroupList(FilterManager::Collection& f
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterLibraryDockWidget::writeSettings(DREAM3DSettings& prefs)
+void FilterLibraryToolboxWidget::writeSettings(DREAM3DSettings* prefs)
 {
-  prefs.setValue(objectName(), isHidden());
+  prefs->beginGroup("DockWidgetSettings");
+  prefs->beginGroup("Filter Library Dock Widget");
+
+  prefs->setValue(objectName(), isHidden());
+
+  prefs->endGroup();
+  prefs->endGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterLibraryDockWidget::readSettings(QMainWindow* main, DREAM3DSettings& prefs)
+void FilterLibraryToolboxWidget::readSettings(DREAM3DSettings* prefs)
 {
-  main->restoreDockWidget(this);
+  prefs->beginGroup("DockWidgetSettings");
+  prefs->beginGroup("Filter Library Dock Widget");
 
-  bool b = prefs.value(objectName(), QVariant(false)).toBool();
+  bool b = prefs->value(objectName(), QVariant(false)).toBool();
   setHidden(b);
+
+  prefs->endGroup();
+  prefs->endGroup();
 }

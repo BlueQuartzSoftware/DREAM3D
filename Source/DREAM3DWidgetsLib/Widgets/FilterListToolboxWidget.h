@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _FilterListDockWidget_H_
-#define _FilterListDockWidget_H_
+#ifndef _FilterListToolboxWidget_H_
+#define _FilterListToolboxWidget_H_
 
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QMenu>
@@ -47,18 +47,18 @@
 
 #include "QtSupportLib/DREAM3DSettings.h"
 
-#include "ui_FilterListDockWidget.h"
+#include "ui_FilterListToolboxWidget.h"
 
 
 
-class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, private Ui::FilterListDockWidget
+class DREAM3DWidgetsLib_EXPORT FilterListToolboxWidget : public QWidget, private Ui::FilterListToolboxWidget
 {
 
     Q_OBJECT
 
   public:
-    FilterListDockWidget(QWidget* parent = NULL);
-    virtual ~FilterListDockWidget();
+    FilterListToolboxWidget(QWidget* parent = NULL);
+    virtual ~FilterListToolboxWidget();
 
     QList<QString> serializeString(QString string, char token);
     QString deserializeString(QList<QString> list, char token);
@@ -68,12 +68,12 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
     /**
     * @brief Reads the preferences from the users pref file
     */
-    void readSettings(QMainWindow* main, DREAM3DSettings& prefs);
+    void readSettings(DREAM3DSettings* prefs);
 
     /**
     * @brief Writes the preferences to the users pref file
     */
-    void writeSettings(DREAM3DSettings& prefs);
+    void writeSettings(DREAM3DSettings* prefs);
 
     /**
     * @brief Returns true if a search is in progress, else returns false
@@ -183,10 +183,10 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
 
     QMap<QString, AbstractFilter::Pointer> getHumanNameMap(QList<AbstractFilter::Pointer> list);
 
-    FilterListDockWidget(const FilterListDockWidget&); // Copy Constructor Not Implemented
-    void operator=(const FilterListDockWidget&); // Operator '=' Not Implemented
+    FilterListToolboxWidget(const FilterListToolboxWidget&); // Copy Constructor Not Implemented
+    void operator=(const FilterListToolboxWidget&); // Operator '=' Not Implemented
 };
 
 
-#endif /* _FilterListDockWidget_H_ */
+#endif /* _FilterListToolboxWidget_H_ */
 

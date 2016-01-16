@@ -37,14 +37,17 @@
 
 #include <iostream>
 
-#include <QtGui/QMouseEvent>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QMessageBox>
+
 #include <QtCore/QMimeData>
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
+
+#include <QtGui/QMouseEvent>
 #include <QtGui/QDrag>
 
-
+#include "Applications/DREAM3D/DREAM3DMenuItems.h"
 #include "Applications/DREAM3D/DREAM3DApplication.h"
 
 #include "DREAM3DWidgetsLib/Widgets/BookmarksItemDelegate.h"
@@ -57,10 +60,12 @@
 // -----------------------------------------------------------------------------
 BookmarksTreeView::BookmarksTreeView(QWidget* parent) :
   QTreeView(parent),
-  m_IndexBeingDragged(QModelIndex()),
+  m_ActiveIndexBeingDragged(QPersistentModelIndex()),
   m_TopLevelItemPlaceholder(QModelIndex())
 {
   setContextMenuPolicy(Qt::CustomContextMenu);
+
+  connect(this, SIGNAL(currentIndexChanged(const QModelIndex&, const QModelIndex&)), dream3dApp, SLOT(bookmarkSelectionChanged(const QModelIndex&, const QModelIndex&)));
 
   connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), dream3dApp, SLOT(on_bookmarksDockContextMenuRequested(const QPoint&)));
 
@@ -98,17 +103,18 @@ void BookmarksTreeView::mousePressEvent(QMouseEvent* event)
   if (event->button() == Qt::LeftButton)
   {
     m_StartPos = event->pos();
-
-    QModelIndex index = indexAt(event->pos());
-
-    if (index.isValid() == false)
-    {
-      // Deselect the current item
-      clearSelection();
-      clearFocus();
-      setCurrentIndex(QModelIndex());
-    }
   }
+
+  QModelIndex index = indexAt(event->pos());
+
+  if (index.isValid() == false)
+  {
+    // Deselect the current item
+    clearSelection();
+    clearFocus();
+    setCurrentIndex(QModelIndex());
+  }
+
   QTreeView::mousePressEvent(event);
 }
 
@@ -134,23 +140,57 @@ void BookmarksTreeView::mouseMoveEvent(QMouseEvent* event)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BookmarksTreeView::performDrag()
+QModelIndexList BookmarksTreeView::filterOutDescendants(QModelIndexList indexList)
 {
   BookmarksModel* model = BookmarksModel::Instance();
 
-  m_IndexBeingDragged = currentIndex();
-  if (m_IndexBeingDragged.isValid())
+  for (int i = indexList.size() - 1; i >= 0; i--)
   {
-    QMimeData* mimeData = new QMimeData;
-    QString path = model->index(m_IndexBeingDragged.row(), BookmarksItem::Path, m_IndexBeingDragged.parent()).data().toString();
-    QString source = "Bookmarks";
-    mimeData->setData("Source", source.toLatin1());
-    mimeData->setText(path);
-
-    QDrag* drag = new QDrag(this);
-    drag->setMimeData(mimeData);
-    drag->exec(Qt::CopyAction);
+    QPersistentModelIndex index = indexList[i];
+    QString name = model->index(index.row(), BookmarksItem::Name, index.parent()).data().toString();
+    // Walk up the tree from the index...if an ancestor is selected, remove the index
+    while (index.isValid() == true)
+    {
+      QPersistentModelIndex parent = index.parent();
+      QString parentName = model->index(parent.row(), BookmarksItem::Name, parent.parent()).data().toString();
+      if (indexList.contains(index.parent()) == true)
+      {
+        indexList.removeAt(i);
+        break;
+      }
+      index = index.parent();
+    }
   }
+
+  return indexList;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BookmarksTreeView::performDrag()
+{
+  m_ActiveIndexBeingDragged = QPersistentModelIndex(currentIndex());
+
+  m_IndexesBeingDragged.clear();
+
+  QModelIndexList list = selectionModel()->selectedRows();
+
+  // We need to filter out all indexes that already have parents/ancestors selected
+  list = filterOutDescendants(list);
+
+  for (int i = 0; i < list.size(); i++)
+  {
+    m_IndexesBeingDragged.push_back(list[i]);
+  }
+
+  QMimeData* mimeData = new QMimeData;
+  QString source = "Bookmarks";
+  mimeData->setData("Source", source.toLatin1());
+
+  QDrag* drag = new QDrag(this);
+  drag->setMimeData(mimeData);
+  drag->exec(Qt::CopyAction);
 }
 
 // -----------------------------------------------------------------------------
@@ -186,7 +226,12 @@ void BookmarksTreeView::dragLeaveEvent(QDragLeaveEvent* event)
 
   clearSelection();
 
-  setCurrentIndex(m_IndexBeingDragged);
+  setCurrentIndex(m_ActiveIndexBeingDragged);
+
+  for (int i = 0; i < m_IndexesBeingDragged.size(); i++)
+  {
+    selectionModel()->select(m_IndexesBeingDragged[i], QItemSelectionModel::Select);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -227,7 +272,7 @@ void BookmarksTreeView::dragMoveEvent(QDragMoveEvent* event)
     else
     {
       // Set the current index back to the index being dragged, but don't highlight it
-      selectionModel()->setCurrentIndex(m_IndexBeingDragged, QItemSelectionModel::NoUpdate);
+      selectionModel()->setCurrentIndex(m_ActiveIndexBeingDragged, QItemSelectionModel::NoUpdate);
     }
   }
 
@@ -258,12 +303,16 @@ void BookmarksTreeView::dropEvent(QDropEvent* event)
     QString source = QString::fromStdString(byteArray.toStdString());
     if (source == "Bookmarks")
     {
-      QModelIndex newParent = model->index(currentIndex().row(), BookmarksItem::Name, currentIndex().parent());
+      QPersistentModelIndex newParent = model->index(currentIndex().row(), BookmarksItem::Name, currentIndex().parent());
 
-      if (model->flags(newParent).testFlag(Qt::ItemIsDropEnabled) == true && newParent != m_IndexBeingDragged)
+      // Don't count the destination item in the list of dragged items (if it happens to be in there)
+      if (m_IndexesBeingDragged.contains(newParent) == true)
       {
-        QModelIndex oldParent = m_IndexBeingDragged.parent();
+        m_IndexesBeingDragged.removeAt(m_IndexesBeingDragged.indexOf(newParent));
+      }
 
+      if (model->flags(newParent).testFlag(Qt::ItemIsDropEnabled) == true)
+      {
         if (m_TopLevelItemPlaceholder.isValid())
         {
           // If the parent is the placeholder, change the parent to the root.
@@ -276,14 +325,44 @@ void BookmarksTreeView::dropEvent(QDropEvent* event)
           m_TopLevelItemPlaceholder = QModelIndex();
         }
 
-        if (m_IndexBeingDragged.isValid())
+        /* Check to make sure that all selected indexes can be moved before moving them.
+           This is where we check for cases where a selected index is trying to be moved
+           into the child of that selected index, which, according to a common tree
+           structure and implementation, should not be allowed */
+
+        if (newParent != QModelIndex())
         {
-          model->moveIndexInternally(m_IndexBeingDragged, oldParent, newParent);
-          expand(newParent);
-          model->sort(BookmarksItem::Name, Qt::AscendingOrder);
-          event->accept();
-          return;
+          QModelIndex testIndex = newParent.parent();
+          while (testIndex.isValid() == true)
+          {
+            for (int i = m_IndexesBeingDragged.size() - 1; i >= 0; i--)
+            {
+              if (testIndex == m_IndexesBeingDragged[i])
+              {
+                QMessageBox::critical(this, "Bookmarks Error", "Cannot move bookmarks.\nThe destination folder \"" + newParent.data(BookmarksItem::Name).toString() + "\" is a subfolder of the source folder \"" + m_IndexesBeingDragged[i].data(BookmarksItem::Name).toString() + "\".", QMessageBox::Ok, QMessageBox::Ok);
+                return;
+              }
+            }
+            testIndex = testIndex.parent();
+          }
         }
+
+        int insertRow = model->rowCount(newParent);
+        for (int i = m_IndexesBeingDragged.size() - 1; i >= 0; i--)
+        {
+          QPersistentModelIndex index = m_IndexesBeingDragged[i];
+          QModelIndex oldParent = index.parent();
+
+          if (index.isValid())
+          {
+            model->moveRow(oldParent, index.row(), newParent, insertRow);
+          }
+        }
+
+        expand(newParent);
+        model->sort(BookmarksItem::Name, Qt::AscendingOrder);
+        event->accept();
+        return;
       }
     }
   }
@@ -450,6 +529,8 @@ QJsonObject BookmarksTreeView::wrapModel(QModelIndex currentIndex)
   else
   {
     obj.insert("Path", path);
+    QString tooltip = model->data(currentIndex, Qt::ToolTipRole).toString();
+    obj.insert("Tooltip", tooltip);
   }
 
   return obj;
@@ -474,12 +555,10 @@ BookmarksModel* BookmarksTreeView::FromJsonObject(QJsonObject treeObject)
   }
 
   QStringList paths = model->getFilePaths();
-  QFileSystemWatcher* fsWatcher = new QFileSystemWatcher(model);
   if( !paths.isEmpty() )
   {
-    fsWatcher->addPaths(paths);
+    model->getFileSystemWatcher()->addPaths(paths);
   }
-  model->setFileSystemWatcher(fsWatcher);
   connect(model->getFileSystemWatcher(), SIGNAL(fileChanged(const QString&)),
           model, SLOT(updateRowState(const QString&)));
 
@@ -503,6 +582,8 @@ void BookmarksTreeView::UnwrapModel(QString objectName, QJsonObject object, Book
   if (path.isEmpty() == false)
   {
     model->setData(nameIndex, QIcon(":/text.png"), Qt::DecorationRole);
+    QString tooltip = object["Tooltip"].toString();
+    model->setData(nameIndex, tooltip, Qt::ToolTipRole);
     if (fi.exists() == false)
     {
       // Set the itemHasError variable

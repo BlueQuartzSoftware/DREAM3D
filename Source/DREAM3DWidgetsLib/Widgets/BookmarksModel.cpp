@@ -49,13 +49,14 @@ BookmarksModel* BookmarksModel::self = NULL;
 //
 // -----------------------------------------------------------------------------
 BookmarksModel::BookmarksModel(QObject* parent) :
-  QAbstractItemModel(parent),
-  m_Watcher(NULL)
+  QAbstractItemModel(parent)
 {
   QVector<QVariant> vector;
   vector.push_back("Name");
   vector.push_back("Path");
   rootItem = new BookmarksItem(vector);
+
+  m_Watcher = new QFileSystemWatcher(this);
 
   connect(this, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex&)), this, SLOT(updateModel(const QModelIndex&, const QModelIndex&)));
 }
@@ -84,28 +85,17 @@ BookmarksModel* BookmarksModel::Instance()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-BookmarksModel* BookmarksModel::NewInstanceFromFile(QString filePath)
+BookmarksModel* BookmarksModel::NewInstance(DREAM3DSettings* prefs)
 {
-  QFileInfo fi(filePath);
-  if (fi.exists() & fi.isFile())
+  // Erase the old content
+  if (self)
   {
-    // Erase the old content
-    if (self)
-    {
-      delete self;
-      self = NULL;
-    }
-
-    DREAM3DSettings prefs(filePath);
-
-    prefs.beginGroup("DockWidgetSettings");
-    prefs.beginGroup("Bookmarks Dock Widget");
-    QJsonObject modelObj = prefs.value("Bookmarks Model", QJsonObject());
-    prefs.endGroup();
-    prefs.endGroup();
-
-    self = BookmarksTreeView::FromJsonObject(modelObj);
+    delete self;
+    self = NULL;
   }
+
+  QJsonObject modelObj = prefs->value("Bookmarks Model", QJsonObject());
+  self = BookmarksTreeView::FromJsonObject(modelObj);
 
   return self;
 }
@@ -220,7 +210,7 @@ QVariant BookmarksModel::data(const QModelIndex& index, int role) const
     }
     else
     {
-      return "";
+      return item->getItemTooltip();
     }
   }
   else if (role == Qt::DecorationRole)
@@ -342,6 +332,31 @@ bool BookmarksModel::removeRows(int position, int rows, const QModelIndex& paren
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+bool BookmarksModel::moveRows(const QModelIndex & sourceParent, int sourceRow, int count, const QModelIndex & destinationParent, int destinationChild)
+{
+  beginMoveRows(sourceParent, sourceRow, sourceRow + count - 1, destinationParent, destinationChild);
+
+  BookmarksItem* srcParentItem = getItem(sourceParent);
+  BookmarksItem* destParentItem = getItem(destinationParent);
+
+  for (int i = sourceRow; i < sourceRow + count; i++)
+  {
+    QModelIndex srcIndex = index(i, BookmarksItem::Name, sourceParent);
+    BookmarksItem* srcItem = getItem(srcIndex);
+
+    destParentItem->insertChild(destinationChild, srcItem);
+    srcItem->setParent(destParentItem);
+    srcParentItem->removeChild(i);
+  }
+
+  endMoveRows();
+
+  return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QModelIndex BookmarksModel::parent(const QModelIndex& index) const
 {
   if (!index.isValid())
@@ -381,6 +396,10 @@ bool BookmarksModel::setData(const QModelIndex& index, const QVariant& value, in
   else if (role == Qt::DecorationRole)
   {
     result = item->setIcon(value.value<QIcon>());
+  }
+  else if (role == Qt::ToolTipRole)
+  {
+    result = item->setItemTooltip(value.toString());
   }
   else
   {
@@ -429,94 +448,6 @@ bool BookmarksModel::isEmpty()
     return true;
   }
   return false;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BookmarksModel::copyIndexToTemp(const QModelIndex& index, const QModelIndex& oldParent, const QModelIndex& tempParent, BookmarksModel* tempModel)
-{
-  // Get the name of the index
-  QString name = self->index(index.row(), BookmarksItem::Name, oldParent).data().toString();
-  QString path = self->index(index.row(), BookmarksItem::Path, oldParent).data().toString();
-
-  // Copy the index to the temporary model
-  int rowPos = tempModel->rowCount(tempParent);
-  tempModel->insertRow(rowPos, tempParent);
-  QModelIndex newNameIndex = tempModel->index(rowPos, BookmarksItem::Name, tempParent);
-  tempModel->setData(newNameIndex, name, Qt::DisplayRole);
-  QModelIndex newPathIndex = tempModel->index(rowPos, BookmarksItem::Path, tempParent);
-  tempModel->setData(newPathIndex, path, Qt::DisplayRole);
-
-  if (path.isEmpty())
-  {
-    tempModel->setData(newNameIndex, QIcon(":/folder_blue.png"), Qt::DecorationRole);
-
-    // This is a node, so recursively call this function
-    for (int i = 0; i < self->rowCount(index); i++)
-    {
-      copyIndexToTemp(index.child(i, BookmarksItem::Name), index, newNameIndex, tempModel);
-    }
-  }
-  else
-  {
-    tempModel->setData(newNameIndex, QIcon(":/text.png"), Qt::DecorationRole);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BookmarksModel::copyTempToIndex(QModelIndex& tempIndex, QModelIndex& newParent, const QModelIndex& tempParent, BookmarksModel* tempModel)
-{
-  // Get the name of the index
-  QString name = tempModel->index(tempIndex.row(), BookmarksItem::Name, tempParent).data().toString();
-  QString path = tempModel->index(tempIndex.row(), BookmarksItem::Path, tempParent).data().toString();
-
-  // Copy the index to the new location
-  int rowPos = self->rowCount(newParent);
-  self->insertRow(rowPos, newParent);
-  QModelIndex newNameIndex = self->index(rowPos, BookmarksItem::Name, newParent);
-  self->setData(newNameIndex, name, Qt::DisplayRole);
-  QModelIndex newPathIndex = self->index(rowPos, BookmarksItem::Path, newParent);
-  self->setData(newPathIndex, path, Qt::DisplayRole);
-
-  if (path.isEmpty())
-  {
-    self->setData(newNameIndex, QIcon(":/folder_blue.png"), Qt::DecorationRole);
-
-    // This is a node, so recursively call this function
-    for (int i = 0; i < tempModel->rowCount(tempIndex); i++)
-    {
-      QModelIndex nextIndex = tempModel->index(i, BookmarksItem::Name, tempIndex);
-      copyTempToIndex(nextIndex, newNameIndex, tempIndex, tempModel);
-    }
-  }
-  else
-  {
-    self->setData(newNameIndex, QIcon(":/text.png"), Qt::DecorationRole);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BookmarksModel::moveIndexInternally(const QModelIndex& index, QModelIndex& oldParent, QModelIndex& newParent)
-{
-  BookmarksModel* tempModel = new BookmarksModel();
-
-  // Copy the sub-tree to a temporary model, to retain its data and structure
-  copyIndexToTemp(index, oldParent, QModelIndex(), tempModel);
-
-  // Now copy the sub-tree to its new position
-  for (int i = 0; i < tempModel->rowCount(QModelIndex()); i++)
-  {
-    QModelIndex tempIndex = tempModel->index(i, BookmarksItem::Name, QModelIndex());
-    copyTempToIndex(tempIndex, newParent, QModelIndex(), tempModel);
-  }
-
-  // Remove the index from its original spot
-  self->removeRow(index.row(), oldParent);
 }
 
 // -----------------------------------------------------------------------------

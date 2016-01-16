@@ -113,6 +113,15 @@ QVariant BookmarksItem::data(int column) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+bool BookmarksItem::insertChild(int position, BookmarksItem* child)
+{
+  m_ChildItems.insert(position, child);
+  return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 bool BookmarksItem::insertChildren(int position, int count, int columns)
 {
   if (position < 0 || position > m_ChildItems.size())
@@ -122,7 +131,7 @@ bool BookmarksItem::insertChildren(int position, int count, int columns)
   {
     QVector<QVariant> data(columns);
     BookmarksItem* item = new BookmarksItem(data, this);
-    m_ChildItems.insert(position, item);
+    insertChild(position, item);
   }
 
   return true;
@@ -151,6 +160,15 @@ bool BookmarksItem::insertColumns(int position, int columns)
 BookmarksItem* BookmarksItem::parent()
 {
   return m_ParentItem;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool BookmarksItem::removeChild(int position)
+{
+  m_ChildItems.removeAt(position);
+  return true;
 }
 
 // -----------------------------------------------------------------------------
@@ -261,4 +279,12 @@ bool BookmarksItem::needsToBeExpanded()
 void BookmarksItem::setNeedsToBeExpanded(bool value)
 {
   m_NeedsToBeExpanded = value;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BookmarksItem::setParent(BookmarksItem* parent)
+{
+  m_ParentItem = parent;
 }

@@ -33,51 +33,55 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#ifndef _MacDREAM3DApplication_H_
+#define _MacDREAM3DApplication_H_
 
-#include "StatsGeneratorUI.h"
+#include "Applications/DREAM3D/DREAM3DApplication.h"
 
-#include <QtSupportLib/QRecentFileList.h>
-#include <QtSupportLib/DREAM3DSettings.h>
-#include "SGApplication.h"
-#include "BrandedStrings.h"
+#define macApp (static_cast<MacDREAM3DApplication*>(qApp))
 
-//-- Qt Headers
-#include <QtWidgets/QApplication>
-
-/**
- * @brief The Main entry point for the application
- */
-int main (int argc, char* argv[])
+class MacDREAM3DApplication : public DREAM3DApplication
 {
-  SGApplication app(argc, argv);
+  Q_OBJECT
 
-  QCoreApplication::setOrganizationDomain(BrandedStrings::OrganizationDomain);
-  QCoreApplication::setOrganizationName(BrandedStrings::OrganizationName);
-  QCoreApplication::setApplicationName("StatsGeneratorUI");
+  public:
+    MacDREAM3DApplication(int& argc, char** argv);
+    virtual ~MacDREAM3DApplication();
 
-#if defined( Q_OS_MAC )
-  //Needed for typical Mac program behavior.
-  app.setQuitOnLastWindowClosed( true );
-#endif //APPLE
+    virtual void unregisterDREAM3DWindow(DREAM3D_UI* window);
 
-  QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+    void toEmptyMenuState();
 
-  setlocale(LC_NUMERIC, "C");
+  protected slots:
 
-//#if defined (Q_OS_MAC)
-//  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-//#else
-  QSharedPointer<DREAM3DSettings> prefs = QSharedPointer<DREAM3DSettings>(new DREAM3DSettings());
-//#endif
-  QRecentFileList::instance()->readList(prefs.data());
+  /**
+  * @brief Updates the QMenu 'Recent Files' with the latest list of files. This
+  * should be connected to the Signal QRecentFileList->fileListChanged
+  * @param file The newly added file.
+  */
+  virtual void updateRecentFileList(const QString& file);
 
+  /**
+  * @brief activeWindowChanged
+  */
+  virtual void dream3dWindowChanged(DREAM3D_UI* instance);
 
-  StatsGeneratorUI* viewer = app.createNewStatsGenerator();
-  viewer->show();
-  int app_return = app.exec();
+  virtual void toolboxWindowChanged();
 
-  QRecentFileList::instance()->writeList(prefs.data());
+  // DREAM3D_UI slots
+  virtual void on_actionClearRecentFiles_triggered();
 
-  return app_return;
-}
+  void toToolboxMenuState();
+  void toDREAM3DMenuState(DREAM3D_UI *instance);
 
+private:
+  // The global menu
+  QMenuBar*                            m_GlobalMenu;
+
+  void createGlobalMenu();
+
+  MacDREAM3DApplication(const MacDREAM3DApplication&); // Copy Constructor Not Implemented
+  void operator=(const MacDREAM3DApplication&); // Operator '=' Not Implemented
+};
+
+#endif /* _MacDREAM3DApplication_H */

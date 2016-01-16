@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _QFilterLibraryDockWidget_H_
-#define _QFilterLibraryDockWidget_H_
+#ifndef _FilterLibraryToolboxWidget_H_
+#define _FilterLibraryToolboxWidget_H_
 
 
 #include <QtWidgets/QDockWidget>
@@ -48,22 +48,22 @@
 
 #include "QtSupportLib/DREAM3DSettings.h"
 
-#include "ui_FilterLibraryDockWidget.h"
+#include "ui_FilterLibraryToolboxWidget.h"
 
-class FilterListDockWidget;
+class FilterListToolboxWidget;
 
 
-class DREAM3DWidgetsLib_EXPORT FilterLibraryDockWidget : public QDockWidget, private Ui::FilterLibraryDockWidget
+class DREAM3DWidgetsLib_EXPORT FilterLibraryToolboxWidget : public QWidget, private Ui::FilterLibraryToolboxWidget
 {
 
     Q_OBJECT
   public:
     /**
-     * @brief FilterLibraryDockWidget
+     * @brief FilterLibraryToolboxWidget
      * @param parent
      */
-    FilterLibraryDockWidget(QWidget* parent = NULL);
-    virtual ~FilterLibraryDockWidget();
+    FilterLibraryToolboxWidget(QWidget* parent = NULL);
+    virtual ~FilterLibraryToolboxWidget();
 
     /**
      * @brief setupGui
@@ -74,7 +74,7 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryDockWidget : public QDockWidget, pri
      * @brief connectFilterList
      * @param filterListWidget
      */
-    void connectFilterList(FilterListDockWidget* filterListWidget);
+    void connectFilterList(FilterListToolboxWidget* filterListWidget);
 
     /**
      * @brief refreshFilterGroups
@@ -84,12 +84,12 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryDockWidget : public QDockWidget, pri
     /**
     * @brief Reads the preferences from the users pref file
     */
-    void readSettings(QMainWindow* main, DREAM3DSettings& prefs);
+    void readSettings(DREAM3DSettings* prefs);
 
     /**
     * @brief Writes the preferences to the users pref file
     */
-    void writeSettings(DREAM3DSettings& prefs);
+    void writeSettings(DREAM3DSettings* prefs);
 
   protected:
     void updateFilterGroupList(FilterManager::Collection& factories);
@@ -130,8 +130,8 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryDockWidget : public QDockWidget, pri
     QMenu* m_ContextMenu;
     QSignalMapper* m_Mapper;
 
-    FilterLibraryDockWidget(const FilterLibraryDockWidget&); // Copy Constructor Not Implemented
-    void operator=(const FilterLibraryDockWidget&); // Operator '=' Not Implemented
+    FilterLibraryToolboxWidget(const FilterLibraryToolboxWidget&); // Copy Constructor Not Implemented
+    void operator=(const FilterLibraryToolboxWidget&); // Operator '=' Not Implemented
 
 
 };

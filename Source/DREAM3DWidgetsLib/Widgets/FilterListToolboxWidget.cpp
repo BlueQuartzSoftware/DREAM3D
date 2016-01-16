@@ -32,7 +32,7 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "FilterListDockWidget.h"
+#include "FilterListToolboxWidget.h"
 
 #include <QtCore/QBitArray>
 #include <QtCore/QFileInfo>
@@ -48,13 +48,13 @@
 #include "SIMPLib/Common/DocRequestManager.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
-#include "moc_FilterListDockWidget.cpp"
+#include "moc_FilterListToolboxWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FilterListDockWidget::FilterListDockWidget(QWidget* parent) :
-  QDockWidget(parent),
+FilterListToolboxWidget::FilterListToolboxWidget(QWidget* parent) :
+  QWidget(parent),
   m_ContextMenu(new QMenu(this)),
   m_Mapper(NULL),
   m_SearchAnyWords(false),
@@ -69,17 +69,15 @@ FilterListDockWidget::FilterListDockWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FilterListDockWidget::~FilterListDockWidget()
+FilterListToolboxWidget::~FilterListToolboxWidget()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterListDockWidget::setupGui()
+void FilterListToolboxWidget::setupGui()
 {
-  updateFilterList(true);
-
   setupSearchField();
 
   QString css(" QToolTip {\
@@ -99,7 +97,7 @@ void FilterListDockWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterListDockWidget::setupSearchField()
+void FilterListToolboxWidget::setupSearchField()
 {
   filterSearch->setAttribute(Qt::WA_MacShowFocusRect, false);
   QMenu* lineEditMenu = new QMenu(filterSearch);
@@ -154,7 +152,7 @@ void FilterListDockWidget::setupSearchField()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterListDockWidget::showContextMenuForWidget(const QPoint& pos)
+void FilterListToolboxWidget::showContextMenuForWidget(const QPoint& pos)
 {
   // Clear the existing context menu
   m_ContextMenu->clear();
@@ -182,7 +180,7 @@ void FilterListDockWidget::showContextMenuForWidget(const QPoint& pos)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterListDockWidget::launchHelpForItem(QString humanLabel)
+void FilterListToolboxWidget::launchHelpForItem(QString humanLabel)
 {
   FilterManager* fm = FilterManager::Instance();
   if (NULL == fm)
@@ -209,7 +207,7 @@ void FilterListDockWidget::launchHelpForItem(QString humanLabel)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterListDockWidget::updateFilterList(bool sortItems)
+void FilterListToolboxWidget::updateFilterList(bool sortItems)
 {
   // Clear the list first
   filterList->clear();
@@ -249,7 +247,7 @@ void FilterListDockWidget::updateFilterList(bool sortItems)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterListDockWidget::addItemToList(AbstractFilter::Pointer filter)
+void FilterListToolboxWidget::addItemToList(AbstractFilter::Pointer filter)
 {
 
   QString humanName = filter->getHumanLabel();
@@ -294,7 +292,7 @@ void FilterListDockWidget::addItemToList(AbstractFilter::Pointer filter)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> FilterListDockWidget::serializeString(QString string, char token)
+QList<QString> FilterListToolboxWidget::serializeString(QString string, char token)
 {
   std::string stringString = string.toStdString();
   QList<QString> list;
@@ -321,7 +319,7 @@ QList<QString> FilterListDockWidget::serializeString(QString string, char token)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString FilterListDockWidget::deserializeString(QList<QString> list, char token)
+QString FilterListToolboxWidget::deserializeString(QList<QString> list, char token)
 {
   QString str = "";
   for (int i = 0; i < list.size(); i++)
@@ -337,7 +335,7 @@ QString FilterListDockWidget::deserializeString(QList<QString> list, char token)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterListDockWidget::matchFilter(QMapIterator<QString, IFilterFactory::Pointer> iter, QString fullWord, int& filterCount)
+void FilterListToolboxWidget::matchFilter(QMapIterator<QString, IFilterFactory::Pointer> iter, QString fullWord, int& filterCount)
 {
   QList<QString> wordList = serializeString(fullWord, ' ');
   fullWord = deserializeString(wordList, ' ');
@@ -458,7 +456,7 @@ void FilterListDockWidget::matchFilter(QMapIterator<QString, IFilterFactory::Poi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterListDockWidget::searchFilters(QString text)
+void FilterListToolboxWidget::searchFilters(QString text)
 {
   // Set scroll bar back to the top
   filterList->scrollToTop();
@@ -490,7 +488,7 @@ void FilterListDockWidget::searchFilters(QString text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterListDockWidget::on_filterList_itemDoubleClicked( QListWidgetItem* item )
+void FilterListToolboxWidget::on_filterList_itemDoubleClicked( QListWidgetItem* item )
 {
   emit filterItemDoubleClicked(item->data(Qt::UserRole).toString());
 }
@@ -498,7 +496,7 @@ void FilterListDockWidget::on_filterList_itemDoubleClicked( QListWidgetItem* ite
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterListDockWidget::keyPressEvent(QKeyEvent* event)
+void FilterListToolboxWidget::keyPressEvent(QKeyEvent* event)
 {
   if (searchInProgress() == true)
   {
@@ -531,7 +529,7 @@ void FilterListDockWidget::keyPressEvent(QKeyEvent* event)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterListDockWidget::searchFieldsChanged(bool isChecked)
+void FilterListToolboxWidget::searchFieldsChanged(bool isChecked)
 {
   QAction* senderAction = qobject_cast<QAction*>(sender());
 
@@ -572,7 +570,7 @@ void FilterListDockWidget::searchFieldsChanged(bool isChecked)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QAction* FilterListDockWidget::getActiveSearchAction()
+QAction* FilterListToolboxWidget::getActiveSearchAction()
 {
   if (m_ActionExactPhrase->isChecked())
   {
@@ -591,7 +589,7 @@ QAction* FilterListDockWidget::getActiveSearchAction()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterListDockWidget::setActiveSearchAction(QAction* action)
+void FilterListToolboxWidget::setActiveSearchAction(QAction* action)
 {
   m_ActionExactPhrase->blockSignals(true);
   m_ActionAllWords->blockSignals(true);
@@ -610,7 +608,7 @@ void FilterListDockWidget::setActiveSearchAction(QAction* action)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QAction*> FilterListDockWidget::getSearchActionList()
+QList<QAction*> FilterListToolboxWidget::getSearchActionList()
 {
   QList<QAction*> list;
   list.append(m_ActionAllWords);
@@ -622,7 +620,7 @@ QList<QAction*> FilterListDockWidget::getSearchActionList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QMap<QString, AbstractFilter::Pointer> FilterListDockWidget::getHumanNameMap(QList<AbstractFilter::Pointer> list)
+QMap<QString, AbstractFilter::Pointer> FilterListToolboxWidget::getHumanNameMap(QList<AbstractFilter::Pointer> list)
 {
   QMap<QString, AbstractFilter::Pointer> map;
   for (int i = 0; i < list.size(); i++)
@@ -636,20 +634,27 @@ QMap<QString, AbstractFilter::Pointer> FilterListDockWidget::getHumanNameMap(QLi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterListDockWidget::writeSettings(DREAM3DSettings& prefs)
+void FilterListToolboxWidget::writeSettings(DREAM3DSettings* prefs)
 {
-  prefs.setValue(objectName(), isHidden());
-  prefs.setValue("ActiveSearchAction", getActiveSearchAction()->objectName());
+  prefs->beginGroup("DockWidgetSettings");
+  prefs->beginGroup("Filter List Dock Widget");
+
+  prefs->setValue(objectName(), isHidden());
+  prefs->setValue("ActiveSearchAction", getActiveSearchAction()->objectName());
+
+  prefs->endGroup();
+  prefs->endGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterListDockWidget::readSettings(QMainWindow* main, DREAM3DSettings& prefs)
+void FilterListToolboxWidget::readSettings(DREAM3DSettings* prefs)
 {
-  main->restoreDockWidget(this);
+  prefs->beginGroup("DockWidgetSettings");
+  prefs->beginGroup("Filter List Dock Widget");
 
-  QString objectName = prefs.value("ActiveSearchAction", QString("")).toString();
+  QString objectName = prefs->value("ActiveSearchAction", QString("")).toString();
   QList<QAction*> list = getSearchActionList();
 
   bool didCheck = false;
@@ -671,12 +676,15 @@ void FilterListDockWidget::readSettings(QMainWindow* main, DREAM3DSettings& pref
     // Set "All Words" as checked by default
     list[0]->setChecked(true);
   }
+
+  prefs->endGroup();
+  prefs->endGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool FilterListDockWidget::searchInProgress()
+bool FilterListToolboxWidget::searchInProgress()
 {
   if (filterSearch->text().isEmpty())
   {
@@ -688,7 +696,7 @@ bool FilterListDockWidget::searchInProgress()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FilterListWidget* FilterListDockWidget::getFilterListWidget()
+FilterListWidget* FilterListToolboxWidget::getFilterListWidget()
 {
   return filterList;
 }

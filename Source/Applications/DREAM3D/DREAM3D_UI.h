@@ -50,8 +50,6 @@
 #include <QtGui/QResizeEvent>
 #include <QtWidgets/QToolBar>
 
-#include "Applications/DREAM3D/DREAM3DMenu.h"
-
 #include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
@@ -64,9 +62,9 @@
 
 
 class ISIMPLibPlugin;
-class FilterLibraryDockWidget;
-class BookmarksDockWidget;
-class PrebuiltPipelinesDockWidget;
+class FilterLibraryToolboxWidget;
+class BookmarksToolboxWidget;
+class PrebuiltsToolboxWidget;
 class FilterListWidget;
 class DREAM3DUpdateCheckDialog;
 class UpdateCheckData;
@@ -107,31 +105,25 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     PipelineViewWidget* getPipelineViewWidget();
 
     /**
-    * @brief getPrebuiltsDockWidget
+    * @brief getBookmarksToolboxWidget
     * @param
     */
-    PrebuiltPipelinesDockWidget* getPrebuiltsDockWidget();
+    BookmarksToolboxWidget* getBookmarksToolboxWidget();
 
     /**
-    * @brief getBookmarksDockWidget
+    * @brief getFilterListToolboxWidget
     * @param
     */
-    BookmarksDockWidget* getBookmarksDockWidget();
+    FilterListToolboxWidget* getFilterListToolboxWidget();
 
     /**
-    * @brief getFilterListDockWidget
+    * @brief getFilterLibraryToolboxWidget
     * @param
     */
-    FilterListDockWidget* getFilterListDockWidget();
+    FilterLibraryToolboxWidget* getFilterLibraryToolboxWidget();
 
     /**
-    * @brief getFilterLibraryDockWidget
-    * @param
-    */
-    FilterLibraryDockWidget* getFilterLibraryDockWidget();
-
-    /**
-    * @brief getFilterListDockWidget
+    * @brief getFilterListToolboxWidget
     * @param
     */
     IssuesDockWidget* getIssuesDockWidget();
@@ -142,22 +134,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     */
     void setOpenDialogLastDirectory(const QString& path);
 
-    /**
-    * @brief
-    */
-    void connectSignalsSlots(DREAM3D_UI* other);
-#if !defined(Q_OS_MAC)
-    /**
-    * @brief setDREAM3DMenu
-    * @param menu
-    */
-    void setDREAM3DMenu(DREAM3DMenu* menu);
-
-    /**
-    * @brief getDREAM3DMenu
-    */
-    DREAM3DMenu* getDREAM3DMenu();
-#endif
     /**
      * @brief updateAndSyncDockWidget
      * @param action
@@ -335,11 +311,11 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      *
      * @param prefs
      */
-    void writeWindowSettings(DREAM3DSettings& prefs);
-    void writeVersionCheckSettings(DREAM3DSettings& prefs);
+    void writeWindowSettings(DREAM3DSettings* prefs);
+    void writeVersionCheckSettings(DREAM3DSettings* prefs);
 
-    void readWindowSettings(DREAM3DSettings& prefs);
-    void readVersionSettings(DREAM3DSettings& prefs);
+    void readWindowSettings(DREAM3DSettings* prefs);
+    void readVersionSettings(DREAM3DSettings* prefs);
 
     void checkForUpdatesAtStartup();
 
@@ -353,14 +329,14 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      * @param prefs
      * @param dw
      */
-    void readDockWidgetSettings(DREAM3DSettings& prefs, QDockWidget* dw);
+    void readDockWidgetSettings(DREAM3DSettings* prefs, QDockWidget* dw);
 
     /**
      * @brief writeDockWidgetSettings
      * @param prefs
      * @param dw
      */
-    void writeDockWidgetSettings(DREAM3DSettings& prefs, QDockWidget* dw);
+    void writeDockWidgetSettings(DREAM3DSettings* prefs, QDockWidget* dw);
 
     /**
      * @brief Checks the currently open file for changes that need to be saved
@@ -387,19 +363,12 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
     FilterPipeline::Pointer               m_PipelineInFlight;
 #if !defined(Q_OS_MAC)
-    DREAM3DMenu*                          m_InstanceMenu;
+    QMenuBar*                             m_InstanceMenuBar;
 #endif
     bool                                  m_ShouldRestart;
 
     QString                               m_OpenedFilePath;
     static QString                        m_OpenDialogLastDirectory;
-
-    /**
-    * @brief Creates a view menu for the DREAM3D instance.  We need to
-    * do this separately because there is a different View menu for each
-    * DREAM3D instance on all OSes.
-    */
-    QMenu* createViewMenu();
 
     /**
     * @brief Updates the "first run" variable in the preferences file

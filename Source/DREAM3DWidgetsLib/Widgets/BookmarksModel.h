@@ -53,6 +53,7 @@ enum IndexState
   Default
 };
 
+class DREAM3DSettings;
 class BookmarksItem;
 
 class DREAM3DWidgetsLib_EXPORT BookmarksModel : public QAbstractItemModel
@@ -66,7 +67,7 @@ class DREAM3DWidgetsLib_EXPORT BookmarksModel : public QAbstractItemModel
 
     static BookmarksModel* Instance();
 
-    static BookmarksModel* NewInstanceFromFile(QString filePath);
+    static BookmarksModel* NewInstance(DREAM3DSettings* prefs);
 
     QVariant data(const QModelIndex& index, int role) const Q_DECL_OVERRIDE;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
@@ -84,6 +85,8 @@ class DREAM3DWidgetsLib_EXPORT BookmarksModel : public QAbstractItemModel
     bool insertRows(int position, int rows, const QModelIndex& parent = QModelIndex()) Q_DECL_OVERRIDE;
     bool removeRows(int position, int rows, const QModelIndex& parent = QModelIndex()) Q_DECL_OVERRIDE;
 
+    bool moveRows(const QModelIndex & sourceParent, int sourceRow, int count, const QModelIndex & destinationParent, int destinationChild) Q_DECL_OVERRIDE;
+
     Qt::ItemFlags flags(const QModelIndex& index) const Q_DECL_OVERRIDE;
 
     bool setData(const QModelIndex& index, const QVariant& value, int role) Q_DECL_OVERRIDE;
@@ -92,8 +95,6 @@ class DREAM3DWidgetsLib_EXPORT BookmarksModel : public QAbstractItemModel
     void setNeedsToBeExpanded(const QModelIndex& index, bool value);
 
     BookmarksItem* getRootItem();
-
-    void moveIndexInternally(const QModelIndex& index, QModelIndex& oldParent, QModelIndex& newParent);
 
     void addFileToTree(QString& path, QModelIndex& specifiedParent);
 
@@ -118,9 +119,6 @@ class DREAM3DWidgetsLib_EXPORT BookmarksModel : public QAbstractItemModel
     static BookmarksModel* self;
 
     BookmarksItem* getItem(const QModelIndex& index) const;
-    void copyIndexToTemp(const QModelIndex& index, const QModelIndex& oldParent, const QModelIndex& tempParent, BookmarksModel* tempModel);
-
-    void copyTempToIndex(QModelIndex& index, QModelIndex& newParent, const QModelIndex& tempParent, BookmarksModel* tempModel);
 
     QStringList getFilePaths(BookmarksItem* item);
 

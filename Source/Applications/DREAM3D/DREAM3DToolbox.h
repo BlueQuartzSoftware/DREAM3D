@@ -34,50 +34,62 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#include "StatsGeneratorUI.h"
+#ifndef DREAM3DToolbox_H
+#define DREAM3DToolbox_H
 
-#include <QtSupportLib/QRecentFileList.h>
-#include <QtSupportLib/DREAM3DSettings.h>
-#include "SGApplication.h"
-#include "BrandedStrings.h"
+#include <QtWidgets/QMainWindow>
 
-//-- Qt Headers
-#include <QtWidgets/QApplication>
+//-- UIC generated Header
+#include "ui_DREAM3DToolbox.h"
 
-/**
- * @brief The Main entry point for the application
- */
-int main (int argc, char* argv[])
+class DREAM3DToolbox : public QMainWindow, private Ui::DREAM3DToolbox
 {
-  SGApplication app(argc, argv);
+    Q_OBJECT
 
-  QCoreApplication::setOrganizationDomain(BrandedStrings::OrganizationDomain);
-  QCoreApplication::setOrganizationName(BrandedStrings::OrganizationName);
-  QCoreApplication::setApplicationName("StatsGeneratorUI");
+  public:
+    virtual ~DREAM3DToolbox();
 
-#if defined( Q_OS_MAC )
-  //Needed for typical Mac program behavior.
-  app.setQuitOnLastWindowClosed( true );
-#endif //APPLE
+    static DREAM3DToolbox* Instance(QWidget* parent = 0, Qt::WindowFlags flags = 0);
 
-  QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+    enum ToolboxTabs
+    {
+      FilterLibrary,
+      FilterList,
+      Bookmarks
+    };
 
-  setlocale(LC_NUMERIC, "C");
+    void setupGui();
 
-//#if defined (Q_OS_MAC)
-//  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-//#else
-  QSharedPointer<DREAM3DSettings> prefs = QSharedPointer<DREAM3DSettings>(new DREAM3DSettings());
-//#endif
-  QRecentFileList::instance()->readList(prefs.data());
+    BookmarksToolboxWidget* getBookmarksWidget();
+    FilterListToolboxWidget* getFilterListWidget();
+    FilterLibraryToolboxWidget* getFilterLibraryWidget();
 
+    void readSettings();
+    void readWindowSettings(DREAM3DSettings* prefs);
 
-  StatsGeneratorUI* viewer = app.createNewStatsGenerator();
-  viewer->show();
-  int app_return = app.exec();
+    void writeSettings();
+    void writeWindowSettings(DREAM3DSettings* prefs);
 
-  QRecentFileList::instance()->writeList(prefs.data());
+    void setCurrentTab(ToolboxTabs tab);
 
-  return app_return;
-}
+  protected:
+    DREAM3DToolbox(QWidget* parent = 0, Qt::WindowFlags flags = 0);
+    void changeEvent(QEvent* event);
+    void closeEvent(QCloseEvent* event);
 
+  protected slots:
+    void actionShowFilterLibrary_triggered(bool enabled);
+    void actionShowFilterList_triggered(bool enabled);
+    void actionShowBookmarks_triggered(bool enabled);
+
+  signals:
+    void toolboxChangedState();
+
+  private:
+    static DREAM3DToolbox*                              self;
+
+    DREAM3DToolbox(const DREAM3DToolbox&); // Copy Constructor Not Implemented
+    void operator=(const DREAM3DToolbox&); // Operator '=' Not Implemented
+};
+
+#endif // DREAM3DToolbox_H

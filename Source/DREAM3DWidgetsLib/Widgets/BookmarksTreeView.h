@@ -95,6 +95,12 @@ class DREAM3DWidgetsLib_EXPORT BookmarksTreeView : public QTreeView
     */
     void setModel(QAbstractItemModel* model) Q_DECL_OVERRIDE;
 
+    /**
+    * @brief filterOutDescendants
+    * @param indexList
+    */
+    QModelIndexList filterOutDescendants(QModelIndexList indexList);
+
   public slots:
     void collapseIndex(const QModelIndex& index);
     void expandIndex(const QModelIndex& index);
@@ -114,7 +120,7 @@ class DREAM3DWidgetsLib_EXPORT BookmarksTreeView : public QTreeView
     void addActionList(QList<QAction*> actionList);
 
   signals:
-    void itemWasDropped(QModelIndex parent, QString& title, QIcon icon, QString path, bool allowEditing, bool editState, bool isExpanding);
+    void itemWasDropped(QModelIndex parent, QString& title, QIcon icon, QString path, int index, bool allowEditing, bool editState, bool isExpanding);
     void currentIndexChanged(const QModelIndex& current, const QModelIndex& previous);
     void folderChangedState(const QModelIndex& index, bool expand);
 
@@ -132,14 +138,15 @@ class DREAM3DWidgetsLib_EXPORT BookmarksTreeView : public QTreeView
     QJsonObject wrapModel(QModelIndex index);
     static void UnwrapModel(QString objectName, QJsonObject object, BookmarksModel* model, QModelIndex parentIndex);
 
-    QPoint                    m_StartPos;
-    QMenu                     m_Menu;
-    QList<QAction*>           m_NodeActions;
-    QList<QAction*>           m_LeafActions;
-    QList<QAction*>           m_LeafErrorActions;
-    QList<QAction*>           m_DefaultActions;
-    QModelIndex               m_IndexBeingDragged;
-    QModelIndex               m_TopLevelItemPlaceholder;
+    QPoint                                        m_StartPos;
+    QMenu                                         m_Menu;
+    QList<QAction*>                               m_NodeActions;
+    QList<QAction*>                               m_LeafActions;
+    QList<QAction*>                               m_LeafErrorActions;
+    QList<QAction*>                               m_DefaultActions;
+    QList<QPersistentModelIndex>                  m_IndexesBeingDragged;
+    QPersistentModelIndex                         m_ActiveIndexBeingDragged;
+    QModelIndex                                   m_TopLevelItemPlaceholder;
 };
 
 #endif /* _BookmarksTreeView_H_ */
