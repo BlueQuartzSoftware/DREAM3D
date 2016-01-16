@@ -34,7 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#include "FeatureCountDecision.h"
+#include "MaskCountDecision.h"
 
 #include <QtCore/QJsonDocument>
 
@@ -43,19 +43,17 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
-#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/Geometry/ImageGeom.h"
 
-#include "moc_FeatureCountDecision.cpp"
+#include "moc_MaskCountDecision.cpp"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FeatureCountDecision::FeatureCountDecision() :
+MaskCountDecision::MaskCountDecision() :
   AbstractDecisionFilter(),
-  m_FeatureIdsArrayPath("", "", ""),
-  m_MaxGrains(0),
-  m_FeatureIds(NULL)
+  m_MaskArrayPath("", "", ""),
+  m_NumberOfTrues(0),
+  m_Mask(NULL)
 {
   setupFilterParameters();
 }
@@ -63,46 +61,43 @@ FeatureCountDecision::FeatureCountDecision() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FeatureCountDecision::~FeatureCountDecision()
+MaskCountDecision::~MaskCountDecision()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FeatureCountDecision::setupFilterParameters()
+void MaskCountDecision::setupFilterParameters()
 {
   FilterParameterVector parameters = getFilterParameters();
-  parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
-  {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::CellEnsemble, DREAM3D::Defaults::AnyGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
-  }
-  parameters.push_back(IntFilterParameter::New("Maximum Number of Features", "MaxGrains", getMaxGrains(), FilterParameter::Parameter, 0));
+  DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Bool, 1, DREAM3D::Defaults::AnyAttributeMatrix, DREAM3D::Defaults::AnyGeometry);
+  parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "MaskArrayPath", getMaskArrayPath(), FilterParameter::RequiredArray, req));
+  parameters.push_back(IntFilterParameter::New("Number of True Instances", "NumberOfTrues", getNumberOfTrues(), FilterParameter::Parameter, 0));
   setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FeatureCountDecision::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void MaskCountDecision::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   AbstractDecisionFilter::readFilterParameters(reader, index);
   reader->openFilterGroup(this, index);
-  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
-  setMaxGrains(reader->readValue("MaxGrains", getMaxGrains()));
+  setMaskArrayPath(reader->readDataArrayPath("MaskArrayPath", getMaskArrayPath()));
+  setNumberOfTrues(reader->readValue("NumberOfTrues", getNumberOfTrues()));
   reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FeatureCountDecision::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int MaskCountDecision::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   AbstractDecisionFilter::writeFilterParameters(writer, index);
   writer->openFilterGroup(this, index);
-  SIMPL_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  SIMPL_FILTER_WRITE_PARAMETER(MaxGrains)
+  SIMPL_FILTER_WRITE_PARAMETER(MaskArrayPath)
+  SIMPL_FILTER_WRITE_PARAMETER(NumberOfTrues)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -110,23 +105,21 @@ int FeatureCountDecision::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FeatureCountDecision::dataCheck()
+void MaskCountDecision::dataCheck()
 {
   setErrorCondition(0);
 
-  getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
-
   QVector<size_t> cDims(1, 1);
 
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if (NULL != m_FeatureIdsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  {  m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_MaskPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getMaskArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if (NULL != m_MaskPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_Mask = m_MaskPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FeatureCountDecision::preflight()
+void MaskCountDecision::preflight()
 {
   setInPreflight(true);
   emit preflightAboutToExecute();
@@ -139,21 +132,31 @@ void FeatureCountDecision::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FeatureCountDecision::execute()
+void MaskCountDecision::execute()
 {
   setErrorCondition(0);
   dataCheck();
   if (getErrorCondition() < 0) { return; }
 
-  // Assumes a SINGLE Phase. This WILL BREAK if there is more than 1 phase.
-  qDebug() << "MaxGrains: " << m_MaxGrains;
-  qDebug() << "FeatureIds: " << m_FeatureIds[1];
+  size_t numTuples = m_MaskPtr.lock()->getNumberOfTuples();
 
-  bool dm = true;
+  size_t trueCount = 0;
+  bool dm = false;
 
-  if (m_MaxGrains < m_FeatureIds[1])
+  for (size_t i = 0; i < numTuples; i++)
   {
-    dm = false;
+    if (m_NumberOfTrues < 0 && !m_Mask[i])
+    {
+      emit decisionMade(dm);
+      return;
+    }
+    if (m_Mask[i]) { trueCount++; }
+    if (trueCount >= m_NumberOfTrues)
+    {
+      dm = true;
+      emit decisionMade(dm);
+      return;
+    }
   }
 
   emit decisionMade(dm);
@@ -164,7 +167,7 @@ void FeatureCountDecision::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FeatureCountDecision::extractProperties(const QJsonDocument &jsonDoc)
+void MaskCountDecision::extractProperties(const QJsonDocument &jsonDoc)
 {
   QJsonObject json = jsonDoc.object();
   QJsonValue jvalue = json.value(this->getNameOfClass());
@@ -176,7 +179,7 @@ void FeatureCountDecision::extractProperties(const QJsonDocument &jsonDoc)
     QJsonValue propValue = jvalue.toObject()["MaxGrains"];
     if (!propValue.isUndefined())
     {
-      setMaxGrains(propValue.toInt());
+      setNumberOfTrues(propValue.toInt());
     }
   }
 
@@ -185,7 +188,7 @@ void FeatureCountDecision::extractProperties(const QJsonDocument &jsonDoc)
     if (!propValue.isUndefined())
     {
       QJsonObject jObj = propValue.toObject();
-      m_FeatureIdsArrayPath.readJson(jObj);
+      m_MaskArrayPath.readJson(jObj);
     }
   }
 
@@ -194,9 +197,9 @@ void FeatureCountDecision::extractProperties(const QJsonDocument &jsonDoc)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FeatureCountDecision::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer MaskCountDecision::newFilterInstance(bool copyFilterParameters)
 {
-  FeatureCountDecision::Pointer filter = FeatureCountDecision::New();
+  MaskCountDecision::Pointer filter = MaskCountDecision::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -207,23 +210,23 @@ AbstractFilter::Pointer FeatureCountDecision::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureCountDecision::getCompiledLibraryName()
+const QString MaskCountDecision::getCompiledLibraryName()
 { return Core::CoreBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureCountDecision::getGroupName()
+const QString MaskCountDecision::getGroupName()
 { return DREAM3D::FilterGroups::CoreFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureCountDecision::getSubGroupName()
+const QString MaskCountDecision::getSubGroupName()
 { return DREAM3D::FilterSubGroups::MiscFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureCountDecision::getHumanLabel()
-{ return "Feature Count Decision"; }
+const QString MaskCountDecision::getHumanLabel()
+{ return "Mask Count Decision"; }

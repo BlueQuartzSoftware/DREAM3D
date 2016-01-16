@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _FeatureCountDecision_H_
-#define _FeatureCountDecision_H_
+#ifndef _MaskCountDecision_H_
+#define _MaskCountDecision_H_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
@@ -44,23 +44,23 @@
 #include "SIMPLib/Common/AbstractDecisionFilter.h"
 
 /**
- * @brief The FeatureCountDecision class. See [Filter documentation](@ref featurecountdecision) for details.
+ * @brief The MaskCountDecision class. See [Filter documentation](@ref MaskCountDecision) for details.
  */
-class FeatureCountDecision : public AbstractDecisionFilter
+class MaskCountDecision : public AbstractDecisionFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    SIMPL_SHARED_POINTERS(FeatureCountDecision)
-    SIMPL_STATIC_NEW_MACRO(FeatureCountDecision)
-    SIMPL_TYPE_MACRO_SUPER(FeatureCountDecision, AbstractDecisionFilter)
+    SIMPL_SHARED_POINTERS(MaskCountDecision)
+    SIMPL_STATIC_NEW_MACRO(MaskCountDecision)
+    SIMPL_TYPE_MACRO_SUPER(MaskCountDecision, AbstractDecisionFilter)
 
-    virtual ~FeatureCountDecision();
+    virtual ~MaskCountDecision();
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-    Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, MaskArrayPath)
+    Q_PROPERTY(DataArrayPath MaskArrayPath READ getMaskArrayPath WRITE setMaskArrayPath)
 
-    SIMPL_FILTER_PARAMETER(int, MaxGrains)
-    Q_PROPERTY(int MaxGrains READ getMaxGrains WRITE setMaxGrains)
+    SIMPL_FILTER_PARAMETER(int, NumberOfTrues)
+    Q_PROPERTY(int NumberOfTrues READ getNumberOfTrues WRITE setNumberOfTrues)
 
     /**
     * @brief
@@ -119,7 +119,7 @@ class FeatureCountDecision : public AbstractDecisionFilter
     virtual void preflight();
 
   protected:
-    FeatureCountDecision();
+    MaskCountDecision();
 
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -127,10 +127,10 @@ class FeatureCountDecision : public AbstractDecisionFilter
     void dataCheck();
 
   private:
-    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_DATAARRAY_VARIABLE(bool, Mask)
 
-    FeatureCountDecision(const FeatureCountDecision&); // Copy Constructor Not Implemented
-    void operator=(const FeatureCountDecision&); // Operator '=' Not Implemented
+    MaskCountDecision(const MaskCountDecision&); // Copy Constructor Not Implemented
+    void operator=(const MaskCountDecision&); // Operator '=' Not Implemented
 };
 
-#endif /* _FeatureCountDecision_H_ */
+#endif /* _MaskCountDecision_H_ */

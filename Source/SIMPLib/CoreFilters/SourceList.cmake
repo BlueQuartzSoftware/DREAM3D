@@ -57,6 +57,7 @@ set(_PublicFilters
   ExtractComponentAsArray
   FeatureCountDecision
   LinkFeatureMapToElementArray
+  MaskCountDecision
   MoveData
   RawBinaryReader
   RemoveArrays
