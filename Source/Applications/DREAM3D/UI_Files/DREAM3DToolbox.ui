@@ -139,19 +139,19 @@
   <customwidget>
    <class>FilterLibraryToolboxWidget</class>
    <extends>QWidget</extends>
-   <header location="global">filterlibrarytoolboxwidget.h</header>
+   <header location="global">FilterLibraryToolboxWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>BookmarksToolboxWidget</class>
    <extends>QWidget</extends>
-   <header location="global">bookmarkstoolboxwidget.h</header>
+   <header location="global">BookmarksToolboxWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>FilterListToolboxWidget</class>
    <extends>QWidget</extends>
-   <header location="global">filterlisttoolboxwidget.h</header>
+   <header location="global">FilterListToolboxWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
