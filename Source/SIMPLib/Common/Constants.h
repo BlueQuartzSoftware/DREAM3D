@@ -118,6 +118,12 @@ namespace DREAM3D
     const QString DAPSettingsHeader("Path");
   }
 
+  namespace DragAndDrop
+  {
+    const QString FilterItem("Filter Item");
+    const QString BookmarkItem("Bookmark Item");
+  }
+
   namespace Defaults
   {
     const QString None("None");

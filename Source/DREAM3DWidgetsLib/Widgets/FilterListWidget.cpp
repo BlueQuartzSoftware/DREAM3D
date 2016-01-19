@@ -37,9 +37,13 @@
 #include "FilterListWidget.h"
 
 #include <QtCore/QMimeData>
+#include <QtCore/QJsonObject>
+#include <QtCore/QJsonDocument>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QDrag>
 #include <QtWidgets/QApplication>
+
+#include "SIMPLib/Common/Constants.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
 #include "moc_FilterListWidget.cpp"
@@ -97,15 +101,19 @@ void FilterListWidget::performDrag()
 {
   QListWidgetItem* item = currentItem();
   if(item)
-  {
+  {    
+    QJsonObject obj;
+    obj[item->text()] = item->data(Qt::UserRole).toString();
+
+    QJsonDocument doc(obj);
+    QByteArray jsonArray = doc.toJson();
+
     QMimeData* mimeData = new QMimeData;
-    mimeData->setText(item->data(Qt::UserRole).toString());
+    mimeData->setData(DREAM3D::DragAndDrop::FilterItem, jsonArray);
 
     QDrag* drag = new QDrag(this);
     drag->setMimeData(mimeData);
     drag->exec(Qt::CopyAction);
-//        if (drag->exec(Qt::MoveAction) == Qt::MoveAction)
-//            delete item;
   }
 }
 

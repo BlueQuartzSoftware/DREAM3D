@@ -42,6 +42,8 @@
 #include <QtCore/QSignalMapper>
 #include <QtCore/QList>
 
+#include <QtGui/QKeyEvent>
+
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "SIMPLib/Common/FilterManager.h"
 

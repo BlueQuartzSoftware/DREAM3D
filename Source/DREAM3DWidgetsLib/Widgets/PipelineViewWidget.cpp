@@ -879,7 +879,7 @@ void PipelineViewWidget::dragMoveEvent(QDragMoveEvent* event)
       }
     }
   }
-  else if (mimedata->hasText() || mimedata->hasFormat("Bookmarks"))
+  else if (mimedata->hasText() || mimedata->hasFormat(DREAM3D::DragAndDrop::BookmarkItem) || mimedata->hasFormat(DREAM3D::DragAndDrop::FilterItem))
   {
     QString data;
     if (mimedata->hasText())
@@ -887,9 +887,9 @@ void PipelineViewWidget::dragMoveEvent(QDragMoveEvent* event)
       QByteArray dropData = mimedata->data("text/plain");
       QString data(dropData);
     }
-    else
+    else if (mimedata->hasFormat(DREAM3D::DragAndDrop::BookmarkItem))
     {
-      QByteArray jsonArray = mimedata->data("Bookmarks");
+      QByteArray jsonArray = mimedata->data(DREAM3D::DragAndDrop::BookmarkItem);
       QJsonDocument doc = QJsonDocument::fromJson(jsonArray);
       QJsonObject obj = doc.object();
 
@@ -899,6 +899,14 @@ void PipelineViewWidget::dragMoveEvent(QDragMoveEvent* event)
         return;
       }
 
+      QJsonObject::iterator iter = obj.begin();
+      data = iter.value().toString();
+    }
+    else
+    {
+      QByteArray jsonArray = mimedata->data(DREAM3D::DragAndDrop::FilterItem);
+      QJsonDocument doc = QJsonDocument::fromJson(jsonArray);
+      QJsonObject obj = doc.object();
       QJsonObject::iterator iter = obj.begin();
       data = iter.value().toString();
     }
@@ -1048,24 +1056,31 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
     emit pipelineChanged();
     event->acceptProposedAction();
   }
-  else if (mimedata->hasUrls() || mimedata->hasText() || mimedata->hasFormat("Bookmarks"))
+  else if (mimedata->hasUrls() || mimedata->hasText() || mimedata->hasFormat(DREAM3D::DragAndDrop::BookmarkItem) || mimedata->hasFormat(DREAM3D::DragAndDrop::FilterItem))
   {
-    QByteArray dropData = mimedata->data("text/plain");
-    QString data(dropData);
-    QString filePath;
+    QString data;
 
     if (mimedata->hasUrls())
     {
+      data = mimedata->text();
       QUrl url(data);
-      filePath = url.toLocalFile();
+      data = url.toLocalFile();
     }
     else if (mimedata->hasText())
     {
-      filePath = data;
+      data = mimedata->text();
+    }
+    else if (mimedata->hasFormat(DREAM3D::DragAndDrop::FilterItem))
+    {
+      QByteArray jsonArray = mimedata->data(DREAM3D::DragAndDrop::FilterItem);
+      QJsonDocument doc = QJsonDocument::fromJson(jsonArray);
+      QJsonObject obj = doc.object();
+      QJsonObject::iterator iter = obj.begin();
+      data = iter.value().toString();
     }
     else
     {
-      QByteArray jsonArray = mimedata->data("Bookmarks");
+      QByteArray jsonArray = mimedata->data(DREAM3D::DragAndDrop::BookmarkItem);
       QJsonDocument doc = QJsonDocument::fromJson(jsonArray);
       QJsonObject obj = doc.object();
 
@@ -1077,10 +1092,10 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
       }
 
       QJsonObject::iterator iter = obj.begin();
-      filePath = iter.value().toString();
+      data = iter.value().toString();
     }
 
-    QFileInfo fi(filePath);
+    QFileInfo fi(data);
     QString ext = fi.completeSuffix();
     FilterManager* fm = FilterManager::Instance();
     if (NULL == fm) { return; }
@@ -1089,26 +1104,23 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
     // If the dragged item is a filter item...
     if (NULL != wf)
     {
+      int index;
+
       // We need to figure out where it was dropped relative to other filters
-      int count = filterCount() - 1;
-      for (int i = 0; i < count; ++i)
+      if (NULL != m_FilterWidgetLayout && m_FilterWidgetLayout->indexOf(m_DropBox) != -1)
       {
-        PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(i)->widget());
-        if (w != NULL)
-        {
-          if (event->pos().y() < w->geometry().y())
-          {
-            count = i;
-            break;
-          }
-        }
+        index = m_FilterWidgetLayout->indexOf(m_DropBox);
+      }
+      else
+      {
+        index = -1;
       }
 
       // Now that we have an index, insert the filter.
-      addFilter(data, count);
+      addFilter(data, index);
 
       emit pipelineChanged();
-      event->acceptProposedAction();
+      event->accept();
     }
     // If the dragged item is a pipeline file...
     else if (ext == "dream3d" || ext == "json" || ext == "ini" || ext == "txt")
@@ -1121,7 +1133,7 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
 
       if (ext == "json" || ext == "ini" || ext == "txt")
       {
-        openPipeline(filePath, index, false, false);
+        openPipeline(data, index, false, false);
 
         emit pipelineChanged();
       }
@@ -1135,16 +1147,16 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
         {
           if (msgBox->isExtractPipelineBtnChecked() == true)
           {
-            openPipeline(filePath, index, false, false);
+            openPipeline(data, index, false, false);
           }
           else
           {
-            addDREAM3DReaderFilter(filePath, index);
+            addDREAM3DReaderFilter(data, index);
             emit pipelineChanged();
           }
         }
       }
-      event->acceptProposedAction();
+      event->accept();
     }
     else
     {
@@ -1160,6 +1172,7 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
   {
     m_FilterWidgetLayout->removeWidget(m_DropBox);
     m_DropBox->setParent(NULL);
+    reindexWidgetTitles();
   }
 }
 

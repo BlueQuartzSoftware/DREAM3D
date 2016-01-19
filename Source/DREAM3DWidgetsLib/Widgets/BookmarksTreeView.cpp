@@ -203,7 +203,7 @@ void BookmarksTreeView::performDrag()
   QByteArray jsonArray = doc.toJson();
 
   QMimeData* mimeData = new QMimeData;
-  mimeData->setData("Bookmarks", jsonArray);
+  mimeData->setData(DREAM3D::DragAndDrop::BookmarkItem, jsonArray);
 
   QDrag* drag = new QDrag(this);
   drag->setMimeData(mimeData);

@@ -30,7 +30,7 @@
     <number>0</number>
    </property>
    <item row="0" column="0">
-    <widget class="FilterTreeWidget" name="bookmarksTreeView">
+    <widget class="FilterLibraryTreeWidget" name="bookmarksTreeView">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
        <horstretch>0</horstretch>
@@ -90,9 +90,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>FilterTreeWidget</class>
+   <class>FilterLibraryTreeWidget</class>
    <extends>QTreeWidget</extends>
-   <header location="global">FilterTreeWidget.h</header>
+   <header location="global">FilterLibraryTreeWidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

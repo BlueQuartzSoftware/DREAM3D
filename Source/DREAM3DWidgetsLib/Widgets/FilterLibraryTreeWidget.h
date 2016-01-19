@@ -34,30 +34,25 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _TREEWIDGETBUILDER_H_
-#define _TREEWIDGETBUILDER_H_
+#ifndef _FilterLibraryTreeWidget_H_
+#define _FilterLibraryTreeWidget_H_
 
-#include <QApplication>
-
-#include <QtCore/QJsonObject>
-
-#include <QtWidgets/QMenu>
-#include <QtGui/QMouseEvent>
+#include <QtCore/QPoint>
 #include <QtWidgets/QTreeWidget>
-#include <QtWidgets/QTreeWidgetItem>
+
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
-
-
-class PipelineBuilderWidget;
-class QAction;
-class QTreeWidgetItem;
-
-class DREAM3DWidgetsLib_EXPORT FilterLibraryTreeWidget : public QTreeWidget
+/*
+ *
+ */
+class DREAM3DWidgetsLib_EXPORT FilterLibraryTreeWidget: public QTreeWidget
 {
     Q_OBJECT
 
   public:
+    FilterLibraryTreeWidget(QWidget* parent = 0);
+    virtual ~FilterLibraryTreeWidget();
+
     enum ItemType
     {
       Node_Item_Type = 1,
@@ -65,92 +60,18 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryTreeWidget : public QTreeWidget
       Unknown_Item_Type = 3
     };
 
-    /**
-     * @brief FilterLibraryTreeWidget
-     * @param parent
-     */
-    FilterLibraryTreeWidget(QWidget* parent = 0);
-
-    /**
-    * @brief fromJsonObject
-    * @param treeObject
-    */
-    static FilterLibraryTreeWidget* FromJsonObject(QJsonObject treeObject);
-
-
-    /**
-     * @brief setNodeActionList
-     * @param list
-     */
-    void setNodeActionList(QList<QAction*> list);
-
-    /**
-     * @brief setLeafActionList
-     * @param list
-     */
-    void setLeafActionList(QList<QAction*> list);
-
-    /**
-     * @brief setDefaultActionList
-     * @param list
-     */
-    void setDefaultActionList(QList<QAction*> list);
-
-    /**
-    * @brief toJsonObject
-    * @param tree
-    */
-    QJsonObject toJsonObject();
-
   protected:
+    void mousePressEvent(QMouseEvent* event);
     void mouseMoveEvent(QMouseEvent* event);
     void dragEnterEvent(QDragEnterEvent* event);
-    void dragLeaveEvent(QDragLeaveEvent* event);
     void dragMoveEvent(QDragMoveEvent* event);
     void dropEvent(QDropEvent* event);
-
-    /**
-     * @brief Adds the actions in the actionList parameter to the right-click menu
-     */
-    void addActionList(QList<QAction*> actionList);
-
-  signals:
-    void itemWasDropped(QTreeWidgetItem* parent, QString& title, QIcon icon, FilterLibraryTreeWidget::ItemType type, QString path, bool allowEditing, bool editState, bool isExpanding);
-
-  private slots:
-
-    /**
-     * @brief onCustomContextMenuRequested
-     * @param pos
-     */
-    void onCustomContextMenuRequested(const QPoint& pos);
-
-    /**
-     * @brief showContextMenu
-     * @param item
-     * @param globalPos
-     */
-    void showContextMenu(QTreeWidgetItem* item, const QPoint& globalPos);
-
-    /**
-    * @brief mousePressEvent
-    * @param event
-    */
-    void mousePressEvent(QMouseEvent* event);
 
   private:
     void performDrag();
 
-    QPoint                    m_StartPos;
-    QMenu                     m_Menu;
-    QList<QAction*>           m_NodeActions;
-    QList<QAction*>           m_LeafActions;
-    QList<QAction*>           m_DefaultActions;
-    QTreeWidgetItem*          m_ItemBeingDragged;
-    QTreeWidgetItem*          m_TopLevelItemPlaceholder;
-
-    QJsonObject wrapTreeItem(QTreeWidgetItem* item);
-    static QTreeWidgetItem* UnwrapTreeItem(QJsonObject object);
+    QPoint startPos;
 };
 
-#endif /* _TREEWIDGETBUILDER_H_ */
+#endif /* _FilterLibraryTreeWidget_H_ */
+
