@@ -40,6 +40,8 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMessageBox>
 
+#include <QtCore/QJsonObject>
+#include <QtCore/QJsonDocument>
 #include <QtCore/QMimeData>
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
@@ -184,9 +186,24 @@ void BookmarksTreeView::performDrag()
     m_IndexesBeingDragged.push_back(list[i]);
   }
 
+  BookmarksModel* model = BookmarksModel::Instance();
+  QJsonObject obj;
+  for(int i=0; i<m_IndexesBeingDragged.size(); i++)
+  {
+    QModelIndex draggedIndex = m_IndexesBeingDragged[i];
+    QString name = model->index(draggedIndex.row(), BookmarksItem::Name, draggedIndex.parent()).data(Qt::DisplayRole).toString();
+    QString path = model->index(draggedIndex.row(), BookmarksItem::Path, draggedIndex.parent()).data(Qt::DisplayRole).toString();
+    if (path.isEmpty() == false)
+    {
+      obj[name] = path;
+    }
+  }
+
+  QJsonDocument doc(obj);
+  QByteArray jsonArray = doc.toJson();
+
   QMimeData* mimeData = new QMimeData;
-  QString source = "Bookmarks";
-  mimeData->setData("Source", source.toLatin1());
+  mimeData->setData("Bookmarks", jsonArray);
 
   QDrag* drag = new QDrag(this);
   drag->setMimeData(mimeData);
@@ -297,73 +314,68 @@ void BookmarksTreeView::dropEvent(QDropEvent* event)
   BookmarksModel* model = BookmarksModel::Instance();
 
   const QMimeData* mimedata = event->mimeData();
-  if (mimedata->hasFormat("Source"))
+  if (mimedata->hasFormat("Bookmarks"))
   {
-    QByteArray byteArray = mimedata->data("Source");
-    QString source = QString::fromStdString(byteArray.toStdString());
-    if (source == "Bookmarks")
+    QPersistentModelIndex newParent = model->index(currentIndex().row(), BookmarksItem::Name, currentIndex().parent());
+
+    // Don't count the destination item in the list of dragged items (if it happens to be in there)
+    if (m_IndexesBeingDragged.contains(newParent) == true)
     {
-      QPersistentModelIndex newParent = model->index(currentIndex().row(), BookmarksItem::Name, currentIndex().parent());
+      m_IndexesBeingDragged.removeAt(m_IndexesBeingDragged.indexOf(newParent));
+    }
 
-      // Don't count the destination item in the list of dragged items (if it happens to be in there)
-      if (m_IndexesBeingDragged.contains(newParent) == true)
+    if (model->flags(newParent).testFlag(Qt::ItemIsDropEnabled) == true)
+    {
+      if (m_TopLevelItemPlaceholder.isValid())
       {
-        m_IndexesBeingDragged.removeAt(m_IndexesBeingDragged.indexOf(newParent));
-      }
-
-      if (model->flags(newParent).testFlag(Qt::ItemIsDropEnabled) == true)
-      {
-        if (m_TopLevelItemPlaceholder.isValid())
+        // If the parent is the placeholder, change the parent to the root.
+        if (m_TopLevelItemPlaceholder == newParent)
         {
-          // If the parent is the placeholder, change the parent to the root.
-          if (m_TopLevelItemPlaceholder == newParent)
-          {
-            newParent = QModelIndex();
-          }
-
-          model->removeRow(model->rowCount() - 1, rootIndex());
-          m_TopLevelItemPlaceholder = QModelIndex();
+          newParent = QModelIndex();
         }
 
-        /* Check to make sure that all selected indexes can be moved before moving them.
+        model->removeRow(model->rowCount() - 1, rootIndex());
+        m_TopLevelItemPlaceholder = QModelIndex();
+      }
+
+      /* Check to make sure that all selected indexes can be moved before moving them.
            This is where we check for cases where a selected index is trying to be moved
            into the child of that selected index, which, according to a common tree
            structure and implementation, should not be allowed */
 
-        if (newParent != QModelIndex())
+      if (newParent != QModelIndex())
+      {
+        QModelIndex testIndex = newParent.parent();
+        while (testIndex.isValid() == true)
         {
-          QModelIndex testIndex = newParent.parent();
-          while (testIndex.isValid() == true)
+          for (int i = m_IndexesBeingDragged.size() - 1; i >= 0; i--)
           {
-            for (int i = m_IndexesBeingDragged.size() - 1; i >= 0; i--)
+            if (testIndex == m_IndexesBeingDragged[i])
             {
-              if (testIndex == m_IndexesBeingDragged[i])
-              {
-                QMessageBox::critical(this, "Bookmarks Error", "Cannot move bookmarks.\nThe destination folder \"" + newParent.data(BookmarksItem::Name).toString() + "\" is a subfolder of the source folder \"" + m_IndexesBeingDragged[i].data(BookmarksItem::Name).toString() + "\".", QMessageBox::Ok, QMessageBox::Ok);
-                return;
-              }
+              QMessageBox::critical(this, "Bookmarks Error", "Cannot move bookmarks.\nThe destination folder \"" + newParent.data(BookmarksItem::Name).toString() + "\" is a subfolder of the source folder \"" + m_IndexesBeingDragged[i].data(BookmarksItem::Name).toString() + "\".", QMessageBox::Ok, QMessageBox::Ok);
+              return;
             }
-            testIndex = testIndex.parent();
           }
+          testIndex = testIndex.parent();
         }
-
-        int insertRow = model->rowCount(newParent);
-        for (int i = m_IndexesBeingDragged.size() - 1; i >= 0; i--)
-        {
-          QPersistentModelIndex index = m_IndexesBeingDragged[i];
-          QModelIndex oldParent = index.parent();
-
-          if (index.isValid())
-          {
-            model->moveRow(oldParent, index.row(), newParent, insertRow);
-          }
-        }
-
-        expand(newParent);
-        model->sort(BookmarksItem::Name, Qt::AscendingOrder);
-        event->accept();
-        return;
       }
+
+      int insertRow = model->rowCount(newParent);
+      for (int i = m_IndexesBeingDragged.size() - 1; i >= 0; i--)
+      {
+        QPersistentModelIndex index = m_IndexesBeingDragged[i];
+        QModelIndex oldParent = index.parent();
+
+        if (index.isValid())
+        {
+          model->moveRow(oldParent, index.row(), newParent, insertRow);
+        }
+      }
+
+      expand(newParent);
+      model->sort(BookmarksItem::Name, Qt::AscendingOrder);
+      event->accept();
+      return;
     }
   }
   else if (mimedata->hasUrls() || mimedata->hasText())

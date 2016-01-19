@@ -43,6 +43,8 @@
 #include <QtCore/QDir>
 #include <QtCore/QTemporaryFile>
 #include <QtCore/QMimeData>
+#include <QtCore/QJsonDocument>
+#include <QtCore/QJsonObject>
 
 #include <QtGui/QMouseEvent>
 #include <QtGui/QDropEvent>
@@ -877,10 +879,30 @@ void PipelineViewWidget::dragMoveEvent(QDragMoveEvent* event)
       }
     }
   }
-  else if (mimedata->hasText())
+  else if (mimedata->hasText() || mimedata->hasFormat("Bookmarks"))
   {
-    QByteArray dropData = mimedata->data("text/plain");
-    QString data(dropData);
+    QString data;
+    if (mimedata->hasText())
+    {
+      QByteArray dropData = mimedata->data("text/plain");
+      QString data(dropData);
+    }
+    else
+    {
+      QByteArray jsonArray = mimedata->data("Bookmarks");
+      QJsonDocument doc = QJsonDocument::fromJson(jsonArray);
+      QJsonObject obj = doc.object();
+
+      if (obj.size() > 1)
+      {
+        event->ignore();
+        return;
+      }
+
+      QJsonObject::iterator iter = obj.begin();
+      data = iter.value().toString();
+    }
+
     QFileInfo fi(data);
     QString ext = fi.completeSuffix();
     FilterManager* fm = FilterManager::Instance();
@@ -982,7 +1004,7 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
   const QMimeData* mimedata = event->mimeData();
   if (m_CurrentFilterBeingDragged != NULL && event->dropAction() == Qt::MoveAction)
   {
-    // This path is take if a filter is being dragged around in the pipeline and dropped.
+    // This is the path to take if a filter is being dragged around in the pipeline and dropped.
     if (NULL != m_FilterWidgetLayout && m_FilterWidgetLayout->indexOf(m_DropBox) != -1)
     {
       m_FilterWidgetLayout->removeWidget(m_DropBox);
@@ -1032,7 +1054,7 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
     emit pipelineChanged();
     event->acceptProposedAction();
   }
-  else if (mimedata->hasUrls() || mimedata->hasText())
+  else if (mimedata->hasUrls() || mimedata->hasText() || mimedata->hasFormat("Bookmarks"))
   {
     QByteArray dropData = mimedata->data("text/plain");
     QString data(dropData);
@@ -1043,9 +1065,25 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
       QUrl url(data);
       filePath = url.toLocalFile();
     }
-    else
+    else if (mimedata->hasText())
     {
       filePath = data;
+    }
+    else
+    {
+      QByteArray jsonArray = mimedata->data("Bookmarks");
+      QJsonDocument doc = QJsonDocument::fromJson(jsonArray);
+      QJsonObject obj = doc.object();
+
+      if (obj.size() > 1)
+      {
+        QMessageBox::warning(NULL, "DREAM.3D Warning", "DREAM.3D currently does not support dragging and dropping multiple bookmarks.", QMessageBox::Ok);
+        event->ignore();
+        return;
+      }
+
+      QJsonObject::iterator iter = obj.begin();
+      filePath = iter.value().toString();
     }
 
     QFileInfo fi(filePath);
@@ -1143,6 +1181,12 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
 
   // Stop auto scrolling if widget is dropped
   stopAutoScroll();
+
+  if (NULL != m_FilterWidgetLayout && m_FilterWidgetLayout->indexOf(m_DropBox) != -1)
+  {
+    m_FilterWidgetLayout->removeWidget(m_DropBox);
+    m_DropBox->setParent(NULL);
+  }
 }
 
 // -----------------------------------------------------------------------------
