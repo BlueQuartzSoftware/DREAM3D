@@ -314,7 +314,7 @@ void BookmarksTreeView::dropEvent(QDropEvent* event)
   BookmarksModel* model = BookmarksModel::Instance();
 
   const QMimeData* mimedata = event->mimeData();
-  if (mimedata->hasFormat("Bookmarks"))
+  if (mimedata->hasFormat(DREAM3D::DragAndDrop::BookmarkItem))
   {
     QPersistentModelIndex newParent = model->index(currentIndex().row(), BookmarksItem::Name, currentIndex().parent());
 

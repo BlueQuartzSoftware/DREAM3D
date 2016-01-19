@@ -879,13 +879,18 @@ void PipelineViewWidget::dragMoveEvent(QDragMoveEvent* event)
       }
     }
   }
-  else if (mimedata->hasText() || mimedata->hasFormat(DREAM3D::DragAndDrop::BookmarkItem) || mimedata->hasFormat(DREAM3D::DragAndDrop::FilterItem))
+  else if (mimedata->hasUrls() || mimedata->hasFormat(DREAM3D::DragAndDrop::BookmarkItem) || mimedata->hasFormat(DREAM3D::DragAndDrop::FilterItem))
   {
     QString data;
-    if (mimedata->hasText())
+    if (mimedata->hasUrls())
     {
-      QByteArray dropData = mimedata->data("text/plain");
-      QString data(dropData);
+      data = mimedata->text();
+      QUrl url(data);
+      data = url.toLocalFile();
+    }
+    else if (mimedata->hasText())
+    {
+      data = mimedata->text();
     }
     else if (mimedata->hasFormat(DREAM3D::DragAndDrop::BookmarkItem))
     {
@@ -895,7 +900,7 @@ void PipelineViewWidget::dragMoveEvent(QDragMoveEvent* event)
 
       if (obj.size() > 1)
       {
-        event->ignore();
+        event->accept();
         return;
       }
 
