@@ -1012,49 +1012,27 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
   const QMimeData* mimedata = event->mimeData();
   if (m_CurrentFilterBeingDragged != NULL && event->dropAction() == Qt::MoveAction)
   {
-    // This is the path to take if a filter is being dragged around in the pipeline and dropped.
-    int count = filterCount();
-    bool didInsert = false;
-    for (int i = 0; i < count; ++i)
+    int index;
+
+    // The drop box, if it exists, marks the index where the filter should be dropped
+    if (NULL != m_FilterWidgetLayout && m_FilterWidgetLayout->indexOf(m_DropBox) != -1)
     {
-      PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(i)->widget());
-      if (w != NULL && m_CurrentFilterBeingDragged != NULL && w != m_CurrentFilterBeingDragged)
-      {
-        if (event->pos().y() < w->geometry().y() + w->geometry().height() / 3)
-        {
-          m_FilterWidgetLayout->insertWidget(i, m_CurrentFilterBeingDragged);
-          setSelectedFilterWidget(m_CurrentFilterBeingDragged);
-          reindexWidgetTitles();
-          didInsert = true;
-          break;
-        }
-      }
+      index = m_FilterWidgetLayout->indexOf(m_DropBox);
     }
-    // Check to see if we are trying to move it to the end
-    if (false == didInsert && count > 0)
+    else
     {
-      PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(count - 2)->widget());
-      if (w != NULL && m_CurrentFilterBeingDragged != NULL && w != m_CurrentFilterBeingDragged)
-      {
-        if (event->pos().y() > w->geometry().y() + w->geometry().height())
-        {
-          m_FilterWidgetLayout->insertWidget(count - 1, m_CurrentFilterBeingDragged);
-          setSelectedFilterWidget(m_CurrentFilterBeingDragged);
-          reindexWidgetTitles();
-        }
-      }
+      index = -1;
     }
 
+    m_FilterWidgetLayout->insertWidget(index, m_CurrentFilterBeingDragged);
     setSelectedFilterWidget(m_CurrentFilterBeingDragged);
     m_CurrentFilterBeingDragged = NULL;
     m_PreviousFilterBeingDragged = NULL;
 
-    // Make sure the widget titles are all correct
-    reindexWidgetTitles();
     preflightPipeline();
 
     emit pipelineChanged();
-    event->acceptProposedAction();
+    event->accept();
   }
   else if (mimedata->hasUrls() || mimedata->hasText() || mimedata->hasFormat(DREAM3D::DragAndDrop::BookmarkItem) || mimedata->hasFormat(DREAM3D::DragAndDrop::FilterItem))
   {
