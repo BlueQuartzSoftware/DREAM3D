@@ -1005,12 +1005,6 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
   if (m_CurrentFilterBeingDragged != NULL && event->dropAction() == Qt::MoveAction)
   {
     // This is the path to take if a filter is being dragged around in the pipeline and dropped.
-    if (NULL != m_FilterWidgetLayout && m_FilterWidgetLayout->indexOf(m_DropBox) != -1)
-    {
-      m_FilterWidgetLayout->removeWidget(m_DropBox);
-      m_DropBox->setParent(NULL);
-    }
-
     int count = filterCount();
     bool didInsert = false;
     for (int i = 0; i < count; ++i)
@@ -1095,13 +1089,6 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
     // If the dragged item is a filter item...
     if (NULL != wf)
     {
-      // Remove the drop line
-      if (NULL != m_FilterWidgetLayout && m_FilterWidgetLayout->indexOf(m_DropBox) != -1)
-      {
-        m_FilterWidgetLayout->removeWidget(m_DropBox);
-        m_DropBox->setParent(NULL);
-      }
-
       // We need to figure out where it was dropped relative to other filters
       int count = filterCount() - 1;
       for (int i = 0; i < count; ++i)
@@ -1134,13 +1121,6 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
 
       if (ext == "json" || ext == "ini" || ext == "txt")
       {
-        // Remove the drop line
-        if (NULL != m_FilterWidgetLayout && index != -1)
-        {
-          m_FilterWidgetLayout->removeWidget(m_DropBox);
-          m_DropBox->setParent(NULL);
-        }
-
         openPipeline(filePath, index, false, false);
 
         emit pipelineChanged();
@@ -1150,13 +1130,6 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
         FileDragMessageBox* msgBox = new FileDragMessageBox(this);
         msgBox->exec();
         msgBox->deleteLater();
-
-        // Remove the drop line
-        if (NULL != m_FilterWidgetLayout && index != -1)
-        {
-          m_FilterWidgetLayout->removeWidget(m_DropBox);
-          m_DropBox->setParent(NULL);
-        }
 
         if (msgBox->didPressOkBtn() == true)
         {
@@ -1182,6 +1155,7 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
   // Stop auto scrolling if widget is dropped
   stopAutoScroll();
 
+  // Remove the drop line, if it exists
   if (NULL != m_FilterWidgetLayout && m_FilterWidgetLayout->indexOf(m_DropBox) != -1)
   {
     m_FilterWidgetLayout->removeWidget(m_DropBox);
