@@ -80,6 +80,8 @@ private:
 
   void createGlobalMenu();
 
+  QMenu* createCustomDockMenu();
+
   MacDREAM3DApplication(const MacDREAM3DApplication&); // Copy Constructor Not Implemented
   void operator=(const MacDREAM3DApplication&); // Operator '=' Not Implemented
 };

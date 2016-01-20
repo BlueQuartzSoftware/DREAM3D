@@ -54,8 +54,12 @@ MacDREAM3DApplication::MacDREAM3DApplication(int& argc, char** argv) :
 DREAM3DApplication(argc, argv),
 m_GlobalMenu(NULL)
 {
-  // Initialize the global menu
+  // Create the global menu
   createGlobalMenu();
+
+  // Add custom actions to a dock menu
+  QMenu* dockMenu = createCustomDockMenu();
+  qt_mac_set_dock_menu(dockMenu);
 }
 
 // -----------------------------------------------------------------------------
@@ -240,6 +244,26 @@ void MacDREAM3DApplication::toEmptyMenuState()
   menuItems->getActionSaveAs()->setDisabled(true);
   menuItems->getActionShowIssues()->setDisabled(true);
   menuItems->getActionClearPipeline()->setDisabled(true);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QMenu* MacDREAM3DApplication::createCustomDockMenu()
+{
+  DREAM3DMenuItems* menuItems = DREAM3DMenuItems::Instance();
+
+  QMenu* dockMenu = new QMenu();
+  dockMenu->addAction(menuItems->getActionNew());
+  dockMenu->addAction(menuItems->getActionOpen());
+  dockMenu->addSeparator();
+  dockMenu->addAction(menuItems->getActionShowDREAM3DHelp());
+  dockMenu->addSeparator();
+  dockMenu->addAction(menuItems->getActionCheckForUpdates());
+  dockMenu->addSeparator();
+  dockMenu->addAction(menuItems->getActionPluginInformation());
+
+  return dockMenu;
 }
 
 // -----------------------------------------------------------------------------
