@@ -176,7 +176,8 @@ void FindFeaturePhases::execute()
 
   int32_t gnum = 0;
   QMap<int32_t, int32_t> featureMap;
-  bool warningThrown = false;
+
+  QMap<int32_t, int32_t> warningMap;
 
   for (size_t i = 0; i < totalPoints; i++)
   {
@@ -184,15 +185,30 @@ void FindFeaturePhases::execute()
     if (!featureMap.contains(gnum)) { featureMap.insert(gnum, m_CellPhases[i]); }
     int32_t curPhaseVal = featureMap.value(gnum);
 
-    if (curPhaseVal != m_CellPhases[i] && !warningThrown)
+    if (curPhaseVal != m_CellPhases[i])
     {
-      // The values are inconsistent with the first values for this feature id, so throw a warning
-      QString ss = QObject::tr("Elements from Feature %1 do not all have the same phase Id. The last phase Id copied into Feature %1 will be used").arg(gnum);
-      notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
-      warningThrown = true;
+      if(!warningMap.contains(gnum)) { warningMap[gnum] = 1; }
+      else {
+        warningMap[gnum]++;
+      }
     }
-
     m_FeaturePhases[gnum] = m_CellPhases[i];
+  }
+
+  if(warningMap.size() > 0)
+  {
+    QStringList warnings;
+    QString header = QString("Elements from some features did not all have the same phase Id. The last phase Id copied into each ffeature will be used");
+    warnings.append(header);
+    QMapIterator<int32_t, int32_t> i(warningMap);
+    while (i.hasNext()) {
+        i.next();
+        QString str;
+        QTextStream ss(&str);
+        ss << "  Phase Feature " << i.key() << " created " << i.value() << " warnings.";
+        warnings.append(str);
+    }
+    notifyWarningMessage(getHumanLabel(), warnings.join("\n"), getErrorCondition());
   }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
