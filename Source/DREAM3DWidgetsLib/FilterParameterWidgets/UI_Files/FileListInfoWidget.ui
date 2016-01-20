@@ -249,7 +249,7 @@ font-size: 12px;
 }</string>
        </property>
        <property name="text">
-        <string>Images Source Directory</string>
+        <string>Files Source Directory</string>
        </property>
       </widget>
      </item>
