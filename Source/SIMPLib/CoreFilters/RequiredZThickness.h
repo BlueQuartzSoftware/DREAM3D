@@ -115,8 +115,8 @@ class RequiredZThickness : public AbstractDecisionFilter
     */
     virtual void preflight();
 
-  signals:
-    void decisionMade(bool& dm);
+//  signals:
+//    void decisionMade(bool& dm);
 
   protected:
     RequiredZThickness();
