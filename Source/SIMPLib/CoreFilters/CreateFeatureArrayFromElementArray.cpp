@@ -191,6 +191,8 @@ IDataArray::Pointer copyCellData(AbstractFilter* filter, IDataArray::Pointer inp
   size_t cells = inputData->getNumberOfTuples();
 
   QMap<int32_t, T*> featureMap;
+  bool warningThrown = false;
+
   for (size_t i = 0; i < cells; ++i)
   {
     // Get the feature id (or what ever the user has selected as their "Feature" identifier
@@ -206,15 +208,13 @@ IDataArray::Pointer copyCellData(AbstractFilter* filter, IDataArray::Pointer inp
     }
 
     // Check that the values that are currently being pointed to by the source pointer match the first values
-    bool warningThrown = false;
     T* currentDataPtr = featureMap.value(featureIdx);
     for (int j = 0; j < numComp; j++)
     {
-      if (currentDataPtr[j] != cSourcePtr[j] && warningThrown == false)
+      if (currentDataPtr[j] != cSourcePtr[j] && !warningThrown)
       {
         // The values are inconsistent with the first values for this feature id, so throw a warning
         QString ss = QObject::tr("Elements from Feature %1 do not all have the same value. The last value copied into Feature %1 will be used").arg(featureIdx);
-        filter->setErrorCondition(-5557);
         filter->notifyWarningMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         warningThrown = true;
       }

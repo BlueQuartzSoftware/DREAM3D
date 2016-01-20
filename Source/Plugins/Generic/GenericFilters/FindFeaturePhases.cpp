@@ -176,19 +176,18 @@ void FindFeaturePhases::execute()
 
   int32_t gnum = 0;
   QMap<int32_t, int32_t> featureMap;
+  bool warningThrown = false;
 
   for (size_t i = 0; i < totalPoints; i++)
   {
     gnum = m_FeatureIds[i];
     if (!featureMap.contains(gnum)) { featureMap.insert(gnum, m_CellPhases[i]); }
-    bool warningThrown = false;
     int32_t curPhaseVal = featureMap.value(gnum);
 
-    if (curPhaseVal != m_CellPhases[i])
+    if (curPhaseVal != m_CellPhases[i] && !warningThrown)
     {
       // The values are inconsistent with the first values for this feature id, so throw a warning
       QString ss = QObject::tr("Elements from Feature %1 do not all have the same phase Id. The last phase Id copied into Feature %1 will be used").arg(gnum);
-      setErrorCondition(-5557);
       notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
       warningThrown = true;
     }
