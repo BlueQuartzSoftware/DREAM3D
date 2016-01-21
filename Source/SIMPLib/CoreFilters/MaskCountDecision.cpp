@@ -175,20 +175,23 @@ void MaskCountDecision::extractProperties(const QJsonDocument &jsonDoc)
     return;
   }
 
-  {
-    QJsonValue propValue = jvalue.toObject()["MaxGrains"];
-    if (!propValue.isUndefined())
-    {
-      setNumberOfTrues(propValue.toInt());
-    }
-  }
+
 
   {
-    QJsonValue propValue = jvalue.toObject()["FeatureIdsArrayPath"];
+    QJsonValue propValue = jvalue.toObject()["MaskArrayPath"];
     if (!propValue.isUndefined())
     {
       QJsonObject jObj = propValue.toObject();
       m_MaskArrayPath.readJson(jObj);
+    }
+  }
+
+  {
+    QJsonValue propValue = jvalue.toObject()["NumberOfTrues"];
+    if (!propValue.isUndefined())
+    {
+      int numTrues = propValue.toInt();
+      setNumberOfTrues(numTrues);
     }
   }
 
