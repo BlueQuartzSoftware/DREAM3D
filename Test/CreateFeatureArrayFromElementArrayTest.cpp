@@ -146,8 +146,6 @@ int CreateFeatureArrayFromElementArrayTest()
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
       createFeatureArrayFromElementArrayFilter->execute();
-      int err = createFeatureArrayFromElementArrayFilter->getErrorCondition();
-      DREAM3D_REQUIRE_EQUAL(err, -5557);
     }
     else
     {
@@ -230,8 +228,6 @@ int CreateFeatureArrayFromElementArrayTest()
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
       createFeatureArrayFromElementArrayFilter->execute();
-      int err = createFeatureArrayFromElementArrayFilter->getErrorCondition();
-      DREAM3D_REQUIRE_EQUAL(err, -5557);
     }
     else
     {
