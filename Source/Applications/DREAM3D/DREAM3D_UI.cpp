@@ -162,7 +162,10 @@ DREAM3D_UI::~DREAM3D_UI()
   clearPipeline();
   dream3dApp->unregisterDREAM3DWindow(this);
 
-  dream3dApp->setActiveWindow(NULL);
+  if (dream3dApp->activeWindow() == this)
+  {
+    dream3dApp->setActiveWindow(NULL);
+  }
 
 #if defined (Q_OS_MAC)
     macApp->toEmptyMenuState();
