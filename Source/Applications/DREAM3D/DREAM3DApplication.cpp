@@ -373,6 +373,11 @@ bool DREAM3DApplication::event(QEvent* event)
 
     return true;
   }
+  else if (event->type() == QEvent::Close)
+  {
+    // We are already handling this event, so don't pass it on
+    return false;
+  }
 
   return QApplication::event(event);
 }
