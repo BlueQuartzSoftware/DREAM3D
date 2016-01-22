@@ -101,6 +101,9 @@ DREAM3DApplication::~DREAM3DApplication()
   delete this->Splash;
   this->Splash = NULL;
 
+  DREAM3DUserManualDialog* ptr = DREAM3DUserManualDialog::Instance();
+  delete ptr;
+
   DREAM3DToolbox* toolbox = DREAM3DToolbox::Instance();
   toolbox->writeSettings();
 
