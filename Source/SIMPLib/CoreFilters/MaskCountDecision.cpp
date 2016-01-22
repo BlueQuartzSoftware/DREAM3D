@@ -141,23 +141,31 @@ void MaskCountDecision::execute()
   size_t numTuples = m_MaskPtr.lock()->getNumberOfTuples();
 
   size_t trueCount = 0;
-  bool dm = false;
+  bool dm = true;
+
+  qDebug() << "NumberOfTrues: " << m_NumberOfTrues;
 
   for (size_t i = 0; i < numTuples; i++)
   {
     if (m_NumberOfTrues < 0 && !m_Mask[i])
     {
+      qDebug() << "First if check: " << dm;
       emit decisionMade(dm);
       return;
     }
     if (m_Mask[i]) { trueCount++; }
     if (trueCount >= m_NumberOfTrues)
     {
-      dm = true;
+      dm = false;
+      qDebug() << "Second if check: " << dm;
+
       emit decisionMade(dm);
       return;
     }
   }
+
+  qDebug() << "Fell through: " << dm;
+
 
   emit decisionMade(dm);
 
