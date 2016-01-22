@@ -284,7 +284,7 @@ function(AddQWebEngineSupportFiles)
   endif()
 
   if(WIN32)
-    install(FILES ${P_QT_INSTALL_PREFIX}/icudtl.dat  ${P_QT_INSTALL_PREFIX}/qtwebengine_resources.pak
+    install(FILES ${P_QT_INSTALL_PREFIX}/icudtl.dat  ${P_QT_INSTALL_PREFIX}/qtwebengine_resources.pak ${P_QT_INSTALL_PREFIX}/qtwebengine_resources_100p.pak ${P_QT_INSTALL_PREFIX}/qtwebengine_resources_200p.pak
               DESTINATION ${QTCONF_DIR}
               COMPONENT Applications)
     install(FILES ${P_QT_INSTALL_PREFIX}/bin/QtWebEngineProcess.exe
