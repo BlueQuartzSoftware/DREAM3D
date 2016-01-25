@@ -141,7 +141,7 @@ void DREAM3DMenuItems::createActions()
   m_ActionCheckForUpdates->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_U));
   m_ActionPluginInformation->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_I));
   m_ActionSave->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
-  m_ActionSaveAs->setShortcut(QKeySequence(Qt::CTRL + + Qt::Key_Shift + Qt::Key_S));
+  m_ActionSaveAs->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_S));
   m_ActionAddBookmark->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_B));
   m_ActionNewFolder->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_F));
 
