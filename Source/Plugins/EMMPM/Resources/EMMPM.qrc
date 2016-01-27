@@ -1,8 +1,0 @@
-<!DOCTYPE RCC>
-<RCC version="1.0">
-<qresource>
-<file>EMMPM/EMMPMDescription.txt</file>
-<file>Groups/EMMPM_Icon.png</file>
-<file>Groups/EMMPM_Icon@2x.png</file>
-</qresource>
-</RCC>

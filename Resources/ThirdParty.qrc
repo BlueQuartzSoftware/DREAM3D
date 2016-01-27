@@ -1,9 +1,0 @@
-<!DOCTYPE RCC>
-<RCC version="1.0">
-<qresource>
-<file>ThirdParty/Boost.txt</file>
-<file>ThirdParty/Qt.txt</file>
-<file>ThirdParty/Qwt.txt</file>
-<file>ThirdParty/HDF5.txt</file>
-</qresource>
-</RCC>

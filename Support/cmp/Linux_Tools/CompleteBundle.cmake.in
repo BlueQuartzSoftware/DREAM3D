@@ -1,3 +1,0 @@
-
-execute_process(COMMAND /bin/bash @OPTIMIZE_BUNDLE_SHELL_SCRIPT@ ${CMAKE_INSTALL_PREFIX})
-
