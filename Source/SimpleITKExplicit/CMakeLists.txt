@@ -74,13 +74,14 @@ function(sitk_install_exported_target tgt)
   export(TARGETS ${tgt}
     APPEND FILE "${CMAKE_BINARY_DIR}/SimpleITKTargets.cmake"
     )
-
-  install(TARGETS ${tgt}
-    EXPORT SimpleITKExplicit
-    RUNTIME DESTINATION ${SimpleITKExplicit_INSTALL_RUNTIME_DIR}
-    LIBRARY DESTINATION ${SimpleITKExplicit_INSTALL_LIBRARY_DIR}
-    ARCHIVE DESTINATION ${SimpleITKExplicit_INSTALL_ARCHIVE_DIR}
-    )
+  if(NOT MSVC)
+    install(TARGETS ${tgt}
+      EXPORT SimpleITKExplicit
+      RUNTIME DESTINATION ${SimpleITKExplicit_INSTALL_RUNTIME_DIR}
+      LIBRARY DESTINATION ${SimpleITKExplicit_INSTALL_LIBRARY_DIR}
+      ARCHIVE DESTINATION ${SimpleITKExplicit_INSTALL_ARCHIVE_DIR}
+      )
+  endif()
 endfunction()
 
 set(install_dir "bin")

@@ -59,7 +59,7 @@ set(_PublicFilters
 foreach(f ${_PublicFilters} )
   ADD_SIMPL_FILTER(  "OrientationAnalysis" "OrientationAnalysis"
                         ${_filterGroupName} ${f}
-                        ${${PLUGIN_NAME}_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md FALSE ${${PLUGIN_NAME}_BINARY_DIR})
+                        ${${PLUGIN_NAME}_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md TRUE ${${PLUGIN_NAME}_BINARY_DIR})
 endforeach()
 
 

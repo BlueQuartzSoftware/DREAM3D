@@ -70,6 +70,15 @@ include_directories(${DREAM3DTest_BINARY_DIR})
 include_directories(${SIMPLProj_SOURCE_DIR}/Source)
 include_directories(${SIMPLProj_BINARY_DIR})
 
+# ---------- Find HDF5 Headers/Libraries -----------------------
+# HDF5 now comes with everything that is needed for CMake to load
+# up the targets (Exported) that it needs. We just need to find where
+# HDF5 is installed.
+include(${CMP_SOURCE_DIR}/ExtLib/HDF5Support.cmake)
+include_directories(${HDF5_INCLUDE_DIRS} )
+
+message(STATUS "HDF5_INCLUDE_DIRS: ${HDF5_INCLUDE_DIRS}")
+
 #-------------------------------------------------------------------------------
 # Function COMPILE_TOOL to help alleviate lots of extra code below for adding
 # simple command line tools that just need one or two source files

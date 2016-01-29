@@ -52,48 +52,9 @@ cmake_minimum_required(VERSION 3.1.0)
 
 #------------------------------------------------------------------------------
 # Create the Top level Project
-#
+# 
 project(DREAM3DProj VERSION 6.2.0.0)
 
-
-#------------------------------------------------------------------------------
-# If the developer has set another CMP directory then use that, otherwise look
-# for the CMP directory at the same level as the SIMPL directory
-if("${CMP_SOURCE_DIR}" STREQUAL "")
-  set(CMP_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR}/../CMP)
-  message(STATUS "CMP_SOURCE_DIR: ${CMP_SOURCE_DIR}")
-endif()
-
-if(NOT EXISTS "${CMP_SOURCE_DIR}")
-  message(WARNING "CMP_SOURCE_DIR does not exist at ${CMP_SOURCE_DIR}. Aborting CMake.")
-  message(FATAL_ERROR "CMP can be cloned using git clone -b develop git://github.com/bluequartzsoftware/CMP.git")
-  # TODO: Add in automatic cloning
-endif()
-
-#------------------------------------------------------------------------------
-# If the developer has set another SIMPLView directory then use that, otherwise look
-# for the SIMPLView directory at the same level as the DREAM3D directory
-if("${SIMPLViewProj_SOURCE_DIR}" STREQUAL "")
-  set(SIMPLViewProj_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR}/../SIMPLView)
-  message(STATUS "SIMPLViewProj_SOURCE_DIR: ${SIMPLViewProj_SOURCE_DIR}")
-endif()
-
-if(NOT EXISTS "${SIMPLViewProj_SOURCE_DIR}")
-  message(WARNING "SIMPLViewProj_SOURCE_DIR does not exist at ${SIMPLViewProj_SOURCE_DIR}. Aborting CMake.")
-  message(FATAL_ERROR "SIMPLView can be cloned using git clone -b develop git://github.com/bluequartzsoftware/SIMPLView.git")
-  # TODO: Add in automatic cloning
-endif()
-
-
-
-#------------------------------------------------------------------------------
-# There are several different Release Types that we are going to use.
-# Official: This is an official release from BlueQuartz Software
-# Beta: This is a Beta release that has is getting ready to be officially released.
-# Development: This is currently in development and probably has bugs.
-set(DREAM3DProj_RELEASE_TYPE "Development")
-
-include(CMakeParseArguments)
 
 # ---------- Setup output Directories -------------------------
 if(NOT DEFINED CMAKE_LIBRARY_OUTPUT_DIRECTORY)
@@ -122,6 +83,51 @@ if(NOT DEFINED CMAKE_ARCHIVE_OUTPUT_DIRECTORY)
     )
 endif()
 
+
+#------------------------------------------------------------------------------
+# Find the Git Package for Versioning. It should be ok if Git is NOT found
+Find_package(Git)
+
+#------------------------------------------------------------------------------
+# If the developer has set another CMP directory then use that, otherwise look
+# for the CMP directory at the same level as the SIMPL directory
+if("${CMP_SOURCE_DIR}" STREQUAL "")
+  set(CMP_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR}/../CMP)
+  get_filename_component(CMP_SOURCE_DIR "${CMP_SOURCE_DIR}" ABSOLUTE)
+  message(STATUS "CMP_SOURCE_DIR: ${CMP_SOURCE_DIR}")
+endif()
+
+if(NOT EXISTS "${CMP_SOURCE_DIR}")
+  message(WARNING "CMP_SOURCE_DIR does not exist at ${CMP_SOURCE_DIR}. Aborting CMake.")
+  message(FATAL_ERROR "CMP can be cloned using git clone -b develop git://github.com/bluequartzsoftware/CMP.git")
+  # TODO: Add in automatic cloning
+endif()
+
+#------------------------------------------------------------------------------
+# If the developer has set another SIMPLView directory then use that, otherwise look
+# for the SIMPLView directory at the same level as the DREAM3D directory
+if("${SIMPLViewProj_SOURCE_DIR}" STREQUAL "")
+  set(SIMPLViewProj_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR}/../SIMPLView)
+  get_filename_component(SIMPLViewProj_SOURCE_DIR "${SIMPLViewProj_SOURCE_DIR}" ABSOLUTE)
+  message(STATUS "SIMPLViewProj_SOURCE_DIR: ${SIMPLViewProj_SOURCE_DIR}")
+endif()
+
+if(NOT EXISTS "${SIMPLViewProj_SOURCE_DIR}")
+  message(WARNING "SIMPLViewProj_SOURCE_DIR does not exist at ${SIMPLViewProj_SOURCE_DIR}. Aborting CMake.")
+  message(FATAL_ERROR "SIMPLView can be cloned using git clone -b develop git://github.com/bluequartzsoftware/SIMPLView.git")
+  # TODO: Add in automatic cloning
+endif()
+
+#------------------------------------------------------------------------------
+# There are several different Release Types that we are going to use.
+# Official: This is an official release from BlueQuartz Software
+# Beta: This is a Beta release that has is getting ready to be officially released.
+# Development: This is currently in development and probably has bugs.
+set(DREAM3DProj_RELEASE_TYPE "Development")
+
+include(CMakeParseArguments)
+
+
 #------------------------------------------------------------------------------
 # If we have not defined a "BrandedSIMPLView_DIR" then define it to the default
 # generic set of ICONs. Needs to be defined BEFORE we setup the SIMPLView project
@@ -133,13 +139,15 @@ endif()
 set(SIMPLView_APPLICATION_NAME "DREAM3D")
 set(SIMPLView_VERSION_HDR_FILE "${DREAM3DProj_BINARY_DIR}/SIMPLViewVersion.h")
 set(SIMPLView_VERSION_SRC_FILE "${DREAM3DProj_BINARY_DIR}/SIMPLViewVersion.cpp")
+
+# -----------------------------------------------------------------------
+# Set these CMP variables because the Version Files need them set
 set(CMP_TOP_HEADER_FILE "SIMPLView.h")
+set(CMP_CONFIGURED_FILES_SOURCE_DIR ${CMP_SOURCE_DIR}/ConfiguredFiles)
+
 
 INCLUDE (${CMP_SOURCE_DIR}/cmpCMakeMacros.cmake )
 
-#------------------------------------------------------------------------------
-# Find the Git Package for Versioning. It should be ok if Git is NOT found
-Find_package(Git)
 
 cmpRevisionString( GENERATED_HEADER_FILE_PATH "SIMPLViewVersion.h"
                         GENERATED_SOURCE_FILE_PATH "SIMPLViewVersion.cpp"
@@ -155,7 +163,6 @@ add_subdirectory( ${SIMPLViewProj_SOURCE_DIR} ${PROJECT_BINARY_DIR}/SIMPLView)
 
 #Enable use of Solution Folders
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-#set_property(GLOBAL PROPERTY USE_FOLDERS OFF)
 set(PROJECT_CODE_DIR ${PROJECT_SOURCE_DIR}/Source)
 set(PROJECT_RESOURCES_DIR ${DREAM3DProj_SOURCE_DIR}/Resources)
 set(EXE_DEBUG_EXTENSION "_debug")
@@ -167,7 +174,6 @@ set(DREAM3D_DOCUMENTATION_DIR ${PROJECT_SOURCE_DIR}/Documentation)
 set(DREAM3D_SUPPORT_DIR ${PROJECT_SOURCE_DIR}/Support)
 
 
-set(CMP_CONFIGURED_FILES_SOURCE_DIR ${CMP_SOURCE_DIR}/ConfiguredFiles)
 
 set(CMP_ENABLE_PLUGINS "1")
 set(CMP_PLUGIN_LIST_FILE ${PROJECT_BINARY_DIR}/SIMPLib_PluginList.txt)
@@ -421,7 +427,7 @@ endif()
 
 #-------------------------------------------------------------------------------
 # Should we build the documentation using DOxygen
-option(SIMPLib_BUILD_DOCUMENTATION "Build the DREAM3D documentation" ON)
+option(SIMPLib_BUILD_DOCUMENTATION "Build the DREAM3D documentation" OFF)
 if(SIMPLib_BUILD_DOCUMENTATION)
   set(DOCUMENTATION_RESOURCES_DIR ${PROJECT_RESOURCES_DIR}/DocConfigFiles)
 
@@ -464,4 +470,53 @@ include(${PROJECT_RESOURCES_DIR}/CPack/PackageProject.cmake)
 if(DREAM3D_BUILD_TESTING)
     include(${DREAM3DProj_SOURCE_DIR}/Test/CMakeLists.txt)
 endif()
+
+
+#-------------------------------------------------------------------------------
+#- This copies all the Prebuilt Pipeline files into the Build directory so the help
+#- works from the Build Tree
+add_custom_target(PrebuiltPipelinesCopy ALL
+            COMMAND ${CMAKE_COMMAND} -E copy_directory ${DREAM3D_SUPPORT_DIR}/PrebuiltPipelines
+            ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}/PrebuiltPipelines/
+            COMMENT "Copying Prebuilt Pipelines into Binary Directory")
+set_target_properties(PrebuiltPipelinesCopy PROPERTIES FOLDER ZZ_COPY_FILES)
+
+# Make Sure this target as part of the DREAM3D Build
+# add_dependencies(DREAM3D PrebuiltPipelinesCopy)
+
+#- This installs all the help files. Note that we assume a flat directory structure
+#- in the "Help" folder, ie, all html files, images, etc are all in the "Help"
+#- folder and NOT in any subfolders beyond that.
+install(DIRECTORY ${DREAM3D_SUPPORT_DIR}/PrebuiltPipelines
+        DESTINATION .
+        COMPONENT Applications )
+
+#-------------------------------------------------------------------------------
+# Copy the Data Folder to the build directory
+
+add_custom_target(DataFolderCopy ALL
+            COMMAND ${CMAKE_COMMAND} -E copy_directory ${DREAM3D_DATA_DIR}/Data
+            ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}/Data/
+            COMMENT "Copying Data Folder into Binary Directory")
+set_target_properties(DataFolderCopy PROPERTIES FOLDER ZZ_COPY_FILES)
+
+#-------------------------------------------------------------------------------
+# Make Sure the DataFolderCopy target is run before the DREAM3D target is built
+# add_dependencies(DREAM3D DataFolderCopy)
+
+# we want specific stats files to be bundled with the Application. The Ang data files
+# are too large to be included and will be a separate download
+SET(SYNTHETIC_STATS_FILES
+    ${DREAM3D_DATA_DIR}/Data/Composite.dream3d
+    ${DREAM3D_DATA_DIR}/Data/CubicSingleEquiaxed.dream3d
+    ${DREAM3D_DATA_DIR}/Data/CubicSingleRolled.dream3d
+    ${DREAM3D_DATA_DIR}/Data/HexagonalSingleEquiaxed.dream3d
+    ${DREAM3D_DATA_DIR}/Data/TwoPhaseCubicHexParticlesEquiaxed.dream3d
+  )
+
+#- This installs all the Data files during a "make install" or "make package"
+install(FILES ${SYNTHETIC_STATS_FILES}
+        DESTINATION ./Data/
+        COMPONENT Applications )
+
 

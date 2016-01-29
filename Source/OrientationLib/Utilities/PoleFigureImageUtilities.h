@@ -43,6 +43,7 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
+#include "OrientationLib/OrientationLib.h"
 #include "OrientationLib/Utilities/PoleFigureUtilities.h"
 
 #include "PoleFigureData.h"
@@ -54,7 +55,7 @@
  * @date Nov 4, 2011
  * @version 1.0
  */
-class PoleFigureImageUtilities
+class OrientationLib_EXPORT PoleFigureImageUtilities
 {
   public:
     PoleFigureImageUtilities();

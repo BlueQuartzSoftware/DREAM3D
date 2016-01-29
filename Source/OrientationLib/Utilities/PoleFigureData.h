@@ -40,7 +40,7 @@
 #include <QtCore/QVector>
 #include <QtCore/QString>
 
-
+#include "OrientationLib/OrientationLib.h"
 
 /**
  * @class PoleFigureData PoleFigureData.h StatsGenerator/PoleFigureData.h
@@ -49,7 +49,7 @@
  * @date Nov 4, 2011
  * @version 1.0
  */
-class PoleFigureData : QObject
+class OrientationLib_EXPORT PoleFigureData : QObject
 {
     Q_OBJECT
 
