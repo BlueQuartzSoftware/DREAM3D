@@ -140,9 +140,13 @@ set(OrientationLib_Generated_CMP_SRCS
 cmp_IDE_GENERATED_PROPERTIES("Generated" "${OrientationLib_Generated_CMP_SRCS}" "")
 
 # Setup the Include Directories
-include_directories(${PROJECT_CODE_DIR})
-include_directories(${OrientationLib_BINARY_DIR})
-include_directories(${OrientationLib_SOURCE_DIR}/..)
+include_directories(${PROJECT_CODE_DIR}
+  ${OrientationLib_BINARY_DIR}
+  ${OrientationLib_BINARY_DIR}/..
+  ${OrientationLib_SOURCE_DIR}/..
+  ${SIMPLProj_SOURCE_DIR}/Source
+  ${SIMPLProj_BINARY_DIR}
+  )
 
 #-- Include all the Source Files
 include( ${OrientationLib_SOURCE_DIR}/SpaceGroupOps/SourceList.cmake)
@@ -196,7 +200,9 @@ set(OrientationLib_LINK_LIBRARIES "")
 if(${OrientationLib_ENABLE_HDF5})
   set(OrientationLib_LINK_LIBRARIES
     ${OrientationLib_LINK_LIBRARIES}
-    hdf5 H5Support
+    hdf5
+    H5Support
+    EbsdLib
     )
 endif()
 
@@ -204,6 +210,7 @@ if(Qt5_FOUND)
   set(OrientationLib_LINK_LIBRARIES
      ${OrientationLib_LINK_LIBRARIES}
      Qt5::Core
+     Qt5::Gui
     )
 endif()
 

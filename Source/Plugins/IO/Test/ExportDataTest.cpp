@@ -98,34 +98,34 @@ int TestExportDataWriter()
   DataContainerArray::Pointer dca = DataContainerArray::New();
 
   // A DataContainer that mimics some real data
-  DataContainer::Pointer m = DataContainer::New(DREAM3D::Defaults::DataContainerName);
+  DataContainer::Pointer m = DataContainer::New(SIMPL::Defaults::DataContainerName);
   dca->addDataContainer(m);
 
-  AttributeMatrix::Pointer attrMatrix = AttributeMatrix::New(QVector<size_t>(1, 20), DREAM3D::Defaults::AttributeMatrixName, DREAM3D::AttributeMatrixType::Generic);
-  m->addAttributeMatrix(DREAM3D::Defaults::AttributeMatrixName, attrMatrix);
+  AttributeMatrix::Pointer attrMatrix = AttributeMatrix::New(QVector<size_t>(1, 20), SIMPL::Defaults::AttributeMatrixName, SIMPL::AttributeMatrixType::Generic);
+  m->addAttributeMatrix(SIMPL::Defaults::AttributeMatrixName, attrMatrix);
 
-  AttributeMatrix::Pointer attrMatrix2 = AttributeMatrix::New(QVector<size_t>(1, 20), DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::AttributeMatrixType::Cell);
-  m->addAttributeMatrix(DREAM3D::Defaults::CellAttributeMatrixName, attrMatrix2);
+  AttributeMatrix::Pointer attrMatrix2 = AttributeMatrix::New(QVector<size_t>(1, 20), SIMPL::Defaults::CellAttributeMatrixName, SIMPL::AttributeMatrixType::Cell);
+  m->addAttributeMatrix(SIMPL::Defaults::CellAttributeMatrixName, attrMatrix2);
   int size = 20;
 
   {
-    Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, DREAM3D::CellData::CellPhases);
+    Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, SIMPL::CellData::CellPhases);
     for (int i = 0; i < size; ++i) // create an array with values 20 to 39
     {
       intArray->setValue(i, i + 20);
     }
-    attrMatrix->addAttributeArray(DREAM3D::CellData::CellPhases, intArray);
+    attrMatrix->addAttributeArray(SIMPL::CellData::CellPhases, intArray);
   }
   {
-    Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, DREAM3D::CellData::ConfidenceIndexNoSpace);
+    Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, SIMPL::CellData::ConfidenceIndexNoSpace);
     for (int i = 0; i < size; ++i) // create an array with values 20 to 39
     {
       intArray->setValue(i, i + 20);
     }
-    attrMatrix->addAttributeArray(DREAM3D::CellData::ConfidenceIndexNoSpace, intArray);
+    attrMatrix->addAttributeArray(SIMPL::CellData::ConfidenceIndexNoSpace, intArray);
   }
   {
-    BoolArrayType::Pointer boolArray = BoolArrayType::CreateArray(size, DREAM3D::GeneralData::ThresholdArray);
+    BoolArrayType::Pointer boolArray = BoolArrayType::CreateArray(size, SIMPL::GeneralData::ThresholdArray);
     for (int i = 0; i < size; ++i) // create an bool array with true and false values
     {
       if (i % 2 == 0)
@@ -133,15 +133,15 @@ int TestExportDataWriter()
       else
       { boolArray->setValue(i, 1); }
     }
-    attrMatrix->addAttributeArray(DREAM3D::GeneralData::ThresholdArray, boolArray);
+    attrMatrix->addAttributeArray(SIMPL::GeneralData::ThresholdArray, boolArray);
   }
   {
-    Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, DREAM3D::CellData::ConfidenceIndexNoSpace);
+    Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, SIMPL::CellData::ConfidenceIndexNoSpace);
     for (int i = 0; i < size; ++i) // create an array with values 20 to 39
     {
       intArray->setValue(i, i + 20);
     }
-    attrMatrix2->addAttributeArray(DREAM3D::CellData::ConfidenceIndexNoSpace, intArray);
+    attrMatrix2->addAttributeArray(SIMPL::CellData::ConfidenceIndexNoSpace, intArray);
   }
 
   Observer obs;
@@ -190,17 +190,17 @@ int TestExportDataWriter()
     propWasSet = filter->setProperty("OutputPath", var); // output file to write array
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-    DataArrayPath path1 = DataArrayPath(DREAM3D::Defaults::DataContainerName,
-                                        DREAM3D::Defaults::AttributeMatrixName,
-                                        DREAM3D::CellData::CellPhases);
+    DataArrayPath path1 = DataArrayPath(SIMPL::Defaults::DataContainerName,
+                                        SIMPL::Defaults::AttributeMatrixName,
+                                        SIMPL::CellData::CellPhases);
 
-    DataArrayPath path2 = DataArrayPath(DREAM3D::Defaults::DataContainerName,
-                                        DREAM3D::Defaults::AttributeMatrixName,
-                                        DREAM3D::CellData::ConfidenceIndexNoSpace);
+    DataArrayPath path2 = DataArrayPath(SIMPL::Defaults::DataContainerName,
+                                        SIMPL::Defaults::AttributeMatrixName,
+                                        SIMPL::CellData::ConfidenceIndexNoSpace);
 
-    DataArrayPath path4 = DataArrayPath(DREAM3D::Defaults::DataContainerName,
-                                        DREAM3D::Defaults::AttributeMatrixName,
-                                        DREAM3D::GeneralData::ThresholdArray);
+    DataArrayPath path4 = DataArrayPath(SIMPL::Defaults::DataContainerName,
+                                        SIMPL::Defaults::AttributeMatrixName,
+                                        SIMPL::GeneralData::ThresholdArray);
 
     QVector<DataArrayPath> vector;
     vector.push_back(path1);
@@ -215,9 +215,9 @@ int TestExportDataWriter()
     err = filter->getErrorCondition();
     DREAM3D_REQUIRE_EQUAL(err, NO_ERROR);
 
-    DataArrayPath path3 = DataArrayPath(DREAM3D::Defaults::DataContainerName,
-                                        DREAM3D::Defaults::CellAttributeMatrixName,
-                                        DREAM3D::CellData::ConfidenceIndexNoSpace);
+    DataArrayPath path3 = DataArrayPath(SIMPL::Defaults::DataContainerName,
+                                        SIMPL::Defaults::CellAttributeMatrixName,
+                                        SIMPL::CellData::ConfidenceIndexNoSpace);
 
     vector.push_back(path3);
 
@@ -245,7 +245,7 @@ int TestExportDataReader()
   {
     int num = 0;
     FILE* f;
-    QString exportArrayFile = UnitTest::ExportDataTest::TestTempDir + QDir::separator() + DREAM3D::CellData::CellPhases + ".txt";
+    QString exportArrayFile = UnitTest::ExportDataTest::TestTempDir + QDir::separator() + SIMPL::CellData::CellPhases + ".txt";
     f = fopen(exportArrayFile.toLatin1().data(), "r"); // open file created from array
     DREAM3D_REQUIRE_VALID_POINTER(f)
 
@@ -262,7 +262,7 @@ int TestExportDataReader()
   {
     int num = 0;
     FILE* f;
-    QString exportArrayFile = UnitTest::ExportDataTest::TestTempDir + QDir::separator() + DREAM3D::CellData::ConfidenceIndexNoSpace + ".txt";
+    QString exportArrayFile = UnitTest::ExportDataTest::TestTempDir + QDir::separator() + SIMPL::CellData::ConfidenceIndexNoSpace + ".txt";
     f = fopen(exportArrayFile.toLatin1().data(), "r"); // open file created from array
     DREAM3D_REQUIRE_VALID_POINTER(f)
 
@@ -279,7 +279,7 @@ int TestExportDataReader()
   {
     int num = 0;
     FILE* f;
-    QString exportArrayFile = UnitTest::ExportDataTest::TestTempDir + QDir::separator() + DREAM3D::GeneralData::ThresholdArray + ".txt";
+    QString exportArrayFile = UnitTest::ExportDataTest::TestTempDir + QDir::separator() + SIMPL::GeneralData::ThresholdArray + ".txt";
     f = fopen(exportArrayFile.toLatin1().data(), "r"); // open file created from array
     DREAM3D_REQUIRE_VALID_POINTER(f)
     for (int i = 0; i < 20; i++) // compare file to what was written in bool array

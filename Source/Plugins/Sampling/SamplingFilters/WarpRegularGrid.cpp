@@ -62,8 +62,8 @@
 // -----------------------------------------------------------------------------
 WarpRegularGrid::WarpRegularGrid() :
   AbstractFilter(),
-  m_NewDataContainerName(DREAM3D::Defaults::NewImageDataContainerName),
-  m_CellAttributeMatrixPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
+  m_NewDataContainerName(SIMPL::Defaults::NewImageDataContainerName),
+  m_CellAttributeMatrixPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, ""),
   m_PolyOrder(0),
   m_SaveAsNewDataContainer(false)
 {
@@ -137,7 +137,7 @@ void WarpRegularGrid::setupFilterParameters()
   parameters.push_back(StringFilterParameter::New("Data Container", "NewDataContainerName", getNewDataContainerName(), FilterParameter::CreatedArray));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", getCellAttributeMatrixPath(), FilterParameter::RequiredArray, req));
   }
   setFilterParameters(parameters);
@@ -367,13 +367,13 @@ const QString WarpRegularGrid::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString WarpRegularGrid::getGroupName()
-{ return DREAM3D::FilterGroups::SamplingFilters; }
+{ return SIMPL::FilterGroups::SamplingFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString WarpRegularGrid::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::WarpingFilters; }
+{ return SIMPL::FilterSubGroups::WarpingFilters; }
 
 // -----------------------------------------------------------------------------
 //

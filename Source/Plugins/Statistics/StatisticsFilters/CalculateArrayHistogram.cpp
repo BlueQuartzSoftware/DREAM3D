@@ -65,10 +65,10 @@ CalculateArrayHistogram::CalculateArrayHistogram() :
   m_MaxRange(1.0f),
   m_UserDefinedRange(false),
   m_Normalize(false),
-  m_NewAttributeMatrixName(DREAM3D::Defaults::NewAttributeMatrixName),
-  m_NewDataArrayName(DREAM3D::CellData::Histogram),
+  m_NewAttributeMatrixName(SIMPL::Defaults::NewAttributeMatrixName),
+  m_NewDataArrayName(SIMPL::CellData::Histogram),
   m_NewDataContainer(false),
-  m_NewDataContainerName(DREAM3D::Defaults::NewDataContainerName),
+  m_NewDataContainerName(SIMPL::Defaults::NewDataContainerName),
   m_InDataArray(NULL),
   m_NewDataArray(NULL)
 {
@@ -99,7 +99,7 @@ void CalculateArrayHistogram::setupFilterParameters()
   linkedProps << "NewDataContainerName";
   parameters.push_back(LinkedBooleanFilterParameter::New("New Data Container", "NewDataContainer", getNewDataContainer(), linkedProps, FilterParameter::Parameter));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::Defaults::AnyPrimitive, 1, DREAM3D::AttributeMatrixObjectType::Any);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
     parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array to Histogram", "SelectedArrayPath", getSelectedArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(StringFilterParameter::New("Data Container ", "NewDataContainerName", getNewDataContainerName(), FilterParameter::CreatedArray));
@@ -189,14 +189,14 @@ void CalculateArrayHistogram::dataCheck()
   {
     DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getNewDataContainerName());
     if (getErrorCondition() < 0) { return; }
-    AttributeMatrix::Pointer attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Generic);
+    AttributeMatrix::Pointer attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Generic);
     if (getErrorCondition() < 0 || NULL == attrMat.get()) { return; }
     tempPath.update(getNewDataContainerName(), getNewAttributeMatrixName(), newArrayName);
   }
   else // use existing data container
   {
     DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(m_SelectedArrayPath.getDataContainerName());
-    AttributeMatrix::Pointer attrMat = dc->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Generic);
+    AttributeMatrix::Pointer attrMat = dc->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Generic);
     if (getErrorCondition() < 0 || NULL == attrMat.get())  { return; }
     tempPath.update(dc->getName(), getNewAttributeMatrixName(), newArrayName);
   }
@@ -339,13 +339,13 @@ const QString CalculateArrayHistogram::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString CalculateArrayHistogram::getGroupName()
-{ return DREAM3D::FilterGroups::StatisticsFilters; }
+{ return SIMPL::FilterGroups::StatisticsFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString CalculateArrayHistogram::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
+{ return SIMPL::FilterSubGroups::EnsembleStatsFilters; }
 
 // -----------------------------------------------------------------------------
 //

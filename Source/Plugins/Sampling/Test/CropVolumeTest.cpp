@@ -55,10 +55,10 @@ static const QString k_DataArrayName("Data");
 static const QString k_4CompDataArrayName("Data 4 Comp");
 static const QString k_FeatureIdsName("FeatureIds");
 static const QString k_ActivesName("Actives");
-static const QString k_DataContainerName = DREAM3D::Defaults::ImageDataContainerName;
-static const QString k_NewDataContainerName = DREAM3D::Defaults::NewImageDataContainerName;
-static const QString k_CellAttributeMatrixName = DREAM3D::Defaults::CellAttributeMatrixName;
-static const QString k_FeatureAttributeMatrixName = DREAM3D::Defaults::CellFeatureAttributeMatrixName;
+static const QString k_DataContainerName = SIMPL::Defaults::ImageDataContainerName;
+static const QString k_NewDataContainerName = SIMPL::Defaults::NewImageDataContainerName;
+static const QString k_CellAttributeMatrixName = SIMPL::Defaults::CellAttributeMatrixName;
+static const QString k_FeatureAttributeMatrixName = SIMPL::Defaults::CellFeatureAttributeMatrixName;
 
 
 static Observer obs;
@@ -147,9 +147,9 @@ DataContainerArray::Pointer CreateDataContainerArrayTestStructure(NumPackage X, 
   int err = 0;
   DataContainerArray::Pointer dca = DataContainerArray::New();
 
-  DataContainer::Pointer dc1 = DataContainer::New(DREAM3D::Defaults::ImageDataContainerName);
+  DataContainer::Pointer dc1 = DataContainer::New(SIMPL::Defaults::ImageDataContainerName);
 
-  ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+  ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   dc1->setGeometry(image);
 
   dc1->getGeometryAs<ImageGeom>()->setDimensions(X.getMax(), Y.getMax(), Z.getMax());
@@ -160,8 +160,8 @@ DataContainerArray::Pointer CreateDataContainerArrayTestStructure(NumPackage X, 
   amDims.push_back(X.getMax());
   amDims.push_back(Y.getMax());
   amDims.push_back(Z.getMax());
-  AttributeMatrix::Pointer am1 = AttributeMatrix::New(amDims, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::AttributeMatrixType::Cell);
-  AttributeMatrix::Pointer am2 = AttributeMatrix::New(amDims, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::AttributeMatrixType::CellFeature);
+  AttributeMatrix::Pointer am1 = AttributeMatrix::New(amDims, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::AttributeMatrixType::Cell);
+  AttributeMatrix::Pointer am2 = AttributeMatrix::New(amDims, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::AttributeMatrixType::CellFeature);
 
   QVector<size_t> tDims;
   tDims.push_back(X.getMax());
@@ -416,7 +416,7 @@ void preflightTests(AbstractFilter::Pointer cropVolume)
   resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
 
   // Test Source Attribute Matrix Does Not Exist
-  path.setDataContainerName(DREAM3D::Defaults::ImageDataContainerName);
+  path.setDataContainerName(SIMPL::Defaults::ImageDataContainerName);
   var.setValue(path);
   propWasSet = cropVolume->setProperty("CellAttributeMatrixPath", var);
   DREAM3D_REQUIRE_EQUAL(propWasSet, true);
@@ -426,7 +426,7 @@ void preflightTests(AbstractFilter::Pointer cropVolume)
   DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCondition(), -307020)
   resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
 
-  path.setAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName);
+  path.setAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName);
   var.setValue(path);
   propWasSet = cropVolume->setProperty("CellAttributeMatrixPath", var);
   DREAM3D_REQUIRE_EQUAL(propWasSet, true);

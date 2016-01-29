@@ -24,6 +24,34 @@ add_definitions(-DDREAM3D_USE_QT)
 # --------------------------------------------------------------------
 # Generate the License File Headers
 set(PROJECT_PREFIX "StatsGenerator")
+set(CMP_HEADER_DIR ${StatsGenerator_BINARY_DIR})
+set(CMP_CONFIGURATION_FILE_NAME "StatsGeneratorConfiguration.h")
+set(CMP_TYPES_FILE_NAME "StatsGeneratorTypes.h")
+set(CMP_VERSION_HEADER_FILE_NAME "StatsGeneratorVersion.h")
+set(CMP_VERSION_SOURCE_FILE_NAME "StatsGeneratorVersion.cpp")
+set(CMP_TOP_HEADER_FILE "StatsGenerator.h")
+set(CMP_PROJECT_NAMESPACE "${PROJECT_NAME}")
+set(CMP_PROJECT_NAME "${PROJECT_NAME}")
+set(CMP_ENABLE_PLUGINS "0")
+set(CMP_LIB_SEARCH_DIRS "")
+set(CMP_GENERATE_VERSION_STRING 1)
+include(${CMP_SOURCE_DIR}/cmpProject.cmake)
+
+cmpConfigureFileWithMD5Check(CONFIGURED_TEMPLATE_PATH ${StatsGenerator_SOURCE_DIR}/StatsGenerator.h.in
+                            GENERATED_FILE_PATH ${StatsGenerator_BINARY_DIR}/${CMP_TOP_HEADER_FILE})
+
+set(StatsGenerator_CMP_FILES
+        ${CMP_HEADER_DIR}/${CMP_CONFIGURATION_FILE_NAME}
+        ${CMP_HEADER_DIR}/${CMP_TYPES_FILE_NAME}
+        ${CMP_HEADER_DIR}/${CMP_VERSION_HEADER_FILE_NAME}
+        ${CMP_HEADER_DIR}/${CMP_VERSION_SOURCE_FILE_NAME}
+        ${CMP_HEADER_DIR}/${CMP_TOP_HEADER_FILE}
+)
+cmp_IDE_GENERATED_PROPERTIES("StatsGenerator" "${StatsGenerator_CMP_FILES}" ${PROJECT_INSTALL_HEADERS})
+
+# --------------------------------------------------------------------
+# Generate the License File Headers
+set(PROJECT_PREFIX "StatsGenerator")
 include(${DREAM3DProj_SOURCE_DIR}/License/License.cmake)
 
 set(StatsGenerator_SRCS
@@ -45,7 +73,7 @@ set(StatsGenerator_SRCS
     ${StatsGenerator_SOURCE_DIR}/TransformationPhaseWidget.cpp
     )
 set(StatsGenerator_HDRS
-  ${BrandedDREAM3D_DIR}/BrandedStrings.h
+  ${BrandedSIMPLView_DIR}/BrandedStrings.h
 )
 
 SET(StatsGenerator_MOC_HDRS
@@ -67,7 +95,7 @@ SET(StatsGenerator_MOC_HDRS
 )
 cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator" "${StatsGenerator_HDRS};${StatsGenerator_MOC_HDRS}" "${StatsGenerator_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
-set(StatsGenerator_DELEGATE_SRCS 
+set(StatsGenerator_DELEGATE_SRCS
     ${StatsGenerator_SOURCE_DIR}/Delegates/SGBetaItemDelegate.cpp
     ${StatsGenerator_SOURCE_DIR}/Delegates/SGLogNormalItemDelegate.cpp
     ${StatsGenerator_SOURCE_DIR}/Delegates/SGPowerLawItemDelegate.cpp
@@ -168,8 +196,8 @@ QT5_WRAP_UI( Generated_UI_HDRS ${StatsGenerator_UIS} )
 
 # --------------------------------------------------------------------
 # and finally this will run moc:
-QT5_WRAP_CPP( StatsGenerator_Generated_MOC_SRCS 
-        ${StatsGenerator_MOC_HDRS} 
+QT5_WRAP_CPP( StatsGenerator_Generated_MOC_SRCS
+        ${StatsGenerator_MOC_HDRS}
         ${StatsGenerator_TABLEMODEL_MOC_HDRS}
         ${StatsGenerator_PRESETS_MOC_HDRS}
         ${StatsGenerator_DIALOGS_MOC_HDRS}
@@ -208,13 +236,13 @@ set(StatsGenerator_PROJECT_SRCS
     ${Generated_MOC_SRCS}
 
     ${StatsGenerator_Generated_MOC_SRCS}
+
+    ${StatsGenerator_CMP_FILES}
 )
 
 include_directories(${HDF5_INCLUDE_DIR})
 include_directories(${PROJECT_CODE_DIR})
 include_directories(${PROJECT_CODE_DIR}/Applications)
-include_directories(${PROJECT_CODE_DIR}/QtSupportLib)
-include_directories(${DREAM3DProj_BINARY_DIR}/QtSupportLib)
 include_directories(${StatsGenerator_SOURCE_DIR})
 include_directories(${StatsGenerator_BINARY_DIR})
 include_directories(${DREAM3DProj_BINARY_DIR})
@@ -224,6 +252,13 @@ include_directories(${DREAM3DProj_BINARY_DIR}/Applications/${APPLICATION_NAME}/P
 include_directories(${DREAM3DProj_BINARY_DIR}/Applications/${APPLICATION_NAME}/Presets/Dialogs)
 include_directories(${DREAM3DProj_BINARY_DIR}/Applications/${APPLICATION_NAME}/Delegates)
 include_directories(${DREAM3DProj_BINARY_DIR}/Applications/${APPLICATION_NAME}/TableModels)
+include_directories(${SIMPLProj_SOURCE_DIR}/Source)
+include_directories(${SIMPLProj_BINARY_DIR})
+include_directories(${SIMPLViewProj_SOURCE_DIR}/Source)
+include_directories(${SIMPLViewProj_SOURCE_DIR}/Source/QtSupportLib)
+include_directories(${SIMPLViewProj_BINARY_DIR})
+include_directories(${SIMPLViewProj_BINARY_DIR}/QtSupportLib)
+include_directories(${BrandedSIMPLView_DIR})
 
 
 if(APPLE)

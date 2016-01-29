@@ -73,7 +73,7 @@ PrecipitateEquiaxedPreset::~PrecipitateEquiaxedPreset()
 void PrecipitateEquiaxedPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
-  plot->setDistributionType(DREAM3D::DistributionType::Beta, false);
+  plot->setDistributionType(SIMPL::DistributionType::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
   if (NULL == model)
@@ -118,7 +118,7 @@ void PrecipitateEquiaxedPreset::initializeOmega3TableModel(StatsGenPlotWidget* p
 void PrecipitateEquiaxedPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
-  plot->setDistributionType(DREAM3D::DistributionType::Beta, false);
+  plot->setDistributionType(SIMPL::DistributionType::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
   if (NULL == model)
@@ -163,7 +163,7 @@ void PrecipitateEquiaxedPreset::initializeBOverATableModel(StatsGenPlotWidget* p
 void PrecipitateEquiaxedPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
-  plot->setDistributionType(DREAM3D::DistributionType::Beta, false);
+  plot->setDistributionType(SIMPL::DistributionType::Beta, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGBetaTableModel* model = qobject_cast<SGBetaTableModel*>(plot->tableModel());
   if (NULL == model)
@@ -209,7 +209,7 @@ void PrecipitateEquiaxedPreset::initializeCOverATableModel(StatsGenPlotWidget* p
 void PrecipitateEquiaxedPreset::initializeClusteringTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
-  plot->setDistributionType(DREAM3D::DistributionType::LogNormal, false);
+  plot->setDistributionType(SIMPL::DistributionType::LogNormal, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGLogNormalTableModel* model = qobject_cast<SGLogNormalTableModel*> (plot->tableModel());
   if (NULL == model)

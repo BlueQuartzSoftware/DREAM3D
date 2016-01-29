@@ -56,8 +56,8 @@
 // -----------------------------------------------------------------------------
 AlignSections::AlignSections() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::ImageDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_DataContainerName(SIMPL::Defaults::ImageDataContainerName),
+  m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
   m_WriteAlignmentShifts(false),
   m_AlignmentShiftFileName("")
 {
@@ -294,13 +294,13 @@ const QString AlignSections::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString AlignSections::getGroupName()
-{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+{ return SIMPL::FilterGroups::ReconstructionFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AlignSections::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::AlignmentFilters; }
+{ return SIMPL::FilterSubGroups::AlignmentFilters; }
 
 // -----------------------------------------------------------------------------
 //

@@ -647,7 +647,7 @@ bool TrigonalOps::inUnitTriangle(float eta, float chi)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb TrigonalOps::generateIPFColor(double* eulers, double* refDir, bool convertDegrees)
+SIMPL::Rgb TrigonalOps::generateIPFColor(double* eulers, double* refDir, bool convertDegrees)
 {
   return generateIPFColor(eulers[0], eulers[1], eulers[2], refDir[0], refDir[1], refDir[2], convertDegrees);
 }
@@ -655,7 +655,7 @@ DREAM3D::Rgb TrigonalOps::generateIPFColor(double* eulers, double* refDir, bool 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb TrigonalOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, bool degToRad)
+SIMPL::Rgb TrigonalOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, bool degToRad)
 {
   if (degToRad == true)
   {
@@ -748,7 +748,7 @@ DREAM3D::Rgb TrigonalOps::generateIPFColor(double phi1, double phi, double phi2,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb TrigonalOps::generateRodriguesColor(float r1, float r2, float r3)
+SIMPL::Rgb TrigonalOps::generateRodriguesColor(float r1, float r2, float r3)
 {
   float range1 = 2.0f * TrigDim1InitValue;
   float range2 = 2.0f * TrigDim2InitValue;
@@ -946,7 +946,7 @@ UInt8ArrayType::Pointer TrigonalOps::generateIPFTriangleLegend(int imageDim)
   // Find the slope of the bounding line.
   static const float m = sinf(30.0 * SIMPLib::Constants::k_PiOver180) / cosf(30.0 * SIMPLib::Constants::k_PiOver180);
 
-  DREAM3D::Rgb color;
+  SIMPL::Rgb color;
   size_t idx = 0;
   size_t yScanLineIndex = 0; // We use this to control where the data is drawn. Otherwise the image will come out flipped vertically
   // Loop over every pixel in the image and project up to the sphere to get the angle and then figure out the RGB from
@@ -1007,9 +1007,9 @@ UInt8ArrayType::Pointer TrigonalOps::generateIPFTriangleLegend(int imageDim)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb TrigonalOps::generateMisorientationColor(const QuatF& q, const QuatF& refFrame)
+SIMPL::Rgb TrigonalOps::generateMisorientationColor(const QuatF& q, const QuatF& refFrame)
 {
-  DREAM3D::Rgb rgb = RgbColor::dRgb(0, 0, 0, 0);
+  SIMPL::Rgb rgb = RgbColor::dRgb(0, 0, 0, 0);
 
   Q_ASSERT(false);
 

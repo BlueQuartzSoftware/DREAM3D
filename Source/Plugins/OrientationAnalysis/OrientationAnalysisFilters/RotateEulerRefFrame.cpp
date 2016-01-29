@@ -149,7 +149,7 @@ void RotateEulerRefFrame::setupFilterParameters()
   parameters.push_back(FloatVec3FilterParameter::New("Rotation Axis (ijk)", "RotationAxis", getRotationAxis(), FilterParameter::Parameter));
   parameters.push_back(DoubleFilterParameter::New("Rotation Angle (Degrees)", "RotationAngle", getRotationAngle(), FilterParameter::Parameter));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Float, 3, DREAM3D::AttributeMatrixObjectType::Element);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixObjectType::Element);
     parameters.push_back(DataArraySelectionFilterParameter::New("Euler Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, req));
   }
   setFilterParameters(parameters);
@@ -287,13 +287,13 @@ const QString RotateEulerRefFrame::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString RotateEulerRefFrame::getGroupName()
-{ return DREAM3D::FilterGroups::OrientationAnalysisFilters; }
+{ return SIMPL::FilterGroups::OrientationAnalysisFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RotateEulerRefFrame::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::ConversionFilters; }
+{ return SIMPL::FilterSubGroups::ConversionFilters; }
 
 // -----------------------------------------------------------------------------
 //

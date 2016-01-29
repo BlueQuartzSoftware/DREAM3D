@@ -347,7 +347,7 @@ const QString FindDifferenceMap::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FindDifferenceMap::getGroupName()
-{ return DREAM3D::FilterGroups::StatisticsFilters; }
+{ return SIMPL::FilterGroups::StatisticsFilters; }
 
 // -----------------------------------------------------------------------------
 //
@@ -359,5 +359,5 @@ const QString FindDifferenceMap::getHumanLabel()
 //
 // -----------------------------------------------------------------------------
 const QString FindDifferenceMap::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::MiscFilters; }
+{ return SIMPL::FilterSubGroups::MiscFilters; }
 

@@ -1603,7 +1603,7 @@ bool CubicOps::inUnitTriangle(float eta, float chi)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb CubicOps::generateIPFColor(double* eulers, double* refDir, bool convertDegrees)
+SIMPL::Rgb CubicOps::generateIPFColor(double* eulers, double* refDir, bool convertDegrees)
 {
   return generateIPFColor(eulers[0], eulers[1], eulers[2], refDir[0], refDir[1], refDir[2], convertDegrees);
 }
@@ -1611,7 +1611,7 @@ DREAM3D::Rgb CubicOps::generateIPFColor(double* eulers, double* refDir, bool con
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb CubicOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, bool degToRad)
+SIMPL::Rgb CubicOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, bool degToRad)
 {
   if (degToRad == true)
   {
@@ -1713,7 +1713,7 @@ DREAM3D::Rgb CubicOps::generateIPFColor(double phi1, double phi, double phi2, do
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb CubicOps::generateRodriguesColor(float r1, float r2, float r3)
+SIMPL::Rgb CubicOps::generateRodriguesColor(float r1, float r2, float r3)
 {
   float range1 = 2.0f * CubicDim1InitValue;
   float range2 = 2.0f * CubicDim2InitValue;
@@ -1925,7 +1925,7 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
   float cd[3];
 
 
-  DREAM3D::Rgb color;
+  SIMPL::Rgb color;
   size_t idx = 0;
   size_t yScanLineIndex = imageDim; // We use this to control where the data is drawn. Otherwise the image will come out flipped vertically
   // Loop over every pixel in the image and project up to the sphere to get the angle and then figure out the RGB from
@@ -1988,7 +1988,7 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb CubicOps::generateMisorientationColor(const QuatF& q, const QuatF& refFrame)
+SIMPL::Rgb CubicOps::generateMisorientationColor(const QuatF& q, const QuatF& refFrame)
 {
   float n1, n2, n3, w;
   float x, x1, x2, x3, x4, x5, x6, x7;
@@ -2065,7 +2065,7 @@ DREAM3D::Rgb CubicOps::generateMisorientationColor(const QuatF& q, const QuatF& 
     s = s / v;
   }
 
-  DREAM3D::Rgb rgb = ColorUtilities::convertHSVtoRgb(h, s, v);
+  SIMPL::Rgb rgb = ColorUtilities::convertHSVtoRgb(h, s, v);
 
   //now standard 0-255 rgb, needs rotation
   return RgbColor::dRgb(255 - RgbColor::dGreen(rgb), RgbColor::dBlue(rgb), RgbColor::dRed(rgb), 0);
@@ -2393,7 +2393,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     quat.y = d2[i] * cosAng * tanAng;
     quat.z = d3[i] * cosAng * tanAng;
     quat.w = cosAng;
-    DREAM3D::Rgb pix = generateMisorientationColor(quat, refQuat);
+    SIMPL::Rgb pix = generateMisorientationColor(quat, refQuat);
     //image.setPixel(qpointba[i].x(), qpointba[i].y(), pix);
   }
 

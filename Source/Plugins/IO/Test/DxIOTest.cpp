@@ -134,9 +134,9 @@ int TestDxWriter()
       // horribly gone wrong in which case the system is going to come down quickly after this.
       AbstractFilter::Pointer dxWriter = filterFactory->create();
 
-      DataArrayPath path = DataArrayPath(DREAM3D::Defaults::DataContainerName,
-                                         DREAM3D::Defaults::CellAttributeMatrixName,
-                                         DREAM3D::CellData::FeatureIds);
+      DataArrayPath path = DataArrayPath(SIMPL::Defaults::DataContainerName,
+                                         SIMPL::Defaults::CellAttributeMatrixName,
+                                         SIMPL::CellData::FeatureIds);
       QVariant var;
       var.setValue(path);
       bool propWasSet = dxWriter->setProperty("FeatureIdsArrayPath", var);
@@ -186,9 +186,9 @@ int TestDxWriter()
       // horribly gone wrong in which case the system is going to come down quickly after this.
       AbstractFilter::Pointer dxWriter = filterFactory->create();
 
-      DataArrayPath path = DataArrayPath(DREAM3D::Defaults::DataContainerName,
-                                         DREAM3D::Defaults::CellAttributeMatrixName,
-                                         DREAM3D::CellData::FeatureIds);
+      DataArrayPath path = DataArrayPath(SIMPL::Defaults::DataContainerName,
+                                         SIMPL::Defaults::CellAttributeMatrixName,
+                                         SIMPL::CellData::FeatureIds);
       QVariant var;
       var.setValue(path);
       bool propWasSet = dxWriter->setProperty("FeatureIdsArrayPath", var);
@@ -251,7 +251,7 @@ int TestDxReader()
   size_t nz = 0;
 
 
-  DataContainer::Pointer m = dxReader->getDataContainerArray()->getDataContainer(DREAM3D::Defaults::ImageDataContainerName);
+  DataContainer::Pointer m = dxReader->getDataContainerArray()->getDataContainer(SIMPL::Defaults::ImageDataContainerName);
   DREAM3D_REQUIRED_PTR(m.get(), != , NULL)
 
   /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
@@ -259,7 +259,7 @@ int TestDxReader()
   DREAM3D_REQUIRE_EQUAL(ny, UnitTest::FeatureIdsTest::YSize);
   DREAM3D_REQUIRE_EQUAL(nz, UnitTest::FeatureIdsTest::ZSize);
 
-  IDataArray::Pointer mdata = dxReader->getDataContainerArray()->getDataContainer(DREAM3D::Defaults::ImageDataContainerName)->getAttributeMatrix("CellData")->getAttributeArray(DREAM3D::CellData::FeatureIds);
+  IDataArray::Pointer mdata = dxReader->getDataContainerArray()->getDataContainer(SIMPL::Defaults::ImageDataContainerName)->getAttributeMatrix("CellData")->getAttributeArray(SIMPL::CellData::FeatureIds);
 
   int size = UnitTest::FeatureIdsTest::XSize * UnitTest::FeatureIdsTest::YSize * UnitTest::FeatureIdsTest::ZSize;
   int32_t* data = Int32ArrayType::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t*>(mdata.get());
@@ -327,7 +327,7 @@ int TestDxReaderCache()
     size_t nz = 0;
 
 
-    DataContainer::Pointer m = dxReader->getDataContainerArray()->getDataContainer(DREAM3D::Defaults::ImageDataContainerName);
+    DataContainer::Pointer m = dxReader->getDataContainerArray()->getDataContainer(SIMPL::Defaults::ImageDataContainerName);
     DREAM3D_REQUIRED_PTR(m.get(), != , NULL)
 
     m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
@@ -365,7 +365,7 @@ int TestDxReaderCache()
     size_t nz = 0;
 
 
-    DataContainer::Pointer m = dxReader->getDataContainerArray()->getDataContainer(DREAM3D::Defaults::ImageDataContainerName);
+    DataContainer::Pointer m = dxReader->getDataContainerArray()->getDataContainer(SIMPL::Defaults::ImageDataContainerName);
     DREAM3D_REQUIRED_PTR(m.get(), != , NULL)
 
     m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
@@ -403,7 +403,7 @@ int TestDxReaderCache()
     size_t nz = 0;
 
 
-    DataContainer::Pointer m = dxReader->getDataContainerArray()->getDataContainer(DREAM3D::Defaults::ImageDataContainerName);
+    DataContainer::Pointer m = dxReader->getDataContainerArray()->getDataContainer(SIMPL::Defaults::ImageDataContainerName);
     DREAM3D_REQUIRED_PTR(m.get(), != , NULL)
 
     m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
@@ -452,7 +452,7 @@ int TestDxReaderCache()
     size_t nz = 0;
 
 
-    DataContainer::Pointer m = dxReader->getDataContainerArray()->getDataContainer(DREAM3D::Defaults::ImageDataContainerName);
+    DataContainer::Pointer m = dxReader->getDataContainerArray()->getDataContainer(SIMPL::Defaults::ImageDataContainerName);
     DREAM3D_REQUIRED_PTR(m.get(), != , NULL)
 
     m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
@@ -494,7 +494,7 @@ int TestDxReaderCache()
     size_t nz = 0;
 
 
-    DataContainer::Pointer m = dxReader->getDataContainerArray()->getDataContainer(DREAM3D::Defaults::ImageDataContainerName);
+    DataContainer::Pointer m = dxReader->getDataContainerArray()->getDataContainer(SIMPL::Defaults::ImageDataContainerName);
     DREAM3D_REQUIRED_PTR(m.get(), != , NULL)
 
     m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);

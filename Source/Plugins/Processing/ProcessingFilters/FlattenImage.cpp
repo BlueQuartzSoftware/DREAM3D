@@ -103,9 +103,9 @@ class FlattenImageImpl
 // -----------------------------------------------------------------------------
 FlattenImage::FlattenImage() :
   AbstractFilter(),
-  m_FlattenMethod(DREAM3D::FlattenImageMethod::Luminosity),
-  m_ImageDataArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::ImageData),
-  m_FlatImageDataArrayName(DREAM3D::CellData::FlatImageData),
+  m_FlattenMethod(SIMPL::FlattenImageMethod::Luminosity),
+  m_ImageDataArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::ImageData),
+  m_FlatImageDataArrayName(SIMPL::CellData::FlatImageData),
   m_ImageData(NULL),
   m_FlatImageData(NULL)
 {
@@ -139,7 +139,7 @@ void FlattenImage::setupFilterParameters()
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::UInt8, DREAM3D::Defaults::AnyComponentSize, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt8, SIMPL::Defaults::AnyComponentSize, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     QVector< QVector<size_t> > cDims;
     cDims.push_back(QVector<size_t>(1, 3));
     cDims.push_back(QVector<size_t>(1, 4));
@@ -233,13 +233,13 @@ void FlattenImage::execute()
   float Rfactor = 1.0f;
   float Gfactor = 1.0f;
   float Bfactor = 1.0f;
-  if (m_FlattenMethod == DREAM3D::FlattenImageMethod::Average)
+  if (m_FlattenMethod == SIMPL::FlattenImageMethod::Average)
   {
     Rfactor = 1.0f / 3.0f;
     Gfactor = 1.0f / 3.0f;
     Bfactor = 1.0f / 3.0f;
   }
-  else if (m_FlattenMethod == DREAM3D::FlattenImageMethod::Luminosity)
+  else if (m_FlattenMethod == SIMPL::FlattenImageMethod::Luminosity)
   {
     Rfactor = 0.21f;
     Gfactor = 0.72f;
@@ -314,13 +314,13 @@ const QString FlattenImage::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FlattenImage::getGroupName()
-{ return DREAM3D::FilterGroups::ProcessingFilters; }
+{ return SIMPL::FilterGroups::ProcessingFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FlattenImage::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::ImageFilters; }
+{ return SIMPL::FilterSubGroups::ImageFilters; }
 
 // -----------------------------------------------------------------------------
 //

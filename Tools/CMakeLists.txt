@@ -66,6 +66,10 @@ ConvertPathToHeaderCompatible(${DREAM3DProj_PARENT_DIR_NORM})
 configure_file( ${DREAM3DTools_SOURCE_DIR}/ToolConfiguration.h.in
                 ${DREAM3DTools_BINARY_DIR}/ToolConfiguration.h)
 
+include_directories(${DREAM3DTest_BINARY_DIR})
+include_directories(${SIMPLProj_SOURCE_DIR}/Source)
+include_directories(${SIMPLProj_BINARY_DIR})
+
 #-------------------------------------------------------------------------------
 # Function COMPILE_TOOL to help alleviate lots of extra code below for adding
 # simple command line tools that just need one or two source files
@@ -96,20 +100,6 @@ function(COMPILE_TOOL)
     )
 
 endfunction()
-
-# Create a Command line tool for the PipelineRunner
-COMPILE_TOOL(
-    TARGET PipelineRunner
-    SOURCES ${DREAM3DTools_SOURCE_DIR}/PipelineRunner.cpp
-    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-    VERSION_MINOR ${DREAM3D_VER_MINOR}
-    VERSION_PATCH ${DREAM3D_VER_PATCH}
-    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    COMPONENT     Tools
-    INSTALL_DEST  "${install_dir}"
-    LINK_LIBRARIES EbsdLib SIMPLib
-)
 
 
 # Create a Command line tool for the FilterParameterTool

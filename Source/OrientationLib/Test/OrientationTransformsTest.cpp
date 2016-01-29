@@ -357,8 +357,8 @@ void RunTestCase( GenerateFunctionList::EntryType& entryRef, size_t nSteps)
     // std::cout << ss.str() << std::endl;
     std::string testName = ss.str();
 
-    DREAM3D::unittest::CurrentMethod = ss.str();
-    DREAM3D::unittest::numTests++;
+    SIMPL::unittest::CurrentMethod = ss.str();
+    SIMPL::unittest::numTests++;
     std::cout << "Starting Test " << ss.str() << " -----------------------------------------------------" << std::endl;
 
     DataContainerArray::Pointer dca = DataContainerArray::New();
@@ -587,12 +587,12 @@ void RunTestCase( GenerateFunctionList::EntryType& entryRef, size_t nSteps)
       ss.str("");
       ss << testName << "Type: " << typeName.toStdString();
       TestPassed(ss.str());
-      DREAM3D::unittest::CurrentMethod = "";
+      SIMPL::unittest::CurrentMethod = "";
     }
   }
   catch (TestException& e)
   {
-    TestFailed(DREAM3D::unittest::CurrentMethod);
+    TestFailed(SIMPL::unittest::CurrentMethod);
     std::cout << e.what() << std::endl;
   }
 

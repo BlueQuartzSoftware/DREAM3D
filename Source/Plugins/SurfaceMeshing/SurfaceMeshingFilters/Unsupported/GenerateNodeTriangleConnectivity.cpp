@@ -47,8 +47,8 @@
 // -----------------------------------------------------------------------------
 GenerateNodeTriangleConnectivity::GenerateNodeTriangleConnectivity() :
   AbstractFilter(),
-  m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::CellData::SurfaceMeshUniqueEdges),
-  m_SurfaceMeshTriangleEdgesArrayName(DREAM3D::CellData::SurfaceMeshTriangleEdges),
+  m_SurfaceMeshUniqueEdgesArrayName(SIMPL::CellData::SurfaceMeshUniqueEdges),
+  m_SurfaceMeshTriangleEdgesArrayName(SIMPL::CellData::SurfaceMeshTriangleEdges),
   m_SurfaceMeshTriangleEdges(NULL)
 {
   setupFilterParameters();
@@ -135,12 +135,12 @@ void GenerateNodeTriangleConnectivity::dataCheck()
 
     // We do not know the size of the array so we can not use the macro so we just manually call
     // the needed methods that will propagate these array additions to the pipeline
-    DataArray<int>::Pointer uniqueEdgesArray = DataArray<int>::CreateArray(1, 2, DREAM3D::CellData::SurfaceMeshUniqueEdges);
-    sm->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::SurfaceMeshUniqueEdges, uniqueEdgesArray);
+    DataArray<int>::Pointer uniqueEdgesArray = DataArray<int>::CreateArray(1, 2, SIMPL::CellData::SurfaceMeshUniqueEdges);
+    sm->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(SIMPL::CellData::SurfaceMeshUniqueEdges, uniqueEdgesArray);
 
     // This is just for tracking what Arrays are being created by this filter. Normally the macro
     // would do this for us.
-    addCreatedCellData(DREAM3D::CellData::SurfaceMeshUniqueEdges);
+    addCreatedCellData(SIMPL::CellData::SurfaceMeshUniqueEdges);
   }
 }
 
@@ -227,7 +227,7 @@ void GenerateNodeTriangleConnectivity::generateConnectivity()
   }
   if (getCancel() == true) { return; }
 
-  ManagedPointerArray<int>::Pointer nodeTriangleArray = ManagedPointerArray<int>::CreateArray(m_Node2Triangle.size(), DREAM3D::CellData::SurfaceMeshNodeTriangles);
+  ManagedPointerArray<int>::Pointer nodeTriangleArray = ManagedPointerArray<int>::CreateArray(m_Node2Triangle.size(), SIMPL::CellData::SurfaceMeshNodeTriangles);
 
   float progIndex = 0.0;
   float curPercent = 0.0;

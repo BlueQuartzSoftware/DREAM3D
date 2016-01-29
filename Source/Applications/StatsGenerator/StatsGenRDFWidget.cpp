@@ -277,7 +277,7 @@ void StatsGenRDFWidget::extractStatsData(int index, StatsData* statsData, unsign
   Q_UNUSED(index)
   VectorOfFloatArray arrays;
 
-  if(phaseType == DREAM3D::PhaseType::PrecipitatePhase)
+  if(phaseType == SIMPL::PhaseType::PrecipitatePhase)
   {
     PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
     arrays = pp->getMDF_Weights();

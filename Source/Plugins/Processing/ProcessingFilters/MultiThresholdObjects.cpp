@@ -56,7 +56,7 @@
 // -----------------------------------------------------------------------------
 MultiThresholdObjects::MultiThresholdObjects() :
   AbstractFilter(),
-  m_DestinationArrayName(DREAM3D::GeneralData::Mask),
+  m_DestinationArrayName(SIMPL::GeneralData::Mask),
   m_SelectedThresholds(),
   m_Destination(NULL)
 {
@@ -219,7 +219,7 @@ void MultiThresholdObjects::execute()
 
   // Prime our output array with the result of the first comparison
   {
-    ThresholdFilterHelper filter(static_cast<DREAM3D::Comparison::Enumeration>(comp_0.compOperator), comp_0.compValue, m_DestinationPtr.lock().get());
+    ThresholdFilterHelper filter(static_cast<SIMPL::Comparison::Enumeration>(comp_0.compOperator), comp_0.compValue, m_DestinationPtr.lock().get());
     // Run the first threshold and store the results in our output array
     err = filter.execute(m->getAttributeMatrix(amName)->getAttributeArray(comp_0.attributeArrayName).get(), m_DestinationPtr.lock().get());
     if (err < 0)
@@ -248,7 +248,7 @@ void MultiThresholdObjects::execute()
 
       ComparisonInput_t& compRef = m_SelectedThresholds[i];
 
-      ThresholdFilterHelper filter(static_cast<DREAM3D::Comparison::Enumeration>(compRef.compOperator), compRef.compValue, currentArrayPtr.get());
+      ThresholdFilterHelper filter(static_cast<SIMPL::Comparison::Enumeration>(compRef.compOperator), compRef.compValue, currentArrayPtr.get());
 
       err = filter.execute(m->getAttributeMatrix(amName)->getAttributeArray(compRef.attributeArrayName).get(), currentArrayPtr.get());
       if (err < 0)
@@ -316,13 +316,13 @@ const QString MultiThresholdObjects::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString MultiThresholdObjects::getGroupName()
-{ return DREAM3D::FilterGroups::ProcessingFilters; }
+{ return SIMPL::FilterGroups::ProcessingFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString MultiThresholdObjects::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::ThresholdFilters; }
+{ return SIMPL::FilterSubGroups::ThresholdFilters; }
 
 // -----------------------------------------------------------------------------
 //

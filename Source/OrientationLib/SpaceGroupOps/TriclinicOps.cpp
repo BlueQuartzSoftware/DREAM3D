@@ -587,7 +587,7 @@ bool TriclinicOps::inUnitTriangle(float eta, float chi)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb TriclinicOps::generateIPFColor(double* eulers, double* refDir, bool convertDegrees)
+SIMPL::Rgb TriclinicOps::generateIPFColor(double* eulers, double* refDir, bool convertDegrees)
 {
   return generateIPFColor(eulers[0], eulers[1], eulers[2], refDir[0], refDir[1], refDir[2], convertDegrees);
 }
@@ -595,7 +595,7 @@ DREAM3D::Rgb TriclinicOps::generateIPFColor(double* eulers, double* refDir, bool
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb TriclinicOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, bool degToRad)
+SIMPL::Rgb TriclinicOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, bool degToRad)
 {
   if (degToRad == true)
   {
@@ -688,7 +688,7 @@ DREAM3D::Rgb TriclinicOps::generateIPFColor(double phi1, double phi, double phi2
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb TriclinicOps::generateRodriguesColor(float r1, float r2, float r3)
+SIMPL::Rgb TriclinicOps::generateRodriguesColor(float r1, float r2, float r3)
 {
   float range1 = 2.0f * TriclinicDim1InitValue;
   float range2 = 2.0f * TriclinicDim2InitValue;
@@ -889,7 +889,7 @@ UInt8ArrayType::Pointer TriclinicOps::generateIPFTriangleLegend(int imageDim)
   float denom = 0.0f;
 
 
-  DREAM3D::Rgb color;
+  SIMPL::Rgb color;
   size_t idx = 0;
   size_t yScanLineIndex = 0; // We use this to control where the data is drawn. Otherwise the image will come out flipped vertically
   // Loop over every pixel in the image and project up to the sphere to get the angle and then figure out the RGB from
@@ -943,9 +943,9 @@ UInt8ArrayType::Pointer TriclinicOps::generateIPFTriangleLegend(int imageDim)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb TriclinicOps::generateMisorientationColor(const QuatF& q, const QuatF& refFrame)
+SIMPL::Rgb TriclinicOps::generateMisorientationColor(const QuatF& q, const QuatF& refFrame)
 {
-  DREAM3D::Rgb rgb = RgbColor::dRgb(0, 0, 0, 0);
+  SIMPL::Rgb rgb = RgbColor::dRgb(0, 0, 0, 0);
 
   Q_ASSERT(false);
 

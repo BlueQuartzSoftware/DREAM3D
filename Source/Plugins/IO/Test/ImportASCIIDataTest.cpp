@@ -208,7 +208,7 @@ void ConvertType()
     O* resultsRaw = results->getPointer(0);
     for (int i = 0; i < results->getSize(); i++)
     {
-      if (outputType == DREAM3D::TypeNames::Double || outputType == DREAM3D::TypeNames::Float)
+      if (outputType == SIMPL::TypeNames::Double || outputType == SIMPL::TypeNames::Float)
       {
         double absValue = std::fabs(outputDoubleVector[i] - static_cast<double>(resultsRaw[i]) );
         DREAM3D_REQUIRED(absValue, < , 0.01)
@@ -241,7 +241,7 @@ void ConvertType()
     O* resultsRaw = results->getPointer(0);
     for (int i = 0; i < results->getSize(); i++)
     {
-      if (outputType == DREAM3D::TypeNames::Double || outputType == DREAM3D::TypeNames::Float)
+      if (outputType == SIMPL::TypeNames::Double || outputType == SIMPL::TypeNames::Float)
       {
         DREAM3D_REQUIRE_EQUAL(resultsRaw[i], outputIntAsDoubleVector[i])
       }
@@ -269,7 +269,7 @@ void ConvertType()
   RemoveTestFiles();
 
   // Scientific Notation Test - Only if the output is a double or float
-  if (outputType == DREAM3D::TypeNames::Double || outputType == DREAM3D::TypeNames::Float)
+  if (outputType == SIMPL::TypeNames::Double || outputType == SIMPL::TypeNames::Float)
   {
     CreateFile(UnitTest::ImportASCIIDataTest::TestFile1, inputScientificNotation, delimiter);
 
@@ -288,7 +288,7 @@ void ConvertType()
     O* resultsRaw = results->getPointer(0);
     for (size_t i = 0; i < results->getSize(); i++)
     {
-      if (outputType == DREAM3D::TypeNames::Double || outputType == DREAM3D::TypeNames::Float)
+      if (outputType == SIMPL::TypeNames::Double || outputType == SIMPL::TypeNames::Float)
       {
         double absValue = fabs(outputDoubleVector[i] - static_cast<double>(resultsRaw[i]));
         DREAM3D_REQUIRED(absValue, < , 0.01)
@@ -303,7 +303,7 @@ void ConvertType()
   RemoveTestFiles();
 
   // Hexadecimal Test - Only if the output is an integer
-  if (outputType != DREAM3D::TypeNames::Double && outputType != DREAM3D::TypeNames::Float)
+  if (outputType != SIMPL::TypeNames::Double && outputType != SIMPL::TypeNames::Float)
   {
     CreateFile(UnitTest::ImportASCIIDataTest::TestFile1, inputHexVector, delimiter);
 
@@ -329,7 +329,7 @@ void ConvertType()
   RemoveTestFiles();
 
   // Octal Test - Only if the output is an integer
-  if (outputType != DREAM3D::TypeNames::Double && outputType != DREAM3D::TypeNames::Float)
+  if (outputType != SIMPL::TypeNames::Double && outputType != SIMPL::TypeNames::Float)
   {
     CreateFile(UnitTest::ImportASCIIDataTest::TestFile1, inputOctVector, delimiter);
 
@@ -375,15 +375,15 @@ void ConvertType()
   {
     // We must hard-code these three types because there is no way to store them otherwise...
     QString minValue;
-    if (outputType == DREAM3D::TypeNames::Float)
+    if (outputType == SIMPL::TypeNames::Float)
     {
       minValue = "-3.4e39";
     }
-    else if (outputType == DREAM3D::TypeNames::Double)
+    else if (outputType == SIMPL::TypeNames::Double)
     {
       minValue = "-1.7e309";
     }
-    else if (outputType == DREAM3D::TypeNames::Int64)
+    else if (outputType == SIMPL::TypeNames::Int64)
     {
       minValue = "-2e32";
     }

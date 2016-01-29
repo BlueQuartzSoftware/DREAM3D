@@ -117,7 +117,7 @@ int TestEnsembleInfoWriter()
   WriteTestFile(UnitTest::EnsembleInfoReaderTest::TestFileIni, groups);
 
   DataContainerArray::Pointer dca = DataContainerArray::New();
-  DataContainer::Pointer vdc = DataContainer::New(DREAM3D::Defaults::DataContainerName);
+  DataContainer::Pointer vdc = DataContainer::New(SIMPL::Defaults::DataContainerName);
 
   // Now instantiate the EnsembleInfoReader Filter from the FilterManager
   QString filtName = "EnsembleInfoReader";
@@ -137,7 +137,7 @@ int TestEnsembleInfoWriter()
     filter->setDataContainerArray(dca);
     var.setValue(UnitTest::EnsembleInfoReaderTest::TestFileDoc); // should return -10018, .doc extension
     propWasSet = filter->setProperty("InputFile", var);
-    var.setValue(DREAM3D::Defaults::DataContainerName);
+    var.setValue(SIMPL::Defaults::DataContainerName);
     filter->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
     filter->preflight();
@@ -147,13 +147,13 @@ int TestEnsembleInfoWriter()
 
     // Reset The data container array with new instances for this sub test
     dca = DataContainerArray::New();
-    vdc = DataContainer::New(DREAM3D::Defaults::DataContainerName);
+    vdc = DataContainer::New(SIMPL::Defaults::DataContainerName);
     dca->addDataContainer(vdc);
     filter->setDataContainerArray(dca);
 
     var.setValue(UnitTest::EnsembleInfoReaderTest::TestFileTxt); // should pass, .txt extension
     propWasSet = filter->setProperty("InputFile", var);
-    var.setValue(DREAM3D::Defaults::DataContainerName);
+    var.setValue(SIMPL::Defaults::DataContainerName);
     filter->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
     filter->preflight();
@@ -161,7 +161,7 @@ int TestEnsembleInfoWriter()
 
     // Reset The data container array with new instances for this sub test
     dca = DataContainerArray::New();
-    vdc = DataContainer::New(DREAM3D::Defaults::DataContainerName);
+    vdc = DataContainer::New(SIMPL::Defaults::DataContainerName);
     dca->addDataContainer(vdc);
     filter->setDataContainerArray(dca);
 
@@ -186,7 +186,7 @@ int TestEnsembleInfoWriter()
 int TestEnsembleInfoReader()
 {
   DataContainerArray::Pointer dca = DataContainerArray::New();
-  DataContainer::Pointer vdc = DataContainer::New(DREAM3D::Defaults::DataContainerName);
+  DataContainer::Pointer vdc = DataContainer::New(SIMPL::Defaults::DataContainerName);
 
   // Now instantiate the EnsembleInfoReader Filter from the FilterManager
   QString filtName = "EnsembleInfoReader";
@@ -206,7 +206,7 @@ int TestEnsembleInfoReader()
     filter->setDataContainerArray(dca);
     var.setValue(UnitTest::EnsembleInfoReaderTest::TestFileIni); // should pass
     propWasSet = filter->setProperty("InputFile", var);
-    var.setValue(DREAM3D::Defaults::DataContainerName);
+    var.setValue(SIMPL::Defaults::DataContainerName);
     filter->setProperty("DataContainerName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
     filter->execute();
@@ -214,7 +214,7 @@ int TestEnsembleInfoReader()
 
     // Reset The data container array with new instances for this sub test
     dca = DataContainerArray::New();
-    vdc = DataContainer::New(DREAM3D::Defaults::DataContainerName);
+    vdc = DataContainer::New(SIMPL::Defaults::DataContainerName);
     dca->addDataContainer(vdc);
     filter->setDataContainerArray(dca);
 
@@ -230,7 +230,7 @@ int TestEnsembleInfoReader()
 
     // Reset The data container array with new instances for this sub test
     dca = DataContainerArray::New();
-    vdc = DataContainer::New(DREAM3D::Defaults::DataContainerName);
+    vdc = DataContainer::New(SIMPL::Defaults::DataContainerName);
     dca->addDataContainer(vdc);
     filter->setDataContainerArray(dca);
     groups = "[EnsembleInfo]\nNumber_Phases = 2\n\n[1]\nCrystalStructure = Cubic_High\n\n\n[2]\nCrystalStructure = Hexagonal_High\nPhaseType = MatrixPhase\n";
@@ -244,7 +244,7 @@ int TestEnsembleInfoReader()
 
     // Reset The data container array with new instances for this sub test
     dca = DataContainerArray::New();
-    vdc = DataContainer::New(DREAM3D::Defaults::DataContainerName);
+    vdc = DataContainer::New(SIMPL::Defaults::DataContainerName);
     dca->addDataContainer(vdc);
     filter->setDataContainerArray(dca);
     groups = "[EnsembleInfo]\nNumber_Phases = 2\n\n[1]\nCrystalStructure = Cubic_High\nPhaseType = PrimaryPhase\n\n[2]\n\nPhaseType = MatrixPhase\n";
@@ -258,7 +258,7 @@ int TestEnsembleInfoReader()
 
     // Reset The data container array with new instances for this sub test
     dca = DataContainerArray::New();
-    vdc = DataContainer::New(DREAM3D::Defaults::DataContainerName);
+    vdc = DataContainer::New(SIMPL::Defaults::DataContainerName);
     dca->addDataContainer(vdc);
     filter->setDataContainerArray(dca);
     groups = "[EnsembleInfo]\nNumber_Phases = 2\n\n[1]\nCrystalStructure = Cubic_High\nPhaseType = PrimaryPase\n\n[2]\nCrystalStructure = Hexagonal_High\nPhaseType = MatrixPhase\n";
@@ -273,7 +273,7 @@ int TestEnsembleInfoReader()
 #if 0
     // Reset The data container array with new instances for this sub test
     dca = DataContainerArray::New();
-    vdc = DataContainer::New(DREAM3D::Defaults::DataContainerName);
+    vdc = DataContainer::New(SIMPL::Defaults::DataContainerName);
     dca->addDataContainer(vdc);
     filter->setDataContainerArray(dca);
     groups = "[EnsembleInfo]\nNumber_Phases = 2\n\n[1]\nCrystalStructure = Cubic_High\nPhaseType = PrimaryPhase\n\n[3]\nCrystalStructure = Hexagonal_High\nPhaseType = MatrixPhase\n";
@@ -288,7 +288,7 @@ int TestEnsembleInfoReader()
 
     // Reset The data container array with new instances for this sub test
     dca = DataContainerArray::New();
-    vdc = DataContainer::New(DREAM3D::Defaults::DataContainerName);
+    vdc = DataContainer::New(SIMPL::Defaults::DataContainerName);
     dca->addDataContainer(vdc);
     filter->setDataContainerArray(dca);
     groups = "[EnsembleInfo]\nNumber_Phases = 2\n\n[1]\nCrystalStructure = Cubc\nPhaseType = PrimaryPhase\n\n[2]\nCrystalStructure = Hexagonal_High\nPhaseType = MatrixPhase\n";

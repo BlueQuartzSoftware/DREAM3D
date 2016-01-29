@@ -82,16 +82,16 @@ void DataFormatPage::setupGui()
   registerField("startRow", startRowSpin);
 
   QStringList dataTypes;
-  dataTypes.push_back(DREAM3D::TypeNames::Double);
-  dataTypes.push_back(DREAM3D::TypeNames::Float);
-  dataTypes.push_back(DREAM3D::TypeNames::Int8);
-  dataTypes.push_back(DREAM3D::TypeNames::Int16);
-  dataTypes.push_back(DREAM3D::TypeNames::Int32);
-  dataTypes.push_back(DREAM3D::TypeNames::Int64);
-  dataTypes.push_back(DREAM3D::TypeNames::UInt8);
-  dataTypes.push_back(DREAM3D::TypeNames::UInt16);
-  dataTypes.push_back(DREAM3D::TypeNames::UInt32);
-  dataTypes.push_back(DREAM3D::TypeNames::UInt64);
+  dataTypes.push_back(SIMPL::TypeNames::Double);
+  dataTypes.push_back(SIMPL::TypeNames::Float);
+  dataTypes.push_back(SIMPL::TypeNames::Int8);
+  dataTypes.push_back(SIMPL::TypeNames::Int16);
+  dataTypes.push_back(SIMPL::TypeNames::Int32);
+  dataTypes.push_back(SIMPL::TypeNames::Int64);
+  dataTypes.push_back(SIMPL::TypeNames::UInt8);
+  dataTypes.push_back(SIMPL::TypeNames::UInt16);
+  dataTypes.push_back(SIMPL::TypeNames::UInt32);
+  dataTypes.push_back(SIMPL::TypeNames::UInt64);
   dataTypeCB->addItems(dataTypes);
   dataTypeCB->setCurrentIndex(0);
 

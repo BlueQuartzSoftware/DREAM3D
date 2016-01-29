@@ -105,7 +105,7 @@ int  ReadPHFile(QString FileName, QVector<int>& data, int& nx, int& ny, int& nz)
     return -1;
   }
 
-  Int32ArrayType* featureIds = Int32ArrayType::SafePointerDownCast(m->getAttributeMatrix(DREAM3D::Defaults::CellAttributeMatrixName)->getAttributeArray(DREAM3D::CellData::FeatureIds).get());
+  Int32ArrayType* featureIds = Int32ArrayType::SafePointerDownCast(m->getAttributeMatrix(SIMPL::Defaults::CellAttributeMatrixName)->getAttributeArray(SIMPL::CellData::FeatureIds).get());
   size_t count = featureIds->getNumberOfTuples();
 
   data.resize(count);
@@ -189,7 +189,7 @@ int writeScalarData(const QString& hdfPath,
   {
     qDebug() << "Error writing array with name: " << name;
   }
-  err = QH5Lite::writeScalarAttribute(cellGroupId, name, DREAM3D::HDF5::NumComponents, numComp);
+  err = QH5Lite::writeScalarAttribute(cellGroupId, name, SIMPL::HDF5::NumComponents, numComp);
   if (err < 0)
   {
     qDebug() << "Error writing dataset " << name;
@@ -220,10 +220,10 @@ int writePhDataToHDF5File(const QString& h5File, QVector<int>& data, int& nx, in
   { totalPoints };
 
   int numComp = 1;
-  err = writeScalarData(DREAM3D::Defaults::DataContainerName, data, DREAM3D::CellData::FeatureIds, numComp, rank, dims);
+  err = writeScalarData(SIMPL::Defaults::DataContainerName, data, SIMPL::CellData::FeatureIds, numComp, rank, dims);
   if (err < 0)
   {
-    qDebug() << "Error Writing Scalars '" << DREAM3D::CellData::FeatureIds << "' to " << DREAM3D::Defaults::DataContainerName;
+    qDebug() << "Error Writing Scalars '" << SIMPL::CellData::FeatureIds << "' to " << SIMPL::Defaults::DataContainerName;
     return err;
   }
   // Close the file when we are done with it.
@@ -239,10 +239,10 @@ int writeEulerDataToHDF5File(const QString& h5File, QVector<float>& data, int nu
   int err = 0;
   err = openHDF5File(h5File, true);
 
-  err = writeScalarData(DREAM3D::Defaults::DataContainerName, data, DREAM3D::CellData::EulerAngles, numComp, rank, dims);
+  err = writeScalarData(SIMPL::Defaults::DataContainerName, data, SIMPL::CellData::EulerAngles, numComp, rank, dims);
   if (err < 0)
   {
-    qDebug() << "Error Writing Scalars '" << DREAM3D::CellData::EulerAngles << "' to " << DREAM3D::Defaults::DataContainerName;
+    qDebug() << "Error Writing Scalars '" << SIMPL::CellData::EulerAngles << "' to " << SIMPL::Defaults::DataContainerName;
     return err;
   }
   // Close the file when we are done with it.

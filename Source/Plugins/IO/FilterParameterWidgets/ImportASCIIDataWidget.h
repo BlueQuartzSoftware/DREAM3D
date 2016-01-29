@@ -37,7 +37,7 @@
 #ifndef _ImportASCIIDataWidget_H_
 #define _ImportASCIIDataWidget_H_
 
-#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+#include "SIMPLViewWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 
 #include "ui_ImportASCIIDataWidget.h"
 

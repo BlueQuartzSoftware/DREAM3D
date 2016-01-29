@@ -51,6 +51,8 @@
 
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
+#include "EbsdLib/EbsdConstants.h"
+
 #include "Reconstruction/ReconstructionConstants.h"
 
 // Include the MOC generated file for this class
@@ -62,7 +64,7 @@
 // -----------------------------------------------------------------------------
 GroupMicroTextureRegions::GroupMicroTextureRegions() :
   GroupFeatures(),
-  m_NewCellFeatureAttributeMatrixName(DREAM3D::Defaults::NewCellFeatureAttributeMatrixName),
+  m_NewCellFeatureAttributeMatrixName(SIMPL::Defaults::NewCellFeatureAttributeMatrixName),
   m_CAxisTolerance(1.0f),
   m_UseRunningAverage(false),
   m_RandomizeParentIds(true),
@@ -71,9 +73,9 @@ GroupMicroTextureRegions::GroupMicroTextureRegions() :
   m_VolumesArrayPath("", "", ""),
   m_AvgQuatsArrayPath("", "", ""),
   m_CrystalStructuresArrayPath("", "", ""),
-  m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
-  m_FeatureParentIdsArrayName(DREAM3D::FeatureData::ParentIds),
-  m_ActiveArrayName(DREAM3D::FeatureData::Active),
+  m_CellParentIdsArrayName(SIMPL::CellData::ParentIds),
+  m_FeatureParentIdsArrayName(SIMPL::FeatureData::ParentIds),
+  m_ActiveArrayName(SIMPL::FeatureData::Active),
   m_FeatureIds(NULL),
   m_AvgQuats(NULL),
   m_FeaturePhases(NULL),
@@ -208,7 +210,7 @@ void GroupMicroTextureRegions::dataCheck()
   if(getErrorCondition() < 0 || NULL == m) { return; }
 
   QVector<size_t> tDims(1, 0);
-  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
+  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewCellFeatureAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellFeature);
 
   QVector<DataArrayPath> dataArrayPaths;
 
@@ -554,13 +556,13 @@ const QString GroupMicroTextureRegions::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString GroupMicroTextureRegions::getGroupName()
-{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+{ return SIMPL::FilterGroups::ReconstructionFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GroupMicroTextureRegions::getSubGroupName()
-{return DREAM3D::FilterSubGroups::GroupingFilters;}
+{return SIMPL::FilterSubGroups::GroupingFilters;}
 
 // -----------------------------------------------------------------------------
 //

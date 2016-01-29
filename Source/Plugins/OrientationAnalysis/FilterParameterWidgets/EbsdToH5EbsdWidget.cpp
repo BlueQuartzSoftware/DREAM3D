@@ -56,8 +56,8 @@
 #include "QtSupportLib/QCheckboxDialog.h"
 #include "QtSupportLib/QFileCompleter.h"
 #include "QtSupportLib/SIMPLQtMacros.h"
-#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
-#include "QtSupportLib/DREAM3DStyles.h"
+#include "QtSupportLib/SIMPLViewHelpUrlGenerator.h"
+#include "QtSupportLib/SIMPLViewStyles.h"
 
 
 #include "OrientationAnalysis/OrientationAnalysisFilters/EbsdToH5Ebsd.h"
@@ -290,11 +290,11 @@ bool EbsdToH5EbsdWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEd
   QFileInfo fileinfo(outFilePath);
   if (false == fileinfo.exists() )
   {
-    DREAM3DStyles::LineEditErrorStyle(lineEdit);
+    SIMPLViewStyles::LineEditErrorStyle(lineEdit);
   }
   else
   {
-    DREAM3DStyles::LineEditClearStyle(lineEdit);
+    SIMPLViewStyles::LineEditClearStyle(lineEdit);
   }
   return fileinfo.exists();
 }
@@ -380,9 +380,9 @@ void EbsdToH5EbsdWidget::on_m_InputDir_textChanged(const QString& text)
 // -----------------------------------------------------------------------------
 uint32_t EbsdToH5EbsdWidget::getRefFrameZDir()
 {
-  if (m_StackLowToHigh->isChecked()) { return Ebsd::RefFrameZDir::LowtoHigh; }
-  if (m_StackHighToLow->isChecked()) { return Ebsd::RefFrameZDir::HightoLow; }
-  return Ebsd::RefFrameZDir::UnknownRefFrameZDirection;
+  if (m_StackLowToHigh->isChecked()) { return SIMPL::RefFrameZDir::LowtoHigh; }
+  if (m_StackHighToLow->isChecked()) { return SIMPL::RefFrameZDir::HightoLow; }
+  return SIMPL::RefFrameZDir::UnknownRefFrameZDirection;
 }
 
 // -----------------------------------------------------------------------------
@@ -390,11 +390,11 @@ uint32_t EbsdToH5EbsdWidget::getRefFrameZDir()
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::setRefFrameZDir(uint32_t ref)
 {
-  if (ref == Ebsd::RefFrameZDir::LowtoHigh)
+  if (ref == SIMPL::RefFrameZDir::LowtoHigh)
   {
     m_StackLowToHigh->setChecked(true);
   }
-  if (ref == Ebsd::RefFrameZDir::HightoLow)
+  if (ref == SIMPL::RefFrameZDir::HightoLow)
   {
     m_StackHighToLow->setChecked(true);
   }

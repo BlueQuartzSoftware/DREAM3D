@@ -61,6 +61,9 @@
 #include "Statistics/DistributionAnalysisOps/LogNormalOps.h"
 #include "Statistics/StatisticsConstants.h"
 
+#include "EbsdLib/EbsdConstants.h"
+
+
 //FIXME: #1 Need to update this to link the phase selectionwidget to the rest of the GUI, so that it preflights after it's updated.
 //FIXME: #2 Need to fix phase selectionWidget to not show phase 0
 //FIXME: #3 Need to link phase selectionWidget to option to include Radial Distribution Function instead of an extra linkedProps boolean.
@@ -74,32 +77,32 @@
 // -----------------------------------------------------------------------------
 GenerateEnsembleStatistics::GenerateEnsembleStatistics() :
   AbstractFilter(),
-  m_CellEnsembleAttributeMatrixPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, ""),
-  m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
-  m_NeighborListArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, DREAM3D::FeatureData::NeighborList),
-  m_SharedSurfaceAreaListArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, DREAM3D::FeatureData::SharedSurfaceAreaList),
-  m_FeaturePhasesArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
-  m_BiasedFeaturesArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, DREAM3D::FeatureData::BiasedFeatures),
-  m_EquivalentDiametersArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, DREAM3D::FeatureData::EquivalentDiameters),
-  m_NeighborhoodsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, DREAM3D::FeatureData::Neighborhoods),
-  m_AspectRatiosArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, DREAM3D::FeatureData::AspectRatios),
-  m_Omega3sArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, DREAM3D::FeatureData::Omega3s),
-  m_AxisEulerAnglesArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, DREAM3D::FeatureData::AxisEulerAngles),
-  m_CrystalStructuresArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
-  m_SurfaceFeaturesArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, DREAM3D::FeatureData::SurfaceFeatures),
-  m_VolumesArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, DREAM3D::FeatureData::Volumes),
-  m_FeatureEulerAnglesArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, DREAM3D::FeatureData::EulerAngles),
-  m_AvgQuatsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::FeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
-  m_StatisticsArrayName(DREAM3D::EnsembleData::Statistics),
+  m_CellEnsembleAttributeMatrixPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, ""),
+  m_PhaseTypesArrayName(SIMPL::EnsembleData::PhaseTypes),
+  m_NeighborListArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::FeatureAttributeMatrixName, SIMPL::FeatureData::NeighborList),
+  m_SharedSurfaceAreaListArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::FeatureAttributeMatrixName, SIMPL::FeatureData::SharedSurfaceAreaList),
+  m_FeaturePhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::FeatureAttributeMatrixName, SIMPL::FeatureData::Phases),
+  m_BiasedFeaturesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::FeatureAttributeMatrixName, SIMPL::FeatureData::BiasedFeatures),
+  m_EquivalentDiametersArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::FeatureAttributeMatrixName, SIMPL::FeatureData::EquivalentDiameters),
+  m_NeighborhoodsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::FeatureAttributeMatrixName, SIMPL::FeatureData::Neighborhoods),
+  m_AspectRatiosArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::FeatureAttributeMatrixName, SIMPL::FeatureData::AspectRatios),
+  m_Omega3sArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::FeatureAttributeMatrixName, SIMPL::FeatureData::Omega3s),
+  m_AxisEulerAnglesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::FeatureAttributeMatrixName, SIMPL::FeatureData::AxisEulerAngles),
+  m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures),
+  m_SurfaceFeaturesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::FeatureAttributeMatrixName, SIMPL::FeatureData::SurfaceFeatures),
+  m_VolumesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::FeatureAttributeMatrixName, SIMPL::FeatureData::Volumes),
+  m_FeatureEulerAnglesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::FeatureAttributeMatrixName, SIMPL::FeatureData::EulerAngles),
+  m_AvgQuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::FeatureAttributeMatrixName, SIMPL::FeatureData::AvgQuats),
+  m_StatisticsArrayName(SIMPL::EnsembleData::Statistics),
   m_CalculateMorphologicalStats(true),
   m_ComputeSizeDistribution(false),
-  m_SizeDistributionFitType(DREAM3D::DistributionType::LogNormal),
+  m_SizeDistributionFitType(SIMPL::DistributionType::LogNormal),
   m_ComputeAspectRatioDistribution(false),
-  m_AspectRatioDistributionFitType(DREAM3D::DistributionType::Beta),
+  m_AspectRatioDistributionFitType(SIMPL::DistributionType::Beta),
   m_ComputeOmega3Distribution(false),
-  m_Omega3DistributionFitType(DREAM3D::DistributionType::Beta),
+  m_Omega3DistributionFitType(SIMPL::DistributionType::Beta),
   m_ComputeNeighborhoodDistribution(false),
-  m_NeighborhoodDistributionFitType(DREAM3D::DistributionType::LogNormal),
+  m_NeighborhoodDistributionFitType(SIMPL::DistributionType::LogNormal),
   m_CalculateCrystallographicStats(true),
   m_CalculateODF(false),
   m_CalculateMDF(false),
@@ -166,11 +169,11 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   parameters.push_back(DoubleFilterParameter::New("Size Correlation Resolution", "SizeCorrelationResolution", getSizeCorrelationResolution(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixObjectType::Feature);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Feature);
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::NeighborList, 1, DREAM3D::AttributeMatrixObjectType::Feature);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::NeighborList, 1, SIMPL::AttributeMatrixObjectType::Feature);
     parameters.push_back(DataArraySelectionFilterParameter::New("Neighbor List", "NeighborListArrayPath", getNeighborListArrayPath(), FilterParameter::RequiredArray, req));
   }
 
@@ -185,30 +188,30 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Morphological Statistics", "CalculateMorphologicalStats", getCalculateMorphologicalStats(), linkedProps, FilterParameter::Parameter));
   parameters.push_back(ChoiceFilterParameter::New("Size Distribution Fit Type", "SizeDistributionFitType", getSizeDistributionFitType(), choices, false, FilterParameter::Parameter));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Bool, 1, DREAM3D::AttributeMatrixObjectType::Feature);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixObjectType::Feature);
     parameters.push_back(DataArraySelectionFilterParameter::New("Biased Features", "BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Float, 1, DREAM3D::AttributeMatrixObjectType::Feature);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 1, SIMPL::AttributeMatrixObjectType::Feature);
     parameters.push_back(DataArraySelectionFilterParameter::New("Equivalent Diameters", "EquivalentDiametersArrayPath", getEquivalentDiametersArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(ChoiceFilterParameter::New("Aspect Ratio Distribution Fit Type", "AspectRatioDistributionFitType", getAspectRatioDistributionFitType(), choices, false, FilterParameter::Parameter));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Float, 2, DREAM3D::AttributeMatrixObjectType::Feature);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 2, SIMPL::AttributeMatrixObjectType::Feature);
     parameters.push_back(DataArraySelectionFilterParameter::New("Aspect Ratios", "AspectRatiosArrayPath", getAspectRatiosArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(ChoiceFilterParameter::New("Omega3 Distribution Fit Type", "Omega3DistributionFitType", getOmega3DistributionFitType(), choices, false, FilterParameter::Parameter));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Float, 1, DREAM3D::AttributeMatrixObjectType::Feature);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 1, SIMPL::AttributeMatrixObjectType::Feature);
     parameters.push_back(DataArraySelectionFilterParameter::New("Omega3s", "Omega3sArrayPath", getOmega3sArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(ChoiceFilterParameter::New("Neighborhood Distribution Fit Type", "NeighborhoodDistributionFitType", getNeighborhoodDistributionFitType(), choices, false, FilterParameter::Parameter));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixObjectType::Feature);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Feature);
     parameters.push_back(DataArraySelectionFilterParameter::New("Neighborhoods", "NeighborhoodsArrayPath", getNeighborhoodsArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Float, 3, DREAM3D::AttributeMatrixObjectType::Feature);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixObjectType::Feature);
     parameters.push_back(DataArraySelectionFilterParameter::New("Axis Euler Angles", "AxisEulerAnglesArrayPath", getAxisEulerAnglesArrayPath(), FilterParameter::RequiredArray, req));
   }
 
@@ -218,28 +221,28 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   linkedProps << "CalculateMDF" << "SharedSurfaceAreaListArrayPath" << "AvgQuatsArrayPath";
   parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Crystallographic Statistics", "CalculateCrystallographicStats", getCalculateCrystallographicStats(), linkedProps, FilterParameter::Parameter));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Bool, 1, DREAM3D::AttributeMatrixObjectType::Feature);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixObjectType::Feature);
     parameters.push_back(DataArraySelectionFilterParameter::New("Surface Features", "SurfaceFeaturesArrayPath", getSurfaceFeaturesArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Float, 1, DREAM3D::AttributeMatrixObjectType::Feature);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 1, SIMPL::AttributeMatrixObjectType::Feature);
     parameters.push_back(DataArraySelectionFilterParameter::New("Volumes", "VolumesArrayPath", getVolumesArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Float, 3, DREAM3D::AttributeMatrixObjectType::Feature);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixObjectType::Feature);
     parameters.push_back(DataArraySelectionFilterParameter::New("Average Euler Angles", "FeatureEulerAnglesArrayPath", getFeatureEulerAnglesArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Float, 4, DREAM3D::AttributeMatrixObjectType::Feature);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixObjectType::Feature);
     parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::NeighborList, 1, DREAM3D::AttributeMatrixObjectType::Feature);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::NeighborList, 1, SIMPL::AttributeMatrixObjectType::Feature);
     parameters.push_back(DataArraySelectionFilterParameter::New("Shared Surface Area List", "SharedSurfaceAreaListArrayPath", getSharedSurfaceAreaListArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::UInt32, 1, DREAM3D::AttributeMatrixObjectType::Ensemble);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixObjectType::Ensemble);
     parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
@@ -250,11 +253,11 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   linkedProps << "RDFArrayPath" << "MaxMinRDFArrayPath";
   parameters.push_back(LinkedBooleanFilterParameter::New("Include Radial Distribution Function", "IncludeRadialDistFunc", getIncludeRadialDistFunc(), linkedProps, FilterParameter::Parameter));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Float, DREAM3D::Defaults::AnyComponentSize, DREAM3D::AttributeMatrixObjectType::Ensemble);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, SIMPL::Defaults::AnyComponentSize, SIMPL::AttributeMatrixObjectType::Ensemble);
     parameters.push_back(DataArraySelectionFilterParameter::New("Radial Distribution Function", "RDFArrayPath", getRDFArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Float, 2, DREAM3D::AttributeMatrixObjectType::Ensemble);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 2, SIMPL::AttributeMatrixObjectType::Ensemble);
     parameters.push_back(DataArraySelectionFilterParameter::New("Max and Min Separation Distances", "MaxMinRDFArrayPath", getMaxMinRDFArrayPath(), FilterParameter::RequiredArray, req));
   }
 
@@ -501,7 +504,7 @@ void GenerateEnsembleStatistics::dataCheck()
     notifyErrorMessage(getHumanLabel(), "The phase type array must contain at least one member. An Ensemble Attribute Matrix must be selected", getErrorCondition());
     return;
   }
-  else if (m_PhaseTypeData.d.size() == 1 && m_PhaseTypeData.d[0] ==  DREAM3D::PhaseType::UnknownPhaseType)
+  else if (m_PhaseTypeData.d.size() == 1 && m_PhaseTypeData.d[0] ==  SIMPL::PhaseType::UnknownPhaseType)
   {
     setErrorCondition(-1001);
     notifyErrorMessage(getHumanLabel(), "The phase type array must contain at least one member. An Ensemble Attribute Matrix must be selected", getErrorCondition());
@@ -511,7 +514,7 @@ void GenerateEnsembleStatistics::dataCheck()
   {
     cDims[0] = 1;
     tempPath.update(getCellEnsembleAttributeMatrixPath().getDataContainerName(), getCellEnsembleAttributeMatrixPath().getAttributeMatrixName(), getPhaseTypesArrayName() );
-    m_PhaseTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, tempPath, DREAM3D::PhaseType::UnknownPhaseType, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_PhaseTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, tempPath, SIMPL::PhaseType::UnknownPhaseType, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     {
       m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0);
@@ -529,19 +532,19 @@ void GenerateEnsembleStatistics::dataCheck()
   m_StatsDataArray->fillArrayWithNewStatsData(m_PhaseTypesPtr.lock()->getNumberOfTuples(), m_PhaseTypes);
   attrMat->addAttributeArray(getStatisticsArrayName(), m_StatsDataArray);
 
-  if (m_SizeDistributionFitType != DREAM3D::DistributionType::LogNormal)
+  if (m_SizeDistributionFitType != SIMPL::DistributionType::LogNormal)
   {
     notifyWarningMessage(getHumanLabel(), "The size distribution needs to be a lognormal distribution otherwise unpredictable results may occur", -1000);
   }
-  if (m_AspectRatioDistributionFitType != DREAM3D::DistributionType::Beta)
+  if (m_AspectRatioDistributionFitType != SIMPL::DistributionType::Beta)
   {
     notifyWarningMessage(getHumanLabel(), "The aspect ratio distribution needs to be a beta distribution otherwise unpredictable results may occur", -1000);
   }
-  if (m_Omega3DistributionFitType != DREAM3D::DistributionType::Beta)
+  if (m_Omega3DistributionFitType != SIMPL::DistributionType::Beta)
   {
     notifyWarningMessage(getHumanLabel(), "The Omega3 distribution needs to be a beta distribution otherwise unpredictable results may occur", -1000);
   }
-  if (m_NeighborhoodDistributionFitType != DREAM3D::DistributionType::LogNormal)
+  if (m_NeighborhoodDistributionFitType != SIMPL::DistributionType::LogNormal)
   {
     notifyWarningMessage(getHumanLabel(), "The neighborhood distribution type needs to be a lognormal distribution otherwise unpredictable results may occur", -1000);
   }
@@ -602,12 +605,12 @@ void GenerateEnsembleStatistics::gatherSizeStats()
   }
   for (size_t i = 1; i < numensembles; i++)
   {
-    if (m_PhaseTypes[i] == DREAM3D::PhaseType::MatrixPhase)
+    if (m_PhaseTypes[i] == SIMPL::PhaseType::MatrixPhase)
     {
       MatrixStatsData* pp = MatrixStatsData::SafePointerDownCast(statsDataArray[i].get());
       pp->setPhaseFraction((fractions[i] / totalUnbiasedVolume));
     }
-    if (m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
+    if (m_PhaseTypes[i] == SIMPL::PhaseType::PrimaryPhase)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       pp->setPhaseFraction((fractions[i] / totalUnbiasedVolume));
@@ -616,11 +619,11 @@ void GenerateEnsembleStatistics::gatherSizeStats()
       DistributionAnalysisOps::determineMaxAndMinValues(values[i][0], maxdiam, mindiam);
       int32_t numbins = int32_t(maxdiam / m_SizeCorrelationResolution) + 1;
       pp->setFeatureDiameterInfo(m_SizeCorrelationResolution, maxdiam, mindiam);
-      binnumbers = FloatArrayType::CreateArray(numbins, DREAM3D::StringConstants::BinNumber);
+      binnumbers = FloatArrayType::CreateArray(numbins, SIMPL::StringConstants::BinNumber);
       DistributionAnalysisOps::determineBinNumbers(maxdiam, mindiam, m_SizeCorrelationResolution, binnumbers);
       pp->setBinNumbers(binnumbers);
     }
-    if (m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+    if (m_PhaseTypes[i] == SIMPL::PhaseType::PrecipitatePhase)
     {
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
       pp->setPhaseFraction((fractions[i] / totalUnbiasedVolume));
@@ -629,11 +632,11 @@ void GenerateEnsembleStatistics::gatherSizeStats()
       DistributionAnalysisOps::determineMaxAndMinValues(values[i][0], maxdiam, mindiam);
       int32_t numbins = int32_t(maxdiam / m_SizeCorrelationResolution) + 1;
       pp->setFeatureDiameterInfo(m_SizeCorrelationResolution, maxdiam, mindiam);
-      binnumbers = FloatArrayType::CreateArray(numbins, DREAM3D::StringConstants::BinNumber);
+      binnumbers = FloatArrayType::CreateArray(numbins, SIMPL::StringConstants::BinNumber);
       DistributionAnalysisOps::determineBinNumbers(maxdiam, mindiam, m_SizeCorrelationResolution, binnumbers);
       pp->setBinNumbers(binnumbers);
     }
-    if (m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
+    if (m_PhaseTypes[i] == SIMPL::PhaseType::TransformationPhase)
     {
       TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
       tp->setPhaseFraction((fractions[i] / totalUnbiasedVolume));
@@ -642,7 +645,7 @@ void GenerateEnsembleStatistics::gatherSizeStats()
       DistributionAnalysisOps::determineMaxAndMinValues(values[i][0], maxdiam, mindiam);
       int numbins = int(maxdiam / m_SizeCorrelationResolution) + 1;
       tp->setFeatureDiameterInfo(m_SizeCorrelationResolution, maxdiam, mindiam);
-      binnumbers = FloatArrayType::CreateArray(numbins, DREAM3D::StringConstants::BinNumber);
+      binnumbers = FloatArrayType::CreateArray(numbins, SIMPL::StringConstants::BinNumber);
       DistributionAnalysisOps::determineBinNumbers(maxdiam, mindiam, m_SizeCorrelationResolution, binnumbers);
       tp->setBinNumbers(binnumbers);
     }
@@ -674,7 +677,7 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
   binsteps.resize(numensembles);
   for (size_t i = 1; i < numensembles; i++)
   {
-    if (m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
+    if (m_PhaseTypes[i] == SIMPL::PhaseType::PrimaryPhase)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       boveras[i] = pp->CreateCorrelatedDistributionArrays(m_AspectRatioDistributionFitType, pp->getBinNumbers()->getSize());
@@ -684,7 +687,7 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
       mindiams[i] = pp->getMinFeatureDiameter();
       binsteps[i] = pp->getBinStepSize();
     }
-    if (m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+    if (m_PhaseTypes[i] == SIMPL::PhaseType::PrecipitatePhase)
     {
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
       boveras[i] = pp->CreateCorrelatedDistributionArrays(m_AspectRatioDistributionFitType, pp->getBinNumbers()->getSize());
@@ -694,7 +697,7 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
       mindiams[i] = pp->getMinFeatureDiameter();
       binsteps[i] = pp->getBinStepSize();
     }
-    if (m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
+    if (m_PhaseTypes[i] == SIMPL::PhaseType::TransformationPhase)
     {
       TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
       boveras[i] = tp->CreateCorrelatedDistributionArrays(m_AspectRatioDistributionFitType, tp->getBinNumbers()->getSize());
@@ -707,9 +710,9 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
   }
   for (size_t i = 1; i < numfeatures; i++)
   {
-    if (m_PhaseTypes[m_FeaturePhases[i]] == DREAM3D::PhaseType::PrimaryPhase ||
-        m_PhaseTypes[m_FeaturePhases[i]] == DREAM3D::PhaseType::PrecipitatePhase ||
-        m_PhaseTypes[m_FeaturePhases[i]] == DREAM3D::PhaseType::TransformationPhase)
+    if (m_PhaseTypes[m_FeaturePhases[i]] == SIMPL::PhaseType::PrimaryPhase ||
+        m_PhaseTypes[m_FeaturePhases[i]] == SIMPL::PhaseType::PrecipitatePhase ||
+        m_PhaseTypes[m_FeaturePhases[i]] == SIMPL::PhaseType::TransformationPhase)
     {
       if (m_BiasedFeatures[i] == false)
       {
@@ -721,7 +724,7 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
   }
   for (size_t i = 1; i < numensembles; i++)
   {
-    if (m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
+    if (m_PhaseTypes[i] == SIMPL::PhaseType::PrimaryPhase)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       m_DistributionAnalysis[m_AspectRatioDistributionFitType]->calculateCorrelatedParameters(bvalues[i], boveras[i]);
@@ -729,7 +732,7 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
       pp->setFeatureSize_BOverA(boveras[i]);
       pp->setFeatureSize_COverA(coveras[i]);
     }
-    if (m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+    if (m_PhaseTypes[i] == SIMPL::PhaseType::PrecipitatePhase)
     {
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
       m_DistributionAnalysis[m_AspectRatioDistributionFitType]->calculateCorrelatedParameters(bvalues[i], boveras[i]);
@@ -737,7 +740,7 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
       pp->setFeatureSize_BOverA(boveras[i]);
       pp->setFeatureSize_COverA(coveras[i]);
     }
-    if (m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
+    if (m_PhaseTypes[i] == SIMPL::PhaseType::TransformationPhase)
     {
       TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
       m_DistributionAnalysis[m_AspectRatioDistributionFitType]->calculateCorrelatedParameters(bvalues[i], boveras[i]);
@@ -769,7 +772,7 @@ void GenerateEnsembleStatistics::gatherOmega3Stats()
   binsteps.resize(numensembles);
   for (size_t i = 1; i < numensembles; i++)
   {
-    if (m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
+    if (m_PhaseTypes[i] == SIMPL::PhaseType::PrimaryPhase)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       omega3s[i] = pp->CreateCorrelatedDistributionArrays(m_Omega3DistributionFitType, pp->getBinNumbers()->getSize());
@@ -777,7 +780,7 @@ void GenerateEnsembleStatistics::gatherOmega3Stats()
       mindiams[i] = pp->getMinFeatureDiameter();
       binsteps[i] = pp->getBinStepSize();
     }
-    if (m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+    if (m_PhaseTypes[i] == SIMPL::PhaseType::PrecipitatePhase)
     {
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
       omega3s[i] = pp->CreateCorrelatedDistributionArrays(m_Omega3DistributionFitType, pp->getBinNumbers()->getSize());
@@ -785,7 +788,7 @@ void GenerateEnsembleStatistics::gatherOmega3Stats()
       mindiams[i] = pp->getMinFeatureDiameter();
       binsteps[i] = pp->getBinStepSize();
     }
-    if (m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
+    if (m_PhaseTypes[i] == SIMPL::PhaseType::TransformationPhase)
     {
       TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
       omega3s[i] = tp->CreateCorrelatedDistributionArrays(m_Omega3DistributionFitType, tp->getBinNumbers()->getSize());
@@ -796,9 +799,9 @@ void GenerateEnsembleStatistics::gatherOmega3Stats()
   }
   for (size_t i = 1; i < numfeatures; i++)
   {
-    if (m_PhaseTypes[m_FeaturePhases[i]] == DREAM3D::PhaseType::PrimaryPhase ||
-        m_PhaseTypes[m_FeaturePhases[i]] == DREAM3D::PhaseType::PrecipitatePhase ||
-        m_PhaseTypes[m_FeaturePhases[i]] == DREAM3D::PhaseType::TransformationPhase)
+    if (m_PhaseTypes[m_FeaturePhases[i]] == SIMPL::PhaseType::PrimaryPhase ||
+        m_PhaseTypes[m_FeaturePhases[i]] == SIMPL::PhaseType::PrecipitatePhase ||
+        m_PhaseTypes[m_FeaturePhases[i]] == SIMPL::PhaseType::TransformationPhase)
     {
       if (m_BiasedFeatures[i] == false)
       {
@@ -809,19 +812,19 @@ void GenerateEnsembleStatistics::gatherOmega3Stats()
   }
   for (size_t i = 1; i < numensembles; i++)
   {
-    if (m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
+    if (m_PhaseTypes[i] == SIMPL::PhaseType::PrimaryPhase)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       m_DistributionAnalysis[m_Omega3DistributionFitType]->calculateCorrelatedParameters(values[i], omega3s[i]);
       pp->setFeatureSize_Omegas(omega3s[i]);
     }
-    if (m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+    if (m_PhaseTypes[i] == SIMPL::PhaseType::PrecipitatePhase)
     {
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
       m_DistributionAnalysis[m_Omega3DistributionFitType]->calculateCorrelatedParameters(values[i], omega3s[i]);
       pp->setFeatureSize_Omegas(omega3s[i]);
     }
-    if (m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
+    if (m_PhaseTypes[i] == SIMPL::PhaseType::TransformationPhase)
     {
       TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
       m_DistributionAnalysis[m_Omega3DistributionFitType]->calculateCorrelatedParameters(values[i], omega3s[i]);
@@ -851,7 +854,7 @@ void GenerateEnsembleStatistics::gatherNeighborhoodStats()
   binsteps.resize(numensembles);
   for (size_t i = 1; i < numensembles; i++)
   {
-    if (m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
+    if (m_PhaseTypes[i] == SIMPL::PhaseType::PrimaryPhase)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       neighborhoods[i] = pp->CreateCorrelatedDistributionArrays(m_NeighborhoodDistributionFitType, pp->getBinNumbers()->getSize());
@@ -859,7 +862,7 @@ void GenerateEnsembleStatistics::gatherNeighborhoodStats()
       mindiams[i] = pp->getMinFeatureDiameter();
       binsteps[i] = pp->getBinStepSize();
     }
-    if (m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+    if (m_PhaseTypes[i] == SIMPL::PhaseType::PrecipitatePhase)
     {
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
       neighborhoods[i] = pp->CreateCorrelatedDistributionArrays(m_NeighborhoodDistributionFitType, pp->getBinNumbers()->getSize());
@@ -867,7 +870,7 @@ void GenerateEnsembleStatistics::gatherNeighborhoodStats()
       mindiams[i] = pp->getMinFeatureDiameter();
       binsteps[i] = pp->getBinStepSize();
     }
-    if (m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
+    if (m_PhaseTypes[i] == SIMPL::PhaseType::TransformationPhase)
     {
       TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
       neighborhoods[i] = tp->CreateCorrelatedDistributionArrays(m_NeighborhoodDistributionFitType, tp->getBinNumbers()->getSize());
@@ -879,9 +882,9 @@ void GenerateEnsembleStatistics::gatherNeighborhoodStats()
 
   for (size_t i = 1; i < numfeatures; i++)
   {
-    if (m_PhaseTypes[m_FeaturePhases[i]] == DREAM3D::PhaseType::PrimaryPhase ||
-        m_PhaseTypes[m_FeaturePhases[i]] == DREAM3D::PhaseType::PrecipitatePhase ||
-        m_PhaseTypes[m_FeaturePhases[i]] == DREAM3D::PhaseType::TransformationPhase)
+    if (m_PhaseTypes[m_FeaturePhases[i]] == SIMPL::PhaseType::PrimaryPhase ||
+        m_PhaseTypes[m_FeaturePhases[i]] == SIMPL::PhaseType::PrecipitatePhase ||
+        m_PhaseTypes[m_FeaturePhases[i]] == SIMPL::PhaseType::TransformationPhase)
     {
       if (m_BiasedFeatures[i] == false)
       {
@@ -892,19 +895,19 @@ void GenerateEnsembleStatistics::gatherNeighborhoodStats()
   }
   for (size_t i = 1; i < numensembles; i++)
   {
-    if (m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
+    if (m_PhaseTypes[i] == SIMPL::PhaseType::PrimaryPhase)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       m_DistributionAnalysis[m_NeighborhoodDistributionFitType]->calculateCorrelatedParameters(values[i], neighborhoods[i]);
       pp->setFeatureSize_Neighbors(neighborhoods[i]);
     }
-    if (m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+    if (m_PhaseTypes[i] == SIMPL::PhaseType::PrecipitatePhase)
     {
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
       m_DistributionAnalysis[m_NeighborhoodDistributionFitType]->calculateCorrelatedParameters(values[i], neighborhoods[i]);
       pp->setFeatureSize_Clustering(neighborhoods[i]);
     }
-    if (m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
+    if (m_PhaseTypes[i] == SIMPL::PhaseType::TransformationPhase)
     {
       TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
       m_DistributionAnalysis[m_NeighborhoodDistributionFitType]->calculateCorrelatedParameters(values[i], neighborhoods[i]);
@@ -936,7 +939,7 @@ void GenerateEnsembleStatistics::gatherODFStats()
     if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Hexagonal_High)
     {
       dims = 36 * 36 * 12;
-      eulerodf[i] = FloatArrayType::CreateArray(dims, DREAM3D::StringConstants::ODF);
+      eulerodf[i] = FloatArrayType::CreateArray(dims, SIMPL::StringConstants::ODF);
       for (uint64_t j = 0; j < dims; j++)
       {
         eulerodf[i]->setValue(j, 0.0);
@@ -945,7 +948,7 @@ void GenerateEnsembleStatistics::gatherODFStats()
     else if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Cubic_High)
     {
       dims = 18 * 18 * 18;
-      eulerodf[i] = FloatArrayType::CreateArray(dims, DREAM3D::StringConstants::ODF);
+      eulerodf[i] = FloatArrayType::CreateArray(dims, SIMPL::StringConstants::ODF);
       for (uint64_t j = 0; j < dims; j++)
       {
         eulerodf[i]->setValue(j, 0.0);
@@ -973,17 +976,17 @@ void GenerateEnsembleStatistics::gatherODFStats()
   }
   for (size_t i = 1; i < numensembles; i++)
   {
-    if (m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
+    if (m_PhaseTypes[i] == SIMPL::PhaseType::PrimaryPhase)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       pp->setODF(eulerodf[i]);
     }
-    if (m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+    if (m_PhaseTypes[i] == SIMPL::PhaseType::PrecipitatePhase)
     {
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
       pp->setODF(eulerodf[i]);
     }
-    if (m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
+    if (m_PhaseTypes[i] == SIMPL::PhaseType::TransformationPhase)
     {
       TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
       tp->setODF(eulerodf[i]);
@@ -1027,12 +1030,12 @@ void GenerateEnsembleStatistics::gatherMDFStats()
     if (Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructures[i] )
     {
       numbins = 36 * 36 * 12;
-      misobin[i] = FloatArrayType::CreateArray(numbins, DREAM3D::StringConstants::MisorientationBins);
+      misobin[i] = FloatArrayType::CreateArray(numbins, SIMPL::StringConstants::MisorientationBins);
     }
     else if (Ebsd::CrystalStructure::Cubic_High == m_CrystalStructures[i] )
     {
       numbins = 18 * 18 * 18;
-      misobin[i] = FloatArrayType::CreateArray(numbins, DREAM3D::StringConstants::MisorientationBins);
+      misobin[i] = FloatArrayType::CreateArray(numbins, SIMPL::StringConstants::MisorientationBins);
     }
     // Now initialize all bins to 0.0
     for (int32_t j = 0; j < numbins; j++)
@@ -1075,19 +1078,19 @@ void GenerateEnsembleStatistics::gatherMDFStats()
     {
       misobin[i]->setValue(j, (misobin[i]->getValue(j) / totalSurfaceArea[i]));
     }
-    if (m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
+    if (m_PhaseTypes[i] == SIMPL::PhaseType::PrimaryPhase)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       pp->setMisorientationBins(misobin[i]);
       pp->setBoundaryArea(totalSurfaceArea[i]);
     }
-    if (m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+    if (m_PhaseTypes[i] == SIMPL::PhaseType::PrecipitatePhase)
     {
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
       pp->setMisorientationBins(misobin[i]);
       pp->setBoundaryArea(totalSurfaceArea[i]);
     }
-    if (m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
+    if (m_PhaseTypes[i] == SIMPL::PhaseType::TransformationPhase)
     {
       TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
       tp->setMisorientationBins(misobin[i]);
@@ -1113,7 +1116,7 @@ void GenerateEnsembleStatistics::gatherAxisODFStats()
   for (size_t i = 1; i < numXTals; i++)
   {
     totalaxes[i] = 0.0;
-    axisodf[i] = FloatArrayType::CreateArray((36 * 36 * 36), DREAM3D::StringConstants::AxisOrientation);
+    axisodf[i] = FloatArrayType::CreateArray((36 * 36 * 36), SIMPL::StringConstants::AxisOrientation);
     for (int32_t j = 0; j < (36 * 36 * 36); j++)
     {
       axisodf[i]->setValue(j, 0.0);
@@ -1140,17 +1143,17 @@ void GenerateEnsembleStatistics::gatherAxisODFStats()
 
   for (size_t i = 1; i < numXTals; i++)
   {
-    if (m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
+    if (m_PhaseTypes[i] == SIMPL::PhaseType::PrimaryPhase)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       pp->setAxisOrientation(axisodf[i]);
     }
-    if (m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+    if (m_PhaseTypes[i] == SIMPL::PhaseType::PrecipitatePhase)
     {
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
       pp->setAxisOrientation(axisodf[i]);
     }
-    if (m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
+    if (m_PhaseTypes[i] == SIMPL::PhaseType::TransformationPhase)
     {
       TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
       tp->setAxisOrientation(axisodf[i]);
@@ -1170,7 +1173,7 @@ void GenerateEnsembleStatistics::gatherRadialDistFunc()
 
   for (size_t i = 1; i < numensembles; i++)
   {
-    if (m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+    if (m_PhaseTypes[i] == SIMPL::PhaseType::PrecipitatePhase)
     {
       RdfData::Pointer rdfData = RdfData::New();
       std::vector<float> freqs(numBins);
@@ -1215,7 +1218,7 @@ void GenerateEnsembleStatistics::calculatePPTBoundaryFrac()
 
   for (size_t k = 1; k < numensembles; k++)
   {
-    if (m_PhaseTypes[k] == DREAM3D::PhaseType::PrecipitatePhase)
+    if (m_PhaseTypes[k] == SIMPL::PhaseType::PrecipitatePhase)
     {
       for (size_t i = 1; i < numfeatures; i++)
       {
@@ -1226,7 +1229,7 @@ void GenerateEnsembleStatistics::calculatePPTBoundaryFrac()
           for (size_t j = 0; j < neighborlist[i].size(); j++)
           {
             if (m_FeaturePhases[i] != m_FeaturePhases[neighborlist[i][j]] &&
-                m_PhaseTypes[m_FeaturePhases[neighborlist[i][j]]] != DREAM3D::PhaseType::MatrixPhase)  // Currently counts something as on the boundary if it has at least two neighbors of a different non-matrix phase. Might want to specify which phase in the future.
+                m_PhaseTypes[m_FeaturePhases[neighborlist[i][j]]] != SIMPL::PhaseType::MatrixPhase)  // Currently counts something as on the boundary if it has at least two neighbors of a different non-matrix phase. Might want to specify which phase in the future.
             {
               count++;
             }
@@ -1266,8 +1269,8 @@ int GenerateEnsembleStatistics::getPhaseCount()
     return -2;
   }
 
-  if(inputAttrMat->getType() < DREAM3D::AttributeMatrixType::VertexEnsemble
-      || inputAttrMat->getType() > DREAM3D::AttributeMatrixType::CellEnsemble )
+  if(inputAttrMat->getType() < SIMPL::AttributeMatrixType::VertexEnsemble
+      || inputAttrMat->getType() > SIMPL::AttributeMatrixType::CellEnsemble )
   {
     //  qDebug() << getNameOfClass() << "::getPhaseCount() CellEnsembleAttributeMatrix was not correct Type";
     //  qDebug() << "     " << getCellEnsembleAttributeMatrixPath().serialize("/");
@@ -1405,13 +1408,13 @@ const QString GenerateEnsembleStatistics::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString GenerateEnsembleStatistics::getGroupName()
-{ return DREAM3D::FilterGroups::StatisticsFilters; }
+{ return SIMPL::FilterGroups::StatisticsFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateEnsembleStatistics::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
+{ return SIMPL::FilterSubGroups::EnsembleStatsFilters; }
 
 // -----------------------------------------------------------------------------
 //

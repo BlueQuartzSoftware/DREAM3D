@@ -58,12 +58,12 @@
 #include "OrientationLib/Texture/Texture.hpp"
 #include "OrientationLib/Texture/StatsGen.hpp"
 #include "OrientationLib/Utilities/PoleFigureUtilities.h"
+#include "OrientationLib/Utilities/PoleFigureImageUtilities.h"
 
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
 #include "StatsGenerator/StatsGenMDFWidget.h"
 #include "StatsGenerator/TextureDialog.h"
-
-#include "QtSupportLib/PoleFigureImageUtilities.h"
+#include "StatsGenerator/StatsGenerator.h"
 
 
 //-- Qwt Includes AFTER SIMPLib Math due to improper defines in qwt_plot_curve.h
@@ -119,17 +119,17 @@ void SGAxisODFWidget::extractStatsData(int index, StatsData* statsData, unsigned
 {
 
   VectorOfFloatArray arrays(0);
-  if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
+  if(phaseType == SIMPL::PhaseType::PrimaryPhase)
   {
     PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
     arrays = pp->getAxisODF_Weights();
   }
-  else if(phaseType == DREAM3D::PhaseType::PrecipitatePhase)
+  else if(phaseType == SIMPL::PhaseType::PrecipitatePhase)
   {
     PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
     arrays = pp->getAxisODF_Weights();
   }
-  else if(phaseType == DREAM3D::PhaseType::TransformationPhase)
+  else if(phaseType == SIMPL::PhaseType::TransformationPhase)
   {
     TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
     arrays = tp->getAxisODF_Weights();
@@ -201,18 +201,18 @@ int SGAxisODFWidget::getOrientationData(StatsData* statsData, unsigned int phase
                                         aodf.data(), numEntries);
   if (aodf.size() > 0)
   {
-    FloatArrayType::Pointer aodfData = FloatArrayType::FromPointer(aodf.data(), aodf.size(), DREAM3D::StringConstants::AxisOrientation);
-    if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
+    FloatArrayType::Pointer aodfData = FloatArrayType::FromPointer(aodf.data(), aodf.size(), SIMPL::StringConstants::AxisOrientation);
+    if(phaseType == SIMPL::PhaseType::PrimaryPhase)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
       pp->setAxisOrientation(aodfData);
     }
-    if(phaseType == DREAM3D::PhaseType::PrecipitatePhase)
+    if(phaseType == SIMPL::PhaseType::PrecipitatePhase)
     {
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
       pp->setAxisOrientation(aodfData);
     }
-    if(phaseType == DREAM3D::PhaseType::TransformationPhase)
+    if(phaseType == SIMPL::PhaseType::TransformationPhase)
     {
       TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
       tp->setAxisOrientation(aodfData);
@@ -220,11 +220,11 @@ int SGAxisODFWidget::getOrientationData(StatsData* statsData, unsigned int phase
 
     if(e1s.size() > 0)
     {
-      FloatArrayType::Pointer euler1 = FloatArrayType::FromPointer(e1s.data(), e1s.size(), DREAM3D::StringConstants::Euler1);
-      FloatArrayType::Pointer euler2 = FloatArrayType::FromPointer(e2s.data(), e2s.size(), DREAM3D::StringConstants::Euler2);
-      FloatArrayType::Pointer euler3 = FloatArrayType::FromPointer(e3s.data(), e3s.size(), DREAM3D::StringConstants::Euler3);
-      FloatArrayType::Pointer sigma = FloatArrayType::FromPointer(sigmas.data(), sigmas.size(), DREAM3D::StringConstants::Sigma);
-      FloatArrayType::Pointer weight = FloatArrayType::FromPointer(weights.data(), weights.size(), DREAM3D::StringConstants::Weight);
+      FloatArrayType::Pointer euler1 = FloatArrayType::FromPointer(e1s.data(), e1s.size(), SIMPL::StringConstants::Euler1);
+      FloatArrayType::Pointer euler2 = FloatArrayType::FromPointer(e2s.data(), e2s.size(), SIMPL::StringConstants::Euler2);
+      FloatArrayType::Pointer euler3 = FloatArrayType::FromPointer(e3s.data(), e3s.size(), SIMPL::StringConstants::Euler3);
+      FloatArrayType::Pointer sigma = FloatArrayType::FromPointer(sigmas.data(), sigmas.size(), SIMPL::StringConstants::Sigma);
+      FloatArrayType::Pointer weight = FloatArrayType::FromPointer(weights.data(), weights.size(), SIMPL::StringConstants::Weight);
 
       VectorOfFloatArray aodfWeights;
       aodfWeights.push_back(euler1);
@@ -232,17 +232,17 @@ int SGAxisODFWidget::getOrientationData(StatsData* statsData, unsigned int phase
       aodfWeights.push_back(euler3);
       aodfWeights.push_back(sigma);
       aodfWeights.push_back(weight);
-      if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
+      if(phaseType == SIMPL::PhaseType::PrimaryPhase)
       {
         PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
         pp->setAxisODF_Weights(aodfWeights);
       }
-      if(phaseType == DREAM3D::PhaseType::PrecipitatePhase)
+      if(phaseType == SIMPL::PhaseType::PrecipitatePhase)
       {
         PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
         pp->setAxisODF_Weights(aodfWeights);
       }
-      if(phaseType == DREAM3D::PhaseType::TransformationPhase)
+      if(phaseType == SIMPL::PhaseType::TransformationPhase)
       {
         TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
         tp->setAxisODF_Weights(aodfWeights);

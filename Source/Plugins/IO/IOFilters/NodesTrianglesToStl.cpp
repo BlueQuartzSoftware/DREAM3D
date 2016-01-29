@@ -255,7 +255,7 @@ void NodesTrianglesToStl::execute()
   // Read the POINTS data (Vertex)
   QMap<int, int> nodeIdToIndex;
   QVector<size_t> cDims(1, 3);
-  SharedVertexList::Pointer nodesPtr = SharedVertexList::CreateArray(nNodes, cDims, DREAM3D::VertexData::SurfaceMeshNodes);
+  SharedVertexList::Pointer nodesPtr = SharedVertexList::CreateArray(nNodes, cDims, SIMPL::VertexData::SurfaceMeshNodes);
   float* nodes = nodesPtr->getPointer(0);
 
   for (int i = 0; i < nNodes; i++)
@@ -278,10 +278,10 @@ void NodesTrianglesToStl::execute()
   // column 8 and 9 = neighboring spins of individual triangles, column 8 = spins on the left side when following winding order using right hand.
   int tData[9];
 
-  SharedTriList::Pointer trianglePtr = SharedTriList::CreateArray(nTriangles, cDims, DREAM3D::Geometry::TriangleGeometry);
+  SharedTriList::Pointer trianglePtr = SharedTriList::CreateArray(nTriangles, cDims, SIMPL::Geometry::TriangleGeometry);
   int64_t* triangles = trianglePtr->getPointer(0);
 
-  DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaceLabels);
+  DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(nTriangles, SIMPL::FaceData::SurfaceMeshFaceLabels);
   int32_t* faceLabels = faceLabelPtr->getPointer(0);
 
   // Store all the unique Spins
@@ -512,14 +512,14 @@ const QString NodesTrianglesToStl::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString NodesTrianglesToStl::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString NodesTrianglesToStl::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::OutputFilters; }
+{ return SIMPL::FilterSubGroups::OutputFilters; }
 
 
 // -----------------------------------------------------------------------------

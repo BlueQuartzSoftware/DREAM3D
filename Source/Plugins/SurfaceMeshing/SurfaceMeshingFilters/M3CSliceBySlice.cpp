@@ -308,14 +308,14 @@ class FeatureChecker
 // -----------------------------------------------------------------------------
 M3CSliceBySlice::M3CSliceBySlice() :
   AbstractFilter(),
-  m_SurfaceDataContainerName(DREAM3D::Defaults::DataContainerName),
-  m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
-  m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
-  m_FaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
-  m_SurfaceMeshNodeTypesArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
+  m_SurfaceDataContainerName(SIMPL::Defaults::DataContainerName),
+  m_VertexAttributeMatrixName(SIMPL::Defaults::VertexAttributeMatrixName),
+  m_FaceAttributeMatrixName(SIMPL::Defaults::FaceAttributeMatrixName),
+  m_FaceLabelsArrayName(SIMPL::FaceData::SurfaceMeshFaceLabels),
+  m_SurfaceMeshNodeTypesArrayName(SIMPL::VertexData::SurfaceMeshNodeType),
   m_DeleteTempFiles(true),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  m_FeatureIdsArrayPath(SIMPL::Defaults::DataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
+  m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
   setupFilterParameters();
@@ -519,7 +519,7 @@ void M3CSliceBySlice::execute()
   cVertexNodeIdPtr->initializeWithZeros();
 
   DataArray<int8_t>::Pointer cVertexNodeTypePtr = DataArray<int8_t>::CreateArray(2 * 7 * NSP, "M3CSliceBySlice_Node_NodeKind_Array");
-  cVertexNodeTypePtr->initializeWithValue(DREAM3D::SurfaceMesh::NodeType::Unused);
+  cVertexNodeTypePtr->initializeWithValue(SIMPL::SurfaceMesh::NodeType::Unused);
 
   StructArray<SurfaceMesh::M3C::Patch>::Pointer  cTrianglePtr = StructArray<SurfaceMesh::M3C::Patch>::CreateArray(0, "M3CSliceBySlice_Triangle_Array");
   cTrianglePtr->initializeWithZeros();
@@ -977,38 +977,38 @@ void M3CSliceBySlice::initialize_nodes(int NSP, int zID, int* wrappedDims, float
     cVertex[id].pos[0] = x + (0.5f * xRes);
     cVertex[id].pos[1] = y;
     cVertex[id].pos[2] = z;
-    nodeKind[id] = DREAM3D::SurfaceMesh::NodeType::Unused;
-    nodeID[id] =  DREAM3D::SurfaceMesh::NodeId::Unused;
+    nodeKind[id] = SIMPL::SurfaceMesh::NodeType::Unused;
+    nodeID[id] =  SIMPL::SurfaceMesh::NodeId::Unused;
     cVertex[id + 1].pos[0] = x;
     cVertex[id + 1].pos[1] = y + (0.5f * yRes);
     cVertex[id + 1].pos[2] = z;
-    nodeKind[id + 1] = DREAM3D::SurfaceMesh::NodeType::Unused;
-    nodeID[id + 1] = DREAM3D::SurfaceMesh::NodeId::Unused;
+    nodeKind[id + 1] = SIMPL::SurfaceMesh::NodeType::Unused;
+    nodeID[id + 1] = SIMPL::SurfaceMesh::NodeId::Unused;
     cVertex[id + 2].pos[0] = x;
     cVertex[id + 2].pos[1] = y;
     cVertex[id + 2].pos[2] = z + (0.5f * zRes);
-    nodeKind[id + 2] = DREAM3D::SurfaceMesh::NodeType::Unused;
-    nodeID[id + 2] = DREAM3D::SurfaceMesh::NodeId::Unused;
+    nodeKind[id + 2] = SIMPL::SurfaceMesh::NodeType::Unused;
+    nodeID[id + 2] = SIMPL::SurfaceMesh::NodeId::Unused;
     cVertex[id + 3].pos[0] = x + (0.5f * xRes);
     cVertex[id + 3].pos[1] = y + (0.5f * yRes);
     cVertex[id + 3].pos[2] = z;
-    nodeKind[id + 3] = DREAM3D::SurfaceMesh::NodeType::Unused;
-    nodeID[id + 3] = DREAM3D::SurfaceMesh::NodeId::Unused;
+    nodeKind[id + 3] = SIMPL::SurfaceMesh::NodeType::Unused;
+    nodeID[id + 3] = SIMPL::SurfaceMesh::NodeId::Unused;
     cVertex[id + 4].pos[0] = x + (0.5f * xRes);
     cVertex[id + 4].pos[1] = y;
     cVertex[id + 4].pos[2] = z + (0.5f * zRes);
-    nodeKind[id + 4] = DREAM3D::SurfaceMesh::NodeType::Unused;
-    nodeID[id + 4] = DREAM3D::SurfaceMesh::NodeId::Unused;
+    nodeKind[id + 4] = SIMPL::SurfaceMesh::NodeType::Unused;
+    nodeID[id + 4] = SIMPL::SurfaceMesh::NodeId::Unused;
     cVertex[id + 5].pos[0] = x;
     cVertex[id + 5].pos[1] = y + (0.5f * yRes);
     cVertex[id + 5].pos[2] = z + (0.5f * zRes);
-    nodeKind[id + 5] = DREAM3D::SurfaceMesh::NodeType::Unused;
-    nodeID[id + 5] = DREAM3D::SurfaceMesh::NodeId::Unused;
+    nodeKind[id + 5] = SIMPL::SurfaceMesh::NodeType::Unused;
+    nodeID[id + 5] = SIMPL::SurfaceMesh::NodeId::Unused;
     cVertex[id + 6].pos[0] = x + (0.5f * xRes);
     cVertex[id + 6].pos[1] = y + (0.5f * yRes);
     cVertex[id + 6].pos[2] = z + (0.5f * zRes);
-    nodeKind[id + 6] = DREAM3D::SurfaceMesh::NodeType::Unused;
-    nodeID[id + 6] = DREAM3D::SurfaceMesh::NodeId::Unused;
+    nodeKind[id + 6] = SIMPL::SurfaceMesh::NodeType::Unused;
+    nodeID[id + 6] = SIMPL::SurfaceMesh::NodeId::Unused;
   }
 }
 
@@ -1182,8 +1182,8 @@ size_t M3CSliceBySlice::get_nodes_Edges(int NSP, int zID, int* wrappedDims,
               {
                 tn1 = NodeID[0];
                 tn2 = NodeID[1];
-                nodeType[tn1] = DREAM3D::SurfaceMesh::NodeType::Unused; // extra Nodes from meshing the surface of the box...
-                nodeType[tn2] = DREAM3D::SurfaceMesh::NodeType::Unused; // we don't need them...
+                nodeType[tn1] = SIMPL::SurfaceMesh::NodeType::Unused; // extra Nodes from meshing the surface of the box...
+                nodeType[tn2] = SIMPL::SurfaceMesh::NodeType::Unused; // we don't need them...
               }
               // Categorize the Node...if it's triple junction or not...
               for (ii = 0; ii < 2; ii++)
@@ -1193,13 +1193,13 @@ size_t M3CSliceBySlice::get_nodes_Edges(int NSP, int zID, int* wrappedDims,
                   if (sqIndex == 7 || sqIndex == 11 || sqIndex == 13 || sqIndex == 14)
                   {
                     tnode = NodeID[ii];
-                    nodeType[tnode] = DREAM3D::SurfaceMesh::NodeType::TriplePoint;
+                    nodeType[tnode] = SIMPL::SurfaceMesh::NodeType::TriplePoint;
                     cSquare[k].FCnode = tnode;
                   }
                   else if (sqIndex == 19)
                   {
                     tnode = NodeID[ii];
-                    nodeType[tnode] = DREAM3D::SurfaceMesh::NodeType::QuadPoint;
+                    nodeType[tnode] = SIMPL::SurfaceMesh::NodeType::QuadPoint;
                     cSquare[k].FCnode = tnode;
                   }
                 }
@@ -1209,7 +1209,7 @@ size_t M3CSliceBySlice::get_nodes_Edges(int NSP, int zID, int* wrappedDims,
                   tnk = nodeType[tnode];
                   if (tnk != -1)
                   {
-                    nodeType[tnode] = DREAM3D::SurfaceMesh::NodeType::Default;
+                    nodeType[tnode] = SIMPL::SurfaceMesh::NodeType::Default;
                   }
                 }
               }
@@ -1603,7 +1603,7 @@ int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
         nodeType[BCnode] = nds;
         if (nds > 4 && nds < 12)
         {
-          nodeType[BCnode] = DREAM3D::SurfaceMesh::NodeType::QuadPoint;
+          nodeType[BCnode] = SIMPL::SurfaceMesh::NodeType::QuadPoint;
         }
       }
       else
@@ -1611,7 +1611,7 @@ int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
         nodeType[BCnode] = nds;
         if (nds > 4 && nds < 12)
         {
-          nodeType[BCnode] = DREAM3D::SurfaceMesh::NodeType::QuadPoint;
+          nodeType[BCnode] = SIMPL::SurfaceMesh::NodeType::QuadPoint;
         }
       }
     }
@@ -2687,7 +2687,7 @@ int M3CSliceBySlice::assign_nodeID(int nN, int NSP,
     //    nkind = nodeType[i];
     //    cnid = nodeID[i];
     //  plane = i % 7;
-    if (nodeType[i] != DREAM3D::SurfaceMesh::NodeType::Unused && nodeID[i] == DREAM3D::SurfaceMesh::NodeId::Unused)
+    if (nodeType[i] != SIMPL::SurfaceMesh::NodeType::Unused && nodeID[i] == SIMPL::SurfaceMesh::NodeId::Unused)
     {
       nodeID[i] = nid;
       nid++;
@@ -3084,14 +3084,14 @@ const QString M3CSliceBySlice::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString M3CSliceBySlice::getGroupName()
-{ return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+{ return SIMPL::FilterGroups::SurfaceMeshingFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString M3CSliceBySlice::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::GenerationFilters; }
+{ return SIMPL::FilterSubGroups::GenerationFilters; }
 
 
 // -----------------------------------------------------------------------------

@@ -60,12 +60,12 @@
 // -----------------------------------------------------------------------------
 M3CEntireVolume::M3CEntireVolume() :
   AbstractFilter(),
-  m_SurfaceMeshEdgesArrayName(DREAM3D::CellData::SurfaceMeshEdges),
-  m_SurfaceMeshInternalEdgesArrayName(DREAM3D::CellData::SurfaceMeshInternalEdges),
+  m_SurfaceMeshEdgesArrayName(SIMPL::CellData::SurfaceMeshEdges),
+  m_SurfaceMeshInternalEdgesArrayName(SIMPL::CellData::SurfaceMeshInternalEdges),
   m_AddSurfaceLayer(true),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_GrainIdsArrayName(SIMPL::CellData::GrainIds),
   m_GrainIds(NULL),
-  m_SurfaceMeshNodeTypeArrayName(DREAM3D::CellData::SurfaceMeshNodeType),
+  m_SurfaceMeshNodeTypeArrayName(SIMPL::CellData::SurfaceMeshNodeType),
   m_SurfaceMeshNodeType(NULL)
 {
   setupFilterParameters();
@@ -140,10 +140,10 @@ void M3CEntireVolume::dataCheck()
   }
   else
   {
-    StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer vertices = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(1, DREAM3D::CellData::SurfaceMeshNodes);
-    StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles = StructArray<SurfaceMesh::DataStructures::Face_t>::CreateArray(1, DREAM3D::CellData::SurfaceMeshTriangles);
-    StructArray<Segment>::Pointer faceEdges = StructArray<Segment>::CreateArray(1, DREAM3D::CellData::SurfaceMeshEdges);
-    StructArray<ISegment>::Pointer internalEdges = StructArray<ISegment>::CreateArray(1, DREAM3D::CellData::SurfaceMeshInternalEdges);
+    StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer vertices = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(1, SIMPL::CellData::SurfaceMeshNodes);
+    StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles = StructArray<SurfaceMesh::DataStructures::Face_t>::CreateArray(1, SIMPL::CellData::SurfaceMeshTriangles);
+    StructArray<Segment>::Pointer faceEdges = StructArray<Segment>::CreateArray(1, SIMPL::CellData::SurfaceMeshEdges);
+    StructArray<ISegment>::Pointer internalEdges = StructArray<ISegment>::CreateArray(1, SIMPL::CellData::SurfaceMeshInternalEdges);
 
     m_SurfaceMeshNodeTypePtr = sattrMat->createNonPrereqArray<DataArray<int8_t>, AbstractFilter, int8_t>(this, m_CellAttributeMatrixName,  m_SurfaceMeshNodeTypeArrayName, 0, 1, 1); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_SurfaceMeshNodeTypePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -151,11 +151,11 @@ void M3CEntireVolume::dataCheck()
 
     sm->setNodes(vertices);
     sm->setTriangles(triangles);
-    sm->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::SurfaceMeshEdges, faceEdges);
-    sm->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::SurfaceMeshInternalEdges, internalEdges);
+    sm->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(SIMPL::CellData::SurfaceMeshEdges, faceEdges);
+    sm->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(SIMPL::CellData::SurfaceMeshInternalEdges, internalEdges);
 
-    addCreatedCellData(DREAM3D::CellData::SurfaceMeshEdges);
-    addCreatedCellData(DREAM3D::CellData::SurfaceMeshInternalEdges);
+    addCreatedCellData(SIMPL::CellData::SurfaceMeshEdges);
+    addCreatedCellData(SIMPL::CellData::SurfaceMeshInternalEdges);
   }
 
 }
@@ -315,10 +315,10 @@ int M3CEntireVolume::createMesh()
 
   //Copy the data from the m_GrainIds Array into the "Voxel" Struct
   // Add a complete layer of surface voxels
-  DataArray<int32_t>::Pointer point = DataArray<int32_t>::CreateArray(totalPoints + 1, DREAM3D::CellData::SurfaceMeshVoxels);
+  DataArray<int32_t>::Pointer point = DataArray<int32_t>::CreateArray(totalPoints + 1, SIMPL::CellData::SurfaceMeshVoxels);
   point->initializeWithZeros();
 
-  StructArray<VoxelCoord>::Pointer voxelCoords = StructArray<VoxelCoord>::CreateArray(totalPoints + 1, DREAM3D::CellData::SurfaceMeshVoxelCoords);
+  StructArray<VoxelCoord>::Pointer voxelCoords = StructArray<VoxelCoord>::CreateArray(totalPoints + 1, SIMPL::CellData::SurfaceMeshVoxelCoords);
   voxelCoords->initializeWithZeros();
   VoxelCoord* voxCoords = voxelCoords.get()->GetPointer(0);
 
@@ -329,14 +329,14 @@ int M3CEntireVolume::createMesh()
   int NS = fileDim[0] * fileDim[1] * fileDim[2];
   NSP = fileDim[0] * fileDim[1] ;
 
-  StructArray<Neighbor>::Pointer neighbors = StructArray<Neighbor>::CreateArray(NS + 1, DREAM3D::CellData::SurfaceMeshNeighbors);
+  StructArray<Neighbor>::Pointer neighbors = StructArray<Neighbor>::CreateArray(NS + 1, SIMPL::CellData::SurfaceMeshNeighbors);
   neighbors->initializeWithZeros();
-  StructArray<Face>::Pointer squares = StructArray<Face>::CreateArray(3 * NS, DREAM3D::CellData::SurfaceMeshFaces);
+  StructArray<Face>::Pointer squares = StructArray<Face>::CreateArray(3 * NS, SIMPL::CellData::SurfaceMeshFaces);
   squares->initializeWithZeros();
-  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodesPtr = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(7 * NS, DREAM3D::CellData::SurfaceMeshNodes);
+  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodesPtr = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(7 * NS, SIMPL::CellData::SurfaceMeshNodes);
   nodesPtr->initializeWithZeros();
 
-  DataArray<int8_t>::Pointer nodeKindPtr = DataArray<int8_t>::CreateArray(7 * NS, DREAM3D::CellData::SurfaceMeshNodeType);
+  DataArray<int8_t>::Pointer nodeKindPtr = DataArray<int8_t>::CreateArray(7 * NS, SIMPL::CellData::SurfaceMeshNodeType);
   nodeKindPtr->initializeWithValues(0);
   m_SurfaceMeshNodeType = nodeKindPtr->GetPointer(0);
 
@@ -365,7 +365,7 @@ int M3CEntireVolume::createMesh()
 
   // memory allocation for face edges...
 //  fedge = (segment *)malloc(nFEdge * sizeof(segment));
-  StructArray<Segment>::Pointer faceEdges = StructArray<Segment>::CreateArray(nFEdge, DREAM3D::CellData::SurfaceMeshEdges);
+  StructArray<Segment>::Pointer faceEdges = StructArray<Segment>::CreateArray(nFEdge, SIMPL::CellData::SurfaceMeshEdges);
   faceEdges->initializeWithZeros();
   Segment* fedge = faceEdges.get()->GetPointer(0);
 
@@ -381,7 +381,7 @@ int M3CEntireVolume::createMesh()
 
   // memory allocation for triangle...
 //  triangle = (patch *)malloc(nTriangle * sizeof(patch));
-  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles = StructArray<SurfaceMesh::DataStructures::Face_t>::CreateArray(nTriangle, DREAM3D::CellData::SurfaceMeshTriangles);
+  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles = StructArray<SurfaceMesh::DataStructures::Face_t>::CreateArray(nTriangle, SIMPL::CellData::SurfaceMeshTriangles);
   triangles->initializeWithZeros();
   sm->setTriangles(triangles);
   Triangle* triangle = triangles.get()->GetPointer(0);
@@ -400,7 +400,7 @@ int M3CEntireVolume::createMesh()
   //printf("\ttotal number of unique inner edges = %d\n", tnIEdge);
   // memory allocation for inner edges...
 //  iedge = (isegment *)malloc(tnIEdge * sizeof(isegment));
-  StructArray<ISegment>::Pointer internalEdges = StructArray<ISegment>::CreateArray(tnIEdge, DREAM3D::CellData::SurfaceMeshInternalEdges);
+  StructArray<ISegment>::Pointer internalEdges = StructArray<ISegment>::CreateArray(tnIEdge, SIMPL::CellData::SurfaceMeshInternalEdges);
   internalEdges->initializeWithZeros();
   ISegment* iedge = internalEdges.get()->GetPointer(0);
 
@@ -423,9 +423,9 @@ int M3CEntireVolume::createMesh()
   notifyStatusMessage(getHumanLabel(), ss.str());
 
   // Create new shortend arrays for the Triangles and the Nodes and NodeKind
-  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodes = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(nNodes, DREAM3D::CellData::SurfaceMeshNodes);
+  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodes = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(nNodes, SIMPL::CellData::SurfaceMeshNodes);
   nodes->initializeWithZeros();
-  DataArray<int8_t>::Pointer shortNodeKindPtr = DataArray<int8_t>::CreateArray(nNodes, DREAM3D::CellData::SurfaceMeshNodeType);
+  DataArray<int8_t>::Pointer shortNodeKindPtr = DataArray<int8_t>::CreateArray(nNodes, SIMPL::CellData::SurfaceMeshNodeType);
 
 
   generate_update_nodes_edges_array(new_ids_for_nodes, shortNodeKindPtr, nodes, nodesPtr, triangles, faceEdges, internalEdges, maxGrainId);
@@ -433,9 +433,9 @@ int M3CEntireVolume::createMesh()
   // Set the updated Nodes & Triangles into the SurfaceMeshDataContainer
   sm->setTriangles(triangles);
   sm->setNodes(nodes);
-  sm->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::SurfaceMeshEdges, faceEdges);
-  sm->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::SurfaceMeshInternalEdges, internalEdges);
-  sm->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(DREAM3D::CellData::SurfaceMeshNodeType, shortNodeKindPtr);
+  sm->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(SIMPL::CellData::SurfaceMeshEdges, faceEdges);
+  sm->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(SIMPL::CellData::SurfaceMeshInternalEdges, internalEdges);
+  sm->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(SIMPL::CellData::SurfaceMeshNodeType, shortNodeKindPtr);
 
 //  notifyStatusMessage(getHumanLabel(), "\nOutputting nodes and triangles...\n");
 //  get_output(vertex, fedge, iedge, triangle, NS, nNodes, nFEdge, tnIEdge, nTriangle, mp);
@@ -1143,8 +1143,8 @@ void M3CEntireVolume::get_nodes_fEdges(Face* sq,
               tn2 = nodeID[1];
               assert(nodeID[0] < ns * 7);
               assert(nodeID[1] < ns * 7);
-              m_SurfaceMeshNodeType[tn1] = DREAM3D::SurfaceMesh::NodeType::Unused;// extra nodes from meshing the surface o f the box...
-              m_SurfaceMeshNodeType[tn2] = DREAM3D::SurfaceMesh::NodeType::Unused; // we don't need them...
+              m_SurfaceMeshNodeType[tn1] = SIMPL::SurfaceMesh::NodeType::Unused;// extra nodes from meshing the surface o f the box...
+              m_SurfaceMeshNodeType[tn2] = SIMPL::SurfaceMesh::NodeType::Unused; // we don't need them...
             }
 
             // Categorize the node on the faces of marching cubes...if it's triple junction or not...
@@ -1157,7 +1157,7 @@ void M3CEntireVolume::get_nodes_fEdges(Face* sq,
 
                   tnode = nodeID[ii];
                   sq[k].FCnode = tnode;
-                  m_SurfaceMeshNodeType[tnode] = DREAM3D::SurfaceMesh::NodeType::TriplePoint;
+                  m_SurfaceMeshNodeType[tnode] = SIMPL::SurfaceMesh::NodeType::TriplePoint;
 
                   if(atBulk == 1)
                   {
@@ -1169,7 +1169,7 @@ void M3CEntireVolume::get_nodes_fEdges(Face* sq,
                 {
                   tnode = nodeID[ii];
                   sq[k].FCnode = tnode;
-                  m_SurfaceMeshNodeType[tnode] = DREAM3D::SurfaceMesh::NodeType::QuadPoint;
+                  m_SurfaceMeshNodeType[tnode] = SIMPL::SurfaceMesh::NodeType::QuadPoint;
                   //printf("atBulk = %3d and nk = %d\n", atBulk, 4);
                 }
                 else
@@ -1184,7 +1184,7 @@ void M3CEntireVolume::get_nodes_fEdges(Face* sq,
                 tnk = m_SurfaceMeshNodeType[tnode];
                 if(tnk != -1)
                 {
-                  m_SurfaceMeshNodeType[tnode] = DREAM3D::SurfaceMesh::NodeType::Default;
+                  m_SurfaceMeshNodeType[tnode] = SIMPL::SurfaceMesh::NodeType::Default;
                 }
                 //printf("atBulk = %d and nk = %d  %3d %3d %3d %3d\n", atBulk, 2, tnspin[0], tnspin[1], tnspin[2], tnspin[3]);
               }

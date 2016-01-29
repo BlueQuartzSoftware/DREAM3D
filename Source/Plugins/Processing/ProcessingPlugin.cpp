@@ -54,10 +54,10 @@
 ProcessingPlugin::ProcessingPlugin() :
   m_Version(SIMPLib::Version::Package()),
   m_CompatibilityVersion(SIMPLib::Version::Package()),
-  m_Vendor(DREAM3D::BlueQuartz::VendorName),
-  m_URL(DREAM3D::BlueQuartz::URL),
+  m_Vendor(BlueQuartz::VendorName),
+  m_URL(BlueQuartz::URL),
   m_Location(""),
-  m_Copyright(DREAM3D::BlueQuartz::Copyright),
+  m_Copyright(BlueQuartz::Copyright),
   m_Filters(QList<QString>()),
   m_DidLoad(false)
 {

@@ -148,11 +148,11 @@ FindProjectedImageStatistics::FindProjectedImageStatistics() :
   AbstractFilter(),
   m_SelectedArrayPath("", "", ""),
   m_Plane(0),
-  m_ProjectedImageMinArrayName(DREAM3D::CellData::ProjectedImageMin),
-  m_ProjectedImageMaxArrayName(DREAM3D::CellData::ProjectedImageMax),
-  m_ProjectedImageAvgArrayName(DREAM3D::CellData::ProjectedImageAvg),
-  m_ProjectedImageStdArrayName(DREAM3D::CellData::ProjectedImageStd),
-  m_ProjectedImageVarArrayName(DREAM3D::CellData::ProjectedImageVar),
+  m_ProjectedImageMinArrayName(SIMPL::CellData::ProjectedImageMin),
+  m_ProjectedImageMaxArrayName(SIMPL::CellData::ProjectedImageMax),
+  m_ProjectedImageAvgArrayName(SIMPL::CellData::ProjectedImageAvg),
+  m_ProjectedImageStdArrayName(SIMPL::CellData::ProjectedImageStd),
+  m_ProjectedImageVarArrayName(SIMPL::CellData::ProjectedImageVar),
   m_InData(NULL),
   m_ProjectedImageMin(NULL),
   m_ProjectedImageMax(NULL),
@@ -191,18 +191,18 @@ void FindProjectedImageStatistics::setupFilterParameters()
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::Defaults::AnyPrimitive, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     QVector<QString> daTypes;
-    daTypes.push_back(DREAM3D::TypeNames::Int8);
-    daTypes.push_back(DREAM3D::TypeNames::Int16);
-    daTypes.push_back(DREAM3D::TypeNames::Int32);
-    daTypes.push_back(DREAM3D::TypeNames::Int64);
-    daTypes.push_back(DREAM3D::TypeNames::UInt8);
-    daTypes.push_back(DREAM3D::TypeNames::UInt16);
-    daTypes.push_back(DREAM3D::TypeNames::UInt32);
-    daTypes.push_back(DREAM3D::TypeNames::UInt64);
-    daTypes.push_back(DREAM3D::TypeNames::Float);
-    daTypes.push_back(DREAM3D::TypeNames::Double);
+    daTypes.push_back(SIMPL::TypeNames::Int8);
+    daTypes.push_back(SIMPL::TypeNames::Int16);
+    daTypes.push_back(SIMPL::TypeNames::Int32);
+    daTypes.push_back(SIMPL::TypeNames::Int64);
+    daTypes.push_back(SIMPL::TypeNames::UInt8);
+    daTypes.push_back(SIMPL::TypeNames::UInt16);
+    daTypes.push_back(SIMPL::TypeNames::UInt32);
+    daTypes.push_back(SIMPL::TypeNames::UInt64);
+    daTypes.push_back(SIMPL::TypeNames::Float);
+    daTypes.push_back(SIMPL::TypeNames::Double);
     req.daTypes = daTypes;
     parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array to Quantify", "SelectedArrayPath", getSelectedArrayPath(), FilterParameter::RequiredArray, req));
   }
@@ -612,14 +612,14 @@ const QString FindProjectedImageStatistics::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FindProjectedImageStatistics::getGroupName()
-{ return DREAM3D::FilterGroups::ProcessingFilters; }
+{ return SIMPL::FilterGroups::ProcessingFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindProjectedImageStatistics::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::ImageFilters; }
+{ return SIMPL::FilterSubGroups::ImageFilters; }
 
 
 // -----------------------------------------------------------------------------

@@ -100,7 +100,7 @@ H5EbsdVolumeInfo::H5EbsdVolumeInfo() :
   m_ZRes(0.0f),
   m_ZStart(0),
   m_ZEnd(0),
-  m_StackingOrder(Ebsd::RefFrameZDir::LowtoHigh),
+  m_StackingOrder(SIMPL::RefFrameZDir::LowtoHigh),
   m_NumPhases(0),
   m_SampleTransformationAngle(0.0),
   m_EulerTransformationAngle(0.0)
@@ -463,7 +463,7 @@ uint32_t H5EbsdVolumeInfo::getStackingOrder()
   if (m_ValuesAreCached == false)
   {
     err = readVolumeInfo();
-    if (err < 0) { return Ebsd::RefFrameZDir::UnknownRefFrameZDirection; }
+    if (err < 0) { return SIMPL::RefFrameZDir::UnknownRefFrameZDirection; }
   }
   return m_StackingOrder;
 }

@@ -63,11 +63,11 @@
 // -----------------------------------------------------------------------------
 ImportImageStack::ImportImageStack() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::ImageDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_DataContainerName(SIMPL::Defaults::ImageDataContainerName),
+  m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
   m_BoundsFile(""),
   m_GeometryType(0),
-  m_ImageDataArrayName(DREAM3D::CellData::ImageData)
+  m_ImageDataArrayName(SIMPL::CellData::ImageData)
 {
   m_Origin.x = 0.0f;
   m_Origin.y = 0.0f;
@@ -183,12 +183,12 @@ void ImportImageStack::dataCheck()
 
   if (m_GeometryType == 0)
   {
-    ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+    ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
     m->setGeometry(image);
   }
   else if (m_GeometryType == 1)
   {
-    RectGridGeom::Pointer rectGrid = RectGridGeom::CreateGeometry(DREAM3D::Geometry::RectGridGeometry);
+    RectGridGeom::Pointer rectGrid = RectGridGeom::CreateGeometry(SIMPL::Geometry::RectGridGeometry);
     m->setGeometry(rectGrid);
 
     if (m_BoundsFile.isEmpty() == true)
@@ -281,7 +281,7 @@ void ImportImageStack::dataCheck()
     {
       tDims[i] = dims[i];
     }
-    m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
+    m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
 
     size_t pixelBytes = 0;
 
@@ -470,9 +470,9 @@ int ImportImageStack::readBounds()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
   m->getGeometryAs<RectGridGeom>()->getDimensions(dims);
 
-  FloatArrayType::Pointer xbounds = FloatArrayType::CreateArray(dims[0] + 1, DREAM3D::Geometry::xBoundsList);
-  FloatArrayType::Pointer ybounds = FloatArrayType::CreateArray(dims[1] + 1, DREAM3D::Geometry::yBoundsList);
-  FloatArrayType::Pointer zbounds = FloatArrayType::CreateArray(dims[2] + 1, DREAM3D::Geometry::zBoundsList);
+  FloatArrayType::Pointer xbounds = FloatArrayType::CreateArray(dims[0] + 1, SIMPL::Geometry::xBoundsList);
+  FloatArrayType::Pointer ybounds = FloatArrayType::CreateArray(dims[1] + 1, SIMPL::Geometry::yBoundsList);
+  FloatArrayType::Pointer zbounds = FloatArrayType::CreateArray(dims[2] + 1, SIMPL::Geometry::zBoundsList);
   float* xbnds = xbounds->getPointer(0);
   float* ybnds = ybounds->getPointer(0);
   float* zbnds = zbounds->getPointer(0);
@@ -726,13 +726,13 @@ const QString ImportImageStack::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString ImportImageStack::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ImportImageStack::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::InputFilters; }
+{ return SIMPL::FilterSubGroups::InputFilters; }
 
 // -----------------------------------------------------------------------------
 //

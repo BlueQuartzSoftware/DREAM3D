@@ -46,7 +46,7 @@ class GenerateFeatureIds : public AbstractFilter
       dataCheck();
       if(getErrorCondition() < 0) { return; }
 
-      DataContainer::Pointer m = getDataContainerArray()->getDataContainer(DREAM3D::Defaults::DataContainerName);
+      DataContainer::Pointer m = getDataContainerArray()->getDataContainer(SIMPL::Defaults::DataContainerName);
 
       int size = UnitTest::FeatureIdsTest::XSize * UnitTest::FeatureIdsTest::YSize * UnitTest::FeatureIdsTest::ZSize;
       QVector<size_t> tDims(3, 0);
@@ -86,11 +86,11 @@ class GenerateFeatureIds : public AbstractFilter
   protected:
     GenerateFeatureIds() :
       AbstractFilter(),
-      m_DataContainerName(DREAM3D::Defaults::DataContainerName),
-      m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-      m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
+      m_DataContainerName(SIMPL::Defaults::DataContainerName),
+      m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
+      m_CellFeatureAttributeMatrixName(SIMPL::Defaults::CellFeatureAttributeMatrixName),
       m_FeatureIds(NULL),
-      m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds)
+      m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
     {
     }
 
@@ -205,10 +205,10 @@ class CreateDataContainer : public AbstractFilter
     void dataCheck()
     {
       DataContainer::Pointer m = DataContainer::New();
-      ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+      ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
       m->setGeometry(image);
 
-      m->setName(DREAM3D::Defaults::DataContainerName);
+      m->setName(SIMPL::Defaults::DataContainerName);
       int64_t nx = m_XDim;
       int64_t ny = m_YDim;
       int64_t nz = m_ZDim;
@@ -218,7 +218,7 @@ class CreateDataContainer : public AbstractFilter
       tDims[0] = nx;
       tDims[1] = ny;
       tDims[2] = nz;
-      AttributeMatrix::Pointer attrMat = AttributeMatrix::New(tDims, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::AttributeMatrixType::Cell);
+      AttributeMatrix::Pointer attrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::AttributeMatrixType::Cell);
       m->addAttributeMatrix(attrMat->getName(), attrMat);
     }
 

@@ -63,7 +63,7 @@
 FitFeatureData::FitFeatureData() :
   AbstractFilter(),
   m_SelectedFeatureArrayPath("", "", ""),
-  m_DistributionType(DREAM3D::DistributionType::UnknownDistributionType),
+  m_DistributionType(SIMPL::DistributionType::UnknownDistributionType),
   m_RemoveBiasedFeatures(false),
   m_FeaturePhasesArrayPath("", "", ""),
   m_BiasedFeaturesArrayPath("", "", ""),
@@ -106,20 +106,20 @@ void FitFeatureData::setupFilterParameters()
   parameters.push_back(LinkedBooleanFilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", getRemoveBiasedFeatures(), linkedProps, FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::Defaults::AnyPrimitive, 1, DREAM3D::AttributeMatrixObjectType::Feature);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Feature);
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Array to Fit", "SelectedFeatureArrayPath", getSelectedFeatureArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixObjectType::Feature);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Feature);
     parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Bool, 1, DREAM3D::AttributeMatrixObjectType::Feature);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixObjectType::Feature);
     parameters.push_back(DataArraySelectionFilterParameter::New("Biased Features", "BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::CreatedArray));
   {
-    DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(DREAM3D::AttributeMatrixObjectType::Ensemble);
+    DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixObjectType::Ensemble);
     parameters.push_back(DataArrayCreationFilterParameter::New("Fit Parameters", "NewEnsembleArrayArray", getNewEnsembleArrayArray(), FilterParameter::CreatedArray, req));
   }
   setFilterParameters(parameters);
@@ -174,9 +174,9 @@ void FitFeatureData::dataCheck()
   int32_t numComp = 0;
   QString distType("UNKNOWN");
   // Determining number of components and name given distribution type
-  if (m_DistributionType == DREAM3D::DistributionType::Beta) { distType = "Beta", numComp = DREAM3D::DistributionType::BetaColumnCount; }
-  else if (m_DistributionType == DREAM3D::DistributionType::LogNormal) { distType = "LogNormal", numComp = DREAM3D::DistributionType::LogNormalColumnCount; }
-  else if (m_DistributionType == DREAM3D::DistributionType::Power) { distType = "PowerLaw", numComp = DREAM3D::DistributionType::PowerLawColumnCount; }
+  if (m_DistributionType == SIMPL::DistributionType::Beta) { distType = "Beta", numComp = SIMPL::DistributionType::BetaColumnCount; }
+  else if (m_DistributionType == SIMPL::DistributionType::LogNormal) { distType = "LogNormal", numComp = SIMPL::DistributionType::LogNormalColumnCount; }
+  else if (m_DistributionType == SIMPL::DistributionType::Power) { distType = "PowerLaw", numComp = SIMPL::DistributionType::PowerLawColumnCount; }
 
   getNewEnsembleArrayArray().setDataArrayName(m_SelectedFeatureArrayPath.getDataArrayName() + distType + QString("Fit"));
   cDims[0] = numComp;
@@ -225,9 +225,9 @@ void fitData(IDataArray::Pointer inDataPtr, float* ensembleArray, int32_t* eIds,
   int32_t numComp = 1;
 
   // Determining number of components and name given distribution type
-  if (dType == DREAM3D::DistributionType::Beta) { distType = "Beta", numComp = DREAM3D::DistributionType::BetaColumnCount; }
-  else if (dType == DREAM3D::DistributionType::LogNormal) { distType = "LogNormal", numComp = DREAM3D::DistributionType::LogNormalColumnCount; }
-  else if (dType == DREAM3D::DistributionType::Power) { distType = "PowerLaw", numComp = DREAM3D::DistributionType::PowerLawColumnCount; }
+  if (dType == SIMPL::DistributionType::Beta) { distType = "Beta", numComp = SIMPL::DistributionType::BetaColumnCount; }
+  else if (dType == SIMPL::DistributionType::LogNormal) { distType = "LogNormal", numComp = SIMPL::DistributionType::LogNormalColumnCount; }
+  else if (dType == SIMPL::DistributionType::Power) { distType = "PowerLaw", numComp = SIMPL::DistributionType::PowerLawColumnCount; }
 
   T* fPtr = inputDataPtr->getPointer(0);
 
@@ -323,13 +323,13 @@ const QString FitFeatureData::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FitFeatureData::getGroupName()
-{ return DREAM3D::FilterGroups::StatisticsFilters; }
+{ return SIMPL::FilterGroups::StatisticsFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FitFeatureData::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
+{ return SIMPL::FilterSubGroups::EnsembleStatsFilters; }
 
 // -----------------------------------------------------------------------------
 //

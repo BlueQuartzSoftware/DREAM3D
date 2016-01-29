@@ -49,6 +49,8 @@
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
+#include "EbsdLib/EbsdConstants.h"
+
 // Include the MOC generated file for this class
 #include "moc_FindSchmids.cpp"
 
@@ -62,9 +64,9 @@ FindSchmids::FindSchmids() :
   m_FeaturePhasesArrayPath("", "", ""),
   m_CrystalStructuresArrayPath("", "", ""),
   m_AvgQuatsArrayPath("", "", ""),
-  m_SchmidsArrayName(DREAM3D::FeatureData::Schmids),
-  m_SlipSystemsArrayName(DREAM3D::FeatureData::SlipSystems),
-  m_PolesArrayName(DREAM3D::FeatureData::Poles),
+  m_SchmidsArrayName(SIMPL::FeatureData::Schmids),
+  m_SlipSystemsArrayName(SIMPL::FeatureData::SlipSystems),
+  m_PolesArrayName(SIMPL::FeatureData::Poles),
   m_PhisArrayName("SchmidPhis"),
   m_LambdasArrayName("SchmidLambdas"),
   m_StoreAngleComponents(false),
@@ -120,16 +122,16 @@ void FindSchmids::setupFilterParameters()
   parameters.push_back(FloatVec3FilterParameter::New("Slip Direction", "SlipDirection", getSlipDirection(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixObjectType::Feature);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Feature);
     parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Float, 4, DREAM3D::AttributeMatrixObjectType::Feature);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixObjectType::Feature);
     parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::UInt32, 1, DREAM3D::AttributeMatrixObjectType::Ensemble);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixObjectType::Ensemble);
     parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
@@ -389,13 +391,13 @@ const QString FindSchmids::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FindSchmids::getGroupName()
-{ return DREAM3D::FilterGroups::StatisticsFilters; }
+{ return SIMPL::FilterGroups::StatisticsFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindSchmids::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+{ return SIMPL::FilterSubGroups::CrystallographicFilters; }
 
 // -----------------------------------------------------------------------------
 //

@@ -43,7 +43,7 @@
 #include <QtGui/QDoubleValidator>
 
 
-#include "QtSupportLib/DREAM3DStyles.h"
+#include "QtSupportLib/SIMPLViewStyles.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
 #include "moc_PrimaryRolledPresetDialog.cpp"
@@ -159,15 +159,15 @@ void PrimaryRolledPresetDialog::checkInputs(const QString& text)
   float c = getC();
   if (a >= b && b >= c)
   {
-    DREAM3DStyles::LineEditClearStyle(A);
-    DREAM3DStyles::LineEditClearStyle(B);
-    DREAM3DStyles::LineEditClearStyle(C);
+    SIMPLViewStyles::LineEditClearStyle(A);
+    SIMPLViewStyles::LineEditClearStyle(B);
+    SIMPLViewStyles::LineEditClearStyle(C);
   }
   else
   {
-    DREAM3DStyles::LineEditRedErrorStyle(A);
-    DREAM3DStyles::LineEditRedErrorStyle(B);
-    DREAM3DStyles::LineEditRedErrorStyle(C);
+    SIMPLViewStyles::LineEditRedErrorStyle(A);
+    SIMPLViewStyles::LineEditRedErrorStyle(B);
+    SIMPLViewStyles::LineEditRedErrorStyle(C);
   }
 }
 

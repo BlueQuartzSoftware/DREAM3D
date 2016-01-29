@@ -795,7 +795,7 @@ bool CubicLowOps::inUnitTriangle(float eta, float chi)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb CubicLowOps::generateIPFColor(double* eulers, double* refDir, bool convertDegrees)
+SIMPL::Rgb CubicLowOps::generateIPFColor(double* eulers, double* refDir, bool convertDegrees)
 {
   return generateIPFColor(eulers[0], eulers[1], eulers[2], refDir[0], refDir[1], refDir[2], convertDegrees);
 }
@@ -803,7 +803,7 @@ DREAM3D::Rgb CubicLowOps::generateIPFColor(double* eulers, double* refDir, bool 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb CubicLowOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, bool degToRad)
+SIMPL::Rgb CubicLowOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, bool degToRad)
 {
   if (degToRad == true)
   {
@@ -893,7 +893,7 @@ DREAM3D::Rgb CubicLowOps::generateIPFColor(double phi1, double phi, double phi2,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb CubicLowOps::generateRodriguesColor(float r1, float r2, float r3)
+SIMPL::Rgb CubicLowOps::generateRodriguesColor(float r1, float r2, float r3)
 {
   float range1 = 2.0f * CubicLowDim1InitValue;
   float range2 = 2.0f * CubicLowDim2InitValue;
@@ -1070,7 +1070,7 @@ QVector<UInt8ArrayType::Pointer> CubicLowOps::generatePoleFigure(PoleFigureConfi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb CubicLowOps::generateMisorientationColor(const QuatF& q, const QuatF& refFrame)
+SIMPL::Rgb CubicLowOps::generateMisorientationColor(const QuatF& q, const QuatF& refFrame)
 {
   Q_ASSERT(false);
 
@@ -1187,7 +1187,7 @@ DREAM3D::Rgb CubicLowOps::generateMisorientationColor(const QuatF& q, const Quat
   g = (g + (v - c));
   b = (b + (v - c));
 
-  DREAM3D::Rgb rgb = RgbColor::dRgb(r * 255, g * 255, b * 255, 0);
+  SIMPL::Rgb rgb = RgbColor::dRgb(r * 255, g * 255, b * 255, 0);
 
   return rgb;
 }

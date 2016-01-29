@@ -77,7 +77,7 @@ int MultiThresholdObjects()
   DataContainerArray::Pointer dca = DataContainerArray::New();
   DataContainer::Pointer vdc = DataContainer::New("dc1");
   //Set up geometry for tuples, a cuboid with dimensions 20, 10, 1
-  ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+  ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   vdc->setGeometry(image);
   size_t dims[1] = { 20 };
   image->setDimensions(dims);
@@ -88,7 +88,7 @@ int MultiThresholdObjects()
   cDims[0] = 1;
   float fnum = 0.0f;
   int inum = 0;
-  AttributeMatrix::Pointer am = AttributeMatrix::New(tDims, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::AttributeMatrixType::Cell);
+  AttributeMatrix::Pointer am = AttributeMatrix::New(tDims, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::AttributeMatrixType::Cell);
   DataArray<float>::Pointer data = DataArray<float>::CreateArray(tDims, cDims, "TestArrayFloat");
   DataArray<int32_t>::Pointer data1 = DataArray<int32_t>::CreateArray(tDims, cDims, "TestArrayInt");
 
@@ -133,14 +133,14 @@ int MultiThresholdObjects()
     propWasSet = filter->setProperty("SelectedThresholds", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-    var.setValue(DREAM3D::GeneralData::ThresholdArray);
+    var.setValue(SIMPL::GeneralData::ThresholdArray);
     propWasSet = filter->setProperty("DestinationArrayName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
     filter->execute();
     DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
 
-    DataArrayPath path = DataArrayPath("dc1", DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::GeneralData::ThresholdArray);
+    DataArrayPath path = DataArrayPath("dc1", SIMPL::Defaults::CellAttributeMatrixName, SIMPL::GeneralData::ThresholdArray);
     IDataArray::Pointer thresholdArray = vdc->getAttributeMatrix(path.getAttributeMatrixName())->getAttributeArray(path.getDataArrayName());
     DataArray<bool>* inputArray = DataArray<bool>::SafePointerDownCast(thresholdArray.get());
     bool* inputArrayPtr = inputArray->getPointer(0); // pointer for threshold array created from the filter for the float array
@@ -175,7 +175,7 @@ int MultiThresholdObjects()
     filter->execute();
     DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
 
-    DataArrayPath path1 = DataArrayPath("dc1", DREAM3D::Defaults::CellAttributeMatrixName, "ThresholdArray1");
+    DataArrayPath path1 = DataArrayPath("dc1", SIMPL::Defaults::CellAttributeMatrixName, "ThresholdArray1");
     IDataArray::Pointer thresholdArray1 = vdc->getAttributeMatrix(path1.getAttributeMatrixName())->getAttributeArray(path1.getDataArrayName());
     DataArray<bool>* inputArray1 = DataArray<bool>::SafePointerDownCast(thresholdArray1.get());
     bool* inputArrayPtr1 = inputArray1->getPointer(0); // pointer for threshold array created from the filter for the int array

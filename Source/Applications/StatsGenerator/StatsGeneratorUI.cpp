@@ -70,7 +70,7 @@
 #include "QtSupportLib/QRecentFileList.h"
 #include "QtSupportLib/HelpDialog.h"
 
-#include "Applications/DREAM3D/DREAM3DApplication.h"
+#include "Applications/SIMPLView/SIMPLViewApplication.h"
 
 #include "DREAM3D/License/StatsGeneratorLicenseFiles.h"
 
@@ -138,7 +138,7 @@ void StatsGeneratorUI::closeEvent(QCloseEvent* event)
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::readSettings()
 {
-  DREAM3DSettings prefs;
+  SIMPLViewSettings prefs;
 
   // Read preferences here
 }
@@ -148,7 +148,7 @@ void StatsGeneratorUI::readSettings()
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::writeSettings()
 {
-  DREAM3DSettings prefs;
+  SIMPLViewSettings prefs;
 
   // Write preferences here
 }
@@ -162,7 +162,7 @@ void StatsGeneratorUI::setupGui()
 
   PrimaryPhaseWidget* ppw = new PrimaryPhaseWidget;
   ppw->setPhaseIndex(1);
-  ppw->setPhaseType(DREAM3D::PhaseType::PrimaryPhase);
+  ppw->setPhaseType(SIMPL::PhaseType::PrimaryPhase);
   ppw->setCrystalStructure(Ebsd::CrystalStructure::Cubic_High);
   ppw->setPhaseFraction(1.0);
   ppw->setTotalPhaseFraction(1.0);
@@ -213,12 +213,12 @@ void StatsGeneratorUI::on_addPhase_clicked()
   int r = dialog.exec();
   if (r == QDialog::Accepted)
   {
-    if(dialog.getPhaseType() == DREAM3D::PhaseType::PrimaryPhase)
+    if(dialog.getPhaseType() == SIMPL::PhaseType::PrimaryPhase)
     {
       PrimaryPhaseWidget* ppw = new PrimaryPhaseWidget(centralwidget);
       phaseTabs->addTab(ppw, "Primary");
       ppw->setPhaseIndex(phaseTabs->count());
-      ppw->setPhaseType(DREAM3D::PhaseType::PrimaryPhase);
+      ppw->setPhaseType(SIMPL::PhaseType::PrimaryPhase);
       ppw->setCrystalStructure(dialog.getCrystalStructure());
       ppw->setPhaseFraction(dialog.getPhaseFraction());
       ppw->setPhaseType(dialog.getPhaseType());
@@ -227,12 +227,12 @@ void StatsGeneratorUI::on_addPhase_clicked()
       ppw->updatePlots();
       setWindowModified(true);
     }
-    else if(dialog.getPhaseType() == DREAM3D::PhaseType::PrecipitatePhase)
+    else if(dialog.getPhaseType() == SIMPL::PhaseType::PrecipitatePhase)
     {
       PrecipitatePhaseWidget* ppw = new PrecipitatePhaseWidget(centralwidget);
       phaseTabs->addTab(ppw, "Precipitate");
       ppw->setPhaseIndex(phaseTabs->count());
-      ppw->setPhaseType(DREAM3D::PhaseType::PrecipitatePhase);
+      ppw->setPhaseType(SIMPL::PhaseType::PrecipitatePhase);
       ppw->setCrystalStructure(dialog.getCrystalStructure());
       ppw->setPhaseFraction(dialog.getPhaseFraction());
       ppw->setPhaseType(dialog.getPhaseType());
@@ -242,12 +242,12 @@ void StatsGeneratorUI::on_addPhase_clicked()
       ppw->updatePlots();
       setWindowModified(true);
     }
-    else if(dialog.getPhaseType() == DREAM3D::PhaseType::TransformationPhase)
+    else if(dialog.getPhaseType() == SIMPL::PhaseType::TransformationPhase)
     {
       TransformationPhaseWidget* tpw = new TransformationPhaseWidget(centralwidget);
       phaseTabs->addTab(tpw, "Transformation");
       tpw->setPhaseIndex(phaseTabs->count());
-      tpw->setPhaseType(DREAM3D::PhaseType::TransformationPhase);
+      tpw->setPhaseType(SIMPL::PhaseType::TransformationPhase);
       tpw->setCrystalStructure(dialog.getCrystalStructure());
       tpw->setPhaseFraction(dialog.getPhaseFraction());
       tpw->setPhaseType(dialog.getPhaseType());
@@ -257,12 +257,12 @@ void StatsGeneratorUI::on_addPhase_clicked()
       tpw->updatePlots();
       setWindowModified(true);
     }
-    else if(dialog.getPhaseType() == DREAM3D::PhaseType::MatrixPhase)
+    else if(dialog.getPhaseType() == SIMPL::PhaseType::MatrixPhase)
     {
       MatrixPhaseWidget* mpw = new MatrixPhaseWidget(centralwidget);
       phaseTabs->addTab(mpw, "Matrix");
       mpw->setPhaseIndex(phaseTabs->count());
-      mpw->setPhaseType(DREAM3D::PhaseType::MatrixPhase);
+      mpw->setPhaseType(SIMPL::PhaseType::MatrixPhase);
       mpw->setCrystalStructure(dialog.getCrystalStructure());
       mpw->setPhaseFraction(dialog.getPhaseFraction());
       mpw->setPhaseType(dialog.getPhaseType());
@@ -270,12 +270,12 @@ void StatsGeneratorUI::on_addPhase_clicked()
       mpw->setObjectName(cName);
       setWindowModified(true);
     }
-    else if(dialog.getPhaseType() == DREAM3D::PhaseType::BoundaryPhase)
+    else if(dialog.getPhaseType() == SIMPL::PhaseType::BoundaryPhase)
     {
       BoundaryPhaseWidget* bpw = new BoundaryPhaseWidget(centralwidget);
       phaseTabs->addTab(bpw, "Boundary");
       bpw->setPhaseIndex(phaseTabs->count());
-      bpw->setPhaseType(DREAM3D::PhaseType::BoundaryPhase);
+      bpw->setPhaseType(SIMPL::PhaseType::BoundaryPhase);
       bpw->setCrystalStructure(dialog.getCrystalStructure());
       bpw->setPhaseFraction(dialog.getPhaseFraction());
       bpw->setPhaseType(dialog.getPhaseType());
@@ -318,32 +318,32 @@ void StatsGeneratorUI::on_editPhase_clicked()
   dialog.setOtherPhaseFractionTotal(phaseFractionTotal);
   dialog.setCrystalStructure(sgwidget->getCrystalStructure());
 
-  if(dialog.getPhaseType() == DREAM3D::PhaseType::PrimaryPhase)
+  if(dialog.getPhaseType() == SIMPL::PhaseType::PrimaryPhase)
   {
     //    PrimaryPhaseWidget* ppw = qobject_cast<PrimaryPhaseWidget*>(sgwidget);
   }
-  else if(dialog.getPhaseType() == DREAM3D::PhaseType::PrecipitatePhase)
+  else if(dialog.getPhaseType() == SIMPL::PhaseType::PrecipitatePhase)
   {
     PrecipitatePhaseWidget* ppw = qobject_cast<PrecipitatePhaseWidget*>(sgwidget);
     if (ppw) { dialog.setPptFraction(ppw->getPptFraction()); }
   }
-  else if(dialog.getPhaseType() == DREAM3D::PhaseType::TransformationPhase)
+  else if(dialog.getPhaseType() == SIMPL::PhaseType::TransformationPhase)
   {
     TransformationPhaseWidget* tpw = qobject_cast<TransformationPhaseWidget*>(sgwidget);
     if (tpw) { dialog.setParentPhase(tpw->getParentPhase()); }
   }
-  else if(dialog.getPhaseType() == DREAM3D::PhaseType::MatrixPhase)
+  else if(dialog.getPhaseType() == SIMPL::PhaseType::MatrixPhase)
   {
     //    MatrixPhaseWidget* mpw = qobject_cast<MatrixPhaseWidget*>(sgwidget);
   }
-  else if(dialog.getPhaseType() == DREAM3D::PhaseType::BoundaryPhase)
+  else if(dialog.getPhaseType() == SIMPL::PhaseType::BoundaryPhase)
   {
     //    BoundaryPhaseWidget* bpw = qobject_cast<BoundaryPhaseWidget*>(sgwidget);
   }
   int r = dialog.exec();
   if(r == QDialog::Accepted)
   {
-    if(dialog.getPhaseType() == DREAM3D::PhaseType::PrimaryPhase)
+    if(dialog.getPhaseType() == SIMPL::PhaseType::PrimaryPhase)
     {
       PrimaryPhaseWidget* ppw = qobject_cast<PrimaryPhaseWidget*>(sgwidget);
       ppw->setCrystalStructure(dialog.getCrystalStructure());
@@ -353,7 +353,7 @@ void StatsGeneratorUI::on_editPhase_clicked()
       setWindowModified(true);
       ppw->updatePlots();
     }
-    if(dialog.getPhaseType() == DREAM3D::PhaseType::PrecipitatePhase)
+    if(dialog.getPhaseType() == SIMPL::PhaseType::PrecipitatePhase)
     {
       PrecipitatePhaseWidget* ppw = qobject_cast<PrecipitatePhaseWidget*>(sgwidget);
       ppw->setCrystalStructure(dialog.getCrystalStructure());
@@ -364,7 +364,7 @@ void StatsGeneratorUI::on_editPhase_clicked()
       setWindowModified(true);
       ppw->updatePlots();
     }
-    if(dialog.getPhaseType() == DREAM3D::PhaseType::TransformationPhase)
+    if(dialog.getPhaseType() == SIMPL::PhaseType::TransformationPhase)
     {
       TransformationPhaseWidget* tpw = qobject_cast<TransformationPhaseWidget*>(sgwidget);
       tpw->setCrystalStructure(dialog.getCrystalStructure());
@@ -375,7 +375,7 @@ void StatsGeneratorUI::on_editPhase_clicked()
       setWindowModified(true);
       tpw->updatePlots();
     }
-    if(dialog.getPhaseType() == DREAM3D::PhaseType::MatrixPhase)
+    if(dialog.getPhaseType() == SIMPL::PhaseType::MatrixPhase)
     {
       MatrixPhaseWidget* mpw = qobject_cast<MatrixPhaseWidget*>(sgwidget);
       mpw->setCrystalStructure(dialog.getCrystalStructure());
@@ -384,7 +384,7 @@ void StatsGeneratorUI::on_editPhase_clicked()
       QString cName = mpw->getComboString();
       setWindowModified(true);
     }
-    if(dialog.getPhaseType() == DREAM3D::PhaseType::BoundaryPhase)
+    if(dialog.getPhaseType() == SIMPL::PhaseType::BoundaryPhase)
     {
       BoundaryPhaseWidget* bpw = qobject_cast<BoundaryPhaseWidget*>(sgwidget);
       bpw->setCrystalStructure(dialog.getCrystalStructure());
@@ -651,24 +651,24 @@ void StatsGeneratorUI::on_actionSave_triggered()
 
   int nPhases = phaseTabs->count() + 1;
   DataContainerArray::Pointer dca = DataContainerArray::New();
-  DataContainer::Pointer m = DataContainer::New(DREAM3D::Defaults::StatsGenerator);
+  DataContainer::Pointer m = DataContainer::New(SIMPL::Defaults::StatsGenerator);
   dca->addDataContainer(m);
   QVector<size_t> tDims(1, nPhases);
-  AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::AttributeMatrixType::CellEnsemble);
-  m->addAttributeMatrix(DREAM3D::Defaults::CellEnsembleAttributeMatrixName, cellEnsembleAttrMat);
+  AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::AttributeMatrixType::CellEnsemble);
+  m->addAttributeMatrix(SIMPL::Defaults::CellEnsembleAttributeMatrixName, cellEnsembleAttrMat);
 
   StatsDataArray::Pointer statsDataArray = StatsDataArray::New();
   statsDataArray->resize(nPhases);
-  cellEnsembleAttrMat->addAttributeArray(DREAM3D::EnsembleData::Statistics, statsDataArray);
+  cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::Statistics, statsDataArray);
 
   QVector<size_t> cDims(1, 1);
-  UInt32ArrayType::Pointer crystalStructures = UInt32ArrayType::CreateArray(tDims, cDims, DREAM3D::EnsembleData::CrystalStructures);
+  UInt32ArrayType::Pointer crystalStructures = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::CrystalStructures);
   crystalStructures->setValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
-  cellEnsembleAttrMat->addAttributeArray(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
+  cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::CrystalStructures, crystalStructures);
 
-  UInt32ArrayType::Pointer phaseTypes = UInt32ArrayType::CreateArray(tDims, cDims, DREAM3D::EnsembleData::PhaseTypes);
-  phaseTypes->setValue(0, DREAM3D::PhaseType::UnknownPhaseType);
-  cellEnsembleAttrMat->addAttributeArray(DREAM3D::EnsembleData::PhaseTypes, phaseTypes);
+  UInt32ArrayType::Pointer phaseTypes = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::PhaseTypes);
+  phaseTypes->setValue(0, SIMPL::PhaseType::UnknownPhaseType);
+  cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::PhaseTypes, phaseTypes);
 
   // Loop on all the phases
 
@@ -676,27 +676,27 @@ void StatsGeneratorUI::on_actionSave_triggered()
   {
     SGWidget* sgwidget = qobject_cast<SGWidget*>(phaseTabs->widget(i));
     sgwidget->setTotalPhaseFraction(phaseFractionTotal);
-    if(sgwidget->getPhaseType() == DREAM3D::PhaseType::PrimaryPhase)
+    if(sgwidget->getPhaseType() == SIMPL::PhaseType::PrimaryPhase)
     {
       PrimaryStatsData::Pointer data = PrimaryStatsData::New();
       statsDataArray->setStatsData(i + 1, data);
     }
-    if(sgwidget->getPhaseType() == DREAM3D::PhaseType::PrecipitatePhase)
+    if(sgwidget->getPhaseType() == SIMPL::PhaseType::PrecipitatePhase)
     {
       PrecipitateStatsData::Pointer data = PrecipitateStatsData::New();
       statsDataArray->setStatsData(i + 1, data);
     }
-    if(sgwidget->getPhaseType() == DREAM3D::PhaseType::TransformationPhase)
+    if(sgwidget->getPhaseType() == SIMPL::PhaseType::TransformationPhase)
     {
       TransformationStatsData::Pointer data = TransformationStatsData::New();
       statsDataArray->setStatsData(i + 1, data);
     }
-    if(sgwidget->getPhaseType() == DREAM3D::PhaseType::MatrixPhase)
+    if(sgwidget->getPhaseType() == SIMPL::PhaseType::MatrixPhase)
     {
       MatrixStatsData::Pointer data = MatrixStatsData::New();
       statsDataArray->setStatsData(i + 1, data);
     }
-    if(sgwidget->getPhaseType() == DREAM3D::PhaseType::BoundaryPhase)
+    if(sgwidget->getPhaseType() == SIMPL::PhaseType::BoundaryPhase)
     {
       BoundaryStatsData::Pointer data = BoundaryStatsData::New();
       statsDataArray->setStatsData(i + 1, data);
@@ -822,11 +822,11 @@ int StatsGeneratorUI::openFile(QString h5file)
   phaseTabs->clear();
 
   DataContainerArray::Pointer dca = DataContainerArray::New();
-  DataContainer::Pointer m = DataContainer::New(DREAM3D::Defaults::StatsGenerator);
+  DataContainer::Pointer m = DataContainer::New(SIMPL::Defaults::StatsGenerator);
   dca->addDataContainer(m);
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::AttributeMatrixType::CellEnsemble);
-  m->addAttributeMatrix(DREAM3D::Defaults::CellEnsembleAttributeMatrixName, cellEnsembleAttrMat);
+  AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::AttributeMatrixType::CellEnsemble);
+  m->addAttributeMatrix(SIMPL::Defaults::CellEnsembleAttributeMatrixName, cellEnsembleAttrMat);
 
   hid_t fileId = QH5Utilities::openFile(h5file, true); // Open the file Read Only
   if(fileId < 0)
@@ -837,31 +837,31 @@ int StatsGeneratorUI::openFile(QString h5file)
   }
   // This will make sure if we return early from this method that the HDF5 File is properly closed.
   HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
-  hid_t dcaGid = H5Gopen(fileId, DREAM3D::StringConstants::DataContainerGroupName.toLatin1().constData(), 0);
+  hid_t dcaGid = H5Gopen(fileId, SIMPL::StringConstants::DataContainerGroupName.toLatin1().constData(), 0);
   scopedFileSentinel.addGroupId(&dcaGid);
 
-  hid_t dcGid = H5Gopen(dcaGid, DREAM3D::Defaults::StatsGenerator.toLatin1().constData(), 0);
+  hid_t dcGid = H5Gopen(dcaGid, SIMPL::Defaults::StatsGenerator.toLatin1().constData(), 0);
   if(dcGid < 0)
   {
     QString title = QObject::tr("Error Opening Data Container");
-    QString msg = QObject::tr("Error opening default Data Container with name '%1'").arg(DREAM3D::Defaults::StatsGenerator);
+    QString msg = QObject::tr("Error opening default Data Container with name '%1'").arg(SIMPL::Defaults::StatsGenerator);
     QMessageBox::critical(this, title, msg, QMessageBox::Ok, QMessageBox::Ok);
     return -4;
   }
   scopedFileSentinel.addGroupId(&dcGid);
-  hid_t amGid = H5Gopen(dcGid, DREAM3D::Defaults::CellEnsembleAttributeMatrixName.toLatin1().constData(), 0);
+  hid_t amGid = H5Gopen(dcGid, SIMPL::Defaults::CellEnsembleAttributeMatrixName.toLatin1().constData(), 0);
   scopedFileSentinel.addGroupId(&amGid);
 
 
   // We need to read one of the arrays to get the number of phases so that we can resize our attributeMatrix
-  UInt32ArrayType::Pointer phases = UInt32ArrayType::CreateArray(1, DREAM3D::EnsembleData::PhaseTypes);
+  UInt32ArrayType::Pointer phases = UInt32ArrayType::CreateArray(1, SIMPL::EnsembleData::PhaseTypes);
   int err = phases->readH5Data(amGid);
   if (err < 0)
   {
 
     QString title = QObject::tr("Error Opening DataArray");
-    QString msg = QObject::tr("Error opening 'PhaseTypes' data array at location '%1/%2/%3/%4'").arg(DREAM3D::StringConstants::DataContainerGroupName)
-                  .arg(DREAM3D::Defaults::StatsGenerator).arg(DREAM3D::Defaults::CellEnsembleAttributeMatrixName).arg(DREAM3D::EnsembleData::PhaseTypes);
+    QString msg = QObject::tr("Error opening 'PhaseTypes' data array at location '%1/%2/%3/%4'").arg(SIMPL::StringConstants::DataContainerGroupName)
+                  .arg(SIMPL::Defaults::StatsGenerator).arg(SIMPL::Defaults::CellEnsembleAttributeMatrixName).arg(SIMPL::EnsembleData::PhaseTypes);
     QMessageBox::critical(this, title, msg, QMessageBox::Ok, QMessageBox::Ok);
     return -4;
   }
@@ -879,7 +879,7 @@ int StatsGeneratorUI::openFile(QString h5file)
   progress.setWindowModality(Qt::WindowModal);
 
 
-  IDataArray::Pointer iDataArray = cellEnsembleAttrMat->getAttributeArray(DREAM3D::EnsembleData::PhaseTypes);
+  IDataArray::Pointer iDataArray = cellEnsembleAttrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
   unsigned int* phaseTypes = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
 
   // We should iterate on all the phases here to start setting data and creating
@@ -893,35 +893,35 @@ int StatsGeneratorUI::openFile(QString h5file)
       return -5;
     }
 
-    if(phaseTypes[phase] == DREAM3D::PhaseType::BoundaryPhase)
+    if(phaseTypes[phase] == SIMPL::PhaseType::BoundaryPhase)
     {
       progress.setLabelText("Opening Boundaray Phase...");
       BoundaryPhaseWidget* w = new BoundaryPhaseWidget(this);
       phaseTabs->addTab(w, w->getTabTitle());
       w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
     }
-    else if(phaseTypes[phase] == DREAM3D::PhaseType::MatrixPhase)
+    else if(phaseTypes[phase] == SIMPL::PhaseType::MatrixPhase)
     {
       progress.setLabelText("Opening Matrix Phase...");
       MatrixPhaseWidget* w = new MatrixPhaseWidget(this);
       phaseTabs->addTab(w, w->getTabTitle());
       w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
     }
-    if(phaseTypes[phase] == DREAM3D::PhaseType::PrecipitatePhase)
+    if(phaseTypes[phase] == SIMPL::PhaseType::PrecipitatePhase)
     {
       progress.setLabelText("Opening Precipitate Phase...");
       PrecipitatePhaseWidget* w = new PrecipitatePhaseWidget(this);
       phaseTabs->addTab(w, w->getTabTitle());
       w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
     }
-    if(phaseTypes[phase] == DREAM3D::PhaseType::PrimaryPhase)
+    if(phaseTypes[phase] == SIMPL::PhaseType::PrimaryPhase)
     {
       progress.setLabelText("Opening Primary Phase...");
       PrimaryPhaseWidget* w = new PrimaryPhaseWidget(this);
       phaseTabs->addTab(w, w->getTabTitle());
       w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
     }
-    if(phaseTypes[phase] == DREAM3D::PhaseType::TransformationPhase)
+    if(phaseTypes[phase] == SIMPL::PhaseType::TransformationPhase)
     {
       progress.setLabelText("Opening Transformation Phase...");
       TransformationPhaseWidget* w = new TransformationPhaseWidget(this);

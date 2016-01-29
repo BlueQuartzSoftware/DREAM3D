@@ -56,8 +56,8 @@
 // -----------------------------------------------------------------------------
 EstablishShapeTypes::EstablishShapeTypes() :
   AbstractFilter(),
-  m_InputPhaseTypesArrayPath(DREAM3D::Defaults::StatsGenerator, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::PhaseTypes),
-  m_ShapeTypesArrayName(DREAM3D::EnsembleData::ShapeTypes),
+  m_InputPhaseTypesArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::PhaseTypes),
+  m_ShapeTypesArrayName(SIMPL::EnsembleData::ShapeTypes),
   m_PhaseTypes(NULL),
   m_ShapeTypes(NULL)
 {
@@ -79,10 +79,10 @@ void EstablishShapeTypes::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::UInt32, 1, DREAM3D::AttributeMatrixType::CellEnsemble, DREAM3D::Defaults::AnyGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
     QVector<uint32_t> geomTypes;
-    geomTypes.push_back(DREAM3D::GeometryType::ImageGeometry);
-    geomTypes.push_back(DREAM3D::GeometryType::UnknownGeometry);
+    geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
+    geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
     req.dcGeometryTypes = geomTypes;
     parameters.push_back(DataArraySelectionFilterParameter::New("Phase Types", "InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath(), FilterParameter::RequiredArray, req));
   }
@@ -201,8 +201,8 @@ int EstablishShapeTypes::getPhaseCount()
     qDebug() << "Name" << inputAttrMat->getName();
   }
 
-  if (inputAttrMat->getType() < DREAM3D::AttributeMatrixType::VertexEnsemble
-      || inputAttrMat->getType() > DREAM3D::AttributeMatrixType::CellEnsemble )
+  if (inputAttrMat->getType() < SIMPL::AttributeMatrixType::VertexEnsemble
+      || inputAttrMat->getType() > SIMPL::AttributeMatrixType::CellEnsemble )
   {
     return 0;
   }
@@ -260,13 +260,13 @@ const QString EstablishShapeTypes::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString EstablishShapeTypes::getGroupName()
-{return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
+{return SIMPL::FilterGroups::SyntheticBuildingFilters;}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString EstablishShapeTypes::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::GenerationFilters; }
+{ return SIMPL::FilterSubGroups::GenerationFilters; }
 
 // -----------------------------------------------------------------------------
 //

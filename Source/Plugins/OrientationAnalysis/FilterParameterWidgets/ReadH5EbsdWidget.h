@@ -46,10 +46,10 @@
 #include "EbsdLib/EbsdConstants.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-
-#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
-#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
-#include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
+#include "SIMPLib/FilterParameters/AxisAngleInput.h"
+#include "SIMPLViewWidgetsLib/SIMPLViewWidgetsLib.h"
+#include "SIMPLViewWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+#include "SIMPLViewWidgetsLib/Widgets/PipelineFilterWidget.h"
 
 #include "OrientationAnalysis/ui_ReadH5EbsdWidget.h"
 

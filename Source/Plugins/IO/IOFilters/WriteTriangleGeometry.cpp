@@ -321,14 +321,14 @@ const QString WriteTriangleGeometry::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString WriteTriangleGeometry::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString WriteTriangleGeometry::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::OutputFilters; }
+{ return SIMPL::FilterSubGroups::OutputFilters; }
 
 
 // -----------------------------------------------------------------------------

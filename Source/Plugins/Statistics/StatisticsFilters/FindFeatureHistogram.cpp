@@ -351,14 +351,14 @@ const QString FindFeatureHistogram::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FindFeatureHistogram::getGroupName()
-{ return DREAM3D::FilterGroups::StatisticsFilters; }
+{ return SIMPL::FilterGroups::StatisticsFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindFeatureHistogram::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
+{ return SIMPL::FilterSubGroups::EnsembleStatsFilters; }
 
 
 // -----------------------------------------------------------------------------

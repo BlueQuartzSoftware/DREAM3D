@@ -40,7 +40,7 @@
 #include "SIMPLib/Geometry/TriangleGeom.h"
 
 
-namespace SM = DREAM3D::SurfaceMesh;
+namespace SM = SIMPL::SurfaceMesh;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

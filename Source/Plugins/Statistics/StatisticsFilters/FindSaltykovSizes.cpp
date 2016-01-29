@@ -57,8 +57,8 @@
 // -----------------------------------------------------------------------------
 FindSaltykovSizes::FindSaltykovSizes() :
   AbstractFilter(),
-  m_EquivalentDiametersArrayPath(DREAM3D::FeatureData::EquivalentDiameters),
-  m_SaltykovEquivalentDiametersArrayPath(DREAM3D::FeatureData::SaltykovEquivalentDiameters),
+  m_EquivalentDiametersArrayPath(SIMPL::FeatureData::EquivalentDiameters),
+  m_SaltykovEquivalentDiametersArrayPath(SIMPL::FeatureData::SaltykovEquivalentDiameters),
   m_EquivalentDiameters(NULL),
   m_SaltykovEquivalentDiameters(NULL)
 {
@@ -450,14 +450,14 @@ const QString FindSaltykovSizes::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FindSaltykovSizes::getGroupName()
-{ return DREAM3D::FilterGroups::StatisticsFilters; }
+{ return SIMPL::FilterGroups::StatisticsFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindSaltykovSizes::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::MorphologicalFilters; }
+{ return SIMPL::FilterSubGroups::MorphologicalFilters; }
 
 
 // -----------------------------------------------------------------------------

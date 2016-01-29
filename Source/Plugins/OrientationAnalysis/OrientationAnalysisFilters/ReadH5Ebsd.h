@@ -41,6 +41,7 @@
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/StringDataArray.hpp"
+#include "SIMPLib/FilterParameters/AxisAngleInput.h"
 
 #include "EbsdLib/H5EbsdVolumeReader.h"
 
@@ -298,13 +299,13 @@ class ReadH5Ebsd : public AbstractFilter
       }
 
 
-      attrMatrix->addAttributeArray(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
+      attrMatrix->addAttributeArray(SIMPL::EnsembleData::CrystalStructures, crystalStructures);
       m_CrystalStructuresPtr = crystalStructures;
       m_CrystalStructures = crystalStructures->getPointer(0);
-      attrMatrix->addAttributeArray(DREAM3D::EnsembleData::LatticeConstants, latticeConstants);
+      attrMatrix->addAttributeArray(SIMPL::EnsembleData::LatticeConstants, latticeConstants);
       m_LatticeConstantsPtr = latticeConstants;
       m_LatticeConstants = latticeConstants->getPointer(0);
-      attrMatrix->addAttributeArray(DREAM3D::EnsembleData::MaterialName, materialNames);
+      attrMatrix->addAttributeArray(SIMPL::EnsembleData::MaterialName, materialNames);
       m_MaterialNamesPtr = materialNames;
       return 0;
     }

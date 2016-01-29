@@ -59,12 +59,12 @@
 // -----------------------------------------------------------------------------
 UncertainRegularGridSampleSurfaceMesh::UncertainRegularGridSampleSurfaceMesh() :
   SampleSurfaceMesh(),
-  m_DataContainerName(DREAM3D::Defaults::ImageDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_DataContainerName(SIMPL::Defaults::ImageDataContainerName),
+  m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
   m_XPoints(0),
   m_YPoints(0),
   m_ZPoints(0),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
   m_Resolution.x = 1.0f;
@@ -152,7 +152,7 @@ void UncertainRegularGridSampleSurfaceMesh::dataCheck()
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
   if (getErrorCondition() < 0) { return; }
 
-  ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+  ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   m->setGeometry(image);
 
   // Set the Dimensions, Resolution and Origin of the output data container
@@ -164,7 +164,7 @@ void UncertainRegularGridSampleSurfaceMesh::dataCheck()
   tDims[0] = m_XPoints;
   tDims[1] = m_YPoints;
   tDims[2] = m_ZPoints;
-  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
+  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
   if (getErrorCondition() < 0 || NULL == cellAttrMat.get()) { return; }
 
   QVector<size_t> cDims(1, 1);
@@ -296,13 +296,13 @@ const QString UncertainRegularGridSampleSurfaceMesh::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString UncertainRegularGridSampleSurfaceMesh::getGroupName()
-{ return DREAM3D::FilterGroups::SamplingFilters; }
+{ return SIMPL::FilterGroups::SamplingFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString UncertainRegularGridSampleSurfaceMesh::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::ResolutionFilters; }
+{ return SIMPL::FilterSubGroups::ResolutionFilters; }
 
 // -----------------------------------------------------------------------------
 //

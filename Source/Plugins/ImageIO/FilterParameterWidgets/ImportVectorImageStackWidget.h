@@ -50,9 +50,9 @@
 #include "QtSupportLib/SIMPLPluginFrame.h"
 
 
-#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
-#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
-#include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
+#include "SIMPLViewWidgetsLib/SIMPLViewWidgetsLib.h"
+#include "SIMPLViewWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+#include "SIMPLViewWidgetsLib/Widgets/PipelineFilterWidget.h"
 
 
 #include "ui_ImportVectorImageStackWidget.h"

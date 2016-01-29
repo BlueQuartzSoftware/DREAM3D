@@ -636,14 +636,14 @@ const QString NodesTrianglesToVtk::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString NodesTrianglesToVtk::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString NodesTrianglesToVtk::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::OutputFilters; }
+{ return SIMPL::FilterSubGroups::OutputFilters; }
 
 
 // -----------------------------------------------------------------------------

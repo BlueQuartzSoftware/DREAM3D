@@ -74,10 +74,10 @@
 // -----------------------------------------------------------------------------
 InitializeSyntheticVolume::InitializeSyntheticVolume() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::SyntheticVolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_InputStatsArrayPath(DREAM3D::Defaults::StatsGenerator, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::Statistics),
-  m_InputPhaseTypesArrayPath(DREAM3D::Defaults::StatsGenerator, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::PhaseTypes),
+  m_DataContainerName(SIMPL::Defaults::SyntheticVolumeDataContainerName),
+  m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
+  m_InputStatsArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::Statistics),
+  m_InputPhaseTypesArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::PhaseTypes),
   m_EstimateNumberOfFeatures(false),
   m_InputStatsFile(""),
   m_EstimatedPrimaryFeatures("")
@@ -122,18 +122,18 @@ void InitializeSyntheticVolume::setupFilterParameters()
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::StatsDataArray, 1, DREAM3D::AttributeMatrixType::CellEnsemble, DREAM3D::Defaults::AnyGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::StatsDataArray, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
     QVector<uint32_t> geomTypes;
-    geomTypes.push_back(DREAM3D::GeometryType::ImageGeometry);
-    geomTypes.push_back(DREAM3D::GeometryType::UnknownGeometry);
+    geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
+    geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
     req.dcGeometryTypes = geomTypes;
     parameters.push_back(DataArraySelectionFilterParameter::New("Statistics", "InputStatsArrayPath", getInputStatsArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::UInt32, 1, DREAM3D::AttributeMatrixType::CellEnsemble, DREAM3D::Defaults::AnyGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixType::CellEnsemble, SIMPL::Defaults::AnyGeometry);
     QVector<uint32_t> geomTypes;
-    geomTypes.push_back(DREAM3D::GeometryType::ImageGeometry);
-    geomTypes.push_back(DREAM3D::GeometryType::UnknownGeometry);
+    geomTypes.push_back(SIMPL::GeometryType::ImageGeometry);
+    geomTypes.push_back(SIMPL::GeometryType::UnknownGeometry);
     req.dcGeometryTypes = geomTypes;
     parameters.push_back(DataArraySelectionFilterParameter::New("Phase Types", "InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath(), FilterParameter::RequiredArray, req));
   }
@@ -196,7 +196,7 @@ void InitializeSyntheticVolume::dataCheck()
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
 
-  ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+  ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   m->setGeometry(image);
 
   // Sanity Check the Dimensions and Resolution
@@ -217,7 +217,7 @@ void InitializeSyntheticVolume::dataCheck()
   tDims[0] = m_Dimensions.x;
   tDims[1] = m_Dimensions.y;
   tDims[2] = m_Dimensions.z;
-  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
+  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0 && cellAttrMat.get() == NULL) { return; }
 
   QVector<size_t> cDims(1, 1); // This states that we are looking for an array with a single component
@@ -336,7 +336,7 @@ QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3
 
     DataArrayPath dap = getInputPhaseTypesArrayPath();
     // Generate the path to the AttributeMatrix
-    QString hPath = DREAM3D::StringConstants::DataContainerGroupName + "/" + dap.getDataContainerName() + "/" + dap.getAttributeMatrixName();
+    QString hPath = SIMPL::StringConstants::DataContainerGroupName + "/" + dap.getDataContainerName() + "/" + dap.getAttributeMatrixName();
     // Open the AttributeMatrix Group
     hid_t amGid = H5Gopen(fileId, hPath.toLatin1().data(), H5P_DEFAULT );
     scopedFileSentinel.addGroupId(&amGid);
@@ -367,7 +367,7 @@ QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3
 
   for (size_t i = 1; i < phaseType->getNumberOfTuples(); ++i)
   {
-    if (phaseType->getValue(i) == DREAM3D::PhaseType::PrimaryPhase)
+    if (phaseType->getValue(i) == SIMPL::PhaseType::PrimaryPhase)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       primaryphases.push_back(i);
@@ -410,7 +410,7 @@ QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3
       while (volgood == false)
       {
         volgood = true;
-        if (pp->getFeatureSize_DistType() == DREAM3D::DistributionType::LogNormal)
+        if (pp->getFeatureSize_DistType() == SIMPL::DistributionType::LogNormal)
         {
           float avgdiam = pp->getFeatureSizeDistribution().at(0)->getValue(0);
           float sddiam = pp->getFeatureSizeDistribution().at(1)->getValue(0);
@@ -479,13 +479,13 @@ const QString InitializeSyntheticVolume::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString InitializeSyntheticVolume::getGroupName()
-{return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
+{return SIMPL::FilterGroups::SyntheticBuildingFilters;}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString InitializeSyntheticVolume::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::PackingFilters; }
+{ return SIMPL::FilterSubGroups::PackingFilters; }
 
 // -----------------------------------------------------------------------------
 //

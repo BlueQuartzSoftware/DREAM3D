@@ -102,8 +102,8 @@ void ConvertOrientations::setupFilterParameters()
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    req.daTypes = QVector<QString>(2, DREAM3D::TypeNames::Double);
-    req.daTypes[1] = DREAM3D::TypeNames::Float;
+    req.daTypes = QVector<QString>(2, SIMPL::TypeNames::Double);
+    req.daTypes[1] = SIMPL::TypeNames::Float;
     parameters.push_back(DataArraySelectionFilterParameter::New("Input Orientations", "InputOrientationArrayPath", getInputOrientationArrayPath(), FilterParameter::RequiredArray, req, 0));
   }
 
@@ -333,13 +333,13 @@ const QString ConvertOrientations::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString ConvertOrientations::getGroupName()
-{ return DREAM3D::FilterGroups::OrientationAnalysisFilters; }
+{ return SIMPL::FilterGroups::OrientationAnalysisFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ConvertOrientations::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::ConversionFilters; }
+{ return SIMPL::FilterSubGroups::ConversionFilters; }
 
 // -----------------------------------------------------------------------------
 //

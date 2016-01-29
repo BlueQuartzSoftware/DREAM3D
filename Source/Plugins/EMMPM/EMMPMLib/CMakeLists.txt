@@ -93,46 +93,9 @@ if(BUILD_SHARED_LIBS)
 endif(BUILD_SHARED_LIBS)
 
 
-# Look for our Prerequisite Libraries
-if(NOT DEFINED DREAM3DProj_BINARY_DIR)
+set(EMMPMLib_HDF5_SUPPORT "1")
+option(EMMPMLib_ENABLE_HDF5 "Enable HDF5 Support in the EMMPMLib" ON)
 
-  # ------------------------------------------------------------------------------
-  #  Qt 4 Section
-  # ------------------------------------------------------------------------------
-  # by default only QtCore and QtGui modules are enabled
-  # other modules must be enabled like this:
-  if(WIN32)
-     set(QT_USE_QTMAIN TRUE)
-  ENDif(WIN32)
-
-  # this command finds Qt4 libraries and sets all required variables
-  # note that it's Qt4, not QT4 or qt4
-  FIND_PACKAGE( Qt4 REQUIRED )
-  if(QT4_FOUND)
-     CMP_COPY_QT4_RUNTIME_LIBRARIES( "QtCore")
-     CMP_QT_LIBRARIES_INSTALL_RULES("QtCore" ".")
-  else()
-    message(FATAL_ERROR "Qt version 4.8 Core Library is REQUIRED to build EMMPMLib")
-  endif()
-
-  set(QT_USE_QTCORE "TRUE")
-
-  # ---------- Find Boost Headers/Libraries -----------------------
-  #set(Boost_FIND_REQUIRED FALSE)
-  set(Boost_DEBUG FALSE)
-  set(Boost_USE_MULTITHREADED TRUE)
-  set(Boost_USE_STATIC_LIBS TRUE)
-  set(Boost_ADDITIONAL_VERSIONS 1.55.0)
-  set(Boost_FIND_COMPONENTS "")
-  set(Boost_NO_BOOST_CMAKE 1)
-  FIND_PACKAGE(Boost)
-  INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
-  LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
-
-else()
-  set(EMMPMLib_HDF5_SUPPORT "1")
-  option(EMMPMLib_ENABLE_HDF5 "Enable HDF5 Support in the EMMPMLib" ON)
-endif()
 
 mark_as_advanced(EMMPMLib_HDF5_SUPPORT)
 mark_as_advanced(EMMPMLib_ENABLE_HDF5)
@@ -177,6 +140,9 @@ endif()
 ## able to use an include path like #include "EMMPMLib/foo.h"
 include_directories(${EMMPM_SOURCE_DIR})
 include_directories(${EMMPM_BINARY_DIR})
+include_directories(${SIMPLProj_SOURCE_DIR}/Source)
+include_directories(${SIMPLProj_BINARY_DIR})
+
 
 #-- Include all the Source Files
 include( ${EMMPMLib_SOURCE_DIR}/Common/SourceList.cmake)

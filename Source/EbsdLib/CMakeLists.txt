@@ -152,9 +152,12 @@ configure_file(${EbsdLib_SOURCE_DIR}/EbsdLibConfiguration.h.in
                ${EbsdLib_BINARY_DIR}/${CMP_TOP_HEADER_FILE})
 
 # Setup the Include Directories
-include_directories(${PROJECT_CODE_DIR})
-include_directories(${EbsdLib_BINARY_DIR})
-INCLUDE_DIRECTORIES(${EbsdLib_SOURCE_DIR}/..)
+include_directories(${PROJECT_CODE_DIR} 
+  ${EbsdLib_BINARY_DIR}
+  ${EbsdLib_SOURCE_DIR}/..
+  ${SIMPLProj_SOURCE_DIR}/Source
+  ${SIMPLProj_BINARY_DIR}
+  )
 
 #-- Include all the Source Files
 include( ${EbsdLib_SOURCE_DIR}/TSL/SourceList.cmake)

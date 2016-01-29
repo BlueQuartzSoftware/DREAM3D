@@ -610,7 +610,7 @@ bool OrthoRhombicOps::inUnitTriangle(float eta, float chi)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb OrthoRhombicOps::generateIPFColor(double* eulers, double* refDir, bool convertDegrees)
+SIMPL::Rgb OrthoRhombicOps::generateIPFColor(double* eulers, double* refDir, bool convertDegrees)
 {
   return generateIPFColor(eulers[0], eulers[1], eulers[2], refDir[0], refDir[1], refDir[2], convertDegrees);
 }
@@ -618,7 +618,7 @@ DREAM3D::Rgb OrthoRhombicOps::generateIPFColor(double* eulers, double* refDir, b
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb OrthoRhombicOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, bool degToRad)
+SIMPL::Rgb OrthoRhombicOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, bool degToRad)
 {
   if (degToRad == true)
   {
@@ -713,7 +713,7 @@ DREAM3D::Rgb OrthoRhombicOps::generateIPFColor(double phi1, double phi, double p
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb OrthoRhombicOps::generateRodriguesColor(float r1, float r2, float r3)
+SIMPL::Rgb OrthoRhombicOps::generateRodriguesColor(float r1, float r2, float r3)
 {
   float range1 = 2.0f * OrthoDim1InitValue;
   float range2 = 2.0f * OrthoDim2InitValue;
@@ -912,7 +912,7 @@ UInt8ArrayType::Pointer OrthoRhombicOps::generateIPFTriangleLegend(int imageDim)
   float z1 = 0.0f;
   float denom = 0.0f;
 
-  DREAM3D::Rgb color;
+  SIMPL::Rgb color;
   size_t idx = 0;
   size_t yScanLineIndex = 0; // We use this to control where the data is drawn. Otherwise the image will come out flipped vertically
   // Loop over every pixel in the image and project up to the sphere to get the angle and then figure out the RGB from
@@ -969,7 +969,7 @@ UInt8ArrayType::Pointer OrthoRhombicOps::generateIPFTriangleLegend(int imageDim)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb OrthoRhombicOps::generateMisorientationColor(const QuatF& q, const QuatF& refFrame)
+SIMPL::Rgb OrthoRhombicOps::generateMisorientationColor(const QuatF& q, const QuatF& refFrame)
 {
   Q_ASSERT(false);
 
@@ -1165,7 +1165,7 @@ DREAM3D::Rgb OrthoRhombicOps::generateMisorientationColor(const QuatF& q, const 
   g = 1 - (g + (v - c));
   b = 1 - (b + (v - c));
 
-  DREAM3D::Rgb rgb = RgbColor::dRgb(r * 255, g * 255, b * 255, 0);
+  SIMPL::Rgb rgb = RgbColor::dRgb(r * 255, g * 255, b * 255, 0);
 
   return rgb;
 }

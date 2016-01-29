@@ -65,7 +65,7 @@ AvizoRectilinearCoordinateWriter::AvizoRectilinearCoordinateWriter() :
   m_OutputFile(""),
   m_WriteBinaryFile(false),
   m_WriteFeatureIds(true),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
   setupFilterParameters();
@@ -374,14 +374,14 @@ const QString AvizoRectilinearCoordinateWriter::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString AvizoRectilinearCoordinateWriter::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AvizoRectilinearCoordinateWriter::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::OutputFilters; }
+{ return SIMPL::FilterSubGroups::OutputFilters; }
 
 
 // -----------------------------------------------------------------------------

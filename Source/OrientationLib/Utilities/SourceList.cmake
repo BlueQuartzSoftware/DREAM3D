@@ -33,25 +33,37 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+set(OrientationLib_Utilities_MOC_HDRS
+  ${OrientationLib_SOURCE_DIR}/Utilities/PoleFigureData.h
+)
+
+
 set(OrientationLib_Utilities_HDRS
   ${OrientationLib_SOURCE_DIR}/Utilities/PoleFigureUtilities.h
   ${OrientationLib_SOURCE_DIR}/Utilities/ModifiedLambertProjection.h
   ${OrientationLib_SOURCE_DIR}/Utilities/ModifiedLambertProjectionArray.h
   ${OrientationLib_SOURCE_DIR}/Utilities/ModifiedLambertProjection3D.hpp
-  )
+  ${OrientationLib_SOURCE_DIR}/Utilities/PoleFigureImageUtilities.h
+)
 
 set(OrientationLib_Utilities_SRCS
   ${OrientationLib_SOURCE_DIR}/Utilities/PoleFigureUtilities.cpp
   ${OrientationLib_SOURCE_DIR}/Utilities/ModifiedLambertProjection.cpp
   ${OrientationLib_SOURCE_DIR}/Utilities/ModifiedLambertProjectionArray.cpp
+  ${OrientationLib_SOURCE_DIR}/Utilities/PoleFigureImageUtilities.cpp
+  ${OrientationLib_SOURCE_DIR}/Utilities/PoleFigureData.cpp
 )
+QT5_WRAP_CPP( OrientationLib_Generated_MOC_SRCS ${OrientationLib_Utilities_MOC_HDRS} )
+set_source_files_properties( ${OrientationLib_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
+set_source_files_properties( ${OrientationLib_Generated_MOC_SRCS} PROPERTIES GENERATED TRUE)
+
 
 cmp_IDE_SOURCE_PROPERTIES( "Utilities" "${OrientationLib_Utilities_HDRS}" "${OrientationLib_Utilities_SRCS}" "0")
 if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
-    INSTALL (FILES ${OrientationLib_Utilities_HDRS}
+    INSTALL (FILES ${OrientationLib_Utilities_HDRS} ${OrientationLib_Utilities_MOC_HDRS}
             DESTINATION include/OrientationLib/Utilities
             COMPONENT Headers   )
 endif()
 
-set(OrientationLib_Utilities_HDRS ${OrientationLib_Utilities_HDRS} ${OrientationLib_Utilities_IO_HDRS})
-set(OrientationLib_Utilities_SRCS ${OrientationLib_Utilities_SRCS} ${OrientationLib_Utilities_IO_SRCS})
+set(OrientationLib_Utilities_HDRS ${OrientationLib_Utilities_HDRS} ${OrientationLib_Utilities_MOC_HDRS})
+set(OrientationLib_Utilities_SRCS ${OrientationLib_Utilities_SRCS} ${OrientationLib_Generated_MOC_SRCS})

@@ -98,7 +98,7 @@
 // -----------------------------------------------------------------------------
 PrimaryPhaseWidget::PrimaryPhaseWidget(QWidget* parent) :
   SGWidget(parent),
-  m_PhaseType(DREAM3D::PhaseType::PrimaryPhase),
+  m_PhaseType(SIMPL::PhaseType::PrimaryPhase),
   m_PhaseFraction(1.0),
   m_TotalPhaseFraction(1.0),
   m_DataHasBeenGenerated(false),
@@ -156,10 +156,10 @@ AbstractMicrostructurePresetFactory::Pointer RegisterPresetFactory(QComboBox* mi
 // -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::setupGui()
 {
-  distributionTypeCombo->addItem(DREAM3D::StringConstants::BetaDistribution.toLatin1().data());
-  distributionTypeCombo->addItem(DREAM3D::StringConstants::LogNormalDistribution.toLatin1().data());
-  distributionTypeCombo->addItem(DREAM3D::StringConstants::PowerLawDistribution.toLatin1().data());
-  distributionTypeCombo->setCurrentIndex(DREAM3D::DistributionType::LogNormal);
+  distributionTypeCombo->addItem(SIMPL::StringConstants::BetaDistribution.toLatin1().data());
+  distributionTypeCombo->addItem(SIMPL::StringConstants::LogNormalDistribution.toLatin1().data());
+  distributionTypeCombo->addItem(SIMPL::StringConstants::PowerLawDistribution.toLatin1().data());
+  distributionTypeCombo->setCurrentIndex(SIMPL::DistributionType::LogNormal);
   // Turn off all the plot widgets
   setTabsPlotTabsEnabled(false);
 
@@ -215,8 +215,8 @@ void PrimaryPhaseWidget::setupGui()
   w->setPlotTitle(QString("Size Vs. Omega 3"));
   w->setXAxisName(QString("Omega 3"));
   w->setYAxisName(QString("Frequency"));
-  w->setDistributionType(DREAM3D::DistributionType::Beta);
-  w->setStatisticsType(DREAM3D::StatisticsType::Feature_SizeVOmega3);
+  w->setDistributionType(SIMPL::DistributionType::Beta);
+  w->setStatisticsType(SIMPL::StatisticsType::Feature_SizeVOmega3);
   w->blockDistributionTypeChanges(true);
   w->setRowOperationEnabled(false);
   w->setMu(mu);
@@ -232,8 +232,8 @@ void PrimaryPhaseWidget::setupGui()
   w->setPlotTitle(QString("B/A Shape Distribution"));
   w->setXAxisName(QString("B/A"));
   w->setYAxisName(QString("Frequency"));
-  w->setDistributionType(DREAM3D::DistributionType::Beta);
-  w->setStatisticsType(DREAM3D::StatisticsType::Feature_SizeVBoverA);
+  w->setDistributionType(SIMPL::DistributionType::Beta);
+  w->setStatisticsType(SIMPL::StatisticsType::Feature_SizeVBoverA);
   w->blockDistributionTypeChanges(true);
   w->setRowOperationEnabled(false);
   w->setMu(mu);
@@ -248,8 +248,8 @@ void PrimaryPhaseWidget::setupGui()
   w->setPlotTitle(QString("C/A Shape Distribution"));
   w->setXAxisName(QString("C/A"));
   w->setYAxisName(QString("Frequency"));
-  w->setDistributionType(DREAM3D::DistributionType::Beta);
-  w->setStatisticsType(DREAM3D::StatisticsType::Feature_SizeVCoverA);
+  w->setDistributionType(SIMPL::DistributionType::Beta);
+  w->setStatisticsType(SIMPL::StatisticsType::Feature_SizeVCoverA);
   w->blockDistributionTypeChanges(true);
   w->setRowOperationEnabled(false);
   w->setMu(mu);
@@ -264,8 +264,8 @@ void PrimaryPhaseWidget::setupGui()
   w->setPlotTitle(QString("Neighbors Distributions"));
   w->setXAxisName(QString("Number of Features (within 1 diameter)"));
   w->setYAxisName(QString("Frequency"));
-  w->setDistributionType(DREAM3D::DistributionType::LogNormal);
-  w->setStatisticsType(DREAM3D::StatisticsType::Feature_SizeVNeighbors);
+  w->setDistributionType(SIMPL::DistributionType::LogNormal);
+  w->setStatisticsType(SIMPL::StatisticsType::Feature_SizeVNeighbors);
   w->blockDistributionTypeChanges(true);
   w->setRowOperationEnabled(false);
   w->setMu(mu);
@@ -851,15 +851,15 @@ int PrimaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
   float stepSize = binStep;
 
   // Get pointers
-  IDataArray::Pointer iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::CrystalStructures);
+  IDataArray::Pointer iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::CrystalStructures);
   unsigned int* crystalStructures = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
-  iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::PhaseTypes);
+  iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
   unsigned int* phaseTypes = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
 
   crystalStructures[m_PhaseIndex] = m_CrystalStructure;
   phaseTypes[m_PhaseIndex] = m_PhaseType;
 
-  StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(attrMat->getAttributeArray(DREAM3D::EnsembleData::Statistics).get());
+  StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics).get());
   if (NULL != statsDataArray)
   {
     StatsData::Pointer statsData = statsDataArray->getStatsData(m_PhaseIndex);
@@ -873,14 +873,14 @@ int PrimaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
     // Feature Size Distribution
     {
       VectorOfFloatArray data;
-      FloatArrayType::Pointer d1 = FloatArrayType::CreateArray(1, DREAM3D::StringConstants::Average);
-      FloatArrayType::Pointer d2 = FloatArrayType::CreateArray(1, DREAM3D::StringConstants::StandardDeviation);
+      FloatArrayType::Pointer d1 = FloatArrayType::CreateArray(1, SIMPL::StringConstants::Average);
+      FloatArrayType::Pointer d2 = FloatArrayType::CreateArray(1, SIMPL::StringConstants::StandardDeviation);
       data.push_back(d1);
       data.push_back(d2);
       d1->setValue(0, avglogdiam);
       d2->setValue(0, sdlogdiam);
       primaryStatsData->setFeatureSizeDistribution(data);
-      primaryStatsData->setFeatureSize_DistType(DREAM3D::DistributionType::LogNormal);
+      primaryStatsData->setFeatureSize_DistType(SIMPL::DistributionType::LogNormal);
     }
 
     // Now that we have bins and feature sizes, push those to the other plot widgets
@@ -905,9 +905,9 @@ int PrimaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
       primaryStatsData->setNeighbors_DistType(m_NeighborPlot->getDistributionType());
     }
 
-    m_ODFWidget->getOrientationData(primaryStatsData, DREAM3D::PhaseType::PrimaryPhase);
+    m_ODFWidget->getOrientationData(primaryStatsData, SIMPL::PhaseType::PrimaryPhase);
 
-    err = m_AxisODFWidget->getOrientationData(primaryStatsData, DREAM3D::PhaseType::PrimaryPhase);
+    err = m_AxisODFWidget->getOrientationData(primaryStatsData, SIMPL::PhaseType::PrimaryPhase);
   }
   return retErr;
 }
@@ -926,15 +926,15 @@ void PrimaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int 
 
   setPhaseIndex(index);
 
-  IDataArray::Pointer iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::CrystalStructures);
+  IDataArray::Pointer iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::CrystalStructures);
   unsigned int* attributeArray = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
   m_CrystalStructure = attributeArray[index];
 
-  iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::PhaseTypes);
+  iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
   attributeArray = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
   m_PhaseType = attributeArray[index];
 
-  iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::Statistics);
+  iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics);
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(iDataArray.get());
   if (statsDataArray == NULL)
   {
@@ -1018,10 +1018,10 @@ void PrimaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int 
 
 
   // Set the ODF Data
-  m_ODFWidget->extractStatsData(index, primaryStatsData, DREAM3D::PhaseType::PrimaryPhase);
+  m_ODFWidget->extractStatsData(index, primaryStatsData, SIMPL::PhaseType::PrimaryPhase);
 
   // Set the Axis ODF Data
-  m_AxisODFWidget->extractStatsData(index, primaryStatsData, DREAM3D::PhaseType::PrimaryPhase);
+  m_AxisODFWidget->extractStatsData(index, primaryStatsData, SIMPL::PhaseType::PrimaryPhase);
 
   // Enable all the tabs
   setTabsPlotTabsEnabled(true);

@@ -56,7 +56,7 @@
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"
 #include "SIMPLib/StatsData/TransformationStatsData.h"
 
-#include "QtSupportLib/PoleFigureImageUtilities.h"
+#include "OrientationLib/Utilities/PoleFigureImageUtilities.h"
 
 class SGODFTableModel;
 class StatsGenMDFWidget;

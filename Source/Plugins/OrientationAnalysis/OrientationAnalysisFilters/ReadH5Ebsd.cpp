@@ -65,21 +65,21 @@
 // -----------------------------------------------------------------------------
 ReadH5Ebsd::ReadH5Ebsd() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::ImageDataContainerName),
-  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_DataContainerName(SIMPL::Defaults::ImageDataContainerName),
+  m_CellEnsembleAttributeMatrixName(SIMPL::Defaults::CellEnsembleAttributeMatrixName),
+  m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
   m_PhaseNameArrayName(""),
-  m_MaterialNameArrayName(DREAM3D::EnsembleData::MaterialName),
+  m_MaterialNameArrayName(SIMPL::EnsembleData::MaterialName),
   m_InputFile(""),
   m_ZStartIndex(0),
   m_ZEndIndex(0),
   m_UseTransformations(true),
-  m_RefFrameZDir(Ebsd::RefFrameZDir::UnknownRefFrameZDirection),
+  m_RefFrameZDir(SIMPL::RefFrameZDir::UnknownRefFrameZDirection),
   m_Manufacturer(Ebsd::UnknownManufacturer),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_LatticeConstantsArrayName(DREAM3D::EnsembleData::LatticeConstants),
-  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+  m_CrystalStructuresArrayName(SIMPL::EnsembleData::CrystalStructures),
+  m_LatticeConstantsArrayName(SIMPL::EnsembleData::LatticeConstants),
+  m_CellPhasesArrayName(SIMPL::CellData::Phases),
+  m_CellEulerAnglesArrayName(SIMPL::CellData::EulerAngles),
   m_CellPhases(NULL),
   m_CellEulerAngles(NULL),
   m_CrystalStructures(NULL),
@@ -308,14 +308,14 @@ void ReadH5Ebsd::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   QVector<size_t> tDims(3, 0);
-  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
+  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
   tDims.resize(1);
   tDims[0] = 0;
-  AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellEnsemble);
+  AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellEnsemble);
   if(getErrorCondition() < 0) { return; }
 
-  ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+  ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   m->setGeometry(image);
 
   volumeInfoReader->setFileName(m_InputFile);
@@ -404,7 +404,7 @@ void ReadH5Ebsd::dataCheck()
   }
 
   // Only read these arrays if the user wants them
-  if (m_SelectedArrayNames.contains(DREAM3D::CellData::EulerAngles) )
+  if (m_SelectedArrayNames.contains(SIMPL::CellData::EulerAngles) )
   {
     cDims[0] = 3;
     tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getCellEulerAnglesArrayName() );
@@ -414,7 +414,7 @@ void ReadH5Ebsd::dataCheck()
   }
 
   // Only read the phases if the user wants it.
-  if (m_SelectedArrayNames.contains(DREAM3D::CellData::Phases) )
+  if (m_SelectedArrayNames.contains(SIMPL::CellData::Phases) )
   {
     cDims[0] = 1;
     tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getCellPhasesArrayName() );
@@ -794,9 +794,9 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
   if (m_SelectedArrayNames.find(m_CellPhasesArrayName) != m_SelectedArrayNames.end() )
   {
     phasePtr = reinterpret_cast<int32_t*>(ebsdReader->getPointerByName(Ebsd::Ang::PhaseData));
-    iArray = Int32ArrayType::CreateArray(tDims, cDims, DREAM3D::CellData::Phases);
+    iArray = Int32ArrayType::CreateArray(tDims, cDims, SIMPL::CellData::Phases);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    cellAttrMatrix->addAttributeArray(DREAM3D::CellData::Phases, iArray);
+    cellAttrMatrix->addAttributeArray(SIMPL::CellData::Phases, iArray);
   }
 
   if (m_SelectedArrayNames.find(m_CellEulerAnglesArrayName) != m_SelectedArrayNames.end() )
@@ -805,7 +805,7 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
     f2 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::Phi));
     f3 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::Phi2));
     cDims[0] = 3;
-    fArray = FloatArrayType::CreateArray(tDims, cDims, DREAM3D::CellData::EulerAngles);
+    fArray = FloatArrayType::CreateArray(tDims, cDims, SIMPL::CellData::EulerAngles);
     float* cellEulerAngles = fArray->getPointer(0);
 
     for (size_t i = 0; i < totalPoints; i++)
@@ -814,7 +814,7 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
       cellEulerAngles[3 * i + 1] = f2[i];
       cellEulerAngles[3 * i + 2] = f3[i];
     }
-    cellAttrMatrix->addAttributeArray(DREAM3D::CellData::EulerAngles, fArray);
+    cellAttrMatrix->addAttributeArray(SIMPL::CellData::EulerAngles, fArray);
   }
 
   // Reset this back to 1 for the rest of the arrays
@@ -893,9 +893,9 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
   size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
   QVector<size_t> cDims(1, 1);
   phasePtr = reinterpret_cast<int32_t*>(ebsdReader->getPointerByName(Ebsd::Ctf::Phase));
-  iArray = Int32ArrayType::CreateArray(tDims, cDims, DREAM3D::CellData::Phases);
+  iArray = Int32ArrayType::CreateArray(tDims, cDims, SIMPL::CellData::Phases);
   ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-  cellAttrMatrix->addAttributeArray(DREAM3D::CellData::Phases, iArray);
+  cellAttrMatrix->addAttributeArray(SIMPL::CellData::Phases, iArray);
 
   if (m_SelectedArrayNames.find(m_CellEulerAnglesArrayName) != m_SelectedArrayNames.end() )
   {
@@ -904,7 +904,7 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
     f2 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ctf::Euler2));
     f3 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ctf::Euler3));
     cDims[0] = 3;
-    fArray = FloatArrayType::CreateArray(tDims, cDims, DREAM3D::CellData::EulerAngles);
+    fArray = FloatArrayType::CreateArray(tDims, cDims, SIMPL::CellData::EulerAngles);
     float* cellEulerAngles = fArray->getPointer(0);
     int32_t* cellPhases = iArray->getPointer(0);
 
@@ -916,7 +916,7 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
       if(m_CrystalStructures[cellPhases[i]] == Ebsd::CrystalStructure::Hexagonal_High)
       {cellEulerAngles[3 * i + 2] = cellEulerAngles[3 * i + 2] + (30.0);}
     }
-    cellAttrMatrix->addAttributeArray(DREAM3D::CellData::EulerAngles, fArray);
+    cellAttrMatrix->addAttributeArray(SIMPL::CellData::EulerAngles, fArray);
   }
 
   cDims[0] = 1;
@@ -1032,13 +1032,13 @@ const QString ReadH5Ebsd::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString ReadH5Ebsd::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ReadH5Ebsd::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::InputFilters; }
+{ return SIMPL::FilterSubGroups::InputFilters; }
 
 // -----------------------------------------------------------------------------
 //

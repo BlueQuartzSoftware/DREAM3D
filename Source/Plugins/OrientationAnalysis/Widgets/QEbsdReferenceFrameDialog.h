@@ -46,6 +46,8 @@ class QGraphicsPixmapItem;
 
 #include "ui_QEbsdReferenceFrameDialog.h"
 
+#include "SIMPLib/FilterParameters/AxisAngleInput.h"
+
 #include "EbsdLib/EbsdConstants.h"
 
 /**

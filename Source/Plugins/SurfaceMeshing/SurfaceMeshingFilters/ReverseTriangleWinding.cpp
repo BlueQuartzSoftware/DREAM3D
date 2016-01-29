@@ -101,7 +101,7 @@ class ReverseWindingImpl
 // -----------------------------------------------------------------------------
 ReverseTriangleWinding::ReverseTriangleWinding() :
   SurfaceMeshFilter(),
-  m_SurfaceDataContainerName(DREAM3D::Defaults::TriangleDataContainerName)
+  m_SurfaceDataContainerName(SIMPL::Defaults::TriangleDataContainerName)
 {
   setupFilterParameters();
 }
@@ -121,7 +121,7 @@ void ReverseTriangleWinding::setupFilterParameters()
   FilterParameterVector parameters;
   {
     DataContainerSelectionFilterParameter::RequirementType req;
-    req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::TriangleGeometry);
+    req.dcGeometryTypes = QVector<unsigned int>(1, SIMPL::GeometryType::TriangleGeometry);
     parameters.push_back(DataContainerSelectionFilterParameter::New("Data Container", "SurfaceDataContainerName", getSurfaceDataContainerName(), FilterParameter::RequiredArray, req));
   }
   setFilterParameters(parameters);
@@ -248,13 +248,13 @@ const QString ReverseTriangleWinding::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString ReverseTriangleWinding::getGroupName()
-{ return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+{ return SIMPL::FilterGroups::SurfaceMeshingFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ReverseTriangleWinding::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::ConnectivityArrangementFilters; }
+{ return SIMPL::FilterSubGroups::ConnectivityArrangementFilters; }
 
 // -----------------------------------------------------------------------------
 //

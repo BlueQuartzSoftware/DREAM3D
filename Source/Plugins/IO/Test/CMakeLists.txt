@@ -10,12 +10,16 @@
 
 set(${PLUGIN_NAME}Test_SOURCE_DIR ${${PLUGIN_NAME}_SOURCE_DIR}/Test)
 set(${PLUGIN_NAME}Test_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test)
-include(${DREAM3DProj_SOURCE_DIR}/Test/DREAM3DTestFunctions.cmake)
+
+#------------------------------------------------------------------------------
+# Include this file from the SIMPL Project
+include(${SIMPLProj_SOURCE_DIR}/Test/SIMPLTestFunctions.cmake)
 
 
 include_directories(${${PLUGIN_NAME}Test_SOURCE_DIR})
 include_directories(${${PLUGIN_NAME}Test_BINARY_DIR})
-
+include_directories(${SIMPLProj_SOURCE_DIR}/Source)
+include_directories(${SIMPLProj_BINARY_DIR})
 
 set(TEST_TEMP_DIR ${${PLUGIN_NAME}Test_BINARY_DIR}/Temp)
 # Make sure the directory is created during CMake time
@@ -30,34 +34,34 @@ set(${PLUGIN_NAME}_Link_Libs Qt5::Core H5Support SIMPLib)
 
 QT5_WRAP_CPP( GenerateFeatureIds_MOC  "${${PLUGIN_NAME}Test_SOURCE_DIR}/GenerateFeatureIds.h")
 set_source_files_properties(${${PLUGIN_NAME}Test_SOURCE_DIR}/GenerateFeatureIds.h PROPERTIES HEADER_FILE_ONLY TRUE)
-AddDREAM3DUnitTest(TESTNAME PhIOTest
+AddSIMPLUnitTest(TESTNAME PhIOTest
                   SOURCES ${${PLUGIN_NAME}Test_SOURCE_DIR}/PhIOTest.cpp ${${PLUGIN_NAME}Test_SOURCE_DIR}/GenerateFeatureIds.h ${GenerateFeatureIds_MOC}
                   FOLDER "${PLUGIN_NAME}Plugin/Test"
                   LINK_LIBRARIES ${${PLUGIN_NAME}_Link_Libs})
 
-AddDREAM3DUnitTest(TESTNAME DxIOTest
+AddSIMPLUnitTest(TESTNAME DxIOTest
                   SOURCES ${${PLUGIN_NAME}Test_SOURCE_DIR}/DxIOTest.cpp ${${PLUGIN_NAME}Test_SOURCE_DIR}/GenerateFeatureIds.h ${GenerateFeatureIds_MOC}
                   FOLDER "${PLUGIN_NAME}Plugin/Test"
                   LINK_LIBRARIES ${${PLUGIN_NAME}_Link_Libs})
 
-AddDREAM3DUnitTest(TESTNAME VtkStruturedPointsReaderTest
+AddSIMPLUnitTest(TESTNAME VtkStruturedPointsReaderTest
                   SOURCES ${${PLUGIN_NAME}Test_SOURCE_DIR}/VtkStruturedPointsReaderTest.cpp
                   FOLDER "${PLUGIN_NAME}Plugin/Test"
                   LINK_LIBRARIES ${${PLUGIN_NAME}_Link_Libs})
 
-AddDREAM3DUnitTest(TESTNAME EnsembleInfoReaderTest 
+AddSIMPLUnitTest(TESTNAME EnsembleInfoReaderTest
                   SOURCES ${${PLUGIN_NAME}Test_SOURCE_DIR}/EnsembleInfoReaderTest.cpp
                   FOLDER "${PLUGIN_NAME}Plugin/Test"
                   LINK_LIBRARIES ${${PLUGIN_NAME}_Link_Libs})
 
-AddDREAM3DUnitTest(TESTNAME ExportDataTest 
+AddSIMPLUnitTest(TESTNAME ExportDataTest
                   SOURCES ${${PLUGIN_NAME}Test_SOURCE_DIR}/ExportDataTest.cpp
                   FOLDER "${PLUGIN_NAME}Plugin/Test"
                   LINK_LIBRARIES ${${PLUGIN_NAME}_Link_Libs})
 
 
-AddDREAM3DUnitTest(TESTNAME ImportASCIIDataTest 
-				  SOURCES ${${PLUGIN_NAME}Test_SOURCE_DIR}/ImportASCIIDataTest.cpp
-				  FOLDER "${PLUGIN_NAME}Plugin/Test" 
-				  LINK_LIBRARIES ${${PLUGIN_NAME}_Link_Libs})
+AddSIMPLUnitTest(TESTNAME ImportASCIIDataTest
+          SOURCES ${${PLUGIN_NAME}Test_SOURCE_DIR}/ImportASCIIDataTest.cpp
+          FOLDER "${PLUGIN_NAME}Plugin/Test"
+          LINK_LIBRARIES ${${PLUGIN_NAME}_Link_Libs})
 

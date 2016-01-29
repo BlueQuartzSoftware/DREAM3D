@@ -41,43 +41,13 @@
 #include <QtCore/QJsonObject>
 #include <QtCore/QMetaType>
 
+#include "SIMPLib/Common/Constants.h"
+
+
 /**
  * @file EbsdConstants.h
  * @brief This file contains many constants that are generic to the EBSD library
  */
-
-typedef struct
-{
-  float angle;
-  float h;
-  float k;
-  float l;
-
-  void writeJson(QJsonObject& json)
-  {
-    json["angle"] = angle;
-    json["h"] = h;
-    json["k"] = k;
-    json["l"] = l;
-  }
-
-  bool readJson(QJsonObject& json)
-  {
-    if (json["angle"].isDouble() && json["h"].isDouble() && json["k"].isDouble() && json["l"].isDouble())
-    {
-      angle = static_cast<float>(json["angle"].toDouble());
-      h = static_cast<float>(json["h"].toDouble());
-      k = static_cast<float>(json["k"].toDouble());
-      l = static_cast<float>(json["l"].toDouble());
-      return true;
-    }
-    return false;
-  }
-
-} AxisAngleInput_t;
-
-Q_DECLARE_METATYPE(AxisAngleInput_t)
-
 namespace Ebsd
 {
   enum Manufacturer
@@ -134,13 +104,6 @@ namespace Ebsd
     const QString EbsdLibVersionStr("EbsdLibVersion");
   }
 
-  /** @brief Constants defined for the 5 orientation options */
-  namespace RefFrameZDir
-  {
-    static const unsigned int LowtoHigh = 0;
-    static const unsigned int HightoLow = 1;
-    static const unsigned int UnknownRefFrameZDirection = 2;
-  }
 
   enum EbsdToSampleCoordinateMapping
   {
@@ -161,16 +124,16 @@ namespace Ebsd
       public:
         static QString getStringForEnum(unsigned int v)
         {
-          if (Ebsd::RefFrameZDir::LowtoHigh == v) { return Ebsd::StackingOrder::LowToHigh; }
-          if (Ebsd::RefFrameZDir::HightoLow == v) { return Ebsd::StackingOrder::HighToLow; }
+          if (SIMPL::RefFrameZDir::LowtoHigh == v) { return Ebsd::StackingOrder::LowToHigh; }
+          if (SIMPL::RefFrameZDir::HightoLow == v) { return Ebsd::StackingOrder::HighToLow; }
           return Ebsd::StackingOrder::UnknownStackingOrder;
         }
 
         static int getEnumForString(const QString& v)
         {
-          if (Ebsd::StackingOrder::LowToHigh.compare(v) == 0) { return Ebsd::RefFrameZDir::LowtoHigh; }
-          if (Ebsd::StackingOrder::HighToLow.compare(v) == 0) { return Ebsd::RefFrameZDir::HightoLow; }
-          return Ebsd::RefFrameZDir::UnknownRefFrameZDirection;
+          if (Ebsd::StackingOrder::LowToHigh.compare(v) == 0) { return SIMPL::RefFrameZDir::LowtoHigh; }
+          if (Ebsd::StackingOrder::HighToLow.compare(v) == 0) { return SIMPL::RefFrameZDir::HightoLow; }
+          return SIMPL::RefFrameZDir::UnknownRefFrameZDirection;
         }
     };
   }

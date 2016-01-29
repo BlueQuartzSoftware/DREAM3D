@@ -140,7 +140,7 @@ FindRelativeMotionBetweenSlices::FindRelativeMotionBetweenSlices() :
   m_SSize1(0),
   m_SSize2(0),
   m_SliceStep(0),
-  m_MotionDirectionArrayName(DREAM3D::CellData::MotionDirection),
+  m_MotionDirectionArrayName(SIMPL::CellData::MotionDirection),
   m_InData(NULL),
   m_MotionDirection(NULL)
 {
@@ -180,18 +180,18 @@ void FindRelativeMotionBetweenSlices::setupFilterParameters()
   parameters.push_back(IntFilterParameter::New("Slice Step", "SliceStep", getSliceStep(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::Defaults::AnyPrimitive, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     QVector<QString> daTypes;
-    daTypes.push_back(DREAM3D::TypeNames::Int8);
-    daTypes.push_back(DREAM3D::TypeNames::Int16);
-    daTypes.push_back(DREAM3D::TypeNames::Int32);
-    daTypes.push_back(DREAM3D::TypeNames::Int64);
-    daTypes.push_back(DREAM3D::TypeNames::UInt8);
-    daTypes.push_back(DREAM3D::TypeNames::UInt16);
-    daTypes.push_back(DREAM3D::TypeNames::UInt32);
-    daTypes.push_back(DREAM3D::TypeNames::UInt64);
-    daTypes.push_back(DREAM3D::TypeNames::Float);
-    daTypes.push_back(DREAM3D::TypeNames::Double);
+    daTypes.push_back(SIMPL::TypeNames::Int8);
+    daTypes.push_back(SIMPL::TypeNames::Int16);
+    daTypes.push_back(SIMPL::TypeNames::Int32);
+    daTypes.push_back(SIMPL::TypeNames::Int64);
+    daTypes.push_back(SIMPL::TypeNames::UInt8);
+    daTypes.push_back(SIMPL::TypeNames::UInt16);
+    daTypes.push_back(SIMPL::TypeNames::UInt32);
+    daTypes.push_back(SIMPL::TypeNames::UInt64);
+    daTypes.push_back(SIMPL::TypeNames::Float);
+    daTypes.push_back(SIMPL::TypeNames::Double);
     req.daTypes = daTypes;
     parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array to Track Motion", "SelectedArrayPath", getSelectedArrayPath(), FilterParameter::RequiredArray, req));
   }
@@ -724,14 +724,14 @@ const QString FindRelativeMotionBetweenSlices::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FindRelativeMotionBetweenSlices::getGroupName()
-{ return DREAM3D::FilterGroups::ProcessingFilters; }
+{ return SIMPL::FilterGroups::ProcessingFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindRelativeMotionBetweenSlices::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::ImageFilters; }
+{ return SIMPL::FilterSubGroups::ImageFilters; }
 
 
 // -----------------------------------------------------------------------------

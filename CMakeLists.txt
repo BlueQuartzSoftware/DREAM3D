@@ -54,6 +54,38 @@ cmake_minimum_required(VERSION 3.1.0)
 # Create the Top level Project
 #
 project(DREAM3DProj VERSION 6.2.0.0)
+
+
+#------------------------------------------------------------------------------
+# If the developer has set another CMP directory then use that, otherwise look
+# for the CMP directory at the same level as the SIMPL directory
+if("${CMP_SOURCE_DIR}" STREQUAL "")
+  set(CMP_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR}/../CMP)
+  message(STATUS "CMP_SOURCE_DIR: ${CMP_SOURCE_DIR}")
+endif()
+
+if(NOT EXISTS "${CMP_SOURCE_DIR}")
+  message(WARNING "CMP_SOURCE_DIR does not exist at ${CMP_SOURCE_DIR}. Aborting CMake.")
+  message(FATAL_ERROR "CMP can be cloned using git clone -b develop git://github.com/bluequartzsoftware/CMP.git")
+  # TODO: Add in automatic cloning
+endif()
+
+#------------------------------------------------------------------------------
+# If the developer has set another SIMPLView directory then use that, otherwise look
+# for the SIMPLView directory at the same level as the DREAM3D directory
+if("${SIMPLViewProj_SOURCE_DIR}" STREQUAL "")
+  set(SIMPLViewProj_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR}/../SIMPLView)
+  message(STATUS "SIMPLViewProj_SOURCE_DIR: ${SIMPLViewProj_SOURCE_DIR}")
+endif()
+
+if(NOT EXISTS "${SIMPLViewProj_SOURCE_DIR}")
+  message(WARNING "SIMPLViewProj_SOURCE_DIR does not exist at ${SIMPLViewProj_SOURCE_DIR}. Aborting CMake.")
+  message(FATAL_ERROR "SIMPLView can be cloned using git clone -b develop git://github.com/bluequartzsoftware/SIMPLView.git")
+  # TODO: Add in automatic cloning
+endif()
+
+
+
 #------------------------------------------------------------------------------
 # There are several different Release Types that we are going to use.
 # Official: This is an official release from BlueQuartz Software
@@ -64,25 +96,61 @@ set(DREAM3DProj_RELEASE_TYPE "Development")
 include(CMakeParseArguments)
 
 # ---------- Setup output Directories -------------------------
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY
-  ${PROJECT_BINARY_DIR}/Bin
-  CACHE PATH
-  "Single Directory for all Libraries"
-  )
+if(NOT DEFINED CMAKE_LIBRARY_OUTPUT_DIRECTORY)
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY
+    ${DREAM3DProj_BINARY_DIR}/Bin
+    CACHE PATH
+    "Single Directory for all Libraries"
+    )
+endif()
 
 # --------- Setup the Executable output Directory -------------
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY
-  ${PROJECT_BINARY_DIR}/Bin
-  CACHE PATH
-  "Single Directory for all Executables."
-  )
+if(NOT DEFINED CMAKE_RUNTIME_OUTPUT_DIRECTORY)
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY
+    ${DREAM3DProj_BINARY_DIR}/Bin
+    CACHE PATH
+    "Single Directory for all Executables."
+    )
+endif()
 
 # --------- Setup the Executable output Directory -------------
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
-  ${PROJECT_BINARY_DIR}/Bin
-  CACHE PATH
-  "Single Directory for all static libraries."
-  )
+if(NOT DEFINED CMAKE_ARCHIVE_OUTPUT_DIRECTORY)
+  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
+    ${DREAM3DProj_BINARY_DIR}/Bin
+    CACHE PATH
+    "Single Directory for all static libraries."
+    )
+endif()
+
+#------------------------------------------------------------------------------
+# If we have not defined a "BrandedSIMPLView_DIR" then define it to the default
+# generic set of ICONs. Needs to be defined BEFORE we setup the SIMPLView project
+if(NOT DEFINED BrandedSIMPLView_DIR)
+  set(BrandedSIMPLView_DIR ${DREAM3DProj_SOURCE_DIR}/Resources/OpenSourceEdition)
+endif()
+
+# Set the Application Name to DREAM3D to rebrand SIMPLView with the correct icons and badges
+set(SIMPLView_APPLICATION_NAME "DREAM3D")
+set(SIMPLView_VERSION_HDR_FILE "${DREAM3DProj_BINARY_DIR}/SIMPLViewVersion.h")
+set(SIMPLView_VERSION_SRC_FILE "${DREAM3DProj_BINARY_DIR}/SIMPLViewVersion.cpp")
+set(CMP_TOP_HEADER_FILE "SIMPLView.h")
+
+INCLUDE (${CMP_SOURCE_DIR}/cmpCMakeMacros.cmake )
+
+#------------------------------------------------------------------------------
+# Find the Git Package for Versioning. It should be ok if Git is NOT found
+Find_package(Git)
+
+cmpRevisionString( GENERATED_HEADER_FILE_PATH "SIMPLViewVersion.h"
+                        GENERATED_SOURCE_FILE_PATH "SIMPLViewVersion.cpp"
+                        NAMESPACE "SIMPLView"
+                        PROJECT_NAME "${PROJECT_NAME}"
+                        EXPORT_MACRO "SIMPLView_EXPORT")
+
+# -----------------------------------------------------------------------
+# Bring in the SIMPLView Project
+# -----------------------------------------------------------------------
+add_subdirectory( ${SIMPLViewProj_SOURCE_DIR} ${PROJECT_BINARY_DIR}/SIMPLView)
 
 
 #Enable use of Solution Folders
@@ -93,12 +161,14 @@ set(PROJECT_RESOURCES_DIR ${DREAM3DProj_SOURCE_DIR}/Resources)
 set(EXE_DEBUG_EXTENSION "_debug")
 set(PROJECT_INSTALL_HEADERS "0")
 set(PROJECT_INSTALL_EXECUTABLES "1")
+
+
 set(DREAM3D_DOCUMENTATION_DIR ${PROJECT_SOURCE_DIR}/Documentation)
 set(DREAM3D_SUPPORT_DIR ${PROJECT_SOURCE_DIR}/Support)
 
-set(CMP_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR}/Support/cmp)
+
 set(CMP_CONFIGURED_FILES_SOURCE_DIR ${CMP_SOURCE_DIR}/ConfiguredFiles)
-INCLUDE (${CMP_SOURCE_DIR}/cmpCMakeMacros.cmake )
+
 set(CMP_ENABLE_PLUGINS "1")
 set(CMP_PLUGIN_LIST_FILE ${PROJECT_BINARY_DIR}/SIMPLib_PluginList.txt)
 file(WRITE ${CMP_PLUGIN_LIST_FILE} "")
@@ -113,15 +183,6 @@ if(UNIX AND NOT APPLE)
 endif()
 
 
-#------------------------------------------------------------------------------
-# Find the Git Package for Versioning. It should be ok if Git is NOT found
-Find_package(Git)
-
-cmpRevisionString( GENERATED_HEADER_FILE_PATH "D3DFileNotUsed.h"
-                        GENERATED_SOURCE_FILE_PATH "D3DFileNotUsed.cpp"
-                        NAMESPACE "DREAM3DProj"
-                        PROJECT_NAME "${PROJECT_NAME}"
-                        EXPORT_MACRO "DREAM3DProj_EXPORT")
 
 # --------------------------------------------------------------------
 #
@@ -159,8 +220,15 @@ else()
 endif(BUILD_SHARED_LIBS)
 
 
-# ---------- Find and Use the Qt5 Libraries -----------------------
+# --------------------------------------------------------------------
+# Find and Use the Qt5 Libraries
 include(${CMP_SOURCE_DIR}/ExtLib/Qt5Support.cmake)
+set(DREAM3D_Qt5_Components Core Widgets Network Gui Concurrent Script Svg Xml OpenGL PrintSupport )
+option(DREAM3D_USE_QtWebEngine "Use QWebEngine to display Help. OFF=Use default web browser" ON)
+CMP_AddQt5Support( "${DREAM3D_Qt5_Components}"
+                    "${DREAM3D_USE_QtWebEngine}"
+                    "${DREAM3DProj_BINARY_DIR}"
+                    "DREAM3D")
 
 
 # ---------- Find HDF5 Headers/Libraries -----------------------
@@ -202,7 +270,7 @@ if(SIMPLib_USE_MULTITHREADED_ALGOS)
 endif()
 
 # --------------------------------------------------------------------
-# DREAM3D needs the Eigen library for Least Squares fit and Eigen
+# SIMPL needs the Eigen library for Least Squares fit and Eigen
 # value/vector calculations.
 set(SIMPLib_USE_EIGEN "")
 Find_Package(Eigen REQUIRED)
@@ -303,19 +371,7 @@ if(DREAM3D_BUILD_TESTING)
 endif()
 
 
-#------------------------------------------------------------------------------
-# If we have not defined a "BrandedDREAM3D_DIR" then define it to the default
-# generic set of ICONs
-if(NOT DEFINED BrandedDREAM3D_DIR)
-  set(BrandedDREAM3D_DIR ${DREAM3DProj_SOURCE_DIR}/Resources/OpenSourceEdition)
-endif()
-
 include_directories(${BrandedDREAM3D_DIR})
-
-# -----------------------------------------------------------------------
-# Add in the Necessary HDF5 Support Sources into a library
-# -----------------------------------------------------------------------
-add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/H5Support ${PROJECT_BINARY_DIR}/H5Support)
 
 # -----------------------------------------------------------------------
 # Add in the Necessary EBSD Sources into a library
@@ -329,21 +385,7 @@ set(FilterWidgetsLib_BINARY_DIR ${DREAM3DProj_BINARY_DIR}/FilterWidgetsLib)
 
 # -----------------------------------------------------------------------
 # -- Add in the DREAM3D Sources into a library
-add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/SIMPLib/ ${PROJECT_BINARY_DIR}/SIMPLib)
-
-# -----------------------------------------------------------------------
-# -- Add in the DREAM3D Sources into a library
 add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/OrientationLib/ ${PROJECT_BINARY_DIR}/OrientationLib)
-
-# Build the static QtSupportLib library - which MUST be a static library or the linking
-# will not work due to signals/slots mechanism.
-add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/QtSupportLib ${PROJECT_BINARY_DIR}/QtSupportLib)
-
-# --------------------------------------------------------------------
-# Build the DREAM3DWidgetsLib Library which holds all the DREAM3D Specific Widgets such
-# as the Filter Parameter Widgets and various building block widgets for the DREAM3D app
-# The plugins are also going to depend on these being built
-add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/DREAM3DWidgetsLib ${PROJECT_BINARY_DIR}/DREAM3DWidgetsLib)
 
 # --------------------------------------------------------------------
 # Build the SimpleITKExplicit Library.
@@ -353,38 +395,19 @@ if(SIMPLib_USE_ITK)
   get_property(SimpleITKExplicit_LIB_NAME TARGET SimpleITKExplicit PROPERTY OUTPUT_NAME)
 endif()
 
-#-------------------------------------------------------------------------------
-# Build the DREAM3D Application here so we can add dependencies between the plugin and
-# the main DREAM3D application target. This should ensure that everything is built and
-# up-to-date properly.
-option(SIMPLib_BUILD_DREAM3D "Compile the DREAM3D GUI Application" ON)
-if(SIMPLib_BUILD_DREAM3D)
+#- Add in the Main DREAM.3D Application
+#add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/DREAM3D ${PROJECT_BINARY_DIR}/Applications/DREAM3D)
 
-  #- Add in the Main DREAM.3D Application
-  add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/DREAM3D ${PROJECT_BINARY_DIR}/Applications/DREAM3D)
-
-  set(SIMPLib_DOCS_ROOT_DIR "${DREAM3DProj_BINARY_DIR}/Bin/Help/DREAM3D")
-endif()
-
+set(DREAM3D_DOCS_ROOT_DIR "${DREAM3DProj_BINARY_DIR}/Bin/Help/DREAM3D")
 
 #-------------------------------------------------------------------------------
 # Compile the Core Plugins that come with DREAM3D and any other Plugins that the
 # developer has added.
 include(${PROJECT_CODE_DIR}/Plugins/Plugins.cmake)
 
-
-# Build the StatsGenerator Application
-OPTION(SIMPLib_BUILD_STATS_GENERATOR "Compile the Statistics Generator GUI Application" ON)
-if(SIMPLib_BUILD_STATS_GENERATOR)
-    add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/Applications/StatsGenerator ${PROJECT_BINARY_DIR}/Applications/StatsGenerator)
-endif()
-
-
-#- Add in the DevHelper application
-option(SIMPLib_BUILD_DEVHELPER "Compile the DevHelper Application" ON)
-if(SIMPLib_BUILD_DEVHELPER)
-    add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/DevHelper  ${PROJECT_BINARY_DIR}/Applications/DevHelper)
-endif()
+#-------------------------------------------------------------------------------
+# Compile StatsGenerator
+add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/Applications/StatsGenerator ${PROJECT_BINARY_DIR}/Applications/StatsGenerator)
 
 
 # add the Command line utilities

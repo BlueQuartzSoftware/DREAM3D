@@ -88,10 +88,10 @@ StatsGenPlotWidget::StatsGenPlotWidget(QWidget* parent) :
   m_MaxCutOff(3.0f),
   m_BinStep(1.0f),
   m_PhaseIndex(-1),
-  m_DistributionType(DREAM3D::DistributionType::UnknownDistributionType),
+  m_DistributionType(SIMPL::DistributionType::UnknownDistributionType),
   m_TableModel(NULL),
   m_grid(NULL),
-  m_StatsType(DREAM3D::StatisticsType::UnknownStatisticsGroup),
+  m_StatsType(SIMPL::StatisticsType::UnknownStatisticsGroup),
   m_UserUpdatedData(false)
 {
   this->setupUi(this);
@@ -144,7 +144,7 @@ int StatsGenPlotWidget::extractStatsData(int index,
                                          VectorOfFloatArray arrays)
 {
   int err = 0;
-  if (m_StatsType == DREAM3D::StatisticsType::UnknownStatisticsGroup)
+  if (m_StatsType == SIMPL::StatisticsType::UnknownStatisticsGroup)
   {
     QMessageBox::critical(this, tr("StatsGenerator"),
                           tr("This Plot has not been assigned a Statistics Group. This should be happening from within the program. Contact the developer."),
@@ -153,7 +153,7 @@ int StatsGenPlotWidget::extractStatsData(int index,
     return -1;
   }
 
-  if (m_DistributionType == DREAM3D::DistributionType::UnknownDistributionType)
+  if (m_DistributionType == SIMPL::DistributionType::UnknownDistributionType)
   {
     QMessageBox::critical(this, tr("StatsGenerator"),
                           tr("The 'Distribution Type' was of an unknown type."),
@@ -207,7 +207,7 @@ int StatsGenPlotWidget::extractStatsData(int index,
 VectorOfFloatArray StatsGenPlotWidget::getStatisticsData()
 {
   VectorOfFloatArray data;
-  if (m_StatsType == DREAM3D::StatisticsType::UnknownStatisticsGroup)
+  if (m_StatsType == SIMPL::StatisticsType::UnknownStatisticsGroup)
   {
     QMessageBox::critical(this, tr("StatsGenerator"),
                           tr("This Plot has not been assigned a Statistics Group. This should be happening from within the program. Contact the developer."),
@@ -216,7 +216,7 @@ VectorOfFloatArray StatsGenPlotWidget::getStatisticsData()
     return data;
   }
 
-  if (m_DistributionType == DREAM3D::DistributionType::UnknownDistributionType)
+  if (m_DistributionType == SIMPL::DistributionType::UnknownDistributionType)
   {
     QMessageBox::critical(this, tr("StatsGenerator"),
                           tr("This Plot has not been assigned a known Distribution Type. This should be happening from within the program. Contact the developer."),
@@ -238,29 +238,29 @@ VectorOfFloatArray StatsGenPlotWidget::getStatisticsData()
   // Create a new Table Model
   switch(m_DistributionType)
   {
-    case DREAM3D::DistributionType::Beta:
+    case SIMPL::DistributionType::Beta:
       v0 = m_TableModel->getData(SGBetaTableModel::Alpha);
       v1 = m_TableModel->getData(SGBetaTableModel::Beta);
-      col0 = FloatArrayType::FromQVector(v0, DREAM3D::StringConstants::Alpha);
-      col1 = FloatArrayType::FromQVector(v1, DREAM3D::StringConstants::Beta);
+      col0 = FloatArrayType::FromQVector(v0, SIMPL::StringConstants::Alpha);
+      col1 = FloatArrayType::FromQVector(v1, SIMPL::StringConstants::Beta);
       data.push_back(col0);
       data.push_back(col1);
       break;
-    case DREAM3D::DistributionType::LogNormal:
+    case SIMPL::DistributionType::LogNormal:
       v0 = m_TableModel->getData(SGLogNormalTableModel::Average);
       v1 = m_TableModel->getData(SGLogNormalTableModel::StdDev);
-      col0 = FloatArrayType::FromQVector(v0, DREAM3D::StringConstants::Average);
-      col1 = FloatArrayType::FromQVector(v1, DREAM3D::StringConstants::StandardDeviation);
+      col0 = FloatArrayType::FromQVector(v0, SIMPL::StringConstants::Average);
+      col1 = FloatArrayType::FromQVector(v1, SIMPL::StringConstants::StandardDeviation);
       data.push_back(col0);
       data.push_back(col1);
       break;
-    case DREAM3D::DistributionType::Power:
+    case SIMPL::DistributionType::Power:
       v0 = m_TableModel->getData(SGPowerLawTableModel::Alpha);
       v1 = m_TableModel->getData(SGPowerLawTableModel::K);
       v2 = m_TableModel->getData(SGPowerLawTableModel::Beta);
-      col0 = FloatArrayType::FromQVector(v0, DREAM3D::StringConstants::Alpha);
-      col1 = FloatArrayType::FromQVector(v1, DREAM3D::StringConstants::Exp_k);
-      col2 = FloatArrayType::FromQVector(v2, DREAM3D::StringConstants::Beta);
+      col0 = FloatArrayType::FromQVector(v0, SIMPL::StringConstants::Alpha);
+      col1 = FloatArrayType::FromQVector(v1, SIMPL::StringConstants::Exp_k);
+      col2 = FloatArrayType::FromQVector(v2, SIMPL::StringConstants::Beta);
       data.push_back(col0);
       data.push_back(col1);
       data.push_back(col2);
@@ -287,13 +287,13 @@ void StatsGenPlotWidget::resetTableModel()
   // Create a new Table Model
   switch(m_DistributionType)
   {
-    case DREAM3D::DistributionType::Beta:
+    case SIMPL::DistributionType::Beta:
       m_TableModel = new SGBetaTableModel;
       break;
-    case DREAM3D::DistributionType::LogNormal:
+    case SIMPL::DistributionType::LogNormal:
       m_TableModel = new SGLogNormalTableModel;
       break;
-    case DREAM3D::DistributionType::Power:
+    case SIMPL::DistributionType::Power:
       m_TableModel = new SGPowerLawTableModel;
       break;
 
@@ -382,9 +382,9 @@ void StatsGenPlotWidget::setYAxisName(QString name)
 void StatsGenPlotWidget::setupGui()
 {
   distributionTypeCombo->blockSignals(true);
-  distributionTypeCombo->addItem(DREAM3D::StringConstants::BetaDistribution.toLatin1().data());
-  distributionTypeCombo->addItem(DREAM3D::StringConstants::LogNormalDistribution.toLatin1().data());
-  distributionTypeCombo->addItem(DREAM3D::StringConstants::PowerLawDistribution.toLatin1().data());
+  distributionTypeCombo->addItem(SIMPL::StringConstants::BetaDistribution.toLatin1().data());
+  distributionTypeCombo->addItem(SIMPL::StringConstants::LogNormalDistribution.toLatin1().data());
+  distributionTypeCombo->addItem(SIMPL::StringConstants::PowerLawDistribution.toLatin1().data());
   distributionTypeCombo->blockSignals(false);
 
 
@@ -463,13 +463,13 @@ void StatsGenPlotWidget::updatePlotCurves()
 
     switch(m_DistributionType)
     {
-      case DREAM3D::DistributionType::Beta:
+      case SIMPL::DistributionType::Beta:
         createBetaCurve(r, xMax, yMax);
         break;
-      case DREAM3D::DistributionType::LogNormal:
+      case SIMPL::DistributionType::LogNormal:
         createLogNormalCurve(r, xMax, yMax);
         break;
-      case DREAM3D::DistributionType::Power:
+      case SIMPL::DistributionType::Power:
         createPowerCurve(r, xMax, yMax);
         break;
       default:
@@ -652,16 +652,16 @@ void StatsGenPlotWidget::setBins(QVector<float>& binNumbers)
     switch(m_StatsType)
     {
       case DREAM3D::Reconstruction::Feature_SizeVBoverA:
-        msg.append(DREAM3D::StringConstants::Feature_SizeVBoverA_Distributions.toLatin1().data());
+        msg.append(SIMPL::StringConstants::Feature_SizeVBoverA_Distributions.toLatin1().data());
         break;
       case DREAM3D::Reconstruction::Feature_SizeVCoverA:
-        msg.append(DREAM3D::StringConstants::Feature_SizeVCoverA_Distributions.toLatin1().data());
+        msg.append(SIMPL::StringConstants::Feature_SizeVCoverA_Distributions.toLatin1().data());
         break;
       case DREAM3D::Reconstruction::Feature_SizeVNeighbors:
-        msg.append(DREAM3D::StringConstants::Feature_SizeVNeighbors_Distributions.toLatin1().data());
+        msg.append(SIMPL::StringConstants::Feature_SizeVNeighbors_Distributions.toLatin1().data());
         break;
       case DREAM3D::Reconstruction::Feature_SizeVOmega3:
-        msg.append(DREAM3D::StringConstants::Feature_SizeVOmega3_Distributions.toLatin1().data());
+        msg.append(SIMPL::StringConstants::Feature_SizeVOmega3_Distributions.toLatin1().data());
         break;
       default:
         msg.append("Unknown");

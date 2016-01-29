@@ -1202,7 +1202,7 @@ bool HexagonalLowOps::inUnitTriangle(float eta, float chi)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb HexagonalLowOps::generateIPFColor(double* eulers, double* refDir, bool convertDegrees)
+SIMPL::Rgb HexagonalLowOps::generateIPFColor(double* eulers, double* refDir, bool convertDegrees)
 {
   return generateIPFColor(eulers[0], eulers[1], eulers[2], refDir[0], refDir[1], refDir[2], convertDegrees);
 }
@@ -1210,7 +1210,7 @@ DREAM3D::Rgb HexagonalLowOps::generateIPFColor(double* eulers, double* refDir, b
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb HexagonalLowOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, bool degToRad)
+SIMPL::Rgb HexagonalLowOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, bool degToRad)
 {
   if (degToRad == true)
   {
@@ -1302,7 +1302,7 @@ DREAM3D::Rgb HexagonalLowOps::generateIPFColor(double phi1, double phi, double p
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb HexagonalLowOps::generateRodriguesColor(float r1, float r2, float r3)
+SIMPL::Rgb HexagonalLowOps::generateRodriguesColor(float r1, float r2, float r3)
 {
   float range1 = 2.0f * HexDim1InitValue;
   float range2 = 2.0f * HexDim2InitValue;
@@ -1504,7 +1504,7 @@ UInt8ArrayType::Pointer HexagonalLowOps::generateIPFTriangleLegend(int imageDim)
   // Find the slope of the bounding line.
   static const float m = sinf(60.0 * SIMPLib::Constants::k_PiOver180) / cosf(60.0 * SIMPLib::Constants::k_PiOver180);
 
-  DREAM3D::Rgb color;
+  SIMPL::Rgb color;
   size_t idx = 0;
   size_t yScanLineIndex = imageDim-1; // We use this to control where the data is drawn. Otherwise the image will come out flipped vertically
   // Loop over every pixel in the image and project up to the sphere to get the angle and then figure out the RGB from
@@ -1565,9 +1565,9 @@ UInt8ArrayType::Pointer HexagonalLowOps::generateIPFTriangleLegend(int imageDim)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb HexagonalLowOps::generateMisorientationColor(const QuatF& q, const QuatF& refFrame)
+SIMPL::Rgb HexagonalLowOps::generateMisorientationColor(const QuatF& q, const QuatF& refFrame)
 {
-  DREAM3D::Rgb rgb = RgbColor::dRgb(0, 0, 0, 0);
+  SIMPL::Rgb rgb = RgbColor::dRgb(0, 0, 0, 0);
 
   Q_ASSERT(false);
 

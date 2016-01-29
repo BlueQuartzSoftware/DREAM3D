@@ -205,52 +205,52 @@ void ImportASCIIData::dataCheck()
     DataArrayPath arrayPath = m_AttributeMatrixPath;
     arrayPath.setDataArrayName(name);
 
-    if (dataType == DREAM3D::TypeNames::Double)
+    if (dataType == SIMPL::TypeNames::Double)
     {
       DoubleArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
       m_ASCIIArrayMap.insert(i, ptr);
     }
-    else if (dataType == DREAM3D::TypeNames::Float)
+    else if (dataType == SIMPL::TypeNames::Float)
     {
       FloatArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<FloatArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
       m_ASCIIArrayMap.insert(i, ptr);
     }
-    else if (dataType == DREAM3D::TypeNames::Int8)
+    else if (dataType == SIMPL::TypeNames::Int8)
     {
       Int8ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<Int8ArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
       m_ASCIIArrayMap.insert(i, ptr);
     }
-    else if (dataType == DREAM3D::TypeNames::Int16)
+    else if (dataType == SIMPL::TypeNames::Int16)
     {
       Int16ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<Int16ArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
       m_ASCIIArrayMap.insert(i, ptr);
     }
-    else if (dataType == DREAM3D::TypeNames::Int32)
+    else if (dataType == SIMPL::TypeNames::Int32)
     {
       Int32ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<Int32ArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
       m_ASCIIArrayMap.insert(i, ptr);
     }
-    else if (dataType == DREAM3D::TypeNames::Int64)
+    else if (dataType == SIMPL::TypeNames::Int64)
     {
       Int64ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<Int64ArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
       m_ASCIIArrayMap.insert(i, ptr);
     }
-    else if (dataType == DREAM3D::TypeNames::UInt8)
+    else if (dataType == SIMPL::TypeNames::UInt8)
     {
       UInt8ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt8ArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
       m_ASCIIArrayMap.insert(i, ptr);
     }
-    else if (dataType == DREAM3D::TypeNames::UInt16)
+    else if (dataType == SIMPL::TypeNames::UInt16)
     {
       UInt16ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt16ArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
       m_ASCIIArrayMap.insert(i, ptr);
     }
-    else if (dataType == DREAM3D::TypeNames::UInt32)
+    else if (dataType == SIMPL::TypeNames::UInt32)
     {
       UInt32ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt32ArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
       m_ASCIIArrayMap.insert(i, ptr);
     }
-    else if (dataType == DREAM3D::TypeNames::UInt64)
+    else if (dataType == SIMPL::TypeNames::UInt64)
     {
       UInt64ArrayType::Pointer ptr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt64ArrayType, AbstractFilter>(this, arrayPath, 0, cDims);
       m_ASCIIArrayMap.insert(i, ptr);
@@ -300,61 +300,61 @@ void ImportASCIIData::execute()
     QString dataType = dataTypes[i];
     QString name = headers[i];
 
-    if (dataType == DREAM3D::TypeNames::Double)
+    if (dataType == SIMPL::TypeNames::Double)
     {
       DoubleArrayType::Pointer data = std::dynamic_pointer_cast<DoubleArrayType>(m_ASCIIArrayMap.value(i));
       DoubleParserType::Pointer parser = DoubleParserType::New(data, name, i);
       dataParsers.push_back(parser);
     }
-    else if (dataType == DREAM3D::TypeNames::Float)
+    else if (dataType == SIMPL::TypeNames::Float)
     {
       FloatArrayType::Pointer data = std::dynamic_pointer_cast<FloatArrayType>(m_ASCIIArrayMap.value(i));
       FloatParserType::Pointer parser = FloatParserType::New(data, name, i);
       dataParsers.push_back(parser);
     }
-    else if (dataType == DREAM3D::TypeNames::Int8)
+    else if (dataType == SIMPL::TypeNames::Int8)
     {
       Int8ArrayType::Pointer data = std::dynamic_pointer_cast<Int8ArrayType>(m_ASCIIArrayMap.value(i));
       Int8ParserType::Pointer parser = Int8ParserType::New(data, name, i);
       dataParsers.push_back(parser);
     }
-    else if (dataType == DREAM3D::TypeNames::Int16)
+    else if (dataType == SIMPL::TypeNames::Int16)
     {
       Int16ArrayType::Pointer data = std::dynamic_pointer_cast<Int16ArrayType>(m_ASCIIArrayMap.value(i));
       Int16ParserType::Pointer parser = Int16ParserType::New(data, name, i);
       dataParsers.push_back(parser);
     }
-    else if (dataType == DREAM3D::TypeNames::Int32)
+    else if (dataType == SIMPL::TypeNames::Int32)
     {
       Int32ArrayType::Pointer data = std::dynamic_pointer_cast<Int32ArrayType>(m_ASCIIArrayMap.value(i));
       Int32ParserType::Pointer parser = Int32ParserType::New(data, name, i);
       dataParsers.push_back(parser);
     }
-    else if (dataType == DREAM3D::TypeNames::Int64)
+    else if (dataType == SIMPL::TypeNames::Int64)
     {
       Int64ArrayType::Pointer data = std::dynamic_pointer_cast<Int64ArrayType>(m_ASCIIArrayMap.value(i));
       Int64ParserType::Pointer parser = Int64ParserType::New(data, name, i);
       dataParsers.push_back(parser);
     }
-    else if (dataType == DREAM3D::TypeNames::UInt8)
+    else if (dataType == SIMPL::TypeNames::UInt8)
     {
       UInt8ArrayType::Pointer data = std::dynamic_pointer_cast<UInt8ArrayType>(m_ASCIIArrayMap.value(i));
       UInt8ParserType::Pointer parser = UInt8ParserType::New(data, name, i);
       dataParsers.push_back(parser);
     }
-    else if (dataType == DREAM3D::TypeNames::UInt16)
+    else if (dataType == SIMPL::TypeNames::UInt16)
     {
       UInt16ArrayType::Pointer data = std::dynamic_pointer_cast<UInt16ArrayType>(m_ASCIIArrayMap.value(i));
       UInt16ParserType::Pointer parser = UInt16ParserType::New(data, name, i);
       dataParsers.push_back(parser);
     }
-    else if (dataType == DREAM3D::TypeNames::UInt32)
+    else if (dataType == SIMPL::TypeNames::UInt32)
     {
       UInt32ArrayType::Pointer data = std::dynamic_pointer_cast<UInt32ArrayType>(m_ASCIIArrayMap.value(i));
       UInt32ParserType::Pointer parser = UInt32ParserType::New(data, name, i);
       dataParsers.push_back(parser);
     }
-    else if (dataType == DREAM3D::TypeNames::UInt64)
+    else if (dataType == SIMPL::TypeNames::UInt64)
     {
       UInt64ArrayType::Pointer data = std::dynamic_pointer_cast<UInt64ArrayType>(m_ASCIIArrayMap.value(i));
       UInt64ParserType::Pointer parser = UInt64ParserType::New(data, name, i);
@@ -455,13 +455,13 @@ const QString ImportASCIIData::getCompiledLibraryName()
 //
 // -----------------------------------------------------------------------------
 const QString ImportASCIIData::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ImportASCIIData::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::InputFilters; }
+{ return SIMPL::FilterSubGroups::InputFilters; }
 
 // -----------------------------------------------------------------------------
 //

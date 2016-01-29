@@ -38,7 +38,10 @@ set(PLUGIN_NAME "EbsdLib")
 set(${PLUGIN_NAME}Test_SOURCE_DIR ${${PLUGIN_NAME}_SOURCE_DIR}/Test)
 set(${PLUGIN_NAME}Test_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test)
 
-include(${DREAM3DProj_SOURCE_DIR}/Test/DREAM3DTestFunctions.cmake)
+
+#------------------------------------------------------------------------------
+# Include this file from the SIMPL Project
+include(${SIMPLProj_SOURCE_DIR}/Test/SIMPLTestFunctions.cmake)
 
 include_directories(${${PLUGIN_NAME}_SOURCE_DIR}/Test)
 include_directories(${${PLUGIN_NAME}_BINARY_DIR}/Test)
@@ -58,17 +61,17 @@ set(TEST_TEMP_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test/Temp)
 file(MAKE_DIRECTORY ${TEST_TEMP_DIR})
 
 
-AddDREAM3DUnitTest(TESTNAME AngImportTest 
+AddSIMPLUnitTest(TESTNAME AngImportTest 
                     SOURCES ${EbsdLibTest_SOURCE_DIR}/AngImportTest.cpp
                     FOLDER "EbsdLibProj/Test" 
                     LINK_LIBRARIES Qt5::Core EbsdLib)
 
-AddDREAM3DUnitTest(TESTNAME CtfReaderTest 
+AddSIMPLUnitTest(TESTNAME CtfReaderTest 
                     SOURCES ${EbsdLibTest_SOURCE_DIR}/CtfReaderTest.cpp
                     FOLDER "EbsdLibProj/Test" 
                     LINK_LIBRARIES Qt5::Core EbsdLib)
 
-AddDREAM3DUnitTest(TESTNAME EdaxOIMReaderTest
+AddSIMPLUnitTest(TESTNAME EdaxOIMReaderTest
                     SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/EdaxOIMReaderTest.cpp
                     FOLDER "EbsdLibProj/Test" 
                     LINK_LIBRARIES Qt5::Core H5Support EbsdLib)

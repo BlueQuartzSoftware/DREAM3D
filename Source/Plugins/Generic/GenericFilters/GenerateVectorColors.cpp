@@ -63,7 +63,7 @@ GenerateVectorColors::GenerateVectorColors() :
   AbstractFilter(),
   m_VectorsArrayPath("", "", ""),
   m_GoodVoxelsArrayPath("", "", ""),
-  m_CellVectorColorsArrayName(DREAM3D::CellData::VectorColor),
+  m_CellVectorColorsArrayName(SIMPL::CellData::VectorColor),
   m_UseGoodVoxels(false),
   m_Vectors(NULL),
   m_GoodVoxels(NULL),
@@ -89,12 +89,12 @@ void GenerateVectorColors::setupFilterParameters()
   parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Good Voxels Only (Bad Voxels Will Be Black)", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Float, 3, DREAM3D::AttributeMatrixObjectType::Element);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixObjectType::Element);
     parameters.push_back(DataArraySelectionFilterParameter::New("Vector Attribute Array", "VectorsArrayPath", getVectorsArrayPath(), FilterParameter::RequiredArray, req));
   }
 
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Bool, 1, DREAM3D::AttributeMatrixObjectType::Element);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixObjectType::Element);
     parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
@@ -205,7 +205,7 @@ void GenerateVectorColors::execute()
 
   size_t index = 0;
 
-  //DREAM3D::Rgb argb = 0x00000000;
+  //SIMPL::Rgb argb = 0x00000000;
 
   // Write the IPF Coloring Cell Data
   for (size_t i = 0; i < totalPoints; i++)
@@ -217,7 +217,7 @@ void GenerateVectorColors::execute()
 
     float dir[3] = { 0.0f, 0.0f, 0.0f };
     float r = 0, g = 0, b = 0;
-    DREAM3D::Rgb argb;
+    SIMPL::Rgb argb;
     if (missingGoodVoxels == true || m_GoodVoxels[i] == true)
     {
       dir[0] = m_Vectors[index + 0];
@@ -316,13 +316,13 @@ const QString GenerateVectorColors::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString GenerateVectorColors::getGroupName()
-{ return DREAM3D::FilterGroups::GenericFilters; }
+{ return SIMPL::FilterGroups::GenericFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateVectorColors::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::CrystallographyFilters; }
+{ return SIMPL::FilterSubGroups::CrystallographyFilters; }
 
 // -----------------------------------------------------------------------------
 //

@@ -359,13 +359,13 @@ const QString WriteIPFStandardTriangle::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString WriteIPFStandardTriangle::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString WriteIPFStandardTriangle::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::OutputFilters; }
+{ return SIMPL::FilterSubGroups::OutputFilters; }
 
 // -----------------------------------------------------------------------------
 //

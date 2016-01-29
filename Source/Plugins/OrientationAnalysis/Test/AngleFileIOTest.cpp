@@ -71,14 +71,14 @@ DataContainerArray::Pointer InitializeDataContainerArray()
 
   // Create Attribute Matrices with different tDims to test validation of tuple compatibility
   QVector<size_t> tDims(1, k_AngleCount);
-  AttributeMatrix::Pointer attrMat1 = AttributeMatrix::New(tDims, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::AttributeMatrixType::Cell);
+  AttributeMatrix::Pointer attrMat1 = AttributeMatrix::New(tDims, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::AttributeMatrixType::Cell);
   m->addAttributeMatrix(attrMat1->getName(), attrMat1);
 
   QVector<size_t> cDims(1, 3);
-  DataArray<float>::Pointer angles = DataArray<float>::CreateArray(k_AngleCount, cDims, DREAM3D::CellData::EulerAngles, true);
+  DataArray<float>::Pointer angles = DataArray<float>::CreateArray(k_AngleCount, cDims, SIMPL::CellData::EulerAngles, true);
   attrMat1->addAttributeArray(angles->getName(), angles);
   cDims[0] = 1;
-  DataArray<int32_t>::Pointer phases = DataArray<int32_t>::CreateArray(k_AngleCount, cDims, DREAM3D::CellData::Phases, true);
+  DataArray<int32_t>::Pointer phases = DataArray<int32_t>::CreateArray(k_AngleCount, cDims, SIMPL::CellData::Phases, true);
   attrMat1->addAttributeArray(phases->getName(), phases);
   for(int i = 0; i < k_AngleCount; i++)
   {
@@ -123,12 +123,12 @@ void TestWriter()
   bool propWasSet = filter->setProperty("OutputFile", UnitTest::AngleFileIOTest::OutputFile);
   DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-      DataArrayPath dap("AngleFileIO", DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerAngles);
+      DataArrayPath dap("AngleFileIO", SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::EulerAngles);
   var.setValue(dap);
   propWasSet = filter->setProperty("CellEulerAnglesArrayPath", var);
   DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-      dap.setDataArrayName(DREAM3D::CellData::Phases);
+      dap.setDataArrayName(SIMPL::CellData::Phases);
   var.setValue(dap);
   propWasSet = filter->setProperty("CellPhasesArrayPath", var);
   DREAM3D_REQUIRE_EQUAL(propWasSet, true)

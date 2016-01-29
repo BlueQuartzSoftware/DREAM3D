@@ -87,11 +87,11 @@ PhReaderPrivate::PhReaderPrivate(PhReader* ptr) :
 // -----------------------------------------------------------------------------
 PhReader::PhReader() :
   FileReader(),
-  m_VolumeDataContainerName(DREAM3D::Defaults::ImageDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_VolumeDataContainerName(SIMPL::Defaults::ImageDataContainerName),
+  m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
   m_InputFile(""),
   m_FileWasRead(false),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds),
   d_ptr(new PhReaderPrivate(this)),
   m_FeatureIds(NULL)
 {
@@ -210,10 +210,10 @@ void PhReader::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   QVector<size_t> tDims(3, 0);
-  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
+  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
 
-  ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+  ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   m->setGeometry(image);
 
   QFileInfo fi(getInputFile());
@@ -442,13 +442,13 @@ const QString PhReader::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString PhReader::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString PhReader::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::InputFilters; }
+{ return SIMPL::FilterSubGroups::InputFilters; }
 
 // -----------------------------------------------------------------------------
 //

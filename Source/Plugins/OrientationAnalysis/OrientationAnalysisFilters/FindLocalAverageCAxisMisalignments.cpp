@@ -78,8 +78,8 @@ FindLocalAverageCAxisMisalignments::FindLocalAverageCAxisMisalignments() :
   m_AvgCAxisMisalignmentsArrayPath("", "", ""),
   m_FeatureParentIdsArrayPath("", "", ""),
   m_CrystalStructuresArrayPath("", "", ""),
-  m_UnbiasedLocalCAxisMisalignmentsArrayName(DREAM3D::FeatureData::UnbiasedLocalCAxisMisalignments),
-  m_NumFeaturesPerParentArrayName(DREAM3D::FeatureData::NumFeaturesPerParent),
+  m_UnbiasedLocalCAxisMisalignmentsArrayName(SIMPL::FeatureData::UnbiasedLocalCAxisMisalignments),
+  m_NumFeaturesPerParentArrayName(SIMPL::FeatureData::NumFeaturesPerParent),
   m_FeatureIds(NULL),
   m_CellParentIds(NULL),
   m_FeatureParentIds(NULL),
@@ -143,7 +143,7 @@ void FindLocalAverageCAxisMisalignments::setupFilterParameters()
     parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(DREAM3D::AttributeMatrixType::CellFeature, DREAM3D::GeometryType::UnknownGeometry);
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::UnknownGeometry);
     parameters.push_back(AttributeMatrixSelectionFilterParameter::New("New Cell Feature Attribute Matrix Name", "NewCellFeatureAttributeMatrixName", getNewCellFeatureAttributeMatrixName(), FilterParameter::RequiredArray, req));
   }
 
@@ -370,14 +370,14 @@ const QString FindLocalAverageCAxisMisalignments::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FindLocalAverageCAxisMisalignments::getGroupName()
-{ return DREAM3D::FilterGroups::StatisticsFilters; }
+{ return SIMPL::FilterGroups::StatisticsFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindLocalAverageCAxisMisalignments::getSubGroupName()
-{return DREAM3D::FilterSubGroups::CrystallographicFilters;}
+{return SIMPL::FilterSubGroups::CrystallographicFilters;}
 
 
 // -----------------------------------------------------------------------------

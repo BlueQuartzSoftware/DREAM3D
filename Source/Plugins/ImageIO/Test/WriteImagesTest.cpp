@@ -102,7 +102,7 @@ DataContainerArray::Pointer initializeDataContainerArray(const QString& dcName, 
   DataContainerArray::Pointer dca = DataContainerArray::New();
   DataContainer::Pointer vdc = DataContainer::New(dcName);
   //Set up geometry for tuples, a cuboid with dimensions 20, 10, 1
-  ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+  ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   vdc->setGeometry(image);
   size_t dims[3] = { 20, 10, 1 };
   image->setDimensions(dims);
@@ -114,7 +114,7 @@ DataContainerArray::Pointer initializeDataContainerArray(const QString& dcName, 
   QVector<size_t> cDims(1);
   cDims[0] = comp;
 
-  AttributeMatrix::Pointer am = AttributeMatrix::New(tDims, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::AttributeMatrixType::Cell);
+  AttributeMatrix::Pointer am = AttributeMatrix::New(tDims, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::AttributeMatrixType::Cell);
   DataArray<uint8_t>::Pointer data = DataArray<uint8_t>::CreateArray(tDims, cDims, "Uint8 Array");
   am->addAttributeArray(data->getName(), data);
   vdc->addAttributeMatrix(am->getName(), am);
@@ -170,7 +170,7 @@ void SaveImagesTest(AbstractFilter::Pointer filter, DataContainerArray::Pointer 
   }
 
   filter->setDataContainerArray(dca);
-  DataArrayPath path = DataArrayPath(dcName, DREAM3D::Defaults::CellAttributeMatrixName, "Uint8 Array");
+  DataArrayPath path = DataArrayPath(dcName, SIMPL::Defaults::CellAttributeMatrixName, "Uint8 Array");
   var.setValue(path);
   propWasSet = filter->setProperty("ColorsArrayPath", var);
   DREAM3D_REQUIRE_EQUAL(propWasSet, true)
