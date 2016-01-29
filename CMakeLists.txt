@@ -430,7 +430,7 @@ endif()
 
 #-------------------------------------------------------------------------------
 # Should we build the documentation using DOxygen
-option(SIMPLib_BUILD_DOCUMENTATION "Build the DREAM3D documentation" OFF)
+option(SIMPLib_BUILD_DOCUMENTATION "Build the DREAM3D documentation" ON)
 if(SIMPLib_BUILD_DOCUMENTATION)
   set(DOCUMENTATION_RESOURCES_DIR ${PROJECT_RESOURCES_DIR}/DocConfigFiles)
 
