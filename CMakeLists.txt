@@ -148,7 +148,9 @@ set(CMP_CONFIGURED_FILES_SOURCE_DIR ${CMP_SOURCE_DIR}/ConfiguredFiles)
 
 INCLUDE (${CMP_SOURCE_DIR}/cmpCMakeMacros.cmake )
 
-
+# -----------------------------------------------------------------------
+# Generate a set of Version Cpp/H files that will be used by SIMPLView to
+# get and display the proper version numbers.
 cmpRevisionString( GENERATED_HEADER_FILE_PATH "SIMPLViewVersion.h"
                         GENERATED_SOURCE_FILE_PATH "SIMPLViewVersion.cpp"
                         NAMESPACE "SIMPLView"
@@ -156,7 +158,13 @@ cmpRevisionString( GENERATED_HEADER_FILE_PATH "SIMPLViewVersion.h"
                         EXPORT_MACRO "SIMPLView_EXPORT")
 
 # -----------------------------------------------------------------------
-# Bring in the SIMPLView Project
+# Setup a Global property that is used to gather Documentation Information
+# into a single known location
+set_property(GLOBAL PROPERTY DREAM3DDocRoot "${DREAM3DProj_BINARY_DIR}")
+file(WRITE ${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList "")
+
+# -----------------------------------------------------------------------
+# Bring in the SIMPLView Project, which will bring in SIMPLib
 # -----------------------------------------------------------------------
 add_subdirectory( ${SIMPLViewProj_SOURCE_DIR} ${PROJECT_BINARY_DIR}/SIMPLView)
 
@@ -189,11 +197,10 @@ if(UNIX AND NOT APPLE)
 endif()
 
 
-
 # --------------------------------------------------------------------
 #
 if("${DREAM3D_DATA_DIR}" STREQUAL "")
-  set(DREAM3D_DATA_DIR "${DREAM3DProj_SOURCE_DIR}/../SIMPLib_Data/"  CACHE PATH "The directory where to find test data files")
+  set(DREAM3D_DATA_DIR "${DREAM3DProj_SOURCE_DIR}/../DREAM3D_Data/"  CACHE PATH "The directory where to find test data files")
 endif()
 
 if("${DREAM3D_DATA_DIR}" STREQUAL "")
@@ -363,11 +370,6 @@ endif()
 include_directories(${DREAM3DProj_SOURCE_DIR}/Source)
 include_directories(${PROJECT_BINARY_DIR})
 
-# -----------------------------------------------------------------------
-# Setup some Global Lists that are used to gather Documentation Information
-file(WRITE ${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList "")
-
-
 
 # ------- Enable the CTest testing. Use make test to run all tests ---------------
 OPTION(DREAM3D_BUILD_TESTING "Compile the test programs" ON)
@@ -377,7 +379,8 @@ if(DREAM3D_BUILD_TESTING)
 endif()
 
 
-include_directories(${BrandedDREAM3D_DIR})
+message(STATUS "BrandedSIMPLView_DIR: ${BrandedSIMPLView_DIR}")
+include_directories(${BrandedSIMPLView_DIR})
 
 # -----------------------------------------------------------------------
 # Add in the Necessary EBSD Sources into a library

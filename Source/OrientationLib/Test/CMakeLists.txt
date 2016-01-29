@@ -35,7 +35,7 @@
 
 # project(OrientationLibTest)
 set(PLUGIN_NAME "OrientationLib")
-set(${PLUGIN_NAME}Test_SOURCE_DIR ${${PLUGIN_NAME}_SOURCE_DIR}/Test/Test)
+set(${PLUGIN_NAME}Test_SOURCE_DIR ${${PLUGIN_NAME}_SOURCE_DIR}/Test)
 set(${PLUGIN_NAME}Test_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test)
 
 
@@ -59,6 +59,37 @@ configure_file(${${PLUGIN_NAME}_SOURCE_DIR}/Test/TestFileLocations.h.in
 set(OrientationLib_Link_Libs Qt5::Core H5Support SIMPLib OrientationLib)
 
 
+#------------------------------------------------------------------------------
+# List all the source files here. They will NOT be compiled but instead
+# be directly included in the main test source file. We list them here so that
+# they will show up in IDEs
+set( ${PLUGIN_NAME}_TEST_SRCS
+  ${${PLUGIN_NAME}Test_SOURCE_DIR}/TextureTest.cpp
+  ${${PLUGIN_NAME}Test_SOURCE_DIR}/ODFTest.cpp
+  ${${PLUGIN_NAME}Test_SOURCE_DIR}/OrientationArrayTest.cpp
+  ${${PLUGIN_NAME}Test_SOURCE_DIR}/OrientationConverterTest.cpp
+  ${${PLUGIN_NAME}Test_SOURCE_DIR}/IPFLegendTest.cpp
+  ${${PLUGIN_NAME}Test_SOURCE_DIR}/SO3SamplerTest.cpp
+  ${${PLUGIN_NAME}Test_SOURCE_DIR}/OrientationTransformsTest.cpp
+  ${${PLUGIN_NAME}Test_SOURCE_DIR}/TestPrintFunctions.h
+  ${${PLUGIN_NAME}Test_SOURCE_DIR}/GenerateFunctionList.h
+  )
+# Set the source files properties on each source file.
+foreach(f ${${PLUGIN_NAME}_TEST_SRCS})
+  set_source_files_properties( ${f} PROPERTIES HEADER_FILE_ONLY TRUE)
+endforeach()
+
+AddSIMPLUnitTest(TESTNAME OrientationLibTest
+                    SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/OrientationLibTest.cpp ${${PLUGIN_NAME}_TEST_SRCS}
+                    FOLDER "OrientationLibProj/Test"
+                    LINK_LIBRARIES ${OrientationLib_Link_Libs})
+if(MSVC)
+  set_source_files_properties(${SIMPLTest_SOURCE_DIR}/OrientationLibTest.cpp PROPERTIES COMPILE_FLAGS /bigobj)
+endif()
+
+
+
+         if(0)
 AddSIMPLUnitTest(TESTNAME TextureTest
                     SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/TextureTest.cpp
                     FOLDER "OrientationLibProj/Test"
@@ -94,4 +125,4 @@ AddSIMPLUnitTest(TESTNAME OrientationTransformsTest
                             ${${PLUGIN_NAME}_SOURCE_DIR}/Test/GenerateFunctionList.h
                     FOLDER "OrientationLibProj/Test"
                     LINK_LIBRARIES ${OrientationLib_Link_Libs})
-
+                endif()

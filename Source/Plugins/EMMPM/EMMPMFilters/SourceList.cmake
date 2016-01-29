@@ -29,7 +29,7 @@ set(_PublicFilters
 foreach(f ${_PublicFilters} )
   ADD_SIMPL_FILTER(  "EMMPM" "EMMPM"
                         ${_filterGroupName} ${f}
-                        ${EMMPM_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md TRUE ${EMMPM_BINARY_DIR})
+                        ${EMMPM_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md TRUE)
 endforeach()
 
 
@@ -45,7 +45,7 @@ set(_PrivateFilters
 foreach(f ${_PrivateFilters} )
   ADD_SIMPL_FILTER(  "EMMPM" "EMMPM"
                         ${_filterGroupName} ${f}
-                        ${${PLUGIN_NAME}_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md FALSE ${OrientationAnalysis_BINARY_DIR})
+                        ${${PLUGIN_NAME}_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md FALSE)
 endforeach()
 
 

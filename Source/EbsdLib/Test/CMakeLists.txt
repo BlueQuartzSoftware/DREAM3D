@@ -60,20 +60,26 @@ set(TEST_TEMP_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test/Temp)
 # Make sure the directory is created during CMake time
 file(MAKE_DIRECTORY ${TEST_TEMP_DIR})
 
+#------------------------------------------------------------------------------
+# List all the source files here. They will NOT be compiled but instead
+# be directly included in the main test source file. We list them here so that
+# they will show up in IDEs
+set( ${PLUGIN_NAME}_TEST_SRCS
+  ${${PLUGIN_NAME}Test_SOURCE_DIR}/AngImportTest.cpp
+  ${${PLUGIN_NAME}Test_SOURCE_DIR}/CtfReaderTest.cpp
+  ${${PLUGIN_NAME}Test_SOURCE_DIR}/EdaxOIMReaderTest.cpp
+  )
+# Set the source files properties on each source file.
+foreach(f ${${PLUGIN_NAME}_TEST_SRCS})
+  set_source_files_properties( ${f} PROPERTIES HEADER_FILE_ONLY TRUE)
+endforeach()
 
-AddSIMPLUnitTest(TESTNAME AngImportTest 
-                    SOURCES ${EbsdLibTest_SOURCE_DIR}/AngImportTest.cpp
-                    FOLDER "EbsdLibProj/Test" 
+AddSIMPLUnitTest(TESTNAME EbsdLibTest
+                    SOURCES ${EbsdLibTest_SOURCE_DIR}/EbsdLibTest.cpp ${${PLUGIN_NAME}_TEST_SRCS}
+                    FOLDER "EbsdLibProj/Test"
                     LINK_LIBRARIES Qt5::Core EbsdLib)
-
-AddSIMPLUnitTest(TESTNAME CtfReaderTest 
-                    SOURCES ${EbsdLibTest_SOURCE_DIR}/CtfReaderTest.cpp
-                    FOLDER "EbsdLibProj/Test" 
-                    LINK_LIBRARIES Qt5::Core EbsdLib)
-
-AddSIMPLUnitTest(TESTNAME EdaxOIMReaderTest
-                    SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/EdaxOIMReaderTest.cpp
-                    FOLDER "EbsdLibProj/Test" 
-                    LINK_LIBRARIES Qt5::Core H5Support EbsdLib)
+if(MSVC)
+  set_source_files_properties(${SIMPLTest_SOURCE_DIR}/EbsdLibTest.cpp PROPERTIES COMPILE_FLAGS /bigobj)
+endif()
 
 

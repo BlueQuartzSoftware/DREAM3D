@@ -38,6 +38,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+
 #include "OrientationLib/Texture/Texture.hpp"
 #include "OrientationLib/SpaceGroupOps/CubicOps.h"
 
@@ -49,41 +50,50 @@
  * @param argv
  * @return
  */
-int main(int argc, char** argv)
+class TextureTest
 {
+  public:
+    TextureTest(){}
+    virtual ~TextureTest(){}
 
-  QVector<float> e1s;
-  QVector<float> e2s;
-  QVector<float> e3s;
-  QVector<float> weights;
-  QVector<float> sigmas;
-  QVector<float> odf;
+    void operator()()
+    {
+      QVector<float> e1s;
+      QVector<float> e2s;
+      QVector<float> e3s;
+      QVector<float> weights;
+      QVector<float> sigmas;
+      QVector<float> odf;
 
-  CubicOps cubicOps;
-  HexagonalOps hexagonalOps;
-  OrthoRhombicOps orthOps;
+      CubicOps cubicOps;
+      HexagonalOps hexagonalOps;
+      OrthoRhombicOps orthOps;
 
-  size_t numEntries = e1s.size();
-  odf.resize(cubicOps.getODFSize());
-  Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true, odf.data(), numEntries);
-  odf.resize(hexagonalOps.getODFSize());
-  Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true,
-                               odf.data(), numEntries);
-
-
-  odf.resize(orthOps.getODFSize());
-  Texture::CalculateOrthoRhombicODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true,
-                                        odf.data(), numEntries);
+      size_t numEntries = e1s.size();
+      odf.resize(cubicOps.getODFSize());
+      Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true, odf.data(), numEntries);
+      odf.resize(hexagonalOps.getODFSize());
+      Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true,
+                                   odf.data(), numEntries);
 
 
-  //int size = 1000;
-  // Now generate the actual XY point data that gets plotted.
-  // These are the output vectors
-  QVector<float> angles;
-  QVector<float> axes;
-  QVector<float> mdf(CubicOps::k_MdfSize);
+      odf.resize(orthOps.getODFSize());
+      Texture::CalculateOrthoRhombicODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true,
+                                            odf.data(), numEntries);
 
-  Texture::CalculateMDFData<float, CubicOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), angles.size());
 
-  return EXIT_SUCCESS;
-}
+      //int size = 1000;
+      // Now generate the actual XY point data that gets plotted.
+      // These are the output vectors
+      QVector<float> angles;
+      QVector<float> axes;
+      QVector<float> mdf(CubicOps::k_MdfSize);
+
+      Texture::CalculateMDFData<float, CubicOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), angles.size());
+
+    }
+  private:
+    TextureTest(const TextureTest&); // Copy Constructor Not Implemented
+    void operator=(const TextureTest&); // Operator '=' Not Implemented
+
+};
