@@ -160,8 +160,29 @@ cmpRevisionString( GENERATED_HEADER_FILE_PATH "SIMPLViewVersion.h"
 # -----------------------------------------------------------------------
 # Setup a Global property that is used to gather Documentation Information
 # into a single known location
-set_property(GLOBAL PROPERTY DREAM3DDocRoot "${DREAM3DProj_BINARY_DIR}")
-file(WRITE ${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList "")
+get_property(DREAM3DDocRoot GLOBAL PROPERTY DREAM3DDocRoot)
+if("${DREAM3DDocRoot}" STREQUAL "")
+  set_property(GLOBAL PROPERTY DREAM3DDocRoot "${DREAM3DProj_BINARY_DIR}")
+  get_property(DREAM3DDocRoot GLOBAL PROPERTY DREAM3DDocRoot)
+  file(WRITE "${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList" "")
+endif()
+
+
+get_property(SIMPLPluginList GLOBAL PROPERTY SIMPLPluginList)
+if("${SIMPLPluginList}" STREQUAL "")
+  set_property(GLOBAL PROPERTY SIMPLPluginList "${DREAM3DProj_BINARY_DIR}/SIMPLPluginList.txt")
+  get_property(SIMPLPluginList GLOBAL PROPERTY SIMPLPluginList)
+  file(WRITE "${DREAM3DProj_BINARY_DIR}/SIMPLPluginList.txt" "")
+endif()
+
+
+get_property(SIMPLLibSearchDirs GLOBAL PROPERTY SIMPLLibSearchDirs)
+if("${SIMPLLibSearchDirs}" STREQUAL "")
+  set_property(GLOBAL PROPERTY SIMPLLibSearchDirs "${DREAM3DProj_BINARY_DIR}/LibSearchDirs.txt")
+  get_property(SIMPLLibSearchDirs GLOBAL PROPERTY SIMPLLibSearchDirs)
+  file(WRITE "${DREAM3DProj_BINARY_DIR}/LibSearchDirs.txt" "")
+endif()
+
 
 # -----------------------------------------------------------------------
 # Bring in the SIMPLView Project, which will bring in SIMPLib
@@ -182,12 +203,10 @@ set(DREAM3D_DOCUMENTATION_DIR ${PROJECT_SOURCE_DIR}/Documentation)
 set(DREAM3D_SUPPORT_DIR ${PROJECT_SOURCE_DIR}/Support)
 
 
-
 set(CMP_ENABLE_PLUGINS "1")
-set(CMP_PLUGIN_LIST_FILE ${PROJECT_BINARY_DIR}/SIMPLib_PluginList.txt)
-file(WRITE ${CMP_PLUGIN_LIST_FILE} "")
-set(CMP_PLUGIN_SEARCHDIR_FILE ${PROJECT_BINARY_DIR}/libsearchdirs.txt)
-file(WRITE ${CMP_PLUGIN_SEARCHDIR_FILE} "${PROJECT_BINARY_DIR}/Bin/plugins;")
+set(CMP_PLUGIN_LIST_FILE "${SIMPLPluginList}")
+set(CMP_PLUGIN_SEARCHDIR_FILE "${SIMPLLibSearchDirs}")
+file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${PROJECT_BINARY_DIR}/Bin/plugins;")
 file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${PROJECT_BINARY_DIR}/Bin;")
 set(CMP_LIB_SEARCH_DIRS "")
 set(CMP_MODULES_SOURCE_DIR ${CMP_SOURCE_DIR}/Modules CACHE INTERNAL "")
