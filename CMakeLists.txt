@@ -33,7 +33,7 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
+message(STATUS "********* STARTING DREAM3D CONFIGURATION ***********************")
 if(NOT "${DREAM3D_SDK}" STREQUAL "")
   include("${DREAM3D_SDK}/DREAM3D_SDK.cmake")
   message(STATUS "DREAM3D_SDK Location: ${DREAM3D_SDK}")
@@ -88,34 +88,61 @@ endif()
 # Find the Git Package for Versioning. It should be ok if Git is NOT found
 Find_package(Git)
 
+get_filename_component(DREAM3D_PARENT ${DREAM3DProj_SOURCE_DIR} DIRECTORY CACHE)
+
 #------------------------------------------------------------------------------
 # If the developer has set another CMP directory then use that, otherwise look
 # for the CMP directory at the same level as the SIMPL directory
 if("${CMP_SOURCE_DIR}" STREQUAL "")
-  set(CMP_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR}/../CMP)
-  get_filename_component(CMP_SOURCE_DIR "${CMP_SOURCE_DIR}" ABSOLUTE)
+  set(CMP_SOURCE_DIR ${DREAM3D_PARENT}/CMP)
   message(STATUS "CMP_SOURCE_DIR: ${CMP_SOURCE_DIR}")
 endif()
 
 if(NOT EXISTS "${CMP_SOURCE_DIR}")
-  message(WARNING "CMP_SOURCE_DIR does not exist at ${CMP_SOURCE_DIR}. Aborting CMake.")
-  message(FATAL_ERROR "CMP can be cloned using git clone -b develop git://github.com/bluequartzsoftware/CMP.git")
-  # TODO: Add in automatic cloning
+  if(Git_FOUND)
+    message(STATUS "CMP_SOURCE_DIR does not exist at ${CMP_SOURCE_DIR}. Attempting to clone it from Github....")
+    execute_process(COMMAND ${GIT_EXECUTABLE} clone -b develop git://github.com/bluequartzsoftware/CMP.git ${DREAM3D_PARENT}/CMP
+                    OUTPUT_VARIABLE CLONE_OUTPUT
+                    RESULT_VARIABLE did_run
+                    ERROR_VARIABLE git_error
+                    WORKING_DIRECTORY ${DREAM3D_PARENT} )
+  endif()
+  # One last check. If it does not exist at this point then we simply Abort CMake 
+  if(NOT EXISTS "${CMP_SOURCE_DIR}")
+    message(FATAL_ERROR "CMP_SOURCE_DIR does not exist. We attempted to clone it from the GitHub repo but that also seemed\
+      to fail. SIMPLView can not proceed without the CMP directory. Please ask a SIMPL developer for more\
+      information about this error. Can you access http://github.com/bluequartzsoftware/CMP.git? is\
+      a firewall blocking the 'git' protocol? ")
+  endif()
 endif()
 
 #------------------------------------------------------------------------------
-# If the developer has set another SIMPLView directory then use that, otherwise look
-# for the SIMPLView directory at the same level as the DREAM3D directory
+# If the developer has set another SIMPL directory then use that, otherwise look
+# for the SIMPLView directory at the same level as the SIMPL directory
 if("${SIMPLViewProj_SOURCE_DIR}" STREQUAL "")
-  set(SIMPLViewProj_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR}/../SIMPLView)
-  get_filename_component(SIMPLViewProj_SOURCE_DIR "${SIMPLViewProj_SOURCE_DIR}" ABSOLUTE)
+  set(SIMPLViewProj_SOURCE_DIR ${DREAM3D_PARENT}/SIMPLView)
   message(STATUS "SIMPLViewProj_SOURCE_DIR: ${SIMPLViewProj_SOURCE_DIR}")
 endif()
 
 if(NOT EXISTS "${SIMPLViewProj_SOURCE_DIR}")
-  message(WARNING "SIMPLViewProj_SOURCE_DIR does not exist at ${SIMPLViewProj_SOURCE_DIR}. Aborting CMake.")
-  message(FATAL_ERROR "SIMPLView can be cloned using git clone -b develop git://github.com/bluequartzsoftware/SIMPLView.git")
-  # TODO: Add in automatic cloning
+  if(Git_FOUND)
+    message(STATUS "SIMPLViewProj_SOURCE_DIR does not exist at ${SIMPLViewProj_SOURCE_DIR}. Attempting to clone it from Github....")
+    execute_process(COMMAND ${GIT_EXECUTABLE} clone -b feature/reorg git://github.com/bluequartzsoftware/SIMPLView.git ${DREAM3D_PARENT}/SIMPLView
+                    OUTPUT_VARIABLE CLONE_OUTPUT
+                    RESULT_VARIABLE did_run
+                    ERROR_VARIABLE git_error
+                    WORKING_DIRECTORY ${DREAM3D_PARENT}/ )
+    # message(STATUS "CLONE_OUTPUT: ${CLONE_OUTPUT}")
+    # message(STATUS "did_run: ${did_run}")
+    # message(STATUS "git_error: ${git_error}")
+  endif()
+  # One last check. If it does not exist at this point then we simply Abort CMake 
+  if(NOT EXISTS "${SIMPLViewProj_SOURCE_DIR}")
+    message(FATAL_ERROR "SIMPLViewProj_SOURCE_DIR does not exist. We attempted to clone it from the GitHub repo but that also seemed\
+      to fail. SIMPLView can not proceed without the SIMPLViewProj_SOURCE_DIR directory. Please ask a SIMPL developer for more\
+      information about this error. Can you access http://github.com/bluequartzsoftware/SIMPLView.git? is\
+      a firewall blocking the 'git' protocol? ")
+  endif()
 endif()
 
 #------------------------------------------------------------------------------
@@ -219,7 +246,7 @@ endif()
 # --------------------------------------------------------------------
 #
 if("${DREAM3D_DATA_DIR}" STREQUAL "")
-  set(DREAM3D_DATA_DIR "${DREAM3DProj_SOURCE_DIR}/../DREAM3D_Data/"  CACHE PATH "The directory where to find test data files")
+  set(DREAM3D_DATA_DIR "${DREAM3D_PARENT}/DREAM3D_Data/"  CACHE PATH "The directory where to find test data files")
 endif()
 
 if("${DREAM3D_DATA_DIR}" STREQUAL "")
