@@ -55,11 +55,6 @@ file(MAKE_DIRECTORY ${TEST_TEMP_DIR})
 configure_file(${EbsdLibTest_SOURCE_DIR}/EbsdTestFileLocation.h.in
                ${EbsdLibTest_BINARY_DIR}/EbsdLibTestFileLocation.h @ONLY IMMEDIATE)
 
-
-set(TEST_TEMP_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test/Temp)
-# Make sure the directory is created during CMake time
-file(MAKE_DIRECTORY ${TEST_TEMP_DIR})
-
 #------------------------------------------------------------------------------
 # List all the source files here. They will NOT be compiled but instead
 # be directly included in the main test source file. We list them here so that
