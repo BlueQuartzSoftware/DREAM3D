@@ -11,13 +11,11 @@
 set(DREAM3DTest_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR}/Test)
 set(DREAM3DTest_BINARY_DIR ${DREAM3DProj_BINARY_DIR}/Test)
 
-
 include_directories(${DREAM3DTest_SOURCE_DIR})
 
 #------------------------------------------------------------------------------
 # Include this file from the SIMPL Project
 include(${SIMPLProj_SOURCE_DIR}/Test/SIMPLTestFunctions.cmake)
-
 
 set(TEST_TEMP_DIR ${DREAM3DTest_BINARY_DIR}/Temp)
 # Make sure the directory is created during CMake time

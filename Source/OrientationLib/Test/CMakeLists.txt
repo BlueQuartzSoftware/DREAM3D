@@ -1,5 +1,5 @@
 # ============================================================================
-# Copyright (c) 2009-2015 BlueQuartz Software, LLC
+# Copyright (c) 2009-2016 BlueQuartz Software, LLC
 #
 # Redistribution and use in source and binary forms, with or without modification,
 # are permitted provided that the following conditions are met:
@@ -52,7 +52,7 @@ set(TEST_TEMP_DIR ${${PLUGIN_NAME}Test_BINARY_DIR}/Test/Temp)
 file(MAKE_DIRECTORY ${TEST_TEMP_DIR})
 
 
-configure_file(${${PLUGIN_NAME}_SOURCE_DIR}/Test/TestFileLocations.h.in
+configure_file(${${PLUGIN_NAME}_SOURCE_DIR}/Test/${PLUGIN_NAME}TestFileLocations.h.in
                ${${PLUGIN_NAME}_BINARY_DIR}/Test/${PLUGIN_NAME}TestFileLocations.h @ONLY IMMEDIATE)
 
 
@@ -63,66 +63,60 @@ set(OrientationLib_Link_Libs Qt5::Core H5Support SIMPLib OrientationLib)
 # List all the source files here. They will NOT be compiled but instead
 # be directly included in the main test source file. We list them here so that
 # they will show up in IDEs
+set(TEST_NAMES
+  TextureTest
+  ODFTest
+  OrientationArrayTest
+  OrientationConverterTest
+  IPFLegendTest
+  SO3SamplerTest
+  OrientationTransformsTest
+)
+
+# We have some extra header files that need to be listed so that they show up in IDEs
 set( ${PLUGIN_NAME}_TEST_SRCS
-  ${${PLUGIN_NAME}Test_SOURCE_DIR}/TextureTest.cpp
-  ${${PLUGIN_NAME}Test_SOURCE_DIR}/ODFTest.cpp
-  ${${PLUGIN_NAME}Test_SOURCE_DIR}/OrientationArrayTest.cpp
-  ${${PLUGIN_NAME}Test_SOURCE_DIR}/OrientationConverterTest.cpp
-  ${${PLUGIN_NAME}Test_SOURCE_DIR}/IPFLegendTest.cpp
-  ${${PLUGIN_NAME}Test_SOURCE_DIR}/SO3SamplerTest.cpp
-  ${${PLUGIN_NAME}Test_SOURCE_DIR}/OrientationTransformsTest.cpp
   ${${PLUGIN_NAME}Test_SOURCE_DIR}/TestPrintFunctions.h
   ${${PLUGIN_NAME}Test_SOURCE_DIR}/GenerateFunctionList.h
   )
+
+set(FilterTestIncludes "")
+set(TestMainFunctors "")
+
+foreach(name  ${TEST_NAMES})
+  set( ${PLUGIN_NAME}_TEST_SRCS
+    ${${PLUGIN_NAME}_TEST_SRCS}
+    "${${PLUGIN_NAME}_SOURCE_DIR}/Test/${name}.cpp"
+    )
+  string(CONCAT
+    FilterTestIncludes
+    ${FilterTestIncludes}
+    "#include \"${name}.cpp\"\n"
+    )
+
+  string(CONCAT
+    TestMainFunctors
+   ${TestMainFunctors}
+   "  ${name}()()|\n")
+endforeach()
+
+STRING(REPLACE "|" ";" TestMainFunctors ${TestMainFunctors}   )
+
+configure_file(${SIMPLProj_SOURCE_DIR}/Test/TestMain.cpp.in
+               ${${PLUGIN_NAME}Test_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp @ONLY)
+
+
 # Set the source files properties on each source file.
 foreach(f ${${PLUGIN_NAME}_TEST_SRCS})
   set_source_files_properties( ${f} PROPERTIES HEADER_FILE_ONLY TRUE)
 endforeach()
 
-AddSIMPLUnitTest(TESTNAME OrientationLibTest
-                    SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/OrientationLibTest.cpp ${${PLUGIN_NAME}_TEST_SRCS}
-                    FOLDER "OrientationLibProj/Test"
-                    LINK_LIBRARIES ${OrientationLib_Link_Libs})
+
+AddSIMPLUnitTest(TESTNAME ${PLUGIN_NAME}UnitTest
+  SOURCES ${${PLUGIN_NAME}Test_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp ${${PLUGIN_NAME}_TEST_SRCS}
+  FOLDER "${PLUGIN_NAME}/Test"
+  LINK_LIBRARIES ${OrientationLib_Link_Libs})
+
 if(MSVC)
-  set_source_files_properties(${SIMPLTest_SOURCE_DIR}/OrientationLibTest.cpp PROPERTIES COMPILE_FLAGS /bigobj)
+  set_source_files_properties(${${PLUGIN_NAME}Test_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp PROPERTIES COMPILE_FLAGS /bigobj)
 endif()
 
-
-
-         if(0)
-AddSIMPLUnitTest(TESTNAME TextureTest
-                    SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/TextureTest.cpp
-                    FOLDER "OrientationLibProj/Test"
-                    LINK_LIBRARIES ${OrientationLib_Link_Libs})
-
-AddSIMPLUnitTest(TESTNAME ODFTest
-                    SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/ODFTest.cpp
-                    FOLDER "OrientationLibProj/Test"
-                    LINK_LIBRARIES ${OrientationLib_Link_Libs})
-
-AddSIMPLUnitTest(TESTNAME OrientationArrayTest
-                    SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/OrientationArrayTest.cpp ${${PLUGIN_NAME}_SOURCE_DIR}/Test/TestPrintFunctions.h
-                    FOLDER "OrientationLibProj/Test"
-                    LINK_LIBRARIES ${OrientationLib_Link_Libs})
-
-AddSIMPLUnitTest(TESTNAME OrientationConverterTest
-                    SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/OrientationConverterTest.cpp ${${PLUGIN_NAME}_SOURCE_DIR}/Test/TestPrintFunctions.h
-                    FOLDER "OrientationLibProj/Test"
-                    LINK_LIBRARIES ${OrientationLib_Link_Libs})
-
-AddSIMPLUnitTest(TESTNAME IPFLegendTest
-                    SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/IPFLegendTest.cpp
-                    FOLDER "OrientationLibProj/Test"
-                    LINK_LIBRARIES ${OrientationLib_Link_Libs} Qt5::Gui )
-
-AddSIMPLUnitTest(TESTNAME SO3SamplerTest
-                    SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/SO3SamplerTest.cpp
-                    FOLDER "OrientationLibProj/Test"
-                    LINK_LIBRARIES ${OrientationLib_Link_Libs})
-
-AddSIMPLUnitTest(TESTNAME OrientationTransformsTest
-                    SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/OrientationTransformsTest.cpp ${${PLUGIN_NAME}_SOURCE_DIR}/Test/TestPrintFunctions.h
-                            ${${PLUGIN_NAME}_SOURCE_DIR}/Test/GenerateFunctionList.h
-                    FOLDER "OrientationLibProj/Test"
-                    LINK_LIBRARIES ${OrientationLib_Link_Libs})
-                endif()

@@ -60,20 +60,20 @@
   var.setValue(firstPath);\
   propWasSet = filter->setProperty("FirstInputArrayPath", var);\
   if(false == propWasSet)\
-  {\
-    qDebug() << "Unable to set property FirstInputArrayPath";\
+{\
+  qDebug() << "Unable to set property FirstInputArrayPath";\
   }\
   var.setValue(secondPath);\
   propWasSet = filter->setProperty("SecondInputArrayPath", var);\
   if(false == propWasSet)\
-  {\
-    qDebug() << "Unable to set property SecondInputArrayPath";\
+{\
+  qDebug() << "Unable to set property SecondInputArrayPath";\
   }\
   var.setValue(diffMapPath);\
   propWasSet = filter->setProperty("DifferenceMapArrayPath", var);\
   if(false == propWasSet)\
-  {\
-    qDebug() << "Unable to set property DifferenceMapArrayPath";\
+{\
+  qDebug() << "Unable to set property DifferenceMapArrayPath";\
   }\
   filter->execute();\
   err = filter->getErrorCondition();\
@@ -83,20 +83,20 @@
   var.setValue(firstPath);\
   propWasSet = filter->setProperty("FirstInputArrayPath", var);\
   if(false == propWasSet)\
-  {\
-    qDebug() << "Unable to set property FirstInputArrayPath";\
+{\
+  qDebug() << "Unable to set property FirstInputArrayPath";\
   }\
   var.setValue(secondPath);\
   propWasSet = filter->setProperty("SecondInputArrayPath", var);\
   if(false == propWasSet)\
-  {\
-    qDebug() << "Unable to set property SecondInputArrayPath";\
+{\
+  qDebug() << "Unable to set property SecondInputArrayPath";\
   }\
   var.setValue(diffMapPath);\
   propWasSet = filter->setProperty("DifferenceMapArrayPath", var);\
   if(false == propWasSet)\
-  {\
-    qDebug() << "Unable to set property DifferenceMapArrayPath";\
+{\
+  qDebug() << "Unable to set property DifferenceMapArrayPath";\
   }\
   filter->execute();\
   err = filter->getErrorCondition();\
@@ -104,353 +104,341 @@
   diffMap = dc->getAttributeMatrix(diffMapPath.getAttributeMatrixName())->getAttributeArray(diffMapPath.getDataArrayName());\
   firstArray = dc->getAttributeMatrix(firstPath.getAttributeMatrixName())->getAttributeArray(firstPath.getDataArrayName());\
   if (!TemplateHelpers::CanDynamicCast<DataArray<type> >()(diffMap))\
-  {\
-    err = -1;\
+{\
+  err = -1;\
   }\
   DREAM3D_REQUIRE_EQUAL(err, 0);\
   checkDims1 = firstArray->getComponentDimensions();\
   checkDims2 = diffMap->getComponentDimensions();\
   if (checkDims1 != checkDims2)\
-  {\
-    err = -1;\
+{\
+  err = -1;\
   }\
   DREAM3D_REQUIRE_EQUAL(err, 0);\
   validateDiffMapValues<type>(diffMap);
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RemoveTestFiles()
+
+class FindDifferenceMapTest
 {
-#if REMOVE_TEST_FILES
-  QFile::remove(UnitTest::FindDifferenceMapTest::TestFile1);
-  QFile::remove(UnitTest::FindDifferenceMapTest::TestFile2);
-#endif
-}
+  public:
+    FindDifferenceMapTest(){}
+    virtual ~FindDifferenceMapTest(){}
+    SIMPL_TYPE_MACRO(FindDifferenceMapTest)
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TestFilterAvailability()
-{
-  // Now instantiate the FindDifferenceMapTest Filter from the FilterManager
-  QString filtName = "FindDifferenceMap";
-  FilterManager* fm = FilterManager::Instance();
-  IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-  if (NULL == filterFactory.get())
-  {
-    std::stringstream ss;
-    ss << "The FindDifferenceMapTest Requires the use of the " << filtName.toStdString() << " filter which is found in the Statistics Plugin";
-    DREAM3D_TEST_THROW_EXCEPTION(ss.str())
-  }
-  return 0;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DataContainerArray::Pointer initializeDataContainerArray()
-{
-  int err = 0;
-
-  DataContainerArray::Pointer dca = DataContainerArray::New();
-
-  DataContainer::Pointer m = DataContainer::New();
-  m->setName("FindDifferenceMapTest");
-
-  // Create Attribute Matrices with different tDims to test validation of tuple compatibility
-  QVector<size_t> tDims(1, 100);
-  AttributeMatrix::Pointer attrMat1 = AttributeMatrix::New(tDims, "DiffMapTestAttrMat1", 3);
-  AttributeMatrix::Pointer attrMat2 = AttributeMatrix::New(tDims, "DiffMapTestAttrMat2", 3);
-  AttributeMatrix::Pointer attrMat11 = AttributeMatrix::New(tDims, "DiffMapTestAttrMat11", 3);
-  AttributeMatrix::Pointer attrMat22 = AttributeMatrix::New(tDims, "DiffMapTestAttrMat22", 3);
-
-  tDims[0] = 10;
-  AttributeMatrix::Pointer attrMat3 = AttributeMatrix::New(tDims, "DiffMapTestAttrMat3", 3);
-
-  m->addAttributeMatrix("DiffMapTestAttrMat1", attrMat1);
-  m->addAttributeMatrix("DiffMapTestAttrMat2", attrMat2);
-  m->addAttributeMatrix("DiffMapTestAttrMat11", attrMat11);
-  m->addAttributeMatrix("DiffMapTestAttrMat22", attrMat22);
-  m->addAttributeMatrix("DiffMapTestAttrMat3", attrMat3);
-  dca->addDataContainer(m);
-
-  QVector<size_t> cDims(1, 3);
-  int32_t initVal = 10;
-  tDims[0] = 100;
-
-  CREATE_DATA_ARRAY(uint8_t, attrMat1, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(int8_t, attrMat1, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(uint16_t, attrMat1, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(int16_t, attrMat1, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(uint32_t, attrMat1, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(int32_t, attrMat1, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(uint64_t, attrMat1, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(int64_t, attrMat1, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(double, attrMat1, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(float, attrMat1, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(bool, attrMat1, tDims, cDims, true, err);
-
-  cDims[0] = 1;
-
-  CREATE_DATA_ARRAY(uint8_t, attrMat11, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(int8_t, attrMat11, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(uint16_t, attrMat11, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(int16_t, attrMat11, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(uint32_t, attrMat11, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(int32_t, attrMat11, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(uint64_t, attrMat11, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(int64_t, attrMat11, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(double, attrMat11, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(float, attrMat11, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(bool, attrMat11, tDims, cDims, true, err);
-
-  initVal = 5;
-  cDims[0] = 3;
-
-  CREATE_DATA_ARRAY(uint8_t, attrMat2, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(int8_t, attrMat2, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(uint16_t, attrMat2, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(int16_t, attrMat2, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(uint32_t, attrMat2, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(int32_t, attrMat2, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(uint64_t, attrMat2, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(int64_t, attrMat2, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(double, attrMat2, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(float, attrMat2, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(bool, attrMat2, tDims, cDims, false, err);
-
-  cDims[0] = 1;
-
-  CREATE_DATA_ARRAY(uint8_t, attrMat22, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(int8_t, attrMat22, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(uint16_t, attrMat22, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(int16_t, attrMat22, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(uint32_t, attrMat22, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(int32_t, attrMat22, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(uint64_t, attrMat22, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(int64_t, attrMat22, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(double, attrMat22, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(float, attrMat22, tDims, cDims, initVal, err);
-  CREATE_DATA_ARRAY(bool, attrMat22, tDims, cDims, true, err);
-
-  tDims[0] = 10;
-
-  CREATE_DATA_ARRAY(float, attrMat3, tDims, cDims, initVal, err)
-
-  return dca;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-template<typename T>
-void validateDiffMapValues(IDataArray::Pointer iArray)
-{
-  typename DataArray<T>::Pointer diffMapPtr = std::dynamic_pointer_cast<DataArray<T> >(iArray);
-  T* diffMap = diffMapPtr->getPointer(0);
-  size_t numTuples = diffMapPtr->getNumberOfTuples();
-  int32_t numComps = diffMapPtr->getNumberOfComponents();
-
-  for (size_t i = 0; i < numTuples; i++)
-  {
-    for (size_t j = 0; j < numComps; j++)
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void RemoveTestFiles()
     {
-      DREAM3D_REQUIRE_EQUAL(diffMap[numComps * i + j], 5)
+#if REMOVE_TEST_FILES
+      QFile::remove(UnitTest::FindDifferenceMapTest::TestFile1);
+      QFile::remove(UnitTest::FindDifferenceMapTest::TestFile2);
+#endif
     }
-  }
-}
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void removeArrayFromDataContainerArray(DataContainerArray::Pointer dca, DataArrayPath path)
-{
-  dca->getDataContainer(path.getDataContainerName())->getAttributeMatrix(path.getAttributeMatrixName())->removeAttributeArray(path.getDataArrayName());
-}
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    int TestFilterAvailability()
+    {
+      // Now instantiate the FindDifferenceMapTest Filter from the FilterManager
+      QString filtName = "FindDifferenceMap";
+      FilterManager* fm = FilterManager::Instance();
+      IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+      if (NULL == filterFactory.get())
+      {
+        std::stringstream ss;
+        ss << "The FindDifferenceMapTest Requires the use of the " << filtName.toStdString() << " filter which is found in the Statistics Plugin";
+        DREAM3D_TEST_THROW_EXCEPTION(ss.str())
+      }
+      return 0;
+    }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void validateFindDifferenceMap(AbstractFilter::Pointer filter, DataContainerArray::Pointer dca)
-{
-  QVariant var;
-  bool propWasSet;
-  int err = 0;
-  QString diffMapName = "DifferenceMap";
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    DataContainerArray::Pointer initializeDataContainerArray()
+    {
+      int err = 0;
 
-  DataContainer::Pointer dc = dca->getDataContainer("FindDifferenceMapTest");
-  QVector<size_t> checkDims1;
-  QVector<size_t> checkDims2;
-  IDataArray::Pointer diffMap;
-  IDataArray::Pointer firstArray;
+      DataContainerArray::Pointer dca = DataContainerArray::New();
 
-  DataArrayPath attrMat1_uint8("FindDifferenceMapTest", "DiffMapTestAttrMat1", "uint8_t");
-  DataArrayPath attrMat1_int8("FindDifferenceMapTest", "DiffMapTestAttrMat1", "int8_t");
-  DataArrayPath attrMat1_uint16("FindDifferenceMapTest", "DiffMapTestAttrMat1", "uint16_t");
-  DataArrayPath attrMat1_int16("FindDifferenceMapTest", "DiffMapTestAttrMat1", "int16_t");
-  DataArrayPath attrMat1_uint32("FindDifferenceMapTest", "DiffMapTestAttrMat1", "uint32_t");
-  DataArrayPath attrMat1_int32("FindDifferenceMapTest", "DiffMapTestAttrMat1", "int32_t");
-  DataArrayPath attrMat1_uint64("FindDifferenceMapTest", "DiffMapTestAttrMat1", "uint64_t");
-  DataArrayPath attrMat1_int64("FindDifferenceMapTest", "DiffMapTestAttrMat1", "int64_t");
-  DataArrayPath attrMat1_float("FindDifferenceMapTest", "DiffMapTestAttrMat1", "float");
-  DataArrayPath attrMat1_double("FindDifferenceMapTest", "DiffMapTestAttrMat1", "double");
-  DataArrayPath attrMat1_bool("FindDifferenceMapTest", "DiffMapTestAttrMat1", "bool");
+      DataContainer::Pointer m = DataContainer::New();
+      m->setName("FindDifferenceMapTest");
 
-  DataArrayPath attrMat2_uint8("FindDifferenceMapTest", "DiffMapTestAttrMat2", "uint8_t");
-  DataArrayPath attrMat2_int8("FindDifferenceMapTest", "DiffMapTestAttrMat2", "int8_t");
-  DataArrayPath attrMat2_uint16("FindDifferenceMapTest", "DiffMapTestAttrMat2", "uint16_t");
-  DataArrayPath attrMat2_int16("FindDifferenceMapTest", "DiffMapTestAttrMat2", "int16_t");
-  DataArrayPath attrMat2_uint32("FindDifferenceMapTest", "DiffMapTestAttrMat2", "uint32_t");
-  DataArrayPath attrMat2_int32("FindDifferenceMapTest", "DiffMapTestAttrMat2", "int32_t");
-  DataArrayPath attrMat2_uint64("FindDifferenceMapTest", "DiffMapTestAttrMat2", "uint64_t");
-  DataArrayPath attrMat2_int64("FindDifferenceMapTest", "DiffMapTestAttrMat2", "int64_t");
-  DataArrayPath attrMat2_float("FindDifferenceMapTest", "DiffMapTestAttrMat2", "float");
-  DataArrayPath attrMat2_double("FindDifferenceMapTest", "DiffMapTestAttrMat2", "double");
-  DataArrayPath attrMat2_bool("FindDifferenceMapTest", "DiffMapTestAttrMat2", "bool");
+      // Create Attribute Matrices with different tDims to test validation of tuple compatibility
+      QVector<size_t> tDims(1, 100);
+      AttributeMatrix::Pointer attrMat1 = AttributeMatrix::New(tDims, "DiffMapTestAttrMat1", 3);
+      AttributeMatrix::Pointer attrMat2 = AttributeMatrix::New(tDims, "DiffMapTestAttrMat2", 3);
+      AttributeMatrix::Pointer attrMat11 = AttributeMatrix::New(tDims, "DiffMapTestAttrMat11", 3);
+      AttributeMatrix::Pointer attrMat22 = AttributeMatrix::New(tDims, "DiffMapTestAttrMat22", 3);
 
-  DataArrayPath attrMat11_uint8("FindDifferenceMapTest", "DiffMapTestAttrMat11", "uint8_t");
-  DataArrayPath attrMat11_int8("FindDifferenceMapTest", "DiffMapTestAttrMat11", "int8_t");
-  DataArrayPath attrMat11_uint16("FindDifferenceMapTest", "DiffMapTestAttrMat11", "uint16_t");
-  DataArrayPath attrMat11_int16("FindDifferenceMapTest", "DiffMapTestAttrMat11", "int16_t");
-  DataArrayPath attrMat11_uint32("FindDifferenceMapTest", "DiffMapTestAttrMat11", "uint32_t");
-  DataArrayPath attrMat11_int32("FindDifferenceMapTest", "DiffMapTestAttrMat11", "int32_t");
-  DataArrayPath attrMat11_uint64("FindDifferenceMapTest", "DiffMapTestAttrMat11", "uint64_t");
-  DataArrayPath attrMat11_int64("FindDifferenceMapTest", "DiffMapTestAttrMat11", "int64_t");
-  DataArrayPath attrMat11_float("FindDifferenceMapTest", "DiffMapTestAttrMat11", "float");
-  DataArrayPath attrMat11_double("FindDifferenceMapTest", "DiffMapTestAttrMat11", "double");
+      tDims[0] = 10;
+      AttributeMatrix::Pointer attrMat3 = AttributeMatrix::New(tDims, "DiffMapTestAttrMat3", 3);
 
-  DataArrayPath attrMat22_uint8("FindDifferenceMapTest", "DiffMapTestAttrMat22", "uint8_t");
-  DataArrayPath attrMat22_int8("FindDifferenceMapTest", "DiffMapTestAttrMat22", "int8_t");
-  DataArrayPath attrMat22_uint16("FindDifferenceMapTest", "DiffMapTestAttrMat22", "uint16_t");
-  DataArrayPath attrMat22_int16("FindDifferenceMapTest", "DiffMapTestAttrMat22", "int16_t");
-  DataArrayPath attrMat22_uint32("FindDifferenceMapTest", "DiffMapTestAttrMat22", "uint32_t");
-  DataArrayPath attrMat22_int32("FindDifferenceMapTest", "DiffMapTestAttrMat22", "int32_t");
-  DataArrayPath attrMat22_uint64("FindDifferenceMapTest", "DiffMapTestAttrMat22", "uint64_t");
-  DataArrayPath attrMat22_int64("FindDifferenceMapTest", "DiffMapTestAttrMat22", "int64_t");
-  DataArrayPath attrMat22_float("FindDifferenceMapTest", "DiffMapTestAttrMat22", "float");
-  DataArrayPath attrMat22_double("FindDifferenceMapTest", "DiffMapTestAttrMat22", "double");
+      m->addAttributeMatrix("DiffMapTestAttrMat1", attrMat1);
+      m->addAttributeMatrix("DiffMapTestAttrMat2", attrMat2);
+      m->addAttributeMatrix("DiffMapTestAttrMat11", attrMat11);
+      m->addAttributeMatrix("DiffMapTestAttrMat22", attrMat22);
+      m->addAttributeMatrix("DiffMapTestAttrMat3", attrMat3);
+      dca->addDataContainer(m);
 
-  DataArrayPath diffMap1("FindDifferenceMapTest", "DiffMapTestAttrMat1", diffMapName);
-  DataArrayPath diffMap2("FindDifferenceMapTest", "DiffMapTestAttrMat3", diffMapName);
+      QVector<size_t> cDims(1, 3);
+      int32_t initVal = 10;
+      tDims[0] = 100;
 
-  // Fail if an input array is bool
-  SET_PROPERTIES_AND_CHECK_NE(filter, attrMat1_bool, attrMat2_bool, diffMap1, -90000)
-  removeArrayFromDataContainerArray(dca, diffMap1);
+      CREATE_DATA_ARRAY(uint8_t, attrMat1, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(int8_t, attrMat1, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(uint16_t, attrMat1, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(int16_t, attrMat1, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(uint32_t, attrMat1, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(int32_t, attrMat1, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(uint64_t, attrMat1, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(int64_t, attrMat1, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(double, attrMat1, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(float, attrMat1, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(bool, attrMat1, tDims, cDims, true, err);
 
-  // Fail if input arrays are of different type
-  SET_PROPERTIES_AND_CHECK_NE(filter, attrMat1_uint8, attrMat2_float, diffMap1, -90001)
-  removeArrayFromDataContainerArray(dca, diffMap1);
+      cDims[0] = 1;
 
-  // Fail if tuples do not match up
-  SET_PROPERTIES_AND_CHECK_NE(filter, attrMat1_uint8, attrMat2_uint8, diffMap2, -10200)
-  removeArrayFromDataContainerArray(dca, diffMap2);
+      CREATE_DATA_ARRAY(uint8_t, attrMat11, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(int8_t, attrMat11, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(uint16_t, attrMat11, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(int16_t, attrMat11, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(uint32_t, attrMat11, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(int32_t, attrMat11, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(uint64_t, attrMat11, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(int64_t, attrMat11, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(double, attrMat11, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(float, attrMat11, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(bool, attrMat11, tDims, cDims, true, err);
 
-  // Fail if input arrays have different numbers of components
-  SET_PROPERTIES_AND_CHECK_NE(filter, attrMat1_uint8, attrMat11_uint8, diffMap1, -90003)
-  removeArrayFromDataContainerArray(dca, diffMap1);
+      initVal = 5;
+      cDims[0] = 3;
 
-  // Succeed for all possible test combinations
+      CREATE_DATA_ARRAY(uint8_t, attrMat2, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(int8_t, attrMat2, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(uint16_t, attrMat2, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(int16_t, attrMat2, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(uint32_t, attrMat2, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(int32_t, attrMat2, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(uint64_t, attrMat2, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(int64_t, attrMat2, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(double, attrMat2, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(float, attrMat2, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(bool, attrMat2, tDims, cDims, false, err);
 
-  // vectors
-  SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat1_uint8, attrMat2_uint8, diffMap1, uint8_t)
-  removeArrayFromDataContainerArray(dca, diffMap1);
-  SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat1_int8, attrMat2_int8, diffMap1, int8_t)
-  removeArrayFromDataContainerArray(dca, diffMap1);
-  SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat1_uint16, attrMat2_uint16, diffMap1, uint16_t)
-  removeArrayFromDataContainerArray(dca, diffMap1);
-  SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat1_int16, attrMat2_int16, diffMap1, int16_t)
-  removeArrayFromDataContainerArray(dca, diffMap1);
-  SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat1_uint32, attrMat2_uint32, diffMap1, uint32_t)
-  removeArrayFromDataContainerArray(dca, diffMap1);
-  SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat1_int32, attrMat2_int32, diffMap1, int32_t)
-  removeArrayFromDataContainerArray(dca, diffMap1);
-  SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat1_uint64, attrMat2_uint64, diffMap1, uint64_t)
-  removeArrayFromDataContainerArray(dca, diffMap1);
-  SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat1_int64, attrMat2_int64, diffMap1, int64_t)
-  removeArrayFromDataContainerArray(dca, diffMap1);
-  SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat1_float, attrMat2_float, diffMap1, float)
-  removeArrayFromDataContainerArray(dca, diffMap1);
-  SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat1_double, attrMat2_double, diffMap1, double)
-  removeArrayFromDataContainerArray(dca, diffMap1);
+      cDims[0] = 1;
 
-  // scalars
-  SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat11_uint8, attrMat22_uint8, diffMap1, uint8_t)
-  removeArrayFromDataContainerArray(dca, diffMap1);
-  SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat11_int8, attrMat22_int8, diffMap1, int8_t)
-  removeArrayFromDataContainerArray(dca, diffMap1);
-  SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat11_uint16, attrMat22_uint16, diffMap1, uint16_t)
-  removeArrayFromDataContainerArray(dca, diffMap1);
-  SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat11_int16, attrMat22_int16, diffMap1, int16_t)
-  removeArrayFromDataContainerArray(dca, diffMap1);
-  SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat11_uint32, attrMat22_uint32, diffMap1, uint32_t)
-  removeArrayFromDataContainerArray(dca, diffMap1);
-  SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat11_int32, attrMat22_int32, diffMap1, int32_t)
-  removeArrayFromDataContainerArray(dca, diffMap1);
-  SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat11_uint64, attrMat22_uint64, diffMap1, uint64_t)
-  removeArrayFromDataContainerArray(dca, diffMap1);
-  SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat11_int64, attrMat22_int64, diffMap1, int64_t)
-  removeArrayFromDataContainerArray(dca, diffMap1);
-  SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat11_float, attrMat22_float, diffMap1, float)
-  removeArrayFromDataContainerArray(dca, diffMap1);
-  SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat11_double, attrMat22_double, diffMap1, double)
-  removeArrayFromDataContainerArray(dca, diffMap1);
-}
+      CREATE_DATA_ARRAY(uint8_t, attrMat22, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(int8_t, attrMat22, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(uint16_t, attrMat22, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(int16_t, attrMat22, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(uint32_t, attrMat22, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(int32_t, attrMat22, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(uint64_t, attrMat22, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(int64_t, attrMat22, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(double, attrMat22, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(float, attrMat22, tDims, cDims, initVal, err);
+      CREATE_DATA_ARRAY(bool, attrMat22, tDims, cDims, true, err);
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int FindDifferenceMapTest()
-{
-  DataContainerArray::Pointer dca = initializeDataContainerArray();
+      tDims[0] = 10;
 
-  QString filtName = "FindDifferenceMap";
-  FilterManager* fm = FilterManager::Instance();
-  IFilterFactory::Pointer factory = fm->getFactoryForFilter(filtName);
-  DREAM3D_REQUIRE(factory.get() != NULL)
+      CREATE_DATA_ARRAY(float, attrMat3, tDims, cDims, initVal, err)
 
-  AbstractFilter::Pointer diffMapFilter = factory->create();
-  DREAM3D_REQUIRE(diffMapFilter.get() != NULL)
+          return dca;
+    }
 
-  diffMapFilter->setDataContainerArray(dca);
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    template<typename T>
+    void validateDiffMapValues(IDataArray::Pointer iArray)
+    {
+      typename DataArray<T>::Pointer diffMapPtr = std::dynamic_pointer_cast<DataArray<T> >(iArray);
+      T* diffMap = diffMapPtr->getPointer(0);
+      size_t numTuples = diffMapPtr->getNumberOfTuples();
+      int32_t numComps = diffMapPtr->getNumberOfComponents();
 
-  validateFindDifferenceMap(diffMapFilter, dca);
+      for (size_t i = 0; i < numTuples; i++)
+      {
+        for (size_t j = 0; j < numComps; j++)
+        {
+          DREAM3D_REQUIRE_EQUAL(diffMap[numComps * i + j], 5)
+        }
+      }
+    }
 
-  return EXIT_SUCCESS;
-}
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void removeArrayFromDataContainerArray(DataContainerArray::Pointer dca, DataArrayPath path)
+    {
+      dca->getDataContainer(path.getDataContainerName())->getAttributeMatrix(path.getAttributeMatrixName())->removeAttributeArray(path.getDataArrayName());
+    }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void loadFilterPlugins()
-{
-  // Register all the filters including trying to load those from Plugins
-  FilterManager* fm = FilterManager::Instance();
-  SIMPLibPluginLoader::LoadPluginFilters(fm);
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void validateFindDifferenceMap(AbstractFilter::Pointer filter, DataContainerArray::Pointer dca)
+    {
+      QVariant var;
+      bool propWasSet;
+      int err = 0;
+      QString diffMapName = "DifferenceMap";
 
-  // Send progress messages from PipelineBuilder to this object for display
-  QMetaObjectUtilities::RegisterMetaTypes();
-}
+      DataContainer::Pointer dc = dca->getDataContainer("FindDifferenceMapTest");
+      QVector<size_t> checkDims1;
+      QVector<size_t> checkDims2;
+      IDataArray::Pointer diffMap;
+      IDataArray::Pointer firstArray;
 
+      DataArrayPath attrMat1_uint8("FindDifferenceMapTest", "DiffMapTestAttrMat1", "uint8_t");
+      DataArrayPath attrMat1_int8("FindDifferenceMapTest", "DiffMapTestAttrMat1", "int8_t");
+      DataArrayPath attrMat1_uint16("FindDifferenceMapTest", "DiffMapTestAttrMat1", "uint16_t");
+      DataArrayPath attrMat1_int16("FindDifferenceMapTest", "DiffMapTestAttrMat1", "int16_t");
+      DataArrayPath attrMat1_uint32("FindDifferenceMapTest", "DiffMapTestAttrMat1", "uint32_t");
+      DataArrayPath attrMat1_int32("FindDifferenceMapTest", "DiffMapTestAttrMat1", "int32_t");
+      DataArrayPath attrMat1_uint64("FindDifferenceMapTest", "DiffMapTestAttrMat1", "uint64_t");
+      DataArrayPath attrMat1_int64("FindDifferenceMapTest", "DiffMapTestAttrMat1", "int64_t");
+      DataArrayPath attrMat1_float("FindDifferenceMapTest", "DiffMapTestAttrMat1", "float");
+      DataArrayPath attrMat1_double("FindDifferenceMapTest", "DiffMapTestAttrMat1", "double");
+      DataArrayPath attrMat1_bool("FindDifferenceMapTest", "DiffMapTestAttrMat1", "bool");
 
-// -----------------------------------------------------------------------------
-//  Use test framework
-// -----------------------------------------------------------------------------
-int main(int argc, char** argv)
-{
-  // Instantiate the QCoreApplication that we need to get the current path and load plugins.
-  QCoreApplication app(argc, argv);
-  QCoreApplication::setOrganizationName("BlueQuartz Software");
-  QCoreApplication::setOrganizationDomain("bluequartz.net");
-  QCoreApplication::setApplicationName("FindDifferenceMapTestTest");
+      DataArrayPath attrMat2_uint8("FindDifferenceMapTest", "DiffMapTestAttrMat2", "uint8_t");
+      DataArrayPath attrMat2_int8("FindDifferenceMapTest", "DiffMapTestAttrMat2", "int8_t");
+      DataArrayPath attrMat2_uint16("FindDifferenceMapTest", "DiffMapTestAttrMat2", "uint16_t");
+      DataArrayPath attrMat2_int16("FindDifferenceMapTest", "DiffMapTestAttrMat2", "int16_t");
+      DataArrayPath attrMat2_uint32("FindDifferenceMapTest", "DiffMapTestAttrMat2", "uint32_t");
+      DataArrayPath attrMat2_int32("FindDifferenceMapTest", "DiffMapTestAttrMat2", "int32_t");
+      DataArrayPath attrMat2_uint64("FindDifferenceMapTest", "DiffMapTestAttrMat2", "uint64_t");
+      DataArrayPath attrMat2_int64("FindDifferenceMapTest", "DiffMapTestAttrMat2", "int64_t");
+      DataArrayPath attrMat2_float("FindDifferenceMapTest", "DiffMapTestAttrMat2", "float");
+      DataArrayPath attrMat2_double("FindDifferenceMapTest", "DiffMapTestAttrMat2", "double");
+      DataArrayPath attrMat2_bool("FindDifferenceMapTest", "DiffMapTestAttrMat2", "bool");
 
-  int err = EXIT_SUCCESS;
-  DREAM3D_REGISTER_TEST( loadFilterPlugins() );
-  DREAM3D_REGISTER_TEST( TestFilterAvailability() );
+      DataArrayPath attrMat11_uint8("FindDifferenceMapTest", "DiffMapTestAttrMat11", "uint8_t");
+      DataArrayPath attrMat11_int8("FindDifferenceMapTest", "DiffMapTestAttrMat11", "int8_t");
+      DataArrayPath attrMat11_uint16("FindDifferenceMapTest", "DiffMapTestAttrMat11", "uint16_t");
+      DataArrayPath attrMat11_int16("FindDifferenceMapTest", "DiffMapTestAttrMat11", "int16_t");
+      DataArrayPath attrMat11_uint32("FindDifferenceMapTest", "DiffMapTestAttrMat11", "uint32_t");
+      DataArrayPath attrMat11_int32("FindDifferenceMapTest", "DiffMapTestAttrMat11", "int32_t");
+      DataArrayPath attrMat11_uint64("FindDifferenceMapTest", "DiffMapTestAttrMat11", "uint64_t");
+      DataArrayPath attrMat11_int64("FindDifferenceMapTest", "DiffMapTestAttrMat11", "int64_t");
+      DataArrayPath attrMat11_float("FindDifferenceMapTest", "DiffMapTestAttrMat11", "float");
+      DataArrayPath attrMat11_double("FindDifferenceMapTest", "DiffMapTestAttrMat11", "double");
 
-  DREAM3D_REGISTER_TEST( FindDifferenceMapTest() )
+      DataArrayPath attrMat22_uint8("FindDifferenceMapTest", "DiffMapTestAttrMat22", "uint8_t");
+      DataArrayPath attrMat22_int8("FindDifferenceMapTest", "DiffMapTestAttrMat22", "int8_t");
+      DataArrayPath attrMat22_uint16("FindDifferenceMapTest", "DiffMapTestAttrMat22", "uint16_t");
+      DataArrayPath attrMat22_int16("FindDifferenceMapTest", "DiffMapTestAttrMat22", "int16_t");
+      DataArrayPath attrMat22_uint32("FindDifferenceMapTest", "DiffMapTestAttrMat22", "uint32_t");
+      DataArrayPath attrMat22_int32("FindDifferenceMapTest", "DiffMapTestAttrMat22", "int32_t");
+      DataArrayPath attrMat22_uint64("FindDifferenceMapTest", "DiffMapTestAttrMat22", "uint64_t");
+      DataArrayPath attrMat22_int64("FindDifferenceMapTest", "DiffMapTestAttrMat22", "int64_t");
+      DataArrayPath attrMat22_float("FindDifferenceMapTest", "DiffMapTestAttrMat22", "float");
+      DataArrayPath attrMat22_double("FindDifferenceMapTest", "DiffMapTestAttrMat22", "double");
 
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-  PRINT_TEST_SUMMARY();
-  return err;
-}
+      DataArrayPath diffMap1("FindDifferenceMapTest", "DiffMapTestAttrMat1", diffMapName);
+      DataArrayPath diffMap2("FindDifferenceMapTest", "DiffMapTestAttrMat3", diffMapName);
+
+      // Fail if an input array is bool
+      SET_PROPERTIES_AND_CHECK_NE(filter, attrMat1_bool, attrMat2_bool, diffMap1, -90000)
+          removeArrayFromDataContainerArray(dca, diffMap1);
+
+      // Fail if input arrays are of different type
+      SET_PROPERTIES_AND_CHECK_NE(filter, attrMat1_uint8, attrMat2_float, diffMap1, -90001)
+          removeArrayFromDataContainerArray(dca, diffMap1);
+
+      // Fail if tuples do not match up
+      SET_PROPERTIES_AND_CHECK_NE(filter, attrMat1_uint8, attrMat2_uint8, diffMap2, -10200)
+          removeArrayFromDataContainerArray(dca, diffMap2);
+
+      // Fail if input arrays have different numbers of components
+      SET_PROPERTIES_AND_CHECK_NE(filter, attrMat1_uint8, attrMat11_uint8, diffMap1, -90003)
+          removeArrayFromDataContainerArray(dca, diffMap1);
+
+      // Succeed for all possible test combinations
+
+      // vectors
+      SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat1_uint8, attrMat2_uint8, diffMap1, uint8_t)
+          removeArrayFromDataContainerArray(dca, diffMap1);
+      SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat1_int8, attrMat2_int8, diffMap1, int8_t)
+          removeArrayFromDataContainerArray(dca, diffMap1);
+      SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat1_uint16, attrMat2_uint16, diffMap1, uint16_t)
+          removeArrayFromDataContainerArray(dca, diffMap1);
+      SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat1_int16, attrMat2_int16, diffMap1, int16_t)
+          removeArrayFromDataContainerArray(dca, diffMap1);
+      SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat1_uint32, attrMat2_uint32, diffMap1, uint32_t)
+          removeArrayFromDataContainerArray(dca, diffMap1);
+      SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat1_int32, attrMat2_int32, diffMap1, int32_t)
+          removeArrayFromDataContainerArray(dca, diffMap1);
+      SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat1_uint64, attrMat2_uint64, diffMap1, uint64_t)
+          removeArrayFromDataContainerArray(dca, diffMap1);
+      SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat1_int64, attrMat2_int64, diffMap1, int64_t)
+          removeArrayFromDataContainerArray(dca, diffMap1);
+      SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat1_float, attrMat2_float, diffMap1, float)
+          removeArrayFromDataContainerArray(dca, diffMap1);
+      SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat1_double, attrMat2_double, diffMap1, double)
+          removeArrayFromDataContainerArray(dca, diffMap1);
+
+      // scalars
+      SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat11_uint8, attrMat22_uint8, diffMap1, uint8_t)
+          removeArrayFromDataContainerArray(dca, diffMap1);
+      SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat11_int8, attrMat22_int8, diffMap1, int8_t)
+          removeArrayFromDataContainerArray(dca, diffMap1);
+      SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat11_uint16, attrMat22_uint16, diffMap1, uint16_t)
+          removeArrayFromDataContainerArray(dca, diffMap1);
+      SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat11_int16, attrMat22_int16, diffMap1, int16_t)
+          removeArrayFromDataContainerArray(dca, diffMap1);
+      SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat11_uint32, attrMat22_uint32, diffMap1, uint32_t)
+          removeArrayFromDataContainerArray(dca, diffMap1);
+      SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat11_int32, attrMat22_int32, diffMap1, int32_t)
+          removeArrayFromDataContainerArray(dca, diffMap1);
+      SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat11_uint64, attrMat22_uint64, diffMap1, uint64_t)
+          removeArrayFromDataContainerArray(dca, diffMap1);
+      SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat11_int64, attrMat22_int64, diffMap1, int64_t)
+          removeArrayFromDataContainerArray(dca, diffMap1);
+      SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat11_float, attrMat22_float, diffMap1, float)
+          removeArrayFromDataContainerArray(dca, diffMap1);
+      SET_PROPERTIES_AND_CHECK_EQ(filter, attrMat11_double, attrMat22_double, diffMap1, double)
+          removeArrayFromDataContainerArray(dca, diffMap1);
+    }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    int RunTest()
+    {
+      DataContainerArray::Pointer dca = initializeDataContainerArray();
+
+      QString filtName = "FindDifferenceMap";
+      FilterManager* fm = FilterManager::Instance();
+      IFilterFactory::Pointer factory = fm->getFactoryForFilter(filtName);
+      DREAM3D_REQUIRE(factory.get() != NULL)
+
+          AbstractFilter::Pointer diffMapFilter = factory->create();
+      DREAM3D_REQUIRE(diffMapFilter.get() != NULL)
+
+          diffMapFilter->setDataContainerArray(dca);
+
+      validateFindDifferenceMap(diffMapFilter, dca);
+
+      return EXIT_SUCCESS;
+    }
+    /**
+  * @brief
+*/
+    void operator()()
+    {
+      int err = EXIT_SUCCESS;
+      DREAM3D_REGISTER_TEST( TestFilterAvailability() );
+
+      DREAM3D_REGISTER_TEST( RunTest() )
+
+          DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+    }
+  private:
+    FindDifferenceMapTest(const FindDifferenceMapTest&); // Copy Constructor Not Implemented
+    void operator=(const FindDifferenceMapTest&); // Operator '=' Not Implemented
+};

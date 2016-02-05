@@ -51,297 +51,287 @@
 
 #include "EMMPMTestFileLocations.h"
 
-enum ErrorCodes
-{
-  NO_ERROR = 0,
-  COMPONENTS_DONT_MATCH = -503
-};
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RemoveTestFiles()
+class EMMPMSegmentationTest
 {
+  public:
+    EMMPMSegmentationTest(){}
+    virtual ~EMMPMSegmentationTest(){}
+    SIMPL_TYPE_MACRO(EMMPMSegmentationTest)
+
+
+    enum ErrorCodes
+    {
+      NO_ERROR = 0,
+          COMPONENTS_DONT_MATCH = -503
+    };
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void RemoveTestFiles()
+    {
 #if REMOVE_TEST_FILES
-  QFile::remove(UnitTest::EMMPMSegmentationTest::TestFile);
+      QFile::remove(UnitTest::EMMPMSegmentationTest::TestFile);
 #endif
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TestFilterAvailability()
-{
-  {
-    // Now instantiate the EMMPM Filter from the FilterManager
-    QString filtName = "EMMPMFilter";
-    FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-    if (NULL == filterFactory.get())
-    {
-      std::stringstream ss;
-      ss << "Unable to initialize the EMMPMFilter while executing the EMMPMSegmentationTest.";
-      DREAM3D_TEST_THROW_EXCEPTION(ss.str())
     }
-  }
 
-  {
-    // Now instantiate the MultiEmmpm Filter from the FilterManager
-    QString filtName = "MultiEmmpmFilter";
-    FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-    if (NULL == filterFactory.get())
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    int TestFilterAvailability()
     {
-      std::stringstream ss;
-      ss << "Unable to initialize the MultiEmmpmFilter while executing the EMMPMSegmentationTest.";
-      DREAM3D_TEST_THROW_EXCEPTION(ss.str())
+      {
+        // Now instantiate the EMMPM Filter from the FilterManager
+        QString filtName = "EMMPMFilter";
+        FilterManager* fm = FilterManager::Instance();
+        IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+        if (NULL == filterFactory.get())
+        {
+          std::stringstream ss;
+          ss << "Unable to initialize the EMMPMFilter while executing the EMMPMSegmentationTest.";
+          DREAM3D_TEST_THROW_EXCEPTION(ss.str())
+        }
+      }
+
+      {
+        // Now instantiate the MultiEmmpm Filter from the FilterManager
+        QString filtName = "MultiEmmpmFilter";
+        FilterManager* fm = FilterManager::Instance();
+        IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+        if (NULL == filterFactory.get())
+        {
+          std::stringstream ss;
+          ss << "Unable to initialize the MultiEmmpmFilter while executing the EMMPMSegmentationTest.";
+          DREAM3D_TEST_THROW_EXCEPTION(ss.str())
+        }
+      }
+
+      return 0;
     }
-  }
 
-  return 0;
-}
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void createAndAddReadImageFilter(FilterPipeline::Pointer pipeline, QString inputFile)
+    {
+      QString filtName = "ItkReadImage";
+      FilterManager* fm = FilterManager::Instance();
+      IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void createAndAddReadImageFilter(FilterPipeline::Pointer pipeline, QString inputFile)
-{
-  QString filtName = "ItkReadImage";
-  FilterManager* fm = FilterManager::Instance();
-  IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+      if (NULL != filterFactory.get())
+      {
+        // If we get this far, the Factory is good so creating the filter should not fail unless something has
+        // horribly gone wrong in which case the system is going to come down quickly after this.
+        AbstractFilter::Pointer filter = filterFactory->create();
 
-  if (NULL != filterFactory.get())
-  {
-    // If we get this far, the Factory is good so creating the filter should not fail unless something has
-    // horribly gone wrong in which case the system is going to come down quickly after this.
-    AbstractFilter::Pointer filter = filterFactory->create();
+        QVariant var;
+        bool propWasSet;
 
-    QVariant var;
-    bool propWasSet;
+        var.setValue(inputFile);
+        propWasSet = filter->setProperty("InputFileName", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-    var.setValue(inputFile);
-    propWasSet = filter->setProperty("InputFileName", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+            pipeline->pushBack(filter);
+      }
+      else
+      {
+        QString ss = QObject::tr("EMMPMSegmentationTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
+        DREAM3D_REQUIRE_EQUAL(0, 1)
+      }
+    }
 
-    pipeline->pushBack(filter);
-  }
-  else
-  {
-    QString ss = QObject::tr("EMMPMSegmentationTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
-    DREAM3D_REQUIRE_EQUAL(0, 1)
-  }
-}
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void createAndAddConvertRGBToGrayscaleFilter(FilterPipeline::Pointer pipeline, DataArrayPath path, QString name)
+    {
+      QString filtName = "ItkRGBToGray";
+      FilterManager* fm = FilterManager::Instance();
+      IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void createAndAddConvertRGBToGrayscaleFilter(FilterPipeline::Pointer pipeline, DataArrayPath path, QString name)
-{
-  QString filtName = "ItkRGBToGray";
-  FilterManager* fm = FilterManager::Instance();
-  IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+      if (NULL != filterFactory.get())
+      {
+        // If we get this far, the Factory is good so creating the filter should not fail unless something has
+        // horribly gone wrong in which case the system is going to come down quickly after this.
+        AbstractFilter::Pointer filter = filterFactory->create();
 
-  if (NULL != filterFactory.get())
-  {
-    // If we get this far, the Factory is good so creating the filter should not fail unless something has
-    // horribly gone wrong in which case the system is going to come down quickly after this.
-    AbstractFilter::Pointer filter = filterFactory->create();
+        QVariant var;
+        bool propWasSet;
 
-    QVariant var;
-    bool propWasSet;
+        var.setValue(path);
+        propWasSet = filter->setProperty("SelectedCellArrayArrayPath", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-    var.setValue(path);
-    propWasSet = filter->setProperty("SelectedCellArrayArrayPath", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+            var.setValue(name);
+        propWasSet = filter->setProperty("NewCellArrayName", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-    var.setValue(name);
-    propWasSet = filter->setProperty("NewCellArrayName", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+            pipeline->pushBack(filter);
+      }
+      else
+      {
+        QString ss = QObject::tr("EMMPMSegmentationTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
+        DREAM3D_REQUIRE_EQUAL(0, 1)
+      }
+    }
 
-    pipeline->pushBack(filter);
-  }
-  else
-  {
-    QString ss = QObject::tr("EMMPMSegmentationTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
-    DREAM3D_REQUIRE_EQUAL(0, 1)
-  }
-}
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void createAndAddEMMPMFilter(FilterPipeline::Pointer pipeline, DataArrayPath input, DataArrayPath output)
+    {
+      QString filtName = "EMMPMFilter";
+      FilterManager* fm = FilterManager::Instance();
+      IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void createAndAddEMMPMFilter(FilterPipeline::Pointer pipeline, DataArrayPath input, DataArrayPath output)
-{
-  QString filtName = "EMMPMFilter";
-  FilterManager* fm = FilterManager::Instance();
-  IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+      if (NULL != filterFactory.get())
+      {
+        // If we get this far, the Factory is good so creating the filter should not fail unless something has
+        // horribly gone wrong in which case the system is going to come down quickly after this.
+        AbstractFilter::Pointer filter = filterFactory->create();
 
-  if (NULL != filterFactory.get())
-  {
-    // If we get this far, the Factory is good so creating the filter should not fail unless something has
-    // horribly gone wrong in which case the system is going to come down quickly after this.
-    AbstractFilter::Pointer filter = filterFactory->create();
+        QVariant var;
+        bool propWasSet;
 
-    QVariant var;
-    bool propWasSet;
+        var.setValue(input);
+        propWasSet = filter->setProperty("InputDataArrayPath", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-    var.setValue(input);
-    propWasSet = filter->setProperty("InputDataArrayPath", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+            var.setValue(output);
+        propWasSet = filter->setProperty("OutputDataArrayPath", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-    var.setValue(output);
-    propWasSet = filter->setProperty("OutputDataArrayPath", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+            pipeline->pushBack(filter);
+      }
+      else
+      {
+        QString ss = QObject::tr("EMMPMSegmentationTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
+        DREAM3D_REQUIRE_EQUAL(0, 1)
+      }
+    }
 
-    pipeline->pushBack(filter);
-  }
-  else
-  {
-    QString ss = QObject::tr("EMMPMSegmentationTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
-    DREAM3D_REQUIRE_EQUAL(0, 1)
-  }
-}
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void createAndAddMultiEMMPMFilter(FilterPipeline::Pointer pipeline, QVector<DataArrayPath> input)
+    {
+      QString filtName = "MultiEmmpmFilter";
+      FilterManager* fm = FilterManager::Instance();
+      IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void createAndAddMultiEMMPMFilter(FilterPipeline::Pointer pipeline, QVector<DataArrayPath> input)
-{
-  QString filtName = "MultiEmmpmFilter";
-  FilterManager* fm = FilterManager::Instance();
-  IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+      if (NULL != filterFactory.get())
+      {
+        // If we get this far, the Factory is good so creating the filter should not fail unless something has
+        // horribly gone wrong in which case the system is going to come down quickly after this.
+        AbstractFilter::Pointer filter = filterFactory->create();
 
-  if (NULL != filterFactory.get())
-  {
-    // If we get this far, the Factory is good so creating the filter should not fail unless something has
-    // horribly gone wrong in which case the system is going to come down quickly after this.
-    AbstractFilter::Pointer filter = filterFactory->create();
+        QVariant var;
+        bool propWasSet;
 
-    QVariant var;
-    bool propWasSet;
+        var.setValue(input);
+        propWasSet = filter->setProperty("InputDataArrayVector", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-    var.setValue(input);
-    propWasSet = filter->setProperty("InputDataArrayVector", var);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+            pipeline->pushBack(filter);
+      }
+      else
+      {
+        QString ss = QObject::tr("EMMPMSegmentationTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
+        DREAM3D_REQUIRE_EQUAL(0, 1)
+      }
+    }
 
-    pipeline->pushBack(filter);
-  }
-  else
-  {
-    QString ss = QObject::tr("EMMPMSegmentationTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
-    DREAM3D_REQUIRE_EQUAL(0, 1)
-  }
-}
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    int TestEMMPMSegmentation()
+    {
+      QImage inputImage(100, 100, QImage::Format_ARGB32);
+      bool saveResult = inputImage.save(UnitTest::EMMPMSegmentationTest::TestFile);
+      DREAM3D_REQUIRE_EQUAL(saveResult, true)
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TestEMMPMSegmentation()
-{
-  QImage inputImage(100, 100, QImage::Format_ARGB32);
-  bool saveResult = inputImage.save(UnitTest::EMMPMSegmentationTest::TestFile);
-  DREAM3D_REQUIRE_EQUAL(saveResult, true)
+          FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
-  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+      {
 
-  {
+        createAndAddReadImageFilter(pipeline, UnitTest::EMMPMSegmentationTest::TestFile);
+        createAndAddConvertRGBToGrayscaleFilter(pipeline, DataArrayPath("ImageDataContainer", "CellData", "ImageData"), "Gray");
+        createAndAddEMMPMFilter(pipeline, DataArrayPath("ImageDataContainer", "CellData", "Gray"), DataArrayPath("ImageDataContainer", "CellData", "Test"));
 
-    createAndAddReadImageFilter(pipeline, UnitTest::EMMPMSegmentationTest::TestFile);
-    createAndAddConvertRGBToGrayscaleFilter(pipeline, DataArrayPath("ImageDataContainer", "CellData", "ImageData"), "Gray");
-    createAndAddEMMPMFilter(pipeline, DataArrayPath("ImageDataContainer", "CellData", "Gray"), DataArrayPath("ImageDataContainer", "CellData", "Test"));
+        pipeline->execute();
+        DREAM3D_REQUIRE_EQUAL(pipeline->getErrorCondition(), NO_ERROR)
+      }
 
-    pipeline->execute();
-    DREAM3D_REQUIRE_EQUAL(pipeline->getErrorCondition(), NO_ERROR)
-  }
+      pipeline->clear();
 
-  pipeline->clear();
+      {
+        createAndAddReadImageFilter(pipeline, UnitTest::EMMPMSegmentationTest::TestFile);
+        //createAndAddConvertRGBToGrayscaleFilter(pipeline, DataArrayPath("DataContainer", "CellData", "ImageData"), "Gray");
+        createAndAddEMMPMFilter(pipeline, DataArrayPath("ImageDataContainer", "CellData", "ImageData"), DataArrayPath("ImageDataContainer", "CellData", "Test"));
 
-  {
-    createAndAddReadImageFilter(pipeline, UnitTest::EMMPMSegmentationTest::TestFile);
-    //createAndAddConvertRGBToGrayscaleFilter(pipeline, DataArrayPath("DataContainer", "CellData", "ImageData"), "Gray");
-    createAndAddEMMPMFilter(pipeline, DataArrayPath("ImageDataContainer", "CellData", "ImageData"), DataArrayPath("ImageDataContainer", "CellData", "Test"));
+        pipeline->execute();
+        DREAM3D_REQUIRE_EQUAL(pipeline->getErrorCondition(), COMPONENTS_DONT_MATCH)
+      }
 
-    pipeline->execute();
-    DREAM3D_REQUIRE_EQUAL(pipeline->getErrorCondition(), COMPONENTS_DONT_MATCH)
-  }
+      return EXIT_SUCCESS;
+    }
 
-  return EXIT_SUCCESS;
-}
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    int TestMultiEMMPMSegmentation()
+    {
+      QImage inputImage(100, 100, QImage::Format_ARGB32);
+      bool saveResult = inputImage.save(UnitTest::EMMPMSegmentationTest::TestFile);
+      DREAM3D_REQUIRE_EQUAL(saveResult, true)
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TestMultiEMMPMSegmentation()
-{
-  QImage inputImage(100, 100, QImage::Format_ARGB32);
-  bool saveResult = inputImage.save(UnitTest::EMMPMSegmentationTest::TestFile);
-  DREAM3D_REQUIRE_EQUAL(saveResult, true)
+          FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
-  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+      {
+        createAndAddReadImageFilter(pipeline, UnitTest::EMMPMSegmentationTest::TestFile);
+        createAndAddConvertRGBToGrayscaleFilter(pipeline, DataArrayPath("ImageDataContainer", "CellData", "ImageData"), "Gray");
 
-  {
-    createAndAddReadImageFilter(pipeline, UnitTest::EMMPMSegmentationTest::TestFile);
-    createAndAddConvertRGBToGrayscaleFilter(pipeline, DataArrayPath("ImageDataContainer", "CellData", "ImageData"), "Gray");
+        QVector<DataArrayPath> vector;
+        vector.push_back(DataArrayPath("ImageDataContainer", "CellData", "Gray"));
+        createAndAddMultiEMMPMFilter(pipeline, vector);
+        pipeline->execute();
+        DREAM3D_REQUIRE_EQUAL(pipeline->getErrorCondition(), NO_ERROR)
+      }
 
-    QVector<DataArrayPath> vector;
-    vector.push_back(DataArrayPath("ImageDataContainer", "CellData", "Gray"));
-    createAndAddMultiEMMPMFilter(pipeline, vector);
-    pipeline->execute();
-    DREAM3D_REQUIRE_EQUAL(pipeline->getErrorCondition(), NO_ERROR)
-  }
+      pipeline->clear();
 
-  pipeline->clear();
+      {
+        createAndAddReadImageFilter(pipeline, UnitTest::EMMPMSegmentationTest::TestFile);
+        createAndAddConvertRGBToGrayscaleFilter(pipeline, DataArrayPath("ImageDataContainer", "CellData", "ImageData"), "Gray");
 
-  {
-    createAndAddReadImageFilter(pipeline, UnitTest::EMMPMSegmentationTest::TestFile);
-    createAndAddConvertRGBToGrayscaleFilter(pipeline, DataArrayPath("ImageDataContainer", "CellData", "ImageData"), "Gray");
+        QVector<DataArrayPath> vector;
+        vector.push_back(DataArrayPath("ImageDataContainer", "CellData", "Gray"));
+        vector.push_back(DataArrayPath("ImageDataContainer", "CellData", "ImageData"));
+        createAndAddMultiEMMPMFilter(pipeline, vector);
+        pipeline->execute();
+        DREAM3D_REQUIRE_EQUAL(pipeline->getErrorCondition(), COMPONENTS_DONT_MATCH)
+      }
 
-    QVector<DataArrayPath> vector;
-    vector.push_back(DataArrayPath("ImageDataContainer", "CellData", "Gray"));
-    vector.push_back(DataArrayPath("ImageDataContainer", "CellData", "ImageData"));
-    createAndAddMultiEMMPMFilter(pipeline, vector);
-    pipeline->execute();
-    DREAM3D_REQUIRE_EQUAL(pipeline->getErrorCondition(), COMPONENTS_DONT_MATCH)
-  }
-
-  return EXIT_SUCCESS;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void loadFilterPlugins()
-{
-  // Register all the filters including trying to load those from Plugins
-  FilterManager* fm = FilterManager::Instance();
-  SIMPLibPluginLoader::LoadPluginFilters(fm);
-
-  // Send progress messages from PipelineBuilder to this object for display
-  QMetaObjectUtilities::RegisterMetaTypes();
-}
+      return EXIT_SUCCESS;
+    }
 
 
-// -----------------------------------------------------------------------------
-//  Use test framework
-// -----------------------------------------------------------------------------
-int main(int argc, char** argv)
-{
-  // Instantiate the QCoreApplication that we need to get the current path and load plugins.
-  QCoreApplication app(argc, argv);
-  QCoreApplication::setOrganizationName("BlueQuartz Software");
-  QCoreApplication::setOrganizationDomain("bluequartz.net");
-  QCoreApplication::setApplicationName("EMMPMSegmentationTest");
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void operator()()
+    {
+      int err = EXIT_SUCCESS;
+      DREAM3D_REGISTER_TEST( TestFilterAvailability() );
 
-  int err = EXIT_SUCCESS;
-  DREAM3D_REGISTER_TEST( loadFilterPlugins() );
-  DREAM3D_REGISTER_TEST( TestFilterAvailability() );
+      DREAM3D_REGISTER_TEST(TestEMMPMSegmentation())
+          DREAM3D_REGISTER_TEST(TestMultiEMMPMSegmentation())
 
-  DREAM3D_REGISTER_TEST(TestEMMPMSegmentation())
-  DREAM3D_REGISTER_TEST(TestMultiEMMPMSegmentation())
+          DREAM3D_REGISTER_TEST(RemoveTestFiles())
+    }
 
-  DREAM3D_REGISTER_TEST(RemoveTestFiles())
-  PRINT_TEST_SUMMARY();
-
-  return err;
-}
-
+  private:
+    EMMPMSegmentationTest(const EMMPMSegmentationTest&); // Copy Constructor Not Implemented
+    void operator=(const EMMPMSegmentationTest&); // Operator '=' Not Implemented
+};
