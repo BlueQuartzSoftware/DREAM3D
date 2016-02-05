@@ -43,7 +43,7 @@
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/TSL/AngReader.h"
 #include "EbsdLib/TSL/H5OIMReader.h"
-#include "EbsdLib/Test/EbsdLibTestFileLocation.h"
+#include "EbsdLib/Test/EbsdLibTestFileLocations.h"
 
 #include "SIMPLib/Utilities/UnitTestSupport.hpp"
 

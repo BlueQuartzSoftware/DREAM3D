@@ -54,7 +54,7 @@
 
 #include "SIMPLib/Utilities/UnitTestSupport.hpp"
 
-#include "EbsdLib/Test/EbsdLibTestFileLocation.h"
+#include "EbsdLib/Test/EbsdLibTestFileLocations.h"
 
 class AngImportTest
 {
