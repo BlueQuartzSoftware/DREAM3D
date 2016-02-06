@@ -393,13 +393,13 @@ const QString ExportData::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString ExportData::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ExportData::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::OutputFilters; }
+{ return SIMPL::FilterSubGroups::OutputFilters; }
 
 // -----------------------------------------------------------------------------
 //

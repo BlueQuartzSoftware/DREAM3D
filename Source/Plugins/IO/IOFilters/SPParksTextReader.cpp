@@ -60,11 +60,11 @@
 // -----------------------------------------------------------------------------
 SPParksTextReader::SPParksTextReader() :
   FileReader(),
-  m_VolumeDataContainerName(DREAM3D::Defaults::ImageDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_VolumeDataContainerName(SIMPL::Defaults::ImageDataContainerName),
+  m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
   m_InputFile(""),
   m_OneBasedArrays(false),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds)
+  m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
 {
   m_Origin.x = 0.0f;
   m_Origin.y = 0.0f;
@@ -161,7 +161,7 @@ void SPParksTextReader::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   QVector<size_t> tDims(3, 0);
-  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
+  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
 
   // Creating a Feature Ids array here in preflight so that it appears in the current data structure
@@ -184,7 +184,7 @@ void SPParksTextReader::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+  ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   m->setGeometry(image);
 
   if (getInputFile().isEmpty() == false && fi.exists() == true)
@@ -559,13 +559,13 @@ const QString SPParksTextReader::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString SPParksTextReader::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString SPParksTextReader::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::InputFilters; }
+{ return SIMPL::FilterSubGroups::InputFilters; }
 
 // -----------------------------------------------------------------------------
 //

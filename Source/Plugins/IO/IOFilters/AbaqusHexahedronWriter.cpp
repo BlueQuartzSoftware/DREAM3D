@@ -65,7 +65,7 @@ AbaqusHexahedronWriter::AbaqusHexahedronWriter() :
   AbstractFilter(),
   m_OutputPath(""),
   m_FilePrefix(""),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
   m_HourglassStiffness(250),
   m_JobName(""),
   m_FeatureIds(NULL)
@@ -92,7 +92,7 @@ void AbaqusHexahedronWriter::setupFilterParameters()
   parameters.push_back(StringFilterParameter::New("Output File Prefix", "FilePrefix", getFilePrefix(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
   }
   setFilterParameters(parameters);
@@ -708,13 +708,13 @@ const QString AbaqusHexahedronWriter::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString AbaqusHexahedronWriter::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AbaqusHexahedronWriter::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::OutputFilters; }
+{ return SIMPL::FilterSubGroups::OutputFilters; }
 
 // -----------------------------------------------------------------------------
 //

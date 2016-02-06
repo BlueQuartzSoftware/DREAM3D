@@ -5,7 +5,11 @@
 set(_filterGroupName ReconstructionFilters)
 set(${_filterGroupName}_FILTERS_HDRS "")
 
-START_FILTER_GROUP(${Reconstruction_BINARY_DIR} "${_filterGroupName}" "Reconstruction Filters")
+SIMPL_START_FILTER_GROUP(
+  ALL_FILTERS_HEADERFILE ${AllFiltersHeaderFile}
+  REGISTER_KNOWN_FILTERS_FILE ${RegisterKnownFiltersFile}
+  FILTER_GROUP "${_filterGroupName}"
+  BINARY_DIR ${Reconstruction_BINARY_DIR} )
 
 #---------
 # List your public filters here
@@ -27,9 +31,9 @@ set(_PublicFilters
 # Loop on all the filters adding each one. In this loop we default to making each filter exposed in the user
 # interface in DREAM3D. If you want to have the filter compiled but NOT exposed to the user then use the next loop
 foreach(f ${_PublicFilters} )
-  ADD_DREAM3D_FILTER(  "Reconstruction" "Reconstruction"
+  ADD_SIMPL_FILTER(  "Reconstruction" "Reconstruction"
                         ${_filterGroupName} ${f}
-                        ${Reconstruction_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md TRUE)
+                        ${Reconstruction_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md TRUE ${Reconstruction_BINARY_DIR})
 endforeach()
 
 
@@ -49,10 +53,10 @@ set(_PrivateFilters
 #-----------------
 # Loop on the Private Filters adding each one to the DREAM3DLib project so that it gets compiled.
 foreach(f ${_PrivateFilters} )
-  ADD_DREAM3D_FILTER(  "Reconstruction" "Reconstruction"
+  ADD_SIMPL_FILTER(  "Reconstruction" "Reconstruction"
                         ${_filterGroupName} ${f}
-                        ${Reconstruction_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md FALSE)
+                        ${${PLUGIN_NAME}_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md FALSE ${${PLUGIN_NAME}_BINARY_DIR})
 endforeach()
 
-END_FILTER_GROUP(${Reconstruction_BINARY_DIR} "${_filterGroupName}" "Reconstruction Filters")
+SIMPL_END_FILTER_GROUP(${Reconstruction_BINARY_DIR} "${_filterGroupName}" "Reconstruction Filters")
 

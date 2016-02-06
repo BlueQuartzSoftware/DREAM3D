@@ -234,13 +234,13 @@ const QString AlignSectionsList::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString AlignSectionsList::getGroupName()
-{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+{ return SIMPL::FilterGroups::ReconstructionFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AlignSectionsList::getSubGroupName()
-{return DREAM3D::FilterSubGroups::AlignmentFilters;}
+{return SIMPL::FilterSubGroups::AlignmentFilters;}
 
 // -----------------------------------------------------------------------------
 //

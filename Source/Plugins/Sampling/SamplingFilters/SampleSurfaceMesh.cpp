@@ -128,7 +128,7 @@ class SampleSurfaceMeshImpl
 // -----------------------------------------------------------------------------
 SampleSurfaceMesh::SampleSurfaceMesh() :
   AbstractFilter(),
-  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::TriangleDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
+  m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabels(NULL)
 {
   setupFilterParameters();
@@ -149,7 +149,7 @@ void SampleSurfaceMesh::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 2, DREAM3D::AttributeMatrixType::Face, DREAM3D::GeometryType::TriangleGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req));
   }
   setFilterParameters(parameters);
@@ -375,13 +375,13 @@ const QString SampleSurfaceMesh::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString SampleSurfaceMesh::getGroupName()
-{ return DREAM3D::FilterGroups::SamplingFilters; }
+{ return SIMPL::FilterGroups::SamplingFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString SampleSurfaceMesh::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::ResolutionFilters; }
+{ return SIMPL::FilterSubGroups::ResolutionFilters; }
 
 // -----------------------------------------------------------------------------
 //

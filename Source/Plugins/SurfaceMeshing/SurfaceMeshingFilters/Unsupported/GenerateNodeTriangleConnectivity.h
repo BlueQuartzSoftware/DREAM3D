@@ -78,7 +78,7 @@ class GenerateNodeTriangleConnectivity : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+    virtual const QString getGroupName() { return SIMPL::FilterGroups::SurfaceMeshingFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable

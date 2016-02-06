@@ -60,8 +60,8 @@ FillBadData::FillBadData() :
   AbstractFilter(),
   m_StoreAsNewPhase(false),
   m_MinAllowedDefectSize(1),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_CellPhasesArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
+  m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
+  m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases),
   m_AlreadyChecked(NULL),
   m_Neighbors(NULL),
   m_FeatureIds(NULL),
@@ -89,11 +89,11 @@ void FillBadData::setupFilterParameters()
   parameters.push_back(LinkedBooleanFilterParameter::New("Store Defects as New Phase", "StoreAsNewPhase", getStoreAsNewPhase(), linkedProps, FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req));
   }
   setFilterParameters(parameters);
@@ -419,13 +419,13 @@ const QString FillBadData::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FillBadData::getGroupName()
-{ return DREAM3D::FilterGroups::ProcessingFilters; }
+{ return SIMPL::FilterGroups::ProcessingFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FillBadData::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::CleanupFilters; }
+{ return SIMPL::FilterSubGroups::CleanupFilters; }
 
 // -----------------------------------------------------------------------------
 //

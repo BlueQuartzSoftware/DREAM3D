@@ -58,7 +58,7 @@
 FindCAxisLocations::FindCAxisLocations() :
   AbstractFilter(),
   m_QuatsArrayPath("", "", ""),
-  m_CAxisLocationsArrayName(DREAM3D::CellData::CAxisLocation),
+  m_CAxisLocationsArrayName(SIMPL::CellData::CAxisLocation),
   m_Quats(NULL),
   m_CAxisLocations(NULL)
 {
@@ -82,7 +82,7 @@ void FindCAxisLocations::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Float, 4, DREAM3D::AttributeMatrixObjectType::Element);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixObjectType::Element);
     parameters.push_back(DataArraySelectionFilterParameter::New("Quaternions", "QuatsArrayPath", getQuatsArrayPath(), FilterParameter::RequiredArray, req));
 
   }
@@ -232,13 +232,13 @@ const QString FindCAxisLocations::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FindCAxisLocations::getGroupName()
-{ return DREAM3D::FilterGroups::StatisticsFilters; }
+{ return SIMPL::FilterGroups::StatisticsFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindCAxisLocations::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+{ return SIMPL::FilterSubGroups::CrystallographicFilters; }
 
 // -----------------------------------------------------------------------------
 //

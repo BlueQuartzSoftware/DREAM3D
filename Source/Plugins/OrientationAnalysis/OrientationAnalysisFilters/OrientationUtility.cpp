@@ -137,7 +137,7 @@ const QString OrientationUtility::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString OrientationUtility::getGroupName()
-{ return DREAM3D::FilterGroups::Utilities; }
+{ return SIMPL::FilterGroups::Utilities; }
 
 // -----------------------------------------------------------------------------
 //

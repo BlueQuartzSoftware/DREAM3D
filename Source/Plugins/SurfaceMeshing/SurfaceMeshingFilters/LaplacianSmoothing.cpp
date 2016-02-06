@@ -59,9 +59,9 @@
 // -----------------------------------------------------------------------------
 LaplacianSmoothing::LaplacianSmoothing() :
   SurfaceMeshFilter(),
-  m_SurfaceDataContainerName(DREAM3D::Defaults::TriangleDataContainerName),
-  m_SurfaceMeshNodeTypeArrayPath(DREAM3D::Defaults::TriangleDataContainerName, DREAM3D::Defaults::VertexAttributeMatrixName, DREAM3D::VertexData::SurfaceMeshNodeType),
-  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::TriangleDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
+  m_SurfaceDataContainerName(SIMPL::Defaults::TriangleDataContainerName),
+  m_SurfaceMeshNodeTypeArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::VertexAttributeMatrixName, SIMPL::VertexData::SurfaceMeshNodeType),
+  m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels),
   m_IterationSteps(1),
   m_Lambda(0.1f),
   m_SurfacePointLambda(0.0f),
@@ -97,12 +97,12 @@ void LaplacianSmoothing::setupFilterParameters()
   parameters.push_back(DoubleFilterParameter::New("Outer Quadruple Points Lambda", "SurfaceQuadPointLambda", getSurfaceQuadPointLambda(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int8, 1, DREAM3D::AttributeMatrixType::Vertex, DREAM3D::GeometryType::TriangleGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int8, 1, SIMPL::AttributeMatrixType::Vertex, SIMPL::GeometryType::TriangleGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Node Type", "SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 2, DREAM3D::AttributeMatrixType::Face, DREAM3D::GeometryType::TriangleGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req));
   }
   setFilterParameters(parameters);
@@ -224,24 +224,24 @@ int32_t LaplacianSmoothing::generateLambdaArray()
   {
     switch (m_SurfaceMeshNodeType[i])
     {
-      case DREAM3D::SurfaceMesh::NodeType::Unused:
+      case SIMPL::SurfaceMesh::NodeType::Unused:
         break;
-      case DREAM3D::SurfaceMesh::NodeType::Default:
+      case SIMPL::SurfaceMesh::NodeType::Default:
         lambdas->setValue(i, m_Lambda);
         break;
-      case DREAM3D::SurfaceMesh::NodeType::TriplePoint:
+      case SIMPL::SurfaceMesh::NodeType::TriplePoint:
         lambdas->setValue(i, m_TripleLineLambda);
         break;
-      case DREAM3D::SurfaceMesh::NodeType::QuadPoint:
+      case SIMPL::SurfaceMesh::NodeType::QuadPoint:
         lambdas->setValue(i, m_QuadPointLambda);
         break;
-      case DREAM3D::SurfaceMesh::NodeType::SurfaceDefault:
+      case SIMPL::SurfaceMesh::NodeType::SurfaceDefault:
         lambdas->setValue(i, m_SurfacePointLambda);
         break;
-      case DREAM3D::SurfaceMesh::NodeType::SurfaceTriplePoint:
+      case SIMPL::SurfaceMesh::NodeType::SurfaceTriplePoint:
         lambdas->setValue(i, m_SurfaceTripleLineLambda);
         break;
-      case DREAM3D::SurfaceMesh::NodeType::SurfaceQuadPoint:
+      case SIMPL::SurfaceMesh::NodeType::SurfaceQuadPoint:
         lambdas->setValue(i, m_SurfaceQuadPointLambda);
         break;
       default:
@@ -507,13 +507,13 @@ const QString LaplacianSmoothing::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString LaplacianSmoothing::getGroupName()
-{ return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+{ return SIMPL::FilterGroups::SurfaceMeshingFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString LaplacianSmoothing::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::SmoothingFilters; }
+{ return SIMPL::FilterSubGroups::SmoothingFilters; }
 
 // -----------------------------------------------------------------------------
 //

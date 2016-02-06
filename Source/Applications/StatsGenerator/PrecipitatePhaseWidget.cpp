@@ -93,7 +93,7 @@
 // -----------------------------------------------------------------------------
 PrecipitatePhaseWidget::PrecipitatePhaseWidget(QWidget* parent) :
   SGWidget(parent),
-  m_PhaseType(DREAM3D::PhaseType::PrimaryPhase),
+  m_PhaseType(SIMPL::PhaseType::PrimaryPhase),
   m_PhaseFraction(1.0),
   m_TotalPhaseFraction(1.0),
   m_PptFraction(-1.0f),
@@ -150,10 +150,10 @@ AbstractMicrostructurePresetFactory::Pointer RegisterPresetFactory(QComboBox* mi
 // -----------------------------------------------------------------------------
 void PrecipitatePhaseWidget::setupGui()
 {
-  distributionTypeCombo->addItem(DREAM3D::StringConstants::BetaDistribution.toLatin1().data());
-  distributionTypeCombo->addItem(DREAM3D::StringConstants::LogNormalDistribution.toLatin1().data());
-  distributionTypeCombo->addItem(DREAM3D::StringConstants::PowerLawDistribution.toLatin1().data());
-  distributionTypeCombo->setCurrentIndex(DREAM3D::DistributionType::LogNormal);
+  distributionTypeCombo->addItem(SIMPL::StringConstants::BetaDistribution.toLatin1().data());
+  distributionTypeCombo->addItem(SIMPL::StringConstants::LogNormalDistribution.toLatin1().data());
+  distributionTypeCombo->addItem(SIMPL::StringConstants::PowerLawDistribution.toLatin1().data());
+  distributionTypeCombo->setCurrentIndex(SIMPL::DistributionType::LogNormal);
   // Turn off all the plot widgets
   setTabsPlotTabsEnabled(false);
 
@@ -185,8 +185,8 @@ void PrecipitatePhaseWidget::setupGui()
   w->setPlotTitle(QString("Size Vs. Omega 3"));
   w->setXAxisName(QString("Omega 3"));
   w->setYAxisName(QString("Frequency"));
-  w->setDistributionType(DREAM3D::DistributionType::Beta);
-  w->setStatisticsType(DREAM3D::StatisticsType::Feature_SizeVOmega3);
+  w->setDistributionType(SIMPL::DistributionType::Beta);
+  w->setStatisticsType(SIMPL::StatisticsType::Feature_SizeVOmega3);
   w->blockDistributionTypeChanges(true);
   w->setRowOperationEnabled(false);
   w->setMu(mu);
@@ -202,8 +202,8 @@ void PrecipitatePhaseWidget::setupGui()
   w->setPlotTitle(QString("B/A Shape Distribution"));
   w->setXAxisName(QString("B/A"));
   w->setYAxisName(QString("Frequency"));
-  w->setDistributionType(DREAM3D::DistributionType::Beta);
-  w->setStatisticsType(DREAM3D::StatisticsType::Feature_SizeVBoverA);
+  w->setDistributionType(SIMPL::DistributionType::Beta);
+  w->setStatisticsType(SIMPL::StatisticsType::Feature_SizeVBoverA);
   w->blockDistributionTypeChanges(true);
   w->setRowOperationEnabled(false);
   w->setMu(mu);
@@ -218,8 +218,8 @@ void PrecipitatePhaseWidget::setupGui()
   w->setPlotTitle(QString("C/A Shape Distribution"));
   w->setXAxisName(QString("C/A"));
   w->setYAxisName(QString("Frequency"));
-  w->setDistributionType(DREAM3D::DistributionType::Beta);
-  w->setStatisticsType(DREAM3D::StatisticsType::Feature_SizeVCoverA);
+  w->setDistributionType(SIMPL::DistributionType::Beta);
+  w->setStatisticsType(SIMPL::StatisticsType::Feature_SizeVCoverA);
   w->blockDistributionTypeChanges(true);
   w->setRowOperationEnabled(false);
   w->setMu(mu);
@@ -235,8 +235,8 @@ void PrecipitatePhaseWidget::setupGui()
 //    m_RdfPlot->setPlotTitle(QString("Clustering Distributions"));
 //    m_RdfPlot->setXAxisName(QString("Distance between Centroids"));
 //    m_RdfPlot->setYAxisName(QString("Frequency"));
-//    m_RdfPlot->setDistributionType(DREAM3D::DistributionType::LogNormal);
-//    m_RdfPlot->setStatisticsType(DREAM3D::StatisticsType::Feature_SizeVClustering);
+//    m_RdfPlot->setDistributionType(SIMPL::DistributionType::LogNormal);
+//    m_RdfPlot->setStatisticsType(SIMPL::StatisticsType::Feature_SizeVClustering);
 //    m_RdfPlot->blockDistributionTypeChanges(true);
 //    m_RdfPlot->setRowOperationEnabled(false);
 //    w->setMu(mu);
@@ -775,15 +775,15 @@ int PrecipitatePhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
 //  typedef DataArray<unsigned int> ShapeTypeArrayType;
 
   // Get pointers
-  IDataArray::Pointer iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::CrystalStructures);
+  IDataArray::Pointer iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::CrystalStructures);
   unsigned int* crystalStructures = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
-  iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::PhaseTypes);
+  iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
   unsigned int* phaseTypes = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
 
   crystalStructures[m_PhaseIndex] = m_CrystalStructure;
   phaseTypes[m_PhaseIndex] = m_PhaseType;
 
-  StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(attrMat->getAttributeArray(DREAM3D::EnsembleData::Statistics).get());
+  StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics).get());
   if (NULL != statsDataArray)
   {
     StatsData::Pointer statsData = statsDataArray->getStatsData(m_PhaseIndex);
@@ -798,14 +798,14 @@ int PrecipitatePhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
     // Feature Size Distribution
     {
       VectorOfFloatArray data;
-      FloatArrayType::Pointer d1 = FloatArrayType::CreateArray(1, DREAM3D::StringConstants::Average);
-      FloatArrayType::Pointer d2 = FloatArrayType::CreateArray(1, DREAM3D::StringConstants::StandardDeviation);
+      FloatArrayType::Pointer d1 = FloatArrayType::CreateArray(1, SIMPL::StringConstants::Average);
+      FloatArrayType::Pointer d2 = FloatArrayType::CreateArray(1, SIMPL::StringConstants::StandardDeviation);
       data.push_back(d1);
       data.push_back(d2);
       d1->setValue(0, avglogdiam);
       d2->setValue(0, sdlogdiam);
       precipitateStatsData->setFeatureSizeDistribution(data);
-      precipitateStatsData->setFeatureSize_DistType(DREAM3D::DistributionType::LogNormal);
+      precipitateStatsData->setFeatureSize_DistType(SIMPL::DistributionType::LogNormal);
     }
 
     // Now that we have bins and feature sizes, push those to the other plot widgets
@@ -829,9 +829,9 @@ int PrecipitatePhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
       precipitateStatsData->setRadialDistFunction(data);
     }
 
-    m_ODFWidget->getOrientationData(precipitateStatsData, DREAM3D::PhaseType::PrecipitatePhase);
+    m_ODFWidget->getOrientationData(precipitateStatsData, SIMPL::PhaseType::PrecipitatePhase);
 
-    err = m_AxisODFWidget->getOrientationData(precipitateStatsData, DREAM3D::PhaseType::PrecipitatePhase);
+    err = m_AxisODFWidget->getOrientationData(precipitateStatsData, SIMPL::PhaseType::PrecipitatePhase);
   }
   return retErr;
 }
@@ -850,15 +850,15 @@ void PrecipitatePhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, 
 
   setPhaseIndex(index);
 
-  IDataArray::Pointer iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::CrystalStructures);
+  IDataArray::Pointer iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::CrystalStructures);
   unsigned int* attributeArray = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
   m_CrystalStructure = attributeArray[index];
 
-  iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::PhaseTypes);
+  iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
   attributeArray = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
   m_PhaseType = attributeArray[index];
 
-  iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::Statistics);
+  iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics);
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(iDataArray.get());
   if (statsDataArray == NULL)
   {
@@ -945,10 +945,10 @@ void PrecipitatePhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, 
 
 
   // Set the ODF Data
-  m_ODFWidget->extractStatsData(index, precipitateStatsData, DREAM3D::PhaseType::PrecipitatePhase);
+  m_ODFWidget->extractStatsData(index, precipitateStatsData, SIMPL::PhaseType::PrecipitatePhase);
 
   // Set the Axis ODF Data
-  m_AxisODFWidget->extractStatsData(index, precipitateStatsData, DREAM3D::PhaseType::PrecipitatePhase);
+  m_AxisODFWidget->extractStatsData(index, precipitateStatsData, SIMPL::PhaseType::PrecipitatePhase);
 
   // Enable all the tabs
   setTabsPlotTabsEnabled(true);

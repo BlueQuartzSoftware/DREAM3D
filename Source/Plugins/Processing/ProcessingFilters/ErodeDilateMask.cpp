@@ -63,7 +63,7 @@ ErodeDilateMask::ErodeDilateMask() :
   m_XDirOn(true),
   m_YDirOn(true),
   m_ZDirOn(true),
-  m_MaskArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Mask),
+  m_MaskArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask),
   m_MaskCopy(NULL),
   m_Mask(NULL)
 {
@@ -102,7 +102,7 @@ void ErodeDilateMask::setupFilterParameters()
   parameters.push_back(BooleanFilterParameter::New("Z Direction", "ZDirOn", getZDirOn(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Bool, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "MaskArrayPath", getMaskArrayPath(), FilterParameter::RequiredArray, req));
   }
   setFilterParameters(parameters);
@@ -314,13 +314,13 @@ const QString ErodeDilateMask::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString ErodeDilateMask::getGroupName()
-{ return DREAM3D::FilterGroups::ProcessingFilters; }
+{ return SIMPL::FilterGroups::ProcessingFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ErodeDilateMask::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::CleanupFilters; }
+{ return SIMPL::FilterSubGroups::CleanupFilters; }
 
 // -----------------------------------------------------------------------------
 //

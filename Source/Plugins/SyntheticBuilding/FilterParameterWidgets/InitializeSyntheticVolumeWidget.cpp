@@ -243,21 +243,21 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
   dca->addDataContainer(m_DataContainer);
 
   //      QSet<QString> selectedArrays;
-  //      selectedArrays.insert(DREAM3D::EnsembleData::Statistics);
-  //      selectedArrays.insert(DREAM3D::EnsembleData::PhaseTypes);
-  //      selectedArrays.insert(DREAM3D::EnsembleData::CrystalStructures);
+  //      selectedArrays.insert(SIMPL::EnsembleData::Statistics);
+  //      selectedArrays.insert(SIMPL::EnsembleData::PhaseTypes);
+  //      selectedArrays.insert(SIMPL::EnsembleData::CrystalStructures);
 
 #if 0
   // Create a Proxy object to hold our "Array Selections"
   DataContainerArrayProxy dcaProxy;
   DataContainerProxy dcProxy("VolumeDataContainer", Qt::Checked);
   AttributeMatrixProxy amProxy("CellEnsembleData", Qt::Checked);
-  DataArrayProxy statsArray("VolumeDataContainer/CellEnsembleData", DREAM3D::EnsembleData::Statistics, Qt::Checked);
-  amProxy.dataArrays.insert(DREAM3D::EnsembleData::Statistics, statsArray);
-  DataArrayProxy phaseTypeArray("VolumeDataContainer/CellEnsembleData", DREAM3D::EnsembleData::PhaseTypes, Qt::Checked);
-  amProxy.dataArrays.insert(DREAM3D::EnsembleData::PhaseTypes, phaseTypeArray);
-  DataArrayProxy xtalArray("VolumeDataContainer/CellEnsembleData", DREAM3D::EnsembleData::CrystalStructures, Qt::Checked);
-  amProxy.dataArrays.insert(DREAM3D::EnsembleData::CrystalStructures, xtalArray);
+  DataArrayProxy statsArray("VolumeDataContainer/CellEnsembleData", SIMPL::EnsembleData::Statistics, Qt::Checked);
+  amProxy.dataArrays.insert(SIMPL::EnsembleData::Statistics, statsArray);
+  DataArrayProxy phaseTypeArray("VolumeDataContainer/CellEnsembleData", SIMPL::EnsembleData::PhaseTypes, Qt::Checked);
+  amProxy.dataArrays.insert(SIMPL::EnsembleData::PhaseTypes, phaseTypeArray);
+  DataArrayProxy xtalArray("VolumeDataContainer/CellEnsembleData", SIMPL::EnsembleData::CrystalStructures, Qt::Checked);
+  amProxy.dataArrays.insert(SIMPL::EnsembleData::CrystalStructures, xtalArray);
   dcProxy.attributeMatricies.insert("CellEnsembleData", amProxy);
   dcaProxy.list.append(dcProxy);
 #endif
@@ -279,7 +279,7 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
     return;
   }
 
-  IDataArray::Pointer iPtr = m_DataContainer->getAttributeMatrix("CellEnsembleData")->getAttributeArray(DREAM3D::EnsembleData::PhaseTypes);
+  IDataArray::Pointer iPtr = m_DataContainer->getAttributeMatrix("CellEnsembleData")->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
   if (NULL == iPtr.get())
   {
     m_DataContainer = DataContainer::NullPointer();
@@ -484,11 +484,11 @@ int InitializeSyntheticVolumeWidget::estimate_numFeatures(int xpoints, int ypoin
     }
   }
 #if 0
-  IDataArray::Pointer iPtr = m_DataContainer->getCellEnsembleData(DREAM3D::EnsembleData::PhaseTypes);
+  IDataArray::Pointer iPtr = m_DataContainer->getCellEnsembleData(SIMPL::EnsembleData::PhaseTypes);
   // Get the PhaseTypes - Remember there is a Dummy PhaseType in the first slot of the array
   DataArray<uint32_t>* phaseType = DataArray<uint32_t>::SafePointerDownCast(iPtr.get());
 
-  iPtr = m_DataContainer->getCellEnsembleData(DREAM3D::EnsembleData::Statistics);
+  iPtr = m_DataContainer->getCellEnsembleData(SIMPL::EnsembleData::Statistics);
   StatsDataArray* statsDataArrayPtr = StatsDataArray::SafePointerDownCast(iPtr.get());
   if(NULL == statsDataArrayPtr)
   {
@@ -508,7 +508,7 @@ int InitializeSyntheticVolumeWidget::estimate_numFeatures(int xpoints, int ypoin
   // find which phases are primary phases
   for (size_t i = 1; i < phaseType->getNumberOfTuples(); ++i)
   {
-    if(phaseType->GetValue(i) == DREAM3D::PhaseType::PrimaryPhase)
+    if(phaseType->GetValue(i) == SIMPL::PhaseType::PrimaryPhase)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       primaryphases.push_back(i);
@@ -540,7 +540,7 @@ int InitializeSyntheticVolumeWidget::estimate_numFeatures(int xpoints, int ypoin
       {
         volgood = 1;
         // u = rg.genrand_res53();
-        if(pp->getFeatureSize_DistType() == DREAM3D::DistributionType::LogNormal)
+        if(pp->getFeatureSize_DistType() == SIMPL::DistributionType::LogNormal)
         {
           float avgdiam = pp->getFeatureSizeDistribution().at(0)->GetValue(0);
           float sddiam = pp->getFeatureSizeDistribution().at(1)->GetValue(0);
@@ -648,7 +648,7 @@ void InitializeSyntheticVolumeWidget::writeOptions(QSettings& prefs)
 void InitializeSyntheticVolumeWidget::openHtmlHelpFile()
 {
   QString lowerFilter = QString("InitializeSyntheticVolume").toLower();
-  DREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl(lowerFilter, this);
+  SIMPLViewHelpUrlGenerator::generateAndOpenHTMLUrl(lowerFilter, this);
 }
 
 
@@ -695,7 +695,7 @@ AbstractFilter::Pointer InitializeSyntheticVolumeWidget::getFilter(bool defaultV
   filter->setZRes(m_ZResolution->value());
 
   int count = m_ShapeTypeCombos.count();
-  QVector<uint32_t> shapeTypes(count + 1, DREAM3D::ShapeType::UnknownShapeType);
+  QVector<uint32_t> shapeTypes(count + 1, SIMPL::ShapeType::UnknownShapeType);
   bool ok = false;
   for (int i = 0; i < count; ++i)
   {
@@ -728,8 +728,8 @@ QFilterWidget* InitializeSyntheticVolumeWidget::createDeepCopy()
 
   //  int count = m_ShapeTypeCombos.count();
   //  DataArray<unsigned int>::Pointer shapeTypes =
-  //    DataArray<unsigned int>::CreateArray(count+1, DREAM3D::EnsembleData::ShapeTypes);
-  //  shapeTypes->SetValue(0, DREAM3D::ShapeType::UnknownShapeType);
+  //    DataArray<unsigned int>::CreateArray(count+1, SIMPL::EnsembleData::ShapeTypes);
+  //  shapeTypes->SetValue(0, SIMPL::ShapeType::UnknownShapeType);
   //  bool ok = false;
   //  for (int i = 0; i < count; ++i)
   //  {

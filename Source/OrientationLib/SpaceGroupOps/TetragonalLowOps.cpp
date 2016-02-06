@@ -606,7 +606,7 @@ bool TetragonalLowOps::inUnitTriangle(float eta, float chi)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb TetragonalLowOps::generateIPFColor(double* eulers, double* refDir, bool convertDegrees)
+SIMPL::Rgb TetragonalLowOps::generateIPFColor(double* eulers, double* refDir, bool convertDegrees)
 {
   return generateIPFColor(eulers[0], eulers[1], eulers[2], refDir[0], refDir[1], refDir[2], convertDegrees);
 }
@@ -614,7 +614,7 @@ DREAM3D::Rgb TetragonalLowOps::generateIPFColor(double* eulers, double* refDir, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb TetragonalLowOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, bool degToRad)
+SIMPL::Rgb TetragonalLowOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, bool degToRad)
 {
   if (degToRad == true)
   {
@@ -710,7 +710,7 @@ DREAM3D::Rgb TetragonalLowOps::generateIPFColor(double phi1, double phi, double 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb TetragonalLowOps::generateRodriguesColor(float r1, float r2, float r3)
+SIMPL::Rgb TetragonalLowOps::generateRodriguesColor(float r1, float r2, float r3)
 {
   float range1 = 2.0f * TetraDim1InitValue;
   float range2 = 2.0f * TetraDim2InitValue;
@@ -912,7 +912,7 @@ UInt8ArrayType::Pointer TetragonalLowOps::generateIPFTriangleLegend(int imageDim
   float z1 = 0.0f;
   float denom = 0.0f;
 
-  DREAM3D::Rgb color;
+  SIMPL::Rgb color;
   size_t idx = 0;
   size_t yScanLineIndex = 0; // We use this to control where the data is drawn. Otherwise the image will come out flipped vertically
   // Loop over every pixel in the image and project up to the sphere to get the angle and then figure out the RGB from
@@ -970,7 +970,7 @@ UInt8ArrayType::Pointer TetragonalLowOps::generateIPFTriangleLegend(int imageDim
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb TetragonalLowOps::generateMisorientationColor(const QuatF& q, const QuatF& refFrame)
+SIMPL::Rgb TetragonalLowOps::generateMisorientationColor(const QuatF& q, const QuatF& refFrame)
 {
   Q_ASSERT(false);
 

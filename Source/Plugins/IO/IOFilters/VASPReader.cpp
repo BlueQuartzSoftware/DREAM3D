@@ -60,11 +60,11 @@
 // -----------------------------------------------------------------------------
 VASPReader::VASPReader() :
   FileReader(),
-  m_VertexDataContainerName(DREAM3D::Defaults::VertexDataContainerName),
-  m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
+  m_VertexDataContainerName(SIMPL::Defaults::VertexDataContainerName),
+  m_VertexAttributeMatrixName(SIMPL::Defaults::VertexAttributeMatrixName),
   m_InputFile(""),
-  m_AtomVelocitiesArrayName(DREAM3D::VertexData::AtomVelocities),
-  m_AtomTypesArrayName(DREAM3D::VertexData::AtomTypes),
+  m_AtomVelocitiesArrayName(SIMPL::VertexData::AtomVelocities),
+  m_AtomTypesArrayName(SIMPL::VertexData::AtomTypes),
   m_AtomVelocities(NULL),
   m_AtomTypes(NULL)
 {
@@ -146,10 +146,10 @@ void VASPReader::dataCheck()
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVertexDataContainerName());
   if(getErrorCondition() < 0) { return; }
   QVector<size_t> tDims (1, 0);
-  AttributeMatrix::Pointer vertexAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Vertex);
+  AttributeMatrix::Pointer vertexAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Vertex);
   if(getErrorCondition() < 0 || NULL == vertexAttrMat.get()) { return; }
 
-  VertexGeom::Pointer vertex = VertexGeom::CreateGeometry(0, DREAM3D::Geometry::VertexGeometry);
+  VertexGeom::Pointer vertex = VertexGeom::CreateGeometry(0, SIMPL::Geometry::VertexGeometry);
   m->setGeometry(vertex);
 
   QFileInfo fi(getInputFile());
@@ -316,7 +316,7 @@ int VASPReader::readHeader()
     totalAtoms += tokens[i].toInt(&ok, 10);
   }
 
-  VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(totalAtoms, DREAM3D::VertexData::SurfaceMeshNodes);
+  VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(totalAtoms, SIMPL::VertexData::SurfaceMeshNodes);
   m->setGeometry(vertices);
 
   QVector<size_t> tDims(1, totalAtoms);
@@ -445,14 +445,14 @@ const QString VASPReader::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString VASPReader::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString VASPReader::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::InputFilters; }
+{ return SIMPL::FilterSubGroups::InputFilters; }
 
 
 // -----------------------------------------------------------------------------

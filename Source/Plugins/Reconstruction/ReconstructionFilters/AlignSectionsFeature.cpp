@@ -53,7 +53,7 @@
 // -----------------------------------------------------------------------------
 AlignSectionsFeature::AlignSectionsFeature() :
   AlignSections(),
-  m_GoodVoxelsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Mask),
+  m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask),
   m_GoodVoxels(NULL)
 {
   // only setting up the child parameters because the parent constructor has already been called
@@ -76,7 +76,7 @@ void AlignSectionsFeature::setupFilterParameters()
   FilterParameterVector parameters = getFilterParameters();
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Bool, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req));
   }
   setFilterParameters(parameters);
@@ -308,13 +308,13 @@ const QString AlignSectionsFeature::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString AlignSectionsFeature::getGroupName()
-{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+{ return SIMPL::FilterGroups::ReconstructionFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString AlignSectionsFeature::getSubGroupName()
-{return DREAM3D::FilterSubGroups::AlignmentFilters;}
+{return SIMPL::FilterSubGroups::AlignmentFilters;}
 
 // -----------------------------------------------------------------------------
 //

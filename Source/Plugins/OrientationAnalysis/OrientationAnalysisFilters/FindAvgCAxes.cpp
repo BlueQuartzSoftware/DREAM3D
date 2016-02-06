@@ -85,17 +85,17 @@ void FindAvgCAxes::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Float, 4, DREAM3D::AttributeMatrixObjectType::Element);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixObjectType::Element);
     parameters.push_back(DataArraySelectionFilterParameter::New("Quaternions", "QuatsArrayPath", getQuatsArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixObjectType::Element);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Element);
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
   {
-    DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(DREAM3D::AttributeMatrixObjectType::Feature);
-    req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::ImageGeometry);
+    DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixObjectType::Feature);
+    req.dcGeometryTypes = QVector<unsigned int>(1, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArrayCreationFilterParameter::New("Average C-Axes", "AvgCAxesArrayPath", getAvgCAxesArrayPath(), FilterParameter::CreatedArray, req));
   }
   setFilterParameters(parameters);
@@ -284,13 +284,13 @@ const QString FindAvgCAxes::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FindAvgCAxes::getGroupName()
-{ return DREAM3D::FilterGroups::StatisticsFilters; }
+{ return SIMPL::FilterGroups::StatisticsFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindAvgCAxes::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+{ return SIMPL::FilterSubGroups::CrystallographicFilters; }
 
 // -----------------------------------------------------------------------------
 //

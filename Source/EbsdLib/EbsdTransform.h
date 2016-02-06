@@ -45,7 +45,7 @@
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/EbsdHeaderEntry.h"
 
-
+#include "SIMPLib/FilterParameters/AxisAngleInput.h"
 
 
 /**

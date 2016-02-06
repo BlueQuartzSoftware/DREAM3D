@@ -44,9 +44,9 @@
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 
-#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
-#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
-#include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
+#include "SIMPLViewWidgetsLib/SIMPLViewWidgetsLib.h"
+#include "SIMPLViewWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+#include "SIMPLViewWidgetsLib/Widgets/PipelineFilterWidget.h"
 
 #include "SyntheticBuilding/ui_InitializeSyntheticVolumeWidget.h"
 

@@ -158,7 +158,7 @@ class OrientationLib_EXPORT SpaceGroupOps
      * @param rgb [output] The pointer to store the RGB value
      * @param convertDegrees Are the input angles in Degrees
      */
-    virtual DREAM3D::Rgb generateIPFColor(double* eulers, double* refDir, bool convertDegrees) = 0;
+    virtual SIMPL::Rgb generateIPFColor(double* eulers, double* refDir, bool convertDegrees) = 0;
 
     /**
      * @brief generateIPFColor Generates an RGB Color from a Euler Angle and Reference Direction
@@ -171,7 +171,7 @@ class OrientationLib_EXPORT SpaceGroupOps
      * @param rgb [output] The pointer to store the RGB value
      * @param convertDegrees Are the input angles in Degrees
      */
-    virtual DREAM3D::Rgb generateIPFColor(double e0, double e1, double e2, double dir0, double dir1, double dir2, bool convertDegrees) = 0;
+    virtual SIMPL::Rgb generateIPFColor(double e0, double e1, double e2, double dir0, double dir1, double dir2, bool convertDegrees) = 0;
 
     /**
      * @brief generateRodriguesColor Generates an RGB Color from a Rodrigues Vector
@@ -180,15 +180,15 @@ class OrientationLib_EXPORT SpaceGroupOps
      * @param r3 Third component of the Rodrigues Vector
      * @param rgb [output] The pointer to store the RGB value
      */
-    virtual DREAM3D::Rgb generateRodriguesColor(float r1, float r2, float r3) = 0;
+    virtual SIMPL::Rgb generateRodriguesColor(float r1, float r2, float r3) = 0;
 
     /**
      * @brief generateMisorientationColor Generates a color based on the method developed by C. Schuh and S. Patala.
      * @param q A Quaternion representing the crystal direction
      * @param refDir A Quaternion representing the sample reference direction
-     * @return A DREAM3D::Rgb value
+     * @return A SIMPL::Rgb value
      */
-    virtual DREAM3D::Rgb generateMisorientationColor(const QuatF& q, const QuatF& refFrame) = 0;
+    virtual SIMPL::Rgb generateMisorientationColor(const QuatF& q, const QuatF& refFrame) = 0;
 
 
     /**

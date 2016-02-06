@@ -68,10 +68,10 @@ FeatureInfoReader::FeatureInfoReader() :
   m_CreateCellLevelArrays(true),
   m_RenumberFeatures(true),
   m_FeatureIdsArrayPath("", "", ""),
-  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
-  m_FeatureEulerAnglesArrayName(DREAM3D::FeatureData::EulerAngles),
+  m_CellPhasesArrayName(SIMPL::CellData::Phases),
+  m_CellEulerAnglesArrayName(SIMPL::CellData::EulerAngles),
+  m_FeaturePhasesArrayName(SIMPL::FeatureData::Phases),
+  m_FeatureEulerAnglesArrayName(SIMPL::FeatureData::EulerAngles),
   m_FeatureIds(NULL),
   m_CellPhases(NULL),
   m_CellEulerAngles(NULL),
@@ -103,14 +103,14 @@ void FeatureInfoReader::setupFilterParameters()
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req;
     QVector<unsigned int> amTypes;
-    amTypes.push_back(DREAM3D::AttributeMatrixType::Cell);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::Edge);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::Face);
-    amTypes.push_back(DREAM3D::AttributeMatrixType::Vertex);
+    amTypes.push_back(SIMPL::AttributeMatrixType::Cell);
+    amTypes.push_back(SIMPL::AttributeMatrixType::Edge);
+    amTypes.push_back(SIMPL::AttributeMatrixType::Face);
+    amTypes.push_back(SIMPL::AttributeMatrixType::Vertex);
     parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Element Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixObjectType::Element);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Element);
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
@@ -188,7 +188,7 @@ void FeatureInfoReader::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   QVector<size_t> tDims(1, 0);
-  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
+  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellFeature);
 
   QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
@@ -411,13 +411,13 @@ const QString FeatureInfoReader::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FeatureInfoReader::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FeatureInfoReader::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::InputFilters; }
+{ return SIMPL::FilterSubGroups::InputFilters; }
 
 // -----------------------------------------------------------------------------
 //

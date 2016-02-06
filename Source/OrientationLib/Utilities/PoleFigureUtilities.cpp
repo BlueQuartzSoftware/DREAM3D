@@ -137,7 +137,7 @@ void PoleFigureUtilities::CreateColorImage(DoubleArrayType* data, PoleFigureConf
 
   int numColors = config.numColors;
   QVector<float> colors(numColors * 3, 0.0);
-  DREAM3DColorTable::GetColorTable(config.numColors, colors);
+  SIMPLColorTable::GetColorTable(config.numColors, colors);
 
   float r = 0.0, g = 0.0, b = 0.0;
 

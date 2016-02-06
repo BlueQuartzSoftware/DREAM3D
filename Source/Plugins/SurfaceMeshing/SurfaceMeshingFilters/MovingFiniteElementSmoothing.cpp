@@ -141,8 +141,8 @@ MovingFiniteElementSmoothing::MovingFiniteElementSmoothing() :
   m_ConstrainSurfaceNodes(true),
   m_ConstrainQuadPoints(true),
   m_SmoothTripleLines(true),
-  m_SurfaceMeshNodeTypeArrayPath(DREAM3D::Defaults::DataContainerName, DREAM3D::Defaults::VertexAttributeMatrixName, DREAM3D::VertexData::SurfaceMeshNodeType),
-  m_SurfaceMeshNodeTypeArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
+  m_SurfaceMeshNodeTypeArrayPath(SIMPL::Defaults::DataContainerName, SIMPL::Defaults::VertexAttributeMatrixName, SIMPL::VertexData::SurfaceMeshNodeType),
+  m_SurfaceMeshNodeTypeArrayName(SIMPL::VertexData::SurfaceMeshNodeType),
   m_SurfaceMeshNodeType(NULL)
 {
   setupFilterParameters();
@@ -361,8 +361,8 @@ void MovingFiniteElementSmoothing::execute()
 
   if(m_SmoothTripleLines == true)
   {
-    IDataArray::Pointer edgesDataArray = m->getPointData(DREAM3D::CellData::SurfaceMeshEdges);
-    IDataArray::Pointer iEdgesDataArray = m->getPointData(DREAM3D::CellData::SurfaceMeshInternalEdges);
+    IDataArray::Pointer edgesDataArray = m->getPointData(SIMPL::CellData::SurfaceMeshEdges);
+    IDataArray::Pointer iEdgesDataArray = m->getPointData(SIMPL::CellData::SurfaceMeshInternalEdges);
     if((edgesDataArray.get() == NULL || iEdgesDataArray.get() == NULL) && m_SmoothTripleLines == true)
     {
       setErrorCondition(-596);
@@ -665,7 +665,7 @@ void MovingFiniteElementSmoothing::execute()
       //  totally constrain a surface node (temporary fix for connectivity issues in bounded box meshes)
 
     }
-    if(m_SurfaceMeshNodeType[r] == DREAM3D::SurfaceMesh::NodeType::QuadPoint && m_ConstrainQuadPoints == true) { nodeConstraint[r] = 7; }
+    if(m_SurfaceMeshNodeType[r] == SIMPL::SurfaceMesh::NodeType::QuadPoint && m_ConstrainQuadPoints == true) { nodeConstraint[r] = 7; }
     //  constraint for quad point nodes is in all 3 coords.
   }
 
@@ -1061,14 +1061,14 @@ const QString MovingFiniteElementSmoothing::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString MovingFiniteElementSmoothing::getGroupName()
-{ return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+{ return SIMPL::FilterGroups::SurfaceMeshingFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString MovingFiniteElementSmoothing::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::SmoothingFilters; }
+{ return SIMPL::FilterSubGroups::SmoothingFilters; }
 
 
 // -----------------------------------------------------------------------------

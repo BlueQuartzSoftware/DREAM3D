@@ -64,8 +64,11 @@
 #include "OrientationLib/SpaceGroupOps/TrigonalLowOps.h"
 #include "OrientationLib/SpaceGroupOps/TrigonalOps.h"
 
+#include "EbsdLib/EbsdConstants.h"
 
-
+/**
+ * @brief The CalculateFaceSchuhMisorientationColorsImpl class
+ */
 class CalculateFaceSchuhMisorientationColorsImpl
 {
     int32_t* m_Labels;
@@ -89,13 +92,13 @@ class CalculateFaceSchuhMisorientationColorsImpl
 
     /**
      * @brief generate Generates the colors for the triangles
-     * @param start The starting DREAM3D::SurfaceMesh::Face_t Index
-     * @param end The ending DREAM3D::SurfaceMesh::Face_t Index
+     * @param start The starting SIMPL::SurfaceMesh::Face_t Index
+     * @param end The ending SIMPL::SurfaceMesh::Face_t Index
      */
     void generate(size_t start, size_t end) const
     {
       QVector<SpaceGroupOps::Pointer> ops = SpaceGroupOps::getOrientationOpsQVector();
-      DREAM3D::Rgb argb = 0x00000000;
+      SIMPL::Rgb argb = 0x00000000;
 
       int grain1, grain2, phase1, phase2;
       QuatF q1;
@@ -156,11 +159,11 @@ class CalculateFaceSchuhMisorientationColorsImpl
 // -----------------------------------------------------------------------------
 GenerateFaceSchuhMisorientationColoring::GenerateFaceSchuhMisorientationColoring() :
   SurfaceMeshFilter(),
-  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::TriangleDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
-  m_AvgQuatsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
-  m_FeaturePhasesArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
-  m_CrystalStructuresArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
-  m_SurfaceMeshFaceSchuhMisorientationColorsArrayName(DREAM3D::FaceData::SurfaceMeshFaceSchuhMisorientationColors),
+  m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels),
+  m_AvgQuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::AvgQuats),
+  m_FeaturePhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases),
+  m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures),
+  m_SurfaceMeshFaceSchuhMisorientationColorsArrayName(SIMPL::FaceData::SurfaceMeshFaceSchuhMisorientationColors),
   m_SurfaceMeshFaceLabels(NULL),
   m_SurfaceMeshFaceSchuhMisorientationColors(NULL),
   m_AvgQuats(NULL),
@@ -376,14 +379,14 @@ const QString GenerateFaceSchuhMisorientationColoring::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString GenerateFaceSchuhMisorientationColoring::getGroupName()
-{ return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+{ return SIMPL::FilterGroups::SurfaceMeshingFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateFaceSchuhMisorientationColoring::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::MiscFilters; }
+{ return SIMPL::FilterSubGroups::MiscFilters; }
 
 
 // -----------------------------------------------------------------------------

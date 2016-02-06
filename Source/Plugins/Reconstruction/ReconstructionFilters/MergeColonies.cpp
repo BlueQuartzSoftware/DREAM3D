@@ -55,6 +55,9 @@
 
 #include "Reconstruction/ReconstructionConstants.h"
 
+#include "EbsdLib/EbsdConstants.h"
+
+
 namespace
 {
   static const float unit110 = 1.0 / sqrtf(2.0);
@@ -140,10 +143,10 @@ MergeColonies::MergeColonies() :
   m_FeaturePhasesArrayPath("", "", ""),
   m_AvgQuatsArrayPath("", "", ""),
   m_CrystalStructuresArrayPath("", "", ""),
-  m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
-  m_GlobAlphaArrayName(DREAM3D::CellData::GlobAlpha),
-  m_FeatureParentIdsArrayName(DREAM3D::FeatureData::ParentIds),
-  m_ActiveArrayName(DREAM3D::FeatureData::Active),
+  m_CellParentIdsArrayName(SIMPL::CellData::ParentIds),
+  m_GlobAlphaArrayName(SIMPL::CellData::GlobAlpha),
+  m_FeatureParentIdsArrayName(SIMPL::FeatureData::ParentIds),
+  m_ActiveArrayName(SIMPL::FeatureData::Active),
   m_AxisTolerance(1.0f),
   m_AngleTolerance(1.0f),
   m_RandomizeParentIds(true),
@@ -183,25 +186,25 @@ void MergeColonies::setupFilterParameters()
   QStringList linkedProps("GlobAlphaArrayName");
   parameters.push_back(LinkedBooleanFilterParameter::New("Identify Glob Alpha", "IdentifyGlobAlpha", getIdentifyGlobAlpha(), linkedProps, FilterParameter::Parameter));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixObjectType::Feature);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Feature);
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", getFeaturePhasesArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Float, 4, DREAM3D::AttributeMatrixObjectType::Feature);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixObjectType::Feature);
     parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixObjectType::Element);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Element);
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixObjectType::Element);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Element);
     parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::UInt32, 1, DREAM3D::AttributeMatrixObjectType::Ensemble);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixObjectType::Ensemble);
     parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
@@ -287,7 +290,7 @@ void MergeColonies::dataCheck()
   if(getErrorCondition() < 0 || NULL == m.get()) { return; }
 
   QVector<size_t> tDims(1, 0);
-  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
+  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewCellFeatureAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellFeature);
 
   QVector<size_t> cDims(1, 1);
 
@@ -711,13 +714,13 @@ const QString MergeColonies::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString MergeColonies::getGroupName()
-{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+{ return SIMPL::FilterGroups::ReconstructionFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString MergeColonies::getSubGroupName()
-{return DREAM3D::FilterSubGroups::GroupingFilters;}
+{return SIMPL::FilterSubGroups::GroupingFilters;}
 
 // -----------------------------------------------------------------------------
 //

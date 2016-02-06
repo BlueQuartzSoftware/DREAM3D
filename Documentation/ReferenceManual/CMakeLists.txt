@@ -71,7 +71,8 @@ set(DOXYGEN_IMAGE_DIRS
 
 #-------------------------------------------------------------------------------
 # Read the list of Groups back into CMake
-file(STRINGS ${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList DREAM3D_DOC_GROUPS_FILE_LIST)
+get_property(DREAM3DDocRoot GLOBAL PROPERTY DREAM3DDocRoot)
+file(STRINGS ${DREAM3DDocRoot}/DREAM3DDocGroupList DREAM3D_DOC_GROUPS_FILE_LIST)
 file(WRITE ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox "/*!\n\n@page filterdocumentation Filter Documentation\n\n")
 foreach( group ${DREAM3D_DOC_GROUPS_FILE_LIST} )
   #message(STATUS "=======>   DOxygen Group: ${group}")
@@ -86,7 +87,7 @@ file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox "\n*/\n
 # Now Append the list of filters for each Group into the same file
 foreach( group ${DREAM3D_DOC_GROUPS_FILE_LIST} )
   string(TOLOWER ${group} filterGroup_Lower)
-  file(STRINGS ${DREAM3DProj_BINARY_DIR}/DREAM3DDoc_${group} filter_path_list)
+  file(STRINGS ${DREAM3DDocRoot}/DREAM3DDoc_${group} filter_path_list)
   file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox "/*!\n@page ${filterGroup_Lower} ${group}\n\n")
   # Read the summary for the group if it exists
   if(EXISTS ${DREAM3DReferenceManual_SOURCE_DIR}/Filters/${group}/${group}.md)
@@ -103,9 +104,10 @@ foreach( group ${DREAM3D_DOC_GROUPS_FILE_LIST} )
   endforeach()
   list(REMOVE_DUPLICATES DOXYGEN_IMAGE_DIRS)
   file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox "*/\n\n")
-  file(REMOVE ${DREAM3DProj_BINARY_DIR}/DREAM3DDoc_${group})
+  file(REMOVE ${DREAM3DDocRoot}/DREAM3DDoc_${group})
 endforeach()
-file(REMOVE ${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList)
+
+file(REMOVE ${DREAM3DDocRoot}/DREAM3DDocGroupList)
 
 set(DOCUMENTATION_SOURCE_FILES
     "${DOCUMENTATION_SOURCE_FILES}"

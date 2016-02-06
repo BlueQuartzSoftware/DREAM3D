@@ -57,12 +57,12 @@
 // -----------------------------------------------------------------------------
 FindEllipsoidError::FindEllipsoidError() :
   AbstractFilter(),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_CentroidsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Centroids),
-  m_NumCellsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::NumCells),
-  m_AxisLengthsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AxisLengths),
-  m_AxisEulerAnglesArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AxisEulerAngles),
+  m_CellFeatureAttributeMatrixName(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, ""),
+  m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
+  m_CentroidsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Centroids),
+  m_NumCellsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::NumCells),
+  m_AxisLengthsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::AxisLengths),
+  m_AxisEulerAnglesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::AxisEulerAngles),
   m_IdealFeatureIdsArrayName("IdealFeatureIds"),
   m_EllipsoidErrorArrayName("EllipsoidError"),
   m_WriteIdealEllipseFeatureIds(true),
@@ -116,7 +116,7 @@ void FindEllipsoidError::setupFilterParameters()
     parameters.push_back(DataArraySelectionFilterParameter::New("AxisLengths", "AxisLengthsArrayPath", getAxisLengthsArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(DREAM3D::AttributeMatrixType::CellFeature, DREAM3D::GeometryType::ImageGeometry);
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::RequiredArray, req));
   }
 
@@ -421,14 +421,14 @@ const QString FindEllipsoidError::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FindEllipsoidError::getGroupName()
-{ return DREAM3D::FilterGroups::StatisticsFilters; }
+{ return SIMPL::FilterGroups::StatisticsFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindEllipsoidError::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::MorphologicalFilters; }
+{ return SIMPL::FilterSubGroups::MorphologicalFilters; }
 
 
 // -----------------------------------------------------------------------------

@@ -206,7 +206,7 @@ int main(int argc, char** argv)
 
   int64_t totalPoints = m->getTotalPoints();
   int32_t* m_FeatureIds = NULL;
-  m_FeatureIds = m->getCellDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::CellData::FeatureIds, totalPoints, 1, NULL);
+  m_FeatureIds = m->getCellDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(SIMPL::CellData::FeatureIds, totalPoints, 1, NULL);
   if (0 == m_FeatureIds )
   {
     ss << "Filter " << getNameOfClass() << " requires the data array '" <<
@@ -214,7 +214,7 @@ int main(int argc, char** argv)
     setErrorCondition(-300);
   }
 
-  WRITE_VTK_GRAIN_IDS_ASCII(m, DREAM3D::CellData::FeatureIds, m_FeatureIds)
+  WRITE_VTK_GRAIN_IDS_ASCII(m, SIMPL::CellData::FeatureIds, m_FeatureIds)
 
   fclose(f);
 

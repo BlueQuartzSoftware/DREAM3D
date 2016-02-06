@@ -41,100 +41,108 @@
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 #include "OrientationLib/Utilities/ModifiedLambertProjection3D.hpp"
 
-typedef OrientationTransforms<DOrientArrayType, double> OrientationTransformsType;
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RemoveTestFiles()
+class SO3SamplerTest
 {
+  public:
+    SO3SamplerTest(){}
+    virtual ~SO3SamplerTest(){}
+
+
+    typedef OrientationTransforms<DOrientArrayType, double> OrientationTransformsType;
+
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void RemoveTestFiles()
+    {
 #if REMOVE_TEST_FILES
-  // QFile::remove();
+      // QFile::remove();
 #endif
-}
+    }
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SO3CountTest()
-{
-  SO3Sampler::Pointer sampler = SO3Sampler::New();
-  SO3Sampler::OrientationListArrayType orientations = sampler->SampleRFZ(10, 32);
-  DREAM3D_REQUIRE_EQUAL(361, orientations.size());
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void SO3CountTest()
+    {
+      SO3Sampler::Pointer sampler = SO3Sampler::New();
+      SO3Sampler::OrientationListArrayType orientations = sampler->SampleRFZ(10, 32);
+      DREAM3D_REQUIRE_EQUAL(361, orientations.size());
 
-  orientations = sampler->SampleRFZ(100, 32);
-  DREAM3D_REQUIRE_EQUAL(333227, orientations.size());
-}
+      orientations = sampler->SampleRFZ(100, 32);
+      DREAM3D_REQUIRE_EQUAL(333227, orientations.size());
+    }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void InsideCubicFZTest()
-{
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void InsideCubicFZTest()
+    {
 
-  SO3Sampler::Pointer sampler = SO3Sampler::New();
-  DOrientArrayType rod(4);
+      SO3Sampler::Pointer sampler = SO3Sampler::New();
+      DOrientArrayType rod(4);
 
-  DOrientArrayType cu( -0.3217544095666538,  0.2145029397111025, -0.4290058794222050);
-  OrientationTransformsType::cu2ro(cu, rod);
-  bool inside = sampler->insideCubicFZ(rod.data(), 4);
-  DREAM3D_REQUIRE_EQUAL(inside, false);
+      DOrientArrayType cu( -0.3217544095666538,  0.2145029397111025, -0.4290058794222050);
+      OrientationTransformsType::cu2ro(cu, rod);
+      bool inside = sampler->insideCubicFZ(rod.data(), 4);
+      DREAM3D_REQUIRE_EQUAL(inside, false);
 
-  cu = DOrientArrayType(-0.42900587942220514, -0.21450293971110265, 0.42900587942220514);
-  OrientationTransformsType::cu2ro(cu, rod);
-  inside = sampler->insideCubicFZ(rod.data(), 4);
-  DREAM3D_REQUIRE_EQUAL(inside, true);
+      cu = DOrientArrayType(-0.42900587942220514, -0.21450293971110265, 0.42900587942220514);
+      OrientationTransformsType::cu2ro(cu, rod);
+      inside = sampler->insideCubicFZ(rod.data(), 4);
+      DREAM3D_REQUIRE_EQUAL(inside, true);
 
 
-}
+    }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void TestPyramid()
-{
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void TestPyramid()
+    {
 
-  DOrientArrayType xyz(0,0,1);
+      DOrientArrayType xyz(0,0,1);
 
-  int pSection = ModifiedLambertProjection3D<DOrientArrayType, double>::GetPyramid(xyz);
-  DREAM3D_REQUIRE_EQUAL(pSection, 1)
+      int pSection = ModifiedLambertProjection3D<DOrientArrayType, double>::GetPyramid(xyz);
+      DREAM3D_REQUIRE_EQUAL(pSection, 1)
 
-      xyz = DOrientArrayType(0,0,-1);
-  pSection = ModifiedLambertProjection3D<DOrientArrayType, double>::GetPyramid(xyz);
-  DREAM3D_REQUIRE_EQUAL(pSection, 2)
+          xyz = DOrientArrayType(0,0,-1);
+      pSection = ModifiedLambertProjection3D<DOrientArrayType, double>::GetPyramid(xyz);
+      DREAM3D_REQUIRE_EQUAL(pSection, 2)
 
-      xyz = DOrientArrayType(1,0,0);
-  pSection = ModifiedLambertProjection3D<DOrientArrayType, double>::GetPyramid(xyz);
-  DREAM3D_REQUIRE_EQUAL(pSection, 3)
+          xyz = DOrientArrayType(1,0,0);
+      pSection = ModifiedLambertProjection3D<DOrientArrayType, double>::GetPyramid(xyz);
+      DREAM3D_REQUIRE_EQUAL(pSection, 3)
 
-      xyz = DOrientArrayType(-1, 0, 0);
-  pSection = ModifiedLambertProjection3D<DOrientArrayType, double>::GetPyramid(xyz);
-  DREAM3D_REQUIRE_EQUAL(pSection, 4)
+          xyz = DOrientArrayType(-1, 0, 0);
+      pSection = ModifiedLambertProjection3D<DOrientArrayType, double>::GetPyramid(xyz);
+      DREAM3D_REQUIRE_EQUAL(pSection, 4)
 
-      xyz = DOrientArrayType(0,1,0);
-  pSection = ModifiedLambertProjection3D<DOrientArrayType, double>::GetPyramid(xyz);
-  DREAM3D_REQUIRE_EQUAL(pSection, 5)
+          xyz = DOrientArrayType(0,1,0);
+      pSection = ModifiedLambertProjection3D<DOrientArrayType, double>::GetPyramid(xyz);
+      DREAM3D_REQUIRE_EQUAL(pSection, 5)
 
-      xyz = DOrientArrayType(0,-1, 0);
-  pSection = ModifiedLambertProjection3D<DOrientArrayType, double>::GetPyramid(xyz);
-  DREAM3D_REQUIRE_EQUAL(pSection, 6)
+          xyz = DOrientArrayType(0,-1, 0);
+      pSection = ModifiedLambertProjection3D<DOrientArrayType, double>::GetPyramid(xyz);
+      DREAM3D_REQUIRE_EQUAL(pSection, 6)
 
-}
+    }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int main(int argc, char *argv[])
-{
 
-  int err = EXIT_SUCCESS;
-  DREAM3D_REGISTER_TEST( InsideCubicFZTest() )
-  DREAM3D_REGISTER_TEST( TestPyramid() )
-  DREAM3D_REGISTER_TEST( SO3CountTest() )
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-  PRINT_TEST_SUMMARY();
 
-  return err;
-}
+    void operator()()
+    {
+      int err = EXIT_SUCCESS;
+      DREAM3D_REGISTER_TEST( InsideCubicFZTest() )
+      DREAM3D_REGISTER_TEST( TestPyramid() )
+      DREAM3D_REGISTER_TEST( SO3CountTest() )
+      DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+    }
+
+  private:
+    SO3SamplerTest(const SO3SamplerTest&); // Copy Constructor Not Implemented
+    void operator=(const SO3SamplerTest&); // Operator '=' Not Implemented
+};
+

@@ -1,5 +1,5 @@
 # ============================================================================
-# Copyright (c) 2009-2015 BlueQuartz Software, LLC
+# Copyright (c) 2009-2016 BlueQuartz Software, LLC
 #
 # Redistribution and use in source and binary forms, with or without modification,
 # are permitted provided that the following conditions are met:
@@ -33,44 +33,76 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-# project(EbsdLibTest)
 set(PLUGIN_NAME "EbsdLib")
 set(${PLUGIN_NAME}Test_SOURCE_DIR ${${PLUGIN_NAME}_SOURCE_DIR}/Test)
 set(${PLUGIN_NAME}Test_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test)
 
-include(${DREAM3DProj_SOURCE_DIR}/Test/DREAM3DTestFunctions.cmake)
+
+#------------------------------------------------------------------------------
+# Include this file from the SIMPL Project
+include(${SIMPLProj_SOURCE_DIR}/Test/SIMPLTestFunctions.cmake)
 
 include_directories(${${PLUGIN_NAME}_SOURCE_DIR}/Test)
 include_directories(${${PLUGIN_NAME}_BINARY_DIR}/Test)
 include_directories(${EbsdLibTest_BINARY_DIR})
-include_directories(${DREAM3DProj_SOURCE_DIR}/Test)
 
 set(TEST_TEMP_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test/Temp)
 # Make sure the directory is created during CMake time
 file(MAKE_DIRECTORY ${TEST_TEMP_DIR})
 
-configure_file(${EbsdLibTest_SOURCE_DIR}/EbsdTestFileLocation.h.in
-               ${EbsdLibTest_BINARY_DIR}/EbsdLibTestFileLocation.h @ONLY IMMEDIATE)
+configure_file(${${PLUGIN_NAME}_SOURCE_DIR}/Test/${PLUGIN_NAME}TestFileLocations.h.in
+               ${${PLUGIN_NAME}_BINARY_DIR}/Test/${PLUGIN_NAME}TestFileLocations.h @ONLY IMMEDIATE)
+
+#------------------------------------------------------------------------------
+# List all the source files here. They will NOT be compiled but instead
+# be directly included in the main test source file. We list them here so that
+# they will show up in IDEs
+set(TEST_NAMES
+  AngImportTest
+  CtfReaderTest
+  EdaxOIMReaderTest
+)
 
 
-set(TEST_TEMP_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test/Temp)
-# Make sure the directory is created during CMake time
-file(MAKE_DIRECTORY ${TEST_TEMP_DIR})
+set( ${PLUGIN_NAME}_TEST_SRCS )
+set(FilterTestIncludes "")
+set(TestMainFunctors "")
+
+foreach(name  ${TEST_NAMES})
+  set( ${PLUGIN_NAME}_TEST_SRCS
+    ${${PLUGIN_NAME}_TEST_SRCS}
+    "${${PLUGIN_NAME}_SOURCE_DIR}/Test/${name}.cpp"
+    )
+  string(CONCAT
+    FilterTestIncludes
+    ${FilterTestIncludes}
+    "#include \"${name}.cpp\"\n"
+    )
+
+  string(CONCAT
+    TestMainFunctors
+   ${TestMainFunctors}
+   "  ${name}()()|\n")
+endforeach()
+
+STRING(REPLACE "|" ";" TestMainFunctors ${TestMainFunctors}   )
+
+configure_file(${SIMPLProj_SOURCE_DIR}/Test/TestMain.cpp.in
+               ${${PLUGIN_NAME}Test_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp @ONLY)
 
 
-AddDREAM3DUnitTest(TESTNAME AngImportTest 
-                    SOURCES ${EbsdLibTest_SOURCE_DIR}/AngImportTest.cpp
-                    FOLDER "EbsdLibProj/Test" 
-                    LINK_LIBRARIES Qt5::Core EbsdLib)
+# Set the source files properties on each source file.
+foreach(f ${${PLUGIN_NAME}_TEST_SRCS})
+  set_source_files_properties( ${f} PROPERTIES HEADER_FILE_ONLY TRUE)
+endforeach()
 
-AddDREAM3DUnitTest(TESTNAME CtfReaderTest 
-                    SOURCES ${EbsdLibTest_SOURCE_DIR}/CtfReaderTest.cpp
-                    FOLDER "EbsdLibProj/Test" 
-                    LINK_LIBRARIES Qt5::Core EbsdLib)
 
-AddDREAM3DUnitTest(TESTNAME EdaxOIMReaderTest
-                    SOURCES ${${PLUGIN_NAME}_SOURCE_DIR}/Test/EdaxOIMReaderTest.cpp
-                    FOLDER "EbsdLibProj/Test" 
-                    LINK_LIBRARIES Qt5::Core H5Support EbsdLib)
+AddSIMPLUnitTest(TESTNAME ${PLUGIN_NAME}UnitTest
+  SOURCES ${${PLUGIN_NAME}Test_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp ${${PLUGIN_NAME}_TEST_SRCS}
+  FOLDER "${PLUGIN_NAME}/Test"
+  LINK_LIBRARIES Qt5::Core H5Support SIMPLib EbsdLib)
 
+if(MSVC)
+  set_source_files_properties(${${PLUGIN_NAME}Test_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp PROPERTIES COMPILE_FLAGS /bigobj)
+endif()
 

@@ -60,13 +60,13 @@
 // -----------------------------------------------------------------------------
 FindNeighbors::FindNeighbors() :
   AbstractFilter(),
-  m_CellFeatureAttributeMatrixPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
-  m_SharedSurfaceAreaListArrayName(DREAM3D::FeatureData::SharedSurfaceAreaList),
-  m_NeighborListArrayName(DREAM3D::FeatureData::NeighborList),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_BoundaryCellsArrayName(DREAM3D::CellData::BoundaryCells),
-  m_NumNeighborsArrayName(DREAM3D::FeatureData::NumNeighbors),
-  m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
+  m_CellFeatureAttributeMatrixPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, ""),
+  m_SharedSurfaceAreaListArrayName(SIMPL::FeatureData::SharedSurfaceAreaList),
+  m_NeighborListArrayName(SIMPL::FeatureData::NeighborList),
+  m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
+  m_BoundaryCellsArrayName(SIMPL::CellData::BoundaryCells),
+  m_NumNeighborsArrayName(SIMPL::FeatureData::NumNeighbors),
+  m_SurfaceFeaturesArrayName(SIMPL::FeatureData::SurfaceFeatures),
   m_StoreBoundaryCells(false),
   m_StoreSurfaceFeatures(false),
   m_FeatureIds(NULL),
@@ -100,12 +100,12 @@ void FindNeighbors::setupFilterParameters()
   parameters.push_back(LinkedBooleanFilterParameter::New("Store Surface Features Array", "StoreSurfaceFeatures", getStoreSurfaceFeatures(), linkedProps, FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
-    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(DREAM3D::AttributeMatrixType::CellFeature, DREAM3D::GeometryType::ImageGeometry);
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
@@ -446,13 +446,13 @@ const QString FindNeighbors::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FindNeighbors::getGroupName()
-{ return DREAM3D::FilterGroups::StatisticsFilters; }
+{ return SIMPL::FilterGroups::StatisticsFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindNeighbors::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::MorphologicalFilters; }
+{ return SIMPL::FilterSubGroups::MorphologicalFilters; }
 
 // -----------------------------------------------------------------------------
 //

@@ -98,7 +98,7 @@ class ChangeAngleRepresentationImpl
 // -----------------------------------------------------------------------------
 ChangeAngleRepresentation::ChangeAngleRepresentation() :
   AbstractFilter(),
-  m_ConversionType(DREAM3D::EulerAngleConversionType::DegreesToRadians),
+  m_ConversionType(SIMPL::EulerAngleConversionType::DegreesToRadians),
   m_CellEulerAnglesArrayPath("", "", ""),
   m_CellEulerAngles(NULL)
 {
@@ -132,7 +132,7 @@ void ChangeAngleRepresentation::setupFilterParameters()
     parameters.push_back(parameter);
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Float, DREAM3D::Defaults::AnyComponentSize, DREAM3D::AttributeMatrixObjectType::Element);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, SIMPL::Defaults::AnyComponentSize, SIMPL::AttributeMatrixObjectType::Element);
     parameters.push_back(DataArraySelectionFilterParameter::New("Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, req));
   }
 
@@ -206,11 +206,11 @@ void ChangeAngleRepresentation::execute()
 #endif
 
   float conversionFactor = 1.0f;
-  if (m_ConversionType == DREAM3D::EulerAngleConversionType::DegreesToRadians)
+  if (m_ConversionType == SIMPL::EulerAngleConversionType::DegreesToRadians)
   {
     conversionFactor = static_cast<float>( M_PI / 180.0f );
   }
-  else if (conversionFactor == DREAM3D::EulerAngleConversionType::RadiansToDegrees)
+  else if (conversionFactor == SIMPL::EulerAngleConversionType::RadiansToDegrees)
   {
     conversionFactor = static_cast<float>( 180.0f / M_PI );
   }
@@ -276,13 +276,13 @@ const QString ChangeAngleRepresentation::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString ChangeAngleRepresentation::getGroupName()
-{ return DREAM3D::FilterGroups::OrientationAnalysisFilters; }
+{ return SIMPL::FilterGroups::OrientationAnalysisFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ChangeAngleRepresentation::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::ConversionFilters; }
+{ return SIMPL::FilterSubGroups::ConversionFilters; }
 
 // -----------------------------------------------------------------------------
 //

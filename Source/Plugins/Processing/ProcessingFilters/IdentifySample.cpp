@@ -57,7 +57,7 @@
 IdentifySample::IdentifySample() :
   AbstractFilter(),
   m_FillHoles(false),
-  m_GoodVoxelsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Mask),
+  m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask),
   m_GoodVoxels(NULL)
 {
   setupFilterParameters();
@@ -78,7 +78,7 @@ void IdentifySample::setupFilterParameters()
   parameters.push_back(BooleanFilterParameter::New("Fill Holes in Largest Feature", "FillHoles", getFillHoles(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Bool, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req));
   }
   setFilterParameters(parameters);
@@ -333,13 +333,13 @@ const QString IdentifySample::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString IdentifySample::getGroupName()
-{ return DREAM3D::FilterGroups::ProcessingFilters; }
+{ return SIMPL::FilterGroups::ProcessingFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString IdentifySample::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::CleanupFilters; }
+{ return SIMPL::FilterSubGroups::CleanupFilters; }
 
 // -----------------------------------------------------------------------------
 //

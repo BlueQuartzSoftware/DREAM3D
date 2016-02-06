@@ -57,6 +57,9 @@
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
+#include "EbsdLib/EbsdConstants.h"
+
+
 /**
  * @brief The GenerateIPFColorsImpl class implements a threaded algorithm that computes the IPF
  * colors for each element in a geometry
@@ -80,7 +83,7 @@ class GenerateIPFColorsImpl
       QVector<SpaceGroupOps::Pointer> ops = SpaceGroupOps::getOrientationOpsQVector();
       double refDir[3] = {m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z};
       double dEuler[3] = {0.0, 0.0, 0.0};
-      DREAM3D::Rgb argb = 0x00000000;
+      SIMPL::Rgb argb = 0x00000000;
       int32_t phase = 0;
       bool calcIPF = false;
       size_t index = 0;
@@ -140,7 +143,7 @@ GenerateIPFColors::GenerateIPFColors() :
   m_CrystalStructuresArrayPath("", "", ""),
   m_UseGoodVoxels(false),
   m_GoodVoxelsArrayPath("", "", ""),
-  m_CellIPFColorsArrayName(DREAM3D::CellData::IPFColor),
+  m_CellIPFColorsArrayName(SIMPL::CellData::IPFColor),
   m_CellPhases(NULL),
   m_CellEulerAngles(NULL),
   m_CrystalStructures(NULL),
@@ -171,16 +174,16 @@ void GenerateIPFColors::setupFilterParameters()
   QStringList linkedProps("GoodVoxelsArrayPath");
   parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Good Elements Only (Bad Elements Will Be Black)", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
-  DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Float, 3, DREAM3D::AttributeMatrixObjectType::Element);
+  DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixObjectType::Element);
   parameters.push_back(DataArraySelectionFilterParameter::New("Euler Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, req));
-  req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixObjectType::Element);
+  req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixObjectType::Element);
   parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req));
-  req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::Bool, 1, DREAM3D::AttributeMatrixObjectType::Element);
+  req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixObjectType::Element);
   parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req));
 
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::TypeNames::UInt32, 1, DREAM3D::AttributeMatrixObjectType::Ensemble);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::UInt32, 1, SIMPL::AttributeMatrixObjectType::Ensemble);
     parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
@@ -365,13 +368,13 @@ const QString GenerateIPFColors::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString GenerateIPFColors::getGroupName()
-{ return DREAM3D::FilterGroups::ProcessingFilters; }
+{ return SIMPL::FilterGroups::ProcessingFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateIPFColors::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::CrystallographyFilters; }
+{ return SIMPL::FilterSubGroups::CrystallographyFilters; }
 
 // -----------------------------------------------------------------------------
 //

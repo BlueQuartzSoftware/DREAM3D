@@ -121,10 +121,10 @@ class FindMisorientationVectorsImpl
 // -----------------------------------------------------------------------------
 FindOrientationFieldCurl::FindOrientationFieldCurl() :
   AbstractFilter(),
-  m_CellPhasesArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
-  m_CrystalStructuresArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
-  m_QuatsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Quats),
-  m_DislocationTensorsArrayName(DREAM3D::CellData::DislocationTensors),
+  m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases),
+  m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures),
+  m_QuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats),
+  m_DislocationTensorsArrayName(SIMPL::CellData::DislocationTensors),
   m_CellPhases(NULL),
   m_DislocationTensors(NULL),
   m_Quats(NULL),
@@ -156,15 +156,15 @@ void FindOrientationFieldCurl::setupFilterParameters()
   parameters.push_back(IntVec3FilterParameter::New("Curl Radius (Pixels)", "CurlSize", getCurlSize(), FilterParameter::Parameter));
 
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::Defaults::AnyPrimitive, 1, DREAM3D::AttributeMatrixObjectType::Any);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
     parameters.push_back(DataArraySelectionFilterParameter::New("Cell Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::Defaults::AnyPrimitive, 1, DREAM3D::AttributeMatrixObjectType::Any);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
     parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::Defaults::AnyPrimitive, 4, DREAM3D::AttributeMatrixObjectType::Any);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 4, SIMPL::AttributeMatrixObjectType::Any);
     parameters.push_back(DataArraySelectionFilterParameter::New("Quats", "QuatsArrayPath", getQuatsArrayPath(), FilterParameter::RequiredArray, req));
   }
 
@@ -501,14 +501,14 @@ const QString FindOrientationFieldCurl::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FindOrientationFieldCurl::getGroupName()
-{ return DREAM3D::FilterGroups::StatisticsFilters; }
+{ return SIMPL::FilterGroups::StatisticsFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindOrientationFieldCurl::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+{ return SIMPL::FilterSubGroups::CrystallographicFilters; }
 
 
 // -----------------------------------------------------------------------------

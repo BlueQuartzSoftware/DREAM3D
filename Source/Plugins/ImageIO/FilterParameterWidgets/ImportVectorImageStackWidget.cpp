@@ -384,9 +384,9 @@ void ImportVectorImageStackWidget::on_m_InputDir_textChanged(const QString& text
 // -----------------------------------------------------------------------------
 uint32_t ImportVectorImageStackWidget::getRefFrameZDir()
 {
-  if (m_StackLowToHigh->isChecked()) { return Ebsd::RefFrameZDir::LowtoHigh; }
-  if (m_StackHighToLow->isChecked()) { return Ebsd::RefFrameZDir::HightoLow; }
-  return Ebsd::RefFrameZDir::UnknownRefFrameZDirection;
+  if (m_StackLowToHigh->isChecked()) { return SIMPL::RefFrameZDir::LowtoHigh; }
+  if (m_StackHighToLow->isChecked()) { return SIMPL::RefFrameZDir::HightoLow; }
+  return SIMPL::RefFrameZDir::UnknownRefFrameZDirection;
 }
 
 // -----------------------------------------------------------------------------
@@ -394,11 +394,11 @@ uint32_t ImportVectorImageStackWidget::getRefFrameZDir()
 // -----------------------------------------------------------------------------
 void ImportVectorImageStackWidget::setRefFrameZDir(uint32_t ref)
 {
-  if (ref == Ebsd::RefFrameZDir::LowtoHigh)
+  if (ref == SIMPL::RefFrameZDir::LowtoHigh)
   {
     m_StackLowToHigh->setChecked(true);
   }
-  if (ref == Ebsd::RefFrameZDir::HightoLow)
+  if (ref == SIMPL::RefFrameZDir::HightoLow)
   {
     m_StackHighToLow->setChecked(true);
   }

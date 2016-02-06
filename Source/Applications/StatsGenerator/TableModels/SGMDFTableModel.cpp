@@ -41,7 +41,7 @@
 #include <QtWidgets/QStyleOptionComboBox>
 #include <QtWidgets/QAbstractItemDelegate>
 
-#include "Applications/DREAM3D/DREAM3DApplication.h"
+#include "Applications/SIMPLView/SIMPLViewApplication.h"
 
 #include "StatsGenerator/Delegates/SGMDFItemDelegate.h"
 // Include the MOC generated CPP file which has all the QMetaObject methods/data

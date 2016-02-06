@@ -56,8 +56,8 @@
 // -----------------------------------------------------------------------------
 FindSurfaceFeatures::FindSurfaceFeatures() :
   AbstractFilter(),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_SurfaceFeaturesArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::SurfaceFeatures),
+  m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
+  m_SurfaceFeaturesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::SurfaceFeatures),
   m_FeatureIds(NULL),
   m_SurfaceFeatures(NULL)
 {
@@ -79,13 +79,13 @@ void FindSurfaceFeatures::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
   {
-    DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(DREAM3D::AttributeMatrixObjectType::Feature);
-    req.dcGeometryTypes = QVector<unsigned int>(1, DREAM3D::GeometryType::ImageGeometry);
+    DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixObjectType::Feature);
+    req.dcGeometryTypes = QVector<unsigned int>(1, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArrayCreationFilterParameter::New("Surface Features", "SurfaceFeaturesArrayPath", getSurfaceFeaturesArrayPath(), FilterParameter::CreatedArray, req));
   }
   setFilterParameters(parameters);
@@ -301,13 +301,13 @@ const QString FindSurfaceFeatures::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FindSurfaceFeatures::getGroupName()
-{ return DREAM3D::FilterGroups::GenericFilters; }
+{ return SIMPL::FilterGroups::GenericFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindSurfaceFeatures::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::SpatialFilters; }
+{ return SIMPL::FilterSubGroups::SpatialFilters; }
 
 // -----------------------------------------------------------------------------
 //

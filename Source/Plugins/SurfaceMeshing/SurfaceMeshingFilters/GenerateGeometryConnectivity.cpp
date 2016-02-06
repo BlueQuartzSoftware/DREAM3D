@@ -212,13 +212,13 @@ const QString GenerateGeometryConnectivity::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString GenerateGeometryConnectivity::getGroupName()
-{ return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+{ return SIMPL::FilterGroups::SurfaceMeshingFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateGeometryConnectivity::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::ConnectivityArrangementFilters; }
+{ return SIMPL::FilterSubGroups::ConnectivityArrangementFilters; }
 
 // -----------------------------------------------------------------------------
 //

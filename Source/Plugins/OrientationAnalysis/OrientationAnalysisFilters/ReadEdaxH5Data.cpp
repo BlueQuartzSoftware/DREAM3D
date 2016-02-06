@@ -92,14 +92,14 @@ ReadEdaxH5Data::ReadEdaxH5Data() :
   AbstractFilter(),
   m_InputFile(""),
   m_ScanName(""),
-  m_DataContainerName(DREAM3D::Defaults::ImageDataContainerName),
-  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_DataContainerName(SIMPL::Defaults::ImageDataContainerName),
+  m_CellEnsembleAttributeMatrixName(SIMPL::Defaults::CellEnsembleAttributeMatrixName),
+  m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
   m_ReadPatternData(false),
   m_FileWasRead(false),
-  m_PhaseNameArrayName(DREAM3D::CellData::Phases),
-  m_MaterialNameArrayName(DREAM3D::EnsembleData::MaterialName),
-  m_RefFrameZDir(Ebsd::RefFrameZDir::UnknownRefFrameZDirection),
+  m_PhaseNameArrayName(SIMPL::CellData::Phases),
+  m_MaterialNameArrayName(SIMPL::EnsembleData::MaterialName),
+  m_RefFrameZDir(SIMPL::RefFrameZDir::UnknownRefFrameZDirection),
   m_Manufacturer(Ebsd::UnknownManufacturer),
   m_CellPhases(NULL),
   m_CellEulerAngles(NULL),
@@ -189,15 +189,15 @@ void ReadEdaxH5Data::dataCheck()
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
   if (getErrorCondition() < 0) { return; }
 
-  ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+  ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   m->setGeometry(image);
 
   QVector<size_t> tDims(3, 0);
-  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
+  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
   if (getErrorCondition() < 0) { return; }
   tDims.resize(1);
   tDims[0] = 0;
-  AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellEnsemble);
+  AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellEnsemble);
   if (getErrorCondition() < 0) { return; }
 
   QFileInfo fi(m_InputFile);
@@ -299,8 +299,8 @@ void ReadEdaxH5Data::dataCheck()
       }
     }
 
-    StringDataArray::Pointer materialNames = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumTuples(), DREAM3D::EnsembleData::MaterialName);
-    cellEnsembleAttrMat->addAttributeArray(DREAM3D::EnsembleData::MaterialName, materialNames);
+    StringDataArray::Pointer materialNames = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumTuples(), SIMPL::EnsembleData::MaterialName);
+    cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::MaterialName, materialNames);
   }
 }
 
@@ -491,9 +491,9 @@ int32_t ReadEdaxH5Data::loadMaterialInfo(H5OIMReader* reader)
   QVector<size_t> tDims(1, crystalStructures->getNumberOfTuples());
   attrMatrix->resizeAttributeArrays(tDims);
   // Now add the attributeArray to the AttributeMatrix
-  attrMatrix->addAttributeArray(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
-  attrMatrix->addAttributeArray(DREAM3D::EnsembleData::MaterialName, materialNames);
-  attrMatrix->addAttributeArray(DREAM3D::EnsembleData::LatticeConstants, latticeConstants);
+  attrMatrix->addAttributeArray(SIMPL::EnsembleData::CrystalStructures, crystalStructures);
+  attrMatrix->addAttributeArray(SIMPL::EnsembleData::MaterialName, materialNames);
+  attrMatrix->addAttributeArray(SIMPL::EnsembleData::LatticeConstants, latticeConstants);
 
   // Now reset the internal ensemble array references to these new arrays
   m_CrystalStructuresPtr = crystalStructures;
@@ -541,9 +541,9 @@ void ReadEdaxH5Data::copyRawEbsdData(H5OIMReader* reader, QVector<size_t>& tDims
         phasePtr[i] = 1;
       }
     }
-    iArray = Int32ArrayType::CreateArray(tDims, cDims, DREAM3D::CellData::Phases);
+    iArray = Int32ArrayType::CreateArray(tDims, cDims, SIMPL::CellData::Phases);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    ebsdAttrMat->addAttributeArray(DREAM3D::CellData::Phases, iArray);
+    ebsdAttrMat->addAttributeArray(SIMPL::CellData::Phases, iArray);
   }
 
   // Condense the Euler Angles from 3 separate arrays into a single 1x3 array
@@ -552,7 +552,7 @@ void ReadEdaxH5Data::copyRawEbsdData(H5OIMReader* reader, QVector<size_t>& tDims
     f2 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Phi));
     f3 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Phi2));
     cDims[0] = 3;
-    fArray = FloatArrayType::CreateArray(tDims, cDims, DREAM3D::CellData::EulerAngles);
+    fArray = FloatArrayType::CreateArray(tDims, cDims, SIMPL::CellData::EulerAngles);
     float* cellEulerAngles = fArray->getPointer(0);
 
     for (size_t i = 0; i < totalPoints; i++)
@@ -561,7 +561,7 @@ void ReadEdaxH5Data::copyRawEbsdData(H5OIMReader* reader, QVector<size_t>& tDims
       cellEulerAngles[3 * i + 1] = f2[i];
       cellEulerAngles[3 * i + 2] = f3[i];
     }
-    ebsdAttrMat->addAttributeArray(DREAM3D::CellData::EulerAngles, fArray);
+    ebsdAttrMat->addAttributeArray(SIMPL::CellData::EulerAngles, fArray);
   }
 
   cDims[0] = 1;
@@ -632,7 +632,7 @@ void ReadEdaxH5Data::execute()
   QVector<size_t> cDims(1, 1);
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
   AttributeMatrix::Pointer ebsdAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
-  ebsdAttrMat->setType(DREAM3D::AttributeMatrixType::Cell);
+  ebsdAttrMat->setType(SIMPL::AttributeMatrixType::Cell);
 
   readDataFile(reader.get(), m, tDims, ANG_FULL_FILE);
 
@@ -698,13 +698,13 @@ const QString ReadEdaxH5Data::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString ReadEdaxH5Data::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ReadEdaxH5Data::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::InputFilters; }
+{ return SIMPL::FilterSubGroups::InputFilters; }
 
 // -----------------------------------------------------------------------------
 //

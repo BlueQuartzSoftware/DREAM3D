@@ -44,7 +44,7 @@
 #include <QtCore/QVector>
 #include <QtCore/QUrl>
 
-#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+#include "SIMPLViewWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 
 #include "ui_OrientationUtilityWidget.h"
 

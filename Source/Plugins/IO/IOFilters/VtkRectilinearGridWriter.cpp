@@ -501,14 +501,14 @@ const QString VtkRectilinearGridWriter::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString VtkRectilinearGridWriter::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString VtkRectilinearGridWriter::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::OutputFilters; }
+{ return SIMPL::FilterSubGroups::OutputFilters; }
 
 
 // -----------------------------------------------------------------------------

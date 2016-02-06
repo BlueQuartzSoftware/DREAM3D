@@ -45,6 +45,9 @@
 
 #include "Reconstruction/ReconstructionFilters/GroupFeatures.h"
 
+#include "EbsdLib/EbsdConstants.h"
+
+
 /**
  * @brief The MergeTwins class. See [Filter documentation](@ref mergetwins) for details.
  */

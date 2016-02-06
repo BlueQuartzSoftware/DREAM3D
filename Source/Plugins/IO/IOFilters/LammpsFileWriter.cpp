@@ -62,7 +62,7 @@
 // -----------------------------------------------------------------------------
 LammpsFileWriter::LammpsFileWriter() :
   AbstractFilter(),
-  m_VertexDataContainerName(DREAM3D::Defaults::VertexDataContainerName),
+  m_VertexDataContainerName(SIMPL::Defaults::VertexDataContainerName),
   m_LammpsFile("")
 {
   setupFilterParameters();
@@ -290,14 +290,14 @@ const QString LammpsFileWriter::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString LammpsFileWriter::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString LammpsFileWriter::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::OutputFilters; }
+{ return SIMPL::FilterSubGroups::OutputFilters; }
 
 
 // -----------------------------------------------------------------------------

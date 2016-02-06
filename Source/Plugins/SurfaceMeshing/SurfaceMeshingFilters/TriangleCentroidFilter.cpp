@@ -101,7 +101,7 @@ class CalculateCentroidsImpl
 // -----------------------------------------------------------------------------
 TriangleCentroidFilter::TriangleCentroidFilter() :
   SurfaceMeshFilter(),
-  m_SurfaceMeshTriangleCentroidsArrayPath(DREAM3D::Defaults::TriangleDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceCentroids),
+  m_SurfaceMeshTriangleCentroidsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceCentroids),
   m_SurfaceMeshTriangleCentroids(NULL)
 {
   setupFilterParameters();
@@ -122,7 +122,7 @@ void TriangleCentroidFilter::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
   {
-    DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(DREAM3D::AttributeMatrixType::Face, DREAM3D::GeometryType::TriangleGeometry);
+    DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
     parameters.push_back(DataArrayCreationFilterParameter::New("Face Centroids", "SurfaceMeshTriangleCentroidsArrayPath", getSurfaceMeshTriangleCentroidsArrayPath(), FilterParameter::CreatedArray, req));
   }
   setFilterParameters(parameters);
@@ -263,13 +263,13 @@ const QString TriangleCentroidFilter::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString TriangleCentroidFilter::getGroupName()
-{ return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+{ return SIMPL::FilterGroups::SurfaceMeshingFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString TriangleCentroidFilter::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::MiscFilters; }
+{ return SIMPL::FilterSubGroups::MiscFilters; }
 
 // -----------------------------------------------------------------------------
 //

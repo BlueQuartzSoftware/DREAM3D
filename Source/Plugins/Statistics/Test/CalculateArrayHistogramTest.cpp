@@ -357,6 +357,13 @@ float ExpectedHistogram[HistogramBins][HistogramCols] =
   {5.5, 4.0f}
 };
 
+class CalculateArrayHistogramTest
+{
+  public:
+    CalculateArrayHistogramTest(){}
+    virtual ~CalculateArrayHistogramTest(){}
+    SIMPL_TYPE_MACRO(CalculateArrayHistogramTest)
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -392,7 +399,7 @@ void TestFaithful()
   tDims[0] = Faithful_Rows;
   QVector<size_t> cDims(1);
   cDims[0] = 1;
-  AttributeMatrix::Pointer am = AttributeMatrix::New(tDims, Data_AMName, DREAM3D::AttributeMatrixType::Cell);
+  AttributeMatrix::Pointer am = AttributeMatrix::New(tDims, Data_AMName, SIMPL::AttributeMatrixType::Cell);
 
   DoubleArrayType::Pointer duration = DoubleArrayType::CreateArray(tDims, cDims, Duration_Name);
   DoubleArrayType::Pointer wait = DoubleArrayType::CreateArray(tDims, cDims, WaitTime_Name);
@@ -502,40 +509,18 @@ void TestFaithful()
 
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void loadFilterPlugins()
+/**
+  * @brief
+*/
+void operator()()
 {
-  // Register all the filters including trying to load those from Plugins
-  FilterManager* fm = FilterManager::Instance();
-  SIMPLibPluginLoader::LoadPluginFilters(fm);
-
-  // Send progress messages from PipelineBuilder to this object for display
-  QMetaObjectUtilities::RegisterMetaTypes();
-}
-
-
-// -----------------------------------------------------------------------------
-//  Use test framework
-// -----------------------------------------------------------------------------
-int main(int argc, char** argv)
-{
-  // Instantiate the QCoreApplication that we need to get the current path and load plugins.
-  QCoreApplication app(argc, argv);
-  QCoreApplication::setOrganizationName("BlueQuartz Software");
-  QCoreApplication::setOrganizationDomain("bluequartz.net");
-  QCoreApplication::setApplicationName("CalculateArrayHistogramTest");
-
   int err = EXIT_SUCCESS;
-
-
-
-  DREAM3D_REGISTER_TEST( loadFilterPlugins() );
-  //DREAM3D_REGISTER_TEST( TestFilterAvailability() );
+  DREAM3D_REGISTER_TEST( TestFilterAvailability() );
   //DREAM3D_REGISTER_TEST( CalculateArrayHistogramTest() )
   DREAM3D_REGISTER_TEST( TestFaithful() )
-  PRINT_TEST_SUMMARY();
-  return err;
 }
+private:
+CalculateArrayHistogramTest(const CalculateArrayHistogramTest&); // Copy Constructor Not Implemented
+void operator=(const CalculateArrayHistogramTest&); // Operator '=' Not Implemented
+};
 

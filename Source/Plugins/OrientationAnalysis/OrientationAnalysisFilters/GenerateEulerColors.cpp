@@ -50,6 +50,9 @@
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
+#include "EbsdLib/EbsdConstants.h"
+
+
 // Include the MOC generated file for this class
 #include "moc_GenerateEulerColors.cpp"
 
@@ -64,7 +67,7 @@ GenerateEulerColors::GenerateEulerColors() :
   m_CrystalStructuresArrayPath("", "", ""),
   m_CellEulerAnglesArrayPath("", "", ""),
   m_GoodVoxelsArrayPath("", "", ""),
-  m_CellEulerColorsArrayName(DREAM3D::CellData::EulerColor),
+  m_CellEulerColorsArrayName(SIMPL::CellData::EulerColor),
   m_UseGoodVoxels(false),
   m_CellPhases(NULL),
   m_CellEulerAngles(NULL),
@@ -92,19 +95,19 @@ void GenerateEulerColors::setupFilterParameters()
   parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Good Voxels Only (Bad Voxels Will Be Black)", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter));
 
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::Defaults::AnyPrimitive, 1, DREAM3D::AttributeMatrixObjectType::Any);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
     parameters.push_back(DataArraySelectionFilterParameter::New("Cell Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::Defaults::AnyPrimitive, 1, DREAM3D::AttributeMatrixObjectType::Any);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
     parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::Defaults::AnyPrimitive, 3, DREAM3D::AttributeMatrixObjectType::Any);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 3, SIMPL::AttributeMatrixObjectType::Any);
     parameters.push_back(DataArraySelectionFilterParameter::New("Cell Euler Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(DREAM3D::Defaults::AnyPrimitive, 1, DREAM3D::AttributeMatrixObjectType::Any);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
     parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req));
   }
 
@@ -294,14 +297,14 @@ const QString GenerateEulerColors::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString GenerateEulerColors::getGroupName()
-{ return DREAM3D::FilterGroups::ProcessingFilters; }
+{ return SIMPL::FilterGroups::ProcessingFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString GenerateEulerColors::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::MiscFilters; }
+{ return SIMPL::FilterSubGroups::MiscFilters; }
 
 
 // -----------------------------------------------------------------------------

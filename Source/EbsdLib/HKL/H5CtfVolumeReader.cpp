@@ -270,7 +270,7 @@ int H5CtfVolumeReader::loadData(int64_t xpoints,
     ystartspot = static_cast<int>( (ypointstemp - ypointsslice) / 2 );
 
     // If no stacking order preference was passed, read it from the file and use that value
-    if(ZDir == Ebsd::RefFrameZDir::UnknownRefFrameZDirection)
+    if(ZDir == SIMPL::RefFrameZDir::UnknownRefFrameZDirection)
     {
       ZDir = getStackingOrder();
     }

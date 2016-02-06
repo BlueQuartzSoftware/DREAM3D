@@ -59,7 +59,7 @@
 // -----------------------------------------------------------------------------
 RegularizeZSpacing::RegularizeZSpacing() :
   AbstractFilter(),
-  m_CellAttributeMatrixPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
+  m_CellAttributeMatrixPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, ""),
   m_InputFile(""),
   m_NewZRes(1.0f)
 {
@@ -83,7 +83,7 @@ void RegularizeZSpacing::setupFilterParameters()
   parameters.push_back(DoubleFilterParameter::New("New Z Resolution", "NewZRes", getNewZRes(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", getCellAttributeMatrixPath(), FilterParameter::RequiredArray, req));
   }
   setFilterParameters(parameters);
@@ -317,13 +317,13 @@ const QString RegularizeZSpacing::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString RegularizeZSpacing::getGroupName()
-{ return DREAM3D::FilterGroups::SamplingFilters; }
+{ return SIMPL::FilterGroups::SamplingFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString RegularizeZSpacing::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::ResolutionFilters; }
+{ return SIMPL::FilterSubGroups::ResolutionFilters; }
 
 // -----------------------------------------------------------------------------
 //

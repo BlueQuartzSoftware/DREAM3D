@@ -42,7 +42,7 @@
 EbsdReader::EbsdReader() :
   m_ErrorCode(0),
   m_ErrorMessage(""),
-  m_UserZDir(Ebsd::RefFrameZDir::LowtoHigh),
+  m_UserZDir(SIMPL::RefFrameZDir::LowtoHigh),
   m_SampleTransformationAngle(0.0f),
   m_EulerTransformationAngle(0.0f),
   m_FileName(""),

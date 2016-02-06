@@ -37,7 +37,7 @@
 #include "StatsGeneratorUI.h"
 
 #include <QtSupportLib/QRecentFileList.h>
-#include <QtSupportLib/DREAM3DSettings.h>
+#include <QtSupportLib/SIMPLViewSettings.h>
 #include "SGApplication.h"
 #include "BrandedStrings.h"
 
@@ -67,7 +67,7 @@ int main (int argc, char* argv[])
 //#if defined (Q_OS_MAC)
 //  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 //#else
-  QSharedPointer<DREAM3DSettings> prefs = QSharedPointer<DREAM3DSettings>(new DREAM3DSettings());
+  QSharedPointer<SIMPLViewSettings> prefs = QSharedPointer<SIMPLViewSettings>(new SIMPLViewSettings());
 //#endif
   QRecentFileList::instance()->readList(prefs.data());
 

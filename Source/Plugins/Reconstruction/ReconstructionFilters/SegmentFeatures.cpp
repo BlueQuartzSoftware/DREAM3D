@@ -53,7 +53,7 @@
 // -----------------------------------------------------------------------------
 SegmentFeatures::SegmentFeatures() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::ImageDataContainerName)
+  m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
 {
 }
 
@@ -260,13 +260,13 @@ const QString SegmentFeatures::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString SegmentFeatures::getGroupName()
-{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+{ return SIMPL::FilterGroups::ReconstructionFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString SegmentFeatures::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::SegmentationFilters; }
+{ return SIMPL::FilterSubGroups::SegmentationFilters; }
 
 // -----------------------------------------------------------------------------
 //

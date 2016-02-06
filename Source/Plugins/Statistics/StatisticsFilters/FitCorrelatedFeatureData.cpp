@@ -62,7 +62,7 @@ FitCorrelatedFeatureData::FitCorrelatedFeatureData() :
   AbstractFilter(),
   m_SelectedFeatureArrayPath("", "", ""),
   m_CorrelatedFeatureArrayPath("", "", ""),
-  m_DistributionType(DREAM3D::DistributionType::UnknownDistributionType),
+  m_DistributionType(SIMPL::DistributionType::UnknownDistributionType),
   m_NumberOfCorrelatedBins(1),
   m_RemoveBiasedFeatures(false),
   m_FeaturePhasesArrayPath("", "", ""),
@@ -124,7 +124,7 @@ void FitCorrelatedFeatureData::setupFilterParameters()
     parameters.push_back(DataArraySelectionFilterParameter::New("BiasedFeatures", "BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath(), FilterParameter::RequiredArray, req));
   }
   {
-    DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(DREAM3D::AttributeMatrixObjectType::Ensemble);
+    DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixObjectType::Ensemble);
     parameters.push_back(DataArrayCreationFilterParameter::New("New Ensemble Array", "NewEnsembleArrayArrayPath", getNewEnsembleArrayArrayPath(), FilterParameter::CreatedArray, req));
   }
 
@@ -193,9 +193,9 @@ void FitCorrelatedFeatureData::dataCheck()
   int numComp = 0;
   QString distType("UNKNOWN");
   // Determining number of components and name given distribution type
-  if (m_DistributionType == DREAM3D::DistributionType::Beta) { distType = "Beta", numComp = DREAM3D::DistributionType::BetaColumnCount; }
-  else if (m_DistributionType == DREAM3D::DistributionType::LogNormal) { distType = "LogNormal", numComp = DREAM3D::DistributionType::LogNormalColumnCount; }
-  else if (m_DistributionType == DREAM3D::DistributionType::Power) { distType = "PowerLaw", numComp = DREAM3D::DistributionType::PowerLawColumnCount; }
+  if (m_DistributionType == SIMPL::DistributionType::Beta) { distType = "Beta", numComp = SIMPL::DistributionType::BetaColumnCount; }
+  else if (m_DistributionType == SIMPL::DistributionType::LogNormal) { distType = "LogNormal", numComp = SIMPL::DistributionType::LogNormalColumnCount; }
+  else if (m_DistributionType == SIMPL::DistributionType::Power) { distType = "PowerLaw", numComp = SIMPL::DistributionType::PowerLawColumnCount; }
 
   getNewEnsembleArrayArrayPath().setDataArrayName(m_SelectedFeatureArrayPath.getDataArrayName() + distType + QString("Fit") + QString("CorrelatedTo") + m_CorrelatedFeatureArrayPath.getDataArrayName());
   dims.resize(2);
@@ -251,9 +251,9 @@ void fitData(IDataArray::Pointer inputData, float* ensembleArray, int32_t* eIds,
   int numComp = 1;
 
   // Determining number of components and name given distribution type
-  if (dType == DREAM3D::DistributionType::Beta) { distType = "Beta", numComp = DREAM3D::DistributionType::BetaColumnCount; }
-  else if (dType == DREAM3D::DistributionType::LogNormal) { distType = "LogNormal", numComp = DREAM3D::DistributionType::LogNormalColumnCount; }
-  else if (dType == DREAM3D::DistributionType::Power) { distType = "PowerLaw", numComp = DREAM3D::DistributionType::PowerLawColumnCount; }
+  if (dType == SIMPL::DistributionType::Beta) { distType = "Beta", numComp = SIMPL::DistributionType::BetaColumnCount; }
+  else if (dType == SIMPL::DistributionType::LogNormal) { distType = "LogNormal", numComp = SIMPL::DistributionType::LogNormalColumnCount; }
+  else if (dType == SIMPL::DistributionType::Power) { distType = "PowerLaw", numComp = SIMPL::DistributionType::PowerLawColumnCount; }
 
   T* fPtr = featureArray->getPointer(0);
   int32_t* bPtr = binArray->getPointer(0);
@@ -504,14 +504,14 @@ const QString FitCorrelatedFeatureData::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FitCorrelatedFeatureData::getGroupName()
-{ return DREAM3D::FilterGroups::StatisticsFilters; }
+{ return SIMPL::FilterGroups::StatisticsFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FitCorrelatedFeatureData::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
+{ return SIMPL::FilterSubGroups::EnsembleStatsFilters; }
 
 
 // -----------------------------------------------------------------------------

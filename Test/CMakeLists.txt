@@ -11,12 +11,11 @@
 set(DREAM3DTest_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR}/Test)
 set(DREAM3DTest_BINARY_DIR ${DREAM3DProj_BINARY_DIR}/Test)
 
-
 include_directories(${DREAM3DTest_SOURCE_DIR})
 
-include(${DREAM3DProj_SOURCE_DIR}/Test/DREAM3DTestFunctions.cmake)
-
-
+#------------------------------------------------------------------------------
+# Include this file from the SIMPL Project
+include(${SIMPLProj_SOURCE_DIR}/Test/SIMPLTestFunctions.cmake)
 
 set(TEST_TEMP_DIR ${DREAM3DTest_BINARY_DIR}/Temp)
 # Make sure the directory is created during CMake time
@@ -27,96 +26,17 @@ configure_file(${DREAM3DTest_SOURCE_DIR}/TestFileLocations.h.in
                ${DREAM3DTest_BINARY_DIR}/DREAM3DTestFileLocations.h @ONLY IMMEDIATE)
 
 include_directories(${DREAM3DTest_BINARY_DIR})
+include_directories(${SIMPLProj_SOURCE_DIR}/Source)
+include_directories(${SIMPLProj_BINARY_DIR})
+
+#------------------------------------------------------------------------------
+# Example how to call the CMake macro to add a unit test
+# AddSIMPLUnitTest(TESTNAME ConditionalSetValueTest
+#   SOURCES ${DREAM3DTest_SOURCE_DIR}/ConditionalSetValueTest.cpp
+#   FOLDER "SIMPLibProj/Test"
+#   LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
 
 
-AddDREAM3DUnitTest(TESTNAME ConditionalSetValueTest
-  SOURCES ${DREAM3DTest_SOURCE_DIR}/ConditionalSetValueTest.cpp
-  FOLDER "SIMPLibProj/Test"
-  LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
-  
-AddDREAM3DUnitTest(TESTNAME CombineAttributeArraysTest
-  SOURCES ${DREAM3DTest_SOURCE_DIR}/CombineAttributeArraysTest.cpp
-  FOLDER "SIMPLibProj/Test"
-  LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
-
-AddDREAM3DUnitTest(TESTNAME CombineAttributeMatricesTest
-  SOURCES ${DREAM3DTest_SOURCE_DIR}/CombineAttributeMatricesTest.cpp
-  FOLDER "SIMPLibProj/Test"
-  LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
-
-AddDREAM3DUnitTest(TESTNAME DataContainerTest
-  SOURCES ${DREAM3DTest_SOURCE_DIR}/DataContainerTest.cpp
-  FOLDER "SIMPLibProj/Test"
-  LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
-
-AddDREAM3DUnitTest(TESTNAME ReplaceValueTest
-  SOURCES ${DREAM3DTest_SOURCE_DIR}/ReplaceValueTest.cpp
-  FOLDER "SIMPLibProj/Test"
-  LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
-
-AddDREAM3DUnitTest(TESTNAME StringDataArrayTest
-  SOURCES ${DREAM3DTest_SOURCE_DIR}/StringDataArrayTest.cpp
-  FOLDER "SIMPLibProj/Test"
-  LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
-
-AddDREAM3DUnitTest(TESTNAME StructArrayTest
-  SOURCES ${DREAM3DTest_SOURCE_DIR}/StructArrayTest.cpp
-  FOLDER "SIMPLibProj/Test"
-  LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
-
-AddDREAM3DUnitTest(TESTNAME FilterPipelineTest
-  SOURCES ${DREAM3DTest_SOURCE_DIR}/FilterPipelineTest.cpp
-  FOLDER "SIMPLibProj/Test"
-  LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
-
-AddDREAM3DUnitTest(TESTNAME DataArrayTest
-  SOURCES ${DREAM3DTest_SOURCE_DIR}/DataArrayTest.cpp
-  FOLDER "SIMPLibProj/Test"
-  LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
-
-AddDREAM3DUnitTest(TESTNAME ErrorMessageTest
-  SOURCES ${DREAM3DTest_SOURCE_DIR}/ErrorMessageTest.cpp
-  FOLDER "SIMPLibProj/Test"
-  LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
-
-AddDREAM3DUnitTest(TESTNAME DataContainerBundleTest
-  SOURCES ${DREAM3DTest_SOURCE_DIR}/DataContainerBundleTest.cpp
-  FOLDER "SIMPLibProj/Test"
-  LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
-
-AddDREAM3DUnitTest(TESTNAME FilterParametersRWTest
-  SOURCES ${DREAM3DTest_SOURCE_DIR}/FilterParametersRWTest.cpp
-  FOLDER "SIMPLibProj/Test"
-  LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
-
-AddDREAM3DUnitTest(TESTNAME CreateDataArrayTest
-  SOURCES ${DREAM3DTest_SOURCE_DIR}/CreateDataArrayTest.cpp
-   FOLDER "SIMPLibProj/Test"
- LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
-
-AddDREAM3DUnitTest(TESTNAME RemoveComponentFromArrayTest
-  SOURCES ${DREAM3DTest_SOURCE_DIR}/RemoveComponentFromArrayTest.cpp
-  FOLDER "SIMPLibProj/Test"
-  LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
-
- AddDREAM3DUnitTest(TESTNAME QuaternionMathTest
-   SOURCES ${DREAM3DTest_SOURCE_DIR}/QuaternionMathTest.cpp
-   FOLDER "SIMPLibProj/Test"
-   LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
-
- AddDREAM3DUnitTest(TESTNAME CreateFeatureArrayFromElementArrayTest
-   SOURCES ${DREAM3DTest_SOURCE_DIR}/CreateFeatureArrayFromElementArrayTest.cpp
-   FOLDER "SIMPLibProj/Test"
-   LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
-
-if(0)
-QT5_WRAP_CPP( RemoveArraysObserver_MOC  "${DREAM3DTest_SOURCE_DIR}/RemoveArraysObserver.h")
-set_source_files_properties(${DREAM3DTest_SOURCE_DIR}/RemoveArraysObserver.h PROPERTIES HEADER_FILE_ONLY TRUE)
-AddDREAM3DUnitTest(TESTNAME MoveDataTest
-                   SOURCES ${DREAM3DTest_SOURCE_DIR}/MoveDataTest.cpp ${DREAM3DTest_SOURCE_DIR}/RemoveArraysObserver.h ${RemoveArraysObserver_MOC}
-                   FOLDER "SIMPLibProj/Test"
-                   LINK_LIBRARIES Qt5::Core H5Support SIMPLib  )
-endif()
 
 QT5_WRAP_CPP( PreflightVerify_MOC  "${DREAM3DTest_SOURCE_DIR}/PreflightVerify.h")
 #set_source_files_properties(${DREAM3DTest_SOURCE_DIR}/PreflightVerify.h PROPERTIES HEADER_FILE_ONLY TRUE)
@@ -125,7 +45,7 @@ set(PreFlightTest_SOURCES ${DREAM3DTest_SOURCE_DIR}/PreFlightTest.cpp
                           ${DREAM3DTest_SOURCE_DIR}/PreflightVerify.cpp
                           ${PreflightVerify_MOC}
                           )
-AddDREAM3DUnitTest(TESTNAME PreFlightTest
+AddSIMPLUnitTest(TESTNAME PreFlightTest
                    SOURCES ${PreFlightTest_SOURCES}
                    FOLDER "SIMPLibProj/Test"
                    LINK_LIBRARIES Qt5::Core H5Support SIMPLib  )

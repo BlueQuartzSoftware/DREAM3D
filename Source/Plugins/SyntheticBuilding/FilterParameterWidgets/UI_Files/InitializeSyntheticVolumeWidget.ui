@@ -376,7 +376,7 @@ font-size: 11px;
   <customwidget>
    <class>DataArraySelectionWidget</class>
    <extends>QWidget</extends>
-   <header>DREAM3DWidgetsLib/FilterParameterWidgets/DataArraySelectionWidget.h</header>
+   <header>SIMPLViewWidgetsLib/FilterParameterWidgets/DataArraySelectionWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

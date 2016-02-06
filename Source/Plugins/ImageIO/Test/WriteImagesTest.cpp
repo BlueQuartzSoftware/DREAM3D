@@ -57,248 +57,237 @@
 
 #define WRITE_IMAGES_FILTER_NAME "WriteImages"
 
-QList<QString> fileNames;
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RemoveTestFiles()
+class WriteImagesTest
 {
-#if REMOVE_TEST_FILES
-  for (int i = 0; i < fileNames.size(); i++)
-  {
-    QFileInfo fi(fileNames.at(i));
-    if (fi.exists())
+  public:
+    WriteImagesTest(){}
+    virtual ~WriteImagesTest(){}
+    SIMPL_TYPE_MACRO(WriteImagesTest)
+
+
+    QList<QString> fileNames;
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void RemoveTestFiles()
     {
-      QFile::remove(fileNames.at(i));
-    }
-  }
+#if REMOVE_TEST_FILES
+      for (int i = 0; i < fileNames.size(); i++)
+      {
+        QFileInfo fi(fileNames.at(i));
+        if (fi.exists())
+        {
+          QFile::remove(fileNames.at(i));
+        }
+      }
 #endif
-}
+    }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TestFilterAvailability()
-{
-  // Now instantiate the SaveImages Filter from the FilterManager
-  QString filtName = WRITE_IMAGES_FILTER_NAME;
-  FilterManager* fm = FilterManager::Instance();
-  IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-  if (NULL == filterFactory.get() )
-  {
-    std::stringstream ss;
-    ss << "The WriteImagesTest Requires the use of the " << filtName.toStdString() << " filter which is found in the ImageIO Plugin";
-    DREAM3D_TEST_THROW_EXCEPTION(ss.str())
-  }
-  return 0;
-}
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    int TestFilterAvailability()
+    {
+      // Now instantiate the SaveImages Filter from the FilterManager
+      QString filtName = WRITE_IMAGES_FILTER_NAME;
+      FilterManager* fm = FilterManager::Instance();
+      IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+      if (NULL == filterFactory.get() )
+      {
+        std::stringstream ss;
+        ss << "The WriteImagesTest Requires the use of the " << filtName.toStdString() << " filter which is found in the ImageIO Plugin";
+        DREAM3D_TEST_THROW_EXCEPTION(ss.str())
+      }
+      return 0;
+    }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DataContainerArray::Pointer initializeDataContainerArray(const QString& dcName, size_t comp )
-{
-  DataContainerArray::Pointer dca = DataContainerArray::New();
-  DataContainer::Pointer vdc = DataContainer::New(dcName);
-  //Set up geometry for tuples, a cuboid with dimensions 20, 10, 1
-  ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
-  vdc->setGeometry(image);
-  size_t dims[3] = { 20, 10, 1 };
-  image->setDimensions(dims);
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    DataContainerArray::Pointer initializeDataContainerArray(const QString& dcName, size_t comp )
+    {
+      DataContainerArray::Pointer dca = DataContainerArray::New();
+      DataContainer::Pointer vdc = DataContainer::New(dcName);
+      //Set up geometry for tuples, a cuboid with dimensions 20, 10, 1
+      ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
+      vdc->setGeometry(image);
+      size_t dims[3] = { 20, 10, 1 };
+      image->setDimensions(dims);
 
-  QVector<size_t> tDims(3, 0);
-  tDims[0] = 20;
-  tDims[1] = 10;
-  tDims[2] = 1;
-  QVector<size_t> cDims(1);
-  cDims[0] = comp;
+      QVector<size_t> tDims(3, 0);
+      tDims[0] = 20;
+      tDims[1] = 10;
+      tDims[2] = 1;
+      QVector<size_t> cDims(1);
+      cDims[0] = comp;
 
-  AttributeMatrix::Pointer am = AttributeMatrix::New(tDims, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::AttributeMatrixType::Cell);
-  DataArray<uint8_t>::Pointer data = DataArray<uint8_t>::CreateArray(tDims, cDims, "Uint8 Array");
-  am->addAttributeArray(data->getName(), data);
-  vdc->addAttributeMatrix(am->getName(), am);
-  dca->addDataContainer(vdc);
+      AttributeMatrix::Pointer am = AttributeMatrix::New(tDims, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::AttributeMatrixType::Cell);
+      DataArray<uint8_t>::Pointer data = DataArray<uint8_t>::CreateArray(tDims, cDims, "Uint8 Array");
+      am->addAttributeArray(data->getName(), data);
+      vdc->addAttributeMatrix(am->getName(), am);
+      dca->addDataContainer(vdc);
 
-  return dca;
-}
+      return dca;
+    }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SaveImagesTest(AbstractFilter::Pointer filter, DataContainerArray::Pointer dca, const QString& dcName)
-{
-  QVariant var;
-  int err = 0, plane, fileExtension, numSlices = 1, w = 0, h = 0;
-  bool propWasSet, filePrefix, b;
-  QString fp, extension;
-  QImage testImage;
-  extension = QString();
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void SaveImagesTest(AbstractFilter::Pointer filter, DataContainerArray::Pointer dca, const QString& dcName)
+    {
+      QVariant var;
+      int err = 0, plane, fileExtension, numSlices = 1, w = 0, h = 0;
+      bool propWasSet, filePrefix, b;
+      QString fp, extension;
+      QImage testImage;
+      extension = QString();
 
-  if (dcName == "dc0") // XY slices along Z, no file prefix, 1 slice, .tif, 20x10
-  {
-    plane = 0;
-    fileExtension = 0;
-    extension = ".tif";
-    filePrefix = false;
-    fp = "";
-    numSlices = 1;
-    w = 20;
-    h = 10;
-  }
-  else if (dcName == "dc1") // XZ slices along Y, XZ_ file prefix, 10 slices, .bmp, 20x1
-  {
-    plane = 1;
-    fileExtension = 1;
-    extension = ".bmp";
-    filePrefix = true;
-    fp = "XZ_";
-    numSlices = 10;
-    w = 20;
-    h = 1;
-  }
-  else if (dcName == "dc2") // YZ slices along X, YZ_ file prefix, 20 slices, .png, 10x1
-  {
-    plane = 2;
-    fileExtension = 2;
-    extension = ".png";
-    filePrefix = true;
-    fp = "YZ_";
-    numSlices = 20;
-    w = 10;
-    h = 1;
-  }
+      if (dcName == "dc0") // XY slices along Z, no file prefix, 1 slice, .tif, 20x10
+      {
+        plane = 0;
+        fileExtension = 0;
+        extension = ".tif";
+        filePrefix = false;
+        fp = "";
+        numSlices = 1;
+        w = 20;
+        h = 10;
+      }
+      else if (dcName == "dc1") // XZ slices along Y, XZ_ file prefix, 10 slices, .bmp, 20x1
+      {
+        plane = 1;
+        fileExtension = 1;
+        extension = ".bmp";
+        filePrefix = true;
+        fp = "XZ_";
+        numSlices = 10;
+        w = 20;
+        h = 1;
+      }
+      else if (dcName == "dc2") // YZ slices along X, YZ_ file prefix, 20 slices, .png, 10x1
+      {
+        plane = 2;
+        fileExtension = 2;
+        extension = ".png";
+        filePrefix = true;
+        fp = "YZ_";
+        numSlices = 20;
+        w = 10;
+        h = 1;
+      }
 
-  filter->setDataContainerArray(dca);
-  DataArrayPath path = DataArrayPath(dcName, DREAM3D::Defaults::CellAttributeMatrixName, "Uint8 Array");
-  var.setValue(path);
-  propWasSet = filter->setProperty("ColorsArrayPath", var);
-  DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+      filter->setDataContainerArray(dca);
+      DataArrayPath path = DataArrayPath(dcName, SIMPL::Defaults::CellAttributeMatrixName, "Uint8 Array");
+      var.setValue(path);
+      propWasSet = filter->setProperty("ColorsArrayPath", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-  var.setValue(plane); // plane
-  propWasSet = filter->setProperty("Plane", var);
-  DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+          var.setValue(plane); // plane
+      propWasSet = filter->setProperty("Plane", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-  var.setValue(fileExtension); // file extension
-  propWasSet = filter->setProperty("ImageFormat", var);
-  DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+          var.setValue(fileExtension); // file extension
+      propWasSet = filter->setProperty("ImageFormat", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-  var.setValue(filePrefix); // file prefix checkbox
-  propWasSet = filter->setProperty("FilePrefix", var);
-  DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+          var.setValue(filePrefix); // file prefix checkbox
+      propWasSet = filter->setProperty("FilePrefix", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-  QVariant qv(fp); // file prefix string
-  propWasSet = filter->setProperty("ImagePrefix", qv);
-  DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+          QVariant qv(fp); // file prefix string
+      propWasSet = filter->setProperty("ImagePrefix", qv);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-  var.setValue(UnitTest::TestTempDir); // output directory
-  propWasSet = filter->setProperty("OutputPath", var);
-  DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+          var.setValue(UnitTest::TestTempDir); // output directory
+      propWasSet = filter->setProperty("OutputPath", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
-  filter->execute();
-  if (dcName == "dc3") // 2 components, should have error -1006, number of components must be 1, 3, or 4
-  {
-    err = filter->getErrorCondition();
-    DREAM3D_REQUIRE_EQUAL(err, -1006);
-    return;
-  }
-  else
-  {
-    DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
-  }
+          filter->execute();
+      if (dcName == "dc3") // 2 components, should have error -1006, number of components must be 1, 3, or 4
+      {
+        err = filter->getErrorCondition();
+        DREAM3D_REQUIRE_EQUAL(err, -1006);
+        return;
+      }
+      else
+      {
+        DREAM3D_REQUIRED(filter->getErrorCondition(), >= , 0);
+      }
 
-  for (size_t i = 0; i < numSlices; i++)
-  {
-    b = testImage.load(UnitTest::TestTempDir + QDir::separator() + fp + QString::number(i) + extension);
-    fileNames << UnitTest::TestTempDir + QDir::separator() + fp + QString::number(i) + extension;
-    DREAM3D_REQUIRE_EQUAL(b, true);
-  }
+      for (size_t i = 0; i < numSlices; i++)
+      {
+        b = testImage.load(UnitTest::TestTempDir + QDir::separator() + fp + QString::number(i) + extension);
+        fileNames << UnitTest::TestTempDir + QDir::separator() + fp + QString::number(i) + extension;
+        DREAM3D_REQUIRE_EQUAL(b, true);
+      }
 
-  int wRead = testImage.width();
-  DREAM3D_REQUIRE_EQUAL(wRead, w);
+      int wRead = testImage.width();
+      DREAM3D_REQUIRE_EQUAL(wRead, w);
 
-  int hRead = testImage.height();
-  DREAM3D_REQUIRE_EQUAL(hRead, h);
+      int hRead = testImage.height();
+      DREAM3D_REQUIRE_EQUAL(hRead, h);
 
-  int format = testImage.format();
-  DREAM3D_REQUIRE_EQUAL(format, QImage::Format_RGB32);
+      int format = testImage.format();
+      DREAM3D_REQUIRE_EQUAL(format, QImage::Format_RGB32);
 
-  if (dcName == "dc2") // metadata only for .png
-  {
-    QString ver = testImage.text("Description");
-    DREAM3D_REQUIRE_EQUAL(ver, SIMPLib::Version::PackageComplete());
-  }
+      if (dcName == "dc2") // metadata only for .png
+      {
+        QString ver = testImage.text("Description");
+        DREAM3D_REQUIRE_EQUAL(ver, SIMPLib::Version::PackageComplete());
+      }
 
-}
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int WriteImages()
-{
-  DataContainerArray::Pointer dca;
+    }
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    int WriteImages()
+    {
+      DataContainerArray::Pointer dca;
 
-  // Now instantiate the SaveImages Filter from the FilterManager
-  QString filtName = WRITE_IMAGES_FILTER_NAME;
-  FilterManager* fm = FilterManager::Instance();
-  IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-  if (NULL != filterFactory.get())
-  {
-    // If we get this far, the Factory is good so creating the filter should not fail unless something has
-    // horribly gone wrong in which case the system is going to come down quickly after this.
-    AbstractFilter::Pointer filter = filterFactory->create();
+      // Now instantiate the SaveImages Filter from the FilterManager
+      QString filtName = WRITE_IMAGES_FILTER_NAME;
+      FilterManager* fm = FilterManager::Instance();
+      IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+      if (NULL != filterFactory.get())
+      {
+        // If we get this far, the Factory is good so creating the filter should not fail unless something has
+        // horribly gone wrong in which case the system is going to come down quickly after this.
+        AbstractFilter::Pointer filter = filterFactory->create();
 
-    dca = initializeDataContainerArray("dc0", 3);
-    SaveImagesTest(filter, dca, "dc0"); // XY slices along Z, no file prefix, 1 slice, .tif, 20x10, 3 components
+        dca = initializeDataContainerArray("dc0", 3);
+        SaveImagesTest(filter, dca, "dc0"); // XY slices along Z, no file prefix, 1 slice, .tif, 20x10, 3 components
 
-    dca = initializeDataContainerArray("dc1", 1);
-    SaveImagesTest(filter, dca, "dc1"); // XZ slices along Y, XZ_ file prefix, 10 slices, .bmp, 20x1, 1 component
+        dca = initializeDataContainerArray("dc1", 1);
+        SaveImagesTest(filter, dca, "dc1"); // XZ slices along Y, XZ_ file prefix, 10 slices, .bmp, 20x1, 1 component
 
-    dca = initializeDataContainerArray("dc2", 4);
-    SaveImagesTest(filter, dca, "dc2"); // YZ slices along X, YZ_ file prefix, 20 slices, .png, 10x1, 4 components
+        dca = initializeDataContainerArray("dc2", 4);
+        SaveImagesTest(filter, dca, "dc2"); // YZ slices along X, YZ_ file prefix, 20 slices, .png, 10x1, 4 components
 
-    dca = initializeDataContainerArray("dc3", 2);
-    SaveImagesTest(filter, dca, "dc3"); // 2 components, should have error -1006, number of components must be 1, 3, or 4
-  }
-  else
-  {
-    QString ss = QObject::tr("WriteImagesTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
-    DREAM3D_REQUIRE_EQUAL(0, 1)
-  }
-  return 1;
-}
+        dca = initializeDataContainerArray("dc3", 2);
+        SaveImagesTest(filter, dca, "dc3"); // 2 components, should have error -1006, number of components must be 1, 3, or 4
+      }
+      else
+      {
+        QString ss = QObject::tr("WriteImagesTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
+        DREAM3D_REQUIRE_EQUAL(0, 1)
+      }
+      return 1;
+    }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void loadFilterPlugins()
-{
-  // Register all the filters including trying to load those from Plugins
-  FilterManager* fm = FilterManager::Instance();
-  SIMPLibPluginLoader::LoadPluginFilters(fm);
+    /**
+  * @brief
+*/
+    void operator()()
+    {
+      int err = EXIT_SUCCESS;
+      DREAM3D_REGISTER_TEST( TestFilterAvailability() );
 
-  // Send progress messages from PipelineBuilder to this object for display
-  QMetaObjectUtilities::RegisterMetaTypes();
-}
+      DREAM3D_REGISTER_TEST(WriteImages())
 
-
-// -----------------------------------------------------------------------------
-//  Use test framework
-// -----------------------------------------------------------------------------
-int main(int argc, char** argv)
-{
-  // Instantiate the QCoreApplication that we need to get the current path and load plugins.
-  QCoreApplication app(argc, argv);
-  QCoreApplication::setOrganizationName("BlueQuartz Software");
-  QCoreApplication::setOrganizationDomain("bluequartz.net");
-  QCoreApplication::setApplicationName("WriteImagesTest");
-
-  int err = EXIT_SUCCESS;
-  DREAM3D_REGISTER_TEST( loadFilterPlugins() );
-  DREAM3D_REGISTER_TEST( TestFilterAvailability() );
-
-  DREAM3D_REGISTER_TEST(WriteImages())
-
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-  PRINT_TEST_SUMMARY();
-  return err;
-}
+          DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+    }
+  private:
+    WriteImagesTest(const WriteImagesTest&); // Copy Constructor Not Implemented
+    void operator=(const WriteImagesTest&); // Operator '=' Not Implemented
+};

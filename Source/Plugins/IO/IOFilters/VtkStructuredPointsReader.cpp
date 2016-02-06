@@ -67,10 +67,10 @@ VtkStructuredPointsReader::VtkStructuredPointsReader() :
   AbstractFilter(),
   m_ReadCellData(true),
   m_VolumeDataContainerName("ImageDataContainer_CellData"),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
   m_ReadPointData(true),
   m_VertexDataContainerName("ImageDataContainer_PointData"),
-  m_VertexAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_VertexAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
   m_InputFile(""),
   m_Comment(""),
   m_DatasetType(""),
@@ -184,7 +184,7 @@ void VtkStructuredPointsReader::dataCheck()
   pointData_DataContainer->setGeometry(pointDataGeom);
 
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer pointAttrMat = pointData_DataContainer->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
+  AttributeMatrix::Pointer pointAttrMat = pointData_DataContainer->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
 
   // Create a Volume Data Container even though we may remove it later. We need it later
@@ -199,7 +199,7 @@ void VtkStructuredPointsReader::dataCheck()
   tDims[0] = 0;
   tDims[1] = 0;
   tDims[2] = 0;
-  AttributeMatrix::Pointer cellAttrMat = cellData_DataContainer->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
+  AttributeMatrix::Pointer cellAttrMat = cellData_DataContainer->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
 
   // Scan through the file
@@ -1217,13 +1217,13 @@ const QString VtkStructuredPointsReader::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString VtkStructuredPointsReader::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString VtkStructuredPointsReader::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::InputFilters; }
+{ return SIMPL::FilterSubGroups::InputFilters; }
 
 // -----------------------------------------------------------------------------
 //

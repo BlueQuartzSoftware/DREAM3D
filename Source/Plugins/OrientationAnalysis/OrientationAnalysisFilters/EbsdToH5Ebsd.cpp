@@ -63,7 +63,7 @@ EbsdToH5Ebsd::EbsdToH5Ebsd() :
   m_ZStartIndex(0),
   m_ZEndIndex(0),
   m_ZResolution(1.0f),
-  m_RefFrameZDir(Ebsd::RefFrameZDir::LowtoHigh),
+  m_RefFrameZDir(SIMPL::RefFrameZDir::LowtoHigh),
   m_InputPath(""),
   m_FilePrefix(""),
   m_FileSuffix(""),
@@ -342,8 +342,8 @@ void EbsdToH5Ebsd::execute()
   bool hasMissingFiles = false;
   const bool stackLowToHigh = true;
 
-  //if( Ebsd::RefFrameZDir::LowtoHigh == m_RefFrameZDir) { stackLowToHigh = true; }
-  //else if (Ebsd::RefFrameZDir::HightoLow == m_RefFrameZDir) { stackLowToHigh = false; }
+  //if( SIMPL::RefFrameZDir::LowtoHigh == m_RefFrameZDir) { stackLowToHigh = true; }
+  //else if (SIMPL::RefFrameZDir::HightoLow == m_RefFrameZDir) { stackLowToHigh = false; }
 
 
   // Now generate all the file names the user is asking for and populate the table
@@ -590,13 +590,13 @@ const QString EbsdToH5Ebsd::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString EbsdToH5Ebsd::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString EbsdToH5Ebsd::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::InputFilters; }
+{ return SIMPL::FilterSubGroups::InputFilters; }
 
 // -----------------------------------------------------------------------------
 //

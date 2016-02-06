@@ -54,11 +54,11 @@
 // -----------------------------------------------------------------------------
 SharedFeatureFaceFilter::SharedFeatureFaceFilter() :
   SurfaceMeshFilter(),
-  m_FaceFeatureAttributeMatrixName(DREAM3D::Defaults::FaceFeatureAttributeMatrixName),
-  m_SurfaceMeshFeatureFaceIdsArrayName(DREAM3D::FaceData::SurfaceMeshFeatureFaceId),
-  m_SurfaceMeshFeatureFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
+  m_FaceFeatureAttributeMatrixName(SIMPL::Defaults::FaceFeatureAttributeMatrixName),
+  m_SurfaceMeshFeatureFaceIdsArrayName(SIMPL::FaceData::SurfaceMeshFeatureFaceId),
+  m_SurfaceMeshFeatureFaceLabelsArrayName(SIMPL::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFeatureFaceNumTrianglesArrayName("NumTriangles"),
-  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::TriangleDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
+  m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabels(NULL),
   m_SurfaceMeshFeatureFaceIds(NULL),
   m_SurfaceMeshFeatureFaceLabels(NULL),
@@ -82,7 +82,7 @@ void SharedFeatureFaceFilter::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 2, DREAM3D::AttributeMatrixType::Face, DREAM3D::GeometryType::TriangleGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
@@ -138,7 +138,7 @@ void SharedFeatureFaceFilter::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer facefeatureAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::FaceFeature);
+  AttributeMatrix::Pointer facefeatureAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceFeatureAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::FaceFeature);
   if(getErrorCondition() < 0 || NULL == facefeatureAttrMat.get()) { return; }
 
   QVector<size_t> cDims(1, 2);
@@ -300,13 +300,13 @@ const QString SharedFeatureFaceFilter::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString SharedFeatureFaceFilter::getGroupName()
-{ return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+{ return SIMPL::FilterGroups::SurfaceMeshingFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString SharedFeatureFaceFilter::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::ConnectivityArrangementFilters; }
+{ return SIMPL::FilterSubGroups::ConnectivityArrangementFilters; }
 
 // -----------------------------------------------------------------------------
 //

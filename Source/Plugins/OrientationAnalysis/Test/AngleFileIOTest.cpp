@@ -55,183 +55,165 @@
 
 namespace
 {
-static const int k_AngleCount = 100;
+  static const int k_AngleCount = 100;
 }
 
-
-
-
-DataContainerArray::Pointer InitializeDataContainerArray()
+class AngleFileIOTest
 {
-  DataContainerArray::Pointer dca = DataContainerArray::New();
-
-  DataContainer::Pointer m = DataContainer::New("AngleFileIO");
-
-  dca->addDataContainer(m);
-
-  // Create Attribute Matrices with different tDims to test validation of tuple compatibility
-  QVector<size_t> tDims(1, k_AngleCount);
-  AttributeMatrix::Pointer attrMat1 = AttributeMatrix::New(tDims, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::AttributeMatrixType::Cell);
-  m->addAttributeMatrix(attrMat1->getName(), attrMat1);
-
-  QVector<size_t> cDims(1, 3);
-  DataArray<float>::Pointer angles = DataArray<float>::CreateArray(k_AngleCount, cDims, DREAM3D::CellData::EulerAngles, true);
-  attrMat1->addAttributeArray(angles->getName(), angles);
-  cDims[0] = 1;
-  DataArray<int32_t>::Pointer phases = DataArray<int32_t>::CreateArray(k_AngleCount, cDims, DREAM3D::CellData::Phases, true);
-  attrMat1->addAttributeArray(phases->getName(), phases);
-  for(int i = 0; i < k_AngleCount; i++)
-  {
-
-    float angle = 360.0/k_AngleCount * i;
-    angles->setComponent(i, 0, angle);
-
-    angles->setComponent(i, 2, angle);
-    angle = 180.0/k_AngleCount * i;
-    angles->setComponent(i, 1, angle);
-
-    phases->setValue(i, 1);
-  }
-
-  return dca;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void TestWriter()
-{
-
-  TestObserver obs;
-
-  DataContainerArray::Pointer dca = InitializeDataContainerArray();
-
-  AbstractFilter::Pointer filter = AbstractFilter::NullPointer();
-  QString filtName = "WriteStatsGenOdfAngleFile";
-  FilterManager* fm = FilterManager::Instance();
-  IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
-
-  DREAM3D_REQUIRE_VALID_POINTER(filterFactory.get())
-
-      filter = filterFactory->create();
-  DREAM3D_REQUIRE_VALID_POINTER(filter.get())
-      filter->setDataContainerArray(dca);
-  filter->connect(filter.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-                  &obs, SLOT(processPipelineMessage(const PipelineMessage&)));
-
-  QVariant var;
-  bool propWasSet = filter->setProperty("OutputFile", UnitTest::AngleFileIOTest::OutputFile);
-  DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-
-      DataArrayPath dap("AngleFileIO", DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerAngles);
-  var.setValue(dap);
-  propWasSet = filter->setProperty("CellEulerAnglesArrayPath", var);
-  DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-
-      dap.setDataArrayName(DREAM3D::CellData::Phases);
-  var.setValue(dap);
-  propWasSet = filter->setProperty("CellPhasesArrayPath", var);
-  DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-
-      bool setToDegrees = false;
-  propWasSet = filter->setProperty("ConvertToDegrees", QVariant(setToDegrees));
-  DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-
-      setToDegrees = false;
-  propWasSet = filter->setProperty("UseGoodVoxels", QVariant(setToDegrees));
-  DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-
-      filter->preflight();
-  int32_t err = filter->getErrorCondition();
-
-  DREAM3D_REQUIRED(err, >=, 0)
-
-      filter->execute();
-  err = filter->getErrorCondition();
-
-  DREAM3D_REQUIRE(err >= 0)
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void TestReader()
-{
-  AngleFileLoader::Pointer reader = AngleFileLoader::New();
-
-  QFileInfo fi(UnitTest::AngleFileIOTest::OutputFile);
-  QString absPath = fi.absolutePath();
-  QString fname = fi.completeBaseName();
-  QString suffix = fi.suffix();
-
-  QString absFilePath = absPath + "/" + fname + "_Phase_" + QString::number(1) + "." + suffix;
+  public:
+    AngleFileIOTest(){}
+    virtual ~AngleFileIOTest(){}
+    SIMPL_TYPE_MACRO(AngleFileIOTest)
 
 
-  reader->setInputFile(absFilePath);
-  reader->setAngleRepresentation(AngleFileLoader::EulerAngles);
-  reader->setDelimiter(QString(" "));
-  reader->setFileAnglesInDegrees(true);
-  reader->setOutputAnglesInDegrees(true);
+    DataContainerArray::Pointer InitializeDataContainerArray()
+    {
+      DataContainerArray::Pointer dca = DataContainerArray::New();
 
-  DataArray<float>::Pointer angles = reader->loadData();
-  if(reader->getErrorCode() < 0)
-  {
-    qDebug() << reader->getErrorMessage();
-  }
-  DREAM3D_REQUIRED(reader->getErrorCode(), >=, 0)
-  DREAM3D_REQUIRE_VALID_POINTER(angles.get())
+      DataContainer::Pointer m = DataContainer::New("AngleFileIO");
 
-  DREAM3D_REQUIRED(angles->getNumberOfTuples(), ==, k_AngleCount)
-  DREAM3D_REQUIRED(angles->getNumberOfComponents(), ==, 5)
+      dca->addDataContainer(m);
 
-  for(int i = 0; i < 100; i++)
-  {
-    float angle = 360.0/100.0 * i;
-    DREAM3D_REQUIRED(angle, ==, angles->getComponent(i, 0) );
-    DREAM3D_REQUIRED(angle, ==, angles->getComponent(i, 2) );
+      // Create Attribute Matrices with different tDims to test validation of tuple compatibility
+      QVector<size_t> tDims(1, k_AngleCount);
+      AttributeMatrix::Pointer attrMat1 = AttributeMatrix::New(tDims, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::AttributeMatrixType::Cell);
+      m->addAttributeMatrix(attrMat1->getName(), attrMat1);
 
-    angle = 180.0/100.0 * i;
-    DREAM3D_REQUIRED(angle, ==, angles->getComponent(i, 1) );
-  }
+      QVector<size_t> cDims(1, 3);
+      DataArray<float>::Pointer angles = DataArray<float>::CreateArray(k_AngleCount, cDims, SIMPL::CellData::EulerAngles, true);
+      attrMat1->addAttributeArray(angles->getName(), angles);
+      cDims[0] = 1;
+      DataArray<int32_t>::Pointer phases = DataArray<int32_t>::CreateArray(k_AngleCount, cDims, SIMPL::CellData::Phases, true);
+      attrMat1->addAttributeArray(phases->getName(), phases);
+      for(int i = 0; i < k_AngleCount; i++)
+      {
 
-}
+        float angle = 360.0/k_AngleCount * i;
+        angles->setComponent(i, 0, angle);
+
+        angles->setComponent(i, 2, angle);
+        angle = 180.0/k_AngleCount * i;
+        angles->setComponent(i, 1, angle);
+
+        phases->setValue(i, 1);
+      }
+
+      return dca;
+    }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void TestWriter()
+    {
+
+      TestObserver obs;
+
+      DataContainerArray::Pointer dca = InitializeDataContainerArray();
+
+      AbstractFilter::Pointer filter = AbstractFilter::NullPointer();
+      QString filtName = "WriteStatsGenOdfAngleFile";
+      FilterManager* fm = FilterManager::Instance();
+      IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+
+      DREAM3D_REQUIRE_VALID_POINTER(filterFactory.get())
+
+          filter = filterFactory->create();
+      DREAM3D_REQUIRE_VALID_POINTER(filter.get())
+          filter->setDataContainerArray(dca);
+      filter->connect(filter.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+                      &obs, SLOT(processPipelineMessage(const PipelineMessage&)));
+
+      QVariant var;
+      bool propWasSet = filter->setProperty("OutputFile", UnitTest::AngleFileIOTest::OutputFile);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+
+          DataArrayPath dap("AngleFileIO", SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::EulerAngles);
+      var.setValue(dap);
+      propWasSet = filter->setProperty("CellEulerAnglesArrayPath", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+
+          dap.setDataArrayName(SIMPL::CellData::Phases);
+      var.setValue(dap);
+      propWasSet = filter->setProperty("CellPhasesArrayPath", var);
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+
+          bool setToDegrees = false;
+      propWasSet = filter->setProperty("ConvertToDegrees", QVariant(setToDegrees));
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+
+          setToDegrees = false;
+      propWasSet = filter->setProperty("UseGoodVoxels", QVariant(setToDegrees));
+      DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+
+          filter->preflight();
+      int32_t err = filter->getErrorCondition();
+
+      DREAM3D_REQUIRED(err, >=, 0)
+
+          filter->execute();
+      err = filter->getErrorCondition();
+
+      DREAM3D_REQUIRE(err >= 0)
+
+    }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void TestReader()
+    {
+      AngleFileLoader::Pointer reader = AngleFileLoader::New();
+
+      QFileInfo fi(UnitTest::AngleFileIOTest::OutputFile);
+      QString absPath = fi.absolutePath();
+      QString fname = fi.completeBaseName();
+      QString suffix = fi.suffix();
+
+      QString absFilePath = absPath + "/" + fname + "_Phase_" + QString::number(1) + "." + suffix;
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void loadFilterPlugins()
-{
-  // Register all the filters including trying to load those from Plugins
-  FilterManager* fm = FilterManager::Instance();
-  SIMPLibPluginLoader::LoadPluginFilters(fm);
+      reader->setInputFile(absFilePath);
+      reader->setAngleRepresentation(AngleFileLoader::EulerAngles);
+      reader->setDelimiter(QString(" "));
+      reader->setFileAnglesInDegrees(true);
+      reader->setOutputAnglesInDegrees(true);
 
-  // Send progress messages from PipelineBuilder to this object for display
-  QMetaObjectUtilities::RegisterMetaTypes();
-}
+      DataArray<float>::Pointer angles = reader->loadData();
+      if(reader->getErrorCode() < 0)
+      {
+        qDebug() << reader->getErrorMessage();
+      }
+      DREAM3D_REQUIRED(reader->getErrorCode(), >=, 0)
+      DREAM3D_REQUIRE_VALID_POINTER(angles.get())
 
+      DREAM3D_REQUIRED(angles->getNumberOfTuples(), ==, k_AngleCount)
+      DREAM3D_REQUIRED(angles->getNumberOfComponents(), ==, 5)
 
+      for(int i = 0; i < 100; i++)
+      {
+        float angle = 360.0/100.0 * i;
+        DREAM3D_REQUIRED(angle, ==, angles->getComponent(i, 0) );
+        DREAM3D_REQUIRED(angle, ==, angles->getComponent(i, 2) );
 
-// -----------------------------------------------------------------------------
-//  Use test framework
-// -----------------------------------------------------------------------------
-int main(int argc, char** argv)
-{
-  // Instantiate the QCoreApplication that we need to get the current path and load plugins.
-  QCoreApplication app(argc, argv);
-  QCoreApplication::setOrganizationName("BlueQuartz Software");
-  QCoreApplication::setOrganizationDomain("bluequartz.net");
-  QCoreApplication::setApplicationName("AngleFileIOTest");
+        angle = 180.0/100.0 * i;
+        DREAM3D_REQUIRED(angle, ==, angles->getComponent(i, 1) );
+      }
 
-  int err = EXIT_SUCCESS;
+    }
 
-  DREAM3D_REGISTER_TEST(loadFilterPlugins());
+    /**
+    * @brief
+    */
+    void operator()()
+    {
+      int err = EXIT_SUCCESS;
+      DREAM3D_REGISTER_TEST(TestWriter());
+      DREAM3D_REGISTER_TEST(TestReader());
+    }
 
-  DREAM3D_REGISTER_TEST(TestWriter());
-  DREAM3D_REGISTER_TEST(TestReader());
-
-  PRINT_TEST_SUMMARY();
-  return err;
-}
+  private:
+    AngleFileIOTest(const AngleFileIOTest&); // Copy Constructor Not Implemented
+    void operator=(const AngleFileIOTest&); // Operator '=' Not Implemented
+};
 

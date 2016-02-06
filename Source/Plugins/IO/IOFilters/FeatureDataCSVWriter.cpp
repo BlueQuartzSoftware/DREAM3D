@@ -83,7 +83,7 @@ void FeatureDataCSVWriter::setupFilterParameters()
   parameters.push_back(BooleanFilterParameter::New("Write Neighbor Data", "WriteNeighborListData", getWriteNeighborListData(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   {
-    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(DREAM3D::AttributeMatrixObjectType::Feature);
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixObjectType::Feature);
     parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath(), FilterParameter::RequiredArray, req));
   }
   setFilterParameters(parameters);
@@ -202,7 +202,7 @@ void FeatureDataCSVWriter::execute()
   NeighborList<int32_t>::Pointer neighborlistPtr = NeighborList<int32_t>::CreateArray(0, "_INTERNAL_USE_ONLY_JunkNeighborList", false);
 
   // Print the FeatureIds Header before the rest of the headers
-  outFile << DREAM3D::FeatureData::FeatureID;
+  outFile << SIMPL::FeatureData::FeatureID;
   // Loop throught the list and print the rest of the headers, ignoring those we don't want
   for (QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
@@ -267,7 +267,7 @@ void FeatureDataCSVWriter::execute()
       IDataArray::Pointer p = cellFeatureAttrMat->getAttributeArray(*iter);
       if (p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) == 0)
       {
-        outFile << DREAM3D::FeatureData::FeatureID << m_Delimiter << DREAM3D::FeatureData::NumNeighbors << m_Delimiter << (*iter) << "\n";
+        outFile << SIMPL::FeatureData::FeatureID << m_Delimiter << SIMPL::FeatureData::NumNeighbors << m_Delimiter << (*iter) << "\n";
         numTuples = p->getNumberOfTuples();
 
         // Skip feature 0
@@ -336,13 +336,13 @@ const QString FeatureDataCSVWriter::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FeatureDataCSVWriter::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FeatureDataCSVWriter::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::OutputFilters; }
+{ return SIMPL::FilterSubGroups::OutputFilters; }
 
 // -----------------------------------------------------------------------------
 //

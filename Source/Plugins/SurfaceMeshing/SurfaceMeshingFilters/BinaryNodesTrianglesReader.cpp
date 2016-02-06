@@ -59,11 +59,11 @@
 // -----------------------------------------------------------------------------
 BinaryNodesTrianglesReader::BinaryNodesTrianglesReader() :
   SurfaceMeshFilter(),
-  m_SurfaceDataContainerName(DREAM3D::Defaults::TriangleDataContainerName),
-  m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
-  m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
-  m_FaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
-  m_SurfaceMeshNodeTypesArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
+  m_SurfaceDataContainerName(SIMPL::Defaults::TriangleDataContainerName),
+  m_VertexAttributeMatrixName(SIMPL::Defaults::VertexAttributeMatrixName),
+  m_FaceAttributeMatrixName(SIMPL::Defaults::FaceAttributeMatrixName),
+  m_FaceLabelsArrayName(SIMPL::FaceData::SurfaceMeshFaceLabels),
+  m_SurfaceMeshNodeTypesArrayName(SIMPL::VertexData::SurfaceMeshNodeType),
   m_BinaryNodesFile(""),
   m_BinaryTrianglesFile(""),
   m_SurfaceMeshNodeTypes(NULL),
@@ -165,13 +165,13 @@ void BinaryNodesTrianglesReader::dataCheck()
   DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getSurfaceDataContainerName());
   if(getErrorCondition() < 0) { return; }
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer vertexAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Vertex);
+  AttributeMatrix::Pointer vertexAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Vertex);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix::Pointer faceAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Face);
+  AttributeMatrix::Pointer faceAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Face);
   if(getErrorCondition() < 0) { return; }
 
   SharedVertexList::Pointer vertices = TriangleGeom::CreateSharedVertexList(0);
-  TriangleGeom::Pointer triangleGeom = TriangleGeom::CreateGeometry(0, vertices, DREAM3D::Geometry::TriangleGeometry);
+  TriangleGeom::Pointer triangleGeom = TriangleGeom::CreateGeometry(0, vertices, SIMPL::Geometry::TriangleGeometry);
   sm->setGeometry(triangleGeom);
 
   dims[0] = 2;

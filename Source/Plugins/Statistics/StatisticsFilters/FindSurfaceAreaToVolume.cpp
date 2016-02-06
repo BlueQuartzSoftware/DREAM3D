@@ -56,9 +56,9 @@
 // -----------------------------------------------------------------------------
 FindSurfaceAreaToVolume::FindSurfaceAreaToVolume() :
   AbstractFilter(),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_NumCellsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::NumCells),
-  m_SurfaceAreaVolumeRatioArrayName(DREAM3D::FeatureData::SurfaceAreaVol),
+  m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
+  m_NumCellsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::NumCells),
+  m_SurfaceAreaVolumeRatioArrayName(SIMPL::FeatureData::SurfaceAreaVol),
   m_FeatureIds(NULL),
   m_NumCells(NULL),
   m_SurfaceAreaVolumeRatio(NULL)
@@ -80,12 +80,12 @@ void FindSurfaceAreaToVolume::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::CellFeature, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
 
     parameters.push_back(DataArraySelectionFilterParameter::New("Number of Cells", "NumCellsArrayPath", getNumCellsArrayPath(), FilterParameter::RequiredArray, req));
   }
@@ -326,13 +326,13 @@ const QString FindSurfaceAreaToVolume::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FindSurfaceAreaToVolume::getGroupName()
-{ return DREAM3D::FilterGroups::StatisticsFilters; }
+{ return SIMPL::FilterGroups::StatisticsFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindSurfaceAreaToVolume::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::MorphologicalFilters; }
+{ return SIMPL::FilterSubGroups::MorphologicalFilters; }
 
 // -----------------------------------------------------------------------------
 //

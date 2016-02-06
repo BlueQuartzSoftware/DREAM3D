@@ -61,14 +61,14 @@
 // -----------------------------------------------------------------------------
 VectorSegmentFeatures::VectorSegmentFeatures() :
   SegmentFeatures(),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-  m_SelectedVectorArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::VectorData),
+  m_CellFeatureAttributeMatrixName(SIMPL::Defaults::CellFeatureAttributeMatrixName),
+  m_SelectedVectorArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::VectorData),
   m_AngleTolerance(5.0f),
   m_RandomizeFeatureIds(true),
   m_UseGoodVoxels(true),
-  m_GoodVoxelsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Mask),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_ActiveArrayName(DREAM3D::FeatureData::Active),
+  m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask),
+  m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds),
+  m_ActiveArrayName(SIMPL::FeatureData::Active),
   m_Vectors(NULL),
   m_FeatureIds(NULL),
   m_GoodVoxels(NULL),
@@ -176,7 +176,7 @@ void VectorSegmentFeatures::dataCheck()
   if(getErrorCondition() < 0 || NULL == m.get()) { return; }
 
   QVector<size_t> tDims(1, 0);
-  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
+  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellFeature);
 
   QVector<DataArrayPath> dataArrayPaths;
 
@@ -435,13 +435,13 @@ const QString VectorSegmentFeatures::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString VectorSegmentFeatures::getGroupName()
-{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+{ return SIMPL::FilterGroups::ReconstructionFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString VectorSegmentFeatures::getSubGroupName()
-{return DREAM3D::FilterSubGroups::SegmentationFilters;}
+{return SIMPL::FilterSubGroups::SegmentationFilters;}
 
 // -----------------------------------------------------------------------------
 //

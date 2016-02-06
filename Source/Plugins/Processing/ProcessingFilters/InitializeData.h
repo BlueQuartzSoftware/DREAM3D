@@ -37,9 +37,12 @@
 #ifndef _InitializeData_H_
 #define _InitializeData_H_
 
+#include <QtCore/QVector>
+
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/FilterParameters/RangeFilterParameter.h"
 
 /**
  * @brief The InitializeData class. See [Filter documentation](@ref initializedata) for details.
@@ -54,8 +57,8 @@ class InitializeData : public AbstractFilter
 
     virtual ~InitializeData();
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
-    Q_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
+    SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, CellAttributeMatrixPaths)
+    Q_PROPERTY(QVector<DataArrayPath> CellAttributeMatrixPaths READ getCellAttributeMatrixPaths WRITE setCellAttributeMatrixPaths)
 
     SIMPL_FILTER_PARAMETER(int, XMin)
     Q_PROPERTY(int XMin READ getXMin WRITE setXMin)
@@ -74,6 +77,18 @@ class InitializeData : public AbstractFilter
 
     SIMPL_FILTER_PARAMETER(int, ZMax)
     Q_PROPERTY(int ZMax READ getZMax WRITE setZMax)
+
+    SIMPL_FILTER_PARAMETER(int, InitType)
+    Q_PROPERTY(int InitType READ getInitType WRITE setInitType)
+
+    SIMPL_FILTER_PARAMETER(bool, Random)
+    Q_PROPERTY(bool Random READ getRandom WRITE setRandom)
+
+    SIMPL_FILTER_PARAMETER(double, InitValue)
+    Q_PROPERTY(double InitValue READ getInitValue WRITE setInitValue)
+
+    SIMPL_FILTER_PARAMETER(FPRangePair, InitRange)
+    Q_PROPERTY(FPRangePair InitRange READ getInitRange WRITE setInitRange)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -171,6 +186,49 @@ class InitializeData : public AbstractFilter
     void dataCheck();
 
   private:
+    enum InitChoices
+    {
+      Manual,
+      Random,
+      RandomWithRange
+    };
+
+#if (CMP_SIZEOF_SIZE_T == 4)
+    typedef int32_t DimType;
+#else
+    typedef int64_t DimType;
+#endif
+
+    /**
+    * @brief initializeArrayWithInts Initializes the array p with integers, either from the
+    * manual value entered in the filter, or with a random number.  This function does not
+    * check that the template type actually is an integer, so it will most likely cause
+    * unexpected results when passing anything other than an integer as a template parameter.
+    * @param p The array that will be initialized
+    * @param dims The dimensions of the array p
+    */
+    template <typename T>
+    void initializeArrayWithInts(IDataArray::Pointer p, DimType dims[3]);
+
+    /**
+    * @brief initializeArrayWithReals Initializes the array p with real numbers, either from the
+    * manual value entered in the filter, or with a random number.  This function does not
+    * check that the template type actually is a non-integer, so it will most likely cause
+    * unexpected results when passing anything other than a float or double as a template
+    * parameter.
+    * @param p The array that will be initialized
+    * @param dims The dimensions of the array p
+    */
+    template <typename T>
+    void initializeArrayWithReals(IDataArray::Pointer p, DimType dims[3]);
+
+    /**
+    * @brief checkInitialization Checks that the chosen initialization value/range is inside
+    * the bounds of the array type
+    */
+    template <typename T>
+    void checkInitialization(IDataArray::Pointer p);
+
     InitializeData(const InitializeData&); // Copy Constructor Not Implemented
     void operator=(const InitializeData&); // Operator '=' Not Implemented
 };

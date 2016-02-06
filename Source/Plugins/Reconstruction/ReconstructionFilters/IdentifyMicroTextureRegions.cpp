@@ -59,6 +59,9 @@
 
 #include "OrientationLib/SpaceGroupOps/SpaceGroupOps.h"
 
+#include "EbsdLib/EbsdConstants.h"
+
+
 // included so we can call under the hood to segment the patches found in this filter
 #include "Reconstruction/ReconstructionFilters/VectorSegmentFeatures.h"
 
@@ -217,16 +220,16 @@ class FindPatchMisalignmentsImpl
 // -----------------------------------------------------------------------------
 IdentifyMicroTextureRegions::IdentifyMicroTextureRegions() :
   AbstractFilter(),
-  m_NewCellFeatureAttributeMatrixName(DREAM3D::Defaults::NewCellFeatureAttributeMatrixName),
+  m_NewCellFeatureAttributeMatrixName(SIMPL::Defaults::NewCellFeatureAttributeMatrixName),
   m_CAxisTolerance(1.0f),
   m_MinMTRSize(1.0f),
   m_MinVolFrac(1.0f),
   m_RandomizeMTRIds(false),
-  m_CAxisLocationsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::CAxisLocation),
-  m_CellPhasesArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
-  m_CrystalStructuresArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
-  m_MTRIdsArrayName(DREAM3D::CellData::ParentIds),
-  m_ActiveArrayName(DREAM3D::FeatureData::Active),
+  m_CAxisLocationsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::CAxisLocation),
+  m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases),
+  m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures),
+  m_MTRIdsArrayName(SIMPL::CellData::ParentIds),
+  m_ActiveArrayName(SIMPL::FeatureData::Active),
   m_CAxisLocations(NULL),
   m_CellPhases(NULL),
   m_CrystalStructures(NULL),
@@ -343,7 +346,7 @@ void IdentifyMicroTextureRegions::dataCheck()
   if(getErrorCondition() < 0 || NULL == m.get()) { return; }
 
   QVector<size_t> tDims(1, 0);
-  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
+  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewCellFeatureAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellFeature);
 
   QVector<size_t> cDims(1, 3);
 
@@ -525,7 +528,7 @@ void IdentifyMicroTextureRegions::execute()
   tDims[0] = newDimX;
   tDims[1] = newDimY;
   tDims[2] = newDimZ;
-  tmpDC->createNonPrereqAttributeMatrix<AbstractFilter>(this, "_INTERNAL_USE_ONLY_PatchAM(Temp)", tDims, DREAM3D::AttributeMatrixType::Cell);
+  tmpDC->createNonPrereqAttributeMatrix<AbstractFilter>(this, "_INTERNAL_USE_ONLY_PatchAM(Temp)", tDims, SIMPL::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
 
   DataArrayPath tempPath;
@@ -716,13 +719,13 @@ const QString IdentifyMicroTextureRegions::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString IdentifyMicroTextureRegions::getGroupName()
-{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+{ return SIMPL::FilterGroups::ReconstructionFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString IdentifyMicroTextureRegions::getSubGroupName()
-{return DREAM3D::FilterSubGroups::GroupingFilters;}
+{return SIMPL::FilterSubGroups::GroupingFilters;}
 
 // -----------------------------------------------------------------------------
 //

@@ -58,11 +58,11 @@
 // -----------------------------------------------------------------------------
 FindSizes::FindSizes() :
   AbstractFilter(),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::ImageDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
-  m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
-  m_NumCellsArrayName(DREAM3D::FeatureData::NumCells),
+  m_CellFeatureAttributeMatrixName(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, ""),
+  m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds),
+  m_VolumesArrayName(SIMPL::FeatureData::Volumes),
+  m_EquivalentDiametersArrayName(SIMPL::FeatureData::EquivalentDiameters),
+  m_NumCellsArrayName(SIMPL::FeatureData::NumCells),
   m_FeatureIds(NULL),
   m_Volumes(NULL),
   m_EquivalentDiameters(NULL),
@@ -86,12 +86,12 @@ void FindSizes::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(DREAM3D::TypeNames::Int32, 1, DREAM3D::AttributeMatrixType::Cell, DREAM3D::GeometryType::ImageGeometry);
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
-    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(DREAM3D::AttributeMatrixType::CellFeature, DREAM3D::GeometryType::ImageGeometry);
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
     parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::RequiredArray, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
@@ -302,13 +302,13 @@ const QString FindSizes::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FindSizes::getGroupName()
-{ return DREAM3D::FilterGroups::StatisticsFilters; }
+{ return SIMPL::FilterGroups::StatisticsFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindSizes::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::MorphologicalFilters; }
+{ return SIMPL::FilterSubGroups::MorphologicalFilters; }
 
 // -----------------------------------------------------------------------------
 //

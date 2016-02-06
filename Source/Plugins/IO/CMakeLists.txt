@@ -18,7 +18,7 @@ endif()
 
 set(${PLUGIN_NAME}_Project_SRCS "")
 
-include(${DREAM3DProj_SOURCE_DIR}/Source/SIMPLib/SIMPLibMacros.cmake)
+include(${SIMPLProj_SOURCE_DIR}/Source/SIMPLib/SIMPLibMacros.cmake)
 #-------
 # Start writing this header file
 set(AllFiltersHeaderFile ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters/${PLUGIN_NAME}Filters.h_tmp)
@@ -97,17 +97,12 @@ include_directories( ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME})
 include_directories( ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/${PLUGIN_NAME}Filters)
 include_directories( ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/FilterParameterWidgets)
 include_directories( ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/Test)
+include_directories( ${SIMPLProj_SOURCE_DIR}/Source)
+include_directories( ${SIMPLViewProj_SOURCE_DIR}/Source)
+include_directories( ${SIMPLProj_BINARY_DIR})
+include_directories( ${SIMPLViewProj_BINARY_DIR})
 
-# ******************************************************************************
-# Create our custom executable that will generate most of our QFilterWidget
-# classes from information stored in the Filters themselves.
-# Read the file back into a string so we can configure our file
-file(READ ${FilterWidget_GEN_HDRS_File} ${PLUGIN_NAME}Widget_GEN_HDRS)
-file(READ ${FilterWidget_GEN_SRCS_File} ${PLUGIN_NAME}Widget_GEN_SRCS)
 
-# Remove the temp files that we no longer need
-file(REMOVE ${FilterWidget_GEN_HDRS_File})
-file(REMOVE ${FilterWidget_GEN_SRCS_File})
 
 
 set(FILTER_HEADERS "#include \"${AllFiltersHeaderFile}\"")
@@ -226,7 +221,7 @@ target_link_libraries(${PLUGIN_NAME}
                     Qt5::Gui
                     Qt5::Widgets
                     QtSupportLib
-                    DREAM3DWidgetsLib
+                    SIMPLViewWidgetsLib
                     )
 SET_TARGET_PROPERTIES(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)
 qt5_use_modules(${PLUGIN_NAME} Core Gui Widgets)
@@ -247,6 +242,6 @@ if( DREAM3D_BUILD_CLI_TOOLS )
   ADD_SUBDIRECTORY(${PROJECT_SOURCE_DIR}/Tools ${PROJECT_BINARY_DIR}/Tools)
 endif()
 
-if(DREAM3D_BUILD_TESTING)
+if(SIMPL_BUILD_TESTING)
   include(${${PLUGIN_NAME}_SOURCE_DIR}/Test/CMakeLists.txt)
 endif()

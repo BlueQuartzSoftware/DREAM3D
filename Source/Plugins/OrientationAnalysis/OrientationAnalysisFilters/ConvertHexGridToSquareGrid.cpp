@@ -544,13 +544,13 @@ const QString ConvertHexGridToSquareGrid::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString ConvertHexGridToSquareGrid::getGroupName()
-{ return DREAM3D::FilterGroups::SamplingFilters; }
+{ return SIMPL::FilterGroups::SamplingFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ConvertHexGridToSquareGrid::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::ResolutionFilters; }
+{ return SIMPL::FilterSubGroups::ResolutionFilters; }
 
 // -----------------------------------------------------------------------------
 //

@@ -89,7 +89,7 @@ void readPipeline(QFilterParametersReader::Pointer paramsReader, FilterPipeline:
 {
   FilterManager* filtManager = FilterManager::Instance();
   QSettings* prefs = paramsReader->getPrefs();
-  prefs->beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
+  prefs->beginGroup(SIMPL::Settings::PipelineBuilderGroup);
   bool ok = false;
   int filterCount = prefs->value("Number_Filters").toInt(&ok);
   prefs->endGroup();
@@ -311,8 +311,8 @@ int main (int argc, char*  argv[])
 
       pipelineFile = AdjustOutputDirectory(pipelineFile);
 
-      DREAM3D::unittest::CurrentMethod = fi.fileName().toStdString();
-      DREAM3D::unittest::numTests++;
+      SIMPL::unittest::CurrentMethod = fi.fileName().toStdString();
+      SIMPL::unittest::numTests++;
 
       std::cout << "\"" << testNum++ << "\": {" << std::endl;
 
@@ -320,11 +320,11 @@ int main (int argc, char*  argv[])
 
       TestPassed(fi.fileName().toStdString());
       std::cout << "}," << std::endl;
-      DREAM3D::unittest::CurrentMethod = "";
+      SIMPL::unittest::CurrentMethod = "";
     }
     catch (TestException& e)
     {
-      TestFailed(DREAM3D::unittest::CurrentMethod);
+      TestFailed(SIMPL::unittest::CurrentMethod);
       std::cout << e.what() << std::endl;
       err = EXIT_FAILURE;
     }

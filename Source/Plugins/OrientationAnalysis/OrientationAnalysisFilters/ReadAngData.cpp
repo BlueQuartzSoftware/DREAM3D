@@ -87,13 +87,13 @@ ReadAngDataPrivate::ReadAngDataPrivate(ReadAngData* ptr) :
 // -----------------------------------------------------------------------------
 ReadAngData::ReadAngData() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::ImageDataContainerName),
-  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_DataContainerName(SIMPL::Defaults::ImageDataContainerName),
+  m_CellEnsembleAttributeMatrixName(SIMPL::Defaults::CellEnsembleAttributeMatrixName),
+  m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
   m_FileWasRead(false),
-  m_MaterialNameArrayName(DREAM3D::EnsembleData::MaterialName),
+  m_MaterialNameArrayName(SIMPL::EnsembleData::MaterialName),
   m_InputFile(""),
-  m_RefFrameZDir(Ebsd::RefFrameZDir::UnknownRefFrameZDirection),
+  m_RefFrameZDir(SIMPL::RefFrameZDir::UnknownRefFrameZDirection),
   m_Manufacturer(Ebsd::UnknownManufacturer),
   d_ptr(new ReadAngDataPrivate(this)),
   m_CellPhases(NULL),
@@ -174,15 +174,15 @@ void ReadAngData::dataCheck()
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
   if (getErrorCondition() < 0) { return; }
 
-  ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+  ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   m->setGeometry(image);
 
   QVector<size_t> tDims(3, 0);
-  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
+  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
   if (getErrorCondition() < 0) { return; }
   tDims.resize(1);
   tDims[0] = 0;
-  AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellEnsemble);
+  AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::CellEnsemble);
   if (getErrorCondition() < 0) { return; }
 
   QFileInfo fi(m_InputFile);
@@ -264,8 +264,8 @@ void ReadAngData::dataCheck()
     if (NULL != m_LatticeConstantsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-    StringDataArray::Pointer materialNames = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumTuples(), DREAM3D::EnsembleData::MaterialName);
-    cellEnsembleAttrMat->addAttributeArray(DREAM3D::EnsembleData::MaterialName, materialNames);
+    StringDataArray::Pointer materialNames = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumTuples(), SIMPL::EnsembleData::MaterialName);
+    cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::MaterialName, materialNames);
   }
 }
 
@@ -495,9 +495,9 @@ void ReadAngData::copyRawEbsdData(AngReader* reader, QVector<size_t>& tDims, QVe
         phasePtr[i] = 1;
       }
     }
-    iArray = Int32ArrayType::CreateArray(tDims, cDims, DREAM3D::CellData::Phases);
+    iArray = Int32ArrayType::CreateArray(tDims, cDims, SIMPL::CellData::Phases);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    ebsdAttrMat->addAttributeArray(DREAM3D::CellData::Phases, iArray);
+    ebsdAttrMat->addAttributeArray(SIMPL::CellData::Phases, iArray);
   }
 
   // Condense the Euler Angles from 3 separate arrays into a single 1x3 array
@@ -506,7 +506,7 @@ void ReadAngData::copyRawEbsdData(AngReader* reader, QVector<size_t>& tDims, QVe
     f2 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Phi));
     f3 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Phi2));
     cDims[0] = 3;
-    fArray = FloatArrayType::CreateArray(tDims, cDims, DREAM3D::CellData::EulerAngles);
+    fArray = FloatArrayType::CreateArray(tDims, cDims, SIMPL::CellData::EulerAngles);
     float* cellEulerAngles = fArray->getPointer(0);
 
     for (size_t i = 0; i < totalPoints; i++)
@@ -515,7 +515,7 @@ void ReadAngData::copyRawEbsdData(AngReader* reader, QVector<size_t>& tDims, QVe
       cellEulerAngles[3 * i + 1] = f2[i];
       cellEulerAngles[3 * i + 2] = f3[i];
     }
-    ebsdAttrMat->addAttributeArray(DREAM3D::CellData::EulerAngles, fArray);
+    ebsdAttrMat->addAttributeArray(SIMPL::CellData::EulerAngles, fArray);
   }
 
   cDims[0] = 1;
@@ -562,7 +562,7 @@ void ReadAngData::execute()
   QVector<size_t> cDims(1, 1);
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
   AttributeMatrix::Pointer ebsdAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
-  ebsdAttrMat->setType(DREAM3D::AttributeMatrixType::Cell);
+  ebsdAttrMat->setType(SIMPL::AttributeMatrixType::Cell);
 
   readDataFile(reader.get(), m, tDims, ANG_FULL_FILE);
   if(getErrorCondition() < 0)
@@ -631,13 +631,13 @@ const QString ReadAngData::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString ReadAngData::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ReadAngData::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::InputFilters; }
+{ return SIMPL::FilterSubGroups::InputFilters; }
 
 // -----------------------------------------------------------------------------
 //

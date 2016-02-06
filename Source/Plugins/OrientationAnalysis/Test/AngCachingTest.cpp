@@ -65,6 +65,13 @@ const float yStep2 = 0.25;
 const int nCols2 = 40;
 const int nRows2 = 4;
 
+class AngCachingTest
+{
+  public:
+    AngCachingTest(){}
+    virtual ~AngCachingTest(){}
+    SIMPL_TYPE_MACRO(AngCachingTest)
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -324,33 +331,12 @@ int TestAngReader()
   return EXIT_SUCCESS;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void loadFilterPlugins()
+/**
+  * @brief
+*/
+void operator()()
 {
-  // Register all the filters including trying to load those from Plugins
-  FilterManager* fm = FilterManager::Instance();
-  SIMPLibPluginLoader::LoadPluginFilters(fm);
-
-  // Send progress messages from PipelineBuilder to this object for display
-  QMetaObjectUtilities::RegisterMetaTypes();
-}
-
-
-// -----------------------------------------------------------------------------
-//  Use test framework
-// -----------------------------------------------------------------------------
-int main(int argc, char** argv)
-{
-  // Instantiate the QCoreApplication that we need to get the current path and load plugins.
-  QCoreApplication app(argc, argv);
-  QCoreApplication::setOrganizationName("BlueQuartz Software");
-  QCoreApplication::setOrganizationDomain("bluequartz.net");
-  QCoreApplication::setApplicationName("AngCachingTest");
-
   int err = EXIT_SUCCESS;
-  DREAM3D_REGISTER_TEST(loadFilterPlugins());
   DREAM3D_REGISTER_TEST(TestFilterAvailability());
 
   DREAM3D_REGISTER_TEST(CopyTestFiles())
@@ -358,7 +344,8 @@ int main(int argc, char** argv)
   DREAM3D_REGISTER_TEST(TestAngReader())
 
   DREAM3D_REGISTER_TEST(RemoveTestFiles())
-  PRINT_TEST_SUMMARY();
-  return err;
 }
-
+private:
+AngCachingTest(const AngCachingTest&); // Copy Constructor Not Implemented
+void operator=(const AngCachingTest&); // Operator '=' Not Implemented
+};

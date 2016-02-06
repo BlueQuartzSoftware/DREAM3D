@@ -1,6 +1,37 @@
-#--////////////////////////////////////////////////////////////////////////////
-#-- Your License or copyright can go here
-#--////////////////////////////////////////////////////////////////////////////
+# ============================================================================
+# Copyright (c) 2009-2016 BlueQuartz Software, LLC
+#
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+#
+# Redistributions of source code must retain the above copyright notice, this
+# list of conditions and the following disclaimer.
+#
+# Redistributions in binary form must reproduce the above copyright notice, this
+# list of conditions and the following disclaimer in the documentation and/or
+# other materials provided with the distribution.
+#
+# Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+# contributors may be used to endorse or promote products derived from this software
+# without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+# USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# The code contained herein was partially funded by the followig contracts:
+#    United States Air Force Prime Contract FA8650-07-D-5800
+#    United States Air Force Prime Contract FA8650-10-D-5210
+#    United States Prime Contract Navy N00173-07-C-2068
+#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 set(PLUGIN_NAME EMMPM)
 set(${PLUGIN_NAME}_VERSION "1.0")
@@ -9,17 +40,18 @@ set(${PLUGIN_NAME}_VERSION_MINOR "0")
 get_filename_component(${PLUGIN_NAME}_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}" ABSOLUTE)
 set(EMMPM_BINARY_DIR "${DREAM3DProj_BINARY_DIR}/Plugins/${PLUGIN_NAME}")
 
+
+add_subdirectory(${EMMPM_SOURCE_DIR}/EMMPMLib ${EMMPM_BINARY_DIR}/EMMPMLib)
+
 # --------------------------------------------------------------------
 # Look for Qt 5 as we need it for the plugin GUI to be generated
 if(NOT Qt5Core_FOUND)
     message(FATAL_ERROR "Qt 5 is Needed for plugin ${PLUGIN_NAME}Plugin.")
 endif()
 
-add_subdirectory(${EMMPM_SOURCE_DIR}/EMMPMLib ${EMMPM_BINARY_DIR}/EMMPMLib)
-
 set(${PLUGIN_NAME}_Project_SRCS "")
 
-include(${DREAM3DProj_SOURCE_DIR}/Source/SIMPLib/SIMPLibMacros.cmake)
+include(${SIMPLProj_SOURCE_DIR}/Source/SIMPLib/SIMPLibMacros.cmake)
 #-------
 # Start writing this header file
 set(AllFiltersHeaderFile ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters/${PLUGIN_NAME}Filters.h_tmp)
@@ -94,17 +126,12 @@ include_directories( ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME})
 include_directories( ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/${PLUGIN_NAME}Filters)
 include_directories( ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/FilterParameterWidgets)
 include_directories( ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/Test)
+include_directories( ${SIMPLProj_SOURCE_DIR}/Source)
+include_directories( ${SIMPLViewProj_SOURCE_DIR}/Source)
+include_directories( ${SIMPLProj_BINARY_DIR})
+include_directories( ${SIMPLViewProj_BINARY_DIR})
 
-# ******************************************************************************
-# Create our custom executable that will generate most of our QFilterWidget
-# classes from information stored in the Filters themselves.
-# Read the file back into a string so we can configure our file
-file(READ ${FilterWidget_GEN_HDRS_File} ${PLUGIN_NAME}Widget_GEN_HDRS)
-file(READ ${FilterWidget_GEN_SRCS_File} ${PLUGIN_NAME}Widget_GEN_SRCS)
 
-# Remove the temp files that we no longer need
-file(REMOVE ${FilterWidget_GEN_HDRS_File})
-file(REMOVE ${FilterWidget_GEN_SRCS_File})
 
 
 set(FILTER_HEADERS "#include \"${AllFiltersHeaderFile}\"")
@@ -212,10 +239,10 @@ target_link_libraries(${PLUGIN_NAME}
                     Qt5::Core
                     EMMPMLib
                     SIMPLib
-                    Qt5::Gui 
+                    Qt5::Gui
                     Qt5::Widgets
                     QtSupportLib
-                    DREAM3DWidgetsLib
+                    SIMPLViewWidgetsLib
                     )
 SET_TARGET_PROPERTIES(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)
 qt5_use_modules(${PLUGIN_NAME} Core Gui Widgets)
@@ -233,6 +260,6 @@ if(NOT MSVC)
 endif()
 
 
-if(DREAM3D_BUILD_TESTING)
+if(SIMPL_BUILD_TESTING)
   include(${${PLUGIN_NAME}_SOURCE_DIR}/Test/CMakeLists.txt)
 endif()

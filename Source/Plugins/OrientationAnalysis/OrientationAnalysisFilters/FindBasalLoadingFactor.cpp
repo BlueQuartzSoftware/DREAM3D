@@ -251,14 +251,14 @@ const QString FindBasalLoadingFactor::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString FindBasalLoadingFactor::getGroupName()
-{ return DREAM3D::FilterGroups::StatisticsFilters; }
+{ return SIMPL::FilterGroups::StatisticsFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString FindBasalLoadingFactor::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+{ return SIMPL::FilterSubGroups::CrystallographicFilters; }
 
 
 // -----------------------------------------------------------------------------

@@ -705,7 +705,7 @@ const QString CorrelateValuesWithVectorDirection::getFilterVersion()
 // -----------------------------------------------------------------------------
 const QString CorrelateValuesWithVectorDirection::getGroupName()
 {
-  return DREAM3D::FilterGroups::StatisticsFilters;
+  return SIMPL::FilterGroups::StatisticsFilters;
 }
 
 
@@ -714,7 +714,7 @@ const QString CorrelateValuesWithVectorDirection::getGroupName()
 // -----------------------------------------------------------------------------
 const QString CorrelateValuesWithVectorDirection::getSubGroupName()
 {
-  return DREAM3D::FilterSubGroups::CrystallographicFilters;
+  return SIMPL::FilterSubGroups::CrystallographicFilters;
 }
 
 

@@ -65,8 +65,8 @@
 // -----------------------------------------------------------------------------
 ImportVectorImageStack::ImportVectorImageStack() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::ImageDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_DataContainerName(SIMPL::Defaults::ImageDataContainerName),
+  m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
   m_StartIndex(0),
   m_EndIndex(0),
   m_InputPath(""),
@@ -75,8 +75,8 @@ ImportVectorImageStack::ImportVectorImageStack() :
   m_FileSuffix(""),
   m_FileExtension(""),
   m_PaddingDigits(0),
-  m_RefFrameZDir(Ebsd::RefFrameZDir::LowtoHigh),
-  m_VectorDataArrayName(DREAM3D::CellData::VectorData),
+  m_RefFrameZDir(SIMPL::RefFrameZDir::LowtoHigh),
+  m_VectorDataArrayName(SIMPL::CellData::VectorData),
   m_VectorData(NULL)
 {
 
@@ -186,14 +186,14 @@ void ImportVectorImageStack::dataCheck()
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
   if (getErrorCondition() < 0 || NULL == m.get()) { return; }
 
-  ImageGeom::Pointer image = ImageGeom::CreateGeometry(DREAM3D::Geometry::ImageGeometry);
+  ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   m->setGeometry(image);
 
   bool hasMissingFiles = false;
   bool stackLowToHigh = false;
 
-  if( Ebsd::RefFrameZDir::LowtoHigh == m_RefFrameZDir) { stackLowToHigh = true; }
-  else if (Ebsd::RefFrameZDir::HightoLow == m_RefFrameZDir) { stackLowToHigh = false; }
+  if( SIMPL::RefFrameZDir::LowtoHigh == m_RefFrameZDir) { stackLowToHigh = true; }
+  else if (SIMPL::RefFrameZDir::HightoLow == m_RefFrameZDir) { stackLowToHigh = false; }
 
   // Now generate all the file names the user is asking for and populate the table
   QVector<QString> fileList = FilePathGenerator::GenerateVectorFileList(m_StartIndex, m_EndIndex, m_StartComp, m_EndComp,
@@ -275,7 +275,7 @@ void ImportVectorImageStack::dataCheck()
     {
       tDims[i] = dims[i];
     }
-    AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
+    AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Cell);
     if(getErrorCondition() < 0) { return; }
 
     //set up component dimensions for the vector image array
@@ -293,7 +293,7 @@ void ImportVectorImageStack::dataCheck()
 //  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, ImportVectorImageStack>(this, getDataContainerName());
 //  if(getErrorCondition() < 0) { return; }
 
-//  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), DREAM3D::AttributeMatrixType::Cell);
+//  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), SIMPL::AttributeMatrixType::Cell);
 //  if(getErrorCondition() < 0) { return; }
 
 //  QVector<size_t> tDims = cellAttrMat->getTupleDimensions();
@@ -373,8 +373,8 @@ void ImportVectorImageStack::execute()
   bool hasMissingFiles = false;
   bool stackLowToHigh = false;
 
-  if( Ebsd::RefFrameZDir::LowtoHigh == m_RefFrameZDir) { stackLowToHigh = true; }
-  else if (Ebsd::RefFrameZDir::HightoLow == m_RefFrameZDir) { stackLowToHigh = false; }
+  if( SIMPL::RefFrameZDir::LowtoHigh == m_RefFrameZDir) { stackLowToHigh = true; }
+  else if (SIMPL::RefFrameZDir::HightoLow == m_RefFrameZDir) { stackLowToHigh = false; }
 
   // Now generate all the file names the user is asking for and populate the table
   QVector<QString> fileList = FilePathGenerator::GenerateVectorFileList(m_StartIndex, m_EndIndex,
@@ -501,14 +501,14 @@ const QString ImportVectorImageStack::getFilterVersion()
 //
 // -----------------------------------------------------------------------------
 const QString ImportVectorImageStack::getGroupName()
-{ return DREAM3D::FilterGroups::IOFilters; }
+{ return SIMPL::FilterGroups::IOFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString ImportVectorImageStack::getSubGroupName()
-{ return DREAM3D::FilterSubGroups::InputFilters; }
+{ return SIMPL::FilterSubGroups::InputFilters; }
 
 
 // -----------------------------------------------------------------------------

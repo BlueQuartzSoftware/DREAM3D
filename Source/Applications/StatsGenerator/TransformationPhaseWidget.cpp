@@ -97,7 +97,7 @@
 // -----------------------------------------------------------------------------
 TransformationPhaseWidget::TransformationPhaseWidget(QWidget* parent) :
   SGWidget(parent),
-  m_PhaseType(DREAM3D::PhaseType::PrimaryPhase),
+  m_PhaseType(SIMPL::PhaseType::PrimaryPhase),
   m_PhaseFraction(1.0),
   m_TotalPhaseFraction(1.0),
   m_ParentPhase(0),
@@ -154,10 +154,10 @@ AbstractMicrostructurePresetFactory::Pointer RegisterPresetFactory(QComboBox* mi
 // -----------------------------------------------------------------------------
 void TransformationPhaseWidget::setupGui()
 {
-  distributionTypeCombo->addItem(DREAM3D::StringConstants::BetaDistribution.toLatin1().data());
-  distributionTypeCombo->addItem(DREAM3D::StringConstants::LogNormalDistribution.toLatin1().data());
-  distributionTypeCombo->addItem(DREAM3D::StringConstants::PowerLawDistribution.toLatin1().data());
-  distributionTypeCombo->setCurrentIndex(DREAM3D::DistributionType::LogNormal);
+  distributionTypeCombo->addItem(SIMPL::StringConstants::BetaDistribution.toLatin1().data());
+  distributionTypeCombo->addItem(SIMPL::StringConstants::LogNormalDistribution.toLatin1().data());
+  distributionTypeCombo->addItem(SIMPL::StringConstants::PowerLawDistribution.toLatin1().data());
+  distributionTypeCombo->setCurrentIndex(SIMPL::DistributionType::LogNormal);
   // Turn off all the plot widgets
   setTabsPlotTabsEnabled(false);
 
@@ -190,8 +190,8 @@ void TransformationPhaseWidget::setupGui()
   w->setPlotTitle(QString("Size Vs. Omega 3"));
   w->setXAxisName(QString("Omega 3"));
   w->setYAxisName(QString("Frequency"));
-  w->setDistributionType(DREAM3D::DistributionType::Beta);
-  w->setStatisticsType(DREAM3D::StatisticsType::Feature_SizeVOmega3);
+  w->setDistributionType(SIMPL::DistributionType::Beta);
+  w->setStatisticsType(SIMPL::StatisticsType::Feature_SizeVOmega3);
   w->blockDistributionTypeChanges(true);
   w->setRowOperationEnabled(false);
   w->setMu(mu);
@@ -207,8 +207,8 @@ void TransformationPhaseWidget::setupGui()
   w->setPlotTitle(QString("B/A Shape Distribution"));
   w->setXAxisName(QString("B/A"));
   w->setYAxisName(QString("Frequency"));
-  w->setDistributionType(DREAM3D::DistributionType::Beta);
-  w->setStatisticsType(DREAM3D::StatisticsType::Feature_SizeVBoverA);
+  w->setDistributionType(SIMPL::DistributionType::Beta);
+  w->setStatisticsType(SIMPL::StatisticsType::Feature_SizeVBoverA);
   w->blockDistributionTypeChanges(true);
   w->setRowOperationEnabled(false);
   w->setMu(mu);
@@ -223,8 +223,8 @@ void TransformationPhaseWidget::setupGui()
   w->setPlotTitle(QString("C/A Shape Distribution"));
   w->setXAxisName(QString("C/A"));
   w->setYAxisName(QString("Frequency"));
-  w->setDistributionType(DREAM3D::DistributionType::Beta);
-  w->setStatisticsType(DREAM3D::StatisticsType::Feature_SizeVCoverA);
+  w->setDistributionType(SIMPL::DistributionType::Beta);
+  w->setStatisticsType(SIMPL::StatisticsType::Feature_SizeVCoverA);
   w->blockDistributionTypeChanges(true);
   w->setRowOperationEnabled(false);
   w->setMu(mu);
@@ -744,15 +744,15 @@ int TransformationPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
   float stepSize = binStep;
 
   // Get pointers
-  IDataArray::Pointer iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::CrystalStructures);
+  IDataArray::Pointer iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::CrystalStructures);
   unsigned int* crystalStructures = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
-  iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::PhaseTypes);
+  iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
   unsigned int* phaseTypes = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
 
   crystalStructures[m_PhaseIndex] = m_CrystalStructure;
   phaseTypes[m_PhaseIndex] = m_PhaseType;
 
-  StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(attrMat->getAttributeArray(DREAM3D::EnsembleData::Statistics).get());
+  StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics).get());
   if (NULL != statsDataArray)
   {
     StatsData::Pointer statsData = statsDataArray->getStatsData(m_PhaseIndex);
@@ -767,14 +767,14 @@ int TransformationPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
     // Feature Size Distribution
     {
       VectorOfFloatArray data;
-      FloatArrayType::Pointer d1 = FloatArrayType::CreateArray(1, DREAM3D::StringConstants::Average);
-      FloatArrayType::Pointer d2 = FloatArrayType::CreateArray(1, DREAM3D::StringConstants::StandardDeviation);
+      FloatArrayType::Pointer d1 = FloatArrayType::CreateArray(1, SIMPL::StringConstants::Average);
+      FloatArrayType::Pointer d2 = FloatArrayType::CreateArray(1, SIMPL::StringConstants::StandardDeviation);
       data.push_back(d1);
       data.push_back(d2);
       d1->setValue(0, avglogdiam);
       d2->setValue(0, sdlogdiam);
       transformationStatsData->setFeatureSizeDistribution(data);
-      transformationStatsData->setFeatureSize_DistType(DREAM3D::DistributionType::LogNormal);
+      transformationStatsData->setFeatureSize_DistType(SIMPL::DistributionType::LogNormal);
     }
 
     // Now that we have bins and feature sizes, push those to the other plot widgets
@@ -793,9 +793,9 @@ int TransformationPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
       transformationStatsData->setFeatureSize_COverA(data);
       transformationStatsData->setCOverA_DistType(m_COverAPlot->getDistributionType());
     }
-    m_ODFWidget->getOrientationData(transformationStatsData, DREAM3D::PhaseType::TransformationPhase);
+    m_ODFWidget->getOrientationData(transformationStatsData, SIMPL::PhaseType::TransformationPhase);
 
-    err = m_AxisODFWidget->getOrientationData(transformationStatsData, DREAM3D::PhaseType::TransformationPhase);
+    err = m_AxisODFWidget->getOrientationData(transformationStatsData, SIMPL::PhaseType::TransformationPhase);
   }
   return retErr;
 }
@@ -814,15 +814,15 @@ void TransformationPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMa
 
   setPhaseIndex(index);
 
-  IDataArray::Pointer iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::CrystalStructures);
+  IDataArray::Pointer iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::CrystalStructures);
   unsigned int* attributeArray = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
   m_CrystalStructure = attributeArray[index];
 
-  iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::PhaseTypes);
+  iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::PhaseTypes);
   attributeArray = std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
   m_PhaseType = attributeArray[index];
 
-  iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::Statistics);
+  iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::Statistics);
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(iDataArray.get());
 
   if (statsDataArray == NULL)
@@ -904,10 +904,10 @@ void TransformationPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMa
   m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
   // Set the ODF Data
-  m_ODFWidget->extractStatsData(index, transformationStatsData, DREAM3D::PhaseType::TransformationPhase);
+  m_ODFWidget->extractStatsData(index, transformationStatsData, SIMPL::PhaseType::TransformationPhase);
 
   // Set the Axis ODF Data
-  m_AxisODFWidget->extractStatsData(index, transformationStatsData, DREAM3D::PhaseType::TransformationPhase);
+  m_AxisODFWidget->extractStatsData(index, transformationStatsData, SIMPL::PhaseType::TransformationPhase);
 
   // Enable all the tabs
   setTabsPlotTabsEnabled(true);

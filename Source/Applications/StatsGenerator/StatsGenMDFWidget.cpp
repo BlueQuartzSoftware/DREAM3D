@@ -350,17 +350,17 @@ void StatsGenMDFWidget::extractStatsData(int index, StatsData* statsData, unsign
 {
   Q_UNUSED(index)
   VectorOfFloatArray arrays;
-  if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
+  if(phaseType == SIMPL::PhaseType::PrimaryPhase)
   {
     PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
     arrays = pp->getMDF_Weights();
   }
-  if(phaseType == DREAM3D::PhaseType::PrecipitatePhase)
+  if(phaseType == SIMPL::PhaseType::PrecipitatePhase)
   {
     PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
     arrays = pp->getMDF_Weights();
   }
-  if(phaseType == DREAM3D::PhaseType::TransformationPhase)
+  if(phaseType == SIMPL::PhaseType::TransformationPhase)
   {
     TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
     arrays = tp->getMDF_Weights();
@@ -422,18 +422,18 @@ int StatsGenMDFWidget::getMisorientationData(StatsData* statsData, unsigned int 
   }
   if (mdf.size() > 0)
   {
-    FloatArrayType::Pointer p = FloatArrayType::FromPointer(mdf.data(), mdf.size(), DREAM3D::StringConstants::MisorientationBins);
-    if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
+    FloatArrayType::Pointer p = FloatArrayType::FromPointer(mdf.data(), mdf.size(), SIMPL::StringConstants::MisorientationBins);
+    if(phaseType == SIMPL::PhaseType::PrimaryPhase)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
       pp->setMisorientationBins(p);
     }
-    if(phaseType == DREAM3D::PhaseType::PrecipitatePhase)
+    if(phaseType == SIMPL::PhaseType::PrecipitatePhase)
     {
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
       pp->setMisorientationBins(p);
     }
-    if(phaseType == DREAM3D::PhaseType::TransformationPhase)
+    if(phaseType == SIMPL::PhaseType::TransformationPhase)
     {
       TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
       tp->setMisorientationBins(p);
@@ -441,25 +441,25 @@ int StatsGenMDFWidget::getMisorientationData(StatsData* statsData, unsigned int 
 
     if(angles.size() > 0)
     {
-      FloatArrayType::Pointer anglesArray = FloatArrayType::FromPointer(angles.data(), angles.size(), DREAM3D::StringConstants::Angle);
-      FloatArrayType::Pointer axisArray = FloatArrayType::FromPointer(axes.data(), axes.size(), DREAM3D::StringConstants::Axis);
-      FloatArrayType::Pointer weightArray = FloatArrayType::FromPointer(weights.data(), weights.size(), DREAM3D::StringConstants::Weight);
+      FloatArrayType::Pointer anglesArray = FloatArrayType::FromPointer(angles.data(), angles.size(), SIMPL::StringConstants::Angle);
+      FloatArrayType::Pointer axisArray = FloatArrayType::FromPointer(axes.data(), axes.size(), SIMPL::StringConstants::Axis);
+      FloatArrayType::Pointer weightArray = FloatArrayType::FromPointer(weights.data(), weights.size(), SIMPL::StringConstants::Weight);
 
       VectorOfFloatArray mdfWeights;
       mdfWeights.push_back(anglesArray);
       mdfWeights.push_back(axisArray);
       mdfWeights.push_back(weightArray);
-      if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
+      if(phaseType == SIMPL::PhaseType::PrimaryPhase)
       {
         PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
         pp->setMDF_Weights(mdfWeights);
       }
-      if(phaseType == DREAM3D::PhaseType::PrecipitatePhase)
+      if(phaseType == SIMPL::PhaseType::PrecipitatePhase)
       {
         PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
         pp->setMDF_Weights(mdfWeights);
       }
-      if(phaseType == DREAM3D::PhaseType::TransformationPhase)
+      if(phaseType == SIMPL::PhaseType::TransformationPhase)
       {
         TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
         tp->setMDF_Weights(mdfWeights);
