@@ -102,13 +102,13 @@ class OrientationArrayTest
         OrientationTransformType::ResultType result;
         FOrientArrayType eu_r(3);
         eu_r[0] = 0.81585413f;
-        eu_r[1] = 5.285555f;
+        eu_r[1] = 3.00f;
         eu_r[2] = 0.8661895f;
         result = OrientationTransformType::eu_check(eu_r);
-        DREAM3D_REQUIRE_EQUAL(result.result, 0);
+        DREAM3D_REQUIRE_EQUAL(result.result, 1);
         eu_r[1] = eu_r[1] - SIMPLib::Constants::k_Pi;
         result = OrientationTransformType::eu_check(eu_r);
-        DREAM3D_REQUIRE_EQUAL(result.result, 1);
+        DREAM3D_REQUIRE_EQUAL(result.result, -2);
       }
       {
         typedef std::vector<float> FloatVectorType;
@@ -122,7 +122,7 @@ class OrientationArrayTest
         DREAM3D_REQUIRE_EQUAL(result.result, 1);
         eu_v[0] = -1.0;
         result = OrientationTransformType::eu_check(eu_v);
-        DREAM3D_REQUIRE_EQUAL(result.result, 0);
+        DREAM3D_REQUIRE_EQUAL(result.result, -1);
       }
       {
         typedef QVector<float> FloatQVectorType;
@@ -136,7 +136,7 @@ class OrientationArrayTest
         DREAM3D_REQUIRE_EQUAL(result.result, 1);
         eu_q[0] = -1.0;
         result = OrientationTransformType::eu_check(eu_q);
-        DREAM3D_REQUIRE_EQUAL(result.result, 0);
+        DREAM3D_REQUIRE_EQUAL(result.result, -1);
       }
     }
 
@@ -158,7 +158,7 @@ class OrientationArrayTest
         DREAM3D_REQUIRE_EQUAL(result.result, 1);
         ro[3] = -1.0;
         result = OrientationTransformType::ro_check(ro);
-        DREAM3D_REQUIRE_EQUAL(result.result, 0);
+        DREAM3D_REQUIRE_EQUAL(result.result, -1);
       }
 
       {
@@ -176,7 +176,7 @@ class OrientationArrayTest
         DREAM3D_REQUIRE_EQUAL(result.result, 1);
         ro[3] = -1.0;
         result = OrientationTransformType::ro_check(ro);
-        DREAM3D_REQUIRE_EQUAL(result.result, 0);
+        DREAM3D_REQUIRE_EQUAL(result.result, -1);
       }
 
       {
@@ -193,7 +193,7 @@ class OrientationArrayTest
         DREAM3D_REQUIRE_EQUAL(result.result, 1);
         ro[3] = -1.0;
         result = OrientationTransformType::ro_check(ro);
-        DREAM3D_REQUIRE_EQUAL(result.result, 0);
+        DREAM3D_REQUIRE_EQUAL(result.result, -1);
       }
 
     }
@@ -214,7 +214,7 @@ class OrientationArrayTest
         DREAM3D_REQUIRE_EQUAL(result.result, 1);
         ho[2] = 8.0;
         result = OrientationTransformType::ho_check(ho);
-        DREAM3D_REQUIRE_EQUAL(result.result, 0);
+        DREAM3D_REQUIRE_EQUAL(result.result, -1);
       }
 
       {
@@ -230,7 +230,7 @@ class OrientationArrayTest
         DREAM3D_REQUIRE_EQUAL(result.result, 1);
         ho[2] = 8.0;
         result = OrientationTransformType::ho_check(ho);
-        DREAM3D_REQUIRE_EQUAL(result.result, 0);
+        DREAM3D_REQUIRE_EQUAL(result.result, -1);
       }
 
       {
@@ -245,7 +245,7 @@ class OrientationArrayTest
         DREAM3D_REQUIRE_EQUAL(result.result, 1);
         ho[2] = 8.0;
         result = OrientationTransformType::ho_check(ho);
-        DREAM3D_REQUIRE_EQUAL(result.result, 0);
+        DREAM3D_REQUIRE_EQUAL(result.result, -1);
       }
 
     }
@@ -266,7 +266,7 @@ class OrientationArrayTest
         DREAM3D_REQUIRE_EQUAL(result.result, 1);
         v[2] = 8.0;
         result = OrientationTransformType::cu_check(v);
-        DREAM3D_REQUIRE_EQUAL(result.result, 0);
+        DREAM3D_REQUIRE_EQUAL(result.result, -1);
       }
 
       {
@@ -281,7 +281,7 @@ class OrientationArrayTest
         DREAM3D_REQUIRE_EQUAL(result.result, 1);
         v[2] = 8.0;
         result = OrientationTransformType::cu_check(v);
-        DREAM3D_REQUIRE_EQUAL(result.result, 0);
+        DREAM3D_REQUIRE_EQUAL(result.result, -1);
       }
 
       {
@@ -296,7 +296,7 @@ class OrientationArrayTest
         DREAM3D_REQUIRE_EQUAL(result.result, 1);
         v[2] = 8.0;
         result = OrientationTransformType::cu_check(v);
-        DREAM3D_REQUIRE_EQUAL(result.result, 0);
+        DREAM3D_REQUIRE_EQUAL(result.result, -1);
       }
 
     }
@@ -325,11 +325,11 @@ class OrientationArrayTest
         qu[1] = 3.0f;
         qu[2] = 2.0f;
         result = OrientationTransformType::qu_check(qu);
-        DREAM3D_REQUIRE_EQUAL(result.result, 0);
+        DREAM3D_REQUIRE_EQUAL(result.result, -2);
 
         qu[0] = -1.0;
         result = OrientationTransformType::qu_check(qu);
-        DREAM3D_REQUIRE_EQUAL(result.result, 0);
+        DREAM3D_REQUIRE_EQUAL(result.result, -2);
       }
 
       {
@@ -349,11 +349,11 @@ class OrientationArrayTest
         qu[1] = 3.0f;
         qu[2] = 2.0f;
         result = OrientationTransformType::qu_check(qu);
-        DREAM3D_REQUIRE_EQUAL(result.result, 0);
+        DREAM3D_REQUIRE_EQUAL(result.result, -2);
 
         qu[0] = -1.0;
         result = OrientationTransformType::qu_check(qu);
-        DREAM3D_REQUIRE_EQUAL(result.result, 0);
+        DREAM3D_REQUIRE_EQUAL(result.result, -2);
       }
 
       {
@@ -373,11 +373,11 @@ class OrientationArrayTest
         qu[1] = 3.0f;
         qu[2] = 2.0f;
         result = OrientationTransformType::qu_check(qu);
-        DREAM3D_REQUIRE_EQUAL(result.result, 0);
+        DREAM3D_REQUIRE_EQUAL(result.result, -2);
 
         qu[0] = -1.0;
         result = OrientationTransformType::qu_check(qu);
-        DREAM3D_REQUIRE_EQUAL(result.result, 0);
+        DREAM3D_REQUIRE_EQUAL(result.result, -2);
       }
 
     }
@@ -401,11 +401,11 @@ class OrientationArrayTest
 
         ax[0] = 1.0;
         result = OrientationTransformType::ax_check(ax);
-        DREAM3D_REQUIRE_EQUAL(result.result, 0);
+        DREAM3D_REQUIRE_EQUAL(result.result, -2);
 
         ax[3] = SIMPLib::Constants::k_Pi + 1.0f;
         result = OrientationTransformType::ax_check(ax);
-        DREAM3D_REQUIRE_EQUAL(result.result, 0);
+        DREAM3D_REQUIRE_EQUAL(result.result, -1);
       }
 
       {
@@ -422,11 +422,11 @@ class OrientationArrayTest
 
         ax[0] = 1.0;
         result = OrientationTransformType::ax_check(ax);
-        DREAM3D_REQUIRE_EQUAL(result.result, 0);
+        DREAM3D_REQUIRE_EQUAL(result.result, -2);
 
         ax[3] = SIMPLib::Constants::k_Pi + 1.0;
         result = OrientationTransformType::ax_check(ax);
-        DREAM3D_REQUIRE_EQUAL(result.result, 0);
+        DREAM3D_REQUIRE_EQUAL(result.result, -1);
       }
 
       {
@@ -443,11 +443,11 @@ class OrientationArrayTest
 
         ax[0] = 1.0f;
         result = OrientationTransformType::ax_check(ax);
-        DREAM3D_REQUIRE_EQUAL(result.result, 0);
+        DREAM3D_REQUIRE_EQUAL(result.result, -2);
 
         ax[3] = SIMPLib::Constants::k_Pi + 1.0f;
         result = OrientationTransformType::ax_check(ax);
-        DREAM3D_REQUIRE_EQUAL(result.result, 0);
+        DREAM3D_REQUIRE_EQUAL(result.result, -1);
       }
 
     }
@@ -477,11 +477,11 @@ class OrientationArrayTest
         ax[1] = -16.0f;
         ax[6] = -12.0f;
         result = OrientationTransformType::om_check(ax);
-        DREAM3D_REQUIRE_EQUAL(result.result, 0);
+        DREAM3D_REQUIRE_EQUAL(result.result, -3);
 
         ax[3] = SIMPLib::Constants::k_Pi + 1.0f;
         result = OrientationTransformType::om_check(ax);
-        DREAM3D_REQUIRE_EQUAL(result.result, 0);
+        DREAM3D_REQUIRE_EQUAL(result.result, -2);
       }
 
       {
@@ -504,11 +504,11 @@ class OrientationArrayTest
         ax[1] = -16.0f;
         ax[6] = -12.0f;
         result = OrientationTransformType::om_check(ax);
-        DREAM3D_REQUIRE_EQUAL(result.result, 0);
+        DREAM3D_REQUIRE_EQUAL(result.result, -3);
 
         ax[3] = SIMPLib::Constants::k_Pi + 1.0f;
         result = OrientationTransformType::om_check(ax);
-        DREAM3D_REQUIRE_EQUAL(result.result, 0);
+        DREAM3D_REQUIRE_EQUAL(result.result, -2);
       }
 
       {
@@ -531,11 +531,11 @@ class OrientationArrayTest
         ax[1] = -16.0f;
         ax[6] = -12.0f;
         result = OrientationTransformType::om_check(ax);
-        DREAM3D_REQUIRE_EQUAL(result.result, 0);
+        DREAM3D_REQUIRE_EQUAL(result.result, -3);
 
         ax[3] = SIMPLib::Constants::k_Pi + 1.0f;
         result = OrientationTransformType::om_check(ax);
-        DREAM3D_REQUIRE_EQUAL(result.result, 0);
+        DREAM3D_REQUIRE_EQUAL(result.result, -2);
       }
     }
 
