@@ -63,7 +63,7 @@ class MultiThresholdObjectsTest
     int TestFilterAvailability()
     {
       // Now instantiate the MultiThresholdObjectsTest Filter from the FilterManager
-      QString filtName = "MultiThresholdObjectsTest";
+      QString filtName = "MultiThresholdObjects";
       FilterManager* fm = FilterManager::Instance();
       IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
       if (NULL == filterFactory.get() )
@@ -115,7 +115,7 @@ class MultiThresholdObjectsTest
       dca->addDataContainer(vdc);
 
       // Now instantiate the MultiThresholdObjectsTest Filter from the FilterManager
-      QString filtName = "MultiThresholdObjectsTest";
+      QString filtName = "MultiThresholdObjects";
       FilterManager* fm = FilterManager::Instance();
       IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
       if (NULL != filterFactory.get())
