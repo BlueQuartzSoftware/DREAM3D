@@ -276,7 +276,7 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @param i The index of the Tuple
      * @param c The value to splat across all components in the tuple
      */
-    virtual void initializeTuple(size_t i, double p);
+    virtual void initializeTuple(size_t i, void* p);
 
     /**
      * @brief Sets all the values to zero.

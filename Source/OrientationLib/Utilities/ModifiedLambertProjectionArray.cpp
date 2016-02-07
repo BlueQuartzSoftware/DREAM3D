@@ -378,7 +378,7 @@ bool ModifiedLambertProjectionArray::copyData(size_t destTupleOffset, IDataArray
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ModifiedLambertProjectionArray::initializeTuple(size_t i, double p)
+void ModifiedLambertProjectionArray::initializeTuple(size_t i, void* p)
 {
   Q_ASSERT(false);
 }

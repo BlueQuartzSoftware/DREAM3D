@@ -491,11 +491,12 @@ void InitializeData::initializeArrayWithInts(IDataArray::Pointer p, DimType dims
         if (m_InitType == Manual)
         {
           T num = static_cast<T>(m_InitValue);
-          p->initializeTuple(index, num);
+          p->initializeTuple(index, &num);
         }
         else
         {
-          p->initializeTuple(index, intGenerator());
+          T temp = intGenerator();
+          p->initializeTuple(index, &temp);
         }
       }
     }
@@ -512,8 +513,8 @@ void InitializeData::initializeArrayWithReals(IDataArray::Pointer p, DimType dim
   T rangeMax;
   if (m_InitType == RandomWithRange)
   {
-    rangeMin = m_InitRange.first;
-    rangeMax = m_InitRange.second;
+    rangeMin = static_cast<T>(m_InitRange.first);
+    rangeMax = static_cast<T>(m_InitRange.second);
   }
   else
   {
@@ -542,11 +543,12 @@ void InitializeData::initializeArrayWithReals(IDataArray::Pointer p, DimType dim
         if (m_InitType == Manual)
         {
           T num = static_cast<T>(m_InitValue);
-          p->initializeTuple(index, num);
+          p->initializeTuple(index, &num);
         }
         else
         {
-          p->initializeTuple(index, realGenerator());
+          T temp = realGenerator();
+          p->initializeTuple(index, &temp);
         }
       }
     }
