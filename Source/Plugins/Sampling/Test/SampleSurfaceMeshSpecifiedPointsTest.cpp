@@ -73,7 +73,7 @@ class SampleSurfaceMeshSpecifiedPointsTest
     int TestFilterAvailability()
     {
       // Now instantiate the SampleSurfaceMeshSpecifiedPointsTest Filter from the FilterManager
-      QString filtName = "SampleSurfaceMeshSpecifiedPointsTest";
+      QString filtName = "SampleSurfaceMeshSpecifiedPoints";
       FilterManager* fm = FilterManager::Instance();
       IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
       if (NULL == filterFactory.get())
