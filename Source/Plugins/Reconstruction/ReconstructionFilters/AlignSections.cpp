@@ -36,6 +36,7 @@
 #include "AlignSections.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/TemplateHelpers.hpp"
 #include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
@@ -43,6 +44,7 @@
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+
 
 #include "Reconstruction/ReconstructionConstants.h"
 
@@ -161,6 +163,19 @@ void AlignSections::find_shifts(std::vector<int64_t>& xshifts, std::vector<int64
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+template<typename T>
+void initializeArrayValues(IDataArray::Pointer p, size_t index)
+{
+
+    typename DataArray<T>::Pointer ptr = std::dynamic_pointer_cast<DataArray<T>>(p);
+    T var = static_cast<T>(0);
+    ptr->initializeTuple(index, &var);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void AlignSections::execute()
 {
   setErrorCondition(0);
@@ -169,24 +184,12 @@ void AlignSections::execute()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
-  size_t udims[3] = { 0, 0, 0 };
-  m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
-  {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
-  };
+  size_t dims[3] = { 0, 0, 0 };
+  m->getGeometryAs<ImageGeom>()->getDimensions(dims);
 
-
-  DimType xspot = 0, yspot = 0;
-  DimType newPosition = 0;
-  DimType currentPosition = 0;
+  int64_t xspot = 0, yspot = 0;
+  int64_t newPosition = 0;
+  int64_t currentPosition = 0;
 
   std::vector<int64_t> xshifts(dims[2], 0);
   std::vector<int64_t> yshifts(dims[2], 0);
@@ -198,9 +201,9 @@ void AlignSections::execute()
   int64_t progIncrement = dims[2] / 100;
   int64_t prog = 1;
   int64_t progressInt = 0;
-  DimType slice = 0;
+  size_t slice = 0;
 
-  for (DimType i = 1; i < dims[2]; i++)
+  for (size_t i = 1; i < dims[2]; i++)
   {
     if (i > prog)
     {
@@ -215,9 +218,9 @@ void AlignSections::execute()
       return;
     }
     slice = (dims[2] - 1) - i;
-    for (DimType l = 0; l < dims[1]; l++)
+    for (size_t l = 0; l < dims[1]; l++)
     {
-      for (DimType n = 0; n < dims[0]; n++)
+      for (size_t n = 0; n < dims[0]; n++)
       {
         if (yshifts[i] >= 0) { yspot = l; }
         else if (yshifts[i] < 0) { yspot = dims[1] - 1 - l; }
@@ -240,7 +243,7 @@ void AlignSections::execute()
           for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
             IDataArray::Pointer p = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(*iter);
-            p->initializeTuple(newPosition, 0);
+            EXECUTE_FUNCTION_TEMPLATE(this, initializeArrayValues, p, p, newPosition)
           }
         }
       }
