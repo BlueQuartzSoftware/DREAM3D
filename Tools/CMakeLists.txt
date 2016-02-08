@@ -69,6 +69,8 @@ configure_file( ${DREAM3DTools_SOURCE_DIR}/ToolConfiguration.h.in
 include_directories(${DREAM3DTest_BINARY_DIR})
 include_directories(${SIMPLProj_SOURCE_DIR}/Source)
 include_directories(${SIMPLProj_BINARY_DIR})
+include_directories(${SIMPLViewProj_BINARY_DIR})
+include_directories(${SIMPLViewProj_BINARY_DIR}/Applications/SIMPLView)
 
 # ---------- Find HDF5 Headers/Libraries -----------------------
 # HDF5 now comes with everything that is needed for CMake to load
@@ -144,7 +146,7 @@ OPTION (DREAM3D_BUILD_VERSION_FILE "Generate dream3d_version.json for the webser
 if(${DREAM3D_BUILD_VERSION_FILE})
   COMPILE_TOOL(
       TARGET CreateWebServerJson
-      SOURCES ${DREAM3DTools_SOURCE_DIR}/CreateWebServerJson.cpp
+      SOURCES ${DREAM3DTools_SOURCE_DIR}/CreateWebServerJson.cpp ${SIMPLView_VERSION_SRC_FILE}
       DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
       VERSION_MAJOR ${DREAM3D_VER_MAJOR}
       VERSION_MINOR ${DREAM3D_VER_MINOR}

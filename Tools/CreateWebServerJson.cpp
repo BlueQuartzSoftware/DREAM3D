@@ -12,12 +12,13 @@
 #include <QtCore/QDate>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Common/FilterManager.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/PluginManager.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/Utilities/QMetaObjectUtilities.h"
+
+#include "Applications/SIMPLView/SIMPLViewVersion.h"
 
 #include "ToolConfiguration.h"
 
@@ -43,11 +44,11 @@ void WriteWebServerJSON(const QString& filePath)
   QJsonObject meta;
 
   meta["Release Date"] = QDate::currentDate().toString();
-  meta["Release Type"] = DREAM3DProj_RELEASE_TYPE;
-  meta["Major"] = SIMPLib::Version::Major();
-  meta["Minor"] = SIMPLib::Version::Minor();
-  meta["Patch"] = SIMPLib::Version::Patch();
-  meta["Revision"] = SIMPLib::Version::Revision();
+  meta["Release Type"] = SIMPLProj_RELEASE_TYPE;
+  meta["Major"] = SIMPLView::Version::Major();
+  meta["Minor"] = SIMPLView::Version::Minor();
+  meta["Patch"] = SIMPLView::Version::Patch();
+  meta["Revision"] = SIMPLView::Version::Revision();
   meta["Download WebSite"] = "http://dream3d.bluequartz.net/?page_id=32";
   QJsonObject m_Root;
   m_Root["DREAM3D"] = meta;
