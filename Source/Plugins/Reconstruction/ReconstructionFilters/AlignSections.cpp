@@ -198,9 +198,9 @@ void AlignSections::execute()
 
 
   QList<QString> voxelArrayNames = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNames();
-  int64_t progIncrement = dims[2] / 100;
-  int64_t prog = 1;
-  int64_t progressInt = 0;
+  size_t progIncrement = dims[2] / 100;
+  size_t prog = 1;
+  size_t progressInt = 0;
   size_t slice = 0;
 
   for (size_t i = 1; i < dims[2]; i++)
@@ -228,17 +228,17 @@ void AlignSections::execute()
         else if (xshifts[i] < 0) { xspot = dims[0] - 1 - n; }
         newPosition = (slice * dims[0] * dims[1]) + (yspot * dims[0]) + xspot;
         currentPosition = (slice * dims[0] * dims[1]) + ((yspot + yshifts[i]) * dims[0]) + (xspot + xshifts[i]);
-        if ((yspot + yshifts[i]) >= 0 && (yspot + yshifts[i]) <= dims[1] - 1 && (xspot + xshifts[i]) >= 0
-            && (xspot + xshifts[i]) <= dims[0] - 1)
+        if ((yspot + yshifts[i]) >= 0 && (yspot + yshifts[i]) <= static_cast<int64_t>(dims[1]) - 1 && (xspot + xshifts[i]) >= 0
+            && (xspot + xshifts[i]) <= static_cast<int64_t>(dims[0]) - 1)
         {
           for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
             IDataArray::Pointer p = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(*iter);
-            p->copyTuple(currentPosition, newPosition);
+            p->copyTuple( static_cast<size_t>(currentPosition), static_cast<size_t>(newPosition));
           }
         }
         if ((yspot + yshifts[i]) < 0 || (yspot + yshifts[i]) > dims[1] - 1 || (xspot + xshifts[i]) < 0
-            || (xspot + xshifts[i]) > dims[0] - 1)
+            || (xspot + xshifts[i]) > static_cast<int64_t>(dims[0]) - 1)
         {
           for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
