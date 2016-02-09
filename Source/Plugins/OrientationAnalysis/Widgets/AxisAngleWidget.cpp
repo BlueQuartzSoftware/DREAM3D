@@ -37,6 +37,10 @@
 
 #include "SIMPLib/Math/SIMPLibMath.h"
 
+#include <Eigen/Core>
+#include <Eigen/Dense>
+#include <Eigen/Eigen>
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -120,6 +124,11 @@ void AxisAngleWidget::valuesUpdated(const QString &text)
 {
   QVector<double> values = getValues();
 
+  if(values[0] == 0.0 && values[1] == 0.0 && values[2] == 0)
+  {
+    return;
+  }
+
   if (m_AngleMeasurement == Degrees)
   {
     double degVal = values[3];
@@ -127,11 +136,25 @@ void AxisAngleWidget::valuesUpdated(const QString &text)
     values[3] = radVal;
   }
 
-  OrientationTransforms<QVector<double>, double>::ResultType result = OrientationTransforms<QVector<double>, double>::ax_check(values);
-  int errorCode = result.result;
-  QString errorMsg = QString::fromStdString(result.msg);
+  // Always normalize the axis vector
+  Eigen::Vector3d axis(values[0], values[1], values[2]);
+  axis.normalize();
+  values[0] = axis[0];
+  values[1] = axis[1];
+  values[2] = axis[2];
 
   emit clearErrorTable();
+  int errorCode = 0;
+  std::stringstream ss;
+  ss << "Axis Angle values were normalized. Actual values used for the calculation are: ";
+  ss << "<" << values[0] << ", " << values[1] << ", " << values[2] << "> " << values[3];
+
+
+  emit invalidValues(errorCode, QString::fromStdString(ss.str()));
+
+  OrientationTransforms<QVector<double>, double>::ResultType result = OrientationTransforms<QVector<double>, double>::ax_check(values);
+  errorCode = result.result;
+  QString errorMsg = QString::fromStdString(result.msg);
 
   if (errorCode >= 0)
   {

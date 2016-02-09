@@ -112,12 +112,34 @@ void RodriguesWidget::updateData(OrientationUtilityCalculator* calculator)
 // -----------------------------------------------------------------------------
 void RodriguesWidget::valuesUpdated(const QString &text)
 {
+Q_UNUSED(text)
   QVector<double> values = getValues();
-  OrientationTransforms<QVector<double>, double>::ResultType result = OrientationTransforms<QVector<double>, double>::ro_check(values);
-  int errorCode = result.result;
-  QString errorMsg = QString::fromStdString(result.msg);
+
+  // Sanity check the values. If they are all Zero then we just return otherwise
+  // we will get a setfault in the ModifiedLambertProjection class.
+  if(values[0] == 0.0 && values[1] == 0.0 && values[2] == 0)
+  {
+    return;
+  }
+
+// Always normalize the axis vector
+  Eigen::Vector3d rod(values[0], values[1], values[2]);
+  rod.normalize();
+  values[0] = rod[0];
+  values[1] = rod[1];
+  values[2] = rod[2];
+
 
   emit clearErrorTable();
+  int errorCode = 0;
+  std::stringstream ss;
+  ss << "Rodrigues vector was normalized. Actual values used for the calculation are: ";
+  ss << values[0] << ", " << values[1] << ", " << values[2] << ", " << values[3];
+
+  emit invalidValues(errorCode, QString::fromStdString(ss.str()));
+  OrientationTransforms<QVector<double>, double>::ResultType result = OrientationTransforms<QVector<double>, double>::ro_check(values);
+  errorCode = result.result;
+  QString errorMsg = QString::fromStdString(result.msg);
 
   if (errorCode >= 0)
   {

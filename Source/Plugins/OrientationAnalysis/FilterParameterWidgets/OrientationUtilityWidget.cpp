@@ -92,8 +92,15 @@ void OrientationUtilityWidget::setupGui()
 void OrientationUtilityWidget::setErrorEntry(int errorCode, QString errorMsg)
 {
   errorTextEdit->clear();
-
-  errorTextEdit->setText("<b>Error Message:  </b>" + errorMsg);
+  errorMsg = errorMsg.toHtmlEscaped();
+  if(errorCode == 0)
+  {
+    errorTextEdit->setText("<b>Information: </b>" + errorMsg);
+  }
+  else
+  {
+    errorTextEdit->setText("<b>Error: </b>" + errorMsg);
+  }
 }
 
 // -----------------------------------------------------------------------------
