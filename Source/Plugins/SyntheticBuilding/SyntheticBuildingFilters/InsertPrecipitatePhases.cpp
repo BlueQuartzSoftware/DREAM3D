@@ -444,16 +444,12 @@ void InsertPrecipitatePhases::execute()
 
   size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
+
+  int64_t dims[3] =
   {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
+    static_cast<int64_t>(udims[0]),
+    static_cast<int64_t>(udims[1]),
+    static_cast<int64_t>(udims[2]),
   };
 
   m_TotalPoints = static_cast<size_t>(dims[0] * dims[1] * dims[2]);
@@ -596,13 +592,9 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   size_t udims[3] =
   { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
-  { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[1]), static_cast<DimType>(udims[2]), };
+
+  int64_t dims[3] =
+  { static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]), };
 
   m_XPoints = static_cast<int64_t>(dims[0]);
   m_YPoints = static_cast<int64_t>(dims[1]);
@@ -2048,31 +2040,27 @@ void InsertPrecipitatePhases::assign_voxels()
 
   size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
+
+  int64_t dims[3] =
   {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
+    static_cast<int64_t>(udims[0]),
+    static_cast<int64_t>(udims[1]),
+    static_cast<int64_t>(udims[2]),
   };
 
-  DimType index;
+  int64_t index;
 
   float totalPoints = dims[0] * dims[1] * dims[2];
   float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
   float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
   float zRes = m->getGeometryAs<ImageGeom>()->getZRes();
 
-  DimType column = 0, row = 0, plane = 0;
+  int64_t column = 0, row = 0, plane = 0;
   float inside = 0.0f;
   float xc = 0.0f, yc = 0.0f, zc = 0.0f;
   float coordsRotated[3] = { 0.0f, 0.0f, 0.0f };
   float coords[3] = { 0.0f, 0.0f, 0.0f };
-  DimType xmin = 0, xmax = 0, ymin = 0, ymax = 0, zmin = 0, zmax = 0;
+  int64_t xmin = 0, xmax = 0, ymin = 0, ymax = 0, zmin = 0, zmax = 0;
   size_t numFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
   gsizes.resize(numFeatures);
 
@@ -2114,15 +2102,15 @@ void InsertPrecipitatePhases::assign_voxels()
     FOrientTransformsType::eu2om(FOrientArrayType(&(m_AxisEulerAngles[3 * i]), 3), om);
     om.toGMatrix(ga);
 
-    column = static_cast<DimType>( (xc - (xRes / 2.0f)) / xRes );
-    row = static_cast<DimType>( (yc - (yRes / 2.0f)) / yRes );
-    plane = static_cast<DimType>( (zc - (zRes / 2.0f)) / zRes );
-    xmin = DimType(column - ((radcur1 / xRes) + 1));
-    xmax = DimType(column + ((radcur1 / xRes) + 1));
-    ymin = DimType(row - ((radcur1 / yRes) + 1));
-    ymax = DimType(row + ((radcur1 / yRes) + 1));
-    zmin = DimType(plane - ((radcur1 / zRes) + 1));
-    zmax = DimType(plane + ((radcur1 / zRes) + 1));
+    column = static_cast<int64_t>( (xc - (xRes / 2.0f)) / xRes );
+    row = static_cast<int64_t>( (yc - (yRes / 2.0f)) / yRes );
+    plane = static_cast<int64_t>( (zc - (zRes / 2.0f)) / zRes );
+    xmin = static_cast<int64_t>(column - ((radcur1 / xRes) + 1));
+    xmax = static_cast<int64_t>(column + ((radcur1 / xRes) + 1));
+    ymin = static_cast<int64_t>(row - ((radcur1 / yRes) + 1));
+    ymax = static_cast<int64_t>(row + ((radcur1 / yRes) + 1));
+    zmin = static_cast<int64_t>(plane - ((radcur1 / zRes) + 1));
+    zmax = static_cast<int64_t>(plane + ((radcur1 / zRes) + 1));
     if (m_PeriodicBoundaries == true)
     {
       if (xmin < -dims[0]) { xmin = -dims[0]; }
@@ -2141,11 +2129,11 @@ void InsertPrecipitatePhases::assign_voxels()
       if (zmin < 0) { zmin = 0; }
       if (zmax > dims[2] - 1) { zmax = dims[2] - 1; }
     }
-    for (DimType iter1 = xmin; iter1 < xmax + 1; iter1++)
+    for (int64_t iter1 = xmin; iter1 < xmax + 1; iter1++)
     {
-      for (DimType iter2 = ymin; iter2 < ymax + 1; iter2++)
+      for (int64_t iter2 = ymin; iter2 < ymax + 1; iter2++)
       {
-        for (DimType iter3 = zmin; iter3 < zmax + 1; iter3++)
+        for (int64_t iter3 = zmin; iter3 < zmax + 1; iter3++)
         {
           column = iter1;
           row = iter2;
@@ -2177,7 +2165,7 @@ void InsertPrecipitatePhases::assign_voxels()
           inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
           if (inside >= 0)
           {
-            DimType currentpoint = index;
+            int64_t currentpoint = index;
             if (m_FeatureIds[currentpoint] > m_FirstPrecipitateFeature)
             {
               //oldname = m_FeatureIds[currentpoint];

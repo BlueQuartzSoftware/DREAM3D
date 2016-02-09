@@ -327,21 +327,17 @@ void FindOrientationFieldCurl::execute()
 //  unsigned int phase2 = Ebsd::CrystalStructure::UnknownCrystalStructure;
   size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType xPoints = static_cast<DimType>(udims[0]);
-  DimType yPoints = static_cast<DimType>(udims[1]);
-  DimType zPoints = static_cast<DimType>(udims[2]);
 
-  DimType point;
+  int64_t xPoints = static_cast<int64_t>(udims[0]);
+  int64_t yPoints = static_cast<int64_t>(udims[1]);
+  int64_t zPoints = static_cast<int64_t>(udims[2]);
+
+  int64_t point;
   size_t neighbor = 0;
-  DimType rowShift = xPoints;
-  DimType planeShift = xPoints * yPoints;
-  DimType rowStride;
-  DimType planeStride;
+  int64_t rowShift = xPoints;
+  int64_t planeShift = xPoints * yPoints;
+  int64_t rowStride;
+  int64_t planeStride;
 
   float kappa11 = 0;
   float kappa21 = 0;
@@ -352,13 +348,13 @@ void FindOrientationFieldCurl::execute()
   float kappa13 = 0;
   float kappa23 = 0;
   float kappa33 = 0;
-  for (DimType plane = 0; plane < zPoints; plane++)
+  for (int64_t plane = 0; plane < zPoints; plane++)
   {
     planeStride = plane * planeShift;
-    for (DimType row = 0; row < yPoints; row++)
+    for (int64_t row = 0; row < yPoints; row++)
     {
       rowStride = row * rowShift;
-      for (DimType col = 0; col < xPoints; col++)
+      for (int64_t col = 0; col < xPoints; col++)
       {
         point = planeStride + rowStride + col;
         if (m_CellPhases[point] > 0)

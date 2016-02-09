@@ -393,8 +393,8 @@ void InitializeData::execute()
   { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
-  DimType dims[3] =
-  { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[1]), static_cast<DimType>(udims[2]), };
+  int64_t dims[3] =
+  { static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]), };
 
   QString attrMatName = attributeMatrixPath.getAttributeMatrixName();
   QList<QString> voxelArrayNames = DataArrayPath::GetDataArrayNames(m_CellAttributeMatrixPaths);
@@ -455,7 +455,7 @@ void InitializeData::execute()
 //
 // -----------------------------------------------------------------------------
 template <typename T>
-void InitializeData::initializeArrayWithInts(IDataArray::Pointer p, DimType dims[3])
+void InitializeData::initializeArrayWithInts(IDataArray::Pointer p, int64_t dims[3])
 {
   T rangeMin;
   T rangeMax;
@@ -507,7 +507,7 @@ void InitializeData::initializeArrayWithInts(IDataArray::Pointer p, DimType dims
 //
 // -----------------------------------------------------------------------------
 template <typename T>
-void InitializeData::initializeArrayWithReals(IDataArray::Pointer p, DimType dims[3])
+void InitializeData::initializeArrayWithReals(IDataArray::Pointer p, int64_t dims[3])
 {
   T rangeMin;
   T rangeMax;

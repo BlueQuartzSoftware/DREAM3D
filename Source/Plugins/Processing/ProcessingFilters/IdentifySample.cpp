@@ -150,22 +150,18 @@ void IdentifySample::execute()
 
   size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
+
+  int64_t dims[3] =
   {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
+    static_cast<int64_t>(udims[0]),
+    static_cast<int64_t>(udims[1]),
+    static_cast<int64_t>(udims[2]),
   };
 
-  DimType neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
-  DimType xp = dims[0];
-  DimType yp = dims[1];
-  DimType zp = dims[2];
+  int64_t neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
+  int64_t xp = dims[0];
+  int64_t yp = dims[1];
+  int64_t zp = dims[2];
 
   neighpoints[0] = -(xp * yp);
   neighpoints[1] = -xp;
@@ -180,7 +176,7 @@ void IdentifySample::execute()
   size_t count = 0;
   int32_t good = 0;
   int64_t neighbor = 0;
-  DimType column = 0, row = 0, plane = 0;
+  int64_t column = 0, row = 0, plane = 0;
   int64_t index = 0;
 
   // In this loop over the data we are finding the biggest contiguous set of GoodVoxels and calling that the 'sample'  All GoodVoxels that do not touch the 'sample'

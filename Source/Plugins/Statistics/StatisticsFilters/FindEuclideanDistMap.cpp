@@ -451,20 +451,16 @@ void FindEuclideanDistMap::find_euclideandistmap()
 
   size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
+
+  int64_t dims[3] =
   {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
+    static_cast<int64_t>(udims[0]),
+    static_cast<int64_t>(udims[1]),
+    static_cast<int64_t>(udims[2]),
   };
 
-  DimType neighbor = 0;
-  DimType neighbors[6] = { 0, 0, 0, 0, 0, 0 };
+  int64_t neighbor = 0;
+  int64_t neighbors[6] = { 0, 0, 0, 0, 0, 0 };
   neighbors[0] = -dims[0] * dims[1];
   neighbors[1] = -dims[0];
   neighbors[2] = -1;
@@ -487,7 +483,7 @@ void FindEuclideanDistMap::find_euclideandistmap()
       for (int32_t k = 0; k < 6; k++)
       {
         good = true;
-        neighbor = static_cast<DimType>( a + neighbors[k] );
+        neighbor = static_cast<int64_t>( a + neighbors[k] );
         if (k == 0 && plane == 0) { good = false; }
         if (k == 5 && plane == (zPoints - 1)) { good = false; }
         if (k == 1 && row == 0) { good = false; }

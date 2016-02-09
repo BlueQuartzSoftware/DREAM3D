@@ -158,16 +158,12 @@ void ExtractFlaggedFeatures::find_feature_bounds()
   size_t totalFeatures = m_FlaggedFeaturesPtr.lock()->getNumberOfTuples();
   size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
+
+  int64_t dims[3] =
   {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
+    static_cast<int64_t>(udims[0]),
+    static_cast<int64_t>(udims[1]),
+    static_cast<int64_t>(udims[2]),
   };
 
   QVector<size_t> cDims(1, 6);
@@ -175,17 +171,17 @@ void ExtractFlaggedFeatures::find_feature_bounds()
   m_FeatureBounds = boundsPtr->getPointer(0);
   boundsPtr->initializeWithValue(-1);
 
-  DimType kstride = 0, jstride = 0, count = 0;
-  DimType featureShift = 0;
+  int64_t kstride = 0, jstride = 0, count = 0;
+  int64_t featureShift = 0;
   int32_t feature = 0;
 
-  for (DimType k = 0; k < dims[2]; k++)
+  for (int64_t k = 0; k < dims[2]; k++)
   {
     kstride = dims[0] * dims[1] * k;
-    for (DimType j = 0; j < dims[1]; j++)
+    for (int64_t j = 0; j < dims[1]; j++)
     {
       jstride = dims[0] * j;
-      for (DimType i = 0; i < dims[0]; i++)
+      for (int64_t i = 0; i < dims[0]; i++)
       {
         count = kstride + jstride + i;
         feature = m_FeatureIds[count];

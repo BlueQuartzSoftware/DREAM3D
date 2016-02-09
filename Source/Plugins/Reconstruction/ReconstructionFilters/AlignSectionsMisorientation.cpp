@@ -219,16 +219,12 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int64_t>& xshifts, std
 
   size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
+
+  int64_t dims[3] =
   {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
+    static_cast<int64_t>(udims[0]),
+    static_cast<int64_t>(udims[1]),
+    static_cast<int64_t>(udims[2]),
   };
 
   float disorientation = 0.0f;
@@ -238,32 +234,32 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int64_t>& xshifts, std
   int64_t oldxshift = 0;
   int64_t oldyshift = 0;
   float count = 0.0f;
-  DimType slice = 0;
+  int64_t slice = 0;
   float w = 0.0f;
   float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
   QuatF q1 = QuaternionMathF::New();
   QuatF q2 = QuaternionMathF::New();
-  DimType refposition = 0;
-  DimType curposition = 0;
+  int64_t refposition = 0;
+  int64_t curposition = 0;
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
   uint32_t phase1 = 0, phase2 = 0;
-  DimType progInt = 0;
+  int64_t progInt = 0;
 
   // Allocate a 2D Array which will be reused from slice to slice
   BoolArrayType::Pointer misorientsPtr = BoolArrayType::CreateArray(dims[0] * dims[1], "_INTERNAL_USE_ONLY_Misorients");
   misorientsPtr->initializeWithValue(false);
   bool* misorients = misorientsPtr->getPointer(0); // Get the raw pointer to use in our calculations for speed.
 
-  DimType idx = 0; // This will be used to compute the index into the flat array
-  DimType xIdx = 0;
-  DimType yIdx = 0;
+  int64_t idx = 0; // This will be used to compute the index into the flat array
+  int64_t xIdx = 0;
+  int64_t yIdx = 0;
 
-  const DimType halfDim0 = static_cast<DimType>(dims[0] * 0.5f);
-  const DimType halfDim1 = static_cast<DimType>(dims[1] * 0.5f);
+  const int64_t halfDim0 = static_cast<int64_t>(dims[0] * 0.5f);
+  const int64_t halfDim1 = static_cast<int64_t>(dims[1] * 0.5f);
 
   // Loop over the Z Direction
-  for (DimType iter = 1; iter < dims[2]; iter++)
+  for (int64_t iter = 1; iter < dims[2]; iter++)
   {
     progInt = ((float)iter / dims[2]) * 100.0f;
     QString ss = QObject::tr("Aligning Sections || Determining Shifts || %1% Complete").arg(progInt);
@@ -296,9 +292,9 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int64_t>& xshifts, std
           idx = (dims[0] * yIdx) + xIdx;
           if (misorients[idx] == false && llabs(k + oldxshift) < halfDim0 && llabs(j + oldyshift) < halfDim1)
           {
-            for (DimType l = 0; l < dims[1]; l = l + 4)
+            for (int64_t l = 0; l < dims[1]; l = l + 4)
             {
-              for (DimType n = 0; n < dims[0]; n = n + 4)
+              for (int64_t n = 0; n < dims[0]; n = n + 4)
               {
                 if ((l + j + oldyshift) >= 0 && (l + j + oldyshift) < dims[1] && (n + k + oldxshift) >= 0 && (n + k + oldxshift) < dims[0])
                 {

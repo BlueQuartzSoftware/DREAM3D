@@ -237,8 +237,7 @@ void FindFeatureReferenceCAxisMisorientations::execute()
   float w = 0.0f;
   size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef uint32_t DimType;
+
   uint32_t maxUInt32 = std::numeric_limits<uint32_t>::max();
   // We have more points than can be allocated on a 32 bit machine. Assert Now.
   if(totalPoints > maxUInt32)
@@ -247,14 +246,11 @@ void FindFeatureReferenceCAxisMisorientations::execute()
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     return;
   }
-#else
-  typedef int64_t DimType;
-#endif
 
-  DimType xPoints = static_cast<DimType>(udims[0]);
-  DimType yPoints = static_cast<DimType>(udims[1]);
-  DimType zPoints = static_cast<DimType>(udims[2]);
-  DimType point = 0;
+  int64_t xPoints = static_cast<int64_t>(udims[0]);
+  int64_t yPoints = static_cast<int64_t>(udims[1]);
+  int64_t zPoints = static_cast<int64_t>(udims[2]);
+  int64_t point = 0;
 
   float g1[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
   float g1t[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
@@ -263,11 +259,11 @@ void FindFeatureReferenceCAxisMisorientations::execute()
   float AvgCAxis[3] = {0.0f, 0.0f, 0.0f};
   size_t index = 0;
 
-  for (DimType col = 0; col < xPoints; col++)
+  for (int64_t col = 0; col < xPoints; col++)
   {
-    for (DimType row = 0; row < yPoints; row++)
+    for (int64_t row = 0; row < yPoints; row++)
     {
-      for (DimType plane = 0; plane < zPoints; plane++)
+      for (int64_t plane = 0; plane < zPoints; plane++)
       {
         point = (plane * xPoints * yPoints) + (row * xPoints) + col;
         if (m_FeatureIds[point] > 0 && m_CellPhases[point] > 0)

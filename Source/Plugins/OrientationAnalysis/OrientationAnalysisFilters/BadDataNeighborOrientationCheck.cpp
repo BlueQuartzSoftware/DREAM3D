@@ -204,29 +204,25 @@ void BadDataNeighborOrientationCheck::execute()
 
   size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
+
+  int64_t dims[3] =
   {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
+    static_cast<int64_t>(udims[0]),
+    static_cast<int64_t>(udims[1]),
+    static_cast<int64_t>(udims[2]),
   };
 
   int32_t good = 1;
-  DimType neighbor = 0;
-  DimType column = 0, row = 0, plane = 0;
+  int64_t neighbor = 0;
+  int64_t column = 0, row = 0, plane = 0;
 
-  DimType neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
-  neighpoints[0] = static_cast<DimType>(-dims[0] * dims[1]);
-  neighpoints[1] = static_cast<DimType>(-dims[0]);
-  neighpoints[2] = static_cast<DimType>(-1);
-  neighpoints[3] = static_cast<DimType>(1);
-  neighpoints[4] = static_cast<DimType>(dims[0]);
-  neighpoints[5] = static_cast<DimType>(dims[0] * dims[1]);
+  int64_t neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
+  neighpoints[0] = static_cast<int64_t>(-dims[0] * dims[1]);
+  neighpoints[1] = static_cast<int64_t>(-dims[0]);
+  neighpoints[2] = static_cast<int64_t>(-1);
+  neighpoints[3] = static_cast<int64_t>(1);
+  neighpoints[4] = static_cast<int64_t>(dims[0]);
+  neighpoints[5] = static_cast<int64_t>(dims[0] * dims[1]);
 
   float w = 10000.0f;
   QuatF q1 = QuaternionMathF::New();
@@ -290,7 +286,7 @@ void BadDataNeighborOrientationCheck::execute()
           column = i % dims[0];
           row = (i / dims[0]) % dims[1];
           plane = i / (dims[0] * dims[1]);
-          for (DimType j = 0; j < 6; j++)
+          for (int64_t j = 0; j < 6; j++)
           {
             good = 1;
             neighbor = i + neighpoints[j];

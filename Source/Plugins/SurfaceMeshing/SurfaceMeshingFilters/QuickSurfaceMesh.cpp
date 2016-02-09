@@ -313,44 +313,40 @@ void QuickSurfaceMesh::execute()
   
   size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
+
+  int64_t dims[3] =
   {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
+    static_cast<int64_t>(udims[0]),
+    static_cast<int64_t>(udims[1]),
+    static_cast<int64_t>(udims[2]),
   };
   
-  DimType xP = dims[0];
-  DimType yP = dims[1];
-  DimType zP = dims[2];
+  int64_t xP = dims[0];
+  int64_t yP = dims[1];
+  int64_t zP = dims[2];
   float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
   float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
   float zRes = m->getGeometryAs<ImageGeom>()->getZRes();
   
   std::vector<std::set<int32_t> > ownerLists;
   
-  DimType possibleNumNodes = (xP + 1) * (yP + 1) * (zP + 1);
+  int64_t possibleNumNodes = (xP + 1) * (yP + 1) * (zP + 1);
   std::vector<int64_t> m_NodeIds(possibleNumNodes, -1);
   
   int64_t nodeCount = 0;
   int64_t triangleCount = 0;
   
-  DimType point = 0, neigh1 = 0, neigh2 = 0, neigh3 = 0;
+  int64_t point = 0, neigh1 = 0, neigh2 = 0, neigh3 = 0;
   
-  DimType nodeId1 = 0, nodeId2 = 0, nodeId3 = 0, nodeId4 = 0;
+  int64_t nodeId1 = 0, nodeId2 = 0, nodeId3 = 0, nodeId4 = 0;
   
   // first determining which nodes are actually boundary nodes and
   // count number of nodes and triangles that will be created
-  for (DimType k = 0; k < zP; k++)
+  for (int64_t k = 0; k < zP; k++)
   {
-    for (DimType j = 0; j < yP; j++)
+    for (int64_t j = 0; j < yP; j++)
     {
-      for (DimType i = 0; i < xP; i++)
+      for (int64_t i = 0; i < xP; i++)
       {
         point = (k * xP * yP) + (j * xP) + i;
         neigh1 = point + 1;
@@ -642,12 +638,12 @@ void QuickSurfaceMesh::execute()
   ownerLists.resize(nodeCount);
   
   // Cycle through again assigning coordinates to each node and assigning node numbers and feature labels to each triangle
-  DimType triangleIndex = 0;
-  for (DimType k = 0; k < zP; k++)
+  int64_t triangleIndex = 0;
+  for (int64_t k = 0; k < zP; k++)
   {
-    for (DimType j = 0; j < yP; j++)
+    for (int64_t j = 0; j < yP; j++)
     {
-      for (DimType i = 0; i < xP; i++)
+      for (int64_t i = 0; i < xP; i++)
       {
         point = (k * xP * yP) + (j * xP) + i;
         neigh1 = point + 1;

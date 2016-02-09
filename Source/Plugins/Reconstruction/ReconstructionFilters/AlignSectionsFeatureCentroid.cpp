@@ -175,29 +175,25 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int64_t>& xshifts, st
   }
   size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
+
+  int64_t dims[3] =
   {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
+    static_cast<int64_t>(udims[0]),
+    static_cast<int64_t>(udims[1]),
+    static_cast<int64_t>(udims[2]),
   };
 
   int64_t newxshift = 0;
   int64_t newyshift = 0;
   int64_t count = 0;
-  DimType slice = 0;
-  DimType point = 0;
+  int64_t slice = 0;
+  int64_t point = 0;
   float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
   float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
   std::vector<float> xCentroid(dims[2], 0.0f);
   std::vector<float> yCentroid(dims[2], 0.0f);
 
-  for (DimType iter = 0; iter < dims[2]; iter++)
+  for (int64_t iter = 0; iter < dims[2]; iter++)
   {
     count = 0;
     xCentroid[iter] = 0;
@@ -206,9 +202,9 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int64_t>& xshifts, st
     QString ss = QObject::tr("Aligning Sections || Determining Shifts || %1% Complete").arg(((float)iter / dims[2]) * 100);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     slice = static_cast<int>( (dims[2] - 1) - iter );
-    for (DimType l = 0; l < dims[1]; l++)
+    for (int64_t l = 0; l < dims[1]; l++)
     {
-      for (DimType n = 0; n < dims[0]; n++)
+      for (int64_t n = 0; n < dims[0]; n++)
       {
         point = ((slice) * dims[0] * dims[1]) + (l * dims[0]) + n;
         if (m_GoodVoxels[point] == true)
@@ -222,7 +218,7 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int64_t>& xshifts, st
     xCentroid[iter] = xCentroid[iter] / float(count);
     yCentroid[iter] = yCentroid[iter] / float(count);
   }
-  for (DimType iter = 1; iter < dims[2]; iter++)
+  for (int64_t iter = 1; iter < dims[2]; iter++)
   {
     slice = (dims[2] - 1) - iter;
     if (m_UseReferenceSlice == true)

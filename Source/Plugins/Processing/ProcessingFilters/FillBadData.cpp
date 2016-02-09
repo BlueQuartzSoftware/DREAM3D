@@ -191,16 +191,12 @@ void FillBadData::execute()
 
   size_t udims[3] = {0, 0, 0};
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
+
+  int64_t dims[3] =
   {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
+    static_cast<int64_t>(udims[0]),
+    static_cast<int64_t>(udims[1]),
+    static_cast<int64_t>(udims[2]),
   };
 
   size_t count = 1;
@@ -208,7 +204,7 @@ void FillBadData::execute()
   int64_t neighbor;
   int64_t index = 0;
   float x = 0.0f, y = 0.0f, z = 0.0f;
-  DimType column = 0, row = 0, plane = 0;
+  int64_t column = 0, row = 0, plane = 0;
   int64_t neighpoint = 0;
   int32_t featurename = 0, feature = 0;
   size_t numfeatures = 0;
@@ -228,7 +224,7 @@ void FillBadData::execute()
     }
   }
 
-  DimType neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
+  int64_t neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
   neighpoints[0] = -dims[0] * dims[1];
   neighpoints[1] = -dims[0];
   neighpoints[2] = -1;

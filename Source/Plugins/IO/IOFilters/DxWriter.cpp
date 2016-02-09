@@ -197,13 +197,9 @@ int32_t DxWriter::writeFile()
   size_t udims[3] =
   { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
-  { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[1]), static_cast<DimType>(udims[2]), };
+
+  int64_t dims[3] =
+  { static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]), };
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
@@ -229,13 +225,13 @@ int32_t DxWriter::writeFile()
   }
 
   QTextStream out(&file);
-  DimType fileXDim = dims[0];
-  DimType fileYDim = dims[1];
-  DimType fileZDim = dims[2];
+  int64_t fileXDim = dims[0];
+  int64_t fileYDim = dims[1];
+  int64_t fileZDim = dims[2];
 
-  DimType posXDim = fileXDim + 1;
-  DimType posYDim = fileYDim + 1;
-  DimType posZDim = fileZDim + 1;
+  int64_t posXDim = fileXDim + 1;
+  int64_t posYDim = fileYDim + 1;
+  int64_t posZDim = fileZDim + 1;
 
   if (m_AddSurfaceLayer)
   {
@@ -263,7 +259,7 @@ int32_t DxWriter::writeFile()
   size_t rnIndex = 1;
   if (m_AddSurfaceLayer)
   {
-    for (DimType i = 0; i < (fileXDim * fileYDim); ++i)
+    for (int64_t i = 0; i < (fileXDim * fileYDim); ++i)
     {
       out << "-3 ";
       if (rnIndex == 20)
@@ -275,19 +271,19 @@ int32_t DxWriter::writeFile()
     }
   }
 
-  DimType index = 0;
-  for (DimType z = 0; z < dims[2]; ++z)
+  int64_t index = 0;
+  for (int64_t z = 0; z < dims[2]; ++z)
   {
     // Add a leading surface Row for this plane if needed
     if (m_AddSurfaceLayer)
     {
-      for (DimType i = 0; i < fileXDim; ++i)
+      for (int64_t i = 0; i < fileXDim; ++i)
       {
         out << "-4 ";
       }
       out << "\n";
     }
-    for (DimType y = 0; y < dims[1]; ++y)
+    for (int64_t y = 0; y < dims[1]; ++y)
     {
       // write leading surface voxel for this row
       if (m_AddSurfaceLayer)
@@ -295,7 +291,7 @@ int32_t DxWriter::writeFile()
         out << "-5 ";
       }
       // Write the actual voxel data
-      for (DimType x = 0; x < dims[0]; ++x)
+      for (int64_t x = 0; x < dims[0]; ++x)
       {
         if (m_FeatureIds[index] == 0)
         {
@@ -317,7 +313,7 @@ int32_t DxWriter::writeFile()
     // Add a trailing surface Row for this plane if needed
     if (m_AddSurfaceLayer)
     {
-      for (DimType i = 0; i < fileXDim; ++i)
+      for (int64_t i = 0; i < fileXDim; ++i)
       {
         out << "-7 ";
       }
@@ -329,7 +325,7 @@ int32_t DxWriter::writeFile()
   if (m_AddSurfaceLayer)
   {
     rnIndex = 1;
-    for (DimType i = 0; i < (fileXDim * fileYDim); ++i)
+    for (int64_t i = 0; i < (fileXDim * fileYDim); ++i)
     {
       out << "-8 ";
       if (rnIndex == 20)

@@ -235,19 +235,15 @@ void FindNeighbors::execute()
 
   size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
+
+  int64_t dims[3] =
   {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
+    static_cast<int64_t>(udims[0]),
+    static_cast<int64_t>(udims[1]),
+    static_cast<int64_t>(udims[2]),
   };
 
-  DimType neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
+  int64_t neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
   neighpoints[0] = -dims[0] * dims[1];
   neighpoints[1] = -dims[0];
   neighpoints[2] = -1;
@@ -255,12 +251,12 @@ void FindNeighbors::execute()
   neighpoints[4] = dims[0];
   neighpoints[5] = dims[0] * dims[1];
 
-  DimType column = 0, row = 0, plane = 0;
+  int64_t column = 0, row = 0, plane = 0;
   int32_t feature = 0;
   int32_t nnum = 0;
   int8_t onsurf = 0;
   bool good = false;
-  DimType neighbor = 0;
+  int64_t neighbor = 0;
 
   std::vector<std::vector<int32_t> > neighborlist;
   std::vector<std::vector<float> > neighborsurfacearealist;
@@ -307,19 +303,19 @@ void FindNeighbors::execute()
     feature = m_FeatureIds[j];
     if (feature > 0)
     {
-      column = static_cast<DimType>( j % m->getGeometryAs<ImageGeom>()->getXPoints() );
-      row = static_cast<DimType>( (j / m->getGeometryAs<ImageGeom>()->getXPoints()) % m->getGeometryAs<ImageGeom>()->getYPoints() );
-      plane = static_cast<DimType>( j / (m->getGeometryAs<ImageGeom>()->getXPoints() * m->getGeometryAs<ImageGeom>()->getYPoints()) );
+      column = static_cast<int64_t>( j % m->getGeometryAs<ImageGeom>()->getXPoints() );
+      row = static_cast<int64_t>( (j / m->getGeometryAs<ImageGeom>()->getXPoints()) % m->getGeometryAs<ImageGeom>()->getYPoints() );
+      plane = static_cast<int64_t>( j / (m->getGeometryAs<ImageGeom>()->getXPoints() * m->getGeometryAs<ImageGeom>()->getYPoints()) );
       if (m_StoreSurfaceFeatures == true)
       {
-        if ((column == 0 || column == DimType((m->getGeometryAs<ImageGeom>()->getXPoints() - 1))
-             || row == 0 || row == DimType((m->getGeometryAs<ImageGeom>()->getYPoints()) - 1)
-             || plane == 0 || plane == DimType((m->getGeometryAs<ImageGeom>()->getZPoints() - 1)))
+        if ((column == 0 || column == static_cast<int64_t>((m->getGeometryAs<ImageGeom>()->getXPoints() - 1))
+             || row == 0 || row == static_cast<int64_t>((m->getGeometryAs<ImageGeom>()->getYPoints()) - 1)
+             || plane == 0 || plane == static_cast<int64_t>((m->getGeometryAs<ImageGeom>()->getZPoints() - 1)))
             && m->getGeometryAs<ImageGeom>()->getZPoints() != 1)
         {
           m_SurfaceFeatures[feature] = true;
         }
-        if ((column == 0 || column == DimType((m->getGeometryAs<ImageGeom>()->getXPoints() - 1)) || row == 0 || row == DimType((m->getGeometryAs<ImageGeom>()->getYPoints() - 1))) && m->getGeometryAs<ImageGeom>()->getZPoints() == 1)
+        if ((column == 0 || column == static_cast<int64_t>((m->getGeometryAs<ImageGeom>()->getXPoints() - 1)) || row == 0 || row == static_cast<int64_t>((m->getGeometryAs<ImageGeom>()->getYPoints() - 1))) && m->getGeometryAs<ImageGeom>()->getZPoints() == 1)
         {
           m_SurfaceFeatures[feature] = true;
         }
@@ -327,7 +323,7 @@ void FindNeighbors::execute()
       for (int32_t k = 0; k < 6; k++)
       {
         good = true;
-        neighbor = static_cast<DimType>( j + neighpoints[k] );
+        neighbor = static_cast<int64_t>( j + neighpoints[k] );
         if (k == 0 && plane == 0) { good = false; }
         if (k == 5 && plane == (m->getGeometryAs<ImageGeom>()->getZPoints() - 1)) { good = false; }
         if (k == 1 && row == 0) { good = false; }

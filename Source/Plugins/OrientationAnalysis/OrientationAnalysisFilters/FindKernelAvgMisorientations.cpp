@@ -225,24 +225,20 @@ void FindKernelAvgMisorientations::execute()
   uint32_t phase2 = Ebsd::CrystalStructure::UnknownCrystalStructure;
   size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType xPoints = static_cast<DimType>(udims[0]);
-  DimType yPoints = static_cast<DimType>(udims[1]);
-  DimType zPoints = static_cast<DimType>(udims[2]);
-  DimType point = 0;
-  size_t neighbor = 0;
-  DimType jStride = 0;
-  DimType kStride = 0;
 
-  for (DimType col = 0; col < xPoints; col++)
+  int64_t xPoints = static_cast<int64_t>(udims[0]);
+  int64_t yPoints = static_cast<int64_t>(udims[1]);
+  int64_t zPoints = static_cast<int64_t>(udims[2]);
+  int64_t point = 0;
+  size_t neighbor = 0;
+  int64_t jStride = 0;
+  int64_t kStride = 0;
+
+  for (int64_t col = 0; col < xPoints; col++)
   {
-    for (DimType row = 0; row < yPoints; row++)
+    for (int64_t row = 0; row < yPoints; row++)
     {
-      for (DimType plane = 0; plane < zPoints; plane++)
+      for (int64_t plane = 0; plane < zPoints; plane++)
       {
         point = (plane * xPoints * yPoints) + (row * xPoints) + col;
         if (m_FeatureIds[point] > 0 && m_CellPhases[point] > 0)

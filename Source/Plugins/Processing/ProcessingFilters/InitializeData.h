@@ -193,11 +193,7 @@ class InitializeData : public AbstractFilter
       RandomWithRange
     };
 
-#if (CMP_SIZEOF_SIZE_T == 4)
-    typedef int32_t DimType;
-#else
-    typedef int64_t DimType;
-#endif
+
 
     /**
     * @brief initializeArrayWithInts Initializes the array p with integers, either from the
@@ -208,7 +204,7 @@ class InitializeData : public AbstractFilter
     * @param dims The dimensions of the array p
     */
     template <typename T>
-    void initializeArrayWithInts(IDataArray::Pointer p, DimType dims[3]);
+    void initializeArrayWithInts(IDataArray::Pointer p, int64_t dims[3]);
 
     /**
     * @brief initializeArrayWithReals Initializes the array p with real numbers, either from the
@@ -220,7 +216,7 @@ class InitializeData : public AbstractFilter
     * @param dims The dimensions of the array p
     */
     template <typename T>
-    void initializeArrayWithReals(IDataArray::Pointer p, DimType dims[3]);
+    void initializeArrayWithReals(IDataArray::Pointer p, int64_t dims[3]);
 
     /**
     * @brief checkInitialization Checks that the chosen initialization value/range is inside

@@ -73,11 +73,7 @@
 // Macro to determine if we are going to show the Debugging Output files
 #define PPP_SHOW_DEBUG_OUTPUTS 0
 
-#if (CMP_SIZEOF_SIZE_T == 4)
-typedef int32_t DimType;
-#else
-typedef int64_t DimType;
-#endif
+
 
 /**
  * @brief The AssignVoxelsGapsImpl class implements a threaded algorithm that assigns all the voxels
@@ -85,7 +81,7 @@ typedef int64_t DimType;
  */
 class AssignVoxelsGapsImpl
 {
-    DimType dims[3];
+    int64_t dims[3];
     float Invradcur[3];
     float res[3];
     int32_t* m_FeatureIds;
@@ -99,7 +95,7 @@ class AssignVoxelsGapsImpl
     FloatArrayType::Pointer ellipfuncsPtr;
 
   public:
-    AssignVoxelsGapsImpl(DimType* dimensions, float* resolution, int32_t* featureIds, float* radCur,
+    AssignVoxelsGapsImpl(int64_t* dimensions, float* resolution, int32_t* featureIds, float* radCur,
                          float* xx, ShapeOps* shapeOps, float gA[3][3], float* size, int32_t cur_feature,
                          Int32ArrayType::Pointer newowners, FloatArrayType::Pointer ellipfuncs) :
       m_FeatureIds(featureIds),
@@ -140,39 +136,39 @@ class AssignVoxelsGapsImpl
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void convert(DimType zStart, DimType zEnd, DimType yStart, DimType yEnd, DimType xStart, DimType xEnd) const
+    void convert(int64_t zStart, int64_t zEnd, int64_t yStart, int64_t yEnd, int64_t xStart, int64_t xEnd) const
     {
-      DimType column = 0;
-      DimType row = 0;
-      DimType plane = 0;
-      DimType index = 0;
+      int64_t column = 0;
+      int64_t row = 0;
+      int64_t plane = 0;
+      int64_t index = 0;
       float coords[3] = { 0.0f, 0.0f, 0.0f };
       float inside = 0.0f;
       float coordsRotated[3] = { 0.0f, 0.0f, 0.0f };
       int32_t* newowners = newownersPtr->getPointer(0);
       float* ellipfuncs = ellipfuncsPtr->getPointer(0);
 
-      DimType dim0_dim_1 = dims[0] * dims[1];
-      for (DimType iter1 = xStart; iter1 < xEnd; iter1++)
+      int64_t dim0_dim_1 = dims[0] * dims[1];
+      for (int64_t iter1 = xStart; iter1 < xEnd; iter1++)
       {
         column = iter1;
         if (iter1 < 0) { column = iter1 + dims[0]; }
         else if (iter1 > dims[0] - 1) { column = iter1 - dims[0]; }
 
-        for (DimType iter2 = yStart; iter2 < yEnd; iter2++)
+        for (int64_t iter2 = yStart; iter2 < yEnd; iter2++)
         {
           row = iter2;
           if (iter2 < 0) { row = iter2 + dims[1]; }
           else if (iter2 > dims[1] - 1) { row = iter2 - dims[1]; }
           size_t row_dim = row * dims[0];
 
-          for (DimType iter3 = zStart; iter3 < zEnd; iter3++)
+          for (int64_t iter3 = zStart; iter3 < zEnd; iter3++)
           {
             plane = iter3;
             if (iter3 < 0) { plane = iter3 + dims[2]; }
             else if (iter3 > dims[2] - 1) { plane = iter3 - dims[2]; }
 
-            index = static_cast<DimType>( (plane * dim0_dim_1) + (row_dim) + column );
+            index = static_cast<int64_t>( (plane * dim0_dim_1) + (row_dim) + column );
 
             inside = -1.0f;
             coords[0] = float(iter1) * res[0];
@@ -206,7 +202,7 @@ class AssignVoxelsGapsImpl
     }
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range3d<DimType, DimType, DimType>& r) const
+    void operator()(const tbb::blocked_range3d<int64_t, int64_t, int64_t>& r) const
     {
       convert(r.pages().begin(), r.pages().end(), r.rows().begin(), r.rows().end(), r.cols().begin(), r.cols().end());
     }
@@ -824,16 +820,12 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
   size_t udims[3] =
   { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
+
+  int64_t dims[3] =
   {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
+    static_cast<int64_t>(udims[0]),
+    static_cast<int64_t>(udims[1]),
+    static_cast<int64_t>(udims[2]),
   };
 
   float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
@@ -2165,11 +2157,11 @@ void PackPrimaryPhases::assign_voxels()
   size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
 
-  DimType dims[3] =
+  int64_t dims[3] =
   {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
+    static_cast<int64_t>(udims[0]),
+    static_cast<int64_t>(udims[1]),
+    static_cast<int64_t>(udims[2]),
   };
 
 
@@ -2178,11 +2170,11 @@ void PackPrimaryPhases::assign_voxels()
   bool doParallel = true;
 #endif
 
-  DimType column = 0, row = 0, plane = 0;
+  int64_t column = 0, row = 0, plane = 0;
   float xc = 0.0f, yc = 0.0f, zc = 0.0f;
   float size[3] = { sizex, sizey, sizez };
 
-  DimType xmin = 0, xmax = 0, ymin = 0, ymax = 0, zmin = 0, zmax = 0;
+  int64_t xmin = 0, xmax = 0, ymin = 0, ymax = 0, zmin = 0, zmax = 0;
 
   float xRes = m->getGeometryAs<ImageGeom>()->getXRes();
   float yRes = m->getGeometryAs<ImageGeom>()->getYRes();
@@ -2258,15 +2250,15 @@ void PackPrimaryPhases::assign_voxels()
     FOrientArrayType om(9, 0.0);
     FOrientTransformsType::eu2om(FOrientArrayType(phi1, PHI, phi2), om);
     om.toGMatrix(ga);
-    column = static_cast<DimType>( xc / xRes );
-    row = static_cast<DimType>( yc / yRes );
-    plane = static_cast<DimType>( zc / zRes );
-    xmin = DimType(column - ((radcur1 / xRes) + 1));
-    xmax = DimType(column + ((radcur1 / xRes) + 1));
-    ymin = DimType(row - ((radcur1 / yRes) + 1)); // <======================
-    ymax = DimType(row + ((radcur1 / yRes) + 1)); // <======================
-    zmin = DimType(plane - ((radcur1 / zRes) + 1)); // <======================
-    zmax = DimType(plane + ((radcur1 / zRes) + 1)); // <======================
+    column = static_cast<int64_t>( xc / xRes );
+    row = static_cast<int64_t>( yc / yRes );
+    plane = static_cast<int64_t>( zc / zRes );
+    xmin = static_cast<int64_t>(column - ((radcur1 / xRes) + 1));
+    xmax = static_cast<int64_t>(column + ((radcur1 / xRes) + 1));
+    ymin = static_cast<int64_t>(row - ((radcur1 / yRes) + 1)); 
+    ymax = static_cast<int64_t>(row + ((radcur1 / yRes) + 1));
+    zmin = static_cast<int64_t>(plane - ((radcur1 / zRes) + 1));
+    zmax = static_cast<int64_t>(plane + ((radcur1 / zRes) + 1));
 
     if (m_PeriodicBoundaries == true)
     {
@@ -2294,7 +2286,7 @@ void PackPrimaryPhases::assign_voxels()
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range3d<DimType, DimType, DimType>(zmin, zmax + 1, ymin, ymax + 1, xmin, xmax + 1),
+      tbb::parallel_for(tbb::blocked_range3d<int64_t, int64_t, int64_t>(zmin, zmax + 1, ymin, ymax + 1, xmin, xmax + 1),
                         AssignVoxelsGapsImpl(dims, res, m_FeatureIds, radCur, xx, shapeOps, ga, size, i, newownersPtr, ellipfuncsPtr), tbb::auto_partitioner());
 
     }
@@ -2488,22 +2480,18 @@ void PackPrimaryPhases::cleanup_features()
   size_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
   size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
+
+  int64_t dims[3] =
   {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
+    static_cast<int64_t>(udims[0]),
+    static_cast<int64_t>(udims[1]),
+    static_cast<int64_t>(udims[2]),
   };
 
-  DimType neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
-  DimType xp = dims[0];
-  DimType yp = dims[1];
-  DimType zp = dims[2];
+  int64_t neighpoints[6] = { 0, 0, 0, 0, 0, 0 };
+  int64_t xp = dims[0];
+  int64_t yp = dims[1];
+  int64_t zp = dims[2];
 
   neighpoints[0] = -(xp * yp);
   neighpoints[1] = -xp;
@@ -2511,17 +2499,17 @@ void PackPrimaryPhases::cleanup_features()
   neighpoints[3] = 1;
   neighpoints[4] = xp;
   neighpoints[5] = (xp * yp);
-  std::vector<std::vector<DimType> > vlists;
+  std::vector<std::vector<int64_t> > vlists;
   vlists.resize(totalFeatures);
-  std::vector<DimType> currentvlist;
+  std::vector<int64_t> currentvlist;
   std::vector<bool> checked(totalPoints, false);
   QVector<bool> activeObjects(totalFeatures, true);
   size_t count;
   bool touchessurface = false;
   bool good = false;
-  DimType neighbor = 0;
-  DimType column = 0, row = 0, plane = 0;
-  DimType index = 0;
+  int64_t neighbor = 0;
+  int64_t column = 0, row = 0, plane = 0;
+  int64_t index = 0;
   float minsize = 0.0f;
   gsizes.resize(totalFeatures);
   for (size_t i = 1; i < totalFeatures; i++)

@@ -152,21 +152,17 @@ void AlignSectionsList::find_shifts(std::vector<int64_t>& xshifts, std::vector<i
 
   size_t udims[3] = { 0, 0, 0 };
   m->getGeometryAs<ImageGeom>()->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
+
+  int64_t dims[3] =
   {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
+    static_cast<int64_t>(udims[0]),
+    static_cast<int64_t>(udims[1]),
+    static_cast<int64_t>(udims[2]),
   };
 
   int64_t slice = 0;
   int64_t newxshift = 0, newyshift = 0;
-  for (DimType iter = 1; iter < dims[2]; iter++)
+  for (int64_t iter = 1; iter < dims[2]; iter++)
   {
     inFile >> slice >> newxshift >> newyshift;
     xshifts[iter] = xshifts[iter - 1] + newxshift;
