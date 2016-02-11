@@ -43,7 +43,7 @@
 
 #include "QtSupportLib/QFileCompleter.h"
 #include "QtSupportLib/SIMPLQtMacros.h"
-#include "QtSupportLib/DREAM3DHelpUrlGenerator.h"
+#include "QtSupportLib/SIMPLViewHelpUrlGenerator.h"
 
 #include "OrientationAnalysis/OrientationAnalysisFilters/ReadEdaxH5Data.h"
 #include "OrientationAnalysis/FilterParameters/ReadEdaxH5DataFilterParameter.h"
