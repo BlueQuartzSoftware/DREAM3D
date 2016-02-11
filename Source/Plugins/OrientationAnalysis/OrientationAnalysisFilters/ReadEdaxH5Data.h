@@ -41,6 +41,7 @@
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/StringDataArray.hpp"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 
 #include "EbsdLib/TSL/AngPhase.h"
 
@@ -69,8 +70,17 @@ class ReadEdaxH5Data : public AbstractFilter
     SIMPL_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-    SIMPL_FILTER_PARAMETER(QString, ScanName)
-    Q_PROPERTY(QString ScanName READ getScanName WRITE setScanName)
+    SIMPL_FILTER_PARAMETER(QStringList, SelectedScanNames)
+    Q_PROPERTY(QStringList SelectedScanNames READ getSelectedScanNames WRITE setSelectedScanNames)
+
+    SIMPL_FILTER_PARAMETER(int, NumberOfScans)
+    Q_PROPERTY(int NumberOfScans READ getNumberOfScans WRITE setNumberOfScans)
+
+    SIMPL_FILTER_PARAMETER(double, ZSpacing)
+    Q_PROPERTY(double ZSpacing READ getZSpacing WRITE setZSpacing)
+
+    SIMPL_FILTER_PARAMETER(FloatVec3_t, Origin)
+    Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
 
     SIMPL_FILTER_PARAMETER(QString, DataContainerName)
     Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
@@ -160,6 +170,10 @@ class ReadEdaxH5Data : public AbstractFilter
 
     SIMPL_INSTANCE_PROPERTY(int, Manufacturer)
 
+    typedef QMap<QString, IDataArray::Pointer> IDataArrayMap;
+
+    SIMPL_INSTANCE_PROPERTY(IDataArrayMap, EbsdArrayMap)
+
     SIMPL_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
 
     SIMPL_PIMPL_PROPERTY_DECL(QDateTime, TimeStamp_Cache)
@@ -216,8 +230,9 @@ class ReadEdaxH5Data : public AbstractFilter
     * @param reader H5OIMReader instance pointer
     * @param tDims Tuple dimensions
     * @param cDims Component dimensions
+    * @param index Current slice index
     */
-    void copyRawEbsdData(H5OIMReader* reader, QVector<size_t>& tDims, QVector<size_t>& cDims);
+    void copyRawEbsdData(H5OIMReader* reader, QVector<size_t>& tDims, QVector<size_t>& cDims, int index);
 
     /**
     * @brief loadMaterialInfo Reads the values for the phase type, crystal structure
@@ -233,7 +248,7 @@ class ReadEdaxH5Data : public AbstractFilter
      * @param m DataContainer instance pointer
      * @param tDims Tuple dimensions
      */
-    void readDataFile(H5OIMReader* reader, DataContainer::Pointer m, QVector<size_t>& tDims, ANG_READ_FLAG flag);
+    void readDataFile(H5OIMReader* reader, DataContainer::Pointer m, QVector<size_t>& tDims, const QString &scanName, ANG_READ_FLAG flag);
 
 
   private:
