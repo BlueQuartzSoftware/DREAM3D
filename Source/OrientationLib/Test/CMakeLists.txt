@@ -113,7 +113,7 @@ endforeach()
 
 AddSIMPLUnitTest(TESTNAME ${PLUGIN_NAME}UnitTest
   SOURCES ${${PLUGIN_NAME}Test_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp ${${PLUGIN_NAME}_TEST_SRCS}
-  FOLDER "${PLUGIN_NAME}/Test"
+  FOLDER "${PLUGIN_NAME}Plugin/Test"
   LINK_LIBRARIES ${OrientationLib_Link_Libs})
 
 if(MSVC)
