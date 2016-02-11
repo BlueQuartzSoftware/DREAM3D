@@ -126,6 +126,8 @@ int H5OIMReader::readFile()
     QString str;
     QTextStream ss(&str);
     ss << "H5OIMReader Error: Could not open HDF5 file '" << getFileName() << "'";
+    setErrorCode(-2);
+    setErrorMessage(str);
     return err;
   }
 
