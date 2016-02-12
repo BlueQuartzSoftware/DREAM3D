@@ -99,7 +99,7 @@ endforeach()
 
 AddSIMPLUnitTest(TESTNAME ${PLUGIN_NAME}UnitTest
   SOURCES ${${PLUGIN_NAME}Test_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp ${${PLUGIN_NAME}_TEST_SRCS}
-  FOLDER "${PLUGIN_NAME}Plugin/Test"
+  FOLDER "${PLUGIN_NAME}Proj/Test"
   LINK_LIBRARIES Qt5::Core H5Support SIMPLib EbsdLib)
 
 if(MSVC)
