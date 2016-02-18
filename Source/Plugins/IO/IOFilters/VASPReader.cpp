@@ -316,7 +316,13 @@ int VASPReader::readHeader()
     totalAtoms += tokens[i].toInt(&ok, 10);
   }
 
-  VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(totalAtoms, SIMPL::VertexData::SurfaceMeshNodes);
+  bool allocate = false;
+  if (getInPreflight() == false)
+  {
+    allocate = true;
+  }
+
+  VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(totalAtoms, SIMPL::VertexData::SurfaceMeshNodes, allocate);
   m->setGeometry(vertices);
 
   QVector<size_t> tDims(1, totalAtoms);

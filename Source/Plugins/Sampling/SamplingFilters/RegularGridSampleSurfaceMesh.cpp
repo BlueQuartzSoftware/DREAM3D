@@ -190,7 +190,13 @@ void RegularGridSampleSurfaceMesh::preflight()
 // -----------------------------------------------------------------------------
 VertexGeom::Pointer RegularGridSampleSurfaceMesh::generate_points()
 {
-  VertexGeom::Pointer points = VertexGeom::CreateGeometry((m_XPoints * m_YPoints * m_ZPoints), "_INTERNAL_USE_ONLY_points");
+  bool allocate = false;
+  if (getInPreflight() == false)
+  {
+    allocate = true;
+  }
+
+  VertexGeom::Pointer points = VertexGeom::CreateGeometry((m_XPoints * m_YPoints * m_ZPoints), "_INTERNAL_USE_ONLY_points", allocate);
 
   int64_t count = 0;
   float coords[3] = { 0.0f, 0.0f, 0.0f };
