@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -815,7 +815,7 @@ void ReplaceLicenseText(QString absPath)
       QTextStream out(&license);
 
       out << "/* ============================================================================\n";
-      out << "* Copyright (c) 2009-2015 BlueQuartz Software, LLC\n";
+      out << "* Copyright (c) 2009-2016 BlueQuartz Software, LLC\n";
       out << "*\n";
       out << "* Redistribution and use in source and binary forms, with or without modification,\n";
       out << "* are permitted provided that the following conditions are met:\n";
