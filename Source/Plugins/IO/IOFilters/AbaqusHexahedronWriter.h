@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _AbaqusHexahedronWriter_H_
-#define _AbaqusHexahedronWriter_H_
+#ifndef _abaqushexahedronwriter_h_
+#define _abaqushexahedronwriter_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

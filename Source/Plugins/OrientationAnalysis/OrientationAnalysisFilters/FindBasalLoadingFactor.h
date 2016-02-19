@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _FindBasalLoadingFactor_H_
-#define _FindBasalLoadingFactor_H_
+#ifndef _findbasalloadingfactor_h_
+#define _findbasalloadingfactor_h_
 
 #include <vector>
 #include <string>

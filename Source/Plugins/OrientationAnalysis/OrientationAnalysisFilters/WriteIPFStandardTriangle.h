@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _WriteIPFStandardTriangle_H_
-#define _WriteIPFStandardTriangle_H_
+#ifndef _writeipfstandardtriangle_h_
+#define _writeipfstandardtriangle_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

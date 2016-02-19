@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _GoldfeatherReader_H_
-#define _GoldfeatherReader_H_
+#ifndef _goldfeatherreader_h_
+#define _goldfeatherreader_h_
 
 #include <QtCore/QString>
 

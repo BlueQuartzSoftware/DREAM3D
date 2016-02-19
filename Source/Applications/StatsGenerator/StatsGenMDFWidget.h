@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _STATSGENMDFWIDGET_H_
-#define _STATSGENMDFWIDGET_H_
+#ifndef _statsgenmdfwidget_h_
+#define _statsgenmdfwidget_h_
 
 #include <QtWidgets/QWidget>
 #include "ui_StatsGenMDFWidget.h"

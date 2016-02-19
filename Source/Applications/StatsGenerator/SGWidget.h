@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _SGWIDGET_H_
-#define _SGWIDGET_H_
+#ifndef _sgwidget_h_
+#define _sgwidget_h_
 
 #include <QtWidgets/QWidget>
 

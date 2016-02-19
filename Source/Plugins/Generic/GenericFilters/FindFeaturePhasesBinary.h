@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _FindFeaturePhasesBinary_H_
-#define _FindFeaturePhasesBinary_H_
+#ifndef _findfeaturephasesbinary_h_
+#define _findfeaturephasesbinary_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

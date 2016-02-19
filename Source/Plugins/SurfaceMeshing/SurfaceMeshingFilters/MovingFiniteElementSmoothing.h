@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _MovingFiniteElementSmoothing_H_
-#define _MovingFiniteElementSmoothing_H_
+#ifndef _movingfiniteelementsmoothing_h_
+#define _movingfiniteelementsmoothing_h_
 
 #include <QtCore/QString>
 

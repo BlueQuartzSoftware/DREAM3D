@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _DelimitedOrFixedWidthPage_H_
-#define _DelimitedOrFixedWidthPage_H_
+#ifndef _delimitedorfixedwidthpage_h_
+#define _delimitedorfixedwidthpage_h_
 
 #include <QtWidgets/QWizardPage>
 

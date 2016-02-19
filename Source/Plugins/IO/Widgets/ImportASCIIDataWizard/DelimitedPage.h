@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _DelimitedPage_H_
-#define _DelimitedPage_H_
+#ifndef _delimitedpage_h_
+#define _delimitedpage_h_
 
 #include <QtWidgets/QWizardPage>
 

@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _MSVCDEFINES_H_
-#define _MSVCDEFINES_H_
+#ifndef _msvcdefines_h_
+#define _msvcdefines_h_
 
 #ifdef _MSC_VER
 

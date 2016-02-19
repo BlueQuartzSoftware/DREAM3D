@@ -37,8 +37,8 @@
 
 
 
-#ifndef _EbsdLib_COMMON_DLL_EXPORT_H_
-#define _EbsdLib_COMMON_DLL_EXPORT_H_
+#ifndef _ebsdlibdllexport_h_
+#define _ebsdlibdllexport_h_
 
 
 #if defined (_MSC_VER)
@@ -78,8 +78,8 @@ building the MXADatModel DLL on windows.
 #endif
 
 /* If EbsdLib_EXPORT was never defined, define it here */
-#ifndef EbsdLib_EXPORT
-#define EbsdLib_EXPORT
+#ifndef _ebsdlibdllexport_h_
+#define _ebsdlibdllexport_h_
 #endif
 
 

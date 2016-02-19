@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _SG_AXIS_ODFWIDGET_H_
-#define _SG_AXIS_ODFWIDGET_H_
+#ifndef _sgaxisodfwidget_h_
+#define _sgaxisodfwidget_h_
 
 #include <QtCore/QString>
 #include <QtCore/QVector>

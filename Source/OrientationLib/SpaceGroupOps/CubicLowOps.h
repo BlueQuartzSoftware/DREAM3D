@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _CubicLowOPS_H_
-#define _CubicLowOPS_H_
+#ifndef _cubiclowops_h_
+#define _cubiclowops_h_
 
 
 #include "SIMPLib/SIMPLib.h"

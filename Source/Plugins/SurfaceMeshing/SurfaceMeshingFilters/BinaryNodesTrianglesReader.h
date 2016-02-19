@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _BinaryNodesTrianglesReader_H_
-#define _BinaryNodesTrianglesReader_H_
+#ifndef _binarynodestrianglesreader_h_
+#define _binarynodestrianglesreader_h_
 
 #include <QtCore/QString>
 

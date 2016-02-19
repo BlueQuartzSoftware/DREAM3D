@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _MICROSTRUCTUREPRESET_H_
-#define _MICROSTRUCTUREPRESET_H_
+#ifndef _abstractmicrostructurepreset_h_
+#define _abstractmicrostructurepreset_h_
 
 #include "QtCore/QVector"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"

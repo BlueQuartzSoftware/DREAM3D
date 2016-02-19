@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _GBCDTriangleDumper_H_
-#define _GBCDTriangleDumper_H_
+#ifndef _gbcdtriangledumper_h_
+#define _gbcdtriangledumper_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

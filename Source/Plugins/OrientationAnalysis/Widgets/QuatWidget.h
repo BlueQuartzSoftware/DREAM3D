@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _QuatWidget_H_
-#define _QuatWidget_H_
+#ifndef _quatwidget_h_
+#define _quatwidget_h_
 
 #include "OrientationWidget.h"
 

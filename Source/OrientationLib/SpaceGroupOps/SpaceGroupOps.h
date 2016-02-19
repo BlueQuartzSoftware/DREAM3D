@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _SpaceGroupOps_H_
-#define _SpaceGroupOps_H_
+#ifndef _spacegroupops_h_
+#define _spacegroupops_h_
 
 #include <vector>
 

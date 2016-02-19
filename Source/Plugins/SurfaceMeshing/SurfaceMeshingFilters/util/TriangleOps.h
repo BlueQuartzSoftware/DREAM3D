@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _TriangleOps_H_
-#define _TriangleOps_H_
+#ifndef _triangleops_h_
+#define _triangleops_h_
 
 #include <vector>
 #include <set>

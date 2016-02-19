@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _PoleFigureData_H_
-#define _PoleFigureData_H_
+#ifndef _polefiguredata_h_
+#define _polefiguredata_h_
 
 #include <QtCore/QObject>
 #include <QtCore/QVector>

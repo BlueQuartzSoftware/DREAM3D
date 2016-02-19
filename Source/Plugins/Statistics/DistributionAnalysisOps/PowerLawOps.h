@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _PowerLawOps_H_
-#define _PowerLawOps_H_
+#ifndef _powerlawops_h_
+#define _powerlawops_h_
 
 
 

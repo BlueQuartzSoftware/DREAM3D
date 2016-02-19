@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _OrientationMath_H_
-#define _OrientationMath_H_
+#ifndef _orientationmath_h_
+#define _orientationmath_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Math/QuaternionMath.hpp"

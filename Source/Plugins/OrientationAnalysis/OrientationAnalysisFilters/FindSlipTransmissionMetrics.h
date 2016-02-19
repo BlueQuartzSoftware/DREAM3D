@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _FindSlipTransmissionMetrics_H_
-#define _FindSlipTransmissionMetrics_H_
+#ifndef _findsliptransmissionmetrics_h_
+#define _findsliptransmissionmetrics_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

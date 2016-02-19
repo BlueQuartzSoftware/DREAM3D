@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ImportVectorImageStackFilterParameter_H_
-#define _ImportVectorImageStackFilterParameter_H_
+#ifndef _importvectorimagestackfilterparameter_h_
+#define _importvectorimagestackfilterparameter_h_
 
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 

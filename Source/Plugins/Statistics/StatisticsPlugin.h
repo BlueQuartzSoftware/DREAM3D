@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _Statistics_H_
-#define _Statistics_H_
+#ifndef _statisticsplugin_h_
+#define _statisticsplugin_h_
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>

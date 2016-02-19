@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _EMCalculation_H_
-#define _EMCalculation_H_
+#ifndef _emcalculation_h_
+#define _emcalculation_h_
 
 #include <QtCore/QObject>
 #include <QtCore/QString>

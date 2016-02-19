@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef ASCIIDataItem_H
-#define ASCIIDataItem_H
+#ifndef _asciidataitem_h_
+#define _asciidataitem_h_
 
 #include <QtCore/QVariant>
 #include <QtCore/QVector>

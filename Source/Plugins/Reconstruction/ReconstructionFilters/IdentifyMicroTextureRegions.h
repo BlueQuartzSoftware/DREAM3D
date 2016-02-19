@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _IdentifyMicroTextureRegions_H_
-#define _IdentifyMicroTextureRegions_H_
+#ifndef _identifymicrotextureregions_h_
+#define _identifymicrotextureregions_h_
 
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int.hpp>

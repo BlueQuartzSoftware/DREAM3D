@@ -1,5 +1,5 @@
-#ifndef _SamplingConstants_H_
-#define _SamplingConstants_H_
+#ifndef _samplingconstants_h_
+#define _samplingconstants_h_
 
 #include <QtCore/QString>
 

@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _FindSurfaceAreaToVolume_H_
-#define _FindSurfaceAreaToVolume_H_
+#ifndef _findsurfaceareatovolume_h_
+#define _findsurfaceareatovolume_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

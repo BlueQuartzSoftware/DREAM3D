@@ -1,5 +1,5 @@
-#ifndef _SyntheticBuildingConstants_H_
-#define _SyntheticBuildingConstants_H_
+#ifndef _syntheticbuildingconstants_h_
+#define _syntheticbuildingconstants_h_
 
 #include <QtCore/QString>
 

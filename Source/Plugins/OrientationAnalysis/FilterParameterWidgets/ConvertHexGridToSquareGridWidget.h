@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _ConvertHexGridToSquareGridWidget_H_
-#define _ConvertHexGridToSquareGridWidget_H_
+#ifndef _converthexgridtosquaregridwidget_h_
+#define _converthexgridtosquaregridwidget_h_
 
 
 #include <QtCore/QString>

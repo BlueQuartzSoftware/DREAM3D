@@ -38,8 +38,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _M3CEntireVolume_H_
-#define _M3CEntireVolume_H_
+#ifndef _m3centirevolume_h_
+#define _m3centirevolume_h_
 
 #include <string>
 

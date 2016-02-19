@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _GenerateEnsembleStatistics_H_
-#define _GenerateEnsembleStatistics_H_
+#ifndef _generateensemblestatistics_h_
+#define _generateensemblestatistics_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

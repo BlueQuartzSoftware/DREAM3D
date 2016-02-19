@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _Processing_H_
-#define _Processing_H_
+#ifndef _processingplugin_h_
+#define _processingplugin_h_
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>

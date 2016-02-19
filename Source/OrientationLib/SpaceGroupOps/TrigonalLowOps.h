@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _TrigonalLowOPS_H_
-#define _TrigonalLowOPS_H_
+#ifndef _trigonallowops_h_
+#define _trigonallowops_h_
 
 
 #include "SIMPLib/SIMPLib.h"

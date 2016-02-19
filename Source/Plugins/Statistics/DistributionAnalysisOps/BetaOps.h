@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _BETAOPS_H_
-#define _BETAOPS_H_
+#ifndef _betaops_h_
+#define _betaops_h_
 
 
 

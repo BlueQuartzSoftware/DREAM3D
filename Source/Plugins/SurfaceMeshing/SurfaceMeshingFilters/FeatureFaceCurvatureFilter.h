@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _FeatureFaceCurvatureFilter_H_
-#define _FeatureFaceCurvatureFilter_H_
+#ifndef _featurefacecurvaturefilter_h_
+#define _featurefacecurvaturefilter_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"

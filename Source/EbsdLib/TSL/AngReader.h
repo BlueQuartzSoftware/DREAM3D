@@ -36,8 +36,8 @@
 
 
 
-#ifndef _ANGREADER_H_
-#define _ANGREADER_H_
+#ifndef _angreader_h_
+#define _angreader_h_
 
 #include <QtCore/QString>
 #include <QtCore/QFile>

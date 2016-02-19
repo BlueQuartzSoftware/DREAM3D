@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _AvizoUniformCoordinateWriter_H_
-#define _AvizoUniformCoordinateWriter_H_
+#ifndef _avizouniformcoordinatewriter_h_
+#define _avizouniformcoordinatewriter_h_
 
 #include <QtCore/QString>
 

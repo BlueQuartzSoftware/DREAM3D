@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _InitializeSyntheticVolumeWidget_H_
-#define _InitializeSyntheticVolumeWidget_H_
+#ifndef _initializesyntheticvolumewidget_h_
+#define _initializesyntheticvolumewidget_h_
 
 
 #include <QtCore/QObject>

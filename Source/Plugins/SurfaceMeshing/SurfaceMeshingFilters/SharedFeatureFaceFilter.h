@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _SharedFeatureFaceFilter_H_
-#define _SharedFeatureFaceFilter_H_
+#ifndef _sharedfeaturefacefilter_h_
+#define _sharedfeaturefacefilter_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

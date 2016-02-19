@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _FindNRingNeighbors_H_
-#define _FindNRingNeighbors_H_
+#ifndef _findnringneighbors_h_
+#define _findnringneighbors_h_
 
 #include <set>
 

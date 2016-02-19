@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _CTFPHASE_H_
-#define _CTFPHASE_H_
+#ifndef _ctfphase_h_
+#define _ctfphase_h_
 
 #include <string.h>
 

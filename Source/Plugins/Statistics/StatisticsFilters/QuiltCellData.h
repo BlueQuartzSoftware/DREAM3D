@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _QuiltCellData_H_
-#define _QuiltCellData_H_
+#ifndef _quiltcelldata_h_
+#define _quiltcelldata_h_
 
 #include <QtCore/QString>
 #include <set>

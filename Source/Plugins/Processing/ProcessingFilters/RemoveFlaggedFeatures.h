@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _RemoveFlaggedFeatures_H_
-#define _RemoveFlaggedFeatures_H_
+#ifndef _removeflaggedfeatures_h_
+#define _removeflaggedfeatures_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

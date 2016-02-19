@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _MICROSTRUCTUREPRESETMANAGER_H_
-#define _MICROSTRUCTUREPRESETMANAGER_H_
+#ifndef _microstructurepresetmanager_h_
+#define _microstructurepresetmanager_h_
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 

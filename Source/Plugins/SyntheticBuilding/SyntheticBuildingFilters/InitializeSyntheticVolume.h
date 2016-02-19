@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _InitializeSyntheticVolume_H_
-#define _InitializeSyntheticVolume_H_
+#ifndef _initializesyntheticvolume_h_
+#define _initializesyntheticvolume_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

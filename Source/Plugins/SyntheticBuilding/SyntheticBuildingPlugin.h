@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _SyntheticBuilding_H_
-#define _SyntheticBuilding_H_
+#ifndef _syntheticbuildingplugin_h_
+#define _syntheticbuildingplugin_h_
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>

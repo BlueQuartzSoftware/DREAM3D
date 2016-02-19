@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _FindFeatureReferenceMisorientations_H_
-#define _FindFeatureReferenceMisorientations_H_
+#ifndef _findfeaturereferencemisorientations_h_
+#define _findfeaturereferencemisorientations_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

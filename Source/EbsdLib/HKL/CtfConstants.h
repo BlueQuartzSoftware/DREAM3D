@@ -37,8 +37,8 @@
 
 
 
-#ifndef _HKLConstants_h_
-#define _HKLConstants_h_
+#ifndef _ctfconstants_h_
+#define _ctfconstants_h_
 
 #include <QtCore/QString>
 #include <QtCore/QVector>

@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _ErodeDilateCoordinationNumber_H_
-#define _ErodeDilateCoordinationNumber_H_
+#ifndef _erodedilatecoordinationnumber_h_
+#define _erodedilatecoordinationnumber_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

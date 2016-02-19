@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _FindRelativeMotionBetweenSlices_H_
-#define _FindRelativeMotionBetweenSlices_H_
+#ifndef _findrelativemotionbetweenslices_h_
+#define _findrelativemotionbetweenslices_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

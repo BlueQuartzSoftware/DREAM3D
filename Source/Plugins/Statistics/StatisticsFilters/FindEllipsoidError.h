@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _FindEllipsoidError_H_
-#define _FindEllipsoidError_H_
+#ifndef _findellipsoiderror_h_
+#define _findellipsoiderror_h_
 
 #include <vector>
 #include <QtCore/QString>

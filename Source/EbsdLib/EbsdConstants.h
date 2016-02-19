@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _EbsdConstants_h_
-#define _EbsdConstants_h_
+#ifndef _ebsdconstants_h_
+#define _ebsdconstants_h_
 
 #include <QtCore/QString>
 #include <QtCore/QJsonObject>

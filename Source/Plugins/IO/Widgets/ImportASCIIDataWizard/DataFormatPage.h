@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _DataFormatPage_H_
-#define _DataFormatPage_H_
+#ifndef _dataformatpage_h_
+#define _dataformatpage_h_
 
 #include <QtWidgets/QWizardPage>
 

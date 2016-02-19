@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _GenerateEulerColors_H_
-#define _GenerateEulerColors_H_
+#ifndef _generateeulercolors_h_
+#define _generateeulercolors_h_
 
 #include <QtCore/QString>
 

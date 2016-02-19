@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _EBSDSegmentFeatures_H_
-#define _EBSDSegmentFeatures_H_
+#ifndef _ebsdsegmentfeatures_h_
+#define _ebsdsegmentfeatures_h_
 
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int.hpp>

@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _TEXTUREPRESET_H_
-#define _TEXTUREPRESET_H_
+#ifndef _texturepreset_h_
+#define _texturepreset_h_
 
 #include <QtCore/QVector>
 #include <QtCore/QString>

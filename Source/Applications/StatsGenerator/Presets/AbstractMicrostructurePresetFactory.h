@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ABSTRACTMICROSTRUCTUREPRESETFACTORY_H_
-#define _ABSTRACTMICROSTRUCTUREPRESETFACTORY_H_
+#ifndef _abstractmicrostructurepresetfactory_h_
+#define _abstractmicrostructurepresetfactory_h_
 
 #include <string>
 #include <vector>

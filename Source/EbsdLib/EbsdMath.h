@@ -5,8 +5,8 @@
  *      Author: mjackson
  */
 
-#ifndef _EBSBMATH_H_
-#define _EBSBMATH_H_
+#ifndef _ebsdmath_h_
+#define _ebsdmath_h_
 
 
 

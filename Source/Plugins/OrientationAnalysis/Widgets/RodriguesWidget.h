@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _RodriguesWidget_H_
-#define _RodriguesWidget_H_
+#ifndef _rodrigueswidget_h_
+#define _rodrigueswidget_h_
 
 #include "OrientationWidget.h"
 

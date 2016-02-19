@@ -37,8 +37,8 @@
 
 
 
-#ifndef _EbsdSetGetMacros_h_
-#define _EbsdSetGetMacros_h_
+#ifndef _ebsdsetgetmacros_h_
+#define _ebsdsetgetmacros_h_
 
 #include <string.h>
 

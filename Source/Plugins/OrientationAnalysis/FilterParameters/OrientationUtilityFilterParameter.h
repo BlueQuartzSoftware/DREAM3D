@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _OrientationUtilityFilterParameter_H_
-#define _OrientationUtilityFilterParameter_H_
+#ifndef _orientationutilityfilterparameter_h_
+#define _orientationutilityfilterparameter_h_
 
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 

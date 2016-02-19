@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _ImportASCIIDataWizard_H_
-#define _ImportASCIIDataWizard_H_
+#ifndef _importasciidatawizard_h_
+#define _importasciidatawizard_h_
 
 #include <QtWidgets/QWizard>
 

@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _STATSGENERATOR_H_
-#define _STATSGENERATOR_H_
+#ifndef _statsgeneratorui_h_
+#define _statsgeneratorui_h_
 
 
 #include <QtCore/QObject>

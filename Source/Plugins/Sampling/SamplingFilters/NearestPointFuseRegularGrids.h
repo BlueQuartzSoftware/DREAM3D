@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _NearestPointFuseRegularGrids_H_
-#define _NearestPointFuseRegularGrids_H_
+#ifndef _nearestpointfuseregulargrids_h_
+#define _nearestpointfuseregulargrids_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

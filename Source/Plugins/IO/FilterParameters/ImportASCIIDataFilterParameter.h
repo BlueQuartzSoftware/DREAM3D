@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ImportASCIIDataFilterParameter_H_
-#define _ImportASCIIDataFilterParameter_H_
+#ifndef _importasciidatafilterparameter_h_
+#define _importasciidatafilterparameter_h_
 
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 

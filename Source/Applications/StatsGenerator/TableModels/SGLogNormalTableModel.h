@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _SG_LOG_NORMAL_TABLEMODEL_H_
-#define _SG_LOG_NORMAL_TABLEMODEL_H_
+#ifndef _sglognormaltablemodel_h_
+#define _sglognormaltablemodel_h_
 
 #include <QtCore/QVector>
 #include <QtCore/QVariant>

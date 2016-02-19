@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _Reconstruction_H_
-#define _Reconstruction_H_
+#ifndef _reconstructionplugin_h_
+#define _reconstructionplugin_h_
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>

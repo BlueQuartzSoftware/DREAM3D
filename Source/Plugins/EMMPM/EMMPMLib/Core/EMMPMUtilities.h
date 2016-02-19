@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef EM_H_
-#define EM_H_
+#ifndef _emmpmutilities_h_
+#define _emmpmutilities_h_
 
 #include "EMMPMLib/EMMPMLib.h"
 #include "EMMPMLib/Core/EMMPM_Constants.h"

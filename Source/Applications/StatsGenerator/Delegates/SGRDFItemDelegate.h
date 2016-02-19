@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _SGRDFITEMDELEGATE_H_
-#define _SGRDFITEMDELEGATE_H_
+#ifndef _sgrdfitemdelegate_h_
+#define _sgrdfitemdelegate_h_
 
 #include <iostream>
 

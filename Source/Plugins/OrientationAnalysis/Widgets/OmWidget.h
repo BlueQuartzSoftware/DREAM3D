@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _OmWidget_H_
-#define _OmWidget_H_
+#ifndef _omwidget_h_
+#define _omwidget_h_
 
 #include "OrientationWidget.h"
 

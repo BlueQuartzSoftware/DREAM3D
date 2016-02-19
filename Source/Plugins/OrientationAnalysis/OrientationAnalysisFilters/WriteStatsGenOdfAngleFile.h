@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _WriteStatsGenOdfAngleFile_H_
-#define _WriteStatsGenOdfAngleFile_H_
+#ifndef _writestatsgenodfanglefile_h_
+#define _writestatsgenodfanglefile_h_
 
 #include <QtCore/QString>
 

@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _BoundaryPhaseWidget_H_
-#define _BoundaryPhaseWidget_H_
+#ifndef _boundaryphasewidget_h_
+#define _boundaryphasewidget_h_
 
 #include <QtCore/QList>
 

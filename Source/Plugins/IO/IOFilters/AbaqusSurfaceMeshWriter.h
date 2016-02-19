@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _AbaqusSurfaceMeshWriter_H_
-#define _AbaqusSurfaceMeshWriter_H_
+#ifndef _abaqussurfacemeshwriter_h_
+#define _abaqussurfacemeshwriter_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

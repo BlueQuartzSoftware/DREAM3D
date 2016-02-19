@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _ModifiedLambertProjectionArray_H_
-#define _ModifiedLambertProjectionArray_H_
+#ifndef _modifiedlambertprojectionarray_h_
+#define _modifiedlambertprojectionarray_h_
 
 #include <vector>
 

@@ -2,8 +2,8 @@
  * Your License or Copyright can go here
  */
 
-#ifndef _ImportASCIIData_H_
-#define _ImportASCIIData_H_
+#ifndef _importasciidata_h_
+#define _importasciidata_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

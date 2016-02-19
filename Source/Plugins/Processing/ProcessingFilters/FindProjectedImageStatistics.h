@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _FindProjectedImageStatistics_H_
-#define _FindProjectedImageStatistics_H_
+#ifndef _findprojectedimagestatistics_h_
+#define _findprojectedimagestatistics_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

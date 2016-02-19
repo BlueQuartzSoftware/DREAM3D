@@ -1,5 +1,5 @@
-#ifndef _ImageIOConstants_H_
-#define _ImageIOConstants_H_
+#ifndef _imageioconstants_h_
+#define _imageioconstants_h_
 
 #include <QtCore/QString>
 

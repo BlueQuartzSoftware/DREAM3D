@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _IOConstants_H_
-#define _IOConstants_H_
+#ifndef _ioconstants_h_
+#define _ioconstants_h_
 
 #include <QtCore/QString>
 

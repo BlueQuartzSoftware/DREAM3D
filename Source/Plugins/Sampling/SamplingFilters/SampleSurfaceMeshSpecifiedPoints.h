@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _SampleSurfaceMeshSpecifiedPoints_H_
-#define _SampleSurfaceMeshSpecifiedPoints_H_
+#ifndef _samplesurfacemeshspecifiedpoints_h_
+#define _samplesurfacemeshspecifiedpoints_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

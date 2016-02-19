@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _SurfaceMeshToNonconformalVtk_H_
-#define _SurfaceMeshToNonconformalVtk_H_
+#ifndef _surfacemeshtononconformalvtk_h_
+#define _surfacemeshtononconformalvtk_h_
 
 #include <QtCore/QString>
 

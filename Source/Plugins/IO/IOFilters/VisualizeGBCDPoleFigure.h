@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _VisualizeGBCDPoleFigure_H_
-#define _VisualizeGBCDPoleFigure_H_
+#ifndef _visualizegbcdpolefigure_h_
+#define _visualizegbcdpolefigure_h_
 
 // Needed for AxisAngle_t
 #include "EbsdLib/EbsdConstants.h"

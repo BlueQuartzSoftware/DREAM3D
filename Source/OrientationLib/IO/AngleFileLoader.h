@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _AngleFileLoader_H_
-#define _AngleFileLoader_H_
+#ifndef _anglefileloader_h_
+#define _anglefileloader_h_
 
 
 

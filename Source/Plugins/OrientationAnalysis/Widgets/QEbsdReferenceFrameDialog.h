@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _EBSDREFERENCEFRAMEWIDGET_H_
-#define _EBSDREFERENCEFRAMEWIDGET_H_
+#ifndef _qebsdreferenceframedialog_h_
+#define _qebsdreferenceframedialog_h_
 
 #include <QtCore/QString>
 #include <QtCore/QStringList>

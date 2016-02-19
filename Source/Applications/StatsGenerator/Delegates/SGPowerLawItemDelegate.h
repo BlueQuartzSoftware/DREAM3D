@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _SGPOWERLAWITEMDELEGATE_H_
-#define _SGPOWERLAWITEMDELEGATE_H_
+#ifndef _sgpowerlawitemdelegate_h_
+#define _sgpowerlawitemdelegate_h_
 
 #include <iostream>
 

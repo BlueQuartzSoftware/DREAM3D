@@ -6,8 +6,8 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef _EMTime_h_
-#define _EMTime_h_
+#ifndef _emtime_h_
+#define _emtime_h_
 
 #include "EMMPMLib/EMMPMLib.h"
 

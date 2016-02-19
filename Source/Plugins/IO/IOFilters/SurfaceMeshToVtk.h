@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _SurfaceMeshToVtk_H_
-#define _SurfaceMeshToVtk_H_
+#ifndef _surfacemeshtovtk_h_
+#define _surfacemeshtovtk_h_
 
 #include <QtCore/QString>
 

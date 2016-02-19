@@ -29,8 +29,8 @@
  *
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _SO3Sampler_H_
-#define _SO3Sampler_H_
+#ifndef _so3sampler_h_
+#define _so3sampler_h_
 
 
 

@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _CTFREADER_H_
-#define _CTFREADER_H_
+#ifndef _ctfreader_h_
+#define _ctfreader_h_
 
 #include <QtCore/QString>
 #include <QtCore/QMap>

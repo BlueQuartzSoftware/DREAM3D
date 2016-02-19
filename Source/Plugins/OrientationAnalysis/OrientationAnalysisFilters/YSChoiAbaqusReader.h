@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _YSChoiAbaqusReader_H_
-#define _YSChoiAbaqusReader_H_
+#ifndef _yschoiabaqusreader_h_
+#define _yschoiabaqusreader_h_
 
 #include <string.h> // needed for the ::memcpy function below
 #include <QtCore/QString>

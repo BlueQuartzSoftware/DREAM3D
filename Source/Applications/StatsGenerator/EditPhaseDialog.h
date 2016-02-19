@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _EDITPHASEDIALOG_H_
-#define _EDITPHASEDIALOG_H_
+#ifndef _editphasedialog_h_
+#define _editphasedialog_h_
 
 #include <QtWidgets/QDialog>
 #include <QtGui/QDoubleValidator>

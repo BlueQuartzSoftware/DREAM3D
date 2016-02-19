@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _EditHeadersDialog_H_
-#define _EditHeadersDialog_H_
+#ifndef _editheadersdialog_h_
+#define _editheadersdialog_h_
 
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QDialogButtonBox>

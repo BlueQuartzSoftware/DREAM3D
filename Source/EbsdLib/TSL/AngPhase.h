@@ -38,8 +38,8 @@
 
 
 
-#ifndef _ANGPHASE_H_
-#define _ANGPHASE_H_
+#ifndef _angphase_h_
+#define _angphase_h_
 
 #include <QtCore/QString>
 #include <QtCore/QVector>

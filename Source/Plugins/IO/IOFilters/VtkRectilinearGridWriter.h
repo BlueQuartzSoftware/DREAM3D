@@ -32,8 +32,8 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _VtkRectilinearGridWriter_H_
-#define _VtkRectilinearGridWriter_H_
+#ifndef _vtkrectilineargridwriter_h_
+#define _vtkrectilineargridwriter_h_
 
 #include <QtCore/QString>
 #include <QtCore/QVector>

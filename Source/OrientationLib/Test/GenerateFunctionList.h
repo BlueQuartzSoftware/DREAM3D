@@ -1,5 +1,5 @@
-#ifndef _GenerateFunctionList_H_
-#define _GenerateFunctionList_H_
+#ifndef _generatefunctionlist_h_
+#define _generatefunctionlist_h_
 
 
 #include <stdio.h>

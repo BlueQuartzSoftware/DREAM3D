@@ -35,8 +35,8 @@
 
 
 
-#ifndef _EbsdImporter_h_
-#define _EbsdImporter_h_
+#ifndef _ebsdimporter_h_
+#define _ebsdimporter_h_
 
 #include "hdf5.h"
 

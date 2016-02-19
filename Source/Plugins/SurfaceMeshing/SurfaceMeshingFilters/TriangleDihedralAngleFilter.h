@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _TriangleDihedralAngleFilter_H_
-#define _TriangleDihedralAngleFilter_H_
+#ifndef _triangledihedralanglefilter_h_
+#define _triangledihedralanglefilter_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

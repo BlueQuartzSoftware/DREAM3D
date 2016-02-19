@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _CalculateTriangleGroupCurvatures_H_
-#define _CalculateTriangleGroupCurvatures_H_
+#ifndef _calculatetrianglegroupcurvatures_h_
+#define _calculatetrianglegroupcurvatures_h_
 
 #include <set>
 

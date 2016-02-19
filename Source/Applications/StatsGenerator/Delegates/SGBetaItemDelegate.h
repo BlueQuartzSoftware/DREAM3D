@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _SGBETAITEMDELEGATE_H_
-#define _SGBETAITEMDELEGATE_H_
+#ifndef _sgbetaitemdelegate_h_
+#define _sgbetaitemdelegate_h_
 
 #include <iostream>
 

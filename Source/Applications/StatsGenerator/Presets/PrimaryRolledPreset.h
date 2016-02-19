@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _PrimaryRolledPreset_H_
-#define _PrimaryRolledPreset_H_
+#ifndef _primaryrolledpreset_h_
+#define _primaryrolledpreset_h_
 
 //-- C++ includes
 #include <string>

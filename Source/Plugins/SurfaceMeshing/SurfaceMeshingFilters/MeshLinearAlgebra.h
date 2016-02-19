@@ -42,8 +42,8 @@
  */
 
 // LinearAlgebra.h
-#ifndef LINEAR_ALGEBRA
-#define LINEAR_ALGEBRA
+#ifndef _meshlinearalgebra_h_
+#define _meshlinearalgebra_h_
 #include<vector>
 #include<cmath>
 #include<iostream>

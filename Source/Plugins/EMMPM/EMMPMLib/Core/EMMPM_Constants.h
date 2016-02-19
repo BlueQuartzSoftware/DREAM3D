@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef EMMPM_CONSTANTS_H_
-#define EMMPM_CONSTANTS_H_
+#ifndef _emmpm_constants_h_
+#define _emmpm_constants_h_
 
 
 

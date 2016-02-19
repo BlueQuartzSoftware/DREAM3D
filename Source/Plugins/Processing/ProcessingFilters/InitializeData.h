@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _InitializeData_H_
-#define _InitializeData_H_
+#ifndef _initializedata_h_
+#define _initializedata_h_
 
 #include <QtCore/QVector>
 

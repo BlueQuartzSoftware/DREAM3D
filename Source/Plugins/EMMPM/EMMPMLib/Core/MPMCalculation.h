@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _MPMCalculation_H_
-#define _MPMCalculation_H_
+#ifndef _mpmcalculation_h_
+#define _mpmcalculation_h_
 
 #include <QtCore/QObject>
 #include <QtCore/QString>

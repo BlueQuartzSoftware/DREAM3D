@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _AngHeaderEntry_H_
-#define _AngHeaderEntry_H_
+#ifndef _angheaderentry_h_
+#define _angheaderentry_h_
 
 
 #include <string.h>

@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _TupleSelectionPage_H_
-#define _TupleSelectionPage_H_
+#ifndef _tupleselectionpage_h_
+#define _tupleselectionpage_h_
 
 #include <QtWidgets/QWizardPage>
 

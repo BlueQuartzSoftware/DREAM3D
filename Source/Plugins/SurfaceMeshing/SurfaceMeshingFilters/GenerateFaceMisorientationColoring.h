@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _GenerateFaceMisorientationColoring_H_
-#define _GenerateFaceMisorientationColoring_H_
+#ifndef _generatefacemisorientationcoloring_h_
+#define _generatefacemisorientationcoloring_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

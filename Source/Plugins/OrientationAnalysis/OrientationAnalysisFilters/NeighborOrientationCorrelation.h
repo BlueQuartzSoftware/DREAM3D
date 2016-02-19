@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _NeighborOrientationCorrelation_H_
-#define _NeighborOrientationCorrelation_H_
+#ifndef _neighbororientationcorrelation_h_
+#define _neighbororientationcorrelation_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _GenerateFaceIPFColoring_H_
-#define _GenerateFaceIPFColoring_H_
+#ifndef _generatefaceipfcoloring_h_
+#define _generatefaceipfcoloring_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

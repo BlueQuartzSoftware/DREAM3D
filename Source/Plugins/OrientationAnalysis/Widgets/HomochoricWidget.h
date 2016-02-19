@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _HomochoricWidget_H_
-#define _HomochoricWidget_H_
+#ifndef _homochoricwidget_h_
+#define _homochoricwidget_h_
 
 #include "OrientationWidget.h"
 

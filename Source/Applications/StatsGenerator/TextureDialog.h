@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _TEXTUREDIALOG_H_
-#define _TEXTUREDIALOG_H_
+#ifndef _texturedialog_h_
+#define _texturedialog_h_
 
 #include <vector>
 

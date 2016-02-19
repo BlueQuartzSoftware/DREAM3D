@@ -1,8 +1,8 @@
 /*
  * Your License should go here
  */
-#ifndef _EMMPMConstants_H_
-#define _EMMPMConstants_H_
+#ifndef _emmpmconstants_h_
+#define _emmpmconstants_h_
 
 #include <QtCore/QString>
 

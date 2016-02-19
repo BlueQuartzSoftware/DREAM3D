@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _CAxisSegmentFeatures_H_
-#define _CAxisSegmentFeatures_H_
+#ifndef _caxissegmentfeatures_h_
+#define _caxissegmentfeatures_h_
 
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int.hpp>

@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _EBSDREADER_H_
-#define _EBSDREADER_H_
+#ifndef _ebsdreader_h_
+#define _ebsdreader_h_
 
 #include <QtCore/QString>
 #include <QtCore/QVector>

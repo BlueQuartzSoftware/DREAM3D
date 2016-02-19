@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _PrecipitatePhaseWidget_H_
-#define _PrecipitatePhaseWidget_H_
+#ifndef _precipitatephasewidget_h_
+#define _precipitatephasewidget_h_
 
 #include <QtCore/QList>
 #include <QtCore/QVector>

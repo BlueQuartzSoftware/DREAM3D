@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _MonoclinicOPS_H_
-#define _MonoclinicOPS_H_
+#ifndef _monoclinicops_h_
+#define _monoclinicops_h_
 
 
 #include "SIMPLib/SIMPLib.h"

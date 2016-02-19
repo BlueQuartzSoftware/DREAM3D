@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _VtkStructuredPointsReader_H_
-#define _VtkStructuredPointsReader_H_
+#ifndef _vtkstructuredpointsreader_h_
+#define _vtkstructuredpointsreader_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

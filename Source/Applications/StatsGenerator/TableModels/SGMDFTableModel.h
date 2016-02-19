@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _SGMDFTABLEMODEL_H_
-#define _SGMDFTABLEMODEL_H_
+#ifndef _sgmdftablemodel_h_
+#define _sgmdftablemodel_h_
 
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QVector>

@@ -35,8 +35,8 @@
 
 
 
-#ifndef _PhReader_H_
-#define _PhReader_H_
+#ifndef _phreader_h_
+#define _phreader_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

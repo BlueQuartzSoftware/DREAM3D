@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _AlignSectionsMutualInformation_H_
-#define _AlignSectionsMutualInformation_H_
+#ifndef _alignsectionsmutualinformation_h_
+#define _alignsectionsmutualinformation_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

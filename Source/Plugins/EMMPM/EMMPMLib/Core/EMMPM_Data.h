@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef EMMPM_STRUCTURES_H_
-#define EMMPM_STRUCTURES_H_
+#ifndef _emmpm_data_h_
+#define _emmpm_data_h_
 
 // C Includes
 #include <stddef.h>

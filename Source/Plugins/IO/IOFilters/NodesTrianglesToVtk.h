@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _NodesTrianglesToVtk_H_
-#define _NodesTrianglesToVtk_H_
+#ifndef _nodestrianglestovtk_h_
+#define _nodestrianglestovtk_h_
 
 #include <QtCore/QString>
 

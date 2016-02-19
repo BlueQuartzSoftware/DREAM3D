@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _STATSGENODFWIDGET_H_
-#define _STATSGENODFWIDGET_H_
+#ifndef _statsgenodfwidget_h_
+#define _statsgenodfwidget_h_
 
 
 #include <QtCore/QFutureWatcher>

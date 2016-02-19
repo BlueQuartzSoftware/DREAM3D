@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _EBSDTRANSFORM_H_
-#define _EBSDTRANSFORM_H_
+#ifndef _ebsdtransform_h_
+#define _ebsdtransform_h_
 
 #include <QtCore/QString>
 #include <QtCore/QVector>

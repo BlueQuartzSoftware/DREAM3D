@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _LammpsFileWriter_H_
-#define _LammpsFileWriter_H_
+#ifndef _lammpsfilewriter_h_
+#define _lammpsfilewriter_h_
 
 #include <QtCore/QString>
 

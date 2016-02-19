@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _COLORPOLEFIGURE_H_
-#define _COLORPOLEFIGURE_H_
+#ifndef _polefiguremaker_h_
+#define _polefiguremaker_h_
 
 #include <QtCore/QObject>
 #include <QtCore/QVector>

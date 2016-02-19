@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _DxReader_H_
-#define _DxReader_H_
+#ifndef _dxreader_h_
+#define _dxreader_h_
 
 #include <QtCore/QFile>
 

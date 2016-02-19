@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _EbsdToH5Ebsd_H_
-#define _EbsdToH5Ebsd_H_
+#ifndef _ebsdtoh5ebsd_h_
+#define _ebsdtoh5ebsd_h_
 
 // Needed for AxisAngle_t
 #include "EbsdLib/EbsdConstants.h"

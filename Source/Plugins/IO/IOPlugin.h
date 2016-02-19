@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _IOPlugin_H_
-#define _IOPlugin_H_
+#ifndef _ioplugin_h_
+#define _ioplugin_h_
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>

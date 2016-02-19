@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _SurfaceMeshing_H_
-#define _SurfaceMeshing_H_
+#ifndef _surfacemeshingplugin_h_
+#define _surfacemeshingplugin_h_
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>

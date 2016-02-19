@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _CTFHEADERENTRY_H_
-#define _CTFHEADERENTRY_H_
+#ifndef _ctfheaderentry_h_
+#define _ctfheaderentry_h_
 
 
 #include <string.h>

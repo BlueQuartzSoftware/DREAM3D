@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _PrimaryRecrystallizedPreset_H_
-#define _PrimaryRecrystallizedPreset_H_
+#ifndef _primaryrecrystallizedpreset_h_
+#define _primaryrecrystallizedpreset_h_
 
 //-- C++ includes
 #include <string>

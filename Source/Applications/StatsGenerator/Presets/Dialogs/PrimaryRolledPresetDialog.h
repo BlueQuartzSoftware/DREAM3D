@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _PrimaryRolledPresetDialog_H_
-#define _PrimaryRolledPresetDialog_H_
+#ifndef _primaryrolledpresetdialog_h_
+#define _primaryrolledpresetdialog_h_
 
 #include <QtWidgets/QDialog>
 

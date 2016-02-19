@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _OrientationUtilityWidget_H_
-#define _OrientationUtilityWidget_H_
+#ifndef _orientationutilitywidget_h_
+#define _orientationutilitywidget_h_
 
 
 #include <QtCore/QString>

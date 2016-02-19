@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _LogNormalOps_H_
-#define _LogNormalOps_H_
+#ifndef _lognormalops_h_
+#define _lognormalops_h_
 
 
 

@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _EulerWidget_H_
-#define _EulerWidget_H_
+#ifndef _eulerwidget_h_
+#define _eulerwidget_h_
 
 #include "OrientationWidget.h"
 

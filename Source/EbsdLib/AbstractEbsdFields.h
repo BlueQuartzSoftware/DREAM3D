@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ABSTRACTEBSDFIELDS_H_
-#define _ABSTRACTEBSDFIELDS_H_
+#ifndef _abstractebsdfields_h_
+#define _abstractebsdfields_h_
 
 
 #include <QtCore/QString>

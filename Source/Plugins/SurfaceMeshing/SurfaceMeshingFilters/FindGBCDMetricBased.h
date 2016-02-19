@@ -43,8 +43,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _FindGBCDMetricBased_H_
-#define _FindGBCDMetricBased_H_
+#ifndef _findgbcdmetricbased_h_
+#define _findgbcdmetricbased_h_
 
 // Needed for AxisAngle_t
 #include "EbsdLib/EbsdConstants.h"

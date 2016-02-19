@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _CubochoricWidget_H_
-#define _CubochoricWidget_H_
+#ifndef _cubochoricwidget_h_
+#define _cubochoricwidget_h_
 
 #include "OrientationWidget.h"
 

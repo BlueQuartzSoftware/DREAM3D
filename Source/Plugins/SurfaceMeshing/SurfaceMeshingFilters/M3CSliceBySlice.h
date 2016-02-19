@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _M3CSliceBySlice_H_
-#define _M3CSliceBySlice_H_
+#ifndef _m3cslicebyslice_h_
+#define _m3cslicebyslice_h_
 
 
 #include <QtCore/QString>

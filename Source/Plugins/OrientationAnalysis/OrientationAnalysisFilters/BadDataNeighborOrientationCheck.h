@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _BadDataNeighborOrientationCheck_H_
-#define _BadDataNeighborOrientationCheck_H_
+#ifndef _baddataneighbororientationcheck_h_
+#define _baddataneighbororientationcheck_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

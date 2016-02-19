@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ConvertHexGridToSquareGridFilterParameter_H_
-#define _ConvertHexGridToSquareGridFilterParameter_H_
+#ifndef _converthexgridtosquaregridfilterparameter_h_
+#define _converthexgridtosquaregridfilterparameter_h_
 
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 

@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _EMMPMINPUTPARSER_H_
-#define _EMMPMINPUTPARSER_H_
+#ifndef _emmpminputparser_h_
+#define _emmpminputparser_h_
 
 #error
 

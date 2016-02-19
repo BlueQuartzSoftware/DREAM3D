@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _SGABSTRACTTABLEMODEL_H_
-#define _SGABSTRACTTABLEMODEL_H_
+#ifndef _sgabstracttablemodel_h_
+#define _sgabstracttablemodel_h_
 
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QVector>

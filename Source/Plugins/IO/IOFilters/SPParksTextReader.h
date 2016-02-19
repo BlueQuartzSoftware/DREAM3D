@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _SPParksTextReader_H_
-#define _SPParksTextReader_H_
+#ifndef _spparkstextreader_h_
+#define _spparkstextreader_h_
 
 #include <QtCore/QFile>
 

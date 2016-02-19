@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _FindMicroTextureRegions_H_
-#define _FindMicroTextureRegions_H_
+#ifndef _findmicrotextureregions_h_
+#define _findmicrotextureregions_h_
 
 #include <vector>
 #include <QtCore/QString>

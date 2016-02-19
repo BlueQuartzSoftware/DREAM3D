@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _GenerateFaceSchuhMisorientationColoring_H_
-#define _GenerateFaceSchuhMisorientationColoring_H_
+#ifndef _generatefaceschuhmisorientationcoloring_h_
+#define _generatefaceschuhmisorientationcoloring_h_
 
 #include <QtCore/QString>
 

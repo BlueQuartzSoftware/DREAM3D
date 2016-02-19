@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _H5CTFVOLUMEREADER_H_
-#define _H5CTFVOLUMEREADER_H_
+#ifndef _h5ctfvolumereader_h_
+#define _h5ctfvolumereader_h_
 
 #include <QtCore/QString>
 #include <QtCore/QVector>

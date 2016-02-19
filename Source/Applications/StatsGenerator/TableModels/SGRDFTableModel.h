@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _SGRDFTableModel_H_
-#define _SGRDFTableModel_H_
+#ifndef _sgrdftablemodel_h_
+#define _sgrdftablemodel_h_
 
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QVector>

@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _FindSaltykovSizes_H_
-#define _FindSaltykovSizes_H_
+#ifndef _findsaltykovsizes_h_
+#define _findsaltykovsizes_h_
 
 #include <QtCore/QString>
 

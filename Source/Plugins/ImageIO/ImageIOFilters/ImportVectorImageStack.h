@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ImportVectorImageStack_H_
-#define _ImportVectorImageStack_H_
+#ifndef _importvectorimagestack_h_
+#define _importvectorimagestack_h_
 
 #include <QtCore/QString>
 

@@ -37,8 +37,8 @@
 
 
 
-#ifndef _ANGCONSTANTS_H_
-#define _ANGCONSTANTS_H_
+#ifndef _angconstants_h_
+#define _angconstants_h_
 
 /**
  * @file AngConstants.h

@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _OrientationUtilityCalculator_H_
-#define _OrientationUtilityCalculator_H_
+#ifndef _orientationutilitycalculator_h_
+#define _orientationutilitycalculator_h_
 
 #include <QtWidgets/QWidget>
 

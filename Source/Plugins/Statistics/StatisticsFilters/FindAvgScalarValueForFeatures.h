@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _FindAvgScalarValueForFeatures_H_
-#define _FindAvgScalarValueForFeatures_H_
+#ifndef _findavgscalarvalueforfeatures_h_
+#define _findavgscalarvalueforfeatures_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _DistributionAnalysisOps_H_
-#define _DistributionAnalysisOps_H_
+#ifndef _distributionanalysisops_h_
+#define _distributionanalysisops_h_
 
 #include <vector>
 

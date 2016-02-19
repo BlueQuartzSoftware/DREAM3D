@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ConvertHexGridToSquareGrid_H_
-#define _ConvertHexGridToSquareGrid_H_
+#ifndef _converthexgridtosquaregrid_h_
+#define _converthexgridtosquaregrid_h_
 
 #if defined (_MSC_VER)
 #define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers

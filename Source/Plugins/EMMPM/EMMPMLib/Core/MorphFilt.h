@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _MORPHFILT_H_
-#define _MORPHFILT_H_
+#ifndef _morphfilt_h_
+#define _morphfilt_h_
 
 #include <QtCore/QObject>
 #include <QtCore/QString>

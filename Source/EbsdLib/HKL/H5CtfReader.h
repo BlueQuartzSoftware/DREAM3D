@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _H5CTFREADER_H_
-#define _H5CTFREADER_H_
+#ifndef _h5ctfreader_h_
+#define _h5ctfreader_h_
 
 #include <hdf5.h>
 

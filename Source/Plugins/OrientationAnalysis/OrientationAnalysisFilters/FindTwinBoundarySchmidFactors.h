@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _FindTwinBoundarySchmidFactors_H_
-#define _FindTwinBoundarySchmidFactors_H_
+#ifndef _findtwinboundaryschmidfactors_h_
+#define _findtwinboundaryschmidfactors_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

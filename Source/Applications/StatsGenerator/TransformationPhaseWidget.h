@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _TransformationPhaseWidget_H_
-#define _TransformationPhaseWidget_H_
+#ifndef _transformationphasewidget_h_
+#define _transformationphasewidget_h_
 
 #include <QtCore/QList>
 #include <QtCore/QVector>

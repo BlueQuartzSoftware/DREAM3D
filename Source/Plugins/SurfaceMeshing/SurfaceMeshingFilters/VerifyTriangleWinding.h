@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _VerifyTriangleWinding_H_
-#define _VerifyTriangleWinding_H_
+#ifndef _verifytrianglewinding_h_
+#define _verifytrianglewinding_h_
 
 #include <QtCore/QString>
 

@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _GenerateRodriguesColors_H_
-#define _GenerateRodriguesColors_H_
+#ifndef _generaterodriguescolors_h_
+#define _generaterodriguescolors_h_
 
 #include <QtCore/QString>
 

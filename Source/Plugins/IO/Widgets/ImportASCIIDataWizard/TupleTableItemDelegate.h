@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _TupleTableItemDelegate_H
-#define _TupleTableItemDelegate_H
+#ifndef _tupletableitemdelegate_h_
+#define _tupletableitemdelegate_h_
 
 #include <QtCore/QModelIndex>
 

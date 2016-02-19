@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _SGODFTABLEMODEL_H_
-#define _SGODFTABLEMODEL_H_
+#ifndef _sgodftablemodel_h_
+#define _sgodftablemodel_h_
 
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QVector>

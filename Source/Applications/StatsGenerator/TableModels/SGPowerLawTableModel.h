@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _SG_POWER_LAW_TABLEMODEL_H_
-#define _SG_POWER_LAW_TABLEMODEL_H_
+#ifndef _sgpowerlawtablemodel_h_
+#define _sgpowerlawtablemodel_h_
 
 #include <QtCore/QVector>
 #include <QtCore/QVariant>

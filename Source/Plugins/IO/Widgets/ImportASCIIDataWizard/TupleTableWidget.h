@@ -32,8 +32,8 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _TupleTableWidget_H_
-#define _TupleTableWidget_H_
+#ifndef _tupletablewidget_h_
+#define _tupletablewidget_h_
 
 #include <QtCore/QObject>
 #include <QtCore/QPointer>

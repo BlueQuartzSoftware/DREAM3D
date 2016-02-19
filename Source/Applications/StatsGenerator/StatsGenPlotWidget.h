@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _STATSGENPLOTWIDGET_H_
-#define _STATSGENPLOTWIDGET_H_
+#ifndef _statsgenplotwidget_h_
+#define _statsgenplotwidget_h_
 
 #include <QtWidgets/QWidget>
 

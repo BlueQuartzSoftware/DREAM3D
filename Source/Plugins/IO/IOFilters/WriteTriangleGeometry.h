@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _WriteTriangleGeometry_H_
-#define _WriteTriangleGeometry_H_
+#ifndef _writetrianglegeometry_h_
+#define _writetrianglegeometry_h_
 
 #include <QtCore/QString>
 

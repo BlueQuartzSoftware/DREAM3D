@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _Generic_H_
-#define _Generic_H_
+#ifndef _genericplugin_h_
+#define _genericplugin_h_
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>

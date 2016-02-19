@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _FindLocalAverageCAxisMisalignments_H_
-#define _FindLocalAverageCAxisMisalignments_H_
+#ifndef _findlocalaveragecaxismisalignments_h_
+#define _findlocalaveragecaxismisalignments_h_
 
 #include <QtCore/QObject>
 

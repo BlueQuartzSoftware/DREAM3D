@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _SGODFITEMDELEGATE_H_
-#define _SGODFITEMDELEGATE_H_
+#ifndef _sgodfitemdelegate_h_
+#define _sgodfitemdelegate_h_
 
 #include <iostream>
 

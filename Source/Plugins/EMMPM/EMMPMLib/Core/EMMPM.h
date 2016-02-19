@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _EMMPM_H_
-#define _EMMPM_H_
+#ifndef _emmpm_h_
+#define _emmpm_h_
 
 #include <QtCore/QObject>
 #include <QtCore/QString>

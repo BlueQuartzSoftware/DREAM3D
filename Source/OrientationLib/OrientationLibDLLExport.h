@@ -37,8 +37,8 @@
 
 
 
-#ifndef _OrientationLib_COMMON_DLL_EXPORT_H_
-#define _OrientationLib_COMMON_DLL_EXPORT_H_
+#ifndef _orientationlibdllexport_h_
+#define _orientationlibdllexport_h_
 
 
 #if defined (_MSC_VER)

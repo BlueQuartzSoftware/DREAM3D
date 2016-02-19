@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _OrientationAnalysis_H_
-#define _OrientationAnalysis_H_
+#ifndef _orientationanalysisplugin_h_
+#define _orientationanalysisplugin_h_
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>

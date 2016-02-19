@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef INITIALIZATIONFUNCTIONS_H_
-#define INITIALIZATIONFUNCTIONS_H_
+#ifndef _initializationfunctions_h_
+#define _initializationfunctions_h_
 
 //-- MXA Includes
 #include "SIMPLib/SIMPLib.h"

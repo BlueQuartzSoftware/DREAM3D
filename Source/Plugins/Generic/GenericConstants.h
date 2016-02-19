@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _GenericConstants_H_
-#define _GenericConstants_H_
+#ifndef _genericconstants_h_
+#define _genericconstants_h_
 
 #include <QtCore/QString>
 

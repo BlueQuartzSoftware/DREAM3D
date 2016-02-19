@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _H5OIMReader_H_
-#define _H5OIMReader_H_
+#ifndef _h5oimreader_h_
+#define _h5oimreader_h_
 
 #include <hdf5.h>
 

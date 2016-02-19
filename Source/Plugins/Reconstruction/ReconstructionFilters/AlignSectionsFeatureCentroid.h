@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _AlignSectionsFeatureCentroid_H_
-#define _AlignSectionsFeatureCentroid_H_
+#ifndef _alignsectionsfeaturecentroid_h_
+#define _alignsectionsfeaturecentroid_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _SG_BETA_TABLEMODEL_H_
-#define _SG_BETA_TABLEMODEL_H_
+#ifndef _sgbetatablemodel_h_
+#define _sgbetatablemodel_h_
 
 #include <QtCore/QVector>
 #include <QtCore/QVariant>

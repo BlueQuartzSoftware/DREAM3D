@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _AlignSectionsMisorientation_H_
-#define _AlignSectionsMisorientation_H_
+#ifndef _alignsectionsmisorientation_h_
+#define _alignsectionsmisorientation_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

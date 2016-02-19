@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _H5ANGDATALOADER_H_
-#define _H5ANGDATALOADER_H_
+#ifndef _h5angvolumereader_h_
+#define _h5angvolumereader_h_
 
 #include <vector>
 

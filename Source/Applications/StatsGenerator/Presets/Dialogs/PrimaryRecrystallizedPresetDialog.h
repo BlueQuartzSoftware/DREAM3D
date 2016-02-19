@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _PrimaryRecrystallizedPresetDialog_H_
-#define _PrimaryRecrystallizedPresetDialog_H_
+#ifndef _primaryrecrystallizedpresetdialog_h_
+#define _primaryrecrystallizedpresetdialog_h_
 
 #include <QtWidgets/QDialog>
 

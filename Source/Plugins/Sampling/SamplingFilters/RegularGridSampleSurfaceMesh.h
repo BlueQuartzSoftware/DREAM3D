@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _RegularGridSampleSurfaceMesh_H_
-#define _RegularGridSampleSurfaceMesh_H_
+#ifndef _regulargridsamplesurfacemesh_h_
+#define _regulargridsamplesurfacemesh_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

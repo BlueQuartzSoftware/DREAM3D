@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _StatsGenRDFWidget_H_
-#define _StatsGenRDFWidget_H_
+#ifndef _statsgenrdfwidget_h_
+#define _statsgenrdfwidget_h_
 
 #include <QtWidgets/QWidget>
 

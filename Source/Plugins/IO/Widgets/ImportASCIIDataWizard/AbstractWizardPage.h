@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _AbstractWizardPage_H_
-#define _AbstractWizardPage_H_
+#ifndef _abstractwizardpage_h_
+#define _abstractwizardpage_h_
 
 #include <QtWidgets/QWizardPage>
 

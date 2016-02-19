@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _NodesTrianglesToStl_H_
-#define _NodesTrianglesToStl_H_
+#ifndef _nodestrianglestostl_h_
+#define _nodestrianglestostl_h_
 
 #include <QtCore/QString>
 

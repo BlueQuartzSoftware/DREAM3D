@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _FindFeatureNeighborCAxisMisalignments_H_
-#define _FindFeatureNeighborCAxisMisalignments_H_
+#ifndef _findfeatureneighborcaxismisalignments_h_
+#define _findfeatureneighborcaxismisalignments_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

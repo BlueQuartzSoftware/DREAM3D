@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _H5CTFIMPORTER_H_
-#define _H5CTFIMPORTER_H_
+#ifndef _h5ctfimporter_h_
+#define _h5ctfimporter_h_
 
 #include "hdf5.h"
 

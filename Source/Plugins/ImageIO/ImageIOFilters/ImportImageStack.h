@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _ImportImageStack_H_
-#define _ImportImageStack_H_
+#ifndef _importimagestack_h_
+#define _importimagestack_h_
 
 #include <QtCore/QFile>
 

@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _SGLOGNORMALITEMDELEGATE_H_
-#define _SGLOGNORMALITEMDELEGATE_H_
+#ifndef _sglognormalitemdelegate_h_
+#define _sglognormalitemdelegate_h_
 
 #include <iostream>
 

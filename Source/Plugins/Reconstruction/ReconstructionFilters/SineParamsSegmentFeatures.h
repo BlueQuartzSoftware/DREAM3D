@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _SineParamsSegmentFeatures_H_
-#define _SineParamsSegmentFeatures_H_
+#ifndef _sineparamssegmentfeatures_h_
+#define _sineparamssegmentfeatures_h_
 
 #include <QtCore/QString>
 

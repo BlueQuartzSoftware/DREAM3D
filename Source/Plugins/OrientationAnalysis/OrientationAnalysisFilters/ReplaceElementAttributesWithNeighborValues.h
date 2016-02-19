@@ -32,8 +32,8 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _ReplaceElementAttributesWithNeighborValues_H_
-#define _ReplaceElementAttributesWithNeighborValues_H_
+#ifndef _replaceelementattributeswithneighborvalues_h_
+#define _replaceelementattributeswithneighborvalues_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

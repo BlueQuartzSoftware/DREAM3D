@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _PoleFigureImageUtilities_H_
-#define _PoleFigureImageUtilities_H_
+#ifndef _polefigureimageutilities_h_
+#define _polefigureimageutilities_h_
 
 #include <QtCore/QObject>
 #include <QtCore/QVector>

@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _CUBICOPS_H_
-#define _CUBICOPS_H_
+#ifndef _cubicops_h_
+#define _cubicops_h_
 
 
 #include "SIMPLib/SIMPLib.h"

@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _FitCorrelatedFeatureData_H_
-#define _FitCorrelatedFeatureData_H_
+#ifndef _fitcorrelatedfeaturedata_h_
+#define _fitcorrelatedfeaturedata_h_
 
 #include <QtCore/QString>
 #include <set>

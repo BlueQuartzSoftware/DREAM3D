@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _ScalarSegmentFeatures_H_
-#define _ScalarSegmentFeatures_H_
+#ifndef _scalarsegmentfeatures_h_
+#define _scalarsegmentfeatures_h_
 
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int.hpp>

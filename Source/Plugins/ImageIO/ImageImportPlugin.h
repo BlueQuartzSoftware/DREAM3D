@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ImageIOPlugin_H_
-#define _ImageIOPlugin_H_
+#ifndef _imageimportplugin_h_
+#define _imageimportplugin_h_
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>

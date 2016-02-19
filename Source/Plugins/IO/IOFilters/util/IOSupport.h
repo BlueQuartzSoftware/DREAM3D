@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _IOSupport_H_
-#define _IOSupport_H_
+#ifndef _iosupport_h_
+#define _iosupport_h_
 
 #include <hdf5.h>
 

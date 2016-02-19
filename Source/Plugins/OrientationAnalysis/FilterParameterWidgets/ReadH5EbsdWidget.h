@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _QReadH5Ebsd_H_
-#define _QReadH5Ebsd_H_
+#ifndef _readh5ebsdwidget_h_
+#define _readh5ebsdwidget_h_
 
 #include <QtCore/QObject>
 #include <QtCore/QUrl>

@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _OrientationWidget_H_
-#define _OrientationWidget_H_
+#ifndef _orientationwidget_h_
+#define _orientationwidget_h_
 
 #include <QtWidgets/QWidget>
 

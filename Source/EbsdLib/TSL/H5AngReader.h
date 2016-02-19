@@ -37,8 +37,8 @@
 
 
 
-#ifndef _H5ANGREADER_H_
-#define _H5ANGREADER_H_
+#ifndef _h5angreader_h_
+#define _h5angreader_h_
 
 #include <hdf5.h>
 

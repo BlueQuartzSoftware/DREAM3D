@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef ASCIIDataModel_H
-#define ASCIIDataModel_H
+#ifndef _asciidatamodel_h_
+#define _asciidatamodel_h_
 
 #include <QtCore/QAbstractTableModel>
 

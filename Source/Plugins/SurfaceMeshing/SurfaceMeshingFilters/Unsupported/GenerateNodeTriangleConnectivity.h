@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _GenerateNodeTriangleConnectivity_H_
-#define _GenerateNodeTriangleConnectivity_H_
+#ifndef _generatenodetriangleconnectivity_h_
+#define _generatenodetriangleconnectivity_h_
 
 #include <string>
 

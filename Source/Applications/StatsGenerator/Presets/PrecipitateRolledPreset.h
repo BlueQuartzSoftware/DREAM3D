@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _PrecipitateRolledPreset_H_
-#define _PrecipitateRolledPreset_H_
+#ifndef _precipitaterolledpreset_h_
+#define _precipitaterolledpreset_h_
 
 //-- C++ includes
 #include <string>

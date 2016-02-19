@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef CorrelateValuesWithVectorDirection_H_
-#define CorrelateValuesWithVectorDirection_H_
+#ifndef _correlatevalueswithvectordirection_h_
+#define _correlatevalueswithvectordirection_h_
 
 #include <vector>
 #include <QtCore/QString>
