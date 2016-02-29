@@ -171,7 +171,7 @@ void BinaryNodesTrianglesReader::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   SharedVertexList::Pointer vertices = TriangleGeom::CreateSharedVertexList(0);
-  TriangleGeom::Pointer triangleGeom = TriangleGeom::CreateGeometry(0, vertices, SIMPL::Geometry::TriangleGeometry);
+  TriangleGeom::Pointer triangleGeom = TriangleGeom::CreateGeometry(0, vertices, SIMPL::Geometry::TriangleGeometry, !getInPreflight());
   sm->setGeometry(triangleGeom);
 
   dims[0] = 2;

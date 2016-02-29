@@ -141,7 +141,7 @@ void SampleSurfaceMeshSpecifiedPoints::dataCheck()
   DataContainer::Pointer v = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, "SpecifiedPoints");
   if (getErrorCondition() < 0 || NULL == v.get()) { return; }
 
-  VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(1, SIMPL::Geometry::VertexGeometry, false);
+  VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(0, SIMPL::Geometry::VertexGeometry, !getInPreflight());
   v->setGeometry(vertices);
 
   QVector<size_t> tDims(1, 0);
@@ -192,13 +192,7 @@ VertexGeom::Pointer SampleSurfaceMeshSpecifiedPoints::generate_points()
 
   DataContainer::Pointer v = getDataContainerArray()->getDataContainer("SpecifiedPoints");
 
-  bool allocate = false;
-  if (getInPreflight() == false)
-  {
-    allocate = true;
-  }
-
-  VertexGeom::Pointer points = VertexGeom::CreateGeometry(m_NumPoints, "Points", allocate);
+  VertexGeom::Pointer points = VertexGeom::CreateGeometry(m_NumPoints, "Points");
 
   float coords[3] = { 0.0f, 0.0f, 0.0f };
 
