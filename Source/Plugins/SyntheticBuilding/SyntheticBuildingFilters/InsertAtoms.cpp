@@ -417,7 +417,14 @@ void InsertAtoms::assign_points(QVector<VertexGeom::Pointer> points, QVector<Boo
   }
 
   DataContainer::Pointer v = getDataContainerArray()->getDataContainer(getVertexDataContainerName());
-  VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(count, SIMPL::VertexData::SurfaceMeshNodes);
+
+  bool allocate = false;
+  if (getInPreflight() == false)
+  {
+    allocate = true;
+  }
+
+  VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(count, SIMPL::VertexData::SurfaceMeshNodes, allocate);
 
   AttributeMatrix::Pointer vertexAttrMat = v->getAttributeMatrix(getVertexAttributeMatrixName());
   QVector<size_t> tDims(1, count);
