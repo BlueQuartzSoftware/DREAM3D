@@ -335,7 +335,7 @@ RdfData::Pointer StatsGenRDFWidget::getStatisticsData()
   QVector<float> qRdfData = m_RDFTableModel->getData(SGRDFTableModel::Frequency);
   std::vector<float> randomFreq = RadialDistributionFunction::GenerateRandomDistribution(minDistLE->text().toFloat(&ok), maxDistLE->text().toFloat(&ok), numBinsLE->text().toInt(&ok), boxDims, boxRes);
 
-  for (int i = 0; i < qRdfDataFinal.size(); i++)
+  for (int i = 0; i < qRdfDataFinal.size()-1; i++)
   {
     qRdfDataFinal[i] = qRdfData[i + 1] / randomFreq[i + 1];
   }
