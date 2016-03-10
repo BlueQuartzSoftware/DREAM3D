@@ -237,7 +237,7 @@ void AlignSections::execute()
             p->copyTuple( static_cast<size_t>(currentPosition), static_cast<size_t>(newPosition));
           }
         }
-        if ((yspot + yshifts[i]) < 0 || (yspot + yshifts[i]) > dims[1] - 1 || (xspot + xshifts[i]) < 0
+        if ((yspot + yshifts[i]) < 0 || (yspot + yshifts[i]) > static_cast<int64_t>(dims[1] - 1) || (xspot + xshifts[i]) < 0
             || (xspot + xshifts[i]) > static_cast<int64_t>(dims[0]) - 1)
         {
           for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
