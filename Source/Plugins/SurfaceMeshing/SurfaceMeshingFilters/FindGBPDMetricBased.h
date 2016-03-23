@@ -1,13 +1,15 @@
-/* This filter has been created by Krzysztof Glowinski (kglowinski at ymail.com).
- * It adapts the algorithm described in K.Glowinski, A.Morawiec, "Analysis of 
+/* ============================================================================
+ * This filter has been created by Krzysztof Glowinski (kglowinski at ymail.com).
+ * It adapts the algorithm described in K.Glowinski, A.Morawiec, "Analysis of
  * experimental grain boundary distributions based on boundary-space metrics",
  * Metall. Mater. Trans. A 45, 3189-3194 (2014).
  * Besides the algorithm itself, many parts of the code come from
  * the sources of other filters, mainly "Find GBCD" and "Write GBCD Pole Figure (GMT5)".
  * Therefore, the below copyright notice applies.
- *
- * ============================================================================
- * Copyright (c) 2009-2015 BlueQuartz Software, LLC
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+/* ============================================================================
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -41,8 +43,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _FindGBPDMetricBased_H_
-#define _FindGBPDMetricBased_H_
+#ifndef _findgbpdmetricbased_H_
+#define _findgbpdmetricbased_H_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
@@ -85,7 +87,6 @@ class FindGBPDMetricBased : public SurfaceMeshFilter
     SIMPL_FILTER_PARAMETER(bool, SaveRelativeErr)
     Q_PROPERTY(bool SaveRelativeErr READ getSaveRelativeErr WRITE setSaveRelativeErr)
 
-
     SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
@@ -115,6 +116,20 @@ class FindGBPDMetricBased : public SurfaceMeshFilter
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */
     virtual const QString getCompiledLibraryName();
+
+    /**
+     * @brief getBrandingString Returns the branding string for the filter, which is a tag
+     * used to denote the filter's association with specific plugins
+     * @return Branding string
+    */
+    virtual const QString getBrandingString();
+
+    /**
+     * @brief getFilterVersion Returns a version string for this filter. Default
+     * value is an empty string.
+     * @return
+     */
+    virtual const QString getFilterVersion();
 
     /**
      * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -161,29 +176,6 @@ class FindGBPDMetricBased : public SurfaceMeshFilter
     */
     virtual void preflight();
 
- // signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer 
-     */
-  //  void updateFilterParameters(AbstractFilter* filter);
-
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-  //  void parametersChanged();
-
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-  //  void preflightAboutToExecute();
-
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-  //  void preflightExecuted();
-
   protected:
     FindGBPDMetricBased();
 
@@ -200,16 +192,13 @@ class FindGBPDMetricBased : public SurfaceMeshFilter
     DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
     DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
     DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceLabels)
-
     DEFINE_DATAARRAY_VARIABLE(int8_t, NodeTypes)
 
-
-    const void appendSamplPtsFixedZenith(QVector<float> *xVec, QVector<float> *yVec, QVector<float> *zVec,
+    void appendSamplPtsFixedZenith(QVector<float> *xVec, QVector<float> *yVec, QVector<float> *zVec,
                                          double theta, double minPhi, double maxPhi, double step);
 
-    const void appendSamplPtsFixedAzimuth(QVector<float> *xVec, QVector<float> *yVec, QVector<float> *zVec,
+    void appendSamplPtsFixedAzimuth(QVector<float> *xVec, QVector<float> *yVec, QVector<float> *zVec,
                                           double phi, double minTheta, double maxTheta, double step);
-
 
     FindGBPDMetricBased(const FindGBPDMetricBased&); // Copy Constructor Not Implemented
     void operator=(const FindGBPDMetricBased&); // Operator '=' Not Implemented

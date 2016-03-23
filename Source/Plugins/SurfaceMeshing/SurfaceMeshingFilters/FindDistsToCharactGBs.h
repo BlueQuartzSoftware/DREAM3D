@@ -1,11 +1,13 @@
-/* This filter has been created by Krzysztof Glowinski (kglowinski at ymail.com).
+/* ============================================================================
+ * This filter has been created by Krzysztof Glowinski (kglowinski at ymail.com).
  * It computes 'approximate distances' to the nearest characteristic GBs.
  * Besides the calculation of the distances, many parts of the code come from
  * the sources of other filters, mainly "Find GBCD".
  * Therefore, the below copyright notice applies.
- *
- * ============================================================================
- * Copyright (c) 2009-2015 BlueQuartz Software, LLC
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+/* ============================================================================
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -39,15 +41,14 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _FindDistsToCharactGBs_H_
-#define _FindDistsToCharactGBs_H_
+#ifndef _finddiststocharactgbs_H_
+#define _finddiststocharactgbs_H_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
-
 
 /**
  * @brief The FindDistsToCharactGBs class. See [Filter documentation](@ref finddiststocharactgbs) for details.
@@ -80,7 +81,6 @@ class FindDistsToCharactGBs : public SurfaceMeshFilter
     SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceNormalsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceNormalsArrayPath READ getSurfaceMeshFaceNormalsArrayPath WRITE setSurfaceMeshFaceNormalsArrayPath)
 
-
     SIMPL_FILTER_PARAMETER(DataArrayPath, DistToTiltArrayPath)
     Q_PROPERTY(DataArrayPath DistToTiltArrayPath READ getDistToTiltArrayPath WRITE setDistToTiltArrayPath)
 
@@ -97,6 +97,20 @@ class FindDistsToCharactGBs : public SurfaceMeshFilter
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */
     virtual const QString getCompiledLibraryName();
+
+    /**
+     * @brief getBrandingString Returns the branding string for the filter, which is a tag
+     * used to denote the filter's association with specific plugins
+     * @return Branding string
+    */
+    virtual const QString getBrandingString();
+
+    /**
+     * @brief getFilterVersion Returns a version string for this filter. Default
+     * value is an empty string.
+     * @return
+     */
+    virtual const QString getFilterVersion();
 
     /**
      * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -143,29 +157,6 @@ class FindDistsToCharactGBs : public SurfaceMeshFilter
     */
     virtual void preflight();
 
-  //signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer 
-     */
-  //  void updateFilterParameters(AbstractFilter* filter);
-
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-  //  void parametersChanged();
-
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-   // void preflightAboutToExecute();
-
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-   // void preflightExecuted();
-
   protected:
     FindDistsToCharactGBs();
 
@@ -180,7 +171,6 @@ class FindDistsToCharactGBs : public SurfaceMeshFilter
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
     DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
     DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
-
     DEFINE_DATAARRAY_VARIABLE(double, DistToTilt)
     DEFINE_DATAARRAY_VARIABLE(double, DistToTwist)
     DEFINE_DATAARRAY_VARIABLE(double, DistToSymmetric)
@@ -188,8 +178,6 @@ class FindDistsToCharactGBs : public SurfaceMeshFilter
 
     FindDistsToCharactGBs(const FindDistsToCharactGBs&); // Copy Constructor Not Implemented
     void operator=(const FindDistsToCharactGBs&); // Operator '=' Not Implemented
-
-
 };
 
 #endif /* _FindDistsToCharactGBs_H_ */
