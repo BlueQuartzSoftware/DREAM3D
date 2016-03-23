@@ -13,7 +13,7 @@ The above items represent only a subset of the specific capabilities of DREAM.3D
 DREAM.3D is open-source and available under a BSD license. See the Resources/DREAM3D/DREAM3DLicense.txt file that comes with the project for more information.
 
 ## Building DREAM.3D ##
-For information on building DREAM.3D and all its necessary dependencies, see the Documentation/Developer/ directory.
+For information on building DREAM.3D and all its necessary dependencies, see the Documentation/ReferenceManual/Developer/ directory.
 
 ## Getting Help ##
 Please consider signing up for the <a href="https://groups.google.com/forum/?hl=en#!forum/dream3d-users">DREAM.3D Users Google group</a>! It's the fastest way to ask your DREAM.3D questions, get help with using DREAM.3D, and connect with both developers and the community at large.  If you are interested in contributing to the DREAM.3D project, also sign up to the <a href="https://groups.google.com/forum/?hl=en#!forum/dream3d-developers">DREAM.3D Developers Google group</a> to get help with compiling and adding to DREAM.3D. If you find an error with DREAM.3D or want to request a new feature, please [open up an issue](https://github.com/dream3d/DREAM3D/issues).
