@@ -5,7 +5,6 @@ set(${PLUGIN_NAME}_Widgets_SRCS "")
 set(${PLUGIN_NAME}_Widgets_UIS "")
 
 set(${PLUGIN_NAME}_Widgets_MOC_HDRS ${${PLUGIN_NAME}_Widgets_MOC_HDRS}
-    ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/DelimitedOrFixedWidthPage.h
     ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/DelimitedPage.h
     ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/DataFormatPage.h
     ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/TupleTableWidget.h
@@ -17,7 +16,6 @@ set(${PLUGIN_NAME}_Widgets_MOC_HDRS ${${PLUGIN_NAME}_Widgets_MOC_HDRS}
   )
 
 set(${PLUGIN_NAME}_Widgets_SRCS ${${PLUGIN_NAME}_Widgets_SRCS}
-    ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/DelimitedOrFixedWidthPage.cpp
     ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/DelimitedPage.cpp
     ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/DataFormatPage.cpp
     ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/TupleTableWidget.cpp
@@ -30,7 +28,6 @@ set(${PLUGIN_NAME}_Widgets_SRCS ${${PLUGIN_NAME}_Widgets_SRCS}
     )
 
 set(${PLUGIN_NAME}_Widgets_UIS ${${PLUGIN_NAME}_Widgets_UIS}
-    ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/UI_Files/DelimitedOrFixedWidthPage.ui
     ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/UI_Files/DelimitedPage.ui
     ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/UI_Files/DataFormatPage.ui
     ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/UI_Files/TupleTableWidget.ui

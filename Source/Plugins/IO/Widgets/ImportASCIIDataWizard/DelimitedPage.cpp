@@ -65,6 +65,8 @@ void DelimitedPage::setupGui()
 {
   ASCIIDataModel* model = ASCIIDataModel::Instance();
 
+  refreshModel();
+
   dataView->setModel(model);
   dataView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
@@ -101,7 +103,7 @@ void DelimitedPage::checkBox_Toggled(int state)
 
   QList<char> delimiters = ImportASCIIDataWizard::ConvertToDelimiters(tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter);
 
-  QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, delimiters, false, consecutiveDelimiters);
+  QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, delimiters, consecutiveDelimiters);
   ImportASCIIDataWizard::InsertTokenizedLines(tokenizedLines, 1);
 }
 
@@ -125,8 +127,34 @@ void DelimitedPage::refreshModel()
 
   QList<char> delimiters = ImportASCIIDataWizard::ConvertToDelimiters(tabAsDelimiter, semicolonAsDelimiter, commaAsDelimiter, spaceAsDelimiter);
 
-  QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, delimiters, false, consecutiveDelimiters);
+  QList<QStringList> tokenizedLines = ImportASCIIDataWizard::TokenizeLines(lines, delimiters, consecutiveDelimiters);
   ImportASCIIDataWizard::InsertTokenizedLines(tokenizedLines, 1);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DelimitedPage::showEvent(QShowEvent* event)
+{
+  ASCIIDataModel* model = ASCIIDataModel::Instance();
+  model->clearContents();
+
+  if (model->columnCount() > 0)
+  {
+    model->removeColumns(0, model->columnCount());
+  }
+
+  // This is the first screen, so everything automatically goes into one column for now
+  model->insertColumn(0);
+
+  for (int row = 0; row < model->rowCount(); row++)
+  {
+    QString line = model->originalString(row);
+
+    QModelIndex index = model->index(row, 0);
+
+    model->setData(index, line, Qt::DisplayRole);
+  }
 }
 
 // -----------------------------------------------------------------------------

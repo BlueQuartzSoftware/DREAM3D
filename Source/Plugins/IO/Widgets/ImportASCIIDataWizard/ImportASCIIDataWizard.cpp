@@ -37,7 +37,6 @@
 
 #include <QtCore/QFile>
 
-#include "DelimitedOrFixedWidthPage.h"
 #include "DelimitedPage.h"
 #include "DataFormatPage.h"
 #include "ASCIIDataModel.h"
@@ -59,9 +58,6 @@ ImportASCIIDataWizard::ImportASCIIDataWizard(const QString &inputFilePath, int n
   //m_RefreshBtn = new QPushButton("Refresh", this);
   //connect(m_RefreshBtn, SIGNAL(pressed()), this, SLOT(refreshModel()));
   //setButton(QWizard::HelpButton, m_RefreshBtn);
-
-  DelimitedOrFixedWidthPage* dOrFPage = new DelimitedOrFixedWidthPage(inputFilePath, numLines, this);
-  setPage(DelimitedOrFixedWidth, dOrFPage);
 
   DelimitedPage* dPage = new DelimitedPage(inputFilePath, numLines, this);
   setPage(Delimited, dPage);
@@ -157,49 +153,51 @@ QStringList ImportASCIIDataWizard::ReadLines(const QString &inputFilePath, int b
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QStringList ImportASCIIDataWizard::TokenizeLine(QString line, QList<char> delimiters, bool isFixedWidth, bool consecutiveDelimiters)
+QStringList ImportASCIIDataWizard::TokenizeLine(QString line, QList<char> delimiters, bool consecutiveDelimiters)
 {
-  QString expStr = "";
-  for (int i = 0; i < delimiters.size(); i++)
-  {
-    expStr.append(delimiters[i]);
-    expStr.append('|');
-  }
-  if (isFixedWidth == true)
-  {
-    expStr.append("\t|");
-    expStr.append(" |");
-  }
-  expStr.chop(1);
-  QRegularExpression exp(expStr);
+  QStringList tokenList;
 
-  QStringList tokenizedLine;
-  if (expStr.isEmpty() == true)
+  if (delimiters.isEmpty() == true)
   {
-    tokenizedLine.push_back(line);
-  }
-  else if (consecutiveDelimiters == true || isFixedWidth == true)
-  {
-    tokenizedLine = line.split(exp, QString::SkipEmptyParts);
-  }
-  else
-  {
-    tokenizedLine = line.split(exp, QString::KeepEmptyParts);
+    tokenList.push_back(line);
+    return tokenList;
   }
 
-  return tokenizedLine;
+  int start = 0;
+  for (int i=0; i<line.size(); i++)
+  {
+    char character = line.at(i).toLatin1();
+    if (delimiters.contains(character) == true)
+    {
+      tokenList.push_back(line.mid(start, i - start + 1));
+
+      if (consecutiveDelimiters == true)
+      {
+        while (delimiters.contains(character) == true)
+        {
+          i++;
+          character = line.at(i).toLatin1();
+        }
+        i--;
+      }
+
+      start = i + 1;
+    }
+  }
+
+  return tokenList;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QStringList> ImportASCIIDataWizard::TokenizeLines(QStringList lines, QList<char> delimiters, bool isFixedWidth, bool consecutiveDelimiters)
+QList<QStringList> ImportASCIIDataWizard::TokenizeLines(QStringList lines, QList<char> delimiters, bool consecutiveDelimiters)
 {
   QList<QStringList> tokenizedLines;
   for (int row = 0; row < lines.size(); row++)
   {
     QString line = lines[row];
-    QStringList tokenizedLine = TokenizeLine(line, delimiters, isFixedWidth, consecutiveDelimiters);
+    QStringList tokenizedLine = TokenizeLine(line, delimiters, consecutiveDelimiters);
 
     tokenizedLines.push_back(tokenizedLine);
   }

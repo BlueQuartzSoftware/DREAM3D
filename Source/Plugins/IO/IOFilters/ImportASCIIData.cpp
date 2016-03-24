@@ -286,7 +286,6 @@ void ImportASCIIData::execute()
   QStringList headers = wizardData.dataHeaders;
   QStringList dataTypes = wizardData.dataTypes;
   QList<char> delimiters = wizardData.delimiters;
-  bool isFixedWidth = wizardData.isFixedWidth;
   bool consecutiveDelimiters = wizardData.consecutiveDelimiters;
   int numLines = wizardData.numberOfLines;
   int beginIndex = wizardData.beginIndex;
@@ -381,7 +380,7 @@ void ImportASCIIData::execute()
     for (int lineNum = beginIndex; lineNum <= numLines; lineNum++)
     {
       QString line = in.readLine();
-      QStringList tokens = ImportASCIIDataWizard::TokenizeLine(line, delimiters, isFixedWidth, consecutiveDelimiters);
+      QStringList tokens = ImportASCIIDataWizard::TokenizeLine(line, delimiters, consecutiveDelimiters);
 
       if (dataTypes.size() != tokens.size())
       {
