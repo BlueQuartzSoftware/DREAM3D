@@ -169,20 +169,30 @@ QStringList ImportASCIIDataWizard::TokenizeLine(QString line, QList<char> delimi
     char character = line.at(i).toLatin1();
     if (delimiters.contains(character) == true)
     {
-      tokenList.push_back(line.mid(start, i - start + 1));
-
-      if (consecutiveDelimiters == true)
+      QString token = line.mid(start, i - start);
+      if (token.isEmpty() == false)
       {
-        while (delimiters.contains(character) == true)
+        tokenList.push_back(token);
+
+        if (consecutiveDelimiters == true)
         {
-          i++;
-          character = line.at(i).toLatin1();
+          while (i < line.size() - 1 && delimiters.contains(character) == true)
+          {
+            i++;
+            character = line.at(i).toLatin1();
+          }
+          i--;
         }
-        i--;
       }
 
       start = i + 1;
     }
+  }
+
+  QString token = line.mid(start, line.size() - start);
+  if (token.isEmpty() == false)
+  {
+    tokenList.push_back(token);
   }
 
   return tokenList;
