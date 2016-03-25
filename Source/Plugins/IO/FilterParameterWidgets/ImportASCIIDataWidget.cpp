@@ -169,25 +169,21 @@ void ImportASCIIDataWidget::on_importFileBtn_pressed()
 
     // Validate that the file is an ASCII file
     {
-      FILE* file;
-      long fileSize;
       long bufferSize = 2048;
       char* buffer;
       size_t result;
 
+      // Obtain the file size
+      QFile qFile(filePath);
+      long fileSize = qFile.size();
+
       // Open the file
-      file = fopen(filePath.toStdString().c_str(), "rb");
-      if (file == NULL)
+      if (qFile.open(QIODevice::ReadOnly) == false)
       {
         QString errorStr = "Error: Unable to open file \"" + filePath + "\"";
         fputs(errorStr.toStdString().c_str(), stderr);
         return;
       }
-
-      // Obtain the file size
-      fseek(file, 0, SEEK_END);
-      fileSize = ftell(file);
-      rewind(file);
 
       long actualSize;
       if (fileSize <= bufferSize)
@@ -209,7 +205,7 @@ void ImportASCIIDataWidget::on_importFileBtn_pressed()
       }
 
       // Copy the file contents into the buffer
-      result = fread(buffer, 1, actualSize, file);
+      result = qFile.read(buffer, actualSize);
       if (result != actualSize)
       {
         QString errorStr = "Error: There was an error reading the data from \"" + filePath + "\"";
@@ -259,7 +255,7 @@ void ImportASCIIDataWidget::on_importFileBtn_pressed()
       }
 
       // Close the file and free the memory from the buffer
-      fclose(file);
+      qFile.close();
       free(buffer);
     }
 
