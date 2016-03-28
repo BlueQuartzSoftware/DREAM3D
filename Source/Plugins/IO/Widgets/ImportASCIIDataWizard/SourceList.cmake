@@ -13,6 +13,7 @@ set(${PLUGIN_NAME}_Widgets_MOC_HDRS ${${PLUGIN_NAME}_Widgets_MOC_HDRS}
     ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/AbstractWizardPage.h
     ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/ASCIIDataModel.h
     ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/EditHeadersDialog.h
+    ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/LineCounterObject.h
   )
 
 set(${PLUGIN_NAME}_Widgets_SRCS ${${PLUGIN_NAME}_Widgets_SRCS}
@@ -25,6 +26,7 @@ set(${PLUGIN_NAME}_Widgets_SRCS ${${PLUGIN_NAME}_Widgets_SRCS}
     ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/ASCIIDataModel.cpp
     ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/ASCIIDataItem.cpp
     ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/EditHeadersDialog.cpp
+    ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets/ImportASCIIDataWizard/LineCounterObject.cpp
     )
 
 set(${PLUGIN_NAME}_Widgets_UIS ${${PLUGIN_NAME}_Widgets_UIS}
