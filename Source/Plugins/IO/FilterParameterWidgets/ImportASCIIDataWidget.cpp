@@ -169,13 +169,13 @@ void ImportASCIIDataWidget::on_importFileBtn_pressed()
 
     // Validate that the file is an ASCII file
     {
-      long bufferSize = 2048;
+      int64_t bufferSize = 2048;
       char* buffer;
       size_t result;
 
       // Obtain the file size
       QFile qFile(filePath);
-      long fileSize = qFile.size();
+      int64_t fileSize = qFile.size();
 
       // Open the file
       if (qFile.open(QIODevice::ReadOnly) == false)
@@ -185,7 +185,7 @@ void ImportASCIIDataWidget::on_importFileBtn_pressed()
         return;
       }
 
-      long actualSize;
+      int64_t actualSize;
       if (fileSize <= bufferSize)
       {
         actualSize = fileSize;
