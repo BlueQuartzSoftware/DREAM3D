@@ -56,6 +56,7 @@ protected slots:
 
 signals:
   void finished();
+  void progressUpdateGenerated(double percentage);
 
 private:
   QString                                               m_FilePath;

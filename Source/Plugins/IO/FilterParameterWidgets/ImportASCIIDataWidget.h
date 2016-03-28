@@ -82,6 +82,7 @@ class ImportASCIIDataWidget : public FilterParameterWidget, private Ui::ImportAS
     void on_removeFileBtn_pressed();
 
     void lineCountDidFinish();
+    void updateProgress(double percentage);
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
@@ -98,8 +99,6 @@ class ImportASCIIDataWidget : public FilterParameterWidget, private Ui::ImportAS
 
     QThread*                                          m_WorkerThread;
     LineCounterObject*                                m_LineCounter;
-
-    QMovie*                                           m_LoadingGif;
 
     ImportASCIIDataWidget(const ImportASCIIDataWidget&); // Copy Constructor Not Implemented
     void operator=(const ImportASCIIDataWidget&); // Operator '=' Not Implemented

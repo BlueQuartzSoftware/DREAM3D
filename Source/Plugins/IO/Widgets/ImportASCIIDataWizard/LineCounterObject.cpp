@@ -99,14 +99,25 @@ void LineCounterObject::run()
     return;
   }
 
+  int64_t currentByte = 0;
   while (qFile.atEnd() == false)
   {
     // Copy the file contents into the buffer
     result = qFile.read(buffer, actualSize);
 
     // Check the buffer for new lines and carriage returns
+    int64_t fiveThresh = fileSize / 20.0;
+    int64_t currentThresh = fiveThresh;
     for (int i = 0; i < actualSize; i++)
     {
+      currentByte++;
+      if (currentByte > currentThresh)
+      {
+        double progress = static_cast<double>(currentByte)/static_cast<double>(fileSize)*100;
+        emit progressUpdateGenerated(progress);
+        currentThresh = currentThresh + fiveThresh;
+      }
+
       char currentChar = buffer[i];
 
       if (currentChar == '\n')

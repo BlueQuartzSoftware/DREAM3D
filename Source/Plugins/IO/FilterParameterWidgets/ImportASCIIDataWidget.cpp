@@ -100,10 +100,6 @@ void ImportASCIIDataWidget::setupGui()
   // Catch when the filter wants its values updated
   connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)),
     this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
-
-  // Create the loading gif
-  m_LoadingGif = new QMovie(":/loading.gif");
-  loadingLabel->setMovie(m_LoadingGif);
   
   // If the filter was loaded from a pipeline file, fill in the information in the widget
   if (m_Filter->getWizardData().isEmpty() == false)
@@ -137,7 +133,7 @@ void ImportASCIIDataWidget::setupGui()
     tupleDims->hide();
   }
 
-  loadingLabel->hide();
+  loadingProgress->hide();
 }
 
 // -----------------------------------------------------------------------------
@@ -296,10 +292,13 @@ void ImportASCIIDataWidget::on_importFileBtn_pressed()
     connect(m_WorkerThread, SIGNAL(finished()),
             this, SLOT( lineCountDidFinish() ) );
 
+    // Connection to send progress updates
+    connect(m_LineCounter, SIGNAL(progressUpdateGenerated(double)),
+            this, SLOT( updateProgress(double) ) );
+
     // Move the QFile object into the thread that we just created.
     m_LineCounter->moveToThread(m_WorkerThread);
-    m_LoadingGif->start();
-    loadingLabel->show();
+    loadingProgress->show();
     m_WorkerThread->start();
   }
 }
@@ -307,8 +306,20 @@ void ImportASCIIDataWidget::on_importFileBtn_pressed()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ImportASCIIDataWidget::updateProgress(double percentage)
+{
+  int64_t progressInt = static_cast<int64_t>(percentage);
+  loadingProgress->setText(QString::number(progressInt) + "%");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ImportASCIIDataWidget::lineCountDidFinish()
 {
+  loadingProgress->setText("0%");
+  loadingProgress->hide();
+
   int numOfLines = m_LineCounter->getNumberOfLines();
 
   m_ImportWizard = new ImportASCIIDataWizard(m_FilePath, numOfLines, this);
@@ -338,11 +349,9 @@ void ImportASCIIDataWidget::lineCountDidFinish()
     tupleCount->show();
     tupleDimsLabel->show();
     tupleDims->show();
+
     emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
   }
-
-  m_LoadingGif->stop();
-  loadingLabel->hide();
 }
 
 // -----------------------------------------------------------------------------
