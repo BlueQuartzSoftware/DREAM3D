@@ -37,6 +37,8 @@
 
 #include <QtCore/QTextStream>
 
+#include "SIMPLib/SIMPLibTypes.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -62,71 +64,66 @@ LineCounterObject::~LineCounterObject()
 void LineCounterObject::run()
 {
   // Validate that the file is an ASCII file
+  int64_t bufferSize = 262144;
+  char* buffer;
+  size_t result;
+
+  // Obtain the file size
+  QFile qFile(m_FilePath);
+  int64_t fileSize = qFile.size();
+
+  // Open the file
+  if (qFile.open(QIODevice::ReadOnly) == false)
   {
-    int64_t bufferSize = 262144;
-    char* buffer;
-    size_t result;
+    QString errorStr = "Error: Unable to open file \"" + m_FilePath + "\"";
+    fputs(errorStr.toStdString().c_str(), stderr);
+    return;
+  }
 
-    // Obtain the file size
-    QFile qFile(m_FilePath);
-    int64_t fileSize = qFile.size();
+  int64_t actualSize;
+  if (fileSize <= bufferSize)
+  {
+    actualSize = fileSize;
+  }
+  else
+  {
+    actualSize = bufferSize;
+  }
 
-    // Open the file
-    if (qFile.open(QIODevice::ReadOnly) == false)
-    {
-      QString errorStr = "Error: Unable to open file \"" + m_FilePath + "\"";
-      fputs(errorStr.toStdString().c_str(), stderr);
-      return;
-    }
+  // Allocate the buffer
+  buffer = (char*)malloc(sizeof(char)*actualSize);
+  if (buffer == NULL)
+  {
+    QString errorStr = "Error: Unable to allocate memory to read in data from \"" + m_FilePath + "\"";
+    fputs(errorStr.toStdString().c_str(), stderr);
+    return;
+  }
 
-    int64_t actualSize;
-    if (fileSize <= bufferSize)
-    {
-      actualSize = fileSize;
-    }
-    else
-    {
-      actualSize = bufferSize;
-    }
-
-    // Allocate the buffer
-    buffer = (char*)malloc(sizeof(char)*actualSize);
-    if (buffer == NULL)
-    {
-      QString errorStr = "Error: Unable to allocate memory to read in data from \"" + m_FilePath + "\"";
-      fputs(errorStr.toStdString().c_str(), stderr);
-      return;
-    }
-
+  while (qFile.atEnd() == false)
+  {
     // Copy the file contents into the buffer
     result = qFile.read(buffer, actualSize);
-    if (result != actualSize)
-    {
-      QString errorStr = "Error: There was an error reading the data from \"" + m_FilePath + "\"";
-      fputs(errorStr.toStdString().c_str(), stderr);
-      return;
-    }
 
     // Check the buffer for new lines and carriage returns
     for (int i = 0; i < actualSize; i++)
     {
       char currentChar = buffer[i];
 
-      if (currentChar == 10)
+      if (currentChar == '\n')
       {
         m_NumOfLines++;
       }
-      else if (currentChar == 13 && i+1<actualSize && buffer[i+1] == 10)
+      else if (currentChar == '\r' && i + 1 < actualSize && buffer[i + 1] == '\n')
       {
         m_NumOfLines++;
         i++;
       }
     }
-
-    // Close the file and free the memory from the buffer
-    qFile.close();
-    free(buffer);
   }
+
+  // Close the file and free the memory from the buffer
+  qFile.close();
+  free(buffer);
 
   emit finished();
 }
