@@ -575,7 +575,7 @@ void ReadEdaxH5Data::copyRawEbsdData(H5OIMReader* reader, QVector<size_t>& tDims
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
   AttributeMatrix::Pointer ebsdAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
 
-  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements() / m_NumberOfScans;
+  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getXPoints() * m->getGeometryAs<ImageGeom>()->getYPoints();
 
   // Prepare the Cell Attribute Matrix with the correct number of tuples based on the total points being read from the file.
   tDims.resize(3);
@@ -608,7 +608,7 @@ void ReadEdaxH5Data::copyRawEbsdData(H5OIMReader* reader, QVector<size_t>& tDims
     f3 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Phi2));
     cDims[0] = 3;
     fArray = std::dynamic_pointer_cast<FloatArrayType>(m_EbsdArrayMap.value(SIMPL::CellData::EulerAngles));
-    float* cellEulerAngles = fArray->getPointer(offset);
+    float* cellEulerAngles = fArray->getTuplePointer(offset);
 
     for (size_t i = 0; i < totalPoints; i++)
     {
