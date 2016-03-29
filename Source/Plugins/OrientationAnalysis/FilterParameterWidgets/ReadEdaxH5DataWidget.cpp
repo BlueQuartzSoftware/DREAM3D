@@ -190,6 +190,8 @@ void ReadEdaxH5DataWidget::updateList()
     totalScanNames->clear();
     totalScanNames->addItems(choices);
 
+    sortList(totalScanNames, Qt::AscendingOrder);
+
     for (int i = 0; i < selectedScanNames->count(); i++)
     {
       QString name = selectedScanNames->item(i)->text();
@@ -219,6 +221,8 @@ void ReadEdaxH5DataWidget::on_addScanName_pressed()
       selectedScanNames->addItem(currentName);
     }
 
+    on_stackLowToHighBtn_toggled(stackLowToHighBtn->isChecked());
+
     emit parametersChanged();
   }
 }
@@ -243,6 +247,8 @@ void ReadEdaxH5DataWidget::on_removeScanName_pressed()
       delete item;
     }
 
+    on_stackLowToHighBtn_toggled(stackLowToHighBtn->isChecked());
+
     emit parametersChanged();
   }
 }
@@ -250,9 +256,16 @@ void ReadEdaxH5DataWidget::on_removeScanName_pressed()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadEdaxH5DataWidget::on_ascendingBtn_pressed()
+void ReadEdaxH5DataWidget::on_stackLowToHighBtn_toggled(bool checked)
 {
-  selectedScanNames->sortItems(Qt::AscendingOrder);
+  if (checked == true)
+  {
+    sortList(selectedScanNames, Qt::AscendingOrder);
+  }
+  else
+  {
+    sortList(selectedScanNames, Qt::DescendingOrder);
+  }
 
   emit parametersChanged();
 }
@@ -260,10 +273,49 @@ void ReadEdaxH5DataWidget::on_ascendingBtn_pressed()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadEdaxH5DataWidget::on_descendingBtn_pressed()
+void ReadEdaxH5DataWidget::sortList(DREAM3DListWidget* listWidget, Qt::SortOrder order)
 {
-  selectedScanNames->sortItems(Qt::DescendingOrder);
+  QMap<int, QString> sortingMap;
+  for (int i = 0; i < listWidget->count(); i++)
+  {
+    QRegularExpression regExp("([A-Z]|[a-z]|_)+|\\d+");
+    QString selectedScanName = listWidget->item(i)->text();
+    QRegularExpressionMatchIterator iter = regExp.globalMatch(selectedScanName);
 
-  emit parametersChanged();
+    while (iter.hasNext())
+    {
+      QRegularExpressionMatch match = iter.next();
+      bool ok;
+      int num = match.captured().toInt(&ok);
+      if (ok == true)
+      {
+        sortingMap.insert(num, selectedScanName);
+      }
+    }
+  }
+
+  QStringList scanNames;
+  if (order == Qt::AscendingOrder)
+  {
+    QMapIterator<int, QString> iter(sortingMap);
+    while (iter.hasNext())
+    {
+      iter.next();
+      scanNames.push_back(iter.value());
+    }
+  }
+  else
+  {
+    QMapIterator<int, QString> iter(sortingMap);
+    iter.toBack();
+    while (iter.hasPrevious())
+    {
+      iter.previous();
+      scanNames.push_back(iter.value());
+    }
+  }
+
+  listWidget->clear();
+  listWidget->addItems(scanNames);
 }
 

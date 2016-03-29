@@ -87,8 +87,7 @@ class ReadEdaxH5DataWidget : public FilterParameterWidget, private Ui::ReadEdaxH
 
     void on_addScanName_pressed();
     void on_removeScanName_pressed();
-    void on_ascendingBtn_pressed();
-    void on_descendingBtn_pressed();
+    void on_stackLowToHighBtn_toggled(bool checked);
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
@@ -97,6 +96,8 @@ class ReadEdaxH5DataWidget : public FilterParameterWidget, private Ui::ReadEdaxH
   private:
     ReadEdaxH5Data*                         m_Filter;
     ReadEdaxH5DataFilterParameter*          m_FilterParameter;
+
+    void sortList(DREAM3DListWidget* listWidget, Qt::SortOrder order);
 
     ReadEdaxH5DataWidget(const ReadEdaxH5DataWidget&); // Copy Constructor Not Implemented
     void operator=(const ReadEdaxH5DataWidget&); // Operator '=' Not Implemented
