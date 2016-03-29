@@ -10,8 +10,8 @@
 * San Francisco, California, 94105, USA.
  ***/
 
-#ifndef H_CENTIPEDE_BASICS_MATH_GEOM_PLANE
-#define H_CENTIPEDE_BASICS_MATH_GEOM_PLANE
+#ifndef _plane_h_
+#define _plane_h_
 
 #include <ostream>
 

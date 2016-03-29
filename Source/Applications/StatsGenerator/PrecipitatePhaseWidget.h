@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _PrecipitatePhaseWidget_H_
-#define _PrecipitatePhaseWidget_H_
+#ifndef _precipitatephasewidget_h_
+#define _precipitatephasewidget_h_
 
 #include <QtCore/QList>
 #include <QtCore/QVector>

@@ -1,5 +1,5 @@
-#ifndef _ReconstructionConstants_H_
-#define _ReconstructionConstants_H_
+#ifndef _reconstructionconstants_h_
+#define _reconstructionconstants_h_
 
 #include <QtCore/QString>
 

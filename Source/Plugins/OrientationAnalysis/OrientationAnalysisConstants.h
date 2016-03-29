@@ -1,5 +1,5 @@
-#ifndef _OrientationAnalysisConstants_H_
-#define _OrientationAnalysisConstants_H_
+#ifndef _orientationanalysisconstants_h_
+#define _orientationanalysisconstants_h_
 
 #include <QtCore/QString>
 /**

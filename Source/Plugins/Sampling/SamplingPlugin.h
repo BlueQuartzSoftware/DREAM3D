@@ -2,8 +2,8 @@
  * Your License or Copyright Information can go here
  */
 
-#ifndef _SamplingPlugin_H_
-#define _SamplingPlugin_H_
+#ifndef _samplingplugin_h_
+#define _samplingplugin_h_
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>

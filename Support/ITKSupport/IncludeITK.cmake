@@ -32,7 +32,7 @@ function(AddITKCopyInstallRules)
 
     if(TARGET ${Z_LIBNAME})
 
-      GET_TARGET_PROPERTY(LibPath ${Z_LIBNAME} IMPORTED_LOCATION_${TYPE})
+      GET_TARGET_PROPERTY(LibPath ${Z_LIBNAME} LOCATION_${TYPE})
       GET_TARGET_PROPERTY(LibType ${Z_LIBNAME} TYPE)
 
       if(0)

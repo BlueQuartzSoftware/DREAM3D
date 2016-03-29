@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -141,7 +141,7 @@ void SampleSurfaceMeshSpecifiedPoints::dataCheck()
   DataContainer::Pointer v = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, "SpecifiedPoints");
   if (getErrorCondition() < 0 || NULL == v.get()) { return; }
 
-  VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(1, SIMPL::Geometry::VertexGeometry);
+  VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(0, SIMPL::Geometry::VertexGeometry, !getInPreflight());
   v->setGeometry(vertices);
 
   QVector<size_t> tDims(1, 0);
@@ -191,6 +191,7 @@ VertexGeom::Pointer SampleSurfaceMeshSpecifiedPoints::generate_points()
   }
 
   DataContainer::Pointer v = getDataContainerArray()->getDataContainer("SpecifiedPoints");
+
   VertexGeom::Pointer points = VertexGeom::CreateGeometry(m_NumPoints, "Points");
 
   float coords[3] = { 0.0f, 0.0f, 0.0f };

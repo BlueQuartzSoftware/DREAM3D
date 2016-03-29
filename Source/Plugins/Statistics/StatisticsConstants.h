@@ -1,5 +1,5 @@
-#ifndef _StatisticsConstants_H_
-#define _StatisticsConstants_H_
+#ifndef _statisticsconstants_h_
+#define _statisticsconstants_h_
 
 #include <QtCore/QString>
 

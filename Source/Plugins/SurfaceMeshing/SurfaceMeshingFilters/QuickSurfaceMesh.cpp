@@ -1,5 +1,5 @@
 /* ============================================================================
- * Copyright (c) 2009-2015 BlueQuartz Software, LLC
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -238,7 +238,7 @@ void QuickSurfaceMesh::dataCheck()
   
   // Create a Triangle Geometry
   SharedVertexList::Pointer vertices = TriangleGeom::CreateSharedVertexList(0);
-  TriangleGeom::Pointer triangleGeom = TriangleGeom::CreateGeometry(0, vertices, SIMPL::Geometry::TriangleGeometry);
+  TriangleGeom::Pointer triangleGeom = TriangleGeom::CreateGeometry(0, vertices, SIMPL::Geometry::TriangleGeometry, !getInPreflight());
   sm->setGeometry(triangleGeom);
   
   cDims[0] = 2;

@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -516,58 +516,6 @@ bool SplitFilterHeaderCodes( AbstractFilter::Pointer filter, const QString& hFil
   return didReplace;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool FixIncludeGuard( AbstractFilter::Pointer filter, const QString& hFile, const QString& cppFile)
-{
-  QString contents;
-  QFileInfo fi(hFile);
-  {
-    // Read the Source File
-    //    if (fi.baseName().compare("GenerateVectorColors") != 0)
-    //    {
-    //      return false;
-    //    }
-
-    QFile source(hFile);
-    source.open(QFile::ReadOnly);
-    contents = source.readAll();
-    source.close();
-  }
-
-
-  QStringList names;
-  bool didReplace = false;
-
-  QString searchString = "#ifndef";
-  QString replaceString = "#ifndef _" + fi.baseName() + "_H_";
-  QStringList outLines;
-  QStringList list = contents.split(QRegExp("\\n"));
-  QStringListIterator sourceLines(list);
-  QString body;
-
-  int index = 0;
-  while (sourceLines.hasNext())
-  {
-    QString line = sourceLines.next();
-    if(line.contains(searchString) )
-    {
-      outLines.push_back(replaceString);
-      outLines.push_back("#define _" + fi.baseName() + "_H_");
-      line = sourceLines.next(); // Eat the next line
-      didReplace = true;
-    }
-    else
-    {
-      outLines.push_back(line);
-    }
-  }
-
-  writeOutput(didReplace, outLines, hFile);
-  index++;
-  return didReplace;
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -757,6 +705,60 @@ QString findPath(const QString& groupName, const QString& filtName, const QStrin
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+bool ReplaceIncludeGuard(const QString& hFile)
+{
+  QString contents;
+  QFileInfo fi(hFile);
+  {
+    // Read the Source File
+    if (fi.suffix().compare("h") != 0)
+    {
+      return false;
+    }
+
+    QFile source(hFile);
+    source.open(QFile::ReadOnly);
+    contents = source.readAll();
+    source.close();
+  }
+
+
+  QStringList names;
+  bool didReplace = false;
+
+  QString searchString = "#ifndef";
+  QString replaceString = "#ifndef _" + fi.baseName().toLower() + "_h_";
+  QStringList outLines;
+  QStringList list = contents.split(QRegExp("\\n"));
+  QStringListIterator sourceLines(list);
+  QString body;
+
+  int index = 0;
+  while (sourceLines.hasNext())
+  {
+    QString line = sourceLines.next();
+    if(line.contains(searchString) )
+    {
+      outLines.push_back(replaceString);
+      outLines.push_back("#define _" + fi.baseName().toLower() + "_h_");
+      line = sourceLines.next(); // Eat the next line
+      didReplace = true;
+    }
+    else
+    {
+      outLines.push_back(line);
+    }
+  }
+
+  writeOutput(didReplace, outLines, hFile);
+  index++;
+  return didReplace;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ReplaceLicenseText(QString absPath)
 {
   QString contents;
@@ -813,7 +815,7 @@ void ReplaceLicenseText(QString absPath)
       QTextStream out(&license);
 
       out << "/* ============================================================================\n";
-      out << "* Copyright (c) 2009-2015 BlueQuartz Software, LLC\n";
+      out << "* Copyright (c) 2009-2016 BlueQuartz Software, LLC\n";
       out << "*\n";
       out << "* Redistribution and use in source and binary forms, with or without modification,\n";
       out << "* are permitted provided that the following conditions are met:\n";
@@ -879,9 +881,9 @@ void ReplaceLicenseCodeRecursively(QDir currentDir)
 
   QStringList filters;
   filters.append("*.h");
-  filters.append("*.cpp");
+ // filters.append("*.cpp");
   filters.append("*.hpp");
-  filters.append("*.in");
+//  filters.append("*.in");
 
   qDebug() << currentDir;
 
@@ -903,7 +905,8 @@ void ReplaceLicenseCodeRecursively(QDir currentDir)
   foreach(QFileInfo itemInfo, itemList)
   {
     QString itemFilePath = itemInfo.absoluteFilePath();
-    ReplaceLicenseText(itemFilePath);
+    //ReplaceLicenseText(itemFilePath);
+    ReplaceIncludeGuard(itemFilePath);
   }
 }
 
@@ -1190,7 +1193,7 @@ void ReplaceGrepSearchesRecursively(QDir currentDir)
 {
 
   QStringList filters;
-  filters.append("*.cpp");
+//  filters.append("*.cpp");
   filters.append("*.h");
 
   if(currentDir.dirName().compare("zRel") == 0 || currentDir.dirName().compare("Build") == 0)
@@ -1320,8 +1323,14 @@ int main(int argc, char* argv[])
 //  GenerateMarkDownDocs();
   GenerateFilterParametersCode();
 #else
-  ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/Source" ) );
+//  ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/Source" ) );
 //  ReplaceGrepSearchesRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins" ) );
+  ReplaceLicenseCodeRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/Source" ));
+  ReplaceLicenseCodeRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/Test" ));
+  ReplaceLicenseCodeRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/Tools" ));
+  ReplaceLicenseCodeRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/../SIMPL" ));
+  ReplaceLicenseCodeRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/../SIMPLView" ));
+  ReplaceLicenseCodeRecursively( QDir ( D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins" ));
 
 #endif
   return 0;

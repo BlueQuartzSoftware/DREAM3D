@@ -8,8 +8,8 @@
 //                           FA8650-04-C-5229
 //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef _EMMPM_DLL_EXPORT_H_
-#define _EMMPM_DLL_EXPORT_H_
+#ifndef _emmpmlibdllexport_h_
+#define _emmpmlibdllexport_h_
 
 
 /* Cmake will define EMMPMLib_EXPORTS on Windows when it

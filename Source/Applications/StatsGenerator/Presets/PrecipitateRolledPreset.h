@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -33,8 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _PrecipitateRolledPreset_H_
-#define _PrecipitateRolledPreset_H_
+#ifndef _precipitaterolledpreset_h_
+#define _precipitaterolledpreset_h_
 
 //-- C++ includes
 #include <string>

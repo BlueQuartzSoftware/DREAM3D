@@ -2,8 +2,8 @@
  * Your License or Copyright can go here
  */
 
-#ifndef _OrientationUtility_H_
-#define _OrientationUtility_H_
+#ifndef _orientationutility_h_
+#define _orientationutility_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"

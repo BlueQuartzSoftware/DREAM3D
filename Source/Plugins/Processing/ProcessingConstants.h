@@ -1,5 +1,5 @@
-#ifndef _ProcessingConstants_H_
-#define _ProcessingConstants_H_
+#ifndef _processingconstants_h_
+#define _processingconstants_h_
 
 #include <QtCore/QString>
 

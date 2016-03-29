@@ -10,8 +10,8 @@
 * San Francisco, California, 94105, USA.
  ***/
 
-#ifndef H_CENTIPEDE_BASICS_EXCEPTIONS_INVALIDPARAMETEREXCEPTION
-#define H_CENTIPEDE_BASICS_EXCEPTIONS_INVALIDPARAMETEREXCEPTION
+#ifndef _invalidparameterexception_h_
+#define _invalidparameterexception_h_
 
 #include "Exception.h"
 

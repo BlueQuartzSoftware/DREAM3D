@@ -1,5 +1,5 @@
-#ifndef _GenerateFeatureIds_H_
-#define _GenerateFeatureIds_H_
+#ifndef _generatefeatureids_h_
+#define _generatefeatureids_h_
 
 
 

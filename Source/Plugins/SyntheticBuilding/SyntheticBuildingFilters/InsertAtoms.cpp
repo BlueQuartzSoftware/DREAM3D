@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -359,7 +359,7 @@ void InsertAtoms::dataCheck()
   DataContainer::Pointer v = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVertexDataContainerName());
   if(getErrorCondition() < 0) { return; }
 
-  VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(0, SIMPL::Geometry::VertexGeometry);
+  VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(0, SIMPL::Geometry::VertexGeometry, !getInPreflight());
   v->setGeometry(vertices);
 
   QVector<size_t> tDims(1, 0);
@@ -417,6 +417,7 @@ void InsertAtoms::assign_points(QVector<VertexGeom::Pointer> points, QVector<Boo
   }
 
   DataContainer::Pointer v = getDataContainerArray()->getDataContainer(getVertexDataContainerName());
+
   VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(count, SIMPL::VertexData::SurfaceMeshNodes);
 
   AttributeMatrix::Pointer vertexAttrMat = v->getAttributeMatrix(getVertexAttributeMatrixName());

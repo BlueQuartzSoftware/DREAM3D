@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -35,8 +35,8 @@
 
 
 
-#ifndef _EbsdImporter_h_
-#define _EbsdImporter_h_
+#ifndef _ebsdimporter_h_
+#define _ebsdimporter_h_
 
 #include "hdf5.h"
 

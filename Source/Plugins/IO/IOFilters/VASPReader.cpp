@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -149,7 +149,7 @@ void VASPReader::dataCheck()
   AttributeMatrix::Pointer vertexAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, SIMPL::AttributeMatrixType::Vertex);
   if(getErrorCondition() < 0 || NULL == vertexAttrMat.get()) { return; }
 
-  VertexGeom::Pointer vertex = VertexGeom::CreateGeometry(0, SIMPL::Geometry::VertexGeometry);
+  VertexGeom::Pointer vertex = VertexGeom::CreateGeometry(0, SIMPL::Geometry::VertexGeometry, !getInPreflight());
   m->setGeometry(vertex);
 
   QFileInfo fi(getInputFile());
@@ -316,7 +316,7 @@ int VASPReader::readHeader()
     totalAtoms += tokens[i].toInt(&ok, 10);
   }
 
-  VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(totalAtoms, SIMPL::VertexData::SurfaceMeshNodes);
+  VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(totalAtoms, SIMPL::VertexData::SurfaceMeshNodes, !getInPreflight());
   m->setGeometry(vertices);
 
   QVector<size_t> tDims(1, totalAtoms);

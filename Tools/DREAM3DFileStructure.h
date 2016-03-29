@@ -1,5 +1,5 @@
-#ifndef _DREAM3DFileStructure_H_
-#define _DREAM3DFileStructure_H_
+#ifndef _dream3dfilestructure_h_
+#define _dream3dfilestructure_h_
 
 
 

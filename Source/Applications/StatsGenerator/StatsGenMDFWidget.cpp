@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -370,11 +370,11 @@ void StatsGenMDFWidget::extractStatsData(int index, StatsData* statsData, unsign
     QVector<float> angle(static_cast<int>(arrays[0]->getNumberOfTuples()));
     ::memcpy( &(angle.front()), arrays[0]->getVoidPointer(0), sizeof(float)*angle.size() );
 
-    QVector<float> weights(static_cast<int>(arrays[0]->getNumberOfTuples()));
-    ::memcpy( &(weights.front()), arrays[0]->getVoidPointer(0), sizeof(float)*weights.size() );
+    QVector<float> weights(static_cast<int>(arrays[1]->getNumberOfTuples()));
+    ::memcpy( &(weights.front()), arrays[1]->getVoidPointer(0), sizeof(float)*weights.size() );
 
-    QVector<float> axis(static_cast<int>(arrays[0]->getSize())); // This one is 3xn in size
-    ::memcpy( &(axis.front()), arrays[0]->getVoidPointer(0), sizeof(float)*axis.size() );
+    QVector<float> axis(static_cast<int>(arrays[2]->getSize())); // This one is 3xn in size
+    ::memcpy( &(axis.front()), arrays[2]->getVoidPointer(0), sizeof(float)*axis.size() );
 
     if (angle.size() > 0)
     {

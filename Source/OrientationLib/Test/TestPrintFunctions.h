@@ -1,5 +1,5 @@
-#ifndef _TestPrintFunctions_H_
-#define _TestPrintFunctions_H_
+#ifndef _testprintfunctions_h_
+#define _testprintfunctions_h_
 
 #include <stdio.h>
 

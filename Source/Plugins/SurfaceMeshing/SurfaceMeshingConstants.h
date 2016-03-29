@@ -1,5 +1,5 @@
-#ifndef _SurfaceMeshingConstants_H_
-#define _SurfaceMeshingConstants_H_
+#ifndef _surfacemeshingconstants_h_
+#define _surfacemeshingconstants_h_
 
 #include <QtCore/QString>
 

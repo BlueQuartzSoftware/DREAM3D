@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -36,8 +36,8 @@
 
 
 
-#ifndef _ANGREADER_H_
-#define _ANGREADER_H_
+#ifndef _angreader_h_
+#define _angreader_h_
 
 #include <QtCore/QString>
 #include <QtCore/QFile>

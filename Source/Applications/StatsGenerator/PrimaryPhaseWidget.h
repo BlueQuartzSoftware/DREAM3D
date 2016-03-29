@@ -5,8 +5,8 @@
  *      Author: mjackson
  */
 
-#ifndef _PRIMARYPHASEWIDGET_H_
-#define _PRIMARYPHASEWIDGET_H_
+#ifndef _primaryphasewidget_h_
+#define _primaryphasewidget_h_
 
 #include <QtCore/QObject>
 #include <QtCore/QVector>

@@ -4,8 +4,8 @@
  * Notice:  Copyright Stuart Golodetz, 2008. All rights reserved.
  ***/
 
-#ifndef H_CENTIPEDE_BASICS_MATH_VECTORS_VECTOR3
-#define H_CENTIPEDE_BASICS_MATH_VECTORS_VECTOR3
+#ifndef _vector3_h_
+#define _vector3_h_
 
 #include <iostream>
 

@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2015 BlueQuartz Software, LLC
+* Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -37,8 +37,8 @@
 
 
 
-#ifndef _OrientationLib_COMMON_DLL_EXPORT_H_
-#define _OrientationLib_COMMON_DLL_EXPORT_H_
+#ifndef _orientationlibdllexport_h_
+#define _orientationlibdllexport_h_
 
 
 #if defined (_MSC_VER)
