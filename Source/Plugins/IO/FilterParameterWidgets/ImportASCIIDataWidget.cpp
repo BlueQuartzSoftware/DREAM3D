@@ -100,7 +100,7 @@ void ImportASCIIDataWidget::setupGui()
   // Catch when the filter wants its values updated
   connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)),
     this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
-  
+
   // If the filter was loaded from a pipeline file, fill in the information in the widget
   if (m_Filter->getWizardData().isEmpty() == false)
   {
@@ -117,7 +117,7 @@ void ImportASCIIDataWidget::setupGui()
       }
       tupleDims->setText(tupleDimsStr);
     }
-    
+
     tupleCount->setText(QString::number(numOfDataLines));
     fileImportedLabel->setText(m_Filter->getWizardData().inputFilePath);
   }
@@ -401,7 +401,6 @@ void ImportASCIIDataWidget::filterNeedsInputParameters(AbstractFilter* filter)
 
     ASCIIWizardData data;
     data.consecutiveDelimiters = m_ImportWizard->getConsecutiveDelimiters();
-    data.isFixedWidth = m_ImportWizard->getHasFixedWidth();
     data.delimiters = m_ImportWizard->getDelimiters();
     data.inputFilePath = m_ImportWizard->getInputFilePath();
     data.dataHeaders = m_ImportWizard->getHeaders();

@@ -192,7 +192,6 @@ class ImportASCIIDataTest
       data.dataTypes.push_back(outputType);
       data.delimiters.push_back(delimiter);
       data.inputFilePath = UnitTest::ImportASCIIDataTest::TestFile1;
-      data.isFixedWidth = false;
       data.numberOfLines = 10;
       data.tupleDims = QVector<size_t>(1, 10);
 

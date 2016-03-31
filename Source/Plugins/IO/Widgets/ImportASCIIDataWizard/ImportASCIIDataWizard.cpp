@@ -117,7 +117,7 @@ QString ImportASCIIDataWizard::ReadLine(const QString &inputFilePath, int line)
   {
     return QString();
   }
-  
+
   return lines[0];
 }
 
@@ -268,7 +268,7 @@ void ImportASCIIDataWizard::InsertLines(QStringList lines, int firstRowHeaderInd
 void ImportASCIIDataWizard::LoadOriginalLines(QStringList lines)
 {
   ASCIIDataModel* model = ASCIIDataModel::Instance();
-  
+
   if (model->rowCount() > 0)
   {
     model->removeRows(0, model->rowCount());
@@ -321,14 +321,6 @@ QList<char> ImportASCIIDataWizard::getDelimiters()
 bool ImportASCIIDataWizard::getConsecutiveDelimiters()
 {
   return field("consecutiveDelimiters").toBool();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool ImportASCIIDataWizard::getHasFixedWidth()
-{
-  return field("isFixedWidth").toBool();
 }
 
 // -----------------------------------------------------------------------------
@@ -391,6 +383,6 @@ QVector<size_t> ImportASCIIDataWizard::getTupleDims()
   {
     return dfPage->getTupleTable()->getData();
   }
-  
+
   return QVector<size_t>();
 }

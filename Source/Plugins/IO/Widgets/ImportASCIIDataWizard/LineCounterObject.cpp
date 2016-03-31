@@ -66,7 +66,7 @@ void LineCounterObject::run()
   // Validate that the file is an ASCII file
   int64_t bufferSize = 262144;
   char* buffer;
-  size_t result;
+  int64_t result;
 
   // Obtain the file size
   QFile qFile(m_FilePath);
@@ -108,7 +108,7 @@ void LineCounterObject::run()
     // Check the buffer for new lines and carriage returns
     int64_t fiveThresh = fileSize / 20.0;
     int64_t currentThresh = fiveThresh;
-    for (int i = 0; i < actualSize; i++)
+    for (int i = 0; i < result; i++)
     {
       currentByte++;
       if (currentByte > currentThresh)
