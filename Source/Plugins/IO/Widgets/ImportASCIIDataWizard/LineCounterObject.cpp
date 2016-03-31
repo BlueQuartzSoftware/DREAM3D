@@ -33,29 +33,19 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "DelimitedOrFixedWidthPage.h"
+#include "LineCounterObject.h"
 
-#include <QtCore/QFile>
+#include <QtCore/QTextStream>
 
-#include "ImportASCIIDataWizard.h"
-#include "ASCIIDataModel.h"
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DelimitedOrFixedWidthPage::DelimitedOrFixedWidthPage(const QString &inputFilePath, int numLines, QWidget* parent) :
-  AbstractWizardPage(inputFilePath, parent),
-  m_NumLines(numLines)
-{
-  setupUi(this);
-
-  setupGui();
-}
+#include "SIMPLib/SIMPLibTypes.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DelimitedOrFixedWidthPage::~DelimitedOrFixedWidthPage()
+LineCounterObject::LineCounterObject(const QString &filePath, QObject* parent) :
+  QObject(parent),
+  m_FilePath(filePath),
+  m_NumOfLines(0)
 {
 
 }
@@ -63,95 +53,96 @@ DelimitedOrFixedWidthPage::~DelimitedOrFixedWidthPage()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DelimitedOrFixedWidthPage::setupGui()
+LineCounterObject::~LineCounterObject()
 {
-  ASCIIDataModel* model = ASCIIDataModel::Instance();
 
-  refreshModel();
-
-  dataView->setModel(model);
-  dataView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-
-  registerField("isDelimited", isDelimitedRadio);
-  registerField("isFixedWidth", isFixedWidthRadio);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DelimitedOrFixedWidthPage::showEvent(QShowEvent* event)
+void LineCounterObject::run()
 {
-  ASCIIDataModel* model = ASCIIDataModel::Instance();
-  model->clearContents();
+  // Validate that the file is an ASCII file
+  int64_t bufferSize = 262144;
+  char* buffer;
+  int64_t result;
 
-  if (model->columnCount() > 0)
+  // Obtain the file size
+  QFile qFile(m_FilePath);
+  int64_t fileSize = qFile.size();
+
+  // Open the file
+  if (qFile.open(QIODevice::ReadOnly) == false)
   {
-    model->removeColumns(0, model->columnCount());
+    QString errorStr = "Error: Unable to open file \"" + m_FilePath + "\"";
+    fputs(errorStr.toStdString().c_str(), stderr);
+    return;
   }
 
-  // This is the first screen, so everything automatically goes into one column for now
-  model->insertColumn(0);
-
-  for (int row = 0; row < model->rowCount(); row++)
+  int64_t actualSize;
+  if (fileSize <= bufferSize)
   {
-    QString line = model->originalString(row);
-
-    QModelIndex index = model->index(row, 0);
-
-    model->setData(index, line, Qt::DisplayRole);
+    actualSize = fileSize;
   }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DelimitedOrFixedWidthPage::refreshModel()
-{
-  ASCIIDataModel* model = ASCIIDataModel::Instance();
-  model->clear();
-
-  QStringList lines = ImportASCIIDataWizard::ReadLines(m_InputFilePath, 1, ImportASCIIDataWizard::TotalPreviewLines);
-
-  bool hasTabs = false;
-  for (int i = 0; i < lines.size(); i++)
+  else
   {
-    if (lines.contains("\\t"))
+    actualSize = bufferSize;
+  }
+
+  // Allocate the buffer
+  buffer = (char*)malloc(sizeof(char)*actualSize);
+  if (buffer == NULL)
+  {
+    QString errorStr = "Error: Unable to allocate memory to read in data from \"" + m_FilePath + "\"";
+    fputs(errorStr.toStdString().c_str(), stderr);
+    return;
+  }
+
+  int64_t currentByte = 0;
+  while (qFile.atEnd() == false)
+  {
+    // Copy the file contents into the buffer
+    result = qFile.read(buffer, actualSize);
+
+    // Check the buffer for new lines and carriage returns
+    int64_t fiveThresh = fileSize / 20.0;
+    int64_t currentThresh = fiveThresh;
+    for (int i = 0; i < result; i++)
     {
-      hasTabs = true;
+      currentByte++;
+      if (currentByte > currentThresh)
+      {
+        double progress = static_cast<double>(currentByte)/static_cast<double>(fileSize)*100;
+        emit progressUpdateGenerated(progress);
+        currentThresh = currentThresh + fiveThresh;
+      }
+
+      char currentChar = buffer[i];
+
+      if (currentChar == '\n')
+      {
+        m_NumOfLines++;
+      }
+      else if (currentChar == '\r' && i + 1 < actualSize && buffer[i + 1] == '\n')
+      {
+        m_NumOfLines++;
+        i++;
+      }
     }
   }
 
-  QString guesserText = dataTypeGuesserLabel->text();
+  // Close the file and free the memory from the buffer
+  qFile.close();
+  free(buffer);
 
-  if (hasTabs == true)
-  {
-    guesserText.replace("[dataType]", "<b>Fixed Width</b>");
-    isFixedWidthRadio->setChecked(true);
-  }
-  else
-  {
-    guesserText.replace("[dataType]", "<b>Delimited</b>");
-    isDelimitedRadio->setChecked(true);
-  }
-
-  dataTypeGuesserLabel->setText(guesserText);
-
-  ImportASCIIDataWizard::LoadOriginalLines(lines);
-
-  ImportASCIIDataWizard::InsertLines(lines, 1);
+  emit finished();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int DelimitedOrFixedWidthPage::nextId() const
+int LineCounterObject::getNumberOfLines()
 {
-  if (isDelimitedRadio->isChecked())
-  {
-    return ImportASCIIDataWizard::Delimited;
-  }
-  else
-  {
-    return ImportASCIIDataWizard::DataFormat;
-  }
+  return m_NumOfLines;
 }

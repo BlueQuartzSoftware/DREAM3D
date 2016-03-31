@@ -34,8 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _ASCIIWizardData_H_
-#define _ASCIIWizardData_H_
+#ifndef _asciiwizarddata_h_
+#define _asciiwizarddata_h_
 
 #include <QtCore/QStringList>
 
@@ -43,7 +43,7 @@ class ASCIIWizardData
 {
 public:
   ASCIIWizardData() :
-    inputFilePath(""), 
+    inputFilePath(""),
     beginIndex(-1),
     numberOfLines(-1)
   {
@@ -56,7 +56,6 @@ public:
   int numberOfLines;
   QStringList dataTypes;
   QList<char> delimiters;
-  bool isFixedWidth;
   bool consecutiveDelimiters;
   QVector<size_t> tupleDims;
 

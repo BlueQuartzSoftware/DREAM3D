@@ -78,13 +78,12 @@ void ImportASCIIData::readFilterParameters(AbstractFilterParametersReader* reade
   data.dataHeaders = reader->readStringList(prefix + "DataHeaders", QStringList());
   data.dataTypes = reader->readStringList(prefix + "DataTypes", QStringList());
   data.inputFilePath = reader->readString(prefix + "InputFilePath", "");
-  data.isFixedWidth = reader->readValue(prefix + "IsFixedWidth", false);
   data.numberOfLines = reader->readValue(prefix + "NumberOfLines", -1);
 
   QVector<uint64_t> tmpVec;
   QVector<size_t> tDims;
   tmpVec = reader->readArray(prefix + "TupleDims", QVector<uint64_t>());
-  for (int i = 0; i < tmpVec.size(); i++) 
+  for (int i = 0; i < tmpVec.size(); i++)
   {
     tDims.push_back(static_cast<size_t>(tmpVec[i]));
   }
@@ -117,7 +116,6 @@ int ImportASCIIData::writeFilterParameters(AbstractFilterParametersWriter* write
   writer->writeValue(prefix + "DataHeaders", m_WizardData.dataHeaders);
   writer->writeValue(prefix + "DataTypes", m_WizardData.dataTypes);
   writer->writeValue(prefix + "InputFilePath", m_WizardData.inputFilePath);
-  writer->writeValue(prefix + "IsFixedWidth", m_WizardData.isFixedWidth);
   writer->writeValue(prefix + "NumberOfLines", m_WizardData.numberOfLines);
   QVector<uint64_t> tDims;
   QVector<size_t> tmpVec = m_WizardData.tupleDims;
@@ -155,8 +153,6 @@ void ImportASCIIData::dataCheck()
   QString inputFilePath = wizardData.inputFilePath;
   QStringList headers = wizardData.dataHeaders;
   QStringList dataTypes = wizardData.dataTypes;
-//  int numLines = wizardData.numberOfLines;
-//  int beginIndex = wizardData.beginIndex;
   QVector<size_t> tDims = wizardData.tupleDims;
   QVector<size_t> cDims(1, 1);
 
@@ -286,7 +282,6 @@ void ImportASCIIData::execute()
   QStringList headers = wizardData.dataHeaders;
   QStringList dataTypes = wizardData.dataTypes;
   QList<char> delimiters = wizardData.delimiters;
-  bool isFixedWidth = wizardData.isFixedWidth;
   bool consecutiveDelimiters = wizardData.consecutiveDelimiters;
   int numLines = wizardData.numberOfLines;
   int beginIndex = wizardData.beginIndex;
@@ -381,7 +376,7 @@ void ImportASCIIData::execute()
     for (int lineNum = beginIndex; lineNum <= numLines; lineNum++)
     {
       QString line = in.readLine();
-      QStringList tokens = ImportASCIIDataWizard::TokenizeLine(line, delimiters, isFixedWidth, consecutiveDelimiters);
+      QStringList tokens = ImportASCIIDataWizard::TokenizeLine(line, delimiters, consecutiveDelimiters);
 
       if (dataTypes.size() != tokens.size())
       {

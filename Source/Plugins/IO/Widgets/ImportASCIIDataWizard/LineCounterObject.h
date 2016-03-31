@@ -34,55 +34,37 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _delimitedorfixedwidthpage_h_
-#define _delimitedorfixedwidthpage_h_
+#ifndef _linecounterobject_h_
+#define _linecounterobject_h_
 
-#include <QtWidgets/QWizardPage>
+#include <QtCore/QObject>
+#include <QtCore/QFile>
 
-#include "AbstractWizardPage.h"
-
-#include "ui_DelimitedOrFixedWidthPage.h"
-
-class ASCIIDataModel;
-
-class DelimitedOrFixedWidthPage : public AbstractWizardPage, private Ui::DelimitedOrFixedWidthPage
+class LineCounterObject : public QObject
 {
   Q_OBJECT
 
-  public:
-    /**
-    * @brief Constructor
-    * @param parameter The FilterParameter object that this widget represents
-    * @param filter The instance of the filter that this parameter is a part of
-    * @param parent The parent QWidget for this Widget
-    */
-    DelimitedOrFixedWidthPage(const QString &inputFilePath, int numLines, QWidget* parent = NULL);
+public:
+  LineCounterObject(const QString &filePath, QObject *parent = NULL);
 
-    virtual ~DelimitedOrFixedWidthPage();
+  virtual ~LineCounterObject();
 
-    /**
-     * @brief Initializes some of the GUI elements with selections or other GUI related items
-     */
-    virtual void setupGui();
+  int getNumberOfLines();
 
-    /**
-    * @brief Refreshes the model
-    */
-    virtual void refreshModel();
+protected slots:
+  void run();
 
-    /**
-    * @brief Controls which page to navigate to after the user clicks "Next" button
-    */
-    int nextId() const;
+signals:
+  void finished();
+  void progressUpdateGenerated(double percentage);
 
-  protected:
-    void showEvent(QShowEvent* event);
+private:
+  QString                                               m_FilePath;
 
-  private:
-    int                                             m_NumLines;
+  int                                                   m_NumOfLines;
 
-    DelimitedOrFixedWidthPage(const DelimitedOrFixedWidthPage&); // Copy Constructor Not Implemented
-    void operator=(const DelimitedOrFixedWidthPage&); // Operator '=' Not Implemented
+  LineCounterObject(const LineCounterObject&); // Copy Constructor Not Implemented
+  void operator=(const LineCounterObject&); // Operator '=' Not Implemented
 };
 
-#endif /* DelimitedOrFixedWidthPage_H_ */
+#endif /* _linecounterobject_h_ */
