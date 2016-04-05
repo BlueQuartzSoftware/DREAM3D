@@ -856,7 +856,7 @@ void FindGBCDMetricBased::execute()
     return;
   }
 
-  // Open the output files, should be opened and checked before starting computations TODO
+  // Open the output files, should be opened and checked before starting computations
   FILE* fDist = NULL;
   fDist = fopen(m_DistOutputFile.toLatin1().data(), "wb");
   if (NULL == fDist)

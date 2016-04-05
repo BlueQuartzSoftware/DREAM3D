@@ -177,8 +177,8 @@ void PrecipitateRolledPresetDialog::checkInputs(const QString& text)
 float PrecipitateRolledPresetDialog::getA()
 {
   bool ok = false;
-  double d = A->text().toFloat(&ok);
-  //FIXME: Should check the 'ok' variable here
+  float d = A->text().toFloat(&ok);
+  if(!ok) d = 0.0f;
   return d;
 }
 
@@ -188,8 +188,8 @@ float PrecipitateRolledPresetDialog::getA()
 float PrecipitateRolledPresetDialog::getB()
 {
   bool ok = false;
-  double d = B->text().toFloat(&ok);
-  //FIXME: Should check the 'ok' variable here
+  float d = B->text().toFloat(&ok);
+  if(!ok) d = 0.0f;
   return d;
 }
 
@@ -199,7 +199,7 @@ float PrecipitateRolledPresetDialog::getB()
 float PrecipitateRolledPresetDialog::getC()
 {
   bool ok = false;
-  double d = C->text().toFloat(&ok);
-  //FIXME: Should check the 'ok' variable here
+  float d = C->text().toFloat(&ok);
+  if(!ok) d = 0.0f;
   return d;
 }

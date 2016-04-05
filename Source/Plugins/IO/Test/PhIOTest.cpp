@@ -263,7 +263,7 @@ class PhIOTest
       DataContainer::Pointer m = phReader->getDataContainerArray()->getDataContainer(SIMPL::Defaults::ImageDataContainerName);
       DREAM3D_REQUIRED_PTR(m.get(), != , NULL)
 
-          /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
+      m->getGeometryAs<ImageGeom>()->getDimensions(nx, ny, nz);
       DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize);
       DREAM3D_REQUIRE_EQUAL(ny, UnitTest::FeatureIdsTest::YSize);
       DREAM3D_REQUIRE_EQUAL(nz, UnitTest::FeatureIdsTest::ZSize);

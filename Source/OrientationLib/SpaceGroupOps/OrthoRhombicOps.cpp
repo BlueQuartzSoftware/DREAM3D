@@ -115,7 +115,7 @@ using namespace Detail;
 // -----------------------------------------------------------------------------
 OrthoRhombicOps::OrthoRhombicOps()
 {
-  // TODO Auto-generated constructor stub
+
 }
 
 // -----------------------------------------------------------------------------
@@ -123,7 +123,7 @@ OrthoRhombicOps::OrthoRhombicOps()
 // -----------------------------------------------------------------------------
 OrthoRhombicOps::~OrthoRhombicOps()
 {
-  // TODO Auto-generated destructor stub
+  
 }
 
 // -----------------------------------------------------------------------------

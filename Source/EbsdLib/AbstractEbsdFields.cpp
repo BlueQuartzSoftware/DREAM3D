@@ -38,12 +38,12 @@
 
 AbstractEbsdFields::AbstractEbsdFields()
 {
-  // TODO Auto-generated constructor stub
+  
 
 }
 
 AbstractEbsdFields::~AbstractEbsdFields()
 {
-  // TODO Auto-generated destructor stub
+  
 }
 

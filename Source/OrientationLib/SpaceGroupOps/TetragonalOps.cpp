@@ -153,7 +153,7 @@ TetragonalOps::TetragonalOps()
 // -----------------------------------------------------------------------------
 TetragonalOps::~TetragonalOps()
 {
-  // TODO Auto-generated destructor stub
+  
 }
 
 float TetragonalOps::_calcMisoQuat(const QuatF quatsym[8], int numsym,
