@@ -77,9 +77,8 @@ include_directories(${SIMPLViewProj_BINARY_DIR}/Applications/SIMPLView)
 # up the targets (Exported) that it needs. We just need to find where
 # HDF5 is installed.
 include(${CMP_SOURCE_DIR}/ExtLib/HDF5Support.cmake)
-include_directories(${HDF5_INCLUDE_DIRS} )
-
-message(STATUS "HDF5_INCLUDE_DIRS: ${HDF5_INCLUDE_DIRS}")
+include_directories(${HDF5_INCLUDE_DIRS}) # Covers 1.8.15
+include_directories(${HDF5_INCLUDE_DIR}) # Covers 1.8.16
 
 #-------------------------------------------------------------------------------
 # Function COMPILE_TOOL to help alleviate lots of extra code below for adding
