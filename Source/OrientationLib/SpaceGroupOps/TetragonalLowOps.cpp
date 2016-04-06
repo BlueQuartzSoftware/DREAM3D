@@ -118,7 +118,7 @@ using namespace Detail;
 // -----------------------------------------------------------------------------
 TetragonalLowOps::TetragonalLowOps()
 {
-  // TODO Auto-generated constructor stub
+  
 
 }
 
@@ -127,7 +127,7 @@ TetragonalLowOps::TetragonalLowOps()
 // -----------------------------------------------------------------------------
 TetragonalLowOps::~TetragonalLowOps()
 {
-  // TODO Auto-generated destructor stub
+  
 }
 
 // -----------------------------------------------------------------------------

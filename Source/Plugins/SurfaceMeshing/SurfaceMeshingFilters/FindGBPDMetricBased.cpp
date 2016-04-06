@@ -1,8 +1,8 @@
 /* ============================================================================
  * This filter has been created by Krzysztof Glowinski (kglowinski at ymail.com).
- * It includes an implementation of the algorithm described in:
- * K.Glowinski, A.Morawiec, "Analysis of experimental grain boundary distributions
- * based on boundary-space metrics", Metall. Mater. Trans. A 45, 3189-3194 (2014).
+ * It adapts the algorithm described in K.Glowinski, A.Morawiec, "Analysis of
+ * experimental grain boundary distributions based on boundary-space metrics",
+ * Metall. Mater. Trans. A 45, 3189-3194 (2014).
  * Besides the algorithm itself, many parts of the code come from
  * the sources of other filters, mainly "Find GBCD" and "Write GBCD Pole Figure (GMT5)".
  * Therefore, the below copyright notice applies.
@@ -43,7 +43,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "FindGBCDMetricBased.h"
+#include "FindGBPDMetricBased.h"
 
 #include <QtCore/QDir>
 
@@ -51,12 +51,12 @@
 #include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
-#include "SIMPLib/FilterParameters/IntFilterParameter.h"
-#include "SIMPLib/FilterParameters/AxisAngleFilterParameter.h"
-#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 
@@ -72,15 +72,7 @@
 #endif
 
 // Include the MOC generated file for this class
-#include "moc_FindGBCDMetricBased.cpp"
-
-const float FindGBCDMetricBased::RESOL_CHOICES[FindGBCDMetricBased::NUM_RESOL_CHOICES][2] = {
-  { 3.0f, 7.0f }, { 5.0f, 5.0f }, { 5.0f, 7.0f }, { 5.0f, 8.0f }, { 6.0f, 7.0f }, { 7.0f, 7.0f }, { 8.0f, 8.0f }
-}; // { for misorient., for planes }
-
-const double FindGBCDMetricBased::BALL_VOLS_M3M[FindGBCDMetricBased::NUM_RESOL_CHOICES] = {
-  0.0000641361, 0.000139158, 0.000287439, 0.00038019, 0.000484151, 0.000747069, 0.00145491
-};
+#include "moc_FindGBPDMetricBased.cpp"
 
 /**
  * @brief The TriAreaAndNormals class defines a container that stores the area of a given triangle
@@ -108,6 +100,11 @@ class TriAreaAndNormals
     {
     }
 
+    bool operator <(const TriAreaAndNormals& other)
+    {
+      return area < other.area;
+    }
+
     TriAreaAndNormals() {
       TriAreaAndNormals(0.0, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
     }
@@ -115,28 +112,23 @@ class TriAreaAndNormals
 
 /**
  * @brief The TrisSelector class implements a threaded algorithm that determines which triangles to
- * include in the GBCD calculation
+ * include in the GBPD calculation
  */
 class TrisSelector
 {
+    // corresponding to Phase of Interest
     bool m_ExcludeTripleLines;
     int64_t *m_Triangles;
     int8_t *m_NodeTypes;
-
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     tbb::concurrent_vector<TriAreaAndNormals>* selectedTris;
 #else
     QVector<TriAreaAndNormals>* selectedTris;
 #endif
-    QVector<int8_t> *triIncluded;
-    float m_misorResol;
     int32_t m_PhaseOfInterest;
-    float (&gFixedT)[3][3];
-
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
     uint32_t cryst;
     int32_t nsym;
-
     uint32_t* m_CrystalStructures;
     float* m_Eulers;
     int32_t* m_Phases;
@@ -155,25 +147,19 @@ class TrisSelector
     #else
         QVector<TriAreaAndNormals>* __selectedTris,
     #endif
-        QVector<int8_t> *__triIncluded,
-        float __m_misorResol,
         int32_t __m_PhaseOfInterest,
-        float(&__gFixedT)[3][3],
-    uint32_t* __m_CrystalStructures,
-    float* __m_Eulers,
-    int32_t* __m_Phases,
-    int32_t* __m_FaceLabels,
-    double* __m_FaceNormals,
-    double* __m_FaceAreas
-    ) :
+        uint32_t* __m_CrystalStructures,
+        float* __m_Eulers,
+        int32_t* __m_Phases,
+        int32_t* __m_FaceLabels,
+        double* __m_FaceNormals,
+        double* __m_FaceAreas
+        ) :
       m_ExcludeTripleLines(__m_ExcludeTripleLines),
       m_Triangles(__m_Triangles),
       m_NodeTypes(__m_NodeTypes),
       selectedTris(__selectedTris),
-      triIncluded(__triIncluded),
-      m_misorResol(__m_misorResol),
       m_PhaseOfInterest(__m_PhaseOfInterest),
-      gFixedT(__gFixedT),
       m_CrystalStructures(__m_CrystalStructures),
       m_Eulers(__m_Eulers),
       m_Phases(__m_Phases),
@@ -196,25 +182,12 @@ class TrisSelector
       float g1[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
       float g2[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
 
-      float g1s[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-      float g2s[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-
-      float sym1[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-      float sym2[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-
-      float g2sT[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-
-      float dg[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-      float dgT[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-
-      float diffFromFixed[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-
       float normal_lab[3] = { 0.0f, 0.0f, 0.0f };
       float normal_grain1[3] = { 0.0f, 0.0f, 0.0f };
       float normal_grain2[3] = { 0.0f, 0.0f, 0.0f };
 
-      for (size_t triIdx = start; triIdx < end; triIdx++) {
-
+      for (size_t triIdx = start; triIdx < end; triIdx++)
+      {
         int32_t feature1 = m_FaceLabels[2 * triIdx];
         int32_t feature2 = m_FaceLabels[2 * triIdx + 1];
 
@@ -230,8 +203,6 @@ class TrisSelector
 
           if (m_NodeTypes[node1] != 2 || m_NodeTypes[node2] != 2 || m_NodeTypes[node3] != 2) { continue; }
         }
-
-        (*triIncluded)[triIdx] = 1;
 
         normal_lab[0] = static_cast<float>(m_FaceNormals[3 * triIdx]);
         normal_lab[1] = static_cast<float>(m_FaceNormals[3 * triIdx + 1]);
@@ -249,72 +220,18 @@ class TrisSelector
         FOrientTransformsType::eu2om(FOrientArrayType(g2ea, 3), om);
         om.toGMatrix(g2);
 
-        for (int j = 0; j < nsym; j++)
-        {
-          // rotate g1 by symOp
-          m_OrientationOps[cryst]->getMatSymOp(j, sym1);
-          MatrixMath::Multiply3x3with3x3(sym1, g1, g1s);
-          // get the crystal directions along the triangle normals
-          MatrixMath::Multiply3x3with3x1(g1s, normal_lab, normal_grain1);
+        MatrixMath::Multiply3x3with3x1(g1, normal_lab, normal_grain1);
+        MatrixMath::Multiply3x3with3x1(g2, normal_lab, normal_grain2);
 
-          for (int k = 0; k < nsym; k++)
-          {
-            // calculate the symmetric misorienation
-            m_OrientationOps[cryst]->getMatSymOp(k, sym2);
-            // rotate g2 by symOp
-            MatrixMath::Multiply3x3with3x3(sym2, g2, g2s);
-            // transpose rotated g2
-            MatrixMath::Transpose3x3(g2s, g2sT);
-            // calculate delta g
-            MatrixMath::Multiply3x3with3x3(g1s, g2sT, dg); //dg -- the misorientation between adjacent grains
-            MatrixMath::Transpose3x3(dg, dgT);
-
-            for (int transpose = 0; transpose <= 1; transpose++)
-            {
-              // check if dg is close to gFix
-              if (transpose == 0)
-              {
-                MatrixMath::Multiply3x3with3x3(dg, gFixedT, diffFromFixed);
-              }
-              else
-              {
-                MatrixMath::Multiply3x3with3x3(dgT, gFixedT, diffFromFixed);
-              }
-
-              float diffAngle = acosf((diffFromFixed[0][0] + diffFromFixed[1][1] + diffFromFixed[2][2] - 1.0f) * 0.5f);
-
-              if (diffAngle < m_misorResol)
-              {
-                MatrixMath::Multiply3x3with3x1(dgT, normal_grain1, normal_grain2); // minus sign before normal_grain2 will be added later
-
-                if (transpose == 0)
-                {
-                  (*selectedTris).push_back(TriAreaAndNormals(
-                                              m_FaceAreas[triIdx],
-                                              normal_grain1[0],
-                                              normal_grain1[1],
-                                              normal_grain1[2],
-                                              -normal_grain2[0],
-                                              -normal_grain2[1],
-                                              -normal_grain2[2]
-                                            ));
-                }
-                else
-                {
-                  (*selectedTris).push_back(TriAreaAndNormals(
-                                              m_FaceAreas[triIdx],
-                                              -normal_grain2[0],
-                                              -normal_grain2[1],
-                                              -normal_grain2[2],
-                                              normal_grain1[0],
-                                              normal_grain1[1],
-                                              normal_grain1[2]
-                                            ));
-                }
-              }
-            }
-          }
-        }
+        (*selectedTris).push_back(TriAreaAndNormals(
+                                    m_FaceAreas[triIdx],
+                                    normal_grain1[0],
+                                    normal_grain1[1],
+                                    normal_grain1[2],
+                                    -normal_grain2[0],
+                                    -normal_grain2[1],
+                                    -normal_grain2[2]
+                                  ));
       }
     }
 
@@ -328,56 +245,60 @@ class TrisSelector
 
 /**
  * @brief The ProbeDistrib class implements a threaded algorithm that determines the distribution values
- * for the GBCD
+ * for the GBPD
  */
 class ProbeDistrib
 {
     QVector<double>* distribValues;
     QVector<double>* errorValues;
-    QVector<float> samplPtsX;
-    QVector<float> samplPtsY;
-    QVector<float> samplPtsZ;
+    QVector<float>* samplPtsX;
+    QVector<float>* samplPtsY;
+    QVector<float>* samplPtsZ;
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
     tbb::concurrent_vector<TriAreaAndNormals> selectedTris;
 #else
     QVector<TriAreaAndNormals> selectedTris;
 #endif
-    float planeResolSq;
+    float limitDist;
     double totalFaceArea;
     int numDistinctGBs;
     double ballVolume;
-    float (&gFixedT)[3][3];
+    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
+    uint32_t cryst;
+    int32_t nsym;
 
   public:
     ProbeDistrib(
         QVector<double>* __distribValues,
         QVector<double>* __errorValues,
-        QVector<float> __samplPtsX,
-        QVector<float> __samplPtsY,
-        QVector<float> __samplPtsZ,
+        QVector<float> *__samplPtsX,
+        QVector<float> *__samplPtsY,
+        QVector<float> *__samplPtsZ,
     #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
         tbb::concurrent_vector<TriAreaAndNormals> __selectedTris,
     #else
         QVector<TriAreaAndNormals> __selectedTris,
     #endif
-        float __planeResolSq,
+        float __limitDist,
         double __totalFaceArea,
         int __numDistinctGBs,
         double __ballVolume,
-        float (&__gFixedT)[3][3]
-    ) :
+        int32_t __cryst
+        ) :
       distribValues(__distribValues),
       errorValues(__errorValues),
       samplPtsX(__samplPtsX),
       samplPtsY(__samplPtsY),
       samplPtsZ(__samplPtsZ),
       selectedTris(__selectedTris),
-      planeResolSq(__planeResolSq),
+      limitDist(__limitDist),
       totalFaceArea(__totalFaceArea),
       numDistinctGBs(__numDistinctGBs),
       ballVolume(__ballVolume),
-      gFixedT(__gFixedT)
+      cryst(__cryst)
     {
+      m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+      nsym = m_OrientationOps[__cryst]->getNumSymOps();
     }
 
     virtual ~ProbeDistrib() {}
@@ -386,37 +307,70 @@ class ProbeDistrib
     {
       for (size_t ptIdx = start; ptIdx < end; ptIdx++)
       {
-        float fixedNormal1[3] = { samplPtsX.at(ptIdx), samplPtsY.at(ptIdx), samplPtsZ.at(ptIdx) };
-        float fixedNormal2[3] = { 0.0f, 0.0f, 0.0f };
-        MatrixMath::Multiply3x3with3x1(gFixedT, fixedNormal1, fixedNormal2);
+        double __c = 0.0;
+
+        float probeNormal[3] = { (*samplPtsX).at(ptIdx), (*samplPtsY).at(ptIdx), (*samplPtsZ).at(ptIdx) };
 
         for (int triRepresIdx = 0; triRepresIdx < static_cast<int>(selectedTris.size()); triRepresIdx++)
         {
-          for (int inversion = 0; inversion <= 1; inversion++)
+          float normal1[3] = {
+            selectedTris[triRepresIdx].normal_grain1_x,
+            selectedTris[triRepresIdx].normal_grain1_y,
+            selectedTris[triRepresIdx].normal_grain1_z };
+
+          float normal2[3] = {
+            selectedTris[triRepresIdx].normal_grain2_x,
+            selectedTris[triRepresIdx].normal_grain2_y,
+            selectedTris[triRepresIdx].normal_grain2_z };
+
+          float sym[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+
+          for (int j = 0; j < nsym; j++)
           {
-            float sign = 1.0f;
-            if (inversion == 1) sign = -1.0f;
+            m_OrientationOps[cryst]->getMatSymOp(j, sym);
 
-            float theta1 = acosf(sign * (
-                                   selectedTris[triRepresIdx].normal_grain1_x * fixedNormal1[0] +
-                                   selectedTris[triRepresIdx].normal_grain1_y * fixedNormal1[1] +
-                                   selectedTris[triRepresIdx].normal_grain1_z * fixedNormal1[2]));
+            float sym_normal1[3] = { 0.0f, 0.0f, 0.0f };
+            float sym_normal2[3] = { 0.0f, 0.0f, 0.0f };
 
-            float theta2 = acosf(-sign * (
-                                   selectedTris[triRepresIdx].normal_grain2_x * fixedNormal2[0] +
-                                   selectedTris[triRepresIdx].normal_grain2_y * fixedNormal2[1] +
-                                   selectedTris[triRepresIdx].normal_grain2_z * fixedNormal2[2]));
+            MatrixMath::Multiply3x3with3x1(sym, normal1, sym_normal1);
+            MatrixMath::Multiply3x3with3x1(sym, normal2, sym_normal2);
 
-            float distSq = 0.5f * (theta1 * theta1 + theta2 * theta2);
-
-            if (distSq < planeResolSq)
+            for (int inversion = 0; inversion <= 1; inversion++)
             {
-              (*distribValues)[ptIdx] += selectedTris[triRepresIdx].area;
+              float sign = 1.0f;
+              if (inversion == 1) sign = -1.0f;
+
+              float gamma1 = acosf(sign * (
+                                     probeNormal[0] * sym_normal1[0] +
+                                     probeNormal[1] * sym_normal1[1] +
+                                     probeNormal[2] * sym_normal1[2]));
+
+              float gamma2 = acosf(sign * (
+                                     probeNormal[0] * sym_normal2[0] +
+                                     probeNormal[1] * sym_normal2[1] +
+                                     probeNormal[2] * sym_normal2[2]));
+
+              if (gamma1 < limitDist)
+              {
+                // Kahan summation algorithm
+                double __y = selectedTris[triRepresIdx].area - __c;
+                double __t = (*distribValues)[ptIdx] + __y;
+                __c = (__t - (*distribValues)[ptIdx]);
+                __c -=__y;
+                (*distribValues)[ptIdx] = __t;
+              }
+              if (gamma2 < limitDist)
+              {
+                double __y = selectedTris[triRepresIdx].area - __c;
+                double __t = (*distribValues)[ptIdx] + __y;
+                __c = (__t - (*distribValues)[ptIdx]);
+                __c -= __y;
+                (*distribValues)[ptIdx] = __t;
+              }
             }
           }
         }
         (*errorValues)[ptIdx] = sqrt((*distribValues)[ptIdx] / totalFaceArea / double(numDistinctGBs)) / ballVolume;
-
         (*distribValues)[ptIdx] /= totalFaceArea;
         (*distribValues)[ptIdx] /= ballVolume;
       }
@@ -430,14 +384,13 @@ class ProbeDistrib
 #endif
 };
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindGBCDMetricBased::FindGBCDMetricBased() :
+FindGBPDMetricBased::FindGBPDMetricBased() :
   SurfaceMeshFilter(),
   m_PhaseOfInterest(1),
-  m_ChosenLimitDists(FindGBCDMetricBased::DEFAULT_RESOL_CHOICE),
+  m_LimitDist(7.0f),
   m_NumSamplPts(3000),
   m_ExcludeTripleLines(false),
   m_DistOutputFile(""),
@@ -460,56 +413,28 @@ FindGBCDMetricBased::FindGBCDMetricBased() :
   m_SurfaceMeshFeatureFaceLabels(NULL),
   m_NodeTypes(NULL)
 {
-  m_MisorientationRotation.angle = 17.9f;
-  m_MisorientationRotation.h = 1.0f;
-  m_MisorientationRotation.k = 1.0f;
-  m_MisorientationRotation.l = 1.0f;
-
   setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindGBCDMetricBased::~FindGBCDMetricBased()
+FindGBPDMetricBased::~FindGBPDMetricBased()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGBCDMetricBased::setupFilterParameters()
+void FindGBPDMetricBased::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(IntFilterParameter::New("Phase of Interest", "PhaseOfInterest", getPhaseOfInterest(), FilterParameter::Parameter));
-  parameters.push_back(AxisAngleFilterParameter::New("Fixed Misorientation", "MisorientationRotation", getMisorientationRotation(), FilterParameter::Parameter));
-  {
-    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
-    parameter->setHumanLabel("Limiting Distances");
-    parameter->setPropertyName("ChosenLimitDists");
-
-    QVector<QString> choices;
-
-    for (int choiceIdx = 0; choiceIdx < FindGBCDMetricBased::NUM_RESOL_CHOICES; choiceIdx++)
-    {
-      QString misorResStr;
-      QString planeResStr;
-      QString degSymbol = QChar(0x00B0);
-
-      misorResStr.setNum(FindGBCDMetricBased::RESOL_CHOICES[choiceIdx][0], 'f', 0);
-      planeResStr.setNum(FindGBCDMetricBased::RESOL_CHOICES[choiceIdx][1], 'f', 0);
-
-      choices.push_back(misorResStr + degSymbol + " for Misorientations; " + planeResStr + degSymbol + " for Plane Inclinations");
-    }
-
-    parameter->setChoices(choices);
-    parameter->setCategory(FilterParameter::Parameter);
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(DoubleFilterParameter::New("Limiting Distance [deg.]", "LimitDist", getLimitDist(), FilterParameter::Parameter));
   parameters.push_back(IntFilterParameter::New("Number of Sampling Points (on a Hemisphere)", "NumSamplPts", getNumSamplPts(), FilterParameter::Parameter));
   parameters.push_back(BooleanFilterParameter::New("Exclude Triangles Directly Neighboring Triple Lines", "ExcludeTripleLines", getExcludeTripleLines(), FilterParameter::Parameter));
-  parameters.push_back(OutputFileFilterParameter::New("Output Distribution File", "DistOutputFile", getDistOutputFile(), FilterParameter::Parameter, "*.dat", "DAT File"));
-  parameters.push_back(OutputFileFilterParameter::New("Output Distribution Errors File", "ErrOutputFile", getErrOutputFile(), FilterParameter::Parameter, "*.dat", "DAT File"));
+  parameters.push_back(OutputFileFilterParameter::New("Output Distribution File", "DistOutputFile", getDistOutputFile(), FilterParameter::Parameter, ""));
+  parameters.push_back(OutputFileFilterParameter::New("Output Distribution Errors File", "ErrOutputFile", getErrOutputFile(), FilterParameter::Parameter, ""));
   parameters.push_back(BooleanFilterParameter::New("Save Relative Errors Instead of Their Absolute Values", "SaveRelativeErr", getSaveRelativeErr(), FilterParameter::Parameter));
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::RequiredArray));
   {
@@ -554,12 +479,11 @@ void FindGBCDMetricBased::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGBCDMetricBased::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void FindGBPDMetricBased::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   setPhaseOfInterest(reader->readValue("PhaseOfInterest", getPhaseOfInterest()));
-  setMisorientationRotation(reader->readAxisAngle("MisorientationRotation", getMisorientationRotation(), -1));
-  setChosenLimitDists(reader->readValue("ChosenLimitDists", getChosenLimitDists()));
+  setLimitDist(reader->readValue("LimitDist", getLimitDist()));
   setNumSamplPts(reader->readValue("NumSamplPts", getNumSamplPts()));
   setExcludeTripleLines(reader->readValue("ExcludeTripleLines", getExcludeTripleLines()));
   setDistOutputFile(reader->readString("DistOutputFile", getDistOutputFile()));
@@ -579,12 +503,11 @@ void FindGBCDMetricBased::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindGBCDMetricBased::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int FindGBPDMetricBased::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   SIMPL_FILTER_WRITE_PARAMETER(PhaseOfInterest)
-  SIMPL_FILTER_WRITE_PARAMETER(MisorientationRotation)
-  SIMPL_FILTER_WRITE_PARAMETER(ChosenLimitDists)
+  SIMPL_FILTER_WRITE_PARAMETER(LimitDist)
   SIMPL_FILTER_WRITE_PARAMETER(NumSamplPts)
   SIMPL_FILTER_WRITE_PARAMETER(ExcludeTripleLines)
   SIMPL_FILTER_WRITE_PARAMETER(DistOutputFile)
@@ -605,25 +528,9 @@ int FindGBCDMetricBased::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGBCDMetricBased::dataCheck()
+void FindGBPDMetricBased::dataCheck()
 {
   setErrorCondition(0);
-
-  // Fixed Misorientation (filter params.)
-  if (getMisorientationRotation().angle <= 0.0 || getMisorientationRotation().angle > 180.0)
-  {
-    QString degSymbol = QChar(0x00B0);
-    QString ss = "The misorientation angle should be in the range (0, 180" + degSymbol + "]";
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-    setErrorCondition(-1);
-  }
-
-  if (getMisorientationRotation().h == 0.0f && getMisorientationRotation().k == 0.0f && getMisorientationRotation().l == 0.0f)
-  {
-    QString ss = QObject::tr("All three indices of the misorientation axis cannot be 0");
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-    setErrorCondition(-1);
-  }
 
   // Number of Sampling Points (filter params.)
   if (getNumSamplPts() < 1)
@@ -636,7 +543,7 @@ void FindGBCDMetricBased::dataCheck()
   // Set some reasonable value, but allow user to use more if he/she knows what he/she does
   if (getNumSamplPts() > 5000)
   {
-    QString ss = QObject::tr("The number of sampling points is greater than 5000, but it is unlikely that many are needed");
+    QString ss = QObject::tr("Most likely, you do not need to use that many sampling points");
     notifyWarningMessage(getHumanLabel(), ss, -1);
   }
 
@@ -675,7 +582,6 @@ void FindGBCDMetricBased::dataCheck()
   {
     setDistOutputFile(getDistOutputFile().append(".dat"));
   }
-
   if (errOutFileInfo.suffix().compare("") == 0)
   {
     setErrOutputFile(getErrOutputFile().append(".dat"));
@@ -683,7 +589,7 @@ void FindGBCDMetricBased::dataCheck()
 
   // Make sure the file name ends with _1 so the GMT scripts work correctly
   QString distFName = distOutFileInfo.baseName();
-  if (!distFName.isEmpty() && distFName.endsWith("_1") == false)
+  if (distFName.endsWith("_1") == false)
   {
     distFName = distFName + "_1";
     QString absPath = distOutFileInfo.absolutePath() + "/" + distFName + ".dat";
@@ -691,7 +597,7 @@ void FindGBCDMetricBased::dataCheck()
   }
 
   QString errFName = errOutFileInfo.baseName();
-  if (!errFName.isEmpty() && errFName.endsWith("_1") == false)
+  if (errFName.endsWith("_1") == false)
   {
     errFName = errFName + "_1";
     QString absPath = errOutFileInfo.absolutePath() + "/" + errFName + ".dat";
@@ -711,7 +617,7 @@ void FindGBCDMetricBased::dataCheck()
   if (NULL != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  // Phase of Interest  (filter params.)
+  // Phase of Interest
   if (NULL != m_CrystalStructuresPtr.lock().get())
   {
     if (getPhaseOfInterest() >= static_cast<int>(m_CrystalStructuresPtr.lock()->getNumberOfTuples()) || getPhaseOfInterest() <= 0)
@@ -722,7 +628,7 @@ void FindGBCDMetricBased::dataCheck()
     }
   }
 
-  // Euler Angles
+  // Euler Angels
   cDims[0] = 3;
   m_FeatureEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getFeatureEulerAnglesArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if (NULL != m_FeatureEulerAnglesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -768,7 +674,7 @@ void FindGBCDMetricBased::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGBCDMetricBased::preflight()
+void FindGBPDMetricBased::preflight()
 {
   // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
   setInPreflight(true); // Set the fact that we are preflighting.
@@ -782,19 +688,47 @@ void FindGBCDMetricBased::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGBCDMetricBased::execute()
+void FindGBPDMetricBased::appendSamplPtsFixedZenith(QVector<float> *xVec, QVector<float> *yVec, QVector<float> *zVec,
+                                                           double theta, double minPhi, double maxPhi, double step)
+{
+  for (double phi = minPhi; phi <= maxPhi; phi += step)
+  {
+    (*xVec).push_back( sinf(static_cast<float>(theta)) * cosf(static_cast<float>(phi)) );
+    (*yVec).push_back( sinf(static_cast<float>(theta)) * sinf(static_cast<float>(phi)) );
+    (*zVec).push_back( cosf(static_cast<float>(theta)) );
+  }
+  (*xVec).push_back(sinf(static_cast<float>(theta)) * cosf(static_cast<float>(maxPhi)) );
+  (*yVec).push_back(sinf(static_cast<float>(theta)) * sinf(static_cast<float>(maxPhi)) );
+  (*zVec).push_back(cosf(static_cast<float>(theta)) );
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FindGBPDMetricBased::appendSamplPtsFixedAzimuth(QVector<float> *xVec, QVector<float> *yVec, QVector<float> *zVec,
+                                                            double phi, double minTheta, double maxTheta, double step)
+{
+  for (double theta = minTheta; theta <= maxTheta; theta += step)
+  {
+    (*xVec).push_back(sinf(static_cast<float>(theta)) * cosf(static_cast<float>(phi)) );
+    (*yVec).push_back(sinf(static_cast<float>(theta)) * sinf(static_cast<float>(phi)) );
+    (*zVec).push_back(cosf(static_cast<float>(theta)) );
+  }
+  (*xVec).push_back(sinf(static_cast<float>(maxTheta)) * cosf(static_cast<float>(phi)) );
+  (*yVec).push_back(sinf(static_cast<float>(maxTheta)) * sinf(static_cast<float>(phi)) );
+  (*zVec).push_back(cosf(static_cast<float>(maxTheta)) );
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FindGBPDMetricBased::execute()
 {
   setErrorCondition(0);
   dataCheck();
   if (getErrorCondition() < 0) { return; }
 
-  // -------------------- set resolutions and 'ball volumes' based on user's selection -------------
-  float m_misorResol = FindGBCDMetricBased::RESOL_CHOICES[getChosenLimitDists()][0];
-  float m_planeResol = FindGBCDMetricBased::RESOL_CHOICES[getChosenLimitDists()][1];
-
-  m_misorResol *= SIMPLib::Constants::k_PiOver180;
-  m_planeResol *= SIMPLib::Constants::k_PiOver180;
-  float m_PlaneResolSq = m_planeResol * m_planeResol;
+  m_LimitDist *= SIMPLib::Constants::k_PiOver180;
 
   // We want to work with the raw pointers for speed so get those pointers.
   uint32_t* m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
@@ -806,6 +740,14 @@ void FindGBCDMetricBased::execute()
   int32_t* m_FeatureFaceLabels = m_SurfaceMeshFeatureFaceLabelsPtr.lock()->getPointer(0);
   int8_t* m_NodeTypes = m_NodeTypesPtr.lock()->getPointer(0);
 
+
+  if (m_CrystalStructures[m_PhaseOfInterest] > 10)
+  {
+    QString ss = QObject::tr("Unsupported CrystalStructure");
+    notifyErrorMessage(getHumanLabel(), ss, -1);
+    return;
+  }
+
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceAreasArrayPath().getDataContainerName());
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
   SharedTriList::Pointer m_TrianglesPtr = triangleGeom->getTriangles();
@@ -816,6 +758,7 @@ void FindGBCDMetricBased::execute()
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
   QFileInfo distOutFileInfo(getDistOutputFile());
+
   QDir distOutFileDir(distOutFileInfo.path());
   if (!distOutFileDir.mkpath("."))
   {
@@ -878,25 +821,22 @@ void FindGBCDMetricBased::execute()
   }
 
   // ------------------- before computing the distribution, we must find normalization factors -----
-  double ballVolume = FindGBCDMetricBased::BALL_VOLS_M3M[getChosenLimitDists()];
-  {
-    QVector<SpaceGroupOps::Pointer> m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
-    int32_t cryst = m_CrystalStructures[m_PhaseOfInterest];
-    int32_t nsym = m_OrientationOps[cryst]->getNumSymOps();
-
-    if (cryst != 1) {
-      double symFactor = double(nsym) / 24.0;
-      symFactor *= symFactor;
-      ballVolume *= symFactor;
-    }
-  }
+  QVector<SpaceGroupOps::Pointer> m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
+  int32_t cryst = m_CrystalStructures[m_PhaseOfInterest];
+  int32_t nsym = m_OrientationOps[cryst]->getNumSymOps();
+  double ballVolume = double(nsym) * 2.0 * (1.0 - cos(m_LimitDist));
 
   // ------------------------------ generation of sampling points ----------------------------------
-  QString ss = QObject::tr("|| Generating sampling points");
+
+  QString ss = QObject::tr("--> Generating sampling points");
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
   // generate "Golden Section Spiral", see http://www.softimageblog.com/archives/115
   int numSamplPts_WholeSph = 2 * m_NumSamplPts; // here we generate points on the whole sphere
+  QVector<float> samplPtsX_HemiSph(0);
+  QVector<float> samplPtsY_HemiSph(0);
+  QVector<float> samplPtsZ_HemiSph(0);
+
   QVector<float> samplPtsX(0);
   QVector<float> samplPtsY(0);
   QVector<float> samplPtsZ(0);
@@ -914,40 +854,147 @@ void FindGBCDMetricBased::execute()
 
     float z = sinf(_phi) * _r;
 
-    if (z > 0.0f)
-    {
-      samplPtsX.push_back(cosf(_phi) * _r);
-      samplPtsY.push_back(_y);
-      samplPtsZ.push_back(z);
+    if (z >= 0.0f) {
+      samplPtsX_HemiSph.push_back(cosf(_phi) * _r);
+      samplPtsY_HemiSph.push_back(_y);
+      samplPtsZ_HemiSph.push_back(z);
     }
   }
 
-  // Add points at the equator for better performance of some plotting tools
-  for (double phi = 0.0; phi <= SIMPLib::Constants::k_2Pi; phi += m_planeResol)
+  // now, select the points from the SST
+  for (int ptIdx_HemiSph = 0; ptIdx_HemiSph < samplPtsX_HemiSph.size(); ptIdx_HemiSph++)
   {
-    samplPtsX.push_back(cosf(static_cast<float>(phi)));
-    samplPtsY.push_back(sinf(static_cast<float>(phi)));
-    samplPtsZ.push_back(0.0f);
+    if (getCancel() == true) { return; }
+
+    float x = samplPtsX_HemiSph[ptIdx_HemiSph];
+    float y = samplPtsY_HemiSph[ptIdx_HemiSph];
+    float z = samplPtsZ_HemiSph[ptIdx_HemiSph];
+
+    if (cryst == 0) // 6/mmm
+    {
+      if (x < 0.0f || y < 0.0f || y > x * SIMPLib::Constants::k_1OverRoot3) { continue; }
+    }
+    if (cryst == 1) // m-3m
+    {
+        if (y < 0.0f || x < y || z < x) { continue; }
+    }
+    if (cryst == 2 || cryst == 10) // 6/m || -3m
+    {
+      if (x < 0.0f || y < 0.0f || y > x * SIMPLib::Constants::k_Sqrt3) { continue; }
+    }
+    if (cryst == 3) // m-3
+    {
+      if (x < 0.0f || y < 0.0f || z < x || z < y) { continue; }
+    }
+    // cryst = 4  =>  -1
+    if (cryst == 5) // 2/m
+    {
+      if (y < 0.0f) { continue; }
+    }
+    if (cryst == 6 || cryst == 7) // mmm || 4/m
+    {
+      if (x < 0.0f || y < 0.0f) { continue; }
+    }
+    if (cryst == 8) // 4/mmm
+    {
+      if (x < 0.0f || y < 0.0f || y > x) { continue; }
+    }
+    if (cryst == 9) // -3
+    {
+      if (y < 0.0f || x < -y * SIMPLib::Constants::k_1OverRoot3) { continue; }
+    }
+
+    samplPtsX.push_back(x);
+    samplPtsY.push_back(y);
+    samplPtsZ.push_back(z);
   }
 
-  // Convert axis angle to matrix representation of misorientation
-  float gFixed[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
-  float gFixedT[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+  // Add points at the edges and vertices of a fundamental region
+  const double deg = SIMPLib::Constants::k_PiOver180;
+  const double density = m_LimitDist;
 
+  if (cryst == 0) // 6/mmm
   {
-    float gFixedAngle = static_cast<float>(m_MisorientationRotation.angle * SIMPLib::Constants::k_PiOver180);
-    float gFixedAxis[3] = { m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l };
-    MatrixMath::Normalize3x1(gFixedAxis);
-    FOrientArrayType om(9);
-    FOrientTransformsType::ax2om(FOrientArrayType(gFixedAxis[0], gFixedAxis[1], gFixedAxis[2], gFixedAngle), om);
-    om.toGMatrix(gFixed);
+    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, 0.0, 90.0 * deg, density);
+    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 30.0 * deg, 0.0, 90.0 * deg, density);
+    appendSamplPtsFixedZenith(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 30.0 * deg, density);
+  }
+  if (cryst == 1) // m-3m
+  {
+    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, 0.0, 45.0 * deg, density);
+    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 45.0 * deg, 0.0, acos(SIMPLib::Constants::k_1OverRoot3), density);
+
+    for (double phi = 0; phi <= 45.0f * deg; phi += density)
+    {
+      double cosPhi = cos(phi);
+      double sinPhi = sin(phi);
+      double atan1OverCosPhi = atan(1.0 / cosPhi);
+      double sinAtan1OverCosPhi = sin(atan1OverCosPhi);
+      double cosAtan1OverCosPhi = cos(atan1OverCosPhi);
+
+      samplPtsX.push_back(static_cast<float>(sinAtan1OverCosPhi * cosPhi));
+      samplPtsY.push_back(static_cast<float>(sinAtan1OverCosPhi * sinPhi));
+      samplPtsZ.push_back(static_cast<float>(cosAtan1OverCosPhi));
+    }
+  }
+  if (cryst == 2 || cryst == 10) // 6/m ||  -3m
+  {
+    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, 0.0, 90.0 * deg, density);
+    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 60.0 * deg, 0.0, 90.0 * deg, density);
+    appendSamplPtsFixedZenith(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 60.0 * deg, density);
+  }
+  if (cryst == 3) // m-3
+  {
+    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, 0.0, 45.0 * deg, density);
+    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 45.0 * deg, density);
+    for (double phi = 0; phi <= 45.0f * deg; phi += density)
+    {
+      double cosPhi = cos(phi);
+      double sinPhi = sin(phi);
+      double atan1OverCosPhi = atan(1.0 / cosPhi);
+      double sinAtan1OverCosPhi = sin(atan1OverCosPhi);
+      double cosAtan1OverCosPhi = cos(atan1OverCosPhi);
+
+      samplPtsX.push_back(static_cast<float>(sinAtan1OverCosPhi * cosPhi));
+      samplPtsY.push_back(static_cast<float>(sinAtan1OverCosPhi * sinPhi));
+      samplPtsZ.push_back(static_cast<float>(cosAtan1OverCosPhi));
+
+      samplPtsX.push_back(static_cast<float>(sinAtan1OverCosPhi * sinPhi));
+      samplPtsY.push_back(static_cast<float>(sinAtan1OverCosPhi * cosPhi));
+      samplPtsZ.push_back(static_cast<float>(cosAtan1OverCosPhi));
+    }
+  }
+  if (cryst == 4) // -1
+  {
+    appendSamplPtsFixedZenith(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 360.0 * deg, density);
+  }
+  if (cryst == 5) // 2/m
+  {
+    appendSamplPtsFixedZenith(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 180.0 * deg, density);
+    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, -90.0 * deg, 90.0 * deg, density);
+  }
+  if (cryst == 6 || cryst == 7) // mmm || 4/m
+  {
+    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, 0.0, 90.0 * deg, density);
+    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 90.0 * deg, density);
+    appendSamplPtsFixedZenith(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 90.0 * deg, density);
+  }
+  if (cryst == 8) // 4/mmm
+  {
+    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, 0.0, 90.0 * deg, density);
+    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 45.0 * deg, 0.0, 90.0 * deg, density);
+    appendSamplPtsFixedZenith(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 45.0 * deg, density);
+  }
+  if (cryst == 9) // -3
+  {
+    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 0.0, 0.0, 90.0 * deg, density);
+    appendSamplPtsFixedAzimuth(&samplPtsX, &samplPtsY, &samplPtsZ, 120.0 * deg, 0.0, 90.0 * deg, density);
+    appendSamplPtsFixedZenith(&samplPtsX, &samplPtsY, &samplPtsZ, 90.0 * deg, 0.0, 120.0 * deg, density);
   }
 
-  MatrixMath::Transpose3x3(gFixed, gFixedT);
-
+  // ---------  find triangles corresponding to Phase of Interests, and their normals in crystal reference frames ---------
   size_t numMeshTris = m_SurfaceMeshFaceAreasPtr.lock()->getNumberOfTuples();
 
-  // ---------  find triangles (and equivalent crystallographic parameters) with +- the fixed misorientation ---------
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
@@ -956,15 +1003,13 @@ void FindGBCDMetricBased::execute()
   QVector<TriAreaAndNormals> selectedTris(0);
 #endif
 
-  QVector<int8_t> triIncluded(numMeshTris, 0);
-
   size_t trisChunkSize = 50000;
   if (numMeshTris < trisChunkSize) { trisChunkSize = numMeshTris; }
 
   for (size_t i = 0; i < numMeshTris; i = i + trisChunkSize)
   {
     if (getCancel() == true) { return; }
-    ss = QObject::tr("|| Step 1/2: Selecting Triangles with the Specified Misorientation (%1% completed)").arg(int(100.0 * float(i) / float(numMeshTris)));
+    ss = QObject::tr("--> Selecting triangles corresponding to Phase Of Interest");
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     if (i + trisChunkSize >= numMeshTris)
     {
@@ -976,20 +1021,17 @@ void FindGBCDMetricBased::execute()
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(i, i + trisChunkSize),
         TrisSelector(
-        m_ExcludeTripleLines,
-        m_Triangles,
-        m_NodeTypes,
-        &selectedTris,
-        &triIncluded,
-        m_misorResol,
-        m_PhaseOfInterest,
-        gFixedT,
-        m_CrystalStructures,
-        m_Eulers,
-        m_Phases,
-        m_FaceLabels,
-        m_FaceNormals,
-        m_FaceAreas
+          m_ExcludeTripleLines,
+          m_Triangles,
+          m_NodeTypes,
+          &selectedTris,
+          m_PhaseOfInterest,
+          m_CrystalStructures,
+          m_Eulers,
+          m_Phases,
+          m_FaceLabels,
+          m_FaceNormals,
+          m_FaceAreas
         ), tbb::auto_partitioner());
     }
     else
@@ -1000,17 +1042,14 @@ void FindGBCDMetricBased::execute()
         m_Triangles,
         m_NodeTypes,
         &selectedTris,
-        &triIncluded,
-        m_misorResol,
         m_PhaseOfInterest,
-        gFixedT,
         m_CrystalStructures,
         m_Eulers,
         m_Phases,
         m_FaceLabels,
         m_FaceNormals,
         m_FaceAreas
-      );
+        );
       serial.select(i, i + trisChunkSize);
     }
   }
@@ -1033,21 +1072,18 @@ void FindGBCDMetricBased::execute()
 
   // ----------------- determining distribution values at the sampling points (and their errors) ---
   double totalFaceArea = 0.0;
-  for (size_t triIdx = 0; triIdx < numMeshTris; triIdx++)
-  {
-    totalFaceArea += m_FaceAreas[triIdx] * double(triIncluded.at(triIdx));
-  }
+  for (int i = 0; i < static_cast<int>(selectedTris.size()); i++) { totalFaceArea += selectedTris.at(i).area; }
 
   QVector<double> distribValues(samplPtsX.size(), 0.0);
   QVector<double> errorValues(samplPtsX.size(), 0.0);
 
-  int32_t pointsChunkSize = 100;
+  int32_t pointsChunkSize = 20;
   if (samplPtsX.size() < pointsChunkSize) { pointsChunkSize = samplPtsX.size(); }
 
   for (int32_t i = 0; i < samplPtsX.size(); i = i + pointsChunkSize)
   {
     if (getCancel() == true) { return; }
-    ss = QObject::tr("|| Step 2/2: Computing Distribution Values at the Section of Interest (%1% completed)").arg(int(100.0 * float(i) / float(samplPtsX.size())));
+    ss = QObject::tr("--> Determining GBPD values (%1%)").arg(int(100.0 * float(i) / float(samplPtsX.size())));
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     if (i + pointsChunkSize >= samplPtsX.size())
     {
@@ -1061,15 +1097,15 @@ void FindGBCDMetricBased::execute()
         ProbeDistrib(
         &distribValues,
         &errorValues,
-        samplPtsX,
-        samplPtsY,
-        samplPtsZ,
+        &samplPtsX,
+        &samplPtsY,
+        &samplPtsZ,
         selectedTris,
-        m_PlaneResolSq,
+        m_LimitDist,
         totalFaceArea,
         numDistinctGBs,
         ballVolume,
-        gFixedT
+        cryst
         ), tbb::auto_partitioner());
     }
     else
@@ -1078,50 +1114,75 @@ void FindGBCDMetricBased::execute()
       ProbeDistrib serial(
         &distribValues,
         &errorValues,
-        samplPtsX,
-        samplPtsY,
-        samplPtsZ,
+        &samplPtsX,
+        &samplPtsY,
+        &samplPtsZ,
         selectedTris,
-        m_PlaneResolSq,
+        m_LimitDist,
         totalFaceArea,
         numDistinctGBs,
         ballVolume,
-        gFixedT
+        cryst
         );
       serial.probe(i, i + pointsChunkSize);
     }
   }
 
   // ------------------------------------------- writing the output --------------------------------
-  fprintf(fDist, "%.1f %.1f %.1f %.1f\n", m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l, m_MisorientationRotation.angle);
-  fprintf(fErr, "%.1f %.1f %.1f %.1f\n", m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l, m_MisorientationRotation.angle);
+  fprintf(fDist, "%.1f %.1f %.1f %.1f\n", 0.0f, 0.0f, 0.0f, 0.0f);
+  fprintf(fErr, "%.1f %.1f %.1f %.1f\n", 0.0f, 0.0f, 0.0f, 0.0f);
 
-  for (int ptIdx = 0; ptIdx < samplPtsX.size(); ptIdx++) {
+  for (int ptIdx = 0; ptIdx < samplPtsX.size(); ptIdx++)
+  {
+    float point[3] = { samplPtsX.at(ptIdx), samplPtsY.at(ptIdx), samplPtsZ.at(ptIdx) };
+    float sym[3][3] = { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
 
-    float zenith = acosf(samplPtsZ.at(ptIdx));
-    float azimuth = atan2f(samplPtsY.at(ptIdx), samplPtsX.at(ptIdx));
-
-    float zenithDeg = static_cast<float>(SIMPLib::Constants::k_180OverPi * zenith);
-    float azimuthDeg = static_cast<float>(SIMPLib::Constants::k_180OverPi * azimuth);
-
-    fprintf(fDist, "%.2f %.2f %.4f\n", azimuthDeg, 90.0f - zenithDeg,  distribValues[ptIdx]);
-
-    if (m_SaveRelativeErr == false)
+    for (int j = 0; j < nsym; j++)
     {
-      fprintf(fErr, "%.2f %.2f %.4f\n", azimuthDeg, 90.0f - zenithDeg, errorValues[ptIdx]);
-    }
-    else
-    {
-      double saneErr = 100.0;
-      if (distribValues[ptIdx] > 1e-10)
+      m_OrientationOps[cryst]->getMatSymOp(j, sym);
+      float sym_point[3] = { 0.0f, 0.0f, 0.0f };
+      MatrixMath::Multiply3x3with3x1(sym, point, sym_point);
+
+      if (sym_point[2] < 0.0f)
       {
-        saneErr = fmin(100.0, 100.0 * errorValues[ptIdx] / distribValues[ptIdx]);
+        sym_point[0] = -sym_point[0];
+        sym_point[1] = -sym_point[1];
+        sym_point[2] = -sym_point[2];
       }
-      fprintf(fErr, "%.2f %.2f %.2f\n", azimuthDeg, 90.0f - zenithDeg,  saneErr);
+
+      float zenith = acosf(sym_point[2]);
+      float azimuth = atan2f(sym_point[1], sym_point[0]);
+
+      float zenithDeg = static_cast<float>(SIMPLib::Constants::k_180OverPi * zenith);
+      float azimuthDeg = static_cast<float>(SIMPLib::Constants::k_180OverPi * azimuth);
+
+      fprintf(fDist, "%.2f %.2f %.4f\n", azimuthDeg, 90.0f - zenithDeg, distribValues[ptIdx]);
+
+      if (m_SaveRelativeErr == false)
+      {
+        fprintf(fErr, "%.2f %.2f %.4f\n", azimuthDeg, 90.0f - zenithDeg, errorValues[ptIdx]);
+      }
+      else
+      {
+        double saneErr = 100.0;
+        if (distribValues[ptIdx] > 1e-10)
+        {
+          saneErr = fmin(100.0, 100.0 * errorValues[ptIdx] / distribValues[ptIdx]);
+        }
+        fprintf(fErr, "%.2f %.2f %.2f\n", azimuthDeg, 90.0f - zenithDeg, saneErr);
+      }
     }
   }
   fclose(fDist);
   fclose(fErr);
+
+  if (getErrorCondition() < 0)
+  {
+    QString ss = QObject::tr("Something went wrong");
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
@@ -1129,10 +1190,10 @@ void FindGBCDMetricBased::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FindGBCDMetricBased::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindGBPDMetricBased::newFilterInstance(bool copyFilterParameters)
 {
-  FindGBCDMetricBased::Pointer filter = FindGBCDMetricBased::New();
-  if (true == copyFilterParameters)
+  FindGBPDMetricBased::Pointer filter = FindGBPDMetricBased::New();
+  if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }
@@ -1142,15 +1203,13 @@ AbstractFilter::Pointer FindGBCDMetricBased::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCDMetricBased::getCompiledLibraryName()
-{
-  return SurfaceMeshingConstants::SurfaceMeshingBaseName;
-}
+const QString FindGBPDMetricBased::getCompiledLibraryName()
+{ return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCDMetricBased::getBrandingString()
+const QString FindGBPDMetricBased::getBrandingString()
 {
   return "SurfaceMeshing";
 }
@@ -1158,7 +1217,7 @@ const QString FindGBCDMetricBased::getBrandingString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCDMetricBased::getFilterVersion()
+const QString FindGBPDMetricBased::getFilterVersion()
 {
   QString version;
   QTextStream vStream(&version);
@@ -1169,17 +1228,17 @@ const QString FindGBCDMetricBased::getFilterVersion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCDMetricBased::getGroupName()
+const QString FindGBPDMetricBased::getGroupName()
 { return SIMPL::FilterGroups::StatisticsFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCDMetricBased::getSubGroupName()
+const QString FindGBPDMetricBased::getSubGroupName()
 { return SIMPL::FilterSubGroups::CrystallographicFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCDMetricBased::getHumanLabel()
-{ return "Find GBCD (Metric-Based Approach)"; }
+const QString FindGBPDMetricBased::getHumanLabel()
+{ return "Find GBPD (Metric-Based Approach)"; }

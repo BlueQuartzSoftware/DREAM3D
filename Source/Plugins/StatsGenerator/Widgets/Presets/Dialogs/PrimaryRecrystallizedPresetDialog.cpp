@@ -114,8 +114,8 @@ void PrimaryRecrystallizedPresetDialog::setupGui()
 float PrimaryRecrystallizedPresetDialog::getPercentRecrystallized()
 {
   bool ok = false;
-  double d = percentRecystallized->text().toFloat(&ok);
-  //FIXME: Should check the 'ok' variable here
+  float d = percentRecystallized->text().toFloat(&ok);
+  if(!ok) d = 0.0f;
   return d;
 }
 

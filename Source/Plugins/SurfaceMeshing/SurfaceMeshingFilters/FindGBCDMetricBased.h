@@ -182,7 +182,6 @@ public:
   */
   virtual void preflight();
 
-
 protected:
   FindGBCDMetricBased();
 

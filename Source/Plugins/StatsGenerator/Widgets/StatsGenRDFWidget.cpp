@@ -307,6 +307,8 @@ void StatsGenRDFWidget::extractStatsData(int index, StatsData* statsData, unsign
     //updateRDFPlot(qFreq);
   }
 
+  // Generate the RDF table Plot? which adds value to the Table?
+  on_generateRDFBtn_clicked();
 }
 
 

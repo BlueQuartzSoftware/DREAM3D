@@ -37,6 +37,10 @@
 #ifndef _importasciidatawidget_h_
 #define _importasciidatawidget_h_
 
+#include <QtCore/QThread>
+
+#include <QtGui/QMovie>
+
 #include "SIMPLViewWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 
 #include "ui_ImportASCIIDataWidget.h"
@@ -45,6 +49,7 @@ class QFSDropLabel;
 class ImportASCIIDataFilterParameter;
 class ImportASCIIDataWizard;
 class ImportASCIIData;
+class LineCounterObject;
 
 class ImportASCIIDataWidget : public FilterParameterWidget, private Ui::ImportASCIIDataWidget
 {
@@ -76,6 +81,9 @@ class ImportASCIIDataWidget : public FilterParameterWidget, private Ui::ImportAS
     void on_editHeadersBtn_pressed();
     void on_removeFileBtn_pressed();
 
+    void lineCountDidFinish();
+    void updateProgress(double percentage);
+
   signals:
     void errorSettingFilterParameter(const QString& msg);
     void parametersChanged();
@@ -86,9 +94,11 @@ class ImportASCIIDataWidget : public FilterParameterWidget, private Ui::ImportAS
 
     ImportASCIIDataWizard*                            m_ImportWizard;
 
+    QString                                           m_FilePath;
     static QString                                    m_OpenDialogLastDirectory;
 
-    int                                               m_NumLines;
+    QThread*                                          m_WorkerThread;
+    LineCounterObject*                                m_LineCounter;
 
     ImportASCIIDataWidget(const ImportASCIIDataWidget&); // Copy Constructor Not Implemented
     void operator=(const ImportASCIIDataWidget&); // Operator '=' Not Implemented

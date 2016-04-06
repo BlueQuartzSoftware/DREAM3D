@@ -366,6 +366,7 @@ void StatsGenMDFWidget::extractStatsData(int index, StatsData* statsData, unsign
     arrays = tp->getMDF_Weights();
   }
 
+<<<<<<< HEAD:Source/Plugins/StatsGenerator/Widgets/StatsGenMDFWidget.cpp
   QVector<float> axis;
   QVector<float> angle;
   QVector<float> weights;
@@ -377,6 +378,13 @@ void StatsGenMDFWidget::extractStatsData(int index, StatsData* statsData, unsign
        axis = QVector<float>(static_cast<int>(arrays[i]->getSize())); // This one is 3xn in size
       ::memcpy( &(axis.front()), arrays[i]->getVoidPointer(0), sizeof(float)*axis.size() );
     }
+=======
+    QVector<float> weights(static_cast<int>(arrays[1]->getNumberOfTuples()));
+    ::memcpy( &(weights.front()), arrays[1]->getVoidPointer(0), sizeof(float)*weights.size() );
+
+    QVector<float> axis(static_cast<int>(arrays[2]->getSize())); // This one is 3xn in size
+    ::memcpy( &(axis.front()), arrays[2]->getVoidPointer(0), sizeof(float)*axis.size() );
+>>>>>>> develop:Source/Applications/StatsGenerator/StatsGenMDFWidget.cpp
 
     if(arrays[i]->getName().compare(SIMPL::StringConstants::Angle) == 0)
     {

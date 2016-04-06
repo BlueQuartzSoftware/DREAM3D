@@ -200,8 +200,6 @@ set(OrientationLib_LINK_LIBRARIES "")
 if(${OrientationLib_ENABLE_HDF5})
   set(OrientationLib_LINK_LIBRARIES
     ${OrientationLib_LINK_LIBRARIES}
-    hdf5
-    H5Support
     EbsdLib
     )
 endif()

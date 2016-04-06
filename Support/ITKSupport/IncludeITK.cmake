@@ -120,6 +120,7 @@ set(DREAM3D_ITK_MODULES
     ITKWatersheds
     ITKClassifiers
     #ITKConnectedComponents
+    ITKTransform
 
     #Other
     ITKReview

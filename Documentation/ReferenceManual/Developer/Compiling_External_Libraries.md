@@ -9,11 +9,11 @@ A tutorial is available for [Windows 7/8](http://dream3d.bluequartz.net/?p=954) 
 
 A compiler suite (Visual Studio, Xcode, GCC, etc.) for your operating system is necessary. The following table lists the compilers that DREAM.3D is commonly compiled against.
 
-| Compiler Version | Notes |  
-|  ------	| ------	|  
-| Visual Studio 2013 Pro & Express/Community SP4 | 64 bit builds |  
-| Xcode 5.1.1 (or Greater) (OS X Version 10.8, 10.9, 10.10) | 64 bit Intel Only |  
-| GCC 4.7.x or Clang (Ubuntu 14.04) | 64 bit Intel Only |  
+| Compiler Version | Notes |
+|  ------	| ------	|
+| Visual Studio 2013 Pro & Express/Community SP4 | 64 bit builds |
+| Xcode 5.1.1 (or Greater) (OS X Version 10.8, 10.9, 10.10) | 64 bit Intel Only |
+| GCC 4.7.x or Clang (Ubuntu 14.04) | 64 bit Intel Only |
 
 ## Note for MinGW/MSys/Cygwin ##
 
@@ -23,7 +23,7 @@ Due to incompatibilities of HDF5, compiling DREAM.3D using these environments is
 
 The DREAM.3D developers keep a downloadable _DREAM3D\_SDK_ for Visual Studio 2013 that contains 64 bit builds of **ALL** the dependent libraries and applications except for Qt 5 and ITK. The _DREAM3D\_SDK_ can be downloaded [here](http://dream3d.bluequartz.net/binaries/SDK/).
 
-**The developer is strongly urged to utilize the available SDK as everything is included except a git install**. Unless the developer has a special need to compile everything, it is best to use the precompiled SDK. 
+**The developer is strongly urged to utilize the available SDK as everything is included except a git install**. Unless the developer has a special need to compile everything, it is best to use the precompiled SDK.
 
 # External Dependencies (Recommended Order of Installation) #
 
@@ -44,11 +44,11 @@ The DREAM.3D developers keep a downloadable _DREAM3D\_SDK_ for Visual Studio 201
 
 The developer is urged to keep two distinct folder hierarchies on their computer. The first is a folder that contains all the source codes to all the various libraries and DREAM.3D itself.  Let's call this **Workspace**. The second is a folder where the developer will _INSTALL_ all the libraries that they will compile. Let's call this the **DREAM3D_SDK**.  The general flow is to download the source into the **Workspace** directory, configure it using CMake, build it and then install the libraries into the **DREAM3D_SDK** folder. The single exception to this is Qt on Windows. For this very specific case, build Qt in its final _installation_ location; once Qt is built on the Windows platforms it **CAN NOT** be moved to another location. Let's look at an example on Windows:
 
-Our **Workspace** is location at 
+Our **Workspace** is location at
 
 	C:\Users\[user_id]\Workspace
-	
-Our **DREAM3D\_SDK** is located at 
+
+Our **DREAM3D\_SDK** is located at
 
 	C:\DREAM3D_SDK
 
@@ -72,7 +72,7 @@ The default packages are usually not new enough from the package maintainers and
 Download Doxygen for your system. Unpack and drop the folder into the **DREAM3D\_SDK** folder.
 
 ## OS X Notes ##
-	
+
 On OS X systems the Doxygen.app should be placed into /Applications instead of the **DREAM3D\_SDK** folder.
 
 ## Linux Notes ##
@@ -127,9 +127,9 @@ Windows developers should select the *.zip file and OS X users should select the
 
 	[user] $ tar -xvzf boost_1_58_0.tar.gz
 	[user] $ cd boost_1_58_0
-	[user] $ ./bootstrap.sh 
+	[user] $ ./bootstrap.sh
 	[user] $ ./b2 --prefix=/Users/Shared/DREAM3D_SDK/boost-1.58.0 --build-dir=Build variant=release link=shared threading=multi install
-	[user] $ 
+	[user] $
 
 
 ## Linux Notes ##
@@ -169,7 +169,7 @@ Download [http://threadingbuildingblocks.org/download](http://threadingbuildingb
 ## OS X Notes ##
 
 Within the DREAM3D/Support/Scripts/OSX_Build_Scripts directory is a shell script called "Build_TBB.sh". This script should be used to build TBB for OS X.
-	
+
 ## Linux Notes ##
 
 + Download TBB from [http://threadingbuildingblocks.org/download](http://threadingbuildingblocks.org/download)
@@ -181,13 +181,13 @@ Download Qt from [http://www.qt.io](http://www.qt.io). One can usually download 
 
 Install Qt into C:/DREAM3D_SDK/Qt5.4.1 (Windows) /Users/Shared/DREAM3D_SDK/Qt5.4.1 (OS X) or /opt/DREAM3D_SDK/Qt5.4.1 (Linux).
 
-**Windows Visual Studio Users** The Qt-Project provides pre-built binaries for Qt for Visual Studio (VS) BUT they are ONLY 64 bit and they are ONLY for Visual Studio 2013 and ONLY for a specific version of Visual Studio 2013. If your version of Visual Studio does NOT match theirs, down to the exact security patches and service packs you **will** get errors due to mismatched "manifests", C/C++ runtime DLL issues and a few other things. 
+**Windows Visual Studio Users** The Qt-Project provides pre-built binaries for Qt for Visual Studio (VS) BUT they are ONLY 64 bit and they are ONLY for Visual Studio 2013 and ONLY for a specific version of Visual Studio 2013. If your version of Visual Studio does NOT match theirs, down to the exact security patches and service packs you **will** get errors due to mismatched "manifests", C/C++ runtime DLL issues and a few other things.
 
 # Building Qwt #
 
 Build Qwt 6.1.2 which is the first version to be compatible with Qt 5.4.1
 
-+ Download version [Qwt 6.1.2](http://sourceforge.net/projects/qwt/files/latest/download) for Qt 5.4 compatibility 
++ Download version [Qwt 6.1.2](http://sourceforge.net/projects/qwt/files/latest/download) for Qt 5.4 compatibility
 + Modify the following files:
 
 ## Edit qwt-6.1.2/src/src.pro ##
