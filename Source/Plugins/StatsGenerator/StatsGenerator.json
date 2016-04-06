@@ -1,0 +1,27 @@
+{
+
+  "Statistics": {
+
+      "Phase Count": 3
+  },
+ 
+  "1": {
+    "Phase Type": "PrimaryStatsData",
+    "Bin Count": 6,
+    "Bin Step Size": 0.5,
+    "FeatureSize Distribution" : {
+      "Average": 1.0,
+      "Standard Deviation": 0.1
+    }
+
+
+  },
+  "2":{
+    "Phase Type": "PrecipitateStatsData",
+  },
+
+  "3": {
+    "Phase Type": "MatrixStatsData",
+  }
+
+}

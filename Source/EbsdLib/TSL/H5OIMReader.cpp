@@ -174,7 +174,7 @@ int H5OIMReader::readFile()
   {
     QString str;
     QTextStream ss(&str);
-    ss << "H5OIMReader Error: could not read data";
+    ss << "H5OIMReader Error: could not read data. Internal Error code " << err << " generated.";
     err = QH5Utilities::closeFile(fileId);
     setErrorCode(-900022);
     setErrorMessage(str);

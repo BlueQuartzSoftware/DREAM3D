@@ -288,6 +288,7 @@ void ReplaceElementAttributesWithNeighborValues::readFilterParameters(AbstractFi
   setConfidenceIndexArrayPath(reader->readDataArrayPath("ConfidenceIndexArrayPath", getConfidenceIndexArrayPath() ) );
   setMinConfidence( reader->readValue("MinConfidence", getMinConfidence()) );
   setLoop( reader->readValue("Loop", false) );
+  setSelectedComparison(reader->readValue("SelectedComparison", getSelectedComparison()));
   reader->closeFilterGroup();
 }
 
@@ -301,6 +302,7 @@ int ReplaceElementAttributesWithNeighborValues::writeFilterParameters(AbstractFi
   SIMPL_FILTER_WRITE_PARAMETER(ConfidenceIndexArrayPath)
   SIMPL_FILTER_WRITE_PARAMETER(MinConfidence)
   SIMPL_FILTER_WRITE_PARAMETER(Loop)
+  SIMPL_FILTER_WRITE_PARAMETER(SelectedComparison)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
