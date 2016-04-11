@@ -555,7 +555,7 @@ set_target_properties(DataFolderCopy PROPERTIES FOLDER ZZ_COPY_FILES)
 
 # we want specific stats files to be bundled with the Application. The Ang data files
 # are too large to be included and will be a separate download
-SET(SYNTHETIC_STATS_FILES
+set(SYNTHETIC_STATS_FILES
     ${DREAM3D_DATA_DIR}/Data/Composite.dream3d
     ${DREAM3D_DATA_DIR}/Data/CubicSingleEquiaxed.dream3d
     ${DREAM3D_DATA_DIR}/Data/CubicSingleRolled.dream3d
@@ -564,8 +564,9 @@ SET(SYNTHETIC_STATS_FILES
   )
 
 #- This installs all the Data files during a "make install" or "make package"
-install(FILES ${SYNTHETIC_STATS_FILES}
-        DESTINATION ./Data/
-        COMPONENT Applications )
-
-
+list(GET SYNTHETIC_STATS_FILES 0 data_file)
+if(EXISTS ${data_file})
+  install(FILES ${SYNTHETIC_STATS_FILES}
+          DESTINATION ./Data/
+          COMPONENT Applications )
+endif()
