@@ -296,8 +296,7 @@ void StatsGenRDFWidget::extractStatsData(int index, StatsData* statsData, unsign
 
     minDistLE->setText(QString::number(rdf->getMinDistance()));
     maxDistLE->setText(QString::number(rdf->getMaxDistance()));
-
-    numBinsLE->setText(QString::number(rdf->getFrequencies().size()));
+    numBinsLE->setText(QString::number(rdf->getNumberOfBins()));
 
     // Generate a new RDF for these
     on_generateRDFBtn_clicked();
@@ -321,6 +320,7 @@ RdfData::Pointer StatsGenRDFWidget::getStatisticsData()
   bool ok = false;
   RdfData::Pointer rdf = RdfData::New();
   QVector<float> qRdfDataFinal(numBinsLE->text().toInt(&ok));
+  rdf->setNumberOfBins(numBinsLE->text().toInt());
 
   QLocale loc = QLocale::system();
   std::vector<float> boxDims(3);
