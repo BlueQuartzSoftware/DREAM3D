@@ -32,8 +32,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _StatsGeneratorUtilities_h_
-#define _StatsGeneratorUtilities_h_
+#ifndef _statsgeneratorutilities_h_
+#define _statsgeneratorutilities_h_
 
 #include <QtCore/QVector>
 
@@ -61,6 +61,10 @@ class StatsGeneratorUtilities
                                    QVector<float> &e3s, QVector<float> &weights,
                                    QVector<float> &sigmas);
 
+    static void GenerateAxisODFBinData(StatsData* statsData, unsigned int phaseType,
+                                       QVector<float> &e1s, QVector<float> &e2s,
+                                       QVector<float> &e3s, QVector<float> &weights,
+                                       QVector<float> &sigmas);
 
     static QVector<float> GenerateODFData(unsigned int crystalStructure,
                                                  QVector<float> &e1s, QVector<float> &e2s,

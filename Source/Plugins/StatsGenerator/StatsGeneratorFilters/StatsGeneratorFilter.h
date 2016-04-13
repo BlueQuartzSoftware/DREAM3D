@@ -52,10 +52,22 @@ class StatsGeneratorFilter : public AbstractFilter
 
     virtual ~StatsGeneratorFilter();
 
-//    SIMPL_FILTER_PARAMETER(DataContainer::Pointer, StatsGeneratorDataContainer)
-//    Q_PROPERTY(DataContainer::Pointer StatsGeneratorDataContainer READ getStatsGeneratorDataContainer WRITE setStatsGeneratorDataContainer)
+    SIMPL_FILTER_PARAMETER(QString, StatsGeneratorDataContainerName)
+    Q_PROPERTY(QString StatsGeneratorDataContainerName READ getStatsGeneratorDataContainerName WRITE setStatsGeneratorDataContainerName)
 
-    SIMPL_FILTER_PARAMETER(StatsDataArray::Pointer, StatsDataArray);
+    SIMPL_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+    Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
+
+    SIMPL_FILTER_PARAMETER(QString, StatsDataArrayName)
+    Q_PROPERTY(QString StatsDataArrayName READ getStatsDataArrayName WRITE setStatsDataArrayName)
+
+    SIMPL_FILTER_PARAMETER(QString, CrystalStructuresArrayName)
+    Q_PROPERTY(QString CrystalStructuresArrayName READ getCrystalStructuresArrayName WRITE setCrystalStructuresArrayName)
+
+    SIMPL_FILTER_PARAMETER(QString, PhaseTypesArrayName)
+    Q_PROPERTY(QString PhaseTypesArrayName READ getPhaseTypesArrayName WRITE setPhaseTypesArrayName)
+
+    SIMPL_FILTER_PARAMETER(StatsDataArray::Pointer, StatsDataArray)
     Q_PROPERTY(StatsDataArray::Pointer StatsDataArray READ getStatsDataArray WRITE setStatsDataArray)
 
     SIMPL_FILTER_PARAMETER(UInt32ArrayType::Pointer, CrystalStructures)

@@ -189,7 +189,6 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, unsigned int pha
   QVector<float> e3s;
   QVector<float> weights;
   QVector<float> sigmas;
-  QVector<float> odf;
 
   SGODFTableModel* tableModel = NULL;
 
@@ -211,11 +210,10 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, unsigned int pha
   // Convert from Degrees to Radians
   for (QVector<float>::size_type i = 0; i < e1s.size(); i++)
   {
-    e1s[i] = e1s[i] * M_PI / 180.0;
-    e2s[i] = e2s[i] * M_PI / 180.0;
-    e3s[i] = e3s[i] * M_PI / 180.0;
+    e1s[i] = static_cast<float>(e1s[i] * M_PI / 180.0);
+    e2s[i] = static_cast<float>(e2s[i] * M_PI / 180.0);
+    e3s[i] = static_cast<float>(e3s[i] * M_PI / 180.0);
   }
-
 
   StatsGeneratorUtilities::GenerateODFBinData(statsData, phaseType, m_CrystalStructure, e1s, e2s, e3s, weights, sigmas);
 

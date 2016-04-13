@@ -60,11 +60,10 @@
 #include "OrientationLib/Utilities/PoleFigureUtilities.h"
 #include "OrientationLib/Utilities/PoleFigureImageUtilities.h"
 
+#include "StatsGenerator/StatsGeneratorFilters/StatsGeneratorUtilities.h"
 #include "StatsGenerator/Widgets/TableModels/SGODFTableModel.h"
 #include "StatsGenerator/Widgets/StatsGenMDFWidget.h"
 #include "StatsGenerator/Widgets/TextureDialog.h"
-
-
 
 //-- Qwt Includes AFTER SIMPLib Math due to improper defines in qwt_plot_curve.h
 #include <qwt_plot.h>
@@ -76,7 +75,6 @@
 #ifndef QwtArray
 #define QwtArray QVector
 #endif
-
 
 #define SHOW_POLE_FIGURES 1
 #define COLOR_POLE_FIGURES 1
@@ -185,71 +183,16 @@ int SGAxisODFWidget::getOrientationData(StatsData* statsData, unsigned int phase
   QVector<float> e2Rad = e2s;
   QVector<float> e3Rad = e3s;
 
-  for(qint32 i = 0; i < e1s.size(); i++)
+  // Convert from Degrees to Radians
+  for (QVector<float>::size_type i = 0; i < e1s.size(); i++)
   {
-    e1Rad[i] = e1Rad[i] * SIMPLib::Constants::k_PiOver180;
-    e2Rad[i] = e2Rad[i] * SIMPLib::Constants::k_PiOver180;
-    e3Rad[i] = e3Rad[i] * SIMPLib::Constants::k_PiOver180;
+    e1s[i] = static_cast<float>(e1s[i] * M_PI / 180.0);
+    e2s[i] = static_cast<float>(e2s[i] * M_PI / 180.0);
+    e3s[i] = static_cast<float>(e3s[i] * M_PI / 180.0);
   }
 
-  size_t numEntries = e1s.size();
+  StatsGeneratorUtilities::GenerateAxisODFBinData(statsData, phaseType, e1s, e2s, e3s, weights, sigmas);
 
-  QVector<float> aodf;
-  aodf.resize(OrthoRhombicOps::k_OdfSize);
-  Texture::CalculateOrthoRhombicODFData(e1Rad.data(), e2Rad.data(), e3Rad.data(),
-                                        weights.data(), sigmas.data(), true,
-                                        aodf.data(), numEntries);
-  if (aodf.size() > 0)
-  {
-    FloatArrayType::Pointer aodfData = FloatArrayType::FromPointer(aodf.data(), aodf.size(), SIMPL::StringConstants::AxisOrientation);
-    if(phaseType == SIMPL::PhaseType::PrimaryPhase)
-    {
-      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
-      pp->setAxisOrientation(aodfData);
-    }
-    if(phaseType == SIMPL::PhaseType::PrecipitatePhase)
-    {
-      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
-      pp->setAxisOrientation(aodfData);
-    }
-    if(phaseType == SIMPL::PhaseType::TransformationPhase)
-    {
-      TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
-      tp->setAxisOrientation(aodfData);
-    }
-
-    if(e1s.size() > 0)
-    {
-      FloatArrayType::Pointer euler1 = FloatArrayType::FromPointer(e1s.data(), e1s.size(), SIMPL::StringConstants::Euler1);
-      FloatArrayType::Pointer euler2 = FloatArrayType::FromPointer(e2s.data(), e2s.size(), SIMPL::StringConstants::Euler2);
-      FloatArrayType::Pointer euler3 = FloatArrayType::FromPointer(e3s.data(), e3s.size(), SIMPL::StringConstants::Euler3);
-      FloatArrayType::Pointer sigma = FloatArrayType::FromPointer(sigmas.data(), sigmas.size(), SIMPL::StringConstants::Sigma);
-      FloatArrayType::Pointer weight = FloatArrayType::FromPointer(weights.data(), weights.size(), SIMPL::StringConstants::Weight);
-
-      VectorOfFloatArray aodfWeights;
-      aodfWeights.push_back(euler1);
-      aodfWeights.push_back(euler2);
-      aodfWeights.push_back(euler3);
-      aodfWeights.push_back(sigma);
-      aodfWeights.push_back(weight);
-      if(phaseType == SIMPL::PhaseType::PrimaryPhase)
-      {
-        PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
-        pp->setAxisODF_Weights(aodfWeights);
-      }
-      if(phaseType == SIMPL::PhaseType::PrecipitatePhase)
-      {
-        PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
-        pp->setAxisODF_Weights(aodfWeights);
-      }
-      if(phaseType == SIMPL::PhaseType::TransformationPhase)
-      {
-        TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
-        tp->setAxisODF_Weights(aodfWeights);
-      }
-    }
-
-  }
   return retErr;
 }
 

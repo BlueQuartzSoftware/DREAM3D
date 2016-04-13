@@ -134,7 +134,73 @@ void StatsGeneratorUtilities::GenerateODFBinData(StatsData* statsData,
       }
     }
   }
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUtilities::GenerateAxisODFBinData(StatsData* statsData, unsigned int phaseType,
+                                                     QVector<float> &e1s, QVector<float> &e2s,
+                                                     QVector<float> &e3s, QVector<float> &weights,
+                                                     QVector<float> &sigmas)
+{
+  QVector<float> aodf;
+  size_t numEntries = e1s.size();
+
+  aodf.resize(OrthoRhombicOps::k_OdfSize);
+  Texture::CalculateOrthoRhombicODFData(e1s.data(), e2s.data(), e3s.data(),
+                                        weights.data(), sigmas.data(), true,
+                                        aodf.data(), numEntries);
+
+  if (aodf.size() > 0)
+  {
+    FloatArrayType::Pointer aodfData = FloatArrayType::FromQVector(aodf, SIMPL::StringConstants::AxisOrientation);
+    if(phaseType == SIMPL::PhaseType::PrimaryPhase)
+    {
+      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
+      pp->setAxisOrientation(aodfData);
+    }
+    if(phaseType == SIMPL::PhaseType::PrecipitatePhase)
+    {
+      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
+      pp->setAxisOrientation(aodfData);
+    }
+    if(phaseType == SIMPL::PhaseType::TransformationPhase)
+    {
+      TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
+      tp->setAxisOrientation(aodfData);
+    }
+    if (e1s.size() > 0)
+    {
+      FloatArrayType::Pointer euler1 = FloatArrayType::FromQVector(e1s, SIMPL::StringConstants::Euler1);
+      FloatArrayType::Pointer euler2 = FloatArrayType::FromQVector(e2s, SIMPL::StringConstants::Euler2);
+      FloatArrayType::Pointer euler3 = FloatArrayType::FromQVector(e3s, SIMPL::StringConstants::Euler3);
+      FloatArrayType::Pointer sigma = FloatArrayType::FromQVector(sigmas, SIMPL::StringConstants::Sigma);
+      FloatArrayType::Pointer weight = FloatArrayType::FromQVector(weights, SIMPL::StringConstants::Weight);
+
+      VectorOfFloatArray aodfWeights;
+      aodfWeights.push_back(euler1);
+      aodfWeights.push_back(euler2);
+      aodfWeights.push_back(euler3);
+      aodfWeights.push_back(sigma);
+      aodfWeights.push_back(weight);
+      if(phaseType == SIMPL::PhaseType::PrimaryPhase)
+      {
+        PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
+        pp->setAxisODF_Weights(aodfWeights);
+      }
+      if(phaseType == SIMPL::PhaseType::PrecipitatePhase)
+      {
+        PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
+        pp->setAxisODF_Weights(aodfWeights);
+      }
+      if(phaseType == SIMPL::PhaseType::TransformationPhase)
+      {
+        TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
+        tp->setAxisODF_Weights(aodfWeights);
+      }
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
