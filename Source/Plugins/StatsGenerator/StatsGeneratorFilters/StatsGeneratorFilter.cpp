@@ -346,7 +346,7 @@ void StatsGeneratorFilter::execute()
       }
 
       // Compute the binned axis ODF and set it into the StatsDataArray
-      StatsGeneratorUtilities::GenerateAxisODFBinData(statsData.get(), phaseType, axis_e1s, axis_e2s, axis_e3s, weights, sigmas);
+      StatsGeneratorUtilities::GenerateAxisODFBinData(statsData.get(), phaseType, axis_e1s, axis_e2s, axis_e3s, axis_weights, axis_sigmas);
 
       // RDF Data ************************************************************************
       if (phaseType == SIMPL::PhaseType::PrecipitatePhase)
