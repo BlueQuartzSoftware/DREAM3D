@@ -238,7 +238,7 @@ void StatsGeneratorFilter::execute()
   if(getErrorCondition() < 0) { return; }
 
 
-  // Create the ODF and MDF Arrays, RDF (if needed) & Axis ODF for EACH PHASE
+  // Create the ODF, MDF, Axis ODF and bin numbers for EACH PHASE
   size_t count = m_StatsDataArray->getNumberOfTuples();
   for (size_t c = 0; c < count; c++)
   {
@@ -346,12 +346,6 @@ void StatsGeneratorFilter::execute()
 
       // Compute the binned axis ODF and set it into the StatsDataArray
       StatsGeneratorUtilities::GenerateAxisODFBinData(statsData.get(), phaseType, axis_e1s, axis_e2s, axis_e3s, axis_weights, axis_sigmas);
-
-      // RDF Data ************************************************************************
-      if (phaseType == SIMPL::PhaseType::PrecipitatePhase)
-      {
-        PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsData);
-      }
     }
   }
 
