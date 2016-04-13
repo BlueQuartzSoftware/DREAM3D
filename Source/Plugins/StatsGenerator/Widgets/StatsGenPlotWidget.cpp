@@ -233,7 +233,6 @@ VectorOfFloatArray StatsGenPlotWidget::getStatisticsData()
     return data;
   }
 
-
   FloatArrayType::Pointer col0;
   FloatArrayType::Pointer col1;
   FloatArrayType::Pointer col2;

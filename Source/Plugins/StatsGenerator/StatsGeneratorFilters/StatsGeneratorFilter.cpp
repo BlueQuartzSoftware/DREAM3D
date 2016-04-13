@@ -165,7 +165,6 @@ int StatsGeneratorFilter::writeFilterParameters(AbstractFilterParametersWriter* 
   }
   QJsonObject& jsonRoot = jsonWriter->getCurrentGroupObject();
 
-
   m_StatsDataArray->writeToJson(jsonRoot, m_CrystalStructures);
 
   SIMPL_FILTER_WRITE_PARAMETER(StatsGeneratorDataContainerName)
