@@ -54,11 +54,9 @@ class QwtPlotPanner;
 class QwtPlotGrid;
 class QwtPlotCurve;
 
-namespace UIA
-{
-  const static int Alpha = 255;
-}
-
+/**
+ * @brief The StatsGenPlotWidget class
+ */
 class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 {
 

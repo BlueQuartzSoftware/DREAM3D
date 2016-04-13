@@ -79,6 +79,12 @@
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
 #include "moc_StatsGenPlotWidget.cpp"
 
+namespace UIA
+{
+  const static int Alpha = 255;
+}
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

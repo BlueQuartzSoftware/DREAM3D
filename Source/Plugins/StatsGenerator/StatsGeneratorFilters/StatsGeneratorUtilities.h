@@ -28,78 +28,61 @@
 *
 * The code contained herein was partially funded by the followig contracts:
 *    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _statsgenrdfwidget_h_
-#define _statsgenrdfwidget_h_
+#ifndef _StatsGeneratorUtilities_h_
+#define _StatsGeneratorUtilities_h_
 
-#include <QtWidgets/QWidget>
+#include <QtCore/QVector>
 
-
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/StatsData/StatsData.h"
-#include "SIMPLib/StatsData/PrecipitateStatsData.h"
-#include "SIMPLib/Math/RadialDistributionFunction.h"
+class StatsData;
 
 
-#include "TableModels/SGRDFTableModel.h"
-
-#include "ui_StatsGenRDFWidget.h"
-
-class SGRDFTableModel;
-class QwtPlotCurve;
-
-/**
- * @class StatsGenRDFWidget StatsGenRDFWidget.h StatsGenerator/StatsGenRDFWidget.h
- * @brief This class gives GUIs an interface into the RDF settings
- *
- * @date Apr 20, 2011
- * @version 1.0
- */
-class StatsGenRDFWidget : public QWidget, private Ui::StatsGenRDFWidget
+class StatsGeneratorUtilities
 {
-    Q_OBJECT
-
   public:
-    StatsGenRDFWidget(QWidget* parent = 0);
-    virtual ~StatsGenRDFWidget();
 
-    void setupGui();
-    void initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot);
+    virtual ~StatsGeneratorUtilities();
 
-    int getMisorientationData(StatsData* statsData, unsigned int phaseType);
-    void extractStatsData(int index, StatsData* statsData, unsigned int phaseType);
+    /**
+     * @brief GenerateODFBinData
+     * @param statsData
+     * @param phaseType
+     * @param e1s
+     * @param e2s
+     * @param e3s
+     * @param weights
+     * @param sigmas
+     */
+    static void GenerateODFBinData(StatsData* statsData, unsigned int phaseType, unsigned int crystalStructure,
+                                   QVector<float> &e1s, QVector<float> &e2s,
+                                   QVector<float> &e3s, QVector<float> &weights,
+                                   QVector<float> &sigmas);
 
-    QVector<float> generateODFData();
 
-    void updateRDFPlot(QVector<float>& freqs);
-    void updatePlots();
+    static QVector<float> GenerateODFData(unsigned int crystalStructure,
+                                                 QVector<float> &e1s, QVector<float> &e2s,
+                                                 QVector<float> &e3s, QVector<float> &weights,
+                                                 QVector<float> &sigmas);
 
-    SGRDFTableModel* tableModel();
 
-    RdfData::Pointer getStatisticsData();
+    static void GenerateMisorientationBinData(StatsData* statsData,
+                                              unsigned int phaseType, unsigned int crystalStruct,
+                                              QVector<float>& odf,
+                                              QVector<float>& angles, QVector<float>& axes, QVector<float>& weights);
 
-  protected slots:
-    void on_generateRDFBtn_clicked();
 
+  protected:
+    StatsGeneratorUtilities();
 
   private:
-    SGRDFTableModel* m_RDFTableModel;
-    QwtPlotCurve*    m_PlotCurve;
-
-    QString m_OpenDialogLastDirectory; // Must be last in the list
-
-
-    StatsGenRDFWidget(const StatsGenRDFWidget&); // Copy Constructor Not Implemented
-    void operator=(const StatsGenRDFWidget&); // Operator '=' Not Implemented
+    StatsGeneratorUtilities(const StatsGeneratorUtilities&); // Copy Constructor Not Implemented
+    void operator=(const StatsGeneratorUtilities&); // Operator '=' Not Implemented
 
 };
 
-#endif /* _StatsGenRDFWidget_H_ */
+
+#endif /* _StatsGeneratorUtilities_h_ */
 

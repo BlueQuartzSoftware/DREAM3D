@@ -28,7 +28,7 @@ set(_PublicFilters
 foreach(f ${_PublicFilters} )
   ADD_SIMPL_FILTER(  "${PLUGIN_NAME}" "${PLUGIN_NAME}"
                         ${_filterGroupName} ${f}
-                        ${${PLUGIN_NAME}_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md 
+                        ${${PLUGIN_NAME}_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md
                         TRUE
                         ${${PLUGIN_NAME}_BINARY_DIR})
 endforeach()
@@ -49,7 +49,10 @@ foreach(f ${_PrivateFilters} )
                         ${${PLUGIN_NAME}_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md FALSE ${${PLUGIN_NAME}_BINARY_DIR})
 endforeach()
 
-
+#-------------
+# These are files that need to be compiled into DREAM3DLib but are NOT filters
+ADD_SIMPL_SUPPORT_HEADER(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} StatsGeneratorUtilities.h)
+ADD_SIMPL_SUPPORT_SOURCE(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} StatsGeneratorUtilities.cpp)
 
 #---------------------
 # This macro must come last after we are done adding all the filters and support files.

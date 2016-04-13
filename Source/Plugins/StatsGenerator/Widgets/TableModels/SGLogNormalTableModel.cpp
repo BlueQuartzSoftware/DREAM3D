@@ -387,22 +387,24 @@ void SGLogNormalTableModel::setTableData(QVector<float> bins, QVector<QVector<fl
   qint32 row = 0;
   // Remove all the current rows in the table model
   removeRows(0, rowCount());
-
-  int offset = row + count - 1;
-  if (offset < 0) { offset = 0;}
-  // Now mass insert the data to the table then emit that the data has changed
-  beginInsertRows(QModelIndex(), row, offset);
-  m_BinNumbers = bins;
-  m_Average = data[0];
-  m_StdDev = data[1];
-  m_Colors = colors;
-  m_RowCount = count;
-  endInsertRows();
-  QModelIndex topLeft = createIndex(0, 0);
-  offset = count - 1;
-  if (offset < 0) { offset = 0;}
-  QModelIndex botRight = createIndex(offset, ColumnCount);
-  emit dataChanged(topLeft, botRight);
+  if(data.size() > 1)
+  {
+    int offset = row + count - 1;
+    if (offset < 0) { offset = 0;}
+    // Now mass insert the data to the table then emit that the data has changed
+    beginInsertRows(QModelIndex(), row, offset);
+    m_BinNumbers = bins;
+    m_Average = data[0];
+    m_StdDev = data[1];
+    m_Colors = colors;
+    m_RowCount = count;
+    endInsertRows();
+    QModelIndex topLeft = createIndex(0, 0);
+    offset = count - 1;
+    if (offset < 0) { offset = 0;}
+    QModelIndex botRight = createIndex(offset, ColumnCount);
+    emit dataChanged(topLeft, botRight);
+  }
 }
 
 

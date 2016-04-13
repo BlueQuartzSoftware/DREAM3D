@@ -76,6 +76,7 @@
 #include "OrientationLib/Utilities/PoleFigureUtilities.h"
 #include "OrientationLib/Utilities/PoleFigureImageUtilities.h"
 
+#include "StatsGenerator/StatsGeneratorFilters/StatsGeneratorUtilities.h"
 #include "StatsGenerator/Widgets/TableModels/SGODFTableModel.h"
 #include "StatsGenerator/Widgets/StatsGenMDFWidget.h"
 #include "StatsGenerator/Widgets/TextureDialog.h"
@@ -148,11 +149,11 @@ void StatsGenODFWidget::extractStatsData(int index, StatsData* statsData, unsign
     QVector<float> e3(static_cast<int>(arrays[2]->getNumberOfTuples()));
     ::memcpy( e3.data(), arrays[2]->getVoidPointer(0), sizeof(float)*e3.size() );
 
-    QVector<float> weights(static_cast<int>(arrays[3]->getNumberOfTuples()));
-    ::memcpy( weights.data(), arrays[3]->getVoidPointer(0), sizeof(float)*weights.size() );
+    QVector<float> weights(static_cast<int>(arrays[4]->getNumberOfTuples()));
+    ::memcpy( weights.data(), arrays[4]->getVoidPointer(0), sizeof(float)*weights.size() );
 
-    QVector<float> sigmas(static_cast<int>(arrays[4]->getNumberOfTuples()));
-    ::memcpy( sigmas.data(), arrays[4]->getVoidPointer(0), sizeof(float)*sigmas.size() );
+    QVector<float> sigmas(static_cast<int>(arrays[3]->getNumberOfTuples()));
+    ::memcpy( sigmas.data(), arrays[3]->getVoidPointer(0), sizeof(float)*sigmas.size() );
 
     // Convert from Radians to Degrees for the Euler Angles
     for(int i = 0; i < e1.size(); ++i)
@@ -201,84 +202,23 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, unsigned int pha
     tableModel = m_OdfBulkTableModel;
   }
 
-  // Initialize xMax and yMax....
   e1s = tableModel->getData(SGODFTableModel::Euler1);
   e2s = tableModel->getData(SGODFTableModel::Euler2);
   e3s = tableModel->getData(SGODFTableModel::Euler3);
   weights = tableModel->getData(SGODFTableModel::Weight);
   sigmas = tableModel->getData(SGODFTableModel::Sigma);
 
+  // Convert from Degrees to Radians
   for (QVector<float>::size_type i = 0; i < e1s.size(); i++)
   {
     e1s[i] = e1s[i] * M_PI / 180.0;
     e2s[i] = e2s[i] * M_PI / 180.0;
     e3s[i] = e3s[i] * M_PI / 180.0;
   }
-  size_t numEntries = e1s.size();
 
-  if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
-  {
-    odf.resize(CubicOps::k_OdfSize);
-    Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(),
-                                   weights.data(), sigmas.data(), true,
-                                   odf.data(), numEntries);
-  }
-  else if ( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
-  {
-    odf.resize(HexagonalOps::k_OdfSize);
-    Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(),
-                                 weights.data(), sigmas.data(), true,
-                                 odf.data(), numEntries);
-  }
-  if (odf.size() > 0)
-  {
-    FloatArrayType::Pointer p = FloatArrayType::FromQVector(odf, SIMPL::StringConstants::ODF);
-    if(phaseType == SIMPL::PhaseType::PrimaryPhase)
-    {
-      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
-      pp->setODF(p);
-    }
-    if(phaseType == SIMPL::PhaseType::PrecipitatePhase)
-    {
-      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
-      pp->setODF(p);
-    }
-    if(phaseType == SIMPL::PhaseType::TransformationPhase)
-    {
-      TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
-      tp->setODF(p);
-    }
-    if (e1s.size() > 0)
-    {
-      FloatArrayType::Pointer euler1 = FloatArrayType::FromQVector(e1s, SIMPL::StringConstants::Euler1);
-      FloatArrayType::Pointer euler2 = FloatArrayType::FromQVector(e2s, SIMPL::StringConstants::Euler2);
-      FloatArrayType::Pointer euler3 = FloatArrayType::FromQVector(e3s, SIMPL::StringConstants::Euler3);
-      FloatArrayType::Pointer sigma = FloatArrayType::FromQVector(sigmas, SIMPL::StringConstants::Sigma);
-      FloatArrayType::Pointer weight = FloatArrayType::FromQVector(weights, SIMPL::StringConstants::Weight);
 
-      VectorOfFloatArray odfWeights;
-      odfWeights.push_back(euler1);
-      odfWeights.push_back(euler2);
-      odfWeights.push_back(euler3);
-      odfWeights.push_back(sigma);
-      odfWeights.push_back(weight);
-      if(phaseType == SIMPL::PhaseType::PrimaryPhase)
-      {
-        PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
-        pp->setODF_Weights(odfWeights);
-      }
-      if(phaseType == SIMPL::PhaseType::PrecipitatePhase)
-      {
-        PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
-        pp->setODF_Weights(odfWeights);
-      }
-      if(phaseType == SIMPL::PhaseType::TransformationPhase)
-      {
-        TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
-        tp->setODF_Weights(odfWeights);
-      }
-    }
-  }
+  StatsGeneratorUtilities::GenerateODFBinData(statsData, phaseType, m_CrystalStructure, e1s, e2s, e3s, weights, sigmas);
+
   // Write the MDF Data if we have that functionality enabled
   if (m_MDFWidget != NULL)
   {

@@ -249,7 +249,6 @@ void StatsGeneratorWidget::filterNeedsInputParameters(AbstractFilter* filter)
     statsGenFilter->setStatsDataArray(statsDataArray);
     statsGenFilter->setCrystalStructures(crystalStructures);
     statsGenFilter->setPhaseTypes(phaseTypes);
-    statsGenFilter->setStatsDataArray(statsDataArray);
 
   }
 }
@@ -533,8 +532,6 @@ void StatsGeneratorWidget::on_deletePhase_clicked()
   on_phaseTabs_tabCloseRequested(phaseTabs->currentIndex());
 }
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -652,9 +649,9 @@ DataContainerArray::Pointer StatsGeneratorWidget::generateDataContainerArray()
     err = sgwidget->gatherStatsData(cellEnsembleAttrMat);
     if(err < 0)
     {
-      QString  msg("Could not save file due to an internal error gathering statistics.\nError code ");
+      QString  msg("Internal error gathering statistics from Statistics Widgets.\nError code ");
       msg.append(QString::number(err));
-      QMessageBox::critical(this, QString("File Save Error"), msg , QMessageBox::Ok);
+      QMessageBox::critical(this, QString("Gather StatsData Error"), msg , QMessageBox::Ok);
       return DataContainerArray::NullPointer();
     }
   }

@@ -79,7 +79,7 @@ class StatsGenMDFWidget : public QWidget, private Ui::StatsGenMDFWidget
     int getMisorientationData(StatsData* statsData, unsigned int phaseType);
     void extractStatsData(int index, StatsData* statsData, unsigned int phaseType);
 
-    QVector<float> generateODFData();
+   // QVector<float> generateODFData();
 
     void updateMDFPlot(QVector<float>& odf);
 

@@ -32,16 +32,20 @@
 #include "StatsGeneratorFilter.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/JsonFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/JsonFilterParametersWriter.h"
+#include "SIMPLib/StatsData/PrimaryStatsData.h"
+#include "SIMPLib/StatsData/PrecipitateStatsData.h"
+#include "SIMPLib/StatsData/TransformationStatsData.h"
 
 #include "StatsGenerator/StatsGeneratorConstants.h"
 #include "StatsGenerator/StatsGeneratorVersion.h"
-
 #include "StatsGenerator/FilterParameters/StatsGeneratorFilterParameter.h"
+#include "StatsGenerator/StatsGeneratorFilters/StatsGeneratorUtilities.h"
 
 #include "EbsdLib/EbsdConstants.h"
 
@@ -170,9 +174,13 @@ void StatsGeneratorFilter::dataCheck()
 
     cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::Statistics, m_StatsDataArray);
 
-    cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::CrystalStructures, m_CrystalStructures);
 
-    cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::PhaseTypes, m_PhaseTypes);
+    if(nullptr != m_CrystalStructures.get()) {
+      cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::CrystalStructures, m_CrystalStructures);
+    }
+    if(nullptr != m_PhaseTypes.get()) {
+      cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::PhaseTypes, m_PhaseTypes);
+    }
   }
 
 }
@@ -202,13 +210,108 @@ void StatsGeneratorFilter::execute()
 
   if (getCancel() == true) { return; }
 
-  if (getErrorCondition() < 0)
+
+  // Create the ODF and MDF Arrays, RDF (if needed) & Axis ODF for EACH PHASE
+  size_t count = m_StatsDataArray->getNumberOfTuples();
+  for(size_t c = 0; c < count; c++)
   {
-    QString ss = QObject::tr("Some error message");
-    setErrorCondition(-99999999);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
+    StatsData::Pointer statsData = m_StatsDataArray->getStatsData(c);
+    if(nullptr != statsData.get())
+    {
+      u_int32_t phaseType = m_PhaseTypes->getValue(c);
+      u_int32_t crystalStruct = m_CrystalStructures->getValue(c);
+
+      // ODF Data ************************************************************************
+      VectorOfFloatArray odfWeights;
+      VectorOfFloatArray mdfWeights;
+      if(phaseType == SIMPL::PhaseType::PrimaryPhase)
+      {
+        PrimaryStatsData::Pointer pp = std::dynamic_pointer_cast<PrimaryStatsData>(statsData);
+        odfWeights = pp->getODF_Weights();
+        mdfWeights = pp->getMDF_Weights();
+      }
+      else if(phaseType == SIMPL::PhaseType::PrecipitatePhase)
+      {
+        PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsData);
+        odfWeights = pp->getODF_Weights();
+        mdfWeights = pp->getMDF_Weights();
+      }
+      else if(phaseType == SIMPL::PhaseType::TransformationPhase)
+      {
+        TransformationStatsData::Pointer tp = std::dynamic_pointer_cast<TransformationStatsData>(statsData);
+        odfWeights = tp->getODF_Weights();
+        mdfWeights = tp->getMDF_Weights();
+      }
+
+      QVector<float> e1s;
+      QVector<float> e2s;
+      QVector<float> e3s;
+      QVector<float> weights;
+      QVector<float> sigmas;
+
+      if(odfWeights.size() == 5)
+      {
+        size_t odfCount = odfWeights[0]->getNumberOfTuples();
+        for(size_t i = 0; i < odfCount; i++)
+        {
+          e1s.push_back(odfWeights[0]->getValue(i));
+          e2s.push_back(odfWeights[1]->getValue(i));
+          e3s.push_back(odfWeights[2]->getValue(i));
+          weights.push_back(odfWeights[3]->getValue(i));
+          sigmas.push_back(odfWeights[4]->getValue(i));
+        }
+      }
+      StatsGeneratorUtilities::GenerateODFBinData(statsData.get(), phaseType, crystalStruct, e1s, e2s, e3s, weights, sigmas);
+
+
+      // MDF Data ************************************************************************
+      QVector<float> mdf_angles;
+      QVector<float> mdf_axes;
+      QVector<float> mdf_weights;
+
+      if(mdfWeights.size() == 3)
+      {
+        size_t mdfCount = mdfWeights[0]->getNumberOfTuples();
+        for(size_t i = 0; i < mdfCount; i++)
+        {
+          mdf_angles.push_back(mdfWeights[0]->getValue(i));
+          mdf_axes.push_back(mdfWeights[1]->getComponent(i, 0));
+          mdf_axes.push_back(mdfWeights[1]->getComponent(i, 1));
+          mdf_axes.push_back(mdfWeights[1]->getComponent(i, 2));
+          mdf_weights.push_back(mdfWeights[2]->getValue(i));
+        }
+
+
+      }
+
+      QVector<float> odf = StatsGeneratorUtilities::GenerateODFData(crystalStruct, e1s, e2s, e3s, weights, sigmas);
+
+      StatsGeneratorUtilities::GenerateMisorientationBinData(statsData.get(), phaseType, crystalStruct, odf, mdf_angles, mdf_axes, mdf_weights);
+
+      // Primary
+      //m_MDFWidget->getMisorientationData(statsData, phaseType);
+      // Precipitate
+
+      // Transformation
+
+
+
+      // Axis ODF ************************************************************************
+      //err = m_AxisODFWidget->getOrientationData(primaryStatsData, SIMPL::PhaseType::PrimaryPhase);
+
+      // RDF Data ************************************************************************
+      if(phaseType == SIMPL::PhaseType::PrecipitatePhase)
+      {
+
+      }
+    }
+
   }
+  // Loop Each Phase
+  // StatsGenODFWidget->getOrientationData()
+  // Factor out common code so both the widget and this code can call it
+
+
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
