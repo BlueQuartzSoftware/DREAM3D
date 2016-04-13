@@ -256,6 +256,7 @@ void StatsGeneratorFilter::execute()
       if (phaseType == SIMPL::PhaseType::PrimaryPhase)
       {
         PrimaryStatsData::Pointer pp = std::dynamic_pointer_cast<PrimaryStatsData>(statsData);
+        pp->generateBinNumbers();
         odfWeights = pp->getODF_Weights();
         mdfWeights = pp->getMDF_Weights();
         aodfWeights = pp->getAxisODF_Weights();
@@ -263,6 +264,7 @@ void StatsGeneratorFilter::execute()
       else if (phaseType == SIMPL::PhaseType::PrecipitatePhase)
       {
         PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsData);
+        pp->generateBinNumbers();
         odfWeights = pp->getODF_Weights();
         mdfWeights = pp->getMDF_Weights();
         aodfWeights = pp->getAxisODF_Weights();
@@ -270,6 +272,7 @@ void StatsGeneratorFilter::execute()
       else if (phaseType == SIMPL::PhaseType::TransformationPhase)
       {
         TransformationStatsData::Pointer tp = std::dynamic_pointer_cast<TransformationStatsData>(statsData);
+        tp->generateBinNumbers();
         odfWeights = tp->getODF_Weights();
         mdfWeights = tp->getMDF_Weights();
         aodfWeights = tp->getAxisODF_Weights();
@@ -353,11 +356,6 @@ void StatsGeneratorFilter::execute()
     }
 
   }
-  // Loop Each Phase
-  // StatsGenODFWidget->getOrientationData()
-  // Factor out common code so both the widget and this code can call it
-
-
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
