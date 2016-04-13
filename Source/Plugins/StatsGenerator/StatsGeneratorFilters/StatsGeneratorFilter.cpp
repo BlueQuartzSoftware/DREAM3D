@@ -290,8 +290,8 @@ void StatsGeneratorFilter::execute()
           e1s.push_back(odfWeights[0]->getValue(i));
           e2s.push_back(odfWeights[1]->getValue(i));
           e3s.push_back(odfWeights[2]->getValue(i));
-          weights.push_back(odfWeights[3]->getValue(i));
-          sigmas.push_back(odfWeights[4]->getValue(i));
+          weights.push_back(odfWeights[4]->getValue(i));
+          sigmas.push_back(odfWeights[3]->getValue(i));
         }
       }
 
@@ -337,8 +337,8 @@ void StatsGeneratorFilter::execute()
           axis_e1s.push_back(odfWeights[0]->getValue(i));
           axis_e2s.push_back(odfWeights[1]->getValue(i));
           axis_e3s.push_back(odfWeights[2]->getValue(i));
-          axis_weights.push_back(odfWeights[3]->getValue(i));
-          axis_sigmas.push_back(odfWeights[4]->getValue(i));
+          axis_weights.push_back(odfWeights[4]->getValue(i));
+          axis_sigmas.push_back(odfWeights[3]->getValue(i));
         }
       }
 
