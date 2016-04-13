@@ -353,7 +353,6 @@ void StatsGeneratorFilter::execute()
         PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsData);
       }
     }
-
   }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
