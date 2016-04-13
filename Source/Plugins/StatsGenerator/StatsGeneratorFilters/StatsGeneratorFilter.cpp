@@ -334,11 +334,11 @@ void StatsGeneratorFilter::execute()
         size_t aodfCount = aodfWeights[0]->getNumberOfTuples();
         for (size_t i = 0; i < aodfCount; i++)
         {
-          axis_e1s.push_back(odfWeights[0]->getValue(i));
-          axis_e2s.push_back(odfWeights[1]->getValue(i));
-          axis_e3s.push_back(odfWeights[2]->getValue(i));
-          axis_weights.push_back(odfWeights[4]->getValue(i));
-          axis_sigmas.push_back(odfWeights[3]->getValue(i));
+          axis_e1s.push_back(aodfWeights[0]->getValue(i));
+          axis_e2s.push_back(aodfWeights[1]->getValue(i));
+          axis_e3s.push_back(aodfWeights[2]->getValue(i));
+          axis_weights.push_back(aodfWeights[4]->getValue(i));
+          axis_sigmas.push_back(aodfWeights[3]->getValue(i));
         }
       }
 
