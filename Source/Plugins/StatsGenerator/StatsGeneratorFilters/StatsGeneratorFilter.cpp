@@ -182,9 +182,7 @@ int StatsGeneratorFilter::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 void StatsGeneratorFilter::dataCheck()
 {
-  //setErrorCondition(0);
-
-  if (nullptr != m_StatsDataArray.get())
+  if (nullptr != m_StatsDataArray)
   {
     getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getStatsGeneratorDataContainerName());
 
@@ -197,12 +195,12 @@ void StatsGeneratorFilter::dataCheck()
 
     cellEnsembleAttrMat->addAttributeArray(getStatsDataArrayName(), m_StatsDataArray);
 
-    if (nullptr != m_CrystalStructures.get())
+    if (nullptr != m_CrystalStructures)
     {
       cellEnsembleAttrMat->addAttributeArray(getCrystalStructuresArrayName(), m_CrystalStructures);
     }
 
-    if (nullptr != m_PhaseTypes.get())
+    if (nullptr != m_PhaseTypes)
     {
       cellEnsembleAttrMat->addAttributeArray(getPhaseTypesArrayName(), m_PhaseTypes);
     }
@@ -210,6 +208,8 @@ void StatsGeneratorFilter::dataCheck()
   else
   {
     setErrorCondition(-1);
+    QString ss = QObject::tr("Unable to retrieve a valid pointer for statistics data");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 }
@@ -236,7 +236,6 @@ void StatsGeneratorFilter::execute()
   setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
-
 
   // Create the ODF, MDF, Axis ODF and bin numbers for EACH PHASE
   size_t count = m_StatsDataArray->getNumberOfTuples();

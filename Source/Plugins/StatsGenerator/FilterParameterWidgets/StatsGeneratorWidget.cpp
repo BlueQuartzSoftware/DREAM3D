@@ -261,7 +261,7 @@ void StatsGeneratorWidget::beforePreflight()
    if (!sgwidget->getDataHasBeenGenerated())
    {
      m_Filter->setErrorCondition(-1);
-     QString ss = QObject::tr("Data needs to be generated!");
+     QString ss = QObject::tr("Data needs to be generated for phase %1 (%2)").arg(sgwidget->getPhaseIndex()).arg(sgwidget->getTabTitle());
      m_Filter->notifyErrorMessage(m_Filter->getHumanLabel(), ss, m_Filter->getErrorCondition());
    }
  }
