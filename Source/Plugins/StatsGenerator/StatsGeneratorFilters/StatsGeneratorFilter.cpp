@@ -235,15 +235,18 @@ void StatsGeneratorFilter::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if (getErrorCondition() < 0) { return; }
 
-  // Create the ODF, MDF, Axis ODF and bin numbers for EACH PHASE
+  // Create the ODF, MDF, Axis ODF, bin numbers and RDF (precipitate ONLY) for EACH PHASE
+  // These arrays are re-created here because they MAY be junk having come from the GUI,
+  // since we avoid re-computing these during preflights and the user may not have
+  // decided to click the update buttons
   size_t count = m_StatsDataArray->getNumberOfTuples();
   for (size_t c = 0; c < count; c++)
   {
     if (getCancel() == true) { return; }
     StatsData::Pointer statsData = m_StatsDataArray->getStatsData(c);
-    if (nullptr != statsData.get())
+    if (nullptr != statsData)
     {
       // Pull the ODF, MDF and AxisODF weights from the StatsDataArray
       u_int32_t phaseType = m_PhaseTypes->getValue(c);
@@ -266,6 +269,25 @@ void StatsGeneratorFilter::execute()
         odfWeights = pp->getODF_Weights();
         mdfWeights = pp->getMDF_Weights();
         aodfWeights = pp->getAxisODF_Weights();
+
+        // RDF Data ************************************************************************
+        RdfData::Pointer rdf = pp->getRadialDistFunction();
+        float boxSize[3] = { 0.0f, 0.0f, 0.0f };
+        float boxRes[3] = { 0.0f, 0.0f, 0.0f };
+        rdf->getBoxSize(boxSize);
+        rdf->getBoxResolution(boxRes);
+        std::vector<float> boxSizeVec = { boxSize[0], boxSize[1], boxSize[2] };
+        std::vector<float> boxResVec = { boxRes[0], boxRes[1], boxRes[2] };
+        std::vector<float> freqs = RadialDistributionFunction::GenerateRandomDistribution(rdf->getMinDistance(), rdf->getMaxDistance(),
+                                                                                          rdf->getNumberOfBins(), boxSizeVec, boxResVec);
+        RdfData::Pointer cleanRDF = RdfData::New();
+        cleanRDF->setFrequencies(freqs);
+        cleanRDF->setMinDistance(rdf->getMinDistance());
+        cleanRDF->setMaxDistance(rdf->getMaxDistance());
+        cleanRDF->setDistributionType(rdf->getDistributionType());
+        cleanRDF->setBoxSize(boxSize);
+        cleanRDF->setBoxResolution(boxRes);
+        pp->setRadialDistFunction(cleanRDF);
       }
       else if (phaseType == SIMPL::PhaseType::TransformationPhase)
       {
@@ -345,6 +367,12 @@ void StatsGeneratorFilter::execute()
 
       // Compute the binned axis ODF and set it into the StatsDataArray
       StatsGeneratorUtilities::GenerateAxisODFBinData(statsData.get(), phaseType, axis_e1s, axis_e2s, axis_e3s, axis_weights, axis_sigmas);
+
+      // RDF Data ************************************************************************
+      if (phaseType == SIMPL::PhaseType::PrecipitatePhase)
+      {
+        PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsData);
+      }
     }
   }
 
