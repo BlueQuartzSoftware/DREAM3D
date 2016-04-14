@@ -136,8 +136,10 @@ QString MatrixPhaseWidget::getComboString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int MatrixPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
+int MatrixPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight)
 {
+  Q_UNUSED(preflight)
+
   if (m_PhaseIndex < 1)
   {
     QMessageBox::critical(this, tr("StatsGenerator"),

@@ -814,7 +814,7 @@ void PrimaryPhaseWidget::plotSizeDistribution()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PrimaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
+int PrimaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight)
 {
   if (m_PhaseIndex < 1)
   {
@@ -829,7 +829,6 @@ int PrimaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
   float sigma = 1.0f;
   float minCutOff = 1.0f;
   float maxCutOff = 1.0f;
-  // float stepSize = 1.0f;
   float binStep = 1.0f;
   gatherSizeDistributionFromGui(mu, sigma, minCutOff, maxCutOff, binStep);
   float calcPhaseFraction = m_PhaseFraction / m_TotalPhaseFraction;
@@ -909,9 +908,9 @@ int PrimaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
       primaryStatsData->setNeighbors_DistType(m_NeighborPlot->getDistributionType());
     }
 
-    m_ODFWidget->getOrientationData(primaryStatsData, SIMPL::PhaseType::PrimaryPhase);
+    m_ODFWidget->getOrientationData(primaryStatsData, SIMPL::PhaseType::PrimaryPhase, preflight);
 
-    err = m_AxisODFWidget->getOrientationData(primaryStatsData, SIMPL::PhaseType::PrimaryPhase);
+    err = m_AxisODFWidget->getOrientationData(primaryStatsData, SIMPL::PhaseType::PrimaryPhase, preflight);
   }
   return retErr;
 }

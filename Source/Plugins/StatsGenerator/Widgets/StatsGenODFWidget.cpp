@@ -180,7 +180,7 @@ void StatsGenODFWidget::extractStatsData(int index, StatsData* statsData, unsign
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGenODFWidget::getOrientationData(StatsData* statsData, unsigned int phaseType)
+int StatsGenODFWidget::getOrientationData(StatsData* statsData, unsigned int phaseType, bool preflight)
 {
   int retErr = 0;
 
@@ -215,12 +215,12 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, unsigned int pha
     e3s[i] = static_cast<float>(e3s[i] * M_PI / 180.0);
   }
 
-  StatsGeneratorUtilities::GenerateODFBinData(statsData, phaseType, m_CrystalStructure, e1s, e2s, e3s, weights, sigmas);
+  StatsGeneratorUtilities::GenerateODFBinData(statsData, phaseType, m_CrystalStructure, e1s, e2s, e3s, weights, sigmas, !preflight);
 
   // Write the MDF Data if we have that functionality enabled
   if (m_MDFWidget != NULL)
   {
-    m_MDFWidget->getMisorientationData(statsData, phaseType);
+    m_MDFWidget->getMisorientationData(statsData, phaseType, !preflight);
   }
   return retErr;
 }
@@ -497,7 +497,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   PoleFigureConfiguration_t config;
   QVector<UInt8ArrayType::Pointer> figures;
 
-  if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
+  if (Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
   {
     // We now need to resize all the arrays here to make sure they are all allocated
     odf.resize(CubicOps::k_OdfSize);
@@ -515,7 +515,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
 
     figures = ops.generatePoleFigure(config);
   }
-  else if ( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
+  else if (Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
   {
     // We now need to resize all the arrays here to make sure they are all allocated
     odf.resize(HexagonalOps::k_OdfSize);

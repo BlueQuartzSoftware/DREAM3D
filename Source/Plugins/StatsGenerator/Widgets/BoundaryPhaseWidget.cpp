@@ -134,8 +134,10 @@ QString BoundaryPhaseWidget::getComboString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int BoundaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
+int BoundaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight)
 {
+  Q_UNUSED(preflight)
+
   if (m_PhaseIndex < 1)
   {
     QMessageBox::critical(this, tr("StatsGenerator"),

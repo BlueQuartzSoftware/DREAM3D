@@ -96,7 +96,7 @@ class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
     void setCrystalStructure(unsigned int value);
     unsigned int getCrystalStructure();
 
-    int getOrientationData(StatsData* statsData, unsigned int phaseType);
+    int getOrientationData(StatsData* statsData, unsigned int phaseType, bool preflight = false);
     void extractStatsData(int index, StatsData* statsData, unsigned int phaseType);
 
     void updatePlots();

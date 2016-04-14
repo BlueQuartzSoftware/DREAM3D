@@ -135,9 +135,6 @@ class StatsGeneratorWidget : public FilterParameterWidget, private Ui::StatsGene
     DataContainerArray::Pointer generateDataContainerArray();
 
   private:
-//    QString              m_FilePath;
-//    bool                 m_FileSelected;
-
     StatsGeneratorFilterParameter* m_FilterParameter;
     StatsGeneratorFilter*          m_Filter;
 

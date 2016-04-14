@@ -74,7 +74,7 @@ class BoundaryPhaseWidget : public SGWidget, private Ui::BoundaryPhaseWidget
     QString getComboString();
     QString getTabTitle();
 
-    int gatherStatsData(AttributeMatrix::Pointer attrMat);
+    int gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight = false);
 
   protected slots:
 

@@ -161,7 +161,7 @@ void SGAxisODFWidget::extractStatsData(int index, StatsData* statsData, unsigned
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGAxisODFWidget::getOrientationData(StatsData* statsData, unsigned int phaseType)
+int SGAxisODFWidget::getOrientationData(StatsData* statsData, unsigned int phaseType, bool preflight)
 {
   int retErr = 0;
 
@@ -170,7 +170,6 @@ int SGAxisODFWidget::getOrientationData(StatsData* statsData, unsigned int phase
   QVector<float> e3s;
   QVector<float> weights;
   QVector<float> sigmas;
-
 
   // Initialize xMax and yMax....
   e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1);
@@ -191,7 +190,7 @@ int SGAxisODFWidget::getOrientationData(StatsData* statsData, unsigned int phase
     e3s[i] = static_cast<float>(e3s[i] * M_PI / 180.0);
   }
 
-  StatsGeneratorUtilities::GenerateAxisODFBinData(statsData, phaseType, e1s, e2s, e3s, weights, sigmas);
+  StatsGeneratorUtilities::GenerateAxisODFBinData(statsData, phaseType, e1s, e2s, e3s, weights, sigmas, !preflight);
 
   return retErr;
 }
@@ -258,14 +257,13 @@ void SGAxisODFWidget::setupGui()
 
   // In release mode hide the Lambert Square Size.
   QString releaseType = QString::fromLatin1("Official");
-  if(releaseType.compare("Official") == 0)
+  if (releaseType.compare("Official") == 0)
   {
     pfLambertSize->hide();
     pfLambertLabel->hide();
   }
 
   bulkLoadGroupBox->hide();
-
 }
 
 // -----------------------------------------------------------------------------

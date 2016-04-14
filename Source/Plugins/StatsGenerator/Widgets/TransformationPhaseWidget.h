@@ -98,7 +98,7 @@ class TransformationPhaseWidget : public SGWidget, private Ui::TransformationPha
     int calculateNumberOfBins(float mu, float sigma, float minCutOff, float maxCutOff, float stepSize);
     int gatherSizeDistributionFromGui(float& mu, float& sigma, float& minCutOff, float& maxCutOff, float& stepSize);
 
-    int gatherStatsData(AttributeMatrix::Pointer attrMat);
+    int gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight = false);
 
     // public slots:
     void on_m_GenerateDefaultData_clicked();

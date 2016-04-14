@@ -721,7 +721,7 @@ void PrecipitatePhaseWidget::plotSizeDistribution()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PrecipitatePhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
+int PrecipitatePhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight)
 {
   if (m_PhaseIndex < 1)
   {
@@ -815,9 +815,9 @@ int PrecipitatePhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
       precipitateStatsData->setRadialDistFunction(data);
     }
 
-    m_ODFWidget->getOrientationData(precipitateStatsData, SIMPL::PhaseType::PrecipitatePhase);
+    m_ODFWidget->getOrientationData(precipitateStatsData, SIMPL::PhaseType::PrecipitatePhase, preflight);
 
-    err = m_AxisODFWidget->getOrientationData(precipitateStatsData, SIMPL::PhaseType::PrecipitatePhase);
+    err = m_AxisODFWidget->getOrientationData(precipitateStatsData, SIMPL::PhaseType::PrecipitatePhase, preflight);
   }
   return retErr;
 }

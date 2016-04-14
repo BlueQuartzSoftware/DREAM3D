@@ -376,7 +376,7 @@ void StatsGenMDFWidget::extractStatsData(int index, StatsData* statsData, unsign
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGenMDFWidget::getMisorientationData(StatsData* statsData, unsigned int phaseType)
+int StatsGenMDFWidget::getMisorientationData(StatsData* statsData, unsigned int phaseType, bool preflight)
 {
   int retErr = 0;
 
@@ -400,18 +400,14 @@ int StatsGenMDFWidget::getMisorientationData(StatsData* statsData, unsigned int 
     e3s[i] = e3s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
   }
 
-
-  QVector<float> odf = StatsGeneratorUtilities::GenerateODFData(m_CrystalStructure, e1s, e2s, e3s, odf_weights, sigmas);
-
+  QVector<float> odf = StatsGeneratorUtilities::GenerateODFData(m_CrystalStructure, e1s, e2s, e3s, odf_weights, sigmas, !preflight);
 
   // Now use the ODF data to generate the MDF data ************************************************
   QVector<float> angles = m_MDFTableModel->getData(SGMDFTableModel::Angle);
   QVector<float> weights = m_MDFTableModel->getData(SGMDFTableModel::Weight);
   QVector<float> axes = m_MDFTableModel->getData(SGMDFTableModel::Axis);
 
-
-  StatsGeneratorUtilities::GenerateMisorientationBinData(statsData, phaseType, m_CrystalStructure, odf, angles, axes, weights);
+  StatsGeneratorUtilities::GenerateMisorientationBinData(statsData, phaseType, m_CrystalStructure, odf, angles, axes, weights, !preflight);
   return retErr;
 }
-
 

@@ -432,7 +432,7 @@ void StatsGeneratorWidget::on_editPhase_clicked()
     }
   }
   dialog.setPhaseType(sgwidget->getPhaseType());
-  dialog.setOtherPhaseFractionTotal(phaseFractionTotal);
+  dialog.setOtherPhaseFractionTotal(static_cast<float>(phaseFractionTotal));
   dialog.setCrystalStructure(sgwidget->getCrystalStructure());
 
   if(dialog.getPhaseType() == SIMPL::PhaseType::PrimaryPhase)
@@ -602,7 +602,6 @@ void StatsGeneratorWidget::on_actionSaveAs_triggered()
   m_FileSelected = true;
   on_saveH5Btn_clicked();
 #endif
-
 }
 
 // -----------------------------------------------------------------------------
@@ -640,39 +639,38 @@ DataContainerArray::Pointer StatsGeneratorWidget::generateDataContainerArray()
     phaseFractionTotal += sgwidget->getPhaseFraction();
   }
 
-
   // Loop on all the phases
-  for(int i = 0; i < phaseTabs->count(); ++i)
+  for (int i = 0; i < phaseTabs->count(); ++i)
   {
     SGWidget* sgwidget = qobject_cast<SGWidget*>(phaseTabs->widget(i));
-    sgwidget->setTotalPhaseFraction(phaseFractionTotal);
-    if(sgwidget->getPhaseType() == SIMPL::PhaseType::PrimaryPhase)
+    sgwidget->setTotalPhaseFraction(static_cast<float>(phaseFractionTotal));
+    if (sgwidget->getPhaseType() == SIMPL::PhaseType::PrimaryPhase)
     {
       PrimaryStatsData::Pointer data = PrimaryStatsData::New();
       statsDataArray->setStatsData(i + 1, data);
     }
-    if(sgwidget->getPhaseType() == SIMPL::PhaseType::PrecipitatePhase)
+    if (sgwidget->getPhaseType() == SIMPL::PhaseType::PrecipitatePhase)
     {
       PrecipitateStatsData::Pointer data = PrecipitateStatsData::New();
       statsDataArray->setStatsData(i + 1, data);
     }
-    if(sgwidget->getPhaseType() == SIMPL::PhaseType::TransformationPhase)
+    if (sgwidget->getPhaseType() == SIMPL::PhaseType::TransformationPhase)
     {
       TransformationStatsData::Pointer data = TransformationStatsData::New();
       statsDataArray->setStatsData(i + 1, data);
     }
-    if(sgwidget->getPhaseType() == SIMPL::PhaseType::MatrixPhase)
+    if (sgwidget->getPhaseType() == SIMPL::PhaseType::MatrixPhase)
     {
       MatrixStatsData::Pointer data = MatrixStatsData::New();
       statsDataArray->setStatsData(i + 1, data);
     }
-    if(sgwidget->getPhaseType() == SIMPL::PhaseType::BoundaryPhase)
+    if (sgwidget->getPhaseType() == SIMPL::PhaseType::BoundaryPhase)
     {
       BoundaryStatsData::Pointer data = BoundaryStatsData::New();
       statsDataArray->setStatsData(i + 1, data);
     }
     err = sgwidget->gatherStatsData(cellEnsembleAttrMat);
-    if(err < 0)
+    if (err < 0)
     {
       QString  msg("Internal error gathering statistics from Statistics Widgets.\nError code ");
       msg.append(QString::number(err));

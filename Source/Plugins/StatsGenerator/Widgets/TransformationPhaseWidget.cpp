@@ -719,7 +719,7 @@ void TransformationPhaseWidget::plotSizeDistribution()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TransformationPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
+int TransformationPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight)
 {
   if (m_PhaseIndex < 1)
   {
@@ -809,9 +809,9 @@ int TransformationPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
       transformationStatsData->setFeatureSize_COverA(data);
       transformationStatsData->setCOverA_DistType(m_COverAPlot->getDistributionType());
     }
-    m_ODFWidget->getOrientationData(transformationStatsData, SIMPL::PhaseType::TransformationPhase);
+    m_ODFWidget->getOrientationData(transformationStatsData, SIMPL::PhaseType::TransformationPhase, preflight);
 
-    err = m_AxisODFWidget->getOrientationData(transformationStatsData, SIMPL::PhaseType::TransformationPhase);
+    err = m_AxisODFWidget->getOrientationData(transformationStatsData, SIMPL::PhaseType::TransformationPhase, preflight);
   }
   return retErr;
 }

@@ -74,7 +74,7 @@ QString SGWidget::getComboString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
+int SGWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight)
 {
   return -1;
 }

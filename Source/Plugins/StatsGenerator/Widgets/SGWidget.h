@@ -70,7 +70,7 @@ class SGWidget : public QWidget
     SIMPL_VIRTUAL_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
 
     virtual void extractStatsData(AttributeMatrix::Pointer attrMat, int index);
-    virtual int gatherStatsData(AttributeMatrix::Pointer attrMat);
+    virtual int gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight = false);
 
     virtual QString getComboString();
     virtual QString getTabTitle();
@@ -90,8 +90,6 @@ class SGWidget : public QWidget
 
 
   private:
-
-
     SGWidget(const SGWidget&); // Copy Constructor Not Implemented
     void operator=(const SGWidget&); // Operator '=' Not Implemented
 
