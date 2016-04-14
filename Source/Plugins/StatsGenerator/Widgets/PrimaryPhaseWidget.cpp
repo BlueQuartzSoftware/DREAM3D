@@ -680,7 +680,6 @@ int PrimaryPhaseWidget::computeBinsAndCutOffs( float mu, float sigma,
 // -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::updateSizeDistributionPlot()
 {
-
   float mu = 1.0;
   float sigma = 1.0;
   float minCutOff = 1.0;

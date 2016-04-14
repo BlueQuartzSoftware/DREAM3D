@@ -33,12 +33,10 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #ifndef _statsgenrdfwidget_h_
 #define _statsgenrdfwidget_h_
 
 #include <QtWidgets/QWidget>
-
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -46,7 +44,6 @@
 #include "SIMPLib/StatsData/StatsData.h"
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"
 #include "SIMPLib/Math/RadialDistributionFunction.h"
-
 
 #include "TableModels/SGRDFTableModel.h"
 
@@ -87,6 +84,11 @@ class StatsGenRDFWidget : public QWidget, private Ui::StatsGenRDFWidget
 
   protected slots:
     void on_generateRDFBtn_clicked();
+    void on_minDistLE_textChanged(const QString& text);
+    void on_maxDistLE_textChanged(const QString& text);
+    void on_BoxSizeXLE_textChanged(const QString& text);
+    void on_BoxSizeYLE_textChanged(const QString& text);
+    void on_BoxSizeZLE_textChanged(const QString& text);
 
   signals:
     void rdfParametersChanged();

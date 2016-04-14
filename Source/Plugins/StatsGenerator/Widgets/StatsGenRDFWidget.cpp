@@ -221,9 +221,58 @@ void StatsGenRDFWidget::on_generateRDFBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void StatsGenRDFWidget::on_minDistLE_textChanged(const QString& text)
+{
+  Q_UNUSED(text)
+  minDistLE->setFocus();
+  emit rdfParametersChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenRDFWidget::on_maxDistLE_textChanged(const QString& text)
+{
+  Q_UNUSED(text)
+  maxDistLE->setFocus();
+  emit rdfParametersChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenRDFWidget::on_BoxSizeXLE_textChanged(const QString& text)
+{
+  Q_UNUSED(text)
+  BoxSizeXLE->setFocus();
+  emit rdfParametersChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenRDFWidget::on_BoxSizeYLE_textChanged(const QString& text)
+{
+  Q_UNUSED(text)
+  BoxSizeYLE->setFocus();
+  emit rdfParametersChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenRDFWidget::on_BoxSizeZLE_textChanged(const QString& text)
+{
+  Q_UNUSED(text)
+  BoxSizeZLE->setFocus();
+  emit rdfParametersChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void StatsGenRDFWidget::updateRDFPlot(QVector<float>& freqs)
 {
-
   // These are the output vectors
   QwtArray<double> xD(static_cast<int>(freqs.size()));
   QwtArray<double> yD(static_cast<int>(freqs.size()));

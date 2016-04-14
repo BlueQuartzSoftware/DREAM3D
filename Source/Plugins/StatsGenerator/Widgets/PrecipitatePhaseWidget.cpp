@@ -233,24 +233,6 @@ void PrecipitatePhaseWidget::setupGui()
   connect(m_COverAPlot, SIGNAL(userEditedData()),
           this, SIGNAL(phaseParametersChanged()));
 
-  {
-    // w = m_RdfPlot;
-//    m_RdfPlot->setPlotTitle(QString("Clustering Distributions"));
-//    m_RdfPlot->setXAxisName(QString("Distance between Centroids"));
-//    m_RdfPlot->setYAxisName(QString("Frequency"));
-//    m_RdfPlot->setDistributionType(SIMPL::DistributionType::LogNormal);
-//    m_RdfPlot->setStatisticsType(SIMPL::StatisticsType::Feature_SizeVClustering);
-//    m_RdfPlot->blockDistributionTypeChanges(true);
-//    m_RdfPlot->setRowOperationEnabled(false);
-//    w->setMu(mu);
-//    w->setSigma(sigma);
-//    w->setMinCutOff(minCutOff);
-//    w->setMaxCutOff(maxCutOff);
-//    w->setBinStep(binStepSize);
-//    connect(m_RdfPlot, SIGNAL(userEditedData()),
-//            this, SLOT(dataWasEdited()));
-  }
-
   m_SizeDistributionPlot->setCanvasBackground(QColor(Qt::white));
   m_SizeDistributionPlot->setTitle("Size Distribution");
 
@@ -418,7 +400,6 @@ void PrecipitatePhaseWidget::setWidgetListEnabled(bool b)
     w->setEnabled(b);
   }
 }
-
 
 // -----------------------------------------------------------------------------
 //
