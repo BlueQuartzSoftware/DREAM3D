@@ -80,7 +80,6 @@ class StatsGeneratorWidget : public FilterParameterWidget, private Ui::StatsGene
     virtual ~StatsGeneratorWidget();
 
     void adjustWindowTitle();
-
     void displayDialogBox(QString title, QString text, QMessageBox::Icon icon);
 
   protected slots:
@@ -88,19 +87,16 @@ class StatsGeneratorWidget : public FilterParameterWidget, private Ui::StatsGene
     void beforePreflight();
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
-
     void on_updatePipelineBtn_clicked();
 
     /* Menu Slots */
     void on_saveH5Btn_clicked();
     void on_actionSaveAs_triggered();
-
     void on_addPhase_clicked();
     void on_deletePhase_clicked();
     void on_editPhase_clicked();
     void on_saveJsonBtn_clicked();
     void on_openStatsFile_clicked();
-
     void on_phaseTabs_tabCloseRequested ( int index );
 
   signals:
@@ -108,7 +104,6 @@ class StatsGeneratorWidget : public FilterParameterWidget, private Ui::StatsGene
     void parametersChanged();
 
   protected:
-
     /**
      * @brief Initializes some of the GUI elements with selections or other GUI related items
      */

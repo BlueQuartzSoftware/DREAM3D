@@ -114,6 +114,12 @@ StatsGeneratorWidget::~StatsGeneratorWidget()
 // -----------------------------------------------------------------------------
 void StatsGeneratorWidget::setupGui()
 {
+  // Hide the debugging buttons
+  updatePipelineBtn->hide();
+  saveH5Btn->hide();
+  saveJsonBtn->hide();
+  openStatsFile->hide();
+
   // Catch when the filter is about to execute the preflight
   connect(getFilter(), SIGNAL(preflightAboutToExecute()),
           this, SLOT(beforePreflight()));
@@ -142,7 +148,8 @@ void StatsGeneratorWidget::setupGui()
     connect(ppw, SIGNAL(phaseParametersChanged()),
             this, SIGNAL(parametersChanged()));
   }
-  else {
+  else
+  {
     size_t ensembles = sda->getNumberOfTuples();
     QProgressDialog progress("Opening Stats File....", "Cancel", 0, ensembles, this);
     progress.setWindowModality(Qt::WindowModal);
@@ -164,7 +171,6 @@ void StatsGeneratorWidget::setupGui()
         return;
       }
       StatsData::Pointer statsData = sda->getStatsData(phase);
-
 
       if(phaseTypes->getValue(phase) == SIMPL::PhaseType::BoundaryPhase)
       {
@@ -210,7 +216,6 @@ void StatsGeneratorWidget::setupGui()
 
     // Now delete the first Phase from the Combo which was left over from something else
     phaseTabs->setCurrentIndex(0);
-
   }
 }
 
