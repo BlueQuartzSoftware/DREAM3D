@@ -45,17 +45,24 @@ fi
 if [ ! -e "$SDK_INSTALL/${EIGEN_FOLDER_NAME}" ];
 then
     tar -xvzf ${EIGEN_ARCHIVE_NAME}
-    #echo "Looking for Actual Decompressed Eigen Directory because the Eigen Folks are Idiots...."
-    #EIGEN_DIR=`find . -type d -name 'eigen-eigen*'`
-    #echo "EIGEN_DIR=$EIGEN_DIR"
-    #mv $EIGEN_DIR Eigen-${EIGEN_VERSION}_source
+    echo "Looking for Actual Decompressed Eigen Directory because the Eigen Folks are Idiots...."
+    EIGEN_DIR=`find . -type d -name 'eigen-eigen*'`
+    echo "EIGEN_DIR=$EIGEN_DIR"
+    mv $EIGEN_DIR ${EIGEN_FOLDER_NAME}
+fi
+
+
+if [ ! -e "$SDK_INSTALL/${EIGEN_FOLDER_NAME}" ];
+then
+    echo "Uh Oh. The Eigen Archive did not properly decompress. Exiting now."
+    exit -1
 fi
 
 # We assume we already have downloaded the source for eigen and have it in a folder
 cd ${EIGEN_FOLDER_NAME}
 mkdir Build
 cd Build
-touch $SDK_INSTALL/${EIGEN_FOLDER_NAME}/Build/DartConfiguration.tcl
+echo "SourceDirectory: $SDK_INSTALL/${EIGEN_FOLDER_NAME}" > $SDK_INSTALL/${EIGEN_FOLDER_NAME}/Build/DartConfiguration.tcl
 cmake -DCMAKE_CXX_FLAGS="-stdlib=libc++ -std=c++11" -DCMAKE_OSX_DEPLOYMENT_TARGET=$OSX_DEPLOYMENT_TARGET -DCMAKE_OSX_SYSROOT=$OSX_SDK -DCMAKE_CXX_STANDARD=11 -DCMAKE_CXX_STANDARD_REQUIRED=ON -Wno-dev -DQT_QMAKE_EXECUTABLE="" -DBUILD_SHARED_LIBS=OFF -DBUILD_TESTING=OFF -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/Eigen-${EIGEN_VERSION}  ../
 make -j$PARALLEL_BUILD
 make install

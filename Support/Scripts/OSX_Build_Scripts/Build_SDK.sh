@@ -109,17 +109,41 @@ echo "set(DREAM3D_DATA_DIR \${DREAM3D_SDK_ROOT}/DREAM3D_Data CACHE PATH \"\")" >
 
 
 
+#------------------------------------------------------------------------------
+# Make sure Qt is installed correctly
+
+if [[ "$HOST_SYSTEM" = "Darwin" ]]; then
+  sed -i -e "s@QT_INSTALL_LOCATION@$SDK_PARENT/$SDK_FOLDER_NAME/Qt$QT_VERSION@g" "${SCRIPT_DIR}/Qt_HeadlessInstall.js"
+
+  # Download the archive if it is not in the proper location
+  if [[ ! -e $SDK_PARENT/$SDK_FOLDER_NAME/$QT_OSX_BASE_NAME.dmg ]]; then
+    echo "-------------------------------------------"
+    echo " Downloading Qt $QT_VERSION                "
+    echo "-------------------------------------------"
+    curl "$QT_PREBUILT_BINARY_DOWNLOAD" -o $QT_OSX_BASE_NAME.dmg
+  fi
+
+
+  # If the DMG is already mounted (due to a failed attempt) lets just use that.
+  if [[ ! -e  "/Volumes/$QT_OSX_BASE_NAME/$QT_OSX_BASE_NAME.app/Contents/MacOS/$QT_OSX_BASE_NAME" ]]; then
+    hdiutil mount $SDK_PARENT/$SDK_FOLDER_NAME/$QT_OSX_BASE_NAME.dmg
+  fi
+  /Volumes/$QT_OSX_BASE_NAME/$QT_OSX_BASE_NAME.app/Contents/MacOS/$QT_OSX_BASE_NAME --script ${SCRIPT_DIR}/Qt_HeadlessInstall.js
+  hdiutil unmount /Volumes/$QT_OSX_BASE_NAME
+  mv ${SCRIPT_DIR}/Qt_HeadlessInstall.js-e ${SCRIPT_DIR}/Qt_HeadlessInstall.js
+fi
+
 
 #------------------------------------------------------------------------------
-# Ensure the user has a valid Qt 5.5.1 installation
+# Ensure the user has a valid Qt 5.6.0 installation
 if [ ! -e "$SDK_PARENT/$SDK_FOLDER_NAME/$QT_INSTALL_DIR/$QT_BIN_DIR/qmake" ];
   then
   echo "qmake was NOT found in $SDK_PARENT/$QT_INSTALL_DIR/$QT_BIN_DIR/ directory."
   echo "This indicates a potentially broken DREAM3D_SDK installation. Have you installed"
-  echo "Qt 5.5.1 from the following location:"
+  echo "Qt $QT_VERSION from the following location:"
   echo "$QT_PREBUILT_BINARY_DOWNLOAD"
   echo "During installation please set the installation directory to:"
-  echo "/Users/Shared/DREAM3D_SDK/Qt5.5.1"
+  echo "$SDK_PARENT/$SDK_FOLDER_NAME/Qt$QT_VERSION"
   exit 1
 fi
 
