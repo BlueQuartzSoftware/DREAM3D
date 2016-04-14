@@ -469,8 +469,6 @@ void PrimaryPhaseWidget::updatePlots()
     m_AxisODFWidget->updatePlots();
 
     progress.setValue(4);
-
-    emit phaseParametersChanged();
   }
 }
 
@@ -481,6 +479,7 @@ void PrimaryPhaseWidget::on_m_GenerateDefaultData_clicked()
 {
   m_DataHasBeenGenerated = true;
   updatePlots();
+  emit phaseParametersChanged();
 }
 
 // -----------------------------------------------------------------------------

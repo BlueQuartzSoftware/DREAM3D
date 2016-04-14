@@ -479,7 +479,6 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   weights = tableModel->getData(SGODFTableModel::Weight);
   sigmas = tableModel->getData(SGODFTableModel::Sigma);
 
-
   // Convert from Degrees to Radians
   for(int i = 0; i < e1s.size(); i++)
   {

@@ -427,8 +427,6 @@ void PrecipitatePhaseWidget::updatePlots()
     progress.setValue(4);
     progress.setLabelText("[4/4] Calculating RDF Data ...");
     m_RdfPlot->updatePlots();
-
-    emit phaseParametersChanged();
   }
 }
 
@@ -439,6 +437,7 @@ void PrecipitatePhaseWidget::on_m_GenerateDefaultData_clicked()
 {
   m_DataHasBeenGenerated = true;
   updatePlots();
+  emit phaseParametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -702,16 +701,11 @@ void PrecipitatePhaseWidget::plotSizeDistribution()
   m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, stepSize);
   m_MicroPreset->initializeCOverATableModel(m_COverAPlot, binsizes);
 
-  // m_RdfPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, stepSize);
-  // m_MicroPreset->initializeClusteringTableModel(m_RdfPlot, binsizes);
-
   // Get any presets for the ODF/AxisODF/MDF also
   m_MicroPreset->initializeODFTableModel(m_ODFWidget);
   m_MicroPreset->initializeAxisODFTableModel(m_AxisODFWidget);
   m_MicroPreset->initializeMDFTableModel(m_ODFWidget->getMDFWidget());
-
 }
-
 
 #define SGWIGET_WRITE_ERROR_CHECK(var)\
   if (err < 0)  {\
@@ -742,7 +736,6 @@ int PrecipitatePhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
   float sigma = 1.0f;
   float minCutOff = 1.0f;
   float maxCutOff = 1.0f;
-// float stepSize = 1.0f;
   float binStep = 1.0f;
   gatherSizeDistributionFromGui(mu, sigma, minCutOff, maxCutOff, binStep);
   float calcPhaseFraction = m_PhaseFraction / m_TotalPhaseFraction;
@@ -766,12 +759,6 @@ int PrecipitatePhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
   float avglogdiam = mu;
   float sdlogdiam = sigma;
   float stepSize = binStep;
-
-// size_t nBins = 0;
-
-// //typedef DataArray<unsigned int> XTalStructArrayType;
-//  typedef DataArray<unsigned int> PhaseTypeArrayType;
-//  typedef DataArray<unsigned int> ShapeTypeArrayType;
 
   // Get pointers
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::CrystalStructures);
@@ -873,10 +860,7 @@ void PrecipitatePhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, 
   m_Omega3Plot->setCrystalStructure(m_CrystalStructure);
   m_BOverAPlot->setCrystalStructure(m_CrystalStructure);
   m_COverAPlot->setCrystalStructure(m_CrystalStructure);
-  //m_RdfPlot->setCrystalStructure(m_CrystalStructure);
   m_ODFWidget->setCrystalStructure(m_CrystalStructure);
-// m_AxisODFWidget->setCrystalStructure(m_CrystalStructure);
-
 
   /* Set the BinNumbers data set */
   FloatArrayType::Pointer bins = precipitateStatsData->getBinNumbers();
@@ -937,10 +921,7 @@ void PrecipitatePhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, 
   m_COverAPlot->extractStatsData(index, qbins, precipitateStatsData->getFeatureSize_COverA());
   m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
-  //m_RdfPlot->setDistributionType(precipitateStatsData->getClustering_DistType(), false);
   m_RdfPlot->extractStatsData(index, precipitateStatsData, SIMPL::PhaseType::PrecipitatePhase);
-  //m_RdfPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
-
 
   // Set the ODF Data
   m_ODFWidget->extractStatsData(index, precipitateStatsData, SIMPL::PhaseType::PrecipitatePhase);
@@ -951,9 +932,7 @@ void PrecipitatePhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, 
   // Enable all the tabs
   setTabsPlotTabsEnabled(true);
   m_DataHasBeenGenerated = true;
-
 }
-
 
 // -----------------------------------------------------------------------------
 //

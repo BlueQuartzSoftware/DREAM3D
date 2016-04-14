@@ -341,9 +341,6 @@ void StatsGenRDFWidget::extractStatsData(int index, StatsData* statsData, unsign
 
     float boxRes[3];
     rdf->getBoxResolution(boxRes);
-//    BoxSize->setText(QString::number(boxDim[0]));
-//    BoxSizeYLE->setText(QString::number(boxDim[1]));
-//    BoxSizeZLE->setText(QString::number(boxDim[2]));
 
     minDistLE->setText(QString::number(rdf->getMinDistance()));
     maxDistLE->setText(QString::number(rdf->getMaxDistance()));
@@ -351,11 +348,6 @@ void StatsGenRDFWidget::extractStatsData(int index, StatsData* statsData, unsign
 
     // Generate a new RDF for these
     on_generateRDFBtn_clicked();
-
-    //QVector<float> qFreq = QVector<float>::fromStdVector(rdf->getFrequencies());
-    //m_RDFTableModel->setTableData(qFreq);
-    // Update the Qwt plot with the correct values
-    //updateRDFPlot(qFreq);
   }
 
   // Generate the RDF table Plot? which adds value to the Table?

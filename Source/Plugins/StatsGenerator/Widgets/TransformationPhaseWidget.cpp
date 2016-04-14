@@ -404,7 +404,6 @@ void TransformationPhaseWidget::setWidgetListEnabled(bool b)
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -429,8 +428,6 @@ void TransformationPhaseWidget::updatePlots()
     m_AxisODFWidget->updatePlots();
 
     progress.setValue(4);
-
-    emit phaseParametersChanged();
   }
 }
 
@@ -441,6 +438,7 @@ void TransformationPhaseWidget::on_m_GenerateDefaultData_clicked()
 {
   m_DataHasBeenGenerated = true;
   updatePlots();
+  emit phaseParametersChanged();
 }
 
 // -----------------------------------------------------------------------------
