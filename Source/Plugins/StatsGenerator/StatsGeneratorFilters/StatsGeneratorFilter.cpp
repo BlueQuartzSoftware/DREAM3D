@@ -182,7 +182,7 @@ int StatsGeneratorFilter::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 void StatsGeneratorFilter::dataCheck()
 {
-  setErrorCondition(0);
+  //setErrorCondition(0);
 
   if (nullptr != m_StatsDataArray.get())
   {

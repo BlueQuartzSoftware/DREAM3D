@@ -51,8 +51,6 @@ class PrimaryPhaseWidget : public SGWidget, private Ui::PrimaryPhaseWidget
 
     void updatePlots();
 
-
-
     SIMPL_INSTANCE_PROPERTY(unsigned int, PhaseType)
     void setCrystalStructure(unsigned int xtal);
     unsigned int getCrystalStructure() const;
@@ -98,8 +96,8 @@ class PrimaryPhaseWidget : public SGWidget, private Ui::PrimaryPhaseWidget
 
     void on_microstructurePresetCombo_currentIndexChanged(int index);
 
-
     void dataWasEdited();
+
   protected:
 
     /**

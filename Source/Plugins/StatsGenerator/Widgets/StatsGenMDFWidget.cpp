@@ -166,9 +166,12 @@ void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
     e2s[i] = e2s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
     e3s[i] = e3s[i] * static_cast<float>(SIMPLib::Constants::k_PiOver180);
   }
+
   QVector<float> odf = StatsGeneratorUtilities::GenerateODFData(m_CrystalStructure, e1s, e2s, e3s, weights, sigmas);
 
   updateMDFPlot(odf);
+
+  emit mdfParametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -177,7 +180,6 @@ void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
 void StatsGenMDFWidget::updateMDFPlot(QVector<float>& odf)
 {
   int err = 0;
-
   int size = 100000;
 
   // These are the input vectors
@@ -188,7 +190,6 @@ void StatsGenMDFWidget::updateMDFPlot(QVector<float>& odf)
   angles = m_MDFTableModel->getData(SGMDFTableModel::Angle);
   weights = m_MDFTableModel->getData(SGMDFTableModel::Weight);
   axes = m_MDFTableModel->getData(SGMDFTableModel::Axis);
-
 
   // These are the output vectors
   QVector<float> x;
@@ -220,10 +221,7 @@ void StatsGenMDFWidget::updateMDFPlot(QVector<float>& odf)
     x.resize(npoints);
     y.resize(npoints);
     err = StatsGen::GenHexMDFPlotData(mdf.data(), x.data(), y.data(), npoints, size);
-    if (err < 0)
-    {
-      return;
-    }
+    if (err < 0) { return; }
   }
 
   QwtArray<double> xD(static_cast<int>(x.size()));
@@ -258,6 +256,7 @@ void StatsGenMDFWidget::on_addMDFRowBtn_clicked()
   m_MDFTableView->setFocus();
   QModelIndex index = m_MDFTableModel->index(m_MDFTableModel->rowCount() - 1, 0);
   m_MDFTableView->setCurrentIndex(index);
+  emit mdfParametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -274,6 +273,7 @@ void StatsGenMDFWidget::on_deleteMDFRowBtn_clicked()
   {
     m_MDFTableView->resizeColumnsToContents();
   }
+  emit mdfParametersChanged();
 }
 
 // -----------------------------------------------------------------------------

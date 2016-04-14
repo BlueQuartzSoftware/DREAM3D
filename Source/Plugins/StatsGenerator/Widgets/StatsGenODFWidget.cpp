@@ -237,6 +237,8 @@ void StatsGenODFWidget::enableMDFTab(bool b)
   m_MDFWidget = new StatsGenMDFWidget();
   m_MDFWidget->setODFTableModel(m_ODFTableModel);
   tabWidget->addTab(m_MDFWidget, QString("MDF"));
+  connect(m_MDFWidget, SIGNAL(mdfParametersChanged()),
+          this, SIGNAL(odfParametersChanged()));
 }
 
 // -----------------------------------------------------------------------------
@@ -318,12 +320,11 @@ void StatsGenODFWidget::setupGui()
 
   // In release mode hide the Lambert Square Size.
   QString releaseType = QString::fromLatin1("Official");
-  if(releaseType.compare("Official") == 0)
+  if (releaseType.compare("Official") == 0)
   {
     pfLambertSize->hide();
     pfLambertLabel->hide();
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -461,7 +462,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   SGODFTableModel* tableModel = NULL;
 
   int npoints = 0;
-  if(weightSpreadGroupBox->isChecked() )
+  if (weightSpreadGroupBox->isChecked() )
   {
     tableModel = m_ODFTableModel;
     npoints = pfSamplePoints->value();
@@ -471,7 +472,6 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     tableModel = m_OdfBulkTableModel;
     npoints = tableModel->rowCount();
   }
-
 
   e1s = tableModel->getData(SGODFTableModel::Euler1);
   e2s = tableModel->getData(SGODFTableModel::Euler2);
@@ -483,9 +483,9 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   // Convert from Degrees to Radians
   for(int i = 0; i < e1s.size(); i++)
   {
-    e1s[i] = e1s[i] * M_PI / 180.0;
-    e2s[i] = e2s[i] * M_PI / 180.0;
-    e3s[i] = e3s[i] * M_PI / 180.0;
+    e1s[i] = static_cast<float>(e1s[i] * M_PI / 180.0);
+    e2s[i] = static_cast<float>(e2s[i] * M_PI / 180.0);
+    e3s[i] = static_cast<float>(e3s[i] * M_PI / 180.0);
   }
   size_t numEntries = e1s.size();
 
@@ -568,9 +568,9 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     m_MDFWidget->setEnabled(true);
     m_MDFWidget->updateMDFPlot(odf);
   }
+
+  emit odfParametersChanged();
 }
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -599,6 +599,7 @@ void StatsGenODFWidget::on_addODFTextureBtn_clicked()
     QModelIndex index = m_ODFTableModel->index(m_ODFTableModel->rowCount() - 1, 0);
     m_ODFTableView->setCurrentIndex(index);
   }
+  emit odfParametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -611,13 +612,11 @@ void StatsGenODFWidget::on_selectAnglesFile_clicked()
   angleFilePath->setText(file);
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
 {
-
   QString file = angleFilePath->text();
   if(true == file.isEmpty())
   {
@@ -798,7 +797,6 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
         break;
       default:
         delim = " ";
-
     }
 
     loader->setDelimiter(delim);
@@ -822,7 +820,6 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
       weights[i] = data->getComponent(i, 3);
       sigmas[i] = data->getComponent(i, 4);
     }
-
   }
 
   progress.setValue(2);
@@ -849,7 +846,6 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
   progress.setValue(3);
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -864,8 +860,8 @@ void StatsGenODFWidget::on_deleteODFTextureBtn_clicked()
   {
     m_ODFTableView->resizeColumnsToContents();
   }
+  emit odfParametersChanged();
 }
-
 
 // -----------------------------------------------------------------------------
 //

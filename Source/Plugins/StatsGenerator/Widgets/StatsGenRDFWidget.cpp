@@ -214,6 +214,8 @@ void StatsGenRDFWidget::on_generateRDFBtn_clicked()
 
   // Update the Qwt plot with the correct values
   updateRDFPlot(qFreq);
+
+  emit rdfParametersChanged();
 }
 
 // -----------------------------------------------------------------------------

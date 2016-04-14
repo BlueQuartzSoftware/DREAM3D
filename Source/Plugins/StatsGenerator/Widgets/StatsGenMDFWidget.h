@@ -79,8 +79,6 @@ class StatsGenMDFWidget : public QWidget, private Ui::StatsGenMDFWidget
     int getMisorientationData(StatsData* statsData, unsigned int phaseType);
     void extractStatsData(int index, StatsData* statsData, unsigned int phaseType);
 
-   // QVector<float> generateODFData();
-
     void updateMDFPlot(QVector<float>& odf);
 
     SGMDFTableModel* tableModel();
@@ -91,6 +89,8 @@ class StatsGenMDFWidget : public QWidget, private Ui::StatsGenMDFWidget
     void on_m_MDFUpdateBtn_clicked();
     void on_loadMDFBtn_clicked();
 
+  signals:
+    void mdfParametersChanged();
 
   private:
     SGMDFTableModel* m_MDFTableModel;

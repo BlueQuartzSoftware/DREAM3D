@@ -120,7 +120,6 @@ PrimaryPhaseWidget::PrimaryPhaseWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 PrimaryPhaseWidget::~PrimaryPhaseWidget()
 {
-
 }
 
 
@@ -184,7 +183,6 @@ void PrimaryPhaseWidget::setupGui()
 
   m_Mu_SizeDistribution->setValidator(m_MuValidator);
 
-
   m_SigmaValidator = new QDoubleValidator(m_Sigma_SizeDistribution);
   m_SigmaValidator->setLocale(loc);
   m_SigmaValidator->setRange(0.0000, 1.0, 4);
@@ -198,11 +196,9 @@ void PrimaryPhaseWidget::setupGui()
   maxVal->setLocale(loc);
   m_MaxSigmaCutOff->setValidator(maxVal);
 
-
   // Select the first Preset in the list
   microstructurePresetCombo->setCurrentIndex(0);
   microstructurePresetCombo->blockSignals(false);
-
 
   float mu = 1.0f;
   float sigma = 0.1f;
@@ -226,6 +222,8 @@ void PrimaryPhaseWidget::setupGui()
   w->setBinStep(binStepSize);
   connect(m_Omega3Plot, SIGNAL(userEditedData()),
           this, SLOT(dataWasEdited()));
+  connect(m_Omega3Plot, SIGNAL(userEditedData()),
+          this, SIGNAL(phaseParametersChanged()));
 
 
   w = m_BOverAPlot;
@@ -243,6 +241,8 @@ void PrimaryPhaseWidget::setupGui()
   w->setBinStep(binStepSize);
   connect(m_BOverAPlot, SIGNAL(userEditedData()),
           this, SLOT(dataWasEdited()));
+  connect(m_BOverAPlot, SIGNAL(userEditedData()),
+          this, SIGNAL(phaseParametersChanged()));
 
   w = m_COverAPlot;
   w->setPlotTitle(QString("C/A Shape Distribution"));
@@ -259,6 +259,8 @@ void PrimaryPhaseWidget::setupGui()
   w->setBinStep(binStepSize);
   connect(m_COverAPlot, SIGNAL(userEditedData()),
           this, SLOT(dataWasEdited()));
+  connect(m_COverAPlot, SIGNAL(userEditedData()),
+          this, SIGNAL(phaseParametersChanged()));
 
   w = m_NeighborPlot;
   w->setPlotTitle(QString("Neighbors Distributions"));
@@ -275,7 +277,8 @@ void PrimaryPhaseWidget::setupGui()
   w->setBinStep(binStepSize);
   connect(m_NeighborPlot, SIGNAL(userEditedData()),
           this, SLOT(dataWasEdited()));
-
+  connect(m_NeighborPlot, SIGNAL(userEditedData()),
+          this, SIGNAL(phaseParametersChanged()));
 
   m_SizeDistributionPlot->setCanvasBackground(QColor(Qt::white));
   m_SizeDistributionPlot->setTitle("Size Distribution");
@@ -294,11 +297,17 @@ void PrimaryPhaseWidget::setupGui()
 
   // For the ODF Tab we want the MDF functionality
   m_ODFWidget->enableMDFTab(true);
+
   // Remove any Axis Decorations. The plots are explicitly know to have a -1 to 1 axis min/max
   m_ODFWidget->setEnableAxisDecorations(false);
 
   // Remove any Axis Decorations. The plots are explicitly know to have a -1 to 1 axis min/max
   m_AxisODFWidget->setEnableAxisDecorations(false);
+
+  connect(m_ODFWidget, SIGNAL(odfParametersChanged()),
+          this, SIGNAL(phaseParametersChanged()));
+  connect(m_AxisODFWidget, SIGNAL(axisODFParametersChanged()),
+          this, SIGNAL(phaseParametersChanged()));
 
   updateSizeDistributionPlot();
   calculateNumberOfBins();
@@ -349,7 +358,6 @@ unsigned int PrimaryPhaseWidget::getCrystalStructure() const
 {
   return m_CrystalStructure;
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -437,7 +445,6 @@ void PrimaryPhaseWidget::setWidgetListEnabled(bool b)
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -462,8 +469,9 @@ void PrimaryPhaseWidget::updatePlots()
     m_AxisODFWidget->updatePlots();
 
     progress.setValue(4);
-  }
 
+    emit phaseParametersChanged();
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -527,7 +535,9 @@ void PrimaryPhaseWidget::on_m_Mu_SizeDistribution_textChanged(const QString& tex
   updateSizeDistributionPlot();
   m_Mu_SizeDistribution->setFocus();
   calculateNumberOfBins();
+  emit phaseParametersChanged();
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -541,6 +551,7 @@ void PrimaryPhaseWidget::on_m_Sigma_SizeDistribution_textChanged(const QString& 
   updateSizeDistributionPlot();
   m_Sigma_SizeDistribution->setFocus();
   calculateNumberOfBins();
+  emit phaseParametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -552,6 +563,7 @@ void PrimaryPhaseWidget::on_m_MinSigmaCutOff_textChanged(const QString& text)
   updateSizeDistributionPlot();
   m_MinSigmaCutOff->setFocus();
   calculateNumberOfBins();
+  emit phaseParametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -563,6 +575,7 @@ void PrimaryPhaseWidget::on_m_MaxSigmaCutOff_textChanged(const QString& text)
   updateSizeDistributionPlot();
   m_MaxSigmaCutOff->setFocus();
   calculateNumberOfBins();
+  emit phaseParametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -572,8 +585,8 @@ void PrimaryPhaseWidget::on_m_BinStepSize_valueChanged(double v)
 {
   Q_UNUSED(v)
   calculateNumberOfBins();
+  emit phaseParametersChanged();
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -591,7 +604,6 @@ void PrimaryPhaseWidget::calculateNumberOfBins()
   {
     return;
   }
-
 
   int n = StatsGen::ComputeNumberOfBins(mu, sigma, minCutOff, maxCutOff, stepSize, max, min);
   if(err < 0)
@@ -662,7 +674,6 @@ int PrimaryPhaseWidget::computeBinsAndCutOffs( float mu, float sigma,
 
   return err;
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -758,10 +769,7 @@ void PrimaryPhaseWidget::plotSizeDistribution()
   float maxCutOff = 1.0;
   float stepSize = 1.0;
   int err = gatherSizeDistributionFromGui(mu, sigma, minCutOff, maxCutOff, stepSize);
-  if (err == 0)
-  {
-    return;
-  }
+  if (err == 0) { return; }
 
   QwtArray<float> xCo;
   QwtArray<float> yCo;
@@ -792,9 +800,7 @@ void PrimaryPhaseWidget::plotSizeDistribution()
   m_MicroPreset->initializeODFTableModel(m_ODFWidget);
   m_MicroPreset->initializeAxisODFTableModel(m_AxisODFWidget);
   m_MicroPreset->initializeMDFTableModel(m_ODFWidget->getMDFWidget());
-
 }
-
 
 #define SGWIGET_WRITE_ERROR_CHECK(var)\
   if (err < 0)  {\
@@ -1016,7 +1022,6 @@ void PrimaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int 
   m_NeighborPlot->extractStatsData(index, qbins, primaryStatsData->getFeatureSize_Neighbors());
   m_NeighborPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
-
   // Set the ODF Data
   m_ODFWidget->extractStatsData(index, primaryStatsData, SIMPL::PhaseType::PrimaryPhase);
 
@@ -1026,7 +1031,6 @@ void PrimaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int 
   // Enable all the tabs
   setTabsPlotTabsEnabled(true);
   m_DataHasBeenGenerated = true;
-
 }
 
 // -----------------------------------------------------------------------------
@@ -1036,5 +1040,3 @@ QString PrimaryPhaseWidget::getTabTitle()
 {
   return QString("Primary");
 }
-
-

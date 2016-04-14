@@ -109,14 +109,11 @@ StatsGeneratorWidget::~StatsGeneratorWidget()
 {
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void StatsGeneratorWidget::setupGui()
 {
-
-
   // Catch when the filter is about to execute the preflight
   connect(getFilter(), SIGNAL(preflightAboutToExecute()),
           this, SLOT(beforePreflight()));
@@ -141,6 +138,9 @@ void StatsGeneratorWidget::setupGui()
     ppw->setPhaseFraction(1.0);
     ppw->setTotalPhaseFraction(1.0);
     phaseTabs->addTab(ppw, "Primary Phase");
+
+    connect(ppw, SIGNAL(phaseParametersChanged()),
+            this, SIGNAL(parametersChanged()));
   }
   else {
     size_t ensembles = sda->getNumberOfTuples();
@@ -227,12 +227,10 @@ void StatsGeneratorWidget::on_updatePipelineBtn_clicked()
 // -----------------------------------------------------------------------------
 void StatsGeneratorWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
-
   StatsGeneratorFilter* statsGenFilter = dynamic_cast<StatsGeneratorFilter*>(filter);
 
   if (NULL != statsGenFilter)
   {
-
     DataContainerArray::Pointer dca = generateDataContainerArray();
     DataContainer::Pointer dc = dca->getDataContainer(SIMPL::Defaults::StatsGenerator);
     AttributeMatrix::Pointer cellEnsembleAttrMat = dc->getAttributeMatrix(SIMPL::Defaults::CellEnsembleAttributeMatrixName);
@@ -249,7 +247,6 @@ void StatsGeneratorWidget::filterNeedsInputParameters(AbstractFilter* filter)
     statsGenFilter->setStatsDataArray(statsDataArray);
     statsGenFilter->setCrystalStructures(crystalStructures);
     statsGenFilter->setPhaseTypes(phaseTypes);
-
   }
 }
 
@@ -258,7 +255,16 @@ void StatsGeneratorWidget::filterNeedsInputParameters(AbstractFilter* filter)
 // -----------------------------------------------------------------------------
 void StatsGeneratorWidget::beforePreflight()
 {
-
+ for (int i = 0; i < phaseTabs->count(); i++)
+ {
+   SGWidget* sgwidget = qobject_cast<SGWidget*>(phaseTabs->widget(i));
+   if (!sgwidget->getDataHasBeenGenerated())
+   {
+     m_Filter->setErrorCondition(-1);
+     QString ss = QObject::tr("Data needs to be generated!");
+     m_Filter->notifyErrorMessage(m_Filter->getHumanLabel(), ss, m_Filter->getErrorCondition());
+   }
+ }
 }
 
 // -----------------------------------------------------------------------------
@@ -266,7 +272,6 @@ void StatsGeneratorWidget::beforePreflight()
 // -----------------------------------------------------------------------------
 void StatsGeneratorWidget::afterPreflight()
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -302,7 +307,7 @@ void StatsGeneratorWidget::on_addPhase_clicked()
 
   EditPhaseDialog dialog;
   dialog.setEditFlag(true);
-  dialog.setOtherPhaseFractionTotal(phaseFractionTotal);
+  dialog.setOtherPhaseFractionTotal(static_cast<float>(phaseFractionTotal));
   int r = dialog.exec();
   if (r == QDialog::Accepted)
   {
@@ -310,6 +315,10 @@ void StatsGeneratorWidget::on_addPhase_clicked()
     {
       PrimaryPhaseWidget* ppw = new PrimaryPhaseWidget();
       phaseTabs->addTab(ppw, "Primary");
+
+      connect(ppw, SIGNAL(phaseParametersChanged()),
+              this, SIGNAL(parametersChanged()));
+
       ppw->setPhaseIndex(phaseTabs->count());
       ppw->setPhaseType(SIMPL::PhaseType::PrimaryPhase);
       ppw->setCrystalStructure(dialog.getCrystalStructure());
@@ -324,6 +333,10 @@ void StatsGeneratorWidget::on_addPhase_clicked()
     {
       PrecipitatePhaseWidget* ppw = new PrecipitatePhaseWidget();
       phaseTabs->addTab(ppw, "Precipitate");
+
+      connect(ppw, SIGNAL(phaseParametersChanged()),
+              this, SIGNAL(parametersChanged()));
+
       ppw->setPhaseIndex(phaseTabs->count());
       ppw->setPhaseType(SIMPL::PhaseType::PrecipitatePhase);
       ppw->setCrystalStructure(dialog.getCrystalStructure());
@@ -339,6 +352,10 @@ void StatsGeneratorWidget::on_addPhase_clicked()
     {
       TransformationPhaseWidget* tpw = new TransformationPhaseWidget();
       phaseTabs->addTab(tpw, "Transformation");
+
+      connect(tpw, SIGNAL(phaseParametersChanged()),
+              this, SIGNAL(parametersChanged()));
+
       tpw->setPhaseIndex(phaseTabs->count());
       tpw->setPhaseType(SIMPL::PhaseType::TransformationPhase);
       tpw->setCrystalStructure(dialog.getCrystalStructure());
@@ -354,6 +371,10 @@ void StatsGeneratorWidget::on_addPhase_clicked()
     {
       MatrixPhaseWidget* mpw = new MatrixPhaseWidget();
       phaseTabs->addTab(mpw, "Matrix");
+
+      connect(mpw, SIGNAL(phaseParametersChanged()),
+              this, SIGNAL(parametersChanged()));
+
       mpw->setPhaseIndex(phaseTabs->count());
       mpw->setPhaseType(SIMPL::PhaseType::MatrixPhase);
       mpw->setCrystalStructure(dialog.getCrystalStructure());
@@ -367,6 +388,10 @@ void StatsGeneratorWidget::on_addPhase_clicked()
     {
       BoundaryPhaseWidget* bpw = new BoundaryPhaseWidget();
       phaseTabs->addTab(bpw, "Boundary");
+
+      connect(bpw, SIGNAL(phaseParametersChanged()),
+              this, SIGNAL(parametersChanged()));
+
       bpw->setPhaseIndex(phaseTabs->count());
       bpw->setPhaseType(SIMPL::PhaseType::BoundaryPhase);
       bpw->setCrystalStructure(dialog.getCrystalStructure());
@@ -379,9 +404,8 @@ void StatsGeneratorWidget::on_addPhase_clicked()
 
     // Make sure the new tab is the active tab
     phaseTabs->setCurrentIndex(phaseTabs->count() - 1);
-
-
   }
+  emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -522,6 +546,7 @@ void StatsGeneratorWidget::on_phaseTabs_tabCloseRequested ( int index )
 #endif
   }
   setWindowModified(true);
+  emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------

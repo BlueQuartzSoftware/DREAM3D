@@ -114,9 +114,7 @@ PrecipitatePhaseWidget::PrecipitatePhaseWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 PrecipitatePhaseWidget::~PrecipitatePhaseWidget()
 {
-
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -196,7 +194,8 @@ void PrecipitatePhaseWidget::setupGui()
   w->setBinStep(binStepSize);
   connect(m_Omega3Plot, SIGNAL(userEditedData()),
           this, SLOT(dataWasEdited()));
-
+  connect(m_Omega3Plot, SIGNAL(userEditedData()),
+          this, SIGNAL(phaseParametersChanged()));
 
   w = m_BOverAPlot;
   w->setPlotTitle(QString("B/A Shape Distribution"));
@@ -213,6 +212,8 @@ void PrecipitatePhaseWidget::setupGui()
   w->setBinStep(binStepSize);
   connect(m_BOverAPlot, SIGNAL(userEditedData()),
           this, SLOT(dataWasEdited()));
+  connect(m_BOverAPlot, SIGNAL(userEditedData()),
+          this, SIGNAL(phaseParametersChanged()));
 
   w = m_COverAPlot;
   w->setPlotTitle(QString("C/A Shape Distribution"));
@@ -229,6 +230,8 @@ void PrecipitatePhaseWidget::setupGui()
   w->setBinStep(binStepSize);
   connect(m_COverAPlot, SIGNAL(userEditedData()),
           this, SLOT(dataWasEdited()));
+  connect(m_COverAPlot, SIGNAL(userEditedData()),
+          this, SIGNAL(phaseParametersChanged()));
 
   {
     // w = m_RdfPlot;
@@ -265,11 +268,19 @@ void PrecipitatePhaseWidget::setupGui()
 
   // For the ODF Tab we want the MDF functionality
   m_ODFWidget->enableMDFTab(true);
+
   // Remove any Axis Decorations. The plots are explicitly know to have a -1 to 1 axis min/max
   m_ODFWidget->setEnableAxisDecorations(false);
 
   // Remove any Axis Decorations. The plots are explicitly know to have a -1 to 1 axis min/max
   m_AxisODFWidget->setEnableAxisDecorations(false);
+
+  connect(m_ODFWidget, SIGNAL(odfParametersChanged()),
+          this, SIGNAL(phaseParametersChanged()));
+  connect(m_AxisODFWidget, SIGNAL(axisODFParametersChanged()),
+          this, SIGNAL(phaseParametersChanged()));
+  connect(m_RdfPlot, SIGNAL(rdfParametersChanged()),
+          this, SIGNAL(phaseParametersChanged()));
 
   updateSizeDistributionPlot();
   calculateNumberOfBins();
@@ -435,6 +446,8 @@ void PrecipitatePhaseWidget::updatePlots()
     progress.setValue(4);
     progress.setLabelText("[4/4] Calculating RDF Data ...");
     m_RdfPlot->updatePlots();
+
+    emit phaseParametersChanged();
   }
 }
 
@@ -456,7 +469,9 @@ void PrecipitatePhaseWidget::on_m_Mu_SizeDistribution_textChanged(const QString&
   updateSizeDistributionPlot();
   m_Mu_SizeDistribution->setFocus();
   calculateNumberOfBins();
+  emit phaseParametersChanged();
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -466,6 +481,7 @@ void PrecipitatePhaseWidget::on_m_Sigma_SizeDistribution_textChanged(const QStri
   updateSizeDistributionPlot();
   m_Sigma_SizeDistribution->setFocus();
   calculateNumberOfBins();
+  emit phaseParametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -477,6 +493,7 @@ void PrecipitatePhaseWidget::on_m_MinSigmaCutOff_textChanged(const QString& text
   updateSizeDistributionPlot();
   m_MinSigmaCutOff->setFocus();
   calculateNumberOfBins();
+  emit phaseParametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -488,6 +505,7 @@ void PrecipitatePhaseWidget::on_m_MaxSigmaCutOff_textChanged(const QString& text
   updateSizeDistributionPlot();
   m_MaxSigmaCutOff->setFocus();
   calculateNumberOfBins();
+  emit phaseParametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -497,8 +515,8 @@ void PrecipitatePhaseWidget::on_m_BinStepSize_valueChanged(double v)
 {
   Q_UNUSED(v);
   calculateNumberOfBins();
+  emit phaseParametersChanged();
 }
-
 
 // -----------------------------------------------------------------------------
 //

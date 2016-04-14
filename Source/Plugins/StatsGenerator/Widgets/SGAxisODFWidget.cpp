@@ -401,7 +401,6 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
   QwtArray<float> sigmas;
   QwtArray<float> odf;
 
-
   e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1);
   e2s = m_ODFTableModel->getData(SGODFTableModel::Euler2);
   e3s = m_ODFTableModel->getData(SGODFTableModel::Euler3);
@@ -410,9 +409,9 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
 
   for(int i = 0; i < e1s.size(); i++)
   {
-    e1s[i] = e1s[i] * M_PI / 180.0;
-    e2s[i] = e2s[i] * M_PI / 180.0;
-    e3s[i] = e3s[i] * M_PI / 180.0;
+    e1s[i] = static_cast<float>(e1s[i] * M_PI / 180.0);
+    e2s[i] = static_cast<float>(e2s[i] * M_PI / 180.0);
+    e3s[i] = static_cast<float>(e3s[i] * M_PI / 180.0);
   }
   size_t numEntries = e1s.size();
 
@@ -449,7 +448,6 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
   order[2] = 1; // Show B Second
   config.order = order;
 
-
   QVector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
   if (err == 1)
   {
@@ -460,6 +458,7 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
   QImage image = PoleFigureImageUtilities::Create3ImagePoleFigure(figures[0].get(), figures[1].get(), figures[2].get(), config, imageLayout->currentIndex());
   m_PoleFigureLabel->setPixmap(QPixmap::fromImage(image));
 
+  emit axisODFParametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -489,6 +488,7 @@ void SGAxisODFWidget::on_addODFTextureBtn_clicked()
     QModelIndex index = m_ODFTableModel->index(m_ODFTableModel->rowCount() - 1, 0);
     m_ODFTableView->setCurrentIndex(index);
   }
+  emit axisODFParametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -505,7 +505,9 @@ void SGAxisODFWidget::on_deleteODFTextureBtn_clicked()
   {
     m_ODFTableView->resizeColumnsToContents();
   }
+  emit axisODFParametersChanged();
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -527,14 +529,12 @@ void SGAxisODFWidget::on_loadODFTextureBtn_clicked()
     inFile >> numOrients;
 
     float e1, e2, e3, weight, sigma;
-    for(size_t i = 0; i < numOrients; i++)
+    for (size_t i = 0; i < numOrients; i++)
     {
       inFile >> e1 >> e2 >> e3 >> weight >> sigma;
-
       if (!m_ODFTableModel->insertRow(m_ODFTableModel->rowCount())) { return; }
       int row = m_ODFTableModel->rowCount() - 1;
       m_ODFTableModel->setRowData(row, e1, e2, e3, weight, sigma);
-
       m_ODFTableView->resizeColumnsToContents();
       m_ODFTableView->scrollToBottom();
       m_ODFTableView->setFocus();
@@ -543,6 +543,7 @@ void SGAxisODFWidget::on_loadODFTextureBtn_clicked()
     }
   }
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -556,7 +557,6 @@ SGODFTableModel* SGAxisODFWidget::tableModel()
 // -----------------------------------------------------------------------------
 void SGAxisODFWidget::on_savePoleFigureImage_clicked()
 {
-
   QString Ftype = "Image Files";
   QString ext = "*.png";
   QString s = "Image Files (*.tiff *.png *.bmp);;All Files(*.*)";
@@ -576,4 +576,3 @@ void SGAxisODFWidget::on_savePoleFigureImage_clicked()
   QImage image = m_PoleFigureLabel->pixmap()->toImage();
   image.save(file);
 }
-

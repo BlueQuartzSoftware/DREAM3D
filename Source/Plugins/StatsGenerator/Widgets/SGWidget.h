@@ -81,8 +81,10 @@ class SGWidget : public QWidget
 
 
   protected slots:
-
     virtual void dataWasEdited();
+
+  signals:
+    void phaseParametersChanged();
 
   protected:
 

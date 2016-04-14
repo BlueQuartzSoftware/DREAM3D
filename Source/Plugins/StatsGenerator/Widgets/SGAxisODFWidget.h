@@ -97,6 +97,9 @@ class SGAxisODFWidget : public QWidget, private Ui::SGAxisODFWidget
     void on_loadODFTextureBtn_clicked();
     void on_savePoleFigureImage_clicked();
 
+  signals:
+    void axisODFParametersChanged();
+
   protected:
     SIMPL_INSTANCE_PROPERTY(bool, Initializing)
 
@@ -114,8 +117,6 @@ class SGAxisODFWidget : public QWidget, private Ui::SGAxisODFWidget
     QString m_OpenDialogLastDirectory; // Must be last in the list
     SGAxisODFWidget(const SGAxisODFWidget&); // Copy Constructor Not Implemented
     void operator=(const SGAxisODFWidget&); // Operator '=' Not Implemented
-
 };
 
 #endif /* _SG_AXIS_ODFWIDGET_H_ */
-

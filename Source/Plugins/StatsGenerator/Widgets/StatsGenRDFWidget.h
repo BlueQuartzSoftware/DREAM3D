@@ -88,6 +88,8 @@ class StatsGenRDFWidget : public QWidget, private Ui::StatsGenRDFWidget
   protected slots:
     void on_generateRDFBtn_clicked();
 
+  signals:
+    void rdfParametersChanged();
 
   private:
     SGRDFTableModel* m_RDFTableModel;

@@ -115,11 +115,12 @@ class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
     void on_deleteODFTextureBtn_clicked();
     void on_loadODFTextureBtn_clicked();
     void on_selectAnglesFile_clicked();
-
     void on_bulkLoadGroupBox_clicked ( bool checked = false );
     void on_weightSpreadGroupBox_clicked ( bool checked = false );
     void on_savePoleFigureImage_clicked();
 
+  signals:
+    void odfParametersChanged();
 
   protected:
 
