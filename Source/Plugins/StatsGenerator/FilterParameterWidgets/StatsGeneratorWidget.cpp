@@ -263,11 +263,16 @@ void StatsGeneratorWidget::beforePreflight()
  for (int i = 0; i < phaseTabs->count(); i++)
  {
    SGWidget* sgwidget = qobject_cast<SGWidget*>(phaseTabs->widget(i));
-   if (!sgwidget->getDataHasBeenGenerated())
+   if (!qobject_cast<MatrixPhaseWidget*>(sgwidget) &&
+       !qobject_cast<BoundaryPhaseWidget*>(sgwidget) &&
+       !qobject_cast<TransformationPhaseWidget*>(sgwidget))
    {
-     m_Filter->setErrorCondition(-1);
-     QString ss = QObject::tr("Data needs to be generated for phase %1 (%2)").arg(sgwidget->getPhaseIndex()).arg(sgwidget->getTabTitle());
-     m_Filter->notifyErrorMessage(m_Filter->getHumanLabel(), ss, m_Filter->getErrorCondition());
+     if (!sgwidget->getDataHasBeenGenerated())
+     {
+       m_Filter->setErrorCondition(-1);
+       QString ss = QObject::tr("Data needs to be generated for phase %1 (%2)").arg(sgwidget->getPhaseIndex()).arg(sgwidget->getTabTitle());
+       m_Filter->notifyErrorMessage(m_Filter->getHumanLabel(), ss, m_Filter->getErrorCondition());
+     }
    }
  }
 }

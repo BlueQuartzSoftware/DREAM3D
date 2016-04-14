@@ -61,7 +61,6 @@ class MatrixPhaseWidget : public SGWidget, private Ui::MatrixPhaseWidget
 
     void updatePlots();
 
-
     SIMPL_INSTANCE_PROPERTY(unsigned int, PhaseType)
     SIMPL_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
     SIMPL_INSTANCE_PROPERTY(int, PhaseIndex)
@@ -80,8 +79,8 @@ class MatrixPhaseWidget : public SGWidget, private Ui::MatrixPhaseWidget
     //s   void on_m_GenerateDefaultData_clicked();
 
   protected slots:
-
     void dataWasEdited();
+
   protected:
 
     /**
