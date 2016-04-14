@@ -97,20 +97,23 @@ void StatsGeneratorFilter::readFilterParameters(AbstractFilterParametersReader* 
 {
   reader->openFilterGroup(this, index);
 
-  JsonFilterParametersReader* jsonReader = dynamic_cast<JsonFilterParametersReader*>(reader);
-  QJsonObject& jsonRoot = jsonReader->getCurrentGroupObject();
+  if (dynamic_cast<JsonFilterParametersReader*>(reader))
+  {
+    JsonFilterParametersReader* jsonReader = dynamic_cast<JsonFilterParametersReader*>(reader);
+    QJsonObject& jsonRoot = jsonReader->getCurrentGroupObject();
 
-  // Clear the array as we are going to populate the entire array with new objects
-  if (nullptr != m_StatsDataArray.get() ) {
-    m_StatsDataArray = StatsDataArray::NullPointer();
+    // Clear the array as we are going to populate the entire array with new objects
+    if (nullptr != m_StatsDataArray) {
+      m_StatsDataArray = StatsDataArray::NullPointer();
+    }
+
+    QString filterName = jsonRoot["Filter_Name"].toString();
+    m_StatsDataArray = StatsDataArray::CreateArray(0, "THIS SHOULD BE RESET");
+    m_StatsDataArray->readFromJson(jsonRoot);
+    size_t numTuples = m_StatsDataArray->getNumberOfTuples();
+
+    readArray(jsonRoot, numTuples);
   }
-
-  QString filterName = jsonRoot["Filter_Name"].toString();
-  m_StatsDataArray = StatsDataArray::CreateArray(0, "THIS SHOULD BE RESET");
-  m_StatsDataArray->readFromJson(jsonRoot);
-  size_t numTuples = m_StatsDataArray->getNumberOfTuples();
-
-  readArray(jsonRoot, numTuples);
 
   setStatsGeneratorDataContainerName(reader->readString("StatsGeneratorDataContainerName", getStatsGeneratorDataContainerName()));
   setCellEnsembleAttributeMatrixName(reader->readString("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName()));
@@ -137,7 +140,7 @@ void StatsGeneratorFilter::readArray(const QJsonObject &jsonRoot, size_t numTupl
   m_PhaseTypes->initializeWithValue(SIMPL::PhaseType::UnknownPhaseType);
 
   // Start from index 1. Index 0 is always junk.
-  for(int index = 1; index < phaseCount; index++)
+  for (int index = 1; index < phaseCount; index++)
   {
     QString phaseAsString = QString::number(index);
     QJsonObject phaseObject = statsObject[phaseAsString].toObject();
@@ -156,9 +159,14 @@ void StatsGeneratorFilter::readArray(const QJsonObject &jsonRoot, size_t numTupl
 int StatsGeneratorFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  SIMPL_FILTER_WRITE_PARAMETER(StatsGeneratorDataContainerName)
+  SIMPL_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
+  SIMPL_FILTER_WRITE_PARAMETER(StatsDataArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayName)
+  SIMPL_FILTER_WRITE_PARAMETER(PhaseTypesArrayName)
 
   JsonFilterParametersWriter* jsonWriter = dynamic_cast<JsonFilterParametersWriter*>(writer);
-  if(nullptr == jsonWriter)
+  if (nullptr == jsonWriter)
   {
     writer->closeFilterGroup();
     return ++index; // we want to return the next index that was just written to
@@ -166,12 +174,6 @@ int StatsGeneratorFilter::writeFilterParameters(AbstractFilterParametersWriter* 
   QJsonObject& jsonRoot = jsonWriter->getCurrentGroupObject();
 
   m_StatsDataArray->writeToJson(jsonRoot, m_CrystalStructures);
-
-  SIMPL_FILTER_WRITE_PARAMETER(StatsGeneratorDataContainerName)
-  SIMPL_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
-  SIMPL_FILTER_WRITE_PARAMETER(StatsDataArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayName)
-  SIMPL_FILTER_WRITE_PARAMETER(PhaseTypesArrayName)
 
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
