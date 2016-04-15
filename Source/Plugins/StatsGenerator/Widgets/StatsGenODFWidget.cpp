@@ -156,14 +156,14 @@ void StatsGenODFWidget::extractStatsData(int index, StatsData* statsData, unsign
     ::memcpy( sigmas.data(), arrays[3]->getVoidPointer(0), sizeof(float)*sigmas.size() );
 
     // Convert from Radians to Degrees for the Euler Angles
-    for(int i = 0; i < e1.size(); ++i)
+    for (int i = 0; i < e1.size(); ++i)
     {
-      e1[i] = e1[i] * 180.0f / M_PI;
-      e2[i] = e2[i] * 180.0f / M_PI;
-      e3[i] = e3[i] * 180.0f / M_PI;
+      e1[i] = static_cast<float>(e1[i] * 180.0f / M_PI);
+      e2[i] = static_cast<float>(e2[i] * 180.0f / M_PI);
+      e3[i] = static_cast<float>(e3[i] * 180.0f / M_PI);
     }
 
-    if(e1.size() > 0)
+    if (e1.size() > 0)
     {
       // Load the data into the table model
       m_ODFTableModel->setTableData(e1, e2, e3, weights, sigmas);
@@ -192,7 +192,7 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, unsigned int pha
 
   SGODFTableModel* tableModel = NULL;
 
-  if(weightSpreadGroupBox->isChecked() )
+  if (weightSpreadGroupBox->isChecked() )
   {
     tableModel = m_ODFTableModel;
   }

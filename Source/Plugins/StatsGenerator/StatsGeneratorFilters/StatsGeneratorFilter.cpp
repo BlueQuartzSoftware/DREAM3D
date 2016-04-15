@@ -32,6 +32,8 @@
 
 #include "StatsGeneratorFilter.h"
 
+#include <QtCore/QJsonDocument>
+
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -39,6 +41,8 @@
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/JsonFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/JsonFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/H5FilterParametersReader.h"
+#include "SIMPLib/FilterParameters/H5FilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"
@@ -97,21 +101,27 @@ void StatsGeneratorFilter::readFilterParameters(AbstractFilterParametersReader* 
 {
   reader->openFilterGroup(this, index);
 
-  if (dynamic_cast<JsonFilterParametersReader*>(reader))
+  // Clear the array as we are going to populate the entire array with new objects
+  if (nullptr != m_StatsDataArray) {
+    m_StatsDataArray = StatsDataArray::NullPointer();
+  }
+
+  m_StatsDataArray = StatsDataArray::CreateArray(0, "THIS SHOULD BE RESET");
+
+  if (dynamic_cast<H5FilterParametersReader*>(reader))
+  {
+    QString jsonString = reader->readString("StatsDataArray", "");
+    QJsonDocument jDoc = QJsonDocument::fromJson(jsonString.toUtf8());
+    m_StatsDataArray->readFromJson(jDoc.object());
+    size_t numTuples = m_StatsDataArray->getNumberOfTuples();
+    readArray(jDoc.object(), numTuples);
+  }
+  else if (dynamic_cast<JsonFilterParametersReader*>(reader))
   {
     JsonFilterParametersReader* jsonReader = dynamic_cast<JsonFilterParametersReader*>(reader);
     QJsonObject& jsonRoot = jsonReader->getCurrentGroupObject();
-
-    // Clear the array as we are going to populate the entire array with new objects
-    if (nullptr != m_StatsDataArray) {
-      m_StatsDataArray = StatsDataArray::NullPointer();
-    }
-
-    QString filterName = jsonRoot["Filter_Name"].toString();
-    m_StatsDataArray = StatsDataArray::CreateArray(0, "THIS SHOULD BE RESET");
     m_StatsDataArray->readFromJson(jsonRoot);
     size_t numTuples = m_StatsDataArray->getNumberOfTuples();
-
     readArray(jsonRoot, numTuples);
   }
 
@@ -165,15 +175,21 @@ int StatsGeneratorFilter::writeFilterParameters(AbstractFilterParametersWriter* 
   SIMPL_FILTER_WRITE_PARAMETER(CrystalStructuresArrayName)
   SIMPL_FILTER_WRITE_PARAMETER(PhaseTypesArrayName)
 
-  JsonFilterParametersWriter* jsonWriter = dynamic_cast<JsonFilterParametersWriter*>(writer);
-  if (nullptr == jsonWriter)
+  if (dynamic_cast<H5FilterParametersWriter*>(writer))
   {
-    writer->closeFilterGroup();
-    return ++index; // we want to return the next index that was just written to
+    QJsonObject jsonRoot;
+    m_StatsDataArray->writeToJson(jsonRoot, m_CrystalStructures);
+    QJsonDocument jDoc(jsonRoot);
+    QByteArray jsonBytes = jDoc.toJson();
+    QString jsonString(jsonBytes);
+    writer->writeValue("StatsDataArray", jsonString);
   }
-  QJsonObject& jsonRoot = jsonWriter->getCurrentGroupObject();
-
-  m_StatsDataArray->writeToJson(jsonRoot, m_CrystalStructures);
+  else if (dynamic_cast<JsonFilterParametersWriter*>(writer))
+  {
+    JsonFilterParametersWriter* jsonWriter = dynamic_cast<JsonFilterParametersWriter*>(writer);
+    QJsonObject& jsonRoot = jsonWriter->getCurrentGroupObject();
+    m_StatsDataArray->writeToJson(jsonRoot, m_CrystalStructures);
+  }
 
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -387,14 +403,16 @@ void StatsGeneratorFilter::execute()
 AbstractFilter::Pointer StatsGeneratorFilter::newFilterInstance(bool copyFilterParameters)
 {
   StatsGeneratorFilter::Pointer filter = StatsGeneratorFilter::New();
-  if(true == copyFilterParameters)
+  if (true == copyFilterParameters)
   {
-    //copyFilterParameterInstanceVariables(filter.get());
+    filter->setStatsGeneratorDataContainerName(getStatsGeneratorDataContainerName());
+    filter->setCellEnsembleAttributeMatrixName(getCellEnsembleAttributeMatrixName());
+    filter->setStatsDataArrayName(getStatsDataArrayName());
+    filter->setCrystalStructuresArrayName(getCrystalStructuresArrayName());
+    filter->setPhaseTypesArrayName(getPhaseTypesArrayName());
     filter->setCrystalStructures(std::dynamic_pointer_cast<UInt32ArrayType>(m_CrystalStructures->deepCopy(getInPreflight())));
     filter->setPhaseTypes(std::dynamic_pointer_cast<UInt32ArrayType>(m_PhaseTypes->deepCopy(getInPreflight())));
-
     filter->setStatsDataArray(std::dynamic_pointer_cast<StatsDataArray>(m_StatsDataArray->deepCopy(getInPreflight())));
-
   }
   return filter;
 }

@@ -723,11 +723,7 @@ void StatsGeneratorWidget::on_saveJsonBtn_clicked()
 
   QJsonObject jsonRoot;
 
-
-
   sda->writeToJson(jsonRoot, std::dynamic_pointer_cast< UInt32ArrayType >(iDataArray));
-
-
 
   QJsonDocument doc(jsonRoot);
 

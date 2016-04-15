@@ -29,14 +29,14 @@
  *
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _statsGeneratorFilter_H_
-#define _statsGeneratorFilter_H_
+
+#ifndef _statsgeneratorfilter_h_
+#define _statsgeneratorfilter_h_
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/AbstractFilter.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
-
 
 /**
  * @brief The StatsGeneratorFilter class. See [Filter documentation](@ref statsgeneratorfilter) for details.
