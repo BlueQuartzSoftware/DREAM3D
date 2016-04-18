@@ -25,7 +25,7 @@ Tutorials covering some of the most common DREAM.3D workflows
 
 @subpage auxiliarytools
 
-Overviews of the auxiliary DREAM.3D tools @ref statsgenerator, @ref devhelper and @ref pipelinerunner
+Overviews of the auxiliary DREAM.3D tools @ref devhelper and @ref pipelinerunner
 
 @subpage supportedfileformats
 
