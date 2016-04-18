@@ -385,12 +385,6 @@ void StatsGeneratorFilter::execute()
 
       // Compute the binned axis ODF and set it into the StatsDataArray
       StatsGeneratorUtilities::GenerateAxisODFBinData(statsData.get(), phaseType, axis_e1s, axis_e2s, axis_e3s, axis_weights, axis_sigmas);
-
-      // RDF Data ************************************************************************
-      if (phaseType == SIMPL::PhaseType::PrecipitatePhase)
-      {
-        PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsData);
-      }
     }
   }
 
@@ -427,9 +421,7 @@ const QString StatsGeneratorFilter::getCompiledLibraryName()
 //
 // -----------------------------------------------------------------------------
 const QString StatsGeneratorFilter::getBrandingString()
-{
-  return "StatsGenerator";
-}
+{ return "StatsGenerator"; }
 
 // -----------------------------------------------------------------------------
 //
@@ -452,11 +444,11 @@ const QString StatsGeneratorFilter::getGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString StatsGeneratorFilter::getSubGroupName()
-{ return "StatsGenerator"; }
+{ return SIMPL::FilterSubGroups::GenerationFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString StatsGeneratorFilter::getHumanLabel()
-{ return "StatsGenerator Filter"; }
+{ return "StatsGenerator"; }
 

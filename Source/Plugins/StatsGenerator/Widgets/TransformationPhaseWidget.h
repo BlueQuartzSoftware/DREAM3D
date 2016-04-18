@@ -74,9 +74,9 @@ class TransformationPhaseWidget : public SGWidget, private Ui::TransformationPha
     SIMPL_INSTANCE_PROPERTY(float, TotalPhaseFraction)
     SIMPL_INSTANCE_PROPERTY(unsigned int, ParentPhase)
     SIMPL_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
+    SIMPL_INSTANCE_PROPERTY(bool, BulkLoadFailure)
 
     void extractStatsData(AttributeMatrix::Pointer attrMat, int index);
-
 
     void plotSizeDistribution();
     void updateSizeDistributionPlot();
@@ -100,11 +100,8 @@ class TransformationPhaseWidget : public SGWidget, private Ui::TransformationPha
 
     int gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight = false);
 
-    // public slots:
-    void on_m_GenerateDefaultData_clicked();
-
   protected slots:
-
+    void on_m_GenerateDefaultData_clicked();
     void on_m_Mu_SizeDistribution_textChanged(const QString& text);
     void on_m_Sigma_SizeDistribution_textChanged(const QString& text);
     void on_m_MinSigmaCutOff_textChanged(const QString& text);
@@ -113,8 +110,9 @@ class TransformationPhaseWidget : public SGWidget, private Ui::TransformationPha
 
     void on_microstructurePresetCombo_currentIndexChanged(int index);
 
-
     void dataWasEdited();
+    void bulkLoadEvent(bool fail);
+
   protected:
 
     /**

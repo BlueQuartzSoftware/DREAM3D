@@ -58,11 +58,8 @@
 
 #include <ui_StatsGeneratorWidget.h>
 
-
 class StatsGeneratorFilter;
 class StatsGeneratorFilterParameter;
-
-
 
 /**
  * @class StatsGeneratorWidget StatsGeneratorWidget.h StatsGenerator/StatsGeneratorWidget.h

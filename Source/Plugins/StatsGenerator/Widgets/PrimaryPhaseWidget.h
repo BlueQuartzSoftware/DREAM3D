@@ -37,12 +37,9 @@ class QDoubleValidator;
 
  */
 
-/*
- *
- */
+
 class PrimaryPhaseWidget : public SGWidget, private Ui::PrimaryPhaseWidget
 {
-
     Q_OBJECT
 
   public:
@@ -59,6 +56,7 @@ class PrimaryPhaseWidget : public SGWidget, private Ui::PrimaryPhaseWidget
     SIMPL_INSTANCE_PROPERTY(float, PhaseFraction)
     SIMPL_INSTANCE_PROPERTY(float, TotalPhaseFraction)
     SIMPL_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
+    SIMPL_INSTANCE_PROPERTY(bool, BulkLoadFailure)
 
     void extractStatsData(AttributeMatrix::Pointer attrMat, int index);
 
@@ -85,7 +83,6 @@ class PrimaryPhaseWidget : public SGWidget, private Ui::PrimaryPhaseWidget
 
   public slots:
 
-
   protected slots:
     void on_m_GenerateDefaultData_clicked();
     void on_m_Mu_SizeDistribution_textChanged(const QString& text);
@@ -97,6 +94,7 @@ class PrimaryPhaseWidget : public SGWidget, private Ui::PrimaryPhaseWidget
     void on_microstructurePresetCombo_currentIndexChanged(int index);
 
     void dataWasEdited();
+    void bulkLoadEvent(bool fail);
 
   protected:
 

@@ -55,7 +55,6 @@
 #include <QtWidgets/QAbstractItemDelegate>
 #include <QtWidgets/QProgressDialog>
 
-
 #include <qwt.h>
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
@@ -65,10 +64,8 @@
 #include <qwt_plot_marker.h>
 #include <qwt_symbol.h>
 
-
 #include "EbsdLib/TSL/AngReader.h"
 #include "EbsdLib/HKL/CtfReader.h"
-
 
 #include "OrientationLib/Texture/Texture.hpp"
 #include "OrientationLib/Texture/StatsGen.hpp"
@@ -83,7 +80,6 @@
 
 #define SHOW_POLE_FIGURES 1
 #define COLOR_POLE_FIGURES 1
-
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
 #include "moc_StatsGenODFWidget.cpp"
@@ -335,8 +331,6 @@ void StatsGenODFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
   plot->setAxisTitle(QwtPlot::xBottom, xAxisName);
   plot->setAxisTitle(QwtPlot::yLeft, yAxisName);
   plot->setCanvasBackground(QColor(Qt::white));
-  //plot->setCanvasLineWidth(2);
-  //plot->canvas()->setFrameShape(QFrame::NoFrame);
 
   // Lock the Axis Min/Max to -1 to 1 effectively cropping the plot. If there are
   // data points outside of that range they will never be shown.
@@ -614,17 +608,36 @@ void StatsGenODFWidget::on_selectAnglesFile_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void StatsGenODFWidget::on_angleFilePath_textChanged()
+{
+  // If the text has changed, we don't know if the file exists/is valid,
+  // so blow away the bulk table model, if it exists, and emit that
+  // the user needs to select a valid file and reload
+  if (m_OdfBulkTableModel) { delete m_OdfBulkTableModel; m_OdfBulkTableModel = NULL; }
+  m_OdfBulkTableModel = new SGODFTableModel;
+  m_OdfBulkTableModel->setCrystalStructure(m_CrystalStructure);
+  m_OdfBulkTableModel->setInitialValues();
+
+  emit bulkLoadEvent(true);
+  emit odfParametersChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
 {
   QString file = angleFilePath->text();
   if(true == file.isEmpty())
   {
+    emit bulkLoadEvent(true);
     return;
   }
 
   QFileInfo fi(angleFilePath->text());
   if(fi.exists() == false)
   {
+    emit bulkLoadEvent(true);
     return;
   }
 
@@ -644,6 +657,7 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
   {
     QMessageBox::critical(this, "ANG File Loading not Supported",
                           "Please use the 'Write StatsGenerator ODF Angle File' filter from DREAM.3D to generate a file. See that filter's help for the proper format.", QMessageBox::Ok);
+    emit bulkLoadEvent(true);
     return;
 #if 0
     phaseOfInterest->setEnabled(true);
@@ -709,6 +723,7 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
   {
     QMessageBox::critical(this, "CTF File Loading not Supported",
                           "Please use the 'Write StatsGenerator ODF Angle File' filter from DREAM.3D to generate a file. See that filter's help for the proper format.", QMessageBox::Ok);
+    emit bulkLoadEvent(true);
     return;
 #if 0
     phaseOfInterest->setEnabled(true);
@@ -803,6 +818,7 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
     if (loader->getErrorCode() < 0)
     {
       QMessageBox::critical(this, "Error Loading Angle data", loader->getErrorMessage(), QMessageBox::Ok);
+      emit bulkLoadEvent(true);
       return;
     }
     count = data->getNumberOfTuples();
@@ -826,7 +842,7 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
 
   // Just blow away our table and create a new one. Quicker than removing all the rows
   // first, the repopulating them
-  if(m_OdfBulkTableModel) { delete m_OdfBulkTableModel; m_OdfBulkTableModel = NULL; }
+  if (m_OdfBulkTableModel) { delete m_OdfBulkTableModel; m_OdfBulkTableModel = NULL; }
   m_OdfBulkTableModel = new SGODFTableModel;
   m_OdfBulkTableModel->setCrystalStructure(m_CrystalStructure);
   m_OdfBulkTableModel->setInitialValues();
@@ -841,6 +857,7 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
   m_OdfBulkTableModel->blockSignals(false);
 #endif
 
+  emit bulkLoadEvent(false);
   on_m_CalculateODFBtn_clicked();
   progress.setValue(3);
 }
@@ -887,6 +904,8 @@ void StatsGenODFWidget::on_bulkLoadGroupBox_clicked ( bool checked )
   m_ODFTableView->setModel(m_OdfBulkTableModel);
   QAbstractItemDelegate* idelegate = m_OdfBulkTableModel->getItemDelegate();
   m_ODFTableView->setItemDelegate(idelegate);
+  emit bulkLoadEvent(!(m_OdfBulkTableModel->rowCount() > 0));
+  emit odfParametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -898,6 +917,8 @@ void StatsGenODFWidget::on_weightSpreadGroupBox_clicked ( bool checked )
   m_ODFTableView->setModel(m_ODFTableModel);
   QAbstractItemDelegate* idelegate = m_ODFTableModel->getItemDelegate();
   m_ODFTableView->setItemDelegate(idelegate);
+  emit bulkLoadEvent(false);
+  emit odfParametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -905,7 +926,6 @@ void StatsGenODFWidget::on_weightSpreadGroupBox_clicked ( bool checked )
 // -----------------------------------------------------------------------------
 void StatsGenODFWidget::on_savePoleFigureImage_clicked()
 {
-
   QString Ftype = "Image Files";
   QString ext = "*.png";
   QString s = "Image Files (*.tiff *.png *.bmp);;All Files(*.*)";

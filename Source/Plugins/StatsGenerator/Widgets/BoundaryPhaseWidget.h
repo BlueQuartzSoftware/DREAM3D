@@ -77,8 +77,8 @@ class BoundaryPhaseWidget : public SGWidget, private Ui::BoundaryPhaseWidget
     int gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight = false);
 
   protected slots:
-
     void dataWasEdited();
+
   protected:
 
     /**

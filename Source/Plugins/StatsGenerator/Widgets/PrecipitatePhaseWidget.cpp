@@ -98,6 +98,7 @@ PrecipitatePhaseWidget::PrecipitatePhaseWidget(QWidget* parent) :
   m_TotalPhaseFraction(1.0),
   m_PptFraction(-1.0f),
   m_DataHasBeenGenerated(false),
+  m_BulkLoadFailure(false),
   m_PhaseIndex(0),
   m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High),
   m_SizeDistributionCurve(NULL),
@@ -259,6 +260,8 @@ void PrecipitatePhaseWidget::setupGui()
 
   connect(m_ODFWidget, SIGNAL(odfParametersChanged()),
           this, SIGNAL(phaseParametersChanged()));
+  connect(m_ODFWidget, SIGNAL(bulkLoadEvent(bool)),
+          this, SLOT(bulkLoadEvent(bool)));
   connect(m_AxisODFWidget, SIGNAL(axisODFParametersChanged()),
           this, SIGNAL(phaseParametersChanged()));
   connect(m_RdfPlot, SIGNAL(rdfParametersChanged()),
@@ -277,7 +280,6 @@ void PrecipitatePhaseWidget::setPhaseIndex(int index)
   m_Omega3Plot->setPhaseIndex(m_PhaseIndex);
   m_BOverAPlot->setPhaseIndex(m_PhaseIndex);
   m_COverAPlot->setPhaseIndex(m_PhaseIndex);
-//  m_RdfPlot->setPhaseIndex(m_PhaseIndex);
   m_ODFWidget->setPhaseIndex(m_PhaseIndex);
   m_AxisODFWidget->setPhaseIndex(m_PhaseIndex);
 }
@@ -438,6 +440,14 @@ void PrecipitatePhaseWidget::on_m_GenerateDefaultData_clicked()
   m_DataHasBeenGenerated = true;
   updatePlots();
   emit phaseParametersChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PrecipitatePhaseWidget::bulkLoadEvent(bool fail)
+{
+  m_BulkLoadFailure = fail;
 }
 
 // -----------------------------------------------------------------------------

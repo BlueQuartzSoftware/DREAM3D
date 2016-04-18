@@ -102,6 +102,7 @@ PrimaryPhaseWidget::PrimaryPhaseWidget(QWidget* parent) :
   m_PhaseFraction(1.0),
   m_TotalPhaseFraction(1.0),
   m_DataHasBeenGenerated(false),
+  m_BulkLoadFailure(false),
   m_PhaseIndex(0),
   m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High),
   m_SizeDistributionCurve(NULL),
@@ -306,6 +307,8 @@ void PrimaryPhaseWidget::setupGui()
 
   connect(m_ODFWidget, SIGNAL(odfParametersChanged()),
           this, SIGNAL(phaseParametersChanged()));
+  connect(m_ODFWidget, SIGNAL(bulkLoadEvent(bool)),
+          this, SLOT(bulkLoadEvent(bool)));
   connect(m_AxisODFWidget, SIGNAL(axisODFParametersChanged()),
           this, SIGNAL(phaseParametersChanged()));
 
@@ -480,6 +483,14 @@ void PrimaryPhaseWidget::on_m_GenerateDefaultData_clicked()
   m_DataHasBeenGenerated = true;
   updatePlots();
   emit phaseParametersChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PrimaryPhaseWidget::bulkLoadEvent(bool fail)
+{
+  m_BulkLoadFailure = fail;
 }
 
 // -----------------------------------------------------------------------------

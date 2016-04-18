@@ -87,19 +87,15 @@
 StatsGeneratorWidget::StatsGeneratorWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   FilterParameterWidget(parameter, filter, parent)
 {
-
   m_FilterParameter = dynamic_cast<StatsGeneratorFilterParameter*>(parameter);
   Q_ASSERT_X(m_FilterParameter != NULL, "NULL Pointer", "StatsGeneratorFilterWidget can ONLY be used with an StatsGeneratorFilterParameter object");
 
   m_Filter = dynamic_cast<StatsGeneratorFilter*>(filter);
   Q_ASSERT_X(m_Filter != NULL, "NULL Pointer", "StatsGeneratorFilterWidget can ONLY be used with an StatsGeneratorFilter filter");
 
-
-
   m_OpenDialogLastDirectory = QDir::homePath();
   setupUi(this);
   setupGui();
-
 }
 
 // -----------------------------------------------------------------------------
@@ -270,7 +266,15 @@ void StatsGeneratorWidget::beforePreflight()
      if (!sgwidget->getDataHasBeenGenerated())
      {
        m_Filter->setErrorCondition(-1);
-       QString ss = QObject::tr("Data needs to be generated for phase %1 (%2)").arg(sgwidget->getPhaseIndex()).arg(sgwidget->getTabTitle());
+       QString ss = QObject::tr("Statistics data needs to be generated for phase %1 (%2)\n"
+                                "Click the Create Data button to generate the statistics data").arg(sgwidget->getPhaseIndex()).arg(sgwidget->getTabTitle());
+       m_Filter->notifyErrorMessage(m_Filter->getHumanLabel(), ss, m_Filter->getErrorCondition());
+     }
+     if (sgwidget->getBulkLoadFailure())
+     {
+       m_Filter->setErrorCondition(-1);
+       QString ss = QObject::tr("A valid angles file is needed to bulk load orientaiton weights and spreads for phase %1 (%2)\n"
+                                "Select an angles file and click the Load Data button to load the orientations").arg(sgwidget->getPhaseIndex()).arg(sgwidget->getTabTitle());
        m_Filter->notifyErrorMessage(m_Filter->getHumanLabel(), ss, m_Filter->getErrorCondition());
      }
    }

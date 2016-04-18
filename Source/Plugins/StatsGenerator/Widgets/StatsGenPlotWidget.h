@@ -125,7 +125,6 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
   protected:
     void resetTableModel();
 
-
   private:
     unsigned int m_DistributionType;
     SGAbstractTableModel* m_TableModel;

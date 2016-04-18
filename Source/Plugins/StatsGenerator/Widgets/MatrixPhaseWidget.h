@@ -66,7 +66,6 @@ class MatrixPhaseWidget : public SGWidget, private Ui::MatrixPhaseWidget
     SIMPL_INSTANCE_PROPERTY(int, PhaseIndex)
     SIMPL_INSTANCE_PROPERTY(float, PhaseFraction)
     SIMPL_INSTANCE_PROPERTY(float, TotalPhaseFraction)
-    //    SIMPL_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
 
     void extractStatsData(AttributeMatrix::Pointer attrMat, int index);
 
@@ -74,9 +73,6 @@ class MatrixPhaseWidget : public SGWidget, private Ui::MatrixPhaseWidget
     QString getTabTitle();
 
     int gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight = false);
-
-    // public slots:
-    //s   void on_m_GenerateDefaultData_clicked();
 
   protected slots:
     void dataWasEdited();

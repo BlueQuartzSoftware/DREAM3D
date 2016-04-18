@@ -37,18 +37,15 @@
 #ifndef _statsgenodfwidget_h_
 #define _statsgenodfwidget_h_
 
-
 #include <QtCore/QFutureWatcher>
 #include <QtGui/QImage>
 #include <QtWidgets/QWidget>
 
 #include "ui_SGAxisODFWidget.h"
 
-
 #ifndef QwtArray
 #define QwtArray QVector
 #endif
-
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/StatsData/StatsData.h"
@@ -118,9 +115,11 @@ class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
     void on_bulkLoadGroupBox_clicked ( bool checked = false );
     void on_weightSpreadGroupBox_clicked ( bool checked = false );
     void on_savePoleFigureImage_clicked();
+    void on_angleFilePath_textChanged();
 
   signals:
     void odfParametersChanged();
+    void bulkLoadEvent(bool fail);
 
   protected:
 
@@ -140,7 +139,6 @@ class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
 
     StatsGenODFWidget(const StatsGenODFWidget&); // Copy Constructor Not Implemented
     void operator=(const StatsGenODFWidget&); // Operator '=' Not Implemented
-
 };
 
 #endif /* _STATSGENODFWIDGET_H_ */

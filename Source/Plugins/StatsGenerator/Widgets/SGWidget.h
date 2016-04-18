@@ -68,6 +68,7 @@ class SGWidget : public QWidget
     SIMPL_VIRTUAL_INSTANCE_PROPERTY(float, PhaseFraction)
     SIMPL_VIRTUAL_INSTANCE_PROPERTY(float, TotalPhaseFraction)
     SIMPL_VIRTUAL_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
+    SIMPL_VIRTUAL_INSTANCE_PROPERTY(bool, BulkLoadFailure)
 
     virtual void extractStatsData(AttributeMatrix::Pointer attrMat, int index);
     virtual int gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight = false);
@@ -79,7 +80,6 @@ class SGWidget : public QWidget
 
   public slots:
 
-
   protected slots:
     virtual void dataWasEdited();
 
@@ -88,12 +88,9 @@ class SGWidget : public QWidget
 
   protected:
 
-
   private:
     SGWidget(const SGWidget&); // Copy Constructor Not Implemented
     void operator=(const SGWidget&); // Operator '=' Not Implemented
-
 };
 
 #endif /* SGWIDGET_H_ */
-
