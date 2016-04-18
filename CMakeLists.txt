@@ -283,9 +283,9 @@ endif(BUILD_SHARED_LIBS)
 # Find and Use the Qt5 Libraries
 include(${CMP_SOURCE_DIR}/ExtLib/Qt5Support.cmake)
 set(DREAM3D_Qt5_Components Core Widgets Network Gui Concurrent Script Svg Xml OpenGL PrintSupport )
-option(DREAM3D_USE_QtWebEngine "Use QWebEngine to display Help. OFF=Use default web browser" ON)
+option(SIMPLView_USE_QtWebEngine "Use QWebEngine to display Help. OFF=Use default web browser" ON)
 CMP_AddQt5Support( "${DREAM3D_Qt5_Components}"
-                    "${DREAM3D_USE_QtWebEngine}"
+                    "${SIMPLView_USE_QtWebEngine}"
                     "${DREAM3DProj_BINARY_DIR}"
                     "DREAM3D")
 
