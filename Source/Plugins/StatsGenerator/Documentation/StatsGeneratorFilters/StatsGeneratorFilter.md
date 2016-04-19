@@ -7,7 +7,7 @@ Synthetic Building (Generation)
 ## Description ##
 This **Filter** creates the arrays necessary to [generate synthetic microstructures](@ref tutorialsyntheticsingle).
 
-The **StatsGenerator** program was created as an auxiliary tool to DREAM.3D in order to allow users to quickly generate a set of statistics that can be used to create a synthetic microstructure. Using this program, the user can generate the necessary statistics that describe a microstructure, with the aid of visual plots of the statistics, and save them to a DREAM.3D file. The saved DREAM.3D file can then be used in a DREAM.3D pipeline to generate a synthetic microstructure.
+The StatsGenerator **Filter** was created to allow users to quickly generate a set of statistics that can be used to create a synthetic microstructure. Using this  **Filter**, the user can generate the necessary statistics that describe a microstructure, with the aid of visual plots of the statistics, and immediately use them in the **Pipeline** to generate a synthetic microstructure. The statistics data can also be [saved to a DREAM.3D file](@ref datacontainerwriter) for later use.
 
 The set(s) of statistics that can be generated in this program correspond to the set(s) used by "**Feature** packing algorithms" in DREAM.3D.  DREAM.3D chooses to classify **Features** in *Phase Types*, which define the set of statistics used to describe the key metrics for those **Features**.  The *Phase Types* that can currently be selected in DREAM.3D are _Primary_, _Precipitate_ and _Matrix_.  The statistics that describe each of these *Phase Types* are listed below:
 
@@ -22,7 +22,7 @@ The set(s) of statistics that can be generated in this program correspond to the
 ![Phase Properties Buttons](Images/image009.png)
 @image latex Images/image009.png "Phase Properties Buttons" width=6in 
 
-The user can add, remove or modify properties of the phase by clicking the *Phase Properties Buttons* at the top of the **StatsGenerator** GUI. The _plus button_ allows the user to add a phase, the _minus button_ allows the user to remove a phase, and the _cogwheel button_ allows the user to edit the currently selected phase.
+The user can add, remove or modify properties of the phase by clicking the *Phase Properties Buttons* at the top of the StatsGenerator GUI. The _plus button_ allows the user to add a phase, the _minus button_ allows the user to remove a phase, and the _cogwheel button_ allows the user to edit the currently selected phase.
 
 ![Phase Properties Manager](Images/image002.png)
 @image latex Images/image002.png "Phase Properties Manager" width=6in 
