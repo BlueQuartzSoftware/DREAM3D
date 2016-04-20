@@ -3,10 +3,6 @@
 @page auxiliarytools Auxiliary Tools
 DREAM.3D comes with a number of external tools to improve the overall DREAM.3D experience. This section explains the user of those tools.
 
-@subpage statsgenerator 
-
-A tool able to generate statistics that can be used to create synthetic microstructures
-
 @subpage devhelper
 
 Application to allow for easier creation of new <b>Filters</b> and <b>Plugins</b>

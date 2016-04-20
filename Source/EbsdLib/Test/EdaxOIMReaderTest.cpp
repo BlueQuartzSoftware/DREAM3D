@@ -110,13 +110,15 @@ class EdaxOIMReaderTest
       int* phasePtr = reinterpret_cast<int*>(reader->getPointerByName(Ebsd::Ang::PhaseData));
       DREAM3D_REQUIRE_VALID_POINTER(phasePtr)
 
-          uint8_t* patterns = reader->getPatternData();
-      DREAM3D_REQUIRE_VALID_POINTER(patterns)
-          int patternDims[2] = {0, 0};
-      reader->getPatternDims(patternDims);
-      DREAM3D_REQUIRED(patternDims[0], ==, 60)
-          DREAM3D_REQUIRED(patternDims[1], ==, 60)
-
+      if(reader->getReadPatternData())
+      {
+        uint8_t* patterns = reader->getPatternData();
+        DREAM3D_REQUIRE_VALID_POINTER(patterns)
+        int patternDims[2] = {0, 0};
+        reader->getPatternDims(patternDims);
+        DREAM3D_REQUIRED(patternDims[0], ==, 60)
+        DREAM3D_REQUIRED(patternDims[1], ==, 60)
+      }
     }
 
 

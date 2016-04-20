@@ -460,11 +460,6 @@ set(DREAM3D_DOCS_ROOT_DIR "${DREAM3DProj_BINARY_DIR}/Bin/Help/DREAM3D")
 # developer has added.
 include(${PROJECT_CODE_DIR}/Plugins/Plugins.cmake)
 
-#-------------------------------------------------------------------------------
-# Compile StatsGenerator
-add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/Applications/StatsGenerator ${PROJECT_BINARY_DIR}/Applications/StatsGenerator)
-
-
 # add the Command line utilities
 # Figure out here if we are going to build the command line tools
 option(SIMPLib_BUILD_CLI_TOOLS "Build the command line versions of the applications" ON)

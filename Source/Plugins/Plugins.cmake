@@ -121,6 +121,7 @@ set(DREAM3D_BASE_PLUGINS
   Statistics
   SurfaceMeshing
   SyntheticBuilding
+  StatsGenerator
 )
 
 get_filename_component(DREAM3D_PARENT_DIR  ${DREAM3DProj_SOURCE_DIR} DIRECTORY)
