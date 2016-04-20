@@ -267,8 +267,8 @@ void StatsGeneratorFilter::execute()
     if (nullptr != statsData)
     {
       // Pull the ODF, MDF and AxisODF weights from the StatsDataArray
-      u_int32_t phaseType = m_PhaseTypes->getValue(c);
-      u_int32_t crystalStruct = m_CrystalStructures->getValue(c);
+      uint32_t phaseType = m_PhaseTypes->getValue(c);
+      uint32_t crystalStruct = m_CrystalStructures->getValue(c);
       VectorOfFloatArray odfWeights;
       VectorOfFloatArray mdfWeights;
       VectorOfFloatArray aodfWeights;
