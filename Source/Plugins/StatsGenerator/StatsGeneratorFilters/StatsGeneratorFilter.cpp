@@ -404,9 +404,18 @@ AbstractFilter::Pointer StatsGeneratorFilter::newFilterInstance(bool copyFilterP
     filter->setStatsDataArrayName(getStatsDataArrayName());
     filter->setCrystalStructuresArrayName(getCrystalStructuresArrayName());
     filter->setPhaseTypesArrayName(getPhaseTypesArrayName());
-    filter->setCrystalStructures(std::dynamic_pointer_cast<UInt32ArrayType>(m_CrystalStructures->deepCopy(getInPreflight())));
-    filter->setPhaseTypes(std::dynamic_pointer_cast<UInt32ArrayType>(m_PhaseTypes->deepCopy(getInPreflight())));
-    filter->setStatsDataArray(std::dynamic_pointer_cast<StatsDataArray>(m_StatsDataArray->deepCopy(getInPreflight())));
+    if (m_CrystalStructures)
+    {
+      filter->setCrystalStructures(std::dynamic_pointer_cast<UInt32ArrayType>(m_CrystalStructures->deepCopy(getInPreflight())));
+    }
+    if (m_PhaseTypes)
+    {
+      filter->setPhaseTypes(std::dynamic_pointer_cast<UInt32ArrayType>(m_PhaseTypes->deepCopy(getInPreflight())));
+    }
+    if (m_StatsDataArray)
+    {
+      filter->setStatsDataArray(std::dynamic_pointer_cast<StatsDataArray>(m_StatsDataArray->deepCopy(getInPreflight())));
+    }
   }
   return filter;
 }
