@@ -1,6 +1,25 @@
 #! /bin/bash
 # This script requires a single argument which is the current install path
 
+
+#------------------------------------------------------------------------------
+# Read the configuration file for the SDK Build
+shopt -s extglob
+configfile="SDK_Configuration.conf" # set the actual path name of your (DOS or Unix) config file
+tr -d '\r' < $configfile > $configfile.unix
+while IFS='= ' read lhs rhs
+do
+    if [[ ! $lhs =~ ^\ *# && -n $lhs ]]; then
+        rhs="${rhs%%\#*}"    # Del in line right comments
+        rhs="${rhs%%*( )}"   # Del trailing spaces
+        rhs="${rhs%\"*}"     # Del opening string quotes 
+        rhs="${rhs#\"*}"     # Del closing string quotes 
+        declare $lhs="$rhs"
+    fi
+done < $configfile.unix
+rm $configfile.unix
+#------------------------------------------------------------------------------
+
 DEBUG=0
 # -----------------------------------------------------------------------------
 #  Conditional Printing
@@ -67,7 +86,7 @@ function CorrectLibraryDependency()
   # Filter out System Libraries or those located in /Libary/Frameworks
   isSystem=`expr  "${oldPath}" : '/System'`
   isUsrLib=`expr "${oldPath}" : '/usr/lib'`
-  isToolkitsLib=`expr "${oldPath}" : '/Users/Shared/DREAM3D_SDK/hdf5-1.8.15'`
+  isToolkitsLib=`expr "${oldPath}" : '${SDK_INSTALL}/${HDF5_INSTALL}'`
   #isLibFrwk=`expr "${oldPath}" : '/Libraray/Frameworks'`
   isEmbeddedPathExe=`expr "${oldPath}" : '@executable_path/'`
   isEmbeddedPathLdr=`expr "${oldPath}" : '@loader_path/'`
@@ -208,7 +227,7 @@ function UpdateExecutableDependencies()
   # Filter out System Libraries or those located in /Libary/Frameworks
   isSystem=`expr  "${oldPath}" : '/System'`
   isUsrLib=`expr "${oldPath}" : '/usr/lib'`
-  isToolkitsLib=`expr "${oldPath}" : '/Users/Shared/DREAM3D_SDK/hdf5-1.8.15'`
+  isToolkitsLib=`expr "${oldPath}" : '/Users/Shared/DREAM3D_SDK/hdf5-1.8.16'`
   #isLibFrwk=`expr "${oldPath}" : '/Libraray/Frameworks'`
   isEmbeddedPathExe=`expr "${oldPath}" : '@executable_path/'`
   isEmbeddedPathLdr=`expr "${oldPath}" : '@loader_path/'`
