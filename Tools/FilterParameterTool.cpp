@@ -45,6 +45,7 @@
 #include <QtCore/QMetaProperty>
 #include <QtCore/QTextStream>
 #include <QtCore/QDebug>
+#include <QtCore/QUuid>
 
 // DREAM3DLib includes
 //#include "SIMPLib/SIMPLib.h"
@@ -1302,7 +1303,33 @@ void GenerateMarkDownDocs()
 // -----------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
-  Q_ASSERT(true); // We don't want anyone to run this program.
+
+  //QUuid(uint l, ushort w1, ushort w2, uchar b1, uchar b2, uchar b3, uchar b4, uchar b5, uchar b6, uchar b7, uchar b8)
+  uint l = 100;
+  ushort w1 = 200;
+  ushort w2 = 300;
+  uchar b1 = 'S';
+  uchar b2 = 'I';
+  uchar b3 = 'M';
+  uchar b4 = 'P';
+  uchar b5 = 'L';
+  uchar b6 = 'i';
+  uchar b7 = 'b';
+  uchar b8 = '1';
+  QUuid uuid = QUuid(l, w1, w2, b1, b2, b3, b4, b5, b6, b7, b8);
+  qDebug() << uuid;
+
+  QString path1 = QString("%1/%2/%3").arg("DataContainer").arg("AttributeMatrix").arg("DataArray");
+  QUuid p1 = QUuid::createUuidV5(uuid, path1);
+  qDebug() << p1;
+
+  path1 = QString("%1/%2/%3").arg("DataContainer").arg("AttributeMatrix").arg("DataArray1");
+  p1 = QUuid::createUuidV5(uuid, path1);
+  qDebug() << p1;
+
+
+
+  Q_ASSERT(false); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");
