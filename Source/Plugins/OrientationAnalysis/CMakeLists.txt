@@ -83,7 +83,7 @@ include_directories( ${HDF5_INCLUDE_DIR} )
 include_directories( ${PROJECT_CODE_DIR} )
 include_directories( ${QtSupportLib_BINARY_DIR} )
 include_directories( ${QtSupportLib_SOURCE_DIR} )
-
+include_directories( ${SIMPLViewWidgetsLib_SOURCE_DIR}/Widgets )
 
 get_filename_component(PLUGINS_SOURCE_DIR  ${${PLUGIN_NAME}_SOURCE_DIR} DIRECTORY)
 get_filename_component(PLUGINS_BINARY_DIR  ${${PLUGIN_NAME}_BINARY_DIR} DIRECTORY)

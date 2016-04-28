@@ -47,10 +47,13 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/DynamicChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+
+#include "OrientationAnalysis/FilterParameters/ReadEdaxH5DataFilterParameter.h"
 
 /**
  * @brief The ReadEdaxH5DataPrivate class is a private implementation of the ReadEdaxH5Data class
@@ -91,7 +94,8 @@ ReadEdaxH5DataPrivate::ReadEdaxH5DataPrivate(ReadEdaxH5Data* ptr) :
 ReadEdaxH5Data::ReadEdaxH5Data() :
   AbstractFilter(),
   m_InputFile(""),
-  m_ScanName(""),
+  m_NumberOfScans(0),
+  m_ZSpacing(0),
   m_DataContainerName(SIMPL::Defaults::ImageDataContainerName),
   m_CellEnsembleAttributeMatrixName(SIMPL::Defaults::CellEnsembleAttributeMatrixName),
   m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName),
@@ -107,6 +111,12 @@ ReadEdaxH5Data::ReadEdaxH5Data() :
   m_LatticeConstants(NULL),
   d_ptr(new ReadEdaxH5DataPrivate(this))
 {
+  FloatVec3_t value;
+  value.x = 0;
+  value.y = 0;
+  value.z = 0;
+  m_Origin = value;
+
   setupFilterParameters();
   setPatternDims(QVector<int32_t>(2, 0)); // initialize this with a 2 element vector
 }
@@ -134,7 +144,13 @@ void ReadEdaxH5Data::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(InputFileFilterParameter::New("Input File", "InputFile", getInputFile(), FilterParameter::Parameter, "*.h5 *.hdf5"));
-  parameters.push_back(DynamicChoiceFilterParameter::New("Scan Name", "ScanName", getScanName(), "FileScanNames", FilterParameter::Parameter));
+
+  //parameters.push_back(DynamicChoiceFilterParameter::New("Scan Name", "ScanName", getScanName(), "FileScanNames", FilterParameter::Parameter));
+  parameters.push_back(ReadEdaxH5DataFilterParameter::New("Scan Names", "SelectedScanNames", getSelectedScanNames(), "FileScanNames", FilterParameter::Parameter));
+
+  parameters.push_back(DoubleFilterParameter::New("Z Spacing (Microns)", "ZSpacing", getZSpacing(), FilterParameter::Parameter));
+  parameters.push_back(FloatVec3FilterParameter::New("Origin (XYZ)", "Origin", getOrigin(), FilterParameter::Parameter));
+
   parameters.push_back(BooleanFilterParameter::New("Read Pattern Data", "ReadPatternData", getReadPatternData(), FilterParameter::Parameter));
   parameters.push_back(StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
@@ -154,7 +170,9 @@ void ReadEdaxH5Data::readFilterParameters(AbstractFilterParametersReader* reader
   setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName()));
   setCellEnsembleAttributeMatrixName(reader->readString("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName()));
   setInputFile(reader->readString("InputFile", getInputFile()));
-  setScanName(reader->readString("ScanName", getScanName()));
+  setZSpacing(reader->readValue("ZSpacing", getZSpacing()));
+  setOrigin(reader->readFloatVec3("Origin", getOrigin()));
+  setSelectedScanNames(reader->readStringList("SelectedScanNames", getSelectedScanNames()));
   setReadPatternData(reader->readValue("ReadPatternData", getReadPatternData()));
   reader->closeFilterGroup();
 }
@@ -169,7 +187,9 @@ int ReadEdaxH5Data::writeFilterParameters(AbstractFilterParametersWriter* writer
   SIMPL_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
   SIMPL_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
   SIMPL_FILTER_WRITE_PARAMETER(InputFile)
-  SIMPL_FILTER_WRITE_PARAMETER(ScanName)
+  SIMPL_FILTER_WRITE_PARAMETER(ZSpacing)
+  SIMPL_FILTER_WRITE_PARAMETER(Origin)
+  SIMPL_FILTER_WRITE_PARAMETER(SelectedScanNames)
   SIMPL_FILTER_WRITE_PARAMETER(ReadPatternData)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -180,6 +200,9 @@ int ReadEdaxH5Data::writeFilterParameters(AbstractFilterParametersWriter* writer
 // -----------------------------------------------------------------------------
 void ReadEdaxH5Data::dataCheck()
 {
+  // Clear the array map
+  m_EbsdArrayMap.clear();
+
   // Reset FileWasRead flag
   m_FileWasRead = false;
 
@@ -206,6 +229,7 @@ void ReadEdaxH5Data::dataCheck()
     QString ss = QObject::tr("The input file does not exist: '%1'").arg(getInputFile());
     setErrorCondition(-388);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
   }
 
   if (m_InputFile.isEmpty() == true && m_Manufacturer == Ebsd::UnknownManufacturer)
@@ -213,6 +237,15 @@ void ReadEdaxH5Data::dataCheck()
     QString ss = QObject::tr("The input file must be set");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, -1);
+    return;
+  }
+
+  if (m_ZSpacing <= 0)
+  {
+    QString ss = QObject::tr("The Z Spacing field contains a value that is non-positive.  The Z Spacing field must be set to a positive value.");
+    setErrorCondition(-3);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
   }
 
   if (m_InputFile.isEmpty() == false) // User set a filename, so lets check it
@@ -225,24 +258,50 @@ void ReadEdaxH5Data::dataCheck()
     if (comp == 0)
     {
       H5OIMReader::Pointer reader = H5OIMReader::New();
-      readDataFile(reader.get(), m, cDims, ANG_HEADER_ONLY);
+      reader->setFileName(getInputFile());
 
-      // Update the size of the Cell Attribute Matrix now that the dimensions of the volume are known
-      cellAttrMat->resizeAttributeArrays(cDims);
-      AngFields angfeatures;
-      names = angfeatures.getFilterFeatures<QVector<QString> >();
-      cDims.resize(1);
-      cDims[0] = 1;
-      for (qint32 i = 0; i < names.size(); ++i)
+      // We ALWAYS want to read the Scan Names from the file so that we can present that list to the user if needed.
+      QStringList scanNames;
+      int32_t err = reader->readScanNames(scanNames);
+      if (err < 0)
       {
-        if (reader->getPointerType(names[i]) == Ebsd::Int32)
+        setErrorCondition(reader->getErrorCode());
+        notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
+        return;
+      }
+      setFileScanNames(scanNames);
+      setNumberOfScans(scanNames.size());
+
+      if (getSelectedScanNames().size() > 0)
+      {
+        readDataFile(reader.get(), m, cDims, scanNames[0], ANG_HEADER_ONLY);
+
+        // Update the size of the Cell Attribute Matrix now that the dimensions of the volume are known
+        cellAttrMat->resizeAttributeArrays(cDims);
+        AngFields angfeatures;
+        names = angfeatures.getFilterFeatures<QVector<QString> >();
+        cDims.resize(1);
+        cDims[0] = 1;
+        for (qint32 i = 0; i < names.size(); ++i)
         {
-          cellAttrMat->createAndAddAttributeArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, names[i], 0, cDims);
+          if (reader->getPointerType(names[i]) == Ebsd::Int32)
+          {
+            cellAttrMat->createAndAddAttributeArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, names[i], 0, cDims);
+            m_EbsdArrayMap.insert(names[i], cellAttrMat->getAttributeArray(names[i]));
+          }
+          else if (reader->getPointerType(names[i]) == Ebsd::Float)
+          {
+            cellAttrMat->createAndAddAttributeArray<DataArray<float>, AbstractFilter, float>(this, names[i], 0, cDims);
+            m_EbsdArrayMap.insert(names[i], cellAttrMat->getAttributeArray(names[i]));
+          }
         }
-        else if (reader->getPointerType(names[i]) == Ebsd::Float)
-        {
-          cellAttrMat->createAndAddAttributeArray<DataArray<float>, AbstractFilter, float>(this, names[i], 0, cDims);
-        }
+      }
+      else
+      {
+        setErrorCondition(-996);
+        QString ss = QObject::tr("At least one scan must be chosen.  Please select a scan from the list.").arg(ext);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return;
       }
     }
     else
@@ -259,23 +318,27 @@ void ReadEdaxH5Data::dataCheck()
     m_CellEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if (NULL != m_CellEulerAnglesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    m_EbsdArrayMap.insert(Ebsd::AngFile::EulerAngles, getDataContainerArray()->getPrereqIDataArrayFromPath<FloatArrayType, AbstractFilter>(this, tempPath));
 
     cDims[0] = 1;
     tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), Ebsd::AngFile::Phases);
     m_CellPhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if (NULL != m_CellPhasesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    m_EbsdArrayMap.insert(Ebsd::AngFile::Phases, getDataContainerArray()->getPrereqIDataArrayFromPath<Int32ArrayType, AbstractFilter>(this, tempPath));
 
     tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), Ebsd::AngFile::CrystalStructures);
     m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if (NULL != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    m_EbsdArrayMap.insert(Ebsd::AngFile::CrystalStructures, getDataContainerArray()->getPrereqIDataArrayFromPath<UInt32ArrayType, AbstractFilter>(this, tempPath));
 
     cDims[0] = 6;
     tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), Ebsd::AngFile::LatticeConstants);
     m_LatticeConstantsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0.0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if (NULL != m_LatticeConstantsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    m_EbsdArrayMap.insert(Ebsd::AngFile::LatticeConstants, getDataContainerArray()->getPrereqIDataArrayFromPath<FloatArrayType, AbstractFilter>(this, tempPath));
 
     if(getReadPatternData())
     {
@@ -290,6 +353,8 @@ void ReadEdaxH5Data::dataCheck()
         {
           m_CellPatternData = m_CellPatternDataPtr.lock()->getPointer(0);
         } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+        m_EbsdArrayMap.insert(Ebsd::Ang::PatternData, getDataContainerArray()->getPrereqIDataArrayFromPath<UInt8ArrayType, AbstractFilter>(this, tempPath));
       }
       else
       {
@@ -301,6 +366,7 @@ void ReadEdaxH5Data::dataCheck()
 
     StringDataArray::Pointer materialNames = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumTuples(), SIMPL::EnsembleData::MaterialName);
     cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::MaterialName, materialNames);
+    m_EbsdArrayMap.insert(SIMPL::EnsembleData::MaterialName, materialNames);
   }
 }
 
@@ -330,7 +396,7 @@ void ReadEdaxH5Data::flushCache()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadEdaxH5Data::readDataFile(H5OIMReader* reader, DataContainer::Pointer m, QVector<size_t>& tDims, ANG_READ_FLAG flag)
+void ReadEdaxH5Data::readDataFile(H5OIMReader* reader, DataContainer::Pointer m, QVector<size_t>& tDims, const QString &scanName, ANG_READ_FLAG flag)
 {
   QFileInfo fi(m_InputFile);
   QDateTime timeStamp(fi.lastModified());
@@ -341,28 +407,15 @@ void ReadEdaxH5Data::readDataFile(H5OIMReader* reader, DataContainer::Pointer m,
   // Drop into this if statement if we need to read from a file
   if (m_InputFile != getInputFile_Cache() || getTimeStamp_Cache().isValid() == false || getTimeStamp_Cache() < timeStamp)
   {
-    float zStep = 1.0f, xOrigin = 0.0f, yOrigin = 0.0f, zOrigin = 0.0f;
-    size_t zDim = 1;
-    QStringList scanNames;
-    reader->setFileName(getInputFile());
-
-    // We ALWAYS want to read the Scan Names from the file so that we can present that list to the user if needed.
-    int32_t err = reader->readScanNames(scanNames);
-    if(err < 0)
-    {
-      setErrorCondition(reader->getErrorCode());
-      notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
-      return;
-    }
-    setFileScanNames(scanNames);
+    float zStep = static_cast<float>(getZSpacing()), xOrigin = getOrigin().x, yOrigin = getOrigin().y, zOrigin = getOrigin().z;
     reader->setReadPatternData(getReadPatternData());
 
     // If the user has already set a Scan Name to read then we are good to go.
-    reader->setHDF5Path(getScanName());
+    reader->setHDF5Path(scanName);
 
     if (flag == ANG_HEADER_ONLY)
     {
-      err = reader->readHeaderOnly();
+      int err = reader->readHeaderOnly();
       if (err < 0)
       {
         setErrorCondition(err);
@@ -388,7 +441,7 @@ void ReadEdaxH5Data::readDataFile(H5OIMReader* reader, DataContainer::Pointer m,
     }
     tDims[0] = reader->getXDimension();
     tDims[1] = reader->getYDimension();
-    tDims[2] = zDim; // We are reading a single slice
+    tDims[2] = getSelectedScanNames().size();
 
     // Set Cache with values from the file
     {
@@ -509,7 +562,7 @@ int32_t ReadEdaxH5Data::loadMaterialInfo(H5OIMReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadEdaxH5Data::copyRawEbsdData(H5OIMReader* reader, QVector<size_t>& tDims, QVector<size_t>& cDims)
+void ReadEdaxH5Data::copyRawEbsdData(H5OIMReader* reader, QVector<size_t>& tDims, QVector<size_t>& cDims, int index)
 {
   float* f1 = NULL;
   float* f2 = NULL;
@@ -522,7 +575,7 @@ void ReadEdaxH5Data::copyRawEbsdData(H5OIMReader* reader, QVector<size_t>& tDims
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
   AttributeMatrix::Pointer ebsdAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
 
-  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
+  size_t totalPoints = m->getGeometryAs<ImageGeom>()->getXPoints() * m->getGeometryAs<ImageGeom>()->getYPoints();
 
   // Prepare the Cell Attribute Matrix with the correct number of tuples based on the total points being read from the file.
   tDims.resize(3);
@@ -530,6 +583,8 @@ void ReadEdaxH5Data::copyRawEbsdData(H5OIMReader* reader, QVector<size_t>& tDims
   tDims[1] = m->getGeometryAs<ImageGeom>()->getYPoints();
   tDims[2] = m->getGeometryAs<ImageGeom>()->getZPoints();
   ebsdAttrMat->resizeAttributeArrays(tDims);
+
+  size_t offset = index * totalPoints;
 
   // Adjust the values of the 'phase' data to correct for invalid values
   {
@@ -541,8 +596,8 @@ void ReadEdaxH5Data::copyRawEbsdData(H5OIMReader* reader, QVector<size_t>& tDims
         phasePtr[i] = 1;
       }
     }
-    iArray = Int32ArrayType::CreateArray(tDims, cDims, SIMPL::CellData::Phases);
-    ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
+    iArray = std::dynamic_pointer_cast<Int32ArrayType>(m_EbsdArrayMap.value(SIMPL::CellData::Phases));
+    ::memcpy(iArray->getPointer(offset), phasePtr, sizeof(int32_t) * totalPoints);
     ebsdAttrMat->addAttributeArray(SIMPL::CellData::Phases, iArray);
   }
 
@@ -552,8 +607,8 @@ void ReadEdaxH5Data::copyRawEbsdData(H5OIMReader* reader, QVector<size_t>& tDims
     f2 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Phi));
     f3 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Phi2));
     cDims[0] = 3;
-    fArray = FloatArrayType::CreateArray(tDims, cDims, SIMPL::CellData::EulerAngles);
-    float* cellEulerAngles = fArray->getPointer(0);
+    fArray = std::dynamic_pointer_cast<FloatArrayType>(m_EbsdArrayMap.value(SIMPL::CellData::EulerAngles));
+    float* cellEulerAngles = fArray->getTuplePointer(offset);
 
     for (size_t i = 0; i < totalPoints; i++)
     {
@@ -567,29 +622,29 @@ void ReadEdaxH5Data::copyRawEbsdData(H5OIMReader* reader, QVector<size_t>& tDims
   cDims[0] = 1;
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::ImageQuality));
-    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::ImageQuality);
-    ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
+    fArray = std::dynamic_pointer_cast<FloatArrayType>(m_EbsdArrayMap.value(Ebsd::Ang::ImageQuality));
+    ::memcpy(fArray->getPointer(offset), f1, sizeof(float) * totalPoints);
     ebsdAttrMat->addAttributeArray(Ebsd::Ang::ImageQuality, fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::ConfidenceIndex));
-    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::ConfidenceIndex);
-    ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
+    fArray = std::dynamic_pointer_cast<FloatArrayType>(m_EbsdArrayMap.value(Ebsd::Ang::ConfidenceIndex));
+    ::memcpy(fArray->getPointer(offset), f1, sizeof(float) * totalPoints);
     ebsdAttrMat->addAttributeArray(Ebsd::Ang::ConfidenceIndex, fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::SEMSignal));
-    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::SEMSignal);
-    ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
+    fArray = std::dynamic_pointer_cast<FloatArrayType>(m_EbsdArrayMap.value(Ebsd::Ang::SEMSignal));
+    ::memcpy(fArray->getPointer(offset), f1, sizeof(float) * totalPoints);
     ebsdAttrMat->addAttributeArray(Ebsd::Ang::SEMSignal, fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Fit));
-    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::Fit);
-    ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
+    fArray = std::dynamic_pointer_cast<FloatArrayType>(m_EbsdArrayMap.value(Ebsd::Ang::Fit));
+    ::memcpy(fArray->getPointer(offset), f1, sizeof(float) * totalPoints);
     ebsdAttrMat->addAttributeArray(Ebsd::Ang::Fit, fArray);
   }
 
@@ -605,7 +660,9 @@ void ReadEdaxH5Data::copyRawEbsdData(H5OIMReader* reader, QVector<size_t>& tDims
       pDimsV[0] = pDims[0];
       pDimsV[1] = pDims[1];
 
-      UInt8ArrayType::Pointer patternData = UInt8ArrayType::WrapPointer(ptr, totalPoints, pDimsV, Ebsd::Ang::PatternData, true);
+      UInt8ArrayType::Pointer patternData = std::dynamic_pointer_cast<UInt8ArrayType>(m_EbsdArrayMap.value(Ebsd::Ang::PatternData));
+      ::memcpy(patternData->getPointer(offset), ptr, sizeof(uint8_t) * totalPoints);
+      ebsdAttrMat->addAttributeArray(Ebsd::Ang::PatternData, patternData);
 
       // Remove the current PatternData array
       ebsdAttrMat->removeAttributeArray(Ebsd::Ang::PatternData);
@@ -628,15 +685,25 @@ void ReadEdaxH5Data::execute()
   if (getErrorCondition() < 0) { return; }
 
   H5OIMReader::Pointer reader = H5OIMReader::New();
+  reader->setFileName(m_InputFile);
   QVector<size_t> tDims(3, 0);
   QVector<size_t> cDims(1, 1);
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
   AttributeMatrix::Pointer ebsdAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
   ebsdAttrMat->setType(SIMPL::AttributeMatrixType::Cell);
 
-  readDataFile(reader.get(), m, tDims, ANG_FULL_FILE);
+  QStringList scanNames = getSelectedScanNames();
 
-  copyRawEbsdData(reader.get(), tDims, cDims);
+  for (int index = 0; index < scanNames.size(); index++)
+  {
+    QString currentScanName = scanNames[index];
+
+    readDataFile(reader.get(), m, tDims, currentScanName, ANG_FULL_FILE);
+    if (getErrorCondition() < 0) { return; }
+
+    copyRawEbsdData(reader.get(), tDims, cDims, index);
+    if (getErrorCondition() < 0) { return; }
+  }
 
   // Set the file name and time stamp into the cache, if we are reading from the file and after all the reading has been done
   {

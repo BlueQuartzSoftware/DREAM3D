@@ -7,6 +7,7 @@ set(${PLUGIN_NAME}_ParameterWidgets_UIS "")
 set(${PLUGIN_NAME}_PARAMETER_WIDGETS
       EbsdToH5EbsdWidget
       ReadH5EbsdWidget
+      ReadEdaxH5DataWidget
       OrientationUtilityWidget
       ConvertHexGridToSquareGridWidget
 )
