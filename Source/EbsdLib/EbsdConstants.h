@@ -186,6 +186,13 @@ namespace Ebsd
     Double,
     UnknownNumType
   };
+
+  namespace AngleRepresentation
+  {
+    static const int Radians = 0;
+    static const int Degrees = 1;
+    static const int Invalid = 2;
+  };
 }
 
 

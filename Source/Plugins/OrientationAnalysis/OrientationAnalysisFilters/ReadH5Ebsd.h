@@ -91,6 +91,10 @@ class ReadH5Ebsd : public AbstractFilter
     SIMPL_INSTANCE_PROPERTY(QSet<QString>, DataArrayNames) // These are for reading the names of the arrays during a preflight
     Q_PROPERTY(QSet<QString> DataArrayNames READ getDataArrayNames WRITE setDataArrayNames)
 
+    SIMPL_FILTER_PARAMETER(int, AngleRepresentation)
+    Q_PROPERTY(int AngleRepresentation READ getAngleRepresentation WRITE setAngleRepresentation)
+
+
     //-------------------------------------------------------
     // Not sure why these are here. We would be reading all of these from the file
     //

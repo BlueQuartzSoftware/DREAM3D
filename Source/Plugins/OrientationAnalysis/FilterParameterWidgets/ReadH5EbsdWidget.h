@@ -106,6 +106,7 @@ class ReadH5EbsdWidget : public FilterParameterWidget, private Ui::ReadH5EbsdWid
     void on_m_ZStartIndex_valueChanged(int value);
     void on_m_ZEndIndex_valueChanged(int value);
     void on_m_UseTransformations_stateChanged(int state);
+    void on_m_AngleRepresentationCB_currentIndexChanged(int index);
 
 
   protected:

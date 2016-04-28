@@ -183,6 +183,7 @@ void ReadH5EbsdWidget::setupGui()
   m_ZEndIndex->setValue( m_Filter->getZEndIndex() );
 
   m_UseTransformations->setChecked( m_Filter->getUseTransformations() );
+  m_AngleRepresentationCB->setCurrentIndex(m_Filter->getAngleRepresentation());
   m_RefFrameZDir->setText( Ebsd::StackingOrder::Utils::getStringForEnum( m_Filter->getRefFrameZDir() )  );
   updateFileInfoWidgets();
   QSet<QString> selectedArrays = m_Filter->getSelectedArrayNames();
@@ -360,6 +361,17 @@ void ReadH5EbsdWidget::on_m_ZEndIndex_valueChanged(int value)
 void ReadH5EbsdWidget::on_m_UseTransformations_stateChanged(int state)
 {
   m_DidCausePreflight = true;
+  m_AngleRepresentationCB->setEnabled(m_UseTransformations->isChecked());
+  emit parametersChanged();
+  m_DidCausePreflight = false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReadH5EbsdWidget::on_m_AngleRepresentationCB_currentIndexChanged(int index)
+{
+  m_DidCausePreflight = true;
   emit parametersChanged();
   m_DidCausePreflight = false;
 }
@@ -402,8 +414,10 @@ void ReadH5EbsdWidget::filterNeedsInputParameters(AbstractFilter* filter)
   readEbsd->setZStartIndex(m_ZStartIndex->text().toLongLong(&ok));
   readEbsd->setZEndIndex(m_ZEndIndex->text().toLongLong(&ok));
   readEbsd->setUseTransformations(m_UseTransformations->isChecked() );
-
+  int index = m_AngleRepresentationCB->currentIndex();
+  readEbsd->setAngleRepresentation(index);
   readEbsd->setSelectedArrayNames(getSelectedArrayNames());
+
   //  m_Filter->setSelectedEnsembleNames(getSelectedEnsembleNames());
 
 }

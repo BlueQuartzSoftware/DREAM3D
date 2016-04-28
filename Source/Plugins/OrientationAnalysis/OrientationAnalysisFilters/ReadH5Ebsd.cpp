@@ -45,6 +45,7 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "EbsdLib/H5EbsdVolumeInfo.h"
 #include "EbsdLib/HKL/CtfFields.h"
@@ -74,6 +75,7 @@ ReadH5Ebsd::ReadH5Ebsd() :
   m_ZStartIndex(0),
   m_ZEndIndex(0),
   m_UseTransformations(true),
+  m_AngleRepresentation(Ebsd::AngleRepresentation::Radians),
   m_RefFrameZDir(SIMPL::RefFrameZDir::UnknownRefFrameZDirection),
   m_Manufacturer(Ebsd::UnknownManufacturer),
   m_CrystalStructuresArrayName(SIMPL::EnsembleData::CrystalStructures),
@@ -135,6 +137,7 @@ void ReadH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, in
   setZEndIndex( reader->readValue("ZEndIndex", getZEndIndex() ) );
   setUseTransformations( reader->readValue("UseTransformations", getUseTransformations() ) );
   setSelectedArrayNames(reader->readArraySelections("SelectedArrayNames", getSelectedArrayNames() ));
+  setAngleRepresentation(reader->readValue("AngleRepresentation", getAngleRepresentation() ));
   reader->closeFilterGroup();
 }
 
@@ -153,6 +156,7 @@ int ReadH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, in
   SIMPL_FILTER_WRITE_PARAMETER(ZStartIndex)
   SIMPL_FILTER_WRITE_PARAMETER(ZEndIndex)
   SIMPL_FILTER_WRITE_PARAMETER(UseTransformations)
+  SIMPL_FILTER_WRITE_PARAMETER(AngleRepresentation)
   writer->writeArraySelections("SelectedArrayNames", getSelectedArrayNames() );
 
   writer->closeFilterGroup();
@@ -807,12 +811,16 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
     cDims[0] = 3;
     fArray = FloatArrayType::CreateArray(tDims, cDims, SIMPL::CellData::EulerAngles);
     float* cellEulerAngles = fArray->getPointer(0);
-
+    float degToRad = 1.0f;
+    if(m_AngleRepresentation != Ebsd::AngleRepresentation::Radians && m_UseTransformations == true)
+    {
+      degToRad = SIMPLib::Constants::k_PiOver180;
+    }
     for (size_t i = 0; i < totalPoints; i++)
     {
-      cellEulerAngles[3 * i] = f1[i];
-      cellEulerAngles[3 * i + 1] = f2[i];
-      cellEulerAngles[3 * i + 2] = f3[i];
+      cellEulerAngles[3 * i] = f1[i] * degToRad;
+      cellEulerAngles[3 * i + 1] = f2[i] * degToRad;
+      cellEulerAngles[3 * i + 2] = f3[i] * degToRad;
     }
     cellAttrMatrix->addAttributeArray(SIMPL::CellData::EulerAngles, fArray);
   }
@@ -907,14 +915,18 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
     fArray = FloatArrayType::CreateArray(tDims, cDims, SIMPL::CellData::EulerAngles);
     float* cellEulerAngles = fArray->getPointer(0);
     int32_t* cellPhases = iArray->getPointer(0);
-
+    float degToRad = 1.0f;
+    if(m_AngleRepresentation != Ebsd::AngleRepresentation::Radians && m_UseTransformations == true)
+    {
+      degToRad = SIMPLib::Constants::k_PiOver180;
+    }
     for (size_t i = 0; i < totalPoints; i++)
     {
-      cellEulerAngles[3 * i] = f1[i];
-      cellEulerAngles[3 * i + 1] = f2[i];
-      cellEulerAngles[3 * i + 2] = f3[i];
+      cellEulerAngles[3 * i] = f1[i] * degToRad;
+      cellEulerAngles[3 * i + 1] = f2[i] * degToRad;
+      cellEulerAngles[3 * i + 2] = f3[i] * degToRad;
       if(m_CrystalStructures[cellPhases[i]] == Ebsd::CrystalStructure::Hexagonal_High)
-      {cellEulerAngles[3 * i + 2] = cellEulerAngles[3 * i + 2] + (30.0);}
+      {cellEulerAngles[3 * i + 2] = cellEulerAngles[3 * i + 2] + (30.0 * degToRad);}
     }
     cellAttrMatrix->addAttributeArray(SIMPL::CellData::EulerAngles, fArray);
   }
@@ -998,6 +1010,7 @@ AbstractFilter::Pointer ReadH5Ebsd::newFilterInstance(bool copyFilterParameters)
     filter->setUseTransformations(getUseTransformations());
     filter->setSelectedArrayNames(getSelectedArrayNames());
     filter->setDataArrayNames(getDataArrayNames());
+    filter->setAngleRepresentation(getAngleRepresentation());
   }
   return filter;
 }

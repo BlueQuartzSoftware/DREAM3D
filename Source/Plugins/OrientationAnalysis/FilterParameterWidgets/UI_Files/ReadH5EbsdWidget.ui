@@ -724,30 +724,7 @@ font-size: 10px;
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QLabel" name="label_5">
-       <property name="styleSheet">
-        <string notr="true">QLabel {
-font-weight: bold;
-font-size: 11px;
-}</string>
-       </property>
-       <property name="text">
-        <string>Start Slice</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QSpinBox" name="m_ZStartIndex">
-       <property name="minimumSize">
-        <size>
-         <width>75</width>
-         <height>0</height>
-        </size>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="1" colspan="2">
+     <item row="5" column="1" colspan="2">
       <spacer name="verticalSpacer">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
@@ -773,20 +750,7 @@ font-size: 11px;
        </property>
       </widget>
      </item>
-     <item row="3" column="1" colspan="2">
-      <widget class="QCheckBox" name="m_UseTransformations">
-       <property name="layoutDirection">
-        <enum>Qt::LeftToRight</enum>
-       </property>
-       <property name="text">
-        <string>Use Recommended Transformations</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="3" rowspan="4">
+     <item row="1" column="3" rowspan="5">
       <widget class="QListWidget" name="m_CellList">
        <property name="alternatingRowColors">
         <bool>true</bool>
@@ -806,6 +770,66 @@ font-size: 11px;
        </property>
        <property name="tristate">
         <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1" colspan="2">
+      <widget class="QCheckBox" name="m_UseTransformations">
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
+       </property>
+       <property name="text">
+        <string>Use Recommended Transformations</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QSpinBox" name="m_ZStartIndex">
+       <property name="minimumSize">
+        <size>
+         <width>75</width>
+         <height>0</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLabel" name="label_5">
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+font-weight: bold;
+font-size: 11px;
+}</string>
+       </property>
+       <property name="text">
+        <string>Start Slice</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="2">
+      <widget class="QComboBox" name="m_AngleRepresentationCB">
+       <item>
+        <property name="text">
+         <string>Radians</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Degrees</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLabel" name="label_2">
+       <property name="toolTip">
+        <string extracomment="Are the Euler angles represented in Degrees or Radians"/>
+       </property>
+       <property name="text">
+        <string>Euler Representation</string>
        </property>
       </widget>
      </item>
