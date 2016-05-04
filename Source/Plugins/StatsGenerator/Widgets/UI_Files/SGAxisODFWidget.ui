@@ -398,7 +398,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QFSDropLineEdit" name="angleFilePath"/>
+                 <widget class="QtSFSDropLineEdit" name="angleFilePath"/>
                 </item>
                 <item>
                  <widget class="QPushButton" name="selectAnglesFile">
@@ -737,9 +737,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QFSDropLineEdit</class>
+   <class>QtSFSDropLineEdit</class>
    <extends>QLineEdit</extends>
-   <header location="global">QFSDropLineEdit.h</header>
+   <header location="global">QtSFSDropLineEdit.h</header>
   </customwidget>
  </customwidgets>
  <resources>

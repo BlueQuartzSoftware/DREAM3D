@@ -39,7 +39,7 @@
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
 
-#include "SIMPLViewWidgetsLib/FilterParameterWidgets/FilterParameterWidgetsDialogs.h"
+#include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidgetsDialogs.h"
 
 #include "SIMPLib/Common/AbstractFilter.h"
 

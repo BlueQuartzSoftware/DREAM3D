@@ -109,11 +109,16 @@ include_directories( ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/FilterParameterWidgets
 include_directories( ${PLUGINS_SOURCE_DIR}/${PLUGIN_NAME}/Widgets)
 include_directories( ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/Widgets)
 include_directories( ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/Test)
-include_directories( ${SIMPLProj_SOURCE_DIR}/Source)
-include_directories( ${SIMPLViewProj_SOURCE_DIR}/Source)
-include_directories( ${SIMPLProj_BINARY_DIR})
-include_directories( ${SIMPLViewProj_BINARY_DIR})
 include_directories( ${DREAM3DProj_SOURCE_DIR}/Source)
+include_directories( ${SIMPLProj_SOURCE_DIR}/Source)
+include_directories( ${SIMPLProj_BINARY_DIR})
+
+include_directories( ${SIMPLViewProj_SOURCE_DIR}/Source)
+include_directories( ${SIMPLViewProj_SOURCE_DIR}/Source/SVWidgetsLib/QtSupport)
+include_directories( ${SIMPLViewProj_BINARY_DIR})
+include_directories( ${SIMPLViewProj_BINARY_DIR}/SVWidgetsLib)
+
+
 
 # ******************************************************************************
 # Create our custom executable that will generate most of our QFilterWidget
@@ -251,8 +256,7 @@ target_link_libraries(${PLUGIN_NAME}
                     SIMPLib
                     Qt5::Gui
                     Qt5::Widgets
-                    QtSupportLib
-                    SIMPLViewWidgetsLib
+                    SVWidgetsLib
                     EbsdLib
                     OrientationLib
                     ${QWT_LIBRARY}

@@ -78,9 +78,6 @@ set(RegisterKnownFiltersFile ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters/
 #--------------------------
 include_directories( ${HDF5_INCLUDE_DIR} )
 include_directories( ${PROJECT_CODE_DIR} )
-include_directories( ${QtSupportLib_BINARY_DIR} )
-include_directories( ${QtSupportLib_SOURCE_DIR} )
-include_directories( ${QtSupport_SOURCE_DIR}/.. )
 include_directories( ${${PLUGIN_NAME}_BINARY_DIR} )
 include_directories( ${${PLUGIN_NAME}_SOURCE_DIR})
 
@@ -92,10 +89,14 @@ include_directories( ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME})
 include_directories( ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/${PLUGIN_NAME}Filters)
 include_directories( ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/FilterParameterWidgets)
 include_directories( ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/Test)
+
 include_directories( ${SIMPLProj_SOURCE_DIR}/Source)
-include_directories( ${SIMPLViewProj_SOURCE_DIR}/Source)
 include_directories( ${SIMPLProj_BINARY_DIR})
+
+include_directories( ${SIMPLViewProj_SOURCE_DIR}/Source)
+include_directories( ${SIMPLViewProj_SOURCE_DIR}/Source/SVWidgetsLib/QtSupport)
 include_directories( ${SIMPLViewProj_BINARY_DIR})
+include_directories( ${SIMPLViewProj_BINARY_DIR}/SVWidgetsLib/QtSupport)
 
 
 
@@ -211,8 +212,7 @@ target_link_libraries(${PLUGIN_NAME}
                     OrientationLib
                     Qt5::Gui
                     Qt5::Widgets
-                    QtSupportLib
-                    SIMPLViewWidgetsLib
+                    SVWidgetsLib
                     )
 SET_TARGET_PROPERTIES(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)
 qt5_use_modules(${PLUGIN_NAME} Core Gui Widgets)

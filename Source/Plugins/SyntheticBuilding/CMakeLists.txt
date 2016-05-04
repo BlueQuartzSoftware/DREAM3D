@@ -101,11 +101,12 @@ include_directories( ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/${PLUGIN_NAME}Filters)
 include_directories( ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/FilterParameterWidgets)
 include_directories( ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/Test)
 include_directories( ${SIMPLProj_SOURCE_DIR}/Source)
-include_directories( ${SIMPLViewProj_SOURCE_DIR}/Source)
 include_directories( ${SIMPLProj_BINARY_DIR})
+
+include_directories( ${SIMPLViewProj_SOURCE_DIR}/Source)
+include_directories( ${SIMPLViewProj_SOURCE_DIR}/Source/SVWidgetsLib/QtSupport)
 include_directories( ${SIMPLViewProj_BINARY_DIR})
-
-
+include_directories( ${SIMPLViewProj_BINARY_DIR}/SVWidgetsLib/QtSupport)
 
 
 set(FILTER_HEADERS "#include \"${AllFiltersHeaderFile}\"")
@@ -216,9 +217,9 @@ target_link_libraries(${PLUGIN_NAME}
                     Qt5::Core
                     SIMPLib
                     OrientationLib
-                    Qt5::Gui Qt5::Widgets
-                    QtSupportLib
-                    SIMPLViewWidgetsLib
+                    Qt5::Gui
+                    Qt5::Widgets
+                    SVWidgetsLib
                     )
 SET_TARGET_PROPERTIES(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)
 qt5_use_modules(${PLUGIN_NAME} Core Gui Widgets)

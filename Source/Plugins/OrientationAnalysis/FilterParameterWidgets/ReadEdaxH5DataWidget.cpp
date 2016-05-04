@@ -41,9 +41,9 @@
 
 #include "SIMPLib/Common/Constants.h"
 
-#include "QtSupportLib/QFileCompleter.h"
-#include "QtSupportLib/SIMPLQtMacros.h"
-#include "QtSupportLib/SIMPLViewHelpUrlGenerator.h"
+#include "SVWidgetsLib/QtSupport/QtSFileCompleter.h"
+#include "SVWidgetsLib/QtSupport/QtSMacros.h"
+#include "SVWidgetsLib/QtSupport/QtSHelpUrlGenerator.h"
 
 #include "OrientationAnalysis/OrientationAnalysisFilters/ReadEdaxH5Data.h"
 #include "OrientationAnalysis/FilterParameters/ReadEdaxH5DataFilterParameter.h"

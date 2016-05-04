@@ -62,7 +62,7 @@
 #include "SIMPLib/CoreFilters/DataContainerReader.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
-#include "QtSupportLib/QFileCompleter.h"
+#include "SVWidgetsLib/QtSupport/QtSFileCompleter.h"
 
 #include "SyntheticBuilding/SyntheticBuildingFilters/InitializeSyntheticVolume.h"
 
@@ -145,7 +145,7 @@ void InitializeSyntheticVolumeWidget::setupGui()
   connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
-  QFileCompleter* com = new QFileCompleter(this, false);
+  QtSFileCompleter* com = new QtSFileCompleter(this, false);
   m_InputFile->setCompleter(com);
   QObject::connect(com, SIGNAL(activated(const QString&)),
                    this, SLOT(on_m_InputFile_textChanged(const QString&)));
@@ -648,7 +648,7 @@ void InitializeSyntheticVolumeWidget::writeOptions(QSettings& prefs)
 void InitializeSyntheticVolumeWidget::openHtmlHelpFile()
 {
   QString lowerFilter = QString("InitializeSyntheticVolume").toLower();
-  SIMPLViewHelpUrlGenerator::generateAndOpenHTMLUrl(lowerFilter, this);
+  QtSHelpUrlGenerator::generateAndOpenHTMLUrl(lowerFilter, this);
 }
 
 

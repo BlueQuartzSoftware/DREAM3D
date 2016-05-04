@@ -45,7 +45,7 @@ font-size: 11px;
       </widget>
      </item>
      <item>
-      <widget class="QFSDropLineEdit" name="m_InputFile">
+      <widget class="QtSFSDropLineEdit" name="m_InputFile">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -839,9 +839,9 @@ font-size: 11px;
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QFSDropLineEdit</class>
+   <class>QtSFSDropLineEdit</class>
    <extends>QLineEdit</extends>
-   <header location="global">QFSDropLineEdit.h</header>
+   <header location="global">QtSFSDropLineEdit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

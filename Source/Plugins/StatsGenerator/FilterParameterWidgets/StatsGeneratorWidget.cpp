@@ -67,9 +67,9 @@
 #include "SIMPLib/CoreFilters/DataContainerWriter.h"
 #include "SIMPLib/CoreFilters/DataContainerReader.h"
 
-#include "QtSupportLib/ApplicationAboutBoxDialog.h"
-#include "QtSupportLib/QRecentFileList.h"
-#include "QtSupportLib/HelpDialog.h"
+#include "SVWidgetsLib/QtSupport/QtSApplicationAboutBoxDialog.h"
+#include "SVWidgetsLib/QtSupport/QtSRecentFileList.h"
+#include "SVWidgetsLib/QtSupport/QtSHelpDialog.h"
 
 #include "Applications/SIMPLView/SIMPLViewApplication.h"
 

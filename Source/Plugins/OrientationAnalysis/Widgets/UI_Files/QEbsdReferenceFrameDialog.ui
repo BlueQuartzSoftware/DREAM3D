@@ -643,15 +643,15 @@ font-size: 10px;
     </layout>
    </item>
    <item row="3" column="0" colspan="2">
-    <widget class="SIMPLViewGraphicsView" name="m_EbsdView"/>
+    <widget class="QtSGraphicsView" name="m_EbsdView"/>
    </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>SIMPLViewGraphicsView</class>
+   <class>QtSGraphicsView</class>
    <extends>QGraphicsView</extends>
-   <header location="global">SIMPLViewGraphicsView.h</header>
+   <header location="global">QtSGraphicsView.h</header>
    <slots>
     <slot>zoomIn()</slot>
     <slot>zoomOut()</slot>

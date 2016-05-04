@@ -46,7 +46,7 @@
 #include <QtGui/QDoubleValidator>
 #include <QtWidgets/QStyledItemDelegate>
 
-#include "QtSupportLib/ColorComboPicker.h"
+#include "SVWidgetsLib/QtSupport/QtSColorComboPicker.h"
 #include "StatsGenerator/Widgets/TableModels/SGPowerLawTableModel.h"
 
 /**

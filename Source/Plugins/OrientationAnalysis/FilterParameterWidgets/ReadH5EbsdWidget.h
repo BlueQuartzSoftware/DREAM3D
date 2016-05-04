@@ -47,9 +47,9 @@
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/AxisAngleInput.h"
-#include "SIMPLViewWidgetsLib/SIMPLViewWidgetsLib.h"
-#include "SIMPLViewWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
-#include "SIMPLViewWidgetsLib/Widgets/PipelineFilterWidget.h"
+#include "SVWidgetsLib/SVWidgetsLib.h"
+#include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+#include "SVWidgetsLib/Workspace/PipelineFilterWidget.h"
 
 #include "OrientationAnalysis/ui_ReadH5EbsdWidget.h"
 

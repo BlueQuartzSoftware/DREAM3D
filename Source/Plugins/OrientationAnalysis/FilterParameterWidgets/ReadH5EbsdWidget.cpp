@@ -50,9 +50,9 @@
 #include "SIMPLib/Common/Constants.h"
 
 
-#include "QtSupportLib/QFileCompleter.h"
-#include "QtSupportLib/SIMPLQtMacros.h"
-#include "QtSupportLib/SIMPLViewHelpUrlGenerator.h"
+#include "SVWidgetsLib/QtSupport/QtSFileCompleter.h"
+#include "SVWidgetsLib/QtSupport/QtSMacros.h"
+#include "SVWidgetsLib/QtSupport/QtSHelpUrlGenerator.h"
 
 
 #include "OrientationAnalysis/OrientationAnalysisFilters/ReadH5Ebsd.h"
@@ -164,7 +164,7 @@ void ReadH5EbsdWidget::setupGui()
   connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
-  QFileCompleter* com = new QFileCompleter(this, false);
+  QtSFileCompleter* com = new QtSFileCompleter(this, false);
   m_InputFile->setCompleter(com);
   QObject::connect( com, SIGNAL(activated(const QString&)),
                     this, SLOT(on_m_InputFile_textChanged(const QString&)));

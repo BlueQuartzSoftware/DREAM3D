@@ -65,7 +65,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 
-#include "QtSupportLib/SIMPLViewHelpUrlGenerator.h"
+#include "SVWidgetsLib/QtSupport/QtSHelpUrlGenerator.h"
 
 #include "OrientationAnalysis/OrientationAnalysisFilters/ReadAngData.h"
 #include "OrientationAnalysis/OrientationAnalysisFilters/ReadCtfData.h"
@@ -734,6 +734,6 @@ void QEbsdReferenceFrameDialog::referenceDirectionChanged()
 // -----------------------------------------------------------------------------
 void QEbsdReferenceFrameDialog::on_showHelp_clicked()
 {
-  SIMPLViewHelpUrlGenerator::generateAndOpenHTMLUrl("ebsdtoh5ebsd", this);
+  QtSHelpUrlGenerator::generateAndOpenHTMLUrl("ebsdtoh5ebsd", this);
 }
 

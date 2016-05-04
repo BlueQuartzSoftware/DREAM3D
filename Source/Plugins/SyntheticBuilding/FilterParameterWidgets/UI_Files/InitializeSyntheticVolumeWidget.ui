@@ -351,7 +351,7 @@ font-size: 11px;
       </widget>
      </item>
      <item>
-      <widget class="QFSDropLineEdit" name="m_InputFile"/>
+      <widget class="QtSFSDropLineEdit" name="m_InputFile"/>
      </item>
      <item>
       <widget class="QPushButton" name="m_InputFileBtn">
@@ -369,14 +369,14 @@ font-size: 11px;
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QFSDropLineEdit</class>
+   <class>QtSFSDropLineEdit</class>
    <extends>QLineEdit</extends>
-   <header location="global">QFSDropLineEdit.h</header>
+   <header location="global">QtSFSDropLineEdit.h</header>
   </customwidget>
   <customwidget>
    <class>DataArraySelectionWidget</class>
    <extends>QWidget</extends>
-   <header>SIMPLViewWidgetsLib/FilterParameterWidgets/DataArraySelectionWidget.h</header>
+   <header>SVWidgetsLib/FilterParameterWidgets/DataArraySelectionWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

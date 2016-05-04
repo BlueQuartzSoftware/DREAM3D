@@ -43,7 +43,7 @@
 #include <QtGui/QDoubleValidator>
 
 
-#include "QtSupportLib/SIMPLViewStyles.h"
+#include "SVWidgetsLib/QtSupport/QtSStyles.h"
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data
 #include "moc_PrecipitateRolledPresetDialog.cpp"
@@ -159,15 +159,15 @@ void PrecipitateRolledPresetDialog::checkInputs(const QString& text)
   float c = getC();
   if (a >= b && b >= c)
   {
-    SIMPLViewStyles::LineEditClearStyle(A);
-    SIMPLViewStyles::LineEditClearStyle(B);
-    SIMPLViewStyles::LineEditClearStyle(C);
+    QtSStyles::LineEditClearStyle(A);
+    QtSStyles::LineEditClearStyle(B);
+    QtSStyles::LineEditClearStyle(C);
   }
   else
   {
-    SIMPLViewStyles::LineEditRedErrorStyle(A);
-    SIMPLViewStyles::LineEditRedErrorStyle(B);
-    SIMPLViewStyles::LineEditRedErrorStyle(C);
+    QtSStyles::LineEditRedErrorStyle(A);
+    QtSStyles::LineEditRedErrorStyle(B);
+    QtSStyles::LineEditRedErrorStyle(C);
   }
 }
 

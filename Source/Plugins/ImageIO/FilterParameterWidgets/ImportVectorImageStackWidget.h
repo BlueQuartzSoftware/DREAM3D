@@ -47,12 +47,12 @@
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 
-#include "QtSupportLib/SIMPLPluginFrame.h"
+#include "SVWidgetsLib/QtSupport/QtSPluginFrame.h"
 
 
-#include "SIMPLViewWidgetsLib/SIMPLViewWidgetsLib.h"
-#include "SIMPLViewWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
-#include "SIMPLViewWidgetsLib/Widgets/PipelineFilterWidget.h"
+#include "SVWidgetsLib/SVWidgetsLib.h"
+#include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+#include "SVWidgetsLib/Workspace/PipelineFilterWidget.h"
 
 
 #include "ui_ImportVectorImageStackWidget.h"

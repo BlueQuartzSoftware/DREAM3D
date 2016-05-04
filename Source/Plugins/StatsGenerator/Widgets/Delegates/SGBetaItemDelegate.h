@@ -46,7 +46,7 @@
 #include <QtGui/QDoubleValidator>
 #include <QtWidgets/QStyledItemDelegate>
 
-#include "QtSupportLib/ColorComboPicker.h"
+#include "SVWidgetsLib/QtSupport/QtSColorComboPicker.h"
 #include "StatsGenerator/Widgets/TableModels/SGBetaTableModel.h"
 
 /**
@@ -107,7 +107,7 @@ class SGBetaItemDelegate : public QStyledItemDelegate
           beta->setValidator(betaValidator);
           return beta;
         case SGBetaTableModel::LineColor:
-          colorCombo = new ColorComboPicker(parent);
+          colorCombo = new QtSColorComboPicker(parent);
           return colorCombo;
         default:
           break;
@@ -132,7 +132,7 @@ class SGBetaItemDelegate : public QStyledItemDelegate
       else if (col == SGBetaTableModel::LineColor)
       {
         QString state = index.model()->data(index).toString();
-        ColorComboPicker* comboBox = qobject_cast<ColorComboPicker* > (editor);
+        QtSColorComboPicker* comboBox = qobject_cast<QtSColorComboPicker* > (editor);
         Q_ASSERT(comboBox);
         comboBox->setCurrentIndex(comboBox->findText(state));
       }
@@ -157,7 +157,7 @@ class SGBetaItemDelegate : public QStyledItemDelegate
       }
       else if (col == SGBetaTableModel::LineColor)
       {
-        ColorComboPicker* comboBox = qobject_cast<ColorComboPicker* > (editor);
+        QtSColorComboPicker* comboBox = qobject_cast<QtSColorComboPicker* > (editor);
         Q_ASSERT(comboBox);
         model->setData(index, comboBox->currentText());
       }

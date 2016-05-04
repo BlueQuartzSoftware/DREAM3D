@@ -53,11 +53,11 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
 
-#include "QtSupportLib/QCheckboxDialog.h"
-#include "QtSupportLib/QFileCompleter.h"
-#include "QtSupportLib/SIMPLQtMacros.h"
-#include "QtSupportLib/SIMPLViewHelpUrlGenerator.h"
-#include "QtSupportLib/SIMPLViewStyles.h"
+#include "SVWidgetsLib/QtSupport/QtSCheckboxDialog.h"
+#include "SVWidgetsLib/QtSupport/QtSFileCompleter.h"
+#include "SVWidgetsLib/QtSupport/QtSMacros.h"
+#include "SVWidgetsLib/QtSupport/QtSHelpUrlGenerator.h"
+#include "SVWidgetsLib/QtSupport/QtSStyles.h"
 
 
 #include "OrientationAnalysis/OrientationAnalysisFilters/EbsdToH5Ebsd.h"
@@ -155,12 +155,12 @@ void EbsdToH5EbsdWidget::setupGui()
   connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
-  QFileCompleter* com = new QFileCompleter(this, true);
+  QtSFileCompleter* com = new QtSFileCompleter(this, true);
   m_InputDir->setCompleter(com);
   QObject::connect( com, SIGNAL(activated(const QString&)),
                     this, SLOT(on_m_InputDir_textChanged(const QString&)));
 
-  QFileCompleter* com1 = new QFileCompleter(this, false);
+  QtSFileCompleter* com1 = new QtSFileCompleter(this, false);
   m_OutputFile->setCompleter(com1);
   QObject::connect( com1, SIGNAL(activated(const QString&)),
                     this, SLOT(on_m_OutputFile_textChanged(const QString&)));
@@ -290,11 +290,11 @@ bool EbsdToH5EbsdWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEd
   QFileInfo fileinfo(outFilePath);
   if (false == fileinfo.exists() )
   {
-    SIMPLViewStyles::LineEditErrorStyle(lineEdit);
+    QtSStyles::LineEditErrorStyle(lineEdit);
   }
   else
   {
-    SIMPLViewStyles::LineEditClearStyle(lineEdit);
+    QtSStyles::LineEditClearStyle(lineEdit);
   }
   return fileinfo.exists();
 }

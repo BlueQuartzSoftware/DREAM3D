@@ -55,7 +55,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
 
-#include "QtSupportLib/QFileCompleter.h"
+#include "SVWidgetsLib/QtSupport/QtSFileCompleter.h"
 
 #include "ImageIO/ImageIOFilters/ImportVectorImageStack.h"
 
@@ -136,7 +136,7 @@ void ImportVectorImageStackWidget::setupGui()
   connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
-  QFileCompleter* com = new QFileCompleter(this, true);
+  QtSFileCompleter* com = new QtSFileCompleter(this, true);
   m_InputDir->setCompleter(com);
   QObject::connect( com, SIGNAL(activated(const QString&)),
                     this, SLOT(on_m_InputDir_textChanged(const QString&)));

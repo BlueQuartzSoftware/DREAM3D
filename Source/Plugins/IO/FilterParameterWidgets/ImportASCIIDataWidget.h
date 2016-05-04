@@ -41,11 +41,11 @@
 
 #include <QtGui/QMovie>
 
-#include "SIMPLViewWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+#include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 
 #include "ui_ImportASCIIDataWidget.h"
 
-class QFSDropLabel;
+class QtSFSDropLabel;
 class ImportASCIIDataFilterParameter;
 class ImportASCIIDataWizard;
 class ImportASCIIData;

@@ -46,7 +46,7 @@
 #include <QtGui/QDoubleValidator>
 #include <QtWidgets/QStyledItemDelegate>
 
-#include "QtSupportLib/ColorComboPicker.h"
+#include "SVWidgetsLib/QtSupport/QtSColorComboPicker.h"
 #include "StatsGenerator/Widgets/TableModels/SGLogNormalTableModel.h"
 
 
@@ -108,7 +108,7 @@ class SGLogNormalItemDelegate : public QStyledItemDelegate
           stdDev->setValidator(stdDevValidator);
           return stdDev;
         case SGLogNormalTableModel::LineColor:
-          colorCombo = new ColorComboPicker(parent);
+          colorCombo = new QtSColorComboPicker(parent);
           return colorCombo;
         default:
           break;
@@ -133,7 +133,7 @@ class SGLogNormalItemDelegate : public QStyledItemDelegate
       else if (col == SGLogNormalTableModel::LineColor)
       {
         QString state = index.model()->data(index).toString();
-        ColorComboPicker* comboBox = qobject_cast<ColorComboPicker* > (editor);
+        QtSColorComboPicker* comboBox = qobject_cast<QtSColorComboPicker* > (editor);
         Q_ASSERT(comboBox);
         comboBox->setCurrentIndex(comboBox->findText(state));
       }
@@ -158,7 +158,7 @@ class SGLogNormalItemDelegate : public QStyledItemDelegate
       }
       else if (col == SGLogNormalTableModel::LineColor)
       {
-        ColorComboPicker* comboBox = qobject_cast<ColorComboPicker* > (editor);
+        QtSColorComboPicker* comboBox = qobject_cast<QtSColorComboPicker* > (editor);
         Q_ASSERT(comboBox);
         model->setData(index, comboBox->currentText());
       }
