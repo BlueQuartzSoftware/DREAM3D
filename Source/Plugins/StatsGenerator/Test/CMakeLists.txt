@@ -35,7 +35,6 @@ set(${PLUGIN_NAME}_Link_Libs Qt5::Core H5Support SIMPLib)
 # they will show up in IDEs
 set(TEST_NAMES
   StatsGeneratorFilter
-
 )
 
 set( ${PLUGIN_NAME}_TEST_SRCS )

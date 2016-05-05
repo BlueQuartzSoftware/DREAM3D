@@ -1,0 +1,15 @@
+
+
+#include <QtCore/QString>
+
+
+namespace StatsGen
+{
+    namespace Example {
+
+        static const QString PipelineFile("${${PLUGIN_NAME}Examples_SOURCE_DIR}/ExampleStatsGeneratorPipeline.json");
+        static const QString OutputDir("${${PLUGIN_NAME}Examples_BINARY_DIR}");
+
+    }
+
+}
