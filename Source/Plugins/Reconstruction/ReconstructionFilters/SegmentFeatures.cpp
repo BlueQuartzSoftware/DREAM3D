@@ -155,7 +155,7 @@ void SegmentFeatures::execute()
   neighpoints[3] = 1;
   neighpoints[4] = dims[0];
   neighpoints[5] = (dims[0] * dims[1]);
-  int64_t nextSeed = -1;
+  int64_t nextSeed = 0;
 
   while (seed >= 0)
   {

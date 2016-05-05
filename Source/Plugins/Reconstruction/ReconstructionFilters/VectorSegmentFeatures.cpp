@@ -279,7 +279,7 @@ int64_t VectorSegmentFeatures::getSeed(int32_t gnum, int64_t nextSeed)
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   int64_t seed = -1;
   // start with the next voxel after the last seed
-  size_t randpoint = static_cast<size_t>(nextSeed)+1;
+  size_t randpoint = static_cast<size_t>(nextSeed);
   while (seed == -1 && randpoint < totalPoints)
   {
     if (m_FeatureIds[randpoint] == 0) // If the GrainId of the voxel is ZERO then we can use this as a seed point
