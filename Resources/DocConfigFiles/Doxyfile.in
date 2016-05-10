@@ -36,7 +36,8 @@ RTF_EXTENSIONS_FILE =
 #---------------------------------------------------------------------------
 IMAGE_PATH        = @DOXYGEN_IMAGE_DIR@
 INPUT             = @DOXYGEN_INPUT_FILES@
-FILE_PATTERNS     = *.dox *.md *.cpp *.hpp *.h *.c
+#FILE_PATTERNS     = *.dox *.md *.cpp *.hpp *.h *.c
+FILE_PATTERNS     = @DOXYGEN_FILE_PATTERNS@
 RECURSIVE         = YES
 TAGFILES          =
 ALLEXTERNALS      = NO
