@@ -188,7 +188,10 @@ int StatsGeneratorFilter::writeFilterParameters(AbstractFilterParametersWriter* 
   {
     JsonFilterParametersWriter* jsonWriter = dynamic_cast<JsonFilterParametersWriter*>(writer);
     QJsonObject& jsonRoot = jsonWriter->getCurrentGroupObject();
-    m_StatsDataArray->writeToJson(jsonRoot, m_CrystalStructures);
+    if(nullptr != m_StatsDataArray.get())
+    {
+      m_StatsDataArray->writeToJson(jsonRoot, m_CrystalStructures);
+    }
   }
 
   writer->closeFilterGroup();
