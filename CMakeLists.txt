@@ -565,3 +565,17 @@ if(EXISTS ${data_file})
           DESTINATION ./Data/
           COMPONENT Applications )
 endif()
+
+#-- This is example code that loops over all the DocGroups and each .md BUILD_WITH_INSTALL_RPATH
+#-- the filter DocGroup
+if (0)
+get_property(DREAM3DDoc_GROUPS GLOBAL PROPERTY DREAM3DDoc_GROUPS)
+foreach(DocGroup ${DREAM3DDoc_GROUPS})
+  #message(STATUS "  DocGroup: ${DocGroup}" )
+  get_property(DocGroupList GLOBAL PROPERTY DREAM3DDoc_${DocGroup})
+  foreach(docListItem ${DocGroupList})
+    #message(STATUS "    ${docListItem}")
+  endforeach()
+endforeach()
+endif()
+
