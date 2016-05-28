@@ -198,7 +198,7 @@ void FindFeaturePhases::execute()
   if(warningMap.size() > 0)
   {
     QStringList warnings;
-    QString header = QString("Elements from some features did not all have the same phase Id. The last phase Id copied into each ffeature will be used");
+    QString header = QString("Elements from some features did not all have the same phase Id. The last phase Id copied into each feature will be used");
     warnings.append(header);
     QMapIterator<int32_t, int32_t> i(warningMap);
     while (i.hasNext()) {
