@@ -1405,6 +1405,11 @@ Int32ArrayType::Pointer PackPrimaryPhases::initialize_packinggrid()
   m_PackingPoints[0] = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints() / 2);
   m_PackingPoints[1] = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints() / 2);
   m_PackingPoints[2] = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints() / 2);
+  
+  for (auto&& packingValue : m_PackingPoints)
+  {
+    if (packingValue == 0) { packingValue = 1; }
+  }
 
   m_TotalPackingPoints = m_PackingPoints[0] * m_PackingPoints[1] * m_PackingPoints[2];
 
