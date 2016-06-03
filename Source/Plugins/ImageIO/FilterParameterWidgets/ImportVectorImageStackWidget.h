@@ -52,7 +52,7 @@
 
 #include "SVWidgetsLib/SVWidgetsLib.h"
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
-#include "SVWidgetsLib/Workspace/PipelineFilterWidget.h"
+#include "SVWidgetsLib/Widgets/SVPipelineFilterWidget.h"
 
 
 #include "ui_ImportVectorImageStackWidget.h"

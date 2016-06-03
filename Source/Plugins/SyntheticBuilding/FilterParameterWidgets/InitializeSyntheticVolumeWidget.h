@@ -46,7 +46,7 @@
 
 #include "SVWidgetsLib/SVWidgetsLib.h"
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
-#include "SVWidgetsLib/Workspace/PipelineFilterWidget.h"
+#include "SVWidgetsLib/Widgets/SVPipelineFilterWidget.h"
 
 #include "SyntheticBuilding/ui_InitializeSyntheticVolumeWidget.h"
 

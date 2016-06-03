@@ -47,7 +47,7 @@
 
 #include "SVWidgetsLib/SVWidgetsLib.h"
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
-#include "SVWidgetsLib/Workspace/PipelineFilterWidget.h"
+#include "SVWidgetsLib/Widgets/SVPipelineFilterWidget.h"
 
 #include "StatsGenerator/Widgets/SGWidget.h"
 #include "StatsGenerator/Widgets/PrimaryPhaseWidget.h"

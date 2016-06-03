@@ -49,7 +49,7 @@
 #include "SIMPLib/FilterParameters/AxisAngleInput.h"
 #include "SVWidgetsLib/SVWidgetsLib.h"
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
-#include "SVWidgetsLib/Workspace/PipelineFilterWidget.h"
+#include "SVWidgetsLib/Widgets/SVPipelineFilterWidget.h"
 
 #include "OrientationAnalysis/ui_ReadH5EbsdWidget.h"
 

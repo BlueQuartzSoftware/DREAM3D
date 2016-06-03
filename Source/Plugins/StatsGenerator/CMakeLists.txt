@@ -110,15 +110,15 @@ include_directories( ${PLUGINS_SOURCE_DIR}/${PLUGIN_NAME}/Widgets)
 include_directories( ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/Widgets)
 include_directories( ${PLUGINS_BINARY_DIR}/${PLUGIN_NAME}/Test)
 include_directories( ${DREAM3DProj_SOURCE_DIR}/Source)
+
 include_directories( ${SIMPLProj_SOURCE_DIR}/Source)
 include_directories( ${SIMPLProj_BINARY_DIR})
+include_directories( ${SIMPLProj_SOURCE_DIR}/Source/SVWidgetsLib/QtSupport)
+include_directories( ${SIMPLProj_BINARY_DIR}/SVWidgetsLib/QtSupport)
+include_directories( ${SIMPLProj_BINARY_DIR}/SVWidgetsLib)
 
 include_directories( ${SIMPLViewProj_SOURCE_DIR}/Source)
-include_directories( ${SIMPLViewProj_SOURCE_DIR}/Source/SVWidgetsLib/QtSupport)
 include_directories( ${SIMPLViewProj_BINARY_DIR})
-include_directories( ${SIMPLViewProj_BINARY_DIR}/SVWidgetsLib)
-
-
 
 # ******************************************************************************
 # Create our custom executable that will generate most of our QFilterWidget
