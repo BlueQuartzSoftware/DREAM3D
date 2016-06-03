@@ -162,6 +162,12 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
 
     virtual void printHeader(std::ostream& out);
 
+    /**
+     * @brief writeFile
+     * @param filepath
+     */
+    virtual int writeFile(QString filepath);
+
   protected:
 
   private:

@@ -342,6 +342,9 @@ int CtfReader::readData(QFile& in)
 
   // Read the column Headers and allocate the necessary arrays
   buf = in.readLine();
+  QString originalHeader = getOriginalHeader();
+  originalHeader = originalHeader + buf;
+  setOriginalHeader(originalHeader);
   buf = buf.trimmed(); // Remove leading and trailing whitespace
 
   QList<QByteArray> tokens = buf.split('\t'); // Tokenize the array with a tab
@@ -792,3 +795,96 @@ void CtfReader::printHeader(std::ostream& out)
   std::cout << "----------------------------------------" << std::endl;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int CtfReader::writeFile(QString filepath)
+{
+  int error = 0;
+
+  FILE* f = fopen(filepath.toLatin1().data(), "wb");
+  if(nullptr == f)
+  {
+    return -1;
+  }
+
+  QByteArray header = getOriginalHeader().toLatin1();
+  fwrite(header.data(), 1, header.count(), f);
+  int zStart = 0;
+  int zEnd = getZCells();
+  int yCells = getYCells();
+  int xCells = getXCells();
+
+  QList<QString> colNames = getColumnNames();
+
+  typedef struct { QString colName; void* ptr; int aType; } ColInfoType;
+
+  std::vector<ColInfoType> colInfos(colNames.count());
+
+  QListIterator<QString> iter(colNames);
+  while (iter.hasNext())
+  {
+
+    ColInfoType colInfo;
+    QString name = iter.next();
+
+    colInfo.colName = name;
+
+    DataParser::Pointer dparser = m_NamePointerMap[name];
+
+    colInfo.ptr = dparser->getVoidPointer();
+
+    colInfo.aType = 2; // undefined value
+
+    int aType = dparser->IsA("Int32Parser");
+    if(1 == aType) {
+      colInfo.aType = 0;
+    }
+    aType = dparser->IsA("FloatParser");
+    if(1 == aType)
+    {
+      colInfo.aType = 1;
+    }
+
+    colInfos[dparser->getColumnIndex()] = colInfo;
+  }
+
+  size_t counter = 0;
+  for (int slice = zStart; slice < zEnd; ++slice)
+  {
+    for (int row = 0; row < yCells; ++row)
+    {
+      for (int col = 0; col < xCells; ++col)
+      {
+
+        for(size_t n = 0; n < colInfos.size(); n++)
+        {
+          ColInfoType& colInfo = colInfos[n];
+          if(0 == colInfo.aType) // int32 pointer
+          {
+            int32_t* i32Ptr = reinterpret_cast<int32_t*>(colInfo.ptr);
+            fprintf(f, "%d\t", i32Ptr[counter]);
+          }
+          else if(1 == colInfo.aType) // float pointer
+          {
+            float* f32Ptr = reinterpret_cast<float*>(colInfo.ptr);
+            fprintf(f, "%0.4f\t", f32Ptr[counter]);
+          }
+          else
+          {
+            Q_ASSERT_X(false, __FILE__, "DataParser type not known;");
+          }
+        }
+        counter++;
+        fprintf(f, "\n");
+
+      }
+    }
+  }
+
+  fclose(f);
+  f = nullptr;
+
+
+  return error;
+}
