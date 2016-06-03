@@ -9,7 +9,39 @@ These release notes summarize the major changes for each officially released ver
 
 [Developers](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
-## Version 6.2.327 ##
+## Version 6.2.XXX ##
++ Created new "ToolBox" window that contains the *Filter List*, *Filter Library* and *Bookmarks* tabs from earlier versions
+
+
+### General Changes ###
++ Releases are now built against Qt 5.6.0, HDF5 1.8.16, Boost 1.60.0, Qwt 6.1.2, Eigen 3.2.8, ITK 4.9.1
+
+### SIMPLib Changes ###
++ Add infrastructure to allow Cut/Copy/Paste of filters into/out-of a pipeline view
++ Add infrastructure to allow "Undo/Redo" commands
++ Add **Execute Process** filter that allows the filter to execute any program on the computer system.
++ Add a **Pause Pipeline** filter that allows the user to pause a pipeline at a given point.
++ Added a **StatsGenerator** filter that allows the user to generate statistics for a synthetic microstructure inside a pipeline instead of using a separate application.
++ Added an **Array Calculator** filter
++ Fix bug that was not allowing **Pipeline Runner** to execute properly
++ Optimize Array initialization during the **Create Data Array** filter
+
+
+
+
+### SIMPLView Changes ###
+
++ Added GUI for **Pause Pipeline** filter
++ Added GUI for **Execute Process** filter
++ Added GUI for **StatsGenerator** filter
++ Added GUI for ** Array Calculator** filter
++ 
+
+### DREAM.3D Changes ###
+
+
+
+## Version 6.2.327 Jan 6, 2016 ##
 + DREAM.3D has new logo and splash screen!
 + Added **Filter** "Import ASCII Data", which implements a generic text reader to import data into DREAM.3D.  The **Filter** utilizes a wizard to guide the user through importing their column-oriented ASCII data.
 + Added **Filter** "Combine Attribute Arrays", which allows the user to stack any number of **Attribute Arrays** to form a new combined array.
