@@ -199,7 +199,7 @@ get_property(SIMPLPluginList GLOBAL PROPERTY SIMPLPluginList)
 if("${SIMPLPluginList}" STREQUAL "")
   set_property(GLOBAL PROPERTY SIMPLPluginList "${DREAM3DProj_BINARY_DIR}/SIMPLPluginList.txt")
   get_property(SIMPLPluginList GLOBAL PROPERTY SIMPLPluginList)
-  file(WRITE "${DREAM3DProj_BINARY_DIR}/SIMPLPluginList.txt" "")
+  file(WRITE "${SIMPLPluginList}" "")
 endif()
 
 
@@ -207,7 +207,7 @@ get_property(SIMPLLibSearchDirs GLOBAL PROPERTY SIMPLLibSearchDirs)
 if("${SIMPLLibSearchDirs}" STREQUAL "")
   set_property(GLOBAL PROPERTY SIMPLLibSearchDirs "${DREAM3DProj_BINARY_DIR}/LibSearchDirs.txt")
   get_property(SIMPLLibSearchDirs GLOBAL PROPERTY SIMPLLibSearchDirs)
-  file(WRITE "${DREAM3DProj_BINARY_DIR}/LibSearchDirs.txt" "")
+  file(WRITE "${SIMPLLibSearchDirs}" "${CMAKE_LIBRARY_OUTPUT_DIRECTORY};")
 endif()
 
 
@@ -439,7 +439,7 @@ set(FilterWidgetsLib_BINARY_DIR ${DREAM3DProj_BINARY_DIR}/FilterWidgetsLib)
 
 # -----------------------------------------------------------------------
 # -- Add in the DREAM3D Sources into a library
-add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/OrientationLib/ ${PROJECT_BINARY_DIR}/OrientationLib)
+add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/OrientationLib ${PROJECT_BINARY_DIR}/OrientationLib)
 
 # --------------------------------------------------------------------
 # Build the SimpleITKExplicit Library.
