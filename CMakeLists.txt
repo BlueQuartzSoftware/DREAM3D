@@ -210,6 +210,15 @@ if("${SIMPLLibSearchDirs}" STREQUAL "")
   file(WRITE "${SIMPLLibSearchDirs}" "${CMAKE_LIBRARY_OUTPUT_DIRECTORY};")
 endif()
 
+# --------------------------------------------------------------------
+# Build the SimpleITKExplicit Library.
+option(SIMPLib_USE_ITK "Use ITK For Image Processing" ON)
+if(SIMPLib_USE_ITK)
+  set(EXE_DEBUG_EXTENSION "_debug")
+  add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/SimpleITKExplicit ${PROJECT_BINARY_DIR}/SimpleITKExplicit)
+  get_property(SimpleITKExplicit_LIB_NAME TARGET SimpleITKExplicit PROPERTY OUTPUT_NAME)
+endif()
+
 
 # -----------------------------------------------------------------------
 # Bring in the SIMPLView Project, which will bring in SIMPLib
@@ -428,30 +437,22 @@ message(STATUS "BrandedSIMPLView_DIR: ${BrandedSIMPLView_DIR}")
 include_directories(${BrandedSIMPLView_DIR})
 
 # -----------------------------------------------------------------------
-# Add in the Necessary EBSD Sources into a library
-# -----------------------------------------------------------------------
+# -- Build the EbsdLib Library
 add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/EbsdLib ${PROJECT_BINARY_DIR}/EbsdLib)
+
+# -----------------------------------------------------------------------
+# -- Build the OrientationLib Library
+add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/OrientationLib ${PROJECT_BINARY_DIR}/OrientationLib)
+
 
 # -----------------------------------------------------------------------
 # This needs to be set here as we are going to look for files in this directory
 # -----------------------------------------------------------------------
 set(FilterWidgetsLib_BINARY_DIR ${DREAM3DProj_BINARY_DIR}/FilterWidgetsLib)
 
-# -----------------------------------------------------------------------
-# -- Add in the DREAM3D Sources into a library
-add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/OrientationLib ${PROJECT_BINARY_DIR}/OrientationLib)
-
-# --------------------------------------------------------------------
-# Build the SimpleITKExplicit Library.
-option(SIMPLib_USE_ITK "Use ITK For Image Processing" ON)
-if(SIMPLib_USE_ITK)
-  add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/SimpleITKExplicit ${PROJECT_BINARY_DIR}/SimpleITKExplicit)
-  get_property(SimpleITKExplicit_LIB_NAME TARGET SimpleITKExplicit PROPERTY OUTPUT_NAME)
-endif()
 
 #- Add in the Main DREAM.3D Application
 #add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/DREAM3D ${PROJECT_BINARY_DIR}/Applications/DREAM3D)
-
 set(DREAM3D_DOCS_ROOT_DIR "${DREAM3DProj_BINARY_DIR}/Bin/Help/DREAM3D")
 
 #-------------------------------------------------------------------------------
