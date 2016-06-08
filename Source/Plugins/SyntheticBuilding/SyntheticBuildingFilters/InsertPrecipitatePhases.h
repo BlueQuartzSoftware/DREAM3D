@@ -241,6 +241,11 @@ class InsertPrecipitatePhases : public AbstractFilter
     void dataCheck();
 
     /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
+    /**
      * @brief place_precipitates Organizes the placement of precipitates into the packing volume while ensuring
      * proper size and morphological statistics are maintained
      * @param exlusionZonesPtr Array of exclusion zone precipitate Ids for each packing point
@@ -406,8 +411,6 @@ class InsertPrecipitatePhases : public AbstractFilter
      */
     void compare_3Ddistributions(std::vector<std::vector<std::vector<float> > >, std::vector<std::vector<std::vector<float> > >, float& sqrerror);
 
-    std::vector<int32_t> precipitatephases;
-    std::vector<float> precipitatephasefractions;
 
   private:
     int32_t m_FirstPrecipitateFeature;
@@ -458,35 +461,39 @@ class InsertPrecipitatePhases : public AbstractFilter
     int64_t* m_Neighbors;
     StatsDataArray::WeakPointer m_StatsDataArray;
 
-    std::vector<std::vector<int64_t> > columnlist;
-    std::vector<std::vector<int64_t> > rowlist;
-    std::vector<std::vector<int64_t> > planelist;
+    std::vector<std::vector<int64_t> > m_ColumnList;
+    std::vector<std::vector<int64_t> > m_RowList;
+    std::vector<std::vector<int64_t> > m_PlaneList;
 
-    std::vector<size_t> pointsToAdd;
-    std::vector<size_t> pointsToRemove;
+    std::vector<size_t> m_PointsToAdd;
+    std::vector<size_t> m_PointsToRemove;
 
     uint64_t m_Seed;
 
-    std::vector<std::vector<float> > featuresizedist;
-    std::vector<std::vector<float> > simfeaturesizedist;
-    std::vector<float> m_rdfTargetDist;
-    std::vector<float> m_rdfCurrentDist;
-    std::vector<float> m_rdfCurrentDistNorm;
+    std::vector<std::vector<float> > m_FeatureSizeDist;
+    std::vector<std::vector<float> > m_SimFeatureSizeDist;
+    std::vector<float> m_RdfTargetDist;
+    std::vector<float> m_RdfCurrentDist;
+    std::vector<float> m_RdfCurrentDistNorm;
 
     std::vector<float> m_RandomCentroids;
-    std::vector<float> m_rdfRandom;
+    std::vector<float> m_RdfRandom;
 
-    std::vector<float> featuresizediststep;
+    std::vector<float> m_FeatureSizeDistStep;
 
-    std::vector<int64_t> gsizes;
+    std::vector<int64_t> m_GSizes;
 
-    size_t availablePointsCount;
+    size_t m_AvailablePointsCount;
     float m_currentRDFerror, m_oldRDFerror;
     float m_CurrentSizeDistError, m_OldSizeDistError;
     float m_rdfMax;
     float m_rdfMin;
     float m_StepSize;
     int32_t m_numRDFbins;
+
+
+    std::vector<int32_t> m_PrecipitatePhases;
+    std::vector<float> m_PrecipitatePhaseFractions;
 
     /**
      * @brief updateFeatureInstancePointers Resets the raw pointers that belong to a

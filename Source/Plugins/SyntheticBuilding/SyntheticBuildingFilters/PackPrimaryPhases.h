@@ -220,6 +220,12 @@ class PackPrimaryPhases : public AbstractFilter
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
     /**
      * @brief initialize_packinggrid Initializes internal variables for packing grid dimensions based on
      * the incoming grid set by the user
@@ -413,22 +419,22 @@ class PackPrimaryPhases : public AbstractFilter
     ShapeOps::Pointer m_SuperEllipsoidOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    std::vector<std::vector<int64_t> > columnlist;
-    std::vector<std::vector<int64_t> > rowlist;
-    std::vector<std::vector<int64_t> > planelist;
-    std::vector<std::vector<float> > ellipfunclist;
+    std::vector<std::vector<int64_t> > m_ColumnList;
+    std::vector<std::vector<int64_t> > m_RowList;
+    std::vector<std::vector<int64_t> > m_PlaneList;
+    std::vector<std::vector<float> > m_EllipFuncList;
 
-    std::vector<size_t> pointsToAdd;
-    std::vector<size_t> pointsToRemove;
+    std::vector<size_t> m_PointsToAdd;
+    std::vector<size_t> m_PointsToRemove;
 
     uint64_t m_Seed;
 
-    int32_t firstPrimaryFeature;
+    int32_t m_FirstPrimaryFeature;
 
-    float sizex;
-    float sizey;
-    float sizez;
-    float totalvol;
+    float m_SizeX;
+    float m_SizeY;
+    float m_SizeZ;
+    float m_TotalVol;
     float m_HalfPackingRes[3];
     float m_OneOverPackingRes[3];
     float m_OneOverHalfPackingRes[3];
@@ -437,24 +443,24 @@ class PackPrimaryPhases : public AbstractFilter
     int64_t m_PackingPoints[3];
     int64_t m_TotalPackingPoints;
 
-    std::vector<std::vector<float> > featuresizedist;
-    std::vector<std::vector<float> > simfeaturesizedist;
-    std::vector<std::vector<std::vector<float> > > neighbordist;
-    std::vector<std::vector<std::vector<float> > > simneighbordist;
+    std::vector<std::vector<float> > m_FeatureSizeDist;
+    std::vector<std::vector<float> > m_SimFeatureSizeDist;
+    std::vector<std::vector<std::vector<float> > > m_NeighborDist;
+    std::vector<std::vector<std::vector<float> > > m_SimNeighborDist;
 
-    std::vector<float> featuresizediststep;
-    std::vector<float> neighbordiststep;
+    std::vector<float> m_FeatureSizeDistStep;
+    std::vector<float> m_NeighborDistStep;
 
-    std::vector<int64_t> packqualities;
-    std::vector<int64_t> gsizes;
+    std::vector<int64_t> m_PackQualities;
+    std::vector<int64_t> m_GSizes;
 
-    std::vector<int32_t> primaryphases;
-    std::vector<float> primaryphasefractions;
+    std::vector<int32_t> m_PrimaryPhases;
+    std::vector<float> m_PrimaryPhaseFractions;
 
-    size_t availablePointsCount;
-    float fillingerror, oldfillingerror;
-    float currentneighborhooderror, oldneighborhooderror;
-    float currentsizedisterror, oldsizedisterror;
+    size_t m_AvailablePointsCount;
+    float m_FillingError, m_OldFillingError;
+    float m_CurrentNeighborhoodError, m_OldNeighborhoodError;
+    float m_CurrentSizeDistError, m_OldSizeDistError;
 
     /**
      * @brief updateFeatureInstancePointers Resets the raw pointers that belong to a
