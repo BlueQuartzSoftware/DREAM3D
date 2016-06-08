@@ -78,6 +78,7 @@ function ConfigureITK()
   echo "ITKGroup_Filtering:BOOL=ON" >> $cacheFile
   echo "ITKGroup_Registration:BOOL=ON" >> $cacheFile
   echo "ITKGroup_Segmentation:BOOL=ON" >> $cacheFile
+  echo "Module_SCIFIO:BOOL=ON" >> $cacheFile
   echo "ITK_USE_SYSTEM_HDF5:BOOL=ON" >> $cacheFile
   echo "CMAKE_SKIP_INSTALL_RPATH:BOOL=ON" >> $cacheFile
   echo "CMAKE_SKIP_RPATH:BOOL=ON" >> $cacheFile

@@ -51,7 +51,7 @@ InstallNameLib=${LibPath}
 
 TmpDir="/tmp"
 
-
+changes=""
 
 
 # -----------------------------------------------------------------------------
@@ -222,6 +222,7 @@ function UpdateDylibInstallName()
 # -----------------------------------------------------------------------------
 function UpdateExecutableDependencies()
 {
+  changes=""
   pattern=" \(*\)"            # everything between '(' and ')'
   oldPath="${1%$pattern}"
   # Filter out System Libraries or those located in /Libary/Frameworks
@@ -274,13 +275,14 @@ do
     echo "[${k}/${total}] Changing " $l
     let k=k+1
     ApplicationExe=$l
-
+    # for itk library get the linked libraries
     otool -L "${LibPath}/${ApplicationExe}" > "${tmpFile}"
 
     i=0
     exec 9<"${tmpFile}"
     while read -u 9 line
     do
+        # For each output line from the 'otool'
         if [[ ${i} -gt 0 ]]; then
             UpdateExecutableDependencies "${line}" "${ApplicationExe}"     
         fi
