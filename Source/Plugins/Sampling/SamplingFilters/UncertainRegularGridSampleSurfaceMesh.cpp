@@ -144,6 +144,14 @@ int UncertainRegularGridSampleSurfaceMesh::writeFilterParameters(AbstractFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void UncertainRegularGridSampleSurfaceMesh::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void UncertainRegularGridSampleSurfaceMesh::dataCheck()
 {
   setErrorCondition(0);

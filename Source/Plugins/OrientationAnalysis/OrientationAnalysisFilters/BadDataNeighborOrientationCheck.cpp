@@ -143,6 +143,14 @@ int BadDataNeighborOrientationCheck::writeFilterParameters(AbstractFilterParamet
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void BadDataNeighborOrientationCheck::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void BadDataNeighborOrientationCheck::dataCheck()
 {
   setErrorCondition(0);

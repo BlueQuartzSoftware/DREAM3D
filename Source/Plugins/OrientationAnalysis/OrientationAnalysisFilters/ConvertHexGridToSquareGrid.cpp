@@ -142,6 +142,14 @@ int ConvertHexGridToSquareGrid::writeFilterParameters(AbstractFilterParametersWr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ConvertHexGridToSquareGrid::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ConvertHexGridToSquareGrid::dataCheck()
 {
   setErrorCondition(0);

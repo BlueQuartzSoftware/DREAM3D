@@ -215,7 +215,6 @@ class PackPrimaryPhases : public AbstractFilter
 
   protected:
     PackPrimaryPhases();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */

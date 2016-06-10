@@ -119,11 +119,16 @@ class PhWriter : public FileWriter
 
   protected:
     PhWriter();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief writeHeader Reimplemented from @see FileReader class

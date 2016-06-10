@@ -136,6 +136,14 @@ int FindBoundingBoxFeatures::writeFilterParameters(AbstractFilterParametersWrite
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindBoundingBoxFeatures::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindBoundingBoxFeatures::dataCheck()
 {
   setErrorCondition(0);

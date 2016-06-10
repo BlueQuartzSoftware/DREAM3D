@@ -163,6 +163,14 @@ int GenerateRodriguesColors::writeFilterParameters(AbstractFilterParametersWrite
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void GenerateRodriguesColors::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void GenerateRodriguesColors::dataCheck()
 {
   DataArrayPath tempPath;

@@ -219,11 +219,16 @@ class ReadEdaxH5Data : public AbstractFilter
 
   protected:
     ReadEdaxH5Data();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
     * @brief copyRawEbsdData Reads the H5OIM file and puts the data into the data container

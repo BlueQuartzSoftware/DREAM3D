@@ -99,6 +99,14 @@ int GenerateNodeTriangleConnectivity::writeFilterParameters(AbstractFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void GenerateNodeTriangleConnectivity::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void GenerateNodeTriangleConnectivity::dataCheck()
 {
   setErrorCondition(0);

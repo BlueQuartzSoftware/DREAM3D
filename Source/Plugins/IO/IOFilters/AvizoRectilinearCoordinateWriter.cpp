@@ -122,6 +122,14 @@ int AvizoRectilinearCoordinateWriter::writeFilterParameters(AbstractFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void AvizoRectilinearCoordinateWriter::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void AvizoRectilinearCoordinateWriter::dataCheck()
 {
   setErrorCondition(0);

@@ -180,11 +180,16 @@ class FindEllipsoidError : public AbstractFilter
 
   protected:
     FindEllipsoidError();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     void find_error2D();
 

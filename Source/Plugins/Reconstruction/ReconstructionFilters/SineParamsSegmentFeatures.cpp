@@ -160,6 +160,14 @@ void SineParamsSegmentFeatures::updateFeatureInstancePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void SineParamsSegmentFeatures::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void SineParamsSegmentFeatures::dataCheck()
 {
   DataArrayPath tempPath;

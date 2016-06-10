@@ -113,6 +113,14 @@ int WriteIPFStandardTriangle::writeFilterParameters(AbstractFilterParametersWrit
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void WriteIPFStandardTriangle::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void WriteIPFStandardTriangle::dataCheck()
 {
   setErrorCondition(0);

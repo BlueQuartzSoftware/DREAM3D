@@ -158,11 +158,16 @@ class FindSizes : public AbstractFilter
 
   protected:
     FindSizes();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief find_sizes Determines the size of each Feature

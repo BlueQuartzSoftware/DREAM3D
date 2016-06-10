@@ -120,6 +120,14 @@ int CorrelateValuesWithVectorDirection::writeFilterParameters(AbstractFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void CorrelateValuesWithVectorDirection::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void CorrelateValuesWithVectorDirection::dataCheck()
 {
   setErrorCondition(0);

@@ -118,6 +118,14 @@ int AppendImageGeometryZSlice::writeFilterParameters(AbstractFilterParametersWri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void AppendImageGeometryZSlice::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void AppendImageGeometryZSlice::dataCheck()
 {
   setErrorCondition(0);

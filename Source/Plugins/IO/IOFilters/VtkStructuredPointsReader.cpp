@@ -146,6 +146,14 @@ int VtkStructuredPointsReader::writeFilterParameters(AbstractFilterParametersWri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void VtkStructuredPointsReader::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void VtkStructuredPointsReader::dataCheck()
 {
   setErrorCondition(0);

@@ -151,6 +151,14 @@ int GenerateEulerColors::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void GenerateEulerColors::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void GenerateEulerColors::dataCheck()
 {
   DataArrayPath tempPath;

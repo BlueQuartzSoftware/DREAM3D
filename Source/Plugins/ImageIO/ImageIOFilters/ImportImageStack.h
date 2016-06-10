@@ -174,11 +174,16 @@ class ImportImageStack : public AbstractFilter
 
   protected:
     ImportImageStack();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
     * @brief readBounds Reads the bounds for voxels from the specified file

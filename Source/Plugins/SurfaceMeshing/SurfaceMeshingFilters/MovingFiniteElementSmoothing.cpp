@@ -206,6 +206,14 @@ int MovingFiniteElementSmoothing::writeFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void MovingFiniteElementSmoothing::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MovingFiniteElementSmoothing::dataCheck()
 {
   setErrorCondition(0);

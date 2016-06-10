@@ -188,6 +188,14 @@ int InitializeSyntheticVolume::writeFilterParameters(AbstractFilterParametersWri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void InitializeSyntheticVolume::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::dataCheck()
 {
   setErrorCondition(0);

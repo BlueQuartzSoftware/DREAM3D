@@ -170,11 +170,16 @@ class FindShapes : public AbstractFilter
 
   protected:
     FindShapes();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief find_moments Determines the second order moments for each Feature

@@ -170,6 +170,14 @@ int ImportVectorImageStack::writeFilterParameters(AbstractFilterParametersWriter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ImportVectorImageStack::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ImportVectorImageStack::dataCheck()
 {
   DataArrayPath tempPath;

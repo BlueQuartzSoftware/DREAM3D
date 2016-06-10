@@ -159,11 +159,16 @@ class GroupFeatures : public AbstractFilter
 
   protected:
     GroupFeatures();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief getSeed Initializes a new seed from which to star the burn algorithm

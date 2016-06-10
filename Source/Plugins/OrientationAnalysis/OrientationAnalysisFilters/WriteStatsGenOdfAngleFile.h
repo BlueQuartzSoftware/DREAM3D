@@ -168,11 +168,16 @@ class WriteStatsGenOdfAngleFile : public AbstractFilter
 
   protected:
     WriteStatsGenOdfAngleFile();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     int determineOutputLineCount(int64_t totalPoints, int32_t phase);
 

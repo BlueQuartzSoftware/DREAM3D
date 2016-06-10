@@ -152,11 +152,16 @@ class ErodeDilateCoordinationNumber : public AbstractFilter
 
   protected:
     ErodeDilateCoordinationNumber();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
   private:
     int32_t* m_Neighbors;

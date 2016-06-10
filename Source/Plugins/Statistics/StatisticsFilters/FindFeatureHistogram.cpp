@@ -151,6 +151,14 @@ int FindFeatureHistogram::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindFeatureHistogram::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindFeatureHistogram::dataCheck()
 {
   setErrorCondition(0);

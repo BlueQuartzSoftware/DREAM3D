@@ -152,11 +152,16 @@ class FindLargestCrossSections : public AbstractFilter
 
   protected:
     FindLargestCrossSections();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief find_crosssections Determines the largest area for a Feature in the defined plane of an Image Geometry

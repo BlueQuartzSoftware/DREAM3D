@@ -151,6 +151,14 @@ int AlignSectionsMutualInformation::writeFilterParameters(AbstractFilterParamete
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void AlignSectionsMutualInformation::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void AlignSectionsMutualInformation::dataCheck()
 {
   setErrorCondition(0);

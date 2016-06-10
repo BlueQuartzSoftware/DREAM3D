@@ -178,11 +178,16 @@ class InitializeSyntheticVolume : public AbstractFilter
 
   protected:
     InitializeSyntheticVolume();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief estimateNumFeatures Estimates the number of Features that will be generated based on the supplied statistics

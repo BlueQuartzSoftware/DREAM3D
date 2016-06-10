@@ -162,11 +162,16 @@ class CorrelateValuesWithVectorDirection : public AbstractFilter
 
   protected:
     CorrelateValuesWithVectorDirection();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     void makeLambertProjection(size_t numComps);
     int determineSquareCoordsandBin(float xyz[3]);

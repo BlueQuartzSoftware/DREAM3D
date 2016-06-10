@@ -122,6 +122,14 @@ int FindSurfaceAreaToVolume::writeFilterParameters(AbstractFilterParametersWrite
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindSurfaceAreaToVolume::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindSurfaceAreaToVolume::dataCheck()
 {
   setErrorCondition(0);

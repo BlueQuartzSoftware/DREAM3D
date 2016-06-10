@@ -310,6 +310,14 @@ int ReplaceElementAttributesWithNeighborValues::writeFilterParameters(AbstractFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ReplaceElementAttributesWithNeighborValues::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ReplaceElementAttributesWithNeighborValues::dataCheck()
 {
   setErrorCondition(0);

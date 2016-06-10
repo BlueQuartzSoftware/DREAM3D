@@ -126,6 +126,14 @@ int FindAvgScalarValueForFeatures::writeFilterParameters(AbstractFilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindAvgScalarValueForFeatures::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindAvgScalarValueForFeatures::dataCheck()
 {
   setErrorCondition(0);

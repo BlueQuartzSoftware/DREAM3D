@@ -166,6 +166,14 @@ int ChangeAngleRepresentation::writeFilterParameters(AbstractFilterParametersWri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ChangeAngleRepresentation::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ChangeAngleRepresentation::dataCheck()
 {
   setErrorCondition(0);

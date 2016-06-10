@@ -122,6 +122,14 @@ int FindBoundaryElementFractions::writeFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindBoundaryElementFractions::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindBoundaryElementFractions::dataCheck()
 {
   setErrorCondition(0);

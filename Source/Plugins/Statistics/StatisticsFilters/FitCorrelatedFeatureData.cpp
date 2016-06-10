@@ -170,6 +170,14 @@ int FitCorrelatedFeatureData::writeFilterParameters(AbstractFilterParametersWrit
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FitCorrelatedFeatureData::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FitCorrelatedFeatureData::dataCheck()
 {
   setErrorCondition(0);

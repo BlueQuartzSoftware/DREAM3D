@@ -164,6 +164,14 @@ int WriteStatsGenOdfAngleFile::writeFilterParameters(AbstractFilterParametersWri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void WriteStatsGenOdfAngleFile::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void WriteStatsGenOdfAngleFile::dataCheck()
 {
   setErrorCondition(0);

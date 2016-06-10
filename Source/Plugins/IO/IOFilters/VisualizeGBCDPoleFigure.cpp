@@ -142,6 +142,14 @@ int VisualizeGBCDPoleFigure::writeFilterParameters(AbstractFilterParametersWrite
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void VisualizeGBCDPoleFigure::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void VisualizeGBCDPoleFigure::dataCheck()
 {
   setErrorCondition(0);

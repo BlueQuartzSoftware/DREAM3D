@@ -168,11 +168,16 @@ class VtkStructuredPointsReader : public AbstractFilter
 
   protected:
     VtkStructuredPointsReader();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief readHeader Reads the .vtk file header ; CURRENTLY NOT IMPLEMENTED

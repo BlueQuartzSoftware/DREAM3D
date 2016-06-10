@@ -150,6 +150,14 @@ int AlignSectionsMisorientation::writeFilterParameters(AbstractFilterParametersW
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void AlignSectionsMisorientation::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void AlignSectionsMisorientation::dataCheck()
 {
   setErrorCondition(0);

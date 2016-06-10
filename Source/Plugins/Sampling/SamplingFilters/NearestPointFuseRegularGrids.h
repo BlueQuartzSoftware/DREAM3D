@@ -149,11 +149,16 @@ class NearestPointFuseRegularGrids : public AbstractFilter
 
   protected:
     NearestPointFuseRegularGrids();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
   private:
     NearestPointFuseRegularGrids(const NearestPointFuseRegularGrids&); // Copy Constructor Not Implemented

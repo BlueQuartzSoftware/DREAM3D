@@ -207,6 +207,14 @@ int FeatureFaceCurvatureFilter::writeFilterParameters(AbstractFilterParametersWr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FeatureFaceCurvatureFilter::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FeatureFaceCurvatureFilter::dataCheck()
 {
   setErrorCondition(0);

@@ -233,8 +233,8 @@ class InsertPrecipitatePhases : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    InsertPrecipitatePhases();
 
+    InsertPrecipitatePhases();
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */

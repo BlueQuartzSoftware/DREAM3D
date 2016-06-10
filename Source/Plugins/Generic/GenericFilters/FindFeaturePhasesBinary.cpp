@@ -131,6 +131,14 @@ int FindFeaturePhasesBinary::writeFilterParameters(AbstractFilterParametersWrite
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindFeaturePhasesBinary::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindFeaturePhasesBinary::dataCheck()
 {
   setErrorCondition(0);

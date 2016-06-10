@@ -335,6 +335,14 @@ void IdentifyMicroTextureRegions::updateFeatureInstancePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void IdentifyMicroTextureRegions::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void IdentifyMicroTextureRegions::dataCheck()
 {
   setErrorCondition(0);

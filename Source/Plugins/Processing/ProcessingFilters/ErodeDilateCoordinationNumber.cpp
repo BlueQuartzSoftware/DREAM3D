@@ -118,6 +118,14 @@ int ErodeDilateCoordinationNumber::writeFilterParameters(AbstractFilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ErodeDilateCoordinationNumber::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ErodeDilateCoordinationNumber::dataCheck()
 {
   setErrorCondition(0);

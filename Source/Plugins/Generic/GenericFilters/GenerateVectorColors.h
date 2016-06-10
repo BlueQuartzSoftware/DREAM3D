@@ -155,11 +155,16 @@ class GenerateVectorColors : public AbstractFilter
 
   protected:
     GenerateVectorColors();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
   private:
     DEFINE_DATAARRAY_VARIABLE(float, Vectors)
     DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)

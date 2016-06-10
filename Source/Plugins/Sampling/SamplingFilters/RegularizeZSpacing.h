@@ -152,11 +152,16 @@ class RegularizeZSpacing : public AbstractFilter
 
   protected:
     RegularizeZSpacing();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
   private:
     RegularizeZSpacing(const RegularizeZSpacing&); // Copy Constructor Not Implemented

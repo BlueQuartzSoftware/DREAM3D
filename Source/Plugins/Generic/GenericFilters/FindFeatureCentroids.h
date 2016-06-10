@@ -149,11 +149,16 @@ class FindFeatureCentroids : public AbstractFilter
 
   protected:
     FindFeatureCentroids();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief find_centroids Determines the centroids of a list of Features.

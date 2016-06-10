@@ -123,6 +123,14 @@ int RemoveFlaggedFeatures::writeFilterParameters(AbstractFilterParametersWriter*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void RemoveFlaggedFeatures::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void RemoveFlaggedFeatures::dataCheck()
 {
   setErrorCondition(0);

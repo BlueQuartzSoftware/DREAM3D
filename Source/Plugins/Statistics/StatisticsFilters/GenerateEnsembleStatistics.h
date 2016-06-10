@@ -260,11 +260,16 @@ class GenerateEnsembleStatistics : public AbstractFilter
 
   protected:
     GenerateEnsembleStatistics();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief gatherSizeStats Consolidates Feature size statistics

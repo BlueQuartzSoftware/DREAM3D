@@ -132,6 +132,14 @@ int FindLargestCrossSections::writeFilterParameters(AbstractFilterParametersWrit
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindLargestCrossSections::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindLargestCrossSections::dataCheck()
 {
   setErrorCondition(0);

@@ -157,11 +157,16 @@ class WriteIPFStandardTriangle : public AbstractFilter
 
   protected:
     WriteIPFStandardTriangle();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief writeImage Writes the generated IPF triangle to a file

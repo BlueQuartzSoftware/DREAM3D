@@ -359,6 +359,14 @@ int FindDistsToCharactGBs::writeFilterParameters(AbstractFilterParametersWriter*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindDistsToCharactGBs::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindDistsToCharactGBs::dataCheck()
 {
   setErrorCondition(0);

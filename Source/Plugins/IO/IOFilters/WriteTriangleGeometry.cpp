@@ -125,6 +125,14 @@ int WriteTriangleGeometry::writeFilterParameters(AbstractFilterParametersWriter*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void WriteTriangleGeometry::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void WriteTriangleGeometry::dataCheck()
 {
   setErrorCondition(0);

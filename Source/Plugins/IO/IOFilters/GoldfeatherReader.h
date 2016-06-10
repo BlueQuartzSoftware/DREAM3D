@@ -176,11 +176,16 @@ class GoldfeatherReader : public AbstractFilter
 
   protected:
     GoldfeatherReader();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     void updateVertexInstancePointers();
     void updateFaceInstancePointers();

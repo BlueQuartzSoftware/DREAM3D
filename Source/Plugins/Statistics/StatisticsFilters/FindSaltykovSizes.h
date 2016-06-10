@@ -157,11 +157,16 @@ class FindSaltykovSizes : public AbstractFilter
 
   protected:
     FindSaltykovSizes();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     void find_saltykov_sizes();
     int do_saltykov(std::vector<int> nA, float Dmax, int k);

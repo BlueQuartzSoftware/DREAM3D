@@ -133,6 +133,14 @@ int GenerateVectorColors::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void GenerateVectorColors::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void GenerateVectorColors::dataCheck()
 {
   setErrorCondition(0);

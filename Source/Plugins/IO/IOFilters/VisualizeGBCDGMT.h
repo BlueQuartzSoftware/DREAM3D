@@ -164,11 +164,16 @@ class VisualizeGBCDGMT : public AbstractFilter
 
   protected:
     VisualizeGBCDGMT();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief getSquareCoord Computes the square based coordinate based on the incoming normal

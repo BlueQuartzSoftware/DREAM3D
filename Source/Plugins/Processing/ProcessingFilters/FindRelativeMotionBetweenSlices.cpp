@@ -237,6 +237,14 @@ int FindRelativeMotionBetweenSlices::writeFilterParameters(AbstractFilterParamet
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindRelativeMotionBetweenSlices::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindRelativeMotionBetweenSlices::dataCheck()
 {
   setErrorCondition(0);

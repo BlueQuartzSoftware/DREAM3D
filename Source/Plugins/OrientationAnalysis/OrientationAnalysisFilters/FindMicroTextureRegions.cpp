@@ -126,6 +126,14 @@ int FindMicroTextureRegions::writeFilterParameters(AbstractFilterParametersWrite
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindMicroTextureRegions::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindMicroTextureRegions::dataCheck()
 {
   DataArrayPath tempPath;

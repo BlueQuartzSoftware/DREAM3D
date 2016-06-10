@@ -116,11 +116,16 @@ class ImportASCIIData : public AbstractFilter
 
   protected:
     ImportASCIIData();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
   private:
     QMap<int, IDataArray::Pointer>                                      m_ASCIIArrayMap;

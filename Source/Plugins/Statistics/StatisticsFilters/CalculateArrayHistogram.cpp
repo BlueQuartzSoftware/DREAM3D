@@ -145,6 +145,14 @@ int CalculateArrayHistogram::writeFilterParameters(AbstractFilterParametersWrite
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void CalculateArrayHistogram::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void CalculateArrayHistogram::dataCheck()
 {
   setErrorCondition(0);

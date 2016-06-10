@@ -167,11 +167,16 @@ class FindMisorientations : public AbstractFilter
 
   protected:
     FindMisorientations();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
   private:
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;

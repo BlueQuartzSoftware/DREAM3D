@@ -149,6 +149,14 @@ int NeighborOrientationCorrelation::writeFilterParameters(AbstractFilterParamete
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void NeighborOrientationCorrelation::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void NeighborOrientationCorrelation::dataCheck()
 {
   setErrorCondition(0);

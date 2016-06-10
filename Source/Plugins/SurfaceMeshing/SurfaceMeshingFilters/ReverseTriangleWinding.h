@@ -125,11 +125,16 @@ class ReverseTriangleWinding : public SurfaceMeshFilter
 
   protected:
     ReverseTriangleWinding();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
   private:
     ReverseTriangleWinding(const ReverseTriangleWinding&); // Copy Constructor Not Implemented

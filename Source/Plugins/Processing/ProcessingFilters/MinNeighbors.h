@@ -163,11 +163,16 @@ class MinNeighbors : public AbstractFilter
 
   protected:
     MinNeighbors();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief assign_badpoints Coarsens those Features remaining in the structure after removing any Features

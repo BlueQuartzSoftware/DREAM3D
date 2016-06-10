@@ -162,11 +162,16 @@ class FindMicroTextureRegions : public AbstractFilter
 
   protected:
     FindMicroTextureRegions();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     void find_microtextureregions();
 

@@ -127,6 +127,14 @@ int SharedFeatureFaceFilter::writeFilterParameters(AbstractFilterParametersWrite
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void SharedFeatureFaceFilter::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void SharedFeatureFaceFilter::dataCheck()
 {
   setErrorCondition(0);

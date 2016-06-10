@@ -114,6 +114,14 @@ int NearestPointFuseRegularGrids::writeFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void NearestPointFuseRegularGrids::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void NearestPointFuseRegularGrids::dataCheck()
 {
   setErrorCondition(0);

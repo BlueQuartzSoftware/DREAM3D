@@ -149,11 +149,16 @@ class ExtractFlaggedFeatures : public AbstractFilter
 
   protected:
     ExtractFlaggedFeatures();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief find_feature_bounds Determines the bounding box for each Feature. The bounding box determines the Feature cropping.

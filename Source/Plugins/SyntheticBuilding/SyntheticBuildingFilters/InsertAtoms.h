@@ -165,11 +165,16 @@ class InsertAtoms : public AbstractFilter
 
   protected:
     InsertAtoms();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief assign_points Assigns Feature Ids to the generated 'atoms'

@@ -117,6 +117,14 @@ int AbaqusSurfaceMeshWriter::writeFilterParameters(AbstractFilterParametersWrite
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void AbaqusSurfaceMeshWriter::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void AbaqusSurfaceMeshWriter::dataCheck()
 {
   setErrorCondition(0);

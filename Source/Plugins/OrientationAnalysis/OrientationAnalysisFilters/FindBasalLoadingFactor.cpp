@@ -127,6 +127,14 @@ int FindBasalLoadingFactor::writeFilterParameters(AbstractFilterParametersWriter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindBasalLoadingFactor::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindBasalLoadingFactor::dataCheck()
 {
   setErrorCondition(0);

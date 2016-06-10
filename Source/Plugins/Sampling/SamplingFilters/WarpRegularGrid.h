@@ -176,11 +176,16 @@ class WarpRegularGrid : public AbstractFilter
 
   protected:
     WarpRegularGrid();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief determine_warped_coordinates Warps the supplied x and y coordinates by the supplied polynomial coefficients.

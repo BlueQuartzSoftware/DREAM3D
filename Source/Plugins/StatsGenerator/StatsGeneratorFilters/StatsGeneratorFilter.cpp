@@ -201,6 +201,14 @@ int StatsGeneratorFilter::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void StatsGeneratorFilter::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void StatsGeneratorFilter::dataCheck()
 {
   if (nullptr != m_StatsDataArray)

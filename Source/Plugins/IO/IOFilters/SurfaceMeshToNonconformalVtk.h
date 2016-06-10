@@ -162,11 +162,16 @@ class SurfaceMeshToNonconformalVtk : public AbstractFilter
 
   protected:
     SurfaceMeshToNonconformalVtk();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     int writeCellData(FILE* vtkFile, QMap<int32_t, int32_t>& featureIds);
 

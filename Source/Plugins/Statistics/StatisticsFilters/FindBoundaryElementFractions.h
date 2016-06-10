@@ -152,11 +152,16 @@ class FindBoundaryElementFractions : public AbstractFilter
 
   protected:
     FindBoundaryElementFractions();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief find_surface_voxel_fractions Computes the element-wise fraction of cells that belong to surfaces

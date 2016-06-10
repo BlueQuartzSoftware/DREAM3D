@@ -204,6 +204,14 @@ int FindOrientationFieldCurl::writeFilterParameters(AbstractFilterParametersWrit
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindOrientationFieldCurl::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindOrientationFieldCurl::dataCheck()
 {
   DataArrayPath tempPath;

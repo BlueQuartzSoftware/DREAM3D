@@ -147,11 +147,16 @@ class SampleSurfaceMesh : public AbstractFilter
 
   protected:
     SampleSurfaceMesh();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief generate_points Returns a VertexGeom object whose points correspond to the sampling

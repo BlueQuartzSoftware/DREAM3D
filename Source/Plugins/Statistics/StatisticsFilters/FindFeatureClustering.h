@@ -179,11 +179,16 @@ class FindFeatureClustering : public AbstractFilter
 
   protected:
     FindFeatureClustering();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief find_clustering Determines the Feature clustering

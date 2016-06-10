@@ -176,6 +176,14 @@ int FindFeatureClustering::writeFilterParameters(AbstractFilterParametersWriter*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindFeatureClustering::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindFeatureClustering::dataCheck()
 {
   setErrorCondition(0);

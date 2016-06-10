@@ -250,6 +250,14 @@ int FindProjectedImageStatistics::writeFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindProjectedImageStatistics::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindProjectedImageStatistics::dataCheck()
 {
   setErrorCondition(0);

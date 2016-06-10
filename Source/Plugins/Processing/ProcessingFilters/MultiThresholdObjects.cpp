@@ -116,6 +116,14 @@ int MultiThresholdObjects::writeFilterParameters(AbstractFilterParametersWriter*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void MultiThresholdObjects::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MultiThresholdObjects::dataCheck()
 {
   setErrorCondition(0);

@@ -131,6 +131,14 @@ int AbaqusHexahedronWriter::writeFilterParameters(AbstractFilterParametersWriter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void AbaqusHexahedronWriter::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void AbaqusHexahedronWriter::dataCheck()
 {
   setErrorCondition(0);

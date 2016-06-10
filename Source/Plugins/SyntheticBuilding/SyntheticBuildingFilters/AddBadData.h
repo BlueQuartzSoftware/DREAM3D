@@ -158,11 +158,16 @@ class AddBadData : public AbstractFilter
 
   protected:
     AddBadData();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief add_noise Adds "noise" to all arrays that belong to a particular Attribute Matrix.

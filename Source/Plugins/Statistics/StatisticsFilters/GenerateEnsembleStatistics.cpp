@@ -364,6 +364,14 @@ int GenerateEnsembleStatistics::writeFilterParameters(AbstractFilterParametersWr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void GenerateEnsembleStatistics::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::dataCheck()
 {
   setErrorCondition(0);

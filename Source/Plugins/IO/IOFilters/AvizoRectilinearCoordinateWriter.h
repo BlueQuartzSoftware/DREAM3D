@@ -171,11 +171,16 @@ class AvizoRectilinearCoordinateWriter : public AbstractFilter
 
   protected:
     AvizoRectilinearCoordinateWriter();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief Generates the Avizo Header for this file

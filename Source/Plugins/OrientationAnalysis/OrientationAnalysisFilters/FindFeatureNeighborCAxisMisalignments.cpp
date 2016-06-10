@@ -157,6 +157,14 @@ int FindFeatureNeighborCAxisMisalignments::writeFilterParameters(AbstractFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindFeatureNeighborCAxisMisalignments::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindFeatureNeighborCAxisMisalignments::dataCheck()
 {
   setErrorCondition(0);

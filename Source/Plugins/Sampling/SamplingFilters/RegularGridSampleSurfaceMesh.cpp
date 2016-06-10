@@ -141,6 +141,14 @@ int RegularGridSampleSurfaceMesh::writeFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void RegularGridSampleSurfaceMesh::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void RegularGridSampleSurfaceMesh::dataCheck()
 {
   setErrorCondition(0);

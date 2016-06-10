@@ -153,6 +153,14 @@ int TriangleCentroidFilter::writeFilterParameters(AbstractFilterParametersWriter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void TriangleCentroidFilter::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void TriangleCentroidFilter::dataCheck()
 {
   setErrorCondition(0);

@@ -161,11 +161,16 @@ class SineParamsSegmentFeatures : public SegmentFeatures
     virtual void preflight();
   protected:
     SineParamsSegmentFeatures();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     virtual int64_t getSeed(int32_t gnum, int64_t nextSeed);
     virtual bool determineGrouping(int64_t referencepoint, int64_t neighborpoint, int32_t gnum);

@@ -177,11 +177,16 @@ class EstablishMatrixPhase : public AbstractFilter
 
   protected:
     EstablishMatrixPhase();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief establish_matrix Fills a synthetic volume with the correct volume fraction

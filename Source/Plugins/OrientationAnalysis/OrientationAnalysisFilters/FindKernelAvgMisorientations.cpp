@@ -150,6 +150,14 @@ int FindKernelAvgMisorientations::writeFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindKernelAvgMisorientations::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindKernelAvgMisorientations::dataCheck()
 {
   setErrorCondition(0);

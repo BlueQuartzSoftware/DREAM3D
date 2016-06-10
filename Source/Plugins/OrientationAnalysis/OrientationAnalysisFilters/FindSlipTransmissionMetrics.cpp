@@ -156,6 +156,14 @@ int FindSlipTransmissionMetrics::writeFilterParameters(AbstractFilterParametersW
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindSlipTransmissionMetrics::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindSlipTransmissionMetrics::dataCheck()
 {
   setErrorCondition(0);

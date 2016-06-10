@@ -155,11 +155,16 @@ class FillBadData : public AbstractFilter
 
   protected:
     FillBadData();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
   private:
     bool* m_AlreadyChecked;

@@ -203,6 +203,14 @@ int FindLocalAverageCAxisMisalignments::writeFilterParameters(AbstractFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindLocalAverageCAxisMisalignments::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindLocalAverageCAxisMisalignments::dataCheck()
 {
   DataArrayPath tempPath;

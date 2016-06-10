@@ -161,11 +161,16 @@ class CAxisSegmentFeatures : public SegmentFeatures
 
   protected:
     CAxisSegmentFeatures();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief getSeed Reimplemented from @see SegmentFeatures class

@@ -359,6 +359,14 @@ int FindEuclideanDistMap::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindEuclideanDistMap::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindEuclideanDistMap::dataCheck()
 {
   setErrorCondition(0);

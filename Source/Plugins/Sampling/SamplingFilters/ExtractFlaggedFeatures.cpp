@@ -119,6 +119,14 @@ int ExtractFlaggedFeatures::writeFilterParameters(AbstractFilterParametersWriter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ExtractFlaggedFeatures::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ExtractFlaggedFeatures::dataCheck()
 {
   setErrorCondition(0);

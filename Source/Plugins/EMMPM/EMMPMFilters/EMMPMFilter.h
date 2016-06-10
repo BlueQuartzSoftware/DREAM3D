@@ -187,11 +187,16 @@ class EMMPMFilter : public AbstractFilter
 
   protected:
     EMMPMFilter();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief segment Performs the EMMPM segmentation routine

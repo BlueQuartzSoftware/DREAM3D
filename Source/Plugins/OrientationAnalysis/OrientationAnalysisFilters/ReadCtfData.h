@@ -206,9 +206,14 @@ class ReadCtfData : public AbstractFilter
     ReadCtfData();
 
     /**
-    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-    */
+     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+     */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
 
     /**
     * @brief copyRawEbsdData Reads the Ang file and puts the data into the data container

@@ -116,6 +116,14 @@ int FindFeatureCentroids::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindFeatureCentroids::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindFeatureCentroids::dataCheck()
 {
   setErrorCondition(0);

@@ -149,11 +149,16 @@ class FindSurfaceFeatures : public AbstractFilter
 
   protected:
     FindSurfaceFeatures();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
     /**
      * @brief find_surfacefeatures Determines which Features intersect the outer surface of a 3D volume.
      */

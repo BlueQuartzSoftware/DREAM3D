@@ -118,6 +118,14 @@ int FeatureDataCSVWriter::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FeatureDataCSVWriter::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FeatureDataCSVWriter::dataCheck()
 {
   setErrorCondition(0);

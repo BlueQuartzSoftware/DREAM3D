@@ -142,6 +142,14 @@ void BinaryNodesTrianglesReader::updateFaceInstancePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void BinaryNodesTrianglesReader::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void BinaryNodesTrianglesReader::dataCheck()
 {
   if (getBinaryNodesFile().isEmpty() == true)

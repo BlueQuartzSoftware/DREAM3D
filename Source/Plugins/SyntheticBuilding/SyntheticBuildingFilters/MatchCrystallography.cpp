@@ -238,6 +238,14 @@ int MatchCrystallography::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void MatchCrystallography::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MatchCrystallography::dataCheck()
 {
   setErrorCondition(0);

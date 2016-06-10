@@ -118,6 +118,14 @@ int AlignSectionsFeatureCentroid::writeFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void AlignSectionsFeatureCentroid::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void AlignSectionsFeatureCentroid::dataCheck()
 {
   setErrorCondition(0);

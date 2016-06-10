@@ -150,6 +150,14 @@ int FindFeatureReferenceCAxisMisorientations::writeFilterParameters(AbstractFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindFeatureReferenceCAxisMisorientations::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindFeatureReferenceCAxisMisorientations::dataCheck()
 {
   setErrorCondition(0);

@@ -181,6 +181,14 @@ int TriangleDihedralAngleFilter::writeFilterParameters(AbstractFilterParametersW
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void TriangleDihedralAngleFilter::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void TriangleDihedralAngleFilter::dataCheck()
 {
   setErrorCondition(0);

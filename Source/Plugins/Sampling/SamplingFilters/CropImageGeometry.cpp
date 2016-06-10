@@ -172,6 +172,14 @@ int CropImageGeometry::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void CropImageGeometry::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void CropImageGeometry::dataCheck()
 {
   if(getErrorCondition() < 0) { return; }

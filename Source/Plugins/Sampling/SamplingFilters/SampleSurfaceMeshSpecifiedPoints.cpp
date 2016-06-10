@@ -119,6 +119,14 @@ void SampleSurfaceMeshSpecifiedPoints::updateVertexInstancePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void SampleSurfaceMeshSpecifiedPoints::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void SampleSurfaceMeshSpecifiedPoints::dataCheck()
 {
   setErrorCondition(0);

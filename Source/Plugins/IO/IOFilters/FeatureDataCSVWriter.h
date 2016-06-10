@@ -154,11 +154,16 @@ class FeatureDataCSVWriter : public AbstractFilter
 
   protected:
     FeatureDataCSVWriter();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
   private:
     FeatureDataCSVWriter(const FeatureDataCSVWriter&); // Copy Constructor Not Implemented

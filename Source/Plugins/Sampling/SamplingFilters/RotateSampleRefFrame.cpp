@@ -236,6 +236,14 @@ int RotateSampleRefFrame::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void RotateSampleRefFrame::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void RotateSampleRefFrame::dataCheck()
 {
   setErrorCondition(0);

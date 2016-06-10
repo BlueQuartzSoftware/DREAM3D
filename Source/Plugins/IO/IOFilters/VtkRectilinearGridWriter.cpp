@@ -263,6 +263,14 @@ int VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWrit
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void VtkRectilinearGridWriter::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void VtkRectilinearGridWriter::dataCheck()
 {
   setErrorCondition(0);

@@ -122,6 +122,14 @@ int AvizoUniformCoordinateWriter::writeFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void AvizoUniformCoordinateWriter::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void AvizoUniformCoordinateWriter::dataCheck()
 {
   setErrorCondition(0);

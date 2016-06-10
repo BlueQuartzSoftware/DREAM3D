@@ -167,6 +167,14 @@ int FindEllipsoidError::writeFilterParameters(AbstractFilterParametersWriter* wr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindEllipsoidError::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindEllipsoidError::dataCheck()
 {
   DataArrayPath tempPath;

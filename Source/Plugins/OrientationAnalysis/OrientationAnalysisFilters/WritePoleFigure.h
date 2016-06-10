@@ -185,11 +185,16 @@ class WritePoleFigure : public AbstractFilter
 
   protected:
     WritePoleFigure();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
     /**
      * @brief generateImagePath Generates the path to write the image

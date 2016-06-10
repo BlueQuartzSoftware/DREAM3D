@@ -131,11 +131,16 @@ class GenerateGeometryConnectivity : public SurfaceMeshFilter
 
   protected:
     GenerateGeometryConnectivity();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
   private:
     GenerateGeometryConnectivity(const GenerateGeometryConnectivity&); // Copy Constructor Not Implemented

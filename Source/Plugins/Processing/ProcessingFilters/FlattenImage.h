@@ -152,11 +152,16 @@ class FlattenImage : public AbstractFilter
 
   protected:
     FlattenImage();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
   private:
     DEFINE_DATAARRAY_VARIABLE(uint8_t, ImageData)

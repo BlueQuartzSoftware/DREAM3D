@@ -124,60 +124,6 @@ InsertPrecipitatePhases::~InsertPrecipitatePhases()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void InsertPrecipitatePhases::initialize()
-{
-  m_FirstPrecipitateFeature  = 1;
-  m_SizeX = m_SizeY = m_SizeZ = 0.0f;
-  m_XRes = m_YRes = m_ZRes = m_TotalVol = m_UseableTotalVol = 0.0f;
-  m_TotalVol = 0.0f;
-  m_UseableTotalVol = 0.0f;
-  m_XPoints = m_YPoints = m_ZPoints = m_TotalPoints = 0;
-  m_TotalPoints = 0;
-
-  m_ClusteringList = NeighborList<float>::NullPointer();
-
-  m_ShapeOps = ShapeOps::getShapeOpsQVector();
-  m_UnknownShapeOps = ShapeOps::NullPointer();
-  m_CubicOctohedronOps = ShapeOps::NullPointer();
-  m_CylinderOps = ShapeOps::NullPointer();
-  m_EllipsoidOps = ShapeOps::NullPointer();
-  m_SuperEllipsoidOps = ShapeOps::NullPointer();
-  m_OrthoOps = OrthoRhombicOps::New();
-
-  m_Neighbors = NULL;
-  m_StatsDataArray = StatsDataArray::NullPointer();
-
-  m_ColumnList.clear();
-  m_RowList.clear();
-  m_PlaneList.clear();
-  m_PointsToAdd.clear();
-  m_PointsToRemove.clear();
-
-  m_Seed = QDateTime::currentMSecsSinceEpoch();
-
-  m_FeatureSizeDist.clear();
-  m_SimFeatureSizeDist.clear();
-  m_RdfTargetDist.clear();
-  m_RdfCurrentDist.clear();
-  m_RdfCurrentDistNorm.clear();
-  m_RandomCentroids.clear();
-  m_RdfRandom.clear();
-  m_FeatureSizeDistStep.clear();
-  m_GSizes.clear();
-
-  m_AvailablePointsCount = 0;
-  m_currentRDFerror = m_oldRDFerror = 0.0f;
-  m_CurrentSizeDistError = m_OldSizeDistError = 0.0f;
-  m_rdfMax = m_rdfMin = m_StepSize = 0.0f;
-  m_numRDFbins = 0;
-
-  m_PrecipitatePhases.clear();
-  m_PrecipitatePhaseFractions.clear();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::setupFilterParameters()
 {
   FilterParameterVector parameters;
@@ -321,6 +267,60 @@ void InsertPrecipitatePhases::updateFeatureInstancePointers()
   { m_AxisEulerAngles = m_AxisEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if( NULL != m_AxisLengthsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_AxisLengths = m_AxisLengthsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::initialize()
+{
+  m_FirstPrecipitateFeature  = 1;
+  m_SizeX = m_SizeY = m_SizeZ = 0.0f;
+  m_XRes = m_YRes = m_ZRes = m_TotalVol = m_UseableTotalVol = 0.0f;
+  m_TotalVol = 0.0f;
+  m_UseableTotalVol = 0.0f;
+  m_XPoints = m_YPoints = m_ZPoints = m_TotalPoints = 0;
+  m_TotalPoints = 0;
+
+  m_ClusteringList = NeighborList<float>::NullPointer();
+
+  m_ShapeOps = ShapeOps::getShapeOpsQVector();
+  m_UnknownShapeOps = ShapeOps::NullPointer();
+  m_CubicOctohedronOps = ShapeOps::NullPointer();
+  m_CylinderOps = ShapeOps::NullPointer();
+  m_EllipsoidOps = ShapeOps::NullPointer();
+  m_SuperEllipsoidOps = ShapeOps::NullPointer();
+  m_OrthoOps = OrthoRhombicOps::New();
+
+  m_Neighbors = NULL;
+  m_StatsDataArray = StatsDataArray::NullPointer();
+
+  m_ColumnList.clear();
+  m_RowList.clear();
+  m_PlaneList.clear();
+  m_PointsToAdd.clear();
+  m_PointsToRemove.clear();
+
+  m_Seed = QDateTime::currentMSecsSinceEpoch();
+
+  m_FeatureSizeDist.clear();
+  m_SimFeatureSizeDist.clear();
+  m_RdfTargetDist.clear();
+  m_RdfCurrentDist.clear();
+  m_RdfCurrentDistNorm.clear();
+  m_RandomCentroids.clear();
+  m_RdfRandom.clear();
+  m_FeatureSizeDistStep.clear();
+  m_GSizes.clear();
+
+  m_AvailablePointsCount = 0;
+  m_currentRDFerror = m_oldRDFerror = 0.0f;
+  m_CurrentSizeDistError = m_OldSizeDistError = 0.0f;
+  m_rdfMax = m_rdfMin = m_StepSize = 0.0f;
+  m_numRDFbins = 0;
+
+  m_PrecipitatePhases.clear();
+  m_PrecipitatePhaseFractions.clear();
 }
 
 // -----------------------------------------------------------------------------

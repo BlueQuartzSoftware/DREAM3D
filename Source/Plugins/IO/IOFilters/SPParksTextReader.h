@@ -162,9 +162,14 @@ class SPParksTextReader : public FileReader
     virtual int32_t readFile();
 
     /**
-     * @brief readFile Reimplemented from @see FileReader class
+     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
 
     /**
      * @brief updateCellInstancePointers Updates raw cell pointers

@@ -131,6 +131,14 @@ int SurfaceMeshToNonconformalVtk::writeFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void SurfaceMeshToNonconformalVtk::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void SurfaceMeshToNonconformalVtk::dataCheck()
 {
   setErrorCondition(0);

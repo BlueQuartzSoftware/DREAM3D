@@ -166,6 +166,14 @@ int TriangleNormalFilter::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void TriangleNormalFilter::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void TriangleNormalFilter::dataCheck()
 {
   setErrorCondition(0);

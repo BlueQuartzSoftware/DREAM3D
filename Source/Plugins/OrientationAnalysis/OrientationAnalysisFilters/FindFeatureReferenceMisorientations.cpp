@@ -185,6 +185,14 @@ int FindFeatureReferenceMisorientations::writeFilterParameters(AbstractFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindFeatureReferenceMisorientations::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindFeatureReferenceMisorientations::dataCheck()
 {
   setErrorCondition(0);

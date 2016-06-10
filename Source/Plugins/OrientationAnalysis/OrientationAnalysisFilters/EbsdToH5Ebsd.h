@@ -171,11 +171,16 @@ class EbsdToH5Ebsd : public AbstractFilter
 
   protected:
     EbsdToH5Ebsd();
-
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
     void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
 
   private:
     EbsdToH5Ebsd(const EbsdToH5Ebsd&); // Copy Constructor Not Implemented

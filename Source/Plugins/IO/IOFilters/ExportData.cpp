@@ -207,6 +207,14 @@ int ExportData::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ExportData::initialize()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ExportData::dataCheck()
 {
   // Make sure the weak pointer vector is cleared before we begin...
