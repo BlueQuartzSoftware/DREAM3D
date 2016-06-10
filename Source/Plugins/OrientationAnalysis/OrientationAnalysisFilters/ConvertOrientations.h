@@ -157,6 +157,7 @@ class ConvertOrientations : public AbstractFilter
 
   protected:
     ConvertOrientations();
+
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */

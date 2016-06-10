@@ -265,7 +265,7 @@ int VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWrit
 // -----------------------------------------------------------------------------
 void VtkRectilinearGridWriter::initialize()
 {
-
+  m_SelectedWeakPtrVector.clear();
 }
 
 // -----------------------------------------------------------------------------
@@ -274,7 +274,7 @@ void VtkRectilinearGridWriter::initialize()
 void VtkRectilinearGridWriter::dataCheck()
 {
   setErrorCondition(0);
-
+  initialize();
   if(m_OutputFile.isEmpty() == true)
   {
     QString ss = QObject::tr("The output file must be set before executing this filter.");

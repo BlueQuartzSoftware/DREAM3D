@@ -154,7 +154,8 @@ int FindMisorientations::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 void FindMisorientations::initialize()
 {
-
+  m_NeighborList = NeighborList<int32_t>::NullPointer();
+  m_MisorientationList = NeighborList<float>::NullPointer();
 }
 
 // -----------------------------------------------------------------------------
@@ -163,6 +164,8 @@ void FindMisorientations::initialize()
 void FindMisorientations::dataCheck()
 {
   setErrorCondition(0);
+  initialize();
+
   DataArrayPath tempPath;
 
   QVector<size_t> cDims(1, 4);

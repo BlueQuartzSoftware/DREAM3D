@@ -178,6 +178,7 @@ class InitializeSyntheticVolume : public AbstractFilter
 
   protected:
     InitializeSyntheticVolume();
+
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */

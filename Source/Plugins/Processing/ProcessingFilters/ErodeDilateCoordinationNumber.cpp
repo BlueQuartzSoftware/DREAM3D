@@ -120,7 +120,7 @@ int ErodeDilateCoordinationNumber::writeFilterParameters(AbstractFilterParameter
 // -----------------------------------------------------------------------------
 void ErodeDilateCoordinationNumber::initialize()
 {
-
+  m_Neighbors = nullptr;
 }
 
 // -----------------------------------------------------------------------------
@@ -129,6 +129,7 @@ void ErodeDilateCoordinationNumber::initialize()
 void ErodeDilateCoordinationNumber::dataCheck()
 {
   setErrorCondition(0);
+  initialize();
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 

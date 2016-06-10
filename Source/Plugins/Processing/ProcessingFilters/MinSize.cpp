@@ -143,7 +143,7 @@ int MinSize::writeFilterParameters(AbstractFilterParametersWriter* writer, int i
 // -----------------------------------------------------------------------------
 void MinSize::initialize()
 {
-
+  m_Neighbors = nullptr;
 }
 
 // -----------------------------------------------------------------------------
@@ -152,6 +152,7 @@ void MinSize::initialize()
 void MinSize::dataCheck()
 {
   setErrorCondition(0);
+  initialize();
 
   QVector<DataArrayPath> dataArrayPaths;
 

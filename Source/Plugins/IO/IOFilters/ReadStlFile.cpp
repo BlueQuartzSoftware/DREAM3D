@@ -193,7 +193,12 @@ void ReadStlFile::updateFaceInstancePointers()
 // -----------------------------------------------------------------------------
 void ReadStlFile::initialize()
 {
-
+  m_minXcoord = std::numeric_limits<float>::max();
+  m_maxXcoord = -std::numeric_limits<float>::max();
+  m_minYcoord = std::numeric_limits<float>::max();
+  m_maxYcoord = -std::numeric_limits<float>::max();
+  m_minZcoord = std::numeric_limits<float>::max();
+  m_maxZcoord = -std::numeric_limits<float>::max();
 }
 
 // -----------------------------------------------------------------------------
@@ -201,6 +206,7 @@ void ReadStlFile::initialize()
 // -----------------------------------------------------------------------------
 void ReadStlFile::dataCheck()
 {
+  initialize();
   setErrorCondition(0);
 
   DataArrayPath tempPath;

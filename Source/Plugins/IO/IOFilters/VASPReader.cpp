@@ -141,7 +141,14 @@ void VASPReader::updateVertexInstancePointers()
 // -----------------------------------------------------------------------------
 void VASPReader::initialize()
 {
-
+  if(m_InStream.isOpen())
+  {
+    m_InStream.close();
+  }
+  latticeConstant = 0.0f;
+  for(size_t i = 0; i < 3; i++) { for(size_t j=0;j<3;j++) { latticeVectors[i][j] = 0.0f;} }
+  atomNumbers.clear();
+  totalAtoms = -1;
 }
 
 // -----------------------------------------------------------------------------
@@ -151,6 +158,7 @@ void VASPReader::dataCheck()
 {
   DataArrayPath tempPath;
   setErrorCondition(0);
+  initialize();
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVertexDataContainerName());
   if(getErrorCondition() < 0) { return; }
   QVector<size_t> tDims (1, 0);
@@ -185,11 +193,6 @@ void VASPReader::dataCheck()
   m_AtomTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_AtomTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_AtomTypes = m_AtomTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
-  if (m_InStream.isOpen() == true)
-  {
-    m_InStream.close();
-  }
 
   if (getInputFile().isEmpty() == false && fi.exists() == true)
   {

@@ -166,7 +166,7 @@ class AlignSectionsMisorientation : public AlignSections
 
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
-    uint64_t Seed;
+    uint64_t m_RandomSeed;
 
     AlignSectionsMisorientation(const AlignSectionsMisorientation&); // Copy Constructor Not Implemented
     void operator=(const AlignSectionsMisorientation&); // Operator '=' Not Implemented

@@ -213,8 +213,8 @@ class GroupMicroTextureRegions : public GroupFeatures
     DEFINE_DATAARRAY_VARIABLE(int32_t, CellParentIds)
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureParentIds)
 
-    float avgCaxes[3];
-    float caxisTolerance;
+    float m_AvgCAxes[3];
+    float m_CAxisToleranceRad;
 
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 

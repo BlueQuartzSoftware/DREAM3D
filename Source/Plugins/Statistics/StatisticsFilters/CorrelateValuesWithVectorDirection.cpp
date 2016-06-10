@@ -122,7 +122,10 @@ int CorrelateValuesWithVectorDirection::writeFilterParameters(AbstractFilterPara
 // -----------------------------------------------------------------------------
 void CorrelateValuesWithVectorDirection::initialize()
 {
-
+  m_LambertProj = DoubleArrayType::NullPointer();
+  m_MaxCoord = sqrt(SIMPLib::Constants::k_2Pi) / 2.0;
+  m_Dimension = 72;
+  m_StepSize = sqrt(SIMPLib::Constants::k_2Pi) / 72.0;
 }
 
 // -----------------------------------------------------------------------------

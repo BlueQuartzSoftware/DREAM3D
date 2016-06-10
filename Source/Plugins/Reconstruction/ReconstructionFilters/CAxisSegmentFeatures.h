@@ -197,7 +197,7 @@ class CAxisSegmentFeatures : public SegmentFeatures
     std::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;
     std::shared_ptr<Generator> m_NumberGenerator;
 
-    float misoTolerance;
+    float m_MisoTolerance;
 
     /**
      * @brief randomizeGrainIds Randomizes Feature Ids

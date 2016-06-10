@@ -172,6 +172,7 @@ class SurfaceMeshToVtk : public AbstractFilter
 
   protected:
     SurfaceMeshToVtk();
+
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
@@ -182,9 +183,18 @@ class SurfaceMeshToVtk : public AbstractFilter
      */
     void initialize();
 
-
+    /**
+     * @brief writeCellData
+     * @param vtkFile
+     * @return
+     */
     int writeCellData(FILE* vtkFile);
 
+    /**
+     * @brief writePointData
+     * @param vtkFile
+     * @return
+     */
     int writePointData(FILE* vtkFile);
 
   private:

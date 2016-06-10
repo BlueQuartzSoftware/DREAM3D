@@ -138,7 +138,7 @@ int ImportASCIIData::writeFilterParameters(AbstractFilterParametersWriter* write
 // -----------------------------------------------------------------------------
 void ImportASCIIData::initialize()
 {
-
+  m_ASCIIArrayMap.clear();
 }
 
 // -----------------------------------------------------------------------------
@@ -284,6 +284,7 @@ void ImportASCIIData::execute()
   setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
+  initialize();
 
   ASCIIWizardData wizardData = getWizardData();
   QString inputFilePath = wizardData.inputFilePath;

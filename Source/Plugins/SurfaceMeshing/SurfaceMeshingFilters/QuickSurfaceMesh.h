@@ -182,8 +182,8 @@ class QuickSurfaceMesh : public AbstractFilter
     DEFINE_DATAARRAY_VARIABLE(int32_t, FaceLabels)
     DEFINE_DATAARRAY_VARIABLE(int8_t, NodeTypes)
   
-    QVector<IDataArray::WeakPointer> m_SelectedWeakPtrVector;
-    QVector<IDataArray::WeakPointer> m_CreatedWeakPtrVector;
+    std::vector<IDataArray::WeakPointer> m_SelectedWeakPtrVector;
+    std::vector<IDataArray::WeakPointer> m_CreatedWeakPtrVector;
 
     /**
      * @brief updateFaceInstancePointers Updates raw Face pointers

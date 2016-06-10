@@ -203,6 +203,11 @@ void EstablishMatrixPhase::updateFeatureInstancePointers()
 // -----------------------------------------------------------------------------
 void EstablishMatrixPhase::initialize()
 {
+  firstMatrixFeature = 1;
+  sizex = sizey = sizez = totalvol = 0.0f;
+
+  m_StatsDataArray = StatsDataArray::NullPointer();
+
 
 }
 
@@ -212,6 +217,7 @@ void EstablishMatrixPhase::initialize()
 void EstablishMatrixPhase::dataCheck()
 {
   setErrorCondition(0);
+  initialize();
   DataArrayPath tempPath;
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getOutputCellAttributeMatrixPath().getDataContainerName());

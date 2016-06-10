@@ -159,7 +159,7 @@ int INLWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int
 // -----------------------------------------------------------------------------
 void INLWriter::initialize()
 {
-
+  m_MaterialNamePtr = StringDataArray::NullPointer();
 }
 
 // -----------------------------------------------------------------------------

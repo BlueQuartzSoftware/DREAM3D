@@ -165,7 +165,6 @@ class FlattenImage : public AbstractFilter
 
   private:
     DEFINE_DATAARRAY_VARIABLE(uint8_t, ImageData)
-
     DEFINE_DATAARRAY_VARIABLE(uint8_t, FlatImageData)
 
     FlattenImage(const FlattenImage&); // Copy Constructor Not Implemented

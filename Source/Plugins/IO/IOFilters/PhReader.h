@@ -151,6 +151,7 @@ class PhReader : public FileReader
     virtual void preflight();
 
   public slots:
+
     /**
      * @brief flushCache Clears the input file cache
      */

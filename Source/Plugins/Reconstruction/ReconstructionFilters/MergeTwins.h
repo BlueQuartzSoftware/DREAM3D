@@ -197,7 +197,7 @@ class MergeTwins : public GroupFeatures
 
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
-    float axisTolerance;
+    float m_AxisToleranceRad;
 
     /**
      * @brief updateFeatureInstancePointers Updates raw Feature pointers

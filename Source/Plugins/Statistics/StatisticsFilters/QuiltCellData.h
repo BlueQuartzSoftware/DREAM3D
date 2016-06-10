@@ -172,6 +172,7 @@ class QuiltCellData : public AbstractFilter
 
   protected:
     QuiltCellData();
+
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */

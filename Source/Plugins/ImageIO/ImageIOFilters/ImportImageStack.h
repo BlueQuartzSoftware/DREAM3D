@@ -184,7 +184,6 @@ class ImportImageStack : public AbstractFilter
      */
     void initialize();
 
-
     /**
     * @brief readBounds Reads the bounds for voxels from the specified file
     */

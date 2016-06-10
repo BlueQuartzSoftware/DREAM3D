@@ -455,9 +455,28 @@ int FindGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FindGBCD::initialize()
+{
+  m_GbcdDeltasArray = FloatArrayType::NullPointer();
+  m_GbcdSizesArray = Int32ArrayType::NullPointer();
+  m_GbcdLimitsArray = FloatArrayType::NullPointer();
+  m_GbcdBinsArray = Int32ArrayType::NullPointer();
+  m_GbcdHemiCheckArray = BoolArrayType::NullPointer();
+
+  m_GbcdDeltas = nullptr;
+  m_GbcdSizes = nullptr;
+  m_GbcdLimits = nullptr;
+  m_GbcdBins = nullptr;
+  m_HemiCheck = nullptr;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindGBCD::dataCheckSurfaceMesh()
 {
   setErrorCondition(0);
+  initialize();
 
   DataArrayPath tempPath;
 

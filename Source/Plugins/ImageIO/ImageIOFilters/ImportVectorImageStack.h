@@ -177,6 +177,7 @@ class ImportVectorImageStack : public AbstractFilter
 
   protected:
     ImportVectorImageStack();
+
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
@@ -187,7 +188,9 @@ class ImportVectorImageStack : public AbstractFilter
      */
     void initialize();
 
-
+    /**
+     * @brief generateFileList
+     */
     void generateFileList();
 
   private:

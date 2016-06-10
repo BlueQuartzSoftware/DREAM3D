@@ -176,7 +176,7 @@ class AlignSectionsMutualInformation : public AlignSections
     QVector<SpaceGroupOps::Pointer> m_OrientationOps;
   
     Int32ArrayType::Pointer m_MIFeaturesPtr;
-    uint64_t m_Seed;
+    uint64_t m_RandomSeed;
 
     AlignSectionsMutualInformation(const AlignSectionsMutualInformation&); // Copy Constructor Not Implemented
     void operator=(const AlignSectionsMutualInformation&); // Operator '=' Not Implemented

@@ -121,7 +121,7 @@ void SampleSurfaceMeshSpecifiedPoints::updateVertexInstancePointers()
 // -----------------------------------------------------------------------------
 void SampleSurfaceMeshSpecifiedPoints::initialize()
 {
-
+  m_NumPoints = 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -130,7 +130,7 @@ void SampleSurfaceMeshSpecifiedPoints::initialize()
 void SampleSurfaceMeshSpecifiedPoints::dataCheck()
 {
   setErrorCondition(0);
-
+  initialize();
   DataArrayPath tempPath;
 
   if (true == m_InputFilePath.isEmpty())

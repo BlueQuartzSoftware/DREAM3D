@@ -74,10 +74,6 @@ SPParksTextReader::SPParksTextReader() :
   m_Resolution.y = 1.0f;
   m_Resolution.z = 1.0f;
 
-  m_Dims[0] = 0;
-  m_Dims[1] = 0;
-  m_Dims[2] = 0;
-
   setupFilterParameters();
 }
 
@@ -155,7 +151,11 @@ void SPParksTextReader::updateCellInstancePointers()
 // -----------------------------------------------------------------------------
 void SPParksTextReader::initialize()
 {
-
+  m_NamePointerMap.clear();
+  if(m_InStream.isOpen())
+  {
+    m_InStream.close();
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -164,6 +164,7 @@ void SPParksTextReader::initialize()
 void SPParksTextReader::dataCheck()
 {
   setErrorCondition(0);
+  initialize();
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVolumeDataContainerName());
   if(getErrorCondition() < 0) { return; }

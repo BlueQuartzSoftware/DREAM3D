@@ -140,7 +140,7 @@ int FindNeighborhoods::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::initialize()
 {
-
+  m_NeighborhoodList = NeighborList<int32_t>::NullPointer();
 }
 
 // -----------------------------------------------------------------------------
@@ -149,6 +149,7 @@ void FindNeighborhoods::initialize()
 void FindNeighborhoods::dataCheck()
 {
   setErrorCondition(0);
+  initialize();
   DataArrayPath tempPath;
 
   QVector<DataArrayPath> dataArrayPaths;

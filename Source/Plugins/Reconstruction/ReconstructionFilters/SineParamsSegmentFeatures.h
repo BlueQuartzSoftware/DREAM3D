@@ -209,7 +209,7 @@ class SineParamsSegmentFeatures : public SegmentFeatures
      */
     void updateFeatureInstancePointers();
 
-    bool missingGoodVoxels;
+    bool m_MissingGoodVoxels;
 
     SineParamsSegmentFeatures(const SineParamsSegmentFeatures&); // Copy Constructor Not Implemented
     void operator=(const SineParamsSegmentFeatures&); // Operator '=' Not Implemented

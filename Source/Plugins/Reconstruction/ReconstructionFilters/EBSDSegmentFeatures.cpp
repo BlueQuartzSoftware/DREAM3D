@@ -78,7 +78,7 @@ EBSDSegmentFeatures::EBSDSegmentFeatures() :
 {
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
-  misoTolerance = 0.0f;
+  m_MisoTolerance = 0.0f;
 
   setupFilterParameters();
 }
@@ -366,7 +366,7 @@ bool EBSDSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t neig
     {
       w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
     }
-    if (w < misoTolerance)
+    if (w < m_MisoTolerance)
     {
       group = true;
       m_FeatureIds[neighborpoint] = gnum;
@@ -407,7 +407,7 @@ void EBSDSegmentFeatures::execute()
   updateFeatureInstancePointers();
 
   // Convert user defined tolerance to radians.
-  misoTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_Pi / 180.0f;
+  m_MisoTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_Pi / 180.0f;
 
   // Generate the random voxel indices that will be used for the seed points to start a new grain growth/agglomeration
   const int64_t rangeMin = 0;

@@ -170,7 +170,6 @@ class FindAvgCAxes : public AbstractFilter
 
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_DATAARRAY_VARIABLE(float, Quats)
-
     DEFINE_DATAARRAY_VARIABLE(float, AvgCAxes)
 
     FindAvgCAxes(const FindAvgCAxes&); // Copy Constructor Not Implemented

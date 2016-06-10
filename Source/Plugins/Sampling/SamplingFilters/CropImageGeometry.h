@@ -190,6 +190,7 @@ class CropImageGeometry : public AbstractFilter
 
   protected:
     CropImageGeometry();
+
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */

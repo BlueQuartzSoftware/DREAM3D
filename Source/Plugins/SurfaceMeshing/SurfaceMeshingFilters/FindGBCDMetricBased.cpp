@@ -74,11 +74,11 @@
 // Include the MOC generated file for this class
 #include "moc_FindGBCDMetricBased.cpp"
 
-const float FindGBCDMetricBased::RESOL_CHOICES[FindGBCDMetricBased::NUM_RESOL_CHOICES][2] = {
+const float FindGBCDMetricBased::k_ResolutionChoices[FindGBCDMetricBased::k_NumberResolutionChoices][2] = {
   { 3.0f, 7.0f }, { 5.0f, 5.0f }, { 5.0f, 7.0f }, { 5.0f, 8.0f }, { 6.0f, 7.0f }, { 7.0f, 7.0f }, { 8.0f, 8.0f }
 }; // { for misorient., for planes }
 
-const double FindGBCDMetricBased::BALL_VOLS_M3M[FindGBCDMetricBased::NUM_RESOL_CHOICES] = {
+const double FindGBCDMetricBased::k_BallVolumesM3M[FindGBCDMetricBased::k_NumberResolutionChoices] = {
   0.0000641361, 0.000139158, 0.000287439, 0.00038019, 0.000484151, 0.000747069, 0.00145491
 };
 
@@ -437,7 +437,7 @@ class ProbeDistrib
 FindGBCDMetricBased::FindGBCDMetricBased() :
   SurfaceMeshFilter(),
   m_PhaseOfInterest(1),
-  m_ChosenLimitDists(FindGBCDMetricBased::DEFAULT_RESOL_CHOICE),
+  m_ChosenLimitDists(FindGBCDMetricBased::k_DefaultResolutionChoice),
   m_NumSamplPts(3000),
   m_ExcludeTripleLines(false),
   m_DistOutputFile(""),
@@ -490,14 +490,14 @@ void FindGBCDMetricBased::setupFilterParameters()
 
     QVector<QString> choices;
 
-    for (int choiceIdx = 0; choiceIdx < FindGBCDMetricBased::NUM_RESOL_CHOICES; choiceIdx++)
+    for (int choiceIdx = 0; choiceIdx < FindGBCDMetricBased::k_NumberResolutionChoices; choiceIdx++)
     {
       QString misorResStr;
       QString planeResStr;
       QString degSymbol = QChar(0x00B0);
 
-      misorResStr.setNum(FindGBCDMetricBased::RESOL_CHOICES[choiceIdx][0], 'f', 0);
-      planeResStr.setNum(FindGBCDMetricBased::RESOL_CHOICES[choiceIdx][1], 'f', 0);
+      misorResStr.setNum(FindGBCDMetricBased::k_ResolutionChoices[choiceIdx][0], 'f', 0);
+      planeResStr.setNum(FindGBCDMetricBased::k_ResolutionChoices[choiceIdx][1], 'f', 0);
 
       choices.push_back(misorResStr + degSymbol + " for Misorientations; " + planeResStr + degSymbol + " for Plane Inclinations");
     }
@@ -797,8 +797,8 @@ void FindGBCDMetricBased::execute()
   if (getErrorCondition() < 0) { return; }
 
   // -------------------- set resolutions and 'ball volumes' based on user's selection -------------
-  float m_misorResol = FindGBCDMetricBased::RESOL_CHOICES[getChosenLimitDists()][0];
-  float m_planeResol = FindGBCDMetricBased::RESOL_CHOICES[getChosenLimitDists()][1];
+  float m_misorResol = FindGBCDMetricBased::k_ResolutionChoices[getChosenLimitDists()][0];
+  float m_planeResol = FindGBCDMetricBased::k_ResolutionChoices[getChosenLimitDists()][1];
 
   m_misorResol *= SIMPLib::Constants::k_PiOver180;
   m_planeResol *= SIMPLib::Constants::k_PiOver180;
@@ -886,7 +886,7 @@ void FindGBCDMetricBased::execute()
   }
 
   // ------------------- before computing the distribution, we must find normalization factors -----
-  double ballVolume = FindGBCDMetricBased::BALL_VOLS_M3M[getChosenLimitDists()];
+  double ballVolume = FindGBCDMetricBased::k_BallVolumesM3M[getChosenLimitDists()];
   {
     QVector<SpaceGroupOps::Pointer> m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
     int32_t cryst = m_CrystalStructures[m_PhaseOfInterest];

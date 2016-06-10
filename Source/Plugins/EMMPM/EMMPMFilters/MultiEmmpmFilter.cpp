@@ -168,7 +168,8 @@ int MultiEmmpmFilter::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 void MultiEmmpmFilter::initialize()
 {
-
+  m_PreviousMu.clear();
+  m_PreviousSigma.clear();
 }
 
 // -----------------------------------------------------------------------------
@@ -284,6 +285,8 @@ void MultiEmmpmFilter::execute()
   setErrorCondition(0);
   dataCheck();
   if (getErrorCondition() < 0) { return; }
+  initialize();
+
 
   DataArrayPath inputAMPath = DataArrayPath::GetAttributeMatrixPath(getInputDataArrayVector());
 

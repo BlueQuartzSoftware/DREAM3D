@@ -366,7 +366,10 @@ int GenerateEnsembleStatistics::writeFilterParameters(AbstractFilterParametersWr
 // -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::initialize()
 {
+  m_NeighborList = NeighborList<int32_t>::NullPointer();
+  m_SharedSurfaceAreaList = NeighborList<float>::NullPointer();
 
+  m_StatsDataArray = StatsDataArray::NullPointer();
 }
 
 // -----------------------------------------------------------------------------
@@ -375,6 +378,7 @@ void GenerateEnsembleStatistics::initialize()
 void GenerateEnsembleStatistics::dataCheck()
 {
   setErrorCondition(0);
+  initialize();
 
   DataArrayPath tempPath;
 

@@ -183,7 +183,7 @@ class VectorSegmentFeatures : public SegmentFeatures
     std::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;
     std::shared_ptr<Generator> m_NumberGenerator;
 
-    float angleTolerance;
+    float m_AngleToleranceRad;
 
     /**
      * @brief randomizeGrainIds Randomizes Feature Ids

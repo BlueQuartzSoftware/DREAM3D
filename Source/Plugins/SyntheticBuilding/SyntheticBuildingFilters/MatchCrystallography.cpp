@@ -100,12 +100,12 @@ MatchCrystallography::MatchCrystallography() :
   m_SharedSurfaceAreaList = NeighborList<float>::NullPointer();
   m_StatsDataArray = StatsDataArray::NullPointer();
 
-  mdfchange = odfchange = 0.0f;
+  m_MdfChange = m_OdfChange = 0.0f;
 
-  actualodf = FloatArrayType::NullPointer();
-  simodf = FloatArrayType::NullPointer();
-  actualmdf = FloatArrayType::NullPointer();
-  simmdf = FloatArrayType::NullPointer();
+  m_ActualOdf = FloatArrayType::NullPointer();
+  m_SimOdf = FloatArrayType::NullPointer();
+  m_ActualMdf = FloatArrayType::NullPointer();
+  m_SimMdf = FloatArrayType::NullPointer();
 
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
@@ -240,7 +240,21 @@ int MatchCrystallography::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 void MatchCrystallography::initialize()
 {
+  m_NeighborList = NeighborList<int32_t>::NullPointer();
+  m_SharedSurfaceAreaList = NeighborList<float>::NullPointer();
+  m_StatsDataArray = StatsDataArray::NullPointer();
 
+  m_MdfChange = m_OdfChange = 0.0f;
+  m_UnbiasedVolume.clear();
+  m_TotalSurfaceArea.clear();
+
+  m_ActualOdf = FloatArrayType::NullPointer();
+  m_SimOdf = FloatArrayType::NullPointer();
+  m_ActualMdf = FloatArrayType::NullPointer();
+  m_SimMdf = FloatArrayType::NullPointer();
+  m_MisorientationLists.clear();
+
+  m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 }
 
 // -----------------------------------------------------------------------------
@@ -249,6 +263,7 @@ void MatchCrystallography::initialize()
 void MatchCrystallography::dataCheck()
 {
   setErrorCondition(0);
+  initialize();
   DataArrayPath tempPath;
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
@@ -415,8 +430,8 @@ void MatchCrystallography::initializeArrays(size_t ensem)
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
-    actualodf = pp->getODF();
-    actualmdf = pp->getMisorientationBins();
+    m_ActualOdf = pp->getODF();
+    m_ActualMdf = pp->getMisorientationBins();
   }
   else if (m_PhaseTypes[ensem] == SIMPL::PhaseType::PrimaryPhase)
   {
@@ -431,8 +446,8 @@ void MatchCrystallography::initializeArrays(size_t ensem)
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
-    actualodf = pp->getODF();
-    actualmdf = pp->getMisorientationBins();
+    m_ActualOdf = pp->getODF();
+    m_ActualMdf = pp->getMisorientationBins();
   }
   else
   {
@@ -443,15 +458,15 @@ void MatchCrystallography::initializeArrays(size_t ensem)
     return;
   }
 
-  simodf = FloatArrayType::CreateArray(actualodf->getSize(), SIMPL::StringConstants::ODF);
-  simmdf = FloatArrayType::CreateArray(actualmdf->getSize(), SIMPL::StringConstants::MisorientationBins);
-  for (size_t j = 0; j < simodf->getSize(); j++)
+  m_SimOdf = FloatArrayType::CreateArray(m_ActualOdf->getSize(), SIMPL::StringConstants::ODF);
+  m_SimMdf = FloatArrayType::CreateArray(m_ActualMdf->getSize(), SIMPL::StringConstants::MisorientationBins);
+  for (size_t j = 0; j < m_SimOdf->getSize(); j++)
   {
-    simodf->setValue(j, 0.0);
+    m_SimOdf->setValue(j, 0.0);
   }
-  for (size_t j = 0; j < simmdf->getSize(); j++)
+  for (size_t j = 0; j < m_SimMdf->getSize(); j++)
   {
-    simmdf->setValue(j, 0.0);
+    m_SimMdf->setValue(j, 0.0);
   }
 }
 
@@ -466,7 +481,7 @@ void MatchCrystallography::determine_volumes()
   size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
   size_t totalEnsembles = m_CrystalStructuresPtr.lock()->getNumberOfTuples();
 
-  unbiasedvol.resize(totalEnsembles);
+  m_UnbiasedVolume.resize(totalEnsembles);
   for (size_t i = 1; i < totalFeatures; i++)
   {
     m_Volumes[i] = 0.0;
@@ -481,7 +496,7 @@ void MatchCrystallography::determine_volumes()
     m_Volumes[i] = m_Volumes[i] * res_scalar;
     if(m_SurfaceFeatures[i] == false)
     {
-      unbiasedvol[m_FeaturePhases[i]] = unbiasedvol[m_FeaturePhases[i]] + m_Volumes[i];
+      m_UnbiasedVolume[m_FeaturePhases[i]] = m_UnbiasedVolume[m_FeaturePhases[i]] + m_Volumes[i];
     }
   }
 }
@@ -574,7 +589,7 @@ void MatchCrystallography::assign_eulers(size_t ensem)
       QuaternionMathF::Copy(q.toQuaternion(), avgQuats[i]);
       if (m_SurfaceFeatures[i] == false)
       {
-        simodf->setValue(choose, (simodf->getValue(choose) + m_Volumes[i] / unbiasedvol[ensem]));
+        m_SimOdf->setValue(choose, (m_SimOdf->getValue(choose) + m_Volumes[i] / m_UnbiasedVolume[ensem]));
       }
     }
   }
@@ -590,7 +605,7 @@ int32_t MatchCrystallography::pick_euler(float random, int32_t numbins)
 
   for (int32_t j = 0; j < numbins; j++)
   {
-    float density = actualodf->getValue(j);
+    float density = m_ActualOdf->getValue(j);
     float td1 = totaldensity;
     totaldensity = totaldensity + density;
     if (random < totaldensity && random >= td1) { choose = j; break; }
@@ -632,14 +647,14 @@ void MatchCrystallography::MC_LoopBody1(int32_t feature, size_t ensem, size_t j,
 
   FOrientTransformsType::ax2ro(FOrientArrayType(n1, n2, n3, w), rod);
   newmisobin = m_OrientationOps[sym]->getMisoBin(rod);
-  mdfchange = mdfchange
-              + (((actualmdf->getValue(curmisobin) - simmdf->getValue(curmisobin)) * (actualmdf->getValue(curmisobin) - simmdf->getValue(curmisobin)))
-                 - ((actualmdf->getValue(curmisobin) - (simmdf->getValue(curmisobin) - (neighsurfarea / m_TotalSurfaceArea[ensem])))
-                    * (actualmdf->getValue(curmisobin) - (simmdf->getValue(curmisobin) - (neighsurfarea / m_TotalSurfaceArea[ensem])))));
-  mdfchange = mdfchange
-              + (((actualmdf->getValue(newmisobin) - simmdf->getValue(newmisobin)) * (actualmdf->getValue(newmisobin) - simmdf->getValue(newmisobin)))
-                 - ((actualmdf->getValue(newmisobin) - (simmdf->getValue(newmisobin) + (neighsurfarea / m_TotalSurfaceArea[ensem])))
-                    * (actualmdf->getValue(newmisobin) - (simmdf->getValue(newmisobin) + (neighsurfarea / m_TotalSurfaceArea[ensem])))));
+  m_MdfChange = m_MdfChange
+              + (((m_ActualMdf->getValue(curmisobin) - m_SimMdf->getValue(curmisobin)) * (m_ActualMdf->getValue(curmisobin) - m_SimMdf->getValue(curmisobin)))
+                 - ((m_ActualMdf->getValue(curmisobin) - (m_SimMdf->getValue(curmisobin) - (neighsurfarea / m_TotalSurfaceArea[ensem])))
+                    * (m_ActualMdf->getValue(curmisobin) - (m_SimMdf->getValue(curmisobin) - (neighsurfarea / m_TotalSurfaceArea[ensem])))));
+  m_MdfChange = m_MdfChange
+              + (((m_ActualMdf->getValue(newmisobin) - m_SimMdf->getValue(newmisobin)) * (m_ActualMdf->getValue(newmisobin) - m_SimMdf->getValue(newmisobin)))
+                 - ((m_ActualMdf->getValue(newmisobin) - (m_SimMdf->getValue(newmisobin) + (neighsurfarea / m_TotalSurfaceArea[ensem])))
+                    * (m_ActualMdf->getValue(newmisobin) - (m_SimMdf->getValue(newmisobin) + (neighsurfarea / m_TotalSurfaceArea[ensem])))));
 }
 
 // -----------------------------------------------------------------------------
@@ -679,8 +694,8 @@ void MatchCrystallography::MC_LoopBody2(int32_t feature, size_t ensem, size_t j,
   m_MisorientationLists[feature][3 * j] = miso1;
   m_MisorientationLists[feature][3 * j + 1] = miso2;
   m_MisorientationLists[feature][3 * j + 2] = miso3;
-  simmdf->setValue(curmisobin, (simmdf->getValue(curmisobin) - (neighsurfarea / m_TotalSurfaceArea[ensem])));
-  simmdf->setValue(newmisobin, (simmdf->getValue(newmisobin) + (neighsurfarea / m_TotalSurfaceArea[ensem])));
+  m_SimMdf->setValue(curmisobin, (m_SimMdf->getValue(curmisobin) - (neighsurfarea / m_TotalSurfaceArea[ensem])));
+  m_SimMdf->setValue(newmisobin, (m_SimMdf->getValue(newmisobin) + (neighsurfarea / m_TotalSurfaceArea[ensem])));
 }
 
 // -----------------------------------------------------------------------------
@@ -740,8 +755,8 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
     }
     currentodferror = 0;
     currentmdferror = 0;
-    float* actualOdfPtr = actualodf->getPointer(0);
-    float* simOdfPtr = simodf->getPointer(0);
+    float* actualOdfPtr = m_ActualOdf->getPointer(0);
+    float* simOdfPtr = m_SimOdf->getPointer(0);
     float delta = 0.0f;
     for (int32_t i = 0; i < numbins; i++)
     {
@@ -750,7 +765,7 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
     }
     for (int32_t i = 0; i < (numbins); i++)
     {
-      currentmdferror = currentmdferror + ((actualmdf->getValue(i) - simmdf->getValue(i)) * (actualmdf->getValue(i) - simmdf->getValue(i)));
+      currentmdferror = currentmdferror + ((m_ActualMdf->getValue(i) - m_SimMdf->getValue(i)) * (m_ActualMdf->getValue(i) - m_SimMdf->getValue(i)));
     }
     iterations++;
     badtrycount++;
@@ -794,15 +809,15 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
         FOrientTransformsType::eu2qu(g1ea, quat);
         q1 = quat.toQuaternion();
 
-        odfchange = ((actualodf->getValue(choose) - simodf->getValue(choose)) * (actualodf->getValue(choose) - simodf->getValue(choose)))
-                    - ((actualodf->getValue(choose) - (simodf->getValue(choose) + (m_Volumes[selectedfeature1] / unbiasedvol[ensem])))
-                       * (actualodf->getValue(choose) - (simodf->getValue(choose) + (m_Volumes[selectedfeature1] / unbiasedvol[ensem]))));
-        odfchange = odfchange
-                    + (((actualodf->getValue(g1odfbin) - simodf->getValue(g1odfbin)) * (actualodf->getValue(g1odfbin) - simodf->getValue(g1odfbin)))
-                       - ((actualodf->getValue(g1odfbin) - (simodf->getValue(g1odfbin) - (m_Volumes[selectedfeature1] / unbiasedvol[ensem])))
-                          * (actualodf->getValue(g1odfbin) - (simodf->getValue(g1odfbin) - (m_Volumes[selectedfeature1] / unbiasedvol[ensem])))));
+        m_OdfChange = ((m_ActualOdf->getValue(choose) - m_SimOdf->getValue(choose)) * (m_ActualOdf->getValue(choose) - m_SimOdf->getValue(choose)))
+                    - ((m_ActualOdf->getValue(choose) - (m_SimOdf->getValue(choose) + (m_Volumes[selectedfeature1] / m_UnbiasedVolume[ensem])))
+                       * (m_ActualOdf->getValue(choose) - (m_SimOdf->getValue(choose) + (m_Volumes[selectedfeature1] / m_UnbiasedVolume[ensem]))));
+        m_OdfChange = m_OdfChange
+                    + (((m_ActualOdf->getValue(g1odfbin) - m_SimOdf->getValue(g1odfbin)) * (m_ActualOdf->getValue(g1odfbin) - m_SimOdf->getValue(g1odfbin)))
+                       - ((m_ActualOdf->getValue(g1odfbin) - (m_SimOdf->getValue(g1odfbin) - (m_Volumes[selectedfeature1] / m_UnbiasedVolume[ensem])))
+                          * (m_ActualOdf->getValue(g1odfbin) - (m_SimOdf->getValue(g1odfbin) - (m_Volumes[selectedfeature1] / m_UnbiasedVolume[ensem])))));
 
-        mdfchange = 0;
+        m_MdfChange = 0;
         size_t size = 0;
         if (neighborlist[selectedfeature1].size() != 0) { size = neighborlist[selectedfeature1].size(); }
         for (size_t j = 0; j < size; j++)
@@ -814,7 +829,7 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
           MC_LoopBody1(selectedfeature1, ensem, j, neighsurfarea, m_CrystalStructures[ensem], q1, q2);
         }
 
-        deltaerror = (odfchange / currentodferror) + (mdfchange / currentmdferror);
+        deltaerror = (m_OdfChange / currentodferror) + (m_MdfChange / currentmdferror);
         if (deltaerror > 0)
         {
           badtrycount = 0;
@@ -822,8 +837,8 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
           m_FeatureEulerAngles[3 * selectedfeature1 + 1] = g1ea2;
           m_FeatureEulerAngles[3 * selectedfeature1 + 2] = g1ea3;
           QuaternionMathF::Copy(q1, avgQuats[selectedfeature1]);
-          simodf->setValue(choose, (simodf->getValue(choose) + (m_Volumes[selectedfeature1] / unbiasedvol[ensem])));
-          simodf->setValue(g1odfbin, (simodf->getValue(g1odfbin) - (m_Volumes[selectedfeature1] / unbiasedvol[ensem])));
+          m_SimOdf->setValue(choose, (m_SimOdf->getValue(choose) + (m_Volumes[selectedfeature1] / m_UnbiasedVolume[ensem])));
+          m_SimOdf->setValue(g1odfbin, (m_SimOdf->getValue(g1odfbin) - (m_Volumes[selectedfeature1] / m_UnbiasedVolume[ensem])));
           size = 0;
           if (neighborlist[selectedfeature1].size() != 0) { size = neighborlist[selectedfeature1].size(); }
           for (size_t j = 0; j < size; j++)
@@ -889,23 +904,23 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
           FOrientTransformsType::eu2ro(FOrientArrayType(&(m_FeatureEulerAngles[3 * selectedfeature2]), 3), rod);
           g2odfbin = m_OrientationOps[m_CrystalStructures[ensem]]->getOdfBin(rod);
 
-          odfchange = ((actualodf->getValue(g1odfbin) - simodf->getValue(g1odfbin)) * (actualodf->getValue(g1odfbin) - simodf->getValue(g1odfbin)))
-                      - ((actualodf->getValue(g1odfbin)
-                          - (simodf->getValue(g1odfbin) - (m_Volumes[selectedfeature1] / unbiasedvol[ensem])
-                             + (m_Volumes[selectedfeature2] / unbiasedvol[ensem])))
-                         * (actualodf->getValue(g1odfbin)
-                            - (simodf->getValue(g1odfbin) - (m_Volumes[selectedfeature1] / unbiasedvol[ensem])
-                               + (m_Volumes[selectedfeature2] / unbiasedvol[ensem]))));
-          odfchange = odfchange
-                      + (((actualodf->getValue(g2odfbin) - simodf->getValue(g2odfbin)) * (actualodf->getValue(g2odfbin) - simodf->getValue(g2odfbin)))
-                         - ((actualodf->getValue(g2odfbin)
-                             - (simodf->getValue(g2odfbin) - (m_Volumes[selectedfeature2] / unbiasedvol[ensem])
-                                + (m_Volumes[selectedfeature1] / unbiasedvol[ensem])))
-                            * (actualodf->getValue(g2odfbin)
-                               - (simodf->getValue(g2odfbin) - (m_Volumes[selectedfeature2] / unbiasedvol[ensem])
-                                  + (m_Volumes[selectedfeature1] / unbiasedvol[ensem])))));
+          m_OdfChange = ((m_ActualOdf->getValue(g1odfbin) - m_SimOdf->getValue(g1odfbin)) * (m_ActualOdf->getValue(g1odfbin) - m_SimOdf->getValue(g1odfbin)))
+                      - ((m_ActualOdf->getValue(g1odfbin)
+                          - (m_SimOdf->getValue(g1odfbin) - (m_Volumes[selectedfeature1] / m_UnbiasedVolume[ensem])
+                             + (m_Volumes[selectedfeature2] / m_UnbiasedVolume[ensem])))
+                         * (m_ActualOdf->getValue(g1odfbin)
+                            - (m_SimOdf->getValue(g1odfbin) - (m_Volumes[selectedfeature1] / m_UnbiasedVolume[ensem])
+                               + (m_Volumes[selectedfeature2] / m_UnbiasedVolume[ensem]))));
+          m_OdfChange = m_OdfChange
+                      + (((m_ActualOdf->getValue(g2odfbin) - m_SimOdf->getValue(g2odfbin)) * (m_ActualOdf->getValue(g2odfbin) - m_SimOdf->getValue(g2odfbin)))
+                         - ((m_ActualOdf->getValue(g2odfbin)
+                             - (m_SimOdf->getValue(g2odfbin) - (m_Volumes[selectedfeature2] / m_UnbiasedVolume[ensem])
+                                + (m_Volumes[selectedfeature1] / m_UnbiasedVolume[ensem])))
+                            * (m_ActualOdf->getValue(g2odfbin)
+                               - (m_SimOdf->getValue(g2odfbin) - (m_Volumes[selectedfeature2] / m_UnbiasedVolume[ensem])
+                                  + (m_Volumes[selectedfeature1] / m_UnbiasedVolume[ensem])))));
 
-          mdfchange = 0;
+          m_MdfChange = 0;
 
           FOrientArrayType quat(4);
           FOrientTransformsType::eu2qu(FOrientArrayType(g2ea1, g2ea2, g2ea3), quat);
@@ -942,7 +957,7 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
             }
           }
 
-          deltaerror = (odfchange / currentodferror) + (mdfchange / currentmdferror);
+          deltaerror = (m_OdfChange / currentodferror) + (m_MdfChange / currentmdferror);
           if (deltaerror > 0)
           {
 
@@ -953,10 +968,10 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
             m_FeatureEulerAngles[3 * selectedfeature2] = g1ea1;
             m_FeatureEulerAngles[3 * selectedfeature2 + 1] = g1ea2;
             m_FeatureEulerAngles[3 * selectedfeature2 + 2] = g1ea3;
-            simodf->setValue(g1odfbin, (simodf->getValue(g1odfbin) + (m_Volumes[selectedfeature2] / unbiasedvol[ensem])
-                                        - (m_Volumes[selectedfeature1] / unbiasedvol[ensem])));
-            simodf->setValue(g2odfbin, (simodf->getValue(g2odfbin) + (m_Volumes[selectedfeature1] / unbiasedvol[ensem])
-                                        - (m_Volumes[selectedfeature2] / unbiasedvol[ensem])));
+            m_SimOdf->setValue(g1odfbin, (m_SimOdf->getValue(g1odfbin) + (m_Volumes[selectedfeature2] / m_UnbiasedVolume[ensem])
+                                        - (m_Volumes[selectedfeature1] / m_UnbiasedVolume[ensem])));
+            m_SimOdf->setValue(g2odfbin, (m_SimOdf->getValue(g2odfbin) + (m_Volumes[selectedfeature1] / m_UnbiasedVolume[ensem])
+                                        - (m_Volumes[selectedfeature2] / m_UnbiasedVolume[ensem])));
 
             FOrientTransformsType::eu2qu(FOrientArrayType(g1ea1, g1ea2, g1ea3), quat);
             q1 = quat.toQuaternion();
@@ -1074,7 +1089,7 @@ void MatchCrystallography::measure_misorientations(size_t ensem)
           mbin = m_OrientationOps[crys1]->getMisoBin(rod);
           if (m_SurfaceFeatures[i] == false && (nname > static_cast<int32_t>(i) || m_SurfaceFeatures[nname] == true))
           {
-            simmdf->setValue(mbin, (simmdf->getValue(mbin) + (neighsurfarea / m_TotalSurfaceArea[m_FeaturePhases[i]])));
+            m_SimMdf->setValue(mbin, (m_SimMdf->getValue(mbin) + (neighsurfarea / m_TotalSurfaceArea[m_FeaturePhases[i]])));
           }
         }
         else

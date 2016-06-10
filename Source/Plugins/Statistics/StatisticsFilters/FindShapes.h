@@ -221,7 +221,7 @@ class FindShapes : public AbstractFilter
     DEFINE_DATAARRAY_VARIABLE(float, Volumes)
     DEFINE_DATAARRAY_VARIABLE(float, AspectRatios)
 
-    double scaleFactor;
+    double m_ScaleFactor;
 
     FindShapes(const FindShapes&); // Copy Constructor Not Implemented
     void operator=(const FindShapes&); // Operator '=' Not Implemented

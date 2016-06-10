@@ -295,16 +295,16 @@ class MatchCrystallography : public AbstractFilter
     StatsDataArray::WeakPointer m_StatsDataArray;
 
     // All other private instance variables
-    float mdfchange;
-    float odfchange;
+    float m_MdfChange;
+    float m_OdfChange;
 
-    std::vector<float> unbiasedvol;
+    std::vector<float> m_UnbiasedVolume;
     std::vector<float> m_TotalSurfaceArea;
 
-    FloatArrayType::Pointer actualodf;
-    FloatArrayType::Pointer simodf;
-    FloatArrayType::Pointer actualmdf;
-    FloatArrayType::Pointer simmdf;
+    FloatArrayType::Pointer m_ActualOdf;
+    FloatArrayType::Pointer m_SimOdf;
+    FloatArrayType::Pointer m_ActualMdf;
+    FloatArrayType::Pointer m_SimMdf;
 
     std::vector<std::vector<float> > m_MisorientationLists;
 

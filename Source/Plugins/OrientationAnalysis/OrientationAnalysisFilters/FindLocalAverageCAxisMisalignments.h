@@ -205,6 +205,8 @@ class FindLocalAverageCAxisMisalignments : public AbstractFilter
 
 
   private:
+    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
+
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_DATAARRAY_VARIABLE(int32_t, CellParentIds)
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureParentIds)
@@ -216,7 +218,6 @@ class FindLocalAverageCAxisMisalignments : public AbstractFilter
 
     NeighborList<int>::WeakPointer m_NeighborList;
     NeighborList<float>::WeakPointer m_CAxisMisalignmentList;
-    QVector<SpaceGroupOps::Pointer> m_OrientationOps;
 
     FindLocalAverageCAxisMisalignments(const FindLocalAverageCAxisMisalignments&); // Copy Constructor Not Implemented
     void operator=(const FindLocalAverageCAxisMisalignments&); // Operator '=' Not Implemented

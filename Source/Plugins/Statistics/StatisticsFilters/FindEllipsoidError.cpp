@@ -72,10 +72,9 @@ FindEllipsoidError::FindEllipsoidError() :
   m_AxisLengths(NULL),
   m_NumCells(NULL),
   m_IdealFeatureIds(NULL),
-  m_EllipsoidError(NULL)
+  m_EllipsoidError(NULL),
+  m_ScaleFator(1.0f)
 {
-  scaleFactor = 1.0;
-
   setupFilterParameters();
 }
 
@@ -169,7 +168,7 @@ int FindEllipsoidError::writeFilterParameters(AbstractFilterParametersWriter* wr
 // -----------------------------------------------------------------------------
 void FindEllipsoidError::initialize()
 {
-
+  m_ScaleFator = 1.0;
 }
 
 // -----------------------------------------------------------------------------
@@ -177,9 +176,9 @@ void FindEllipsoidError::initialize()
 // -----------------------------------------------------------------------------
 void FindEllipsoidError::dataCheck()
 {
-  DataArrayPath tempPath;
   setErrorCondition(0);
-
+  initialize();
+  DataArrayPath tempPath;
 
   QVector<size_t> dims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -256,9 +255,9 @@ void FindEllipsoidError::execute()
 
 
 
-  scaleFactor = 1.0 / xRes;
-  if(yRes > xRes && yRes > zRes) { scaleFactor = 1.0 / yRes; }
-  if(zRes > xRes && zRes > yRes) { scaleFactor = 1.0 / zRes; }
+  m_ScaleFator = 1.0 / xRes;
+  if(yRes > xRes && yRes > zRes) { m_ScaleFator = 1.0 / yRes; }
+  if(zRes > xRes && zRes > yRes) { m_ScaleFator = 1.0 / zRes; }
 
   if(m->getGeometryAs<ImageGeom>()->getXPoints() > 1 && m->getGeometryAs<ImageGeom>()->getYPoints() > 1 && m->getGeometryAs<ImageGeom>()->getZPoints() > 1) {  }
   if(m->getGeometryAs<ImageGeom>()->getXPoints() == 1 || m->getGeometryAs<ImageGeom>()->getYPoints() == 1 || m->getGeometryAs<ImageGeom>()->getZPoints() == 1) {find_error2D();}

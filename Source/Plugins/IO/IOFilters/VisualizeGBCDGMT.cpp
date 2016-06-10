@@ -142,7 +142,7 @@ int VisualizeGBCDGMT::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 void VisualizeGBCDGMT::initialize()
 {
-
+  gmtValues.clear();
 }
 
 // -----------------------------------------------------------------------------
@@ -151,6 +151,7 @@ void VisualizeGBCDGMT::initialize()
 void VisualizeGBCDGMT::dataCheck()
 {
   setErrorCondition(0);
+  initialize();
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getGBCDArrayPath().getDataContainerName());
 

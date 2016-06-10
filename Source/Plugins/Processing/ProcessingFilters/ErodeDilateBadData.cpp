@@ -144,7 +144,7 @@ int ErodeDilateBadData::writeFilterParameters(AbstractFilterParametersWriter* wr
 // -----------------------------------------------------------------------------
 void ErodeDilateBadData::initialize()
 {
-
+  m_Neighbors = nullptr;
 }
 
 // -----------------------------------------------------------------------------
@@ -153,7 +153,7 @@ void ErodeDilateBadData::initialize()
 void ErodeDilateBadData::dataCheck()
 {
   setErrorCondition(0);
-
+  initialize();
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
   if (getNumIterations() <= 0)

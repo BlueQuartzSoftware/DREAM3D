@@ -202,7 +202,7 @@ class FindEllipsoidError : public AbstractFilter
     DEFINE_DATAARRAY_VARIABLE(int32_t, IdealFeatureIds)
     DEFINE_DATAARRAY_VARIABLE(float, EllipsoidError)
 
-    double scaleFactor;
+    double m_ScaleFator;
 
     FindEllipsoidError(const FindEllipsoidError&); // Copy Constructor Not Implemented
     void operator=(const FindEllipsoidError&); // Operator '=' Not Implemented

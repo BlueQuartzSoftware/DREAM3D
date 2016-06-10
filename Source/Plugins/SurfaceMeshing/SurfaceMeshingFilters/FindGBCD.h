@@ -164,6 +164,12 @@ class FindGBCD : public SurfaceMeshFilter
     void dataCheckVoxel();
 
     /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
+
+    /**
      * @brief sizeGBCD Determines the sizing for the GBCD arrays
      * @param faceChunkSize Number of triangles per chunk
      * @param numMisoReps Dimensionality for bins

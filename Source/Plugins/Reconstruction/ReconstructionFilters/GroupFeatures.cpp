@@ -123,7 +123,8 @@ int GroupFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer,
 // -----------------------------------------------------------------------------
 void GroupFeatures::initialize()
 {
-
+  m_ContiguousNeighborList = NeighborList<int32_t>::NullPointer();
+  m_NonContiguousNeighborList = NeighborList<int32_t>::NullPointer();
 }
 
 // -----------------------------------------------------------------------------
@@ -132,6 +133,7 @@ void GroupFeatures::initialize()
 void GroupFeatures::dataCheck()
 {
   setErrorCondition(0);
+  initialize();
 
   QVector<size_t> cDims(1, 1);
   m_ContiguousNeighborList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<int32_t>, AbstractFilter>(this, getContiguousNeighborListArrayPath(), cDims);

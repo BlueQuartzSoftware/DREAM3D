@@ -178,7 +178,8 @@ int FindFeatureClustering::writeFilterParameters(AbstractFilterParametersWriter*
 // -----------------------------------------------------------------------------
 void FindFeatureClustering::initialize()
 {
-
+  m_ClusteringList = NeighborList<float>::NullPointer();
+  m_RandomCentroids.clear();
 }
 
 // -----------------------------------------------------------------------------
@@ -187,7 +188,7 @@ void FindFeatureClustering::initialize()
 void FindFeatureClustering::dataCheck()
 {
   setErrorCondition(0);
-
+  initialize();
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getEquivalentDiametersArrayPath().getDataContainerName());
 
   DataArrayPath tempPath;

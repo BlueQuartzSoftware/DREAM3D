@@ -165,6 +165,7 @@ class StatsGeneratorFilter : public AbstractFilter
 
   protected:
     StatsGeneratorFilter();
+
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
@@ -174,7 +175,6 @@ class StatsGeneratorFilter : public AbstractFilter
      * @brief Initializes all the private instance variables.
      */
     void initialize();
-
 
     /**
      * @brief readArray

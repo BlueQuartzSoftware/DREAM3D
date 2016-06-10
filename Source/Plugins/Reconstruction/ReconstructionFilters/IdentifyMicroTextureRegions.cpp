@@ -241,7 +241,7 @@ IdentifyMicroTextureRegions::IdentifyMicroTextureRegions() :
   m_PatchIds(NULL),
   m_PatchActive(NULL)
 {
-  caxisTolerance = 0.0f;
+  m_CAxisToleranceRad = 0.0f;
 
   setupFilterParameters();
 }
@@ -337,7 +337,8 @@ void IdentifyMicroTextureRegions::updateFeatureInstancePointers()
 // -----------------------------------------------------------------------------
 void IdentifyMicroTextureRegions::initialize()
 {
-
+  m_CAxisToleranceRad = 0.0f;
+  m_TotalRandomNumbersGenerated = 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -346,6 +347,8 @@ void IdentifyMicroTextureRegions::initialize()
 void IdentifyMicroTextureRegions::dataCheck()
 {
   setErrorCondition(0);
+  initialize();
+
   DataArrayPath tempPath;
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getCAxisLocationsArrayPath().getDataContainerName());
@@ -559,7 +562,7 @@ void IdentifyMicroTextureRegions::execute()
   { m_AvgCAxis = m_AvgCAxisPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Convert user defined tolerance to radians.
-  caxisTolerance = m_CAxisTolerance * SIMPLib::Constants::k_Pi / 180.0f;
+  m_CAxisToleranceRad = m_CAxisTolerance * SIMPLib::Constants::k_Pi / 180.0f;
 
 #ifdef SIMPLib_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
@@ -571,13 +574,13 @@ void IdentifyMicroTextureRegions::execute()
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPatches),
-                      FindPatchMisalignmentsImpl(newDims, origDims, m_CAxisLocations, m_CellPhases, m_CrystalStructures, m_VolFrac, m_AvgCAxis, m_InMTR, critDim, m_MinVolFrac, caxisTolerance), tbb::auto_partitioner());
+                      FindPatchMisalignmentsImpl(newDims, origDims, m_CAxisLocations, m_CellPhases, m_CrystalStructures, m_VolFrac, m_AvgCAxis, m_InMTR, critDim, m_MinVolFrac, m_CAxisToleranceRad), tbb::auto_partitioner());
 
   }
   else
 #endif
   {
-    FindPatchMisalignmentsImpl serial(newDims, origDims, m_CAxisLocations, m_CellPhases, m_CrystalStructures, m_VolFrac, m_AvgCAxis, m_InMTR, critDim, m_MinVolFrac, caxisTolerance);
+    FindPatchMisalignmentsImpl serial(newDims, origDims, m_CAxisLocations, m_CellPhases, m_CrystalStructures, m_VolFrac, m_AvgCAxis, m_InMTR, critDim, m_MinVolFrac, m_CAxisToleranceRad);
     serial.convert(0, totalPatches);
   }
 

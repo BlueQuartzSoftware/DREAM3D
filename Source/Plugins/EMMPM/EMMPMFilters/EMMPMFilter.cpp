@@ -174,7 +174,8 @@ int EMMPMFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 // -----------------------------------------------------------------------------
 void EMMPMFilter::initialize()
 {
-
+  m_PreviousMu.clear();
+  m_PreviousSigma.clear();
 }
 
 // -----------------------------------------------------------------------------
@@ -231,6 +232,7 @@ void EMMPMFilter::execute()
   setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
+  initialize();
 
   // This is the routine that sets up the EM/MPM to segment the image
   segment(getEmmpmInitType());

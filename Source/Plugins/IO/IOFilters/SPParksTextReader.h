@@ -201,7 +201,6 @@ class SPParksTextReader : public FileReader
     void parseDataLine(QByteArray& line, QVector<size_t> dims, int64_t xCol, int64_t yCol, int64_t zCol);
 
   private:
-    size_t m_Dims[3];
     QFile m_InStream;
     QMap<QString, DataParser::Pointer> m_NamePointerMap;
 

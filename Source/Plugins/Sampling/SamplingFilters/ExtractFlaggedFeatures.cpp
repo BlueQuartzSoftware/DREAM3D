@@ -121,7 +121,8 @@ int ExtractFlaggedFeatures::writeFilterParameters(AbstractFilterParametersWriter
 // -----------------------------------------------------------------------------
 void ExtractFlaggedFeatures::initialize()
 {
-
+  m_BoundsPtr = Int32ArrayType::NullPointer();
+  m_FeatureBounds = nullptr;
 }
 
 // -----------------------------------------------------------------------------
@@ -175,9 +176,9 @@ void ExtractFlaggedFeatures::find_feature_bounds()
   };
 
   QVector<size_t> cDims(1, 6);
-  boundsPtr = Int32ArrayType::CreateArray(totalFeatures, cDims, "_INTERNAL_USE_ONLY_Bounds");
-  m_FeatureBounds = boundsPtr->getPointer(0);
-  boundsPtr->initializeWithValue(-1);
+  m_BoundsPtr = Int32ArrayType::CreateArray(totalFeatures, cDims, "_INTERNAL_USE_ONLY_Bounds");
+  m_FeatureBounds = m_BoundsPtr->getPointer(0);
+  m_BoundsPtr->initializeWithValue(-1);
 
   int64_t kstride = 0, jstride = 0, count = 0;
   int64_t featureShift = 0;

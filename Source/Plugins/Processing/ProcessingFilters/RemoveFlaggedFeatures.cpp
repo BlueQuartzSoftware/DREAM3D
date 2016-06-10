@@ -125,7 +125,7 @@ int RemoveFlaggedFeatures::writeFilterParameters(AbstractFilterParametersWriter*
 // -----------------------------------------------------------------------------
 void RemoveFlaggedFeatures::initialize()
 {
-
+  m_Neighbors = nullptr;
 }
 
 // -----------------------------------------------------------------------------
@@ -134,7 +134,7 @@ void RemoveFlaggedFeatures::initialize()
 void RemoveFlaggedFeatures::dataCheck()
 {
   setErrorCondition(0);
-
+  initialize();
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
   QVector<size_t> cDims(1, 1);

@@ -74,7 +74,8 @@ SineParamsSegmentFeatures::SineParamsSegmentFeatures() :
   m_SineParams(NULL),
   m_FeatureIds(NULL),
   m_GoodVoxels(NULL),
-  m_Active(NULL)
+  m_Active(NULL),
+  m_MissingGoodVoxels(false)
 {
   setupFilterParameters();
 }
@@ -162,7 +163,7 @@ void SineParamsSegmentFeatures::updateFeatureInstancePointers()
 // -----------------------------------------------------------------------------
 void SineParamsSegmentFeatures::initialize()
 {
-
+  m_MissingGoodVoxels = false;
 }
 
 // -----------------------------------------------------------------------------
@@ -171,6 +172,7 @@ void SineParamsSegmentFeatures::initialize()
 void SineParamsSegmentFeatures::dataCheck()
 {
   DataArrayPath tempPath;
+  initialize();
   setErrorCondition(0);
 
   //Set the DataContainerName for the Parent Class (SegmentFeatures) to Use

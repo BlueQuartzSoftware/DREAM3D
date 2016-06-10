@@ -158,7 +158,11 @@ int FindSlipTransmissionMetrics::writeFilterParameters(AbstractFilterParametersW
 // -----------------------------------------------------------------------------
 void FindSlipTransmissionMetrics::initialize()
 {
-
+  m_F1List = NeighborList<float>::NullPointer();
+  m_F1sptList = NeighborList<float>::NullPointer();
+  m_F7List = NeighborList<float>::NullPointer();
+  m_mPrimeList = NeighborList<float>::NullPointer();
+  m_NeighborList = NeighborList<int32_t>::NullPointer();
 }
 
 // -----------------------------------------------------------------------------
@@ -167,6 +171,8 @@ void FindSlipTransmissionMetrics::initialize()
 void FindSlipTransmissionMetrics::dataCheck()
 {
   setErrorCondition(0);
+  initialize();
+
   DataArrayPath tempPath;
 
   QVector<DataArrayPath> dataArrayPaths;

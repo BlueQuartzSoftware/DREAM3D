@@ -129,7 +129,7 @@ int NodesTrianglesToVtk::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 void NodesTrianglesToVtk::initialize()
 {
-
+  m_NodeKind = nullptr;
 }
 
 // -----------------------------------------------------------------------------
@@ -204,6 +204,8 @@ void NodesTrianglesToVtk::execute()
 
   dataCheck();
   if(getErrorCondition() < 0) { return; }
+  initialize();
+
   // Open the Nodes file for reading
   FILE* nodesFile = fopen(m_NodesFile.toLatin1().data(), "rb+");
   if (nodesFile == NULL)

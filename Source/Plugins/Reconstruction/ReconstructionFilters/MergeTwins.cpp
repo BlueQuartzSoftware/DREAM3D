@@ -81,7 +81,7 @@ MergeTwins::MergeTwins() :
 {
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
-  axisTolerance = 0.0f;
+  m_AxisToleranceRad = 0.0f;
 
   setupFilterParameters();
 }
@@ -186,7 +186,7 @@ void MergeTwins::updateFeatureInstancePointers()
 // -----------------------------------------------------------------------------
 void MergeTwins::initialize()
 {
-
+  m_AxisToleranceRad = 0.0f;
 }
 
 // -----------------------------------------------------------------------------
@@ -324,7 +324,7 @@ bool MergeTwins::determineGrouping(int32_t referenceFeature, int32_t neighborFea
       w = w * (180.0f / SIMPLib::Constants::k_Pi);
       float axisdiff111 = acosf(fabsf(n1) * 0.57735f + fabsf(n2) * 0.57735f + fabsf(n3) * 0.57735f);
       float angdiff60 = fabsf(w - 60.0f);
-      if (axisdiff111 < axisTolerance && angdiff60 < m_AngleTolerance) { twin = true; }
+      if (axisdiff111 < m_AxisToleranceRad && angdiff60 < m_AngleTolerance) { twin = true; }
       if (twin == true)
       {
         m_FeatureParentIds[neighborFeature] = newFid;
@@ -352,7 +352,7 @@ void MergeTwins::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  axisTolerance = m_AxisTolerance * SIMPLib::Constants::k_Pi / 180.0f;
+  m_AxisToleranceRad = m_AxisTolerance * SIMPLib::Constants::k_Pi / 180.0f;
 
   m_FeatureParentIds[0] = 0; // set feature 0 to be parent 0
 

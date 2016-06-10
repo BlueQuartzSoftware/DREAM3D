@@ -293,7 +293,7 @@ void ReadH5Ebsd::readVolumeInfo()
 // -----------------------------------------------------------------------------
 void ReadH5Ebsd::initialize()
 {
-
+  m_MaterialNamesPtr = StringDataArray::NullPointer();
 }
 
 // -----------------------------------------------------------------------------
@@ -302,6 +302,8 @@ void ReadH5Ebsd::initialize()
 void ReadH5Ebsd::dataCheck()
 {
   setErrorCondition(0);
+  initialize();
+
   DataArrayPath tempPath;
 
   m_DataArrayNames.clear(); // Remove all the data arrays

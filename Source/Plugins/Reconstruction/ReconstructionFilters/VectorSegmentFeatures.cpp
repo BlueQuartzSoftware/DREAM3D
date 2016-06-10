@@ -72,9 +72,9 @@ VectorSegmentFeatures::VectorSegmentFeatures() :
   m_Vectors(NULL),
   m_FeatureIds(NULL),
   m_GoodVoxels(NULL),
-  m_Active(NULL)
+  m_Active(NULL),
+  m_AngleToleranceRad(0.0f)
 {
-  angleTolerance = 0.0f;
 
   setupFilterParameters();
 }
@@ -163,7 +163,7 @@ void VectorSegmentFeatures::updateFeatureInstancePointers()
 // -----------------------------------------------------------------------------
 void VectorSegmentFeatures::initialize()
 {
-
+  m_AngleToleranceRad = 0.0f;
 }
 
 // -----------------------------------------------------------------------------
@@ -171,8 +171,10 @@ void VectorSegmentFeatures::initialize()
 // -----------------------------------------------------------------------------
 void VectorSegmentFeatures::dataCheck()
 {
-  DataArrayPath tempPath;
+
   setErrorCondition(0);
+  initialize();
+  DataArrayPath tempPath;
 
   // Set the DataContainerName for the Parent Class (SegmentFeatures) to Use
   setDataContainerName(m_SelectedVectorArrayPath.getDataContainerName());
@@ -331,7 +333,7 @@ bool VectorSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t ne
     float w = GeometryMath::CosThetaBetweenVectors(v1, v2);
     w = acosf(w);
     if (w > SIMPLib::Constants::k_PiOver2) { w = SIMPLib::Constants::k_Pi - w; }
-    if (w < angleTolerance)
+    if (w < m_AngleToleranceRad)
     {
       group = true;
       m_FeatureIds[neighborpoint] = gnum;
@@ -373,7 +375,7 @@ void VectorSegmentFeatures::execute()
   int64_t totalPoints = static_cast<int64_t>(m_FeatureIdsPtr.lock()->getNumberOfTuples());
 
   // Convert user defined tolerance to radians.
-  angleTolerance = m_AngleTolerance * SIMPLib::Constants::k_Pi / 180.0f;
+  m_AngleToleranceRad = m_AngleTolerance * SIMPLib::Constants::k_Pi / 180.0f;
 
   // Generate the random voxel indices that will be used for the seed points to start a new grain growth/agglomeration
   const int64_t rangeMin = 0;

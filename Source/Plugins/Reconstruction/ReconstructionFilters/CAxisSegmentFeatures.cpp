@@ -86,7 +86,7 @@ CAxisSegmentFeatures::CAxisSegmentFeatures() :
 {
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
-  misoTolerance = 0.0f;
+  m_MisoTolerance = 0.0f;
 
   setupFilterParameters();
 }
@@ -189,7 +189,7 @@ void CAxisSegmentFeatures::updateFeatureInstancePointers()
 // -----------------------------------------------------------------------------
 void CAxisSegmentFeatures::initialize()
 {
-
+  m_MisoTolerance = 0.0f;
 }
 
 // -----------------------------------------------------------------------------
@@ -389,7 +389,7 @@ bool CAxisSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t nei
 
       w = ((c1[0] * c2[0]) + (c1[1] * c2[1]) + (c1[2] * c2[2]));
       w = acosf(w);
-      if (w <= misoTolerance || (SIMPLib::Constants::k_Pi - w) <= misoTolerance)
+      if (w <= m_MisoTolerance || (SIMPLib::Constants::k_Pi - w) <= m_MisoTolerance)
       {
         group = true;
         m_FeatureIds[neighborpoint] = gnum;
@@ -431,7 +431,7 @@ void CAxisSegmentFeatures::execute()
   updateFeatureInstancePointers();
 
   // Convert user defined tolerance to radians.
-  misoTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_Pi / 180.0f;
+  m_MisoTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_Pi / 180.0f;
 
   // Generate the random voxel indices that will be used for the seed points to start a new grain growth/agglomeration
   const int64_t rangeMin = 0;

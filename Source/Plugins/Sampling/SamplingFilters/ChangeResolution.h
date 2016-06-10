@@ -165,6 +165,7 @@ class ChangeResolution : public AbstractFilter
 
   protected:
     ChangeResolution();
+
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */

@@ -152,6 +152,7 @@ class FindFeaturePhases : public AbstractFilter
 
   protected:
     FindFeaturePhases();
+
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */

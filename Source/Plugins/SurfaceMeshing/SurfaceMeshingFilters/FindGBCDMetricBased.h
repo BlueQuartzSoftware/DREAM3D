@@ -205,10 +205,10 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceLabels)
   DEFINE_DATAARRAY_VARIABLE(int8_t, NodeTypes)
 
-  static const int NUM_RESOL_CHOICES = 7;
-  static const int DEFAULT_RESOL_CHOICE = 2;
-  static const float RESOL_CHOICES[][2];
-  static const double BALL_VOLS_M3M[];
+  static const int k_NumberResolutionChoices = 7;
+  static const int k_DefaultResolutionChoice = 2;
+  static const float k_ResolutionChoices[][2];
+  static const double k_BallVolumesM3M[];
 
   FindGBCDMetricBased(const FindGBCDMetricBased&); // Copy Constructor Not Implemented
   void operator=(const FindGBCDMetricBased&); // Operator '=' Not Implemented

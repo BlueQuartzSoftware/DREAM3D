@@ -74,6 +74,8 @@ class  INLWriter : public FileWriter
     SIMPL_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
     Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
+    SIMPL_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
+
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */
@@ -163,7 +165,6 @@ class  INLWriter : public FileWriter
     DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
     DEFINE_DATAARRAY_VARIABLE(int32_t, NumFeatures)
 
-    SIMPL_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
     StringDataArray::WeakPointer m_MaterialNamePtr;
 
     INLWriter(const INLWriter&); // Copy Constructor Not Implemented

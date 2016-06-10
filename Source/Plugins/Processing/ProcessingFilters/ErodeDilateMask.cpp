@@ -145,7 +145,7 @@ int ErodeDilateMask::writeFilterParameters(AbstractFilterParametersWriter* write
 // -----------------------------------------------------------------------------
 void ErodeDilateMask::initialize()
 {
-
+  m_MaskCopy = nullptr;
 }
 
 // -----------------------------------------------------------------------------
@@ -154,6 +154,7 @@ void ErodeDilateMask::initialize()
 void ErodeDilateMask::dataCheck()
 {
   setErrorCondition(0);
+  initialize();
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getMaskArrayPath().getDataContainerName());
 

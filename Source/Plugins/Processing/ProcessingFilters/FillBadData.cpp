@@ -132,7 +132,8 @@ int FillBadData::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 // -----------------------------------------------------------------------------
 void FillBadData::initialize()
 {
-
+  m_AlreadyChecked = nullptr;
+  m_Neighbors = nullptr;
 }
 
 // -----------------------------------------------------------------------------
@@ -141,6 +142,7 @@ void FillBadData::initialize()
 void FillBadData::dataCheck()
 {
   setErrorCondition(0);
+  initialize();
 
   QVector<DataArrayPath> dataArrayPaths;
 

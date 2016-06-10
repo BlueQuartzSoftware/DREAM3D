@@ -163,7 +163,7 @@ MergeColonies::MergeColonies() :
 {
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
-  axisTolerance = 0.0f;
+  m_AxisToleranceRad = 0.0f;
 
   setupFilterParameters();
 }
@@ -280,7 +280,7 @@ void MergeColonies::updateFeatureInstancePointers()
 // -----------------------------------------------------------------------------
 void MergeColonies::initialize()
 {
-
+  m_AxisToleranceRad = 0.0f;
 }
 
 // -----------------------------------------------------------------------------
@@ -289,6 +289,8 @@ void MergeColonies::initialize()
 void MergeColonies::dataCheck()
 {
   setErrorCondition(0);
+  initialize();
+
   DataArrayPath tempPath;
 
   GroupFeatures::dataCheck();
@@ -440,19 +442,19 @@ bool MergeColonies::determineGrouping(int32_t referenceFeature, int32_t neighbor
       w = w * (180.0f / SIMPLib::Constants::k_Pi);
       float angdiff1 = fabsf(w - 10.53f);
       float axisdiff1 = acosf(fabsf(n1) * 0.0000f + fabsf(n2) * 0.0000f + fabsf(n3) * 1.0000f);
-      if (angdiff1 < m_AngleTolerance && axisdiff1 < axisTolerance) { colony = true; }
+      if (angdiff1 < m_AngleTolerance && axisdiff1 < m_AxisToleranceRad) { colony = true; }
       float angdiff2 = fabsf(w - 90.00f);
       float axisdiff2 = acosf(fabsf(n1) * 0.9958f + fabsf(n2) * 0.0917f + fabsf(n3) * 0.0000f);
-      if (angdiff2 < m_AngleTolerance && axisdiff2 < axisTolerance) { colony = true; }
+      if (angdiff2 < m_AngleTolerance && axisdiff2 < m_AxisToleranceRad) { colony = true; }
       float angdiff3 = fabsf(w - 60.00f);
       float axisdiff3 = acosf(fabsf(n1) * 1.0000f + fabsf(n2) * 0.0000f + fabsf(n3) * 0.0000f);
-      if (angdiff3 < m_AngleTolerance && axisdiff3 < axisTolerance) { colony = true; }
+      if (angdiff3 < m_AngleTolerance && axisdiff3 < m_AxisToleranceRad) { colony = true; }
       float angdiff4 = fabsf(w - 60.83f);
       float axisdiff4 = acosf(fabsf(n1) * 0.9834f + fabsf(n2) * 0.0905f + fabsf(n3) * 0.1570f);
-      if (angdiff4 < m_AngleTolerance && axisdiff4 < axisTolerance) { colony = true; }
+      if (angdiff4 < m_AngleTolerance && axisdiff4 < m_AxisToleranceRad) { colony = true; }
       float angdiff5 = fabsf(w - 63.26f);
       float axisdiff5 = acosf(fabsf(n1) * 0.9549f + fabsf(n2) * 0.0000f + fabsf(n3) * 0.2969f);
-      if (angdiff5 < m_AngleTolerance && axisdiff5 < axisTolerance) { colony = true; }
+      if (angdiff5 < m_AngleTolerance && axisdiff5 < m_AxisToleranceRad) { colony = true; }
       if (colony == true)
       {
         m_FeatureParentIds[neighborFeature] = newFid;
@@ -595,7 +597,7 @@ void MergeColonies::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  axisTolerance = m_AxisTolerance * SIMPLib::Constants::k_Pi / 180.0f;
+  m_AxisToleranceRad = m_AxisTolerance * SIMPLib::Constants::k_Pi / 180.0f;
 
   GroupFeatures::execute();
 

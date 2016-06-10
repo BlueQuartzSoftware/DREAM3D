@@ -187,19 +187,18 @@ void copyCellArraysToFaceArrays(size_t faceIndex, size_t firstCellIndex, size_t 
 // -----------------------------------------------------------------------------
 void QuickSurfaceMesh::initialize()
 {
-
+  m_SelectedWeakPtrVector.clear();
+  m_CreatedWeakPtrVector.clear();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void QuickSurfaceMesh::dataCheck()
-{
-  m_SelectedWeakPtrVector.clear();
-  m_CreatedWeakPtrVector.clear();
-  
+{  
   setErrorCondition(0);
-  
+  initialize();
+
   DataArrayPath tempPath;
   
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
@@ -261,7 +260,7 @@ void QuickSurfaceMesh::dataCheck()
   if( NULL != m_NodeTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NodeTypes = m_NodeTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   
-  for (int32_t i = 0; i < m_SelectedWeakPtrVector.count(); i++)
+  for (int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
   {
     tempPath.update(getSurfaceDataContainerName(), getFaceAttributeMatrixName(), m_SelectedDataArrayPaths[i].getDataArrayName());
     cDims = m_SelectedWeakPtrVector[i].lock()->getComponentDimensions();
@@ -283,7 +282,7 @@ void QuickSurfaceMesh::dataCheck()
     m_CreatedWeakPtrVector.push_back(TemplateHelpers::CreateNonPrereqArrayFromArrayType()(this, tempPath, faceDims, m_SelectedWeakPtrVector[i].lock()));
   }
   
-  if (m_SelectedWeakPtrVector.count() != m_CreatedWeakPtrVector.count())
+  if (m_SelectedWeakPtrVector.size() != m_CreatedWeakPtrVector.size())
   {
     setErrorCondition(-11006);
     QString ss = QObject::tr("The number of selected Cell Attribute Arrays available does not match the number of Face Attribute Arrays created");
@@ -686,7 +685,7 @@ void QuickSurfaceMesh::execute()
           m_FaceLabels[triangleIndex * 2] = m_FeatureIds[point];
           m_FaceLabels[triangleIndex * 2 + 1] = -1;
           
-          for (int32_t i = 0; i < m_SelectedWeakPtrVector.count(); i++)
+          for (int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(), m_CreatedWeakPtrVector[i].lock(), true)
           }
@@ -699,7 +698,7 @@ void QuickSurfaceMesh::execute()
           m_FaceLabels[triangleIndex * 2] = m_FeatureIds[point];
           m_FaceLabels[triangleIndex * 2 + 1] = -1;
           
-          for (int32_t i = 0; i < m_SelectedWeakPtrVector.count(); i++)
+          for (int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(), m_CreatedWeakPtrVector[i].lock(), true)
           }
@@ -743,7 +742,7 @@ void QuickSurfaceMesh::execute()
           m_FaceLabels[triangleIndex * 2] = m_FeatureIds[point];
           m_FaceLabels[triangleIndex * 2 + 1] = -1;
           
-          for (int32_t i = 0; i < m_SelectedWeakPtrVector.count(); i++)
+          for (int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(), m_CreatedWeakPtrVector[i].lock(), true)
           }
@@ -756,7 +755,7 @@ void QuickSurfaceMesh::execute()
           m_FaceLabels[triangleIndex * 2] = m_FeatureIds[point];
           m_FaceLabels[triangleIndex * 2 + 1] = -1;
           
-          for (int32_t i = 0; i < m_SelectedWeakPtrVector.count(); i++)
+          for (int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(), m_CreatedWeakPtrVector[i].lock(), true)
           }
@@ -800,7 +799,7 @@ void QuickSurfaceMesh::execute()
           m_FaceLabels[triangleIndex * 2] = m_FeatureIds[point];
           m_FaceLabels[triangleIndex * 2 + 1] = -1;
           
-          for (int32_t i = 0; i < m_SelectedWeakPtrVector.count(); i++)
+          for (int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(), m_CreatedWeakPtrVector[i].lock(), true)
           }
@@ -813,7 +812,7 @@ void QuickSurfaceMesh::execute()
           m_FaceLabels[triangleIndex * 2] = m_FeatureIds[point];
           m_FaceLabels[triangleIndex * 2 + 1] = -1;
           
-          for (int32_t i = 0; i < m_SelectedWeakPtrVector.count(); i++)
+          for (int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(), m_CreatedWeakPtrVector[i].lock(), true)
           }
@@ -857,7 +856,7 @@ void QuickSurfaceMesh::execute()
           m_FaceLabels[triangleIndex * 2] = m_FeatureIds[point];
           m_FaceLabels[triangleIndex * 2 + 1] = -1;
           
-          for (int32_t i = 0; i < m_SelectedWeakPtrVector.count(); i++)
+          for (int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(), m_CreatedWeakPtrVector[i].lock(), true)
           }
@@ -870,7 +869,7 @@ void QuickSurfaceMesh::execute()
           m_FaceLabels[triangleIndex * 2] = m_FeatureIds[point];
           m_FaceLabels[triangleIndex * 2 + 1] = -1;
           
-          for (int32_t i = 0; i < m_SelectedWeakPtrVector.count(); i++)
+          for (int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(), m_CreatedWeakPtrVector[i].lock(), true)
           }
@@ -914,7 +913,7 @@ void QuickSurfaceMesh::execute()
           m_FaceLabels[triangleIndex * 2] = m_FeatureIds[neigh1];
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
           
-          for (int32_t i = 0; i < m_SelectedWeakPtrVector.count(); i++)
+          for (int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, neigh1, point, m_SelectedWeakPtrVector[i].lock(), m_CreatedWeakPtrVector[i].lock())
           }
@@ -927,7 +926,7 @@ void QuickSurfaceMesh::execute()
           m_FaceLabels[triangleIndex * 2] = m_FeatureIds[neigh1];
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
           
-          for (int32_t i = 0; i < m_SelectedWeakPtrVector.count(); i++)
+          for (int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, neigh1, point, m_SelectedWeakPtrVector[i].lock(), m_CreatedWeakPtrVector[i].lock())
           }
@@ -971,7 +970,7 @@ void QuickSurfaceMesh::execute()
           m_FaceLabels[triangleIndex * 2] = m_FeatureIds[point];
           m_FaceLabels[triangleIndex * 2 + 1] = -1;
           
-          for (int32_t i = 0; i < m_SelectedWeakPtrVector.count(); i++)
+          for (int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(), m_CreatedWeakPtrVector[i].lock(), true)
           }
@@ -984,7 +983,7 @@ void QuickSurfaceMesh::execute()
           m_FaceLabels[triangleIndex * 2] = m_FeatureIds[point];
           m_FaceLabels[triangleIndex * 2 + 1] = -1;
           
-          for (int32_t i = 0; i < m_SelectedWeakPtrVector.count(); i++)
+          for (int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(), m_CreatedWeakPtrVector[i].lock(), true)
           }
@@ -1028,7 +1027,7 @@ void QuickSurfaceMesh::execute()
           m_FaceLabels[triangleIndex * 2] = m_FeatureIds[neigh2];
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
           
-          for (int32_t i = 0; i < m_SelectedWeakPtrVector.count(); i++)
+          for (int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, neigh2, point, m_SelectedWeakPtrVector[i].lock(), m_CreatedWeakPtrVector[i].lock())
           }
@@ -1041,7 +1040,7 @@ void QuickSurfaceMesh::execute()
           m_FaceLabels[triangleIndex * 2] = m_FeatureIds[neigh2];
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
           
-          for (int32_t i = 0; i < m_SelectedWeakPtrVector.count(); i++)
+          for (int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, neigh2, point, m_SelectedWeakPtrVector[i].lock(), m_CreatedWeakPtrVector[i].lock())
           }
@@ -1085,7 +1084,7 @@ void QuickSurfaceMesh::execute()
           m_FaceLabels[triangleIndex * 2] = m_FeatureIds[point];
           m_FaceLabels[triangleIndex * 2 + 1] = -1;
           
-          for (int32_t i = 0; i < m_SelectedWeakPtrVector.count(); i++)
+          for (int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(), m_CreatedWeakPtrVector[i].lock(), true)
           }
@@ -1098,7 +1097,7 @@ void QuickSurfaceMesh::execute()
           m_FaceLabels[triangleIndex * 2] = m_FeatureIds[point];
           m_FaceLabels[triangleIndex * 2 + 1] = -1;
           
-          for (int32_t i = 0; i < m_SelectedWeakPtrVector.count(); i++)
+          for (int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(), m_CreatedWeakPtrVector[i].lock(), true)
           }
@@ -1142,7 +1141,7 @@ void QuickSurfaceMesh::execute()
           m_FaceLabels[triangleIndex * 2] = m_FeatureIds[neigh3];
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
           
-          for (int32_t i = 0; i < m_SelectedWeakPtrVector.count(); i++)
+          for (int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, neigh3, point, m_SelectedWeakPtrVector[i].lock(), m_CreatedWeakPtrVector[i].lock())
           }
@@ -1155,7 +1154,7 @@ void QuickSurfaceMesh::execute()
           m_FaceLabels[triangleIndex * 2] = m_FeatureIds[neigh3];
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
           
-          for (int32_t i = 0; i < m_SelectedWeakPtrVector.count(); i++)
+          for (int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, neigh3, point, m_SelectedWeakPtrVector[i].lock(), m_CreatedWeakPtrVector[i].lock())
           }

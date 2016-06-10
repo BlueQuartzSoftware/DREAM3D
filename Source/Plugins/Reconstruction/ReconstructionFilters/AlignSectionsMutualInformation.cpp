@@ -66,7 +66,7 @@ AlignSectionsMutualInformation::AlignSectionsMutualInformation() :
   m_GoodVoxels(NULL),
   m_CrystalStructures(NULL)
 {
-  m_Seed = QDateTime::currentMSecsSinceEpoch();
+  m_RandomSeed = QDateTime::currentMSecsSinceEpoch();
 
   m_OrientationOps = SpaceGroupOps::getOrientationOpsQVector();
 
@@ -153,6 +153,8 @@ int AlignSectionsMutualInformation::writeFilterParameters(AbstractFilterParamete
 // -----------------------------------------------------------------------------
 void AlignSectionsMutualInformation::initialize()
 {
+  m_RandomSeed = QDateTime::currentMSecsSinceEpoch();
+  m_MIFeaturesPtr = Int32ArrayType::NullPointer();
 
 }
 

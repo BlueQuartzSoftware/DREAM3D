@@ -153,6 +153,7 @@ class AppendImageGeometryZSlice : public AbstractFilter
 
   protected:
     AppendImageGeometryZSlice();
+
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */

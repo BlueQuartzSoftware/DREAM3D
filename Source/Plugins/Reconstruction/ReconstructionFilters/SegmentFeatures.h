@@ -143,6 +143,7 @@ class SegmentFeatures : public AbstractFilter
 
   protected:
     SegmentFeatures();
+
     /**
      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
      */
@@ -152,8 +153,6 @@ class SegmentFeatures : public AbstractFilter
      * @brief Initializes all the private instance variables.
      */
     void initialize();
-
-
 
     /**
      * @brief getSeed Initializes a new seed from which to start the burn algorithm

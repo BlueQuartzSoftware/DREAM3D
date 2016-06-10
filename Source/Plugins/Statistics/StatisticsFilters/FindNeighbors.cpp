@@ -162,7 +162,8 @@ int FindNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer,
 // -----------------------------------------------------------------------------
 void FindNeighbors::initialize()
 {
-
+  m_NeighborList = NeighborList<int32_t>::NullPointer();
+  m_SharedSurfaceAreaList = NeighborList<float>::NullPointer();
 }
 
 // -----------------------------------------------------------------------------
@@ -171,6 +172,7 @@ void FindNeighbors::initialize()
 void FindNeighbors::dataCheck()
 {
   setErrorCondition(0);
+  initialize();
   DataArrayPath tempPath;
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());

@@ -205,7 +205,8 @@ int FindLocalAverageCAxisMisalignments::writeFilterParameters(AbstractFilterPara
 // -----------------------------------------------------------------------------
 void FindLocalAverageCAxisMisalignments::initialize()
 {
-
+  m_NeighborList = NeighborList<int32_t>::NullPointer();
+  m_CAxisMisalignmentList = NeighborList<float>::NullPointer();
 }
 
 // -----------------------------------------------------------------------------

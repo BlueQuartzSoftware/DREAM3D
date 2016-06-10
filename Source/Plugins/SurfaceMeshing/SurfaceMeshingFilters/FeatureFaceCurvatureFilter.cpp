@@ -209,7 +209,9 @@ int FeatureFaceCurvatureFilter::writeFilterParameters(AbstractFilterParametersWr
 // -----------------------------------------------------------------------------
 void FeatureFaceCurvatureFilter::initialize()
 {
-
+  m_SurfaceMeshFaceEdges = nullptr;
+  m_TotalFeatureFaces = -1;
+  m_CompletedFeatureFaces = -1;
 }
 
 // -----------------------------------------------------------------------------
@@ -218,6 +220,8 @@ void FeatureFaceCurvatureFilter::initialize()
 void FeatureFaceCurvatureFilter::dataCheck()
 {
   setErrorCondition(0);
+  initialize();
+
   DataArrayPath tempPath;
 
   TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());

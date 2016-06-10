@@ -167,10 +167,36 @@ class FindSaltykovSizes : public AbstractFilter
      */
     void initialize();
 
-
+    /**
+     * @brief find_saltykov_sizes
+     */
     void find_saltykov_sizes();
+
+    /**
+     * @brief do_saltykov
+     * @param nA
+     * @param Dmax
+     * @param k
+     * @return
+     */
     int do_saltykov(std::vector<int> nA, float Dmax, int k);
+
+    /**
+     * @brief forward_difference
+     * @param fx
+     * @param f1
+     * @param f0
+     * @param x1
+     * @param x0
+     * @return
+     */
     int forward_difference(int fx, int f1, int f0, int x1, int x0);
+
+    /**
+     * @brief round_to_nearest_int
+     * @param x
+     * @return
+     */
     template<class T>
     int round_to_nearest_int(T x);
 

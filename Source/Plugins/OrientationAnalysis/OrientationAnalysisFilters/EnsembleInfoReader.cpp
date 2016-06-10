@@ -67,7 +67,7 @@ EnsembleInfoReader::EnsembleInfoReader() :
   m_PhaseTypesArrayName(SIMPL::EnsembleData::PhaseTypes),
   m_CrystalStructures(NULL),
   m_PhaseTypes(NULL),
-  m_ptype(999),
+  m_ptype(SIMPL::PhaseType::UnknownPhaseType),
   m_crystruct(999)
 {
   setupFilterParameters();
@@ -154,6 +154,8 @@ void EnsembleInfoReader::updateEnsembleInstancePointers()
 // -----------------------------------------------------------------------------
 void EnsembleInfoReader::initialize()
 {
+  m_ptype = SIMPL::PhaseType::UnknownPhaseType;
+  m_crystruct = 999;
 
 }
 
@@ -163,7 +165,7 @@ void EnsembleInfoReader::initialize()
 void EnsembleInfoReader::dataCheck()
 {
   setErrorCondition(0);
-
+  initialize();
   DataArrayPath tempPath;
 
   QFileInfo fi(getInputFile());

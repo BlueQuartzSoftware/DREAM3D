@@ -148,7 +148,7 @@ int VtkStructuredPointsReader::writeFilterParameters(AbstractFilterParametersWri
 // -----------------------------------------------------------------------------
 void VtkStructuredPointsReader::initialize()
 {
-
+  m_CurrentAttrMat = AttributeMatrix::NullPointer();
 }
 
 // -----------------------------------------------------------------------------
@@ -156,6 +156,7 @@ void VtkStructuredPointsReader::initialize()
 // -----------------------------------------------------------------------------
 void VtkStructuredPointsReader::dataCheck()
 {
+  initialize();
   setErrorCondition(0);
 
   QFileInfo fi(getInputFile());

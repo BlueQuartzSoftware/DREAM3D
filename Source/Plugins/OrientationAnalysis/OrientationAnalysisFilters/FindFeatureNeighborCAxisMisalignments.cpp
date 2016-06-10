@@ -159,7 +159,8 @@ int FindFeatureNeighborCAxisMisalignments::writeFilterParameters(AbstractFilterP
 // -----------------------------------------------------------------------------
 void FindFeatureNeighborCAxisMisalignments::initialize()
 {
-
+  m_NeighborList = NeighborList<int32_t>::NullPointer();
+  m_CAxisMisalignmentList = NeighborList<float>::NullPointer();
 }
 
 // -----------------------------------------------------------------------------
@@ -168,6 +169,8 @@ void FindFeatureNeighborCAxisMisalignments::initialize()
 void FindFeatureNeighborCAxisMisalignments::dataCheck()
 {
   setErrorCondition(0);
+  initialize();
+
   DataArrayPath tempPath;
 
   QVector<DataArrayPath> dataArrayPaths;

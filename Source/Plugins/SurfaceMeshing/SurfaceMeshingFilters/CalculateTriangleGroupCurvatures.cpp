@@ -53,7 +53,8 @@
 //
 // -----------------------------------------------------------------------------
 CalculateTriangleGroupCurvatures::CalculateTriangleGroupCurvatures(int64_t nring,
-    std::vector<int64_t> triangleIds, bool useNormalsForCurveFitting,
+    std::vector<int64_t> triangleIds,
+    bool useNormalsForCurveFitting,
     DoubleArrayType::Pointer principleCurvature1,
     DoubleArrayType::Pointer principleCurvature2,
     DoubleArrayType::Pointer principleDirection1,

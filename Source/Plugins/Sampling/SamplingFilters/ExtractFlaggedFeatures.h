@@ -166,7 +166,7 @@ class ExtractFlaggedFeatures : public AbstractFilter
     void find_feature_bounds();
 
   private:
-    Int32ArrayType::Pointer boundsPtr;
+    Int32ArrayType::Pointer m_BoundsPtr;
     int32_t* m_FeatureBounds;
 
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)

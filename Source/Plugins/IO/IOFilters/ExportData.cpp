@@ -209,7 +209,7 @@ int ExportData::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 // -----------------------------------------------------------------------------
 void ExportData::initialize()
 {
-
+  m_SelectedWeakPtrVector.clear();
 }
 
 // -----------------------------------------------------------------------------
@@ -285,6 +285,7 @@ void ExportData::execute()
   setErrorCondition(0);
   dataCheck();
   if(getErrorCondition() < 0) { return; }
+  initialize();
 
   if (m_SelectedDataArrayPaths.count() != m_SelectedWeakPtrVector.count())
   {
