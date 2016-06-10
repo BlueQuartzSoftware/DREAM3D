@@ -7,7 +7,7 @@ IO (Input)
 
 ## Description ##
 
-This **Filter** will read a single .ctf file into a new **Data Container** with a corresponding **Image Geometry**, allowing the immediate use of **Filters** on the data instead of having to generate the intermediate .h5ebsd file. A **Cell Attribute Matrix** and **Ensemble Attribute Matrix** will also be created to hold the imported EBSD information. Currently, the user has no control over the names of the created **Attribute Arrays**. The user should be aware that simply reading the file then performing operations that are dependent on the proper crystallographic and sample reference frame will be undefined or simply **wrong**. In order to bring the [crystal reference frame](@ref rotateeulerrefframe) and [sample reference frame](@ref rotatesamplerefframe) into coincidence, rotations will need to be applied to the data. An excellant reference for this is the following PDF file:
+This **Filter** will read a single .ctf file into a new **Data Container** with a corresponding **Image Geometry**, allowing the immediate use of **Filters** on the data instead of having to generate the intermediate .h5ebsd file. A **Cell Attribute Matrix** and **Ensemble Attribute Matrix** will also be created to hold the imported EBSD information. Currently, the user has no control over the names of the created **Attribute Arrays**. The user should be aware that simply reading the file then performing operations that are dependent on the proper crystallographic and sample reference frame will be **undefined, inaccurate and/or wrong**. In order to bring the [crystal reference frame](@ref rotateeulerrefframe) and [sample reference frame](@ref rotatesamplerefframe) into coincidence, rotations will need to be applied to the data. An excellant reference for this is the following PDF file:
 [http://pajarito.materials.cmu.edu/rollett/27750/L17-EBSD-analysis-31Mar16.pdf](http://pajarito.materials.cmu.edu/rollett/27750/L17-EBSD-analysis-31Mar16.pdf)
 
 ### Default HKL Transformations ###
@@ -36,7 +36,13 @@ The user also may want to assign un-indexed pixels to be ignored by flagging the
 + DREAM.3D uses the TSL/EDAX convention.
 + **The result of this is that the filter will _AUTOMATICALLY_ add 30° to phi2 when reading Oxford Instr (.ctf) files. There is no way to turn off this behavior. **
 
-![Figure 1 showing TSL & Oxford Instr. conventions.](images/Hexagonal_Axis_Alignment.png)
+| Figure 1 |
+|--------|
+| ![](images/Hexagonal_Axis_Alignment.png) |
+| **Figure 1:** showing TSL and Oxford Instr. conventions. EDAX/TSL is in **Green**. Oxford Inst. is in **Red** |
+
+
+
 
 
 ## Parameters ##
