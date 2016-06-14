@@ -114,7 +114,7 @@ void StatsGeneratorWidget::setupGui()
   updatePipelineBtn->hide();
   saveH5Btn->hide();
   saveJsonBtn->hide();
-  openStatsFile->hide();
+  //openStatsFile->hide();
 
   // Catch when the filter is about to execute the preflight
   connect(getFilter(), SIGNAL(preflightAboutToExecute()),
