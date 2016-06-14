@@ -332,22 +332,24 @@ void StatsGenRDFWidget::extractStatsData(int index, StatsData* statsData, unsign
     PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
 //    arrays = pp->getMDF_Weights();
     RdfData::Pointer rdf = pp->getRadialDistFunction();
+    if(nullptr != rdf.get())
+    {
+      float boxDim[3];
+      rdf->getBoxSize(boxDim);
+      BoxSizeXLE->setText(QString::number(boxDim[0]));
+      BoxSizeYLE->setText(QString::number(boxDim[1]));
+      BoxSizeZLE->setText(QString::number(boxDim[2]));
 
-    float boxDim[3];
-    rdf->getBoxSize(boxDim);
-    BoxSizeXLE->setText(QString::number(boxDim[0]));
-    BoxSizeYLE->setText(QString::number(boxDim[1]));
-    BoxSizeZLE->setText(QString::number(boxDim[2]));
+      float boxRes[3];
+      rdf->getBoxResolution(boxRes);
 
-    float boxRes[3];
-    rdf->getBoxResolution(boxRes);
+      minDistLE->setText(QString::number(rdf->getMinDistance()));
+      maxDistLE->setText(QString::number(rdf->getMaxDistance()));
+      numBinsLE->setText(QString::number(rdf->getNumberOfBins()));
 
-    minDistLE->setText(QString::number(rdf->getMinDistance()));
-    maxDistLE->setText(QString::number(rdf->getMaxDistance()));
-    numBinsLE->setText(QString::number(rdf->getNumberOfBins()));
-
-    // Generate a new RDF for these
-    on_generateRDFBtn_clicked();
+      // Generate a new RDF for these
+      on_generateRDFBtn_clicked();
+    }
   }
 
   // Generate the RDF table Plot? which adds value to the Table?
