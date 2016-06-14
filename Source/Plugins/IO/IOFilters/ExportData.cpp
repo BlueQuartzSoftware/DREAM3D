@@ -283,9 +283,9 @@ void ExportData::preflight()
 void ExportData::execute()
 {
   setErrorCondition(0);
+  initialize();
   dataCheck();
   if(getErrorCondition() < 0) { return; }
-  initialize();
 
   if (m_SelectedDataArrayPaths.count() != m_SelectedWeakPtrVector.count())
   {
