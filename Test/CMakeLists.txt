@@ -29,12 +29,10 @@ include_directories(${DREAM3DTest_BINARY_DIR})
 include_directories(${SIMPLProj_SOURCE_DIR}/Source)
 include_directories(${SIMPLProj_BINARY_DIR})
 
-#------------------------------------------------------------------------------
-# Example how to call the CMake macro to add a unit test
-# AddSIMPLUnitTest(TESTNAME ConditionalSetValueTest
-#   SOURCES ${DREAM3DTest_SOURCE_DIR}/ConditionalSetValueTest.cpp
-#   FOLDER "SIMPLibProj/Test"
-#   LINK_LIBRARIES Qt5::Core H5Support SIMPLib)
+AddSIMPLUnitTest(TESTNAME FilterParameterCallbackExample
+                   SOURCES ${DREAM3DTest_SOURCE_DIR}/FilterParameterCallbackExample.cpp
+                   FOLDER "SIMPLibProj/Test"
+                   LINK_LIBRARIES Qt5::Core H5Support SIMPLib  )
 
 
 
@@ -92,7 +90,7 @@ configure_file(${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.h.in
 add_executable(PipelineRunnerTest ${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.cpp ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.h)
 target_link_libraries(PipelineRunnerTest Qt5::Core EbsdLib SIMPLib)
 set_target_properties(PipelineRunnerTest PROPERTIES FOLDER "SIMPLibProj/Test")
-add_test(PipelineRunnerTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PipelineRunnerTest)
+#add_test(PipelineRunnerTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PipelineRunnerTest)
 
 FILE(WRITE ${TEST_PIPELINE_LIST_FILE} )
 
