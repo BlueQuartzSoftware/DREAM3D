@@ -364,7 +364,7 @@ void TestPreflight()
       //DREAM3D_REQUIRE_EQUAL(filter->getInPreflight(), false);
       err = filter->getErrorCondition();
       // An error condition GREATER than ZERO is an anomoly and should be looked at.
-      if (err >= 0)
+      if (err > 0)
       {
         qDebug() << "Anomalous result for Preflight for " << filter->getGroupName() << "/" << filter->getNameOfClass()
                  << " Error Condition = " << filter->getErrorCondition();
