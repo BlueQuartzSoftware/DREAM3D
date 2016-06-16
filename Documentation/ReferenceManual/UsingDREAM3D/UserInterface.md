@@ -70,13 +70,13 @@ The **Bookmarks** section is where the user can _bookmark_ any **Pipelines** tha
 **Pipelines** and folders containing **Pipelines** can be dragged from the file system into **Bookmarks**. The user can right click anywhere in **Bookmarks** to make a contextual menu appear with additional options.
 
 ![Bookmarks Contextual Menu](Images/OverView-BookmarksViewMenu1.png)
-@image latex Images/OverView-BookmarksViewMenu.png "Bookmarks Contextual Menu" width=6in
+@image latex Images/OverView-BookmarksViewMenu1.png "Bookmarks Contextual Menu" width=6in
 
 ![Bookmarks Contextual Menu](Images/OverView-BookmarksViewMenu2.png)
-@image latex Images/OverView-BookmarksViewMenu.png "Bookmarks Contextual Menu" width=6in
+@image latex Images/OverView-BookmarksViewMenu2.png "Bookmarks Contextual Menu" width=6in
 
 ![Bookmarks Contextual Menu](Images/OverView-BookmarksViewMenu3.png)
-@image latex Images/OverView-BookmarksViewMenu.png "Bookmarks Contextual Menu" width=6in
+@image latex Images/OverView-BookmarksViewMenu3.png "Bookmarks Contextual Menu" width=6in
 
 ### Interacting With Bookmarks ###
 To add a bookmark to **Bookmarks**, open the *Bookmarks* menu and choose *Add Bookmark*. Users can also use the **Bookmarks Contextual Menu** to add a bookmark by right clicking on an existing virtual folder or empty space and selecting *Add Bookmark*. **Bookmarks** and virtual folders can be renamed by right clicking on them and selecting the *Rename Bookmark* or *Rename Folder* option. To update a bookmark in **Bookmarks**, use the **Bookmarks Contextual Menu** by right clicking on a bookmark and select *Update Pipeline*. The **Bookmark** that was right clicked will be updated with the pipeline that is currently in the **Pipeline View**. To remove a **Bookmark** or virtual folder from **Bookmarks**, use the **Bookmarks Contextual Menu** by right clicking on a bookmark or virtual folder and select *Remove Bookmark* or *Remove Folder*. This procedure _does not_ delete the **Pipeline** files themselves, but only removes them from the **Bookmarks View**.
