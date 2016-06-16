@@ -109,6 +109,17 @@ A **Filter** can be selected by single left clicking. Multiple **Filters** can b
 
 **Note:** Copying **Filters** puts them onto the system clipboard as a pipeline in JSON format.  Therefore, it is possible to create a sub-pipeline of a pipeline currently loaded in DREAM.3D by copying filters to the clipboard in DREAM.3D and then pasting into any text editor.
 
+![Alt-Drag Example](Images/OverView-CutCopyPaste1.png)
+@image latex OverView-CutCopyPaste1.png "Alt-Drag Example" width=6in
+
+![Alt-Drag Example](Images/OverView-CutCopyPaste2.png)
+@image latex OverView-CutCopyPaste2.png "Alt-Drag Example" width=6in
+
+![Alt-Drag Example](Images/OverView-CutCopyPaste3.png)
+@image latex OverView-CutCopyPaste3.png "Alt-Drag Example" width=6in
+
+In the example above, filters 2 and 4 are selected and then copied to the bottom of the pipeline by pressing the Alt key and dragging.
+
 ### Undo/Redo Filter Placement ###
 It is possible to undo and redo actions such as adding, removing, moving, and clearing **Filters** using the **Undo** and **Redo** items in the **Edit** menu.  Additionally, **Undo** and **Redo** can also be invoked by pressing their universal keyboard shortcuts (Ctrl+Z, Ctrl+Shift+Z).
 
