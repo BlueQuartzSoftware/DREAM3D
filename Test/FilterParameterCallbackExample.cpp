@@ -11,8 +11,13 @@
 #include "SIMPLib/DataContainers/DataArrayPath.h"
 
 
+#define SIMPL_BIND_SETTER(CLASS, PTR, PROP)\
+std::bind(&CLASS::set##PROP, PTR, std::placeholders::_1)
 
+#define SIMPL_BIND_GETTER(CLASS, PTR, PROP)\
+std::bind(&CLASS::get##PROP, PTR)
 
+#if 0
 #define BIND_SETTER_PROPERTY(CLASS, PTR, PROP)\
 std::bind(&CLASS::set##PROP, PTR, std::placeholders::_1),
 
@@ -21,7 +26,7 @@ std::bind(&CLASS::get##PROP, PTR), QString(#PROP)
 
 #define BIND_PROPERTY(CLASS, PTR, PROP)\
  QString(#PROP), std::bind(&CLASS::set##PROP, PTR, std::placeholders::_1), std::bind(&CLASS::get##PROP, PTR)
-
+#endif
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -207,9 +212,9 @@ class Filter
 
     void setupParameters()
     {
-      m_FilterParameters.push_back( IntParameter::New(BIND_PROPERTY(Filter, this, Parameter1)) );
-      m_FilterParameters.push_back( DoubleParameter::New(BIND_PROPERTY(Filter, this, Parameter2)) );
-      m_FilterParameters.push_back( DataArrayPathParameter::New(BIND_PROPERTY(Filter, this, FeatureIdsPath)) );
+      m_FilterParameters.push_back( IntParameter::New("Parameter1", SIMPL_BIND_SETTER(Filter, this, Parameter1), SIMPL_BIND_GETTER(Filter, this, Parameter1) ));
+      m_FilterParameters.push_back( DoubleParameter::New("Parameter2", SIMPL_BIND_SETTER(Filter, this, Parameter2), SIMPL_BIND_GETTER(Filter, this, Parameter2) ));
+      m_FilterParameters.push_back( DataArrayPathParameter::New("FeatureIdsPath", SIMPL_BIND_SETTER(Filter, this, FeatureIdsPath), SIMPL_BIND_GETTER(Filter, this, FeatureIdsPath) ));
     }
 
     SIMPL_FILTER_PARAMETER(int, Index)
