@@ -320,7 +320,8 @@ void WarpRegularGrid::execute()
       }
       else
       {
-        data->initializeTuple(i, 0);
+        int var = 0;
+        data->initializeTuple(i, &var);
       }
     }
     cellAttrMat->removeAttributeArray(*iter);

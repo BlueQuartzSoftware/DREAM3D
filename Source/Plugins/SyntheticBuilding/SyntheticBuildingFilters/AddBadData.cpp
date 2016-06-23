@@ -209,7 +209,8 @@ void  AddBadData::add_noise()
         for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
           IDataArray::Pointer p = m->getAttributeMatrix(attMatName)->getAttributeArray(*iter);
-          p->initializeTuple(i, 0);
+          int var = 0;
+          p->initializeTuple(i, &var);
         }
       }
     }
@@ -221,7 +222,8 @@ void  AddBadData::add_noise()
         for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
           IDataArray::Pointer p = m->getAttributeMatrix(attMatName)->getAttributeArray(*iter);
-          p->initializeTuple(i, 0);
+          int var = 0;
+          p->initializeTuple(i, &var);
         }
       }
     }

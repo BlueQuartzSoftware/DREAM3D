@@ -538,7 +538,8 @@ void RotateSampleRefFrame::execute()
       }
       else
       {
-        data->initializeTuple(i, 0);
+        int var = 0;
+        data->initializeTuple(i, &var);
       }
     }
     m->getAttributeMatrix(attrMatName)->addAttributeArray(*iter, data);
