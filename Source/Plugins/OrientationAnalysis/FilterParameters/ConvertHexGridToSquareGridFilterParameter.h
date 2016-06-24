@@ -45,11 +45,13 @@ public:
     SIMPL_STATIC_NEW_MACRO(ConvertHexGridToSquareGridFilterParameter)
     SIMPL_TYPE_MACRO(ConvertHexGridToSquareGridFilterParameter)
 
+  typedef std::function<void(int)> SetterCallbackType;
+  typedef std::function<int(void)> GetterCallbackType;
+
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-    const QVariant& defaultValue, Category category,
-    const QString& fileExtension = QString(""),
-    const QString& fileType = QString(""),
-    int groupIndex = -1);
+    const QVariant& defaultValue, Category category, SetterCallbackType setterCallback,
+    GetterCallbackType getterCallback, const QString& fileExtension = QString(""),
+    const QString& fileType = QString(""), int groupIndex = -1);
 
   virtual ~ConvertHexGridToSquareGridFilterParameter();
 
@@ -57,6 +59,21 @@ public:
     SIMPL_INSTANCE_STRING_PROPERTY(FileType)
 
   QString getWidgetType();
+
+  /**
+   * @brief readJson
+   * @return
+   */
+  void readJson(const QJsonObject &json);
+
+  /**
+   * @brief writeJson
+   * @return
+   */
+  void writeJson(QJsonObject &json);
+
+  SIMPL_INSTANCE_PROPERTY(SetterCallbackType, SetterCallback)
+  SIMPL_INSTANCE_PROPERTY(GetterCallbackType, GetterCallback)
 
 protected:
   ConvertHexGridToSquareGridFilterParameter();

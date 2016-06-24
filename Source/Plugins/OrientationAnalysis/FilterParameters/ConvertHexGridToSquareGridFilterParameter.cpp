@@ -35,6 +35,8 @@
 
 #include "ConvertHexGridToSquareGridFilterParameter.h"
 
+#include <QtCore/QJsonObject>
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -52,7 +54,7 @@ ConvertHexGridToSquareGridFilterParameter::~ConvertHexGridToSquareGridFilterPara
 //
 // -----------------------------------------------------------------------------
 ConvertHexGridToSquareGridFilterParameter::Pointer ConvertHexGridToSquareGridFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QVariant& defaultValue, Category category, const QString& fileExtension,
+  const QVariant& defaultValue, Category category, SetterCallbackType setterCallback, GetterCallbackType getterCallback, const QString& fileExtension,
   const QString& fileType, int groupIndex)
 {
   ConvertHexGridToSquareGridFilterParameter::Pointer ptr = ConvertHexGridToSquareGridFilterParameter::New();
@@ -63,6 +65,9 @@ ConvertHexGridToSquareGridFilterParameter::Pointer ConvertHexGridToSquareGridFil
   ptr->setFileExtension(fileExtension);
   ptr->setFileType(fileType);
   ptr->setGroupIndex(groupIndex);
+  ptr->setSetterCallback(setterCallback);
+  ptr->setGetterCallback(getterCallback);
+
   return ptr;
 }
 
@@ -73,5 +78,25 @@ ConvertHexGridToSquareGridFilterParameter::Pointer ConvertHexGridToSquareGridFil
 QString ConvertHexGridToSquareGridFilterParameter::getWidgetType()
 {
   return QString("ConvertHexGridToSquareGridWidget");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ConvertHexGridToSquareGridFilterParameter::readJson(const QJsonObject &json)
+{
+  QJsonValue jsonValue = json[getPropertyName()];
+  if(!jsonValue.isUndefined() )
+  {
+    m_SetterCallback(jsonValue.toInt(0.0));
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ConvertHexGridToSquareGridFilterParameter::writeJson(QJsonObject &json)
+{
+  json[getPropertyName()] = m_GetterCallback();
 }
 

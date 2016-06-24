@@ -336,7 +336,7 @@ void M3CSliceBySlice::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(BooleanFilterParameter::New("Delete Temp Files", "DeleteTempFiles", getDeleteTempFiles(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(M3CSliceBySlice, this, DeleteTempFiles), SIMPL_BIND_GETTER(M3CSliceBySlice, this, DeleteTempFiles)));
   parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(DataArraySelectionFilterParameter::New("FeatureIds", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::Uncategorized));
+  parameters.push_back(DataArraySelectionFilterParameter::New("FeatureIds", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(M3CSliceBySlice, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(M3CSliceBySlice, this, FeatureIdsArrayPath)));
   parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
   parameters.push_back(StringFilterParameter::New("Surface Data Container", "SurfaceDataContainerName", getSurfaceDataContainerName(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(M3CSliceBySlice, this, SurfaceDataContainerName), SIMPL_BIND_GETTER(M3CSliceBySlice, this, SurfaceDataContainerName)));
   parameters.push_back(StringFilterParameter::New("Vertex Attribute Matrix", "VertexAttributeMatrixName", getVertexAttributeMatrixName(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(M3CSliceBySlice, this, VertexAttributeMatrixName), SIMPL_BIND_GETTER(M3CSliceBySlice, this, VertexAttributeMatrixName)));

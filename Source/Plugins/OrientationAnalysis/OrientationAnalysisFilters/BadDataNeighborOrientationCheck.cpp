@@ -85,7 +85,7 @@ BadDataNeighborOrientationCheck::~BadDataNeighborOrientationCheck()
 void BadDataNeighborOrientationCheck::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(DoubleFilterParameter::New("Misorientation Tolerance (Degrees)", "MisorientationTolerance", getMisorientationTolerance(), FilterParameter::Parameter));
+  parameters.push_back(DoubleFilterParameter::New("Misorientation Tolerance (Degrees)", "MisorientationTolerance", getMisorientationTolerance(), FilterParameter::Parameter, SIMPL_BIND_SETTER(BadDataNeighborOrientationCheck, this, MisorientationTolerance), SIMPL_BIND_GETTER(BadDataNeighborOrientationCheck, this, MisorientationTolerance)));
   parameters.push_back(IntFilterParameter::New("Required Number of Neighbors", "NumberOfNeighbors", getNumberOfNeighbors(), FilterParameter::Parameter, SIMPL_BIND_SETTER(BadDataNeighborOrientationCheck, this, NumberOfNeighbors), SIMPL_BIND_GETTER(BadDataNeighborOrientationCheck, this, NumberOfNeighbors)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {

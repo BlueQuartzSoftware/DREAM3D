@@ -167,7 +167,7 @@ void MovingFiniteElementSmoothing::setupFilterParameters()
   parameters.push_back(BooleanFilterParameter::New("Constrain Quad Points", "ConstrainQuadPoints", getConstrainQuadPoints(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(MovingFiniteElementSmoothing, this, ConstrainQuadPoints), SIMPL_BIND_GETTER(MovingFiniteElementSmoothing, this, ConstrainQuadPoints)));
   parameters.push_back(BooleanFilterParameter::New("Smooth Triple Lines", "SmoothTripleLines", getSmoothTripleLines(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(MovingFiniteElementSmoothing, this, SmoothTripleLines), SIMPL_BIND_GETTER(MovingFiniteElementSmoothing, this, SmoothTripleLines)));
   parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath(), FilterParameter::Uncategorized));
+  parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(MovingFiniteElementSmoothing, this, SurfaceMeshNodeTypeArrayPath), SIMPL_BIND_GETTER(MovingFiniteElementSmoothing, this, SurfaceMeshNodeTypeArrayPath)));
   setFilterParameters(parameters);
 }
 

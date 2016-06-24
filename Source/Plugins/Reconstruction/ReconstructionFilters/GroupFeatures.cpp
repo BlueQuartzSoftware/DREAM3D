@@ -79,7 +79,7 @@ void GroupFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
   QStringList linkedProps("NonContiguousNeighborListArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Non-Contiguous Neighbors", "UseNonContiguousNeighbors", getUseNonContiguousNeighbors(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Non-Contiguous Neighbors", "UseNonContiguousNeighbors", getUseNonContiguousNeighbors(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(GroupFeatures, this, UseNonContiguousNeighbors), SIMPL_BIND_GETTER(GroupFeatures, this, UseNonContiguousNeighbors)));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::NeighborList, 1, SIMPL::AttributeMatrixObjectType::Feature);

@@ -92,12 +92,12 @@ CropImageGeometry::~CropImageGeometry()
 void CropImageGeometry::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntFilterParameter::New("X Min (Column)", "XMin", getXMin(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("Y Min (Row)", "YMin", getYMin(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("Z Min (Plane)", "ZMin", getZMin(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("X Max (Column) [Inclusive]", "XMax", getXMax(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("Y Max (Row) [Inclusive]", "YMax", getYMax(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("Z Max (Plane) [Inclusive]", "ZMax", getZMax(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("X Min (Column)", "XMin", getXMin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CropImageGeometry, this, XMin), SIMPL_BIND_GETTER(CropImageGeometry, this, XMin)));
+  parameters.push_back(IntFilterParameter::New("Y Min (Row)", "YMin", getYMin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CropImageGeometry, this, YMin), SIMPL_BIND_GETTER(CropImageGeometry, this, YMin)));
+  parameters.push_back(IntFilterParameter::New("Z Min (Plane)", "ZMin", getZMin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CropImageGeometry, this, ZMin), SIMPL_BIND_GETTER(CropImageGeometry, this, ZMin)));
+  parameters.push_back(IntFilterParameter::New("X Max (Column) [Inclusive]", "XMax", getXMax(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CropImageGeometry, this, XMax), SIMPL_BIND_GETTER(CropImageGeometry, this, XMax)));
+  parameters.push_back(IntFilterParameter::New("Y Max (Row) [Inclusive]", "YMax", getYMax(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CropImageGeometry, this, YMax), SIMPL_BIND_GETTER(CropImageGeometry, this, YMax)));
+  parameters.push_back(IntFilterParameter::New("Z Max (Plane) [Inclusive]", "ZMax", getZMax(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CropImageGeometry, this, ZMax), SIMPL_BIND_GETTER(CropImageGeometry, this, ZMax)));
   QStringList linkedProps;
   linkedProps << "CellFeatureAttributeMatrixPath" << "FeatureIdsArrayPath";
   parameters.push_back(LinkedBooleanFilterParameter::New("Renumber Features", "RenumberFeatures", getRenumberFeatures(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(CropImageGeometry, this, RenumberFeatures), SIMPL_BIND_GETTER(CropImageGeometry, this, RenumberFeatures)));

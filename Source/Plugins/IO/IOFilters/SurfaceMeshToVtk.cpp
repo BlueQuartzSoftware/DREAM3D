@@ -90,7 +90,7 @@ void SurfaceMeshToVtk::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
 
-  parameters.push_back(OutputFileFilterParameter::New("Output Vtk File", "OutputVtkFile", getOutputVtkFile(), FilterParameter::Parameter));
+  parameters.push_back(OutputFileFilterParameter::New("Output Vtk File", "OutputVtkFile", getOutputVtkFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SurfaceMeshToVtk, this, OutputVtkFile), SIMPL_BIND_GETTER(SurfaceMeshToVtk, this, OutputVtkFile)));
   parameters.push_back(BooleanFilterParameter::New("Write Binary Vtk File", "WriteBinaryFile", getWriteBinaryFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SurfaceMeshToVtk, this, WriteBinaryFile), SIMPL_BIND_GETTER(SurfaceMeshToVtk, this, WriteBinaryFile)));
   parameters.push_back(BooleanFilterParameter::New("Write Conformal Mesh", "WriteConformalMesh", getWriteConformalMesh(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SurfaceMeshToVtk, this, WriteConformalMesh), SIMPL_BIND_GETTER(SurfaceMeshToVtk, this, WriteConformalMesh)));
   {

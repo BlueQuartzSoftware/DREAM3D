@@ -97,7 +97,7 @@ FindBoundaryStrengths::~FindBoundaryStrengths()
 void FindBoundaryStrengths::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FloatVec3FilterParameter::New("Loading Direction (XYZ)", "Loading", getLoading(), FilterParameter::Parameter));
+  parameters.push_back(FloatVec3FilterParameter::New("Loading Direction (XYZ)", "Loading", getLoading(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindBoundaryStrengths, this, Loading), SIMPL_BIND_GETTER(FindBoundaryStrengths, this, Loading)));
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
 
   {

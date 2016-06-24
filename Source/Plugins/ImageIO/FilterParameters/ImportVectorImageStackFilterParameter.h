@@ -45,12 +45,31 @@ public:
     SIMPL_STATIC_NEW_MACRO(ImportVectorImageStackFilterParameter)
     SIMPL_TYPE_MACRO(ImportVectorImageStackFilterParameter)
 
+  typedef std::function<void(int)> SetterCallbackType;
+  typedef std::function<int(void)> GetterCallbackType;
+
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-    const QVariant& defaultValue, Category category, int groupIndex = -1);
+    const QVariant& defaultValue, Category category, SetterCallbackType setterCallback,
+                       GetterCallbackType getterCallback,int groupIndex = -1);
 
   virtual ~ImportVectorImageStackFilterParameter();
 
   QString getWidgetType();
+
+  /**
+   * @brief readJson
+   * @return
+   */
+  void readJson(const QJsonObject &json);
+
+  /**
+   * @brief writeJson
+   * @return
+   */
+  void writeJson(QJsonObject &json);
+
+  SIMPL_INSTANCE_PROPERTY(SetterCallbackType, SetterCallback)
+  SIMPL_INSTANCE_PROPERTY(GetterCallbackType, GetterCallback)
 
 protected:
   ImportVectorImageStackFilterParameter();

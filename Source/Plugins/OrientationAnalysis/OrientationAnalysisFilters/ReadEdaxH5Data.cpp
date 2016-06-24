@@ -148,8 +148,8 @@ void ReadEdaxH5Data::setupFilterParameters()
   //parameters.push_back(DynamicChoiceFilterParameter::New("Scan Name", "ScanName", getScanName(), "FileScanNames", FilterParameter::Parameter));
   parameters.push_back(ReadEdaxH5DataFilterParameter::New("Scan Names", "SelectedScanNames", getSelectedScanNames(), "FileScanNames", FilterParameter::Parameter));
 
-  parameters.push_back(DoubleFilterParameter::New("Z Spacing (Microns)", "ZSpacing", getZSpacing(), FilterParameter::Parameter));
-  parameters.push_back(FloatVec3FilterParameter::New("Origin (XYZ)", "Origin", getOrigin(), FilterParameter::Parameter));
+  parameters.push_back(DoubleFilterParameter::New("Z Spacing (Microns)", "ZSpacing", getZSpacing(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ReadEdaxH5Data, this, ZSpacing), SIMPL_BIND_GETTER(ReadEdaxH5Data, this, ZSpacing)));
+  parameters.push_back(FloatVec3FilterParameter::New("Origin (XYZ)", "Origin", getOrigin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ReadEdaxH5Data, this, Origin), SIMPL_BIND_GETTER(ReadEdaxH5Data, this, Origin)));
 
   parameters.push_back(BooleanFilterParameter::New("Read Pattern Data", "ReadPatternData", getReadPatternData(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ReadEdaxH5Data, this, ReadPatternData), SIMPL_BIND_GETTER(ReadEdaxH5Data, this, ReadPatternData)));
   parameters.push_back(StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ReadEdaxH5Data, this, DataContainerName), SIMPL_BIND_GETTER(ReadEdaxH5Data, this, DataContainerName)));

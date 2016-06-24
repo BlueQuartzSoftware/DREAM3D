@@ -93,7 +93,7 @@ void MultiEmmpmFilter::setupFilterParameters()
     {
       {
         MultiDataArraySelectionFilterParameter::RequirementType req = MultiDataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt8, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-        parameters[i] = MultiDataArraySelectionFilterParameter::New("Input Attribute Arrays", "InputDataArrayVector", getInputDataArrayVector(), FilterParameter::RequiredArray, req);
+        parameters[i] = MultiDataArraySelectionFilterParameter::New("Input Attribute Arrays", "InputDataArrayVector", getInputDataArrayVector(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(MultiEmmpmFilter, this, InputDataArrayVector), SIMPL_BIND_GETTER(MultiEmmpmFilter, this, InputDataArrayVector));
       }
     }
   }
@@ -104,7 +104,7 @@ void MultiEmmpmFilter::setupFilterParameters()
     FilterParameter::Pointer& p = parameters[i];
     if ( p->getPropertyName().compare("OutputDataArrayPath") == 0 )
     {
-      parameters[i] = StringFilterParameter::New("Output Cell Attribute Matrix", "OutputAttributeMatrixName", getOutputAttributeMatrixName(), FilterParameter::CreatedArray);
+      parameters[i] = StringFilterParameter::New("Output Cell Attribute Matrix", "OutputAttributeMatrixName", getOutputAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(MultiEmmpmFilter, this, OutputAttributeMatrixName), SIMPL_BIND_GETTER(MultiEmmpmFilter, this, OutputAttributeMatrixName));
     }
   }
 

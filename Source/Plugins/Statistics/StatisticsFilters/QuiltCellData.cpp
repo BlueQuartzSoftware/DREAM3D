@@ -88,8 +88,8 @@ void QuiltCellData::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(IntVec3FilterParameter::New("Quilt Step (Voxels)", "QuiltStep", getQuiltStep(), FilterParameter::Parameter));
-  parameters.push_back(IntVec3FilterParameter::New("Patch Size (Voxels)", "PatchSize", getPatchSize(), FilterParameter::Parameter));
+  parameters.push_back(IntVec3FilterParameter::New("Quilt Step (Voxels)", "QuiltStep", getQuiltStep(), FilterParameter::Parameter, SIMPL_BIND_SETTER(QuiltCellData, this, QuiltStep), SIMPL_BIND_GETTER(QuiltCellData, this, QuiltStep)));
+  parameters.push_back(IntVec3FilterParameter::New("Patch Size (Voxels)", "PatchSize", getPatchSize(), FilterParameter::Parameter, SIMPL_BIND_SETTER(QuiltCellData, this, PatchSize), SIMPL_BIND_GETTER(QuiltCellData, this, PatchSize)));
 
   {
     DataArraySelectionFilterParameter::RequirementType req;

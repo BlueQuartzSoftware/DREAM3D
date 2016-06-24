@@ -35,6 +35,9 @@
 
 #include "ImportVectorImageStackFilterParameter.h"
 
+#include <QtCore/QJsonValue>
+#include <QtCore/QJsonObject>
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -52,7 +55,7 @@ ImportVectorImageStackFilterParameter::~ImportVectorImageStackFilterParameter()
 //
 // -----------------------------------------------------------------------------
 ImportVectorImageStackFilterParameter::Pointer ImportVectorImageStackFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-  const QVariant& defaultValue, Category category, int groupIndex)
+  const QVariant& defaultValue, Category category, SetterCallbackType setterCallback, GetterCallbackType getterCallback, int groupIndex)
 {
 
   ImportVectorImageStackFilterParameter::Pointer ptr = ImportVectorImageStackFilterParameter::New();
@@ -61,6 +64,9 @@ ImportVectorImageStackFilterParameter::Pointer ImportVectorImageStackFilterParam
   ptr->setDefaultValue(defaultValue);
   ptr->setCategory(category);
   ptr->setGroupIndex(groupIndex);
+  ptr->setSetterCallback(setterCallback);
+  ptr->setGetterCallback(getterCallback);
+
   return ptr;
 }
 
@@ -71,5 +77,25 @@ ImportVectorImageStackFilterParameter::Pointer ImportVectorImageStackFilterParam
 QString ImportVectorImageStackFilterParameter::getWidgetType()
 {
   return QString("ImportVectorImageStackWidget");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ImportVectorImageStackFilterParameter::readJson(const QJsonObject &json)
+{
+  QJsonValue jsonValue = json[getPropertyName()];
+  if(!jsonValue.isUndefined() )
+  {
+    m_SetterCallback(jsonValue.toInt(0.0));
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ImportVectorImageStackFilterParameter::writeJson(QJsonObject &json)
+{
+  json[getPropertyName()] = m_GetterCallback();
 }
 

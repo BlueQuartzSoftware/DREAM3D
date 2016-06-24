@@ -236,7 +236,7 @@ void VerifyTriangleWinding::setupFilterParameters()
   FilterParameterVector parameters;
 
   parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
-  parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::Uncategorized));
+  parameters.push_back(DataArraySelectionFilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(VerifyTriangleWinding, this, SurfaceMeshFaceLabelsArrayPath), SIMPL_BIND_GETTER(VerifyTriangleWinding, this, SurfaceMeshFaceLabelsArrayPath)));
   setFilterParameters(parameters);
 }
 

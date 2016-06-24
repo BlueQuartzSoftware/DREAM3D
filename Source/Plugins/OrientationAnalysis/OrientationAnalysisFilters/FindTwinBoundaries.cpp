@@ -242,8 +242,8 @@ FindTwinBoundaries::~FindTwinBoundaries()
 void FindTwinBoundaries::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(DoubleFilterParameter::New("Axis Tolerance (Degrees)", "AxisTolerance", getAxisTolerance(), FilterParameter::Parameter));
-  parameters.push_back(DoubleFilterParameter::New("Angle Tolerance (Degrees)", "AngleTolerance", getAngleTolerance(), FilterParameter::Parameter));
+  parameters.push_back(DoubleFilterParameter::New("Axis Tolerance (Degrees)", "AxisTolerance", getAxisTolerance(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindTwinBoundaries, this, AxisTolerance), SIMPL_BIND_GETTER(FindTwinBoundaries, this, AxisTolerance)));
+  parameters.push_back(DoubleFilterParameter::New("Angle Tolerance (Degrees)", "AngleTolerance", getAngleTolerance(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FindTwinBoundaries, this, AngleTolerance), SIMPL_BIND_GETTER(FindTwinBoundaries, this, AngleTolerance)));
   QStringList linkedProps;
   linkedProps << "SurfaceMeshFaceNormalsArrayPath" << "SurfaceMeshTwinBoundaryIncoherenceArrayName";
   parameters.push_back(LinkedBooleanFilterParameter::New("Compute Coherence", "FindCoherence", getFindCoherence(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FindTwinBoundaries, this, FindCoherence), SIMPL_BIND_GETTER(FindTwinBoundaries, this, FindCoherence)));

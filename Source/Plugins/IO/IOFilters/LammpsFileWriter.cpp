@@ -82,7 +82,7 @@ void LammpsFileWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(OutputFileFilterParameter::New("Lammps File", "LammpsFile", getLammpsFile(), FilterParameter::Parameter));
+  parameters.push_back(OutputFileFilterParameter::New("Lammps File", "LammpsFile", getLammpsFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(LammpsFileWriter, this, LammpsFile), SIMPL_BIND_GETTER(LammpsFileWriter, this, LammpsFile)));
 
   {
     DataContainerSelectionFilterParameter::RequirementType req;

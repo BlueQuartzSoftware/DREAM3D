@@ -173,7 +173,7 @@ void GenerateIPFColors::setupFilterParameters()
   parameters.push_back(FloatVec3FilterParameter::New("Reference Direction", "ReferenceDir", getReferenceDir(), FilterParameter::Parameter, SIMPL_BIND_SETTER(GenerateIPFColors, this, ReferenceDir), SIMPL_BIND_GETTER(GenerateIPFColors, this, ReferenceDir)));
 
   QStringList linkedProps("GoodVoxelsArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Good Elements Only (Bad Elements Will Be Black)", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Good Elements Only (Bad Elements Will Be Black)", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(GenerateIPFColors, this, UseGoodVoxels), SIMPL_BIND_GETTER(GenerateIPFColors, this, UseGoodVoxels)));
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixObjectType::Element);
   parameters.push_back(DataArraySelectionFilterParameter::New("Euler Angles", "CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(GenerateIPFColors, this, CellEulerAnglesArrayPath), SIMPL_BIND_GETTER(GenerateIPFColors, this, CellEulerAnglesArrayPath)));

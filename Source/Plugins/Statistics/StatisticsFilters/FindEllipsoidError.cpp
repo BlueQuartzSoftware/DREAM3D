@@ -92,7 +92,7 @@ void FindEllipsoidError::setupFilterParameters()
   FilterParameterVector parameters;
 
   QStringList linkedProps("IdealFeatureIdsArrayName");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Write Ideal Ellipse Feature Ids (Caution LONG calculation)", "WriteIdealEllipseFeatureIds", getWriteIdealEllipseFeatureIds(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Write Ideal Ellipse Feature Ids (Caution LONG calculation)", "WriteIdealEllipseFeatureIds", getWriteIdealEllipseFeatureIds(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FindEllipsoidError, this, WriteIdealEllipseFeatureIds), SIMPL_BIND_GETTER(FindEllipsoidError, this, WriteIdealEllipseFeatureIds)));
 
   {
     DataArraySelectionFilterParameter::RequirementType req;

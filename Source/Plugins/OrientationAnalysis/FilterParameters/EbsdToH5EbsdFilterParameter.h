@@ -38,6 +38,8 @@
 
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 
+#include "OrientationAnalysis/OrientationAnalysisFilters/EbsdToH5Ebsd.h"
+
 class EbsdToH5EbsdFilterParameter : public FilterParameter
 {
 public:
@@ -46,7 +48,7 @@ public:
     SIMPL_TYPE_MACRO(EbsdToH5EbsdFilterParameter)
 
   static Pointer New(const QString& humanLabel, const QString& propertyName,
-                     const QVariant& defaultValue, Category category,
+                     const QVariant& defaultValue, Category category, EbsdToH5Ebsd* filter,
                      const QString& fileExtension = QString(""),
                      const QString& fileType = QString(""),
                      int groupIndex = -1);
@@ -56,7 +58,21 @@ public:
   SIMPL_INSTANCE_STRING_PROPERTY(FileExtension)
     SIMPL_INSTANCE_STRING_PROPERTY(FileType)
 
+  SIMPL_INSTANCE_PROPERTY(EbsdToH5Ebsd*, Filter)
+
   QString getWidgetType();
+
+  /**
+   * @brief readJson
+   * @return
+   */
+  void readJson(const QJsonObject &json);
+
+  /**
+   * @brief writeJson
+   * @return
+   */
+  void writeJson(QJsonObject &json);
 
 protected:
   EbsdToH5EbsdFilterParameter();
