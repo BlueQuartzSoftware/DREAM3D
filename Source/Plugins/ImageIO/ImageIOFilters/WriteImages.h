@@ -152,7 +152,17 @@ class WriteImages : public AbstractFilter
      * @param dims Array of the 3 dimensions
      * @return Integer error values
      */
-    int32_t saveImage(size_t slice, size_t dB, size_t dA, size_t* dims);
+    int32_t writeRGBImage(size_t slice, size_t dB, size_t dA, size_t* dims);
+
+    /**
+     * @brief saveImage Saves the data to an image on the disk
+     * @param slice The axis on which the slicing occurs
+     * @param dA Dimensions of one axis of the plane
+     * @param dB Dimensions of the second axis of the plane
+     * @param dims Array of the 3 dimensions
+     * @return Integer error values
+     */
+    int32_t writeGrayscaleImage(size_t slice, size_t dB, size_t dA, size_t* dims);
 
   signals:
     /**
