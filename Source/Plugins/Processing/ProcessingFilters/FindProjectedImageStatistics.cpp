@@ -204,14 +204,14 @@ void FindProjectedImageStatistics::setupFilterParameters()
     daTypes.push_back(SIMPL::TypeNames::Float);
     daTypes.push_back(SIMPL::TypeNames::Double);
     req.daTypes = daTypes;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array to Quantify", "SelectedArrayPath", getSelectedArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Attribute Array to Quantify", "SelectedArrayPath", getSelectedArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindProjectedImageStatistics, this, SelectedArrayPath), SIMPL_BIND_GETTER(FindProjectedImageStatistics, this, SelectedArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Projected Image Min", "ProjectedImageMinArrayName", getProjectedImageMinArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Projected Image Max", "ProjectedImageMaxArrayName", getProjectedImageMaxArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Projected Image Avg", "ProjectedImageAvgArrayName", getProjectedImageAvgArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Projected Image Std", "ProjectedImageStdArrayName", getProjectedImageStdArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Projected Image Var", "ProjectedImageVarArrayName", getProjectedImageVarArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Projected Image Min", "ProjectedImageMinArrayName", getProjectedImageMinArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindProjectedImageStatistics, this, ProjectedImageMinArrayName), SIMPL_BIND_GETTER(FindProjectedImageStatistics, this, ProjectedImageMinArrayName)));
+  parameters.push_back(StringFilterParameter::New("Projected Image Max", "ProjectedImageMaxArrayName", getProjectedImageMaxArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindProjectedImageStatistics, this, ProjectedImageMaxArrayName), SIMPL_BIND_GETTER(FindProjectedImageStatistics, this, ProjectedImageMaxArrayName)));
+  parameters.push_back(StringFilterParameter::New("Projected Image Avg", "ProjectedImageAvgArrayName", getProjectedImageAvgArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindProjectedImageStatistics, this, ProjectedImageAvgArrayName), SIMPL_BIND_GETTER(FindProjectedImageStatistics, this, ProjectedImageAvgArrayName)));
+  parameters.push_back(StringFilterParameter::New("Projected Image Std", "ProjectedImageStdArrayName", getProjectedImageStdArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindProjectedImageStatistics, this, ProjectedImageStdArrayName), SIMPL_BIND_GETTER(FindProjectedImageStatistics, this, ProjectedImageStdArrayName)));
+  parameters.push_back(StringFilterParameter::New("Projected Image Var", "ProjectedImageVarArrayName", getProjectedImageVarArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindProjectedImageStatistics, this, ProjectedImageVarArrayName), SIMPL_BIND_GETTER(FindProjectedImageStatistics, this, ProjectedImageVarArrayName)));
   setFilterParameters(parameters);
 }
 

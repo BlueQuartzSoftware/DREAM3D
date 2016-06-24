@@ -85,7 +85,7 @@ void MultiThresholdObjects::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(StringFilterParameter::New("Output Attribute Array", "DestinationArrayName", getDestinationArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Output Attribute Array", "DestinationArrayName", getDestinationArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(MultiThresholdObjects, this, DestinationArrayName), SIMPL_BIND_GETTER(MultiThresholdObjects, this, DestinationArrayName)));
   setFilterParameters(parameters);
 }
 

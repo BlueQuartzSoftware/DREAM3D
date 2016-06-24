@@ -98,7 +98,7 @@ ImportImageStack::~ImportImageStack()
 void ImportImageStack::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
-  parameters.push_back(FileListInfoFilterParameter::New("Input File List", "InputFileListInfo", getInputFileListInfo(), FilterParameter::Parameter));
+  parameters.push_back(FileListInfoFilterParameter::New("Input File List", "InputFileListInfo", getInputFileListInfo(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ImportImageStack, this, InputFileListInfo), SIMPL_BIND_GETTER(ImportImageStack, this, InputFileListInfo)));
   {
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
     parameter->setHumanLabel("Geometry Type");
@@ -118,10 +118,10 @@ void ImportImageStack::setupFilterParameters()
   parameters.push_back(FloatVec3FilterParameter::New("Origin", "Origin", getOrigin(), FilterParameter::Parameter, 0));
   parameters.push_back(FloatVec3FilterParameter::New("Resolution", "Resolution", getResolution(), FilterParameter::Parameter, 0));
   parameters.push_back(InputFileFilterParameter::New("Bounds File", "BoundsFile", getBoundsFile(), FilterParameter::Parameter, "*.txt", "", 1));
-  parameters.push_back(StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ImportImageStack, this, DataContainerName), SIMPL_BIND_GETTER(ImportImageStack, this, DataContainerName)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Image Data", "ImageDataArrayName", getImageDataArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ImportImageStack, this, CellAttributeMatrixName), SIMPL_BIND_GETTER(ImportImageStack, this, CellAttributeMatrixName)));
+  parameters.push_back(StringFilterParameter::New("Image Data", "ImageDataArrayName", getImageDataArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ImportImageStack, this, ImageDataArrayName), SIMPL_BIND_GETTER(ImportImageStack, this, ImageDataArrayName)));
   setFilterParameters(parameters);
 }
 

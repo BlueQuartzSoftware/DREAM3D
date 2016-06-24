@@ -90,19 +90,19 @@ void QuickSurfaceMesh::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(QuickSurfaceMesh, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(QuickSurfaceMesh, this, FeatureIdsArrayPath)));
   }
   {
     MultiDataArraySelectionFilterParameter::RequirementType req = MultiDataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(MultiDataArraySelectionFilterParameter::New("Attribute Arrays to Transfer", "SelectedDataArrayPaths", getSelectedDataArrayPaths(), FilterParameter::RequiredArray, req));
+    parameters.push_back(MultiDataArraySelectionFilterParameter::New("Attribute Arrays to Transfer", "SelectedDataArrayPaths", getSelectedDataArrayPaths(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(QuickSurfaceMesh, this, SelectedDataArrayPaths), SIMPL_BIND_GETTER(QuickSurfaceMesh, this, SelectedDataArrayPaths)));
   }
-  parameters.push_back(StringFilterParameter::New("Data Container", "SurfaceDataContainerName", getSurfaceDataContainerName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Data Container", "SurfaceDataContainerName", getSurfaceDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(QuickSurfaceMesh, this, SurfaceDataContainerName), SIMPL_BIND_GETTER(QuickSurfaceMesh, this, SurfaceDataContainerName)));
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Vertex Attribute Matrix", "VertexAttributeMatrixName", getVertexAttributeMatrixName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Node Types", "NodeTypesArrayName", getNodeTypesArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Vertex Attribute Matrix", "VertexAttributeMatrixName", getVertexAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(QuickSurfaceMesh, this, VertexAttributeMatrixName), SIMPL_BIND_GETTER(QuickSurfaceMesh, this, VertexAttributeMatrixName)));
+  parameters.push_back(StringFilterParameter::New("Node Types", "NodeTypesArrayName", getNodeTypesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(QuickSurfaceMesh, this, NodeTypesArrayName), SIMPL_BIND_GETTER(QuickSurfaceMesh, this, NodeTypesArrayName)));
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Face Attribute Matrix", "FaceAttributeMatrixName", getFaceAttributeMatrixName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Face Labels", "FaceLabelsArrayName", getFaceLabelsArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Face Attribute Matrix", "FaceAttributeMatrixName", getFaceAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(QuickSurfaceMesh, this, FaceAttributeMatrixName), SIMPL_BIND_GETTER(QuickSurfaceMesh, this, FaceAttributeMatrixName)));
+  parameters.push_back(StringFilterParameter::New("Face Labels", "FaceLabelsArrayName", getFaceLabelsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(QuickSurfaceMesh, this, FaceLabelsArrayName), SIMPL_BIND_GETTER(QuickSurfaceMesh, this, FaceLabelsArrayName)));
   setFilterParameters(parameters);
 }
 

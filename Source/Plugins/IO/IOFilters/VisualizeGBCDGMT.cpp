@@ -92,17 +92,17 @@ VisualizeGBCDGMT::~VisualizeGBCDGMT()
 void VisualizeGBCDGMT::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntFilterParameter::New("Phase of Interest", "PhaseOfInterest", getPhaseOfInterest(), FilterParameter::Parameter));
-  parameters.push_back(AxisAngleFilterParameter::New("Misorientation Axis-Angle", "MisorientationRotation", getMisorientationRotation(), FilterParameter::Parameter));
-  parameters.push_back(OutputFileFilterParameter::New("Output GMT File", "OutputFile", getOutputFile(), FilterParameter::Parameter, "*.dat", "DAT File"));
+  parameters.push_back(IntFilterParameter::New("Phase of Interest", "PhaseOfInterest", getPhaseOfInterest(), FilterParameter::Parameter, SIMPL_BIND_SETTER(VisualizeGBCDGMT, this, PhaseOfInterest), SIMPL_BIND_GETTER(VisualizeGBCDGMT, this, PhaseOfInterest)));
+  parameters.push_back(AxisAngleFilterParameter::New("Misorientation Axis-Angle", "MisorientationRotation", getMisorientationRotation(), FilterParameter::Parameter, SIMPL_BIND_SETTER(VisualizeGBCDGMT, this, MisorientationRotation), SIMPL_BIND_GETTER(VisualizeGBCDGMT, this, MisorientationRotation)));
+  parameters.push_back(OutputFileFilterParameter::New("Output GMT File", "OutputFile", getOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(VisualizeGBCDGMT, this, OutputFile), SIMPL_BIND_GETTER(VisualizeGBCDGMT, this, OutputFile), "*.dat", "DAT File"));
   parameters.push_back(SeparatorFilterParameter::New("Face Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Double, SIMPL::Defaults::AnyComponentSize, SIMPL::AttributeMatrixType::FaceEnsemble, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("GBCD", "GBCDArrayPath", getGBCDArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("GBCD", "GBCDArrayPath", getGBCDArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(VisualizeGBCDGMT, this, GBCDArrayPath), SIMPL_BIND_GETTER(VisualizeGBCDGMT, this, GBCDArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", getCrystalStructuresArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(VisualizeGBCDGMT, this, CrystalStructuresArrayPath), SIMPL_BIND_GETTER(VisualizeGBCDGMT, this, CrystalStructuresArrayPath)));
   }
   setFilterParameters(parameters);
 }

@@ -116,11 +116,11 @@ void ReadH5Ebsd::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(ReadH5EbsdFilterParameter::New("Read H5Ebsd File", "", "", FilterParameter::Parameter));
-  parameters.push_back(StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Data Container", "DataContainerName", getDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ReadH5Ebsd, this, DataContainerName), SIMPL_BIND_GETTER(ReadH5Ebsd, this, DataContainerName)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", getCellAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ReadH5Ebsd, this, CellAttributeMatrixName), SIMPL_BIND_GETTER(ReadH5Ebsd, this, CellAttributeMatrixName)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Cell Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ReadH5Ebsd, this, CellEnsembleAttributeMatrixName), SIMPL_BIND_GETTER(ReadH5Ebsd, this, CellEnsembleAttributeMatrixName)));
   setFilterParameters(parameters);
 }
 

@@ -96,29 +96,29 @@ EMMPMFilter::~EMMPMFilter()
 void EMMPMFilter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntFilterParameter::New("Number of Classes", "NumClasses", getNumClasses(), FilterParameter::Parameter));
-  parameters.push_back(DoubleFilterParameter::New("Exchange Energy", "ExchangeEnergy", getExchangeEnergy(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Number of Classes", "NumClasses", getNumClasses(), FilterParameter::Parameter, SIMPL_BIND_SETTER(EMMPMFilter, this, NumClasses), SIMPL_BIND_GETTER(EMMPMFilter, this, NumClasses)));
+  parameters.push_back(DoubleFilterParameter::New("Exchange Energy", "ExchangeEnergy", getExchangeEnergy(), FilterParameter::Parameter, SIMPL_BIND_SETTER(EMMPMFilter, this, ExchangeEnergy), SIMPL_BIND_GETTER(EMMPMFilter, this, ExchangeEnergy)));
   parameters.push_back(IntFilterParameter::New("Histogram Loops (EM)", "HistogramLoops", getHistogramLoops(), FilterParameter::Parameter));
   parameters.push_back(IntFilterParameter::New("Segmentation Loops (MPM)", "SegmentationLoops", getSegmentationLoops(), FilterParameter::Parameter));
-  parameters.push_back(BooleanFilterParameter::New("Use Simulated Annealing", "UseSimulatedAnnealing", getUseSimulatedAnnealing(), FilterParameter::Parameter));
+  parameters.push_back(BooleanFilterParameter::New("Use Simulated Annealing", "UseSimulatedAnnealing", getUseSimulatedAnnealing(), FilterParameter::Parameter, SIMPL_BIND_SETTER(EMMPMFilter, this, UseSimulatedAnnealing), SIMPL_BIND_GETTER(EMMPMFilter, this, UseSimulatedAnnealing)));
   QStringList linkedProps("GradientPenalty");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Gradient Penalty", "UseGradientPenalty", getUseGradientPenalty(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Gradient Penalty", "UseGradientPenalty", getUseGradientPenalty(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(EMMPMFilter, this, UseGradientPenalty), SIMPL_BIND_GETTER(EMMPMFilter, this, UseGradientPenalty)));
   parameters.push_back(DoubleFilterParameter::New("Gradient Penalty (Beta E)", "GradientPenalty", getGradientPenalty(), FilterParameter::Parameter));
   linkedProps.clear();
   linkedProps << "CurvaturePenalty" << "RMax" << "EMLoopDelay";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Curvature Penalty", "UseCurvaturePenalty", getUseCurvaturePenalty(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Curvature Penalty", "UseCurvaturePenalty", getUseCurvaturePenalty(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(EMMPMFilter, this, UseCurvaturePenalty), SIMPL_BIND_GETTER(EMMPMFilter, this, UseCurvaturePenalty)));
   parameters.push_back(DoubleFilterParameter::New("Curvature Penalty (Beta C)", "CurvaturePenalty", getCurvaturePenalty(), FilterParameter::Parameter));
-  parameters.push_back(DoubleFilterParameter::New("R Max", "RMax", getRMax(), FilterParameter::Parameter));
-  parameters.push_back(IntFilterParameter::New("EM Loop Delay", "EMLoopDelay", getEMLoopDelay(), FilterParameter::Parameter));
+  parameters.push_back(DoubleFilterParameter::New("R Max", "RMax", getRMax(), FilterParameter::Parameter, SIMPL_BIND_SETTER(EMMPMFilter, this, RMax), SIMPL_BIND_GETTER(EMMPMFilter, this, RMax)));
+  parameters.push_back(IntFilterParameter::New("EM Loop Delay", "EMLoopDelay", getEMLoopDelay(), FilterParameter::Parameter, SIMPL_BIND_SETTER(EMMPMFilter, this, EMLoopDelay), SIMPL_BIND_GETTER(EMMPMFilter, this, EMLoopDelay)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt8, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Input Attribute Array", "InputDataArrayPath", getInputDataArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Input Attribute Array", "InputDataArrayPath", getInputDataArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(EMMPMFilter, this, InputDataArrayPath), SIMPL_BIND_GETTER(EMMPMFilter, this, InputDataArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Output Attribute Array", "OutputDataArrayPath", getOutputDataArrayPath(), FilterParameter::CreatedArray, req));
+    parameters.push_back(DataArrayCreationFilterParameter::New("Output Attribute Array", "OutputDataArrayPath", getOutputDataArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(EMMPMFilter, this, OutputDataArrayPath), SIMPL_BIND_GETTER(EMMPMFilter, this, OutputDataArrayPath)));
   }
   setFilterParameters(parameters);
 }

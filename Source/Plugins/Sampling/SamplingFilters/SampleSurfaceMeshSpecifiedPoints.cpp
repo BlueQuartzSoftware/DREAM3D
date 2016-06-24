@@ -77,7 +77,7 @@ void SampleSurfaceMeshSpecifiedPoints::setupFilterParameters()
 {
   FilterParameterVector parameters = getFilterParameters();
   parameters.push_back(InputFileFilterParameter::New("Specified Points File", "InputFilePath", getInputFilePath(), FilterParameter::Parameter, "*.raw, *.bin"));
-  parameters.push_back(OutputFileFilterParameter::New("Sampled Values File", "OutputFilePath", getOutputFilePath(), FilterParameter::Parameter, "*.txt"));
+  parameters.push_back(OutputFileFilterParameter::New("Sampled Values File", "OutputFilePath", getOutputFilePath(), FilterParameter::Parameter, SIMPL_BIND_SETTER(SampleSurfaceMeshSpecifiedPoints, this, OutputFilePath), SIMPL_BIND_GETTER(SampleSurfaceMeshSpecifiedPoints, this, OutputFilePath), *.txt));
   setFilterParameters(parameters);
 }
 

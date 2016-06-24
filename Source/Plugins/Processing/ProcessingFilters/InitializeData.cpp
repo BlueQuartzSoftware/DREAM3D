@@ -105,7 +105,7 @@ void InitializeData::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     MultiDataArraySelectionFilterParameter::RequirementType req = MultiDataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, SIMPL::Defaults::AnyComponentSize, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(MultiDataArraySelectionFilterParameter::New("Cell Arrays", "CellAttributeMatrixPaths", getCellAttributeMatrixPaths(), FilterParameter::RequiredArray, req));
+    parameters.push_back(MultiDataArraySelectionFilterParameter::New("Cell Arrays", "CellAttributeMatrixPaths", getCellAttributeMatrixPaths(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(InitializeData, this, CellAttributeMatrixPaths), SIMPL_BIND_GETTER(InitializeData, this, CellAttributeMatrixPaths)));
   }
   parameters.push_back(IntFilterParameter::New("X Min (Column)", "XMin", getXMin(), FilterParameter::Parameter));
   parameters.push_back(IntFilterParameter::New("Y Min (Row)", "YMin", getYMin(), FilterParameter::Parameter));
@@ -133,9 +133,8 @@ void InitializeData::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(DoubleFilterParameter::New("Initialization Value", "InitValue", getInitValue(), FilterParameter::Parameter, Manual));
-  parameters.push_back(RangeFilterParameter::New("Initialization Range", "InitRange", getInitRange(), FilterParameter::Parameter, RandomWithRange));
-
+  parameters.push_back(DoubleFilterParameter::New("Initialization Value", "InitValue", getInitValue(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InitializeData, this, InitValue), SIMPL_BIND_GETTER(InitializeData, this, InitValue), Manual));
+  parameters.push_back(RangeFilterParameter::New("Initialization Range", "InitRange", getInitRange(), FilterParameter::Parameter, SIMPL_BIND_SETTER(InitializeData, this, InitRange), SIMPL_BIND_GETTER(InitializeData, this, InitRange), RandomWithRange));
   setFilterParameters(parameters);
 }
 

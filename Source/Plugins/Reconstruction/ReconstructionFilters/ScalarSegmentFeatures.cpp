@@ -191,22 +191,22 @@ void ScalarSegmentFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
   QStringList linkedProps("GoodVoxelsArrayPath");
-  parameters.push_back(DoubleFilterParameter::New("Scalar Tolerance", "ScalarTolerance", getScalarTolerance(), FilterParameter::Parameter));
-  parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask Array", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(DoubleFilterParameter::New("Scalar Tolerance", "ScalarTolerance", getScalarTolerance(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ScalarSegmentFeatures, this, ScalarTolerance), SIMPL_BIND_GETTER(ScalarSegmentFeatures, this, ScalarTolerance)));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask Array", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(ScalarSegmentFeatures, this, UseGoodVoxels), SIMPL_BIND_GETTER(ScalarSegmentFeatures, this, UseGoodVoxels)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Scalar Array to Segment", "ScalarArrayPath", getScalarArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Scalar Array to Segment", "ScalarArrayPath", getScalarArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(ScalarSegmentFeatures, this, ScalarArrayPath), SIMPL_BIND_GETTER(ScalarSegmentFeatures, this, ScalarArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "GoodVoxelsArrayPath", getGoodVoxelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(ScalarSegmentFeatures, this, GoodVoxelsArrayPath), SIMPL_BIND_GETTER(ScalarSegmentFeatures, this, GoodVoxelsArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Feature Ids", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Feature Ids", "FeatureIdsArrayName", getFeatureIdsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ScalarSegmentFeatures, this, FeatureIdsArrayName), SIMPL_BIND_GETTER(ScalarSegmentFeatures, this, FeatureIdsArrayName)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Active", "ActiveArrayName", getActiveArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ScalarSegmentFeatures, this, CellFeatureAttributeMatrixName), SIMPL_BIND_GETTER(ScalarSegmentFeatures, this, CellFeatureAttributeMatrixName)));
+  parameters.push_back(StringFilterParameter::New("Active", "ActiveArrayName", getActiveArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(ScalarSegmentFeatures, this, ActiveArrayName), SIMPL_BIND_GETTER(ScalarSegmentFeatures, this, ActiveArrayName)));
   setFilterParameters(parameters);
 }
 

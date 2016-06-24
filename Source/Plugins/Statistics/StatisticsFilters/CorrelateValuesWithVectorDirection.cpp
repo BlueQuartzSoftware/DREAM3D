@@ -83,11 +83,11 @@ void CorrelateValuesWithVectorDirection::setupFilterParameters()
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("VectorData", "VectorDataArrayPath", getVectorDataArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("VectorData", "VectorDataArrayPath", getVectorDataArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(CorrelateValuesWithVectorDirection, this, VectorDataArrayPath), SIMPL_BIND_GETTER(CorrelateValuesWithVectorDirection, this, VectorDataArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataArraySelectionFilterParameter::New("CorrelatedData", "CorrelatedDataArrayPath", getCorrelatedDataArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("CorrelatedData", "CorrelatedDataArrayPath", getCorrelatedDataArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(CorrelateValuesWithVectorDirection, this, CorrelatedDataArrayPath), SIMPL_BIND_GETTER(CorrelateValuesWithVectorDirection, this, CorrelatedDataArrayPath)));
   }
 
   setFilterParameters(parameters);

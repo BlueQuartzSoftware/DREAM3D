@@ -255,7 +255,7 @@ ReplaceElementAttributesWithNeighborValues::~ReplaceElementAttributesWithNeighbo
 void ReplaceElementAttributesWithNeighborValues::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(DoubleFilterParameter::New("Threshold Value", "MinConfidence", getMinConfidence(), FilterParameter::Parameter));
+  parameters.push_back(DoubleFilterParameter::New("Threshold Value", "MinConfidence", getMinConfidence(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ReplaceElementAttributesWithNeighborValues, this, MinConfidence), SIMPL_BIND_GETTER(ReplaceElementAttributesWithNeighborValues, this, MinConfidence)));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Comparison Operator");
@@ -269,12 +269,12 @@ void ReplaceElementAttributesWithNeighborValues::setupFilterParameters()
     parameters.push_back(parameter);
   }
 
-  parameters.push_back(BooleanFilterParameter::New("Loop Until Gone", "Loop", getLoop(), FilterParameter::Parameter));
+  parameters.push_back(BooleanFilterParameter::New("Loop Until Gone", "Loop", getLoop(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ReplaceElementAttributesWithNeighborValues, this, Loop), SIMPL_BIND_GETTER(ReplaceElementAttributesWithNeighborValues, this, Loop)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
 
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, SIMPL::AttributeMatrixObjectType::Any);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Comparison Array", "ConfidenceIndexArrayPath", getConfidenceIndexArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Comparison Array", "ConfidenceIndexArrayPath", getConfidenceIndexArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(ReplaceElementAttributesWithNeighborValues, this, ConfidenceIndexArrayPath), SIMPL_BIND_GETTER(ReplaceElementAttributesWithNeighborValues, this, ConfidenceIndexArrayPath)));
   }
   setFilterParameters(parameters);
 }

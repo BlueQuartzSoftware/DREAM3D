@@ -284,17 +284,17 @@ void InsertAtoms::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Face Labels", "SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(InsertAtoms, this, SurfaceMeshFaceLabelsArrayPath), SIMPL_BIND_GETTER(InsertAtoms, this, SurfaceMeshFaceLabelsArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Average Quaternions", "AvgQuatsArrayPath", getAvgQuatsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(InsertAtoms, this, AvgQuatsArrayPath), SIMPL_BIND_GETTER(InsertAtoms, this, AvgQuatsArrayPath)));
   }
-  parameters.push_back(StringFilterParameter::New("Data Container", "VertexDataContainerName", getVertexDataContainerName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Data Container", "VertexDataContainerName", getVertexDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(InsertAtoms, this, VertexDataContainerName), SIMPL_BIND_GETTER(InsertAtoms, this, VertexDataContainerName)));
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Vertex Attribute Matrix", "VertexAttributeMatrixName", getVertexAttributeMatrixName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Atom Feature Labels", "AtomFeatureLabelsArrayName", getAtomFeatureLabelsArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Vertex Attribute Matrix", "VertexAttributeMatrixName", getVertexAttributeMatrixName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(InsertAtoms, this, VertexAttributeMatrixName), SIMPL_BIND_GETTER(InsertAtoms, this, VertexAttributeMatrixName)));
+  parameters.push_back(StringFilterParameter::New("Atom Feature Labels", "AtomFeatureLabelsArrayName", getAtomFeatureLabelsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(InsertAtoms, this, AtomFeatureLabelsArrayName), SIMPL_BIND_GETTER(InsertAtoms, this, AtomFeatureLabelsArrayName)));
   setFilterParameters(parameters);
 }
 

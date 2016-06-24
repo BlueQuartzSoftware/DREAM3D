@@ -96,14 +96,14 @@ void ErodeDilateMask::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
-  parameters.push_back(IntFilterParameter::New("Number of Iterations", "NumIterations", getNumIterations(), FilterParameter::Parameter));
-  parameters.push_back(BooleanFilterParameter::New("X Direction", "XDirOn", getXDirOn(), FilterParameter::Parameter));
-  parameters.push_back(BooleanFilterParameter::New("Y Direction", "YDirOn", getYDirOn(), FilterParameter::Parameter));
-  parameters.push_back(BooleanFilterParameter::New("Z Direction", "ZDirOn", getZDirOn(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Number of Iterations", "NumIterations", getNumIterations(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ErodeDilateMask, this, NumIterations), SIMPL_BIND_GETTER(ErodeDilateMask, this, NumIterations)));
+  parameters.push_back(BooleanFilterParameter::New("X Direction", "XDirOn", getXDirOn(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ErodeDilateMask, this, XDirOn), SIMPL_BIND_GETTER(ErodeDilateMask, this, XDirOn)));
+  parameters.push_back(BooleanFilterParameter::New("Y Direction", "YDirOn", getYDirOn(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ErodeDilateMask, this, YDirOn), SIMPL_BIND_GETTER(ErodeDilateMask, this, YDirOn)));
+  parameters.push_back(BooleanFilterParameter::New("Z Direction", "ZDirOn", getZDirOn(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ErodeDilateMask, this, ZDirOn), SIMPL_BIND_GETTER(ErodeDilateMask, this, ZDirOn)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "MaskArrayPath", getMaskArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Mask", "MaskArrayPath", getMaskArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(ErodeDilateMask, this, MaskArrayPath), SIMPL_BIND_GETTER(ErodeDilateMask, this, MaskArrayPath)));
   }
   setFilterParameters(parameters);
 }

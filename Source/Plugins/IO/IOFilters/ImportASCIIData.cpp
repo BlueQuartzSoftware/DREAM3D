@@ -48,7 +48,7 @@ void ImportASCIIData::setupFilterParameters()
 
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req;
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Attribute Matrix", "AttributeMatrixPath", getAttributeMatrixPath(), FilterParameter::Parameter, req));
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Attribute Matrix", "AttributeMatrixPath", getAttributeMatrixPath(), FilterParameter::Parameter, req, SIMPL_BIND_SETTER(ImportASCIIData, this, AttributeMatrixPath), SIMPL_BIND_GETTER(ImportASCIIData, this, AttributeMatrixPath)));
   }
 
   setFilterParameters(parameters);

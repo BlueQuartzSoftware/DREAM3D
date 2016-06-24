@@ -79,12 +79,12 @@ FeatureDataCSVWriter::~FeatureDataCSVWriter()
 void FeatureDataCSVWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(OutputFileFilterParameter::New("Output File", "FeatureDataFile", getFeatureDataFile(), FilterParameter::Parameter, "*.csv", "Comma Separated Data"));
-  parameters.push_back(BooleanFilterParameter::New("Write Neighbor Data", "WriteNeighborListData", getWriteNeighborListData(), FilterParameter::Parameter));
+  parameters.push_back(OutputFileFilterParameter::New("Output File", "FeatureDataFile", getFeatureDataFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FeatureDataCSVWriter, this, FeatureDataFile), SIMPL_BIND_GETTER(FeatureDataCSVWriter, this, FeatureDataFile), "*.csv", "Comma Separated Data"));
+  parameters.push_back(BooleanFilterParameter::New("Write Neighbor Data", "WriteNeighborListData", getWriteNeighborListData(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FeatureDataCSVWriter, this, WriteNeighborListData), SIMPL_BIND_GETTER(FeatureDataCSVWriter, this, WriteNeighborListData)));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixObjectType::Feature);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FeatureDataCSVWriter, this, CellFeatureAttributeMatrixPath), SIMPL_BIND_GETTER(FeatureDataCSVWriter, this, CellFeatureAttributeMatrixPath)));
   }
   setFilterParameters(parameters);
 }

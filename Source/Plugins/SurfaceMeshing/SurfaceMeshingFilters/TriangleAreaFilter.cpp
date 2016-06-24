@@ -137,7 +137,7 @@ void TriangleAreaFilter::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Face Areas", "SurfaceMeshTriangleAreasArrayPath", getSurfaceMeshTriangleAreasArrayPath(), FilterParameter::CreatedArray, req));
+    parameters.push_back(DataArrayCreationFilterParameter::New("Face Areas", "SurfaceMeshTriangleAreasArrayPath", getSurfaceMeshTriangleAreasArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(TriangleAreaFilter, this, SurfaceMeshTriangleAreasArrayPath), SIMPL_BIND_GETTER(TriangleAreaFilter, this, SurfaceMeshTriangleAreasArrayPath)));
   }
   setFilterParameters(parameters);
 }

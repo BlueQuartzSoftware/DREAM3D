@@ -90,7 +90,7 @@ void WriteTriangleGeometry::setupFilterParameters()
 
   {
     DataContainerSelectionFilterParameter::RequirementType req;
-    parameters.push_back(DataContainerSelectionFilterParameter::New("DataContainer", "DataContainerSelection", getDataContainerSelection(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataContainerSelectionFilterParameter::New("DataContainer", "DataContainerSelection", getDataContainerSelection(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(WriteTriangleGeometry, this, DataContainerSelection), SIMPL_BIND_GETTER(WriteTriangleGeometry, this, DataContainerSelection)));
   }
 
   setFilterParameters(parameters);

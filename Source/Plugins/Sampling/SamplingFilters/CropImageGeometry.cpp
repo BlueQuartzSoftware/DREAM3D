@@ -100,26 +100,26 @@ void CropImageGeometry::setupFilterParameters()
   parameters.push_back(IntFilterParameter::New("Z Max (Plane) [Inclusive]", "ZMax", getZMax(), FilterParameter::Parameter));
   QStringList linkedProps;
   linkedProps << "CellFeatureAttributeMatrixPath" << "FeatureIdsArrayPath";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Renumber Features", "RenumberFeatures", getRenumberFeatures(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Renumber Features", "RenumberFeatures", getRenumberFeatures(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(CropImageGeometry, this, RenumberFeatures), SIMPL_BIND_GETTER(CropImageGeometry, this, RenumberFeatures)));
   linkedProps.clear();
   linkedProps << "NewDataContainerName";
-  parameters.push_back(BooleanFilterParameter::New("Update Origin", "UpdateOrigin", getUpdateOrigin(), FilterParameter::Parameter));
-  parameters.push_back(LinkedBooleanFilterParameter::New("Save As New Data Container", "SaveAsNewDataContainer", getSaveAsNewDataContainer(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(BooleanFilterParameter::New("Update Origin", "UpdateOrigin", getUpdateOrigin(), FilterParameter::Parameter, SIMPL_BIND_SETTER(CropImageGeometry, this, UpdateOrigin), SIMPL_BIND_GETTER(CropImageGeometry, this, UpdateOrigin)));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Save As New Data Container", "SaveAsNewDataContainer", getSaveAsNewDataContainer(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(CropImageGeometry, this, SaveAsNewDataContainer), SIMPL_BIND_GETTER(CropImageGeometry, this, SaveAsNewDataContainer)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", getCellAttributeMatrixPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", getCellAttributeMatrixPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(CropImageGeometry, this, CellAttributeMatrixPath), SIMPL_BIND_GETTER(CropImageGeometry, this, CellAttributeMatrixPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(CropImageGeometry, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(CropImageGeometry, this, FeatureIdsArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(CropImageGeometry, this, CellFeatureAttributeMatrixPath), SIMPL_BIND_GETTER(CropImageGeometry, this, CellFeatureAttributeMatrixPath)));
   }
-  parameters.push_back(StringFilterParameter::New("Data Container", "NewDataContainerName", getNewDataContainerName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Data Container", "NewDataContainerName", getNewDataContainerName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(CropImageGeometry, this, NewDataContainerName), SIMPL_BIND_GETTER(CropImageGeometry, this, NewDataContainerName)));
   setFilterParameters(parameters);
 }
 

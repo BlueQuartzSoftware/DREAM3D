@@ -334,15 +334,15 @@ M3CSliceBySlice::~M3CSliceBySlice()
 void M3CSliceBySlice::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(BooleanFilterParameter::New("Delete Temp Files", "DeleteTempFiles", getDeleteTempFiles(), FilterParameter::Uncategorized));
+  parameters.push_back(BooleanFilterParameter::New("Delete Temp Files", "DeleteTempFiles", getDeleteTempFiles(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(M3CSliceBySlice, this, DeleteTempFiles), SIMPL_BIND_GETTER(M3CSliceBySlice, this, DeleteTempFiles)));
   parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
   parameters.push_back(DataArraySelectionFilterParameter::New("FeatureIds", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::Uncategorized));
   parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(StringFilterParameter::New("Surface Data Container", "SurfaceDataContainerName", getSurfaceDataContainerName(), FilterParameter::Uncategorized));
-  parameters.push_back(StringFilterParameter::New("Vertex Attribute Matrix", "VertexAttributeMatrixName", getVertexAttributeMatrixName(), FilterParameter::Uncategorized));
-  parameters.push_back(StringFilterParameter::New("Face Attribute Matrix", "FaceAttributeMatrixName", getFaceAttributeMatrixName(), FilterParameter::Uncategorized));
-  parameters.push_back(StringFilterParameter::New("Face Labels", "FaceLabelsArrayName", getFaceLabelsArrayName(), FilterParameter::Uncategorized));
-  parameters.push_back(StringFilterParameter::New("Node Types", "SurfaceMeshNodeTypesArrayName", getSurfaceMeshNodeTypesArrayName(), FilterParameter::Uncategorized));
+  parameters.push_back(StringFilterParameter::New("Surface Data Container", "SurfaceDataContainerName", getSurfaceDataContainerName(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(M3CSliceBySlice, this, SurfaceDataContainerName), SIMPL_BIND_GETTER(M3CSliceBySlice, this, SurfaceDataContainerName)));
+  parameters.push_back(StringFilterParameter::New("Vertex Attribute Matrix", "VertexAttributeMatrixName", getVertexAttributeMatrixName(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(M3CSliceBySlice, this, VertexAttributeMatrixName), SIMPL_BIND_GETTER(M3CSliceBySlice, this, VertexAttributeMatrixName)));
+  parameters.push_back(StringFilterParameter::New("Face Attribute Matrix", "FaceAttributeMatrixName", getFaceAttributeMatrixName(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(M3CSliceBySlice, this, FaceAttributeMatrixName), SIMPL_BIND_GETTER(M3CSliceBySlice, this, FaceAttributeMatrixName)));
+  parameters.push_back(StringFilterParameter::New("Face Labels", "FaceLabelsArrayName", getFaceLabelsArrayName(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(M3CSliceBySlice, this, FaceLabelsArrayName), SIMPL_BIND_GETTER(M3CSliceBySlice, this, FaceLabelsArrayName)));
+  parameters.push_back(StringFilterParameter::New("Node Types", "SurfaceMeshNodeTypesArrayName", getSurfaceMeshNodeTypesArrayName(), FilterParameter::Uncategorized, SIMPL_BIND_SETTER(M3CSliceBySlice, this, SurfaceMeshNodeTypesArrayName), SIMPL_BIND_GETTER(M3CSliceBySlice, this, SurfaceMeshNodeTypesArrayName)));
   setFilterParameters(parameters);
 }
 

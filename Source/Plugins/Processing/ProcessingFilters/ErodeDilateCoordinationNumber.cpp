@@ -79,12 +79,12 @@ ErodeDilateCoordinationNumber::~ErodeDilateCoordinationNumber()
 void ErodeDilateCoordinationNumber::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntFilterParameter::New("Coordination Number to Consider", "CoordinationNumber", getCoordinationNumber(), FilterParameter::Parameter));
-  parameters.push_back(BooleanFilterParameter::New("Loop Until Gone", "Loop", getLoop(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Coordination Number to Consider", "CoordinationNumber", getCoordinationNumber(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ErodeDilateCoordinationNumber, this, CoordinationNumber), SIMPL_BIND_GETTER(ErodeDilateCoordinationNumber, this, CoordinationNumber)));
+  parameters.push_back(BooleanFilterParameter::New("Loop Until Gone", "Loop", getLoop(), FilterParameter::Parameter, SIMPL_BIND_SETTER(ErodeDilateCoordinationNumber, this, Loop), SIMPL_BIND_GETTER(ErodeDilateCoordinationNumber, this, Loop)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(ErodeDilateCoordinationNumber, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(ErodeDilateCoordinationNumber, this, FeatureIdsArrayPath)));
   }
   setFilterParameters(parameters);
 }

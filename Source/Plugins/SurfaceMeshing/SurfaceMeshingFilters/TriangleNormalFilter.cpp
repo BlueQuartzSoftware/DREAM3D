@@ -136,7 +136,7 @@ void TriangleNormalFilter::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::Face, SIMPL::GeometryType::TriangleGeometry);
-    parameters.push_back(DataArrayCreationFilterParameter::New("Face Normals", "SurfaceMeshTriangleNormalsArrayPath", getSurfaceMeshTriangleNormalsArrayPath(), FilterParameter::CreatedArray, req));
+    parameters.push_back(DataArrayCreationFilterParameter::New("Face Normals", "SurfaceMeshTriangleNormalsArrayPath", getSurfaceMeshTriangleNormalsArrayPath(), FilterParameter::CreatedArray, req, SIMPL_BIND_SETTER(TriangleNormalFilter, this, SurfaceMeshTriangleNormalsArrayPath), SIMPL_BIND_GETTER(TriangleNormalFilter, this, SurfaceMeshTriangleNormalsArrayPath)));
   }
   setFilterParameters(parameters);
 }

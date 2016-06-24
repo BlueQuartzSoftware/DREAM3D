@@ -84,22 +84,22 @@ void FindBoundingBoxFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
   QStringList linkedProps("PhasesArrayPath");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Apply Phase by Phase", "CalcByPhase", getCalcByPhase(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Apply Phase by Phase", "CalcByPhase", getCalcByPhase(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FindBoundingBoxFeatures, this, CalcByPhase), SIMPL_BIND_GETTER(FindBoundingBoxFeatures, this, CalcByPhase)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 3, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Centroids", "CentroidsArrayPath", getCentroidsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Centroids", "CentroidsArrayPath", getCentroidsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindBoundingBoxFeatures, this, CentroidsArrayPath), SIMPL_BIND_GETTER(FindBoundingBoxFeatures, this, CentroidsArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Bool, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Surface Features", "SurfaceFeaturesArrayPath", getSurfaceFeaturesArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Surface Features", "SurfaceFeaturesArrayPath", getSurfaceFeaturesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindBoundingBoxFeatures, this, SurfaceFeaturesArrayPath), SIMPL_BIND_GETTER(FindBoundingBoxFeatures, this, SurfaceFeaturesArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "PhasesArrayPath", getPhasesArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "PhasesArrayPath", getPhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindBoundingBoxFeatures, this, PhasesArrayPath), SIMPL_BIND_GETTER(FindBoundingBoxFeatures, this, PhasesArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Biased Features", "BiasedFeaturesArrayName", getBiasedFeaturesArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Biased Features", "BiasedFeaturesArrayName", getBiasedFeaturesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindBoundingBoxFeatures, this, BiasedFeaturesArrayName), SIMPL_BIND_GETTER(FindBoundingBoxFeatures, this, BiasedFeaturesArrayName)));
   setFilterParameters(parameters);
 }
 

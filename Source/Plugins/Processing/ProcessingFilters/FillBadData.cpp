@@ -83,18 +83,18 @@ FillBadData::~FillBadData()
 void FillBadData::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntFilterParameter::New("Minimum Allowed Defect Size", "MinAllowedDefectSize", getMinAllowedDefectSize(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Minimum Allowed Defect Size", "MinAllowedDefectSize", getMinAllowedDefectSize(), FilterParameter::Parameter, SIMPL_BIND_SETTER(FillBadData, this, MinAllowedDefectSize), SIMPL_BIND_GETTER(FillBadData, this, MinAllowedDefectSize)));
   QStringList linkedProps;
   linkedProps << "CellPhasesArrayPath";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Store Defects as New Phase", "StoreAsNewPhase", getStoreAsNewPhase(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Store Defects as New Phase", "StoreAsNewPhase", getStoreAsNewPhase(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FillBadData, this, StoreAsNewPhase), SIMPL_BIND_GETTER(FillBadData, this, StoreAsNewPhase)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FillBadData, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(FillBadData, this, FeatureIdsArrayPath)));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Phases", "CellPhasesArrayPath", getCellPhasesArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FillBadData, this, CellPhasesArrayPath), SIMPL_BIND_GETTER(FillBadData, this, CellPhasesArrayPath)));
   }
   setFilterParameters(parameters);
 }

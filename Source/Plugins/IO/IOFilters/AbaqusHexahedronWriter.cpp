@@ -86,14 +86,14 @@ AbaqusHexahedronWriter::~AbaqusHexahedronWriter()
 void AbaqusHexahedronWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(IntFilterParameter::New("Hourglass Stiffness", "HourglassStiffness", getHourglassStiffness(), FilterParameter::Parameter, 0));
-  parameters.push_back(StringFilterParameter::New("Job Name", "JobName", getJobName(), FilterParameter::Parameter));
-  parameters.push_back(OutputPathFilterParameter::New("Output Path", "OutputPath", getOutputPath(), FilterParameter::Parameter));
-  parameters.push_back(StringFilterParameter::New("Output File Prefix", "FilePrefix", getFilePrefix(), FilterParameter::Parameter));
+  parameters.push_back(IntFilterParameter::New("Hourglass Stiffness", "HourglassStiffness", getHourglassStiffness(), FilterParameter::Parameter, SIMPL_BIND_SETTER(AbaqusHexahedronWriter, this, HourglassStiffness), SIMPL_BIND_GETTER(AbaqusHexahedronWriter, this, HourglassStiffness), 0));
+  parameters.push_back(StringFilterParameter::New("Job Name", "JobName", getJobName(), FilterParameter::Parameter, SIMPL_BIND_SETTER(AbaqusHexahedronWriter, this, JobName), SIMPL_BIND_GETTER(AbaqusHexahedronWriter, this, JobName)));
+  parameters.push_back(OutputPathFilterParameter::New("Output Path", "OutputPath", getOutputPath(), FilterParameter::Parameter, SIMPL_BIND_SETTER(AbaqusHexahedronWriter, this, OutputPath), SIMPL_BIND_GETTER(AbaqusHexahedronWriter, this, OutputPath)));
+  parameters.push_back(StringFilterParameter::New("Output File Prefix", "FilePrefix", getFilePrefix(), FilterParameter::Parameter, SIMPL_BIND_SETTER(AbaqusHexahedronWriter, this, FilePrefix), SIMPL_BIND_GETTER(AbaqusHexahedronWriter, this, FilePrefix)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(AbaqusHexahedronWriter, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(AbaqusHexahedronWriter, this, FeatureIdsArrayPath)));
   }
   setFilterParameters(parameters);
 }

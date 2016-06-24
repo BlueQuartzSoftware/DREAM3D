@@ -94,27 +94,27 @@ void FindNeighbors::setupFilterParameters()
 {
   FilterParameterVector parameters;
   QStringList linkedProps("BoundaryCellsArrayName");
-  parameters.push_back(LinkedBooleanFilterParameter::New("Store Boundary Cells Array", "StoreBoundaryCells", getStoreBoundaryCells(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Store Boundary Cells Array", "StoreBoundaryCells", getStoreBoundaryCells(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FindNeighbors, this, StoreBoundaryCells), SIMPL_BIND_GETTER(FindNeighbors, this, StoreBoundaryCells)));
   linkedProps.clear();
   linkedProps << "SurfaceFeaturesArrayName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Store Surface Features Array", "StoreSurfaceFeatures", getStoreSurfaceFeatures(), linkedProps, FilterParameter::Parameter));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Store Surface Features Array", "StoreSurfaceFeatures", getStoreSurfaceFeatures(), linkedProps, FilterParameter::Parameter, SIMPL_BIND_SETTER(FindNeighbors, this, StoreSurfaceFeatures), SIMPL_BIND_GETTER(FindNeighbors, this, StoreSurfaceFeatures)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, SIMPL::AttributeMatrixType::Cell, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(DataArraySelectionFilterParameter::New("Feature Ids", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindNeighbors, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(FindNeighbors, this, FeatureIdsArrayPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(SIMPL::AttributeMatrixType::CellFeature, SIMPL::GeometryType::ImageGeometry);
-    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath(), FilterParameter::RequiredArray, req));
+    parameters.push_back(AttributeMatrixSelectionFilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(FindNeighbors, this, CellFeatureAttributeMatrixPath), SIMPL_BIND_GETTER(FindNeighbors, this, CellFeatureAttributeMatrixPath)));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Boundary Cells", "BoundaryCellsArrayName", getBoundaryCellsArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Boundary Cells", "BoundaryCellsArrayName", getBoundaryCellsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindNeighbors, this, BoundaryCellsArrayName), SIMPL_BIND_GETTER(FindNeighbors, this, BoundaryCellsArrayName)));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Number of Neighbors", "NumNeighborsArrayName", getNumNeighborsArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Neighbor List", "NeighborListArrayName", getNeighborListArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Shared Surface Area List", "SharedSurfaceAreaListArrayName", getSharedSurfaceAreaListArrayName(), FilterParameter::CreatedArray));
-  parameters.push_back(StringFilterParameter::New("Surface Features", "SurfaceFeaturesArrayName", getSurfaceFeaturesArrayName(), FilterParameter::CreatedArray));
+  parameters.push_back(StringFilterParameter::New("Number of Neighbors", "NumNeighborsArrayName", getNumNeighborsArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindNeighbors, this, NumNeighborsArrayName), SIMPL_BIND_GETTER(FindNeighbors, this, NumNeighborsArrayName)));
+  parameters.push_back(StringFilterParameter::New("Neighbor List", "NeighborListArrayName", getNeighborListArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindNeighbors, this, NeighborListArrayName), SIMPL_BIND_GETTER(FindNeighbors, this, NeighborListArrayName)));
+  parameters.push_back(StringFilterParameter::New("Shared Surface Area List", "SharedSurfaceAreaListArrayName", getSharedSurfaceAreaListArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindNeighbors, this, SharedSurfaceAreaListArrayName), SIMPL_BIND_GETTER(FindNeighbors, this, SharedSurfaceAreaListArrayName)));
+  parameters.push_back(StringFilterParameter::New("Surface Features", "SurfaceFeaturesArrayName", getSurfaceFeaturesArrayName(), FilterParameter::CreatedArray, SIMPL_BIND_SETTER(FindNeighbors, this, SurfaceFeaturesArrayName), SIMPL_BIND_GETTER(FindNeighbors, this, SurfaceFeaturesArrayName)));
   setFilterParameters(parameters);
 }
 

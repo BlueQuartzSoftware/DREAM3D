@@ -82,8 +82,8 @@ void MultiEmmpmFilter::setupFilterParameters()
 {
   FilterParameterVector parameters = getFilterParameters();
 
-  parameters.push_back(BooleanFilterParameter::New("Use Mu/Sigma from Previous Image as Initialization for Current Image", "UsePreviousMuSigma", getUsePreviousMuSigma(), FilterParameter::Parameter));
-  parameters.push_back(StringFilterParameter::New("Output Array Prefix", "OutputArrayPrefix", getOutputArrayPrefix(), FilterParameter::Parameter));
+  parameters.push_back(BooleanFilterParameter::New("Use Mu/Sigma from Previous Image as Initialization for Current Image", "UsePreviousMuSigma", getUsePreviousMuSigma(), FilterParameter::Parameter, SIMPL_BIND_SETTER(MultiEmmpmFilter, this, UsePreviousMuSigma), SIMPL_BIND_GETTER(MultiEmmpmFilter, this, UsePreviousMuSigma)));
+  parameters.push_back(StringFilterParameter::New("Output Array Prefix", "OutputArrayPrefix", getOutputArrayPrefix(), FilterParameter::Parameter, SIMPL_BIND_SETTER(MultiEmmpmFilter, this, OutputArrayPrefix), SIMPL_BIND_GETTER(MultiEmmpmFilter, this, OutputArrayPrefix)));
 
 
   for ( qint32 i = 0; i < parameters.size(); i++ )

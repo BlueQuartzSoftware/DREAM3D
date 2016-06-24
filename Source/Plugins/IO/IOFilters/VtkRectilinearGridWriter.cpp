@@ -225,12 +225,12 @@ void VtkRectilinearGridWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(OutputFileFilterParameter::New("Output File", "OutputFile", getOutputFile(), FilterParameter::Parameter, "*.vtk", "VTK Rectilinear Grid"));
-  parameters.push_back(BooleanFilterParameter::New("Write Binary File", "WriteBinaryFile", getWriteBinaryFile(), FilterParameter::Parameter));
+  parameters.push_back(OutputFileFilterParameter::New("Output File", "OutputFile", getOutputFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(VtkRectilinearGridWriter, this, OutputFile), SIMPL_BIND_GETTER(VtkRectilinearGridWriter, this, OutputFile), "*.vtk", "VTK Rectilinear Grid"));
+  parameters.push_back(BooleanFilterParameter::New("Write Binary File", "WriteBinaryFile", getWriteBinaryFile(), FilterParameter::Parameter, SIMPL_BIND_SETTER(VtkRectilinearGridWriter, this, WriteBinaryFile), SIMPL_BIND_GETTER(VtkRectilinearGridWriter, this, WriteBinaryFile)));
 
   {
     MultiDataArraySelectionFilterParameter::RequirementType req;
-    parameters.push_back(MultiDataArraySelectionFilterParameter::New("Attribute Arrays to Write", "SelectedDataArrayPaths", getSelectedDataArrayPaths(), FilterParameter::RequiredArray, req));
+    parameters.push_back(MultiDataArraySelectionFilterParameter::New("Attribute Arrays to Write", "SelectedDataArrayPaths", getSelectedDataArrayPaths(), FilterParameter::RequiredArray, req, SIMPL_BIND_SETTER(VtkRectilinearGridWriter, this, SelectedDataArrayPaths), SIMPL_BIND_GETTER(VtkRectilinearGridWriter, this, SelectedDataArrayPaths)));
   }
 
   setFilterParameters(parameters);
