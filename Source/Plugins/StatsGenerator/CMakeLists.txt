@@ -1,6 +1,3 @@
-#--////////////////////////////////////////////////////////////////////////////
-#-- Your License or Copyright can go here
-#--////////////////////////////////////////////////////////////////////////////
 
 set(PLUGIN_NAME StatsGenerator)
 set(${PLUGIN_NAME}_VERSION "1.0")
@@ -8,6 +5,12 @@ set(${PLUGIN_NAME}_VERSION_MAJOR "1")
 set(${PLUGIN_NAME}_VERSION_MINOR "0")
 get_filename_component(${PLUGIN_NAME}_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}" ABSOLUTE)
 set(StatsGenerator_BINARY_DIR "${DREAM3DProj_BINARY_DIR}/Plugins/${PLUGIN_NAME}")
+
+
+# ------------------------------------------------------------------------------
+#  Qwt Section. Find Qwt and setup copy and install rules
+# ------------------------------------------------------------------------------
+include(${CMP_SOURCE_DIR}/ExtLib/QwtSupport.cmake)
 
 # --------------------------------------------------------------------
 # Look for Qt 5 as we need it for the plugin GUI to be generated
